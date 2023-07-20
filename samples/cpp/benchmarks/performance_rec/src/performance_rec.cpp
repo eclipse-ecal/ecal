@@ -32,7 +32,7 @@ int main(int argc, char **argv)
   eCAL::Initialize(argc, argv, "performance_rec");
 
   // create subscriber for topic "Performance"
-  eCAL::SDataTypeDescription topic_info;
+  eCAL::SDataTypeInformation topic_info;
   topic_info.encoding = "base";
   topic_info.name = "std::string";
   eCAL::CSubscriber sub("Performance", topic_info);

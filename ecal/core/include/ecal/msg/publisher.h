@@ -60,12 +60,12 @@ namespace eCAL
      * @param topic_type_  Type name (optional for type checking). 
      * @param topic_desc_  Type description (optional for description checking). 
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CMsgPublisher(const std::string& topic_name_, const SDataTypeDescription& topic_info_) instead. This function will be removed in eCAL6. ")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6. ")
     CMsgPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "") : CPublisher(topic_name_, topic_type_, topic_desc_)
     {
     }
 
-    CMsgPublisher(const std::string& topic_name_, const SDataTypeDescription& topic_info_) : CPublisher(topic_name_, topic_info_)
+    CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_) : CPublisher(topic_name_, topic_info_)
     {
     }
 
@@ -106,7 +106,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the method Create(const std::string& topic_name_, const SDataTypeDescription& topic_info_) instead. This function will be removed in eCAL6. ")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6. ")
     bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "")
     {
       return(CPublisher::Create(topic_name_, topic_type_, topic_desc_));
@@ -120,7 +120,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool Create(const std::string& topic_name_, const SDataTypeDescription& topic_info_)
+    bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
     {
       return(CPublisher::Create(topic_name_, topic_info_));
     }
@@ -192,21 +192,21 @@ namespace eCAL
     }
 
   protected:
-    ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeDescription GetDataTypeDescription() instead. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeInformation GetDataTypeDescription() instead. This function will be removed in eCAL6.")
     virtual std::string GetTypeName() const
     {
-      SDataTypeDescription topic_info{ GetDataTypeDescription() };
+      SDataTypeInformation topic_info{ GetDataTypeDescription() };
       return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.name);
     };
 
-    ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeDescription GetDataTypeDescription() instead. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeInformation GetDataTypeDescription() instead. This function will be removed in eCAL6.")
     virtual std::string GetDescription() const
     {
       return GetDataTypeDescription().descriptor;
     };
     
     // We cannot make it pure virtual, as it would break a bunch of implementations, who are not (yet) implementing this function
-    virtual SDataTypeDescription GetDataTypeDescription() const { return SDataTypeDescription{}; }
+    virtual SDataTypeInformation GetDataTypeDescription() const { return SDataTypeInformation{}; }
   private:
     virtual size_t GetSize(const T& msg_) const = 0;
     virtual bool Serialize(const T& msg_, char* buffer_, size_t size_) const = 0;

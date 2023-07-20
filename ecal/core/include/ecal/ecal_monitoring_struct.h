@@ -65,7 +65,7 @@ namespace eCAL
       std::string                         tid;                  //!< topic id
       std::string                         tname;                //!< topic name
       std::string                         direction;            //!< direction (publisher, subscriber)
-      SDataTypeDescription                tdatatype;            //!< topic datatype description (encoding, type, descriptor)
+      SDataTypeInformation                tdatatype;            //!< topic datatype description (encoding, type, descriptor)
       int                                 tsize;                //!< topic size
 
       bool                                tlayer_ecal_udp_mc;   //!< transport layer udp active

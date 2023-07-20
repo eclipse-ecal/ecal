@@ -99,7 +99,7 @@ namespace eCAL
     Destroy();
   }
 
-  bool CDataWriter::Create(const std::string& topic_name_, const SDataTypeDescription& topic_info_)
+  bool CDataWriter::Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
   {
     if (m_created) return(false);
 
@@ -218,7 +218,7 @@ namespace eCAL
 
  
 
-  bool CDataWriter::SetTopicInformation(const SDataTypeDescription& topic_info_)
+  bool CDataWriter::SetTopicInformation(const SDataTypeInformation& topic_info_)
   {
     // Does it even make sense to register if the info is the same???
     const bool force = m_topic_info != topic_info_;
@@ -653,7 +653,7 @@ namespace eCAL
     else         return 0;
   }
 
-  void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const SDataTypeDescription& tinfo_, const std::string& reader_par_)
+  void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_, const std::string& reader_par_)
   {
     Connect(tid_, tinfo_);
 
@@ -695,7 +695,7 @@ namespace eCAL
 #endif
   }
 
-  void CDataWriter::ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const SDataTypeDescription& tinfo_, const std::string& reader_par_)
+  void CDataWriter::ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_, const std::string& reader_par_)
   {
     Connect(tid_, tinfo_);
 
@@ -994,7 +994,7 @@ namespace eCAL
     return(true);
   }
 
-  void CDataWriter::Connect(const std::string& tid_, const SDataTypeDescription& tinfo_)
+  void CDataWriter::Connect(const std::string& tid_, const SDataTypeInformation& tinfo_)
   {
     SPubEventCallbackData data;
     data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();

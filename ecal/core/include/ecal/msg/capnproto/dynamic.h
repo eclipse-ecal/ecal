@@ -119,7 +119,7 @@ namespace eCAL
       {
         if (!initialized)
         {
-          SDataTypeDescription topic_info_;
+          SDataTypeInformation topic_info_;
           eCAL::Util::GetDataTypeDescription(topic_name_, topic_info_);
           std::string topic_desc = topic_info_.descriptor;
           if (!topic_desc.empty())
@@ -171,7 +171,7 @@ namespace eCAL
       *
       * @return  Type name.
       **/
-      ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeDescription GetDataTypeDescription() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")
+      ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeDescription() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")
       std::string GetTypeName() const
       {
         return ("");
@@ -182,9 +182,9 @@ namespace eCAL
        *
        * @return  Topic information.
       **/
-      SDataTypeDescription GetDataTypeDescription() const
+      SDataTypeInformation GetDataTypeDescription() const
       {
-        SDataTypeDescription topic_info;
+        SDataTypeInformation topic_info;
         // this is dynamic information. what should we return now?
         return topic_info;
       }

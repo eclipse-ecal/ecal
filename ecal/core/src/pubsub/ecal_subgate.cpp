@@ -233,7 +233,7 @@ namespace eCAL
     if (topic_name.empty()) return;
 
     const std::string& topic_id   = ecal_sample.tid();
-    SDataTypeDescription topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
+    SDataTypeInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
 
     // store description
     ApplyTopicToDescGate(topic_name, topic_info);
@@ -312,7 +312,7 @@ namespace eCAL
     const std::string& host_name  = ecal_sample.hname();
     const std::string& topic_name = ecal_sample.tname();
     const std::string& topic_id   = ecal_sample.tid();
-    SDataTypeDescription topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
+    SDataTypeInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
     const std::string  process_id = std::to_string(ecal_sample.pid());
 
     // store description
@@ -387,7 +387,7 @@ namespace eCAL
     return(0);
   }
 
-  bool CSubGate::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeDescription& topic_info_)
+  bool CSubGate::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
   {
     if (g_descgate() != nullptr)
     {

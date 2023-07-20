@@ -100,9 +100,9 @@ namespace eCAL
       *
       * @return  Topic information. ("base", "std::string", "")
       **/
-      SDataTypeDescription GetDataTypeDescription() const override
+      SDataTypeInformation GetDataTypeDescription() const override
       {
-        SDataTypeDescription topic_info;
+        SDataTypeInformation topic_info;
         topic_info.encoding = "base";
         topic_info.name = "std::string";
         // empty descriptor

@@ -111,10 +111,10 @@ namespace eCAL
     // store description
     for (const auto& method : ecal_sample_service.methods())
     {
-      SDataTypeDescription request_type;
+      SDataTypeInformation request_type;
       request_type.name = method.req_type();
       request_type.descriptor = method.req_desc();
-      SDataTypeDescription response_type{};
+      SDataTypeInformation response_type{};
       response_type.name = method.resp_type();
       response_type.descriptor = method.resp_desc();
 
@@ -178,8 +178,8 @@ namespace eCAL
 
   bool CClientGate::ApplyServiceToDescGate(const std::string& service_name_
     , const std::string& method_name_
-    , const SDataTypeDescription& reqest_type_description_
-    , const SDataTypeDescription& response_type_description_)
+    , const SDataTypeInformation& reqest_type_description_
+    , const SDataTypeInformation& response_type_description_)
   {
     if (g_descgate() != nullptr)
     {

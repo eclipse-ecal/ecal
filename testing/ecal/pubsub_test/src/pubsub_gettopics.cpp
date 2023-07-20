@@ -31,18 +31,18 @@ TEST(IO, GetTopics)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_gettopics");
 
-  std::unordered_map<std::string, eCAL::SDataTypeDescription> topic_info_map;
+  std::unordered_map<std::string, eCAL::SDataTypeInformation> topic_info_map;
 
   // create and check a few pub/sub entities
   {
-    eCAL::SDataTypeDescription info_A1  { "typeA1"  ,"",  "descA1"   };
-    eCAL::SDataTypeDescription info_A1_2{ "typeA1.2","",  "descA1.2" };
-    eCAL::SDataTypeDescription info_A2  { "typeA2"  ,"",  "descA2"   };
-    eCAL::SDataTypeDescription info_A3  { "typeA3"  ,"",  "descA3"   };
+    eCAL::SDataTypeInformation info_A1  { "typeA1"  ,"",  "descA1"   };
+    eCAL::SDataTypeInformation info_A1_2{ "typeA1.2","",  "descA1.2" };
+    eCAL::SDataTypeInformation info_A2  { "typeA2"  ,"",  "descA2"   };
+    eCAL::SDataTypeInformation info_A3  { "typeA3"  ,"",  "descA3"   };
 
-    eCAL::SDataTypeDescription info_B1  { "typeB1"  ,"",  "descB1"   };
-    eCAL::SDataTypeDescription info_B1_2{ "typeB1.2","",  "descB1.2" };
-    eCAL::SDataTypeDescription info_B2  { "typeB2"  ,"",  "descB2"   };
+    eCAL::SDataTypeInformation info_B1  { "typeB1"  ,"",  "descB1"   };
+    eCAL::SDataTypeInformation info_B1_2{ "typeB1.2","",  "descB1.2" };
+    eCAL::SDataTypeInformation info_B2  { "typeB2"  ,"",  "descB2"   };
 
     // create 3 publisher
     eCAL::CPublisher pub1("A1", info_A1);
@@ -70,9 +70,9 @@ TEST(IO, GetTopics)
     // check types and descriptions
     for (auto& topic_info : topic_info_map)
     {
-      eCAL::SDataTypeDescription utils_topic_info;
+      eCAL::SDataTypeInformation utils_topic_info;
       eCAL::Util::GetDataTypeDescription(topic_info.first, utils_topic_info);
-      eCAL::SDataTypeDescription expected_topic_info{ "type" + topic_info.first, "", "desc" + topic_info.first };
+      eCAL::SDataTypeInformation expected_topic_info{ "type" + topic_info.first, "", "desc" + topic_info.first };
       EXPECT_EQ(utils_topic_info, expected_topic_info);
     }
 
@@ -93,12 +93,12 @@ TEST(IO, GetTopics)
 
     // pub1 and sub1 still exists
     {
-      eCAL::SDataTypeDescription utils_topic_info;
+      eCAL::SDataTypeInformation utils_topic_info;
       eCAL::Util::GetDataTypeDescription("A1", utils_topic_info);
       EXPECT_EQ(utils_topic_info, info_A1);
     }
     {
-      eCAL::SDataTypeDescription utils_topic_info;
+      eCAL::SDataTypeInformation utils_topic_info;
       eCAL::Util::GetDataTypeDescription("B1", utils_topic_info);
       EXPECT_EQ(utils_topic_info, info_B1);
     }
@@ -114,12 +114,12 @@ TEST(IO, GetTopics)
 
     // check overwritten attributes
     {
-      eCAL::SDataTypeDescription utils_topic_info;
+      eCAL::SDataTypeInformation utils_topic_info;
       eCAL::Util::GetDataTypeDescription("A1", utils_topic_info);
       EXPECT_EQ(utils_topic_info, info_A1_2);
     }
     {
-      eCAL::SDataTypeDescription utils_topic_info;
+      eCAL::SDataTypeInformation utils_topic_info;
       eCAL::Util::GetDataTypeDescription("B1", utils_topic_info);
       EXPECT_EQ(utils_topic_info, info_B1_2);
     }

@@ -110,7 +110,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CServiceServerImpl::AddDescription(const std::string& method_, const SDataTypeDescription& reqest_type_description_, const SDataTypeDescription& response_type_description_)
+  bool CServiceServerImpl::AddDescription(const std::string& method_, const SDataTypeInformation& reqest_type_description_, const SDataTypeInformation& response_type_description_)
   {
     {
       std::lock_guard<std::mutex> const lock(m_method_map_sync);
@@ -171,10 +171,10 @@ namespace eCAL
       }
     }
 
-    SDataTypeDescription request_datatype_description;
+    SDataTypeInformation request_datatype_description;
     request_datatype_description.name = req_type_;
     request_datatype_description.descriptor = req_desc;
-    SDataTypeDescription response_datatype_description;
+    SDataTypeInformation response_datatype_description;
     response_datatype_description.name = resp_type_;
     response_datatype_description.descriptor = resp_desc;
     // update descgate infos
@@ -422,8 +422,8 @@ namespace eCAL
   }
 
   bool CServiceServerImpl::ApplyServiceToDescGate(const std::string& method_name_
-    , const SDataTypeDescription& reqest_type_description_
-    , const SDataTypeDescription& response_type_description_)
+    , const SDataTypeInformation& reqest_type_description_
+    , const SDataTypeInformation& response_type_description_)
   {
     if (g_descgate() != nullptr)
     {

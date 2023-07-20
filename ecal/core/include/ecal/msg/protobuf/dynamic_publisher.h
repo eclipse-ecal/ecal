@@ -105,7 +105,7 @@ namespace eCAL
     private:
       size_t Send(const google::protobuf::Message& msg_, long long time_ = -1) = delete;
 
-      SDataTypeDescription GetDataTypeDescription() const override
+      SDataTypeInformation GetDataTypeDescription() const override
       {
         return GetTopicInformationFromMessage(m_msg.get());
       }
@@ -124,11 +124,11 @@ namespace eCAL
         return (msg_.SerializeToArray((void*)buffer_, (int)size_));
       }
 
-      static SDataTypeDescription GetTopicInformationFromMessage(const google::protobuf::Message* msg_ptr_)
+      static SDataTypeInformation GetTopicInformationFromMessage(const google::protobuf::Message* msg_ptr_)
       {
         assert(msg_ptr_);
 
-        SDataTypeDescription topic_info;
+        SDataTypeInformation topic_info;
         topic_info.encoding = "proto";
         topic_info.name = msg_ptr_->GetTypeName();
         topic_info.descriptor = GetDescriptorFromMessage(msg_ptr_);

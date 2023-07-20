@@ -97,9 +97,9 @@ namespace eCAL
       *
       * @return  Topic information.
       **/
-      SDataTypeDescription GetDataTypeDescription() const override
+      SDataTypeInformation GetDataTypeDescription() const override
       {
-        SDataTypeDescription topic_info;
+        SDataTypeInformation topic_info;
         topic_info.encoding = "mpack";
         // empty descriptor, empty descriptor
         return topic_info;

@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  helper class to copy from eCAL::pb:Sample to SDataTypeDescription
+ * @brief  helper class to copy from eCAL::pb:Sample to SDataTypeInformation
 **/
 
 #pragma once
@@ -31,9 +31,9 @@
 namespace eCAL
 {
 
-  inline SDataTypeDescription eCALSampleToTopicInformation(const eCAL::pb::Sample& sample)
+  inline SDataTypeInformation eCALSampleToTopicInformation(const eCAL::pb::Sample& sample)
   {
-    SDataTypeDescription topic;
+    SDataTypeInformation topic;
     const auto& tdatatype = sample.topic().tdatatype();
     topic.encoding = tdatatype.encoding();
     topic.name = tdatatype.name();

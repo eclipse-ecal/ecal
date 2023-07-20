@@ -64,7 +64,7 @@ namespace eCAL
       *
       * @param topic_name_  Unique topic name.
       **/
-      CBuilderSubscriber(const std::string& topic_name_, const SDataTypeDescription& topic_info_) : CMsgSubscriber<capnp::MallocMessageBuilder>(topic_name_, topic_info_)
+      CBuilderSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_) : CMsgSubscriber<capnp::MallocMessageBuilder>(topic_name_, topic_info_)
       {
       }
 
@@ -95,7 +95,7 @@ namespace eCAL
        *
        * @return  True if it succeeds, false if it fails.
       **/
-      bool Create(const std::string& topic_name_, const SDataTypeDescription& topic_info_)
+      bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
       {
         return(CMsgSubscriber<capnp::MallocMessageBuilder>::Create(topic_name_, topic_info_));
       }
@@ -244,7 +244,7 @@ namespace eCAL
       *
       * @return  Type name.
       **/
-      ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeDescription GetDataTypeDescription() instead. This function will be removed in eCAL6.")
+      ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeInformation GetDataTypeDescription() instead. This function will be removed in eCAL6.")
       std::string GetTypeName() const
       {
         return eCAL::capnproto::TypeAsString<message_type>();
@@ -256,9 +256,9 @@ namespace eCAL
        *
        * @return  Topic information.
       **/
-      SDataTypeDescription GetDataTypeDescription() const
+      SDataTypeInformation GetDataTypeDescription() const
       {
-        SDataTypeDescription topic_info;
+        SDataTypeInformation topic_info;
         topic_info.encoding   = eCAL::capnproto::EncodingAsString();
         topic_info.name       = eCAL::capnproto::TypeAsString<message_type>();
         topic_info.descriptor = eCAL::capnproto::SchemaAsString<message_type>();

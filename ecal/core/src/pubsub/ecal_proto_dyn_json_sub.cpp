@@ -122,7 +122,7 @@ namespace eCAL
         if (msg_string.empty())
         {
           // get topic type
-          SDataTypeDescription topic_info;
+          SDataTypeInformation topic_info;
           //nodiscard???
           eCAL::Util::GetDataTypeDescription(topic_name_, topic_info);
           topic_type_full = topic_info.name;

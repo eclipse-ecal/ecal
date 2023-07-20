@@ -77,7 +77,7 @@ namespace eCAL
     Destroy();
   }
 
-  bool CDataReader::Create(const std::string& topic_name_, const SDataTypeDescription& topic_info_)
+  bool CDataReader::Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
   {
     if(m_created) return(false);
 
@@ -609,7 +609,7 @@ namespace eCAL
     m_id_set = id_set_;
   }
 
-  void CDataReader::ApplyLocPublication(const std::string& process_id_, const std::string& tid_, const SDataTypeDescription& tinfo_)
+  void CDataReader::ApplyLocPublication(const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_)
   {
     Connect(tid_, tinfo_);
 
@@ -633,7 +633,7 @@ namespace eCAL
     }
   }
 
-  void CDataReader::ApplyExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const SDataTypeDescription& tinfo_)
+  void CDataReader::ApplyExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_)
   {
     Connect(tid_, tinfo_);
 
@@ -711,7 +711,7 @@ namespace eCAL
     }
   }
 
-  void CDataReader::Connect(const std::string& tid_, const SDataTypeDescription& topic_info_)
+  void CDataReader::Connect(const std::string& tid_, const SDataTypeInformation& topic_info_)
   {
     SSubEventCallbackData data;
     data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();

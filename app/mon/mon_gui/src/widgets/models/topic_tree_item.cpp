@@ -90,7 +90,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         const std::string monitor_topic_name = topic_.tname();
         if (!monitor_topic_name.empty())
         {
-          eCAL::SDataTypeDescription topic_info;
+          eCAL::SDataTypeInformation topic_info;
           eCAL::Util::GetDataTypeDescription(monitor_topic_name, topic_info);
           return topic_info.encoding.c_str();
         }
@@ -110,7 +110,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         const std::string monitor_topic_name = topic_.tname();
         if (!monitor_topic_name.empty())
         {
-          eCAL::SDataTypeDescription topic_info;
+          eCAL::SDataTypeInformation topic_info;
           eCAL::Util::GetDataTypeDescription(monitor_topic_name, topic_info);
           return topic_info.name.c_str();
         }

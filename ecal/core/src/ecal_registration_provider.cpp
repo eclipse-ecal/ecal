@@ -360,10 +360,10 @@ namespace eCAL
       const auto& ecal_sample_service = iter->second.service();
       for (const auto& method : ecal_sample_service.methods())
       {
-        SDataTypeDescription request_type;
+        SDataTypeInformation request_type;
         request_type.name = method.req_type();
         request_type.descriptor = method.req_desc();
-        SDataTypeDescription response_type;
+        SDataTypeInformation response_type;
         response_type.name = method.resp_type();
         response_type.descriptor = method.resp_desc();
 
@@ -409,7 +409,7 @@ namespace eCAL
       //////////////////////////////////////////////
       // read attributes
       const std::string topic_name(iter->second.topic().tname());
-      SDataTypeDescription topic_info;
+      SDataTypeInformation topic_info;
       const auto& pb_topic_datatype = iter->second.topic().tdatatype();
       topic_info.encoding = pb_topic_datatype.encoding();
       topic_info.name = pb_topic_datatype.name();
@@ -508,7 +508,7 @@ namespace eCAL
   }
 
   bool CRegistrationProvider::ApplyTopicToDescGate(const std::string& topic_name_
-    , const SDataTypeDescription& topic_info_
+    , const SDataTypeInformation& topic_info_
     , bool topic_is_a_publisher_)
   {
     if (g_descgate() != nullptr)
@@ -531,8 +531,8 @@ namespace eCAL
 
   bool CRegistrationProvider::ApplyServiceToDescGate(const std::string& service_name_
     , const std::string& method_name_
-    , const SDataTypeDescription& reqest_type_description_
-    , const SDataTypeDescription& response_type_description_
+    , const SDataTypeInformation& reqest_type_description_
+    , const SDataTypeInformation& response_type_description_
   )
   {
     if (g_descgate() != nullptr)

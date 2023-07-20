@@ -46,7 +46,7 @@ namespace eCAL
   {
   }
 
-  bool CDescGate::ApplyTopicDescription(const std::string& topic_name_, const SDataTypeDescription& topic_info_, const QualityFlags description_quality_)
+  bool CDescGate::ApplyTopicDescription(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const QualityFlags description_quality_)
   {
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     m_topic_info_map.map->remove_deprecated();
@@ -186,9 +186,9 @@ namespace eCAL
     return false;
   }
 
-  void CDescGate::GetTopics(std::unordered_map<std::string, SDataTypeDescription>& topic_info_map_)
+  void CDescGate::GetTopics(std::unordered_map<std::string, SDataTypeInformation>& topic_info_map_)
   {
-    std::unordered_map<std::string, SDataTypeDescription> map;
+    std::unordered_map<std::string, SDataTypeInformation> map;
 
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     m_topic_info_map.map->remove_deprecated();
@@ -215,7 +215,7 @@ namespace eCAL
     }
   }
 
-  bool CDescGate::GetDataTypeDescription(const std::string& topic_name_, SDataTypeDescription& topic_info_)
+  bool CDescGate::GetDataTypeDescription(const std::string& topic_name_, SDataTypeInformation& topic_info_)
   {
     if (topic_name_.empty()) return(false);
 
@@ -229,8 +229,8 @@ namespace eCAL
   
   bool CDescGate::ApplyServiceDescription(const std::string& service_name_
                                         , const std::string& method_name_
-                                        , const SDataTypeDescription& reqest_type_description_
-                                        , const SDataTypeDescription& response_type_description_
+                                        , const SDataTypeInformation& reqest_type_description_
+                                        , const SDataTypeInformation& response_type_description_
                                         , const QualityFlags description_quality_)
   {
     std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);

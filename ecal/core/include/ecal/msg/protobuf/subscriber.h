@@ -112,9 +112,9 @@ namespace eCAL
       *
       * @return  Topic information.
       **/
-      SDataTypeDescription GetDataTypeDescription() const override
+      SDataTypeInformation GetDataTypeDescription() const override
       {
-        SDataTypeDescription topic_info;
+        SDataTypeInformation topic_info;
         static T msg{};
         topic_info.encoding = "proto";
         topic_info.name = msg.GetTypeName();

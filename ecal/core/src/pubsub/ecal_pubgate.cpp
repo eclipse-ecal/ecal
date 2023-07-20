@@ -115,7 +115,7 @@ namespace eCAL
     const auto& ecal_sample = ecal_sample_.topic();
     const std::string& topic_name = ecal_sample.tname();
     const std::string& topic_id   = ecal_sample.tid();
-    SDataTypeDescription topic_information{ eCALSampleToTopicInformation(ecal_sample_) };
+    SDataTypeInformation topic_information{ eCALSampleToTopicInformation(ecal_sample_) };
     const std::string  process_id = std::to_string(ecal_sample.pid());
 
     std::string reader_par;
@@ -165,7 +165,7 @@ namespace eCAL
     const std::string& host_name  = ecal_sample.hname();
     const std::string& topic_name = ecal_sample.tname();
     const std::string& topic_id   = ecal_sample.tid();
-    SDataTypeDescription topic_information{ eCALSampleToTopicInformation(ecal_sample_) };
+    SDataTypeInformation topic_information{ eCALSampleToTopicInformation(ecal_sample_) };
     const std::string  process_id = std::to_string(ecal_sample.pid());
 
     std::string reader_par;
@@ -220,7 +220,7 @@ namespace eCAL
     }
   }
 
-  bool CPubGate::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeDescription& topic_info_)
+  bool CPubGate::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
   {
     if (g_descgate() != nullptr)
     {

@@ -56,7 +56,7 @@ namespace eCAL
 
     static void InitializeLayers();
 
-    bool Create(const std::string& topic_name_, const SDataTypeDescription& topic_info_);
+    bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
     bool Destroy();
 
     bool SetQOS(const QOS::SReaderQOS& qos_);
@@ -76,10 +76,10 @@ namespace eCAL
 
     void SetID(const std::set<long long>& id_set_);
 
-    void ApplyLocPublication(const std::string& process_id_, const std::string& tid_, const SDataTypeDescription& tinfo_);
+    void ApplyLocPublication(const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_);
     void RemoveLocPublication(const std::string& process_id_, const std::string& tid_);
 
-    void ApplyExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const SDataTypeDescription& tinfo_);
+    void ApplyExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_);
     void RemoveExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_);
 
     void ApplyLocLayerParameter(const std::string& process_id_, const std::string& topic_id_, eCAL::pb::eTLayerType type_, const std::string& parameter_);
@@ -97,7 +97,7 @@ namespace eCAL
 
     std::string          GetTopicName()        const {return(m_topic_name);}
     std::string          GetTopicID()          const {return(m_topic_id);}
-    SDataTypeDescription GetDataTypeDescription() const {return(m_topic_info);}
+    SDataTypeInformation GetDataTypeDescription() const {return(m_topic_info);}
 
     void RefreshRegistration();
     void CheckReceiveTimeout();
@@ -111,7 +111,7 @@ namespace eCAL
     bool Register(bool force_);
     bool Unregister();
 
-    void Connect(const std::string& tid_, const SDataTypeDescription& topic_info_);
+    void Connect(const std::string& tid_, const SDataTypeInformation& topic_info_);
     void Disconnect();
     bool CheckMessageClock(const std::string& tid_, long long current_clock_);
 
@@ -121,7 +121,7 @@ namespace eCAL
     std::string                               m_pname;
     std::string                               m_topic_name;
     std::string                               m_topic_id;
-    SDataTypeDescription                      m_topic_info;
+    SDataTypeInformation                      m_topic_info;
     std::map<std::string, std::string>        m_attr;
     std::atomic<size_t>                       m_topic_size;
 

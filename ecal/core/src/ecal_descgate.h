@@ -66,17 +66,17 @@ namespace eCAL
     void Destroy();
 
     bool ApplyTopicDescription(const std::string& topic_name_, 
-                               const SDataTypeDescription& topic_info_,
+                               const SDataTypeInformation& topic_info_,
                                const QualityFlags description_quality_);
 
-    void GetTopics(std::unordered_map<std::string, SDataTypeDescription>& topic_info_map_);
+    void GetTopics(std::unordered_map<std::string, SDataTypeInformation>& topic_info_map_);
     void GetTopicNames(std::vector<std::string>& topic_names_);
-    bool GetDataTypeDescription(const std::string& topic_name_, SDataTypeDescription& topic_info_);
+    bool GetDataTypeDescription(const std::string& topic_name_, SDataTypeInformation& topic_info_);
 
     bool ApplyServiceDescription(const std::string& service_name_, 
                                  const std::string& method_name_, 
-                                 const SDataTypeDescription& reqest_type_description_,
-                                 const SDataTypeDescription& response_type_description_,
+                                 const SDataTypeInformation& reqest_type_description_,
+                                 const SDataTypeInformation& response_type_description_,
                                  const QualityFlags description_quality_);
 
     void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_);
@@ -87,7 +87,7 @@ namespace eCAL
   protected:
     struct STopicInfoQuality
     {
-      SDataTypeDescription info;                                                       //!< Topic info struct with type encoding, name and descriptor.
+      SDataTypeInformation info;                                                       //!< Topic info struct with type encoding, name and descriptor.
       QualityFlags         quality               = QualityFlags::NO_QUALITY;           //!< QualityFlags to determine whether we may overwrite the current data with better one. E.g. we prefer the description sent by a publisher over one sent by a subscriber. 
       bool                 type_missmatch_logged = false;                              //!< Whether we have already logged a type-missmatch
     };

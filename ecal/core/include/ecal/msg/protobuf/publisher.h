@@ -176,10 +176,10 @@ namespace eCAL
        *
        * @return  Type name.
       **/
-      ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeDescription GetDataTypeDescription() instead. This function will be removed in eCAL6.")
+      ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeInformation GetDataTypeDescription() instead. This function will be removed in eCAL6.")
       std::string GetTypeName() const
       {
-        SDataTypeDescription topic_info{ GetDataTypeDescription() };
+        SDataTypeInformation topic_info{ GetDataTypeDescription() };
         return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.name);
       }
 
@@ -189,7 +189,7 @@ namespace eCAL
        *
        * @return  Description string.
       **/
-      ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeDescription GetDataTypeDescription() instead. This function will be removed in eCAL6.")
+      ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeInformation GetDataTypeDescription() instead. This function will be removed in eCAL6.")
       std::string GetDescription() const
       {
         return GetDataTypeDescription().descriptor;
@@ -200,9 +200,9 @@ namespace eCAL
       *
       * @return  Topic information.
       **/
-      SDataTypeDescription GetDataTypeDescription() const
+      SDataTypeInformation GetDataTypeDescription() const
       {
-        SDataTypeDescription topic_info;
+        SDataTypeInformation topic_info;
         static T msg{};
         topic_info.encoding = "proto";
         topic_info.name = msg.GetTypeName();

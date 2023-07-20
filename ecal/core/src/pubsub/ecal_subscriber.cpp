@@ -46,14 +46,14 @@ namespace eCAL
     Create(topic_name_, topic_type_, topic_desc_);
   }
 
-  CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeDescription& topic_info_)
+  CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
     : CSubscriber()
   {
     Create(topic_name_, topic_info_);
   }
 
   CSubscriber::CSubscriber(const std::string& topic_name_)
-    : CSubscriber(topic_name_, SDataTypeDescription{})
+    : CSubscriber(topic_name_, SDataTypeInformation{})
   {}
 
   CSubscriber::~CSubscriber()
@@ -90,7 +90,7 @@ namespace eCAL
 
   bool CSubscriber::Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ /* = "" */)
   {
-    SDataTypeDescription info;
+    SDataTypeInformation info;
     auto split_type = Util::SplitCombinedTopicType(topic_type_);
     info.encoding = split_type.first;
     info.name = split_type.second;
@@ -98,7 +98,7 @@ namespace eCAL
     return Create(topic_name_, info);
   }
 
-  bool CSubscriber::Create(const std::string& topic_name_, const SDataTypeDescription& topic_info_)
+  bool CSubscriber::Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
   {
     if (m_created)              return(false);
     if (g_globals() == nullptr) return(false);
@@ -263,7 +263,7 @@ namespace eCAL
   std::string CSubscriber::GetTypeName() const
   {
     if(m_datareader == nullptr) return("");
-    SDataTypeDescription info = m_datareader->GetDataTypeDescription();
+    SDataTypeInformation info = m_datareader->GetDataTypeDescription();
     return(Util::CombinedTopicEncodingAndType(info.encoding, info.name));
   }
 
@@ -273,9 +273,9 @@ namespace eCAL
     return(m_datareader->GetDataTypeDescription().descriptor);
   }
   
-  SDataTypeDescription CSubscriber::GetDataTypeDescription() const
+  SDataTypeInformation CSubscriber::GetDataTypeDescription() const
   {
-    if (m_datareader == nullptr) return(SDataTypeDescription{});
+    if (m_datareader == nullptr) return(SDataTypeInformation{});
     return(m_datareader->GetDataTypeDescription());
   }
 
@@ -291,7 +291,7 @@ namespace eCAL
     m_qos.reliability = QOS::best_effort_reliability_qos;
   }
 
-  bool CSubscriber::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeDescription& topic_info_)
+  bool CSubscriber::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
   {
     if (g_descgate() != nullptr)
     {

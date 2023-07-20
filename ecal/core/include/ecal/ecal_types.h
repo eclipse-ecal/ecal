@@ -31,18 +31,18 @@ namespace eCAL
      * @brief Optional compile time information associated with a given topic
      *        (necessary for reflection / runtime type checking)
     **/
-    struct SDataTypeDescription
+    struct SDataTypeInformation
     {
       std::string name;
       std::string encoding;
       std::string descriptor;
 
-      bool operator==(const SDataTypeDescription& other) const
+      bool operator==(const SDataTypeInformation& other) const
       {
         return name == other.name && encoding == other.encoding && descriptor == other.descriptor;
       }
 
-      bool operator!=(const SDataTypeDescription& other) const
+      bool operator!=(const SDataTypeInformation& other) const
       {
         return !(*this == other);
       }
@@ -54,7 +54,7 @@ namespace eCAL
     **/
     struct STopicInformation
     {
-      SDataTypeDescription topic_type; //!< Data type description of the topic
+      SDataTypeInformation topic_type; //!< Data type description of the topic
 
       bool operator==(const STopicInformation& other) const
       {
@@ -73,8 +73,8 @@ namespace eCAL
     **/
     struct SServiceMethodInformation
     {
-      SDataTypeDescription request_type;   //!< Data type description of the request
-      SDataTypeDescription response_type;  //!< Data type description of the response
+      SDataTypeInformation request_type;   //!< Data type description of the request
+      SDataTypeInformation response_type;  //!< Data type description of the response
 
       bool operator==(const SServiceMethodInformation& other) const
       {

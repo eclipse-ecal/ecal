@@ -224,7 +224,7 @@ namespace eCAL
       if (g_pubgate()) g_pubgate()->ShareDescription(state_);
     }
 
-    void GetTopics(std::unordered_map<std::string, SDataTypeDescription>& topic_info_map_)
+    void GetTopics(std::unordered_map<std::string, SDataTypeInformation>& topic_info_map_)
     {
       if (!g_descgate()) return;
       g_descgate()->GetTopics(topic_info_map_);
@@ -253,7 +253,7 @@ namespace eCAL
     // [[deprecated]]
     bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_)
     {
-      SDataTypeDescription topic_info;
+      SDataTypeInformation topic_info;
       auto ret = GetDataTypeDescription(topic_name_, topic_info);
       topic_type_ = Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.name);
       return ret;
@@ -300,7 +300,7 @@ namespace eCAL
     // [[deprecated]]
     bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_)
     {
-      SDataTypeDescription topic_info;
+      SDataTypeInformation topic_info;
       auto ret = GetDataTypeDescription(topic_name_, topic_info);
       topic_desc_ = topic_info.descriptor;
       return ret;
@@ -330,7 +330,7 @@ namespace eCAL
       return("");
     }
 
-    bool GetDataTypeDescription(const std::string& topic_name_, SDataTypeDescription& topic_info_)
+    bool GetDataTypeDescription(const std::string& topic_name_, SDataTypeInformation& topic_info_)
     {
       if (g_descgate() == nullptr) return(false);
       return(g_descgate()->GetDataTypeDescription(topic_name_, topic_info_));

@@ -94,9 +94,9 @@ namespace eCAL
       *
       * @return  Topic information.
       **/
-      SDataTypeDescription GetDataTypeDescription() const override
+      SDataTypeInformation GetDataTypeDescription() const override
       {
-        SDataTypeDescription topic_info;
+        SDataTypeInformation topic_info;
         topic_info.encoding = "flatb";
         // empty type, empty descriptor
         return topic_info;

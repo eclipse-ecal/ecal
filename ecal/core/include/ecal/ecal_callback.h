@@ -72,7 +72,7 @@ namespace eCAL
     std::string          ttype;       //!< topic type information of the connected publisher           (for sub_event_update_connection only)
     ECAL_DEPRECATE_SINCE_5_13("Use the tdatatype.descriptor instead of tdesc.")
     std::string          tdesc;       //!< topic descriptor information of the connected publisher     (for sub_event_update_connection only)
-    SDataTypeDescription tdatatype;   //!< datatype description of the connected subscriber            (for pub_event_update_connection only)
+    SDataTypeInformation tdatatype;   //!< datatype description of the connected subscriber            (for pub_event_update_connection only)
   };
 
   /**
@@ -94,7 +94,7 @@ namespace eCAL
     std::string           ttype;      //!< topic type information of the connected publisher       (for sub_event_update_connection only)
     ECAL_DEPRECATE_SINCE_5_13("Use the tdatatype.descriptor instead of tdesc.")
     std::string           tdesc;      //!< topic descriptor information of the connected publisher (for sub_event_update_connection only)
-    SDataTypeDescription  tdatatype;  //!< topic information of the connected subscriber           (for pub_event_update_connection only)
+    SDataTypeInformation  tdatatype;  //!< topic information of the connected subscriber           (for pub_event_update_connection only)
   };
 
   /**

@@ -170,9 +170,9 @@ namespace eCAL
        *
        * @return  Topic information.
       **/
-      SDataTypeDescription GetDataTypeDescription() const
+      SDataTypeInformation GetDataTypeDescription() const
       {
-        SDataTypeDescription topic_info;
+        SDataTypeInformation topic_info;
         topic_info.encoding   = eCAL::capnproto::EncodingAsString();
         topic_info.name       = eCAL::capnproto::TypeAsString<message_type>();
         topic_info.descriptor = eCAL::capnproto::SchemaAsString<message_type>();
