@@ -216,7 +216,7 @@ namespace eCAL
     topic_info.name = split_type.second;
     ApplyTopicToDescGate(m_datawriter->GetTopicName(), topic_info);
 
-    return m_datawriter->SetTopicInformation(topic_info);
+    return m_datawriter->SetDataTypeInformation(topic_info);
   }
 
   bool CPublisher::SetDescription(const std::string& topic_desc_)
@@ -228,14 +228,14 @@ namespace eCAL
     topic_info.descriptor = topic_desc_;
     ApplyTopicToDescGate(m_datawriter->GetTopicName(), topic_info);
 
-    return m_datawriter->SetTopicInformation(topic_info);
+    return m_datawriter->SetDataTypeInformation(topic_info);
   }
 
-  bool CPublisher::SetTopicInformation(const SDataTypeInformation& topic_info_)
+  bool CPublisher::SetDataTypeInformation(const SDataTypeInformation& topic_info_)
   {
     if (m_datawriter == nullptr) return false;
     ApplyTopicToDescGate(m_datawriter->GetTopicName(), topic_info_);
-    return m_datawriter->SetTopicInformation(topic_info_);
+    return m_datawriter->SetDataTypeInformation(topic_info_);
   }
 
   bool CPublisher::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)

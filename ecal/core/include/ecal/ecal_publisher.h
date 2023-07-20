@@ -179,7 +179,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetTopicInformation(const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetDataTypeInformation(const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6")
     ECAL_API bool SetTypeName(const std::string& topic_type_name_);
 
     /**
@@ -189,7 +189,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails. 
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetTopicInformation(const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetDataTypeInformation(const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6")
     ECAL_API bool SetDescription(const std::string& topic_desc_);
 
     /**
@@ -199,7 +199,7 @@ namespace eCAL
     *
     * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_API bool SetTopicInformation(const SDataTypeInformation& topic_info_);
+    ECAL_API bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
     /**
      * @brief Sets publisher attribute. 

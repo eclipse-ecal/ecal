@@ -174,7 +174,7 @@ TEST(IO, TypeDescriptionDynamic)
     // set topic info
     eCAL::SDataTypeInformation tinfo_new(tdatatype);
     tinfo_new.descriptor = "desc_A_new";
-    pub.SetTopicInformation(tinfo_new);  // Already set descriptions are not overwritten in the database
+    pub.SetDataTypeInformation(tinfo_new);  // Already set descriptions are not overwritten in the database
 
     // check type name (should not be influenced by SetDescription)
     eCAL::SDataTypeInformation retrieved_util_info_new;
@@ -199,7 +199,7 @@ TEST(IO, TypeDescriptionDynamic)
       EXPECT_EQ(retrieved_util_info, tinfo_no_desc);
     }
 
-    pub2.SetTopicInformation(tinfo_with_desc);
+    pub2.SetDataTypeInformation(tinfo_with_desc);
 
     {
       eCAL::SDataTypeInformation retrieved_util_info;

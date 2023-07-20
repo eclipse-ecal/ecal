@@ -218,7 +218,7 @@ namespace eCAL
 
  
 
-  bool CDataWriter::SetTopicInformation(const SDataTypeInformation& topic_info_)
+  bool CDataWriter::SetDataTypeInformation(const SDataTypeInformation& topic_info_)
   {
     // Does it even make sense to register if the info is the same???
     const bool force = m_topic_info != topic_info_;

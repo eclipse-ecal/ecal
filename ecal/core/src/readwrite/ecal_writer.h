@@ -53,7 +53,7 @@ namespace eCAL
     bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
     bool Destroy();
 
-    bool SetTopicInformation(const SDataTypeInformation& topic_info_);
+    bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
     bool ClearAttribute(const std::string& attr_name_);
