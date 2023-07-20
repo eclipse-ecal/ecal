@@ -711,7 +711,7 @@ namespace eCAL
     }
   }
 
-  void CDataReader::Connect(const std::string& tid_, const SDataTypeInformation& topic_info_)
+  void CDataReader::Connect(const std::string& tid_, const SDataTypeInformation& data_type_info_)
   {
     SSubEventCallbackData data;
     data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
@@ -729,9 +729,9 @@ namespace eCAL
           data.type  = sub_event_connected;
           data.tid   = tid_;
           // Remove with eCAL6 (next two lines)
-          data.ttype = Util::CombinedTopicEncodingAndType(topic_info_.encoding, topic_info_.name);
-          data.tdesc = topic_info_.descriptor;
-          data.tdatatype = topic_info_;
+          data.ttype = Util::CombinedTopicEncodingAndType(data_type_info_.encoding, data_type_info_.name);
+          data.tdesc = data_type_info_.descriptor;
+          data.tdatatype = data_type_info_;
           (iter->second)(m_topic_name.c_str(), &data);
         }
       }
@@ -743,9 +743,9 @@ namespace eCAL
     {
       data.type  = sub_event_update_connection;
       data.tid   = tid_;
-      data.ttype = Util::CombinedTopicEncodingAndType(topic_info_.encoding, topic_info_.name);
-      data.tdesc = topic_info_.descriptor;
-      data.tdatatype = topic_info_;
+      data.ttype = Util::CombinedTopicEncodingAndType(data_type_info_.encoding, data_type_info_.name);
+      data.tdesc = data_type_info_.descriptor;
+      data.tdatatype = data_type_info_;
       (iter->second)(m_topic_name.c_str(), &data);
     }
   }

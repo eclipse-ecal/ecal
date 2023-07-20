@@ -52,10 +52,10 @@ namespace eCAL
     Create(topic_name_, topic_type_, topic_desc_);
   }
 
-  CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
+  CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_)
     : CPublisher()
   {
-    Create(topic_name_, topic_info_);
+    Create(topic_name_, data_type_info_);
   }
 
   CPublisher::CPublisher(const std::string& topic_name_) 
@@ -114,7 +114,7 @@ namespace eCAL
     return Create(topic_name_, info);
   }
 
-  bool CPublisher::Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
+  bool CPublisher::Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_)
   {
     if (m_created)              return(false);
     if (topic_name_.empty())    return(false);
@@ -148,7 +148,7 @@ namespace eCAL
     m_datawriter->SetLayerMode(TLayer::tlayer_tcp, m_tlayer.sm_tcp);
     m_datawriter->SetLayerMode(TLayer::tlayer_inproc, m_tlayer.sm_inproc);
     // create it
-    if (!m_datawriter->Create(topic_name_, topic_info_))
+    if (!m_datawriter->Create(topic_name_, data_type_info_))
     {
 #ifndef NDEBUG
       // log it
@@ -164,7 +164,7 @@ namespace eCAL
     g_pubgate()->Register(topic_name_, m_datawriter);
 
     // register to description gateway for type / description checking
-    ApplyTopicToDescGate(topic_name_, topic_info_);
+    ApplyTopicToDescGate(topic_name_, data_type_info_);
 
     // we made it :-)
     m_created = true;
@@ -209,14 +209,14 @@ namespace eCAL
     if (m_datawriter == nullptr) return false;
 
     // register to description gateway for type / description checking
-    SDataTypeInformation topic_info = m_datawriter->GetDataTypeInformation();
+    SDataTypeInformation data_type_info = m_datawriter->GetDataTypeInformation();
     // split the topic_type_name
     auto split_type = Util::SplitCombinedTopicType(topic_type_name_);
-    topic_info.encoding = split_type.first;
-    topic_info.name = split_type.second;
-    ApplyTopicToDescGate(m_datawriter->GetTopicName(), topic_info);
+    data_type_info.encoding = split_type.first;
+    data_type_info.name = split_type.second;
+    ApplyTopicToDescGate(m_datawriter->GetTopicName(), data_type_info);
 
-    return m_datawriter->SetDataTypeInformation(topic_info);
+    return m_datawriter->SetDataTypeInformation(data_type_info);
   }
 
   bool CPublisher::SetDescription(const std::string& topic_desc_)
@@ -224,18 +224,18 @@ namespace eCAL
     if(m_datawriter == nullptr) return false;
 
     // register to description gateway for type / description checking
-    SDataTypeInformation topic_info = m_datawriter->GetDataTypeInformation();
-    topic_info.descriptor = topic_desc_;
-    ApplyTopicToDescGate(m_datawriter->GetTopicName(), topic_info);
+    SDataTypeInformation data_type_info = m_datawriter->GetDataTypeInformation();
+    data_type_info.descriptor = topic_desc_;
+    ApplyTopicToDescGate(m_datawriter->GetTopicName(), data_type_info);
 
-    return m_datawriter->SetDataTypeInformation(topic_info);
+    return m_datawriter->SetDataTypeInformation(data_type_info);
   }
 
-  bool CPublisher::SetDataTypeInformation(const SDataTypeInformation& topic_info_)
+  bool CPublisher::SetDataTypeInformation(const SDataTypeInformation& data_type_info_)
   {
     if (m_datawriter == nullptr) return false;
-    ApplyTopicToDescGate(m_datawriter->GetTopicName(), topic_info_);
-    return m_datawriter->SetDataTypeInformation(topic_info_);
+    ApplyTopicToDescGate(m_datawriter->GetTopicName(), data_type_info_);
+    return m_datawriter->SetDataTypeInformation(data_type_info_);
   }
 
   bool CPublisher::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
@@ -450,21 +450,21 @@ namespace eCAL
     m_tlayer = TLayer::STLayer();
   }
 
-  bool CPublisher::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
+  bool CPublisher::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& data_type_info_)
   {
     if (g_descgate() != nullptr)
     {
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_info_.name.empty() || !topic_info_.encoding.empty())
+      if (!data_type_info_.name.empty() || !data_type_info_.encoding.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_info_.descriptor.empty())
+      if (!data_type_info_.descriptor.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PRODUCER;
 
-      return g_descgate()->ApplyTopicDescription(topic_name_, topic_info_, quality);
+      return g_descgate()->ApplyTopicDescription(topic_name_, data_type_info_, quality);
     }
     return false;
   }
