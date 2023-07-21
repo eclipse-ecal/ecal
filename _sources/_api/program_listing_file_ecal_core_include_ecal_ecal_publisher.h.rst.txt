@@ -37,7 +37,7 @@ Program Listing for File ecal_publisher.h
    #include <ecal/ecal_payload_writer.h>
    #include <ecal/ecal_qos.h>
    #include <ecal/ecal_tlayer.h>
-   #include <ecal/types/topic_information.h>
+   #include <ecal/ecal_types.h>
    
    #include <chrono>
    #include <memory>
@@ -56,10 +56,10 @@ Program Listing for File ecal_publisher.h
    
        ECAL_API CPublisher();
    
-       ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CPublisher(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")
+       ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6.")
        ECAL_API CPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
    
-       ECAL_API CPublisher(const std::string& topic_name_, const STopicInformation& topic_info_);
+       ECAL_API CPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
    
        ECAL_API CPublisher(const std::string& topic_name_);
    
@@ -73,26 +73,25 @@ Program Listing for File ecal_publisher.h
    
        ECAL_API CPublisher& operator=(CPublisher&& rhs) noexcept;
    
-       ECAL_DEPRECATE_SINCE_5_13("Please use the create method bool Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")
+       ECAL_DEPRECATE_SINCE_5_13("Please use the create method bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6.")
        ECAL_API bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
    
-       ECAL_API bool Create(const std::string& topic_name_, const STopicInformation& topic_info_);
+       ECAL_API bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
    
        ECAL_API bool Create(const std::string& topic_name_)
        {
-         return Create(topic_name_, STopicInformation());
+         return Create(topic_name_, SDataTypeInformation());
        }
-   
    
        ECAL_API bool Destroy();
    
-       ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetTopicInformation(const STopicInformation& topic_info_) instead. This function will be removed in eCAL6")
+       ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetDataTypeInformation(const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6")
        ECAL_API bool SetTypeName(const std::string& topic_type_name_);
    
-       ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetTopicInformation(const STopicInformation& topic_info_) instead. This function will be removed in eCAL6")
+       ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetDataTypeInformation(const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6")
        ECAL_API bool SetDescription(const std::string& topic_desc_);
    
-       ECAL_API bool SetTopicInformation(const STopicInformation& topic_info_);
+       ECAL_API bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
    
        ECAL_API bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
    
@@ -161,20 +160,20 @@ Program Listing for File ecal_publisher.h
    
        ECAL_API std::string GetTopicName() const;
    
-       ECAL_DEPRECATE_SINCE_5_13("Please use the method STopicInformation GetTopicInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")
+       ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")
        ECAL_API std::string GetTypeName() const;
    
-       ECAL_DEPRECATE_SINCE_5_13("Please use the method STopicInformation GetTopicInformation() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")
+       ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")
        ECAL_API std::string GetDescription() const;
    
-       ECAL_API STopicInformation GetTopicInformation() const;
+       ECAL_API SDataTypeInformation GetDataTypeInformation() const;
    
        ECAL_API std::string Dump(const std::string& indent_ = "") const;
    
      protected:
        void InitializeQOS();
        void InitializeTLayer();
-       bool ApplyTopicToDescGate(const std::string& topic_name_, const STopicInformation& topic_info_);
+       bool ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
    
        // class members
        std::shared_ptr<CDataWriter>     m_datawriter;

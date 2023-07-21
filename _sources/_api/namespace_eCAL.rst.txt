@@ -50,6 +50,8 @@ Classes
 
 - :ref:`exhale_struct_structeCAL_1_1SClientEventCallbackData`
 
+- :ref:`exhale_struct_structeCAL_1_1SDataTypeInformation`
+
 - :ref:`exhale_struct_structeCAL_1_1SEventHandle`
 
 - :ref:`exhale_struct_structeCAL_1_1SPubEventCallbackData`
@@ -60,9 +62,13 @@ Classes
 
 - :ref:`exhale_struct_structeCAL_1_1SServiceAttr`
 
+- :ref:`exhale_struct_structeCAL_1_1SServiceMethodInformation`
+
 - :ref:`exhale_struct_structeCAL_1_1SServiceResponse`
 
 - :ref:`exhale_struct_structeCAL_1_1SSubEventCallbackData`
+
+- :ref:`exhale_struct_structeCAL_1_1STopicInformation`
 
 - :ref:`exhale_class_classeCAL_1_1CBufferPayloadWriter`
 

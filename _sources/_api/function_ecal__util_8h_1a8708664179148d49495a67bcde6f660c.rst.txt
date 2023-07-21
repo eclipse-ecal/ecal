@@ -1,4 +1,4 @@
-.. _exhale_function_ecal__util_8h_1abab3d3883a214f45139e479bbddf63fd:
+.. _exhale_function_ecal__util_8h_1a8708664179148d49495a67bcde6f660c:
 
 Function eCAL::Util::GetTopics
 ==============================
@@ -10,5 +10,5 @@ Function Documentation
 ----------------------
 
 
-.. doxygenfunction:: eCAL::Util::GetTopics(std::unordered_map<std::string, STopicInformation>&)
+.. doxygenfunction:: eCAL::Util::GetTopics(std::unordered_map<std::string, SDataTypeInformation>&)
    :project: eCAL
