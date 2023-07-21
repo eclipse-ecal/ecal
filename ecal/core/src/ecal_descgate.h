@@ -75,8 +75,8 @@ namespace eCAL
 
     bool ApplyServiceDescription(const std::string& service_name_, 
                                  const std::string& method_name_, 
-                                 const SDataTypeInformation& reqest_type_description_,
-                                 const SDataTypeInformation& response_type_description_,
+                                 const SDataTypeInformation& request_type_information_,
+                                 const SDataTypeInformation& response_type_information_,
                                  const QualityFlags description_quality_);
 
     void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_);

@@ -64,8 +64,8 @@ namespace eCAL
 
     bool ApplyServiceToDescGate(const std::string& service_name_
       , const std::string& method_name_
-      , const SDataTypeInformation& reqest_type_description_
-      , const SDataTypeInformation& response_type_description_);
+      , const SDataTypeInformation& request_type_information_
+      , const SDataTypeInformation& response_type_information_);
 
   protected:
     static std::atomic<bool>    m_created;

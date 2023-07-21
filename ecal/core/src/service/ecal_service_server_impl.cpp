@@ -110,7 +110,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CServiceServerImpl::AddDescription(const std::string& method_, const SDataTypeInformation& reqest_type_description_, const SDataTypeInformation& response_type_description_)
+  bool CServiceServerImpl::AddDescription(const std::string& method_, const SDataTypeInformation& request_type_information_, const SDataTypeInformation& response_type_information_)
   {
     {
       std::lock_guard<std::mutex> const lock(m_method_map_sync);
@@ -118,25 +118,25 @@ namespace eCAL
       if (iter != m_method_map.end())
       {
         iter->second.method_pb.set_mname(method_);
-        iter->second.method_pb.set_req_type(reqest_type_description_.name);
-        iter->second.method_pb.set_req_desc(reqest_type_description_.descriptor);
-        iter->second.method_pb.set_resp_type(response_type_description_.name);
-        iter->second.method_pb.set_resp_desc(response_type_description_.descriptor);
+        iter->second.method_pb.set_req_type(request_type_information_.name);
+        iter->second.method_pb.set_req_desc(request_type_information_.descriptor);
+        iter->second.method_pb.set_resp_type(response_type_information_.name);
+        iter->second.method_pb.set_resp_desc(response_type_information_.descriptor);
       }
       else
       {
         SMethod method;
         method.method_pb.set_mname(method_);
-        method.method_pb.set_req_type(reqest_type_description_.name);
-        method.method_pb.set_req_desc(reqest_type_description_.descriptor);
-        method.method_pb.set_resp_type(response_type_description_.name);
-        method.method_pb.set_resp_desc(response_type_description_.descriptor);
+        method.method_pb.set_req_type(request_type_information_.name);
+        method.method_pb.set_req_desc(request_type_information_.descriptor);
+        method.method_pb.set_resp_type(response_type_information_.name);
+        method.method_pb.set_resp_desc(response_type_information_.descriptor);
         m_method_map[method_] = method;
       }
     }
 
     // update descgate infos
-    return ApplyServiceToDescGate(method_, reqest_type_description_, response_type_description_);
+    return ApplyServiceToDescGate(method_, request_type_information_, response_type_information_);
   }
 
   // add callback function for server method calls
@@ -171,14 +171,14 @@ namespace eCAL
       }
     }
 
-    SDataTypeInformation request_datatype_description;
-    request_datatype_description.name = req_type_;
-    request_datatype_description.descriptor = req_desc;
-    SDataTypeInformation response_datatype_description;
-    response_datatype_description.name = resp_type_;
-    response_datatype_description.descriptor = resp_desc;
+    SDataTypeInformation request_datatype_information;
+    request_datatype_information.name = req_type_;
+    request_datatype_information.descriptor = req_desc;
+    SDataTypeInformation response_datatype_information;
+    response_datatype_information.name = resp_type_;
+    response_datatype_information.descriptor = resp_desc;
     // update descgate infos
-    ApplyServiceToDescGate(method_, request_datatype_description, response_datatype_description);
+    ApplyServiceToDescGate(method_, request_datatype_information, response_datatype_information);
 
     return true;
   }
@@ -422,20 +422,20 @@ namespace eCAL
   }
 
   bool CServiceServerImpl::ApplyServiceToDescGate(const std::string& method_name_
-    , const SDataTypeInformation& reqest_type_description_
-    , const SDataTypeInformation& response_type_description_)
+    , const SDataTypeInformation& request_type_information_
+    , const SDataTypeInformation& response_type_information_)
   {
     if (g_descgate() != nullptr)
     {
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!(reqest_type_description_.name.empty() && response_type_description_.name.empty()))
+      if (!(request_type_information_.name.empty() && response_type_information_.name.empty()))
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!(reqest_type_description_.descriptor.empty() && response_type_description_.descriptor.empty()))
+      if (!(request_type_information_.descriptor.empty() && response_type_information_.descriptor.empty()))
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
 
-      return g_descgate()->ApplyServiceDescription(m_service_name, method_name_, reqest_type_description_, response_type_description_, quality);
+      return g_descgate()->ApplyServiceDescription(m_service_name, method_name_, request_type_information_, response_type_information_, quality);
     }
     return false;
   }

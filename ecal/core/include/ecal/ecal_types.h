@@ -33,9 +33,9 @@ namespace eCAL
     **/
     struct SDataTypeInformation
     {
-      std::string name;
-      std::string encoding;
-      std::string descriptor;
+      std::string name;          //!< name of the datatype
+      std::string encoding;      //!< encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
+      std::string descriptor;    //!< descriptor information of the datatype (necessary for reflection)
 
       bool operator==(const SDataTypeInformation& other) const
       {

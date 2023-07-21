@@ -56,7 +56,7 @@ namespace eCAL
 
     bool Destroy();
 
-    bool AddDescription(const std::string& method_, const SDataTypeInformation& reqest_type_description_, const SDataTypeInformation& response_type_description_);
+    bool AddDescription(const std::string& method_, const SDataTypeInformation& request_type_information_, const SDataTypeInformation& response_type_information_);
       
     // add and remove callback function for server method calls
     bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
@@ -96,8 +96,8 @@ namespace eCAL
     void EventCallback(eCAL_Server_Event event_, const std::string& message_);
 
     bool ApplyServiceToDescGate(const std::string& method_name_
-      , const SDataTypeInformation& reqest_type_description_
-      , const SDataTypeInformation& response_type_description_);
+      , const SDataTypeInformation& request_type_information_
+      , const SDataTypeInformation& response_type_information_);
 
     CTcpServer            m_tcp_server;
 

@@ -229,8 +229,8 @@ namespace eCAL
   
   bool CDescGate::ApplyServiceDescription(const std::string& service_name_
                                         , const std::string& method_name_
-                                        , const SDataTypeInformation& reqest_type_description_
-                                        , const SDataTypeInformation& response_type_description_
+                                        , const SDataTypeInformation& request_type_information_
+                                        , const SDataTypeInformation& response_type_information_
                                         , const QualityFlags description_quality_)
   {
     std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
@@ -243,8 +243,8 @@ namespace eCAL
     {
       // create a new service entry
       SServiceMethodInfoQuality& service_info = (*m_service_info_map.map)[service_method_tuple];
-      service_info.info.request_type   = reqest_type_description_;
-      service_info.info.response_type  = response_type_description_;
+      service_info.info.request_type   = request_type_information_;
+      service_info.info.response_type  = response_type_information_;
       service_info.quality             = description_quality_;
       return true;
     }
@@ -255,8 +255,8 @@ namespace eCAL
     SServiceMethodInfoQuality service_info = (*service_info_map_it).second;
     if (description_quality_ > service_info.quality)
     {
-      service_info.info.request_type   =  reqest_type_description_;
-      service_info.info.response_type  = response_type_description_;
+      service_info.info.request_type   =  request_type_information_;
+      service_info.info.response_type  = response_type_information_;
       service_info.quality             = description_quality_;
       ret_value = true;
     }

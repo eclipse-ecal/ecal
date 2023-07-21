@@ -116,13 +116,13 @@ namespace eCAL
   bool CServiceServer::AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_)
   {
     if (!m_created) return false;
-    SDataTypeInformation reqest_type_description_;
-    reqest_type_description_.name = req_type_;
-    reqest_type_description_.descriptor = req_desc_;
-    SDataTypeInformation response_type_description_;
-    reqest_type_description_.name = resp_type_;
-    reqest_type_description_.descriptor = resp_desc_;
-    return m_service_server_impl->AddDescription(method_, reqest_type_description_, response_type_description_);
+    SDataTypeInformation request_type_information;
+    request_type_information.name = req_type_;
+    request_type_information.descriptor = req_desc_;
+    SDataTypeInformation response_type_information;
+    response_type_information.name = resp_type_;
+    response_type_information.descriptor = resp_desc_;
+    return m_service_server_impl->AddDescription(method_, request_type_information, response_type_information);
   }
 
   /**
