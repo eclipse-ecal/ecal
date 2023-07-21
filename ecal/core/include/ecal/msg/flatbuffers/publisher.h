@@ -52,7 +52,7 @@ namespace eCAL
        *
        * @param topic_name_  Unique topic name.
       **/
-      CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, GetTopicInformation())
+      CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation())
       {
       }
 
@@ -85,7 +85,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(CMsgPublisher<T>::Create(topic_name_, GetTopicInformation()));
+        return(CMsgPublisher<T>::Create(topic_name_, GetDataTypeInformation()));
       }
 
     private:
@@ -94,9 +94,9 @@ namespace eCAL
       *
       * @return  Topic information.
       **/
-      STopicInformation GetTopicInformation() const override
+      SDataTypeInformation GetDataTypeInformation() const override
       {
-        STopicInformation topic_info;
+        SDataTypeInformation topic_info;
         topic_info.encoding = "flatb";
         // empty type, empty descriptor
         return topic_info;

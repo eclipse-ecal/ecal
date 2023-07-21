@@ -60,7 +60,7 @@ namespace eCAL
 
     void RefreshRegistrations();
 
-    bool ApplyTopicToDescGate(const std::string& topic_name_, const STopicInformation& topic_info_);
+    bool ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
 
   protected:
     static std::atomic<bool>  m_created;

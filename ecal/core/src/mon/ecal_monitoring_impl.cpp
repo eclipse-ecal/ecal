@@ -279,9 +279,9 @@ namespace eCAL
       default:
         break;
         }
-      std::string topic_info_encoding   = sample_topic.tinfo().encoding();
-      std::string topic_info_type       = sample_topic.tinfo().type();
-      std::string topic_info_descriptor = sample_topic.tinfo().desc();
+      std::string topic_datatype_encoding   = sample_topic.tdatatype().encoding();
+      std::string topic_datatype_name       = sample_topic.tdatatype().name();
+      std::string topic_datatype_descriptor = sample_topic.tdatatype().desc();
       auto attr              = sample_topic.attr();
 
       // try to get topic info
@@ -301,9 +301,10 @@ namespace eCAL
 
       // update flexible content
       TopicInfo.rclock++;
-      TopicInfo.tinfo.encoding     = std::move(topic_info_encoding);
-      TopicInfo.tinfo.type         = std::move(topic_info_type);
-      TopicInfo.tinfo.descriptor   = std::move(topic_info_descriptor);
+      TopicInfo.tdatatype.encoding    = std::move(topic_datatype_encoding);
+      TopicInfo.tdatatype.name        = std::move(topic_datatype_name);
+      TopicInfo.tdatatype.descriptor  = std::move(topic_datatype_descriptor);
+
       TopicInfo.attr               = std::map<std::string, std::string>{attr.begin(), attr.end()};
       TopicInfo.tlayer_ecal_udp_mc = topic_tlayer_ecal_udp_mc;
       TopicInfo.tlayer_ecal_shm    = topic_tlayer_ecal_shm;
@@ -930,7 +931,7 @@ namespace eCAL
 
       // remove with eCAL6
       // topic type
-      pMonTopic->set_ttype(eCAL::Util::CombinedTopicEncodingAndType(topic.second.tinfo.encoding, topic.second.tinfo.type));
+      pMonTopic->set_ttype(eCAL::Util::CombinedTopicEncodingAndType(topic.second.tdatatype.encoding, topic.second.tdatatype.name));
 
       // topic transport layers
       if (topic.second.tlayer_ecal_udp_mc)
@@ -960,14 +961,14 @@ namespace eCAL
 
       // remove with eCAL6
       // topic description
-      pMonTopic->set_tdesc(topic.second.tinfo.descriptor);
+      pMonTopic->set_tdesc(topic.second.tdatatype.descriptor);
 
       // topic information
       {
-        auto *tinfo = pMonTopic->mutable_tinfo();
-        tinfo->set_encoding(topic.second.tinfo.encoding);
-        tinfo->set_type(topic.second.tinfo.type);
-        tinfo->set_desc(topic.second.tinfo.descriptor);
+        auto *tdatatype = pMonTopic->mutable_tdatatype();
+        tdatatype->set_encoding(topic.second.tdatatype.encoding);
+        tdatatype->set_name(topic.second.tdatatype.name);
+        tdatatype->set_desc(topic.second.tdatatype.descriptor);
       }
 
       // topic attributes

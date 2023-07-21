@@ -26,7 +26,7 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_monitoring_entity.h>
+#include <ecal/types/monitoring.h>
 #include <string>
 
 namespace eCAL
@@ -78,6 +78,17 @@ namespace eCAL
      * @return Zero if succeeded.
     **/
     ECAL_API int GetMonitoring(std::string& mon_, unsigned int entities_);
+    
+    /**
+     * @brief Get monitoring as a struct.
+     *
+     * @param [out] mon_       Target struct to store monitoring information.
+     * @param       entities_  Entities definition.
+     *
+     * @return Number of struct elements if succeeded.
+    **/
+    ECAL_API int GetMonitoring(eCAL::Monitoring::SMonitoring& mon_, unsigned int entities_ = Entity::All);
+    
 
     /**
      * @brief Get logging as serialized protobuf string. 

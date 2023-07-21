@@ -78,7 +78,7 @@ namespace eCAL
     Destroy();
   }
 
-  bool CDataReader::Create(const std::string& topic_name_, const STopicInformation& topic_info_)
+  bool CDataReader::Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
   {
     if(m_created) return(false);
 
@@ -226,18 +226,18 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
     // topic_information
     // Remove eCAL6!!
-    if (m_use_ttype) ecal_reg_sample_mutable_topic->set_ttype(Util::CombinedTopicEncodingAndType(m_topic_info.encoding, m_topic_info.type));
+    if (m_use_ttype) ecal_reg_sample_mutable_topic->set_ttype(Util::CombinedTopicEncodingAndType(m_topic_info.encoding, m_topic_info.name));
     if (m_use_tdesc) ecal_reg_sample_mutable_topic->set_tdesc(m_topic_info.descriptor);
     {
-      auto* ecal_reg_sample_mutable_tinfo = ecal_reg_sample_mutable_topic->mutable_tinfo();
+      auto* ecal_reg_sample_mutable_tdatatype = ecal_reg_sample_mutable_topic->mutable_tdatatype();
       if (m_use_ttype)
       {
-        ecal_reg_sample_mutable_tinfo->set_encoding(m_topic_info.encoding);
-        ecal_reg_sample_mutable_tinfo->set_type(m_topic_info.type);
+        ecal_reg_sample_mutable_tdatatype->set_encoding(m_topic_info.encoding);
+        ecal_reg_sample_mutable_tdatatype->set_name(m_topic_info.name);
       }
       if (m_use_tdesc)
       {
-        ecal_reg_sample_mutable_tinfo->set_desc(m_topic_info.descriptor);
+        ecal_reg_sample_mutable_tdatatype->set_desc(m_topic_info.descriptor);
       }
     }
     *ecal_reg_sample_mutable_topic->mutable_attr() = google::protobuf::Map<std::string, std::string> { m_attr.begin(), m_attr.end() };
@@ -612,7 +612,7 @@ namespace eCAL
     m_id_set = id_set_;
   }
 
-  void CDataReader::ApplyLocPublication(const std::string& process_id_, const std::string& tid_, const STopicInformation& tinfo_)
+  void CDataReader::ApplyLocPublication(const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_)
   {
     Connect(tid_, tinfo_);
 
@@ -636,7 +636,7 @@ namespace eCAL
     }
   }
 
-  void CDataReader::ApplyExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const STopicInformation& tinfo_)
+  void CDataReader::ApplyExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_)
   {
     Connect(tid_, tinfo_);
 
@@ -714,7 +714,7 @@ namespace eCAL
     }
   }
 
-  void CDataReader::Connect(const std::string& tid_, const STopicInformation& topic_info_)
+  void CDataReader::Connect(const std::string& tid_, const SDataTypeInformation& data_type_info_)
   {
     SSubEventCallbackData data;
     data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
@@ -732,9 +732,9 @@ namespace eCAL
           data.type  = sub_event_connected;
           data.tid   = tid_;
           // Remove with eCAL6 (next two lines)
-          data.ttype = Util::CombinedTopicEncodingAndType(topic_info_.encoding, topic_info_.type);
-          data.tdesc = topic_info_.descriptor;
-          data.tinfo = topic_info_;
+          data.ttype = Util::CombinedTopicEncodingAndType(data_type_info_.encoding, data_type_info_.name);
+          data.tdesc = data_type_info_.descriptor;
+          data.tdatatype = data_type_info_;
           (iter->second)(m_topic_name.c_str(), &data);
         }
       }
@@ -746,9 +746,9 @@ namespace eCAL
     {
       data.type  = sub_event_update_connection;
       data.tid   = tid_;
-      data.ttype = Util::CombinedTopicEncodingAndType(topic_info_.encoding, topic_info_.type);
-      data.tdesc = topic_info_.descriptor;
-      data.tinfo = topic_info_;
+      data.ttype = Util::CombinedTopicEncodingAndType(data_type_info_.encoding, data_type_info_.name);
+      data.tdesc = data_type_info_.descriptor;
+      data.tdatatype = data_type_info_;
       (iter->second)(m_topic_name.c_str(), &data);
     }
   }
@@ -980,24 +980,24 @@ namespace eCAL
     std::stringstream out;
 
     out << std::endl;
-    out << indent_ << "--------------------------------"                     << std::endl;
-    out << indent_ << " class CDataReader "                                  << std::endl;
-    out << indent_ << "--------------------------------"                     << std::endl;
-    out << indent_ << "m_host_name:             " << m_host_name             << std::endl;
-    out << indent_ << "m_host_group_name:       " << m_host_group_name       << std::endl;
-    out << indent_ << "m_host_id:               " << m_host_id               << std::endl;
-    out << indent_ << "m_topic_name:            " << m_topic_name            << std::endl;
-    out << indent_ << "m_topic_id:              " << m_topic_id              << std::endl;
-    out << indent_ << "m_topic_info.encoding:   " << m_topic_info.encoding   << std::endl;
-    out << indent_ << "m_topic_info.type:       " << m_topic_info.type       << std::endl;
-    out << indent_ << "m_topic_info.descriptor: " << m_topic_info.descriptor << std::endl;
-    out << indent_ << "m_topic_size:            " << m_topic_size            << std::endl;
-    out << indent_ << "m_read_buf.size():       " << m_read_buf.size()       << std::endl;
-    out << indent_ << "m_read_time:             " << m_read_time             << std::endl;
-    out << indent_ << "m_clock:                 " << m_clock                 << std::endl;
-    out << indent_ << "m_rec_time:              " << std::chrono::duration_cast<std::chrono::milliseconds>(m_rec_time.time_since_epoch()).count() << std::endl;
-    out << indent_ << "m_freq:                  " << m_freq                  << std::endl;
-    out << indent_ << "m_created:               " << m_created               << std::endl;
+    out << indent_ << "------------------------------------"                                       << std::endl;
+    out << indent_ << " class CDataReader "                                                        << std::endl;
+    out << indent_ << "------------------------------------"                                       << std::endl;
+    out << indent_ << "m_host_name:                        " << m_host_name                        << std::endl;
+    out << indent_ << "m_host_group_name:                  " << m_host_group_name                  << std::endl;
+    out << indent_ << "m_host_id:                          " << m_host_id                          << std::endl;
+    out << indent_ << "m_topic_name:                       " << m_topic_name                       << std::endl;
+    out << indent_ << "m_topic_id:                         " << m_topic_id                         << std::endl;
+    out << indent_ << "m_topic_info.encoding:              " << m_topic_info.encoding              << std::endl;
+    out << indent_ << "m_topic_info.name:                  " << m_topic_info.name                  << std::endl;
+    out << indent_ << "m_topic_info.descriptor:            " << m_topic_info.descriptor            << std::endl;
+    out << indent_ << "m_topic_size:                       " << m_topic_size                       << std::endl;
+    out << indent_ << "m_read_buf.size():                  " << m_read_buf.size()                  << std::endl;
+    out << indent_ << "m_read_time:                        " << m_read_time                        << std::endl;
+    out << indent_ << "m_clock:                            " << m_clock                            << std::endl;
+    out << indent_ << "m_rec_time:                         " << std::chrono::duration_cast<std::chrono::milliseconds>(m_rec_time.time_since_epoch()).count() << std::endl;
+    out << indent_ << "m_freq:                             " << m_freq                             << std::endl;
+    out << indent_ << "m_created:                          " << m_created                          << std::endl;
     out << std::endl;
 
     return(out.str());

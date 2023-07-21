@@ -101,7 +101,7 @@ namespace eCAL
       * @param topic_name_  Unique topic name.
       **/
       CPublisher(const std::string& topic_name_)
-        : eCAL::CPublisher(topic_name_, GetTopicInformation())
+        : eCAL::CPublisher(topic_name_, GetDataTypeInformation())
         , builder(std::make_unique<capnp::MallocMessageBuilder>())
         , root_builder(builder->initRoot<message_type>())
       {
@@ -150,7 +150,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(eCAL::CPublisher::Create(topic_name_, GetTopicInformation()));
+        return(eCAL::CPublisher::Create(topic_name_, GetDataTypeInformation()));
       }
 
       typename message_type::Builder GetBuilder()
@@ -170,11 +170,11 @@ namespace eCAL
        *
        * @return  Topic information.
       **/
-      STopicInformation GetTopicInformation() const
+      SDataTypeInformation GetDataTypeInformation() const
       {
-        STopicInformation topic_info;
+        SDataTypeInformation topic_info;
         topic_info.encoding   = eCAL::capnproto::EncodingAsString();
-        topic_info.type       = eCAL::capnproto::TypeAsString<message_type>();
+        topic_info.name       = eCAL::capnproto::TypeAsString<message_type>();
         topic_info.descriptor = eCAL::capnproto::SchemaAsString<message_type>();
         return topic_info;
       }
