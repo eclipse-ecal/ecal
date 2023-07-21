@@ -31,18 +31,18 @@ TEST(IO, GetTopics)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_gettopics");
 
-  std::unordered_map<std::string, eCAL::STopicInformation> topic_info_map;
+  std::unordered_map<std::string, eCAL::SDataTypeInformation> topic_info_map;
 
   // create and check a few pub/sub entities
   {
-    eCAL::STopicInformation info_A1  { "", "typeA1"  , "descA1"   };
-    eCAL::STopicInformation info_A1_2{ "", "typeA1.2", "descA1.2" };
-    eCAL::STopicInformation info_A2  { "", "typeA2"  , "descA2"   };
-    eCAL::STopicInformation info_A3  { "", "typeA3"  , "descA3"   };
+    eCAL::SDataTypeInformation info_A1  { "typeA1"  ,"",  "descA1"   };
+    eCAL::SDataTypeInformation info_A1_2{ "typeA1.2","",  "descA1.2" };
+    eCAL::SDataTypeInformation info_A2  { "typeA2"  ,"",  "descA2"   };
+    eCAL::SDataTypeInformation info_A3  { "typeA3"  ,"",  "descA3"   };
 
-    eCAL::STopicInformation info_B1  { "", "typeB1"  , "descB1"   };
-    eCAL::STopicInformation info_B1_2{ "", "typeB1.2", "descB1.2" };
-    eCAL::STopicInformation info_B2  { "", "typeB2"  , "descB2"   };
+    eCAL::SDataTypeInformation info_B1  { "typeB1"  ,"",  "descB1"   };
+    eCAL::SDataTypeInformation info_B1_2{ "typeB1.2","",  "descB1.2" };
+    eCAL::SDataTypeInformation info_B2  { "typeB2"  ,"",  "descB2"   };
 
     // create 3 publisher
     eCAL::CPublisher pub1("A1", info_A1);
@@ -70,9 +70,9 @@ TEST(IO, GetTopics)
     // check types and descriptions
     for (auto& topic_info : topic_info_map)
     {
-      eCAL::STopicInformation utils_topic_info;
-      eCAL::Util::GetTopicInformation(topic_info.first, utils_topic_info);
-      eCAL::STopicInformation expected_topic_info{ "", "type" + topic_info.first, "desc" + topic_info.first };
+      eCAL::SDataTypeInformation utils_topic_info;
+      eCAL::Util::GetTopicDataTypeInformation(topic_info.first, utils_topic_info);
+      eCAL::SDataTypeInformation expected_topic_info{ "type" + topic_info.first, "", "desc" + topic_info.first };
       EXPECT_EQ(utils_topic_info, expected_topic_info);
     }
 
@@ -93,13 +93,13 @@ TEST(IO, GetTopics)
 
     // pub1 and sub1 still exists
     {
-      eCAL::STopicInformation utils_topic_info;
-      eCAL::Util::GetTopicInformation("A1", utils_topic_info);
+      eCAL::SDataTypeInformation utils_topic_info;
+      eCAL::Util::GetTopicDataTypeInformation("A1", utils_topic_info);
       EXPECT_EQ(utils_topic_info, info_A1);
     }
     {
-      eCAL::STopicInformation utils_topic_info;
-      eCAL::Util::GetTopicInformation("B1", utils_topic_info);
+      eCAL::SDataTypeInformation utils_topic_info;
+      eCAL::Util::GetTopicDataTypeInformation("B1", utils_topic_info);
       EXPECT_EQ(utils_topic_info, info_B1);
     }
 
@@ -114,13 +114,13 @@ TEST(IO, GetTopics)
 
     // check overwritten attributes
     {
-      eCAL::STopicInformation utils_topic_info;
-      eCAL::Util::GetTopicInformation("A1", utils_topic_info);
+      eCAL::SDataTypeInformation utils_topic_info;
+      eCAL::Util::GetTopicDataTypeInformation("A1", utils_topic_info);
       EXPECT_EQ(utils_topic_info, info_A1_2);
     }
     {
-      eCAL::STopicInformation utils_topic_info;
-      eCAL::Util::GetTopicInformation("B1", utils_topic_info);
+      eCAL::SDataTypeInformation utils_topic_info;
+      eCAL::Util::GetTopicDataTypeInformation("B1", utils_topic_info);
       EXPECT_EQ(utils_topic_info, info_B1_2);
     }
   }

@@ -23,8 +23,7 @@
 
 #pragma once
 
-#include <ecal/ecal_monitoring_entity.h>
-#include <ecal/ecal_monitoring_struct.h>
+#include <ecal/types/monitoring.h>
 
 #include "ecal_monitoring_threads.h"
 #include "ecal_expmap.h"

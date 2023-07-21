@@ -46,14 +46,14 @@ namespace eCAL
     Create(topic_name_, topic_type_, topic_desc_);
   }
 
-  CSubscriber::CSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_)
+  CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
     : CSubscriber()
   {
     Create(topic_name_, topic_info_);
   }
 
   CSubscriber::CSubscriber(const std::string& topic_name_)
-    : CSubscriber(topic_name_, STopicInformation{})
+    : CSubscriber(topic_name_, SDataTypeInformation{})
   {}
 
   CSubscriber::~CSubscriber()
@@ -90,15 +90,15 @@ namespace eCAL
 
   bool CSubscriber::Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ /* = "" */)
   {
-    STopicInformation info;
+    SDataTypeInformation info;
     auto split_type = Util::SplitCombinedTopicType(topic_type_);
     info.encoding = split_type.first;
-    info.type = split_type.second;
+    info.name = split_type.second;
     info.descriptor = topic_desc_;
     return Create(topic_name_, info);
   }
 
-  bool CSubscriber::Create(const std::string& topic_name_, const STopicInformation& topic_info_)
+  bool CSubscriber::Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
   {
     if (m_created)              return(false);
     if (g_globals() == nullptr) return(false);
@@ -263,20 +263,20 @@ namespace eCAL
   std::string CSubscriber::GetTypeName() const
   {
     if(m_datareader == nullptr) return("");
-    STopicInformation info = m_datareader->GetTopicInformation();
-    return(Util::CombinedTopicEncodingAndType(info.encoding, info.type));
+    SDataTypeInformation info = m_datareader->GetDataTypeInformation();
+    return(Util::CombinedTopicEncodingAndType(info.encoding, info.name));
   }
 
   std::string CSubscriber::GetDescription() const
   {
     if(m_datareader == nullptr) return("");
-    return(m_datareader->GetTopicInformation().descriptor);
+    return(m_datareader->GetDataTypeInformation().descriptor);
   }
   
-  STopicInformation CSubscriber::GetTopicInformation() const
+  SDataTypeInformation CSubscriber::GetDataTypeInformation() const
   {
-    if (m_datareader == nullptr) return(STopicInformation{});
-    return(m_datareader->GetTopicInformation());
+    if (m_datareader == nullptr) return(SDataTypeInformation{});
+    return(m_datareader->GetDataTypeInformation());
   }
 
   bool CSubscriber::SetTimeout(int timeout_)
@@ -291,13 +291,13 @@ namespace eCAL
     m_qos.reliability = QOS::best_effort_reliability_qos;
   }
 
-  bool CSubscriber::ApplyTopicToDescGate(const std::string& topic_name_, const STopicInformation& topic_info_)
+  bool CSubscriber::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
   {
     if (g_descgate() != nullptr)
     {
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_info_.type.empty() || !topic_info_.encoding.empty())
+      if (!topic_info_.name.empty() || !topic_info_.encoding.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
       if (!topic_info_.descriptor.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;

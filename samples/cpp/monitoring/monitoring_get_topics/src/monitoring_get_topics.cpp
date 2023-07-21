@@ -37,7 +37,7 @@ int main(int argc, char **argv)
   {
     // GetTopics
     {
-      std::unordered_map<std::string, eCAL::STopicInformation> topic_info_map;
+      std::unordered_map<std::string, eCAL::SDataTypeInformation> topic_info_map;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)

@@ -84,7 +84,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       // When the monitor didn't tell us the topic encoding, we ask eCAL::Util instead
       // Why this logic only for type, not descriptor? (and thus encoding?)
-      const std::string monitor_topic_encoding = topic_.tinfo().encoding();
+      const std::string monitor_topic_encoding = topic_.tdatatype().encoding();
       if (!monitor_topic_encoding.empty())
       {
         return monitor_topic_encoding.c_str();
@@ -94,8 +94,8 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         const std::string monitor_topic_name = topic_.tname();
         if (!monitor_topic_name.empty())
         {
-          eCAL::STopicInformation topic_info;
-          eCAL::Util::GetTopicInformation(monitor_topic_name, topic_info);
+          eCAL::SDataTypeInformation topic_info;
+          eCAL::Util::GetTopicDataTypeInformation(monitor_topic_name, topic_info);
           return topic_info.encoding.c_str();
         }
       }
@@ -104,7 +104,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       // When the monitor didn't tell us the topic type, we ask eCAL::Util instead
       // Why this logic only for type, not descriptor? (and thus encoding?)
-      const std::string monitor_topic_type = topic_.tinfo().type();
+      const std::string monitor_topic_type = topic_.tdatatype().name();
       if (!monitor_topic_type.empty())
       {
         return monitor_topic_type.c_str();
@@ -114,15 +114,15 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         const std::string monitor_topic_name = topic_.tname();
         if (!monitor_topic_name.empty())
         {
-          eCAL::STopicInformation topic_info;
-          eCAL::Util::GetTopicInformation(monitor_topic_name, topic_info);
-          return topic_info.type.c_str();
+          eCAL::SDataTypeInformation topic_info;
+          eCAL::Util::GetTopicDataTypeInformation(monitor_topic_name, topic_info);
+          return topic_info.name.c_str();
         }
       }
     }
     else if (column == Columns::TDESC)
     {
-      return topic_.tinfo().desc().c_str();
+      return topic_.tdatatype().desc().c_str();
     }
     else if (column == Columns::TQOS)
     {
