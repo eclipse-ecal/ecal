@@ -74,6 +74,17 @@ You can activate TCP in the following ways:
       While this may be fine for testing, you may run into side effects that you didn't expect, mostly from the fact that each additional subscriber will cause more network usage.
       Transmitting small messages is way more efficient using UDP Multicast.
 
+#. **Test TCP communication**
+    The sample we are going to use to try out the "TCP" eCAL communication is `ecal_sample_person_snd_tcp`. Start it!
+    
+    * |fa-windows| On Windows start |person_snd_tcp-path-windows|
+    * |fa-ubuntu| On Ubuntu call :file:`ecal_sample_person_snd_tcp` from a terminal (it should be in your PATH)
+    
+    You now have a console-based application that periodically prints some text to the terminal. In the background the application created a topic `person` and sends data to it. So, let's add a subscriber that receives the data!
+    
+    * |fa-windows| On Windows start :file:|person_rec-path-windows|
+    * |fa-ubuntu| On Ubuntu call :file:`ecal_sample_person_rec` from a terminal
+
 #. **Use TCP selectively from your code for a single publisher:**
    
    Usually, you can somewhat estimate the size of your messages when writing your publisher code.
@@ -95,4 +106,4 @@ You can activate TCP in the following ways:
 
       Also see the ``person_snd_tcp`` sample:
 
-      https://github.com/eclipse-ecal/ecal/tree/master/samples/cpp/person/person_snd_tcp
+      https://github.com/eclipse-ecal/ecal/tree/master/samples/cpp/pubsub/protobuf/person_snd_tcp
