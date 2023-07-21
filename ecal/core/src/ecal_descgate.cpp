@@ -46,7 +46,7 @@ namespace eCAL
   {
   }
 
-  bool CDescGate::ApplyTopicDescription(const std::string& topic_name_, const STopicInformation& topic_info_, const QualityFlags description_quality_)
+  bool CDescGate::ApplyTopicDescription(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const QualityFlags description_quality_)
   {
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     m_topic_info_map.map->remove_deprecated();
@@ -134,13 +134,13 @@ namespace eCAL
 
     // topic type name differs
     // we log the error and update the entry one time
-    if (!topic_info_.type.empty()
-      && !topic_info.info.type.empty()
-      && (topic_info.info.type != topic_info_.type)
+    if (!topic_info_.name.empty()
+      && !topic_info.info.name.empty()
+      && (topic_info.info.name != topic_info_.name)
       )
     {
-      std::string ttype1 = topic_info.info.type;
-      std::string ttype2 = topic_info_.type;
+      std::string ttype1 = topic_info.info.name;
+      std::string ttype2 = topic_info_.name;
       std::replace(ttype1.begin(), ttype1.end(), '\0', '?');
       std::replace(ttype1.begin(), ttype1.end(), '\t', '?');
       std::replace(ttype2.begin(), ttype2.end(), '\0', '?');
@@ -186,9 +186,9 @@ namespace eCAL
     return false;
   }
 
-  void CDescGate::GetTopics(std::unordered_map<std::string, STopicInformation>& topic_info_map_)
+  void CDescGate::GetTopics(std::unordered_map<std::string, SDataTypeInformation>& topic_info_map_)
   {
-    std::unordered_map<std::string, STopicInformation> map;
+    std::unordered_map<std::string, SDataTypeInformation> map;
 
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     m_topic_info_map.map->remove_deprecated();
@@ -215,7 +215,7 @@ namespace eCAL
     }
   }
 
-  bool CDescGate::GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_)
+  bool CDescGate::GetDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_)
   {
     if (topic_name_.empty()) return(false);
 
@@ -229,10 +229,8 @@ namespace eCAL
   
   bool CDescGate::ApplyServiceDescription(const std::string& service_name_
                                         , const std::string& method_name_
-                                        , const std::string& req_type_name_
-                                        , const std::string& req_type_desc_
-                                        , const std::string& resp_type_name_
-                                        , const std::string& resp_type_desc_
+                                        , const SDataTypeInformation& request_type_information_
+                                        , const SDataTypeInformation& response_type_information_
                                         , const QualityFlags description_quality_)
   {
     std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
@@ -245,11 +243,9 @@ namespace eCAL
     {
       // create a new service entry
       SServiceMethodInfoQuality& service_info = (*m_service_info_map.map)[service_method_tuple];
-      service_info.info.request_type_name         = req_type_name_;
-      service_info.info.request_type_description  = req_type_desc_;
-      service_info.info.response_type_name        = resp_type_name_;
-      service_info.info.response_type_description = resp_type_desc_;
-      service_info.quality                        = description_quality_;
+      service_info.info.request_type   = request_type_information_;
+      service_info.info.response_type  = response_type_information_;
+      service_info.quality             = description_quality_;
       return true;
     }
 
@@ -259,11 +255,9 @@ namespace eCAL
     SServiceMethodInfoQuality service_info = (*service_info_map_it).second;
     if (description_quality_ > service_info.quality)
     {
-      service_info.info.request_type_name         = req_type_name_;
-      service_info.info.request_type_description  = req_type_desc_;
-      service_info.info.response_type_name        = resp_type_name_;
-      service_info.info.response_type_description = resp_type_desc_;
-      service_info.quality                        = description_quality_;
+      service_info.info.request_type   =  request_type_information_;
+      service_info.info.response_type  = response_type_information_;
+      service_info.quality             = description_quality_;
       ret_value = true;
     }
 
@@ -273,9 +267,9 @@ namespace eCAL
     return ret_value;
   }
 
-  void CDescGate::GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_)
+  void CDescGate::GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_)
   {
-    std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo> map;
+    std::map<std::tuple<std::string, std::string>, SServiceMethodInformation> map;
 
     const std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
     m_service_info_map.map->remove_deprecated();
@@ -309,8 +303,8 @@ namespace eCAL
     auto service_info_map_it = m_service_info_map.map->find(service_method_tuple);
 
     if (service_info_map_it == m_service_info_map.map->end()) return false;
-    req_type_name_  = (*service_info_map_it).second.info.request_type_name;
-    resp_type_name_ = (*service_info_map_it).second.info.response_type_name;
+    req_type_name_  = (*service_info_map_it).second.info.request_type.name;
+    resp_type_name_ = (*service_info_map_it).second.info.response_type.name;
     return true;
   }
 
@@ -322,8 +316,8 @@ namespace eCAL
     auto service_info_map_it = m_service_info_map.map->find(service_method_tuple);
 
     if (service_info_map_it == m_service_info_map.map->end()) return false;
-    req_type_desc_  = (*service_info_map_it).second.info.request_type_description;
-    resp_type_desc_ = (*service_info_map_it).second.info.response_type_description;
+    req_type_desc_  = (*service_info_map_it).second.info.request_type.descriptor;
+    resp_type_desc_ = (*service_info_map_it).second.info.response_type.descriptor;
     return true;
   }
 };
