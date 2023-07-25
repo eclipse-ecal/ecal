@@ -40,7 +40,7 @@ Communication phase (default configuration):
 * The subscribers close the memory file and release the access-mutex.
 
 
-To support one to many publisher/subscriber connections the publisher creates in fact one named update event per connection.
+To support one to many publisher/subscriber connections, the publisher creates one named update event per connection.
    
 .. note::
 
@@ -92,7 +92,7 @@ Finally that means the publishers ``CPublisher::Send`` API function call is now 
 Zero Copy mode (optional)
 -------------------------
 
-*Zero-copy has been added in eCAL 5.10. It is turned off by default. When turned on, old eCAL Version can still receive the data but will not use zero-copy.**
+*Zero-copy has been added in eCAL 5.10 for subscription and in 5.12 for publishing. It is turned off by default. When turned on, old eCAL Versions can still receive the data but will not use zero-copy.*
 
 The “normal” eCAL Shared memory communication results in the payload being copied at least twice:
 
@@ -108,6 +108,7 @@ If it comes to very large messages (e.g. high resolution images) however, copyin
 With zero-copy, the communication would look like this:
 
 1. The publisher still has to copy the data into the memory file.
+   However, via the ``CPayload`` object, direct serialization into an SHM file is possible (instead of a serialize plus copy operation).
 
 2. The subscriber executes its callback directly on the memory file.
    The memory file is blocked, while being used.
@@ -122,7 +123,7 @@ With zero-copy, the communication would look like this:
 .. note::
 
    Even though it is called zero-copy, only the subscribers are zero-copy.
-   Publishers still have to copy the data into the memory file, as they have to also support other layers like UDP or TCP and therefore cannot directly work on the memory file.
+   With publishers it's a bit more tricky. As of eCAL 5.12, the public publisher API has changed in such a way that a publishers ``Send`` method will take a ``CPayload`` object, instead of a memory address and a size. If publishers have only local subscriptions, eCAL will be able e.g. to serialize directly (and possible partially) into an SHM file.
 
 Zero-copy can be enabled in the following ways:
 
