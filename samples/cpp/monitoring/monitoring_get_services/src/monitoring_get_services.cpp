@@ -38,7 +38,7 @@ int main(int argc, char **argv)
   {
     // GetServices
     {
-      std::map<std::tuple<std::string, std::string>, eCAL::Util::SServiceMethodInfo> service_info_map;
+      std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation> service_info_map;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)

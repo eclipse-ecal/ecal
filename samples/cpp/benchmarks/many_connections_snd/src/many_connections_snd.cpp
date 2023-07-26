@@ -38,7 +38,7 @@ public:
     {
       std::ostringstream tname;
       tname << std::setw(5) << std::setfill('0') << i;
-      publishers.emplace_back("Topic" + tname.str(), eCAL::STopicInformation{ "", ttype, tdesc });
+      publishers.emplace_back("Topic" + tname.str(), eCAL::SDataTypeInformation{ ttype, "",  tdesc });
     }
   }
 

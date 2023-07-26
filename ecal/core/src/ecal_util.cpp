@@ -23,7 +23,7 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_core.h>
-#include <ecal/types/topic_information.h>
+#include <ecal/ecal_types.h>
 
 #include "ecal_def.h"
 #include "ecal_descgate.h"
@@ -224,7 +224,7 @@ namespace eCAL
       if (g_pubgate()) g_pubgate()->ShareDescription(state_);
     }
 
-    void GetTopics(std::unordered_map<std::string, STopicInformation>& topic_info_map_)
+    void GetTopics(std::unordered_map<std::string, SDataTypeInformation>& topic_info_map_)
     {
       if (!g_descgate()) return;
       g_descgate()->GetTopics(topic_info_map_);
@@ -253,9 +253,9 @@ namespace eCAL
     // [[deprecated]]
     bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_)
     {
-      STopicInformation topic_info;
-      auto ret = GetTopicInformation(topic_name_, topic_info);
-      topic_type_ = Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.type);
+      SDataTypeInformation topic_info;
+      auto ret = GetTopicDataTypeInformation(topic_name_, topic_info);
+      topic_type_ = Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.name);
       return ret;
     }
 
@@ -300,8 +300,8 @@ namespace eCAL
     // [[deprecated]]
     bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_)
     {
-      STopicInformation topic_info;
-      auto ret = GetTopicInformation(topic_name_, topic_info);
+      SDataTypeInformation topic_info;
+      auto ret = GetTopicDataTypeInformation(topic_name_, topic_info);
       topic_desc_ = topic_info.descriptor;
       return ret;
     }
@@ -330,10 +330,10 @@ namespace eCAL
       return("");
     }
 
-    bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_)
+    bool GetTopicDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_)
     {
       if (g_descgate() == nullptr) return(false);
-      return(g_descgate()->GetTopicInformation(topic_name_, topic_info_));
+      return(g_descgate()->GetDataTypeInformation(topic_name_, topic_info_));
     }
 
     // [[deprecated]]
@@ -377,7 +377,7 @@ namespace eCAL
      * @param service_info_map_  Map to store the topic informations.
      *                           Map { (ServiceName, MethodName) -> ( (ReqType, ReqDescription), (RespType, RespDescription) ) } mapping of all currently known services.
     **/
-    void GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_)
+    void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_)
     {
       if (!g_descgate()) return;
       g_descgate()->GetServices(service_info_map_);

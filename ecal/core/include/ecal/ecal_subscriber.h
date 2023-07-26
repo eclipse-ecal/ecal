@@ -25,9 +25,10 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_qos.h>
-#include <ecal/types/topic_information.h>
+#include <ecal/ecal_types.h>
 
 #include <memory>
 #include <set>
@@ -95,7 +96,7 @@ namespace eCAL
      * @param topic_type_   Type name (optional for type checking).
      * @param topic_desc_   Type description (optional for description checking).
      **/
-    [[deprecated("Please use the constructor CSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6.")
     ECAL_API CSubscriber(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
 
     /**
@@ -104,7 +105,7 @@ namespace eCAL
     * @param topic_name_   Unique topic name.
     * @param topic_info_   Topic information (encoding, type, descriptor)
     **/
-    ECAL_API CSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_);
+    ECAL_API CSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
 
     /**
     * @brief Constructor.
@@ -147,7 +148,7 @@ namespace eCAL
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    [[deprecated("Please use the create method bool Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the create method bool Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")
     ECAL_API bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
 
     /**
@@ -158,7 +159,7 @@ namespace eCAL
      * @return  True if it succeeds, false if it fails.
     **/
     ECAL_API bool Create(const std::string& topic_name_) {
-      return Create(topic_name_, STopicInformation{});
+      return Create(topic_name_, SDataTypeInformation{});
     }
 
     /**
@@ -169,7 +170,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_API bool Create(const std::string& topic_name_, const STopicInformation& topic_info_);
+    ECAL_API bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
 
     /**
      * @brief Destroys this object. 
@@ -233,7 +234,7 @@ namespace eCAL
      *
      * @return  Length of received buffer. 
     **/
-    [[deprecated]]
+    ECAL_DEPRECATE_SINCE_5_10("Please use the method bool ReceiveBuffer(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) instead. This function will be removed in eCAL6.")
     ECAL_API size_t Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
 
     /**
@@ -308,7 +309,7 @@ namespace eCAL
      *
      * @return  The type name. 
     **/
-    [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")
     ECAL_API std::string GetTypeName() const;
 
     /**
@@ -316,7 +317,7 @@ namespace eCAL
      *
      * @return  The description. 
     **/
-    [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")
     ECAL_API std::string GetDescription() const;
 
     /**
@@ -324,7 +325,7 @@ namespace eCAL
     *
     * @return  The topic information.
     **/
-    ECAL_API STopicInformation GetTopicInformation() const;
+    ECAL_API SDataTypeInformation GetDataTypeInformation() const;
 
     /**
      * @brief Set the timeout parameter for triggering
@@ -347,7 +348,7 @@ namespace eCAL
 
   protected:
     void InitializeQOS();
-    bool ApplyTopicToDescGate(const std::string& topic_name_, const STopicInformation& topic_info_);
+    bool ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
 
     // class members
     std::shared_ptr<CDataReader>     m_datareader;

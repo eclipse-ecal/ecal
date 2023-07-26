@@ -82,15 +82,13 @@ namespace eCAL
     int RegisterSendThread();
 
     bool ApplyTopicToDescGate(const std::string& topic_name_
-      , const STopicInformation& topic_info_
+      , const SDataTypeInformation& topic_info_
       , bool topic_is_a_publisher_);
 
     bool ApplyServiceToDescGate(const std::string& service_name_
       , const std::string& method_name_
-      , const std::string& req_type_name_
-      , const std::string& req_type_desc_
-      , const std::string& resp_type_name_
-      , const std::string& resp_type_desc_);
+      , const SDataTypeInformation& request_type_information_
+      , const SDataTypeInformation& response_type_information_);
 
     bool SendSampleList(bool reset_sample_list_ = true);
 

@@ -24,7 +24,7 @@
 #pragma once
 
 #include <ecal/ecal_util.h>
-#include <ecal/types/topic_information.h>
+#include <ecal/ecal_types.h>
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
@@ -66,22 +66,20 @@ namespace eCAL
     void Destroy();
 
     bool ApplyTopicDescription(const std::string& topic_name_, 
-                               const STopicInformation& topic_info_,
+                               const SDataTypeInformation& topic_info_,
                                const QualityFlags description_quality_);
 
-    void GetTopics(std::unordered_map<std::string, STopicInformation>& topic_info_map_);
+    void GetTopics(std::unordered_map<std::string, SDataTypeInformation>& topic_info_map_);
     void GetTopicNames(std::vector<std::string>& topic_names_);
-    bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_);
+    bool GetDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_);
 
     bool ApplyServiceDescription(const std::string& service_name_, 
                                  const std::string& method_name_, 
-                                 const std::string& req_type_name_, 
-                                 const std::string& req_type_desc_, 
-                                 const std::string& resp_type_name_,
-                                 const std::string& resp_type_desc_,
+                                 const SDataTypeInformation& request_type_information_,
+                                 const SDataTypeInformation& response_type_information_,
                                  const QualityFlags description_quality_);
 
-    void GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_);
+    void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_);
     void GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_);
     bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_name_, std::string& resp_type_name_);
     bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_type_desc_, std::string& resp_type_desc_);
@@ -89,14 +87,14 @@ namespace eCAL
   protected:
     struct STopicInfoQuality
     {
-      STopicInformation info;                                                       //!< Topic info struct with type encoding, name and descriptor.
-      QualityFlags     quality               = QualityFlags::NO_QUALITY;           //!< QualityFlags to determine whether we may overwrite the current data with better one. E.g. we prefer the description sent by a publisher over one sent by a subscriber. 
-      bool             type_missmatch_logged = false;                              //!< Whether we have already logged a type-missmatch
+      SDataTypeInformation info;                                                       //!< Topic info struct with type encoding, name and descriptor.
+      QualityFlags         quality               = QualityFlags::NO_QUALITY;           //!< QualityFlags to determine whether we may overwrite the current data with better one. E.g. we prefer the description sent by a publisher over one sent by a subscriber. 
+      bool                 type_missmatch_logged = false;                              //!< Whether we have already logged a type-missmatch
     };
 
     struct SServiceMethodInfoQuality
     {
-      Util::SServiceMethodInfo info;                                               //!< Service info struct with type names and descriptors for request and response.
+      SServiceMethodInformation info;                                               //!< Service info struct with type names and descriptors for request and response.
       QualityFlags             quality = QualityFlags::NO_QUALITY;                 //!< The Quality of the Info
     };
 

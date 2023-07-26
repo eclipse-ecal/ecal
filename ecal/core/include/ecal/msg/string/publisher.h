@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <ecal/ecal_deprecate.h>
 #include <ecal/msg/publisher.h>
 
 #include <string>
@@ -58,7 +59,7 @@ namespace eCAL
 
       // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
       // where the vtable is not created yet or it's destructed.
-      CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, GetTopicInformation())
+      CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation())
       {
       }
 
@@ -69,7 +70,7 @@ namespace eCAL
        * @param topic_type_  Type name (optional).
        * @param topic_desc_  Type description (optional).
       **/
-      [[deprecated("Plase use eCAL::string::CPublisher(const std::string& topic_name_) instead. This function will be removed in eCAL6.")]]
+      ECAL_DEPRECATE_SINCE_5_13("Plase use eCAL::string::CPublisher(const std::string& topic_name_) instead. This function will be removed in eCAL6.")
       CPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_) : CMsgPublisher<T>(topic_name_, topic_type_, topic_desc_)
       {
       }
@@ -103,7 +104,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(CMsgPublisher<T>::Create(topic_name_, GetTopicInformation()));
+        return(CMsgPublisher<T>::Create(topic_name_, GetDataTypeInformation()));
       }
 
     private:
@@ -112,11 +113,11 @@ namespace eCAL
       *
       * @return  Topic information.
       **/
-      STopicInformation GetTopicInformation() const override
+      SDataTypeInformation GetDataTypeInformation() const override
       {
-        STopicInformation topic_info;
+        SDataTypeInformation topic_info;
         topic_info.encoding = "base";
-        topic_info.type = "std::string";
+        topic_info.name = "std::string";
         // empty descriptor
         return topic_info;
       }

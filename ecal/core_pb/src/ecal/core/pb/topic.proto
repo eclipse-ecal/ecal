@@ -42,40 +42,41 @@ message QOS                                       // quality of service
   int32                   history_depth  =  3;    // number of samples for history kind "keep last"
 }
 
-message TopicInformation
+message DataTypeInformation
 {
-  string encoding   = 1;
-  string type       = 2;
-  bytes  desc       = 3;
+  string name       = 1; // name of the datatype
+  string encoding   = 2; // encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
+  bytes  desc       = 3; // descriptor information of the datatype (necessary for reflection)
 }
 
-message Topic                                     // eCAL topic
+message Topic                                      // eCAL topic
 {
-  int32              rclock                =  1;  // registration clock (heart beat)
-  int32              hid                   = 26;  // host id
-  string             hname                 =  2;  // host name
-  int32              pid                   =  3;  // process id
-  string             pname                 =  4;  // process name
-  string             uname                 =  5;  // unit name
-  string             tid                   =  6;  // topic id
-  string             tname                 =  7;  // topic name
-  string             direction             =  8;  // direction (publisher, subscriber)
-  string             ttype                 =  9;  // topic type + topic encoding (deprecated)
-  bytes              tdesc                 = 10;  // topic description (protocol descriptor) (deprecated)
+  int32               rclock                =  1;  // registration clock (heart beat)
+  int32               hid                   = 26;  // host id
+  string              hname                 =  2;  // host name
+  string              hgname                = 28;  // host group name
+  int32               pid                   =  3;  // process id
+  string              pname                 =  4;  // process name
+  string              uname                 =  5;  // unit name
+  string              tid                   =  6;  // topic id
+  string              tname                 =  7;  // topic name
+  string              direction             =  8;  // direction (publisher, subscriber)
+  string              ttype                 =  9;  // topic type + topic encoding (deprecated)
+  bytes               tdesc                 = 10;  // topic description (protocol descriptor) (deprecated)
   
-  TopicInformation   tinfo                 = 30;  // topic information (encoding & type & description)
+  DataTypeInformation tdatatype             = 30;  // topic datatype information (encoding & type & description)
 
-  QOS                tqos                  = 11;  // topic quality of service
-  repeated TLayer    tlayer                = 12;  // active topic transport layers and it's specific parameter
-  int32              tsize                 = 13;  // topic size
-
-  int32              connections_loc       = 16;  // number of local connected entities
-  int32              connections_ext       = 17;  // number of external connected entities
-  int32              message_drops         = 18;  // dropped messages
-
-  int64              did                   = 19;  // data send id (publisher setid)
-  int64              dclock                = 20;  // data clock (send / receive action)
-  int32              dfreq                 = 21;  // data frequency (send / receive samples per second) [mHz]
+  QOS                 tqos                  = 11;  // topic quality of service
+  repeated TLayer     tlayer                = 12;  // active topic transport layers and it's specific parameter
+  int32               tsize                 = 13;  // topic size
+                      
+  int32               connections_loc       = 16;  // number of local connected entities
+  int32               connections_ext       = 17;  // number of external connected entities
+  int32               message_drops         = 18;  // dropped messages
+                      
+  int64               did                   = 19;  // data send id (publisher setid)
+  int64               dclock                = 20;  // data clock (send / receive action)
+  int32               dfreq                 = 21;  // data frequency (send / receive samples per second) [mHz]
 
   map<string, string> attr                 = 27;  // generic topic description
 }

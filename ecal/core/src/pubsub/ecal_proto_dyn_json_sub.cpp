@@ -122,10 +122,10 @@ namespace eCAL
         if (msg_string.empty())
         {
           // get topic type
-          STopicInformation topic_info;
+          SDataTypeInformation topic_info;
           //nodiscard???
-          eCAL::Util::GetTopicInformation(topic_name_, topic_info);
-          topic_type_full = topic_info.type;
+          eCAL::Util::GetTopicDataTypeInformation(topic_name_, topic_info);
+          topic_type_full = topic_info.name;
           topic_type = topic_type_full.substr(topic_type_full.find_last_of('.') + 1, topic_type_full.size());
           topic_type_full = "/" + topic_type_full;
 

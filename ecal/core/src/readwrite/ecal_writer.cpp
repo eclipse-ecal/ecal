@@ -66,6 +66,7 @@ namespace eCAL
 {
   CDataWriter::CDataWriter() :
     m_host_name(Process::GetHostName()),
+    m_host_group_name(Process::GetHostGroupName()),
     m_host_id(Process::internal::GetHostID()),
     m_pid(Process::GetProcessID()),
     m_pname(Process::GetProcessName()),
@@ -99,7 +100,7 @@ namespace eCAL
     Destroy();
   }
 
-  bool CDataWriter::Create(const std::string& topic_name_, const STopicInformation& topic_info_)
+  bool CDataWriter::Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
   {
     if (m_created) return(false);
 
@@ -218,7 +219,7 @@ namespace eCAL
 
  
 
-  bool CDataWriter::SetTopicInformation(const STopicInformation& topic_info_)
+  bool CDataWriter::SetDataTypeInformation(const SDataTypeInformation& topic_info_)
   {
     // Does it even make sense to register if the info is the same???
     const bool force = m_topic_info != topic_info_;
@@ -653,7 +654,7 @@ namespace eCAL
     else         return 0;
   }
 
-  void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const STopicInformation& tinfo_, const std::string& reader_par_)
+  void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_, const std::string& reader_par_)
   {
     Connect(tid_, tinfo_);
 
@@ -695,7 +696,7 @@ namespace eCAL
 #endif
   }
 
-  void CDataWriter::ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const STopicInformation& tinfo_, const std::string& reader_par_)
+  void CDataWriter::ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_, const std::string& reader_par_)
   {
     Connect(tid_, tinfo_);
 
@@ -801,21 +802,22 @@ namespace eCAL
     std::stringstream out;
 
     out << std::endl;
-    out << indent_ << "--------------------------------"                     << std::endl;
-    out << indent_ << " class CDataWriter  "                                 << std::endl;
-    out << indent_ << "--------------------------------"                     << std::endl;
-    out << indent_ << "m_host_name:             " << m_host_name             << std::endl;
-    out << indent_ << "m_host_id:               " << m_host_id               << std::endl;
-    out << indent_ << "m_topic_name:            " << m_topic_name            << std::endl;
-    out << indent_ << "m_topic_id:              " << m_topic_id              << std::endl;
-    out << indent_ << "m_topic_info.encoding:   " << m_topic_info.encoding   << std::endl;
-    out << indent_ << "m_topic_info.type:       " << m_topic_info.type       << std::endl;
-    out << indent_ << "m_topic_info.descriptor: " << m_topic_info.descriptor << std::endl;
-    out << indent_ << "m_id:                    " << m_id                    << std::endl;
-    out << indent_ << "m_clock:                 " << m_clock                 << std::endl;
-    out << indent_ << "m_created:               " << m_created               << std::endl;
-    out << indent_ << "m_loc_subscribed:        " << m_loc_subscribed        << std::endl;
-    out << indent_ << "m_ext_subscribed:        " << m_ext_subscribed        << std::endl;
+    out << indent_ << "--------------------------"                            << std::endl;
+    out << indent_ << " class CDataWriter  "                                  << std::endl;
+    out << indent_ << "--------------------------"                            << std::endl;
+    out << indent_ << "m_host_name:              " << m_host_name             << std::endl;
+    out << indent_ << "m_host_group_name:        " << m_host_group_name       << std::endl;
+    out << indent_ << "m_host_id:                " << m_host_id               << std::endl;
+    out << indent_ << "m_topic_name:             " << m_topic_name            << std::endl;
+    out << indent_ << "m_topic_id:               " << m_topic_id              << std::endl;
+    out << indent_ << "m_topic_info.encoding:    " << m_topic_info.encoding   << std::endl;
+    out << indent_ << "m_topic_info.name:        " << m_topic_info.name       << std::endl;
+    out << indent_ << "m_topic_info.descriptor:  " << m_topic_info.descriptor << std::endl;
+    out << indent_ << "m_id:                     " << m_id                    << std::endl;
+    out << indent_ << "m_clock:                  " << m_clock                 << std::endl;
+    out << indent_ << "m_created:                " << m_created               << std::endl;
+    out << indent_ << "m_loc_subscribed:         " << m_loc_subscribed        << std::endl;
+    out << indent_ << "m_ext_subscribed:         " << m_ext_subscribed        << std::endl;
     out << std::endl;
 
     return(out.str());
@@ -843,22 +845,23 @@ namespace eCAL
     ecal_reg_sample.set_cmd_type(eCAL::pb::bct_reg_publisher);
     auto *ecal_reg_sample_mutable_topic = ecal_reg_sample.mutable_topic();
     ecal_reg_sample_mutable_topic->set_hname(m_host_name);
+    ecal_reg_sample_mutable_topic->set_hgname(m_host_group_name);
     ecal_reg_sample_mutable_topic->set_hid(m_host_id);
     ecal_reg_sample_mutable_topic->set_tname(m_topic_name);
     ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
-    if (share_ttype) ecal_reg_sample_mutable_topic->set_ttype(Util::CombinedTopicEncodingAndType(m_topic_info.encoding, m_topic_info.type));
+    if (share_ttype) ecal_reg_sample_mutable_topic->set_ttype(Util::CombinedTopicEncodingAndType(m_topic_info.encoding, m_topic_info.name));
     if (share_tdesc) ecal_reg_sample_mutable_topic->set_tdesc(m_topic_info.descriptor);
     // topic_information
     {
-      auto* ecal_reg_sample_mutable_tinfo = ecal_reg_sample_mutable_topic->mutable_tinfo();
+      auto* ecal_reg_sample_mutable_tdatatype = ecal_reg_sample_mutable_topic->mutable_tdatatype();
       if (share_ttype)
       {
-        ecal_reg_sample_mutable_tinfo->set_encoding(m_topic_info.encoding);
-        ecal_reg_sample_mutable_tinfo->set_type(m_topic_info.type);
+        ecal_reg_sample_mutable_tdatatype->set_encoding(m_topic_info.encoding);
+        ecal_reg_sample_mutable_tdatatype->set_name(m_topic_info.name);
       }
       if (share_tdesc)
       {
-        ecal_reg_sample_mutable_tinfo->set_desc(m_topic_info.descriptor);
+        ecal_reg_sample_mutable_tdatatype->set_desc(m_topic_info.descriptor);
       }
     }
     *ecal_reg_sample_mutable_topic->mutable_attr() = google::protobuf::Map<std::string, std::string> { m_attr.begin(), m_attr.end() };
@@ -977,6 +980,7 @@ namespace eCAL
     ecal_unreg_sample.set_cmd_type(eCAL::pb::bct_unreg_publisher);
     auto* ecal_reg_sample_mutable_topic = ecal_unreg_sample.mutable_topic();
     ecal_reg_sample_mutable_topic->set_hname(m_host_name);
+    ecal_reg_sample_mutable_topic->set_hgname(m_host_group_name);
     ecal_reg_sample_mutable_topic->set_hid(m_host_id);
     ecal_reg_sample_mutable_topic->set_pname(m_pname);
     ecal_reg_sample_mutable_topic->set_pid(m_pid);
@@ -994,7 +998,7 @@ namespace eCAL
     return(true);
   }
 
-  void CDataWriter::Connect(const std::string& tid_, const STopicInformation& tinfo_)
+  void CDataWriter::Connect(const std::string& tid_, const SDataTypeInformation& tinfo_)
   {
     SPubEventCallbackData data;
     data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
@@ -1020,9 +1024,9 @@ namespace eCAL
       data.type  = pub_event_update_connection;
       data.tid   = tid_;
       // Remove with eCAL6 (next two lines)
-      data.ttype = Util::CombinedTopicEncodingAndType(tinfo_.encoding, tinfo_.type);
+      data.ttype = Util::CombinedTopicEncodingAndType(tinfo_.encoding, tinfo_.name);
       data.tdesc = tinfo_.descriptor;
-      data.tinfo = tinfo_;
+      data.tdatatype = tinfo_;
       (iter->second)(m_topic_name.c_str(), &data);
     }
   }

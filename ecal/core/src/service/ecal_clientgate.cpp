@@ -111,7 +111,14 @@ namespace eCAL
     // store description
     for (const auto& method : ecal_sample_service.methods())
     {
-      ApplyServiceToDescGate(ecal_sample_service.sname(), method.mname(), method.req_type(), method.req_desc(), method.resp_type(), method.resp_desc());
+      SDataTypeInformation request_type;
+      request_type.name = method.req_type();
+      request_type.descriptor = method.req_desc();
+      SDataTypeInformation response_type{};
+      response_type.name = method.resp_type();
+      response_type.descriptor = method.resp_desc();
+
+      ApplyServiceToDescGate(ecal_sample_service.sname(), method.mname(), request_type, response_type);
     }
 
     // create service key
@@ -171,21 +178,19 @@ namespace eCAL
 
   bool CClientGate::ApplyServiceToDescGate(const std::string& service_name_
     , const std::string& method_name_
-    , const std::string& req_type_name_
-    , const std::string& req_type_desc_
-    , const std::string& resp_type_name_
-    , const std::string& resp_type_desc_)
+    , const SDataTypeInformation& request_type_information_
+    , const SDataTypeInformation& response_type_information_)
   {
     if (g_descgate() != nullptr)
     {
       // calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!(req_type_name_.empty() && resp_type_name_.empty()))
+      if (!(request_type_information_.name.empty() && response_type_information_.name.empty()))
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!(req_type_desc_.empty() && resp_type_desc_.empty()))
+      if (!(request_type_information_.descriptor.empty() && response_type_information_.descriptor.empty()))
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
 
-      return g_descgate()->ApplyServiceDescription(service_name_, method_name_, req_type_name_, req_type_desc_, resp_type_name_, resp_type_desc_, quality);
+      return g_descgate()->ApplyServiceDescription(service_name_, method_name_, request_type_information_, response_type_information_, quality);
     }
     return false;
   }

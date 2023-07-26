@@ -26,7 +26,7 @@
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_tlayer.h>
-#include <ecal/types/topic_information.h>
+#include <ecal/ecal_types.h>
 
 #include "ecal_def.h"
 #include "ecal_expmap.h"
@@ -50,10 +50,10 @@ namespace eCAL
     CDataWriter();
     ~CDataWriter();
 
-    bool Create(const std::string& topic_name_, const STopicInformation& topic_info_);
+    bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
     bool Destroy();
 
-    bool SetTopicInformation(const STopicInformation& topic_info_);
+    bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
     bool ClearAttribute(const std::string& attr_name_);
@@ -77,10 +77,10 @@ namespace eCAL
 
     size_t Write(CPayloadWriter& payload_, long long time_, long long id_);
 
-    void ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const STopicInformation& tinfo_, const std::string& reader_par_);
+    void ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_, const std::string& reader_par_);
     void RemoveLocSubscription(const std::string & process_id_, const std::string& tid_);
 
-    void ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const STopicInformation& tinfo_, const std::string& reader_par_);
+    void ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_, const std::string& reader_par_);
     void RemoveExtSubscription(const std::string & host_name_, const std::string & process_id_, const std::string& tid_);
 
     void RefreshRegistration();
@@ -98,13 +98,13 @@ namespace eCAL
     }
 
     const std::string& GetTopicName() const {return(m_topic_name);}
-    const STopicInformation& GetTopicInformation() const { return m_topic_info; }
+    const SDataTypeInformation& GetDataTypeInformation() const { return m_topic_info; }
 
   protected:
     bool Register(bool force_);
     bool Unregister();
 
-    void Connect(const std::string& tid_, const STopicInformation& tinfo_);
+    void Connect(const std::string& tid_, const SDataTypeInformation& tinfo_);
     void Disconnect();
 
     void SetUseUdpMC(TLayer::eSendMode mode_);
@@ -118,12 +118,13 @@ namespace eCAL
     void LogSendMode(TLayer::eSendMode smode_, const std::string & base_msg_);
 
     std::string                        m_host_name;
+    std::string                        m_host_group_name;
     int                                m_host_id;
     int                                m_pid;
     std::string                        m_pname;
     std::string                        m_topic_name;
     std::string                        m_topic_id;
-    STopicInformation                   m_topic_info;
+    SDataTypeInformation               m_topic_info;
     std::map<std::string, std::string> m_attr;
     size_t                             m_topic_size;
 

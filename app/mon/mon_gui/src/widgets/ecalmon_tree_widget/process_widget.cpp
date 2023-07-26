@@ -64,6 +64,12 @@ ProcessWidget::ProcessWidget(QWidget *parent)
   host.name = "Host";
   preconfigured_group_by_settings.push_back(host);
 
+  EcalmonTreeWidget::GroupSetting host_group;
+  host_group.group_by_columns = { (int)ProcessTreeModel::Columns::HOST_GROUP_NAME };
+  host_group.auto_expand = 0;
+  host_group.name = "Host Group";
+  preconfigured_group_by_settings.push_back(host_group);
+
   setGroupSettings(preconfigured_group_by_settings, group_by_enabled_columns);
 
   // Initial layout

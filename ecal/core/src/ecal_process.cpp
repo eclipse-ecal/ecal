@@ -219,6 +219,7 @@ namespace eCAL
 
       sstream << "------------------------- NETWORK --------------------------------" << std::endl;
       sstream << "Host name                : " << Process::GetHostName() << std::endl;
+      sstream << "Host group name          : " << Process::GetHostGroupName() << std::endl;
 
       if (Config::IsNetworkEnabled())
       {
@@ -328,6 +329,11 @@ namespace eCAL
         }
       }
       return(g_host_name);
+    }
+
+    std::string GetHostGroupName()
+    {
+      return Config::GetHostGroupName().empty() ? GetHostName() : Config::GetHostGroupName();
     }
 
     int GetHostID()

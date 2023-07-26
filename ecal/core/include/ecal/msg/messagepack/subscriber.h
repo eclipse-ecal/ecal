@@ -55,7 +55,7 @@ namespace eCAL
        *
        * @param topic_name_  Unique topic name.
       **/
-      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, GetTopicInformation())
+      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, GetDataTypeInformation())
       {
       }
 
@@ -88,7 +88,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(CMsgSubscriber<T>::Create(topic_name_, GetTopicInformation()));
+        return(CMsgSubscriber<T>::Create(topic_name_, GetDataTypeInformation()));
       }
 
     private:
@@ -97,9 +97,9 @@ namespace eCAL
       *
       * @return  Topic information.
       **/
-      STopicInformation GetTopicInformation() const override
+      SDataTypeInformation GetDataTypeInformation() const override
       {
-        STopicInformation topic_info;
+        SDataTypeInformation topic_info;
         topic_info.encoding = "mpack";
         // empty descriptor, empty descriptor
         return topic_info;

@@ -27,6 +27,7 @@
 #include <exception>
 #include <sstream>
 #include <ecal/ecal.h>
+#include <ecal/ecal_deprecate.h>
 #include <ecal/protobuf/ecal_proto_dyn.h>
 #include <ecal/msg/dynamic.h>
 
@@ -108,11 +109,8 @@ namespace eCAL
 
       /**
        * @brief get a Pointer to a temporary message that can be passed to receive
-       * 
-       * This function is deprecated and will return a nullptr now.
        *
       **/
-      [[deprecated]]
       google::protobuf::Message* getMessagePointer();
 
       /**
@@ -224,7 +222,19 @@ namespace eCAL
 
     inline google::protobuf::Message* CDynamicSubscriber::getMessagePointer()
     {
-      return nullptr;
+      try
+      {
+        // Create Message Pointer for our topic name.
+        if (msg_ptr == nullptr)
+        {
+          msg_ptr = CreateMessagePointer(topic_name);
+        }
+      }
+      catch (DynamicReflectionException& /*e*/)
+      {
+        return nullptr;
+      }
+      return msg_ptr.get();
     }
 
     inline bool CDynamicSubscriber::Receive(google::protobuf::Message& msg_, long long* time_, int rcv_timeout_)
@@ -303,9 +313,9 @@ namespace eCAL
     inline std::shared_ptr<google::protobuf::Message> CDynamicSubscriber::CreateMessagePointer(const std::string& topic_name_)
     {
       // get topic type
-      STopicInformation topic_info;
-      eCAL::Util::GetTopicInformation(topic_name, topic_info);
-      std::string topic_type{ topic_info.type };
+      SDataTypeInformation topic_info;
+      eCAL::Util::GetTopicDataTypeInformation(topic_name, topic_info);
+      std::string topic_type{ topic_info.name };
       topic_type = topic_type.substr(topic_type.find_last_of('.') + 1, topic_type.size());
       if (StrEmptyOrNull(topic_type))
       {
