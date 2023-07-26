@@ -92,20 +92,29 @@ Finally that means the publishers ``CPublisher::Send`` API function call is now 
 Zero Copy mode (optional)
 -------------------------
 
-*Zero-copy has been added in eCAL 5.10 for subscription and in 5.12 for publishing. It is turned off by default. When turned on, old eCAL Versions can still receive the data but will not use zero-copy.*
+.. seealso:: 
 
-The “normal” eCAL Shared memory communication results in the payload being copied at least twice:
+   .. toctree:: 
+      :maxdepth: 1
+
+      shm_zerocopy
+
+.. note::
+
+   Zero-copy has been added in eCAL 5.10 for subscription and in 5.12 for publishing.
+   It is turned off by default.
+   When turned on, old eCAL Versions can still receive the data but will not use zero-copy.
+
+The "normal" eCAL Shared memory communication results in the payload being copied at least twice:
 
 1. Into the SHM file by the publisher
 
 2. From the SHM file the private memory of each subscriber
 
-Usually there is no issue with that.
-Copying the payload from the memory file before executing the subscriber callback results in better decoupling, so the publisher can update the memory file with the next message while the subscriber is still processing the last one.
-Small messages will be transmitted in a few microseconds and will not benefit from zero-copy.
+Copying the payload from the memory file before executing the subscriber callback results in **better decoupling**, so the publisher can update the memory file with the next message while the subscriber is still processing the last one.
+**Small messages** will be transmitted in a few microseconds and will not benefit from zero-copy.
 
-If it comes to very large messages (e.g. high resolution images) however, copying really matters and it can make sense to activate eCAL's zero-copy mode.
-With zero-copy, the communication would look like this:
+If it comes to very **large messages** (e.g. high resolution images) however, copying really matters and it can make sense to activate eCAL's **zero-copy mode**:
 
 1. The publisher still has to copy the data into the memory file.
    However, via the ``CPayload`` object, direct serialization into an SHM file is possible (instead of a serialize plus copy operation).
@@ -139,6 +148,7 @@ Zero-copy can be enabled in the following ways:
 
 - **Use zero-copy for a single publisher (from your code):**
 
+  Zero-copy can be activated for a single publisher from the eCAL API:
   Zero copy could be activated either per connection or for a complete system using the eCAL configuration file.
   To activate it for a specific publisher this ``CPublisher`` `API function <https://eclipse-ecal.github.io/ecal/_api/classeCAL_1_1CPublisher.html#_CPPv4N4eCAL10CPublisher17ShmEnableZeroCopyEb>`_ needs to be called.
 
@@ -150,16 +160,18 @@ Zero-copy can be enabled in the following ways:
      // Enable zero-copy for this publisher
      pub.ShmEnableZeroCopy(true);
 
-.. note::
+.. tip::
 
    In general, it is advisable to combine zero-copy with multi-buffering to reduce the impact on the publisher.
 
 Multi-buffering mode (optional)
 -------------------------------
 
-*Multi-buffering has been added in eCAL 5.10.
-Multi-buffered topics cannot be received by older eCAL versions.
-The feature is turned off by default.*
+.. note:: 
+
+   Multi-buffering has been added in eCAL 5.10.
+   Multi-buffered topics cannot be received by older eCAL versions.
+   The feature is turned off by default.
 
 As described in the previous sections, eCAL uses one shared memory file per publisher. This can lead to performance reduction if
 

@@ -11,7 +11,7 @@ The release notably contains the eCAL Rec command line Application.
 
 - **Release**: August 2021
 - 
-- **End of life**: December 2022 (After 17 Month)
+- **End of life**: December 2022 (After 16 months)
 
 New features
 ============

@@ -13,7 +13,11 @@
 
        * **Services**: 100% compatible
 
-       * **eCAL Shared Memory**: 
+       * **eCAL Shared Memory**: 100% compatible
+
+       * **eCAL Registration Layer**: 100% compatible
+
+         New fields have been added in the internal protobuf format.
 
    * - API / ABI
 
@@ -34,4 +38,5 @@
 
        * **Measurements**: 100% compatible
 
-       * **Meas Cutter**: The structure of the output directory has changed
+       * **Meas Cutter**: The structure of the output directory has changed.
+         It is now aligned to the output structure of eCAL Rec.

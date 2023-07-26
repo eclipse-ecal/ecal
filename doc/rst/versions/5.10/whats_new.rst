@@ -11,7 +11,7 @@ The release notably brings eCAL Core improvements (TCP and Shared Memory)
 
 - **Release**: May 2022
 - 
-- **End of life**: July 2023 (after 15 months)
+- **End of life**: July 2023 (after 14 months)
 
 New features
 ============
