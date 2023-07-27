@@ -147,13 +147,14 @@ namespace eCAL
     /**
      * @brief Apply payload on the memory file.
      *
-     * @param payload_  The payload.
-     * @param len_      The number of bytes to write.
-     * @param offset_   The offset for writing the data.
+     * @param payload_            The payload.
+     * @param len_                The number of bytes to write.
+     * @param offset_             The offset for writing the data.
+     * @param force_full_write_   Force full write action.
      *
-     * @return          Number of bytes access (len if succeeded otherwise zero).
+     * @return          Number of bytes accessed (len if succeeded otherwise zero).
     **/
-    size_t WritePayload(CPayloadWriter& payload_, size_t len_, size_t offset_);
+    size_t WritePayload(CPayloadWriter& payload_, size_t len_, size_t offset_, bool force_full_write_ = false);
 
     /**
      * @brief Maximum data size of the whole memory file.
