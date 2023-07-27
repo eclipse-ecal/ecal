@@ -2514,7 +2514,7 @@ Core:
 - Improved performance on systems with slow malloc implementations (like QNX)
 - Fixed nullptr check in raw-C Binding (#1052)
 - Fixed compile issue with gcc13 by adding a missing cstdint include
-- Fixed a bug that was caused by the cyclic registration thread not being stopped early enough (#1141)
+- Fixed a bug caused by the registration thread not being stopped correctly on eCAL shutdown (finalize) (#1141)
 - Restore Receive functionality for Dynamic Subscribers (#1150)
 
 Mon:
