@@ -49,8 +49,7 @@ Enabling eCAL Zero Copy
 Full Zero Copy behavior
 ==================
 
-The eCAL Zero Copy mechanism is working for local (inner-host) publish-subscribe connections only. Sending data over a network connection will no 
-Sending data over a network cannot benefit from that feature.
+The Full eCAL Zero Copy mechanism is working for local (inner-host) publish-subscribe connections only. Sending data over a network connection will not benefit from that feature.
 
 Shared-Memory-only connection
 -----------------------------
