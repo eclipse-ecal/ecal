@@ -178,57 +178,72 @@ The implementation of the ``GetSize`` method is mandatory. This method is used b
 
 **Example**:
 
-The following primitive example shows the usage of the ``CPayloadWriter`` API to send a simple binary struct efficient by implementing a full ``Write`` and an ``Update`` method that is modifying a few struct elements without memcopying the whole structure again into memory.
+The following primitive example shows the usage of the ``CPayloadWriter`` API to send a simple binary struct efficient by implementing a full ``Write`` and an ``Update`` method that is modifying a few struct elements without memcopying the whole structure again into memory. Note the in case of the none Full Zero Copy Mode only the ``Write`` function will be called by eCAL.
 
-This is the customized new payload writer class. The ``Write`` method is creating a ``SSimpleStruct`` struct and will copy the whole structure into the opened shared memory file buffer. The ``Update`` method gets a view of the opened shared memory file, and applies modifications on the struct elements ``clock`` and ``bytes``.
+This is the customized new payload writer class. The ``Write`` method is creating a new ``SSimpleStruct`` struct, updating its content and copying the whole structure into the opened shared memory file buffer. The ``Update`` method gets a view of the opened shared memory file, and applies modifications on the struct elements ``clock`` and ``bytes`` by just apllying ``UpdateStruct``.
 
 .. code-block:: cpp
 
   #pragma pack(push, 1)
   struct SSimpleStruct
   {
-    const uint32_t version = 7;
-    const uint16_t rows    = 5;
-    const uint16_t cols    = 3;
-    uint16_t clock         = 0;
-    uint8_t  bytes[5 * 3]  = { 0 };
+    uint32_t version      = 1;
+    uint16_t rows         = 5;
+    uint16_t cols         = 3;
+    uint16_t clock        = 0;
+    uint8_t  bytes[5 * 3] = { 0 };
   };
   #pragma pack(pop)
 
+  // a binary payload object for sending a SSimpleStruct
   class CStructPayload : public eCAL::CPayloadWriter
   {
   public:
+    // write a new initialized and updated SSimpleStruct to the shared memory
     bool Write(void* buf_, size_t len_) override
     {
-      // write complete content to the shared memory file
+      // recheck available size
       if (len_ < GetSize()) return false;
 
-      // write the complete struct into memory
+      // (re)create the complete struct
       SSimpleStruct simple_struct;
+      UpdateStruct(&simple_struct);
+
+      // copy complete struct into the memory
       memcpy(buf_, &simple_struct, GetSize());
 
       return true;
     };
 
+    // just update a SSimpleStruct in the shared memory
     bool Update(void* buf_, size_t len_) override
     {
-      // update content of the shared memory file
+      // recheck available size
       if (len_ < GetSize()) return false;
 
-      // cast existing memory to a SSimpleStruct
-      SSimpleStruct* simple_struct = static_cast<SSimpleStruct*>(buf_);
-
-      // modify the simple struct in memory
-      simple_struct->clock++;
-      for (auto i = 0; i < (simple_struct->rows * simple_struct->cols); ++i)
-      {
-        simple_struct->bytes[i] = static_cast<char>(simple_struct->clock);
-      }
+      // update the struct in memory
+      UpdateStruct(static_cast<SSimpleStruct*>(buf_));
 
       return true;
     };
 
     size_t GetSize() override { return sizeof(SSimpleStruct); };
+
+  private:
+    void UpdateStruct(SSimpleStruct* simple_struct)
+    {
+      // modify the simple struct in memory
+      simple_struct->clock = clock;
+      for (auto i = 0; i < (simple_struct->rows * simple_struct->cols); ++i)
+      {
+        simple_struct->bytes[i] = static_cast<char>(simple_struct->clock);
+      }
+
+      // increase internal state clock
+      clock++;
+    };
+
+    uint16_t clock = 0;
   };
 
 To send this payload you just need a few lines of code:
