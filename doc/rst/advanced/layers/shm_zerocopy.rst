@@ -359,4 +359,6 @@ Default eCAL SHM vs. Full Zero Copy SHM
 Combining Zero Copy and Multibuffering
 ======================================
 
-For technical reasons the Full Zero Copy mode described above is turned of if the Multibuffering option ``CPublisher::ShmSetBufferCount`` is activated. To support differential/partial writes on a set of connected memory files can not be implemented in an efficient way. Default (subscriber side) Zero Copy is working in combination with Multibuffering as described.
+For technical reasons the Full Zero Copy mode described above is turned of if the Multibuffering option ``CPublisher::ShmSetBufferCount`` is activated. 
+
+Default (subscriber side) Zero Copy is working in combination with Multibuffering as described.
