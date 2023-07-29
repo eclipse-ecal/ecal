@@ -285,9 +285,9 @@ To send this payload you just need a few lines of code:
   int main(int argc, char** argv)
   {
     // initialize eCAL API
-    eCAL::Initialize(argc, argv, "binary_zero_copy_snd");
+    eCAL::Initialize(argc, argv, "binary_payload_snd");
 
-    // publisher for topic "number"
+    // publisher for topic "simple_struct"
     eCAL::CPublisher pub("simple_struct");
 
     // turn zero copy mode on
