@@ -153,26 +153,58 @@ The new payload type ``CPayloadWriter`` looks like this (all functions unnecessa
 
 .. code-block:: cpp
 
+  /**
+   * @brief Base payload writer class to allow zero copy memory operations.
+   *
+   * This class serves as the base class for payload writers, allowing zero-copy memory
+   * operations. The `Write` and `Update` calls may operate on the target memory file
+   * directly in zero-copy mode.
+   */
   class CPayloadWriter
   {
   public:
-    // the provisioned memory is uninitialized ->
-    // perform a full write operation
+    /**
+     * @brief Perform a full write operation with uninitialized memory.
+     *
+     * This virtual function allows derived classes to perform a full write operation
+     * when the provisioned memory is uninitialized.
+     *
+     * @param buffer_ Pointer to the buffer containing the data to be written.
+     * @param size_   Size of the data to be written.
+     *
+     * @return True if the write operation is successful, false otherwise.
+     */
     virtual bool Write(void* buffer_, size_t size_) = 0;
 
-    // the provisioned memory is initialized and contains the data from the last write operation ->
-    // perform a partial write operation or just modify a few bytes here
-    //
-    // by default this operation will just call `Write`
+    /**
+     * @brief Perform a partial write operation or modify existing data.
+     *
+     * This virtual function allows derived classes to perform a partial write operation
+     * or modify existing data when the provisioned memory is already initialized and
+     * contains the data from the last write operation. By default, this operation will
+     * just call the `Write` function.
+     *
+     * @param buffer_ Pointer to the buffer containing the data to be written or modified.
+     * @param size_   Size of the data to be written or modified.
+     *
+     * @return True if the write/update operation is successful, false otherwise.
+     */
     virtual bool Update(void* buffer_, size_t size_) { return Write(buffer_, size_); };
 
-    // provide the size of the required memory (eCAL needs to allocate for you).
+    /**
+     * @brief Get the size of the required memory.
+     *
+     * This virtual function allows derived classes to provide the size of the memory
+     * that eCAL needs to allocate.
+     *
+     * @return The size of the required memory.
+     */
     virtual size_t GetSize() = 0;
   };
 
-The user must derive his own playload data class and implement at least the ``Write`` function. This ``Write`` function will be called by the low level eCAL SHM layer when finally the connected memory file needs to be written the first time (initial full write action). 
+The user must derive his own playload data class and implement at least the ``Write`` function. This ``Write`` function will be called by the low level eCAL SHM layer when finally the shared memory file needs to be written the first time (initial full write action). 
 
-For writing partial content (modifying the memory content) the user has to define a second function called ``Update``. This function is called by the eCAL SHM layer if the connected memory file is in an initialized state i.e. if it was written with the previously mentioned ``Write`` method. As you can see, the ``Update`` function simply calls the ``Write`` function by default if it is not overwritten.
+For writing partial content (modifying the memory content) the user may define a second function called ``Update``. This function is called by the eCAL SHM layer if the shared memory file is in an initialized state i.e. if it was written with the previously mentioned ``Write`` method. As you can see, the ``Update`` function simply calls the ``Write`` function by default if it is not overwritten.
 
 The implementation of the ``GetSize`` method is mandatory. This method is used by the eCAL SHM layer to obtain the size of the memory file that needs to be allocated.
 
