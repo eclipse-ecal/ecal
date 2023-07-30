@@ -19,11 +19,14 @@
 
 #include <ecal/ecal.h>
 
+#include <chrono>
 #include <cstdint>
 #include <iostream>
+#include <thread>
 
-#pragma pack(push, 1)
-struct SSimpleStruct
+// a simple struct with some used
+// to demonstrate zero copy modifications
+struct alignas(4) SSimpleStruct
 {
   uint32_t version      = 1;
   uint16_t rows         = 5;
@@ -31,65 +34,63 @@ struct SSimpleStruct
   uint32_t clock        = 0;
   uint8_t  bytes[5 * 3] = { 0 };
 };
-#pragma pack(pop)
 
-std::ostream& operator<<(std::ostream& os, const SSimpleStruct& s)
+// SSimpleStruct logging
+void log_struct(const char* action_name, const SSimpleStruct& s)
 {
-  os << "Version : " << s.version << std::endl;
-  os << "Rows    : " << s.rows    << std::endl;
-  os << "Cols    : " << s.cols    << std::endl;
-  os << "Clock   : " << s.clock   << std::endl;
+  std::cout << "------------------------------------" << std::endl;
+  std::cout << action_name << std::endl;
+  std::cout << "------------------------------------" << std::endl;
 
-  os << "Bytes   : " << std::endl;
+  std::cout << "Version : " << s.version << std::endl;
+  std::cout << "Rows    : " << s.rows    << std::endl;
+  std::cout << "Cols    : " << s.cols    << std::endl;
+  std::cout << "Clock   : " << s.clock   << std::endl;
+
+  std::cout << "Bytes   : " << std::endl;
   for (int i = 0; i < s.rows; ++i) {
     for (int j = 0; j < s.cols; ++j) {
-      os << static_cast<int>(s.bytes[i * s.cols + j]) << " ";
+      std::cout << static_cast<int>(s.bytes[i * s.cols + j]) << " ";
     }
-    os << std::endl;
+    std::cout << std::endl;
   }
-  return os;
 }
 
-// a binary payload object for sending a SSimpleStruct
+// a binary payload object that handles
+// SSimpleStruct Write and Update functionality
 class CStructPayload : public eCAL::CPayloadWriter
 {
 public:
-  // write a newly initialized and updated SSimpleStruct to the shared memory
+  // Write the complete SSimpleStruct to the shared memory
   bool Write(void* buf_, size_t len_) override
   {
-    // recheck available size
-    if (len_ < GetSize()) return false;
+    // check available size and pointer
+    if (len_ < GetSize() || buf_ == nullptr) return false;
 
-    // (re)create the complete struct
+    // create a new struct and update its content
     SSimpleStruct simple_struct;
     UpdateStruct(&simple_struct);
 
     // copy complete struct into the memory
-    memcpy(buf_, &simple_struct, GetSize());
+    *static_cast<SSimpleStruct*>(buf_) = simple_struct;
 
-    // log it
-    std::cout << "------------------------------------" << std::endl;
-    std::cout << "Write SSimpleStruct :"                << std::endl;
-    std::cout << "------------------------------------" << std::endl;
-    std::cout << simple_struct << std::endl;
+    // log action
+    log_struct("Write SSimpleStruct :", simple_struct);
 
     return true;
   };
 
-  // just update the SSimpleStruct in the shared memory
+  // Modify the SSimpleStruct in the shared memory
   bool Update(void* buf_, size_t len_) override
   {
-    // recheck available size
-    if (len_ < GetSize()) return false;
+    // check available size and pointer
+    if (len_ < GetSize() || buf_ == nullptr) return false;
 
     // update the struct in memory
     UpdateStruct(static_cast<SSimpleStruct*>(buf_));
 
-    // log it
-    std::cout << "------------------------------------" << std::endl;
-    std::cout << "Update SSimpleStruct :"               << std::endl;
-    std::cout << "------------------------------------" << std::endl;
-    std::cout << *static_cast<SSimpleStruct*>(buf_) << std::endl;
+    // log action
+    log_struct("Update SSimpleStruct :", *static_cast<SSimpleStruct*>(buf_));
 
     return true;
   };
@@ -115,11 +116,15 @@ private:
 
 int main(int argc, char** argv)
 {
-  // initialize eCAL API
-  eCAL::Initialize(argc, argv, "binary_zero_copy_snd");
+  const char* nodeName       = "binary_zero_copy_snd";
+  const char* topicName      = "simple_struct";
+  const char* structTypeName = "SSimpleStruct";
 
-  // publisher for topic "number"
-  eCAL::CPublisher pub("simple_struct", { "custom", "SSimpleStruct", "" });
+  // initialize eCAL API
+  eCAL::Initialize(argc, argv, nodeName);
+
+  // create the publisher
+  eCAL::CPublisher pub(topicName, { "custom", structTypeName, "" });
 
   // turn zero copy mode on
   pub.ShmEnableZeroCopy(true);
@@ -131,11 +136,11 @@ int main(int argc, char** argv)
   while (eCAL::Ok())
   {
     pub.Send(struct_payload);
-    eCAL::Process::SleepMS(100);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
   // finalize eCAL API
   eCAL::Finalize();
 
-  return(0);
+  return 0;
 }

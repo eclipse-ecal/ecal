@@ -18,22 +18,21 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
-
 project(binary_zero_copy_snd)
 
+# set project properties
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
+set(binary_zero_copy_snd_src src/binary_zero_copy_snd.cpp)
+
+# find packages
+message("-- Checking for modules 'eCAL'")
 find_package(eCAL REQUIRED)
 
-set(binary_zero_copy_snd_src
-    src/binary_zero_copy_snd.cpp
-)
-
+# add and configure sample project
 ecal_add_sample(${PROJECT_NAME} ${binary_zero_copy_snd_src})
-
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 target_link_libraries(${PROJECT_NAME} eCAL::core)
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
-
+# install and set properties
 ecal_install_sample(${PROJECT_NAME})
-
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/pubsub/binary)

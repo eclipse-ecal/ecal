@@ -20,27 +20,28 @@
 #include <ecal/ecal.h>
 
 #include <iostream>
-#include <sstream>
 #include <chrono>
+#include <sstream>
 #include <thread>
 
-#pragma pack(push, 1)
-struct SSimpleStruct
+// a simple struct with some used
+// to demonstrate zero copy modifications
+struct alignas(4) SSimpleStruct
 {
-  uint32_t version = 1;
-  uint16_t rows = 5;
-  uint16_t cols = 3;
-  uint32_t clock = 0;
+  uint32_t version      = 1;
+  uint16_t rows         = 5;
+  uint16_t cols         = 3;
+  uint32_t clock        = 0;
   uint8_t  bytes[5 * 3] = { 0 };
 };
-#pragma pack(pop)
 
+// SSimpleStruct logging
 std::ostream& operator<<(std::ostream& os, const SSimpleStruct& s)
 {
   os << "Version : " << s.version << std::endl;
-  os << "Rows    : " << s.rows << std::endl;
-  os << "Cols    : " << s.cols << std::endl;
-  os << "Clock   : " << s.clock << std::endl;
+  os << "Rows    : " << s.rows    << std::endl;
+  os << "Cols    : " << s.cols    << std::endl;
+  os << "Clock   : " << s.clock   << std::endl;
 
   os << "Bytes   : " << std::endl;
   for (int i = 0; i < s.rows; ++i) {
@@ -73,11 +74,14 @@ void OnReceive(const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackD
 
 int main(int argc, char** argv)
 {
-  // initialize eCAL API
-  eCAL::Initialize(argc, argv, "binary_zero_copy_rec");
+  const char* nodeName  = "binary_zero_copy_rec";
+  const char* topicName = "simple_struct";
 
-  // subscriber for topic "number"
-  eCAL::CSubscriber sub("simple_struct");
+  // initialize eCAL API
+  eCAL::Initialize(argc, argv, nodeName);
+
+  // create the subscriber
+  eCAL::CSubscriber sub(topicName);
 
   // assign callback
   sub.AddReceiveCallback(OnReceive);
@@ -88,5 +92,5 @@ int main(int argc, char** argv)
   // finalize eCAL API
   eCAL::Finalize();
 
-  return(0);
+  return 0;
 }
