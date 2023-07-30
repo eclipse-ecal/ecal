@@ -24,8 +24,8 @@
 #include <iostream>
 #include <thread>
 
-// a simple struct with some used
-// to demonstrate zero copy modifications
+// a simple struct to demonstrate
+// zero copy modifications
 struct alignas(4) SSimpleStruct
 {
   uint32_t version      = 1;
