@@ -18,8 +18,7 @@
 */
 
 /**
- * @file   ecal_payload_writer.h
- * @brief  eCAL payload writer base class
+ * @brief  eCAL payload writer class wrapping classic (buffer, size) payload
 **/
 
 #pragma once
