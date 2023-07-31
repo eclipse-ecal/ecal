@@ -79,8 +79,10 @@ add_subdirectory(cpp/orchestration/component2)
 add_subdirectory(cpp/orchestration/orchestrator)
 
 # pubsub
-add_subdirectory(cpp/pubsub/binary/binary_rec_cb)
+add_subdirectory(cpp/pubsub/binary/binary_rec)
 add_subdirectory(cpp/pubsub/binary/binary_snd)
+add_subdirectory(cpp/pubsub/binary/binary_zero_copy_rec)
+add_subdirectory(cpp/pubsub/binary/binary_zero_copy_snd)
 add_subdirectory(cpp/pubsub/binary/ping)
 add_subdirectory(cpp/pubsub/binary/pong)
 if(HAS_CAPNPROTO)
