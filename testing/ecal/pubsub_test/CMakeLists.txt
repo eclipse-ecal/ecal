@@ -23,6 +23,7 @@ find_package(GTest REQUIRED)
 
 set(pubsub_test_src
   src/pubsub_gettopics.cpp
+  src/pubsub_multibuffer
   src/pubsub_test.cpp
   src/pubsub_receive_test.cpp
 )
