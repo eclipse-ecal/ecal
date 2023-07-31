@@ -139,7 +139,8 @@ namespace eCAL
      *
      * @return True if the copy operation is successful, false otherwise.
      */
-    bool Write(void* buffer_, size_t size_) override {
+    bool Write(void* buffer_, size_t size_) override
+    {
       if (buffer_ == nullptr) return false;
       if (size_ < m_size) return false;
       if (m_buffer == nullptr) return false;
