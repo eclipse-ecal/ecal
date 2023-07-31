@@ -2535,53 +2535,94 @@ title="Print to PDF"
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CPayloadWriterE">
 <span id="_CPPv3N4eCAL14CPayloadWriterE"></span><span id="_CPPv2N4eCAL14CPayloadWriterE"></span><span id="eCAL::CPayloadWriter"></span><span class="target" id="classeCAL_1_1CPayloadWriter"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CPayloadWriter</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL14CPayloadWriterE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Subclassed by <a class="reference internal" href="classeCAL_1_1CBufferPayloadWriter.html#classeCAL_1_1CBufferPayloadWriter"><span class="std std-ref">eCAL::CBufferPayloadWriter</span></a></p>
+<dd><p>Base payload writer class to allow zero copy memory operations. </p>
+<p>This class serves as the base class for payload writers, allowing zero-copy memory operations. The <code class="docutils literal notranslate"><span class="pre">Write</span></code> and <code class="docutils literal notranslate"><span class="pre">Update</span></code> calls may operate on the target memory file directly in zero-copy mode. </p>
+<p>Subclassed by <a class="reference internal" href="classeCAL_1_1CBufferPayloadWriter.html#classeCAL_1_1CBufferPayloadWriter"><span class="std std-ref">eCAL::CBufferPayloadWriter</span></a></p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CPayloadWriter14CPayloadWriterEv">
 <span id="_CPPv3N4eCAL14CPayloadWriter14CPayloadWriterEv"></span><span id="_CPPv2N4eCAL14CPayloadWriter14CPayloadWriterEv"></span><span id="eCAL::CPayloadWriter::CPayloadWriter"></span><span class="target" id="classeCAL_1_1CPayloadWriter_1a287a1a3c0424f5998915cea0cde1c326"></span><span class="sig-name descname"><span class="n"><span class="pre">CPayloadWriter</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N4eCAL14CPayloadWriter14CPayloadWriterEv" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Default constructor for <a class="reference internal" href="#classeCAL_1_1CPayloadWriter"><span class="std std-ref">CPayloadWriter</span></a>. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CPayloadWriterD0Ev">
 <span id="_CPPv3N4eCAL14CPayloadWriterD0Ev"></span><span id="_CPPv2N4eCAL14CPayloadWriterD0Ev"></span><span id="eCAL::CPayloadWriter::~CPayloadWriter"></span><span class="target" id="classeCAL_1_1CPayloadWriter_1aa534d3e9315ab097cdc3d4e9332676ae"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">~CPayloadWriter</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N4eCAL14CPayloadWriterD0Ev" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Virtual destructor for <a class="reference internal" href="#classeCAL_1_1CPayloadWriter"><span class="std std-ref">CPayloadWriter</span></a>. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CPayloadWriter14CPayloadWriterERK14CPayloadWriter">
 <span id="_CPPv3N4eCAL14CPayloadWriter14CPayloadWriterERK14CPayloadWriter"></span><span id="_CPPv2N4eCAL14CPayloadWriter14CPayloadWriterERK14CPayloadWriter"></span><span id="eCAL::CPayloadWriter::CPayloadWriter__CPayloadWriterCR"></span><span class="target" id="classeCAL_1_1CPayloadWriter_1a5e0811d56d7ceb8f0ca3c52b98d17cdd"></span><span class="sig-name descname"><span class="n"><span class="pre">CPayloadWriter</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4eCAL14CPayloadWriter14CPayloadWriterERK14CPayloadWriter" title="eCAL::CPayloadWriter::CPayloadWriter"><span class="n"><span class="pre">CPayloadWriter</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N4eCAL14CPayloadWriter14CPayloadWriterERK14CPayloadWriter" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Copy constructor (deleted). </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CPayloadWriter14CPayloadWriterERR14CPayloadWriter">
 <span id="_CPPv3N4eCAL14CPayloadWriter14CPayloadWriterERR14CPayloadWriter"></span><span id="_CPPv2N4eCAL14CPayloadWriter14CPayloadWriterERR14CPayloadWriter"></span><span id="eCAL::CPayloadWriter::CPayloadWriter__CPayloadWriterRR"></span><span class="target" id="classeCAL_1_1CPayloadWriter_1a110b6503c24323c369277ce51daa1710"></span><span class="sig-name descname"><span class="n"><span class="pre">CPayloadWriter</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4eCAL14CPayloadWriter14CPayloadWriterERR14CPayloadWriter" title="eCAL::CPayloadWriter::CPayloadWriter"><span class="n"><span class="pre">CPayloadWriter</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N4eCAL14CPayloadWriter14CPayloadWriterERR14CPayloadWriter" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Move constructor (deleted). </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CPayloadWriteraSERK14CPayloadWriter">
 <span id="_CPPv3N4eCAL14CPayloadWriteraSERK14CPayloadWriter"></span><span id="_CPPv2N4eCAL14CPayloadWriteraSERK14CPayloadWriter"></span><span id="eCAL::CPayloadWriter::assign-operator__CPayloadWriterCR"></span><span class="target" id="classeCAL_1_1CPayloadWriter_1ac56421da31ffcf6b902536a4755bf818"></span><a class="reference internal" href="#_CPPv4N4eCAL14CPayloadWriterE" title="eCAL::CPayloadWriter"><span class="n"><span class="pre">CPayloadWriter</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4eCAL14CPayloadWriterE" title="eCAL::CPayloadWriter"><span class="n"><span class="pre">CPayloadWriter</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N4eCAL14CPayloadWriteraSERK14CPayloadWriter" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Copy assignment operator (deleted). </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CPayloadWriteraSERR14CPayloadWriter">
 <span id="_CPPv3N4eCAL14CPayloadWriteraSERR14CPayloadWriter"></span><span id="_CPPv2N4eCAL14CPayloadWriteraSERR14CPayloadWriter"></span><span id="eCAL::CPayloadWriter::assign-operator__CPayloadWriterRR"></span><span class="target" id="classeCAL_1_1CPayloadWriter_1a61bd311744ce4c5ee82e78d1e7d985cd"></span><a class="reference internal" href="#_CPPv4N4eCAL14CPayloadWriterE" title="eCAL::CPayloadWriter"><span class="n"><span class="pre">CPayloadWriter</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4eCAL14CPayloadWriterE" title="eCAL::CPayloadWriter"><span class="n"><span class="pre">CPayloadWriter</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N4eCAL14CPayloadWriteraSERR14CPayloadWriter" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Move assignment operator (deleted). </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CPayloadWriter5WriteEPv6size_t">
 <span id="_CPPv3N4eCAL14CPayloadWriter5WriteEPv6size_t"></span><span id="_CPPv2N4eCAL14CPayloadWriter5WriteEPv6size_t"></span><span id="eCAL::CPayloadWriter::Write__voidP.s"></span><span class="target" id="classeCAL_1_1CPayloadWriter_1a0c80f1fdc15503d992b9277f4c092a46"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Write</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">buffer_</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size_</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N4eCAL14CPayloadWriter5WriteEPv6size_t" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Perform a full write operation with uninitialized memory. </p>
+<p>This virtual function allows derived classes to perform a full write operation when the provisioned memory is uninitialized.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer_</strong> – Pointer to the buffer containing the data to be written. </p></li>
+<li><p><strong>size_</strong> – Size of the data to be written.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the write operation is successful, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CPayloadWriter6UpdateEPv6size_t">
 <span id="_CPPv3N4eCAL14CPayloadWriter6UpdateEPv6size_t"></span><span id="_CPPv2N4eCAL14CPayloadWriter6UpdateEPv6size_t"></span><span id="eCAL::CPayloadWriter::Update__voidP.s"></span><span class="target" id="classeCAL_1_1CPayloadWriter_1adef71f71560f623a8042c1ba01ee872c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Update</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">buffer_</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CPayloadWriter6UpdateEPv6size_t" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Perform a partial write operation or modify existing data. </p>
+<p>This virtual function allows derived classes to perform a partial write operation or modify existing data when the provisioned memory is already initialized and contains the data from the last write operation. By default, this operation will just call the <code class="docutils literal notranslate"><span class="pre">Write</span></code> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer_</strong> – Pointer to the buffer containing the data to be written or modified. </p></li>
+<li><p><strong>size_</strong> – Size of the data to be written or modified.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the write/update operation is successful, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CPayloadWriter7GetSizeEv">
 <span id="_CPPv3N4eCAL14CPayloadWriter7GetSizeEv"></span><span id="_CPPv2N4eCAL14CPayloadWriter7GetSizeEv"></span><span id="eCAL::CPayloadWriter::GetSize"></span><span class="target" id="classeCAL_1_1CPayloadWriter_1a32092e1db64f84bd86429df86824835c"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetSize</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N4eCAL14CPayloadWriter7GetSizeEv" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Get the size of the required memory. </p>
+<p>This virtual function allows derived classes to provide the size of the memory that eCAL needs to allocate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The size of the required memory. </p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 </dd></dl>

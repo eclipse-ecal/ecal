@@ -2535,22 +2535,53 @@ title="Print to PDF"
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL20CBufferPayloadWriterE">
 <span id="_CPPv3N4eCAL20CBufferPayloadWriterE"></span><span id="_CPPv2N4eCAL20CBufferPayloadWriterE"></span><span id="eCAL::CBufferPayloadWriter"></span><span class="target" id="classeCAL_1_1CBufferPayloadWriter"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CBufferPayloadWriter</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">eCAL</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="classeCAL_1_1CPayloadWriter.html#_CPPv4N4eCAL14CPayloadWriterE" title="eCAL::CPayloadWriter"><span class="n"><span class="pre">CPayloadWriter</span></span></a><a class="headerlink" href="#_CPPv4N4eCAL20CBufferPayloadWriterE" title="Permalink to this definition">#</a><br /></dt>
-<dd><div class="breathe-sectiondef docutils container">
+<dd><p>Payload writer class that wraps a classic (void*, size_t) interface. </p>
+<p>This class is a payload writer that wraps a classic interface using <code class="docutils literal notranslate"><span class="pre">void*</span></code> and <code class="docutils literal notranslate"><span class="pre">size_t</span></code> arguments. It inherits from the base class <a class="reference internal" href="classeCAL_1_1CPayloadWriter.html#classeCAL_1_1CPayloadWriter"><span class="std std-ref">CPayloadWriter</span></a>, allowing zero-copy memory operations. </p>
+<div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL20CBufferPayloadWriter20CBufferPayloadWriterEPCKv6size_t">
 <span id="_CPPv3N4eCAL20CBufferPayloadWriter20CBufferPayloadWriterEPCKv6size_t"></span><span id="_CPPv2N4eCAL20CBufferPayloadWriter20CBufferPayloadWriterEPCKv6size_t"></span><span id="eCAL::CBufferPayloadWriter::CBufferPayloadWriter__voidCPC.s"></span><span class="target" id="classeCAL_1_1CBufferPayloadWriter_1a011a219797b8d1f036171e9c9ad0d42c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CBufferPayloadWriter</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">buffer_</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL20CBufferPayloadWriter20CBufferPayloadWriterEPCKv6size_t" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Constructor for <a class="reference internal" href="#classeCAL_1_1CBufferPayloadWriter"><span class="std std-ref">CBufferPayloadWriter</span></a>. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer_</strong> – Pointer to the buffer containing the data to be written. </p></li>
+<li><p><strong>size_</strong> – Size of the data to be written. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL20CBufferPayloadWriter5WriteEPv6size_t">
 <span id="_CPPv3N4eCAL20CBufferPayloadWriter5WriteEPv6size_t"></span><span id="_CPPv2N4eCAL20CBufferPayloadWriter5WriteEPv6size_t"></span><span id="eCAL::CBufferPayloadWriter::Write__voidP.s"></span><span class="target" id="classeCAL_1_1CBufferPayloadWriter_1a1b6a909b8c7071eaf586888706927407"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Write</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">buffer_</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size_</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N4eCAL20CBufferPayloadWriter5WriteEPv6size_t" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Make a dump memory copy of the stored buffer. </p>
+<p>This function performs a dump memory copy of the stored buffer to the provided memory location (buffer_) with the specified size (size_). The size of the provided memory buffer should be equal to or greater than the stored buffer size to avoid memory corruption.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer_</strong> – Pointer to the target buffer where the data will be copied. </p></li>
+<li><p><strong>size_</strong> – Size of the target buffer.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the copy operation is successful, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL20CBufferPayloadWriter7GetSizeEv">
 <span id="_CPPv3N4eCAL20CBufferPayloadWriter7GetSizeEv"></span><span id="_CPPv2N4eCAL20CBufferPayloadWriter7GetSizeEv"></span><span id="eCAL::CBufferPayloadWriter::GetSize"></span><span class="target" id="classeCAL_1_1CBufferPayloadWriter_1a313e648fb876880ed1f7b41aa91de782"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetSize</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N4eCAL20CBufferPayloadWriter7GetSizeEv" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Get the size of the memory that needs to be copied. </p>
+<p>This function returns the size of the memory buffer that needs to be copied during the write operation. It is used by the base class <a class="reference internal" href="classeCAL_1_1CPayloadWriter.html#classeCAL_1_1CPayloadWriter"><span class="std std-ref">CPayloadWriter</span></a> to allocate the required memory for eCAL.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The size of the memory that needs to be copied. </p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 </dd></dl>
