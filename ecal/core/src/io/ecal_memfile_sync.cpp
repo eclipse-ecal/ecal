@@ -129,7 +129,7 @@ namespace eCAL
     return false;
   }
 
-  bool CSyncMemoryFile::Write(CPayloadWriter& payload_, const SWriterAttr& data_)
+  bool CSyncMemoryFile::Write(CPayloadWriter& payload_, const SWriterAttr& data_, bool force_full_write_/* = false*/)
   {
     if (!m_created)
     {
@@ -197,7 +197,7 @@ namespace eCAL
     // write the buffer
     if (data_.len > 0)
     {
-      written &= m_memfile.WritePayload(payload_, data_.len, wbytes) > 0;
+      written &= m_memfile.WritePayload(payload_, data_.len, wbytes, force_full_write_) > 0;
     }
     // release write access
     m_memfile.ReleaseWriteAccess();
