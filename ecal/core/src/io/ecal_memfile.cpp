@@ -314,7 +314,7 @@ namespace eCAL
     }
   }
 
-  size_t CMemoryFile::WritePayload(CPayloadWriter& payload_, const size_t len_, const size_t offset_)
+  size_t CMemoryFile::WritePayload(CPayloadWriter& payload_, const size_t len_, const size_t offset_, bool force_full_write_ /*= false*/)
   {
     if (!m_created) return(0);
 
@@ -322,7 +322,7 @@ namespace eCAL
     if (GetWriteAddress(wbuf, len_ + offset_) != 0u)
     {
       // (re)write complete buffer
-      if (!m_payload_initialized)
+      if (!m_payload_initialized || force_full_write_)
       {
         bool const success = payload_.Write(static_cast<char*>(wbuf) + offset_, len_);
         if (!success)
