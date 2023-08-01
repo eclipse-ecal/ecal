@@ -31,13 +31,13 @@
 #define PAYLOAD_SIZE               1024
 
 // a binary payload object for testing
-// full (Write) and partial (Update) writing
+// full (WriteFull) and partial (WriteModified) writing
 class CBinaryPayload : public eCAL::CPayloadWriter
 {
 public:
   CBinaryPayload(size_t size_) : size(size_) {}
 
-  bool Write(void* buf_, size_t len_) override
+  bool WriteFull(void* buf_, size_t len_) override
   {
     // write complete content to the shared memory file
     if (len_ < size) return false;
@@ -45,9 +45,9 @@ public:
     return true;
   };
 
-  bool Update(void* buf_, size_t len_) override
+  bool WriteModified(void* buf_, size_t len_) override
   {
-    // update content of the shared memory file
+    // modify content of the shared memory file
     if (len_ < size) return false;
     const size_t write_idx(clock % len_);
     const char write_chr(clock % 100);

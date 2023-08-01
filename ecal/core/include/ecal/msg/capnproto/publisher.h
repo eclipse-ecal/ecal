@@ -66,7 +66,7 @@ namespace eCAL
         CPayload& operator=(const CPayload&) = delete;
         CPayload& operator=(CPayload&&) noexcept = delete;
 
-        bool Write(void* buf_, size_t len_) override
+        bool WriteFull(void* buf_, size_t len_) override
         {
           kj::Array<capnp::word> words = capnp::messageToFlatArray(const_cast<capnp::MallocMessageBuilder&>(message_builder));
           kj::ArrayPtr<kj::byte> bytes = words.asBytes();
