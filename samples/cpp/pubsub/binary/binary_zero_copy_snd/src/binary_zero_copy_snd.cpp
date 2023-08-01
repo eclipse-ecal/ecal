@@ -61,7 +61,7 @@ void log_struct(const char* action_name, const SSimpleStruct& s)
 class CStructPayload : public eCAL::CPayloadWriter
 {
 public:
-  // WriteFull the complete SSimpleStruct to the shared memory
+  // Write the complete SSimpleStruct to the shared memory
   bool WriteFull(void* buf_, size_t len_) override
   {
     // check available size and pointer
