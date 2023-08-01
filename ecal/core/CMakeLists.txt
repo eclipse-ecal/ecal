@@ -273,6 +273,7 @@ set(ecal_service_header_src
 
 set(ecal_cmn_header_src
     src/convert_utf.h
+    src/ecal_buffer_payload_writer.h
     src/ecal_config_reader.h
     src/ecal_config_reader_hlp.h
     src/ecal_def.h
