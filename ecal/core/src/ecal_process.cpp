@@ -33,6 +33,7 @@
 
 #include <array>
 #include <chrono>
+#include <cstdlib>
 #include <thread>
 #include <iostream>
 #include <sstream>
@@ -333,7 +334,11 @@ namespace eCAL
 
     std::string GetHostGroupName()
     {
-      return Config::GetHostGroupName().empty() ? GetHostName() : Config::GetHostGroupName();
+      const auto host_group_name = std::getenv("ECAL_HOST_GROUP_NAME");
+      if (host_group_name != nullptr)
+        return host_group_name;
+      else
+        return Config::GetHostGroupName().empty() ? GetHostName() : Config::GetHostGroupName();
     }
 
     int GetHostID()
