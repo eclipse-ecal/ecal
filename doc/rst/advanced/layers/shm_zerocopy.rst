@@ -157,39 +157,48 @@ The new payload type ``CPayloadWriter`` looks like this (all functions unnecessa
    * @brief Base payload writer class to allow zero copy memory operations.
    *
    * This class serves as the base class for payload writers, allowing zero-copy memory
-   * operations. The `Write` and `Update` calls may operate on the target memory file
-   * directly in zero-copy mode.
+   * operations. The `WriteFull` and `WriteModified` calls may operate on the target
+   * memory file directly in zero-copy mode.
+   * 
+   * A partial writing / modification of the memory file is only possible when zero-copy mode 
+   * is activated. If zero-copy is not enabled, the `WriteModified` method is ignored and the 
+   * `WriteFull` method is always executed (see CPublisher::ShmEnableZeroCopy)
+   * 
    */
   class CPayloadWriter
   {
   public:
     /**
-     * @brief Perform a full write operation with uninitialized memory.
+     * @brief Perform a full write operation on uninitialized memory.
      *
      * This virtual function allows derived classes to perform a full write operation
-     * when the provisioned memory is uninitialized.
+     * when the provisioned memory is uninitialized. Typically, this is the case when a 
+     * memory file had to be recreated or its size had to be changed.
      *
      * @param buffer_ Pointer to the buffer containing the data to be written.
      * @param size_   Size of the data to be written.
      *
      * @return True if the write operation is successful, false otherwise.
      */
-    virtual bool Write(void* buffer_, size_t size_) = 0;
+    virtual bool WriteFull(void* buffer_, size_t size_) = 0;
 
     /**
-     * @brief Perform a partial write operation or modify existing data.
+     * @brief Perform a partial write operation to modify existing data.
      *
-     * This virtual function allows derived classes to perform a partial write operation
-     * or modify existing data when the provisioned memory is already initialized and
-     * contains the data from the last write operation. By default, this operation will
-     * just call the `Write` function.
+     * This virtual function allows derived classes to modify existing data when the provisioned
+     * memory is already initialized by a WriteFull call (i.e. contains the data from that full write operation).
      *
-     * @param buffer_ Pointer to the buffer containing the data to be written or modified.
-     * @param size_   Size of the data to be written or modified.
+     * The memory can be partially modified and does not have to be completely rewritten, which leads to significantly 
+     * higher performance (lower latency).
+     * 
+     * If not implemented (by default), this operation will just call the `WriteFull` function.
+     *
+     * @param buffer_ Pointer to the buffer containing the data to be modified.
+     * @param size_   Size of the data to be modified.
      *
      * @return True if the write/update operation is successful, false otherwise.
      */
-    virtual bool Update(void* buffer_, size_t size_) { return Write(buffer_, size_); };
+    virtual bool WriteModified(void* buffer_, size_t size_) { return WriteFull(buffer_, size_); };
 
     /**
      * @brief Get the size of the required memory.
@@ -202,56 +211,57 @@ The new payload type ``CPayloadWriter`` looks like this (all functions unnecessa
     virtual size_t GetSize() = 0;
   };
 
-The user must derive his own playload data class and implement at least the ``Write`` function. This ``Write`` function will be called by the low level eCAL SHM layer when finally the shared memory file needs to be written the first time (initial full write action). 
+The user must derive his own playload data class and implement at least the ``WriteFull`` function. This ``WriteFull`` function will be called by the low level eCAL SHM layer when finally the shared memory file needs to be written the first time (initial full write action). 
 
-For writing partial content (modifying the memory content) the user may define a second function called ``Update``. This function is called by the eCAL SHM layer if the shared memory file is in an initialized state i.e. if it was written with the previously mentioned ``Write`` method. As you can see, the ``Update`` function simply calls the ``Write`` function by default if it is not overwritten.
+For writing partial content (modifying the memory content) the user may define a second function called ``WriteModified``. This function is called by the eCAL SHM layer if the shared memory file is in an initialized state i.e. if it was written with the previously mentioned ``WriteFull`` method. As you can see, the ``WriteModified`` function simply calls the ``WriteFull`` function by default if it is not overwritten.
 
 The implementation of the ``GetSize`` method is mandatory. This method is used by the eCAL SHM layer to obtain the size of the memory file that needs to be allocated.
 
 **Example**:
 
-The following primitive example shows the usage of the ``CPayloadWriter`` API to send a simple binary struct efficient by implementing a full ``Write`` and an ``Update`` method that is modifying a few struct elements without memcopying the whole structure again into memory. Note the in case of the none Full Zero Copy Mode only the ``Write`` function will be called by eCAL.
+The following primitive example shows the usage of the ``CPayloadWriter`` API to send a simple binary struct efficient by implementing a full ``WriteFull`` and an ``WriteModified`` method that is modifying a few struct elements without memcopying the whole structure again into memory. Note the in case of the none Full Zero Copy Mode only the ``WriteFull`` function will be called by eCAL.
 
-This is the customized new payload writer class. The ``Write`` method is creating a new ``SSimpleStruct`` struct, updating its content and copying the whole structure into the opened shared memory file buffer. The ``Update`` method gets a view of the opened shared memory file, and applies modifications on the struct elements ``clock`` and ``bytes`` by just apllying ``UpdateStruct``.
+This is the customized new payload writer class. The ``WriteFull`` method is creating a new ``SSimpleStruct`` struct, updating its content and copying the whole structure into the opened shared memory file buffer. The ``WriteModified`` method gets a view of the opened shared memory file, and applies modifications on the struct elements ``clock`` and ``bytes`` by just apllying ``UpdateStruct``.
 
 .. code-block:: cpp
 
-  #pragma pack(push, 1)
-  struct SSimpleStruct
+  // a simple struct to demonstrate
+  // zero copy modifications
+  struct alignas(4) SSimpleStruct
   {
     uint32_t version      = 1;
     uint16_t rows         = 5;
     uint16_t cols         = 3;
-    uint16_t clock        = 0;
+    uint32_t clock        = 0;
     uint8_t  bytes[5 * 3] = { 0 };
   };
-  #pragma pack(pop)
 
-  // a binary payload object for sending a SSimpleStruct
+  // a binary payload object that handles
+  // SSimpleStruct WriteFull and WriteModified functionality
   class CStructPayload : public eCAL::CPayloadWriter
   {
   public:
-    // write a new initialized and updated SSimpleStruct to the shared memory
-    bool Write(void* buf_, size_t len_) override
+    // Write the complete SSimpleStruct to the shared memory
+    bool WriteFull(void* buf_, size_t len_) override
     {
-      // recheck available size
-      if (len_ < GetSize()) return false;
+      // check available size and pointer
+      if (len_ < GetSize() || buf_ == nullptr) return false;
 
-      // (re)create the complete struct
+      // create a new struct and update its content
       SSimpleStruct simple_struct;
       UpdateStruct(&simple_struct);
 
       // copy complete struct into the memory
-      memcpy(buf_, &simple_struct, GetSize());
+      *static_cast<SSimpleStruct*>(buf_) = simple_struct;
 
       return true;
     };
 
-    // just update a SSimpleStruct in the shared memory
-    bool Update(void* buf_, size_t len_) override
+    // Modify the SSimpleStruct in the shared memory
+    bool WriteModified(void* buf_, size_t len_) override
     {
-      // recheck available size
-      if (len_ < GetSize()) return false;
+      // check available size and pointer
+      if (len_ < GetSize() || buf_ == nullptr) return false;
 
       // update the struct in memory
       UpdateStruct(static_cast<SSimpleStruct*>(buf_));
@@ -264,7 +274,7 @@ This is the customized new payload writer class. The ``Write`` method is creatin
   private:
     void UpdateStruct(SSimpleStruct* simple_struct)
     {
-      // modify the simple struct in memory
+      // modify the simple_struct
       simple_struct->clock = clock;
       for (auto i = 0; i < (simple_struct->rows * simple_struct->cols); ++i)
       {
@@ -275,7 +285,7 @@ This is the customized new payload writer class. The ``Write`` method is creatin
       clock++;
     };
 
-    uint16_t clock = 0;
+    uint32_t clock = 0;
   };
 
 To send this payload you just need a few lines of code:
@@ -300,7 +310,7 @@ To send this payload you just need a few lines of code:
     while (eCAL::Ok())
     {
       pub.Send(struct_payload);
-      eCAL::Process::SleepMS(100);
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
     // finalize eCAL API
