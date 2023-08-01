@@ -32,8 +32,6 @@ Includes
 
 - ``cstddef``
 
-- ``cstring``
-
 
 
 Included By
@@ -55,8 +53,6 @@ Namespaces
 Classes
 -------
 
-
-- :ref:`exhale_class_classeCAL_1_1CBufferPayloadWriter`
 
 - :ref:`exhale_class_classeCAL_1_1CPayloadWriter`
 

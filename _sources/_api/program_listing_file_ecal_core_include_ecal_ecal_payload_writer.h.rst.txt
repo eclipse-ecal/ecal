@@ -32,7 +32,6 @@ Program Listing for File ecal_payload_writer.h
    #pragma once
    
    #include <cstddef>
-   #include <cstring>
    
    namespace eCAL
    {
@@ -56,28 +55,6 @@ Program Listing for File ecal_payload_writer.h
        virtual bool Update(void* buffer_, size_t size_) { return Write(buffer_, size_); };
    
        virtual size_t GetSize() = 0;
-     };
-   
-     class CBufferPayloadWriter : public CPayloadWriter
-     {
-     public:
-       CBufferPayloadWriter(const void* const buffer_, size_t size_) : m_buffer(buffer_), m_size(size_) {};
-   
-       bool Write(void* buffer_, size_t size_) override
-       {
-         if (buffer_ == nullptr) return false;
-         if (size_ < m_size) return false;
-         if (m_buffer == nullptr) return false;
-         if (m_size == 0) return false;
-         memcpy(buffer_, m_buffer, m_size);
-         return true;
-       }
-   
-       size_t GetSize() override { return m_size; };
-   
-     private:
-       const void* m_buffer = nullptr;  
-       size_t      m_size = 0;          
      };
    
    } // namespace eCAL
