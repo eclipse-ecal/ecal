@@ -68,6 +68,7 @@ namespace eCAL
 
     ClientSessionV1::~ClientSessionV1()
     {
+      ClientSessionV1::stop();
       ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Deleted");
     }
 
@@ -151,7 +152,7 @@ namespace eCAL
                                     {
                                       asio::error_code socket_option_ec;
                                       {
-                                        std::lock_guard<std::mutex> socket_lock (me->socket_mutex_);
+                                        const std::lock_guard<std::mutex> socket_lock(me->socket_mutex_);
                                         me->socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec);
                                       }
                                       if (socket_option_ec)

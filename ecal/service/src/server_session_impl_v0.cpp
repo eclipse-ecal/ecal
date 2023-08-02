@@ -60,6 +60,7 @@ namespace eCAL
     // Destructor
     ServerSessionV0::~ServerSessionV0()
     {
+      ServerSessionV0::stop();
       ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Server Session Deleted");
     }
 

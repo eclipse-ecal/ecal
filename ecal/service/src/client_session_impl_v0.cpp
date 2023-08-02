@@ -64,6 +64,7 @@ namespace eCAL
 
     ClientSessionV0::~ClientSessionV0()
     {
+      ClientSessionV0::stop();
       ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Deleted");
     }
 

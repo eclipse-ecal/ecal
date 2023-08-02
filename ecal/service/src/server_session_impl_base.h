@@ -85,7 +85,7 @@ namespace eCAL
     public:
       asio::ip::tcp::socket& socket() { return socket_; }
       virtual void start() = 0;
-      virtual void stop()  = 0;
+      virtual void stop() = 0;
 
       virtual eCAL::service::State get_state() const = 0;
 
