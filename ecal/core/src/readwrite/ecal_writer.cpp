@@ -431,7 +431,7 @@ namespace eCAL
     if (!allow_zero_copy)
     {
       m_payload_buffer.resize(payload_buf_size);
-      payload_.Write(m_payload_buffer.data(), m_payload_buffer.size());
+      payload_.WriteFull(m_payload_buffer.data(), m_payload_buffer.size());
     }
 
     // prepare counter and internal states
