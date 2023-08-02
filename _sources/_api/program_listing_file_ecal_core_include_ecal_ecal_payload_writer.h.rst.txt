@@ -50,9 +50,9 @@ Program Listing for File ecal_payload_writer.h
    
        CPayloadWriter& operator=(CPayloadWriter&&) = default;
    
-       virtual bool Write(void* buffer_, size_t size_) = 0;
+       virtual bool WriteFull(void* buffer_, size_t size_) = 0;
    
-       virtual bool Update(void* buffer_, size_t size_) { return Write(buffer_, size_); };
+       virtual bool WriteModified(void* buffer_, size_t size_) { return WriteFull(buffer_, size_); };
    
        virtual size_t GetSize() = 0;
      };

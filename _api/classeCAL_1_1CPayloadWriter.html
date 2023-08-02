@@ -2498,7 +2498,8 @@ title="Print to PDF"
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CPayloadWriterE">
 <span id="_CPPv3N4eCAL14CPayloadWriterE"></span><span id="_CPPv2N4eCAL14CPayloadWriterE"></span><span id="eCAL::CPayloadWriter"></span><span class="target" id="classeCAL_1_1CPayloadWriter"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CPayloadWriter</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL14CPayloadWriterE" title="Permalink to this definition">#</a><br /></dt>
 <dd><p>Base payload writer class to allow zero copy memory operations. </p>
-<p>This class serves as the base class for payload writers, allowing zero-copy memory operations. The <code class="docutils literal notranslate"><span class="pre">Write</span></code> and <code class="docutils literal notranslate"><span class="pre">Update</span></code> calls may operate on the target memory file directly in zero-copy mode. </p>
+<p>This class serves as the base class for payload writers, allowing zero-copy memory operations. The <code class="docutils literal notranslate"><span class="pre">WriteFull</span></code> and <code class="docutils literal notranslate"><span class="pre">WriteModified</span></code> calls may operate on the target memory file directly in zero-copy mode.</p>
+<p>A partial writing / modification of the memory file is only possible when zero-copy mode is activated. If zero-copy is not enabled, the <code class="docutils literal notranslate"><span class="pre">WriteModified</span></code> method is ignored and the <code class="docutils literal notranslate"><span class="pre">WriteFull</span></code> method is always executed (see <a class="reference internal" href="classeCAL_1_1CPublisher.html#classeCAL_1_1CPublisher_1af057c139ad7f40fe6574e095f5ff806c"><span class="std std-ref">CPublisher::ShmEnableZeroCopy</span></a>) </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -2538,10 +2539,10 @@ title="Print to PDF"
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CPayloadWriter5WriteEPv6size_t">
-<span id="_CPPv3N4eCAL14CPayloadWriter5WriteEPv6size_t"></span><span id="_CPPv2N4eCAL14CPayloadWriter5WriteEPv6size_t"></span><span id="eCAL::CPayloadWriter::Write__voidP.s"></span><span class="target" id="classeCAL_1_1CPayloadWriter_1a0c80f1fdc15503d992b9277f4c092a46"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Write</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">buffer_</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size_</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N4eCAL14CPayloadWriter5WriteEPv6size_t" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Perform a full write operation with uninitialized memory. </p>
-<p>This virtual function allows derived classes to perform a full write operation when the provisioned memory is uninitialized.</p>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CPayloadWriter9WriteFullEPv6size_t">
+<span id="_CPPv3N4eCAL14CPayloadWriter9WriteFullEPv6size_t"></span><span id="_CPPv2N4eCAL14CPayloadWriter9WriteFullEPv6size_t"></span><span id="eCAL::CPayloadWriter::WriteFull__voidP.s"></span><span class="target" id="classeCAL_1_1CPayloadWriter_1a2d4fd3818680de453cf3ac755338bb2c"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WriteFull</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">buffer_</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size_</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N4eCAL14CPayloadWriter9WriteFullEPv6size_t" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Perform a full write operation on uninitialized memory. </p>
+<p>This virtual function allows derived classes to perform a full write operation when the provisioned memory is uninitialized. Typically, this is the case when a memory file had to be recreated or its size had to be changed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2556,15 +2557,17 @@ title="Print to PDF"
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CPayloadWriter6UpdateEPv6size_t">
-<span id="_CPPv3N4eCAL14CPayloadWriter6UpdateEPv6size_t"></span><span id="_CPPv2N4eCAL14CPayloadWriter6UpdateEPv6size_t"></span><span id="eCAL::CPayloadWriter::Update__voidP.s"></span><span class="target" id="classeCAL_1_1CPayloadWriter_1adef71f71560f623a8042c1ba01ee872c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Update</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">buffer_</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CPayloadWriter6UpdateEPv6size_t" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Perform a partial write operation or modify existing data. </p>
-<p>This virtual function allows derived classes to perform a partial write operation or modify existing data when the provisioned memory is already initialized and contains the data from the last write operation. By default, this operation will just call the <code class="docutils literal notranslate"><span class="pre">Write</span></code> function.</p>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CPayloadWriter13WriteModifiedEPv6size_t">
+<span id="_CPPv3N4eCAL14CPayloadWriter13WriteModifiedEPv6size_t"></span><span id="_CPPv2N4eCAL14CPayloadWriter13WriteModifiedEPv6size_t"></span><span id="eCAL::CPayloadWriter::WriteModified__voidP.s"></span><span class="target" id="classeCAL_1_1CPayloadWriter_1a17324d2f99cb72e720910208458b368c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WriteModified</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">buffer_</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CPayloadWriter13WriteModifiedEPv6size_t" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Perform a partial write operation to modify existing data. </p>
+<p>This virtual function allows derived classes to modify existing data when the provisioned memory is already initialized by a WriteFull call (i.e. contains the data from that full write operation).</p>
+<p>The memory can be partially modified and does not have to be completely rewritten, which leads to significantly higher performance (lower latency).</p>
+<p>If not implemented (by default), this operation will just call the <code class="docutils literal notranslate"><span class="pre">WriteFull</span></code> function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>buffer_</strong> – Pointer to the buffer containing the data to be written or modified. </p></li>
-<li><p><strong>size_</strong> – Size of the data to be written or modified.</p></li>
+<li><p><strong>buffer_</strong> – Pointer to the buffer containing the data to be modified. </p></li>
+<li><p><strong>size_</strong> – Size of the data to be modified.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
