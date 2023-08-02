@@ -29,14 +29,14 @@ namespace eCAL
     {
       namespace
       {
-        void read_header_start(asio::ip::tcp::socket& socket, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
-        void read_header_rest(asio::ip::tcp::socket& socket, const std::shared_ptr<std::vector<char>>& header_buffer, size_t bytes_already_read, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
-        void read_payload(asio::ip::tcp::socket& socket, const std::shared_ptr<std::vector<char>>& header_buffer, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
+        void read_header_start(asio::ip::tcp::socket& socket, std::mutex& socket_mutex, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
+        void read_header_rest(asio::ip::tcp::socket& socket, std::mutex& socket_mutex, const std::shared_ptr<std::vector<char>>& header_buffer, size_t bytes_already_read, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
+        void read_payload(asio::ip::tcp::socket& socket, std::mutex& socket_mutex, const std::shared_ptr<std::vector<char>>& header_buffer, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
 
         ///////////////////////////////////////////////////
         // Read and write implementation
         ///////////////////////////////////////////////////
-        void read_header_start(asio::ip::tcp::socket& socket, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb)
+        void read_header_start(asio::ip::tcp::socket& socket, std::mutex& socket_mutex, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb)
         {
           // Get size of the entire header as it is currently known. What comes from
           // the network may be larger or smaller.
@@ -55,10 +55,11 @@ namespace eCAL
           //   - Maximum "bytes_to_read_now"
           //   - At least "bytes_to_read_now"
           // => We read exactly the "bytes_to_read_now" amount of bytes
+          const std::lock_guard<std::mutex> socket_lock(socket_mutex);
           asio::async_read(socket
                         , asio::buffer(header_buffer->data(), bytes_to_read_now)
                         , asio::transfer_at_least(bytes_to_read_now)
-                        , [&socket, header_buffer, error_cb, success_cb](asio::error_code ec, std::size_t bytes_read)
+                        , [&socket, &socket_mutex, header_buffer, error_cb, success_cb](asio::error_code ec, std::size_t bytes_read)
                           {
                             if (ec)
                             {
@@ -68,11 +69,11 @@ namespace eCAL
                             }
 
                             // Read the rest of the header!
-                            read_header_rest(socket, header_buffer, bytes_read, error_cb, success_cb);
+                            read_header_rest(socket, socket_mutex, header_buffer, bytes_read, error_cb, success_cb);
                           });
         }
 
-        void read_header_rest(asio::ip::tcp::socket& socket, const std::shared_ptr<std::vector<char>>& header_buffer, size_t bytes_already_read, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb)
+        void read_header_rest(asio::ip::tcp::socket& socket, std::mutex& socket_mutex, const std::shared_ptr<std::vector<char>>& header_buffer, size_t bytes_already_read, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb)
         {
           // Check how big the remote header claims to be
           const size_t remote_header_size = ntohs(reinterpret_cast<eCAL::service::TcpHeaderV1*>(header_buffer->data())->header_size_n);
@@ -93,15 +94,16 @@ namespace eCAL
           // 8 bytes should come at least 8 reserved bytes.
           if (bytes_still_to_read <= 0)
           {
-            read_payload(socket, header_buffer, error_cb, success_cb);
+            read_payload(socket, socket_mutex, header_buffer, error_cb, success_cb);
             return;
           }
 
           // Read the remaining bytes from the header
+          const std::lock_guard<std::mutex> socket_lock(socket_mutex);
           asio::async_read(socket
                         , asio::buffer(&((*header_buffer)[bytes_already_read]), bytes_still_to_read)
                         , asio::transfer_at_least(bytes_still_to_read)
-                        , [&socket, header_buffer, error_cb, success_cb](asio::error_code ec, std::size_t /*bytes_read*/)
+                        , [&socket, &socket_mutex, header_buffer, error_cb, success_cb](asio::error_code ec, std::size_t /*bytes_read*/)
                           {
                             if (ec)
                             {
@@ -116,7 +118,7 @@ namespace eCAL
                             if (payload_size > 0)
                             {
                               // If there is a payload, read it
-                              read_payload(socket, header_buffer, error_cb, success_cb);
+                              read_payload(socket, socket_mutex, header_buffer, error_cb, success_cb);
                             }
                             else
                             {
@@ -126,7 +128,7 @@ namespace eCAL
                           });
         }
 
-        void read_payload(asio::ip::tcp::socket& socket, const std::shared_ptr<std::vector<char>>& header_buffer, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb)
+        void read_payload(asio::ip::tcp::socket& socket, std::mutex& socket_mutex, const std::shared_ptr<std::vector<char>>& header_buffer, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb)
         {
           // Read how many bytes we will get as payload
           const uint32_t payload_size = ntohl(reinterpret_cast<eCAL::service::TcpHeaderV1*>(header_buffer->data())->package_size_n);
@@ -136,6 +138,7 @@ namespace eCAL
           const std::shared_ptr<std::string> payload_buffer = std::make_shared<std::string>(payload_size, '\0');
 
           // Read all the payload data into the payload_buffer
+          const std::lock_guard<std::mutex> socket_lock(socket_mutex);
           asio::async_read(socket
                         , asio::buffer(const_cast<char*>(payload_buffer->data()), payload_buffer->size())
                         , asio::transfer_at_least(payload_buffer->size())
@@ -158,11 +161,12 @@ namespace eCAL
       ///////////////////////////////////////////////////
       // Public API
       ///////////////////////////////////////////////////
-      void async_send_payload   (asio::ip::tcp::socket& socket, const std::shared_ptr<const eCAL::service::TcpHeaderV1>& header_buffer, const std::shared_ptr<const std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb)
+      void async_send_payload   (asio::ip::tcp::socket& socket, std::mutex& socket_mutex, const std::shared_ptr<const eCAL::service::TcpHeaderV1>& header_buffer, const std::shared_ptr<const std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb)
       {        
         const std::vector<asio::const_buffer> buffer_list { asio::buffer(reinterpret_cast<const char*>(header_buffer.get()), sizeof(eCAL::service::TcpHeaderV1))
                                                           , asio::buffer(*payload_buffer)};
 
+        const std::lock_guard<std::mutex> socket_lock(socket_mutex);
         asio::async_write(socket
                         , buffer_list
                         , [header_buffer, payload_buffer, error_cb, success_cb](asio::error_code ec, std::size_t /*bytes_sent*/)
@@ -178,9 +182,9 @@ namespace eCAL
 
       }
 
-      void async_receive_payload(asio::ip::tcp::socket& socket, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb)
+      void async_receive_payload(asio::ip::tcp::socket& socket, std::mutex& socket_mutex, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb)
       {
-        read_header_start(socket, error_cb, success_cb);
+        read_header_start(socket, socket_mutex, error_cb, success_cb);
       }
     } // namespace ProtocolV1
   } // namespace service

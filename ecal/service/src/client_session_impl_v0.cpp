@@ -126,6 +126,7 @@ namespace eCAL
 
       ECAL_SERVICE_LOG_DEBUG(logger_, "Successfully resolved endpoint to [" + endpoint_to_string(endpoint_to_connect_to) + "]. Connecting...");
 
+      const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
       socket_.async_connect(endpoint_to_connect_to
                               , service_call_queue_strand_.wrap([me = shared_from_this(), endpoint_to_connect_to](asio::error_code ec)
                                 {
@@ -146,7 +147,10 @@ namespace eCAL
                                     // want to transmit our data in a timely fashion.
                                     {
                                       asio::error_code socket_option_ec;
-                                      me->socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec);
+                                      {
+                                        const std::lock_guard<std::mutex> socket_lock(me->socket_mutex_);
+                                        me->socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec);
+                                      }
                                       if (socket_option_ec)
                                       {
                                         me->logger_(LogLevel::Warning, "[" + get_connection_info_string(me->socket_) + "] " + "Failed setting tcp::no_delay option: " + socket_option_ec.message());
@@ -259,6 +263,7 @@ namespace eCAL
 
       // V0 writes payload with no header
 
+      const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
       asio::async_write(socket_
                       , asio::buffer(*request)
                       , [me = shared_from_this(), request, response_cb](asio::error_code ec, std::size_t /*bytes_sent*/)
@@ -285,7 +290,7 @@ namespace eCAL
     {
       ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "[" + get_connection_info_string(socket_) + "] " + "Waiting for service response...");
 
-      eCAL::service::ProtocolV0::async_receive_payload_with_header(socket_
+      eCAL::service::ProtocolV0::async_receive_payload_with_header(socket_, socket_mutex_
                             , service_call_queue_strand_.wrap([me = shared_from_this(), response_cb](asio::error_code ec)
                               {
                                 const std::string message = "Failed receiving service response: " + ec.message();
@@ -373,6 +378,7 @@ namespace eCAL
     {
       const std::shared_ptr<std::vector<char>> peek_buffer = std::make_shared<std::vector<char>>(1, '\0');
 
+      const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
       socket_.async_receive(asio::buffer(*peek_buffer)
                             , asio::socket_base::message_peek
                             , service_call_queue_strand_.wrap([me = shared_from_this(), peek_buffer](const asio::error_code& ec, std::size_t /*bytes_transferred*/) {
@@ -462,8 +468,8 @@ namespace eCAL
       // This is a function that gets used both by the API and by potentially
       // multiple failing async operations at once. As the .close() function is
       // not thread safe, we have a special mutex just for closing the socket.
-      const std::lock_guard<std::mutex> stop_lock(stop_mutex_);
 
+      const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
       if (socket_.is_open())
       {
         {

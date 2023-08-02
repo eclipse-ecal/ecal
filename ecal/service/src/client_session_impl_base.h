@@ -85,6 +85,7 @@ namespace eCAL
     protected:
       const std::shared_ptr<asio::io_context>  io_context_;
       asio::ip::tcp::socket                    socket_;
+      mutable std::mutex                       socket_mutex_;
       const EventCallbackT                     event_callback_;
 
     };

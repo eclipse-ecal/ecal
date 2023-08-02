@@ -94,7 +94,8 @@ namespace eCAL
     /////////////////////////////////////
     protected:
       const std::shared_ptr<asio::io_context>         io_context_;
-      asio::ip::tcp::socket socket_;
+      asio::ip::tcp::socket                           socket_;
+      mutable std::mutex                              socket_mutex_;
 
       const ServerServiceCallbackT                    service_callback_;
       const std::shared_ptr<asio::io_context::strand> service_callback_strand_;

@@ -63,6 +63,7 @@ namespace eCAL
     // Destructor
     ServerSessionV1::~ServerSessionV1()
     {
+      stop();
       ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Server Session Deleted");
     }
 
@@ -79,7 +80,10 @@ namespace eCAL
       // want to transmit our data in a timely fashion.
       {
         asio::error_code socket_option_ec;
-        socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec);
+        {
+          const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
+          socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec);
+        }
         if (socket_option_ec)
         {
           logger_(LogLevel::Warning, "[" + get_connection_info_string(socket_) + "] " + "Failed setting tcp::no_delay option: " + socket_option_ec.message());
@@ -91,18 +95,20 @@ namespace eCAL
 
     void ServerSessionV1::stop()
     {
-      ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Stopping...");
-      
+      const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
+      if (socket_.is_open())
       {
-        // Shutdown the socket
-        asio::error_code ec;
-        socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
-      }
-
-      {
-        // Close the socket
-        asio::error_code ec;
-        socket_.close(ec);
+        ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Stopping...");
+        {
+          // Shutdown the socket
+          asio::error_code ec;
+          socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
+        }
+        {
+          // Close the socket
+          asio::error_code ec;
+          socket_.close(ec);
+        }
       }
     }
 
@@ -119,7 +125,7 @@ namespace eCAL
       state_ = State::HANDSHAKE; // TODO: Protect with mutex?
 
       // TODO: Add strand to add the possibility to parallelize later
-      eCAL::service::ProtocolV1::async_receive_payload(socket_
+      eCAL::service::ProtocolV1::async_receive_payload(socket_, socket_mutex_
                             , [me = shared_from_this()](asio::error_code ec)
                               {
                                 me->state_ = State::FAILED;
@@ -207,7 +213,7 @@ namespace eCAL
       header_buffer->message_type   = MessageType::ProtocolHandshakeResponse;
       header_buffer->header_size_n  = htons(sizeof(TcpHeaderV1));
 
-      eCAL::service::ProtocolV1::async_send_payload(socket_, header_buffer, payload_buffer
+      eCAL::service::ProtocolV1::async_send_payload(socket_, socket_mutex_,header_buffer, payload_buffer
                           , [me = shared_from_this()](asio::error_code ec)
                             {
                               me->state_ = State::FAILED;
@@ -235,7 +241,7 @@ namespace eCAL
     {
       ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Waiting for service request...");
 
-      eCAL::service::ProtocolV1::async_receive_payload(socket_
+      eCAL::service::ProtocolV1::async_receive_payload(socket_, socket_mutex_
                             , [me = shared_from_this()](asio::error_code ec)
                               {
                                 const std::string message = "Server session disconnected while waiting for request: " + ec.message();
@@ -295,7 +301,7 @@ namespace eCAL
 
       ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Sending service response...");
 
-      eCAL::service::ProtocolV1::async_send_payload(socket_, header_buffer, response_buffer
+      eCAL::service::ProtocolV1::async_send_payload(socket_, socket_mutex_, header_buffer, response_buffer
                             , [me = shared_from_this()](asio::error_code ec)
                               {
                                 const std::string message = "Failed sending service response: " + ec.message();

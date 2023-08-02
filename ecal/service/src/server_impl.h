@@ -97,6 +97,7 @@ namespace eCAL
     private:
       const std::shared_ptr<asio::io_context>         io_context_;
       asio::ip::tcp::acceptor                         acceptor_;
+      mutable std::mutex                              acceptor_mutex_;                                //!< Mutex for stopping the server. The stop() function is both used externally (via API) and from within the server itself. Closing the acceptor is not thread-safe, so we need to protect it.
 
       const bool                                      parallel_service_calls_enabled_;
       const std::shared_ptr<asio::io_context::strand> service_callback_common_strand_;
@@ -108,7 +109,6 @@ namespace eCAL
 
       const LoggerT                                   logger_;
 
-      mutable std::mutex                              stop_mutex_;                                //!< Mutex for stopping the server. The stop() function is both used externally (via API) and from within the server itself. Closing the acceptor is not thread-safe, so we need to protect it.
     };
   } // namespace service
 } // namespace eCAL

@@ -83,7 +83,10 @@ namespace eCAL
       // want to transmit our data in a timely fashion.
       {
         asio::error_code socket_option_ec;
-        socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec);
+        {
+          const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
+          socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec);
+        }
         if (socket_option_ec)
         {
           logger_(LogLevel::Warning, "[" + get_connection_info_string(socket_) + "] " + "Failed setting tcp::no_delay option: " + socket_option_ec.message());
@@ -91,6 +94,7 @@ namespace eCAL
       }
 
       ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Waiting for service request...");
+      const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
       socket_.async_read_some(asio::buffer(data_, max_length)
                             , service_callback_strand_->wrap([me = shared_from_this()](asio::error_code ec, std::size_t bytes_read)
                               {
@@ -102,16 +106,20 @@ namespace eCAL
     {
       ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Stopping...");
       
+      const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
+      if (socket_.is_open())
       {
-        // Shutdown the socket
-        asio::error_code ec;
-        socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
-      }
+        {
+          // Shutdown the socket
+          asio::error_code ec;
+          socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
+        }
 
-      {
-        // Close the socket
-        asio::error_code ec;
-        socket_.close(ec);
+        {
+          // Close the socket
+          asio::error_code ec;
+          socket_.close(ec);
+        }
       }
     }
 
@@ -133,7 +141,10 @@ namespace eCAL
         size_t bytes_available_on_socket(0);
         {
           asio::error_code socket_available_ec;
-          bytes_available_on_socket = socket_.available(socket_available_ec);
+          {
+            const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
+            bytes_available_on_socket = socket_.available(socket_available_ec);
+          }
 
           if (socket_available_ec)
           {
@@ -151,11 +162,14 @@ namespace eCAL
         {
           ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "[" + get_connection_info_string(socket_) + "] " + "More data is available on socket! Reading more data...");
 
-          socket_.async_read_some(asio::buffer(data_, max_length)
-                                , service_callback_strand_->wrap([me = shared_from_this(), request](asio::error_code ec, std::size_t bytes_read)
-                                  {
-                                    me->handle_read(ec, bytes_read, request);
-                                  }));
+          {
+            const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
+            socket_.async_read_some(asio::buffer(data_, max_length)
+                                  , service_callback_strand_->wrap([me = shared_from_this(), request](asio::error_code ec, std::size_t bytes_read)
+                                    {
+                                      me->handle_read(ec, bytes_read, request);
+                                    }));
+          }
         }
         // no more data
         else
@@ -175,12 +189,15 @@ namespace eCAL
           const std::vector<asio::const_buffer> buffer_list { asio::buffer(reinterpret_cast<const char*>(header.get()), sizeof(eCAL::service::TcpHeaderV0))
                                                             , asio::buffer(*response)};
 
-          asio::async_write(socket_
-                          , buffer_list
-                          , [me = shared_from_this(), header, response](asio::error_code ec, std::size_t bytes_written)
-                            {
-                              me->handle_write(ec, bytes_written);
-                            });
+          {
+            const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
+            asio::async_write(socket_
+                            , buffer_list
+                            , [me = shared_from_this(), header, response](asio::error_code ec, std::size_t bytes_written)
+                              {
+                                me->handle_write(ec, bytes_written);
+                              });
+          }
         }
       }
       else
@@ -198,11 +215,14 @@ namespace eCAL
       if (!ec)
       {
         ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Waiting for service request...");
-        socket_.async_read_some(asio::buffer(data_, max_length)
-                              , service_callback_strand_->wrap([me = shared_from_this()](asio::error_code ec, std::size_t bytes_read)
-                                {
-                                  me->handle_read(ec, bytes_read, std::make_shared<std::string>());
-                                }));
+        {
+          const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
+          socket_.async_read_some(asio::buffer(data_, max_length)
+                                , service_callback_strand_->wrap([me = shared_from_this()](asio::error_code ec, std::size_t bytes_read)
+                                  {
+                                    me->handle_read(ec, bytes_read, std::make_shared<std::string>());
+                                  }));
+        }
       }
       else
       {

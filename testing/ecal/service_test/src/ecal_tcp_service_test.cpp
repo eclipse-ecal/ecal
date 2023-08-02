@@ -62,7 +62,7 @@ constexpr std::uint8_t max_protocol_version = 1;
 
 
 
-#if 0
+#if 1
 TEST(RAII, TcpServiceServer)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -114,7 +114,7 @@ TEST(RAII, TcpServiceServer)
 }
 #endif
 
-#if 0
+#if 1
 TEST(RAII, TcpServiceClient)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -145,7 +145,7 @@ TEST(RAII, TcpServiceClient)
 }
 #endif
 
-#if 0
+#if 1
 TEST(RAII, TcpServiceServerAndClient)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -233,7 +233,7 @@ TEST(RAII, TcpServiceServerAndClient)
 }
 #endif
 
-#if 0
+#if 1
 TEST(RAII, StopDuringServiceCall)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -313,7 +313,7 @@ TEST(RAII, StopDuringServiceCall)
 }
 #endif
 
-#if 0
+#if 1
 TEST(Communication, SlowCommunication)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -424,7 +424,7 @@ TEST(Communication, SlowCommunication)
 }
 #endif
 
-#if 0
+#if 1
 TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -531,7 +531,7 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst)
 }
 #endif
 
-#if 0
+#if 1
 TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -720,7 +720,7 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
 }
 #endif
 
-#if 0
+#if 1
 TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -867,7 +867,7 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
 }
 #endif
 
-#if 0
+#if 1
 TEST(CommunicationAndCallbacks, StressfulCommunication)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1018,7 +1018,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunication)
 }
 #endif
 
-#if 0
+#if 1
 TEST(CommunicationAndCallbacks, StressfulCommunicationNoParallelCalls)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1146,7 +1146,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationNoParallelCalls)
 }
 #endif
 
-#if 0
+#if 1
 TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload)
 {
   // This test does not work for Protocol version 0 and there is no way to fix that (which is the reason why we invented protocol version 1)
@@ -1301,7 +1301,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload)
 }
 #endif
 
-#if 0
+#if 1
 TEST(callback, ServerAndClientManagers)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1438,7 +1438,7 @@ TEST(callback, ServerAndClientManagers)
 }
 #endif
 
-#if 0
+#if 1
 TEST(Callback, ServiceCallFromCallback)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1509,7 +1509,7 @@ TEST(Callback, ServiceCallFromCallback)
 }
 #endif
 
-#if 0
+#if 1
 TEST(ErrorCallback, ErrorCallbackNoServer)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1531,7 +1531,9 @@ TEST(ErrorCallback, ErrorCallbackNoServer)
     const eCAL::service::ClientSession::EventCallbackT client_event_callback
             = [&num_client_event_callback_called]
               (eCAL::service::ClientEventType /*event*/, const std::string& /*message*/) -> void
-              {};
+              {
+                num_client_event_callback_called++;
+              };
 
 
     EXPECT_EQ(num_client_response_callback_called, 0);
@@ -1559,7 +1561,7 @@ TEST(ErrorCallback, ErrorCallbackNoServer)
 }
 #endif
 
-#if 0
+#if 1
 TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1723,7 +1725,7 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
 }
 #endif
 
-#if 0
+#if 1
 TEST(ErrorCallback, ErrorCallbackClientDisconnects)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1823,19 +1825,9 @@ TEST(ErrorCallback, ErrorCallbackClientDisconnects)
 }
 #endif
 
-// TODO: I think either this or the next test should be enough
 #if 1
 TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
 {
-  // TODO: Remove outer loop
-  auto test_start = std::chrono::steady_clock::now();
-  int counter = 0;
-  while (true)
-  {
-    counter++;
-    std::cout << ">>> Starting Test " << counter << ". Elapsed time: "
-              << std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::steady_clock::now() - test_start).count() << " Seconds." << std::endl;
-
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     constexpr int num_io_threads       = 50;
@@ -1980,6 +1972,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
     }
 
     // delete server
+    server->stop();
     server = nullptr;
 
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -2012,13 +2005,10 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
     }
     io_threads.clear();
   }
-
-  }
 }
 #endif
 
- //TODO: I think either this or the previous test should be enough
-#if 0
+#if 1
 TEST(ErrorCallback, StressfulErrorsHalfwayThroughWithManagers)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -2201,7 +2191,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThroughWithManagers)
 }
 #endif
 
-#if 0
+#if 1
 TEST(BlockingCall, RegularBlockingCall)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -2273,7 +2263,7 @@ TEST(BlockingCall, RegularBlockingCall)
 }
 #endif
 
-#if 0
+#if 1
 TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -2408,7 +2398,7 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
 }
 #endif
 
-#if 0
+#if 1
 TEST(BlockingCall, Stopped) // TODO: This test shows the proper way to stop everything. I should adapt all other tests, too
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)

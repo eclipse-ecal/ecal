@@ -106,6 +106,9 @@ namespace eCAL
     std::uint16_t ServerImpl::get_port() const
     {
       asio::error_code ec;
+
+      const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
+
       auto endpoint = acceptor_.local_endpoint(ec);
       if (!ec)
       {
@@ -128,7 +131,11 @@ namespace eCAL
       ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Server: Opening acceptor...");
       {
         asio::error_code ec;
-        acceptor_.open(endpoint.protocol(), ec);
+
+        {
+          const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
+          acceptor_.open(endpoint.protocol(), ec);
+        }
         if (ec)
         {
           logger_(eCAL::service::LogLevel::Error, "Service Server: Error opening acceptor:" + ec.message());
@@ -141,7 +148,10 @@ namespace eCAL
 
       {
         asio::error_code ec;
-        acceptor_.set_option(asio::ip::tcp::acceptor::reuse_address(true), ec);
+        {
+          acceptor_.set_option(asio::ip::tcp::acceptor::reuse_address(true), ec);
+          const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
+        }
         if (ec)
         {
           logger_(eCAL::service::LogLevel::Error, "Service Server: Error setting \"reuse_address\" option:" + ec.message());
@@ -153,7 +163,10 @@ namespace eCAL
 
       {
         asio::error_code ec;
-        acceptor_.bind(endpoint, ec);
+        {
+          const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
+          acceptor_.bind(endpoint, ec);
+        }
         if (ec)
         {
           logger_(eCAL::service::LogLevel::Error, "Service Server: Error binding acceptor:" + ec.message());
@@ -165,7 +178,10 @@ namespace eCAL
 
       {
         asio::error_code ec;
-        acceptor_.listen(asio::socket_base::max_listen_connections, ec);
+        {
+          const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
+          acceptor_.listen(asio::socket_base::max_listen_connections, ec);
+        }
         if (ec)
         {
           logger_(eCAL::service::LogLevel::Error, "Service Server: Error listening on acceptor: " + ec.message());
@@ -225,6 +241,7 @@ namespace eCAL
       // Accept new session.
       // By only storing a weak_ptr to this, we assure that the user can still
       // delete the service from the outside.
+      const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
       acceptor_.async_accept(new_session->socket()
               , [weak_me = std::weak_ptr<ServerImpl>(shared_from_this()), new_session, protocol_version, logger_copy = logger_](auto ec)
                 {
@@ -270,7 +287,7 @@ namespace eCAL
     {
       {
         // Lock mutex for making the stop function thread safe
-        const std::lock_guard<std::mutex> stop_lock(stop_mutex_);
+        const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
 
         // Close acceptor, if necessary
         if (acceptor_.is_open())
