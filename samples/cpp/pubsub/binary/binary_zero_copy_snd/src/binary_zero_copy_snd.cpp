@@ -57,12 +57,12 @@ void log_struct(const char* action_name, const SSimpleStruct& s)
 }
 
 // a binary payload object that handles
-// SSimpleStruct Write and Update functionality
+// SSimpleStruct WriteFull and WriteModified functionality
 class CStructPayload : public eCAL::CPayloadWriter
 {
 public:
   // Write the complete SSimpleStruct to the shared memory
-  bool Write(void* buf_, size_t len_) override
+  bool WriteFull(void* buf_, size_t len_) override
   {
     // check available size and pointer
     if (len_ < GetSize() || buf_ == nullptr) return false;
@@ -75,13 +75,13 @@ public:
     *static_cast<SSimpleStruct*>(buf_) = simple_struct;
 
     // log action
-    log_struct("Write SSimpleStruct :", simple_struct);
+    log_struct("WriteFull SSimpleStruct :", simple_struct);
 
     return true;
   };
 
   // Modify the SSimpleStruct in the shared memory
-  bool Update(void* buf_, size_t len_) override
+  bool WriteModified(void* buf_, size_t len_) override
   {
     // check available size and pointer
     if (len_ < GetSize() || buf_ == nullptr) return false;
@@ -90,7 +90,7 @@ public:
     UpdateStruct(static_cast<SSimpleStruct*>(buf_));
 
     // log action
-    log_struct("Update SSimpleStruct :", *static_cast<SSimpleStruct*>(buf_));
+    log_struct("WriteModified SSimpleStruct :", *static_cast<SSimpleStruct*>(buf_));
 
     return true;
   };

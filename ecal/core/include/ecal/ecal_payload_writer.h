@@ -32,8 +32,13 @@ namespace eCAL
    * @brief Base payload writer class to allow zero copy memory operations.
    *
    * This class serves as the base class for payload writers, allowing zero-copy memory
-   * operations. The `Write` and `Update` calls may operate on the target memory file
-   * directly in zero-copy mode.
+   * operations. The `WriteFull` and `WriteModified` calls may operate on the target
+   * memory file directly in zero-copy mode.
+   * 
+   * A partial writing / modification of the memory file is only possible when zero-copy mode 
+   * is activated. If zero-copy is not enabled, the `WriteModified` method is ignored and the 
+   * `WriteFull` method is always executed (see CPublisher::ShmEnableZeroCopy)
+   * 
    */
   class CPayloadWriter
   {
@@ -69,32 +74,36 @@ namespace eCAL
     CPayloadWriter& operator=(CPayloadWriter&&) = default;
 
     /**
-     * @brief Perform a full write operation with uninitialized memory.
+     * @brief Perform a full write operation on uninitialized memory.
      *
      * This virtual function allows derived classes to perform a full write operation
-     * when the provisioned memory is uninitialized.
+     * when the provisioned memory is uninitialized. Typically, this is the case when a 
+     * memory file had to be recreated or its size had to be changed.
      *
      * @param buffer_ Pointer to the buffer containing the data to be written.
      * @param size_   Size of the data to be written.
      *
      * @return True if the write operation is successful, false otherwise.
      */
-    virtual bool Write(void* buffer_, size_t size_) = 0;
+    virtual bool WriteFull(void* buffer_, size_t size_) = 0;
 
     /**
-     * @brief Perform a partial write operation or modify existing data.
+     * @brief Perform a partial write operation to modify existing data.
      *
-     * This virtual function allows derived classes to perform a partial write operation
-     * or modify existing data when the provisioned memory is already initialized and
-     * contains the data from the last write operation. By default, this operation will
-     * just call the `Write` function.
+     * This virtual function allows derived classes to modify existing data when the provisioned
+     * memory is already initialized by a WriteFull call (i.e. contains the data from that full write operation).
      *
-     * @param buffer_ Pointer to the buffer containing the data to be written or modified.
-     * @param size_   Size of the data to be written or modified.
+     * The memory can be partially modified and does not have to be completely rewritten, which leads to significantly 
+     * higher performance (lower latency).
+     * 
+     * If not implemented (by default), this operation will just call the `WriteFull` function.
+     *
+     * @param buffer_ Pointer to the buffer containing the data to be modified.
+     * @param size_   Size of the data to be modified.
      *
      * @return True if the write/update operation is successful, false otherwise.
      */
-    virtual bool Update(void* buffer_, size_t size_) { return Write(buffer_, size_); };
+    virtual bool WriteModified(void* buffer_, size_t size_) { return WriteFull(buffer_, size_); };
 
     /**
      * @brief Get the size of the required memory.

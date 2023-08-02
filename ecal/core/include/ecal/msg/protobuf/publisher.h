@@ -69,7 +69,7 @@ namespace eCAL
         CPayload& operator=(const CPayload&) = delete;
         CPayload& operator=(CPayload&&) noexcept = delete;
 
-        bool Write(void* buf_, size_t len_) override
+        bool WriteFull(void* buf_, size_t len_) override
         {
           return message.SerializeToArray(buf_, static_cast<int>(len_));
         }
