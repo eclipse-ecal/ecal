@@ -451,11 +451,12 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst) // NOLINT
             = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
               (eCAL::service::ServerEventType event, const std::string& /*message*/) -> void
               {
-                num_server_event_callback_called++; 
                 if (event == eCAL::service::ServerEventType::Connected)
                   num_server_event_callback_called_connected++;
                 else if (event == eCAL::service::ServerEventType::Disconnected)
                   num_server_event_callback_called_disconnected++;
+
+                num_server_event_callback_called++; 
               };
 
     const eCAL::service::ClientSession::ResponseCallbackT client_response_callback
@@ -467,11 +468,12 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst) // NOLINT
             = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
               (eCAL::service::ClientEventType event, const std::string& /*message*/) -> void
               {
-                num_client_event_callback_called++; 
                 if (event == eCAL::service::ClientEventType::Connected)
                   num_client_event_callback_called_connected++;
                 else if (event == eCAL::service::ClientEventType::Disconnected)
                   num_client_event_callback_called_disconnected++;
+
+                num_client_event_callback_called++; 
               };
 
     auto server    = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
@@ -584,12 +586,12 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst) // NOLINT
             = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
               (eCAL::service::ClientEventType event, const std::string& /*message*/) -> void
               {
-                num_client_event_callback_called++; 
-                
                 if (event == eCAL::service::ClientEventType::Connected)
                     num_client_event_callback_called_connected++;
                 else if (event == eCAL::service::ClientEventType::Disconnected)
                     num_client_event_callback_called_disconnected++;
+
+                num_client_event_callback_called++; 
               };
 
     auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
@@ -750,11 +752,12 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst) // NOLINT
             = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
               (eCAL::service::ServerEventType event, const std::string& /*message*/) -> void
               {
-                num_server_event_callback_called++; 
                 if (event == eCAL::service::ServerEventType::Connected)
                   num_server_event_callback_called_connected++;
                 else if (event == eCAL::service::ServerEventType::Disconnected)
                   num_server_event_callback_called_disconnected++;
+
+                num_server_event_callback_called++; 
               };
 
     const eCAL::service::ClientSession::ResponseCallbackT client_response_callback
@@ -769,11 +772,12 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst) // NOLINT
             = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
               (eCAL::service::ClientEventType event, const std::string& /*message*/) -> void
               {
-                num_client_event_callback_called++; 
                 if (event == eCAL::service::ClientEventType::Connected)
                     num_client_event_callback_called_connected++;
                 else if (event == eCAL::service::ClientEventType::Disconnected)
                     num_client_event_callback_called_disconnected++;
+
+                num_client_event_callback_called++; 
               };
 
     auto server    = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
@@ -879,15 +883,15 @@ TEST(CommunicationAndCallbacks, StressfulCommunication) // NOLINT
     const auto io_context = std::make_shared<asio::io_context>();
     const asio::io_context::work dummy_work(*io_context);
 
-    std::atomic<int> num_server_service_callback_called           (0);
-    std::atomic<int> num_server_event_callback_called             (0);
-    std::atomic<int> num_server_event_callback_called_connected   (0);
-    std::atomic<int> num_server_event_callback_called_disconnected(0);
+    atomic_signalable<int> num_server_service_callback_called           (0);
+    atomic_signalable<int> num_server_event_callback_called             (0);
+    std::atomic<int>       num_server_event_callback_called_connected   (0);
+    std::atomic<int>       num_server_event_callback_called_disconnected(0);
 
-    std::atomic<int> num_client_response_callback_called          (0);
-    std::atomic<int> num_client_event_callback_called             (0);
-    std::atomic<int> num_client_event_callback_called_connected   (0);
-    std::atomic<int> num_client_event_callback_called_disconnected(0);
+    atomic_signalable<int> num_client_response_callback_called          (0);
+    atomic_signalable<int> num_client_event_callback_called             (0);
+    std::atomic<int>       num_client_event_callback_called_connected   (0);
+    std::atomic<int>       num_client_event_callback_called_disconnected(0);
 
     const eCAL::service::Server::ServiceCallbackT service_callback
             = [&num_server_service_callback_called](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
@@ -900,25 +904,25 @@ TEST(CommunicationAndCallbacks, StressfulCommunication) // NOLINT
     const eCAL::service::Server::EventCallbackT server_event_callback
             = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
               (eCAL::service::ServerEventType event, const std::string& /*message*/) -> void
-              {
-                num_server_event_callback_called++; 
-              
+              {              
                 if (event == eCAL::service::ServerEventType::Connected)
                   num_server_event_callback_called_connected++;
                 else if (event == eCAL::service::ServerEventType::Disconnected)
                   num_server_event_callback_called_disconnected++;
+
+                num_server_event_callback_called++; 
               };
 
     auto server = eCAL::service::Server::create(io_context, protocol_version, 0, service_callback, true, server_event_callback, critical_logger("Server"));
 
     {
-      EXPECT_EQ(num_server_service_callback_called           , 0);
-      EXPECT_EQ(num_server_event_callback_called             , 0);
+      EXPECT_EQ(num_server_service_callback_called.get()     , 0);
+      EXPECT_EQ(num_server_event_callback_called.get()       , 0);
       EXPECT_EQ(num_server_event_callback_called_connected   , 0);
       EXPECT_EQ(num_server_event_callback_called_disconnected, 0);
 
-      EXPECT_EQ(num_client_response_callback_called          , 0);
-      EXPECT_EQ(num_client_event_callback_called             , 0);
+      EXPECT_EQ(num_client_response_callback_called.get()    , 0);
+      EXPECT_EQ(num_client_event_callback_called.get()       , 0);
       EXPECT_EQ(num_client_event_callback_called_connected   , 0);
       EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
     }
@@ -939,17 +943,17 @@ TEST(CommunicationAndCallbacks, StressfulCommunication) // NOLINT
       const eCAL::service::ClientSession::EventCallbackT client_event_callback
             = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
               (eCAL::service::ClientEventType event, const std::string& /*message*/) -> void
-              {
-                num_client_event_callback_called++; 
-                
+              {                
                 if (event == eCAL::service::ClientEventType::Connected)
                   num_client_event_callback_called_connected++;
                 else if (event == eCAL::service::ClientEventType::Disconnected)
                   num_client_event_callback_called_disconnected++;
+
+                num_client_event_callback_called++; 
               };
       client_list.push_back(eCAL::service::ClientSession::create(io_context, protocol_version,"127.0.0.1", server->get_port(), client_event_callback, critical_logger("Client " + std::to_string(c))));
     }
-
+    
     // Directly run a bunch of clients and call each client a bunch of times
     for (size_t c = 0; c < client_list.size(); c++)
     {
@@ -972,16 +976,19 @@ TEST(CommunicationAndCallbacks, StressfulCommunication) // NOLINT
     }
 
     // Now wait a short time for the clients to connect to the server and all requests getting executed
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    num_client_response_callback_called.wait_for([num_clients, num_calls_per_client](int v) { return v == num_clients * num_calls_per_client; }, std::chrono::milliseconds(5000));
+    num_server_service_callback_called .wait_for([num_clients, num_calls_per_client](int v) { return v == num_clients * num_calls_per_client; }, std::chrono::milliseconds(500));
+    num_server_event_callback_called   .wait_for([num_clients](int v) { return v == num_clients; }, std::chrono::milliseconds(500));
+    num_client_event_callback_called   .wait_for([num_clients](int v) { return v == num_clients; }, std::chrono::milliseconds(500));
 
     {
-      EXPECT_EQ(num_server_service_callback_called           , num_clients * num_calls_per_client);
-      EXPECT_EQ(num_server_event_callback_called             , num_clients);
+      EXPECT_EQ(num_server_service_callback_called.get()     , num_clients * num_calls_per_client);
+      EXPECT_EQ(num_server_event_callback_called.get()       , num_clients);
       EXPECT_EQ(num_server_event_callback_called_connected   , num_clients);
       EXPECT_EQ(num_server_event_callback_called_disconnected, 0);
 
-      EXPECT_EQ(num_client_response_callback_called          , num_clients * num_calls_per_client);
-      EXPECT_EQ(num_client_event_callback_called             , num_clients);
+      EXPECT_EQ(num_client_response_callback_called.get()    , num_clients * num_calls_per_client);
+      EXPECT_EQ(num_client_event_callback_called.get()       , num_clients);
       EXPECT_EQ(num_client_event_callback_called_connected   , num_clients);
       EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
 
@@ -991,16 +998,18 @@ TEST(CommunicationAndCallbacks, StressfulCommunication) // NOLINT
     // delete all objects
     server = nullptr;
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    // Wait for disconnection callbacks
+    num_server_event_callback_called.wait_for([num_clients](int v) { return v == (2 * num_clients); }, std::chrono::milliseconds(5000));
+    num_client_event_callback_called.wait_for([num_clients](int v) { return v == (2 * num_clients); }, std::chrono::milliseconds(5000));
 
     {
-      EXPECT_EQ(num_server_service_callback_called           , num_clients * num_calls_per_client);
-      EXPECT_EQ(num_server_event_callback_called             , num_clients * 2);
+      EXPECT_EQ(num_server_service_callback_called.get()     , num_clients* num_calls_per_client);
+      EXPECT_EQ(num_server_event_callback_called.get()       , num_clients * 2);
       EXPECT_EQ(num_server_event_callback_called_connected   , num_clients);
       EXPECT_EQ(num_server_event_callback_called_disconnected, num_clients);
 
-      EXPECT_EQ(num_client_response_callback_called          , num_clients * num_calls_per_client);
-      EXPECT_EQ(num_client_event_callback_called             , num_clients * 2);
+      EXPECT_EQ(num_client_response_callback_called.get()    , num_clients * num_calls_per_client);
+      EXPECT_EQ(num_client_event_callback_called.get()       , num_clients * 2);
       EXPECT_EQ(num_client_event_callback_called_connected   , num_clients);
       EXPECT_EQ(num_client_event_callback_called_disconnected, num_clients);
     }
@@ -1163,13 +1172,13 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload) // NOLINT
   const auto io_context = std::make_shared<asio::io_context>();
   const asio::io_context::work dummy_work(*io_context);
 
-  std::atomic<int>       num_server_service_callback_called           (0);
-  std::atomic<int>       num_server_event_callback_called             (0);
+  atomic_signalable<int> num_server_service_callback_called           (0);
+  atomic_signalable<int> num_server_event_callback_called             (0);
   std::atomic<int>       num_server_event_callback_called_connected   (0);
   std::atomic<int>       num_server_event_callback_called_disconnected(0);
 
   atomic_signalable<int> num_client_response_callback_called          (0);
-  std::atomic<int>       num_client_event_callback_called             (0);
+  atomic_signalable<int> num_client_event_callback_called             (0);
   std::atomic<int>       num_client_event_callback_called_connected   (0);
   std::atomic<int>       num_client_event_callback_called_disconnected(0);
 
@@ -1197,13 +1206,13 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload) // NOLINT
   auto server = eCAL::service::Server::create(io_context, protocol_version, 0, service_callback, true, server_event_callback, critical_logger("Server"));
 
   {
-    EXPECT_EQ(num_server_service_callback_called           , 0);
-    EXPECT_EQ(num_server_event_callback_called             , 0);
+    EXPECT_EQ(num_server_service_callback_called.get()     , 0);
+    EXPECT_EQ(num_server_event_callback_called.get()       , 0);
     EXPECT_EQ(num_server_event_callback_called_connected   , 0);
     EXPECT_EQ(num_server_event_callback_called_disconnected, 0);
 
-    EXPECT_EQ(num_client_response_callback_called          , 0);
-    EXPECT_EQ(num_client_event_callback_called             , 0);
+    EXPECT_EQ(num_client_response_callback_called.get()    , 0);
+    EXPECT_EQ(num_client_event_callback_called.get()       , 0);
     EXPECT_EQ(num_client_event_callback_called_connected   , 0);
     EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
   }
@@ -1224,13 +1233,13 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload) // NOLINT
     const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
             (eCAL::service::ClientEventType event, const std::string& /*message*/) -> void
-            {
-              num_client_event_callback_called++; 
-                
+            {  
               if (event == eCAL::service::ClientEventType::Connected)
                 num_client_event_callback_called_connected++;
               else if (event == eCAL::service::ClientEventType::Disconnected)
                 num_client_event_callback_called_disconnected++;
+
+              num_client_event_callback_called++; 
             };
     client_list.push_back(eCAL::service::ClientSession::create(io_context, protocol_version,"127.0.0.1", server->get_port(), client_event_callback, critical_logger("Client " + std::to_string(c))));
   }
@@ -1256,16 +1265,18 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload) // NOLINT
   // Now wait a short time for the clients to connect to the server and all requests getting executed
   auto num_total_calls = num_clients * num_calls_per_client;
   num_client_response_callback_called.wait_for([num_total_calls](int v) { return v >= num_total_calls; }, std::chrono::milliseconds(5000));
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  num_server_service_callback_called .wait_for([num_total_calls](int v) { return v >= num_total_calls; }, std::chrono::milliseconds(500));
+  num_client_event_callback_called   .wait_for([num_clients](int v) { return v >= num_clients; }, std::chrono::milliseconds(500));
+  num_server_event_callback_called   .wait_for([num_clients](int v) { return v >= num_clients; }, std::chrono::milliseconds(500));
 
   {
-    EXPECT_EQ(num_server_service_callback_called           , num_clients * num_calls_per_client);
-    EXPECT_EQ(num_server_event_callback_called             , num_clients);
+    EXPECT_EQ(num_server_service_callback_called.get()     , num_clients * num_calls_per_client);
+    EXPECT_EQ(num_server_event_callback_called.get()       , num_clients);
     EXPECT_EQ(num_server_event_callback_called_connected   , num_clients);
     EXPECT_EQ(num_server_event_callback_called_disconnected, 0);
 
-    EXPECT_EQ(num_client_response_callback_called          , num_clients * num_calls_per_client);
-    EXPECT_EQ(num_client_event_callback_called             , num_clients);
+    EXPECT_EQ(num_client_response_callback_called.get()    , num_clients * num_calls_per_client);
+    EXPECT_EQ(num_client_event_callback_called.get()       , num_clients);
     EXPECT_EQ(num_client_event_callback_called_connected   , num_clients);
     EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
 
@@ -1275,16 +1286,17 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload) // NOLINT
   // delete all objects
   server = nullptr;
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  num_client_event_callback_called   .wait_for([num_clients](int v) { return v >= (2 * num_clients); }, std::chrono::milliseconds(5000));
+  num_server_event_callback_called   .wait_for([num_clients](int v) { return v >= (2 * num_clients); }, std::chrono::milliseconds(500));
 
   {
-    EXPECT_EQ(num_server_service_callback_called           , num_clients * num_calls_per_client);
-    EXPECT_EQ(num_server_event_callback_called             , num_clients * 2);
+    EXPECT_EQ(num_server_service_callback_called.get()     , num_clients * num_calls_per_client);
+    EXPECT_EQ(num_server_event_callback_called.get()       , num_clients * 2);
     EXPECT_EQ(num_server_event_callback_called_connected   , num_clients);
     EXPECT_EQ(num_server_event_callback_called_disconnected, num_clients);
 
-    EXPECT_EQ(num_client_response_callback_called          , num_clients * num_calls_per_client);
-    EXPECT_EQ(num_client_event_callback_called             , num_clients * 2);
+    EXPECT_EQ(num_client_response_callback_called.get()    , num_clients * num_calls_per_client);
+    EXPECT_EQ(num_client_event_callback_called.get()       , num_clients * 2);
     EXPECT_EQ(num_client_event_callback_called_connected   , num_clients);
     EXPECT_EQ(num_client_event_callback_called_disconnected, num_clients);
   }
@@ -1590,11 +1602,12 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected) // NOLINT
             = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
               (eCAL::service::ServerEventType event, const std::string& /*message*/) -> void
               {
-                num_server_event_callback_called++; 
                 if (event == eCAL::service::ServerEventType::Connected)
                   num_server_event_callback_called_connected++;
                 else if (event == eCAL::service::ServerEventType::Disconnected)
                   num_server_event_callback_called_disconnected++;
+
+                num_server_event_callback_called++; 
               };
 
 
@@ -1602,11 +1615,12 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected) // NOLINT
             = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
               (eCAL::service::ClientEventType event, const std::string& /*message*/) -> void
               {
-                num_client_event_callback_called++; 
                 if (event == eCAL::service::ClientEventType::Connected)
                     num_client_event_callback_called_connected++;
                 else if (event == eCAL::service::ClientEventType::Disconnected)
                     num_client_event_callback_called_disconnected++;
+
+                num_client_event_callback_called++; 
               };
 
     auto server    = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
@@ -1840,17 +1854,17 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough) // NOLINT
     const auto io_context = std::make_shared<asio::io_context>();
     const asio::io_context::work dummy_work(*io_context);
 
-    std::atomic<int> num_server_service_callback_called           (0);
-    std::atomic<int> num_server_event_callback_called             (0);
-    std::atomic<int> num_server_event_callback_called_connected   (0);
-    std::atomic<int> num_server_event_callback_called_disconnected(0);
+    std::atomic<int>       num_server_service_callback_called           (0);
+    atomic_signalable<int> num_server_event_callback_called             (0);
+    std::atomic<int>       num_server_event_callback_called_connected   (0);
+    std::atomic<int>       num_server_event_callback_called_disconnected(0);
 
-    std::atomic<int> num_client_response_callback_called              (0);
-    std::atomic<int> num_client_response_callback_called_with_error   (0);
-    std::atomic<int> num_client_response_callback_called_without_error(0);
-    std::atomic<int> num_client_event_callback_called                 (0);
-    std::atomic<int> num_client_event_callback_called_connected       (0);
-    std::atomic<int> num_client_event_callback_called_disconnected    (0);
+    atomic_signalable<int> num_client_response_callback_called              (0);
+    std::atomic<int>       num_client_response_callback_called_with_error   (0);
+    std::atomic<int>       num_client_response_callback_called_without_error(0);
+    atomic_signalable<int> num_client_event_callback_called                 (0);
+    std::atomic<int>       num_client_event_callback_called_connected       (0);
+    std::atomic<int>       num_client_event_callback_called_disconnected    (0);
 
     const eCAL::service::Server::ServiceCallbackT service_callback
             = [server_time_to_waste, &num_server_service_callback_called](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
@@ -1864,13 +1878,13 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough) // NOLINT
     const eCAL::service::Server::EventCallbackT server_event_callback
             = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
               (eCAL::service::ServerEventType event, const std::string& /*message*/) -> void
-              {
-                num_server_event_callback_called++; 
-              
+              {              
                 if (event == eCAL::service::ServerEventType::Connected)
                   num_server_event_callback_called_connected++;
                 else if (event == eCAL::service::ServerEventType::Disconnected)
                   num_server_event_callback_called_disconnected++;
+
+                num_server_event_callback_called++; 
               };
 
     auto server = eCAL::service::Server::create(io_context, protocol_version, 0, service_callback, true, server_event_callback, critical_logger("Server"));
@@ -1884,7 +1898,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough) // NOLINT
       EXPECT_EQ(num_client_response_callback_called              , 0);
       EXPECT_EQ(num_client_response_callback_called_with_error   , 0);
       EXPECT_EQ(num_client_response_callback_called_without_error, 0);
-      EXPECT_EQ(num_client_event_callback_called                 , 0);
+      EXPECT_EQ(num_client_event_callback_called.get()           , 0);
       EXPECT_EQ(num_client_event_callback_called_connected       , 0);
       EXPECT_EQ(num_client_event_callback_called_disconnected    , 0);
     }
@@ -1905,13 +1919,13 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough) // NOLINT
       const eCAL::service::ClientSession::EventCallbackT client_event_callback
             = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
               (eCAL::service::ClientEventType event, const std::string& /*message*/) -> void
-              {
-                num_client_event_callback_called++; 
-                
+              {                
                 if (event == eCAL::service::ClientEventType::Connected)
                   num_client_event_callback_called_connected++;
                 else if (event == eCAL::service::ClientEventType::Disconnected)
                   num_client_event_callback_called_disconnected++;
+
+                num_client_event_callback_called++; 
               };
       client_list.push_back(eCAL::service::ClientSession::create(io_context, protocol_version,"127.0.0.1", server->get_port(), client_event_callback, critical_logger("Client " + std::to_string(c))));
     }
@@ -1927,7 +1941,6 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough) // NOLINT
               = [&num_client_response_callback_called, &num_client_response_callback_called_with_error, &num_client_response_callback_called_without_error, request_string]
                 (const eCAL::service::Error& error, const std::shared_ptr<std::string>& response) -> void
                 {
-                  num_client_response_callback_called++;
                   if (error)
                   {
                     num_client_response_callback_called_with_error++;
@@ -1939,6 +1952,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough) // NOLINT
                     const std::string expected_response = "Response on \"" + *request_string + "\"";
                     ASSERT_EQ(*response, expected_response);
                   }
+                  num_client_response_callback_called++;
                 };
 
         client_list[c]->async_call_service(request_string, response_callback);
@@ -1962,7 +1976,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough) // NOLINT
       EXPECT_TRUE(num_client_response_callback_called_with_error   == 0);
       EXPECT_TRUE(num_client_response_callback_called_without_error > 0);
 
-      EXPECT_EQ(num_client_event_callback_called             , num_clients);
+      EXPECT_EQ(num_client_event_callback_called.get()       , num_clients);
       EXPECT_EQ(num_client_event_callback_called_connected   , num_clients);
       EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
 
@@ -1973,17 +1987,19 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough) // NOLINT
     server->stop();
     server = nullptr;
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    num_server_event_callback_called   .wait_for([num_clients](int v) { return v >= (2 * num_clients); }, std::chrono::milliseconds(5000));
+    num_client_event_callback_called   .wait_for([num_clients](int v) { return v >= (2 * num_clients); }, std::chrono::milliseconds(500));
+    num_client_response_callback_called.wait_for([num_clients, num_calls_per_client](int v) { return v >= (num_clients* num_calls_per_client); }, std::chrono::milliseconds(500));
 
     {
       EXPECT_TRUE(num_server_service_callback_called > 0);
       EXPECT_TRUE(num_server_service_callback_called < (num_clients * num_calls_per_client));
 
-      EXPECT_EQ(num_server_event_callback_called             , num_clients * 2);
+      EXPECT_EQ(num_server_event_callback_called.get()       , num_clients * 2);
       EXPECT_EQ(num_server_event_callback_called_connected   , num_clients);
       EXPECT_EQ(num_server_event_callback_called_disconnected, num_clients);
 
-      EXPECT_EQ(num_client_response_callback_called, num_clients* num_calls_per_client);
+      EXPECT_EQ(num_client_response_callback_called.get(), num_clients* num_calls_per_client);
 
       EXPECT_TRUE(num_client_response_callback_called_with_error    > 0);
       EXPECT_TRUE(num_client_response_callback_called_without_error > 0);
@@ -2047,13 +2063,13 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThroughWithManagers) // NOLINT
     const eCAL::service::Server::EventCallbackT server_event_callback
             = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
               (eCAL::service::ServerEventType event, const std::string& /*message*/) -> void
-              {
-                num_server_event_callback_called++; 
-              
+              {              
                 if (event == eCAL::service::ServerEventType::Connected)
                   num_server_event_callback_called_connected++;
                 else if (event == eCAL::service::ServerEventType::Disconnected)
                   num_server_event_callback_called_disconnected++;
+
+                num_server_event_callback_called++; 
               };
 
     auto server = server_manager->create_server(protocol_version, 0, service_callback, true, server_event_callback);
@@ -2088,13 +2104,13 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThroughWithManagers) // NOLINT
       const eCAL::service::ClientSession::EventCallbackT client_event_callback
             = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
               (eCAL::service::ClientEventType event, const std::string& /*message*/) -> void
-              {
-                num_client_event_callback_called++; 
-                
+              {                
                 if (event == eCAL::service::ClientEventType::Connected)
                   num_client_event_callback_called_connected++;
                 else if (event == eCAL::service::ClientEventType::Disconnected)
                   num_client_event_callback_called_disconnected++;
+
+                num_client_event_callback_called++; 
               };
       client_list.push_back(client_manager->create_client(protocol_version,"127.0.0.1", server->get_port(), client_event_callback));
     }
