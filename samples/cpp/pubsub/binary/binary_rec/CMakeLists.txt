@@ -20,15 +20,15 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
-project(binary_rec_cb)
+project(binary_rec)
 
 find_package(eCAL REQUIRED)
 
-set(binary_rec_cb_src
-    src/binary_rec_cb.cpp
+set(binary_rec_src
+    src/binary_rec.cpp
 )
 
-ecal_add_sample(${PROJECT_NAME} ${binary_rec_cb_src})
+ecal_add_sample(${PROJECT_NAME} ${binary_rec_src})
 
 target_link_libraries(${PROJECT_NAME} eCAL::core)
 

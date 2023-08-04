@@ -103,12 +103,17 @@ namespace eCAL
 
   bool CDataWriterSHM::SetBufferCount(size_t buffer_count_)
   {
+    // no need to adapt anything
+    if (m_memory_file_vec.size() == buffer_count_) return true;
+
+    // buffer count zero not allowed
     if (buffer_count_ < 1)
     {
       Logging::Log(log_level_error, m_topic_name + "::CDataWriterSHM::SetBufferCount minimal number of memory files is 1 !");
       return false;
     }
 
+    // retrieve the memory file size of existing files
     size_t memory_file_size(0);
     if (!m_memory_file_vec.empty())
     {
@@ -119,35 +124,12 @@ namespace eCAL
       memory_file_size = m_memory_file_attr.min_size;
     }
 
-    // ----------------------------------------------------------------------
-    // REMOVE ME IN ECAL6
-    // ----------------------------------------------------------------------
-    // recreate memory buffer list to stay compatible to older versions
-    // for the case that we have ONE existing buffer
-    // and that single buffer is communicated with an older shm datareader
-    // in this case we need to invalidate (destroy) the existing buffer
-    // and the old datareader will get blind (fail safe)
-    // otherwise it would still receive every n-th write
-    // this state change will lead to some lost samples
-    if ((m_memory_file_vec.size() == 1) && (m_memory_file_vec.size() < buffer_count_))
-    {
-      m_memory_file_vec.clear();
-    }
-    // ----------------------------------------------------------------------
-    // REMOVE ME IN ECAL6
-    // ----------------------------------------------------------------------
-
-    // increase buffer count
+    // recreate memory file vector
+    m_memory_file_vec.clear();
     while (m_memory_file_vec.size() < buffer_count_)
     {
       auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, memory_file_size, m_memory_file_attr);
       m_memory_file_vec.push_back(sync_memfile);
-    }
-
-    // decrease buffer count
-    while (m_memory_file_vec.size() > buffer_count_)
-    {
-      m_memory_file_vec.pop_back();
     }
 
     return true;
@@ -185,7 +167,8 @@ namespace eCAL
     if (!m_created) return false;
 
     // write content
-    const bool sent = m_memory_file_vec[m_write_idx]->Write(payload_, attr_);
+    const bool force_full_write(m_memory_file_vec.size() > 1);
+    const bool sent = m_memory_file_vec[m_write_idx]->Write(payload_, attr_, force_full_write);
 
     // and increment file index
     m_write_idx++;
