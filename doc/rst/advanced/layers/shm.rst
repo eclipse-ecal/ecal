@@ -92,13 +92,6 @@ Finally that means the publishers ``CPublisher::Send`` API function call is now 
 Zero Copy mode (optional)
 -------------------------
 
-.. seealso:: 
-
-   .. toctree:: 
-      :maxdepth: 1
-
-      shm_zerocopy
-
 .. note::
 
    Zero-copy has been added in eCAL 5.10 for subscription and in 5.12 for publishing.
@@ -114,55 +107,17 @@ The "normal" eCAL Shared memory communication results in the payload being copie
 Copying the payload from the memory file before executing the subscriber callback results in **better decoupling**, so the publisher can update the memory file with the next message while the subscriber is still processing the last one.
 **Small messages** will be transmitted in a few microseconds and will not benefit from zero-copy.
 
-If it comes to very **large messages** (e.g. high resolution images) however, copying really matters and it can make sense to activate eCAL's **zero-copy mode**:
+If it comes to very **large messages** (e.g. high resolution images) however, copying really matters and it can make sense to activate eCAL's **zero-copy mode**.
 
-1. The publisher still has to copy the data into the memory file.
-   However, via the ``CPayload`` object, direct serialization into an SHM file is possible (instead of a serialize plus copy operation).
+.. seealso:: 
 
-2. The subscriber executes its callback directly on the memory file.
-   The memory file is blocked, while being used.
+   Check out the following Chapter to learn how to enable zero-copy.
+   The chapter will also teach you about advantages and disadvantages of zero-copy:
 
-   .. warning::
-      
-      The memory file is blocked for new publications as long as the user’s callback is processing its content.
-      It will also block other subscribers from reading the same SHM file.
+   .. toctree:: 
+      :maxdepth: 1
 
-3. The subscriber releases the memory file, so the publisher can update it again.
-
-.. note::
-
-   Even though it is called zero-copy, only the subscribers are zero-copy.
-   With publishers it's a bit more tricky. As of eCAL 5.12, the public publisher API has changed in such a way that a publishers ``Send`` method will take a ``CPayload`` object, instead of a memory address and a size. If publishers have only local subscriptions, eCAL will be able e.g. to serialize directly (and possible partially) into an SHM file.
-
-Zero-copy can be enabled in the following ways:
-
-- **Use zero-copy as system-default (not recommended!):**
-
-  Activating zero copy system-wide is not recommended because of the mentioned disadvantages for small payloads.
-  But if this is wanted for reasons it can be done by adapting your :file:`ecal.ini` like this.
-
-  .. code-block:: ini
-
-     [publisher]
-     memfile_zero_copy = 1
-
-- **Use zero-copy for a single publisher (from your code):**
-
-  Zero-copy can be activated for a single publisher from the eCAL API:
-  Zero copy could be activated either per connection or for a complete system using the eCAL configuration file.
-  To activate it for a specific publisher this ``CPublisher`` `API function <https://eclipse-ecal.github.io/ecal/_api/classeCAL_1_1CPublisher.html#_CPPv4N4eCAL10CPublisher17ShmEnableZeroCopyEb>`_ needs to be called.
-
-  .. code-block:: cpp
-
-     // Create a publisher (topic name "person")
-     eCAL::protobuf::CPublisher<pb::People::Person> pub("person");
-
-     // Enable zero-copy for this publisher
-     pub.ShmEnableZeroCopy(true);
-
-.. tip::
-
-   In general, it is advisable to combine zero-copy with multi-buffering to reduce the impact on the publisher.
+      shm_zerocopy.rst
 
 Multi-buffering mode (optional)
 -------------------------------
@@ -212,3 +167,4 @@ You can activate the feature in the following ways.
      pub.ShmSetBufferCount(3);
 
 Combining the zero-copy feature with an increased number of memory buffer files (like 2 or 3) could be a nice setup allowing the subscriber to work on the memory file content without copying its content and nevertheless not blocking the publisher to write new data.
+Using Multibuffering however will force each Send operation to re-write the entire memory file and disable partial updates.

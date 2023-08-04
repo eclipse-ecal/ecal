@@ -47,7 +47,7 @@ Enabling eCAL Zero Copy
   If you want to avoid this copy, you can use the :ref:`low-level API <transport_layer_shm_zerocopy_low_level>` to directly operate on the SHM buffer.
 
 Full Zero Copy behavior
-==================
+=======================
 
 The Full eCAL Zero Copy mechanism is working for local (inner-host) publish-subscribe connections only. Sending data over a network connection will not benefit from that feature.
 
