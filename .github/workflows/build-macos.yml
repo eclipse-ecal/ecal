@@ -25,7 +25,7 @@ jobs:
         target: 'desktop'
 
     - name: Install Dependencies
-      run: brew install ninja doxygen graphviz protobuf@21 hdf5 pkg-config
+      run: brew install ninja doxygen graphviz protobuf hdf5 pkg-config
 
     - name: Install Cap’n Proto
       run: |
@@ -85,8 +85,8 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_QWT=ON \
         -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_PREFIX_PATH=/usr/local/opt/protobuf@21 \
-        -DCMAKE_CXX_STANDARD=14 \
+        -DCMAKE_CXX_STANDARD=17 \
+        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
         -DPython_FIND_STRATEGY=LOCATION \
         -DPython_FIND_REGISTRY=NEVER
         sudo mkdir /etc/ecal
