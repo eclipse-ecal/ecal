@@ -33,7 +33,7 @@ std::string GetSerialzedMessageFromJSON(google::protobuf::Message* msg_proto_, c
   }
 
   // read JSON string into message object
-  google::protobuf::util::Status status = google::protobuf::util::JsonStringToMessage(msg_json_, msg_proto_);
+  auto status = google::protobuf::util::JsonStringToMessage(msg_json_, msg_proto_);
   if (!status.ok())
   {
     std::cerr << "Could not convert JSON to google message." << std::endl;
@@ -60,7 +60,7 @@ std::string GetJSONFromSerialzedMessage(google::protobuf::Message* msg_proto_, c
 
   // convert message object to JSON string
   std::string msg_json;
-  google::protobuf::util::Status status = google::protobuf::util::MessageToJsonString(*msg_proto_, &msg_json);
+  auto status = google::protobuf::util::MessageToJsonString(*msg_proto_, &msg_json);
   if (!status.ok())
   {
     std::cerr << "Could not convert google message to JSON." << std::endl;
