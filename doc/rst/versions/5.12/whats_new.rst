@@ -14,7 +14,33 @@ eCAL 5.12 was released in August 2023.
 New features
 ============
 
+- **True Zero Copy!**
 
+  eCAL had Zero Copy in the past.
+  But now it's even better!
+  With the new **low level API** you can precisely control which part of your Shared Memory message you actually have to change and therefore speed up your system even more!
+
+  Check out the :ref:`Zero Copy documentation<transport_layer_shm_zerocopy>` for explanations and examples on how to use it!
+
+- **Improved Container support through host-groups**
+
+  You want to containerize your eCAL Apps?
+  Well, then this is the release for you.
+  While in the past you had to decide between support for eCAL Service / RPC support and the shared memory transport layer, now both is possible at the same time.
+
+  Check out the :ref:`eCAL in Docker tutorial<ecal_in_docker>` to learn more!
+
+  This also enables you to manage apps in your docker containers with eCAL Sys!
+
+- **Improved eCAL Monitor for Debugging**
+
+  We enriched the eCAL Monitor with even more information, that allow you to debug your system.
+  You can now see the size and hash of your publishers' and subscribers' **descriptors**.
+  And - if that isn't enough for you - the eCAL Monitor got an entirely new **Raw Data panel** for very deep (but easy!) inspections of the registration layer.
+
+- **Improved support for C#**
+
+  The C# language binding has seen some mayor updates. Most notably, the Client / Server API is now available in C#, so you can use eCAL's RPC features!
 
 
 - Check out the `entire 5.12.0 changelog <https://github.com/eclipse-ecal/ecal/releases/tag/v5.12.0>`_!.
