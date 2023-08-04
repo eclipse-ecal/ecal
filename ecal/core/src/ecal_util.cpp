@@ -17,10 +17,6 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  eCAL utility functions
-**/
-
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_core.h>
 #include <ecal/ecal_types.h>
@@ -45,11 +41,6 @@
 
 namespace eCAL
 {
-  /**
-   * @brief Return the eCAL process state.
-   *
-   * @return  True if eCAL is in proper state. 
-  **/
   bool Ok()
   {
     return(g_shutdown == 0);
@@ -72,11 +63,6 @@ namespace eCAL
       return(monitoring);
     }
 
-    /**
-    * @brief Send shutdown event to specified local user process using it's process name.
-     *
-     * @param process_name_   Fully qualified process name (including the absolute path)
-    **/
     void ShutdownProcess(const std::string& process_name_)
     {
       const eCAL::pb::Monitoring monitoring = GetMonitoring();
@@ -101,11 +87,6 @@ namespace eCAL
       }
     }
 
-    /**
-     * @brief Send shutdown event to specified local user process using it's process id.
-     *
-     * @param process_id_   Process id.
-    **/
     void ShutdownProcess(const int process_id_)
     {
       const std::string event_name = EVENT_SHUTDOWN_PROC + std::string("_") + std::to_string(process_id_);
@@ -118,9 +99,6 @@ namespace eCAL
       }
     }
 
-    /**
-     * @brief Send shutdown event to all local user processes.
-    **/
     void ShutdownProcesses()
     {
       const eCAL::pb::Monitoring monitoring = GetMonitoring();
@@ -154,9 +132,6 @@ namespace eCAL
       }
     }
 
-    /**
-     * @brief Send shutdown event to all core components.
-    **/
     void ShutdownCore()
     {
       const eCAL::pb::Monitoring monitoring = GetMonitoring();
@@ -190,35 +165,16 @@ namespace eCAL
       }
     }
 
-    /**
-     * @brief Enable eCAL message loop back,
-     *          that means subscriber will receive messages from
-     *          publishers of the same process (default == false).
-     *
-     * @param  Switch on message loop back..
-    **/
     void EnableLoopback(bool state_)
     {
       if (g_registration_receiver()) g_registration_receiver()->EnableLoopback(state_);
     }
 
-    /**
-     * @brief Enable process wide eCAL publisher topic type sharing
-     *          that is needed for reflection on subscriber side.
-     *
-     * @param state_  Switch on type sharing
-    **/
     void PubShareType(bool state_)
     {
       if (g_pubgate()) g_pubgate()->ShareType(state_);
     }
 
-    /**
-     * @brief Enable process wide eCAL publisher topic description sharing
-     *          that is needed for reflection on subscriber side.
-     *
-     * @param state_  Switch on description sharing
-    **/
     void PubShareDescription(bool state_)
     {
       if (g_pubgate()) g_pubgate()->ShareDescription(state_);
@@ -230,26 +186,12 @@ namespace eCAL
       g_descgate()->GetTopics(topic_info_map_);
     }
 
-
-    /**
-     * @brief Get all topic names.
-     *
-     * @param topic_names_ Vector to store the topic names.
-    **/
     void GetTopicNames(std::vector<std::string>& topic_names_)
     {
       if (!g_descgate()) return;
       g_descgate()->GetTopicNames(topic_names_);
     }
 
-    /**
-     * @brief Gets type name of the specified topic.
-     *
-     * @param topic_name_   Topic name.
-     * @param topic_type_   String to store type name.
-     *
-     * @return  True if succeeded.
-    **/
     // [[deprecated]]
     bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_)
     {
@@ -265,13 +207,6 @@ namespace eCAL
       return GetTopicTypeName(topic_name_, topic_type_);
     }
 
-    /**
-     * @brief Gets type name of the specified topic.
-     *
-     * @param topic_name_   Topic name.
-     *
-     * @return  Topic type name.
-    **/
     // [[deprecated]]
     std::string GetTopicTypeName(const std::string& topic_name_)
     {
@@ -289,14 +224,6 @@ namespace eCAL
       return GetTopicTypeName(topic_name_);
     }
 
-    /**
-     * @brief Gets description of the specified topic.
-     *
-     * @param topic_name_   Topic name.
-     * @param topic_desc_   String to store description.
-     *
-     * @return  True if succeeded.
-    **/
     // [[deprecated]]
     bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_)
     {
@@ -312,13 +239,6 @@ namespace eCAL
       return GetTopicDescription(topic_name_, topic_desc_);
     }
 
-    /**
-     * @brief Gets description of the specified topic.
-     *
-     * @param topic_name_   Topic name.
-     *
-     * @return  Topic description.
-    **/
     // [[deprecated]]
     std::string GetTopicDescription(const std::string& topic_name_)
     {
@@ -371,55 +291,24 @@ namespace eCAL
       }
     }
 
-    /**
-     * @brief Get complete service map (including request and response types and descriptions).
-     *
-     * @param service_info_map_  Map to store the topic informations.
-     *                           Map { (ServiceName, MethodName) -> ( (ReqType, ReqDescription), (RespType, RespDescription) ) } mapping of all currently known services.
-    **/
     void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_)
     {
       if (!g_descgate()) return;
       g_descgate()->GetServices(service_info_map_);
     }
 
-    /**
-     * @brief Get all service/method names.
-     *
-     * @param service_names_ Vector to store the service/method tuples (Vector { (ServiceName, MethodName) }).
-    **/
     void GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_)
     {
       if (!g_descgate()) return;
       g_descgate()->GetServiceNames(service_method_names_);
     }
 
-    /**
-     * @brief Gets service method request and response type names.
-     *
-     * @param service_name_  Service name.
-     * @param method_name_   Method name.
-     * @param req_type_      String to store request type.
-     * @param resp_type_     String to store response type.
-     *
-     * @return  True if succeeded.
-    **/
     bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_)
     {
       if (!g_descgate()) return(false);
       return(g_descgate()->GetServiceTypeNames(service_name_, method_name_, req_type_, resp_type_));
     }
 
-    /**
-     * @brief Gets service method request and response descriptions.
-     *
-     * @param service_name_  Service name.
-     * @param method_name_   Method name.
-     * @param req_desc_      String to store request description.
-     * @param resp_desc_     String to store response description.
-     *
-     * @return  True if succeeded.
-    **/
     bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_desc_, std::string& resp_desc_)
     {
       if (!g_descgate()) return(false);

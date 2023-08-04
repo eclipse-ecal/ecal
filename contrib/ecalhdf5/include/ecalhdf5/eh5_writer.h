@@ -67,8 +67,6 @@ namespace eCAL
          *                  - full path to  measurement directory (recommended with host name) (e.g.: M:\measurement_directory\measurement01\CARPC01),
          *                  - to set the name of the actual hdf5 file use SetFileBaseName method.
          *
-         * @param access   Access type
-         *
          * @return         true if output (AccessType::CREATE) measurement directory structure can be accessed/created, false otherwise.
         **/
         bool Open(const std::string& path) override { return measurement.Open(path, eAccessType::CREATE); }
