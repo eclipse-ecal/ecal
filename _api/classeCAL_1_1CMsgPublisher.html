@@ -1733,26 +1733,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1a41e92bccaac7256e3878bd20ff1ee9ee.html">
-       Typedef eCAL::eh5::eAccessType
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1aa8a709e7af8ce8d85946c5ab3ec9d77a.html">
-       Typedef eCAL::eh5::EntryInfoSet
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1a214de80d6d32407f447aa9df41708e87.html">
-       Typedef eCAL::eh5::EntryInfoVect
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1a8d748bf8fa9b852ee9ba1d7e544099bf.html">
-       Typedef eCAL::eh5::SEntryInfo
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="typedef_ecal__service__info_8h_1ae0436af7a525f2b5fcc30025def57c30.html">
        Typedef eCAL::MethodCallbackT
       </a>
@@ -1800,11 +1780,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="typedef_ecalc__types_8h_1a6801786d75d8af7f213d45239018884b.html">
        Typedef ECAL_HANDLE
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="typedef_ecal__log__level_8h_1ac1acb1e4b9e121f91d4daac215ae1fc7.html">
-       Typedef eCAL_Logging_Filter
       </a>
      </li>
     </ul>
@@ -2537,18 +2512,18 @@ title="Print to PDF"
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL13CMsgPublisher13CMsgPublisherEv">
 <span id="_CPPv3N4eCAL13CMsgPublisher13CMsgPublisherEv"></span><span id="_CPPv2N4eCAL13CMsgPublisher13CMsgPublisherEv"></span><span id="eCAL::CMsgPublisher::CMsgPublisher"></span><span class="target" id="classeCAL_1_1CMsgPublisher_1a4d93fbee6b0d438be4e34d20dfbc2779"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CMsgPublisher</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL13CMsgPublisher13CMsgPublisherEv" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Constructor. </p>
+<dd><p>Default Constructor. Using this constructor, the object is not actually in a usable state. Before being able to send data, one has to call the <code class="docutils literal notranslate"><a class="reference internal" href="#classeCAL_1_1CMsgPublisher_1a447bbe94735245dbccd3dc274103b770"><span class="std std-ref"><span class="pre">Create()</span></span></a></code> function, first. </p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL13CMsgPublisher13CMsgPublisherERKNSt6stringERKNSt6stringERKNSt6stringE">
 <span id="_CPPv3N4eCAL13CMsgPublisher13CMsgPublisherERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL13CMsgPublisher13CMsgPublisherERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CMsgPublisher::CMsgPublisher__ssCR.ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CMsgPublisher_1aef9e493c1bc5c996b7734d021792930f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CMsgPublisher</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_name_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_type_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_desc_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;&quot;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL13CMsgPublisher13CMsgPublisherERKNSt6stringERKNSt6stringERKNSt6stringE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Constructor. </p>
+<dd><p>Constructor, that automatically intializes the Publisher. This function will be deprecated with eCAL 5.13, please use one of other constructors instead. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>topic_name_</strong> – Unique topic name. </p></li>
-<li><p><strong>topic_type_</strong> – Type name (optional for type checking). </p></li>
+<li><p><strong>topic_type_</strong> – Type name. </p></li>
 <li><p><strong>topic_desc_</strong> – Type description (optional for description checking). </p></li>
 </ul>
 </dd>
@@ -2558,12 +2533,27 @@ title="Print to PDF"
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL13CMsgPublisher13CMsgPublisherERKNSt6stringERK20SDataTypeInformation">
 <span id="_CPPv3N4eCAL13CMsgPublisher13CMsgPublisherERKNSt6stringERK20SDataTypeInformation"></span><span id="_CPPv2N4eCAL13CMsgPublisher13CMsgPublisherERKNSt6stringERK20SDataTypeInformation"></span><span id="eCAL::CMsgPublisher::CMsgPublisher__ssCR.SDataTypeInformationCR"></span><span class="target" id="classeCAL_1_1CMsgPublisher_1a099a034bc5cdb8cd52d930087c8e6ca1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CMsgPublisher</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_name_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="structeCAL_1_1SDataTypeInformation.html#_CPPv4N4eCAL20SDataTypeInformationE" title="eCAL::SDataTypeInformation"><span class="n"><span class="pre">SDataTypeInformation</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_info_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL13CMsgPublisher13CMsgPublisherERKNSt6stringERK20SDataTypeInformation" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Constructor, that automatically intializes the Publisher. This should be the preferred constructor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic_name_</strong> – Unique topic name. </p></li>
+<li><p><strong>topic_info_</strong> – Struct that contains information of the datatype (name, encoding, description) of the topic. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL13CMsgPublisher13CMsgPublisherERKNSt6stringE">
 <span id="_CPPv3N4eCAL13CMsgPublisher13CMsgPublisherERKNSt6stringE"></span><span id="_CPPv2N4eCAL13CMsgPublisher13CMsgPublisherERKNSt6stringE"></span><span id="eCAL::CMsgPublisher::CMsgPublisher__ssCR"></span><span class="target" id="classeCAL_1_1CMsgPublisher_1ae6cc2277dbe4e340c8eea9fc8296df92"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CMsgPublisher</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_name_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL13CMsgPublisher13CMsgPublisherERKNSt6stringE" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Constructor, that automatically intializes the Publisher. If no datatype information about the topic is available, this constructor can be used. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>topic_name_</strong> – Unique topic name. </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL13CMsgPublisher13CMsgPublisherERK13CMsgPublisher">

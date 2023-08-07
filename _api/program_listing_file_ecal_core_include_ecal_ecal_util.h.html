@@ -1731,26 +1731,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1a41e92bccaac7256e3878bd20ff1ee9ee.html">
-       Typedef eCAL::eh5::eAccessType
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1aa8a709e7af8ce8d85946c5ab3ec9d77a.html">
-       Typedef eCAL::eh5::EntryInfoSet
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1a214de80d6d32407f447aa9df41708e87.html">
-       Typedef eCAL::eh5::EntryInfoVect
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1a8d748bf8fa9b852ee9ba1d7e544099bf.html">
-       Typedef eCAL::eh5::SEntryInfo
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="typedef_ecal__service__info_8h_1ae0436af7a525f2b5fcc30025def57c30.html">
        Typedef eCAL::MethodCallbackT
       </a>
@@ -1798,11 +1778,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="typedef_ecalc__types_8h_1a6801786d75d8af7f213d45239018884b.html">
        Typedef ECAL_HANDLE
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="typedef_ecal__log__level_8h_1ac1acb1e4b9e121f91d4daac215ae1fc7.html">
-       Typedef eCAL_Logging_Filter
       </a>
      </li>
     </ul>
@@ -2483,6 +2458,7 @@ title="Print to PDF"
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;tuple&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
+
 <span class="k">namespace</span><span class="w"> </span><span class="nn">eCAL</span>
 <span class="p">{</span>
 <span class="w">  </span><span class="k">namespace</span><span class="w"> </span><span class="nn">Util</span>
@@ -2519,16 +2495,16 @@ title="Print to PDF"
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">GetTopicNames</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">topic_names_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">GetTopicTypeName</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GetTopicTypeName</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">GetTopicDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GetTopicDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">);</span>
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">GetTopicDataTypeInformation</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="n">SDataTypeInformation</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_info_</span><span class="p">);</span>
@@ -2541,22 +2517,21 @@ title="Print to PDF"
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">GetServiceDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">service_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">method_name_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">req_desc_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">resp_desc_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_10</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_10</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">GetTypeName</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_10</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_10</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GetTypeName</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_10</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_10</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">GetDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicDataTypeInformation(const std::string&amp; topic_name_, SDataTypeInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GetDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">);</span>
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SplitCombinedTopicType</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">combined_topic_type_</span><span class="p">);</span>
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">CombinedTopicEncodingAndType</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_encoding_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">);</span>
-
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>

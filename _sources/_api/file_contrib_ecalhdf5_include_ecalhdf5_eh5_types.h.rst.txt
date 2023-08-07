@@ -57,16 +57,3 @@ Namespaces
 
 - :ref:`namespace_eCAL__eh5`
 
-
-Typedefs
---------
-
-
-- :ref:`exhale_typedef_eh5__types_8h_1a41e92bccaac7256e3878bd20ff1ee9ee`
-
-- :ref:`exhale_typedef_eh5__types_8h_1aa8a709e7af8ce8d85946c5ab3ec9d77a`
-
-- :ref:`exhale_typedef_eh5__types_8h_1a214de80d6d32407f447aa9df41708e87`
-
-- :ref:`exhale_typedef_eh5__types_8h_1a8d748bf8fa9b852ee9ba1d7e544099bf`
-

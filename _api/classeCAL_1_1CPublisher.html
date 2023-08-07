@@ -1733,26 +1733,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1a41e92bccaac7256e3878bd20ff1ee9ee.html">
-       Typedef eCAL::eh5::eAccessType
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1aa8a709e7af8ce8d85946c5ab3ec9d77a.html">
-       Typedef eCAL::eh5::EntryInfoSet
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1a214de80d6d32407f447aa9df41708e87.html">
-       Typedef eCAL::eh5::EntryInfoVect
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1a8d748bf8fa9b852ee9ba1d7e544099bf.html">
-       Typedef eCAL::eh5::SEntryInfo
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="typedef_ecal__service__info_8h_1ae0436af7a525f2b5fcc30025def57c30.html">
        Typedef eCAL::MethodCallbackT
       </a>
@@ -1800,11 +1780,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="typedef_ecalc__types_8h_1a6801786d75d8af7f213d45239018884b.html">
        Typedef ECAL_HANDLE
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="typedef_ecal__log__level_8h_1ac1acb1e4b9e121f91d4daac215ae1fc7.html">
-       Typedef eCAL_Logging_Filter
       </a>
      </li>
     </ul>
@@ -2589,10 +2564,7 @@ title="Print to PDF"
 <dd><p>Constructor. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>topic_name_</strong> – Unique topic name. </p></li>
-<li><p><strong>topic_info_</strong> – Topic information (encoding, type, descriptor) </p></li>
-</ul>
+<dd class="field-odd"><p><strong>topic_name_</strong> – Unique topic name. </p>
 </dd>
 </dl>
 </dd></dl>
@@ -2668,10 +2640,7 @@ title="Print to PDF"
 <dd><p>Creates this object. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>topic_name_</strong> – Unique topic name. </p></li>
-<li><p><strong>topic_info_</strong> – Topic information (encoding, type, descriptor)</p></li>
-</ul>
+<dd class="field-odd"><p><strong>topic_name_</strong> – Unique topic name.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if it succeeds, false if it fails. </p>
@@ -3196,12 +3165,14 @@ title="Print to PDF"
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher21DEFAULT_TIME_ARGUMENTE">
 <span id="_CPPv3N4eCAL10CPublisher21DEFAULT_TIME_ARGUMENTE"></span><span id="_CPPv2N4eCAL10CPublisher21DEFAULT_TIME_ARGUMENTE"></span><span id="eCAL::CPublisher::DEFAULT_TIME_ARGUMENT__l-l"></span><span class="target" id="classeCAL_1_1CPublisher_1adbc02e2ad1cb6c5ab89888d7a0487176"></span><span class="pre">ECAL_API</span><span class="w"> </span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DEFAULT_TIME_ARGUMENT</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="o"><span class="pre">-</span></span><span class="m"><span class="pre">1</span></span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher21DEFAULT_TIME_ARGUMENTE" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Use DEFAULT_TIME_ARGUMENT in the <code class="docutils literal notranslate"><a class="reference internal" href="#classeCAL_1_1CPublisher_1acbea7ac61cfb86ca5a939e281a89285f"><span class="std std-ref"><span class="pre">Send()</span></span></a></code> function to let eCAL determine the send timestamp </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher28DEFAULT_ACKNOWLEDGE_ARGUMENTE">
 <span id="_CPPv3N4eCAL10CPublisher28DEFAULT_ACKNOWLEDGE_ARGUMENTE"></span><span id="_CPPv2N4eCAL10CPublisher28DEFAULT_ACKNOWLEDGE_ARGUMENTE"></span><span id="eCAL::CPublisher::DEFAULT_ACKNOWLEDGE_ARGUMENT__l-l"></span><span class="target" id="classeCAL_1_1CPublisher_1a82ee6644621ffcdb809b29bb5e042f84"></span><span class="pre">ECAL_API</span><span class="w"> </span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DEFAULT_ACKNOWLEDGE_ARGUMENT</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="o"><span class="pre">-</span></span><span class="m"><span class="pre">1</span></span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher28DEFAULT_ACKNOWLEDGE_ARGUMENTE" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Use DEFAULT_ACKNOWLEDGE_ARGUMENT in the <code class="docutils literal notranslate"><a class="reference internal" href="#classeCAL_1_1CPublisher_1acbea7ac61cfb86ca5a939e281a89285f"><span class="std std-ref"><span class="pre">Send()</span></span></a></code> function to let eCAL determine from configuration if the send operation needs to be acknowledged. </p>
+</dd></dl>
 
 </div>
 </dd></dl>

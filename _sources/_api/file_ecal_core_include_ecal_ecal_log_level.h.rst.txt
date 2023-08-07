@@ -45,10 +45,3 @@ Enums
 
 - :ref:`exhale_enum_ecal__log__level_8h_1a7ac86e3048a80a58673fdab06c1a2310`
 
-
-Typedefs
---------
-
-
-- :ref:`exhale_typedef_ecal__log__level_8h_1ac1acb1e4b9e121f91d4daac215ae1fc7`
-

@@ -4,6 +4,11 @@
 File ecal_types.h
 =================
 
+
+This file contains type definitions for information associated with a given topic. 
+
+
+
 .. contents:: Contents
    :local:
    :backlinks: none

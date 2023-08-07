@@ -51,9 +51,8 @@ Program Listing for File ecal_publisher.h
      {
      public:
    
-       ECAL_API static constexpr long long DEFAULT_TIME_ARGUMENT        = -1;
-       ECAL_API static constexpr long long DEFAULT_ACKNOWLEDGE_ARGUMENT = -1;
-   
+       ECAL_API static constexpr long long DEFAULT_TIME_ARGUMENT        = -1;  
+       ECAL_API static constexpr long long DEFAULT_ACKNOWLEDGE_ARGUMENT = -1;  
        ECAL_API CPublisher();
    
        ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6.")
