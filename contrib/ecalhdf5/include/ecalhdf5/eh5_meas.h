@@ -64,15 +64,21 @@ namespace eCAL
       ~HDF5Meas() override;
 
       /**
-       * @brief Copy operator
+       * @brief Copy constructor deleted
       **/
       HDF5Meas(const HDF5Meas& other) = delete;
+      /**
+       * @brief Move assignemnt deleted
+      **/
       HDF5Meas& operator=(const HDF5Meas& other) = delete;
 
       /**
-      * @brief Move operator
+      * @brief Move constructor
       **/
       HDF5Meas(HDF5Meas&&) = default;
+      /**
+       * @brief Move assignment
+      **/
       HDF5Meas& operator=(HDF5Meas&&) = default;
 
       /**

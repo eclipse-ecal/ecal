@@ -82,8 +82,8 @@ namespace eCAL
       **/
       enum AccessType
       {
-        RDONLY,
-        CREATE
+        RDONLY,  //!< ReadOnly - the measurement can only be read
+        CREATE   //!< Create   - a new measurement will be created
       };
 
     }
