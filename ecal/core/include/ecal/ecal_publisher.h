@@ -71,8 +71,8 @@ namespace eCAL
   {
   public:
 
-    ECAL_API static constexpr long long DEFAULT_TIME_ARGUMENT        = -1;
-    ECAL_API static constexpr long long DEFAULT_ACKNOWLEDGE_ARGUMENT = -1;
+    ECAL_API static constexpr long long DEFAULT_TIME_ARGUMENT        = -1;  /*!< Use DEFAULT_TIME_ARGUMENT in the `Send()` function to let eCAL determine the send timestamp */
+    ECAL_API static constexpr long long DEFAULT_ACKNOWLEDGE_ARGUMENT = -1;  /*!< Use DEFAULT_ACKNOWLEDGE_ARGUMENT in the `Send()` function to let eCAL determine from configuration if the send operation needs to be acknowledged. */
 
     /**
      * @brief Constructor. 
@@ -101,7 +101,6 @@ namespace eCAL
     * @brief Constructor.
     *
     * @param topic_name_   Unique topic name.
-    * @param topic_info_   Topic information (encoding, type, descriptor)
     **/
     ECAL_API CPublisher(const std::string& topic_name_);
 
@@ -156,7 +155,6 @@ namespace eCAL
      * @brief Creates this object.
      *
      * @param topic_name_   Unique topic name.
-     * @param topic_info_   Topic information (encoding, type, descriptor)
      *
      * @return  True if it succeeds, false if it fails.
     **/

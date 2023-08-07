@@ -39,7 +39,6 @@ namespace eCAL
     const std::string kFileVerAttrTitle   ("Version");
     const std::string kTimestampAttrTitle ("Timestamps");
     const std::string kChnAttrTitle       ("Channels");
-    //!< @endcond
 
     /**
      * @brief Info struct for a single measurement entry
