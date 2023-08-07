@@ -47,17 +47,20 @@ namespace eCAL
   {
   public:
     /**
-     * @brief  Constructor. 
+     * @brief  Default Constructor. 
+     *         Using this constructor, the object is not actually in a usable state.
+     *         Before being able to send data, one has to call the `Create()` function, first.
     **/
     CMsgPublisher() : CPublisher()
     {
     }
 
     /**
-     * @brief  Constructor. 
+     * @brief  Constructor, that automatically intializes the Publisher. 
+     *         This function will be deprecated with eCAL 5.13, please use one of other constructors instead.
      *
      * @param topic_name_  Unique topic name. 
-     * @param topic_type_  Type name (optional for type checking). 
+     * @param topic_type_  Type name. 
      * @param topic_desc_  Type description (optional for description checking). 
     **/
     ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6. ")
@@ -65,10 +68,23 @@ namespace eCAL
     {
     }
 
+    /**
+     * @brief  Constructor, that automatically intializes the Publisher. 
+     *         This should be the preferred constructor.
+     *
+     * @param topic_name_  Unique topic name.
+     * @param topic_info_  Struct that contains information of the datatype (name, encoding, description) of the topic.
+     **/
     CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_) : CPublisher(topic_name_, topic_info_)
     {
     }
 
+    /**
+     * @brief  Constructor, that automatically intializes the Publisher. 
+     *         If no datatype information about the topic is available, this constructor can be used.
+     *
+     * @param topic_name_  Unique topic name.
+     **/
     CMsgPublisher(const std::string& topic_name_) : CMsgPublisher(topic_name_, GetDataTypeInformation())
     {
     }
