@@ -239,7 +239,12 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
 #. Configure the Host network
 
-   - eCAL is sending UDP messages to a multicast IP group ``239.0.0.0/24``, further information in :ref:`Getting Started Section <getting_started_cloud_ubuntu_routes>`. The idea is now, to successfully receive those messages from your previously started container on your host. For that, you need to add a route to your routing table. By typing ``ifconfig`` in your shell, you can identify the right docker network. In our case, the prefix of the docker network is always ``br`` followed by random numbers. After identifying the right network, run following command.
+   - eCAL is sending UDP messages to a multicast IP group ``239.0.0.0/24``, further information in :ref:`Getting Started Section <getting_started_cloud_ubuntu_routes>`. 
+     The idea is now, to successfully receive those messages from your previously started container on your host.
+     For that, you need to add a route to your routing table.
+     By typing ``ifconfig`` in your shell, you can identify the right docker network.
+     In our case, the prefix of the docker network is always ``br`` followed by random numbers. 
+     After identifying the right network, run following command.
 
    .. code-block:: bash
 
