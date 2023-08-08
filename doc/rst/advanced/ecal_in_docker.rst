@@ -196,7 +196,7 @@ Seemeless IPC-Communication across host borders
    Older versions lack the ability to utilize the host_group_name in the ecal.ini file, thus it won't work.
 
 
-In eCAL, you are able to set host belonging over network borders by utilizing the eCAL.ini configuration file with the same ``host_group_name`` - in the following steps, you will learn how to set this up.
+In eCAL, you are able to set host belonging over network borders by utilizing the :file:`ecal.ini` configuration file with the same ``host_group_name`` - in the following steps, you will learn how to set this up.
 
 .. note::
     If we dont set the same ``host_group_name`` on our Host and our Containers, an IPC-Communication across host borders is not avaialble with different host names.
@@ -213,7 +213,7 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
    * First, open /etc/ecal/ecal.ini from your prefered editor.
 
-   * Search for the line ``network_enable`` and set it to 'true'.
+   * Search for the line ``network_enabled`` and set it to ``true``.
 
    * Search for the line ``host_group_name`` and write your prefered name.
 
@@ -236,7 +236,7 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
 #. Configure the Host network
 
-   - eCAL is sending UDP messages to a multicast IP group 239.0.0.0/24, further information in :ref:`Getting Started Section <getting_started_cloud_ubuntu_routes>`. The idea is now, to successfully receive those messages from your previously started container on your host. For that, you need to add a route to your routing table. By typing ifconfig in your shell, you can identify the right docker network. In our case, the prefix of the docker network is always ``br`` followed by random numbers. After identifying the right network, run following command.
+   - eCAL is sending UDP messages to a multicast IP group 239.0.0.0/24, further information in :ref:`Getting Started Section <getting_started_cloud_ubuntu_routes>`. The idea is now, to successfully receive those messages from your previously started container on your host. For that, you need to add a route to your routing table. By typing ``ifconfig`` in your shell, you can identify the right docker network. In our case, the prefix of the docker network is always ``br`` followed by random numbers. After identifying the right network, run following command.
 
    .. code-block:: bash
 
@@ -250,4 +250,4 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
    .. image:: img_documentation/vscode_etc_hosts.png
 
-After all steps are done, all eCAL nodes can communicate seemlessly from docker to the host.
+After all steps are done, all eCAL nodes can communicate seemlessly from docker to the host and vice versa.
