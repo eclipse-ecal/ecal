@@ -2453,6 +2453,11 @@ title="Print to PDF"
      Run the docker containers
     </a>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#seamless-ipc-communication-across-host-borders">
+     Seamless IPC-Communication across host borders
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -2502,6 +2507,11 @@ title="Print to PDF"
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#run-the-docker-containers">
      Run the docker containers
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#seamless-ipc-communication-across-host-borders">
+     Seamless IPC-Communication across host borders
     </a>
    </li>
   </ul>
@@ -2833,6 +2843,69 @@ sudo<span class="w"> </span>docker-compose<span class="w"> </span>up
 </ol>
 </li>
 </ul>
+</section>
+<section id="seamless-ipc-communication-across-host-borders">
+<h3>Seamless IPC-Communication across host borders<a class="headerlink" href="#seamless-ipc-communication-across-host-borders" title="Permalink to this headline">#</a></h3>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This will work with eCAL 5.12 and higher.
+Older versions lack the ability to utilize the <code class="docutils literal notranslate"><span class="pre">host_group_name</span></code> in the <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> file, thus it won’t work.</p>
+</div>
+<p>In eCAL, you are able to set host belonging over network borders by utilizing the <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> configuration file with the same <code class="docutils literal notranslate"><span class="pre">host_group_name</span></code> - in the following steps, you will learn how to set this up.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If we don’t set the same <code class="docutils literal notranslate"><span class="pre">host_group_name</span></code> on our Host and our Containers, an IPC-Communication across host borders is not available with different host names.</p>
+</div>
+<ol class="arabic">
+<li><p>To encapsulate your container network from your host network, you need to create a new docker network with the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>docker<span class="w"> </span>network<span class="w"> </span>create<span class="w"> </span>--driver<span class="o">=</span>bridge<span class="w"> </span>--subnet<span class="o">=</span><span class="m">192</span>.100.0.0/24<span class="w"> </span>my_network
+</pre></div>
+</div>
+</li>
+<li><p>Edit your <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> and run your Container within the newly created docker network</p>
+<ul class="simple">
+<li><p>You will use our previously discussed <a class="reference internal" href="#ecal-in-docker"><span class="std std-ref">ecal-runtime-image</span></a> for the next step.</p></li>
+<li><p>First, open <code class="file docutils literal notranslate"><span class="pre">/etc/ecal/ecal.ini</span></code> from your preferred editor.</p></li>
+<li><p>Search for the line <code class="docutils literal notranslate"><span class="pre">network_enabled</span></code> and set it to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
+<li><p>Search for the line <code class="docutils literal notranslate"><span class="pre">host_group_name</span></code> and write your preferred name.</p></li>
+<li><p>Save and close the <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> file.</p></li>
+<li><p>Now your <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> file is prepared.
+We want to use it not only for our Host-System but also for our Container, so we don’t need to edit the <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> in our Container again.
+To achieve that, run following command to start your container:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-it<span class="w"> </span>--ipc<span class="o">=</span>host<span class="w"> </span>--pid<span class="o">=</span>host<span class="w"> </span>--network<span class="o">=</span>my_network<span class="w"> </span>--name<span class="o">=</span>container1<span class="w"> </span>--h<span class="o">=</span>container1<span class="w"> </span>--ip<span class="o">=</span><span class="m">192</span>.168.100.2<span class="w"> </span>-v<span class="w"> </span>/etc/ecal/ecal.ini:/etc/ecal/ecal.ini<span class="w"> </span>ecal-runtime
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>You should now be inside the root shell of your Container.
+Check if your <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> file is correct.</p></li>
+<li><p>Now your Container is prepared and configured correctly, so we are ready to start an eCAL example.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ecal_sample_person_snd
+</pre></div>
+</div>
+</li>
+<li><p>Configure the Host network</p>
+<ul class="simple">
+<li><p>eCAL is sending UDP messages to a multicast IP group <code class="docutils literal notranslate"><span class="pre">239.0.0.0/24</span></code>, further information in <a class="reference internal" href="../getting_started/cloud.html#getting-started-cloud-ubuntu-routes"><span class="std std-ref">Getting Started Section</span></a>.
+The idea is now, to successfully receive those messages from your previously started container on your host.
+For that, you need to add a route to your routing table.
+By typing <code class="docutils literal notranslate"><span class="pre">ifconfig</span></code> in your shell, you can identify the right docker network.
+In our case, the prefix of the docker network is always <code class="docutils literal notranslate"><span class="pre">br</span></code> followed by random numbers.
+After identifying the right network, run following command.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>add<span class="w"> </span><span class="m">239</span>.0.0.0/24<span class="w"> </span>dev<span class="w"> </span>&lt;br-xxx&gt;<span class="w"> </span>metric<span class="w"> </span><span class="m">1</span>
+</pre></div>
+</div>
+</li>
+<li><p>(optional) After adding the route, you register the Container with IP address and name in /etc/hosts for DNS resolution, enabling easy access to it by hostname within the network.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/hosts
+</pre></div>
+</div>
+<img alt="../_images/vscode_etc_hosts.png" src="../_images/vscode_etc_hosts.png" />
+</li>
+</ol>
+<p>After all steps are done, all eCAL nodes can communicate seamlessly from docker to the host and vice versa.</p>
 </section>
 </section>
 </section>
