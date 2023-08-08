@@ -22,11 +22,11 @@ New features
 
   Check out the :ref:`Zero Copy documentation<transport_layer_shm_zerocopy>` for explanations and examples on how to use it!
 
-- **Improved Container support through host-groups**
+- **Container support through host-groups**
 
   You want to containerize your eCAL Apps?
   Well, then this is the release for you.
-  While in the past you had to decide between support for eCAL Service / RPC support and the shared memory transport layer, now both is possible at the same time.
+  In the past, you had to choose between enabling support for eCAL services or utilizing the shared memory transport layer, now you can have both simultaneously.
 
   Check out the :ref:`eCAL in Docker tutorial<ecal_in_docker>` to learn more!
 
