@@ -1988,6 +1988,11 @@
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../versions/5.12/whats_new.html">
+     eCAL 5.12
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../versions/5.11/whats_new.html">
      eCAL 5.11
     </a>
@@ -2071,10 +2076,22 @@
      </i>
     </label>
     <ul>
-     <li class="toctree-l3">
+     <li class="toctree-l3 has-children">
       <a class="reference internal" href="../advanced/layers/shm.html">
        eCAL SHM Layer
       </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+      <label for="toctree-checkbox-17">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../advanced/layers/shm_zerocopy.html">
+         eCAL Zero Copy
+        </a>
+       </li>
+      </ul>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../advanced/layers/udp_mc.html">
@@ -2119,8 +2136,8 @@
   <a class="reference internal" href="../license.html">
    License
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
-  <label for="toctree-checkbox-17">
+  <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+  <label for="toctree-checkbox-18">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -2134,8 +2151,8 @@
     <a class="reference internal" href="../license/thirdparty_licenses.html">
      External components
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
-    <label for="toctree-checkbox-18">
+    <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+    <label for="toctree-checkbox-19">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -2559,7 +2576,7 @@ But you can <a class="reference internal" href="../faq.html#faq-ubuntu-22-04-gra
 <p>Installing eCAL from a PPA will cause apt-get to automatically update eCAL for you.
 You can choose from different PPAs, depending on your desired upgrade path.</p>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Rolling Release</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">eCAL 5.11</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">eCAL 5.10</button><button aria-controls="panel-0-0-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-3" name="0-3" role="tab" tabindex="-1">eCAL 5.9</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>This is the rolling release PPA.
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Rolling Release</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">eCAL 5.12</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">eCAL 5.11</button><button aria-controls="panel-0-0-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-3" name="0-3" role="tab" tabindex="-1">eCAL 5.10</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>This is the rolling release PPA.
 It will always upgrade your installation and you will always receive the latest-and-greatest eCAL version.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>ppa:ecal/ecal-latest
 sudo<span class="w"> </span>apt-get<span class="w"> </span>update
@@ -2567,38 +2584,38 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 </pre></div>
 </div>
 <p>Also check out this PPA on <a class="reference external" href="https://launchpad.net/~ecal/+archive/ubuntu/ecal-latest">Launchpad</a>!</p>
-</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.11.
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.12.
+You will receive patches as long as eCAL 5.12 is supported.
+If you want to upgrade to a new eCAL Version, you will have to manually add the new PPA.</p>
+<p>At the moment, eCAL 5.12 is the latest supported version.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>ppa:ecal/ecal-5.12
+sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>ecal
+</pre></div>
+</div>
+<p>Also check out this PPA on <a class="reference external" href="https://launchpad.net/~ecal/+archive/ubuntu/ecal-5.12">Launchpad</a>!</p>
+</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.11.
 You will receive patches as long as eCAL 5.11 is supported.
 If you want to upgrade to a new eCAL Version, you will have to manually add the new PPA.</p>
-<p>At the moment, eCAL 5.11 is the latest supported version.</p>
+<p>At the moment, eCAL 5.11 is the supported legacy-version.
+Support will be dropped when the next eCAL Version is released.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>ppa:ecal/ecal-5.11
 sudo<span class="w"> </span>apt-get<span class="w"> </span>update
 sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>ecal
 </pre></div>
 </div>
 <p>Also check out this PPA on <a class="reference external" href="https://launchpad.net/~ecal/+archive/ubuntu/ecal-5.11">Launchpad</a>!</p>
-</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.10.
-You will receive patches as long as eCAL 5.10 is supported.
+</div><div aria-labelledby="tab-0-0-3" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-3" name="0-3" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.10.
 If you want to upgrade to a new eCAL Version, you will have to manually add the new PPA.</p>
-<p>At the moment, eCAL 5.10 is the supported legacy-version.
-Support will be dropped when the next eCAL Version is released.</p>
+<p>eCAL 5.10 is not supported any more and will not receive patches.
+You can still use the PPA to install the latest eCAL 5.10.
+Please consider upgrading to a newer version.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>ppa:ecal/ecal-5.10
 sudo<span class="w"> </span>apt-get<span class="w"> </span>update
 sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>ecal
 </pre></div>
 </div>
 <p>Also check out this PPA on <a class="reference external" href="https://launchpad.net/~ecal/+archive/ubuntu/ecal-5.10">Launchpad</a>!</p>
-</div><div aria-labelledby="tab-0-0-3" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-3" name="0-3" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.9.
-If you want to upgrade to a new eCAL Version, you will have to manually add the new PPA.</p>
-<p>eCAL 5.9 is not supported any more and will not receive patches.
-You can still use the PPA to install the latest eCAL 5.9.
-Please consider upgrading to a newer version.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>ppa:ecal/ecal-5.9
-sudo<span class="w"> </span>apt-get<span class="w"> </span>update
-sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>ecal
-</pre></div>
-</div>
-<p>Also check out this PPA on <a class="reference external" href="https://launchpad.net/~ecal/+archive/ubuntu/ecal-5.9">Launchpad</a>!</p>
 </div></div>
 </section>
 <section id="fa-ubuntu-manually-install-ecal-from-a-deb-file">

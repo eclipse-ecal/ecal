@@ -45,7 +45,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="eCAL UDP Layer" href="udp_mc.html" />
+    <link rel="next" title="eCAL Zero Copy" href="shm_zerocopy.html" />
     <link rel="prev" title="Transport Layers" href="../transport_layers.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -1987,6 +1987,11 @@
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../versions/5.12/whats_new.html">
+     eCAL 5.12
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../versions/5.11/whats_new.html">
      eCAL 5.11
     </a>
@@ -2070,10 +2075,22 @@
      </i>
     </label>
     <ul class="current">
-     <li class="toctree-l3 current active">
+     <li class="toctree-l3 current active has-children">
       <a class="current reference internal" href="#">
        eCAL SHM Layer
       </a>
+      <input checked="" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+      <label for="toctree-checkbox-17">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="shm_zerocopy.html">
+         eCAL Zero Copy
+        </a>
+       </li>
+      </ul>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="udp_mc.html">
@@ -2118,8 +2135,8 @@
   <a class="reference internal" href="../../license.html">
    License
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
-  <label for="toctree-checkbox-17">
+  <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+  <label for="toctree-checkbox-18">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -2133,8 +2150,8 @@
     <a class="reference internal" href="../../license/thirdparty_licenses.html">
      External components
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
-    <label for="toctree-checkbox-18">
+    <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+    <label for="toctree-checkbox-19">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -2530,7 +2547,7 @@ This technique ensures both low latency and high throughput - as long as the pub
 <li><p>The subscribers open the memory file and copy the payload into their process memory.</p></li>
 <li><p>The subscribers close the memory file and release the access-mutex.</p></li>
 </ul>
-<p>To support one to many publisher/subscriber connections the publisher creates in fact one named update event per connection.</p>
+<p>To support one to many publisher/subscriber connections, the publisher creates one named update event per connection.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>In the standard configuration there is no guarantee that all subscribers have copied the payload before a new message is written to id.
@@ -2567,66 +2584,39 @@ Finally that means the publishers <code class="docutils literal notranslate"><sp
 </section>
 <section id="zero-copy-mode-optional">
 <h3>Zero Copy mode (optional)<a class="headerlink" href="#zero-copy-mode-optional" title="Permalink to this headline">#</a></h3>
-<p><em>Zero-copy has been added in eCAL 5.10. It is turned off by default. When turned on, old eCAL Version can still receive the data but will not use zero-copy.*</em></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Zero-copy has been added in eCAL 5.10 for subscription and in 5.12 for publishing.
+It is turned off by default.
+When turned on, old eCAL Versions can still receive the data but will not use zero-copy.</p>
+</div>
 <p>The “normal” eCAL Shared memory communication results in the payload being copied at least twice:</p>
 <ol class="arabic simple">
 <li><p>Into the SHM file by the publisher</p></li>
 <li><p>From the SHM file the private memory of each subscriber</p></li>
 </ol>
-<p>Usually there is no issue with that.
-Copying the payload from the memory file before executing the subscriber callback results in better decoupling, so the publisher can update the memory file with the next message while the subscriber is still processing the last one.
-Small messages will be transmitted in a few microseconds and will not benefit from zero-copy.</p>
-<p>If it comes to very large messages (e.g. high resolution images) however, copying really matters and it can make sense to activate eCAL’s zero-copy mode.
-With zero-copy, the communication would look like this:</p>
-<ol class="arabic">
-<li><p>The publisher still has to copy the data into the memory file.</p></li>
-<li><p>The subscriber executes its callback directly on the memory file.
-The memory file is blocked, while being used.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>The memory file is blocked for new publications as long as the user’s callback is processing its content.
-It will also block other subscribers from reading the same SHM file.</p>
-</div>
-</li>
-<li><p>The subscriber releases the memory file, so the publisher can update it again.</p></li>
-</ol>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Even though it is called zero-copy, only the subscribers are zero-copy.
-Publishers still have to copy the data into the memory file, as they have to also support other layers like UDP or TCP and therefore cannot directly work on the memory file.</p>
-</div>
-<p>Zero-copy can be enabled in the following ways:</p>
+<p>Copying the payload from the memory file before executing the subscriber callback results in <strong>better decoupling</strong>, so the publisher can update the memory file with the next message while the subscriber is still processing the last one.
+<strong>Small messages</strong> will be transmitted in a few microseconds and will not benefit from zero-copy.</p>
+<p>If it comes to very <strong>large messages</strong> (e.g. high resolution images) however, copying really matters and it can make sense to activate eCAL’s <strong>zero-copy mode</strong>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>Check out the following Chapter to learn how to enable zero-copy.
+The chapter will also teach you about advantages and disadvantages of zero-copy:</p>
+<div class="toctree-wrapper compound">
 <ul>
-<li><p><strong>Use zero-copy as system-default (not recommended!):</strong></p>
-<p>Activating zero copy system-wide is not recommended because of the mentioned disadvantages for small payloads.
-But if this is wanted for reasons it can be done by adapting your <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> like this.</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[publisher]</span>
-<span class="na">memfile_zero_copy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
-</pre></div>
-</div>
-</li>
-<li><p><strong>Use zero-copy for a single publisher (from your code):</strong></p>
-<p>Zero copy could be activated either per connection or for a complete system using the eCAL configuration file.
-To activate it for a specific publisher this <code class="docutils literal notranslate"><span class="pre">CPublisher</span></code> <a class="reference external" href="https://eclipse-ecal.github.io/ecal/_api/classeCAL_1_1CPublisher.html#_CPPv4N4eCAL10CPublisher17ShmEnableZeroCopyEb">API function</a> needs to be called.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Create a publisher (topic name &quot;person&quot;)</span>
-<span class="n">eCAL</span><span class="o">::</span><span class="n">protobuf</span><span class="o">::</span><span class="n">CPublisher</span><span class="o">&lt;</span><span class="n">pb</span><span class="o">::</span><span class="n">People</span><span class="o">::</span><span class="n">Person</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pub</span><span class="p">(</span><span class="s">&quot;person&quot;</span><span class="p">);</span>
-
-<span class="c1">// Enable zero-copy for this publisher</span>
-<span class="n">pub</span><span class="p">.</span><span class="n">ShmEnableZeroCopy</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
-</pre></div>
-</div>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="shm_zerocopy.html">eCAL Zero Copy</a></li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>In general, it is advisable to combine zero-copy with multi-buffering to reduce the impact on the publisher.</p>
+</div>
 </div>
 </section>
 <section id="multi-buffering-mode-optional">
 <h3>Multi-buffering mode (optional)<a class="headerlink" href="#multi-buffering-mode-optional" title="Permalink to this headline">#</a></h3>
-<p><em>Multi-buffering has been added in eCAL 5.10.
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Multi-buffering has been added in eCAL 5.10.
 Multi-buffered topics cannot be received by older eCAL versions.
-The feature is turned off by default.</em></p>
+The feature is turned off by default.</p>
+</div>
 <p>As described in the previous sections, eCAL uses one shared memory file per publisher. This can lead to performance reduction if</p>
 <ul class="simple">
 <li><p>the memory file is blocked by a subscriber that is copying (non-zero copy) or working on (zero-copy) the content</p></li>
@@ -2659,7 +2649,8 @@ These files work like an SHM-file ring buffer.</p>
 </div>
 </li>
 </ul>
-<p>Combining the zero-copy feature with an increased number of memory buffer files (like 2 or 3) could be a nice setup allowing the subscriber to work on the memory file content without copying its content and nevertheless not blocking the publisher to write new data.</p>
+<p>Combining the zero-copy feature with an increased number of memory buffer files (like 2 or 3) could be a nice setup allowing the subscriber to work on the memory file content without copying its content and nevertheless not blocking the publisher to write new data.
+Using Multibuffering however will force each Send operation to re-write the entire memory file and disable partial updates.</p>
 </section>
 </section>
 </section>
@@ -2679,10 +2670,10 @@ These files work like an SHM-file ring buffer.</p>
             <p class="prev-next-title">Transport Layers</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="udp_mc.html" title="next page">
+    <a class='right-next' id="next-link" href="shm_zerocopy.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">eCAL UDP Layer</p>
+        <p class="prev-next-title">eCAL Zero Copy</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
