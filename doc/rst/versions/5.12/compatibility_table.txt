@@ -1,0 +1,42 @@
+.. list-table:: eCAL 5.12 vs. 5.11
+   :widths: 20 80
+
+   * - Wire compatibility
+     
+     - * **eCAL UDP**: 100% compatible in default settings
+
+         A proper Topic-Name -> UDP-Multicast-Group computation has been added.
+         By default, the old version (``multicast_config_version = v1``) is enabled in the :file:`ecal.ini`, which makes the UDP Layer 100% compatible.
+         If the new version (``v2``) is enabled, UDP communication between eCAL 5.12 and older versions of eCAL will fail.
+  
+       * **eCAL TCP**: 100% compatible
+
+       * **Services**: 100% compatible
+
+       * **eCAL Shared Memory**: 100% compatible
+
+       * **eCAL Registration Layer**: 100% compatible
+
+         New fields have been added in the internal protobuf format.
+
+   * - API / ABI
+
+     - * **API**: downwards compatible.
+         
+       * **ABI**: not compatible
+
+         From now on, the official eCAL installer for Windows is built with Visual Studio 2019 / v142.
+         This means, that you need VS 2019 or newer to link against the included SDK.
+
+   * - Tools
+
+     - * **Rec**: Downwards compatible
+         
+         The ``SetConfig`` RPC Call has been added, which was not available in eCAL 5.11
+
+       * **Sys**: 100% compatible
+
+       * **Measurements**: 100% compatible
+
+       * **Meas Cutter**: The structure of the output directory has changed.
+         It is now aligned to the output structure of eCAL Rec.
