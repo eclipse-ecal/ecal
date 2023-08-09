@@ -9,6 +9,7 @@ eCAL Versions
 
    compatibility
 
+   5.12/whats_new
    5.11/whats_new
    5.10/whats_new
    5.9/whats_new
