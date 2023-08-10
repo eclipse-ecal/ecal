@@ -187,3 +187,72 @@ Run the docker containers
 
         sudo docker-compose build
         sudo docker-compose up
+
+Seemeless IPC-Communication across host borders
+------------------------------------------
+
+
+.. important::
+   This will work with eCAL 5.12 and higher.
+   Older versions lack the ability to utilize the host_group_name in the ecal.ini file, thus it won't work.
+
+
+In eCAL, you are able to set host belonging over network borders by utilizing the eCAL.ini configuration file with the same ``host_group_name`` - in the following steps, you will learn how to set this up.
+
+.. note::
+    If we dont set the same ``host_group_name`` on our Host and our Containers, an IPC-Communication across host borders is not available with different host names.
+
+#. To encapsulate your container network from your host network, you need to create a new docker network with the following command:
+
+   .. code-block:: bash
+
+      sudo docker network create --driver=bridge --subnet=10.0.10.0/24 my_network
+
+#. Edit your ecal.ini and run your Container within the newly created docker network
+
+   * You will use our previously discussed :ref:`ecal-runtime-image<ecal_in_docker>` for the next step.
+
+   * First, open /etc/ecal/ecal.ini from your prefered editor.
+
+   * Search for the line ``network_enable`` and set it to 'true'.
+
+   * Search for the line ``host_group_name`` and write your prefered name.
+
+   * Save and close the ecal.ini file.
+
+   * Now your ecal.ini file is prepared. We want to use it not only for our Host-System but also for our Container, so we don't need to edit the ecal.ini in our Container again. To achieve that, run following command to start your container:
+
+   .. code-block:: bash
+
+      sudo docker run --rm -it --ipc=host --pid=host --network=my_network --name=container1 -h=container1 --ip=10.0.10.10 -v /etc/ecal/ecal.ini:/etc/ecal/ecal.ini ecal-runtime
+
+   - You should now be inside the root shell of your Container. Check if your ecal.ini file is correct.
+
+   - Now your Container is prepared and configured correctly, so we are ready to start an eCAL example.
+
+   .. code-block:: bash
+
+      ecal_sample_person_snd
+
+
+#. Configure the Host network
+
+   - eCAL is sending UDP messages to a multicast IP group 239.0.0.0/24, further information in :ref:`Getting Started Section <getting_started_cloud_ubuntu_routes>`. The idea is now, to successfully receive those messages from your previously started container on your host. For that, you need to add a route to your routing table. By typing ifconfig in your shell, you can identify the right docker network. In our case, the prefix of the docker network is always ``br`` followed by random numbers. After identifying the right network, run following command.
+
+   .. code-block:: bash
+
+      sudo ip route add 239.0.0.0/24 dev <br-xxx> metric 1
+
+   - Review your network configuration. Your eCAL-Monitor should resemble this example:
+
+   .. image:: img_documentation/doku_ecal_docker_mon.png
+
+#. (optional) After adding the route, you register the Container with ip address and name in /etc/hosts for DNS resolution, enabling easy access to it by hostname within the network.
+
+   .. code-block:: bash
+
+      sudo nano /etc/hosts
+
+   .. image:: img_documentation/vscode_etc_hosts.png
+
+After all steps are done, all eCAL nodes can communicate seemlessly from docker to the host.
