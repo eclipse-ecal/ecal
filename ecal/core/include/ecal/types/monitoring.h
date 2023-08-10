@@ -24,8 +24,7 @@
 
 #pragma once
 
-#include <ecal/ecal_os.h>
-#include <ecal/ecal_monitoring_entity.h>
+#include <ecal/ecal_types.h>
 
 #include <map>
 #include <string>
@@ -35,6 +34,25 @@ namespace eCAL
 {
   namespace Monitoring
   {
+    namespace Entity
+    {
+      constexpr unsigned int Publisher  = 0x001;
+      constexpr unsigned int Subscriber = 0x002;
+      constexpr unsigned int Server     = 0x004;
+      constexpr unsigned int Client     = 0x008;
+      constexpr unsigned int Process    = 0x010;
+      constexpr unsigned int Host       = 0x020;
+
+      constexpr unsigned int All = Publisher
+        | Subscriber
+        | Server
+        | Client
+        | Process
+        | Host;
+
+      constexpr unsigned int None = 0x000;
+    }
+    
     struct STopicMon                                            //<! eCAL Topic struct
     {
       STopicMon()
@@ -58,14 +76,14 @@ namespace eCAL
       int                                 rclock;               //!< registration clock (heart beat)
       int                                 hid;                  //!< host id
       std::string                         hname;                //!< host name
+      std::string                         hgname;               //!< host group name
       int                                 pid;                  //!< process id
       std::string                         pname;                //!< process name
       std::string                         uname;                //!< unit name
       std::string                         tid;                  //!< topic id
       std::string                         tname;                //!< topic name
       std::string                         direction;            //!< direction (publisher, subscriber)
-      std::string                         ttype;                //!< topic type (protocol)
-      std::string                         tdesc;                //!< topic description (protocol descriptor)
+      SDataTypeInformation                tdatatype;            //!< topic datatype information (name, encoding, descriptor)
       int                                 tsize;                //!< topic size
 
       bool                                tlayer_ecal_udp_mc;   //!< transport layer udp active
@@ -103,6 +121,7 @@ namespace eCAL
 
       int            rclock;                                    //!< registration clock
       std::string    hname;                                     //!< host name
+      std::string    hgname;                                    //!< host group name
       int            pid;                                       //!< process id
       std::string    pname;                                     //!< process name
       std::string    uname;                                     //!< unit name
@@ -204,14 +223,5 @@ namespace eCAL
       std::vector<SClientMon>   clients;                        //<! clients info vector
     };
 
-    /**
-     * @brief Get monitoring as a struct.
-     *
-     * @param [out] mon_       Target struct to store monitoring information.
-     * @param       entities_  Entities definition.
-     *
-     * @return Number of struct elements if succeeded.
-    **/
-    ECAL_API int GetMonitoring(eCAL::Monitoring::SMonitoring& mon_, unsigned int entities_ = Entity::All);
   }
 }

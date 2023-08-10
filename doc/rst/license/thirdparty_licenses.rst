@@ -217,7 +217,7 @@ They are used by Eclipse eCAL, but not associated to it in any way.
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
-   * - `TinyXML-2 <http://www.grinninglizard.com/tinyxml2/>`_
+   * - `TinyXML-2 <https://github.com/leethomason/tinyxml2>`_
      - :ref:`zlib_license`
      - 	Lee Thomason
      - - |fa-github| Git submodule ``/tirdparty/tinyxml``

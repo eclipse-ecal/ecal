@@ -41,7 +41,6 @@ namespace eCAL
     const std::string kFileVerAttrTitle   ("Version");
     const std::string kTimestampAttrTitle ("Timestamps");
     const std::string kChnAttrTitle       ("Channels");
-    //!< @endcond
 
     // Remove @eCAL6 -> backwards compatibility with old interface!
     using SEntryInfo = eCAL::measurement::base::EntryInfo;
@@ -50,5 +49,6 @@ namespace eCAL
     using eAccessType = eCAL::measurement::base::AccessType;
     using eCAL::measurement::base::RDONLY;
     using eCAL::measurement::base::CREATE;
+    //!< @endcond
   }  // namespace eh5
 }  // namespace eCAL

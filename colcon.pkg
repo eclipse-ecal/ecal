@@ -1,0 +1,8 @@
+{
+  "cmake-args": [
+      "-DHAS_HDF5=OFF",
+      "-DHAS_QT5=OFF",
+      "-DBUILD_SAMPLES=OFF",
+      "-DECAL_INSTALL_SAMPLE_SOURCES=OFF"
+  ]
+}

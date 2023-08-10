@@ -25,6 +25,7 @@
 
 #include <string>
 
+//@{ 
 namespace eCAL
 {
   namespace Config
@@ -71,6 +72,8 @@ namespace eCAL
     ECAL_API int               GetTcpPubsubReaderThreadpoolSize     ();
     ECAL_API int               GetTcpPubsubWriterThreadpoolSize     ();
     ECAL_API int               GetTcpPubsubMaxReconnectionAttemps   ();
+
+    ECAL_API std::string       GetHostGroupName                     ();
 
     /////////////////////////////////////
     // time
@@ -131,3 +134,4 @@ namespace eCAL
     }
   }
 }
+//@}

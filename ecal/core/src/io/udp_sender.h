@@ -45,9 +45,7 @@ namespace eCAL
   {
   public:
     CUDPSender(const SSenderAttr& attr_);
-
-    size_t Send     (const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
-    void   SendAsync(const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
+    size_t Send(const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
 
   protected:
     std::shared_ptr<CUDPSenderImpl> m_socket_impl;

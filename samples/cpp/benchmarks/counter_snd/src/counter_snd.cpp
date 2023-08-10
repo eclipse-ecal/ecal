@@ -34,7 +34,7 @@ int main(int argc, char **argv)
   eCAL::Initialize(argc, argv, "counter_snd");
 
   // create publisher for topic "Counter"
-  eCAL::CPublisher pub("Counter", "long long");
+  eCAL::CPublisher pub("Counter", { "", "long long", "" });
 
   // timer
   long long  clock(0);

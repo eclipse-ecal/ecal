@@ -58,7 +58,7 @@ namespace eCAL
 
       // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
       // where the vtable is not created yet or it's destructed.
-      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetTypeName(), CSubscriber::GetDescription())
+      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetDataTypeInformation())
       {
       }
 
@@ -68,7 +68,7 @@ namespace eCAL
       CSubscriber(const CSubscriber&) = delete;
 
       /**
-      * @brief  Copy Constructor is not available.
+      * @brief Copy Assignment is not available.
       **/
       CSubscriber& operator=(const CSubscriber&) = delete;
 
@@ -91,28 +91,22 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(CMsgSubscriber<T>::Create(topic_name_, GetTypeName(), GetDescription()));
-      }
-
-      /**
-       * @brief  Get type name.
-       *
-       * @return  Always returns "base:std::string".
-      **/
-      std::string GetTypeName() const override
-      {
-        return("base:std::string");
+        return(CMsgSubscriber<T>::Create(topic_name_, GetDataTypeInformation()));
       }
 
     private:
       /**
-       * @brief  Get description.
-       *
-       * @return  Always returns empty string.
+      * @brief  Get topic information of the protobuf message.
+      *
+      * @return  Topic information. ("base", "std::string", "")
       **/
-      std::string GetDescription() const override
+      SDataTypeInformation GetDataTypeInformation() const override
       {
-        return("");
+        SDataTypeInformation topic_info;
+        topic_info.encoding = "base";
+        topic_info.name = "std::string";
+        // empty descriptor
+        return topic_info;
       }
 
       /**

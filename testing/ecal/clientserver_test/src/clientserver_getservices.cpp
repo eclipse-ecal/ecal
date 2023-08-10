@@ -18,6 +18,7 @@
 */
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_types.h>
 
 #include <gtest/gtest.h>
 
@@ -28,7 +29,7 @@ TEST(IO, GetServices)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver_getservices");
 
-  std::map<std::tuple<std::string, std::string>, eCAL::Util::SServiceMethodInfo> service_info_map;
+  std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation> service_info_map;
   
   // add and expire simple service
   {

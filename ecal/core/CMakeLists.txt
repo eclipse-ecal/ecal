@@ -273,6 +273,7 @@ set(ecal_service_header_src
 
 set(ecal_cmn_header_src
     src/convert_utf.h
+    src/ecal_buffer_payload_writer.h
     src/ecal_config_reader.h
     src/ecal_config_reader_hlp.h
     src/ecal_def.h
@@ -284,6 +285,7 @@ set(ecal_cmn_header_src
     src/ecal_log_impl.h
     src/ecal_registration_provider.h
     src/ecal_registration_receiver.h
+    src/ecal_sample_to_topicinfo.h
     src/ecal_thread.h
     src/ecal_timegate.h
     src/getenvvar.h
@@ -317,14 +319,13 @@ set(ecal_header_cmn
     include/ecal/ecal_client.h
     include/ecal/ecal_config.h
     include/ecal/ecal_core.h
+    include/ecal/ecal_deprecate.h
     include/ecal/ecal_event.h
     include/ecal/ecal_eventhandle.h
     include/ecal/ecal_init.h
     include/ecal/ecal_log.h
     include/ecal/ecal_log_level.h
     include/ecal/ecal_monitoring.h
-    include/ecal/ecal_monitoring_entity.h
-    include/ecal/ecal_monitoring_struct.h
     include/ecal/ecal_os.h
     include/ecal/ecal_payload_writer.h
     include/ecal/ecal_process.h
@@ -343,6 +344,8 @@ set(ecal_header_cmn
     include/ecal/ecal_util.h
     include/ecal/ecalc.h
     include/ecal/ecalc_types.h
+    include/ecal/ecal_types.h
+    include/ecal/types/monitoring.h
 )
 
 set(ecal_header_cimpl
