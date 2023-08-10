@@ -40,15 +40,21 @@ namespace eCAL
     InitializeQOS();
   }
 
-  CSubscriber::CSubscriber(const std::string& topic_name_, const std::string& topic_type_ /* = "" */, const std::string& topic_desc_ /* = "" */) :
-                 m_datareader(nullptr),
-                 m_created(false),
-                 m_initialized(false)
+  CSubscriber::CSubscriber(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ /* = "" */)
+    : CSubscriber()
   {
-    InitializeQOS();
-
     Create(topic_name_, topic_type_, topic_desc_);
   }
+
+  CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
+    : CSubscriber()
+  {
+    Create(topic_name_, topic_info_);
+  }
+
+  CSubscriber::CSubscriber(const std::string& topic_name_)
+    : CSubscriber(topic_name_, SDataTypeInformation{})
+  {}
 
   CSubscriber::~CSubscriber()
   {
@@ -82,11 +88,21 @@ namespace eCAL
     return *this;
   };
 
-  bool CSubscriber::Create(const std::string& topic_name_, const std::string& topic_type_ /* = "" */, const std::string& topic_desc_ /* = "" */)
+  bool CSubscriber::Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ /* = "" */)
   {
-    if(m_created)              return(false);
-    if(g_globals() == nullptr) return(false);
-    if(topic_name_.empty())    return(false);
+    SDataTypeInformation info;
+    auto split_type = Util::SplitCombinedTopicType(topic_type_);
+    info.encoding = split_type.first;
+    info.name = split_type.second;
+    info.descriptor = topic_desc_;
+    return Create(topic_name_, info);
+  }
+
+  bool CSubscriber::Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
+  {
+    if (m_created)              return(false);
+    if (g_globals() == nullptr) return(false);
+    if (topic_name_.empty())    return(false);
 
     // initialize globals
     if (g_globals()->IsInitialized(Init::Subscriber) == 0)
@@ -96,11 +112,11 @@ namespace eCAL
     }
 
     // create data reader
-    m_datareader = new CDataReader;
+    m_datareader = std::make_shared<CDataReader>();
     // set qos
     m_datareader->SetQOS(m_qos);
     // create it
-    if(!m_datareader->Create(topic_name_, topic_type_, topic_desc_))
+    if (!m_datareader->Create(topic_name_, topic_info_))
     {
 #ifndef NDEBUG
       // log it
@@ -116,7 +132,7 @@ namespace eCAL
     g_subgate()->Register(topic_name_, m_datareader);
 
     // register to description gateway for type / description checking
-    ApplyTopicToDescGate(topic_name_, topic_type_, topic_desc_);
+    ApplyTopicToDescGate(topic_name_, topic_info_);
 
     // we made it :-)
     m_created = true;
@@ -143,9 +159,8 @@ namespace eCAL
     m_datareader->Destroy();
 
     // free datareader
-    delete m_datareader;
-    m_datareader = nullptr;
-
+    m_datareader.reset();
+    
     // we made it :-)
     m_created = false;
 
@@ -248,13 +263,20 @@ namespace eCAL
   std::string CSubscriber::GetTypeName() const
   {
     if(m_datareader == nullptr) return("");
-    return(m_datareader->GetTypeName());
+    SDataTypeInformation info = m_datareader->GetDataTypeInformation();
+    return(Util::CombinedTopicEncodingAndType(info.encoding, info.name));
   }
 
   std::string CSubscriber::GetDescription() const
   {
     if(m_datareader == nullptr) return("");
-    return(m_datareader->GetDescription());
+    return(m_datareader->GetDataTypeInformation().descriptor);
+  }
+  
+  SDataTypeInformation CSubscriber::GetDataTypeInformation() const
+  {
+    if (m_datareader == nullptr) return(SDataTypeInformation{});
+    return(m_datareader->GetDataTypeInformation());
   }
 
   bool CSubscriber::SetTimeout(int timeout_)
@@ -269,20 +291,20 @@ namespace eCAL
     m_qos.reliability = QOS::best_effort_reliability_qos;
   }
 
-  bool CSubscriber::ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_)
+  bool CSubscriber::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
   {
     if (g_descgate() != nullptr)
     {
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_type_.empty())
+      if (!topic_info_.name.empty() || !topic_info_.encoding.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_desc_.empty())
+      if (!topic_info_.descriptor.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
 
-      return g_descgate()->ApplyTopicDescription(topic_name_, topic_type_, topic_desc_, quality);
+      return g_descgate()->ApplyTopicDescription(topic_name_, topic_info_, quality);
     }
     return false;
   }

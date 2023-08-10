@@ -219,6 +219,7 @@ namespace eCAL
 
       sstream << "------------------------- NETWORK --------------------------------" << std::endl;
       sstream << "Host name                : " << Process::GetHostName() << std::endl;
+      sstream << "Host group name          : " << Process::GetHostGroupName() << std::endl;
 
       if (Config::IsNetworkEnabled())
       {
@@ -297,7 +298,17 @@ namespace eCAL
       }
 #endif // ECAL_NPCAP_SUPPORT
       sstream << std::endl;
+      sstream << std::endl;
 
+      
+
+      sstream << "------------------------- EXPERIMENTAL ---------------------------" << std::endl;
+      sstream << "SHM Monitoring           : " << (Config::Experimental::IsShmMonitoringEnabled() ? "on" : "off") << std::endl;
+      sstream << "SHM Monitoring (Domain)  : " << Config::Experimental::GetShmMonitoringDomain() << std::endl;
+      sstream << "SHM Monitoring (Queue)   : " << Config::Experimental::GetShmMonitoringQueueSize() << std::endl;
+      sstream << "Network Monitoring       : " << (!Config::Experimental::IsNetworkMonitoringDisabled() ? "on" : "off") << std::endl;
+      sstream << "Drop out-of-order msgs   : " << (Config::Experimental::GetDropOutOfOrderMessages() ? "on" : "off") << std::endl;
+      sstream << std::endl;
 
       // write it into std:string
       cfg_s_ = sstream.str();
@@ -318,6 +329,11 @@ namespace eCAL
         }
       }
       return(g_host_name);
+    }
+
+    std::string GetHostGroupName()
+    {
+      return Config::GetHostGroupName().empty() ? GetHostName() : Config::GetHostGroupName();
     }
 
     int GetHostID()

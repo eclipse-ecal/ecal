@@ -43,8 +43,8 @@ namespace eCAL
     void Create();
     void Destroy();
 
-    bool Register(const std::string& topic_name_, CDataReader* datareader_);
-    bool Unregister(const std::string& topic_name_, CDataReader* datareader_);
+    bool Register(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_);
+    bool Unregister(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_);
 
     bool HasSample(const std::string& sample_name_);
     bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_);
@@ -60,12 +60,12 @@ namespace eCAL
 
   protected:
     int CheckTimeouts();
-    bool ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
+    bool ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
 
     static std::atomic<bool> m_created;
 
     // database data reader
-    using TopicNameDataReaderMapT = std::unordered_multimap<std::string, CDataReader *>;
+    using TopicNameDataReaderMapT = std::unordered_multimap<std::string, std::shared_ptr<CDataReader>>;
     std::shared_timed_mutex  m_topic_name_datareader_sync;
     TopicNameDataReaderMapT  m_topic_name_datareader_map;
 

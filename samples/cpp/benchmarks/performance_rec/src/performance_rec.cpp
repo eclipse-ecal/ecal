@@ -32,7 +32,10 @@ int main(int argc, char **argv)
   eCAL::Initialize(argc, argv, "performance_rec");
 
   // create subscriber for topic "Performance"
-  eCAL::CSubscriber sub("Performance", "base:std::string");
+  eCAL::SDataTypeInformation topic_info;
+  topic_info.encoding = "base";
+  topic_info.name = "std::string";
+  eCAL::CSubscriber sub("Performance", topic_info);
 
   // safe the start time
   auto start_time(std::chrono::steady_clock::now());

@@ -24,7 +24,9 @@
 
 #pragma once
 
+#include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_publisher.h>
+#include <ecal/ecal_util.h>
 
 #include <string>
 #include <vector>
@@ -45,20 +47,45 @@ namespace eCAL
   {
   public:
     /**
-     * @brief  Constructor. 
+     * @brief  Default Constructor. 
+     *         Using this constructor, the object is not actually in a usable state.
+     *         Before being able to send data, one has to call the `Create()` function, first.
     **/
     CMsgPublisher() : CPublisher()
     {
     }
 
     /**
-     * @brief  Constructor. 
+     * @brief  Constructor, that automatically intializes the Publisher. 
+     *         This function will be deprecated with eCAL 5.13, please use one of other constructors instead.
      *
      * @param topic_name_  Unique topic name. 
-     * @param topic_type_  Type name (optional for type checking). 
+     * @param topic_type_  Type name. 
      * @param topic_desc_  Type description (optional for description checking). 
     **/
-    CMsgPublisher(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "") : CPublisher(topic_name_, topic_type_, topic_desc_)
+    ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6. ")
+    CMsgPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "") : CPublisher(topic_name_, topic_type_, topic_desc_)
+    {
+    }
+
+    /**
+     * @brief  Constructor, that automatically intializes the Publisher. 
+     *         This should be the preferred constructor.
+     *
+     * @param topic_name_  Unique topic name.
+     * @param topic_info_  Struct that contains information of the datatype (name, encoding, description) of the topic.
+     **/
+    CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_) : CPublisher(topic_name_, topic_info_)
+    {
+    }
+
+    /**
+     * @brief  Constructor, that automatically intializes the Publisher. 
+     *         If no datatype information about the topic is available, this constructor can be used.
+     *
+     * @param topic_name_  Unique topic name.
+     **/
+    CMsgPublisher(const std::string& topic_name_) : CMsgPublisher(topic_name_, GetDataTypeInformation())
     {
     }
 
@@ -84,18 +111,34 @@ namespace eCAL
 
     virtual ~CMsgPublisher() = default;
 
+
+
     /**
-     * @brief  Creates this object. 
+     * @brief  Creates this object.
      *
-     * @param topic_name_   Unique topic name. 
-     * @param topic_type_   Type name (optional for type checking). 
-     * @param topic_desc_   Type description (optional for description checking). 
+     * @param topic_name_   Unique topic name.
+     * @param topic_type_   Type name (optional for type checking).
+     * @param topic_desc_   Type description (optional for description checking).
      *
-     * @return  True if it succeeds, false if it fails. 
+     * @return  True if it succeeds, false if it fails.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6. ")
     bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "")
     {
       return(CPublisher::Create(topic_name_, topic_type_, topic_desc_));
+    }
+
+    /**
+     * @brief  Creates this object.
+     *
+     * @param topic_name_   Unique topic name.
+     * @param topic_info_   Associated datatype description.
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
+    {
+      return(CPublisher::Create(topic_name_, topic_info_));
     }
 
     /**
@@ -164,9 +207,23 @@ namespace eCAL
       return(0);
     }
 
+  protected:
+    ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeInformation GetDataTypeInformation() instead. This function will be removed in eCAL6.")
+    virtual std::string GetTypeName() const
+    {
+      SDataTypeInformation topic_info{ GetDataTypeInformation() };
+      return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.name);
+    };
+
+    ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeInformation GetDataTypeInformation() instead. This function will be removed in eCAL6.")
+    virtual std::string GetDescription() const
+    {
+      return GetDataTypeInformation().descriptor;
+    };
+    
+    // We cannot make it pure virtual, as it would break a bunch of implementations, who are not (yet) implementing this function
+    virtual SDataTypeInformation GetDataTypeInformation() const { return SDataTypeInformation{}; }
   private:
-    virtual std::string GetTypeName() const = 0;
-    virtual std::string GetDescription() const = 0;
     virtual size_t GetSize(const T& msg_) const = 0;
     virtual bool Serialize(const T& msg_, char* buffer_, size_t size_) const = 0;
 

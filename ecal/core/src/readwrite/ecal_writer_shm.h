@@ -45,6 +45,7 @@ namespace eCAL
     bool Destroy() final;
 
     bool SetQOS(const QOS::SWriterQOS& qos_) override;
+    bool SetBufferCount(size_t buffer_count_);
 
     bool PrepareWrite(const SWriterAttr& attr_) override;
 
@@ -55,7 +56,7 @@ namespace eCAL
 
     std::string GetConnectionParameter() override;
 
-  protected:
+  protected:      
     size_t                                        m_write_idx    = 0;
     size_t                                        m_buffer_count = 1;
     SSyncMemoryFileAttr                           m_memory_file_attr = {};

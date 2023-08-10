@@ -26,6 +26,7 @@
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_tlayer.h>
+#include <ecal/ecal_types.h>
 
 #include "ecal_def.h"
 #include "ecal_expmap.h"
@@ -49,11 +50,10 @@ namespace eCAL
     CDataWriter();
     ~CDataWriter();
 
-    bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
+    bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
     bool Destroy();
 
-    bool SetTypeName(const std::string& topic_type_name_);
-    bool SetDescription(const std::string& topic_desc_);
+    bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
     bool ClearAttribute(const std::string& attr_name_);
@@ -66,7 +66,7 @@ namespace eCAL
     bool SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_);
     bool SetMaxBandwidthUDP(long bandwidth_);
 
-    bool ShmSetBufferCount(long buffering_);
+    bool ShmSetBufferCount(size_t buffering_);
     bool ShmEnableZeroCopy(bool state_);
 
     bool ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_);
@@ -77,10 +77,10 @@ namespace eCAL
 
     size_t Write(CPayloadWriter& payload_, long long time_, long long id_);
 
-    void ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_);
+    void ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_, const std::string& reader_par_);
     void RemoveLocSubscription(const std::string & process_id_, const std::string& tid_);
 
-    void ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_);
+    void ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_, const std::string& reader_par_);
     void RemoveExtSubscription(const std::string & host_name_, const std::string & process_id_, const std::string& tid_);
 
     void RefreshRegistration();
@@ -98,17 +98,13 @@ namespace eCAL
     }
 
     const std::string& GetTopicName() const {return(m_topic_name);}
-    const std::string& GetTopicID() const {return(m_topic_id);}
-    const std::string& GetTypeName() const {return(m_topic_type);}
-    const std::string& GetDescription() const {return(m_topic_desc);}
-    long long GetClock() const {return(m_clock);}
-    long GetFrequency() const {return(m_freq);}
+    const SDataTypeInformation& GetDataTypeInformation() const { return m_topic_info; }
 
   protected:
     bool Register(bool force_);
     bool Unregister();
 
-    void Connect(const std::string& tid_, const std::string& ttype_, const std::string& tdesc_);
+    void Connect(const std::string& tid_, const SDataTypeInformation& tinfo_);
     void Disconnect();
 
     void SetUseUdpMC(TLayer::eSendMode mode_);
@@ -122,13 +118,13 @@ namespace eCAL
     void LogSendMode(TLayer::eSendMode smode_, const std::string & base_msg_);
 
     std::string                        m_host_name;
+    std::string                        m_host_group_name;
     int                                m_host_id;
     int                                m_pid;
     std::string                        m_pname;
     std::string                        m_topic_name;
     std::string                        m_topic_id;
-    std::string                        m_topic_type;
-    std::string                        m_topic_desc;
+    SDataTypeInformation               m_topic_info;
     std::map<std::string, std::string> m_attr;
     size_t                             m_topic_size;
 

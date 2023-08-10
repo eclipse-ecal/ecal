@@ -27,7 +27,7 @@ int main(int argc, char **argv)
   eCAL::Initialize(argc, argv, "counter_rec_cb");
 
   // create subscriber for topic "Counter"
-  eCAL::CSubscriber sub("Counter", "long long");
+  eCAL::CSubscriber sub("Counter", { "", "long long", "" });
 
   // counter
   long long  g_clock(0);

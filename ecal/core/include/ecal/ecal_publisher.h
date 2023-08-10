@@ -25,12 +25,15 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_qos.h>
 #include <ecal/ecal_tlayer.h>
+#include <ecal/ecal_types.h>
 
 #include <chrono>
+#include <memory>
 #include <string>
 
 namespace eCAL
@@ -64,51 +67,67 @@ namespace eCAL
    *            size_t snd_len = pub.Send(send_s);
    * @endcode
   **/
-  class ECAL_API CPublisher
+  class CPublisher
   {
   public:
 
-    static constexpr long long DEFAULT_TIME_ARGUMENT        = -1;
-    static constexpr long long DEFAULT_ACKNOWLEDGE_ARGUMENT = -1;
+    ECAL_API static constexpr long long DEFAULT_TIME_ARGUMENT        = -1;  /*!< Use DEFAULT_TIME_ARGUMENT in the `Send()` function to let eCAL determine the send timestamp */
+    ECAL_API static constexpr long long DEFAULT_ACKNOWLEDGE_ARGUMENT = -1;  /*!< Use DEFAULT_ACKNOWLEDGE_ARGUMENT in the `Send()` function to let eCAL determine from configuration if the send operation needs to be acknowledged. */
 
     /**
      * @brief Constructor. 
     **/
-    CPublisher();
+    ECAL_API CPublisher();
 
     /**
      * @brief Constructor. 
      *
      * @param topic_name_   Unique topic name. 
-     * @param topic_type_   Type name (optional). 
+     * @param topic_type_   Type name. 
      * @param topic_desc_   Type description (optional). 
     **/
-    CPublisher(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+    ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6.")
+    ECAL_API CPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
+
+    /**
+    * @brief Constructor.
+    *
+    * @param topic_name_   Unique topic name.
+    * @param topic_info_   Topic information (encoding, type, descriptor)
+    **/
+    ECAL_API CPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
+
+    /**
+    * @brief Constructor.
+    *
+    * @param topic_name_   Unique topic name.
+    **/
+    ECAL_API CPublisher(const std::string& topic_name_);
 
     /**
      * @brief Destructor. 
     **/
-    virtual ~CPublisher();
+    ECAL_API virtual ~CPublisher();
 
     /**
      * @brief CPublishers are non-copyable
     **/
-    CPublisher(const CPublisher&) = delete;
+    ECAL_API CPublisher(const CPublisher&) = delete;
 
     /**
      * @brief CPublishers are non-copyable
     **/
-    CPublisher& operator=(const CPublisher&) = delete;
+    ECAL_API CPublisher& operator=(const CPublisher&) = delete;
 
     /**
      * @brief CPublishers are move-enabled
     **/
-    CPublisher(CPublisher&& rhs) noexcept;
+    ECAL_API CPublisher(CPublisher&& rhs) noexcept;
 
     /**
      * @brief CPublishers are move-enabled
     **/
-    CPublisher& operator=(CPublisher&& rhs) noexcept;
+    ECAL_API CPublisher& operator=(CPublisher&& rhs) noexcept;
 
     /**
      * @brief Creates this object. 
@@ -119,14 +138,37 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails. 
     **/
-    bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+    ECAL_DEPRECATE_SINCE_5_13("Please use the create method bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6.")
+    ECAL_API bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
+
+    /**
+     * @brief Creates this object.
+     *
+     * @param topic_name_   Unique topic name.
+     * @param topic_info_   Topic information (encoding, type, descriptor)
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    ECAL_API bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
+
+    /**
+     * @brief Creates this object.
+     *
+     * @param topic_name_   Unique topic name.
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    ECAL_API bool Create(const std::string& topic_name_)
+    {
+      return Create(topic_name_, SDataTypeInformation());
+    }
 
     /**
      * @brief Destroys this object. 
      *
      * @return  True if it succeeds, false if it fails. 
     **/
-    bool Destroy();
+    ECAL_API bool Destroy();
 
     /**
      * @brief Setup topic type name.
@@ -135,7 +177,8 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool SetTypeName(const std::string& topic_type_name_);
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetDataTypeInformation(const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6")
+    ECAL_API bool SetTypeName(const std::string& topic_type_name_);
 
     /**
      * @brief Setup topic description. 
@@ -144,7 +187,17 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails. 
     **/
-    bool SetDescription(const std::string& topic_desc_);
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetDataTypeInformation(const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6")
+    ECAL_API bool SetDescription(const std::string& topic_desc_);
+
+    /**
+    * @brief Setup topic information.
+    *
+    * @param topic_info_  Topic information attributes.
+    *
+    * @return  True if it succeeds, false if it fails.
+    **/
+    ECAL_API bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
     /**
      * @brief Sets publisher attribute. 
@@ -155,7 +208,7 @@ namespace eCAL
      * @return  True if it succeeds, false if it fails. 
      * @experimental
     **/
-    bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
+    ECAL_API bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
 
     /**
      * @brief Removes publisher attribute. 
@@ -165,7 +218,7 @@ namespace eCAL
      * @return  True if it succeeds, false if it fails.
      * @experimental
     **/
-    bool ClearAttribute(const std::string& attr_name_);
+    ECAL_API bool ClearAttribute(const std::string& attr_name_);
 
     /**
      * @brief Share topic type.
@@ -174,7 +227,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool ShareType(bool state_ = true);
+    ECAL_API bool ShareType(bool state_ = true);
 
     /**
      * @brief Share topic description.
@@ -183,7 +236,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool ShareDescription(bool state_ = true);
+    ECAL_API bool ShareDescription(bool state_ = true);
 
     /**
      * @brief Set publisher quality of service attributes.
@@ -192,14 +245,14 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool SetQOS(const QOS::SWriterQOS& qos_);
+    ECAL_API bool SetQOS(const QOS::SWriterQOS& qos_);
 
     /**
      * @brief Get current publisher quality of service attributes.
      *
      * @return  Quality of service attributes.
     **/
-    QOS::SWriterQOS GetQOS();
+    ECAL_API QOS::SWriterQOS GetQOS();
 
     /**
      * @brief Set publisher send mode for specific transport layer. 
@@ -209,7 +262,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails. 
     **/
-    bool SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_);
+    ECAL_API bool SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_);
 
     /**
      * @brief Set publisher maximum transmit bandwidth for the udp layer.
@@ -218,7 +271,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool SetMaxBandwidthUDP(long bandwidth_);
+    ECAL_API bool SetMaxBandwidthUDP(long bandwidth_);
 
     /**
      * @brief Set publisher maximum number of used shared memory buffers.
@@ -227,23 +280,25 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool ShmSetBufferCount(long buffering_);
+    ECAL_API bool ShmSetBufferCount(long buffering_);
 
     /**
      * @brief Enable zero copy shared memory transport mode.
      *
-     * By default, the built-in shared memory layer is configured to make one memory copy
-     * on the receiver side. That means the payload is copied by the internal eCAL memory pool manager
-     * out of the memory file and the file is closed immediately after this.
-     * The intention of this implementation is to free the file as fast as possible after reading
-     * its content to allow other subscribing processes to access the content with minimal latency.
-     * The different reading subscribers are fully decoupled and can access their memory copy
-     * independently.
+     * By default, the built-in shared memory layer is configured to make two memory copies
+     * one on the publisher and one on the subscriber side.
      * 
-     * If ShmEnableZeroCopy is switched on no memory will be copied at all. The user message callback is
-     * called right after opening the memory file. A direct pointer to the memory payload is forwarded
+     * The intention of this implementation is to free the file as fast as possible after writing and reading
+     * its content to allow other processes to access the content with minimal latency. The publisher and subscribers
+     * are fully decoupled and can access their internal memory copy independently.
+     * 
+     * If ShmEnableZeroCopy is switched on no memory will be copied at all using the low level binary publish / subscribe API.
+     * On publisher side the memory copy is exectuted into the opened memory file. On the subscriber side the user message 
+     * callback is called right after opening the memory file. A direct pointer to the memory payload is forwarded
      * and can be processed with no latency. The memory file will be closed after the user callback function
-     * returned. The advantage of this configuration is a much higher performance for large payloads (> 1024 kB).
+     * returned.
+     *
+     * The advantage of this configuration is a much higher performance for large payloads (> 1024 kB).
      * The disadvantage of this configuration is that in the time when the callback is executed the memory file 
      * is blocked for other subscribers and for writing publishers too. Maybe this can be eliminated
      * by a better memory file read/write access implementation (lock free read) in future releases.
@@ -251,12 +306,15 @@ namespace eCAL
      * Today, for specific scenarios (1:1 pub/sub connections with large payloads for example) this feature
      * can increase the performance remarkable. But please keep in mind to return from the message callback function
      * as fast as possible to not delay subsequent read/write access operations.
+     * 
+     * By using the eCAL::CPayloadWriter API a full zero copy implementation is possible by providing separate methods
+     * for the initialization and the modification of the memory file content (see CPayloadWriter documentation).
      *
      * @param state_  Set type zero copy mode for shared memory transport layer (true == zero copy enabled).
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool ShmEnableZeroCopy(bool state_);
+    ECAL_API bool ShmEnableZeroCopy(bool state_);
 
     /**
      * @brief Force connected subscribers to send acknowledge event after processing the message and 
@@ -278,7 +336,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_);
+    ECAL_API bool ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_);
 
     /**
      * @brief Force connected subscribers to send acknowledge event after processing the message and
@@ -304,7 +362,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool SetID(long long id_);
+    ECAL_API bool SetID(long long id_);
 
     /**
      * @brief Send a message to all subscribers. 
@@ -315,7 +373,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent. 
     **/
-    size_t Send(const void* buf_, size_t len_, long long time_ = DEFAULT_TIME_ARGUMENT) const;
+    ECAL_API size_t Send(const void* buf_, size_t len_, long long time_ = DEFAULT_TIME_ARGUMENT) const;
 
     /**
      * @brief Send a message to all subscribers.
@@ -325,7 +383,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    size_t Send(CPayloadWriter& payload_, long long time_ = DEFAULT_TIME_ARGUMENT) const;
+    ECAL_API size_t Send(CPayloadWriter& payload_, long long time_ = DEFAULT_TIME_ARGUMENT) const;
 
     /**
      * @brief Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout).
@@ -339,7 +397,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    size_t Send(const void* buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const;
+    ECAL_API size_t Send(const void* buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const;
 
     /**
      * @brief Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout).
@@ -353,8 +411,8 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    [[deprecated]]
-    size_t SendSynchronized(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
+    ECAL_DEPRECATE_SINCE_5_12("Please use the method size_t Send(CPayloadWriter& payload_, long long time_, long long acknowledge_timeout_ms_) const instead. This function will be removed in eCAL6.")
+    ECAL_API size_t SendSynchronized(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
     {
       return Send(buf_, len_, time_, acknowledge_timeout_ms_);
     }
@@ -370,7 +428,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    size_t Send(CPayloadWriter& payload_, long long time_, long long acknowledge_timeout_ms_) const;
+    ECAL_API size_t Send(CPayloadWriter& payload_, long long time_, long long acknowledge_timeout_ms_) const;
 
     /**
      * @brief Send a message to all subscribers.
@@ -380,7 +438,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    size_t Send(const std::string& s_, long long time_ = DEFAULT_TIME_ARGUMENT) const
+    ECAL_API size_t Send(const std::string& s_, long long time_ = DEFAULT_TIME_ARGUMENT) const
     {
       return(Send(s_.data(), s_.size(), time_, DEFAULT_ACKNOWLEDGE_ARGUMENT));
     }
@@ -394,7 +452,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    size_t Send(const std::string& s_, long long time_, long long acknowledge_timeout_ms_) const
+    ECAL_API size_t Send(const std::string& s_, long long time_, long long acknowledge_timeout_ms_) const
     {
       return(Send(s_.data(), s_.size(), time_, acknowledge_timeout_ms_));
     }
@@ -407,7 +465,7 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not.
     **/
-    bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
+    ECAL_API bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
 
     /**
      * @brief Remove callback function for publisher events.
@@ -416,49 +474,58 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not.
     **/
-    bool RemEventCallback(eCAL_Publisher_Event type_);
+    ECAL_API bool RemEventCallback(eCAL_Publisher_Event type_);
 
     /**
      * @brief Query if the publisher is created. 
      *
      * @return  True if created, false if not. 
     **/
-    bool IsCreated() const {return(m_created);}
+    ECAL_API bool IsCreated() const {return(m_created);}
 
     /**
      * @brief Query if the publisher is subscribed. 
      *
      * @return  true if subscribed, false if not. 
     **/
-    bool IsSubscribed() const;
+    ECAL_API bool IsSubscribed() const;
 
     /**
      * @brief Query the number of subscribers. 
      *
      * @return  Number of subscribers. 
     **/
-    size_t GetSubscriberCount() const;
+    ECAL_API size_t GetSubscriberCount() const;
 
     /**
      * @brief Gets name of the connected topic. 
      *
      * @return  The topic name. 
     **/
-    std::string GetTopicName() const;
+    ECAL_API std::string GetTopicName() const;
 
     /**
      * @brief Gets type of the connected topic. 
      *
      * @return  The type name. 
     **/
-    std::string GetTypeName() const;
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")
+    ECAL_API std::string GetTypeName() const;
 
     /**
      * @brief Gets description of the connected topic. 
      *
      * @return  The description. 
     **/
-    std::string GetDescription() const;
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")
+    ECAL_API std::string GetDescription() const;
+
+    /**
+    * @brief Gets description of the connected topic.
+    *
+    * @return  The topic information.
+    **/
+    ECAL_API SDataTypeInformation GetDataTypeInformation() const;
 
     /**
      * @brief Dump the whole class state into a string. 
@@ -467,15 +534,15 @@ namespace eCAL
      *
      * @return  The dump string. 
     **/
-    std::string Dump(const std::string& indent_ = "") const;
+    ECAL_API std::string Dump(const std::string& indent_ = "") const;
 
   protected:
     void InitializeQOS();
     void InitializeTLayer();
-    bool ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
+    bool ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
 
     // class members
-    CDataWriter*                     m_datawriter;
+    std::shared_ptr<CDataWriter>     m_datawriter;
     struct ECAL_API QOS::SWriterQOS  m_qos;
     struct ECAL_API TLayer::STLayer  m_tlayer;
     long long                        m_id;

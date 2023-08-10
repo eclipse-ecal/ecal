@@ -16,24 +16,17 @@
 #
 # ========================= eCAL LICENSE =================================
 
-cmake_minimum_required(VERSION 3.10)
-
-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
-
-project(binary_rec_cb)
+project(ecalhdf5_protobuf_rw)
 
 find_package(eCAL REQUIRED)
 
-set(binary_rec_cb_src
-    src/binary_rec_cb.cpp
-)
+set(PROJECT_GROUP ecalhdf5_protobuf_rw)
 
-ecal_add_sample(${PROJECT_NAME} ${binary_rec_cb_src})
+if(ECAL_INCLUDE_PY_SAMPLES)
+  if(WIN32)
 
-target_link_libraries(${PROJECT_NAME} eCAL::core)
+    include_external_msproject(${PROJECT_NAME}_py ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pyproj)
+    set_property(TARGET ${PROJECT_NAME}_py PROPERTY FOLDER samples/python/${PROJECT_GROUP})
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
-
-ecal_install_sample(${PROJECT_NAME})
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/pubsub/binary)
+  endif()
+endif()

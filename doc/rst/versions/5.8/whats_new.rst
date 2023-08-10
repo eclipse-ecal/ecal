@@ -11,7 +11,7 @@ The release notably contains the new application eCAL Sys.
 
 - **Release**: December 2020.
 
-- **End of life**: May 2022 (after 17 Month).
+- **End of life**: May 2022 (after 17 months).
 
 New features
 ============

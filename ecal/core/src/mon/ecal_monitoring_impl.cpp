@@ -31,41 +31,6 @@
 
 #include "../ecal_registration_receiver.h"
 
-namespace
-{
-  void GetSampleHost(const eCAL::pb::Sample& ecal_sample_, std::string& host_name_)
-  {
-    if (ecal_sample_.has_host())
-    {
-      host_name_ = ecal_sample_.host().hname();
-    }
-    if (ecal_sample_.has_process())
-    {
-      host_name_ = ecal_sample_.process().hname();
-    }
-    if (ecal_sample_.has_service())
-    {
-      host_name_ = ecal_sample_.service().hname();
-    }
-    if (ecal_sample_.has_client())
-    {
-      host_name_ = ecal_sample_.client().hname();
-    }
-    if (ecal_sample_.has_topic())
-    {
-      host_name_ = ecal_sample_.topic().hname();
-    }
-  }
-
-  bool IsLocalHost(const eCAL::pb::Sample& ecal_sample_)
-  {
-    std::string host_name;
-    GetSampleHost(ecal_sample_, host_name);
-    if (host_name.empty())                         return(false);
-    if (host_name == eCAL::Process::GetHostName()) return(true);
-    return(false);
-  }
-}
 
 namespace eCAL
 {
@@ -74,7 +39,6 @@ namespace eCAL
   ////////////////////////////////////////
   CMonitoringImpl::CMonitoringImpl() :
     m_init(false),
-    m_network       (Config::IsNetworkEnabled()),
     m_process_map   (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
     m_publisher_map (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
     m_subscriber_map(std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
@@ -87,14 +51,11 @@ namespace eCAL
   {
     if (m_init) return;
 
-    // network mode
-    m_network = Config::IsNetworkEnabled();
-
     // get name of this host
     m_host_name = Process::GetHostName();
 
     // utilize registration receiver to enrich monitor information
-    g_registration_receiver()->SetCustomApplySampleCallback([this](const auto& ecal_sample_){ApplySample(ecal_sample_, eCAL::pb::tl_none);});
+    g_registration_receiver()->SetCustomApplySampleCallback([this](const auto& ecal_sample_){this->ApplySample(ecal_sample_, eCAL::pb::tl_none);});
 
     // start logging receive thread
     const CLoggingReceiveThread::LogMessageCallbackT logmsg_cb = std::bind(&CMonitoringImpl::RegisterLogMessage, this, std::placeholders::_1);
@@ -164,10 +125,6 @@ namespace eCAL
 
   bool CMonitoringImpl::ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/)
   {
-    // if sample is from outside, and we are in local network mode
-    // do not process sample
-    if (!IsLocalHost(ecal_sample_) && !m_network) return false;
-
     switch (ecal_sample_.cmd_type())
     {
     case eCAL::pb::bct_none:
@@ -304,11 +261,12 @@ namespace eCAL
       const std::lock_guard<std::mutex> lock(pTopicMap->sync);
 
       // common infos
-      const int          host_id      = sample_topic.hid();
-      const std::string& host_name    = sample_topic.hname();
-      const std::string& process_name = sample_topic.pname();
-      const std::string& unit_name    = sample_topic.uname();
-      const std::string& topic_id     = sample_topic.tid();
+      const int          host_id         = sample_topic.hid();
+      const std::string& host_name       = sample_topic.hname();
+      const std::string& host_group_name = sample_topic.hgname();
+      const std::string& process_name    = sample_topic.pname();
+      const std::string& unit_name       = sample_topic.uname();
+      const std::string& topic_id        = sample_topic.tid();
       std::string        direction;
       switch (pubsub_type_)
       {
@@ -321,8 +279,9 @@ namespace eCAL
       default:
         break;
         }
-      std::string topic_type = sample_topic.ttype();
-      std::string topic_desc = sample_topic.tdesc();
+      std::string topic_datatype_encoding   = sample_topic.tdatatype().encoding();
+      std::string topic_datatype_name       = sample_topic.tdatatype().name();
+      std::string topic_datatype_descriptor = sample_topic.tdatatype().desc();
       auto attr              = sample_topic.attr();
 
       // try to get topic info
@@ -332,6 +291,7 @@ namespace eCAL
       // set static content
       TopicInfo.hid       = host_id;
       TopicInfo.hname     = host_name;
+      TopicInfo.hgname    = host_group_name;
       TopicInfo.pid       = process_id;
       TopicInfo.pname     = process_name;
       TopicInfo.uname     = unit_name;
@@ -341,8 +301,10 @@ namespace eCAL
 
       // update flexible content
       TopicInfo.rclock++;
-      TopicInfo.ttype              = std::move(topic_type);
-      TopicInfo.tdesc              = std::move(topic_desc);
+      TopicInfo.tdatatype.encoding    = std::move(topic_datatype_encoding);
+      TopicInfo.tdatatype.name        = std::move(topic_datatype_name);
+      TopicInfo.tdatatype.descriptor  = std::move(topic_datatype_descriptor);
+
       TopicInfo.attr               = std::map<std::string, std::string>{attr.begin(), attr.end()};
       TopicInfo.tlayer_ecal_udp_mc = topic_tlayer_ecal_udp_mc;
       TopicInfo.tlayer_ecal_shm    = topic_tlayer_ecal_shm;
@@ -385,6 +347,7 @@ namespace eCAL
   {
     const auto& sample_process = sample_.process();
     const std::string&    host_name                    = sample_process.hname();
+    const std::string&    host_group_name              = sample_process.hgname();
     const std::string&    process_name                 = sample_process.pname();
     const int             process_id                   = sample_process.pid();
     const std::string&    process_param                = sample_process.pparam();
@@ -415,6 +378,7 @@ namespace eCAL
 
     // set static content
     ProcessInfo.hname  = host_name;
+    ProcessInfo.hgname = host_group_name;
     ProcessInfo.pname  = process_name;
     ProcessInfo.uname  = unit_name;
     ProcessInfo.pid    = process_id;
@@ -782,6 +746,9 @@ namespace eCAL
       // host name
       pMonProcs->set_hname(process.second.hname);
 
+      // host group name
+      pMonProcs->set_hgname(process.second.hgname);
+
       // process name
       pMonProcs->set_pname(process.second.pname);
 
@@ -941,6 +908,9 @@ namespace eCAL
       // host name
       pMonTopic->set_hname(topic.second.hname);
 
+      // host group name
+      pMonTopic->set_hgname(topic.second.hgname);
+
       // process id
       pMonTopic->set_pid(topic.second.pid);
 
@@ -959,8 +929,9 @@ namespace eCAL
       // direction
       pMonTopic->set_direction(direction_);
 
+      // remove with eCAL6
       // topic type
-      pMonTopic->set_ttype(topic.second.ttype);
+      pMonTopic->set_ttype(eCAL::Util::CombinedTopicEncodingAndType(topic.second.tdatatype.encoding, topic.second.tdatatype.name));
 
       // topic transport layers
       if (topic.second.tlayer_ecal_udp_mc)
@@ -988,8 +959,17 @@ namespace eCAL
         tlayer->set_confirmed(true);
       }
 
+      // remove with eCAL6
       // topic description
-      pMonTopic->set_tdesc(topic.second.tdesc);
+      pMonTopic->set_tdesc(topic.second.tdatatype.descriptor);
+
+      // topic information
+      {
+        auto *tdatatype = pMonTopic->mutable_tdatatype();
+        tdatatype->set_encoding(topic.second.tdatatype.encoding);
+        tdatatype->set_name(topic.second.tdatatype.name);
+        tdatatype->set_desc(topic.second.tdatatype.descriptor);
+      }
 
       // topic attributes
       *pMonTopic->mutable_attr() = google::protobuf::Map<std::string, std::string> {topic.second.attr.begin(), topic.second.attr.end()};

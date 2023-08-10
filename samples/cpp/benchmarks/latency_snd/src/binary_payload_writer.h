@@ -28,7 +28,7 @@ class CBinaryPayload : public eCAL::CPayloadWriter
 public:
   CBinaryPayload(size_t size_) : size(size_) {}
 
-  bool Write(void* buf_, size_t len_) override
+  bool WriteFull(void* buf_, size_t len_) override
   {
     // write complete content to the shared memory file
     if (len_ < size) return false;
@@ -36,7 +36,7 @@ public:
     return true;
   };
 
-  bool Update(void* buf_, size_t len_) override
+  bool WriteModified(void* buf_, size_t len_) override
   {
     // update content of the shared memory file
     if (len_ < size) return false;

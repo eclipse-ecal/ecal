@@ -21,6 +21,8 @@
  * @brief  eCAL subscriber gateway class
 **/
 
+#include <algorithm>
+
 #include <ecal/ecal.h>
 
 #ifdef ECAL_OS_LINUX
@@ -32,6 +34,7 @@
 #include "ecal_descgate.h"
 
 #include "pubsub/ecal_subgate.h"
+#include "ecal_sample_to_topicinfo.h"
 
 ////////////////////////////////////////////////////////
 // local events
@@ -93,18 +96,18 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CSubGate::Register(const std::string& topic_name_, CDataReader* datareader_)
+  bool CSubGate::Register(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_)
   {
     if(!m_created) return(false);
 
     // register reader
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    m_topic_name_datareader_map.emplace(std::pair<std::string, CDataReader*>(topic_name_, datareader_));
+    m_topic_name_datareader_map.emplace(std::pair<std::string, std::shared_ptr<CDataReader>>(topic_name_, datareader_));
 
     return(true);
   }
 
-  bool CSubGate::Unregister(const std::string& topic_name_, CDataReader* datareader_)
+  bool CSubGate::Unregister(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_)
   {
     if(!m_created) return(false);
     bool ret_state = false;
@@ -154,12 +157,22 @@ namespace eCAL
       const auto& ecal_sample_content_payload = ecal_sample_content.payload();
       g_process_rbytes_sum += ecal_sample_.content().payload().size();
 
-      // apply sample to data reader
-      const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-      auto res = m_topic_name_datareader_map.equal_range(ecal_sample_.topic().tname());
-      for (auto it = res.first; it != res.second; ++it)
+      std::vector<std::shared_ptr<CDataReader>> readers_to_apply;
+
+      // Lock the sync map only while extracting the relevant shared pointers to the Datareaders.
+      // Apply the samples to the readers afterwards.
       {
-        sent = it->second->AddSample(
+        // apply sample to data reader
+        const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
+        auto res = m_topic_name_datareader_map.equal_range(ecal_sample_.topic().tname());
+        std::transform(
+          res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
+        );
+      }
+
+      for (const auto& reader : readers_to_apply)
+      {
+        sent = reader->AddSample(
           ecal_sample_.topic().tid(),
           ecal_sample_content_payload.data(),
           ecal_sample_content_payload.size(),
@@ -189,11 +202,22 @@ namespace eCAL
 
     // apply sample to data reader
     size_t sent(0);
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    auto res = m_topic_name_datareader_map.equal_range(topic_name_);
-    for (auto it = res.first; it != res.second; ++it)
+    std::vector<std::shared_ptr<CDataReader>> readers_to_apply;
+
+    // Lock the sync map only while extracting the relevant shared pointers to the Datareaders.
+    // Apply the samples to the readers afterwards.
     {
-      sent = it->second->AddSample(topic_id_, buf_, len_, id_, clock_, time_, hash_, layer_);
+      const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
+      auto res = m_topic_name_datareader_map.equal_range(topic_name_);
+      std::transform(
+        res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
+      );
+    }
+
+
+    for (const auto& reader : readers_to_apply)
+    {
+      sent = reader->AddSample(topic_id_, buf_, len_, id_, clock_, time_, hash_, layer_);
     }
 
     return (sent > 0);
@@ -209,11 +233,10 @@ namespace eCAL
     if (topic_name.empty()) return;
 
     const std::string& topic_id   = ecal_sample.tid();
-    const std::string& topic_type = ecal_sample.ttype();
-    const std::string& topic_desc = ecal_sample.tdesc();
+    SDataTypeInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
 
     // store description
-    ApplyTopicToDescGate(topic_name, topic_type, topic_desc);
+    ApplyTopicToDescGate(topic_name, topic_info);
 
     // get process id
     const std::string process_id = std::to_string(ecal_sample_.topic().pid());
@@ -258,7 +281,7 @@ namespace eCAL
         iter->second->ApplyLocLayerParameter(process_id, topic_id, tlayer.type(), writer_par);
       }
       // inform for local publisher connection
-      iter->second->ApplyLocPublication(process_id, topic_id, topic_type, topic_desc);
+      iter->second->ApplyLocPublication(process_id, topic_id, topic_info);
     }
   }
 
@@ -289,12 +312,11 @@ namespace eCAL
     const std::string& host_name  = ecal_sample.hname();
     const std::string& topic_name = ecal_sample.tname();
     const std::string& topic_id   = ecal_sample.tid();
-    const std::string& topic_type = ecal_sample.ttype();
-    const std::string& topic_desc = ecal_sample.tdesc();
+    SDataTypeInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
     const std::string  process_id = std::to_string(ecal_sample.pid());
 
     // store description
-    ApplyTopicToDescGate(topic_name, topic_type, topic_desc);
+    ApplyTopicToDescGate(topic_name, topic_info);
 
     // handle external publisher connection
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
@@ -309,7 +331,7 @@ namespace eCAL
         iter->second->ApplyExtLayerParameter(host_name, tlayer.type(), writer_par);
       }
       // inform for external publisher connection
-      iter->second->ApplyExtPublication(host_name, process_id, topic_id, topic_type, topic_desc);
+      iter->second->ApplyExtPublication(host_name, process_id, topic_id, topic_info);
     }
   }
 
@@ -365,20 +387,20 @@ namespace eCAL
     return(0);
   }
 
-  bool CSubGate::ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_)
+  bool CSubGate::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
   {
     if (g_descgate() != nullptr)
     {
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_type_.empty())
+      if (!topic_info_.name.empty() || !topic_info_.encoding.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_desc_.empty())
+      if (!topic_info_.descriptor.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PRODUCER;
 
-      return g_descgate()->ApplyTopicDescription(topic_name_, topic_type_, topic_desc_, quality);
+      return g_descgate()->ApplyTopicDescription(topic_name_, topic_info_, quality);
     }
     return false;
   }

@@ -50,7 +50,7 @@ namespace eCAL
     *
     **/
     template <typename message_type>
-    class CPublisher : eCAL::CPublisher
+    class CPublisher : public eCAL::CPublisher
     {
       class CPayload : public eCAL::CPayloadWriter
       {
@@ -66,7 +66,7 @@ namespace eCAL
         CPayload& operator=(const CPayload&) = delete;
         CPayload& operator=(CPayload&&) noexcept = delete;
 
-        bool Write(void* buf_, size_t len_) override
+        bool WriteFull(void* buf_, size_t len_) override
         {
           kj::Array<capnp::word> words = capnp::messageToFlatArray(const_cast<capnp::MallocMessageBuilder&>(message_builder));
           kj::ArrayPtr<kj::byte> bytes = words.asBytes();
@@ -101,7 +101,7 @@ namespace eCAL
       * @param topic_name_  Unique topic name.
       **/
       CPublisher(const std::string& topic_name_)
-        : eCAL::CPublisher(topic_name_, GetTypeName(), GetDescription())
+        : eCAL::CPublisher(topic_name_, GetDataTypeInformation())
         , builder(std::make_unique<capnp::MallocMessageBuilder>())
         , root_builder(builder->initRoot<message_type>())
       {
@@ -150,7 +150,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(eCAL::CPublisher::Create(topic_name_, GetTypeName(), GetDescription()));
+        return(eCAL::CPublisher::Create(topic_name_, GetDataTypeInformation()));
       }
 
       typename message_type::Builder GetBuilder()
@@ -164,34 +164,26 @@ namespace eCAL
         eCAL::CPublisher::Send(payload);
       }
 
-      /**
-      * @brief  Get type name of the capnp message.
-      *
-      * @return  Type name.
-      **/
-      std::string GetTypeName() const
-      {
-        return eCAL::capnproto::TypeAsString<message_type>();
-      }
-
     private:
+      /**
+       * @brief   Get topic information of the message.
+       *
+       * @return  Topic information.
+      **/
+      SDataTypeInformation GetDataTypeInformation() const
+      {
+        SDataTypeInformation topic_info;
+        topic_info.encoding   = eCAL::capnproto::EncodingAsString();
+        topic_info.name       = eCAL::capnproto::TypeAsString<message_type>();
+        topic_info.descriptor = eCAL::capnproto::SchemaAsString<message_type>();
+        return topic_info;
+      }
 
       std::unique_ptr<capnp::MallocMessageBuilder>    builder;
       typename message_type::Builder                  root_builder;
-
-      /**
-      * @brief  Get file descriptor string of the capnp message.
-      *
-      * @return  Description string.
-      **/
-      std::string GetDescription() const
-      {
-        return eCAL::capnproto::SchemaAsString<message_type>();
-      }
-
     };
     /** @example addressbook_snd.cpp
-    * This is an example how to use eCAL::CPublisher to send capnp data with eCAL. To receive the data, see @ref addressbook_rec.cpp .
+    * This is an example how to use eCAL::capnproto::CPublisher to send capnp data with eCAL. To receive the data, see @ref addressbook_rec.cpp .
     */
   }
 }

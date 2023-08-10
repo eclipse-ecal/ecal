@@ -20,6 +20,7 @@
 #include <ecal/ecal.h>
 
 #include <atomic>
+#include <thread>
 
 #include <gtest/gtest.h>
 
@@ -135,21 +136,16 @@ TEST(IO, TypeDescriptionStatic)
   // create publisher without type and description
   eCAL::CPublisher pub("A");
 
-  // check type name
-  std::string ttype = pub.GetTypeName();
-  EXPECT_EQ("", ttype);
-
-  // check description
-  std::string tdesc = pub.GetDescription();
-  EXPECT_EQ("", tdesc);
+  eCAL::SDataTypeInformation tdatatype = pub.GetDataTypeInformation();
+  EXPECT_EQ("", tdatatype.encoding);
+  EXPECT_EQ("", tdatatype.name);
+  EXPECT_EQ("", tdatatype.descriptor);
 
   // check type name
-  eCAL::Util::GetTopicTypeName("A", ttype);
-  EXPECT_EQ("", ttype);
-
-  // check description
-  eCAL::Util::GetTopicDescription("A", tdesc);
-  EXPECT_EQ("", tdesc);
+  eCAL::Util::GetTopicDataTypeInformation("A", tdatatype);
+  EXPECT_EQ("", tdatatype.encoding);
+  EXPECT_EQ("", tdatatype.name);
+  EXPECT_EQ("", tdatatype.descriptor);
 
   // finalize eCAL API
   eCAL::Finalize();
@@ -161,79 +157,98 @@ TEST(IO, TypeDescriptionDynamic)
   eCAL::Initialize(0, nullptr, "pubsub_test");
 
   {
-    std::string ttype("type_A");
-    std::string tdesc("desc_A");
+    eCAL::SDataTypeInformation tdatatype{ "encoding_A", "type_A", "desc_A" };
 
-    // create publisher without type and description
-    eCAL::CPublisher pub("A", ttype, tdesc);
+    // create publisher with type and description
+    eCAL::CPublisher pub("A", tdatatype);
 
-    // check type name
-    std::string desc_type = pub.GetTypeName();
-    EXPECT_EQ(ttype, desc_type);
+    // check topic information
+    eCAL::SDataTypeInformation retrieved_info = pub.GetDataTypeInformation();
+    EXPECT_EQ(retrieved_info, tdatatype);
 
-    // check description
-    std::string desc_a = pub.GetDescription();
-    EXPECT_EQ(tdesc, desc_a);
+    // check topic information from eCAL Utils
+    eCAL::SDataTypeInformation retrieved_util_info;
+    eCAL::Util::GetTopicDataTypeInformation("A", retrieved_util_info);
+    EXPECT_EQ(retrieved_util_info, tdatatype);
 
-    // check type name
-    eCAL::Util::GetTopicTypeName("A", desc_type);
-    EXPECT_EQ(ttype, desc_type);
-
-    // check description
-    eCAL::Util::GetTopicDescription("A", desc_a);
-    EXPECT_EQ(tdesc, desc_a);
-
-    // set topic description
-    std::string ttdesc_new("desc_A_new");
-    pub.SetDescription(ttdesc_new);  // Already set descriptions are not overwritten in the database
+    // set topic info
+    eCAL::SDataTypeInformation tinfo_new(tdatatype);
+    tinfo_new.descriptor = "desc_A_new";
+    pub.SetDataTypeInformation(tinfo_new);  // Already set descriptions are not overwritten in the database
 
     // check type name (should not be influenced by SetDescription)
-    EXPECT_EQ(eCAL::Util::GetTopicTypeName("A"), ttype);
+    eCAL::SDataTypeInformation retrieved_util_info_new;
+    eCAL::Util::GetTopicDataTypeInformation("A", retrieved_util_info_new);
+    EXPECT_EQ(retrieved_util_info_new, tdatatype);
 
     // check description of publisher
-    EXPECT_EQ(pub.GetDescription(), ttdesc_new);
-
-    // check description of general database
-    EXPECT_EQ(eCAL::Util::GetTopicDescription("A"), tdesc);
+    EXPECT_EQ(pub.GetDataTypeInformation(), tinfo_new);
   }
 
   // Test replace empty description
   {
-    auto pub2 = eCAL::CPublisher("B", "my_type", "");
+    eCAL::SDataTypeInformation tinfo_no_desc{  "my_type", "", "" };
+    eCAL::SDataTypeInformation tinfo_with_desc{ "my_type", "", "my_description" };
+    eCAL::SDataTypeInformation tinfo_with_other_desc{ "my_type", "", "my_description_2" };
 
-    EXPECT_EQ(eCAL::Util::GetTopicTypeName("B"), "my_type");
-    EXPECT_EQ(eCAL::Util::GetTopicDescription("B"), "");
+    auto pub2 = eCAL::CPublisher("B", tinfo_no_desc);
 
-    pub2.SetDescription("my_description");
+    {
+      eCAL::SDataTypeInformation retrieved_util_info;
+      eCAL::Util::GetTopicDataTypeInformation("B", retrieved_util_info);
+      EXPECT_EQ(retrieved_util_info, tinfo_no_desc);
+    }
 
-    EXPECT_EQ(eCAL::Util::GetTopicTypeName("B"), "my_type");
-    EXPECT_EQ(eCAL::Util::GetTopicDescription("B"), "my_description");
+    pub2.SetDataTypeInformation(tinfo_with_desc);
+
+    {
+      eCAL::SDataTypeInformation retrieved_util_info;
+      eCAL::Util::GetTopicDataTypeInformation("B", retrieved_util_info);
+      EXPECT_EQ(retrieved_util_info, tinfo_with_desc);
+    }
 
     // A new publisher cannot change the description any more
-    auto pub3 = eCAL::CPublisher("B", "my_type", "my_description_2");
+    auto pub3 = eCAL::CPublisher("B", tinfo_with_other_desc);
 
-    EXPECT_EQ(eCAL::Util::GetTopicTypeName("B"), "my_type");
-    EXPECT_EQ(eCAL::Util::GetTopicDescription("B"), "my_description");
+    {
+      eCAL::SDataTypeInformation retrieved_util_info;
+      eCAL::Util::GetTopicDataTypeInformation("B", retrieved_util_info);
+      EXPECT_EQ(retrieved_util_info, tinfo_with_desc);
+    }
   }
 
   // Test Publisher replaces subscriber's description
   {
-    auto sub = eCAL::CSubscriber("C", "type", "desc");
+    eCAL::SDataTypeInformation tinfo_C1{ "type1", "", "desc" };
+    eCAL::SDataTypeInformation tinfo_C2{ "type2", "", "" };
+    eCAL::SDataTypeInformation tinfo_C3{ "type3", "", "desc3" };
 
-    EXPECT_EQ(eCAL::Util::GetTopicTypeName("C"), "type");
-    EXPECT_EQ(eCAL::Util::GetTopicDescription("C"), "desc");
+
+    auto sub = eCAL::CSubscriber("C", tinfo_C1);
+
+    {
+      eCAL::SDataTypeInformation retrieved_util_info;
+      eCAL::Util::GetTopicDataTypeInformation("C", retrieved_util_info);
+      EXPECT_EQ(retrieved_util_info, tinfo_C1);
+    }
 
     // A publisher without a description will NOT replace the subscribers data
-    auto pub1 = eCAL::CPublisher("C", "type2", "");
+    auto pub1 = eCAL::CPublisher("C", tinfo_C2);
     
-    EXPECT_EQ(eCAL::Util::GetTopicTypeName("C"), "type");
-    EXPECT_EQ(eCAL::Util::GetTopicDescription("C"), "desc");
+    {
+      eCAL::SDataTypeInformation retrieved_util_info;
+      eCAL::Util::GetTopicDataTypeInformation("C", retrieved_util_info);
+      EXPECT_EQ(retrieved_util_info, tinfo_C1);
+    }
 
     // A publisher with a description will replace the subscribers data
-    auto pub2 = eCAL::CPublisher("C", "type3", "desc3");
+    auto pub2 = eCAL::CPublisher("C", tinfo_C3);
 
-    EXPECT_EQ(eCAL::Util::GetTopicTypeName("C"), "type3");
-    EXPECT_EQ(eCAL::Util::GetTopicDescription("C"), "desc3");
+    {
+      eCAL::SDataTypeInformation retrieved_util_info;
+      eCAL::Util::GetTopicDataTypeInformation("C", retrieved_util_info);
+      EXPECT_EQ(retrieved_util_info, tinfo_C3);
+    }
   }
 
   // finalize eCAL API
@@ -551,6 +566,57 @@ TEST(IO, DynamicCreate)
   eCAL::Finalize();
 }
 
+TEST(IO, SimpleMessageCBSHMBufferCount)
+{
+  // default send string
+  std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
+
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "pubsub_test");
+
+  // publish / subscribe match in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  // create subscriber for topic "A"
+  eCAL::CSubscriber sub("A");
+
+  // create publisher for topic "A"
+  eCAL::CPublisher pub("A");
+  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
+  pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);
+  pub.ShmSetBufferCount(2);
+
+  std::atomic<size_t> received_count{ 0 };
+  std::atomic<size_t> received_bytes{ 0 };
+
+  // add callback
+  auto lambda = [&received_count, &received_bytes](const char* /*topic_name_*/, const eCAL::SReceiveCallbackData* data_) {
+    received_bytes += data_->size;
+    ++received_count;
+  };
+  EXPECT_EQ(true, sub.AddReceiveCallback(lambda));
+
+  // let's match them
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+
+  int iterations = 50;
+  for (int i = 0; i < iterations; ++i)
+  {
+    // send content
+    EXPECT_EQ(send_s.size(), pub.Send(send_s));
+
+    // let the data flow
+    eCAL::Process::SleepMS(DATA_FLOW_TIME);
+  }
+
+  // check callback receive
+  EXPECT_EQ(send_s.size() * iterations, received_bytes);
+  EXPECT_EQ(iterations, received_count);
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
 TEST(IO, ZeroPayloadMessageInProc)
 {
   // default send string
@@ -744,3 +810,70 @@ TEST(IO, ZeroPayloadMessageTCP)
   eCAL::Finalize();
 }
 #endif
+
+#include <ecal/msg/string/publisher.h>
+#include <ecal/msg/string/subscriber.h>
+TEST(IO, DestroyInCallback)
+{
+  /* Test setup :
+   * 2 pair of pub_sub connections ("foo" and "destroy")
+   * "foo" publisher sends message every 100ms
+   * "destroy" publisher sends destroy message after 2 seconds, which will destroy foo subscriber in its callback
+   * Test ensures that this does not create a deadlock or other unintended situation.
+  */
+
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "New Publisher in Callback");
+
+  // enable loop back communication in the same thread
+  eCAL::Util::EnableLoopback(true);
+
+  // start publishing thread
+  eCAL::string::CPublisher<std::string> pub_foo("foo");
+  eCAL::string::CSubscriber<std::string> sub_foo("foo");
+
+  eCAL::string::CPublisher<std::string> pub_destroy("destroy");
+  eCAL::string::CSubscriber<std::string> sub_destroy("destroy");
+  std::atomic<bool> destroyed(false);
+
+  auto destroy_lambda = [&sub_foo, &destroyed](const char* /*topic_*/, const std::string& /*msg*/, long long /*time_*/, long long /*clock_*/, long long /*id_*/) {
+    std::cout << "Receive destroy command" << std::endl;
+    sub_foo.Destroy();
+    destroyed = true;
+    std::cout << "Finnished destroying" << std::endl;
+  };
+  sub_destroy.AddReceiveCallback(destroy_lambda);
+
+  auto receive_lambda = [](const char* /*topic_*/, const std::string& /*msg*/, long long /*time_*/, long long /*clock_*/, long long /*id_*/) {
+    std::cout << "Hello" << std::endl;
+  };
+  sub_foo.AddReceiveCallback(receive_lambda);
+
+  // sleep for 2 seconds, registration should be good!
+  std::this_thread::sleep_for(std::chrono::seconds(2));
+
+  std::thread pub_foo_t([&pub_foo, &destroyed]() {
+    while (!destroyed)
+    {
+      pub_foo.Send("Hello World");
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    std::cout << "Stopped sending foo" << std::endl;
+    });
+
+  std::thread pub_destroy_t([&pub_destroy]() {
+    // sleep for two second, then send the destroy command
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::cout << "Sending destroy message" << std::endl;
+    pub_destroy.Send("Destroy");
+    std::cout << "Done sending destroy message" << std::endl;
+    });
+
+
+  pub_foo_t.join();
+  pub_destroy_t.join();
+
+  // finalize eCAL API
+  // without destroying any pub / sub
+  eCAL::Finalize();
+}

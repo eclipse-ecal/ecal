@@ -478,6 +478,7 @@ if(BUILD_ECAL_TESTS)
   add_subdirectory(testing/ecal/pubsub_proto_test)
   add_subdirectory(testing/ecal/pubsub_test)
   add_subdirectory(testing/ecal/topic2mcast_test)
+  add_subdirectory(testing/ecal/util_test)
   
   # ------------------------------------------------------
   # test apps
@@ -556,6 +557,7 @@ message(STATUS "HAS_HDF5                                       : ${HAS_HDF5}")
 message(STATUS "HAS_QT5                                        : ${HAS_QT5}")
 message(STATUS "HAS_CURL                                       : ${HAS_CURL}")
 message(STATUS "HAS_CAPNPROTO                                  : ${HAS_CAPNPROTO}")
+message(STATUS "HAS_FLATBUFFERS                                : ${HAS_FLATBUFFERS}")
 message(STATUS "HAS_FTXUI                                      : ${HAS_FTXUI}")
 message(STATUS "BUILD_DOCS                                     : ${BUILD_DOCS}")
 message(STATUS "BUILD_APPS                                     : ${BUILD_APPS}")

@@ -99,6 +99,7 @@ set(DOXYGEN_FILE_PATTERNS        "*.h")
 set(DOXYGEN_RECURSIVE            NO)
 set(DOXYGEN_OUTPUT_DIRECTORY     ${DOC_SOURCE_DIRECTORY})
 set(DOXYGEN_XML_OUTPUT           ${DOC_SOURCE_DIRECTORY}/_doxygen)
+set(DOXYGEN_DISTRIBUTE_GROUP_DOC NO)
 
 # Allow @experimental to be used in headers to mark an API as experimental and add it to a list of
 # experimental APIs.
