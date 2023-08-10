@@ -65,7 +65,7 @@ jobs:
         -DBUILD_APPS=ON \
         -DBUILD_SAMPLES=ON \
         -DBUILD_TIME=ON \
-        -DBUILD_PY_BINDING=ON \
+        -DBUILD_PY_BINDING=OFF \
         -DBUILD_CSHARP_BINDING=OFF \
         -DBUILD_ECAL_TESTS=ON \
         -DECAL_INCLUDE_PY_SAMPLES=OFF \
@@ -86,19 +86,13 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_CXX_STANDARD=17 \
-        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
-        -DPython_FIND_STRATEGY=LOCATION \
-        -DPython_FIND_REGISTRY=NEVER
+        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
         sudo mkdir /etc/ecal
         sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal
       shell: bash
 
     - name: Build Release
       run: cmake --build . --config Release
-      working-directory: ${{ runner.workspace }}/_build
-
-    - name: Build Python Wheel
-      run: cmake --build . --target create_python_wheel --config Release
       working-directory: ${{ runner.workspace }}/_build
 
 #    - name: Build Documentation C
@@ -123,9 +117,3 @@ jobs:
       with:
         name: macos-dmg
         path: ${{ runner.workspace }}/_build/_deploy/*.dmg
-
-    - name: Upload Python Wheel
-      uses: actions/upload-artifact@v3
-      with:
-        name: macos-python-wheel
-        path: ${{ runner.workspace }}/_build/_deploy/*.whl

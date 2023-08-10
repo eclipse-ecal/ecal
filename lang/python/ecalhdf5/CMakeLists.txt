@@ -16,16 +16,16 @@
 #
 # ========================= eCAL LICENSE =================================
 
-if (WIN32)
-    if (TARGET hdf5::hdf5-shared)
-        add_custom_target(copy_hdf5_dll ALL
-            COMMAND cmake -E copy_if_different "$<TARGET_FILE:hdf5::hdf5-shared>" "${PYTHON_BINARY_MODULE_DIR}"
-            COMMENT "Copy hdf5 DLL to python directory"
-            DEPENDS hdf5::hdf5-shared
-        )
-        set_property(TARGET copy_hdf5_dll PROPERTY FOLDER lang/python/hdf5)
-    endif()
-endif()
+#if (WIN32)
+#    if (TARGET hdf5::hdf5-shared)
+#        add_custom_target(copy_hdf5_dll ALL
+#            COMMAND cmake -E copy_if_different "$<TARGET_FILE:hdf5::hdf5-shared>" "${PYTHON_BINARY_MODULE_DIR}"
+#            COMMENT "Copy hdf5 DLL to python directory"
+#            DEPENDS hdf5::hdf5-shared
+#        )
+#        set_property(TARGET copy_hdf5_dll PROPERTY FOLDER lang/python/hdf5)
+#    endif()
+#endif()
 
 # ==========================================
 
@@ -47,32 +47,20 @@ target_link_libraries(${PROJECT_NAME}
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
-if (WIN32)
-    if (TARGET hdf5::hdf5-shared)
-        add_dependencies(${PROJECT_NAME} copy_hdf5_dll)
-    endif()
-endif()
+message(STATUS "Install dir: ${PY_BUILD_CMAKE_MODULE_NAME}")
+
+install(TARGETS ${PROJECT_NAME}
+        EXCLUDE_FROM_ALL
+        COMPONENT python_modules
+        DESTINATION ${PY_BUILD_CMAKE_MODULE_NAME})
+
+install(PROGRAMS $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}>
+        EXCLUDE_FROM_ALL
+        COMPONENT python_modules
+        DESTINATION ${PY_BUILD_CMAKE_MODULE_NAME})
 
 if(MSVC)
   set_property(TARGET ${PROJECT_NAME} PROPERTY LINK_FLAGS "/ignore:4098,4099")
 endif(MSVC)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lang/python/hdf5)
-
-if(BUILD_STANDALONE_PY_WHEEL AND NOT WIN32)
-  find_package(patchelf REQUIRED)
-  add_custom_command(TARGET ${PROJECT_NAME} 
-                     POST_BUILD
-                     COMMAND "${CMAKE_COMMAND}" ARGS "-DRUNTIME_FILE=\"$<TARGET_FILE:${PROJECT_NAME}>\"" "-DRUNTIME_DEP_FILTER=\"hdf5|sz|aec\"" "-DRUNTIME_DEPLOY_DIR=\"${PYTHON_BINARY_MODULE_DIR}\"" -P "${CMAKE_SOURCE_DIR}/cmake/deploy_runtime_deps.cmake"
-                     COMMAND "${PATCHELF_COMMAND}" ARGS "--remove-rpath" "\"$<TARGET_FILE:${PROJECT_NAME}>\""
-                     COMMAND "${PATCHELF_COMMAND}" ARGS "--force-rpath" "--set-rpath" "\\$$ORIGIN" "\"$<TARGET_FILE:${PROJECT_NAME}>\"")
-endif()
-
-if(ECAL_INCLUDE_PY_SAMPLES)
-  if(WIN32)
-
-    include_external_msproject(ecal_hdf5_py ${CMAKE_CURRENT_SOURCE_DIR}/ecal_hdf5_py.pyproj)
-    set_property(TARGET ecal_hdf5_py PROPERTY FOLDER lang/python/hdf5)
-
-  endif()
-endif()
