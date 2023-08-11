@@ -6,51 +6,68 @@ import pathlib
 
 class eCALConan(ConanFile):
     name = "ecal"
-    settings = "os", "compiler", "arch", "build_type"
+    settings = "os", "compiler", "arch"
     license = "BSD-3-Clause"
-    generators = "virtualenv"
-    build_requires = "cmake/3.21.1"
+    generators = "virtualenv", "virtualrunenv"
+    python_requires = {"cmake-presets-generator/0.1.0@ild/stable", "conancontifile/0.0.19@ild/stable"}
     
     def build_requirements(self):
-        self.build_requires("doxygen/1.9.1")
+        self.build_requires("doxygen/[*]@ild/stable")
+        self.build_requires("cmake/[*]@ild/stable")
+        self.build_requires("cmake/[*]@ild/stable")
     
     def requirements(self):
-        self.requires("hdf5/1.10.6")
-        self.requires("protobuf/3.17.1")
-        self.requires("libcurl/7.78.0")
-        self.requires("qt/5.15.2")
-        self.requires("spdlog/1.9.2")
-        #self.requires("tclap/1.2.4")
-        #self.requires("asio/1.19.2")
-        self.requires("gtest/1.11.0")
-        self.requires("tinyxml2/8.0.0")
-        self.requires("openssl/1.1.1l", override=True)
-        
-    def configure(self):
-        if self.settings.os == "Windows":
-            self.options["qt"].shared = True
-            self.options["qt"].qtwinextras = True
+        #self.requires("asio/[*]@ild/stable"")
+        #self.requires("tclap/[*]@ild/stable"")
+        self.requires("capnproto/[*]@ild/stable")  
+        self.requires("cmakefunctions/[*]@ild/stable")  
+        self.requires("curl/[*]@ild/stable")
+        self.requires("fineftp-server/[*]@ild/stable")
+        self.requires("flatbuffers/[*]@ild/stable")
+        self.requires("ftxui/[*]@ild/stable")
+        self.requires("gtest/[*]@ild/stable")
+        self.requires("hdf5/[*]@ild/stable")
+        self.requires("openssl/1.1.1i@ild/stable")
+        self.requires("protobuf/3.23.4@ild/stable")
+        self.requires("qt/[*]@ild/stable")
+        self.requires("qwt/[*]@ild/stable")
+        self.requires("recycle/[*]@ild/stable")  
+        self.requires("simpleini/[*]@ild/stable")
+        self.requires("spdlog/[*]@ild/stable")
+        self.requires("tcp-pubsub/[*]@ild/stable")
+        self.requires("termcolor/[*]@ild/stable")        
+        self.requires("tinyxml2/[*]@ild/stable")
+        self.requires("udpcap/[*]@ild/stable")
+        self.requires("yaml-cpp/[*]@ild/stable")  
         
     def generate(self):
-        # Don't generate the config files for doxygen. They don't work properlyexit
-        self.deps_cpp_info["doxygen"].set_property("cmake_find_mode", "none")
-        cmake = CMakeDeps(self)
-        cmake.generate()
-        
-        tc = CMakeToolchain(self)
+        CMakePresets = self.python_requires["cmake-presets-generator"].module.CMakePresets
+        cmake_folder = self.recipe_folder
+        tc = CMakePresets(self, cmake_folder=".")
         # customize toolchain "tc"
-        tc.variables["ECAL_THIRDPARTY_BUILD_CURL"] = "OFF"
-        tc.variables["ECAL_THIRDPARTY_BUILD_SPDLOG"] = "OFF"
-        tc.variables["ECAL_THIRDPARTY_BUILD_GTEST"] = "OFF"
-        tc.variables["ECAL_THIRDPARTY_BUILD_PROTOBUF"] = "OFF"
-        tc.variables["ECAL_THIRDPARTY_BUILD_HDF5"] = "OFF"
-        tc.variables["ECAL_THIRDPARTY_BUILD_TINYXML2"] = "OFF"
         tc.variables["BUILD_DOCS"] = "ON"
-        tc.variables["CMAKE_FIND_PACKAGE_PREFER_CONFIG"] = "ON"
-        if self.settings.os == "Windows":
-            tc.variables["Protobuf_PROTOC_EXECUTABLE"] = os.path.join(self.deps_cpp_info["protobuf"].rootpath, "bin", "protoc.exe").replace('\\', '/')
-        else:
-            tc.variables["Protobuf_PROTOC_EXECUTABLE"] = os.path.join(self.deps_cpp_info["protobuf"].rootpath, "bin", "protoc")
+        tc.variables["BUILD_ECAL_TESTS"] = "ON"
+        tc.variables["BUILD_PY_BINDING"] = "ON"
+        tc.variables["CMAKE_FIND_PACKAGE_PREFER_CONFIG"] = "ON"          
+        tc.variables["HAS_CAPNPROTO"] = "ON"        
+        tc.variables["HAS_FLATBUFFERS"] = "ON"
+        tc.variables["ECAL_INCLUDE_PY_SAMPLES"] = "ON"
+        tc.variables["ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS"] = "OFF"
+        tc.variables["ECAL_THIRDPARTY_BUILD_CURL"] = "OFF"
+        tc.variables["ECAL_THIRDPARTY_BUILD_FINEFTP"] = "OFF"
+        tc.variables["ECAL_THIRDPARTY_BUILD_FTXUI"] = "OFF"
+        tc.variables["ECAL_THIRDPARTY_BUILD_GTEST"] = "OFF"
+        tc.variables["ECAL_THIRDPARTY_BUILD_HDF5"] = "OFF"
+        tc.variables["ECAL_THIRDPARTY_BUILD_PROTOBUF"] = "OFF"
+        tc.variables["ECAL_THIRDPARTY_BUILD_QWT"] = "OFF"
+        tc.variables["ECAL_THIRDPARTY_BUILD_RECYCLE"] = "OFF"
+        tc.variables["ECAL_THIRDPARTY_BUILD_RECYCLE"] = "OFF"        
+        tc.variables["ECAL_THIRDPARTY_BUILD_SPDLOG"] = "OFF"
+        tc.variables["ECAL_THIRDPARTY_BUILD_TCP_PUBSUB"] = "OFF"
+        tc.variables["ECAL_THIRDPARTY_BUILD_TERMCOLOR"] = "OFF"
+        tc.variables["ECAL_THIRDPARTY_BUILD_TINYXML2"] = "OFF"
+        tc.variables["ECAL_THIRDPARTY_BUILD_UDPCAP"] = "OFF"
+        tc.variables["ECAL_THIRDPARTY_BUILD_YAML-CPP"] = "OFF"
         tc.generate()
         
         

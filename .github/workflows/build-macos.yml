@@ -65,7 +65,7 @@ jobs:
         -DBUILD_APPS=ON \
         -DBUILD_SAMPLES=ON \
         -DBUILD_TIME=ON \
-        -DBUILD_PY_BINDING=OFF \
+        -DBUILD_PY_BINDING=ON \
         -DBUILD_CSHARP_BINDING=OFF \
         -DBUILD_ECAL_TESTS=ON \
         -DECAL_INCLUDE_PY_SAMPLES=OFF \
@@ -86,7 +86,9 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_CXX_STANDARD=17 \
-        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
+        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
+        -DPython_FIND_STRATEGY=LOCATION \
+        -DPython_FIND_REGISTRY=NEVER
         sudo mkdir /etc/ecal
         sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal
       shell: bash

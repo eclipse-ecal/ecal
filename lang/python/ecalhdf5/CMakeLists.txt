@@ -31,23 +31,20 @@
 
 project(_ecal_hdf5_py)
 
-find_package(Python COMPONENTS Development)
+find_package(Python3 REQUIRED COMPONENTS Development.Module)
 
 set(ecal_lang_py_src
     src/ecalhdf5_wrap.cxx
 )
 
-ecal_add_python_module(${PROJECT_NAME} SOURCES ${ecal_lang_py_src} PYTHON_CODE ${CMAKE_CURRENT_SOURCE_DIR}/ecal)
+Python3_add_library(${PROJECT_NAME} MODULE ${ecal_lang_py_src})
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
-        Python::Python
         eCAL::hdf5
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
-
-message(STATUS "Install dir: ${PY_BUILD_CMAKE_MODULE_NAME}")
 
 install(TARGETS ${PROJECT_NAME}
         EXCLUDE_FROM_ALL

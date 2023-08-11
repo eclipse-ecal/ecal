@@ -68,7 +68,7 @@ jobs:
         -DBUILD_APPS=ON \
         -DBUILD_SAMPLES=ON \
         -DBUILD_TIME=ON \
-        -DBUILD_PY_BINDING=OFF \
+        -DBUILD_PY_BINDING=ON \
         -DBUILD_STANDALONE_PY_WHEEL=ON \
         -DBUILD_CSHARP_BINDING=OFF \
         -DBUILD_ECAL_TESTS=ON \
@@ -92,7 +92,8 @@ jobs:
         -DCMAKE_INSTALL_SYSCONFDIR=/etc \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LOCALSTATEDIR=/var \
-        -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu
+        -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu \
+        -DPython_FIND_VIRTUALENV=ONLY
         
         sudo mkdir /etc/ecal
         sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal

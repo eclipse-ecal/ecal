@@ -246,7 +246,6 @@ set(eCAL_VERSION        ${eCAL_VERSION_STRING})
 include(helper_functions/ecal_add_functions)
 include(helper_functions/ecal_helper_functions)
 include(helper_functions/ecal_install_functions)
-include(helper_functions/ecal_python_functions)
 
 if(MSVC)
   set(eCAL_PLATFORM_TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET})
