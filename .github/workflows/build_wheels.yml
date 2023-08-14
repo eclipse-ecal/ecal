@@ -4,7 +4,7 @@ on:
   push:
   pull_request:
     branches:
-      - master
+      - master     
 
 jobs:
   build_wheels:
@@ -22,8 +22,8 @@ jobs:
         
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.15.0
-        # env:
-        #   CIBW_SOME_OPTION: value
+        env:
+          MACOSX_DEPLOYMENT_TARGET: "10.14" 
         #    ...
         # with:
         #   package-dir: .
