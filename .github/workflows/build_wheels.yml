@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, windows-2019, macos-11]
+        os: [ubuntu-20.04, windows-2019]
 
     steps:
       - uses: actions/checkout@v3
@@ -24,6 +24,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.15.0
         env:
           MACOSX_DEPLOYMENT_TARGET: "10.14" 
+          CIBW_BUILD: "cp39-*"
         #    ...
         # with:
         #   package-dir: .
