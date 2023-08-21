@@ -47,4 +47,4 @@ if (NOT is_imported)
 endif()
 
 set(Protobuf_PROTOC_EXECUTABLE protoc)
-set(Protobuf_VERSION 3.11.4)
+set(Protobuf_VERSION 3.21.12)
