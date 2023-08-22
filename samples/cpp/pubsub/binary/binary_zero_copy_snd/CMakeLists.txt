@@ -16,23 +16,23 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(test_pubsub)
+cmake_minimum_required(VERSION 3.10)
 
-find_package(Threads REQUIRED)
-find_package(GTest REQUIRED)
+project(binary_zero_copy_snd)
 
-set(pubsub_test_src
-  src/pubsub_gettopics.cpp
-  src/pubsub_multibuffer.cpp
-  src/pubsub_test.cpp
-  src/pubsub_receive_test.cpp
-)
+# set project properties
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
+set(binary_zero_copy_snd_src src/binary_zero_copy_snd.cpp)
 
-ecal_add_gtest(${PROJECT_NAME} ${pubsub_test_src})
-target_link_libraries(${PROJECT_NAME}
-  PRIVATE
-    eCAL::core
-    Threads::Threads)
+# find packages
+message("-- Checking for modules 'eCAL'")
+find_package(eCAL REQUIRED)
+
+# add and configure sample project
+ecal_add_sample(${PROJECT_NAME} ${binary_zero_copy_snd_src})
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
-ecal_install_gtest(${PROJECT_NAME})
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER testing/ecal/pubsub)
+target_link_libraries(${PROJECT_NAME} eCAL::core)
+
+# install and set properties
+ecal_install_sample(${PROJECT_NAME})
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/pubsub/binary)

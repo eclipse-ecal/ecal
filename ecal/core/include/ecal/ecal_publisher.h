@@ -71,8 +71,8 @@ namespace eCAL
   {
   public:
 
-    ECAL_API static constexpr long long DEFAULT_TIME_ARGUMENT        = -1;
-    ECAL_API static constexpr long long DEFAULT_ACKNOWLEDGE_ARGUMENT = -1;
+    ECAL_API static constexpr long long DEFAULT_TIME_ARGUMENT        = -1;  /*!< Use DEFAULT_TIME_ARGUMENT in the `Send()` function to let eCAL determine the send timestamp */
+    ECAL_API static constexpr long long DEFAULT_ACKNOWLEDGE_ARGUMENT = -1;  /*!< Use DEFAULT_ACKNOWLEDGE_ARGUMENT in the `Send()` function to let eCAL determine from configuration if the send operation needs to be acknowledged. */
 
     /**
      * @brief Constructor. 
@@ -101,7 +101,6 @@ namespace eCAL
     * @brief Constructor.
     *
     * @param topic_name_   Unique topic name.
-    * @param topic_info_   Topic information (encoding, type, descriptor)
     **/
     ECAL_API CPublisher(const std::string& topic_name_);
 
@@ -156,7 +155,6 @@ namespace eCAL
      * @brief Creates this object.
      *
      * @param topic_name_   Unique topic name.
-     * @param topic_info_   Topic information (encoding, type, descriptor)
      *
      * @return  True if it succeeds, false if it fails.
     **/
@@ -287,18 +285,20 @@ namespace eCAL
     /**
      * @brief Enable zero copy shared memory transport mode.
      *
-     * By default, the built-in shared memory layer is configured to make one memory copy
-     * on the receiver side. That means the payload is copied by the internal eCAL memory pool manager
-     * out of the memory file and the file is closed immediately after this.
-     * The intention of this implementation is to free the file as fast as possible after reading
-     * its content to allow other subscribing processes to access the content with minimal latency.
-     * The different reading subscribers are fully decoupled and can access their memory copy
-     * independently.
+     * By default, the built-in shared memory layer is configured to make two memory copies
+     * one on the publisher and one on the subscriber side.
      * 
-     * If ShmEnableZeroCopy is switched on no memory will be copied at all. The user message callback is
-     * called right after opening the memory file. A direct pointer to the memory payload is forwarded
+     * The intention of this implementation is to free the file as fast as possible after writing and reading
+     * its content to allow other processes to access the content with minimal latency. The publisher and subscribers
+     * are fully decoupled and can access their internal memory copy independently.
+     * 
+     * If ShmEnableZeroCopy is switched on no memory will be copied at all using the low level binary publish / subscribe API.
+     * On publisher side the memory copy is exectuted into the opened memory file. On the subscriber side the user message 
+     * callback is called right after opening the memory file. A direct pointer to the memory payload is forwarded
      * and can be processed with no latency. The memory file will be closed after the user callback function
-     * returned. The advantage of this configuration is a much higher performance for large payloads (> 1024 kB).
+     * returned.
+     *
+     * The advantage of this configuration is a much higher performance for large payloads (> 1024 kB).
      * The disadvantage of this configuration is that in the time when the callback is executed the memory file 
      * is blocked for other subscribers and for writing publishers too. Maybe this can be eliminated
      * by a better memory file read/write access implementation (lock free read) in future releases.
@@ -306,6 +306,9 @@ namespace eCAL
      * Today, for specific scenarios (1:1 pub/sub connections with large payloads for example) this feature
      * can increase the performance remarkable. But please keep in mind to return from the message callback function
      * as fast as possible to not delay subsequent read/write access operations.
+     * 
+     * By using the eCAL::CPayloadWriter API a full zero copy implementation is possible by providing separate methods
+     * for the initialization and the modification of the memory file content (see CPayloadWriter documentation).
      *
      * @param state_  Set type zero copy mode for shared memory transport layer (true == zero copy enabled).
      *

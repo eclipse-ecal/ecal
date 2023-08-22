@@ -25,6 +25,7 @@
 
 #include <string>
 
+//@{ 
 namespace eCAL
 {
   namespace Config
@@ -139,3 +140,4 @@ namespace eCAL
     }
   }
 }
+//@}
