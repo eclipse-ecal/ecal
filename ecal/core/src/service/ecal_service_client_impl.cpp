@@ -35,6 +35,18 @@
 
 namespace eCAL
 {
+  std::shared_ptr<CServiceClientImpl> CServiceClientImpl::CreateInstance()
+  {
+    return(std::shared_ptr<CServiceClientImpl>(new CServiceClientImpl()));
+  }
+
+  std::shared_ptr<CServiceClientImpl> CServiceClientImpl::CreateInstance(const std::string& service_name_)
+  {
+    auto instance = std::shared_ptr<CServiceClientImpl>(new CServiceClientImpl());
+    instance->Create(service_name_);
+    return instance;
+  }
+
   /**
    * @brief Service client implementation class.
   **/
@@ -42,13 +54,6 @@ namespace eCAL
     m_response_callback(nullptr),
     m_created(false)
   {
-  }
-
-  CServiceClientImpl::CServiceClientImpl(const std::string& service_name_) :
-    m_response_callback(nullptr),
-    m_created(false)
-  {
-    Create(service_name_);
   }
 
   CServiceClientImpl::~CServiceClientImpl()
@@ -513,12 +518,18 @@ namespace eCAL
         if (client != m_client_map.end())
         {
           const eCAL::service::ClientResponseCallbackT response_callback
-                      = [hostname = service.hname, servicename = service.sname, this] // TODO: using the this pointer here actually forces us to also manage the lifetime of this, e.g. with a shared ptr
+                      = [weak_me = std::weak_ptr<CServiceClientImpl>(shared_from_this()), hostname = service.hname, servicename = service.sname]
                         (const eCAL::service::Error& response_error, const std::shared_ptr<std::string>& response_)
                         {
-                          std::lock_guard<std::mutex> const lock(this->m_response_callback_sync);
+                          auto me = weak_me.lock();
+                          if (!me)
+                          {
+                            return;
+                          }
+
+                          std::lock_guard<std::mutex> const lock(me->m_response_callback_sync);
                           
-                          if (m_response_callback)
+                          if (me->m_response_callback)
                           {
                             eCAL::SServiceResponse service_response_struct;
                             
@@ -536,7 +547,7 @@ namespace eCAL
                               fromSerializedProtobuf(*response_, service_response_struct);
                             }
 
-                            this->m_response_callback(service_response_struct);
+                            me->m_response_callback(service_response_struct);
                           }
                         };
 
@@ -720,7 +731,7 @@ namespace eCAL
 
         // Event callback (unused)
         const eCAL::service::ClientSession::EventCallbackT event_callback
-                = [/*this, service_ = iter*/] // Using the this pointer here is extremely unsafe, as it actually forces us to manage the lifetime of this object
+                = [/*this, service_ = iter*/] // Using the this pointer here is extremely unsafe, as it actually forces us to manage the lifetime of this object. UPDATE: this class now inherits from shared_from_this, so when implementing this function, we can store a weak_ptr to this class.
                   (eCAL::service::ClientEventType /*event*/, const std::string& /*message*/) -> void
                   {
                     // I have no idea why, but for some reason the event callbacks of the actual connetions are not even used. The connect / disconnect callbacks are executed whenever a new connection is found, and not when the client has actually connected or disconnected. I am preserving the previous behavior.

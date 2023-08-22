@@ -29,18 +29,23 @@
 
 #include <map>
 #include <mutex>
+#include <memory>
 
 namespace eCAL
 {
   /**
    * @brief Service client implementation class. 
   **/
-  class CServiceClientImpl
+  class CServiceClientImpl : public std::enable_shared_from_this<CServiceClientImpl>
   {
   public:
+    static std::shared_ptr<CServiceClientImpl> CreateInstance();
+    static std::shared_ptr<CServiceClientImpl> CreateInstance(const std::string& service_name_);
+  
+  private:
     CServiceClientImpl();
-    CServiceClientImpl(const std::string& service_name_);
 
+  public:
     ~CServiceClientImpl();
 
     bool Create(const std::string& service_name_);

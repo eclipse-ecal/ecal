@@ -360,8 +360,6 @@ namespace eCAL
   {
     if (m_service_name.empty()) return;
 
-    // TODO: Test this function. This hasn't been adapted to the V0 + V1 server, yet
-
     // create service registration sample
     eCAL::pb::Sample sample;
     sample.set_cmd_type(eCAL::pb::bct_unreg_service);
