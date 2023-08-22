@@ -53,15 +53,13 @@ namespace eCAL
   private:
     CServiceServerImpl();
 
-    // Delete copy and move constructors and assign operators
-    CServiceServerImpl(const CServiceServerImpl&) = delete;             // Copy construct
-    CServiceServerImpl(CServiceServerImpl&&) = delete;                  // Move construct
-    CServiceServerImpl& operator=(const CServiceServerImpl&) = delete;  // Copy assign
-    CServiceServerImpl& operator=(CServiceServerImpl&&) = delete;       // Move assign
-
   public:
+    // Delete copy and move constructors and assign operators. Necessary, as the class uses the this pointer, that would be dangling / pointing to a wrong object otherwise.
+    CServiceServerImpl(const CServiceServerImpl&)            = delete;  // Copy construct
+    CServiceServerImpl(CServiceServerImpl&&)                 = delete;  // Move construct
+    CServiceServerImpl& operator=(const CServiceServerImpl&) = delete;  // Copy assign
+    CServiceServerImpl& operator=(CServiceServerImpl&&)      = delete;  // Move assign
 
-    // TODO: The this pointer is used internally, so this class must not be copyable or movable.
 
     ~CServiceServerImpl();
 

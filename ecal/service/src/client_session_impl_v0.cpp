@@ -73,8 +73,6 @@ namespace eCAL
     //////////////////////////////////////
     void ClientSessionV0::resolve_endpoint()
     {
-      // TODO: Should I create a localhost shortcut here? One that hardcoded goes to 127.0.0.1? Windows does not support localhost resolving, so this would be a workaround.
-
       ECAL_SERVICE_LOG_DEBUG(logger_, "Resolving endpoint [" + address_ + ":" + std::to_string(port_) + "]...");
 
       const asio::ip::tcp::resolver::query query(address_, std::to_string(port_));

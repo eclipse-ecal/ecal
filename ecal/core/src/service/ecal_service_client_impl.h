@@ -95,18 +95,10 @@ namespace eCAL
     static void fromSerializedProtobuf(const std::string&        response_pb_string, eCAL::SServiceResponse& response);
     static void fromProtobuf          (const eCAL::pb::Response& response_pb,        eCAL::SServiceResponse& response);
 
-  // TODO: Why is all this stuff protected???? Shouldn't this be private?
-  protected:
     void Register(bool force_);
     void Unregister();
 
     void CheckForNewServices();
-
-    // TODO: Remove
-    //bool SendRequests(const std::string& host_name_, const std::string& method_name_, const std::string& request_, int timeout_);
-    //bool SendRequest(const std::shared_ptr<eCAL::service::ClientSession>& client_, const std::string& method_name_, const std::string& request_, int timeout_, struct SServiceResponse& service_response_);
-
-    //void SendRequestAsync(const std::shared_ptr<eCAL::service::ClientSession>& client_, const std::string& method_name_, const std::string& request_, int timeout_);
 
     void ErrorCallback(const std::string &method_name_, const std::string &error_message_);
 

@@ -56,7 +56,6 @@ namespace eCAL
     // Constructor, Destructor, Create
     //////////////////////////////////////////////
     public:
-      // TODO: Maybe I can remove all those overloads and just keep 1
       static std::shared_ptr<ClientSession> create(const std::shared_ptr<asio::io_context>& io_context
                                                   , std::uint8_t                            protocol_version
                                                   , const std::string&                      address

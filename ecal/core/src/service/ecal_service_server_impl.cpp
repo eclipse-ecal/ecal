@@ -72,7 +72,6 @@ namespace eCAL
 
     // Get global server manager
     auto server_manager = eCAL::service::ServiceManager::instance()->get_server_manager();
-    // TODO: Check for nullptr
 
     if (!server_manager || server_manager->is_stopped())
       return false;
@@ -105,7 +104,6 @@ namespace eCAL
             = [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())]
               (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
               {
-                // TODO: I can change the signature of the RequestCallback to use shared_ptr
                 auto me = weak_me.lock();
                 if (me)
                   return me->RequestCallback(*request, *response);

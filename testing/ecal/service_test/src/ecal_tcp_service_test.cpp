@@ -2505,6 +2505,4 @@ TEST(BlockingCall, Stopped)  // NOLINT // TODO: This test shows the proper way t
 }
 #endif
 
-// TODO: Test blocking call when the io_context is stopped and then a call is made
-
 // TODO: Add a test for single-threaded service callbacks (-> setting parallel_service_callbacks to false)

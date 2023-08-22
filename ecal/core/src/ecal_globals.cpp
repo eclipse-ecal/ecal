@@ -270,8 +270,6 @@ namespace eCAL
     // clientgate/servicegat. The callbacks in the service implementation carry
     // raw pointers to the gate's functions, so we must make sure that everything
     // has been executed, before we delete the gates.
-    // 
-    // TODO: just make it a share pointer... it will be soooo much better.
     eCAL::service::ServiceManager::instance()->stop();
     if (clientgate_instance)             clientgate_instance->Destroy();
     if (servicegate_instance)            servicegate_instance->Destroy();
