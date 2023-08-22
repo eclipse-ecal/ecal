@@ -2,7 +2,7 @@
 project(ecal_csharp)
 
 set(CMAKE_DOTNET_SDK "")
-set(ECAL_CSHARP_PROTOBUF_VERSION "3.11.4" CACHE STRING "Protobuf Version for C# build")
+set(ECAL_CSHARP_PROTOBUF_VERSION "3.21.12" CACHE STRING "Protobuf Version for C# build")
 option(ECAL_CSHARP_BUILD_SAMPLES "BUILD eCAL C# samples" ON)
 
 add_subdirectory(Continental/eCAL/Core)

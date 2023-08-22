@@ -10,6 +10,6 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 
 # Install the exact protobuf compiler version on the host as the libprotoc we build for target.
 RUN git clone https://github.com/protocolbuffers/protobuf.git && \
-    cd protobuf && git checkout v3.11.4 && mkdir build && \
+    cd protobuf && git checkout v3.21.12 && mkdir build && \
     cmake -Bbuild -Hcmake -Dprotobuf_BUILD_TESTS=off && \
     cmake --build build -j 8 --target install
