@@ -2495,13 +2495,15 @@ title="Print to PDF"
 </ul>
 <section id="changelog">
 <h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">#</a></h2>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Highlights
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>![ecal-logo-5-12](https://github.com/eclipse-ecal/ecal/assets/49162693/437975aa-5c3f-4185-be1e-d3c4c092ddaf)
+
+# Highlights
 
 - **True Zero Copy!**
 
   eCAL had Zero Copy in the past. But now it&#39;s even better! With the new **low level API** you can precisely control which part of your Shared Memory message you actually have to change and therefore speed up your system even more!
 
-  Check out the [Zero Copy documentation](https://eclipse-ecal.github.io/ecal/advanced/shm_zerocopy.html) for explanations and examples on how to use it!
+  Check out the [Zero Copy documentation](https://eclipse-ecal.github.io/ecal/advanced/layers/shm_zerocopy.html) for explanations and examples on how to use it!
 
 - **Container support through host-groups**
 
@@ -2527,9 +2529,8 @@ title="Print to PDF"
   - Added true-zero-copy support (i.e., even when publishing), when using Shared Memory (#1082)
     - Added `CPayloadWriter` class that represents a view on the shared memory
     - Added samples on how to utilize it:
-      - https://github.com/eclipse-ecal/ecal/tree/master/samples/cpp/benchmarks/performance_snd
-      - https://github.com/eclipse-ecal/ecal/tree/master/samples/cpp/benchmarks/pubsub_throughput
-      - https://github.com/eclipse-ecal/ecal/tree/master/samples/cpp/benchmarks/latency_snd
+      - https://github.com/eclipse-ecal/ecal/tree/master/samples/cpp/pubsub/binary/binary_zero_copy_snd
+      - https://github.com/eclipse-ecal/ecal/tree/master/samples/cpp/pubsub/binary/binary_zero_copy_rec
   - Added active un-registration for pub/sub and client/server. This makes apps that rely on the monitoring data (like eCAL Mon) more responsive. (#1086)
   - Added events for Publishers and Subscribers: `pub_event_update_connection` and `sub_event_update_connection` (#920)
   - Added API to retrieve the monitoring / registration data as a native C++ struct
