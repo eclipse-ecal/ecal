@@ -100,7 +100,12 @@ struct StyleSheet
         default: return nothing;
       }
     };
-    sheet.tab.entries.transform = [](EntryState state)
+#if FTXUI_VERSION_MAJOR >= 5
+    sheet.tab.entries_option.transform =
+#else
+    sheet.tab.entries.transform =
+#endif
+      [](EntryState state)
     {
       if(state.active)
       {
@@ -110,7 +115,11 @@ struct StyleSheet
       }
       return text(state.label);
     };
+#if FTXUI_VERSION_MAJOR >= 5
+    sheet.tab.direction = Direction::Right;
+#else
     sheet.tab.direction = MenuOption::Right;
+#endif
     sheet.tab.elements_prefix = [] {
       return text(" ");
     };
@@ -202,14 +211,23 @@ struct StyleSheet
         default: return nothing;
       }
     };
-    sheet.tab.entries.transform = [](EntryState state) {
+#if FTXUI_VERSION_MAJOR >= 5
+    sheet.tab.entries_option.transform = 
+#else
+    sheet.tab.entries.transform =
+#endif
+    [](EntryState state) {
       if(state.active)
       {
         return text(state.label) | inverted;
       }
       return text(state.label);
     };
+#if FTXUI_VERSION_MAJOR >= 5
+    sheet.tab.direction = Direction::Right;
+#else
     sheet.tab.direction = MenuOption::Right;
+#endif
     sheet.tab.elements_prefix = [] {
       return text(" ");
     };

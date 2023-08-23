@@ -108,7 +108,10 @@ target_include_directories(${PROJECT_NAME}
   PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
 
 target_compile_definitions(${PROJECT_NAME}
-  PRIVATE $<$<BOOL:${MSVC}>:PCRE_STATIC;_UNICODE>)
+  PRIVATE 
+    $<$<BOOL:${MSVC}>:PCRE_STATIC;_UNICODE>
+    FTXUI_VERSION_MAJOR=${ftxui_VERSION_MAJOR}
+  )
 
 create_targets_protobuf()
 
