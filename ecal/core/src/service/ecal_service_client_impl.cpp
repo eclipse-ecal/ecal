@@ -220,8 +220,6 @@ namespace eCAL
       }
     }
     return false;
-
-    // TODO: Call timeout callbacks here??????
   }
 
   std::shared_ptr<std::vector<std::pair<bool, eCAL::SServiceResponse>>>
@@ -363,9 +361,9 @@ namespace eCAL
   }
 
   // blocking call, all responses will be returned in service_response_vec_
-  bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_)
+  bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_, int timeout_ms_, ServiceResponseVecT* service_response_vec_)
   {
-    auto responses = CallBlocking(method_name_, request_, std::chrono::milliseconds(timeout_));
+    auto responses = CallBlocking(method_name_, request_, std::chrono::milliseconds(timeout_ms_));
 
     if (service_response_vec_)
       service_response_vec_->clear();
@@ -384,7 +382,7 @@ namespace eCAL
       }
 
       // Call the timeout callback for all services that have not returned yet
-      if (timeout_ > 0)
+      if (timeout_ms_ > 0)
       {
         std::lock_guard<std::mutex> const lock_eb(m_event_callback_map_sync);
         auto callback_it = m_event_callback_map.find(eCAL_Client_Event::client_event_timeout);
@@ -414,9 +412,9 @@ namespace eCAL
   }
 
   // blocking call, using callback
-  bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_, int timeout_)
+  bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_, int timeout_ms_)
   {
-    auto responses = CallBlocking(method_name_, request_, std::chrono::milliseconds(timeout_));
+    auto responses = CallBlocking(method_name_, request_, std::chrono::milliseconds(timeout_ms_));
 
     if (!responses)
     {
@@ -441,7 +439,7 @@ namespace eCAL
       }
 
       // iterate over responses and call the timeout callbacks
-      if (timeout_ > 0)
+      if (timeout_ms_ > 0)
       {
         std::lock_guard<std::mutex> const lock_eb(m_event_callback_map_sync);
         auto callback_it = m_event_callback_map.find(eCAL_Client_Event::client_event_timeout);
@@ -471,7 +469,7 @@ namespace eCAL
   }
 
   // asynchronously call, using callback
-  bool CServiceClientImpl::CallAsync(const std::string& method_name_, const std::string& request_ /*, int timeout_*/)
+  bool CServiceClientImpl::CallAsync(const std::string& method_name_, const std::string& request_ /*, int timeout_ms_*/)
   {
     // TODO: implement timeout
 

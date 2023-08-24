@@ -161,8 +161,12 @@ namespace eCAL
     m_service_name.clear();
     m_service_id.clear();
 
-    m_connected_v0 = false;
-    m_connected_v1 = false;
+    {
+      std::lock_guard<std::mutex> connected_lock(m_connected_mutex);
+      m_connected_v0 = false;
+      m_connected_v1 = false;
+    }
+
     m_created      = false;
 
     return(true);
@@ -457,46 +461,49 @@ namespace eCAL
 
   void CServiceServerImpl::EventCallback(eCAL_Server_Event event_, const std::string& /*message_*/)
   {
-    // TODO: Make thread safe
     bool mode_changed(false);
 
-    // protocol version 0
-    if (m_connected_v0)
     {
-      if (m_tcp_server_v0 && !m_tcp_server_v0->is_connected())
-      {
-        mode_changed   = true;
-        m_connected_v0 = false;
-        Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 0 disconnected");
-      }
-    }
-    else
-    {
-      if (m_tcp_server_v0 && m_tcp_server_v0->is_connected())
-      {
-        mode_changed   = true;
-        m_connected_v0 = true;
-        Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 0 connected");
-      }
-    }
+      std::lock_guard<std::mutex> connected_lock(m_connected_mutex);
 
-    // protocol version 1
-    if (m_connected_v1)
-    {
-      if (m_tcp_server_v1 && !m_tcp_server_v1->is_connected())
+      // protocol version 0
+      if (m_connected_v0)
       {
-        mode_changed   = true;
-        m_connected_v1 = false;
-        Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 1 disconnected");
+        if (m_tcp_server_v0 && !m_tcp_server_v0->is_connected())
+        {
+          mode_changed   = true;
+          m_connected_v0 = false;
+          Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 0 disconnected");
+        }
       }
-    }
-    else
-    {
-      if (m_tcp_server_v1 && m_tcp_server_v1->is_connected())
+      else
       {
-        mode_changed   = true;
-        m_connected_v1 = true;
-        Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 1 connected");
+        if (m_tcp_server_v0 && m_tcp_server_v0->is_connected())
+        {
+          mode_changed   = true;
+          m_connected_v0 = true;
+          Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 0 connected");
+        }
+      }
+
+      // protocol version 1
+      if (m_connected_v1)
+      {
+        if (m_tcp_server_v1 && !m_tcp_server_v1->is_connected())
+        {
+          mode_changed   = true;
+          m_connected_v1 = false;
+          Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 1 disconnected");
+        }
+      }
+      else
+      {
+        if (m_tcp_server_v1 && m_tcp_server_v1->is_connected())
+        {
+          mode_changed   = true;
+          m_connected_v1 = true;
+          Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 1 connected");
+        }
       }
     }
 

@@ -63,7 +63,7 @@ namespace eCAL
     bool RemEventCallback(eCAL_Client_Event type_);
       
     // blocking call, no broadcast, first matching service only, response will be returned in service_response_
-    ECAL_DEPRECATE_SINCE_5_10("Please use bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_) instead. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_10("Please use bool Call(const std::string& method_name_, const std::string& request_, int timeout_ms_, ServiceResponseVecT* service_response_vec_) instead. This function will be removed in eCAL6.")
     bool Call(const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_);
     
   private:
@@ -71,13 +71,13 @@ namespace eCAL
 
   public:
     // blocking call, all responses will be returned in service_response_vec_
-    bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_);
+    bool Call(const std::string& method_name_, const std::string& request_, int timeout_ms_, ServiceResponseVecT* service_response_vec_);
 
     // blocking call, using callback
-    bool Call(const std::string& method_name_, const std::string& request_, int timeout_);
+    bool Call(const std::string& method_name_, const std::string& request_, int timeout_ms_);
 
     // asynchronously call, using callback (timeout not supported yet)
-    bool CallAsync(const std::string& method_name_, const std::string& request_ /*, int timeout_*/);
+    bool CallAsync(const std::string& method_name_, const std::string& request_ /*, int timeout_ms_*/);
 
     // check connection state
     bool IsConnected();
