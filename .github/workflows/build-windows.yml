@@ -485,5 +485,5 @@ jobs:
       if: env.IS_DOWNLOAD_AVAILABLE == 'true'
       uses: actions/upload-artifact@v3
       with:
-        name: windows-setup-eclipse
+        name: windows-setup-signed
         path: ${{ runner.workspace }}/_build/complete/_deploy/${{ env.ASSET_NAME }}
