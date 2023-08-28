@@ -10,20 +10,20 @@ Here we will show how to deploy eCAL into a docker container, and how to use its
 
 
 .. important::
-   
+
    This will work with eCAL 5.10 and up.
    Older eCAL versions will lack Shared Memory communication when being run in a docker container.
 
 Prerequisite
 ============
 
-* Install Docker as described in the `Docker installation documentation <https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository>`_ 
+* Install Docker as described in the `Docker installation documentation <https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository>`_
 
   .. seealso::
 
      If you have problems regarding to the installation, check these links:
 
-     * `Docker package not found <https://stackoverflow.com/questions/61401626/docker-installation-failed-on-ubuntu-20-04-ltsvmware>`_      
+     * `Docker package not found <https://stackoverflow.com/questions/61401626/docker-installation-failed-on-ubuntu-20-04-ltsvmware>`_
      * `Docker installation failed <https://forums.docker.com/t/cant-install-docker-on-ubuntu-20-04/93058>`_
 
 * Optional: If you want your docker container to talk to eCAL Nodes on other machines:
@@ -42,7 +42,7 @@ In this tutorial we are going to create:
 - A subscriber container receiving the Hello World data.
 
 The file hierarchy that we are going to follow:
-   
+
 .. parsed-literal::
 
    |fa-folder-open| ecal_in_docker
@@ -88,7 +88,7 @@ eCAL runtime container
    If you run ``ecal_sample_person_snd`` in the docker container and have an eCAL installation on your host, you can subscribe to the data via the eCAL Monitor or ``ecal_sample_person_rec``.
 
    .. note::
-      
+
       * ``--ipc=host`` will enable Shared Memory communication with your host system and other docker containers that are started with the same parameter.
         This is important for local communication.
 
@@ -121,7 +121,7 @@ It will contain the Hello World Sample from the :ref:`Getting Started Section <g
       :linenos:
 
 #. Create file  |fa-file-alt| :file:`pub_container/CMakeLists.txt`
- 
+
    .. literalinclude:: /getting_started/src/hello_world/hello_world_snd/CMakeLists.txt
       :language: cmake
       :linenos:
@@ -151,11 +151,11 @@ The subscriber container will also be based on the ``ecal-runtime`` container an
       :linenos:
 
 #. Create file |fa-file-alt| :file:`sub_container/CMakeLists.txt`
-   
+
    .. literalinclude:: /getting_started/src/hello_world/hello_world_rec/CMakeLists.txt
       :language: cmake
       :linenos:
-  
+
 #. Build the image:
 
    .. code-block:: bash
@@ -176,17 +176,18 @@ Run the docker containers
 * You can also use the docker-compose file to manage multiple containers.
 
   #. In the parent folder create file |fa-file-alt| :file:`docker-compose.yaml` and paste the following content:
-     
+
      .. literalinclude:: src/ecal_in_docker/docker-compose.yaml
         :language: yaml
         :linenos:
 
   #. You can now use that docker-compose to build/run the publisher and subscriber containers:
-    
+
      .. code-block:: bash
 
         sudo docker-compose build
         sudo docker-compose up
+
 
 Seamless IPC-Communication across host borders
 ----------------------------------------------
@@ -205,7 +206,7 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
    .. code-block:: bash
 
-      sudo docker network create --driver=bridge --subnet=192.100.0.0/24 my_network
+      sudo docker network create --driver=bridge --subnet=10.0.10.0/24 my_network
 
 #. Edit your :file:`ecal.ini` and run your Container within the newly created docker network
 
@@ -225,7 +226,7 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
    .. code-block:: bash
 
-      sudo docker run --rm -it --ipc=host --pid=host --network=my_network --name=container1 --h=container1 --ip=192.168.100.2 -v /etc/ecal/ecal.ini:/etc/ecal/ecal.ini ecal-runtime
+      sudo docker run --rm -it --ipc=host --pid=host --network=my_network --name=container1 -h=container1 --ip=10.0.10.10 -v /etc/ecal/ecal.ini:/etc/ecal/ecal.ini ecal-runtime
 
    - You should now be inside the root shell of your Container.
      Check if your :file:`ecal.ini` file is correct.
@@ -239,16 +240,20 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
 #. Configure the Host network
 
-   - eCAL is sending UDP messages to a multicast IP group ``239.0.0.0/24``, further information in :ref:`Getting Started Section <getting_started_cloud_ubuntu_routes>`. 
+   - eCAL is sending UDP messages to a multicast IP group ``239.0.0.0/24``, further information in :ref:`Getting Started Section <getting_started_cloud_ubuntu_routes>`.
      The idea is now, to successfully receive those messages from your previously started container on your host.
      For that, you need to add a route to your routing table.
      By typing ``ifconfig`` in your shell, you can identify the right docker network.
-     In our case, the prefix of the docker network is always ``br`` followed by random numbers. 
+     In our case, the prefix of the docker network is always ``br`` followed by random numbers.
      After identifying the right network, run following command.
 
    .. code-block:: bash
 
       sudo ip route add 239.0.0.0/24 dev <br-xxx> metric 1
+
+   - Review your network configuration. Your eCAL-Monitor should resemble this example:
+
+   .. image:: img_documentation/doku_ecal_docker_mon.png
 
 #. (optional) After adding the route, you register the Container with IP address and name in /etc/hosts for DNS resolution, enabling easy access to it by hostname within the network.
 
@@ -258,4 +263,4 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
    .. image:: img_documentation/vscode_etc_hosts.png
 
-After all steps are done, all eCAL nodes can communicate seamlessly from docker to the host and vice versa.
+When all steps are done, all eCAL nodes can communicate seamlessly from docker to the host and vice versa.
