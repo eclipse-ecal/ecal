@@ -205,7 +205,7 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
    .. code-block:: bash
 
-      sudo docker network create --driver=bridge --subnet=192.100.0.0/24 my_network
+      sudo docker network create --driver=bridge --subnet=10.0.10.0/24 my_network
 
 #. Edit your :file:`ecal.ini` and run your Container within the newly created docker network
 
@@ -225,7 +225,7 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
    .. code-block:: bash
 
-      sudo docker run --rm -it --ipc=host --pid=host --network=my_network --name=container1 --h=container1 --ip=192.168.100.2 -v /etc/ecal/ecal.ini:/etc/ecal/ecal.ini ecal-runtime
+      sudo docker run --rm -it --ipc=host --pid=host --network=my_network --name=container1 -h=container1 --ip=10.0.10.10 -v /etc/ecal/ecal.ini:/etc/ecal/ecal.ini ecal-runtime
 
    - You should now be inside the root shell of your Container.
      Check if your :file:`ecal.ini` file is correct.
@@ -250,6 +250,11 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
       sudo ip route add 239.0.0.0/24 dev <br-xxx> metric 1
 
+   - Review your network configuration. Your eCAL-Monitor should resemble this example:
+
+   .. image:: img_documentation/doku_ecal_docker_mon.png
+
+
 #. (optional) After adding the route, you register the Container with IP address and name in /etc/hosts for DNS resolution, enabling easy access to it by hostname within the network.
 
    .. code-block:: bash
@@ -258,4 +263,4 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
    .. image:: img_documentation/vscode_etc_hosts.png
 
-After all steps are done, all eCAL nodes can communicate seamlessly from docker to the host and vice versa.
+When you are done, all eCAL nodes can communicate seamlessly from docker to the host and vice versa.
