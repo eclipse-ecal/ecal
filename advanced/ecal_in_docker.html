@@ -2875,7 +2875,7 @@ Older versions lack the ability to utilize the <code class="docutils literal not
 </div>
 <ol class="arabic">
 <li><p>To encapsulate your container network from your host network, you need to create a new docker network with the following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>docker<span class="w"> </span>network<span class="w"> </span>create<span class="w"> </span>--driver<span class="o">=</span>bridge<span class="w"> </span>--subnet<span class="o">=</span><span class="m">192</span>.100.0.0/24<span class="w"> </span>my_network
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>docker<span class="w"> </span>network<span class="w"> </span>create<span class="w"> </span>--driver<span class="o">=</span>bridge<span class="w"> </span>--subnet<span class="o">=</span><span class="m">10</span>.0.10.0/24<span class="w"> </span>my_network
 </pre></div>
 </div>
 </li>
@@ -2890,7 +2890,7 @@ Older versions lack the ability to utilize the <code class="docutils literal not
 We want to use it not only for our Host-System but also for our Container, so we don’t need to edit the <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> in our Container again.
 To achieve that, run following command to start your container:</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-it<span class="w"> </span>--ipc<span class="o">=</span>host<span class="w"> </span>--pid<span class="o">=</span>host<span class="w"> </span>--network<span class="o">=</span>my_network<span class="w"> </span>--name<span class="o">=</span>container1<span class="w"> </span>--h<span class="o">=</span>container1<span class="w"> </span>--ip<span class="o">=</span><span class="m">192</span>.168.100.2<span class="w"> </span>-v<span class="w"> </span>/etc/ecal/ecal.ini:/etc/ecal/ecal.ini<span class="w"> </span>ecal-runtime
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-it<span class="w"> </span>--ipc<span class="o">=</span>host<span class="w"> </span>--pid<span class="o">=</span>host<span class="w"> </span>--network<span class="o">=</span>my_network<span class="w"> </span>--name<span class="o">=</span>container1<span class="w"> </span>-h<span class="o">=</span>container1<span class="w"> </span>--ip<span class="o">=</span><span class="m">10</span>.0.10.10<span class="w"> </span>-v<span class="w"> </span>/etc/ecal/ecal.ini:/etc/ecal/ecal.ini<span class="w"> </span>ecal-runtime
 </pre></div>
 </div>
 <ul class="simple">
@@ -2914,6 +2914,10 @@ After identifying the right network, run following command.</p></li>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>add<span class="w"> </span><span class="m">239</span>.0.0.0/24<span class="w"> </span>dev<span class="w"> </span>&lt;br-xxx&gt;<span class="w"> </span>metric<span class="w"> </span><span class="m">1</span>
 </pre></div>
 </div>
+<ul class="simple">
+<li><p>Review your network configuration. Your eCAL-Monitor should resemble this example:</p></li>
+</ul>
+<img alt="../_images/doku_ecal_docker_mon.png" src="../_images/doku_ecal_docker_mon.png" />
 </li>
 <li><p>(optional) After adding the route, you register the Container with IP address and name in /etc/hosts for DNS resolution, enabling easy access to it by hostname within the network.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/hosts
@@ -2922,7 +2926,7 @@ After identifying the right network, run following command.</p></li>
 <img alt="../_images/vscode_etc_hosts.png" src="../_images/vscode_etc_hosts.png" />
 </li>
 </ol>
-<p>After all steps are done, all eCAL nodes can communicate seamlessly from docker to the host and vice versa.</p>
+<p>When you are done, all eCAL nodes can communicate seamlessly from docker to the host and vice versa.</p>
 </section>
 </section>
 </section>
