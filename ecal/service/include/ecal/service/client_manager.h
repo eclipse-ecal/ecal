@@ -24,6 +24,7 @@
 
 #include <ecal/service/client_session.h>
 
+// TODO: Document the entire eCAL::service API
 namespace eCAL
 {
   namespace service

@@ -1523,6 +1523,103 @@ TEST(Callback, ServiceCallFromCallback) // NOLINT
 #endif
 
 #if 1
+TEST(Callback, SerializedServiceCallbacks) // NOLINT
+{
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  {
+    constexpr std::chrono::milliseconds server_callback_wait_time(50);
+    constexpr int num_clients = 5;
+    constexpr int num_threads = 5;
+
+    const auto io_context = std::make_shared<asio::io_context>();
+    auto server_manager = eCAL::service::ServerManager::create(io_context);
+    auto client_manager = eCAL::service::ClientManager::create(io_context);
+
+    std::vector<std::thread> threads;
+    threads.reserve(num_threads);
+    
+    for (int i = 0; i < num_clients; i++)
+    {
+      threads.emplace_back([&io_context]()
+                          {
+                            io_context->run();
+                          });
+    }
+
+    atomic_signalable<int> num_server_service_callback_called  (0);
+    atomic_signalable<int> num_client_response_callback_called (0);
+    atomic_signalable<int> num_client_event_callback_called    (0);
+
+    const eCAL::service::Server::ServiceCallbackT server_service_callback
+            = [&num_server_service_callback_called, server_callback_wait_time]
+              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+              {
+                std::this_thread::sleep_for(server_callback_wait_time);
+                *response = "Response on \"" + *request + "\"";
+                
+                num_server_service_callback_called++;
+
+                return 0;
+              };
+
+    const eCAL::service::Server::EventCallbackT server_event_callback
+            = []
+              (eCAL::service::ServerEventType /*event*/, const std::string& /*message*/) -> void
+              {};
+
+    const eCAL::service::ClientSession::EventCallbackT client_event_callback
+            = [&num_client_event_callback_called]
+              (eCAL::service::ClientEventType /*event*/, const std::string& /*message*/) -> void
+              {
+                num_client_event_callback_called++;
+              };
+
+    auto server = server_manager->create_server(protocol_version, 0, server_service_callback, false, server_event_callback);
+    std::vector<std::shared_ptr<eCAL::service::ClientSession>> clients;
+    clients.reserve(num_clients);
+    for (int i = 0; i < num_clients; i++)
+    {
+      clients.push_back(client_manager->create_client(protocol_version, "127.0.0.1", server->get_port(), client_event_callback));
+    }
+    
+    num_client_event_callback_called.wait_for([&num_clients](int value) -> bool { return value >= num_clients; }, std::chrono::milliseconds(500));
+
+    auto start = std::chrono::steady_clock::now();
+    for (const auto& client : clients)
+    {
+      const auto request = std::make_shared<std::string>("Request");
+      auto response      = std::make_shared<std::string>();
+
+      auto client_response_callback = [&num_client_response_callback_called, response]
+                                      (const eCAL::service::Error& error, const std::shared_ptr<std::string>& /*response*/) -> void
+                                      {
+                                        EXPECT_FALSE(bool(error));
+                                        num_client_response_callback_called++;
+                                      };
+
+      client->async_call_service(request, client_response_callback);
+    }
+
+    num_client_response_callback_called.wait_for([num_clients](int v) {return v >= num_clients;}, num_clients * server_callback_wait_time * 2);
+
+    auto end = std::chrono::steady_clock::now();
+    auto duration = end - start;
+
+    EXPECT_GE(duration, num_clients * server_callback_wait_time);
+
+    server_manager->stop_servers();
+    client_manager->stop_clients();
+
+    // join all threads
+    for (auto& thread : threads)
+    {
+      thread.join();
+    }
+  }
+}
+#endif
+
+#if 1
 TEST(ErrorCallback, ErrorCallbackNoServer) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1850,7 +1947,6 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough) // NOLINT
     constexpr int num_calls_per_client = 50;
     constexpr std::chrono::milliseconds server_time_to_waste(10);
 
-    // TODO: Ask Rex: is it OK to execute the service callback in parallel? That is the current case, as every server session is running independently.
     //constexpr std::chrono::milliseconds wait_time_for_destroying_server = server_time_to_waste * total_calls / 2;
     constexpr std::chrono::milliseconds wait_time_for_destroying_server = server_time_to_waste * num_calls_per_client / 2;
 
@@ -2507,5 +2603,3 @@ TEST(BlockingCall, Stopped)  // NOLINT // This test shows the proper way to stop
   }
 }
 #endif
-
-// TODO: Add a test for single-threaded service callbacks (-> setting parallel_service_callbacks to false)
