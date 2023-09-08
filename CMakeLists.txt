@@ -325,6 +325,10 @@ add_subdirectory(app/app_pb)
 # ecal core
 # --------------------------------------------------------
 add_subdirectory(ecal/service)
+if(BUILD_SAMPLES)
+  add_subdirectory(ecal/service_sample)
+endif()
+
 add_subdirectory(ecal/core)
 
 # --------------------------------------------------------

@@ -26,8 +26,24 @@
 
 namespace eCAL
 {
+  // TODO: move all raw-service-files in a common folder (tests, sample, library)
   namespace service
   {
+    /**
+     * @brief Manager for eCAL::service::server instances
+     * 
+     * The ServerManager is a singleton class, which manages all eCAL::service::server instances. It is used to create and stop servers. The user doesn't need to manage the servers manually, e.g. for stopping them from a central place and stopping the io_context.
+     * The ServerManager is only available as shared_ptr. It must be created using the static create() method.
+     *
+     * - Upon creation, the ServerManager will create a work object for the given io_context. This will keep the io_context alive, even if there are no servers running.
+     * - For creating a server, the create_server() method must be used. This will create a new server instance and return a shared_ptr to it.
+     * - For stopping all servers, the stop_servers() method must be used. This will stop all servers and delete the internal work object, so the thread executing it can be joined.
+     * 
+     * Example code:
+     * 
+     *     auto server_manager = eCAL::service::ServerManager::create(io_context);
+
+     */
     class ServerManager : public std::enable_shared_from_this<ServerManager>
     {
     ///////////////////////////////////////////////////////
