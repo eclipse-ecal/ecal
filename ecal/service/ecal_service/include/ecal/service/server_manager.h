@@ -40,9 +40,22 @@ namespace eCAL
      * - For stopping all servers, the stop_servers() method must be used. This will stop all servers and delete the internal work object, so the thread executing it can be joined.
      * 
      * Example code:
-     * 
-     *     auto server_manager = eCAL::service::ServerManager::create(io_context);
-
+     *
+     *   // Create a server manager
+     *   auto server_manager = eCAL::service::ServerManager::create(io_context);
+     *  
+     *   // Create and start an io_context thread.
+     *   std::thread io_context_thread([&io_context]() { io_context->run(); });
+     *  
+     *   // Create actual server instances
+     *   auto server1 = server_manager->create_server(...)
+     *   auto server2 = server_manager->create_server(...)
+     *   
+     *   // Stop ALL servers from a common place
+     *   server_manager->stop_servers();
+     *      
+     *   // Join the io_context thread. The io_context does not need to be stopped.
+     *   io_context_thread.join();
      */
     class ServerManager : public std::enable_shared_from_this<ServerManager>
     {
@@ -50,6 +63,19 @@ namespace eCAL
     // Constructor, Destructor, Create
     ///////////////////////////////////////////////////////
     public:
+      /**
+       * @brief Create a new server manager, that can be used to create and stop servers
+       * 
+       * After creation, the server manager will create a work object for the
+       * given io_context. This will keep the io_context alive, even if there
+       * are no servers running. When stopping the servers, that work object
+       * will be deleted and the io_context will run out of work on its own.
+       * 
+       * @param io_context  The io context, that will be used for all servers
+       * @param logger      A logger-function that will be used for by all servers
+       * 
+       * @return A shared_ptr to the created server manager
+       */
       static std::shared_ptr<ServerManager> create(const std::shared_ptr<asio::io_context>& io_context, const LoggerT& logger = default_logger("Service Server"));
 
       // delete copy and move constructors and assign operators
@@ -68,15 +94,39 @@ namespace eCAL
     ///////////////////////////////////////////////////////
     // Public API
     ///////////////////////////////////////////////////////
+    
     public:
+      /**
+       * @brief Create a new server instance, which is managed by this server manager
+       * 
+       * @param protocol_version                The protocol version, that will be used by this server
+       * @param port                            The port, that the server will listen on 
+       * @param service_callback                The callback, that will be called for each incoming service call
+       * @param parallel_service_calls_enabled  If true, the server will handle incoming service calls in parallel. If false, the server will handle incoming service calls sequentially.
+       * @param event_callback                  The callback, that will be called whenever a client connects or disconnects
+       * 
+       * @return a shared pointer to the created server
+       */
       std::shared_ptr<Server> create_server(std::uint8_t                    protocol_version
                                           , std::uint16_t                   port
                                           , const Server::ServiceCallbackT& service_callback
                                           , bool                            parallel_service_calls_enabled
                                           , const Server::EventCallbackT&   event_callback);
 
+      /**
+       * @brief Get the number of servers, that are currently managed by this server manager
+       * @return The number of servers
+       */
       size_t server_count() const;
 
+      /**
+       * @brief Stop all servers , that are currently managed by this server manager
+       * 
+       * This will also delete the internal work object, so the thread executing
+       * the io_context can be joined. The io context will run out of work on
+       * its own.
+       * Obviously, this is only true if no other managers etc. use the io_context.
+       */
       void stop_servers();
 
       bool is_stopped() const;
@@ -91,7 +141,7 @@ namespace eCAL
       mutable std::mutex                          server_manager_mutex_;  //!< Mutex protecting the entire class
       bool                                        stopped_;               //!< Flag indicating, if the manager is stopped
       std::unique_ptr<asio::io_context::work>     work_;                  //!< Work object to keep the io_context alive. Will be deleted, when the manager is stopped.
-      std::map<Server*, std::weak_ptr<Server>>    sessions_;
+      std::map<Server*, std::weak_ptr<Server>>    sessions_;              //!< Map of all servers, that are currently managed by this server manager. The raw_ptr is used as key, because it is unique for each server. The weak_ptr is used to actually access the server object, because the server may already be dead and the raw ptr would be dangling in that case.
     };
 
   }

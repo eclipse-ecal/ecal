@@ -325,10 +325,6 @@ add_subdirectory(app/app_pb)
 # ecal core
 # --------------------------------------------------------
 add_subdirectory(ecal/service)
-if(BUILD_SAMPLES)
-  add_subdirectory(ecal/service_sample)
-endif()
-
 add_subdirectory(ecal/core)
 
 # --------------------------------------------------------
@@ -475,7 +471,6 @@ if(BUILD_ECAL_TESTS)
   # test ecal
   # ------------------------------------------------------
   add_subdirectory(testing/ecal/clientserver_test)   #THIS TEST IS NOT ABLE TO RUN ON GH ACTIONS
-  add_subdirectory(testing/ecal/service_test)
   
   add_subdirectory(testing/ecal/core_test)
   add_subdirectory(testing/ecal/event_test)
