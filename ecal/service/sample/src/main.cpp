@@ -21,6 +21,8 @@
 #include <ecal/service/client_manager.h>
 
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 int main(int argc, char** argv)
 {
