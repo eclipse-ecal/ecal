@@ -655,22 +655,21 @@ namespace eCAL
     else         return 0;
   }
 
-  void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_, const std::string& reader_par_)
+  void CDataWriter::ApplyLocSubscription(const SLocalSubscriptionInfo& local_info_, const SDataTypeInformation& tinfo_, const std::string& reader_par_)
   {
-    Connect(tid_, tinfo_);
+    Connect(local_info_.topic_id, tinfo_);
 
     // add key to local subscriber map
-    const std::string topic_key = process_id_ + tid_;
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_loc_sub_map[topic_key] = true;
+      m_loc_sub_map[local_info_] = true;
     }
 
     m_loc_subscribed = true;
 
     // add a new local subscription
-    m_writer.udp_mc.AddLocConnection (process_id_, reader_par_);
-    m_writer.shm.AddLocConnection    (process_id_, reader_par_);
+    m_writer.udp_mc.AddLocConnection (local_info_.process_id, reader_par_);
+    m_writer.shm.AddLocConnection    (local_info_.process_id, reader_par_);
 
 #ifndef NDEBUG
     // log it
@@ -678,18 +677,17 @@ namespace eCAL
 #endif
   }
 
-  void CDataWriter::RemoveLocSubscription(const std::string& process_id_, const std::string& tid_)
+  void CDataWriter::RemoveLocSubscription(const SLocalSubscriptionInfo& local_info_)
   {
     // remove key from local subscriber map
-    const std::string topic_key = process_id_ + tid_;
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_loc_sub_map.erase(topic_key);
+      m_loc_sub_map.erase(local_info_);
     }
 
     // remove a local subscription
-    m_writer.udp_mc.RemLocConnection (process_id_);
-    m_writer.shm.RemLocConnection    (process_id_);
+    m_writer.udp_mc.RemLocConnection (local_info_.process_id);
+    m_writer.shm.RemLocConnection    (local_info_.process_id);
 
 #ifndef NDEBUG
     // log it
@@ -697,22 +695,21 @@ namespace eCAL
 #endif
   }
 
-  void CDataWriter::ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_, const std::string& reader_par_)
+  void CDataWriter::ApplyExtSubscription(const SExternalSubscriptionInfo& external_info_, const SDataTypeInformation& tinfo_, const std::string& reader_par_)
   {
-    Connect(tid_, tinfo_);
+    Connect(external_info_.topic_id, tinfo_);
 
     // add key to external subscriber map
-    const std::string topic_key = host_name_ + process_id_ + tid_;
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_ext_sub_map[topic_key] = true;
+      m_ext_sub_map[external_info_] = true;
     }
 
     m_ext_subscribed = true;
 
     // add a new external subscription
-    m_writer.udp_mc.AddExtConnection (host_name_, process_id_, reader_par_);
-    m_writer.shm.AddExtConnection    (host_name_, process_id_, reader_par_);
+    m_writer.udp_mc.AddExtConnection (external_info_.host_name, external_info_.process_id, reader_par_);
+    m_writer.shm.AddExtConnection    (external_info_.host_name, external_info_.process_id, reader_par_);
 
 #ifndef NDEBUG
     // log it
@@ -720,18 +717,17 @@ namespace eCAL
 #endif
   }
 
-  void CDataWriter::RemoveExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_)
+  void CDataWriter::RemoveExtSubscription(const SExternalSubscriptionInfo& external_info_)
   {
     // remove key from external subscriber map
-    const std::string topic_key = host_name_ + process_id_ + tid_;
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_ext_sub_map.erase(topic_key);
+      m_ext_sub_map.erase(external_info_);
     }
 
     // remove external subscription
-    m_writer.udp_mc.RemExtConnection (host_name_, process_id_);
-    m_writer.shm.RemExtConnection    (host_name_, process_id_);
+    m_writer.udp_mc.RemExtConnection (external_info_.host_name, external_info_.process_id);
+    m_writer.shm.RemExtConnection    (external_info_.host_name, external_info_.process_id);
   }
 
   void CDataWriter::RefreshRegistration()
@@ -768,7 +764,8 @@ namespace eCAL
     Register(false);
 
     // check connection timeouts
-    const std::shared_ptr<std::list<std::string>> loc_timeouts = std::make_shared<std::list<std::string>>();
+    // Todo: Why are only Local connections removed, not external connections?
+    const std::shared_ptr<std::list<SLocalSubscriptionInfo>> loc_timeouts = std::make_shared<std::list<SLocalSubscriptionInfo>>();
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
       m_loc_sub_map.remove_deprecated(loc_timeouts.get());
@@ -780,7 +777,7 @@ namespace eCAL
 
     for(const auto& loc_sub : *loc_timeouts)
     {
-      m_writer.shm.RemLocConnection(loc_sub);
+      m_writer.shm.RemLocConnection(loc_sub.process_id);
     }
 
     if (!m_loc_subscribed && !m_ext_subscribed)
@@ -1275,7 +1272,7 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_sub_map_sync);
     for (auto sub : m_loc_sub_map)
     {
-      if (sub.first != process_id)
+      if (sub.first.process_id != process_id)
       {
         is_internal_only = false;
         break;
