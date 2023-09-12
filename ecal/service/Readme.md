@@ -33,10 +33,9 @@ int main(int argc, char** argv)
   // This callback will be called, when a client calls the service.
   // It is responsible for filling the response object.
   auto server_service_callback
-          = [](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response)
+          = [](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
             {
                 *response = "Response on \"" + *request + "\"";
-                return 0;
             };
 
   // Event callback (empty)

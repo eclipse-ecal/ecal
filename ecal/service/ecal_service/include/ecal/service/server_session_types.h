@@ -33,8 +33,7 @@ namespace eCAL
       Disconnected,       //!< The connection to a client has been closed for any reason.
     };
 
-    // TODO: Ask rex what the return value (int) of this callback is for
-    using ServerServiceCallbackT = std::function<int(const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response)>;
+    using ServerServiceCallbackT = std::function<void(const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response)>;
     using ServerEventCallbackT   = std::function<void(ServerEventType, const std::string&)>;
   } // namespace service
 } // namespace eCAL

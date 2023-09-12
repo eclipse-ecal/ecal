@@ -69,11 +69,10 @@ TEST(RAII, TcpServiceServer) // NOLINT
     const asio::io_context::work dummy_work(*io_context);
 
     const eCAL::service::Server::ServiceCallbackT service_callback
-            = [](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+            = [](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
               {
                 std::cout << "Server got request: " << *request << std::endl;
                 *response = "Response on \"" + *request + "\"";
-                return 0;
               };
 
 
@@ -154,11 +153,10 @@ TEST(RAII, TcpServiceServerAndClient) // NOLINT
     std::atomic<bool> response_callback_called(false);
 
     const eCAL::service::Server::ServiceCallbackT server_service_callback
-              = [](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+              = [](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
                 {
                   std::cout << "Server got request: " << *request << std::endl;
                   *response = "Response on \"" + *request + "\"";
-                  return 0;
                 };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
@@ -242,11 +240,10 @@ TEST(RAII, StopDuringServiceCall) // NOLINT
     std::atomic<bool> response_callback_called(false);
 
     const eCAL::service::Server::ServiceCallbackT server_service_callback
-              = [](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+              = [](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
                 {
                   std::cout << "Server got request: " << *request << std::endl;
                   *response = "Response on \"" + *request + "\"";
-                  return 0;
                 };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
@@ -324,12 +321,11 @@ TEST(Communication, SlowCommunication) // NOLINT
 
     const eCAL::service::Server::ServiceCallbackT server_service_callback
             = [&num_server_service_callback_called]
-              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
               {
                 num_server_service_callback_called++;
                 std::cout << "Server got request: " << *request << std::endl;
                 *response = "Response on \"" + *request + "\"";
-                return 0;
               };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
@@ -440,10 +436,8 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst) // NOLINT
 
     const eCAL::service::Server::ServiceCallbackT server_service_callback
             = []
-              (const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> int
-              {
-                return 0;
-              };
+              (const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> void
+              {};
 
     const eCAL::service::Server::EventCallbackT server_event_callback
             = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
@@ -551,12 +545,11 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst) // NOLINT
 
     const eCAL::service::Server::ServiceCallbackT server_service_callback
             = [&num_server_service_callback_called]
-              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
               {
                 std::cout << "Server got request: " << *request << std::endl;
                 *response = "Response on \"" + *request + "\"";
                 num_server_service_callback_called++;
-                return 0;
               };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
@@ -745,10 +738,9 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst) // NOLINT
 
     const eCAL::service::Server::ServiceCallbackT server_service_callback
             = [&num_server_service_callback_called]
-              (const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> int
+              (const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> void
               {
                 num_server_service_callback_called++;
-                return 0;
               };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
@@ -897,11 +889,10 @@ TEST(CommunicationAndCallbacks, StressfulCommunication) // NOLINT
     std::atomic<int>       num_client_event_callback_called_disconnected(0);
 
     const eCAL::service::Server::ServiceCallbackT service_callback
-            = [&num_server_service_callback_called](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+            = [&num_server_service_callback_called](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
               {
                 num_server_service_callback_called++;
                 *response = "Response on \"" + *request + "\"";
-                return 0;
               };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
@@ -1051,14 +1042,13 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationNoParallelCalls) // NOLINT
 
     const eCAL::service::Server::ServiceCallbackT service_callback
             = [&num_server_service_callback_started, &num_server_service_callback_finished, server_time_to_waste]
-              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
               {
                 EXPECT_EQ(num_server_service_callback_started, num_server_service_callback_finished);
                 num_server_service_callback_started++;
                 std::this_thread::sleep_for(server_time_to_waste);
                 *response = "Response on \"" + *request + "\"";
                 num_server_service_callback_finished++;
-                return 0;
               };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
@@ -1186,12 +1176,11 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload) // NOLINT
   std::atomic<int>       num_client_event_callback_called_disconnected(0);
 
   const eCAL::service::Server::ServiceCallbackT service_callback
-          = [&num_server_service_callback_called, payload_size_bytes](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+          = [&num_server_service_callback_called, payload_size_bytes](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
             {
               EXPECT_EQ(request->size(), payload_size_bytes);
               num_server_service_callback_called++;
               *response = *request;
-              return 0;
             };
 
   const eCAL::service::Server::EventCallbackT server_event_callback
@@ -1345,8 +1334,8 @@ TEST(callback, ServerAndClientManagers) // NOLINT
                               }));
     }
 
-    const eCAL::service::Server::ServiceCallbackT         server_service_callback  = [](auto, auto) -> int  { return 0; };
-    const eCAL::service::ClientSession::ResponseCallbackT client_response_callback = [](auto, auto) {};
+    const eCAL::service::Server::ServiceCallbackT         server_service_callback  = [](auto, auto) -> void {};
+    const eCAL::service::ClientSession::ResponseCallbackT client_response_callback = [](auto, auto) -> void {};
 
     // Lambda function that on call returns another lambda function that will increment the given atomic_signalable
     auto increment_atomic_signalable = [](auto& atomic_signalable) -> auto
@@ -1464,10 +1453,9 @@ TEST(Callback, ServiceCallFromCallback) // NOLINT
     std::atomic<int> num_client_response_callback2_called(0);
 
     const eCAL::service::Server::ServiceCallbackT server_service_callback
-            = [&num_server_service_callback_called](const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> int
+            = [&num_server_service_callback_called](const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> void
               {
                 num_server_service_callback_called++;
-                return 0;
               };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
@@ -1552,14 +1540,11 @@ TEST(Callback, SerializedServiceCallbacks) // NOLINT
 
     const eCAL::service::Server::ServiceCallbackT server_service_callback
             = [&num_server_service_callback_called, server_callback_wait_time]
-              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
               {
                 std::this_thread::sleep_for(server_callback_wait_time);
                 *response = "Response on \"" + *request + "\"";
-                
                 num_server_service_callback_called++;
-
-                return 0;
               };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
@@ -1691,11 +1676,10 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected) // NOLINT
 
     const eCAL::service::Server::ServiceCallbackT server_service_callback
             = [&num_server_service_callback_called]
-              (const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& response) -> int
+              (const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& response) -> void
               {
                 *response = "Server running!";
                 num_server_service_callback_called++; 
-                return 0;
               };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
@@ -1850,12 +1834,11 @@ TEST(ErrorCallback, ErrorCallbackClientDisconnects) // NOLINT
 
     const eCAL::service::Server::ServiceCallbackT server_service_callback
             = [&num_server_service_callback_called]
-              (const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& response) -> int
+              (const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& response) -> void
               {
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
                 *response = "Server running!";
                 num_server_service_callback_called++; 
-                return 0;
               };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
@@ -1966,12 +1949,11 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough) // NOLINT
     std::atomic<int>       num_client_event_callback_called_disconnected    (0);
 
     const eCAL::service::Server::ServiceCallbackT service_callback
-            = [server_time_to_waste, &num_server_service_callback_called](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+            = [server_time_to_waste, &num_server_service_callback_called](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
               {
                 *response = "Response on \"" + *request + "\"";
                 std::this_thread::sleep_for(server_time_to_waste);
                 num_server_service_callback_called++;
-                return 0;
               };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
@@ -2151,12 +2133,11 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThroughWithManagers) // NOLINT
     std::atomic<int> num_client_event_callback_called_disconnected    (0);
 
     const eCAL::service::Server::ServiceCallbackT service_callback
-            = [server_time_to_waste, &num_server_service_callback_called](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+            = [server_time_to_waste, &num_server_service_callback_called](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
               {
                 *response = "Response on \"" + *request + "\"";
                 std::this_thread::sleep_for(server_time_to_waste);
                 num_server_service_callback_called++;
-                return 0;
               };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
@@ -2319,12 +2300,11 @@ TEST(BlockingCall, RegularBlockingCall) // NOLINT
 
     const eCAL::service::Server::ServiceCallbackT server_service_callback
             = [&num_server_service_callback_called, server_callback_wait_time]
-              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
               {
                 std::this_thread::sleep_for(server_callback_wait_time);
                 num_server_service_callback_called++;
                 *response = "Response on \"" + *request + "\"";
-                return 0;
               };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
@@ -2392,12 +2372,11 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough) // NOLINT
 
     const eCAL::service::Server::ServiceCallbackT server_service_callback
             = [&num_server_service_callback_called, server_callback_wait_time]
-              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
               {
                 std::this_thread::sleep_for(server_callback_wait_time);
                 num_server_service_callback_called++;
                 *response = "Response on \"" + *request + "\"";
-                return 0;
               };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
@@ -2526,12 +2505,11 @@ TEST(BlockingCall, Stopped)  // NOLINT // This test shows the proper way to stop
 
     const eCAL::service::Server::ServiceCallbackT server_service_callback
                     = [&num_server_service_callback_called, server_callback_wait_time]
-                      (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+                      (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
                       {
                         std::this_thread::sleep_for(server_callback_wait_time);
                         num_server_service_callback_called++;
                         *response = "Response on \"" + *request + "\"";
-                        return 0;
                       };
 
     const eCAL::service::Server::EventCallbackT server_event_callback
