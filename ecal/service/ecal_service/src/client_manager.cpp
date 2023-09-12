@@ -40,7 +40,7 @@ namespace eCAL
 
     ClientManager::~ClientManager()
     {
-      stop_clients();
+      stop();
     }
 
     ///////////////////////////////////////////////////////
@@ -79,7 +79,7 @@ namespace eCAL
       return sessions_.size();
     }
 
-    void ClientManager::stop_clients()
+    void ClientManager::stop()
     {
       std::map<ClientSession*, std::weak_ptr<ClientSession>> sessions_copy;
       {

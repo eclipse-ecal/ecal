@@ -84,8 +84,8 @@ int main(int argc, char** argv)
   std::cout << "Shutting down :)" << std::endl;
 
   // Use managers to stop servers and clients
-  server_manager->stop_servers();
-  client_manager->stop_clients();
+  server_manager->stop();
+  client_manager->stop();
 
   // Join the io_context thread
   io_context_thread.join();

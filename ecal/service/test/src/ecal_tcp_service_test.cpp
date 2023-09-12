@@ -1423,8 +1423,8 @@ TEST(callback, ServerAndClientManagers) // NOLINT
 
     // Test what happens when the system stops all clients and servers
 
-    server_manager->stop_servers();
-    client_manager->stop_clients();
+    server_manager->stop();
+    client_manager->stop();
 
     server2_event_callback_called.wait_for([&](int value) { return value >= 4; }, std::chrono::seconds(1));
     client2_1_event_callback_called.wait_for([&](int value) { return value >= 2; }, std::chrono::seconds(1));
@@ -1607,8 +1607,8 @@ TEST(Callback, SerializedServiceCallbacks) // NOLINT
 
     EXPECT_GE(duration, num_clients * server_callback_wait_time);
 
-    server_manager->stop_servers();
-    client_manager->stop_clients();
+    server_manager->stop();
+    client_manager->stop();
 
     // join all threads
     for (auto& thread : threads)
@@ -2268,7 +2268,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThroughWithManagers) // NOLINT
     }
 
     // delete server
-    server_manager->stop_servers();
+    server_manager->stop();
     
     num_client_event_callback_called.wait_for([num_clients](int v) { return v >= num_clients * 2; }, std::chrono::seconds(5));
     num_server_event_callback_called.wait_for([num_clients](int v) { return v >= num_clients * 2; }, std::chrono::seconds(5));
@@ -2293,7 +2293,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThroughWithManagers) // NOLINT
     }
 
     client_list.clear();
-    client_manager->stop_clients();
+    client_manager->stop();
 
     // join all io_threads
     for (const auto& io_thread : io_threads)
@@ -2561,8 +2561,8 @@ TEST(BlockingCall, Stopped)  // NOLINT // This test shows the proper way to stop
                               auto sleep_time = 0.5 * server_callback_wait_time;
                               std::this_thread::sleep_for(sleep_time);
 
-                              client_manager->stop_clients();
-                              server_manager->stop_servers();
+                              client_manager->stop();
+                              server_manager->stop();
 
                               io_thread.join();
 

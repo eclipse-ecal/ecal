@@ -40,7 +40,7 @@ namespace eCAL
 
     ServerManager::~ServerManager()
     {
-      stop_servers();
+      stop();
     }
 
     ///////////////////////////////////////////////////////
@@ -79,7 +79,7 @@ namespace eCAL
       return sessions_.size();
     }
 
-    void ServerManager::stop_servers()
+    void ServerManager::stop()
     {
       std::map<Server*, std::weak_ptr<Server>> sessions_copy;
       {

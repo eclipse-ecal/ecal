@@ -161,10 +161,10 @@ namespace eCAL
       stopped = true;
 
       if (server_manager)
-        server_manager->stop_servers();
+        server_manager->stop();
 
       if (client_manager)
-        client_manager->stop_clients();
+        client_manager->stop();
 
       for (const auto& thread : io_threads)
         thread->join();
