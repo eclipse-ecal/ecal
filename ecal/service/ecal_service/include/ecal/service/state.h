@@ -25,10 +25,10 @@ namespace eCAL
   {
     enum class State
     {
-      NOT_CONNECTED,
-      HANDSHAKE,
-      CONNECTED,
-      FAILED,
+      NOT_CONNECTED,  //!< Initial state
+      HANDSHAKE,      //!< The connection is currently in handshake state.
+      CONNECTED,      //!< The connection is established and ready to exchange data.
+      FAILED,         //!< The connection has been closed due to an error or by the user
     };
   }
 }

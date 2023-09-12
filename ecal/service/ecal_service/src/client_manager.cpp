@@ -88,7 +88,7 @@ namespace eCAL
         sessions_copy = sessions_;
       }
 
-      // stop all dservers without having the mutex locked, so we don't crash, when this thread directly calls the delete callback, that itself needs to have the mutex locked.
+      // stop all clients without having the mutex locked, so we don't crash, when this thread directly calls the delete callback, that itself needs to have the mutex locked.
       for (auto& server_weak : sessions_copy)
       {
         auto server = server_weak.second.lock();

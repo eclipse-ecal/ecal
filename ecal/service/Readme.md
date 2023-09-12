@@ -13,6 +13,8 @@ The following code illustrates the usage of eCAL::service in a separate server a
 ```cpp
 #include <ecal/service/server_manager.h>
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 int main(int argc, char** argv)
 {
@@ -62,6 +64,8 @@ int main(int argc, char** argv)
 ```cpp
 #include <ecal/service/client_manager.h>
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 int main(int argc, char** argv)
 {

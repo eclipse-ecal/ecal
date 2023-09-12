@@ -29,8 +29,8 @@ namespace eCAL
   {
     enum class ServerEventType: int
     {
-      Connected,
-      Disconnected,
+      Connected,          //!< A client has connected successfully.
+      Disconnected,       //!< The connection to a client has been closed for any reason.
     };
 
     // TODO: Ask rex what the return value (int) of this callback is for
