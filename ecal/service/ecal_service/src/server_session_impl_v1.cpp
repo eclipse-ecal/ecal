@@ -122,9 +122,8 @@ namespace eCAL
       ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Waiting for protocol handshake request...");
 
       // Go to handshake state
-      state_ = State::HANDSHAKE; // TODO: Protect with mutex?
+      state_ = State::HANDSHAKE;
 
-      // TODO: Add strand to add the possibility to parallelize later
       eCAL::service::ProtocolV1::async_receive_payload(socket_, socket_mutex_
                             , [me = shared_from_this()](asio::error_code ec)
                               {
@@ -262,7 +261,6 @@ namespace eCAL
                                                               + std::to_string(static_cast<std::uint8_t>(eCAL::service::MessageType::ServiceRequest)) 
                                                               + ", but received " + std::to_string(static_cast<std::uint8_t>(header->message_type));
                                   me->logger_(LogLevel::Fatal, "[" + get_connection_info_string(me->socket_) + "] " + message);
-                                  // TODO: Maybe I should return an error message to the Client? at the moment, I just exit and shut down the session.
 
                                   // The request is not a Service request.
                                   me->state_ = State::FAILED;

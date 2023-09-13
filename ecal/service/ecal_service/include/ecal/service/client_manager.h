@@ -24,7 +24,6 @@
 
 #include <ecal/service/client_session.h>
 
-// TODO: Document the entire eCAL::service API
 namespace eCAL
 {
   namespace service
@@ -169,7 +168,6 @@ namespace eCAL
        * Make sure, that the io_context is executed by a thread again, when
        * creating a new client manager.
        */
-      // TODO: rename to stop
       void stop();
 
       /**

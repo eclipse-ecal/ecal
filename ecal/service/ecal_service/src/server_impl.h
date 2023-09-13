@@ -105,7 +105,7 @@ namespace eCAL
       const ServerEventCallbackT                      event_callback_;
 
       mutable std::mutex                              session_list_mutex_;
-      std::vector<std::weak_ptr<ServerSessionBase>>   session_list_; // TODO: decide whether std::vector is a good idea, as I will have to delete from the middle, when a session is closed.
+      std::vector<std::weak_ptr<ServerSessionBase>>   session_list_;
 
       const LoggerT                                   logger_;
 

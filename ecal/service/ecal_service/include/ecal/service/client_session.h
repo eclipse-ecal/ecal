@@ -245,7 +245,7 @@ namespace eCAL
        * 
        * @return the state of this client session.
        */
-      State         get_state()                     const; // TODO: Test these values
+      State         get_state()                     const;
 
       /**
        * @brief Get the accepted protocol version that the server and client have agreed on.
@@ -254,14 +254,14 @@ namespace eCAL
        * 
        * @return The accepted protocol version that the server and client have agreed on.
        */
-      std::uint8_t  get_accepted_protocol_version() const; // TODO: Test these values
+      std::uint8_t  get_accepted_protocol_version() const;
 
       /**
        * @brief Get the number of pending requests
        * 
        * @return The number of pending requests
        */
-      int           get_queue_size()                const; // TODO: Test these values
+      int           get_queue_size()                const;
 
       /**
        * @brief Stops the client session.
