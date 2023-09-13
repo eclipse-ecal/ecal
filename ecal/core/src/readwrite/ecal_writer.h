@@ -47,6 +47,31 @@ namespace eCAL
   class CDataWriter
   {
   public:
+    struct SExternalSubscriptionInfo
+    {
+      std::string host_name;
+      std::string process_id;
+      std::string topic_id;
+
+      friend bool operator<(const SExternalSubscriptionInfo& l, const SExternalSubscriptionInfo& r)
+      {
+        return std::tie(l.host_name, l.process_id, l.topic_id)
+          < std::tie(r.host_name, r.process_id, r.topic_id);
+      }
+    };
+
+    struct SLocalSubscriptionInfo
+    {
+      std::string process_id;
+      std::string topic_id;
+
+      friend bool operator<(const SLocalSubscriptionInfo& l, const SLocalSubscriptionInfo& r)
+      {
+        return std::tie(l.process_id, l.topic_id)
+          < std::tie(r.process_id, r.topic_id);
+      }
+    };
+
     CDataWriter();
     ~CDataWriter();
 
@@ -77,11 +102,11 @@ namespace eCAL
 
     size_t Write(CPayloadWriter& payload_, long long time_, long long id_);
 
-    void ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_, const std::string& reader_par_);
-    void RemoveLocSubscription(const std::string & process_id_, const std::string& tid_);
+    void ApplyLocSubscription(const SLocalSubscriptionInfo& local_info_, const SDataTypeInformation& tinfo_, const std::string& reader_par_);
+    void RemoveLocSubscription(const SLocalSubscriptionInfo& local_info_);
 
-    void ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_, const std::string& reader_par_);
-    void RemoveExtSubscription(const std::string & host_name_, const std::string & process_id_, const std::string& tid_);
+    void ApplyExtSubscription(const SExternalSubscriptionInfo& external_info_, const SDataTypeInformation& tinfo_, const std::string& reader_par_);
+    void RemoveExtSubscription(const SExternalSubscriptionInfo& external_info_);
 
     void RefreshRegistration();
     void RefreshSendCounter();
@@ -137,10 +162,12 @@ namespace eCAL
     std::vector<char>  m_payload_buffer;
 
     std::atomic<bool>  m_connected;
-    using ConnectedMapT = Util::CExpMap<std::string, bool>;
-    mutable std::mutex m_sub_map_sync;
-    ConnectedMapT      m_loc_sub_map;
-    ConnectedMapT      m_ext_sub_map;
+
+    using LocalConnectedMapT = Util::CExpMap<SLocalSubscriptionInfo, bool>;
+    using ExternalConnectedMapT = Util::CExpMap<SExternalSubscriptionInfo, bool>;
+    mutable std::mutex    m_sub_map_sync;
+    LocalConnectedMapT    m_loc_sub_map;
+    ExternalConnectedMapT m_ext_sub_map;
 
     std::mutex         m_event_callback_map_sync;
     using EventCallbackMapT = std::map<eCAL_Publisher_Event, PubEventCallbackT>;

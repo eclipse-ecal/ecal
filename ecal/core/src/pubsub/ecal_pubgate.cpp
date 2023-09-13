@@ -114,9 +114,10 @@ namespace eCAL
 
     const auto& ecal_sample = ecal_sample_.topic();
     const std::string& topic_name = ecal_sample.tname();
-    const std::string& topic_id   = ecal_sample.tid();
+    CDataWriter::SLocalSubscriptionInfo subscription_info;
+    subscription_info.topic_id = ecal_sample.tid();
+    subscription_info.process_id = std::to_string(ecal_sample.pid());
     SDataTypeInformation topic_information{ eCALSampleToTopicInformation(ecal_sample_) };
-    const std::string  process_id = std::to_string(ecal_sample.pid());
 
     std::string reader_par;
     for (const auto& layer : ecal_sample.tlayer())
@@ -135,7 +136,7 @@ namespace eCAL
     auto res = m_topic_name_datawriter_map.equal_range(topic_name);
     for(TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->ApplyLocSubscription(process_id, topic_id, topic_information, reader_par);
+      iter->second->ApplyLocSubscription(subscription_info, topic_information, reader_par);
     }
   }
 
@@ -145,15 +146,16 @@ namespace eCAL
 
     const auto& ecal_sample = ecal_sample_.topic();
     const std::string& topic_name = ecal_sample.tname();
-    const std::string& topic_id   = ecal_sample.tid();
-    const std::string  process_id = std::to_string(ecal_sample.pid());
+    CDataWriter::SLocalSubscriptionInfo subscription_info;
+    subscription_info.topic_id = ecal_sample.tid();
+    subscription_info.process_id = std::to_string(ecal_sample.pid());
 
     // unregister local subscriber
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     auto res = m_topic_name_datawriter_map.equal_range(topic_name);
     for (TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->RemoveLocSubscription(process_id, topic_id);
+      iter->second->RemoveLocSubscription(subscription_info);
     }
   }
 
@@ -162,11 +164,12 @@ namespace eCAL
     if(!m_created) return;
 
     const auto& ecal_sample = ecal_sample_.topic();
-    const std::string& host_name  = ecal_sample.hname();
     const std::string& topic_name = ecal_sample.tname();
-    const std::string& topic_id   = ecal_sample.tid();
+    CDataWriter::SExternalSubscriptionInfo subscription_info;
+    subscription_info.host_name  = ecal_sample.hname();
+    subscription_info.topic_id   = ecal_sample.tid();
+    subscription_info.process_id = std::to_string(ecal_sample.pid());
     SDataTypeInformation topic_information{ eCALSampleToTopicInformation(ecal_sample_) };
-    const std::string  process_id = std::to_string(ecal_sample.pid());
 
     std::string reader_par;
     for (const auto& layer : ecal_sample.tlayer())
@@ -185,7 +188,7 @@ namespace eCAL
     auto res = m_topic_name_datawriter_map.equal_range(topic_name);
     for(TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->ApplyExtSubscription(host_name, process_id, topic_id, topic_information, reader_par);
+      iter->second->ApplyExtSubscription(subscription_info, topic_information, reader_par);
     }
   }
 
@@ -194,17 +197,18 @@ namespace eCAL
     if (!m_created) return;
 
     const auto& ecal_sample = ecal_sample_.topic();
-    const std::string& host_name  = ecal_sample.hname();
     const std::string& topic_name = ecal_sample.tname();
-    const std::string& topic_id   = ecal_sample.tid();
-    const std::string  process_id = std::to_string(ecal_sample.pid());
+    CDataWriter::SExternalSubscriptionInfo subscription_info;
+    subscription_info.host_name = ecal_sample.hname();
+    subscription_info.topic_id = ecal_sample.tid();
+    subscription_info.process_id = std::to_string(ecal_sample.pid());
 
     // unregister external subscriber
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     auto res = m_topic_name_datawriter_map.equal_range(topic_name);
     for (TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->RemoveExtSubscription(host_name, process_id, topic_id);
+      iter->second->RemoveExtSubscription(subscription_info);
     }
   }
 
