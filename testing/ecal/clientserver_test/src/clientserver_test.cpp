@@ -440,19 +440,19 @@ TEST(IO, ClientServerBaseCallbackTimeout)
   timeout_fired = 0;
 
   // some calls with service_callback_time_ms sleep in the method callback and a proper timeout parameter
-  method_process_time = 100;
+  method_process_time = 50;
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
     for (auto client : client_vec)
     {
       // call method 1
-      success &= client->Call("foo::method1", "my request for method 1", method_process_time * 2);
+      success &= client->Call("foo::method1", "my request for method 1", method_process_time * 4);
       eCAL::Process::SleepMS(sleep);
       methods_called++;
 
       // call method 2
-      success &= client->Call("foo::method2", "my request for method 2", method_process_time * 2);
+      success &= client->Call("foo::method2", "my request for method 2", method_process_time * 4);
       eCAL::Process::SleepMS(sleep);
       methods_called++;
     }
@@ -471,7 +471,7 @@ TEST(IO, ClientServerBaseCallbackTimeout)
   timeout_fired = 0;
 
   // some calls with service_callback_time_ms sleep in the method callback and to small timeout parameter
-  method_process_time = 100;
+  method_process_time = 50;
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
@@ -479,12 +479,12 @@ TEST(IO, ClientServerBaseCallbackTimeout)
     {
       // call method 1
       success &= client->Call("foo::method1", "my request for method 1", method_process_time / 10);
-      eCAL::Process::SleepMS(method_process_time * 2);
+      eCAL::Process::SleepMS(method_process_time * 4);
       methods_called++;
 
       // call method 2
       success &= client->Call("foo::method2", "my request for method 2", method_process_time / 10);
-      eCAL::Process::SleepMS(method_process_time * 2);
+      eCAL::Process::SleepMS(method_process_time * 4);
       methods_called++;
     }
   }
