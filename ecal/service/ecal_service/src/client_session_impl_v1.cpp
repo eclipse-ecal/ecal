@@ -300,6 +300,16 @@ namespace eCAL
 
     void ClientSessionV1::async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback)
     {
+      // TODO: Possible issue with this implementation:
+      // 
+      // If the session has been shut down and the io_context ran out of work,
+      // there is no thread any more, that would execute the asio completion
+      // callbacks (like the one below). If there is no thread, the user can
+      // still add service calls to the client's queue, as is is not checked
+      // beforehand, whether the client session is still alive. When performing
+      // a blocking call, there is the potential for the blocking call to never
+      // return, as the io_context is needed to un-block the blocking call.
+      // 
       service_call_queue_strand_.post([me = shared_from_this(), request, response_callback]()
                             {
                               // Variable that enables us to unlock the mutex before actually calling the callback
