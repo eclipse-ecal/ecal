@@ -2,7 +2,14 @@
 
 The eCAL Service lib encapsulates the binary data exchange of eCAL Servcies
 
-## Core concept
+## API Concept
+
+- All classes are `std::shared_ptr` based. The constructors cannot be accessed, but an instanace of the class can be created by the static `::create(...)` methods.
+- ASIO is exposed through the public API. It is the reponsibility of the user to create an `io_context` and have a thread executing it.
+- Servers and Client should be created through the `ServerManager` and `ClientManager` classes. Those classes automatically keep the `io_context` alive.
+- Having a running `io_context` is crucial for proper operation. Stopping the `io_context` can cause deadlocks.
+- Instead of stopping the io_context, the user should stop their `ServerManager` and `ClientManager`. This will properly shutdown all Servers and Clients and let the `io_context` run out of work. The threads executing it can then be joined.
+- There are no interal threads, only the thread(s) that the user created for executing the `io_context`. All callbacks are executed by the `io_context`, meaning that a long running callback can have a bad impact on everything else that was created with that `io_context`.
 
 ## Example Code
 
@@ -115,3 +122,56 @@ int main(int argc, char** argv)
 ```
 
 ## The protocol
+
+Currently, 2 protocols are supported:
+
+1. **Version 0**: This is a buggy legacy version, that is only kept for compatibility. It cannot be fixed while staying compatible.
+2. **Version 1**: This is the fixed proper version, that is incompatible to version 0, though. It incorporates a protocol handshake while establishing the connection and communicates the version of the used protocol. Therefore, this version is expected to be downward compatible in the future.
+
+The user has to select manually, which protocol has be to used.
+
+All native messages are described in [`protocol_layout.h`](ecal_service/src/protocol_layout.h). Multi-byte datatypes are always sent in network-byte-order (Big Endian).
+
+## Version 1
+
+- Client connects to Server.
+- Client sends a ProtocolHandshakeRequest containing the maximum and minimum supported protocol version.
+- Server selects one version and returns the selected protocol version as ProtocolHandshakeResponse.
+    - If no common protocol version is found, the server closes the connection, instead.
+- The Client now sends Requests to the Server, which is always followed by a Response sent by the Server to the Client.
+
+All messages are prepended whith a header telling the other party about the message type and payload size. The request and response payloads are plain binary data.
+
+```
+Server                           Client 
+   |                               |
+   |  <- ProtocolHandshakeReq  <-  |
+   |  -> ProtocolHandshakeResp ->  |
+   |                               |
+   |  <-------  Request ---------  |
+   |  -------- Response -------->  |
+   |                               |
+   |  <-------  Request ---------  |
+   |  -------- Response -------->  |
+   |              ...              |
+```
+
+## Version 0
+
+- Client connects to Server.
+- _There is no handshake_
+- The Client now sends Requests to the Server, which is always followed by a Response sent by the Server to the Client.
+
+The Request message is prepended by a header telling the server about the payload size.
+The Response message does not have any header, making it virtually impossible to tell whether more data is to be expected or not.
+
+```
+Server                           Client 
+   |                               |
+   |  <-------  Request ---------  |
+   |  -------- Response -------->  |
+   |                               |
+   |  <-------  Request ---------  |
+   |  -------- Response -------->  |
+   |              ...              |
+```
