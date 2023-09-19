@@ -7,6 +7,6 @@ empy
 semantic-version 
 exhale
 Jinja2
-sphinxcontrib-youtube
+sphinxcontrib-youtube<=1.2
 sphinxcontrib-apidoc
 
