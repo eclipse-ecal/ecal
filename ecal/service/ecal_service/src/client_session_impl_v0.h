@@ -81,7 +81,7 @@ namespace eCAL
     // Service calls
     //////////////////////////////////////
     public:
-      void async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback) override;
+      bool async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback) override;
 
     private:
       void send_next_service_request(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_cb);
@@ -104,7 +104,30 @@ namespace eCAL
       void peek_for_error();
       void handle_connection_loss_error(const std::string& message);
       void call_all_callbacks_with_error();
+
+      /**
+       * @brief Stop the client.
+       * 
+       * This will close the connection AND set the state to stopped. This
+       * means, that no further async service calls will be accepted. From now
+       * on, all async service calls will just return false and the callback
+       * will not be called any more in order to give the io_thread the chance
+       * of shutting down.
+       */
       void stop() override;
+
+    private:
+      /**
+       * @brief Closes the internal socket
+       * 
+       * This will close the connection without setting the state to stopped.
+       * This means, that further async service calls will still be accepted,
+       * but they will fail. The failure is still communicated by calling the
+       * callback. For a proper shutdown, where the plan is to stop the
+       * io_context thread as well, the stop() function must be used, or the
+       * client must be destroyed.
+       */
+      void close_socket();
 
     //////////////////////////////////////
     // Member variables
@@ -119,7 +142,8 @@ namespace eCAL
       const LoggerT             logger_;
 
       mutable std::mutex        service_state_mutex_;
-      State                     state_;
+      State                     state_;                     //!< The connection state of this client. Protected by service_state_mutex_.
+      bool                      stopped_by_user_;           //!< Telling whether we actively stopped the client. Protected by service_state_mutex_. When set, the client will not accept any more async service calls.
       std::deque<ServiceCall>   service_call_queue_;
       bool                      service_call_in_progress_;
     };

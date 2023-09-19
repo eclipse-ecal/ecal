@@ -41,6 +41,7 @@ namespace eCAL
         CONNECTION_CLOSED,
         UNKNOWN_SERVER,
         PROTOCOL_ERROR,
+        STOPPED_BY_USER,
       };
 
     //////////////////////////////////////////
@@ -66,6 +67,7 @@ namespace eCAL
         case CONNECTION_CLOSED:                     return "Connection closed";                             break;  
         case UNKNOWN_SERVER:                        return "Unknown server";                                break;
         case PROTOCOL_ERROR:                        return "Protocol error";                                break;
+        case STOPPED_BY_USER:                       return "Stopped by user";                               break;
 
         default:                                    return "Unknown error";
         }

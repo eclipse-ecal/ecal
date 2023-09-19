@@ -61,6 +61,7 @@ namespace eCAL
       , logger_                   (logger)
       , accepted_protocol_version_(0)
       , state_                    (State::NOT_CONNECTED)
+      , stopped_by_user_          (false)
       , service_call_in_progress_ (false)
     {
       ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Created");
@@ -298,74 +299,75 @@ namespace eCAL
     // Service calls
     //////////////////////////////////////
 
-    void ClientSessionV1::async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback)
+    bool ClientSessionV1::async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback)
     {
-      // TODO: Possible issue with this implementation:
-      // 
-      // If the session has been shut down and the io_context ran out of work,
-      // there is no thread any more, that would execute the asio completion
-      // callbacks (like the one below). If there is no thread, the user can
-      // still add service calls to the client's queue, as is is not checked
-      // beforehand, whether the client session is still alive. When performing
-      // a blocking call, there is the potential for the blocking call to never
-      // return, as the io_context is needed to un-block the blocking call.
-      // 
-      service_call_queue_strand_.post([me = shared_from_this(), request, response_callback]()
-                            {
-                              // Variable that enables us to unlock the mutex before actually calling the callback
-                              bool call_response_callback_with_error(false);
-                              
+      // Lock mutex for stopped_by_user_ variable
+      const std::lock_guard<std::mutex> service_state_lock(service_state_mutex_);
+      
+      if (stopped_by_user_)
+      {
+        return false;
+      }
+      else
+      {
+        service_call_queue_strand_.post([me = shared_from_this(), request, response_callback]()
                               {
-                                const std::lock_guard<std::mutex> lock(me->service_state_mutex_);
-                                if (me->state_ != State::FAILED)
+                                // Variable that enables us to unlock the mutex before actually calling the callback
+                                bool call_response_callback_with_error(false);
+                              
                                 {
-                                  // If we are  not in failed state, let's check
-                                  // whether we directly invoke the call of if we add it to the queue
-
-                                  if (!me->service_call_in_progress_ && (me->state_ == State::CONNECTED))
+                                  const std::lock_guard<std::mutex> lock(me->service_state_mutex_);
+                                  if (me->state_ != State::FAILED)
                                   {
-                                    // Directly call the the service, iff
-                                    // 
-                                    //  - There is no call in progress
-                                    //  
-                                    //  and
-                                    // 
-                                    //  - We are connected
-                                    // 
-                                    ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + " No service call in progress. Directly starting next service call.");
-                                    me->service_call_in_progress_ = true;
-                                    me->send_next_service_request(request, response_callback);
+                                    // If we are  not in failed state, let's check
+                                    // whether we directly invoke the call of if we add it to the queue
+
+                                    if (!me->service_call_in_progress_ && (me->state_ == State::CONNECTED))
+                                    {
+                                      // Directly call the the service, iff
+                                      // 
+                                      //  - There is no call in progress
+                                      //  
+                                      //  and
+                                      // 
+                                      //  - We are connected
+                                      // 
+                                      ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + " No service call in progress. Directly starting next service call.");
+                                      me->service_call_in_progress_ = true;
+                                      me->send_next_service_request(request, response_callback);
+                                    }
+                                    else
+                                    {
+                                      // Add the call to the queue, iff:
+                                      // 
+                                      //  - A call is already in progress
+                                      // 
+                                      //  or
+                                      // 
+                                      //  - We are not connected, yet
+                                      //
+                                      ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + "Queuing new service request");
+                                      me->service_call_queue_.push_back(ServiceCall{request, response_callback});
+                                    }
                                   }
                                   else
                                   {
-                                    // Add the call to the queue, iff:
-                                    // 
-                                    //  - A call is already in progress
-                                    // 
-                                    //  or
-                                    // 
-                                    //  - We are not connected, yet
-                                    //
-                                    ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + "Queuing new service request");
-                                    me->service_call_queue_.push_back(ServiceCall{request, response_callback});
+                                    // If we are in FAILED state, we directly call the callback with an error.
+                                    call_response_callback_with_error = true;
                                   }
                                 }
-                                else
+
+                                if(call_response_callback_with_error)
                                 {
                                   // If we are in FAILED state, we directly call the callback with an error.
-                                  call_response_callback_with_error = true;
+                                  // The mutex is unlocked at this point. That is important, as we have no
+                                  // influence on when the callback will return.
+                                  ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + " Client is in FAILED state. Calling callback with error.");
+                                  response_callback(eCAL::service::Error::ErrorCode::CONNECTION_CLOSED, nullptr);
                                 }
-                              }
-
-                              if(call_response_callback_with_error)
-                              {
-                                // If we are in FAILED state, we directly call the callback with an error.
-                                // The mutex is unlocked at this point. That is important, as we have no
-                                // influence on when the callback will return.
-                                ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + " Client is in FAILED state. Calling callback with error.");
-                                response_callback(eCAL::service::Error::ErrorCode::CONNECTION_CLOSED, nullptr);
-                              }
-                            });
+                              });
+        return true;
+      }
     }
 
     void ClientSessionV1::send_next_service_request(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_cb)
@@ -525,17 +527,17 @@ namespace eCAL
     {
       bool call_event_callback (false); // Variable that enables us to unlock the mutex before we execute the event callback.
 
+      // Close the socket, so all waiting async operations are actually woken
+      // up and fail with an error code. If we wouldn't do that, at least on
+      // Ubuntu only 1 waiting operations would wake up, while the others would
+      // indefinitively continue to wait.
+      // Having multiple async operations on the same socket actually does
+      // happen, as we are peeking for errors whenever we don't send or
+      // receive anything.
+      close_socket();
+
       {
         const std::lock_guard<std::mutex> lock(service_state_mutex_);
-
-        // Close the socket, so all waiting async operations are actually woken
-        // up and fail with an error code. If we wouldn't do that, at least on
-        // Ubuntu only 1 waiting operations would wake up, while the others would
-        // indefinitively continue to wait.
-        // Having multiple async operations on the same socket actually does
-        // happen, as we are peeking for errors whenever we don't send or
-        // receive anything.
-        stop();
 
         // cancel the connection loss handling, if we are already in FAILED state
         if (state_ == State::FAILED)
@@ -596,9 +598,24 @@ namespace eCAL
     void ClientSessionV1::stop()
     {
       // This is a function that gets used both by the API and by potentially
-      // multiple failing async operations at once. As the .close() function is
-      // not thread safe, we have a special mutex just for closing the socket.
+      // multiple failing async operations at once. 
 
+      {
+        // Set the stopped_by_user_ flag to true, so that the async operations stop enqueuing new service calls.
+        std::lock_guard<std::mutex> service_state_lock(service_state_mutex_);
+        stopped_by_user_ = true;
+      }
+
+      {
+        close_socket();
+      }
+    }
+
+    void ClientSessionV1::close_socket()
+    {
+      // Close the socket, so all waiting async operations will fail with an
+      // error code. This will also cause the client to call all pending
+      // callbacks with an error.
       const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
 
       if (socket_.is_open())
@@ -614,6 +631,5 @@ namespace eCAL
         }
       }
     }
-
   }  // namespace service
 } // namespace eCAL

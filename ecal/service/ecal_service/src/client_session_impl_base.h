@@ -68,7 +68,7 @@ namespace eCAL
     // API
     /////////////////////////////////////
     public:
-      virtual void async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback) = 0;
+      virtual bool async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback) = 0;
 
       virtual std::string   get_address()                   const = 0;
       virtual std::uint16_t get_port()                      const = 0;

@@ -319,10 +319,23 @@ namespace eCAL
                           condition_variable->notify_all();
                         };
 
+            // Call service asynchronously
+            bool call_success = client->second->async_call_service(request_shared_ptr, response_callback);
+
+            if (!call_success)
+            {
+              // If the call failed, we know that the callback will never be called.
+              // Thus, we need to increment the finished_service_call_count here.
+              (*finished_service_call_count)++;
+
+              // We also store an error in the response vector
+              responses->back().second.error_msg    = "Stopped by user";
+              responses->back().second.ret_state    = 0;
+              responses->back().second.call_state   = eCallState::call_state_failed;
+            }
+
           } // unlock mutex
 
-          // Call service asynchronously
-          client->second->async_call_service(request_shared_ptr, response_callback);
         }
 
       }
@@ -549,9 +562,8 @@ namespace eCAL
                           }
                         };
 
-          client->second->async_call_service(request_shared_ptr, response_callback);
-
-          at_least_one_service_was_called = true;
+          if (client->second->async_call_service(request_shared_ptr, response_callback));
+            at_least_one_service_was_called = true;
         }
       }
     }

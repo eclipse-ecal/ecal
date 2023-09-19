@@ -89,7 +89,7 @@ namespace eCAL
     //////////////////////////////////////////////
     // Public API
     //////////////////////////////////////////////
-    void ClientSession::async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback)
+    bool ClientSession::async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback)
     {
       return impl_->async_call_service(request, response_callback);
     }
@@ -103,6 +103,8 @@ namespace eCAL
       std::condition_variable condition_variable;
       bool                    is_signaled = false;
       
+      bool async_call_successfull(false);
+
       {
         // Create a response callback, that will set the response and notify the condition variable
         const ResponseCallbackT response_callback
@@ -112,16 +114,26 @@ namespace eCAL
                       response = response_;
                       error    = response_error;
                     };
-        async_call_service(request, response_callback); 
+        async_call_successfull = async_call_service(request, response_callback); 
       }
 
-      // Lock mutex, call service asynchronously and wait for the condition variable to be notified
+      if(async_call_successfull)
       {
+        // Lock mutex, call service asynchronously and wait for the condition variable to be notified
         std::unique_lock<std::mutex> lock(mutex);
         condition_variable.wait(lock, [&is_signaled]() { return is_signaled; });
+        return error;
       }
-
-      return error;
+      else
+      {
+        // If the async service call has not been successfull, that means that
+        // the user has stopped the client session. In that case, the request
+        // hasn't even been enqueued, as there is no way to make sure that the
+        // io_context is still being executed. In that case, we must not wait
+        // for it to unblock the condition variable.
+        // Thus, we just return an error
+        return eCAL::service::Error::ErrorCode::STOPPED_BY_USER;
+      }
     }
 
     State         ClientSession::get_state()                     const { return impl_->get_state(); }

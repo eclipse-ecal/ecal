@@ -1662,7 +1662,7 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected) // NOLINT
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    auto dummy_work = std::make_unique<asio::io_context::work>(*io_context);
 
     std::atomic<int> num_server_service_callback_called           (0);
     std::atomic<int> num_server_event_callback_called             (0);
@@ -1707,8 +1707,8 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected) // NOLINT
                 num_client_event_callback_called++; 
               };
 
-    auto server    = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
-    auto client_v1 = eCAL::service::ClientSession::create(io_context, protocol_version,"127.0.0.1", server->get_port(), client_event_callback);
+    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
+    auto client = eCAL::service::ClientSession::create(io_context, protocol_version,"127.0.0.1", server->get_port(), client_event_callback);
 
     std::thread io_thread([&io_context]()
                           {
@@ -1740,7 +1740,7 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected) // NOLINT
                 EXPECT_EQ(*response, "Server running!");
                 num_client_response_callback_called++;
               };
-      client_v1->async_call_service(std::make_shared<std::string>("Everything fine?"), client_response_callback);
+      client->async_call_service(std::make_shared<std::string>("Everything fine?"), client_response_callback);
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -1756,9 +1756,9 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected) // NOLINT
       EXPECT_EQ(num_client_event_callback_called_connected   , 1);
       EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
 
-      EXPECT_EQ(client_v1->get_state(), eCAL::service::State::CONNECTED);
-      EXPECT_EQ(client_v1->get_accepted_protocol_version(), protocol_version);
-      EXPECT_EQ(client_v1->get_queue_size(), 0);
+      EXPECT_EQ(client->get_state(), eCAL::service::State::CONNECTED);
+      EXPECT_EQ(client->get_accepted_protocol_version(), protocol_version);
+      EXPECT_EQ(client->get_queue_size(), 0);
     }
 
     // Server goes away
@@ -1777,9 +1777,9 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected) // NOLINT
       EXPECT_EQ(num_client_event_callback_called_connected   , 1);
       EXPECT_EQ(num_client_event_callback_called_disconnected, 1);
 
-      EXPECT_EQ(client_v1->get_state(), eCAL::service::State::FAILED);
-      EXPECT_EQ(client_v1->get_accepted_protocol_version(), protocol_version);
-      EXPECT_EQ(client_v1->get_queue_size(), 0);
+      EXPECT_EQ(client->get_state(), eCAL::service::State::FAILED);
+      EXPECT_EQ(client->get_accepted_protocol_version(), protocol_version);
+      EXPECT_EQ(client->get_queue_size(), 0);
     }
 
     // Service call on the dead server.
@@ -1791,7 +1791,7 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected) // NOLINT
                 EXPECT_TRUE(error);
                 num_client_response_callback_called++;
               };
-      client_v1->async_call_service(std::make_shared<std::string>("Everything fine?"), client_response_callback);
+      client->async_call_service(std::make_shared<std::string>("Everything fine?"), client_response_callback);
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -1809,13 +1809,15 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected) // NOLINT
       EXPECT_EQ(num_client_event_callback_called_connected   , 1);
       EXPECT_EQ(num_client_event_callback_called_disconnected, 1);
 
-      EXPECT_EQ(client_v1->get_state(), eCAL::service::State::FAILED);
-      EXPECT_EQ(client_v1->get_accepted_protocol_version(), protocol_version);
-      EXPECT_EQ(client_v1->get_queue_size(), 0);
+      EXPECT_EQ(client->get_state(), eCAL::service::State::FAILED);
+      EXPECT_EQ(client->get_accepted_protocol_version(), protocol_version);
+      EXPECT_EQ(client->get_queue_size(), 0);
     }
 
+    dummy_work.reset();
+    client->stop();
+
     // join the io_thread
-    io_context->stop();
     io_thread.join();
   }
 }
@@ -2578,6 +2580,17 @@ TEST(BlockingCall, Stopped)  // NOLINT // This test shows the proper way to stop
     EXPECT_EQ(callbacks_completed, num_calls);
 
     stop_thread.join();
+
+    // Call the client again! it must not block...
+    {
+      auto request  = std::make_shared<std::string>("Request");
+      auto response = std::make_shared<std::string>();
+
+      auto error = client->call_service(request, response);
+
+      EXPECT_TRUE(bool(error));
+      EXPECT_EQ(*response.get(), "");
+    }
   }
 }
 #endif

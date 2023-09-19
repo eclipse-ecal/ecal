@@ -193,10 +193,16 @@ namespace eCAL
        * 
        * When an error occurs, the response_callback will be called with an error.
        * 
+       * When the client has been stopped manually, this function will return
+       * false. In that case, the response_callback will not be called, as there
+       * is no way to make sure, that the io_context is still running.
+       * 
        * @param request           The request to send to the server.
        * @param response_callback The callback to be called when the server responds or an error occurs.
+       * 
+       * @return true if the request was sent enqueued successfully, false otherwise. If this returns false, the response_callback will not be called.
        */
-      void async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback);
+      bool async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback);
 
       /**
        * @brief Calls the server synchronously.
