@@ -203,19 +203,18 @@ namespace eCAL
             // and close the file immediately
             else
             {
+              // need to resize the buffer especially if data_size = 0, otherwise it might contain stale data.
+              m_ecal_buffer.resize((size_t)mfile_hdr.data_size);
+
               // read payload
               // if data length == 0, there is no need to further read data
               // we just flag to process the empty buffer
-              if (mfile_hdr.data_size == 0)
+              if (mfile_hdr.data_size != 0)
               {
-                post_process_buffer = true;
-              }
-              else
-              {
-                m_ecal_buffer.resize((size_t)mfile_hdr.data_size);
                 m_memfile.Read(m_ecal_buffer.data(), (size_t)mfile_hdr.data_size, mfile_hdr.hdr_size);
-                post_process_buffer = true;
               }
+
+              post_process_buffer = true;
             }
 
             // store clock
