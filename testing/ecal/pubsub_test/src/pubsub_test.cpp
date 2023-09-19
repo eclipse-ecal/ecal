@@ -18,6 +18,8 @@
 */
 
 #include <ecal/ecal.h>
+#include <ecal/msg/string/publisher.h>
+#include <ecal/msg/string/subscriber.h>
 
 #include <atomic>
 #include <thread>
@@ -760,6 +762,116 @@ TEST(IO, ZeroPayloadMessageUDP)
   // finalize eCAL API
   eCAL::Finalize();
 }
+
+
+TEST(IO, MultipleSendsSHM)
+{
+  // default send string
+  std::vector<std::string> send_vector{ "this", "is", "a", "", "testtest" };
+  std::string last_received_msg;
+  long long   last_received_timestamp;
+
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "pubsub_test");
+
+  // publish / subscribe match in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  // create subscriber for topic "A"
+  eCAL::string::CSubscriber<std::string> sub("A");
+
+  // create publisher for topic "A"
+  eCAL::string::CPublisher<std::string> pub("A");
+  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
+  pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);
+  pub.ShmSetAcknowledgeTimeout(10); // Make sure we receive the data
+
+  // add callback
+  auto save_data = [&last_received_msg, &last_received_timestamp](const char* /*topic_name_*/, const std::string& msg_, long long time_, long long /*clock_*/, long long /*id_*/)
+  {
+    last_received_msg = msg_;
+    last_received_timestamp = time_;
+  };
+  EXPECT_TRUE(sub.AddReceiveCallback(save_data));
+
+  // let's match them
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  long long timestamp = 1;
+  for (const auto elem : send_vector)
+  {
+    pub.Send(elem, timestamp);
+    eCAL::Process::SleepMS(DATA_FLOW_TIME);
+    EXPECT_EQ(last_received_msg, elem);
+    EXPECT_EQ(last_received_timestamp, timestamp);
+    ++timestamp;
+  }
+
+  // destroy subscriber
+  sub.Destroy();
+
+  // destroy publisher
+  pub.Destroy();
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+
+TEST(IO, MultipleSendsUDP)
+{
+  // default send string
+  std::vector<std::string> send_vector{ "this", "is", "a", "", "testtest" };
+  std::string last_received_msg;
+  long long   last_received_timestamp;
+
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "pubsub_test");
+
+  // publish / subscribe match in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  // create subscriber for topic "A"
+  eCAL::string::CSubscriber<std::string> sub("A");
+
+  // create publisher for topic "A"
+  eCAL::string::CPublisher<std::string> pub("A");
+  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
+  pub.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_on);
+  pub.ShmSetAcknowledgeTimeout(10); // Make sure we receive the data
+
+  // add callback
+  auto save_data = [&last_received_msg, &last_received_timestamp](const char* /*topic_name_*/, const std::string& msg_, long long time_, long long /*clock_*/, long long /*id_*/)
+  {
+    last_received_msg = msg_;
+    last_received_timestamp = time_;
+  };
+  EXPECT_TRUE(sub.AddReceiveCallback(save_data));
+
+  // let's match them
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  long long timestamp = 1;
+  for (const auto elem : send_vector)
+  {
+    pub.Send(elem, timestamp);
+    eCAL::Process::SleepMS(DATA_FLOW_TIME);
+    EXPECT_EQ(last_received_msg, elem);
+    EXPECT_EQ(last_received_timestamp, timestamp);
+    ++timestamp;
+  }
+
+  // destroy subscriber
+  sub.Destroy();
+
+  // destroy publisher
+  pub.Destroy();
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+
+
+
 
 #if 0
 TEST(IO, ZeroPayloadMessageTCP)
