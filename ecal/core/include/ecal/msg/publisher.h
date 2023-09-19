@@ -125,7 +125,7 @@ namespace eCAL
       // counting and frequency calculation for the monitoring layer
       if (!IsSubscribed())
       {
-        return(CPublisher::Send(nullptr, 0));
+        return(CPublisher::Send(nullptr, 0, time_));
       }
 
       // if we have a subscription allocate memory for the
@@ -143,7 +143,7 @@ namespace eCAL
       else
       {
         // see !IsSubscribed()
-        return(CPublisher::Send(nullptr, 0));
+        return(CPublisher::Send(nullptr, 0, time_));
       }
       return(0);
     }
