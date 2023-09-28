@@ -468,8 +468,8 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst) // NOLINT
                 num_client_event_callback_called++; 
               };
 
-    auto server    = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
-    auto client_v1 = eCAL::service::ClientSession::create(io_context, protocol_version,"127.0.0.1", server->get_port(), client_event_callback);
+    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
+    auto client = eCAL::service::ClientSession::create(io_context, protocol_version,"127.0.0.1", server->get_port(), client_event_callback);
 
     std::thread io_thread([&io_context]()
                           {
@@ -490,7 +490,7 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst) // NOLINT
     }
 
     // Client goes away
-    client_v1 = nullptr;
+    client = nullptr;
 
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
 

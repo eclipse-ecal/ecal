@@ -59,15 +59,15 @@ namespace eCAL
       }
 
       auto delete_callback = [weak_me = std::weak_ptr<ServerManager>(shared_from_this())](Server* server)
-      {
-        auto me = weak_me.lock();
-        if (me)
-        {
-          // Remove the session from the sessions_ map
-          const std::lock_guard<std::mutex> lock(me->server_manager_mutex_);
-          me->sessions_.erase(server);
-        }
-      };
+                              {
+                                auto me = weak_me.lock();
+                                if (me)
+                                {
+                                  // Remove the session from the sessions_ map
+                                  const std::lock_guard<std::mutex> lock(me->server_manager_mutex_);
+                                  me->sessions_.erase(server);
+                                }
+                              };
       auto server = Server::create(io_context_, protocol_version, port, service_callback, parallel_service_calls_enabled, event_callback, logger_, delete_callback);
       sessions_.emplace(server.get(), server);
       return server;
