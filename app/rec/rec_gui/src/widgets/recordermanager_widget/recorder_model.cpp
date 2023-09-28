@@ -511,7 +511,7 @@ QVariant RecorderModel::data(const QModelIndex &index, int role) const
     {
       if (recorder_list_[row].recording_enabled_ && recorder_list_[row].time_error_warning_)
       {
-        return "On of the recorders appears to be out of sync!";
+        return "One of the recorders appears to be out of sync!";
       }
     }
 
