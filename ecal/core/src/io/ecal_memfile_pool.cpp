@@ -36,7 +36,7 @@ namespace eCAL
     m_created(false),
     m_do_stop(false),
     m_is_observing(false),
-    m_timeout_read(0)
+    m_time_of_last_life_signal(std::chrono::steady_clock::now())
   {
   }
 
@@ -137,7 +137,7 @@ namespace eCAL
   {
     if (!m_is_observing) return false;
 
-    m_timeout_read = 0;
+    m_time_of_last_life_signal = std::chrono::steady_clock::now();
     
     return true;
   }
@@ -150,14 +150,28 @@ namespace eCAL
     // buffer to store memory file content
     std::vector<char> receive_buffer;
 
-    // runs as long as there is no timeout and no external stop request
-    while((m_timeout_read < timeout_) && !m_do_stop)
-    {
-      // loop start in ms
-      auto loop_start = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+    // Boolean that tells whether the SHM file has new data that we have NOT already accessed
+    bool has_unprocessed_data = false;
 
-      // check for memory file update event from shm writer (20 ms)
-      if(gWaitForEvent(m_event_snd, 20))
+    // runs as long as there is no timeout and no external stop request
+    while(std::chrono::steady_clock::now() - std::chrono::steady_clock::time_point(m_time_of_last_life_signal) < std::chrono::milliseconds(timeout_)
+           && !m_do_stop)
+    {
+      if (!has_unprocessed_data)
+      {
+        // Only wait for the new-data-event, if we haven't processed the data, yet
+        // check for memory file update event from shm writer (20 ms)
+        has_unprocessed_data = gWaitForEvent(m_event_snd, 20);
+
+        if (has_unprocessed_data)
+        {
+          // We got a signal from the publisher! It is alive! So we reset the time since the last live signal
+          m_time_of_last_life_signal = std::chrono::steady_clock::now();
+        }
+      }
+
+      // If we have unprocessed data, we try to access (and process!) it
+      if(has_unprocessed_data)
       {
         // last chance to stop ..
         if(m_do_stop) break;
@@ -165,6 +179,9 @@ namespace eCAL
         // try to open memory file (timeout 5 ms)
         if(m_memfile.GetReadAccess(5))
         {
+          // We have gotten access! Now the data qualifies as processed, so next loop we will wait for the signal for new data, again.
+          has_unprocessed_data = false;
+
           // read the file header
           SMemFileHeader mfile_hdr;
           ReadFileHeader(mfile_hdr);
@@ -240,14 +257,6 @@ namespace eCAL
             }
           }
         }
-
-        // reset timeout
-        m_timeout_read = 0;
-      }
-      else
-      {
-        // increase timeout in ms
-        m_timeout_read += std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count() - loop_start;
       }
     }
 
