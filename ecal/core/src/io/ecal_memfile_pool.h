@@ -67,7 +67,7 @@ namespace eCAL
     std::atomic<bool>       m_do_stop;
     std::atomic<bool>       m_is_observing;
 
-    std::atomic<long long>  m_timeout_read;
+    std::atomic<std::chrono::steady_clock::time_point> m_time_of_last_life_signal;
 
     MemFileDataCallbackT    m_data_callback;
 
