@@ -79,6 +79,10 @@ namespace eCAL
       {
         gOpenEvent(&iter->second.event_ack, event_ack_name);
       }
+
+      // Set the ack event to valid again, so we will wait for the subscriber
+      iter->second.event_ack_is_invalid = false;
+
       return true;
     }
   }
@@ -360,14 +364,20 @@ namespace eCAL
         long       time_to_wait_ms  = static_cast<long>(std::chrono::duration_cast<std::chrono::milliseconds>(time_to_wait).count());
         if (time_to_wait_ms <= 0) time_to_wait_ms = 0;
 
+        if (event_handle.second.event_ack_is_invalid)
+        {
+          // The ack event has timeouted before. Thus, we don't wait for it
+          // anymore, until the subscriber notifies us via registration layer
+          // that it is still alive.
+          continue;
+        }
+
         if (!gWaitForEvent(event_handle.second.event_ack, time_to_wait_ms))
         {
-          // we close the event immediately to not waste time in the next
-          // write call, the event will be reopened later
-          // in ApplyLocSubscription if the connection still exists
-          gCloseEvent(event_handle.second.event_ack);
-          // invalidate it
-          gInvalidateEvent(&event_handle.second.event_ack);
+          // Remember that this event has timeouted. This will not cause the
+          // publisher to wait for it anymore, until the subscriber actively
+          // requests that via registration layer again.
+          event_handle.second.event_ack_is_invalid = true;
 #ifndef NDEBUG
           Logging::Log(log_level_debug2, m_base_name + "::CSyncMemoryFile::SignalWritten - ACK event timeout");
 #endif

@@ -76,6 +76,7 @@ namespace eCAL
     {
       EventHandleT event_snd;
       EventHandleT event_ack;
+      bool         event_ack_is_invalid = false;    //!< The ack event has timeouted. Thus, we don't wait for it anymore, until the subscriber notifies us via registration layer that it is still alive.
     };
     typedef std::unordered_map<std::string, SEventHandlePair> EventHandleMapT;
     std::mutex       m_event_handle_map_sync;
