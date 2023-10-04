@@ -22,6 +22,7 @@ find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
 set(pubsub_test_src
+  src/pubsub_acknowledge.cpp
   src/pubsub_gettopics.cpp
   src/pubsub_multibuffer.cpp
   src/pubsub_test.cpp
