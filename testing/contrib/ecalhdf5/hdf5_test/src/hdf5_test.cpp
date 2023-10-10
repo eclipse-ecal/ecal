@@ -84,7 +84,7 @@ TEST(HDF5, WriteReadIntegrity)
   const long long   t1_clock         = 11LL;
 
   const std::string t2_name          = "another,topic";
-  const std::string t2_data          = "Data of topic 2";
+  const std::string t2_data          = "";
   const long long   t2_snd_timestamp = 1002LL;
   const long long   t2_rcv_timestamp = 2002LL;
   const long long   t2_id            = 2LL;
