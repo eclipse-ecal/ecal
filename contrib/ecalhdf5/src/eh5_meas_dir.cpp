@@ -95,18 +95,20 @@ bool eCAL::eh5::HDF5MeasDir::Open(const std::string& path, eAccessType access /*
 
 bool eCAL::eh5::HDF5MeasDir::Close()
 {
+  bool successfully_closed{ true };
+
   if (access_ == eAccessType::CREATE)
   {
     // Close all existing file writers
     for (auto& file_writer : file_writers_)
     {
-      file_writer.second->Close();
+      successfully_closed &= file_writer.second->Close();
     }
 
     // Clear the list of all file writers, which will delete them
     file_writers_.clear();
 
-    return true;
+    return successfully_closed;
   }
   else
   {
@@ -114,7 +116,7 @@ bool eCAL::eh5::HDF5MeasDir::Close()
     {
       if (file != nullptr)
       {
-        file->Close();
+        successfully_closed &= file->Close();
         delete file;
         file = nullptr;
       }
@@ -125,7 +127,7 @@ bool eCAL::eh5::HDF5MeasDir::Close()
     entries_by_id_.clear();
     entries_by_chn_.clear();
 
-    return true;
+    return successfully_closed;
   }
 }
 
