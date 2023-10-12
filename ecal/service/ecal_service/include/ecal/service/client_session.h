@@ -158,7 +158,7 @@ namespace eCAL
                                                   , const std::string&                      address
                                                   , std::uint16_t                           port
                                                   , const EventCallbackT&                   event_callback
-                                                  , const DeleteCallbackT&                  deleter);
+                                                  , const DeleteCallbackT&                  delete_callback);
 
     protected:
       ClientSession(const std::shared_ptr<asio::io_context>& io_context

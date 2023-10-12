@@ -59,9 +59,9 @@ namespace eCAL
                                                        , const std::string&                       address
                                                        , std::uint16_t                            port
                                                        , const EventCallbackT&                    event_callback
-                                                       , const DeleteCallbackT&                   deleter)
+                                                       , const DeleteCallbackT&                   delete_callback)
     {
-      return ClientSession::create(io_context, protocol_version, address, port, event_callback, default_logger("Service Client"), deleter);
+      return ClientSession::create(io_context, protocol_version, address, port, event_callback, default_logger("Service Client"), delete_callback);
     }
 
     ClientSession::ClientSession(const std::shared_ptr<asio::io_context>& io_context
@@ -103,7 +103,7 @@ namespace eCAL
       std::condition_variable condition_variable;
       bool                    is_signaled = false;
       
-      bool async_call_successfull(false);
+      bool async_call_successful(false);
 
       {
         // Create a response callback, that will set the response and notify the condition variable
@@ -114,10 +114,10 @@ namespace eCAL
                       response = response_;
                       error    = response_error;
                     };
-        async_call_successfull = async_call_service(request, response_callback); 
+        async_call_successful = async_call_service(request, response_callback); 
       }
 
-      if(async_call_successfull)
+      if(async_call_successful)
       {
         // Lock mutex, call service asynchronously and wait for the condition variable to be notified
         std::unique_lock<std::mutex> lock(mutex);
