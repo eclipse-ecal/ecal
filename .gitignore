@@ -40,6 +40,7 @@ doc/rst/_download_archive
 doc/rst/_download_main_page
 doc/extensions/_autogen
 doc/rst/getting_started/**/*_pb2.py
+doc/rst/.venv
 *.pyc
 
 # Clion
