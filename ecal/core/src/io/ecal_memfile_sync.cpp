@@ -87,26 +87,17 @@ namespace eCAL
     }
   }
 
-  bool CSyncMemoryFile::Disconnect(const std::string& process_id_)
+  bool CSyncMemoryFile::Disconnect(const std::string& /* process_id_ */)
   {
-    if (!m_created) return false;
-
-    // a local subscriber connection timed out
-    // we close the associated sync events and
-    // remove them from the event handle map
-
-    const std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-    const EventHandleMapT::const_iterator iter = m_event_handle_map.find(process_id_);
-    if (iter != m_event_handle_map.end())
-    {
-      const SEventHandlePair event_pair = iter->second;
-      gCloseEvent(event_pair.event_snd);
-      gCloseEvent(event_pair.event_ack);
-      m_event_handle_map.erase(iter);
-      return true;
-    }
-
-    return false;
+    // a local subscriber connection timed out or was unregistered actively
+    //
+    // we do not close or remove the associated sync events
+    // because they are still used by the memfile observer logic
+    // in the connected process
+    //
+    // the events will be cleaned up finally with the destruction
+    // of the memory file
+    return true;
   }
 
   bool CSyncMemoryFile::CheckSize(size_t size_)
