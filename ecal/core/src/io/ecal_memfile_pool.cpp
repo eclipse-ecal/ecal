@@ -54,8 +54,8 @@ namespace eCAL
     if (m_created) return false;
 
     // open memory file events
-    gOpenEvent(&m_event_snd, memfile_event_);
-    gOpenEvent(&m_event_ack, memfile_event_ + "_ack");
+    gOpenEvent(&m_event_snd, memfile_event_, false);
+    gOpenEvent(&m_event_ack, memfile_event_ + "_ack", false);
 
     // create memory file access
     m_memfile.Create(memfile_name_.c_str(), false);

@@ -37,7 +37,7 @@
 
 namespace eCAL
 {
-  bool gOpenEvent(EventHandleT* event_, const std::string& event_name_)
+  bool gOpenEvent(EventHandleT* event_, const std::string& event_name_, bool /*owner_*/)
   {
     if(event_ == nullptr) return(false);
     EventHandleT event;
@@ -302,9 +302,10 @@ namespace eCAL
   class CNamedEvent
   {
   public:
-    explicit CNamedEvent(const std::string& name_) :
+    explicit CNamedEvent(const std::string& name_, bool owner_) :
       m_name(name_ + "_evt"),
-      m_event(nullptr)
+      m_event(nullptr),
+      m_owner(owner_)
     {
       m_name = (m_name[0] != '/') ? "/" + m_name : m_name; // make memory file path compatible for all posix systems
       m_event = named_event_open(m_name.c_str());
@@ -318,7 +319,10 @@ namespace eCAL
     {
       if(m_event == nullptr) return;
       named_event_close(m_event);
-      named_event_destroy(m_name.c_str());
+      if(m_owner)
+      {
+        named_event_destroy(m_name.c_str());
+      }
     }
 
     void set()
@@ -371,9 +375,10 @@ namespace eCAL
 
     std::string     m_name;
     named_event_t*  m_event;
+    bool            m_owner;
   };
 
-  bool gOpenEvent(EventHandleT* event_, const std::string& event_name_)
+  bool gOpenEvent(EventHandleT* event_, const std::string& event_name_, bool owner_)
   {
     if(event_ == nullptr) return(false);
 
@@ -386,7 +391,7 @@ namespace eCAL
     }
     else
     {
-      event.handle = new CNamedEvent(event.name);
+      event.handle = new CNamedEvent(event.name, owner_);
     }
 
     if(event.handle != nullptr)

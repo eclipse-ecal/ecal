@@ -35,10 +35,11 @@ namespace eCAL
    *
    * @param [out] event_       Returned event struct.
    * @param       event_name_  Event name ("" == unnamed).
+   * @param       owner_       Event is owned by the caller and will be destroyed on CloseEvent
    *
    * @return  True if succeeded.
   **/
-  ECAL_API bool gOpenEvent(eCAL::EventHandleT* event_, const std::string& event_name_ = "");
+  ECAL_API bool gOpenEvent(eCAL::EventHandleT* event_, const std::string& event_name_ = "", bool owner_ = true);
 
   /**
    * @brief Close an event.
