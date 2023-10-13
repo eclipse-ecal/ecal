@@ -25,22 +25,27 @@
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_callback.h>
 
-#include "service/ecal_tcpclient.h"
+#include <ecal/service/client_session.h>
 
 #include <map>
 #include <mutex>
+#include <memory>
 
 namespace eCAL
 {
   /**
    * @brief Service client implementation class. 
   **/
-  class CServiceClientImpl
+  class CServiceClientImpl : public std::enable_shared_from_this<CServiceClientImpl>
   {
   public:
+    static std::shared_ptr<CServiceClientImpl> CreateInstance();
+    static std::shared_ptr<CServiceClientImpl> CreateInstance(const std::string& service_name_);
+  
+  private:
     CServiceClientImpl();
-    CServiceClientImpl(const std::string& service_name_);
 
+  public:
     ~CServiceClientImpl();
 
     bool Create(const std::string& service_name_);
@@ -58,23 +63,27 @@ namespace eCAL
     bool RemEventCallback(eCAL_Client_Event type_);
       
     // blocking call, no broadcast, first matching service only, response will be returned in service_response_
-    ECAL_DEPRECATE_SINCE_5_10("Please use bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_) instead. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_10("Please use bool Call(const std::string& method_name_, const std::string& request_, int timeout_ms_, ServiceResponseVecT* service_response_vec_) instead. This function will be removed in eCAL6.")
     bool Call(const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_);
     
+  private:
+    std::shared_ptr<std::vector<std::pair<bool, eCAL::SServiceResponse>>> CallBlocking(const std::string& method_name_, const std::string& request_, std::chrono::nanoseconds timeout_);
+
+  public:
     // blocking call, all responses will be returned in service_response_vec_
-    bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_);
+    bool Call(const std::string& method_name_, const std::string& request_, int timeout_ms_, ServiceResponseVecT* service_response_vec_);
 
     // blocking call, using callback
-    bool Call(const std::string& method_name_, const std::string& request_, int timeout_);
+    bool Call(const std::string& method_name_, const std::string& request_, int timeout_ms_);
 
     // asynchronously call, using callback (timeout not supported yet)
-    bool CallAsync(const std::string& method_name_, const std::string& request_ /*, int timeout_*/);
+    bool CallAsync(const std::string& method_name_, const std::string& request_ /*, int timeout_ms_*/);
 
     // check connection state
     bool IsConnected();
 
-    // called by eCAL::CClientGate to register a service
-    void RegisterService(const std::string& key_, unsigned int version_, const SServiceAttr& service_);
+    // called by the eCAL::CClientGate to register a service
+    void RegisterService(const std::string& key_, const SServiceAttr& service_);
 
     // called by eCAL:CClientGate every second to update registration layer
     void RefreshRegistration();
@@ -87,20 +96,18 @@ namespace eCAL
     CServiceClientImpl(CServiceClientImpl&&) = delete;
     CServiceClientImpl& operator=(CServiceClientImpl&&) = delete;
 
-  protected:
+  private:
+    static void fromSerializedProtobuf(const std::string&        response_pb_string, eCAL::SServiceResponse& response);
+    static void fromProtobuf          (const eCAL::pb::Response& response_pb,        eCAL::SServiceResponse& response);
+
     void Register(bool force_);
     void Unregister();
 
     void CheckForNewServices();
 
-    bool SendRequests(const std::string& host_name_, const std::string& method_name_, const std::string& request_, int timeout_);
-    bool SendRequest(const std::shared_ptr<CTcpClient>& client_, const std::string& method_name_, const std::string& request_, int timeout_, struct SServiceResponse& service_response_);
-
-    void SendRequestAsync(const std::shared_ptr<CTcpClient>& client_, const std::string& method_name_, const std::string& request_, int timeout_);
-
     void ErrorCallback(const std::string &method_name_, const std::string &error_message_);
 
-    using ClientMapT = std::map<std::string, std::shared_ptr<CTcpClient>>;
+    using ClientMapT = std::map<std::string, std::shared_ptr<eCAL::service::ClientSession>>;
     std::mutex            m_client_map_sync;
     ClientMapT            m_client_map;
 
@@ -115,7 +122,8 @@ namespace eCAL
     using ServiceAttrMapT = std::map<std::string, SServiceAttr>;
     ServiceAttrMapT       m_connected_services_map;
 
-    static constexpr int  m_version = 0;
+    static constexpr int  m_client_version = 1;
+
     std::string           m_service_name;
     std::string           m_service_id;
     std::string           m_host_name;

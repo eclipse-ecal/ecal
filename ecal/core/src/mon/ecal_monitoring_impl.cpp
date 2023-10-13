@@ -430,7 +430,8 @@ namespace eCAL
     const std::string& process_name = sample_service.pname();
     const std::string& unit_name    = sample_service.uname();
     const int          process_id   = sample_service.pid();
-    const int          tcp_port     = sample_service.tcp_port();
+    const int          tcp_port_v0  = sample_service.tcp_port_v0();
+    const int          tcp_port_v1  = sample_service.tcp_port_v1();
 
     // create map key
     const std::string service_name_id = service_name + service_id + std::to_string(process_id);
@@ -442,13 +443,14 @@ namespace eCAL
     Monitoring::SServerMon& ServerInfo = (*m_server_map.map)[service_name_id];
 
     // set static content
-    ServerInfo.hname    = host_name;
-    ServerInfo.sname    = service_name;
-    ServerInfo.sid      = service_id;
-    ServerInfo.pname    = process_name;
-    ServerInfo.uname    = unit_name;
-    ServerInfo.pid      = process_id;
-    ServerInfo.tcp_port = tcp_port;
+    ServerInfo.hname       = host_name;
+    ServerInfo.sname       = service_name;
+    ServerInfo.sid         = service_id;
+    ServerInfo.pname       = process_name;
+    ServerInfo.uname       = unit_name;
+    ServerInfo.pid         = process_id;
+    ServerInfo.tcp_port_v0 = tcp_port_v0;
+    ServerInfo.tcp_port_v1 = tcp_port_v1;
 
     // update flexible content
     ServerInfo.rclock++;
@@ -838,8 +840,9 @@ namespace eCAL
       // service id
       pMonService->set_sid(server.second.sid);
 
-      // tcp port
-      pMonService->set_tcp_port(server.second.tcp_port);
+      // tcp ports
+      pMonService->set_tcp_port_v0(server.second.tcp_port_v0);
+      pMonService->set_tcp_port_v1(server.second.tcp_port_v1);
 
       // methods
       for (const auto& method : server.second.methods)
@@ -999,7 +1002,7 @@ namespace eCAL
 
   void CMonitoringImpl::Tokenize(const std::string& str, StrICaseSetT& tokens, const std::string& delimiters, bool trimEmpty)
   {
-    std::string::size_type pos = 0;
+    std::string::size_type pos     = 0;
     std::string::size_type lastPos = 0;
 
     for (;;)

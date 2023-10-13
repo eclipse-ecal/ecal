@@ -69,11 +69,11 @@ namespace eCAL
   {
     if(m_created) return(false);
 
-    m_service_client_impl = new CServiceClientImpl;
+    m_service_client_impl = CServiceClientImpl::CreateInstance(service_name_);
     m_service_client_impl->Create(service_name_);
 
     // register this client
-    if (g_clientgate() != nullptr) g_clientgate()->Register(m_service_client_impl);
+    if (g_clientgate() != nullptr) g_clientgate()->Register(m_service_client_impl.get());
 
     m_created = true;
     return(true);
@@ -90,10 +90,9 @@ namespace eCAL
     m_created = false;
 
     // unregister this client
-    if (g_clientgate() != nullptr) g_clientgate()->Unregister(m_service_client_impl);
+    if (g_clientgate() != nullptr) g_clientgate()->Unregister(m_service_client_impl.get());
 
     m_service_client_impl->Destroy();
-    delete m_service_client_impl;
     m_service_client_impl = nullptr;
 
     return(true);

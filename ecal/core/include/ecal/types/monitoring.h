@@ -179,7 +179,8 @@ namespace eCAL
       {
         rclock   = 0;
         pid      = 0;
-        tcp_port = 0;
+        tcp_port_v0 = 0;
+        tcp_port_v1 = 0;
       };
 
       int                      rclock;                          //<! registration clock    
@@ -191,7 +192,8 @@ namespace eCAL
       std::string              sname;                           //<! service name
       std::string              sid;                             //<! service id
 
-      int                      tcp_port;                        //<! the tcp port used for that service
+      int                      tcp_port_v0;                 //<! the tcp port protocol version 0 used for that service
+      int                      tcp_port_v1;                 //<! the tcp port protocol version 1 used for that service
 
       std::vector<SMethodMon>  methods;                         //<! list of methods
     };

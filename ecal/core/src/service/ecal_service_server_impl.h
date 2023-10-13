@@ -26,8 +26,6 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_callback.h>
 
-#include "ecal_tcpserver.h"
-
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
 #endif
@@ -39,16 +37,29 @@
 #include <map>
 #include <mutex>
 
+#include <ecal/service/server.h>
+
 namespace eCAL
 {
   /**
    * @brief Service server implementation class.
   **/
-  class CServiceServerImpl
+  class CServiceServerImpl : public std::enable_shared_from_this<CServiceServerImpl>
   {
   public:
+    static std::shared_ptr<CServiceServerImpl> CreateInstance();
+    static std::shared_ptr<CServiceServerImpl> CreateInstance(const std::string& service_name_);
+
+  private:
     CServiceServerImpl();
-    CServiceServerImpl(const std::string& service_name_);
+
+  public:
+    // Delete copy and move constructors and assign operators. Necessary, as the class uses the this pointer, that would be dangling / pointing to a wrong object otherwise.
+    CServiceServerImpl(const CServiceServerImpl&)            = delete;  // Copy construct
+    CServiceServerImpl(CServiceServerImpl&&)                 = delete;  // Move construct
+    CServiceServerImpl& operator=(const CServiceServerImpl&) = delete;  // Copy assign
+    CServiceServerImpl& operator=(CServiceServerImpl&&)      = delete;  // Move assign
+
 
     ~CServiceServerImpl();
 
@@ -69,16 +80,13 @@ namespace eCAL
     // check connection state
     bool IsConnected();
 
+    // called by the eCAL::CServiceGate to register a client
+    void RegisterClient(const std::string& key_, const SClientAttr& client_);
+
     // called by eCAL:CServiceGate every second to update registration layer
     void RefreshRegistration();
 
     std::string GetServiceName() { return m_service_name; };
-
-    // this object must not be copied and moved
-    CServiceServerImpl(const CServiceServerImpl&) = delete;
-    CServiceServerImpl& operator=(const CServiceServerImpl&) = delete;
-    CServiceServerImpl(CServiceServerImpl&&) = delete;
-    CServiceServerImpl& operator=(CServiceServerImpl&&) = delete;
 
   protected:
     void Register(bool force_);
@@ -99,9 +107,11 @@ namespace eCAL
       , const SDataTypeInformation& request_type_information_
       , const SDataTypeInformation& response_type_information_);
 
-    CTcpServer            m_tcp_server;
+    std::shared_ptr<eCAL::service::Server> m_tcp_server_v0;
+    std::shared_ptr<eCAL::service::Server> m_tcp_server_v1;
 
-    static constexpr int  m_version = 0;
+    static constexpr int  m_server_version = 1;
+    
     std::string           m_service_name;
     std::string           m_service_id;
 
@@ -118,7 +128,10 @@ namespace eCAL
     using EventCallbackMapT = std::map<eCAL_Server_Event, ServerEventCallbackT>;
     EventCallbackMapT     m_event_callback_map;
     
-    bool                  m_connected;
-    bool                  m_created;
+    bool                  m_created      = false;
+
+    mutable std::mutex    m_connected_mutex;          //!< mutex protecting the m_connected_v0 and m_connected_v1 variable, as those are modified by the event callbacks in another thread.
+    bool                  m_connected_v0 = false;
+    bool                  m_connected_v1 = false;
   };
 }

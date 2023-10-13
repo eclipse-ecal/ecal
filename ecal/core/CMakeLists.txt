@@ -57,7 +57,6 @@ if(UNIX)
   endif()
 endif()
 
-
 if(ECAL_NPCAP_SUPPORT)
 set(ecal_io_cpp_src_npcap 
    src/io/udp_receiver_npcap.cpp
@@ -131,19 +130,23 @@ set(ecal_readwrite_cpp_src
 )
 
 set(ecal_readwrite_shm_cpp_src
-  src/readwrite/ecal_reader_shm.cpp
-  src/readwrite/ecal_writer_shm.cpp
+    src/readwrite/ecal_reader_shm.cpp
+    src/readwrite/ecal_writer_shm.cpp
 )
 
 set(ecal_service_cpp_src
     src/service/ecal_clientgate.cpp
+    src/service/ecal_clientgate.h
+    src/service/ecal_servicegate.cpp
+    src/service/ecal_servicegate.h
     src/service/ecal_service_client.cpp
     src/service/ecal_service_client_impl.cpp
+    src/service/ecal_service_client_impl.h
     src/service/ecal_service_server.cpp
     src/service/ecal_service_server_impl.cpp
-    src/service/ecal_tcpclient.cpp
-    src/service/ecal_servicegate.cpp
-    src/service/ecal_tcpserver.cpp
+    src/service/ecal_service_server_impl.h
+    src/service/ecal_service_singleton_manager.cpp
+    src/service/ecal_service_singleton_manager.h
 )
 
 set(ecal_cmn_cpp_src
@@ -153,7 +156,7 @@ set(ecal_cmn_cpp_src
     src/ecal_config.cpp
     src/ecal_config_reader.cpp
     src/ecal_descgate.cpp
-    src/ecal_event.cpp
+    src/ecal_event.cpp 
     src/ecal_global_accessors.cpp
     src/ecal_globals.cpp
     src/ecal_log.cpp
@@ -259,16 +262,6 @@ set(ecal_readwrite_header_src
 set(ecal_readwrite_shm_header_src
     src/readwrite/ecal_reader_shm.h
     src/readwrite/ecal_writer_shm.h
-)
-
-set(ecal_service_header_src
-    src/service/asio_server.h
-    src/service/ecal_clientgate.h
-    src/service/ecal_service_client_impl.h
-    src/service/ecal_service_server_impl.h
-    src/service/ecal_servicegate.h
-    src/service/ecal_tcpclient.h
-    src/service/ecal_tcpserver.h
 )
 
 set(ecal_cmn_header_src
@@ -422,7 +415,6 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_pubsub_header_src}
     ${ecal_readwrite_header_src}
     ${ecal_readwrite_shm_header_src}
-    ${ecal_service_header_src}
 
     ${ecal_header_base}
     ${ecal_header_cimpl}
@@ -498,6 +490,7 @@ target_link_libraries(${PROJECT_NAME}
     Threads::Threads
     eCAL::ecal-utils
     tcp_pubsub::tcp_pubsub
+    ecal_service
 )
 
 set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)
@@ -545,7 +538,6 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_pubsub_header_src}
     ${ecal_readwrite_header_src}
     ${ecal_readwrite_shm_header_src}
-    ${ecal_service_header_src}
 
     ${ecal_header_cmn}
     ${ecal_header_cimpl}

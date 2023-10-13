@@ -266,7 +266,7 @@ class MonitorModel
       service.process_name = std::move(*s.mutable_pname());
       service.unit_name = std::move(*s.mutable_uname());
       service.registration_clock = s.rclock();
-      service.tcp_port = s.tcp_port();
+      service.tcp_port = s.tcp_port_v1();
       for(auto &m: *s.mutable_methods())
       {
         auto &method = service.methods.emplace_back();

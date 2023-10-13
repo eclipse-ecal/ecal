@@ -53,12 +53,12 @@ void OnClientState(const eCAL::SClientEventCallbackData* data_)
     break;
   }
 
-  std::cout << "Server Hostname : " << data_->attr.hname    << std::endl;
-  std::cout << "Server Name     : " << data_->attr.sname    << std::endl;
-  std::cout << "Server Process  : " << data_->attr.pname    << std::endl;
-  std::cout << "Server PID      : " << data_->attr.pid      << std::endl;
-  std::cout << "Server TCP Port : " << data_->attr.tcp_port << std::endl;
-  std::cout << "---------------------------------"          << std::endl << std::endl;
+  std::cout << "Server Hostname      : " << data_->attr.hname       << std::endl;
+  std::cout << "Server Name          : " << data_->attr.sname       << std::endl;
+  std::cout << "Server Process       : " << data_->attr.pname       << std::endl;
+  std::cout << "Server PID           : " << data_->attr.pid         << std::endl;
+  std::cout << "Server TCP Port (V1) : " << data_->attr.tcp_port_v1 << std::endl;
+  std::cout << "---------------------------------"                  << std::endl << std::endl;
 }
 
 // callback for math service response

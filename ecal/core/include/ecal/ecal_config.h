@@ -122,6 +122,12 @@ namespace eCAL
     ECAL_API bool              IsTopicDescriptionSharingEnabled     ();
 
     /////////////////////////////////////
+    // service
+    /////////////////////////////////////
+    ECAL_API bool              IsServiceProtocolV0Enabled           ();
+    ECAL_API bool              IsServiceProtocolV1Enabled           ();
+
+    /////////////////////////////////////
     // experimental
     /////////////////////////////////////
     namespace Experimental

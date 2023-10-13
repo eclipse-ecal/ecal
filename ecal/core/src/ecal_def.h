@@ -41,7 +41,7 @@
 /*                                     monitor settings                                       */
 /**********************************************************************************************/
 /* timeout for automatic removing monitoring topics in ms */
-#define MON_TIMEOUT                                 5000
+#define MON_TIMEOUT                                5000
 /* topics blacklist as regular expression (will not be monitored) */
 #define MON_FILTER_EXCL                            "_.*"
 /* topics whitelist as regular expression (will be monitored only) */
@@ -63,38 +63,38 @@
 /*                                     network settings                                       */
 /**********************************************************************************************/
 /* network switch */
-#define NET_ENABLED                                 false
+#define NET_ENABLED                                false
 
 /* eCAL udp multicast defines */
 #define NET_UDP_MULTICAST_CONFIG_VERSION           "v1"
 #define NET_UDP_MULTICAST_GROUP                    "239.0.0.1"
 #define NET_UDP_MULTICAST_MASK                     "0.0.0.15"
 #define NET_UDP_MULTICAST_PORT                     14000
-#define NET_UDP_MULTICAST_TTL                          3
-#define NET_UDP_MULTICAST_PORT_REG_OFF                 0
-#define NET_UDP_MULTICAST_PORT_LOG_OFF                 1
-#define NET_UDP_MULTICAST_PORT_SAMPLE_OFF              2
-#define NET_UDP_MULTICAST_SNDBUF            (5*1024*1024)  /* 5 MByte */
-#define NET_UDP_MULTICAST_RCVBUF            (5*1024*1024)  /* 5 MByte */
+#define NET_UDP_MULTICAST_TTL                      3
+#define NET_UDP_MULTICAST_PORT_REG_OFF             0
+#define NET_UDP_MULTICAST_PORT_LOG_OFF             1
+#define NET_UDP_MULTICAST_PORT_SAMPLE_OFF          2
+#define NET_UDP_MULTICAST_SNDBUF                   (5*1024*1024)  /* 5 MByte */
+#define NET_UDP_MULTICAST_RCVBUF                   (5*1024*1024)  /* 5 MByte */
 #define NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED      false
 
-#define NET_UDP_RECBUFFER_TIMEOUT                   1000   /* ms */
-#define NET_UDP_RECBUFFER_CLEANUP                     10   /* ms */
+#define NET_UDP_RECBUFFER_TIMEOUT                  1000  /* ms */
+#define NET_UDP_RECBUFFER_CLEANUP                  10    /* ms */
 
 /* overall udp multicast bandwidth limitation in bytes/s, -1 == no limitation*/
-#define NET_BANDWIDTH_MAX_UDP                         -1
+#define NET_BANDWIDTH_MAX_UDP                      (-1)
 
-#define NET_INPROC_REC_ENABLED                      true
-#define NET_TCP_REC_ENABLED                         true
-#define NET_SHM_REC_ENABLED                         true
+#define NET_INPROC_REC_ENABLED                     true
+#define NET_TCP_REC_ENABLED                        true
+#define NET_SHM_REC_ENABLED                        true
 
-#define NET_UDP_MC_REC_ENABLED                      true
+#define NET_UDP_MC_REC_ENABLED                     true
 
-#define NET_NPCAP_ENABLED                           false
+#define NET_NPCAP_ENABLED                          false
 
-#define NET_TCP_PUBSUB_NUM_EXECUTOR_READER          4
-#define NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER          4
-#define NET_TCP_PUBSUB_MAX_RECONNECTIONS            5
+#define NET_TCP_PUBSUB_NUM_EXECUTOR_READER         4
+#define NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER         4
+#define NET_TCP_PUBSUB_MAX_RECONNECTIONS           5
 
 /* common host group name that enables interprocess mechanisms across (virtual) host borders (e.g, Docker); by default equivalent to local host name */
 #define NET_HOST_GROUP_NAME                         ""
@@ -103,30 +103,30 @@
 /*                                     publisher settings                                     */
 /**********************************************************************************************/
 /* use inproc transport layer        [auto = 2, on = 1, off = 0] */
-#define PUB_USE_INPROC                                 0
+#define PUB_USE_INPROC                             0
 /* use shared memory transport layer [auto = 2, on = 1, off = 0] */
-#define PUB_USE_SHM                                    2
+#define PUB_USE_SHM                                2
 /* use tcp transport layer           [auto = 2, on = 1, off = 0] */
-#define PUB_USE_TCP                                    0
+#define PUB_USE_TCP                                0
 /* use udp multicast transport layer [auto = 2, on = 1, off = 0] */
-#define PUB_USE_UDP_MC                                 2
+#define PUB_USE_UDP_MC                             2
 
 /* share topic type                  [          on = 1, off = 0] */
-#define PUB_SHARE_TTYPE                                1
+#define PUB_SHARE_TTYPE                            1
 /* share topic description           [          on = 1, off = 0] */
-#define PUB_SHARE_TDESC                                1
+#define PUB_SHARE_TDESC                            1
 
 /* minimum size for created shared memory files */
-#define PUB_MEMFILE_MINSIZE                      (4*1024)
+#define PUB_MEMFILE_MINSIZE                        (4*1024)
 /* reserve buffer size before reallocation in % */
-#define PUB_MEMFILE_RESERVE                           50
+#define PUB_MEMFILE_RESERVE                        50
 
 /* timeout for create / open a memory file using mutex lock in ms */
-#define PUB_MEMFILE_CREATE_TO                        200
-#define PUB_MEMFILE_OPEN_TO                          200
+#define PUB_MEMFILE_CREATE_TO                      200
+#define PUB_MEMFILE_OPEN_TO                        200
 
 /* timeout for memory read acknowledge signal from data reader in ms */
-#define PUB_MEMFILE_ACK_TO                            0   /* ms */
+#define PUB_MEMFILE_ACK_TO                          0  /* ms */
 
 /* defines number of memory files handle by the publisher for a 1:n connection
    a higher number will increase data throughput, but will also increase the size of used memory, number of semaphores
@@ -134,24 +134,33 @@
    higher values than 3 are not recommended
    values > 1 will break local IPC compatibility to eCAL 5.9 and older
 */
-#define PUB_MEMFILE_BUF_COUNT                         1
+#define PUB_MEMFILE_BUF_COUNT                      1
 
 /* allow subscriber to access memory file without copying content in advance (zero copy)
    this memory file is blocked for other readers wihle processed by the user callback function
    this option is fully IPC compatible to all eCAL 5.x versions
 */
-#define PUB_MEMFILE_ZERO_COPY                         0
+#define PUB_MEMFILE_ZERO_COPY                      0
+
+/**********************************************************************************************/
+/*                                     service settings                                       */
+/**********************************************************************************************/
+/* support service protocol v0, eCAL 5.11 and older (0 = off, 1 = on) */
+#define SERVICE_PROTOCOL_V0                        1
+
+/* support service protocol v1, eCAL 5.12 and newer (0 = off, 1 = on) */
+#define SERVICE_PROTOCOL_V1                        1
 
 /**********************************************************************************************/
 /*                                     time settings                                          */
 /**********************************************************************************************/
-#define TIME_SYNC_MOD_RT                              ""
-#define TIME_SYNC_MOD_REPLAY                          ""
+#define TIME_SYNC_MOD_RT                           ""
+#define TIME_SYNC_MOD_REPLAY                       ""
 
 /**********************************************************************************************/
 /*                                     process settings                                       */
 /**********************************************************************************************/
-#define PROCESS_TERMINAL_EMULATOR                     ""
+#define PROCESS_TERMINAL_EMULATOR                  ""
 
 /**********************************************************************************************/
 /*                                     ecal internal timings                                  */
@@ -169,21 +178,21 @@
 /*                                     events                                                 */
 /**********************************************************************************************/
 /* common stop event prefix to shut down a local user process */
-#define EVENT_SHUTDOWN_PROC             "ecal_shutdown_process"
+#define EVENT_SHUTDOWN_PROC                        "ecal_shutdown_process"
 
 /**********************************************************************************************/
 /*                                     experimental                                           */
 /**********************************************************************************************/
 /* enable distribution of monitoring/registration information via shared memory */
 #define EXP_SHM_MONITORING_ENABLED                  false
-/* disable distribution of monitoring/registration information via network */
+/* disable distribution of monitoring/registration information via network (default) */
 #define EXP_NETWORK_MONITORING_DISABLED             false
 /* queue size of monitoring/registration events  */
-#define EXP_SHM_MONITORING_QUEUE_SIZE               1024
+#define EXP_SHM_MONITORING_QUEUE_SIZE              1024
 /* domain name for shared memory based monitoring/registration */
-#define EXP_SHM_MONITORING_DOMAIN                   "ecal_monitoring"
+#define EXP_SHM_MONITORING_DOMAIN                  "ecal_monitoring"
 /* memory file access timeout */
-#define EXP_MEMFILE_ACCESS_TIMEOUT                  100
+#define EXP_MEMFILE_ACCESS_TIMEOUT                 100
 
 /* enable dropping of payload messages that arrive out of order */
-#define EXP_DROP_OUT_OF_ORDER_MESSAGES              false
+#define EXP_DROP_OUT_OF_ORDER_MESSAGES             false

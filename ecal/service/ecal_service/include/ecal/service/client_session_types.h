@@ -19,15 +19,23 @@
 
 #pragma once
 
-#include <cstdint>
+#include <functional>
+#include <memory>
+#include <string>
+
+#include <ecal/service/error.h>
 
 namespace eCAL
 {
-  struct STcpHeader
+  namespace service
   {
-    uint32_t psize_n   = 0;              // package size in network byte order
-    uint32_t reserved1 = 0;              // reserved
-    uint32_t reserved2 = 0;              // reserved
-    uint32_t reserved3 = 0;              // reserved
-  };
-}
+    enum class ClientEventType: int
+    {
+      Connected,
+      Disconnected,
+    };
+
+    using ClientEventCallbackT    = std::function<void (ClientEventType, const std::string &)>;
+    using ClientResponseCallbackT = std::function<void (const eCAL::service::Error&, const std::shared_ptr<std::string>&)>;
+  } // namespace service
+} // namespace eCAL

@@ -27,6 +27,8 @@
 
 #include <stdexcept>
 
+#include "service/ecal_service_singleton_manager.h"
+
 namespace eCAL
 {
   CGlobals::CGlobals() : initialized(false), components(0)
@@ -146,6 +148,9 @@ namespace eCAL
 
     if (components_ & Init::Service)
     {
+      // Reset the service manager, so it will be able to create new services, again
+      eCAL::service::ServiceManager::instance()->reset();
+
       /////////////////////
       // SERVICE GATE
       /////////////////////
@@ -259,8 +264,16 @@ namespace eCAL
     // start destruction
     if (monitoring_instance)             monitoring_instance->Destroy();
     if (timegate_instance)               timegate_instance->Destroy();
+
+    // The order here is EXTREMELY important! First, the actual service
+    // implementation must be stopped (->Service Manager), then the
+    // clientgate/servicegat. The callbacks in the service implementation carry
+    // raw pointers to the gate's functions, so we must make sure that everything
+    // has been executed, before we delete the gates.
+    eCAL::service::ServiceManager::instance()->stop();
     if (clientgate_instance)             clientgate_instance->Destroy();
     if (servicegate_instance)            servicegate_instance->Destroy();
+
     if (pubgate_instance)                pubgate_instance->Destroy();
     if (subgate_instance)                subgate_instance->Destroy();
     if (registration_receiver_instance)  registration_receiver_instance->Destroy();

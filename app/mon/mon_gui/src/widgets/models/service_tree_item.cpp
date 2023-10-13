@@ -78,7 +78,7 @@ QVariant ServiceTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::TCP_PORT)
     {
-      return service_.tcp_port();
+      return service_.tcp_port_v1();
     }
     else if (column == Columns::MNAME)
     {

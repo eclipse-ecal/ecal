@@ -25,7 +25,6 @@
 #include "ecal_def.h"
 
 
-
 namespace
 {
   void tokenize(const std::string& str, std::vector<std::string>& tokens,
@@ -182,6 +181,16 @@ namespace eCAL
 
     ECAL_API bool              IsTopicTypeSharingEnabled            () { return (eCALPAR(PUB, SHARE_TTYPE) != 0); }
     ECAL_API bool              IsTopicDescriptionSharingEnabled     () { return (eCALPAR(PUB, SHARE_TDESC) != 0); }
+
+    /////////////////////////////////////
+    // service
+    /////////////////////////////////////
+    ECAL_API bool              IsServiceProtocolV0Enabled           () { return (eCALPAR(SERVICE, PROTOCOL_V0) != 0); }
+    ECAL_API bool              IsServiceProtocolV1Enabled           () { return (eCALPAR(SERVICE, PROTOCOL_V1) != 0); }
+
+    /////////////////////////////////////
+    // experimemtal
+    /////////////////////////////////////
 
     namespace Experimental
     {

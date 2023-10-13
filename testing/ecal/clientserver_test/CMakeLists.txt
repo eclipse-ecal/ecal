@@ -25,6 +25,7 @@ find_package(Protobuf REQUIRED)
 create_targets_protobuf()
 
 set(${PROJECT_NAME}_src
+  src/atomic_signalable.h
   src/clientserver_getservices.cpp
   src/clientserver_test.cpp
 )
@@ -48,3 +49,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 ecal_install_gtest(${PROJECT_NAME})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER testing/ecal/service)
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
+    ${${PROJECT_NAME}_src}
+)

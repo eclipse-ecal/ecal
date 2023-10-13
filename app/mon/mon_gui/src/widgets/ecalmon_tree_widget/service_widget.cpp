@@ -114,7 +114,7 @@ void ServiceWidget::autoSizeColumns()
   example_service_pb.set_uname("eCALRPCService____");
   example_service_pb.set_pid(999999);
   example_service_pb.set_sname("eCALRPCService____");
-  example_service_pb.set_tcp_port(999999);
+  example_service_pb.set_tcp_port_v1(999999);
 
   eCAL::pb::Method* method = example_service_pb.mutable_methods()->Add();
   method->set_mname("ShutdownProcessName____");

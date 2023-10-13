@@ -32,6 +32,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace eCAL
 {
@@ -40,35 +41,35 @@ namespace eCAL
   /**
    * @brief Service client wrapper class.
   **/
-  class ECAL_API CServiceClient
+  class CServiceClient
   {
   public:
     /**
      * @brief Constructor. 
     **/
-    CServiceClient();
+    ECAL_API CServiceClient();
 
     /**
      * @brief Constructor. 
      *
      * @param service_name_  Unique service name.
     **/
-    CServiceClient(const std::string& service_name_);
+    ECAL_API CServiceClient(const std::string& service_name_);
 
     /**
      * @brief Destructor. 
     **/
-    virtual ~CServiceClient();
+    ECAL_API virtual ~CServiceClient();
 
     /**
      * @brief CServiceClients are non-copyable
     **/
-    CServiceClient(const CServiceClient&) = delete;
+    ECAL_API CServiceClient(const CServiceClient&) = delete;
 
     /**
      * @brief CServiceClients are non-copyable
     **/
-    CServiceClient& operator=(const CServiceClient&) = delete;
+    ECAL_API CServiceClient& operator=(const CServiceClient&) = delete;
 
     /**
      * @brief Creates this object. 
@@ -77,14 +78,14 @@ namespace eCAL
      *
      * @return  True if successful. 
     **/
-    bool Create(const std::string& service_name_);
+    ECAL_API bool Create(const std::string& service_name_);
 
     /**
      * @brief Destroys this object. 
      *
      * @return  True if successful. 
     **/
-    bool Destroy();
+    ECAL_API bool Destroy();
 
     /**
      * @brief Change the host name filter for that client instance
@@ -93,7 +94,7 @@ namespace eCAL
      *
      * @return  True if successful.
     **/
-    bool SetHostName(const std::string& host_name_);
+    ECAL_API bool SetHostName(const std::string& host_name_);
 
     /**
      * @brief Call a method of this service, responses will be returned by callback. 
@@ -104,7 +105,7 @@ namespace eCAL
      *
      * @return  True if successful. 
     **/
-    bool Call(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
+    ECAL_API bool Call(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
 
     /**
      * @brief Call a method of this service, all responses will be returned in service_response_vec_. 
@@ -116,7 +117,7 @@ namespace eCAL
      *
      * @return  True if successful.
     **/
-    bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_);
+    ECAL_API bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_);
 
     /**
      * @brief Call method of this service, for specific host (deprecated). 
@@ -130,7 +131,7 @@ namespace eCAL
      * @return  True if successful.
     **/
     ECAL_DEPRECATE_SINCE_5_10("Please use the create method bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_) instead. This function will be removed in eCAL6.")
-    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_info_, std::string& response_);
+    ECAL_API bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_info_, std::string& response_);
 
     /**
      * @brief Call a method of this service asynchronously, responses will be returned by callback. 
@@ -141,7 +142,7 @@ namespace eCAL
      *
      * @return  True if successful.
     **/
-    bool CallAsync(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
+    ECAL_API bool CallAsync(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
 
     /**
      * @brief Add server response callback. 
@@ -150,14 +151,14 @@ namespace eCAL
      *
      * @return  True if successful.
     **/
-    bool AddResponseCallback(const ResponseCallbackT& callback_);
+    ECAL_API bool AddResponseCallback(const ResponseCallbackT& callback_);
 
     /**
      * @brief Remove server response callback. 
      *
      * @return  True if successful.
     **/
-    bool RemResponseCallback();
+    ECAL_API bool RemResponseCallback();
 
     /**
      * @brief Add client event callback function.
@@ -167,7 +168,7 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not.
     **/
-    bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
+    ECAL_API bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
 
     /**
      * @brief Remove client event callback function.
@@ -176,24 +177,24 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not.
     **/
-    bool RemEventCallback(eCAL_Client_Event type_);
+    ECAL_API bool RemEventCallback(eCAL_Client_Event type_);
 
     /**
      * @brief Retrieve service name.
      *
      * @return  The service name.
     **/
-    std::string GetServiceName();
+    ECAL_API std::string GetServiceName();
 
     /**
      * @brief Check connection state.
      *
      * @return  True if connected, false if not.
     **/
-    bool IsConnected();
+    ECAL_API bool IsConnected();
 
   protected:
-    CServiceClientImpl* m_service_client_impl;
+    std::shared_ptr<eCAL::CServiceClientImpl> m_service_client_impl;
     bool                m_created;
   };
 }

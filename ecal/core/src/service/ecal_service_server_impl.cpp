@@ -21,6 +21,8 @@
  * @brief  eCAL service server implementation
 **/
 
+#include <ecal/ecal_config.h>
+
 #include "ecal_descgate.h"
 #include "ecal_registration_provider.h"
 #include "ecal_servicegate.h"
@@ -28,24 +30,28 @@
 #include "ecal_service_server_impl.h"
 
 #include <chrono>
+#include <iostream>
 #include <sstream>
 #include <utility>
 
+#include "ecal_service_singleton_manager.h"
+
 namespace eCAL
 {
-  /**
-   * @brief Service server implementation class.
-  **/
-  CServiceServerImpl::CServiceServerImpl() :
-    m_connected(false), m_created(false)
+  std::shared_ptr<CServiceServerImpl> CServiceServerImpl::CreateInstance()
   {
+    return std::shared_ptr<CServiceServerImpl>(new CServiceServerImpl());
   }
 
-  CServiceServerImpl::CServiceServerImpl(const std::string& service_name_) :
-    m_connected(false), m_created(false)
+  std::shared_ptr<CServiceServerImpl> CServiceServerImpl::CreateInstance(const std::string& service_name_)
   {
-    Create(service_name_);
+    auto instance = std::shared_ptr<CServiceServerImpl> (new CServiceServerImpl());
+    instance->Create(service_name_);
+    return instance;
   }
+
+  CServiceServerImpl::CServiceServerImpl()
+  {}
 
   CServiceServerImpl::~CServiceServerImpl()
   {
@@ -64,9 +70,58 @@ namespace eCAL
     counter << std::chrono::steady_clock::now().time_since_epoch().count();
     m_service_id = counter.str();
 
-    m_tcp_server.Create();
-    m_tcp_server.Start(std::bind(&CServiceServerImpl::RequestCallback, this, std::placeholders::_1, std::placeholders::_2),
-                       std::bind(&CServiceServerImpl::EventCallback,   this, std::placeholders::_1, std::placeholders::_2));
+    // Get global server manager
+    auto server_manager = eCAL::service::ServiceManager::instance()->get_server_manager();
+
+    if (!server_manager || server_manager->is_stopped())
+      return false;
+
+    // Create callback functions
+    const eCAL::service::Server::EventCallbackT event_callback
+            = [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())]
+              (eCAL::service::ServerEventType event, const std::string& message)
+              {
+                auto me = weak_me.lock();
+
+                eCAL_Server_Event ecal_server_event = eCAL_Server_Event::server_event_none;
+                switch (event)
+                {
+                case eCAL::service::ServerEventType::Connected:
+                  ecal_server_event = eCAL_Server_Event::server_event_connected;
+                  break;
+                case eCAL::service::ServerEventType::Disconnected:
+                  ecal_server_event = eCAL_Server_Event::server_event_disconnected;
+                  break;
+                default:
+                  break;
+                }
+
+                if (me)
+                  me->EventCallback(ecal_server_event, message);
+              };
+    
+    const eCAL::service::Server::ServiceCallbackT service_callback
+            = [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())]
+              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+              {
+                auto me = weak_me.lock();
+                if (me)
+                  return me->RequestCallback(*request, *response);
+                else
+                  return -1;
+              };
+
+    // start service protocol version 0
+    if (Config::IsServiceProtocolV0Enabled())
+    {
+      m_tcp_server_v0 = server_manager->create_server(0, 0, service_callback, true, event_callback);
+    }
+
+    // start service protocol version 1
+    if (Config::IsServiceProtocolV1Enabled())
+    {
+      m_tcp_server_v1 = server_manager->create_server(1, 0, service_callback, true, event_callback);
+    }
 
     // register this service
     Register(false);
@@ -81,8 +136,11 @@ namespace eCAL
   {
     if (!m_created) return(false);
 
-    m_tcp_server.Stop();
-    m_tcp_server.Destroy();
+    if (m_tcp_server_v0)
+      m_tcp_server_v0->stop();
+
+    if (m_tcp_server_v1)
+      m_tcp_server_v1->stop();
 
     // reset method callback map
     {
@@ -103,9 +161,13 @@ namespace eCAL
     m_service_name.clear();
     m_service_id.clear();
 
-    // mark as unconnected and not created
-    m_connected = false;
-    m_created   = false;
+    {
+      std::lock_guard<std::mutex> connected_lock(m_connected_mutex);
+      m_connected_v0 = false;
+      m_connected_v1 = false;
+    }
+
+    m_created      = false;
 
     return(true);
   }
@@ -237,7 +299,14 @@ namespace eCAL
   bool CServiceServerImpl::IsConnected()
   {
     if (!m_created) return false;
-    return m_tcp_server.IsConnected();
+
+    return (m_tcp_server_v0 && m_tcp_server_v0->is_connected())
+            || (m_tcp_server_v1 && m_tcp_server_v1->is_connected());
+  }
+
+  // called by the eCAL::CServiceGate to register a client
+  void CServiceServerImpl::RegisterClient(const std::string& /*key_*/, const SClientAttr& /*client_*/) // TODO: This function is empty, why does it exist????
+  {
   }
 
   // called by eCAL:CServiceGate every second to update registration layer
@@ -251,22 +320,26 @@ namespace eCAL
   {
     if (m_service_name.empty()) return;
 
-    // might be zero in construction phase
-    unsigned short const server_tcp_port(m_tcp_server.GetTcpPort());
-    if (server_tcp_port == 0) return;
+    // might be zero in contruction phase
+    unsigned short const server_tcp_port_v0(m_tcp_server_v0 ? m_tcp_server_v0->get_port() : 0);
+    if ((Config::IsServiceProtocolV0Enabled()) && (server_tcp_port_v0 == 0)) return;
+
+    unsigned short const server_tcp_port_v1(m_tcp_server_v1 ? m_tcp_server_v1->get_port() : 0);
+    if ((Config::IsServiceProtocolV1Enabled()) && (server_tcp_port_v1 == 0)) return;
 
     // create service registration sample
     eCAL::pb::Sample sample;
     sample.set_cmd_type(eCAL::pb::bct_reg_service);
     auto *service_mutable_service = sample.mutable_service();
+    service_mutable_service->set_version(m_server_version);
     service_mutable_service->set_hname(Process::GetHostName());
     service_mutable_service->set_pname(Process::GetProcessName());
     service_mutable_service->set_uname(Process::GetUnitName());
     service_mutable_service->set_pid(Process::GetProcessID());
     service_mutable_service->set_sname(m_service_name);
     service_mutable_service->set_sid(m_service_id);
-    service_mutable_service->set_version(m_version);
-    service_mutable_service->set_tcp_port(server_tcp_port);
+    service_mutable_service->set_tcp_port_v0(server_tcp_port_v0);
+    service_mutable_service->set_tcp_port_v1(server_tcp_port_v1);
 
     // add methods
     {
@@ -295,13 +368,13 @@ namespace eCAL
     eCAL::pb::Sample sample;
     sample.set_cmd_type(eCAL::pb::bct_unreg_service);
     auto* service_mutable_service = sample.mutable_service();
+    service_mutable_service->set_version(m_server_version);
     service_mutable_service->set_hname(Process::GetHostName());
     service_mutable_service->set_pname(Process::GetProcessName());
     service_mutable_service->set_uname(Process::GetUnitName());
     service_mutable_service->set_pid(Process::GetProcessID());
     service_mutable_service->set_sname(m_service_name);
     service_mutable_service->set_sid(m_service_id);
-    service_mutable_service->set_version(m_version);
 
     // register entity
     if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterServer(m_service_name, m_service_id, sample, true);
@@ -389,20 +462,48 @@ namespace eCAL
   void CServiceServerImpl::EventCallback(eCAL_Server_Event event_, const std::string& /*message_*/)
   {
     bool mode_changed(false);
-    if (m_connected)
+
     {
-      if (!m_tcp_server.IsConnected())
+      std::lock_guard<std::mutex> connected_lock(m_connected_mutex);
+
+      // protocol version 0
+      if (m_connected_v0)
       {
-        mode_changed = true;
-        m_connected  = false;
+        if (m_tcp_server_v0 && !m_tcp_server_v0->is_connected())
+        {
+          mode_changed   = true;
+          m_connected_v0 = false;
+          Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 0 disconnected");
+        }
       }
-    }
-    else
-    {
-      if (m_tcp_server.IsConnected())
+      else
       {
-        mode_changed = true;
-        m_connected  = true;
+        if (m_tcp_server_v0 && m_tcp_server_v0->is_connected())
+        {
+          mode_changed   = true;
+          m_connected_v0 = true;
+          Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 0 connected");
+        }
+      }
+
+      // protocol version 1
+      if (m_connected_v1)
+      {
+        if (m_tcp_server_v1 && !m_tcp_server_v1->is_connected())
+        {
+          mode_changed   = true;
+          m_connected_v1 = false;
+          Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 1 disconnected");
+        }
+      }
+      else
+      {
+        if (m_tcp_server_v1 && m_tcp_server_v1->is_connected())
+        {
+          mode_changed   = true;
+          m_connected_v1 = true;
+          Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 1 connected");
+        }
       }
     }
 
