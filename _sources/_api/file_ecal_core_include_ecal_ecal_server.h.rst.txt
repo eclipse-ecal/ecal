@@ -38,6 +38,8 @@ Includes
 
 - ``ecal/ecal_service_info.h`` (:ref:`file_ecal_core_include_ecal_ecal_service_info.h`)
 
+- ``memory``
+
 - ``string``
 
 - ``vector``

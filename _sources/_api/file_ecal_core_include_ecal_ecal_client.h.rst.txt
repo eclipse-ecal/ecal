@@ -40,6 +40,8 @@ Includes
 
 - ``iostream``
 
+- ``memory``
+
 - ``string``
 
 - ``vector``

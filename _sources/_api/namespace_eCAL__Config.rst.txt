@@ -103,6 +103,10 @@ Functions
 
 - :ref:`exhale_function_ecal__config_8h_1af4eb2b0687288b44e2e363ab8b15a80b`
 
+- :ref:`exhale_function_ecal__config_8h_1a762bb5e7e8a645b38253789a6ffc98be`
+
+- :ref:`exhale_function_ecal__config_8h_1a2535368afdc3131762fe973a2469a836`
+
 - :ref:`exhale_function_ecal__config_8h_1a22e6a81fbd3e1a5bb0c32e5f0bfa69aa`
 
 - :ref:`exhale_function_ecal__config_8h_1a5163d960ca5891f6cca4303709565265`
