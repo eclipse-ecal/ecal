@@ -22,6 +22,10 @@ This chapter will walk you through
 * The :ref:`applications <getting_started_applications>` that come with eCAL
 * Writing your first :ref:`Hello World <getting_started_hello_world>` program 
 
+Learn about how to use and develop with eCAL in our Webinar:
+
+.. youtube:: 8AAxlu1WbdU
+
 .. include:: _download_main_page/_main_page_download_section.rst.txt
 
 Links
@@ -37,7 +41,7 @@ To contribute, please visit our github repository:
          <span class="btn-text">eCAL on Github</span>
       </a>
    </p>
-   
+
 License
 =======
 
