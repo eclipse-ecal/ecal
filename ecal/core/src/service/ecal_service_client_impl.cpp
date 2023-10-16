@@ -562,7 +562,7 @@ namespace eCAL
                           }
                         };
 
-          if (client->second->async_call_service(request_shared_ptr, response_callback));
+          if (client->second->async_call_service(request_shared_ptr, response_callback))
             at_least_one_service_was_called = true;
         }
       }
