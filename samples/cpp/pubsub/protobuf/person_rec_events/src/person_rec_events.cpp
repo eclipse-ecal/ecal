@@ -26,7 +26,7 @@
 
 void OnEvent(const char* topic_name_, const struct eCAL::SSubEventCallbackData* data_)
 {
-  std::cout << "topic name         : " << topic_name_ << std::endl;
+  std::cout << "topic name       : " << topic_name_ << std::endl;
   switch (data_->type)
   {
   case sub_event_connected:
