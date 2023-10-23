@@ -26,10 +26,32 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_eventhandle.h>
+#include <ecal/ecal_deprecate.h>
+
 #include <string>
 
 namespace eCAL
 {
+  /**
+   * @brief Open a named event with ownership.
+   *
+   * @param [out] event_       Returned event struct.
+   * @param       event_name_  Event name.
+   * @param       ownership_   Event is owned by the caller and will be destroyed on CloseEvent
+   *
+   * @return  True if succeeded.
+  **/
+  ECAL_API bool gOpenNamedEvent(eCAL::EventHandleT* event_, const std::string& event_name_, bool ownership_);
+
+  /**
+   * @brief Open a named event with ownership.
+   *
+   * @param [out] event_       Returned event struct.
+   *
+   * @return  True if succeeded.
+  **/
+  ECAL_API bool gOpenUnnamedEvent(eCAL::EventHandleT* event_);
+
   /**
    * @brief Open a named or unnamed event.
    *
@@ -38,6 +60,7 @@ namespace eCAL
    *
    * @return  True if succeeded.
   **/
+  ECAL_DEPRECATE_SINCE_5_13("Use either gOpenNamedEvent or gOpenUnnamedEvent")
   ECAL_API bool gOpenEvent(eCAL::EventHandleT* event_, const std::string& event_name_ = "");
 
   /**

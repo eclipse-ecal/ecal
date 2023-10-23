@@ -28,14 +28,17 @@ TEST(Event, EventSetGet)
 
   // create named event
   eCAL::EventHandleT event_handle;
-  EXPECT_EQ(true, eCAL::gOpenEvent(&event_handle, event_name));
+  EXPECT_EQ(true, eCAL::gOpenNamedEvent(&event_handle, event_name, true));
 
-  // get none set event
+  // wait for event, expect false
   EXPECT_EQ(false, gWaitForEvent(event_handle, 10));
 
   // set event
   EXPECT_EQ(true, gSetEvent(event_handle));
 
-  // get set event
+  // wait for event, expect true now
   EXPECT_EQ(true, gWaitForEvent(event_handle, 100));
+
+  // close (and unlink/destroy) event
+  EXPECT_EQ(true, eCAL::gCloseEvent(event_handle));
 }

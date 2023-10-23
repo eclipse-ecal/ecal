@@ -65,8 +65,8 @@ namespace eCAL
     if (iter == m_event_handle_map.end())
     {
       SEventHandlePair event_pair;
-      gOpenEvent(&event_pair.event_snd, event_snd_name);
-      gOpenEvent(&event_pair.event_ack, event_ack_name);
+      gOpenNamedEvent(&event_pair.event_snd, event_snd_name, true);
+      gOpenNamedEvent(&event_pair.event_ack, event_ack_name, true);
       m_event_handle_map.insert(std::pair<std::string, SEventHandlePair>(process_id_, event_pair));
       return true;
     }
@@ -77,7 +77,7 @@ namespace eCAL
       // event was deactivated by a sync timeout in SendSyncEvents
       if (!gEventIsValid(iter->second.event_ack))
       {
-        gOpenEvent(&iter->second.event_ack, event_ack_name);
+        gOpenNamedEvent(&iter->second.event_ack, event_ack_name, true);
       }
 
       // Set the ack event to valid again, so we will wait for the subscriber

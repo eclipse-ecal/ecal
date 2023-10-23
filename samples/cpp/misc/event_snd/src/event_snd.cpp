@@ -30,7 +30,7 @@ int main(int /*argc*/, char** /*argv*/)
 
   // create named event
   eCAL::EventHandleT event_handle;
-  eCAL::gOpenEvent(&event_handle, event_name);
+  eCAL::gOpenNamedEvent(&event_handle, event_name, true);
 
   // timer
   auto start_time(std::chrono::steady_clock::now());
