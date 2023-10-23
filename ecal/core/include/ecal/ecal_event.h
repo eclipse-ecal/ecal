@@ -44,9 +44,9 @@ namespace eCAL
   ECAL_API bool gOpenNamedEvent(eCAL::EventHandleT* event_, const std::string& event_name_, bool ownership_);
 
   /**
-   * @brief Open a named event with ownership.
+   * @brief Open an unnamed event.
    *
-   * @param [out] event_       Returned event struct.
+   * @param [out] event_  Returned event struct.
    *
    * @return  True if succeeded.
   **/
