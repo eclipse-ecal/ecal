@@ -51,8 +51,7 @@ namespace eCAL
 
     bool Write(CPayloadWriter& payload_, const SWriterAttr& attr_) override;
 
-    bool AddLocConnection(const std::string& process_id_, const std::string& conn_par_) override;
-    bool RemLocConnection(const std::string& process_id_) override;
+    void AddLocConnection(const std::string& process_id_, const std::string& /*topic_id_*/, const std::string& conn_par_) override;
 
     std::string GetConnectionParameter() override;
 

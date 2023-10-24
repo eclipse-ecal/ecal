@@ -177,39 +177,14 @@ namespace eCAL
     return sent;
   }
 
-  bool CDataWriterSHM::AddLocConnection(const std::string& process_id_, const std::string& /*conn_par_*/)
+  void CDataWriterSHM::AddLocConnection(const std::string& process_id_, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/)
   {
-    if (!m_created) return false;
-    bool ret_state(true);
+    if (!m_created) return;
 
     for (auto& memory_file : m_memory_file_vec)
     {
-      ret_state &= memory_file->Connect(process_id_);
+      memory_file->Connect(process_id_);
     }
-
-    return ret_state;
-  }
-
-  bool CDataWriterSHM::RemLocConnection(const std::string& process_id_)
-  {
-    if (!m_created) return false;
-    bool ret_state(true);
-
-    for (auto& memory_file : m_memory_file_vec)
-    {
-      // This is not working correctly under POSIX for memory files that are read and written within the same process.
-      // 
-      // The functions 'CSyncMemoryFile::Disconnect' and 'CDataWriterSHM::RemLocConnection' are now called
-      // by the new Subscriber Unregistration event logic and were never called in any previous eCAL version.
-      // 
-      // TODO: Fix this in 'CSyncMemoryFile::Disconnect' to handle event resources properly.
-      if (std::to_string(eCAL::Process::GetProcessID()) != process_id_)
-      {
-        ret_state &= memory_file->Disconnect(process_id_);
-      }
-    }
-
-    return ret_state;
   }
 
   std::string CDataWriterSHM::GetConnectionParameter()

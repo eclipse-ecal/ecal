@@ -668,8 +668,9 @@ namespace eCAL
     m_loc_subscribed = true;
 
     // add a new local subscription
-    m_writer.udp_mc.AddLocConnection (local_info_.process_id, reader_par_);
-    m_writer.shm.AddLocConnection    (local_info_.process_id, reader_par_);
+    m_writer.udp_mc.AddLocConnection (local_info_.process_id, local_info_.topic_id, reader_par_);
+    m_writer.shm.AddLocConnection    (local_info_.process_id, local_info_.topic_id, reader_par_);
+    m_writer.tcp.AddLocConnection(local_info_.process_id, local_info_.topic_id, reader_par_);
 
 #ifndef NDEBUG
     // log it
@@ -686,8 +687,9 @@ namespace eCAL
     }
 
     // remove a local subscription
-    m_writer.udp_mc.RemLocConnection (local_info_.process_id);
-    m_writer.shm.RemLocConnection    (local_info_.process_id);
+    m_writer.udp_mc.RemLocConnection (local_info_.process_id, local_info_.topic_id);
+    m_writer.shm.RemLocConnection    (local_info_.process_id, local_info_.topic_id);
+    m_writer.tcp.RemLocConnection    (local_info_.process_id, local_info_.topic_id);
 
 #ifndef NDEBUG
     // log it
@@ -708,8 +710,9 @@ namespace eCAL
     m_ext_subscribed = true;
 
     // add a new external subscription
-    m_writer.udp_mc.AddExtConnection (external_info_.host_name, external_info_.process_id, reader_par_);
-    m_writer.shm.AddExtConnection    (external_info_.host_name, external_info_.process_id, reader_par_);
+    m_writer.udp_mc.AddExtConnection (external_info_.host_name, external_info_.process_id, external_info_.topic_id, reader_par_);
+    m_writer.shm.AddExtConnection    (external_info_.host_name, external_info_.process_id, external_info_.topic_id, reader_par_);
+    m_writer.tcp.AddExtConnection    (external_info_.host_name, external_info_.process_id, external_info_.topic_id, reader_par_);
 
 #ifndef NDEBUG
     // log it
@@ -726,8 +729,9 @@ namespace eCAL
     }
 
     // remove external subscription
-    m_writer.udp_mc.RemExtConnection (external_info_.host_name, external_info_.process_id);
-    m_writer.shm.RemExtConnection    (external_info_.host_name, external_info_.process_id);
+    m_writer.udp_mc.RemExtConnection (external_info_.host_name, external_info_.process_id, external_info_.topic_id);
+    m_writer.shm.RemExtConnection    (external_info_.host_name, external_info_.process_id, external_info_.topic_id);
+    m_writer.tcp.RemExtConnection    (external_info_.host_name, external_info_.process_id, external_info_.topic_id);
   }
 
   void CDataWriter::RefreshRegistration()
@@ -764,20 +768,13 @@ namespace eCAL
     Register(false);
 
     // check connection timeouts
-    // Todo: Why are only Local connections removed, not external connections?
-    const std::shared_ptr<std::list<SLocalSubscriptionInfo>> loc_timeouts = std::make_shared<std::list<SLocalSubscriptionInfo>>();
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_loc_sub_map.remove_deprecated(loc_timeouts.get());
+      m_loc_sub_map.remove_deprecated();
       m_ext_sub_map.remove_deprecated();
 
       m_loc_subscribed = !m_loc_sub_map.empty();
       m_ext_subscribed = !m_ext_sub_map.empty();
-    }
-
-    for(const auto& loc_sub : *loc_timeouts)
-    {
-      m_writer.shm.RemLocConnection(loc_sub.process_id);
     }
 
     if (!m_loc_subscribed && !m_ext_subscribed)
