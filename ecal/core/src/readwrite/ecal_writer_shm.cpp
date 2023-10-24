@@ -177,17 +177,14 @@ namespace eCAL
     return sent;
   }
 
-  bool CDataWriterSHM::AddLocConnection(const std::string& process_id_, const std::string& /*conn_par_*/)
+  void CDataWriterSHM::AddLocConnection(const std::string& process_id_, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/)
   {
-    if (!m_created) return false;
-    bool ret_state(true);
+    if (!m_created) return;
 
     for (auto& memory_file : m_memory_file_vec)
     {
-      ret_state &= memory_file->Connect(process_id_);
+      memory_file->Connect(process_id_);
     }
-
-    return ret_state;
   }
 
   std::string CDataWriterSHM::GetConnectionParameter()
