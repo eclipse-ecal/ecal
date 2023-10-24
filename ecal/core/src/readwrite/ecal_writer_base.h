@@ -48,11 +48,11 @@ namespace eCAL
     virtual bool SetQOS(const QOS::SWriterQOS& qos_) { m_qos = qos_; return true; };
     QOS::SWriterQOS GetQOS() { return(m_qos); };
 
-    virtual bool AddLocConnection(const std::string& /*process_id_*/, const std::string& /*conn_par_*/) { return false; };
-    virtual bool RemLocConnection(const std::string& /*process_id_*/) { return false; };
+    virtual void AddLocConnection(const std::string& /*process_id_*/, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/) {};
+    virtual void RemLocConnection(const std::string& /*process_id_*/, const std::string& /*topic_id_*/) {};
 
-    virtual bool AddExtConnection(const std::string& /*host_name_*/, const std::string& /*process_id_*/, const std::string& /*conn_par_*/) { return false; };
-    virtual bool RemExtConnection(const std::string& /*host_name_*/, const std::string& /*process_id_*/) { return false; };
+    virtual void AddExtConnection(const std::string& /*host_name_*/, const std::string& /*process_id_*/, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/) {};
+    virtual void RemExtConnection(const std::string& /*host_name_*/, const std::string& /*process_id_*/, const std::string& /*topic_id_*/) {};
 
     virtual std::string GetConnectionParameter() { return ""; };
 
