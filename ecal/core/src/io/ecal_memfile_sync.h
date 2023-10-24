@@ -57,6 +57,7 @@ namespace eCAL
 
     std::string GetName() const;
     size_t GetSize() const;
+    bool IsCreated() const { return m_created; };
 
   protected:
     bool Create(const std::string& base_name_, size_t size_);

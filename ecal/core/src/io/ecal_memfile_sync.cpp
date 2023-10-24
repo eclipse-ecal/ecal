@@ -251,12 +251,12 @@ namespace eCAL
     // create the memory file
     if (!m_memfile.Create(m_memfile_name.c_str(), true, memfile_size))
     {
-      Logging::Log(log_level_error, std::string(m_base_name + "::CSyncMemoryFile::Create - FAILED : ") + m_memfile_name);
+      Logging::Log(log_level_error, std::string("CSyncMemoryFile::Create FAILED : ") + m_memfile_name);
       return false;
     }
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, std::string(m_base_name + "::CSyncMemoryFile::Create - SUCCESS : ") + m_memfile_name);
+    Logging::Log(log_level_debug2, std::string("CSyncMemoryFile::Create SUCCESS : ") + m_memfile_name);
 #endif
 
     // initialize memory file with empty header
