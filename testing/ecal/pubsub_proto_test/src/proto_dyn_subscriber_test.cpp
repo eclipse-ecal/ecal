@@ -131,6 +131,3 @@ TEST_F(ProtoDynSubscriberTest, SendReceive)
   auto id = extract_id(*message);
   ASSERT_EQ(id, 1);
 }
-
-
-

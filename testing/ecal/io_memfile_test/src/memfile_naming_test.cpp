@@ -28,7 +28,7 @@
 #include <gtest/gtest.h>
 
 
-TEST(IO, MemfileNaming)
+TEST(MemFile, MemfileNaming)
 {
   std::chrono::steady_clock::time_point timepoint{};
 
@@ -37,5 +37,4 @@ TEST(IO, MemfileNaming)
 
   EXPECT_LE(memfile_name_1.size(), 13);
   EXPECT_NE(memfile_name_1, memfile_name_2);
-
 }

@@ -29,14 +29,14 @@
 
 using namespace eCAL::protobuf;
 
-TEST(filter, nofilter)
+TEST(Filter, nofilter)
 {
   NoFilter filter;
   bool result = filter.Filter("abc");
   EXPECT_EQ(true, result);
 }
 
-TEST(filter, include_filter_clear)
+TEST(Filter, include_filter_clear)
 {
   SimpleIncludeFilter filter;
   std::string a("a");
@@ -90,7 +90,7 @@ void test_regular_includes(BaseIncludeFilter& filter)
   EXPECT_EQ(false, filter.Filter(adf));
 }
 
-TEST(filter, include_filter)
+TEST(Filter, include_filter)
 {
   SimpleIncludeFilter simple_filter;
   test_regular_includes(simple_filter);
@@ -98,7 +98,7 @@ TEST(filter, include_filter)
   test_regular_includes(complex_filter);
 }
 
-TEST(filter, include_filter_array_simple)
+TEST(Filter, include_filter_array_simple)
 {
   const std::string a("a");
   const std::string a1("a[1]");
@@ -130,7 +130,7 @@ TEST(filter, include_filter_array_simple)
   EXPECT_EQ(false, filter.Filter(a2b)); // should not accept a[2].b
 }
 
-TEST(filter, include_filter_array_complex)
+TEST(Filter, include_filter_array_complex)
 {
   const std::string a    ("a"          );
   const std::string a1   ("a[1]"       );
