@@ -79,9 +79,7 @@ namespace eCAL
     m_memory_file_attr.timeout_ack_ms  = Config::GetMemfileAckTimeoutMs();
 
     // initialize memory file buffer
-    SetBufferCount(m_buffer_count);
-
-    m_created = true;
+    m_created = SetBufferCount(m_buffer_count);;
     return m_created;
   }
 
@@ -124,12 +122,21 @@ namespace eCAL
       memory_file_size = m_memory_file_attr.min_size;
     }
 
-    // recreate memory file vector
+    // create memory file vector
     m_memory_file_vec.clear();
     while (m_memory_file_vec.size() < buffer_count_)
     {
       auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, memory_file_size, m_memory_file_attr);
-      m_memory_file_vec.push_back(sync_memfile);
+      if (sync_memfile->IsCreated())
+      {
+        m_memory_file_vec.push_back(sync_memfile);
+      }
+      else
+      {
+        m_memory_file_vec.clear();
+        Logging::Log(log_level_error, "CDataWriterSHM::SetBufferCount - FAILED");
+        return false;
+      }
     }
 
     return true;

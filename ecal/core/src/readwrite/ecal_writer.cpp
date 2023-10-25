@@ -1057,10 +1057,16 @@ namespace eCAL
     {
     case TLayer::eSendMode::smode_auto:
     case TLayer::eSendMode::smode_on:
-      m_writer.udp_mc.Create(m_host_name, m_topic_name, m_topic_id);
+      if (m_writer.udp_mc.Create(m_host_name, m_topic_name, m_topic_id))
+      {
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::UDP_MC_WRITER");
+        Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::UDP_MC_WRITER - SUCCESS");
 #endif
+      }
+      else
+      {
+        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Create::UDP_MC_WRITER - FAILED");
+      }
       break;
     case TLayer::eSendMode::smode_none:
     case TLayer::eSendMode::smode_off:
@@ -1081,10 +1087,16 @@ namespace eCAL
     {
     case TLayer::eSendMode::smode_auto:
     case TLayer::eSendMode::smode_on:
-      m_writer.shm.Create(m_host_name, m_topic_name, m_topic_id);
+      if (m_writer.shm.Create(m_host_name, m_topic_name, m_topic_id))
+      {
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::SHM_WRITER");
+        Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::SHM_WRITER - SUCCESS");
 #endif
+      }
+      else
+      {
+        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Create::SHM_WRITER - FAILED");
+      }
       break;
     case TLayer::eSendMode::smode_none:
     case TLayer::eSendMode::smode_off:
@@ -1105,10 +1117,16 @@ namespace eCAL
     {
     case TLayer::eSendMode::smode_auto:
     case TLayer::eSendMode::smode_on:
-      m_writer.tcp.Create(m_host_name, m_topic_name, m_topic_id);
+      if (m_writer.tcp.Create(m_host_name, m_topic_name, m_topic_id))
+      {
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::TCP_WRITER");
+        Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::TCP_WRITER - SUCCESS");
 #endif
+      }
+      else
+      {
+        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Create::TCP_WRITER - FAILED");
+      }
       break;
     case TLayer::eSendMode::smode_none:
     case TLayer::eSendMode::smode_off:
@@ -1129,10 +1147,16 @@ namespace eCAL
     {
     case TLayer::eSendMode::smode_auto:
     case TLayer::eSendMode::smode_on:
-      m_writer.inproc.Create(m_host_name, m_topic_name, m_topic_id);
+      if (m_writer.inproc.Create(m_host_name, m_topic_name, m_topic_id))
+      {
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::INPROC_WRITER");
+        Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::INPROC_WRITER - SUCCESS");
 #endif
+      }
+      else
+      {
+        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Create::INPROC_WRITER - FAILED");
+      }
       break;
     default:
       m_writer.inproc.Destroy();
