@@ -87,7 +87,7 @@ namespace eCAL
       if (!memfile::db::AddFile(name_, create_, create_ ? len_ + m_header.int_hdr_size : SIZEOF_PARTIAL_STRUCT(SInternalHeader, int_hdr_size), m_memfile_info))
       {
 #ifndef NDEBUG
-        printf("Could not create memory file: %s.\n\n", name_);
+        printf("Could not create memory file: %s.\n", name_);
 #endif
         return(false);
       }
@@ -98,7 +98,7 @@ namespace eCAL
     if(!m_memfile_mutex.Create(name_, m_auto_sanitizing))
     {
 #ifndef NDEBUG
-      printf("Could not create memory file mutex: %s.\n\n", name_);
+      printf("Could not create memory file mutex: %s.\n", name_);
 #endif
       return(false);
     }
