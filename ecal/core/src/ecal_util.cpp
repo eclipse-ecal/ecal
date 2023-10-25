@@ -22,6 +22,7 @@
 #include <ecal/ecal_types.h>
 
 #include "ecal_def.h"
+#include "ecal_event_internal.h"
 #include "ecal_descgate.h"
 #include "ecal_process.h"
 #include "ecal_registration_receiver.h"
@@ -91,7 +92,7 @@ namespace eCAL
     {
       const std::string event_name = EVENT_SHUTDOWN_PROC + std::string("_") + std::to_string(process_id_);
       EventHandleT event;
-      if (gOpenEvent(&event, event_name))
+      if (gOpenNamedEvent(&event, event_name, true))
       {
         std::cout << "Shutdown local eCAL process " << process_id_ << std::endl;
         gSetEvent(event);

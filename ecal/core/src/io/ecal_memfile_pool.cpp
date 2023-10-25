@@ -23,6 +23,7 @@
 **/
 
 #include "ecal_def.h"
+#include "ecal_event_internal.h"
 #include "ecal_memfile_pool.h"
 
 #include <chrono>
@@ -54,8 +55,8 @@ namespace eCAL
     if (m_created) return false;
 
     // open memory file events
-    gOpenEvent(&m_event_snd, memfile_event_);
-    gOpenEvent(&m_event_ack, memfile_event_ + "_ack");
+    gOpenNamedEvent(&m_event_snd, memfile_event_, false);
+    gOpenNamedEvent(&m_event_ack, memfile_event_ + "_ack", false);
 
     // create memory file access
     m_memfile.Create(memfile_name_.c_str(), false);

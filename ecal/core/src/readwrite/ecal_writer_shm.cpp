@@ -191,6 +191,9 @@ namespace eCAL
     for (auto& memory_file : m_memory_file_vec)
     {
       memory_file->Connect(process_id_);
+#ifndef NDEBUG
+      Logging::Log(log_level_debug1, std::string("CDataWriterSHM::AddLocConnection - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + process_id_);
+#endif
     }
   }
 
