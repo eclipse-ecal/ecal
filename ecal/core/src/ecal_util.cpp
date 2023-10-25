@@ -22,6 +22,7 @@
 #include <ecal/ecal_types.h>
 
 #include "ecal_def.h"
+#include "ecal_event_internal.h"
 #include "ecal_descgate.h"
 #include "ecal_process.h"
 #include "ecal_registration_receiver.h"

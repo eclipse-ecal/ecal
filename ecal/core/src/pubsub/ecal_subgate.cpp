@@ -31,6 +31,7 @@
 #endif
 
 #include "ecal_def.h"
+#include "ecal_event_internal.h"
 #include "ecal_descgate.h"
 
 #include "pubsub/ecal_subgate.h"

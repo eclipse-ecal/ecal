@@ -469,7 +469,7 @@ extern "C"
   ECALC_API ECAL_HANDLE eCAL_Event_gOpenEvent(const char* event_name_)
   {
     eCAL::EventHandleT* event_handle = new eCAL::EventHandleT;
-    const bool success = eCAL::gOpenNamedEvent(event_handle, event_name_, true);
+    const bool success = eCAL::gOpenEvent(event_handle, event_name_);
     if (success)
     {
       return(event_handle);

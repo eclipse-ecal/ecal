@@ -23,6 +23,7 @@
 **/
 
 #include "ecal_def.h"
+#include "ecal_event_internal.h"
 #include "ecal_memfile_pool.h"
 
 #include <chrono>

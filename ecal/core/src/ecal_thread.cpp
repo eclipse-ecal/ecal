@@ -23,6 +23,7 @@
 
 #include <ecal/ecal_event.h>
 
+#include "ecal_event_internal.h"
 #include "ecal_thread.h"
 #include <thread>
 
