@@ -31,6 +31,7 @@
 #endif
 
 #include "ecal_def.h"
+#include "ecal_event_internal.h"
 #include "ecal_descgate.h"
 
 #include "pubsub/ecal_subgate.h"
@@ -47,7 +48,7 @@ namespace eCAL
     static const std::string event_name(EVENT_SHUTDOWN_PROC + std::string("_") + std::to_string(Process::GetProcessID()));
     if (!gEventIsValid(evt))
     {
-      gOpenEvent(&evt, event_name);
+      gOpenNamedEvent(&evt, event_name, true);
     }
     return(evt);
   }

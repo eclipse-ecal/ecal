@@ -869,10 +869,6 @@ TEST(PubSub, MultipleSendsUDP)
   eCAL::Finalize();
 }
 
-
-
-
-
 #if 0
 TEST(PubSub, ZeroPayloadMessageTCP)
 {
@@ -923,8 +919,6 @@ TEST(PubSub, ZeroPayloadMessageTCP)
 }
 #endif
 
-#include <ecal/msg/string/publisher.h>
-#include <ecal/msg/string/subscriber.h>
 TEST(PubSub, DestroyInCallback)
 {
   /* Test setup :
@@ -984,6 +978,77 @@ TEST(PubSub, DestroyInCallback)
 
   pub_foo_t.join();
   pub_destroy_t.join();
+
+  // finalize eCAL API
+  // without destroying any pub / sub
+  eCAL::Finalize();
+}
+
+TEST(IO, SubscriberReconnection)
+{
+  /* Test setup :
+   * publisher runs permanently in a thread
+   * subscriber start reading
+   * subscriber gets out of scope (destruction)
+   * subscriber starts again in a new scope
+   * Test ensures that subscriber is reconnecting and all sync mechanism are working properly again.
+  */
+
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "SubscriberReconnection");
+
+  // enable loop back communication in the same thread
+  eCAL::Util::EnableLoopback(true);
+
+  // start publishing thread
+  std::atomic<bool> stop_publishing(false);
+  eCAL::string::CPublisher<std::string> pub_foo("foo");
+  std::thread pub_foo_t([&pub_foo, &stop_publishing]() {
+    while (!stop_publishing)
+    {
+      pub_foo.Send("Hello World");
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    std::cout << "Stopped publishing" << std::endl;
+  });
+
+  // scope 1
+  {
+    size_t callback_received_count(0);
+
+    eCAL::string::CSubscriber<std::string> sub_foo("foo");
+    auto receive_lambda = [&sub_foo, &callback_received_count](const char* /*topic_*/, const std::string& /*msg*/, long long /*time_*/, long long /*clock_*/, long long /*id_*/) {
+      std::cout << "Receiving in scope 1" << std::endl;
+      callback_received_count++;
+    };
+    sub_foo.AddReceiveCallback(receive_lambda);
+
+    // sleep for 2 seconds, we should receive something
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    EXPECT_TRUE(callback_received_count > 0);
+  }
+
+  // scope 2
+  {
+    size_t callback_received_count(0);
+
+    eCAL::string::CSubscriber<std::string> sub_foo("foo");
+    auto receive_lambda = [&sub_foo, &callback_received_count](const char* /*topic_*/, const std::string& /*msg*/, long long /*time_*/, long long /*clock_*/, long long /*id_*/) {
+      std::cout << "Receiving in scope 2" << std::endl;
+      callback_received_count++;
+    };
+    sub_foo.AddReceiveCallback(receive_lambda);
+
+    // sleep for 2 seconds, we should receive something
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    EXPECT_TRUE(callback_received_count > 0);
+  }
+
+  // stop publishing and join thread
+  stop_publishing = true;
+  pub_foo_t.join();
 
   // finalize eCAL API
   // without destroying any pub / sub

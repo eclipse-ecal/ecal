@@ -23,6 +23,7 @@
 
 #include <ecal/ecal_event.h>
 
+#include "ecal_event_internal.h"
 #include "ecal_thread.h"
 #include <thread>
 
@@ -41,7 +42,7 @@ namespace eCAL
   {
     if(m_tdata.is_started) return(0);
 
-    gOpenEvent(&m_tdata.event);
+    gOpenUnnamedEvent(&m_tdata.event);
     m_tdata.do_stop     = false;
     m_tdata.period      = period_;
     m_tdata.ext_caller  = ext_caller_;
