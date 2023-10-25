@@ -65,7 +65,7 @@ void measure_execution_within_range(const std::string& description, std::functio
 }
 
 
-TEST(SUBSCRIBER, TimingSubscriberReceive)
+TEST(PubSub, TimingSubscriberReceive)
 {
   // initialize eCAL API
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "subscriber_receive_timing"));
@@ -164,7 +164,7 @@ TEST(SUBSCRIBER, TimingSubscriberReceive)
 
 
 // This tests test for sporadically received empty messages which were a problem.
-TEST(SUBSCRIBER, SporadicEmptyReceives)
+TEST(PubSub, SporadicEmptyReceives)
 { 
   // initialize eCAL API
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "sporadic_empty_receives"));

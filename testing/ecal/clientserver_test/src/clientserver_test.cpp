@@ -92,7 +92,7 @@ namespace
 
 #if ClientConnectEventTest
 
-TEST(IO, ClientConnectEvent)
+TEST(ClientServer, ClientConnectEvent)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver base connect event callback");
@@ -156,7 +156,7 @@ TEST(IO, ClientConnectEvent)
 
 #if ServerConnectEventTest
 
-TEST(IO, ServerConnectEvent)
+TEST(ClientServer, ServerConnectEvent)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver base connect event callback");
@@ -218,7 +218,7 @@ TEST(IO, ServerConnectEvent)
 
 #if ClientServerBaseCallbackTest
 
-TEST(IO, ClientServerBaseCallback)
+TEST(ClientServer, ClientServerBaseCallback)
 {
   const int num_services(2);
   const int num_clients(3);
@@ -332,7 +332,7 @@ TEST(IO, ClientServerBaseCallback)
 
 #if ClientServerBaseCallbackTimeoutTest
 
-TEST(IO, ClientServerBaseCallbackTimeout)
+TEST(ClientServer, ClientServerBaseCallbackTimeout)
 {
   const int num_services(2);
   const int num_clients(3);
@@ -502,7 +502,7 @@ TEST(IO, ClientServerBaseCallbackTimeout)
 
 #if ClientServerBaseAsyncCallbackTest
 
-TEST(IO, ClientServerBaseAsyncCallback)
+TEST(ClientServer, ClientServerBaseAsyncCallback)
 {
   const int calls(1);
   const int sleep(100);
@@ -576,7 +576,7 @@ TEST(IO, ClientServerBaseAsyncCallback)
 
 #if ClientServerBaseAsyncTest
 
-TEST(IO, ClientServerBaseAsyncTest)
+TEST(ClientServer, ClientServerBaseAsyncTest)
 {
   const int calls(5);
 
@@ -683,7 +683,7 @@ TEST(IO, ClientServerBaseAsyncTest)
 
 #if ClientServerBaseBlockingTest
 
-TEST(IO, ClientServerBaseBlocking)
+TEST(ClientServer, ClientServerBaseBlocking)
 {
   const int num_services(2);
   const int num_clients(3);
@@ -818,7 +818,7 @@ public:
   }
 };
 
-TEST(IO, ClientServerProtoCallback)
+TEST(ClientServer, ClientServerProtoCallback)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver proto callback test");
@@ -907,7 +907,7 @@ public:
   }
 };
 
-TEST(IO, ClientServerProtoBlocking)
+TEST(ClientServer, ClientServerProtoBlocking)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver proto blocking test");
@@ -959,7 +959,7 @@ TEST(IO, ClientServerProtoBlocking)
 
 #if NestedRPCCallTest
 
-TEST(IO, NestedRPCCall)
+TEST(ClientServer, NestedRPCCall)
 {
   const int calls(1);
   const int sleep(0);

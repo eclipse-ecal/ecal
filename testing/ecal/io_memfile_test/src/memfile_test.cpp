@@ -38,7 +38,7 @@ namespace eCAL
   }
 }
 
-TEST(IO, MemfileReadWrite)
+TEST(MemFile, MemfileReadWrite)
 {
   eCAL::CMemoryFile mem_file;
 
@@ -140,7 +140,7 @@ TEST(IO, MemfileReadWrite)
   EXPECT_EQ(true, mem_file.Destroy(true));
 }
 
-TEST(IO, MemfilePerf)
+TEST(MemFile, MemfilePerf)
 {
   eCAL::CMemoryFile mem_file;
 
@@ -200,7 +200,7 @@ TEST(IO, MemfilePerf)
   EXPECT_EQ(true, mem_file.Destroy(true));
 }
 
-TEST(IO, MemfileConcurrency)
+TEST(MemFile, MemfileConcurrency)
 {
   eCAL::CMemoryFile mem_file;
 

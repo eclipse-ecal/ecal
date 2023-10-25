@@ -45,7 +45,6 @@ TEST(Util, CombineTopicEncodingAndType)
   TestCombinedTopicEncodingAndType("", "MyType", "MyType");
 }
 
-
 TEST(Util, SplitCombinedTopicType)
 {
   TestSplitCombinedTopicType("", "", "");

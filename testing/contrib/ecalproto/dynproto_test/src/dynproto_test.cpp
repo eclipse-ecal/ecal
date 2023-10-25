@@ -29,7 +29,7 @@
 void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& prefix_ /* = "" */);
 
 // google test
-TEST(IO, dynproto)
+TEST(DynProto, dynproto)
 { 
   // generate a class instance of Person
   pb::People::Person person;
