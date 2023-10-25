@@ -1306,7 +1306,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload) // NOLINT
 #endif
 
 #if 1
-TEST(callback, ServerAndClientManagers) // NOLINT
+TEST(Callback, ServerAndClientManagers) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {

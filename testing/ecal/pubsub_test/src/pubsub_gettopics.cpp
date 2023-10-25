@@ -26,7 +26,7 @@
 #define CMN_REGISTRATION_REFRESH   1000
 #define CMN_MONITORING_TIMEOUT     5000
 
-TEST(IO, GetTopics)
+TEST(PubSub, GetTopics)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_gettopics");

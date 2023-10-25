@@ -51,7 +51,7 @@ static std::string CreatePayLoad(size_t payload_size_)
   return(s);
 }
 
-TEST(IO, InitializeFinalize)
+TEST(PubSub, InitializeFinalize)
 { 
   // Is eCAL API initialized ?
   EXPECT_EQ(0, eCAL::IsInitialized());
@@ -91,7 +91,7 @@ TEST(IO, InitializeFinalize)
   EXPECT_EQ(1, eCAL::Finalize());
 }
 
-TEST(IO, CreateDestroy)
+TEST(PubSub, CreateDestroy)
 { 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
@@ -130,7 +130,7 @@ TEST(IO, CreateDestroy)
   eCAL::Finalize();
 }
 
-TEST(IO, TypeDescriptionStatic)
+TEST(PubSub, TypeDescriptionStatic)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
@@ -153,7 +153,7 @@ TEST(IO, TypeDescriptionStatic)
   eCAL::Finalize();
 }
 
-TEST(IO, TypeDescriptionDynamic)
+TEST(PubSub, TypeDescriptionDynamic)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
@@ -257,7 +257,7 @@ TEST(IO, TypeDescriptionDynamic)
   eCAL::Finalize();
 }
 
-TEST(IO, SimpleMessage1)
+TEST(PubSub, SimpleMessage1)
 { 
   // default send / receive strings
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
@@ -302,7 +302,7 @@ TEST(IO, SimpleMessage1)
   eCAL::Finalize();
 }
 
-TEST(IO, SimpleMessage2)
+TEST(PubSub, SimpleMessage2)
 { 
   // default send / receive strings
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
@@ -341,7 +341,7 @@ TEST(IO, SimpleMessage2)
   eCAL::Finalize();
 }
 
-TEST(IO, SimpleMessageCB)
+TEST(PubSub, SimpleMessageCB)
 { 
   // default send string
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
@@ -420,7 +420,7 @@ TEST(IO, SimpleMessageCB)
   eCAL::Finalize();
 }
 
-TEST(IO, DynamicSizeCB)
+TEST(PubSub, DynamicSizeCB)
 { 
   // default send string
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
@@ -476,7 +476,7 @@ TEST(IO, DynamicSizeCB)
   eCAL::Finalize();
 }
 
-TEST(IO, DynamicCreate)
+TEST(PubSub, DynamicCreate)
 { 
   // default send string
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
@@ -568,7 +568,7 @@ TEST(IO, DynamicCreate)
   eCAL::Finalize();
 }
 
-TEST(IO, SimpleMessageCBSHMBufferCount)
+TEST(PubSub, SimpleMessageCBSHMBufferCount)
 {
   // default send string
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
@@ -619,7 +619,7 @@ TEST(IO, SimpleMessageCBSHMBufferCount)
   eCAL::Finalize();
 }
 
-TEST(IO, ZeroPayloadMessageInProc)
+TEST(PubSub, ZeroPayloadMessageInProc)
 {
   // default send string
   std::string send_s;
@@ -667,7 +667,7 @@ TEST(IO, ZeroPayloadMessageInProc)
   eCAL::Finalize();
 }
 
-TEST(IO, ZeroPayloadMessageSHM)
+TEST(PubSub, ZeroPayloadMessageSHM)
 {
   // default send string
   std::string send_s;
@@ -715,7 +715,7 @@ TEST(IO, ZeroPayloadMessageSHM)
   eCAL::Finalize();
 }
 
-TEST(IO, ZeroPayloadMessageUDP)
+TEST(PubSub, ZeroPayloadMessageUDP)
 {
   // default send string
   std::string send_s;
@@ -764,7 +764,7 @@ TEST(IO, ZeroPayloadMessageUDP)
 }
 
 
-TEST(IO, MultipleSendsSHM)
+TEST(PubSub, MultipleSendsSHM)
 {
   // default send string
   std::vector<std::string> send_vector{ "this", "is", "a", "", "testtest" };
@@ -817,7 +817,7 @@ TEST(IO, MultipleSendsSHM)
 }
 
 
-TEST(IO, MultipleSendsUDP)
+TEST(PubSub, MultipleSendsUDP)
 {
   // default send string
   std::vector<std::string> send_vector{ "this", "is", "a", "", "testtest" };
@@ -870,7 +870,7 @@ TEST(IO, MultipleSendsUDP)
 }
 
 #if 0
-TEST(IO, ZeroPayloadMessageTCP)
+TEST(PubSub, ZeroPayloadMessageTCP)
 {
   // default send string
   std::string send_s;
@@ -919,7 +919,7 @@ TEST(IO, ZeroPayloadMessageTCP)
 }
 #endif
 
-TEST(IO, DestroyInCallback)
+TEST(PubSub, DestroyInCallback)
 {
   /* Test setup :
    * 2 pair of pub_sub connections ("foo" and "destroy")

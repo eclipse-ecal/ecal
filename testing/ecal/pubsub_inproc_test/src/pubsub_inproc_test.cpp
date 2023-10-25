@@ -52,7 +52,7 @@ void OnReceive3()
   sub_clock3++;
 }
 
-TEST(INPROC, CLOCKS)
+TEST(PubSubInproc, CLOCKS)
 { 
   // initialize eCAL API
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "inproc_clock_test"));

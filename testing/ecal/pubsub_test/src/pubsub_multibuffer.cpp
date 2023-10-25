@@ -65,7 +65,7 @@ private:
   int    clock = 0;
 };
 
-TEST(IO, MultibufferPubSub)
+TEST(PubSub, MultibufferPubSub)
 { 
   // create payload
   CBinaryPayload binary_payload(PAYLOAD_SIZE);
