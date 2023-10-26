@@ -43,6 +43,7 @@
 #pragma warning(push)
 #pragma warning(disable: 4800 )
 #endif //_MSC_VER
+#include <cstdint> // Needed for termcolor. Currently (2023-10-26) termcolor does not include this header file, but it is needed for Ubuntu 23.10 / gcc 13.2: https://github.com/ikalnytskyi/termcolor/pull/72
 #include <termcolor/termcolor.hpp>
 #ifdef _MSC_VER
 #pragma warning(pop)
