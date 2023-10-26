@@ -67,17 +67,17 @@ void MeasurementImporter::openChannel(const std::string& channel_name)
   _current_opened_channel_data._timestamps.clear();
   _current_opened_channel_data._timestamp_entry_info_map.clear();
 
-  if (isProtoChannel(_reader->GetChannelType(channel_name)))
+  auto channel_information = _reader->GetChannelDataTypeInformation(channel_name);
+  if (isProtoChannel(channel_information))
   {
     _current_opened_channel_data._channel_info.format = eCALMeasCutterUtils::SerializationFormat::PROTOBUF;
-    _current_opened_channel_data._channel_info.type   = _reader->GetChannelType(channel_name).substr(6); // remove "proto:" from type string
   }
   else
   {
     _current_opened_channel_data._channel_info.format = eCALMeasCutterUtils::SerializationFormat::UNKNOWN;
-    _current_opened_channel_data._channel_info.type   = _reader->GetChannelType(channel_name);
   }
-  _current_opened_channel_data._channel_info.description = _reader->GetChannelDescription(channel_name);
+  _current_opened_channel_data._channel_info.type = channel_information.name;
+  _current_opened_channel_data._channel_info.description = channel_information.descriptor;
   _current_opened_channel_data._channel_info.name = channel_name;
 
   eCAL::measurement::base::EntryInfoSet entry_info_set;
@@ -177,10 +177,9 @@ bool MeasurementImporter::isEcalMeasFile(const std::string& path)
   return false;
 }
 
-bool MeasurementImporter::isProtoChannel(const std::string& channel_type)
+bool MeasurementImporter::isProtoChannel(const eCAL::measurement::base::DataTypeInformation& channel_info)
 {
-  std::string space = channel_type.substr(0, channel_type.find_first_of(':'));
-  return (space.compare("proto") == 0);
+  return (channel_info.encoding.compare("proto") == 0);
 }
 
 std::string MeasurementImporter::getLoadedPath()

@@ -32,6 +32,24 @@ namespace eCAL
   namespace eh5
   {
  
+    // To be removed soon-ish!
+    std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& combined_topic_type_)
+    {
+      auto pos = combined_topic_type_.find(':');
+      if (pos == std::string::npos)
+      {
+        std::string encoding;
+        std::string type{ combined_topic_type_ };
+        return std::make_pair(encoding, type);
+      }
+      else
+      {
+        std::string encoding = combined_topic_type_.substr(0, pos);
+        std::string type = combined_topic_type_.substr(pos + 1);
+        return std::make_pair(encoding, type);
+      }
+    }
+
     /**
      * @brief Hdf5 based Reader Implementation
     **/
@@ -111,23 +129,22 @@ namespace eCAL
       **/
        bool HasChannel(const std::string& channel_name) const override { return measurement.HasChannel(channel_name);  }
 
-      /**
-       * @brief Get the channel description for the given channel
-       *
-       * @param channel_name  channel name
-       *
-       * @return              channel description
-      **/
-       std::string GetChannelDescription(const std::string& channel_name) const override { return measurement.GetChannelDescription(channel_name); }
-
-      /**
-       * @brief Gets the channel type of the given channel
-       *
-       * @param channel_name  channel name
-       *
-       * @return              channel type
-      **/
-       std::string GetChannelType(const std::string& channel_name) const override { return measurement.GetChannelType(channel_name); }
+       /**
+        * @brief Get data type information of the given channel
+        *
+        * @param channel_name  channel name
+        *
+        * @return              channel type
+       **/
+       measurement::base::DataTypeInformation GetChannelDataTypeInformation(const std::string& channel_name) {
+         measurement::base::DataTypeInformation info;
+         auto type = measurement.GetChannelType(channel_name);
+         auto split_types = SplitCombinedTopicType(type);
+         info.encoding = split_types.first;
+         info.name = split_types.second;
+         info.descriptor = measurement.GetChannelDescription(channel_name);
+         return info;
+       }
 
       /**
        * @brief Gets minimum timestamp for specified channel
