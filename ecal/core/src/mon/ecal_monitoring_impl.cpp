@@ -31,7 +31,6 @@
 
 #include "../ecal_registration_receiver.h"
 
-
 namespace eCAL
 {
   ////////////////////////////////////////
@@ -39,6 +38,7 @@ namespace eCAL
   ////////////////////////////////////////
   CMonitoringImpl::CMonitoringImpl() :
     m_init(false),
+    m_network_mode(false),
     m_process_map   (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
     m_publisher_map (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
     m_subscriber_map(std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
@@ -51,8 +51,9 @@ namespace eCAL
   {
     if (m_init) return;
 
-    // get name of this host
-    m_host_name = Process::GetHostName();
+    // get name of this host and network mode
+    m_host_name    = Process::GetHostName();
+    m_network_mode = Config::IsNetworkEnabled();
 
     // utilize registration receiver to enrich monitor information
     g_registration_receiver()->SetCustomApplySampleCallback([this](const auto& ecal_sample_){this->ApplySample(ecal_sample_, eCAL::pb::tl_none);});
@@ -202,6 +203,13 @@ namespace eCAL
 
   bool CMonitoringImpl::RegisterTopic(const eCAL::pb::Sample& sample_, enum ePubSub pubsub_type_)
   {
+    // sample is from another host and we are not in the network mode
+    if ((m_host_name != sample_.topic().hname()) && !m_network_mode)
+    {
+      // do not process that topic
+      return false;
+    }
+    
     const auto& sample_topic = sample_.topic();
     const int          process_id = sample_topic.pid();
     const std::string& topic_name = sample_topic.tname();
@@ -345,6 +353,13 @@ namespace eCAL
 
   bool CMonitoringImpl::RegisterProcess(const eCAL::pb::Sample& sample_)
   {
+    // sample is from another host and we are not in the network mode
+    if ((m_host_name != sample_.process().hname()) && !m_network_mode)
+    {
+      // do not process that process
+      return false;
+    }
+
     const auto& sample_process = sample_.process();
     const std::string&    host_name                    = sample_process.hname();
     const std::string&    host_group_name              = sample_process.hgname();
@@ -423,6 +438,13 @@ namespace eCAL
 
   bool CMonitoringImpl::RegisterServer(const eCAL::pb::Sample& sample_)
   {
+    // sample is from another host and we are not in the network mode
+    if ((m_host_name != sample_.service().hname()) && !m_network_mode)
+    {
+      // do not process that server
+      return false;
+    }
+
     const auto& sample_service = sample_.service();
     const std::string& host_name    = sample_service.hname();
     const std::string& service_name = sample_service.sname();
@@ -492,6 +514,13 @@ namespace eCAL
 
   bool CMonitoringImpl::RegisterClient(const eCAL::pb::Sample& sample_)
   {
+    // sample is from another host and we are not in the network mode
+    if ((m_host_name != sample_.client().hname()) && !m_network_mode)
+    {
+      // do not process that client
+      return false;
+    }
+
     const auto& sample_client = sample_.client();
     const std::string& host_name    = sample_client.hname();
     const std::string& service_name = sample_client.sname();
@@ -544,6 +573,13 @@ namespace eCAL
 
   void CMonitoringImpl::RegisterLogMessage(const eCAL::pb::LogMessage& log_msg_)
   {
+    // sample is from another host and we are not in the network mode
+    if ((m_host_name != log_msg_.hname()) && !m_network_mode)
+    {
+      // do not process that log message
+      return;
+    }
+
     const std::lock_guard<std::mutex> lock(m_log_msglist_sync);
     m_log_msglist.emplace_back(log_msg_);
   }

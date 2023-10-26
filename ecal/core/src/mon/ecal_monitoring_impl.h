@@ -152,6 +152,7 @@ namespace eCAL
 
     bool                                         m_init;
     std::string                                  m_host_name;
+    bool                                         m_network_mode;
 
     std::mutex                                   m_topic_filter_excl_mtx;
     std::string                                  m_topic_filter_excl_s;
