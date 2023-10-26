@@ -2476,32 +2476,35 @@ title="Print to PDF"
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_defs.h&gt;</span>
 
-<span class="cp">#if ECAL_VERSION_INTEGER &gt;= ECAL_VERSION_CALCULATE(5, 4, 0)</span>
+<span class="c1">//uncomment this line if you do want to get deprecation warnings inside eCAL core</span>
+<span class="c1">//#undef ECAL_NO_DEPRECATION_WARNINGS</span>
+
+<span class="cp">#if !defined(ECAL_NO_DEPRECATION_WARNINGS) &amp;&amp; ECAL_VERSION_INTEGER &gt;= ECAL_VERSION_CALCULATE(5, 4, 0)</span>
 <span class="cp">#define ECAL_DEPRECATE_SINCE_5_4(__message__) [[deprecated(__message__)]]</span>
 <span class="cp">#else</span>
 <span class="cp">#define ECAL_DEPRECATE_SINCE_5_4(__message__)</span>
 <span class="cp">#endif</span>
 
 
-<span class="cp">#if ECAL_VERSION_INTEGER &gt;= ECAL_VERSION_CALCULATE(5, 10, 0)</span>
+<span class="cp">#if !defined(ECAL_NO_DEPRECATION_WARNINGS) &amp;&amp; ECAL_VERSION_INTEGER &gt;= ECAL_VERSION_CALCULATE(5, 10, 0)</span>
 <span class="cp">#define ECAL_DEPRECATE_SINCE_5_10(__message__) [[deprecated(__message__)]]</span>
 <span class="cp">#else</span>
 <span class="cp">#define ECAL_DEPRECATE_SINCE_5_10(__message__)</span>
 <span class="cp">#endif</span>
 
-<span class="cp">#if ECAL_VERSION_INTEGER &gt;= ECAL_VERSION_CALCULATE(5, 11, 0)</span>
+<span class="cp">#if !defined(ECAL_NO_DEPRECATION_WARNINGS) &amp;&amp; ECAL_VERSION_INTEGER &gt;= ECAL_VERSION_CALCULATE(5, 11, 0)</span>
 <span class="cp">#define ECAL_DEPRECATE_SINCE_5_11(__message__) [[deprecated(__message__)]]</span>
 <span class="cp">#else</span>
 <span class="cp">#define ECAL_DEPRECATE_SINCE_5_11(__message__)</span>
 <span class="cp">#endif</span>
 
-<span class="cp">#if ECAL_VERSION_INTEGER &gt;= ECAL_VERSION_CALCULATE(5, 12, 0)</span>
+<span class="cp">#if !defined(ECAL_NO_DEPRECATION_WARNINGS) &amp;&amp; ECAL_VERSION_INTEGER &gt;= ECAL_VERSION_CALCULATE(5, 12, 0)</span>
 <span class="cp">#define ECAL_DEPRECATE_SINCE_5_12(__message__) [[deprecated(__message__)]]</span>
 <span class="cp">#else</span>
 <span class="cp">#define ECAL_DEPRECATE_SINCE_5_12(__message__)</span>
 <span class="cp">#endif</span>
 
-<span class="cp">#if ECAL_VERSION_INTEGER &gt;= ECAL_VERSION_CALCULATE(5, 13, 0)</span>
+<span class="cp">#if !defined(ECAL_NO_DEPRECATION_WARNINGS) &amp;&amp; ECAL_VERSION_INTEGER &gt;= ECAL_VERSION_CALCULATE(5, 13, 0)</span>
 <span class="cp">#define ECAL_DEPRECATE_SINCE_5_13(__message__) [[deprecated(__message__)]]</span>
 <span class="cp">#else</span>
 <span class="cp">#define ECAL_DEPRECATE_SINCE_5_13(__message__)</span>
