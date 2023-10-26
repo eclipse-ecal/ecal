@@ -49,6 +49,7 @@ namespace eCAL
       port(0),
       broadcast(false),
       unicast(false),
+      localhost(false),
       loopback(true),
       rcvbuf(1024 * 1024)
     {};
@@ -57,6 +58,7 @@ namespace eCAL
     int         port;
     bool        broadcast;
     bool        unicast;
+    bool        localhost;
     bool        loopback;
     int         rcvbuf;
   };

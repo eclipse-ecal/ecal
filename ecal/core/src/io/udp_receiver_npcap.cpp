@@ -27,6 +27,7 @@ namespace eCAL
     : CUDPReceiverBase(attr_)
     , m_created(false)
     , m_unicast(attr_.unicast)
+    , m_localhost(attr_.localhost)
   {
     // set receive buffer size (default = 1 MB)
     int rcvbuf = 1024 * 1024;
@@ -39,8 +40,19 @@ namespace eCAL
       std::cerr << "CUDPReceiverPcap: Unable to set receive buffer size." << std::endl;
     }
 
+    // define host address
+    Udpcap::HostAddress host_address;
+    if (m_localhost)
+    {
+      host_address = Udpcap::HostAddress::LocalHost();
+    }
+    else
+    {
+      host_address = Udpcap::HostAddress::Any();
+    }
+
     // bind socket
-    if (!m_socket.bind(Udpcap::HostAddress::Any(), static_cast<uint16_t>(attr_.port)))
+    if (!m_socket.bind(host_address, static_cast<uint16_t>(attr_.port)))
     {
       std::cerr << "CUDPReceiverPcap: Unable to bind socket." << std::endl;
       return;

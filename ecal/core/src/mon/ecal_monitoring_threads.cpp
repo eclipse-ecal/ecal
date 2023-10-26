@@ -56,10 +56,11 @@ namespace eCAL
     {
       attr.broadcast = false;
     }
-    attr.ipaddr   = UDP::GetLoggingMulticastAddress();
-    attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
-    attr.loopback = true;
-    attr.rcvbuf   = Config::GetUdpMulticastRcvBufSizeBytes();
+    attr.ipaddr    = UDP::GetLoggingMulticastAddress();
+    attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
+    attr.localhost = !Config::IsNetworkEnabled();
+    attr.loopback  = true;
+    attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
 
     m_log_rcv.Create(attr);
     m_log_rcv_thread.Start(0, std::bind(&CLoggingReceiveThread::ThreadFun, this));
