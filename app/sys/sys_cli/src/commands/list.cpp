@@ -32,6 +32,7 @@
 #pragma warning(push)
 #pragma warning(disable: 4800) // disable termcolor warnings
 #endif
+#include <cstdint> // Needed for termcolor. Currently (2023-10-26) termcolor does not include this header file.
 #include <termcolor/termcolor.hpp>
 #ifdef _MSC_VER
 #pragma warning(pop)
