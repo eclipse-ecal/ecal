@@ -30,6 +30,10 @@ namespace eCAL
     //// unfortunately, we need an actual object for this :/
     //template<typename T>
     //std::string GetTypeName(const T& message);
+    
+    //// unfortunately, we need an actual object for this :/
+    //template<typename T>
+    //std::string GetEncoding(const T& message);
   
     //// unfortunately, we need an actual object for this :/
     //template<typename T>

@@ -1,8 +1,30 @@
 #include <ecal/measurement/hdf5/reader.h>
 #include <ecalhdf5/eh5_meas.h>
 
+
 using namespace eCAL::experimental::measurement::hdf5;
 using namespace eCAL::experimental::measurement;
+
+namespace
+{
+  // To be removed soon-ish!
+  std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& combined_topic_type_)
+  {
+    auto pos = combined_topic_type_.find(':');
+    if (pos == std::string::npos)
+    {
+      std::string encoding;
+      std::string type{ combined_topic_type_ };
+      return std::make_pair(encoding, type);
+    }
+    else
+    {
+      std::string encoding = combined_topic_type_.substr(0, pos);
+      std::string type = combined_topic_type_.substr(pos + 1);
+      return std::make_pair(encoding, type);
+    }
+  }
+}
 
 Reader::Reader() 
   : measurement(std::make_unique<eh5::HDF5Meas>()) 
@@ -48,14 +70,15 @@ bool Reader::HasChannel(const std::string& channel_name) const
   return measurement->HasChannel(channel_name);
 }
 
-std::string Reader::GetChannelDescription(const std::string& channel_name) const
+base::DataTypeInformation Reader::GetChannelDataTypeInformation(const std::string& channel_name) const
 {
-  return measurement->GetChannelDescription(channel_name);
-}
-
-std::string Reader::GetChannelType(const std::string& channel_name) const
-{
-  return measurement->GetChannelType(channel_name);
+  base::DataTypeInformation info;
+  auto type = measurement->GetChannelType(channel_name);
+  auto split_types = SplitCombinedTopicType(type);
+  info.encoding = split_types.first;
+  info.name = split_types.second;
+  info.descriptor = measurement->GetChannelDescription(channel_name);
+  return info;
 }
 
 long long Reader::GetMinTimestamp(const std::string& channel_name) const

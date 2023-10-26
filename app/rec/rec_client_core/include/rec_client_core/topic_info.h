@@ -22,6 +22,7 @@
 #include <string>
 #include <set>
 #include <map>
+#include <ecal/ecal_types.h>
 
 namespace eCAL
 {
@@ -29,17 +30,48 @@ namespace eCAL
   {
     struct TopicInfo
     {
-      TopicInfo(const std::string& type, const std::string& description)
-        : type_(type), description_(description), description_quality_(0)
+      TopicInfo(const eCAL::SDataTypeInformation& tinfo)
+        : tinfo_(tinfo)
       {}
+
+      TopicInfo(const std::string& type, const std::string& encoding, const std::string& description)
+        : tinfo_{ type, encoding, description }
+      {}
+
       TopicInfo() 
-        : description_quality_(0)
       {}
 
-      std::string type_;
-      std::string description_;
+      eCAL::SDataTypeInformation tinfo_;
 
-      int description_quality_;
+      //  This should be removed once internally SDatatypeInformation is saved alongside with the publisher ID..
+      std::string GetLegacyType()
+      {
+        if (tinfo_.encoding.empty())
+        {
+          return tinfo_.name;
+        }
+        else
+        {
+          return tinfo_.encoding + ":" + tinfo_.name;
+        }
+      }
+
+      void SetLegacyType(const std::string& combined_topic_type_)
+      {
+        auto pos = combined_topic_type_.find(':');
+        if (pos == std::string::npos)
+        {
+          tinfo_.encoding = "";
+          tinfo_.name = combined_topic_type_;
+        }
+        else
+        {
+          tinfo_.encoding = combined_topic_type_.substr(0, pos);
+          tinfo_.name = combined_topic_type_.substr(pos + 1);
+        }
+      }
+
+      int description_quality_ = 0;
 
       std::map<std::string, std::set<std::string>> publishers_;
     };

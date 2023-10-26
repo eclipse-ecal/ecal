@@ -214,6 +214,9 @@ namespace eCAL
       **/
       void SetChannelType(const std::string& channel_name, const std::string& type);
 
+
+
+
       /**
        * @brief Gets minimum timestamp for specified channel
        *

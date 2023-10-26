@@ -4,6 +4,21 @@
 using namespace eCAL::experimental::measurement::hdf5;
 using namespace eCAL::experimental::measurement;
 
+namespace {
+  //To be removed soon - ish
+  std::string CombinedTopicEncodingAndType(const std::string & topic_encoding_, const std::string & topic_type_)
+  {
+    if (topic_encoding_.empty())
+    {
+      return topic_type_;
+    }
+    else
+    {
+      return topic_encoding_ + ":" + topic_type_;
+    }
+  }
+}
+
 Writer::Writer() 
   : measurement(std::make_unique<eh5::HDF5Meas>()) 
 {}
@@ -53,14 +68,11 @@ void Writer::SetOneFilePerChannelEnabled(bool enabled)
   return measurement->SetOneFilePerChannelEnabled(enabled);
 }
 
-void Writer::SetChannelDescription(const std::string& channel_name, const std::string& description)
+void Writer::SetChannelDataTypeInformation(const std::string& channel_name, const base::DataTypeInformation& info)
 {
-  return measurement->SetChannelDescription(channel_name, description);
-}
 
-void Writer::SetChannelType(const std::string& channel_name, const std::string& type)
-{
-  return measurement->SetChannelType(channel_name, type);
+  measurement->SetChannelType(channel_name, CombinedTopicEncodingAndType(info.encoding, info.name));
+  measurement->SetChannelDescription(channel_name, info.descriptor);
 }
 
 void Writer::SetFileBaseName(const std::string& base_name)
