@@ -43,16 +43,8 @@ namespace eCAL
       return;
     }
 
-    // define endpoint
-    asio::ip::udp::endpoint ext_endpoint(asio::ip::udp::v4(), static_cast<unsigned short>(attr_.port));
-    asio::ip::udp::endpoint loc_endpoint(asio::ip::address::from_string("127.0.0.1"), static_cast<unsigned short>(attr_.port));
-    asio::ip::udp::endpoint& listen_endpoint = ext_endpoint;
-    if (m_localhost)
-    {
-      listen_endpoint = loc_endpoint;
-    }
-
     // create socket
+    const asio::ip::udp::endpoint listen_endpoint(asio::ip::udp::v4(), static_cast<unsigned short>(attr_.port));
     {
       asio::error_code ec;
       m_socket.open(listen_endpoint.protocol(), ec);
@@ -110,7 +102,14 @@ namespace eCAL
     }
 
     // join multicast group
-    AddMultiCastGroup(attr_.ipaddr.c_str());
+    if (m_localhost)
+    {
+      AddMultiCastGroup("127.0.0.1");
+    }
+    else
+    {
+      AddMultiCastGroup(attr_.ipaddr.c_str());
+    }
 
     // state successful creation
     m_created = true;

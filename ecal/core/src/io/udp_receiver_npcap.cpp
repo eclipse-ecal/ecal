@@ -40,19 +40,8 @@ namespace eCAL
       std::cerr << "CUDPReceiverPcap: Unable to set receive buffer size." << std::endl;
     }
 
-    // define host address
-    Udpcap::HostAddress host_address;
-    if (m_localhost)
-    {
-      host_address = Udpcap::HostAddress::LocalHost();
-    }
-    else
-    {
-      host_address = Udpcap::HostAddress::Any();
-    }
-
     // bind socket
-    if (!m_socket.bind(host_address, static_cast<uint16_t>(attr_.port)))
+    if (!m_socket.bind(Udpcap::HostAddress::Any(), static_cast<uint16_t>(attr_.port)))
     {
       std::cerr << "CUDPReceiverPcap: Unable to bind socket." << std::endl;
       return;
@@ -65,7 +54,14 @@ namespace eCAL
     }
 
     // join multicast group
-    AddMultiCastGroup(attr_.ipaddr.c_str());
+    if (m_localhost)
+    {
+      AddMultiCastGroup("127.0.0.1");
+    }
+    else
+    {
+      AddMultiCastGroup(attr_.ipaddr.c_str());
+    }
 
     // state successful creation
     m_created = true;
