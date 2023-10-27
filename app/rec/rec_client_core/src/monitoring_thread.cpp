@@ -69,8 +69,8 @@ namespace eCAL
           }
 
           // Collect all descriptors
-          std::map<std::string, std::pair<int, std::pair<std::string, std::string>>> channel_descriptor_map; // ChannelName -> {Type, Descriptor}
-          std::map<std::string, std::pair<int, std::string>> type_descriptor_map;                            // Type        -> Descriptor           (used for topics that we know the type of, but have no other information available)
+          std::map<std::string, std::pair<int, eCAL::SDataTypeInformation>> channel_descriptor_map; // ChannelName -> {Type, Encoding, Descriptor}
+          std::map<std::string, std::pair<int, eCAL::SDataTypeInformation>> type_descriptor_map;    // Type        -> DatatypeInformation           (used for topics that we know the type of, but have no other information available)
 
           static const int DESCRIPTION_AVAILABLE_QUALITYBIT         = 0x1 << 3;  // Having a descriptor at all is the most important thing
           static const int INFO_COMES_FROM_CORRECT_TOPIC_QUALITYBIT = 0x1 << 2;  // The information comes from the current topic (and has not been borrowed from another topic)
@@ -84,14 +84,19 @@ namespace eCAL
             if (topic_info_map_it == topic_info_map_.end())
             {
               // Create a new topic entry
-              topic_info_map_.emplace(topic.tname(), eCAL::rec::TopicInfo("", ""));
+              topic_info_map_.emplace(topic.tname(), eCAL::rec::TopicInfo("", "", ""));
               topic_info_map_it = topic_info_map_.find(topic.tname());
             }
 
             // Evaluate the quality of the current descriptor information
             int this_topic_info_quality = 0;
+            auto tdatatype = topic.tdatatype();
+            eCAL::SDataTypeInformation topic_info;
+            topic_info.name = tdatatype.name();
+            topic_info.encoding = tdatatype.encoding();
+            topic_info.descriptor = tdatatype.desc();
 
-            if (!topic.tdesc().empty())
+            if (!topic_info.descriptor.empty())
             {
               this_topic_info_quality |= DESCRIPTION_AVAILABLE_QUALITYBIT;
             }
@@ -114,7 +119,7 @@ namespace eCAL
               }
             }
 
-            if (!topic.ttype().empty())
+            if (!topic_info.name.empty())
             {
               this_topic_info_quality |= TYPE_AVAILABLE_QUALITYBIT;
             }
@@ -125,35 +130,35 @@ namespace eCAL
               if (channel_descriptor_map_it == channel_descriptor_map.end())
               {
                 // Save the new descriptor
-                channel_descriptor_map.emplace(topic.tname(), std::make_pair(this_topic_info_quality, std::make_pair(topic.ttype(), topic.tdesc())));
+                channel_descriptor_map.emplace(topic.tname(), std::make_pair(this_topic_info_quality, topic_info));
               }
               else
               {
                 if(channel_descriptor_map_it->second.first < this_topic_info_quality)
                 {
                   // If the old descriptor has a lower quality than the current descriptor, we may overwrite it!
-                  channel_descriptor_map_it->second = std::make_pair(this_topic_info_quality, std::make_pair(topic.ttype(), topic.tdesc()));
+                  channel_descriptor_map_it->second = std::make_pair(this_topic_info_quality, topic_info);
                 }
               }
             }
 
             // Update the type_descriptor_map (can of course only work if we have the type information available)
-            if (!topic.ttype().empty())
+            if (!topic_info.name.empty())
             {
               int quality_for_other_channels = (this_topic_info_quality & ~INFO_COMES_FROM_CORRECT_TOPIC_QUALITYBIT);
 
-              auto type_descriptor_map_it = type_descriptor_map.find(topic.ttype());
+              auto type_descriptor_map_it = type_descriptor_map.find(topic_info.name);
               if (type_descriptor_map_it == type_descriptor_map.end())
               {
                 // Save the new descriptor
-                type_descriptor_map.emplace(topic.ttype(), std::make_pair(quality_for_other_channels, topic.tdesc()));
+                type_descriptor_map.emplace(topic_info.name, std::make_pair(quality_for_other_channels, topic_info));
               }
               else
               {
                 if(type_descriptor_map_it->second.first < quality_for_other_channels)
                 {
                   // If the old descriptor has a lower quality than the current descriptor, we may overwrite it!
-                  type_descriptor_map_it->second = std::make_pair(quality_for_other_channels, topic.tdesc());
+                  type_descriptor_map_it->second = std::make_pair(quality_for_other_channels, topic_info);
                 }
               }
             }
@@ -166,18 +171,17 @@ namespace eCAL
             if ((channel_descriptor_entry_it != channel_descriptor_map.end())
               && (channel_descriptor_entry_it->second.first >= topic_info_map_entry.second.description_quality_))
             {
-              topic_info_map_entry.second.type_                = channel_descriptor_entry_it->second.second.first;
-              topic_info_map_entry.second.description_         = channel_descriptor_entry_it->second.second.second;
+              topic_info_map_entry.second.tinfo_               = channel_descriptor_entry_it->second.second;
               topic_info_map_entry.second.description_quality_ = channel_descriptor_entry_it->second.first;
             }
 
-            if (!topic_info_map_entry.second.type_.empty())
+            if (!topic_info_map_entry.second.tinfo_.name.empty())
             {
-              auto type_descriptor_entry_it = type_descriptor_map.find(topic_info_map_entry.second.type_);
+              auto type_descriptor_entry_it = type_descriptor_map.find(topic_info_map_entry.second.tinfo_.name);
               if ((type_descriptor_entry_it != type_descriptor_map.end())
                 && (type_descriptor_entry_it->second.first >= topic_info_map_entry.second.description_quality_)) 
               {
-                topic_info_map_entry.second.description_         = type_descriptor_entry_it->second.second;
+                topic_info_map_entry.second.tinfo_               = type_descriptor_entry_it->second.second;
                 topic_info_map_entry.second.description_quality_ = type_descriptor_entry_it->second.first;
               }
             }

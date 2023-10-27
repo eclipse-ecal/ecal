@@ -37,6 +37,21 @@ namespace eCAL
   namespace eh5
   {
       /**
+      * To be removed soon-ish
+      **/
+      std::string CombinedTopicEncodingAndType(const std::string& topic_encoding_, const std::string& topic_type_)
+      {
+        if (topic_encoding_.empty())
+        {
+          return topic_type_;
+        }
+        else
+        {
+          return topic_encoding_ + ":" + topic_type_;
+        }
+      }
+
+      /**
        * @brief Hdf5 based Writer implementation
       **/
       class Writer : public measurement::base::Writer
@@ -122,20 +137,20 @@ namespace eCAL
         void SetOneFilePerChannelEnabled(bool enabled) override { return measurement.SetOneFilePerChannelEnabled(enabled); }
 
         /**
-         * @brief Set description of the given channel
-         *
-         * @param channel_name    channel name
-         * @param description     description of the channel
-        **/
-        void SetChannelDescription(const std::string& channel_name, const std::string& description) override { return measurement.SetChannelDescription(channel_name, description); }
-
-        /**
-         * @brief Set type of the given channel
+         * @brief Set data type information of the given channel
          *
          * @param channel_name  channel name
-         * @param type          type of the channel
+         * @param info          datatype info of the channel
+         *
+         * @return              channel type
         **/
-        void SetChannelType(const std::string& channel_name, const std::string& type) override { return measurement.SetChannelType(channel_name, type); }
+        virtual void SetChannelDataTypeInformation(const std::string& channel_name, const measurement::base::DataTypeInformation& info) override
+        {
+
+          measurement.SetChannelType(channel_name, CombinedTopicEncodingAndType(info.encoding, info.name));
+          measurement.SetChannelDescription(channel_name, info.descriptor);
+        }
+
 
         /**
          * @brief Set measurement file base name (desired name for the actual hdf5 files that will be created)
