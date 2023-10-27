@@ -26,8 +26,8 @@ namespace eCAL
   CUDPReceiverPcap::CUDPReceiverPcap(const SReceiverAttr& attr_)
     : CUDPReceiverBase(attr_)
     , m_created(false)
-    , m_unicast(attr_.unicast)
     , m_localhost(attr_.localhost)
+    , m_unicast(attr_.unicast)
   {
     // set receive buffer size (default = 1 MB)
     int rcvbuf = 1024 * 1024;
@@ -41,27 +41,29 @@ namespace eCAL
     }
 
     // bind socket
-    if (!m_socket.bind(Udpcap::HostAddress::Any(), static_cast<uint16_t>(attr_.port)))
+    bool bind_succeeded(false);
+    if (m_localhost)
+    {
+      bind_succeeded = m_socket.bind(Udpcap::HostAddress::LocalHost(), static_cast<uint16_t>(attr_.port));
+    }
+    else
+    {
+      bind_succeeded = m_socket.bind(Udpcap::HostAddress::Any(), static_cast<uint16_t>(attr_.port));
+    }
+    if (!bind_succeeded)
     {
       std::cerr << "CUDPReceiverPcap: Unable to bind socket." << std::endl;
       return;
     }
 
-    if (!m_unicast)
+    if (!m_localhost && !m_unicast)
     {
       // set loopback option
       m_socket.setMulticastLoopbackEnabled(attr_.loopback);
     }
 
     // join multicast group
-    if (m_localhost)
-    {
-      AddMultiCastGroup("127.0.0.1");
-    }
-    else
-    {
-      AddMultiCastGroup(attr_.ipaddr.c_str());
-    }
+    AddMultiCastGroup(attr_.ipaddr.c_str());
 
     // state successful creation
     m_created = true;
@@ -69,7 +71,7 @@ namespace eCAL
 
   bool CUDPReceiverPcap::AddMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_unicast)
+    if (!m_localhost && !m_unicast)
     {
       // join multicast group
       if (!m_socket.joinMulticastGroup(Udpcap::HostAddress(ipaddr_)))
@@ -83,7 +85,7 @@ namespace eCAL
 
   bool CUDPReceiverPcap::RemMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_unicast)
+    if (!m_localhost && !m_unicast)
     {
       // leave multicast group
       if (!m_socket.leaveMulticastGroup(Udpcap::HostAddress(ipaddr_)))

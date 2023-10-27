@@ -153,6 +153,7 @@ namespace eCAL
     {
       SSenderAttr attr;
       // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
+      attr.localhost = !Config::IsNetworkEnabled();
       attr.broadcast = !Config::IsNetworkEnabled();
       attr.ipaddr    = UDP::GetLoggingMulticastAddress();
       attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;

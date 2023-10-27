@@ -67,6 +67,7 @@ namespace eCAL
     // set network attributes
     SSenderAttr attr;
     attr.ipaddr     = m_udp_ipaddr;
+    attr.localhost  = !Config::IsNetworkEnabled();
     attr.port       = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
     attr.ttl        = Config::GetUdpMulticastTtl();
     attr.sndbuf     = Config::GetUdpMulticastSndBufSizeBytes();

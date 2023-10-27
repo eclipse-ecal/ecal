@@ -43,8 +43,8 @@ namespace eCAL
 
   protected:
     bool                 m_created;
-    bool                 m_unicast;
     bool                 m_localhost;
+    bool                 m_unicast;
     Udpcap::UdpcapSocket m_socket;
   };
 

@@ -32,9 +32,9 @@ namespace eCAL
   CUDPReceiverAsio::CUDPReceiverAsio(const SReceiverAttr& attr_) :
     CUDPReceiverBase(attr_),
     m_created(false),
+    m_localhost(attr_.localhost),
     m_broadcast(attr_.broadcast),
     m_unicast(attr_.unicast),
-    m_localhost(attr_.localhost),
     m_socket(m_iocontext)
   {
     if (m_broadcast && m_unicast)
@@ -43,8 +43,11 @@ namespace eCAL
       return;
     }
 
+    // define endpoint
+    asio::ip::udp::endpoint listen_endpoint(asio::ip::udp::v4(), static_cast<unsigned short>(attr_.port));
+    if (m_localhost) listen_endpoint.address(asio::ip::address::from_string("127.0.0.1"));
+
     // create socket
-    const asio::ip::udp::endpoint listen_endpoint(asio::ip::udp::v4(), static_cast<unsigned short>(attr_.port));
     {
       asio::error_code ec;
       m_socket.open(listen_endpoint.protocol(), ec);
@@ -76,7 +79,7 @@ namespace eCAL
       }
     }
 
-    if (!m_unicast)
+    if (!m_localhost && !m_unicast)
     {
       // set loopback option
       const asio::ip::multicast::enable_loopback loopback(attr_.loopback);
@@ -102,14 +105,7 @@ namespace eCAL
     }
 
     // join multicast group
-    if (m_localhost)
-    {
-      AddMultiCastGroup("127.0.0.1");
-    }
-    else
-    {
-      AddMultiCastGroup(attr_.ipaddr.c_str());
-    }
+    AddMultiCastGroup(attr_.ipaddr.c_str());
 
     // state successful creation
     m_created = true;
@@ -117,7 +113,7 @@ namespace eCAL
 
   bool CUDPReceiverAsio::AddMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_broadcast && !m_unicast)
+    if (!m_localhost && !m_broadcast && !m_unicast)
     {
       // join multicast group
 #ifdef __linux__
@@ -153,7 +149,7 @@ namespace eCAL
 
   bool CUDPReceiverAsio::RemMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_broadcast && !m_unicast)
+    if (!m_localhost && !m_broadcast && !m_unicast)
     {
       // Leave multicast group
 #ifdef __linux__

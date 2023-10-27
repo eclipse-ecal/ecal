@@ -83,6 +83,7 @@ namespace eCAL
       // set network attributes
       SSenderAttr attr;
       attr.ipaddr    = UDP::GetRegistrationMulticastAddress();
+      attr.localhost = !Config::IsNetworkEnabled();
       attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
       attr.ttl       = Config::GetUdpMulticastTtl();
       // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
