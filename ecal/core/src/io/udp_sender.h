@@ -31,7 +31,6 @@ namespace eCAL
   struct SSenderAttr
   {
     std::string ipaddr;
-    bool        localhost = false;
     int         port      = 0;
     int         ttl       = 0;
     bool        broadcast = false;

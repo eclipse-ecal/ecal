@@ -83,13 +83,18 @@ namespace eCAL
       // set network attributes
       SSenderAttr attr;
       attr.ipaddr    = UDP::GetRegistrationMulticastAddress();
-      attr.localhost = !Config::IsNetworkEnabled();
       attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
       attr.ttl       = Config::GetUdpMulticastTtl();
       // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
       attr.broadcast = !Config::IsNetworkEnabled();
       attr.loopback  = true;
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
+
+      // for local only communication we force the ttl (udp package 'hop limit') to 0
+      if (!Config::IsNetworkEnabled())
+      {
+        attr.ttl = 0;
+      }
 
       // create udp sample sender
       m_reg_sample_snd = std::make_shared<CSampleSender>(attr);

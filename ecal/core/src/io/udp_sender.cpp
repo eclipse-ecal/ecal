@@ -47,7 +47,6 @@ namespace eCAL
     size_t Send(const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
 
   protected:
-    bool                    m_localhost;
     bool                    m_broadcast;
     bool                    m_unicast;
     asio::io_context        m_iocontext;
@@ -57,19 +56,12 @@ namespace eCAL
   };
 
   CUDPSenderImpl::CUDPSenderImpl(const SSenderAttr& attr_) :
-    m_localhost(attr_.localhost),
     m_broadcast(attr_.broadcast),
     m_unicast(attr_.unicast),
     m_endpoint(asio::ip::make_address(attr_.ipaddr), static_cast<unsigned short>(attr_.port)),
     m_socket(m_iocontext, m_endpoint.protocol()),
     m_port(static_cast<unsigned short>(attr_.port))
   {
-    if (m_localhost)
-    {
-      m_endpoint.address(asio::ip::address::from_string("127.0.0.1"));
-      return;
-    }
-
     if (m_broadcast && m_unicast)
     {
       std::cerr << "CUDPSender: Setting broadcast and unicast option true is not allowed." << std::endl;
@@ -118,10 +110,10 @@ namespace eCAL
   size_t CUDPSenderImpl::Send(const void* buf_, const size_t len_, const char* ipaddr_)
   {
     const asio::socket_base::message_flags flags(0);
-    asio::error_code                       ec;
-    size_t                                 sent(0);
-    if (!m_localhost && (ipaddr_ != nullptr) && (ipaddr_[0] != '\0')) sent = m_socket.send_to(asio::buffer(buf_, len_), asio::ip::udp::endpoint(asio::ip::make_address(ipaddr_), m_port), flags, ec);
-    else                                                              sent = m_socket.send_to(asio::buffer(buf_, len_), m_endpoint, flags, ec);
+    asio::error_code                 ec;
+    size_t                           sent(0);
+    if ((ipaddr_ != nullptr) && (ipaddr_[0] != '\0')) sent = m_socket.send_to(asio::buffer(buf_, len_), asio::ip::udp::endpoint(asio::ip::make_address(ipaddr_), m_port), flags, ec);
+    else                                              sent = m_socket.send_to(asio::buffer(buf_, len_), m_endpoint, flags, ec);
     if (ec)
     {
       std::cout << "CUDPSender::Send failed with: \'" << ec.message() << "\'" << std::endl;

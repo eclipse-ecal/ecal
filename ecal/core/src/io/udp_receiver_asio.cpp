@@ -24,6 +24,40 @@
 #include "linux/ecal_socket_option_linux.h"
 #endif
 
+namespace
+{
+  bool isLocalAddress(const asio::ip::address& address)
+  {
+    // Check if the address is a loopback address.
+    if (address.is_loopback())
+    {
+      return true;
+    }
+
+    // Check if the address is in the private IP address ranges.
+    // For IPv4, the private address ranges are 10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16.
+    if (address.is_v4())
+    {
+      uint32_t ip = address.to_v4().to_ulong();
+      return ((ip & 0xFF000000) == 0x0A000000) || // 10.0.0.0/8
+             ((ip & 0xFFF00000) == 0xAC100000) || // 172.16.0.0/12
+             ((ip & 0xFFFF0000) == 0xC0A80000);   // 192.168.0.0/16
+    }
+
+#if 0 // not used currently
+    // Check if the address is in the link-local range for IPv6.
+    // Link-local IPv6 addresses typically start with fe80::/10.
+    if (address.is_v6())
+    {
+      const auto& bytes = address.to_v6().to_bytes();
+      return bytes[0] == 0xFE && (bytes[1] & 0xC0) == 0x80;
+    }
+#endif
+
+    return false;
+  }
+}
+
 namespace eCAL
 {
   ////////////////////////////////////////////////////////
@@ -43,11 +77,8 @@ namespace eCAL
       return;
     }
 
-    // define endpoint
-    asio::ip::udp::endpoint listen_endpoint(asio::ip::udp::v4(), static_cast<unsigned short>(attr_.port));
-    if (m_localhost) listen_endpoint.address(asio::ip::address::from_string("127.0.0.1"));
-
     // create socket
+    const asio::ip::udp::endpoint listen_endpoint(asio::ip::udp::v4(), static_cast<unsigned short>(attr_.port));
     {
       asio::error_code ec;
       m_socket.open(listen_endpoint.protocol(), ec);
@@ -79,7 +110,7 @@ namespace eCAL
       }
     }
 
-    if (!m_localhost && !m_unicast)
+    if (!m_unicast)
     {
       // set loopback option
       const asio::ip::multicast::enable_loopback loopback(attr_.loopback);
@@ -113,7 +144,7 @@ namespace eCAL
 
   bool CUDPReceiverAsio::AddMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_localhost && !m_broadcast && !m_unicast)
+    if (!m_broadcast && !m_unicast)
     {
       // join multicast group
 #ifdef __linux__
@@ -149,7 +180,7 @@ namespace eCAL
 
   bool CUDPReceiverAsio::RemMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_localhost && !m_broadcast && !m_unicast)
+    if (!m_broadcast && !m_unicast)
     {
       // Leave multicast group
 #ifdef __linux__
@@ -192,20 +223,40 @@ namespace eCAL
     // run for timeout ms
     RunIOContext(asio::chrono::milliseconds(timeout_));
 
-    // retrieve underlaying raw socket informations
+    // did we receive anything ?
+    if (reclen == 0)
+    {
+      return (0);
+    }
+
+    // is the caller interested in the source address ?
     if (address_)
     {
+      // retrieve underlaying raw socket informations
       if (m_sender_endpoint.address().is_v4())
       {
         asio::detail::sockaddr_in4_type* in4 = reinterpret_cast<asio::detail::sockaddr_in4_type*>(m_sender_endpoint.data());
-        address_->sin_addr = in4->sin_addr;
-        address_->sin_family = in4->sin_family;
-        address_->sin_port = in4->sin_port;
-        memset(&(address_->sin_zero), 0, 8);
+        if (address_)
+        {
+          address_->sin_addr   = in4->sin_addr;
+          address_->sin_family = in4->sin_family;
+          address_->sin_port   = in4->sin_port;
+          memset(&(address_->sin_zero), 0, 8);
+        }
       }
       else
       {
         std::cout << "CUDPReceiverAsio: ipv4 address conversion failed." << std::endl;
+      }
+    }
+
+    // are we running in 'local host only' receiving mode ?
+    if (m_localhost)
+    {
+      // if this is not a local address, return 0
+      if (!isLocalAddress(m_sender_endpoint.address()))
+      {
+        return (0);
       }
     }
 

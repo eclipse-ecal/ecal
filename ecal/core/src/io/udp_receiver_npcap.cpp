@@ -18,6 +18,30 @@
 */
 #include <io/udp_receiver_npcap.h>
 
+namespace
+{
+  bool isLocalAddress(Udpcap::HostAddress& address)
+  {
+    // Check if the address is a loopback address.
+    if (address.isLoopback())
+    {
+      return true;
+    }
+
+    // Check if the address is in the private IP address ranges.
+    // For IPv4, the private address ranges are 10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16.
+    if (address.isValid())
+    {
+      uint32_t ip = address.toInt();
+      return ((ip & 0xFF000000) == 0x0A000000) || // 10.0.0.0/8
+             ((ip & 0xFFF00000) == 0xAC100000) || // 172.16.0.0/12
+             ((ip & 0xFFFF0000) == 0xC0A80000);   // 192.168.0.0/16
+    }
+
+    return false;
+  }
+}
+
 namespace eCAL
 {
   ////////////////////////////////////////////////////////
@@ -41,22 +65,13 @@ namespace eCAL
     }
 
     // bind socket
-    bool bind_succeeded(false);
-    if (m_localhost)
-    {
-      bind_succeeded = m_socket.bind(Udpcap::HostAddress::LocalHost(), static_cast<uint16_t>(attr_.port));
-    }
-    else
-    {
-      bind_succeeded = m_socket.bind(Udpcap::HostAddress::Any(), static_cast<uint16_t>(attr_.port));
-    }
-    if (!bind_succeeded)
+    if (!m_socket.bind(Udpcap::HostAddress::Any(), static_cast<uint16_t>(attr_.port)))
     {
       std::cerr << "CUDPReceiverPcap: Unable to bind socket." << std::endl;
       return;
     }
 
-    if (!m_localhost && !m_unicast)
+    if (!m_unicast)
     {
       // set loopback option
       m_socket.setMulticastLoopbackEnabled(attr_.loopback);
@@ -71,7 +86,7 @@ namespace eCAL
 
   bool CUDPReceiverPcap::AddMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_localhost && !m_unicast)
+    if (!m_unicast)
     {
       // join multicast group
       if (!m_socket.joinMulticastGroup(Udpcap::HostAddress(ipaddr_)))
@@ -85,7 +100,7 @@ namespace eCAL
 
   bool CUDPReceiverPcap::RemMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_localhost && !m_unicast)
+    if (!m_unicast)
     {
       // leave multicast group
       if (!m_socket.leaveMulticastGroup(Udpcap::HostAddress(ipaddr_)))
@@ -101,25 +116,43 @@ namespace eCAL
   {
     if (!m_created) return 0;
 
-    size_t bytes_received;
+    // receive datagram
+    Udpcap::HostAddress source_address;
+    uint16_t source_port;
+    size_t bytes_received = m_socket.receiveDatagram(buf_, len_, static_cast<unsigned long>(timeout_), &source_address, &source_port);
+
+    // did we receive anything ?
+    if (bytes_received == 0)
+    {
+      return 0;
+    }
+
+    // is the caller interested in the source address ?
     if (address_)
     {
-      Udpcap::HostAddress source_address;
-      uint16_t source_port;
-      bytes_received = m_socket.receiveDatagram(buf_, len_, static_cast<unsigned long>(timeout_), &source_address, &source_port);
-
-      if (bytes_received && source_address.isValid())
+      if (source_address.isValid())
       {
         address_->sin_addr.s_addr = source_address.toInt();
         address_->sin_family = AF_INET;
-        address_->sin_port = source_port;
+        address_->sin_port   = source_port;
         memset(&(address_->sin_zero), 0, 8);
       }
+      else
+      {
+        std::cout << "CUDPReceiverPcap: source address conversion failed." << std::endl;
+      }
     }
-    else
+
+    // are we running in 'local host only' receiving mode ?
+    if (m_localhost)
     {
-      bytes_received = m_socket.receiveDatagram(buf_, len_, static_cast<unsigned long>(timeout_));
+      // if this is not a local address, return 0
+      if (!isLocalAddress(source_address))
+      {
+        return 0;
+      }
     }
+  
     return bytes_received;
   }
 }

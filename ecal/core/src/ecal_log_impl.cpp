@@ -153,13 +153,18 @@ namespace eCAL
     {
       SSenderAttr attr;
       // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
-      attr.localhost = !Config::IsNetworkEnabled();
       attr.broadcast = !Config::IsNetworkEnabled();
       attr.ipaddr    = UDP::GetLoggingMulticastAddress();
       attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
       attr.loopback  = true;
       attr.ttl       = Config::GetUdpMulticastTtl();
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
+
+      // for local only communication we force the ttl (udp package 'hop limit') to 0
+      if (!Config::IsNetworkEnabled())
+      {
+        attr.ttl = 0;
+      }
 
       m_udp_sender = std::make_unique<CUDPSender>(attr);
     }
