@@ -43,10 +43,10 @@ namespace
       // For IPv4, the private address ranges are 10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16.
       if (address.isValid())
       {
-        uint32_t ip = address.toInt();
+        const uint32_t ip = address.toInt();
         return !((ip & 0xFF000000) == 0x0A000000) &&  // Not in 10.0.0.0/8
-          !((ip & 0xFFF00000) == 0xAC100000) &&  // Not in 172.16.0.0/12
-          !((ip & 0xFFFF0000) == 0xC0A80000);    // Not in 192.168.0.0/16
+               !((ip & 0xFFF00000) == 0xAC100000) &&  // Not in 172.16.0.0/12
+               !((ip & 0xFFFF0000) == 0xC0A80000);    // Not in 192.168.0.0/16
       }
 
       return true;
@@ -140,7 +140,7 @@ namespace eCAL
     }
 
     // is the caller interested in the source address ?
-    if (address_)
+    if (address_ != nullptr)
     {
       if (source_address.isValid())
       {

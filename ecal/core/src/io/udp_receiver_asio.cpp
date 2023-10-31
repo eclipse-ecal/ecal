@@ -47,7 +47,7 @@ namespace
     // For IPv4, the private address ranges are 10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16.
     if (address.is_v4())
     {
-      uint32_t ip = address.to_v4().to_ulong();
+      const uint32_t ip = address.to_v4().to_ulong();
       return !((ip & 0xFF000000) == 0x0A000000) &&  // Not in 10.0.0.0/8
              !((ip & 0xFFF00000) == 0xAC100000) &&  // Not in 172.16.0.0/12
              !((ip & 0xFFFF0000) == 0xC0A80000);    // Not in 192.168.0.0/16
@@ -229,19 +229,16 @@ namespace eCAL
     }
 
     // is the caller interested in the source address ?
-    if (address_)
+    if (address_ != nullptr)
     {
-      // retrieve underlaying raw socket informations
+      // retrieve underlying raw socket information
       if (m_sender_endpoint.address().is_v4())
       {
         asio::detail::sockaddr_in4_type* in4 = reinterpret_cast<asio::detail::sockaddr_in4_type*>(m_sender_endpoint.data());
-        if (address_)
-        {
-          address_->sin_addr   = in4->sin_addr;
-          address_->sin_family = in4->sin_family;
-          address_->sin_port   = in4->sin_port;
-          memset(&(address_->sin_zero), 0, 8);
-        }
+        address_->sin_addr   = in4->sin_addr;
+        address_->sin_family = in4->sin_family;
+        address_->sin_port   = in4->sin_port;
+        memset(&(address_->sin_zero), 0, 8);
       }
       else
       {
