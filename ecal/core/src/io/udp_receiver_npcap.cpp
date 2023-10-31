@@ -20,25 +20,37 @@
 
 namespace
 {
-  bool isLocalAddress(Udpcap::HostAddress& address)
+  namespace
   {
-    // Check if the address is a loopback address.
-    if (address.isLoopback())
+    /**
+     * @brief Check if an IP address originates from an external host.
+     *
+     * This function determines if the given IP address is associated with an external host,
+     * meaning it is not the own host or part of a private network (e.g., 10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16 for IPv4).
+     *
+     * @param address The IP address to be checked.
+     * @return True if the address is from an external host, false if it is from the own host or a private network.
+     */
+    bool isFromExternalHost(const Udpcap::HostAddress& address)
     {
+      // Check if the address is a loopback address
+      if (address.isLoopback())
+      {
+        return false;
+      }
+
+      // Check if the address is in the private IP address ranges.
+      // For IPv4, the private address ranges are 10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16.
+      if (address.isValid())
+      {
+        uint32_t ip = address.toInt();
+        return !((ip & 0xFF000000) == 0x0A000000) &&  // Not in 10.0.0.0/8
+          !((ip & 0xFFF00000) == 0xAC100000) &&  // Not in 172.16.0.0/12
+          !((ip & 0xFFFF0000) == 0xC0A80000);    // Not in 192.168.0.0/16
+      }
+
       return true;
     }
-
-    // Check if the address is in the private IP address ranges.
-    // For IPv4, the private address ranges are 10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16.
-    if (address.isValid())
-    {
-      uint32_t ip = address.toInt();
-      return ((ip & 0xFF000000) == 0x0A000000) || // 10.0.0.0/8
-             ((ip & 0xFFF00000) == 0xAC100000) || // 172.16.0.0/12
-             ((ip & 0xFFFF0000) == 0xC0A80000);   // 192.168.0.0/16
-    }
-
-    return false;
   }
 }
 
@@ -146,8 +158,8 @@ namespace eCAL
     // are we running in 'local host only' receiving mode ?
     if (m_localhost)
     {
-      // if this is not a local address, return 0
-      if (!isLocalAddress(source_address))
+      // if this address originates from an external host
+      if (isFromExternalHost(source_address))
       {
         return 0;
       }

@@ -26,12 +26,21 @@
 
 namespace
 {
-  bool isLocalAddress(const asio::ip::address& address)
+  /**
+   * @brief Check if an IP address originates from an external host.
+   *
+   * This function determines if the given IP address is associated with an external host,
+   * meaning it is not the own host or part of a private network (e.g., 10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16 for IPv4).
+   *
+   * @param address The IP address to be checked.
+   * @return True if the address is from an external host, false if it is from the own host or a private network.
+   */
+  bool isFromExternalHost(const asio::ip::address& address)
   {
-    // Check if the address is a loopback address.
+    // Check if the address is a loopback address
     if (address.is_loopback())
     {
-      return true;
+      return false;
     }
 
     // Check if the address is in the private IP address ranges.
@@ -39,22 +48,12 @@ namespace
     if (address.is_v4())
     {
       uint32_t ip = address.to_v4().to_ulong();
-      return ((ip & 0xFF000000) == 0x0A000000) || // 10.0.0.0/8
-             ((ip & 0xFFF00000) == 0xAC100000) || // 172.16.0.0/12
-             ((ip & 0xFFFF0000) == 0xC0A80000);   // 192.168.0.0/16
+      return !((ip & 0xFF000000) == 0x0A000000) &&  // Not in 10.0.0.0/8
+             !((ip & 0xFFF00000) == 0xAC100000) &&  // Not in 172.16.0.0/12
+             !((ip & 0xFFFF0000) == 0xC0A80000);    // Not in 192.168.0.0/16
     }
 
-#if 0 // not used currently
-    // Check if the address is in the link-local range for IPv6.
-    // Link-local IPv6 addresses typically start with fe80::/10.
-    if (address.is_v6())
-    {
-      const auto& bytes = address.to_v6().to_bytes();
-      return bytes[0] == 0xFE && (bytes[1] & 0xC0) == 0x80;
-    }
-#endif
-
-    return false;
+    return true;
   }
 }
 
@@ -253,8 +252,8 @@ namespace eCAL
     // are we running in 'local host only' receiving mode ?
     if (m_localhost)
     {
-      // if this is not a local address, return 0
-      if (!isLocalAddress(m_sender_endpoint.address()))
+      // if this address originates from an external host
+      if (isFromExternalHost(m_sender_endpoint.address()))
       {
         return (0);
       }
