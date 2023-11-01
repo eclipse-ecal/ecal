@@ -30,12 +30,18 @@
 #include <memory>
 
 #include <ecal/measurement/base/writer.h>
-#include <ecalhdf5/eh5_meas.h>
 
 namespace eCAL
 {
   namespace eh5
   {
+    class HDF5Meas;
+  }
+
+  namespace measurement
+  {
+    namespace hdf5
+    {
       /**
        * @brief Hdf5 based Writer implementation
       **/
@@ -45,12 +51,31 @@ namespace eCAL
         /**
          * @brief Constructor
         **/
-        Writer() = default;
+        Writer();
 
         /**
          * @brief Constructor
         **/
-        Writer(const std::string& path) : measurement(path, eAccessType::CREATE) {}
+        Writer(const std::string& path);
+
+        /**
+         * @brief Destructor
+        **/
+        virtual ~Writer();
+
+        /**
+         * @brief Copy operator
+        **/
+        Writer(const Writer& other) = delete;
+        Writer& operator=(const Writer& other) = delete;
+
+        /**
+        * @brief Move operator
+        **/
+        Writer(Writer&&) noexcept;
+        Writer& operator=(Writer&&) noexcept;
+
+
 
         /**
          * @brief Open file
@@ -69,35 +94,35 @@ namespace eCAL
          *
          * @return         true if output (AccessType::CREATE) measurement directory structure can be accessed/created, false otherwise.
         **/
-        bool Open(const std::string& path) override { return measurement.Open(path, eAccessType::CREATE); }
+        bool Open(const std::string& path) override;
 
         /**
          * @brief Close file
          *
          * @return         true if succeeds, false if it fails
         **/
-        bool Close() override { return measurement.Close(); }
+        bool Close() override;
 
         /**
          * @brief Checks if file/measurement is ok
          *
          * @return  true if location is accessible, false otherwise
         **/
-        bool IsOk() const override { return measurement.IsOk(); }
+        bool IsOk() const override;
 
         /**
          * @brief Gets maximum allowed size for an individual file
          *
          * @return       maximum size in MB
         **/
-        size_t GetMaxSizePerFile() const override { return measurement.GetMaxSizePerFile(); }
+        size_t GetMaxSizePerFile() const override;
 
         /**
          * @brief Sets maximum allowed size for an individual file
          *
          * @param size   maximum size in MB
         **/
-        void SetMaxSizePerFile(size_t size) override { return measurement.SetMaxSizePerFile(size); }
+        void SetMaxSizePerFile(size_t size) override;
 
         /**
         * @brief Whether each Channel shall be writte in its own file
@@ -108,7 +133,7 @@ namespace eCAL
         *
         * @return true, if one file per channel is enabled
         */
-        bool IsOneFilePerChannelEnabled() const override { return measurement.IsOneFilePerChannelEnabled(); }
+        bool IsOneFilePerChannelEnabled() const override;
 
         /**
         * @brief Enable / disable the creation of one individual file per channel
@@ -119,7 +144,7 @@ namespace eCAL
         *
         * @param enabled   Whether one file shall be created per channel
         */
-        void SetOneFilePerChannelEnabled(bool enabled) override { return measurement.SetOneFilePerChannelEnabled(enabled); }
+        void SetOneFilePerChannelEnabled(bool enabled) override;
 
         /**
          * @brief Set description of the given channel
@@ -127,7 +152,7 @@ namespace eCAL
          * @param channel_name    channel name
          * @param description     description of the channel
         **/
-        void SetChannelDescription(const std::string& channel_name, const std::string& description) override { return measurement.SetChannelDescription(channel_name, description); }
+        void SetChannelDescription(const std::string& channel_name, const std::string& description) override;
 
         /**
          * @brief Set type of the given channel
@@ -135,14 +160,14 @@ namespace eCAL
          * @param channel_name  channel name
          * @param type          type of the channel
         **/
-        void SetChannelType(const std::string& channel_name, const std::string& type) override { return measurement.SetChannelType(channel_name, type); }
+        void SetChannelType(const std::string& channel_name, const std::string& type) override;
 
         /**
          * @brief Set measurement file base name (desired name for the actual hdf5 files that will be created)
          *
          * @param base_name        Name of the hdf5 files that will be created.
         **/
-        void SetFileBaseName(const std::string& base_name) override { return measurement.SetFileBaseName(base_name); }
+        void SetFileBaseName(const std::string& base_name) override;
 
         /**
          * @brief Add entry to file
@@ -157,15 +182,11 @@ namespace eCAL
          *
          * @return              true if succeeds, false if it fails
         **/
-        bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) override
-        {
-          return measurement.AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel_name, id, clock);
-        }
+        bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) override;
 
-        private:
-          HDF5Meas measurement;
-
+      private:
+        std::unique_ptr<eh5::HDF5Meas> measurement;
       };
-
-  }  // namespace eh5
+    }  // namespace hdf5
+  }  // namespace measurement
 }  // namespace eCAL

@@ -30,7 +30,6 @@
 #include <memory>
 
 #include "eh5_types.h"
-#include <ecal/measurement/base/measurement.h>
 
 namespace eCAL
 {
@@ -41,7 +40,7 @@ namespace eCAL
     /**
      * @brief eCAL HDF5 measurement API
     **/
-    class HDF5Meas : public eCAL::measurement::base::Measurement
+    class HDF5Meas
     {
     public:
       /**
@@ -61,7 +60,7 @@ namespace eCAL
       /**
        * @brief Destructor
       **/
-      ~HDF5Meas() override;
+      ~HDF5Meas();
 
       /**
        * @brief Copy constructor deleted
@@ -106,42 +105,42 @@ namespace eCAL
        * @return         true if output (eAccessType::CREATE) measurement directory structure can be accessed/created, false otherwise.
        *                 true if input (eAccessType::RDONLY) measurement/file path was opened, false otherwise.
       **/
-      bool Open(const std::string& path, measurement::base::AccessType access = measurement::base::AccessType::RDONLY) override;
+      bool Open(const std::string& path, measurement::base::AccessType access = measurement::base::AccessType::RDONLY);
 
       /**
        * @brief Close file
        *
        * @return         true if succeeds, false if it fails
       **/
-      bool Close() override;
+      bool Close();
 
       /**
        * @brief Checks if file/measurement is ok
        *
        * @return  true if meas can be opened(read) or location is accessible(write), false otherwise
       **/
-      bool IsOk() const override;
+      bool IsOk() const;
 
       /**
        * @brief Get the File Type Version of the current opened file
        *
        * @return       file version
       **/
-      std::string GetFileVersion() const override;
+      std::string GetFileVersion() const;
 
       /**
        * @brief Gets maximum allowed size for an individual file
        *
        * @return       maximum size in MB
       **/
-      size_t GetMaxSizePerFile() const override;
+      size_t GetMaxSizePerFile() const;
 
       /**
        * @brief Sets maximum allowed size for an individual file
        *
        * @param size   maximum size in MB
       **/
-      void SetMaxSizePerFile(size_t size) override;
+      void SetMaxSizePerFile(size_t size);
 
       /**
       * @brief Whether each Channel shall be writte in its own file
@@ -152,7 +151,7 @@ namespace eCAL
       * 
       * @return true, if one file per channel is enabled
       */
-      bool IsOneFilePerChannelEnabled() const override;
+      bool IsOneFilePerChannelEnabled() const;
 
       /**
       * @brief Enable / disable the creation of one individual file per channel
@@ -163,14 +162,14 @@ namespace eCAL
       * 
       * @param enabled   Whether one file shall be created per channel
       */
-      void SetOneFilePerChannelEnabled(bool enabled) override;
+      void SetOneFilePerChannelEnabled(bool enabled);
 
       /**
        * @brief Get the available channel names of the current opened file / measurement
        *
        * @return       channel names
       **/
-      std::set<std::string> GetChannelNames() const override;
+      std::set<std::string> GetChannelNames() const;
 
       /**
        * @brief Check if channel exists in measurement
@@ -179,7 +178,7 @@ namespace eCAL
        *
        * @return       true if exists, false otherwise
       **/
-      bool HasChannel(const std::string& channel_name) const override;
+      bool HasChannel(const std::string& channel_name) const;
 
       /**
        * @brief Get the channel description for the given channel
@@ -188,7 +187,7 @@ namespace eCAL
        *
        * @return              channel description
       **/
-      std::string GetChannelDescription(const std::string& channel_name) const override;
+      std::string GetChannelDescription(const std::string& channel_name) const;
 
       /**
        * @brief Set description of the given channel
@@ -196,7 +195,7 @@ namespace eCAL
        * @param channel_name    channel name
        * @param description     description of the channel
       **/
-      void SetChannelDescription(const std::string& channel_name, const std::string& description) override;
+      void SetChannelDescription(const std::string& channel_name, const std::string& description);
 
       /**
        * @brief Gets the channel type of the given channel
@@ -205,7 +204,7 @@ namespace eCAL
        *
        * @return              channel type
       **/
-      std::string GetChannelType(const std::string& channel_name) const override;
+      std::string GetChannelType(const std::string& channel_name) const;
 
       /**
        * @brief Set type of the given channel
@@ -213,7 +212,7 @@ namespace eCAL
        * @param channel_name  channel name
        * @param type          type of the channel
       **/
-      void SetChannelType(const std::string& channel_name, const std::string& type) override;
+      void SetChannelType(const std::string& channel_name, const std::string& type);
 
       /**
        * @brief Gets minimum timestamp for specified channel
@@ -222,7 +221,7 @@ namespace eCAL
        *
        * @return                minimum timestamp value
       **/
-      long long GetMinTimestamp(const std::string& channel_name) const override;
+      long long GetMinTimestamp(const std::string& channel_name) const;
 
       /**
        * @brief Gets maximum timestamp for specified channel
@@ -231,7 +230,7 @@ namespace eCAL
        *
        * @return                maximum timestamp value
       **/
-      long long GetMaxTimestamp(const std::string& channel_name) const override;
+      long long GetMaxTimestamp(const std::string& channel_name) const;
 
       /**
        * @brief Gets the header info for all data entries for the given channel
@@ -242,7 +241,7 @@ namespace eCAL
        *
        * @return                    true if succeeds, false if it fails
       **/
-      bool GetEntriesInfo(const std::string& channel_name, measurement::base::EntryInfoSet& entries) const override;
+      bool GetEntriesInfo(const std::string& channel_name, measurement::base::EntryInfoSet& entries) const;
 
       /**
        * @brief Gets the header info for data entries for the given channel included in given time range (begin->end)
@@ -255,7 +254,7 @@ namespace eCAL
        *
        * @return                   true if succeeds, false if it fails
       **/
-      bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, measurement::base::EntryInfoSet& entries) const override;
+      bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, measurement::base::EntryInfoSet& entries) const;
 
       /**
        * @brief Gets data size of a specific entry
@@ -265,7 +264,7 @@ namespace eCAL
        *
        * @return                 true if succeeds, false if it fails
       **/
-      bool GetEntryDataSize(long long entry_id, size_t& size) const override;
+      bool GetEntryDataSize(long long entry_id, size_t& size) const;
 
       /**
        * @brief Gets data from a specific entry
@@ -275,14 +274,14 @@ namespace eCAL
        *
        * @return                 true if succeeds, false if it fails
       **/
-      bool GetEntryData(long long entry_id, void* data) const override;
+      bool GetEntryData(long long entry_id, void* data) const;
 
       /**
        * @brief Set measurement file base name (desired name for the actual hdf5 files that will be created)
        *
        * @param base_name        Name of the hdf5 files that will be created.
       **/
-      void SetFileBaseName(const std::string& base_name) override;
+      void SetFileBaseName(const std::string& base_name);
 
       /**
        * @brief Add entry to file
@@ -297,19 +296,24 @@ namespace eCAL
        *
        * @return              true if succeeds, false if it fails
       **/
-      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) override;
+      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock);
+
+      /**
+       * @brief Callback function type for pre file split notification
+      **/
+      typedef std::function<void(void)> CallbackFunction;
 
       /**
        * @brief Connect callback for pre file split notification
        *
        * @param cb   callback function
       **/
-      void ConnectPreSplitCallback(CallbackFunction cb) override;
+      void ConnectPreSplitCallback(CallbackFunction cb);
 
       /**
        * @brief Disconnect pre file split callback
       **/
-      void DisconnectPreSplitCallback() override;
+      void DisconnectPreSplitCallback();
 
      private:
       std::unique_ptr<HDF5MeasImpl> hdf_meas_impl_;

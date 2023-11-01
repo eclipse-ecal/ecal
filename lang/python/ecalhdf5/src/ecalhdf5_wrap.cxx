@@ -39,7 +39,7 @@
 typedef struct
 {
   PyObject_HEAD
-  eCAL::measurement::base::Measurement *hdf5_meas;
+  eCAL::eh5::HDF5Meas *hdf5_meas;
 } Meas;
 
 /****************************************/

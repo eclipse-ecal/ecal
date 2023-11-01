@@ -58,7 +58,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   eCAL::core
   eCAL::app_pb
   eCAL::ecaltime_pb
-  eCAL::hdf5
+  eCAL::measurement_hdf5
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
