@@ -13,9 +13,9 @@ Writer::Writer(const std::string& path)
 
 Writer::~Writer() = default;
 
-Writer::Writer(Writer&&) = default;
+Writer::Writer(Writer&&) noexcept = default;
 
-Writer& Writer::operator=(Writer&&) = default;
+Writer& Writer::operator=(Writer&&) noexcept = default;
 
 bool Writer::Open(const std::string& path)
 {

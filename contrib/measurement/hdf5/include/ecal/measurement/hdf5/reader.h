@@ -72,8 +72,8 @@ namespace eCAL
         /**
         * @brief Move operator
         **/
-        Reader(Reader&&);
-        Reader& operator=(Reader&&);
+        Reader(Reader&&) noexcept;
+        Reader& operator=(Reader&&) noexcept;
 
         /**
          * @brief Open file

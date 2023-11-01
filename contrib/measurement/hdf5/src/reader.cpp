@@ -13,9 +13,9 @@ Reader::Reader(const std::string& path)
 
 Reader::~Reader() = default;
 
-Reader::Reader(Reader&&) = default;
+Reader::Reader(Reader&&) noexcept = default;
 
-Reader& Reader::operator=(Reader&&) = default;
+Reader& Reader::operator=(Reader&&) noexcept = default;
 
 bool Reader::Open(const std::string& path) 
 {

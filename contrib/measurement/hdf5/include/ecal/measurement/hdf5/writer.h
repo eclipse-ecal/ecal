@@ -72,8 +72,8 @@ namespace eCAL
         /**
         * @brief Move operator
         **/
-        Writer(Writer&&);
-        Writer& operator=(Writer&&);
+        Writer(Writer&&) noexcept;
+        Writer& operator=(Writer&&) noexcept;
 
 
 
