@@ -29,11 +29,12 @@
 #define YAML_CPP_STATIC_DEFINE
 #include "yaml-cpp/yaml.h"
 
-#include <ecalhdf5/eh5_meas.h>
 #include <ecal_utils/str_convert.h>
 #include <ecal_utils/filesystem.h>
 
 #include "logger.h"
+
+#include <ecal/measurement/base/types.h>
 
 namespace eCALMeasCutterUtils
 {

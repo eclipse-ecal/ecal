@@ -50,14 +50,9 @@ set(ecalhdf5_src
 )
 
 set(ecalhdf5_header_base
-    include/ecal/measurement/imeasurement.h
-    include/ecal/measurement/measurement.h
-    include/ecal/measurement/omeasurement.h
     include/ecalhdf5/eh5_defs.h
     include/ecalhdf5/eh5_meas.h
-    include/ecalhdf5/eh5_reader.h
     include/ecalhdf5/eh5_types.h
-    include/ecalhdf5/eh5_writer.h
 )
 
 ecal_add_library(${PROJECT_NAME} ${ecalhdf5_src} ${ecalhdf5_header_base})
@@ -79,8 +74,8 @@ target_compile_options(${PROJECT_NAME}
     $<$<CXX_COMPILER_ID:GNU>:-Wextra>)
 
 target_link_libraries(${PROJECT_NAME} 
-  PUBLIC 
-    eCAL::message
+  PUBLIC
+    eCAL::measurement_base
   PRIVATE  
     eCAL::ecal-utils
 )

@@ -25,7 +25,7 @@
 #include <utility>
 #include <stdexcept>
 
-#include <ecalhdf5/eh5_reader.h>
+#include <ecal/measurement/hdf5/reader.h>
 #include <ecal/measurement/measurement.h>
 
 namespace eCAL
@@ -229,7 +229,7 @@ namespace eCAL
     };
 
     inline IMeasurement::IMeasurement(const std::string& path)
-      : meas{ std::make_shared<eh5::Reader>(path) }
+      : meas{ std::make_shared<eCAL::measurement::hdf5::Reader>(path) }
     {
     }
 

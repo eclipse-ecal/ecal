@@ -18,7 +18,7 @@
 */
 
 #include "measurement_container.h"
-#include <ecalhdf5/eh5_meas.h>
+#include <ecal/measurement/hdf5/reader.h>
 
 #include <algorithm>
 #include <math.h>

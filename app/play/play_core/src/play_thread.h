@@ -27,7 +27,6 @@
 #include "ecal_play_command.h"
 #include "stop_watch.h"
 
-#include <ecalhdf5/eh5_meas.h>
 #include <ecal/ecal.h>
 
 #include <memory>

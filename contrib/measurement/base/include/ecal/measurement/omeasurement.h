@@ -24,7 +24,7 @@
 #include <string>
 #include <utility>
 
-#include <ecalhdf5/eh5_writer.h>
+#include <ecal/measurement/hdf5/writer.h>
 #include <ecal/measurement/measurement.h>
 
 namespace eCAL
@@ -119,7 +119,7 @@ namespace eCAL
 
 
     inline OMeasurement::OMeasurement(const std::string& base_path_, const std::string& measurement_name_)
-      : meas{ std::make_shared<eh5::Writer>(base_path_) }
+      : meas{ std::make_shared<eCAL::measurement::hdf5::Writer>(base_path_) }
     {
       meas->SetFileBaseName(measurement_name_);
     }

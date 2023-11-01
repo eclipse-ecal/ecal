@@ -369,6 +369,7 @@ endif()
 # ecal hdf5 support
 # --------------------------------------------------------
 if(HAS_HDF5)
+  add_subdirectory(contrib/measurement/hdf5)
   add_subdirectory(contrib/ecalhdf5)
   add_subdirectory(contrib/message)
 endif()
