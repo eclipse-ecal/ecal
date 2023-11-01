@@ -260,17 +260,7 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_contrib_ecalhdf5_include_ecalhdf5_eh5_reader.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
    file_contrib_ecalhdf5_include_ecalhdf5_eh5_types.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_contrib_ecalhdf5_include_ecalhdf5_eh5_writer.h.rst
 
 .. toctree::
    :maxdepth: 5

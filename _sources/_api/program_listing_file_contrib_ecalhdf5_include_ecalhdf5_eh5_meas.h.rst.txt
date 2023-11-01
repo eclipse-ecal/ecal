@@ -37,7 +37,6 @@ Program Listing for File eh5_meas.h
    #include <memory>
    
    #include "eh5_types.h"
-   #include <ecal/measurement/base/measurement.h>
    
    namespace eCAL
    {
@@ -45,14 +44,14 @@ Program Listing for File eh5_meas.h
      {
        class HDF5MeasImpl;
    
-       class HDF5Meas : public eCAL::measurement::base::Measurement
+       class HDF5Meas
        {
        public:
          HDF5Meas();
    
          explicit HDF5Meas(const std::string& path, measurement::base::AccessType access = measurement::base::AccessType::RDONLY);
    
-         ~HDF5Meas() override;
+         ~HDF5Meas();
    
          HDF5Meas(const HDF5Meas& other) = delete;
          HDF5Meas& operator=(const HDF5Meas& other) = delete;
@@ -60,53 +59,55 @@ Program Listing for File eh5_meas.h
          HDF5Meas(HDF5Meas&&) = default;
          HDF5Meas& operator=(HDF5Meas&&) = default;
    
-         bool Open(const std::string& path, measurement::base::AccessType access = measurement::base::AccessType::RDONLY) override;
+         bool Open(const std::string& path, measurement::base::AccessType access = measurement::base::AccessType::RDONLY);
    
-         bool Close() override;
+         bool Close();
    
-         bool IsOk() const override;
+         bool IsOk() const;
    
-         std::string GetFileVersion() const override;
+         std::string GetFileVersion() const;
    
-         size_t GetMaxSizePerFile() const override;
+         size_t GetMaxSizePerFile() const;
    
-         void SetMaxSizePerFile(size_t size) override;
+         void SetMaxSizePerFile(size_t size);
    
-         bool IsOneFilePerChannelEnabled() const override;
+         bool IsOneFilePerChannelEnabled() const;
    
-         void SetOneFilePerChannelEnabled(bool enabled) override;
+         void SetOneFilePerChannelEnabled(bool enabled);
    
-         std::set<std::string> GetChannelNames() const override;
+         std::set<std::string> GetChannelNames() const;
    
-         bool HasChannel(const std::string& channel_name) const override;
+         bool HasChannel(const std::string& channel_name) const;
    
-         std::string GetChannelDescription(const std::string& channel_name) const override;
+         std::string GetChannelDescription(const std::string& channel_name) const;
    
-         void SetChannelDescription(const std::string& channel_name, const std::string& description) override;
+         void SetChannelDescription(const std::string& channel_name, const std::string& description);
    
-         std::string GetChannelType(const std::string& channel_name) const override;
+         std::string GetChannelType(const std::string& channel_name) const;
    
-         void SetChannelType(const std::string& channel_name, const std::string& type) override;
+         void SetChannelType(const std::string& channel_name, const std::string& type);
    
-         long long GetMinTimestamp(const std::string& channel_name) const override;
+         long long GetMinTimestamp(const std::string& channel_name) const;
    
-         long long GetMaxTimestamp(const std::string& channel_name) const override;
+         long long GetMaxTimestamp(const std::string& channel_name) const;
    
-         bool GetEntriesInfo(const std::string& channel_name, measurement::base::EntryInfoSet& entries) const override;
+         bool GetEntriesInfo(const std::string& channel_name, measurement::base::EntryInfoSet& entries) const;
    
-         bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, measurement::base::EntryInfoSet& entries) const override;
+         bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, measurement::base::EntryInfoSet& entries) const;
    
-         bool GetEntryDataSize(long long entry_id, size_t& size) const override;
+         bool GetEntryDataSize(long long entry_id, size_t& size) const;
    
-         bool GetEntryData(long long entry_id, void* data) const override;
+         bool GetEntryData(long long entry_id, void* data) const;
    
-         void SetFileBaseName(const std::string& base_name) override;
+         void SetFileBaseName(const std::string& base_name);
    
-         bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) override;
+         bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock);
    
-         void ConnectPreSplitCallback(CallbackFunction cb) override;
+         typedef std::function<void(void)> CallbackFunction;
    
-         void DisconnectPreSplitCallback() override;
+         void ConnectPreSplitCallback(CallbackFunction cb);
+   
+         void DisconnectPreSplitCallback();
    
         private:
          std::unique_ptr<HDF5MeasImpl> hdf_meas_impl_;
