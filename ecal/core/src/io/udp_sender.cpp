@@ -33,6 +33,7 @@
 #pragma warning(pop)
 #endif
 
+#include "udp_configurations.h"
 #include "udp_sender.h"
 
 namespace eCAL
@@ -44,41 +45,58 @@ namespace eCAL
   {
   public:
     CUDPSenderImpl(const SSenderAttr& attr_);
-    size_t Send(const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
+
+    size_t Send(const void* buf_, size_t len_);
+    size_t Send(const void* buf_, size_t len_, const char* ipaddr_);
 
   protected:
-    bool                    m_broadcast;
-    bool                    m_unicast;
-    asio::io_context        m_iocontext;
-    asio::ip::udp::endpoint m_endpoint;
-    asio::ip::udp::socket   m_socket;
-    unsigned short          m_port;
+    std::string           m_ipaddr;
+    unsigned short        m_port;
+    bool                  m_localhost;
+    asio::io_context      m_iocontext;
+    asio::ip::udp::socket m_socket;
   };
 
   CUDPSenderImpl::CUDPSenderImpl(const SSenderAttr& attr_) :
-    m_broadcast(attr_.broadcast),
-    m_unicast(attr_.unicast),
-    m_endpoint(asio::ip::make_address(attr_.ipaddr), static_cast<unsigned short>(attr_.port)),
-    m_socket(m_iocontext, m_endpoint.protocol()),
-    m_port(static_cast<unsigned short>(attr_.port))
+    m_ipaddr(attr_.ipaddr),
+    m_port(static_cast<unsigned short>(attr_.port)),
+    m_localhost(attr_.localhost),
+    m_socket(m_iocontext)
   {
-    if (m_broadcast && m_unicast)
+    if (attr_.localhost)
     {
-      std::cerr << "CUDPSender: Setting broadcast and unicast option true is not allowed." << std::endl;
-      return;
-    }
+      if (attr_.ipaddr != UDP::LocalHost())
+      {
+        std::cerr << "CUDPSenderImpl initialized with ip address: \"" << attr_.ipaddr << "\" in local host mode. Using \"" << UDP::LocalHost() << "\" instead." << std::endl;
+        return;
+      }
 
-    if (m_broadcast || m_unicast)
-    {
-      // set unicast packet TTL
-      const asio::ip::unicast::hops ttl(attr_.ttl);
-      asio::error_code ec;
-      m_socket.set_option(ttl, ec);
-      if (ec)
-        std::cerr << "CUDPSender: Setting TTL failed: " << ec.message() << std::endl;
+      // open socket
+      {
+        const asio::ip::udp::endpoint listen_endpoint(asio::ip::make_address(UDP::LocalHost()), 0);
+        asio::error_code ec;
+        m_socket.open(listen_endpoint.protocol(), ec);
+        if (ec)
+        {
+          std::cerr << "CUDPReceiverAsio: Unable to open socket: " << ec.message() << std::endl;
+          return;
+        }
+      }
     }
     else
     {
+      // open socket
+      {
+        const asio::ip::udp::endpoint listen_endpoint(asio::ip::udp::v4(), 0);
+        asio::error_code ec;
+        m_socket.open(listen_endpoint.protocol(), ec);
+        if (ec)
+        {
+          std::cerr << "CUDPReceiverAsio: Unable to open socket: " << ec.message() << std::endl;
+          return;
+        }
+      }
+
       // set multicast packet TTL
       {
         const asio::ip::multicast::hops ttl(attr_.ttl);
@@ -98,22 +116,41 @@ namespace eCAL
       }
     }
 
-    if (m_broadcast)
+    // set socket reuse
     {
       asio::error_code ec;
-      m_socket.set_option(asio::socket_base::broadcast(true), ec);
+      m_socket.set_option(asio::ip::udp::socket::reuse_address(true), ec);
       if (ec)
-        std::cerr << "CUDPSender: Setting broadcast mode failed: " << ec.message() << std::endl;
+      {
+        std::cerr << "CUDPSender: Unable to set reuse-address option: " << ec.message() << std::endl;
+      }
     }
+  }
+
+  size_t CUDPSenderImpl::Send(const void* buf_, const size_t len_)
+  {
+    const asio::socket_base::message_flags flags(0);
+    asio::error_code ec;
+    size_t sent = m_socket.send_to(asio::buffer(buf_, len_), asio::ip::udp::endpoint(asio::ip::make_address(m_ipaddr), m_port), flags, ec);
+    if (ec)
+    {
+      std::cout << "CUDPSender::Send failed with: \'" << ec.message() << "\'" << std::endl;
+      return (0);
+    }
+    return(sent);
   }
 
   size_t CUDPSenderImpl::Send(const void* buf_, const size_t len_, const char* ipaddr_)
   {
+    if (m_localhost)
+    {
+      std::cout << "CUDPSender::Send failed with explicit ip address: \"" << ipaddr_ << "\" in local host mode." << std::endl;
+      return (0);
+    }
+
     const asio::socket_base::message_flags flags(0);
-    asio::error_code                 ec;
-    size_t                           sent(0);
-    if ((ipaddr_ != nullptr) && (ipaddr_[0] != '\0')) sent = m_socket.send_to(asio::buffer(buf_, len_), asio::ip::udp::endpoint(asio::ip::make_address(ipaddr_), m_port), flags, ec);
-    else                                              sent = m_socket.send_to(asio::buffer(buf_, len_), m_endpoint, flags, ec);
+    asio::error_code ec;
+    size_t sent = m_socket.send_to(asio::buffer(buf_, len_), asio::ip::udp::endpoint(asio::ip::make_address(ipaddr_), m_port), flags, ec);
     if (ec)
     {
       std::cout << "CUDPSender::Send failed with: \'" << ec.message() << "\'" << std::endl;
@@ -128,6 +165,12 @@ namespace eCAL
   CUDPSender::CUDPSender(const SSenderAttr& attr_)
   {
     m_socket_impl = std::make_shared<CUDPSenderImpl>(attr_);
+  }
+
+  size_t CUDPSender::Send(const void* buf_, const size_t len_)
+  {
+    if (!m_socket_impl) return(0);
+    return(m_socket_impl->Send(buf_, len_));
   }
 
   size_t CUDPSender::Send(const void* buf_, const size_t len_, const char* ipaddr_)

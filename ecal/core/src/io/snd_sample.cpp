@@ -30,7 +30,14 @@ namespace
 {
   size_t TransmitToUDP(const void* buf_, const size_t len_, const std::shared_ptr<eCAL::CUDPSender>& sample_sender_, const std::string& mcast_address_)
   {
-    return (sample_sender_->Send(buf_, len_, mcast_address_.c_str()));
+    if (mcast_address_.empty())
+    {
+      return (sample_sender_->Send(buf_, len_));
+    }
+    else
+    {
+      return (sample_sender_->Send(buf_, len_, mcast_address_.c_str()));
+    }
   }
 }
 

@@ -46,16 +46,6 @@ namespace eCAL
     m_network_mode(false), m_log_cb(log_cb_)
   {
     SReceiverAttr attr;
-    bool local_only = !Config::IsNetworkEnabled();
-    // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
-    if (local_only)
-    {
-      attr.broadcast = true;
-    }
-    else
-    {
-      attr.broadcast = false;
-    }
     attr.ipaddr    = UDP::GetLoggingMulticastAddress();
     attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
     attr.localhost = !Config::IsNetworkEnabled();

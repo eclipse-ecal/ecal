@@ -18,44 +18,12 @@
 */
 
 
+#include <io/udp_configurations.h>
 #include <io/udp_receiver_asio.h>
 
 #ifdef __linux__
 #include "linux/ecal_socket_option_linux.h"
 #endif
-
-namespace
-{
-  /**
-   * @brief Check if an IP address originates from an external host.
-   *
-   * This function determines if the given IP address is associated with an external host,
-   * meaning it is not the own host or part of a private network (e.g., 10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16 for IPv4).
-   *
-   * @param address The IP address to be checked.
-   * @return True if the address is from an external host, false if it is from the own host or a private network.
-   */
-  bool isFromExternalHost(const asio::ip::address& address)
-  {
-    // Check if the address is a loopback address
-    if (address.is_loopback())
-    {
-      return false;
-    }
-
-    // Check if the address is in the private IP address ranges.
-    // For IPv4, the private address ranges are 10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16.
-    if (address.is_v4())
-    {
-      const uint32_t ip = address.to_v4().to_ulong();
-      return !((ip & 0xFF000000) == 0x0A000000) &&  // Not in 10.0.0.0/8
-             !((ip & 0xFFF00000) == 0xAC100000) &&  // Not in 172.16.0.0/12
-             !((ip & 0xFFFF0000) == 0xC0A80000);    // Not in 192.168.0.0/16
-    }
-
-    return true;
-  }
-}
 
 namespace eCAL
 {
@@ -66,21 +34,16 @@ namespace eCAL
     CUDPReceiverBase(attr_),
     m_created(false),
     m_localhost(attr_.localhost),
-    m_broadcast(attr_.broadcast),
-    m_unicast(attr_.unicast),
     m_socket(m_iocontext)
   {
-    if (m_broadcast && m_unicast)
-    {
-      std::cerr << "CUDPReceiverAsio: Setting broadcast and unicast option true is not allowed." << std::endl;
-      return;
-    }
+    const asio::ip::udp::endpoint listen_endpoint_any(asio::ip::udp::v4(),                                      static_cast<unsigned short>(attr_.port));
+    const asio::ip::udp::endpoint listen_endpoint_localhost(asio::ip::make_address(UDP::LocalHost()), static_cast<unsigned short>(attr_.port));
 
     // create socket
-    const asio::ip::udp::endpoint listen_endpoint(asio::ip::udp::v4(), static_cast<unsigned short>(attr_.port));
     {
       asio::error_code ec;
-      m_socket.open(listen_endpoint.protocol(), ec);
+      if(attr_.localhost) m_socket.open(listen_endpoint_localhost.protocol(), ec);
+      else                m_socket.open(listen_endpoint_any.protocol(), ec);
       if (ec)
       {
         std::cerr << "CUDPReceiverAsio: Unable to open socket: " << ec.message() << std::endl;
@@ -98,33 +61,13 @@ namespace eCAL
       }
     }
 
-    // bind socket
-    {
-      asio::error_code ec;
-      m_socket.bind(listen_endpoint, ec);
-      if (ec)
-      {
-        std::cerr << "CUDPReceiverAsio: Unable to bind socket to " << listen_endpoint.address().to_string() << ":" << listen_endpoint.port() << ": " << ec.message() << std::endl;
-        return;
-      }
-    }
-
-    if (!m_unicast)
-    {
-      // set loopback option
-      const asio::ip::multicast::enable_loopback loopback(attr_.loopback);
-      asio::error_code ec;
-      m_socket.set_option(loopback, ec);
-      if (ec)
-      {
-        std::cerr << "CUDPReceiverAsio: Unable to enable loopback: " << ec.message() << std::endl;
-      }
-    }
-
     // set receive buffer size (default = 1 MB)
     {
       int rcvbuf = 1024 * 1024;
-      if (attr_.rcvbuf > 0) rcvbuf = attr_.rcvbuf;
+      if (attr_.rcvbuf > 0)
+      {
+        rcvbuf = attr_.rcvbuf;
+      }
       const asio::socket_base::receive_buffer_size recbufsize(rcvbuf);
       asio::error_code ec;
       m_socket.set_option(recbufsize, ec);
@@ -134,8 +77,46 @@ namespace eCAL
       }
     }
 
+    // bind socket
+    {
+      asio::error_code ec;
+      if (attr_.localhost)
+      {
+        m_socket.bind(listen_endpoint_localhost, ec);
+        if (ec)
+        {
+          std::cerr << "CUDPReceiverAsio: Unable to bind socket to " << listen_endpoint_localhost.address().to_string() << ":" << listen_endpoint_localhost.port() << ": " << ec.message() << std::endl;
+          return;
+        }
+      }
+      else
+      {
+        m_socket.bind(listen_endpoint_any, ec);
+        if (ec)
+        {
+          std::cerr << "CUDPReceiverAsio: Unable to bind socket to " << listen_endpoint_any.address().to_string() << ":" << listen_endpoint_any.port() << ": " << ec.message() << std::endl;
+          return;
+        }
+      }
+    }
+
+    // set loopback option
+    if (attr_.loopback)
+    {
+      const asio::ip::multicast::enable_loopback loopback(attr_.loopback);
+      asio::error_code ec;
+      m_socket.set_option(loopback, ec);
+      if (ec)
+      {
+        std::cerr << "CUDPReceiverAsio: Unable to enable loopback: " << ec.message() << std::endl;
+      }
+    }
+
     // join multicast group
-    AddMultiCastGroup(attr_.ipaddr.c_str());
+    if (!attr_.localhost)
+    {
+      AddMultiCastGroup(attr_.ipaddr.c_str());
+    }
 
     // state successful creation
     m_created = true;
@@ -143,7 +124,12 @@ namespace eCAL
 
   bool CUDPReceiverAsio::AddMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_broadcast && !m_unicast)
+    if (m_localhost)
+    {
+      std::cerr << "CUDPReceiverAsio: Unable to join multicast group in local host mode." << std::endl;
+      return(false);
+    }
+    else
     {
       // join multicast group
 #ifdef __linux__
@@ -179,7 +165,12 @@ namespace eCAL
 
   bool CUDPReceiverAsio::RemMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_broadcast && !m_unicast)
+    if (m_localhost)
+    {
+      std::cerr << "CUDPReceiverAsio: Unable to leave multicast group in local host mode." << std::endl;
+      return(false);
+    }
+    else
     {
       // Leave multicast group
 #ifdef __linux__
@@ -217,42 +208,29 @@ namespace eCAL
         {
           reclen = length;
         }
+        else
+        {
+          //std::cerr << "CUDPReceiverAsio: Receive failed with: " << ec.message() << std::endl;
+        }
       });
 
     // run for timeout ms
-    RunIOContext(asio::chrono::milliseconds(timeout_));
+    RunIOContext(asio::chrono::milliseconds(100*timeout_));
 
-    // did we receive anything ?
-    if (reclen == 0)
+    // retrieve underlaying raw socket informations
+    if (address_)
     {
-      return (0);
-    }
-
-    // is the caller interested in the source address ?
-    if (address_ != nullptr)
-    {
-      // retrieve underlying raw socket information
       if (m_sender_endpoint.address().is_v4())
       {
         asio::detail::sockaddr_in4_type* in4 = reinterpret_cast<asio::detail::sockaddr_in4_type*>(m_sender_endpoint.data());
-        address_->sin_addr   = in4->sin_addr;
+        address_->sin_addr = in4->sin_addr;
         address_->sin_family = in4->sin_family;
-        address_->sin_port   = in4->sin_port;
+        address_->sin_port = in4->sin_port;
         memset(&(address_->sin_zero), 0, 8);
       }
       else
       {
         std::cout << "CUDPReceiverAsio: ipv4 address conversion failed." << std::endl;
-      }
-    }
-
-    // are we running in 'local host only' receiving mode ?
-    if (m_localhost)
-    {
-      // if this address originates from an external host
-      if (isFromExternalHost(m_sender_endpoint.address()))
-      {
-        return (0);
       }
     }
 

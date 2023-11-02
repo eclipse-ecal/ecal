@@ -33,8 +33,7 @@ namespace eCAL
     std::string ipaddr;
     int         port      = 0;
     int         ttl       = 0;
-    bool        broadcast = false;
-    bool        unicast   = false;
+    bool        localhost = false;
     bool        loopback  = true;
     int         sndbuf    = 1024 * 1024;
   };
@@ -45,7 +44,9 @@ namespace eCAL
   {
   public:
     CUDPSender(const SSenderAttr& attr_);
-    size_t Send(const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
+
+    size_t Send(const void* buf_, size_t len_);
+    size_t Send(const void* buf_, size_t len_, const char* ipaddr_);
 
   protected:
     std::shared_ptr<CUDPSenderImpl> m_socket_impl;

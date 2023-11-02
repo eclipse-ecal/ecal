@@ -25,6 +25,8 @@
 
 #include "ecal_named_mutex.h"
 
+#include <iostream>
+
 #ifdef ECAL_OS_LINUX
 #include "linux/ecal_named_mutex_impl.h"
 #if defined(ECAL_HAS_ROBUST_MUTEX) || defined(ECAL_HAS_CLOCKLOCK_MUTEX)
@@ -119,6 +121,10 @@ namespace eCAL
 
   bool CNamedMutex::Lock(int64_t timeout_)
   {
+    if (timeout_ == 0)
+    {
+      std::cerr << "WTF" << std::endl;
+    }
     return m_impl->Lock(timeout_);
   }
 
