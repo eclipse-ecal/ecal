@@ -488,6 +488,7 @@ int MMALinux::GetCpuCores(void)
   std::list <std::string> cpuinfo_list = TokenizeIntoLines(FileToString("/proc/cpuinfo"));
   std::vector <std::string> cpucore_vect;
   auto idx = 0;
+#ifdef __x86_64__
   if(!is_vrm)
   {
     for (auto iter : cpuinfo_list)
@@ -502,6 +503,7 @@ int MMALinux::GetCpuCores(void)
     return std::stoi(cpucore_vect[3]);
   }
   else
+#endif
   {
     auto cpu_cores=0;
     for (auto iter : cpuinfo_list)
