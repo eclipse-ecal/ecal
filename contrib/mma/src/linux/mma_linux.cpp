@@ -28,6 +28,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <sys/sysinfo.h>
 
 #include "../include/linux/mma_linux.h"
 
@@ -485,40 +486,7 @@ bool MMALinux::MergeBootWithRootARM(ResourceLinux::DiskStatsList& /*disk_stats_i
 
 int MMALinux::GetCpuCores(void)
 {
-  std::list <std::string> cpuinfo_list = TokenizeIntoLines(FileToString("/proc/cpuinfo"));
-  std::vector <std::string> cpucore_vect;
-  auto idx = 0;
-#ifdef __x86_64__
-  if(!is_vrm)
-  {
-    for (auto iter : cpuinfo_list)
-    {
-      if (idx == 12)
-      {
-        cpucore_vect = SplitLine(iter);
-        break;
-      }
-      idx++;
-    }
-    return std::stoi(cpucore_vect[3]);
-  }
-  else
-#endif
-  {
-    auto cpu_cores=0;
-    for (auto iter : cpuinfo_list)
-    {
-        cpucore_vect = SplitLine(iter);
-        for(auto iter1:cpucore_vect)
-        {
-            if(iter1.find("processor")!= std::string::npos)
-            {
-                cpu_cores++;
-            }
-        }
-    }
-   return cpu_cores;
-  }
+  return get_nprocs();
 }
 
 bool MMALinux::CheckIfIsALinuxVRM()
