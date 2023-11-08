@@ -185,7 +185,7 @@ jobs:
         mkdir ".venv_312"
         py -3.12 -m venv ".venv_312"
         CALL ".venv_312\Scripts\activate.bat"
-        pip install wheel
+        pip install wheel  setuptools
         cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
         cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
         cmake --build . --target create_python_wheel --config Release
