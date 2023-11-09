@@ -60,7 +60,7 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
        Copyright 2018-2020, Rolf Eike Beer
      - - |fa-file-alt| Copy in repository (modified): ``cmake/Modules/Findqwt.cmake``
 
-   * - `fineFTP Server <https://github.com/continental/fineftp-server>`_
+   * - `fineFTP Server <https://github.com/eclipse-ecal/fineftp-server>`_
      - :ref:`mit_license`
      - 2020 Continental Corporation
      - - |fa-github| Git submodule ``/tirdparty/fineftp-server``
@@ -176,7 +176,7 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
-   * - `tcp_pubsub <https://github.com/continental/tcp_pubsub>`_
+   * - `tcp_pubsub <https://github.com/eclipse-ecal/tcp_pubsub>`_
      - :ref:`mit_license`
      - Copyright (c) 2021 Continental
      - - |fa-github| Git submodule ``/tirdparty/tcp_pubsub``
