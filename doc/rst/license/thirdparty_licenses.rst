@@ -26,14 +26,14 @@ They may have a different license than eCAL.
      - Copyright
      - Included in...
 
-   * - `fineFTP Server <https://github.com/continental/fineftp-server>`_
+   * - `fineFTP Server <https://github.com/eclipse-ecal/fineftp-server>`_
      - :ref:`mit_license`
      - 2020 Continental Corporation
      - - |fa-github| Git submodule ``/tirdparty/fineftp-server``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
-   * - `tcp_pubsub <https://github.com/continental/tcp_pubsub>`_
+   * - `tcp_pubsub <https://github.com/eclipse-ecal/tcp_pubsub>`_
      - :ref:`mit_license`
      - Copyright (c) 2021 Continental
      - - |fa-github| Git submodule ``/tirdparty/tcp_pubsub``
