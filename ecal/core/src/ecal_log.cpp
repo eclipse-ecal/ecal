@@ -39,7 +39,7 @@ namespace eCAL
     **/
     void SetLogLevel(const eCAL_Logging_eLogLevel level_)
     {
-      if(g_log()) g_log()->SetLogLevel(level_);
+      if(g_log() != nullptr) g_log()->SetLogLevel(level_);
     }
 
     /**
@@ -49,8 +49,8 @@ namespace eCAL
     **/
     eCAL_Logging_eLogLevel GetLogLevel()
     {
-      if(g_log()) return(g_log()->GetLogLevel());
-      else        return(log_level_none);
+      if(g_log() != nullptr) return(g_log()->GetLogLevel());
+      else                   return(log_level_none);
     }
 
     /**
@@ -60,7 +60,7 @@ namespace eCAL
     **/
     void Log(const std::string& msg_)
     {
-      if(g_log()) g_log()->Log(msg_);
+      if(g_log() != nullptr) g_log()->Log(msg_);
     }
 
     /**
@@ -68,7 +68,7 @@ namespace eCAL
     **/
     void StartCoreTimer()
     {
-      if(g_log()) g_log()->StartCoreTimer();
+      if(g_log() != nullptr) g_log()->StartCoreTimer();
     }
 
     /**
@@ -76,7 +76,7 @@ namespace eCAL
     **/
     void StopCoreTimer()
     {
-      if(g_log()) g_log()->StopCoreTimer();
+      if(g_log() != nullptr) g_log()->StopCoreTimer();
     }
 
     /**
@@ -84,7 +84,7 @@ namespace eCAL
     **/
     void SetCoreTime(const double time_)
     {
-      if(g_log()) g_log()->SetCoreTime(std::chrono::duration<double>(time_));
+      if(g_log() != nullptr) g_log()->SetCoreTime(std::chrono::duration<double>(time_));
     }
 
     /**
@@ -92,7 +92,7 @@ namespace eCAL
     **/
     double GetCoreTime()
     {
-      if(g_log())
+      if(g_log() != nullptr)
       {
         return(g_log()->GetCoreTime().count());
       }

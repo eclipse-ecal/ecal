@@ -45,27 +45,21 @@ namespace eCAL
       class CExpMap
     {
     public:
-      typedef std::chrono::steady_clock clock_type;
+      using clock_type = std::chrono::steady_clock;
 
       // Key access history, most recent at back 
-      typedef std::list<std::pair<clock_type::time_point, Key>> key_tracker_type;
+      using key_tracker_type = std::list<std::pair<clock_type::time_point, Key>>;
       // Key to value and key history iterator 
-      typedef std::map<
-        Key,
-        std::pair<
-        T,
-        typename key_tracker_type::iterator
-        >
-      > key_to_value_type;
+      using key_to_value_type = std::map<Key, std::pair<T, typename key_tracker_type::iterator>>;
 
-      typedef Alloc allocator_type;
-      typedef std::pair<const Key, T> value_type;
-      typedef typename Alloc::reference reference;
-      typedef typename Alloc::const_reference const_reference;
-      typedef typename Alloc::difference_type difference_type;
-      typedef typename Alloc::size_type size_type;
-      typedef Key key_type;
-      typedef T mapped_type;
+      using allocator_type = Alloc;
+      using value_type = std::pair<const Key, T>;
+      using reference = typename Alloc::reference;
+      using const_reference = typename Alloc::const_reference;
+      using difference_type = typename Alloc::difference_type;
+      using size_type = typename Alloc::size_type;
+      using key_type = Key;
+      using mapped_type = T;
 
       class iterator : public std::iterator<std::bidirectional_iterator_tag, std::pair<Key, T>>
         //class iterator : public std::iterator<std::bidirectional_iterator_tag, cache_reference>

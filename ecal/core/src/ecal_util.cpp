@@ -59,7 +59,7 @@ namespace eCAL
       }
 
       eCAL::pb::Monitoring monitoring;
-      if (eCAL::g_monitoring()) eCAL::g_monitoring()->GetMonitoring(monitoring);
+      if (eCAL::g_monitoring() != nullptr) eCAL::g_monitoring()->GetMonitoring(monitoring);
 
       return(monitoring);
     }
@@ -168,28 +168,28 @@ namespace eCAL
 
     void EnableLoopback(bool state_)
     {
-      if (g_registration_receiver()) g_registration_receiver()->EnableLoopback(state_);
+      if (g_registration_receiver() != nullptr) g_registration_receiver()->EnableLoopback(state_);
     }
 
     void PubShareType(bool state_)
     {
-      if (g_pubgate()) g_pubgate()->ShareType(state_);
+      if (g_pubgate() != nullptr) g_pubgate()->ShareType(state_);
     }
 
     void PubShareDescription(bool state_)
     {
-      if (g_pubgate()) g_pubgate()->ShareDescription(state_);
+      if (g_pubgate() != nullptr) g_pubgate()->ShareDescription(state_);
     }
 
     void GetTopics(std::unordered_map<std::string, SDataTypeInformation>& topic_info_map_)
     {
-      if (!g_descgate()) return;
+      if (g_descgate() == nullptr) return;
       g_descgate()->GetTopics(topic_info_map_);
     }
 
     void GetTopicNames(std::vector<std::string>& topic_names_)
     {
-      if (!g_descgate()) return;
+      if (g_descgate() == nullptr) return;
       g_descgate()->GetTopicNames(topic_names_);
     }
 
@@ -294,25 +294,25 @@ namespace eCAL
 
     void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_)
     {
-      if (!g_descgate()) return;
+      if (g_descgate() == nullptr) return;
       g_descgate()->GetServices(service_info_map_);
     }
 
     void GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_)
     {
-      if (!g_descgate()) return;
+      if (g_descgate() == nullptr) return;
       g_descgate()->GetServiceNames(service_method_names_);
     }
 
     bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_)
     {
-      if (!g_descgate()) return(false);
+      if (g_descgate() == nullptr) return(false);
       return(g_descgate()->GetServiceTypeNames(service_name_, method_name_, req_type_, resp_type_));
     }
 
     bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_desc_, std::string& resp_desc_)
     {
-      if (!g_descgate()) return(false);
+      if (g_descgate() == nullptr) return(false);
       return(g_descgate()->GetServiceDescription(service_name_, method_name_, req_desc_, resp_desc_));
     }
   }

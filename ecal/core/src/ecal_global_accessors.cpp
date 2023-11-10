@@ -62,79 +62,79 @@ namespace eCAL
 
   CConfig* g_config()
   {
-    if (!g_globals()) return(nullptr);
+    if (g_globals() == nullptr) return(nullptr);
     return(g_globals()->config().get());
   }
 
   CLog* g_log()
   {
-    if (!g_globals()) return(nullptr);
+    if (g_globals() == nullptr) return(nullptr);
     return(g_globals()->log().get());
   }
 
   CMonitoring* g_monitoring()
   {
-    if (!g_globals()) return(nullptr);
+    if (g_globals() == nullptr) return(nullptr);
     return(g_globals()->monitoring().get());
   }
 
   CTimeGate* g_timegate()
   {
-    if (!g_globals()) return(nullptr);
+    if (g_globals() == nullptr) return(nullptr);
     return(g_globals()->timegate().get());
   }
 
   CRegistrationProvider* g_registration_provider()
   {
-    if (!g_globals()) return(nullptr);
+    if (g_globals() == nullptr) return(nullptr);
     return(g_globals()->registration_provider().get());
   }
 
   CDescGate* g_descgate()
   {
-    if (!g_globals()) return(nullptr);
+    if (g_globals() == nullptr) return(nullptr);
     return(g_globals()->descgate().get());
   }
 
   CSubGate* g_subgate()
   {
-    if (!g_globals()) return(nullptr);
+    if (g_globals() == nullptr) return(nullptr);
     return(g_globals()->subgate().get());
   }
 
   CPubGate* g_pubgate()
   {
-    if (!g_globals()) return(nullptr);
+    if (g_globals() == nullptr) return(nullptr);
     return(g_globals()->pubgate().get());
   }
 
   CServiceGate* g_servicegate()
   {
-    if (!g_globals()) return(nullptr);
+    if (g_globals() == nullptr) return(nullptr);
     return(g_globals()->servicegate().get());
   }
 
   CClientGate* g_clientgate()
   {
-    if (!g_globals()) return(nullptr);
+    if (g_globals() == nullptr) return(nullptr);
     return(g_globals()->clientgate().get());
   }
 
   CRegistrationReceiver* g_registration_receiver()
   {
-    if (!g_globals()) return(nullptr);
+    if (g_globals() == nullptr) return(nullptr);
     return(g_globals()->registration_receiver().get());
   }
 
   CMemFileThreadPool* g_memfile_pool()
   {
-    if (!g_globals()) return(nullptr);
+    if (g_globals() == nullptr) return(nullptr);
     return(g_globals()->memfile_pool().get());
   }
 
   CMemFileMap* g_memfile_map()
   {
-    if (!g_globals()) return(nullptr);
+    if (g_globals() == nullptr) return(nullptr);
     return(g_globals()->memfile_map().get());
   }
 }

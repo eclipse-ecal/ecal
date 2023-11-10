@@ -72,19 +72,19 @@ namespace eCAL
 
   bool gCloseEvent(const EventHandleT& event_)
   {
-    if(!event_.handle) return(false);
+    if(event_.handle == nullptr) return(false);
     return(::CloseHandle(event_.handle) != 0);
   }
 
   bool gSetEvent(const EventHandleT& event_)
   {
-    if(!event_.handle) return(false);
+    if(event_.handle == nullptr) return(false);
     return(::SetEvent(event_.handle) != 0);
   }
 
   bool gWaitForEvent(const EventHandleT& event_, const long timeout_)
   {
-    if(!event_.handle) return(false);
+    if(event_.handle == nullptr) return(false);
     if(timeout_ < 0)
     {
       return(::WaitForSingleObject(event_.handle, INFINITE) == WAIT_OBJECT_0);
