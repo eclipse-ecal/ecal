@@ -320,7 +320,7 @@ namespace eCAL
                         };
 
             // Call service asynchronously
-            bool call_success = client->second->async_call_service(request_shared_ptr, response_callback);
+            const bool call_success = client->second->async_call_service(request_shared_ptr, response_callback);
 
             if (!call_success)
             {
