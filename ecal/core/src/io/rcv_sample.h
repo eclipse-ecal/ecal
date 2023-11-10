@@ -107,7 +107,7 @@ public:
   int Process(const char* sample_buffer_, size_t sample_buffer_len_);
 
 protected:
-  typedef std::unordered_map<int32_t, std::shared_ptr<CSampleReceiveSlot>> ReceiveSlotMapT;
+  using ReceiveSlotMapT = std::unordered_map<int32_t, std::shared_ptr<CSampleReceiveSlot>>;
   ReceiveSlotMapT    m_receive_slot_map;
   std::vector<char>  m_msg_buffer;
   eCAL::pb::Sample     m_ecal_sample;

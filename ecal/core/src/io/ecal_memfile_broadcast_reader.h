@@ -39,7 +39,7 @@ namespace eCAL
     std::int64_t timestamp;
   };
 
-  typedef std::vector<SMemfileBroadcastMessage> MemfileBroadcastMessageListT;
+  using MemfileBroadcastMessageListT = std::vector<SMemfileBroadcastMessage>;
 
   class CMemoryFileBroadcastReader
   {

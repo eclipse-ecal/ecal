@@ -44,7 +44,7 @@ namespace eCAL
     bool CheckFileSize(const std::string& name_, const size_t len_, SMemFileInfo& mem_file_info_);
 
   protected:
-    typedef std::unordered_map<std::string, SMemFileInfo> MemFileMapT;
+    using MemFileMapT = std::unordered_map<std::string, SMemFileInfo>;
     std::mutex  m_memfile_map_mtx;
     MemFileMapT m_memfile_map;
   };
