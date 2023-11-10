@@ -24,7 +24,7 @@
 #include <thread>
 #include <chrono>
 
-int main(int argc, char** argv)
+int main(int /*argc*/, char** /*argv*/)
 {
   // Create an io_context
   auto io_context = std::make_shared<asio::io_context>();
