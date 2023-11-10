@@ -426,7 +426,7 @@ namespace eCAL
 
   std::string CPublisher::GetTypeName() const
   {
-    SDataTypeInformation info = GetDataTypeInformation();
+    const SDataTypeInformation info = GetDataTypeInformation();
     return(Util::CombinedTopicEncodingAndType(info.encoding, info.name));
   }
 

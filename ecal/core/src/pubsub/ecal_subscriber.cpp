@@ -263,7 +263,7 @@ namespace eCAL
   std::string CSubscriber::GetTypeName() const
   {
     if(m_datareader == nullptr) return("");
-    SDataTypeInformation info = m_datareader->GetDataTypeInformation();
+    const SDataTypeInformation info = m_datareader->GetDataTypeInformation();
     return(Util::CombinedTopicEncodingAndType(info.encoding, info.name));
   }
 
