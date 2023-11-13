@@ -32,8 +32,8 @@
 
 #include "ecal_win_main.h"
 
-typedef HANDLE  MemFileT;
-typedef HANDLE  MapRegionT;
+using MemFileT = HANDLE;
+using MapRegionT = HANDLE;
 
 #endif /* ECAL_OS_WINDOWS */
 
@@ -48,23 +48,13 @@ namespace eCAL
 {
   struct SMemFileInfo
   {
-    SMemFileInfo()
-    {
-      refcnt      = 0;
-      remove      = false;
-      memfile     = 0;
-      map_region  = 0;
-      mem_address = 0;
-      size        = 0;
-      exists      = false;
-    }
-    int          refcnt;
-    bool         remove;
-    MemFileT     memfile;
-    MapRegionT   map_region;
-    void*        mem_address;
+    int          refcnt      = 0;
+    bool         remove      = false;
+    MemFileT     memfile     = 0;
+    MapRegionT   map_region  = 0;
+    void*        mem_address = 0;
     std::string  name;
-    size_t       size;
-    bool         exists;
+    size_t       size        = 0;
+    bool         exists      = false;
   };
 }

@@ -31,7 +31,7 @@ namespace eCAL
   class CNamedMutexImplBase
   {
   public:
-    virtual ~CNamedMutexImplBase(){}
+    virtual ~CNamedMutexImplBase()= default;
 
     virtual bool IsCreated() const = 0;
     virtual bool IsRecoverable() const = 0;

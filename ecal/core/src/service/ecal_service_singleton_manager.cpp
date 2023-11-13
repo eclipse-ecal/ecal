@@ -89,7 +89,7 @@ namespace eCAL
         return nullptr;
 
       // Lock the mutex to actually make it thread safe
-      std::lock_guard<std::mutex> singleton_lock(singleton_mutex);
+      const std::lock_guard<std::mutex> singleton_lock(singleton_mutex);
       if (!stopped)
       {
         // Create io_context, if it didn't exist, yet
@@ -126,7 +126,7 @@ namespace eCAL
         return nullptr;
 
       // Lock the mutex to actually make it thread safe
-      std::lock_guard<std::mutex> singleton_lock(singleton_mutex);
+      const std::lock_guard<std::mutex> singleton_lock(singleton_mutex);
       if (!stopped)
       {
         // Create io_context, if it didn't exist, yet
@@ -156,7 +156,7 @@ namespace eCAL
 
     void ServiceManager::stop()
     {
-      std::lock_guard<std::mutex> singleton_lock(singleton_mutex);
+      const std::lock_guard<std::mutex> singleton_lock(singleton_mutex);
 
       stopped = true;
 
@@ -177,7 +177,7 @@ namespace eCAL
 
     void ServiceManager::reset()
     {
-      std::lock_guard<std::mutex> singleton_lock(singleton_mutex);
+      const std::lock_guard<std::mutex> singleton_lock(singleton_mutex);
       stopped = false;
     }
 

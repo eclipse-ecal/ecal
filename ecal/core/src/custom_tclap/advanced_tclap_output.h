@@ -69,9 +69,9 @@ namespace CustomTclap
      */
     AdvancedTclapOutput(std::ostream* output_stream, int max_width);
 
-    virtual void version(TCLAP::CmdLineInterface &cmd) override;
-    virtual void usage(TCLAP::CmdLineInterface &cmd) override;
-    virtual void failure(TCLAP::CmdLineInterface &cmd, TCLAP::ArgException &e) override;
+    void version(TCLAP::CmdLineInterface &cmd) override;
+    void usage(TCLAP::CmdLineInterface &cmd) override;
+    void failure(TCLAP::CmdLineInterface &cmd, TCLAP::ArgException &e) override;
 
     /**
      * @brief Hides / un-hides an argument

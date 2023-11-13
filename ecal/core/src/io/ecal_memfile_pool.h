@@ -39,7 +39,7 @@
 
 namespace eCAL
 {
-  typedef std::function<size_t(const std::string& topic_name_, const std::string& topic_id_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_)> MemFileDataCallbackT;
+  using MemFileDataCallbackT = std::function<size_t (const std::string &, const std::string &, const char *, size_t, long long, long long, long long, size_t)>;
 
   ////////////////////////////////////////
   // CMemFileObserver

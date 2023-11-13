@@ -70,11 +70,11 @@ namespace eCAL
   protected:
     static std::atomic<bool>    m_created;
 
-    typedef std::set<CServiceClientImpl*> ServiceNameServiceImplSetT;
+    using ServiceNameServiceImplSetT = std::set<CServiceClientImpl *>;
     std::shared_timed_mutex     m_client_set_sync;
     ServiceNameServiceImplSetT  m_client_set;
 
-    typedef Util::CExpMap<std::string, SServiceAttr> ConnectedMapT;
+    using ConnectedMapT = Util::CExpMap<std::string, SServiceAttr>;
     std::shared_timed_mutex     m_service_register_map_sync;
     ConnectedMapT               m_service_register_map;
   };

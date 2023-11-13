@@ -234,7 +234,7 @@ namespace eCAL
     if (topic_name.empty()) return;
 
     const std::string& topic_id   = ecal_sample.tid();
-    SDataTypeInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
+    const SDataTypeInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
 
     // store description
     ApplyTopicToDescGate(topic_name, topic_info);
@@ -313,7 +313,7 @@ namespace eCAL
     const std::string& host_name  = ecal_sample.hname();
     const std::string& topic_name = ecal_sample.tname();
     const std::string& topic_id   = ecal_sample.tid();
-    SDataTypeInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
+    const SDataTypeInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
     const std::string  process_id = std::to_string(ecal_sample.pid());
 
     // store description
@@ -361,7 +361,7 @@ namespace eCAL
 
     // refresh reader registrations
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    for (auto iter : m_topic_name_datareader_map)
+    for (const auto& iter : m_topic_name_datareader_map)
     {
       iter.second->RefreshRegistration();
     }

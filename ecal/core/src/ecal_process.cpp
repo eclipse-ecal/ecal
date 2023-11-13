@@ -151,7 +151,7 @@ namespace
 
     // iterate adapters and create hash
     int hash(0);
-    while(pAdapter)
+    while(pAdapter != nullptr)
     {
       for (UINT i = 0; i < pAdapter->AddressLength; ++i)
       {
@@ -205,7 +205,7 @@ namespace eCAL
 #endif
       sstream << std::endl;
 
-      if (!eCAL::IsInitialized())
+      if (eCAL::IsInitialized() == 0)
       {
         sstream << "Components               : NOT INITIALIZED ( call eCAL::Initialize() )";
         sstream << std::endl;
@@ -452,14 +452,14 @@ namespace eCAL
 
     int AddRegistrationCallback(enum eCAL_Registration_Event event_, RegistrationCallbackT callback_)
     {
-      if (!g_registration_receiver()) return -1;
+      if (g_registration_receiver() == nullptr) return -1;
       if (g_registration_receiver()->AddRegistrationCallback(event_, callback_)) return 0;
       return -1;
     }
 
     int RemRegistrationCallback(enum eCAL_Registration_Event event_)
     {
-      if (!g_registration_receiver()) return -1;
+      if (g_registration_receiver() == nullptr) return -1;
       if (g_registration_receiver()->RemRegistrationCallback(event_)) return 0;
       return -1;
     }
@@ -626,11 +626,11 @@ namespace eCAL
       if (block_)
       {
         // Wait until child process exits.
-        if (pi.hProcess) WaitForSingleObject(pi.hProcess, INFINITE);
+        if (pi.hProcess != nullptr) WaitForSingleObject(pi.hProcess, INFINITE);
 
         // Close process and thread handles.
-        if (pi.hProcess) CloseHandle(pi.hProcess);
-        if (pi.hThread)  CloseHandle(pi.hThread);
+        if (pi.hProcess != nullptr) CloseHandle(pi.hProcess);
+        if (pi.hThread != nullptr)  CloseHandle(pi.hThread);
       }
 
       return(ret_pid);
@@ -692,8 +692,8 @@ namespace eCAL
         GetExitCodeProcess(pi.hProcess, &taskkill_error);
 
         // Close process and thread handles.
-        if (pi.hProcess) CloseHandle(pi.hProcess);
-        if (pi.hThread)  CloseHandle(pi.hThread);
+        if (pi.hProcess != nullptr) CloseHandle(pi.hProcess);
+        if (pi.hThread != nullptr)  CloseHandle(pi.hThread);
 
         return (taskkill_error == 0);
       }
@@ -745,8 +745,8 @@ namespace eCAL
         GetExitCodeProcess(pi.hProcess, &taskkill_error);
 
         // Close process and thread handles.
-        if (pi.hProcess) CloseHandle(pi.hProcess);
-        if (pi.hThread)  CloseHandle(pi.hThread);
+        if (pi.hProcess != nullptr) CloseHandle(pi.hProcess);
+        if (pi.hThread != nullptr)  CloseHandle(pi.hThread);
 
         return (taskkill_error == 0);
       }

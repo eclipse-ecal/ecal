@@ -35,13 +35,13 @@ namespace eCAL
   {
     std::string GetName()
     {
-      if (!g_timegate() || !g_timegate()->IsValid()) return("");
+      if ((g_timegate() == nullptr) || !g_timegate()->IsValid()) return("");
       return(g_timegate()->GetName());
     }
 
     long long GetMicroSeconds()
     {
-      if (!g_timegate() || !g_timegate()->IsValid())
+      if ((g_timegate() == nullptr) || !g_timegate()->IsValid())
       {
         const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
         return(std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count());
@@ -51,7 +51,7 @@ namespace eCAL
 
     long long GetNanoSeconds()
     {
-      if (!g_timegate() || !g_timegate()->IsValid())
+      if ((g_timegate() == nullptr) || !g_timegate()->IsValid())
       {
         const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
         return(std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count());
@@ -61,25 +61,25 @@ namespace eCAL
 
     bool SetNanoSeconds(long long time_)
     {
-      if (!g_timegate() || !g_timegate()->IsValid()) return(false);
+      if ((g_timegate() == nullptr) || !g_timegate()->IsValid()) return(false);
       return(g_timegate()->SetNanoSeconds(time_));
     }
 
     bool IsSynchronized()
     {
-      if (!g_timegate() || !g_timegate()->IsValid()) return(false);
+      if ((g_timegate() == nullptr) || !g_timegate()->IsValid()) return(false);
       return(g_timegate()->IsSynchronized());
     }
 
     bool IsMaster()
     {
-      if (!g_timegate() || !g_timegate()->IsValid()) return(false);
+      if ((g_timegate() == nullptr) || !g_timegate()->IsValid()) return(false);
       return(g_timegate()->IsMaster());
     }
     
     void SleepForNanoseconds(long long duration_nsecs_)
     {
-      if (!g_timegate() || !g_timegate()->IsValid())
+      if ((g_timegate() == nullptr) || !g_timegate()->IsValid())
       {
         eCAL::Process::SleepFor(std::chrono::nanoseconds(duration_nsecs_));
       }
@@ -90,9 +90,9 @@ namespace eCAL
     }
 
     void GetStatus(int& error_, std::string* const status_message_) {
-      if (!g_timegate()) {
+      if (g_timegate() == nullptr) {
         error_ = -1;
-        if (status_message_) {
+        if (status_message_ != nullptr) {
           status_message_->assign("Timegate has not been initialized!");
         }
       }

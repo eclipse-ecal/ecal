@@ -7,13 +7,13 @@
 [![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE.txt)
 
 The **e**nhanced **C**ommunication **A**bstraction **L**ayer (eCAL) is a middleware that enables scalable, high performance interprocess communication on a single computer node or between different nodes in a computer network.
-eCAL uses a **publish - subscribe** pattern to automatically connect different nodes in the network.
+eCAL provides **publish - subscribe** and **server - client** pattern to connect different nodes in the network with almost no configuration required.
 
-eCAL automatically chooses the best available data transport mechanism for each link:
+eCAL automatically chooses the best available data transport mechanism for each link, it supports:
 - **Shared memory** for local communication _(incredibly fast!)_
-- **UDP** for network communication
+- **UDP** and **TCP** for network communication
 
-Visit the eCAL Documentation at 🌐 http://ecal.io for more information.
+Visit the eCAL Documentation at 🌐 https://ecal.io for more information.
 
 ## Architecture
 
@@ -63,7 +63,7 @@ sudo apt-get install ecal
 ```
 This PPA will always upgrade you to the latest eCAL Release (-> Rolling Release PPA). If you intend to stay on an specific release, check out other PPAs [here](https://eclipse-ecal.github.io/ecal/getting_started/setup.html#fa-ubuntu-automatically-install-ecal-from-a-ppa).
 
-*Ubuntu 16.04, 18.04, 20.04, 20.10, 21.04 for CPU architectures i386, x64, armhf, arm64 are supported at the time of writing.*
+*Ubuntu 18.04, 20.04, 22.04, 23.04, 23.10 for CPU architectures (i386), x64, armhf, arm64 are supported at the time of writing.*
 
 ## Example
 
@@ -125,8 +125,6 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 ## eCAL & ROS
 * [rmw_ecal](https://github.com/eclipse-ecal/rmw_ecal) - eCAL / ROS2 middleware layer
 * [rosidl_typesupport_protobuf](https://github.com/eclipse-ecal/rosidl_typesupport_protobuf) - Protobuf based rosidl typesupport
-* [ecal-ros2-publisher](https://github.com/ecal-io/ecal-ros2-publisher) - Publishing eCAL topics to ROS2
-* [ecal-ros2-subscriber](https://github.com/ecal-io/ecal-ros2-subscriber) - Subscribing ROS2 topics in eCAL
 
 ## Other projects related to eCAL
 * [fineftp-server](https://github.com/eclipse-ecal/fineftp-server) - FTP functionality to collect distributed measurement artifacts over network

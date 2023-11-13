@@ -117,7 +117,7 @@ namespace eCAL
     CDataWriter::SLocalSubscriptionInfo subscription_info;
     subscription_info.topic_id = ecal_sample.tid();
     subscription_info.process_id = std::to_string(ecal_sample.pid());
-    SDataTypeInformation topic_information{ eCALSampleToTopicInformation(ecal_sample_) };
+    const SDataTypeInformation topic_information{ eCALSampleToTopicInformation(ecal_sample_) };
 
     std::string reader_par;
     for (const auto& layer : ecal_sample.tlayer())
@@ -169,7 +169,7 @@ namespace eCAL
     subscription_info.host_name  = ecal_sample.hname();
     subscription_info.topic_id   = ecal_sample.tid();
     subscription_info.process_id = std::to_string(ecal_sample.pid());
-    SDataTypeInformation topic_information{ eCALSampleToTopicInformation(ecal_sample_) };
+    const SDataTypeInformation topic_information{ eCALSampleToTopicInformation(ecal_sample_) };
 
     std::string reader_par;
     for (const auto& layer : ecal_sample.tlayer())
@@ -218,7 +218,7 @@ namespace eCAL
 
     // refresh publisher registrations
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
-    for (auto iter : m_topic_name_datawriter_map)
+    for (const auto& iter : m_topic_name_datawriter_map)
     {
       iter.second->RefreshRegistration();
     }

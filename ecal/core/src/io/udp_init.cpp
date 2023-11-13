@@ -23,7 +23,7 @@
 
 #include <ecal/ecal_os.h>
 
-#include <stdio.h>
+#include <cstdio>
 #include <atomic>
 
 #ifdef ECAL_OS_WINDOWS

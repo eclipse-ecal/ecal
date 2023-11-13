@@ -97,13 +97,13 @@ namespace eCAL
     }
 
     // initialize real time
-    if (!m_is_initialized_rt && m_time_sync_rt.etime_initialize_ptr)
+    if (!m_is_initialized_rt && (m_time_sync_rt.etime_initialize_ptr != nullptr))
     {
       m_is_initialized_rt = m_time_sync_rt.etime_initialize_ptr() == 0;
     }
 
     // initialize replay
-    if (!m_is_initialized_replay && m_time_sync_replay.etime_initialize_ptr)
+    if (!m_is_initialized_replay && (m_time_sync_replay.etime_initialize_ptr != nullptr))
     {
       m_is_initialized_replay = m_time_sync_replay.etime_initialize_ptr() == 0;
     }
@@ -273,7 +273,7 @@ namespace eCAL
   {
     if (!m_created) {
       error_ = -1;
-      if (status_message_) {
+      if (status_message_ != nullptr) {
         status_message_->assign("eCAL Timegate has not been created.");
       }
     }
@@ -284,19 +284,19 @@ namespace eCAL
       {
       case eTimeSyncMode::none:
         error_ = 0;
-        if (status_message_) {
+        if (status_message_ != nullptr) {
           status_message_->assign("Timesync mode is set to NONE.");
         }
         break;
       case eTimeSyncMode::realtime:
         if (!m_successfully_loaded_rt){
           error_ = -1;
-          if (status_message_) {
+          if (status_message_ != nullptr) {
             status_message_->assign("Failed to load realtime timesync module ");
             status_message_->append(GetName());
           }
         } else {
-          if (status_message_) {
+          if (status_message_ != nullptr) {
             char buffer[buffer_len];
             buffer[0] = 0x0; 
             m_time_sync_rt.etime_get_status_ptr(&error_, buffer, buffer_len);
@@ -311,12 +311,12 @@ namespace eCAL
       case eTimeSyncMode::replay:
         if (!m_successfully_loaded_replay){
           error_ = -1;
-          if (status_message_) {
+          if (status_message_ != nullptr) {
             status_message_->assign("Failed to load realtime timesync module ");
             status_message_->append(GetName());
           }
         } else {
-          if (status_message_) {
+          if (status_message_ != nullptr) {
             char buffer[buffer_len];
             buffer[0] = 0x0;
             m_time_sync_replay.etime_get_status_ptr(&error_, buffer, buffer_len);
@@ -330,7 +330,7 @@ namespace eCAL
         break;
       default:
         error_ = -1;
-        if (status_message_) {
+        if (status_message_ != nullptr) {
           status_message_->assign("Unknown Error.");
         }
       }
@@ -379,7 +379,7 @@ namespace eCAL
       module_name = "lib" + module_name + ".dylib";
 #endif // __APPLE__
 
-    if (!interface_.module_handle)
+    if (interface_.module_handle == nullptr)
     {
 #ifdef _WIN32
       // try to load plugin from paths that are specified in the time plugin environment variable
@@ -387,18 +387,18 @@ namespace eCAL
       {
         const auto module_path = ecal_time_plugin_path + "\\" + module_name;
         interface_.module_handle = LoadLibrary(module_path.c_str());
-        if (interface_.module_handle) break;
+        if (interface_.module_handle != nullptr) break;
       }
 
       // try to load plugin in standard path
-      if (!interface_.module_handle)
+      if (interface_.module_handle == nullptr)
       {
         const auto module_path = module_name;
         interface_.module_handle = LoadLibrary(module_path.c_str());
       }
 
       // try to load plugin from sub folder "ecal_time_plugin_dir"
-      if (!interface_.module_handle)
+      if (interface_.module_handle == nullptr)
       {
         const auto module_path = std::string(ecal_time_plugin_dir) + "\\" + module_name;
         interface_.module_handle = LoadLibrary(module_path.c_str());
@@ -421,7 +421,7 @@ namespace eCAL
       }
 #endif // defined(__linux__) || defined(__APPLE__)
 
-      if (!interface_.module_handle)
+      if (interface_.module_handle == nullptr)
       {
         eCAL::Logging::Log(log_level_error, "Could not load eCAL time sync module " + module_name);
         return false;

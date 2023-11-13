@@ -162,7 +162,7 @@ namespace eCAL
     m_service_id.clear();
 
     {
-      std::lock_guard<std::mutex> connected_lock(m_connected_mutex);
+      const std::lock_guard<std::mutex> connected_lock(m_connected_mutex);
       m_connected_v0 = false;
       m_connected_v1 = false;
     }
@@ -464,7 +464,7 @@ namespace eCAL
     bool mode_changed(false);
 
     {
-      std::lock_guard<std::mutex> connected_lock(m_connected_mutex);
+      const std::lock_guard<std::mutex> connected_lock(m_connected_mutex);
 
       // protocol version 0
       if (m_connected_v0)

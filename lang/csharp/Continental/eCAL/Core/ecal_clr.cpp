@@ -454,7 +454,7 @@ bool ServiceServer::RemMethodCallback(String^ methodName, MethodCallback^ callba
   return(false);
 }
 
-int ServiceServer::OnMethodCall(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_)
+int ServiceServer::OnMethodCall(const std::string& method_, const std::string& /*req_type_*/, const std::string& /*resp_type_*/, const std::string& request_, std::string& response_)
 {
     array<Byte>^ result = m_callbacks(StlStringToString(method_), StlStringToString(method_), StlStringToString(method_), StlStringToByteArray(request_));
     response_ = ByteArrayToStlString(result);

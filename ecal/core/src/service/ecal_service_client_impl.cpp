@@ -320,7 +320,7 @@ namespace eCAL
                         };
 
             // Call service asynchronously
-            bool call_success = client->second->async_call_service(request_shared_ptr, response_callback);
+            const bool call_success = client->second->async_call_service(request_shared_ptr, response_callback);
 
             if (!call_success)
             {
@@ -752,7 +752,7 @@ namespace eCAL
         const auto port_to_use = (protocol_version == 0 ? iter.tcp_port_v0 : iter.tcp_port_v1);
 
         // Create the client and add it to the map
-        const auto new_client_session = client_manager->create_client(protocol_version, iter.hname, port_to_use, event_callback);
+        const auto new_client_session = client_manager->create_client(static_cast<uint8_t>(protocol_version), iter.hname, port_to_use, event_callback);
         if (new_client_session)
           m_client_map[iter.key] = new_client_session;
       }
