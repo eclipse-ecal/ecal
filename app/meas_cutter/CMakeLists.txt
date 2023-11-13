@@ -22,6 +22,12 @@ find_package(Threads REQUIRED)
 find_package(tclap REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
+#compatibility with yaml-cpp < 0.8.0
+if (NOT TARGET yaml-cpp::yaml-cpp AND TARGET yaml-cpp)
+  add_library(yaml-cpp::yaml-cpp ALIAS yaml-cpp)
+endif()
+
+
 set(meas_cutter_src
     src/main.cpp
     src/utils.h
@@ -49,7 +55,7 @@ ecal_add_app_console(${PROJECT_NAME} ${meas_cutter_src})
 target_include_directories(${PROJECT_NAME}
   PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
-target_link_libraries(${PROJECT_NAME}   yaml-cpp
+target_link_libraries(${PROJECT_NAME}   yaml-cpp::yaml-cpp
                                         tclap::tclap
                                         eCAL::ecal-utils
                                         eCAL::measurement_hdf5
