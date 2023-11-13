@@ -320,7 +320,7 @@ To send this payload you just need a few lines of code:
   }
 
 Default eCAL SHM vs. Full Zero Copy SHM
-=============================
+=======================================
 
 .. list-table:: Default eCAL SHM vs. Full Zero Copy SHM
    :widths: 10 45 45
