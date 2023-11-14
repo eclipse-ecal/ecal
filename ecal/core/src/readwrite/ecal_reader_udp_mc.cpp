@@ -60,7 +60,7 @@ namespace eCAL
   void CUDPReaderLayer::Initialize()
   {
     SReceiverAttr attr;
-    attr.ipaddr    = UDP::GetPayloadMulticastAddress("");
+    attr.ipaddr    = Config::GetUdpMulticastGroup();
     attr.port      = UDP::GetPayloadPort();
     attr.localhost = false;
     attr.loopback  = true;

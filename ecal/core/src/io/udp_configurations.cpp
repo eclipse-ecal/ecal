@@ -66,18 +66,6 @@ namespace eCAL
 
     std::string GetPayloadMulticastAddress(const std::string& topic_name)
     {
-      // local host only
-      const bool local_only = !Config::IsNetworkEnabled();
-      if (local_only)
-      {
-        return LocalHost();
-      }
-
-      if (topic_name.empty())
-      {
-        return Config::GetUdpMulticastGroup();
-      }
-
       // v1
       if (Config::GetUdpMulticastConfigVersion() == Config::UdpConfigVersion::V1)
       {
@@ -98,7 +86,7 @@ namespace eCAL
       const bool local_only = !Config::IsNetworkEnabled();
       if (local_only)
       {
-        return 0;
+        return 1;
       }
       else
       {
