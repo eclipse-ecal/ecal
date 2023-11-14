@@ -48,7 +48,7 @@ namespace eCAL
         meas->GetEntryDataSize(entry.ID, message_size);
         data.resize(message_size);
         meas->GetEntryData(entry.ID, (void*)data.data());
-        return make_frame( data, entry.RcvTimestamp, entry.SndTimestamp );
+        return make_frame( data, entry.SndTimestamp, entry.RcvTimestamp );
       }
 
       std::string name()
@@ -188,7 +188,7 @@ namespace eCAL
           //  return m_owner[*m_entry_iterator];
           BinaryFrame e = *it;
           eCAL::message::Deserialize(e.message, message);
-          return make_frame(message, e.receive_timestamp, e.send_timestamp);
+          return make_frame(message, e.send_timestamp, e.receive_timestamp);
         };
         //friend void swap(iterator& lhs, iterator& rhs); //C++11 I think
         bool operator==(const iterator& rhs) const { return it == rhs.it; };
