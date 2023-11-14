@@ -33,8 +33,7 @@ namespace eCAL
     std::string ipaddr;
     int         port      = 0;
     int         ttl       = 0;
-    bool        broadcast = false;
-    bool        unicast   = false;
+    bool        localhost = false;
     bool        loopback  = true;
     int         sndbuf    = 1024 * 1024;
   };

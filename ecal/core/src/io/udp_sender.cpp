@@ -47,7 +47,7 @@ namespace eCAL
     size_t Send(const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
 
   protected:
-    bool                    m_broadcast;
+    bool                    m_localhost;
     bool                    m_unicast;
     asio::io_context        m_iocontext;
     asio::ip::udp::endpoint m_endpoint;
@@ -56,19 +56,12 @@ namespace eCAL
   };
 
   CUDPSenderImpl::CUDPSenderImpl(const SSenderAttr& attr_) :
-    m_broadcast(attr_.broadcast),
-    m_unicast(attr_.unicast),
+    m_localhost(attr_.localhost),
     m_endpoint(asio::ip::make_address(attr_.ipaddr), static_cast<unsigned short>(attr_.port)),
     m_socket(m_iocontext, m_endpoint.protocol()),
     m_port(static_cast<unsigned short>(attr_.port))
   {
-    if (m_broadcast && m_unicast)
-    {
-      std::cerr << "CUDPSender: Setting broadcast and unicast option true is not allowed." << std::endl;
-      return;
-    }
-
-    if (m_broadcast || m_unicast)
+    if (m_localhost)
     {
       // set unicast packet TTL
       const asio::ip::unicast::hops ttl(attr_.ttl);
@@ -98,7 +91,7 @@ namespace eCAL
       }
     }
 
-    if (m_broadcast)
+    if (m_localhost)
     {
       asio::error_code ec;
       m_socket.set_option(asio::socket_base::broadcast(true), ec);

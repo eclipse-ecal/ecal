@@ -32,16 +32,9 @@ namespace eCAL
   CUDPReceiverAsio::CUDPReceiverAsio(const SReceiverAttr& attr_) :
     CUDPReceiverBase(attr_),
     m_created(false),
-    m_broadcast(attr_.broadcast),
-    m_unicast(attr_.unicast),
+    m_localhost(attr_.localhost),
     m_socket(m_iocontext)
   {
-    if (m_broadcast && m_unicast)
-    {
-      std::cerr << "CUDPReceiverAsio: Setting broadcast and unicast option true is not allowed." << std::endl;
-      return;
-    }
-
     // create socket
     const asio::ip::udp::endpoint listen_endpoint(asio::ip::udp::v4(), static_cast<unsigned short>(attr_.port));
     {
@@ -75,9 +68,8 @@ namespace eCAL
       }
     }
 
-    if (!m_unicast)
+    // set loopback option
     {
-      // set loopback option
       const asio::ip::multicast::enable_loopback loopback(attr_.loopback);
       asio::error_code ec;
       m_socket.set_option(loopback, ec);
@@ -109,7 +101,7 @@ namespace eCAL
 
   bool CUDPReceiverAsio::AddMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_broadcast && !m_unicast)
+    if (!m_localhost)
     {
       // join multicast group
 #ifdef __linux__
@@ -145,7 +137,7 @@ namespace eCAL
 
   bool CUDPReceiverAsio::RemMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_broadcast && !m_unicast)
+    if (!m_localhost)
     {
       // Leave multicast group
 #ifdef __linux__

@@ -26,7 +26,7 @@ namespace eCAL
   CUDPReceiverPcap::CUDPReceiverPcap(const SReceiverAttr& attr_)
     : CUDPReceiverBase(attr_)
     , m_created(false)
-    , m_unicast(attr_.unicast)
+    , m_localhost(attr_.localhost)
   {
     // set receive buffer size (default = 1 MB)
     int rcvbuf = 1024 * 1024;
@@ -46,11 +46,8 @@ namespace eCAL
       return;
     }
 
-    if (!m_unicast)
-    {
-      // set loopback option
-      m_socket.setMulticastLoopbackEnabled(attr_.loopback);
-    }
+    // set loopback option
+    m_socket.setMulticastLoopbackEnabled(attr_.loopback);
 
     // join multicast group
     AddMultiCastGroup(attr_.ipaddr.c_str());
@@ -61,7 +58,7 @@ namespace eCAL
 
   bool CUDPReceiverPcap::AddMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_unicast)
+    if (!m_localhost)
     {
       // join multicast group
       if (!m_socket.joinMulticastGroup(Udpcap::HostAddress(ipaddr_)))
@@ -75,7 +72,7 @@ namespace eCAL
 
   bool CUDPReceiverPcap::RemMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_unicast)
+    if (!m_localhost)
     {
       // leave multicast group
       if (!m_socket.leaveMulticastGroup(Udpcap::HostAddress(ipaddr_)))
