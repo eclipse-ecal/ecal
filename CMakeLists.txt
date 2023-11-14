@@ -272,9 +272,12 @@ set(eCAL_install_samples_dir       ${CMAKE_INSTALL_BINDIR})
 set(eCAL_install_samples_src_dir   ${CMAKE_INSTALL_DATADIR}/ecal/samples/)
 set(eCAL_install_tests_dir         ${CMAKE_INSTALL_BINDIR})
 
-set(eCAL_config_dir                ${eCAL_BINARY_DIR}/cmake/)
+set(eCAL_config_dir                ${CMAKE_CURRENT_BINARY_DIR}/_generated/)
 set(eCAL_config                    ${eCAL_config_dir}/eCALConfig.cmake)
 set(eCAL_config_version            ${eCAL_config_dir}/eCALConfigVersion.cmake)
+
+file(MAKE_DIRECTORY ${eCAL_config_dir})
+
 if(WIN32)
   set(eCAL_install_config_dir            cfg)
   set(eCAL_install_doc_dir               doc)
