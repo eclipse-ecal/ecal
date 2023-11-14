@@ -138,7 +138,7 @@ namespace eCAL
       // start registration receive thread
       SReceiverAttr attr;
       attr.ipaddr    = UDP::GetRegistrationMulticastAddress();
-      attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
+      attr.port      = UDP::GetRegistrationPort();
       attr.localhost = !Config::IsNetworkEnabled();
       attr.loopback  = true;
       attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();

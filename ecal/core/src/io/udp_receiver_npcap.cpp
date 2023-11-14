@@ -47,7 +47,10 @@ namespace eCAL
     }
 
     // set loopback option
-    m_socket.setMulticastLoopbackEnabled(attr_.loopback);
+    if (!m_localhost)
+    {
+      m_socket.setMulticastLoopbackEnabled(attr_.loopback);
+    }
 
     // join multicast group
     AddMultiCastGroup(attr_.ipaddr.c_str());

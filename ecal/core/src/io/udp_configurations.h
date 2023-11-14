@@ -29,13 +29,19 @@ namespace eCAL
 {
   namespace UDP
   {
-    // return the multicast adress used for sending/receiving the registration information
+    // return the multicast adress/port used for sending/receiving the registration information
     std::string GetRegistrationMulticastAddress();
+    int GetRegistrationPort();
 
-    // return the multicast adress used for sending/receiving the logging information
+    // return the multicast adress/port used for sending/receiving the logging information
     std::string GetLoggingMulticastAddress();
+    int GetLoggingPort();
 
-    // return the multicast adress used for sending/receiving the topic payload
-    std::string GetTopicMulticastAddress(const std::string& topic_name);
+    // return the multicast adress/port used for sending/receiving the topic payload
+    std::string GetPayloadMulticastAddress(const std::string& topic_name);
+    int GetPayloadPort();
+
+    // return multicast udp package time to live setting
+    int GetMulticastTtl();
   }
 }

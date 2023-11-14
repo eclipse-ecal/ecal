@@ -20,6 +20,8 @@
 #include "io/udp_configurations.h"
 
 #include <ecal/ecal_config.h>
+
+#include "ecal_def.h"
 #include "topic2mcast.h"
 
 namespace eCAL
@@ -28,6 +30,7 @@ namespace eCAL
   {
     std::string LocalHost()
     {
+      // the specific address 127.255.255.255 is the broadcast address within the loopback range (127.0.0.0 to 127.255.255.255)
       return "127.255.255.255";
     }
 
@@ -45,18 +48,62 @@ namespace eCAL
       }
     }
 
+    int GetRegistrationPort()
+    {
+      return Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
+    }
+      
     std::string GetLoggingMulticastAddress()
     {
       // both logging and monitoring use the same addresses but different ports
       return GetRegistrationMulticastAddress();
     }
 
-    std::string GetTopicMulticastAddress(const std::string& topic_name)
+    int GetLoggingPort()
     {
+      return Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
+    }
+
+    std::string GetPayloadMulticastAddress(const std::string& topic_name)
+    {
+      // local host only
+      const bool local_only = !Config::IsNetworkEnabled();
+      if (local_only)
+      {
+        return LocalHost();
+      }
+
+      if (topic_name.empty())
+      {
+        return Config::GetUdpMulticastGroup();
+      }
+
+      // v1
       if (Config::GetUdpMulticastConfigVersion() == Config::UdpConfigVersion::V1)
+      {
         return UDP::V1::topic2mcast(topic_name, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
+      }
+
       // v2
       return  UDP::V2::topic2mcast(topic_name, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
+    }
+
+    int GetPayloadPort()
+    {
+      return Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
+    }
+
+    int GetMulticastTtl()
+    {
+      const bool local_only = !Config::IsNetworkEnabled();
+      if (local_only)
+      {
+        return 0;
+      }
+      else
+      {
+        return Config::GetUdpMulticastTtl();
+      }
     }
   }
 }

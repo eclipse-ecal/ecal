@@ -25,10 +25,7 @@
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_config.h>
 
-#include "ecal_def.h"
-
 #include "ecal_log_impl.h"
-
 #include "io/udp_configurations.h"
 
 #include <mutex>
@@ -153,10 +150,10 @@ namespace eCAL
     {
       SSenderAttr attr;
       attr.ipaddr    = UDP::GetLoggingMulticastAddress();
-      attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
+      attr.port      = UDP::GetLoggingPort();
       attr.localhost = !Config::IsNetworkEnabled();
       attr.loopback  = true;
-      attr.ttl       = Config::GetUdpMulticastTtl();
+      attr.ttl       = UDP::GetMulticastTtl();
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
       m_udp_sender = std::make_unique<CUDPSender>(attr);

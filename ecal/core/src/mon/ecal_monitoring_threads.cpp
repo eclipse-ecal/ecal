@@ -28,9 +28,7 @@
 #include "io/msg_type.h"
 #include "io/udp_configurations.h"
 
-#include "ecal_config_reader_hlp.h"
 #include "ecal_monitoring_threads.h"
-#include "ecal_global_accessors.h"
 
 namespace eCAL
 {
@@ -47,7 +45,7 @@ namespace eCAL
   {
     SReceiverAttr attr;
     attr.ipaddr    = UDP::GetLoggingMulticastAddress();
-    attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
+    attr.port      = UDP::GetLoggingPort();
     attr.localhost = !Config::IsNetworkEnabled();
     attr.loopback  = true;
     attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();

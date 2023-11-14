@@ -60,8 +60,8 @@ namespace eCAL
   void CUDPReaderLayer::Initialize()
   {
     SReceiverAttr attr;
-    attr.ipaddr    = Config::GetUdpMulticastGroup();
-    attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
+    attr.ipaddr    = UDP::GetPayloadMulticastAddress("");
+    attr.port      = UDP::GetPayloadPort();
     attr.localhost = false;
     attr.loopback  = true;
     attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
@@ -76,7 +76,7 @@ namespace eCAL
       started = true;
     }
     // add topic name based multicast address
-    const std::string mcast_address = UDP::GetTopicMulticastAddress(topic_name_);
+    const std::string mcast_address = UDP::GetPayloadMulticastAddress(topic_name_);
     if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
     {
       topic_name_mcast_map.emplace(std::pair<std::string, int>(mcast_address, 0));
@@ -87,7 +87,7 @@ namespace eCAL
 
   void CUDPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
   {
-    const std::string mcast_address = UDP::GetTopicMulticastAddress(topic_name_);
+    const std::string mcast_address = UDP::GetPayloadMulticastAddress(topic_name_);
     if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
     {
       // this should never happen

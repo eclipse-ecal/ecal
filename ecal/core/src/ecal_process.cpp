@@ -26,10 +26,10 @@
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
-#include "ecal_registration_provider.h"
 #include "ecal_registration_receiver.h"
 #include "ecal_globals.h"
 #include "ecal_process.h"
+#include "io/udp_configurations.h"
 
 #include <array>
 #include <chrono>
@@ -42,8 +42,8 @@
 
 #include "sys_usage.h"
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include <string>
 #include <cstring>
 #include <atomic>
@@ -229,7 +229,7 @@ namespace eCAL
       {
         sstream << "Network mode             : local" << std::endl;
       }
-      sstream << "Network ttl              : " << Config::GetUdpMulticastTtl() << std::endl;
+      sstream << "Network ttl              : " << UDP::GetMulticastTtl() << std::endl;
       sstream << "Network sndbuf           : " << GetBufferStr(Config::GetUdpMulticastSndBufSizeBytes()) << std::endl;
       sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetUdpMulticastRcvBufSizeBytes()) << std::endl;
       sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetUdpMulticastConfigVersion()) << std::endl;
@@ -549,7 +549,7 @@ namespace eCAL
         creation_flag = CREATE_NEW_CONSOLE;
       }
 
-      short win_state;
+      short win_state = 0;
       switch (process_mode_)
       {
       case 0:
