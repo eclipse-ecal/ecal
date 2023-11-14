@@ -35,8 +35,10 @@
 #define B_IN_KB 1024.0
 #define B_IN_MB 1048576.0
 
+#define MMA_CPU_CMD "cat /proc/uptime"
+
 MMALinux::MMALinux():
-  cpu_pipe_(std::make_unique<PipeRefresher>("sar -u 1 1",500)),
+  cpu_pipe_(std::make_unique<PipeRefresher>(MMA_CPU_CMD,500)),
   network_pipe_(std::make_unique<PipeRefresher>("ifstat 1 1",500)),
   disk_pipe_(std::make_unique<PipeRefresher>("iostat -N 1 2",500)),
   process_pipe_(std::make_unique<PipeRefresher>("ps -aux",500))
@@ -58,8 +60,11 @@ MMALinux::~MMALinux()
 void MMALinux::OnDataReceived(const std::string& pipe_result, const std::string& command)
 {
   std::lock_guard<std::mutex> guard(mutex);
-  if (command == "sar -u 1 1")
+  if (command == MMA_CPU_CMD)
+  {
     cpu_pipe_result_ = pipe_result;
+    cpu_pipe_count_++;
+  }
   if (command == "ifstat 1 1")
     network_pipe_result_ = pipe_result;
   if (command == "iostat -N 1 2")
@@ -104,24 +109,28 @@ std::string MMALinux::FileToString(const std::string& command)
 double MMALinux::GetCPULoad()
 {
   std::string local_copy;
+  unsigned int local_count;
+  static unsigned int previous_count;
   {
     std::lock_guard<std::mutex> guard(mutex);
     local_copy = cpu_pipe_result_;
+    local_count = cpu_pipe_count_;
   }
 
   double cpu_time = 0.0;
 
-  auto lines = TokenizeIntoLines(local_copy);
-  if (lines.size() > 0)
+  if (local_copy.length() > 0)
   {
-    std::vector<std::string> cpu_line = SplitLine(lines.back());
-    double idle_time = static_cast<double>(stod(cpu_line.back()));
+    std::vector<std::string> cpu_line = SplitLine(local_copy);
+    const double idle_time = stod(cpu_line.back());
+    const unsigned int delta_count = (local_count - previous_count) * nr_of_cpu_cores;
+    static double previous_idle_time = idle_time - delta_count / 2;
+    const double current_idle = idle_time - previous_idle_time;
 
-    cpu_time = 100.0 - idle_time;
-  }
-  else
-  {
-    cpu_time = 0.0;
+    if (delta_count > 0)
+      cpu_time = 100.0 * (1 - 2 * current_idle / delta_count);
+    previous_idle_time = idle_time;
+    previous_count = local_count;
   }
 
   return cpu_time;

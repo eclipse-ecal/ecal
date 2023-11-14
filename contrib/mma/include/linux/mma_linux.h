@@ -56,6 +56,7 @@ class MMALinux : public MMAImpl
   std::string disk_pipe_result_;
   std::string process_pipe_result_;
 
+  unsigned int cpu_pipe_count_ = 0;
 
 
   /**
