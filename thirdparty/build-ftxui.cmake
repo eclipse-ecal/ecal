@@ -10,3 +10,5 @@ if(content MATCHES "VERSION ([0-9]+)\\.[0-9]+\\.[0-9]+")
 else()
   message(FATAL_ERROR "Couldn't read version info")
 endif()
+
+list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/ftxui-module)

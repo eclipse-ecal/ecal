@@ -1,0 +1,1 @@
+set(spdlog_FOUND TRUE)

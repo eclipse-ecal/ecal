@@ -11,3 +11,5 @@ endif()
 if(NOT TARGET GTest::gtest_main)
   add_library(GTest::gtest_main ALIAS gtest_main)
 endif()
+
+list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/gtest-module)

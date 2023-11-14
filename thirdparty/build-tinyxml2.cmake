@@ -15,3 +15,5 @@ if (NOT TARGET tinyxml2::tinyxml2)
     )
   endif ()
 endif ()
+
+list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/tinyxml2-module)

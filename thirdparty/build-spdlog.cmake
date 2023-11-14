@@ -14,3 +14,5 @@ if (NOT TARGET spdlog::spdlog)
     )
   endif()
 endif()
+
+list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/spdlog-module)
