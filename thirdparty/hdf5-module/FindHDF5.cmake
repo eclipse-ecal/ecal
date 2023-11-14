@@ -1,0 +1,1 @@
+set(HDF5_FOUND TRUE)

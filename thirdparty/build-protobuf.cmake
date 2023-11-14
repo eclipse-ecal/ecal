@@ -48,3 +48,5 @@ endif()
 
 set(Protobuf_PROTOC_EXECUTABLE protoc)
 set(Protobuf_VERSION 3.11.4)
+
+list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/protobuf-module)

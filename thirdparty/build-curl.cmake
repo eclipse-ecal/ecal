@@ -18,3 +18,5 @@ if (NOT TARGET CURL::libcurl)
     )
   endif()
 endif()
+
+list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/curl-module)

@@ -1,0 +1,1 @@
+set(eCAL_FOUND TRUE)
