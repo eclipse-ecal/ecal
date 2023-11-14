@@ -1,4 +1,4 @@
-_name: Fat source archive
+name: Fat source archive
 
 on:  
   push:
