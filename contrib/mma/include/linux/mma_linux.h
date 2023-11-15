@@ -57,6 +57,7 @@ class MMALinux : public MMAImpl
   std::string process_pipe_result_;
 
   unsigned int cpu_pipe_count_ = 0;
+  unsigned int network_pipe_count_ = 0;
 
 
   /**

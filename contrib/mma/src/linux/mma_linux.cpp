@@ -36,10 +36,11 @@
 #define B_IN_MB 1048576.0
 
 #define MMA_CPU_CMD "cat /proc/uptime"
+#define MMA_NET_CMD "cat /proc/net/dev"
 
 MMALinux::MMALinux():
   cpu_pipe_(std::make_unique<PipeRefresher>(MMA_CPU_CMD,500)),
-  network_pipe_(std::make_unique<PipeRefresher>("ifstat 1 1",500)),
+  network_pipe_(std::make_unique<PipeRefresher>(MMA_NET_CMD,500)),
   disk_pipe_(std::make_unique<PipeRefresher>("iostat -N 1 2",500)),
   process_pipe_(std::make_unique<PipeRefresher>("ps -aux",500))
 {
@@ -65,8 +66,11 @@ void MMALinux::OnDataReceived(const std::string& pipe_result, const std::string&
     cpu_pipe_result_ = pipe_result;
     cpu_pipe_count_++;
   }
-  if (command == "ifstat 1 1")
+  if (command == MMA_NET_CMD)
+  {
     network_pipe_result_ = pipe_result;
+    network_pipe_count_++;
+  }
   if (command == "iostat -N 1 2")
     disk_pipe_result_ = pipe_result;
   if (command == "ps -aux")
@@ -209,9 +213,18 @@ ResourceLinux::DiskStatsList MMALinux::GetDisks()
 ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
 {
   std::string local_copy;
+  unsigned int local_count;
+  static unsigned int previous_count;
+  typedef struct
+  {
+    unsigned long rec;
+    unsigned long snd;
+  } t_io;
+  static std::unordered_map<std::string, t_io> previous;
   {
     std::lock_guard<std::mutex> guard(mutex);
     local_copy = network_pipe_result_;
+    local_count = network_pipe_count_;
   }
 
   ResourceLinux::NetworkStatsList networks;
@@ -220,34 +233,42 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
   auto lines = TokenizeIntoLines(local_copy);
   if (lines.size() > 0)
   {
-    std::vector<std::string> network_names = SplitLine(lines.front());
-
     // skip the first 2 lines
     auto iterator = lines.begin();
     std::advance(iterator, 2);
 
-    std::vector<std::string> network_io = SplitLine(*iterator);
-
-    int kb_in_index = 0;
-    int kb_out_index = 1;
-
-    size_t size = network_names.size();
-    for (size_t i = 0; i < size; i++)
+    const unsigned long int delta_count = (local_count - previous_count);
+    
+    while(iterator != lines.end())
     {
-      network_stats.name = network_names[i];
-      try { network_stats.receive = static_cast<double>(stod(network_io[kb_in_index])); }
-      catch (...) { network_stats.receive = 0.00; }
+      std::vector<std::string> network_io = SplitLine(*iterator);
+      t_io cur = {0, 0};
+      t_io prev;
+      network_stats.name=network_io[0];
 
-      try { network_stats.send = static_cast<double>(stod(network_io[kb_out_index])); }
-      catch (...) { network_stats.send = 0.00; }
+      try { cur.rec = stoul(network_io[1]); }
+      catch (...) { }
 
-      kb_in_index += 2;
-      kb_out_index += 2;
+      try { cur.snd = stoul(network_io[9]); }
+      catch (...) { }
 
-      network_stats.receive *= B_IN_KB;
-      network_stats.send *= B_IN_KB;
+      if (previous.find(network_stats.name) != previous.end())
+      {
+        prev = previous[network_stats.name];
+      }
+      else
+      {
+        prev = cur;
+      }
+
+      network_stats.receive = (cur.rec - prev.rec) / (0.5 * delta_count);
+      network_stats.send = (cur.snd - prev.snd) / (0.5 * delta_count);
+
       networks.push_back(network_stats);
+      previous[network_stats.name] = cur;
+      std::advance(iterator, 1);
     }
+    previous_count = local_count;
   }
 
   return networks;
