@@ -51,7 +51,7 @@ namespace eCAL
       }
 
       return local_endpoint_string + " -> " + remote_endpoint_string;
-    };
+    }
 
     inline std::string endpoint_to_string(const asio::ip::tcp::endpoint& endpoint)
     {
