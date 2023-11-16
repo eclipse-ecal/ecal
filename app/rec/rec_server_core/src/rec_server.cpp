@@ -119,10 +119,10 @@ namespace eCAL
     uint16_t RecServer::GetInternalFtpServerPort() const                         { return rec_server_impl_->GetInternalFtpServerPort(); }
 
     eCAL::rec::Error RecServer::UploadMeasurement(int64_t meas_id)               { return rec_server_impl_->UploadMeasurement(meas_id); }
-    bool RecServer::CanUploadMeasurement(int64_t meas_id) const                  { return rec_server_impl_->CanUploadMeasurement(meas_id); };
-    eCAL::rec::Error RecServer::SimulateUploadMeasurement(int64_t meas_id) const { return rec_server_impl_->SimulateUploadMeasurement(meas_id); };
+    bool RecServer::CanUploadMeasurement(int64_t meas_id) const                  { return rec_server_impl_->CanUploadMeasurement(meas_id); }
+    eCAL::rec::Error RecServer::SimulateUploadMeasurement(int64_t meas_id) const { return rec_server_impl_->SimulateUploadMeasurement(meas_id); }
 
-    int RecServer::UploadNonUploadedMeasurements()                               { return rec_server_impl_->UploadNonUploadedMeasurements(); };
+    int RecServer::UploadNonUploadedMeasurements()                               { return rec_server_impl_->UploadNonUploadedMeasurements(); }
 
     bool RecServer::HasAnyUploadError(int64_t meas_id) const                     { return rec_server_impl_->HasAnyUploadError(meas_id); }
 

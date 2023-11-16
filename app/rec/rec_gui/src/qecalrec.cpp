@@ -168,7 +168,7 @@ bool QEcalRec::setHostFilter(const std::string& hostname, const std::set<std::st
   return success;
 }
 
-std::set<std::string> QEcalRec::hostFilter(const std::string& hostname) const { return rec_server_->GetHostFilter(hostname); };
+std::set<std::string> QEcalRec::hostFilter(const std::string& hostname) const { return rec_server_->GetHostFilter(hostname); }
 
 bool QEcalRec::setConnectionToClientsActive(bool active, bool omit_dialogs)
 {
@@ -200,7 +200,7 @@ bool QEcalRec::setConnectionToClientsActive(bool active, bool omit_dialogs)
   return success;
 }
 
-bool QEcalRec::connectionToClientsActive() const { return rec_server_->IsConnectionToClientsActive(); };
+bool QEcalRec::connectionToClientsActive() const { return rec_server_->IsConnectionToClientsActive(); }
 
 ////////////////////////////////////
 // Recorder control
@@ -366,9 +366,9 @@ bool QEcalRec::stopRecording(bool omit_dialogs)
   return success;
 }
 
-bool QEcalRec::connectedToEcal() const { return rec_server_->IsConnectedToEcal(); };
+bool QEcalRec::connectedToEcal() const { return rec_server_->IsConnectedToEcal(); }
 
-bool QEcalRec::recording() const { return rec_server_->IsRecording(); };
+bool QEcalRec::recording() const { return rec_server_->IsRecording(); }
 
 int64_t QEcalRec::currentlyRecordingMeasId() const { return rec_server_->GetCurrentlyRecordingMeasId(); }
 
@@ -382,9 +382,9 @@ void QEcalRec::waitForPendingRequests() const { rec_server_->WaitForPendingReque
 // Status
 ////////////////////////////////////
 
-eCAL::rec_server::RecorderStatusMap_T                   QEcalRec::recorderStatuses()              const { return rec_server_->GetRecorderStatuses(); };
+eCAL::rec_server::RecorderStatusMap_T                   QEcalRec::recorderStatuses()              const { return rec_server_->GetRecorderStatuses(); }
 
-eCAL::rec::RecorderStatus                               QEcalRec::builtInRecorderInstanceStatus() const { return rec_server_->GetBuiltInRecorderInstanceStatus(); };
+eCAL::rec::RecorderStatus                               QEcalRec::builtInRecorderInstanceStatus() const { return rec_server_->GetBuiltInRecorderInstanceStatus(); }
 
 eCAL::rec_server::TopicInfoMap_T                        QEcalRec::topicInfo()                     const { return rec_server_->GetTopicInfo(); }
 
@@ -529,11 +529,11 @@ bool QEcalRec::setTopicWhitelist(const std::set<std::string>& topic_whitelist, b
   }
 }
 
-std::chrono::steady_clock::duration QEcalRec::maxPreBufferLength () const { return rec_server_->GetMaxPreBufferLength();  };
-bool                                QEcalRec::preBufferingEnabled() const { return rec_server_->GetPreBufferingEnabled(); };
-eCAL::rec::RecordMode               QEcalRec::recordMode         () const { return rec_server_->GetRecordMode();          };
-std::set<std::string>               QEcalRec::topicBlacklist     () const { return topic_blacklist_;                      };
-std::set<std::string>               QEcalRec::topicWhitelist     () const { return topic_whitelist_;                      };
+std::chrono::steady_clock::duration QEcalRec::maxPreBufferLength () const { return rec_server_->GetMaxPreBufferLength();  }
+bool                                QEcalRec::preBufferingEnabled() const { return rec_server_->GetPreBufferingEnabled(); }
+eCAL::rec::RecordMode               QEcalRec::recordMode         () const { return rec_server_->GetRecordMode();          }
+std::set<std::string>               QEcalRec::topicBlacklist     () const { return topic_blacklist_;                      }
+std::set<std::string>               QEcalRec::topicWhitelist     () const { return topic_whitelist_;                      }
 
 ////////////////////////////////////
 // Job Settings
@@ -574,10 +574,10 @@ void QEcalRec::setDescription(const std::string& description)
   emit descriptionChangedSignal(description);
 }
 
-std::string  QEcalRec::measRootDir   () const { return rec_server_->GetMeasRootDir();    };
-std::string  QEcalRec::measName      () const { return rec_server_->GetMeasName();       };
-unsigned int QEcalRec::maxFileSizeMib() const { return rec_server_->GetMaxFileSizeMib(); };
-std::string  QEcalRec::description   () const { return rec_server_->GetDescription();    };
+std::string  QEcalRec::measRootDir   () const { return rec_server_->GetMeasRootDir();    }
+std::string  QEcalRec::measName      () const { return rec_server_->GetMeasName();       }
+unsigned int QEcalRec::maxFileSizeMib() const { return rec_server_->GetMaxFileSizeMib(); }
+std::string  QEcalRec::description   () const { return rec_server_->GetDescription();    }
 
 ////////////////////////////////////
 // Server Settings

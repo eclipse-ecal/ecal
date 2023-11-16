@@ -86,7 +86,7 @@ namespace eCAL
     rhs.m_initialized = false;
 
     return *this;
-  };
+  }
 
   bool CSubscriber::Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ /* = "" */)
   {

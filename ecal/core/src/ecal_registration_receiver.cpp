@@ -424,4 +424,4 @@ namespace eCAL
   {
     m_callback_custom_apply_sample = [](const auto&){};
   }
-};
+}

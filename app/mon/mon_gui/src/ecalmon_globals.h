@@ -33,4 +33,4 @@ namespace EcalmonGlobals
       + (VERSION_MINOR * 1000)
       + (VERSION_MAJOR * 1000 * 1000));
   }
-};
+}
