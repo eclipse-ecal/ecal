@@ -71,4 +71,4 @@ namespace eCAL
 
     eCAL::CThread            m_subtimeout_thread;
   };
-};
+}

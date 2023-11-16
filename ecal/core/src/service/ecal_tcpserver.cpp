@@ -88,4 +88,4 @@ namespace eCAL
 
     m_server = nullptr;
   }
-};
+}

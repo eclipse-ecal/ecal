@@ -35,7 +35,7 @@ namespace eCAL
   CGlobals::~CGlobals()
   {
     Finalize(Init::All);
-  };
+  }
 
   int CGlobals::Initialize(unsigned int components_, std::vector<std::string>* config_keys_ /*= nullptr*/)
   {

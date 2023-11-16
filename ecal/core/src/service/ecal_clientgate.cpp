@@ -194,4 +194,4 @@ namespace eCAL
     }
     return false;
   }
-};
+}

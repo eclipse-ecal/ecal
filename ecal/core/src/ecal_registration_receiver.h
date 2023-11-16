@@ -125,4 +125,4 @@ namespace eCAL
 
     std::string                      m_host_group_name;
   };
-};
+}

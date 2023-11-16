@@ -95,4 +95,4 @@ namespace eCAL
     void ReceiveResponseData(const size_t size, AsyncCallbackT callback_);
     void ExecuteCallback(AsyncCallbackT callback_, const std::string &data_, bool success_);
   };
-};
+}
