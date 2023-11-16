@@ -29,6 +29,9 @@
 #include <unordered_map>
 #include <vector>
 #include <sys/sysinfo.h>
+#include <sys/stat.h>
+#include <pwd.h>
+#include <unistd.h>
 
 #include "../include/linux/mma_linux.h"
 
@@ -38,12 +41,13 @@
 #define MMA_CPU_CMD "cat /proc/uptime"
 #define MMA_NET_CMD "cat /proc/net/dev"
 #define MMA_DISK_CMD "cat /proc/diskstats"
+#define MMA_PS_CMD "cat /proc/[0-9]*/stat 2>/dev/null"
 
 MMALinux::MMALinux():
   cpu_pipe_(std::make_unique<PipeRefresher>(MMA_CPU_CMD,500)),
   network_pipe_(std::make_unique<PipeRefresher>(MMA_NET_CMD,500)),
   disk_pipe_(std::make_unique<PipeRefresher>(MMA_DISK_CMD,500)),
-  process_pipe_(std::make_unique<PipeRefresher>("ps -aux",500))
+  process_pipe_(std::make_unique<PipeRefresher>(MMA_PS_CMD,500))
 {
   cpu_pipe_->AddCallback(std::bind(&MMALinux::OnDataReceived, this, std::placeholders::_1, std::placeholders::_2));
   network_pipe_->AddCallback(std::bind(&MMALinux::OnDataReceived, this, std::placeholders::_1, std::placeholders::_2));
@@ -67,18 +71,21 @@ void MMALinux::OnDataReceived(const std::string& pipe_result, const std::string&
     cpu_pipe_result_ = pipe_result;
     cpu_pipe_count_++;
   }
-  if (command == MMA_NET_CMD)
+  else if (command == MMA_NET_CMD)
   {
     network_pipe_result_ = pipe_result;
     network_pipe_count_++;
   }
-  if (command == MMA_DISK_CMD)
+  else if (command == MMA_DISK_CMD)
   {
     disk_pipe_result_ = pipe_result;
     disk_pipe_count_++;
   }
-  if (command == "ps -aux")
+  else if (command == MMA_PS_CMD)
+  {
     process_pipe_result_ = pipe_result;
+    process_pipe_count_++;
+  }
 
 }
 
@@ -280,9 +287,15 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
 ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
 {
   std::string local_copy;
+  static const long page_size = sysconf(_SC_PAGE_SIZE);
+  static const long ticks_per_second = sysconf(_SC_CLK_TCK);
+  static unsigned int previous_count;
+  static std::unordered_map<uint32_t, unsigned long> previous;
+  unsigned int local_count;
   {
     std::lock_guard<std::mutex> guard(mutex);
     local_copy = process_pipe_result_;
+    local_count = process_pipe_count_;
   }
 
   ResourceLinux::ProcessStatsList processes;
@@ -291,20 +304,43 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
   auto lines = TokenizeIntoLines(local_copy);
   if (lines.size() > 0)
   {
-    // skip the first 1 lines
     auto iterator = lines.begin();
-    std::advance(iterator, 1);
     while(iterator!=lines.end())
     {
       std::vector<std::string> process_data = SplitLine(*iterator);
-      process_stats.id=std::stoi(process_data[1]);
-      process_stats.user=process_data[0];
-      process_stats.memory.current_used_memory=stoull(process_data[5]) * 1024LL;
-      process_stats.commandline=process_data[10];
-      process_stats.cpu_load.cpu_load=std::stof(process_data[2]);
+      process_stats.id=std::stoi(process_data[0]);
+      struct stat info;
+      std::string filename = "/proc/" + process_data[0];
+      if (0 == stat(filename.c_str(), &info))
+      {
+        struct passwd *pw = getpwuid(info.st_uid);
+        if (pw)
+          process_stats.user=pw->pw_name;
+      }
+
+      process_stats.memory.current_used_memory=stoull(process_data[23]) * page_size;
+      if (process_data[1].length() > 2)
+        process_stats.commandline=process_data[1].substr(1, process_data[1].length()-2);
+
+      const unsigned int delta_count = (local_count - previous_count) * ticks_per_second * nr_of_cpu_cores;
+      const unsigned long cur = std::stoul(process_data[13]);
+      unsigned long prev;
+      if (previous.find(process_stats.id) != previous.end())
+      {
+        prev = previous[process_stats.id];
+      }
+      else
+      {
+        prev = cur;
+      }
+
+      if (delta_count > 0)
+        process_stats.cpu_load.cpu_load = (cur - prev) / (0.005 * delta_count);
       processes.push_back(process_stats);
+      previous[process_stats.id] = cur;
       std::advance(iterator, 1);
     }
+    previous_count = local_count;
   }
   return processes;
 }
