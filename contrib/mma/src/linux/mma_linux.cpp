@@ -426,7 +426,7 @@ bool MMALinux::SetDiskInformation(ResourceLinux::DiskStatsList& disks)
   bool return_value = false;
 
   std::string result;
-  OpenPipe("df -B1", result);
+  OpenPipe("df", result);
 
   // partitions for disks
   std::map<std::string, std::vector<std::string>> partition_map;
@@ -459,10 +459,11 @@ bool MMALinux::SetDiskInformation(ResourceLinux::DiskStatsList& disks)
 
   for (const auto& partition : partition_map)
   {
+    const uint64_t KiB = 1024;
     ResourceLinux::DiskStats disk_stats;
     disk_stats.name = partition.second[0];
-    uint64_t used = stoll(partition.second[1]);
-    disk_stats.available = stoll(partition.second[2]);
+    uint64_t used = stoll(partition.second[1]) * KiB;
+    disk_stats.available = stoll(partition.second[2]) * KiB;
     disk_stats.capacity = disk_stats.available + used;
     disk_stats.mount_point = partition.second[3];
 
