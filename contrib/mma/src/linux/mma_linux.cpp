@@ -37,11 +37,12 @@
 
 #define MMA_CPU_CMD "cat /proc/uptime"
 #define MMA_NET_CMD "cat /proc/net/dev"
+#define MMA_DISK_CMD "cat /proc/diskstats"
 
 MMALinux::MMALinux():
   cpu_pipe_(std::make_unique<PipeRefresher>(MMA_CPU_CMD,500)),
   network_pipe_(std::make_unique<PipeRefresher>(MMA_NET_CMD,500)),
-  disk_pipe_(std::make_unique<PipeRefresher>("iostat -N 1 2",500)),
+  disk_pipe_(std::make_unique<PipeRefresher>(MMA_DISK_CMD,500)),
   process_pipe_(std::make_unique<PipeRefresher>("ps -aux",500))
 {
   cpu_pipe_->AddCallback(std::bind(&MMALinux::OnDataReceived, this, std::placeholders::_1, std::placeholders::_2));
@@ -71,8 +72,11 @@ void MMALinux::OnDataReceived(const std::string& pipe_result, const std::string&
     network_pipe_result_ = pipe_result;
     network_pipe_count_++;
   }
-  if (command == "iostat -N 1 2")
+  if (command == MMA_DISK_CMD)
+  {
     disk_pipe_result_ = pipe_result;
+    disk_pipe_count_++;
+  }
   if (command == "ps -aux")
     process_pipe_result_ = pipe_result;
 
@@ -439,18 +443,24 @@ bool MMALinux::SetDiskInformation(ResourceLinux::DiskStatsList& disks)
 bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_info)
 {
   std::string local_copy;
+  unsigned int local_count;
+  static unsigned int previous_count;
+  typedef struct
+  {
+    unsigned long read;
+    unsigned long write;
+  } t_io;
+  static std::unordered_map<std::string, t_io> previous;
   {
     std::lock_guard<std::mutex> guard(mutex);
     local_copy = disk_pipe_result_;
+    local_count = disk_pipe_count_;
   }
 
   bool return_value = true;
+  const unsigned long int delta_count = (local_count - previous_count);
 
   auto lines = TokenizeIntoLines(local_copy);
-
-  auto it = lines.begin();
-  std::advance(it, (lines.size() / 2) + 4);
-  lines.erase(lines.begin(), it);
 
   for (const auto& line : lines)
   {
@@ -458,20 +468,34 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
 
     for (auto& disk : disk_stats_info)
     {
-      if (disk.name.find(partition[0]) != std::string::npos)
+      if (disk.name.find(partition[2]) != std::string::npos)
       {
-        try { disk.read = static_cast<double>(stod(partition[2])); }
-        catch (...) { disk.read = 0.00; }
+        t_io cur = {0, 0};
+        t_io prev;
 
-        try { disk.write = static_cast<double>(stod(partition[3])); }
-        catch (...) { disk.write = 0.00; }
+        try { cur.read = static_cast<double>(stod(partition[5])); }
+        catch (...) { }
 
+        try { cur.write = static_cast<double>(stod(partition[9])); }
+        catch (...) { }
 
-        disk.read *= B_IN_KB;
-        disk.write *= B_IN_KB;
+        if (previous.find(disk.name) != previous.end())
+        {
+          prev = previous[disk.name];
+        }
+        else
+        {
+          prev = cur;
+        }
+
+        disk.read = (cur.read - prev.read) * 4 * B_IN_KB / delta_count;
+        disk.write = (cur.write - prev.write) * 4 * B_IN_KB / delta_count;
+
+        previous[disk.name] = cur;
       }
     }
   }
+  previous_count = local_count;
 
   return return_value;
 }
