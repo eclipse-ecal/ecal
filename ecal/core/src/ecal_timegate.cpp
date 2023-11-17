@@ -65,7 +65,7 @@ namespace eCAL
     m_successfully_loaded_replay(false),
     m_sync_mode(eTimeSyncMode::none)
   {
-  };
+  }
 
   CTimeGate::~CTimeGate()
   {
@@ -469,4 +469,4 @@ namespace eCAL
 
     return true;
   }
-};
+}

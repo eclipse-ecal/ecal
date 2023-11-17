@@ -186,7 +186,7 @@ namespace eCAL
     inline CDynamicSubscriber::~CDynamicSubscriber()
     {
       Destroy();
-    };
+    }
 
     inline void CDynamicSubscriber::Create(const std::string& topic_name_)
     {

@@ -240,4 +240,4 @@ namespace eCAL
     }
     return false;
   }
-};
+}

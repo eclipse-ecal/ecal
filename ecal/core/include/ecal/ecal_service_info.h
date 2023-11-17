@@ -70,4 +70,4 @@ namespace eCAL
    * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
   **/
   typedef std::function<void(const struct SServiceResponse& service_response_)> ResponseCallbackT;
-};
+}

@@ -94,20 +94,20 @@ namespace eCAL
     }
 
     return(0);
-  };
+  }
 
   CMonLogPublishingThread::CMonLogPublishingThread(MonitoringCallbackT mon_cb_, LoggingCallbackT log_cb_) :
     m_mon_cb(mon_cb_), m_log_cb(log_cb_)
   {
     m_pub_thread.Start(CMN_REGISTRATION_REFRESH, std::bind(&CMonLogPublishingThread::ThreadFun, this));
-  };
+  }
 
   CMonLogPublishingThread::~CMonLogPublishingThread()
   {
     m_pub_thread.Stop();
     m_mon_pub.pub.Destroy();
     m_log_pub.pub.Destroy();
-  };
+  }
 
   void CMonLogPublishingThread::SetMonState(bool state_, const std::string& name_)
   {

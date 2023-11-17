@@ -78,4 +78,4 @@ namespace eCAL
     std::shared_timed_mutex     m_service_register_map_sync;
     ConnectedMapT               m_service_register_map;
   };
-};
+}
