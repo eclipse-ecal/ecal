@@ -385,6 +385,22 @@ bool MMALinux::FormatListData(std::vector<std::string>& the_list)
     iterator = the_list.begin();
     std::string name = *iterator;
 
+    // /dev/root needs special handling
+    if (name == "/dev/root")
+    {
+      static std::string root_dev;
+      if (root_dev.empty())
+      {
+        std::string result;
+        OpenPipe("cat /proc/cmdline", result);
+        std::size_t found = result.find("root=");
+        result = result.substr(found + 5);
+        found = result.find(" ");
+        root_dev = result.substr(0, found);
+      }
+      name = root_dev;
+    }
+
     // if last character of string is digit, delete the digit
     if (IsDigit(name.back()))
     {
@@ -466,6 +482,9 @@ bool MMALinux::SetDiskInformation(ResourceLinux::DiskStatsList& disks)
     disk_stats.available = stoll(partition.second[2]) * KiB;
     disk_stats.capacity = disk_stats.available + used;
     disk_stats.mount_point = partition.second[3];
+    // ensure initialization of transfer rates
+    disk_stats.read = 0.0;
+    disk_stats.write = 0.0;
 
     disks.push_back(disk_stats);
   }
