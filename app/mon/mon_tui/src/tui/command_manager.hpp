@@ -180,4 +180,4 @@ std::shared_ptr<CommandDescriptionMap> CreateCommandDescriptionMap()
     {Command::HELP, "Show help view"},
     {Command::SYSTEM_INFORMATION, "Show system info view"},
   });
-};
+}

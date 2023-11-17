@@ -207,7 +207,7 @@ namespace eCAL
     CDynamicJSONSubscriber::~CDynamicJSONSubscriber()
     {
       Destroy();
-    };
+    }
 
     void CDynamicJSONSubscriber::Create(const std::string& topic_name_)
     {

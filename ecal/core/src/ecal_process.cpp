@@ -413,32 +413,32 @@ namespace eCAL
     long long GetSClock()
     {
       return(GetWClock());
-    };
+    }
 
     long long GetSBytes()
     {
       return(GetWBytes());
-    };
+    }
 
     long long GetWClock()
     {
       return(g_process_wclock);
-    };
+    }
 
     long long GetWBytes()
     {
       return(g_process_wbytes);
-    };
+    }
 
     long long GetRClock()
     {
       return(g_process_rclock);
-    };
+    }
 
     long long GetRBytes()
     {
       return(g_process_rbytes);
-    };
+    }
 
     void SetState(eCAL_Process_eSeverity severity_, eCAL_Process_eSeverity_Level level_, const char* info_)
     {

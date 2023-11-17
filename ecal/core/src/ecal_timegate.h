@@ -132,4 +132,4 @@ namespace eCAL
     STimeDllInterface        m_time_sync_rt;
     STimeDllInterface        m_time_sync_replay;
   };
-};
+}

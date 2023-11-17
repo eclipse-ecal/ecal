@@ -25,7 +25,7 @@
 
 #include "person.pb.h"
 
-constexpr auto ONE_SECOND = 1000000;;
+constexpr auto ONE_SECOND = 1000000;
 
 int main(int /*argc*/, char** /*argv*/)
 {

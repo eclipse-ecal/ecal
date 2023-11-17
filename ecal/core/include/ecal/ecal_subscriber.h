@@ -356,4 +356,4 @@ namespace eCAL
     bool                             m_created;
     bool                             m_initialized;
   };
-};
+}

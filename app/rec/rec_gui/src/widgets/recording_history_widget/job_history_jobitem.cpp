@@ -270,7 +270,7 @@ int JobHistoryJobItem::type() const
 
 int64_t                               JobHistoryJobItem::jobId()     const { return local_evaluated_job_config_.GetJobId(); }
 const eCAL::rec::JobConfig&           JobHistoryJobItem::localEvaluatedJobConfig() const { return local_evaluated_job_config_; }
-std::chrono::system_clock::time_point JobHistoryJobItem::timestamp() const { return local_start_timestamp_; };
+std::chrono::system_clock::time_point JobHistoryJobItem::timestamp() const { return local_start_timestamp_; }
 bool                                  JobHistoryJobItem::isDeleted() const { return is_deleted_; }
 
 void                                  JobHistoryJobItem::setIsDeleted(bool is_deleted) { is_deleted_ = is_deleted; }

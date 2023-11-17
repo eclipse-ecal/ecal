@@ -430,4 +430,4 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_mtx);
     m_callback_custom_apply_sample = [](const auto&){};
   }
-};
+}
