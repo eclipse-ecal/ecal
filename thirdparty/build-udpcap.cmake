@@ -25,3 +25,5 @@ unset(BUILD_SHARED_LIBS_OLD)
 
 # move the udpcap target to a subdirectory in the IDE
 set_property(TARGET udpcap PROPERTY FOLDER lib/udpcap)
+
+list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/udpcap-module)

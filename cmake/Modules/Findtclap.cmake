@@ -1,10 +1,5 @@
 find_path(tclap_INCLUDE_DIR
   NAMES tclap/Arg.h
-  HINTS    
-    "${CONAN_TCLAP_ROOT}/include"
-    "${ECAL_PROJECT_ROOT}/thirdparty/tclap/include"
-  NO_DEFAULT_PATH
-  NO_CMAKE_FIND_ROOT_PATH
 )
 
 if(tclap_INCLUDE_DIR-NOTFOUND)
