@@ -82,10 +82,10 @@ namespace eCAL
     {
       // set network attributes
       SSenderAttr attr;
-      attr.ipaddr    = UDP::GetRegistrationMulticastAddress();
+      attr.address    = UDP::GetRegistrationMulticastAddress();
       attr.port      = UDP::GetRegistrationPort();
       attr.ttl       = UDP::GetMulticastTtl();
-      attr.localhost = !Config::IsNetworkEnabled();
+      attr.broadcast = !Config::IsNetworkEnabled();
       attr.loopback  = true;
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 

@@ -62,10 +62,10 @@ namespace eCAL
 
     // set network attributes
     SSenderAttr attr;
-    attr.ipaddr = UDP::GetPayloadMulticastAddress(topic_name_);
-    attr.port   = UDP::GetPayloadPort();
-    attr.ttl    = UDP::GetMulticastTtl();
-    attr.sndbuf = Config::GetUdpMulticastSndBufSizeBytes();
+    attr.address = UDP::GetPayloadMulticastAddress(topic_name_);
+    attr.port    = UDP::GetPayloadPort();
+    attr.ttl     = UDP::GetMulticastTtl();
+    attr.sndbuf  = Config::GetUdpMulticastSndBufSizeBytes();
 
     // create udp/sample sender with activated loop-back
     attr.loopback   = true;

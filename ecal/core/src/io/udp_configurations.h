@@ -29,6 +29,9 @@ namespace eCAL
 {
   namespace UDP
   {
+    // return local broadcast address
+    std::string LocalBroadcastAddress();
+
     // return the multicast adress/port used for sending/receiving the registration information
     std::string GetRegistrationMulticastAddress();
     int GetRegistrationPort();

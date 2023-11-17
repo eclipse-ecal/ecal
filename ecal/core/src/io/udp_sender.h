@@ -30,10 +30,10 @@ namespace eCAL
 {
   struct SSenderAttr
   {
-    std::string ipaddr;
+    std::string address;
     int         port      = 0;
     int         ttl       = 0;
-    bool        localhost = false;
+    bool        broadcast = false;
     bool        loopback  = true;
     int         sndbuf    = 1024 * 1024;
   };

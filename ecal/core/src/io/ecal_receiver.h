@@ -45,9 +45,9 @@ namespace eCAL
   ////////////////////////////////////////////////////////
   struct SReceiverAttr
   {
-    std::string ipaddr;
+    std::string address;
     int         port      = 0;
-    bool        localhost = false;
+    bool        broadcast = false;
     bool        loopback  = true;
     int         rcvbuf    = 1024 * 1024;
   };

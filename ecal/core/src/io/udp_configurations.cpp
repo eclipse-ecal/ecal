@@ -28,7 +28,7 @@ namespace eCAL
 {
   namespace UDP
   {
-    std::string LocalHost()
+    std::string LocalBroadcastAddress()
     {
       // the specific address 127.255.255.255 is the broadcast address within the loopback range (127.0.0.0 to 127.255.255.255)
       return "127.255.255.255";
@@ -39,7 +39,7 @@ namespace eCAL
       const bool local_only = !Config::IsNetworkEnabled();
       if (local_only)
       {
-        return LocalHost();
+        return LocalBroadcastAddress();
       }
       else
       {

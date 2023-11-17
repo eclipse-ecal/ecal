@@ -32,7 +32,7 @@ namespace eCAL
   CUDPReceiverAsio::CUDPReceiverAsio(const SReceiverAttr& attr_) :
     CUDPReceiverBase(attr_),
     m_created(false),
-    m_localhost(attr_.localhost),
+    m_broadcast(attr_.broadcast),
     m_socket(m_iocontext)
   {
     // create socket
@@ -93,7 +93,7 @@ namespace eCAL
     }
 
     // join multicast group
-    AddMultiCastGroup(attr_.ipaddr.c_str());
+    AddMultiCastGroup(attr_.address.c_str());
 
     // state successful creation
     m_created = true;
@@ -101,7 +101,7 @@ namespace eCAL
 
   bool CUDPReceiverAsio::AddMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_localhost)
+    if (!m_broadcast)
     {
       // join multicast group
 #ifdef __linux__
@@ -137,7 +137,7 @@ namespace eCAL
 
   bool CUDPReceiverAsio::RemMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_localhost)
+    if (!m_broadcast)
     {
       // Leave multicast group
 #ifdef __linux__

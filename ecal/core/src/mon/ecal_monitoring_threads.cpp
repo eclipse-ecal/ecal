@@ -44,9 +44,9 @@ namespace eCAL
     m_network_mode(false), m_log_cb(log_cb_)
   {
     SReceiverAttr attr;
-    attr.ipaddr    = UDP::GetLoggingMulticastAddress();
+    attr.address   = UDP::GetLoggingMulticastAddress();
     attr.port      = UDP::GetLoggingPort();
-    attr.localhost = !Config::IsNetworkEnabled();
+    attr.broadcast = !Config::IsNetworkEnabled();
     attr.loopback  = true;
     attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
 

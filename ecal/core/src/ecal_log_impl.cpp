@@ -149,9 +149,9 @@ namespace eCAL
     if(m_filter_mask_udp != 0)
     {
       SSenderAttr attr;
-      attr.ipaddr    = UDP::GetLoggingMulticastAddress();
+      attr.address   = UDP::GetLoggingMulticastAddress();
       attr.port      = UDP::GetLoggingPort();
-      attr.localhost = !Config::IsNetworkEnabled();
+      attr.broadcast = !Config::IsNetworkEnabled();
       attr.loopback  = true;
       attr.ttl       = UDP::GetMulticastTtl();
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();

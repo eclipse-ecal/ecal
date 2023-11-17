@@ -47,7 +47,7 @@ namespace eCAL
     size_t Send(const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
 
   protected:
-    bool                    m_localhost;
+    bool                    m_broadcast;
     asio::io_context        m_iocontext;
     asio::ip::udp::endpoint m_endpoint;
     asio::ip::udp::socket   m_socket;
@@ -55,12 +55,12 @@ namespace eCAL
   };
 
   CUDPSenderImpl::CUDPSenderImpl(const SSenderAttr& attr_) :
-    m_localhost(attr_.localhost),
-    m_endpoint(asio::ip::make_address(attr_.ipaddr), static_cast<unsigned short>(attr_.port)),
+    m_broadcast(attr_.broadcast),
+    m_endpoint(asio::ip::make_address(attr_.address), static_cast<unsigned short>(attr_.port)),
     m_socket(m_iocontext, m_endpoint.protocol()),
     m_port(static_cast<unsigned short>(attr_.port))
   {
-    if (m_localhost)
+    if (m_broadcast)
     {
       // set unicast packet TTL
       const asio::ip::unicast::hops ttl(attr_.ttl);
@@ -90,7 +90,7 @@ namespace eCAL
       }
     }
 
-    if (m_localhost)
+    if (m_broadcast)
     {
       asio::error_code ec;
       m_socket.set_option(asio::socket_base::broadcast(true), ec);

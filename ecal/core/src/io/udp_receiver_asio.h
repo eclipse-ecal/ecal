@@ -48,7 +48,7 @@ namespace eCAL
     void RunIOContext(const asio::chrono::steady_clock::duration& timeout);
 
     bool                    m_created;
-    bool                    m_localhost;
+    bool                    m_broadcast;
     asio::io_context        m_iocontext;
     asio::ip::udp::socket   m_socket;
     asio::ip::udp::endpoint m_sender_endpoint;

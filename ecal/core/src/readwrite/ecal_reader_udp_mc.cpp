@@ -60,9 +60,9 @@ namespace eCAL
   void CUDPReaderLayer::Initialize()
   {
     SReceiverAttr attr;
-    attr.ipaddr    = Config::GetUdpMulticastGroup();
+    attr.address   = Config::GetUdpMulticastGroup();
     attr.port      = UDP::GetPayloadPort();
-    attr.localhost = false;
+    attr.broadcast = false;
     attr.loopback  = true;
     attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
     rcv.Create(attr);
