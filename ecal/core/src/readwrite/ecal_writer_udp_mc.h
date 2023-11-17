@@ -56,7 +56,6 @@ namespace eCAL
     bool Write(const void* buf_, const SWriterAttr& attr_) override;
 
   protected:
-    std::string                    m_udp_ipaddr;
     eCAL::pb::Sample               m_ecal_sample;
 
     std::shared_ptr<CSampleSender> m_sample_sender_loopback;

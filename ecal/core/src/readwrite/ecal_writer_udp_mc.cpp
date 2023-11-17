@@ -24,9 +24,7 @@
 #include <ecal/ecal_log.h>
 #include <ecal/ecal_config.h>
 
-#include "ecal_def.h"
 #include "ecal_writer_udp_mc.h"
-
 #include "io/udp_configurations.h"
 
 namespace eCAL
@@ -62,14 +60,12 @@ namespace eCAL
     m_topic_name  = topic_name_;
     m_topic_id    = topic_id_;
 
-    m_udp_ipaddr = UDP::GetTopicMulticastAddress(topic_name_);
-
     // set network attributes
     SSenderAttr attr;
-    attr.ipaddr     = m_udp_ipaddr;
-    attr.port       = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
-    attr.ttl        = Config::GetUdpMulticastTtl();
-    attr.sndbuf     = Config::GetUdpMulticastSndBufSizeBytes();
+    attr.address = UDP::GetPayloadMulticastAddress(topic_name_);
+    attr.port    = UDP::GetPayloadPort();
+    attr.ttl     = UDP::GetMulticastTtl();
+    attr.sndbuf  = Config::GetUdpMulticastSndBufSizeBytes();
 
     // create udp/sample sender with activated loop-back
     attr.loopback   = true;

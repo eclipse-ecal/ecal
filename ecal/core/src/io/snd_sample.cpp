@@ -52,7 +52,7 @@ namespace eCAL
     if (data_size > 0)
     {
       // and send it
-      sent_sum = SendSampleBuffer(m_payload.data(), data_size, bandwidth_, std::bind(TransmitToUDP, std::placeholders::_1, std::placeholders::_2, m_udp_sender, m_attr.ipaddr));
+      sent_sum = SendSampleBuffer(m_payload.data(), data_size, bandwidth_, std::bind(TransmitToUDP, std::placeholders::_1, std::placeholders::_2, m_udp_sender, m_attr.address));
 
 #ifndef NDEBUG
       // log it

@@ -49,7 +49,6 @@ namespace eCAL
 
     bool                    m_created;
     bool                    m_broadcast;
-    bool                    m_unicast;
     asio::io_context        m_iocontext;
     asio::ip::udp::socket   m_socket;
     asio::ip::udp::endpoint m_sender_endpoint;

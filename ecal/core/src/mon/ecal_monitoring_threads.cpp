@@ -28,9 +28,7 @@
 #include "io/msg_type.h"
 #include "io/udp_configurations.h"
 
-#include "ecal_config_reader_hlp.h"
 #include "ecal_monitoring_threads.h"
-#include "ecal_global_accessors.h"
 
 namespace eCAL
 {
@@ -46,20 +44,11 @@ namespace eCAL
     m_network_mode(false), m_log_cb(log_cb_)
   {
     SReceiverAttr attr;
-    bool local_only = !Config::IsNetworkEnabled();
-    // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
-    if (local_only)
-    {
-      attr.broadcast = true;
-    }
-    else
-    {
-      attr.broadcast = false;
-    }
-    attr.ipaddr   = UDP::GetLoggingMulticastAddress();
-    attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
-    attr.loopback = true;
-    attr.rcvbuf   = Config::GetUdpMulticastRcvBufSizeBytes();
+    attr.address   = UDP::GetLoggingMulticastAddress();
+    attr.port      = UDP::GetLoggingPort();
+    attr.broadcast = !Config::IsNetworkEnabled();
+    attr.loopback  = true;
+    attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
 
     m_log_rcv.Create(attr);
     m_log_rcv_thread.Start(0, std::bind(&CLoggingReceiveThread::ThreadFun, this));

@@ -137,10 +137,9 @@ namespace eCAL
     {
       // start registration receive thread
       SReceiverAttr attr;
-      // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
+      attr.address   = UDP::GetRegistrationMulticastAddress();
+      attr.port      = UDP::GetRegistrationPort();
       attr.broadcast = !Config::IsNetworkEnabled();
-      attr.ipaddr    = UDP::GetRegistrationMulticastAddress();
-      attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
       attr.loopback  = true;
       attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
 

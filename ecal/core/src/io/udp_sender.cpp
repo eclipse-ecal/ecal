@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,7 +48,6 @@ namespace eCAL
 
   protected:
     bool                    m_broadcast;
-    bool                    m_unicast;
     asio::io_context        m_iocontext;
     asio::ip::udp::endpoint m_endpoint;
     asio::ip::udp::socket   m_socket;
@@ -57,18 +56,11 @@ namespace eCAL
 
   CUDPSenderImpl::CUDPSenderImpl(const SSenderAttr& attr_) :
     m_broadcast(attr_.broadcast),
-    m_unicast(attr_.unicast),
-    m_endpoint(asio::ip::make_address(attr_.ipaddr), static_cast<unsigned short>(attr_.port)),
+    m_endpoint(asio::ip::make_address(attr_.address), static_cast<unsigned short>(attr_.port)),
     m_socket(m_iocontext, m_endpoint.protocol()),
     m_port(static_cast<unsigned short>(attr_.port))
   {
-    if (m_broadcast && m_unicast)
-    {
-      std::cerr << "CUDPSender: Setting broadcast and unicast option true is not allowed." << std::endl;
-      return;
-    }
-
-    if (m_broadcast || m_unicast)
+    if (m_broadcast)
     {
       // set unicast packet TTL
       const asio::ip::unicast::hops ttl(attr_.ttl);

@@ -25,10 +25,7 @@
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_config.h>
 
-#include "ecal_def.h"
-
 #include "ecal_log_impl.h"
-
 #include "io/udp_configurations.h"
 
 #include <mutex>
@@ -152,12 +149,11 @@ namespace eCAL
     if(m_filter_mask_udp != 0)
     {
       SSenderAttr attr;
-      // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
+      attr.address   = UDP::GetLoggingMulticastAddress();
+      attr.port      = UDP::GetLoggingPort();
       attr.broadcast = !Config::IsNetworkEnabled();
-      attr.ipaddr    = UDP::GetLoggingMulticastAddress();
-      attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
       attr.loopback  = true;
-      attr.ttl       = Config::GetUdpMulticastTtl();
+      attr.ttl       = UDP::GetMulticastTtl();
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
       m_udp_sender = std::make_unique<CUDPSender>(attr);
