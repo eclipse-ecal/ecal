@@ -14,7 +14,6 @@
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/" CACHE PATH "")
   set(BUILD_SHARED_LIBS              ON                         CACHE BOOL "Build hdf5 shared" FORCE)
   
-  list(APPEND as_subproject HDF5)
   #we will need threads
   find_package(Threads REQUIRED)
 
