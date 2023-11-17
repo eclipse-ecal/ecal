@@ -182,4 +182,4 @@ Program Listing for File ecal_publisher.h
        bool                             m_created;
        bool                             m_initialized;
      };
-   };
+   }

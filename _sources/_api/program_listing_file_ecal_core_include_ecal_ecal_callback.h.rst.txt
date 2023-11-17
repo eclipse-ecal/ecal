@@ -142,4 +142,4 @@ Program Listing for File ecal_callback.h
      using ClientEventCallbackT = std::function<void (const char *, const struct SClientEventCallbackData *)>;
    
      using ServerEventCallbackT = std::function<void (const char *, const struct SServerEventCallbackData *)>;
-   };
+   }

@@ -60,4 +60,4 @@ Program Listing for File ecal_service_info.h
      typedef std::function<int(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_)> MethodCallbackT;
    
      typedef std::function<void(const struct SServiceResponse& service_response_)> ResponseCallbackT;
-   };
+   }

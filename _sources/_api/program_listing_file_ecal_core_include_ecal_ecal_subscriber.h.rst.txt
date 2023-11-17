@@ -129,4 +129,4 @@ Program Listing for File ecal_subscriber.h
        bool                             m_created;
        bool                             m_initialized;
      };
-   };
+   }
