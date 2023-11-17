@@ -21,9 +21,9 @@ Functions
 
 - :ref:`exhale_function_ecal__util_8h_1a8bcb30275052a25eb7baa8cddf238a8d`
 
-- :ref:`exhale_function_ecal__util_8h_1a6b718f778eb845effac2fa3cf61973cd`
-
 - :ref:`exhale_function_ecal__util_8h_1a8a6da5c64336cb74d3c3d8d6baae6596`
+
+- :ref:`exhale_function_ecal__util_8h_1a6b718f778eb845effac2fa3cf61973cd`
 
 - :ref:`exhale_function_ecal__util_8h_1a27263f5f699870e349210f85c0cf331f`
 
