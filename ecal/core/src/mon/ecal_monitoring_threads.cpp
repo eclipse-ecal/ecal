@@ -43,15 +43,21 @@ namespace eCAL
   CLoggingReceiveThread::CLoggingReceiveThread(LogMessageCallbackT log_cb_) :
     m_network_mode(false), m_log_cb(log_cb_)
   {
+    // set network attributes
     SReceiverAttr attr;
-    attr.address   = UDP::GetLoggingMulticastAddress();
+    attr.address   = UDP::GetLoggingAddress();
     attr.port      = UDP::GetLoggingPort();
     attr.broadcast = !Config::IsNetworkEnabled();
     attr.loopback  = true;
     attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
 
+    // create udp logging receiver
     m_log_rcv.Create(attr);
+
+    // start logging receiver thread
     m_log_rcv_thread.Start(0, std::bind(&CLoggingReceiveThread::ThreadFun, this));
+
+    // allocate receive buffer
     m_msg_buffer.resize(MSG_BUFFER_SIZE);
   }
 

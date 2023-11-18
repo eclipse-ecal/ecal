@@ -62,17 +62,18 @@ namespace eCAL
 
     // set network attributes
     SSenderAttr attr;
-    attr.address = UDP::GetPayloadMulticastAddress(topic_name_);
-    attr.port    = UDP::GetPayloadPort();
-    attr.ttl     = UDP::GetMulticastTtl();
-    attr.sndbuf  = Config::GetUdpMulticastSndBufSizeBytes();
+    attr.address   = UDP::GetPayloadAddress(topic_name_);
+    attr.port      = UDP::GetPayloadPort();
+    attr.ttl       = UDP::GetMulticastTtl();
+    attr.broadcast = !Config::IsNetworkEnabled();
+    attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
     // create udp/sample sender with activated loop-back
-    attr.loopback   = true;
+    attr.loopback = true;
     m_sample_sender_loopback = std::make_shared<CSampleSender>(attr);
 
     // create udp/sample sender without activated loop-back
-    attr.loopback   = false;
+    attr.loopback = false;
     m_sample_sender_no_loopback = std::make_shared<CSampleSender>(attr);
 
     m_created = true;

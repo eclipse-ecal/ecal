@@ -61,6 +61,7 @@ namespace eCAL
 
   private:
     bool                       started;
+    bool                       local_mode;
     CUDPReceiver               rcv;
     CThread                    thread;
     CDataReaderUDP             reader;

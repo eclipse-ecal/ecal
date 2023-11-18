@@ -145,17 +145,18 @@ namespace eCAL
       m_logfile = fopen(m_logfile_name.c_str(), "w");
     }
 
-    // create log udp sender
+    // set network attributes
     if(m_filter_mask_udp != 0)
     {
       SSenderAttr attr;
-      attr.address   = UDP::GetLoggingMulticastAddress();
+      attr.address   = UDP::GetLoggingAddress();
       attr.port      = UDP::GetLoggingPort();
+      attr.ttl       = UDP::GetMulticastTtl();
       attr.broadcast = !Config::IsNetworkEnabled();
       attr.loopback  = true;
-      attr.ttl       = UDP::GetMulticastTtl();
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
+      // create udp logging sender
       m_udp_sender = std::make_unique<CUDPSender>(attr);
     }
 

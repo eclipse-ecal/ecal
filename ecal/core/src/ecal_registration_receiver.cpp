@@ -135,15 +135,18 @@ namespace eCAL
 
     if (m_use_network_monitoring)
     {
-      // start registration receive thread
+      // set network attributes
       SReceiverAttr attr;
-      attr.address   = UDP::GetRegistrationMulticastAddress();
+      attr.address   = UDP::GetRegistrationAddress();
       attr.port      = UDP::GetRegistrationPort();
       attr.broadcast = !Config::IsNetworkEnabled();
       attr.loopback  = true;
       attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
 
+      // create udp registration receiver
       m_reg_rcv.Create(attr);
+
+      // start registration receiver thread
       m_reg_rcv_thread.Start(0, std::bind(&CUdpRegistrationReceiver::Receive, &m_reg_rcv_process, &m_reg_rcv));
     }
 
