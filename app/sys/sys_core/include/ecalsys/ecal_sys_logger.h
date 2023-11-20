@@ -21,15 +21,7 @@
 
 #include <string>
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4459) // disable declaration of 'uint' hides global declaration
-#endif
 #include <spdlog/fmt/ostr.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_sinks.h>
 #ifdef SPDLOG_VER_MAJOR
