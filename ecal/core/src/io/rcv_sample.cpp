@@ -222,12 +222,12 @@ CSampleReceiver::CSampleReceiver()
 
 CSampleReceiver::~CSampleReceiver() = default;
 
-int CSampleReceiver::Receive(eCAL::CUDPReceiver* sample_receiver_)
+int CSampleReceiver::Receive(eCAL::CUDPReceiver* sample_receiver_, int timeout_)
 {
   if(sample_receiver_ == nullptr) return(-1);
 
   // wait for any incoming message
-  const size_t recv_len = sample_receiver_->Receive(m_msg_buffer.data(), m_msg_buffer.size(), 10);
+  const size_t recv_len = sample_receiver_->Receive(m_msg_buffer.data(), m_msg_buffer.size(), timeout_);
   if(recv_len > 0)
   {
     return(Process(m_msg_buffer.data(), recv_len));
