@@ -67,7 +67,7 @@ namespace eCAL
       
     std::string GetLoggingAddress()
     {
-      // both logging and monitoring use the same addresses but different ports
+      // registration, logging and payload use the same addresses but different ports
       return GetRegistrationAddress();
     }
 
@@ -80,7 +80,13 @@ namespace eCAL
       return configured_port + NET_UDP_MULTICAST_PORT_LOG_OFF;
     }
 
-    std::string GetPayloadAddress(const std::string& topic_name)
+    std::string GetPayloadAddress()
+    {
+      // registration, logging and payload use the same addresses but different ports
+      return GetRegistrationAddress();
+    }
+
+    std::string GetTopicPayloadAddress(const std::string& topic_name)
     {
       // check if the network is disabled
       const bool local_only = !Config::IsNetworkEnabled();
@@ -88,12 +94,6 @@ namespace eCAL
       {
         // if network is disabled, return the local broadcast address
         return GetLocalBroadcastAddress();
-      }
-
-      if (topic_name.empty())
-      {
-        // if no topic is provided, return the base UDP multicast group address from the configuration
-        return Config::GetUdpMulticastGroup();
       }
 
       // determine the UDP multicast configuration version

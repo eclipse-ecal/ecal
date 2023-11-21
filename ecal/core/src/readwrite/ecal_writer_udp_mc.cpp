@@ -62,7 +62,7 @@ namespace eCAL
 
     // set network attributes
     SSenderAttr attr;
-    attr.address   = UDP::GetPayloadAddress(topic_name_);
+    attr.address   = UDP::GetTopicPayloadAddress(topic_name_);
     attr.port      = UDP::GetPayloadPort();
     attr.ttl       = UDP::GetMulticastTtl();
     attr.broadcast = !Config::IsNetworkEnabled();

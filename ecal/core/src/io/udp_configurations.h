@@ -70,7 +70,17 @@ namespace eCAL
     int GetLoggingPort();
 
     /**
-     * @brief GetPayloadAddress retrieves the UDP payload address based on network configuration and the topic name.
+     * @brief GetPayloadAddress retrieves the UDP payload address used as base address for udp receivers.
+     *
+     * If the network mode is disabled, it returns the local broadcast address.
+     * Otherwise, it retrieves the UDP multicast group address from the global configuration.
+     *
+     * @return The UDP payload address based on the network configuration.
+     */
+    std::string GetPayloadAddress();
+
+    /**
+     * @brief GetTopicPayloadAddress retrieves the UDP payload address based on network configuration and the topic name.
      *
      * If the network mode is disabled, it returns the local broadcast address.
      *
@@ -82,8 +92,8 @@ namespace eCAL
      * @param  topic_name  The name of the topic for which the payload address is requested.
      *
      * @return The payload address based on the network configuration and the topic name.
-     */  
-    std::string GetPayloadAddress(const std::string& topic_name);
+     */
+    std::string GetTopicPayloadAddress(const std::string& topic_name);
 
     /**
      * @brief GetPayloadPort retrieves the payload port based on the configured UDP multicast port.

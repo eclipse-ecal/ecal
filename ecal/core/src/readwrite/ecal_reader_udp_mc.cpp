@@ -65,7 +65,7 @@ namespace eCAL
 
     // set network attributes
     SReceiverAttr attr;
-    attr.address   = UDP::GetPayloadAddress("");
+    attr.address   = UDP::GetPayloadAddress();
     attr.port      = UDP::GetPayloadPort();
     attr.broadcast = !Config::IsNetworkEnabled();
     attr.loopback  = true;
@@ -87,7 +87,7 @@ namespace eCAL
     if (local_mode) return;
 
     // add topic name based multicast address
-    const std::string mcast_address = UDP::GetPayloadAddress(topic_name_);
+    const std::string mcast_address = UDP::GetTopicPayloadAddress(topic_name_);
     if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
     {
       topic_name_mcast_map.emplace(std::pair<std::string, int>(mcast_address, 0));
@@ -101,7 +101,7 @@ namespace eCAL
     // we use udp broadcast in local mode
     if (local_mode) return;
 
-    const std::string mcast_address = UDP::GetPayloadAddress(topic_name_);
+    const std::string mcast_address = UDP::GetTopicPayloadAddress(topic_name_);
     if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
     {
       // this should never happen
