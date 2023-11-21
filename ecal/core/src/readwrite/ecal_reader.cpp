@@ -943,7 +943,7 @@ namespace eCAL
     // check receive timeout
     if(m_receive_timeout > 0)
     {
-      m_receive_time += CMN_DATAREADER_TIMEOUT_DTIME;
+      m_receive_time += CMN_DATAREADER_TIMEOUT_RESOLUTION_MS;
       if(m_receive_time > m_receive_timeout)
       {
         const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
