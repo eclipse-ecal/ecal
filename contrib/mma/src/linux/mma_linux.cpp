@@ -404,13 +404,20 @@ bool MMALinux::FormatListData(std::vector<std::string>& the_list)
     // if last character of string is digit, delete the digit
     if (IsDigit(name.back()))
     {
-      name.pop_back();
+      // exception: mtdblock
+      if (name.find("mtdblock") == std::string::npos)
+      {
+        name.pop_back();
+      }
     }
 
     *iterator = name;
 
     // format the path to include just the name
     std::size_t found = name.find_last_of("/");
+    // only accept devices which are indicated by the / in name
+    if (found == std::string::npos)
+      return_value = false;
     *iterator = name.substr(found + 1);
   }
   else
@@ -444,8 +451,8 @@ bool MMALinux::SetDiskInformation(ResourceLinux::DiskStatsList& disks)
   std::string result;
   OpenPipe("df", result);
 
-  // partitions for disks
-  std::map<std::string, std::vector<std::string>> partition_map;
+  // disks sorted in map
+  std::map<std::string, ResourceLinux::DiskStats> disks_map;
 
   auto lines = TokenizeIntoLines(result);
 
@@ -461,32 +468,37 @@ bool MMALinux::SetDiskInformation(ResourceLinux::DiskStatsList& disks)
     {
       if (partition.size() == 4)
       {
-        if ((partition.back() == root) || (partition.back() == home) || (partition.back().find(media) != std::string::npos) || (partition.back() == boot))
+        const uint64_t KiB = 1024;
+        ResourceLinux::DiskStats disk_stats;
+        uint64_t used = stoll(partition[1]) * KiB;
+        disk_stats.name = partition[0];
+        disk_stats.available = stoll(partition[2]) * KiB;
+        disk_stats.capacity = disk_stats.available + used;
+        disk_stats.mount_point = partition[3];
+        // ensure initialization of transfer rates
+        disk_stats.read = 0.0;
+        disk_stats.write = 0.0;
+        if (disks_map.find(partition[0]) == disks_map.end())
         {
-          partition_map[partition.back()] = partition;
+          disks_map[partition[0]] = disk_stats;
+        }
+        else
+        {
+          // sum up partitions of same disk
+          disks_map[partition[0]].available += disk_stats.available;
+          disks_map[partition[0]].capacity += disk_stats.capacity;
         }
       }
       else
       {
-        return_value = true;
+        return_value = true; //FixMe: what does this return value mean?
       }
     }
   }
 
-  for (const auto& partition : partition_map)
+  for (const auto& disk : disks_map)
   {
-    const uint64_t KiB = 1024;
-    ResourceLinux::DiskStats disk_stats;
-    disk_stats.name = partition.second[0];
-    uint64_t used = stoll(partition.second[1]) * KiB;
-    disk_stats.available = stoll(partition.second[2]) * KiB;
-    disk_stats.capacity = disk_stats.available + used;
-    disk_stats.mount_point = partition.second[3];
-    // ensure initialization of transfer rates
-    disk_stats.read = 0.0;
-    disk_stats.write = 0.0;
-
-    disks.push_back(disk_stats);
+    disks.push_back(disk.second);
   }
 
 #ifdef __arm__
