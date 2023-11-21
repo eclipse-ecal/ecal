@@ -49,7 +49,8 @@ namespace eCAL
   // LAYER
   ////////////////
   CUDPReaderLayer::CUDPReaderLayer() : 
-                   started(false)
+                   started(false),
+                   local_mode(false)
   {}
 
   CUDPReaderLayer::~CUDPReaderLayer()
@@ -59,12 +60,18 @@ namespace eCAL
 
   void CUDPReaderLayer::Initialize()
   {
+    // set local mode
+    local_mode = !Config::IsNetworkEnabled();
+
+    // set network attributes
     SReceiverAttr attr;
-    attr.address   = Config::GetUdpMulticastGroup();
+    attr.address   = UDP::GetPayloadAddress();
     attr.port      = UDP::GetPayloadPort();
-    attr.broadcast = false;
+    attr.broadcast = !Config::IsNetworkEnabled();
     attr.loopback  = true;
     attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
+
+    // create udp receiver
     rcv.Create(attr);
   }
 
@@ -75,8 +82,12 @@ namespace eCAL
       thread.Start(0, std::bind(&CDataReaderUDP::Receive, &reader, &rcv, CMN_PAYLOAD_RECEIVE_THREAD_CYCLE_TIME_MS));
       started = true;
     }
+
+    // we use udp broadcast in local mode
+    if (local_mode) return;
+
     // add topic name based multicast address
-    const std::string mcast_address = UDP::GetPayloadMulticastAddress(topic_name_);
+    const std::string mcast_address = UDP::GetTopicPayloadAddress(topic_name_);
     if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
     {
       topic_name_mcast_map.emplace(std::pair<std::string, int>(mcast_address, 0));
@@ -87,7 +98,10 @@ namespace eCAL
 
   void CUDPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
   {
-    const std::string mcast_address = UDP::GetPayloadMulticastAddress(topic_name_);
+    // we use udp broadcast in local mode
+    if (local_mode) return;
+
+    const std::string mcast_address = UDP::GetTopicPayloadAddress(topic_name_);
     if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
     {
       // this should never happen

@@ -82,14 +82,14 @@ namespace eCAL
     {
       // set network attributes
       SSenderAttr attr;
-      attr.address    = UDP::GetRegistrationMulticastAddress();
+      attr.address   = UDP::GetRegistrationAddress();
       attr.port      = UDP::GetRegistrationPort();
       attr.ttl       = UDP::GetMulticastTtl();
       attr.broadcast = !Config::IsNetworkEnabled();
       attr.loopback  = true;
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
-      // create udp sample sender
+      // create udp registration sender
       m_reg_sample_snd = std::make_shared<CSampleSender>(attr);
     }
     else
