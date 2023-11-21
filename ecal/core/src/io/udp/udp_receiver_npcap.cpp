@@ -16,7 +16,7 @@
  *
  * ========================= eCAL LICENSE =================================
 */
-#include <io/udp_receiver_npcap.h>
+#include "io/udp/udp_receiver_npcap.h"
 
 namespace eCAL
 {

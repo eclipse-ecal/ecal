@@ -17,27 +17,34 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <io/ecal_memfile_naming.h>
 
-#include <cstdint>
-#include <limits>
-#include <random>
-#include <sstream>
+#pragma once
+
+#include "io/udp/udp_receiver_base.h"
+
+#include "ecal_config_reader_hlp.h"
+#include <udpcap/npcap_helpers.h>
+#include <udpcap/udpcap_socket.h>
 
 namespace eCAL
 {
-  namespace memfile
+  ////////////////////////////////////////////////////////
+  // Npcap based receiver class implementation
+  ////////////////////////////////////////////////////////
+  class CUDPReceiverPcap : public CUDPReceiverBase
   {
+  public:
+    CUDPReceiverPcap(const SReceiverAttr& attr_);
 
-    std::string BuildRandomMemFileName(const std::string& base_name)
-    {
-      static std::random_device rd;
-      static std::uniform_int_distribution<uint32_t> dist(0, std::numeric_limits<uint32_t>::max());
+    bool AddMultiCastGroup(const char* ipaddr_) override;
+    bool RemMultiCastGroup(const char* ipaddr_) override;
 
-      std::stringstream out;
-      out << base_name << std::hex << dist(rd);
+    size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr) override;
 
-      return out.str();
-    }
-  }
+  protected:
+    bool                 m_created;
+    bool                 m_broadcast;
+    Udpcap::UdpcapSocket m_socket;
+  };
+
 }

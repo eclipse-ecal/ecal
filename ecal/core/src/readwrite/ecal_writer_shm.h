@@ -24,7 +24,7 @@
 #pragma once
 
 #include "readwrite/ecal_writer_base.h"
-#include "io/ecal_memfile_sync.h"
+#include "io/shm/ecal_memfile_sync.h"
 
 #include <memory>
 #include <string>

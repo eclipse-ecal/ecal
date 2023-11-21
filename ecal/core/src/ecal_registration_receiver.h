@@ -32,10 +32,10 @@
 #include "ecal_def.h"
 #include "ecal_thread.h"
 
-#include "io/rcv_sample.h"
+#include "io/udp/rcv_sample.h"
 
-#include "io/ecal_memfile_broadcast.h"
-#include "io/ecal_memfile_broadcast_reader.h"
+#include "io/shm/ecal_memfile_broadcast.h"
+#include "io/shm/ecal_memfile_broadcast_reader.h"
 
 #include <string>
 #include <atomic>

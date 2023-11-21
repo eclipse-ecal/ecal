@@ -27,10 +27,10 @@
 
 #include <ecal/ecal_config.h>
 
-#include "io/udp_receiver_base.h"
-#include "io/udp_receiver_asio.h"
+#include "io/udp/udp_receiver_base.h"
+#include "io/udp/udp_receiver_asio.h"
 #ifdef ECAL_NPCAP_SUPPORT
-#include "io/udp_receiver_npcap.h"
+#include "io/udp/udp_receiver_npcap.h"
 #endif
 
 namespace eCAL

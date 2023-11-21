@@ -32,7 +32,7 @@
 #include "service/ecal_clientgate.h"
 #include "service/ecal_servicegate.h"
 
-#include "io/udp_configurations.h"
+#include "io/udp/udp_configurations.h"
 #include "ecal_sample_to_topicinfo.h"
 
 namespace eCAL

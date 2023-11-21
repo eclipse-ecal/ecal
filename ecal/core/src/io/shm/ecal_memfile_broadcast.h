@@ -29,7 +29,7 @@
 #include <cstring>
 #include <cstdint>
 
-#include "relocatable_circular_queue.h"
+#include "io/relocatable_circular_queue.h"
 
 #include <ecal/ecal.h>
 

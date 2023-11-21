@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "io/udp_configurations.h"
+#include "io/udp/udp_configurations.h"
 
 #include <ecal/ecal_config.h>
 

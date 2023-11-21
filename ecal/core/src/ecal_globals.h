@@ -34,8 +34,8 @@
 #include "pubsub/ecal_subgate.h"
 #include "service/ecal_servicegate.h"
 #include "service/ecal_clientgate.h"
-#include "io/ecal_memfile_pool.h"
-#include "io/ecal_memfile_db.h"
+#include "io/shm/ecal_memfile_pool.h"
+#include "io/shm/ecal_memfile_db.h"
 
 #include <memory>
 
