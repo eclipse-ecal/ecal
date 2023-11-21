@@ -403,9 +403,9 @@ public:
       return visible_data[0].rows.size();
     }
 
-    return std::accumulate(visible_data.begin(), visible_data.end(), 0,
+    return std::accumulate(visible_data.begin(), visible_data.end(), std::size_t{ 0 },
     [](auto val, auto &group) {
-      return group.rows.size() + val + 1;
+      return size_t(group.rows.size() + val + 1);
     });
   }
 

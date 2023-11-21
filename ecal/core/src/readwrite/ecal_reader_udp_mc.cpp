@@ -79,7 +79,7 @@ namespace eCAL
   {
     if (!started)
     {
-      thread.Start(0, std::bind(&CDataReaderUDP::Receive, &reader, &rcv));
+      thread.Start(0, std::bind(&CDataReaderUDP::Receive, &reader, &rcv, CMN_PAYLOAD_RECEIVE_THREAD_CYCLE_TIME_MS));
       started = true;
     }
 

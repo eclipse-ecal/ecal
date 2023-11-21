@@ -166,13 +166,22 @@
 /*                                     ecal internal timings                                  */
 /**********************************************************************************************/
 /* timeout for automatic removing registered topics and memory files in global database in ms */
-#define CMN_REGISTRATION_TO                          (60*1000)
+#define CMN_REGISTRATION_TO                            (60*1000)
 
 /* time for resend registration info from publisher/subscriber in ms */
-#define CMN_REGISTRATION_REFRESH                     1000
+#define CMN_REGISTRATION_REFRESH                       1000
 
 /* delta time to check timeout for data readers in ms */
-#define CMN_DATAREADER_TIMEOUT_DTIME                 10
+#define CMN_DATAREADER_TIMEOUT_RESOLUTION_MS           100
+
+/* cylce time udp registration receive thread in ms */
+#define CMN_REGISTRATION_RECEIVE_THREAD_CYCLE_TIME_MS  1000
+
+/* cylce time udp logging receive thread in ms */
+#define CMN_LOGGING_RECEIVE_THREAD_CYCLE_TIME_MS       1000
+
+/* cylce time udp paylaod receive thread in ms */
+#define CMN_PAYLOAD_RECEIVE_THREAD_CYCLE_TIME_MS       1000
 
 /**********************************************************************************************/
 /*                                     events                                                 */

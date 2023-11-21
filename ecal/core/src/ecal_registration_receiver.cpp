@@ -147,7 +147,7 @@ namespace eCAL
       m_reg_rcv.Create(attr);
 
       // start registration receiver thread
-      m_reg_rcv_thread.Start(0, std::bind(&CUdpRegistrationReceiver::Receive, &m_reg_rcv_process, &m_reg_rcv));
+      m_reg_rcv_thread.Start(0, std::bind(&CUdpRegistrationReceiver::Receive, &m_reg_rcv_process, &m_reg_rcv, CMN_REGISTRATION_RECEIVE_THREAD_CYCLE_TIME_MS));
     }
 
     if (m_use_shm_monitoring)

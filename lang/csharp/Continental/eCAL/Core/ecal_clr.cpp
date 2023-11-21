@@ -52,8 +52,8 @@ std::string ByteArrayToStlString(array<Byte>^ array_)
 
 array<Byte>^ StlStringToByteArray(const std::string& string_)
 {
-  array<Byte>^ array_ = gcnew array<Byte>(string_.size());
-  System::Runtime::InteropServices::Marshal::Copy(IntPtr((void*)(string_.data())), array_, 0, string_.size());
+  array<Byte>^ array_ = gcnew array<Byte>(static_cast<int>(string_.size()));
+  System::Runtime::InteropServices::Marshal::Copy(IntPtr((void*)(string_.data())), array_, 0, static_cast<int>(string_.size()));
   return(array_);
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -627,8 +627,8 @@ array<Byte>^ Monitoring::GetMonitoringBytes()
 {
     std::string monitoring;
     ::eCAL::Monitoring::GetMonitoring(monitoring);
-    array<Byte>^ data = gcnew array<Byte>(monitoring.size());
-    System::Runtime::InteropServices::Marshal::Copy(IntPtr(&monitoring[0]), data, 0, monitoring.size());
+    array<Byte>^ data = gcnew array<Byte>(static_cast<int>(monitoring.size()));
+    System::Runtime::InteropServices::Marshal::Copy(IntPtr(&monitoring[0]), data, 0, static_cast<int>(monitoring.size()));
     return data;
 }
 
@@ -636,8 +636,8 @@ array<Byte>^ Monitoring::GetLoggingBytes()
 {
     std::string logging;
     ::eCAL::Monitoring::GetLogging(logging);
-    array<Byte>^ data = gcnew array<Byte>(logging.size());
-    System::Runtime::InteropServices::Marshal::Copy(IntPtr(&logging[0]), data, 0, logging.size());
+    array<Byte>^ data = gcnew array<Byte>(static_cast<int>(logging.size()));
+    System::Runtime::InteropServices::Marshal::Copy(IntPtr(&logging[0]), data, 0, static_cast<int>(logging.size()));
     return data;
 }
 

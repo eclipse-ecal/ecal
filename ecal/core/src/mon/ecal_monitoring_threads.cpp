@@ -75,7 +75,7 @@ namespace eCAL
   int CLoggingReceiveThread::ThreadFun()
   {
     // wait for any incoming message
-    const size_t recv_len = m_log_rcv.Receive(m_msg_buffer.data(), m_msg_buffer.size(), 10);
+    const size_t recv_len = m_log_rcv.Receive(m_msg_buffer.data(), m_msg_buffer.size(), CMN_LOGGING_RECEIVE_THREAD_CYCLE_TIME_MS);
     if (recv_len > 0)
     {
       m_log_ecal_msg.Clear();
@@ -94,7 +94,7 @@ namespace eCAL
   CMonLogPublishingThread::CMonLogPublishingThread(MonitoringCallbackT mon_cb_, LoggingCallbackT log_cb_) :
     m_mon_cb(mon_cb_), m_log_cb(log_cb_)
   {
-    m_pub_thread.Start(CMN_REGISTRATION_REFRESH, std::bind(&CMonLogPublishingThread::ThreadFun, this));
+    m_pub_thread.Start(Config::GetRegistrationRefreshMs(), std::bind(&CMonLogPublishingThread::ThreadFun, this));
   }
 
   CMonLogPublishingThread::~CMonLogPublishingThread()

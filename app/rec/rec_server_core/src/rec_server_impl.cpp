@@ -698,7 +698,7 @@ namespace eCAL
             job.can_upload_  = true;
           else
             job.can_upload_  = false;
-          result = SimulateAddComment_NoLock(job, job.local_evaluated_job_config_.GetJobId());
+          result = SimulateAddComment_NoLock(job, static_cast<int>(job.local_evaluated_job_config_.GetJobId()));
           if (result == eCAL::rec::Error(eCAL::rec::Error::OK))
             job.can_comment_ = true;
           else
