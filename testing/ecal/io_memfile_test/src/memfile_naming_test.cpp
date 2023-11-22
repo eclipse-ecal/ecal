@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "io/ecal_memfile_naming.h"
+#include "io/shm/ecal_memfile_naming.h"
 
 #include <atomic>
 #include <chrono>

@@ -25,7 +25,7 @@
 #include <ecal/ecal_config.h>
 
 #include "ecal_writer_udp_mc.h"
-#include "io/udp_configurations.h"
+#include "io/udp/udp_configurations.h"
 
 namespace eCAL
 {

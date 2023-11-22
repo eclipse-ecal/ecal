@@ -30,7 +30,7 @@
 #include <ecal/ecal_payload_writer.h>
 
 #include "ecal_memfile_info.h"
-#include "ecal_named_mutex.h"
+#include "io/mtx/ecal_named_mutex.h"
 
 namespace eCAL
 {

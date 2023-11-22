@@ -18,8 +18,8 @@
 */
 
 #include <ecal/ecal.h>
-#include "io/ecal_memfile.h"
-#include "io/ecal_memfile_db.h"
+#include "io/shm/ecal_memfile.h"
+#include "io/shm/ecal_memfile_db.h"
 
 #include <atomic>
 #include <chrono>

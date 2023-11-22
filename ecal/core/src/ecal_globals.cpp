@@ -22,7 +22,7 @@
 **/
 
 #include "ecal_globals.h"
-#include "io/udp_init.h"
+#include "io/udp/udp_init.h"
 #include "ecal_config_reader.h"
 
 #include <stdexcept>

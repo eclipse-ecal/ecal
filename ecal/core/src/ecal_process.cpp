@@ -29,7 +29,7 @@
 #include "ecal_registration_receiver.h"
 #include "ecal_globals.h"
 #include "ecal_process.h"
-#include "io/udp_configurations.h"
+#include "io/udp/udp_configurations.h"
 
 #include <array>
 #include <chrono>

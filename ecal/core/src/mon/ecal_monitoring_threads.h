@@ -27,7 +27,7 @@
 #include <ecal/msg/protobuf/publisher.h>
 
 #include "ecal_thread.h"
-#include "io/udp_receiver.h"
+#include "io/udp/udp_receiver.h"
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings

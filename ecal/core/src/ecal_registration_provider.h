@@ -29,11 +29,11 @@
 #pragma once
 
 #include "ecal_thread.h"
-#include "io/snd_sample.h"
-#include "io/udp_sender.h"
+#include "io/udp/snd_sample.h"
+#include "io/udp/udp_sender.h"
 
-#include "io/ecal_memfile_broadcast.h"
-#include "io/ecal_memfile_broadcast_writer.h"
+#include "io/shm/ecal_memfile_broadcast.h"
+#include "io/shm/ecal_memfile_broadcast_writer.h"
 
 #include <atomic>
 #include <mutex>

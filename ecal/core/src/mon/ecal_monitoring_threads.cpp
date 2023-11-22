@@ -25,8 +25,8 @@
 #include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
-#include "io/msg_type.h"
-#include "io/udp_configurations.h"
+#include "io/udp/msg_type.h"
+#include "io/udp/udp_configurations.h"
 
 #include "ecal_monitoring_threads.h"
 

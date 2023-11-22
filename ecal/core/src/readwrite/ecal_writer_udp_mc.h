@@ -33,8 +33,8 @@
 #pragma warning(pop)
 #endif
 
-#include "io/snd_sample.h"
-#include "io/udp_sender.h"
+#include "io/udp/snd_sample.h"
+#include "io/udp/udp_sender.h"
 #include "readwrite/ecal_writer_base.h"
 
 #include <string>

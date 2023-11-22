@@ -26,7 +26,7 @@
 #include "ecal_process.h"
 
 #include "snd_raw_buffer.h"
-#include "io/msg_type.h"
+#include "io/udp/msg_type.h"
 
 namespace
 {
