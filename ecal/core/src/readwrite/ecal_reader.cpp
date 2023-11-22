@@ -25,7 +25,7 @@
 #include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
-#include "ecal_registration_provider.h"
+#include "registration/ecal_registration_provider.h"
 #include "ecal_descgate.h"
 #include "ecal_reader.h"
 #include "ecal_process.h"

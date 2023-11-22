@@ -240,6 +240,16 @@ set(ecal_readwrite_udp_src
 )
 
 ######################################
+# registration
+######################################
+set(ecal_registration_src
+    src/registration/ecal_registration_provider.cpp
+    src/registration/ecal_registration_provider.h
+    src/registration/ecal_registration_receiver.cpp
+    src/registration/ecal_registration_receiver.h
+)
+
+######################################
 # service
 ######################################
 set(ecal_service_src
@@ -273,8 +283,6 @@ set(ecal_cmn_src
     src/ecal_log.cpp
     src/ecal_log_impl.cpp
     src/ecal_process.cpp
-    src/ecal_registration_provider.cpp
-    src/ecal_registration_receiver.cpp
     src/ecal_thread.cpp
     src/ecal_time.cpp
     src/ecal_timegate.cpp
@@ -293,8 +301,6 @@ set(ecal_cmn_src
     src/ecal_global_accessors.h
     src/ecal_globals.h
     src/ecal_log_impl.h
-    src/ecal_registration_provider.h
-    src/ecal_registration_receiver.h
     src/ecal_sample_to_topicinfo.h
     src/ecal_thread.h
     src/ecal_timegate.h
@@ -434,7 +440,8 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_readwrite_inproc_src} 
     ${ecal_readwrite_shm_src} 
     ${ecal_readwrite_tcp_src} 
-    ${ecal_readwrite_udp_src} 
+    ${ecal_readwrite_udp_src}
+    ${ecal_registration_src}   
     ${ecal_service_src}
     ${ecal_cmn_src}
     ${ecal_header_public}
@@ -550,6 +557,7 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_readwrite_shm_src} 
     ${ecal_readwrite_tcp_src} 
     ${ecal_readwrite_udp_src} 
+    ${ecal_registration_src}   
     ${ecal_service_src}
     ${ecal_cmn_src}
     ${ecal_c_src}

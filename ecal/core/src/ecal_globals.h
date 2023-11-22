@@ -24,8 +24,8 @@
 #pragma once
 
 #include "ecal_global_accessors.h"
-#include "ecal_registration_provider.h"
-#include "ecal_registration_receiver.h"
+#include "registration/ecal_registration_provider.h"
+#include "registration/ecal_registration_receiver.h"
 #include "ecal_descgate.h"
 #include "ecal_timegate.h"
 #include "ecal_log_impl.h"

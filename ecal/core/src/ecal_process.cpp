@@ -26,7 +26,7 @@
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
-#include "ecal_registration_receiver.h"
+#include "registration/ecal_registration_receiver.h"
 #include "ecal_globals.h"
 #include "ecal_process.h"
 #include "io/udp/udp_configurations.h"

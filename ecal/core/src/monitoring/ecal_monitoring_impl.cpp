@@ -29,7 +29,7 @@
 
 #include <regex>
 
-#include "../ecal_registration_receiver.h"
+#include "../registration/ecal_registration_receiver.h"
 
 
 namespace eCAL
