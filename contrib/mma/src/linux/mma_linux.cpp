@@ -172,12 +172,12 @@ ResourceLinux::Memory MMALinux::GetMemory()
   }
 
   if (memory_map.find("MemAvailable:") != memory_map.end())
-  {
+  { // since Linux kernel 3.14
     memory.available = memory_map["MemAvailable:"];
     memory.total = memory_map["MemTotal:"];
   }
   else
-  {
+  { // before Linux kernel 3.14
     memory.available = memory_map["MemFree:"] + memory_map["Buffers:"] + memory_map["Cached:"];
     memory.total = memory_map["MemTotal:"];
   }
@@ -193,7 +193,7 @@ ResourceLinux::Temperature MMALinux::GetTemperature()
   ResourceLinux::Temperature temperature;
 
 #ifdef __arm__
-
+  // FixMe: this seems very specific for some dedicated devices
   std::string result;
   OpenPipe("/opt/vc/bin/vcgencmd measure_temp", result);
 
@@ -248,7 +248,7 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
     auto iterator = lines.begin();
     std::advance(iterator, 2);
 
-    const unsigned long int delta_count = (local_count - previous_count);
+    const unsigned int delta_count = (local_count - previous_count);
     
     while(iterator != lines.end())
     {
@@ -256,6 +256,7 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
       t_io cur = {0, 0};
       t_io prev;
       network_stats.name=network_io[0];
+      network_stats.name.pop_back();
 
       try { cur.rec = stoul(network_io[1]); }
       catch (...) { }
@@ -272,8 +273,16 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
         prev = cur;
       }
 
-      network_stats.receive = (cur.rec - prev.rec) / (0.5 * delta_count);
-      network_stats.send = (cur.snd - prev.snd) / (0.5 * delta_count);
+      if (delta_count > 0)
+      {
+        network_stats.receive = (cur.rec - prev.rec) / (0.5 * delta_count);
+        network_stats.send = (cur.snd - prev.snd) / (0.5 * delta_count);
+      }
+      else
+      {
+        network_stats.receive = 0;
+        network_stats.send = 0;
+      }
 
       networks.push_back(network_stats);
       previous[network_stats.name] = cur;
@@ -284,18 +293,24 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
 
   return networks;
 }
+
 ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
 {
   std::string local_copy;
   static const long page_size = sysconf(_SC_PAGE_SIZE);
   static const long ticks_per_second = sysconf(_SC_CLK_TCK);
   static unsigned int previous_count;
-  static std::unordered_map<uint32_t, unsigned long> previous;
-  unsigned int local_count;
+  typedef struct
+  {
+    unsigned long utime;
+    unsigned int count;
+  } t_item;
+  static std::map<uint32_t, t_item> previous;
+  t_item item;
   {
     std::lock_guard<std::mutex> guard(mutex);
     local_copy = process_pipe_result_;
-    local_count = process_pipe_count_;
+    item.count = process_pipe_count_;
   }
 
   ResourceLinux::ProcessStatsList processes;
@@ -322,12 +337,12 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
       if (process_data[1].length() > 2)
         process_stats.commandline=process_data[1].substr(1, process_data[1].length()-2);
 
-      const unsigned int delta_count = (local_count - previous_count) * ticks_per_second * nr_of_cpu_cores;
+      const unsigned int delta_count = (item.count - previous_count) * ticks_per_second * nr_of_cpu_cores;
       const unsigned long cur = std::stoul(process_data[13]);
       unsigned long prev;
       if (previous.find(process_stats.id) != previous.end())
       {
-        prev = previous[process_stats.id];
+        prev = previous[process_stats.id].utime;
       }
       else
       {
@@ -337,10 +352,21 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
       if (delta_count > 0)
         process_stats.cpu_load.cpu_load = (cur - prev) / (0.005 * delta_count);
       processes.push_back(process_stats);
-      previous[process_stats.id] = cur;
+      item.utime = cur;
+      previous[process_stats.id] = item;
       std::advance(iterator, 1);
     }
-    previous_count = local_count;
+    previous_count = item.count;
+
+    // garbage collection
+    for (auto it = previous.begin(), next = it; it != previous.end(); it = next)
+    {
+      next++;
+      if (it->second.count < item.count)
+      {
+        previous.erase(it);
+      }
+    }
   }
   return processes;
 }
@@ -408,6 +434,9 @@ bool MMALinux::FormatListData(std::vector<std::string>& the_list)
       if (name.find("mtdblock") == std::string::npos)
       {
         name.pop_back();
+        // delete last character p as well
+        if (name.back() == 'p')
+          name.pop_back();
       }
     }
 
@@ -446,7 +475,7 @@ std::list<std::string> MMALinux::TokenizeIntoLines(const std::string& str)
 
 bool MMALinux::SetDiskInformation(ResourceLinux::DiskStatsList& disks)
 {
-  bool return_value = false;
+  bool return_value = true;
 
   std::string result;
   OpenPipe("df", result);
@@ -489,10 +518,6 @@ bool MMALinux::SetDiskInformation(ResourceLinux::DiskStatsList& disks)
           disks_map[partition[0]].capacity += disk_stats.capacity;
         }
       }
-      else
-      {
-        return_value = true; //FixMe: what does this return value mean?
-      }
     }
   }
 
@@ -526,7 +551,7 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
   }
 
   bool return_value = true;
-  const unsigned long int delta_count = (local_count - previous_count);
+  const unsigned int delta_count = (local_count - previous_count);
 
   auto lines = TokenizeIntoLines(local_copy);
 
@@ -556,8 +581,11 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
           prev = cur;
         }
 
-        disk.read = (cur.read - prev.read) * 4 * B_IN_KB / delta_count;
-        disk.write = (cur.write - prev.write) * 4 * B_IN_KB / delta_count;
+        if (delta_count > 0)
+        {
+          disk.read = (cur.read - prev.read) * 4 * B_IN_KB / delta_count;
+          disk.write = (cur.write - prev.write) * 4 * B_IN_KB / delta_count;
+        }
 
         previous[disk.name] = cur;
       }
