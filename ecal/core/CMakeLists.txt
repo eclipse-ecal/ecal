@@ -116,6 +116,7 @@ set(ecal_io_shm_src
     src/io/shm/ecal_memfile_os.h
     src/io/shm/ecal_memfile_pool.h
     src/io/shm/ecal_memfile_sync.h
+    src/io/shm/relocatable_circular_queue.h
 )
 
 # io/shm/linux
