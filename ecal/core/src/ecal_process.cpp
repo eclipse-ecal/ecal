@@ -40,7 +40,7 @@
 #include <memory>
 #include <fstream>
 
-#include "sys_usage.h"
+#include "util/sys_usage.h"
 
 #include <cstdlib>
 #include <cstdio>

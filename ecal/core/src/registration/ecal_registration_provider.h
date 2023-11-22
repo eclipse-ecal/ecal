@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "ecal_thread.h"
+#include "util/ecal_thread.h"
 #include "io/udp/snd_sample.h"
 #include "io/udp/udp_sender.h"
 

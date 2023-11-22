@@ -24,7 +24,7 @@
 #pragma once
 
 #include "ecal_def.h"
-#include "ecal_expmap.h"
+#include "util/ecal_expmap.h"
 
 #include <ecal/ecal_callback.h>
 

@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <custom_tclap/advanced_tclap_output.h>
+#include "advanced_tclap_output.h"
 
 #include <sstream>
 

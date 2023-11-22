@@ -30,7 +30,7 @@
 #include <ecal/ecal.h>
 
 #include "ecal_def.h"
-#include "ecal_thread.h"
+#include "util/ecal_thread.h"
 
 #include "io/udp/rcv_sample.h"
 

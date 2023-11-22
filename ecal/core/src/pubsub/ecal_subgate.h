@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "ecal_thread.h"
+#include "util/ecal_thread.h"
 
 #include "readwrite/ecal_reader.h"
 

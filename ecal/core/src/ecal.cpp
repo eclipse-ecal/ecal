@@ -24,7 +24,7 @@
 #include "ecal_globals.h"
 
 #include <tclap/CmdLine.h>
-#include <custom_tclap/advanced_tclap_output.h>
+#include "util/advanced_tclap_output.h"
 
 namespace eCAL
 {

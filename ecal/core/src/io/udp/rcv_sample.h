@@ -25,7 +25,7 @@
 
 #include "ecal_def.h"
 #include "udp_receiver.h"
-#include "ecal_thread.h"
+#include "util/ecal_thread.h"
 #include "msg_type.h"
 
 #include <memory>

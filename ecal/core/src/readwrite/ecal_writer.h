@@ -29,7 +29,7 @@
 #include <ecal/ecal_types.h>
 
 #include "ecal_def.h"
-#include "ecal_expmap.h"
+#include "util/ecal_expmap.h"
 
 #include "udp/ecal_writer_udp_mc.h"
 #include "shm/ecal_writer_shm.h"

@@ -28,7 +28,7 @@
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
-#include "ecal_expmap.h"
+#include "util/ecal_expmap.h"
 
 #include <shared_mutex>
 #include <string>

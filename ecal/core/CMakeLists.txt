@@ -57,15 +57,6 @@ if(UNIX)
   endif()
 endif()
 
-
-######################################
-# custom_tclap
-######################################
-set(ecal_custom_tclap_src
-    src/custom_tclap/advanced_tclap_output.cpp
-    src/custom_tclap/advanced_tclap_output.h
-)
-
 ######################################
 # io/mtx
 ######################################
@@ -211,6 +202,7 @@ set(ecal_pubsub_src
 # readwrite
 ######################################
 set(ecal_readwrite_src
+    src/readwrite/ecal_buffer_payload_writer.h
     src/readwrite/ecal_reader.cpp
     src/readwrite/ecal_reader.h
     src/readwrite/ecal_reader_layer.h
@@ -277,10 +269,25 @@ set(ecal_service_src
 )
 
 ######################################
+# util
+######################################
+set(ecal_util_src
+    src/util/advanced_tclap_output.cpp
+    src/util/advanced_tclap_output.h
+    src/util/convert_utf.cpp
+    src/util/convert_utf.h
+    src/util/ecal_expmap.h
+    src/util/ecal_thread.cpp
+    src/util/ecal_thread.h
+    src/util/getenvvar.h
+    src/util/sys_usage.cpp
+    src/util/sys_usage.h
+)
+
+######################################
 # common
 ######################################
 set(ecal_cmn_src
-    src/convert_utf.cpp
     src/ecal.cpp
     src/ecal_clang.cpp
     src/ecal_config.cpp
@@ -290,28 +297,20 @@ set(ecal_cmn_src
     src/ecal_global_accessors.cpp
     src/ecal_globals.cpp
     src/ecal_process.cpp
-    src/ecal_thread.cpp
     src/ecal_time.cpp
     src/ecal_timegate.cpp
     src/ecal_timer.cpp
     src/ecal_util.cpp
     src/ecalc.cpp
-    src/sys_usage.cpp
-    src/convert_utf.h
-    src/ecal_buffer_payload_writer.h
     src/ecal_config_reader.h
     src/ecal_config_reader_hlp.h
     src/ecal_def.h
     src/ecal_def_ini.h
     src/ecal_descgate.h
-    src/ecal_expmap.h
     src/ecal_global_accessors.h
     src/ecal_globals.h
     src/ecal_sample_to_topicinfo.h
-    src/ecal_thread.h
     src/ecal_timegate.h
-    src/getenvvar.h
-    src/sys_usage.h
     src/topic2mcast.h
 )
 if (WIN32)
@@ -450,13 +449,14 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_readwrite_udp_src}
     ${ecal_registration_src}   
     ${ecal_service_src}
+    ${ecal_util_src}
     ${ecal_cmn_src}
     ${ecal_header_public}
     ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h
 )
 
 if(UNIX)
-  set_source_files_properties(src/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
+  set_source_files_properties(src/util/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
 ecal_add_ecal_shared_library(${PROJECT_NAME}_c ${ecal_c_src} ${ecal_c_win_src})
@@ -567,6 +567,7 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_readwrite_udp_src} 
     ${ecal_registration_src}   
     ${ecal_service_src}
+    ${ecal_util_src}
     ${ecal_cmn_src}
     ${ecal_c_src}
     ${ecal_c_win_src}

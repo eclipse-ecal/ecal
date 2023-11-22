@@ -35,7 +35,7 @@
 #pragma warning(pop)
 #endif
 
-#include "ecal_expmap.h"
+#include "util/ecal_expmap.h"
 
 #include <condition_variable>
 #include <mutex>
