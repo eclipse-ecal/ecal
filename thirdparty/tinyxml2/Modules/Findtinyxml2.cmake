@@ -1,0 +1,1 @@
+set(tinyxml2_FOUND TRUE)

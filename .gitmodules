@@ -1,57 +1,57 @@
 [submodule "thirdparty/protobuf"]
-	path = thirdparty/protobuf
+	path = thirdparty/protobuf/protobuf
 	url = https://github.com/protocolbuffers/protobuf.git
 [submodule "thirdparty/asio"]
-	path = thirdparty/asio
+	path = thirdparty/asio/asio
 	url = https://github.com/chriskohlhoff/asio.git
 [submodule "thirdparty/tclap"]
-	path = thirdparty/tclap
+	path = thirdparty/tclap/tclap
 	url = https://github.com/xguerin/tclap.git
 [submodule "thirdparty/simpleini"]
-	path = thirdparty/simpleini
+	path = thirdparty/simpleini/simpleini
 	url = https://github.com/brofield/simpleini.git
 [submodule "thirdparty/spdlog"]
-	path = thirdparty/spdlog
+	path = thirdparty/spdlog/spdlog
 	url = https://github.com/gabime/spdlog.git
 [submodule "thirdparty/googletest"]
-	path = thirdparty/googletest
+	path = thirdparty/gtest/googletest
 	url = https://github.com/google/googletest.git
 [submodule "thirdparty/fineftp-server"]
-	path = thirdparty/fineftp-server
+	path = thirdparty/fineftp/fineftp-server
 	url = https://github.com/eclipse-ecal/fineftp-server.git
 [submodule "thirdparty/tinyxml2"]
-	path = thirdparty/tinyxml2
+	path = thirdparty/tinyxml2/tinyxml2
 	url = https://github.com/leethomason/tinyxml2
 [submodule "thirdparty/curl"]
-	path = thirdparty/curl
+	path = thirdparty/curl/curl
 	url = https://github.com/curl/curl.git
 [submodule "thirdparty/zlib"]
-	path = thirdparty/zlib
+	path = thirdparty/zlib/zlib
 	url = https://github.com/madler/zlib.git
 [submodule "thirdparty/libssh2"]
-	path = thirdparty/libssh2
+	path = thirdparty/libssh2/libssh2
 	url = https://github.com/libssh2/libssh2.git
 [submodule "thirdparty/hdf5"]
-	path = thirdparty/hdf5
+	path = thirdparty/hdf5/hdf5
 	url = https://github.com/HDFGroup/hdf5.git
 [submodule "thirdparty/termcolor"]
-	path = thirdparty/termcolor
+	path = thirdparty/termcolor/termcolor
 	url = https://github.com/ikalnytskyi/termcolor.git
 [submodule "thirdparty/recycle"]
-	path = thirdparty/recycle
+	path = thirdparty/recycle/recycle
 	url = https://github.com/steinwurf/recycle.git
 [submodule "thirdparty/tcp_pubsub"]
-	path = thirdparty/tcp_pubsub
+	path = thirdparty/tcp_pubsub/tcp_pubsub
 	url = https://github.com/eclipse-ecal/tcp_pubsub.git
 [submodule "thirdparty/qwt/qwt"]
 	path = thirdparty/qwt/qwt
 	url = https://git.code.sf.net/p/qwt/git
 [submodule "thirdparty/yaml-cpp"]
-	path = thirdparty/yaml-cpp
+	path = thirdparty/yaml-cpp/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp.git
 [submodule "thirdparty/ftxui"]
-	path = thirdparty/ftxui
+	path = thirdparty/ftxui/ftxui
 	url = https://github.com/ArthurSonzogni/FTXUI.git
 [submodule "thirdparty/udpcap"]
-	path = thirdparty/udpcap
+	path = thirdparty/udpcap/udpcap
 	url = https://github.com/eclipse-ecal/udpcap.git

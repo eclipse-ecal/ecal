@@ -1,10 +1,5 @@
 find_path(asio_INCLUDE_DIR
   NAMES asio.hpp
-  HINTS
-    "${CONAN_ASIO_ROOT}/include"
-    "${ECAL_PROJECT_ROOT}/thirdparty/asio/asio/include"
-  NO_DEFAULT_PATH
-  NO_CMAKE_FIND_ROOT_PATH
 )
 
 if(asio_INCLUDE_DIR-NOTFOUND)
