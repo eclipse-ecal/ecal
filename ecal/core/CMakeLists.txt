@@ -176,13 +176,13 @@ endif()
 ######################################
 # mon
 ######################################
-set(ecal_mon_src
-    src/mon/ecal_monitoring_def.cpp
-    src/mon/ecal_monitoring_impl.cpp
-    src/mon/ecal_monitoring_threads.cpp
-    src/mon/ecal_monitoring_def.h
-    src/mon/ecal_monitoring_impl.h
-    src/mon/ecal_monitoring_threads.h
+set(ecal_monitoring_src
+    src/monitoring/ecal_monitoring_def.cpp
+    src/monitoring/ecal_monitoring_impl.cpp
+    src/monitoring/ecal_monitoring_threads.cpp
+    src/monitoring/ecal_monitoring_def.h
+    src/monitoring/ecal_monitoring_impl.h
+    src/monitoring/ecal_monitoring_threads.h
 )
 
 ######################################
@@ -416,7 +416,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_io_shm_win_src} 
     ${ecal_io_udp_src}
     ${ecal_io_udp_linux_src}
-    ${ecal_mon_src} 
+    ${ecal_monitoring_src} 
     ${ecal_pubsub_src} 
     ${ecal_readwrite_src} 
     ${ecal_service_src}
@@ -527,7 +527,7 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_io_shm_linux_src}
     ${ecal_io_shm_win_src} 
     ${ecal_io_udp_src}
-    ${ecal_mon_src}
+    ${ecal_monitoring_src}
     ${ecal_pubsub_src}
     ${ecal_readwrite_src}
     ${ecal_service_src}

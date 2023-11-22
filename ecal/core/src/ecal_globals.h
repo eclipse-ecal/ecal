@@ -29,7 +29,7 @@
 #include "ecal_descgate.h"
 #include "ecal_timegate.h"
 #include "ecal_log_impl.h"
-#include "mon/ecal_monitoring_def.h"
+#include "monitoring/ecal_monitoring_def.h"
 #include "pubsub/ecal_pubgate.h"
 #include "pubsub/ecal_subgate.h"
 #include "service/ecal_servicegate.h"
