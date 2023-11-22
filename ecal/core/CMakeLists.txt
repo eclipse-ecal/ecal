@@ -203,28 +203,40 @@ set(ecal_pubsub_src
 ######################################
 set(ecal_readwrite_src
     src/readwrite/ecal_reader.cpp
-    src/readwrite/ecal_reader_udp_mc.cpp
-    src/readwrite/ecal_reader_tcp.cpp
-    src/readwrite/ecal_writer.cpp
-    src/readwrite/ecal_writer_inproc.cpp
-    src/readwrite/ecal_writer_udp_mc.cpp
-    src/readwrite/ecal_writer_tcp.cpp
-    src/readwrite/ecal_reader_shm.cpp
-    src/readwrite/ecal_writer_shm.cpp
     src/readwrite/ecal_reader.h
     src/readwrite/ecal_reader_layer.h
-    src/readwrite/ecal_reader_tcp.h
-    src/readwrite/ecal_reader_udp_mc.h
+    src/readwrite/ecal_writer.cpp
     src/readwrite/ecal_writer.h
     src/readwrite/ecal_writer_base.h
     src/readwrite/ecal_writer_data.h
     src/readwrite/ecal_writer_info.h
-    src/readwrite/ecal_writer_inproc.h
-    src/readwrite/ecal_writer_tcp.h
-    src/readwrite/ecal_writer_udp_mc.h
-    src/readwrite/ecal_tcp_pubsub_logger.h
-    src/readwrite/ecal_reader_shm.h
-    src/readwrite/ecal_writer_shm.h
+)
+
+set(ecal_readwrite_inproc_src
+    src/readwrite/inproc/ecal_writer_inproc.cpp
+    src/readwrite/inproc/ecal_writer_inproc.h
+)
+
+set(ecal_readwrite_shm_src
+    src/readwrite/shm/ecal_reader_shm.cpp
+    src/readwrite/shm/ecal_reader_shm.h
+    src/readwrite/shm/ecal_writer_shm.cpp
+    src/readwrite/shm/ecal_writer_shm.h
+)
+
+set(ecal_readwrite_tcp_src
+    src/readwrite/tcp/ecal_reader_tcp.cpp
+    src/readwrite/tcp/ecal_reader_tcp.h
+    src/readwrite/tcp/ecal_tcp_pubsub_logger.h
+    src/readwrite/tcp/ecal_writer_tcp.cpp
+    src/readwrite/tcp/ecal_writer_tcp.h
+)
+
+set(ecal_readwrite_udp_src
+    src/readwrite/udp/ecal_reader_udp_mc.cpp
+    src/readwrite/udp/ecal_reader_udp_mc.h
+    src/readwrite/udp/ecal_writer_udp_mc.cpp
+    src/readwrite/udp/ecal_writer_udp_mc.h
 )
 
 ######################################
@@ -419,6 +431,10 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_monitoring_src} 
     ${ecal_pubsub_src} 
     ${ecal_readwrite_src} 
+    ${ecal_readwrite_inproc_src} 
+    ${ecal_readwrite_shm_src} 
+    ${ecal_readwrite_tcp_src} 
+    ${ecal_readwrite_udp_src} 
     ${ecal_service_src}
     ${ecal_cmn_src}
     ${ecal_header_public}
@@ -530,6 +546,10 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_monitoring_src}
     ${ecal_pubsub_src}
     ${ecal_readwrite_src}
+    ${ecal_readwrite_inproc_src} 
+    ${ecal_readwrite_shm_src} 
+    ${ecal_readwrite_tcp_src} 
+    ${ecal_readwrite_udp_src} 
     ${ecal_service_src}
     ${ecal_cmn_src}
     ${ecal_c_src}

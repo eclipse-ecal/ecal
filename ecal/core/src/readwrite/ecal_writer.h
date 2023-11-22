@@ -31,10 +31,10 @@
 #include "ecal_def.h"
 #include "ecal_expmap.h"
 
-#include "ecal_writer_udp_mc.h"
-#include "ecal_writer_shm.h"
-#include "ecal_writer_tcp.h"
-#include "ecal_writer_inproc.h"
+#include "udp/ecal_writer_udp_mc.h"
+#include "shm/ecal_writer_shm.h"
+#include "tcp/ecal_writer_tcp.h"
+#include "inproc/ecal_writer_inproc.h"
 
 #include <mutex>
 #include <string>
