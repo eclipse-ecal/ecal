@@ -174,7 +174,16 @@ if(UNIX)
 endif()
 
 ######################################
-# mon
+# logging
+######################################
+set(ecal_logging_src
+    src/logging/ecal_log.cpp
+    src/logging/ecal_log_impl.cpp
+    src/logging/ecal_log_impl.h
+)
+
+######################################
+# monitoring
 ######################################
 set(ecal_monitoring_src
     src/monitoring/ecal_monitoring_def.cpp
@@ -280,8 +289,6 @@ set(ecal_cmn_src
     src/ecal_event.cpp 
     src/ecal_global_accessors.cpp
     src/ecal_globals.cpp
-    src/ecal_log.cpp
-    src/ecal_log_impl.cpp
     src/ecal_process.cpp
     src/ecal_thread.cpp
     src/ecal_time.cpp
@@ -300,7 +307,6 @@ set(ecal_cmn_src
     src/ecal_expmap.h
     src/ecal_global_accessors.h
     src/ecal_globals.h
-    src/ecal_log_impl.h
     src/ecal_sample_to_topicinfo.h
     src/ecal_thread.h
     src/ecal_timegate.h
@@ -434,6 +440,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_io_shm_win_src} 
     ${ecal_io_udp_src}
     ${ecal_io_udp_linux_src}
+    ${ecal_logging_src} 
     ${ecal_monitoring_src} 
     ${ecal_pubsub_src} 
     ${ecal_readwrite_src} 
@@ -550,6 +557,7 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_io_shm_linux_src}
     ${ecal_io_shm_win_src} 
     ${ecal_io_udp_src}
+    ${ecal_logging_src} 
     ${ecal_monitoring_src}
     ${ecal_pubsub_src}
     ${ecal_readwrite_src}

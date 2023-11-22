@@ -28,7 +28,7 @@
 #include "registration/ecal_registration_receiver.h"
 #include "ecal_descgate.h"
 #include "ecal_timegate.h"
-#include "ecal_log_impl.h"
+#include "logging/ecal_log_impl.h"
 #include "monitoring/ecal_monitoring_def.h"
 #include "pubsub/ecal_pubgate.h"
 #include "pubsub/ecal_subgate.h"
