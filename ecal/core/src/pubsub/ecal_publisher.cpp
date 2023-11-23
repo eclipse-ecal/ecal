@@ -25,7 +25,7 @@
 #include <ecal/ecal_tlayer.h>
 #include <ecal/ecal_config.h>
 
-#include "ecal_config_reader_hlp.h"
+#include "config/ecal_config_reader_hlp.h"
 #include "readwrite/ecal_buffer_payload_writer.h"
 #include "ecal_globals.h"
 

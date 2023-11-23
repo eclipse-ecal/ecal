@@ -27,7 +27,7 @@
 
 #include "ecal_def.h"
 #include "ecal_buffer_payload_writer.h"
-#include "ecal_config_reader_hlp.h"
+#include "config/ecal_config_reader_hlp.h"
 
 #include "registration/ecal_registration_provider.h"
 #include "registration/ecal_registration_receiver.h"

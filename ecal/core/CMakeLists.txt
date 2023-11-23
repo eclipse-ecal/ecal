@@ -1,4 +1,4 @@
-# ========================= eCAL LICENSE =================================
+  # ========================= eCAL LICENSE =================================
 #
 # Copyright (C) 2016 - 2019 Continental Corporation
 #
@@ -56,6 +56,16 @@ if(UNIX)
     endif()
   endif()
 endif()
+
+######################################
+# config
+######################################
+set(ecal_config_src
+    src/config/ecal_config.cpp
+    src/config/ecal_config_reader.cpp
+    src/config/ecal_config_reader.h
+    src/config/ecal_config_reader_hlp.h
+)
 
 ######################################
 # io/mtx
@@ -290,8 +300,6 @@ set(ecal_util_src
 set(ecal_cmn_src
     src/ecal.cpp
     src/ecal_clang.cpp
-    src/ecal_config.cpp
-    src/ecal_config_reader.cpp
     src/ecal_descgate.cpp
     src/ecal_event.cpp 
     src/ecal_global_accessors.cpp
@@ -302,8 +310,6 @@ set(ecal_cmn_src
     src/ecal_timer.cpp
     src/ecal_util.cpp
     src/ecalc.cpp
-    src/ecal_config_reader.h
-    src/ecal_config_reader_hlp.h
     src/ecal_def.h
     src/ecal_def_ini.h
     src/ecal_descgate.h
@@ -345,7 +351,6 @@ set(ecal_header_cmn
     include/ecal/ecal.h
     include/ecal/ecal_callback.h
     include/ecal/ecal_clang.h
-    include/ecal/ecal_config.h
     include/ecal/ecal_client.h
     include/ecal/ecal_config.h
     include/ecal/ecal_core.h
@@ -430,7 +435,7 @@ set(ecal_header_public
 )
 
 ecal_add_ecal_shared_library(${PROJECT_NAME} 
-    ${ecal_custom_tclap_src}
+    ${ecal_config_src}
     ${ecal_io_mtx_src}
     ${ecal_io_mtx_linux_src}
     ${ecal_io_mtx_win_src}
@@ -548,8 +553,7 @@ install(DIRECTORY
 
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
-    ${ecal_custom_tclap_src}
-    ${ecal_io_cpp_src}
+    ${ecal_config_src}
     ${ecal_io_mtx_src}
     ${ecal_io_mtx_linux_src}
     ${ecal_io_mtx_win_src}
