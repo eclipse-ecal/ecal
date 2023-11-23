@@ -34,7 +34,7 @@
 #endif
 
 #include "ecal_def.h"
-#include "../ecal_writer.h"
+#include "readwrite/ecal_writer.h"
 #include "ecal_writer_shm.h"
 
 namespace eCAL

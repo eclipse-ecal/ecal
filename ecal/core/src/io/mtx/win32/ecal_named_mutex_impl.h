@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "../ecal_named_mutex_base.h"
+#include "io/mtx/ecal_named_mutex_base.h"
 
 namespace eCAL
 {

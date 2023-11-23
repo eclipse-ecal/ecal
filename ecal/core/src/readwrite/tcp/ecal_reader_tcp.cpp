@@ -27,7 +27,7 @@
 
 #include "pubsub/ecal_subgate.h"
 
-#include "../ecal_writer_base.h"
+#include "readwrite/ecal_writer_base.h"
 #include "ecal_reader_tcp.h"
 #include "ecal_tcp_pubsub_logger.h"
 
