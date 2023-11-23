@@ -21,7 +21,7 @@
  * @brief  eCAL publisher gateway class
 **/
 
-#include "ecal_config_reader_hlp.h"
+#include "config/ecal_config_reader_hlp.h"
 #include "ecal_pubgate.h"
 #include "ecal_descgate.h"
 #include "ecal_sample_to_topicinfo.h"

@@ -29,7 +29,7 @@
 #pragma warning(pop)
 #endif
 
-#include "ecal_config_reader_hlp.h"
+#include "config/ecal_config_reader_hlp.h"
 
 #include <ecal/ecal_config.h>
 
