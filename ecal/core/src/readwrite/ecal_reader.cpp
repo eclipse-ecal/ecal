@@ -25,14 +25,14 @@
 #include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
-#include "ecal_registration_provider.h"
+#include "registration/ecal_registration_provider.h"
 #include "ecal_descgate.h"
 #include "ecal_reader.h"
 #include "ecal_process.h"
 
-#include "readwrite/ecal_reader_udp_mc.h"
-#include "readwrite/ecal_reader_shm.h"
-#include "readwrite/ecal_reader_tcp.h"
+#include "readwrite/udp/ecal_reader_udp_mc.h"
+#include "readwrite/shm/ecal_reader_shm.h"
+#include "readwrite/tcp/ecal_reader_tcp.h"
 
 #include <iterator>
 #include <sstream>

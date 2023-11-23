@@ -26,7 +26,7 @@
 #include <ecal/ecal.h>
 #include <ecal/msg/protobuf/publisher.h>
 
-#include "ecal_thread.h"
+#include "util/ecal_thread.h"
 #include "io/udp/udp_receiver.h"
 
 #ifdef _MSC_VER

@@ -26,7 +26,7 @@
 #include <ecal/types/monitoring.h>
 
 #include "ecal_monitoring_threads.h"
-#include "ecal_expmap.h"
+#include "util/ecal_expmap.h"
 #include "io/udp/rcv_sample.h"
 
 #include <memory>

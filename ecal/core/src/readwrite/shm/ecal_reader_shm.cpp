@@ -34,7 +34,7 @@
 #include "ecal_global_accessors.h"
 #include "pubsub/ecal_subgate.h"
 #include "io/shm/ecal_memfile_pool.h"
-#include "readwrite/ecal_reader_shm.h"
+#include "ecal_reader_shm.h"
 
 #include <iostream>
 

@@ -27,10 +27,10 @@
 
 #include "ecal_def.h"
 #include "ecal_buffer_payload_writer.h"
-#include "ecal_config_reader_hlp.h"
+#include "config/ecal_config_reader_hlp.h"
 
-#include "ecal_registration_provider.h"
-#include "ecal_registration_receiver.h"
+#include "registration/ecal_registration_provider.h"
+#include "registration/ecal_registration_receiver.h"
 
 #include "ecal_writer.h"
 #include "ecal_writer_base.h"

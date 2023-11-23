@@ -24,12 +24,12 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_config.h>
 
-#include "ecal_config_reader_hlp.h"
+#include "config/ecal_config_reader_hlp.h"
 #include "ecal_monitoring_impl.h"
 
 #include <regex>
 
-#include "../ecal_registration_receiver.h"
+#include "registration/ecal_registration_receiver.h"
 
 
 namespace eCAL

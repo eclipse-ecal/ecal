@@ -28,8 +28,8 @@
 #include "pubsub/ecal_subgate.h"
 
 #include "readwrite/ecal_writer_base.h"
-#include "readwrite/ecal_reader_tcp.h"
-#include "readwrite/ecal_tcp_pubsub_logger.h"
+#include "ecal_reader_tcp.h"
+#include "ecal_tcp_pubsub_logger.h"
 
 #include "ecal_utils/portable_endian.h"
 

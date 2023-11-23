@@ -26,7 +26,7 @@
 
 #include "ecal_global_accessors.h"
 #include "pubsub/ecal_subgate.h"
-#include "readwrite/ecal_writer_inproc.h"
+#include "readwrite/inproc/ecal_writer_inproc.h"
 
 namespace eCAL
 {

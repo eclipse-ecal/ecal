@@ -25,8 +25,8 @@
 #include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
-#include "ecal_config_reader_hlp.h"
-#include "ecal_registration_receiver.h"
+#include "config/ecal_config_reader_hlp.h"
+#include "registration/ecal_registration_receiver.h"
 #include "ecal_globals.h"
 #include "ecal_process.h"
 #include "io/udp/udp_configurations.h"
@@ -40,7 +40,7 @@
 #include <memory>
 #include <fstream>
 
-#include "sys_usage.h"
+#include "util/sys_usage.h"
 
 #include <cstdlib>
 #include <cstdio>

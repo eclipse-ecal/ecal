@@ -21,7 +21,7 @@
  * @brief  memory file utility functions for windows platform
 **/
 
-#include "../ecal_memfile.h"
+#include "io/shm/ecal_memfile.h"
 
 namespace eCAL
 {

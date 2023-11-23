@@ -21,7 +21,7 @@
  * @brief  memory file utility functions for posix platform
 **/
 
-#include "../ecal_memfile.h"
+#include "io/shm/ecal_memfile.h"
 
 #include <iostream>
 #include <string.h>
