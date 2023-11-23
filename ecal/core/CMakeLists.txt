@@ -279,6 +279,16 @@ set(ecal_service_src
 )
 
 ######################################
+# time
+######################################
+set(ecal_time_src
+    src/time/ecal_time.cpp
+    src/time/ecal_timegate.cpp
+    src/time/ecal_timegate.h
+    src/time/ecal_timer.cpp
+)
+
+######################################
 # util
 ######################################
 set(ecal_util_src
@@ -305,9 +315,6 @@ set(ecal_cmn_src
     src/ecal_global_accessors.cpp
     src/ecal_globals.cpp
     src/ecal_process.cpp
-    src/ecal_time.cpp
-    src/ecal_timegate.cpp
-    src/ecal_timer.cpp
     src/ecal_util.cpp
     src/ecalc.cpp
     src/ecal_def.h
@@ -316,7 +323,6 @@ set(ecal_cmn_src
     src/ecal_global_accessors.h
     src/ecal_globals.h
     src/ecal_sample_to_topicinfo.h
-    src/ecal_timegate.h
     src/topic2mcast.h
 )
 if (WIN32)
@@ -454,6 +460,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_readwrite_udp_src}
     ${ecal_registration_src}   
     ${ecal_service_src}
+    ${ecal_time_src}
     ${ecal_util_src}
     ${ecal_cmn_src}
     ${ecal_header_public}
@@ -571,6 +578,7 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_readwrite_udp_src} 
     ${ecal_registration_src}   
     ${ecal_service_src}
+    ${ecal_time_src}
     ${ecal_util_src}
     ${ecal_cmn_src}
     ${ecal_c_src}
