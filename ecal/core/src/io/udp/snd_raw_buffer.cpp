@@ -21,6 +21,8 @@
  * @brief  raw message buffer handling
 **/
 
+#include <chrono>
+#include <mutex>
 #include <thread>
 
 #include "ecal_process.h"
@@ -31,8 +33,11 @@
 namespace
 {
   // random number generator
+  std::mutex xorshf96_mtx;
   unsigned long xorshf96(unsigned long& x, unsigned long& y, unsigned long& z)  // period 2^96-1
   {
+    const std::lock_guard<std::mutex> lock(xorshf96_mtx);
+
     unsigned long t;
     x ^= x << 16;
     x ^= x >> 5;
@@ -129,7 +134,11 @@ namespace eCAL
       msg_header.type = msg_type_header;
       {
         // create random number for message id
-        static unsigned long x = 123456789, y = 362436069, z = 521288629;
+        static unsigned long x = std::chrono::duration_cast<std::chrono::nanoseconds>(
+          std::chrono::high_resolution_clock::now().time_since_epoch()
+        ).count();
+        static unsigned long y = 362436069;
+        static unsigned long z = 521288629;
         msg_header.id = xorshf96(x, y, z);
       }
       msg_header.num = total_packet_num;
