@@ -75,7 +75,7 @@ namespace eCAL
   int CLoggingReceiveThread::ThreadFun()
   {
     // wait for any incoming message
-    const size_t recv_len = m_log_rcv.Receive(m_msg_buffer.data(), m_msg_buffer.size(), CMN_LOGGING_RECEIVE_THREAD_CYCLE_TIME_MS);
+    const size_t recv_len = m_log_rcv.Receive(m_msg_buffer.data(), m_msg_buffer.size(), CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS);
     if (recv_len > 0)
     {
       m_log_ecal_msg.Clear();

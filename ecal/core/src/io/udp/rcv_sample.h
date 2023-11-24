@@ -103,14 +103,14 @@ public:
   using HasSampleCallbackT   = std::function<bool(const std::string& sample_name_)>;
   using ApplySampleCallbackT = std::function<void(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_)>;
 
-  void Start(eCAL::SReceiverAttr attr_, HasSampleCallbackT has_sample_callback_, ApplySampleCallbackT apply_sample_callback_, int timeout_);
+  void Start(eCAL::SReceiverAttr attr_, HasSampleCallbackT has_sample_callback_, ApplySampleCallbackT apply_sample_callback_);
   void Stop();
 
   bool AddMultiCastGroup(const char* ipaddr_);
   bool RemMultiCastGroup(const char* ipaddr_);
 
 protected:
-  void ReceiveThread(int timeout_);
+  void ReceiveThread();
   void Process(const char* sample_buffer_, size_t sample_buffer_len_);
 
   HasSampleCallbackT    m_has_sample_callback;

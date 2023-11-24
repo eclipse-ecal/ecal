@@ -225,14 +225,14 @@ CSampleReceiver::~CSampleReceiver()
   Stop();
 }
 
-void CSampleReceiver::Start(eCAL::SReceiverAttr attr_, HasSampleCallbackT has_sample_callback_, ApplySampleCallbackT apply_sample_callback_, int timeout_)
+void CSampleReceiver::Start(eCAL::SReceiverAttr attr_, HasSampleCallbackT has_sample_callback_, ApplySampleCallbackT apply_sample_callback_)
 {
   m_has_sample_callback   = has_sample_callback_;
   m_apply_sample_callback = apply_sample_callback_;
 
   m_udp_receiver.Create(attr_);
 
-  m_receive_thread = std::thread(&CSampleReceiver::ReceiveThread, this, timeout_);
+  m_receive_thread = std::thread(&CSampleReceiver::ReceiveThread, this);
 }
 
 void CSampleReceiver::Stop()
@@ -251,12 +251,12 @@ bool CSampleReceiver::RemMultiCastGroup(const char* ipaddr_)
   return m_udp_receiver.RemMultiCastGroup(ipaddr_);
 }
 
-void CSampleReceiver::ReceiveThread(int timeout_)
+void CSampleReceiver::ReceiveThread()
 {
   while (!m_receive_thread_stop.load(std::memory_order_acquire))
   {
     // wait for any incoming message
-    const size_t recv_len = m_udp_receiver.Receive(m_msg_buffer.data(), m_msg_buffer.size(), timeout_);
+    const size_t recv_len = m_udp_receiver.Receive(m_msg_buffer.data(), m_msg_buffer.size(), CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS);
     if (recv_len > 0)
     {
       Process(m_msg_buffer.data(), recv_len);

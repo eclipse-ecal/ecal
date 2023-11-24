@@ -138,7 +138,7 @@ namespace eCAL
       attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
 
       // start registration sample receiver
-      m_registration_receiver.Start(attr, std::bind(&CRegistrationReceiver::HasSample, this, std::placeholders::_1), std::bind(&CRegistrationReceiver::ApplySample, this, std::placeholders::_1), CMN_REGISTRATION_RECEIVE_THREAD_CYCLE_TIME_MS);
+      m_registration_receiver.Start(attr, std::bind(&CRegistrationReceiver::HasSample, this, std::placeholders::_1), std::bind(&CRegistrationReceiver::ApplySample, this, std::placeholders::_1));
     }
 
     if (m_use_shm_monitoring)

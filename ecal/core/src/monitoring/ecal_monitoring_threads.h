@@ -90,11 +90,11 @@ namespace eCAL
       protobuf::CPublisher<T>  pub;
     };
 
-    class CThread                         m_pub_thread;
+    class CThread                           m_pub_thread;
     struct SProtoPub<eCAL::pb::Monitoring>  m_mon_pub;
     struct SProtoPub<eCAL::pb::Logging>     m_log_pub;
 
-    MonitoringCallbackT                   m_mon_cb;
-    LoggingCallbackT                      m_log_cb;
+    MonitoringCallbackT                     m_mon_cb;
+    LoggingCallbackT                        m_log_cb;
   };
 }

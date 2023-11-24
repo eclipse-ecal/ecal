@@ -174,14 +174,8 @@
 /* delta time to check timeout for data readers in ms */
 #define CMN_DATAREADER_TIMEOUT_RESOLUTION_MS           100
 
-/* cylce time udp registration receive thread in ms */
-#define CMN_REGISTRATION_RECEIVE_THREAD_CYCLE_TIME_MS  1000
-
-/* cylce time udp logging receive thread in ms */
-#define CMN_LOGGING_RECEIVE_THREAD_CYCLE_TIME_MS       1000
-
-/* cylce time udp paylaod receive thread in ms */
-#define CMN_PAYLOAD_RECEIVE_THREAD_CYCLE_TIME_MS       1000
+/* cylce time udp receive threads in ms */
+#define CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS           1000
 
 /**********************************************************************************************/
 /*                                     events                                                 */

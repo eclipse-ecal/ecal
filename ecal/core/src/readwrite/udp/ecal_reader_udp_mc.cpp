@@ -62,7 +62,7 @@ namespace eCAL
       attr.loopback = true;
       attr.rcvbuf = Config::GetUdpMulticastRcvBufSizeBytes();
 
-      m_payload_receiver.Start(attr, std::bind(&CUDPReaderLayer::HasSample, this, std::placeholders::_1), std::bind(&CUDPReaderLayer::ApplySample, this, std::placeholders::_1), CMN_PAYLOAD_RECEIVE_THREAD_CYCLE_TIME_MS);
+      m_payload_receiver.Start(attr, std::bind(&CUDPReaderLayer::HasSample, this, std::placeholders::_1), std::bind(&CUDPReaderLayer::ApplySample, this, std::placeholders::_1));
 
       m_started = true;
     }
