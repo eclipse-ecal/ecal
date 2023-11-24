@@ -78,7 +78,7 @@ protected:
   int32_t           m_message_curr_num;
   int32_t           m_message_curr_len;
 
-  eCAL::pb::Sample    m_ecal_sample;
+  eCAL::pb::Sample  m_ecal_sample;
 };
 
 
@@ -100,17 +100,30 @@ public:
   CSampleReceiver();
   virtual ~CSampleReceiver();
 
-  virtual bool HasSample(const std::string& sample_name_)                                        = 0;
-  virtual bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_) = 0;
+  using HasSampleCallbackT   = std::function<bool(const std::string& sample_name_)>;
+  using ApplySampleCallbackT = std::function<void(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_)>;
 
-  int Receive(eCAL::CUDPReceiver* sample_receiver_, int timeout_);
-  int Process(const char* sample_buffer_, size_t sample_buffer_len_);
+  void Start(eCAL::SReceiverAttr attr_, HasSampleCallbackT has_sample_callback_, ApplySampleCallbackT apply_sample_callback_, int timeout_);
+  void Stop();
+
+  bool AddMultiCastGroup(const char* ipaddr_);
+  bool RemMultiCastGroup(const char* ipaddr_);
 
 protected:
+  void ReceiveThread(int timeout_);
+  void Process(const char* sample_buffer_, size_t sample_buffer_len_);
+
+  HasSampleCallbackT    m_has_sample_callback;
+  ApplySampleCallbackT  m_apply_sample_callback;
+
+  eCAL::CUDPReceiver    m_udp_receiver;
+  std::thread           m_receive_thread;
+  std::atomic<bool>     m_receive_thread_stop;
+
   using ReceiveSlotMapT = std::unordered_map<int32_t, std::shared_ptr<CSampleReceiveSlot>>;
-  ReceiveSlotMapT    m_receive_slot_map;
-  std::vector<char>  m_msg_buffer;
-  eCAL::pb::Sample     m_ecal_sample;
+  ReceiveSlotMapT       m_receive_slot_map;
+  std::vector<char>     m_msg_buffer;
+  eCAL::pb::Sample      m_ecal_sample;
 
   std::chrono::steady_clock::time_point m_cleanup_start;
 };

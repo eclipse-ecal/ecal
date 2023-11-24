@@ -37,12 +37,6 @@
 
 namespace eCAL
 {
-  bool CUdpRegistrationReceiver::ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/)
-  {
-    if (g_registration_receiver() == nullptr) return false;
-    return g_registration_receiver()->ApplySample(ecal_sample_);
-  }
-
   //////////////////////////////////////////////////////////////////
   // CMemfileRegistrationReceiver
   //////////////////////////////////////////////////////////////////
@@ -143,11 +137,8 @@ namespace eCAL
       attr.loopback  = true;
       attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
 
-      // create udp registration receiver
-      m_reg_rcv.Create(attr);
-
-      // start registration receiver thread
-      m_reg_rcv_thread.Start(0, std::bind(&CUdpRegistrationReceiver::Receive, &m_reg_rcv_process, &m_reg_rcv, CMN_REGISTRATION_RECEIVE_THREAD_CYCLE_TIME_MS));
+      // start registration sample receiver
+      m_registration_receiver.Start(attr, std::bind(&CRegistrationReceiver::HasSample, this, std::placeholders::_1), std::bind(&CRegistrationReceiver::ApplySample, this, std::placeholders::_1), CMN_REGISTRATION_RECEIVE_THREAD_CYCLE_TIME_MS);
     }
 
     if (m_use_shm_monitoring)
@@ -169,7 +160,7 @@ namespace eCAL
 
     if(m_use_network_monitoring)
       // stop network registration receive thread
-      m_reg_rcv_thread.Stop();
+      m_registration_receiver.Stop();
 
     if(m_use_shm_monitoring)
     {

@@ -88,12 +88,6 @@ namespace eCAL
     return(m_monitoring_impl->PubLogging(state_, name_));
   }
 
-  bool CMonitoring::ApplySample(const eCAL::pb::Sample & ecal_sample_)
-  {
-    if(m_monitoring_impl != nullptr) return m_monitoring_impl->ApplySample(ecal_sample_, eCAL::pb::eTLayerType::tl_none);
-    return false;
-  }
-
   namespace Monitoring
   {
     ////////////////////////////////////////////////////////

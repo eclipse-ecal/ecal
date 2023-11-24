@@ -27,7 +27,6 @@
 
 #include "ecal_monitoring_threads.h"
 #include "util/ecal_expmap.h"
-#include "io/udp/rcv_sample.h"
 
 #include <memory>
 #include <mutex>
@@ -38,11 +37,11 @@ namespace eCAL
   ////////////////////////////////////////
   // Monitoring Declaration
   ////////////////////////////////////////
-  class CMonitoringImpl : public CSampleReceiver
+  class CMonitoringImpl
   {
   public:
     CMonitoringImpl();
-    ~CMonitoringImpl() override = default;
+    ~CMonitoringImpl() = default;
 
     void Create();
     void Destroy();
@@ -58,10 +57,8 @@ namespace eCAL
     int PubMonitoring(bool state_, std::string& name_);
     int PubLogging(bool state_, std::string& name_);
 
-    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/) override;
-
   protected:
-    bool HasSample(const std::string& /* sample_name_ */) override { return(true); };
+    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/);
 
     bool RegisterProcess(const eCAL::pb::Sample& sample_);
     bool UnregisterProcess(const eCAL::pb::Sample& sample_);

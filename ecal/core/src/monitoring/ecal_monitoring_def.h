@@ -61,8 +61,6 @@ namespace eCAL
     int PubMonitoring(bool state_, std::string& name_);
     int PubLogging(bool state_, std::string& name_);
 
-    bool ApplySample(const eCAL::pb::Sample& ecal_sample_);
-
   protected:
     CMonitoringImpl* m_monitoring_impl = nullptr;
 

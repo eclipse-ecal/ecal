@@ -30,7 +30,6 @@
 #include <ecal/ecal.h>
 
 #include "ecal_def.h"
-#include "util/ecal_thread.h"
 
 #include "io/udp/rcv_sample.h"
 
@@ -50,12 +49,6 @@
 
 namespace eCAL
 {
-  class CUdpRegistrationReceiver : public CSampleReceiver
-  {
-    bool HasSample(const std::string& /*sample_name_*/) override { return(true); };
-    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_) override;
-  };
-
   class CMemfileRegistrationReceiver
   {
   public:
@@ -84,6 +77,7 @@ namespace eCAL
     void EnableLoopback(bool state_);
     bool LoopBackEnabled() const { return m_loopback; };
 
+    bool HasSample(const std::string& /*sample_name_*/) { return(true); };
     bool ApplySample(const eCAL::pb::Sample& ecal_sample_);
 
     bool AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_);
@@ -91,7 +85,6 @@ namespace eCAL
 
     void SetCustomApplySampleCallback(const ApplySampleCallbackT& callback_);
     void RemCustomApplySampleCallback();
-
 
   protected:
     void ApplySubscriberRegistration(const eCAL::pb::Sample& ecal_sample_);
@@ -109,9 +102,7 @@ namespace eCAL
     RegistrationCallbackT            m_callback_client;
     RegistrationCallbackT            m_callback_process;
                                      
-    CUDPReceiver                     m_reg_rcv;
-    CThread                          m_reg_rcv_thread;
-    CUdpRegistrationReceiver         m_reg_rcv_process;
+    CSampleReceiver                  m_registration_receiver;
 
     eCAL::CMemoryFileBroadcast       m_memfile_broadcast;
     eCAL::CMemoryFileBroadcastReader m_memfile_broadcast_reader;

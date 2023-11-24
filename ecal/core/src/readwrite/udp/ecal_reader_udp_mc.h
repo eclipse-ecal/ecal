@@ -34,16 +34,6 @@
 namespace eCAL
 {
   ////////////////
-  // READER
-  ////////////////
-  class CDataReaderUDP : public CSampleReceiver
-  {
-  public:
-    bool HasSample(const std::string& sample_name_) override;
-    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_) override;
-  };
-
-  ////////////////
   // LAYER
   ////////////////
   class CUDPReaderLayer : public CReaderLayer<CUDPReaderLayer>
@@ -60,11 +50,12 @@ namespace eCAL
     void SetConnectionParameter(SReaderLayerPar& /*par_*/) override {}
 
   private:
-    bool                       started;
-    bool                       local_mode;
-    CUDPReceiver               rcv;
-    CThread                    thread;
-    CDataReaderUDP             reader;
-    std::map<std::string, int> topic_name_mcast_map;
+    bool HasSample(const std::string& sample_name_);
+    bool ApplySample(const eCAL::pb::Sample& ecal_sample_);
+
+    bool                        m_started;
+    bool                        m_local_mode;
+    CSampleReceiver             m_payload_receiver;
+    std::map<std::string, int>  m_topic_name_mcast_map;
   };
 }

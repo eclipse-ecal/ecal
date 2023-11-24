@@ -145,8 +145,8 @@ int CReceiveSlot::OnMessageData(const struct SUDPMessage& ecal_message_)
 }
 
 
-CSampleReceiver::CSampleReceiveSlot::CSampleReceiveSlot(CSampleReceiver* sample_receiver_) :
-                    m_sample_receiver(sample_receiver_)
+CSampleReceiver::CSampleReceiveSlot::CSampleReceiveSlot(CSampleReceiver* sample_receiver_)
+  : m_sample_receiver(sample_receiver_)
 {
 }
 
@@ -161,7 +161,7 @@ int CSampleReceiver::CSampleReceiveSlot::OnMessageCompleted(std::vector<char> &&
   // read sample_name
   const std::string    sample_name(msg_buffer_.data() + sizeof(sample_name_size));
 
-  if(m_sample_receiver->HasSample(sample_name))
+  if(m_sample_receiver->m_has_sample_callback(sample_name))
   {
     // read sample
     if(!m_ecal_sample.ParseFromArray(msg_buffer_.data() + sizeof(sample_name_size) + sample_name_size, static_cast<int>(msg_buffer_.size() - (sizeof(sample_name_size) + sample_name_size)))) return(0);
@@ -208,7 +208,7 @@ int CSampleReceiver::CSampleReceiveSlot::OnMessageCompleted(std::vector<char> &&
       }
     }
     // apply sample
-    m_sample_receiver->ApplySample(m_ecal_sample, layer);
+    m_sample_receiver->m_apply_sample_callback(m_ecal_sample, layer);
   }
 
   return(0);
@@ -220,50 +220,80 @@ CSampleReceiver::CSampleReceiver()
   m_cleanup_start = std::chrono::steady_clock::now();
 }
 
-CSampleReceiver::~CSampleReceiver() = default;
-
-int CSampleReceiver::Receive(eCAL::CUDPReceiver* sample_receiver_, int timeout_)
+CSampleReceiver::~CSampleReceiver()
 {
-  if(sample_receiver_ == nullptr) return(-1);
-
-  // wait for any incoming message
-  const size_t recv_len = sample_receiver_->Receive(m_msg_buffer.data(), m_msg_buffer.size(), timeout_);
-  if(recv_len > 0)
-  {
-    return(Process(m_msg_buffer.data(), recv_len));
-  }
-
-  return(0);
+  Stop();
 }
 
-int CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_len_)
+void CSampleReceiver::Start(eCAL::SReceiverAttr attr_, HasSampleCallbackT has_sample_callback_, ApplySampleCallbackT apply_sample_callback_, int timeout_)
+{
+  m_has_sample_callback   = has_sample_callback_;
+  m_apply_sample_callback = apply_sample_callback_;
+
+  m_udp_receiver.Create(attr_);
+
+  m_receive_thread = std::thread(&CSampleReceiver::ReceiveThread, this, timeout_);
+}
+
+void CSampleReceiver::Stop()
+{
+  m_receive_thread_stop.store(true, std::memory_order_release);
+  m_receive_thread.join();
+}
+
+bool CSampleReceiver::AddMultiCastGroup(const char* ipaddr_)
+{
+  return m_udp_receiver.AddMultiCastGroup(ipaddr_);
+}
+
+bool CSampleReceiver::RemMultiCastGroup(const char* ipaddr_)
+{
+  return m_udp_receiver.RemMultiCastGroup(ipaddr_);
+}
+
+void CSampleReceiver::ReceiveThread(int timeout_)
+{
+  while (!m_receive_thread_stop.load(std::memory_order_acquire))
+  {
+    // wait for any incoming message
+    const size_t recv_len = m_udp_receiver.Receive(m_msg_buffer.data(), m_msg_buffer.size(), timeout_);
+    if (recv_len > 0)
+    {
+      Process(m_msg_buffer.data(), recv_len);
+    }
+  }
+}
+
+void CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_len_)
 {
   // we need at least the header information to start
-  if (sample_buffer_len_ < sizeof(SUDPMessageHead)) return(0);
+  if (sample_buffer_len_ < sizeof(SUDPMessageHead)) return;
 
   // cast buffer to udp message struct
   struct SUDPMessage* ecal_message = (struct SUDPMessage*)sample_buffer_;
 
   // check for eCAL 4.x header
-  if ((ecal_message->header.head[0] == 'e')
+  if (
+       (ecal_message->header.head[0] == 'e')
     && (ecal_message->header.head[1] == 'C')
     && (ecal_message->header.head[2] == 'A')
     && (ecal_message->header.head[3] == 'L')
     )
   {
     eCAL::Logging::Log(log_level_warning, "Received eCAL 4 traffic");
-    return(0);
+    return;
   }
 
   // check for valid header
-  else if ( (ecal_message->header.head[0] != 'E')
+  else if ( 
+       (ecal_message->header.head[0] != 'E')
     || (ecal_message->header.head[1] != 'C')
     || (ecal_message->header.head[2] != 'A')
     || (ecal_message->header.head[3] != 'L')
     )
   {
     eCAL::Logging::Log(log_level_warning, "Received invalid traffic (eCAL Header missing)");
-    return(0);
+    return;
   }
 
   // check integrity
@@ -274,10 +304,10 @@ int CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_le
   case msg_type_content:
   case msg_type_header_with_content:
     if (sample_buffer_len_ < sizeof(SUDPMessageHead) + static_cast<size_t>(ecal_message->header.len))
-      return(0);
+      return;
     break;
   default:
-    return(0);
+    return;
   }
 
 #ifndef NDEBUG
@@ -306,10 +336,10 @@ int CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_le
     // read sample_name
     const std::string sample_name = ecal_message->payload + sizeof(sample_name_size);
 
-    if (HasSample(sample_name))
+    if (m_has_sample_callback(sample_name))
     {
       // read sample
-      if (!m_ecal_sample.ParseFromArray(ecal_message->payload + static_cast<size_t>(sizeof(sample_name_size) + sample_name_size), static_cast<int>(static_cast<size_t>(ecal_message->header.len) - (sizeof(sample_name_size) + sample_name_size)))) return(0);
+      if (!m_ecal_sample.ParseFromArray(ecal_message->payload + static_cast<size_t>(sizeof(sample_name_size) + sample_name_size), static_cast<int>(static_cast<size_t>(ecal_message->header.len) - (sizeof(sample_name_size) + sample_name_size)))) return;
 
 #ifndef NDEBUG
       // log it
@@ -354,7 +384,7 @@ int CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_le
         }
       }
       // apply sample
-      ApplySample(m_ecal_sample, layer);
+      m_apply_sample_callback(m_ecal_sample, layer);
     }
   }
   break;
@@ -387,7 +417,7 @@ int CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_le
       const std::string sample_name = ecal_message->payload + sizeof(sample_name_size);
 
       // remove the matching slot if we are not interested in this sample
-      if (!HasSample(sample_name))
+      if (!m_has_sample_callback(sample_name))
       {
         auto riter = m_receive_slot_map.find(ecal_message->header.id);
         if (riter != m_receive_slot_map.end())
@@ -447,6 +477,4 @@ int CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_le
       }
     }
   }
-
-  return(static_cast<int>(sample_buffer_len_));
 }
