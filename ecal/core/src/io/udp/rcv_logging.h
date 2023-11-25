@@ -18,18 +18,25 @@
 */
 
 /**
- * @brief  Global monitoring class
+ * @brief  UDP logging receiver to receive messages of type eCAL::pb::LogMessage
 **/
 
 #pragma once
 
-#include <ecal/types/monitoring.h>
+#include "ecal_def.h"
+#include "udp_receiver.h"
+#include "msg_type.h"
+
+#include <chrono>
+#include <memory>
 #include <string>
+#include <thread>
+#include <unordered_map>
+#include <vector>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
 #endif
-#include <ecal/core/pb/ecal.pb.h>
 #include <ecal/core/pb/monitoring.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -37,32 +44,27 @@
 
 namespace eCAL
 {
-  ////////////////////////////////////////
-  // global database class
-  ////////////////////////////////////////
-  class CMonitoringImpl;
-  class CMonitoring
+  class CUDPLoggingReceiver
   {
   public:
-    CMonitoring();
-    ~CMonitoring();
-    
-    void Create();
-    void Destroy();
+    using LogMessageCallbackT = std::function<void(const eCAL::pb::LogMessage&)>;
 
-    void SetExclFilter(const std::string& filter_);
-    void SetInclFilter(const std::string& filter_);
-    void SetFilterState(bool state_);
+    CUDPLoggingReceiver(LogMessageCallbackT log_cb_);
+    virtual ~CUDPLoggingReceiver();
 
-    void GetMonitoring(eCAL::pb::Monitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
-    void GetMonitoring(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
-    void GetLogging(eCAL::pb::Logging& logging_);
-
+    void SetNetworkMode(bool network_mode_);
+  
   protected:
-    CMonitoringImpl* m_monitoring_impl = nullptr;
+    void ReceiveThread();
 
-  private:
-    CMonitoring(const CMonitoring&);                 // prevent copy-construction
-    CMonitoring& operator=(const CMonitoring&);      // prevent assignment
+    bool                 m_network_mode;
+    LogMessageCallbackT  m_log_message_callback;
+
+    CUDPReceiver         m_udp_receiver;
+    std::thread          m_receive_thread;
+    std::atomic<bool>    m_receive_thread_stop;
+
+    std::vector<char>    m_msg_buffer;
+    eCAL::pb::LogMessage m_log_message;
   };
 }

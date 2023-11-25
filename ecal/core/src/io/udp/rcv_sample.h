@@ -18,20 +18,21 @@
 */
 
 /**
- * @brief  Receiver thread for ecal samples
+ * @brief  UDP sample receiver to receive messages of type eCAL::pb::Sample
 **/
 
 #pragma once
 
 #include "ecal_def.h"
 #include "udp_receiver.h"
-#include "util/ecal_thread.h"
 #include "msg_type.h"
 
-#include <memory>
-#include <vector>
-#include <unordered_map>
 #include <chrono>
+#include <memory>
+#include <string>
+#include <thread>
+#include <unordered_map>
+#include <vector>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
@@ -48,8 +49,10 @@ public:
   virtual ~CReceiveSlot();
 
   int ApplyMessage(const struct SUDPMessage& ecal_message_);
+
   bool HasFinished() {return((m_recv_mode == rcm_aborted) || (m_recv_mode == rcm_completed));};
   bool HasTimedOut(const std::chrono::duration<double>& diff_time_) {m_timeout += diff_time_; return(m_timeout >= std::chrono::milliseconds(NET_UDP_RECBUFFER_TIMEOUT));};
+  
   int32_t GetMessageTotalLength() {return(m_message_total_len);};
   int32_t GetMessageCurrentLength() {return(m_message_curr_len);};
 
@@ -81,29 +84,28 @@ protected:
   eCAL::pb::Sample  m_ecal_sample;
 };
 
-
-class CSampleReceiver
+class CUDPSampleReceiver
 {
   class CSampleReceiveSlot : public CReceiveSlot
   {
   public:
-    explicit CSampleReceiveSlot(CSampleReceiver* sample_receiver_);
-    virtual ~CSampleReceiveSlot();
+    explicit CSampleReceiveSlot(CUDPSampleReceiver* sample_receiver_);
+    ~CSampleReceiveSlot() override;
 
-    virtual int OnMessageCompleted(std::vector<char> &&msg_buffer_);
+    int OnMessageCompleted(std::vector<char> &&msg_buffer_) override;
 
   protected:
-    CSampleReceiver* m_sample_receiver;
+    CUDPSampleReceiver* m_sample_receiver;
   };
 
 public:
-  CSampleReceiver();
-  virtual ~CSampleReceiver();
+  CUDPSampleReceiver();
+  virtual ~CUDPSampleReceiver();
 
   using HasSampleCallbackT   = std::function<bool(const std::string& sample_name_)>;
   using ApplySampleCallbackT = std::function<void(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_)>;
 
-  void Start(eCAL::SReceiverAttr attr_, HasSampleCallbackT has_sample_callback_, ApplySampleCallbackT apply_sample_callback_);
+  void Start(const eCAL::SReceiverAttr& attr_, HasSampleCallbackT has_sample_callback_, ApplySampleCallbackT apply_sample_callback_);
   void Stop();
 
   bool AddMultiCastGroup(const char* ipaddr_);

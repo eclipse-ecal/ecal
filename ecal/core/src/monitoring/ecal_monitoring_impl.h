@@ -25,8 +25,16 @@
 
 #include <ecal/types/monitoring.h>
 
-#include "ecal_monitoring_threads.h"
+#include "io/udp/rcv_logging.h"
 #include "util/ecal_expmap.h"
+
+#ifdef _MSC_VER
+#pragma warning(push, 0) // disable proto warnings
+#endif
+#include <ecal/core/pb/ecal.pb.h>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #include <memory>
 #include <mutex>
@@ -53,9 +61,6 @@ namespace eCAL
     void GetMonitoringPb(eCAL::pb::Monitoring& monitoring_, unsigned int entities_);
     void GetMonitoringStructs(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_);
     void GetLogging(eCAL::pb::Logging& logging_);
-
-    int PubMonitoring(bool state_, std::string& name_);
-    int PubLogging(bool state_, std::string& name_);
 
   protected:
     bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/);
@@ -170,8 +175,7 @@ namespace eCAL
     std::mutex                                   m_log_msglist_sync;
     LogMessageListT                              m_log_msglist;
 
-    // worker threads
-    std::shared_ptr<CLoggingReceiveThread>       m_log_rcv_threadcaller;
-    std::shared_ptr<CMonLogPublishingThread>     m_pub_threadcaller;
+    // logging receive thread
+    std::shared_ptr<CUDPLoggingReceiver>            m_log_receiver;
   };
 }

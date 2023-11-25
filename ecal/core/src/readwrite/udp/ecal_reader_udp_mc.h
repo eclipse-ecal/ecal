@@ -55,7 +55,7 @@ namespace eCAL
 
     bool                        m_started;
     bool                        m_local_mode;
-    CSampleReceiver             m_payload_receiver;
+    CUDPSampleReceiver             m_payload_receiver;
     std::map<std::string, int>  m_topic_name_mcast_map;
   };
 }

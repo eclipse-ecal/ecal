@@ -78,16 +78,6 @@ namespace eCAL
     m_monitoring_impl->GetLogging(logging_);
   }
 
-  int CMonitoring::PubMonitoring(bool state_, std::string& name_)
-  {
-    return(m_monitoring_impl->PubMonitoring(state_, name_));
-  }
-
-  int CMonitoring::PubLogging(bool state_, std::string& name_)
-  {
-    return(m_monitoring_impl->PubLogging(state_, name_));
-  }
-
   namespace Monitoring
   {
     ////////////////////////////////////////////////////////
@@ -148,16 +138,18 @@ namespace eCAL
       return((int)log_.size());
     }
 
-    int PubMonitoring(bool state_, std::string name_ /* = "ecal.monitoring"*/)
+    int PubMonitoring(bool state_, std::string name_)
     {
-      if (g_monitoring() != nullptr) return(g_monitoring()->PubMonitoring(state_, name_));
-      return -1;
+      // no more implemented
+      // TODO: Remove this function from the API
+      return 0;
     }
 
-    int PubLogging(bool state_, std::string name_ /* = "ecal.logging"*/)
+    int PubLogging(bool state_, std::string name_)
     {
-      if (g_monitoring() != nullptr) return(g_monitoring()->PubLogging(state_, name_));
-      return -1;
+      // no more implemented
+      // TODO: Remove this function from the API
+      return 0;
     }
   }
 }

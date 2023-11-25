@@ -145,24 +145,26 @@ set(ecal_io_udp_src_npcap
 endif()
 
 set(ecal_io_udp_src
-    src/io/udp/rcv_sample.cpp
-    src/io/udp/snd_raw_buffer.cpp
-    src/io/udp/snd_sample.cpp
-    src/io/udp/udp_configurations.cpp
-    src/io/udp/udp_init.cpp
-    src/io/udp/udp_receiver.cpp
-    src/io/udp/udp_receiver_asio.cpp
-    src/io/udp/udp_sender.cpp
     src/io/udp/ecal_receiver.h
     src/io/udp/msg_type.h
+    src/io/udp/rcv_logging.cpp
+    src/io/udp/rcv_logging.h
+    src/io/udp/rcv_sample.cpp
     src/io/udp/rcv_sample.h
+    src/io/udp/snd_raw_buffer.cpp
     src/io/udp/snd_raw_buffer.h
+    src/io/udp/snd_sample.cpp
     src/io/udp/snd_sample.h
+    src/io/udp/udp_configurations.cpp
     src/io/udp/udp_configurations.h
+    src/io/udp/udp_init.cpp
     src/io/udp/udp_init.h
+    src/io/udp/udp_receiver.cpp
     src/io/udp/udp_receiver.h
-    src/io/udp/udp_receiver_base.h
+    src/io/udp/udp_receiver_asio.cpp
     src/io/udp/udp_receiver_asio.h
+    src/io/udp/udp_receiver_base.h
+    src/io/udp/udp_sender.cpp
     src/io/udp/udp_sender.h
     ${ecal_io_udp_src_npcap}
 )
@@ -189,10 +191,8 @@ set(ecal_logging_src
 set(ecal_monitoring_src
     src/monitoring/ecal_monitoring_def.cpp
     src/monitoring/ecal_monitoring_impl.cpp
-    src/monitoring/ecal_monitoring_threads.cpp
     src/monitoring/ecal_monitoring_def.h
     src/monitoring/ecal_monitoring_impl.h
-    src/monitoring/ecal_monitoring_threads.h
 )
 
 ######################################

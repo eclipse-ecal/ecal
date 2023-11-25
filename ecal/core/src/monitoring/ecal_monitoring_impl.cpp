@@ -58,15 +58,9 @@ namespace eCAL
     g_registration_receiver()->SetCustomApplySampleCallback([this](const auto& ecal_sample_){this->ApplySample(ecal_sample_, eCAL::pb::tl_none);});
 
     // start logging receive thread
-    const CLoggingReceiveThread::LogMessageCallbackT logmsg_cb = std::bind(&CMonitoringImpl::RegisterLogMessage, this, std::placeholders::_1);
-    m_log_rcv_threadcaller = std::make_shared<CLoggingReceiveThread>(logmsg_cb);
-    m_log_rcv_threadcaller->SetNetworkMode(Config::IsNetworkEnabled());
-
-    // start monitoring and logging publishing thread
-    // we really need to remove this feature !
-    const CMonLogPublishingThread::MonitoringCallbackT mon_cb = std::bind(&CMonitoringImpl::GetMonitoringPb, this, std::placeholders::_1, Monitoring::Entity::All);
-    const CMonLogPublishingThread::LoggingCallbackT    log_cb = std::bind(&CMonitoringImpl::GetLogging, this, std::placeholders::_1);
-    m_pub_threadcaller = std::make_shared<CMonLogPublishingThread>(mon_cb, log_cb);
+    const CUDPLoggingReceiver::LogMessageCallbackT logmsg_cb = std::bind(&CMonitoringImpl::RegisterLogMessage, this, std::placeholders::_1);
+    m_log_receiver = std::make_shared<CUDPLoggingReceiver>(logmsg_cb);
+    m_log_receiver->SetNetworkMode(Config::IsNetworkEnabled());
 
     // setup blacklist and whitelist filter strings#
     m_topic_filter_excl_s = Config::GetMonitoringFilterExcludeList();
@@ -714,20 +708,6 @@ namespace eCAL
 
     // empty message list
     m_log_msglist.clear();
-  }
-
-  int CMonitoringImpl::PubMonitoring(bool state_, std::string & name_)
-  {
-    // (de)activate monitor publisher
-    m_pub_threadcaller->SetMonState(state_, name_);
-    return 0;
-  }
-
-  int CMonitoringImpl::PubLogging(bool state_, std::string & name_)
-  {
-    // (de)activate logging publisher
-    m_pub_threadcaller->SetLogState(state_, name_);
-    return 0;
   }
 
   void CMonitoringImpl::MonitorProcs(eCAL::pb::Monitoring& monitoring_)

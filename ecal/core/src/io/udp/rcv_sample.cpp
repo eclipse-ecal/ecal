@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  Receiver thread for ecal samples
+ * @brief  UDP sample receiver to receive messages of type eCAL::pb::Sample
 **/
 
 #include <ecal/ecal.h>
@@ -145,14 +145,14 @@ int CReceiveSlot::OnMessageData(const struct SUDPMessage& ecal_message_)
 }
 
 
-CSampleReceiver::CSampleReceiveSlot::CSampleReceiveSlot(CSampleReceiver* sample_receiver_)
+CUDPSampleReceiver::CSampleReceiveSlot::CSampleReceiveSlot(CUDPSampleReceiver* sample_receiver_)
   : m_sample_receiver(sample_receiver_)
 {
 }
 
-CSampleReceiver::CSampleReceiveSlot::~CSampleReceiveSlot() = default;
+CUDPSampleReceiver::CSampleReceiveSlot::~CSampleReceiveSlot() = default;
 
-int CSampleReceiver::CSampleReceiveSlot::OnMessageCompleted(std::vector<char> &&msg_buffer_)
+int CUDPSampleReceiver::CSampleReceiveSlot::OnMessageCompleted(std::vector<char> &&msg_buffer_)
 {
   if(m_sample_receiver == nullptr) return(0);
 
@@ -214,44 +214,44 @@ int CSampleReceiver::CSampleReceiveSlot::OnMessageCompleted(std::vector<char> &&
   return(0);
 }
 
-CSampleReceiver::CSampleReceiver()
+CUDPSampleReceiver::CUDPSampleReceiver()
 {
   m_msg_buffer.resize(MSG_BUFFER_SIZE);
   m_cleanup_start = std::chrono::steady_clock::now();
 }
 
-CSampleReceiver::~CSampleReceiver()
+CUDPSampleReceiver::~CUDPSampleReceiver()
 {
   Stop();
 }
 
-void CSampleReceiver::Start(eCAL::SReceiverAttr attr_, HasSampleCallbackT has_sample_callback_, ApplySampleCallbackT apply_sample_callback_)
+void CUDPSampleReceiver::Start(const eCAL::SReceiverAttr& attr_, HasSampleCallbackT has_sample_callback_, ApplySampleCallbackT apply_sample_callback_)
 {
   m_has_sample_callback   = has_sample_callback_;
   m_apply_sample_callback = apply_sample_callback_;
 
   m_udp_receiver.Create(attr_);
 
-  m_receive_thread = std::thread(&CSampleReceiver::ReceiveThread, this);
+  m_receive_thread = std::thread(&CUDPSampleReceiver::ReceiveThread, this);
 }
 
-void CSampleReceiver::Stop()
+void CUDPSampleReceiver::Stop()
 {
   m_receive_thread_stop.store(true, std::memory_order_release);
   m_receive_thread.join();
 }
 
-bool CSampleReceiver::AddMultiCastGroup(const char* ipaddr_)
+bool CUDPSampleReceiver::AddMultiCastGroup(const char* ipaddr_)
 {
   return m_udp_receiver.AddMultiCastGroup(ipaddr_);
 }
 
-bool CSampleReceiver::RemMultiCastGroup(const char* ipaddr_)
+bool CUDPSampleReceiver::RemMultiCastGroup(const char* ipaddr_)
 {
   return m_udp_receiver.RemMultiCastGroup(ipaddr_);
 }
 
-void CSampleReceiver::ReceiveThread()
+void CUDPSampleReceiver::ReceiveThread()
 {
   while (!m_receive_thread_stop.load(std::memory_order_acquire))
   {
@@ -264,7 +264,7 @@ void CSampleReceiver::ReceiveThread()
   }
 }
 
-void CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_len_)
+void CUDPSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_len_)
 {
   // we need at least the header information to start
   if (sample_buffer_len_ < sizeof(SUDPMessageHead)) return;

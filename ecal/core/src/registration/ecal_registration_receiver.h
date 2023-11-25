@@ -30,6 +30,7 @@
 #include <ecal/ecal.h>
 
 #include "ecal_def.h"
+#include "util/ecal_thread.h"
 
 #include "io/udp/rcv_sample.h"
 
@@ -102,7 +103,7 @@ namespace eCAL
     RegistrationCallbackT            m_callback_client;
     RegistrationCallbackT            m_callback_process;
                                      
-    CSampleReceiver                  m_registration_receiver;
+    CUDPSampleReceiver                  m_registration_receiver;
 
     eCAL::CMemoryFileBroadcast       m_memfile_broadcast;
     eCAL::CMemoryFileBroadcastReader m_memfile_broadcast_reader;
