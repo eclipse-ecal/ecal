@@ -30,6 +30,13 @@ namespace eCAL
   namespace UDP
   {
     /**
+     * @brief IsBroadcast() retrieves if we communicate via UDP Broadcast or UDP Multicast.
+     *
+     * @return True if broadcast mode is active.
+     */
+    bool IsBroadcast();
+    
+    /**
      * @brief GetRegistrationAddress retrieves the UDP registration address based on network configuration.
      *
      * If the network mode is disabled, it returns the local broadcast address.

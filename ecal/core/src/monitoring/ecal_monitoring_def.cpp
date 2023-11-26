@@ -23,6 +23,7 @@
 
 #include "ecal_monitoring_def.h"
 #include "ecal_monitoring_impl.h"
+#include "logging/ecal_log_impl.h"
 #include "ecal_global_accessors.h"
 
 namespace eCAL
@@ -71,11 +72,6 @@ namespace eCAL
   void CMonitoring::GetMonitoring(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_)
   {
     m_monitoring_impl->GetMonitoringStructs(monitoring_, entities_);
-  }
-
-  void CMonitoring::GetLogging(eCAL::pb::Logging& logging_)
-  {
-    m_monitoring_impl->GetLogging(logging_);
   }
 
   namespace Monitoring
@@ -132,22 +128,20 @@ namespace eCAL
     int GetLogging(std::string& log_)
     {
       eCAL::pb::Logging logging;
-      if (g_monitoring() != nullptr) g_monitoring()->GetLogging(logging);
+      if (g_log() != nullptr) g_log()->GetLogging(logging);
 
       log_ = logging.SerializeAsString();
       return((int)log_.size());
     }
 
-    int PubMonitoring(bool state_, std::string name_)
+    int PubMonitoring(bool /*state_*/, std::string /*name_*/)
     {
-      // no more implemented
       // TODO: Remove this function from the API
       return 0;
     }
 
-    int PubLogging(bool state_, std::string name_)
+    int PubLogging(bool /*state_*/, std::string /*name_*/)
     {
-      // no more implemented
       // TODO: Remove this function from the API
       return 0;
     }

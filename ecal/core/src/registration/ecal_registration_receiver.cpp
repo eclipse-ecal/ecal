@@ -41,54 +41,54 @@ namespace eCAL
   // CMemfileRegistrationReceiver
   //////////////////////////////////////////////////////////////////
 
-  bool CMemfileRegistrationReceiver::Create(eCAL::CMemoryFileBroadcastReader* memfile_broadcast_reader_)
+  void CMemfileRegistrationReceiver::Create(eCAL::CMemoryFileBroadcastReader* memfile_broadcast_reader_)
   {
-    if (m_created) return false;
+    if (m_created) return;
+
+    // start memfile broadcast receive thread
     m_memfile_broadcast_reader = memfile_broadcast_reader_;
+    m_memfile_broadcast_reader_thread = std::thread(&CMemfileRegistrationReceiver::Receive, this);
+
     m_created = true;
-    return true;
   }
 
-  bool CMemfileRegistrationReceiver::Receive()
+  void CMemfileRegistrationReceiver::Destroy()
   {
-    if (!m_created) return false;
+    if (!m_created) return;
 
-    MemfileBroadcastMessageListT message_list;
-    if(!m_memfile_broadcast_reader->Read(message_list, 0))
-      return false;
+    // stop memfile broadcast receive thread
+    m_memfile_broadcast_reader_thread_stop.store(true, std::memory_order_release);
+    m_memfile_broadcast_reader_thread.join();
+    m_memfile_broadcast_reader = nullptr;
 
-    eCAL::pb::SampleList sample_list;
-    bool return_value {true};
+    m_created = false;
+  }
 
-    for(const auto& message: message_list)
+  // TODO: Discuss this with Kristof !
+  void CMemfileRegistrationReceiver::Receive()
+  {
+    while (!m_memfile_broadcast_reader_thread_stop.load(std::memory_order_acquire))
     {
-      if(sample_list.ParseFromArray(message.data, static_cast<int>(message.size)))
+      MemfileBroadcastMessageListT message_list;
+      if (m_memfile_broadcast_reader->Read(message_list, 0))
       {
-        for(const auto& sample: sample_list.samples())
+        eCAL::pb::SampleList sample_list;
+
+        for (const auto& message : message_list)
         {
-          return_value &= ApplySample(sample);
+          if (sample_list.ParseFromArray(message.data, static_cast<int>(message.size)))
+          {
+            for (const auto& sample : sample_list.samples())
+            {
+              if (g_registration_receiver()) g_registration_receiver()->ApplySample(sample);
+            }
+          }
         }
       }
-      else
-      {
-        return_value = false;
-      }
+
+      // idle process
+      Process::SleepMS(Config::GetRegistrationRefreshMs()/2);
     }
-    return return_value;
-  }
-
-  bool CMemfileRegistrationReceiver::Destroy()
-  {
-    if (!m_created) return false;
-    m_memfile_broadcast_reader = nullptr;
-    m_created = false;
-    return true;
-  }
-
-  bool CMemfileRegistrationReceiver::ApplySample(const eCAL::pb::Sample& ecal_sample_)
-  {
-    if (g_registration_receiver() == nullptr) return false;
-    return g_registration_receiver()->ApplySample(ecal_sample_);
   }
 
   //////////////////////////////////////////////////////////////////
@@ -133,12 +133,12 @@ namespace eCAL
       SReceiverAttr attr;
       attr.address   = UDP::GetRegistrationAddress();
       attr.port      = UDP::GetRegistrationPort();
-      attr.broadcast = !Config::IsNetworkEnabled();
+      attr.broadcast = UDP::IsBroadcast();
       attr.loopback  = true;
       attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
 
       // start registration sample receiver
-      m_registration_receiver.Start(attr, std::bind(&CRegistrationReceiver::HasSample, this, std::placeholders::_1), std::bind(&CRegistrationReceiver::ApplySample, this, std::placeholders::_1));
+      m_registration_receiver = std::make_shared<CUDPSampleReceiver>(attr, std::bind(&CRegistrationReceiver::HasSample, this, std::placeholders::_1), std::bind(&CRegistrationReceiver::ApplySample, this, std::placeholders::_1));
     }
 
     if (m_use_shm_monitoring)
@@ -148,7 +148,6 @@ namespace eCAL
       m_memfile_broadcast_reader.Bind(&m_memfile_broadcast);
 
       m_memfile_reg_rcv.Create(&m_memfile_broadcast_reader);
-      m_memfile_reg_rcv_thread.Start(Config::GetRegistrationRefreshMs() / 2 , std::bind(&CMemfileRegistrationReceiver::Receive, &m_memfile_reg_rcv));
     }
 
     m_created = true;
@@ -158,14 +157,15 @@ namespace eCAL
   {
     if(!m_created) return;
 
+    // stop network registration receive thread
     if(m_use_network_monitoring)
-      // stop network registration receive thread
-      m_registration_receiver.Stop();
+    {
+      m_registration_receiver = nullptr;
+    }
 
     if(m_use_shm_monitoring)
     {
       // stop memfile registration receive thread and unbind reader
-      m_memfile_reg_rcv_thread.Stop();
       m_memfile_broadcast_reader.Unbind();
       m_memfile_broadcast.Destroy();
     }

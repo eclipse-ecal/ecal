@@ -76,7 +76,8 @@ namespace eCAL
     CDataReader::InitializeLayers();
 
     // start timeout thread
-    m_subtimeout_thread.Start(CMN_DATAREADER_TIMEOUT_RESOLUTION_MS, std::bind(&CSubGate::CheckTimeouts, this));
+    m_subtimeout_thread = std::thread(&CSubGate::CheckTimeouts, this);
+
     m_created = true;
   }
 
@@ -85,7 +86,8 @@ namespace eCAL
     if(!m_created) return;
 
     // stop timeout thread
-    m_subtimeout_thread.Stop();
+    m_subtimeout_thread_stop.store(true, std::memory_order_release);
+    m_subtimeout_thread.join();
 
     // destroy all remaining subscriber
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
@@ -367,25 +369,27 @@ namespace eCAL
     }
   }
 
-  int CSubGate::CheckTimeouts()
+  void CSubGate::CheckTimeouts()
   {
-    if (!m_created) return(0);
-
-    // check subscriber timeouts
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    for (auto iter = m_topic_name_datareader_map.begin(); iter != m_topic_name_datareader_map.end(); ++iter)
+    while (!m_subtimeout_thread_stop.load(std::memory_order_acquire))
     {
-      iter->second->CheckReceiveTimeout();
-    }
+      // check subscriber timeouts
+      const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
+      for (auto iter = m_topic_name_datareader_map.begin(); iter != m_topic_name_datareader_map.end(); ++iter)
+      {
+        iter->second->CheckReceiveTimeout();
+      }
 
-    // signal shutdown if eCAL is not okay
-    const bool ecal_is_ok = (g_globals_ctx != nullptr) && !gWaitForEvent(ShutdownProcEvent(), 0);
-    if (!ecal_is_ok)
-    {
-      g_shutdown = 1;
-    }
+      // signal shutdown if eCAL is not okay
+      const bool ecal_is_ok = (g_globals_ctx != nullptr) && !gWaitForEvent(ShutdownProcEvent(), 0);
+      if (!ecal_is_ok)
+      {
+        g_shutdown = 1;
+      }
 
-    return(0);
+      // idle thread
+      Process::SleepMS(CMN_DATAREADER_TIMEOUT_RESOLUTION_MS);
+    }
   }
 
   bool CSubGate::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_)

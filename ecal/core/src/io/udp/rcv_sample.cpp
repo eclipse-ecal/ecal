@@ -21,129 +21,7 @@
  * @brief  UDP sample receiver to receive messages of type eCAL::pb::Sample
 **/
 
-#include <ecal/ecal.h>
-
-#include <algorithm>
-
-#include "ecal_def.h"
 #include "rcv_sample.h"
-
-
-CReceiveSlot::CReceiveSlot()
-  : m_timeout(0.0)
-  , m_recv_mode(rcm_waiting)
-  , m_message_id(0)
-  , m_message_total_num(0)
-  , m_message_total_len(0)
-  , m_message_curr_num(0)
-  , m_message_curr_len(0)
-{
-}
-
-CReceiveSlot::~CReceiveSlot() = default;
-
-int CReceiveSlot::ApplyMessage(const struct SUDPMessage& ecal_message_)
-{
-  // reset timeout
-  m_timeout = std::chrono::duration<double>(0.0);
-
-  // process current packet
-  switch(ecal_message_.header.type)
-  {
-    // new message started
-  case msg_type_header:
-    OnMessageStart(ecal_message_);
-    break;
-    // message data package
-  case msg_type_content:
-    if(m_recv_mode == rcm_reading)
-    {
-      OnMessageData(ecal_message_);
-    }
-    break;
-  }
-
-  // we have a complete message in the receive buffer
-  if(m_recv_mode == rcm_completed)
-  {
-    // call complete event
-    OnMessageCompleted(std::move(m_recv_buffer));
-  }
-
-  return(0);
-}
-
-int CReceiveSlot::OnMessageStart(const struct SUDPMessage& ecal_message_)
-{
-  // store header info
-  m_message_id        = ecal_message_.header.id;
-  m_message_total_num = ecal_message_.header.num;
-  m_message_total_len = ecal_message_.header.len;
-
-  // reset current message states
-  m_message_curr_num = 0;
-  m_message_curr_len = 0;
-
-  // prepare receive buffer
-  m_recv_buffer.reserve(static_cast<size_t>(m_message_total_len));
-
-  // switch to reading mode
-  m_recv_mode = rcm_reading;
-
-  return(0);
-}
-
-int CReceiveSlot::OnMessageData(const struct SUDPMessage& ecal_message_)
-{
-  // check message id
-  if(ecal_message_.header.id != m_message_id)
-  {
-#ifndef NDEBUG
-    // log it
-    eCAL::Logging::Log(log_level_debug3, "UDP Sample OnMessageData - WRONG MESSAGE PACKET ID " + std::to_string(ecal_message_.header.id));
-#endif
-    m_recv_mode = rcm_aborted;
-    return(-1);
-  }
-
-  // check current packet counter
-  if(ecal_message_.header.num != m_message_curr_num)
-  {
-#ifndef NDEBUG
-    // log it
-    eCAL::Logging::Log(log_level_debug3, "UDP Sample OnMessageData - WRONG MESSAGE PACKET NUMBER " + std::to_string(ecal_message_.header.num) + " / " + std::to_string(m_message_curr_num));
-#endif
-    m_recv_mode = rcm_aborted;
-    return(-1);
-  }
-
-  // check current packet length
-  if(ecal_message_.header.len <= 0)
-  {
-#ifndef NDEBUG
-    // log it
-    eCAL::Logging::Log(log_level_debug3, "UDP Sample OnMessageData - WRONG MESSAGE PACKET LENGTH " + std::to_string(ecal_message_.header.len));
-#endif
-    m_recv_mode = rcm_aborted;
-    return(-1);
-  }
-
-  // copy the message part to the receive message buffer
-  m_recv_buffer.resize(m_recv_buffer.size() + static_cast<size_t>(ecal_message_.header.len));
-  memcpy(m_recv_buffer.data() + m_recv_buffer.size() - static_cast<size_t>(ecal_message_.header.len), ecal_message_.payload, static_cast<size_t>(ecal_message_.header.len));
-
-  // increase packet counter
-  m_message_curr_num++;
-
-  // increase current length
-  m_message_curr_len += ecal_message_.header.len;
-
-  // last message packet ? -> switch to completed mode
-  if(m_message_curr_num == m_message_total_num) m_recv_mode = rcm_completed;
-
-  return(0);
-}
-
 
 CUDPSampleReceiver::CSampleReceiveSlot::CSampleReceiveSlot(CUDPSampleReceiver* sample_receiver_)
   : m_sample_receiver(sample_receiver_)
@@ -214,28 +92,22 @@ int CUDPSampleReceiver::CSampleReceiveSlot::OnMessageCompleted(std::vector<char>
   return(0);
 }
 
-CUDPSampleReceiver::CUDPSampleReceiver()
+CUDPSampleReceiver::CUDPSampleReceiver(const eCAL::SReceiverAttr& attr_, HasSampleCallbackT has_sample_callback_, ApplySampleCallbackT apply_sample_callback_) :
+  m_has_sample_callback(has_sample_callback_), m_apply_sample_callback(apply_sample_callback_)
 {
+  // create udp receiver
+  m_udp_receiver.Create(attr_);
+
+  // allocate receive buffer
   m_msg_buffer.resize(MSG_BUFFER_SIZE);
+
+  // start receiver thread
+  m_receive_thread = std::thread(&CUDPSampleReceiver::ReceiveThread, this);
+
   m_cleanup_start = std::chrono::steady_clock::now();
 }
 
 CUDPSampleReceiver::~CUDPSampleReceiver()
-{
-  Stop();
-}
-
-void CUDPSampleReceiver::Start(const eCAL::SReceiverAttr& attr_, HasSampleCallbackT has_sample_callback_, ApplySampleCallbackT apply_sample_callback_)
-{
-  m_has_sample_callback   = has_sample_callback_;
-  m_apply_sample_callback = apply_sample_callback_;
-
-  m_udp_receiver.Create(attr_);
-
-  m_receive_thread = std::thread(&CUDPSampleReceiver::ReceiveThread, this);
-}
-
-void CUDPSampleReceiver::Stop()
 {
   m_receive_thread_stop.store(true, std::memory_order_release);
   m_receive_thread.join();

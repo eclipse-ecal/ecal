@@ -23,13 +23,12 @@
 
 #pragma once
 
-#include "util/ecal_thread.h"
-
 #include "readwrite/ecal_reader.h"
 
 #include <atomic>
 #include <shared_mutex>
 #include <string>
+#include <thread>
 #include <unordered_map>
 
 namespace eCAL
@@ -59,7 +58,7 @@ namespace eCAL
     void RefreshRegistrations();
 
   protected:
-    int CheckTimeouts();
+    void CheckTimeouts();
     bool ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
 
     static std::atomic<bool> m_created;
@@ -69,6 +68,7 @@ namespace eCAL
     std::shared_timed_mutex  m_topic_name_datareader_sync;
     TopicNameDataReaderMapT  m_topic_name_datareader_map;
 
-    eCAL::CThread            m_subtimeout_thread;
+    std::thread              m_subtimeout_thread;
+    std::atomic<bool>        m_subtimeout_thread_stop;
   };
 }

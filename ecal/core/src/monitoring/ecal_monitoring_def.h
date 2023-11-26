@@ -56,7 +56,6 @@ namespace eCAL
 
     void GetMonitoring(eCAL::pb::Monitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
     void GetMonitoring(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
-    void GetLogging(eCAL::pb::Logging& logging_);
 
   protected:
     CMonitoringImpl* m_monitoring_impl = nullptr;

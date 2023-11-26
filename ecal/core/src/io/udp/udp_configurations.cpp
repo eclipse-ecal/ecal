@@ -29,6 +29,16 @@ namespace eCAL
   namespace UDP
   {
     /**
+     * @brief IsBroadcast() retrieves if we communicate via UDP Broadcast or UDP Multicast.
+     *
+     * @return True if broadcast mode is active.
+     */
+    bool IsBroadcast()
+    {
+      return !Config::IsNetworkEnabled();
+    }
+
+    /**
      * @brief GetLocalBroadcastAddress retrieves the broadcast address within the loopback range.
      *
      * This function returns the specific broadcast address 127.255.255.255, which is within

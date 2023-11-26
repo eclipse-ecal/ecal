@@ -21,14 +21,8 @@
  * @brief  UDP logging receiver to receive messages of type eCAL::pb::LogMessage
 **/
 
-#include <ecal/ecal.h>
-#include <ecal/ecal_config.h>
-
-#include "ecal_def.h"
-#include "io/udp/msg_type.h"
-#include "io/udp/udp_configurations.h"
-
 #include "rcv_logging.h"
+#include "io/udp/msg_type.h"
 
 namespace
 {
@@ -43,44 +37,23 @@ namespace
 
 namespace eCAL
 {
-  static bool IsLocalHost(const eCAL::pb::LogMessage& ecal_message_)
+  CUDPLoggingReceiver::CUDPLoggingReceiver(const eCAL::SReceiverAttr& attr_, LogMessageCallbackT log_message_callback_) :
+    m_network_mode(!attr_.broadcast), m_log_message_callback(log_message_callback_)
   {
-    const std::string host_name = ecal_message_.hname();
-    if (host_name.empty())                   return(false);
-    if (host_name == Process::GetHostName()) return(true);
-    return(false);
-  }
-
-  CUDPLoggingReceiver::CUDPLoggingReceiver(LogMessageCallbackT log_cb_) :
-    m_network_mode(false), m_log_message_callback(log_cb_)
-  {
-    // set network attributes
-    SReceiverAttr attr;
-    attr.address   = UDP::GetLoggingAddress();
-    attr.port      = UDP::GetLoggingPort();
-    attr.broadcast = !Config::IsNetworkEnabled();
-    attr.loopback  = true;
-    attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
-
-    // create udp logging receiver
-    m_udp_receiver.Create(attr);
-
-    // start logging receiver thread
-    m_receive_thread = std::thread(&CUDPLoggingReceiver::ReceiveThread, this);
+    // create udp receiver
+    m_udp_receiver.Create(attr_);
 
     // allocate receive buffer
     m_msg_buffer.resize(MSG_BUFFER_SIZE);
+
+    // start receiver thread
+    m_receive_thread = std::thread(&CUDPLoggingReceiver::ReceiveThread, this);
   }
 
   CUDPLoggingReceiver::~CUDPLoggingReceiver()
   {
     m_receive_thread_stop.store(true, std::memory_order_release);
     m_receive_thread.join();
-  }
-
-  void CUDPLoggingReceiver::SetNetworkMode(bool network_mode_)
-  {
-    m_network_mode = network_mode_;
   }
 
   void CUDPLoggingReceiver::ReceiveThread()

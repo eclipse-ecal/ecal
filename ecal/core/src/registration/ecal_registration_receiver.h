@@ -30,15 +30,16 @@
 #include <ecal/ecal.h>
 
 #include "ecal_def.h"
-#include "util/ecal_thread.h"
 
 #include "io/udp/rcv_sample.h"
 
 #include "io/shm/ecal_memfile_broadcast.h"
 #include "io/shm/ecal_memfile_broadcast_reader.h"
 
-#include <string>
 #include <atomic>
+#include <memory>
+#include <string>
+#include <thread>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
@@ -53,15 +54,17 @@ namespace eCAL
   class CMemfileRegistrationReceiver
   {
   public:
-    bool Create(eCAL::CMemoryFileBroadcastReader* memfile_broadcast_reader_);
-    bool Receive();
-    bool Destroy();
-
-    bool ApplySample(const eCAL::pb::Sample& ecal_sample_);
+    void Create(CMemoryFileBroadcastReader* memfile_broadcast_reader_);
+    void Destroy();
 
   private:
+    void Receive();
+
+    CMemoryFileBroadcastReader*  m_memfile_broadcast_reader = nullptr;
+    std::thread                  m_memfile_broadcast_reader_thread;
+    std::atomic<bool>            m_memfile_broadcast_reader_thread_stop;
+
     bool m_created = false;
-    eCAL::CMemoryFileBroadcastReader* m_memfile_broadcast_reader = nullptr;
   };
 
   using ApplySampleCallbackT = std::function<void (const eCAL::pb::Sample &)>;
@@ -93,28 +96,28 @@ namespace eCAL
 
     bool IsHostGroupMember(const eCAL::pb::Sample & ecal_sample_);
 
-    static std::atomic<bool>         m_created;
-    bool                             m_network;
-    bool                             m_loopback;
+    static std::atomic<bool>             m_created;
+    bool                                 m_network;
+    bool                                 m_loopback;
                                      
-    RegistrationCallbackT            m_callback_pub;
-    RegistrationCallbackT            m_callback_sub;
-    RegistrationCallbackT            m_callback_service;
-    RegistrationCallbackT            m_callback_client;
-    RegistrationCallbackT            m_callback_process;
+    RegistrationCallbackT                m_callback_pub;
+    RegistrationCallbackT                m_callback_sub;
+    RegistrationCallbackT                m_callback_service;
+    RegistrationCallbackT                m_callback_client;
+    RegistrationCallbackT                m_callback_process;
                                      
-    CUDPSampleReceiver                  m_registration_receiver;
+    std::shared_ptr<CUDPSampleReceiver>  m_registration_receiver;
 
-    eCAL::CMemoryFileBroadcast       m_memfile_broadcast;
-    eCAL::CMemoryFileBroadcastReader m_memfile_broadcast_reader;
-    CMemfileRegistrationReceiver     m_memfile_reg_rcv;
-    CThread                          m_memfile_reg_rcv_thread;
+    CMemoryFileBroadcast                 m_memfile_broadcast;
+    CMemoryFileBroadcastReader           m_memfile_broadcast_reader;
 
-    bool                             m_use_network_monitoring;
-    bool                             m_use_shm_monitoring;
+    CMemfileRegistrationReceiver         m_memfile_reg_rcv;
 
-    ApplySampleCallbackT             m_callback_custom_apply_sample;
+    bool                                 m_use_network_monitoring;
+    bool                                 m_use_shm_monitoring;
 
-    std::string                      m_host_group_name;
+    ApplySampleCallbackT                 m_callback_custom_apply_sample;
+
+    std::string                          m_host_group_name;
   };
 }

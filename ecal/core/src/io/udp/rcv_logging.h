@@ -25,13 +25,9 @@
 
 #include "ecal_def.h"
 #include "udp_receiver.h"
-#include "msg_type.h"
 
-#include <chrono>
-#include <memory>
 #include <string>
 #include <thread>
-#include <unordered_map>
 #include <vector>
 
 #ifdef _MSC_VER
@@ -49,10 +45,8 @@ namespace eCAL
   public:
     using LogMessageCallbackT = std::function<void(const eCAL::pb::LogMessage&)>;
 
-    CUDPLoggingReceiver(LogMessageCallbackT log_cb_);
+    CUDPLoggingReceiver(const eCAL::SReceiverAttr& attr_, LogMessageCallbackT log_message_callback_);
     virtual ~CUDPLoggingReceiver();
-
-    void SetNetworkMode(bool network_mode_);
   
   protected:
     void ReceiveThread();

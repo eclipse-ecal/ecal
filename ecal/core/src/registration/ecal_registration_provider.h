@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "util/ecal_thread.h"
 #include "io/udp/snd_sample.h"
 #include "io/udp/udp_sender.h"
 
@@ -36,10 +35,11 @@
 #include "io/shm/ecal_memfile_broadcast_writer.h"
 
 #include <atomic>
+#include <memory>
 #include <mutex>
 #include <string>
+#include <thread>
 #include <unordered_map>
-#include <memory>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
@@ -79,7 +79,7 @@ namespace eCAL
 
     bool ApplySample(const std::string& sample_name_, const eCAL::pb::Sample& sample_);
       
-    int RegisterSendThread();
+    void RegisterSendThread();
 
     bool ApplyTopicToDescGate(const std::string& topic_name_
       , const SDataTypeInformation& topic_info_
@@ -98,8 +98,9 @@ namespace eCAL
     bool                             m_reg_services;
     bool                             m_reg_process;
 
-    CThread                          m_reg_sample_snd_thread;
     std::shared_ptr<CSampleSender>   m_reg_sample_snd;
+    std::thread                      m_reg_sample_snd_thread;
+    std::atomic<bool>                m_reg_sample_snd_thread_stop;
 
     using SampleMapT = std::unordered_map<std::string, eCAL::pb::Sample>;
     std::mutex                       m_topics_map_sync;

@@ -145,20 +145,32 @@ namespace eCAL
       m_logfile = fopen(m_logfile_name.c_str(), "w");
     }
 
-    // set network attributes
     if(m_filter_mask_udp != 0)
     {
+      // set logging send network attributes
       SSenderAttr attr;
       attr.address   = UDP::GetLoggingAddress();
       attr.port      = UDP::GetLoggingPort();
       attr.ttl       = UDP::GetMulticastTtl();
-      attr.broadcast = !Config::IsNetworkEnabled();
+      attr.broadcast = UDP::IsBroadcast();
       attr.loopback  = true;
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
       // create udp logging sender
       m_udp_sender = std::make_unique<CUDPSender>(attr);
     }
+
+    // set logging receive network attributes
+    SReceiverAttr attr;
+    attr.address   = UDP::GetLoggingAddress();
+    attr.port      = UDP::GetLoggingPort();
+    attr.broadcast = UDP::IsBroadcast();
+    attr.loopback  = true;
+    attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
+
+    // start logging receiver
+    const CUDPLoggingReceiver::LogMessageCallbackT log_message_callback = std::bind(&CLog::RegisterLogMessage, this, std::placeholders::_1);
+    m_log_receiver = std::make_shared<CUDPLoggingReceiver>(attr, log_message_callback);
 
     m_created = true;
   }
@@ -309,5 +321,35 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_log_sync);
 
     return(m_core_time);
+  }
+
+  void CLog::GetLogging(eCAL::pb::Logging& logging_)
+  {
+    // clear protobuf object
+    logging_.Clear();
+
+    // acquire access
+    const std::lock_guard<std::mutex> lock(m_log_msglist_sync);
+
+    LogMessageListT::const_iterator siter = m_log_msglist.begin();
+    while (siter != m_log_msglist.end())
+    {
+      // add log message
+      eCAL::pb::LogMessage* pMonLogMessage = logging_.add_logs();
+
+      // copy content
+      pMonLogMessage->CopyFrom(*siter);
+
+      ++siter;
+    }
+
+    // empty message list
+    m_log_msglist.clear();
+  }
+
+  void CLog::RegisterLogMessage(const eCAL::pb::LogMessage& log_msg_)
+  {
+    const std::lock_guard<std::mutex> lock(m_log_msglist_sync);
+    m_log_msglist.emplace_back(log_msg_);
   }
 }

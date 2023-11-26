@@ -38,10 +38,7 @@ namespace eCAL
                    m_local_mode(false)
   {}
 
-  CUDPReaderLayer::~CUDPReaderLayer()
-  {
-    m_payload_receiver.Stop();
-  }
+  CUDPReaderLayer::~CUDPReaderLayer() = default;
 
   void CUDPReaderLayer::Initialize()
   {
@@ -52,17 +49,18 @@ namespace eCAL
     if (!m_started)
     {
       // set local mode
-      m_local_mode = !Config::IsNetworkEnabled();
+      m_local_mode = UDP::IsBroadcast();
 
       // set network attributes
       SReceiverAttr attr;
-      attr.address = UDP::GetPayloadAddress();
-      attr.port = UDP::GetPayloadPort();
-      attr.broadcast = !Config::IsNetworkEnabled();
-      attr.loopback = true;
-      attr.rcvbuf = Config::GetUdpMulticastRcvBufSizeBytes();
+      attr.address   = UDP::GetPayloadAddress();
+      attr.port      = UDP::GetPayloadPort();
+      attr.broadcast = UDP::IsBroadcast();
+      attr.loopback  = true;
+      attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
 
-      m_payload_receiver.Start(attr, std::bind(&CUDPReaderLayer::HasSample, this, std::placeholders::_1), std::bind(&CUDPReaderLayer::ApplySample, this, std::placeholders::_1));
+      // start payload sample receiver
+      m_payload_receiver = std::make_shared<CUDPSampleReceiver>(attr, std::bind(&CUDPReaderLayer::HasSample, this, std::placeholders::_1), std::bind(&CUDPReaderLayer::ApplySample, this, std::placeholders::_1));
 
       m_started = true;
     }
@@ -75,7 +73,7 @@ namespace eCAL
     if (m_topic_name_mcast_map.find(mcast_address) == m_topic_name_mcast_map.end())
     {
       m_topic_name_mcast_map.emplace(std::pair<std::string, int>(mcast_address, 0));
-      m_payload_receiver.AddMultiCastGroup(mcast_address.c_str());
+      m_payload_receiver->AddMultiCastGroup(mcast_address.c_str());
     }
     m_topic_name_mcast_map[mcast_address]++;
   }
@@ -95,7 +93,7 @@ namespace eCAL
       m_topic_name_mcast_map[mcast_address]--;
       if (m_topic_name_mcast_map[mcast_address] == 0)
       {
-        m_payload_receiver.RemMultiCastGroup(mcast_address.c_str());
+        m_payload_receiver->RemMultiCastGroup(mcast_address.c_str());
         m_topic_name_mcast_map.erase(mcast_address);
       }
     }

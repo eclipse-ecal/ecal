@@ -151,10 +151,13 @@ set(ecal_io_udp_src
     src/io/udp/rcv_logging.h
     src/io/udp/rcv_sample.cpp
     src/io/udp/rcv_sample.h
+    src/io/udp/rcv_sample_slot.cpp
+    src/io/udp/rcv_sample_slot.h
     src/io/udp/snd_raw_buffer.cpp
     src/io/udp/snd_raw_buffer.h
     src/io/udp/snd_sample.cpp
     src/io/udp/snd_sample.h
+    src/io/udp/topic2mcast.h
     src/io/udp/udp_configurations.cpp
     src/io/udp/udp_configurations.h
     src/io/udp/udp_init.cpp
@@ -297,8 +300,6 @@ set(ecal_util_src
     src/util/convert_utf.cpp
     src/util/convert_utf.h
     src/util/ecal_expmap.h
-    src/util/ecal_thread.cpp
-    src/util/ecal_thread.h
     src/util/getenvvar.h
     src/util/sys_usage.cpp
     src/util/sys_usage.h
@@ -323,7 +324,6 @@ set(ecal_cmn_src
     src/ecal_global_accessors.h
     src/ecal_globals.h
     src/ecal_sample_to_topicinfo.h
-    src/topic2mcast.h
 )
 if (WIN32)
     list (APPEND
