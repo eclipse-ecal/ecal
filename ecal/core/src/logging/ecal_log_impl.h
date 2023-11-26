@@ -34,6 +34,7 @@
 #include "ecal_global_accessors.h"
 
 #include <atomic>
+#include <list>
 #include <mutex>
 #include <memory>
 #include <chrono>
