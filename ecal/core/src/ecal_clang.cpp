@@ -75,6 +75,23 @@ ECAL_API int ecal_finalize()
 }
 
 /****************************************/
+/*      ecal_is_initialized             */
+/****************************************/
+ECAL_API int ecal_is_initialized()
+{
+  //* @return 1 if eCAL is initialized.
+  return(eCAL::IsInitialized());
+}
+
+/****************************************/
+/*      ecal_set_unit_name              */
+/****************************************/
+ECAL_API int ecal_set_unit_name(const char* unit_name_)
+{
+  return(eCAL::SetUnitName(unit_name_));
+}
+
+/****************************************/
 /*      ecal_set_process_state          */
 /****************************************/
 ECAL_API void ecal_set_process_state(const int severity_, const int level_, const char* info_)

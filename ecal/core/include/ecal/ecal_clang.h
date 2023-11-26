@@ -63,6 +63,22 @@ ECAL_API int ecal_initialize(int argc_, char **argv_, const char* unit_name_);
 ECAL_API int ecal_finalize();
 
 /**
+ * @brief Check eCAL initialize state.
+ *
+ * @return 1 if eCAL is initialized.
+**/
+ECAL_API int ecal_is_initialized();
+
+/**
+ * @brief  Set/change the unit name of current module.
+ *
+ * @param unit_name_  Defines the name of the eCAL unit.
+ *
+ * @return  Zero if succeeded.
+**/
+ECAL_API int ecal_set_unit_name(const char *unit_name_);
+
+/**
  * @brief  Set process state info.
  *
  * @param severity_  Severity.
