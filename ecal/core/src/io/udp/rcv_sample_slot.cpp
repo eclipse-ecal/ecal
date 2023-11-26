@@ -25,6 +25,8 @@
 
 #include <ecal/ecal_log.h>
 
+#include <cstring>
+
 CReceiveSlot::CReceiveSlot()
   : m_timeout(0.0)
   , m_recv_mode(rcm_waiting)
