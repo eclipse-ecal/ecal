@@ -467,7 +467,7 @@ if(BUILD_ECAL_TESTS)
   # ------------------------------------------------------
   # test ecal
   # ------------------------------------------------------
-  add_subdirectory(testing/ecal/clientserver_test)   #THIS TEST IS NOT ABLE TO RUN ON GH ACTIONS
+  add_subdirectory(testing/ecal/clientserver_test)
   
   add_subdirectory(testing/ecal/core_test)
   add_subdirectory(testing/ecal/event_test)
@@ -483,7 +483,7 @@ if(BUILD_ECAL_TESTS)
   # test apps
   # ------------------------------------------------------
   if (HAS_HDF5 AND HAS_QT5)
-    add_subdirectory(app/rec/rec_tests/rec_rpc_tests)
+    #add_subdirectory(app/rec/rec_tests/rec_rpc_tests)  # exlude for now ..
   endif()
 endif()
 

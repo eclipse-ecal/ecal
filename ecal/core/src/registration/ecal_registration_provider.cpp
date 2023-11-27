@@ -36,6 +36,8 @@
 #include "io/udp/udp_configurations.h"
 #include "io/udp/snd_sample.h"
 
+#include <chrono>
+
 namespace eCAL
 {
   extern eCAL_Process_eSeverity  g_process_severity;
@@ -506,7 +508,7 @@ namespace eCAL
       SendSampleList();
 
       // idle thread
-      Process::SleepMS(Config::GetRegistrationRefreshMs());
+      std::this_thread::sleep_for(std::chrono::milliseconds(Config::GetRegistrationRefreshMs()));
     }
   }
 

@@ -35,6 +35,8 @@
 #include "io/udp/udp_configurations.h"
 #include "ecal_sample_to_topicinfo.h"
 
+#include <chrono>
+
 namespace eCAL
 {
   //////////////////////////////////////////////////////////////////
@@ -87,7 +89,7 @@ namespace eCAL
       }
 
       // idle process
-      Process::SleepMS(Config::GetRegistrationRefreshMs()/2);
+      std::this_thread::sleep_for(std::chrono::milliseconds(Config::GetRegistrationRefreshMs()/2));
     }
   }
 

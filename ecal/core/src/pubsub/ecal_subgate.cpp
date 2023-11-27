@@ -22,6 +22,7 @@
 **/
 
 #include <algorithm>
+#include <chrono>
 
 #include <ecal/ecal.h>
 
@@ -388,7 +389,7 @@ namespace eCAL
       }
 
       // idle thread
-      Process::SleepMS(CMN_DATAREADER_TIMEOUT_RESOLUTION_MS);
+      std::this_thread::sleep_for(std::chrono::milliseconds(CMN_DATAREADER_TIMEOUT_RESOLUTION_MS));
     }
   }
 
