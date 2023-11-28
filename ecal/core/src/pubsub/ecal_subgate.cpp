@@ -77,8 +77,9 @@ namespace eCAL
     CDataReader::InitializeLayers();
 
     // start timeout thread
-    m_subtimeout_thread = std::thread(&CSubGate::CheckTimeouts, this);
-
+    m_subtimeout_thread = std::make_shared<CallbackThread>(std::bind(&CSubGate::CheckTimeouts, this));
+    m_subtimeout_thread->start(std::chrono::milliseconds(CMN_DATAREADER_TIMEOUT_RESOLUTION_MS));
+      
     m_created = true;
   }
 
@@ -87,8 +88,7 @@ namespace eCAL
     if(!m_created) return;
 
     // stop timeout thread
-    m_subtimeout_thread_stop.store(true, std::memory_order_release);
-    m_subtimeout_thread.join();
+    m_subtimeout_thread->stop();
 
     // destroy all remaining subscriber
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
@@ -372,25 +372,22 @@ namespace eCAL
 
   void CSubGate::CheckTimeouts()
   {
-    while (!m_subtimeout_thread_stop.load(std::memory_order_acquire))
+    // check subscriber timeouts
+    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
+    for (auto iter = m_topic_name_datareader_map.begin(); iter != m_topic_name_datareader_map.end(); ++iter)
     {
-      // check subscriber timeouts
-      const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-      for (auto iter = m_topic_name_datareader_map.begin(); iter != m_topic_name_datareader_map.end(); ++iter)
-      {
-        iter->second->CheckReceiveTimeout();
-      }
-
-      // signal shutdown if eCAL is not okay
-      const bool ecal_is_ok = (g_globals_ctx != nullptr) && !gWaitForEvent(ShutdownProcEvent(), 0);
-      if (!ecal_is_ok)
-      {
-        g_shutdown = 1;
-      }
-
-      // idle thread
-      std::this_thread::sleep_for(std::chrono::milliseconds(CMN_DATAREADER_TIMEOUT_RESOLUTION_MS));
+      iter->second->CheckReceiveTimeout();
     }
+
+    // signal shutdown if eCAL is not okay
+    const bool ecal_is_ok = (g_globals_ctx != nullptr) && !gWaitForEvent(ShutdownProcEvent(), 0);
+    if (!ecal_is_ok)
+    {
+      g_shutdown = 1;
+    }
+
+    // idle thread
+    std::this_thread::sleep_for(std::chrono::milliseconds(CMN_DATAREADER_TIMEOUT_RESOLUTION_MS));
   }
 
   bool CSubGate::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_)

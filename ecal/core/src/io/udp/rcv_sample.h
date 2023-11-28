@@ -26,11 +26,12 @@
 #include "ecal_def.h"
 #include "udp_receiver.h"
 #include "rcv_sample_slot.h"
+#include "util/ecal_thread.h"
 
 #include <chrono>
 #include <functional>
+#include <memory>
 #include <string>
-#include <thread>
 #include <unordered_map>
 #include <vector>
 
@@ -71,17 +72,16 @@ protected:
   void ReceiveThread();
   void Process(const char* sample_buffer_, size_t sample_buffer_len_);
 
-  HasSampleCallbackT   m_has_sample_callback;
-  ApplySampleCallbackT m_apply_sample_callback;
+  HasSampleCallbackT                     m_has_sample_callback;
+  ApplySampleCallbackT                   m_apply_sample_callback;
 
-  eCAL::CUDPReceiver   m_udp_receiver;
-  std::thread          m_receive_thread;
-  std::atomic<bool>    m_receive_thread_stop;
+  eCAL::CUDPReceiver                     m_udp_receiver;
+  std::shared_ptr<eCAL::CallbackThread>  m_udp_receiver_thread;
 
   using ReceiveSlotMapT = std::unordered_map<int32_t, std::shared_ptr<CSampleReceiveSlot>>;
-  ReceiveSlotMapT      m_receive_slot_map;
-  std::vector<char>    m_msg_buffer;
-  eCAL::pb::Sample     m_ecal_sample;
+  ReceiveSlotMapT                        m_receive_slot_map;
+  std::vector<char>                      m_msg_buffer;
+  eCAL::pb::Sample                       m_ecal_sample;
 
-  std::chrono::steady_clock::time_point m_cleanup_start;
+  std::chrono::steady_clock::time_point  m_cleanup_start;
 };

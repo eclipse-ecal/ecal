@@ -24,11 +24,12 @@
 #pragma once
 
 #include "readwrite/ecal_reader.h"
+#include "util/ecal_thread.h"
 
 #include <atomic>
 #include <shared_mutex>
+#include <memory>
 #include <string>
-#include <thread>
 #include <unordered_map>
 
 namespace eCAL
@@ -61,14 +62,13 @@ namespace eCAL
     void CheckTimeouts();
     bool ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
 
-    static std::atomic<bool> m_created;
+    static std::atomic<bool>         m_created;
 
     // database data reader
     using TopicNameDataReaderMapT = std::unordered_multimap<std::string, std::shared_ptr<CDataReader>>;
-    std::shared_timed_mutex  m_topic_name_datareader_sync;
-    TopicNameDataReaderMapT  m_topic_name_datareader_map;
+    std::shared_timed_mutex          m_topic_name_datareader_sync;
+    TopicNameDataReaderMapT          m_topic_name_datareader_map;
 
-    std::thread              m_subtimeout_thread;
-    std::atomic<bool>        m_subtimeout_thread_stop;
+    std::shared_ptr<CallbackThread>  m_subtimeout_thread;
   };
 }

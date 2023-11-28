@@ -47,30 +47,27 @@ namespace eCAL
     m_msg_buffer.resize(MSG_BUFFER_SIZE);
 
     // start receiver thread
-    m_receive_thread = std::thread(&CUDPLoggingReceiver::ReceiveThread, this);
+    m_udp_receiver_thread = std::make_shared<CallbackThread>(std::bind(&CUDPLoggingReceiver::ReceiveThread, this));
+    m_udp_receiver_thread->start(std::chrono::milliseconds(0));
   }
 
   CUDPLoggingReceiver::~CUDPLoggingReceiver()
   {
-    m_receive_thread_stop.store(true, std::memory_order_release);
-    m_receive_thread.join();
+    m_udp_receiver_thread->stop();
   }
 
   void CUDPLoggingReceiver::ReceiveThread()
   {
-    while (!m_receive_thread_stop.load(std::memory_order_acquire))
+    // wait for any incoming message
+    const size_t recv_len = m_udp_receiver.Receive(m_msg_buffer.data(), m_msg_buffer.size(), CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS);
+    if (recv_len > 0)
     {
-      // wait for any incoming message
-      const size_t recv_len = m_udp_receiver.Receive(m_msg_buffer.data(), m_msg_buffer.size(), CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS);
-      if (recv_len > 0)
+      m_log_message.Clear();
+      if (m_log_message.ParseFromArray(m_msg_buffer.data(), static_cast<int>(recv_len)))
       {
-        m_log_message.Clear();
-        if (m_log_message.ParseFromArray(m_msg_buffer.data(), static_cast<int>(recv_len)))
+        if (IsLocalHost(m_log_message) || m_network_mode)
         {
-          if (IsLocalHost(m_log_message) || m_network_mode)
-          {
-            m_log_message_callback(m_log_message);
-          }
+          m_log_message_callback(m_log_message);
         }
       }
     }

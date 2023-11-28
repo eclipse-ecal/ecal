@@ -102,15 +102,15 @@ CUDPSampleReceiver::CUDPSampleReceiver(const eCAL::SReceiverAttr& attr_, HasSamp
   m_msg_buffer.resize(MSG_BUFFER_SIZE);
 
   // start receiver thread
-  m_receive_thread = std::thread(&CUDPSampleReceiver::ReceiveThread, this);
+  m_udp_receiver_thread = std::make_shared<eCAL::CallbackThread>(std::bind(&CUDPSampleReceiver::ReceiveThread, this));
+  m_udp_receiver_thread->start(std::chrono::milliseconds(0));
 
   m_cleanup_start = std::chrono::steady_clock::now();
 }
 
 CUDPSampleReceiver::~CUDPSampleReceiver()
 {
-  m_receive_thread_stop.store(true, std::memory_order_release);
-  m_receive_thread.join();
+  m_udp_receiver_thread->stop();
 }
 
 bool CUDPSampleReceiver::AddMultiCastGroup(const char* ipaddr_)
@@ -125,14 +125,11 @@ bool CUDPSampleReceiver::RemMultiCastGroup(const char* ipaddr_)
 
 void CUDPSampleReceiver::ReceiveThread()
 {
-  while (!m_receive_thread_stop.load(std::memory_order_acquire))
+  // wait for any incoming message
+  const size_t recv_len = m_udp_receiver.Receive(m_msg_buffer.data(), m_msg_buffer.size(), CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS);
+  if (recv_len > 0)
   {
-    // wait for any incoming message
-    const size_t recv_len = m_udp_receiver.Receive(m_msg_buffer.data(), m_msg_buffer.size(), CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS);
-    if (recv_len > 0)
-    {
-      Process(m_msg_buffer.data(), recv_len);
-    }
+    Process(m_msg_buffer.data(), recv_len);
   }
 }
 

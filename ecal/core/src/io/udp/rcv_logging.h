@@ -25,9 +25,10 @@
 
 #include "ecal_def.h"
 #include "udp_receiver.h"
+#include "util/ecal_thread.h"
 
 #include <string>
-#include <thread>
+#include <memory>
 #include <vector>
 
 #ifdef _MSC_VER
@@ -51,14 +52,13 @@ namespace eCAL
   protected:
     void ReceiveThread();
 
-    bool                 m_network_mode;
-    LogMessageCallbackT  m_log_message_callback;
+    bool                             m_network_mode;
+    LogMessageCallbackT              m_log_message_callback;
 
-    CUDPReceiver         m_udp_receiver;
-    std::thread          m_receive_thread;
-    std::atomic<bool>    m_receive_thread_stop;
+    CUDPReceiver                     m_udp_receiver;
+    std::shared_ptr<CallbackThread>  m_udp_receiver_thread;
 
-    std::vector<char>    m_msg_buffer;
-    eCAL::pb::LogMessage m_log_message;
+    std::vector<char>                m_msg_buffer;
+    eCAL::pb::LogMessage             m_log_message;
   };
 }
