@@ -1634,7 +1634,7 @@ static PyMethodDef _ecal_methods[] =
   {"client_call_method",            client_call_method,            METH_VARARGS,  "client_call_method(client_handle, method_name, request, timeout)" },
 
   {"client_add_response_callback",  client_add_response_callback,  METH_VARARGS,  "client_add_response_callback(client_handle, callback)" },
-  {"client_rem_response_callback",  client_add_response_callback,  METH_VARARGS,  "client_rem_response_callback(client_handle)" },
+  {"client_rem_response_callback",  client_rem_response_callback,  METH_VARARGS,  "client_rem_response_callback(client_handle)" },
   
   {"mon_initialize",                mon_initialize,                METH_NOARGS,   "mon_initialize()"},
   {"mon_finalize",                  mon_finalize,                  METH_NOARGS,   "mon_finalize()"},
