@@ -45,6 +45,7 @@ class MMALinux : public MMAImpl
 
   std::mutex mutex;
   bool is_vrm;
+  std::string os_name;
   int nr_of_cpu_cores;
   const std::string root = "/";
   const std::string home = "/home";
@@ -119,6 +120,7 @@ class MMALinux : public MMAImpl
   int  GetCpuCores(void);
 
   bool CheckIfIsALinuxVRM();
+  std::string GetOsName();
   ResourceLinux::ProcessStatsList GetProcesses();
 
 

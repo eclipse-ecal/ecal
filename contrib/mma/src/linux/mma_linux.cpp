@@ -55,6 +55,7 @@ MMALinux::MMALinux():
   process_pipe_->AddCallback(std::bind(&MMALinux::OnDataReceived, this, std::placeholders::_1, std::placeholders::_2));
 
   is_vrm = CheckIfIsALinuxVRM();
+  os_name = GetOsName();
   nr_of_cpu_cores = GetCpuCores();
 
 }
@@ -659,11 +660,22 @@ bool MMALinux::CheckIfIsALinuxVRM()
     return false;
 }
 
+std::string MMALinux::GetOsName()
+{
+  std::string os_release = FileToString("/etc/os-release");
+  std::size_t found = os_release.find("PRETTY_NAME=\"");
+  os_release = os_release.substr(found + 13);
+  found = os_release.find("\"");
+  std::string name = "LINUX ";
+  name.append(os_release.substr(0, found));
+  return name;
+}
+
 void MMALinux::SetResourceData(eCAL::pb::mma::State& state)
 {
   state.set_cpu_load(GetCPULoad());
   state.set_number_of_cpu_cores(nr_of_cpu_cores);
-  state.set_operating_system(is_vrm ? "LINUX VRM": "LINUX NATIVE");
+  state.set_operating_system(os_name);
 
   eCAL::pb::mma::Memory memory;
   ResourceLinux::Memory mem = GetMemory();
