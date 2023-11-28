@@ -478,7 +478,7 @@ def client_add_response_callback(client_handle, callback):
   return _ecal.client_add_response_callback(client_handle, callback)
 
 
-def client_rem_method_callback(client_handle):
+def client_rem_response_callback(client_handle):
   """ remove response callback from client
 
   :param client_handle: the client handle
