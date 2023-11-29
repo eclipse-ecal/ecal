@@ -126,7 +126,7 @@ TEST(PubSub, GetTopics)
   }
 
   // let's unregister them
-  eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT + 1000);
+  eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT + 2000);
 
   // get all topics again, now all topics 
   // should be removed from the map
