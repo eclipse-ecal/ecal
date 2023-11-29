@@ -34,6 +34,8 @@
 #include "io/shm/ecal_memfile_broadcast.h"
 #include "io/shm/ecal_memfile_broadcast_writer.h"
 
+#include "util/ecal_thread.h"
+
 #include <atomic>
 #include <memory>
 #include <mutex>
@@ -99,8 +101,7 @@ namespace eCAL
     bool                             m_reg_process;
 
     std::shared_ptr<CSampleSender>   m_reg_sample_snd;
-    std::thread                      m_reg_sample_snd_thread;
-    std::atomic<bool>                m_reg_sample_snd_thread_stop;
+    std::shared_ptr<CallbackThread>  m_reg_sample_snd_thread;
 
     using SampleMapT = std::unordered_map<std::string, eCAL::pb::Sample>;
     std::mutex                       m_topics_map_sync;

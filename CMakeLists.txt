@@ -483,7 +483,7 @@ if(BUILD_ECAL_TESTS)
   # test apps
   # ------------------------------------------------------
   if (HAS_HDF5 AND HAS_QT5)
-    #add_subdirectory(app/rec/rec_tests/rec_rpc_tests)  # exlude for now ..
+    add_subdirectory(app/rec/rec_tests/rec_rpc_tests)
   endif()
 endif()
 

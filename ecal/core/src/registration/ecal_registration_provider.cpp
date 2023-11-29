@@ -107,7 +107,8 @@ namespace eCAL
     }
 
     // start cyclic registration thread
-    m_reg_sample_snd_thread = std::thread(&CRegistrationProvider::RegisterSendThread, this);
+    m_reg_sample_snd_thread = std::make_shared<CallbackThread>(std::bind(&CRegistrationProvider::RegisterSendThread, this));
+    m_reg_sample_snd_thread->start(std::chrono::milliseconds(Config::GetRegistrationRefreshMs()));
 
     m_created = true;
   }
@@ -117,8 +118,7 @@ namespace eCAL
     if(!m_created) return;
 
     // stop cyclic registration thread
-    m_reg_sample_snd_thread_stop.store(true, std::memory_order_release);
-    m_reg_sample_snd_thread.join();
+    m_reg_sample_snd_thread->stop();
 
     // send one last (un)registration message to the world
     // thank you and goodbye :-)
@@ -470,47 +470,41 @@ namespace eCAL
 
   void CRegistrationProvider::RegisterSendThread()
   {
-    while (!m_reg_sample_snd_thread_stop.load(std::memory_order_acquire))
-    {
-      // calculate average receive bytes
-      g_process_rbytes = static_cast<long long>(((double)g_process_rbytes_sum / m_reg_refresh) * 1000.0);
-      g_process_rbytes_sum = 0;
+    // calculate average receive bytes
+    g_process_rbytes = static_cast<long long>(((double)g_process_rbytes_sum / m_reg_refresh) * 1000.0);
+    g_process_rbytes_sum = 0;
 
-      // calculate average write bytes
-      g_process_wbytes = static_cast<long long>(((double)g_process_wbytes_sum / m_reg_refresh) * 1000.0);
-      g_process_wbytes_sum = 0;
+    // calculate average write bytes
+    g_process_wbytes = static_cast<long long>(((double)g_process_wbytes_sum / m_reg_refresh) * 1000.0);
+    g_process_wbytes_sum = 0;
 
-      // refresh subscriber registration
-      if (g_subgate() != nullptr) g_subgate()->RefreshRegistrations();
+    // refresh subscriber registration
+    if (g_subgate() != nullptr) g_subgate()->RefreshRegistrations();
 
-      // refresh publisher registration
-      if (g_pubgate() != nullptr) g_pubgate()->RefreshRegistrations();
+    // refresh publisher registration
+    if (g_pubgate() != nullptr) g_pubgate()->RefreshRegistrations();
 
-      // refresh server registration
-      if (g_servicegate() != nullptr) g_servicegate()->RefreshRegistrations();
+    // refresh server registration
+    if (g_servicegate() != nullptr) g_servicegate()->RefreshRegistrations();
 
-      // refresh client registration
-      if (g_clientgate() != nullptr) g_clientgate()->RefreshRegistrations();
+    // refresh client registration
+    if (g_clientgate() != nullptr) g_clientgate()->RefreshRegistrations();
 
-      // register process
-      RegisterProcess();
+    // register process
+    RegisterProcess();
 
-      // register server
-      RegisterServer();
+    // register server
+    RegisterServer();
 
-      // register clients
-      RegisterClient();
+    // register clients
+    RegisterClient();
 
-      // register topics
-      RegisterTopics();
+    // register topics
+    RegisterTopics();
 
-      // write sample list to shared memory
-      SendSampleList();
-
-      // idle thread
-      std::this_thread::sleep_for(std::chrono::milliseconds(Config::GetRegistrationRefreshMs()));
-    }
-  }
+    // write sample list to shared memory
+    SendSampleList();
+ }
 
   bool CRegistrationProvider::ApplyTopicToDescGate(const std::string& topic_name_
     , const SDataTypeInformation& topic_info_

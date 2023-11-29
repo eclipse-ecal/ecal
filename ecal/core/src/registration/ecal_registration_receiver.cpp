@@ -49,7 +49,8 @@ namespace eCAL
 
     // start memfile broadcast receive thread
     m_memfile_broadcast_reader = memfile_broadcast_reader_;
-    m_memfile_broadcast_reader_thread = std::thread(&CMemfileRegistrationReceiver::Receive, this);
+    m_memfile_broadcast_reader_thread = std::make_shared<CallbackThread>(std::bind(&CMemfileRegistrationReceiver::Receive, this));
+    m_memfile_broadcast_reader_thread->start(std::chrono::milliseconds(Config::GetRegistrationRefreshMs()/2));
 
     m_created = true;
   }
@@ -59,37 +60,29 @@ namespace eCAL
     if (!m_created) return;
 
     // stop memfile broadcast receive thread
-    m_memfile_broadcast_reader_thread_stop.store(true, std::memory_order_release);
-    m_memfile_broadcast_reader_thread.join();
+    m_memfile_broadcast_reader_thread->stop();
     m_memfile_broadcast_reader = nullptr;
 
     m_created = false;
   }
 
-  // TODO: Discuss this with Kristof !
   void CMemfileRegistrationReceiver::Receive()
   {
-    while (!m_memfile_broadcast_reader_thread_stop.load(std::memory_order_acquire))
+    MemfileBroadcastMessageListT message_list;
+    if (m_memfile_broadcast_reader->Read(message_list, 0))
     {
-      MemfileBroadcastMessageListT message_list;
-      if (m_memfile_broadcast_reader->Read(message_list, 0))
-      {
-        eCAL::pb::SampleList sample_list;
+      eCAL::pb::SampleList sample_list;
 
-        for (const auto& message : message_list)
+      for (const auto& message : message_list)
+      {
+        if (sample_list.ParseFromArray(message.data, static_cast<int>(message.size)))
         {
-          if (sample_list.ParseFromArray(message.data, static_cast<int>(message.size)))
+          for (const auto& sample : sample_list.samples())
           {
-            for (const auto& sample : sample_list.samples())
-            {
-              if (g_registration_receiver()) g_registration_receiver()->ApplySample(sample);
-            }
+            if (g_registration_receiver()) g_registration_receiver()->ApplySample(sample);
           }
         }
       }
-
-      // idle process
-      std::this_thread::sleep_for(std::chrono::milliseconds(Config::GetRegistrationRefreshMs()/2));
     }
   }
 

@@ -136,7 +136,7 @@ namespace eCAL
       if (local_only)
       {
         // if network is disabled, return a TTL of 0 to restrict multicast packets to the local machine
-        return 0;
+        return 1;
       }
 
       // if network is enabled, return the configured UDP multicast TTL value
