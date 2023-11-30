@@ -305,6 +305,7 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
   {
     unsigned long utime;
     unsigned int count;
+    ResourceLinux::Process process_stats;
   } t_item;
   static std::map<uint32_t, t_item> previous;
   t_item item;
@@ -315,7 +316,7 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
   }
 
   ResourceLinux::ProcessStatsList processes;
-  ResourceLinux::Process process_stats;
+  ResourceLinux::Process process_stats; // FixMe: is it still needed?
 
   auto lines = TokenizeIntoLines(local_copy);
   if (lines.size() > 0)
@@ -325,13 +326,35 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
     {
       std::vector<std::string> process_data = SplitLine(*iterator);
       process_stats.id=std::stoi(process_data[0]);
-      struct stat info;
-      std::string filename = "/proc/" + process_data[0];
-      if (0 == stat(filename.c_str(), &info))
+      const unsigned long cur = std::stoul(process_data[13]);
+      unsigned long prev;
+      if (previous.find(process_stats.id) != previous.end())
       {
-        struct passwd *pw = getpwuid(info.st_uid);
-        if (pw)
-          process_stats.user=pw->pw_name;
+        prev = previous[process_stats.id].utime;
+        process_stats = previous[process_stats.id].process_stats;
+      }
+      else
+      {
+        prev = cur;
+        struct stat info;
+        std::string filename = "/proc/" + process_data[0];
+        if (0 == stat(filename.c_str(), &info))
+        {
+          static std::map<uid_t, std::string> uname_map;
+          if (uname_map.find(info.st_uid) == uname_map.end())
+          {
+          struct passwd *pw = getpwuid(info.st_uid);
+          if (pw)
+          {
+            process_stats.user=pw->pw_name;
+            uname_map[info.st_uid] = pw->pw_name;
+          }
+          }
+          else
+          {
+            process_stats.user = uname_map[info.st_uid];
+          }
+        }
       }
 
       process_stats.memory.current_used_memory=stoull(process_data[23]) * page_size;
@@ -339,21 +362,11 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
         process_stats.commandline=process_data[1].substr(1, process_data[1].length()-2);
 
       const unsigned int delta_count = (item.count - previous_count) * ticks_per_second * nr_of_cpu_cores;
-      const unsigned long cur = std::stoul(process_data[13]);
-      unsigned long prev;
-      if (previous.find(process_stats.id) != previous.end())
-      {
-        prev = previous[process_stats.id].utime;
-      }
-      else
-      {
-        prev = cur;
-      }
 
       if (delta_count > 0)
         process_stats.cpu_load.cpu_load = (cur - prev) / (0.005 * delta_count);
-      processes.push_back(process_stats);
       item.utime = cur;
+      item.process_stats = process_stats;
       previous[process_stats.id] = item;
       std::advance(iterator, 1);
     }
@@ -366,6 +379,10 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
       if (it->second.count < item.count)
       {
         previous.erase(it);
+      }
+      else
+      {
+        processes.push_back(it->second.process_stats);
       }
     }
   }
