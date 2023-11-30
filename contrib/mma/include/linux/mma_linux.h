@@ -44,13 +44,8 @@ class MMALinux : public MMAImpl
   ~MMALinux();
 
   std::mutex mutex;
-  bool is_vrm;
   std::string os_name;
   int nr_of_cpu_cores;
-  const std::string root = "/";
-  const std::string home = "/home";
-  const std::string media = "/media";
-  const std::string boot = "/boot";
 
   std::string cpu_pipe_result_;
   std::string network_pipe_result_;
@@ -119,7 +114,6 @@ class MMALinux : public MMAImpl
   void SetResourceData(eCAL::pb::mma::State& state);
   int  GetCpuCores(void);
 
-  bool CheckIfIsALinuxVRM();
   std::string GetOsName();
   ResourceLinux::ProcessStatsList GetProcesses();
 
@@ -134,7 +128,6 @@ class MMALinux : public MMAImpl
   std::list<std::string> TokenizeIntoLines(const std::string& str);
   bool SetDiskInformation(ResourceLinux::DiskStatsList& disks);
   bool SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_info);
-  bool MergeBootWithRootARM(ResourceLinux::DiskStatsList& disk_stats_info);
   
   std::unique_ptr<PipeRefresher> cpu_pipe_;
   std::unique_ptr<PipeRefresher> network_pipe_;

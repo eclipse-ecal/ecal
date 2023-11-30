@@ -54,7 +54,6 @@ MMALinux::MMALinux():
   disk_pipe_->AddCallback(std::bind(&MMALinux::OnDataReceived, this, std::placeholders::_1, std::placeholders::_2));
   process_pipe_->AddCallback(std::bind(&MMALinux::OnDataReceived, this, std::placeholders::_1, std::placeholders::_2));
 
-  is_vrm = CheckIfIsALinuxVRM();
   os_name = GetOsName();
   nr_of_cpu_cores = GetCpuCores();
 
@@ -245,18 +244,17 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
   auto lines = TokenizeIntoLines(local_copy);
   if (lines.size() > 0)
   {
+    const unsigned int delta_count = (local_count - previous_count);
+
     // skip the first 2 lines
     auto iterator = lines.begin();
-    std::advance(iterator, 2);
-
-    const unsigned int delta_count = (local_count - previous_count);
-    
-    while(iterator != lines.end())
+    for(std::advance(iterator, 2); iterator != lines.end(); iterator++)
     {
       std::vector<std::string> network_io = SplitLine(*iterator);
       t_io cur = {0, 0};
       t_io prev;
       network_stats.name=network_io[0];
+      // remove the colon at the end
       network_stats.name.pop_back();
 
       try { cur.rec = stoul(network_io[1]); }
@@ -287,7 +285,6 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
 
       networks.push_back(network_stats);
       previous[network_stats.name] = cur;
-      std::advance(iterator, 1);
     }
     previous_count = local_count;
   }
@@ -316,16 +313,16 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
   }
 
   ResourceLinux::ProcessStatsList processes;
-  ResourceLinux::Process process_stats; // FixMe: is it still needed?
+  ResourceLinux::Process process_stats;
 
   auto lines = TokenizeIntoLines(local_copy);
   if (lines.size() > 0)
   {
-    auto iterator = lines.begin();
-    while(iterator!=lines.end())
+    for(auto iterator = lines.begin(); iterator!=lines.end(); iterator++)
     {
       std::vector<std::string> process_data = SplitLine(*iterator);
       process_stats.id=std::stoi(process_data[0]);
+      // process utime
       const unsigned long cur = std::stoul(process_data[13]);
       unsigned long prev;
       if (previous.find(process_stats.id) != previous.end())
@@ -343,12 +340,16 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
           static std::map<uid_t, std::string> uname_map;
           if (uname_map.find(info.st_uid) == uname_map.end())
           {
-          struct passwd *pw = getpwuid(info.st_uid);
-          if (pw)
-          {
-            process_stats.user=pw->pw_name;
-            uname_map[info.st_uid] = pw->pw_name;
-          }
+            struct passwd *pw = getpwuid(info.st_uid);
+            if (pw)
+            {
+              process_stats.user=pw->pw_name;
+              uname_map[info.st_uid] = pw->pw_name;
+            }
+            else
+            {
+              process_stats.user = "";
+            }
           }
           else
           {
@@ -360,6 +361,8 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
       process_stats.memory.current_used_memory=stoull(process_data[23]) * page_size;
       if (process_data[1].length() > 2)
         process_stats.commandline=process_data[1].substr(1, process_data[1].length()-2);
+      else
+        process_stats.commandline = process_data[1];
 
       const unsigned int delta_count = (item.count - previous_count) * ticks_per_second * nr_of_cpu_cores;
 
@@ -368,7 +371,6 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
       item.utime = cur;
       item.process_stats = process_stats;
       previous[process_stats.id] = item;
-      std::advance(iterator, 1);
     }
     previous_count = item.count;
 
@@ -377,11 +379,11 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
     {
       next++;
       if (it->second.count < item.count)
-      {
+      { // process disappeared
         previous.erase(it);
       }
       else
-      {
+      { // push to sorted list
         processes.push_back(it->second.process_stats);
       }
     }
@@ -446,6 +448,7 @@ bool MMALinux::FormatListData(std::vector<std::string>& the_list)
     }
 
     // if last character of string is digit, delete the digit
+    // because it is the partition number
     if (IsDigit(name.back()))
     {
       // exception: mtdblock
@@ -544,10 +547,6 @@ bool MMALinux::SetDiskInformation(ResourceLinux::DiskStatsList& disks)
     disks.push_back(disk.second);
   }
 
-#ifdef __arm__
-  return_value |= MergeBootWithRootARM(disks);
-#endif
-
   return return_value;
 }
 
@@ -600,7 +599,9 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
         }
 
         if (delta_count > 0)
-        {
+        { // the factor 4 is a 2 * 2 because:
+          // 2 reads every second and
+          // value is in sectors of 512 bytes
           disk.read = (cur.read - prev.read) * 4 * B_IN_KB / delta_count;
           disk.write = (cur.write - prev.write) * 4 * B_IN_KB / delta_count;
         }
@@ -614,67 +615,9 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
   return return_value;
 }
 
-#ifdef __arm__
-bool MMALinux::MergeBootWithRootARM(ResourceLinux::DiskStatsList& disk_stats_info)
-#else
-bool MMALinux::MergeBootWithRootARM(ResourceLinux::DiskStatsList& /*disk_stats_info*/)
-#endif
-{
-  bool return_val = false;
-#ifdef __arm__
-  ResourceLinux::DiskStats disk_boot;
-  for (const auto& disk : disk_stats_info)
-  {
-    if (disk.mount_point == boot)
-    {
-      disk_boot.name = disk.name;
-      break;
-    }
-  }
-
-  for (auto& disk_st : disk_stats_info)
-  {
-    if (disk_st.mount_point == root)
-    {
-      disk_st.name = disk_boot.name;
-      break;
-    }
-  }
-
-  for (auto it = disk_stats_info.begin(); it != disk_stats_info.end();)
-  {
-    if (it->mount_point == boot)
-      it = disk_stats_info.erase(it);
-    else
-      ++it;
-  }
-#endif
-  return return_val;
-}
-
 int MMALinux::GetCpuCores(void)
 {
   return get_nprocs();
-}
-
-bool MMALinux::CheckIfIsALinuxVRM()
-{
-    std::string result;
-    std::lock_guard<std::mutex> guard(mutex);
-    OpenPipe("dmesg",result);
-    std::list <std::string> dmesg_command_result = TokenizeIntoLines(result);
-    for(auto iter1:dmesg_command_result)
-    {
-        auto temp_vector=SplitLine((iter1));
-        for(auto iter2:temp_vector)
-        {
-            if(iter2.find("VMware")!= std::string::npos)
-            {
-                return true;
-            }
-        }
-    }
-    return false;
 }
 
 std::string MMALinux::GetOsName()
