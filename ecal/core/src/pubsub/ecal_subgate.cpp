@@ -77,7 +77,7 @@ namespace eCAL
     CDataReader::InitializeLayers();
 
     // start timeout thread
-    m_subtimeout_thread = std::make_shared<CallbackThread>(std::bind(&CSubGate::CheckTimeouts, this));
+    m_subtimeout_thread = std::make_shared<CCallbackThread>(std::bind(&CSubGate::CheckTimeouts, this));
     m_subtimeout_thread->start(std::chrono::milliseconds(CMN_DATAREADER_TIMEOUT_RESOLUTION_MS));
       
     m_created = true;

@@ -101,7 +101,7 @@ namespace eCAL
     bool                             m_reg_process;
 
     std::shared_ptr<CSampleSender>   m_reg_sample_snd;
-    std::shared_ptr<CallbackThread>  m_reg_sample_snd_thread;
+    std::shared_ptr<CCallbackThread>  m_reg_sample_snd_thread;
 
     using SampleMapT = std::unordered_map<std::string, eCAL::pb::Sample>;
     std::mutex                       m_topics_map_sync;

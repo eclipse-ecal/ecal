@@ -76,7 +76,7 @@ protected:
   ApplySampleCallbackT                   m_apply_sample_callback;
 
   eCAL::CUDPReceiver                     m_udp_receiver;
-  std::shared_ptr<eCAL::CallbackThread>  m_udp_receiver_thread;
+  std::shared_ptr<eCAL::CCallbackThread>  m_udp_receiver_thread;
 
   using ReceiveSlotMapT = std::unordered_map<int32_t, std::shared_ptr<CSampleReceiveSlot>>;
   ReceiveSlotMapT                        m_receive_slot_map;

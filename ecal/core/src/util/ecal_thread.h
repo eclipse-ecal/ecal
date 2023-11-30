@@ -34,14 +34,15 @@ namespace eCAL
   /**
    * @brief A class that encapsulates threaded functionality with a callback interface.
    */
-  class CallbackThread {
+  class CCallbackThread
+  {
   public:
     /**
      * @brief Constructor for the CallbackThread class.
      * @param callback A callback function to be executed in the CallbackThread thread.
      */
-    CallbackThread(std::function<void()> callback)
-      : callback_(callback), stopThread_(false) {}
+    CCallbackThread(std::function<void()> callback)
+      : callback_(callback) {}
 
     /**
      * @brief Start the callback thread with a specified timeout.
@@ -50,7 +51,7 @@ namespace eCAL
     template <typename DurationType>
     void start(DurationType timeout)
     {
-      callbackThread_ = std::thread(&CallbackThread::callbackFunction<DurationType>, this, timeout);
+      callbackThread_ = std::thread(&CCallbackThread::callbackFunction<DurationType>, this, timeout);
     }
 
     /**
@@ -60,7 +61,7 @@ namespace eCAL
     void stop()
     {
       {
-        std::unique_lock<std::mutex> lock(mtx_);
+        const std::unique_lock<std::mutex> lock(mtx_);
         // Set the flag to signal the callback thread to stop
         stopThread_ = true;
         // Notify the callback thread to wake up and check the flag
@@ -78,7 +79,7 @@ namespace eCAL
     std::function<void()> callback_;  /**< The callback function to be executed in the callback thread. */
     std::mutex mtx_;                  /**< Mutex for thread synchronization. */
     std::condition_variable cv_;      /**< Condition variable for signaling between threads. */
-    bool stopThread_;                 /**< Flag to indicate whether the callback thread should stop. */
+    bool stopThread_{false};          /**< Flag to indicate whether the callback thread should stop. */
 
     /**
      * @brief Callback function that runs in the callback thread.

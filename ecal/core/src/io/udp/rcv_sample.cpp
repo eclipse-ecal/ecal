@@ -102,7 +102,7 @@ CUDPSampleReceiver::CUDPSampleReceiver(const eCAL::SReceiverAttr& attr_, HasSamp
   m_msg_buffer.resize(MSG_BUFFER_SIZE);
 
   // start receiver thread
-  m_udp_receiver_thread = std::make_shared<eCAL::CallbackThread>(std::bind(&CUDPSampleReceiver::ReceiveThread, this));
+  m_udp_receiver_thread = std::make_shared<eCAL::CCallbackThread>(std::bind(&CUDPSampleReceiver::ReceiveThread, this));
   m_udp_receiver_thread->start(std::chrono::milliseconds(0));
 
   m_cleanup_start = std::chrono::steady_clock::now();

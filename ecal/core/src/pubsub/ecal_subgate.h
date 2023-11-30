@@ -69,6 +69,6 @@ namespace eCAL
     std::shared_timed_mutex          m_topic_name_datareader_sync;
     TopicNameDataReaderMapT          m_topic_name_datareader_map;
 
-    std::shared_ptr<CallbackThread>  m_subtimeout_thread;
+    std::shared_ptr<CCallbackThread>  m_subtimeout_thread;
   };
 }

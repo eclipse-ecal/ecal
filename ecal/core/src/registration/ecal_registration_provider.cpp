@@ -107,7 +107,7 @@ namespace eCAL
     }
 
     // start cyclic registration thread
-    m_reg_sample_snd_thread = std::make_shared<CallbackThread>(std::bind(&CRegistrationProvider::RegisterSendThread, this));
+    m_reg_sample_snd_thread = std::make_shared<CCallbackThread>(std::bind(&CRegistrationProvider::RegisterSendThread, this));
     m_reg_sample_snd_thread->start(std::chrono::milliseconds(Config::GetRegistrationRefreshMs()));
 
     m_created = true;

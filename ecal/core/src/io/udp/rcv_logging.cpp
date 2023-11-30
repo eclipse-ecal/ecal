@@ -47,7 +47,7 @@ namespace eCAL
     m_msg_buffer.resize(MSG_BUFFER_SIZE);
 
     // start receiver thread
-    m_udp_receiver_thread = std::make_shared<CallbackThread>(std::bind(&CUDPLoggingReceiver::ReceiveThread, this));
+    m_udp_receiver_thread = std::make_shared<CCallbackThread>(std::bind(&CUDPLoggingReceiver::ReceiveThread, this));
     m_udp_receiver_thread->start(std::chrono::milliseconds(0));
   }
 

@@ -61,7 +61,7 @@ namespace eCAL
     void Receive();
 
     CMemoryFileBroadcastReader*      m_memfile_broadcast_reader = nullptr;
-    std::shared_ptr<CallbackThread>  m_memfile_broadcast_reader_thread;
+    std::shared_ptr<CCallbackThread>  m_memfile_broadcast_reader_thread;
 
     bool m_created = false;
   };
