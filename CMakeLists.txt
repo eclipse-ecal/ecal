@@ -19,7 +19,6 @@
 cmake_minimum_required(VERSION 3.13)
 
 include(CMakeDependentOption)
-include("${CMAKE_CURRENT_LIST_DIR}/thirdparty/cmake_functions/qt/qt_msvc_path.cmake")
 
 if (POLICY CMP0077)
   cmake_policy(SET CMP0077 NEW) # Prevent HDF5 from overwriting our output paths
@@ -28,6 +27,8 @@ endif (POLICY CMP0077)
 list(APPEND CMAKE_MODULE_PATH
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
+  
+set(eCAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
 
 project(eCAL)
 set(ECAL_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}")
@@ -91,17 +92,20 @@ option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (
 option(ECAL_USE_CLOCKLOCK_MUTEX                "Use native mutex with monotonic clock (requires glibc >= 2.30)"   OFF)
 
 # Set option regarding third party library builds
-option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL"                                    ON)
-option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                            ON)
-option(ECAL_THIRDPARTY_BUILD_TINYXML2          "Build tinyxml2 with eCAL"                                          ON)
-option(ECAL_THIRDPARTY_BUILD_FINEFTP           "Build fineFTP with eCAL"                                           ON)
-option(ECAL_THIRDPARTY_BUILD_TERMCOLOR         "Build termcolor with eCAL"                                         ON)
-option(ECAL_THIRDPARTY_BUILD_TCP_PUBSUB        "Build tcp_pubsub library with eCAL"                                ON)
-option(ECAL_THIRDPARTY_BUILD_RECYCLE           "Build steinwurf::recylce with eCAL"                                ON)
-option(ECAL_THIRDPARTY_BUILD_FTXUI             "Build ftxui with eCAL"                                             ON)
-# option(ECAL_THIRDPARTY_BUILD_ZLIB              "Build zlib with eCAL"                                              ON)
 # option(ECAL_THIRDPARTY_BUILD_LIBSSH2           "Build libssh2 with eCAL"                                           ON)
+# option(ECAL_THIRDPARTY_BUILD_ZLIB              "Build zlib with eCAL"                                              ON)
+option(ECAL_THIRDPARTY_BUILD_ASIO              "Build asio with eCAL"                                              ON)
+option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL"                                    ON)
+option(ECAL_THIRDPARTY_BUILD_FINEFTP           "Build fineFTP with eCAL"                                           ON)
+option(ECAL_THIRDPARTY_BUILD_FTXUI             "Build ftxui with eCAL"                                             ON)
 option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"                                            OFF)
+option(ECAL_THIRDPARTY_BUILD_RECYCLE           "Build steinwurf::recylce with eCAL"                                ON)
+option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                            ON)
+option(ECAL_THIRDPARTY_BUILD_SIMPLEINI         "Build simpleini with eCAL"                                         ON)
+option(ECAL_THIRDPARTY_BUILD_TCLAP             "Build tclap library with eCAL"                                     ON)
+option(ECAL_THIRDPARTY_BUILD_TCP_PUBSUB        "Build tcp_pubsub library with eCAL"                                ON)
+option(ECAL_THIRDPARTY_BUILD_TERMCOLOR         "Build termcolor with eCAL"                                         ON)
+option(ECAL_THIRDPARTY_BUILD_TINYXML2          "Build tinyxml2 with eCAL"                                          ON)
 option(ECAL_THIRDPARTY_BUILD_UDPCAP            "Build udpcap library with eCAL"                                   OFF)
 
 if(WIN32)
@@ -165,6 +169,51 @@ if(MSVC)
   endif()
 endif()
 
+# This is a list of subprojects, that might be build with eCAL
+# according to how options ECAL_BUILD_<SUBPROJECT> are set
+set(possible_subprojects
+  asio
+  CMakeFunctions
+  CURL
+  fineftp
+  ftxui
+  GTest
+  HDF5
+  #libssh2
+  Protobuf
+  qwt
+  recycle
+  simpleini
+  spdlog
+  tclap
+  tcp_pubsub
+  termcolor
+  tinyxml2
+  udpcap
+  yaml-cpp
+  #zlib zlibstatic  
+)
+
+# We should rename the option, but don't know how to do in in a
+# backwards compatible way
+set(ECAL_THIRDPARTY_BUILD_CMAKEFUNCTIONS ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS})
+
+# if a package does need to be build, include the cmake file with build instructions
+foreach (dep IN LISTS possible_subprojects)
+  string(TOUPPER ${dep} dep_upper)
+  string(TOLOWER ${dep} dep_lower)
+  if (ECAL_THIRDPARTY_BUILD_${dep_upper})
+    include(thirdparty/${dep_lower}/build-${dep_lower}.cmake)
+  endif ()
+endforeach ()
+
+if(MSVC)
+  message(STATUS "reset thirdparty warnings for windows platform ..")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
+endif()
+
+find_package(CMakeFunctions REQUIRED)
+
 # --------------------------------------------------------
 # detect qt library
 # --------------------------------------------------------
@@ -177,62 +226,6 @@ if(MSVC)
   endif()
 endif()
 
-# This is a list of subprojects, that might be build with eCAL
-# according to how options ECAL_BUILD_<SUBPROJECT> are set
-set(possible_subprojects
-  Protobuf
-  spdlog
-  tinyxml2
-  fineftp
-  termcolor
-  recycle
-  tcp_pubsub
-  #libssh2
-  #zlib zlibstatic
-  CURL
-  GTest
-  HDF5
-  CMakeFunctions
-  qwt
-  yaml-cpp
-  ftxui
-  udpcap
-)
-
-# We should rename the option, but don't know how to do in in a
-# backwards compatible way
-set(ECAL_THIRDPARTY_BUILD_CMAKEFUNCTIONS ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS})
-
-# For each dependency, check if option to build was set or not
-# if so append to `as_subproject` list
-foreach (dep IN LISTS possible_subprojects)
-  string(TOUPPER ${dep} dep_upper)
-  if (ECAL_THIRDPARTY_BUILD_${dep_upper})
-    list(APPEND as_subproject ${dep})
-  endif ()
-endforeach()
-
-macro(find_package)
-  if(NOT "${ARGV0}" IN_LIST as_subproject)
-    _find_package(${ARGV})
-  endif()
-endmacro()
-
-# if a package does need to be build, include the cmake file with build instructions
-foreach (dep IN LISTS possible_subprojects)
-  string(TOUPPER ${dep} dep_upper)
-  string(TOLOWER ${dep} dep_lower)
-  if (ECAL_THIRDPARTY_BUILD_${dep_upper})
-    include(thirdparty/build-${dep_lower}.cmake)
-  endif ()
-endforeach ()
-
-if(MSVC)
-  message(STATUS "reset thirdparty warnings for windows platform ..")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
-endif()
-
-find_package(CMakeFunctions REQUIRED)
 
 git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
 set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
@@ -281,9 +274,12 @@ set(eCAL_install_samples_dir       ${CMAKE_INSTALL_BINDIR})
 set(eCAL_install_samples_src_dir   ${CMAKE_INSTALL_DATADIR}/ecal/samples/)
 set(eCAL_install_tests_dir         ${CMAKE_INSTALL_BINDIR})
 
-set(eCAL_config_dir                ${eCAL_BINARY_DIR}/cmake/)
+set(eCAL_config_dir                ${CMAKE_CURRENT_BINARY_DIR}/_generated/)
 set(eCAL_config                    ${eCAL_config_dir}/eCALConfig.cmake)
 set(eCAL_config_version            ${eCAL_config_dir}/eCALConfigVersion.cmake)
+
+file(MAKE_DIRECTORY ${eCAL_config_dir})
+
 if(WIN32)
   set(eCAL_install_config_dir            cfg)
   set(eCAL_install_doc_dir               doc)
@@ -574,20 +570,24 @@ message(STATUS "ECAL_INCLUDE_PY_SAMPLES                        : ${ECAL_INCLUDE_
 message(STATUS "ECAL_INSTALL_SAMPLE_SOURCES                    : ${ECAL_INSTALL_SAMPLE_SOURCES}")
 message(STATUS "ECAL_JOIN_MULTICAST_TWICE                      : ${ECAL_JOIN_MULTICAST_TWICE}")
 message(STATUS "ECAL_NPCAP_SUPPORT                             : ${ECAL_NPCAP_SUPPORT}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_ASIO                     : ${ECAL_THIRDPARTY_BUILD_ASIO}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS          : ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS}")
-message(STATUS "ECAL_THIRDPARTY_BUILD_SPDLOG                   : ${ECAL_THIRDPARTY_BUILD_SPDLOG}")
-message(STATUS "ECAL_THIRDPARTY_BUILD_TINYXML2                 : ${ECAL_THIRDPARTY_BUILD_TINYXML2}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_CURL                     : ${ECAL_THIRDPARTY_BUILD_CURL}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_FINEFTP                  : ${ECAL_THIRDPARTY_BUILD_FINEFTP}")
-message(STATUS "ECAL_THIRDPARTY_BUILD_TERMCOLOR                : ${ECAL_THIRDPARTY_BUILD_TERMCOLOR}")
-message(STATUS "ECAL_THIRDPARTY_BUILD_TCP_PUBSUB               : ${ECAL_THIRDPARTY_BUILD_TCP_PUBSUB}")
-message(STATUS "ECAL_THIRDPARTY_BUILD_RECYCLE                  : ${ECAL_THIRDPARTY_BUILD_RECYCLE}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_FTXUI                    : ${ECAL_THIRDPARTY_BUILD_FTXUI}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_GTEST                    : ${ECAL_THIRDPARTY_BUILD_GTEST}")
-message(STATUS "ECAL_THIRDPARTY_BUILD_PROTOBUF                 : ${ECAL_THIRDPARTY_BUILD_PROTOBUF}")
-message(STATUS "ECAL_THIRDPARTY_BUILD_CURL                     : ${ECAL_THIRDPARTY_BUILD_CURL}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_HDF5                     : ${ECAL_THIRDPARTY_BUILD_HDF5}")
-message(STATUS "ECAL_THIRDPARTY_BUILD_YAML-CPP                 : ${ECAL_THIRDPARTY_BUILD_YAML-CPP}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_PROTOBUF                 : ${ECAL_THIRDPARTY_BUILD_PROTOBUF}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_QWT                      : ${ECAL_THIRDPARTY_BUILD_QWT}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_RECYCLE                  : ${ECAL_THIRDPARTY_BUILD_RECYCLE}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_SIMPLEINI                : ${ECAL_THIRDPARTY_BUILD_SIMPLEINI}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_SPDLOG                   : ${ECAL_THIRDPARTY_BUILD_SPDLOG}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_TCLAP                    : ${ECAL_THIRDPARTY_BUILD_TCLAP}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_TCP_PUBSUB               : ${ECAL_THIRDPARTY_BUILD_TCP_PUBSUB}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_TERMCOLOR                : ${ECAL_THIRDPARTY_BUILD_TERMCOLOR}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_TINYXML2                 : ${ECAL_THIRDPARTY_BUILD_TINYXML2}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_UDPCAP                   : ${ECAL_THIRDPARTY_BUILD_UDPCAP}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_YAML-CPP                 : ${ECAL_THIRDPARTY_BUILD_YAML-CPP}")
 message(STATUS "ECAL_LINK_HDF5_SHARED                          : ${ECAL_LINK_HDF5_SHARED}")
 message(STATUS "CPACK_PACK_WITH_INNOSETUP                      : ${CPACK_PACK_WITH_INNOSETUP}")
 

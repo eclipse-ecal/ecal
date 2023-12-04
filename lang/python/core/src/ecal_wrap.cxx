@@ -576,7 +576,7 @@ PyObject* sub_receive(PyObject* /*self*/, PyObject* args)
 /****************************************/
 /*      sub_set_callback                */
 /****************************************/
-static void c_subscriber_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, ECAL_HANDLE handle_, const std::string& python_formatter)
+static void c_subscriber_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, ECAL_HANDLE handle_, const std::string& /*python_formatter*/)
 {
 #if ECAL_PY_INIT_THREADS_NEEDED
   if (!g_pygil_init)
@@ -658,7 +658,7 @@ PyObject* sub_set_callback(PyObject* /*self*/, PyObject* args)
     }
   }
   return Py_BuildValue("is", 0, "error: could not set callback");
-};
+}
 
 /****************************************/
 /*      sub_rem_callback                */
@@ -697,7 +697,7 @@ PyObject* sub_rem_callback(PyObject* /*self*/, PyObject* args)
   {
     return Py_BuildValue("is", 0, "error: could not remove callback");
   }
-};
+}
 
 /****************************************/
 /*      dyn_json_sub_create             */
@@ -783,7 +783,7 @@ PyObject* dyn_json_sub_set_callback(PyObject* /*self*/, PyObject* args)
     }
   }
   return Py_BuildValue("is", 0, "error: could not set callback");
-};
+}
 
 /****************************************/
 /*      dyn_json_sub_rem_callback       */
@@ -822,7 +822,7 @@ PyObject* dyn_json_sub_rem_callback(PyObject* /*self*/, PyObject* args)
   {
     return Py_BuildValue("is", 0, "error: could not remove callback");
   }
-};
+}
 
 
 /****************************************/
@@ -1634,7 +1634,7 @@ static PyMethodDef _ecal_methods[] =
   {"client_call_method",            client_call_method,            METH_VARARGS,  "client_call_method(client_handle, method_name, request, timeout)" },
 
   {"client_add_response_callback",  client_add_response_callback,  METH_VARARGS,  "client_add_response_callback(client_handle, callback)" },
-  {"client_rem_response_callback",  client_add_response_callback,  METH_VARARGS,  "client_rem_response_callback(client_handle)" },
+  {"client_rem_response_callback",  client_rem_response_callback,  METH_VARARGS,  "client_rem_response_callback(client_handle)" },
   
   {"mon_initialize",                mon_initialize,                METH_NOARGS,   "mon_initialize()"},
   {"mon_finalize",                  mon_finalize,                  METH_NOARGS,   "mon_finalize()"},

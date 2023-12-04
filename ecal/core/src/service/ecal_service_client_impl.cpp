@@ -23,7 +23,7 @@
 
 #include "ecal_global_accessors.h"
 
-#include "ecal_registration_provider.h"
+#include "registration/ecal_registration_provider.h"
 #include "ecal_clientgate.h"
 #include "ecal_service_client_impl.h"
 

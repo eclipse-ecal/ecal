@@ -100,7 +100,7 @@ class Client(object):
     """
     return ecal_core.client_add_response_callback(self.shandle, callback)
 
-  def rem_response_callback(self, method_name):
+  def rem_response_callback(self):
     """ remove response callback from client
     """
     return ecal_core.client_rem_response_callback(self.shandle)

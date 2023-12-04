@@ -28,7 +28,7 @@
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
-#include "ecal_expmap.h"
+#include "util/ecal_expmap.h"
 
 #include <shared_mutex>
 #include <string>
@@ -132,4 +132,4 @@ namespace eCAL
   inline           CDescGate::QualityFlags& operator|= (CDescGate::QualityFlags& a, CDescGate::QualityFlags b) { return reinterpret_cast<CDescGate::QualityFlags&>( reinterpret_cast<std::underlying_type<CDescGate::QualityFlags>::type&>(a) |= static_cast<std::underlying_type<CDescGate::QualityFlags>::type>(b) ); }
   inline           CDescGate::QualityFlags& operator&= (CDescGate::QualityFlags& a, CDescGate::QualityFlags b) { return reinterpret_cast<CDescGate::QualityFlags&>( reinterpret_cast<std::underlying_type<CDescGate::QualityFlags>::type&>(a) &= static_cast<std::underlying_type<CDescGate::QualityFlags>::type>(b) ); }
   inline           CDescGate::QualityFlags& operator^= (CDescGate::QualityFlags& a, CDescGate::QualityFlags b) { return reinterpret_cast<CDescGate::QualityFlags&>( reinterpret_cast<std::underlying_type<CDescGate::QualityFlags>::type&>(a) ^= static_cast<std::underlying_type<CDescGate::QualityFlags>::type>(b) ); }
-};
+}

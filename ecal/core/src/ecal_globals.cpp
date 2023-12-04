@@ -22,8 +22,8 @@
 **/
 
 #include "ecal_globals.h"
-#include "io/udp_init.h"
-#include "ecal_config_reader.h"
+#include "io/udp/udp_init.h"
+#include "config/ecal_config_reader.h"
 
 #include <stdexcept>
 
@@ -37,7 +37,7 @@ namespace eCAL
   CGlobals::~CGlobals()
   {
     Finalize(Init::All);
-  };
+  }
 
   int CGlobals::Initialize(unsigned int components_, std::vector<std::string>* config_keys_ /*= nullptr*/)
   {

@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include "ecal_expmap.h"
+#include "util/ecal_expmap.h"
 
 #include <string>
 #include <chrono>

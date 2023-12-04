@@ -1,1 +1,0 @@
-add_subdirectory(thirdparty/cmake_functions)

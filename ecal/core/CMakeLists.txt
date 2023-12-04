@@ -57,84 +57,213 @@ if(UNIX)
   endif()
 endif()
 
-if(ECAL_NPCAP_SUPPORT)
-set(ecal_io_cpp_src_npcap 
-   src/io/udp_receiver_npcap.cpp
-)
-endif()
-
-set(ecal_custom_tclap_cpp_src
-    src/custom_tclap/advanced_tclap_output.cpp
-)
-
-set(ecal_io_cpp_src
-    src/io/rcv_sample.cpp
-    src/io/snd_raw_buffer.cpp
-    src/io/snd_sample.cpp
-    src/io/udp_configurations.cpp
-    src/io/udp_init.cpp
-    src/io/udp_receiver.cpp
-    src/io/udp_receiver_asio.cpp
-    src/io/udp_sender.cpp
-    ${ecal_io_cpp_src_npcap}
+######################################
+# config
+######################################
+set(ecal_config_src
+    src/config/ecal_config.cpp
+    src/config/ecal_config_reader.cpp
+    src/config/ecal_config_reader.h
+    src/config/ecal_config_reader_hlp.h
 )
 
-set(ecal_io_mem_cpp_src
-    src/io/ecal_memfile.cpp
-    src/io/ecal_memfile_db.cpp
-    src/io/ecal_memfile_broadcast.cpp
-    src/io/ecal_memfile_broadcast_reader.cpp
-    src/io/ecal_memfile_broadcast_writer.cpp
-    src/io/ecal_memfile_naming.cpp      
-    src/io/ecal_memfile_pool.cpp
-    src/io/ecal_memfile_sync.cpp
-    src/io/ecal_named_mutex.cpp
+######################################
+# io/mtx
+######################################
+set(ecal_io_mtx_src
+    src/io/mtx/ecal_named_mutex.cpp
+    src/io/mtx/ecal_named_mutex.h
+    src/io/mtx/ecal_named_mutex_base.h
 )
+
+# io/mtx/linux
 if(UNIX)
-  set(ecal_io_mem_cpp_linux_src
-      src/io/linux/ecal_memfile_os.cpp
-      src/io/linux/ecal_named_mutex_impl.cpp
-      $<$<OR:$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>,$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>>:src/io/linux/ecal_named_mutex_robust_clocklock_impl.cpp>
+  set(ecal_io_mtx_linux_src
+      src/io/mtx/linux/ecal_named_mutex_impl.cpp
+      $<$<OR:$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>,$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>>:src/io/mtx/linux/ecal_named_mutex_robust_clocklock_impl.cpp>
+      src/io/mtx/linux/ecal_named_mutex_impl.h
+      $<$<OR:$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>,$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>>:src/io/mtx/linux/ecal_named_mutex_robust_clocklock_impl.h>
   )
 endif()
 
+# io/mtx/win32
 if(WIN32)
-  set(ecal_io_mem_cpp_win_src
-     src/io/win32/ecal_memfile_os.cpp
-     src/io/win32/ecal_named_mutex_impl.cpp
+  set(ecal_io_mtx_win_src
+      src/io/mtx/win32/ecal_named_mutex_impl.cpp
+      src/io/mtx/win32/ecal_named_mutex_impl.h
   )
 endif()
 
-set(ecal_mon_cpp_src
-    src/mon/ecal_monitoring_def.cpp
-    src/mon/ecal_monitoring_impl.cpp
-    src/mon/ecal_monitoring_threads.cpp
+######################################
+# io/shm
+######################################
+set(ecal_io_shm_src
+    src/io/shm/ecal_memfile.cpp
+    src/io/shm/ecal_memfile_broadcast.cpp
+    src/io/shm/ecal_memfile_broadcast_reader.cpp
+    src/io/shm/ecal_memfile_broadcast_writer.cpp
+    src/io/shm/ecal_memfile_db.cpp
+    src/io/shm/ecal_memfile_naming.cpp      
+    src/io/shm/ecal_memfile_pool.cpp
+    src/io/shm/ecal_memfile_sync.cpp
+    src/io/shm/ecal_memfile.h
+    src/io/shm/ecal_memfile_broadcast.h
+    src/io/shm/ecal_memfile_broadcast_reader.h
+    src/io/shm/ecal_memfile_broadcast_writer.h
+    src/io/shm/ecal_memfile_db.h
+    src/io/shm/ecal_memfile_header.h
+    src/io/shm/ecal_memfile_info.h
+    src/io/shm/ecal_memfile_naming.h
+    src/io/shm/ecal_memfile_os.h
+    src/io/shm/ecal_memfile_pool.h
+    src/io/shm/ecal_memfile_sync.h
+    src/io/shm/relocatable_circular_queue.h
 )
 
-set(ecal_pubsub_cpp_src
+# io/shm/linux
+if(UNIX)
+  set(ecal_io_shm_linux_src
+      src/io/shm/linux/ecal_memfile_os.cpp
+  )
+endif()
+
+# io/shm/win32
+if(WIN32)
+  set(ecal_io_shm_win_src
+     src/io/shm/win32/ecal_memfile_os.cpp
+  )
+endif()
+
+######################################
+# io/udp
+######################################
+if(ECAL_NPCAP_SUPPORT)
+set(ecal_io_udp_src_npcap 
+   src/io/udp/udp_receiver_npcap.cpp
+   src/io/udp/udp_receiver_npcap.h
+)
+endif()
+
+set(ecal_io_udp_src
+    src/io/udp/rcv_sample.cpp
+    src/io/udp/snd_raw_buffer.cpp
+    src/io/udp/snd_sample.cpp
+    src/io/udp/udp_configurations.cpp
+    src/io/udp/udp_init.cpp
+    src/io/udp/udp_receiver.cpp
+    src/io/udp/udp_receiver_asio.cpp
+    src/io/udp/udp_sender.cpp
+    src/io/udp/ecal_receiver.h
+    src/io/udp/msg_type.h
+    src/io/udp/rcv_sample.h
+    src/io/udp/snd_raw_buffer.h
+    src/io/udp/snd_sample.h
+    src/io/udp/udp_configurations.h
+    src/io/udp/udp_init.h
+    src/io/udp/udp_receiver.h
+    src/io/udp/udp_receiver_base.h
+    src/io/udp/udp_receiver_asio.h
+    src/io/udp/udp_sender.h
+    ${ecal_io_udp_src_npcap}
+)
+
+# io/udp/linux
+if(UNIX)
+  set(ecal_io_udp_linux_src
+      src/io/udp/linux/ecal_socket_option_linux.h
+)
+endif()
+
+######################################
+# logging
+######################################
+set(ecal_logging_src
+    src/logging/ecal_log.cpp
+    src/logging/ecal_log_impl.cpp
+    src/logging/ecal_log_impl.h
+)
+
+######################################
+# monitoring
+######################################
+set(ecal_monitoring_src
+    src/monitoring/ecal_monitoring_def.cpp
+    src/monitoring/ecal_monitoring_impl.cpp
+    src/monitoring/ecal_monitoring_threads.cpp
+    src/monitoring/ecal_monitoring_def.h
+    src/monitoring/ecal_monitoring_impl.h
+    src/monitoring/ecal_monitoring_threads.h
+)
+
+######################################
+# pubsub
+######################################
+set(ecal_pubsub_src
     src/pubsub/ecal_proto_dyn_json_sub.cpp
     src/pubsub/ecal_pubgate.cpp
     src/pubsub/ecal_publisher.cpp
     src/pubsub/ecal_subgate.cpp
     src/pubsub/ecal_subscriber.cpp
+    src/pubsub/ecal_pubgate.h
+    src/pubsub/ecal_subgate.h
 )
 
-set(ecal_readwrite_cpp_src
+######################################
+# readwrite
+######################################
+set(ecal_readwrite_src
+    src/readwrite/ecal_buffer_payload_writer.h
     src/readwrite/ecal_reader.cpp
-    src/readwrite/ecal_reader_udp_mc.cpp
-    src/readwrite/ecal_reader_tcp.cpp
+    src/readwrite/ecal_reader.h
+    src/readwrite/ecal_reader_layer.h
     src/readwrite/ecal_writer.cpp
-    src/readwrite/ecal_writer_inproc.cpp
-    src/readwrite/ecal_writer_udp_mc.cpp
-    src/readwrite/ecal_writer_tcp.cpp
+    src/readwrite/ecal_writer.h
+    src/readwrite/ecal_writer_base.h
+    src/readwrite/ecal_writer_data.h
+    src/readwrite/ecal_writer_info.h
 )
 
-set(ecal_readwrite_shm_cpp_src
-    src/readwrite/ecal_reader_shm.cpp
-    src/readwrite/ecal_writer_shm.cpp
+set(ecal_readwrite_inproc_src
+    src/readwrite/inproc/ecal_writer_inproc.cpp
+    src/readwrite/inproc/ecal_writer_inproc.h
 )
 
-set(ecal_service_cpp_src
+set(ecal_readwrite_shm_src
+    src/readwrite/shm/ecal_reader_shm.cpp
+    src/readwrite/shm/ecal_reader_shm.h
+    src/readwrite/shm/ecal_writer_shm.cpp
+    src/readwrite/shm/ecal_writer_shm.h
+)
+
+set(ecal_readwrite_tcp_src
+    src/readwrite/tcp/ecal_reader_tcp.cpp
+    src/readwrite/tcp/ecal_reader_tcp.h
+    src/readwrite/tcp/ecal_tcp_pubsub_logger.h
+    src/readwrite/tcp/ecal_writer_tcp.cpp
+    src/readwrite/tcp/ecal_writer_tcp.h
+)
+
+set(ecal_readwrite_udp_src
+    src/readwrite/udp/ecal_reader_udp_mc.cpp
+    src/readwrite/udp/ecal_reader_udp_mc.h
+    src/readwrite/udp/ecal_writer_udp_mc.cpp
+    src/readwrite/udp/ecal_writer_udp_mc.h
+)
+
+######################################
+# registration
+######################################
+set(ecal_registration_src
+    src/registration/ecal_registration_provider.cpp
+    src/registration/ecal_registration_provider.h
+    src/registration/ecal_registration_receiver.cpp
+    src/registration/ecal_registration_receiver.h
+)
+
+######################################
+# service
+######################################
+set(ecal_service_src
     src/service/ecal_clientgate.cpp
     src/service/ecal_clientgate.h
     src/service/ecal_servicegate.cpp
@@ -149,154 +278,71 @@ set(ecal_service_cpp_src
     src/service/ecal_service_singleton_manager.h
 )
 
-set(ecal_cmn_cpp_src
-    src/convert_utf.cpp
+######################################
+# time
+######################################
+set(ecal_time_src
+    src/time/ecal_time.cpp
+    src/time/ecal_timegate.cpp
+    src/time/ecal_timegate.h
+    src/time/ecal_timer.cpp
+)
+
+######################################
+# util
+######################################
+set(ecal_util_src
+    src/util/advanced_tclap_output.cpp
+    src/util/advanced_tclap_output.h
+    src/util/convert_utf.cpp
+    src/util/convert_utf.h
+    src/util/ecal_expmap.h
+    src/util/ecal_thread.cpp
+    src/util/ecal_thread.h
+    src/util/getenvvar.h
+    src/util/sys_usage.cpp
+    src/util/sys_usage.h
+)
+
+######################################
+# common
+######################################
+set(ecal_cmn_src
     src/ecal.cpp
     src/ecal_clang.cpp
-    src/ecal_config.cpp
-    src/ecal_config_reader.cpp
     src/ecal_descgate.cpp
     src/ecal_event.cpp 
     src/ecal_global_accessors.cpp
     src/ecal_globals.cpp
-    src/ecal_log.cpp
-    src/ecal_log_impl.cpp
     src/ecal_process.cpp
-    src/ecal_registration_provider.cpp
-    src/ecal_registration_receiver.cpp
-    src/ecal_thread.cpp
-    src/ecal_time.cpp
-    src/ecal_timegate.cpp
-    src/ecal_timer.cpp
     src/ecal_util.cpp
     src/ecalc.cpp
-    src/sys_usage.cpp
-)
-
-if(ECAL_NPCAP_SUPPORT)
-set(ecal_io_header_src_npcap 
-   src/io/udp_receiver_npcap.h
-)
-endif()
-
-set(ecal_custom_tclap_header_src
-    src/custom_tclap/advanced_tclap_output.h
-)
-
-set(ecal_io_header_src
-    src/io/ecal_memfile_header.h
-    src/io/ecal_receiver.h
-    src/io/msg_type.h
-    src/io/rcv_sample.h
-    src/io/snd_raw_buffer.h
-    src/io/snd_sample.h
-    src/io/udp_configurations.h
-    src/io/udp_init.h
-    src/io/udp_receiver.h
-    src/io/udp_receiver_base.h
-    src/io/udp_receiver_asio.h
-    src/io/udp_sender.h
-    ${ecal_io_header_src_npcap}
-)
-
-if (UNIX)
-  list (APPEND
-        ecal_io_header_src
-        "src/io/linux/ecal_socket_option_linux.h")
-endif()
-
-set(ecal_io_mem_header_src
-    src/io/ecal_memfile.h
-    src/io/ecal_memfile_broadcast.h
-    src/io/ecal_memfile_broadcast_reader.h
-    src/io/ecal_memfile_broadcast_writer.h
-    src/io/ecal_memfile_db.h
-    src/io/ecal_memfile_info.h
-    src/io/ecal_memfile_naming.h
-    src/io/ecal_memfile_os.h
-    src/io/ecal_memfile_pool.h
-    src/io/ecal_memfile_sync.h
-    src/io/ecal_named_mutex.h
-    src/io/ecal_named_mutex_base.h
-)
-
-if(WIN32)
-  set(ecal_io_mem_header_win_src
-      src/io/win32/ecal_named_mutex_impl.h
-  )
-endif()
-
-if(UNIX)
-  set(ecal_io_mem_header_linux_src
-      src/io/linux/ecal_named_mutex_impl.h
-      $<$<OR:$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>,$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>>:src/io/linux/ecal_named_mutex_robust_clocklock_impl.h>
-)
-endif()
-
-set(ecal_mon_header_src
-    src/mon/ecal_monitoring_def.h
-    src/mon/ecal_monitoring_impl.h
-    src/mon/ecal_monitoring_threads.h
-)
-
-set(ecal_pubsub_header_src
-    src/pubsub/ecal_pubgate.h
-    src/pubsub/ecal_subgate.h
-)
-
-set(ecal_readwrite_header_src
-    src/readwrite/ecal_reader.h
-    src/readwrite/ecal_reader_layer.h
-    src/readwrite/ecal_reader_tcp.h
-    src/readwrite/ecal_reader_udp_mc.h
-    src/readwrite/ecal_writer.h
-    src/readwrite/ecal_writer_base.h
-    src/readwrite/ecal_writer_data.h
-    src/readwrite/ecal_writer_info.h
-    src/readwrite/ecal_writer_inproc.h
-    src/readwrite/ecal_writer_tcp.h
-    src/readwrite/ecal_writer_udp_mc.h
-    src/readwrite/ecal_tcp_pubsub_logger.h
-)
-
-set(ecal_readwrite_shm_header_src
-    src/readwrite/ecal_reader_shm.h
-    src/readwrite/ecal_writer_shm.h
-)
-
-set(ecal_cmn_header_src
-    src/convert_utf.h
-    src/ecal_buffer_payload_writer.h
-    src/ecal_config_reader.h
-    src/ecal_config_reader_hlp.h
     src/ecal_def.h
     src/ecal_def_ini.h
     src/ecal_descgate.h
-    src/ecal_expmap.h
     src/ecal_global_accessors.h
     src/ecal_globals.h
-    src/ecal_log_impl.h
-    src/ecal_registration_provider.h
-    src/ecal_registration_receiver.h
     src/ecal_sample_to_topicinfo.h
-    src/ecal_thread.h
-    src/ecal_timegate.h
-    src/getenvvar.h
-    src/sys_usage.h
     src/topic2mcast.h
 )
 if (WIN32)
     list (APPEND
-        ecal_cmn_header_src
+        ecal_cmn_src
         src/ecal_win_main.h
         src/ecal_win_socket.h
     )
 endif()
 
+######################################
+# c interface
+######################################
 set(ecal_c_src
     src/ecalc.cpp
 )
 
+######################################
+# windows dll
+######################################
 if(WIN32)
   set(ecal_c_win_src
       src/win32/dll/dllmain.cpp
@@ -304,11 +350,13 @@ if(WIN32)
   )
 endif()
 
+######################################
+# public header
+######################################
 set(ecal_header_cmn
     include/ecal/ecal.h
     include/ecal/ecal_callback.h
     include/ecal/ecal_clang.h
-    include/ecal/ecal_config.h
     include/ecal/ecal_client.h
     include/ecal/ecal_config.h
     include/ecal/ecal_core.h
@@ -386,45 +434,41 @@ set(ecal_header_msg
     include/ecal/msg/subscriber.h
 )
 
-set(ecal_header_base
+set(ecal_header_public
     ${ecal_header_cmn}
     ${ecal_header_cimpl}
     ${ecal_header_msg}
 )
 
 ecal_add_ecal_shared_library(${PROJECT_NAME} 
-    ${ecal_custom_tclap_cpp_src}
-    ${ecal_io_cpp_src} 
-    ${ecal_io_mem_cpp_src} 
-    ${ecal_io_mem_cpp_win_src} 
-    ${ecal_io_mem_cpp_linux_src} 
-    ${ecal_mon_cpp_src} 
-    ${ecal_pubsub_cpp_src} 
-    ${ecal_readwrite_cpp_src} 
-    ${ecal_readwrite_shm_cpp_src}
-    ${ecal_service_cpp_src}
-    ${ecal_cmn_cpp_src}
-
-    ${ecal_custom_tclap_header_src}
-    ${ecal_cmn_header_src}
-    ${ecal_io_header_src}
-    ${ecal_io_mem_header_src} 
-    ${ecal_io_mem_header_win_src} 
-    ${ecal_io_mem_header_linux_src} 
-    ${ecal_mon_header_src}
-    ${ecal_pubsub_header_src}
-    ${ecal_readwrite_header_src}
-    ${ecal_readwrite_shm_header_src}
-
-    ${ecal_header_base}
-    ${ecal_header_cimpl}
-    ${ecal_header_msg}
-    
+    ${ecal_config_src}
+    ${ecal_io_mtx_src}
+    ${ecal_io_mtx_linux_src}
+    ${ecal_io_mtx_win_src}
+    ${ecal_io_shm_src} 
+    ${ecal_io_shm_linux_src}
+    ${ecal_io_shm_win_src} 
+    ${ecal_io_udp_src}
+    ${ecal_io_udp_linux_src}
+    ${ecal_logging_src} 
+    ${ecal_monitoring_src} 
+    ${ecal_pubsub_src} 
+    ${ecal_readwrite_src} 
+    ${ecal_readwrite_inproc_src} 
+    ${ecal_readwrite_shm_src} 
+    ${ecal_readwrite_tcp_src} 
+    ${ecal_readwrite_udp_src}
+    ${ecal_registration_src}   
+    ${ecal_service_src}
+    ${ecal_time_src}
+    ${ecal_util_src}
+    ${ecal_cmn_src}
+    ${ecal_header_public}
     ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h
 )
 
 if(UNIX)
-  set_source_files_properties(src/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
+  set_source_files_properties(src/util/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
 ecal_add_ecal_shared_library(${PROJECT_NAME}_c ${ecal_c_src} ${ecal_c_win_src})
@@ -516,37 +560,30 @@ install(DIRECTORY
 
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
-    ${ecal_custom_tclap_cpp_src}
-    ${ecal_io_cpp_src}
-    ${ecal_io_mem_cpp_src}
-    ${ecal_io_mem_cpp_linux_src} 
-    ${ecal_io_mem_cpp_win_src} 
-    ${ecal_io_cpp_linux_src}
-    ${ecal_io_cpp_win32_src}
-    ${ecal_mon_cpp_src}
-    ${ecal_pubsub_cpp_src}
-    ${ecal_readwrite_cpp_src}
-    ${ecal_readwrite_shm_cpp_src}
-    ${ecal_service_cpp_src}
-    ${ecal_cmn_cpp_src}
+    ${ecal_config_src}
+    ${ecal_io_mtx_src}
+    ${ecal_io_mtx_linux_src}
+    ${ecal_io_mtx_win_src}
+    ${ecal_io_shm_src} 
+    ${ecal_io_shm_linux_src}
+    ${ecal_io_shm_win_src} 
+    ${ecal_io_udp_src}
+    ${ecal_logging_src} 
+    ${ecal_monitoring_src}
+    ${ecal_pubsub_src}
+    ${ecal_readwrite_src}
+    ${ecal_readwrite_inproc_src} 
+    ${ecal_readwrite_shm_src} 
+    ${ecal_readwrite_tcp_src} 
+    ${ecal_readwrite_udp_src} 
+    ${ecal_registration_src}   
+    ${ecal_service_src}
+    ${ecal_time_src}
+    ${ecal_util_src}
+    ${ecal_cmn_src}
     ${ecal_c_src}
     ${ecal_c_win_src}
-
-    ${ecal_custom_tclap_header_src}
-    ${ecal_cmn_header_src}
-    ${ecal_io_header_src}
-    ${ecal_io_mem_header_src}
-    ${ecal_io_mem_header_win_src}
-    ${ecal_io_header_linux_src}
-    ${ecal_io_header_win_src}
-    ${ecal_mon_header_src}
-    ${ecal_pubsub_header_src}
-    ${ecal_readwrite_header_src}
-    ${ecal_readwrite_shm_header_src}
-
-    ${ecal_header_cmn}
-    ${ecal_header_cimpl}
-    ${ecal_header_msg}
+    ${ecal_header_public}
   )
 endif()
 
