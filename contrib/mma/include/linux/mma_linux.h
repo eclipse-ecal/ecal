@@ -57,6 +57,7 @@ class MMALinux : public MMAImpl
   unsigned int disk_pipe_count_ = 0;
   unsigned int process_pipe_count_ = 0;
 
+  std::string arm_vcgencmd;
 
   /**
   * @brief  Get machine statistics: CPU, Memory, Disk, Network
@@ -128,6 +129,7 @@ class MMALinux : public MMAImpl
   std::list<std::string> TokenizeIntoLines(const std::string& str);
   bool SetDiskInformation(ResourceLinux::DiskStatsList& disks);
   bool SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_info);
+  std::string GetArmvcgencmd();
   
   std::unique_ptr<PipeRefresher> cpu_pipe_;
   std::unique_ptr<PipeRefresher> network_pipe_;

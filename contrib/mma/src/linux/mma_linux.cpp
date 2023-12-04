@@ -56,6 +56,7 @@ MMALinux::MMALinux():
 
   os_name = GetOsName();
   nr_of_cpu_cores = GetCpuCores();
+  arm_vcgencmd = GetArmvcgencmd();
 
 }
 
@@ -188,24 +189,36 @@ ResourceLinux::Memory MMALinux::GetMemory()
   return memory;
 }
 
+std::string MMALinux::GetArmvcgencmd()
+{
+  std::string result;
+  OpenPipe("command -v vcgencmd", result);
+  if (result.length() != 0)
+  {
+    if (result.back() == '\n')
+      result.pop_back();
+    result.append(" measure_temp");
+  }
+  return result;
+}
+
 ResourceLinux::Temperature MMALinux::GetTemperature()
 {
   ResourceLinux::Temperature temperature;
 
-#ifdef __arm__
-  // FixMe: this seems very specific for some dedicated devices
-  std::string result;
-  OpenPipe("/opt/vc/bin/vcgencmd measure_temp", result);
-
-  std::smatch match;
-  const std::regex expression("\\d{2,}.\\d{1,}");
-
-  if (std::regex_search(result, match, expression) && match.size() > 0)
+  if (arm_vcgencmd.length() != 0)
   {
-    temperature.cpu_temperature = stof(match.str(0));
-  }
+    std::string result;
+    OpenPipe(arm_vcgencmd, result);
 
-#endif
+    std::smatch match;
+    const std::regex expression("\\d{2,}.\\d{1,}");
+
+    if (std::regex_search(result, match, expression) && match.size() > 0)
+    {
+      temperature.cpu_temperature = stof(match.str(0));
+    }
+  }
 
   return temperature;
 }
