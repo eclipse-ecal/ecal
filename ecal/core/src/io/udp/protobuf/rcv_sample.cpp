@@ -21,6 +21,8 @@
  * @brief  UDP sample receiver to receive messages of type eCAL::pb::Sample
 **/
 
+#include <ecal/ecal_log.h>
+
 #include "rcv_sample.h"
 
 CUDPSampleReceiver::CSampleReceiveSlot::CSampleReceiveSlot(CUDPSampleReceiver* sample_receiver_)

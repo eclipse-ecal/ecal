@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "io/udp/udp_receiver_base.h"
+#include "io/udp/udp_receiver.h"
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -32,7 +32,7 @@
 
 namespace eCAL
 {
-  class CUDPReceiverAsio : public CUDPReceiverBase
+  class CUDPReceiverAsio : public CUDPReceiverImpl
   {
   public:
     CUDPReceiverAsio(const SReceiverAttr& attr_);

@@ -21,8 +21,10 @@
 #include "io/udp/udp_receiver_asio.h"
 
 #ifdef __linux__
-#include "linux/ecal_socket_option_linux.h"
+#include "linux/ecal_socket_os.h"
 #endif
+
+#include <iostream>
 
 namespace eCAL
 {
@@ -30,7 +32,7 @@ namespace eCAL
   // Default ASIO based receiver class implementation
   ////////////////////////////////////////////////////////
   CUDPReceiverAsio::CUDPReceiverAsio(const SReceiverAttr& attr_) :
-    CUDPReceiverBase(attr_),
+    CUDPReceiverImpl(attr_),
     m_created(false),
     m_broadcast(attr_.broadcast),
     m_socket(m_iocontext)

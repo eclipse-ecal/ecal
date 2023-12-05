@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "io/udp/udp_receiver_base.h"
+#include "io/udp/udp_receiver.h"
 
 #include "config/ecal_config_reader_hlp.h"
 #include <udpcap/npcap_helpers.h>
@@ -31,7 +31,7 @@ namespace eCAL
   ////////////////////////////////////////////////////////
   // Npcap based receiver class implementation
   ////////////////////////////////////////////////////////
-  class CUDPReceiverPcap : public CUDPReceiverBase
+  class CUDPReceiverPcap : public CUDPReceiverImpl
   {
   public:
     CUDPReceiverPcap(const SReceiverAttr& attr_);

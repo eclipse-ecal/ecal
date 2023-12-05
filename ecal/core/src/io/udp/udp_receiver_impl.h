@@ -26,17 +26,18 @@ namespace eCAL
   ////////////////////////////////////////////////////////
   // udp receiver class implementation
   ////////////////////////////////////////////////////////
-  class CUDPReceiverBase
+  class CUDPReceiverImpl
   {
   public:
-    CUDPReceiverBase(const SReceiverAttr& /*attr_*/) {};
+    CUDPReceiverImpl(const SReceiverAttr& /*attr_*/) {};
     // We don't technically need a virtual destructor, if we are working with shared_ptrs...
-    virtual ~CUDPReceiverBase() = default;
+    virtual ~CUDPReceiverImpl() = default;
+
     // Delete copy / move operations to prevent slicing
-    CUDPReceiverBase(CUDPReceiverBase&&) = delete;
-    CUDPReceiverBase& operator=(CUDPReceiverBase&&) = delete;
-    CUDPReceiverBase(const CUDPReceiverBase&) = delete;
-    CUDPReceiverBase& operator=(const CUDPReceiverBase&) = delete;
+    CUDPReceiverImpl(CUDPReceiverImpl&&) = delete;
+    CUDPReceiverImpl& operator=(CUDPReceiverImpl&&) = delete;
+    CUDPReceiverImpl(const CUDPReceiverImpl&) = delete;
+    CUDPReceiverImpl& operator=(const CUDPReceiverImpl&) = delete;
 
     virtual bool AddMultiCastGroup(const char* ipaddr_) = 0;
     virtual bool RemMultiCastGroup(const char* ipaddr_) = 0;

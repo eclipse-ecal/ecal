@@ -23,28 +23,66 @@
 
 #pragma once
 
+#include "ecal_def.h"
+
+#ifdef ECAL_OS_WINDOWS
+#include "win32/ecal_socket_os.h"
+#endif
+
+#ifdef ECAL_OS_LINUX
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#endif
+
 #include <memory>
-#include "ecal_receiver.h"
+#include <string>
 
 namespace eCAL
 {
-  class CUDPReceiverBase;
+  struct SReceiverAttr
+  {
+    std::string address;
+    int         port      = 0;
+    bool        broadcast = false;
+    bool        loopback  = true;
+    int         rcvbuf    = 1024 * 1024;
+  };
 
-  class CUDPReceiver : public CReceiver
+  class CUDPReceiverImpl
+  {
+  public:
+    CUDPReceiverImpl(const SReceiverAttr& /*attr_*/) {};
+    // We don't technically need a virtual destructor, if we are working with shared_ptrs...
+    virtual ~CUDPReceiverImpl() = default;
+
+    // Delete copy / move operations to prevent slicing
+    CUDPReceiverImpl(CUDPReceiverImpl&&) = delete;
+    CUDPReceiverImpl& operator=(CUDPReceiverImpl&&) = delete;
+    CUDPReceiverImpl(const CUDPReceiverImpl&) = delete;
+    CUDPReceiverImpl& operator=(const CUDPReceiverImpl&) = delete;
+
+    virtual bool AddMultiCastGroup(const char* ipaddr_) = 0;
+    virtual bool RemMultiCastGroup(const char* ipaddr_) = 0;
+
+    virtual size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr) = 0;
+  };
+
+  class CUDPReceiver
   {
   public:
     CUDPReceiver();
 
-    bool Create(const SReceiverAttr& attr_) override;
-    bool Destroy() override;
+    bool Create(const SReceiverAttr& attr_);
+    bool Destroy();
 
     bool AddMultiCastGroup(const char* ipaddr_);
     bool RemMultiCastGroup(const char* ipaddr_);
 
-    size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr) override;
+    size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr);
 
   protected:
     bool m_use_npcap;
-    std::shared_ptr<CUDPReceiverBase> m_socket_impl;
+    std::shared_ptr<CUDPReceiverImpl> m_socket_impl;
   };
 }

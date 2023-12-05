@@ -16,7 +16,10 @@
  *
  * ========================= eCAL LICENSE =================================
 */
+
 #include "io/udp/udp_receiver_npcap.h"
+
+#include <iostream>
 
 namespace eCAL
 {
@@ -24,7 +27,7 @@ namespace eCAL
   // Npcap based receiver class implementation
   ////////////////////////////////////////////////////////
   CUDPReceiverPcap::CUDPReceiverPcap(const SReceiverAttr& attr_)
-    : CUDPReceiverBase(attr_)
+    : CUDPReceiverImpl(attr_)
     , m_created(false)
     , m_broadcast(attr_.broadcast)
   {

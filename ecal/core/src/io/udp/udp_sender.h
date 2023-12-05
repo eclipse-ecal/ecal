@@ -23,6 +23,18 @@
 
 #pragma once
 
+#include "ecal_def.h"
+
+#ifdef ECAL_OS_WINDOWS
+#include "win32/ecal_socket_os.h"
+#endif
+
+#ifdef ECAL_OS_LINUX
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#endif
+
 #include <memory>
 #include <string>
 

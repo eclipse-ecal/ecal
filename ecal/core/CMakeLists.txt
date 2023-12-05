@@ -161,7 +161,6 @@ set(ecal_io_udp_protobuf_src
 )
 
 set(ecal_io_udp_src
-    src/io/udp/ecal_receiver.h
     src/io/udp/msg_type.h
     src/io/udp/topic2mcast.h
     src/io/udp/udp_configurations.cpp
@@ -172,7 +171,6 @@ set(ecal_io_udp_src
     src/io/udp/udp_receiver.h
     src/io/udp/udp_receiver_asio.cpp
     src/io/udp/udp_receiver_asio.h
-    src/io/udp/udp_receiver_base.h
     src/io/udp/udp_sender.cpp
     src/io/udp/udp_sender.h
     ${ecal_io_udp_src_npcap}
@@ -181,7 +179,14 @@ set(ecal_io_udp_src
 # io/udp/linux
 if(UNIX)
   set(ecal_io_udp_linux_src
-      src/io/udp/linux/ecal_socket_option_linux.h
+      src/io/udp/linux/ecal_socket_os.h
+)
+endif()
+
+# io/udp/win32
+if (WIN32)
+  set(ecal_io_udp_win_src
+      src/io/udp/win32/ecal_socket_os.h
 )
 endif()
 
@@ -336,7 +341,6 @@ if (WIN32)
     list (APPEND
         ecal_cmn_src
         src/ecal_win_main.h
-        src/ecal_win_socket.h
     )
 endif()
 
@@ -459,6 +463,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_io_udp_protobuf_src}
     ${ecal_io_udp_src}
     ${ecal_io_udp_linux_src}
+    ${ecal_io_udp_win_src}
     ${ecal_logging_src} 
     ${ecal_monitoring_src} 
     ${ecal_pubsub_src} 

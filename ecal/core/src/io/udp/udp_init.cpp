@@ -27,7 +27,7 @@
 #include <atomic>
 
 #ifdef ECAL_OS_WINDOWS
-#include "ecal_win_socket.h"
+#include "win32/ecal_socket_os.h"
 #endif /* ECAL_OS_WINDOWS */
 
 static std::atomic<int> g_socket_init_refcnt(0);

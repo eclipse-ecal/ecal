@@ -21,6 +21,8 @@
  * @brief  UDP logging receiver to receive messages of type eCAL::pb::LogMessage
 **/
 
+#include <ecal/ecal_process.h>
+
 #include "rcv_logging.h"
 #include "io/udp/msg_type.h"
 

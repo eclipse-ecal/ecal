@@ -27,7 +27,6 @@
 
 #include <ecal/ecal_config.h>
 
-#include "io/udp/udp_receiver_base.h"
 #include "io/udp/udp_receiver_asio.h"
 #ifdef ECAL_NPCAP_SUPPORT
 #include "io/udp/udp_receiver_npcap.h"
@@ -39,8 +38,7 @@ namespace eCAL
   // udp receiver class
   ////////////////////////////////////////////////////////
   CUDPReceiver::CUDPReceiver()
-    : CReceiver(CReceiver::SType_ReceiverUDP)
-    , m_use_npcap(false)
+    : m_use_npcap(false)
   {
 #ifdef ECAL_NPCAP_SUPPORT
     if (Config::IsNpcapEnabled())
