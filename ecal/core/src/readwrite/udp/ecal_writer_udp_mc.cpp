@@ -123,14 +123,14 @@ namespace eCAL
     {
       if (m_sample_sender_loopback)
       {
-        sent = m_sample_sender_loopback->SendSample(m_ecal_sample.topic().tname(), m_ecal_sample, attr_.bandwidth);
+        sent = m_sample_sender_loopback->Send(m_ecal_sample.topic().tname(), m_ecal_sample, attr_.bandwidth);
       }
     }
     else
     {
       if (m_sample_sender_no_loopback)
       {
-        sent = m_sample_sender_no_loopback->SendSample(m_ecal_sample.topic().tname(), m_ecal_sample, attr_.bandwidth);
+        sent = m_sample_sender_no_loopback->Send(m_ecal_sample.topic().tname(), m_ecal_sample, attr_.bandwidth);
       }
     }
 

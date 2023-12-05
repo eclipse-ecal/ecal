@@ -156,6 +156,8 @@ set(ecal_io_udp_protobuf_src
     src/io/udp/protobuf/rcv_logging.h
     src/io/udp/protobuf/rcv_sample.cpp
     src/io/udp/protobuf/rcv_sample.h
+    src/io/udp/protobuf/snd_logging.cpp
+    src/io/udp/protobuf/snd_logging.h
     src/io/udp/protobuf/snd_sample.cpp
     src/io/udp/protobuf/snd_sample.h
 )

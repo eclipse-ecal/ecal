@@ -157,7 +157,7 @@ namespace eCAL
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
       // create udp logging sender
-      m_udp_sender = std::make_unique<CUDPSender>(attr);
+      m_udp_logging_sender = std::make_unique<CLoggingSender>(attr);
     }
 
     // set logging receive network attributes
@@ -181,7 +181,7 @@ namespace eCAL
 
     const std::lock_guard<std::mutex> lock(m_log_sync);
 
-    m_udp_sender.reset();
+    m_udp_logging_sender.reset();
 
     if(m_logfile != nullptr) fclose(m_logfile);
     m_logfile = nullptr;
@@ -271,8 +271,9 @@ namespace eCAL
       fflush(m_logfile);
     }
 
-    if((log_udp != 0) && m_udp_sender)
+    if((log_udp != 0) && m_udp_logging_sender)
     {
+      // set up log message
       ecal_msg.Clear();
       ecal_msg.set_time(std::chrono::duration_cast<std::chrono::microseconds>(log_time.time_since_epoch()).count());
       ecal_msg.set_hname(m_hname);
@@ -282,11 +283,8 @@ namespace eCAL
       ecal_msg.set_level(level_);
       ecal_msg.set_content(msg_);
 
-      ecal_msg_s = ecal_msg.SerializeAsString();
-      if(!ecal_msg_s.empty())
-      {
-        m_udp_sender->Send((void*)ecal_msg_s.data(), ecal_msg_s.size());
-      }
+      // sent it
+      m_udp_logging_sender->Send(ecal_msg);
     }
   }
 

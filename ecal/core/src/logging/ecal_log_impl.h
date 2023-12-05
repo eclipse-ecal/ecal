@@ -23,8 +23,8 @@
 
 #pragma once
 
-#include "io/udp/udp_sender.h"
 #include "io/udp/protobuf/rcv_logging.h"
+#include "io/udp/protobuf/snd_logging.h"
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_os.h>
@@ -128,7 +128,7 @@ namespace eCAL
     std::mutex                            m_log_sync;
 
     std::atomic<bool>                     m_created;
-    std::unique_ptr<CUDPSender>           m_udp_sender;
+    std::unique_ptr<CLoggingSender>       m_udp_logging_sender;
 
     // log messages
     using LogMessageListT = std::list<eCAL::pb::LogMessage>;

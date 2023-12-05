@@ -436,7 +436,7 @@ namespace eCAL
     bool return_value {true};
 
     if (m_use_network_monitoring && m_reg_sample_snd)
-      return_value &= (m_reg_sample_snd->SendSample(sample_name_, sample_, -1) != 0);
+      return_value &= (m_reg_sample_snd->Send(sample_name_, sample_, -1) != 0);
 
     if(m_use_shm_monitoring)
     {

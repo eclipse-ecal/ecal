@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  UDP sample sender to send messages of type eCAL::pb::Sample
+ * @brief  UDP logging sender to send messages of type eCAL::pb::LogMessage
 **/
 
 #pragma once
@@ -30,23 +30,21 @@
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
 #endif
-#include <ecal/core/pb/ecal.pb.h>
+#include <ecal/core/pb/monitoring.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
 namespace eCAL
 {
-  class CSampleSender
+  class CLoggingSender
   {
   public:
-    CSampleSender(const SSenderAttr& attr_);
-    size_t Send(const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, long bandwidth_);
+    CLoggingSender(const SSenderAttr& attr_);
+    size_t Send(const eCAL::pb::LogMessage& ecal_log_message_);
 
   private:
     SSenderAttr                       m_attr;
-
     std::shared_ptr<eCAL::CUDPSender> m_udp_sender;
-    std::vector<char>                 m_payload;
   };
 }

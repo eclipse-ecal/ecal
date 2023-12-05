@@ -18,6 +18,8 @@
 */
 
 
+#include <ecal/ecal_config.h>
+
 #include "io/udp/udp_receiver_asio.h"
 
 #ifdef __linux__
