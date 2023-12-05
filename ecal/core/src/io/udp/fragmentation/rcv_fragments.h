@@ -24,16 +24,16 @@
 #pragma once
 
 #include "ecal_def.h"
-#include "msg_type.h"
+#include "io/udp/msg_type.h"
 
 #include <chrono>
 #include <vector>
 
-class CReceiveSlot
+class CMsgDefragmentation
 {
 public:
-  CReceiveSlot();
-  virtual ~CReceiveSlot();
+  CMsgDefragmentation();
+  virtual ~CMsgDefragmentation();
 
   int ApplyMessage(const struct SUDPMessage& ecal_message_);
 

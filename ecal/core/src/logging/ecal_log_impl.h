@@ -24,7 +24,7 @@
 #pragma once
 
 #include "io/udp/udp_sender.h"
-#include "io/udp/rcv_logging.h"
+#include "io/udp/protobuf/rcv_logging.h"
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_os.h>

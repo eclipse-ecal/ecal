@@ -144,19 +144,25 @@ set(ecal_io_udp_src_npcap
 )
 endif()
 
+set(ecal_io_udp_fragmentation_src
+    src/io/udp/fragmentation/rcv_fragments.cpp
+    src/io/udp/fragmentation/rcv_fragments.h
+    src/io/udp/fragmentation/snd_fragments.cpp
+    src/io/udp/fragmentation/snd_fragments.h
+)
+
+set(ecal_io_udp_protobuf_src
+    src/io/udp/protobuf/rcv_logging.cpp
+    src/io/udp/protobuf/rcv_logging.h
+    src/io/udp/protobuf/rcv_sample.cpp
+    src/io/udp/protobuf/rcv_sample.h
+    src/io/udp/protobuf/snd_sample.cpp
+    src/io/udp/protobuf/snd_sample.h
+)
+
 set(ecal_io_udp_src
     src/io/udp/ecal_receiver.h
     src/io/udp/msg_type.h
-    src/io/udp/rcv_logging.cpp
-    src/io/udp/rcv_logging.h
-    src/io/udp/rcv_sample.cpp
-    src/io/udp/rcv_sample.h
-    src/io/udp/rcv_sample_slot.cpp
-    src/io/udp/rcv_sample_slot.h
-    src/io/udp/snd_raw_buffer.cpp
-    src/io/udp/snd_raw_buffer.h
-    src/io/udp/snd_sample.cpp
-    src/io/udp/snd_sample.h
     src/io/udp/topic2mcast.h
     src/io/udp/udp_configurations.cpp
     src/io/udp/udp_configurations.h
@@ -448,7 +454,9 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_io_mtx_win_src}
     ${ecal_io_shm_src} 
     ${ecal_io_shm_linux_src}
-    ${ecal_io_shm_win_src} 
+    ${ecal_io_shm_win_src}
+    ${ecal_io_udp_fragmentation_src}
+    ${ecal_io_udp_protobuf_src}
     ${ecal_io_udp_src}
     ${ecal_io_udp_linux_src}
     ${ecal_logging_src} 
@@ -568,6 +576,8 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_io_shm_src} 
     ${ecal_io_shm_linux_src}
     ${ecal_io_shm_win_src} 
+    ${ecal_io_udp_fragmentation_src}
+    ${ecal_io_udp_protobuf_src}
     ${ecal_io_udp_src}
     ${ecal_logging_src} 
     ${ecal_monitoring_src}

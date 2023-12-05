@@ -31,7 +31,7 @@
 
 #include "ecal_def.h"
 
-#include "io/udp/rcv_sample.h"
+#include "io/udp/protobuf/rcv_sample.h"
 
 #include "io/shm/ecal_memfile_broadcast.h"
 #include "io/shm/ecal_memfile_broadcast_reader.h"

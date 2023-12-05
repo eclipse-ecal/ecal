@@ -27,7 +27,7 @@
 
 #include "ecal_process.h"
 
-#include "snd_raw_buffer.h"
+#include "snd_fragments.h"
 #include "io/udp/msg_type.h"
 
 namespace
@@ -79,7 +79,7 @@ namespace eCAL
     return (0);
   }
 
-  size_t SendSampleBuffer(char* buf_, size_t buf_len_, long bandwidth_, TransmitCallbackT transmit_cb_)
+  size_t SendFragmentedMessage(char* buf_, size_t buf_len_, long bandwidth_, TransmitCallbackT transmit_cb_)
   {
     if (buf_ == nullptr) return(0);
 

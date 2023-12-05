@@ -18,14 +18,14 @@
 */
 
 /**
- * @brief  Sender thread for ecal samples
+ * @brief  UDP sample sender to send messages of type eCAL::pb::Sample
 **/
 
 #pragma once
 
 #include <memory>
 
-#include "udp_sender.h"
+#include "io/udp/udp_sender.h"
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings

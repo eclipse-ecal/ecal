@@ -28,8 +28,7 @@
 
 #pragma once
 
-#include "io/udp/snd_sample.h"
-#include "io/udp/udp_sender.h"
+#include "io/udp/protobuf/snd_sample.h"
 
 #include "io/shm/ecal_memfile_broadcast.h"
 #include "io/shm/ecal_memfile_broadcast_writer.h"

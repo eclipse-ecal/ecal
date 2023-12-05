@@ -18,13 +18,13 @@
 */
 
 /**
- * @brief  Sender thread for ecal samples
+ * @brief  UDP sample sender to send messages of type eCAL::pb::Sample
 **/
 
 #include <ecal/ecal.h>
 
 #include "snd_sample.h"
-#include "snd_raw_buffer.h"
+#include "io/udp/fragmentation/snd_fragments.h"
 
 namespace
 {
@@ -52,7 +52,7 @@ namespace eCAL
     if (data_size > 0)
     {
       // and send it
-      sent_sum = SendSampleBuffer(m_payload.data(), data_size, bandwidth_, std::bind(TransmitToUDP, std::placeholders::_1, std::placeholders::_2, m_udp_sender, m_attr.address));
+      sent_sum = SendFragmentedMessage(m_payload.data(), data_size, bandwidth_, std::bind(TransmitToUDP, std::placeholders::_1, std::placeholders::_2, m_udp_sender, m_attr.address));
 
 #ifndef NDEBUG
       // log it

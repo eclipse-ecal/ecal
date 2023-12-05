@@ -21,13 +21,13 @@
  * @brief  UDP sample receiver to receive messages of type eCAL::pb::Sample
 **/
 
-#include "rcv_sample_slot.h"
+#include "rcv_fragments.h"
 
 #include <ecal/ecal_log.h>
 
 #include <cstring>
 
-CReceiveSlot::CReceiveSlot()
+CMsgDefragmentation::CMsgDefragmentation()
   : m_timeout(0.0)
   , m_recv_mode(rcm_waiting)
   , m_message_id(0)
@@ -38,9 +38,9 @@ CReceiveSlot::CReceiveSlot()
 {
 }
 
-CReceiveSlot::~CReceiveSlot() = default;
+CMsgDefragmentation::~CMsgDefragmentation() = default;
 
-int CReceiveSlot::ApplyMessage(const struct SUDPMessage& ecal_message_)
+int CMsgDefragmentation::ApplyMessage(const struct SUDPMessage& ecal_message_)
 {
   // reset timeout
   m_timeout = std::chrono::duration<double>(0.0);
@@ -71,7 +71,7 @@ int CReceiveSlot::ApplyMessage(const struct SUDPMessage& ecal_message_)
   return(0);
 }
 
-int CReceiveSlot::OnMessageStart(const struct SUDPMessage& ecal_message_)
+int CMsgDefragmentation::OnMessageStart(const struct SUDPMessage& ecal_message_)
 {
   // store header info
   m_message_id        = ecal_message_.header.id;
@@ -91,7 +91,7 @@ int CReceiveSlot::OnMessageStart(const struct SUDPMessage& ecal_message_)
   return(0);
 }
 
-int CReceiveSlot::OnMessageData(const struct SUDPMessage& ecal_message_)
+int CMsgDefragmentation::OnMessageData(const struct SUDPMessage& ecal_message_)
 {
   // check message id
   if(ecal_message_.header.id != m_message_id)

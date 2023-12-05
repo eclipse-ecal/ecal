@@ -25,7 +25,7 @@
 
 #include "readwrite/ecal_reader_layer.h"
 
-#include "io/udp/rcv_sample.h"
+#include "io/udp/protobuf/rcv_sample.h"
 
 #include <map>
 #include <memory>

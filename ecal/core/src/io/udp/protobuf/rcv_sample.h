@@ -24,8 +24,8 @@
 #pragma once
 
 #include "ecal_def.h"
-#include "udp_receiver.h"
-#include "rcv_sample_slot.h"
+#include "io/udp/udp_receiver.h"
+#include "io/udp/fragmentation/rcv_fragments.h"
 #include "util/ecal_thread.h"
 
 #include <chrono>
@@ -45,7 +45,7 @@
 
 class CUDPSampleReceiver
 {
-  class CSampleReceiveSlot : public CReceiveSlot
+  class CSampleReceiveSlot : public CMsgDefragmentation
   {
   public:
     explicit CSampleReceiveSlot(CUDPSampleReceiver* sample_receiver_);

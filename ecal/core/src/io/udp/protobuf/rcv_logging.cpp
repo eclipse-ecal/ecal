@@ -62,7 +62,6 @@ namespace eCAL
     const size_t recv_len = m_udp_receiver.Receive(m_msg_buffer.data(), m_msg_buffer.size(), CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS);
     if (recv_len > 0)
     {
-      m_log_message.Clear();
       if (m_log_message.ParseFromArray(m_msg_buffer.data(), static_cast<int>(recv_len)))
       {
         if (IsLocalHost(m_log_message) || m_network_mode)

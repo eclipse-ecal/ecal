@@ -34,7 +34,7 @@
 #include "ecal_descgate.h"
 
 #include "io/udp/udp_configurations.h"
-#include "io/udp/snd_sample.h"
+#include "io/udp/protobuf/snd_sample.h"
 
 #include <chrono>
 

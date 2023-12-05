@@ -24,7 +24,7 @@
 #pragma once
 
 #include "ecal_def.h"
-#include "udp_receiver.h"
+#include "io/udp/udp_receiver.h"
 #include "util/ecal_thread.h"
 
 #include <string>
@@ -56,7 +56,7 @@ namespace eCAL
     LogMessageCallbackT              m_log_message_callback;
 
     CUDPReceiver                     m_udp_receiver;
-    std::shared_ptr<CCallbackThread>  m_udp_receiver_thread;
+    std::shared_ptr<CCallbackThread> m_udp_receiver_thread;
 
     std::vector<char>                m_msg_buffer;
     eCAL::pb::LogMessage             m_log_message;
