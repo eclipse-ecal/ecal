@@ -33,7 +33,7 @@
 #pragma warning(pop)
 #endif
 
-#include "io/udp/protobuf/snd_sample.h"
+#include "io/udp/ecal_udp_sample_sender.h"
 #include "readwrite/ecal_writer_base.h"
 
 #include <string>
@@ -55,9 +55,9 @@ namespace eCAL
     bool Write(const void* buf_, const SWriterAttr& attr_) override;
 
   protected:
-    eCAL::pb::Sample               m_ecal_sample;
+    eCAL::pb::Sample                    m_ecal_sample;
 
-    std::shared_ptr<CSampleSender> m_sample_sender_loopback;
-    std::shared_ptr<CSampleSender> m_sample_sender_no_loopback;
+    std::shared_ptr<UDP::CSampleSender> m_sample_sender_loopback;
+    std::shared_ptr<UDP::CSampleSender> m_sample_sender_no_loopback;
   };
 }

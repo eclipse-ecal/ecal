@@ -25,7 +25,7 @@
 #include <ecal/ecal_config.h>
 
 #include "ecal_writer_udp_mc.h"
-#include "io/udp/udp_configurations.h"
+#include "io/udp/ecal_udp_configurations.h"
 
 namespace eCAL
 {
@@ -61,7 +61,7 @@ namespace eCAL
     m_topic_id    = topic_id_;
 
     // set network attributes
-    SSenderAttr attr;
+    IO::UDP::SSenderAttr attr;
     attr.address   = UDP::GetTopicPayloadAddress(topic_name_);
     attr.port      = UDP::GetPayloadPort();
     attr.ttl       = UDP::GetMulticastTtl();
@@ -70,11 +70,11 @@ namespace eCAL
 
     // create udp/sample sender with activated loop-back
     attr.loopback = true;
-    m_sample_sender_loopback = std::make_shared<CSampleSender>(attr);
+    m_sample_sender_loopback = std::make_shared<UDP::CSampleSender>(attr);
 
     // create udp/sample sender without activated loop-back
     attr.loopback = false;
-    m_sample_sender_no_loopback = std::make_shared<CSampleSender>(attr);
+    m_sample_sender_no_loopback = std::make_shared<UDP::CSampleSender>(attr);
 
     m_created = true;
     return true;

@@ -17,12 +17,12 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "io/udp/udp_configurations.h"
+#include "ecal_udp_configurations.h"
+#include "ecal_udp_topic2mcast.h"
 
 #include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
-#include "topic2mcast.h"
 
 namespace eCAL
 {
@@ -36,6 +36,16 @@ namespace eCAL
     bool IsBroadcast()
     {
       return !Config::IsNetworkEnabled();
+    }
+
+    /**
+     * @brief IsNpcapEnabled() retrieves if we use the npcap UDP receiver (windows only).
+     *
+     * @return True if npcap mode is active.
+     */
+    bool IsNpcapEnabled()
+    {
+      return Config::IsNpcapEnabled();
     }
 
     /**

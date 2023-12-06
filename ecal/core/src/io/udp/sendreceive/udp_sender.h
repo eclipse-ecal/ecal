@@ -18,33 +18,50 @@
 */
 
 /**
- * @brief  UDP logging sender to send messages of type eCAL::pb::LogMessage
+ * @brief  UDP sender class
 **/
 
 #pragma once
 
+#include "ecal_def.h"
+
+#ifdef ECAL_OS_WINDOWS
+#include "win32/socket_os.h"
+#endif
+
+#ifdef ECAL_OS_LINUX
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#endif
+
 #include <memory>
+#include <string>
 
-#include "io/udp/udp_sender.h"
-
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/monitoring.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
-namespace eCAL
+namespace IO
 {
-  class CLoggingSender
+  namespace UDP
   {
-  public:
-    CLoggingSender(const SSenderAttr& attr_);
-    size_t Send(const eCAL::pb::LogMessage& ecal_log_message_);
+    struct SSenderAttr
+    {
+      std::string address;
+      int         port      = 0;
+      int         ttl       = 0;
+      bool        broadcast = false;
+      bool        loopback  = true;
+      int         sndbuf    = 1024 * 1024;
+    };
 
-  private:
-    SSenderAttr                       m_attr;
-    std::shared_ptr<eCAL::CUDPSender> m_udp_sender;
-  };
+    class CUDPSenderImpl;
+
+    class CUDPSender
+    {
+    public:
+      CUDPSender(const SSenderAttr& attr_);
+      size_t Send(const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
+
+    protected:
+      std::shared_ptr<CUDPSenderImpl> m_socket_impl;
+    };
+  }
 }

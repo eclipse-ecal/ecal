@@ -33,8 +33,8 @@
 #include "ecal_registration_provider.h"
 #include "ecal_descgate.h"
 
-#include "io/udp/udp_configurations.h"
-#include "io/udp/protobuf/snd_sample.h"
+#include "io/udp/ecal_udp_configurations.h"
+#include "io/udp/ecal_udp_sample_sender.h"
 
 #include <chrono>
 
@@ -83,7 +83,7 @@ namespace eCAL
     if (m_use_network_monitoring)
     {
       // set network attributes
-      SSenderAttr attr;
+      IO::UDP::SSenderAttr attr;
       attr.address   = UDP::GetRegistrationAddress();
       attr.port      = UDP::GetRegistrationPort();
       attr.ttl       = UDP::GetMulticastTtl();
@@ -92,7 +92,7 @@ namespace eCAL
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
       // create udp registration sender
-      m_reg_sample_snd = std::make_shared<CSampleSender>(attr);
+      m_reg_sample_snd = std::make_shared<UDP::CSampleSender>(attr);
     }
     else
     {

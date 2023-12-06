@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "io/udp/udp_receiver.h"
+#include "io/udp/sendreceive/udp_receiver.h"
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -30,27 +30,30 @@
 #pragma warning(pop)
 #endif
 
-namespace eCAL
+namespace IO
 {
-  class CUDPReceiverAsio : public CUDPReceiverImpl
+  namespace UDP
   {
-  public:
-    CUDPReceiverAsio(const SReceiverAttr& attr_);
+    class CUDPReceiverAsio : public CUDPReceiverImpl
+    {
+    public:
+      CUDPReceiverAsio(const SReceiverAttr& attr_);
 
-    // this virtual function is called during construction/destruction,
-    // so, mark it as final to ensure that no derived classes override it.
-    bool AddMultiCastGroup(const char* ipaddr_) final override;
-    bool RemMultiCastGroup(const char* ipaddr_) override;
+      // this virtual function is called during construction/destruction,
+      // so, mark it as final to ensure that no derived classes override it.
+      bool AddMultiCastGroup(const char* ipaddr_) final override;
+      bool RemMultiCastGroup(const char* ipaddr_) override;
 
-    size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr) override;
+      size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr) override;
 
-  protected:
-    void RunIOContext(const asio::chrono::steady_clock::duration& timeout);
+    protected:
+      void RunIOContext(const asio::chrono::steady_clock::duration& timeout);
 
-    bool                    m_created;
-    bool                    m_broadcast;
-    asio::io_context        m_iocontext;
-    asio::ip::udp::socket   m_socket;
-    asio::ip::udp::endpoint m_sender_endpoint;
-  };
+      bool                    m_created;
+      bool                    m_broadcast;
+      asio::io_context        m_iocontext;
+      asio::ip::udp::socket   m_socket;
+      asio::ip::udp::endpoint m_sender_endpoint;
+    };
+  }
 }

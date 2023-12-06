@@ -24,47 +24,53 @@
 #pragma once
 
 #include "ecal_def.h"
-#include "io/udp/msg_type.h"
+#include "msg_type.h"
 
 #include <chrono>
 #include <vector>
 
-class CMsgDefragmentation
+namespace IO
 {
-public:
-  CMsgDefragmentation();
-  virtual ~CMsgDefragmentation();
-
-  int ApplyMessage(const struct SUDPMessage& ecal_message_);
-
-  bool HasFinished() {return((m_recv_mode == rcm_aborted) || (m_recv_mode == rcm_completed));};
-  bool HasTimedOut(const std::chrono::duration<double>& diff_time_) {m_timeout += diff_time_; return(m_timeout >= std::chrono::milliseconds(NET_UDP_RECBUFFER_TIMEOUT));};
-  
-  int32_t GetMessageTotalLength() {return(m_message_total_len);};
-  int32_t GetMessageCurrentLength() {return(m_message_curr_len);};
-
-  virtual int OnMessageCompleted(std::vector<char> &&msg_buffer_) = 0;
-
-protected:
-  int OnMessageStart(const struct SUDPMessage& ecal_message_);
-  int OnMessageData(const struct SUDPMessage& ecal_message_);
-
-  enum eReceiveMode
+  namespace UDP
   {
-    rcm_waiting = 1,
-    rcm_reading,
-    rcm_aborted,
-    rcm_completed
-  };
+    class CMsgDefragmentation
+    {
+    public:
+      CMsgDefragmentation();
+      virtual ~CMsgDefragmentation();
 
-  std::chrono::duration<double> m_timeout;
-  std::vector<char>             m_recv_buffer;
-  eReceiveMode                  m_recv_mode;
+      int ApplyMessage(const struct SUDPMessage& ecal_message_);
 
-  int32_t                       m_message_id;
-  int32_t                       m_message_total_num;
-  int32_t                       m_message_total_len;
+      bool HasFinished() { return((m_recv_mode == rcm_aborted) || (m_recv_mode == rcm_completed)); };
+      bool HasTimedOut(const std::chrono::duration<double>& diff_time_) { m_timeout += diff_time_; return(m_timeout >= std::chrono::milliseconds(NET_UDP_RECBUFFER_TIMEOUT)); };
 
-  int32_t                       m_message_curr_num;
-  int32_t                       m_message_curr_len;
-};
+      int32_t GetMessageTotalLength()   { return(m_message_total_len); };
+      int32_t GetMessageCurrentLength() { return(m_message_curr_len); };
+
+      virtual int OnMessageCompleted(std::vector<char>&& msg_buffer_) = 0;
+
+    protected:
+      int OnMessageStart(const struct SUDPMessage& ecal_message_);
+      int OnMessageData(const struct SUDPMessage& ecal_message_);
+
+      enum eReceiveMode
+      {
+        rcm_waiting = 1,
+        rcm_reading,
+        rcm_aborted,
+        rcm_completed
+      };
+
+      std::chrono::duration<double> m_timeout;
+      std::vector<char>             m_recv_buffer;
+      eReceiveMode                  m_recv_mode;
+
+      int32_t                       m_message_id;
+      int32_t                       m_message_total_num;
+      int32_t                       m_message_total_len;
+
+      int32_t                       m_message_curr_num;
+      int32_t                       m_message_curr_len;
+    };
+  }
+}

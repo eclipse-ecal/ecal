@@ -25,7 +25,7 @@
 
 #include "readwrite/ecal_reader_layer.h"
 
-#include "io/udp/protobuf/rcv_sample.h"
+#include "io/udp/ecal_udp_sample_receiver.h"
 
 #include <map>
 #include <memory>
@@ -53,9 +53,9 @@ namespace eCAL
     bool HasSample(const std::string& sample_name_);
     bool ApplySample(const eCAL::pb::Sample& ecal_sample_);
 
-    bool                                 m_started;
-    bool                                 m_local_mode;
-    std::shared_ptr<CUDPSampleReceiver>  m_payload_receiver;
-    std::map<std::string, int>           m_topic_name_mcast_map;
+    bool                                   m_started;
+    bool                                   m_local_mode;
+    std::shared_ptr<UDP::CSampleReceiver>  m_payload_receiver;
+    std::map<std::string, int>             m_topic_name_mcast_map;
   };
 }

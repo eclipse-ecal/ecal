@@ -25,41 +25,47 @@
 
 #include <stdint.h>
 
-enum eUDPMessageType
+namespace IO
 {
-  msg_type_unknown             = 0,
-  msg_type_header              = 1,
-  msg_type_content             = 2,
-  msg_type_header_with_content = 3
-};
-
-struct alignas(4) SUDPMessageHead
-{
-  SUDPMessageHead()
+  namespace UDP
   {
-    head[0] = 'E';
-    head[1] = 'C';
-    head[2] = 'A';
-    head[3] = 'L';
-    version = 5;
-    type    = msg_type_unknown;
-    id      = 0;
-    num     = 0;
-    len     = 0;
-  }
+    enum eUDPMessageType
+    {
+      msg_type_unknown             = 0,
+      msg_type_header              = 1,
+      msg_type_content             = 2,
+      msg_type_header_with_content = 3
+    };
 
-  char     head[4];   //-V112
-  int32_t  version;
-  int32_t  type;
-  int32_t  id;        // unique id for all message parts
-  int32_t  num;       // header: number of all parts,      data: current number of that part
-  int32_t  len;       // header: complete size of message, data: current size of that part
-};
+    struct alignas(4) SUDPMessageHead
+    {
+      SUDPMessageHead()
+      {
+        head[0] = 'E';
+        head[1] = 'C';
+        head[2] = 'A';
+        head[3] = 'L';
+        version = 5;
+        type    = msg_type_unknown;
+        id      = 0;
+        num     = 0;
+        len     = 0;
+      }
+
+      char     head[4];   //-V112
+      int32_t  version;
+      int32_t  type;
+      int32_t  id;        // unique id for all message parts
+      int32_t  num;       // header: number of all parts,      data: current number of that part
+      int32_t  len;       // header: complete size of message, data: current size of that part
+    };
 
 #define MSG_BUFFER_SIZE   (64*1024 - 20 /* IP header */ - 8 /* UDP header */ - 1 /* don't ask */)
 #define MSG_PAYLOAD_SIZE  (MSG_BUFFER_SIZE-sizeof(struct SUDPMessageHead))
-struct SUDPMessage
-{
-  struct SUDPMessageHead header;
-  char                   payload[MSG_PAYLOAD_SIZE];
-};
+    struct SUDPMessage
+    {
+      struct SUDPMessageHead header;
+      char                   payload[MSG_PAYLOAD_SIZE];
+    };
+  }
+}

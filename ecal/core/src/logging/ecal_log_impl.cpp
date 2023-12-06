@@ -26,7 +26,7 @@
 #include <ecal/ecal_config.h>
 
 #include "ecal_log_impl.h"
-#include "io/udp/udp_configurations.h"
+#include "io/udp/ecal_udp_configurations.h"
 
 #include <mutex>
 #include <cstdio>
@@ -148,7 +148,7 @@ namespace eCAL
     if(m_filter_mask_udp != 0)
     {
       // set logging send network attributes
-      SSenderAttr attr;
+      IO::UDP::SSenderAttr attr;
       attr.address   = UDP::GetLoggingAddress();
       attr.port      = UDP::GetLoggingPort();
       attr.ttl       = UDP::GetMulticastTtl();
@@ -157,11 +157,11 @@ namespace eCAL
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
       // create udp logging sender
-      m_udp_logging_sender = std::make_unique<CLoggingSender>(attr);
+      m_udp_logging_sender = std::make_unique<UDP::CLoggingSender>(attr);
     }
 
     // set logging receive network attributes
-    SReceiverAttr attr;
+    IO::UDP::SReceiverAttr attr;
     attr.address   = UDP::GetLoggingAddress();
     attr.port      = UDP::GetLoggingPort();
     attr.broadcast = UDP::IsBroadcast();
@@ -169,8 +169,8 @@ namespace eCAL
     attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
 
     // start logging receiver
-    const CUDPLoggingReceiver::LogMessageCallbackT log_message_callback = std::bind(&CLog::RegisterLogMessage, this, std::placeholders::_1);
-    m_log_receiver = std::make_shared<CUDPLoggingReceiver>(attr, log_message_callback);
+    const UDP::CLoggingReceiver::LogMessageCallbackT log_message_callback = std::bind(&CLog::RegisterLogMessage, this, std::placeholders::_1);
+    m_log_receiver = std::make_shared<UDP::CLoggingReceiver>(attr, log_message_callback);
 
     m_created = true;
   }

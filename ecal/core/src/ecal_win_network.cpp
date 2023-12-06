@@ -18,17 +18,24 @@
 */
 
 /**
- * @brief  UDP initialization
+ * @brief  Win32 network initialization
 **/
-
-#include <ecal/ecal_os.h>
 
 #include <cstdio>
 #include <atomic>
 
-#ifdef ECAL_OS_WINDOWS
-#include "win32/ecal_socket_os.h"
-#endif /* ECAL_OS_WINDOWS */
+#if defined(_MSC_VER) && defined(__clang__) && !defined(CINTERFACE)
+#define CINTERFACE
+#endif
+
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
+#include <winsock2.h> //NOLINT
+#include <Ws2tcpip.h> //NOLINT
+
+#undef CINTERFACE
 
 static std::atomic<int> g_socket_init_refcnt(0);
 
@@ -41,7 +48,6 @@ namespace eCAL
       g_socket_init_refcnt++;
       if(g_socket_init_refcnt == 1)
       {
-#ifdef ECAL_OS_WINDOWS
         const WORD wVersionRequested = MAKEWORD(2, 2);
 
         WSADATA wsaData;
@@ -67,7 +73,6 @@ namespace eCAL
           printf("Could not find a usable version of Winsock.dll\n");
           WSACleanup();
         }
-#endif /* ECAL_OS_WINDOWS */
       }
       return(0);
     }
@@ -79,11 +84,8 @@ namespace eCAL
       g_socket_init_refcnt--;
       if(g_socket_init_refcnt == 0)
       {
-#ifdef ECAL_OS_WINDOWS
         WSACleanup();
-#endif /* ECAL_OS_WINDOWS */
       }
-
       return(0);
     }
   }

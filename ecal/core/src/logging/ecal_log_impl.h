@@ -23,8 +23,8 @@
 
 #pragma once
 
-#include "io/udp/protobuf/rcv_logging.h"
-#include "io/udp/protobuf/snd_logging.h"
+#include "io/udp/ecal_udp_logging_receiver.h"
+#include "io/udp/ecal_udp_logging_sender.h"
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_os.h>
@@ -125,33 +125,33 @@ namespace eCAL
     CLog(const CLog&);                 // prevent copy-construction
     CLog& operator=(const CLog&);      // prevent assignment
 
-    std::mutex                            m_log_sync;
+    std::mutex                             m_log_sync;
 
-    std::atomic<bool>                     m_created;
-    std::unique_ptr<CLoggingSender>       m_udp_logging_sender;
+    std::atomic<bool>                      m_created;
+    std::unique_ptr<UDP::CLoggingSender>   m_udp_logging_sender;
 
     // log messages
     using LogMessageListT = std::list<eCAL::pb::LogMessage>;
-    std::mutex                            m_log_msglist_sync;
-    LogMessageListT                       m_log_msglist;
+    std::mutex                             m_log_msglist_sync;
+    LogMessageListT                        m_log_msglist;
 
     // udp logging receiver
-    std::shared_ptr<CUDPLoggingReceiver>  m_log_receiver;
+    std::shared_ptr<UDP::CLoggingReceiver> m_log_receiver;
 
-    std::string                           m_hname;
-    int                                   m_pid;
-    std::string                           m_pname;
+    std::string                            m_hname;
+    int                                    m_pid;
+    std::string                            m_pname;
 
-    std::string                           m_logfile_name;
-    FILE*                                 m_logfile;
+    std::string                            m_logfile_name;
+    FILE*                                  m_logfile;
 
-    eCAL_Logging_eLogLevel                m_level;
-    eCAL_Logging_Filter                   m_filter_mask_con;
-    eCAL_Logging_Filter                   m_filter_mask_file;
-    eCAL_Logging_Filter                   m_filter_mask_udp;
+    eCAL_Logging_eLogLevel                 m_level;
+    eCAL_Logging_Filter                    m_filter_mask_con;
+    eCAL_Logging_Filter                    m_filter_mask_file;
+    eCAL_Logging_Filter                    m_filter_mask_udp;
 
-    std::chrono::duration<double>         m_core_time;
+    std::chrono::duration<double>          m_core_time;
 
-    std::chrono::steady_clock::time_point m_core_time_start;
+    std::chrono::steady_clock::time_point  m_core_time_start;
   };
 }

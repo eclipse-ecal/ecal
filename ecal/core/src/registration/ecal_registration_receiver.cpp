@@ -32,7 +32,7 @@
 #include "service/ecal_clientgate.h"
 #include "service/ecal_servicegate.h"
 
-#include "io/udp/udp_configurations.h"
+#include "io/udp/ecal_udp_configurations.h"
 #include "ecal_sample_to_topicinfo.h"
 
 #include <chrono>
@@ -125,7 +125,7 @@ namespace eCAL
     if (m_use_network_monitoring)
     {
       // set network attributes
-      SReceiverAttr attr;
+      IO::UDP::SReceiverAttr attr;
       attr.address   = UDP::GetRegistrationAddress();
       attr.port      = UDP::GetRegistrationPort();
       attr.broadcast = UDP::IsBroadcast();
@@ -133,7 +133,7 @@ namespace eCAL
       attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
 
       // start registration sample receiver
-      m_registration_receiver = std::make_shared<CUDPSampleReceiver>(attr, std::bind(&CRegistrationReceiver::HasSample, this, std::placeholders::_1), std::bind(&CRegistrationReceiver::ApplySample, this, std::placeholders::_1));
+      m_registration_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CRegistrationReceiver::HasSample, this, std::placeholders::_1), std::bind(&CRegistrationReceiver::ApplySample, this, std::placeholders::_1));
     }
 
     if (m_use_shm_monitoring)

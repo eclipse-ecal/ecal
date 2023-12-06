@@ -37,6 +37,13 @@ namespace eCAL
     bool IsBroadcast();
     
     /**
+     * @brief IsNpcapEnabled() retrieves if we use the npcap UDP receiver (windows only).
+     *
+     * @return True if npcap mode is active.
+     */
+    bool IsNpcapEnabled();
+
+    /**
      * @brief GetRegistrationAddress retrieves the UDP registration address based on network configuration.
      *
      * If the network mode is disabled, it returns the local broadcast address.

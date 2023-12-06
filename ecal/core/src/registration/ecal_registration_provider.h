@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "io/udp/protobuf/snd_sample.h"
+#include "io/udp/ecal_udp_sample_sender.h"
 
 #include "io/shm/ecal_memfile_broadcast.h"
 #include "io/shm/ecal_memfile_broadcast_writer.h"
@@ -93,33 +93,33 @@ namespace eCAL
 
     bool SendSampleList(bool reset_sample_list_ = true);
 
-    static std::atomic<bool>         m_created;
-    int                              m_reg_refresh;
-    bool                             m_reg_topics;
-    bool                             m_reg_services;
-    bool                             m_reg_process;
+    static std::atomic<bool>            m_created;
+    int                                 m_reg_refresh;
+    bool                                m_reg_topics;
+    bool                                m_reg_services;
+    bool                                m_reg_process;
 
-    std::shared_ptr<CSampleSender>   m_reg_sample_snd;
-    std::shared_ptr<CCallbackThread>  m_reg_sample_snd_thread;
+    std::shared_ptr<UDP::CSampleSender> m_reg_sample_snd;
+    std::shared_ptr<CCallbackThread>    m_reg_sample_snd_thread;
 
     using SampleMapT = std::unordered_map<std::string, eCAL::pb::Sample>;
-    std::mutex                       m_topics_map_sync;
-    SampleMapT                       m_topics_map;
+    std::mutex                          m_topics_map_sync;
+    SampleMapT                          m_topics_map;
 
-    std::mutex                       m_server_map_sync;
-    SampleMapT                       m_server_map;
+    std::mutex                          m_server_map_sync;
+    SampleMapT                          m_server_map;
 
-    std::mutex                       m_client_map_sync;
-    SampleMapT                       m_client_map;
+    std::mutex                          m_client_map_sync;
+    SampleMapT                          m_client_map;
 
-    std::mutex                       m_sample_list_sync;
-    eCAL::pb::SampleList             m_sample_list;
-    std::string                      m_sample_list_buffer;
+    std::mutex                          m_sample_list_sync;
+    eCAL::pb::SampleList                m_sample_list;
+    std::string                         m_sample_list_buffer;
 
-    eCAL::CMemoryFileBroadcast       m_memfile_broadcast;
-    eCAL::CMemoryFileBroadcastWriter m_memfile_broadcast_writer;
+    eCAL::CMemoryFileBroadcast          m_memfile_broadcast;
+    eCAL::CMemoryFileBroadcastWriter    m_memfile_broadcast_writer;
 
-    bool m_use_network_monitoring;
-    bool m_use_shm_monitoring;
+    bool                                m_use_network_monitoring;
+    bool                                m_use_shm_monitoring;
   };
 }

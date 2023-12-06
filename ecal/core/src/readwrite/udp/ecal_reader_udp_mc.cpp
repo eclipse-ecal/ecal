@@ -26,7 +26,7 @@
 #include "ecal_global_accessors.h"
 #include "pubsub/ecal_subgate.h"
 
-#include "io/udp/udp_configurations.h"
+#include "io/udp/ecal_udp_configurations.h"
 
 namespace eCAL
 {
@@ -52,7 +52,7 @@ namespace eCAL
       m_local_mode = UDP::IsBroadcast();
 
       // set network attributes
-      SReceiverAttr attr;
+      IO::UDP::SReceiverAttr attr;
       attr.address   = UDP::GetPayloadAddress();
       attr.port      = UDP::GetPayloadPort();
       attr.broadcast = UDP::IsBroadcast();
@@ -60,7 +60,7 @@ namespace eCAL
       attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
 
       // start payload sample receiver
-      m_payload_receiver = std::make_shared<CUDPSampleReceiver>(attr, std::bind(&CUDPReaderLayer::HasSample, this, std::placeholders::_1), std::bind(&CUDPReaderLayer::ApplySample, this, std::placeholders::_1));
+      m_payload_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CUDPReaderLayer::HasSample, this, std::placeholders::_1), std::bind(&CUDPReaderLayer::ApplySample, this, std::placeholders::_1));
 
       m_started = true;
     }

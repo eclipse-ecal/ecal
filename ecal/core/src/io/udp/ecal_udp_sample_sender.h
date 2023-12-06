@@ -18,47 +18,39 @@
 */
 
 /**
- * @brief  UDP sender class
+ * @brief  UDP sample sender to send messages of type eCAL::pb::Sample
 **/
 
 #pragma once
 
-#include "ecal_def.h"
-
-#ifdef ECAL_OS_WINDOWS
-#include "win32/ecal_socket_os.h"
-#endif
-
-#ifdef ECAL_OS_LINUX
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#endif
-
 #include <memory>
-#include <string>
+#include <vector>
+
+#include "io/udp/sendreceive/udp_sender.h"
+
+#ifdef _MSC_VER
+#pragma warning(push, 0) // disable proto warnings
+#endif
+#include <ecal/core/pb/ecal.pb.h>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 namespace eCAL
 {
-  struct SSenderAttr
+  namespace UDP
   {
-    std::string address;
-    int         port      = 0;
-    int         ttl       = 0;
-    bool        broadcast = false;
-    bool        loopback  = true;
-    int         sndbuf    = 1024 * 1024;
-  };
+    class CSampleSender
+    {
+    public:
+      CSampleSender(const IO::UDP::SSenderAttr& attr_);
+      size_t Send(const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, long bandwidth_);
 
-  class CUDPSenderImpl;
+    private:
+      IO::UDP::SSenderAttr                 m_attr;
+      std::shared_ptr<IO::UDP::CUDPSender> m_udp_sender;
 
-  class CUDPSender
-  {
-  public:
-    CUDPSender(const SSenderAttr& attr_);
-    size_t Send(const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
-
-  protected:
-    std::shared_ptr<CUDPSenderImpl> m_socket_impl;
-  };
+      std::vector<char>                    m_payload;
+    };
+  }
 }

@@ -31,7 +31,7 @@
 
 #include "ecal_def.h"
 
-#include "io/udp/protobuf/rcv_sample.h"
+#include "io/udp/ecal_udp_sample_receiver.h"
 
 #include "io/shm/ecal_memfile_broadcast.h"
 #include "io/shm/ecal_memfile_broadcast_reader.h"
@@ -95,28 +95,28 @@ namespace eCAL
 
     bool IsHostGroupMember(const eCAL::pb::Sample & ecal_sample_);
 
-    static std::atomic<bool>             m_created;
-    bool                                 m_network;
-    bool                                 m_loopback;
+    static std::atomic<bool>              m_created;
+    bool                                  m_network;
+    bool                                  m_loopback;
                                      
-    RegistrationCallbackT                m_callback_pub;
-    RegistrationCallbackT                m_callback_sub;
-    RegistrationCallbackT                m_callback_service;
-    RegistrationCallbackT                m_callback_client;
-    RegistrationCallbackT                m_callback_process;
+    RegistrationCallbackT                 m_callback_pub;
+    RegistrationCallbackT                 m_callback_sub;
+    RegistrationCallbackT                 m_callback_service;
+    RegistrationCallbackT                 m_callback_client;
+    RegistrationCallbackT                 m_callback_process;
                                      
-    std::shared_ptr<CUDPSampleReceiver>  m_registration_receiver;
+    std::shared_ptr<UDP::CSampleReceiver> m_registration_receiver;
 
-    CMemoryFileBroadcast                 m_memfile_broadcast;
-    CMemoryFileBroadcastReader           m_memfile_broadcast_reader;
+    CMemoryFileBroadcast                  m_memfile_broadcast;
+    CMemoryFileBroadcastReader            m_memfile_broadcast_reader;
 
-    CMemfileRegistrationReceiver         m_memfile_reg_rcv;
+    CMemfileRegistrationReceiver          m_memfile_reg_rcv;
 
-    bool                                 m_use_network_monitoring;
-    bool                                 m_use_shm_monitoring;
+    bool                                  m_use_network_monitoring;
+    bool                                  m_use_shm_monitoring;
 
-    ApplySampleCallbackT                 m_callback_custom_apply_sample;
+    ApplySampleCallbackT                  m_callback_custom_apply_sample;
 
-    std::string                          m_host_group_name;
+    std::string                           m_host_group_name;
   };
 }

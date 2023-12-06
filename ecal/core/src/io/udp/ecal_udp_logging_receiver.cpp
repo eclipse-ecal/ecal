@@ -23,8 +23,8 @@
 
 #include <ecal/ecal_process.h>
 
-#include "rcv_logging.h"
-#include "io/udp/msg_type.h"
+#include "ecal_udp_logging_receiver.h"
+#include "io/udp/fragmentation/msg_type.h"
 
 namespace
 {
@@ -39,36 +39,39 @@ namespace
 
 namespace eCAL
 {
-  CUDPLoggingReceiver::CUDPLoggingReceiver(const eCAL::SReceiverAttr& attr_, LogMessageCallbackT log_message_callback_) :
-    m_network_mode(!attr_.broadcast), m_log_message_callback(log_message_callback_)
+  namespace UDP
   {
-    // create udp receiver
-    m_udp_receiver.Create(attr_);
-
-    // allocate receive buffer
-    m_msg_buffer.resize(MSG_BUFFER_SIZE);
-
-    // start receiver thread
-    m_udp_receiver_thread = std::make_shared<CCallbackThread>(std::bind(&CUDPLoggingReceiver::ReceiveThread, this));
-    m_udp_receiver_thread->start(std::chrono::milliseconds(0));
-  }
-
-  CUDPLoggingReceiver::~CUDPLoggingReceiver()
-  {
-    m_udp_receiver_thread->stop();
-  }
-
-  void CUDPLoggingReceiver::ReceiveThread()
-  {
-    // wait for any incoming message
-    const size_t recv_len = m_udp_receiver.Receive(m_msg_buffer.data(), m_msg_buffer.size(), CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS);
-    if (recv_len > 0)
+    CLoggingReceiver::CLoggingReceiver(const IO::UDP::SReceiverAttr& attr_, LogMessageCallbackT log_message_callback_) :
+      m_network_mode(!attr_.broadcast), m_log_message_callback(log_message_callback_)
     {
-      if (m_log_message.ParseFromArray(m_msg_buffer.data(), static_cast<int>(recv_len)))
+      // create udp receiver
+      m_udp_receiver.Create(attr_);
+
+      // allocate receive buffer
+      m_msg_buffer.resize(MSG_BUFFER_SIZE);
+
+      // start receiver thread
+      m_udp_receiver_thread = std::make_shared<CCallbackThread>(std::bind(&CLoggingReceiver::ReceiveThread, this));
+      m_udp_receiver_thread->start(std::chrono::milliseconds(0));
+    }
+
+    CLoggingReceiver::~CLoggingReceiver()
+    {
+      m_udp_receiver_thread->stop();
+    }
+
+    void CLoggingReceiver::ReceiveThread()
+    {
+      // wait for any incoming message
+      const size_t recv_len = m_udp_receiver.Receive(m_msg_buffer.data(), m_msg_buffer.size(), CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS);
+      if (recv_len > 0)
       {
-        if (IsLocalHost(m_log_message) || m_network_mode)
+        if (m_log_message.ParseFromArray(m_msg_buffer.data(), static_cast<int>(recv_len)))
         {
-          m_log_message_callback(m_log_message);
+          if (IsLocalHost(m_log_message) || m_network_mode)
+          {
+            m_log_message_callback(m_log_message);
+          }
         }
       }
     }

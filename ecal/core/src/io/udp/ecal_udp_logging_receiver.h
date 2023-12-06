@@ -24,11 +24,12 @@
 #pragma once
 
 #include "ecal_def.h"
-#include "io/udp/udp_receiver.h"
+#include "io/udp/sendreceive/udp_receiver.h"
 #include "util/ecal_thread.h"
 
-#include <string>
+#include <functional>
 #include <memory>
+#include <string>
 #include <vector>
 
 #ifdef _MSC_VER
@@ -41,24 +42,28 @@
 
 namespace eCAL
 {
-  class CUDPLoggingReceiver
+  namespace UDP
   {
-  public:
-    using LogMessageCallbackT = std::function<void(const eCAL::pb::LogMessage&)>;
+    class CLoggingReceiver
+    {
+    public:
+      using LogMessageCallbackT = std::function<void(const eCAL::pb::LogMessage&)>;
 
-    CUDPLoggingReceiver(const eCAL::SReceiverAttr& attr_, LogMessageCallbackT log_message_callback_);
-    virtual ~CUDPLoggingReceiver();
-  
-  protected:
-    void ReceiveThread();
+      CLoggingReceiver(const IO::UDP::SReceiverAttr& attr_, LogMessageCallbackT log_message_callback_);
+      virtual ~CLoggingReceiver();
 
-    bool                             m_network_mode;
-    LogMessageCallbackT              m_log_message_callback;
+    protected:
+      void ReceiveThread();
 
-    CUDPReceiver                     m_udp_receiver;
-    std::shared_ptr<CCallbackThread> m_udp_receiver_thread;
+      bool                             m_network_mode;
 
-    std::vector<char>                m_msg_buffer;
-    eCAL::pb::LogMessage             m_log_message;
-  };
+      LogMessageCallbackT              m_log_message_callback;
+
+      IO::UDP::CUDPReceiver            m_udp_receiver;
+      std::shared_ptr<CCallbackThread> m_udp_receiver_thread;
+
+      std::vector<char>                m_msg_buffer;
+      eCAL::pb::LogMessage             m_log_message;
+    };
+  }
 }

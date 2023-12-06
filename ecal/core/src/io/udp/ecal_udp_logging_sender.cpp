@@ -18,35 +18,31 @@
 */
 
 /**
- * @brief  UDP sample sender to send messages of type eCAL::pb::Sample
+ * @brief  UDP logging sender to send messages of type eCAL::pb::LogMessage
 **/
 
-#pragma once
-
-#include <memory>
-
-#include "io/udp/udp_sender.h"
-
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include "ecal_udp_logging_sender.h"
 
 namespace eCAL
 {
-  class CSampleSender
+  namespace UDP
   {
-  public:
-    CSampleSender(const SSenderAttr& attr_);
-    size_t Send(const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, long bandwidth_);
+    CLoggingSender::CLoggingSender(const IO::UDP::SSenderAttr& attr_)
+    {
+      m_udp_sender = std::make_shared<IO::UDP::CUDPSender>(attr_);
+    }
 
-  private:
-    SSenderAttr                       m_attr;
+    size_t CLoggingSender::Send(const eCAL::pb::LogMessage& ecal_log_message_)
+    {
+      if (!m_udp_sender) return(0);
 
-    std::shared_ptr<eCAL::CUDPSender> m_udp_sender;
-    std::vector<char>                 m_payload;
-  };
+      m_logmessage_s = ecal_log_message_.SerializeAsString();
+      if (!m_logmessage_s.empty())
+      {
+        return m_udp_sender->Send((void*)m_logmessage_s.data(), m_logmessage_s.size());
+      }
+
+      return 0;
+    }
+  }
 }
