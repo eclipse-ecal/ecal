@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "io/udp/sendreceive/udp_receiver_npcap.h"
+#include "udp_receiver_npcap.h"
 
 #include <iostream>
 

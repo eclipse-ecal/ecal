@@ -20,7 +20,7 @@
 
 #include <ecal/ecal_config.h>
 
-#include "io/udp/sendreceive/udp_receiver_asio.h"
+#include "udp_receiver_asio.h"
 
 #ifdef __linux__
 #include "linux/socket_os.h"

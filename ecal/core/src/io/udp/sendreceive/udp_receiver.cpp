@@ -27,9 +27,9 @@
 
 #include "io/udp/ecal_udp_configurations.h"
 
-#include "io/udp/sendreceive/udp_receiver_asio.h"
+#include "udp_receiver_asio.h"
 #ifdef ECAL_NPCAP_SUPPORT
-#include "io/udp/sendreceive/udp_receiver_npcap.h"
+#include "udp_receiver_npcap.h"
 #endif
 
 namespace IO

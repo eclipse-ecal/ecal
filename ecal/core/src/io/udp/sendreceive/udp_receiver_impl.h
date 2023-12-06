@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "io/udp/udp_receiver.h"
+#include "udp_receiver.h"
 
 namespace eCAL
 {

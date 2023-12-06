@@ -35,7 +35,7 @@ namespace
   // random number generator
   unsigned long xorshf96(unsigned long& x, unsigned long& y, unsigned long& z)  // period 2^96-1
   {
-    unsigned long t;
+    unsigned long t(0);
     x ^= x << 16;
     x ^= x >> 5;
     x ^= x << 1;

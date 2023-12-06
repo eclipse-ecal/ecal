@@ -44,8 +44,8 @@ namespace IO
       bool HasFinished() { return((m_recv_mode == rcm_aborted) || (m_recv_mode == rcm_completed)); };
       bool HasTimedOut(const std::chrono::duration<double>& diff_time_) { m_timeout += diff_time_; return(m_timeout >= std::chrono::milliseconds(NET_UDP_RECBUFFER_TIMEOUT)); };
 
-      int32_t GetMessageTotalLength()   { return(m_message_total_len); };
-      int32_t GetMessageCurrentLength() { return(m_message_curr_len); };
+      int32_t GetMessageTotalLength() const   { return(m_message_total_len); };
+      int32_t GetMessageCurrentLength() const { return(m_message_curr_len); };
 
       virtual int OnMessageCompleted(std::vector<char>&& msg_buffer_) = 0;
 

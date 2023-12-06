@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "io/udp/sendreceive/udp_receiver.h"
+#include "udp_receiver.h"
 
 #include "config/ecal_config_reader_hlp.h"
 #include <udpcap/npcap_helpers.h>
