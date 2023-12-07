@@ -44,6 +44,15 @@ namespace eCAL
     bool IsNpcapEnabled();
 
     /**
+     * @brief Linux specific setting to enable joining multicast groups on all network interfacs independent of their link state.
+     *
+     * Enabling this makes sure that eCAL processes receive data if they are started before network devices are up and running.
+     *
+     * @return True if this setting is active.
+     */
+    bool IsUdpMulticastJoinAllIfEnabled();
+
+    /**
      * @brief GetRegistrationAddress retrieves the UDP registration address based on network configuration.
      *
      * If the network mode is disabled, it returns the local broadcast address.

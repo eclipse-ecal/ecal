@@ -43,7 +43,7 @@ int main(int argc, char **argv)
   pb::People::Person person;
 
   eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");
-  auto receive_lambda = [&sub](const char* topic_name_, const pb::People::Person& person_, const long long time_, const long long clock_, const long long /*id_*/){
+  auto receive_lambda = [&sub](const char* /*topic_name_*/, const pb::People::Person& person_, const long long /*time_*/, const long long /*clock_*/, const long long /*id_*/){
     std::cout << "------------------------------------------" << std::endl;
     std::cout << " RECEIVED                                 " << std::endl;
     std::cout << "------------------------------------------" << std::endl;

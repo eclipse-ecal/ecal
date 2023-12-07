@@ -21,21 +21,8 @@
  * @brief  UDP logging receiver to receive messages of type eCAL::pb::LogMessage
 **/
 
-#include <ecal/ecal_process.h>
-
 #include "ecal_udp_logging_receiver.h"
 #include "io/udp/fragmentation/msg_type.h"
-
-namespace
-{
-  bool IsLocalHost(const eCAL::pb::LogMessage &ecal_message_)
-  {
-    const std::string host_name = ecal_message_.hname();
-    if (host_name.empty()) return (false);
-    if (host_name == eCAL::Process::GetHostName()) return (true);
-    return (false);
-  }
-}
 
 namespace eCAL
 {
@@ -68,10 +55,7 @@ namespace eCAL
       {
         if (m_log_message.ParseFromArray(m_msg_buffer.data(), static_cast<int>(recv_len)))
         {
-          if (IsLocalHost(m_log_message) || m_network_mode)
-          {
-            m_log_message_callback(m_log_message);
-          }
+          m_log_message_callback(m_log_message);
         }
       }
     }

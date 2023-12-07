@@ -18,9 +18,9 @@
 */
 
 
-#include <ecal/ecal_config.h>
-
 #include "udp_receiver_asio.h"
+
+#include "io/udp/ecal_udp_configurations.h"
 
 #ifdef __linux__
 #include "linux/socket_os.h"
@@ -111,7 +111,7 @@ namespace IO
       {
         // join multicast group
 #ifdef __linux__
-        if (eCAL::Config::IsUdpMulticastJoinAllIfEnabled())
+        if (eCAL::UDP::IsUdpMulticastJoinAllIfEnabled())
         {
           if (!IO::UDP::set_socket_mcast_group_option(m_socket.native_handle(), ipaddr_, MCAST_JOIN_GROUP))
           {
@@ -147,7 +147,7 @@ namespace IO
       {
         // Leave multicast group
 #ifdef __linux__
-        if (eCAL::Config::IsUdpMulticastJoinAllIfEnabled())
+        if (eCAL::UDP::IsUdpMulticastJoinAllIfEnabled())
         {
           if (!IO::UDP::set_socket_mcast_group_option(m_socket.native_handle(), ipaddr_, MCAST_LEAVE_GROUP))
           {

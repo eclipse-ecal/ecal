@@ -347,7 +347,12 @@ namespace eCAL
 
   void CLog::RegisterLogMessage(const eCAL::pb::LogMessage& log_msg_)
   {
-    const std::lock_guard<std::mutex> lock(m_log_msglist_sync);
-    m_log_msglist.emplace_back(log_msg_);
+    // in "network mode" we accept all log messages
+    // in "local mode" we accept log messages from this host only
+    if ((m_hname == log_msg_.hname()) || Config::IsNetworkEnabled())
+    {
+      const std::lock_guard<std::mutex> lock(m_log_msglist_sync);
+      m_log_msglist.emplace_back(log_msg_);
+    }
   }
 }

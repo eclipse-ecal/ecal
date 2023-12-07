@@ -49,6 +49,18 @@ namespace eCAL
     }
 
     /**
+     * @brief Linux specific setting to enable joining multicast groups on all network interfacs independent of their link state.
+     *
+     * Enabling this makes sure that eCAL processes receive data if they are started before network devices are up and running.
+     *
+     * @return True if this setting is active.
+     */
+    bool IsUdpMulticastJoinAllIfEnabled()
+    {
+      return Config::IsUdpMulticastJoinAllIfEnabled();
+    }
+
+    /**
      * @brief GetLocalBroadcastAddress retrieves the broadcast address within the loopback range.
      *
      * This function returns the specific broadcast address 127.255.255.255, which is within
