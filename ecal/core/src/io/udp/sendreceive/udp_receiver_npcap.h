@@ -21,8 +21,8 @@
 #pragma once
 
 #include "udp_receiver.h"
-
 #include "config/ecal_config_reader_hlp.h"
+
 #include <udpcap/npcap_helpers.h>
 #include <udpcap/udpcap_socket.h>
 

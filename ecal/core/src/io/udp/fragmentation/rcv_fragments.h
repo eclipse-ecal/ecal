@@ -24,7 +24,6 @@
 #pragma once
 
 #include "ecal_def.h"
-#include "msg_type.h"
 
 #include <chrono>
 #include <vector>

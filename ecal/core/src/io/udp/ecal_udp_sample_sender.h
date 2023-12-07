@@ -23,10 +23,8 @@
 
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include "io/udp/sendreceive/udp_sender.h"
+
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
@@ -35,6 +33,9 @@
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
+
+#include <memory>
+#include <vector>
 
 namespace eCAL
 {

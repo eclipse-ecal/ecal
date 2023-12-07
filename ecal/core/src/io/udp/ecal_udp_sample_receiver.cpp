@@ -21,9 +21,10 @@
  * @brief  UDP sample receiver to receive messages of type eCAL::pb::Sample
 **/
 
-#include <ecal/ecal_log.h>
-
 #include "ecal_udp_sample_receiver.h"
+#include "io/udp/fragmentation/msg_type.h"
+
+#include <ecal/ecal_log.h>
 
 namespace eCAL
 {

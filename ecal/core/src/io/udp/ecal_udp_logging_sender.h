@@ -23,9 +23,6 @@
 
 #pragma once
 
-#include <memory>
-#include <string>
-
 #include "io/udp/sendreceive/udp_sender.h"
 
 #ifdef _MSC_VER
@@ -35,6 +32,9 @@
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
+
+#include <memory>
+#include <string>
 
 namespace eCAL
 {

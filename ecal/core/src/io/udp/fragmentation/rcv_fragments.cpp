@@ -21,7 +21,9 @@
  * @brief  UDP sample receiver to receive messages of type eCAL::pb::Sample
 **/
 
+
 #include "rcv_fragments.h"
+#include "msg_type.h"
 
 #include <ecal/ecal_log.h>
 

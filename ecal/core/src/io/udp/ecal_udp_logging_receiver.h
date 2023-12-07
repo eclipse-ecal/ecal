@@ -23,7 +23,6 @@
 
 #pragma once
 
-#include "ecal_def.h"
 #include "io/udp/sendreceive/udp_receiver.h"
 #include "util/ecal_thread.h"
 

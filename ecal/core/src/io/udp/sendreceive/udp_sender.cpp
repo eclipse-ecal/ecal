@@ -21,6 +21,8 @@
  * @brief  UDP sender class
 **/
 
+#include "udp_sender.h"
+
 #include <iostream>
 #include <functional>
 
@@ -32,8 +34,6 @@
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-
-#include "udp_sender.h"
 
 namespace IO
 {

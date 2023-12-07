@@ -23,19 +23,16 @@
 
 #pragma once
 
-#include "ecal_def.h"
 #include "io/udp/sendreceive/udp_receiver.h"
+#include "io/udp/fragmentation/rcv_fragments.h"
 #include "util/ecal_thread.h"
 
-#include "io/udp/fragmentation/rcv_fragments.h"
-
+#include <chrono>
 #include <functional>
 #include <memory>
 #include <string>
-#include <vector>
-
-#include <chrono>
 #include <unordered_map>
+#include <vector>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings

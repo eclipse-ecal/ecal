@@ -21,16 +21,15 @@
  * @brief  UDP receiver class
 **/
 
-#include <iostream>
-
 #include "udp_receiver.h"
-
 #include "io/udp/ecal_udp_configurations.h"
 
 #include "udp_receiver_asio.h"
 #ifdef ECAL_NPCAP_SUPPORT
 #include "udp_receiver_npcap.h"
 #endif
+
+#include <iostream>
 
 namespace IO
 {

@@ -18,11 +18,11 @@
 */
 
 #include "ecal_udp_configurations.h"
+
+#include "ecal_def.h"
 #include "ecal_udp_topic2mcast.h"
 
 #include <ecal/ecal_config.h>
-
-#include "ecal_def.h"
 
 namespace eCAL
 {

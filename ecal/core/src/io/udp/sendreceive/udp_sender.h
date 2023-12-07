@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "ecal_def.h"
+#include <ecal/ecal_os.h>
 
 #ifdef ECAL_OS_WINDOWS
 #include "win32/socket_os.h"

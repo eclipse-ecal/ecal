@@ -22,6 +22,8 @@
 **/
 
 #include "ecal_udp_logging_receiver.h"
+
+#include "ecal_def.h"
 #include "io/udp/fragmentation/msg_type.h"
 
 namespace eCAL
