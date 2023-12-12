@@ -129,14 +129,6 @@ namespace IO
             return(false);
           }
         }
-
-#ifdef ECAL_JOIN_MULTICAST_TWICE
-        // this is a very bad workaround because of an identified bug on a specific embedded device
-        // we join the multicast group multiple times otherwise the socket will not receive any data
-        std::cerr << "eCAL was compiled with ECAL_JOIN_MULTICAST_TWICE" << std::endl;
-        m_socket.set_option(asio::ip::multicast::leave_group(asio::ip::make_address(ipaddr_)));
-        m_socket.set_option(asio::ip::multicast::join_group(asio::ip::make_address(ipaddr_)));
-#endif // ECAL_JOIN_MULTICAST_TWICE
       }
       return(true);
     }

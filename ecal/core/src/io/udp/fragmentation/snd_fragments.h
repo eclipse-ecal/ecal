@@ -39,6 +39,6 @@ namespace IO
     size_t CreateSampleBuffer(const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, std::vector<char>& payload_);
 
     using TransmitCallbackT = std::function<size_t(const void*, const size_t)>;
-    size_t SendFragmentedMessage(char* buf_, size_t buf_len_, long bandwidth_, TransmitCallbackT transmit_cb_);
+    size_t SendFragmentedMessage(char* buf_, size_t buf_len_, long bandwidth_, const TransmitCallbackT& transmit_cb_);
   }
 }

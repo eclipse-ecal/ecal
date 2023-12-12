@@ -79,7 +79,7 @@ namespace IO
       return (0);
     }
 
-    size_t SendFragmentedMessage(char* buf_, size_t buf_len_, long bandwidth_, TransmitCallbackT transmit_cb_)
+    size_t SendFragmentedMessage(char* buf_, size_t buf_len_, long bandwidth_, const TransmitCallbackT& transmit_cb_)
     {
       if (buf_ == nullptr) return(0);
 
