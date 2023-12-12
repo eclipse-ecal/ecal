@@ -134,6 +134,8 @@ set(ECAL_BUILD_VERSION "0.0.0" CACHE STRING "Inject a build version if not build
 
 set(ECAL_CSHARP_BUILD_SAMPLES  ${BUILD_SAMPLES})
 
+set(PY_BUILD_CMAKE_MODULE_NAME "_install_py/ecal" CACHE STRING "Cache variable for py install dir")
+
 
 # there is a CMake issue with testing threading availibility via TEST_RUN
 if(${CMAKE_CROSSCOMPILING})
@@ -237,7 +239,6 @@ set(eCAL_VERSION        ${eCAL_VERSION_STRING})
 include(helper_functions/ecal_add_functions)
 include(helper_functions/ecal_helper_functions)
 include(helper_functions/ecal_install_functions)
-include(helper_functions/ecal_python_functions)
 
 if(MSVC)
   set(eCAL_PLATFORM_TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET})

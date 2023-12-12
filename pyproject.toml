@@ -1,0 +1,64 @@
+[project] # Project metadata
+name = "ecal5"
+readme = "README.md"
+requires-python = ">=3.7"
+license = { "file" = "LICENSE.txt" }
+authors = [{ "name" = "Kerstin Keller", "email" = "kerstin.keller@continental.com" }]
+keywords = ["DDS", "Middlware"]
+classifiers = ["Topic :: Scientific/Engineering"]
+dependencies = ["protobuf"]
+version = "5.13.0-alpha"
+
+[project.urls]
+"Documentation" = "https://eclipse-ecal.github.io/ecal"
+"Source" = "https://github.com/eclipse-ecal/ecal"
+
+[build-system] # How pip and other frontends should build this project
+requires = ["scikit-build-core"]
+build-backend = "scikit_build_core.build"
+
+[tool.scikit-build]
+
+sdist.exclude = ["*"]
+sdist.include = ["CMakeLists.txt", "pyproject.toml", "LICENSE.txt", "NOTICE.txt", "README.md", "app/*", "cmake/*", "contrib/*", "cpack/*", "ecal/*", "lib/*", "licenses/*", "lang/python/*", "thirdparty/*"]
+
+wheel.packages = ["lang/python"]
+
+[tool.scikit-build.cmake.define]
+#WITH_PY_STUBS:BOOL = "On"
+HAS_HDF5 = "ON"
+HAS_QT5 = "OFF"
+HAS_CURL = "OFF"
+HAS_FTXUI = "OFF"
+BUILD_APPS = "OFF"
+BUILD_SAMPLES = "OFF"
+BUILD_TIME = "ON"
+BUILD_PY_BINDING = "ON"
+ECAL_INSTALL_SAMPLE_SOURCES = "OFF"
+ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS = "ON"
+ECAL_THIRDPARTY_BUILD_SPDLOG = "ON"
+ECAL_THIRDPARTY_BUILD_TINYXML2 = "OFF"
+ECAL_THIRDPARTY_BUILD_FINEFTP = "OFF"
+ECAL_THIRDPARTY_BUILD_TERMCOLOR ="OFF"
+ECAL_THIRDPARTY_BUILD_TCP_PUBSUB ="ON"
+ECAL_THIRDPARTY_BUILD_RECYCLE = "ON"
+ECAL_THIRDPARTY_BUILD_FTXUI = "OFF"
+ECAL_THIRDPARTY_BUILD_PROTOBUF = "ON"
+ECAL_THIRDPARTY_BUILD_YAML-CPP = "OFF"
+ECAL_THIRDPARTY_BUILD_CURL = "OFF"
+ECAL_THIRDPARTY_BUILD_HDF5 = "ON"
+
+build-dir = "./_python_build"
+
+#[tool.py-build-cmake.module] # Where to find the Python module to package
+#name = "ecal"
+#directory = "./lang/python"
+#
+#[tool.py-build-cmake.sdist] # What to include in source distributions
+#include = ["CMakeLists.txt", "app/*", "cmake/*", "contrib/*", "cpack/*", "ecal/*", "lib/*", "licenses/*", "lang/python/*", "thirdparty/*"]
+
+#source_path = "."
+#build_args = ["-j"]
+#install_components = ["python_modules"]
+#
+#[tool.py-build-cmake.stubgen] # Whether and how to generate typed stub files
