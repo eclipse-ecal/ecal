@@ -345,8 +345,6 @@ if (WIN32)
     list (APPEND
         ecal_cmn_src
         src/ecal_win_main.h
-        src/ecal_win_network.cpp
-        src/ecal_win_network.h
     )
 endif()
 

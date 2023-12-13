@@ -22,7 +22,6 @@
 **/
 
 #include "ecal_globals.h"
-#include "ecal_win_network.h"
 
 #include "config/ecal_config_reader.h"
 
@@ -44,11 +43,6 @@ namespace eCAL
   {
     // will be set if any new module was initialized
     bool new_initialization(false);
-
-#ifdef ECAL_OS_WINDOWS
-    // windows network startup
-    Net::Initialize();
-#endif /* ECAL_OS_WINDOWS */
 
     /////////////////////
     // CONFIG
@@ -299,11 +293,6 @@ namespace eCAL
     memfile_map_instance            = nullptr;
     log_instance                    = nullptr;
     config_instance                 = nullptr;
-
-#ifdef ECAL_OS_WINDOWS
-    // windows network cleanup
-    Net::Finalize();
-#endif /* ECAL_OS_WINDOWS */
 
     initialized = false;
 
