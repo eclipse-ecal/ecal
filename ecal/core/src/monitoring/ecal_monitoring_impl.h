@@ -25,9 +25,17 @@
 
 #include <ecal/types/monitoring.h>
 
-#include "ecal_monitoring_threads.h"
+#include "ecal_def.h"
 #include "util/ecal_expmap.h"
-#include "io/udp/rcv_sample.h"
+
+#ifdef _MSC_VER
+#pragma warning(push, 0) // disable proto warnings
+#endif
+#include <ecal/core/pb/ecal.pb.h>
+#include <ecal/core/pb/monitoring.pb.h>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #include <memory>
 #include <mutex>
@@ -38,11 +46,11 @@ namespace eCAL
   ////////////////////////////////////////
   // Monitoring Declaration
   ////////////////////////////////////////
-  class CMonitoringImpl : public CSampleReceiver
+  class CMonitoringImpl
   {
   public:
     CMonitoringImpl();
-    ~CMonitoringImpl() override = default;
+    ~CMonitoringImpl() = default;
 
     void Create();
     void Destroy();
@@ -53,15 +61,9 @@ namespace eCAL
 
     void GetMonitoringPb(eCAL::pb::Monitoring& monitoring_, unsigned int entities_);
     void GetMonitoringStructs(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_);
-    void GetLogging(eCAL::pb::Logging& logging_);
-
-    int PubMonitoring(bool state_, std::string& name_);
-    int PubLogging(bool state_, std::string& name_);
-
-    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/) override;
 
   protected:
-    bool HasSample(const std::string& /* sample_name_ */) override { return(true); };
+    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/);
 
     bool RegisterProcess(const eCAL::pb::Sample& sample_);
     bool UnregisterProcess(const eCAL::pb::Sample& sample_);
@@ -80,8 +82,6 @@ namespace eCAL
 
     bool RegisterTopic(const eCAL::pb::Sample& sample_, enum ePubSub pubsub_type_);
     bool UnregisterTopic(const eCAL::pb::Sample& sample_, enum ePubSub pubsub_type_);
-
-    void RegisterLogMessage(const eCAL::pb::LogMessage& log_msg_);
 
     using TopicMonMapT = eCAL::Util::CExpMap<std::string, eCAL::Monitoring::STopicMon>;
     struct STopicMonMap
@@ -167,14 +167,5 @@ namespace eCAL
     STopicMonMap                                 m_subscriber_map;
     SServerMonMap                                m_server_map;
     SClientMonMap                                m_clients_map;
-
-    // logging
-    using LogMessageListT = std::list<eCAL::pb::LogMessage>;
-    std::mutex                                   m_log_msglist_sync;
-    LogMessageListT                              m_log_msglist;
-
-    // worker threads
-    std::shared_ptr<CLoggingReceiveThread>       m_log_rcv_threadcaller;
-    std::shared_ptr<CMonLogPublishingThread>     m_pub_threadcaller;
   };
 }

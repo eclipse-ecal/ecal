@@ -23,30 +23,45 @@
 
 #pragma once
 
+#include <ecal/ecal_os.h>
+
+#ifdef ECAL_OS_WINDOWS
+#include "win32/socket_os.h"
+#endif
+
+#ifdef ECAL_OS_LINUX
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#endif
+
 #include <memory>
 #include <string>
 
-namespace eCAL
+namespace IO
 {
-  struct SSenderAttr
+  namespace UDP
   {
-    std::string address;
-    int         port      = 0;
-    int         ttl       = 0;
-    bool        broadcast = false;
-    bool        loopback  = true;
-    int         sndbuf    = 1024 * 1024;
-  };
+    struct SSenderAttr
+    {
+      std::string address;
+      int         port      = 0;
+      int         ttl       = 0;
+      bool        broadcast = false;
+      bool        loopback  = true;
+      int         sndbuf    = 1024 * 1024;
+    };
 
-  class CUDPSenderImpl;
+    class CUDPSenderImpl;
 
-  class CUDPSender
-  {
-  public:
-    CUDPSender(const SSenderAttr& attr_);
-    size_t Send(const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
+    class CUDPSender
+    {
+    public:
+      CUDPSender(const SSenderAttr& attr_);
+      size_t Send(const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
 
-  protected:
-    std::shared_ptr<CUDPSenderImpl> m_socket_impl;
-  };
+    protected:
+      std::shared_ptr<CUDPSenderImpl> m_socket_impl;
+    };
+  }
 }

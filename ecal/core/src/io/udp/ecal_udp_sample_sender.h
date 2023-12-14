@@ -18,12 +18,13 @@
 */
 
 /**
- * @brief  udp data writer
+ * @brief  UDP sample sender to send messages of type eCAL::pb::Sample
 **/
 
 #pragma once
 
-#include "ecal_def.h"
+#include "io/udp/sendreceive/udp_sender.h"
+
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
@@ -33,31 +34,24 @@
 #pragma warning(pop)
 #endif
 
-#include "io/udp/ecal_udp_sample_sender.h"
-#include "readwrite/ecal_writer_base.h"
-
-#include <string>
+#include <memory>
+#include <vector>
 
 namespace eCAL
 {
-  class CDataWriterUdpMC : public CDataWriterBase
+  namespace UDP
   {
-  public:
-    ~CDataWriterUdpMC() override;
+    class CSampleSender
+    {
+    public:
+      CSampleSender(const IO::UDP::SSenderAttr& attr_);
+      size_t Send(const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, long bandwidth_);
 
-    SWriterInfo GetInfo() override;
+    private:
+      IO::UDP::SSenderAttr                 m_attr;
+      std::shared_ptr<IO::UDP::CUDPSender> m_udp_sender;
 
-    bool Create(const std::string& host_name_, const std::string& topic_name_, const std::string & topic_id_) override;
-    // this virtual function is called during construction/destruction,
-    // so, mark it as final to ensure that no derived classes override it.
-    bool Destroy() final;
-
-    bool Write(const void* buf_, const SWriterAttr& attr_) override;
-
-  protected:
-    eCAL::pb::Sample                    m_ecal_sample;
-
-    std::shared_ptr<UDP::CSampleSender> m_sample_sender_loopback;
-    std::shared_ptr<UDP::CSampleSender> m_sample_sender_no_loopback;
-  };
+      std::vector<char>                    m_payload;
+    };
+  }
 }

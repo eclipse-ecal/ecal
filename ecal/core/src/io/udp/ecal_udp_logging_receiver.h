@@ -18,18 +18,22 @@
 */
 
 /**
- * @brief  Global monitoring class
+ * @brief  UDP logging receiver to receive messages of type eCAL::pb::LogMessage
 **/
 
 #pragma once
 
-#include <ecal/types/monitoring.h>
+#include "io/udp/sendreceive/udp_receiver.h"
+#include "util/ecal_thread.h"
+
+#include <functional>
+#include <memory>
 #include <string>
+#include <vector>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
 #endif
-#include <ecal/core/pb/ecal.pb.h>
 #include <ecal/core/pb/monitoring.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -37,31 +41,28 @@
 
 namespace eCAL
 {
-  ////////////////////////////////////////
-  // global database class
-  ////////////////////////////////////////
-  class CMonitoringImpl;
-  class CMonitoring
+  namespace UDP
   {
-  public:
-    CMonitoring();
-    ~CMonitoring();
-    
-    void Create();
-    void Destroy();
+    class CLoggingReceiver
+    {
+    public:
+      using LogMessageCallbackT = std::function<void(const eCAL::pb::LogMessage&)>;
 
-    void SetExclFilter(const std::string& filter_);
-    void SetInclFilter(const std::string& filter_);
-    void SetFilterState(bool state_);
+      CLoggingReceiver(const IO::UDP::SReceiverAttr& attr_, LogMessageCallbackT log_message_callback_);
+      virtual ~CLoggingReceiver();
 
-    void GetMonitoring(eCAL::pb::Monitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
-    void GetMonitoring(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
+    protected:
+      void ReceiveThread();
 
-  protected:
-    CMonitoringImpl* m_monitoring_impl = nullptr;
+      bool                             m_network_mode;
 
-  private:
-    CMonitoring(const CMonitoring&);                 // prevent copy-construction
-    CMonitoring& operator=(const CMonitoring&);      // prevent assignment
-  };
+      LogMessageCallbackT              m_log_message_callback;
+
+      IO::UDP::CUDPReceiver            m_udp_receiver;
+      std::shared_ptr<CCallbackThread> m_udp_receiver_thread;
+
+      std::vector<char>                m_msg_buffer;
+      eCAL::pb::LogMessage             m_log_message;
+    };
+  }
 }

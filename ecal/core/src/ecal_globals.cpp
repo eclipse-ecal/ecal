@@ -22,7 +22,7 @@
 **/
 
 #include "ecal_globals.h"
-#include "io/udp/udp_init.h"
+
 #include "config/ecal_config_reader.h"
 
 #include <stdexcept>
@@ -43,9 +43,6 @@ namespace eCAL
   {
     // will be set if any new module was initialized
     bool new_initialization(false);
-
-    // this is needed here for functions like "GetHostName" on windows
-    Net::Initialize();
 
     /////////////////////
     // CONFIG
@@ -296,9 +293,6 @@ namespace eCAL
     memfile_map_instance            = nullptr;
     log_instance                    = nullptr;
     config_instance                 = nullptr;
-
-    // last not least we close all
-    Net::Finalize();
 
     initialized = false;
 

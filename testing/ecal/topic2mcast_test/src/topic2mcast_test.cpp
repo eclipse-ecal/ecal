@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include "topic2mcast.h"
+#include "io/udp/ecal_udp_topic2mcast.h"
 
 #include <string>
 #include <chrono>

@@ -107,7 +107,7 @@ namespace eCAL
      *
      * @return Zero if succeeded.
     **/
-    ECAL_DEPRECATE_SINCE_5_12("use GetMonitoring and publish yourself")
+    ECAL_DEPRECATE_SINCE_5_12("Function is no longer implemented. Instead use GetMonitoring")
     ECAL_API int PubMonitoring(bool state_, std::string name_ = "ecal.monitoring");
 
     /**
@@ -118,7 +118,7 @@ namespace eCAL
      *
      * @return Zero if succeeded.
     **/
-    ECAL_DEPRECATE_SINCE_5_12("use GetLogging and publish yourself")
+    ECAL_DEPRECATE_SINCE_5_12("Function is no longer implemented. Instead use GetLogging")
     ECAL_API int PubLogging(bool state_, std::string name_ = "ecal.logging");
   }
   /** @example monitoring_rec.cpp

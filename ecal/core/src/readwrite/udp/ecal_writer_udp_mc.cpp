@@ -25,7 +25,7 @@
 #include <ecal/ecal_config.h>
 
 #include "ecal_writer_udp_mc.h"
-#include "io/udp/udp_configurations.h"
+#include "io/udp/ecal_udp_configurations.h"
 
 namespace eCAL
 {
@@ -61,20 +61,20 @@ namespace eCAL
     m_topic_id    = topic_id_;
 
     // set network attributes
-    SSenderAttr attr;
+    IO::UDP::SSenderAttr attr;
     attr.address   = UDP::GetTopicPayloadAddress(topic_name_);
     attr.port      = UDP::GetPayloadPort();
     attr.ttl       = UDP::GetMulticastTtl();
-    attr.broadcast = !Config::IsNetworkEnabled();
+    attr.broadcast = UDP::IsBroadcast();
     attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
     // create udp/sample sender with activated loop-back
     attr.loopback = true;
-    m_sample_sender_loopback = std::make_shared<CSampleSender>(attr);
+    m_sample_sender_loopback = std::make_shared<UDP::CSampleSender>(attr);
 
     // create udp/sample sender without activated loop-back
     attr.loopback = false;
-    m_sample_sender_no_loopback = std::make_shared<CSampleSender>(attr);
+    m_sample_sender_no_loopback = std::make_shared<UDP::CSampleSender>(attr);
 
     m_created = true;
     return true;
@@ -123,14 +123,14 @@ namespace eCAL
     {
       if (m_sample_sender_loopback)
       {
-        sent = m_sample_sender_loopback->SendSample(m_ecal_sample.topic().tname(), m_ecal_sample, attr_.bandwidth);
+        sent = m_sample_sender_loopback->Send(m_ecal_sample.topic().tname(), m_ecal_sample, attr_.bandwidth);
       }
     }
     else
     {
       if (m_sample_sender_no_loopback)
       {
-        sent = m_sample_sender_no_loopback->SendSample(m_ecal_sample.topic().tname(), m_ecal_sample, attr_.bandwidth);
+        sent = m_sample_sender_no_loopback->Send(m_ecal_sample.topic().tname(), m_ecal_sample, attr_.bandwidth);
       }
     }
 

@@ -20,31 +20,34 @@
 
 #pragma once
 
-#include "io/udp/udp_receiver_base.h"
-
+#include "udp_receiver.h"
 #include "config/ecal_config_reader_hlp.h"
+
 #include <udpcap/npcap_helpers.h>
 #include <udpcap/udpcap_socket.h>
 
-namespace eCAL
+namespace IO
 {
-  ////////////////////////////////////////////////////////
-  // Npcap based receiver class implementation
-  ////////////////////////////////////////////////////////
-  class CUDPReceiverPcap : public CUDPReceiverBase
+  namespace UDP
   {
-  public:
-    CUDPReceiverPcap(const SReceiverAttr& attr_);
+    ////////////////////////////////////////////////////////
+    // Npcap based receiver class implementation
+    ////////////////////////////////////////////////////////
+    class CUDPReceiverPcap : public CUDPReceiverImpl
+    {
+    public:
+      CUDPReceiverPcap(const SReceiverAttr& attr_);
+      ~CUDPReceiverPcap();
 
-    bool AddMultiCastGroup(const char* ipaddr_) override;
-    bool RemMultiCastGroup(const char* ipaddr_) override;
+      bool AddMultiCastGroup(const char* ipaddr_) override;
+      bool RemMultiCastGroup(const char* ipaddr_) override;
 
-    size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr) override;
+      size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr) override;
 
-  protected:
-    bool                 m_created;
-    bool                 m_broadcast;
-    Udpcap::UdpcapSocket m_socket;
-  };
-
+    protected:
+      bool                 m_created;
+      bool                 m_broadcast;
+      Udpcap::UdpcapSocket m_socket;
+    };
+  }
 }

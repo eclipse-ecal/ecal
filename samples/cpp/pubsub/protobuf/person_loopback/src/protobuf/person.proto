@@ -17,34 +17,26 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  UDP receiver class
-**/
+syntax = "proto3";
 
-#pragma once
+import "animal.proto";
+import "house.proto";
 
-#include <memory>
-#include "ecal_receiver.h"
+package pb.People;
 
-namespace eCAL
+message Person
 {
-  class CUDPReceiverBase;
-
-  class CUDPReceiver : public CReceiver
+  enum SType
   {
-  public:
-    CUDPReceiver();
+    MALE   = 0;
+    FEMALE = 1;
+  }
 
-    bool Create(const SReceiverAttr& attr_) override;
-    bool Destroy() override;
+  int32  id               = 1;
+  string name             = 2;
+  SType  stype            = 3;
+  string email            = 4;
 
-    bool AddMultiCastGroup(const char* ipaddr_);
-    bool RemMultiCastGroup(const char* ipaddr_);
-
-    size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr) override;
-
-  protected:
-    bool m_use_npcap;
-    std::shared_ptr<CUDPReceiverBase> m_socket_impl;
-  };
+  Animal.Dog        dog   = 5;
+  Environment.House house = 6;
 }

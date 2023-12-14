@@ -30,6 +30,29 @@ namespace eCAL
   namespace UDP
   {
     /**
+     * @brief IsBroadcast() retrieves if we communicate via UDP Broadcast or UDP Multicast.
+     *
+     * @return True if broadcast mode is active.
+     */
+    bool IsBroadcast();
+    
+    /**
+     * @brief IsNpcapEnabled() retrieves if we use the npcap UDP receiver (windows only).
+     *
+     * @return True if npcap mode is active.
+     */
+    bool IsNpcapEnabled();
+
+    /**
+     * @brief Linux specific setting to enable joining multicast groups on all network interfacs independent of their link state.
+     *
+     * Enabling this makes sure that eCAL processes receive data if they are started before network devices are up and running.
+     *
+     * @return True if this setting is active.
+     */
+    bool IsUdpMulticastJoinAllIfEnabled();
+
+    /**
      * @brief GetRegistrationAddress retrieves the UDP registration address based on network configuration.
      *
      * If the network mode is disabled, it returns the local broadcast address.

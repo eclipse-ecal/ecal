@@ -27,11 +27,6 @@ if (ECAL_NPCAP_SUPPORT)
   find_package(udpcap REQUIRED)
 endif()
 
-if (ECAL_JOIN_MULTICAST_TWICE)
-  message(STATUS "eCAL ${PROJECT_NAME}: Enabling Specific Multicast Network Bug Workaround")
-  add_definitions(-DECAL_JOIN_MULTICAST_TWICE)
-endif(ECAL_JOIN_MULTICAST_TWICE)
-
 # If we're currently doing a build within a git repository, we will configure the header files.
 # Else, (e.g. for source packages such as debian source packages) we will use a preconfigured file.
 # If there is really no information available, it will generate a dummy version file 0.0.0
@@ -137,42 +132,62 @@ endif()
 ######################################
 # io/udp
 ######################################
+# io/udp/fragmentation
+set(ecal_io_udp_fragmentation_src
+    src/io/udp/fragmentation/msg_type.h
+    src/io/udp/fragmentation/rcv_fragments.cpp
+    src/io/udp/fragmentation/rcv_fragments.h
+    src/io/udp/fragmentation/snd_fragments.cpp
+    src/io/udp/fragmentation/snd_fragments.h
+)
+
+# io/udp/sendreceive (npcap)
 if(ECAL_NPCAP_SUPPORT)
-set(ecal_io_udp_src_npcap 
-   src/io/udp/udp_receiver_npcap.cpp
-   src/io/udp/udp_receiver_npcap.h
+set(ecal_io_udp_sendreceive_src_npcap 
+   src/io/udp/sendreceive/udp_receiver_npcap.cpp
+   src/io/udp/sendreceive/udp_receiver_npcap.h
 )
 endif()
 
-set(ecal_io_udp_src
-    src/io/udp/rcv_sample.cpp
-    src/io/udp/snd_raw_buffer.cpp
-    src/io/udp/snd_sample.cpp
-    src/io/udp/udp_configurations.cpp
-    src/io/udp/udp_init.cpp
-    src/io/udp/udp_receiver.cpp
-    src/io/udp/udp_receiver_asio.cpp
-    src/io/udp/udp_sender.cpp
-    src/io/udp/ecal_receiver.h
-    src/io/udp/msg_type.h
-    src/io/udp/rcv_sample.h
-    src/io/udp/snd_raw_buffer.h
-    src/io/udp/snd_sample.h
-    src/io/udp/udp_configurations.h
-    src/io/udp/udp_init.h
-    src/io/udp/udp_receiver.h
-    src/io/udp/udp_receiver_base.h
-    src/io/udp/udp_receiver_asio.h
-    src/io/udp/udp_sender.h
-    ${ecal_io_udp_src_npcap}
+# io/udp/sendreceive
+set(ecal_io_udp_sendreceive_src
+    src/io/udp/sendreceive/udp_receiver.cpp
+    src/io/udp/sendreceive/udp_receiver.h
+    src/io/udp/sendreceive/udp_receiver_asio.cpp
+    src/io/udp/sendreceive/udp_receiver_asio.h
+    src/io/udp/sendreceive/udp_sender.cpp
+    src/io/udp/sendreceive/udp_sender.h
+    ${ecal_io_udp_sendreceive_src_npcap}
 )
 
-# io/udp/linux
+# io/udp/sendreceive/linux
 if(UNIX)
-  set(ecal_io_udp_linux_src
-      src/io/udp/linux/ecal_socket_option_linux.h
+  set(ecal_io_udp_sendreceive_linux_src
+      src/io/udp/sendreceive/linux/socket_os.h
 )
 endif()
+
+# io/udp/sendreceive/win32
+if (WIN32)
+  set(ecal_io_udp_sendreceive_win_src
+      src/io/udp/sendreceive/win32/socket_os.h
+)
+endif()
+
+# io/udp
+set(ecal_io_udp_src
+    src/io/udp/ecal_udp_configurations.cpp
+    src/io/udp/ecal_udp_configurations.h
+    src/io/udp/ecal_udp_logging_receiver.cpp
+    src/io/udp/ecal_udp_logging_receiver.h
+    src/io/udp/ecal_udp_logging_sender.cpp
+    src/io/udp/ecal_udp_logging_sender.h
+    src/io/udp/ecal_udp_sample_receiver.cpp
+    src/io/udp/ecal_udp_sample_receiver.h
+    src/io/udp/ecal_udp_sample_sender.cpp
+    src/io/udp/ecal_udp_sample_sender.h
+    src/io/udp/ecal_udp_topic2mcast.h
+)
 
 ######################################
 # logging
@@ -189,10 +204,8 @@ set(ecal_logging_src
 set(ecal_monitoring_src
     src/monitoring/ecal_monitoring_def.cpp
     src/monitoring/ecal_monitoring_impl.cpp
-    src/monitoring/ecal_monitoring_threads.cpp
     src/monitoring/ecal_monitoring_def.h
     src/monitoring/ecal_monitoring_impl.h
-    src/monitoring/ecal_monitoring_threads.h
 )
 
 ######################################
@@ -297,7 +310,6 @@ set(ecal_util_src
     src/util/convert_utf.cpp
     src/util/convert_utf.h
     src/util/ecal_expmap.h
-    src/util/ecal_thread.cpp
     src/util/ecal_thread.h
     src/util/getenvvar.h
     src/util/sys_usage.cpp
@@ -323,13 +335,11 @@ set(ecal_cmn_src
     src/ecal_global_accessors.h
     src/ecal_globals.h
     src/ecal_sample_to_topicinfo.h
-    src/topic2mcast.h
 )
 if (WIN32)
     list (APPEND
         ecal_cmn_src
         src/ecal_win_main.h
-        src/ecal_win_socket.h
     )
 endif()
 
@@ -447,9 +457,12 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_io_mtx_win_src}
     ${ecal_io_shm_src} 
     ${ecal_io_shm_linux_src}
-    ${ecal_io_shm_win_src} 
+    ${ecal_io_shm_win_src}
+    ${ecal_io_udp_fragmentation_src}
+    ${ecal_io_udp_sendreceive_src}
     ${ecal_io_udp_src}
-    ${ecal_io_udp_linux_src}
+    ${ecal_io_udp_sendreceive_linux_src}
+    ${ecal_io_udp_sendreceive_win_src}
     ${ecal_logging_src} 
     ${ecal_monitoring_src} 
     ${ecal_pubsub_src} 
@@ -567,7 +580,11 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_io_shm_src} 
     ${ecal_io_shm_linux_src}
     ${ecal_io_shm_win_src} 
+    ${ecal_io_udp_fragmentation_src}
+    ${ecal_io_udp_sendreceive_src}
     ${ecal_io_udp_src}
+    ${ecal_io_udp_sendreceive_linux_src}
+    ${ecal_io_udp_sendreceive_win_src}
     ${ecal_logging_src} 
     ${ecal_monitoring_src}
     ${ecal_pubsub_src}

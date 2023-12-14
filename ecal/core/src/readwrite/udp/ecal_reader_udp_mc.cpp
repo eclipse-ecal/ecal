@@ -26,94 +26,87 @@
 #include "ecal_global_accessors.h"
 #include "pubsub/ecal_subgate.h"
 
-#include "io/udp/udp_configurations.h"
+#include "io/udp/ecal_udp_configurations.h"
 
 namespace eCAL
 {
   ////////////////
-  // READER
-  ////////////////
-  bool CDataReaderUDP::HasSample(const std::string& sample_name_)
-  {
-    if (g_subgate() == nullptr) return(false);
-    return(g_subgate()->HasSample(sample_name_));
-  }
-
-  bool CDataReaderUDP::ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_)
-  {
-    if (g_subgate() == nullptr) return false;
-    return g_subgate()->ApplySample(ecal_sample_, layer_);
-  }
-
-  ////////////////
   // LAYER
   ////////////////
   CUDPReaderLayer::CUDPReaderLayer() : 
-                   started(false),
-                   local_mode(false)
+                   m_started(false),
+                   m_local_mode(false)
   {}
 
-  CUDPReaderLayer::~CUDPReaderLayer()
-  {
-    thread.Stop();
-  }
+  CUDPReaderLayer::~CUDPReaderLayer() = default;
 
   void CUDPReaderLayer::Initialize()
   {
-    // set local mode
-    local_mode = !Config::IsNetworkEnabled();
-
-    // set network attributes
-    SReceiverAttr attr;
-    attr.address   = UDP::GetPayloadAddress();
-    attr.port      = UDP::GetPayloadPort();
-    attr.broadcast = !Config::IsNetworkEnabled();
-    attr.loopback  = true;
-    attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
-
-    // create udp receiver
-    rcv.Create(attr);
   }
 
   void CUDPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
   {
-    if (!started)
+    if (!m_started)
     {
-      thread.Start(0, std::bind(&CDataReaderUDP::Receive, &reader, &rcv, CMN_PAYLOAD_RECEIVE_THREAD_CYCLE_TIME_MS));
-      started = true;
+      // set local mode
+      m_local_mode = UDP::IsBroadcast();
+
+      // set network attributes
+      IO::UDP::SReceiverAttr attr;
+      attr.address   = UDP::GetPayloadAddress();
+      attr.port      = UDP::GetPayloadPort();
+      attr.broadcast = UDP::IsBroadcast();
+      attr.loopback  = true;
+      attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
+
+      // start payload sample receiver
+      m_payload_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CUDPReaderLayer::HasSample, this, std::placeholders::_1), std::bind(&CUDPReaderLayer::ApplySample, this, std::placeholders::_1));
+
+      m_started = true;
     }
 
     // we use udp broadcast in local mode
-    if (local_mode) return;
+    if (m_local_mode) return;
 
     // add topic name based multicast address
     const std::string mcast_address = UDP::GetTopicPayloadAddress(topic_name_);
-    if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
+    if (m_topic_name_mcast_map.find(mcast_address) == m_topic_name_mcast_map.end())
     {
-      topic_name_mcast_map.emplace(std::pair<std::string, int>(mcast_address, 0));
-      rcv.AddMultiCastGroup(mcast_address.c_str());
+      m_topic_name_mcast_map.emplace(std::pair<std::string, int>(mcast_address, 0));
+      m_payload_receiver->AddMultiCastGroup(mcast_address.c_str());
     }
-    topic_name_mcast_map[mcast_address]++;
+    m_topic_name_mcast_map[mcast_address]++;
   }
 
   void CUDPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
   {
     // we use udp broadcast in local mode
-    if (local_mode) return;
+    if (m_local_mode) return;
 
     const std::string mcast_address = UDP::GetTopicPayloadAddress(topic_name_);
-    if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
+    if (m_topic_name_mcast_map.find(mcast_address) == m_topic_name_mcast_map.end())
     {
       // this should never happen
     }
     else
     {
-      topic_name_mcast_map[mcast_address]--;
-      if (topic_name_mcast_map[mcast_address] == 0)
+      m_topic_name_mcast_map[mcast_address]--;
+      if (m_topic_name_mcast_map[mcast_address] == 0)
       {
-        rcv.RemMultiCastGroup(mcast_address.c_str());
-        topic_name_mcast_map.erase(mcast_address);
+        m_payload_receiver->RemMultiCastGroup(mcast_address.c_str());
+        m_topic_name_mcast_map.erase(mcast_address);
       }
     }
+  }
+  bool CUDPReaderLayer::HasSample(const std::string& sample_name_)
+  {
+    if (g_subgate() == nullptr) return(false);
+    return(g_subgate()->HasSample(sample_name_));
+  }
+
+  bool CUDPReaderLayer::ApplySample(const eCAL::pb::Sample& ecal_sample_)
+  {
+    if (g_subgate() == nullptr) return false;
+    return g_subgate()->ApplySample(ecal_sample_, eCAL::pb::eTLayerType::tl_ecal_udp_mc);
   }
 }

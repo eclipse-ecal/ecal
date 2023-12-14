@@ -17,17 +17,49 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "io/udp/udp_configurations.h"
-
-#include <ecal/ecal_config.h>
+#include "ecal_udp_configurations.h"
 
 #include "ecal_def.h"
-#include "topic2mcast.h"
+#include "ecal_udp_topic2mcast.h"
+
+#include <ecal/ecal_config.h>
 
 namespace eCAL
 {
   namespace UDP
   {
+    /**
+     * @brief IsBroadcast() retrieves if we communicate via UDP Broadcast or UDP Multicast.
+     *
+     * @return True if broadcast mode is active.
+     */
+    bool IsBroadcast()
+    {
+      return !Config::IsNetworkEnabled();
+    }
+
+    /**
+     * @brief IsNpcapEnabled() retrieves if we use the npcap UDP receiver (windows only).
+     *
+     * @return True if npcap mode is active.
+     */
+    bool IsNpcapEnabled()
+    {
+      return Config::IsNpcapEnabled();
+    }
+
+    /**
+     * @brief Linux specific setting to enable joining multicast groups on all network interfacs independent of their link state.
+     *
+     * Enabling this makes sure that eCAL processes receive data if they are started before network devices are up and running.
+     *
+     * @return True if this setting is active.
+     */
+    bool IsUdpMulticastJoinAllIfEnabled()
+    {
+      return Config::IsUdpMulticastJoinAllIfEnabled();
+    }
+
     /**
      * @brief GetLocalBroadcastAddress retrieves the broadcast address within the loopback range.
      *
@@ -126,7 +158,7 @@ namespace eCAL
       if (local_only)
       {
         // if network is disabled, return a TTL of 0 to restrict multicast packets to the local machine
-        return 0;
+        return 1;
       }
 
       // if network is enabled, return the configured UDP multicast TTL value
