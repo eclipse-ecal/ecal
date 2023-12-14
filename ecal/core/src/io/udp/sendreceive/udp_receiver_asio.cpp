@@ -105,6 +105,15 @@ namespace IO
       m_created = true;
     }
 
+    CUDPReceiverAsio::~CUDPReceiverAsio()
+    {
+      // close the socket
+      m_socket.close();
+
+      // state successful destruction
+      m_created = false;
+    }
+
     bool CUDPReceiverAsio::AddMultiCastGroup(const char* ipaddr_)
     {
       if (!m_broadcast)

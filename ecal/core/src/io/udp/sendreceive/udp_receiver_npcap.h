@@ -37,6 +37,7 @@ namespace IO
     {
     public:
       CUDPReceiverPcap(const SReceiverAttr& attr_);
+      ~CUDPReceiverPcap();
 
       bool AddMultiCastGroup(const char* ipaddr_) override;
       bool RemMultiCastGroup(const char* ipaddr_) override;

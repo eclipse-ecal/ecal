@@ -27,11 +27,6 @@ if (ECAL_NPCAP_SUPPORT)
   find_package(udpcap REQUIRED)
 endif()
 
-if (ECAL_JOIN_MULTICAST_TWICE)
-  message(STATUS "eCAL ${PROJECT_NAME}: Enabling Specific Multicast Network Bug Workaround")
-  add_definitions(-DECAL_JOIN_MULTICAST_TWICE)
-endif(ECAL_JOIN_MULTICAST_TWICE)
-
 # If we're currently doing a build within a git repository, we will configure the header files.
 # Else, (e.g. for source packages such as debian source packages) we will use a preconfigured file.
 # If there is really no information available, it will generate a dummy version file 0.0.0

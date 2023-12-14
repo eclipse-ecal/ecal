@@ -64,6 +64,15 @@ namespace IO
       m_created = true;
     }
 
+    CUDPReceiverPcap::~CUDPReceiverPcap()
+    {
+      // close socket
+      m_socket.close();
+      
+      // state successful destruction
+      m_created = false;
+    }
+
     bool CUDPReceiverPcap::AddMultiCastGroup(const char* ipaddr_)
     {
       if (!m_broadcast)

@@ -87,7 +87,6 @@ option(BUILD_ECAL_TESTS                        "Build the eCAL google tests"    
 option(ECAL_INCLUDE_PY_SAMPLES                 "Include python language sample projects into CMake"               OFF)
 option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samples"                               ON)
 
-option(ECAL_JOIN_MULTICAST_TWICE               "Specific Multicast Network Bug Workaround"                        OFF)
 option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
 option(ECAL_USE_CLOCKLOCK_MUTEX                "Use native mutex with monotonic clock (requires glibc >= 2.30)"   OFF)
 
@@ -568,7 +567,6 @@ message(STATUS "BUILD_CSHARP_BINDING                           : ${BUILD_CSHARP_
 message(STATUS "BUILD_ECAL_TESTS                               : ${BUILD_ECAL_TESTS}")
 message(STATUS "ECAL_INCLUDE_PY_SAMPLES                        : ${ECAL_INCLUDE_PY_SAMPLES}")
 message(STATUS "ECAL_INSTALL_SAMPLE_SOURCES                    : ${ECAL_INSTALL_SAMPLE_SOURCES}")
-message(STATUS "ECAL_JOIN_MULTICAST_TWICE                      : ${ECAL_JOIN_MULTICAST_TWICE}")
 message(STATUS "ECAL_NPCAP_SUPPORT                             : ${ECAL_NPCAP_SUPPORT}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_ASIO                     : ${ECAL_THIRDPARTY_BUILD_ASIO}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS          : ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS}")
