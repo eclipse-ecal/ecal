@@ -36,6 +36,7 @@
 #endif
 
 #include <memory>
+#include <mutex>
 #include <string>
 
 namespace IO
@@ -85,6 +86,7 @@ namespace IO
 
     protected:
       bool m_use_npcap;
+      std::mutex                        m_socket_mtx;
       std::shared_ptr<CUDPReceiverImpl> m_socket_impl;
     };
   }

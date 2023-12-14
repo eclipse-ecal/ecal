@@ -72,25 +72,34 @@ namespace IO
     bool CUDPReceiver::Destroy()
     {
       if (!m_socket_impl) return(false);
+
+      const std::lock_guard<std::mutex> lock(m_socket_mtx);
       m_socket_impl.reset();
+
       return(true);
     }
 
     bool CUDPReceiver::AddMultiCastGroup(const char* ipaddr_)
     {
       if (!m_socket_impl) return(false);
+
+      const std::lock_guard<std::mutex> lock(m_socket_mtx);
       return(m_socket_impl->AddMultiCastGroup(ipaddr_));
     }
 
     bool CUDPReceiver::RemMultiCastGroup(const char* ipaddr_)
     {
       if (!m_socket_impl) return(false);
+
+      const std::lock_guard<std::mutex> lock(m_socket_mtx);
       return(m_socket_impl->RemMultiCastGroup(ipaddr_));
     }
 
     size_t CUDPReceiver::Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ /* = nullptr */)
     {
       if (!m_socket_impl) return(0);
+
+      const std::lock_guard<std::mutex> lock(m_socket_mtx);
       return(m_socket_impl->Receive(buf_, len_, timeout_, address_));
     }
   }
