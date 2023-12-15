@@ -140,7 +140,7 @@ double MMALinux::GetCPULoad()
     std::vector<std::string> cpu_line = SplitLine(local_copy);
     const double idle_time = stod(cpu_line.back());
     const unsigned int delta_count = (local_count - previous_count) * nr_of_cpu_cores;
-    static double previous_idle_time = idle_time - delta_count / 2;
+    static double previous_idle_time = idle_time - delta_count / 2.0;
     const double current_idle = idle_time - previous_idle_time;
 
     if (delta_count > 0)
@@ -257,7 +257,7 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
   auto lines = TokenizeIntoLines(local_copy);
   if (lines.size() > 0)
   {
-    const unsigned int delta_count = (local_count - previous_count);
+    const unsigned int delta_count = local_count - previous_count;
 
     // skip the first 2 lines
     auto iterator = lines.begin();
@@ -267,6 +267,8 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
       t_io cur = {0, 0};
       t_io prev;
       network_stats.name=network_io[0];
+      if (network_stats.name == "lo:")
+        continue;
       // remove the colon at the end
       network_stats.name.pop_back();
 
@@ -296,7 +298,8 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
         network_stats.send = 0;
       }
 
-      networks.push_back(network_stats);
+      if (cur.snd || cur.rec || prev.snd || prev.rec)
+        networks.push_back(network_stats);
       previous[network_stats.name] = cur;
     }
     previous_count = local_count;
@@ -581,7 +584,7 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
   }
 
   bool return_value = true;
-  const unsigned int delta_count = (local_count - previous_count);
+  const unsigned int delta_count = local_count - previous_count;
 
   auto lines = TokenizeIntoLines(local_copy);
 
@@ -593,13 +596,15 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
     {
       if (disk.name.find(partition[2]) != std::string::npos)
       {
+        disk.mount_point = "";
+
         t_io cur = {0, 0};
         t_io prev;
 
-        try { cur.read = static_cast<double>(stod(partition[5])); }
+        try { cur.read = stod(partition[5]); }
         catch (...) { }
 
-        try { cur.write = static_cast<double>(stod(partition[9])); }
+        try { cur.write = stod(partition[9]); }
         catch (...) { }
 
         if (previous.find(disk.name) != previous.end())
@@ -624,6 +629,16 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
     }
   }
   previous_count = local_count;
+
+  // remove unused disks
+  for (auto it = disk_stats_info.begin(), next = it; it != disk_stats_info.end(); it = next)
+  {
+    next++;
+    if (!it->mount_point.empty())
+    { // disk without statistics
+      disk_stats_info.erase(it);
+    }
+  }
 
   return return_value;
 }
