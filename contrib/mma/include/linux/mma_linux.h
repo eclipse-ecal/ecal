@@ -57,8 +57,40 @@ class MMALinux : public MMAImpl
   unsigned int disk_pipe_count_ = 0;
   unsigned int process_pipe_count_ = 0;
 
-  std::string arm_vcgencmd;
+  unsigned int cpu_prev_count_;
+  unsigned int net_prev_count_;
+  unsigned int disk_prev_count_;
+  unsigned int proc_prev_count_;
+  double cpu_prev_idle_time_;
 
+  struct t_netIo
+  {
+    unsigned long rec;
+    unsigned long snd;
+  };
+  std::unordered_map<std::string, t_netIo> net_prev_map;
+
+  struct t_procItem
+  {
+    unsigned long utime;
+    unsigned int count;
+    ResourceLinux::Process process_stats;
+  };
+  std::map<uint32_t, t_procItem> proc_prev_map;
+
+  struct t_diskIo
+  {
+    unsigned long read;
+    unsigned long write;
+  };
+  std::unordered_map<std::string, t_diskIo> disk_prev_map;
+
+  std::map<uid_t, std::string> uname_map;
+  std::string root_dev;
+  std::string arm_vcgencmd;
+  long page_size;
+  long ticks_per_second;
+  
   /**
   * @brief  Get machine statistics: CPU, Memory, Disk, Network
   *

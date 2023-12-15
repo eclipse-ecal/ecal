@@ -57,7 +57,8 @@ MMALinux::MMALinux():
   os_name = GetOsName();
   nr_of_cpu_cores = GetCpuCores();
   arm_vcgencmd = GetArmvcgencmd();
-
+  page_size = sysconf(_SC_PAGE_SIZE);
+  ticks_per_second = sysconf(_SC_CLK_TCK);
 }
 
 MMALinux::~MMALinux()
@@ -126,7 +127,6 @@ double MMALinux::GetCPULoad()
 {
   std::string local_copy;
   unsigned int local_count;
-  static unsigned int previous_count;
   {
     std::lock_guard<std::mutex> guard(mutex);
     local_copy = cpu_pipe_result_;
@@ -139,14 +139,13 @@ double MMALinux::GetCPULoad()
   {
     std::vector<std::string> cpu_line = SplitLine(local_copy);
     const double idle_time = stod(cpu_line.back());
-    const unsigned int delta_count = (local_count - previous_count) * nr_of_cpu_cores;
-    static double previous_idle_time = idle_time - delta_count / 2.0;
-    const double current_idle = idle_time - previous_idle_time;
+    const unsigned int delta_count = (local_count - cpu_prev_count_) * nr_of_cpu_cores;
+    const double current_idle = idle_time - cpu_prev_idle_time_;
 
     if (delta_count > 0)
       cpu_time = 100.0 * (1 - 2 * current_idle / delta_count);
-    previous_idle_time = idle_time;
-    previous_count = local_count;
+    cpu_prev_idle_time_ = idle_time;
+    cpu_prev_count_ = local_count;
   }
 
   return cpu_time;
@@ -238,13 +237,6 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
 {
   std::string local_copy;
   unsigned int local_count;
-  static unsigned int previous_count;
-  typedef struct
-  {
-    unsigned long rec;
-    unsigned long snd;
-  } t_io;
-  static std::unordered_map<std::string, t_io> previous;
   {
     std::lock_guard<std::mutex> guard(mutex);
     local_copy = network_pipe_result_;
@@ -257,15 +249,15 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
   auto lines = TokenizeIntoLines(local_copy);
   if (lines.size() > 0)
   {
-    const unsigned int delta_count = local_count - previous_count;
+    const unsigned int delta_count = local_count - net_prev_count_;
 
     // skip the first 2 lines
     auto iterator = lines.begin();
     for(std::advance(iterator, 2); iterator != lines.end(); iterator++)
     {
       std::vector<std::string> network_io = SplitLine(*iterator);
-      t_io cur = {0, 0};
-      t_io prev;
+      t_netIo cur = {0, 0};
+      t_netIo prev;
       network_stats.name=network_io[0];
       if (network_stats.name == "lo:")
         continue;
@@ -278,9 +270,9 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
       try { cur.snd = stoul(network_io[9]); }
       catch (...) { }
 
-      if (previous.find(network_stats.name) != previous.end())
+      if (net_prev_map.find(network_stats.name) != net_prev_map.end())
       {
-        prev = previous[network_stats.name];
+        prev = net_prev_map[network_stats.name];
       }
       else
       {
@@ -300,9 +292,9 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
 
       if (cur.snd || cur.rec || prev.snd || prev.rec)
         networks.push_back(network_stats);
-      previous[network_stats.name] = cur;
+      net_prev_map[network_stats.name] = cur;
     }
-    previous_count = local_count;
+    net_prev_count_ = local_count;
   }
 
   return networks;
@@ -311,17 +303,7 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
 ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
 {
   std::string local_copy;
-  static const long page_size = sysconf(_SC_PAGE_SIZE);
-  static const long ticks_per_second = sysconf(_SC_CLK_TCK);
-  static unsigned int previous_count;
-  typedef struct
-  {
-    unsigned long utime;
-    unsigned int count;
-    ResourceLinux::Process process_stats;
-  } t_item;
-  static std::map<uint32_t, t_item> previous;
-  t_item item;
+  t_procItem item;
   {
     std::lock_guard<std::mutex> guard(mutex);
     local_copy = process_pipe_result_;
@@ -341,10 +323,10 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
       // process utime
       const unsigned long cur = std::stoul(process_data[13]);
       unsigned long prev;
-      if (previous.find(process_stats.id) != previous.end())
+      if (proc_prev_map.find(process_stats.id) != proc_prev_map.end())
       {
-        prev = previous[process_stats.id].utime;
-        process_stats = previous[process_stats.id].process_stats;
+        prev = proc_prev_map[process_stats.id].utime;
+        process_stats = proc_prev_map[process_stats.id].process_stats;
       }
       else
       {
@@ -353,7 +335,6 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
         std::string filename = "/proc/" + process_data[0];
         if (0 == stat(filename.c_str(), &info))
         {
-          static std::map<uid_t, std::string> uname_map;
           if (uname_map.find(info.st_uid) == uname_map.end())
           {
             struct passwd *pw = getpwuid(info.st_uid);
@@ -380,23 +361,23 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
       else
         process_stats.commandline = process_data[1];
 
-      const unsigned int delta_count = (item.count - previous_count) * ticks_per_second * nr_of_cpu_cores;
+      const unsigned int delta_count = (item.count - proc_prev_count_) * ticks_per_second * nr_of_cpu_cores;
 
       if (delta_count > 0)
         process_stats.cpu_load.cpu_load = (cur - prev) / (0.005 * delta_count);
       item.utime = cur;
       item.process_stats = process_stats;
-      previous[process_stats.id] = item;
+      proc_prev_map[process_stats.id] = item;
     }
-    previous_count = item.count;
+    proc_prev_count_ = item.count;
 
     // garbage collection
-    for (auto it = previous.begin(), next = it; it != previous.end(); it = next)
+    for (auto it = proc_prev_map.begin(), next = it; it != proc_prev_map.end(); it = next)
     {
       next++;
       if (it->second.count < item.count)
       { // process disappeared
-        previous.erase(it);
+        proc_prev_map.erase(it);
       }
       else
       { // push to sorted list
@@ -450,7 +431,6 @@ bool MMALinux::FormatListData(std::vector<std::string>& the_list)
     // /dev/root needs special handling
     if (name == "/dev/root")
     {
-      static std::string root_dev;
       if (root_dev.empty())
       {
         std::string result;
@@ -570,13 +550,6 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
 {
   std::string local_copy;
   unsigned int local_count;
-  static unsigned int previous_count;
-  typedef struct
-  {
-    unsigned long read;
-    unsigned long write;
-  } t_io;
-  static std::unordered_map<std::string, t_io> previous;
   {
     std::lock_guard<std::mutex> guard(mutex);
     local_copy = disk_pipe_result_;
@@ -584,7 +557,7 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
   }
 
   bool return_value = true;
-  const unsigned int delta_count = local_count - previous_count;
+  const unsigned int delta_count = local_count - disk_prev_count_;
 
   auto lines = TokenizeIntoLines(local_copy);
 
@@ -598,8 +571,8 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
       {
         disk.mount_point = "";
 
-        t_io cur = {0, 0};
-        t_io prev;
+        t_diskIo cur = {0, 0};
+        t_diskIo prev;
 
         try { cur.read = stod(partition[5]); }
         catch (...) { }
@@ -607,9 +580,9 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
         try { cur.write = stod(partition[9]); }
         catch (...) { }
 
-        if (previous.find(disk.name) != previous.end())
+        if (disk_prev_map.find(disk.name) != disk_prev_map.end())
         {
-          prev = previous[disk.name];
+          prev = disk_prev_map[disk.name];
         }
         else
         {
@@ -624,11 +597,11 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
           disk.write = (cur.write - prev.write) * 4 * B_IN_KB / delta_count;
         }
 
-        previous[disk.name] = cur;
+        disk_prev_map[disk.name] = cur;
       }
     }
   }
-  previous_count = local_count;
+  disk_prev_count_ = local_count;
 
   // remove unused disks
   for (auto it = disk_stats_info.begin(), next = it; it != disk_stats_info.end(); it = next)
