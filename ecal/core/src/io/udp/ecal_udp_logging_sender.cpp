@@ -18,16 +18,31 @@
 */
 
 /**
- * @brief  UDP initialization
+ * @brief  UDP logging sender to send messages of type eCAL::pb::LogMessage
 **/
 
-#pragma once
+#include "ecal_udp_logging_sender.h"
 
 namespace eCAL
 {
-  namespace Net
+  namespace UDP
   {
-    int Initialize();
-    int Finalize();
+    CLoggingSender::CLoggingSender(const IO::UDP::SSenderAttr& attr_)
+    {
+      m_udp_sender = std::make_shared<IO::UDP::CUDPSender>(attr_);
+    }
+
+    size_t CLoggingSender::Send(const eCAL::pb::LogMessage& ecal_log_message_)
+    {
+      if (!m_udp_sender) return(0);
+
+      m_logmessage_s = ecal_log_message_.SerializeAsString();
+      if (!m_logmessage_s.empty())
+      {
+        return m_udp_sender->Send((void*)m_logmessage_s.data(), m_logmessage_s.size());
+      }
+
+      return 0;
+    }
   }
 }

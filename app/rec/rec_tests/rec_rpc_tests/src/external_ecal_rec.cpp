@@ -64,7 +64,17 @@ ExternalEcalRecInstance::ExternalEcalRecInstance(bool gui)
     return;
   }
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+  for (int i = 0; i < 20; ++i)
+  {
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    eCAL::pb::rec_server::RecServerConfig config_pb;
+    auto error = GetConfigViaRpc(config_pb);
+    if (!error)
+    {
+      break;
+    }
+  }
 
   if (gui)
   {

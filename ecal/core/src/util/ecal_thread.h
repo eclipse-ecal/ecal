@@ -21,48 +21,93 @@
  * @brief  eCAL threading helper class
 **/
 
-#pragma once
-
-#include <ecal/ecal_eventhandle.h>
-
-#include <atomic>
-#include <thread>
+#include <chrono>
+#include <condition_variable>
 #include <functional>
+#include <mutex>
+#include <thread>
+
+#pragma once
 
 namespace eCAL
 {
-  class CThread
+  /**
+   * @brief A class that encapsulates threaded functionality with a callback interface.
+   */
+  class CCallbackThread
   {
   public:
-    CThread();
-    virtual ~CThread();
+    /**
+     * @brief Constructor for the CallbackThread class.
+     * @param callback A callback function to be executed in the CallbackThread thread.
+     */
+    CCallbackThread(std::function<void()> callback)
+      : callback_(callback) {}
 
-    int Start(int period, std::function<int()> ext_caller_);
-    int Stop();
-    int Fire();
-
-    bool IsRunning()        {return(m_tdata.is_running);};
-
-  protected:
-    struct ThreadData
+    /**
+     * @brief Start the callback thread with a specified timeout.
+     * @param timeout The timeout duration for waiting in the callback thread.
+     */
+    template <typename DurationType>
+    void start(DurationType timeout)
     {
-      ThreadData() :
-         period(0)
-       , is_running(false)
-       , is_started(false)
-       , do_stop(false)
-      {
-      };
-      std::thread             thread;
-      int                     period;
-      EventHandleT            event;
-      std::atomic<bool>       is_running;
-      std::atomic<bool>       is_started;
-      std::atomic<bool>       do_stop;
-      std::function<int()>    ext_caller;
-    };
-    struct ThreadData m_tdata;
+      callbackThread_ = std::thread(&CCallbackThread::callbackFunction<DurationType>, this, timeout);
+    }
 
-    static void HelperThread(void* par_);
+    /**
+     * @brief Stop the callback thread.
+     * Waits for the callback thread to finish its work.
+     */
+    void stop()
+    {
+      {
+        const std::unique_lock<std::mutex> lock(mtx_);
+        // Set the flag to signal the callback thread to stop
+        stopThread_ = true;
+        // Notify the callback thread to wake up and check the flag
+        cv_.notify_one();
+      }
+
+      // Wait for the callback thread to finish
+      if (callbackThread_.joinable()) {
+        callbackThread_.join();
+      }
+    }
+
+  private:
+    std::thread callbackThread_;      /**< The callback thread object. */
+    std::function<void()> callback_;  /**< The callback function to be executed in the callback thread. */
+    std::mutex mtx_;                  /**< Mutex for thread synchronization. */
+    std::condition_variable cv_;      /**< Condition variable for signaling between threads. */
+    bool stopThread_{false};          /**< Flag to indicate whether the callback thread should stop. */
+
+    /**
+     * @brief Callback function that runs in the callback thread.
+     * Periodically checks the stopThread flag and executes the callback function.
+     * @tparam DurationType The type of the timeout duration (e.g., std::chrono::seconds, std::chrono::milliseconds).
+     * @param timeout The timeout duration for waiting in the callback thread.
+     */
+    template <typename DurationType>
+    void callbackFunction(DurationType timeout)
+    {
+      while (true)
+      {
+        {
+          std::unique_lock<std::mutex> lock(mtx_);
+          // Wait for a signal or a timeout
+          if (cv_.wait_for(lock, timeout, [this] { return stopThread_; }))
+          {
+            // If the stopThread flag is true, break out of the loop
+            break;
+          }
+        }
+
+        // Do some work in the callback thread
+        if (callback_)
+        {
+          callback_();
+        }
+      }
+    }
   };
 }

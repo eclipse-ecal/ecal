@@ -26,7 +26,7 @@
 #include <ecal/ecal_config.h>
 
 #include "ecal_log_impl.h"
-#include "io/udp/udp_configurations.h"
+#include "io/udp/ecal_udp_configurations.h"
 
 #include <mutex>
 #include <cstdio>
@@ -145,20 +145,32 @@ namespace eCAL
       m_logfile = fopen(m_logfile_name.c_str(), "w");
     }
 
-    // set network attributes
     if(m_filter_mask_udp != 0)
     {
-      SSenderAttr attr;
+      // set logging send network attributes
+      IO::UDP::SSenderAttr attr;
       attr.address   = UDP::GetLoggingAddress();
       attr.port      = UDP::GetLoggingPort();
       attr.ttl       = UDP::GetMulticastTtl();
-      attr.broadcast = !Config::IsNetworkEnabled();
+      attr.broadcast = UDP::IsBroadcast();
       attr.loopback  = true;
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
       // create udp logging sender
-      m_udp_sender = std::make_unique<CUDPSender>(attr);
+      m_udp_logging_sender = std::make_unique<UDP::CLoggingSender>(attr);
     }
+
+    // set logging receive network attributes
+    IO::UDP::SReceiverAttr attr;
+    attr.address   = UDP::GetLoggingAddress();
+    attr.port      = UDP::GetLoggingPort();
+    attr.broadcast = UDP::IsBroadcast();
+    attr.loopback  = true;
+    attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
+
+    // start logging receiver
+    const UDP::CLoggingReceiver::LogMessageCallbackT log_message_callback = std::bind(&CLog::RegisterLogMessage, this, std::placeholders::_1);
+    m_log_receiver = std::make_shared<UDP::CLoggingReceiver>(attr, log_message_callback);
 
     m_created = true;
   }
@@ -169,7 +181,7 @@ namespace eCAL
 
     const std::lock_guard<std::mutex> lock(m_log_sync);
 
-    m_udp_sender.reset();
+    m_udp_logging_sender.reset();
 
     if(m_logfile != nullptr) fclose(m_logfile);
     m_logfile = nullptr;
@@ -259,8 +271,9 @@ namespace eCAL
       fflush(m_logfile);
     }
 
-    if((log_udp != 0) && m_udp_sender)
+    if((log_udp != 0) && m_udp_logging_sender)
     {
+      // set up log message
       ecal_msg.Clear();
       ecal_msg.set_time(std::chrono::duration_cast<std::chrono::microseconds>(log_time.time_since_epoch()).count());
       ecal_msg.set_hname(m_hname);
@@ -270,11 +283,8 @@ namespace eCAL
       ecal_msg.set_level(level_);
       ecal_msg.set_content(msg_);
 
-      ecal_msg_s = ecal_msg.SerializeAsString();
-      if(!ecal_msg_s.empty())
-      {
-        m_udp_sender->Send((void*)ecal_msg_s.data(), ecal_msg_s.size());
-      }
+      // sent it
+      m_udp_logging_sender->Send(ecal_msg);
     }
   }
 
@@ -309,5 +319,40 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_log_sync);
 
     return(m_core_time);
+  }
+
+  void CLog::GetLogging(eCAL::pb::Logging& logging_)
+  {
+    // clear protobuf object
+    logging_.Clear();
+
+    // acquire access
+    const std::lock_guard<std::mutex> lock(m_log_msglist_sync);
+
+    LogMessageListT::const_iterator siter = m_log_msglist.begin();
+    while (siter != m_log_msglist.end())
+    {
+      // add log message
+      eCAL::pb::LogMessage* pMonLogMessage = logging_.add_logs();
+
+      // copy content
+      pMonLogMessage->CopyFrom(*siter);
+
+      ++siter;
+    }
+
+    // empty message list
+    m_log_msglist.clear();
+  }
+
+  void CLog::RegisterLogMessage(const eCAL::pb::LogMessage& log_msg_)
+  {
+    // in "network mode" we accept all log messages
+    // in "local mode" we accept log messages from this host only
+    if ((m_hname == log_msg_.hname()) || Config::IsNetworkEnabled())
+    {
+      const std::lock_guard<std::mutex> lock(m_log_msglist_sync);
+      m_log_msglist.emplace_back(log_msg_);
+    }
   }
 }

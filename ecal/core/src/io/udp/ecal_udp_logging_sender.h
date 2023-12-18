@@ -18,50 +18,39 @@
 */
 
 /**
- * @brief  Global monitoring class
+ * @brief  UDP logging sender to send messages of type eCAL::pb::LogMessage
 **/
 
 #pragma once
 
-#include <ecal/types/monitoring.h>
-#include <string>
+#include "io/udp/sendreceive/udp_sender.h"
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
 #endif
-#include <ecal/core/pb/ecal.pb.h>
 #include <ecal/core/pb/monitoring.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
+#include <memory>
+#include <string>
+
 namespace eCAL
 {
-  ////////////////////////////////////////
-  // global database class
-  ////////////////////////////////////////
-  class CMonitoringImpl;
-  class CMonitoring
+  namespace UDP
   {
-  public:
-    CMonitoring();
-    ~CMonitoring();
-    
-    void Create();
-    void Destroy();
+    class CLoggingSender
+    {
+    public:
+      CLoggingSender(const IO::UDP::SSenderAttr& attr_);
+      size_t Send(const eCAL::pb::LogMessage& ecal_log_message_);
 
-    void SetExclFilter(const std::string& filter_);
-    void SetInclFilter(const std::string& filter_);
-    void SetFilterState(bool state_);
+    private:
+      IO::UDP::SSenderAttr                 m_attr;
+      std::shared_ptr<IO::UDP::CUDPSender> m_udp_sender;
 
-    void GetMonitoring(eCAL::pb::Monitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
-    void GetMonitoring(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
-
-  protected:
-    CMonitoringImpl* m_monitoring_impl = nullptr;
-
-  private:
-    CMonitoring(const CMonitoring&);                 // prevent copy-construction
-    CMonitoring& operator=(const CMonitoring&);      // prevent assignment
-  };
+      std::string                          m_logmessage_s;
+    };
+  }
 }

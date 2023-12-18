@@ -180,7 +180,5 @@ namespace eCAL
         return topic2mcast_hash(hash_v, mcast_base_, mcast_mask_);
       }
     }
-  
-
   }
 }

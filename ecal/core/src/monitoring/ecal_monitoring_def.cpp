@@ -23,6 +23,7 @@
 
 #include "ecal_monitoring_def.h"
 #include "ecal_monitoring_impl.h"
+#include "logging/ecal_log_impl.h"
 #include "ecal_global_accessors.h"
 
 namespace eCAL
@@ -71,27 +72,6 @@ namespace eCAL
   void CMonitoring::GetMonitoring(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_)
   {
     m_monitoring_impl->GetMonitoringStructs(monitoring_, entities_);
-  }
-
-  void CMonitoring::GetLogging(eCAL::pb::Logging& logging_)
-  {
-    m_monitoring_impl->GetLogging(logging_);
-  }
-
-  int CMonitoring::PubMonitoring(bool state_, std::string& name_)
-  {
-    return(m_monitoring_impl->PubMonitoring(state_, name_));
-  }
-
-  int CMonitoring::PubLogging(bool state_, std::string& name_)
-  {
-    return(m_monitoring_impl->PubLogging(state_, name_));
-  }
-
-  bool CMonitoring::ApplySample(const eCAL::pb::Sample & ecal_sample_)
-  {
-    if(m_monitoring_impl != nullptr) return m_monitoring_impl->ApplySample(ecal_sample_, eCAL::pb::eTLayerType::tl_none);
-    return false;
   }
 
   namespace Monitoring
@@ -148,22 +128,22 @@ namespace eCAL
     int GetLogging(std::string& log_)
     {
       eCAL::pb::Logging logging;
-      if (g_monitoring() != nullptr) g_monitoring()->GetLogging(logging);
+      if (g_log() != nullptr) g_log()->GetLogging(logging);
 
       log_ = logging.SerializeAsString();
       return((int)log_.size());
     }
 
-    int PubMonitoring(bool state_, std::string name_ /* = "ecal.monitoring"*/)
+    int PubMonitoring(bool /*state_*/, std::string /*name_*/)
     {
-      if (g_monitoring() != nullptr) return(g_monitoring()->PubMonitoring(state_, name_));
-      return -1;
+      // TODO: Remove this function from the API
+      return 0;
     }
 
-    int PubLogging(bool state_, std::string name_ /* = "ecal.logging"*/)
+    int PubLogging(bool /*state_*/, std::string /*name_*/)
     {
-      if (g_monitoring() != nullptr) return(g_monitoring()->PubLogging(state_, name_));
-      return -1;
+      // TODO: Remove this function from the API
+      return 0;
     }
   }
 }

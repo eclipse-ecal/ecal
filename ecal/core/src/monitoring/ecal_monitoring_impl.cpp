@@ -24,6 +24,7 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_config.h>
 
+#include "io/udp/ecal_udp_configurations.h"
 #include "config/ecal_config_reader_hlp.h"
 #include "ecal_monitoring_impl.h"
 
@@ -56,17 +57,6 @@ namespace eCAL
 
     // utilize registration receiver to enrich monitor information
     g_registration_receiver()->SetCustomApplySampleCallback([this](const auto& ecal_sample_){this->ApplySample(ecal_sample_, eCAL::pb::tl_none);});
-
-    // start logging receive thread
-    const CLoggingReceiveThread::LogMessageCallbackT logmsg_cb = std::bind(&CMonitoringImpl::RegisterLogMessage, this, std::placeholders::_1);
-    m_log_rcv_threadcaller = std::make_shared<CLoggingReceiveThread>(logmsg_cb);
-    m_log_rcv_threadcaller->SetNetworkMode(Config::IsNetworkEnabled());
-
-    // start monitoring and logging publishing thread
-    // we really need to remove this feature !
-    const CMonLogPublishingThread::MonitoringCallbackT mon_cb = std::bind(&CMonitoringImpl::GetMonitoringPb, this, std::placeholders::_1, Monitoring::Entity::All);
-    const CMonLogPublishingThread::LoggingCallbackT    log_cb = std::bind(&CMonitoringImpl::GetLogging, this, std::placeholders::_1);
-    m_pub_threadcaller = std::make_shared<CMonLogPublishingThread>(mon_cb, log_cb);
 
     // setup blacklist and whitelist filter strings#
     m_topic_filter_excl_s = Config::GetMonitoringFilterExcludeList();
@@ -542,12 +532,6 @@ namespace eCAL
     return(true);
   }
 
-  void CMonitoringImpl::RegisterLogMessage(const eCAL::pb::LogMessage& log_msg_)
-  {
-    const std::lock_guard<std::mutex> lock(m_log_msglist_sync);
-    m_log_msglist.emplace_back(log_msg_);
-  }
-
   CMonitoringImpl::STopicMonMap* CMonitoringImpl::GetMap(enum ePubSub pubsub_type_)
   {
     STopicMonMap* pHostMap = nullptr;
@@ -690,44 +674,6 @@ namespace eCAL
         monitoring_.clients.emplace_back(client.second);
       }
     }
-  }
-
-  void CMonitoringImpl::GetLogging(eCAL::pb::Logging& logging_)
-  {
-    // clear protobuf object
-    logging_.Clear();
-
-    // acquire access
-    const std::lock_guard<std::mutex> lock(m_log_msglist_sync);
-
-    LogMessageListT::const_iterator siter = m_log_msglist.begin();
-    while (siter != m_log_msglist.end())
-    {
-      // add log message
-      eCAL::pb::LogMessage* pMonLogMessage = logging_.add_logs();
-
-      // copy content
-      pMonLogMessage->CopyFrom(*siter);
-
-      ++siter;
-    }
-
-    // empty message list
-    m_log_msglist.clear();
-  }
-
-  int CMonitoringImpl::PubMonitoring(bool state_, std::string & name_)
-  {
-    // (de)activate monitor publisher
-    m_pub_threadcaller->SetMonState(state_, name_);
-    return 0;
-  }
-
-  int CMonitoringImpl::PubLogging(bool state_, std::string & name_)
-  {
-    // (de)activate logging publisher
-    m_pub_threadcaller->SetLogState(state_, name_);
-    return 0;
   }
 
   void CMonitoringImpl::MonitorProcs(eCAL::pb::Monitoring& monitoring_)

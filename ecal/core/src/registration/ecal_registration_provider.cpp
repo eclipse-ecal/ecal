@@ -33,8 +33,10 @@
 #include "ecal_registration_provider.h"
 #include "ecal_descgate.h"
 
-#include "io/udp/udp_configurations.h"
-#include "io/udp/snd_sample.h"
+#include "io/udp/ecal_udp_configurations.h"
+#include "io/udp/ecal_udp_sample_sender.h"
+
+#include <chrono>
 
 namespace eCAL
 {
@@ -81,16 +83,16 @@ namespace eCAL
     if (m_use_network_monitoring)
     {
       // set network attributes
-      SSenderAttr attr;
+      IO::UDP::SSenderAttr attr;
       attr.address   = UDP::GetRegistrationAddress();
       attr.port      = UDP::GetRegistrationPort();
       attr.ttl       = UDP::GetMulticastTtl();
-      attr.broadcast = !Config::IsNetworkEnabled();
+      attr.broadcast = UDP::IsBroadcast();
       attr.loopback  = true;
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
       // create udp registration sender
-      m_reg_sample_snd = std::make_shared<CSampleSender>(attr);
+      m_reg_sample_snd = std::make_shared<UDP::CSampleSender>(attr);
     }
     else
     {
@@ -105,7 +107,8 @@ namespace eCAL
     }
 
     // start cyclic registration thread
-    m_reg_sample_snd_thread.Start(Config::GetRegistrationRefreshMs(), std::bind(&CRegistrationProvider::RegisterSendThread, this));
+    m_reg_sample_snd_thread = std::make_shared<CCallbackThread>(std::bind(&CRegistrationProvider::RegisterSendThread, this));
+    m_reg_sample_snd_thread->start(std::chrono::milliseconds(Config::GetRegistrationRefreshMs()));
 
     m_created = true;
   }
@@ -115,7 +118,7 @@ namespace eCAL
     if(!m_created) return;
 
     // stop cyclic registration thread
-    m_reg_sample_snd_thread.Stop();
+    m_reg_sample_snd_thread->stop();
 
     // send one last (un)registration message to the world
     // thank you and goodbye :-)
@@ -433,7 +436,7 @@ namespace eCAL
     bool return_value {true};
 
     if (m_use_network_monitoring && m_reg_sample_snd)
-      return_value &= (m_reg_sample_snd->SendSample(sample_name_, sample_, -1) != 0);
+      return_value &= (m_reg_sample_snd->Send(sample_name_, sample_, -1) != 0);
 
     if(m_use_shm_monitoring)
     {
@@ -465,16 +468,14 @@ namespace eCAL
     return return_value;
   }
 
-  int CRegistrationProvider::RegisterSendThread()
+  void CRegistrationProvider::RegisterSendThread()
   {
-    if(!m_created) return(0);
-
     // calculate average receive bytes
-    g_process_rbytes = static_cast<long long>(((double)g_process_rbytes_sum / m_reg_refresh)*1000.0);
+    g_process_rbytes = static_cast<long long>(((double)g_process_rbytes_sum / m_reg_refresh) * 1000.0);
     g_process_rbytes_sum = 0;
 
     // calculate average write bytes
-    g_process_wbytes = static_cast<long long>(((double)g_process_wbytes_sum / m_reg_refresh)*1000.0);
+    g_process_wbytes = static_cast<long long>(((double)g_process_wbytes_sum / m_reg_refresh) * 1000.0);
     g_process_wbytes_sum = 0;
 
     // refresh subscriber registration
@@ -503,9 +504,7 @@ namespace eCAL
 
     // write sample list to shared memory
     SendSampleList();
-
-    return(0);
-  }
+ }
 
   bool CRegistrationProvider::ApplyTopicToDescGate(const std::string& topic_name_
     , const SDataTypeInformation& topic_info_
