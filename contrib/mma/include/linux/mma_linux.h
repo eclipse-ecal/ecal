@@ -72,8 +72,8 @@ class MMALinux : public MMAImpl
 
   struct t_procItem
   {
-    unsigned long utime;
-    unsigned int count;
+    unsigned long utime{};
+    unsigned int count{};
     ResourceLinux::Process process_stats;
   };
   std::map<uint32_t, t_procItem> proc_prev_map;

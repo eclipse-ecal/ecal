@@ -44,6 +44,8 @@
 #define MMA_PS_CMD "cat /proc/[0-9]*/stat 2>/dev/null"
 
 MMALinux::MMALinux():
+  page_size(sysconf(_SC_PAGE_SIZE)),
+  ticks_per_second(sysconf(_SC_CLK_TCK)),
   cpu_pipe_(std::make_unique<PipeRefresher>(MMA_CPU_CMD,500)),
   network_pipe_(std::make_unique<PipeRefresher>(MMA_NET_CMD,500)),
   disk_pipe_(std::make_unique<PipeRefresher>(MMA_DISK_CMD,500)),
@@ -57,8 +59,6 @@ MMALinux::MMALinux():
   os_name = GetOsName();
   nr_of_cpu_cores = GetCpuCores();
   arm_vcgencmd = GetArmvcgencmd();
-  page_size = sysconf(_SC_PAGE_SIZE);
-  ticks_per_second = sysconf(_SC_CLK_TCK);
 }
 
 MMALinux::~MMALinux()
@@ -126,7 +126,7 @@ std::string MMALinux::FileToString(const std::string& command)
 double MMALinux::GetCPULoad()
 {
   std::string local_copy;
-  unsigned int local_count;
+  unsigned int local_count = 0;
   {
     std::lock_guard<std::mutex> guard(mutex);
     local_copy = cpu_pipe_result_;
@@ -213,7 +213,7 @@ ResourceLinux::Temperature MMALinux::GetTemperature()
     std::smatch match;
     const std::regex expression("\\d{2,}.\\d{1,}");
 
-    if (std::regex_search(result, match, expression) && match.size() > 0)
+    if (std::regex_search(result, match, expression) && !match.empty())
     {
       temperature.cpu_temperature = stof(match.str(0));
     }
@@ -236,7 +236,7 @@ ResourceLinux::DiskStatsList MMALinux::GetDisks()
 ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
 {
   std::string local_copy;
-  unsigned int local_count;
+  unsigned int local_count = 0;
   {
     std::lock_guard<std::mutex> guard(mutex);
     local_copy = network_pipe_result_;
@@ -257,7 +257,7 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
     {
       std::vector<std::string> network_io = SplitLine(*iterator);
       t_netIo cur = {0, 0};
-      t_netIo prev;
+      t_netIo prev{};
       network_stats.name=network_io[0];
       if (network_stats.name == "lo:")
         continue;
@@ -290,7 +290,10 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
         network_stats.send = 0;
       }
 
-      if (cur.snd || cur.rec || prev.snd || prev.rec)
+      if ( (cur.snd != 0) || 
+           (cur.rec != 0) || 
+           (prev.snd != 0) || 
+           (prev.rec != 0) )
         networks.push_back(network_stats);
       net_prev_map[network_stats.name] = cur;
     }
@@ -316,13 +319,13 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
   auto lines = TokenizeIntoLines(local_copy);
   if (lines.size() > 0)
   {
-    for(auto iterator = lines.begin(); iterator!=lines.end(); iterator++)
+    for(auto& line : lines)
     {
-      std::vector<std::string> process_data = SplitLine(*iterator);
+      std::vector<std::string> process_data = SplitLine(line);
       process_stats.id=std::stoi(process_data[0]);
       // process utime
       const unsigned long cur = std::stoul(process_data[13]);
-      unsigned long prev;
+      unsigned long prev = 0;
       if (proc_prev_map.find(process_stats.id) != proc_prev_map.end())
       {
         prev = proc_prev_map[process_stats.id].utime;
@@ -331,14 +334,14 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
       else
       {
         prev = cur;
-        struct stat info;
-        std::string filename = "/proc/" + process_data[0];
+        struct stat info{};
+        const std::string filename = "/proc/" + process_data[0];
         if (0 == stat(filename.c_str(), &info))
         {
           if (uname_map.find(info.st_uid) == uname_map.end())
           {
             struct passwd *pw = getpwuid(info.st_uid);
-            if (pw)
+            if (pw != nullptr)
             {
               process_stats.user=pw->pw_name;
               uname_map[info.st_uid] = pw->pw_name;
@@ -437,7 +440,7 @@ bool MMALinux::FormatListData(std::vector<std::string>& the_list)
         OpenPipe("cat /proc/cmdline", result);
         std::size_t found = result.find("root=");
         result = result.substr(found + 5);
-        found = result.find(" ");
+        found = result.find(' ');
         root_dev = result.substr(0, found);
       }
       name = root_dev;
@@ -492,7 +495,7 @@ std::list<std::string> MMALinux::TokenizeIntoLines(const std::string& str)
 
 bool MMALinux::SetDiskInformation(ResourceLinux::DiskStatsList& disks)
 {
-  bool return_value = true;
+  const bool return_value = true;
 
   std::string result;
   OpenPipe("df", result);
@@ -516,7 +519,7 @@ bool MMALinux::SetDiskInformation(ResourceLinux::DiskStatsList& disks)
       {
         const uint64_t KiB = 1024;
         ResourceLinux::DiskStats disk_stats;
-        uint64_t used = stoll(partition[1]) * KiB;
+        const uint64_t used = stoll(partition[1]) * KiB;
         disk_stats.name = partition[0];
         disk_stats.available = stoll(partition[2]) * KiB;
         disk_stats.capacity = disk_stats.available + used;
@@ -549,7 +552,7 @@ bool MMALinux::SetDiskInformation(ResourceLinux::DiskStatsList& disks)
 bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_info)
 {
   std::string local_copy;
-  unsigned int local_count;
+  unsigned int local_count = 0;
   {
     std::lock_guard<std::mutex> guard(mutex);
     local_copy = disk_pipe_result_;
@@ -572,7 +575,7 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
         disk.mount_point = "";
 
         t_diskIo cur = {0, 0};
-        t_diskIo prev;
+        t_diskIo prev{};
 
         try { cur.read = stod(partition[5]); }
         catch (...) { }
@@ -626,7 +629,7 @@ std::string MMALinux::GetOsName()
   std::string os_release = FileToString("/etc/os-release");
   std::size_t found = os_release.find("PRETTY_NAME=\"");
   os_release = os_release.substr(found + 13);
-  found = os_release.find("\"");
+  found = os_release.find('\"');
   std::string name = "LINUX ";
   name.append(os_release.substr(0, found));
   return name;
