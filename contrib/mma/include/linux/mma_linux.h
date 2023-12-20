@@ -43,9 +43,9 @@ class MMALinux : public MMAImpl
   **/
   ~MMALinux();
 
-  std::mutex mutex;
-  std::string os_name;
-  int nr_of_cpu_cores;
+  std::mutex mutex_;
+  std::string os_name_;
+  int nr_of_cpu_cores_;
 
   std::string cpu_pipe_result_;
   std::string network_pipe_result_;
@@ -68,7 +68,7 @@ class MMALinux : public MMAImpl
     unsigned long rec;
     unsigned long snd;
   };
-  std::unordered_map<std::string, t_netIo> net_prev_map;
+  std::unordered_map<std::string, t_netIo> net_prev_map_;
 
   struct t_procItem
   {
@@ -76,20 +76,20 @@ class MMALinux : public MMAImpl
     unsigned int count{};
     ResourceLinux::Process process_stats;
   };
-  std::map<uint32_t, t_procItem> proc_prev_map;
+  std::map<uint32_t, t_procItem> proc_prev_map_;
 
   struct t_diskIo
   {
     unsigned long read;
     unsigned long write;
   };
-  std::unordered_map<std::string, t_diskIo> disk_prev_map;
+  std::unordered_map<std::string, t_diskIo> disk_prev_map_;
 
-  std::map<uid_t, std::string> uname_map;
-  std::string root_dev;
-  std::string arm_vcgencmd;
-  long page_size;
-  long ticks_per_second;
+  std::map<uid_t, std::string> uname_map_;
+  std::string root_dev_;
+  std::string arm_vcgencmd_;
+  long page_size_;
+  long ticks_per_second_;
   
   /**
   * @brief  Get machine statistics: CPU, Memory, Disk, Network

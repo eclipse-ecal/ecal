@@ -44,8 +44,8 @@
 #define MMA_PS_CMD "cat /proc/[0-9]*/stat 2>/dev/null"
 
 MMALinux::MMALinux():
-  page_size(sysconf(_SC_PAGE_SIZE)),
-  ticks_per_second(sysconf(_SC_CLK_TCK)),
+  page_size_(sysconf(_SC_PAGE_SIZE)),
+  ticks_per_second_(sysconf(_SC_CLK_TCK)),
   cpu_pipe_(std::make_unique<PipeRefresher>(MMA_CPU_CMD,500)),
   network_pipe_(std::make_unique<PipeRefresher>(MMA_NET_CMD,500)),
   disk_pipe_(std::make_unique<PipeRefresher>(MMA_DISK_CMD,500)),
@@ -56,9 +56,9 @@ MMALinux::MMALinux():
   disk_pipe_->AddCallback(std::bind(&MMALinux::OnDataReceived, this, std::placeholders::_1, std::placeholders::_2));
   process_pipe_->AddCallback(std::bind(&MMALinux::OnDataReceived, this, std::placeholders::_1, std::placeholders::_2));
 
-  os_name = GetOsName();
-  nr_of_cpu_cores = GetCpuCores();
-  arm_vcgencmd = GetArmvcgencmd();
+  os_name_ = GetOsName();
+  nr_of_cpu_cores_ = GetCpuCores();
+  arm_vcgencmd_ = GetArmvcgencmd();
 }
 
 MMALinux::~MMALinux()
@@ -67,7 +67,7 @@ MMALinux::~MMALinux()
 
 void MMALinux::OnDataReceived(const std::string& pipe_result, const std::string& command)
 {
-  std::lock_guard<std::mutex> guard(mutex);
+  std::lock_guard<std::mutex> guard(mutex_);
   if (command == MMA_CPU_CMD)
   {
     cpu_pipe_result_ = pipe_result;
@@ -128,7 +128,7 @@ double MMALinux::GetCPULoad()
   std::string local_copy;
   unsigned int local_count = 0;
   {
-    std::lock_guard<std::mutex> guard(mutex);
+    std::lock_guard<std::mutex> guard(mutex_);
     local_copy = cpu_pipe_result_;
     local_count = cpu_pipe_count_;
   }
@@ -139,7 +139,7 @@ double MMALinux::GetCPULoad()
   {
     std::vector<std::string> cpu_line = SplitLine(local_copy);
     const double idle_time = stod(cpu_line.back());
-    const unsigned int delta_count = (local_count - cpu_prev_count_) * nr_of_cpu_cores;
+    const unsigned int delta_count = (local_count - cpu_prev_count_) * nr_of_cpu_cores_;
     const double current_idle = idle_time - cpu_prev_idle_time_;
 
     if (delta_count > 0)
@@ -205,10 +205,10 @@ ResourceLinux::Temperature MMALinux::GetTemperature()
 {
   ResourceLinux::Temperature temperature;
 
-  if (arm_vcgencmd.length() != 0)
+  if (arm_vcgencmd_.length() != 0)
   {
     std::string result;
-    OpenPipe(arm_vcgencmd, result);
+    OpenPipe(arm_vcgencmd_, result);
 
     std::smatch match;
     const std::regex expression("\\d{2,}.\\d{1,}");
@@ -238,7 +238,7 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
   std::string local_copy;
   unsigned int local_count = 0;
   {
-    std::lock_guard<std::mutex> guard(mutex);
+    std::lock_guard<std::mutex> guard(mutex_);
     local_copy = network_pipe_result_;
     local_count = network_pipe_count_;
   }
@@ -270,9 +270,9 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
       try { cur.snd = stoul(network_io[9]); }
       catch (...) { }
 
-      if (net_prev_map.find(network_stats.name) != net_prev_map.end())
+      if (net_prev_map_.find(network_stats.name) != net_prev_map_.end())
       {
-        prev = net_prev_map[network_stats.name];
+        prev = net_prev_map_[network_stats.name];
       }
       else
       {
@@ -295,7 +295,7 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
            (prev.snd != 0) || 
            (prev.rec != 0) )
         networks.push_back(network_stats);
-      net_prev_map[network_stats.name] = cur;
+      net_prev_map_[network_stats.name] = cur;
     }
     net_prev_count_ = local_count;
   }
@@ -308,7 +308,7 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
   std::string local_copy;
   t_procItem item;
   {
-    std::lock_guard<std::mutex> guard(mutex);
+    std::lock_guard<std::mutex> guard(mutex_);
     local_copy = process_pipe_result_;
     item.count = process_pipe_count_;
   }
@@ -326,10 +326,10 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
       // process utime
       const unsigned long cur = std::stoul(process_data[13]);
       unsigned long prev = 0;
-      if (proc_prev_map.find(process_stats.id) != proc_prev_map.end())
+      if (proc_prev_map_.find(process_stats.id) != proc_prev_map_.end())
       {
-        prev = proc_prev_map[process_stats.id].utime;
-        process_stats = proc_prev_map[process_stats.id].process_stats;
+        prev = proc_prev_map_[process_stats.id].utime;
+        process_stats = proc_prev_map_[process_stats.id].process_stats;
       }
       else
       {
@@ -338,13 +338,13 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
         const std::string filename = "/proc/" + process_data[0];
         if (0 == stat(filename.c_str(), &info))
         {
-          if (uname_map.find(info.st_uid) == uname_map.end())
+          if (uname_map_.find(info.st_uid) == uname_map_.end())
           {
             struct passwd *pw = getpwuid(info.st_uid);
             if (pw != nullptr)
             {
               process_stats.user=pw->pw_name;
-              uname_map[info.st_uid] = pw->pw_name;
+              uname_map_[info.st_uid] = pw->pw_name;
             }
             else
             {
@@ -353,34 +353,34 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
           }
           else
           {
-            process_stats.user = uname_map[info.st_uid];
+            process_stats.user = uname_map_[info.st_uid];
           }
         }
       }
 
-      process_stats.memory.current_used_memory=stoull(process_data[23]) * page_size;
+      process_stats.memory.current_used_memory=stoull(process_data[23]) * page_size_;
       if (process_data[1].length() > 2)
         process_stats.commandline=process_data[1].substr(1, process_data[1].length()-2);
       else
         process_stats.commandline = process_data[1];
 
-      const unsigned int delta_count = (item.count - proc_prev_count_) * ticks_per_second * nr_of_cpu_cores;
+      const unsigned int delta_count = (item.count - proc_prev_count_) * ticks_per_second_ * nr_of_cpu_cores_;
 
       if (delta_count > 0)
         process_stats.cpu_load.cpu_load = (cur - prev) / (0.005 * delta_count);
       item.utime = cur;
       item.process_stats = process_stats;
-      proc_prev_map[process_stats.id] = item;
+      proc_prev_map_[process_stats.id] = item;
     }
     proc_prev_count_ = item.count;
 
     // garbage collection
-    for (auto it = proc_prev_map.begin(), next = it; it != proc_prev_map.end(); it = next)
+    for (auto it = proc_prev_map_.begin(), next = it; it != proc_prev_map_.end(); it = next)
     {
       next++;
       if (it->second.count < item.count)
       { // process disappeared
-        proc_prev_map.erase(it);
+        proc_prev_map_.erase(it);
       }
       else
       { // push to sorted list
@@ -434,16 +434,16 @@ bool MMALinux::FormatListData(std::vector<std::string>& the_list)
     // /dev/root needs special handling
     if (name == "/dev/root")
     {
-      if (root_dev.empty())
+      if (root_dev_.empty())
       {
         std::string result;
         OpenPipe("cat /proc/cmdline", result);
         std::size_t found = result.find("root=");
         result = result.substr(found + 5);
         found = result.find(' ');
-        root_dev = result.substr(0, found);
+        root_dev_ = result.substr(0, found);
       }
-      name = root_dev;
+      name = root_dev_;
     }
 
     // if last character of string is digit, delete the digit
@@ -554,7 +554,7 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
   std::string local_copy;
   unsigned int local_count = 0;
   {
-    std::lock_guard<std::mutex> guard(mutex);
+    std::lock_guard<std::mutex> guard(mutex_);
     local_copy = disk_pipe_result_;
     local_count = disk_pipe_count_;
   }
@@ -583,9 +583,9 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
         try { cur.write = stod(partition[9]); }
         catch (...) { }
 
-        if (disk_prev_map.find(disk.name) != disk_prev_map.end())
+        if (disk_prev_map_.find(disk.name) != disk_prev_map_.end())
         {
-          prev = disk_prev_map[disk.name];
+          prev = disk_prev_map_[disk.name];
         }
         else
         {
@@ -600,7 +600,7 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
           disk.write = (cur.write - prev.write) * 4 * B_IN_KB / delta_count;
         }
 
-        disk_prev_map[disk.name] = cur;
+        disk_prev_map_[disk.name] = cur;
       }
     }
   }
@@ -638,8 +638,8 @@ std::string MMALinux::GetOsName()
 void MMALinux::SetResourceData(eCAL::pb::mma::State& state)
 {
   state.set_cpu_load(GetCPULoad());
-  state.set_number_of_cpu_cores(nr_of_cpu_cores);
-  state.set_operating_system(os_name);
+  state.set_number_of_cpu_cores(nr_of_cpu_cores_);
+  state.set_operating_system(os_name_);
 
   eCAL::pb::mma::Memory memory;
   ResourceLinux::Memory mem = GetMemory();
