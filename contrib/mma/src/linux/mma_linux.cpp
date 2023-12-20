@@ -44,6 +44,7 @@
 #define MMA_PS_CMD "cat /proc/[0-9]*/stat 2>/dev/null"
 
 MMALinux::MMALinux():
+  nr_of_cpu_cores_(GetCpuCores()),
   page_size_(sysconf(_SC_PAGE_SIZE)),
   ticks_per_second_(sysconf(_SC_CLK_TCK)),
   cpu_pipe_(std::make_unique<PipeRefresher>(MMA_CPU_CMD,500)),
@@ -57,7 +58,6 @@ MMALinux::MMALinux():
   process_pipe_->AddCallback(std::bind(&MMALinux::OnDataReceived, this, std::placeholders::_1, std::placeholders::_2));
 
   os_name_ = GetOsName();
-  nr_of_cpu_cores_ = GetCpuCores();
   arm_vcgencmd_ = GetArmvcgencmd();
 }
 
@@ -67,7 +67,7 @@ MMALinux::~MMALinux()
 
 void MMALinux::OnDataReceived(const std::string& pipe_result, const std::string& command)
 {
-  std::lock_guard<std::mutex> guard(mutex_);
+  const std::lock_guard<std::mutex> guard(mutex_);
   if (command == MMA_CPU_CMD)
   {
     cpu_pipe_result_ = pipe_result;
@@ -128,7 +128,7 @@ double MMALinux::GetCPULoad()
   std::string local_copy;
   unsigned int local_count = 0;
   {
-    std::lock_guard<std::mutex> guard(mutex_);
+    const std::lock_guard<std::mutex> guard(mutex_);
     local_copy = cpu_pipe_result_;
     local_count = cpu_pipe_count_;
   }
@@ -238,7 +238,7 @@ ResourceLinux::NetworkStatsList MMALinux::GetNetworks()
   std::string local_copy;
   unsigned int local_count = 0;
   {
-    std::lock_guard<std::mutex> guard(mutex_);
+    const std::lock_guard<std::mutex> guard(mutex_);
     local_copy = network_pipe_result_;
     local_count = network_pipe_count_;
   }
@@ -308,7 +308,7 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
   std::string local_copy;
   t_procItem item;
   {
-    std::lock_guard<std::mutex> guard(mutex_);
+    const std::lock_guard<std::mutex> guard(mutex_);
     local_copy = process_pipe_result_;
     item.count = process_pipe_count_;
   }
@@ -554,7 +554,7 @@ bool MMALinux::SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_inf
   std::string local_copy;
   unsigned int local_count = 0;
   {
-    std::lock_guard<std::mutex> guard(mutex_);
+    const std::lock_guard<std::mutex> guard(mutex_);
     local_copy = disk_pipe_result_;
     local_count = disk_pipe_count_;
   }
