@@ -465,7 +465,7 @@ def client_set_hostname(client_handle, host_name):
   :type host_name:      string
 
   """
-  return _ecal.client_set_host_name(client_handle, host_name)
+  return _ecal.client_set_hostname(client_handle, host_name)
 
 
 def client_add_response_callback(client_handle, callback):
