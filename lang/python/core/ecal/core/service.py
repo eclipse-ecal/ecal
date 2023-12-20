@@ -90,7 +90,7 @@ class Client(object):
     :type host_name:  string
 
     """
-    return ecal_core.client_set_host_name(self.shandle, host_name)
+    return ecal_core.client_set_hostname(self.shandle, host_name)
 
   def add_response_callback(self, callback):
     """ add response callback to client
