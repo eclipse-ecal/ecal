@@ -35,7 +35,6 @@ CMake option                               Default   Description
 ``BUILD_ECAL_TESTS``                       ``OFF``   Build the eCAL google tests
 ``ECAL_INCLUDE_PY_SAMPLES``                ``OFF``   Include python language sample projects into CMake
 ``ECAL_INSTALL_SAMPLE_SOURCES``            ``ON``    Install the sources of eCAL samples
-``ECAL_JOIN_MULTICAST_TWICE``              ``OFF``   Specific multicast network bug workaround
 ``ECAL_NPCAP_SUPPORT``                     ``OFF``   Enable the eCAL to use Npcap for udp socket communication (i.e. the Win10 performance fix)
 ``ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS``  ``ON``    Build CMakeFunctions with eCAL
 ``ECAL_THIRDPARTY_BUILD_SPDLOG``           ``ON``    Build Spdlog with eCAL, included as a submodule in the thirdparty folder. You can always use your custom spdlog installation, this is only for convenience.
