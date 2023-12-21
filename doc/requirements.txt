@@ -3,7 +3,7 @@ sphinx-book-theme==0.3.3
 sphinx-tabs==3.3.1
 PyGithub
 autodoc
-empy
+empy<=3.3.4
 semantic-version 
 exhale
 Jinja2
