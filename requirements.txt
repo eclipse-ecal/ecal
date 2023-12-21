@@ -1,7 +1,7 @@
 wheel
 PyGithub
 autodoc
-empy
+empy<=3.3.4
 semantic-version 
 sphinx-tabs==3.2.0
 alabaster
