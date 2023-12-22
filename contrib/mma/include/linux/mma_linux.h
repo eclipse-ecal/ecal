@@ -43,21 +43,54 @@ class MMALinux : public MMAImpl
   **/
   ~MMALinux();
 
-  std::mutex mutex;
-  bool is_vrm;
-  int nr_of_cpu_cores;
-  const std::string root = "/";
-  const std::string home = "/home";
-  const std::string media = "/media";
-  const std::string boot = "/boot";
+  std::mutex mutex_;
+  std::string os_name_;
+  int nr_of_cpu_cores_;
 
   std::string cpu_pipe_result_;
   std::string network_pipe_result_;
   std::string disk_pipe_result_;
   std::string process_pipe_result_;
 
+  unsigned int cpu_pipe_count_ = 0;
+  unsigned int network_pipe_count_ = 0;
+  unsigned int disk_pipe_count_ = 0;
+  unsigned int process_pipe_count_ = 0;
 
+  unsigned int cpu_prev_count_;
+  unsigned int net_prev_count_;
+  unsigned int disk_prev_count_;
+  unsigned int proc_prev_count_;
+  double cpu_prev_idle_time_;
 
+  struct t_netIo
+  {
+    unsigned long rec;
+    unsigned long snd;
+  };
+  std::unordered_map<std::string, t_netIo> net_prev_map_;
+
+  struct t_procItem
+  {
+    unsigned long utime{};
+    unsigned int count{};
+    ResourceLinux::Process process_stats;
+  };
+  std::map<uint32_t, t_procItem> proc_prev_map_;
+
+  struct t_diskIo
+  {
+    unsigned long read;
+    unsigned long write;
+  };
+  std::unordered_map<std::string, t_diskIo> disk_prev_map_;
+
+  std::map<uid_t, std::string> uname_map_;
+  std::string root_dev_;
+  std::string arm_vcgencmd_;
+  long page_size_;
+  long ticks_per_second_;
+  
   /**
   * @brief  Get machine statistics: CPU, Memory, Disk, Network
   *
@@ -114,7 +147,7 @@ class MMALinux : public MMAImpl
   void SetResourceData(eCAL::pb::mma::State& state);
   int  GetCpuCores(void);
 
-  bool CheckIfIsALinuxVRM();
+  std::string GetOsName();
   ResourceLinux::ProcessStatsList GetProcesses();
 
 
@@ -128,7 +161,7 @@ class MMALinux : public MMAImpl
   std::list<std::string> TokenizeIntoLines(const std::string& str);
   bool SetDiskInformation(ResourceLinux::DiskStatsList& disks);
   bool SetDiskIOInformation(ResourceLinux::DiskStatsList& disk_stats_info);
-  bool MergeBootWithRootARM(ResourceLinux::DiskStatsList& disk_stats_info);
+  std::string GetArmvcgencmd();
   
   std::unique_ptr<PipeRefresher> cpu_pipe_;
   std::unique_ptr<PipeRefresher> network_pipe_;
