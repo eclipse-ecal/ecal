@@ -22,7 +22,7 @@ jobs:
         
       - name: Check for changed files that are probably public API
         id: protected-files-changes
-        uses: tj-actions/changed-files@v35
+        uses: tj-actions/changed-files@v41
         with:
           files: |
             app/app_pb/**
