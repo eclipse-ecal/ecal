@@ -50,6 +50,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,
 
 target_link_libraries(${PROJECT_NAME} 
   PRIVATE
+    eCAL::atomic
     $<$<BOOL:${UNIX}>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>>:rt>
     Threads::Threads

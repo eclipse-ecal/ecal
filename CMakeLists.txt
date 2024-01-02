@@ -52,16 +52,7 @@ if(UNIX)
   message(STATUS "GCC detected - Adding flags")
   add_definitions(-Wall -Wextra)
 
-  set(ATOMIC_TEST_CODE "
-      #include <atomic>
-      int main() { std::atomic<int64_t> i(0); i++; return 0; }
-  ")
-  include(CheckCXXSourceCompiles)
-  check_cxx_source_compiles("${ATOMIC_TEST_CODE}" ATOMIC_IS_BUILTIN)
-  if (NOT ATOMIC_IS_BUILTIN)
-      message(STATUS "Adding -latomic flag, as this plattform does not support 64bit atomic operations out of the box.")
-      set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -latomic")
-  endif ()
+
 endif()
 
 # --------------------------------------------------------
@@ -234,6 +225,7 @@ set(eCAL_VERSION_STRING ${eCAL_VERSION_MAJOR}.${eCAL_VERSION_MINOR}.${eCAL_VERSI
 set(eCAL_VERSION        ${eCAL_VERSION_STRING})
 
 include(helper_functions/ecal_add_functions)
+include(helper_functions/ecal_atomic)
 include(helper_functions/ecal_helper_functions)
 include(helper_functions/ecal_install_functions)
 include(helper_functions/ecal_python_functions)
@@ -523,6 +515,7 @@ install(FILES ${eCAL_config} ${eCAL_config_version}
 )
 
 install(FILES
+  cmake/helper_functions/ecal_atomic.cmake
   cmake/helper_functions/ecal_add_functions.cmake
   cmake/helper_functions/ecal_helper_functions.cmake
   cmake/helper_functions/ecal_install_functions.cmake

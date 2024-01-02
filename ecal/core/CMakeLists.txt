@@ -553,6 +553,7 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::ecal-utils
     tcp_pubsub::tcp_pubsub
     ecal_service
+    eCAL::atomic
 )
 
 set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)

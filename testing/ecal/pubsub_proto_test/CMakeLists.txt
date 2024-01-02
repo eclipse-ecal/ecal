@@ -41,6 +41,7 @@ PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${p
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
+    eCAL::atomic
     eCAL::core
     protobuf::libprotobuf
     Threads::Threads)

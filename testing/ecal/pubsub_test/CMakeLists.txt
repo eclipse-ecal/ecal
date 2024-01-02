@@ -32,6 +32,7 @@ set(pubsub_test_src
 ecal_add_gtest(${PROJECT_NAME} ${pubsub_test_src})
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
+    eCAL::atomic
     eCAL::core
     Threads::Threads)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)

@@ -40,6 +40,11 @@ target_include_directories(${PROJECT_NAME}
   PUBLIC include/
   PRIVATE src/)
 
+target_link_libraries(${PROJECT_NAME} 
+  PUBLIC
+    eCAL::atomic
+)
+
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
 
 # Create a source tree that mirrors the filesystem

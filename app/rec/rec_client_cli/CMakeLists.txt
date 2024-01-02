@@ -42,6 +42,7 @@ create_targets_protobuf()
 target_link_libraries(${PROJECT_NAME} 
   PUBLIC
   tclap::tclap
+  eCAL::atomic
   eCAL::rec_client_core
   eCAL::core
   tclap::tclap

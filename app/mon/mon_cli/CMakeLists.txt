@@ -44,6 +44,7 @@ create_targets_protobuf()
 target_link_libraries(${PROJECT_NAME}
   protobuf::libprotobuf
   tclap::tclap
+  eCAL::atomic
   eCAL::core
   eCAL::core_pb)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 

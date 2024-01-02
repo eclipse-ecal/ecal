@@ -188,6 +188,7 @@ ecal_add_app_qt(${PROJECT_NAME}
 target_link_libraries (${PROJECT_NAME}
     protobuf::libprotobuf
     eCAL::core
+    eCAL::core
     eCAL::core_pb
     eCAL::mon_plugin_lib
     Qt5::Widgets

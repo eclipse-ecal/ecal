@@ -65,6 +65,7 @@ target_link_libraries(${PROJECT_NAME}
         $<BUILD_INTERFACE:asio::asio>
     PRIVATE
         Threads::Threads
+        eCAL::atomic
         $<$<BOOL:${WIN32}>:ws2_32>
         $<$<BOOL:${WIN32}>:wsock32>
 
