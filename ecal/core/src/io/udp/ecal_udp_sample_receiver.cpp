@@ -117,7 +117,11 @@ namespace eCAL
 
     CSampleReceiver::~CSampleReceiver()
     {
+      // stop receiver thread
       m_udp_receiver_thread->stop();
+
+      // destroy udp receiver
+      m_udp_receiver.Destroy();
     }
 
     bool CSampleReceiver::AddMultiCastGroup(const char* ipaddr_)
