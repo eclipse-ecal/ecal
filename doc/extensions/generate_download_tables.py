@@ -19,6 +19,7 @@ ubuntu_default_python_version_dict = \
 
 ubuntu_codename_dict = \
 {
+    "noble":   semantic_version.Version("24.4.0"),
     "jammy":   semantic_version.Version("22.4.0"),
     "focal":   semantic_version.Version("20.4.0"),
     "bionic":  semantic_version.Version("18.4.0"),
