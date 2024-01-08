@@ -24,6 +24,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 #include "ecal_receiver.h"
 
 namespace eCAL
@@ -44,7 +45,8 @@ namespace eCAL
     size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr) override;
 
   protected:
-    bool m_use_npcap;
+    bool                              m_use_npcap;
+    std::mutex                        m_socket_mtx;
     std::shared_ptr<CUDPReceiverBase> m_socket_impl;
   };
 }
