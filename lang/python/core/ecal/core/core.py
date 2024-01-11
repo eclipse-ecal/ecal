@@ -54,6 +54,12 @@ def getversion():
   return _ecal.getversion()
 
 
+def getversion_components():
+  """ get ecal version as major, minor, patch tuple
+  """
+  return _ecal.getversion_components()
+
+
 def set_unit_name(unit_name):
   """ set/change the unit name of the current module
   

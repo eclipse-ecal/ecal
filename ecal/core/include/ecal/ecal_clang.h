@@ -38,6 +38,17 @@
 ECAL_API const char* ecal_getversion();
 
 /**
+ * @brief  Get eCAL version as separated integer values.
+ *
+ * @param [out] major_  The eCAL major version number.
+ * @param [out] minor_  The eCAL minor version number.
+ * @param [out] patch_  The eCAL patch version number.
+ *
+ * @return  Zero if succeeded.
+**/
+ECAL_API int ecal_getversion_components(int* major_, int* minor_, int* patch_);
+
+/**
  * @brief  Get eCAL version date.
  *
  * @return  Full eCAL version date string.

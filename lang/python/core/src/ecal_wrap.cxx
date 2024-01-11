@@ -169,6 +169,18 @@ PyObject* getversion(PyObject* /*self*/, PyObject* /*args*/)
 }
 
 /****************************************/
+/*      getversioncomponents            */
+/****************************************/
+PyObject* getversion_components(PyObject* /*self*/, PyObject* /*args*/)
+{
+  int major = 0;
+  int minor = 0;
+  int patch = 0;
+  ecal_getversion_components(&major, &minor, &patch);
+  return(Py_BuildValue("iii", major, minor, patch));
+}
+
+/****************************************/
 /*      getdate                         */
 /****************************************/
 PyObject* getdate(PyObject* /*self*/, PyObject* /*args*/)
@@ -1599,6 +1611,7 @@ static PyMethodDef _ecal_methods[] =
   {"set_unit_name",                 set_unit_name,                 METH_VARARGS,  "set_unit_name(unit_name)"},
 
   {"getversion",                    getversion,                    METH_NOARGS,   "getversion()"},
+  {"getversion_components",         getversion_components,         METH_NOARGS,   "getversion_components()"},
   {"getdate",                       getdate,                       METH_NOARGS,   "getdate()"},
   {"getmicroseconds",               getmicroseconds,               METH_NOARGS,   "getmicroseconds()"},
 

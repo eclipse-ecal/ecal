@@ -50,6 +50,14 @@ ECAL_API const char* ecal_getversion()
 }
 
 /****************************************/
+/*      ecal_getversion_components      */
+/****************************************/
+ECAL_API int ecal_getversion_components(int* major_, int* minor_, int* patch_)
+{
+  return eCAL::GetVersion(major_, minor_, patch_);
+}
+
+/****************************************/
 /*      ecal_getdate                    */
 /****************************************/
 ECAL_API const char* ecal_getdate()
