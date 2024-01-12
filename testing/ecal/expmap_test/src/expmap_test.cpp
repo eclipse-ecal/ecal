@@ -125,6 +125,28 @@ TEST(ExpMap, ExpMapFind)
   EXPECT_EQ(0, expmap.size());
 }
 
+// This test assures that find can be called on a const CExpMap and returns an CExpMap::const_iterator
+TEST(ExpMap, ExpMapFindConst)
+{
+  eCAL::Util::CExpMap<std::string, int> expmap(std::chrono::milliseconds(200));
+
+  auto it = expmap.find("A");
+  EXPECT_EQ(expmap.end(), it);
+  
+  expmap["A"] = 1;
+
+  const auto& const_ref_exmap = expmap;
+  auto const_it = const_ref_exmap.find("A");
+  // assert that we are actually getting a const_iterator here!
+  static_assert(std::is_same_v<decltype(const_it), eCAL::Util::CExpMap<std::string, int>::const_iterator>, "We're not being returned a const_iterator from find.");
+  int i = (*it).second;
+  EXPECT_EQ(i, 1);
+ 
+  std::this_thread::sleep_for(std::chrono::milliseconds(300));
+  expmap.remove_deprecated();
+  EXPECT_EQ(0, expmap.size());
+}
+
 TEST(ExpMap, ExpMapIterate)
 {
   // create the map with 2500 ms expiration

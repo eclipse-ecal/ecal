@@ -239,6 +239,11 @@ namespace eCAL
         return iterator(_key_to_value.find(k));
       }
 
+      const_iterator find(const Key& k) const
+      {
+        return const_iterator(_key_to_value.find(k));
+      }
+
       // Purge the timed out elements from the cache 
       void remove_deprecated(std::list<Key>* key_erased = nullptr) //-V826
       {
