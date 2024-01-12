@@ -27,6 +27,7 @@
 #include "io/ecal_memfile_sync.h"
 
 #include <memory>
+#include <mutex>
 #include <string>
 
 namespace eCAL
@@ -58,6 +59,8 @@ namespace eCAL
     size_t                                        m_write_idx    = 0;
     size_t                                        m_buffer_count = 1;
     SSyncMemoryFileAttr                           m_memory_file_attr;
+
+    std::mutex                                    m_memory_file_vec_mtx;
     std::vector<std::shared_ptr<CSyncMemoryFile>> m_memory_file_vec;
   };
 }

@@ -83,10 +83,13 @@ namespace eCAL
     m_memory_file_attr.timeout_ack_ms  = Config::GetMemfileAckTimeoutMs();
 
     // create the files
-    for (size_t num(0); num < m_buffer_count; ++num)
     {
-      auto sync_memfile = std::make_shared<CSyncMemoryFile>(topic_name_, 0, m_memory_file_attr);
-      m_memory_file_vec.push_back(sync_memfile);
+      const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
+      for (size_t num(0); num < m_buffer_count; ++num)
+      {
+        auto sync_memfile = std::make_shared<CSyncMemoryFile>(topic_name_, 0, m_memory_file_attr);
+        m_memory_file_vec.push_back(sync_memfile);
+      }
     }
 
     m_created = true;
@@ -98,6 +101,7 @@ namespace eCAL
     if (!m_created) return false;
     m_created = false;
 
+    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
     m_memory_file_vec.clear();
 
     return true;
@@ -117,6 +121,9 @@ namespace eCAL
     // false signals no rematching / exchanging of
     // connection parameters needed
     bool ret_state(false);
+
+    // protect memfile vector
+    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
 
     // check number of requested memory file buffer
     if (data_.buffering != m_buffer_count)
@@ -169,6 +176,9 @@ namespace eCAL
   {
     if (!m_created) return 0;
 
+    // protect memfile vector
+    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
+
     // write content
     bool sent = m_memory_file_vec[m_write_idx]->Write(data_);
 
@@ -182,6 +192,9 @@ namespace eCAL
   bool CDataWriterSHM::AddLocConnection(const std::string& process_id_, const std::string& /*conn_par_*/)
   {
     if (!m_created) return false;
+
+    // protect memfile vector
+    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
 
     for (auto& memory_file : m_memory_file_vec)
     {
@@ -198,6 +211,9 @@ namespace eCAL
   {
     if (!m_created) return false;
 
+    // protect memfile vector
+    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
+
     for (auto& memory_file : m_memory_file_vec)
     {
       if (!memory_file->Disconnect(process_id_))
@@ -211,6 +227,9 @@ namespace eCAL
 
   std::string CDataWriterSHM::GetConnectionParameter()
   {
+    // protect memfile vector
+    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
+
     // starting from eCAL version > 5.8.13/5.9.0 the ConnectionParameter is defined as google protobuf
     eCAL::pb::ConnnectionPar connection_par;
     for (auto& memory_file : m_memory_file_vec)
