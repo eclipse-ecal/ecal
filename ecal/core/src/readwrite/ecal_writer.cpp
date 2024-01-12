@@ -1004,25 +1004,31 @@ namespace eCAL
       m_connected = true;
 
       // fire pub_event_connected
-      auto iter = m_event_callback_map.find(pub_event_connected);
-      if (iter != m_event_callback_map.end())
       {
-        data.type = pub_event_connected;
-        (iter->second)(m_topic_name.c_str(), &data);
+        const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+        auto iter = m_event_callback_map.find(pub_event_connected);
+        if (iter != m_event_callback_map.end())
+        {
+          data.type = pub_event_connected;
+          (iter->second)(m_topic_name.c_str(), &data);
+        }
       }
     }
 
     // fire pub_event_update_connection
-    auto iter = m_event_callback_map.find(pub_event_update_connection);
-    if (iter != m_event_callback_map.end())
     {
-      data.type  = pub_event_update_connection;
-      data.tid   = tid_;
-      // Remove with eCAL6 (next two lines)
-      data.ttype = Util::CombinedTopicEncodingAndType(tinfo_.encoding, tinfo_.name);
-      data.tdesc = tinfo_.descriptor;
-      data.tdatatype = tinfo_;
-      (iter->second)(m_topic_name.c_str(), &data);
+      const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+      auto iter = m_event_callback_map.find(pub_event_update_connection);
+      if (iter != m_event_callback_map.end())
+      {
+        data.type  = pub_event_update_connection;
+        data.tid   = tid_;
+        // Remove with eCAL6 (next two lines)
+        data.ttype = Util::CombinedTopicEncodingAndType(tinfo_.encoding, tinfo_.name);
+        data.tdesc = tinfo_.descriptor;
+        data.tdatatype = tinfo_;
+        (iter->second)(m_topic_name.c_str(), &data);
+      }
     }
   }
 
@@ -1033,14 +1039,17 @@ namespace eCAL
       m_connected = false;
       
       // fire pub_event_disconnected
-      auto iter = m_event_callback_map.find(pub_event_disconnected);
-      if (iter != m_event_callback_map.end())
       {
-        SPubEventCallbackData data;
-        data.type  = pub_event_disconnected;
-        data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-        data.clock = 0;
-        (iter->second)(m_topic_name.c_str(), &data);
+        const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+        auto iter = m_event_callback_map.find(pub_event_disconnected);
+        if (iter != m_event_callback_map.end())
+        {
+          SPubEventCallbackData data;
+          data.type  = pub_event_disconnected;
+          data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+          data.clock = 0;
+          (iter->second)(m_topic_name.c_str(), &data);
+        }
       }
     }
   }
