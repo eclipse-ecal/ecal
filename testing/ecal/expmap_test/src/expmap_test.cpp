@@ -144,6 +144,33 @@ TEST(ExpMap, ExpMapIterate)
   EXPECT_EQ(1, value);
 }
 
+void ConstRefIterate(const eCAL::Util::CExpMap<std::string, int>& map)
+{
+  std::string key;
+  int value;
+
+  for (auto&& entry : map)
+  {
+    key = entry.first;
+    value = entry.second;
+  }
+
+  EXPECT_EQ(std::string("A"), key);
+  EXPECT_EQ(1, value);
+}
+
+
+TEST(ExpMap, ConstExpMapIterate)
+{
+  // create the map with 2500 ms expiration
+  eCAL::Util::CExpMap<std::string, int> expmap(std::chrono::milliseconds(200));
+  expmap["A"] = 1;
+
+  ConstRefIterate(expmap);
+}
+
+
+
 TEST(ExpMap, ExpMapEmpty)
 {
   eCAL::Util::CExpMap<std::string, int> expmap(std::chrono::milliseconds(200));

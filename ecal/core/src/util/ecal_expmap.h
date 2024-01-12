@@ -62,8 +62,9 @@ namespace eCAL
       using mapped_type = T;
 
       class iterator : public std::iterator<std::bidirectional_iterator_tag, std::pair<Key, T>>
-        //class iterator : public std::iterator<std::bidirectional_iterator_tag, cache_reference>
       {
+        friend class const_iterator;
+
       public:
         iterator(const iterator& i)
           : it(i.it)
@@ -99,8 +100,53 @@ namespace eCAL
 
       private:
         typename key_to_value_type::iterator it;
-        mutable value_type current_ref;
+       };
+
+      class const_iterator : public std::iterator<std::bidirectional_iterator_tag, const std::pair<Key, T>>
+      {
+      public:
+        const_iterator(const const_iterator& i)
+          : it(i.it)
+        {};
+
+        const_iterator(const iterator& other)
+          : it(other.it)
+        {
+        }
+
+        const_iterator(const typename key_to_value_type::const_iterator _it)
+          : it(_it)
+        {};
+        ~const_iterator() = default;
+        const_iterator& operator=(const const_iterator& i)
+        {
+          it = i.it;
+          return *this;
+        };
+        const_iterator& operator++()
+        {
+          it++;
+          return *this;
+        }; //prefix increment
+        const_iterator& operator--()
+        {
+          it--;
+          return *this;
+        }; //prefix decrement
+           //reference operator*() const
+        const std::pair<Key, T> operator*() const
+        {
+          return std::make_pair(it->first, it->second.first);
+        };
+        //friend void swap(iterator& lhs, iterator& rhs); //C++11 I think
+        bool operator==(const const_iterator& rhs) const { return it == rhs.it; };
+        bool operator!=(const const_iterator& rhs) const { return it != rhs.it; };
+
+
+      private:
+        typename key_to_value_type::const_iterator it;
       };
+
 
       // Constructor specifies the timeout of the map
       CExpMap() : _timeout(std::chrono::milliseconds(5000)) {};
@@ -121,6 +167,25 @@ namespace eCAL
       {
         return iterator(_key_to_value.end());
       };
+
+      const_iterator begin() const noexcept
+      {
+        return const_iterator(_key_to_value.begin());
+      };
+
+      const_iterator end() const noexcept
+      {
+        return const_iterator(_key_to_value.end());
+      };
+
+      // Const begin and end functions
+      const_iterator cbegin() const noexcept {
+        return const_iterator(_key_to_value.cbegin());
+      }
+
+      const_iterator cend() const noexcept {
+        return const_iterator(_key_to_value.cend());
+      }
 
       // Capacity
       bool empty() const noexcept
