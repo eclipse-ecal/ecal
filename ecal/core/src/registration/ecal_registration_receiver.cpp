@@ -43,6 +43,11 @@ namespace eCAL
   // CMemfileRegistrationReceiver
   //////////////////////////////////////////////////////////////////
 
+  CMemfileRegistrationReceiver::~CMemfileRegistrationReceiver()
+  {
+    Destroy();
+  }
+
   void CMemfileRegistrationReceiver::Create(eCAL::CMemoryFileBroadcastReader* memfile_broadcast_reader_)
   {
     if (m_created) return;
