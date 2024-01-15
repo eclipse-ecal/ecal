@@ -139,7 +139,7 @@ TEST(ExpMap, ExpMapFindConst)
   auto const_it = const_ref_exmap.find("A");
   // assert that we are actually getting a const_iterator here!
   static_assert(std::is_same_v<decltype(const_it), eCAL::Util::CExpMap<std::string, int>::const_iterator>, "We're not being returned a const_iterator from find.");
-  int i = (*it).second;
+  int i = (*const_it).second;
   EXPECT_EQ(i, 1);
  
   std::this_thread::sleep_for(std::chrono::milliseconds(300));
