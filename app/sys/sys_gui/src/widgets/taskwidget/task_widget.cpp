@@ -329,7 +329,7 @@ void TaskWidget::setEditControlsVisibility(bool visibile)
 void TaskWidget::filterTextChanged(QString text)
 {
   task_tree_sort_filter_proxy_model_->setFilterCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
-  task_tree_sort_filter_proxy_model_->setFilterRegExp(text);
+  task_tree_sort_filter_proxy_model_->setFilterRegularExpression(text);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
