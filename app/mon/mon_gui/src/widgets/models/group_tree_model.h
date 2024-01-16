@@ -70,7 +70,28 @@ private:
   {
     bool operator()(const QVariant& lhs, const QVariant& rhs) const
     {
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
       return QVariant::compare(lhs, rhs) == QPartialOrdering::Less;
+#else
+
+  // deactivate warning about deprecated QVariant::compare
+  #ifdef _MSC_VER
+    #pragma warning(push)
+    #pragma warning (disable : 4996)
+  #elif __GNUC__
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
+
+      return lhs < rhs;
+
+  #ifdef _MSC_VER
+    #pragma warning(pop)
+  #elif __GNUC__
+    #pragma GCC diagnostic pop
+  #endif
+
+#endif
     }
   };
   std::map<QVariant, GroupTreeItem*, cmp> group_map_;
