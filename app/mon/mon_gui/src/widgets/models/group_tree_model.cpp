@@ -235,7 +235,9 @@ void GroupTreeModel::removeItemFromGroups(QAbstractTreeItem* item, bool remove_e
     }
     else
     {
-      qDebug() << "GroupTreeModel::removeItemFromGroups: Could not find group item in group map";
+#ifndef NDEBUG
+      qDebug().nospace() << "[" << metaObject()->className() << "] removeItemFromGroups: Could not find group item in group map";
+#endif // !NDEBUG
     }
   }
 
