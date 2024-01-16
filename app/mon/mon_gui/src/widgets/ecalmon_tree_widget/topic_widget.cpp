@@ -35,6 +35,10 @@
 #include <QApplication>
 #include <QRegularExpression>
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+#include <QDesktopWidget>
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+
 TopicWidget::TopicWidget(QWidget *parent)
   : EcalmonTreeWidget(parent)
   , parse_time_(true)
@@ -378,6 +382,9 @@ void TopicWidget::resetLayout()
   settings.setValue("tree_state", QByteArray());  // Reset the settings, so new windows will open resetted
   settings.endGroup();
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+  int screen_number = QApplication::desktop()->screenNumber(this);
+#else
   int screen_number = 0;
   QScreen* current_screen = this->screen();
   if (current_screen)
@@ -386,6 +393,7 @@ void TopicWidget::resetLayout()
     if (screen_number < 0)
       screen_number = 0;
   }
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
 
   for (auto reflection_window : visualisation_windows_.values())
   {
