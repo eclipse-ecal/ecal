@@ -194,16 +194,16 @@ QVariant ServiceTreeItem::data(Columns column, Qt::ItemDataRole role) const
       }
       else
       {
-        return QVariant::Invalid;
+        return QVariant(); // Invalid QVariant
       }
     }
     else
     {
-      return QVariant::Invalid;
+      return QVariant(); // Invalid QVariant
     }
   }
 
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 int ServiceTreeItem::type() const

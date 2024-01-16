@@ -341,7 +341,7 @@ endif()
 # --------------------------------------------------------
 # ecal mon plugin sdk
 # --------------------------------------------------------
-if(HAS_QT5)
+if(HAS_QT5 OR HAS_QT6)
   add_subdirectory(app/mon/mon_plugin_lib)
 endif(HAS_QT5)
 
@@ -423,12 +423,12 @@ endif()
 # --------------------------------------------------------
 # qt applications
 # --------------------------------------------------------
-if(BUILD_APPS AND HAS_QT6)
+if(BUILD_APPS AND (HAS_QT5 OR HAS_QT6))
   add_subdirectory(app/sys/sys_gui)
+  add_subdirectory(app/mon/mon_gui)
 endif()
 
 if(BUILD_APPS AND HAS_QT5)
-  add_subdirectory(app/mon/mon_gui)
   if(WIN32)
     set(ECAL_MON_PLUGIN_DIR ecalmon_plugins)
   else()

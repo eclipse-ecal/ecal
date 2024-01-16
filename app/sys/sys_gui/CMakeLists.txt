@@ -20,7 +20,7 @@ cmake_minimum_required(VERSION 3.14)
 
 # Allow the install command to use generator expressions
 if(POLICY CMP0087)
-	cmake_policy(SET CMP0087 NEW)
+    cmake_policy(SET CMP0087 NEW)
 endif()
 
 set(PROJECT_NAME sys_gui)
@@ -220,7 +220,7 @@ if ((WIN32 OR APPLE) AND (${QT_VERSION_MAJOR} GREATER_EQUAL 6))
     # Add a postbuild script that will also execute the created script via cmake -P
     # This is necessary to make the application startable / debuggable from the build directory.
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-	    COMMAND ${CMAKE_COMMAND} -DQT_DEPLOY_PREFIX=$<TARGET_FILE_DIR:${PROJECT_NAME}> -DQT_DEPLOY_BIN_DIR=. -P ${qt_deploy_script}
+        COMMAND ${CMAKE_COMMAND} -DQT_DEPLOY_PREFIX=$<TARGET_FILE_DIR:${PROJECT_NAME}> -DQT_DEPLOY_BIN_DIR=. -P ${qt_deploy_script}
     )
 
     # Use the script for deploying the qt dlls in the install dir

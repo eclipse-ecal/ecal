@@ -33,7 +33,7 @@
 #include <QSettings>
 #include <QMenu>
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QRegularExpression>
 
 TopicWidget::TopicWidget(QWidget *parent)
   : EcalmonTreeWidget(parent)
@@ -59,7 +59,7 @@ TopicWidget::TopicWidget(QWidget *parent)
   {
     if (state == Qt::CheckState::Checked)
     {
-      topic_sort_filter_proxy_model_->setRegExpLists(QList<QRegExp>{}, QList<QRegExp>{});
+      topic_sort_filter_proxy_model_->setRegExpLists(QList<QRegularExpression>{}, QList<QRegularExpression>{});
     }
     else
     {
@@ -196,21 +196,21 @@ void TopicWidget::loadRegExpLists()
   // regular expression that properly uses a ",". We cannot do anything about
   // that without changing the ecal.ini specification.
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-  QList<QString> exclude_string_list = exclude_string.split(QRegExp("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);
-  QList<QString> include_string_list = include_string.split(QRegExp("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);
+  QList<QString> exclude_string_list = exclude_string.split(QRegularExpression("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);
+  QList<QString> include_string_list = include_string.split(QRegularExpression("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);
 #else // QT_VERSION
-  QList<QString> exclude_string_list = exclude_string.split(QRegExp("[\\,,;]"), QString::SplitBehavior::SkipEmptyParts);
-  QList<QString> include_string_list = include_string.split(QRegExp("[\\,,;]"), QString::SplitBehavior::SkipEmptyParts);
+  QList<QString> exclude_string_list = exclude_string.split(QRegularExpression("[\\,,;]"), QString::SplitBehavior::SkipEmptyParts);
+  QList<QString> include_string_list = include_string.split(QRegularExpression("[\\,,;]"), QString::SplitBehavior::SkipEmptyParts);
 #endif // QT_VERSION
 
   for (auto& s : exclude_string_list)
   {
-    topic_exclude_regexp_list_.push_back(QRegExp(s));
+    topic_exclude_regexp_list_.push_back(QRegularExpression(s));
   }
 
   for (auto& s : include_string_list)
   {
-    topic_include_regexp_list_.push_back(QRegExp(s));
+    topic_include_regexp_list_.push_back(QRegularExpression(s));
   }
 }
 
@@ -240,7 +240,7 @@ void TopicWidget::autoSizeColumns()
   example_topic_pb.set_dfreq(999999);
 
   TopicTreeItem* example_topic_item = new TopicTreeItem(example_topic_pb);
-  GroupTreeItem* example_group_item = new GroupTreeItem("CameraSensorMapFusionCAF___", "", "", QVariant::Invalid, "");
+  GroupTreeItem* example_group_item = new GroupTreeItem("CameraSensorMapFusionCAF___", "", "", QVariant(), "");
 
   topic_tree_model_->insertItem(example_group_item);
   auto group_index = topic_tree_model_->index(example_group_item);
@@ -378,7 +378,15 @@ void TopicWidget::resetLayout()
   settings.setValue("tree_state", QByteArray());  // Reset the settings, so new windows will open resetted
   settings.endGroup();
 
-  int screen_number = QApplication::desktop()->screenNumber(this);
+  int screen_number = 0;
+  QScreen* current_screen = this->screen();
+  if (current_screen)
+  {
+    screen_number = QApplication::screens().indexOf(current_screen);
+    if (screen_number < 0)
+      screen_number = 0;
+  }
+
   for (auto reflection_window : visualisation_windows_.values())
   {
     reflection_window->resetLayout(screen_number);

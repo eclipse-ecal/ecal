@@ -384,10 +384,10 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       }
     }
 
-    return QVariant::Invalid;
+    return QVariant(); // Invalid QVariant
   }
 
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 int TopicTreeItem::type() const

@@ -35,7 +35,6 @@
 #include "plugin/plugin_manager.h"
 
 #include <QSettings>
-#include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QDateTime>
 #include <QScreen>
@@ -698,7 +697,14 @@ void Ecalmon::resetLayout()
   setTheme(Theme::Dark);
 
   // Back when we saved the initial window geometry, the window-manager might not have positioned the window on the screen, yet
-  int screen_number = QApplication::desktop()->screenNumber(this);
+  int screen_number = 0;
+  QScreen* current_screen = this->screen();
+  if (current_screen)
+  {
+    screen_number = QApplication::screens().indexOf(current_screen);
+    if (screen_number < 0)
+      screen_number = 0;
+  }
 
   restoreGeometry(initial_geometry_);
   restoreState(initial_state_);

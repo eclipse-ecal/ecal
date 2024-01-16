@@ -129,7 +129,7 @@ void ProcessWidget::autoSizeColumns()
   //example_process_pb.set_tsync_mode();
 
   ProcessTreeItem* example_process_item = new ProcessTreeItem(example_process_pb);
-  GroupTreeItem* example_group_item = new GroupTreeItem("HNAME00____", "", "", QVariant::Invalid, "");
+  GroupTreeItem* example_group_item = new GroupTreeItem("HNAME00____", "", "", QVariant(), "");
 
   process_tree_model_->insertItem(example_process_item);
   process_tree_model_->insertItem(example_group_item);

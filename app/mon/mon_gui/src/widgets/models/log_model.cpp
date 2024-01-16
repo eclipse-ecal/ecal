@@ -149,7 +149,7 @@ QVariant LogModel::logLevelColor(int log_level)
   case eCAL_Logging_eLogLevel::log_level_fatal:
     return QColor(192, 0, 0);
   default:
-    return QVariant::Invalid; // Default color for "Debug x"
+    return QVariant(); // Invalid QVariant // Default color for "Debug x"
   }
 }
 

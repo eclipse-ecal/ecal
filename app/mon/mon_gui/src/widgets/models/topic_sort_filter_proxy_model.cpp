@@ -33,7 +33,7 @@ TopicSortFilterProxyModel::TopicSortFilterProxyModel(QObject* parent)
 TopicSortFilterProxyModel::~TopicSortFilterProxyModel()
 {}
 
-void TopicSortFilterProxyModel::setRegExpLists(const QList<QRegExp>& exclude_list, const QList<QRegExp>& include_list)
+void TopicSortFilterProxyModel::setRegExpLists(const QList<QRegularExpression>& exclude_list, const QList<QRegularExpression>& include_list)
 {
   exclude_regexp_list_ = exclude_list;
   include_regexp_list_ = include_list;
@@ -57,9 +57,9 @@ bool TopicSortFilterProxyModel::filterDirectAcceptsRow(int source_row, const QMo
   }
 
 
-  for (const QRegExp& regexp : exclude_regexp_list_)
+  for (const QRegularExpression& regexp : exclude_regexp_list_)
   {
-    if (regexp.exactMatch(data))
+    if (regexp.match(data).hasMatch()) // TODO: [2024-01-15] This was QRegExp::exactMatch() before, but QRegularExpression::exactMatch() does not exist. I don't know what this function is used for.
     {
       return false;
     }
@@ -71,9 +71,9 @@ bool TopicSortFilterProxyModel::filterDirectAcceptsRow(int source_row, const QMo
   }
   else
   {
-    for (const QRegExp& regexp : include_regexp_list_)
+    for (const QRegularExpression& regexp : include_regexp_list_)
     {
-      if (regexp.exactMatch(data))
+      if (regexp.match(data).hasMatch()) // TODO: [2024-01-15] This was QRegExp::exactMatch() before, but QRegularExpression::exactMatch() does not exist. I don't know what this function is used for.
       {
         return true;
       }
