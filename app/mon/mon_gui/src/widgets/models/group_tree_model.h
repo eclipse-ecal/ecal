@@ -32,7 +32,7 @@
 
 #include "group_tree_item.h"
 
-#include <QMap>
+#include <list>
 #include <QVector>
 #include <QPair>
 
@@ -64,7 +64,18 @@ protected:
   virtual int groupColumn() const = 0;
 
 private:
-  QMap<QVariant, GroupTreeItem*> group_map_;                                    /*< group_identifier -> TreeItem mapping*/
+  //std::list<std::pair<QVariant, GroupTreeItem*>> group_map_;                                    /*< group_identifier -> TreeItem mapping*/
+
+  struct cmp
+  {
+    bool operator()(const QVariant& lhs, const QVariant& rhs) const
+    {
+      return QVariant::compare(lhs, rhs) == QPartialOrdering::Less;
+    }
+  };
+  std::map<QVariant, GroupTreeItem*, cmp> group_map_;
+
+
   QList<QAbstractTreeItem*> items_list_;
 
   QVariant group_column_header_;
