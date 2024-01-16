@@ -1,1 +1,1 @@
-set(ftxui_FOUND TRUE)
+set(qwt_FOUND TRUE)
