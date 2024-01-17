@@ -38,6 +38,7 @@
 
 #include <atomic>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <thread>
 
@@ -115,6 +116,7 @@ namespace eCAL
     bool                                  m_use_network_monitoring;
     bool                                  m_use_shm_monitoring;
 
+    std::mutex                            m_callback_custom_apply_sample_mtx;
     ApplySampleCallbackT                  m_callback_custom_apply_sample;
 
     std::string                           m_host_group_name;
