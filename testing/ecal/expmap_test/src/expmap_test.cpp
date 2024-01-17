@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,13 +23,14 @@
 #include <string>
 #include <chrono>
 #include <thread>
+#include <type_traits>
 
 #include <gtest/gtest.h>
 
 #include <iostream>
 
 TEST(ExpMap, ExpMapSetGet)
-{ 
+{
   // create the map with 2500 ms expiration
   eCAL::Util::CExpMap<std::string, int> expmap(std::chrono::milliseconds(200));
 
@@ -132,16 +133,16 @@ TEST(ExpMap, ExpMapFindConst)
 
   auto it = expmap.find("A");
   EXPECT_EQ(expmap.end(), it);
-  
+
   expmap["A"] = 1;
 
   const auto& const_ref_exmap = expmap;
   auto const_it = const_ref_exmap.find("A");
   // assert that we are actually getting a const_iterator here!
-  static_assert(std::is_same_v<decltype(const_it), eCAL::Util::CExpMap<std::string, int>::const_iterator>, "We're not being returned a const_iterator from find.");
+  static_assert(std::is_same<decltype(const_it), eCAL::Util::CExpMap<std::string, int>::const_iterator>::value, "We're not being returned a const_iterator from find.");
   int i = (*const_it).second;
   EXPECT_EQ(i, 1);
- 
+
   std::this_thread::sleep_for(std::chrono::milliseconds(300));
   expmap.remove_deprecated();
   EXPECT_EQ(0, expmap.size());
@@ -158,7 +159,7 @@ TEST(ExpMap, ExpMapIterate)
 
   for (auto&& entry : expmap)
   {
-    key   = entry.first;
+    key = entry.first;
     value = entry.second;
   }
 
@@ -181,7 +182,6 @@ void ConstRefIterate(const eCAL::Util::CExpMap<std::string, int>& map)
   EXPECT_EQ(1, value);
 }
 
-
 TEST(ExpMap, ConstExpMapIterate)
 {
   // create the map with 2500 ms expiration
@@ -190,8 +190,6 @@ TEST(ExpMap, ConstExpMapIterate)
 
   ConstRefIterate(expmap);
 }
-
-
 
 TEST(ExpMap, ExpMapEmpty)
 {
