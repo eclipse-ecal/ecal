@@ -55,15 +55,25 @@ namespace eCAL
   class CMemfileRegistrationReceiver
   {
   public:
+    CMemfileRegistrationReceiver() = default;
     ~CMemfileRegistrationReceiver();
 
     void Create(CMemoryFileBroadcastReader* memfile_broadcast_reader_);
     void Destroy();
 
   private:
+    // default copy constructor
+    CMemfileRegistrationReceiver(const CMemfileRegistrationReceiver& other) = delete;
+    // default copy assignment operator
+    CMemfileRegistrationReceiver& operator=(const CMemfileRegistrationReceiver& other) = delete;
+    // default move constructor
+    CMemfileRegistrationReceiver(CMemfileRegistrationReceiver&& other) noexcept = delete;
+    // default move assignment operator
+    CMemfileRegistrationReceiver& operator=(CMemfileRegistrationReceiver&& other) noexcept = delete;
+
     void Receive();
 
-    CMemoryFileBroadcastReader*      m_memfile_broadcast_reader = nullptr;
+    CMemoryFileBroadcastReader*       m_memfile_broadcast_reader = nullptr;
     std::shared_ptr<CCallbackThread>  m_memfile_broadcast_reader_thread;
 
     bool m_created = false;
