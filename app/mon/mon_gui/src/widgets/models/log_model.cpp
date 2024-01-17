@@ -294,7 +294,11 @@ bool LogModel::dumpToCsv(const QString& path)
       {
         QVariant current_data = data(index(row, col), Qt::ItemDataRole::DisplayRole);
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        switch (current_data.typeId())
+#else
         switch ((QMetaType::Type)current_data.type())
+#endif
         {
         case QMetaType::QString:
           stream << "\"" << current_data.toString().replace("\"", "\"\"") << "\"";

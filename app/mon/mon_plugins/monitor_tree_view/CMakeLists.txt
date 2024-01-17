@@ -18,10 +18,10 @@
 
 project(MonitorTreeView)
 
-find_package(Qt5 
-  COMPONENTS Core Widgets
-  REQUIRED
-)
+# Legacy Qt5 (pre 5.15) support as suggested by teh Qt Documentation:
+# https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html#supporting-older-qt-5-versions
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
 
 set(source_files
   src/item_data_roles.h
@@ -41,7 +41,9 @@ add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} PUBLIC src)
 
 target_link_libraries(${PROJECT_NAME}
-  Qt5::Widgets CustomQt
+  Qt${QT_VERSION_MAJOR}::Core
+  Qt${QT_VERSION_MAJOR}::Widgets
+  CustomQt
 )
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 
 

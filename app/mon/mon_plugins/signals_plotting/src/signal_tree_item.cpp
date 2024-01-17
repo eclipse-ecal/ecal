@@ -147,7 +147,7 @@ QVariant SignalTreeItem::data(Columns column, Qt::ItemDataRole role) const
       return background_color_.toQColor();
     }
   }
-  return QVariant::Invalid;
+  return QVariant();
 }
 
 Qt::ItemFlags SignalTreeItem::flags(int column) const

@@ -97,7 +97,11 @@ QByteArray asByteArrayBlob(const QByteArray& bytes)
 // Return crc16 checksum of the byte Array
 QString asChecksum(const QByteArray& bytes)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+  quint16 crc16 = qChecksum(QByteArrayView(bytes));
+#else
   quint16 crc16 = qChecksum(bytes.data(), (uint)bytes.length());
+#endif
   return QString("%1 bytes (CRC16: %2)").arg(QString::number(bytes.length())).arg(QString::number(crc16, 16).toUpper(), 4, '0');
 }
 
@@ -159,7 +163,7 @@ QVariant MonitorTreeItem::data(Columns column, Qt::ItemDataRole role) const
     return data(column, Qt::ItemDataRole::DisplayRole);
   }
 
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 int MonitorTreeItem::type() const
