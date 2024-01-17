@@ -39,6 +39,7 @@
 
 #include <string>
 #include <atomic>
+#include <mutex>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
@@ -121,6 +122,7 @@ namespace eCAL
     bool                             m_use_network_monitoring;
     bool                             m_use_shm_monitoring;
 
+    std::mutex                       m_callback_custom_apply_sample_mtx;
     ApplySampleCallbackT             m_callback_custom_apply_sample;
 
     std::string                      m_host_group_name;
