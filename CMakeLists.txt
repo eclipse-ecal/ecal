@@ -69,8 +69,14 @@ endif()
 # use it that way cmake .. -DBUILD_APPS=ON -DBUILD_SAMPLES=ON
 # --------------------------------------------------------
 option(HAS_HDF5                                "Platform supports HDF5 library"                                    ON)
-option(HAS_QT5                                 "Platform supports Qt 5 library"                                    ON)
-option(HAS_QT6                                 "Platform supports Qt 5 library"                                    OFF)
+option(HAS_QT                                  "Platform supports Qt 5 6 library."                                 ON)
+
+# If the user set the legacy HAS_QT5 option, but didn't set the new HAS_QT option, set it to the value of HAS_QT5
+if(DEFINED HAS_QT5 AND NOT DEFINED HAS_QT)
+  set(HAS_QT ${HAS_QT5})
+  message(WARNING "The option HAS_QT5 is deprecated and may be removed at any time. Please use HAS_QT instead.")
+endif()
+
 option(HAS_CURL                                "Build with CURL (i.e. upload support in the recorder app)"         ON)
 option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                            OFF)
 option(HAS_FLATBUFFERS                         "Platform supports flatbuffers library"                            OFF)
@@ -113,12 +119,12 @@ if(WIN32)
   option(ECAL_THIRDPARTY_BUILD_YAML-CPP        "Build yaml-cpp with eCAL"                                          ON)
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              ON)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              ON)
-  cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                      ON  "HAS_QT5 OR HAS_QT6" OFF)
+  cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                      ON  "HAS_QT" OFF)
 else()
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                         OFF)
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                             OFF)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                             OFF)
-  cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                     OFF "HAS_QT5 OR HAS_QT6" OFF)
+  cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                     OFF "HAS_QT" OFF)
   option(ECAL_THIRDPARTY_BUILD_YAML-CPP        "Build yaml-cpp with eCAL"                                         OFF)
 endif()
 
@@ -213,19 +219,6 @@ if(MSVC)
 endif()
 
 find_package(CMakeFunctions REQUIRED)
-
-# --------------------------------------------------------
-# detect qt library
-# --------------------------------------------------------
-if(MSVC)
-  if (HAS_QT5)
-    find_package(Qt5 COMPONENTS Core QUIET)
-    if (NOT "${Qt5_FOUND}")
-      autodetect_qt5_msvc_dir()
-    endif()
-  endif()
-endif()
-
 
 git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
 set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
@@ -330,18 +323,18 @@ add_subdirectory(lib/ThreadingUtils)
 add_subdirectory(lib/CustomTclap)
 add_subdirectory(lib/ecal_utils)
 
-if(HAS_QT5 OR HAS_QT6)
+if(HAS_QT)
   add_subdirectory(lib/CustomQt)
 endif()
 add_subdirectory(lib/EcalParser)
-if(HAS_QT5 OR HAS_QT6)
+if(HAS_QT)
   add_subdirectory(lib/QEcalParser)
 endif()
 
 # --------------------------------------------------------
 # ecal mon plugin sdk
 # --------------------------------------------------------
-if(HAS_QT5 OR HAS_QT6)
+if(HAS_QT)
   add_subdirectory(app/mon/mon_plugin_lib)
 endif()
 
@@ -423,7 +416,7 @@ endif()
 # --------------------------------------------------------
 # qt applications
 # --------------------------------------------------------
-if(BUILD_APPS AND (HAS_QT5 OR HAS_QT6))
+if(BUILD_APPS AND (HAS_QT))
   add_subdirectory(app/sys/sys_gui)
   add_subdirectory(app/mon/mon_gui)
   if(WIN32)
@@ -483,7 +476,7 @@ if(BUILD_ECAL_TESTS)
   # ------------------------------------------------------
   # test apps
   # ------------------------------------------------------
-  if (HAS_HDF5 AND HAS_QT5 OR HAS_QT6)
+  if (HAS_HDF5 AND HAS_QT)
     add_subdirectory(app/rec/rec_tests/rec_rpc_tests)
   endif()
 endif()
@@ -554,7 +547,7 @@ message(STATUS "Build Options:")
 message(STATUS "--------------------------------------------------------------------------------")
 message(STATUS "CMAKE_EXPORT_COMPILE_COMMANDS                  : ${CMAKE_EXPORT_COMPILE_COMMANDS}")
 message(STATUS "HAS_HDF5                                       : ${HAS_HDF5}")
-message(STATUS "HAS_QT5                                        : ${HAS_QT5}")
+message(STATUS "HAS_QT                                         : ${HAS_QT}")
 message(STATUS "HAS_CURL                                       : ${HAS_CURL}")
 message(STATUS "HAS_CAPNPROTO                                  : ${HAS_CAPNPROTO}")
 message(STATUS "HAS_FLATBUFFERS                                : ${HAS_FLATBUFFERS}")
