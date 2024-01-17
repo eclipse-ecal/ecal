@@ -343,7 +343,7 @@ endif()
 # --------------------------------------------------------
 if(HAS_QT5 OR HAS_QT6)
   add_subdirectory(app/mon/mon_plugin_lib)
-endif(HAS_QT5)
+endif()
 
 # --------------------------------------------------------
 # ecal rec addon sdk
@@ -483,7 +483,7 @@ if(BUILD_ECAL_TESTS)
   # ------------------------------------------------------
   # test apps
   # ------------------------------------------------------
-  if (HAS_HDF5 AND HAS_QT5)
+  if (HAS_HDF5 AND HAS_QT5 OR HAS_QT6)
     add_subdirectory(app/rec/rec_tests/rec_rpc_tests)
   endif()
 endif()
