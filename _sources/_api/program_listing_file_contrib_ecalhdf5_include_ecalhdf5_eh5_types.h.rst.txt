@@ -49,11 +49,11 @@ Program Listing for File eh5_types.h
        const std::string kChnAttrTitle       ("Channels");
    
        // Remove @eCAL6 -> backwards compatibility with old interface!
-       using SEntryInfo = eCAL::measurement::base::EntryInfo;
-       using EntryInfoSet = eCAL::measurement::base::EntryInfoSet;
-       using EntryInfoVect = eCAL::measurement::base::EntryInfoVect;
-       using eAccessType = eCAL::measurement::base::AccessType;
-       using eCAL::measurement::base::RDONLY;
-       using eCAL::measurement::base::CREATE;
+       using SEntryInfo = eCAL::experimental::measurement::base::EntryInfo;
+       using EntryInfoSet = eCAL::experimental::measurement::base::EntryInfoSet;
+       using EntryInfoVect = eCAL::experimental::measurement::base::EntryInfoVect;
+       using eAccessType = eCAL::experimental::measurement::base::AccessType;
+       using eCAL::experimental::measurement::base::RDONLY;
+       using eCAL::experimental::measurement::base::CREATE;
      }  // namespace eh5
    }  // namespace eCAL

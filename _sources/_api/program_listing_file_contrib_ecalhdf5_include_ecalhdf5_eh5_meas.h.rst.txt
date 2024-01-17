@@ -49,7 +49,7 @@ Program Listing for File eh5_meas.h
        public:
          HDF5Meas();
    
-         explicit HDF5Meas(const std::string& path, measurement::base::AccessType access = measurement::base::AccessType::RDONLY);
+         explicit HDF5Meas(const std::string& path, eAccessType access = RDONLY);
    
          ~HDF5Meas();
    
@@ -59,7 +59,7 @@ Program Listing for File eh5_meas.h
          HDF5Meas(HDF5Meas&&) = default;
          HDF5Meas& operator=(HDF5Meas&&) = default;
    
-         bool Open(const std::string& path, measurement::base::AccessType access = measurement::base::AccessType::RDONLY);
+         bool Open(const std::string& path, eAccessType access = RDONLY);
    
          bool Close();
    
@@ -91,9 +91,9 @@ Program Listing for File eh5_meas.h
    
          long long GetMaxTimestamp(const std::string& channel_name) const;
    
-         bool GetEntriesInfo(const std::string& channel_name, measurement::base::EntryInfoSet& entries) const;
+         bool GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const;
    
-         bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, measurement::base::EntryInfoSet& entries) const;
+         bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const;
    
          bool GetEntryDataSize(long long entry_id, size_t& size) const;
    
