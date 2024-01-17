@@ -73,11 +73,17 @@ Functions
 
 - :ref:`exhale_function_ecal__clang_8h_1a85b5ba3548d6163d0719f0cef2cd33e6`
 
+- :ref:`exhale_function_ecal__clang_8h_1a796502f49ee481c4c6cb99bcb19db6d9`
+
 - :ref:`exhale_function_ecal__clang_8h_1a29db94388ec381748e074a9df967909f`
+
+- :ref:`exhale_function_ecal__clang_8h_1add52342efb58ef692522bdcd1ff2120f`
 
 - :ref:`exhale_function_ecal__clang_8h_1a95ed939a2965efd4ce0fca6f392586c3`
 
 - :ref:`exhale_function_ecal__clang_8h_1a739ac14ab29959f162491b39ef6d9e39`
+
+- :ref:`exhale_function_ecal__clang_8h_1afb64cdd0f3741ff9eeb55f62d3aba563`
 
 - :ref:`exhale_function_ecal__clang_8h_1aff7c0bddb1be0ad0c19de1a4b3ee91d1`
 
