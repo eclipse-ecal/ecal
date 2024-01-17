@@ -432,10 +432,10 @@ if(BUILD_APPS AND (HAS_QT5 OR HAS_QT6))
     set(ECAL_MON_PLUGIN_DIR ecal/plugins/mon)
   endif()
   add_subdirectory(app/mon/mon_plugins)
+  add_subdirectory(app/util/launcher)
 endif()
 
 if(BUILD_APPS AND HAS_QT5)
-  add_subdirectory(app/util/launcher)
 # --------------------------------------------------------
 # qt applications using hdf5
 # --------------------------------------------------------

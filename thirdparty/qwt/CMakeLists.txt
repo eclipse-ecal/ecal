@@ -1,4 +1,10 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.14)
+
+# Allow the install command to use generator expressions
+if(POLICY CMP0087)
+    cmake_policy(SET CMP0087 NEW)
+endif()
+
 project(qwt VERSION 6.2.0)
 
 # Legacy Qt5 (pre 5.15) support as suggested by teh Qt Documentation:
