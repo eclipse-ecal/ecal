@@ -21,7 +21,11 @@
 
 #include <QFont>
 #include <QStyle>
-#include <QDesktopWidget>
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+  #include <QDesktopWidget>
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+
 #include <QDesktopServices>
 #include <QApplication>
 #include <QStyleOption>
@@ -101,7 +105,7 @@ RecorderModel::~RecorderModel()
 QVariant RecorderModel::data(const QModelIndex &index, int role) const
 {
   if (!index.isValid())
-    return QVariant::Invalid;
+    return QVariant(); // Invalid QVariant
 
   const int     row    = index.row();
   const Columns column = (Columns)index.column();
@@ -583,7 +587,7 @@ QVariant RecorderModel::data(const QModelIndex &index, int role) const
     return data(index, Qt::ItemDataRole::DisplayRole);
   }
 
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 bool RecorderModel::setData(const QModelIndex &index, const QVariant &value, int role)
@@ -720,7 +724,7 @@ QVariant RecorderModel::headerData(int section, Qt::Orientation orientation, int
   {
     return column_labels_.at((Columns)section);
   }
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 QModelIndex RecorderModel::index(int row, int column, const QModelIndex& /*parent*/) const

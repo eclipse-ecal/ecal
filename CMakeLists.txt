@@ -433,16 +433,14 @@ if(BUILD_APPS AND (HAS_QT5 OR HAS_QT6))
   endif()
   add_subdirectory(app/mon/mon_plugins)
   add_subdirectory(app/util/launcher)
-endif()
-
-if(BUILD_APPS AND HAS_QT5)
-# --------------------------------------------------------
-# qt applications using hdf5
-# --------------------------------------------------------
-if(BUILD_APPS AND HAS_QT5 AND HAS_HDF5)
-  add_subdirectory(app/play/play_gui)
-  add_subdirectory(app/rec/rec_gui)
-endif()
+  
+  # --------------------------------------------------------
+  # qt applications using hdf5
+  # --------------------------------------------------------
+  if(HAS_HDF5)
+    add_subdirectory(app/play/play_gui)
+    add_subdirectory(app/rec/rec_gui)
+  endif()
 endif()
 
 # --------------------------------------------------------

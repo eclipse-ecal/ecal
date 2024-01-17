@@ -247,7 +247,7 @@ QVariant ChannelTreeItem::data(Columns column, Qt::ItemDataRole role) const
   }
 
 
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 bool ChannelTreeItem::setData(int column, const QVariant& data, Qt::ItemDataRole role)

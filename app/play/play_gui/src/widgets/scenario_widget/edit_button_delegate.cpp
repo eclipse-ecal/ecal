@@ -288,7 +288,11 @@ bool EditButtonDelegate::eventFilter(QObject* obj, QEvent *event)
     {
       const QAbstractItemView* item_view = static_cast<const QAbstractItemView*>(parent());
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
       QPoint mouse_pos = static_cast<QMouseEvent*>(event)->globalPos();
+#else
+      QPoint mouse_pos = static_cast<QMouseEvent*>(event)->globalPosition().toPoint();
+#endif
       QPoint p = item_view->viewport()->mapFromGlobal(mouse_pos);
 
 //      QModelIndex current_index = item_view->indexAt(p);

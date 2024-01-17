@@ -144,7 +144,7 @@ void ConfigWidget::userRecPathButtonPressed()
 
   if (root.exists() && !parsed_meas_root.isEmpty())
   {
-    if (parsed_meas_root[parsed_meas_root.size() - 1] != "\\" && parsed_meas_root[parsed_meas_root.size() - 1] != "/")
+    if (parsed_meas_root[parsed_meas_root.size() - 1] != '\\' && parsed_meas_root[parsed_meas_root.size() - 1] != '/')
       root_path = parsed_meas_root + "/";
     else
       root_path = parsed_meas_root;

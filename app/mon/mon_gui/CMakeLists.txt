@@ -176,7 +176,6 @@ if(ECAL_NPCAP_SUPPORT)
     )
 endif(ECAL_NPCAP_SUPPORT)
 
-
 # compile qt resource files and ui files
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_resources(autogen_resources ${qt_resource_files})

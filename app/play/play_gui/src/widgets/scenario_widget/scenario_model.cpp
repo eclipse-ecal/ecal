@@ -53,7 +53,7 @@ QVariant ScenarioModel::headerData(int section, Qt::Orientation orientation, int
   }
   else
   {
-    return QVariant::Invalid;
+    return QVariant(); // Invalid QVariant
   }
 }
 
