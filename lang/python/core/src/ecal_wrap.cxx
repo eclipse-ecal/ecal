@@ -140,11 +140,44 @@ PyObject* finalize(PyObject* /*self*/, PyObject* /*args*/)
 }
 
 /****************************************/
+/*      is_initialized                  */
+/****************************************/
+PyObject* is_initialized(PyObject* /*self*/, PyObject* /*args*/)
+{
+  return(Py_BuildValue("i", ecal_is_initialized()));
+}
+
+/****************************************/
+/*      set_unit_name                   */
+/****************************************/
+PyObject* set_unit_name(PyObject* /*self*/, PyObject* args)
+{
+  char* unit_name = nullptr;
+
+  if (!PyArg_ParseTuple(args, "s", &unit_name))
+    return nullptr;
+
+  return(Py_BuildValue("i", ecal_set_unit_name(unit_name)));
+}
+
+/****************************************/
 /*      getversion                      */
 /****************************************/
 PyObject* getversion(PyObject* /*self*/, PyObject* /*args*/)
 {
   return(Py_BuildValue("s", ecal_getversion()));
+}
+
+/****************************************/
+/*      getversioncomponents            */
+/****************************************/
+PyObject* getversion_components(PyObject* /*self*/, PyObject* /*args*/)
+{
+  int major = 0;
+  int minor = 0;
+  int patch = 0;
+  ecal_getversion_components(&major, &minor, &patch);
+  return(Py_BuildValue("iii", major, minor, patch));
 }
 
 /****************************************/
@@ -1574,8 +1607,11 @@ static PyMethodDef _ecal_methods[] =
 {
   {"initialize",                    initialize,                    METH_VARARGS,  "initialize(argv, unit_name)"},
   {"finalize",                      finalize,                      METH_NOARGS,   "finalize()"},
+  {"is_initialized",                is_initialized,                METH_NOARGS,   "is_initialized()"},
+  {"set_unit_name",                 set_unit_name,                 METH_VARARGS,  "set_unit_name(unit_name)"},
 
   {"getversion",                    getversion,                    METH_NOARGS,   "getversion()"},
+  {"getversion_components",         getversion_components,         METH_NOARGS,   "getversion_components()"},
   {"getdate",                       getdate,                       METH_NOARGS,   "getdate()"},
   {"getmicroseconds",               getmicroseconds,               METH_NOARGS,   "getmicroseconds()"},
 
