@@ -55,6 +55,8 @@ namespace eCAL
   class CMemfileRegistrationReceiver
   {
   public:
+    ~CMemfileRegistrationReceiver();
+
     void Create(CMemoryFileBroadcastReader* memfile_broadcast_reader_);
     void Destroy();
 
