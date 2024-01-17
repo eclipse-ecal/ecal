@@ -94,7 +94,7 @@ namespace eCAL
       mutable RecHdf5JobStatus              last_status_;
 
       mutable std::mutex                                    hdf5_writer_mutex_;
-      std::unique_ptr<eCAL::measurement::base::Writer>      hdf5_writer_;
+      std::unique_ptr<eCAL::experimental::measurement::base::Writer>      hdf5_writer_;
 
 
       std::atomic<bool> flushing_;

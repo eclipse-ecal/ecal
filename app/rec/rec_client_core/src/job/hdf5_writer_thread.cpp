@@ -42,7 +42,7 @@ namespace eCAL
       , new_topic_info_map_available_(true)
       , flushing_                    (false)
     {
-      hdf5_writer_ = std::make_unique<eCAL::measurement::hdf5::Writer>();
+      hdf5_writer_ = std::make_unique<eCAL::experimental::measurement::hdf5::Writer>();
     }
 
     Hdf5WriterThread::~Hdf5WriterThread()
