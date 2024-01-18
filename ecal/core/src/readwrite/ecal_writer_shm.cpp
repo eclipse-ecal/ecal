@@ -98,7 +98,10 @@ namespace eCAL
     if (!m_created) return false;
     m_created = false;
 
-    m_memory_file_vec.clear();
+    {
+      const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
+      m_memory_file_vec.clear();
+    }
 
     return true;
   }
@@ -113,7 +116,7 @@ namespace eCAL
   {
     if (!m_created)     return false;
     if (data_.len == 0) return false;
-
+    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
     // false signals no rematching / exchanging of
     // connection parameters needed
     bool ret_state(false);
@@ -169,6 +172,9 @@ namespace eCAL
   {
     if (!m_created) return 0;
 
+    // protect m_memory_file_vec
+    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
+
     // write content
     bool sent = m_memory_file_vec[m_write_idx]->Write(data_);
 
@@ -182,6 +188,8 @@ namespace eCAL
   bool CDataWriterSHM::AddLocConnection(const std::string& process_id_, const std::string& /*conn_par_*/)
   {
     if (!m_created) return false;
+    // protect m_memory_file_vec
+    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
 
     for (auto& memory_file : m_memory_file_vec)
     {
@@ -213,6 +221,10 @@ namespace eCAL
   {
     // starting from eCAL version > 5.8.13/5.9.0 the ConnectionParameter is defined as google protobuf
     eCAL::pb::ConnnectionPar connection_par;
+
+    // protect m_memory_file_vec
+    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
+
     for (auto& memory_file : m_memory_file_vec)
     {
       connection_par.mutable_layer_par_shm()->add_memory_file_list(memory_file->GetName());
