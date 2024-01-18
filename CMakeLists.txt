@@ -220,6 +220,19 @@ endif()
 
 find_package(CMakeFunctions REQUIRED)
 
+# --------------------------------------------------------
+# detect qt library
+# --------------------------------------------------------
+if(MSVC)
+  if (HAS_QT)
+    find_package(QT NAMES Qt6 Qt5 COMPONENTS Core QUIET)
+    if (NOT "${QT_FOUND}")
+      autodetect_qt_msvc_dir()
+    endif()
+  endif()
+endif()
+
+
 git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
 set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
 set(eCAL_VERSION_MINOR  ${GIT_REVISION_MINOR})
