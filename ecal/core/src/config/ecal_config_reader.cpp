@@ -352,14 +352,10 @@ namespace eCAL
   CConfig::CConfig() :
     m_impl(nullptr)
   {
-    m_impl = new CConfigImpl();
+    m_impl = std::make_unique<CConfigImpl>();
   }
 
-  CConfig::~CConfig()
-  {
-    delete m_impl;
-    m_impl = nullptr;
-  }
+  CConfig::~CConfig() = default;
 
   void CConfig::OverwriteKeys(const std::vector<std::string>& key_vec_)
   {

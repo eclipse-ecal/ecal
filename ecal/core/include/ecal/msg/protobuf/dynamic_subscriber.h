@@ -153,13 +153,13 @@ namespace eCAL
 
       std::shared_ptr<google::protobuf::Message> CreateMessagePointer(const std::string& topic_name_);
 
-      bool                                        created;
-      std::string                                 topic_name;
-      eCAL::protobuf::CProtoDynDecoder*           msg_decoder;
-      std::shared_ptr<google::protobuf::Message>  msg_ptr;
-      eCAL::CSubscriber                           msg_sub;
-      ProtoMsgCallbackT                           msg_callback;
-      ProtoErrorCallbackT                         err_callback;
+      bool                                              created;
+      std::string                                       topic_name;
+      std::unique_ptr<eCAL::protobuf::CProtoDynDecoder> msg_decoder;
+      std::shared_ptr<google::protobuf::Message>        msg_ptr;
+      eCAL::CSubscriber                                 msg_sub;
+      ProtoMsgCallbackT                                 msg_callback;
+      ProtoErrorCallbackT                               err_callback;
 
     private:
       // this object must not be copied.
@@ -196,7 +196,7 @@ namespace eCAL
       topic_name = topic_name_;
 
       // create message decoder
-      msg_decoder = new eCAL::protobuf::CProtoDynDecoder();
+      msg_decoder = std::make_unique<eCAL::protobuf::CProtoDynDecoder>();
 
       // create subscriber
       msg_sub.Create(topic_name_);
@@ -215,7 +215,7 @@ namespace eCAL
       msg_ptr = nullptr;
 
       // delete message decoder
-      delete msg_decoder;
+      msg_decoder.reset();
 
       created = false;
     }

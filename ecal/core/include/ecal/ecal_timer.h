@@ -37,13 +37,13 @@ namespace eCAL
    *
    * The CTimer class is used to realize simple time triggered callbacks.
   **/
-  class ECAL_API CTimer 
+  class CTimer 
   {
   public:
     /**
      * @brief Constructor. 
     **/
-    CTimer();
+    ECAL_API CTimer();
 
     /**
      * @brief Constructor. 
@@ -52,12 +52,12 @@ namespace eCAL
      * @param callback_   The callback function. 
      * @param delay_      Timer callback delay for first call in ms.
     **/
-    CTimer(int timeout_, TimerCallbackT callback_, int delay_ = 0);
+    ECAL_API CTimer(int timeout_, TimerCallbackT callback_, int delay_ = 0);
 
     /**
      * @brief Destructor. 
     **/
-    virtual ~CTimer();
+    ECAL_API virtual ~CTimer();
 
     /**
      * @brief Start the timer. 
@@ -68,18 +68,18 @@ namespace eCAL
      *
      * @return  True if timer could be started. 
     **/
-    bool Start(int timeout_, TimerCallbackT callback_, int delay_ = 0);
+    ECAL_API bool Start(int timeout_, TimerCallbackT callback_, int delay_ = 0);
 
     /**
      * @brief Stop the timer. 
      *
      * @return  True if timer could be stopped. 
     **/
-    bool Stop();
+    ECAL_API bool Stop();
 
   protected:
     // class members
-    CTimerImpl*  m_timer;
+    std::unique_ptr<CTimerImpl> m_timer;
 
   private:
     // this object must not be copied.

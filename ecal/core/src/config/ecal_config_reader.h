@@ -27,6 +27,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace eCAL
 {
@@ -49,7 +50,7 @@ namespace eCAL
     std::string get(const std::string& section_, const std::string& key_, const char* default_);
 
   private:
-    CConfigImpl* m_impl;
+    std::unique_ptr<CConfigImpl> m_impl;
   };
 
   ECAL_API bool        CfgGetBool  (const std::string& section_, const std::string& key_, bool        default_ = false);

@@ -103,7 +103,7 @@ namespace eCAL
     struct STopicInfoMap
     {
       explicit STopicInfoMap(const std::chrono::milliseconds& timeout_) :
-        map(new TopicInfoMap(timeout_))
+        map(std::make_unique<TopicInfoMap>(timeout_))
       {
       };
       mutable std::shared_timed_mutex sync;                                        //!< Mutex protecting the map
@@ -116,7 +116,7 @@ namespace eCAL
     struct SServiceMethodInfoMap
     {
       explicit SServiceMethodInfoMap(const std::chrono::milliseconds& timeout_) :
-        map(new ServiceMethodInfoMap(timeout_))
+        map(std::make_unique<ServiceMethodInfoMap>(timeout_))
       {
       };
       mutable std::shared_timed_mutex       sync;                                  //!< Mutex protecting the map
