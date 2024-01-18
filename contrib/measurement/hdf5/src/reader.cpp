@@ -1,7 +1,7 @@
 #include <ecal/measurement/hdf5/reader.h>
 #include <ecalhdf5/eh5_meas.h>
 
-using namespace eCAL::measurement::hdf5;
+using namespace eCAL::experimental::measurement::hdf5;
 
 Reader::Reader() 
   : measurement(std::make_unique<eh5::HDF5Meas>()) 

@@ -38,6 +38,17 @@
 ECAL_API const char* ecal_getversion();
 
 /**
+ * @brief  Get eCAL version as separated integer values.
+ *
+ * @param [out] major_  The eCAL major version number.
+ * @param [out] minor_  The eCAL minor version number.
+ * @param [out] patch_  The eCAL patch version number.
+ *
+ * @return  Zero if succeeded.
+**/
+ECAL_API int ecal_getversion_components(int* major_, int* minor_, int* patch_);
+
+/**
  * @brief  Get eCAL version date.
  *
  * @return  Full eCAL version date string.
@@ -61,6 +72,22 @@ ECAL_API int ecal_initialize(int argc_, char **argv_, const char* unit_name_);
  * @return Zero if succeeded, 1 if already initialized, -1 if failed.
 **/
 ECAL_API int ecal_finalize();
+
+/**
+ * @brief Check eCAL initialize state.
+ *
+ * @return 1 if eCAL is initialized.
+**/
+ECAL_API int ecal_is_initialized();
+
+/**
+ * @brief  Set/change the unit name of current module.
+ *
+ * @param unit_name_  Defines the name of the eCAL unit.
+ *
+ * @return  Zero if succeeded.
+**/
+ECAL_API int ecal_set_unit_name(const char *unit_name_);
 
 /**
  * @brief  Set process state info.

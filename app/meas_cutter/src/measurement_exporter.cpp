@@ -21,7 +21,7 @@
 #include <ecal/measurement/hdf5/writer.h>
 
 MeasurementExporter::MeasurementExporter():
-  _writer(std::make_unique<eCAL::measurement::hdf5::Writer>())
+  _writer(std::make_unique<eCAL::experimental::measurement::hdf5::Writer>())
 {
 }
 
