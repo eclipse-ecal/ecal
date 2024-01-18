@@ -98,7 +98,7 @@ QByteArray asByteArrayBlob(const QByteArray& bytes)
 QString asChecksum(const QByteArray& bytes)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-  quint16 crc16 = qChecksum(QByteArrayView(bytes));
+  quint16 crc16 = qChecksum(bytes);
 #else
   quint16 crc16 = qChecksum(bytes.data(), (uint)bytes.length());
 #endif
@@ -262,7 +262,11 @@ void MonitorTreeItem::setAccessed(bool accessed)
 
 QVariant MonitorTreeItem::getDisplayValue() const
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
   if (data_.type() == QVariant::Type::ByteArray)
+#else
+  if (data_.typeId() == QMetaType::QByteArray)
+#endif
   {
     //TODO
     QByteArray bytes = data_.toByteArray();
@@ -275,7 +279,11 @@ QVariant MonitorTreeItem::getDisplayValue() const
       return asChecksum(bytes);
     }
   }
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
   else if (data_.userType() == QMetaType::type("StringEnum"))
+#else
+  else if (data_.metaType() == QMetaType::fromName("StringEnum"))
+#endif
   {
     StringEnum string_enum = data_.value<StringEnum>();
     return string_enum.name + "(" + QString::number(string_enum.value) + ")";

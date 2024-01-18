@@ -140,7 +140,13 @@ void PluginWidget::updateRawMessageView()
 {
   std::lock_guard<std::mutex> message_lock(message_mutex_);
 
-  quint16 crc16 = qChecksum(last_message_.data(), last_message_.length());
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+  const quint16 crc16 = qChecksum(last_message_.data(), last_message_.length());
+#else
+  const quint16 crc16 = qChecksum(last_message_);
+#endif
+
   QString crc16_string = QString("%1").arg(QString::number(crc16, 16).toUpper(), 4, '0');
   QString size_text = tr("Binary data of ") + QString::number(last_message_.size()) + tr(" bytes (CRC16: ") + crc16_string + ")";
 
