@@ -656,6 +656,7 @@ namespace eCAL
     m_connected = state_;
     if(m_connected)
     {
+      const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
       auto iter = m_event_callback_map.find(sub_event_connected);
       if(iter != m_event_callback_map.end())
       {
@@ -668,6 +669,7 @@ namespace eCAL
     }
     else
     {
+      const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
       auto iter = m_event_callback_map.find(sub_event_disconnected);
       if(iter != m_event_callback_map.end())
       {
@@ -700,14 +702,17 @@ namespace eCAL
         msg += "\')";
         Logging::Log(log_level_warning, msg);
 #endif
-        auto citer = m_event_callback_map.find(sub_event_dropped);
-        if (citer != m_event_callback_map.end())
         {
-          SSubEventCallbackData data;
-          data.type  = sub_event_dropped;
-          data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-          data.clock = drops;
-          (citer->second)(m_topic_name.c_str(), &data);
+          const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+          auto citer = m_event_callback_map.find(sub_event_dropped);
+          if (citer != m_event_callback_map.end())
+          {
+            SSubEventCallbackData data;
+            data.type  = sub_event_dropped;
+            data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+            data.clock = drops;
+            (citer->second)(m_topic_name.c_str(), &data);
+          }
         }
         m_message_drops += drops;
       }
