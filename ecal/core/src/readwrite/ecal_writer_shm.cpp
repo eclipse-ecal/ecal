@@ -88,7 +88,10 @@ namespace eCAL
     if (!m_created) return false;
     m_created = false;
 
-    m_memory_file_vec.clear();
+    {
+      const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
+      m_memory_file_vec.clear();
+    }
 
     return true;
   }
@@ -101,6 +104,8 @@ namespace eCAL
 
   bool CDataWriterSHM::SetBufferCount(size_t buffer_count_)
   {
+    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
+
     // no need to adapt anything
     if (m_memory_file_vec.size() == buffer_count_) return true;
 
@@ -160,11 +165,15 @@ namespace eCAL
       ret_state |= true;
     }
 
-    // adapt write index if needed
-    m_write_idx %= m_memory_file_vec.size();
-      
-    // check size and reserve new if needed
-    ret_state |= m_memory_file_vec[m_write_idx]->CheckSize(attr_.len);
+    {
+      const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
+
+      // adapt write index if needed
+      m_write_idx %= m_memory_file_vec.size();
+
+      // check size and reserve new if needed
+      ret_state |= m_memory_file_vec[m_write_idx]->CheckSize(attr_.len);
+    }
 
     return ret_state;
   }
@@ -172,6 +181,9 @@ namespace eCAL
   bool CDataWriterSHM::Write(CPayloadWriter& payload_, const SWriterAttr& attr_)
   {
     if (!m_created) return false;
+
+    // protect m_memory_file_vec
+    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
 
     // write content
     const bool force_full_write(m_memory_file_vec.size() > 1);
@@ -188,6 +200,9 @@ namespace eCAL
   {
     if (!m_created) return;
 
+    // protect m_memory_file_vec
+    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
+
     for (auto& memory_file : m_memory_file_vec)
     {
       memory_file->Connect(process_id_);
@@ -201,6 +216,10 @@ namespace eCAL
   {
     // starting from eCAL version > 5.8.13/5.9.0 the ConnectionParameter is defined as google protobuf
     eCAL::pb::ConnnectionPar connection_par;
+
+    // protect m_memory_file_vec
+    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
+
     for (auto& memory_file : m_memory_file_vec)
     {
       connection_par.mutable_layer_par_shm()->add_memory_file_list(memory_file->GetName());
