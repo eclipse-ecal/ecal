@@ -63,12 +63,12 @@ namespace eCAL
       /**
        * @brief Move constructor
       **/
-      ECAL_API CDynamicJSONSubscriber(CDynamicJSONSubscriber&& rhs);
+      ECAL_API CDynamicJSONSubscriber(CDynamicJSONSubscriber&& rhs) noexcept;
 
       /**
        * @brief Move assignment
       **/
-      ECAL_API CDynamicJSONSubscriber& operator=(CDynamicJSONSubscriber&& rhs);
+      ECAL_API CDynamicJSONSubscriber& operator=(CDynamicJSONSubscriber&& rhs) noexcept;
 
       /**
        * @brief Creates this object.

@@ -67,12 +67,12 @@ namespace eCAL
     /**
      * @brief Move constructor
     **/
-    ECAL_API CTimer(CTimer&& rhs);
+    ECAL_API CTimer(CTimer&& rhs) noexcept;
 
     /**
      * @brief Move assignment
     **/
-    ECAL_API CTimer& operator=(CTimer&& rhs);
+    ECAL_API CTimer& operator=(CTimer&& rhs) noexcept;
 
     /**
      * @brief Start the timer. 
