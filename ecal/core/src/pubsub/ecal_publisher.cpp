@@ -71,12 +71,38 @@ namespace eCAL
   /**
    * @brief CPublisher are move-enabled
   **/
-  CPublisher::CPublisher(CPublisher&& rhs) noexcept = default;
+  CPublisher::CPublisher(CPublisher&& rhs) noexcept :
+                m_datawriter(std::move(rhs.m_datawriter)),
+                m_qos(std::move(rhs.m_qos)),
+                m_tlayer(std::move(rhs.m_tlayer)),
+                m_id(std::move(rhs.m_id)),
+                m_created(std::move(rhs.m_created)),
+                m_initialized(std::move(rhs.m_initialized))
+  {
+    rhs.m_created     = false;
+    rhs.m_initialized = false;
+  }
 
   /**
    * @brief CPublisher are move-enabled
   **/
-  CPublisher& CPublisher::operator=(CPublisher&& rhs) noexcept = default;
+  CPublisher& CPublisher::operator=(CPublisher&& rhs) noexcept
+  {
+    // Call destroy, to clean up the current state, then afterwards move all elements
+    Destroy();
+
+    m_datawriter      = std::move(rhs.m_datawriter);
+    m_qos             = std::move(rhs.m_qos);
+    m_tlayer          = std::move(rhs.m_tlayer),
+    m_id              = std::move(rhs.m_id);
+    m_created         = std::move(rhs.m_created);
+    m_initialized     = std::move(rhs.m_initialized);
+
+    rhs.m_created     = false;
+    rhs.m_initialized = false;
+
+    return *this;
+  }
 
   bool CPublisher::Create(const std::string& topic_name_, const std::string& topic_type_ /* = "" */, const std::string& topic_desc_ /* = "" */)
   {

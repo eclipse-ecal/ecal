@@ -61,8 +61,31 @@ namespace eCAL
     Destroy();
   }
 
-  CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept = default; 
-  CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept = default;
+  CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept :
+                 m_datareader(std::move(rhs.m_datareader)),
+                 m_qos(std::move(rhs.m_qos)),
+                 m_created(std::move(rhs.m_created)),
+                 m_initialized(std::move(rhs.m_initialized))
+  {
+    rhs.m_created     = false;
+    rhs.m_initialized = false;
+  }
+
+  CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept
+  {
+    // Call destroy, to clean up the current state, then afterwards move all elements
+    Destroy();
+
+    m_datareader      = std::move(rhs.m_datareader);
+    m_qos             = std::move(rhs.m_qos);
+    m_created         = std::move(rhs.m_created);
+    m_initialized     = std::move(rhs.m_initialized);
+
+    rhs.m_created     = false;
+    rhs.m_initialized = false;
+
+    return *this;
+  }
 
   bool CSubscriber::Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ /* = "" */)
   {
