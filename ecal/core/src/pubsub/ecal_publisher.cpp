@@ -73,11 +73,11 @@ namespace eCAL
   **/
   CPublisher::CPublisher(CPublisher&& rhs) noexcept :
                 m_datawriter(std::move(rhs.m_datawriter)),
-                m_qos(std::move(rhs.m_qos)),
-                m_tlayer(std::move(rhs.m_tlayer)),
-                m_id(std::move(rhs.m_id)),
-                m_created(std::move(rhs.m_created)),
-                m_initialized(std::move(rhs.m_initialized))
+                m_qos(rhs.m_qos),
+                m_tlayer(rhs.m_tlayer),
+                m_id(rhs.m_id),
+                m_created(rhs.m_created),
+                m_initialized(rhs.m_initialized)
   {
     rhs.m_created     = false;
     rhs.m_initialized = false;
@@ -92,11 +92,11 @@ namespace eCAL
     Destroy();
 
     m_datawriter      = std::move(rhs.m_datawriter);
-    m_qos             = std::move(rhs.m_qos);
-    m_tlayer          = std::move(rhs.m_tlayer),
-    m_id              = std::move(rhs.m_id);
-    m_created         = std::move(rhs.m_created);
-    m_initialized     = std::move(rhs.m_initialized);
+    m_qos             = rhs.m_qos;
+    m_tlayer          = rhs.m_tlayer,
+    m_id              = rhs.m_id;
+    m_created         = rhs.m_created;
+    m_initialized     = rhs.m_initialized;
 
     rhs.m_created     = false;
     rhs.m_initialized = false;
