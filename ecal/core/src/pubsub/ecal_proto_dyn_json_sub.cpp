@@ -209,6 +209,12 @@ namespace eCAL
       Destroy();
     }
 
+    CDynamicJSONSubscriber::CDynamicJSONSubscriber(CDynamicJSONSubscriber&& rhs)
+      = default;
+
+    CDynamicJSONSubscriber& CDynamicJSONSubscriber::operator=(CDynamicJSONSubscriber&& rhs)
+      = default;
+
     void CDynamicJSONSubscriber::Create(const std::string& topic_name_)
     {
       if (created) return;

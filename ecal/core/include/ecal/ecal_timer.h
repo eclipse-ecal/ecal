@@ -26,6 +26,7 @@
 
 #include <ecal/ecal_os.h>
 #include <functional>
+#include <memory>
 
 namespace eCAL
 {
@@ -59,6 +60,20 @@ namespace eCAL
     **/
     ECAL_API virtual ~CTimer();
 
+    // Object not copyable
+    CTimer(const CTimer&) = delete;
+    CTimer& operator=(const CTimer&) = delete;
+
+    /**
+     * @brief Move constructor
+    **/
+    ECAL_API CTimer(CTimer&& rhs);
+
+    /**
+     * @brief Move assignment
+    **/
+    ECAL_API CTimer& operator=(CTimer&& rhs);
+
     /**
      * @brief Start the timer. 
      *
@@ -80,10 +95,5 @@ namespace eCAL
   protected:
     // class members
     std::unique_ptr<CTimerImpl> m_timer;
-
-  private:
-    // this object must not be copied.
-    CTimer(const CTimer&);
-    CTimer& operator=(const CTimer&);
   };
 }

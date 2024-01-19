@@ -146,6 +146,12 @@ namespace eCAL
     m_timer.reset();
   }
 
+  CTimer::CTimer(CTimer&& rhs)
+    = default;
+
+  CTimer& CTimer::operator=(CTimer&& rhs)
+    = default;
+
   bool CTimer::Start(const int timeout_, TimerCallbackT callback_, const int delay_ /*= 0*/)
   {
     return(m_timer->Start(timeout_, callback_, delay_));

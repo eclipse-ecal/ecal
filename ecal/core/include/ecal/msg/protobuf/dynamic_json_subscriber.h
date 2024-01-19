@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal.h>
+#include <memory>
 
 namespace eCAL
 {
@@ -55,6 +56,19 @@ namespace eCAL
        * @brief Destructor.
       **/
       ECAL_API ~CDynamicJSONSubscriber();
+
+      CDynamicJSONSubscriber(const CDynamicJSONSubscriber&) = delete;
+      CDynamicJSONSubscriber& operator=(const CDynamicJSONSubscriber&) = delete;
+
+      /**
+       * @brief Move constructor
+      **/
+      ECAL_API CDynamicJSONSubscriber(CDynamicJSONSubscriber&& rhs);
+
+      /**
+       * @brief Move assignment
+      **/
+      ECAL_API CDynamicJSONSubscriber& operator=(CDynamicJSONSubscriber&& rhs);
 
       /**
        * @brief Creates this object.
@@ -98,11 +112,6 @@ namespace eCAL
     protected:
       bool                                        created;
       std::unique_ptr<CDynamicJSONSubscriberImpl> proto_dyn_sub_impl;
-
-    private:
-      // this object must not be copied.
-      CDynamicJSONSubscriber(const CDynamicJSONSubscriber&);
-      CDynamicJSONSubscriber& operator=(const CDynamicJSONSubscriber&);
     };
     /** @example proto_dyn_json.cpp
     * This is an example how to use CDynamicJSONSubscriber to receive dynamic google::protobuf data as a JSON string with eCAL.
