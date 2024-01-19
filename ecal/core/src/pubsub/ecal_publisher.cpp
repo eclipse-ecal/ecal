@@ -71,39 +71,12 @@ namespace eCAL
   /**
    * @brief CPublisher are move-enabled
   **/
-  CPublisher::CPublisher(CPublisher&& rhs) noexcept :
-                m_datawriter(rhs.m_datawriter),
-                m_qos(rhs.m_qos),
-                m_id(rhs.m_id),
-                m_created(rhs.m_created),
-                m_initialized(rhs.m_initialized)
-  {
-    InitializeQOS();
-    InitializeTLayer();
-
-    rhs.m_created     = false;
-    rhs.m_initialized = false;
-  }
+  CPublisher::CPublisher(CPublisher&& rhs) noexcept = default;
 
   /**
    * @brief CPublisher are move-enabled
   **/
-  CPublisher& CPublisher::operator=(CPublisher&& rhs) noexcept
-  {
-    m_datawriter = rhs.m_datawriter;
-
-    m_qos             = rhs.m_qos;
-    m_id              = rhs.m_id;
-    m_created         = rhs.m_created;
-    m_initialized     = rhs.m_initialized;
-
-    InitializeQOS();
-    InitializeTLayer();
-    rhs.m_created     = false;
-    rhs.m_initialized = false;
-
-    return *this;
-  }
+  CPublisher& CPublisher::operator=(CPublisher&& rhs) noexcept = default;
 
   bool CPublisher::Create(const std::string& topic_name_, const std::string& topic_type_ /* = "" */, const std::string& topic_desc_ /* = "" */)
   {
