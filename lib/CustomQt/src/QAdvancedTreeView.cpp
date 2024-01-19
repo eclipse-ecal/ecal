@@ -283,9 +283,3 @@ bool QAdvancedTreeView::restoreState(const QByteArray& state, int32_t version)
 
   return true;
 }
-
-// TODO: Add again or check why it existed in the first place
-//QStyleOptionViewItem QAdvancedTreeView::viewOptions() const
-//{
-//  return QTreeView::viewOptions();
-//}
