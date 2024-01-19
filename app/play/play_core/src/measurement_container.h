@@ -92,8 +92,8 @@ private:
     eCAL::CPublisher publisher_;
     long long message_counter_;
 
-    PublisherInfo(const std::string& topic_name, const std::string& topic_type = "", const std::string& topic_description = "")
-      : publisher_(topic_name, topic_type, topic_description)
+    PublisherInfo(const std::string& topic_name, const eCAL::SDataTypeInformation& datatype_information)
+      : publisher_(topic_name, datatype_information)
       , message_counter_(0)
     {}
   };
