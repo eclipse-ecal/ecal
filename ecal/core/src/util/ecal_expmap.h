@@ -62,45 +62,76 @@ namespace eCAL
       using mapped_type = T;
 
       class iterator : public std::iterator<std::bidirectional_iterator_tag, std::pair<Key, T>>
-        //class iterator : public std::iterator<std::bidirectional_iterator_tag, cache_reference>
       {
+        friend class const_iterator;
+
       public:
-        iterator(const iterator& i)
-          : it(i.it)
-        {};
         iterator(const typename key_to_value_type::iterator _it)
           : it(_it)
-        {};
-        ~iterator() = default;
-        iterator& operator=(const iterator& i)
-        {
-          it = i.it;
-          return *this;
-        };
+        {}
+
         iterator& operator++()
         {
           it++;
           return *this;
-        }; //prefix increment
+        } //prefix increment
+
         iterator& operator--()
         {
           it--;
           return *this;
-        }; //prefix decrement
-           //reference operator*() const
+        } //prefix decrement
+
         std::pair<Key, T> operator*() const
         {
           return std::make_pair(it->first, it->second.first);
-        };
+        }
+        
         //friend void swap(iterator& lhs, iterator& rhs); //C++11 I think
-        bool operator==(const iterator& rhs) const { return it == rhs.it; };
-        bool operator!=(const iterator& rhs) const { return it != rhs.it; };
-
+        bool operator==(const iterator& rhs) const { return it == rhs.it; }
+        bool operator!=(const iterator& rhs) const { return it != rhs.it; }
 
       private:
         typename key_to_value_type::iterator it;
-        mutable value_type current_ref;
+       };
+
+      class const_iterator : public std::iterator<std::bidirectional_iterator_tag, const std::pair<Key, T>>
+      {
+      public:
+        const_iterator(const iterator& other)
+          : it(other.it)
+        {}
+
+        const_iterator(const typename key_to_value_type::const_iterator _it)
+          : it(_it)
+        {}
+        
+        const_iterator& operator++()
+        {
+          it++;
+          return *this;
+        } //prefix increment
+        
+        const_iterator& operator--()
+        {
+          it--;
+          return *this;
+        } //prefix decrement
+          //reference operator*() const
+        
+        std::pair<Key, T> operator*() const
+        {
+          return std::make_pair(it->first, it->second.first);
+        }
+        
+        //friend void swap(iterator& lhs, iterator& rhs); //C++11 I think
+        bool operator==(const const_iterator& rhs) const { return it == rhs.it; }
+        bool operator!=(const const_iterator& rhs) const { return it != rhs.it; }
+
+      private:
+        typename key_to_value_type::const_iterator it;
       };
+
 
       // Constructor specifies the timeout of the map
       CExpMap() : _timeout(std::chrono::milliseconds(5000)) {};
@@ -115,23 +146,42 @@ namespace eCAL
       iterator begin() noexcept
       {
         return iterator(_key_to_value.begin());
-      };
+      }
 
       iterator end() noexcept
       {
         return iterator(_key_to_value.end());
-      };
+      }
+
+      const_iterator begin() const noexcept
+      {
+        return const_iterator(_key_to_value.begin());
+      }
+
+      const_iterator end() const noexcept
+      {
+        return const_iterator(_key_to_value.end());
+      }
+
+      // Const begin and end functions
+      const_iterator cbegin() const noexcept {
+        return const_iterator(_key_to_value.cbegin());
+      }
+
+      const_iterator cend() const noexcept {
+        return const_iterator(_key_to_value.cend());
+      }
 
       // Capacity
       bool empty() const noexcept
       {
         return _key_to_value.empty();
-      };
+      }
 
       size_type size() const noexcept
       {
         return _key_to_value.size();
-      };
+      }
 
       size_type max_size() const noexcept
       {
@@ -169,25 +219,30 @@ namespace eCAL
       mapped_type& at(const key_type& k)
       {
         return _key_to_value.at(k).first;
-      };
+      }
 
       const mapped_type& at(const key_type& k) const
       {
         return _key_to_value.at(k).first;
-      };
+      }
 
       // Modifiers
       std::pair<iterator, bool> insert(const value_type& val)
       {
         auto result = insert(val.first, val.second);
         return std::make_pair(iterator(result.first), result.second);
-      };
+      }
 
       // Operations
       iterator find(const key_type& k)
       {
         return iterator(_key_to_value.find(k));
-      };
+      }
+
+      const_iterator find(const Key& k) const
+      {
+        return const_iterator(_key_to_value.find(k));
+      }
 
       // Purge the timed out elements from the cache 
       void remove_deprecated(std::list<Key>* key_erased = nullptr) //-V826
@@ -204,7 +259,7 @@ namespace eCAL
           _key_to_value.erase(it->second); // erase the element from the map 
           it = _key_tracker.erase(it);     // erase the element from the list
         }
-      };
+      }
 
       // Remove specific element from the cache
       bool erase(const Key& k)
@@ -217,7 +272,7 @@ namespace eCAL
           return true;
         }
         return false;
-      };
+      }
 
       // Remove all elements from the cache 
       void clear()
@@ -231,7 +286,7 @@ namespace eCAL
           _key_to_value.erase(it->second); // erase the element from the map 
           it = _key_tracker.erase(it);     // erase the element from the list
         }
-      };
+      }
 
     private:
 
