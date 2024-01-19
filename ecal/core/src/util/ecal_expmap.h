@@ -119,7 +119,7 @@ namespace eCAL
         } //prefix decrement
           //reference operator*() const
         
-        const std::pair<Key, T> operator*() const
+        std::pair<Key, T> operator*() const
         {
           return std::make_pair(it->first, it->second.first);
         }
