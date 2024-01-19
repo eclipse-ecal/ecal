@@ -35,14 +35,14 @@ namespace eCAL
     class IBinaryChannel
     {
     public:
-      IBinaryChannel(std::shared_ptr<base::Reader> meas_, std::string name_)
+      IBinaryChannel(std::shared_ptr<experimental::measurement::base::Reader> meas_, std::string name_)
         : channel_name(name_)
         , meas(meas_)
       {
         meas->GetEntriesInfo(channel_name, entry_infos);
       }
 
-      virtual BinaryFrame operator[](const base::EntryInfo& entry)
+      virtual BinaryFrame operator[](const experimental::measurement::base::EntryInfo& entry)
       {
         size_t message_size;
         meas->GetEntryDataSize(entry.ID, message_size);
@@ -64,7 +64,7 @@ namespace eCAL
           , m_entry_iterator(owner_.entry_infos.begin())
         {};
 
-        iterator(IBinaryChannel& owner_, const measurement::base::EntryInfoSet::iterator& it)
+        iterator(IBinaryChannel& owner_, const experimental::measurement::base::EntryInfoSet::iterator& it)
           : m_owner(owner_)
           , m_entry_iterator(it)
         {};
@@ -96,7 +96,7 @@ namespace eCAL
         bool operator!=(const iterator& rhs) const { return !(operator==(rhs)); };
       private:
         IBinaryChannel& m_owner;
-        measurement::base::EntryInfoSet::iterator m_entry_iterator;
+        experimental::measurement::base::EntryInfoSet::iterator m_entry_iterator;
         mutable std::string m_msg;
       };
 
@@ -115,8 +115,8 @@ namespace eCAL
 
     private:
       const std::string channel_name;
-      std::shared_ptr<base::Reader> meas;
-      mutable base::EntryInfoSet entry_infos;
+      std::shared_ptr<experimental::measurement::base::Reader> meas;
+      mutable experimental::measurement::base::EntryInfoSet entry_infos;
       mutable std::string data;
     };
 
@@ -125,7 +125,7 @@ namespace eCAL
     class IChannel
     {
     public:
-      IChannel(std::shared_ptr<base::Reader> meas_, std::string name_)
+      IChannel(std::shared_ptr<experimental::measurement::base::Reader> meas_, std::string name_)
         : binary_channel(meas_, name_)
       {
       }
@@ -134,7 +134,7 @@ namespace eCAL
       bool operator!=(const IChannel& rhs) const { return !(operator==(rhs)); }
 
       //virtual Entry<T> operator[](unsigned long long timestamp);
-      virtual Frame<T> operator[](const base::EntryInfo& entry)
+      virtual Frame<T> operator[](const experimental::measurement::base::EntryInfo& entry)
       {
         auto binary_entry = binary_channel[entry];
         eCAL::message::Deserialize(binary_entry.message, message);
@@ -225,11 +225,11 @@ namespace eCAL
       IChannel<T> Get(const std::string& channel) const;
 
     private:
-      std::shared_ptr<base::Reader> meas;
+      std::shared_ptr<experimental::measurement::base::Reader> meas;
     };
 
     inline IMeasurement::IMeasurement(const std::string& path)
-      : meas{ std::make_shared<eCAL::measurement::hdf5::Reader>(path) }
+      : meas{ std::make_shared<experimental::measurement::hdf5::Reader>(path) }
     {
     }
 

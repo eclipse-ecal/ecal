@@ -43,7 +43,7 @@ public:
   std::string getRootOutputPath() const;
 
 private:
-  std::unique_ptr<eCAL::measurement::base::Writer>      _writer;
+  std::unique_ptr<eCAL::experimental::measurement::base::Writer>      _writer;
   std::string                                           _current_channel_name;
   std::string                                           _output_path;
   std::string                                           _root_output_path;

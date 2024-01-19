@@ -50,6 +50,14 @@ ECAL_API const char* ecal_getversion()
 }
 
 /****************************************/
+/*      ecal_getversion_components      */
+/****************************************/
+ECAL_API int ecal_getversion_components(int* major_, int* minor_, int* patch_)
+{
+  return eCAL::GetVersion(major_, minor_, patch_);
+}
+
+/****************************************/
 /*      ecal_getdate                    */
 /****************************************/
 ECAL_API const char* ecal_getdate()
@@ -72,6 +80,23 @@ ECAL_API int ecal_finalize()
 {
   //* @return Zero if succeeded, 1 if still initialized, -1 if failed.
   return(eCAL::Finalize());
+}
+
+/****************************************/
+/*      ecal_is_initialized             */
+/****************************************/
+ECAL_API int ecal_is_initialized()
+{
+  //* @return 1 if eCAL is initialized.
+  return(eCAL::IsInitialized());
+}
+
+/****************************************/
+/*      ecal_set_unit_name              */
+/****************************************/
+ECAL_API int ecal_set_unit_name(const char* unit_name_)
+{
+  return(eCAL::SetUnitName(unit_name_));
 }
 
 /****************************************/

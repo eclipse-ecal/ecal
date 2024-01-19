@@ -55,7 +55,7 @@ namespace eCAL
        * @param access   Access type
        *
       **/
-      explicit HDF5Meas(const std::string& path, measurement::base::AccessType access = measurement::base::AccessType::RDONLY);
+      explicit HDF5Meas(const std::string& path, eAccessType access = RDONLY);
 
       /**
        * @brief Destructor
@@ -105,7 +105,7 @@ namespace eCAL
        * @return         true if output (eAccessType::CREATE) measurement directory structure can be accessed/created, false otherwise.
        *                 true if input (eAccessType::RDONLY) measurement/file path was opened, false otherwise.
       **/
-      bool Open(const std::string& path, measurement::base::AccessType access = measurement::base::AccessType::RDONLY);
+      bool Open(const std::string& path, eAccessType access = RDONLY);
 
       /**
        * @brief Close file
@@ -241,7 +241,7 @@ namespace eCAL
        *
        * @return                    true if succeeds, false if it fails
       **/
-      bool GetEntriesInfo(const std::string& channel_name, measurement::base::EntryInfoSet& entries) const;
+      bool GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const;
 
       /**
        * @brief Gets the header info for data entries for the given channel included in given time range (begin->end)
@@ -254,7 +254,7 @@ namespace eCAL
        *
        * @return                   true if succeeds, false if it fails
       **/
-      bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, measurement::base::EntryInfoSet& entries) const;
+      bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const;
 
       /**
        * @brief Gets data size of a specific entry
