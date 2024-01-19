@@ -370,7 +370,7 @@ bool QEcalPlay::loadMeasurement(const QString& path, bool suppress_blocking_dial
   dlg.setValue(0);
   dlg.setValue(1);
 
-  QFuture<bool> success_future = QtConcurrent::run([this, path]() -> bool { return this->ecal_play_.LoadMeasurement(path.toStdString()); });
+  QFuture<bool> const success_future = QtConcurrent::run([this, path]() -> bool { return this->ecal_play_.LoadMeasurement(path.toStdString()); });
 
   while (!success_future.isFinished())
   {
@@ -585,7 +585,7 @@ void QEcalPlay::calculateChannelsCumulativeEstimatedSize() const
   dlg.setValue(0);
   dlg.setValue(1);
 
-  QFuture<void> success_future = QtConcurrent::run([this]() -> void { this->ecal_play_.CalculateEstimatedSizeForChannels(); });
+  QFuture<void> const success_future = QtConcurrent::run([this]() -> void { this->ecal_play_.CalculateEstimatedSizeForChannels(); });
 
   while (!success_future.isFinished())
   {

@@ -152,7 +152,7 @@ void PluginWidget::updateRawMessageView()
 
   size_label_->setText(size_text);
 
-  QByteArray last_message_trimmed(last_message_.data(), std::min(static_cast<std::size_t>(last_message_.length()), std::size_t(1024)));
+  QByteArray const last_message_trimmed(last_message_.data(), std::min(static_cast<std::size_t>(last_message_.length()), std::size_t(1024)));
   blob_text_edit_->setPlainText(
 #if QT_VERSION < QT_VERSION_CHECK(5, 9, 0)
     bytesToHex(last_message_trimmed, ' ')

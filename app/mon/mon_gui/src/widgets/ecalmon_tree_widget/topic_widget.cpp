@@ -200,8 +200,8 @@ void TopicWidget::loadRegExpLists()
   // regular expression that properly uses a ",". We cannot do anything about
   // that without changing the ecal.ini specification.
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-  QList<QString> exclude_string_list = exclude_string.split(QRegularExpression("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);
-  QList<QString> include_string_list = include_string.split(QRegularExpression("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);
+  QList<QString> const exclude_string_list = exclude_string.split(QRegularExpression("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);
+  QList<QString> const include_string_list = include_string.split(QRegularExpression("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);
 #else // QT_VERSION
   QList<QString> exclude_string_list = exclude_string.split(QRegularExpression("[\\,,;]"), QString::SplitBehavior::SkipEmptyParts);
   QList<QString> include_string_list = include_string.split(QRegularExpression("[\\,,;]"), QString::SplitBehavior::SkipEmptyParts);
@@ -387,7 +387,7 @@ void TopicWidget::resetLayout()
 #else
   int screen_number = 0;
   QScreen* current_screen = this->screen();
-  if (current_screen)
+  if (current_screen != nullptr)
   {
     screen_number = QApplication::screens().indexOf(current_screen);
     if (screen_number < 0)

@@ -706,7 +706,7 @@ void Ecalmon::resetLayout()
 #else
   int screen_number = 0;
   QScreen* current_screen = this->screen();
-  if (current_screen)
+  if (current_screen != nullptr)
   {
     screen_number = QApplication::screens().indexOf(current_screen);
     if (screen_number < 0)

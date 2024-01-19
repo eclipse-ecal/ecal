@@ -93,7 +93,7 @@ void QListMenuToolButton::showListMenu()
   int screen_number = QApplication::desktop()->screenNumber(this);
   QRect screen_geometry = QApplication::desktop()->screenGeometry(screen_number);
 #else
-  QRect screen_geometry = this->screen()->geometry();
+  QRect const screen_geometry = this->screen()->geometry();
 #endif // QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
 
   QRect global_button_geometry = QRect(mapToGlobal(QPoint(0, 0)), size());

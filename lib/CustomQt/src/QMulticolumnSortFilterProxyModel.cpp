@@ -57,7 +57,7 @@ QVector<int> QMulticolumnSortFilterProxyModel::filterKeyColumns() const
 
 bool QMulticolumnSortFilterProxyModel::filterDirectAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
-  QRegularExpression filter_regexp = filterRegularExpression();
+  QRegularExpression const filter_regexp = filterRegularExpression();
 
   for (int column : filter_columns_)
   {
