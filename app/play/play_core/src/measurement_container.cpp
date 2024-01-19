@@ -139,7 +139,7 @@ void MeasurementContainer::CreatePublishers(const std::map<std::string, std::str
 
     std::string topic_type_protocol;
     std::string topic_type_name;
-    auto pos = topic_type.find(":");
+    auto pos = topic_type.find(':');
     if (pos != std::string::npos)
     {
       topic_type_protocol = topic_type.substr(0, pos);
