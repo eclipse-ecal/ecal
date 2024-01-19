@@ -60,19 +60,11 @@ namespace eCAL
     **/
     ECAL_API virtual ~CTimer();
 
-    // Object not copyable
+    // Object not copyable / moveable
     CTimer(const CTimer&) = delete;
     CTimer& operator=(const CTimer&) = delete;
-
-    /**
-     * @brief Move constructor
-    **/
-    ECAL_API CTimer(CTimer&& rhs) noexcept;
-
-    /**
-     * @brief Move assignment
-    **/
-    ECAL_API CTimer& operator=(CTimer&& rhs) noexcept;
+    CTimer(CTimer&& rhs) = delete;
+    CTimer& operator=(CTimer&& rhs) = delete;
 
     /**
      * @brief Start the timer. 

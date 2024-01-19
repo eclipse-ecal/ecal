@@ -59,16 +59,8 @@ namespace eCAL
 
       CDynamicJSONSubscriber(const CDynamicJSONSubscriber&) = delete;
       CDynamicJSONSubscriber& operator=(const CDynamicJSONSubscriber&) = delete;
-
-      /**
-       * @brief Move constructor
-      **/
-      ECAL_API CDynamicJSONSubscriber(CDynamicJSONSubscriber&& rhs) noexcept;
-
-      /**
-       * @brief Move assignment
-      **/
-      ECAL_API CDynamicJSONSubscriber& operator=(CDynamicJSONSubscriber&& rhs) noexcept;
+      CDynamicJSONSubscriber(CDynamicJSONSubscriber&& rhs) = delete;
+      CDynamicJSONSubscriber& operator=(CDynamicJSONSubscriber&& rhs) = delete;
 
       /**
        * @brief Creates this object.
