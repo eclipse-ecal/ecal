@@ -54,7 +54,7 @@ TopicWidget::TopicWidget(QWidget *parent)
   topic_sort_filter_proxy_model_->setSortRole(ItemDataRoles::SortRole);
   topic_sort_filter_proxy_model_->setFilterKeyColumn((int)TopicTreeModel::Columns::TOPIC_NAME);
   topic_sort_filter_proxy_model_->setRecursiveFilteringEnabled(true);
-  topic_sort_filter_proxy_model_->setRegExpLists(topic_exclude_regexp_list_, topic_include_regexp_list_);
+  topic_sort_filter_proxy_model_->setRegularExpressionLists(topic_exclude_regexp_list_, topic_include_regexp_list_);
   topic_sort_filter_proxy_model_->setSortCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
   setAdditionalProxyModel(topic_sort_filter_proxy_model_);
 
@@ -63,11 +63,11 @@ TopicWidget::TopicWidget(QWidget *parent)
   {
     if (state == Qt::CheckState::Checked)
     {
-      topic_sort_filter_proxy_model_->setRegExpLists(QList<QRegularExpression>{}, QList<QRegularExpression>{});
+      topic_sort_filter_proxy_model_->setRegularExpressionLists(QList<QRegularExpression>{}, QList<QRegularExpression>{});
     }
     else
     {
-      topic_sort_filter_proxy_model_->setRegExpLists(topic_exclude_regexp_list_, topic_include_regexp_list_);
+      topic_sort_filter_proxy_model_->setRegularExpressionLists(topic_exclude_regexp_list_, topic_include_regexp_list_);
     }
   });
 

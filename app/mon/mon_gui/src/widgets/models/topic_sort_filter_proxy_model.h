@@ -30,7 +30,7 @@ public:
   TopicSortFilterProxyModel(QObject* parent = 0);
   ~TopicSortFilterProxyModel();
 
-  void setRegExpLists(const QList<QRegularExpression>& exclude_list, const QList<QRegularExpression>& include_list);
+  void setRegularExpressionLists(const QList<QRegularExpression>& exclude_list, const QList<QRegularExpression>& include_list);
 
 private:
   QList<QRegularExpression> exclude_regexp_list_;
