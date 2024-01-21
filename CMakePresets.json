@@ -69,6 +69,26 @@
         "BUILD_STANDALONE_PY_WHEEL": "ON",
         "ECAL_THIRDPARTY_BUILD_HDF5": null
       }
+    },
+    {
+      "name": "cli",
+      "inherits": "core",
+      "displayName": "CLI Apps",
+      "description": "eCAL CLI applications",
+      "cacheVariables": {
+        "HAS_HDF5": "ON",
+        "HAS_CURL": "ON",
+        "HAS_FTXUI": "ON",
+        "BUILD_APPS": "ON",
+        "ECAL_THIRDPARTY_BUILD_FINEFTP": "ON",
+        "ECAL_THIRDPARTY_BUILD_FTXUI": "ON",
+        "ECAL_THIRDPARTY_BUILD_SPDLOG": "ON",
+        "ECAL_THIRDPARTY_BUILD_TERMCOLOR": "ON",
+        "ECAL_THIRDPARTY_BUILD_TINYXML2": "ON",
+        "ECAL_THIRDPARTY_BUILD_YAML-CPP": null,
+        "ECAL_THIRDPARTY_BUILD_CURL": null,
+        "ECAL_THIRDPARTY_BUILD_HDF5": null
+      }
     }
   ],
   "buildPresets": [
@@ -82,6 +102,11 @@
       "description": "Build standalone python wheel",
       "configurePreset": "wheel",
       "targets": "create_python_wheel"
+    },
+    {
+      "name": "cli",
+      "description": "Build CLI apps",
+      "configurePreset": "cli"
     }
   ]
 }
