@@ -89,6 +89,15 @@
         "ECAL_THIRDPARTY_BUILD_CURL": null,
         "ECAL_THIRDPARTY_BUILD_HDF5": null
       }
+    },
+    {
+      "name": "gui",
+      "inherits": "cli",
+      "displayName": "GUI Apps",
+      "description": "eCAL GUI and CLI applications",
+      "cacheVariables": {
+        "HAS_QT5": "ON"
+      }
     }
   ],
   "buildPresets": [
@@ -107,6 +116,11 @@
       "name": "cli",
       "description": "Build CLI apps",
       "configurePreset": "cli"
+    },
+    {
+      "name": "gui",
+      "description": "Build GUI and CLI apps",
+      "configurePreset": "gui"
     }
   ]
 }
