@@ -57,6 +57,18 @@
         "ECAL_THIRDPARTY_BUILD_CURL": "OFF",
         "ECAL_THIRDPARTY_BUILD_HDF5": "OFF"
       }
+    },
+    {
+      "name": "wheel",
+      "inherits": "core",
+      "displayName": "Python Wheel",
+      "description": "Minimal build for standalone python wheel",
+      "cacheVariables": {
+        "HAS_HDF5": "ON",
+        "BUILD_PY_BINDING": "ON",
+        "BUILD_STANDALONE_PY_WHEEL": "ON",
+        "ECAL_THIRDPARTY_BUILD_HDF5": null
+      }
     }
   ],
   "buildPresets": [
@@ -64,6 +76,12 @@
       "name": "core",
       "description": "Build core library only",
       "configurePreset": "core"
+    },
+    {
+      "name": "wheel",
+      "description": "Build standalone python wheel",
+      "configurePreset": "wheel",
+      "targets": "create_python_wheel"
     }
   ]
 }
