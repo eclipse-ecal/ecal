@@ -5,6 +5,7 @@ Thumbs.db
 /_build*
 /_setup
 /_vs_out*
+/out
 
 # Binary libraries
 /thirdparty/npcap/
