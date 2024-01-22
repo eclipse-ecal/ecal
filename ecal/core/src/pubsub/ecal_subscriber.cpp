@@ -62,26 +62,25 @@ namespace eCAL
   }
 
   CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept :
-                 m_datareader(rhs.m_datareader),
+                 m_datareader(std::move(rhs.m_datareader)),
                  m_qos(rhs.m_qos),
                  m_created(rhs.m_created),
                  m_initialized(rhs.m_initialized)
   {
-    InitializeQOS();
-
     rhs.m_created     = false;
     rhs.m_initialized = false;
   }
 
   CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept
   {
-    m_datareader      = std::move(rhs.m_datareader);
+    // Call destroy, to clean up the current state, then afterwards move all elements
+    Destroy();
 
+    m_datareader      = std::move(rhs.m_datareader);
     m_qos             = rhs.m_qos;
     m_created         = rhs.m_created;
     m_initialized     = rhs.m_initialized;
 
-    InitializeQOS();
     rhs.m_created     = false;
     rhs.m_initialized = false;
 
