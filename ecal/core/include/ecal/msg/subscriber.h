@@ -76,6 +76,8 @@ namespace eCAL
     {
     }
 
+    virtual ~CMsgSubscriber() = default;
+
     /**
     * @brief  Copy Constructor is not available.
     **/
@@ -124,9 +126,6 @@ namespace eCAL
 
       return *this;
     }
-
-    virtual ~CMsgSubscriber() 
-    {}
 
     /**
      * @brief Creates this object.
@@ -252,7 +251,7 @@ protected:
   private:
     void ReceiveCallback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
     {
-      MsgReceiveCallbackT fn_callback;
+      MsgReceiveCallbackT fn_callback = nullptr;
       {
         std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
         fn_callback = m_cb_callback;
