@@ -61,7 +61,7 @@ namespace eCAL
       **/
       ~CSubscriber() override
       {
-        Destroy();
+        this->Destroy();
       }
 
       /**

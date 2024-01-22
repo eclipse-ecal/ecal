@@ -73,7 +73,7 @@ namespace eCAL
       **/
       ~CBuilderSubscriber() override
       {
-        Destroy();
+        this->Destroy();
       }
 
       /**
