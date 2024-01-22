@@ -74,10 +74,16 @@ Qt::ItemFlags SignalTreeModel::flags(const QModelIndex& index) const
 QVariant SignalTreeModel::data(const QModelIndex& index, int role) const
 {
   QAbstractTreeItem* tree_item = item(index);
-  if (tree_item)
-    return (index.column() >= 0 ? tree_item->data(index.column(), (Qt::ItemDataRole)role) : QVariant());
-  else
-    return QVariant();
+  if (tree_item != nullptr)
+  {
+    int const item_column = mapColumnToItem(index.column(), tree_item->type());
+    if (item_column >= 0)
+    {
+      return tree_item->data(item_column, (Qt::ItemDataRole)role);
+    }
+  }
+
+  return QVariant();
 }
 
 void SignalTreeModel::setCheckedState(SignalTreeItem* item, int index_column)
