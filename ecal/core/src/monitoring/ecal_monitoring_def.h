@@ -58,7 +58,7 @@ namespace eCAL
     void GetMonitoring(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
 
   protected:
-    CMonitoringImpl* m_monitoring_impl = nullptr;
+    std::unique_ptr<CMonitoringImpl> m_monitoring_impl;
 
   private:
     CMonitoring(const CMonitoring&);                 // prevent copy-construction

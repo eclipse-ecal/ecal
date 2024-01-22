@@ -87,7 +87,7 @@ namespace eCAL
     struct STopicMonMap
     {
       explicit STopicMonMap(const std::chrono::milliseconds& timeout_) :
-        map(new TopicMonMapT(timeout_))
+        map(std::make_unique<TopicMonMapT>(timeout_))
       {
       };
       std::mutex                     sync;
@@ -98,7 +98,7 @@ namespace eCAL
     struct SProcessMonMap
     {
       explicit SProcessMonMap(const std::chrono::milliseconds& timeout_) :
-        map(new ProcessMonMapT(timeout_))
+        map(std::make_unique<ProcessMonMapT>(timeout_))
       {
       };
       std::mutex                       sync;
@@ -109,7 +109,7 @@ namespace eCAL
     struct SServerMonMap
     {
       explicit SServerMonMap(const std::chrono::milliseconds& timeout_) :
-        map(new ServerMonMapT(timeout_))
+        map(std::make_unique<ServerMonMapT>(timeout_))
       {
       };
       std::mutex                      sync;
@@ -120,7 +120,7 @@ namespace eCAL
     struct SClientMonMap
     {
       explicit SClientMonMap(const std::chrono::milliseconds& timeout_) :
-        map(new ClientMonMapT(timeout_))
+        map(std::make_unique<ClientMonMapT>(timeout_))
       {
       };
       std::mutex                      sync;

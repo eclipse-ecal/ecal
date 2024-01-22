@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal.h>
+#include <memory>
 
 namespace eCAL
 {
@@ -36,25 +37,30 @@ namespace eCAL
     /**
      * @brief eCAL dynamic protobuf to json subscriber.
     **/
-    class ECAL_API CDynamicJSONSubscriber
+    class CDynamicJSONSubscriber
     {
     public:
       /**
        * @brief Constructor.
       **/
-      CDynamicJSONSubscriber();
+      ECAL_API CDynamicJSONSubscriber();
 
       /**
        * @brief Constructor.
        *
        * @param topic_name_  Unique topic name.
       **/
-      CDynamicJSONSubscriber(const std::string& topic_name_);
+      ECAL_API CDynamicJSONSubscriber(const std::string& topic_name_);
 
       /**
        * @brief Destructor.
       **/
-      ~CDynamicJSONSubscriber();
+      ECAL_API ~CDynamicJSONSubscriber();
+
+      CDynamicJSONSubscriber(const CDynamicJSONSubscriber&) = delete;
+      CDynamicJSONSubscriber& operator=(const CDynamicJSONSubscriber&) = delete;
+      CDynamicJSONSubscriber(CDynamicJSONSubscriber&& rhs) = delete;
+      CDynamicJSONSubscriber& operator=(CDynamicJSONSubscriber&& rhs) = delete;
 
       /**
        * @brief Creates this object.
@@ -63,21 +69,21 @@ namespace eCAL
        *
        * @return  true if it succeeds, false if it fails.
       **/
-      void Create(const std::string& topic_name_);
+      ECAL_API void Create(const std::string& topic_name_);
 
       /**
        * @brief Destroys this object.
        *
        * @return  true if it succeeds, false if it fails.
       **/
-      void Destroy();
+      ECAL_API void Destroy();
 
       /**
        * @brief Query if this object is created.
        *
        * @return  true if created, false if not.
       **/
-      bool IsCreated() { return(created); }
+      ECAL_API bool IsCreated() { return(created); }
 
       /**
        * @brief Add callback function for incoming receives.
@@ -86,23 +92,18 @@ namespace eCAL
        *
        * @return  True if succeeded, false if not.
       **/
-      bool AddReceiveCallback(ReceiveCallbackT callback_);
+      ECAL_API bool AddReceiveCallback(ReceiveCallbackT callback_);
 
       /**
        * @brief Remove callback function for incoming receives.
        *
        * @return  True if succeeded, false if not.
       **/
-      bool RemReceiveCallback();
+      ECAL_API bool RemReceiveCallback();
 
     protected:
-      bool                          created;
-      CDynamicJSONSubscriberImpl*   proto_dyn_sub_impl;
-
-    private:
-      // this object must not be copied.
-      CDynamicJSONSubscriber(const CDynamicJSONSubscriber&);
-      CDynamicJSONSubscriber& operator=(const CDynamicJSONSubscriber&);
+      bool                                        created;
+      std::unique_ptr<CDynamicJSONSubscriberImpl> proto_dyn_sub_impl;
     };
     /** @example proto_dyn_json.cpp
     * This is an example how to use CDynamicJSONSubscriber to receive dynamic google::protobuf data as a JSON string with eCAL.
