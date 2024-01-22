@@ -76,7 +76,7 @@ QVariant SignalTreeModel::data(const QModelIndex& index, int role) const
   QAbstractTreeItem* tree_item = item(index);
   if (tree_item != nullptr)
   {
-    int item_column = mapColumnToItem(index.column(), tree_item->type());
+    int const item_column = mapColumnToItem(index.column(), tree_item->type());
     if (item_column >= 0)
     {
       return tree_item->data(item_column, (Qt::ItemDataRole)role);
