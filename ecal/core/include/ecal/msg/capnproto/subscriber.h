@@ -69,6 +69,14 @@ namespace eCAL
       }
 
       /**
+       * @brief  Destructor
+      **/
+      ~CBuilderSubscriber() override
+      {
+        Destroy();
+      }
+
+      /**
       * @brief  Copy Constructor is not available.
       **/
       CBuilderSubscriber(const CBuilderSubscriber&) = delete;
