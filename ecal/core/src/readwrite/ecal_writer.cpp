@@ -1007,7 +1007,7 @@ namespace eCAL
       {
         const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
         auto iter = m_event_callback_map.find(pub_event_connected);
-        if (iter != m_event_callback_map.end())
+        if (iter != m_event_callback_map.end() && iter->second)
         {
           data.type = pub_event_connected;
           (iter->second)(m_topic_name.c_str(), &data);
@@ -1019,7 +1019,7 @@ namespace eCAL
     {
       const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
       auto iter = m_event_callback_map.find(pub_event_update_connection);
-      if (iter != m_event_callback_map.end())
+      if (iter != m_event_callback_map.end() && iter->second)
       {
         data.type  = pub_event_update_connection;
         data.tid   = tid_;
@@ -1042,7 +1042,7 @@ namespace eCAL
       {
         const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
         auto iter = m_event_callback_map.find(pub_event_disconnected);
-        if (iter != m_event_callback_map.end())
+        if (iter != m_event_callback_map.end() && iter->second)
         {
           SPubEventCallbackData data;
           data.type  = pub_event_disconnected;
