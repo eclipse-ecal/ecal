@@ -984,7 +984,7 @@ namespace eCAL
     {
       const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
       auto iter = m_event_callback_map.find(pub_event_connected);
-      if (iter != m_event_callback_map.end())
+      if (iter != m_event_callback_map.end() && iter->second)
       {
         SPubEventCallbackData data;
         data.type  = pub_event_connected;
@@ -997,7 +997,7 @@ namespace eCAL
     {
       const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
       auto iter = m_event_callback_map.find(pub_event_disconnected);
-      if (iter != m_event_callback_map.end())
+      if (iter != m_event_callback_map.end() && iter->second)
       {
         SPubEventCallbackData data;
         data.type  = pub_event_disconnected;
