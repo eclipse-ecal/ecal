@@ -2489,6 +2489,8 @@ title="Print to PDF"
 <span class="w">    </span><span class="p">{</span>
 <span class="w">    </span><span class="p">}</span>
 
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="o">~</span><span class="n">CMsgSubscriber</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+
 <span class="w">    </span><span class="n">CMsgSubscriber</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">CMsgSubscriber</span><span class="o">&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">delete</span><span class="p">;</span>
 
 <span class="w">    </span><span class="n">CMsgSubscriber</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">CMsgSubscriber</span><span class="o">&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">delete</span><span class="p">;</span>
@@ -2526,8 +2528,6 @@ title="Print to PDF"
 <span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="o">*</span><span class="k">this</span><span class="p">;</span>
 <span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="o">~</span><span class="n">CMsgSubscriber</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span>
-
 <span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method CMsgSubscriber(const std::string&amp; topic_name_, const SDataTypeInformation&amp; topic_info_) instead. This function will be removed in eCAL6. &quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">Create</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="p">{</span>
@@ -2561,16 +2561,22 @@ title="Print to PDF"
 <span class="w">      </span><span class="n">assert</span><span class="p">(</span><span class="n">IsCreated</span><span class="p">());</span>
 <span class="w">      </span><span class="n">RemReceiveCallback</span><span class="p">();</span>
 
-<span class="w">      </span><span class="n">m_cb_callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">callback_</span><span class="p">;</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="w"> </span><span class="n">callback_lock</span><span class="p">(</span><span class="n">m_cb_callback_mutex</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m_cb_callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">callback_</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
 <span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">CMsgSubscriber</span><span class="o">::</span><span class="n">ReceiveCallback</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_1</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_2</span><span class="p">);</span>
 <span class="w">      </span><span class="k">return</span><span class="p">(</span><span class="n">CSubscriber</span><span class="o">::</span><span class="n">AddReceiveCallback</span><span class="p">(</span><span class="n">callback</span><span class="p">));</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">RemReceiveCallback</span><span class="p">()</span>
 <span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CSubscriber</span><span class="o">::</span><span class="n">RemReceiveCallback</span><span class="p">();</span>
+
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="w"> </span><span class="n">callback_lock</span><span class="p">(</span><span class="n">m_cb_callback_mutex</span><span class="p">);</span>
 <span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_cb_callback</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
 <span class="w">      </span><span class="n">m_cb_callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
-<span class="w">      </span><span class="k">return</span><span class="p">(</span><span class="n">CSubscriber</span><span class="o">::</span><span class="n">RemReceiveCallback</span><span class="p">());</span>
+<span class="w">      </span><span class="k">return</span><span class="p">(</span><span class="n">ret</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="k">protected</span><span class="o">:</span>
@@ -2594,7 +2600,11 @@ title="Print to PDF"
 <span class="w">  </span><span class="k">private</span><span class="o">:</span>
 <span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">ReceiveCallback</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">eCAL</span><span class="o">::</span><span class="n">SReceiveCallbackData</span><span class="o">*</span><span class="w"> </span><span class="n">data_</span><span class="p">)</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="n">MsgReceiveCallbackT</span><span class="w"> </span><span class="nf">fn_callback</span><span class="p">(</span><span class="n">m_cb_callback</span><span class="p">);</span>
+<span class="w">      </span><span class="n">MsgReceiveCallbackT</span><span class="w"> </span><span class="n">fn_callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="w"> </span><span class="n">callback_lock</span><span class="p">(</span><span class="n">m_cb_callback_mutex</span><span class="p">);</span>
+<span class="w">        </span><span class="n">fn_callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_cb_callback</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
 
 <span class="w">      </span><span class="k">if</span><span class="p">(</span><span class="n">fn_callback</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
 
@@ -2605,6 +2615,7 @@ title="Print to PDF"
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="w">          </span><span class="n">m_cb_callback_mutex</span><span class="p">;</span>
 <span class="w">    </span><span class="n">MsgReceiveCallbackT</span><span class="w"> </span><span class="n">m_cb_callback</span><span class="p">;</span>
 <span class="w">  </span><span class="p">};</span>
 <span class="p">}</span>

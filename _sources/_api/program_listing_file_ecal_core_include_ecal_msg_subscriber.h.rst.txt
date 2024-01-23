@@ -61,6 +61,8 @@ Program Listing for File subscriber.h
        {
        }
    
+       virtual ~CMsgSubscriber() = default;
+   
        CMsgSubscriber(const CMsgSubscriber&) = delete;
    
        CMsgSubscriber& operator=(const CMsgSubscriber&) = delete;
@@ -98,8 +100,6 @@ Program Listing for File subscriber.h
          return *this;
        }
    
-       virtual ~CMsgSubscriber() {}
-   
        ECAL_DEPRECATE_SINCE_5_13("Please use the method CMsgSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6. ")
        bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "")
        {
@@ -133,16 +133,22 @@ Program Listing for File subscriber.h
          assert(IsCreated());
          RemReceiveCallback();
    
-         m_cb_callback = callback_;
+         {
+           std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
+           m_cb_callback = callback_;
+         }
          auto callback = std::bind(&CMsgSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
          return(CSubscriber::AddReceiveCallback(callback));
        }
    
        bool RemReceiveCallback()
        {
+         bool ret = CSubscriber::RemReceiveCallback();
+   
+         std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
          if (m_cb_callback == nullptr) return(false);
          m_cb_callback = nullptr;
-         return(CSubscriber::RemReceiveCallback());
+         return(ret);
        }
    
    protected:
@@ -166,7 +172,11 @@ Program Listing for File subscriber.h
      private:
        void ReceiveCallback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
        {
-         MsgReceiveCallbackT fn_callback(m_cb_callback);
+         MsgReceiveCallbackT fn_callback = nullptr;
+         {
+           std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
+           fn_callback = m_cb_callback;
+         }
    
          if(fn_callback == nullptr) return;
    
@@ -177,6 +187,7 @@ Program Listing for File subscriber.h
          }
        }
    
+       std::mutex          m_cb_callback_mutex;
        MsgReceiveCallbackT m_cb_callback;
      };
    }
