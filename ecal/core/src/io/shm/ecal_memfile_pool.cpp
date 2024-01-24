@@ -309,7 +309,10 @@ namespace eCAL
   {
   }
 
-  CMemFileThreadPool::~CMemFileThreadPool() = default;
+  CMemFileThreadPool::~CMemFileThreadPool()
+  {
+    Destroy();
+  }
 
   void CMemFileThreadPool::Create()
   {
