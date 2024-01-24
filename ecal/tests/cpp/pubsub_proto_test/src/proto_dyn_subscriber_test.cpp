@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ public:
     pub.Send(p);
   }
 
-  void OnPerson(const char*, const google::protobuf::Message&, long long)
+  void OnPerson(const char* /*topic_name*/, const std::shared_ptr<google::protobuf::Message>& /*message*/, long long /*time*/)
   {
     received_callbacks++;
   }
@@ -122,12 +122,9 @@ TEST_F(core_cpp_pubsub_proto_dyn, ProtoDynSubscriberTest_SendReceive)
   SendPerson(person_pub);
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-  google::protobuf::Message* message = person_dyn_rec.getMessagePointer();
-  ASSERT_NE(message, nullptr) << "pointer returned by dynamic subscriber may not be null";
-
-  bool received = person_dyn_rec.Receive(*message, nullptr, 500);
+  auto received_message = person_dyn_rec.Receive(nullptr, 500);
   // assert that the OnPerson callback has been called once.
-  ASSERT_TRUE(received) << "we should have received data that was sent";
-  auto id = extract_id(*message);
-  ASSERT_EQ(id, 1);
+  ASSERT_TRUE(received_message.has_value()) << "we should have received data that was sent";
+  auto id = extract_id(*received_message.value());
+  ASSERT_EQ(id, 1) << "Extracted ID needs to be 1";
 }

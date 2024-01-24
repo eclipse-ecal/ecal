@@ -88,9 +88,9 @@ int main(int argc, char **argv)
   while (eCAL::Ok())
   {
     // receive content
-    if (sub.Receive(nullptr, 0))
+    AddressBook::Reader reader;
+    if (sub.Receive(reader))
     {
-      AddressBook::Reader reader{ sub.getReader() };
       printAddressBook(reader);
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(100));

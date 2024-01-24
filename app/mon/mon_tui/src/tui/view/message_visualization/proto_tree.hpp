@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -261,7 +261,7 @@ public:
 
 }
 
-void PopulateProtoTree(ftxui::TreeNode &root, google::protobuf::Message *message, const std::shared_ptr<StyleSheet> style)
+void PopulateProtoTree(ftxui::TreeNode &root, const std::shared_ptr<google::protobuf::Message>& message, const std::shared_ptr<StyleSheet> style)
 {
   auto tree_builder = std::make_shared<eCAL::protobuf::TreeMessageVisitor>(root, style);
   if(message)
@@ -272,7 +272,7 @@ void PopulateProtoTree(ftxui::TreeNode &root, google::protobuf::Message *message
   }
 }
 
-ftxui::TreeNodePtr ProtoTree(google::protobuf::Message *message, const std::shared_ptr<StyleSheet> style)
+ftxui::TreeNodePtr ProtoTree(const std::shared_ptr<google::protobuf::Message>& message, const std::shared_ptr<StyleSheet> style)
 {
   using namespace ftxui;
   auto root = std::make_shared<TreeNode>();
