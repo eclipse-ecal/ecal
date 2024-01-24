@@ -111,10 +111,6 @@ namespace eCAL
     }
 
   private:
-    // this object must not be copied.
-    CTimedCB(const CTimedCB&);
-    CTimedCB& operator=(const CTimedCB&);
-
     void Thread(TimerCallbackT callback_, int timeout_, int delay_)
     {
       assert(callback_ != nullptr);
