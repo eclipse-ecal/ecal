@@ -2487,6 +2487,12 @@ title="Print to PDF"
   <section id="ecal-tcp-layer">
 <span id="transport-layer-tcp"></span><h1>eCAL TCP Layer<a class="headerlink" href="#ecal-tcp-layer" title="Permalink to this headline">#</a></h1>
 <p>The eCAL TCP Transport Layer has been added with eCAL 5.10.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can test TCP communication by executing the <code class="docutils literal notranslate"><span class="pre">ecal_sample_person_snd_tcp</span></code> samples.
+That sample will <strong>always</strong> send data via TCP, regardless of you system configuration.</p>
+<p>You can use the eCAL Monitor or the regular <code class="docutils literal notranslate"><span class="pre">ecal_sample_person_rec</span></code> sample to receive the data.</p>
+</div>
 <section id="motivation">
 <h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">#</a></h2>
 <p>The eCAL TCP Layer has been added with having single <strong>large messages</strong> in mind (let’s say 1 Megabyte or more).
@@ -2559,7 +2565,7 @@ Therefore, we recommend enabling TCP from the eCAL Publisher API only for those 
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p>Also see the <code class="docutils literal notranslate"><span class="pre">person_snd_tcp</span></code> sample:</p>
-<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/tree/master/samples/cpp/person/person_snd_tcp">https://github.com/eclipse-ecal/ecal/tree/master/samples/cpp/person/person_snd_tcp</a></p>
+<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/tree/master/samples/cpp/pubsub/protobuf/person_snd_tcp">https://github.com/eclipse-ecal/ecal/tree/master/samples/cpp/pubsub/protobuf/person_snd_tcp</a></p>
 </div>
 </li>
 </ol>
