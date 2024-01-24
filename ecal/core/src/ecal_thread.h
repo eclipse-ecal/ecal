@@ -37,6 +37,11 @@ namespace eCAL
     CThread();
     virtual ~CThread();
 
+    CThread(const CThread&) = delete;
+    CThread& operator=(const CThread&) = delete;
+    CThread(CThread&& rhs) = delete;
+    CThread& operator=(CThread&& rhs) = delete;
+
     int Start(int period, std::function<int()> ext_caller_);
     int Stop();
     int Fire();
