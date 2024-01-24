@@ -50,6 +50,11 @@ namespace eCAL
     CMemFileObserver();
     ~CMemFileObserver();
 
+    CMemFileObserver(const CMemFileObserver&) = delete;
+    CMemFileObserver& operator=(const CMemFileObserver&) = delete;
+    CMemFileObserver(CMemFileObserver&& rhs) = delete;
+    CMemFileObserver& operator=(CMemFileObserver&& rhs) = delete;
+
     bool Create(const std::string& memfile_name_, const std::string& memfile_event_);
     bool Destroy();
 

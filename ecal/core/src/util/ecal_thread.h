@@ -44,6 +44,16 @@ namespace eCAL
     CCallbackThread(std::function<void()> callback)
       : callback_(callback) {}
 
+    ~CCallbackThread()
+    {
+      stop();
+    }
+
+    CCallbackThread(const CCallbackThread&) = delete;
+    CCallbackThread& operator=(const CCallbackThread&) = delete;
+    CCallbackThread(CCallbackThread&& rhs) = delete;
+    CCallbackThread& operator=(CCallbackThread&& rhs) = delete;
+
     /**
      * @brief Start the callback thread with a specified timeout.
      * @param timeout The timeout duration for waiting in the callback thread.
