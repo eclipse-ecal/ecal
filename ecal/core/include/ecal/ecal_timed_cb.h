@@ -97,7 +97,10 @@ namespace eCAL
     {
       if (!m_running) return(false);
       m_stop = true;
-      m_thread.join();
+      // Wait for the callback thread to finish
+      if (m_thread.joinable()) {
+        m_thread.join();
+      }
       m_running = false;
       return(true);
     }
