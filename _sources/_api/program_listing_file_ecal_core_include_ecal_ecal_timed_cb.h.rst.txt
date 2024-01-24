@@ -54,6 +54,11 @@ Program Listing for File ecal_timed_cb.h
    
        virtual ~CTimedCB() { Stop(); }
    
+       CTimedCB(const CTimedCB&) = delete;
+       CTimedCB& operator=(const CTimedCB&) = delete;
+       CTimedCB(CTimedCB&& rhs) = delete;
+       CTimedCB& operator=(CTimedCB&& rhs) = delete;
+   
        bool Start(const int timeout_, TimerCallbackT callback_, const int delay_ = 0)
        {
          assert(m_running == false);
@@ -69,16 +74,15 @@ Program Listing for File ecal_timed_cb.h
        {
          if (!m_running) return(false);
          m_stop = true;
-         m_thread.join();
+         // Wait for the callback thread to finish
+         if (m_thread.joinable()) {
+           m_thread.join();
+         }
          m_running = false;
          return(true);
        }
    
      private:
-       // this object must not be copied.
-       CTimedCB(const CTimedCB&);
-       CTimedCB& operator=(const CTimedCB&);
-   
        void Thread(TimerCallbackT callback_, int timeout_, int delay_)
        {
          assert(callback_ != nullptr);
