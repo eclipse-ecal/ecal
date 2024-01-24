@@ -35,6 +35,7 @@
 #endif
 
 #include <memory>
+#include <mutex>
 #include <vector>
 
 namespace eCAL
@@ -51,6 +52,7 @@ namespace eCAL
       IO::UDP::SSenderAttr                 m_attr;
       std::shared_ptr<IO::UDP::CUDPSender> m_udp_sender;
 
+      std::mutex                           m_payload_mutex;
       std::vector<char>                    m_payload;
     };
   }
