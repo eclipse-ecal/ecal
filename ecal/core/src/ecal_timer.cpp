@@ -38,6 +38,10 @@ namespace eCAL
     CTimerImpl(const int timeout_, TimerCallbackT callback_, const int delay_) : m_stop(false), m_running(false) { Start(timeout_, callback_, delay_); }
 
     virtual ~CTimerImpl() { Stop(); }
+    CTimerImpl(const CTimerImpl&) = delete;
+    CTimerImpl& operator=(const CTimerImpl&) = delete;
+    CTimerImpl(CTimerImpl&& rhs) = delete;
+    CTimerImpl& operator=(CTimerImpl&& rhs) = delete;
 
     bool Start(const int timeout_, TimerCallbackT callback_, const int delay_)
     {
