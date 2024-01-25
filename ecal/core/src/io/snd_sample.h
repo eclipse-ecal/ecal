@@ -24,6 +24,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 
 #include "udp_sender.h"
 
@@ -47,6 +48,7 @@ namespace eCAL
     SSenderAttr                       m_attr;
 
     std::shared_ptr<eCAL::CUDPSender> m_udp_sender;
+    std::mutex                        m_payload_mutex;
     std::vector<char>                 m_payload;
   };
 }
