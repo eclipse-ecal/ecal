@@ -206,7 +206,11 @@ namespace eCAL
   {
     if(!m_created) return 0;
 
-    m_callback_custom_apply_sample(ecal_sample_);
+    // forward all registration samples to outside "customer" (e.g. Monitoring)
+    {
+      const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_mtx);
+      m_callback_custom_apply_sample(ecal_sample_);
+    }
 
     std::string reg_sample;
     if ( m_callback_pub
@@ -350,11 +354,13 @@ namespace eCAL
 
   void CRegistrationReceiver::SetCustomApplySampleCallback(const ApplySampleCallbackT& callback_)
   {
+    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_mtx);
     m_callback_custom_apply_sample = callback_;
   }
 
   void CRegistrationReceiver::RemCustomApplySampleCallback()
   {
+    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_mtx);
     m_callback_custom_apply_sample = [](const auto&){};
   }
 };
