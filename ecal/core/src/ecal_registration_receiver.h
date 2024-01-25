@@ -78,6 +78,15 @@ namespace eCAL
     CRegistrationReceiver();
     ~CRegistrationReceiver();
 
+    // default copy constructor
+    CRegistrationReceiver(const CRegistrationReceiver& other) = delete;
+    // default copy assignment operator
+    CRegistrationReceiver& operator=(const CRegistrationReceiver& other) = delete;
+    // default move constructor
+    CRegistrationReceiver(CRegistrationReceiver&& other) noexcept = delete;
+    // default move assignment operator
+    CRegistrationReceiver& operator=(CRegistrationReceiver&& other) noexcept = delete;
+
     void Create();
     void Destroy();
 
@@ -121,6 +130,7 @@ namespace eCAL
     bool                             m_use_network_monitoring;
     bool                             m_use_shm_monitoring;
 
+    std::mutex                       m_callback_custom_apply_sample_mtx;
     ApplySampleCallbackT             m_callback_custom_apply_sample;
 
     std::string                      m_host_group_name;
