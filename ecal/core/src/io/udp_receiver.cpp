@@ -54,6 +54,11 @@ namespace eCAL
 #endif //ECAL_NPCAP_SUPPORT
   }
 
+  CUDPReceiver::~CUDPReceiver()
+  {
+    Destroy();
+  }
+
   bool CUDPReceiver::Create(const SReceiverAttr& attr_)
   {
     if (m_socket_impl) return false;
