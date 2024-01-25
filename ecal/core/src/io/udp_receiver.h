@@ -35,6 +35,12 @@ namespace eCAL
   {
   public:
     CUDPReceiver();
+    ~CUDPReceiver();
+
+    CUDPReceiver(const CUDPReceiver&) = delete;
+    CUDPReceiver& operator=(const CUDPReceiver&) = delete;
+    CUDPReceiver(CUDPReceiver&& rhs) = delete;
+    CUDPReceiver& operator=(CUDPReceiver&& rhs) = delete;
 
     bool Create(const SReceiverAttr& attr_) override;
     bool Destroy() override;
