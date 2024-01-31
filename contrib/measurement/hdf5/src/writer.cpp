@@ -2,6 +2,7 @@
 #include <ecalhdf5/eh5_meas.h>
 
 using namespace eCAL::experimental::measurement::hdf5;
+using namespace eCAL::experimental::measurement;
 
 Writer::Writer() 
   : measurement(std::make_unique<eh5::HDF5Meas>()) 
