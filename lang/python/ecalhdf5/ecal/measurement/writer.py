@@ -26,6 +26,11 @@ def combine_encoding_and_type(encoding, type):
   return encoding + ":" + type
 
 class ProtobufChannelWriter:
+    """Class to create Protobuf Channels
+
+    This API is not considered stable and might break in future eCAL Versions
+    """
+
     def __init__(self, channel_name: str, protobuf_type, meas: ecalhdf5.Meas):
         self._protobuf_type = protobuf_type
         self._binary_writer = BinaryChannelWriter(channel_name, meas=meas, encoding = self.encoding, type = self.type, descriptor = self.descriptor)
@@ -50,6 +55,11 @@ class ProtobufChannelWriter:
         return self._protobuf_type.DESCRIPTOR.full_name
 
 class BinaryChannelWriter:
+    """Class to create Binary Channels
+    
+    This API is not considered stable and might break in future eCAL Versions
+    """
+    
     def __init__(self, channel_name: str, meas: ecalhdf5.Meas, encoding = "", type = "", descriptor = ""):
         self._meas = meas
         self._channel_name = channel_name
@@ -85,6 +95,11 @@ class Encoding(Enum):
     PROTOBUF = 1
 
 class MeasurementWriter:
+    """Write an eCAL Measurement
+    
+    This API is not considered stable and might break in future eCAL Versions
+    """
+
     def __init__(self, output_dir: str, file_name: str, max_size_per_file: int):
         self._output_dir = output_dir
         self._file_name = file_name
