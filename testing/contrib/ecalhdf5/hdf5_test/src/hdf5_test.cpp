@@ -99,7 +99,7 @@ void ValidateDataInMeasurement(eCAL::eh5::HDF5Meas& hdf5_reader, const TestingMe
   // entry was not in the dataset
   if (info == EntryInfo{})
   {
-    ADD_FAILURE("Entry info not found in set / measurement");
+    FAIL() << "Entry info not found in set / measurement";
     return;
   }
 
