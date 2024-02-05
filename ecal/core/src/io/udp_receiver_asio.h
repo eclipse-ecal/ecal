@@ -36,7 +36,7 @@ namespace eCAL
   {
   public:
     CUDPReceiverAsio(const SReceiverAttr& attr_);
-    ~CUDPReceiverAsio();
+    ~CUDPReceiverAsio() override;
 
     // this virtual function is called during construction/destruction,
     // so, mark it as final to ensure that no derived classes override it.
