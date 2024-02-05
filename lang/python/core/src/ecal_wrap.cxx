@@ -38,6 +38,7 @@
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4800 4505) // disable proto warnings
 #endif
+#include <ecal/core/pb/logging.pb.h>
 #include <ecal/core/pb/monitoring.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -318,21 +319,6 @@ PyObject* log_message(PyObject* /*self*/, PyObject* args)
   Py_RETURN_NONE;
 }
 
-/****************************************/
-/*      log_setcoretime                 */
-/****************************************/
-PyObject* log_setcoretime(PyObject* /*self*/, PyObject* args)
-{
-  double time = 0.0;
-
-  if (!PyArg_ParseTuple(args, "d", &time)) 
-    return nullptr;
-
-  log_setcoretime(time);
-
-  Py_RETURN_NONE;
-}
-
 
 /****************************************/
 /*      pub_create                      */
@@ -362,103 +348,6 @@ PyObject* pub_destroy(PyObject* /*self*/, PyObject* args)
 }
 
 /****************************************/
-/*      pub_set_topic_type_name         */
-/****************************************/
-PyObject* pub_set_topic_type_name(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  char* topic_type_name = nullptr;
-  Py_ssize_t  topic_type_name_len = 0;
-
-  if (!PyArg_ParseTuple(args, "ns#", &topic_handle, &topic_type_name, &topic_type_name_len))
-    return nullptr;
-
-  return(Py_BuildValue("i", pub_set_type_name(topic_handle, topic_type_name, (int)topic_type_name_len)));
-}
-
-/****************************************/
-/*      pub_set_description             */
-/****************************************/
-PyObject* pub_set_description(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle   = nullptr;
-  char*       topic_desc     = nullptr;
-  Py_ssize_t  topic_desc_len = 0;
-
-  if (!PyArg_ParseTuple(args, "ny#", &topic_handle, &topic_desc, &topic_desc_len)) 
-    return nullptr;
-
-  return(Py_BuildValue("i", pub_set_description(topic_handle, topic_desc, (int)topic_desc_len)));
-}
-
-/****************************************/
-/*      pub_set_qos_historykind         */
-/****************************************/
-PyObject* pub_set_qos_historykind(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  int         qpolicy      = 0;
-  int         depth        = 0;
-
-  if (!PyArg_ParseTuple(args, "nii", &topic_handle, &qpolicy, &depth))
-    return nullptr;
-
-  SWriterQOSC qos;
-  pub_get_qos(topic_handle, &qos);
-  qos.history_kind       = static_cast<eQOSPolicy_HistoryKindC>(qpolicy);
-  qos.history_kind_depth = depth;
-
-  return(Py_BuildValue("i", pub_set_qos(topic_handle, qos)));
-}
-
-/****************************************/
-/*      pub_set_qos_reliability         */
-/****************************************/
-PyObject* pub_set_qos_reliability(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  int         qpolicy      = 0;
-
-  if (!PyArg_ParseTuple(args, "ni", &topic_handle, &qpolicy))
-    return nullptr;
-
-  SWriterQOSC qos;
-  pub_get_qos(topic_handle, &qos);
-  qos.reliability = static_cast<eQOSPolicy_ReliabilityC>(qpolicy);
-
-  return(Py_BuildValue("i", pub_set_qos(topic_handle, qos)));
-}
-
-/****************************************/
-/*      pub_set_layer_mode              */
-/****************************************/
-PyObject* pub_set_layer_mode(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  int         layer        = 0;
-  int         mode         = 0;
-
-  if (!PyArg_ParseTuple(args, "nii", &topic_handle, &layer, &mode))
-    return nullptr;
-
-  return(Py_BuildValue("i", pub_set_layer_mode(topic_handle, layer, mode)));
-}
-
-/****************************************/
-/*      pub_set_max_bandwidth_udp       */
-/****************************************/
-PyObject* pub_set_max_bandwidth_udp(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  long        bandwidth    = 0;
-
-  if (!PyArg_ParseTuple(args, "nl", &topic_handle, &bandwidth))
-    return nullptr;
-
-  return(Py_BuildValue("i", pub_set_max_bandwidth_udp(topic_handle, bandwidth)));
-}
-
-/****************************************/
 /*      pub_send                        */
 /****************************************/
 PyObject* pub_send(PyObject* /*self*/, PyObject* args)
@@ -479,25 +368,6 @@ PyObject* pub_send(PyObject* /*self*/, PyObject* args)
   return(Py_BuildValue("i", sent));
 }
 
-/****************************************/
-/*      pub_send_sync                   */
-/****************************************/
-PyObject* pub_send_sync(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE  topic_handle = nullptr;
-  char* payload = nullptr;
-  Py_ssize_t   length      = 0;
-  PY_LONG_LONG time        = 0;
-  PY_LONG_LONG ack_timeout = 0;
-
-  if (!PyArg_ParseTuple(args, "ny#LL", &topic_handle, &payload, &length, &time, &ack_timeout))
-    return nullptr;
-
-  int sent{ 0 };
-  sent = pub_send_sync(topic_handle, payload, (int)length, time, ack_timeout);
-
-  return(Py_BuildValue("i", sent));
-}
 
 /****************************************/
 /*      sub_create                      */
@@ -532,52 +402,6 @@ PyObject* sub_destroy(PyObject* /*self*/, PyObject* args)
     destroyed = sub_destroy(topic_handle);
   Py_END_ALLOW_THREADS
   return(Py_BuildValue("i", destroyed));
-}
-
-/****************************************/
-/*      sub_set_qos_historykind         */
-/****************************************/
-PyObject* sub_set_qos_historykind(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  int         qpolicy      = 0;
-  int         depth        = 0;
-
-  if (!PyArg_ParseTuple(args, "nii", &topic_handle, &qpolicy, &depth))
-    return nullptr;
-
-  bool set_qos{ false };
-  Py_BEGIN_ALLOW_THREADS
-    SReaderQOSC qos;
-    sub_get_qos(topic_handle, &qos);
-    qos.history_kind       = static_cast<eQOSPolicy_HistoryKindC>(qpolicy);
-    qos.history_kind_depth = depth;
-    set_qos = sub_set_qos(topic_handle, qos);
-  Py_END_ALLOW_THREADS
-
-  return(Py_BuildValue("i", set_qos));
-}
-
-/****************************************/
-/*      sub_set_qos_reliability         */
-/****************************************/
-PyObject* sub_set_qos_reliability(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  int         qpolicy      = 0;
-
-  if (!PyArg_ParseTuple(args, "ni", &topic_handle, &qpolicy))
-    return nullptr;
-
-  bool set_qos{ false };
-  Py_BEGIN_ALLOW_THREADS
-    SReaderQOSC qos;
-    sub_get_qos(topic_handle, &qos);
-    qos.reliability = static_cast<eQOSPolicy_ReliabilityC>(qpolicy);
-    set_qos = sub_set_qos(topic_handle, qos);
-  Py_END_ALLOW_THREADS
-
-  return(Py_BuildValue("i", set_qos));
 }
 
 /****************************************/
@@ -1383,15 +1207,6 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
       val = Py_BuildValue("s", process.pparam().c_str());
       PyDict_SetItemString(processDict, "pparam", val); Py_DECREF(val);
 
-      val = Py_BuildValue("L", process.pmemory());
-      PyDict_SetItemString(processDict, "pmemory", val); Py_DECREF(val);
-
-      val = Py_BuildValue("f", process.pcpu());
-      PyDict_SetItemString(processDict, "pcpu", val); Py_DECREF(val);
-
-      val = Py_BuildValue("f", process.usrptime());
-      PyDict_SetItemString(processDict, "usrptime", val); Py_DECREF(val);
-
       val = Py_BuildValue("L", process.datawrite());
       PyDict_SetItemString(processDict, "datawrite", val); Py_DECREF(val);
 
@@ -1533,17 +1348,17 @@ PyObject* mon_logging(PyObject* /*self*/, PyObject* /*args*/)
   PyObject* retList = PyList_New(0);
 
   std::string logging_s;
-  if (eCAL::Monitoring::GetLogging(logging_s))
+  if (eCAL::Logging::GetLogging(logging_s))
   {
-    eCAL::pb::Logging logging;
+    eCAL::pb::LogMessageList logging;
     logging.ParseFromString(logging_s);
 
-    for (int i = 0; i < logging.logs().size(); ++i)
+    for (int i = 0; i < logging.log_messages().size(); ++i)
     {
       PyObject* logDict = PyDict_New();
       PyList_Append(retList, logDict); Py_DECREF(logDict);
 
-      const eCAL::pb::LogMessage& log = logging.logs(i);
+      const eCAL::pb::LogMessage& log = logging.log_messages(i);
       PyObject* val;
 
       val = Py_BuildValue("L", log.time());
@@ -1567,34 +1382,6 @@ PyObject* mon_logging(PyObject* /*self*/, PyObject* /*args*/)
   }
 
   return(Py_BuildValue("iO", 0, retList));
-}
-
-/****************************************/
-/*      mon_pubmonitoring               */
-/****************************************/
-PyObject* mon_pubmonitoring(PyObject* /*self*/, PyObject* args)
-{
-  int   state = 0;
-  char* name  = nullptr;
-
-  if (!PyArg_ParseTuple(args, "is", &state, &name))
-    return nullptr;
-
-  return(Py_BuildValue("i", eCAL::Monitoring::PubMonitoring(state != 0, name)));
-}
-
-/****************************************/
-/*      mon_publogging                  */
-/****************************************/
-PyObject* mon_publogging(PyObject* /*self*/, PyObject* args)
-{
-  int   state = 0;
-  char* name = nullptr;
-
-  if (!PyArg_ParseTuple(args, "is", &state, &name))
-    return nullptr;
-
-  return(Py_BuildValue("i", eCAL::Monitoring::PubLogging(state != 0, name)));
 }
 
 
@@ -1624,28 +1411,14 @@ static PyMethodDef _ecal_methods[] =
 
   {"log_setlevel",                  log_setlevel,                  METH_VARARGS,  "log_setlevel(level)"},
   {"log_message",                   log_message,                   METH_VARARGS,  "log_message(message)"},
-  {"log_setcoretime",               log_setcoretime,               METH_VARARGS,  "log_setcoretime(time)"},
 
   {"pub_create",                    pub_create,                    METH_VARARGS,  "pub_create(topic_name, topic_type)"},
   {"pub_destroy",                   pub_destroy,                   METH_VARARGS,  "pub_destroy(topic_handle)"},
 
-  {"pub_set_topic_type_name",       pub_set_topic_type_name,       METH_VARARGS,  "pub_set_topic_type_name(topic_handle, topic_type_name)"},
-  {"pub_set_description",           pub_set_description,           METH_VARARGS,  "pub_set_description(topic_handle, topic_description)"},
-
-  {"pub_set_qos_historykind",       pub_set_qos_historykind,       METH_VARARGS,  "pub_set_qos_historykind(topic_handle, qpolicy, depth)"},
-  {"pub_set_qos_reliability",       pub_set_qos_reliability,       METH_VARARGS,  "pub_set_qos_reliability(topic_handle, qpolicy)"},
-  {"pub_set_layer_mode",            pub_set_layer_mode,            METH_VARARGS,  "pub_set_layer_mode(topic_handle, layer, mode)"},
-
-  {"pub_set_max_bandwidth_udp",     pub_set_max_bandwidth_udp,     METH_VARARGS,  "pub_set_max_bandwidth_udp(topic_handle, bandwidth)"},
-
   {"pub_send",                      pub_send,                      METH_VARARGS,  "pub_send(topic_handle, payload, time)"},
-  {"pub_send_sync",                 pub_send_sync,                 METH_VARARGS,  "pub_send_sync(topic_handle, payload, time, ack_timeout)"},
 
   {"sub_create",                    sub_create,                    METH_VARARGS,  "sub_create(topic_name, topuic_type)"},
   {"sub_destroy",                   sub_destroy,                   METH_VARARGS,  "sub_destroy(topic_handle)"},
-
-  {"sub_set_qos_historykind",       sub_set_qos_historykind,       METH_VARARGS,  "sub_set_qos_historykind(topic_handle, qpolicy, depth)"},
-  {"sub_set_qos_reliability",       sub_set_qos_reliability,       METH_VARARGS,  "sub_set_qos_reliability(topic_handle, qpolicy)"},
 
   {"sub_receive",                   sub_receive,                   METH_VARARGS,  "sub_receive(topic_handle, timeout)"},
 
@@ -1680,9 +1453,6 @@ static PyMethodDef _ecal_methods[] =
 
   {"mon_monitoring",                mon_monitoring,                METH_NOARGS,   "mon_monitoring()"},
   {"mon_logging",                   mon_logging,                   METH_NOARGS,   "mon_logging()"},
-
-  {"mon_pubmonitoring",             mon_pubmonitoring,             METH_VARARGS,  "mon_pubmonitoring(state, name)"},
-  {"mon_publogging",                mon_publogging,                METH_VARARGS,  "mon_publogging(state, name)"},
 
   {nullptr, nullptr, 0, ""}
 };
