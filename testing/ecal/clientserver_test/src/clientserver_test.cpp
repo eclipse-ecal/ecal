@@ -126,27 +126,32 @@ TEST(ClientServer, ClientConnectEvent)
 
   // check events
   eCAL::Process::SleepMS(1000);
-  EXPECT_EQ(0, event_connected_fired);
-  EXPECT_EQ(0, event_disconnected_fired);
+  EXPECT_EQ(0, event_connected_fired.get());
+  EXPECT_EQ(0, event_disconnected_fired.get());
 
   // create server
   {
     eCAL::CServiceServer server1("service");
 
     event_connected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::seconds(5));
-    EXPECT_EQ(1, event_connected_fired);
-    EXPECT_EQ(0, event_disconnected_fired);
+    EXPECT_EQ(1, event_connected_fired.get());
+    EXPECT_EQ(0, event_disconnected_fired.get());
 
     eCAL::CServiceServer server2("service");
 
     event_connected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::seconds(5));
-    EXPECT_EQ(2, event_connected_fired);
-    EXPECT_EQ(0, event_disconnected_fired);
+    EXPECT_EQ(2, event_connected_fired.get());
+    EXPECT_EQ(0, event_disconnected_fired.get());
   }
 
-  event_disconnected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::seconds(5));
-  EXPECT_EQ(2, event_connected_fired);
-  EXPECT_EQ(2, event_disconnected_fired);
+   // eCAL doesn't use the service callback, which would detect the disconnection
+   // instantly. Instead, eCAL waits for an entire monitoring loop, then tries
+   // to reconnect and then fires the disconnect callback itself, once that
+   // reconnection failes. That takes a lot of time, so we need to wait for a
+   // long time here.
+  event_disconnected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::seconds(20));
+  EXPECT_EQ(2, event_connected_fired.get());
+  EXPECT_EQ(2, event_disconnected_fired.get());
 
   // finalize eCAL API
   eCAL::Finalize();
@@ -189,26 +194,32 @@ TEST(ClientServer, ServerConnectEvent)
 
   // check events
   eCAL::Process::SleepMS(1000);
-  EXPECT_EQ(0, event_connected_fired);
-  EXPECT_EQ(0, event_disconnected_fired);
+  EXPECT_EQ(0, event_connected_fired.get());
+  EXPECT_EQ(0, event_disconnected_fired.get());
 
   // create clients
   {
     eCAL::CServiceClient client1("service");
 
     event_connected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::seconds(5));
-    EXPECT_EQ(1, event_connected_fired);
-    EXPECT_EQ(0, event_disconnected_fired);
+    EXPECT_EQ(1, event_connected_fired.get());
+    EXPECT_EQ(0, event_disconnected_fired.get());
 
     eCAL::CServiceClient client2("service");
 
     eCAL::Process::SleepMS(2000);
-    EXPECT_EQ(1, event_connected_fired);
-    EXPECT_EQ(0, event_disconnected_fired);
+    EXPECT_EQ(1, event_connected_fired.get());
+    EXPECT_EQ(0, event_disconnected_fired.get());
   }
-  event_disconnected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::seconds(5));
-  EXPECT_EQ(1, event_connected_fired);
-  EXPECT_EQ(1, event_disconnected_fired);
+
+  // eCAL doesn't use the service callback, which would detect the disconnection
+  // instantly. Instead, eCAL waits for an entire monitoring loop, then tries
+  // to reconnect and then fires the disconnect callback itself, once that
+  // reconnection failes. That takes a lot of time, so we need to wait for a
+  // long time here.
+  event_disconnected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::seconds(10));
+  EXPECT_EQ(1, event_connected_fired.get());
+  EXPECT_EQ(1, event_disconnected_fired.get());
 
   // finalize eCAL API
   eCAL::Finalize();
@@ -644,8 +655,8 @@ TEST(ClientServer, ClientServerBaseAsyncTest)
 
   num_client_response_callbacks_finished.wait_for([num_service_calls](int v) { return num_service_calls == v; }, std::chrono::seconds(1));
 
-  EXPECT_EQ(num_service_calls, num_service_callbacks_finished);
-  EXPECT_EQ(num_service_calls, num_client_response_callbacks_finished);
+  EXPECT_EQ(num_service_calls, num_service_callbacks_finished.get());
+  EXPECT_EQ(num_service_calls, num_client_response_callbacks_finished.get());
 
   // Call the methods directly one after another and then wait for the responses.
   // As the service callback needs some time to finish and we call it from only
@@ -670,8 +681,8 @@ TEST(ClientServer, ClientServerBaseAsyncTest)
 
   auto async_response_end = std::chrono::steady_clock::now();
 
-  EXPECT_EQ(num_service_calls,          num_service_callbacks_finished);
-  EXPECT_EQ(num_service_calls,          num_client_response_callbacks_finished);
+  EXPECT_EQ(num_service_calls,          num_service_callbacks_finished.get());
+  EXPECT_EQ(num_service_calls,          num_client_response_callbacks_finished.get());
   EXPECT_GT(async_response_end - start, std::chrono::milliseconds(service_callback_time_ms) * num_service_calls); // The response should take some time, as the service callback needs some time to finish.
   
 
