@@ -9,6 +9,7 @@ Submodules
 
    ecal.measurement.hdf5
    ecal.measurement.measurement
+   ecal.measurement.writer
 
 Module contents
 ---------------

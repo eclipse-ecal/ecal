@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>ecal package &#8212; Eclipse eCAL™</title>
+    <title>ecal.measurement.writer module &#8212; Eclipse eCAL™</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -45,8 +45,8 @@
     <link rel="shortcut icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ecal.core package" href="ecal.core.html" />
-    <link rel="prev" title="python" href="modules.html" />
+    <link rel="next" title="ecal.proto package" href="ecal.proto.html" />
+    <link rel="prev" title="ecal.measurement.measurement module" href="ecal.measurement.measurement.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -1790,7 +1790,7 @@
     </label>
     <ul class="current">
      <li class="toctree-l3 current active has-children">
-      <a class="current reference internal" href="#">
+      <a class="reference internal" href="ecal.html">
        ecal package
       </a>
       <input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
@@ -1798,13 +1798,13 @@
        <i class="fas fa-chevron-down">
        </i>
       </label>
-      <ul>
+      <ul class="current">
        <li class="toctree-l4">
         <a class="reference internal" href="ecal.core.html">
          ecal.core package
         </a>
        </li>
-       <li class="toctree-l4">
+       <li class="toctree-l4 current active">
         <a class="reference internal" href="ecal.measurement.html">
          ecal.measurement package
         </a>
@@ -2331,7 +2331,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/eclipse-ecal/ecal//issues/new?title=Issue%20on%20page%20%2F_api_python/ecal.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/eclipse-ecal/ecal//issues/new?title=Issue%20on%20page%20%2F_api_python/ecal.measurement.writer.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -2348,7 +2348,7 @@ title="Open an issue"
       </li>
       
       <li>
-        <a href="https://github.com/eclipse-ecal/ecal/edit/master/doc/rst/_api_python/ecal.rst"
+        <a href="https://github.com/eclipse-ecal/ecal/edit/master/doc/rst/_api_python/ecal.measurement.writer.rst"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -2376,7 +2376,7 @@ title="Edit this page"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="../_sources/_api_python/ecal.rst.txt"
+        <a href="../_sources/_api_python/ecal.measurement.writer.rst.txt"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -2413,70 +2413,23 @@ title="Print to PDF"
     </ul>
   </div>
 </div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
-</label>
 
     </div>
 </div>
 
 <!-- Table of contents -->
 <div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#subpackages">
-   Subpackages
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#module-ecal">
-   Module contents
-  </a>
- </li>
-</ul>
-
-    </nav>
 </div>
     </div>
     <div class="article row">
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>ecal package</h1>
+                <h1>ecal.measurement.writer module</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#subpackages">
-   Subpackages
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#module-ecal">
-   Module contents
-  </a>
- </li>
-</ul>
-
-                        </nav>
                     </div>
                 </div>
             </div>
@@ -2484,55 +2437,8 @@ title="Print to PDF"
                 
               <div>
                 
-  <section id="ecal-package">
-<h1>ecal package<a class="headerlink" href="#ecal-package" title="Permalink to this headline">#</a></h1>
-<section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">#</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="ecal.core.html">ecal.core package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ecal.core.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ecal.core.pb.html">ecal.core.pb package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ecal.core.pb.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ecal.core.pb.html#module-ecal.core.pb">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="ecal.core.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ecal.core.core.html">ecal.core.core module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ecal.core.publisher.html">ecal.core.publisher module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ecal.core.service.html">ecal.core.service module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ecal.core.subscriber.html">ecal.core.subscriber module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="ecal.core.html#module-ecal.core">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ecal.measurement.html">ecal.measurement package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ecal.measurement.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ecal.measurement.hdf5.html">ecal.measurement.hdf5 module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ecal.measurement.measurement.html">ecal.measurement.measurement module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ecal.measurement.writer.html">ecal.measurement.writer module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="ecal.measurement.html#module-ecal.measurement">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ecal.proto.html">ecal.proto package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ecal.proto.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ecal.proto.helper.html">ecal.proto.helper module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="ecal.proto.html#module-ecal.proto">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</section>
-<section id="module-ecal">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ecal" title="Permalink to this headline">#</a></h2>
-</section>
+  <section id="ecal-measurement-writer-module">
+<h1>ecal.measurement.writer module<a class="headerlink" href="#ecal-measurement-writer-module" title="Permalink to this headline">#</a></h1>
 </section>
 
 
@@ -2543,17 +2449,17 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="modules.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="ecal.measurement.measurement.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">python</p>
+            <p class="prev-next-title">ecal.measurement.measurement module</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="ecal.core.html" title="next page">
+    <a class='right-next' id="next-link" href="ecal.proto.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">ecal.core package</p>
+        <p class="prev-next-title">ecal.proto package</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
