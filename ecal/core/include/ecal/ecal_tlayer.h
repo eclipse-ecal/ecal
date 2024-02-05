@@ -39,7 +39,6 @@ namespace eCAL
       tlayer_udp_mc     = 1,
       tlayer_shm        = 4,
       tlayer_tcp        = 5,
-      tlayer_inproc     = 42,
       tlayer_all        = 255
     };
 
@@ -63,12 +62,10 @@ namespace eCAL
       {
         sm_udp_mc  = smode_none;
         sm_shm     = smode_none;
-        sm_inproc  = smode_none;
         sm_tcp     = smode_none;
       }
       eSendMode sm_udp_mc;  //!< udp multicast
       eSendMode sm_shm;     //!< shared memory
-      eSendMode sm_inproc;  //!< inner process (inner process memory forwarding only)
       eSendMode sm_tcp;     //!< tcp
     };
   }

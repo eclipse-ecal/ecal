@@ -18,20 +18,29 @@
 */
 
 /**
- * @file   ecal_event_internal.h
- * @brief  eCAL event interface (internal)
- *
- *         This file will be renamed back to ecal_event.h after removing event API from eCAL's public API.
+ * @file   ecal_event.h
+ * @brief  eCAL event interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_eventhandle.h>
-
+#include <ecal/ecal_os.h>
 #include <string>
+
+#include "ecal_eventhandle.h"
 
 namespace eCAL
 {
+  /**
+   * @brief Open a named or unnamed event.
+   *
+   * @param [out] event_       Returned event struct.
+   * @param       event_name_  Event name ("" == unnamed).
+   *
+   * @return  True if succeeded.
+  **/
+  bool gOpenEvent(eCAL::EventHandleT* event_, const std::string& event_name_ = "");
+
   /**
    * @brief Open a named event with ownership.
    *
@@ -51,4 +60,46 @@ namespace eCAL
    * @return  True if succeeded.
   **/
   bool gOpenUnnamedEvent(eCAL::EventHandleT* event_);
+
+  /**
+   * @brief Close an event.
+   *
+   * @param event_  Event struct.
+   *
+   * @return  True if succeeded.
+  **/
+  bool gCloseEvent(const EventHandleT& event_);
+
+  /**
+   * @brief Set an event active.
+   *
+   * @param event_  Event struct.
+   *
+   * @return  True if succeeded.
+  **/
+  bool gSetEvent(const EventHandleT& event_);
+
+  /**
+   * @brief Wait for an event with timeout.
+   *
+   * @param event_    Event struct.
+   * @param timeout_  Timeout in ms (-1 == infinite).
+   *
+   * @return  True if succeeded.
+  **/
+  bool gWaitForEvent(const EventHandleT& event_, long timeout_);
+
+  /**
+   * @brief Invalidate an event.
+   *
+   * @return  True if event is invalidated.
+  **/
+  bool gInvalidateEvent(EventHandleT* event_);
+
+  /**
+   * @brief Check whether an event is valid or not.
+   *
+   * @return  True if event is valid.
+  **/
+  bool gEventIsValid(const EventHandleT& event_);
 }

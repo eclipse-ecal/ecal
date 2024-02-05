@@ -18,9 +18,40 @@
 */
 
 /**
- * @brief  System usage monitoring
+ * @file   ecal_eventhandle.h
+ * @brief  eCAL event handle
 **/
 
 #pragma once
 
-float GetCPULoad();
+#include <string>
+#include <vector>
+
+namespace eCAL
+{
+  /**
+   * @brief eCAL event callback handle.
+  **/
+  struct SEventHandle
+  {
+    /**
+     * @brief Event callback handle constructor.
+    **/
+    SEventHandle() : name(), handle(nullptr)
+    {
+    };
+    std::string name;    //!< event name
+    void*       handle;  //!< event handle
+
+    /* @cond */
+    bool operator==(const SEventHandle& rhs) const
+    {
+      return(rhs.name == name && rhs.handle == handle);
+    }
+    /* @endcond */
+  };
+
+  /* @cond */
+  typedef SEventHandle              EventHandleT;
+  /* @endcond */
+}

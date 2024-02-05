@@ -28,7 +28,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/msg/publisher.h>
-#include <ecal/protobuf/ecal_proto_hlp.h>
+#include <ecal/msg/protobuf/ecal_proto_hlp.h>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings

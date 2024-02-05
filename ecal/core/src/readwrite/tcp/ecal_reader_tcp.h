@@ -28,13 +28,7 @@
 #include <tcp_pubsub/executor.h>
 #include <tcp_pubsub/subscriber.h>
 
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include "serialization/ecal_struct_sample_payload.h"
 
 namespace eCAL
 {
@@ -53,9 +47,11 @@ namespace eCAL
 
   private:
     void OnTcpMessage(const tcp_pubsub::CallbackData& callback_data);
+
+    Payload::Sample                         m_ecal_header;
+
     std::shared_ptr<tcp_pubsub::Subscriber> m_subscriber;
     bool                                    m_callback_active;
-    eCAL::pb::Sample                        m_ecal_header;
   };
 
   ////////////////
@@ -68,7 +64,7 @@ namespace eCAL
 
     void Initialize() override;
 
-    void AddSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, QOS::SReaderQOS qos_) override;
+    void AddSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_) override;
     void RemSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_) override;
 
     void SetConnectionParameter(SReaderLayerPar& /*par_*/) override;

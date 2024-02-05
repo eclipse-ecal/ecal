@@ -81,7 +81,7 @@ namespace eCAL
     
     void SleepForNanoseconds(long long duration_nsecs_);
 
-    void GetStatus(int& error_, std::string* const status_message_);
+    void GetStatus(int& error_, std::string* status_message_);
     bool IsValid();
 
     eTimeSyncMode GetSyncMode() { return(m_sync_mode); };

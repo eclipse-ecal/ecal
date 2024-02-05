@@ -29,15 +29,12 @@
 #include "ecal_global_accessors.h"
 #include "util/getenvvar.h"
 
+#include <algorithm>
+#include <cassert>
 #include <iostream>
 #include <fstream>
-#include <cassert>
 
 #include <ecal_utils/filesystem.h>
-
-#ifdef ECAL_OS_WINDOWS
-#include "ecal_win_main.h"
-#endif
 
 #ifdef ECAL_OS_LINUX
 #include <sys/types.h>
@@ -46,7 +43,9 @@
 #include <pwd.h>
 #endif
 
+#if ECAL_CORE_CONFIG_INIFILE
 #include <SimpleIni.h>
+#endif
 
 namespace
 {
@@ -132,7 +131,7 @@ namespace
   // 2. The ecal.ini exists in that directory
   bool IsValidConfigFilePath(const std::string& path)
   {
-    if (path.empty()) { return false; };
+    if (path.empty()) { return false; }
 
     // check existence of ecal.ini file
     const EcalUtils::Filesystem::FileStatus ecal_ini_status(path + std::string(ECAL_DEFAULT_CFG), EcalUtils::Filesystem::Current);
@@ -279,16 +278,13 @@ namespace eCAL
   ////////////////////////////////////////////////////////
   // CConfigImpl
   ////////////////////////////////////////////////////////
+#if ECAL_CORE_CONFIG_INIFILE
+
   class CConfigImpl : public CSimpleIni
   {
   public:
-    CConfigImpl()
-    {
-    }
-
-    virtual ~CConfigImpl()
-    {
-    }
+    CConfigImpl() = default;
+    virtual ~CConfigImpl() = default;
 
     void OverwriteKeys(const std::vector<std::string>& key_vec_)
     {
@@ -323,7 +319,7 @@ namespace eCAL
       }
 
       // update command line keys
-      for (auto full_key : m_overwrite_keys)
+      for (const auto& full_key : m_overwrite_keys)
       {
          auto sec_pos = full_key.find_last_of('/');
          if (sec_pos == std::string::npos) continue;
@@ -345,6 +341,24 @@ namespace eCAL
   protected:
     std::vector<std::string> m_overwrite_keys;
   };
+
+#else // ECAL_CORE_CONFIG_INIFILE
+
+  class CConfigImpl
+  {
+  public:
+    CConfigImpl() = default;
+    virtual ~CConfigImpl() = default;
+
+    void OverwriteKeys(const std::vector<std::string>& /*key_vec_*/) {}
+    void AddFile(std::string& /*file_name_*/) {}
+
+    std::string GetValue(const std::string& /*section_*/, const std::string& /*key_*/, const std::string& default_) { return default_;}
+    long GetLongValue(const std::string& /*section_*/, const std::string& /*key_*/, long default_)                  { return default_; }
+    double GetDoubleValue(const std::string& /*section_*/, const std::string& /*key_*/, double default_)            { return default_; }
+  };
+
+#endif // ECAL_CORE_CONFIG_INIFILE
 
   ////////////////////////////////////////////////////////
   // CConfigBase

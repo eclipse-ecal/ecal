@@ -24,10 +24,11 @@
 #pragma once
 
 #include <ecal/ecal_payload_writer.h>
-#include <ecal/ecal_qos.h>
 
 #include "ecal_writer_data.h"
 #include "ecal_writer_info.h"
+
+#include "serialization/ecal_struct_sample_registration.h"
 
 #include <atomic>
 #include <string>
@@ -45,16 +46,13 @@ namespace eCAL
     virtual bool Create(const std::string& host_name_, const std::string& topic_name_, const std::string & topic_id_) = 0;
     virtual bool Destroy() = 0;
 
-    virtual bool SetQOS(const QOS::SWriterQOS& qos_) { m_qos = qos_; return true; };
-    QOS::SWriterQOS GetQOS() { return(m_qos); };
-
     virtual void AddLocConnection(const std::string& /*process_id_*/, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/) {};
     virtual void RemLocConnection(const std::string& /*process_id_*/, const std::string& /*topic_id_*/) {};
 
     virtual void AddExtConnection(const std::string& /*host_name_*/, const std::string& /*process_id_*/, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/) {};
     virtual void RemExtConnection(const std::string& /*host_name_*/, const std::string& /*process_id_*/, const std::string& /*topic_id_*/) {};
 
-    virtual std::string GetConnectionParameter() { return ""; };
+    virtual Registration::ConnectionPar GetConnectionParameter() { return {}; };
 
     virtual bool PrepareWrite(const SWriterAttr& /*attr_*/) { return false; };
     virtual bool Write(CPayloadWriter& /*payload_*/, const SWriterAttr& /*attr_*/) { return false; };
@@ -64,7 +62,6 @@ namespace eCAL
     std::string        m_host_name;
     std::string        m_topic_name;
     std::string        m_topic_id;
-    QOS::SWriterQOS    m_qos;
 
     std::atomic<bool>  m_created;
   };

@@ -23,9 +23,8 @@
 
 #pragma once
 
-#include "readwrite/ecal_reader_layer.h"
-
 #include "io/udp/ecal_udp_sample_receiver.h"
+#include "readwrite/ecal_reader_layer.h"
 
 #include <map>
 #include <memory>
@@ -44,14 +43,14 @@ namespace eCAL
 
     void Initialize() override;
 
-    void AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/) override;
+    void AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/) override;
     void RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/) override;
 
     void SetConnectionParameter(SReaderLayerPar& /*par_*/) override {}
 
   private:
     bool HasSample(const std::string& sample_name_);
-    bool ApplySample(const eCAL::pb::Sample& ecal_sample_);
+    bool ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_);
 
     bool                                   m_started;
     bool                                   m_local_mode;

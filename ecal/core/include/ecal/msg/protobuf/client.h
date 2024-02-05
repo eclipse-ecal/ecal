@@ -26,7 +26,7 @@
 
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_client.h>
-#include <ecal/protobuf/ecal_proto_hlp.h>
+#include <ecal/msg/protobuf/ecal_proto_hlp.h>
 
 // protobuf includes
 #ifdef _MSC_VER

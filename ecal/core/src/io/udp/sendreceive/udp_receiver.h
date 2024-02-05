@@ -55,7 +55,7 @@ namespace IO
     class CUDPReceiverImpl
     {
     public:
-      CUDPReceiverImpl(const SReceiverAttr& /*attr_*/) {};
+      explicit CUDPReceiverImpl(const SReceiverAttr& /*attr_*/) {};
       // We don't technically need a virtual destructor, if we are working with shared_ptrs...
       virtual ~CUDPReceiverImpl() = default;
 
@@ -68,7 +68,7 @@ namespace IO
       virtual bool AddMultiCastGroup(const char* ipaddr_) = 0;
       virtual bool RemMultiCastGroup(const char* ipaddr_) = 0;
 
-      virtual size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr) = 0;
+      virtual size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_) = 0;
     };
 
     class CUDPReceiver

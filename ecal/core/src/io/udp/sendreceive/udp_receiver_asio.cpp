@@ -170,7 +170,7 @@ namespace IO
       return(true);
     }
 
-    size_t CUDPReceiverAsio::Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ /* = nullptr */)
+    size_t CUDPReceiverAsio::Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_)
     {
       if (!m_created) return 0;
 
@@ -187,12 +187,12 @@ namespace IO
       // run for timeout ms
       RunIOContext(asio::chrono::milliseconds(timeout_));
 
-      // retrieve underlaying raw socket informations
+      // retrieve underlying raw socket information
       if (address_ != nullptr)
       {
         if (m_sender_endpoint.address().is_v4())
         {
-          asio::detail::sockaddr_in4_type* in4 = reinterpret_cast<asio::detail::sockaddr_in4_type*>(m_sender_endpoint.data());
+          auto in4 = reinterpret_cast<asio::detail::sockaddr_in4_type*>(m_sender_endpoint.data());
           address_->sin_addr = in4->sin_addr;
           address_->sin_family = in4->sin_family;
           address_->sin_port = in4->sin_port;

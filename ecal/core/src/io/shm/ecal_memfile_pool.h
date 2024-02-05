@@ -23,9 +23,9 @@
 
 #pragma once
 
-#include <ecal/ecal_event.h>
 #include <ecal/ecal_log.h>
 
+#include "ecal_event.h"
 #include "ecal_memfile.h"
 #include "ecal_memfile_header.h"
 

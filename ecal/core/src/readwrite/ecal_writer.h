@@ -31,10 +31,17 @@
 #include "ecal_def.h"
 #include "util/ecal_expmap.h"
 
+#if ECAL_CORE_TRANSPORT_UDP
 #include "udp/ecal_writer_udp_mc.h"
+#endif
+
+#if ECAL_CORE_TRANSPORT_SHM
 #include "shm/ecal_writer_shm.h"
+#endif
+
+#if ECAL_CORE_TRANSPORT_TCP
 #include "tcp/ecal_writer_tcp.h"
-#include "inproc/ecal_writer_inproc.h"
+#endif
 
 #include <mutex>
 #include <string>
@@ -86,10 +93,7 @@ namespace eCAL
     void ShareType(bool state_);
     void ShareDescription(bool state_);
 
-    bool SetQOS(const QOS::SWriterQOS& qos_);
-
     bool SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_);
-    bool SetMaxBandwidthUDP(long bandwidth_);
 
     bool ShmSetBufferCount(size_t buffering_);
     bool ShmEnableZeroCopy(bool state_);
@@ -113,16 +117,16 @@ namespace eCAL
 
     std::string Dump(const std::string& indent_ = "");
 
-    bool IsCreated() const {return(m_created);}
-    bool IsSubscribed() const {return(m_loc_subscribed || m_ext_subscribed);}
-    bool IsExtSubscribed() const {return(m_ext_subscribed);}
+    bool IsCreated() const { return(m_created); }
+    bool IsSubscribed() const { return(m_loc_subscribed || m_ext_subscribed); }
+    bool IsExtSubscribed() const { return(m_ext_subscribed); }
     size_t GetSubscriberCount() const
     {
       std::lock_guard<std::mutex> const lock(m_sub_map_sync);
       return(m_loc_sub_map.size() + m_ext_sub_map.size());
     }
 
-    const std::string& GetTopicName() const {return(m_topic_name);}
+    const std::string& GetTopicName() const { return(m_topic_name); }
     const SDataTypeInformation& GetDataTypeInformation() const { return m_topic_info; }
 
   protected:
@@ -135,54 +139,48 @@ namespace eCAL
     void SetUseUdpMC(TLayer::eSendMode mode_);
     void SetUseShm(TLayer::eSendMode mode_);
     void SetUseTcp(TLayer::eSendMode mode_);
-    void SetUseInProc(TLayer::eSendMode mode_);
 
     bool CheckWriterModes();
     size_t PrepareWrite(long long id_, size_t len_);
     bool IsInternalSubscribedOnly();
-    void LogSendMode(TLayer::eSendMode smode_, const std::string & base_msg_);
+    void LogSendMode(TLayer::eSendMode smode_, const std::string& base_msg_);
 
-    std::string                        m_host_name;
-    std::string                        m_host_group_name;
-    int                                m_host_id;
-    int                                m_pid;
-    std::string                        m_pname;
-    std::string                        m_topic_name;
-    std::string                        m_topic_id;
-    SDataTypeInformation               m_topic_info;
-    std::map<std::string, std::string> m_attr;
-    size_t                             m_topic_size;
+    std::string                            m_host_name;
+    std::string                            m_host_group_name;
+    int                                    m_pid;
+    std::string                            m_pname;
+    std::string                            m_topic_name;
+    std::string                            m_topic_id;
+    SDataTypeInformation                   m_topic_info;
+    std::map<std::string, std::string>     m_attr;
+    size_t                                 m_topic_size;
 
-    QOS::SWriterQOS    m_qos;
+    size_t                                 m_buffering_shm;
+    bool                                   m_zero_copy;
+    long long                              m_acknowledge_timeout_ms;
 
-    size_t             m_buffering_shm;
-    bool               m_zero_copy;
-    long long          m_acknowledge_timeout_ms;
+    std::vector<char>                      m_payload_buffer;
 
-    std::vector<char>  m_payload_buffer;
+    std::atomic<bool>                      m_connected;
 
-    std::atomic<bool>  m_connected;
-
-    using LocalConnectedMapT = Util::CExpMap<SLocalSubscriptionInfo, bool>;
+    using LocalConnectedMapT    = Util::CExpMap<SLocalSubscriptionInfo, bool>;
     using ExternalConnectedMapT = Util::CExpMap<SExternalSubscriptionInfo, bool>;
-    mutable std::mutex    m_sub_map_sync;
-    LocalConnectedMapT    m_loc_sub_map;
-    ExternalConnectedMapT m_ext_sub_map;
+    mutable std::mutex                     m_sub_map_sync;
+    LocalConnectedMapT                     m_loc_sub_map;
+    ExternalConnectedMapT                  m_ext_sub_map;
 
-    std::mutex         m_event_callback_map_sync;
     using EventCallbackMapT = std::map<eCAL_Publisher_Event, PubEventCallbackT>;
-    EventCallbackMapT  m_event_callback_map;
+    std::mutex                             m_event_callback_map_sync;
+    EventCallbackMapT                      m_event_callback_map;
 
-    long long          m_id;
-    long long          m_clock;
-    long long          m_clock_old;
-    std::chrono::steady_clock::time_point m_snd_time;
-    long               m_freq;
+    long long                              m_id;
+    long long                              m_clock;
+    long long                              m_clock_old;
+    std::chrono::steady_clock::time_point  m_snd_time;
+    long                                   m_freq;
 
-    long               m_bandwidth_max_udp;
-
-    std::atomic<bool>  m_loc_subscribed;
-    std::atomic<bool>  m_ext_subscribed;
+    std::atomic<bool>                      m_loc_subscribed;
+    std::atomic<bool>                      m_ext_subscribed;
 
     struct SWriter
     {
@@ -193,24 +191,26 @@ namespace eCAL
         bool              confirmed = false;
       };
 
-      SWriterMode        udp_mc_mode;
-      CDataWriterUdpMC   udp_mc;
+      SWriterMode                          udp_mc_mode;
+      SWriterMode                          tcp_mode;
+      SWriterMode                          shm_mode;
 
-      SWriterMode        shm_mode;
-      CDataWriterSHM     shm;
-
-      SWriterMode        tcp_mode;
-      CDataWriterTCP     tcp;
-
-      SWriterMode        inproc_mode;
-      CDataWriterInProc  inproc;
+#if ECAL_CORE_TRANSPORT_UDP
+      CDataWriterUdpMC                     udp_mc;
+#endif
+#if ECAL_CORE_TRANSPORT_SHM
+      CDataWriterSHM                       shm;
+#endif
+#if ECAL_CORE_TRANSPORT_TCP
+      CDataWriterTCP                       tcp;
+#endif
     };
-    SWriter            m_writer;
+    SWriter                                m_writer;
 
-    bool               m_use_ttype;
-    bool               m_use_tdesc;
-    int                m_share_ttype;
-    int                m_share_tdesc;
-    bool               m_created;
+    bool                                   m_use_ttype;
+    bool                                   m_use_tdesc;
+    int                                    m_share_ttype;
+    int                                    m_share_tdesc;
+    bool                                   m_created;
   };
 }

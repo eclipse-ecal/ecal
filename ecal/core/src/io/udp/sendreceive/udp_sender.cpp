@@ -44,7 +44,7 @@ namespace IO
     class CUDPSenderImpl
     {
     public:
-      CUDPSenderImpl(const SSenderAttr& attr_);
+      explicit CUDPSenderImpl(const SSenderAttr& attr_);
       size_t Send(const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
 
     protected:

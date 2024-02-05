@@ -25,16 +25,7 @@
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_log.h>
 
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/layer.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
 #include "ecal_def.h"
-#include "readwrite/ecal_writer.h"
 #include "ecal_writer_shm.h"
 
 namespace eCAL
@@ -56,9 +47,6 @@ namespace eCAL
     info_.has_mode_local       = true;
     info_.has_mode_cloud       = false;
 
-    info_.has_qos_history_kind = false;
-    info_.has_qos_reliability  = true;
-
     info_.send_size_max        = -1;
 
     return info_;
@@ -66,7 +54,7 @@ namespace eCAL
   
   bool CDataWriterSHM::Create(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string & /*topic_id_*/)
   {
-    if (m_created) return false;
+    if (m_created) return true;
     m_topic_name = topic_name_;
 
     // init write index and create memory files
@@ -79,33 +67,23 @@ namespace eCAL
     m_memory_file_attr.timeout_ack_ms  = Config::GetMemfileAckTimeoutMs();
 
     // initialize memory file buffer
-    m_created = SetBufferCount(m_buffer_count);;
+    m_created = SetBufferCount(m_buffer_count);
+
     return m_created;
   }
 
   bool CDataWriterSHM::Destroy()
   {
-    if (!m_created) return false;
+    if (!m_created) return true;
     m_created = false;
 
-    {
-      const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
-      m_memory_file_vec.clear();
-    }
+    m_memory_file_vec.clear();
 
-    return true;
-  }
-
-  bool CDataWriterSHM::SetQOS(const QOS::SWriterQOS& qos_)
-  {
-    m_qos = qos_;
     return true;
   }
 
   bool CDataWriterSHM::SetBufferCount(size_t buffer_count_)
   {
-    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
-
     // no need to adapt anything
     if (m_memory_file_vec.size() == buffer_count_) return true;
 
@@ -165,15 +143,11 @@ namespace eCAL
       ret_state |= true;
     }
 
-    {
-      const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
-
-      // adapt write index if needed
-      m_write_idx %= m_memory_file_vec.size();
-
-      // check size and reserve new if needed
-      ret_state |= m_memory_file_vec[m_write_idx]->CheckSize(attr_.len);
-    }
+    // adapt write index if needed
+    m_write_idx %= m_memory_file_vec.size();
+      
+    // check size and reserve new if needed
+    ret_state |= m_memory_file_vec[m_write_idx]->CheckSize(attr_.len);
 
     return ret_state;
   }
@@ -181,9 +155,6 @@ namespace eCAL
   bool CDataWriterSHM::Write(CPayloadWriter& payload_, const SWriterAttr& attr_)
   {
     if (!m_created) return false;
-
-    // protect m_memory_file_vec
-    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
 
     // write content
     const bool force_full_write(m_memory_file_vec.size() > 1);
@@ -200,9 +171,6 @@ namespace eCAL
   {
     if (!m_created) return;
 
-    // protect m_memory_file_vec
-    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
-
     for (auto& memory_file : m_memory_file_vec)
     {
       memory_file->Connect(process_id_);
@@ -212,18 +180,13 @@ namespace eCAL
     }
   }
 
-  std::string CDataWriterSHM::GetConnectionParameter()
+  Registration::ConnectionPar CDataWriterSHM::GetConnectionParameter()
   {
-    // starting from eCAL version > 5.8.13/5.9.0 the ConnectionParameter is defined as google protobuf
-    eCAL::pb::ConnnectionPar connection_par;
-
-    // protect m_memory_file_vec
-    const std::lock_guard<std::mutex> lock(m_memory_file_vec_mtx);
-
+    Registration::ConnectionPar connection_par;
     for (auto& memory_file : m_memory_file_vec)
     {
-      connection_par.mutable_layer_par_shm()->add_memory_file_list(memory_file->GetName());
+      connection_par.layer_par_shm.memory_file_list.push_back(memory_file->GetName());
     }
-    return connection_par.SerializeAsString();
+    return connection_par;
   }
 }

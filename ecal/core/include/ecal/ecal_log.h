@@ -26,6 +26,8 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_log_level.h>
+
+#include <list>
 #include <string>
 
 namespace eCAL
@@ -33,12 +35,12 @@ namespace eCAL
   namespace Logging
   {
     /**
-     * @brief Sets the log level. 
+     * @brief Sets the log level.
      *
-     * @param level_  The level. 
+     * @param level_  The level.
     **/
     ECAL_API void SetLogLevel(eCAL_Logging_eLogLevel level_);
-  
+
     /**
      * @brief Get the current log level.
      *
@@ -47,16 +49,16 @@ namespace eCAL
     ECAL_API eCAL_Logging_eLogLevel GetLogLevel();
 
     /**
-     * @brief Log a message (with current log level). 
+     * @brief Log a message (with current log level).
      *
      * @param msg_  The log message string.
     **/
     ECAL_API void Log(const std::string& msg_);
 
     /**
-     * @brief Log a message. 
+     * @brief Log a message.
      *
-     * @param level_  The level. 
+     * @param level_  The level.
      * @param msg_    The log message string.
     **/
     inline void Log(eCAL_Logging_eLogLevel level_, const std::string& msg_)
@@ -66,23 +68,12 @@ namespace eCAL
     }
 
     /**
-     * @brief Mark the start of the user core process. 
+     * @brief Get logging as serialized protobuf string.
+     *
+     * @param [out] log_  String to store the logging information.
+     *
+     * @return  Monitoring buffer length or zero if failed.
     **/
-    ECAL_API void StartCoreTimer();
-
-    /**
-     * @brief Mark the stop of the user core process. 
-    **/
-    ECAL_API void StopCoreTimer();
-
-    /**
-     * @brief Set the current measured core time in s (for user implemented measuring). 
-    **/
-    ECAL_API void SetCoreTime(double time_);
-
-    /**
-     * @brief Returns the current measured core time in s. 
-    **/
-    ECAL_API double GetCoreTime();
+    ECAL_API int GetLogging(std::string& log_);
   }
 }

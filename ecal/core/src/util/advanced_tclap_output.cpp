@@ -201,14 +201,14 @@ namespace CustomTclap
     std::vector<std::vector<TCLAP::Arg*>> cleaned_xor_list;
 
     // Remove hidden arguments from XOR list
-    for (size_t i = 0; i < xor_list.size(); i++)
+    for (const auto & i : xor_list)
     {
       std::vector<TCLAP::Arg*> arg_list;
-      for (size_t j = 0; j < xor_list[i].size(); j++)
+      for (size_t j = 0; j < i.size(); j++)
       {
-        if (hidden_arguments_.find(xor_list[i][j]) == hidden_arguments_.end())
+        if (hidden_arguments_.find(i[j]) == hidden_arguments_.end())
         {
-          arg_list.push_back(xor_list[i][j]);
+          arg_list.push_back(i[j]);
         }
       }
 

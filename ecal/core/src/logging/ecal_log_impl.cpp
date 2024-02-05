@@ -27,6 +27,7 @@
 
 #include "ecal_log_impl.h"
 #include "io/udp/ecal_udp_configurations.h"
+#include "serialization/ecal_serialize_logging.h"
 
 #include <mutex>
 #include <cstdio>
@@ -38,14 +39,6 @@
 #include <iomanip>
 #include <ctime>
 #include <chrono>
-
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/monitoring.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
 
 #ifdef ECAL_OS_WINDOWS
 #include "ecal_win_main.h"
@@ -109,10 +102,8 @@ namespace eCAL
           m_level(log_level_none),
           m_filter_mask_con(log_level_info | log_level_warning | log_level_error | log_level_fatal),
           m_filter_mask_file(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2),
-          m_filter_mask_udp(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2),
-          m_core_time_start(std::chrono::nanoseconds(0))
+          m_filter_mask_udp(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2)
   {
-    m_core_time = std::chrono::duration<double>(-1.0);
   }
 
   CLog::~CLog()
@@ -157,7 +148,7 @@ namespace eCAL
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
       // create udp logging sender
-      m_udp_logging_sender = std::make_unique<UDP::CLoggingSender>(attr);
+      m_udp_logging_sender = std::make_unique<UDP::CSampleSender>(attr);
     }
 
     // set logging receive network attributes
@@ -169,8 +160,7 @@ namespace eCAL
     attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
 
     // start logging receiver
-    const UDP::CLoggingReceiver::LogMessageCallbackT log_message_callback = std::bind(&CLog::RegisterLogMessage, this, std::placeholders::_1);
-    m_log_receiver = std::make_shared<UDP::CLoggingReceiver>(attr, log_message_callback);
+    m_log_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CLog::HasSample, this, std::placeholders::_1), std::bind(&CLog::ApplySample, this, std::placeholders::_1, std::placeholders::_2));
 
     m_created = true;
   }
@@ -213,9 +203,7 @@ namespace eCAL
     const eCAL_Logging_Filter log_udp  = level_ & m_filter_mask_udp;
     if((log_con | log_file | log_udp) == 0) return;
 
-    static eCAL::pb::LogMessage ecal_msg;
-    static std::string        ecal_msg_s;
-    auto                      log_time = eCAL::Time::ecal_clock::now();
+    auto log_time = eCAL::Time::ecal_clock::now();
 
     if(log_con != 0)
     {
@@ -274,17 +262,19 @@ namespace eCAL
     if((log_udp != 0) && m_udp_logging_sender)
     {
       // set up log message
-      ecal_msg.Clear();
-      ecal_msg.set_time(std::chrono::duration_cast<std::chrono::microseconds>(log_time.time_since_epoch()).count());
-      ecal_msg.set_hname(m_hname);
-      ecal_msg.set_pid(m_pid);
-      ecal_msg.set_pname(m_pname);
-      ecal_msg.set_uname(eCAL::Process::GetUnitName());
-      ecal_msg.set_level(level_);
-      ecal_msg.set_content(msg_);
+      Logging::LogMessage log_message;
+      log_message.time    = std::chrono::duration_cast<std::chrono::microseconds>(log_time.time_since_epoch()).count();
+      log_message.hname   = m_hname;
+      log_message.pid     = m_pid;
+      log_message.pname   = m_pname;
+      log_message.uname   = eCAL::Process::GetUnitName();
+      log_message.level   = level_;
+      log_message.content = msg_;
 
       // sent it
-      m_udp_logging_sender->Send(ecal_msg);
+      m_log_message_vec.clear();
+      SerializeToBuffer(log_message, m_log_message_vec);
+      m_udp_logging_sender->Send("_log_message_", m_log_message_vec);
     }
   }
 
@@ -293,66 +283,38 @@ namespace eCAL
     Log(m_level, msg_);
   }
 
-  void CLog::StartCoreTimer()
+  void CLog::GetLogging(std::string& log_msg_list_string_)
   {
-    const std::lock_guard<std::mutex> lock(m_log_sync);
+    // clear target list string
+    log_msg_list_string_.clear();
 
-    m_core_time_start = std::chrono::steady_clock::now();
-  }
-
-  void CLog::StopCoreTimer()
-  {
-    const std::lock_guard<std::mutex> lock(m_log_sync);
-
-    m_core_time = std::chrono::steady_clock::now() - m_core_time_start;
-  }
-
-  void CLog::SetCoreTime(const std::chrono::duration<double>& time_)
-  {
-    const std::lock_guard<std::mutex> lock(m_log_sync);
-
-    m_core_time = time_;
-  }
-
-  std::chrono::duration<double> CLog::GetCoreTime()
-  {
-    const std::lock_guard<std::mutex> lock(m_log_sync);
-
-    return(m_core_time);
-  }
-
-  void CLog::GetLogging(eCAL::pb::Logging& logging_)
-  {
-    // clear protobuf object
-    logging_.Clear();
-
-    // acquire access
-    const std::lock_guard<std::mutex> lock(m_log_msglist_sync);
-
-    LogMessageListT::const_iterator siter = m_log_msglist.begin();
-    while (siter != m_log_msglist.end())
-    {
-      // add log message
-      eCAL::pb::LogMessage* pMonLogMessage = logging_.add_logs();
-
-      // copy content
-      pMonLogMessage->CopyFrom(*siter);
-
-      ++siter;
-    }
-
+    // serialize message list to target list string
+    SerializeToBuffer(m_log_msglist, log_msg_list_string_);
+ 
     // empty message list
-    m_log_msglist.clear();
+    m_log_msglist.log_messages.clear();
   }
 
-  void CLog::RegisterLogMessage(const eCAL::pb::LogMessage& log_msg_)
+  bool CLog::HasSample(const std::string& sample_name_)
   {
-    // in "network mode" we accept all log messages
-    // in "local mode" we accept log messages from this host only
-    if ((m_hname == log_msg_.hname()) || Config::IsNetworkEnabled())
+    return (sample_name_ == "_log_message_");
+  }
+
+  bool CLog::ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_)
+  {
+    // TODO: Limit maximum size of collected log messages !
+    Logging::LogMessage log_message;
+    if (DeserializeFromBuffer(serialized_sample_data_, serialized_sample_size_, log_message))
     {
-      const std::lock_guard<std::mutex> lock(m_log_msglist_sync);
-      m_log_msglist.emplace_back(log_msg_);
+      // in "network mode" we accept all log messages
+      // in "local mode" we accept log messages from this host only
+      if ((m_hname == log_message.hname) || Config::IsNetworkEnabled())
+      {
+        const std::lock_guard<std::mutex> lock(m_log_msglist_sync);
+        m_log_msglist.log_messages.emplace_back(log_message);
+      }
+      return true;
     }
+    return false;
   }
 }

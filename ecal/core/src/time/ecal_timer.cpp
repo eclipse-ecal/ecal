@@ -26,7 +26,7 @@
 #include <atomic>
 #include <chrono>
 #include <thread>
-#include <assert.h>
+#include <cassert>
 
 namespace eCAL
 {

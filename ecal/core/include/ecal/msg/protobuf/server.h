@@ -25,7 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_server.h>
-#include <ecal/protobuf/ecal_proto_dyn.h>
+#include <ecal/msg/protobuf/ecal_proto_dyn.h>
 #include <ecal/msg/dynamic.h>
 
 // protobuf includes
@@ -38,6 +38,7 @@
 #endif
 
 // stl includes
+#include <iostream>
 #include <map>
 #include <memory>
 #include <string>
@@ -192,6 +193,7 @@ namespace eCAL
         google::protobuf::Message* request(m_service->GetRequestPrototype(method_descriptor).New());
         if (!request->ParseFromString(request_))
         {
+          std::cerr << "Protobuf Service " << GetServiceName() << " failed to parse request message!" << std::endl;
           delete request;
           return -1;
         }

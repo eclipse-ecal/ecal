@@ -39,7 +39,7 @@ namespace eCAL
     {
       size_t operator()(std::string const& s) const
       {
-        size_t result = static_cast<size_t>(2166136261U);
+        auto result = static_cast<size_t>(2166136261U);
         std::string::const_iterator end = s.end();
         for (std::string::const_iterator iter = s.begin();
           iter != end;
@@ -61,7 +61,7 @@ namespace eCAL
         int i = 0;
         while (std::getline(ss, token, '.') && (i < 4)) //-V112
         {
-          unsigned char mask = static_cast<unsigned char>(atoi(token.c_str()));
+          auto mask = static_cast<unsigned char>(atoi(token.c_str()));
           ipv4 = ipv4 << 8 | mask;
           i++;
         }
@@ -122,7 +122,7 @@ namespace eCAL
       inline std::string topic2mcast(const std::string& tname_, const std::string& mcast_base_, const std::string& mcast_mask_)
       {
         struct fnv_hash thash;
-        uint32_t hash_v = static_cast<uint32_t>(thash(tname_));
+        auto hash_v = static_cast<uint32_t>(thash(tname_));
 
         return topic2mcast_hash(hash_v, mcast_base_, mcast_mask_);
       }
@@ -141,7 +141,7 @@ namespace eCAL
         int i = 0;
         while (std::getline(ss, token, '.') && (i < 4)) //-V112
         {
-          unsigned char mask = static_cast<unsigned char>(atoi(token.c_str()));
+          auto mask = static_cast<unsigned char>(atoi(token.c_str()));
           address_mask[i] = mask;
           i++;
         }

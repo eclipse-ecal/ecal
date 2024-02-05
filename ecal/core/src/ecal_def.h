@@ -72,8 +72,8 @@
 #define NET_UDP_MULTICAST_PORT                     14000
 #define NET_UDP_MULTICAST_TTL                      3
 #define NET_UDP_MULTICAST_PORT_REG_OFF             0
-#define NET_UDP_MULTICAST_PORT_LOG_OFF             1
 #define NET_UDP_MULTICAST_PORT_SAMPLE_OFF          2
+#define NET_UDP_MULTICAST_PORT_LOG_OFF             4
 #define NET_UDP_MULTICAST_SNDBUF                   (5*1024*1024)  /* 5 MByte */
 #define NET_UDP_MULTICAST_RCVBUF                   (5*1024*1024)  /* 5 MByte */
 #define NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED      false
@@ -81,13 +81,8 @@
 #define NET_UDP_RECBUFFER_TIMEOUT                  1000  /* ms */
 #define NET_UDP_RECBUFFER_CLEANUP                  10    /* ms */
 
-/* overall udp multicast bandwidth limitation in bytes/s, -1 == no limitation*/
-#define NET_BANDWIDTH_MAX_UDP                      (-1)
-
-#define NET_INPROC_REC_ENABLED                     true
 #define NET_TCP_REC_ENABLED                        true
 #define NET_SHM_REC_ENABLED                        true
-
 #define NET_UDP_MC_REC_ENABLED                     true
 
 #define NET_NPCAP_ENABLED                          false
@@ -102,8 +97,6 @@
 /**********************************************************************************************/
 /*                                     publisher settings                                     */
 /**********************************************************************************************/
-/* use inproc transport layer        [auto = 2, on = 1, off = 0] */
-#define PUB_USE_INPROC                             0
 /* use shared memory transport layer [auto = 2, on = 1, off = 0] */
 #define PUB_USE_SHM                                2
 /* use tcp transport layer           [auto = 2, on = 1, off = 0] */

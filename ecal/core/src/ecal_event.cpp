@@ -21,15 +21,11 @@
  * @brief  eCAL handle helper class
 **/
 
-#include <ecal/ecal.h>
 #include <ecal/ecal_os.h>
 
-#include <ecal/ecal_event.h>
+#include "ecal_event.h"
 
 #include <sstream>
-#include <memory>
-#include <chrono>
-#include <thread>
 
 #ifdef ECAL_OS_WINDOWS
 

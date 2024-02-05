@@ -24,12 +24,14 @@
 
 #pragma once
 
-#include <exception>
-#include <sstream>
 #include <ecal/ecal.h>
 #include <ecal/ecal_deprecate.h>
-#include <ecal/protobuf/ecal_proto_dyn.h>
 #include <ecal/msg/dynamic.h>
+#include <ecal/msg/protobuf/ecal_proto_dyn.h>
+
+#include <exception>
+#include <memory>
+#include <sstream>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
@@ -307,9 +309,9 @@ namespace eCAL
       }
     }
 
-    /*
-    * Might throw DynamicReflectionException!
-    */
+    /**
+     * Might throw DynamicReflectionException!
+    **/
     inline std::shared_ptr<google::protobuf::Message> CDynamicSubscriber::CreateMessagePointer(const std::string& topic_name_)
     {
       // get topic type

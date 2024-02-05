@@ -185,6 +185,18 @@ ECAL_API void ecal_enable_loopback(const int state_);
 ECAL_API bool ecal_get_type_name(const char* topic_name_, const char** topic_type_, int* topic_type_len_);
 
 /**
+ * @brief Gets type encoding of the specified topic.
+ *
+ * @param       topic_name_          Topic name.
+ * @param [out] topic_encoding_      Pointer to store the type encoding information.
+ * @param [out] topic_encoding_len_  Length of allocated buffer,
+ *                                   eCAL is allocating the buffer for you, use ecal_free_mem to free the buffer finally.
+ *
+ * @return  True if succeeded.
+**/
+ECAL_API bool ecal_get_type_encoding(const char* topic_name_, const char** topic_encoding_, int* topic_encoding_len_);
+
+/**
  * @brief Gets type description of the specified topic.
  *
  * @param       topic_name_      Topic name.
@@ -205,13 +217,6 @@ ECAL_API bool ecal_get_description(const char* topic_name_, const char** topic_d
  * @param level_  The level.
 **/
 ECAL_API void log_setlevel(const int level_);
-
-/**
- * @brief Set the current measured core time in s (for user implemented measuring).
- *
- * @param time_  The core time.
-**/
-ECAL_API void log_setcoretime(const double time_);
 
 /**
  * @brief Log a message (with current log level).
@@ -243,69 +248,6 @@ ECAL_API ECAL_HANDLE pub_create(const char* topic_name_, const char* topic_type_
 ECAL_API bool pub_destroy(ECAL_HANDLE handle_);
 
 /**
- * @brief Setup topic type name.
- *
- * @param handle_                  Publisher handle.
- * @param topic_type_name_         Topic type name.
- * @param topic_type_name_length_  Topic type name length.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool pub_set_type_name(ECAL_HANDLE handle_, const char* topic_type_name_, const int topic_type_name_length_);
-
-/**
- * @brief Setup topic type description.
- *
- * @param handle_             Publisher handle.
- * @param topic_desc_         Topic type description.
- * @param topic_desc_length_  Topic type description length.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_);
-
-/**
- * @brief Set publisher quality of service attributes.
- *
- * @param handle_  Publisher handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool pub_set_qos(ECAL_HANDLE handle_, struct SWriterQOSC qos_);
-
-/**
- * @brief Get publisher quality of service attributes.
- *
- * @param handle_  Publisher handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool pub_get_qos(ECAL_HANDLE handle_, struct SWriterQOSC* qos_);
-
-/**
- * @brief Set publisher send mode for specific transport layer.
- *
- * @param handle_  Publisher handle.
- * @param layer_   Transport layer.
- * @param mode_    Send mode.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool pub_set_layer_mode(ECAL_HANDLE handle_, const int layer_, const int mode_);
-
-/**
- * @brief Set publisher maximum transmit bandwidth for the udp layer.
- *
- * @param handle_     Publisher handle.
- * @param bandwidth_  Maximum bandwidth in bytes/s (-1 == unlimited).
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool pub_set_max_bandwidth_udp(ECAL_HANDLE handle_, long bandwidth_);
-
-/**
  * @brief Send a message to all subscribers.
  *
  * @param handle_   Publisher handle.
@@ -316,21 +258,6 @@ ECAL_API bool pub_set_max_bandwidth_udp(ECAL_HANDLE handle_, long bandwidth_);
  * @return  Number of bytes sent.
 **/
 ECAL_API int pub_send(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_);
-
-/**
- * @brief Send a message to all subscribers synchronized with acknowledge timeout.
- *
- * This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.
- *
- * @param handle_                  Publisher handle.
- * @param payload_                 Buffer that contains content to send.
- * @param length_                  Length of buffer.
- * @param time_                    Send time (-1 = use eCAL system time in us).
- * @param acknowledge_timeout_ms_  Maximum time to wait for all subscribers acknowledge feedback in ms (content received and processed).
- *
- * @return  Number of bytes sent.
-**/
-ECAL_API int pub_send_sync(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_, const long long acknowledge_timeout_ms_);
 
 /**
  * @brief Add callback function for publisher events.
@@ -375,26 +302,6 @@ ECAL_API ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_
  * @return  True if succeeded.
 **/
 ECAL_API bool sub_destroy(ECAL_HANDLE handle_);
-
-/**
- * @brief Set subscriber quality of service attributes.
- *
- * @param handle_  Subscriber handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool sub_set_qos(ECAL_HANDLE handle_, struct SReaderQOSC qos_);
-
-/**
- * @brief Get subscriber quality of service attributes.
- *
- * @param handle_  Subscriber handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool sub_get_qos(ECAL_HANDLE handle_, struct SReaderQOSC* qos_);
 
 /**
  * @brief Receive a message from the publisher.
@@ -465,17 +372,6 @@ ECAL_API bool sub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_E
  * @return  True if succeeded.
 **/
 ECAL_API bool sub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_);
-
-/**
- * @brief Set the timeout parameter for triggering
- *          the timeout callback.
- *
- * @param handle_   Subscriber handle.
- * @param timeout_  The timeout in milliseconds.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool sub_set_timeout(ECAL_HANDLE handle_, int timeout_);
 
 /*************************************************************************/
 /*  dyn_json_subscriber                                                  */
