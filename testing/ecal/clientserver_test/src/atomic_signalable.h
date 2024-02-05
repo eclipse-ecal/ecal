@@ -115,6 +115,12 @@ public:
     return cv.wait_for(lock, timeout, [&]() { return predicate(value); });
   }
 
+  T get() const
+  {
+    std::lock_guard<std::mutex> lock(mutex);
+    return value;
+  }
+
   bool operator==(T other) const
   {
     std::lock_guard<std::mutex> lock(mutex);
