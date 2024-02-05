@@ -28,8 +28,6 @@
 
 #include <ecal/ecal_clang.h>
 
-#include <ecal/msg/protobuf/dynamic_json_subscriber.h>
-
 #include <unordered_map>
 #include <atomic>
 
@@ -529,131 +527,6 @@ PyObject* sub_rem_callback(PyObject* /*self*/, PyObject* args)
     return nullptr;
 
   eCAL::CSubscriber* sub = (eCAL::CSubscriber*)topic_handle;
-  if (!sub)
-  {
-    return(Py_BuildValue("is", -1, "subscriber invalid"));
-  }
-
-  PySubscriberCallbackMapT::const_iterator iter = g_subscriber_pycallback_map.find(sub);
-  if (iter != g_subscriber_pycallback_map.end())
-  {
-    PyObject* py_callback = iter->second;
-    Py_XDECREF(py_callback);                    /* Dispose of previous callback */
-    g_subscriber_pycallback_map.erase(iter);               /* Delete previous callback */
-  }
-
-  bool removed_callback{ false };
-  Py_BEGIN_ALLOW_THREADS
-    removed_callback = sub->RemReceiveCallback();
-  Py_END_ALLOW_THREADS
-  if (removed_callback)
-  {
-    return Py_BuildValue("is", 1, "callback removed");
-  }
-  else
-  {
-    return Py_BuildValue("is", 0, "error: could not remove callback");
-  }
-}
-
-/****************************************/
-/*      dyn_json_sub_create             */
-/****************************************/
-PyObject* dyn_json_sub_create(PyObject* /*self*/, PyObject* args)
-{
-  char* topic_name = nullptr;
-
-  if (!PyArg_ParseTuple(args, "s", &topic_name))
-    return nullptr;
-
-  ECAL_HANDLE sub{ nullptr };
-  Py_BEGIN_ALLOW_THREADS
-    sub = dyn_json_sub_create(topic_name);
-  Py_END_ALLOW_THREADS
-
-  return(PyAnswerHandle(sub));
-}
-
-/****************************************/
-/*      dyn_json_sub_destroy            */
-/****************************************/
-PyObject* dyn_json_sub_destroy(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-
-  if (!PyArg_ParseTuple(args, "n", &topic_handle))
-    return nullptr;
-
-  bool destroyed{ nullptr };
-  Py_BEGIN_ALLOW_THREADS
-    destroyed = dyn_json_sub_destroy(topic_handle);
-  Py_END_ALLOW_THREADS
-  return(Py_BuildValue("i", destroyed));
-}
-
-/****************************************/
-/*      dyn_json_sub_set_callback       */
-/****************************************/
-PyObject* dyn_json_sub_set_callback(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  PyObject*   cb_func      = nullptr;
-
-  if (!PyArg_ParseTuple(args, "nO", &topic_handle, &cb_func))
-    return nullptr;
-
-  eCAL::protobuf::CDynamicJSONSubscriber* sub = (eCAL::protobuf::CDynamicJSONSubscriber*)topic_handle;
-  if (!sub)
-  {
-    return(Py_BuildValue("is", -1, "subscriber invalid"));
-  }
-
-  PySubscriberCallbackMapT::const_iterator iter = g_subscriber_pycallback_map.find(sub);
-  if (iter != g_subscriber_pycallback_map.end())
-  {
-    PyObject* py_callback = iter->second;
-    Py_XDECREF(py_callback);                    /* Dispose of previous callback */
-    g_subscriber_pycallback_map.erase(iter);               /* Delete previous callback */
-  }
-
-  if (PyCallable_Check(cb_func))
-  {
-#if ECAL_PY_INIT_THREADS_NEEDED
-    if (!g_pygil_init)
-    {
-      g_pygil_init = 1;
-      PyEval_InitThreads();
-    }
-#endif
-
-    Py_XINCREF(cb_func);                        /* Add a reference to new callback */
-    g_subscriber_pycallback_map[sub] = cb_func;            /* Add new callback */
-    bool added_callback{ false };
-    Py_BEGIN_ALLOW_THREADS
-      std::string python_formatter{ "s#" };
-      added_callback = sub->AddReceiveCallback(std::bind(c_subscriber_callback, std::placeholders::_1, std::placeholders::_2, sub, python_formatter));
-    Py_END_ALLOW_THREADS
-
-    if (added_callback)
-    {
-      return Py_BuildValue("is", 1, "callback set");
-    }
-  }
-  return Py_BuildValue("is", 0, "error: could not set callback");
-}
-
-/****************************************/
-/*      dyn_json_sub_rem_callback       */
-/****************************************/
-PyObject* dyn_json_sub_rem_callback(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  PyObject*   cb_func      = nullptr;
-
-  if (!PyArg_ParseTuple(args, "nO", &topic_handle, &cb_func))
-    return nullptr;
-
-  eCAL::protobuf::CDynamicJSONSubscriber* sub = (eCAL::protobuf::CDynamicJSONSubscriber*)topic_handle;
   if (!sub)
   {
     return(Py_BuildValue("is", -1, "subscriber invalid"));
@@ -1424,11 +1297,6 @@ static PyMethodDef _ecal_methods[] =
 
   {"sub_set_callback",              sub_set_callback,              METH_VARARGS,  "sub_set_callback(topic_handle, callback)"},
   {"sub_rem_callback",              sub_rem_callback,              METH_VARARGS,  "sub_rem_callback(topic_handle, callback)"},
-
-  {"dyn_json_sub_create",           dyn_json_sub_create,           METH_VARARGS,  "dyn_json_sub_create(topic_name)"},
-  {"dyn_json_sub_destroy",          dyn_json_sub_destroy,          METH_VARARGS,  "dyn_json_sub_destroy(topic_handle)"},
-  {"dyn_json_sub_set_callback",     dyn_json_sub_set_callback,     METH_VARARGS,  "dyn_json_sub_set_callback(topic_handle, callback)"},
-  {"dyn_json_sub_rem_callback",     dyn_json_sub_rem_callback,     METH_VARARGS,  "dyn_json_sub_rem_callback(topic_handle, callback)"},
 
   {"server_create",                 server_create,                 METH_VARARGS,  "server_create(service_name)" },
   {"server_destroy",                server_destroy,                METH_VARARGS,  "server_destroy(server_handle)" },

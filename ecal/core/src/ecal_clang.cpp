@@ -23,7 +23,6 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_clang.h>
-#include <ecal/msg/protobuf/dynamic_json_subscriber.h>
 
 #include <mutex>
 #include <string>
@@ -533,69 +532,6 @@ ECAL_API bool sub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_E
   eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
 
   return(sub->RemEventCallback(type_));
-}
-
-/****************************************/
-/*       dyn_json_sub_create            */
-/****************************************/
-ECAL_API ECAL_HANDLE dyn_json_sub_create(const char* topic_name_)
-{
-  eCAL::protobuf::CDynamicJSONSubscriber* sub = new eCAL::protobuf::CDynamicJSONSubscriber(topic_name_);
-  if (!sub->IsCreated())
-  {
-    delete sub;
-    return(nullptr);
-  }
-  return(sub);
-}
-
-/****************************************/
-/*       dyn_json_sub_destroy           */
-/****************************************/
-ECAL_API bool dyn_json_sub_destroy(ECAL_HANDLE handle_)
-{
-  eCAL::protobuf::CDynamicJSONSubscriber* sub = static_cast<eCAL::protobuf::CDynamicJSONSubscriber*>(handle_);
-  if (sub != nullptr)
-  {
-    delete sub;
-    sub = nullptr;
-    return(true);
-  }
-  return(false);
-}
-
-/****************************************/
-/*   dyn_json_sub_add_receive_callback  */
-/****************************************/
-static std::mutex g_dyn_json_sub_receive_callback_mtx;
-static void g_dyn_json_sub_receive_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, const ReceiveCallbackCT callback_, void* par_)
-{
-  const std::lock_guard<std::mutex> lock(g_dyn_json_sub_receive_callback_mtx);
-  SReceiveCallbackDataC data;
-  data.buf   = data_->buf;
-  data.size  = data_->size;
-  data.id    = data_->id;
-  data.time  = data_->time;
-  data.clock = data_->clock;
-  callback_(topic_name_, &data, par_);
-}
-
-ECAL_API bool dyn_json_sub_add_receive_callback(ECAL_HANDLE handle_, const ReceiveCallbackCT callback_, void* par_)
-{
-  eCAL::protobuf::CDynamicJSONSubscriber* sub = static_cast<eCAL::protobuf::CDynamicJSONSubscriber*>(handle_);
-
-  auto callback = std::bind(g_dyn_json_sub_receive_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
-  return(sub->AddReceiveCallback(callback));
-}
-
-/****************************************/
-/*  dyn_json_sub_rem_receive_callback   */
-/****************************************/
-ECAL_API bool dyn_json_sub_rem_receive_callback(ECAL_HANDLE handle_)
-{
-  eCAL::protobuf::CDynamicJSONSubscriber* sub = static_cast<eCAL::protobuf::CDynamicJSONSubscriber*>(handle_);
-
-  return(sub->RemReceiveCallback());
 }
 
 

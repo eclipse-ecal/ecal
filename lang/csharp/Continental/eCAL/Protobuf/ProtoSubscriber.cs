@@ -49,7 +49,7 @@ namespace Continental
         public ProtobufSubscriber(string topicName)
         {
           T msg = new T();
-          binarySubscriber = new Subscriber(topicName, Common.ProtobufHelper.GetProtoMessageTypeName(msg), Common.ProtobufHelper.GetProtoMessageDescription(msg));
+          binarySubscriber = new Subscriber(topicName, Common.ProtobufHelper.GetProtoMessageTypeName(msg), "proto", Common.ProtobufHelper.GetProtoMessageDescription(msg));
           receivedData = new ReceiveCallbackData();
         }
 
