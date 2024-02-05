@@ -107,6 +107,23 @@ namespace eCAL
     m_created = true;
   }
 
+  CUDPReceiverAsio::~CUDPReceiverAsio()
+  {
+    // prepare for destruction
+    m_created = false;
+
+    // interrupt running asio io context
+    m_iocontext.stop();
+
+    // shut down socket
+    asio::error_code ec;
+    m_socket.shutdown(asio::ip::udp::socket::shutdown_receive, ec);
+    if (ec)
+    {
+      std::cerr << "CUDPReceiverAsio: Shutdown asio socket failed: " << ec.message() << std::endl;
+    }
+  }
+
   bool CUDPReceiverAsio::AddMultiCastGroup(const char* ipaddr_)
   {
     if (!m_broadcast && !m_unicast)
