@@ -17,20 +17,22 @@
  * ========================= eCAL LICENSE =================================
 */
 
-syntax = "proto3";
+#include "../../serialization/ecal_struct_logging.h"
 
-import "ecal/core/pb/host.proto";
-import "ecal/core/pb/process.proto";
-import "ecal/core/pb/service.proto";
-import "ecal/core/pb/topic.proto";
-
-package eCAL.pb;
-
-message Monitoring                                // eCAL monitoring information
+namespace eCAL
 {
-  repeated Host         hosts          =  1;      // hosts
-  repeated Process      processes      =  2;      // processes
-  repeated Service      services       =  3;      // services
-  repeated Client       clients        =  5;      // clients
-  repeated Topic        topics         =  4;      // topics
+  namespace Logging
+  {
+    // compare two LogMessages for equality
+    bool CompareLogMessages(const LogMessage& message1, const LogMessage& message2)
+    {
+      return (message1.time    == message2.time &&
+              message1.hname   == message2.hname &&
+              message1.pid     == message2.pid &&
+              message1.pname   == message2.pname &&
+              message1.uname   == message2.uname &&
+              message1.level   == message2.level &&
+              message1.content == message2.content);
+    }
+  }
 }

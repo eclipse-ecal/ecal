@@ -17,20 +17,22 @@
  * ========================= eCAL LICENSE =================================
 */
 
-syntax = "proto3";
+/**
+ * @file   ecal_serialize_monitoring.h
+ * @brief  eCAL monitoring serialization / deserialization
+**/
 
-import "ecal/core/pb/host.proto";
-import "ecal/core/pb/process.proto";
-import "ecal/core/pb/service.proto";
-import "ecal/core/pb/topic.proto";
+#pragma once
 
-package eCAL.pb;
+#include <ecal/types/monitoring.h>
 
-message Monitoring                                // eCAL monitoring information
+#include <string>
+#include <vector>
+
+namespace eCAL
 {
-  repeated Host         hosts          =  1;      // hosts
-  repeated Process      processes      =  2;      // processes
-  repeated Service      services       =  3;      // services
-  repeated Client       clients        =  5;      // clients
-  repeated Topic        topics         =  4;      // topics
+  // monitoring - serialize/deserialize
+  bool SerializeToBuffer     (const Monitoring::SMonitoring& source_sample_, std::vector<char>& target_buffer_);
+  bool SerializeToBuffer     (const Monitoring::SMonitoring& source_sample_, std::string& target_buffer_);
+  bool DeserializeFromBuffer (const char* data_, size_t size_, Monitoring::SMonitoring& target_sample_);
 }

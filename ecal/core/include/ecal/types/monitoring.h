@@ -53,51 +53,57 @@ namespace eCAL
       constexpr unsigned int None = 0x000;
     }
     
+    enum eTLayerType
+    {
+      tl_none        = 0,
+      tl_ecal_udp_mc = 1,
+      tl_ecal_shm    = 4,
+      tl_ecal_tcp    = 5,
+    };
+
+    struct TLayer
+    {
+      eTLayerType  type      = tl_none;                         //<! transport layer type
+      int32_t      version   = 0;                               //<! transport layer version
+      bool         confirmed = false;                           //<! transport layer used?
+    };
+
     struct STopicMon                                            //<! eCAL Topic struct
     {
       STopicMon()
       {
-        rclock             = 0;
-        hid                = 0;
-        pid                = 0;
-        tsize              = 0;
-        tlayer_ecal_udp_mc = false;
-        tlayer_ecal_shm    = false;
-        tlayer_ecal_tcp    = false;
-        tlayer_inproc      = false;
-        connections_loc    = 0;
-        connections_ext    = 0;
-        message_drops      = 0;
-        did                = 0;
-        dclock             = 0;
-        dfreq              = 0;
+        rclock          = 0;
+        pid             = 0;
+        tsize           = 0;
+        connections_loc = 0;
+        connections_ext = 0;
+        message_drops   = 0;
+        did             = 0;
+        dclock          = 0;
+        dfreq           = 0;
       };
 
-      int                                 rclock;               //!< registration clock (heart beat)
-      int                                 hid;                  //!< host id
+      int32_t                             rclock;               //!< registration clock (heart beat)
       std::string                         hname;                //!< host name
       std::string                         hgname;               //!< host group name
-      int                                 pid;                  //!< process id
+      int32_t                             pid;                  //!< process id
       std::string                         pname;                //!< process name
       std::string                         uname;                //!< unit name
       std::string                         tid;                  //!< topic id
       std::string                         tname;                //!< topic name
       std::string                         direction;            //!< direction (publisher, subscriber)
       SDataTypeInformation                tdatatype;            //!< topic datatype information (name, encoding, descriptor)
-      int                                 tsize;                //!< topic size
+	  
+      std::vector<TLayer>                 tlayer;               //!< transport layer details
+      int32_t                             tsize;                //!< topic size
 
-      bool                                tlayer_ecal_udp_mc;   //!< transport layer udp active
-      bool                                tlayer_ecal_shm;      //!< transport layer shm active
-      bool                                tlayer_ecal_tcp;      //!< transport layer tcp active
-      bool                                tlayer_inproc;        //!< transport layer inproc active
+       int32_t                            connections_loc;      //!< number of local connected entities
+      int32_t                             connections_ext;      //!< number of external connected entities
+      int32_t                             message_drops;        //!< dropped messages
 
-      int                                 connections_loc;      //!< number of local connected entities
-      int                                 connections_ext;      //!< number of external connected entities
-      long long                           message_drops;        //!< dropped messages
-
-      long long                           did;                  //!< data send id (publisher setid)
-      long long                           dclock;               //!< data clock (send / receive action)
-      long                                dfreq;                //!< data frequency (send / receive samples per second) [mHz]
+      int64_t                             did;                  //!< data send id (publisher setid)
+      int64_t                             dclock;               //!< data clock (send / receive action)
+      int32_t                             dfreq;                //!< data frequency (send / receive samples per second) [mHz]
 
       std::map<std::string, std::string>  attr;                 //!< generic topic description
     };
@@ -108,9 +114,6 @@ namespace eCAL
       {
         rclock               = 0;
         pid                  = 0;
-        pmemory              = 0;
-        pcpu                 = 0.0f;
-        usrptime             = 0.0f;
         datawrite            = 0;
         dataread             = 0;
         state_severity       = 0;
@@ -119,28 +122,24 @@ namespace eCAL
         component_init_state = 0;
       };
 
-      int            rclock;                                    //!< registration clock
+      int32_t        rclock;                                    //!< registration clock
       std::string    hname;                                     //!< host name
       std::string    hgname;                                    //!< host group name
-      int            pid;                                       //!< process id
+      int32_t        pid;                                       //!< process id
       std::string    pname;                                     //!< process name
       std::string    uname;                                     //!< unit name
       std::string    pparam;                                    //!< process parameter
 
-      long long      pmemory;                                   //!< process memory
-      float          pcpu;                                      //!< process cpu usage
-      float          usrptime;                                  //!< process user time
+      int64_t        datawrite;                                 //!< data write bytes per sec
+      int64_t        dataread;                                  //!< data read bytes per sec
 
-      long long      datawrite;                                 //!< data write bytes per sec
-      long long      dataread;                                  //!< data read bytes per sec
-
-      int            state_severity;                            //!< process state info severity:
+      int32_t        state_severity;                            //!< process state info severity:
                                                                 //!<   proc_sev_unknown       = 0 (condition unknown)
                                                                 //!<   proc_sev_healthy       = 1 (process healthy)
                                                                 //!<   proc_sev_warning       = 2 (process warning level)
                                                                 //!<   proc_sev_critical      = 3 (process critical)
                                                                 //!<   proc_sev_failed        = 4 (process failed)
-      int            state_severity_level;                      //!< process state info severity level:
+      int32_t        state_severity_level;                      //!< process state info severity level:
                                                                 //!<   proc_sev_level_unknown = 0 (condition unknown)
                                                                 //!<   proc_sev_level1        = 1 (default severity level 1)
                                                                 //!<   proc_sev_level2        = 2 (severity level 2)
@@ -150,10 +149,10 @@ namespace eCAL
 
       std::string    state_info;                                //!< process state info as human readable string
 
-      int            tsync_state;                               //!< time synchronization state
+      int32_t        tsync_state;                               //!< time synchronization state
       std::string    tsync_mod_name;                            //!< time synchronization module name
 
-      int            component_init_state;                      //!< eCAL component initialization state (eCAL::Initialize(..))
+      int32_t        component_init_state;                      //!< eCAL component initialization state (eCAL::Initialize(..))
       std::string    component_init_info;                       //!< like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc)
 
       std::string    ecal_runtime_version;                      //!< loaded / runtime eCAL version of a component
@@ -177,23 +176,24 @@ namespace eCAL
     {
       SServerMon()
       {
-        rclock   = 0;
-        pid      = 0;
+        rclock      = 0;
+        pid         = 0;
         tcp_port_v0 = 0;
         tcp_port_v1 = 0;
       };
 
-      int                      rclock;                          //<! registration clock    
+      int32_t                  rclock;                          //<! registration clock    
       std::string              hname;                           //<! host name
       std::string              pname;                           //<! process name
       std::string              uname;                           //<! unit name
-      int                      pid;                             //<! process id
+      int32_t                  pid;                             //<! process id
 
       std::string              sname;                           //<! service name
       std::string              sid;                             //<! service id
 
-      int                      tcp_port_v0;                 //<! the tcp port protocol version 0 used for that service
-      int                      tcp_port_v1;                 //<! the tcp port protocol version 1 used for that service
+      uint32_t                 version;                         //<! service protocol version
+      uint32_t                 tcp_port_v0;                     //<! the tcp port protocol version 0 used for that service
+      uint32_t                 tcp_port_v1;                     //<! the tcp port protocol version 1 used for that service
 
       std::vector<SMethodMon>  methods;                         //<! list of methods
     };
@@ -206,19 +206,21 @@ namespace eCAL
         pid    = 0;
       };
 
-      int          rclock;                                      //<! registration clock
+      int32_t      rclock;                                      //<! registration clock
       std::string  hname;                                       //<! host name
       std::string  pname;                                       //<! process name
       std::string  uname;                                       //<! unit name
-      int          pid;                                         //<! process id
+      int32_t      pid;                                         //<! process id
 
       std::string  sname;                                       //<! service name
       std::string  sid;                                         //<! service id
+
+      uint32_t     version;                                     //<! client protocol version
     };
 
     struct SMonitoring                                          //<! eCAL Monitoring struct
     {
-      std::vector<SProcessMon>  process;                        //<! process info
+      std::vector<SProcessMon>  processes;                      //<! process info
       std::vector<STopicMon>    publisher;                      //<! publisher info vector
       std::vector<STopicMon>    subscriber;                     //<! subscriber info vector
       std::vector<SServerMon>   server;                         //<! server info vector

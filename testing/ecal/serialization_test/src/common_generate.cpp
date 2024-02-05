@@ -17,20 +17,23 @@
  * ========================= eCAL LICENSE =================================
 */
 
-syntax = "proto3";
+#include <cstdlib>
+#include <string>
 
-import "ecal/core/pb/host.proto";
-import "ecal/core/pb/process.proto";
-import "ecal/core/pb/service.proto";
-import "ecal/core/pb/topic.proto";
-
-package eCAL.pb;
-
-message Monitoring                                // eCAL monitoring information
+namespace eCAL
 {
-  repeated Host         hosts          =  1;      // hosts
-  repeated Process      processes      =  2;      // processes
-  repeated Service      services       =  3;      // services
-  repeated Client       clients        =  5;      // clients
-  repeated Topic        topics         =  4;      // topics
+  // Generate a random string of given length (may contain null character)
+  std::string GenerateString(size_t length)
+  {
+    const std::string charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    std::string result;
+    result.reserve(length);
+
+    for (size_t i = 0; i < length; ++i) {
+      // use the full charset, including null character
+      result.push_back(charset[rand() % (charset.length() + 1)]);
+    }
+
+    return result;
+  }
 }

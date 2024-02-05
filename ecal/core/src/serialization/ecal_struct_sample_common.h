@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,20 +17,37 @@
  * ========================= eCAL LICENSE =================================
 */
 
-syntax = "proto3";
+/**
+ * @file   ecal_struct_sample_common.h
+ * @brief  eCAL common struct types
+**/
 
-import "ecal/core/pb/host.proto";
-import "ecal/core/pb/process.proto";
-import "ecal/core/pb/service.proto";
-import "ecal/core/pb/topic.proto";
+#pragma once
 
-package eCAL.pb;
-
-message Monitoring                                // eCAL monitoring information
+namespace eCAL
 {
-  repeated Host         hosts          =  1;      // hosts
-  repeated Process      processes      =  2;      // processes
-  repeated Service      services       =  3;      // services
-  repeated Client       clients        =  5;      // clients
-  repeated Topic        topics         =  4;      // topics
+  enum eCmdType
+  {
+    bct_none             = 0,
+    bct_set_sample       = 1,
+    bct_reg_publisher    = 2,
+    bct_reg_subscriber   = 3,
+    bct_reg_process      = 4,
+    bct_reg_service      = 5,
+    bct_reg_client       = 6,
+    bct_unreg_publisher  = 12,
+    bct_unreg_subscriber = 13,
+    bct_unreg_process    = 14,
+    bct_unreg_service    = 15,
+    bct_unreg_client     = 16
+  };
+
+  enum eTLayerType
+  {
+    tl_none        = 0,
+    tl_ecal_udp_mc = 1,
+    tl_ecal_shm    = 4,
+    tl_ecal_tcp    = 5,
+    tl_all         = 255,
+  };
 }

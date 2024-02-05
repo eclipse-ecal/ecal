@@ -273,7 +273,52 @@ set(ecal_registration_src
     src/registration/ecal_registration_receiver.h
 )
 
+############################################################################
+# serialization
 ######################################
+set(ecal_serialization_src
+    src/serialization/nanopb/nanopb/pb.h
+    src/serialization/nanopb/nanopb/pb_common.c
+    src/serialization/nanopb/nanopb/pb_common.h
+    src/serialization/nanopb/nanopb/pb_decode.c
+    src/serialization/nanopb/nanopb/pb_decode.h
+    src/serialization/nanopb/nanopb/pb_encode.c
+    src/serialization/nanopb/nanopb/pb_encode.h      
+    src/serialization/nanopb/ecal.pb.c
+    src/serialization/nanopb/ecal.pb.h
+    src/serialization/nanopb/host.pb.c
+    src/serialization/nanopb/host.pb.h
+    src/serialization/nanopb/layer.pb.c
+    src/serialization/nanopb/layer.pb.h
+    src/serialization/nanopb/logging.pb.c
+    src/serialization/nanopb/logging.pb.h
+    src/serialization/nanopb/monitoring.pb.c
+    src/serialization/nanopb/monitoring.pb.h
+    src/serialization/nanopb/process.pb.c
+    src/serialization/nanopb/process.pb.h
+    src/serialization/nanopb/service.pb.c
+    src/serialization/nanopb/service.pb.h
+    src/serialization/nanopb/topic.pb.c
+    src/serialization/nanopb/topic.pb.h
+    src/serialization/ecal_serialize_common.cpp
+    src/serialization/ecal_serialize_common.h
+    src/serialization/ecal_serialize_logging.cpp
+    src/serialization/ecal_serialize_logging.h
+    src/serialization/ecal_serialize_monitoring.cpp
+    src/serialization/ecal_serialize_monitoring.h
+    src/serialization/ecal_serialize_sample_payload.cpp
+    src/serialization/ecal_serialize_sample_payload.h
+    src/serialization/ecal_serialize_sample_registration.cpp
+    src/serialization/ecal_serialize_sample_registration.h
+    src/serialization/ecal_serialize_service.cpp
+    src/serialization/ecal_serialize_service.h
+    src/serialization/ecal_struct_logging.h
+    src/serialization/ecal_struct_sample_common.h
+    src/serialization/ecal_struct_sample_payload.h
+    src/serialization/ecal_struct_sample_registration.h
+    src/serialization/ecal_struct_service.h
+)
+
 # service
 ######################################
 set(ecal_service_src
@@ -472,6 +517,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_readwrite_tcp_src} 
     ${ecal_readwrite_udp_src}
     ${ecal_registration_src}   
+    ${ecal_serialization_src}
     ${ecal_service_src}
     ${ecal_time_src}
     ${ecal_util_src}
@@ -594,6 +640,7 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_readwrite_tcp_src} 
     ${ecal_readwrite_udp_src} 
     ${ecal_registration_src}   
+    ${ecal_serialization_src}
     ${ecal_service_src}
     ${ecal_time_src}
     ${ecal_util_src}

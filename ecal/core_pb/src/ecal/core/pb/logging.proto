@@ -19,18 +19,20 @@
 
 syntax = "proto3";
 
-import "ecal/core/pb/host.proto";
-import "ecal/core/pb/process.proto";
-import "ecal/core/pb/service.proto";
-import "ecal/core/pb/topic.proto";
-
 package eCAL.pb;
 
-message Monitoring                                // eCAL monitoring information
+message LogMessage                                // eCAL log message
 {
-  repeated Host         hosts          =  1;      // hosts
-  repeated Process      processes      =  2;      // processes
-  repeated Service      services       =  3;      // services
-  repeated Client       clients        =  5;      // clients
-  repeated Topic        topics         =  4;      // topics
+  int64                 time           =  1;      // time
+  string                hname          =  2;      // host name
+  int32                 pid            =  3;      // process id
+  string                pname          =  4;      // process name
+  string                uname          =  5;      // unit name
+  int32                 level          =  6;      // message level
+  string                content        =  7;      // message content
+}
+
+message LogMessageList                            // eCAL log message list
+{
+  repeated LogMessage   log_messages   =  1;      // log messages
 }

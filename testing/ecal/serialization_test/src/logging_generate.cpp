@@ -17,20 +17,28 @@
  * ========================= eCAL LICENSE =================================
 */
 
-syntax = "proto3";
+#include "../../serialization/ecal_struct_logging.h"
 
-import "ecal/core/pb/host.proto";
-import "ecal/core/pb/process.proto";
-import "ecal/core/pb/service.proto";
-import "ecal/core/pb/topic.proto";
+#include <cstdlib>
 
-package eCAL.pb;
-
-message Monitoring                                // eCAL monitoring information
+namespace eCAL
 {
-  repeated Host         hosts          =  1;      // hosts
-  repeated Process      processes      =  2;      // processes
-  repeated Service      services       =  3;      // services
-  repeated Client       clients        =  5;      // clients
-  repeated Topic        topics         =  4;      // topics
+  std::string GenerateString(size_t length);
+
+  namespace Logging
+  {
+    LogMessage GenerateLogMessage()
+    {
+      LogMessage logMessage;
+      logMessage.time    = rand() % 1000;
+      logMessage.hname   = GenerateString(10);
+      logMessage.pid     = rand() % 1000;
+      logMessage.pname   = GenerateString(8);
+      logMessage.uname   = GenerateString(6);
+      logMessage.level   = static_cast<eCAL_Logging_eLogLevel>(rand() % 2);
+      logMessage.content = GenerateString(50);
+
+      return logMessage;
+    }
+  }
 }
