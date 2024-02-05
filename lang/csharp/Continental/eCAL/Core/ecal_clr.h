@@ -127,11 +127,6 @@ namespace Continental
          * @param message_ The message string to log.
         **/
         static void Log(System::String^ message_);
-
-        /**
-         * @brief Set the current measured core time in s (for user implemented measuring).
-        **/
-        static void SetCoreTime(double time_);
       };
 
 
@@ -153,20 +148,22 @@ namespace Continental
         /**
          * @brief Constructor.
          *
-         * @param topic_name_   Unique topic name.
-         * @param topic_type_   Type name (optional.
-         * @param topic_desc_   Type description (optional.
+         * @param topic_name_     Unique topic name.
+         * @param topic_type_     Type name (optional).
+         * @param topic_encoding_ Type encoding (optional).
+         * @param topic_desc_     Type description (optional).
         **/
-        Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_desc_);
+        Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, System::String^ topic_desc_);
 
         /**
          * @brief Constructor.
          *
-         * @param topic_name_   Unique topic name.
-         * @param topic_type_   Type name (optional.
-         * @param topic_desc_   Type description (optional.
+         * @param topic_name_     Unique topic name.
+         * @param topic_type_     Type name (optional.
+         * @param topic_encoding_ Type encoding (optional).
+         * @param topic_desc_     Type description (optional.
         **/
-        Publisher(System::String^ topic_name_, System::String^ topic_type_, array<Byte>^ topic_desc_);
+        Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, array<Byte>^ topic_desc_);
 
         /**
          * @brief Destructor.
@@ -176,12 +173,13 @@ namespace Continental
         /**
          * @brief Creates this object.
          *
-         * @param topic_name_   Unique topic name.
-         * @param topic_type_   Type name (optional for type checking by monitoring app).
+         * @param topic_name_     Unique topic name.
+         * @param topic_type_     Type name (optional for type checking by monitoring app).
+         * @param topic_encoding_ Type encoding (optional).
          *
          * @return  true if it succeeds, false if it fails.
         **/
-        bool Create(System::String^ topic_name_, System::String^ topic_type_);
+        bool Create(System::String^ topic_name_, System::String^ topic_encoding_, System::String^ topic_type_);
 
         /**
          * @brief Destroys this object.
@@ -225,13 +223,6 @@ namespace Continental
         System::String^ GetTopicName();
 
         /**
-         * @brief Gets type of the connected topic.
-         *
-         * @return  The type name.
-        **/
-        System::String^ GetTypeName();
-
-        /**
          * @brief Dump the whole class state into a string.
          *
          * @return  The dump string.
@@ -260,20 +251,22 @@ namespace Continental
         /**
          * @brief Constructor.
          *
-         * @param topic_name_   Unique topic name.
-         * @param topic_type_   Type name (optional for type checking by monitoring app).
-         * @param topic_desc_   Descriptor (optional for dynamic reflection by monitoring app).
+         * @param topic_name_     Unique topic name.
+         * @param topic_type_     Type name (optional).
+         * @param topic_encoding_ Type encoding (optional).
+         * @param topic_desc_     Type description (optional).
         **/
-        Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_desc_);
+        Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, System::String^ topic_desc_);
 
         /**
          * @brief Constructor.
          *
-         * @param topic_name_   Unique topic name.
-         * @param topic_type_   Type name (optional for type checking by monitoring app).
-         * @param topic_desc_   Descriptor (optional for dynamic reflection by monitoring app).
+         * @param topic_name_     Unique topic name.
+         * @param topic_type_     Type name (optional.
+         * @param topic_encoding_ Type encoding (optional).
+         * @param topic_desc_     Type description (optional.
         **/
-        Subscriber(System::String^ topic_name_, System::String^ topic_type_, array<Byte>^ topic_desc_);
+        Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, array<Byte>^ topic_desc_);
 
         /**
          * @brief Destructor.
@@ -298,22 +291,23 @@ namespace Continental
           long long id;         /*!< Message id          */
           long long time;       /*!< Message time stamp  */
           long long clock;      /*!< Message write clock */
-      };
+        };
         /**
          * @brief delegate definition for callback functions
         **/
         delegate void ReceiverCallback(String^ str, ReceiveCallbackData^ data);
+        delegate void ReceiverCallbackUnsafe(String^ str, ReceiveCallbackDataUnsafe^ data);
 
-         delegate void ReceiverCallbackUnsafe(String^ str, ReceiveCallbackDataUnsafe^ data);
         /**
          * @brief Creates this object.
          *
-         * @param topic_name_   Unique topic name.
-         * @param topic_type_   Type name (optional for type checking by monitoring app).
+         * @param topic_name_     Unique topic name.
+         * @param topic_type_     Type name (optional for type checking by monitoring app).
+         * @param topic_encoding_ Type encoding (optional).
          *
          * @return  true if it succeeds, false if it fails.
         **/
-        bool Create(System::String^ topic_name_, System::String^ topic_type_);
+        bool Create(System::String^ topic_name_, System::String^ topic_encoding_, System::String^ topic_type_);
 
         /**
          * @brief Destroys this object.
@@ -365,13 +359,6 @@ namespace Continental
          * @return  The topic name.
         **/
         System::String^ GetTopicName();
-
-        /**
-         * @brief Gets type of the connected topic.
-         *
-         * @return  The type name.
-        **/
-        System::String^ GetTypeName();
 
         /**
          * @brief Dump the whole class state into a string.

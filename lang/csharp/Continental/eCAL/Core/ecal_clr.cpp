@@ -138,11 +138,6 @@ void Logger::Log(System::String^ message_)
   ::eCAL::Logging::Log(StringToStlString(message_));
 }
 
-void Logger::SetCoreTime(double time_)
-{
-  ::eCAL::Logging::SetCoreTime(time_);
-}
-
 
 /////////////////////////////////////////////////////////////////////////////
 // Publisher
@@ -151,14 +146,22 @@ Publisher::Publisher() : m_pub(new ::eCAL::CPublisher())
 {
 }
 
-Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_desc_)
+Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, System::String^ topic_desc_)
 {
-  m_pub = new ::eCAL::CPublisher(StringToStlString(topic_name_), StringToStlString(topic_type_), StringToStlString(topic_desc_));
+  ::eCAL::SDataTypeInformation topic_info;
+  topic_info.name       = StringToStlString(topic_type_);
+  topic_info.encoding   = StringToStlString(topic_encoding_);
+  topic_info.descriptor = StringToStlString(topic_desc_);
+  m_pub = new ::eCAL::CPublisher(StringToStlString(topic_name_), topic_info);
 }
 
-Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, array<Byte>^ topic_desc_)
+Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, array<Byte>^ topic_desc_)
 {
-  m_pub = new ::eCAL::CPublisher(StringToStlString(topic_name_), StringToStlString(topic_type_), ByteArrayToStlString(topic_desc_));
+  ::eCAL::SDataTypeInformation topic_info;
+  topic_info.name       = StringToStlString(topic_type_);
+  topic_info.encoding   = StringToStlString(topic_encoding_);
+  topic_info.descriptor = ByteArrayToStlString(topic_desc_);
+  m_pub = new ::eCAL::CPublisher(StringToStlString(topic_name_), topic_info);
 }
 
 Publisher::~Publisher()
@@ -167,10 +170,13 @@ Publisher::~Publisher()
   delete m_pub;
 }
 
-bool Publisher::Create(System::String^ topic_name_, System::String^ topic_type_)
+bool Publisher::Create(System::String^ topic_name_, System::String^ topic_encoding_, System::String^ topic_type_)
 {
   if(m_pub == nullptr) return(false);
-  return(m_pub->Create(StringToStlString(topic_name_), StringToStlString(topic_type_)));
+  ::eCAL::SDataTypeInformation topic_info;
+  topic_info.name     = StringToStlString(topic_type_);
+  topic_info.encoding = StringToStlString(topic_encoding_);
+  return(m_pub->Create(StringToStlString(topic_name_), topic_info));
 }
 
 bool Publisher::Destroy()
@@ -209,12 +215,6 @@ System::String^ Publisher::GetTopicName()
   return(StlStringToString(m_pub->GetTopicName()));
 }
 
-System::String^ Publisher::GetTypeName()
-{
-  if(m_pub == nullptr) return("");
-  return(StlStringToString(m_pub->GetTypeName()));
-}
-
 System::String^ Publisher::Dump()
 {
   if(m_pub == nullptr) return("");
@@ -229,14 +229,22 @@ Subscriber::Subscriber() : m_sub(new ::eCAL::CSubscriber())
 {
 }
 
-Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_desc_)
+Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, System::String^ topic_desc_)
 {
-  m_sub = new ::eCAL::CSubscriber(StringToStlString(topic_name_), StringToStlString(topic_type_), StringToStlString(topic_desc_));
+  ::eCAL::SDataTypeInformation topic_info;
+  topic_info.name       = StringToStlString(topic_type_);
+  topic_info.encoding   = StringToStlString(topic_encoding_);
+  topic_info.descriptor = StringToStlString(topic_desc_);
+  m_sub = new ::eCAL::CSubscriber(StringToStlString(topic_name_), topic_info);
 }
 
-Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_, array<Byte>^ topic_desc_)
+Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, array<Byte>^ topic_desc_)
 {
-  m_sub = new ::eCAL::CSubscriber(StringToStlString(topic_name_), StringToStlString(topic_type_), ByteArrayToStlString(topic_desc_));
+  ::eCAL::SDataTypeInformation topic_info;
+  topic_info.name       = StringToStlString(topic_type_);
+  topic_info.encoding   = StringToStlString(topic_encoding_);
+  topic_info.descriptor = ByteArrayToStlString(topic_desc_);
+  m_sub = new ::eCAL::CSubscriber(StringToStlString(topic_name_), topic_info);
 }
 
 Subscriber::~Subscriber()
@@ -245,10 +253,13 @@ Subscriber::~Subscriber()
   delete m_sub;
 }
 
-bool Subscriber::Create(System::String^ topic_name_, System::String^ topic_type_)
+bool Subscriber::Create(System::String^ topic_name_, System::String^ topic_encoding_, System::String^ topic_type_)
 {
-  if(m_sub == nullptr) return(false);
-  return(m_sub->Create(StringToStlString(topic_name_), StringToStlString(topic_type_)));
+  if (m_sub == nullptr) return(false);
+  ::eCAL::SDataTypeInformation topic_info;
+  topic_info.name     = StringToStlString(topic_type_);
+  topic_info.encoding = StringToStlString(topic_encoding_);
+  return(m_sub->Create(StringToStlString(topic_name_), topic_info));
 }
 
 bool Subscriber::Destroy()
@@ -263,7 +274,7 @@ Subscriber::ReceiveCallbackData^ Subscriber::Receive(const int rcv_timeout_)
   long long rcv_time = 0;
   std::string rcv_buf;
 
-  auto size = m_sub->Receive(rcv_buf, &rcv_time, rcv_timeout_);
+  auto size = m_sub->ReceiveBuffer(rcv_buf, &rcv_time, rcv_timeout_);
   if (size > 0)
   {
     ReceiveCallbackData^ rcv_data = gcnew ReceiveCallbackData();
@@ -284,7 +295,7 @@ Subscriber::ReceiveCallbackDataUnsafe^ Subscriber::ReceiveUnsafe(const int rcv_t
   if(m_sub == nullptr) return(nullptr);
   long long rcv_time = 0;
   std::string rcv_buf;
-  auto size = m_sub->Receive(rcv_buf, &rcv_time, rcv_timeout_);
+  auto size = m_sub->ReceiveBuffer(rcv_buf, &rcv_time, rcv_timeout_);
   if (size > 0)
   {
     ReceiveCallbackDataUnsafe^ rcv_data = gcnew ReceiveCallbackDataUnsafe();
@@ -363,12 +374,6 @@ System::String^ Subscriber::GetTopicName()
 {
   if(m_sub == nullptr) return("");
   return(StlStringToString(m_sub->GetTopicName()));
-}
-
-System::String^ Subscriber::GetTypeName()
-{
-  if(m_sub == nullptr) return("");
-  return(StlStringToString(m_sub->GetTypeName()));
 }
 
 System::String^ Subscriber::Dump()
@@ -619,7 +624,7 @@ String^ Monitoring::GetMonitoring()
 String^ Monitoring::GetLogging()
 {
     std::string logging;
-    ::eCAL::Monitoring::GetLogging(logging);
+    ::eCAL::Logging::GetLogging(logging);
     return StlStringToString(logging);
 }
 
@@ -635,7 +640,7 @@ array<Byte>^ Monitoring::GetMonitoringBytes()
 array<Byte>^ Monitoring::GetLoggingBytes()
 {
     std::string logging;
-    ::eCAL::Monitoring::GetLogging(logging);
+    ::eCAL::Logging::GetLogging(logging);
     array<Byte>^ data = gcnew array<Byte>(static_cast<int>(logging.size()));
     System::Runtime::InteropServices::Marshal::Copy(IntPtr(&logging[0]), data, 0, static_cast<int>(logging.size()));
     return data;
