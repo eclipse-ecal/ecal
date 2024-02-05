@@ -837,7 +837,7 @@ namespace eCAL
         {
           const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
           auto citer = m_event_callback_map.find(sub_event_dropped);
-          if (citer != m_event_callback_map.end())
+          if (citer != m_event_callback_map.end() && citer->second)
           {
             SSubEventCallbackData data;
             data.type  = sub_event_dropped;
