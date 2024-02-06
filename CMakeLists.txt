@@ -82,7 +82,7 @@ option(BUILD_TIME                                        "Build the eCAL time in
 option(BUILD_PY_BINDING                                  "Build eCAL python binding"                                                                            OFF)
 option(BUILD_STANDALONE_PY_WHEEL                         "Build eCAL python binding as standalone wheel"                                                        OFF)
 option(BUILD_CSHARP_BINDING                              "Build eCAL C# binding"                                                                                OFF)
-option(BUILD_ECAL_TESTS                                  "Build the eCAL google tests"                                                                          OFF)
+option(BUILD_ECAL_TESTS                                  "Build the eCAL google tests"                                                                           ON)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # core internal feature configuration (adapt to your needs)
@@ -120,7 +120,7 @@ option(ECAL_THIRDPARTY_BUILD_ASIO                        "Build asio with eCAL" 
 option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS             "Build CMakeFunctions with eCAL"                                                                        ON)
 option(ECAL_THIRDPARTY_BUILD_FINEFTP                     "Build fineFTP with eCAL"                                                                               ON)
 option(ECAL_THIRDPARTY_BUILD_FTXUI                       "Build ftxui with eCAL"                                                                                 ON)
-option(ECAL_THIRDPARTY_BUILD_GTEST                       "Build gtest with eCAL"                                                                                OFF)
+option(ECAL_THIRDPARTY_BUILD_GTEST                       "Build gtest with eCAL"                                                                                 ON)
 option(ECAL_THIRDPARTY_BUILD_RECYCLE                     "Build steinwurf::recylce with eCAL"                                                                    ON)
 option(ECAL_THIRDPARTY_BUILD_SPDLOG                      "Build spdlog with eCAL"                                                                                ON)
 option(ECAL_THIRDPARTY_BUILD_SIMPLEINI                   "Build simpleini with eCAL"                                                                             ON)
