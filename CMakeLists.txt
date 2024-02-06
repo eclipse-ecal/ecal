@@ -68,24 +68,24 @@ endif()
 # configurable build options
 # command line usage: cmake .. -DBUILD_SAMPLES=ON -DBUILD_ECAL_TESTS=OFF -DECAL_CORE_CONFIG_INIFILE=OFF
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-option(HAS_HDF5                                          "Platform supports HDF5 library"                                                                       OFF)
-option(HAS_QT5                                           "Platform supports Qt 5 library"                                                                       OFF)
-option(HAS_CURL                                          "Build with CURL (i.e. upload support in the recorder app)"                                            OFF)
+option(HAS_HDF5                                          "Platform supports HDF5 library"                                                                        ON)
+option(HAS_QT5                                           "Platform supports Qt 5 library"                                                                        ON)
+option(HAS_CURL                                          "Build with CURL (i.e. upload support in the recorder app)"                                             ON)
 option(HAS_CAPNPROTO                                     "Platform supports Cap'n Proto library"                                                                OFF)
 option(HAS_FLATBUFFERS                                   "Platform supports flatbuffers library"                                                                OFF)
-option(HAS_FTXUI                                         "Platform supports FTXUI library. Requires C++17 and up."                                              OFF)
+option(HAS_FTXUI                                         "Platform supports FTXUI library. Requires C++17 and up."                                               ON)
 
 option(BUILD_DOCS                                        "Build the eCAL documentation"                                                                         OFF)
-option(BUILD_APPS                                        "Build the eCAL applications"                                                                          OFF)
+option(BUILD_APPS                                        "Build the eCAL applications"                                                                           ON)
 option(BUILD_SAMPLES                                     "Build the eCAL samples"                                                                                ON)
-option(BUILD_TIME                                        "Build the eCAL time interfaces"                                                                       OFF)
+option(BUILD_TIME                                        "Build the eCAL time interfaces"                                                                        ON)
 option(BUILD_PY_BINDING                                  "Build eCAL python binding"                                                                            OFF)
 option(BUILD_STANDALONE_PY_WHEEL                         "Build eCAL python binding as standalone wheel"                                                        OFF)
 option(BUILD_CSHARP_BINDING                              "Build eCAL C# binding"                                                                                OFF)
-option(BUILD_ECAL_TESTS                                  "Build the eCAL google tests"                                                                           ON)
+option(BUILD_ECAL_TESTS                                  "Build the eCAL google tests"                                                                          OFF)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# core internal feature configuration (adapt to your needs)
+# core internal feature configuration - start
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 option(ECAL_CORE_CONFIG_INIFILE                          "Enables to configure eCAL via ecal.ini file"                                                           ON)
 option(ECAL_CORE_COMMAND_LINE                            "Enables eCAL application cmd line interfaces"                                                          ON)
@@ -95,18 +95,19 @@ option(ECAL_CORE_PUBLISHER                               "Enables the eCAL publi
 option(ECAL_CORE_SUBSCRIBER                              "Enables the eCAL subscriber functionality"                                                             ON)
 option(ECAL_CORE_SERVICE                                 "Enables the eCAL server/client functionality"                                                          ON)
 option(ECAL_CORE_TIMEPLUGIN                              "Enables the eCAL time plugin functionality"                                                            ON)
-option(ECAL_CORE_NPCAP_SUPPORT                           "Enable the eCAL Npcap Receiver (Win10 performance fix for UDP communication)"                          ON)
+option(ECAL_CORE_NPCAP_SUPPORT                           "Enable the eCAL Npcap Receiver (Win10 performance fix for UDP communication)"                         OFF)
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # core registration layer options (change with care)
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 option(ECAL_CORE_REGISTRATION_SHM                        "Enables the eCAL registration layer over shared memory"                                                ON)
-
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # core transport layer options (change with care)
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 option(ECAL_CORE_TRANSPORT_UDP                           "Enables the eCAL to transport payload via UDP multicast"                                               ON)
 option(ECAL_CORE_TRANSPORT_TCP                           "Enables the eCAL to transport payload via TCP"                                                         ON)
 option(ECAL_CORE_TRANSPORT_SHM                           "Enables the eCAL to transport payload via local shared memory"                                         ON)
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# core internal feature configuration - end
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 option(ECAL_INCLUDE_PY_SAMPLES                           "Include python language sample projects into CMake"                                                   OFF)
@@ -120,7 +121,7 @@ option(ECAL_THIRDPARTY_BUILD_ASIO                        "Build asio with eCAL" 
 option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS             "Build CMakeFunctions with eCAL"                                                                        ON)
 option(ECAL_THIRDPARTY_BUILD_FINEFTP                     "Build fineFTP with eCAL"                                                                               ON)
 option(ECAL_THIRDPARTY_BUILD_FTXUI                       "Build ftxui with eCAL"                                                                                 ON)
-option(ECAL_THIRDPARTY_BUILD_GTEST                       "Build gtest with eCAL"                                                                                 ON)
+option(ECAL_THIRDPARTY_BUILD_GTEST                       "Build gtest with eCAL"                                                                                OFF)
 option(ECAL_THIRDPARTY_BUILD_RECYCLE                     "Build steinwurf::recylce with eCAL"                                                                    ON)
 option(ECAL_THIRDPARTY_BUILD_SPDLOG                      "Build spdlog with eCAL"                                                                                ON)
 option(ECAL_THIRDPARTY_BUILD_SIMPLEINI                   "Build simpleini with eCAL"                                                                             ON)
@@ -128,7 +129,7 @@ option(ECAL_THIRDPARTY_BUILD_TCLAP                       "Build tclap library wi
 option(ECAL_THIRDPARTY_BUILD_TCP_PUBSUB                  "Build tcp_pubsub library with eCAL"                                                                    ON)
 option(ECAL_THIRDPARTY_BUILD_TERMCOLOR                   "Build termcolor with eCAL"                                                                             ON)
 option(ECAL_THIRDPARTY_BUILD_TINYXML2                    "Build tinyxml2 with eCAL"                                                                              ON)
-option(ECAL_THIRDPARTY_BUILD_UDPCAP                      "Build udpcap library with eCAL"                                                                        ON)
+option(ECAL_THIRDPARTY_BUILD_UDPCAP                      "Build udpcap library with eCAL"                                                                       OFF)
 
 if(WIN32)
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF                  "Build protobuf with eCAL"                                                                              ON)
