@@ -24,7 +24,9 @@
 
 #pragma once 
 
+#include <cstdint>
 #include <set>
+#include <tuple>
 #include <vector>
 
 namespace eCAL
@@ -42,22 +44,62 @@ namespace eCAL
         **/
         struct DataTypeInformation
         {
-          std::string name;          //!< name of the datatype
-          std::string encoding;      //!< encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
-          std::string descriptor;    //!< descriptor information of the datatype (necessary for reflection)
+          std::string name       = "";    //!< name of the datatype
+          std::string encoding   = "";    //!< encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
+          std::string descriptor = "";    //!< descriptor information of the datatype (necessary for reflection)
 
           //!< @cond
           bool operator==(const DataTypeInformation& other) const
           {
-            return name == other.name && encoding == other.encoding && descriptor == other.descriptor;
+            return std::tie(name, encoding, descriptor) == std::tie(other.name, other.encoding, other.descriptor);
           }
 
           bool operator!=(const DataTypeInformation& other) const
           {
             return !(*this == other);
           }
+
+          bool operator<(const DataTypeInformation& other) const
+          {
+            return std::tie(name, encoding, descriptor) < std::tie(other.name, other.encoding, other.descriptor);
+          }
           //!< @endcond
         };
+
+        struct Channel
+        {
+          using id_t = std::int64_t;
+
+          std::string name = "";
+          id_t        id = 0;
+
+          [[deprecated("Please construct a Channel object explicitly.")]]
+          Channel(const std::string name_) : name(name_) {};
+          
+          Channel(const std::string name_, id_t id_) : name(name_), id(id_) {};
+
+          //!< @cond
+          bool operator==(const Channel& other) const
+          {
+            return std::tie(name, id) == std::tie(other.name, other.id);
+          }
+
+          bool operator!=(const Channel& other) const
+          {
+            return !(*this == other);
+          }
+
+          bool operator<(const Channel& other) const
+          {
+            return std::tie(name, id) < std::tie(other.name, other.id);
+          }
+          //!< @endcond
+        };
+
+        inline Channel CreateChannel(const std::string& name)
+        {
+          return Channel{ name, 0 };
+        }
 
         /**
          * @brief Info struct for a single measurement entry

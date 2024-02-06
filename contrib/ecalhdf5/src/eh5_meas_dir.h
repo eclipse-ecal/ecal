@@ -134,6 +134,13 @@ namespace eCAL
       std::set<std::string> GetChannelNames() const override;
 
       /**
+       * @brief Get the available channel names of the current opened file / measurement
+       *
+       * @return       channel names & ids
+       **/
+      std::set<eCAL::eh5::SChannel> GetChannels() const override;
+
+      /**
       * @brief Check if channel exists in measurement
       *
       * @param channel_name   name of the channel
@@ -149,7 +156,7 @@ namespace eCAL
        *
        * @return              channel type
       **/
-      DataTypeInformation GetChannelDataTypeInformation(const std::string& channel_name) const override;
+      DataTypeInformation GetChannelDataTypeInformation(const SChannel& channel) const override;
 
       /**
        * @brief Set data type information of the given channel
@@ -159,7 +166,7 @@ namespace eCAL
        *
        * @return              channel type
       **/
-      void SetChannelDataTypeInformation(const std::string& channel_name, const DataTypeInformation& info) override;
+      void SetChannelDataTypeInformation(const SChannel& channel, const DataTypeInformation& info) override;
 
       /**
       * @brief Gets minimum timestamp for specified channel
@@ -168,7 +175,7 @@ namespace eCAL
       *
       * @return                minimum timestamp value
       **/
-      long long GetMinTimestamp(const std::string& channel_name) const override;
+      long long GetMinTimestamp(const SChannel& channel) const override;
 
       /**
       * @brief Gets maximum timestamp for specified channel
@@ -177,7 +184,7 @@ namespace eCAL
       *
       * @return                maximum timestamp value
       **/
-      long long GetMaxTimestamp(const std::string& channel_name) const override;
+      long long GetMaxTimestamp(const SChannel& channel) const override;
 
       /**
       * @brief Gets the header info for all data entries for the given channel
@@ -188,7 +195,7 @@ namespace eCAL
       *
       * @return                    true if succeeds, false if it fails
       **/
-      bool GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const override;
+      bool GetEntriesInfo(const SChannel& channel, EntryInfoSet& entries) const override;
 
       /**
       * @brief Gets the header info for data entries for the given channel included in given time range (begin->end)
@@ -201,7 +208,7 @@ namespace eCAL
       *
       * @return                   true if succeeds, false if it fails
       **/
-      bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const override;
+      bool GetEntriesInfoRange(const SChannel& channel, long long begin, long long end, EntryInfoSet& entries) const override;
 
       /**
       * @brief Gets data size of a specific entry
@@ -287,10 +294,10 @@ namespace eCAL
         {}
       };
 
-      typedef std::list<eCAL::eh5::HDF5Meas*>               HDF5Files;
-      typedef std::unordered_map<std::string, ChannelInfo>  ChannelInfoUMap;
-      typedef std::unordered_map<long long, EntryInfo>      EntriesByIdUMap;
-      typedef std::unordered_map<std::string, EntryInfoSet> EntriesByChannelUMap;
+      typedef std::list<eCAL::eh5::HDF5Meas*>                                                   HDF5Files;
+      typedef std::unordered_map<std::string, std::unordered_map<SChannel::id_t, ChannelInfo>>  ChannelInfoUMap;
+      typedef std::unordered_map<long long, EntryInfo>                                          EntriesByIdUMap;
+      typedef std::unordered_map<std::string, std::unordered_map<SChannel::id_t, EntryInfoSet>> EntriesByChannelUMap;
 
       HDF5Files              file_readers_;
       ChannelInfoUMap        channels_info_;

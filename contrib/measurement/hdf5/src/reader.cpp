@@ -44,34 +44,44 @@ std::set<std::string> Reader::GetChannelNames() const
   return measurement->GetChannelNames();
 }
 
-bool Reader::HasChannel(const std::string& channel_name) const
+std::set<eCAL::experimental::measurement::base::Channel> eCAL::experimental::measurement::hdf5::Reader::GetChannels() const
 {
-  return measurement->HasChannel(channel_name);
+  return measurement->GetChannels();
 }
 
-base::DataTypeInformation Reader::GetChannelDataTypeInformation(const std::string& channel_name) const
+std::set<eCAL::experimental::measurement::base::Channel> eCAL::experimental::measurement::hdf5::Reader::GetChannels(const std::string& channel_name) const
 {
-  return measurement->GetChannelDataTypeInformation(channel_name);
+  return measurement->GetChannels(channel_name);
 }
 
-long long Reader::GetMinTimestamp(const std::string& channel_name) const
+bool Reader::HasChannel(const eCAL::experimental::measurement::base::Channel& channel) const
 {
-  return measurement->GetMinTimestamp(channel_name);
+  return measurement->HasChannel(channel.name);
 }
 
-long long Reader::GetMaxTimestamp(const std::string& channel_name) const
+base::DataTypeInformation Reader::GetChannelDataTypeInformation(const base::Channel& channel) const
 {
-  return measurement->GetMaxTimestamp(channel_name);
+  return measurement->GetChannelDataTypeInformation(channel);
 }
 
-bool Reader::GetEntriesInfo(const std::string& channel_name, base::EntryInfoSet& entries) const
+long long Reader::GetMinTimestamp(const base::Channel& channel) const
 {
-  return measurement->GetEntriesInfo(channel_name, entries);
+  return measurement->GetMinTimestamp(channel);
 }
 
-bool Reader::GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, base::EntryInfoSet& entries) const
+long long Reader::GetMaxTimestamp(const base::Channel& channel) const
 {
-  return measurement->GetEntriesInfoRange(channel_name, begin, end, entries);
+  return measurement->GetMaxTimestamp(channel);
+}
+
+bool Reader::GetEntriesInfo(const base::Channel& channel, base::EntryInfoSet& entries) const
+{
+  return measurement->GetEntriesInfo(channel, entries);
+}
+
+bool Reader::GetEntriesInfoRange(const base::Channel& channel, long long begin, long long end, base::EntryInfoSet& entries) const
+{
+  return measurement->GetEntriesInfoRange(channel, begin, end, entries);
 }
 
 bool Reader::GetEntryDataSize(long long entry_id, size_t& size) const

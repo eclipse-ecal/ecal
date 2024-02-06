@@ -53,7 +53,7 @@ void Writer::SetOneFilePerChannelEnabled(bool enabled)
   return measurement->SetOneFilePerChannelEnabled(enabled);
 }
 
-void Writer::SetChannelDataTypeInformation(const std::string& channel_name, const base::DataTypeInformation& info)
+void Writer::SetChannelDataTypeInformation(const base::Channel& channel_name, const base::DataTypeInformation& info)
 {
   measurement->SetChannelDataTypeInformation(channel_name, info);
 }
@@ -63,7 +63,7 @@ void Writer::SetFileBaseName(const std::string& base_name)
   return measurement->SetFileBaseName(base_name);
 }
 
-bool Writer::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock)
+bool Writer::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const eCAL::experimental::measurement::base::Channel& channel, long long clock)
 {
-  return measurement->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel_name, id, clock);
+  return measurement->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel, clock);
 }

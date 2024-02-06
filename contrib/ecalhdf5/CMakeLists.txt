@@ -42,9 +42,15 @@ set(ecalhdf5_src
     src/eh5_meas_file_v4.h
     src/eh5_meas_file_v5.cpp
     src/eh5_meas_file_v5.h
+    src/eh5_meas_file_v6.cpp
+    src/eh5_meas_file_v6.h
     src/eh5_meas_file_writer_v5.cpp
     src/eh5_meas_file_writer_v5.h
+    src/eh5_meas_file_writer_v6.cpp
+    src/eh5_meas_file_writer_v6.h
     src/eh5_meas_impl.h
+    src/hdf5_helper.h
+    src/hdf5_helper.cpp
     src/escape.cpp
     src/escape.h
 )

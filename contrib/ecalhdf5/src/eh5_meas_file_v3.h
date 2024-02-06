@@ -60,7 +60,7 @@ namespace eCAL
       *
       * @return                    true if succeeds, false if it fails
       **/
-      bool GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const override;
+      bool GetEntriesInfo(const SChannel& channel, EntryInfoSet& entries) const override;
     };
   }  //  namespace eh5
 }  //  namespace eCAL

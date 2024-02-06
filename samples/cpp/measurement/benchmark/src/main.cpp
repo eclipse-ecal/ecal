@@ -116,7 +116,7 @@ void MeasPerf(const std::string& file_name, const size_t pkg_size, const size_t 
     writer.SetMaxSizePerFile(max_size_per_file);
     for (size_t loop = 0; loop < write_loops; ++loop)
     {
-      writer.AddEntryToFile(static_cast<void*>(data.data()), data.size(), 0, 0, "myChannel", 0, loop);
+      writer.AddEntryToFile(static_cast<void*>(data.data()), data.size(), 0, 0, eCAL::experimental::measurement::base::CreateChannel("myChannel"), loop);
     }
     writer.Close();
 

@@ -24,12 +24,19 @@
 
 #pragma once
 
+#include <cstdint>
 #include <functional>
 #include <set>
 #include <string>
 #include <memory>
 
 #include "eh5_types.h"
+
+#if defined(ECAL_EH5_NO_DEPRECATION_WARNINGS)
+#define ECAL_EH5_DEPRECATE(__message__)                             //!< Don't print deprecation warnigns
+#else 
+#define ECAL_EH5_DEPRECATE(__message__) [[deprecated(__message__)]] //!< Deprecate the following function 
+#endif
 
 namespace eCAL
 {
@@ -172,6 +179,21 @@ namespace eCAL
       std::set<std::string> GetChannelNames() const;
 
       /**
+       * @brief Get the available channel names of the current opened file / measurement
+       *
+       * @return Channels (channel name & id)
+      **/
+      std::set<SChannel> GetChannels() const;
+
+      /**
+       * @brief Get the available channel names of the current opened file / measurement
+       *
+       * @param   channel_name   name of the channel
+       * @return                 channel names & ids
+      **/
+      std::set<eCAL::eh5::SChannel> GetChannels(const std::string & channel_name) const;
+
+      /**
        * @brief Check if channel exists in measurement
        *
        * @param channel_name   name of the channel
@@ -187,7 +209,7 @@ namespace eCAL
        *
        * @return              channel description
       **/
-      [[deprecated("Please use GetChannelDataTypeInformation instead")]]
+      ECAL_EH5_DEPRECATE("Please use GetChannelDataTypeInformation instead")
       std::string GetChannelDescription(const std::string& channel_name) const;
 
       /**
@@ -196,7 +218,7 @@ namespace eCAL
        * @param channel_name    channel name
        * @param description     description of the channel
       **/
-      [[deprecated("Please use SetChannelDataTypeInformation instead")]]
+      ECAL_EH5_DEPRECATE("Please use SetChannelDataTypeInformation instead")
       void SetChannelDescription(const std::string& channel_name, const std::string& description);
 
       /**
@@ -206,7 +228,7 @@ namespace eCAL
        *
        * @return              channel type
       **/
-      [[deprecated("Please use GetChannelDataTypeInformation instead")]]
+      ECAL_EH5_DEPRECATE("Please use GetChannelDataTypeInformation instead")
       std::string GetChannelType(const std::string& channel_name) const;
 
       /**
@@ -215,7 +237,7 @@ namespace eCAL
        * @param channel_name  channel name
        * @param type          type of the channel
       **/
-      [[deprecated("Please use SetChannelDataTypeInformation instead")]]
+      ECAL_EH5_DEPRECATE("Please use SetChannelDataTypeInformation instead")
       void SetChannelType(const std::string& channel_name, const std::string& type);
 
       /**
@@ -225,7 +247,7 @@ namespace eCAL
        *
        * @return              channel type
       **/
-      DataTypeInformation GetChannelDataTypeInformation(const std::string& channel_name) const;
+      DataTypeInformation GetChannelDataTypeInformation(const SChannel& channel) const;
 
       /**
        * @brief Set data type information of the given channel
@@ -235,7 +257,7 @@ namespace eCAL
        *
        * @return              channel type
       **/
-      void SetChannelDataTypeInformation(const std::string& channel_name, const DataTypeInformation& info);
+      void SetChannelDataTypeInformation(const SChannel& channel, const DataTypeInformation& info);
 
       /**
        * @brief Gets minimum timestamp for specified channel
@@ -244,7 +266,17 @@ namespace eCAL
        *
        * @return                minimum timestamp value
       **/
+      ECAL_EH5_DEPRECATE("Please use the overload GetMinTimestamp(const SChannel&)")
       long long GetMinTimestamp(const std::string& channel_name) const;
+
+      /**
+        * @brief Gets minimum timestamp for specified channel
+        *
+        * @param channel         channel (name & id)
+        *
+        * @return                minimum timestamp value
+      **/
+      long long GetMinTimestamp(const SChannel& channel) const;
 
       /**
        * @brief Gets maximum timestamp for specified channel
@@ -253,7 +285,17 @@ namespace eCAL
        *
        * @return                maximum timestamp value
       **/
+      ECAL_EH5_DEPRECATE("Please use the overload GetMaxTimestamp(const SChannel&)")
       long long GetMaxTimestamp(const std::string& channel_name) const;
+
+      /**
+       * @brief Gets maximum timestamp for specified channel
+       *
+       * @param channel         channel (name & id)
+       *
+       * @return                maximum timestamp value
+      **/
+      long long GetMaxTimestamp(const SChannel& channel) const;
 
       /**
        * @brief Gets the header info for all data entries for the given channel
@@ -264,7 +306,20 @@ namespace eCAL
        *
        * @return                    true if succeeds, false if it fails
       **/
+      ECAL_EH5_DEPRECATE("Please use the overload GetEntriesInfo(const SChannel&, EntryInfoSet&)")
       bool GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const;
+      
+      /**
+       * @brief Gets the header info for all data entries for the given channel
+       *        Header = timestamp + entry id
+       *
+       * @param [in]  channel       channel (name & id)
+       * @param [out] entries       header info for all data entries
+       *
+       * @return                    true if succeeds, false if it fails
+      **/
+      bool GetEntriesInfo(const SChannel& channel, EntryInfoSet& entries) const;
+
 
       /**
        * @brief Gets the header info for data entries for the given channel included in given time range (begin->end)
@@ -277,7 +332,21 @@ namespace eCAL
        *
        * @return                   true if succeeds, false if it fails
       **/
+      ECAL_EH5_DEPRECATE("Please use the overload GetEntriesInfoRange(const SChannel&, long long, long long, EntryInfoSet&)")
       bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const;
+
+      /**
+       * @brief Gets the header info for data entries for the given channel included in given time range (begin->end)
+       *        Header = timestamp + entry id
+       *
+       * @param [in]  channel      channel (name & id)
+       * @param [in]  begin        time range begin timestamp
+       * @param [in]  end          time range end timestamp
+       * @param [out] entries      header info for data entries in given range
+       *
+       * @return                   true if succeeds, false if it fails
+      **/
+      bool GetEntriesInfoRange(const SChannel& channel, long long begin, long long end, EntryInfoSet& entries) const;
 
       /**
        * @brief Gets data size of a specific entry
@@ -319,7 +388,23 @@ namespace eCAL
        *
        * @return              true if succeeds, false if it fails
       **/
+      ECAL_EH5_DEPRECATE("Please use the overload AddEntryToFile(const void*, const unsigned long long&, const long long, const long long&, const SChannel&, long long)")
       bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock);
+
+      /**
+       * @brief Add entry to file
+       *
+       * @param data           data to be added
+       * @param size           size of the data
+       * @param snd_timestamp  send time stamp
+       * @param rcv_timestamp  receive time stamp
+       * @param channel        channel channel (name & id)
+       * @param id             message id
+       * @param clock          message clock
+       *
+       * @return              true if succeeds, false if it fails
+      **/
+      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long clock);
 
       /**
        * @brief Callback function type for pre file split notification
