@@ -492,6 +492,7 @@ if(BUILD_ECAL_TESTS)
   add_subdirectory(testing/ecal/clientserver_test)
   
   add_subdirectory(testing/ecal/core_test)
+  add_subdirectory(testing/ecal/event_test)
   add_subdirectory(testing/ecal/expmap_test)
   add_subdirectory(testing/ecal/io_memfile_test)
   add_subdirectory(testing/ecal/pubsub_inproc_test)
