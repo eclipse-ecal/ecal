@@ -150,6 +150,13 @@ namespace eCAL
       virtual std::set<std::string> GetChannelNames() const = 0;
 
       /**
+       * @brief Get the available channel names of the current opened file / measurement
+       *
+       * @return       channel names & ids
+      **/
+      virtual std::set<eCAL::eh5::SChannel> GetChannels() const = 0;
+
+      /**
       * @brief Check if channel exists in measurement
       *
       * @param channel_name   name of the channel
@@ -165,7 +172,7 @@ namespace eCAL
        *
        * @return              channel type
       **/
-      virtual DataTypeInformation GetChannelDataTypeInformation(const std::string& channel_name) const = 0;
+      virtual DataTypeInformation GetChannelDataTypeInformation(const SChannel& channel) const = 0;
 
       /**
        * @brief Set data type information of the given channel
@@ -175,7 +182,7 @@ namespace eCAL
        *
        * @return              channel type
       **/
-      virtual void SetChannelDataTypeInformation(const std::string& channel_name, const DataTypeInformation& info) = 0;
+      virtual void SetChannelDataTypeInformation(const SChannel& channel, const eCAL::eh5::DataTypeInformation& info) = 0;
 
       /**
       * @brief Gets minimum timestamp for specified channel
@@ -184,7 +191,7 @@ namespace eCAL
       *
       * @return                minimum timestamp value
       **/
-      virtual long long GetMinTimestamp(const std::string& channel_name) const = 0;
+      virtual long long GetMinTimestamp(const SChannel& channel) const = 0;
 
       /**
       * @brief Gets maximum timestamp for specified channel
@@ -193,7 +200,7 @@ namespace eCAL
       *
       * @return                maximum timestamp value
       **/
-      virtual long long GetMaxTimestamp(const std::string& channel_name) const = 0;
+      virtual long long GetMaxTimestamp(const SChannel& channel) const = 0;
 
       /**
       * @brief Gets the header info for all data entries for the given channel
@@ -204,7 +211,7 @@ namespace eCAL
       *
       * @return                    true if succeeds, false if it fails
       **/
-      virtual bool GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const = 0;
+      virtual bool GetEntriesInfo(const SChannel& channel, EntryInfoSet& entries) const = 0;
 
       /**
       * @brief Gets the header info for data entries for the given channel included in given time range (begin->end)
@@ -217,7 +224,7 @@ namespace eCAL
       *
       * @return                   true if succeeds, false if it fails
       **/
-      virtual bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const = 0;
+      virtual bool GetEntriesInfoRange(const SChannel& channel, long long begin, long long end, EntryInfoSet& entries) const = 0;
 
       /**
       * @brief Gets data size of a specific entry

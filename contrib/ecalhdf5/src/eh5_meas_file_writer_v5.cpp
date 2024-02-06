@@ -139,38 +139,38 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::HasChannel(const std::string& /*channel_na
 }
 
 
-eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileWriterV5::GetChannelDataTypeInformation(const std::string&  /*channel_name*/) const
+eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileWriterV5::GetChannelDataTypeInformation(const SChannel& /*channel*/) const
 {
   // UNSUPPORTED FUNCTION
   return eCAL::eh5::DataTypeInformation{};
 }
 
-void eCAL::eh5::HDF5MeasFileWriterV5::SetChannelDataTypeInformation(const std::string& channel_name, const eCAL::eh5::DataTypeInformation& info)
+void eCAL::eh5::HDF5MeasFileWriterV5::SetChannelDataTypeInformation(const SChannel& channel, const eCAL::eh5::DataTypeInformation& info)
 {
   auto type_descriptor = FromInfo(info);
-  channels_[channel_name].Type = type_descriptor.first;
-  channels_[channel_name].Description = type_descriptor.second;
+  channels_[channel.name].Type = type_descriptor.first;
+  channels_[channel.name].Description = type_descriptor.second;
 }
 
-long long eCAL::eh5::HDF5MeasFileWriterV5::GetMinTimestamp(const std::string& /*channel_name*/) const
+long long eCAL::eh5::HDF5MeasFileWriterV5::GetMinTimestamp(const SChannel& /*channel*/) const
 {
   // UNSUPPORTED FUNCTION
   return -1;
 }
 
-long long eCAL::eh5::HDF5MeasFileWriterV5::GetMaxTimestamp(const std::string& /*channel_name*/) const
+long long eCAL::eh5::HDF5MeasFileWriterV5::GetMaxTimestamp(const SChannel& /*channel*/) const
 {
   // UNSUPPORTED FUNCTION
   return -1;
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfo(const std::string& /*channel_name*/, EntryInfoSet& /*entries*/) const
+bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfo(const SChannel& /*channel*/, EntryInfoSet& /*entries*/) const
 {
   // UNSUPPORTED FUNCTION
   return false;
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfoRange(const std::string& /*channel_name*/, long long /*begin*/, long long /*end*/, EntryInfoSet& /*entries*/) const
+bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfoRange(const SChannel& /*channel*/, long long /*begin*/, long long /*end*/, EntryInfoSet& /*entries*/) const
 {
   // UNSUPPORTED FUNCTION
   return false;
