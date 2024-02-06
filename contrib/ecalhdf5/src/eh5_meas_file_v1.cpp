@@ -82,7 +82,7 @@ bool eCAL::eh5::HDF5MeasFileV1::Open(const std::string& path, eAccessType access
     if (channels.size() == 1)
     {
       channel_name_ = *channels.begin();
-      HDF5MeasFileV1::GetEntriesInfo(channel_name_, entries_);
+      HDF5MeasFileV1::GetEntriesInfo(eCAL::experimental::measurement::base::CreateChannel(channel_name_), entries_);
     }
   }
 
@@ -156,6 +156,18 @@ std::set<std::string> eCAL::eh5::HDF5MeasFileV1::GetChannelNames() const
   return channels;
 }
 
+std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasFileV1::GetChannels() const
+{
+  auto channel_names = GetChannelNames();
+  std::set<eCAL::eh5::SChannel> channels;
+
+  // Transform the vector of strings into a vector of MyStruct
+  std::transform(channel_names.begin(), channel_names.end(), std::inserter(channels, channels.begin()),
+    [](const std::string& str) { return eCAL::experimental::measurement::base::CreateChannel(str); });
+
+  return channels;
+}
+
 
 bool eCAL::eh5::HDF5MeasFileV1::HasChannel(const std::string& channel_name) const
 {
@@ -164,27 +176,27 @@ bool eCAL::eh5::HDF5MeasFileV1::HasChannel(const std::string& channel_name) cons
   return std::find(channels.cbegin(), channels.cend(), channel_name) != channels.end();
 }
 
-eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileV1::GetChannelDataTypeInformation(const std::string& channel_name) const
+eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileV1::GetChannelDataTypeInformation(const SChannel& channel) const
 {
   std::string type;
 
-  if (EcalUtils::String::Icompare(channel_name, channel_name_))
+  if (EcalUtils::String::Icompare(channel.name, channel_name_))
     GetAttributeValue(file_id_, kChnTypeAttrTitle, type);
 
   std::string description;
 
-  if (EcalUtils::String::Icompare(channel_name, channel_name_))
+  if (EcalUtils::String::Icompare(channel.name, channel_name_))
     GetAttributeValue(file_id_, kChnDescAttrTitle, description);
 
   return CreateInfo(type, description);
 }
 
-void eCAL::eh5::HDF5MeasFileV1::SetChannelDataTypeInformation(const std::string& /*channel_name*/, const eCAL::eh5::DataTypeInformation& /*info*/)
+void eCAL::eh5::HDF5MeasFileV1::SetChannelDataTypeInformation(const SChannel& /*channel*/, const eCAL::eh5::DataTypeInformation& /*info*/)
 {
   ReportUnsupportedAction();
 }
 
-long long eCAL::eh5::HDF5MeasFileV1::GetMinTimestamp(const std::string& /*channel_name*/) const
+long long eCAL::eh5::HDF5MeasFileV1::GetMinTimestamp(const SChannel& /*channel_name*/) const
 {
   long long ret_val = 0;
 
@@ -196,7 +208,7 @@ long long eCAL::eh5::HDF5MeasFileV1::GetMinTimestamp(const std::string& /*channe
   return ret_val;
 }
 
-long long eCAL::eh5::HDF5MeasFileV1::GetMaxTimestamp(const std::string& /*channel_name*/) const
+long long eCAL::eh5::HDF5MeasFileV1::GetMaxTimestamp(const SChannel& /*channel_name*/) const
 {
   long long ret_val = 0;
 
@@ -208,11 +220,11 @@ long long eCAL::eh5::HDF5MeasFileV1::GetMaxTimestamp(const std::string& /*channe
   return ret_val;
 }
 
-bool eCAL::eh5::HDF5MeasFileV1::GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const
+bool eCAL::eh5::HDF5MeasFileV1::GetEntriesInfo(const SChannel& channel, EntryInfoSet& entries) const
 {
   entries.clear();
 
-  if (!EcalUtils::String::Icompare(channel_name, channel_name_)) return false;
+  if (!EcalUtils::String::Icompare(channel.name, channel_name_)) return false;
 
   if (!HDF5MeasFileV1::IsOk()) return false;
 
@@ -244,7 +256,7 @@ bool eCAL::eh5::HDF5MeasFileV1::GetEntriesInfo(const std::string& channel_name, 
   return (status >= 0);
 }
 
-bool eCAL::eh5::HDF5MeasFileV1::GetEntriesInfoRange(const std::string& /*channel_name*/, long long begin, long long end, EntryInfoSet& entries) const
+bool eCAL::eh5::HDF5MeasFileV1::GetEntriesInfoRange(const SChannel& /*channel_name*/, long long begin, long long end, EntryInfoSet& entries) const
 {
   bool ret_val = false;
 
@@ -377,5 +389,5 @@ bool eCAL::eh5::HDF5MeasFileV1::GetAttributeValue(hid_t obj_id, const std::strin
 
 void eCAL::eh5::HDF5MeasFileV1::ReportUnsupportedAction() 
 {
-  std::cout << "eCALHDF5 file version bellow 2.0 support only readonly access type. Desired action not supported.\n";
+  std::cout << "eCALHDF5 file version below 2.0 support only readonly access type. Desired action not supported.\n";
 }

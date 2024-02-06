@@ -186,8 +186,7 @@ namespace eCAL
             frame->data_.size(),
             std::chrono::duration_cast<std::chrono::microseconds>(frame->ecal_publish_time_.time_since_epoch()).count(),
             std::chrono::duration_cast<std::chrono::microseconds>(frame->ecal_receive_time_.time_since_epoch()).count(),
-            frame->topic_name_,
-            frame->id_,
+            eCAL::experimental::measurement::base::Channel{ frame->topic_name_, frame->id_ },
             frame->clock_
           ))
           {
