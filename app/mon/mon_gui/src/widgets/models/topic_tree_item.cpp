@@ -124,36 +124,6 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return topic_.tdatatype().desc().c_str();
     }
-    else if (column == Columns::TQOS)
-    {
-      auto reliability = topic_.tqos().reliability();
-
-      QString qos_string;
-
-      if (reliability == eCAL::pb::QOS::eQOSPolicy_Reliability::QOS_eQOSPolicy_Reliability_reliable_reliability_qos)
-      {
-        auto topic_tqos = topic_.tqos();
-        qos_string += "Reliable";
-
-        auto history = topic_tqos.history();
-        if (history == eCAL::pb::QOS::eQOSPolicy_HistoryKind::QOS_eQOSPolicy_HistoryKind_keep_all_history_qos)
-        {
-          qos_string += " (History: unlimited)";
-        }
-        else if (history == eCAL::pb::QOS::eQOSPolicy_HistoryKind::QOS_eQOSPolicy_HistoryKind_keep_last_history_qos)
-        {
-          qos_string += (" (History: " + QString::number(topic_tqos.history_depth()) + ")");
-        }
-      }
-      else
-      {
-        if (reliability == eCAL::pb::QOS::eQOSPolicy_Reliability::QOS_eQOSPolicy_Reliability_best_effort_reliability_qos)
-        {
-          qos_string += "Best effort";
-        }
-      }
-      return qos_string;
-    }
     else if (column == Columns::TLAYER)
     {
       QList<QVariant> layers;
@@ -245,9 +215,6 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
           break;
         case eCAL::pb::eTLayerType::tl_ecal_shm:
           this_layer_string = "shm";
-          break;
-        case eCAL::pb::eTLayerType::tl_inproc:
-          this_layer_string = "inproc";
           break;
         case eCAL::pb::eTLayerType::tl_all:
           this_layer_string = "all";

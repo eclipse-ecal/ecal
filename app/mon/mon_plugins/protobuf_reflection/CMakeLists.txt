@@ -54,7 +54,7 @@ ecal_add_mon_plugin(${PROJECT_NAME}
 )
 
 create_targets_protobuf()
-target_link_libraries (${PROJECT_NAME} Qt5::Widgets eCAL::core eCAL::app_pb protobuf::libprotobuf MonitorTreeView eCAL::mon_plugin_lib)
+target_link_libraries (${PROJECT_NAME} Qt5::Widgets eCAL::core eCAL::proto eCAL::app_pb protobuf::libprotobuf MonitorTreeView eCAL::mon_plugin_lib)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 if(MSVC)
