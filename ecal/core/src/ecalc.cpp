@@ -938,9 +938,10 @@ extern "C"
     callback_(&service_response, par_);
   }
 
+  static std::recursive_mutex g_client_event_callback_mtx;
   static void g_client_event_callback(const char* name_, const struct eCAL::SClientEventCallbackData* data_, const ClientEventCallbackCT callback_, void* par_)
   {
-    const std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
+    const std::lock_guard<std::recursive_mutex> lock(g_client_event_callback_mtx);
     SClientEventCallbackDataC data;
     data.time = data_->time;
     data.type = data_->type;
