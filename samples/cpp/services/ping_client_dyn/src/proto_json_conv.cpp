@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/msg/protobuf/ecal_proto_dyn.h>
+#include <ecal/protobuf/ecal_proto_dyn.h>
 
 #include <google/protobuf/util/json_util.h>
 
