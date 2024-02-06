@@ -57,10 +57,6 @@ class TopicDetailsView : public View
       separatorEmpty(),
       text("External connections: " + std::to_string(details->external_connections_count)),
       separatorEmpty(),
-      text("QOS - Reliability: " + std::to_string(details->reliability)),
-      text("QOS - History: " + std::to_string(details->history_kind)),
-      text("QOS - History depth: " + std::to_string(details->history_depth)),
-      separatorEmpty(),
       text("Attributes:"),
       vbox(attributes)
     );
