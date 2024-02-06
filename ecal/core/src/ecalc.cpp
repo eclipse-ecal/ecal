@@ -464,7 +464,7 @@ extern "C"
     return(0);
   }
 }
-#endif
+#endif // ECAL_CORE_PUBLISHER
 
 /////////////////////////////////////////////////////////
 // Subscriber
@@ -701,7 +701,7 @@ extern "C"
     return(0);
   }
 }
-#endif
+#endif // ECAL_CORE_SUBSCRIBER
 
 /////////////////////////////////////////////////////////
 // Time
@@ -814,6 +814,7 @@ extern "C"
 /////////////////////////////////////////////////////////
 // Service Server
 /////////////////////////////////////////////////////////
+#if ECAL_CORE_SERVICE
 extern "C"
 {
   static std::recursive_mutex g_request_callback_mtx;
@@ -830,9 +831,10 @@ extern "C"
     return ret_state;
   }
 
+  static std::recursive_mutex g_server_event_callback_mtx;
   static void g_server_event_callback(const char* name_, const struct eCAL::SServerEventCallbackData* data_, const ServerEventCallbackCT callback_, void* par_)
   {
-    const std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
+    const std::lock_guard<std::recursive_mutex> lock(g_server_event_callback_mtx);
     SServerEventCallbackDataC data;
     data.time = data_->time;
     data.type = data_->type;
@@ -1064,3 +1066,4 @@ ECALC_API int eCAL_Client_GetServiceName(ECAL_HANDLE handle_, void* buf_, int bu
     return(buffer_len);
   }
 }
+#endif // ECAL_CORE_SERVICE
