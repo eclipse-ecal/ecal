@@ -31,7 +31,7 @@ public class minimal_snd
     System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Util.GetVersion(), Util.GetDate()));
 
     // create a publisher (topic name "Hello", type "base:std::string", description "")
-    Publisher publisher = new Publisher("Hello", "base:std::string", "");
+    Publisher publisher = new Publisher("Hello", "std::string", "base", "");
 
     // idle main thread
     int loop = 0;

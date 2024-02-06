@@ -64,10 +64,10 @@ TEST(PubSubInproc, CLOCKS)
   eCAL::string::CPublisher<std::string> pub("CLOCK");
 
   // and force him to send on 3 layers in parallel
-  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
-  pub.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_on);
-  pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);
-  pub.SetLayerMode(eCAL::TLayer::tlayer_inproc, eCAL::TLayer::smode_on);
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);  // TODO: NEW PARAMETER API
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_on);  // TODO: NEW PARAMETER API
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);  // TODO: NEW PARAMETER API
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_inproc, eCAL::TLayer::smode_on);  // TODO: NEW PARAMETER API
 
   // create subscriber number 1
   eCAL::string::CSubscriber<std::string> sub1("CLOCK");

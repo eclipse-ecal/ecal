@@ -358,11 +358,11 @@ extern "C"
     return(pub);
   }
 
-  ECALC_API int eCAL_Pub_Create(ECAL_HANDLE handle_, const char* topic_name_, const char* topic_type_encoding_, const char* topic_type_name_, const char* topic_desc_, int topic_desc_len_)
+  ECALC_API int eCAL_Pub_Create(ECAL_HANDLE handle_, const char* topic_name_, const char* topic_type_name_, const char* topic_type_encoding_, const char* topic_desc_, int topic_desc_len_)
   {
     if (handle_ == nullptr) return(0);
     auto* pub = static_cast<eCAL::CPublisher*>(handle_);
-    struct eCAL::SDataTypeInformation topic_info = { topic_type_encoding_, topic_type_name_, std::string(topic_desc_, static_cast<size_t>(topic_desc_len_)) };
+    struct eCAL::SDataTypeInformation topic_info = { topic_type_name_, topic_type_encoding_, std::string(topic_desc_, static_cast<size_t>(topic_desc_len_)) };
     if (!pub->Create(topic_name_, topic_info)) return(0);
     return(1);
   }
@@ -505,11 +505,11 @@ extern "C"
     return(sub);
   }
 
-  ECALC_API int eCAL_Sub_Create(ECAL_HANDLE handle_, const char* topic_name_, const char* topic_type_encoding_, const char* topic_type_name_, const char* topic_desc_, int topic_desc_len_)
+  ECALC_API int eCAL_Sub_Create(ECAL_HANDLE handle_, const char* topic_name_, const char* topic_type_name_, const char* topic_type_encoding_, const char* topic_desc_, int topic_desc_len_)
   {
     if (handle_ == nullptr) return(0);
     auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
-    struct eCAL::SDataTypeInformation topic_info = { topic_type_encoding_, topic_type_name_, std::string(topic_desc_, static_cast<size_t>(topic_desc_len_)) };
+    struct eCAL::SDataTypeInformation topic_info = { topic_type_name_, topic_type_encoding_, std::string(topic_desc_, static_cast<size_t>(topic_desc_len_)) };
     if (!sub->Create(topic_name_, topic_info)) return(0);
     return(1);
   }
@@ -763,5 +763,304 @@ ECALC_API int eCAL_Time_GetStatus(int* error_, char** status_message_, const int
   {
     eCAL::Time::GetStatus(*error_, nullptr);
     return 0;
+  }
+}
+
+/////////////////////////////////////////////////////////
+// Timer
+/////////////////////////////////////////////////////////
+static std::recursive_mutex g_timer_callback_mtx;
+static void g_timer_callback(const TimerCallbackCT callback_, void* par_)
+{
+  const std::lock_guard<std::recursive_mutex> lock(g_timer_callback_mtx);
+  callback_(par_);
+}
+
+extern "C"
+{
+  ECALC_API ECAL_HANDLE eCAL_Timer_Create()
+  {
+    eCAL::CTimer* timer = new eCAL::CTimer;
+    return(timer);
+  }
+
+  ECALC_API int eCAL_Timer_Destroy(ECAL_HANDLE handle_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CTimer* timer = static_cast<eCAL::CTimer*>(handle_);
+    delete timer;
+    timer = NULL;
+    return(1);
+  }
+
+  ECALC_API int eCAL_Timer_Start(ECAL_HANDLE handle_, int timeout_, TimerCallbackCT callback_, int delay_, void* par_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CTimer* timer = static_cast<eCAL::CTimer*>(handle_);
+    auto callback = std::bind(g_timer_callback, callback_, par_);
+    if (timer->Start(timeout_, callback, delay_)) return(1);
+    else                                         return(0);
+  }
+
+  ECALC_API int eCAL_Timer_Stop(ECAL_HANDLE handle_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CTimer* timer = static_cast<eCAL::CTimer*>(handle_);
+    if (timer->Stop()) return(1);
+    else              return(0);
+  }
+}
+
+/////////////////////////////////////////////////////////
+// Service Server
+/////////////////////////////////////////////////////////
+extern "C"
+{
+  static std::recursive_mutex g_request_callback_mtx;
+  static int g_method_callback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_, MethodCallbackCT callback_, void* par_)
+  {
+    const std::lock_guard<std::recursive_mutex> lock(g_request_callback_mtx);
+    void* response(nullptr);
+    int   response_len(ECAL_ALLOCATE_4ME);
+    const int ret_state = callback_(method_.c_str(), req_type_.c_str(), resp_type_.c_str(), request_.c_str(), static_cast<int>(request_.size()), &response, &response_len, par_);
+    if (response_len > 0)
+    {
+      response_ = std::string(static_cast<const char*>(response), static_cast<size_t>(response_len));
+    }
+    return ret_state;
+  }
+
+  static void g_server_event_callback(const char* name_, const struct eCAL::SServerEventCallbackData* data_, const ServerEventCallbackCT callback_, void* par_)
+  {
+    const std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
+    SServerEventCallbackDataC data;
+    data.time = data_->time;
+    data.type = data_->type;
+    callback_(name_, &data, par_);
+  }
+
+  ECALC_API ECAL_HANDLE eCAL_Server_Create(const char* service_name_)
+  {
+    if (service_name_ == NULL) return(NULL);
+    eCAL::CServiceServer* server = new eCAL::CServiceServer(service_name_);
+    return(server);
+  }
+
+  ECALC_API int eCAL_Server_Destroy(ECAL_HANDLE handle_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CServiceServer* server = static_cast<eCAL::CServiceServer*>(handle_);
+    delete server;
+    server = NULL;
+    return(1);
+  }
+
+  ECALC_API int eCAL_Server_AddMethodCallback(ECAL_HANDLE handle_, const char* method_, const char* req_type_, const char* resp_type_, MethodCallbackCT callback_, void* par_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CServiceServer* server = static_cast<eCAL::CServiceServer*>(handle_);
+    auto callback = std::bind(g_method_callback, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, callback_, par_);
+    return server->AddMethodCallback(method_, req_type_, resp_type_, callback);
+  }
+
+  ECALC_API_DEPRECATED int eCAL_Server_AddMethodCallbackC(ECAL_HANDLE handle_, const char* method_, const char* req_type_, const char* resp_type_, MethodCallbackCT callback_, void* par_)
+  {
+    return eCAL_Server_AddMethodCallback(handle_, method_, req_type_, resp_type_, callback_, par_);
+  }
+
+  ECALC_API int eCAL_Server_RemMethodCallback(ECAL_HANDLE handle_, const char* method_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CServiceServer* server = static_cast<eCAL::CServiceServer*>(handle_);
+    return server->RemMethodCallback(method_);
+  }
+
+  ECALC_API_DEPRECATED int eCAL_Server_RemMethodCallbackC(ECAL_HANDLE handle_, const char* method_)
+  {
+    return eCAL_Server_RemMethodCallback(handle_, method_);
+  }
+
+  ECALC_API int eCAL_Server_AddEventCallback(ECAL_HANDLE handle_, eCAL_Server_Event type_, ServerEventCallbackCT callback_, void* par_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CServiceServer* server = static_cast<eCAL::CServiceServer*>(handle_);
+    auto callback = std::bind(g_server_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
+    if (server->AddEventCallback(type_, callback)) return(1);
+    return(0);
+  }
+
+  ECALC_API int eCAL_Server_RemEventCallback(ECAL_HANDLE handle_, eCAL_Server_Event type_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CServiceServer* server = static_cast<eCAL::CServiceServer*>(handle_);
+    if (server->RemEventCallback(type_)) return(1);
+    return(0);
+  }
+
+  ECALC_API int eCAL_Server_GetServiceName(ECAL_HANDLE handle_, void* buf_, int buf_len_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CServiceServer* server = static_cast<eCAL::CServiceServer*>(handle_);
+    const std::string service_name = server->GetServiceName();
+    int buffer_len = CopyBuffer(buf_, buf_len_, service_name);
+    if (buffer_len != static_cast<int>(service_name.size()))
+    {
+      return(0);
+    }
+    else
+    {
+      return(buffer_len);
+    }
+  }
+}
+
+/////////////////////////////////////////////////////////
+// Service Client
+/////////////////////////////////////////////////////////
+extern "C"
+{
+  static std::recursive_mutex g_response_callback_mtx;
+  static void g_response_callback(const struct eCAL::SServiceResponse& service_response_, const ResponseCallbackCT callback_, void* par_)
+  {
+    const std::lock_guard<std::recursive_mutex> lock(g_response_callback_mtx);
+    struct SServiceResponseC service_response;
+    service_response.host_name = service_response_.host_name.c_str();
+    service_response.service_name = service_response_.service_name.c_str();
+    service_response.service_id = service_response_.service_id.c_str();
+    service_response.method_name = service_response_.method_name.c_str();
+    service_response.error_msg = service_response_.error_msg.c_str();
+    service_response.ret_state = service_response_.ret_state;
+    service_response.call_state = service_response_.call_state;
+    service_response.response = service_response_.response.c_str();
+    service_response.response_len = static_cast<int>(service_response_.response.size());
+    callback_(&service_response, par_);
+  }
+
+  static void g_client_event_callback(const char* name_, const struct eCAL::SClientEventCallbackData* data_, const ClientEventCallbackCT callback_, void* par_)
+  {
+    const std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
+    SClientEventCallbackDataC data;
+    data.time = data_->time;
+    data.type = data_->type;
+    callback_(name_, &data, par_);
+  }
+
+  ECALC_API ECAL_HANDLE eCAL_Client_Create(const char* service_name_)
+  {
+    if (service_name_ == NULL) return(NULL);
+    eCAL::CServiceClient* client = new eCAL::CServiceClient(service_name_);
+    return(client);
+  }
+
+  ECALC_API int eCAL_Client_Destroy(ECAL_HANDLE handle_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+    delete client;
+    client = NULL;
+    return(1);
+  }
+
+  ECALC_API int eCAL_Client_SetHostName(ECAL_HANDLE handle_, const char* host_name_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+    if (client->SetHostName(host_name_)) return(1);
+    return(0);
+  }
+
+  ECALC_API int eCAL_Client_Call(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+    if (client->Call(method_name_, std::string(request_, static_cast<size_t>(request_len_)), timeout_)) return(1);
+    return(0);
+  }
+
+  // The C API variant is not able to return all service repsonses but only the first one !
+  ECALC_API int eCAL_Client_Call_Wait(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_, struct SServiceResponseC* service_response_, void* response_, int response_len_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+    eCAL::ServiceResponseVecT service_response_vec;
+    if (client->Call(method_name_, std::string(request_, static_cast<size_t>(request_len_)), timeout_, &service_response_vec))
+    {
+      if (service_response_vec.size() > 0)
+      {
+        service_response_->host_name = NULL;
+        service_response_->service_name = NULL;
+        service_response_->service_id = NULL;
+        service_response_->method_name = NULL;
+        service_response_->error_msg = NULL;
+        service_response_->ret_state = service_response_vec[0].ret_state;
+        service_response_->call_state = service_response_vec[0].call_state;
+        service_response_->response = NULL;
+        service_response_->response_len = 0;
+        return(CopyBuffer(response_, response_len_, service_response_vec[0].response));
+      }
+    }
+    return(0);
+  }
+}
+
+ECALC_API int eCAL_Client_Call_Async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_)
+{
+  if (handle_ == NULL) return(0);
+  eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+  if (client->CallAsync(method_name_, std::string(request_, static_cast<size_t>(request_len_)), timeout_)) return(1);
+  return(0);
+}
+
+int eCAL_Client_AddResponseCallback(ECAL_HANDLE handle_, ResponseCallbackCT callback_, void* par_)
+{
+  if (handle_ == NULL) return(0);
+  eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+  auto callback = std::bind(g_response_callback, std::placeholders::_1, callback_, par_);
+  return client->AddResponseCallback(callback);
+}
+
+int eCAL_Client_AddResponseCallbackC(ECAL_HANDLE handle_, ResponseCallbackCT callback_, void* par_)
+{
+  return eCAL_Client_AddResponseCallback(handle_, callback_, par_);
+}
+
+
+int eCAL_Client_RemResponseCallback(ECAL_HANDLE handle_)
+{
+  if (handle_ == NULL) return(0);
+  eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+  return client->RemResponseCallback();
+}
+
+ECALC_API int eCAL_Client_AddEventCallback(ECAL_HANDLE handle_, eCAL_Client_Event type_, ClientEventCallbackCT callback_, void* par_)
+{
+  if (handle_ == NULL) return(0);
+  eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+  auto callback = std::bind(g_client_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
+  if (client->AddEventCallback(type_, callback)) return(1);
+  return(0);
+}
+
+ECALC_API int eCAL_Client_RemEventCallback(ECAL_HANDLE handle_, eCAL_Client_Event type_)
+{
+  if (handle_ == NULL) return(0);
+  eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+  if (client->RemEventCallback(type_)) return(1);
+  return(0);
+}
+
+ECALC_API int eCAL_Client_GetServiceName(ECAL_HANDLE handle_, void* buf_, int buf_len_)
+{
+  if (handle_ == NULL) return(0);
+  eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+  const std::string service_name = client->GetServiceName();
+  const int buffer_len = CopyBuffer(buf_, buf_len_, service_name);
+  if (buffer_len != static_cast<int>(service_name.size()))
+  {
+    return(0);
+  }
+  else
+  {
+    return(buffer_len);
   }
 }

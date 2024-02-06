@@ -56,7 +56,7 @@ TEST(PubSub, TimeoutAcknowledgment)
   eCAL::Util::EnableLoopback(true);
 
   eCAL::string::CPublisher<std::string> pub("topic");
-  pub.ShmSetAcknowledgeTimeout(500);
+  //pub.ShmSetAcknowledgeTimeout(500);  // TODO: NEW PARAMETER API
   auto sub1 = std::make_shared< eCAL::string::CSubscriber<std::string>>("topic");
   auto sleeper_variable_time = [](const char* /*topic_name_*/, const std::string& msg_, long long /*time_*/, long long /*clock_*/, long long /*id_*/)
                                 {

@@ -584,9 +584,9 @@ TEST(PubSub, SimpleMessageCBSHMBufferCount)
 
   // create publisher for topic "A"
   eCAL::CPublisher pub("A");
-  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
-  pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);
-  pub.ShmSetBufferCount(2);
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);  // TODO: NEW PARAMETER API
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);  // TODO: NEW PARAMETER API
+  //pub.ShmSetBufferCount(2);  // TODO: NEW PARAMETER API
 
   std::atomic<size_t> received_count{ 0 };
   std::atomic<size_t> received_bytes{ 0 };
@@ -635,8 +635,8 @@ TEST(PubSub, ZeroPayloadMessageInProc)
 
   // create publisher for topic "A"
   eCAL::CPublisher pub("A");
-  pub.SetLayerMode(eCAL::TLayer::tlayer_all,    eCAL::TLayer::smode_off);
-  pub.SetLayerMode(eCAL::TLayer::tlayer_inproc, eCAL::TLayer::smode_on);
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_all,    eCAL::TLayer::smode_off);  // TODO: NEW PARAMETER API
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_inproc, eCAL::TLayer::smode_on);  // TODO: NEW PARAMETER API
 
   // add callback
   EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
@@ -683,8 +683,8 @@ TEST(PubSub, ZeroPayloadMessageSHM)
 
   // create publisher for topic "A"
   eCAL::CPublisher pub("A");
-  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
-  pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);  // TODO: NEW PARAMETER API
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);  // TODO: NEW PARAMETER API
 
   // add callback
   EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
@@ -731,8 +731,8 @@ TEST(PubSub, ZeroPayloadMessageUDP)
 
   // create publisher for topic "A"
   eCAL::CPublisher pub("A");
-  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
-  pub.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_on);
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);  // TODO: NEW PARAMETER API
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_on);  // TODO: NEW PARAMETER API
 
   // add callback
   EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
@@ -782,9 +782,9 @@ TEST(PubSub, MultipleSendsSHM)
 
   // create publisher for topic "A"
   eCAL::string::CPublisher<std::string> pub("A");
-  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
-  pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);
-  pub.ShmSetAcknowledgeTimeout(10); // Make sure we receive the data
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);  // TODO: NEW PARAMETER API
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);  // TODO: NEW PARAMETER API
+  //pub.ShmSetAcknowledgeTimeout(10); // Make sure we receive the data  // TODO: NEW PARAMETER API
 
   // add callback
   auto save_data = [&last_received_msg, &last_received_timestamp](const char* /*topic_name_*/, const std::string& msg_, long long time_, long long /*clock_*/, long long /*id_*/)
@@ -835,9 +835,9 @@ TEST(PubSub, MultipleSendsUDP)
 
   // create publisher for topic "A"
   eCAL::string::CPublisher<std::string> pub("A");
-  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
-  pub.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_on);
-  pub.ShmSetAcknowledgeTimeout(10); // Make sure we receive the data
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);  // TODO: NEW PARAMETER API
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_on);  // TODO: NEW PARAMETER API
+  //pub.ShmSetAcknowledgeTimeout(10); // Make sure we receive the data  // TODO: NEW PARAMETER API
 
   // add callback
   auto save_data = [&last_received_msg, &last_received_timestamp](const char* /*topic_name_*/, const std::string& msg_, long long time_, long long /*clock_*/, long long /*id_*/)

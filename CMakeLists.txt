@@ -68,17 +68,17 @@ endif()
 # configurable build options
 # command line usage: cmake .. -DBUILD_SAMPLES=ON -DBUILD_ECAL_TESTS=OFF -DECAL_CORE_CONFIG_INIFILE=OFF
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-option(HAS_HDF5                                          "Platform supports HDF5 library"                                                                        ON)
-option(HAS_QT5                                           "Platform supports Qt 5 library"                                                                        ON)
-option(HAS_CURL                                          "Build with CURL (i.e. upload support in the recorder app)"                                             ON)
+option(HAS_HDF5                                          "Platform supports HDF5 library"                                                                       OFF)
+option(HAS_QT5                                           "Platform supports Qt 5 library"                                                                       OFF)
+option(HAS_CURL                                          "Build with CURL (i.e. upload support in the recorder app)"                                            OFF)
 option(HAS_CAPNPROTO                                     "Platform supports Cap'n Proto library"                                                                OFF)
 option(HAS_FLATBUFFERS                                   "Platform supports flatbuffers library"                                                                OFF)
-option(HAS_FTXUI                                         "Platform supports FTXUI library. Requires C++17 and up."                                               ON)
+option(HAS_FTXUI                                         "Platform supports FTXUI library. Requires C++17 and up."                                              OFF)
 
 option(BUILD_DOCS                                        "Build the eCAL documentation"                                                                         OFF)
-option(BUILD_APPS                                        "Build the eCAL applications"                                                                           ON)
+option(BUILD_APPS                                        "Build the eCAL applications"                                                                          OFF)
 option(BUILD_SAMPLES                                     "Build the eCAL samples"                                                                                ON)
-option(BUILD_TIME                                        "Build the eCAL time interfaces"                                                                        ON)
+option(BUILD_TIME                                        "Build the eCAL time interfaces"                                                                       OFF)
 option(BUILD_PY_BINDING                                  "Build eCAL python binding"                                                                            OFF)
 option(BUILD_STANDALONE_PY_WHEEL                         "Build eCAL python binding as standalone wheel"                                                        OFF)
 option(BUILD_CSHARP_BINDING                              "Build eCAL C# binding"                                                                                OFF)
@@ -128,7 +128,7 @@ option(ECAL_THIRDPARTY_BUILD_TCLAP                       "Build tclap library wi
 option(ECAL_THIRDPARTY_BUILD_TCP_PUBSUB                  "Build tcp_pubsub library with eCAL"                                                                    ON)
 option(ECAL_THIRDPARTY_BUILD_TERMCOLOR                   "Build termcolor with eCAL"                                                                             ON)
 option(ECAL_THIRDPARTY_BUILD_TINYXML2                    "Build tinyxml2 with eCAL"                                                                              ON)
-option(ECAL_THIRDPARTY_BUILD_UDPCAP                      "Build udpcap library with eCAL"                                                                       OFF)
+option(ECAL_THIRDPARTY_BUILD_UDPCAP                      "Build udpcap library with eCAL"                                                                        ON)
 
 if(WIN32)
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF                  "Build protobuf with eCAL"                                                                              ON)

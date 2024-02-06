@@ -81,8 +81,8 @@ TEST(PubSub, MultibufferPubSub)
 
   // create publisher for topic "A"
   eCAL::CPublisher pub("A");
-  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
-  pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);  // TODO: NEW PARAMETER API
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);  // TODO: NEW PARAMETER API
 
   std::atomic<size_t> received_count{ 0 };
   std::atomic<size_t> received_bytes{ 0 };
@@ -124,8 +124,8 @@ TEST(PubSub, MultibufferPubSub)
   std::cout << std::endl << "Buffer = 1, Zero Copy Off -> partial writing disabled" << std::endl;
   binary_payload.ResetClock();
   received_content.clear();
-  pub.ShmSetBufferCount(1);
-  pub.ShmEnableZeroCopy(false);
+  //pub.ShmSetBufferCount(1);  // TODO: NEW PARAMETER API
+  //pub.ShmEnableZeroCopy(false);  // TODO: NEW PARAMETER API
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
@@ -163,8 +163,8 @@ TEST(PubSub, MultibufferPubSub)
   std::cout << std::endl << "Buffer = 2, Zero Copy Off -> partial writing disabled" << std::endl;
   binary_payload.ResetClock();
   received_content.clear();
-  pub.ShmSetBufferCount(2);
-  pub.ShmEnableZeroCopy(false);
+  //pub.ShmSetBufferCount(2);  // TODO: NEW PARAMETER API
+  //pub.ShmEnableZeroCopy(false);  // TODO: NEW PARAMETER API
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
@@ -202,8 +202,8 @@ TEST(PubSub, MultibufferPubSub)
   std::cout << std::endl << "Buffer = 2, Zero Copy On -> partial writing disabled" << std::endl;
   binary_payload.ResetClock();
   received_content.clear();
-  pub.ShmSetBufferCount(2);
-  pub.ShmEnableZeroCopy(true);
+  //pub.ShmSetBufferCount(2);  // TODO: NEW PARAMETER API
+  //pub.ShmEnableZeroCopy(true);  // TODO: NEW PARAMETER API
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
@@ -241,8 +241,8 @@ TEST(PubSub, MultibufferPubSub)
   std::cout << std::endl << "Buffer = 1, Zero Copy On -> partial writing enabled" << std::endl;
   binary_payload.ResetClock();
   received_content.clear();
-  pub.ShmSetBufferCount(1);
-  pub.ShmEnableZeroCopy(true);
+  //pub.ShmSetBufferCount(1);  // TODO: NEW PARAMETER API
+  //pub.ShmEnableZeroCopy(true);  // TODO: NEW PARAMETER API
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);

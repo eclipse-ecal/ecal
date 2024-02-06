@@ -23,7 +23,7 @@ find_package(asio         REQUIRED)
 find_package(tclap        REQUIRED)
 find_package(simpleini    REQUIRED)
 find_package(tcp_pubsub   REQUIRED)
-if (ECAL_NPCAP_SUPPORT)
+if (ECAL_CORE_NPCAP_SUPPORT)
   find_package(udpcap REQUIRED)
 endif()
 

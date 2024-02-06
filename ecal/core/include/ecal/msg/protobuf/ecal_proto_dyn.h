@@ -159,7 +159,7 @@ namespace eCAL
         *
         * @return true if succeeded otherwise false (details see error_s_)
       **/
-      static bool GetFileDescriptorFromFile(const std::string& proto_filename_, google::protobuf::FileDescriptorProto* file_desc_proto_, std::string& error_s_);
+      bool GetFileDescriptorFromFile(const std::string& proto_filename_, google::protobuf::FileDescriptorProto* file_desc_proto_, std::string& error_s_);
 
       /**
         * @brief Create proto descriptor from proto string.
@@ -170,7 +170,7 @@ namespace eCAL
         *
         * @return true if succeeded otherwise false (details see error_s_)
       **/
-      static bool GetFileDescriptorFromString(const std::string& proto_string_, google::protobuf::FileDescriptorProto* file_desc_proto_, std::string& error_s_);
+      bool GetFileDescriptorFromString(const std::string& proto_string_, google::protobuf::FileDescriptorProto* file_desc_proto_, std::string& error_s_);
 
     protected:
       google::protobuf::DescriptorPool        m_descriptor_pool;
@@ -254,7 +254,7 @@ namespace eCAL
       std::stringstream m_ss;
     };
 
-    google::protobuf::Message* CProtoDynDecoder::GetProtoMessageFromFile(const std::string& proto_filename_, const std::string& msg_type_, std::string& error_s_)
+    inline google::protobuf::Message* CProtoDynDecoder::GetProtoMessageFromFile(const std::string& proto_filename_, const std::string& msg_type_, std::string& error_s_)
     {
       google::protobuf::FileDescriptorProto proto;
       if (!GetFileDescriptorFromFile(proto_filename_, &proto, error_s_)) return (nullptr);
@@ -264,7 +264,7 @@ namespace eCAL
       return (GetProtoMessageFromDescriptorSet(pset, msg_type_, error_s_));
     }
 
-    google::protobuf::Message* CProtoDynDecoder::GetProtoMessageFromString(const std::string& proto_string_, const std::string& msg_type_, std::string& error_s_)
+    inline google::protobuf::Message* CProtoDynDecoder::GetProtoMessageFromString(const std::string& proto_string_, const std::string& msg_type_, std::string& error_s_)
     {
       google::protobuf::FileDescriptorProto proto;
       if (!GetFileDescriptorFromString(proto_string_, &proto, error_s_)) return (nullptr);
@@ -274,7 +274,7 @@ namespace eCAL
       return (GetProtoMessageFromDescriptorSet(pset, msg_type_, error_s_));
     }
 
-    google::protobuf::Message* CProtoDynDecoder::GetProtoMessageFromDescriptor(const google::protobuf::FileDescriptorProto& proto_desc_, const std::string& msg_type_, std::string& error_s_)
+    inline google::protobuf::Message* CProtoDynDecoder::GetProtoMessageFromDescriptor(const google::protobuf::FileDescriptorProto& proto_desc_, const std::string& msg_type_, std::string& error_s_)
     {
       google::protobuf::FileDescriptorSet pset;
       google::protobuf::FileDescriptorProto* pdesc = pset.add_file();
@@ -282,7 +282,7 @@ namespace eCAL
       return (GetProtoMessageFromDescriptorSet(pset, msg_type_, error_s_));
     }
 
-    google::protobuf::Message* CProtoDynDecoder::GetProtoMessageFromDescriptor(const std::string& msg_desc_, const std::string& msg_type_, std::string& error_s_)
+    inline google::protobuf::Message* CProtoDynDecoder::GetProtoMessageFromDescriptor(const std::string& msg_desc_, const std::string& msg_type_, std::string& error_s_)
     {
       // create file descriptor set
       google::protobuf::FileDescriptorSet pset;
@@ -302,7 +302,7 @@ namespace eCAL
       return (proto_msg);
     }
 
-    google::protobuf::Message* CProtoDynDecoder::GetProtoMessageFromDescriptorSet(const google::protobuf::FileDescriptorSet& proto_desc_set_, const std::string& msg_type_, std::string& error_s_)
+    inline google::protobuf::Message* CProtoDynDecoder::GetProtoMessageFromDescriptorSet(const google::protobuf::FileDescriptorSet& proto_desc_set_, const std::string& msg_type_, std::string& error_s_)
     {
       // check if msg_type_ is available in descriptor pool
       const google::protobuf::Descriptor* desc = m_descriptor_pool.FindMessageTypeByName(msg_type_);
@@ -368,12 +368,12 @@ namespace eCAL
       return (proto_msg);
     }
 
-    google::protobuf::DescriptorPool* CProtoDynDecoder::GetDescriptorPool()
+    inline google::protobuf::DescriptorPool* CProtoDynDecoder::GetDescriptorPool()
     {
       return &m_descriptor_pool;
     }
 
-    bool CProtoDynDecoder::GetFileDescriptorFromFile(const std::string& proto_filename_, google::protobuf::FileDescriptorProto* file_desc_proto_, std::string& error_s_)
+    inline bool CProtoDynDecoder::GetFileDescriptorFromFile(const std::string& proto_filename_, google::protobuf::FileDescriptorProto* file_desc_proto_, std::string& error_s_)
     {
       std::ifstream fs(proto_filename_);
       if (!fs.is_open())
@@ -389,7 +389,7 @@ namespace eCAL
       return (GetFileDescriptorFromString(proto_str, file_desc_proto_, error_s_));
     }
 
-    bool CProtoDynDecoder::GetFileDescriptorFromString(const std::string& proto_string_, google::protobuf::FileDescriptorProto* file_desc_proto_, std::string& error_s_)
+    inline bool CProtoDynDecoder::GetFileDescriptorFromString(const std::string& proto_string_, google::protobuf::FileDescriptorProto* file_desc_proto_, std::string& error_s_)
     {
       std::stringstream ss;
       ss << proto_string_;

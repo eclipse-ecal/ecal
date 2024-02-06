@@ -77,13 +77,13 @@ int main(int argc, char **argv)
   send_s.resize(size);
 
   // set zero copy
-  pub.ShmEnableZeroCopy(zero_copy);
+  //pub.ShmEnableZeroCopy(zero_copy);  // TODO: NEW PARAMETER API
   
   // set buffering
-  pub.ShmSetBufferCount(buffer_count);
+  //pub.ShmSetBufferCount(buffer_count);  // TODO: NEW PARAMETER API
 
   // set handshake acknowledgement timeout [ms]
-  pub.ShmSetAcknowledgeTimeout(acknowledge_time);
+  //pub.ShmSetAcknowledgeTimeout(acknowledge_time);  // TODO: NEW PARAMETER API
 
   // send updates
   while(eCAL::Ok())

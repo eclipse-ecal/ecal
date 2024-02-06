@@ -49,17 +49,17 @@ int main(int argc, char **argv)
   eCAL::CPublisher pub("Performance");
  
   // enable zero copy mode
-  std::cout << "Zero copy mode: " << zero_copy << std::endl;
-  pub.ShmEnableZeroCopy(zero_copy);
+  //std::cout << "Zero copy mode: " << zero_copy << std::endl;
+  //pub.ShmEnableZeroCopy(zero_copy);  // TODO: NEW PARAMETER API
 
   // set write buffer count
-  std::cout << "Number of write buffers: " << buffer_count << std::endl;
-  pub.ShmSetBufferCount(buffer_count);
+  //std::cout << "Number of write buffers: " << buffer_count << std::endl;
+  //pub.ShmSetBufferCount(buffer_count);  // TODO: NEW PARAMETER API
   
   // enable handshake mode
-  std::cout << "Acknowledge timeout: " << acknowledge_timeout_ms << " ms" << std::endl;
-  pub.ShmSetAcknowledgeTimeout(acknowledge_timeout_ms);
-  std::cout << std::endl;
+  //std::cout << "Acknowledge timeout: " << acknowledge_timeout_ms << " ms" << std::endl;
+  //pub.ShmSetAcknowledgeTimeout(acknowledge_timeout_ms);  // TODO: NEW PARAMETER API
+  //std::cout << std::endl;
 
   // counter
   long long msgs (0);

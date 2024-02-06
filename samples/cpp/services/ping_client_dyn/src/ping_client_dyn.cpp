@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/protobuf/ecal_proto_dyn.h>
+#include <ecal/msg/protobuf/ecal_proto_dyn.h>
 
 #include <chrono>
 #include <iostream>

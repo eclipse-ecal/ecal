@@ -36,10 +36,10 @@ int main(int argc, char **argv)
   eCAL::protobuf::CPublisher<pb::People::Person> pub("person");
 
   // switch all layer off
-  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);  // TODO: NEW PARAMETER API
 
   // switch unicast layer on
-  pub.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_on);
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_on);  // TODO: NEW PARAMETER API
 
   // generate a class instance of Person
   pb::People::Person person;

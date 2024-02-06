@@ -38,9 +38,6 @@ void OnEvent(const char* topic_name_, const struct eCAL::SSubEventCallbackData* 
   case sub_event_dropped:
     std::cout << "event            : " << "sub_event_dropped (" << data_->clock << " messages)" << std::endl;
     break;
-  case sub_event_timeout:
-    std::cout << "event            : " << "sub_event_timeout" << std::endl;
-    break;
   // not implemented yet
   case sub_event_corrupted:
     std::cout << "event            : " << "sub_event_corrupted" << std::endl;
@@ -70,15 +67,11 @@ int main(int argc, char **argv)
   // create a subscriber (topic name "person")
   eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");
 
-  // set receive timeout in ms
-  sub.SetTimeout(1000);
-
   // add event callback function (_1 = topic_name, _2 = event data struct)
   auto evt_callback = std::bind(OnEvent, std::placeholders::_1, std::placeholders::_2);
   sub.AddEventCallback(sub_event_connected,         evt_callback);
   sub.AddEventCallback(sub_event_disconnected,      evt_callback);
   sub.AddEventCallback(sub_event_dropped,           evt_callback);
-  sub.AddEventCallback(sub_event_timeout,           evt_callback);
   sub.AddEventCallback(sub_event_corrupted,         evt_callback);
   sub.AddEventCallback(sub_event_update_connection, evt_callback);
 
