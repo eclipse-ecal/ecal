@@ -39,6 +39,7 @@
 
 #include <string>
 #include <atomic>
+#include <mutex>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
