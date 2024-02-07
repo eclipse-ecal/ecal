@@ -20,7 +20,6 @@ project(test_clientserver)
 
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
-find_package(Protobuf REQUIRED)
 
 create_targets_protobuf()
 
@@ -30,18 +29,11 @@ set(${PROJECT_NAME}_src
   src/clientserver_test.cpp
 )
 
-set(clientserver_test_proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/math.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/ping.proto
-)
-
 ecal_add_gtest(${PROJECT_NAME} ${${PROJECT_NAME}_src})
-PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${clientserver_test_proto})
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
     eCAL::core
-    protobuf::libprotobuf
     Threads::Threads)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)

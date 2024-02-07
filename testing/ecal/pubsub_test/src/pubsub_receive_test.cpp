@@ -24,7 +24,6 @@
 #include <atomic>
 #include <chrono>
 #include <string>
-#include <sstream>
 #include <thread>
 
 #include <gtest/gtest.h>
@@ -63,7 +62,6 @@ void measure_execution_within_range(const std::string& description, std::functio
   // How to do this nicely?
   EXPECT_TRUE(within_epsilon) << "Execution of " << description << " took " << duration.count() << " ns but expected was " << expected_runtime.count()*1000000 << "ns";
 }
-
 
 TEST(PubSub, TimingSubscriberReceive)
 {
@@ -161,8 +159,6 @@ TEST(PubSub, TimingSubscriberReceive)
   EXPECT_EQ(0, eCAL::Finalize());
 }
 
-
-
 // This tests test for sporadically received empty messages which were a problem.
 TEST(PubSub, SporadicEmptyReceives)
 { 
@@ -214,7 +210,6 @@ TEST(PubSub, SporadicEmptyReceives)
 
   sub_stop = true;
   sub_t.join();
-
 
   // finalize eCAL API
   EXPECT_EQ(0, eCAL::Finalize());

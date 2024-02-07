@@ -477,7 +477,6 @@ endif()
 # --------------------------------------------------------
 if(BUILD_ECAL_TESTS)
   enable_testing()
-
   # ------------------------------------------------------
   # test contrib
   # ------------------------------------------------------
@@ -488,19 +487,9 @@ if(BUILD_ECAL_TESTS)
   add_subdirectory(testing/contrib/ecalproto/ecal_proto_test)
 
   # ------------------------------------------------------
-  # test ecal
+  # test ecal-core
   # ------------------------------------------------------
-  add_subdirectory(testing/ecal/clientserver_test)
-  
-  add_subdirectory(testing/ecal/core_test)
-  add_subdirectory(testing/ecal/event_test)
-  add_subdirectory(testing/ecal/expmap_test)
-  add_subdirectory(testing/ecal/io_memfile_test)
-  add_subdirectory(testing/ecal/pubsub_proto_test)
-  add_subdirectory(testing/ecal/serialization_test)
-  add_subdirectory(testing/ecal/pubsub_test)
-  add_subdirectory(testing/ecal/topic2mcast_test)
-  add_subdirectory(testing/ecal/util_test)
+  add_subdirectory(testing/ecal)
   
   # ------------------------------------------------------
   # test apps
