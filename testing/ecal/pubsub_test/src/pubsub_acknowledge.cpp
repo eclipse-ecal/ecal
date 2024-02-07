@@ -46,6 +46,7 @@ namespace
   }
 }
 
+#if 0 // reactivate this if ShmSetAcknowledgeTimeout API is implemented again
 // This test asserts that a timeouted acknowledge does not break subsequent calls
 TEST(PubSub, TimeoutAcknowledgment)
 {
@@ -108,5 +109,5 @@ TEST(PubSub, TimeoutAcknowledgment)
   // finalize eCAL API
   // without destroying any pub / sub
   EXPECT_EQ(0, eCAL::Finalize());
-
 }
+#endif

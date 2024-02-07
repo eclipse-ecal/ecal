@@ -576,7 +576,7 @@ TEST(ClientServer, ClientServerBaseAsyncCallback)
 
 #if ClientServerBaseAsyncTest
 
-TEST(ClientServer, ClientServerBaseAsyncTest)
+TEST(ClientServer, ClientServerBaseAsync)
 {
   const int calls(5);
 

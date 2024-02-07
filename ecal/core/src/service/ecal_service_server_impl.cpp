@@ -254,13 +254,16 @@ namespace eCAL
       }
     }
 
-    SDataTypeInformation request_datatype_information;
-    request_datatype_information.name = req_type_;
-    request_datatype_information.descriptor = req_desc;
+    SDataTypeInformation request_type_information;
+    request_type_information.name       = req_type_;
+    request_type_information.descriptor = req_desc;
 
-    SDataTypeInformation response_datatype_information;
-    response_datatype_information.name = resp_type_;
-    response_datatype_information.descriptor = resp_desc;
+    SDataTypeInformation response_type_information;
+    response_type_information.name       = resp_type_;
+    response_type_information.descriptor = resp_desc;
+
+    // update descgate infos
+    ApplyServiceDescription(m_service_name, method_, request_type_information, response_type_information);
 
     return true;
   }

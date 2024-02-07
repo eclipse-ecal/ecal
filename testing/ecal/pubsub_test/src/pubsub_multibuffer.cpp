@@ -65,6 +65,7 @@ private:
   int    clock = 0;
 };
 
+#if 0  // reactivate this if SetLayerMode, ShmEnableZeroCopy, ShmSetBufferCount API is implemented again
 TEST(PubSub, MultibufferPubSub)
 { 
   // create payload
@@ -264,3 +265,4 @@ TEST(PubSub, MultibufferPubSub)
   // finalize eCAL API
   eCAL::Finalize();
 }
+#endif
