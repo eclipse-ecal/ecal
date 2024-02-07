@@ -897,7 +897,7 @@ void EcalsysGui::menuViewResetLayoutTriggered()
 
   // Back when we saved the initial window geometry, the window-manager might not have positioned the window on the screen, yet
 
-#if QT_VERSION <= QT_VERSION_CHECK(5, 15, 0)
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
   int screen_number = QApplication::desktop()->screenNumber(this);
 #else
   int screen_number = 0;
@@ -908,7 +908,7 @@ void EcalsysGui::menuViewResetLayoutTriggered()
     if (screen_number < 0)
       screen_number = 0;
   }
-#endif // QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
 
   restoreGeometry(initial_geometry_);
   restoreState(initial_state_);
