@@ -21,8 +21,9 @@
  * @brief  Global config class
 **/
 
-#include <ecal/ecal_os.h>
+#include <cctype>
 #include <ecal/ecal_defs.h>
+#include <ecal/ecal_os.h>
 
 #include "ecal_def.h"
 #include "ecal_config_reader.h"
@@ -35,6 +36,8 @@
 #include <fstream>
 
 #include <ecal_utils/filesystem.h>
+#include <string>
+#include <vector>
 
 #ifdef ECAL_OS_LINUX
 #include <sys/types.h>

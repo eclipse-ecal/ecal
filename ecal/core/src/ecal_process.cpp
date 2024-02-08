@@ -21,6 +21,7 @@
 * @brief  eCAL process interface
 **/
 
+#include <cstdint>
 #include <ecal/ecal.h>
 
 #include "ecal_def.h"
@@ -38,15 +39,16 @@
 #include <array>
 #include <atomic>
 #include <chrono>
-#include <cstdlib>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <memory>
-#include <string>
 #include <sstream>
+#include <string>
 #include <thread>
+#include <vector>
 
 #ifdef ECAL_OS_WINDOWS
 #include "ecal_win_main.h"

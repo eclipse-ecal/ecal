@@ -26,6 +26,7 @@
 
 #include "ecal_struct_sample_registration.h"
 
+#include <cstddef>
 #include <string>
 #include <vector>
 

@@ -21,6 +21,8 @@
  * @brief  synchronized memory file interface
 **/
 
+#include <cstddef>
+#include <cstdint>
 #include <ecal/ecal_log.h>
 
 #include "ecal_event.h"
@@ -29,7 +31,10 @@
 #include "ecal_memfile_sync.h"
 
 #include <chrono>
+#include <mutex>
 #include <sstream>
+#include <string>
+#include <utility>
 
 namespace eCAL
 {

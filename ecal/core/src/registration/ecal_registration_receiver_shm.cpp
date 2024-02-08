@@ -29,6 +29,9 @@
 
 #include "ecal_registration_receiver_shm.h"
 #include "serialization/ecal_serialize_sample_registration.h"
+#include <chrono>
+#include <functional>
+#include <memory>
 
 namespace eCAL
 {

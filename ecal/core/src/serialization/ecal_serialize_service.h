@@ -26,6 +26,7 @@
 
 #include "ecal_struct_service.h"
 
+#include <cstddef>
 #include <string>
 #include <vector>
 

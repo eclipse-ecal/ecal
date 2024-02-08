@@ -21,8 +21,13 @@
  * @brief  common eCAL data reader
 **/
 
+#include <chrono>
 #include <ecal/ecal.h>
 #include <ecal/ecal_config.h>
+#include <list>
+#include <memory>
+#include <mutex>
+#include <string>
 
 #if ECAL_CORE_REGISTRATION
 #include "registration/ecal_registration_provider.h"

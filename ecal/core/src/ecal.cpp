@@ -22,8 +22,11 @@
 **/
 
 #include "ecal_def.h"
-#include "ecal_globals.h"
 #include "ecal_event.h"
+#include "ecal_globals.h"
+#include <cstddef>
+#include <string>
+#include <vector>
 
 #if ECAL_CORE_COMMAND_LINE
 #include "util/advanced_tclap_output.h"

@@ -25,10 +25,11 @@
 
 #include "ecal_memfile_broadcast.h"
 
+#include <cstddef>
 #include <cstdint>
-#include <vector>
-#include <unordered_map>
 #include <memory>
+#include <unordered_map>
+#include <vector>
 
 namespace eCAL
 {

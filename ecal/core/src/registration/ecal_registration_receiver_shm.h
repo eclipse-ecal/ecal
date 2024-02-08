@@ -31,6 +31,7 @@
 #include "shm/ecal_memfile_broadcast_reader.h"
 
 #include "util/ecal_thread.h"
+#include <memory>
 
 namespace eCAL
 {

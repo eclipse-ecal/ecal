@@ -21,11 +21,14 @@
  * @brief  eCAL handle helper class
 **/
 
+#include <chrono>
+#include <cstdint>
 #include <ecal/ecal_os.h>
 
 #include "ecal_event.h"
 
 #include <sstream>
+#include <string>
 
 #ifdef ECAL_OS_WINDOWS
 

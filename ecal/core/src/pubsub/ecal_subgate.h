@@ -26,8 +26,9 @@
 #include "readwrite/ecal_reader.h"
 
 #include <atomic>
-#include <shared_mutex>
+#include <cstddef>
 #include <memory>
+#include <shared_mutex>
 #include <string>
 #include <unordered_map>
 

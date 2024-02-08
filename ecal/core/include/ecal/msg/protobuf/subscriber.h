@@ -24,8 +24,9 @@
 
 #pragma once
 
-#include <ecal/msg/subscriber.h>
+#include <cstddef>
 #include <ecal/msg/protobuf/ecal_proto_hlp.h>
+#include <ecal/msg/subscriber.h>
 
 // protobuf includes
 #ifdef _MSC_VER

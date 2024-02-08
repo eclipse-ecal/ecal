@@ -30,8 +30,11 @@
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
 
 #include <exception>
+#include <functional>
 #include <memory>
+#include <ostream>
 #include <sstream>
+#include <string>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings

@@ -19,9 +19,10 @@
 
 #pragma once
 
+#include <cstddef>
+#include <ecal/ecal_log_level.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_tlayer.h>
-#include <ecal/ecal_log_level.h>
 
 #include <string>
 

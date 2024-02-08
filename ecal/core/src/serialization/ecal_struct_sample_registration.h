@@ -27,6 +27,7 @@
 #include "ecal_struct_sample_common.h"
 #include "ecal_struct_service.h"
 
+#include <cstdint>
 #include <list>
 #include <map>
 #include <string>

@@ -25,6 +25,7 @@
 
 #include "io/udp/sendreceive/udp_sender.h"
 
+#include <cstddef>
 #include <memory>
 #include <mutex>
 #include <string>

@@ -24,11 +24,17 @@
 
 #pragma once
 
+#include <cassert>
+#include <cstddef>
+#include <memory>
+#include <ostream>
 #include <sstream>
 
 #include <ecal/ecal.h>
-#include <ecal/msg/publisher.h>
 #include <ecal/msg/protobuf/ecal_proto_hlp.h>
+#include <ecal/msg/publisher.h>
+#include <stdexcept>
+#include <string>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings

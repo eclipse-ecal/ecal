@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <ecal/types/monitoring.h>
 
 #include <string>

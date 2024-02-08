@@ -26,7 +26,15 @@
 #include "ecal_globals.h"
 
 #include <algorithm>
+#include <atomic>
+#include <cstddef>
 #include <iterator>
+#include <memory>
+#include <mutex>
+#include <shared_mutex>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace
 {

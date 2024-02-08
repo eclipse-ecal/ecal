@@ -26,6 +26,8 @@
 
 #include "ecal_struct_sample_common.h"
 
+#include <cstddef>
+#include <cstdint>
 #include <map>
 #include <string>
 #include <vector>

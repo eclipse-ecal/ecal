@@ -20,6 +20,7 @@
 #pragma once
 
 #include "udp_receiver.h"
+#include <cstddef>
 
 #ifdef _MSC_VER
 #pragma warning(push)

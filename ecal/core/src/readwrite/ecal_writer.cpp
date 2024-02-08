@@ -21,9 +21,15 @@
  * @brief  common eCAL data writer
 **/
 
+#include <cstddef>
+#include <cstdint>
 #include <ecal/ecal.h>
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_payload_writer.h>
+#include <functional>
+#include <mutex>
+#include <string>
+#include <utility>
 
 #include "ecal_def.h"
 #include "config/ecal_config_reader_hlp.h"

@@ -27,6 +27,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <ecal/ecal.h>
 
 #include "ecal_def.h"

@@ -23,7 +23,9 @@
 
 #include "udp_sender.h"
 
+#include <cstddef>
 #include <iostream>
+#include <memory>
 
 #ifdef _MSC_VER
 #pragma warning(push)

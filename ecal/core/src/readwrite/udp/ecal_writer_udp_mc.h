@@ -26,6 +26,7 @@
 #include "io/udp/ecal_udp_sample_sender.h"
 #include "readwrite/ecal_writer_base.h"
 
+#include <memory>
 #include <string>
 #include <vector>
 

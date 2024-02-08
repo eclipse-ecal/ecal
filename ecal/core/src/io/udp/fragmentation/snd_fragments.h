@@ -21,6 +21,7 @@
  * @brief  raw message buffer handling
 **/
 
+#include <cstddef>
 #include <functional>
 #include <string>
 #include <vector>

@@ -26,7 +26,10 @@
 #include "config/ecal_config_reader.h"
 
 #include <iostream>
+#include <memory>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 #if ECAL_CORE_SERVICE
 #include "service/ecal_service_singleton_manager.h"

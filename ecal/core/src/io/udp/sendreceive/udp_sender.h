@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <ecal/ecal_os.h>
 
 #ifdef ECAL_OS_WINDOWS

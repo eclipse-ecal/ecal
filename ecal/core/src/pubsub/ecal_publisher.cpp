@@ -21,14 +21,18 @@
  * @brief  common data publisher based on eCAL
 **/
 
+#include <cstddef>
 #include <ecal/ecal.h>
 
 #include "ecal_globals.h"
 #include "readwrite/ecal_writer.h"
 #include "readwrite/ecal_writer_buffer_payload.h"
 
-#include <sstream>
 #include <iostream>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <utility>
 
 namespace
 {

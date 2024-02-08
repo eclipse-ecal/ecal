@@ -21,10 +21,15 @@
  * @brief  Implementation of the eCAL dll interface
 **/
 
+#include <cstddef>
+#include <cstdlib>
+#include <functional>
 #include <mutex>
 
 #include <ecal/ecal.h>
 #include <ecal/ecalc.h>
+#include <set>
+#include <string>
 
 static int CopyBuffer(void* target_, int target_len_, const std::string& source_s_)
 {

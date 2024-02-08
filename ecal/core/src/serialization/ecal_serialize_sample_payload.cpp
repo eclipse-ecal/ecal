@@ -29,7 +29,10 @@
 #include "ecal_serialize_common.h"
 #include "ecal_struct_sample_payload.h"
 
+#include <cstddef>
 #include <iostream>
+#include <string>
+#include <vector>
 
 namespace
 {

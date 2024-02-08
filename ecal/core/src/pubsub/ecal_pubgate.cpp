@@ -25,8 +25,13 @@
 #include "ecal_sample_to_topicinfo.h"
 #include "ecal_globals.h"
 
-#include <iterator>
 #include <atomic>
+#include <iterator>
+#include <memory>
+#include <mutex>
+#include <shared_mutex>
+#include <string>
+#include <utility>
 
 namespace
 {

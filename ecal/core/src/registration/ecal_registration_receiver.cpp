@@ -32,8 +32,13 @@
 #include "pubsub/ecal_pubgate.h"
 #include "service/ecal_clientgate.h"
 
-#include "io/udp/ecal_udp_configurations.h"
 #include "ecal_sample_to_topicinfo.h"
+#include "io/udp/ecal_udp_configurations.h"
+#include <atomic>
+#include <functional>
+#include <memory>
+#include <mutex>
+#include <string>
 
 namespace eCAL
 {

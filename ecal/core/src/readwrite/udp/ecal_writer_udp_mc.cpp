@@ -21,8 +21,11 @@
  * @brief  udp data writer
 **/
 
-#include <ecal/ecal_log.h>
+#include <cstddef>
 #include <ecal/ecal_config.h>
+#include <ecal/ecal_log.h>
+#include <memory>
+#include <string>
 
 #include "ecal_writer_udp_mc.h"
 #include "io/udp/ecal_udp_configurations.h"

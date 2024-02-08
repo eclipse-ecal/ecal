@@ -24,10 +24,14 @@
 #include "ecal_udp_sample_receiver.h"
 #include "io/udp/fragmentation/msg_type.h"
 
+#include <chrono>
 #include <ecal/ecal_log.h>
 
 #include <cstring>
+#include <memory>
+#include <string>
 #include <utility>
+#include <vector>
 
 namespace eCAL
 {

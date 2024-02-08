@@ -30,8 +30,10 @@
 #include <ecal/ecal_callback.h>
 
 #include <atomic>
-#include <shared_mutex>
 #include <set>
+#include <shared_mutex>
+#include <string>
+#include <vector>
 
 namespace eCAL
 {

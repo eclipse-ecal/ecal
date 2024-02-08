@@ -27,8 +27,12 @@
 #include "io/shm/ecal_memfile.h"
 #include "ecal_global_accessors.h"
 
-#include <iostream>
 #include <array>
+#include <cstddef>
+#include <cstdint>
+#include <iostream>
+#include <memory>
+#include <string>
 
 namespace eCAL
 {

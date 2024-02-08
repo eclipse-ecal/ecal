@@ -31,6 +31,8 @@
 #include "ecal_struct_sample_registration.h"
 #include "ecal_struct_service.h"
 
+#include <cstddef>
+#include <map>
 #include <string>
 #include <vector>
 

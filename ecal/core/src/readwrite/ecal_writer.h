@@ -23,10 +23,13 @@
 
 #pragma once
 
+#include <chrono>
+#include <cstddef>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_tlayer.h>
 #include <ecal/ecal_types.h>
+#include <tuple>
 
 #include "ecal_def.h"
 #include "util/ecal_expmap.h"

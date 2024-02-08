@@ -21,9 +21,11 @@
  * @brief  memory file data writer
 **/
 
+#include <cstddef>
 #include <ecal/ecal.h>
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_log.h>
+#include <string>
 
 #include "ecal_def.h"
 #include "ecal_writer_shm.h"

@@ -30,8 +30,12 @@
 #include "serialization/ecal_serialize_service.h"
 
 #include <chrono>
+#include <memory>
+#include <mutex>
 #include <sstream>
+#include <string>
 #include <utility>
+#include <vector>
 
 namespace eCAL
 {

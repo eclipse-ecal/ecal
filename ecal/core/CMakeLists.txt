@@ -23,6 +23,7 @@ find_package(asio         REQUIRED)
 find_package(tclap        REQUIRED)
 find_package(simpleini    REQUIRED)
 find_package(tcp_pubsub   REQUIRED)
+
 if (ECAL_CORE_NPCAP_SUPPORT)
   find_package(udpcap REQUIRED)
 endif()
@@ -653,8 +654,6 @@ target_include_directories(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME} 
-#  PUBLIC
-#    eCAL::proto
   PRIVATE
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>

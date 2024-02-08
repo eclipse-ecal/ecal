@@ -20,10 +20,13 @@
 #pragma once
 
 #include "client_session_impl_base.h"
+#include <cstdint>
 #include <ecal/service/logger.h>
 
 #include <deque>
+#include <memory>
 #include <mutex>
+#include <string>
 
 namespace eCAL
 {

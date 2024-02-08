@@ -26,6 +26,7 @@
 
 #include "ecal_struct_sample_payload.h"
 
+#include <cstddef>
 #include <string>
 #include <vector>
 

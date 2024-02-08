@@ -27,8 +27,9 @@
 #include "serialization/ecal_struct_sample_registration.h"
 
 #include <atomic>
-#include <shared_mutex>
+#include <map>
 #include <memory>
+#include <shared_mutex>
 #include <string>
 #include <unordered_map>
 

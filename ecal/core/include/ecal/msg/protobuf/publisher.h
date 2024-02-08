@@ -24,9 +24,10 @@
 
 #pragma once
 
+#include <cstddef>
 #include <ecal/ecal_deprecate.h>
-#include <ecal/msg/publisher.h>
 #include <ecal/msg/protobuf/ecal_proto_hlp.h>
+#include <ecal/msg/publisher.h>
 
 // protobuf includes
 #ifdef _MSC_VER

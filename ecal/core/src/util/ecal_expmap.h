@@ -23,13 +23,14 @@
 
 #pragma once
 
+#include <chrono>
 #include <functional>
+#include <iterator>
 #include <list>
 #include <map>
 #include <memory>
 #include <utility>
 #include <vector>
-#include <chrono>
 
 namespace eCAL
 {

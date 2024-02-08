@@ -27,6 +27,7 @@
 #include "io/udp/ecal_udp_sample_sender.h"
 #include "serialization/ecal_struct_logging.h"
 
+#include <cstddef>
 #include <ecal/ecal.h>
 #include <ecal/ecal_os.h>
 
@@ -36,8 +37,9 @@
 
 #include <atomic>
 #include <list>
-#include <mutex>
 #include <memory>
+#include <mutex>
+#include <string>
 #include <vector>
 
 namespace eCAL

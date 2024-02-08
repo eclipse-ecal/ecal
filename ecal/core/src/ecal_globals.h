@@ -24,6 +24,8 @@
 #pragma once
 
 #include "ecal_global_accessors.h"
+#include <string>
+#include <vector>
 #if ECAL_CORE_REGISTRATION
 #include "registration/ecal_registration_provider.h"
 #include "registration/ecal_registration_receiver.h"

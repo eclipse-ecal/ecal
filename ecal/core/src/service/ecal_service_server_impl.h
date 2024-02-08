@@ -28,9 +28,11 @@
 #include <ecal/ecal_service_info.h>
 
 #include <map>
+#include <memory>
 #include <mutex>
 
 #include <ecal/service/server.h>
+#include <string>
 
 #include "serialization/ecal_struct_service.h"
 

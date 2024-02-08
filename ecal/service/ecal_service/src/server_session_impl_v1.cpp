@@ -21,8 +21,14 @@
 
 #include "protocol_v1.h"
 
-#include "log_helpers.h"
 #include "log_defs.h"
+#include "log_helpers.h"
+#include <algorithm>
+#include <cstdint>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <vector>
 
 ///////////////////////////////////////////////
 // Create, Constructor, Destructor

@@ -17,8 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstddef>
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_log_level.h>
+#include <string>
+#include <vector>
 
 #include "ecal_config_reader.h"
 #include "ecal_config_reader_hlp.h"

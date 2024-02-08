@@ -25,8 +25,9 @@
 #pragma once
 
 #include <ecal/ecal_server.h>
-#include <ecal/msg/protobuf/ecal_proto_dyn.h>
 #include <ecal/msg/dynamic.h>
+#include <ecal/msg/protobuf/ecal_proto_dyn.h>
+#include <functional>
 
 // protobuf includes
 #ifdef _MSC_VER

@@ -23,7 +23,12 @@
 #include "pubsub/ecal_pubgate.h"
 
 #include <list>
+#include <map>
 #include <string>
+#include <tuple>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 namespace eCAL
 {

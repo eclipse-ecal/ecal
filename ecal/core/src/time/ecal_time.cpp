@@ -24,6 +24,7 @@
 #include <ecal/ecal.h>
 
 #include <chrono>
+#include <string>
 #include <thread>
 
 #if ECAL_CORE_TIMEGATE

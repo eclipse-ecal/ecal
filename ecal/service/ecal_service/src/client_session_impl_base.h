@@ -19,6 +19,10 @@
 
 #pragma once
 
+#include <cstdint>
+#include <memory>
+#include <mutex>
+#include <string>
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4834)

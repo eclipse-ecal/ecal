@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <chrono>
+#include <cstddef>
 #include <ecal/ecal_log.h>
 
 #include "ecal_event.h"
@@ -35,6 +37,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <string>
 #include <thread>
 
 namespace eCAL

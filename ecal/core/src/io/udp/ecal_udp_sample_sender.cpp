@@ -24,7 +24,13 @@
 #include "ecal_udp_sample_sender.h"
 #include "io/udp/fragmentation/snd_fragments.h"
 
+#include <cstddef>
+#include <functional>
 #include <iostream>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <vector>
 
 namespace
 {

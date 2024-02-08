@@ -29,7 +29,11 @@
 #include "ecal_serialize_common.h"
 #include "ecal_serialize_sample_registration.h"
 
+#include <cstddef>
 #include <iostream>
+#include <list>
+#include <string>
+#include <vector>
 
 namespace
 {

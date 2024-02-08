@@ -21,7 +21,10 @@
  * @brief  shared memory layer
 **/
 
+#include <cstddef>
 #include <ecal/ecal.h>
+#include <functional>
+#include <string>
 
 #include "ecal_global_accessors.h"
 #include "pubsub/ecal_subgate.h"

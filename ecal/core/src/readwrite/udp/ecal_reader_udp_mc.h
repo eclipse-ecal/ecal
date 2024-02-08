@@ -26,6 +26,7 @@
 #include "io/udp/ecal_udp_sample_receiver.h"
 #include "readwrite/ecal_reader_layer.h"
 
+#include <cstddef>
 #include <map>
 #include <memory>
 #include <string>

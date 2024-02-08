@@ -21,6 +21,8 @@
 #include "udp_receiver_asio.h"
 
 #include "io/udp/ecal_udp_configurations.h"
+#include <cstddef>
+#include <cstring>
 
 #ifdef __linux__
 #include "linux/socket_os.h"

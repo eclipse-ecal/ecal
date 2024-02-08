@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <string>
 
 #include "ecal_log_impl.h"
 

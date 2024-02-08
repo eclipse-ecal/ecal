@@ -25,9 +25,14 @@
 #include <ecal/ecal_config.h>
 
 #include "ecal_descgate.h"
-#include <cassert>
 #include <algorithm>
+#include <cassert>
 #include <mutex>
+#include <shared_mutex>
+#include <string>
+#include <tuple>
+#include <unordered_map>
+#include <vector>
 
 namespace eCAL
 {
