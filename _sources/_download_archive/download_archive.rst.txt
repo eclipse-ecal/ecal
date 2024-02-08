@@ -19,9 +19,12 @@ eCAL 5.12
    * - Release
      - Release Date
      - Support Status
+   * - :ref:`eCAL v5.12.4 <download_archive_ecal_v5_12_4>`
+     - 2024-02-08
+     - Supported
    * - :ref:`eCAL v5.12.1 <download_archive_ecal_v5_12_1>`
      - 2023-10-27
-     - Supported
+     - EOL
    * - :ref:`eCAL v5.12.0 <download_archive_ecal_v5_12_0>`
      - 2023-08-08
      - EOL
@@ -38,9 +41,12 @@ eCAL 5.11
    * - Release
      - Release Date
      - Support Status
+   * - :ref:`eCAL v5.11.8 <download_archive_ecal_v5_11_8>`
+     - 2024-02-07
+     - Supported
    * - :ref:`eCAL v5.11.6 <download_archive_ecal_v5_11_6>`
      - 2023-10-27
-     - Supported
+     - EOL
    * - :ref:`eCAL v5.11.5 <download_archive_ecal_v5_11_5>`
      - 2023-07-24
      - EOL
