@@ -57,8 +57,6 @@ namespace eCAL
       using allocator_type  = Alloc;
       using value_type      = std::pair<const Key, T>;
       using reference       = typename Alloc::reference;
-      using const_reference = typename Alloc::const_reference;
-      using difference_type = typename Alloc::difference_type;
       using size_type       = typename Alloc::size_type;
       using key_type        = Key;
       using mapped_type     = T;
@@ -68,13 +66,11 @@ namespace eCAL
         friend class const_iterator;
 
       public:
-        using iterator_category = std::bidirectional_iterator_tag;
-        using value_type        = std::pair<Key, T>;
-        using difference_type   = std::ptrdiff_t;
-        using pointer           = std::pair<Key, T>*;
-        using reference         = std::pair<Key, T>&;
+        using value_type = std::pair<Key, T>;
+        using pointer    = std::pair<Key, T>*;
+        using reference  = std::pair<Key, T>&;
 
-        iterator(const typename key_to_value_type::iterator _it)
+        explicit iterator(const typename key_to_value_type::iterator _it)
           : it(_it)
         {}
 
@@ -106,17 +102,15 @@ namespace eCAL
       class const_iterator
       {
       public:
-        using iterator_category = std::bidirectional_iterator_tag;
-        using value_type        = std::pair<Key, T>;
-        using difference_type   = std::ptrdiff_t;
-        using pointer           = std::pair<Key, T>*;
-        using reference         = std::pair<Key, T>&;
+        using value_type = std::pair<Key, T>;
+        using pointer    = std::pair<Key, T>*;
+        using reference  = std::pair<Key, T>&;
 
-        const_iterator(const iterator& other)
+        explicit const_iterator(const iterator& other)
           : it(other.it)
         {}
 
-        const_iterator(const typename key_to_value_type::const_iterator _it)
+        explicit const_iterator(const typename key_to_value_type::const_iterator _it)
           : it(_it)
         {}
 
@@ -149,7 +143,7 @@ namespace eCAL
 
       // Constructor specifies the timeout of the map
       CExpMap() : _timeout(std::chrono::milliseconds(5000)) {};
-      CExpMap(clock_type::duration t) : _timeout(t) {};
+      explicit CExpMap(clock_type::duration t) : _timeout(t) {};
 
       /**
       * @brief  set expiration time

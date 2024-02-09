@@ -26,7 +26,6 @@
 #include "ecal_globals.h"
 
 #include <atomic>
-#include <iterator>
 #include <memory>
 #include <mutex>
 #include <shared_mutex>

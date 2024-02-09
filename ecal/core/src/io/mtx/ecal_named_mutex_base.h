@@ -47,9 +47,7 @@ namespace eCAL
   class CNamedMutexStubImpl : public CNamedMutexImplBase
   {
   public:
-    ~CNamedMutexStubImpl()
-    {
-    }
+    ~CNamedMutexStubImpl() override = default;
 
     bool IsCreated() const final
     {

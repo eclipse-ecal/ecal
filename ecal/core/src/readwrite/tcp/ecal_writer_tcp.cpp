@@ -110,7 +110,7 @@ namespace eCAL
     proto_header_content.id    = attr_.id;
     proto_header_content.clock = attr_.clock;
     proto_header_content.time  = attr_.time;
-    proto_header_content.hash  = attr_.hash;
+    proto_header_content.hash  = static_cast<int64_t>(attr_.hash);
     proto_header_content.size  = static_cast<int32_t>(attr_.len); // we use this size attribute for "header only"
 
     // Compute size of "ECAL" pre-header
@@ -121,7 +121,7 @@ namespace eCAL
     SerializeToBuffer(proto_header, serialized_proto_header);
 
     // Get size of ecal payload sample
-    uint16_t proto_header_size = static_cast<uint16_t>(serialized_proto_header.size());
+    auto proto_header_size = static_cast<uint16_t>(serialized_proto_header.size());
 
     // Compute needed padding for aligning the payload
     //const size_t minimal_header_size = ecal_magic_size + sizeof(uint16_t) + ecal_sample_size;

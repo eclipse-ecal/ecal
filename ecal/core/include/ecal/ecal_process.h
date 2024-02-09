@@ -98,7 +98,7 @@ namespace eCAL
      *
      * @param  time_ns_  Time to sleep in ns.
     **/
-    ECAL_API void SleepNS(const long long time_ns_);
+    ECAL_API void SleepNS(long long time_ns_);
 
     /**
      * @brief  Sleep current thread.

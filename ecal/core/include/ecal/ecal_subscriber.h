@@ -102,7 +102,7 @@ namespace eCAL
      * 
      * @param topic_name_   Unique topic name.
     **/
-    ECAL_API CSubscriber(const std::string& topic_name_);
+    ECAL_API explicit CSubscriber(const std::string& topic_name_);
 
     /**
      * @brief Destructor. 
@@ -112,12 +112,12 @@ namespace eCAL
     /**
      * @brief CSubscribers are non-copyable
     **/
-    ECAL_API CSubscriber(const CSubscriber&) = delete;
+    CSubscriber(const CSubscriber&) = delete;
 
     /**
      * @brief CSubscribers are non-copyable
     **/
-    ECAL_API CSubscriber& operator=(const CSubscriber&) = delete;
+    CSubscriber& operator=(const CSubscriber&) = delete;
 
     /**
      * @brief CSubscribers are move-enabled

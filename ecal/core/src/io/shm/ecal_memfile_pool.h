@@ -61,14 +61,14 @@ namespace eCAL
     bool Create(const std::string& memfile_name_, const std::string& memfile_event_);
     bool Destroy();
 
-    bool Start(const std::string& topic_name_, const std::string& topic_id_, const int timeout_, const MemFileDataCallbackT& callback_);
+    bool Start(const std::string& topic_name_, const std::string& topic_id_, int timeout_, const MemFileDataCallbackT& callback_);
     bool Stop();
     bool IsObserving() {return(m_is_observing);};
 
     bool ResetTimeout();
 
   protected:
-    void Observe(const std::string& topic_name_, const std::string& topic_id_, const int timeout_);
+    void Observe(const std::string& topic_name_, const std::string& topic_id_, int timeout_);
     bool ReadFileHeader(SMemFileHeader& memfile_hdr);
 
     std::atomic<bool>       m_created;

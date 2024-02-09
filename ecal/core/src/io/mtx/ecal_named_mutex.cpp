@@ -57,12 +57,12 @@ namespace eCAL
   {
   }
 
-  CNamedMutex::CNamedMutex(CNamedMutex&& named_mutex)
+  CNamedMutex::CNamedMutex(CNamedMutex&& named_mutex) noexcept
   {
     m_impl.swap(named_mutex.m_impl);
   }
 
-  CNamedMutex& CNamedMutex::operator=(CNamedMutex&& named_mutex)
+  CNamedMutex& CNamedMutex::operator=(CNamedMutex&& named_mutex) noexcept
   {
     m_impl.swap(named_mutex.m_impl);
     named_mutex.m_impl.reset();

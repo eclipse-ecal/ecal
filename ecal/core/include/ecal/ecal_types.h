@@ -51,27 +51,6 @@ namespace eCAL
   };
 
   /**
-   * @brief Optional compile time information associated with a given topic
-   *        (necessary for reflection / runtime type checking)
-  **/
-  struct STopicInformation
-  {
-    SDataTypeInformation topic_type; //!< Data type description of the topic
-
-    //!< @cond
-    bool operator==(const STopicInformation& other) const
-    {
-      return topic_type == other.topic_type;
-    }
-
-    bool operator!=(const STopicInformation& other) const
-    {
-      return !(*this == other);
-    }
-    //!< @endcond
-  };
-
-  /**
    * @brief Optional compile time information associated with a given service method
    *        (necessary for reflection / runtime type checking)
   **/

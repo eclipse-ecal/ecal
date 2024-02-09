@@ -21,7 +21,6 @@
  * @brief  common data publisher based on eCAL
 **/
 
-#include <cstddef>
 #include <ecal/ecal.h>
 
 #include "ecal_globals.h"
@@ -70,7 +69,7 @@ namespace eCAL
   CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_)
     : CPublisher()
   {
-    Create(topic_name_, data_type_info_);
+    CPublisher::Create(topic_name_, data_type_info_);
   }
 
   CPublisher::CPublisher(const std::string& topic_name_) 
@@ -79,7 +78,7 @@ namespace eCAL
 
   CPublisher::~CPublisher()
   {
-    Destroy();
+    CPublisher::Destroy();
   }
 
   /**

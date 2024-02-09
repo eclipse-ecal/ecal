@@ -60,7 +60,7 @@ namespace eCAL
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    bool Create(const char* name_, const bool create_, const size_t len_ = 0, const bool auto_sanitizing_ = false);
+    bool Create(const char* name_, bool create_, size_t len_ = 0, bool auto_sanitizing_ = false);
 
     /**
      * @brief Delete the associated memory file from system. 
@@ -69,7 +69,7 @@ namespace eCAL
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    bool Destroy(const bool remove_);
+    bool Destroy(bool remove_);
 
     /**
      * @brief Get memory file read access. 
@@ -78,7 +78,7 @@ namespace eCAL
      *
      * @return  true if file exists and could be opened with read access. 
     **/
-    bool GetReadAccess(const int timeout_);
+    bool GetReadAccess(int timeout_);
 
     /**
      * @brief Release the read access. 
@@ -95,7 +95,7 @@ namespace eCAL
      *
      * @return         Number of available bytes (or zero if it fails).
     **/
-    size_t GetReadAddress(const void*& buf_, const size_t len_);
+    size_t GetReadAddress(const void*& buf_, size_t len_);
 
     /**
      * @brief Read bytes from an opened memory file.
@@ -106,7 +106,7 @@ namespace eCAL
      *
      * @return         Number of copied bytes (or zero if it fails).
     **/
-    size_t Read(void* buf_, const size_t len_, const size_t offset_);
+    size_t Read(void* buf_, size_t len_, size_t offset_);
 
     /**
      * @brief Get memory file write access.
@@ -115,7 +115,7 @@ namespace eCAL
      *
      * @return  true if file exists and could be opened with read/write access.
     **/
-    bool GetWriteAccess(const int timeout_);
+    bool GetWriteAccess(int timeout_);
 
     /**
      * @brief Release the write access.
@@ -132,7 +132,7 @@ namespace eCAL
      *
      * @return         Number of available bytes (or zero if it fails).
     **/
-    size_t GetWriteAddress(void*& buf_, const size_t len_);
+    size_t GetWriteAddress(void*& buf_, size_t len_);
 
     /**
      * @brief Write bytes to the memory file.

@@ -26,7 +26,6 @@
 
 #include "ecal_descgate.h"
 #include <algorithm>
-#include <cassert>
 #include <mutex>
 #include <shared_mutex>
 #include <string>

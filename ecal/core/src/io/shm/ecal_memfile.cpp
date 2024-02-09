@@ -115,7 +115,7 @@ namespace eCAL
       {
         if (m_memfile_info.mem_address != nullptr)
         {
-          SInternalHeader* header = reinterpret_cast<SInternalHeader*>(m_memfile_info.mem_address);
+          auto* header = reinterpret_cast<SInternalHeader*>(m_memfile_info.mem_address);
 
           // reset header if memfile does not exist or rather is not initialized as well as if lock state is inconsistent
           if (!m_memfile_info.exists || header->int_hdr_size == 0 || (m_auto_sanitizing && m_memfile_mutex.WasRecovered()))
@@ -286,7 +286,7 @@ namespace eCAL
 
     // update m_header and write into memory file header
     m_header.cur_data_size = (unsigned long)(len_);
-    SInternalHeader* pHeader = static_cast<SInternalHeader*>(m_memfile_info.mem_address);
+    auto* pHeader = static_cast<SInternalHeader*>(m_memfile_info.mem_address);
     pHeader->cur_data_size = m_header.cur_data_size;
 
     // return write address

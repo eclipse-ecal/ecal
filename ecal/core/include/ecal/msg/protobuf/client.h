@@ -65,7 +65,7 @@ namespace eCAL
        *
        * @param service_name_  Unique service name.
       **/
-      CServiceClient(const std::string& service_name_)
+      explicit CServiceClient(const std::string& service_name_)
       {
         Create(service_name_);
       }
@@ -177,7 +177,7 @@ namespace eCAL
         SetHostName(host_name_);
         if (Call(method_name_, request_.SerializeAsString(), timeout_, &service_response_vec))
         {
-          if (service_response_vec.size() > 0)
+          if (!service_response_vec.empty())
           {
             service_response_ = service_response_vec[0];
             response_.ParseFromString(service_response_vec[0].response);

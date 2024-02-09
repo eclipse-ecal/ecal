@@ -24,7 +24,6 @@
 #include "ecal_def.h"
 #include "ecal_event.h"
 #include "ecal_globals.h"
-#include <cstddef>
 #include <string>
 #include <vector>
 

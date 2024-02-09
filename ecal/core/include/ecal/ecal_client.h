@@ -54,7 +54,7 @@ namespace eCAL
      *
      * @param service_name_  Unique service name.
     **/
-    ECAL_API CServiceClient(const std::string& service_name_);
+    ECAL_API explicit CServiceClient(const std::string& service_name_);
 
     /**
      * @brief Destructor. 
@@ -64,12 +64,12 @@ namespace eCAL
     /**
      * @brief CServiceClients are non-copyable
     **/
-    ECAL_API CServiceClient(const CServiceClient&) = delete;
+    CServiceClient(const CServiceClient&) = delete;
 
     /**
      * @brief CServiceClients are non-copyable
     **/
-    ECAL_API CServiceClient& operator=(const CServiceClient&) = delete;
+    CServiceClient& operator=(const CServiceClient&) = delete;
 
     /**
      * @brief Creates this object. 

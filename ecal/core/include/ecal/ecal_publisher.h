@@ -90,7 +90,7 @@ namespace eCAL
      *
      * @param topic_name_   Unique topic name.
     **/
-    ECAL_API CPublisher(const std::string& topic_name_);
+    ECAL_API explicit CPublisher(const std::string& topic_name_);
 
     /**
      * @brief Destructor. 
@@ -100,12 +100,12 @@ namespace eCAL
     /**
      * @brief CPublishers are non-copyable
     **/
-    ECAL_API CPublisher(const CPublisher&) = delete;
+    CPublisher(const CPublisher&) = delete;
 
     /**
      * @brief CPublishers are non-copyable
     **/
-    ECAL_API CPublisher& operator=(const CPublisher&) = delete;
+    CPublisher& operator=(const CPublisher&) = delete;
 
     /**
      * @brief CPublishers are move-enabled

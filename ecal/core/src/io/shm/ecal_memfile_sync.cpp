@@ -21,8 +21,6 @@
  * @brief  synchronized memory file interface
 **/
 
-#include <cstddef>
-#include <cstdint>
 #include <ecal/ecal_log.h>
 
 #include "ecal_event.h"

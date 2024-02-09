@@ -25,7 +25,6 @@
 
 #include <chrono>
 #include <string>
-#include <thread>
 
 #if ECAL_CORE_TIMEGATE
 #include "ecal_timegate.h"

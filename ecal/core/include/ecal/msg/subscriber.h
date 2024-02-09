@@ -211,7 +211,7 @@ protected:
   private:
     void ReceiveCallback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
     {
-      MsgReceiveCallbackT fn_callback = nullptr;
+      MsgReceiveCallbackT fn_callback(nullptr);
       {
         std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
         fn_callback = m_cb_callback;

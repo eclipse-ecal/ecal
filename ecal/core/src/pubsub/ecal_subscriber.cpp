@@ -21,7 +21,6 @@
  * @brief  common data subscriber for eCAL
 **/
 
-#include <cstddef>
 #include <ecal/ecal.h>
 
 #include "ecal_globals.h"
@@ -67,7 +66,7 @@ namespace eCAL
   CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
     : CSubscriber()
   {
-    Create(topic_name_, topic_info_);
+    CSubscriber::Create(topic_name_, topic_info_);
   }
 
   CSubscriber::CSubscriber(const std::string& topic_name_)
@@ -76,7 +75,7 @@ namespace eCAL
 
   CSubscriber::~CSubscriber()
   {
-    Destroy();
+    CSubscriber::Destroy();
   }
 
   CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept :

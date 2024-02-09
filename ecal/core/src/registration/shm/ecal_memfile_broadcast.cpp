@@ -28,8 +28,6 @@
 #include "ecal_global_accessors.h"
 
 #include <array>
-#include <cstddef>
-#include <cstdint>
 #include <iostream>
 #include <memory>
 #include <string>

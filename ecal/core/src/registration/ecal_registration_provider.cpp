@@ -356,7 +356,7 @@ namespace eCAL
 
     // eCAL initialization state
     const unsigned int comp_state(g_globals()->GetComponents());
-    process_sample_process.component_init_state = comp_state;
+    process_sample_process.component_init_state = static_cast<int32_t>(comp_state);
     std::string component_info;
     if ((comp_state & Init::Publisher)  != 0u) component_info += "|pub";
     if ((comp_state & Init::Subscriber) != 0u) component_info += "|sub";

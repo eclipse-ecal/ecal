@@ -40,9 +40,9 @@ namespace eCAL
 
     void Destroy();
 
-    bool AddFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_);
-    bool RemoveFile(const std::string& name_, const bool remove_);
-    bool CheckFileSize(const std::string& name_, const size_t len_, SMemFileInfo& mem_file_info_);
+    bool AddFile(const std::string& name_, bool create_, size_t len_, SMemFileInfo& mem_file_info_);
+    bool RemoveFile(const std::string& name_, bool remove_);
+    bool CheckFileSize(const std::string& name_, size_t len_, SMemFileInfo& mem_file_info_);
 
   protected:
     using MemFileMapT = std::unordered_map<std::string, SMemFileInfo>;
@@ -54,10 +54,10 @@ namespace eCAL
   {
     namespace db
     {
-      bool AddFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_);
-      bool RemoveFile(const std::string& name_, const bool remove_);
+      bool AddFile(const std::string& name_, bool create_, size_t len_, SMemFileInfo& mem_file_info_);
+      bool RemoveFile(const std::string& name_, bool remove_);
 
-      bool CheckFileSize(const std::string& name_, const size_t len_, SMemFileInfo& mem_file_info_);
+      bool CheckFileSize(const std::string& name_, size_t len_, SMemFileInfo& mem_file_info_);
     }
   }
 }

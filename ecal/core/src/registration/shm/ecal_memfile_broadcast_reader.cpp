@@ -24,7 +24,6 @@
 #include "ecal_memfile_broadcast_reader.h"
 #include "ecal_def.h"
 #include "io/shm/ecal_memfile.h"
-#include <cstdint>
 #include <iostream>
 #include <memory>
 #include <set>

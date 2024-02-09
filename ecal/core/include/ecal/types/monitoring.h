@@ -179,6 +179,7 @@ namespace eCAL
       {
         rclock      = 0;
         pid         = 0;
+        version     = 0;
         tcp_port_v0 = 0;
         tcp_port_v1 = 0;
       };
@@ -203,8 +204,9 @@ namespace eCAL
     {
       SClientMon()
       {
-        rclock = 0;
-        pid    = 0;
+        rclock  = 0;
+        pid     = 0;
+        version = 0;
       };
 
       int32_t      rclock;                                      //<! registration clock

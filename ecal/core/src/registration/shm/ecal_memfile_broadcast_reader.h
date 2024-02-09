@@ -35,7 +35,7 @@ namespace eCAL
 {
   struct SMemfileBroadcastMessage
     {
-    const void  *data;
+    const void  *data = nullptr;
     std::size_t  size = 0;
     std::int64_t timestamp = 0;
   };

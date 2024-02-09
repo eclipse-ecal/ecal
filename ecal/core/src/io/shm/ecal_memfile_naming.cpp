@@ -19,7 +19,6 @@
 
 #include "io/shm/ecal_memfile_naming.h"
 
-#include <cstdint>
 #include <ios>
 #include <limits>
 #include <random>
