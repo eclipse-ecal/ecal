@@ -20,6 +20,11 @@
 #include "protocol_v0.h"
 
 #include "protocol_layout.h"
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <mutex>
+#include <string>
 
 namespace eCAL
 {

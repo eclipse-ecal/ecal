@@ -20,6 +20,9 @@
 #include "server_impl.h"
 
 #include <algorithm>
+#include <cstdint>
+#include <memory>
+#include <mutex>
 
 #include "server_session_impl_v1.h"
 #include "server_session_impl_v0.h"

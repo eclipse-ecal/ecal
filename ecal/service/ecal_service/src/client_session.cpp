@@ -17,7 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstdint>
 #include <ecal/service/client_session.h>
+#include <memory>
+#include <mutex>
+#include <string>
 
 #include "client_session_impl_v1.h"
 #include "client_session_impl_v0.h"

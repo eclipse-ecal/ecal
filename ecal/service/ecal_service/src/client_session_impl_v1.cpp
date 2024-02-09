@@ -23,7 +23,14 @@
 #include "log_helpers.h"
 #include "log_defs.h"
 
+#include <cstddef>
+#include <cstdint>
 #include <iostream>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace eCAL
 {

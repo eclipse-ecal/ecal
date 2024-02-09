@@ -19,11 +19,10 @@
 
 #pragma once
 
-#include <memory>
-#include <string>
-#include <vector>
 #include <functional>
+#include <memory>
 #include <mutex>
+#include <string>
 
 #include <asio.hpp>
 
