@@ -18,14 +18,23 @@
 
 project(core VERSION ${eCAL_VERSION_STRING})
 
-find_package(Threads      REQUIRED)
-find_package(asio         REQUIRED)
-find_package(tclap        REQUIRED)
-find_package(simpleini    REQUIRED)
-find_package(tcp_pubsub   REQUIRED)
+find_package(asio             REQUIRED)
+find_package(Threads          REQUIRED)
+
+if (ECAL_CORE_CONFIG_INIFILE)
+  find_package(simpleini      REQUIRED)
+endif()
+
+if (ECAL_CORE_COMMAND_LINE)
+  find_package(tclap          REQUIRED)
+endif()
+
+if (ECAL_CORE_TRANSPORT_TCP)
+  find_package(tcp_pubsub     REQUIRED)
+endif()
 
 if (ECAL_CORE_NPCAP_SUPPORT)
-  find_package(udpcap REQUIRED)
+  find_package(udpcap         REQUIRED)
 endif()
 
 # If we're currently doing a build within a git repository, we will configure the header files.
@@ -307,7 +316,7 @@ if (ECAL_CORE_REGISTRATION)
   endif()
 endif()
 
-############################################################################
+######################################
 # serialization
 ######################################
 set(ecal_serialization_src
@@ -455,6 +464,7 @@ set(ecal_header_cmn
     include/ecal/types/monitoring.h
     include/ecal/ecal.h
     include/ecal/ecal_callback.h
+    include/ecal/ecal_clang.h
     include/ecal/ecal_client.h
     include/ecal/ecal_config.h
     include/ecal/ecal_core.h
@@ -525,7 +535,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_io_mtx_src}
     ${ecal_io_mtx_linux_src}
     ${ecal_io_mtx_win_src}
-    ${ecal_io_shm_src} 
+    ${ecal_io_shm_src}
     ${ecal_io_shm_linux_src}
     ${ecal_io_shm_win_src}
     ${ecal_io_udp_fragmentation_src}
@@ -533,13 +543,13 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_io_udp_src}
     ${ecal_io_udp_sendreceive_linux_src}
     ${ecal_io_udp_sendreceive_win_src}
-    ${ecal_logging_src} 
-    ${ecal_monitoring_src} 
-    ${ecal_pub_src} 
-    ${ecal_sub_src} 
+    ${ecal_logging_src}
+    ${ecal_monitoring_src}
+    ${ecal_pub_src}
+    ${ecal_sub_src}
     ${ecal_writer_src}
     ${ecal_reader_src}
-    ${ecal_registration_src}   
+    ${ecal_registration_src}
     ${ecal_serialization_src}
     ${ecal_service_src}
     ${ecal_time_src}
@@ -670,8 +680,8 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::ecal-utils
 )
 
-set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)
-set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER ecal/core)
+set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER core)
+set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER core)
 
 ecal_install_ecal_shared_library(${PROJECT_NAME}_c)
 ecal_install_ecal_shared_library(${PROJECT_NAME})
@@ -692,9 +702,9 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_io_mtx_src}
     ${ecal_io_mtx_linux_src}
     ${ecal_io_mtx_win_src}
-    ${ecal_io_shm_src} 
+    ${ecal_io_shm_src}
     ${ecal_io_shm_linux_src}
-    ${ecal_io_shm_win_src} 
+    ${ecal_io_shm_win_src}
     ${ecal_io_udp_fragmentation_src}
     ${ecal_io_udp_sendreceive_src}
     ${ecal_io_udp_src}
@@ -704,10 +714,10 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_monitoring_src}
     ${ecal_pub_src} 
     ${ecal_sub_src} 
-    ${ecal_writer_src}
-    ${ecal_reader_src}
+    ${ecal_writer_src} 
+    ${ecal_reader_src} 
     ${ecal_registration_src}   
-    ${ecal_serialization_src}
+    ${ecal_serialization_src}    
     ${ecal_service_src}
     ${ecal_time_src}
     ${ecal_util_src}
@@ -729,5 +739,5 @@ if(UNIX)
 
     ecal_install_app(${PROJECT_NAME_PROCESS_STUB})
 
-    set_property(TARGET ${PROJECT_NAME_PROCESS_STUB} PROPERTY FOLDER ecal/core)
+    set_property(TARGET ${PROJECT_NAME_PROCESS_STUB} PROPERTY FOLDER core)
 endif(UNIX)
