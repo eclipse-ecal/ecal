@@ -14,3 +14,4 @@ sphinxcontrib-devhelp<=1.0.5          # 2024-01-15: Newer packages need Sphinx 5
 sphinxcontrib-htmlhelp<=2.0.4         # 2024-01-15: Newer packages (probably) need Sphinx 5 or up, but our old sphinx-book-theme 0.3.3 requires Sphinx 4
 sphinxcontrib-qthelp<=1.0.6           # 2024-01-15: Newer packages (probably) need Sphinx 5 or up, but our old sphinx-book-theme 0.3.3 requires Sphinx 4
 sphinxcontrib-serializinghtml<=1.1.9  # 2024-01-15: Newer packages (probably) need Sphinx 5 or up, but our old sphinx-book-theme 0.3.3 requires Sphinx 4
+setuptools # Python3.12 no longer has setuptools by default and the pinned sphinx-tabs version needs pkg_resources

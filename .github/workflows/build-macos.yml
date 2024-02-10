@@ -46,10 +46,6 @@ jobs:
 
     - name: Display Python version
       run: python -c "import sys; print(sys.version)"
-        
-    - name: Install Python requirements
-      run: |
-        sudo pip3 install -r "$GITHUB_WORKSPACE/doc/requirements.txt"
 
     - name: CMake
       run: |

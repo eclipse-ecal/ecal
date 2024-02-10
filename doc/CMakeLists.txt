@@ -19,40 +19,60 @@
 project(documentation_sphinx)
 
 #Setup Python VENV
-# find_package(PythonInterp REQUIRED)
-
-# set(PYTHON_VENV_PATH "${CMAKE_BINARY_DIR}/_python_venv")
+message(DEBUG "Configuring eCAL documentation build")
+set(PYTHON_VENV_PATH "${CMAKE_BINARY_DIR}/_python_venv")
 set(CMAKE_FOLDER "docs")
 
-# message(STATUS "Creating Python venv at ${PYTHON_VENV_PATH}")
-# exec_program("${PYTHON_EXECUTABLE}"
-    # ARGS -m venv ${PYTHON_VENV_PATH}
-# )
+find_package(Doxygen REQUIRED)
+
+if(NOT EXISTS "${PYTHON_VENV_PATH}")
+  find_package(Python3 3.7 REQUIRED COMPONENTS Interpreter)
+  message(STATUS "Creating Python ${Python3_VERSION} virtual environment at ${PYTHON_VENV_PATH}")
+  execute_process(COMMAND 
+    "${Python3_EXECUTABLE}" "-m"
+    "venv" "${PYTHON_VENV_PATH}"
+    RESULT_VARIABLE PYTHON_VENV_RESULT
+  )
+  message(DEBUG "Python venv RESULT_VARIABLE: ${PYTHON_VENV_RESULT}")
+  if(NOT "${PYTHON_VENV_RESULT}" EQUAL 0)
+    message(FATAL_ERROR 
+      " Failed create Python virtual environment using 'venv'.\n"
+      " You may manually create the virtual environment at the following location"
+      " to bypass this step:\n"
+      " ${PYTHON_VENV_PATH}"
+      )
+  endif()
+endif()
 
 # update the environment with VIRTUAL_ENV variable (mimic the activate script)
-# set (ENV{VIRTUAL_ENV} "${PYTHON_VENV_PATH}")
+set(ENV{VIRTUAL_ENV} "${PYTHON_VENV_PATH}")
+unset(ENV{CONDA_PREFIX})
+
 # change the context of the search
-# set (Python_FIND_VIRTUALENV FIRST)
-# unset Python3_EXECUTABLE because it is also an input variable (see documentation, Artifacts Specification section)
-# unset (Python3_EXECUTABLE)
+set(Python3_FIND_VIRTUALENV "ONLY")
+set(Python3_ROOT_DIR "${PYTHON_VENV_PATH}")
+
+# unset from prior search
+unset(Python3_EXECUTABLE)
+
 # Launch a new search
-# find_package(PythonInterp REQUIRED)
+find_package(Python3 3.7 REQUIRED COMPONENTS Interpreter)
 
-# message(STATUS "========Python executable: ${PYTHON_EXECUTABLE}")
-# message(STATUS "========PYTHON_VENV_PATH : ${PYTHON_VENV_PATH}")
+message(STATUS "Documentation Python ${Python3_VERSION} executable: ${Python3_EXECUTABLE}")
 
+set(VENV_STAMP_FILE "${CMAKE_CURRENT_BINARY_DIR}/venv.stamp")
 
-
-
-
-
-
-
-
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
-find_package(Sphinx REQUIRED)
-find_package(Doxygen REQUIRED)
+# Install documentation build dependencies
+add_custom_command(OUTPUT "${VENV_STAMP_FILE}"
+  COMMAND "${Python3_EXECUTABLE}" "-m"
+    "pip" "install"
+    "-r" "${CMAKE_CURRENT_SOURCE_DIR}/requirements.txt"
+    "--quiet" "--disable-pip-version-check" "--require-virtualenv"
+  DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/requirements.txt"
+  COMMENT "Installing documentation pip dependencies"
+  COMMAND "${CMAKE_COMMAND}" -E touch "${VENV_STAMP_FILE}"
+)
+add_custom_target(documentation_install_deps DEPENDS "${VENV_STAMP_FILE}")
 
 # This directory contains all files for creating the actual documentation
 set(DOC_SOURCE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/_sources)
@@ -149,9 +169,7 @@ configure_file(
 # Now run the actual sphinx documentation
 ####################################################  
 add_custom_target(documentation_sphinx ALL
-    #${SPHINX_APIDOC} -f
-    #-o ${DOC_SOURCE_DIRECTORY}/_apidoc/ ${PYTHON_SOURCE_DIRECTORY}
-    COMMAND ${SPHINX_EXECUTABLE}
+    COMMAND "${Python3_EXECUTABLE}" -m sphinx
         -q -b html
         -c "${DOC_SOURCE_DIRECTORY}"
         -d "${SPHINX_CACHE_DIR}"
@@ -159,7 +177,13 @@ add_custom_target(documentation_sphinx ALL
         "${DOC_SOURCE_DIRECTORY}"
         "${SPHINX_HTML_DIR}"
     COMMENT "Building HTML documentation with Sphinx"
-    DEPENDS documentation_run_doxygen documentation_copy_rst_files _ecal_core_py _ecal_hdf5_py documentation_copy_sample_files
+    DEPENDS 
+      documentation_install_deps 
+      documentation_run_doxygen 
+      documentation_copy_rst_files 
+      _ecal_core_py 
+      _ecal_hdf5_py 
+      documentation_copy_sample_files
 )
     
     
