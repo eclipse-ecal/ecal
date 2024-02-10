@@ -22,6 +22,7 @@ project(documentation_sphinx)
 # find_package(PythonInterp REQUIRED)
 
 # set(PYTHON_VENV_PATH "${CMAKE_BINARY_DIR}/_python_venv")
+set(CMAKE_FOLDER "docs")
 
 # message(STATUS "Creating Python venv at ${PYTHON_VENV_PATH}")
 # exec_program("${PYTHON_EXECUTABLE}"
@@ -68,12 +69,10 @@ add_custom_target(documentation_copy_rst_files ALL
   COMMAND cmake -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/rst ${DOC_SOURCE_DIRECTORY}
   SOURCES ${rst_sources}
 )
-set_property(TARGET documentation_copy_rst_files  PROPERTY FOLDER docs)
 
 add_custom_target(documentation_copy_sample_files ALL
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/samples/ ${DOC_SOURCE_DIRECTORY}/source_code_samples
 )
-set_property(TARGET documentation_copy_sample_files  PROPERTY FOLDER docs)
 
 #######################################
 # Doxygen documentation with xml output
@@ -120,7 +119,6 @@ doxygen_add_docs(
   #../ecal/metal/include/ecalmetal/udp
 )
 
-set_property(TARGET documentation_run_doxygen PROPERTY FOLDER docs)
 
 
 
@@ -164,7 +162,6 @@ add_custom_target(documentation_sphinx ALL
     DEPENDS documentation_run_doxygen documentation_copy_rst_files _ecal_core_py _ecal_hdf5_py documentation_copy_sample_files
 )
     
-set_property(TARGET documentation_sphinx  PROPERTY FOLDER docs)
     
 # Install the generated files
 install(DIRECTORY ${SPHINX_HTML_DIR}/
