@@ -71,6 +71,15 @@
       }
     },
     {
+      "name": "docs",
+      "inherits": "wheel",
+      "displayName": "Documentation",
+      "description": "Build documentation",
+      "cacheVariables": {
+        "BUILD_DOCS": "ON"
+      }
+    },
+    {
       "name": "cli",
       "inherits": "core",
       "displayName": "CLI Apps",
@@ -111,6 +120,12 @@
       "description": "Build standalone python wheel",
       "configurePreset": "wheel",
       "targets": "create_python_wheel"
+    },
+    {
+      "name": "docs",
+      "description": "Build sphinx documentation",
+      "configurePreset": "docs",
+      "targets": "documentation_sphinx" 
     },
     {
       "name": "cli",
