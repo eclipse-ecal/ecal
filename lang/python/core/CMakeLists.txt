@@ -29,7 +29,7 @@ endif()
 
 project(_ecal_core_py)
 
-find_package(Python COMPONENTS Development Interpreter)
+find_package(Python3 COMPONENTS Development Interpreter)
 find_package(Protobuf REQUIRED)
 
 set(ecal_lang_py_src
@@ -40,7 +40,7 @@ ecal_add_python_module(${PROJECT_NAME} SOURCES ${ecal_lang_py_src} PYTHON_CODE $
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
-        Python::Python
+        Python3::Python
         eCAL::core
         eCAL::core_pb
 )

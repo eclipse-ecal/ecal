@@ -44,7 +44,7 @@ function(ecal_add_python_module TARGET_NAME)
 
   # if Sources are specified, a library is created
   if(ARGUMENTS_SOURCES)
-    Python_add_library(${TARGET_NAME} MODULE ${ARGUMENTS_SOURCES})
+    Python3_add_library(${TARGET_NAME} MODULE ${ARGUMENTS_SOURCES})
     set_target_properties(${TARGET_NAME}
         PROPERTIES
         PREFIX ""

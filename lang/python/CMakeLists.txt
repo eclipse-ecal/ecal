@@ -18,7 +18,7 @@
 
 project(_ecal_py)
 
-find_package(Python COMPONENTS Development Interpreter)
+find_package(Python3 COMPONENTS Development Interpreter)
 find_package(Protobuf REQUIRED)
 
 set(SETUP_PY_IN "${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in")
@@ -44,15 +44,15 @@ endif()
 
 configure_file(${SETUP_PY_IN} ${SETUP_PY} @ONLY)
 
-if(Python_Interpreter_FOUND)
-  message(STATUS "Python interpreter found: ${Python_EXECUTABLE}")
+if(Python3_Interpreter_FOUND)
+  message(STATUS "Python interpreter found: ${Python3_EXECUTABLE}")
 
   # on make install the python module gets installed directly by invocing python interpreter
   # TODO: this needs to be tested on windows also
   message(STATUS "Installing Python extensions")
   #install(CODE "execute_process(COMMAND ${Python_EXECUTABLE} setup.py install --user WORKING_DIRECTORY ${PYTHON_BINARY_DIR})")
   add_custom_target(create_python_wheel
-      ${Python_EXECUTABLE} setup.py bdist_wheel --dist-dir=${BUILD_DEPLOY_DIRECTORY}
+      ${Python3_EXECUTABLE} setup.py bdist_wheel --dist-dir=${BUILD_DEPLOY_DIRECTORY}
       DEPENDS _ecal_core_py _ecal_hdf5_py
       WORKING_DIRECTORY ${PYTHON_BINARY_DIR}
       COMMENT "Creating python wheel"
