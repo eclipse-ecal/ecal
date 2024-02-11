@@ -20,7 +20,7 @@ project(documentation_sphinx)
 
 #Setup Python VENV
 message(DEBUG "Configuring eCAL documentation build")
-set(PYTHON_VENV_PATH "${CMAKE_BINARY_DIR}/_python_venv")
+set(PYTHON_VENV_PATH "${CMAKE_CURRENT_BINARY_DIR}/_python_venv")
 set(CMAKE_FOLDER "docs")
 
 find_package(Doxygen REQUIRED)
@@ -64,10 +64,13 @@ set(VENV_STAMP_FILE "${CMAKE_CURRENT_BINARY_DIR}/venv.stamp")
 
 # Install documentation build dependencies
 add_custom_command(OUTPUT "${VENV_STAMP_FILE}"
+  COMMAND "${Python3_EXECUTABLE}" "-m" 
+    "pip" "install" "--upgrade" "pip"
+    "--quiet" "--require-virtualenv"
   COMMAND "${Python3_EXECUTABLE}" "-m"
     "pip" "install"
     "-r" "${CMAKE_CURRENT_SOURCE_DIR}/requirements.txt"
-    "--quiet" "--disable-pip-version-check" "--require-virtualenv"
+    "--quiet" "--require-virtualenv"
   DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/requirements.txt"
   COMMENT "Installing documentation pip dependencies"
   COMMAND "${CMAKE_COMMAND}" -E touch "${VENV_STAMP_FILE}"
