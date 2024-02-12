@@ -19,7 +19,10 @@
 
 #pragma once
 
+#include <cstdint>
+#include <functional>
 #include <memory>
+#include <string>
 
 #ifdef _MSC_VER
 #pragma warning(push)

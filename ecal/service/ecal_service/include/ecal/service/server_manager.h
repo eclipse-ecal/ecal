@@ -19,10 +19,13 @@
 
 #pragma once
 
-#include <memory>
+#include <cstddef>
+#include <cstdint>
 #include <map>
+#include <memory>
 
 #include <ecal/service/server.h>
+#include <mutex>
 
 namespace eCAL
 {
