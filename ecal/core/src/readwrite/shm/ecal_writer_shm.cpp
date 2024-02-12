@@ -56,9 +56,6 @@ namespace eCAL
     info_.has_mode_local       = true;
     info_.has_mode_cloud       = false;
 
-    info_.has_qos_history_kind = false;
-    info_.has_qos_reliability  = true;
-
     info_.send_size_max        = -1;
 
     return info_;
@@ -93,12 +90,6 @@ namespace eCAL
       m_memory_file_vec.clear();
     }
 
-    return true;
-  }
-
-  bool CDataWriterSHM::SetQOS(const QOS::SWriterQOS& qos_)
-  {
-    m_qos = qos_;
     return true;
   }
 
