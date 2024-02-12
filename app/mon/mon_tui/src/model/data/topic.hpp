@@ -25,16 +25,6 @@
 
 struct Topic
 {
-  enum class QOSReliability
-  {
-    BEST_EFFORT, RELIABLE
-  };
-
-  enum class QOSHistoryKind
-  {
-    KEEP_LAST, KEEP_ALL
-  };
-
   enum class TransportLayer
   {
     NONE, UDP_MC, SHM, TCP, INPROC, ALL
@@ -56,9 +46,6 @@ struct Topic
   Direction direction;
   std::string type;
   std::string type_descriptor;
-  QOSHistoryKind history_kind;
-  int32_t history_depth;
-  QOSReliability reliability;
   std::vector<TransportLayer> transport_layers;
   int32_t size;
   int32_t local_connections_count;

@@ -82,7 +82,6 @@ TopicWidget::TopicWidget(QWidget *parent)
     (int)TopicTreeModel::Columns::UNIT_NAME,
     (int)TopicTreeModel::Columns::TOPIC_ENCODING,
     (int)TopicTreeModel::Columns::MESSAGE_TYPE,
-    (int)TopicTreeModel::Columns::QOS,
     (int)TopicTreeModel::Columns::TRANSPORT_LAYER,
   };
   setFilterColumns(filter_columns);
@@ -97,7 +96,6 @@ TopicWidget::TopicWidget(QWidget *parent)
     (int)TopicTreeModel::Columns::PROCESS_NAME,
     (int)TopicTreeModel::Columns::TOPIC_ENCODING,
     (int)TopicTreeModel::Columns::MESSAGE_TYPE,
-    (int)TopicTreeModel::Columns::QOS,
     (int)TopicTreeModel::Columns::TRANSPORT_LAYER,
   };
 
@@ -228,7 +226,6 @@ void TopicWidget::autoSizeColumns()
   example_topic_pb.set_direction("subscriber__");
   example_topic_pb.set_ttype("proto:pb.People.Person____");
   //example_topic_pb.set_tdesc();
-  example_topic_pb.mutable_tqos()->set_reliability(eCAL::pb::QOS::eQOSPolicy_Reliability::QOS_eQOSPolicy_Reliability_best_effort_reliability_qos);
 
   example_topic_pb.mutable_tlayer()->Add()->set_type(eCAL::pb::eTLayerType::tl_ecal_shm);
   example_topic_pb.mutable_tlayer()->Add()->set_type(eCAL::pb::eTLayerType::tl_ecal_udp_mc);
@@ -261,7 +258,6 @@ void TopicWidget::autoSizeColumns()
     (int)TopicTreeModel::Columns::TOPIC_ENCODING,
     (int)TopicTreeModel::Columns::MESSAGE_TYPE,
     (int)TopicTreeModel::Columns::HEARTBEAT,
-    (int)TopicTreeModel::Columns::QOS,
     (int)TopicTreeModel::Columns::TRANSPORT_LAYER,
     (int)TopicTreeModel::Columns::TOPIC_SIZE,
     (int)TopicTreeModel::Columns::CONNECTIONS_LOCAL,
