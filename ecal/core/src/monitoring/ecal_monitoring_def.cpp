@@ -126,7 +126,7 @@ namespace eCAL
 
     int GetLogging(std::string& log_)
     {
-      eCAL::pb::Logging logging;
+      eCAL::pb::LogMessageList logging;
       if (g_log() != nullptr) g_log()->GetLogging(logging);
 
       log_ = logging.SerializeAsString();

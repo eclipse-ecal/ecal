@@ -302,11 +302,6 @@ endif()
 add_subdirectory(contrib/ecalproto)
 
 # --------------------------------------------------------
-# old ecal core protobuf interface (for compatibility)
-# --------------------------------------------------------
-add_subdirectory(ecal/pb)
-
-# --------------------------------------------------------
 # ecal core protobuf interface
 # --------------------------------------------------------
 add_subdirectory(ecal/core_pb)

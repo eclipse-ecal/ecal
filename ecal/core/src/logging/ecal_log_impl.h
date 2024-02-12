@@ -117,7 +117,7 @@ namespace eCAL
     **/
     std::chrono::duration<double> GetCoreTime();
 
-    void GetLogging(eCAL::pb::Logging& logging_);
+    void GetLogging(eCAL::pb::LogMessageList& logging_);
 
   private:
     void RegisterLogMessage(const eCAL::pb::LogMessage& log_msg_);

@@ -38,6 +38,7 @@
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4800 4505) // disable proto warnings
 #endif
+#include <ecal/core/pb/logging.pb.h>
 #include <ecal/core/pb/monitoring.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -1535,15 +1536,15 @@ PyObject* mon_logging(PyObject* /*self*/, PyObject* /*args*/)
   std::string logging_s;
   if (eCAL::Monitoring::GetLogging(logging_s))
   {
-    eCAL::pb::Logging logging;
+    eCAL::pb::LogMessageList logging;
     logging.ParseFromString(logging_s);
 
-    for (int i = 0; i < logging.logs().size(); ++i)
+    for (int i = 0; i < logging.log_messages().size(); ++i)
     {
       PyObject* logDict = PyDict_New();
       PyList_Append(retList, logDict); Py_DECREF(logDict);
 
-      const eCAL::pb::LogMessage& log = logging.logs(i);
+      const eCAL::pb::LogMessage& log = logging.log_messages(i);
       PyObject* val;
 
       val = Py_BuildValue("L", log.time());

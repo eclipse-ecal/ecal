@@ -321,7 +321,7 @@ namespace eCAL
     return(m_core_time);
   }
 
-  void CLog::GetLogging(eCAL::pb::Logging& logging_)
+  void CLog::GetLogging(eCAL::pb::LogMessageList& logging_)
   {
     // clear protobuf object
     logging_.Clear();
@@ -333,7 +333,7 @@ namespace eCAL
     while (siter != m_log_msglist.end())
     {
       // add log message
-      eCAL::pb::LogMessage* pMonLogMessage = logging_.add_logs();
+      eCAL::pb::LogMessage* pMonLogMessage = logging_.add_log_messages();
 
       // copy content
       pMonLogMessage->CopyFrom(*siter);
