@@ -29,11 +29,11 @@ class ProcessesViewModel : public TableViewModel<Process>
 public:
   enum Column
   {
-    Host, PID, Name, CPU, Memory, Info, State
+    Host, PID, Name, Info, State
   };
 
   ProcessesViewModel(std::shared_ptr<MonitorModel> model_)
-    : TableViewModel<Process>({"Host", "PID", "Name", "CPU", "Memory", "Info", "State"})
+    : TableViewModel<Process>({"Host", "PID", "Name", "Info", "State"})
   {
     title = "Processes";
     model_->AddModelUpdateCallback([this, model_] {
@@ -51,10 +51,6 @@ public:
         return std::to_string(value.pid);
       case Column::Name:
         return value.name;
-      case Column::CPU:
-        return std::to_string(value.cpu_usage);
-      case Column::Memory:
-        return std::to_string(value.memory_usage);
       case Column::Info:
         return value.state_info;
       case Column::State:

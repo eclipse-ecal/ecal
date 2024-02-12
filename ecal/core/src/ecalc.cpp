@@ -308,16 +308,6 @@ extern "C"
     return(0);
   }
 
-  ECALC_API float eCAL_Process_GetProcessCpuUsage()
-  {
-    return(eCAL::Process::GetProcessCpuUsage());
-  }
-
-  ECALC_API unsigned long eCAL_Process_GetProcessMemory()
-  {
-    return(eCAL::Process::GetProcessMemory());
-  }
-
   ECALC_API long long eCAL_Process_GetSClock()
   {
     return(eCAL_Process_GetWClock());
@@ -438,26 +428,6 @@ extern "C"
   ECALC_API void eCAL_Logging_Log(const char* const msg_)
   {
     eCAL::Logging::Log(msg_);
-  }
-
-  ECALC_API void eCAL_Logging_StartCoreTimer()
-  {
-    eCAL::Logging::StartCoreTimer();
-  }
-
-  ECALC_API void eCAL_Logging_StopCoreTimer()
-  {
-    eCAL::Logging::StopCoreTimer();
-  }
-
-  ECALC_API void eCAL_Logging_SetCoreTime(double time_)
-  {
-    eCAL::Logging::SetCoreTime(time_);
-  }
-
-  ECALC_API double eCAL_Logging_GetCoreTime()
-  {
-    return(eCAL::Logging::GetCoreTime());
   }
 }
 

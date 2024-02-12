@@ -154,20 +154,6 @@ namespace eCAL
     ECAL_API std::string GetProcessParameter();
 
     /**
-     * @brief  Get CPU usage of current process. 
-     *
-     * @return  The CPU usage in percent. 
-    **/
-    ECAL_API float GetProcessCpuUsage();
-
-    /**
-     * @brief  Get memory usage of current process. 
-     *
-     * @return  The memory usage in bytes. 
-    **/
-    ECAL_API unsigned long GetProcessMemory();
-
-    /**
      * @deprecated  Use the function GetWClock() instead
     **/
     ECAL_DEPRECATE_SINCE_5_4("use GetWClock() instead")

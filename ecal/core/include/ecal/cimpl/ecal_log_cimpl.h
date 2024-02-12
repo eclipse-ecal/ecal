@@ -53,28 +53,6 @@ extern "C"
    * @param msg_  The log message string.
   **/
   ECALC_API void eCAL_Logging_Log(const char* const msg_);
-
-  /**
-   * @brief Mark the start of the user core process. 
-  **/
-  ECALC_API void eCAL_Logging_StartCoreTimer();
-
-  /**
-   * @brief Mark the stop of the user core process. 
-  **/
-  ECALC_API void eCAL_Logging_StopCoreTimer();
-
-  /**
-   * @brief Set the current measured core time in s (for user implemented measuring). 
-   *
-   * @param time_  The core time.
-  **/
-  ECALC_API void eCAL_Logging_SetCoreTime(double time_);
-
-  /**
-   * @brief Returns the current measured core time in s. 
-  **/
-  ECALC_API double eCAL_Logging_GetCoreTime();
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

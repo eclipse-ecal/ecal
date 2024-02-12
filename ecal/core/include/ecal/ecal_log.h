@@ -64,25 +64,5 @@ namespace eCAL
       SetLogLevel(level_);
       Log(msg_);
     }
-
-    /**
-     * @brief Mark the start of the user core process. 
-    **/
-    ECAL_API void StartCoreTimer();
-
-    /**
-     * @brief Mark the stop of the user core process. 
-    **/
-    ECAL_API void StopCoreTimer();
-
-    /**
-     * @brief Set the current measured core time in s (for user implemented measuring). 
-    **/
-    ECAL_API void SetCoreTime(double time_);
-
-    /**
-     * @brief Returns the current measured core time in s. 
-    **/
-    ECAL_API double GetCoreTime();
   }
 }

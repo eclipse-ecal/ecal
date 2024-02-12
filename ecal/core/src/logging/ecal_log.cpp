@@ -62,44 +62,5 @@ namespace eCAL
     {
       if(g_log() != nullptr) g_log()->Log(msg_);
     }
-
-    /**
-     * @brief Mark the start of the user core process.
-    **/
-    void StartCoreTimer()
-    {
-      if(g_log() != nullptr) g_log()->StartCoreTimer();
-    }
-
-    /**
-     * @brief Mark the stop of the user core process.
-    **/
-    void StopCoreTimer()
-    {
-      if(g_log() != nullptr) g_log()->StopCoreTimer();
-    }
-
-    /**
-     * @brief Set the current measured core time in s (for user implemented measuring).
-    **/
-    void SetCoreTime(const double time_)
-    {
-      if(g_log() != nullptr) g_log()->SetCoreTime(std::chrono::duration<double>(time_));
-    }
-
-    /**
-     * @brief Returns the current measured core time in s.
-    **/
-    double GetCoreTime()
-    {
-      if(g_log() != nullptr)
-      {
-        return(g_log()->GetCoreTime().count());
-      }
-      else
-      {
-        return(0.0);
-      }
-    }
   }
 }

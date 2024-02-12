@@ -207,13 +207,6 @@ ECAL_API bool ecal_get_description(const char* topic_name_, const char** topic_d
 ECAL_API void log_setlevel(const int level_);
 
 /**
- * @brief Set the current measured core time in s (for user implemented measuring).
- *
- * @param time_  The core time.
-**/
-ECAL_API void log_setcoretime(const double time_);
-
-/**
  * @brief Log a message (with current log level).
  *
  * @param message_  The log message string.

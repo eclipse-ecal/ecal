@@ -108,9 +108,6 @@ namespace eCAL
       {
         rclock               = 0;
         pid                  = 0;
-        pmemory              = 0;
-        pcpu                 = 0.0f;
-        usrptime             = 0.0f;
         datawrite            = 0;
         dataread             = 0;
         state_severity       = 0;
@@ -126,10 +123,6 @@ namespace eCAL
       std::string    pname;                                     //!< process name
       std::string    uname;                                     //!< unit name
       std::string    pparam;                                    //!< process parameter
-
-      long long      pmemory;                                   //!< process memory
-      float          pcpu;                                      //!< process cpu usage
-      float          usrptime;                                  //!< process user time
 
       long long      datawrite;                                 //!< data write bytes per sec
       long long      dataread;                                  //!< data read bytes per sec

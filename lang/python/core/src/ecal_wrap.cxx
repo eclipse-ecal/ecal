@@ -318,21 +318,6 @@ PyObject* log_message(PyObject* /*self*/, PyObject* args)
   Py_RETURN_NONE;
 }
 
-/****************************************/
-/*      log_setcoretime                 */
-/****************************************/
-PyObject* log_setcoretime(PyObject* /*self*/, PyObject* args)
-{
-  double time = 0.0;
-
-  if (!PyArg_ParseTuple(args, "d", &time)) 
-    return nullptr;
-
-  log_setcoretime(time);
-
-  Py_RETURN_NONE;
-}
-
 
 /****************************************/
 /*      pub_create                      */
@@ -1383,15 +1368,6 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
       val = Py_BuildValue("s", process.pparam().c_str());
       PyDict_SetItemString(processDict, "pparam", val); Py_DECREF(val);
 
-      val = Py_BuildValue("L", process.pmemory());
-      PyDict_SetItemString(processDict, "pmemory", val); Py_DECREF(val);
-
-      val = Py_BuildValue("f", process.pcpu());
-      PyDict_SetItemString(processDict, "pcpu", val); Py_DECREF(val);
-
-      val = Py_BuildValue("f", process.usrptime());
-      PyDict_SetItemString(processDict, "usrptime", val); Py_DECREF(val);
-
       val = Py_BuildValue("L", process.datawrite());
       PyDict_SetItemString(processDict, "datawrite", val); Py_DECREF(val);
 
@@ -1624,7 +1600,6 @@ static PyMethodDef _ecal_methods[] =
 
   {"log_setlevel",                  log_setlevel,                  METH_VARARGS,  "log_setlevel(level)"},
   {"log_message",                   log_message,                   METH_VARARGS,  "log_message(message)"},
-  {"log_setcoretime",               log_setcoretime,               METH_VARARGS,  "log_setcoretime(time)"},
 
   {"pub_create",                    pub_create,                    METH_VARARGS,  "pub_create(topic_name, topic_type)"},
   {"pub_destroy",                   pub_destroy,                   METH_VARARGS,  "pub_destroy(topic_handle)"},

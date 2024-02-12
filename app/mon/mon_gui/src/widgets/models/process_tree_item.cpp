@@ -81,18 +81,6 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return process_.pparam().c_str();
     }
-    else if (column == Columns::PMEMORY)
-    {
-      return (long long)process_.pmemory();
-    }
-    else if (column == Columns::PCPU)
-    {
-      return (long long)process_.pcpu();
-    }
-    else if (column == Columns::USRPTIME)
-    {
-      return process_.usrptime();
-    }
     else if (column == Columns::DATAWRITE)
     {
       return (long long)process_.datawrite();
@@ -140,30 +128,6 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
       return (!raw_data.isEmpty() ? raw_data : "- ? -");
-    }
-    else if (column == Columns::PMEMORY)
-    {
-      auto memory_bytes = process_.pmemory();
-      if (memory_bytes == 0)
-      {
-        return "0";
-      }
-      else
-      {
-        return QString::number(memory_bytes / 1024.0, 'f', 0);
-      }
-    }
-    else if (column == Columns::PCPU)
-    {
-      double cpu_percentage = process_.pcpu();
-      if (fabs(cpu_percentage) < DBL_EPSILON)
-      {
-        return "0";
-      }
-      else
-      {
-        return QString::number(cpu_percentage, 'f', 2);
-      }
     }
     else if (column == Columns::SEVERITY)
     {
@@ -227,9 +191,6 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if ((column == Columns::RCLOCK)
       || (column == Columns::PID)
-      || (column == Columns::PMEMORY)
-      || (column == Columns::PCPU)
-      || (column == Columns::USRPTIME)
       || (column == Columns::DATAWRITE)
       || (column == Columns::DATAREAD)
       )
