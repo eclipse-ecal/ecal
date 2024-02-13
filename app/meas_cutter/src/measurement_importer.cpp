@@ -179,7 +179,7 @@ bool MeasurementImporter::isEcalMeasFile(const std::string& path)
 
 bool MeasurementImporter::isProtoChannel(const eCAL::experimental::measurement::base::DataTypeInformation& channel_info)
 {
-  return (channel_info.encoding.compare("proto") == 0);
+  return (channel_info.encoding == "proto");
 }
 
 std::string MeasurementImporter::getLoadedPath()

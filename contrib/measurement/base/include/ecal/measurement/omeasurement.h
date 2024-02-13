@@ -132,7 +132,7 @@ namespace eCAL
     inline OChannel<T> OMeasurement::Create(const std::string& channel) const
     {
       static T msg;
-      eCAL::experimental::measurement::base::DataTypeInformation datatype_info;
+      eCAL::experimental::measurement::base::DataTypeInformation const datatype_info;
       datatype_info.name = eCAL::message::GetTypeName(msg);
       datatype_info.encoding = eCAL::message::GetEncoding(msg);
       datatype_info.descriptor = eCAL::message::GetDescription(msg);

@@ -44,7 +44,7 @@ namespace eCAL
       eCAL::SDataTypeInformation tinfo_;
 
       //  This should be removed once internally SDatatypeInformation is saved alongside with the publisher ID..
-      std::string GetLegacyType()
+      std::string GetLegacyType() const
       {
         if (tinfo_.encoding.empty())
         {

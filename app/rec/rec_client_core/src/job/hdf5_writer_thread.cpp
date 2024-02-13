@@ -169,7 +169,7 @@ namespace eCAL
 
           for (const auto& topic : topic_info_map_to_set)
           {
-            eCAL::experimental::measurement::base::DataTypeInformation topic_info{ topic.second.tinfo_.name, topic.second.tinfo_.encoding, topic.second.tinfo_.descriptor };
+            eCAL::experimental::measurement::base::DataTypeInformation const topic_info{ topic.second.tinfo_.name, topic.second.tinfo_.encoding, topic.second.tinfo_.descriptor };
             hdf5_writer_->SetChannelDataTypeInformation(topic.first, topic_info);
           }
         }
