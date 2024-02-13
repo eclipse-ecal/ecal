@@ -111,7 +111,6 @@ namespace eCAL
           m_filter_mask_file(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2),
           m_filter_mask_udp(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2)
   {
-    m_core_time = std::chrono::duration<double>(-1.0);
   }
 
   CLog::~CLog()
@@ -292,7 +291,7 @@ namespace eCAL
     Log(m_level, msg_);
   }
 
-  void CLog::GetLogging(eCAL::pb::Logging& logging_)
+  void CLog::GetLogging(eCAL::pb::LogMessageList& logging_)
   {
     // clear protobuf object
     logging_.Clear();
@@ -304,7 +303,7 @@ namespace eCAL
     while (siter != m_log_msglist.end())
     {
       // add log message
-      eCAL::pb::LogMessage* pMonLogMessage = logging_.add_logs();
+      eCAL::pb::LogMessage* pMonLogMessage = logging_.add_log_messages();
 
       // copy content
       pMonLogMessage->CopyFrom(*siter);

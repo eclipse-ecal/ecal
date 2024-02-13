@@ -25,7 +25,7 @@
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
 #endif
-#include "ecal/core/pb/monitoring.pb.h"
+#include <ecal/core/pb/logging.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
@@ -53,7 +53,7 @@ class LogModel
   bool is_polling;
   int capacity = 500;
 
-  eCAL::pb::Logging logs;
+  eCAL::pb::LogMessageList logs;
 
   std::mutex mtx;
   std::thread update_thread;
@@ -113,7 +113,7 @@ class LogModel
       eCAL::Monitoring::GetLogging(raw_data);
       logs.ParseFromString(raw_data);
 
-      auto &pb_logs = logs.logs();
+      auto &pb_logs = logs.log_messages();
       auto new_entries_count = pb_logs.size();
       if(new_entries_count == 0)
       {
@@ -126,7 +126,7 @@ class LogModel
       {
         data.erase(data.begin(), data.begin() + overflow_size);
       }
-      for(auto &l: logs.logs()) data.push_back(ToLogEntry(l));
+      for(auto &l: logs.log_messages()) data.push_back(ToLogEntry(l));
     }
 
     NotifyUpdate();

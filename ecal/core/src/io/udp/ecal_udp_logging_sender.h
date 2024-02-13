@@ -28,7 +28,7 @@
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
 #endif
-#include <ecal/core/pb/monitoring.pb.h>
+#include <ecal/core/pb/logging.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif

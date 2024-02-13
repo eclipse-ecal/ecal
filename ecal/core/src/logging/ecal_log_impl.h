@@ -93,7 +93,7 @@ namespace eCAL
     **/
     void Log(const std::string& msg_);
 
-    void GetLogging(eCAL::pb::Logging& logging_);
+    void GetLogging(eCAL::pb::LogMessageList& logging_);
 
   private:
     void RegisterLogMessage(const eCAL::pb::LogMessage& log_msg_);
@@ -125,7 +125,5 @@ namespace eCAL
     eCAL_Logging_Filter                    m_filter_mask_con;
     eCAL_Logging_Filter                    m_filter_mask_file;
     eCAL_Logging_Filter                    m_filter_mask_udp;
-
-    std::chrono::duration<double>          m_core_time;
   };
 }

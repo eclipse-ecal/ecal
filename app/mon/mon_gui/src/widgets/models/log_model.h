@@ -28,7 +28,7 @@
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
-#include <ecal/core/pb/monitoring.pb.h>
+#include <ecal/core/pb/logging.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
@@ -73,7 +73,7 @@ public:
   QModelIndex parent(const QModelIndex &index) const override;
   Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-  void insertLogs(const eCAL::pb::Logging& logs);
+  void insertLogs(const eCAL::pb::LogMessageList& logs);
 
   void setParseTimeEnabled(bool enabled);
   bool isParseTimeEnabled() const;
