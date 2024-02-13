@@ -65,7 +65,6 @@ namespace eCAL
     ECAL_API bool              IsUdpMulticastRecEnabled             ();
     ECAL_API bool              IsShmRecEnabled                      ();
     ECAL_API bool              IsTcpRecEnabled                      ();
-    ECAL_API bool              IsInprocRecEnabled                   ();
 
     ECAL_API bool              IsNpcapEnabled                       ();
 
@@ -107,7 +106,6 @@ namespace eCAL
     /////////////////////////////////////
     // publisher
     /////////////////////////////////////
-    ECAL_API TLayer::eSendMode GetPublisherInprocMode               ();
     ECAL_API TLayer::eSendMode GetPublisherShmMode                  ();
     ECAL_API TLayer::eSendMode GetPublisherTcpMode                  ();
     ECAL_API TLayer::eSendMode GetPublisherUdpMulticastMode         ();

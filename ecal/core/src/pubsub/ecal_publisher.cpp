@@ -136,7 +136,6 @@ namespace eCAL
     if (m_tlayer.sm_udp_mc == TLayer::smode_none) m_tlayer.sm_udp_mc = Config::GetPublisherUdpMulticastMode();
     if (m_tlayer.sm_shm == TLayer::smode_none) m_tlayer.sm_shm = Config::GetPublisherShmMode();
     if (m_tlayer.sm_tcp == TLayer::smode_none) m_tlayer.sm_tcp = Config::GetPublisherTcpMode();
-    if (m_tlayer.sm_inproc == TLayer::smode_none) m_tlayer.sm_inproc = Config::GetPublisherInprocMode();
 
     // create data writer
     m_datawriter = std::make_shared<CDataWriter>();
@@ -146,7 +145,6 @@ namespace eCAL
     m_datawriter->SetLayerMode(TLayer::tlayer_udp_mc, m_tlayer.sm_udp_mc);
     m_datawriter->SetLayerMode(TLayer::tlayer_shm, m_tlayer.sm_shm);
     m_datawriter->SetLayerMode(TLayer::tlayer_tcp, m_tlayer.sm_tcp);
-    m_datawriter->SetLayerMode(TLayer::tlayer_inproc, m_tlayer.sm_inproc);
     // create it
     if (!m_datawriter->Create(topic_name_, data_type_info_))
     {
@@ -289,14 +287,10 @@ namespace eCAL
     case TLayer::tlayer_tcp:
       m_tlayer.sm_tcp = mode_;
       break;
-    case TLayer::tlayer_inproc:
-      m_tlayer.sm_inproc = mode_;
-      break;
     case TLayer::tlayer_all:
       m_tlayer.sm_udp_mc  = mode_;
       m_tlayer.sm_shm     = mode_;
       m_tlayer.sm_tcp     = mode_;
-      m_tlayer.sm_inproc  = mode_;
       break;
     default:
       break;

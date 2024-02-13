@@ -37,7 +37,7 @@ struct Topic
 
   enum class TransportLayer
   {
-    NONE, UDP_MC, SHM, TCP, INPROC, ALL
+    NONE, UDP_MC, SHM, TCP, ALL
   };
 
   enum class Direction

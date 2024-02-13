@@ -156,8 +156,6 @@ class MonitorModel
         return Topic::TransportLayer::TCP;
       case eCAL::pb::tl_ecal_udp_mc:
         return Topic::TransportLayer::UDP_MC;
-      case eCAL::pb::tl_inproc:
-        return Topic::TransportLayer::INPROC;
       case eCAL::pb::tl_none:
       default:
         return Topic::TransportLayer::NONE;

@@ -116,12 +116,6 @@ The network setting drive how and which ...
    
    UDP bandwidth limit for eCAL udp layer (-1 == unlimited)
 
-.. option:: inproc_rec_enabled  
-   
-   ``true``
-
-   Enable to receive on eCAL inner process layer
-
 .. option:: shm_rec_enabled     
 
    ``true``
@@ -193,16 +187,6 @@ The network setting drive how and which ...
 
 [publisher]
 -----------
-
-.. option:: use_inproc
-   
-   use inner process transport layer 
-   
-   - 0 = off
-   - 1 = on
-   - 2 = auto
-   
-   default = 0
    
 .. option:: use_shm
    

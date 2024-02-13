@@ -34,7 +34,6 @@
 #include "udp/ecal_writer_udp_mc.h"
 #include "shm/ecal_writer_shm.h"
 #include "tcp/ecal_writer_tcp.h"
-#include "inproc/ecal_writer_inproc.h"
 
 #include <mutex>
 #include <string>
@@ -135,7 +134,6 @@ namespace eCAL
     void SetUseUdpMC(TLayer::eSendMode mode_);
     void SetUseShm(TLayer::eSendMode mode_);
     void SetUseTcp(TLayer::eSendMode mode_);
-    void SetUseInProc(TLayer::eSendMode mode_);
 
     bool CheckWriterModes();
     size_t PrepareWrite(long long id_, size_t len_);
@@ -201,9 +199,6 @@ namespace eCAL
 
       SWriterMode        tcp_mode;
       CDataWriterTCP     tcp;
-
-      SWriterMode        inproc_mode;
-      CDataWriterInProc  inproc;
     };
     SWriter            m_writer;
 

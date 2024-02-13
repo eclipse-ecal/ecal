@@ -246,9 +246,6 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         case eCAL::pb::eTLayerType::tl_ecal_shm:
           this_layer_string = "shm";
           break;
-        case eCAL::pb::eTLayerType::tl_inproc:
-          this_layer_string = "inproc";
-          break;
         case eCAL::pb::eTLayerType::tl_all:
           this_layer_string = "all";
           break;
