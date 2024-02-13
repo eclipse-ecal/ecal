@@ -877,25 +877,6 @@ namespace eCAL
       shm_tlayer->set_confirmed(m_writer.shm_mode.confirmed);
       const std::string par_layer_s = m_writer.shm.GetConnectionParameter();
       shm_tlayer->mutable_par_layer()->ParseFromString(par_layer_s);
-
-      // ----------------------------------------------------------------------
-      // REMOVE ME IN ECAL6
-      // ----------------------------------------------------------------------
-      shm_tlayer->set_par_shm("");
-      {
-        // for downward compatibility eCAL version <= 5.8.13/5.9.0
-        // in case of one memory file only we pack the name into 'layer_par_shm()'
-        eCAL::pb::ConnnectionPar cpar;
-        cpar.ParseFromString(par_layer_s);
-        if (cpar.layer_par_shm().memory_file_list_size() == 1)
-        {
-          shm_tlayer->set_par_shm(cpar.layer_par_shm().memory_file_list().begin()->c_str());
-        }
-      }
-      // ----------------------------------------------------------------------
-      // REMOVE ME IN ECAL6
-      // ----------------------------------------------------------------------
-
     }
     // tcp layer
     {

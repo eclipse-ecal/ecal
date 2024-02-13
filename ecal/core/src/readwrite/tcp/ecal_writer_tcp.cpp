@@ -121,9 +121,6 @@ namespace eCAL
     ecal_sample_mutable_content->set_hash(attr_.hash);
     ecal_sample_mutable_content->set_size((google::protobuf::int32)attr_.len);
 
-    // Initialize the padding with 1 element. It just must not be empty right now.
-    m_ecal_header.set_padding(std::string("a"));
-
     // Compute size of "ECAL" pre-header
     constexpr size_t ecal_magic_size(4 * sizeof(char));
 
@@ -134,18 +131,6 @@ namespace eCAL
     uint16_t proto_header_size = static_cast<uint16_t>(m_ecal_header.ByteSize());
 #endif
 
-    // Compute needed padding for aligning the payload
-    constexpr size_t alignment_bytes     = 8;
-    const     size_t minimal_header_size = ecal_magic_size +  sizeof(uint16_t)    +  proto_header_size;
-    const     size_t padding_size        = (alignment_bytes - (minimal_header_size % alignment_bytes)) % alignment_bytes;
-
-    // Add more bytes to the protobuf message to blow it up to the alignment
-    // Aligning the user payload this way should be 100% compatible with previous
-    // versions. It's most certainly bad style though and we should improve this 
-    // in eCAL 6.
-    // 
-    // TODO: REMOVE ME FOR ECAL6
-    m_ecal_header.set_padding(std::string(padding_size + 1, 'a'));
 #if GOOGLE_PROTOBUF_VERSION >= 3001000
     proto_header_size = (uint16_t)m_ecal_header.ByteSizeLong();
 #else
