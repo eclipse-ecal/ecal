@@ -172,7 +172,11 @@ void SignalTreeModel::removeItemChecked(const QString& full_signal_name, int mod
 void SignalTreeModel::slt_itemValueChanged(SignalTreeItem* item)
 {
   QString item_value;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
   if (item->getValue().userType() == QMetaType::type("StringEnum"))
+#else
+  if (item->getValue().metaType() == QMetaType::fromName("StringEnum"))
+#endif
   {
     StringEnum string_enum = item->getValue().value<StringEnum>();
     item_value = QString::number(string_enum.value);

@@ -154,7 +154,7 @@ QVariant TaskTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else
     {
-      return QVariant::Invalid;
+      return QVariant(); // Invalid QVariant
     }
   }
 
@@ -210,7 +210,7 @@ QVariant TaskTreeItem::data(Columns column, Qt::ItemDataRole role) const
       case eCAL_Process_eSeverity::proc_sev_failed:
         return QColor(240, 20, 20);
       default:
-        return QVariant::Invalid;
+        return QVariant(); // Invalid QVariant
       }
     }
   }
@@ -229,7 +229,7 @@ QVariant TaskTreeItem::data(Columns column, Qt::ItemDataRole role) const
       }
       else
       {
-        return QVariant::Invalid;
+        return QVariant(); // Invalid QVariant
       }
     }
     else if (options.use_localhost_for_all_tasks)
@@ -242,7 +242,7 @@ QVariant TaskTreeItem::data(Columns column, Qt::ItemDataRole role) const
       }
       else
       {
-        return QVariant::Invalid;
+        return QVariant(); // Invalid QVariant
       }
     }
   }
@@ -323,7 +323,7 @@ QVariant TaskTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
   }
 
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 
 }
 

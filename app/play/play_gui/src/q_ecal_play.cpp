@@ -32,15 +32,15 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QTextStream>
-#include <QtConcurrent/QtConcurrent>
+#include <QtConcurrent>
 #include <QFuture>
 #include <QApplication>
 #include <QCheckBox>
 
 #include "ecal_play_logger.h"
 
-#ifdef WIN32
-#include <QWinTaskbarButton>
+#if((defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
+  #include <QWinTaskbarButton>
 #endif //WIN32
 
 QEcalPlay::QEcalPlay()
@@ -370,7 +370,7 @@ bool QEcalPlay::loadMeasurement(const QString& path, bool suppress_blocking_dial
   dlg.setValue(0);
   dlg.setValue(1);
 
-  QFuture<bool> success_future = QtConcurrent::run(&ecal_play_, &EcalPlay::LoadMeasurement, path.toStdString());
+  QFuture<bool> const success_future = QtConcurrent::run([this, path]() -> bool { return this->ecal_play_.LoadMeasurement(path.toStdString()); });
 
   while (!success_future.isFinished())
   {
@@ -585,7 +585,7 @@ void QEcalPlay::calculateChannelsCumulativeEstimatedSize() const
   dlg.setValue(0);
   dlg.setValue(1);
 
-  QFuture<void> success_future = QtConcurrent::run(&ecal_play_, &EcalPlay::CalculateEstimatedSizeForChannels);
+  QFuture<void> const success_future = QtConcurrent::run([this]() -> void { this->ecal_play_.CalculateEstimatedSizeForChannels(); });
 
   while (!success_future.isFinished())
   {

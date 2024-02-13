@@ -17,7 +17,13 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstddef>
+#include <cstdint>
 #include <ecal/service/client_manager.h>
+#include <map>
+#include <memory>
+#include <mutex>
+#include <string>
 
 namespace eCAL
 {

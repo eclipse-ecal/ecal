@@ -21,7 +21,6 @@
 
 
 #include <QSettings>
-#include <QDesktopWidget>
 #include <QKeyEvent>
 #include <QScreen>
 

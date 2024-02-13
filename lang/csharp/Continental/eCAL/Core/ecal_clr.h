@@ -127,11 +127,6 @@ namespace Continental
          * @param message_ The message string to log.
         **/
         static void Log(System::String^ message_);
-
-        /**
-         * @brief Set the current measured core time in s (for user implemented measuring).
-        **/
-        static void SetCoreTime(double time_);
       };
 
 

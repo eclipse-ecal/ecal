@@ -207,13 +207,6 @@ ECAL_API bool ecal_get_description(const char* topic_name_, const char** topic_d
 ECAL_API void log_setlevel(const int level_);
 
 /**
- * @brief Set the current measured core time in s (for user implemented measuring).
- *
- * @param time_  The core time.
-**/
-ECAL_API void log_setcoretime(const double time_);
-
-/**
  * @brief Log a message (with current log level).
  *
  * @param message_  The log message string.
@@ -263,26 +256,6 @@ ECAL_API bool pub_set_type_name(ECAL_HANDLE handle_, const char* topic_type_name
  * @return  True if succeeded.
 **/
 ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_);
-
-/**
- * @brief Set publisher quality of service attributes.
- *
- * @param handle_  Publisher handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool pub_set_qos(ECAL_HANDLE handle_, struct SWriterQOSC qos_);
-
-/**
- * @brief Get publisher quality of service attributes.
- *
- * @param handle_  Publisher handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool pub_get_qos(ECAL_HANDLE handle_, struct SWriterQOSC* qos_);
 
 /**
  * @brief Set publisher send mode for specific transport layer.
@@ -375,26 +348,6 @@ ECAL_API ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_
  * @return  True if succeeded.
 **/
 ECAL_API bool sub_destroy(ECAL_HANDLE handle_);
-
-/**
- * @brief Set subscriber quality of service attributes.
- *
- * @param handle_  Subscriber handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool sub_set_qos(ECAL_HANDLE handle_, struct SReaderQOSC qos_);
-
-/**
- * @brief Get subscriber quality of service attributes.
- *
- * @param handle_  Subscriber handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool sub_get_qos(ECAL_HANDLE handle_, struct SReaderQOSC* qos_);
 
 /**
  * @brief Receive a message from the publisher.

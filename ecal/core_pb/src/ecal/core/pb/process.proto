@@ -63,9 +63,6 @@ message Process                                           // process
   string                    pname                =  4;    // process name
   string                    uname                =  5;    // unit name
   string                    pparam               =  6;    // process parameter
-  int64                     pmemory              =  7;    // process memory
-  float                     pcpu                 =  8;    // process cpu usage
-  float                     usrptime             =  9;    // process user time
   int64                     datawrite            = 10;    // data write bytes per sec
   int64                     dataread             = 11;    // data read bytes per sec
   ProcessState              state                = 12;    // process state info

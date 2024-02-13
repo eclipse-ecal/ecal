@@ -96,9 +96,6 @@ int main(int argc, char **argv)
         std::cout << "pname           : " << process.pname()             << std::endl;   // process name
         std::cout << "uname           : " << process.uname()             << std::endl;   // unit name
         std::cout << "pparam          : " << process.pparam()            << std::endl;   // process parameter
-        std::cout << "pmemory         : " << process.pmemory()           << std::endl;   // process memory
-        std::cout << "pcpu            : " << process.pcpu()              << std::endl;   // process cpu usage
-        std::cout << "usrptime        : " << process.usrptime()          << std::endl;   // process user time
         std::cout << "datawrite       : " << process.datawrite()         << std::endl;   // data write bytes per sec
         std::cout << "dataread        : " << process.dataread()          << std::endl;   // date read bytes per sec
         std::cout << "severity        : " << process.state().severity()  << std::endl;   // process state severity
@@ -173,7 +170,6 @@ int main(int argc, char **argv)
         std::cout << "direction       : " << topic.direction()       << std::endl;   // direction (publisher, subscriber)
         std::cout << "ttype           : " << topic.ttype()           << std::endl;   // topic type
 //        std::cout << "tdesc           : " << topic.tdesc()           << std::endl;   // topic description
-//        std::cout << "tqos            : " << topic.tqos()            << std::endl;   // topic quality of service
         for (auto layer : topic.tlayer())
         {
           std::string layer_type("unknown");
@@ -190,9 +186,6 @@ int main(int argc, char **argv)
             break;
           case eCAL::pb::eTLayerType::tl_ecal_tcp:
             layer_type = "tlayer_tcp";
-            break;
-          case eCAL::pb::eTLayerType::tl_inproc:
-            layer_type = "tlayer_inproc";
             break;
           case eCAL::pb::eTLayerType::tl_all:
             layer_type = "tlayer_all";

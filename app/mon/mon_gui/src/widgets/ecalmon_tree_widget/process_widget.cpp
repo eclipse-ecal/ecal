@@ -86,8 +86,6 @@ ProcessWidget::ProcessWidget(QWidget *parent)
     (int)ProcessTreeModel::Columns::STATE,
     (int)ProcessTreeModel::Columns::INFO,
     (int)ProcessTreeModel::Columns::HEARTBEAT,
-    (int)ProcessTreeModel::Columns::MEMORY,
-    (int)ProcessTreeModel::Columns::CPU_PERCENTAGE,
     (int)ProcessTreeModel::Columns::DATAWRITE,
     (int)ProcessTreeModel::Columns::DATAREAD,
     (int)ProcessTreeModel::Columns::ECAL_RUNTIME_VERSION,
@@ -118,9 +116,6 @@ void ProcessWidget::autoSizeColumns()
   example_process_pb.set_pname("");
   example_process_pb.set_uname("eCALProcessUnitNameABCDE___");
   example_process_pb.set_pparam("");
-  example_process_pb.set_pmemory(99999999999);
-  example_process_pb.set_pcpu(1000);
-  example_process_pb.set_usrptime(999999.9999f);
   example_process_pb.set_datawrite(99999999999);
   example_process_pb.set_dataread(99999999999);
 
@@ -129,7 +124,7 @@ void ProcessWidget::autoSizeColumns()
   //example_process_pb.set_tsync_mode();
 
   ProcessTreeItem* example_process_item = new ProcessTreeItem(example_process_pb);
-  GroupTreeItem* example_group_item = new GroupTreeItem("HNAME00____", "", "", QVariant::Invalid, "");
+  GroupTreeItem* example_group_item = new GroupTreeItem("HNAME00____", "", "", QVariant(), "");
 
   process_tree_model_->insertItem(example_process_item);
   process_tree_model_->insertItem(example_group_item);
@@ -143,9 +138,6 @@ void ProcessWidget::autoSizeColumns()
     (int)ProcessTreeModel::Columns::PROCESS_NAME,
     (int)ProcessTreeModel::Columns::STATE,
     (int)ProcessTreeModel::Columns::HEARTBEAT,
-    (int)ProcessTreeModel::Columns::MEMORY,
-    (int)ProcessTreeModel::Columns::CPU_PERCENTAGE,
-    (int)ProcessTreeModel::Columns::USER_TIME,
     (int)ProcessTreeModel::Columns::DATAWRITE,
     (int)ProcessTreeModel::Columns::DATAREAD,
     (int)ProcessTreeModel::Columns::TIMESYNC_STATE,

@@ -20,6 +20,7 @@
 #include "CustomQt/QMulticolumnSortFilterProxyModel.h"
 
 #include <numeric>
+#include <QRegularExpression>
 
 QMulticolumnSortFilterProxyModel::QMulticolumnSortFilterProxyModel(QObject* parent)
   : QStableSortFilterProxyModel(parent)
@@ -56,7 +57,7 @@ QVector<int> QMulticolumnSortFilterProxyModel::filterKeyColumns() const
 
 bool QMulticolumnSortFilterProxyModel::filterDirectAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
-  QRegExp filter_regexp = filterRegExp();
+  QRegularExpression const filter_regexp = filterRegularExpression();
 
   for (int column : filter_columns_)
   {
@@ -97,6 +98,9 @@ bool QMulticolumnSortFilterProxyModel::lessThan(const QModelIndex &left, const Q
       {
         // Don't fake the sort order, we have to follow the user-set one
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        return QPartialOrdering::Less == QVariant::compare(left_data, right_data);
+#else // Pre Qt 6.0
         // Qt Deprecation note:
         // 
         // QVariant::operator< is deprecated since Qt 5.15, mainly because
@@ -111,14 +115,27 @@ bool QMulticolumnSortFilterProxyModel::lessThan(const QModelIndex &left, const Q
         // 
         // The operators still exist in Qt 6.0 beta.
         return (left_data < right_data);
+#endif // QT_VERSION
       }
       else
       {
         // We want to ignore the user-set sort order, so we fake the less-than method
         if (sortOrder() == always_sorted_sort_order_)
+        {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+          return QPartialOrdering::Less == QVariant::compare(left_data, right_data);
+#else // Pre Qt 6.0
           return (left_data < right_data); // Qt 5.15 Deprecation note: see above
+#endif // QT_VERSION
+        }
         else
+        {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+          return QPartialOrdering::Greater == QVariant::compare(left_data, right_data);
+#else // Pre Qt 6.0
           return (left_data > right_data); // Qt 5.15 Deprecation note: see above
+#endif // QT_VERSION
+        }
       }
     }
 #ifdef _MSC_VER

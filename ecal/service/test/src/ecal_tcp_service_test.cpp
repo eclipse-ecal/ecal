@@ -21,10 +21,11 @@
 
 #include <asio.hpp>
 
-#include <iostream>
 #include <atomic>
-#include <thread>
 #include <chrono>
+#include <iostream>
+#include <string>
+#include <thread>
 
 #include <ecal/service/server.h> // Should not be needed, when I use the server manager / client manager
 #include <ecal/service/client_session.h> // Should not be needed, when I use the server manager / client manager

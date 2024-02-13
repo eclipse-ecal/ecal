@@ -43,7 +43,7 @@
 /* timeout for automatic removing monitoring topics in ms */
 #define MON_TIMEOUT                                5000
 /* topics blacklist as regular expression (will not be monitored) */
-#define MON_FILTER_EXCL                            "_.*"
+#define MON_FILTER_EXCL                            "^__.*$"
 /* topics whitelist as regular expression (will be monitored only) */
 #define MON_FILTER_INCL                            ""
 
@@ -84,7 +84,6 @@
 /* overall udp multicast bandwidth limitation in bytes/s, -1 == no limitation*/
 #define NET_BANDWIDTH_MAX_UDP                      (-1)
 
-#define NET_INPROC_REC_ENABLED                     true
 #define NET_TCP_REC_ENABLED                        true
 #define NET_SHM_REC_ENABLED                        true
 
@@ -102,8 +101,6 @@
 /**********************************************************************************************/
 /*                                     publisher settings                                     */
 /**********************************************************************************************/
-/* use inproc transport layer        [auto = 2, on = 1, off = 0] */
-#define PUB_USE_INPROC                             0
 /* use shared memory transport layer [auto = 2, on = 1, off = 0] */
 #define PUB_USE_SHM                                2
 /* use tcp transport layer           [auto = 2, on = 1, off = 0] */

@@ -22,7 +22,7 @@
 #include <memory>
 #include <functional>
 
-#include <string>
+#include <mutex>
 #include <sstream>
 
 #ifdef _MSC_VER

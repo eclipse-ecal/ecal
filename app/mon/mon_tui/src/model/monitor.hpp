@@ -120,30 +120,6 @@ class MonitorModel
     return Topic::Direction::SUBSCRIBER;
   }
 
-  Topic::QOSHistoryKind TopicHistoryKind(eCAL::pb::QOS_eQOSPolicy_HistoryKind kind)
-  {
-    switch(kind)
-    {
-      case eCAL::pb::QOS_eQOSPolicy_HistoryKind_keep_all_history_qos:
-        return Topic::QOSHistoryKind::KEEP_ALL;
-      case eCAL::pb::QOS_eQOSPolicy_HistoryKind_keep_last_history_qos:
-      default:
-        return Topic::QOSHistoryKind::KEEP_LAST;
-    }
-  }
-
-  Topic::QOSReliability TopicReliability(eCAL::pb::QOS_eQOSPolicy_Reliability reliability)
-  {
-    switch(reliability)
-    {
-      case eCAL::pb::QOS_eQOSPolicy_Reliability_reliable_reliability_qos:
-        return Topic::QOSReliability::RELIABLE;
-      case eCAL::pb::QOS_eQOSPolicy_Reliability_best_effort_reliability_qos:
-      default:
-        return Topic::QOSReliability::BEST_EFFORT;
-    }
-  }
-
   Topic::TransportLayer TopicTransportLayer(eCAL::pb::eTLayerType layer)
   {
     switch(layer)
@@ -156,8 +132,6 @@ class MonitorModel
         return Topic::TransportLayer::TCP;
       case eCAL::pb::tl_ecal_udp_mc:
         return Topic::TransportLayer::UDP_MC;
-      case eCAL::pb::tl_inproc:
-        return Topic::TransportLayer::INPROC;
       case eCAL::pb::tl_none:
       default:
         return Topic::TransportLayer::NONE;
@@ -188,9 +162,6 @@ class MonitorModel
       process.host_name = std::move(*p.mutable_hname());
       process.unit_name = std::move(*p.mutable_uname());
       process.params = std::move(*p.mutable_pparam());
-      process.memory_usage = p.pmemory();
-      process.cpu_usage = p.pcpu();;
-      process.user_time = p.usrptime();
       process.data_sent_bytes = p.datawrite();
       process.data_recieved_bytes = p.dataread();
       process.severity = Severity(p.state().severity());
@@ -233,9 +204,6 @@ class MonitorModel
       topic.direction = TopicDirection(t.direction());
       topic.type = std::move(*t.mutable_ttype());
       topic.type_descriptor = std::move(*t.mutable_tdesc());
-      topic.history_kind = TopicHistoryKind(t.tqos().history());
-      topic.history_depth = t.tqos().history_depth();
-      topic.reliability = TopicReliability(t.tqos().reliability());
       for(auto &tl: t.tlayer())
       {
         topic.transport_layers.emplace_back(TopicTransportLayer(tl.type()));

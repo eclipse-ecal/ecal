@@ -40,7 +40,7 @@ TopicListModel::~TopicListModel()
 QVariant TopicListModel::data(const QModelIndex &index, int role) const
 {
   if (!index.isValid())
-    return QVariant::Invalid;
+    return QVariant(); // Invalid QVariant
 
   const int     row    = index.row();
   const Columns column = (Columns)index.column();
@@ -208,7 +208,7 @@ QVariant TopicListModel::data(const QModelIndex &index, int role) const
     // Fallback to the display role
     return data(index, Qt::ItemDataRole::DisplayRole);
   }
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 QVariant TopicListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -218,7 +218,7 @@ QVariant TopicListModel::headerData(int section, Qt::Orientation orientation, in
   {
     return column_labels_.at((Columns)section);
   }
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 QModelIndex TopicListModel::index(int row, int column, const QModelIndex& /*parent*/) const

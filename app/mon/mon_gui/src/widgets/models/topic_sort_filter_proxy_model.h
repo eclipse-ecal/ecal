@@ -20,6 +20,8 @@
 #pragma once
 #include <CustomQt/QStableSortFilterProxyModel.h>
 
+#include <QRegularExpression>
+
 class TopicSortFilterProxyModel :
   public QStableSortFilterProxyModel
 {
@@ -28,11 +30,11 @@ public:
   TopicSortFilterProxyModel(QObject* parent = 0);
   ~TopicSortFilterProxyModel();
 
-  void setRegExpLists(const QList<QRegExp>& exclude_list, const QList<QRegExp>& include_list);
+  void setRegularExpressionLists(const QList<QRegularExpression>& exclude_list, const QList<QRegularExpression>& include_list);
 
 private:
-  QList<QRegExp> exclude_regexp_list_;
-  QList<QRegExp> include_regexp_list_;
+  QList<QRegularExpression> exclude_regexp_list_;
+  QList<QRegularExpression> include_regexp_list_;
   
   bool filterDirectAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 };

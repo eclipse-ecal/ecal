@@ -20,6 +20,7 @@
 #pragma once
 
 #include <asio.hpp>
+#include <string>
 
 namespace eCAL
 {

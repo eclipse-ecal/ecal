@@ -51,8 +51,8 @@ private:
   TopicTreeModel* topic_tree_model_;
   TopicSortFilterProxyModel* topic_sort_filter_proxy_model_;
 
-  QList<QRegExp> topic_exclude_regexp_list_;
-  QList<QRegExp> topic_include_regexp_list_;
+  QList<QRegularExpression> topic_exclude_regexp_list_;
+  QList<QRegularExpression> topic_include_regexp_list_;
 
   QMap<QString, VisualisationWindow*> visualisation_windows_;
 

@@ -18,10 +18,10 @@
 
 project(mon_plugin_template VERSION 0.1.0)
 
-find_package(Qt5 COMPONENTS
-    Core
-    Widgets
-REQUIRED)
+# Legacy Qt5 (pre 5.15) support as suggested by teh Qt Documentation:
+# https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html#supporting-older-qt-5-versions
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC OFF) # Reason for being turned off: AutoUIC will prevent VS from detecting changes in .ui files
@@ -43,7 +43,12 @@ ecal_add_mon_plugin(${PROJECT_NAME}
   METADATA src/metadata.json
 )
 
-target_link_libraries (${PROJECT_NAME} Qt5::Widgets eCAL::core eCAL::mon_plugin_lib)
+target_link_libraries (${PROJECT_NAME}
+  Qt${QT_VERSION_MAJOR}::Core
+  Qt${QT_VERSION_MAJOR}::Widgets
+  eCAL::core
+  eCAL::mon_plugin_lib
+)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 
 
 if(MSVC)

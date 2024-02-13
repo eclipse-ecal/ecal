@@ -43,7 +43,6 @@ namespace eCAL
                 m_created(false),
                 m_initialized(false)
   {
-    InitializeQOS();
     InitializeTLayer();
   }
 
@@ -73,7 +72,6 @@ namespace eCAL
   **/
   CPublisher::CPublisher(CPublisher&& rhs) noexcept :
                 m_datawriter(std::move(rhs.m_datawriter)),
-                m_qos(rhs.m_qos),
                 m_tlayer(rhs.m_tlayer),
                 m_id(rhs.m_id),
                 m_created(rhs.m_created),
@@ -92,7 +90,6 @@ namespace eCAL
     Destroy();
 
     m_datawriter      = std::move(rhs.m_datawriter);
-    m_qos             = rhs.m_qos;
     m_tlayer          = rhs.m_tlayer,
     m_id              = rhs.m_id;
     m_created         = rhs.m_created;
@@ -136,17 +133,13 @@ namespace eCAL
     if (m_tlayer.sm_udp_mc == TLayer::smode_none) m_tlayer.sm_udp_mc = Config::GetPublisherUdpMulticastMode();
     if (m_tlayer.sm_shm == TLayer::smode_none) m_tlayer.sm_shm = Config::GetPublisherShmMode();
     if (m_tlayer.sm_tcp == TLayer::smode_none) m_tlayer.sm_tcp = Config::GetPublisherTcpMode();
-    if (m_tlayer.sm_inproc == TLayer::smode_none) m_tlayer.sm_inproc = Config::GetPublisherInprocMode();
 
     // create data writer
     m_datawriter = std::make_shared<CDataWriter>();
-    // set qos
-    m_datawriter->SetQOS(m_qos);
     // set transport layer
     m_datawriter->SetLayerMode(TLayer::tlayer_udp_mc, m_tlayer.sm_udp_mc);
     m_datawriter->SetLayerMode(TLayer::tlayer_shm, m_tlayer.sm_shm);
     m_datawriter->SetLayerMode(TLayer::tlayer_tcp, m_tlayer.sm_tcp);
-    m_datawriter->SetLayerMode(TLayer::tlayer_inproc, m_tlayer.sm_inproc);
     // create it
     if (!m_datawriter->Create(topic_name_, data_type_info_))
     {
@@ -264,18 +257,6 @@ namespace eCAL
     return true;
   }
 
-  bool CPublisher::SetQOS(const QOS::SWriterQOS& qos_)
-  {
-    if (m_created) return false;
-    m_qos = qos_;
-    return true;
-  }
-
-  QOS::SWriterQOS CPublisher::GetQOS()
-  {
-    return m_qos;
-  }
-
   bool CPublisher::SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_)
   {
     switch (layer_)
@@ -289,14 +270,10 @@ namespace eCAL
     case TLayer::tlayer_tcp:
       m_tlayer.sm_tcp = mode_;
       break;
-    case TLayer::tlayer_inproc:
-      m_tlayer.sm_inproc = mode_;
-      break;
     case TLayer::tlayer_all:
       m_tlayer.sm_udp_mc  = mode_;
       m_tlayer.sm_shm     = mode_;
       m_tlayer.sm_tcp     = mode_;
-      m_tlayer.sm_inproc  = mode_;
       break;
     default:
       break;
@@ -438,11 +415,6 @@ namespace eCAL
   {
     if (m_datawriter == nullptr) return(SDataTypeInformation{});
     return(m_datawriter->GetDataTypeInformation());
-  }
-
-  void CPublisher::InitializeQOS()
-  {
-    m_qos = QOS::SWriterQOS();
   }
 
   void CPublisher::InitializeTLayer()

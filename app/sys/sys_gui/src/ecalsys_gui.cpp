@@ -34,7 +34,6 @@
 #include <QFileDialog>
 #include <QColor>
 #include <QSettings>
-#include <QDesktopWidget>
 #include <QApplication>
 #include <QScreen>
 #include <QFileInfo>
@@ -46,6 +45,10 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QStyleFactory>
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+#include <QDesktopWidget>
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
 
 #ifdef WIN32
 #include <Windows.h>
@@ -890,10 +893,22 @@ void EcalsysGui::menuEditRunnersTriggered()
 
 void EcalsysGui::menuViewResetLayoutTriggered()
 {
-  setTheme(Theme::Default);
+  setTheme(Theme::Dark);
 
   // Back when we saved the initial window geometry, the window-manager might not have positioned the window on the screen, yet
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
   int screen_number = QApplication::desktop()->screenNumber(this);
+#else
+  int screen_number = 0;
+  QScreen* current_screen = this->screen();
+  if (current_screen != nullptr)
+  {
+    screen_number = QApplication::screens().indexOf(current_screen);
+    if (screen_number < 0)
+      screen_number = 0;
+  }
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
 
   restoreGeometry(initial_geometry_);
   restoreState(initial_state_);
@@ -901,10 +916,10 @@ void EcalsysGui::menuViewResetLayoutTriggered()
   move(QGuiApplication::screens().at(screen_number)->availableGeometry().center() - rect().center());
 
   task_widget_             ->resetLayout();
-  runner_window_           ->resetLayout(QApplication::desktop()->screenNumber(this));
+  runner_window_           ->resetLayout(screen_number);
   group_widget_            ->resetLayout();
   group_edit_widget_       ->resetLayout();
-  import_from_cloud_window_->resetLayout(QApplication::desktop()->screenNumber(this));
+  import_from_cloud_window_->resetLayout(screen_number);
 }
 
 void EcalsysGui::menuOptionsCheckTargetsReachableToggled(bool enabled)

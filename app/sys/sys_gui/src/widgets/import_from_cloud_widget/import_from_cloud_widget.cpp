@@ -21,6 +21,7 @@
 
 #include <QMenu>
 #include <QAction>
+#include <QFile>
 
 #include <regex>
 
@@ -127,7 +128,7 @@ ImportFromCloudWidget::ImportFromCloudWidget(QWidget *parent)
   connect(ui_.auto_detect_runners_button, &QPushButton::clicked, [this]() {autoDetectRunnersFor(getCheckedTasks()); });
   connect(ui_.cancel_button,              SIGNAL(clicked()), this, SIGNAL(closeSignal()));
   connect(ui_.import_button,              SIGNAL(clicked()), this, SLOT(import()));
-  connect(ui_.show_all_tasks_checkbox,    &QCheckBox::toggled, [this](bool checked) { task_sort_filter_proxy_model_->setFilterRegExp(checked ? "" : "enabled"); });
+  connect(ui_.show_all_tasks_checkbox,    &QCheckBox::toggled, [this](bool checked) { task_sort_filter_proxy_model_->setFilterRegularExpression(checked ? "" : "enabled"); });
 
   // connect the task-tree
   ui_.tasks_tree->setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
@@ -237,7 +238,7 @@ void ImportFromCloudWidget::reload()
   updateTaskTableHeaderCheckbox();
 
   // Re-apply the filter
-  task_sort_filter_proxy_model_->setFilterRegExp(task_sort_filter_proxy_model_->filterRegExp());
+  task_sort_filter_proxy_model_->setFilterRegularExpression(task_sort_filter_proxy_model_->filterRegularExpression());
 }
 
 void ImportFromCloudWidget::setUpdateEnabled(bool enabled)
@@ -778,7 +779,7 @@ void ImportFromCloudWidget::monitorUpdated()
   updateImportCheckboxEnabledStates();
   updateTaskTableHeaderCheckbox();
   updateButtons();
-  task_sort_filter_proxy_model_->setFilterRegExp(task_sort_filter_proxy_model_->filterRegExp());
+  task_sort_filter_proxy_model_->setFilterRegularExpression(task_sort_filter_proxy_model_->filterRegularExpression());
 }
 
 void ImportFromCloudWidget::tasksChanged(std::vector<std::shared_ptr<EcalSysTask>>)
@@ -786,7 +787,7 @@ void ImportFromCloudWidget::tasksChanged(std::vector<std::shared_ptr<EcalSysTask
   updateImportCheckboxEnabledStates();
   updateTaskTableHeaderCheckbox();
   updateButtons();
-  task_sort_filter_proxy_model_->setFilterRegExp(task_sort_filter_proxy_model_->filterRegExp());
+  task_sort_filter_proxy_model_->setFilterRegularExpression(task_sort_filter_proxy_model_->filterRegularExpression());
 }
 
 void ImportFromCloudWidget::ecalsysOptionsChanged()
@@ -799,7 +800,7 @@ void ImportFromCloudWidget::configChanged()
   updateImportCheckboxEnabledStates();
   updateTaskTableHeaderCheckbox();
   updateButtons();
-  task_sort_filter_proxy_model_->setFilterRegExp(task_sort_filter_proxy_model_->filterRegExp());
+  task_sort_filter_proxy_model_->setFilterRegularExpression(task_sort_filter_proxy_model_->filterRegularExpression());
 }
 
 void ImportFromCloudWidget::updateButtons()

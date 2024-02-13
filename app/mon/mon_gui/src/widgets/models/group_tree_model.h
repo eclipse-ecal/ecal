@@ -32,7 +32,7 @@
 
 #include "group_tree_item.h"
 
-#include <QMap>
+#include <list>
 #include <QVector>
 #include <QPair>
 
@@ -64,7 +64,39 @@ protected:
   virtual int groupColumn() const = 0;
 
 private:
-  QMap<QVariant, GroupTreeItem*> group_map_;                                    /*< group_identifier -> TreeItem mapping*/
+  //std::list<std::pair<QVariant, GroupTreeItem*>> group_map_;                                    /*< group_identifier -> TreeItem mapping*/
+
+  struct cmp
+  {
+    bool operator()(const QVariant& lhs, const QVariant& rhs) const
+    {
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+      return QVariant::compare(lhs, rhs) == QPartialOrdering::Less;
+#else
+
+  // deactivate warning about deprecated QVariant::compare
+  #ifdef _MSC_VER
+    #pragma warning(push)
+    #pragma warning (disable : 4996)
+  #elif __GNUC__
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
+
+      return lhs < rhs;
+
+  #ifdef _MSC_VER
+    #pragma warning(pop)
+  #elif __GNUC__
+    #pragma GCC diagnostic pop
+  #endif
+
+#endif
+    }
+  };
+  std::map<QVariant, GroupTreeItem*, cmp> group_map_;
+
+
   QList<QAbstractTreeItem*> items_list_;
 
   QVariant group_column_header_;

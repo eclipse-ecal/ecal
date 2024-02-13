@@ -308,16 +308,6 @@ extern "C"
     return(0);
   }
 
-  ECALC_API float eCAL_Process_GetProcessCpuUsage()
-  {
-    return(eCAL::Process::GetProcessCpuUsage());
-  }
-
-  ECALC_API unsigned long eCAL_Process_GetProcessMemory()
-  {
-    return(eCAL::Process::GetProcessMemory());
-  }
-
   ECALC_API long long eCAL_Process_GetSClock()
   {
     return(eCAL_Process_GetWClock());
@@ -438,26 +428,6 @@ extern "C"
   ECALC_API void eCAL_Logging_Log(const char* const msg_)
   {
     eCAL::Logging::Log(msg_);
-  }
-
-  ECALC_API void eCAL_Logging_StartCoreTimer()
-  {
-    eCAL::Logging::StartCoreTimer();
-  }
-
-  ECALC_API void eCAL_Logging_StopCoreTimer()
-  {
-    eCAL::Logging::StopCoreTimer();
-  }
-
-  ECALC_API void eCAL_Logging_SetCoreTime(double time_)
-  {
-    eCAL::Logging::SetCoreTime(time_);
-  }
-
-  ECALC_API double eCAL_Logging_GetCoreTime()
-  {
-    return(eCAL::Logging::GetCoreTime());
   }
 }
 
@@ -600,30 +570,6 @@ extern "C"
     eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
     pub->ShareDescription(state_ != 0);
     return(1);
-  }
-
-  ECALC_API int eCAL_Pub_SetQOS(ECAL_HANDLE handle_, struct SWriterQOSC qos_) //-V813
-  {
-    if (handle_ == NULL) return(0);
-    eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
-    eCAL::QOS::SWriterQOS qos;
-    qos.history_kind       = static_cast<eCAL::QOS::eQOSPolicy_HistoryKind>(qos_.history_kind);
-    qos.history_kind_depth = qos_.history_kind_depth;
-    qos.reliability        = static_cast<eCAL::QOS::eQOSPolicy_Reliability>(qos_.reliability);
-    if (pub->SetQOS(qos)) return(1);
-    return(0);
-  }
-
-  ECALC_API int eCAL_Pub_GetQOS(ECAL_HANDLE handle_, struct SWriterQOSC* qos_)
-  {
-    if (handle_ == NULL) return(0);
-    if (qos_    == NULL) return(0);
-    eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
-    const eCAL::QOS::SWriterQOS qos = pub->GetQOS();
-    qos_->history_kind       = static_cast<eQOSPolicy_HistoryKindC>(qos.history_kind);
-    qos_->history_kind_depth = qos.history_kind_depth;;
-    qos_->reliability        = static_cast<eQOSPolicy_ReliabilityC>(qos.reliability);
-    return(0);
   }
 
   ECALC_API int eCAL_Pub_SetLayerMode(ECAL_HANDLE handle_, enum eTransportLayerC layer_, enum eSendModeC mode_)
@@ -775,18 +721,6 @@ extern "C"
     return(1);
   }
 
-  ECALC_API int eCAL_Sub_SetQOS(ECAL_HANDLE handle_, struct SReaderQOSC qos_) //-V813
-  {
-    if (handle_ == NULL) return(0);
-    eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
-    eCAL::QOS::SReaderQOS qos;
-    qos.history_kind       = static_cast<eCAL::QOS::eQOSPolicy_HistoryKind>(qos_.history_kind);
-    qos.history_kind_depth = qos_.history_kind_depth;
-    qos.reliability        = static_cast<eCAL::QOS::eQOSPolicy_Reliability>(qos_.reliability);
-    if (sub->SetQOS(qos)) return(1);
-    return(0);
-  }
-
   ECALC_API int eCAL_Sub_SetID(ECAL_HANDLE handle_, const long long* id_array_, const int id_num_)
   {
     if (handle_ == NULL) return(0);
@@ -816,18 +750,6 @@ extern "C"
     if (handle_ == NULL) return(0);
     eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
     if (sub->ClearAttribute(std::string(attr_name_, static_cast<size_t>(attr_name_len_)))) return(1);
-    return(0);
-  }
-
-  ECALC_API int eCAL_Sub_GetQOS(ECAL_HANDLE handle_, struct SReaderQOSC* qos_)
-  {
-    if (handle_ == NULL) return(0);
-    if (qos_ == NULL) return(0);
-    eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
-    const eCAL::QOS::SReaderQOS qos = sub->GetQOS();
-    qos_->history_kind       = static_cast<eQOSPolicy_HistoryKindC>(qos.history_kind);
-    qos_->history_kind_depth = qos.history_kind_depth;;
-    qos_->reliability        = static_cast<eQOSPolicy_ReliabilityC>(qos.reliability);
     return(0);
   }
 
