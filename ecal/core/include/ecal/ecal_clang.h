@@ -265,26 +265,6 @@ ECAL_API bool pub_set_type_name(ECAL_HANDLE handle_, const char* topic_type_name
 ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_);
 
 /**
- * @brief Set publisher quality of service attributes.
- *
- * @param handle_  Publisher handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool pub_set_qos(ECAL_HANDLE handle_, struct SWriterQOSC qos_);
-
-/**
- * @brief Get publisher quality of service attributes.
- *
- * @param handle_  Publisher handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool pub_get_qos(ECAL_HANDLE handle_, struct SWriterQOSC* qos_);
-
-/**
  * @brief Set publisher send mode for specific transport layer.
  *
  * @param handle_  Publisher handle.
@@ -375,26 +355,6 @@ ECAL_API ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_
  * @return  True if succeeded.
 **/
 ECAL_API bool sub_destroy(ECAL_HANDLE handle_);
-
-/**
- * @brief Set subscriber quality of service attributes.
- *
- * @param handle_  Subscriber handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool sub_set_qos(ECAL_HANDLE handle_, struct SReaderQOSC qos_);
-
-/**
- * @brief Get subscriber quality of service attributes.
- *
- * @param handle_  Subscriber handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool sub_get_qos(ECAL_HANDLE handle_, struct SReaderQOSC* qos_);
 
 /**
  * @brief Receive a message from the publisher.

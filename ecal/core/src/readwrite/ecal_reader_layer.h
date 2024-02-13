@@ -23,8 +23,6 @@
 
 #pragma once
 
-#include <ecal/ecal_qos.h>
-
 #include <memory>
 #include <string>
 
@@ -55,7 +53,7 @@ namespace eCAL
     virtual void Initialize() = 0;
 
     // activate / create a specific subscription
-    virtual void AddSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, QOS::SReaderQOS qos_) = 0;
+    virtual void AddSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_) = 0;
 
     // deactivate / destroy a specific subscription
     virtual void RemSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_) = 0;

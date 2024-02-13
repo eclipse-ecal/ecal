@@ -45,7 +45,6 @@ namespace eCAL
     // so, mark it as final to ensure that no derived classes override it.
     bool Destroy() final;
 
-    bool SetQOS(const QOS::SWriterQOS& qos_) override;
     bool SetBufferCount(size_t buffer_count_);
 
     bool PrepareWrite(const SWriterAttr& attr_) override;
