@@ -111,7 +111,6 @@ namespace eCAL
           m_filter_mask_file(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2),
           m_filter_mask_udp(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2)
   {
-    m_core_time = std::chrono::duration<double>(-1.0);
   }
 
   CLog::~CLog()
