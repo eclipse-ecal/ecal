@@ -40,7 +40,6 @@
 #include <ecal/cimpl/ecal_monitoring_cimpl.h>
 #include <ecal/cimpl/ecal_process_cimpl.h>
 #include <ecal/cimpl/ecal_publisher_cimpl.h>
-#include <ecal/cimpl/ecal_qos_cimpl.h>
 #include <ecal/cimpl/ecal_server_cimpl.h>
 #include <ecal/cimpl/ecal_subscriber_cimpl.h>
 #include <ecal/cimpl/ecal_proto_dyn_json_subscriber_cimpl.h>

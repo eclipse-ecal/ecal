@@ -33,7 +33,11 @@
 #include <QSettings>
 #include <QMenu>
 #include <QApplication>
+#include <QRegularExpression>
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
 #include <QDesktopWidget>
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
 
 TopicWidget::TopicWidget(QWidget *parent)
   : EcalmonTreeWidget(parent)
@@ -50,7 +54,7 @@ TopicWidget::TopicWidget(QWidget *parent)
   topic_sort_filter_proxy_model_->setSortRole(ItemDataRoles::SortRole);
   topic_sort_filter_proxy_model_->setFilterKeyColumn((int)TopicTreeModel::Columns::TOPIC_NAME);
   topic_sort_filter_proxy_model_->setRecursiveFilteringEnabled(true);
-  topic_sort_filter_proxy_model_->setRegExpLists(topic_exclude_regexp_list_, topic_include_regexp_list_);
+  topic_sort_filter_proxy_model_->setRegularExpressionLists(topic_exclude_regexp_list_, topic_include_regexp_list_);
   topic_sort_filter_proxy_model_->setSortCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
   setAdditionalProxyModel(topic_sort_filter_proxy_model_);
 
@@ -59,11 +63,11 @@ TopicWidget::TopicWidget(QWidget *parent)
   {
     if (state == Qt::CheckState::Checked)
     {
-      topic_sort_filter_proxy_model_->setRegExpLists(QList<QRegExp>{}, QList<QRegExp>{});
+      topic_sort_filter_proxy_model_->setRegularExpressionLists(QList<QRegularExpression>{}, QList<QRegularExpression>{});
     }
     else
     {
-      topic_sort_filter_proxy_model_->setRegExpLists(topic_exclude_regexp_list_, topic_include_regexp_list_);
+      topic_sort_filter_proxy_model_->setRegularExpressionLists(topic_exclude_regexp_list_, topic_include_regexp_list_);
     }
   });
 
@@ -82,7 +86,6 @@ TopicWidget::TopicWidget(QWidget *parent)
     (int)TopicTreeModel::Columns::UNIT_NAME,
     (int)TopicTreeModel::Columns::TOPIC_ENCODING,
     (int)TopicTreeModel::Columns::MESSAGE_TYPE,
-    (int)TopicTreeModel::Columns::QOS,
     (int)TopicTreeModel::Columns::TRANSPORT_LAYER,
   };
   setFilterColumns(filter_columns);
@@ -97,7 +100,6 @@ TopicWidget::TopicWidget(QWidget *parent)
     (int)TopicTreeModel::Columns::PROCESS_NAME,
     (int)TopicTreeModel::Columns::TOPIC_ENCODING,
     (int)TopicTreeModel::Columns::MESSAGE_TYPE,
-    (int)TopicTreeModel::Columns::QOS,
     (int)TopicTreeModel::Columns::TRANSPORT_LAYER,
   };
 
@@ -196,21 +198,21 @@ void TopicWidget::loadRegExpLists()
   // regular expression that properly uses a ",". We cannot do anything about
   // that without changing the ecal.ini specification.
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-  QList<QString> exclude_string_list = exclude_string.split(QRegExp("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);
-  QList<QString> include_string_list = include_string.split(QRegExp("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);
+  QList<QString> const exclude_string_list = exclude_string.split(QRegularExpression("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);
+  QList<QString> const include_string_list = include_string.split(QRegularExpression("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);
 #else // QT_VERSION
-  QList<QString> exclude_string_list = exclude_string.split(QRegExp("[\\,,;]"), QString::SplitBehavior::SkipEmptyParts);
-  QList<QString> include_string_list = include_string.split(QRegExp("[\\,,;]"), QString::SplitBehavior::SkipEmptyParts);
+  QList<QString> exclude_string_list = exclude_string.split(QRegularExpression("[\\,,;]"), QString::SplitBehavior::SkipEmptyParts);
+  QList<QString> include_string_list = include_string.split(QRegularExpression("[\\,,;]"), QString::SplitBehavior::SkipEmptyParts);
 #endif // QT_VERSION
 
   for (auto& s : exclude_string_list)
   {
-    topic_exclude_regexp_list_.push_back(QRegExp(s));
+    topic_exclude_regexp_list_.push_back(QRegularExpression(s));
   }
 
   for (auto& s : include_string_list)
   {
-    topic_include_regexp_list_.push_back(QRegExp(s));
+    topic_include_regexp_list_.push_back(QRegularExpression(s));
   }
 }
 
@@ -228,7 +230,6 @@ void TopicWidget::autoSizeColumns()
   example_topic_pb.set_direction("subscriber__");
   example_topic_pb.set_ttype("proto:pb.People.Person____");
   //example_topic_pb.set_tdesc();
-  example_topic_pb.mutable_tqos()->set_reliability(eCAL::pb::QOS::eQOSPolicy_Reliability::QOS_eQOSPolicy_Reliability_best_effort_reliability_qos);
 
   example_topic_pb.mutable_tlayer()->Add()->set_type(eCAL::pb::eTLayerType::tl_ecal_shm);
   example_topic_pb.mutable_tlayer()->Add()->set_type(eCAL::pb::eTLayerType::tl_ecal_udp_mc);
@@ -240,7 +241,7 @@ void TopicWidget::autoSizeColumns()
   example_topic_pb.set_dfreq(999999);
 
   TopicTreeItem* example_topic_item = new TopicTreeItem(example_topic_pb);
-  GroupTreeItem* example_group_item = new GroupTreeItem("CameraSensorMapFusionCAF___", "", "", QVariant::Invalid, "");
+  GroupTreeItem* example_group_item = new GroupTreeItem("CameraSensorMapFusionCAF___", "", "", QVariant(), "");
 
   topic_tree_model_->insertItem(example_group_item);
   auto group_index = topic_tree_model_->index(example_group_item);
@@ -261,7 +262,6 @@ void TopicWidget::autoSizeColumns()
     (int)TopicTreeModel::Columns::TOPIC_ENCODING,
     (int)TopicTreeModel::Columns::MESSAGE_TYPE,
     (int)TopicTreeModel::Columns::HEARTBEAT,
-    (int)TopicTreeModel::Columns::QOS,
     (int)TopicTreeModel::Columns::TRANSPORT_LAYER,
     (int)TopicTreeModel::Columns::TOPIC_SIZE,
     (int)TopicTreeModel::Columns::CONNECTIONS_LOCAL,
@@ -378,7 +378,19 @@ void TopicWidget::resetLayout()
   settings.setValue("tree_state", QByteArray());  // Reset the settings, so new windows will open resetted
   settings.endGroup();
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
   int screen_number = QApplication::desktop()->screenNumber(this);
+#else
+  int screen_number = 0;
+  QScreen* current_screen = this->screen();
+  if (current_screen != nullptr)
+  {
+    screen_number = QApplication::screens().indexOf(current_screen);
+    if (screen_number < 0)
+      screen_number = 0;
+  }
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+
   for (auto reflection_window : visualisation_windows_.values())
   {
     reflection_window->resetLayout(screen_number);

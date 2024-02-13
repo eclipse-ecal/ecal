@@ -85,8 +85,6 @@ namespace eCAL
     void ShareType(bool state_);
     void ShareDescription(bool state_);
 
-    bool SetQOS(const QOS::SWriterQOS& qos_);
-
     bool SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_);
     bool SetMaxBandwidthUDP(long bandwidth_);
 
@@ -150,8 +148,6 @@ namespace eCAL
     SDataTypeInformation               m_topic_info;
     std::map<std::string, std::string> m_attr;
     size_t                             m_topic_size;
-
-    QOS::SWriterQOS    m_qos;
 
     size_t             m_buffering_shm;
     bool               m_zero_copy;

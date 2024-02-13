@@ -124,36 +124,6 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return topic_.tdatatype().desc().c_str();
     }
-    else if (column == Columns::TQOS)
-    {
-      auto reliability = topic_.tqos().reliability();
-
-      QString qos_string;
-
-      if (reliability == eCAL::pb::QOS::eQOSPolicy_Reliability::QOS_eQOSPolicy_Reliability_reliable_reliability_qos)
-      {
-        auto topic_tqos = topic_.tqos();
-        qos_string += "Reliable";
-
-        auto history = topic_tqos.history();
-        if (history == eCAL::pb::QOS::eQOSPolicy_HistoryKind::QOS_eQOSPolicy_HistoryKind_keep_all_history_qos)
-        {
-          qos_string += " (History: unlimited)";
-        }
-        else if (history == eCAL::pb::QOS::eQOSPolicy_HistoryKind::QOS_eQOSPolicy_HistoryKind_keep_last_history_qos)
-        {
-          qos_string += (" (History: " + QString::number(topic_tqos.history_depth()) + ")");
-        }
-      }
-      else
-      {
-        if (reliability == eCAL::pb::QOS::eQOSPolicy_Reliability::QOS_eQOSPolicy_Reliability_best_effort_reliability_qos)
-        {
-          qos_string += "Best effort";
-        }
-      }
-      return qos_string;
-    }
     else if (column == Columns::TLAYER)
     {
       QList<QVariant> layers;
@@ -213,7 +183,11 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
       if (!raw_data.empty())
       {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         const quint16 crc16 = qChecksum(raw_data.data(), static_cast<uint>(raw_data.length()));
+#else
+        const quint16 crc16 = qChecksum(raw_data);
+#endif
       
         const QString crc16_string = QString("%1").arg(QString::number(crc16, 16).toUpper(), 4, '0');
         const QString size_text    = QString::number(raw_data.size()) + " byte" + (raw_data.size() != 1 ? "s" : "")
@@ -381,10 +355,10 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       }
     }
 
-    return QVariant::Invalid;
+    return QVariant(); // Invalid QVariant
   }
 
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 int TopicTreeItem::type() const

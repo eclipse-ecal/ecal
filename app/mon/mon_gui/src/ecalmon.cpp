@@ -35,13 +35,16 @@
 #include "plugin/plugin_manager.h"
 
 #include <QSettings>
-#include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QDateTime>
 #include <QScreen>
 #include <QStyleFactory>
 #include <QLayout>
 #include <QUuid>
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+#include <QDesktopWidget>
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
 
 #ifndef NDEBUG
   #ifdef _MSC_VER
@@ -698,7 +701,18 @@ void Ecalmon::resetLayout()
   setTheme(Theme::Dark);
 
   // Back when we saved the initial window geometry, the window-manager might not have positioned the window on the screen, yet
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
   int screen_number = QApplication::desktop()->screenNumber(this);
+#else
+  int screen_number = 0;
+  QScreen* current_screen = this->screen();
+  if (current_screen != nullptr)
+  {
+    screen_number = QApplication::screens().indexOf(current_screen);
+    if (screen_number < 0)
+      screen_number = 0;
+  }
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
 
   restoreGeometry(initial_geometry_);
   restoreState(initial_state_);

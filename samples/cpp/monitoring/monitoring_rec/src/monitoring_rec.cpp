@@ -173,7 +173,6 @@ int main(int argc, char **argv)
         std::cout << "direction       : " << topic.direction()       << std::endl;   // direction (publisher, subscriber)
         std::cout << "ttype           : " << topic.ttype()           << std::endl;   // topic type
 //        std::cout << "tdesc           : " << topic.tdesc()           << std::endl;   // topic description
-//        std::cout << "tqos            : " << topic.tqos()            << std::endl;   // topic quality of service
         for (auto layer : topic.tlayer())
         {
           std::string layer_type("unknown");

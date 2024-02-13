@@ -43,7 +43,7 @@
 /* timeout for automatic removing monitoring topics in ms */
 #define MON_TIMEOUT                                5000
 /* topics blacklist as regular expression (will not be monitored) */
-#define MON_FILTER_EXCL                            "_.*"
+#define MON_FILTER_EXCL                            "^__.*$"
 /* topics whitelist as regular expression (will be monitored only) */
 #define MON_FILTER_INCL                            ""
 

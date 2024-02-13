@@ -20,6 +20,11 @@
 #pragma once
 #include <QSortFilterProxyModel>
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 12, 0)
+#include <QRegExp>
+#include <QRegularExpression>
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 12, 0)
+
 /**
  * @brief The QStableSortFilterProxyModel provides a deterministic sort behaviour (compared to the @see{QSortFilterProxyModel})
  *
@@ -37,6 +42,14 @@ public:
   ~QStableSortFilterProxyModel();
 
   bool lessThan(const QModelIndex &rLeft, const QModelIndex &rRight) const override;
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 12, 0)
+  // filterRegularExpression was added in Qt 5.12, so we need to backport it for older Qt Versions
+public:
+  QRegularExpression filterRegularExpression() const { return QRegularExpression(filterRegExp().pattern()); }
+  void setFilterRegularExpression(const QString &pattern) { setFilterRegExp(QRegExp(pattern)); }
+  void setFilterRegularExpression(const QRegularExpression &regularExpression) { setFilterRegExp(QRegExp(regularExpression.pattern())); }
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 12, 0)
 
 protected:
   bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;

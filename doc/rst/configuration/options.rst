@@ -258,7 +258,7 @@ Monitor settings are listed in the section ``monitoring``
    topics blacklist as regular expression (will not be monitored)
    Per default includes all eCAL internal topics.
    
-   default = ``__.*`` 
+   default = ``^__.*$`` 
    
 .. option:: filter_incl
 

@@ -43,7 +43,6 @@ namespace eCAL
                 m_created(false),
                 m_initialized(false)
   {
-    InitializeQOS();
     InitializeTLayer();
   }
 
@@ -73,7 +72,6 @@ namespace eCAL
   **/
   CPublisher::CPublisher(CPublisher&& rhs) noexcept :
                 m_datawriter(std::move(rhs.m_datawriter)),
-                m_qos(rhs.m_qos),
                 m_tlayer(rhs.m_tlayer),
                 m_id(rhs.m_id),
                 m_created(rhs.m_created),
@@ -92,7 +90,6 @@ namespace eCAL
     Destroy();
 
     m_datawriter      = std::move(rhs.m_datawriter);
-    m_qos             = rhs.m_qos;
     m_tlayer          = rhs.m_tlayer,
     m_id              = rhs.m_id;
     m_created         = rhs.m_created;
@@ -139,8 +136,6 @@ namespace eCAL
 
     // create data writer
     m_datawriter = std::make_shared<CDataWriter>();
-    // set qos
-    m_datawriter->SetQOS(m_qos);
     // set transport layer
     m_datawriter->SetLayerMode(TLayer::tlayer_udp_mc, m_tlayer.sm_udp_mc);
     m_datawriter->SetLayerMode(TLayer::tlayer_shm, m_tlayer.sm_shm);
@@ -260,18 +255,6 @@ namespace eCAL
     if (m_datawriter == nullptr) return false;
     m_datawriter->ShareDescription(state_);
     return true;
-  }
-
-  bool CPublisher::SetQOS(const QOS::SWriterQOS& qos_)
-  {
-    if (m_created) return false;
-    m_qos = qos_;
-    return true;
-  }
-
-  QOS::SWriterQOS CPublisher::GetQOS()
-  {
-    return m_qos;
   }
 
   bool CPublisher::SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_)
@@ -432,11 +415,6 @@ namespace eCAL
   {
     if (m_datawriter == nullptr) return(SDataTypeInformation{});
     return(m_datawriter->GetDataTypeInformation());
-  }
-
-  void CPublisher::InitializeQOS()
-  {
-    m_qos = QOS::SWriterQOS();
   }
 
   void CPublisher::InitializeTLayer()

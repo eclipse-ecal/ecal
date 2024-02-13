@@ -33,7 +33,7 @@ TopicSortFilterProxyModel::TopicSortFilterProxyModel(QObject* parent)
 TopicSortFilterProxyModel::~TopicSortFilterProxyModel()
 {}
 
-void TopicSortFilterProxyModel::setRegExpLists(const QList<QRegExp>& exclude_list, const QList<QRegExp>& include_list)
+void TopicSortFilterProxyModel::setRegularExpressionLists(const QList<QRegularExpression>& exclude_list, const QList<QRegularExpression>& include_list)
 {
   exclude_regexp_list_ = exclude_list;
   include_regexp_list_ = include_list;
@@ -56,10 +56,9 @@ bool TopicSortFilterProxyModel::filterDirectAcceptsRow(int source_row, const QMo
     return false;
   }
 
-
-  for (const QRegExp& regexp : exclude_regexp_list_)
+  for (const QRegularExpression& regexp : exclude_regexp_list_)
   {
-    if (regexp.exactMatch(data))
+    if (regexp.match(data).hasMatch())
     {
       return false;
     }
@@ -71,9 +70,9 @@ bool TopicSortFilterProxyModel::filterDirectAcceptsRow(int source_row, const QMo
   }
   else
   {
-    for (const QRegExp& regexp : include_regexp_list_)
+    for (const QRegularExpression& regexp : include_regexp_list_)
     {
-      if (regexp.exactMatch(data))
+      if (regexp.match(data).hasMatch())
       {
         return true;
       }

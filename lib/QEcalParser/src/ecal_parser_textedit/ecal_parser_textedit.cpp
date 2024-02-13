@@ -30,9 +30,6 @@
 #include <QStyle>
 #include <QEvent>
 
-// TODO: REmove
-#include <iostream>
-
 QEcalParserTextEdit::QEcalParserTextEdit(QWidget *parent)
   : QEcalParserTextEdit("", parent)
 {

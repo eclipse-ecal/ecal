@@ -78,7 +78,7 @@ QVariant GroupStateTreeItem::data(Columns column, Qt::ItemDataRole role) const
     return data(column, Qt::ItemDataRole::DisplayRole);
   }
 
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 std::shared_ptr<TaskGroup::GroupState> GroupStateTreeItem::getGroupState()

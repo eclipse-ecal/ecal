@@ -36,7 +36,6 @@
 #include <ecal/ecal_process.h>
 #include <ecal/ecal_monitoring.h>
 #include <ecal/ecal_publisher.h>
-#include <ecal/ecal_qos.h>
 #include <ecal/ecal_server.h>
 #include <ecal/ecal_service_info.h>
 #include <ecal/ecal_subscriber.h>

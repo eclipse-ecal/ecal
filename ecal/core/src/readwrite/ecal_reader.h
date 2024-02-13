@@ -59,8 +59,6 @@ namespace eCAL
     bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
     bool Destroy();
 
-    bool SetQOS(const QOS::SReaderQOS& qos_);
-
     bool Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);
 
     bool AddReceiveCallback(ReceiveCallbackT callback_);
@@ -125,8 +123,6 @@ namespace eCAL
     SDataTypeInformation                      m_topic_info;
     std::map<std::string, std::string>        m_attr;
     std::atomic<size_t>                       m_topic_size;
-
-    QOS::SReaderQOS                           m_qos;
 
     std::atomic<bool>                         m_connected;
     using ConnectedMapT = Util::CExpMap<std::string, bool>;

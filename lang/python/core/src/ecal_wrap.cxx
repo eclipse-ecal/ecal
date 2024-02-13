@@ -392,44 +392,6 @@ PyObject* pub_set_description(PyObject* /*self*/, PyObject* args)
 }
 
 /****************************************/
-/*      pub_set_qos_historykind         */
-/****************************************/
-PyObject* pub_set_qos_historykind(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  int         qpolicy      = 0;
-  int         depth        = 0;
-
-  if (!PyArg_ParseTuple(args, "nii", &topic_handle, &qpolicy, &depth))
-    return nullptr;
-
-  SWriterQOSC qos;
-  pub_get_qos(topic_handle, &qos);
-  qos.history_kind       = static_cast<eQOSPolicy_HistoryKindC>(qpolicy);
-  qos.history_kind_depth = depth;
-
-  return(Py_BuildValue("i", pub_set_qos(topic_handle, qos)));
-}
-
-/****************************************/
-/*      pub_set_qos_reliability         */
-/****************************************/
-PyObject* pub_set_qos_reliability(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  int         qpolicy      = 0;
-
-  if (!PyArg_ParseTuple(args, "ni", &topic_handle, &qpolicy))
-    return nullptr;
-
-  SWriterQOSC qos;
-  pub_get_qos(topic_handle, &qos);
-  qos.reliability = static_cast<eQOSPolicy_ReliabilityC>(qpolicy);
-
-  return(Py_BuildValue("i", pub_set_qos(topic_handle, qos)));
-}
-
-/****************************************/
 /*      pub_set_layer_mode              */
 /****************************************/
 PyObject* pub_set_layer_mode(PyObject* /*self*/, PyObject* args)
@@ -532,52 +494,6 @@ PyObject* sub_destroy(PyObject* /*self*/, PyObject* args)
     destroyed = sub_destroy(topic_handle);
   Py_END_ALLOW_THREADS
   return(Py_BuildValue("i", destroyed));
-}
-
-/****************************************/
-/*      sub_set_qos_historykind         */
-/****************************************/
-PyObject* sub_set_qos_historykind(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  int         qpolicy      = 0;
-  int         depth        = 0;
-
-  if (!PyArg_ParseTuple(args, "nii", &topic_handle, &qpolicy, &depth))
-    return nullptr;
-
-  bool set_qos{ false };
-  Py_BEGIN_ALLOW_THREADS
-    SReaderQOSC qos;
-    sub_get_qos(topic_handle, &qos);
-    qos.history_kind       = static_cast<eQOSPolicy_HistoryKindC>(qpolicy);
-    qos.history_kind_depth = depth;
-    set_qos = sub_set_qos(topic_handle, qos);
-  Py_END_ALLOW_THREADS
-
-  return(Py_BuildValue("i", set_qos));
-}
-
-/****************************************/
-/*      sub_set_qos_reliability         */
-/****************************************/
-PyObject* sub_set_qos_reliability(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  int         qpolicy      = 0;
-
-  if (!PyArg_ParseTuple(args, "ni", &topic_handle, &qpolicy))
-    return nullptr;
-
-  bool set_qos{ false };
-  Py_BEGIN_ALLOW_THREADS
-    SReaderQOSC qos;
-    sub_get_qos(topic_handle, &qos);
-    qos.reliability = static_cast<eQOSPolicy_ReliabilityC>(qpolicy);
-    set_qos = sub_set_qos(topic_handle, qos);
-  Py_END_ALLOW_THREADS
-
-  return(Py_BuildValue("i", set_qos));
 }
 
 /****************************************/
@@ -1632,8 +1548,6 @@ static PyMethodDef _ecal_methods[] =
   {"pub_set_topic_type_name",       pub_set_topic_type_name,       METH_VARARGS,  "pub_set_topic_type_name(topic_handle, topic_type_name)"},
   {"pub_set_description",           pub_set_description,           METH_VARARGS,  "pub_set_description(topic_handle, topic_description)"},
 
-  {"pub_set_qos_historykind",       pub_set_qos_historykind,       METH_VARARGS,  "pub_set_qos_historykind(topic_handle, qpolicy, depth)"},
-  {"pub_set_qos_reliability",       pub_set_qos_reliability,       METH_VARARGS,  "pub_set_qos_reliability(topic_handle, qpolicy)"},
   {"pub_set_layer_mode",            pub_set_layer_mode,            METH_VARARGS,  "pub_set_layer_mode(topic_handle, layer, mode)"},
 
   {"pub_set_max_bandwidth_udp",     pub_set_max_bandwidth_udp,     METH_VARARGS,  "pub_set_max_bandwidth_udp(topic_handle, bandwidth)"},
@@ -1643,9 +1557,6 @@ static PyMethodDef _ecal_methods[] =
 
   {"sub_create",                    sub_create,                    METH_VARARGS,  "sub_create(topic_name, topuic_type)"},
   {"sub_destroy",                   sub_destroy,                   METH_VARARGS,  "sub_destroy(topic_handle)"},
-
-  {"sub_set_qos_historykind",       sub_set_qos_historykind,       METH_VARARGS,  "sub_set_qos_historykind(topic_handle, qpolicy, depth)"},
-  {"sub_set_qos_reliability",       sub_set_qos_reliability,       METH_VARARGS,  "sub_set_qos_reliability(topic_handle, qpolicy)"},
 
   {"sub_receive",                   sub_receive,                   METH_VARARGS,  "sub_receive(topic_handle, timeout)"},
 

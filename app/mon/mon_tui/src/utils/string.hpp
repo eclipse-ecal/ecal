@@ -156,26 +156,4 @@ std::string to_string(const std::vector<Topic::TransportLayer> &value)
   return str;
 }
 
-std::string to_string(Topic::QOSHistoryKind value)
-{
-  switch(value)
-  {
-    case Topic::QOSHistoryKind::KEEP_LAST: return "Keep last";
-    case Topic::QOSHistoryKind::KEEP_ALL:
-    default:
-      return "Keep all";
-  }
-}
-
-std::string to_string(Topic::QOSReliability value)
-{
-  switch(value)
-  {
-    case Topic::QOSReliability::RELIABLE: return "Reliable";
-    case Topic::QOSReliability::BEST_EFFORT:
-    default:
-      return "Best effort";
-  }
-}
-
 }

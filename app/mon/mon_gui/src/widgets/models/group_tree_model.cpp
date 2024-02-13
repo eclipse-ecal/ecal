@@ -17,15 +17,15 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#ifdef _MSC_VER
-// Disable Qt 5.15 Deprecation Warning about QVariant::operator<(), which is udsed by QMap
-#pragma warning(push)
-#pragma warning (disable : 4996)
-#endif // _MSC_VER
+//#ifdef _MSC_VER
+//// Disable Qt 5.15 Deprecation Warning about QVariant::operator<(), which is udsed by QMap
+//#pragma warning(push)
+//#pragma warning (disable : 4996)
+//#endif // _MSC_VER
 #include "group_tree_model.h"
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+//#ifdef _MSC_VER
+//#pragma warning(pop)
+//#endif
 
 #include "tree_item_type.h"
 #include "item_data_roles.h"
@@ -42,6 +42,7 @@
     #pragma warning(pop)
   #endif // _MSC_VER
 #endif // NDEBUG
+
 GroupTreeModel::GroupTreeModel(const QVector<int>& group_by_columns, QObject *parent)
   : QAbstractTreeModel(parent)
   , group_column_header_("Group")
@@ -149,13 +150,13 @@ void GroupTreeModel::insertItemIntoGroups(QAbstractTreeItem* item)
     }
 
     GroupTreeItem* group_item;
-
-    if (group_map_.contains(current_group_identifier))
+    const auto current_group_it = group_map_.find(current_group_identifier);
+    if (current_group_it != group_map_.end())
     {
 #ifndef NDEBUG
       qDebug().nospace() << "[" << metaObject()->className() << "]: Group " << current_group_name.toString() << " Exists already";
 #endif // NDEBUG
-      group_item = group_map_.value(current_group_identifier);
+      group_item = current_group_it->second;
     }
     else
     {
@@ -163,6 +164,7 @@ void GroupTreeModel::insertItemIntoGroups(QAbstractTreeItem* item)
       qDebug().nospace() << "[" << metaObject()->className() << "] Adding Group " << current_group_name.toString();
 #endif // NDEBUG
       group_item = new GroupTreeItem(current_group_name, current_group_filter_role, current_group_sort_role, current_group_font_role, current_group_identifier);
+
       group_map_[current_group_identifier] = group_item;
       insertItem(group_item);
     }
@@ -224,7 +226,19 @@ void GroupTreeModel::removeItemFromGroups(QAbstractTreeItem* item, bool remove_e
 
   if (item_to_remove->parentItem() == root())
   {
-    group_map_.remove(group_map_.key((GroupTreeItem*)item_to_remove));
+    auto it = std::find_if(std::begin(group_map_), std::end(group_map_),
+                           [item_to_remove](auto& p) { return p.second == (GroupTreeItem*)item_to_remove; });
+
+    if (it != std::end(group_map_))
+    {
+      group_map_.erase(it);
+    }
+    else
+    {
+#ifndef NDEBUG
+      qDebug().nospace() << "[" << metaObject()->className() << "] removeItemFromGroups: Could not find group item in group map";
+#endif // !NDEBUG
+    }
   }
 
   removeItem(index(item_to_remove));

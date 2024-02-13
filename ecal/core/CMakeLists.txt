@@ -378,7 +378,6 @@ set(ecal_header_cmn
     include/ecal/ecal_process_mode.h
     include/ecal/ecal_process_severity.h
     include/ecal/ecal_publisher.h
-    include/ecal/ecal_qos.h
     include/ecal/ecal_server.h
     include/ecal/ecal_service.h
     include/ecal/ecal_service_info.h
@@ -405,7 +404,6 @@ set(ecal_header_cimpl
     include/ecal/cimpl/ecal_process_cimpl.h
     include/ecal/cimpl/ecal_proto_dyn_json_subscriber_cimpl.h
     include/ecal/cimpl/ecal_publisher_cimpl.h
-    include/ecal/cimpl/ecal_qos_cimpl.h
     include/ecal/cimpl/ecal_server_cimpl.h
     include/ecal/cimpl/ecal_service_cimpl.h
     include/ecal/cimpl/ecal_service_info_cimpl.h

@@ -49,7 +49,6 @@ public:
     TENCODING,
     TTYPE,
     TDESC,
-    TQOS,
     TLAYER,
     TSIZE,
     CONNECTIONS_LOC,

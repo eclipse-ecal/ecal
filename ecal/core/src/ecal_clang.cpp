@@ -309,24 +309,6 @@ ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, 
 }
 
 /****************************************/
-/*      pub_set_qos                     */
-/****************************************/
-ECAL_API bool pub_set_qos(ECAL_HANDLE handle_, struct SWriterQOSC qos_) //-V813
-{
-  const int ret = eCAL_Pub_SetQOS(handle_, qos_);
-  return(ret == 0);
-}
-
-/****************************************/
-/*      pub_get_qos                     */
-/****************************************/
-ECAL_API bool pub_get_qos(ECAL_HANDLE handle_, struct SWriterQOSC* qos_)
-{
-  const int ret = eCAL_Pub_GetQOS(handle_, qos_);
-  return(ret == 0);
-}
-
-/****************************************/
 /*      pub_set_layer_mode              */
 /****************************************/
 ECAL_API bool pub_set_layer_mode(ECAL_HANDLE handle_, const int layer_, const int mode_)
@@ -449,24 +431,6 @@ ECAL_API bool sub_destroy(ECAL_HANDLE handle_)
     return(true);
   }
   return(false);
-}
-
-/****************************************/
-/*      sub_set_qos                     */
-/****************************************/
-ECAL_API bool sub_set_qos(ECAL_HANDLE handle_, struct SReaderQOSC qos_) //-V813
-{
-  const int ret = eCAL_Sub_SetQOS(handle_, qos_);
-  return(ret == 0);
-}
-
-/****************************************/
-/*      sub_get_qos                     */
-/****************************************/
-ECAL_API bool sub_get_qos(ECAL_HANDLE handle_, struct SReaderQOSC* qos_)
-{
-  const int ret = eCAL_Sub_GetQOS(handle_, qos_);
-  return(ret == 0);
 }
 
 /****************************************/

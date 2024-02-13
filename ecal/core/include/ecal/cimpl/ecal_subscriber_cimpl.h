@@ -30,7 +30,6 @@
 
 #include <ecal/cimpl/ecal_callback_cimpl.h>
 
-#include "ecal_qos_cimpl.h"
 #include "ecal_tlayer_cimpl.h"
 
 #ifdef __cplusplus
@@ -65,26 +64,6 @@ extern "C"
    * @return  None zero if succeeded.
   **/
   ECALC_API int eCAL_Sub_Destroy(ECAL_HANDLE handle_);
-
-  /**
-   * @brief Set subscriber quality of service attributes.
-   *
-   * @param handle_  Subscriber handle.
-   * @param qos_     Quality of service policies.
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Sub_SetQOS(ECAL_HANDLE handle_, struct SReaderQOSC qos_);
-
-  /**
-   * @brief Get subscriber quality of service attributes.
-   *
-   * @param handle_  Subscriber handle.
-   * @param qos_     Quality of service policies.
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Sub_GetQOS(ECAL_HANDLE handle_, struct SReaderQOSC* qos_);
 
   /**
    * @brief Set a set of id's to prefiltering topics (see eCAL_Pub_SetID).

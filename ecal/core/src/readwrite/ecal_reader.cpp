@@ -184,13 +184,13 @@ namespace eCAL
     // subscribe topic to udp multicast layer
     if (Config::IsUdpMulticastRecEnabled())
     {
-      CUDPReaderLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
+      CUDPReaderLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id);
     }
 
     // subscribe topic to tcp layer
     if (Config::IsTcpRecEnabled())
     {
-      CTCPReaderLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
+      CTCPReaderLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id);
     }
   }
   
@@ -278,28 +278,6 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_connections_loc(google::protobuf::int32(loc_connections));
     ecal_reg_sample_mutable_topic->set_connections_ext(google::protobuf::int32(ext_connections));
 
-    // qos HistoryKind
-    switch (m_qos.history_kind)
-    {
-    case QOS::keep_last_history_qos:
-      ecal_reg_sample_mutable_topic->mutable_tqos()->set_history(eCAL::pb::QOS::keep_last_history_qos);
-      break;
-    case QOS::keep_all_history_qos:
-      ecal_reg_sample_mutable_topic->mutable_tqos()->set_history(eCAL::pb::QOS::keep_all_history_qos);
-      break;
-  }
-    ecal_reg_sample_mutable_topic->mutable_tqos()->set_history_depth(m_qos.history_kind_depth);
-    // qos Reliability
-    switch (m_qos.reliability)
-    {
-    case QOS::best_effort_reliability_qos:
-      ecal_reg_sample_mutable_topic->mutable_tqos()->set_reliability(eCAL::pb::QOS::best_effort_reliability_qos);
-      break;
-    case QOS::reliable_reliability_qos:
-      ecal_reg_sample_mutable_topic->mutable_tqos()->set_reliability(eCAL::pb::QOS::reliable_reliability_qos);
-      break;
-    }
-
     // register subscriber
     if(g_registration_provider() != nullptr) g_registration_provider()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
 #ifndef NDEBUG
@@ -333,12 +311,6 @@ namespace eCAL
     Logging::Log(log_level_debug4, m_topic_name + "::CDataReader::Unregister");
 #endif
     return(true);
-  }
-
-  bool CDataReader::SetQOS(const QOS::SReaderQOS& qos_)
-  {
-    m_qos = qos_;
-    return (!m_created);
   }
 
   bool CDataReader::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)

@@ -30,7 +30,6 @@
 
 #include <ecal/cimpl/ecal_callback_cimpl.h>
 
-#include "ecal_qos_cimpl.h"
 #include "ecal_tlayer_cimpl.h"
 
 #ifdef __cplusplus
@@ -132,26 +131,6 @@ extern "C"
    * @return  None zero if succeeded.
   **/
   ECALC_API int eCAL_Pub_ShareDescription(ECAL_HANDLE handle_, int state_);
-
-  /**
-   * @brief Set publisher quality of service attributes.
-   *
-   * @param handle_  Publisher handle.
-   * @param qos_     Quality of service policies.
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Pub_SetQOS(ECAL_HANDLE handle_, struct SWriterQOSC qos_);
-
-  /**
-   * @brief Get publisher quality of service attributes.
-   *
-   * @param handle_  Publisher handle.
-   * @param qos_     Quality of service policies.
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Pub_GetQOS(ECAL_HANDLE handle_, struct SWriterQOSC* qos_);
 
   /**
    * @brief Set publisher send mode for specific transport layer.

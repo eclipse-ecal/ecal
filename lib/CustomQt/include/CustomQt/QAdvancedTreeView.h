@@ -155,8 +155,6 @@ public:
    */
   bool restoreState(const QByteArray& state, int32_t version = 0);
 
-  QStyleOptionViewItem viewOptions() const override;
-
 protected:
   void keyPressEvent(QKeyEvent* key_event) override;
 

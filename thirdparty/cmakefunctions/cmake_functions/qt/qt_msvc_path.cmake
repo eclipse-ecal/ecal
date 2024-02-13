@@ -16,11 +16,11 @@
 #
 # ========================= eCAL LICENSE =================================
 
-macro(autodetect_qt5_msvc_dir)
+macro(autodetect_qt_msvc_dir)
 	SET(QT_MISSING True)
 	# msvc only; mingw will need different logic
 	IF(MSVC)
-		message(STATUS "Trying to auto-detect best Qt5 Version")
+		message(STATUS "Trying to auto-detect best Qt Version")
 		# look for user-registry pointing to qtcreator
 		GET_FILENAME_COMPONENT(QTCREATOR_BIN [HKEY_CURRENT_USER\\Software\\Classes\\Applications\\QtProject.QtCreator.pro\\shell\\Open\\Command] DIRECTORY)
 		# get root path so we can search for 5.3, 5.4, 5.5, etc
@@ -28,8 +28,8 @@ macro(autodetect_qt5_msvc_dir)
 
 		LIST(GET QT_BIN 0 QT_INSTALL_DIRECTORY)
 				
-		# Collect all Qt5 directories
-		FILE(GLOB QT_VERSION_DIRECTORIES "${QT_INSTALL_DIRECTORY}/5.*")
+		# Collect all Qt5 and Qt6 directories
+		FILE(GLOB QT_VERSION_DIRECTORIES "${QT_INSTALL_DIRECTORY}/[5-6].*")
 		
 		# Compute the MSVC Version as year (e.g. 2015, 2017, 2019...) and aim for upwards compatibility
 		if (MSVC_VERSION LESS 1900)
@@ -87,7 +87,7 @@ macro(autodetect_qt5_msvc_dir)
 				
 				if (("${QT_MSVC_YEAR}" LESS_EQUAL "${MSVC_YEAR}") AND (${QT_MSVC_YEAR} GREATER_EQUAL "2015"))
 					# At this point we have found a version that should be usable. Let's check if it is better than the last one we found!
-					message(STATUS "Found Qt5 candidate at ${QT_MSVC_DIR}")
+					message(STATUS "Found Qt candidate at ${QT_MSVC_DIR}")
 					if ( ("${QT_MAJOR}" GREATER "${BEST_QT_MAJOR}") OR
 						(("${QT_MAJOR}" EQUAL   "${BEST_QT_MAJOR}") AND ("${QT_MINOR}" GREATER "${BEST_QT_MINOR}")) OR
 						(("${QT_MAJOR}" EQUAL   "${BEST_QT_MAJOR}") AND ("${QT_MINOR}" EQUAL   "${BEST_QT_MINOR}") AND ("${QT_PATCH}" GREATER "${BEST_QT_PATCH}")) OR
@@ -108,12 +108,12 @@ macro(autodetect_qt5_msvc_dir)
 		endforeach()
 
 		if ("${BEST_QT_DIRECTORY}" STREQUAL "")
-			message(FATAL_ERROR "ERROR: Unable to find any usable Qt5 installation. Please install Qt5 or manually set the CMAKE_PREFIX_PATH.")
+			message(FATAL_ERROR "ERROR: Unable to find any usable Qt5 or Qt6 installation. Please install Qt or manually set the CMAKE_PREFIX_PATH.")
 		endif()
 
 		message(STATUS "Using Qt ${BEST_QT_MAJOR}.${BEST_QT_MINOR}.${BEST_QT_PATCH} MSVC ${BEST_QT_MSVC_YEAR} from ${BEST_QT_DIRECTORY}")
-		SET(Qt5_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt5/")
-		SET(Qt5Test_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt5Test")
+		SET(Qt${BEST_QT_MAJOR}_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt${BEST_QT_MAJOR}/")
+		SET(Qt${BEST_QT_MAJOR}Test_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt${BEST_QT_MAJOR}Test")
 	
 	endif()
 endmacro()

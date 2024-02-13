@@ -410,7 +410,7 @@ void GroupWidget::groupTreeContextMenu(const QPoint& pos)
 void GroupWidget::filterTextChanged(QString text)
 {
   group_sort_filter_proxy_model_->setFilterCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
-  group_sort_filter_proxy_model_->setFilterRegExp(text);
+  group_sort_filter_proxy_model_->setFilterRegularExpression(text);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
