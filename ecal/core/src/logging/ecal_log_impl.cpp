@@ -109,8 +109,7 @@ namespace eCAL
           m_level(log_level_none),
           m_filter_mask_con(log_level_info | log_level_warning | log_level_error | log_level_fatal),
           m_filter_mask_file(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2),
-          m_filter_mask_udp(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2),
-          m_core_time_start(std::chrono::nanoseconds(0))
+          m_filter_mask_udp(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2)
   {
     m_core_time = std::chrono::duration<double>(-1.0);
   }
@@ -291,34 +290,6 @@ namespace eCAL
   void CLog::Log(const std::string& msg_)
   {
     Log(m_level, msg_);
-  }
-
-  void CLog::StartCoreTimer()
-  {
-    const std::lock_guard<std::mutex> lock(m_log_sync);
-
-    m_core_time_start = std::chrono::steady_clock::now();
-  }
-
-  void CLog::StopCoreTimer()
-  {
-    const std::lock_guard<std::mutex> lock(m_log_sync);
-
-    m_core_time = std::chrono::steady_clock::now() - m_core_time_start;
-  }
-
-  void CLog::SetCoreTime(const std::chrono::duration<double>& time_)
-  {
-    const std::lock_guard<std::mutex> lock(m_log_sync);
-
-    m_core_time = time_;
-  }
-
-  std::chrono::duration<double> CLog::GetCoreTime()
-  {
-    const std::lock_guard<std::mutex> lock(m_log_sync);
-
-    return(m_core_time);
   }
 
   void CLog::GetLogging(eCAL::pb::Logging& logging_)

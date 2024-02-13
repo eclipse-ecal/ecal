@@ -403,11 +403,6 @@ namespace eCAL
       #endif
     }
 
-    float GetProcessCpuUsage()
-    {
-      return(GetCPULoad() * 100.0f);
-    }
-
     long long GetSClock()
     {
       return(GetWClock());
@@ -513,14 +508,6 @@ namespace eCAL
         g_process_par = EcalUtils::CommandLine::GetUtf8CommandLine();
       }
       return(g_process_par);
-    }
-
-    unsigned long GetProcessMemory()
-    {
-      PROCESS_MEMORY_COUNTERS pmc;
-      GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
-      const SIZE_T msize = pmc.PagefileUsage;
-      return(static_cast<unsigned long>(msize));
     }
 
     int StartProcess(const char* proc_name_, const char* proc_args_, const char* working_dir_, const bool create_console_, const eCAL_Process_eStartMode process_mode_, const bool block_)
@@ -1144,25 +1131,6 @@ namespace eCAL
         g_process_par = process_par;
       }
       return(g_process_par);
-    }
-
-    unsigned long GetProcessMemory()
-    {
-      FILE* file = fopen("/proc/self/status", "r");
-      if (file == nullptr) return(0);
-
-      int result = 0;
-      char line[128] = { 0 };
-      while (fgets(line, 128, file) != nullptr)
-      {
-        if (strncmp(line, "VmSize:", 7) == 0)
-        {
-          result = parseLine(line);
-          break;
-        }
-      }
-      fclose(file);
-      return(result * 1024);
     }
 
     int StartProcess(const char* proc_name_,

@@ -138,11 +138,6 @@ void Logger::Log(System::String^ message_)
   ::eCAL::Logging::Log(StringToStlString(message_));
 }
 
-void Logger::SetCoreTime(double time_)
-{
-  ::eCAL::Logging::SetCoreTime(time_);
-}
-
 
 /////////////////////////////////////////////////////////////////////////////
 // Publisher

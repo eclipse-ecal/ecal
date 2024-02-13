@@ -339,9 +339,6 @@ namespace eCAL
     const int             process_id                   = sample_process.pid();
     const std::string&    process_param                = sample_process.pparam();
     const std::string&    unit_name                    = sample_process.uname();
-    const long long       process_memory               = sample_process.pmemory();
-    const float           process_cpu                  = sample_process.pcpu();
-    const float           process_usrptime             = sample_process.usrptime();
     const long long       process_datawrite            = sample_process.datawrite();
     const long long       process_dataread             = sample_process.dataread();
     const auto&           sample_process_state         = sample_process.state();
@@ -373,9 +370,6 @@ namespace eCAL
 
     // update flexible content
     ProcessInfo.rclock++;
-    ProcessInfo.pmemory              = process_memory;
-    ProcessInfo.pcpu                 = process_cpu;
-    ProcessInfo.usrptime             = process_usrptime;
     ProcessInfo.datawrite            = process_datawrite;
     ProcessInfo.dataread             = process_dataread;
     ProcessInfo.state_severity       = process_state_severity;
@@ -705,15 +699,6 @@ namespace eCAL
 
       // process parameter
       pMonProcs->set_pparam(process.second.pparam);
-
-      // process memory
-      pMonProcs->set_pmemory(process.second.pmemory);
-
-      // process cpu
-      pMonProcs->set_pcpu(process.second.pcpu);
-
-      // process user core time
-      pMonProcs->set_usrptime(process.second.usrptime);
 
       // process data write bytes
       pMonProcs->set_datawrite(process.second.datawrite);

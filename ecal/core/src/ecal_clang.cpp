@@ -234,14 +234,6 @@ ECAL_API void log_setlevel(const int level_)
 }
 
 /****************************************/
-/*      log_setcoretime                 */
-/****************************************/
-ECAL_API void log_setcoretime(const double time_)
-{
-  eCAL::Logging::SetCoreTime(time_);
-}
-
-/****************************************/
 /*      log_message                     */
 /****************************************/
 ECAL_API void log_message(const char* message_)
