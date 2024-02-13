@@ -293,34 +293,6 @@ namespace eCAL
     Log(m_level, msg_);
   }
 
-  void CLog::StartCoreTimer()
-  {
-    const std::lock_guard<std::mutex> lock(m_log_sync);
-
-    m_core_time_start = std::chrono::steady_clock::now();
-  }
-
-  void CLog::StopCoreTimer()
-  {
-    const std::lock_guard<std::mutex> lock(m_log_sync);
-
-    m_core_time = std::chrono::steady_clock::now() - m_core_time_start;
-  }
-
-  void CLog::SetCoreTime(const std::chrono::duration<double>& time_)
-  {
-    const std::lock_guard<std::mutex> lock(m_log_sync);
-
-    m_core_time = time_;
-  }
-
-  std::chrono::duration<double> CLog::GetCoreTime()
-  {
-    const std::lock_guard<std::mutex> lock(m_log_sync);
-
-    return(m_core_time);
-  }
-
   void CLog::GetLogging(eCAL::pb::LogMessageList& logging_)
   {
     // clear protobuf object

@@ -93,30 +93,6 @@ namespace eCAL
     **/
     void Log(const std::string& msg_);
 
-    /**
-      * @brief Mark the start of the user core process.
-      *
-    **/
-    void StartCoreTimer();
-
-    /**
-      * @brief Mark the stop of the user core process.
-      *
-    **/
-    void StopCoreTimer();
-
-    /**
-      * @brief Set the current measured core time in s (for user implemented measuring).
-      *
-    **/
-    void SetCoreTime(const std::chrono::duration<double>& time_);
-
-    /**
-      * @brief Returns the current measured core time in s.
-      *
-    **/
-    std::chrono::duration<double> GetCoreTime();
-
     void GetLogging(eCAL::pb::LogMessageList& logging_);
 
   private:
@@ -149,9 +125,5 @@ namespace eCAL
     eCAL_Logging_Filter                    m_filter_mask_con;
     eCAL_Logging_Filter                    m_filter_mask_file;
     eCAL_Logging_Filter                    m_filter_mask_udp;
-
-    std::chrono::duration<double>          m_core_time;
-
-    std::chrono::steady_clock::time_point  m_core_time_start;
   };
 }
