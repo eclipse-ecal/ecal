@@ -265,7 +265,6 @@ namespace eCAL
       sstream << std::endl;
 
       sstream << "------------------------- PUBLISHER LAYER DEFAULTS ---------------"       << std::endl;
-      sstream << "Layer Mode INPROC        : " << LayerMode(Config::GetPublisherInprocMode())  << std::endl;
       auto zero_copy = Config::IsMemfileZerocopyEnabled();
 
       if (zero_copy)
@@ -281,7 +280,6 @@ namespace eCAL
       sstream << std::endl;
 
       sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------"               << std::endl;
-      sstream << "Layer Mode INPROC        : " << LayerMode(Config::IsInprocRecEnabled())  << std::endl;
       sstream << "Layer Mode SHM           : " << LayerMode(Config::IsShmRecEnabled())     << std::endl;
       sstream << "Layer Mode TCP           : " << LayerMode(Config::IsTcpRecEnabled())  << std::endl;
       sstream << "Layer Mode UDP MC        : " << LayerMode(Config::IsUdpMulticastRecEnabled())  << std::endl;

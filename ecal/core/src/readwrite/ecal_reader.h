@@ -167,7 +167,6 @@ namespace eCAL
     bool                                      m_use_udp_mc_confirmed;
     bool                                      m_use_shm_confirmed;
     bool                                      m_use_tcp_confirmed;
-    bool                                      m_use_inproc_confirmed;
 
     std::atomic<bool>                         m_created;
   };

@@ -128,7 +128,6 @@ std::string to_string(Topic::TransportLayer value)
     case Topic::TransportLayer::UDP_MC: return "UDP multicast";
     case Topic::TransportLayer::SHM: return "SHM";
     case Topic::TransportLayer::TCP: return "TCP";
-    case Topic::TransportLayer::INPROC: return "InProc";
     case Topic::TransportLayer::ALL: return "All";
     case Topic::TransportLayer::NONE:
     default:

@@ -64,7 +64,6 @@ namespace eCAL
         tlayer_ecal_udp_mc = false;
         tlayer_ecal_shm    = false;
         tlayer_ecal_tcp    = false;
-        tlayer_inproc      = false;
         connections_loc    = 0;
         connections_ext    = 0;
         message_drops      = 0;
@@ -89,7 +88,6 @@ namespace eCAL
       bool                                tlayer_ecal_udp_mc;   //!< transport layer udp active
       bool                                tlayer_ecal_shm;      //!< transport layer shm active
       bool                                tlayer_ecal_tcp;      //!< transport layer tcp active
-      bool                                tlayer_inproc;        //!< transport layer inproc active
 
       int                                 connections_loc;      //!< number of local connected entities
       int                                 connections_ext;      //!< number of external connected entities

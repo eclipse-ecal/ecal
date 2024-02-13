@@ -619,54 +619,6 @@ TEST(PubSub, SimpleMessageCBSHMBufferCount)
   eCAL::Finalize();
 }
 
-TEST(PubSub, ZeroPayloadMessageInProc)
-{
-  // default send string
-  std::string send_s;
-
-  // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
-
-  // create subscriber for topic "A"
-  eCAL::CSubscriber sub("A");
-
-  // create publisher for topic "A"
-  eCAL::CPublisher pub("A");
-  pub.SetLayerMode(eCAL::TLayer::tlayer_all,    eCAL::TLayer::smode_off);
-  pub.SetLayerMode(eCAL::TLayer::tlayer_inproc, eCAL::TLayer::smode_on);
-
-  // add callback
-  EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
-
-  // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
-
-  g_callback_received_bytes = 0;
-  g_callback_received_count = 0;
-
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
-  eCAL::Process::SleepMS(DATA_FLOW_TIME);
-
-  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
-  eCAL::Process::SleepMS(DATA_FLOW_TIME);
-
-  // check callback receive
-  EXPECT_EQ(send_s.size(), g_callback_received_bytes);
-  EXPECT_EQ(2,             g_callback_received_count);
-
-  // destroy subscriber
-  sub.Destroy();
-
-  // destroy publisher
-  pub.Destroy();
-
-  // finalize eCAL API
-  eCAL::Finalize();
-}
-
 TEST(PubSub, ZeroPayloadMessageSHM)
 {
   // default send string
