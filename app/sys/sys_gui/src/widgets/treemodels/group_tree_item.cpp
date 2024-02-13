@@ -131,7 +131,7 @@ QVariant GroupTreeItem::data(Columns column, Qt::ItemDataRole role) const
     return data(column, Qt::ItemDataRole::DisplayRole);
   }
 
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 std::shared_ptr<TaskGroup> GroupTreeItem::getGroup()

@@ -59,7 +59,11 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
       if (mouse_event == nullptr) return false;
       if (mouse_event->button() == Qt::LeftButton)
       {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         _dragPosition = mouse_event->globalPos() - frameGeometry().topLeft();
+#else
+        _dragPosition = mouse_event->globalPosition().toPoint() - frameGeometry().topLeft();
+#endif
         return false;
       }
     }
@@ -69,7 +73,11 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
       if (mouse_event == nullptr) return false;
       if (mouse_event->buttons() & Qt::LeftButton)
       {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         move(mouse_event->globalPos() - _dragPosition);
+#else
+        move(mouse_event->globalPosition().toPoint() - _dragPosition);
+#endif
         return false;
       }
     }

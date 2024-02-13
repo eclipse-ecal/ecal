@@ -25,7 +25,7 @@
 #include <QIcon>
 #include <QMenu>
 #include <QContextMenuEvent>
-#include <QRegExp>
+#include <QRegularExpression>
 
 QEcalParserLineEdit::QEcalParserLineEdit(QWidget *parent)
   : QEcalParserLineEdit("", parent)
@@ -53,7 +53,7 @@ void QEcalParserLineEdit::openDialog()
   QEcalParserEditorDialog dialog(text(), this);
   if (dialog.exec() == QDialog::Accepted)
   {
-    setText(dialog.text().remove(QRegExp("[\\n\\r]")));
+    setText(dialog.text().remove(QRegularExpression("[\\n\\r]")));
   }
 }
 

@@ -50,7 +50,7 @@ FunctionListModel::~FunctionListModel()
 QVariant FunctionListModel::data(const QModelIndex &index, int role) const
 {
   if (!index.isValid())
-    return QVariant::Invalid;
+    return QVariant();  // Invalid QVariant
 
   const int     row    = index.row();
   const Columns column = (Columns)index.column();
@@ -72,7 +72,7 @@ QVariant FunctionListModel::data(const QModelIndex &index, int role) const
     }
   }
 
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 QVariant FunctionListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -82,7 +82,7 @@ QVariant FunctionListModel::headerData(int section, Qt::Orientation orientation,
   {
     return column_labels_.at((Columns)section);
   }
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 QModelIndex FunctionListModel::index(int row, int column, const QModelIndex& /*parent*/) const

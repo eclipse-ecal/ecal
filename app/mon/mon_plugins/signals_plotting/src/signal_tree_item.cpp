@@ -90,7 +90,11 @@ QByteArray asByteArrayBlob(const QByteArray& bytes)
 // Return crc16 checksum of the byte Array
 QString asChecksum(const QByteArray& bytes)
 {
-  quint16 crc16 = qChecksum(bytes.data(), (uint)bytes.length());
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+  const quint16 crc16 = qChecksum(bytes.data(), (uint)bytes.length());
+#else
+  const quint16 crc16 = qChecksum(bytes);
+#endif
   return QString("%1").arg(QString::number(crc16, 16).toUpper(), 4, '0');
 }
 
@@ -147,7 +151,7 @@ QVariant SignalTreeItem::data(Columns column, Qt::ItemDataRole role) const
       return background_color_.toQColor();
     }
   }
-  return QVariant::Invalid;
+  return QVariant();
 }
 
 Qt::ItemFlags SignalTreeItem::flags(int column) const
@@ -161,11 +165,19 @@ Qt::ItemFlags SignalTreeItem::flags(int column) const
   case (int)Columns::SINGLE:
     if (data_.isValid())
     {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
       if (data_.userType() == QMetaType::type("StringEnum"))
+#else
+      if (data_.metaType() == QMetaType::fromName("StringEnum"))
+#endif
       {
         return check_flags;
       }
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
       switch ((QMetaType::Type)data_.type())
+#else
+      switch (data_.typeId())
+#endif
       {
       case QMetaType::Int:
       case QMetaType::UInt:
@@ -322,12 +334,20 @@ void SignalTreeItem::setAccessed(bool accessed)
 
 QVariant SignalTreeItem::getDisplayValue() const
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
   if (data_.type() == QVariant::Type::ByteArray)
+#else
+  if (data_.typeId() == QMetaType::QByteArray)
+#endif
   {
     QByteArray bytes = data_.toByteArray();
     return asChecksum(bytes);
   }
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
   else if (data_.userType() == QMetaType::type("StringEnum"))
+#else
+  else if (data_.metaType() == QMetaType::fromName("StringEnum"))
+#endif
   {
     StringEnum string_enum = data_.value<StringEnum>();
     return string_enum.name + "(" + QString::number(string_enum.value) + ")";

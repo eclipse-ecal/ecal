@@ -118,9 +118,9 @@ add_subdirectory(cpp/pubsub/string/minimal_snd)
 
 # services
 add_subdirectory(cpp/services/ecalplayer_client)
-if(HAS_QT5)
+if(HAS_QT)
   add_subdirectory(cpp/services/ecalplayer_gui_client)
-endif(HAS_QT5)
+endif()
 add_subdirectory(cpp/services/ecalsys_client)
 add_subdirectory(cpp/services/latency_client)
 add_subdirectory(cpp/services/latency_server)
@@ -133,10 +133,10 @@ add_subdirectory(cpp/services/ping_client_dyn)
 add_subdirectory(cpp/services/ping_server)
 add_subdirectory(cpp/services/player_stepper)
 add_subdirectory(cpp/services/rec_client_service_cli)
-if(HAS_QT5)
+if(HAS_QT)
   add_subdirectory(cpp/services/rec_client_service_gui)
   add_subdirectory(cpp/services/rec_server_service_gui)
-endif(HAS_QT5)
+endif()
 
 # --------------------------------------------------------
 # python samples

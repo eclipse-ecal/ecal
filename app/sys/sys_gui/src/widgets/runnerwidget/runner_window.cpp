@@ -21,7 +21,6 @@
 
 #include <QSettings>
 #include <QScreen>
-#include <QDesktopWidget>
 
 RunnerWindow::RunnerWindow(QWidget *parent)
     : QMainWindow(parent)

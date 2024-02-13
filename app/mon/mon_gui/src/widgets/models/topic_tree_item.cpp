@@ -213,7 +213,11 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
       if (!raw_data.empty())
       {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         const quint16 crc16 = qChecksum(raw_data.data(), static_cast<uint>(raw_data.length()));
+#else
+        const quint16 crc16 = qChecksum(raw_data);
+#endif
       
         const QString crc16_string = QString("%1").arg(QString::number(crc16, 16).toUpper(), 4, '0');
         const QString size_text    = QString::number(raw_data.size()) + " byte" + (raw_data.size() != 1 ? "s" : "")
@@ -384,10 +388,10 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       }
     }
 
-    return QVariant::Invalid;
+    return QVariant(); // Invalid QVariant
   }
 
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 int TopicTreeItem::type() const

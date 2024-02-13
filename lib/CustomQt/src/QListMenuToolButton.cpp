@@ -21,10 +21,14 @@
 
 #include <QStyleOptionToolButton>
 #include <QMouseEvent>
-#include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QApplication>
 #include <QScreen>
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+#include <QDesktopWidget>
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+
 
 QListMenuToolButton::QListMenuToolButton(QWidget* parent)
   : QToolButton(parent)
@@ -85,8 +89,12 @@ void QListMenuToolButton::showListMenu()
   }
 
   // Position on screen
-  int screen_number     = QApplication::desktop()->screenNumber(this);
-  QRect screen_geometry = QApplication::screens()[screen_number]->geometry();
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+  int screen_number = QApplication::desktop()->screenNumber(this);
+  QRect screen_geometry = QApplication::desktop()->screenGeometry(screen_number);
+#else
+  QRect const screen_geometry = this->screen()->geometry();
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
 
   QRect global_button_geometry = QRect(mapToGlobal(QPoint(0, 0)), size());
   QRect popup_geometry         = QRect(global_button_geometry.bottomLeft(), QSize(target_width, target_height));

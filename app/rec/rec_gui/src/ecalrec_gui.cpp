@@ -26,19 +26,27 @@
 #include <QCloseEvent>
 #include <QFileDialog>
 #include <QSettings>
-#include <QDesktopWidget>
+#include <QActionGroup>
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+  #include <QDesktopWidget>
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+
 #include <QApplication>
 #include <QScreen>
 #include <QStyleFactory>
 
 #include <iostream>
 
+#if (defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+  #include <QWinTaskbarButton>
+  #include <QWinTaskbarProgress>
+#endif
+
 #ifdef WIN32
-#include <QWinTaskbarButton>
-#include <QWinTaskbarProgress>
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#include <Windows.h>
+  #define WIN32_LEAN_AND_MEAN
+  #define NOMINMAX
+  #include <Windows.h>
 #endif // WIN32
 
 #include <widgets/about_dialog/about_dialog.h>
@@ -53,7 +61,7 @@ EcalRecGui::EcalRecGui(QWidget *parent)
   , connect_to_ecal_action_state_is_connect_           (true)
   , record_action_state_is_record_                     (true)
   , first_show_event_                                  (true)
-#ifdef WIN32
+#if (defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
   , taskbar_activate_icon_                             (":/ecalicons/TASKBAR_POWER_ON")
   , taskbar_deactivate_icon_                           (":/ecalicons/TASKBAR_POWER_OFF")
   , taskbar_record_icon_                               (":/ecalicons/TASKBAR_RECORD")
@@ -203,7 +211,7 @@ EcalRecGui::EcalRecGui(QWidget *parent)
   ui_.action_debug_console->setVisible(false);
 #endif // WIN32
 
-#ifdef WIN32
+#if (defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
   /////////////////////////////////////////////
   // Windows taskbar
   /////////////////////////////////////////////
@@ -389,7 +397,7 @@ void EcalRecGui::showEvent(QShowEvent* /*event*/)
 {
   if (first_show_event_)
   {
-#ifdef WIN32
+#if (defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     registerTaskbarButtons();
 #endif // WIN32
 
@@ -480,7 +488,19 @@ void EcalRecGui::resetLayout()
   recorder_manager_widget_->resetLayout();
   recording_history_widget_->resetLayout();
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
   int screen_number = QApplication::desktop()->screenNumber(this);
+#else
+  int screen_number = 0;
+  QScreen* current_screen = this->screen();
+  if (current_screen != nullptr)
+  {
+    screen_number = QApplication::screens().indexOf(current_screen);
+    if (screen_number < 0)
+      screen_number = 0;
+  }
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+
   restoreGeometry(initial_geometry_);
   restoreState(initial_state_);
   move(QGuiApplication::screens().at(screen_number)->availableGeometry().center() - rect().center());
@@ -595,7 +615,7 @@ void EcalRecGui::updateActivateActionAndAdvancedMenu()
     ui_.action_activate->setToolTip(tr("Activate clients and start pre-buffering"));
     activate_action_state_is_activate_ = true;
 
-#ifdef WIN32
+#if (defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     taskbar_activate_button_->setIcon(taskbar_activate_icon_);
     taskbar_activate_button_->setToolTip(tr("Activate / Prepare"));
 #endif // WIN32
@@ -608,7 +628,7 @@ void EcalRecGui::updateActivateActionAndAdvancedMenu()
     ui_.action_activate->setToolTip(tr("De-activate clients and stop pre-buffering"));
     activate_action_state_is_activate_ = false;
 
-#ifdef WIN32
+#if (defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     taskbar_activate_button_->setIcon(taskbar_deactivate_icon_);
     taskbar_activate_button_->setToolTip(tr("De-activate"));
 #endif // WIN32
@@ -656,7 +676,7 @@ void EcalRecGui::updateRecordAction()
     ui_.action_start_recording->setEnabled(true);
     record_action_state_is_record_ = false;
 
-#ifdef WIN32
+#if (defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     taskbar_record_button_->setIcon(QIcon(":/ecalicons/TASKBAR_STOP"));
     taskbar_record_button_->setToolTip(tr("Stop recording"));
     taskbar_record_button_->setEnabled(true);
@@ -671,7 +691,7 @@ void EcalRecGui::updateRecordAction()
       ui_.action_start_recording->setToolTip(tr("Start recording"));
       record_action_state_is_record_ = true;
 
-#ifdef WIN32
+#if (defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
       taskbar_record_button_->setIcon(QIcon(":/ecalicons/TASKBAR_RECORD"));
       taskbar_record_button_->setToolTip(tr("Start recording"));
 #endif // WIN32
@@ -679,7 +699,7 @@ void EcalRecGui::updateRecordAction()
 
     bool enabled = (QEcalRec::instance()->enabledRecClients().size() > 0);
     ui_.action_start_recording->setEnabled(enabled);
-#ifdef WIN32
+#if (defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     taskbar_record_button_->setEnabled(enabled);
     taskbar_record_button_->setIcon(enabled ? taskbar_record_icon_ : taskbar_record_icon_disabled_);
 #endif // WIN32
@@ -694,7 +714,7 @@ void EcalRecGui::updateSaveBufferAction()
     && QEcalRec::instance()->enabledRecClients().size() > 0);
 
   ui_.action_save_pre_buffer->setEnabled(enabled);
-#ifdef WIN32
+#if (defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
   taskbar_save_buffer_button_->setEnabled(enabled);
   taskbar_save_buffer_button_->setIcon(enabled ? taskbar_save_buffer_icon_ : taskbar_save_buffer_icon_disabled_);
 #endif // WIN32
@@ -1112,12 +1132,6 @@ void EcalRecGui::showUploadSettingsDialog()
 ////////////////////////////////////////////
 // Windows specific
 ////////////////////////////////////////////
-void EcalRecGui::registerTaskbarButtons()
-{
-  taskbar_button_   ->setWindow(this->windowHandle());
-  thumbnail_toolbar_->setWindow(this->windowHandle());
-}
-
 void EcalRecGui::showConsole(bool show)
 {
   if (show)
@@ -1146,6 +1160,18 @@ void EcalRecGui::showConsole(bool show)
   ui_.action_debug_console->blockSignals(true);
   ui_.action_debug_console->setChecked(GetConsoleWindow());
   ui_.action_debug_console->blockSignals(false);
+}
+#endif
+
+#if (defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+////////////////////////////////////////////
+// Windows taskbar
+////////////////////////////////////////////
+
+void EcalRecGui::registerTaskbarButtons()
+{
+  taskbar_button_   ->setWindow(this->windowHandle());
+  thumbnail_toolbar_->setWindow(this->windowHandle());
 }
 
 void EcalRecGui::updateTaskbarButton(const eCAL::rec_server::RecorderStatusMap_T& recorder_statuses)
@@ -1188,4 +1214,4 @@ void EcalRecGui::updateTaskbarButton(const eCAL::rec_server::RecorderStatusMap_T
   }
 }
 
-#endif // WIN32
+#endif

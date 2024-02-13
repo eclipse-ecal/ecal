@@ -31,7 +31,7 @@ void PlayerTimeSlider::mousePressEvent(QMouseEvent* ev)
     if (orientation() == Qt::Vertical)
     {
       double half_handle_height = (0.5 * slider_handle_rect.height()) + 0.5; // Correct rounding
-      int adapted_pos_y = ev->y();
+      int adapted_pos_y = ev->pos().y();
 
       if (adapted_pos_y < half_handle_height)
         adapted_pos_y = half_handle_height;
@@ -47,7 +47,7 @@ void PlayerTimeSlider::mousePressEvent(QMouseEvent* ev)
     else
     {
       double half_handle_width = (0.5 * slider_handle_rect.width()) + 0.5; // Correct rounding
-      int adapted_pos_x = ev->x();
+      int adapted_pos_x = ev->pos().x();
 
       if (adapted_pos_x < half_handle_width)
         adapted_pos_x = half_handle_width;
