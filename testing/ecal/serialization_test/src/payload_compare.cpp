@@ -75,6 +75,11 @@ namespace eCAL
         }
       }
 
+      // compare padding
+      if (sample1.padding != sample2.padding) {
+        return false;
+      }
+
       // all comparisons passed, samples are equal
       return true;
     }

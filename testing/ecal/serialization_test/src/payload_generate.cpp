@@ -24,6 +24,7 @@
 namespace eCAL
 {
   std::string GenerateString(size_t length);
+  std::vector<char> GenerateRandomVector(size_t length);
 
   namespace Payload
   {
@@ -105,6 +106,7 @@ namespace eCAL
       sample.cmd_type = static_cast<eCmdType>(rand() % 17);  //  command type
       sample.topic    = GenerateTopic();
       sample.content  = GenerateContent(payload_vec);
+      sample.padding  = GenerateRandomVector(8);
 
       return sample;
     }

@@ -19,6 +19,7 @@
 
 #include <cstdlib>
 #include <string>
+#include <vector>
 
 namespace eCAL
 {
@@ -32,6 +33,20 @@ namespace eCAL
     for (size_t i = 0; i < length; ++i) {
       // use the full charset, including null character
       result.push_back(charset[rand() % (charset.length() + 1)]);
+    }
+
+    return result;
+  }
+  
+  std::vector<char> GenerateRandomVector(size_t length)
+  {
+    std::vector<char> result;
+    result.reserve(length);
+
+    for (size_t i = 0; i < length; ++i)
+    {
+      char random_byte = rand() % 256; // Generates a random byte (0-255)
+      result.push_back(random_byte);
     }
 
     return result;
