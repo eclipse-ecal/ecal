@@ -120,12 +120,28 @@ namespace eCAL
     std::vector<char> serialized_proto_header;
     SerializeToBuffer(proto_header, serialized_proto_header);
 
-    // Get size of ecal payload sample
+    // Get size of un-altered proto header size
     auto proto_header_size = static_cast<uint16_t>(serialized_proto_header.size());
 
     // Compute needed padding for aligning the payload
-    //const size_t minimal_header_size = ecal_magic_size + sizeof(uint16_t) + ecal_sample_size;
+    constexpr size_t alignment_bytes     = 8;
+    const     size_t minimal_header_size = ecal_magic_size +  sizeof(uint16_t)    +  proto_header_size;
+    const     size_t padding_size        = (alignment_bytes - (minimal_header_size % alignment_bytes)) % alignment_bytes;
 
+    // Add more bytes to the protobuf message to blow it up to the alignment
+    // Aligning the user payload this way should be 100% compatible with previous
+    // versions. It's most certainly bad style though and we should improve this 
+    // in a future eCAL version.
+    // 
+    // TODO: REMOVE ME FOR ECAL6
+    proto_header.padding.resize(padding_size);
+
+    // Serialize payload sample again (now with padding) and reread size
+    serialized_proto_header.clear();
+    SerializeToBuffer(proto_header, serialized_proto_header);
+    proto_header_size = static_cast<uint16_t>(serialized_proto_header.size());
+
+    // prepare the header buffer
     //                    'ECAL'           + proto header size field  + proto header
     m_header_buffer.resize(ecal_magic_size + sizeof(uint16_t)         + proto_header_size);
 
