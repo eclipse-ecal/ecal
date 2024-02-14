@@ -21,7 +21,7 @@ jobs:
         sudo apt-get install ninja-build doxygen graphviz libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules:  'true'
         fetch-depth: 0
