@@ -1,6 +1,7 @@
 #include <ecal/measurement/hdf5/reader.h>
 #include <ecalhdf5/eh5_meas.h>
 
+
 using namespace eCAL::experimental::measurement::hdf5;
 using namespace eCAL::experimental::measurement;
 
@@ -48,14 +49,9 @@ bool Reader::HasChannel(const std::string& channel_name) const
   return measurement->HasChannel(channel_name);
 }
 
-std::string Reader::GetChannelDescription(const std::string& channel_name) const
+base::DataTypeInformation Reader::GetChannelDataTypeInformation(const std::string& channel_name) const
 {
-  return measurement->GetChannelDescription(channel_name);
-}
-
-std::string Reader::GetChannelType(const std::string& channel_name) const
-{
-  return measurement->GetChannelType(channel_name);
+  return measurement->GetChannelDataTypeInformation(channel_name);
 }
 
 long long Reader::GetMinTimestamp(const std::string& channel_name) const

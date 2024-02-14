@@ -138,26 +138,18 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::HasChannel(const std::string& /*channel_na
   return false;
 }
 
-std::string eCAL::eh5::HDF5MeasFileWriterV5::GetChannelDescription(const std::string& /*channel_name*/) const
+
+eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileWriterV5::GetChannelDataTypeInformation(const std::string&  /*channel_name*/) const
 {
   // UNSUPPORTED FUNCTION
-  return "";
+  return eCAL::eh5::DataTypeInformation{};
 }
 
-void eCAL::eh5::HDF5MeasFileWriterV5::SetChannelDescription(const std::string& channel_name, const std::string& description)
+void eCAL::eh5::HDF5MeasFileWriterV5::SetChannelDataTypeInformation(const std::string& channel_name, const eCAL::eh5::DataTypeInformation& info)
 {
-  channels_[channel_name].Description = description;
-}
-
-std::string eCAL::eh5::HDF5MeasFileWriterV5::GetChannelType(const std::string& /*channel_name*/) const
-{
-  // UNSUPPORTED FUNCTION
-  return "";
-}
-
-void eCAL::eh5::HDF5MeasFileWriterV5::SetChannelType(const std::string& channel_name, const std::string& type)
-{
-  channels_[channel_name].Type = type;
+  auto type_descriptor = FromInfo(info);
+  channels_[channel_name].Type = type_descriptor.first;
+  channels_[channel_name].Description = type_descriptor.second;
 }
 
 long long eCAL::eh5::HDF5MeasFileWriterV5::GetMinTimestamp(const std::string& /*channel_name*/) const

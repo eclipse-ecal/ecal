@@ -233,41 +233,54 @@ bool eCAL::eh5::HDF5Meas::HasChannel(const std::string& channel_name) const
   return ret_val;
 }
 
+// deprecated
 std::string eCAL::eh5::HDF5Meas::GetChannelDescription(const std::string& channel_name) const
 {
-  std::string ret_val;
-  if (hdf_meas_impl_)
-  {
-    ret_val = hdf_meas_impl_->GetChannelDescription(GetEscapedTopicname(channel_name));
-  }
-
-  return ret_val;
+  auto datatype_info = GetChannelDataTypeInformation(channel_name);
+  return datatype_info.descriptor;
 }
 
+// deprecated
 void eCAL::eh5::HDF5Meas::SetChannelDescription(const std::string& channel_name, const std::string& description)
 {
-  if (hdf_meas_impl_)
-  {
-    hdf_meas_impl_->SetChannelDescription(GetEscapedTopicname(channel_name), description);
-  }
+  auto current_info = GetChannelDataTypeInformation(channel_name);
+  current_info.descriptor = description;
+  SetChannelDataTypeInformation(channel_name, current_info);
 }
 
+// deprecated
 std::string eCAL::eh5::HDF5Meas::GetChannelType(const std::string& channel_name) const
 {
   std::string ret_val;
+  auto datatype_info = GetChannelDataTypeInformation(channel_name);
+  std::tie(ret_val, std::ignore) = FromInfo(datatype_info);
+  return ret_val;
+}
+
+// deprecated
+void eCAL::eh5::HDF5Meas::SetChannelType(const std::string& channel_name, const std::string& type)
+{
+  auto current_info = GetChannelDataTypeInformation(channel_name);
+  auto new_info = CreateInfo(type, current_info.descriptor);
+  SetChannelDataTypeInformation(channel_name, new_info);
+}
+
+eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5Meas::GetChannelDataTypeInformation(const std::string& channel_name) const
+{
+  eCAL::eh5::DataTypeInformation ret_val;
   if (hdf_meas_impl_)
   {
-    ret_val = hdf_meas_impl_->GetChannelType(GetEscapedTopicname(channel_name));
+    ret_val = hdf_meas_impl_->GetChannelDataTypeInformation(GetEscapedTopicname(channel_name));
   }
 
   return ret_val;
 }
 
-void eCAL::eh5::HDF5Meas::SetChannelType(const std::string& channel_name, const std::string& type)
+void eCAL::eh5::HDF5Meas::SetChannelDataTypeInformation(const std::string& channel_name, const eCAL::eh5::DataTypeInformation& info)
 {
   if (hdf_meas_impl_)
   {
-    hdf_meas_impl_->SetChannelType(GetEscapedTopicname(channel_name), type);
+    hdf_meas_impl_->SetChannelDataTypeInformation(GetEscapedTopicname(channel_name), info);
   }
 }
 

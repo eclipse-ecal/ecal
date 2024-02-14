@@ -126,22 +126,14 @@ namespace eCAL
           virtual bool HasChannel(const std::string& channel_name) const = 0;
 
           /**
-           * @brief Get the channel description for the given channel
-           *
-           * @param channel_name  channel name
-           *
-           * @return              channel description
-          **/
-          virtual std::string GetChannelDescription(const std::string& channel_name) const = 0;
-
-          /**
-           * @brief Gets the channel type of the given channel
+           * @brief Get data type information of the given channel
            *
            * @param channel_name  channel name
            *
            * @return              channel type
           **/
-          virtual std::string GetChannelType(const std::string& channel_name) const = 0;
+          virtual DataTypeInformation GetChannelDataTypeInformation(const std::string & channel_name) const = 0;
+
 
           /**
            * @brief Gets minimum timestamp for specified channel

@@ -38,7 +38,13 @@ namespace eCAL
     // unfortunately, we need an actual object for this :/
     inline std::string GetTypeName(const google::protobuf::Message& message)
     {
-      return("proto:" + message.GetTypeName());
+      return(message.GetTypeName());
+    }
+    
+    // unfortunately, we need an actual object for this :/
+    inline std::string GetEncoding(const google::protobuf::Message& /*message*/)
+    {
+      return("proto");
     }
 
     // unfortunately, we need an actual object for this :/
