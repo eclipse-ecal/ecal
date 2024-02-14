@@ -53,10 +53,10 @@ void do_run(const int runs, int snd_size /*kB*/, int mem_buffer, bool zero_copy)
   eCAL::CPublisher pub("ping");
 
   // set number of publisher memory buffers
-  pub.ShmSetBufferCount(mem_buffer);
+  //pub.ShmSetBufferCount(mem_buffer);  // TODO: NEW PARAMETER API
 
   // enable zero copy mode
-  pub.ShmEnableZeroCopy(zero_copy);
+  //pub.ShmEnableZeroCopy(zero_copy);  // TODO: NEW PARAMETER API
 
   // prepare send buffer
   CBinaryPayload payload(snd_size * 1024);
@@ -71,7 +71,8 @@ void do_run(const int runs, int snd_size /*kB*/, int mem_buffer, bool zero_copy)
     // get microseconds
     auto snd_time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     // send message (with receive timeout 100 ms)
-    pub.Send(payload, snd_time, 100 /*ms*/);
+    //pub.Send(payload, snd_time, 100 /*ms*/);
+    pub.Send(payload, snd_time);  // TODO: NEW PARAMETER API
   }
 
   // log test

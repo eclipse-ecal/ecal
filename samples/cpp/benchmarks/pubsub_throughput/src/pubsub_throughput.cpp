@@ -36,11 +36,11 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
   // create publisher
   eCAL::CPublisher pub("throughput");
   // set transport layer
-  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
-  pub.SetLayerMode(layer, eCAL::TLayer::smode_on);
+  //pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);  // TODO: NEW PARAMETER API
+  //DO: NEW PARAMETER API
   // set attributes
-  pub.ShmEnableZeroCopy(zero_copy);
-  pub.ShmSetAcknowledgeTimeout(100);
+  //pub.ShmEnableZeroCopy(zero_copy);  // TODO: NEW PARAMETER API
+  //pub.ShmSetAcknowledgeTimeout(100);  // TODO: NEW PARAMETER API
 
   // create subscriber
   eCAL::CSubscriber sub("throughput");

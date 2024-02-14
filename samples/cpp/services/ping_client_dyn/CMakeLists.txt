@@ -34,6 +34,7 @@ ecal_add_sample(${PROJECT_NAME} ${ping_client_dyn_src})
 
 target_link_libraries(${PROJECT_NAME}
     eCAL::core
+    eCAL::proto
     protobuf::libprotobuf
 )
 
