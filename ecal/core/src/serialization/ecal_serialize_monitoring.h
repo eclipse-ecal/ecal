@@ -18,26 +18,22 @@
 */
 
 /**
- * @file   ecal_process.h
- * @brief  eCAL process interface (internal)
+ * @file   ecal_serialize_monitoring.h
+ * @brief  eCAL monitoring serialization / deserialization
 **/
 
 #pragma once
 
-#include <ecal/ecal.h>
+#include <cstddef>
+#include <ecal/types/monitoring.h>
+
+#include <string>
+#include <vector>
 
 namespace eCAL
 {
-  namespace Process
-  {
-    namespace internal  // non-public namespace of eCAL::Process
-    {
-      /**
-       * @brief  Get unique host id.
-       *
-       * @return  Host id or zero if failed.
-      **/
-      ECAL_API int GetHostID();
-    }
-  }
+  // monitoring - serialize/deserialize
+  bool SerializeToBuffer     (const Monitoring::SMonitoring& source_sample_, std::vector<char>& target_buffer_);
+  bool SerializeToBuffer     (const Monitoring::SMonitoring& source_sample_, std::string& target_buffer_);
+  bool DeserializeFromBuffer (const char* data_, size_t size_, Monitoring::SMonitoring& target_sample_);
 }

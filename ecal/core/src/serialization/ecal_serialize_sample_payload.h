@@ -18,18 +18,22 @@
 */
 
 /**
- * @file   ecal_service.h
- * @brief  eCAL service interface
+ * @file   ecal_serialize_sample_payload.h
+ * @brief  eCAL sample payload serialization / deserialization
 **/
 
 #pragma once
 
-#ifdef _MSC_VER
-#pragma message("WARNING: This header file is deprecated. It will be removed in future eCAL versions. Please include <ecal/ecal_server.h> and / or <ecal/ecal_client.h> instead")
-#endif /*_MSC_VER*/
-#ifdef __GNUC__
-#pragma message "WARNING: This header file is deprecated. It will be removed in future eCAL versions. Please include <ecal/ecal_server.h> and / or <ecal/ecal_client.h> instead"
-#endif /* __GNUC__ */
+#include "ecal_struct_sample_payload.h"
 
-#include <ecal/ecal_server.h>
-#include <ecal/ecal_client.h>
+#include <cstddef>
+#include <string>
+#include <vector>
+
+namespace eCAL
+{
+  // payload sample - serialize/deserialize
+  bool SerializeToBuffer     (const Payload::Sample& source_sample_, std::vector<char>& target_buffer_);
+  bool SerializeToBuffer     (const Payload::Sample& source_sample_, std::string& target_buffer_);
+  bool DeserializeFromBuffer (const char* data_, size_t size_, Payload::Sample& target_sample_);
+}
