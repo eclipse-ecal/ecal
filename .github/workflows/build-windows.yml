@@ -60,12 +60,6 @@ jobs:
         submodules:  'true'
         fetch-depth: 0
 
-    - name: Download NPCAP
-      run: |
-        cd %GITHUB_WORKSPACE%
-        powershell -Command "& 'build_win\download_npcap.ps1'"
-      shell: cmd
-
     - name: Create Python virtualenv
       run: |
         mkdir "${{ runner.workspace }}\_build\complete\.venv\"
