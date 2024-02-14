@@ -97,8 +97,6 @@ Functions
 
 - :ref:`exhale_function_ecal__clang_8h_1aecd889bfd46bf7ce7549b249c405fb15`
 
-- :ref:`exhale_function_ecal__clang_8h_1ad6ab32ac524e11ecff49c04e50ee418d`
-
 - :ref:`exhale_function_ecal__clang_8h_1a8734995133d0e2808ff66274ff7d7512`
 
 - :ref:`exhale_function_ecal__clang_8h_1ac165329dc942cd7404144c1347254466`
@@ -121,8 +119,6 @@ Functions
 
 - :ref:`exhale_function_ecal__clang_8h_1a02d6437f4a1da37f22bfd7d9efbf3f15`
 
-- :ref:`exhale_function_ecal__clang_8h_1a29c50810681e482f364404cf93366e58`
-
 - :ref:`exhale_function_ecal__clang_8h_1a3c4548baa30604c6f790adb4cc2c3438`
 
 - :ref:`exhale_function_ecal__clang_8h_1a0e2c1a29a1336083f2d19db5a1a2d4d1`
@@ -134,8 +130,6 @@ Functions
 - :ref:`exhale_function_ecal__clang_8h_1a8cb6f20f940c0e54231c78e47c5bc920`
 
 - :ref:`exhale_function_ecal__clang_8h_1ad7cad459dd949ef83ec948ce20d8da1d`
-
-- :ref:`exhale_function_ecal__clang_8h_1a81bf79f82c3f19bc7c0de5e9f90c9f20`
 
 - :ref:`exhale_function_ecal__clang_8h_1addc7cfbd8c81984c68af33dbf437ff01`
 
@@ -155,8 +149,6 @@ Functions
 
 - :ref:`exhale_function_ecal__clang_8h_1afe3c3a74ccfa61f0d811befc8d40f60a`
 
-- :ref:`exhale_function_ecal__clang_8h_1abc58eef47fc5fa983d5d8a72af212a14`
-
 - :ref:`exhale_function_ecal__clang_8h_1a1ec1f718a0335eb6844c47e3f58c2398`
 
 - :ref:`exhale_function_ecal__clang_8h_1ac6cdc9785b833cd571c373aab28794d2`
@@ -164,8 +156,6 @@ Functions
 - :ref:`exhale_function_ecal__clang_8h_1a326dd7ba23bbd7df7c28038a5914928d`
 
 - :ref:`exhale_function_ecal__clang_8h_1a5423009de750bc100d6fd3ff088f20f1`
-
-- :ref:`exhale_function_ecal__clang_8h_1abc7e3b35431d935887d7484a390362d7`
 
 - :ref:`exhale_function_ecal__clang_8h_1aeb563351d862ff01fb009e307d76292d`
 

@@ -31,8 +31,6 @@ Namespaces
 
 - :ref:`namespace_eCAL__Process`
 
-- :ref:`namespace_eCAL__QOS`
-
 - :ref:`namespace_eCAL__Time`
 
 - :ref:`namespace_eCAL__TLayer`

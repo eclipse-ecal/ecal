@@ -102,8 +102,6 @@ Program Listing for File ecal_clang.h
    /*************************************************************************/
    ECAL_API void log_setlevel(const int level_);
    
-   ECAL_API void log_setcoretime(const double time_);
-   
    ECAL_API void log_message(const char* message_);
    
    /*************************************************************************/
@@ -116,10 +114,6 @@ Program Listing for File ecal_clang.h
    ECAL_API bool pub_set_type_name(ECAL_HANDLE handle_, const char* topic_type_name_, const int topic_type_name_length_);
    
    ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_);
-   
-   ECAL_API bool pub_set_qos(ECAL_HANDLE handle_, struct SWriterQOSC qos_);
-   
-   ECAL_API bool pub_get_qos(ECAL_HANDLE handle_, struct SWriterQOSC* qos_);
    
    ECAL_API bool pub_set_layer_mode(ECAL_HANDLE handle_, const int layer_, const int mode_);
    
@@ -139,10 +133,6 @@ Program Listing for File ecal_clang.h
    ECAL_API ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_);
    
    ECAL_API bool sub_destroy(ECAL_HANDLE handle_);
-   
-   ECAL_API bool sub_set_qos(ECAL_HANDLE handle_, struct SReaderQOSC qos_);
-   
-   ECAL_API bool sub_get_qos(ECAL_HANDLE handle_, struct SReaderQOSC* qos_);
    
    ECAL_API int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_);
    

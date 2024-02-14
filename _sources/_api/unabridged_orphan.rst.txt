@@ -180,11 +180,6 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_ecal_core_include_ecal_ecal_qos.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
    file_ecal_core_include_ecal_ecal_server.h.rst
 
 .. toctree::

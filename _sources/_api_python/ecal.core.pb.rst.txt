@@ -10,6 +10,7 @@ Submodules
    ecal.core.pb.ecal_pb2
    ecal.core.pb.host_pb2
    ecal.core.pb.layer_pb2
+   ecal.core.pb.logging_pb2
    ecal.core.pb.monitoring_pb2
    ecal.core.pb.process_pb2
    ecal.core.pb.service_pb2

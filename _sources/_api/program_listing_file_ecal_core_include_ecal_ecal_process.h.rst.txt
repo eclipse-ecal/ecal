@@ -78,10 +78,6 @@ Program Listing for File ecal_process.h
    
        ECAL_API std::string GetProcessParameter();
    
-       ECAL_API float GetProcessCpuUsage();
-   
-       ECAL_API unsigned long GetProcessMemory();
-   
        ECAL_DEPRECATE_SINCE_5_4("use GetWClock() instead")
        ECAL_API long long GetSClock();
    

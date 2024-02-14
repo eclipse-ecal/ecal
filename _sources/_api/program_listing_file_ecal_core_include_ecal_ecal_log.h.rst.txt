@@ -50,13 +50,5 @@ Program Listing for File ecal_log.h
          SetLogLevel(level_);
          Log(msg_);
        }
-   
-       ECAL_API void StartCoreTimer();
-   
-       ECAL_API void StopCoreTimer();
-   
-       ECAL_API void SetCoreTime(double time_);
-   
-       ECAL_API double GetCoreTime();
      }
    }

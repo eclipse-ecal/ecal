@@ -52,8 +52,6 @@ Includes
 
 - ``ecal/ecal_publisher.h`` (:ref:`file_ecal_core_include_ecal_ecal_publisher.h`)
 
-- ``ecal/ecal_qos.h`` (:ref:`file_ecal_core_include_ecal_ecal_qos.h`)
-
 - ``ecal/ecal_server.h`` (:ref:`file_ecal_core_include_ecal_ecal_server.h`)
 
 - ``ecal/ecal_service_info.h`` (:ref:`file_ecal_core_include_ecal_ecal_service_info.h`)

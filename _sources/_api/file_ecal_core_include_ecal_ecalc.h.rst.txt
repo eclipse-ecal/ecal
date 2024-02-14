@@ -46,8 +46,6 @@ Includes
 
 - ``ecal/cimpl/ecal_publisher_cimpl.h``
 
-- ``ecal/cimpl/ecal_qos_cimpl.h``
-
 - ``ecal/cimpl/ecal_server_cimpl.h``
 
 - ``ecal/cimpl/ecal_subscriber_cimpl.h``
