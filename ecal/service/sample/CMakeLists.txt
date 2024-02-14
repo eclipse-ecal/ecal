@@ -32,7 +32,7 @@ target_link_libraries(${PROJECT_NAME}
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ecal/service)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER core/service)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
     ${sources}

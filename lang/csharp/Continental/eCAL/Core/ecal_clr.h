@@ -24,7 +24,6 @@
 
 #pragma once
 #include <ecal/ecal.h>
-#include <ecal/msg/protobuf/dynamic_json_subscriber.h>
 
 using namespace System;
 using namespace System::Collections::Generic;
@@ -148,20 +147,22 @@ namespace Continental
         /**
          * @brief Constructor.
          *
-         * @param topic_name_   Unique topic name.
-         * @param topic_type_   Type name (optional.
-         * @param topic_desc_   Type description (optional.
+         * @param topic_name_     Unique topic name.
+         * @param topic_type_     Type name (optional).
+         * @param topic_encoding_ Type encoding (optional).
+         * @param topic_desc_     Type description (optional).
         **/
-        Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_desc_);
+        Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, System::String^ topic_desc_);
 
         /**
          * @brief Constructor.
          *
-         * @param topic_name_   Unique topic name.
-         * @param topic_type_   Type name (optional.
-         * @param topic_desc_   Type description (optional.
+         * @param topic_name_     Unique topic name.
+         * @param topic_type_     Type name (optional.
+         * @param topic_encoding_ Type encoding (optional).
+         * @param topic_desc_     Type description (optional.
         **/
-        Publisher(System::String^ topic_name_, System::String^ topic_type_, array<Byte>^ topic_desc_);
+        Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, array<Byte>^ topic_desc_);
 
         /**
          * @brief Destructor.
@@ -171,12 +172,13 @@ namespace Continental
         /**
          * @brief Creates this object.
          *
-         * @param topic_name_   Unique topic name.
-         * @param topic_type_   Type name (optional for type checking by monitoring app).
+         * @param topic_name_     Unique topic name.
+         * @param topic_type_     Type name (optional for type checking by monitoring app).
+         * @param topic_encoding_ Type encoding (optional).
          *
          * @return  true if it succeeds, false if it fails.
         **/
-        bool Create(System::String^ topic_name_, System::String^ topic_type_);
+        bool Create(System::String^ topic_name_, System::String^ topic_encoding_, System::String^ topic_type_);
 
         /**
          * @brief Destroys this object.
@@ -220,13 +222,6 @@ namespace Continental
         System::String^ GetTopicName();
 
         /**
-         * @brief Gets type of the connected topic.
-         *
-         * @return  The type name.
-        **/
-        System::String^ GetTypeName();
-
-        /**
          * @brief Dump the whole class state into a string.
          *
          * @return  The dump string.
@@ -255,20 +250,22 @@ namespace Continental
         /**
          * @brief Constructor.
          *
-         * @param topic_name_   Unique topic name.
-         * @param topic_type_   Type name (optional for type checking by monitoring app).
-         * @param topic_desc_   Descriptor (optional for dynamic reflection by monitoring app).
+         * @param topic_name_     Unique topic name.
+         * @param topic_type_     Type name (optional).
+         * @param topic_encoding_ Type encoding (optional).
+         * @param topic_desc_     Type description (optional).
         **/
-        Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_desc_);
+        Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, System::String^ topic_desc_);
 
         /**
          * @brief Constructor.
          *
-         * @param topic_name_   Unique topic name.
-         * @param topic_type_   Type name (optional for type checking by monitoring app).
-         * @param topic_desc_   Descriptor (optional for dynamic reflection by monitoring app).
+         * @param topic_name_     Unique topic name.
+         * @param topic_type_     Type name (optional.
+         * @param topic_encoding_ Type encoding (optional).
+         * @param topic_desc_     Type description (optional.
         **/
-        Subscriber(System::String^ topic_name_, System::String^ topic_type_, array<Byte>^ topic_desc_);
+        Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, array<Byte>^ topic_desc_);
 
         /**
          * @brief Destructor.
@@ -293,22 +290,23 @@ namespace Continental
           long long id;         /*!< Message id          */
           long long time;       /*!< Message time stamp  */
           long long clock;      /*!< Message write clock */
-      };
+        };
         /**
          * @brief delegate definition for callback functions
         **/
         delegate void ReceiverCallback(String^ str, ReceiveCallbackData^ data);
+        delegate void ReceiverCallbackUnsafe(String^ str, ReceiveCallbackDataUnsafe^ data);
 
-         delegate void ReceiverCallbackUnsafe(String^ str, ReceiveCallbackDataUnsafe^ data);
         /**
          * @brief Creates this object.
          *
-         * @param topic_name_   Unique topic name.
-         * @param topic_type_   Type name (optional for type checking by monitoring app).
+         * @param topic_name_     Unique topic name.
+         * @param topic_type_     Type name (optional for type checking by monitoring app).
+         * @param topic_encoding_ Type encoding (optional).
          *
          * @return  true if it succeeds, false if it fails.
         **/
-        bool Create(System::String^ topic_name_, System::String^ topic_type_);
+        bool Create(System::String^ topic_name_, System::String^ topic_encoding_, System::String^ topic_type_);
 
         /**
          * @brief Destroys this object.
@@ -360,13 +358,6 @@ namespace Continental
          * @return  The topic name.
         **/
         System::String^ GetTopicName();
-
-        /**
-         * @brief Gets type of the connected topic.
-         *
-         * @return  The type name.
-        **/
-        System::String^ GetTypeName();
 
         /**
          * @brief Dump the whole class state into a string.
@@ -546,114 +537,6 @@ namespace Continental
       private:
           ::eCAL::CServiceClient* m_client;
       };
-
-      /**
-       * @brief eCAL protobuf json subscriber class.
-       *
-       * The CSubscriber class is used to receive topics from matching eCAL publishers.
-       *
-      **/
-      public ref class JSONProtobufSubscriber
-      {
-      public:
-        /**
-         * @brief Constructor.
-        **/
-        JSONProtobufSubscriber();
-
-        /**
-         * @brief Constructor.
-         *
-         * @param topic_name_   Unique topic name.
-        **/
-        JSONProtobufSubscriber(System::String^ topic_name_);
-
-        /**
-         * @brief Destructor.
-        **/
-        ~JSONProtobufSubscriber();
-
-        /**
-         * @brief structure which contains the data for callback functions
-        **/
-        ref struct ReceiveCallbackData
-        {
-          System::String^ data;  /*!< Message payload     */
-          long long id;          /*!< Message id          */
-          long long time;        /*!< Message time stamp  */
-          long long clock;       /*!< Message write clock */
-        };
-
-        /**
-         * @brief delegate definition for callback functions
-        **/
-        delegate void ReceiverCallback(String^ str, ReceiveCallbackData^ data);
-
-        /**
-         * @brief Creates this object.
-         *
-         * @param topic_name_   Unique topic name.
-        **/
-        void Create(System::String^ topic_name_);
-
-        /**
-         * @brief Destroys this object.
-        **/
-        void Destroy();
-
-
-        /**
-         * @brief Add callback function for incoming receives.
-         *
-         * @param callback_  The callback function set to connect.
-         *
-         * @return  True if succeeded, false if not.
-        **/
-        bool AddReceiveCallback(ReceiverCallback^ callback_);
-
-        /**
-         * @brief Remove callback function for incoming receives.
-         *
-         * @param callback_  The callback function set to disconnect.
-         *
-         * @return  True if succeeded, false if not.
-        **/
-        bool RemReceiveCallback(ReceiverCallback^ callback_);
-
-        /**
-         * @brief Query if this object is created.
-         *
-         * @return  true if created, false if not.
-        **/
-        bool IsCreated();
-
-      private:
-        ::eCAL::protobuf::CDynamicJSONSubscriber* m_sub;
-        /**
-         * @brief managed callbacks that will get executed on during the eCAL topic callback
-        **/
-        ReceiverCallback^ m_callbacks;
-
-        /**
-         * @brief private member which holds the the pointer to OnReceive, to avoid function relocation
-        **/
-        GCHandle m_gch;
-
-        /**
-         * @brief The callback of the subscriber, that is registered with the unmanaged code
-        **/
-        delegate void subCallback(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_);
-        subCallback^ m_sub_callback;
-        void OnReceive(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_);
-
-        /**
-         * @brief stdcall function pointer definition of eCAL::ReceiveCallbackT
-        **/
-        typedef void(__stdcall * stdcall_eCAL_ReceiveCallbackT)(const char*, const ::eCAL::SReceiveCallbackData*);
-      };
-
-
-
 
 
       /**

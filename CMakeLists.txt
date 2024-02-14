@@ -91,6 +91,32 @@ option(BUILD_STANDALONE_PY_WHEEL               "Build eCAL python binding as sta
 option(BUILD_CSHARP_BINDING                    "Build eCAL C# binding"                                            OFF)
 option(BUILD_ECAL_TESTS                        "Build the eCAL google tests"                                      OFF)
 
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# core internal feature configuration - start
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+option(ECAL_CORE_CONFIG_INIFILE                          "Enables to configure eCAL via ecal.ini file"                                                           ON)
+option(ECAL_CORE_COMMAND_LINE                            "Enables eCAL application cmd line interfaces"                                                          ON)
+option(ECAL_CORE_REGISTRATION                            "Enables the eCAL registration layer"                                                                   ON)
+option(ECAL_CORE_MONITORING                              "Enables the eCAL monitoring functionality"                                                             ON)
+option(ECAL_CORE_PUBLISHER                               "Enables the eCAL publisher functionality"                                                              ON)
+option(ECAL_CORE_SUBSCRIBER                              "Enables the eCAL subscriber functionality"                                                             ON)
+option(ECAL_CORE_SERVICE                                 "Enables the eCAL server/client functionality"                                                          ON)
+option(ECAL_CORE_TIMEPLUGIN                              "Enables the eCAL time plugin functionality"                                                            ON)
+option(ECAL_CORE_NPCAP_SUPPORT                           "Enable the eCAL Npcap Receiver (Win10 performance fix for UDP communication)"                         OFF)
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# core registration layer options (change with care)
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+option(ECAL_CORE_REGISTRATION_SHM                        "Enables the eCAL registration layer over shared memory"                                                ON)
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# core transport layer options (change with care)
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+option(ECAL_CORE_TRANSPORT_UDP                           "Enables the eCAL to transport payload via UDP multicast"                                               ON)
+option(ECAL_CORE_TRANSPORT_TCP                           "Enables the eCAL to transport payload via TCP"                                                         ON)
+option(ECAL_CORE_TRANSPORT_SHM                           "Enables the eCAL to transport payload via local shared memory"                                         ON)
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# core internal feature configuration - end
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 option(ECAL_INCLUDE_PY_SAMPLES                 "Include python language sample projects into CMake"               OFF)
 option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samples"                               ON)
 
@@ -469,17 +495,8 @@ if(BUILD_ECAL_TESTS)
   # ------------------------------------------------------
   # test ecal
   # ------------------------------------------------------
-  add_subdirectory(testing/ecal/clientserver_test)
-  
-  add_subdirectory(testing/ecal/core_test)
-  add_subdirectory(testing/ecal/event_test)
-  add_subdirectory(testing/ecal/expmap_test)
-  add_subdirectory(testing/ecal/io_memfile_test)
-  add_subdirectory(testing/ecal/pubsub_proto_test)
-  add_subdirectory(testing/ecal/pubsub_test)
-  add_subdirectory(testing/ecal/topic2mcast_test)
-  add_subdirectory(testing/ecal/util_test)
-  
+  add_subdirectory(testing/ecal)
+
   # ------------------------------------------------------
   # test apps
   # ------------------------------------------------------
@@ -569,7 +586,7 @@ message(STATUS "BUILD_CSHARP_BINDING                           : ${BUILD_CSHARP_
 message(STATUS "BUILD_ECAL_TESTS                               : ${BUILD_ECAL_TESTS}")
 message(STATUS "ECAL_INCLUDE_PY_SAMPLES                        : ${ECAL_INCLUDE_PY_SAMPLES}")
 message(STATUS "ECAL_INSTALL_SAMPLE_SOURCES                    : ${ECAL_INSTALL_SAMPLE_SOURCES}")
-message(STATUS "ECAL_NPCAP_SUPPORT                             : ${ECAL_NPCAP_SUPPORT}")
+message(STATUS "ECAL_CORE_NPCAP_SUPPORT                        : ${ECAL_CORE_NPCAP_SUPPORT}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_ASIO                     : ${ECAL_THIRDPARTY_BUILD_ASIO}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS          : ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_CURL                     : ${ECAL_THIRDPARTY_BUILD_CURL}")

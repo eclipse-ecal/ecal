@@ -194,7 +194,6 @@ class MonitorModel
       }
       auto &topic = topics.emplace_back();
       topic.registration_clock = t.rclock();
-      topic.host_id = t.hid();
       topic.host_name = std::move(*t.mutable_hname());
       topic.pid = t.pid();
       topic.process_name = std::move(*t.mutable_pname());

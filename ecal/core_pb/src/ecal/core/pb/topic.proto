@@ -25,15 +25,14 @@ package eCAL.pb;
 
 message DataTypeInformation
 {
-  string name       = 1; // name of the datatype
-  string encoding   = 2; // encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
-  bytes  desc       = 3; // descriptor information of the datatype (necessary for reflection)
+  string name       = 1;                           // name of the datatype
+  string encoding   = 2;                           // encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
+  bytes  desc       = 3;                           // descriptor information of the datatype (necessary for reflection)
 }
 
 message Topic                                      // eCAL topic
 {
   int32               rclock                =  1;  // registration clock (heart beat)
-  int32               hid                   = 26;  // host id
   string              hname                 =  2;  // host name
   string              hgname                = 28;  // host group name
   int32               pid                   =  3;  // process id
@@ -58,5 +57,5 @@ message Topic                                      // eCAL topic
   int64               dclock                = 20;  // data clock (send / receive action)
   int32               dfreq                 = 21;  // data frequency (send / receive samples per second) [mHz]
 
-  map<string, string> attr                 = 27;  // generic topic description
+  map<string, string> attr                  = 27;  // generic topic description
 }

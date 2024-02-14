@@ -28,8 +28,6 @@
 
 #include <ecal/ecal_clang.h>
 
-#include <ecal/msg/protobuf/dynamic_json_subscriber.h>
-
 #include <unordered_map>
 #include <atomic>
 
@@ -348,65 +346,6 @@ PyObject* pub_destroy(PyObject* /*self*/, PyObject* args)
 }
 
 /****************************************/
-/*      pub_set_topic_type_name         */
-/****************************************/
-PyObject* pub_set_topic_type_name(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  char* topic_type_name = nullptr;
-  Py_ssize_t  topic_type_name_len = 0;
-
-  if (!PyArg_ParseTuple(args, "ns#", &topic_handle, &topic_type_name, &topic_type_name_len))
-    return nullptr;
-
-  return(Py_BuildValue("i", pub_set_type_name(topic_handle, topic_type_name, (int)topic_type_name_len)));
-}
-
-/****************************************/
-/*      pub_set_description             */
-/****************************************/
-PyObject* pub_set_description(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle   = nullptr;
-  char*       topic_desc     = nullptr;
-  Py_ssize_t  topic_desc_len = 0;
-
-  if (!PyArg_ParseTuple(args, "ny#", &topic_handle, &topic_desc, &topic_desc_len)) 
-    return nullptr;
-
-  return(Py_BuildValue("i", pub_set_description(topic_handle, topic_desc, (int)topic_desc_len)));
-}
-
-/****************************************/
-/*      pub_set_layer_mode              */
-/****************************************/
-PyObject* pub_set_layer_mode(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  int         layer        = 0;
-  int         mode         = 0;
-
-  if (!PyArg_ParseTuple(args, "nii", &topic_handle, &layer, &mode))
-    return nullptr;
-
-  return(Py_BuildValue("i", pub_set_layer_mode(topic_handle, layer, mode)));
-}
-
-/****************************************/
-/*      pub_set_max_bandwidth_udp       */
-/****************************************/
-PyObject* pub_set_max_bandwidth_udp(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  long        bandwidth    = 0;
-
-  if (!PyArg_ParseTuple(args, "nl", &topic_handle, &bandwidth))
-    return nullptr;
-
-  return(Py_BuildValue("i", pub_set_max_bandwidth_udp(topic_handle, bandwidth)));
-}
-
-/****************************************/
 /*      pub_send                        */
 /****************************************/
 PyObject* pub_send(PyObject* /*self*/, PyObject* args)
@@ -427,25 +366,6 @@ PyObject* pub_send(PyObject* /*self*/, PyObject* args)
   return(Py_BuildValue("i", sent));
 }
 
-/****************************************/
-/*      pub_send_sync                   */
-/****************************************/
-PyObject* pub_send_sync(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE  topic_handle = nullptr;
-  char* payload = nullptr;
-  Py_ssize_t   length      = 0;
-  PY_LONG_LONG time        = 0;
-  PY_LONG_LONG ack_timeout = 0;
-
-  if (!PyArg_ParseTuple(args, "ny#LL", &topic_handle, &payload, &length, &time, &ack_timeout))
-    return nullptr;
-
-  int sent{ 0 };
-  sent = pub_send_sync(topic_handle, payload, (int)length, time, ack_timeout);
-
-  return(Py_BuildValue("i", sent));
-}
 
 /****************************************/
 /*      sub_create                      */
@@ -607,131 +527,6 @@ PyObject* sub_rem_callback(PyObject* /*self*/, PyObject* args)
     return nullptr;
 
   eCAL::CSubscriber* sub = (eCAL::CSubscriber*)topic_handle;
-  if (!sub)
-  {
-    return(Py_BuildValue("is", -1, "subscriber invalid"));
-  }
-
-  PySubscriberCallbackMapT::const_iterator iter = g_subscriber_pycallback_map.find(sub);
-  if (iter != g_subscriber_pycallback_map.end())
-  {
-    PyObject* py_callback = iter->second;
-    Py_XDECREF(py_callback);                    /* Dispose of previous callback */
-    g_subscriber_pycallback_map.erase(iter);               /* Delete previous callback */
-  }
-
-  bool removed_callback{ false };
-  Py_BEGIN_ALLOW_THREADS
-    removed_callback = sub->RemReceiveCallback();
-  Py_END_ALLOW_THREADS
-  if (removed_callback)
-  {
-    return Py_BuildValue("is", 1, "callback removed");
-  }
-  else
-  {
-    return Py_BuildValue("is", 0, "error: could not remove callback");
-  }
-}
-
-/****************************************/
-/*      dyn_json_sub_create             */
-/****************************************/
-PyObject* dyn_json_sub_create(PyObject* /*self*/, PyObject* args)
-{
-  char* topic_name = nullptr;
-
-  if (!PyArg_ParseTuple(args, "s", &topic_name))
-    return nullptr;
-
-  ECAL_HANDLE sub{ nullptr };
-  Py_BEGIN_ALLOW_THREADS
-    sub = dyn_json_sub_create(topic_name);
-  Py_END_ALLOW_THREADS
-
-  return(PyAnswerHandle(sub));
-}
-
-/****************************************/
-/*      dyn_json_sub_destroy            */
-/****************************************/
-PyObject* dyn_json_sub_destroy(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-
-  if (!PyArg_ParseTuple(args, "n", &topic_handle))
-    return nullptr;
-
-  bool destroyed{ nullptr };
-  Py_BEGIN_ALLOW_THREADS
-    destroyed = dyn_json_sub_destroy(topic_handle);
-  Py_END_ALLOW_THREADS
-  return(Py_BuildValue("i", destroyed));
-}
-
-/****************************************/
-/*      dyn_json_sub_set_callback       */
-/****************************************/
-PyObject* dyn_json_sub_set_callback(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  PyObject*   cb_func      = nullptr;
-
-  if (!PyArg_ParseTuple(args, "nO", &topic_handle, &cb_func))
-    return nullptr;
-
-  eCAL::protobuf::CDynamicJSONSubscriber* sub = (eCAL::protobuf::CDynamicJSONSubscriber*)topic_handle;
-  if (!sub)
-  {
-    return(Py_BuildValue("is", -1, "subscriber invalid"));
-  }
-
-  PySubscriberCallbackMapT::const_iterator iter = g_subscriber_pycallback_map.find(sub);
-  if (iter != g_subscriber_pycallback_map.end())
-  {
-    PyObject* py_callback = iter->second;
-    Py_XDECREF(py_callback);                    /* Dispose of previous callback */
-    g_subscriber_pycallback_map.erase(iter);               /* Delete previous callback */
-  }
-
-  if (PyCallable_Check(cb_func))
-  {
-#if ECAL_PY_INIT_THREADS_NEEDED
-    if (!g_pygil_init)
-    {
-      g_pygil_init = 1;
-      PyEval_InitThreads();
-    }
-#endif
-
-    Py_XINCREF(cb_func);                        /* Add a reference to new callback */
-    g_subscriber_pycallback_map[sub] = cb_func;            /* Add new callback */
-    bool added_callback{ false };
-    Py_BEGIN_ALLOW_THREADS
-      std::string python_formatter{ "s#" };
-      added_callback = sub->AddReceiveCallback(std::bind(c_subscriber_callback, std::placeholders::_1, std::placeholders::_2, sub, python_formatter));
-    Py_END_ALLOW_THREADS
-
-    if (added_callback)
-    {
-      return Py_BuildValue("is", 1, "callback set");
-    }
-  }
-  return Py_BuildValue("is", 0, "error: could not set callback");
-}
-
-/****************************************/
-/*      dyn_json_sub_rem_callback       */
-/****************************************/
-PyObject* dyn_json_sub_rem_callback(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  PyObject*   cb_func      = nullptr;
-
-  if (!PyArg_ParseTuple(args, "nO", &topic_handle, &cb_func))
-    return nullptr;
-
-  eCAL::protobuf::CDynamicJSONSubscriber* sub = (eCAL::protobuf::CDynamicJSONSubscriber*)topic_handle;
   if (!sub)
   {
     return(Py_BuildValue("is", -1, "subscriber invalid"));
@@ -1426,7 +1221,7 @@ PyObject* mon_logging(PyObject* /*self*/, PyObject* /*args*/)
   PyObject* retList = PyList_New(0);
 
   std::string logging_s;
-  if (eCAL::Monitoring::GetLogging(logging_s))
+  if (eCAL::Logging::GetLogging(logging_s))
   {
     eCAL::pb::LogMessageList logging;
     logging.ParseFromString(logging_s);
@@ -1462,34 +1257,6 @@ PyObject* mon_logging(PyObject* /*self*/, PyObject* /*args*/)
   return(Py_BuildValue("iO", 0, retList));
 }
 
-/****************************************/
-/*      mon_pubmonitoring               */
-/****************************************/
-PyObject* mon_pubmonitoring(PyObject* /*self*/, PyObject* args)
-{
-  int   state = 0;
-  char* name  = nullptr;
-
-  if (!PyArg_ParseTuple(args, "is", &state, &name))
-    return nullptr;
-
-  return(Py_BuildValue("i", eCAL::Monitoring::PubMonitoring(state != 0, name)));
-}
-
-/****************************************/
-/*      mon_publogging                  */
-/****************************************/
-PyObject* mon_publogging(PyObject* /*self*/, PyObject* args)
-{
-  int   state = 0;
-  char* name = nullptr;
-
-  if (!PyArg_ParseTuple(args, "is", &state, &name))
-    return nullptr;
-
-  return(Py_BuildValue("i", eCAL::Monitoring::PubLogging(state != 0, name)));
-}
-
 
 /****************************************/
 /*                                      */
@@ -1521,15 +1288,7 @@ static PyMethodDef _ecal_methods[] =
   {"pub_create",                    pub_create,                    METH_VARARGS,  "pub_create(topic_name, topic_type)"},
   {"pub_destroy",                   pub_destroy,                   METH_VARARGS,  "pub_destroy(topic_handle)"},
 
-  {"pub_set_topic_type_name",       pub_set_topic_type_name,       METH_VARARGS,  "pub_set_topic_type_name(topic_handle, topic_type_name)"},
-  {"pub_set_description",           pub_set_description,           METH_VARARGS,  "pub_set_description(topic_handle, topic_description)"},
-
-  {"pub_set_layer_mode",            pub_set_layer_mode,            METH_VARARGS,  "pub_set_layer_mode(topic_handle, layer, mode)"},
-
-  {"pub_set_max_bandwidth_udp",     pub_set_max_bandwidth_udp,     METH_VARARGS,  "pub_set_max_bandwidth_udp(topic_handle, bandwidth)"},
-
   {"pub_send",                      pub_send,                      METH_VARARGS,  "pub_send(topic_handle, payload, time)"},
-  {"pub_send_sync",                 pub_send_sync,                 METH_VARARGS,  "pub_send_sync(topic_handle, payload, time, ack_timeout)"},
 
   {"sub_create",                    sub_create,                    METH_VARARGS,  "sub_create(topic_name, topuic_type)"},
   {"sub_destroy",                   sub_destroy,                   METH_VARARGS,  "sub_destroy(topic_handle)"},
@@ -1538,11 +1297,6 @@ static PyMethodDef _ecal_methods[] =
 
   {"sub_set_callback",              sub_set_callback,              METH_VARARGS,  "sub_set_callback(topic_handle, callback)"},
   {"sub_rem_callback",              sub_rem_callback,              METH_VARARGS,  "sub_rem_callback(topic_handle, callback)"},
-
-  {"dyn_json_sub_create",           dyn_json_sub_create,           METH_VARARGS,  "dyn_json_sub_create(topic_name)"},
-  {"dyn_json_sub_destroy",          dyn_json_sub_destroy,          METH_VARARGS,  "dyn_json_sub_destroy(topic_handle)"},
-  {"dyn_json_sub_set_callback",     dyn_json_sub_set_callback,     METH_VARARGS,  "dyn_json_sub_set_callback(topic_handle, callback)"},
-  {"dyn_json_sub_rem_callback",     dyn_json_sub_rem_callback,     METH_VARARGS,  "dyn_json_sub_rem_callback(topic_handle, callback)"},
 
   {"server_create",                 server_create,                 METH_VARARGS,  "server_create(service_name)" },
   {"server_destroy",                server_destroy,                METH_VARARGS,  "server_destroy(server_handle)" },
@@ -1567,9 +1321,6 @@ static PyMethodDef _ecal_methods[] =
 
   {"mon_monitoring",                mon_monitoring,                METH_NOARGS,   "mon_monitoring()"},
   {"mon_logging",                   mon_logging,                   METH_NOARGS,   "mon_logging()"},
-
-  {"mon_pubmonitoring",             mon_pubmonitoring,             METH_VARARGS,  "mon_pubmonitoring(state, name)"},
-  {"mon_publogging",                mon_publogging,                METH_VARARGS,  "mon_publogging(state, name)"},
 
   {nullptr, nullptr, 0, ""}
 };

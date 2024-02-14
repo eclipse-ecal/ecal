@@ -67,5 +67,5 @@ message Sample                                 // a sample is a topic, it's desc
 
 message SampleList
 {
-  repeated Sample samples = 1;
+  repeated Sample samples            =  1;     // list of Samples used currently by SHM registration
 }
