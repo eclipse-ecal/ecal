@@ -18,29 +18,21 @@
 
 cmake_minimum_required(VERSION 3.13)
 
+add_subdirectory(clientserver_proto_test)
+add_subdirectory(clientserver_test)
+
+add_subdirectory(core_test)
+
 add_subdirectory(event_test)
 add_subdirectory(expmap_test)
+
+add_subdirectory(io_memfile_test)
+
+add_subdirectory(pubsub_proto_test)
+add_subdirectory(pubsub_test)
+
 add_subdirectory(serialization_test)
+
 add_subdirectory(topic2mcast_test)
+
 add_subdirectory(util_test)
-
-if(ECAL_CORE_REGISTRATION_SHM OR ECAL_CORE_TRANSPORT_SHM)
-  add_subdirectory(io_memfile_test)
-endif()
-
-if(ECAL_CORE_PUBLISHER AND ECAL_CORE_SUBSCRIBER)
-  add_subdirectory(core_test)
-  if(ECAL_CORE_TRANSPORT_SHM OR ECAL_CORE_TRANSPORT_UDP) # this test is running for shm and udp layer only, needs to be fixed for tcp
-    add_subdirectory(pubsub_test)
-  endif()
-  if(ECAL_CORE_BUILD_TESTS_PROTOBUF)
-    add_subdirectory(pubsub_proto_test)
-  endif()
-endif()
-
-if(ECAL_CORE_SERVICE)
-  add_subdirectory(clientserver_test)
-  if(ECAL_CORE_BUILD_TESTS_PROTOBUF)
-    add_subdirectory(clientserver_proto_test)
-  endif()
-endif()
