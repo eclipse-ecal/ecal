@@ -112,8 +112,14 @@ macro(autodetect_qt_msvc_dir)
 		endif()
 
 		message(STATUS "Using Qt ${BEST_QT_MAJOR}.${BEST_QT_MINOR}.${BEST_QT_PATCH} MSVC ${BEST_QT_MSVC_YEAR} from ${BEST_QT_DIRECTORY}")
+		
+		# Dirs for legacy targets with version:
 		SET(Qt${BEST_QT_MAJOR}_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt${BEST_QT_MAJOR}/")
 		SET(Qt${BEST_QT_MAJOR}Test_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt${BEST_QT_MAJOR}Test")
+		
+		# Dirs for modern version-less targets
+		SET(QT_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt${BEST_QT_MAJOR}/")
+		SET(QTTest_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt${BEST_QT_MAJOR}Test")
 	
 	endif()
 endmacro()
