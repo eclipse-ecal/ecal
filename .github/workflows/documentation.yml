@@ -48,7 +48,7 @@ jobs:
         cd "${{ runner.workspace }}/_build"
         cmake $GITHUB_WORKSPACE -G "Ninja" \
         -DHAS_HDF5=ON \
-        -DHAS_QT=OFF \
+        -DHAS_QT5=OFF \
         -DHAS_CURL=OFF \
         -DHAS_CAPNPROTO=OFF \
         -DHAS_FTXUI=ON \
