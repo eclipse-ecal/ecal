@@ -30,10 +30,6 @@
 
 #include <person.pb.h>
 
-// subscriber callback function
-
-#define REGISTRATION_REFRESH_CYCLE 1000
-
 class ProtoSubscriberTest : public ::testing::Test {
 public:
   ProtoSubscriberTest() 
@@ -84,7 +80,6 @@ TEST_F(ProtoSubscriberTest, SendReceive)
   ASSERT_EQ(1, received_callbacks);
 
 }
-
 
 TEST_F(ProtoSubscriberTest, MoveAssignment)
 {
@@ -141,5 +136,4 @@ TEST_F(ProtoSubscriberTest, MoveConstruction)
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   // assert that the OnPerson callback has been called once.
   ASSERT_EQ(1, received_callbacks);
-
 }

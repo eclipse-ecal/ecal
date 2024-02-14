@@ -17,25 +17,23 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal_event.h"
+#include <cstdlib>
+#include <string>
 
-#include <gtest/gtest.h>
+namespace eCAL
+{
+  // Generate a random string of given length (may contain null character)
+  std::string GenerateString(size_t length)
+  {
+    const std::string charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    std::string result;
+    result.reserve(length);
 
-TEST(Event, EventSetGet)
-{ 
-  // global parameter
-  const std::string event_name = "my_event";
+    for (size_t i = 0; i < length; ++i) {
+      // use the full charset, including null character
+      result.push_back(charset[rand() % (charset.length() + 1)]);
+    }
 
-  // create named event
-  eCAL::EventHandleT event_handle;
-  EXPECT_EQ(true, eCAL::gOpenEvent(&event_handle, event_name));
-
-  // get none set event
-  EXPECT_EQ(false, gWaitForEvent(event_handle, 10));
-
-  // set event
-  EXPECT_EQ(true, gSetEvent(event_handle));
-
-  // get set event
-  EXPECT_EQ(true, gWaitForEvent(event_handle, 100));
+    return result;
+  }
 }

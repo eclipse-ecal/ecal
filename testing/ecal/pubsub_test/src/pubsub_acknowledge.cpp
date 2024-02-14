@@ -46,6 +46,7 @@ namespace
   }
 }
 
+#if 0 // reactivate this if ShmSetAcknowledgeTimeout API is implemented again
 // This test asserts that a timeouted acknowledge does not break subsequent calls
 TEST(PubSub, TimeoutAcknowledgment)
 {
@@ -56,7 +57,7 @@ TEST(PubSub, TimeoutAcknowledgment)
   eCAL::Util::EnableLoopback(true);
 
   eCAL::string::CPublisher<std::string> pub("topic");
-  pub.ShmSetAcknowledgeTimeout(500);
+  //pub.ShmSetAcknowledgeTimeout(500);  // TODO: NEW PARAMETER API
   auto sub1 = std::make_shared< eCAL::string::CSubscriber<std::string>>("topic");
   auto sleeper_variable_time = [](const char* /*topic_name_*/, const std::string& msg_, long long /*time_*/, long long /*clock_*/, long long /*id_*/)
                                 {
@@ -108,5 +109,5 @@ TEST(PubSub, TimeoutAcknowledgment)
   // finalize eCAL API
   // without destroying any pub / sub
   EXPECT_EQ(0, eCAL::Finalize());
-
 }
+#endif

@@ -17,32 +17,28 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  UDP logging sender to send messages of type eCAL::pb::LogMessage
-**/
+#include "../../serialization/ecal_struct_logging.h"
 
-#include "ecal_udp_logging_sender.h"
+#include <cstdlib>
 
 namespace eCAL
 {
-  namespace UDP
+  std::string GenerateString(size_t length);
+
+  namespace Logging
   {
-    CLoggingSender::CLoggingSender(const IO::UDP::SSenderAttr& attr_)
+    LogMessage GenerateLogMessage()
     {
-      m_udp_sender = std::make_shared<IO::UDP::CUDPSender>(attr_);
-    }
+      LogMessage logMessage;
+      logMessage.time    = rand() % 1000;
+      logMessage.hname   = GenerateString(10);
+      logMessage.pid     = rand() % 1000;
+      logMessage.pname   = GenerateString(8);
+      logMessage.uname   = GenerateString(6);
+      logMessage.level   = static_cast<eCAL_Logging_eLogLevel>(rand() % 2);
+      logMessage.content = GenerateString(50);
 
-    size_t CLoggingSender::Send(const eCAL::pb::LogMessage& ecal_log_message_)
-    {
-      if (!m_udp_sender) return(0);
-
-      m_logmessage_s = ecal_log_message_.SerializeAsString();
-      if (!m_logmessage_s.empty())
-      {
-        return m_udp_sender->Send((void*)m_logmessage_s.data(), m_logmessage_s.size());
-      }
-
-      return 0;
+      return logMessage;
     }
   }
 }
