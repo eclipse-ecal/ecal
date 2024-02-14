@@ -35,7 +35,7 @@ typedef struct _eCAL_pb_Content {
     int64_t clock; /* internal used clock */
     int64_t time; /* time the content was updated */
     pb_callback_t payload; /* octet stream */
-    int32_t size; /* size (additional for none payload "header only samples") */
+    int32_t size; /* size (redundant for compatibility) */
     int64_t hash; /* unique hash for that sample */
 } eCAL_pb_Content;
 

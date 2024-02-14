@@ -13,8 +13,11 @@
 typedef enum _eCAL_pb_eTLayerType {
     eCAL_pb_eTLayerType_tl_none = 0, /* undefined */
     eCAL_pb_eTLayerType_tl_ecal_udp_mc = 1, /* ecal udp multicast */
+    /* 2 = ecal udp unicast (not supported anymore)
+ 3 = ecal udp metal (not supported anymore) */
     eCAL_pb_eTLayerType_tl_ecal_shm = 4, /* ecal shared memory */
     eCAL_pb_eTLayerType_tl_ecal_tcp = 5, /* ecal tcp */
+    /* 42 = inproc (not supported anymore) */
     eCAL_pb_eTLayerType_tl_all = 255 /* all layer */
 } eCAL_pb_eTLayerType;
 
@@ -27,10 +30,6 @@ typedef struct _eCAL_pb_LayerParShm {
     pb_callback_t memory_file_list; /* list of memory file names */
 } eCAL_pb_LayerParShm;
 
-typedef struct _eCAL_pb_LayerParInproc {
-    char dummy_field;
-} eCAL_pb_LayerParInproc;
-
 typedef struct _eCAL_pb_LayerParTcp {
     int32_t port; /* tcp writers port number */
 } eCAL_pb_LayerParTcp;
@@ -40,6 +39,7 @@ typedef struct _eCAL_pb_ConnnectionPar {
     eCAL_pb_LayerParUdpMC layer_par_udpmc; /* parameter for ecal udp multicast */
     bool has_layer_par_shm;
     eCAL_pb_LayerParShm layer_par_shm; /* parameter for ecal shared memory */
+    /* 3 = parameter for ecal inner process */
     bool has_layer_par_tcp;
     eCAL_pb_LayerParTcp layer_par_tcp; /* parameter for ecal tcp */
 } eCAL_pb_ConnnectionPar;
@@ -66,20 +66,17 @@ extern "C" {
 
 
 
-
 #define eCAL_pb_TLayer_type_ENUMTYPE eCAL_pb_eTLayerType
 
 
 /* Initializer values for message structs */
 #define eCAL_pb_LayerParUdpMC_init_default       {0}
 #define eCAL_pb_LayerParShm_init_default         {{{NULL}, NULL}}
-#define eCAL_pb_LayerParInproc_init_default      {0}
 #define eCAL_pb_LayerParTcp_init_default         {0}
 #define eCAL_pb_ConnnectionPar_init_default      {false, eCAL_pb_LayerParUdpMC_init_default, false, eCAL_pb_LayerParShm_init_default, false, eCAL_pb_LayerParTcp_init_default}
 #define eCAL_pb_TLayer_init_default              {_eCAL_pb_eTLayerType_MIN, 0, 0, false, eCAL_pb_ConnnectionPar_init_default}
 #define eCAL_pb_LayerParUdpMC_init_zero          {0}
 #define eCAL_pb_LayerParShm_init_zero            {{{NULL}, NULL}}
-#define eCAL_pb_LayerParInproc_init_zero         {0}
 #define eCAL_pb_LayerParTcp_init_zero            {0}
 #define eCAL_pb_ConnnectionPar_init_zero         {false, eCAL_pb_LayerParUdpMC_init_zero, false, eCAL_pb_LayerParShm_init_zero, false, eCAL_pb_LayerParTcp_init_zero}
 #define eCAL_pb_TLayer_init_zero                 {_eCAL_pb_eTLayerType_MIN, 0, 0, false, eCAL_pb_ConnnectionPar_init_zero}
@@ -105,11 +102,6 @@ extern "C" {
 X(a, CALLBACK, REPEATED, STRING,   memory_file_list,   1)
 #define eCAL_pb_LayerParShm_CALLBACK pb_default_field_callback
 #define eCAL_pb_LayerParShm_DEFAULT NULL
-
-#define eCAL_pb_LayerParInproc_FIELDLIST(X, a) \
-
-#define eCAL_pb_LayerParInproc_CALLBACK NULL
-#define eCAL_pb_LayerParInproc_DEFAULT NULL
 
 #define eCAL_pb_LayerParTcp_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, INT32,    port,              1)
@@ -137,7 +129,6 @@ X(a, STATIC,   OPTIONAL, MESSAGE,  par_layer,         5)
 
 extern const pb_msgdesc_t eCAL_pb_LayerParUdpMC_msg;
 extern const pb_msgdesc_t eCAL_pb_LayerParShm_msg;
-extern const pb_msgdesc_t eCAL_pb_LayerParInproc_msg;
 extern const pb_msgdesc_t eCAL_pb_LayerParTcp_msg;
 extern const pb_msgdesc_t eCAL_pb_ConnnectionPar_msg;
 extern const pb_msgdesc_t eCAL_pb_TLayer_msg;
@@ -145,7 +136,6 @@ extern const pb_msgdesc_t eCAL_pb_TLayer_msg;
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define eCAL_pb_LayerParUdpMC_fields &eCAL_pb_LayerParUdpMC_msg
 #define eCAL_pb_LayerParShm_fields &eCAL_pb_LayerParShm_msg
-#define eCAL_pb_LayerParInproc_fields &eCAL_pb_LayerParInproc_msg
 #define eCAL_pb_LayerParTcp_fields &eCAL_pb_LayerParTcp_msg
 #define eCAL_pb_ConnnectionPar_fields &eCAL_pb_ConnnectionPar_msg
 #define eCAL_pb_TLayer_fields &eCAL_pb_TLayer_msg
@@ -155,7 +145,6 @@ extern const pb_msgdesc_t eCAL_pb_TLayer_msg;
 /* eCAL_pb_ConnnectionPar_size depends on runtime parameters */
 /* eCAL_pb_TLayer_size depends on runtime parameters */
 #define ECAL_PB_LAYER_PB_H_MAX_SIZE              eCAL_pb_LayerParTcp_size
-#define eCAL_pb_LayerParInproc_size              0
 #define eCAL_pb_LayerParTcp_size                 11
 #define eCAL_pb_LayerParUdpMC_size               0
 
