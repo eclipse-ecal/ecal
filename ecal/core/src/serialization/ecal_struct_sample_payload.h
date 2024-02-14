@@ -77,6 +77,7 @@ namespace eCAL
       eCmdType                            cmd_type = bct_none;          // payload command type
       Topic                               topic;                        // topic information
       Content                             content;                      // topic content
+      std::vector<char>                   padding;                      // padding to artificially increase the size of the message. This is a workaround for TCP topics, to get the actual user-payload 8-byte-aligned. REMOVE ME IN ECAL6
     };
   }
 }

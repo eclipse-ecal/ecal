@@ -83,7 +83,7 @@ namespace eCAL
     ///////////////////////////////////////////////
     // bytes
     ///////////////////////////////////////////////
-    bool encode_bytes_field(pb_ostream_t* stream, const pb_field_iter_t* field, void* const* arg)
+    bool encode_bytes_field_nano_bytes(pb_ostream_t* stream, const pb_field_iter_t* field, void* const* arg)
     {
       if (arg == nullptr)  return false;
       if (*arg == nullptr) return false;
@@ -99,8 +99,26 @@ namespace eCAL
     {
       if (nano_bytes.length == 0) return;
 
-      pb_callback.funcs.encode = &encode_bytes_field;
+      pb_callback.funcs.encode = &encode_bytes_field_nano_bytes;
       pb_callback.arg = (void*)(&nano_bytes);
+    }
+
+    bool encode_bytes_field_vec(pb_ostream_t* stream, const pb_field_iter_t* field, void* const* arg)
+    {
+      if (arg == nullptr)  return false;
+      if (*arg == nullptr) return false;
+
+      if (!pb_encode_tag_for_field(stream, field))
+        return false;
+
+      auto* vec = (std::vector<char>*)(*arg);
+      return pb_encode_string(stream, (pb_byte_t*)vec->data(), vec->size());
+    }
+
+    void encode_bytes(pb_callback_t& pb_callback, const std::vector<char>& vec)
+    {
+      pb_callback.funcs.encode = &encode_bytes_field_vec;
+      pb_callback.arg = (void*)(&vec);
     }
 
     bool decode_bytes_field(pb_istream_t* stream, const pb_field_iter_t* /*field*/, void** arg)

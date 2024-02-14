@@ -66,9 +66,11 @@ namespace eCAL
         friend class const_iterator;
 
       public:
-        using value_type = std::pair<Key, T>;
-        using pointer    = std::pair<Key, T>*;
-        using reference  = std::pair<Key, T>&;
+        using iterator_category = std::bidirectional_iterator_tag;
+        using value_type        = std::pair<Key, T>;
+        using difference_type   = std::ptrdiff_t;
+        using pointer           = std::pair<Key, T>*;
+        using reference         = std::pair<Key, T>&;
 
         explicit iterator(const typename key_to_value_type::iterator _it)
           : it(_it)
@@ -102,9 +104,11 @@ namespace eCAL
       class const_iterator
       {
       public:
-        using value_type = std::pair<Key, T>;
-        using pointer    = std::pair<Key, T>*;
-        using reference  = std::pair<Key, T>&;
+        using iterator_category = std::bidirectional_iterator_tag;
+        using value_type        = std::pair<Key, T>;
+        using difference_type   = std::ptrdiff_t;
+        using pointer           = std::pair<Key, T>*;
+        using reference         = std::pair<Key, T>&;
 
         explicit const_iterator(const iterator& other)
           : it(other.it)

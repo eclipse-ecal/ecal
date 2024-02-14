@@ -50,6 +50,7 @@ namespace eCAL
     void decode_string(pb_callback_t& pb_callback, std::string& str);
 
     void encode_bytes(pb_callback_t& pb_callback, const SNanoBytes& nano_bytes);
+    void encode_bytes(pb_callback_t& pb_callback, const std::vector<char>& vec);
     void decode_bytes(pb_callback_t& pb_callback, std::vector<char>& vec);
 
     void encode_map(pb_callback_t& pb_callback, const std::map<std::string, std::string>& str_map);
