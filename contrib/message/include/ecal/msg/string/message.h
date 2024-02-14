@@ -30,14 +30,21 @@ namespace eCAL
     // unfortunately, we need an actual object for this :/
     inline std::string GetTypeName(const std::string& /*message*/)
     {
-      return("base:std::string");
+      return("std::string");
     }
 
+    // unfortunately, we need an actual object for this :/
+    inline std::string GetEncoding(const std::string& /*message*/)
+    {
+      return("base");
+    }
+    
     // unfortunately, we need an actual object for this :/
     inline std::string GetDescription(const std::string& /*message*/)
     {
       return("");
     }
+
 
     inline bool Serialize(const std::string& message, std::string& buffer)
     {

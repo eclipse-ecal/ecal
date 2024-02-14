@@ -29,6 +29,39 @@
 
 #include "ecalhdf5/eh5_types.h"
 
+inline eCAL::eh5::DataTypeInformation CreateInfo(const std::string& combined_topic_type_, const std::string& descriptor_)
+{
+  eCAL::eh5::DataTypeInformation info;
+  auto pos = combined_topic_type_.find(':');
+  if (pos == std::string::npos)
+  {
+    info.name     = combined_topic_type_;
+    info.encoding = "";
+  }
+  else
+  {
+    info.name     = combined_topic_type_.substr(pos + 1);
+    info.encoding = combined_topic_type_.substr(0, pos);
+  }
+  info.descriptor = descriptor_;
+  return info;
+}
+
+inline std::pair<std::string, std::string> FromInfo(const eCAL::eh5::DataTypeInformation& datatype_info_)
+{
+  std::string combined_topic_type;
+  if (datatype_info_.encoding.empty())
+  {
+    combined_topic_type = datatype_info_.name;
+  }
+  else
+  {
+    combined_topic_type = datatype_info_.encoding + ":" + datatype_info_.name;
+  }
+
+  return std::make_pair(combined_topic_type, datatype_info_.descriptor);
+}
+
 namespace eCAL
 {
   namespace eh5
@@ -126,38 +159,23 @@ namespace eCAL
       virtual bool HasChannel(const std::string& channel_name) const = 0;
 
       /**
-      * @brief Get the channel description for the given channel
-      *
-      * @param channel_name  channel name
-      *
-      * @return              channel description
+       * @brief Get data type information of the given channel
+       *
+       * @param channel_name  channel name
+       *
+       * @return              channel type
       **/
-      virtual std::string GetChannelDescription(const std::string& channel_name) const = 0;
+      virtual DataTypeInformation GetChannelDataTypeInformation(const std::string& channel_name) const = 0;
 
       /**
-      * @brief Set description of the given channel
-      *
-      * @param channel_name    channel name
-      * @param description     description of the channel
+       * @brief Set data type information of the given channel
+       *
+       * @param channel_name  channel name
+       * @param info          datatype info of the channel
+       *
+       * @return              channel type
       **/
-      virtual void SetChannelDescription(const std::string& channel_name, const std::string& description) = 0;
-
-      /**
-      * @brief Gets the channel type of the given channel
-      *
-      * @param channel_name  channel name
-      *
-      * @return              channel type
-      **/
-      virtual std::string GetChannelType(const std::string& channel_name) const = 0;
-
-      /**
-      * @brief Set type of the given channel
-      *
-      * @param channel_name  channel name
-      * @param type          type of the channel
-      **/
-      virtual void SetChannelType(const std::string& channel_name, const std::string& type) = 0;
+      virtual void SetChannelDataTypeInformation(const std::string& channel_name, const DataTypeInformation& info) = 0;
 
       /**
       * @brief Gets minimum timestamp for specified channel

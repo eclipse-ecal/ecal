@@ -196,44 +196,27 @@ bool eCAL::eh5::HDF5MeasDir::HasChannel(const std::string& channel_name) const
   return channels_info_.count(channel_name) != 0;
 }
 
-std::string eCAL::eh5::HDF5MeasDir::GetChannelDescription(const std::string& channel_name) const
+eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasDir::GetChannelDataTypeInformation(const std::string& channel_name) const
 {
-  std::string ret_val;
+  eCAL::eh5::DataTypeInformation ret_val;
 
   const auto& found = channels_info_.find(channel_name);
 
   if (found != channels_info_.end())
   {
-    ret_val = found->second.description;
+    ret_val = found->second.info;
   }
   return ret_val;
 }
 
-void eCAL::eh5::HDF5MeasDir::SetChannelDescription(const std::string& channel_name, const std::string& description)
+void eCAL::eh5::HDF5MeasDir::SetChannelDataTypeInformation(const std::string& channel_name, const eCAL::eh5::DataTypeInformation& info)
 {
   // Get an existing writer or create a new one
   auto file_writer_it = GetWriter(channel_name);
-  file_writer_it->second->SetChannelDescription(channel_name, description);
-}
+  file_writer_it->second->SetChannelDataTypeInformation(channel_name, info);
 
-std::string eCAL::eh5::HDF5MeasDir::GetChannelType(const std::string& channel_name) const
-{
-  std::string ret_val;
-
-  const auto& found = channels_info_.find(channel_name);
-
-  if (found != channels_info_.end())
-  {
-    ret_val = found->second.type;
-  }
-  return ret_val;
-}
-
-void eCAL::eh5::HDF5MeasDir::SetChannelType(const std::string& channel_name, const std::string& type)
-{
-  // Get an existing writer or create a new one
-  auto file_writer_it = GetWriter(channel_name);
-  file_writer_it->second->SetChannelType(channel_name, type);
+  // Let's save them in case we need to query them
+  channels_info_[channel_name] = ChannelInfo(info);
 }
 
 long long eCAL::eh5::HDF5MeasDir::GetMinTimestamp(const std::string& channel_name) const
@@ -457,17 +440,18 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
       for (const auto& channel : channels)
       {
         auto escaped_name = GetEscapedTopicname(channel);
-        auto description = reader->GetChannelDescription(channel);
+        auto info = reader->GetChannelDataTypeInformation(channel);
 
+        // What exactly does that do? what are we overwriting?
         if (channels_info_.find(escaped_name) == channels_info_.end())
         {
-          channels_info_[escaped_name] = ChannelInfo(reader->GetChannelType(channel), description);
+          channels_info_[escaped_name] = ChannelInfo(info);
         }
         else
         {
-          if (!description.empty())
+          if (!info.descriptor.empty())
           {
-            channels_info_[escaped_name].description = description;
+            channels_info_[escaped_name].info.descriptor = info.descriptor;
           }
         }
 

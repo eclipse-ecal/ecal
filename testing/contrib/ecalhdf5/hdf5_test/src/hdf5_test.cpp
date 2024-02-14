@@ -30,6 +30,23 @@
 
 using namespace eCAL::experimental::measurement::base;
 
+namespace eCAL 
+{
+  namespace experimental
+  {
+    namespace measurement
+    {
+      namespace base
+      {
+        void PrintTo(const DataTypeInformation& info, std::ostream* os) {
+          *os << "(" << info.name << "," << info.encoding << "," << info.descriptor << ")";
+        }
+      }
+    }
+  }
+}
+
+
 namespace
 {
 struct TestingMeasEntry
@@ -257,7 +274,6 @@ TEST(HDF5, ReadWrite)
 }
 
 
-
 TEST(HDF5, IsOneFilePerChannelEnabled)
 {
   eCAL::eh5::HDF5Meas hdf5_writer;
@@ -400,5 +416,86 @@ TEST(HDF5, EscapeFilenamesForOneFilePerChannel)
     ValidateDataInMeasurement(hdf5_reader, normal_ascii);
     ValidateDataInMeasurement(hdf5_reader, escape_ascii);
     ValidateDataInMeasurement(hdf5_reader, escape_ascii_2);
+  }
+}
+
+// This test validates that Datatypinformation is stored to / can be retrieved from the measurement correctly.
+TEST(HDF5, WriteReadTopicTypeInformation)
+{
+  // Define data that will be written to the file
+  TestingMeasEntry entry;
+  DataTypeInformation info{ "mytype", "myencoding", "mydescriptor" };
+
+  std::string base_name = "datatypeinformation_meas";
+  std::string meas_root_dir = output_dir + "/" + base_name;
+
+  // Write HDF5 file
+  {
+    eCAL::eh5::HDF5Meas hdf5_writer;
+
+    if (hdf5_writer.Open(meas_root_dir, eCAL::eh5::eAccessType::CREATE))
+    {
+      hdf5_writer.SetFileBaseName(base_name);
+      hdf5_writer.SetMaxSizePerFile(max_size_per_file);
+    }
+    else
+    {
+      FAIL() << "Failed to open HDF5 Writer";
+    }
+
+    hdf5_writer.SetChannelDataTypeInformation(entry.channel_name, info);
+    EXPECT_TRUE(WriteToHDF(hdf5_writer, entry));
+
+    EXPECT_TRUE(hdf5_writer.Close());
+  }
+
+  // Read entries with HDF5 dir API
+  {
+    eCAL::eh5::HDF5Meas hdf5_reader;
+    EXPECT_TRUE(hdf5_reader.Open(meas_root_dir));
+    EXPECT_EQ(hdf5_reader.GetChannelDataTypeInformation(entry.channel_name), info);
+  }
+}
+
+TEST(HDF5, WriteReadTopicTypeInformationDeprecated)
+{
+  // Define data that will be written to the file
+  TestingMeasEntry entry;
+  std::string type = "myencoding:mytype";
+  std::string descriptor =  "mydescriptor";
+  DataTypeInformation info{ "mytype", "myencoding", "mydescriptor" };
+
+  std::string base_name = "datatypeinformation_meas_deprecated";
+  std::string meas_root_dir = output_dir + "/" + base_name;
+
+  // Write HDF5 file
+  {
+    eCAL::eh5::HDF5Meas hdf5_writer;
+
+    if (hdf5_writer.Open(meas_root_dir, eCAL::eh5::eAccessType::CREATE))
+    {
+      hdf5_writer.SetFileBaseName(base_name);
+      hdf5_writer.SetMaxSizePerFile(max_size_per_file);
+    }
+    else
+    {
+      FAIL() << "Failed to open HDF5 Writer";
+    }
+
+    hdf5_writer.SetChannelType(entry.channel_name, type);
+    hdf5_writer.SetChannelDescription(entry.channel_name, descriptor);
+
+    EXPECT_TRUE(WriteToHDF(hdf5_writer, entry));
+
+    EXPECT_TRUE(hdf5_writer.Close());
+  }
+
+  // Read entries with HDF5 dir API
+  {
+    eCAL::eh5::HDF5Meas hdf5_reader;
+    EXPECT_TRUE(hdf5_reader.Open(meas_root_dir));
+    EXPECT_EQ(hdf5_reader.GetChannelType(entry.channel_name), type);
+    EXPECT_EQ(hdf5_reader.GetChannelDescription(entry.channel_name), descriptor);
+    EXPECT_EQ(hdf5_reader.GetChannelDataTypeInformation(entry.channel_name), info);
   }
 }

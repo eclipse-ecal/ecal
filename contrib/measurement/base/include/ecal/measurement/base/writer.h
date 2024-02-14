@@ -139,20 +139,14 @@ namespace eCAL
           virtual void SetOneFilePerChannelEnabled(bool enabled) = 0;
 
           /**
-           * @brief Set description of the given channel
-           *
-           * @param channel_name    channel name
-           * @param description     description of the channel
-          **/
-          virtual void SetChannelDescription(const std::string& channel_name, const std::string& description) = 0;
-
-          /**
-           * @brief Set type of the given channel
+           * @brief Set data type information of the given channel
            *
            * @param channel_name  channel name
-           * @param type          type of the channel
+           * @param info          datatype info of the channel
+           *
+           * @return              channel type
           **/
-          virtual void SetChannelType(const std::string& channel_name, const std::string& type) = 0;
+          virtual void SetChannelDataTypeInformation(const std::string & channel_name, const DataTypeInformation& info) = 0;
 
           /**
            * @brief Set measurement file base name (desired name for the actual hdf5 files that will be created)
