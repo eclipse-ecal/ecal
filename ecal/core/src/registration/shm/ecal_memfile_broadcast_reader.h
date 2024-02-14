@@ -25,18 +25,19 @@
 
 #include "ecal_memfile_broadcast.h"
 
+#include <cstddef>
 #include <cstdint>
-#include <vector>
-#include <unordered_map>
 #include <memory>
+#include <unordered_map>
+#include <vector>
 
 namespace eCAL
 {
   struct SMemfileBroadcastMessage
     {
-    const void *data;
-    std::size_t size;
-    std::int64_t timestamp;
+    const void  *data = nullptr;
+    std::size_t  size = 0;
+    std::int64_t timestamp = 0;
   };
 
   using MemfileBroadcastMessageListT = std::vector<SMemfileBroadcastMessage>;
@@ -46,8 +47,8 @@ namespace eCAL
     struct SPayloadMemfile
     {
       std::shared_ptr <CMemoryFile> payload_memfile;
-      std::vector<char> payload_memfile_buffer;
-      std::int64_t timestamp;
+      std::vector<char>             payload_memfile_buffer;
+      std::int64_t                  timestamp;
     };
   public:
     bool Bind(CMemoryFileBroadcast *memfile_broadcast);
@@ -55,9 +56,9 @@ namespace eCAL
 
     bool Read(MemfileBroadcastMessageListT &memfile_broadcast_message_list, std::int64_t timeout);
   private:
-    CMemoryFileBroadcast *m_memfile_broadcast = nullptr;
+    CMemoryFileBroadcast                              *m_memfile_broadcast = nullptr;
     std::unordered_map<std::uint64_t, SPayloadMemfile> m_payload_memfiles;
-    MemfileBroadcastEventListT m_broadcast_event_list;
-    bool m_bound = false;
+    MemfileBroadcastEventListT                         m_broadcast_event_list;
+    bool                                               m_bound = false;
   };
 }

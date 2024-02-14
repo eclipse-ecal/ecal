@@ -23,24 +23,24 @@
 
 #pragma once
 
+#include <chrono>
+#include <cstdint>
+#include <cstring>
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
-#include <cstring>
-#include <cstdint>
 
-#include "io/shm/relocatable_circular_queue.h"
+#include "relocatable_circular_queue.h"
+#include "io/shm/ecal_memfile.h"
 
 #include <ecal/ecal.h>
 
 namespace eCAL 
 {
-  class CMemoryFile;
-
   static inline std::int64_t CreateTimestamp()
   {
     const auto time_point = std::chrono::steady_clock::now();
-    return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(time_point.time_since_epoch()).count());
+    return static_cast<int64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(time_point.time_since_epoch()).count());
   }
 
   static inline std::uint64_t CreateEventId()

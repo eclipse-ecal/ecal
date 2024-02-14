@@ -34,43 +34,69 @@ namespace eCAL
   class  CGlobals;
   class  CConfig;
   class  CLog;
+#if ECAL_CORE_MONITORING
   class  CMonitoring;
+#endif
+#if ECAL_CORE_TIMEPLUGIN
   class  CTimeGate;
+#endif
+#if ECAL_CORE_REGISTRATION
   class  CRegistrationProvider;
+  class  CRegistrationReceiver;
+#endif
   class  CDescGate;
+#if ECAL_CORE_SUBSCRIBER
   class  CSubGate;
+#endif
+#if ECAL_CORE_PUBLISHER
   class  CPubGate;
+#endif
+#if ECAL_CORE_SERVICE
   class  CServiceGate;
   class  CClientGate;
-  class  CRegistrationReceiver;
+#endif
+#if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
   class  CMemFileThreadPool;
   class  CMemFileMap;
+#endif
 
   // Declaration of getter functions for globally accessible variable instances
   CGlobals*               g_globals();
   CConfig*                g_config();
   CLog*                   g_log();
+#if ECAL_CORE_MONITORING
   CMonitoring*            g_monitoring();
+#endif
+#if ECAL_CORE_TIMEPLUGIN
   CTimeGate*              g_timegate();
+#endif
+#if ECAL_CORE_REGISTRATION
   CRegistrationProvider*  g_registration_provider();
+  CRegistrationReceiver*  g_registration_receiver();
+#endif
   CDescGate*              g_descgate();
+#if ECAL_CORE_SUBSCRIBER
   CSubGate*               g_subgate();
+#endif
+#if ECAL_CORE_PUBLISHER
   CPubGate*               g_pubgate();
+#endif
+#if ECAL_CORE_SERVICE
   CServiceGate*           g_servicegate();
   CClientGate*            g_clientgate();
-  CRegistrationReceiver*  g_registration_receiver();
+#endif
+#if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
   CMemFileThreadPool*     g_memfile_pool();
   CMemFileMap*            g_memfile_map();
+#endif
 
   // declaration of globally accessible variables
   extern CGlobals*                     g_globals_ctx;
   extern std::atomic<int>              g_globals_ctx_ref_cnt;
-  extern std::atomic<int>              g_shutdown;
 
   extern std::string                   g_default_ini_file;
 
   extern std::string                   g_host_name;
-  extern int                           g_host_id;
   extern std::string                   g_unit_name;
   extern std::vector<std::string>      g_task_parameter;
 

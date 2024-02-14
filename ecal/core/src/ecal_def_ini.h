@@ -48,8 +48,6 @@
 
 #define  NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED_S   "multicast_join_all_if"
 
-#define  NET_BANDWIDTH_MAX_UDP_S                   "bandwidth_max_udp"
-
 #define  NET_UDP_MC_REC_ENABLED_S                  "udp_mc_rec_enabled"
 #define  NET_SHM_REC_ENABLED_S                     "shm_rec_enabled"
 #define  NET_TCP_REC_ENABLED_S                     "tcp_rec_enabled"
@@ -60,7 +58,7 @@
 #define  NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER_S      "tcp_pubsub_num_executor_writer"
 #define  NET_TCP_PUBSUB_MAX_RECONNECTIONS_S        "tcp_pubsub_max_reconnections"
 
-#define  NET_HOST_GROUP_NAME_S            "host_group_name"
+#define  NET_HOST_GROUP_NAME_S                     "host_group_name"
 
 /////////////////////////////////////
 // time

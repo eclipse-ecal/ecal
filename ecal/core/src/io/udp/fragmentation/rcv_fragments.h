@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  UDP sample receiver to receive messages of type eCAL::pb::Sample
+ * @brief  UDP sample receiver to receive messages of type eCAL::Sample
 **/
 
 #pragma once
@@ -26,6 +26,7 @@
 #include "ecal_def.h"
 
 #include <chrono>
+#include <cstdint>
 #include <vector>
 
 namespace IO

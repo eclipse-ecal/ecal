@@ -51,13 +51,6 @@ extern "C"
   ECALC_API int eCAL_Process_GetHostName(void* name_, int name_len_);
 
   /**
-   * @brief  Get unique host id.
-   *
-   * @return  The host id.
-  **/
-  ECALC_API int eCAL_Process_GetHostID();
-
-  /**
    * @brief  Get process unit name (defined with eCAL_Initialize). 
    *
    * @param [out] name_      Pointer to store the unit name. 
@@ -117,44 +110,6 @@ extern "C"
   ECALC_API int eCAL_Process_GetProcessParameter(void* par_, int par_len_);
 
   /**
-  * @deprecated  Use the function eCAL_Process_GetWClock() instead
-  **/
-  ECALC_API long long eCAL_Process_GetSClock();
-
-  /**
-  * @deprecated  Use the function eCAL_Process_GetWBytes() instead
-  **/
-  ECALC_API long long eCAL_Process_GetSBytes();
-
-  /**
-   * @brief  Get the write clock of the current process. 
-   *
-   * @return  The message write count per second. 
-  **/
-  ECALC_API long long eCAL_Process_GetWClock();
-
-  /**
-   * @brief  Get the write bytes of the current process. 
-   *
-   * @return  The message write bytes per second. 
-  **/
-  ECALC_API long long eCAL_Process_GetWBytes();
-
-  /**
-   * @brief  Get the read clock of the current process. 
-   *
-   * @return  The message read count per second. 
-  **/
-  ECALC_API long long eCAL_Process_GetRClock();
-
-  /**
-   * @brief  Get the read bytes of the current process. 
-   *
-   * @return  The message read bytes per second. 
-  **/
-  ECALC_API long long eCAL_Process_GetRBytes();
-
-  /**
    * @brief  Set process state info. 
    *
    * @param severity_  Severity. 
@@ -165,34 +120,34 @@ extern "C"
   ECALC_API void eCAL_Process_SetState(enum eCAL_Process_eSeverity severity_, enum eCAL_Process_eSeverity_Level level_, const char* info_);
 
   /**
-   * @brief  Start specified process (windows only). 
+   * @brief  Start specified process (windows only).
    *
-   * @param proc_name_       Process name. 
-   * @param proc_args_       Process argument string. 
-   * @param working_dir_     Working directory. 
-   * @param create_console_  Start process in own console window (Windows only). 
-   * @param process_mode_    Start normal, hidden, minimized, maximized (Windows only). 
-   * @param block_           Block until process finished. 
+   * @param proc_name_       Process name.
+   * @param proc_args_       Process argument string.
+   * @param working_dir_     Working directory.
+   * @param create_console_  Start process in own console window (Windows only).
+   * @param process_mode_    Start normal, hidden, minimized, maximized (Windows only).
+   * @param block_           Block until process finished.
    *
-   * @return  Process id or zero if failed. 
+   * @return  Process id or zero if failed.
   **/
   ECALC_API int eCAL_Process_StartProcess(const char* proc_name_, const char* proc_args_, const char* working_dir_, int create_console_, enum eCAL_Process_eStartMode process_mode_, int block_);
 
   /**
-   * @brief  Stop specified process (windows only). 
+   * @brief  Stop specified process (windows only).
    *
-   * @param proc_name_  Process name. 
+   * @param proc_name_  Process name.
    *
-   * @return  None zero if successful. 
+   * @return  None zero if successful.
   **/
   ECALC_API int eCAL_Process_StopProcessName(const char* proc_name_);
 
   /**
-   * @brief  Stop specified process (windows only). 
+   * @brief  Stop specified process (windows only).
    *
-   * @param proc_id_    Process id. 
+   * @param proc_id_    Process id.
    *
-   * @return  None zero if successful. 
+   * @return  None zero if successful.
   **/
   ECALC_API int eCAL_Process_StopProcessID(int proc_id_);
 #ifdef __cplusplus

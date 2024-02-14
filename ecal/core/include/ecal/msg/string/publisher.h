@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <ecal/ecal_deprecate.h>
 #include <ecal/msg/publisher.h>
 
@@ -57,41 +58,29 @@ namespace eCAL
        * @param topic_name_  Unique topic name.
       **/
 
-      // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
-      // where the vtable is not created yet or it's destructed.
-      CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation())
+      // call the function via its class because it's a virtual function that is called in constructor/destructor,-
+      // where the vtable is not created yet, or it's destructed.
+      explicit CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation())
       {
       }
 
       /**
-       * @brief  Constructor.
-       *
-       * @param topic_name_  Unique topic name.
-       * @param topic_type_  Type name (optional).
-       * @param topic_desc_  Type description (optional).
-      **/
-      ECAL_DEPRECATE_SINCE_5_13("Plase use eCAL::string::CPublisher(const std::string& topic_name_) instead. This function will be removed in eCAL6.")
-      CPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_) : CMsgPublisher<T>(topic_name_, topic_type_, topic_desc_)
-      {
-      }
-
-      /**
-      * @brief  Copy Constructor is not available.
+       * @brief  Copy Constructor is not available.
       **/
       CPublisher(const CPublisher&) = delete;
 
       /**
-      * @brief  Copy Constructor is not available.
+       * @brief  Copy Constructor is not available.
       **/
       CPublisher& operator=(const CPublisher&) = delete;
 
       /**
-      * @brief  Move Constructor
+       * @brief  Move Constructor
       **/
       CPublisher(CPublisher&&) = default;
 
       /**
-      * @brief  Move assignment
+       * @brief  Move assignment
       **/
       CPublisher& operator=(CPublisher&&) = default;
 
@@ -109,15 +98,15 @@ namespace eCAL
 
     private:
       /**
-      * @brief   Get topic information of the message.
-      *
-      * @return  Topic information.
+       * @brief   Get topic information of the message.
+       *
+       * @return  Topic information.
       **/
       SDataTypeInformation GetDataTypeInformation() const override
       {
         SDataTypeInformation topic_info;
         topic_info.encoding = "base";
-        topic_info.name = "std::string";
+        topic_info.name     = "std::string";
         // empty descriptor
         return topic_info;
       }
@@ -135,7 +124,7 @@ namespace eCAL
       }
 
       /**
-       * @brief  Copy the string object into a preallocated char buffer.
+       * @brief  Copy the string object into a pre-allocated char buffer.
        *
        * @param       msg_     The message object.
        * @param [out] buffer_  Target buffer.
@@ -154,7 +143,7 @@ namespace eCAL
       }
     };
     /** @example minimal_snd.cpp
-    * This is an example how to use eCAL::CPublisher to send a std::string with eCAL. To receive the strings, see @ref minimal_rec.cpp .
-    */
+     * This is an example how to use eCAL::CPublisher to send a std::string with eCAL. To receive the strings, see @ref minimal_rec.cpp .
+    **/
   }
 }

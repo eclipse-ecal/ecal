@@ -44,7 +44,7 @@ namespace eCAL
     void*       handle;  //!< event handle
 
     /* @cond */
-    bool operator==(const SEventHandle& rhs)
+    bool operator==(const SEventHandle& rhs) const
     {
       return(rhs.name == name && rhs.handle == handle);
     }
@@ -53,6 +53,5 @@ namespace eCAL
 
   /* @cond */
   typedef SEventHandle              EventHandleT;
-  typedef std::vector<EventHandleT> EventHandleVecT;
   /* @endcond */
 }

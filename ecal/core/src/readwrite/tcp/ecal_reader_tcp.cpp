@@ -27,7 +27,6 @@
 
 #include "pubsub/ecal_subgate.h"
 
-#include "readwrite/ecal_writer_base.h"
 #include "ecal_reader_tcp.h"
 #include "ecal_tcp_pubsub_logger.h"
 
@@ -92,8 +91,8 @@ namespace eCAL
   {
     // extract header size
     const size_t ecal_magic(4 * sizeof(char));
-    //                           ECAL        +  header size field
-    const size_t   header_length = ecal_magic  +  sizeof(uint16_t);
+    //                             ECAL       +  header size field
+    const size_t   header_length = ecal_magic + sizeof(uint16_t);
     const uint16_t header_size   = le16toh(*reinterpret_cast<uint16_t*>(data_.buffer_->data() + ecal_magic));
 
     // extract header
@@ -102,24 +101,24 @@ namespace eCAL
     const char* data_payload   = header_payload + header_size;
 
     // parse header
-    if (m_ecal_header.ParseFromArray(header_payload, static_cast<int>(header_size)))
+    if (DeserializeFromBuffer(header_payload, header_size, m_ecal_header))
     {
       if (g_subgate() != nullptr)
       {
         // use this intermediate variables as optimization
-        const auto& ecal_header_topic   = m_ecal_header.topic();
-        const auto& ecal_header_content = m_ecal_header.content();
+        const auto& ecal_header_topic   = m_ecal_header.topic;
+        const auto& ecal_header_content = m_ecal_header.content;
         // apply sample
         g_subgate()->ApplySample(
-          ecal_header_topic.tname(),
-          ecal_header_topic.tid(),
+          ecal_header_topic.tname,
+          ecal_header_topic.tid,
           data_payload,
-          static_cast<size_t>(ecal_header_content.size()),
-          ecal_header_content.id(),
-          ecal_header_content.clock(),
-          ecal_header_content.time(),
-          ecal_header_content.hash(),
-          eCAL::pb::tl_ecal_tcp);
+          static_cast<size_t>(ecal_header_content.size),
+          ecal_header_content.id,
+          ecal_header_content.clock,
+          ecal_header_content.time,
+          ecal_header_content.hash,
+          tl_ecal_tcp);
       }
     }
   }
@@ -164,29 +163,19 @@ namespace eCAL
 
   void CTCPReaderLayer::SetConnectionParameter(SReaderLayerPar& par_)
   {
-    eCAL::pb::ConnnectionPar connection_par;
-    if (connection_par.ParseFromString(par_.parameter))
-    {
-      //////////////////////////////////
-      // get parameter from a new writer
-      //////////////////////////////////
+    //////////////////////////////////
+    // get parameter from a new writer
+    //////////////////////////////////
+    const auto& remote_hostname = par_.host_name;
+    auto        remote_port     = par_.parameter.layer_par_tcp.port;
 
-      const auto& remote_hostname = par_.host_name;
-      auto        remote_port     = connection_par.layer_par_tcp().port();
+    const std::string map_key(par_.topic_name);
 
-      const std::string map_key(par_.topic_name);
+    const std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
+    const DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
+    if (iter == m_datareadertcp_map.end()) return;
 
-      const std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
-      const DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
-      if (iter == m_datareadertcp_map.end()) return;
-
-      auto& reader = iter->second;
-      reader->AddConnectionIfNecessary(remote_hostname, static_cast<uint16_t>(remote_port));
-    }
-    else
-    {
-      std::cout << "FATAL ERROR: Could not parse layer connection parameter ! Did you mix up different eCAL versions on the same host ?" << std::endl;
-      return;
-    }
+    auto& reader = iter->second;
+    reader->AddConnectionIfNecessary(remote_hostname, static_cast<uint16_t>(remote_port));
   }
 }

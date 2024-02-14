@@ -54,7 +54,7 @@ namespace eCAL
      *
      * @param service_name_  Unique service name.
     **/
-    ECAL_API CServiceClient(const std::string& service_name_);
+    ECAL_API explicit CServiceClient(const std::string& service_name_);
 
     /**
      * @brief Destructor. 
@@ -64,12 +64,12 @@ namespace eCAL
     /**
      * @brief CServiceClients are non-copyable
     **/
-    ECAL_API CServiceClient(const CServiceClient&) = delete;
+    CServiceClient(const CServiceClient&) = delete;
 
     /**
      * @brief CServiceClients are non-copyable
     **/
-    ECAL_API CServiceClient& operator=(const CServiceClient&) = delete;
+    CServiceClient& operator=(const CServiceClient&) = delete;
 
     /**
      * @brief Creates this object. 
@@ -118,20 +118,6 @@ namespace eCAL
      * @return  True if successful.
     **/
     ECAL_API bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_);
-
-    /**
-     * @brief Call method of this service, for specific host (deprecated). 
-     *
-     * @param       host_name_         Host name.
-     * @param       method_name_       Method name.
-     * @param       request_           Request string.
-     * @param [out] service_info_      Service response struct for detailed informations.
-     * @param [out] response_          Response string.
-     *
-     * @return  True if successful.
-    **/
-    ECAL_DEPRECATE_SINCE_5_10("Please use the create method bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_) instead. This function will be removed in eCAL6.")
-    ECAL_API bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_info_, std::string& response_);
 
     /**
      * @brief Call a method of this service asynchronously, responses will be returned by callback. 

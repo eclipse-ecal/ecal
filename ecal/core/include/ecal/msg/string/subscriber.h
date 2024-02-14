@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <ecal/msg/subscriber.h>
 
 #include <string>
@@ -56,9 +57,9 @@ namespace eCAL
        * @param topic_name_  Unique topic name.
       **/
 
-      // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
-      // where the vtable is not created yet or it's destructed.
-      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetDataTypeInformation())
+      // call the function via its class because it's a virtual function that is called in constructor/destructor,-
+      // where the vtable is not created yet, or it's destructed.
+      explicit CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetDataTypeInformation())
       {
       }
 
@@ -71,22 +72,22 @@ namespace eCAL
       }
 
       /**
-      * @brief  Copy Constructor is not available.
+       * @brief  Copy Constructor is not available.
       **/
       CSubscriber(const CSubscriber&) = delete;
 
       /**
-      * @brief Copy Assignment is not available.
+       * @brief Copy Assignment is not available.
       **/
       CSubscriber& operator=(const CSubscriber&) = delete;
 
       /**
-      * @brief  Move Constructor
+       * @brief  Move Constructor
       **/
       CSubscriber(CSubscriber&&) = default;
 
       /**
-      * @brief  Move assignment
+       * @brief  Move assignment
       **/
       CSubscriber& operator=(CSubscriber&&) = default;
 
@@ -104,9 +105,9 @@ namespace eCAL
 
     private:
       /**
-      * @brief  Get topic information of the protobuf message.
-      *
-      * @return  Topic information. ("base", "std::string", "")
+       * @brief  Get topic information of the protobuf message.
+       *
+       * @return  Topic information. ("base", "std::string", "")
       **/
       SDataTypeInformation GetDataTypeInformation() const override
       {
@@ -134,7 +135,7 @@ namespace eCAL
 
     };
     /** @example minimal_rec.cpp
-    * This is an example how to use eCAL::CSubscriber to receive a std::string with eCAL. To send the strings, see @ref minimal_snd.cpp .
-    */
+     * This is an example how to use eCAL::CSubscriber to receive a std::string with eCAL. To send the strings, see @ref minimal_snd.cpp .
+    **/
   }
 }

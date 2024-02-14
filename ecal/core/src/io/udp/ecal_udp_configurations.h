@@ -82,6 +82,7 @@ namespace eCAL
      */
     std::string GetLoggingAddress();
 
+
     /**
      * @brief GetLoggingPort retrieves the logging port based on the configured UDP multicast port.
      *
@@ -89,7 +90,7 @@ namespace eCAL
      * obtained from the configuration. The resulting port is used for logging communication.
      *
      * @return The logging port calculated by adding an offset to the configured UDP multicast port.
-     */    
+     */
     int GetLoggingPort();
 
     /**

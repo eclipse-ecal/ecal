@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <string>
 
 #include "ecal_clientgate.h"
 #include "ecal_global_accessors.h"
@@ -141,36 +142,6 @@ namespace eCAL
   {
     if (!m_created) return(false);
     return(m_service_client_impl->Call(method_name_, request_, timeout_, service_response_vec_));
-  }
-
-  /**
-   * @brief Call method of this service, for specific host (deprecated).
-   *
-   * @param       host_name_         Host name.
-   * @param       method_name_       Method name.
-   * @param       request_           Request string.
-   * @param [out] service_info_      Service response struct for detailed information.
-   * @param [out] response_          Response string.
-   *
-   * @return  True if successful.
-  **/
-  bool CServiceClient::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_info_, std::string& response_)
-  {
-    if (!m_created) return(false);
-
-    m_service_client_impl->SetHostName(host_name_);
-
-    ServiceResponseVecT service_response_vec;
-    if (m_service_client_impl->Call(method_name_, request_, -1, &service_response_vec))
-    {
-      if (!service_response_vec.empty())
-      {
-        service_info_ = service_response_vec[0];
-        response_ = service_info_.response;
-        return(true);
-      }
-    }
-    return(false);
   }
 
   /**

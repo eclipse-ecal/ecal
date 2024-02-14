@@ -21,20 +21,18 @@
  * @brief  eCAL time gateway class
 **/
 
+#include <atomic>
 #include <ecal/ecal.h>
-#include <ecal/ecal_os.h>
 
 #include <ecal/ecal_config.h>
 
 #include "config/ecal_config_reader_hlp.h"
 #include "ecal_def.h"
-#include "ecal_process.h"
 #include "ecal_timegate.h"
 #include "util/getenvvar.h"
 
-#include <iostream>
 #include <chrono>
-#include <thread>
+#include <string>
 
 #define etime_initialize_name            "etime_initialize"
 #define etime_finalize_name              "etime_finalize"
@@ -393,8 +391,7 @@ namespace eCAL
       // try to load plugin in standard path
       if (interface_.module_handle == nullptr)
       {
-        const auto module_path = module_name;
-        interface_.module_handle = LoadLibrary(module_path.c_str());
+        interface_.module_handle = LoadLibrary(module_name.c_str());
       }
 
       // try to load plugin from sub folder "ecal_time_plugin_dir"

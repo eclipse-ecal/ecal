@@ -24,11 +24,11 @@
 #pragma once
 
 #include "readwrite/ecal_reader.h"
-#include "util/ecal_thread.h"
 
 #include <atomic>
-#include <shared_mutex>
+#include <cstddef>
 #include <memory>
+#include <shared_mutex>
 #include <string>
 #include <unordered_map>
 
@@ -47,28 +47,24 @@ namespace eCAL
     bool Unregister(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_);
 
     bool HasSample(const std::string& sample_name_);
-    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_);
-    bool ApplySample(const std::string& topic_name_, const std::string& topic_id_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_, eCAL::pb::eTLayerType layer_);
 
-    void ApplyLocPubRegistration(const eCAL::pb::Sample& ecal_sample_);
-    void ApplyLocPubUnregistration(const eCAL::pb::Sample& ecal_sample_);
+    bool ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_, eTLayerType layer_);
+    bool ApplySample(const std::string& topic_name_, const std::string& topic_id_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
 
-    void ApplyExtPubRegistration(const eCAL::pb::Sample& ecal_sample_);
-    void ApplyExtPubUnregistration(const eCAL::pb::Sample& ecal_sample_);
+    void ApplyLocPubRegistration(const Registration::Sample& ecal_sample_);
+    void ApplyLocPubUnregistration(const Registration::Sample& ecal_sample_);
+
+    void ApplyExtPubRegistration(const Registration::Sample& ecal_sample_);
+    void ApplyExtPubUnregistration(const Registration::Sample& ecal_sample_);
 
     void RefreshRegistrations();
 
   protected:
-    void CheckTimeouts();
-    bool ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
-
-    static std::atomic<bool>         m_created;
+    static std::atomic<bool> m_created;
 
     // database data reader
     using TopicNameDataReaderMapT = std::unordered_multimap<std::string, std::shared_ptr<CDataReader>>;
-    std::shared_timed_mutex          m_topic_name_datareader_sync;
-    TopicNameDataReaderMapT          m_topic_name_datareader_map;
-
-    std::shared_ptr<CCallbackThread>  m_subtimeout_thread;
+    std::shared_timed_mutex  m_topic_name_datareader_sync;
+    TopicNameDataReaderMapT  m_topic_name_datareader_map;
   };
 }

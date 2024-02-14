@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  UDP sample receiver to receive messages of type eCAL::pb::Sample
+ * @brief  UDP sample receiver to receive messages of type eCAL::Sample
 **/
 
 #pragma once
@@ -28,19 +28,13 @@
 #include "util/ecal_thread.h"
 
 #include <chrono>
+#include <cstddef>
+#include <cstdint>
 #include <functional>
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
-
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
 
 namespace eCAL
 {
@@ -50,7 +44,7 @@ namespace eCAL
     {
     public:
       using HasSampleCallbackT   = std::function<bool(const std::string& sample_name_)>;
-      using ApplySampleCallbackT = std::function<void(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_)>;
+      using ApplySampleCallbackT = std::function<void(const char* serialized_sample_data_, size_t serialized_sample_size_)>;
 
       CSampleReceiver(const IO::UDP::SReceiverAttr& attr_, HasSampleCallbackT has_sample_callback_, ApplySampleCallbackT apply_sample_callback_);
       virtual ~CSampleReceiver();
@@ -69,7 +63,6 @@ namespace eCAL
       std::shared_ptr<eCAL::CCallbackThread>  m_udp_receiver_thread;
 
       std::vector<char>                       m_msg_buffer;
-      eCAL::pb::Sample                        m_ecal_sample;
 
       std::chrono::steady_clock::time_point   m_cleanup_start;
 
@@ -83,11 +76,10 @@ namespace eCAL
 
       protected:
         CSampleReceiver* m_sample_receiver;
-        eCAL::pb::Sample m_ecal_sample;
       };
 
       using SampleDefragmentationMapT = std::unordered_map<int32_t, std::shared_ptr<CSampleDefragmentation>>;
-      SampleDefragmentationMapT               m_defrag_sample_map;
+      SampleDefragmentationMapT m_defrag_sample_map;
     };
   }
 }

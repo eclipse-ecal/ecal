@@ -23,38 +23,34 @@
 
 #pragma once
 
-#include <ecal/core/pb/ecal.pb.h>
 #include <ecal/ecal_types.h>
-
 #include <ecal/ecal_util.h>
+
+#include "serialization/ecal_serialize_sample_registration.h"
 
 namespace eCAL
 {
-
-  inline SDataTypeInformation eCALSampleToTopicInformation(const eCAL::pb::Sample& sample)
+  inline SDataTypeInformation eCALSampleToTopicInformation(const eCAL::Registration::Sample& sample)
   {
     SDataTypeInformation topic;
-    const auto& tdatatype = sample.topic().tdatatype();
-    topic.encoding = tdatatype.encoding();
-    topic.name = tdatatype.name();
-    topic.descriptor = tdatatype.desc();
+    const auto& tdatatype = sample.topic.tdatatype;
+    topic.encoding   = tdatatype.encoding;
+    topic.name       = tdatatype.name;
+    topic.descriptor = tdatatype.desc;
     return topic;
   }
   
   // This function can be removed in eCAL6. For the time being we need to enrich incoming samples with additional topic information.
-  inline void ModifyIncomingSampleForBackwardsCompatibility(const eCAL::pb::Sample& sample, eCAL::pb::Sample& modified_sample)
+  inline void ModifyIncomingSampleForBackwardsCompatibility(const eCAL::Registration::Sample& sample, eCAL::Registration::Sample& modified_sample)
   {
-    modified_sample.CopyFrom(sample);
-    if (modified_sample.has_topic() && !modified_sample.topic().has_tdatatype())
+    modified_sample = sample;
+    if (!modified_sample.topic.ttype.empty() && modified_sample.topic.tdatatype.name.empty())
     {
-      auto* topic_datatype = modified_sample.mutable_topic()->mutable_tdatatype();
-      auto split_type = Util::SplitCombinedTopicType(modified_sample.topic().ttype());
-      topic_datatype->set_name(split_type.second);
-      topic_datatype->set_encoding(split_type.first);
-      topic_datatype->set_desc(modified_sample.topic().tdesc());
+      auto& topic_datatype = modified_sample.topic.tdatatype;
+      auto split_type = Util::SplitCombinedTopicType(modified_sample.topic.ttype);
+      topic_datatype.encoding = split_type.first;
+      topic_datatype.name     = split_type.second;
+      topic_datatype.desc     = modified_sample.topic.tdesc;
     }
   }
-
-
-
 }

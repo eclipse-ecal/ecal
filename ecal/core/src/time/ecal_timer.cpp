@@ -24,9 +24,10 @@
 #include <ecal/ecal.h>
 
 #include <atomic>
+#include <cassert>
 #include <chrono>
+#include <memory>
 #include <thread>
-#include <assert.h>
 
 namespace eCAL
 {

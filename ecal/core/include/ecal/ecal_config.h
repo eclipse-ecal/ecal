@@ -19,9 +19,10 @@
 
 #pragma once
 
+#include <cstddef>
+#include <ecal/ecal_log_level.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_tlayer.h>
-#include <ecal/ecal_log_level.h>
 
 #include <string>
 
@@ -59,8 +60,6 @@ namespace eCAL
     ECAL_API int               GetUdpMulticastRcvBufSizeBytes       ();
 
     ECAL_API bool              IsUdpMulticastJoinAllIfEnabled       ();
-
-    ECAL_API int               GetMaxUdpBandwidthBytesPerSecond     ();
 
     ECAL_API bool              IsUdpMulticastRecEnabled             ();
     ECAL_API bool              IsShmRecEnabled                      ();

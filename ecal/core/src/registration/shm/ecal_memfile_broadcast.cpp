@@ -24,11 +24,13 @@
 #include "ecal_def.h"
 
 #include "ecal_memfile_broadcast.h"
-#include "ecal_memfile.h"
+#include "io/shm/ecal_memfile.h"
 #include "ecal_global_accessors.h"
 
-#include <iostream>
 #include <array>
+#include <iostream>
+#include <memory>
+#include <string>
 
 namespace eCAL
 {

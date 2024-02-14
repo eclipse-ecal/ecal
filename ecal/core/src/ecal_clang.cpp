@@ -23,13 +23,11 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_clang.h>
-#include <ecal/msg/protobuf/dynamic_json_subscriber.h>
 
 #include <mutex>
 #include <string>
 #include <vector>
 #include <functional>
-#include <mutex>
 
 static char* str_malloc(const std::string& buf_s_)
 {
@@ -131,6 +129,7 @@ ECAL_API void ecal_sleep_ms(const long time_ms_)
   eCAL::Process::SleepMS(time_ms_);
 }
 
+#if ECAL_CORE_MONITORING
 /****************************************/
 /*     ecal_shutdown_process_uname      */
 /****************************************/
@@ -162,6 +161,7 @@ ECAL_API void ecal_shutdown_core()
 {
   eCAL::Util::ShutdownCore();
 }
+#endif // ECAL_CORE_MONITORING
 
 /****************************************/
 /*      ecal_enable_loopback            */
@@ -176,10 +176,11 @@ ECAL_API void ecal_enable_loopback(const int state_)
 /****************************************/
 ECAL_API bool ecal_get_type_name(const char* topic_name_, const char** topic_type_, int* topic_type_len_)
 {
-  std::string topic_type_s;
-  bool ret = eCAL::Util::GetTopicTypeName(topic_name_, topic_type_s);
+  eCAL::SDataTypeInformation topic_info;
+  bool ret = eCAL::Util::GetTopicDataTypeInformation(topic_name_, topic_info);
   if(ret)
   {
+    std::string topic_type_s = topic_info.name;
     // this has to be freed by caller (ecal_free_mem)
     char* cbuf = str_malloc(topic_type_s);
     if(cbuf == nullptr) return(false);
@@ -199,14 +200,43 @@ ECAL_API bool ecal_get_type_name(const char* topic_name_, const char** topic_typ
 }
 
 /****************************************/
+/*      get_type_encoding               */
+/****************************************/
+ECAL_API bool ecal_get_type_encoding(const char* topic_name_, const char** topic_encoding_, int* topic_encoding_len_)
+{
+  eCAL::SDataTypeInformation topic_info;
+  bool ret = eCAL::Util::GetTopicDataTypeInformation(topic_name_, topic_info);
+  if (ret)
+  {
+    std::string topic_encoding_s = topic_info.encoding;
+    // this has to be freed by caller (ecal_free_mem)
+    char* cbuf = str_malloc(topic_encoding_s);
+    if (cbuf == nullptr) return(false);
+
+    if (topic_encoding_ != nullptr) {
+      *topic_encoding_ = cbuf;
+      if (topic_encoding_len_ != nullptr) *topic_encoding_len_ = static_cast<int>(topic_encoding_s.size());
+    }
+    else {
+      // free allocated memory:
+      ecal_free_mem(cbuf);
+      if (topic_encoding_len_ != nullptr) *topic_encoding_len_ = 0;
+      ret = false;
+    }
+  }
+  return(ret);
+}
+
+/****************************************/
 /*      get_description                 */
 /****************************************/
 ECAL_API bool ecal_get_description(const char* topic_name_, const char** topic_desc_, int* topic_desc_len_)
 {
-  std::string topic_desc_s;
-  bool ret = eCAL::Util::GetTopicDescription(topic_name_, topic_desc_s);
+  eCAL::SDataTypeInformation topic_info;
+  bool ret = eCAL::Util::GetTopicDataTypeInformation(topic_name_, topic_info);
   if(ret)
   {
+    std::string topic_desc_s = topic_info.descriptor;
     // this has to be freed by caller (ecal_free_mem)
     char* cbuf = str_malloc(topic_desc_s);
     if(cbuf == nullptr) return(false);
@@ -242,13 +272,16 @@ ECAL_API void log_message(const char* message_)
 }
 
 
+#if ECAL_CORE_PUBLISHER
 /****************************************/
 /*      pub_create                      */
 /****************************************/
 ECAL_API ECAL_HANDLE pub_create(const char* topic_name_, const char* topic_type_)
 {
-  eCAL::CPublisher* pub = new eCAL::CPublisher;
-  if (!pub->Create(topic_name_, topic_type_))
+  eCAL::SDataTypeInformation topic_info;
+  topic_info.name = topic_type_;
+  auto* pub = new eCAL::CPublisher;
+  if (!pub->Create(topic_name_, topic_info))
   {
     delete pub;
     return(nullptr);
@@ -261,11 +294,10 @@ ECAL_API ECAL_HANDLE pub_create(const char* topic_name_, const char* topic_type_
 /****************************************/
 ECAL_API bool pub_destroy(ECAL_HANDLE handle_)
 {
-  eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
+  auto* pub = static_cast<eCAL::CPublisher*>(handle_);
   if(pub != nullptr)
   {
     delete pub;
-    pub = nullptr;
     return(true);
   }
   else
@@ -275,84 +307,15 @@ ECAL_API bool pub_destroy(ECAL_HANDLE handle_)
 }
 
 /****************************************/
-/*      pub_set_type_name              */
-/****************************************/
-ECAL_API bool pub_set_type_name(ECAL_HANDLE handle_, const char* topic_type_name_, const int topic_type_name_length_)
-{
-  eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
-  if (pub != nullptr)
-  {
-    return(pub->SetTypeName(std::string(topic_type_name_, static_cast<size_t>(topic_type_name_length_))));
-  }
-  return(false);
-}
-
-/****************************************/
-/*      pub_set_description             */
-/****************************************/
-ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_)
-{
-  eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
-  if(pub != nullptr)
-  {
-    return(pub->SetDescription(std::string(topic_desc_, static_cast<size_t>(topic_desc_length_))));
-  }
-  return(false);
-}
-
-/****************************************/
-/*      pub_set_layer_mode              */
-/****************************************/
-ECAL_API bool pub_set_layer_mode(ECAL_HANDLE handle_, const int layer_, const int mode_)
-{
-  eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
-  if(pub != nullptr)
-  {
-    return(pub->SetLayerMode(eCAL::TLayer::eTransportLayer(layer_), eCAL::TLayer::eSendMode(mode_)));
-  }
-  return(false);
-}
-
-/****************************************/
-/*      pub_set_max_bandwidth_udp       */
-/****************************************/
-ECAL_API bool pub_set_max_bandwidth_udp(ECAL_HANDLE handle_, long bandwidth_)
-{
-  eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
-  if (pub != nullptr)
-  {
-    return(pub->SetMaxBandwidthUDP(bandwidth_));
-  }
-  return(false);
-}
-
-/****************************************/
 /*      pub_send                        */
 /****************************************/
 ECAL_API int pub_send(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_)
 {
-  eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
+  auto* pub = static_cast<eCAL::CPublisher*>(handle_);
   if(pub != nullptr)
   {
     const size_t ret = pub->Send(payload_, static_cast<size_t>(length_), time_);
     if(static_cast<int>(ret) == length_)
-    {
-      return(length_);
-    }
-  }
-  return(0);
-}
-
-/****************************************/
-/*      pub_send_sync                   */
-/****************************************/
-ECAL_API int pub_send_sync(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_, const long long acknowledge_timeout_ms_)
-{
-  eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
-  if (pub != nullptr)
-  {
-    const size_t ret = pub->Send(payload_, static_cast<size_t>(length_), time_, acknowledge_timeout_ms_);
-    if (static_cast<int>(ret) == length_)
     {
       return(length_);
     }
@@ -367,19 +330,20 @@ static std::mutex g_pub_event_callback_mtx;
 static void g_pub_event_callback(const char* topic_name_, const struct eCAL::SPubEventCallbackData* data_, const PubEventCallbackCT callback_, void* par_)
 {
   const std::lock_guard<std::mutex> lock(g_pub_event_callback_mtx);
-  SPubEventCallbackDataC data;
-  data.type  = data_->type;
-  data.time  = data_->time;
-  data.clock = data_->clock;
-  data.tid   = data_->tid.c_str();
-  data.ttype = data_->ttype.c_str();
-  data.tdesc = data_->tdesc.c_str();
+  SPubEventCallbackDataC data{};
+  data.type      = data_->type;
+  data.time      = data_->time;
+  data.clock     = data_->clock;
+  data.tid       = data_->tid.c_str();
+  data.tname     = data_->tdatatype.name.c_str();
+  data.tencoding = data_->tdatatype.encoding.c_str();
+  data.tdesc     = data_->tdatatype.descriptor.c_str();
   callback_(topic_name_, &data, par_);
 }
 
 ECAL_API bool pub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, const PubEventCallbackCT callback_, void* par_)
 {
-  eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
+  auto* pub = static_cast<eCAL::CPublisher*>(handle_);
 
   auto callback = std::bind(g_pub_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
   return(pub->AddEventCallback(type_, callback));
@@ -390,19 +354,23 @@ ECAL_API bool pub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Ev
 /****************************************/
 ECAL_API bool pub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_)
 {
-  eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
+  auto* pub = static_cast<eCAL::CPublisher*>(handle_);
 
   return(pub->RemEventCallback(type_));
 }
+#endif // ECAL_CORE_PUBLISHER
 
 
+#if ECAL_CORE_SUBSCRIBER
 /****************************************/
 /*      sub_create                      */
 /****************************************/
 ECAL_API ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_)
 {
-  eCAL::CSubscriber* sub = new eCAL::CSubscriber;
-  if (!sub->Create(topic_name_, topic_type_))
+  eCAL::SDataTypeInformation topic_info;
+  topic_info.name = topic_type_;
+  auto* sub = new eCAL::CSubscriber;
+  if (!sub->Create(topic_name_, topic_info))
   {
     delete sub;
     return(nullptr);
@@ -415,11 +383,10 @@ ECAL_API ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_
 /****************************************/
 ECAL_API bool sub_destroy(ECAL_HANDLE handle_)
 {
-  eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
   if(sub != nullptr)
   {
     delete sub;
-    sub = nullptr;
     return(true);
   }
   return(false);
@@ -430,7 +397,7 @@ ECAL_API bool sub_destroy(ECAL_HANDLE handle_)
 /****************************************/
 ECAL_API int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_)
 {
-  eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
   if(sub != nullptr)
   {
     std::string rcv_buf;
@@ -468,7 +435,7 @@ ECAL_API int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_bu
 /****************************************/
 ECAL_API bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_)
 {
-  eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
   if (sub != nullptr)
   {
     std::string rcv_buf;
@@ -506,7 +473,7 @@ static std::mutex g_sub_receive_callback_mtx;
 static void g_sub_receive_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, const ReceiveCallbackCT callback_, void* par_)
 {
   const std::lock_guard<std::mutex> lock(g_sub_receive_callback_mtx);
-  SReceiveCallbackDataC data;
+  SReceiveCallbackDataC data{};
   data.buf   = data_->buf;
   data.size  = data_->size;
   data.id    = data_->id;
@@ -517,7 +484,7 @@ static void g_sub_receive_callback(const char* topic_name_, const struct eCAL::S
 
 ECAL_API bool sub_add_receive_callback(ECAL_HANDLE handle_, const ReceiveCallbackCT callback_, void* par_)
 {
-  eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
 
   auto callback = std::bind(g_sub_receive_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
   return(sub->AddReceiveCallback(callback));
@@ -528,7 +495,7 @@ ECAL_API bool sub_add_receive_callback(ECAL_HANDLE handle_, const ReceiveCallbac
 /****************************************/
 ECAL_API bool sub_rem_receive_callback(ECAL_HANDLE handle_)
 {
-  eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
 
   return(sub->RemReceiveCallback());
 }
@@ -540,19 +507,20 @@ static std::mutex g_sub_event_callback_mtx;
 static void g_sub_event_callback(const char* topic_name_, const struct eCAL::SSubEventCallbackData* data_, const SubEventCallbackCT callback_, void* par_)
 {
   const std::lock_guard<std::mutex> lock(g_sub_event_callback_mtx);
-  SSubEventCallbackDataC data;
-  data.type  = data_->type;
-  data.time  = data_->time;
-  data.clock = data_->clock;
-  data.tid   = data_->tid.c_str();
-  data.ttype = data_->ttype.c_str();
-  data.tdesc = data_->tdesc.c_str();
+  SSubEventCallbackDataC data{};
+  data.type      = data_->type;
+  data.time      = data_->time;
+  data.clock     = data_->clock;
+  data.tid       = data_->tid.c_str();
+  data.tname     = data_->tdatatype.name.c_str();
+  data.tencoding = data_->tdatatype.encoding.c_str();
+  data.tdesc     = data_->tdatatype.descriptor.c_str();
   callback_(topic_name_, &data, par_);
 }
 
 ECAL_API bool sub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_, const SubEventCallbackCT callback_, void* par_)
 {
-  eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
 
   auto callback = std::bind(g_sub_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
   return(sub->AddEventCallback(type_, callback));
@@ -563,91 +531,20 @@ ECAL_API bool sub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_E
 /****************************************/
 ECAL_API bool sub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_)
 {
-  eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
 
   return(sub->RemEventCallback(type_));
 }
-
-/****************************************/
-/*      sub_set_timeout                 */
-/****************************************/
-ECAL_API bool sub_set_timeout(ECAL_HANDLE handle_, int timeout_)
-{
-  eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
-
-  return(sub->SetTimeout(timeout_));
-}
-
-/****************************************/
-/*       dyn_json_sub_create            */
-/****************************************/
-ECAL_API ECAL_HANDLE dyn_json_sub_create(const char* topic_name_)
-{
-  eCAL::protobuf::CDynamicJSONSubscriber* sub = new eCAL::protobuf::CDynamicJSONSubscriber(topic_name_);
-  if (!sub->IsCreated())
-  {
-    delete sub;
-    return(nullptr);
-  }
-  return(sub);
-}
-
-/****************************************/
-/*       dyn_json_sub_destroy           */
-/****************************************/
-ECAL_API bool dyn_json_sub_destroy(ECAL_HANDLE handle_)
-{
-  eCAL::protobuf::CDynamicJSONSubscriber* sub = static_cast<eCAL::protobuf::CDynamicJSONSubscriber*>(handle_);
-  if (sub != nullptr)
-  {
-    delete sub;
-    sub = nullptr;
-    return(true);
-  }
-  return(false);
-}
-
-/****************************************/
-/*   dyn_json_sub_add_receive_callback  */
-/****************************************/
-static std::mutex g_dyn_json_sub_receive_callback_mtx;
-static void g_dyn_json_sub_receive_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, const ReceiveCallbackCT callback_, void* par_)
-{
-  const std::lock_guard<std::mutex> lock(g_dyn_json_sub_receive_callback_mtx);
-  SReceiveCallbackDataC data;
-  data.buf   = data_->buf;
-  data.size  = data_->size;
-  data.id    = data_->id;
-  data.time  = data_->time;
-  data.clock = data_->clock;
-  callback_(topic_name_, &data, par_);
-}
-
-ECAL_API bool dyn_json_sub_add_receive_callback(ECAL_HANDLE handle_, const ReceiveCallbackCT callback_, void* par_)
-{
-  eCAL::protobuf::CDynamicJSONSubscriber* sub = static_cast<eCAL::protobuf::CDynamicJSONSubscriber*>(handle_);
-
-  auto callback = std::bind(g_dyn_json_sub_receive_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
-  return(sub->AddReceiveCallback(callback));
-}
-
-/****************************************/
-/*  dyn_json_sub_rem_receive_callback   */
-/****************************************/
-ECAL_API bool dyn_json_sub_rem_receive_callback(ECAL_HANDLE handle_)
-{
-  eCAL::protobuf::CDynamicJSONSubscriber* sub = static_cast<eCAL::protobuf::CDynamicJSONSubscriber*>(handle_);
-
-  return(sub->RemReceiveCallback());
-}
+#endif // ECAL_CORE_SUBSCRIBER
 
 
+#if ECAL_CORE_SERVICE
 /****************************************/
 /*      server_create                   */
 /****************************************/
 ECAL_API ECAL_HANDLE server_create(const char* service_name_)
 {
-  eCAL::CServiceServer* server = new eCAL::CServiceServer;
+  auto* server = new eCAL::CServiceServer;
   if (!server->Create(service_name_))
   {
     delete server;
@@ -661,11 +558,10 @@ ECAL_API ECAL_HANDLE server_create(const char* service_name_)
 /****************************************/
 ECAL_API bool server_destroy(ECAL_HANDLE handle_)
 {
-  eCAL::CServiceServer* server = static_cast<eCAL::CServiceServer*>(handle_);
+  auto* server = static_cast<eCAL::CServiceServer*>(handle_);
   if (server != nullptr)
   {
     delete server;
-    server = nullptr;
     return(true);
   }
   else
@@ -690,7 +586,7 @@ static int g_server_method_callback(const std::string& method_, const std::strin
 
 ECAL_API bool server_add_method_callback(ECAL_HANDLE handle_,  const char* method_name_, const char* req_type_, const char* resp_type_, const MethodCallbackCT callback_, void* par_)
 {
-  eCAL::CServiceServer* server = static_cast<eCAL::CServiceServer*>(handle_);
+  auto* server = static_cast<eCAL::CServiceServer*>(handle_);
   if (server != nullptr)
   {
     auto callback = std::bind(g_server_method_callback, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, callback_, par_);
@@ -707,7 +603,7 @@ ECAL_API bool server_add_method_callback(ECAL_HANDLE handle_,  const char* metho
 /****************************************/
 ECAL_API bool server_rem_method_callback(ECAL_HANDLE handle_, const char* method_name_)
 {
-  eCAL::CServiceServer* server = static_cast<eCAL::CServiceServer*>(handle_);
+  auto* server = static_cast<eCAL::CServiceServer*>(handle_);
   if (server != nullptr)
   {
     return(server->RemMethodCallback(method_name_));
@@ -724,7 +620,7 @@ ECAL_API bool server_rem_method_callback(ECAL_HANDLE handle_, const char* method
 /****************************************/
 ECAL_API ECAL_HANDLE client_create(const char* service_name_)
 {
-  eCAL::CServiceClient* client = new eCAL::CServiceClient;
+  auto* client = new eCAL::CServiceClient;
   if (!client->Create(service_name_))
   {
     delete client;
@@ -738,11 +634,10 @@ ECAL_API ECAL_HANDLE client_create(const char* service_name_)
 /****************************************/
 ECAL_API bool client_destroy(ECAL_HANDLE handle_)
 {
-  eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+  auto* client = static_cast<eCAL::CServiceClient*>(handle_);
   if (client != nullptr)
   {
     delete client;
-    client = nullptr;
     return(true);
   }
   else
@@ -756,7 +651,7 @@ ECAL_API bool client_destroy(ECAL_HANDLE handle_)
 /****************************************/
 ECAL_API bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_)
 {
-  eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+  auto* client = static_cast<eCAL::CServiceClient*>(handle_);
   if (client != nullptr)
   {
     return(client->SetHostName(host_name_));
@@ -772,7 +667,7 @@ ECAL_API bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_)
 /****************************************/
 ECAL_API bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_)
 {
-  eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+  auto* client = static_cast<eCAL::CServiceClient*>(handle_);
   if (client != nullptr)
   {
     std::string request(request_, request_len_);
@@ -789,7 +684,7 @@ ECAL_API bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, 
 /****************************************/
 ECAL_API bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_)
 {
-  eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+  auto* client = static_cast<eCAL::CServiceClient*>(handle_);
   if (client != nullptr)
   {
     std::string request(request_, request_len_);
@@ -808,8 +703,10 @@ ECAL_API bool client_call_method_async(ECAL_HANDLE handle_, const char* method_n
 /****************************************/
 /*      client_rem_response_callback    */
 /****************************************/
+#endif // ECAL_CORE_SERVICE
 
 
+#if ECAL_CORE_MONITORING
 /****************************************/
 /*      mon_initialize                  */
 /****************************************/
@@ -889,7 +786,7 @@ ECAL_API int mon_get_monitoring(const char** mon_buf_, int* mon_buf_len_)
 ECAL_API int mon_get_logging(const char** log_buf_, int* log_buf_len_)
 {
   std::string log_s;
-  const int size = eCAL::Monitoring::GetLogging(log_s);
+  const int size = eCAL::Logging::GetLogging(log_s);
   if(size > 0)
   {
     // this has to be freed by caller (ecal_free_mem)
@@ -914,3 +811,4 @@ ECAL_API int mon_get_logging(const char** log_buf_, int* log_buf_len_)
     return(0);
   }
 }
+#endif // ECAL_CORE_MONITORING

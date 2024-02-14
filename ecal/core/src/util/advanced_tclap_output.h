@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <tclap/CmdLine.h>
 #include <tclap/StdOutput.h>
 
 #include <ostream>

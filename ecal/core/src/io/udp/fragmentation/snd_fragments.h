@@ -21,24 +21,18 @@
  * @brief  raw message buffer handling
 **/
 
+#include <cstddef>
 #include <functional>
 #include <string>
-
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include <vector>
 
 namespace IO
 {
   namespace UDP
   {
-    size_t CreateSampleBuffer(const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, std::vector<char>& payload_);
+    size_t CreateSampleBuffer(const std::string& sample_name_, const std::vector<char>& serialized_sample_, std::vector<char>& payload_);
 
     using TransmitCallbackT = std::function<size_t(const void*, const size_t)>;
-    size_t SendFragmentedMessage(char* buf_, size_t buf_len_, long bandwidth_, const TransmitCallbackT& transmit_cb_);
+    size_t SendFragmentedMessage(char* buf_, size_t buf_len_, const TransmitCallbackT& transmit_cb_);
   }
 }

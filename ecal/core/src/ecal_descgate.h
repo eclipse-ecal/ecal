@@ -23,21 +23,22 @@
 
 #pragma once
 
-#include <ecal/ecal_util.h>
+#include <chrono>
 #include <ecal/ecal_types.h>
+#include <ecal/ecal_util.h>
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
 #include "util/ecal_expmap.h"
 
+#include <map>
+#include <memory>
 #include <shared_mutex>
 #include <string>
-#include <map>
-#include <unordered_map>
-#include <memory>
 #include <tuple>
+#include <type_traits>
+#include <unordered_map>
 #include <vector>
-
 
 namespace eCAL
 {
@@ -67,7 +68,7 @@ namespace eCAL
 
     bool ApplyTopicDescription(const std::string& topic_name_, 
                                const SDataTypeInformation& topic_info_,
-                               const QualityFlags description_quality_);
+                               QualityFlags description_quality_);
 
     void GetTopics(std::unordered_map<std::string, SDataTypeInformation>& topic_info_map_);
     void GetTopicNames(std::vector<std::string>& topic_names_);
@@ -77,7 +78,7 @@ namespace eCAL
                                  const std::string& method_name_, 
                                  const SDataTypeInformation& request_type_information_,
                                  const SDataTypeInformation& response_type_information_,
-                                 const QualityFlags description_quality_);
+                                 QualityFlags description_quality_);
 
     void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_);
     void GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_);

@@ -24,21 +24,16 @@
 #pragma once
 
 #include "ecal_def.h"
+#include "serialization/ecal_struct_sample_registration.h"
 #include "util/ecal_expmap.h"
 
 #include <ecal/ecal_callback.h>
 
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
 #include <atomic>
-#include <shared_mutex>
 #include <set>
+#include <shared_mutex>
+#include <string>
+#include <vector>
 
 namespace eCAL
 {
@@ -56,16 +51,11 @@ namespace eCAL
     bool Register  (CServiceClientImpl* client_);
     bool Unregister(CServiceClientImpl* client_);
 
-    void ApplyServiceRegistration(const eCAL::pb::Sample& ecal_sample_);
+    void ApplyServiceRegistration(const Registration::Sample& ecal_sample_);
 
     std::vector<SServiceAttr> GetServiceAttr(const std::string& service_name_);
 
     void RefreshRegistrations();
-
-    bool ApplyServiceToDescGate(const std::string& service_name_
-      , const std::string& method_name_
-      , const SDataTypeInformation& request_type_information_
-      , const SDataTypeInformation& response_type_information_);
 
   protected:
     static std::atomic<bool>    m_created;

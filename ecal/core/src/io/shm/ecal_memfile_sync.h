@@ -23,10 +23,12 @@
 
 #pragma once
 
-#include <ecal/ecal_eventhandle.h>
+#include <cstddef>
+#include <cstdint>
 #include <ecal/ecal_payload_writer.h>
 
 #include "readwrite/ecal_writer_data.h"
+#include "ecal_eventhandle.h"
 #include "ecal_memfile.h"
 
 #include <mutex>

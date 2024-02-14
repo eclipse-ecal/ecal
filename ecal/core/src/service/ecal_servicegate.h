@@ -25,16 +25,6 @@
 
 #include "ecal_def.h"
 
-#include <ecal/ecal_callback.h>
-
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
 #include <atomic>
 #include <shared_mutex>
 #include <set>
