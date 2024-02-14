@@ -55,16 +55,10 @@ jobs:
 #        cmake --build . --target install --config Release
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules:  'true'
         fetch-depth: 0
-
-    - name: Download NPCAP
-      run: |
-        cd %GITHUB_WORKSPACE%
-        powershell -Command "& 'build_win\download_npcap.ps1'"
-      shell: cmd
 
     - name: Create Python virtualenv
       run: |
