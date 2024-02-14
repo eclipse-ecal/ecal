@@ -69,13 +69,14 @@ endif()
 # use it that way cmake .. -DBUILD_APPS=ON -DBUILD_SAMPLES=ON
 # --------------------------------------------------------
 option(HAS_HDF5                                "Platform supports HDF5 library"                                    ON)
-option(HAS_QT                                  "Platform supports Qt 5 / 6 library."                               ON)
 
 # If the user set the legacy HAS_QT5 option, but didn't set the new HAS_QT option, set it to the value of HAS_QT5
 if(DEFINED HAS_QT5 AND NOT DEFINED HAS_QT)
   set(HAS_QT ${HAS_QT5})
   message(WARNING "The option HAS_QT5 is deprecated and may be removed at any time. Please use HAS_QT instead.")
 endif()
+
+option(HAS_QT                                  "Platform supports Qt 5 / 6 library."                               ON)
 
 option(HAS_CURL                                "Build with CURL (i.e. upload support in the recorder app)"         ON)
 option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                            OFF)
