@@ -4,12 +4,9 @@ pushd "%~dp0\.."
 
 call build_win\win_set_vars.bat
 
-echo Downloading NPCAP
-powershell -Command "& '%~dp0\download_npcap.ps1'"
-
 set CMAKE_OPTIONS_COMPLETE=-DCMAKE_INSTALL_PREFIX=_install ^
 -DHAS_HDF5=ON ^
--DHAS_QT5=ON ^
+-DHAS_QT=ON ^
 -DHAS_CURL=ON ^
 -DHAS_CAPNPROTO=OFF ^
 -DHAS_FTXUI=ON ^
@@ -43,7 +40,7 @@ set CMAKE_OPTIONS_COMPLETE=-DCMAKE_INSTALL_PREFIX=_install ^
 
 set CMAKE_OPTIONS_SDK=-DCMAKE_INSTALL_PREFIX=_install ^
 -DHAS_HDF5=ON ^
--DHAS_QT5=ON ^
+-DHAS_QT=ON ^
 -DHAS_CURL=OFF ^
 -DHAS_CAPNPROTO=OFF ^
 -DHAS_FTXUI=ON ^
