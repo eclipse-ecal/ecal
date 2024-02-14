@@ -53,14 +53,9 @@ void Writer::SetOneFilePerChannelEnabled(bool enabled)
   return measurement->SetOneFilePerChannelEnabled(enabled);
 }
 
-void Writer::SetChannelDescription(const std::string& channel_name, const std::string& description)
+void Writer::SetChannelDataTypeInformation(const std::string& channel_name, const base::DataTypeInformation& info)
 {
-  return measurement->SetChannelDescription(channel_name, description);
-}
-
-void Writer::SetChannelType(const std::string& channel_name, const std::string& type)
-{
-  return measurement->SetChannelType(channel_name, type);
+  measurement->SetChannelDataTypeInformation(channel_name, info);
 }
 
 void Writer::SetFileBaseName(const std::string& base_name)

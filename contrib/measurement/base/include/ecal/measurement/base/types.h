@@ -37,6 +37,29 @@ namespace eCAL
       namespace base
       {
         /**
+         * @brief Optional compile time information associated with a given topic
+         *        (necessary for reflection / runtime type checking)
+        **/
+        struct DataTypeInformation
+        {
+          std::string name;          //!< name of the datatype
+          std::string encoding;      //!< encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
+          std::string descriptor;    //!< descriptor information of the datatype (necessary for reflection)
+
+          //!< @cond
+          bool operator==(const DataTypeInformation& other) const
+          {
+            return name == other.name && encoding == other.encoding && descriptor == other.descriptor;
+          }
+
+          bool operator!=(const DataTypeInformation& other) const
+          {
+            return !(*this == other);
+          }
+          //!< @endcond
+        };
+
+        /**
          * @brief Info struct for a single measurement entry
         **/
         struct EntryInfo

@@ -131,23 +131,12 @@ void MeasurementContainer::CreatePublishers(const std::map<std::string, std::str
   // Create new publishers
   for (const auto& channel_mapping : publisher_map)
   {
-    auto topic_type        = hdf5_meas_->GetChannelType(channel_mapping.first);
-    auto topic_description = hdf5_meas_->GetChannelDescription(channel_mapping.first);
-
-    // Split the topic_type into protocol and name. The HDF5 API gives us the
-    // traditional topic_type, which encodes the encoding and the typename in a
-    // single URI-style string (like proto:person). 
-    // Thus, we need to split the string into protocol and name.
-    auto split_topic_type = eCAL::Util::SplitCombinedTopicType(topic_type);
-
-    // Create a datatype information object
-    eCAL::SDataTypeInformation datatype_information;
-    datatype_information.name        = std::move(split_topic_type.second);
-    datatype_information.encoding    = std::move(split_topic_type.first);
-    datatype_information.descriptor  = topic_description;
-
-    // create a publisher for the topic
-    publisher_map_.emplace(channel_mapping.first, PublisherInfo(channel_mapping.second, datatype_information));
+    auto topic_info        = hdf5_meas_->GetChannelDataTypeInformation(channel_mapping.first);
+    eCAL::SDataTypeInformation data_type_info;
+    data_type_info.name = topic_info.name;
+    data_type_info.encoding = topic_info.encoding;
+    data_type_info.descriptor = topic_info.descriptor;
+    publisher_map_.emplace(channel_mapping.first, PublisherInfo(channel_mapping.second, data_type_info));
   }
 
   // Assign publishers to entries
@@ -322,7 +311,9 @@ double MeasurementContainer::GetMaxTimestampOfChannel(const std::string& channel
 
 std::string MeasurementContainer::GetChannelType(const std::string& channel_name) const
 {
-  return hdf5_meas_->GetChannelType(channel_name);
+  // This function needs to also return the proper datatypes information! To clean up.
+  auto datatype_information = hdf5_meas_->GetChannelDataTypeInformation(channel_name);
+  return eCAL::Util::CombinedTopicEncodingAndType(datatype_information.encoding, datatype_information.name);
 }
 
 size_t MeasurementContainer::GetChannelCumulativeEstimatedSize(const std::string& channel_name) const

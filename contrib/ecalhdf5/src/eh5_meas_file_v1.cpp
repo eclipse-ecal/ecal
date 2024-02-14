@@ -164,32 +164,22 @@ bool eCAL::eh5::HDF5MeasFileV1::HasChannel(const std::string& channel_name) cons
   return std::find(channels.cbegin(), channels.cend(), channel_name) != channels.end();
 }
 
-std::string eCAL::eh5::HDF5MeasFileV1::GetChannelDescription(const std::string& channel_name) const
-{
-  std::string description;
-
-  if (EcalUtils::String::Icompare(channel_name, channel_name_))
-    GetAttributeValue(file_id_, kChnDescAttrTitle, description);
-
-  return  description;
-}
-
-void eCAL::eh5::HDF5MeasFileV1::SetChannelDescription(const std::string& /*channel_name*/, const std::string& /*description*/)
-{
-  ReportUnsupportedAction();
-}
-
-std::string eCAL::eh5::HDF5MeasFileV1::GetChannelType(const std::string& channel_name) const
+eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileV1::GetChannelDataTypeInformation(const std::string& channel_name) const
 {
   std::string type;
 
   if (EcalUtils::String::Icompare(channel_name, channel_name_))
     GetAttributeValue(file_id_, kChnTypeAttrTitle, type);
 
-  return type;
+  std::string description;
+
+  if (EcalUtils::String::Icompare(channel_name, channel_name_))
+    GetAttributeValue(file_id_, kChnDescAttrTitle, description);
+
+  return CreateInfo(type, description);
 }
 
-void eCAL::eh5::HDF5MeasFileV1::SetChannelType(const std::string& /*channel_name*/, const std::string& /*type*/)
+void eCAL::eh5::HDF5MeasFileV1::SetChannelDataTypeInformation(const std::string& /*channel_name*/, const eCAL::eh5::DataTypeInformation& /*info*/)
 {
   ReportUnsupportedAction();
 }

@@ -136,22 +136,13 @@ namespace eCAL
           bool HasChannel(const std::string& channel_name) const override;
 
           /**
-           * @brief Get the channel description for the given channel
-           *
-           * @param channel_name  channel name
-           *
-           * @return              channel description
-          **/
-          std::string GetChannelDescription(const std::string& channel_name) const override;
-
-          /**
-           * @brief Gets the channel type of the given channel
+           * @brief Get data type information of the given channel
            *
            * @param channel_name  channel name
            *
            * @return              channel type
           **/
-          std::string GetChannelType(const std::string& channel_name) const override;
+          base::DataTypeInformation GetChannelDataTypeInformation(const std::string& channel_name) const override;
 
           /**
            * @brief Gets minimum timestamp for specified channel
