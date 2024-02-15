@@ -17,6 +17,9 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstdint>
+#include <string>
+#include <thread>
 #ifdef __unix__
 
 #include <string.h>

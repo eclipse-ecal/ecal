@@ -17,6 +17,14 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstddef>
+#include <cstdio>
+#include <cstring>
+#include <iterator>
+#include <memory>
+#include <mutex>
+#include <stdio.h>
+#include <utility>
 #ifdef __unix__
 
 #include <functional>
