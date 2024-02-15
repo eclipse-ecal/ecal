@@ -21,7 +21,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <list>
-#include <stdio.h>
 #include <string>
 
 #ifdef _WIN32

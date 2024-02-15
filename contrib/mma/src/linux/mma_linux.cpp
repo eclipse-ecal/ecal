@@ -27,7 +27,6 @@
 #include <iterator>
 #include <memory>
 #include <mutex>
-#include <stdio.h>
 #include <utility>
 #ifdef __unix__
 
