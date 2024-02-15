@@ -21,6 +21,7 @@
 * @brief  eCAL process interface
 **/
 
+#include <cerrno>
 #include <ecal/ecal.h>
 #include <ecal/ecal_config.h>
 
@@ -31,22 +32,25 @@
 #include "ecal_process.h"
 #include "io/udp/ecal_udp_configurations.h"
 
+#include <algorithm>
 #include <array>
 #include <chrono>
-#include <thread>
-#include <iostream>
-#include <sstream>
-#include <algorithm>
-#include <memory>
 #include <fstream>
+#include <iostream>
+#include <memory>
+#include <sstream>
+#include <stdio.h>
+#include <thread>
 
 #include "util/sys_usage.h"
 
-#include <cstdlib>
-#include <cstdio>
-#include <string>
-#include <cstring>
 #include <atomic>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+#include <utility>
+#include <vector>
 
 #ifdef ECAL_OS_WINDOWS
 #include "ecal_win_main.h"

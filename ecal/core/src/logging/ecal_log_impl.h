@@ -26,6 +26,7 @@
 #include "io/udp/ecal_udp_logging_receiver.h"
 #include "io/udp/ecal_udp_logging_sender.h"
 
+#include <cstdio>
 #include <ecal/ecal.h>
 #include <ecal/ecal_os.h>
 
@@ -34,10 +35,11 @@
 #include "ecal_global_accessors.h"
 
 #include <atomic>
-#include <list>
-#include <mutex>
-#include <memory>
 #include <chrono>
+#include <list>
+#include <memory>
+#include <mutex>
+#include <string>
 
 namespace eCAL
 {

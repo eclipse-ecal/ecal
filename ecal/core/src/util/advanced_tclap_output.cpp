@@ -19,7 +19,13 @@
 
 #include "advanced_tclap_output.h"
 
+#include <cstddef>
+#include <list>
+#include <ostream>
 #include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace CustomTclap
 {

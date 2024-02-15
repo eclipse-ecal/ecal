@@ -23,10 +23,11 @@
 
 #include <ecal/ecal.h>
 
+#include <assert.h>
 #include <atomic>
 #include <chrono>
+#include <memory>
 #include <thread>
-#include <assert.h>
 
 namespace eCAL
 {

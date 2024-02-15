@@ -26,9 +26,10 @@
 
 #include <ecal/ecal_event.h>
 
-#include <sstream>
-#include <memory>
 #include <chrono>
+#include <memory>
+#include <sstream>
+#include <string>
 #include <thread>
 
 #ifdef ECAL_OS_WINDOWS

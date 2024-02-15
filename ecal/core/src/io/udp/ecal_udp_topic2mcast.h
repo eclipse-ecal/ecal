@@ -23,11 +23,13 @@
 
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
-#include <sstream>
+#include <cstdlib>
 #include <iostream>
+#include <sstream>
 #include <string>
- 
+
 namespace eCAL
 {
   namespace UDP

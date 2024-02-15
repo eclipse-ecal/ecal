@@ -25,6 +25,8 @@
 
 #include "readwrite/ecal_writer_base.h"
 
+#include <cstdint>
+#include <memory>
 #include <tcp_pubsub/executor.h>
 #include <tcp_pubsub/publisher.h>
 

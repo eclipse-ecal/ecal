@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ecal/types/monitoring.h>
+#include <memory>
 #include <string>
 
 #ifdef _MSC_VER

@@ -23,6 +23,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_log.h>
+#include <string>
 
 #include "ecal_global_accessors.h"
 #include "pubsub/ecal_subgate.h"

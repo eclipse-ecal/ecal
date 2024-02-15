@@ -21,6 +21,8 @@
  * @brief  common eCAL data reader
 **/
 
+#include <chrono>
+#include <cstddef>
 #include <ecal/ecal.h>
 #include <ecal/ecal_config.h>
 
@@ -34,11 +36,16 @@
 #include "readwrite/shm/ecal_reader_shm.h"
 #include "readwrite/tcp/ecal_reader_tcp.h"
 
-#include <iterator>
-#include <sstream>
-#include <iostream>
-#include <utility>
 #include <algorithm>
+#include <iostream>
+#include <iterator>
+#include <list>
+#include <memory>
+#include <mutex>
+#include <set>
+#include <sstream>
+#include <string>
+#include <utility>
 
 namespace eCAL
 {

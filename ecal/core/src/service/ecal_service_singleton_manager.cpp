@@ -19,7 +19,12 @@
 
 #include "ecal_service_singleton_manager.h"
 
+#include <cstddef>
 #include <ecal/ecal_log.h>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <thread>
 
 namespace eCAL
 {

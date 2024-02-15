@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <ecal/msg/subscriber.h>
 #include <ecal/protobuf/ecal_proto_hlp.h>
 

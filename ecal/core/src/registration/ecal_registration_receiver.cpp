@@ -35,7 +35,12 @@
 #include "io/udp/ecal_udp_configurations.h"
 #include "ecal_sample_to_topicinfo.h"
 
+#include <atomic>
 #include <chrono>
+#include <functional>
+#include <memory>
+#include <mutex>
+#include <string>
 
 namespace eCAL
 {

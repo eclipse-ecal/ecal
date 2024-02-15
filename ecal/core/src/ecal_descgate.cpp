@@ -21,13 +21,18 @@
  * @brief  eCAL description gateway class
 **/
 
-#include <ecal/ecal_log.h>
+#include <chrono>
 #include <ecal/ecal_config.h>
+#include <ecal/ecal_log.h>
 
 #include "ecal_descgate.h"
-#include <cassert>
 #include <algorithm>
+#include <cassert>
+#include <map>
 #include <mutex>
+#include <shared_mutex>
+#include <string>
+#include <tuple>
 
 namespace eCAL
 {

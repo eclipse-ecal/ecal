@@ -23,9 +23,10 @@
 
 #pragma once
 
-#include <string>
 #include <array>
+#include <cstddef>
 #include <cstdint>
+#include <string>
 
 #include <ecal/ecal_payload_writer.h>
 

@@ -17,6 +17,8 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstddef>
+#include <cstdint>
 #include <gtest/gtest.h>
 
 #include <asio.hpp>
@@ -24,6 +26,7 @@
 #include <atomic>
 #include <chrono>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <thread>
 
@@ -32,6 +35,7 @@
 
 #include <ecal/service/client_manager.h>
 #include <ecal/service/server_manager.h>
+#include <vector>
 
 #include "atomic_signalable.h"
 

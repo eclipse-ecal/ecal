@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_tlayer.h>
@@ -36,10 +37,11 @@
 #include "tcp/ecal_writer_tcp.h"
 #include "inproc/ecal_writer_inproc.h"
 
-#include <mutex>
-#include <string>
 #include <atomic>
 #include <map>
+#include <mutex>
+#include <string>
+#include <tuple>
 #include <vector>
 
 namespace eCAL

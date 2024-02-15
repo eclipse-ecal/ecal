@@ -23,21 +23,22 @@
 
 #pragma once
 
-#include <ecal/ecal_util.h>
+#include <chrono>
 #include <ecal/ecal_types.h>
+#include <ecal/ecal_util.h>
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
 #include "util/ecal_expmap.h"
 
+#include <map>
+#include <memory>
 #include <shared_mutex>
 #include <string>
-#include <map>
-#include <unordered_map>
-#include <memory>
 #include <tuple>
+#include <type_traits>
+#include <unordered_map>
 #include <vector>
-
 
 namespace eCAL
 {

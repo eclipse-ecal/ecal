@@ -24,6 +24,7 @@
 #include <ecal/ecal.h>
 
 #include <chrono>
+#include <string>
 #include <thread>
 
 #include "ecal_timegate.h"

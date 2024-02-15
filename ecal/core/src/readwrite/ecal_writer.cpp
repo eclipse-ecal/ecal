@@ -21,6 +21,7 @@
  * @brief  common eCAL data writer
 **/
 
+#include <cstddef>
 #include <ecal/ecal.h>
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_payload_writer.h>
@@ -38,9 +39,11 @@
 
 #include "pubsub/ecal_pubgate.h"
 
-#include <sstream>
 #include <chrono>
 #include <functional>
+#include <mutex>
+#include <sstream>
+#include <string>
 
 struct SSndHash
 {

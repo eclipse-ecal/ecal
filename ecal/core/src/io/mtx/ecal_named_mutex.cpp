@@ -21,7 +21,10 @@
  * @brief  eCAL named mutex
 **/
 
+#include <cstdint>
 #include <ecal/ecal_os.h>
+#include <memory>
+#include <string>
 
 #include "ecal_named_mutex.h"
 

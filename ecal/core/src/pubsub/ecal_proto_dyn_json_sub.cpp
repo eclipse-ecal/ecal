@@ -25,11 +25,13 @@
 #include <ecal/msg/protobuf/dynamic_json_subscriber.h>
 #include <ecal/msg/protobuf/dynamic_subscriber.h>
 
-#include <stdio.h>
-#include <iostream>
-#include <sstream>
 #include <fstream>
+#include <functional>
+#include <iostream>
 #include <memory>
+#include <sstream>
+#include <stdio.h>
+#include <string>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
