@@ -41,8 +41,6 @@ namespace eCAL
           monitoring1.processes[i].pname != monitoring2.processes[i].pname ||
           monitoring1.processes[i].uname != monitoring2.processes[i].uname ||
           monitoring1.processes[i].pparam != monitoring2.processes[i].pparam ||
-          monitoring1.processes[i].datawrite != monitoring2.processes[i].datawrite ||
-          monitoring1.processes[i].dataread != monitoring2.processes[i].dataread ||
           monitoring1.processes[i].state_severity != monitoring2.processes[i].state_severity ||
           monitoring1.processes[i].state_severity_level != monitoring2.processes[i].state_severity_level ||
           monitoring1.processes[i].state_info != monitoring2.processes[i].state_info ||

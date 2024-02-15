@@ -115,8 +115,6 @@ namespace eCAL
       {
         rclock               = 0;
         pid                  = 0;
-        datawrite            = 0;
-        dataread             = 0;
         state_severity       = 0;
         state_severity_level = 0;
         tsync_state          = 0;
@@ -130,9 +128,6 @@ namespace eCAL
       std::string    pname;                                     //!< process name
       std::string    uname;                                     //!< unit name
       std::string    pparam;                                    //!< process parameter
-
-      int64_t        datawrite;                                 //!< data write bytes per sec
-      int64_t        dataread;                                  //!< data read bytes per sec
 
       int32_t        state_severity;                            //!< process state info severity:
                                                                 //!<   proc_sev_unknown       = 0 (condition unknown)

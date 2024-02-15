@@ -38,8 +38,6 @@ namespace eCAL
       process.pname                = GenerateString(8);
       process.uname                = GenerateString(6);
       process.pparam               = GenerateString(20);
-      process.datawrite            = rand() % 10000;
-      process.dataread             = rand() % 10000;
       process.state_severity       = rand() % 5;
       process.state_severity_level = rand() % 6;
       process.state_info           = GenerateString(15);
