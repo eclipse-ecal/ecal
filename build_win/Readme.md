@@ -1,4 +1,6 @@
-If you want to build complete eCAL setup for windows then simply call.
+Please first adjust the CMAKE_PREFIX_PATH in `win_set_vars.bat` so that cmake can detect your QT installation, then:
+
+If you want to build complete eCAL setup for windows then simply call. 
 
 ```bash
 win_make_all.bat
