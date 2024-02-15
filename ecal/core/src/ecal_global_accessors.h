@@ -108,12 +108,4 @@ namespace eCAL
 
   extern eCAL_Process_eSeverity        g_process_severity;
   extern eCAL_Process_eSeverity_Level  g_process_severity_level;
-
-  extern std::atomic<long long>        g_process_wclock;
-  extern std::atomic<long long>        g_process_wbytes;
-  extern std::atomic<long long>        g_process_wbytes_sum;
-
-  extern std::atomic<long long>        g_process_rclock;
-  extern std::atomic<long long>        g_process_rbytes;
-  extern std::atomic<long long>        g_process_rbytes_sum;
 }

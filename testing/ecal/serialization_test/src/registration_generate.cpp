@@ -138,8 +138,6 @@ namespace eCAL
       sample.process.pname                = GenerateString(10);
       sample.process.uname                = GenerateString(5);
       sample.process.pparam               = GenerateString(12);
-      sample.process.datawrite            = rand();
-      sample.process.dataread             = rand();
       sample.process.tsync_state          = static_cast<eTSyncState>(rand() % (tsync_replay + 1));
       sample.process.tsync_mod_name       = GenerateString(6);
       sample.process.component_init_state = rand() % 5;

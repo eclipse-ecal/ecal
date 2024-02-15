@@ -81,14 +81,6 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return process_.pparam().c_str();
     }
-    else if (column == Columns::DATAWRITE)
-    {
-      return (long long)process_.datawrite();
-    }
-    else if (column == Columns::DATAREAD)
-    {
-      return (long long)process_.dataread();
-    }
     else if (column == Columns::SEVERITY)
     {
       severityToCombinedInt(process_.state().severity(), process_.state().severity_level());
@@ -191,8 +183,6 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if ((column == Columns::RCLOCK)
       || (column == Columns::PID)
-      || (column == Columns::DATAWRITE)
-      || (column == Columns::DATAREAD)
       )
     {
       return Qt::AlignmentFlag::AlignRight;

@@ -1080,12 +1080,6 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
       val = Py_BuildValue("s", process.pparam().c_str());
       PyDict_SetItemString(processDict, "pparam", val); Py_DECREF(val);
 
-      val = Py_BuildValue("L", process.datawrite());
-      PyDict_SetItemString(processDict, "datawrite", val); Py_DECREF(val);
-
-      val = Py_BuildValue("L", process.dataread());
-      PyDict_SetItemString(processDict, "dataread", val); Py_DECREF(val);
-
       val = Py_BuildValue("i", process.state().severity());
       PyDict_SetItemString(processDict, "state_severity", val); Py_DECREF(val);
 

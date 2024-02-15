@@ -319,8 +319,6 @@ namespace eCAL
     process_sample_process.pname                = Process::GetProcessName();
     process_sample_process.uname                = Process::GetUnitName();
     process_sample_process.pparam               = Process::GetProcessParameter();
-    process_sample_process.datawrite            = g_process_wbytes;
-    process_sample_process.dataread             = g_process_rbytes;
     process_sample_process.state.severity       = static_cast<Registration::eProcessSeverity>(g_process_severity);
     process_sample_process.state.severity_level = static_cast<Registration::eProcessSeverityLevel>(g_process_severity_level);
     process_sample_process.state.info           = g_process_info;
@@ -533,14 +531,6 @@ namespace eCAL
 
   void CRegistrationProvider::RegisterSendThread()
   {
-    // calculate average receive bytes
-    g_process_rbytes = static_cast<long long>(((double)g_process_rbytes_sum / m_reg_refresh) * 1000.0);
-    g_process_rbytes_sum = 0;
-
-    // calculate average write bytes
-    g_process_wbytes = static_cast<long long>(((double)g_process_wbytes_sum / m_reg_refresh) * 1000.0);
-    g_process_wbytes_sum = 0;
-
 #if ECAL_CORE_SUBSCRIBER
     // refresh subscriber registration
     if (g_subgate() != nullptr) g_subgate()->RefreshRegistrations();

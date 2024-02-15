@@ -171,12 +171,9 @@ namespace eCAL
         break;
       }
 
-      // update globals
-      g_process_rclock++;
-      g_process_rbytes_sum += payload_size;
-
+      // apply sample to data reader
       std::vector<std::shared_ptr<CDataReader>> readers_to_apply;
-
+        
       // Lock the sync map only while extracting the relevant shared pointers to the Datareaders.
       // Apply the samples to the readers afterward.
       {
@@ -214,10 +211,6 @@ namespace eCAL
   bool CSubGate::ApplySample(const std::string& topic_name_, const std::string& topic_id_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_)
   {
     if (!m_created) return false;
-
-    // update globals
-    g_process_rclock++;
-    g_process_rbytes_sum += len_;
 
     // apply sample to data reader
     size_t applied_size(0);

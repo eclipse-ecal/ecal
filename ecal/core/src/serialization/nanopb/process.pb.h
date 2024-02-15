@@ -47,8 +47,8 @@ typedef struct _eCAL_pb_Process {
     pb_callback_t pname; /* process name */
     pb_callback_t uname; /* unit name */
     pb_callback_t pparam; /* process parameter */
-    int64_t datawrite; /* data write bytes per sec */
-    int64_t dataread; /* data read bytes per sec */
+    /* 10 = data write bytes per sec
+ 11 = data read bytes per sec */
     bool has_state;
     eCAL_pb_ProcessState state; /* process state info */
     eCAL_pb_eTSyncState tsync_state; /* time synchronization state */
@@ -85,9 +85,9 @@ extern "C" {
 
 /* Initializer values for message structs */
 #define eCAL_pb_ProcessState_init_default        {_eCAL_pb_eProcessSeverity_MIN, {{NULL}, NULL}, _eCAL_pb_eProcessSeverityLevel_MIN}
-#define eCAL_pb_Process_init_default             {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, false, eCAL_pb_ProcessState_init_default, _eCAL_pb_eTSyncState_MIN, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define eCAL_pb_Process_init_default             {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_ProcessState_init_default, _eCAL_pb_eTSyncState_MIN, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define eCAL_pb_ProcessState_init_zero           {_eCAL_pb_eProcessSeverity_MIN, {{NULL}, NULL}, _eCAL_pb_eProcessSeverityLevel_MIN}
-#define eCAL_pb_Process_init_zero                {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, false, eCAL_pb_ProcessState_init_zero, _eCAL_pb_eTSyncState_MIN, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define eCAL_pb_Process_init_zero                {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_ProcessState_init_zero, _eCAL_pb_eTSyncState_MIN, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define eCAL_pb_ProcessState_severity_tag        1
@@ -99,8 +99,6 @@ extern "C" {
 #define eCAL_pb_Process_pname_tag                4
 #define eCAL_pb_Process_uname_tag                5
 #define eCAL_pb_Process_pparam_tag               6
-#define eCAL_pb_Process_datawrite_tag            10
-#define eCAL_pb_Process_dataread_tag             11
 #define eCAL_pb_Process_state_tag                12
 #define eCAL_pb_Process_tsync_state_tag          13
 #define eCAL_pb_Process_tsync_mod_name_tag       14
@@ -124,8 +122,6 @@ X(a, STATIC,   SINGULAR, INT32,    pid,               3) \
 X(a, CALLBACK, SINGULAR, STRING,   pname,             4) \
 X(a, CALLBACK, SINGULAR, STRING,   uname,             5) \
 X(a, CALLBACK, SINGULAR, STRING,   pparam,            6) \
-X(a, STATIC,   SINGULAR, INT64,    datawrite,        10) \
-X(a, STATIC,   SINGULAR, INT64,    dataread,         11) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  state,            12) \
 X(a, STATIC,   SINGULAR, UENUM,    tsync_state,      13) \
 X(a, CALLBACK, SINGULAR, STRING,   tsync_mod_name,   14) \

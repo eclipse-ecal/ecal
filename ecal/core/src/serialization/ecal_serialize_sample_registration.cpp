@@ -72,10 +72,6 @@ namespace
     eCAL::nanopb::encode_string(pb_sample_.process.uname, registration_.process.uname);
     // pparam
     eCAL::nanopb::encode_string(pb_sample_.process.pparam, registration_.process.pparam);
-    // datawrite
-    pb_sample_.process.datawrite = registration_.process.datawrite;
-    // dataread
-    pb_sample_.process.dataread = registration_.process.dataread;
     // state.severity
     pb_sample_.process.state.severity = static_cast<eCAL_pb_eProcessSeverity>(registration_.process.state.severity);
     // state.severity_level
@@ -359,10 +355,6 @@ namespace
     registration_.process.rclock = pb_sample_.process.rclock;
     // pid
     registration_.process.pid = pb_sample_.process.pid;
-    // datawrite
-    registration_.process.datawrite = pb_sample_.process.datawrite;
-    // dataread
-    registration_.process.dataread = pb_sample_.process.dataread;
     // state.severity
     registration_.process.state.severity = static_cast<eCAL::Registration::eProcessSeverity>(pb_sample_.process.state.severity);
     // state.severity_level

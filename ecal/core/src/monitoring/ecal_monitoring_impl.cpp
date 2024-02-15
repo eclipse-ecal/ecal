@@ -361,8 +361,6 @@ namespace eCAL
     const int             process_id                   = sample_process.pid;
     const std::string&    process_param                = sample_process.pparam;
     const std::string&    unit_name                    = sample_process.uname;
-    const long long       process_datawrite            = sample_process.datawrite;
-    const long long       process_dataread             = sample_process.dataread;
     const auto&           sample_process_state         = sample_process.state;
     const int             process_state_severity       = sample_process_state.severity;
     const int             process_state_severity_level = sample_process_state.severity_level;
@@ -392,8 +390,6 @@ namespace eCAL
 
     // update flexible content
     ProcessInfo.rclock++;
-    ProcessInfo.datawrite            = process_datawrite;
-    ProcessInfo.dataread             = process_dataread;
     ProcessInfo.state_severity       = process_state_severity;
     ProcessInfo.state_severity_level = process_state_severity_level;
     ProcessInfo.state_info           = process_state_info;

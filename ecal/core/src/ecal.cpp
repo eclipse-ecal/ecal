@@ -177,14 +177,6 @@ namespace eCAL
       {
         for (size_t i = 0; i < static_cast<size_t>(argc_); ++i) if (argv_[i] != nullptr) g_task_parameter.emplace_back(argv_[i]);
       }
-
-      g_process_wclock = 0;
-      g_process_wbytes = 0;
-      g_process_wbytes_sum = 0;
-
-      g_process_rclock = 0;
-      g_process_rbytes = 0;
-      g_process_rbytes_sum = 0;
     }
     g_globals_ctx_ref_cnt++;
 

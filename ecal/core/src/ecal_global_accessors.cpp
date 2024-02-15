@@ -47,14 +47,6 @@ namespace eCAL
   eCAL_Process_eSeverity        g_process_severity(eCAL_Process_eSeverity::proc_sev_unknown);
   eCAL_Process_eSeverity_Level  g_process_severity_level(eCAL_Process_eSeverity_Level::proc_sev_level1);
 
-  std::atomic<long long>        g_process_wclock;
-  std::atomic<long long>        g_process_wbytes;
-  std::atomic<long long>        g_process_wbytes_sum;
-
-  std::atomic<long long>        g_process_rclock;
-  std::atomic<long long>        g_process_rbytes;
-  std::atomic<long long>        g_process_rbytes_sum;
-
   CGlobals* g_globals()
   {
     return g_globals_ctx;

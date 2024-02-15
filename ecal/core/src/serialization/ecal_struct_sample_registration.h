@@ -121,15 +121,13 @@ namespace eCAL
     // Process information
     struct Process
     {
-      int32_t                             rclock    = 0;                // registration clock
+      int32_t                             rclock = 0;                   // registration clock
       std::string                         hname;                        // host name
       std::string                         hgname;                       // host group name
-      int32_t                             pid       = 0;                // process id
+      int32_t                             pid = 0;                      // process id
       std::string                         pname;                        // process name
       std::string                         uname;                        // unit name
       std::string                         pparam;                       // process parameter
-      int64_t                             datawrite = 0;                // data write bytes per sec
-      int64_t                             dataread  = 0;                // data read bytes per sec
       ProcessState                        state;                        // process state info
       eTSyncState                         tsync_state = tsync_none;     // time synchronization state
       std::string                         tsync_mod_name;               // time synchronization module name

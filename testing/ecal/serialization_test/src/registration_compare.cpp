@@ -43,8 +43,6 @@ namespace eCAL
              (process1.pname                == process2.pname) &&
              (process1.uname                == process2.uname) &&
              (process1.pparam               == process2.pparam) &&
-             (process1.datawrite            == process2.datawrite) &&
-             (process1.dataread             == process2.dataread) &&
              CompareProcessState(process1.state, process2.state) &&
              (process1.tsync_state          == process2.tsync_state) &&
              (process1.tsync_mod_name       == process2.tsync_mod_name) &&

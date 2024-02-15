@@ -766,9 +766,6 @@ namespace eCAL
   {
     // increase write clock
     m_clock++;
-
-    // statistics
-    g_process_wclock++;
   }
 
   std::string CDataWriter::Dump(const std::string& indent_ /* = "" */)
@@ -1207,9 +1204,6 @@ namespace eCAL
     // calculate unique send hash
     const std::hash<SSndHash> hf;
     const size_t snd_hash = hf(SSndHash(m_topic_id, m_clock));
-
-    // increase overall sum send
-    g_process_wbytes_sum += len_;
 
     // store size for monitoring
     m_topic_size = len_;

@@ -57,10 +57,6 @@ namespace
     eCAL::nanopb::encode_string(pb_process_.uname, process_.uname);
     // pparam
     eCAL::nanopb::encode_string(pb_process_.pparam, process_.pparam);
-    // datawrite
-    pb_process_.datawrite = process_.datawrite;
-    // dataread
-    pb_process_.dataread = process_.dataread;
     // state
     pb_process_.has_state = true;
     // state.severity
@@ -518,10 +514,6 @@ namespace
     process_.rclock = pb_process_.rclock;
     // pid
     process_.pid = pb_process_.pid;
-    // datawrite
-    process_.datawrite = pb_process_.datawrite;
-    // dataread
-    process_.dataread = pb_process_.dataread;
     // state.severity
     process_.state_severity = pb_process_.state.severity;
     // state.severity_level
