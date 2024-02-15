@@ -20,7 +20,6 @@
 #include <atomic>
 #include <chrono>
 #include <cstring>
-#include <functional>
 #include <iostream>
 #include <string>
 #include <thread>
@@ -33,11 +32,10 @@
 #include "../include/mma.h"
 #include "../include/mma_defs.h"
 #include "../include/zombie_instance_killer.h"
-#include "../include/interruptable_timer.h"
 
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
+#pragma warning(disable : 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
 #include <ecal/app/pb/mma/mma.pb.h>
 #ifdef _MSC_VER
@@ -50,17 +48,12 @@
 #include <direct.h>
 #include <TlHelp32.h>
 #else
-#include <csignal>
 #include <cstdlib>
-#include <errno.h>
-#include <fcntl.h>
 #include <iostream>
 #include <list>
 #include <stdio.h>
 #include <string>
 #include <sys/ioctl.h>
-#include <sys/select.h>
-#include <sys/types.h> 
 #include <termios.h>
 #include <unistd.h>
 

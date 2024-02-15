@@ -21,6 +21,7 @@
 
 #include <ctime>
 #include <fstream>
+#include <ios>
 #include <string.h>
 #include <string>
 

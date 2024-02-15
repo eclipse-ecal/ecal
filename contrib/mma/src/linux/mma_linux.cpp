@@ -17,7 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include "ecal/app/pb/mma/mma.pb.h"
+#include "linux/pipe_refresher.h"
+#include "linux/ressource.h"
 #include <cstddef>
+#include <cstdint>
 #include <cstdio>
 #include <cstring>
 #include <iterator>

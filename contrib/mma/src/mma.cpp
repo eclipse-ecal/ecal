@@ -18,6 +18,7 @@
 */
 
 #include "../include/mma.h"
+#include "ecal/app/pb/mma/mma.pb.h"
 
 #ifdef _WIN32
 #include "../include/windows/mma_windows.h"

@@ -32,7 +32,6 @@
 #endif
 
 #ifdef __linux__
-#include <csignal>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
