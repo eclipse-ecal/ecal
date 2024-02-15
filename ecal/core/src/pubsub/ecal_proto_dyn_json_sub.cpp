@@ -30,7 +30,7 @@
 #include <iostream>
 #include <memory>
 #include <sstream>
-#include <stdio.h>
+#include <cstdio>
 #include <string>
 
 #ifdef _MSC_VER

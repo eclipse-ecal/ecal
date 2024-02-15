@@ -23,8 +23,8 @@
 
 #include <ecal/ecal.h>
 
-#include <assert.h>
 #include <atomic>
+#include <cassert>
 #include <chrono>
 #include <memory>
 #include <thread>

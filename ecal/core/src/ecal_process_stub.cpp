@@ -18,7 +18,7 @@
 */
 
 #include <cstdlib>
-#include <errno.h>
+#include <cerrno>
 #include <fcntl.h>
 #include <string>
 #include <sys/file.h>

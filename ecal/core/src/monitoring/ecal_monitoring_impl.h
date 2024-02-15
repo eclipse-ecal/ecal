@@ -26,7 +26,6 @@
 #include <chrono>
 #include <ecal/types/monitoring.h>
 #include <set>
-#include <strings.h>
 
 #include "ecal_def.h"
 #include "util/ecal_expmap.h"

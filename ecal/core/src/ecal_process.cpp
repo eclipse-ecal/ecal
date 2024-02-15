@@ -39,7 +39,6 @@
 #include <iostream>
 #include <memory>
 #include <sstream>
-#include <stdio.h>
 #include <thread>
 
 #include "util/sys_usage.h"

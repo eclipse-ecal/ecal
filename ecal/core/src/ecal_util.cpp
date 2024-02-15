@@ -33,8 +33,7 @@
 #include <iostream>
 #include <list>
 #include <map>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
 #include <string>
 #include <tuple>
 #include <unordered_map>
