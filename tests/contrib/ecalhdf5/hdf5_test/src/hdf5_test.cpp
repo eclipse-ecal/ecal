@@ -17,15 +17,15 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecalhdf5/eh5_meas.h>
-
-#include <chrono>
-#include <thread>
-#include <set>
 #include <algorithm>
+#include <chrono>
+#include <limits>
+#include <set>
+#include <thread>
 
 #include <gtest/gtest.h>
 
+#include <ecalhdf5/eh5_meas.h>
 #include <src/hdf5_helper.h> // This header file is usually not available as public include!
 #include <src/escape.h> // This header file is usually not available as public include!
 
@@ -62,7 +62,7 @@ struct TestingMeasEntry
 
 bool MeasEntryEqualsEntryInfo(const TestingMeasEntry& meas_entry, const EntryInfo entry_info)
 {
-  return meas_entry.id == (uint64_t)entry_info.SndID
+  return meas_entry.id == entry_info.SndID
     && meas_entry.snd_timestamp == entry_info.SndTimestamp
     && meas_entry.rcv_timestamp == entry_info.RcvTimestamp
     && meas_entry.clock == entry_info.SndClock;
@@ -95,7 +95,7 @@ void ValidateChannelsInMeasurement(eCAL::eh5::HDF5Meas& hdf5_reader, const std::
 // Return default EntryInfo if it cannot be Found
 EntryInfo FindInSet(const eCAL::eh5::EntryInfoSet& info_set, const TestingMeasEntry& to_find)
 {
-  auto it = std::find_if(info_set.begin(), info_set.end(), [&to_find](const EntryInfo& entry) { return entry.SndClock == to_find.clock; });
+  auto it = std::find_if(info_set.begin(), info_set.end(), [&to_find](const EntryInfo& entry) { return entry.SndClock == to_find.clock && entry.SndID == to_find.id; });
 
   if (it != info_set.end()) {
     return *it;
@@ -643,11 +643,11 @@ TEST(HDF5, MinMaxTimestamps)
   std::vector<TestingMeasEntry> meas_entries = {
     TestingMeasEntry{ topic_name, "topic2: test data", 1001, 1002,  id_1,  0 },
     TestingMeasEntry{ topic_name, "topic2: test data", 2001, 2002,  id_1,  1 },
-    TestingMeasEntry{ topic_name, "topic2: test data", 2051, 2052,  id_2,  2 },
-    TestingMeasEntry{ topic_name, "topic2: test data", 3001, 3002,  id_1,  3 },
-    TestingMeasEntry{ topic_name, "topic2: test data", 3051, 3052,  id_2,  4 },
-    TestingMeasEntry{ topic_name, "topic2: test data", 4001, 4002,  id_1,  5 },
-    TestingMeasEntry{ topic_name, "topic2: test data", 5001, 5002,  id_1,  6 },
+    TestingMeasEntry{ topic_name, "topic2: test data", 2051, 2052,  id_2,  0 },
+    TestingMeasEntry{ topic_name, "topic2: test data", 3001, 3002,  id_1,  2 },
+    TestingMeasEntry{ topic_name, "topic2: test data", 3051, 3052,  id_2,  1 },
+    TestingMeasEntry{ topic_name, "topic2: test data", 4001, 4002,  id_1,  3 },
+    TestingMeasEntry{ topic_name, "topic2: test data", 5001, 5002,  id_1,  4 },
   };
 
   std::string base_name = "min_max_timestamps";
@@ -693,6 +693,117 @@ TEST(HDF5, MinMaxTimestamps)
   }
 }
 
+/*
+* This test checks that we can correctly merge multiple measurements
+* 
+*/
+TEST(HDF5, MergedMeasurements)
+{
+  Channel::id_t id_1 = 0xAAAA;
+  Channel::id_t id_2 = 0x00AA;
+  Channel::id_t id_3 = 0x0001;
+  std::string topic_name_1_2 = "topic";
+  std::string topic_name_3   = "topic_3";
+
+  eCAL::eh5::SChannel channel_1{ topic_name_1_2, id_1 };
+  eCAL::eh5::SChannel channel_2{ topic_name_1_2, id_2 };
+  eCAL::eh5::SChannel channel_3{ topic_name_3, id_3 };
+
+  DataTypeInformation info_1{ "mytype1", "myencoding1", "mydescriptor1" };
+  DataTypeInformation info_2{ "mytype2", "myencoding2", "mydescriptor2" };
+  DataTypeInformation info_3{ "mytype3", "myencoding3", "mydescriptor3" };
+
+  // Define data that will be written to the file
+  std::vector<TestingMeasEntry> entries_meas_1 = {
+    TestingMeasEntry{ topic_name_1_2, "topic2: test data", 0001, 0002,  id_1,  0 },
+    TestingMeasEntry{ topic_name_1_2, "topic2: test data", 2001, 2002,  id_1,  1 },
+    TestingMeasEntry{ topic_name_1_2, "topic2: test data", 3001, 3002,  id_1,  2 },
+    TestingMeasEntry{ topic_name_1_2, "topic2: test data", 4001, 4002,  id_1,  3 },
+    TestingMeasEntry{ topic_name_1_2, "topic2: test data", 5001, 5002,  id_1,  4 },
+  };
+
+  std::vector<TestingMeasEntry> entries_meas_2 = {
+    TestingMeasEntry{ topic_name_3,   "topic2: test data", 1001, 1002,  id_3,  0 },
+    TestingMeasEntry{ topic_name_3,   "topic2: test data", 2001, 2002,  id_3,  1 },
+    TestingMeasEntry{ topic_name_1_2, "topic2: test data", 2051, 2052,  id_2,  0 },
+    TestingMeasEntry{ topic_name_3,   "topic2: test data", 3001, 3002,  id_3,  2 },
+    TestingMeasEntry{ topic_name_1_2, "topic2: test data", 3051, 3052,  id_2,  1 },
+    TestingMeasEntry{ topic_name_3,   "topic2: test data", 6001, 6002,  id_3,  3 },
+    TestingMeasEntry{ topic_name_3,   "topic2: test data", 7001, 7002,  id_3,  4 },
+  };
+
+  std::string base_dir   = output_dir + "/merged_measurement";
+  std::string meas_dir_1 = base_dir + "/meas1";
+  std::string meas_dir_2 = base_dir + "/meas2";
+
+  // Write first HDF5 file
+  {
+    eCAL::eh5::HDF5Meas hdf5_writer;
+    CreateMeasurement(hdf5_writer, meas_dir_1, "meas1");
+
+    for (const auto& entry : entries_meas_1)
+    {
+      EXPECT_TRUE(WriteToHDF(hdf5_writer, entry));
+    }
+
+    EXPECT_TRUE(hdf5_writer.Close());
+  }
+
+  // Write second HDF5 file
+  {
+    eCAL::eh5::HDF5Meas hdf5_writer;
+    CreateMeasurement(hdf5_writer, meas_dir_1, "meas2");
+
+    for (const auto& entry : entries_meas_2)
+    {
+      EXPECT_TRUE(WriteToHDF(hdf5_writer, entry));
+    }
+
+    EXPECT_TRUE(hdf5_writer.Close());
+  }
+
+  {
+    eCAL::eh5::HDF5Meas hdf5_reader;
+    EXPECT_TRUE(hdf5_reader.Open(base_dir));
+
+    std::set<Channel> expected_channels{ channel_1, channel_2, channel_3 };
+    EXPECT_EQ(hdf5_reader.GetChannels(), expected_channels);
+
+    // New API
+    EXPECT_EQ(hdf5_reader.GetMinTimestamp(channel_1), 0002);
+    EXPECT_EQ(hdf5_reader.GetMinTimestamp(channel_2), 2052);
+    EXPECT_EQ(hdf5_reader.GetMinTimestamp(channel_3), 1002);
+
+    // Deprecated API
+    EXPECT_EQ(hdf5_reader.GetMinTimestamp(topic_name_1_2), 0002);
+    EXPECT_EQ(hdf5_reader.GetMinTimestamp(topic_name_3), 1002);
+
+    // New API
+    EXPECT_EQ(hdf5_reader.GetMaxTimestamp(channel_1), 5002);
+    EXPECT_EQ(hdf5_reader.GetMaxTimestamp(channel_2), 3052);
+    EXPECT_EQ(hdf5_reader.GetMaxTimestamp(channel_3), 7002);
+
+    // Deprecated API
+    EXPECT_EQ(hdf5_reader.GetMaxTimestamp(topic_name_1_2), 5002);
+    EXPECT_EQ(hdf5_reader.GetMaxTimestamp(topic_name_3), 7002);
+
+
+    // Check that all entries are present in the measurement
+    for (const auto& entry : entries_meas_1)
+    {
+      ValidateDataInMeasurement(hdf5_reader, entry);
+      ValidateDataInMeasurementDeprecated(hdf5_reader, entry);
+    }
+    for (const auto& entry : entries_meas_2)
+    {
+      ValidateDataInMeasurement(hdf5_reader, entry);
+      ValidateDataInMeasurementDeprecated(hdf5_reader, entry);
+    }
+  }
+
+}
+
+
 
 TEST(HDF5, ParsePrintHex)
 {
@@ -711,6 +822,26 @@ TEST(HDF5, ParsePrintHex)
     auto int_value = parseHexID(value);
     auto string_value = printHex(int_value);
     EXPECT_EQ(string_value, value);
+  }
+}
+
+TEST(HDF5, PrintParseHex)
+{
+  std::vector<Channel::id_t> numeric_values =
+  {
+    0,
+    -1,
+    1,
+    std::numeric_limits<Channel::id_t>::min(),
+    std::numeric_limits<Channel::id_t>::max()
+  };
+
+  for (const auto& value : numeric_values)
+  {
+    auto string_value = printHex(value);
+    auto int_value = parseHexID(string_value);
+
+    EXPECT_EQ(int_value, value);
   }
 }
 
