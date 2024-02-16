@@ -21,9 +21,10 @@
  * @brief  common data publisher based on eCAL
 **/
 
+#include <cstddef>
 #include <ecal/ecal.h>
-#include <ecal/ecal_tlayer.h>
 #include <ecal/ecal_config.h>
+#include <ecal/ecal_tlayer.h>
 
 #include "config/ecal_config_reader_hlp.h"
 #include "readwrite/ecal_buffer_payload_writer.h"
@@ -31,8 +32,10 @@
 
 #include "readwrite/ecal_writer.h"
 
-#include <sstream>
 #include <iostream>
+#include <memory>
+#include <sstream>
+#include <string>
 #include <utility>
 
 namespace eCAL

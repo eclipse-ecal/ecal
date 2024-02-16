@@ -23,8 +23,12 @@
 
 #include "ecal_globals.h"
 
-#include <tclap/CmdLine.h>
 #include "util/advanced_tclap_output.h"
+#include <algorithm>
+#include <cstddef>
+#include <string>
+#include <tclap/CmdLine.h>
+#include <vector>
 
 namespace eCAL
 {

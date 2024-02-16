@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <string>
 
 #include "ecal_memfile.h"

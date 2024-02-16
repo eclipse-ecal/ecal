@@ -21,7 +21,11 @@
  * @brief  shared memory layer
 **/
 
+#include <cstddef>
 #include <ecal/ecal.h>
+#include <functional>
+#include <string>
+#include <vector>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings

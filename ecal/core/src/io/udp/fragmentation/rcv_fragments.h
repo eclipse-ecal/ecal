@@ -26,6 +26,7 @@
 #include "ecal_def.h"
 
 #include <chrono>
+#include <cstdint>
 #include <vector>
 
 namespace IO

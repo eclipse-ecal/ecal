@@ -21,14 +21,17 @@
  * @brief  common data subscriber for eCAL
 **/
 
+#include <cstddef>
 #include <ecal/ecal.h>
 
 #include "ecal_globals.h"
 #include "readwrite/ecal_reader.h"
 
-#include <sstream>
 #include <iostream>
-
+#include <memory>
+#include <sstream>
+#include <string>
+#include <utility>
 
 namespace eCAL
 {

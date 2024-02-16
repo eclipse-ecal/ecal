@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
 #include <ecal/ecal_eventhandle.h>
 #include <ecal/ecal_payload_writer.h>
 

@@ -27,6 +27,8 @@
 #include "util/ecal_expmap.h"
 
 #include <ecal/ecal_callback.h>
+#include <string>
+#include <vector>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings

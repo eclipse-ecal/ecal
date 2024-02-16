@@ -25,6 +25,10 @@
 
 #include "ecal_def.h"
 #include "io/udp/fragmentation/msg_type.h"
+#include <chrono>
+#include <cstddef>
+#include <functional>
+#include <memory>
 
 namespace eCAL
 {

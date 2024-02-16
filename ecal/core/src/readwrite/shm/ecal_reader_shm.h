@@ -26,7 +26,9 @@
 #include "ecal_def.h"
 #include "readwrite/ecal_reader_layer.h"
 
+#include <cstddef>
 #include <memory>
+#include <string>
 
 namespace eCAL
 {

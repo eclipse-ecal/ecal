@@ -25,8 +25,13 @@
 
 #include "readwrite/ecal_reader_layer.h"
 
+#include <cstdint>
+#include <memory>
+#include <mutex>
+#include <string>
 #include <tcp_pubsub/executor.h>
 #include <tcp_pubsub/subscriber.h>
+#include <unordered_map>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings

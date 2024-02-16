@@ -23,7 +23,13 @@
 
 #include "ecal_global_accessors.h"
 
+#include <cstdint>
 #include <ecal/ecal_config.h>
+#include <functional>
+#include <iostream>
+#include <memory>
+#include <mutex>
+#include <string>
 
 #include "pubsub/ecal_subgate.h"
 

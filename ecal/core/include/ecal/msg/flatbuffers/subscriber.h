@@ -24,7 +24,10 @@
 
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
 #include <ecal/msg/subscriber.h>
+#include <string>
 
 namespace eCAL
 {

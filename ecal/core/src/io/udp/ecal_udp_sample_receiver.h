@@ -28,6 +28,8 @@
 #include "util/ecal_thread.h"
 
 #include <chrono>
+#include <cstddef>
+#include <cstdint>
 #include <functional>
 #include <memory>
 #include <string>

@@ -25,6 +25,7 @@
 
 #include "ecal_memfile_broadcast.h"
 
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 

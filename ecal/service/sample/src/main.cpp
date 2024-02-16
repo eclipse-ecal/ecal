@@ -17,12 +17,15 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/service/server_manager.h>
+#include "asio/io_context.hpp"
 #include <ecal/service/client_manager.h>
+#include <ecal/service/server_manager.h>
 
-#include <iostream>
-#include <thread>
 #include <chrono>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <thread>
 
 int main(int /*argc*/, char** /*argv*/)
 {

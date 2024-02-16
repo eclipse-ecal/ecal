@@ -25,8 +25,13 @@
 #include "msg_type.h"
 
 #include <chrono>
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
 #include <mutex>
+#include <string>
 #include <thread>
+#include <vector>
 
 namespace
 {
