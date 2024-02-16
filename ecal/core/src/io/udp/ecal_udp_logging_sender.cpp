@@ -22,6 +22,8 @@
 **/
 
 #include "ecal_udp_logging_sender.h"
+#include <cstddef>
+#include <memory>
 
 namespace eCAL
 {

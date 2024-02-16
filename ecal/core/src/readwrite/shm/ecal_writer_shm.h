@@ -26,9 +26,11 @@
 #include "readwrite/ecal_writer_base.h"
 #include "io/shm/ecal_memfile_sync.h"
 
+#include <cstddef>
 #include <memory>
 #include <mutex>
 #include <string>
+#include <vector>
 
 namespace eCAL
 {

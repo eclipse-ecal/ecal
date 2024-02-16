@@ -25,9 +25,12 @@
 #include "rcv_fragments.h"
 #include "msg_type.h"
 
+#include <chrono>
 #include <ecal/ecal_log.h>
 
 #include <cstring>
+#include <string>
+#include <utility>
 
 namespace IO
 {

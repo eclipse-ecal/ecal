@@ -31,7 +31,10 @@
 
 #include <chrono>
 #include <iostream>
+#include <memory>
+#include <mutex>
 #include <sstream>
+#include <string>
 #include <utility>
 
 #include "ecal_service_singleton_manager.h"

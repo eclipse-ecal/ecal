@@ -21,9 +21,13 @@
  * @brief  memory file data writer
 **/
 
+#include <cstddef>
 #include <ecal/ecal.h>
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_log.h>
+#include <memory>
+#include <mutex>
+#include <string>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings

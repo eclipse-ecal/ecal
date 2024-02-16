@@ -26,6 +26,9 @@
 #include "ecal_memfile_db.h"
 
 #include <cassert>
+#include <cstddef>
+#include <mutex>
+#include <string>
 
 namespace eCAL
 {

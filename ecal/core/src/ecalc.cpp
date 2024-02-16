@@ -21,11 +21,17 @@
  * @brief  Implementation of the eCAL dll interface
 **/
 
+#include <cstddef>
+#include <cstdlib>
+#include <cstring>
+#include <functional>
 #include <mutex>
 
 #include <ecal/ecal.h>
-#include <ecal/msg/protobuf/dynamic_json_subscriber.h>
 #include <ecal/ecalc.h>
+#include <ecal/msg/protobuf/dynamic_json_subscriber.h>
+#include <set>
+#include <string>
 
 #include "ecal_process.h"
 

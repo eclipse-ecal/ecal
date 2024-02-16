@@ -27,6 +27,9 @@
 #include "pubsub/ecal_subgate.h"
 
 #include "io/udp/ecal_udp_configurations.h"
+#include <functional>
+#include <string>
+#include <utility>
 
 namespace eCAL
 {

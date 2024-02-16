@@ -26,7 +26,16 @@
 #include "ecal_event_internal.h"
 #include "ecal_memfile_pool.h"
 
+#include <algorithm>
 #include <chrono>
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <thread>
+#include <utility>
+#include <vector>
 
 namespace eCAL
 {

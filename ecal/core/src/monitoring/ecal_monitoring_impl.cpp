@@ -21,14 +21,20 @@
  * @brief  Global monitoring class (implementation)
 **/
 
+#include <chrono>
+#include <cstddef>
 #include <ecal/ecal.h>
 #include <ecal/ecal_config.h>
 
-#include "io/udp/ecal_udp_configurations.h"
 #include "config/ecal_config_reader_hlp.h"
 #include "ecal_monitoring_impl.h"
+#include "io/udp/ecal_udp_configurations.h"
 
+#include <map>
+#include <mutex>
 #include <regex>
+#include <string>
+#include <utility>
 
 #include "registration/ecal_registration_receiver.h"
 

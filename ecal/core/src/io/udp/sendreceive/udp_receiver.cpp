@@ -25,6 +25,9 @@
 #include "io/udp/ecal_udp_configurations.h"
 
 #include "udp_receiver_asio.h"
+#include <cstddef>
+#include <memory>
+#include <mutex>
 #ifdef ECAL_NPCAP_SUPPORT
 #include "udp_receiver_npcap.h"
 #endif

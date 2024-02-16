@@ -23,6 +23,7 @@
 #include "ecal_udp_topic2mcast.h"
 
 #include <ecal/ecal_config.h>
+#include <string>
 
 namespace eCAL
 {

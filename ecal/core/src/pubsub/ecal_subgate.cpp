@@ -22,9 +22,19 @@
 **/
 
 #include <algorithm>
+#include <atomic>
 #include <chrono>
 
+#include <cstddef>
 #include <ecal/ecal.h>
+#include <functional>
+#include <iterator>
+#include <memory>
+#include <mutex>
+#include <shared_mutex>
+#include <string>
+#include <thread>
+#include <vector>
 
 #ifdef ECAL_OS_LINUX
 //#include <sys/types.h>

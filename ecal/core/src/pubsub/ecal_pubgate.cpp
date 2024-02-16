@@ -26,8 +26,12 @@
 #include "ecal_descgate.h"
 #include "ecal_sample_to_topicinfo.h"
 
-#include <iterator>
 #include <atomic>
+#include <iterator>
+#include <memory>
+#include <mutex>
+#include <shared_mutex>
+#include <string>
 
 namespace eCAL
 {

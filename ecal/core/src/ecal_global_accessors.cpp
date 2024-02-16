@@ -23,6 +23,9 @@
 
 #include "ecal_global_accessors.h"
 #include "ecal_globals.h"
+#include <atomic>
+#include <string>
+#include <vector>
 
 namespace eCAL
 {

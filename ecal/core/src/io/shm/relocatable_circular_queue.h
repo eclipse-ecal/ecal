@@ -23,11 +23,12 @@
 
 #pragma once
 
-#include <cstdint>
-#include <stdexcept>
-#include <limits>
-#include <iterator>
 #include <cassert>
+#include <cstddef>
+#include <cstdint>
+#include <iterator>
+#include <limits>
+#include <stdexcept>
 
 template<class T>
 class RelocatableCircularQueue{

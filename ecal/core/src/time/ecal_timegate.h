@@ -28,6 +28,7 @@
 #include "ecal_global_accessors.h"
 
 #include <atomic>
+#include <string>
 
 #ifdef ECAL_OS_WINDOWS
 

@@ -37,12 +37,10 @@
 #include "readwrite/ecal_writer_base.h"
 
 #include <string>
-#include <vector>
 
-namespace eCAL
+namespace eCAL {
+class CDataWriterInProc : public CDataWriterBase
 {
-  class CDataWriterInProc : public CDataWriterBase
-  {
   public:
     ~CDataWriterInProc() override;
 
@@ -57,4 +55,4 @@ namespace eCAL
 
   protected:
   };
-}
+  } // namespace eCAL
