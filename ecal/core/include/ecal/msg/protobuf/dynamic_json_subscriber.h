@@ -144,14 +144,12 @@ namespace eCAL
 
     inline CDynamicJSONSubscriber::CDynamicJSONSubscriber() :
       m_created(false),
-      m_msg_decoder(nullptr),
-      m_msg_string()
+      m_msg_decoder(nullptr)
     {}
 
     inline CDynamicJSONSubscriber::CDynamicJSONSubscriber(const std::string& topic_name_) :
       m_created(false),
-      m_msg_decoder(nullptr),
-      m_msg_string()
+      m_msg_decoder(nullptr)
     {
       Create(topic_name_);
     }
@@ -249,7 +247,7 @@ namespace eCAL
         options.always_print_primitive_fields = true;
 
         std::string binary_input;
-        binary_input.assign((char*)data_->buf, static_cast<size_t>(data_->size));
+        binary_input.assign(static_cast<char*>(data_->buf), static_cast<size_t>(data_->size));
         m_msg_string.clear();
         auto status = google::protobuf::util::BinaryToJsonString(m_resolver.get(), m_topic_type_full, binary_input, &m_msg_string, options);
         if (status.ok())

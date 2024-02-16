@@ -31,7 +31,7 @@
 namespace eCAL
 {
   class CTimerImpl;
-  typedef std::function<void(void)> TimerCallbackT;
+  using TimerCallbackT = std::function<void ()>;
 
   /**
    * @brief eCAL timer class.

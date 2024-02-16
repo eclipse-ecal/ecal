@@ -148,9 +148,9 @@ namespace eCAL
       if (size > 0)
       {
         m_buffer.resize(size);
-        if (Serialize(msg_, &m_buffer[0], m_buffer.size()))
+        if (Serialize(msg_, m_buffer.data(), m_buffer.size()))
         {
-          return(CPublisher::Send(&m_buffer[0], size, time_));
+          return(CPublisher::Send(m_buffer.data(), size, time_));
         }
       }
       else

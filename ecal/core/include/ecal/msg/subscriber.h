@@ -79,7 +79,7 @@ namespace eCAL
     /**
     * @brief  Move Constructor
     **/
-    CMsgSubscriber(CMsgSubscriber&& rhs)
+    CMsgSubscriber(CMsgSubscriber&& rhs) noexcept
       : CSubscriber(std::move(rhs))
       , m_cb_callback(std::move(rhs.m_cb_callback))
     {
@@ -97,7 +97,7 @@ namespace eCAL
     /**
      * @brief  Move assignment
     **/
-    CMsgSubscriber& operator=(CMsgSubscriber&& rhs)
+    CMsgSubscriber& operator=(CMsgSubscriber&& rhs) noexcept
     {
       CSubscriber::operator=(std::move(rhs));
 
@@ -166,7 +166,7 @@ namespace eCAL
      * @param clock_       Message writer clock.
      * @param id_          Message id.
     **/
-    typedef std::function<void(const char* topic_name_, const T& msg_, long long time_, long long clock_, long long id_)> MsgReceiveCallbackT;
+    using MsgReceiveCallbackT = std::function<void (const char *, const T &, long long, long long, long long)>;
 
     /**
      * @brief  Add receive callback for incoming messages.

@@ -76,11 +76,10 @@ namespace eCAL
         }
 
         size_t GetSize() override {
-          size_t size(0);
 #if GOOGLE_PROTOBUF_VERSION >= 3001000
-          size = static_cast<size_t>(message.ByteSizeLong());
+          size_t size = static_cast<size_t>(message.ByteSizeLong());
 #else
-          size = static_cast<size_t>(message.ByteSize());
+          size_t size = static_cast<size_t>(message.ByteSize());
 #endif
           return(size);
           };

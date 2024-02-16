@@ -50,17 +50,11 @@ namespace eCAL
   **/
   struct SPubEventCallbackData
   {
-    SPubEventCallbackData()
-    {
-      type  = pub_event_none;
-      time  = 0;
-      clock = 0;
-    };
-    eCAL_Publisher_Event type;        //!< publisher event type
-    long long            time;        //!< publisher event time in µs
-    long long            clock;       //!< publisher event clock
-    std::string          tid;         //!< topic id of the of the connected subscriber                 (for pub_event_update_connection only)
-    SDataTypeInformation tdatatype;   //!< datatype description of the connected subscriber            (for pub_event_update_connection only)
+    eCAL_Publisher_Event type{pub_event_none};  //!< publisher event type
+    long long            time{0};               //!< publisher event time in µs
+    long long            clock{0};              //!< publisher event clock
+    std::string          tid;                   //!< topic id of the of the connected subscriber                 (for pub_event_update_connection only)
+    SDataTypeInformation tdatatype;             //!< datatype description of the connected subscriber            (for pub_event_update_connection only)
   };
 
   /**
@@ -68,17 +62,11 @@ namespace eCAL
   **/
   struct SSubEventCallbackData
   {
-    SSubEventCallbackData()
-    {
-      type  = sub_event_none;
-      time  = 0;
-      clock = 0;
-    };
-    eCAL_Subscriber_Event type;       //!< subscriber event type
-    long long             time;       //!< subscriber event time in µs
-    long long             clock;      //!< subscriber event clock
-    std::string           tid;        //!< topic id of the of the connected publisher              (for sub_event_update_connection only)
-    SDataTypeInformation  tdatatype;  //!< topic information of the connected subscriber           (for pub_event_update_connection only)
+    eCAL_Subscriber_Event type{sub_event_none}; //!< subscriber event type
+    long long             time{0};              //!< subscriber event time in µs
+    long long             clock{0};             //!< subscriber event clock
+    std::string           tid;                  //!< topic id of the of the connected publisher              (for sub_event_update_connection only)
+    SDataTypeInformation  tdatatype;            //!< topic information of the connected subscriber           (for pub_event_update_connection only)
   };
 
   /**

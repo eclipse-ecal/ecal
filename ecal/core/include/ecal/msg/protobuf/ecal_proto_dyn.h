@@ -180,15 +180,15 @@ namespace eCAL
     class ParserErrorCollector : public google::protobuf::io::ErrorCollector
     {
     public:
-      ParserErrorCollector() {}
-      ~ParserErrorCollector() {}
+      ParserErrorCollector() = default;
+      ~ParserErrorCollector() override = default;
 
       std::string Get() { return (m_ss.str()); }
 
       // Indicates that there was an error in the input at the given line and
       // column numbers.  The numbers are zero-based, so you may want to add
       // 1 to each before printing them.
-      void AddError(int line_, int column_, const std::string& msg_)
+      void AddError(int line_, int column_, const std::string& msg_) override
       {
         Add(line_, column_, "ERROR: " + msg_);
       }
@@ -196,7 +196,7 @@ namespace eCAL
       // Indicates that there was a warning in the input at the given line and
       // column numbers.  The numbers are zero-based, so you may want to add
       // 1 to each before printing them.
-      void AddWarning(int line_, int column_, const std::string& msg_)
+      void AddWarning(int line_, int column_, const std::string& msg_) override
       {
         Add(line_, column_, "WARNING: " + msg_);
       }
@@ -213,8 +213,8 @@ namespace eCAL
     class DescriptorErrorCollector : public google::protobuf::DescriptorPool::ErrorCollector
     {
     public:
-      DescriptorErrorCollector() {}
-      ~DescriptorErrorCollector() {}
+      DescriptorErrorCollector() = default;
+      ~DescriptorErrorCollector() override {}
 
       std::string Get() { return (m_ss.str()); }
 
@@ -224,7 +224,7 @@ namespace eCAL
         const google::protobuf::Message* descriptor,    // Descriptor of the erroneous element.
         ErrorLocation location,                         // One of the location constants, above.
         const std::string& message                      // Human-readable error message.
-      )
+      ) override
       {
         Add(filename, element_name, descriptor, location, "ERROR: " + message);
       }
@@ -235,7 +235,7 @@ namespace eCAL
         const google::protobuf::Message* descriptor,    // Descriptor of the erroneous element.
         ErrorLocation location,                         // One of the location constants, above.
         const std::string& message                      // Human-readable error message.
-      )
+      ) override
       {
         Add(filename, element_name, descriptor, location, "WARNING: " + message);
       }
@@ -294,7 +294,7 @@ namespace eCAL
 
       // create message object
       google::protobuf::Message* proto_msg = GetProtoMessageFromDescriptorSet(pset, msg_type_, error_s_);
-      if (!proto_msg)
+      if (proto_msg == nullptr)
       {
         return (nullptr);
       }

@@ -71,23 +71,10 @@ namespace eCAL
 
     struct STopicMon                                            //<! eCAL Topic struct
     {
-      STopicMon()
-      {
-        rclock          = 0;
-        pid             = 0;
-        tsize           = 0;
-        connections_loc = 0;
-        connections_ext = 0;
-        message_drops   = 0;
-        did             = 0;
-        dclock          = 0;
-        dfreq           = 0;
-      };
-
-      int32_t                             rclock;               //!< registration clock (heart beat)
+      int32_t                             rclock{0};            //!< registration clock (heart beat)
       std::string                         hname;                //!< host name
       std::string                         hgname;               //!< host group name
-      int32_t                             pid;                  //!< process id
+      int32_t                             pid{0};               //!< process id
       std::string                         pname;                //!< process name
       std::string                         uname;                //!< unit name
       std::string                         tid;                  //!< topic id
@@ -96,46 +83,36 @@ namespace eCAL
       SDataTypeInformation                tdatatype;            //!< topic datatype information (name, encoding, descriptor)
 	  
       std::vector<TLayer>                 tlayer;               //!< transport layer details
-      int32_t                             tsize;                //!< topic size
+      int32_t                             tsize{0};             //!< topic size
 
-       int32_t                            connections_loc;      //!< number of local connected entities
-      int32_t                             connections_ext;      //!< number of external connected entities
-      int32_t                             message_drops;        //!< dropped messages
+      int32_t                             connections_loc{0};   //!< number of local connected entities
+      int32_t                             connections_ext{0};   //!< number of external connected entities
+      int32_t                             message_drops{0};     //!< dropped messages
 
-      int64_t                             did;                  //!< data send id (publisher setid)
-      int64_t                             dclock;               //!< data clock (send / receive action)
-      int32_t                             dfreq;                //!< data frequency (send / receive samples per second) [mHz]
+      int64_t                             did{0};               //!< data send id (publisher setid)
+      int64_t                             dclock{0};            //!< data clock (send / receive action)
+      int32_t                             dfreq{0};             //!< data frequency (send / receive samples per second) [mHz]
 
       std::map<std::string, std::string>  attr;                 //!< generic topic description
     };
 
     struct SProcessMon                                          //<! eCAL Process struct
     {
-      SProcessMon()
-      {
-        rclock               = 0;
-        pid                  = 0;
-        state_severity       = 0;
-        state_severity_level = 0;
-        tsync_state          = 0;
-        component_init_state = 0;
-      };
-
-      int32_t        rclock;                                    //!< registration clock
+      int32_t        rclock{0};                                 //!< registration clock
       std::string    hname;                                     //!< host name
       std::string    hgname;                                    //!< host group name
-      int32_t        pid;                                       //!< process id
+      int32_t        pid{0};                                    //!< process id
       std::string    pname;                                     //!< process name
       std::string    uname;                                     //!< unit name
       std::string    pparam;                                    //!< process parameter
 
-      int32_t        state_severity;                            //!< process state info severity:
+      int32_t        state_severity{0};                         //!< process state info severity:
                                                                 //!<   proc_sev_unknown       = 0 (condition unknown)
                                                                 //!<   proc_sev_healthy       = 1 (process healthy)
                                                                 //!<   proc_sev_warning       = 2 (process warning level)
                                                                 //!<   proc_sev_critical      = 3 (process critical)
                                                                 //!<   proc_sev_failed        = 4 (process failed)
-      int32_t        state_severity_level;                      //!< process state info severity level:
+      int32_t        state_severity_level{0};                   //!< process state info severity level:
                                                                 //!<   proc_sev_level_unknown = 0 (condition unknown)
                                                                 //!<   proc_sev_level1        = 1 (default severity level 1)
                                                                 //!<   proc_sev_level2        = 2 (severity level 2)
@@ -145,10 +122,10 @@ namespace eCAL
 
       std::string    state_info;                                //!< process state info as human readable string
 
-      int32_t        tsync_state;                               //!< time synchronization state
+      int32_t        tsync_state{0};                            //!< time synchronization state
       std::string    tsync_mod_name;                            //!< time synchronization module name
 
-      int32_t        component_init_state;                      //!< eCAL component initialization state (eCAL::Initialize(..))
+      int32_t        component_init_state{0};                   //!< eCAL component initialization state (eCAL::Initialize(..))
       std::string    component_init_info;                       //!< like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc)
 
       std::string    ecal_runtime_version;                      //!< loaded / runtime eCAL version of a component
@@ -156,64 +133,44 @@ namespace eCAL
 
     struct SMethodMon                                           //<! eCAL Server Method struct
     {
-      SMethodMon()
-      {
-        call_count = 0;
-      };
       std::string  mname;                                       //<! method name
       std::string  req_type;                                    //<! request type
       std::string  req_desc;                                    //<! request descriptor
       std::string  resp_type;                                   //<! response type
       std::string  resp_desc;                                   //<! response descriptor
-      long long    call_count;                                  //<! call counter
+      long long    call_count{0};                               //<! call counter
     };
 
     struct SServerMon                                           //<! eCAL Server struct
     {
-      SServerMon()
-      {
-        rclock      = 0;
-        pid         = 0;
-        version     = 0;
-        tcp_port_v0 = 0;
-        tcp_port_v1 = 0;
-      };
-
-      int32_t                  rclock;                          //<! registration clock    
+      int32_t                  rclock{0};                       //<! registration clock
       std::string              hname;                           //<! host name
       std::string              pname;                           //<! process name
       std::string              uname;                           //<! unit name
-      int32_t                  pid;                             //<! process id
+      int32_t                  pid{0};                          //<! process id
 
       std::string              sname;                           //<! service name
       std::string              sid;                             //<! service id
 
-      uint32_t                 version;                         //<! service protocol version
-      uint32_t                 tcp_port_v0;                     //<! the tcp port protocol version 0 used for that service
-      uint32_t                 tcp_port_v1;                     //<! the tcp port protocol version 1 used for that service
+      uint32_t                 version{0};                      //<! service protocol version
+      uint32_t                 tcp_port_v0{0};                  //<! the tcp port protocol version 0 used for that service
+      uint32_t                 tcp_port_v1{0};                  //<! the tcp port protocol version 1 used for that service
 
       std::vector<SMethodMon>  methods;                         //<! list of methods
     };
 
     struct SClientMon                                           //<! eCAL Client struct
     {
-      SClientMon()
-      {
-        rclock  = 0;
-        pid     = 0;
-        version = 0;
-      };
-
-      int32_t      rclock;                                      //<! registration clock
+      int32_t      rclock{0};                                   //<! registration clock
       std::string  hname;                                       //<! host name
       std::string  pname;                                       //<! process name
       std::string  uname;                                       //<! unit name
-      int32_t      pid;                                         //<! process id
+      int32_t      pid{0};                                      //<! process id
 
       std::string  sname;                                       //<! service name
       std::string  sid;                                         //<! service id
 
-      uint32_t     version;                                     //<! client protocol version
+      uint32_t     version{0};                                  //<! client protocol version
     };
 
     struct SMonitoring                                          //<! eCAL Monitoring struct
@@ -224,6 +181,5 @@ namespace eCAL
       std::vector<SServerMon>   server;                         //<! server info vector
       std::vector<SClientMon>   clients;                        //<! clients info vector
     };
-
   }
 }

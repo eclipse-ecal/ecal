@@ -97,7 +97,7 @@ ECAL_API int ecal_set_unit_name(const char *unit_name_);
  * @param info_      Info message.
  *
 **/
-ECAL_API void ecal_set_process_state(const int severity_, const int level_, const char* info_);
+ECAL_API void ecal_set_process_state(int severity_, int level_, const char* info_);
 
 /**
  * @brief Return the eCAL process state.
@@ -137,7 +137,7 @@ ECAL_API void ecal_free_mem(void* mem_);
  *
  * @param  time_ms_  Time to sleep in ms.
 **/
-ECAL_API void ecal_sleep_ms(const long time_ms_);
+ECAL_API void ecal_sleep_ms(long time_ms_);
 
 /**
  * @brief Send shutdown event to specified local user process using it's unit name.
@@ -151,7 +151,7 @@ ECAL_API void ecal_shutdown_process_uname(const char* unit_name_);
  *
  * @param process_id_  Process id.
 **/
-ECAL_API void ecal_shutdown_process_id(const int process_id_);
+ECAL_API void ecal_shutdown_process_id(int process_id_);
 
 /**
  * @brief Send shutdown event to all local user processes.
@@ -170,7 +170,7 @@ ECAL_API void ecal_shutdown_core();
  *
  * @param state_  Switch on message loop back..
 **/
-ECAL_API void ecal_enable_loopback(const int state_);
+ECAL_API void ecal_enable_loopback(int state_);
 
 /**
  * @brief Gets type name of the specified topic.
@@ -216,7 +216,7 @@ ECAL_API bool ecal_get_description(const char* topic_name_, const char** topic_d
  *
  * @param level_  The level.
 **/
-ECAL_API void log_setlevel(const int level_);
+ECAL_API void log_setlevel(int level_);
 
 /**
  * @brief Log a message (with current log level).
@@ -257,7 +257,7 @@ ECAL_API bool pub_destroy(ECAL_HANDLE handle_);
  *
  * @return  Number of bytes sent.
 **/
-ECAL_API int pub_send(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_);
+ECAL_API int pub_send(ECAL_HANDLE handle_, const char* payload_, int length_, long long time_);
 
 /**
  * @brief Add callback function for publisher events.
@@ -269,7 +269,7 @@ ECAL_API int pub_send(ECAL_HANDLE handle_, const char* payload_, const int lengt
  *
  * @return  True if succeeded.
 **/
-ECAL_API bool pub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, const PubEventCallbackCT callback_, void* par_);
+ECAL_API bool pub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, PubEventCallbackCT callback_, void* par_);
 
 /**
  * @brief Remove callback function for publisher events.
@@ -315,7 +315,7 @@ ECAL_API bool sub_destroy(ECAL_HANDLE handle_);
  *
  * @return  Length of received buffer.
 **/
-ECAL_API int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_);
+ECAL_API int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, int timeout_);
 
 /**
  * @brief Receive a message from the publisher (able to process zero length buffer).
@@ -329,7 +329,7 @@ ECAL_API int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_bu
  *
  * @return  True if succeeded.
 **/
-ECAL_API bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_);
+ECAL_API bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, int timeout_);
 
 /**
  * @brief Add callback function for incoming receives.
@@ -340,7 +340,7 @@ ECAL_API bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int
  *
  * @return  True if succeeded.
 **/
-ECAL_API bool sub_add_receive_callback(ECAL_HANDLE handle_, const ReceiveCallbackCT callback_, void* par_);
+ECAL_API bool sub_add_receive_callback(ECAL_HANDLE handle_, ReceiveCallbackCT callback_, void* par_);
 
 /**
  * @brief Remove callback function for incoming receives.
@@ -361,7 +361,7 @@ ECAL_API bool sub_rem_receive_callback(ECAL_HANDLE handle_);
  *
  * @return  True if succeeded.
 **/
-ECAL_API bool sub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_, const SubEventCallbackCT callback_, void* par_);
+ECAL_API bool sub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_, SubEventCallbackCT callback_, void* par_);
 
 /**
  * @brief Remove callback function for subscriber events.
@@ -403,7 +403,7 @@ ECAL_API bool dyn_json_sub_destroy(ECAL_HANDLE handle_);
  *
  * @return  True if succeeded.
 **/
-ECAL_API bool dyn_json_sub_add_receive_callback(ECAL_HANDLE handle_, const ReceiveCallbackCT callback_, void* par_);
+ECAL_API bool dyn_json_sub_add_receive_callback(ECAL_HANDLE handle_, ReceiveCallbackCT callback_, void* par_);
 
 /**
  * @brief Remove callback function for incoming receives.
@@ -452,7 +452,7 @@ ECAL_API bool server_destroy(ECAL_HANDLE handle_);
  *
  * @return  True if succeeded.
 **/
-ECAL_API bool server_add_method_callback(ECAL_HANDLE handle_, const char* method_name_, const char* req_type_, const char* resp_type_, const MethodCallbackCT callback_, void* par_);
+ECAL_API bool server_add_method_callback(ECAL_HANDLE handle_, const char* method_name_, const char* req_type_, const char* resp_type_, MethodCallbackCT callback_, void* par_);
 
 /**
  * @brief Remove server method callback.
@@ -503,7 +503,7 @@ ECAL_API bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_);
  *
  * @return  True if succeeded.
 **/
-ECAL_API bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_);
+ECAL_API bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_);
 
 /**
  * @brief Call method of this service (asynchronously with callback).
@@ -516,7 +516,7 @@ ECAL_API bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, 
  *
  * @return  True if succeeded.
 **/
-ECAL_API bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_);
+ECAL_API bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_);
 
 /* TODO: not implemented and not used for now */
 //ECAL_API client_add_response_callback
@@ -565,7 +565,7 @@ ECAL_API int mon_set_incl_filter(const char* filter_);
  *
  * @return Zero if succeeded.
 **/
-ECAL_API int mon_set_filter_state(const bool state_);
+ECAL_API int mon_set_filter_state(bool state_);
 
 /**
  * @brief Get monitoring protobuf string.
