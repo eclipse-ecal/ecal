@@ -17,10 +17,14 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <chrono>
+#include <cstdint>
+#include <cstdio>
+#include <string>
+#include <thread>
 #ifdef __unix__
 
 #include <string.h>
-#include <iostream>
 
 #include "../include/linux/pipe_refresher.h"
 
