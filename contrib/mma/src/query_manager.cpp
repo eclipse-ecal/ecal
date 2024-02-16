@@ -18,6 +18,7 @@
 */
 
 #include "../include/query_manager.h"
+#include <string>
 
 QueryManager::QueryManager()
 {

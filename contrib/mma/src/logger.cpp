@@ -19,7 +19,11 @@
 
 #include "../include/logger.h"
 
+#include <ctime>
+#include <fstream>
+#include <ios>
 #include <string.h>
+#include <string>
 
 Logger* Logger::this_ = nullptr;
 std::ofstream Logger::log_file_;

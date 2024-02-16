@@ -17,6 +17,8 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstdio>
+#include <cstdlib>
 #include <iostream>
 #include <list>
 #include <string>
@@ -29,7 +31,6 @@
 #endif
 
 #ifdef __linux__
-#include <csignal>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
