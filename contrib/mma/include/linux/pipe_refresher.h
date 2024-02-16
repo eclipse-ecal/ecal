@@ -19,11 +19,11 @@
 
 #pragma once
 
+#include <cstdint>
 #ifdef __unix__
 
 #include <atomic>
 #include <functional>
-#include <mutex>
 #include <string>
 #include <thread>
 

@@ -17,6 +17,12 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstdint>
+#include <list>
+#include <map>
+#include <sys/types.h>
+#include <unordered_map>
+#include <vector>
 #ifdef __unix__
 
 #include <mutex>
