@@ -30,11 +30,11 @@
 #include <ecal/ecal_types.h>
 
 #include <map>
-#include <unordered_map>
 #include <string>
 #include <tuple>
+#include <unordered_map>
+#include <utility>
 #include <vector>
-
 
 namespace eCAL
 {

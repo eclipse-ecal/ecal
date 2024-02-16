@@ -37,6 +37,7 @@
 #include "io/shm/ecal_memfile_broadcast_reader.h"
 
 #include <atomic>
+#include <functional>
 #include <memory>
 #include <mutex>
 #include <string>

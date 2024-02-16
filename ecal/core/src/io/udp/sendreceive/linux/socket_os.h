@@ -19,14 +19,14 @@
 
 #pragma once
 
+#include <arpa/inet.h>
+#include <cerrno>
 #include <cstring>
 #include <ifaddrs.h>
 #include <iostream>
 #include <net/if.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
 #include <vector>
-
 
 namespace IO
 {

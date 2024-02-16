@@ -19,10 +19,15 @@
 
 #pragma once
 
-#include <ecal/service/server_manager.h>
+#include <atomic>
+#include <cstddef>
 #include <ecal/service/client_manager.h>
+#include <ecal/service/server_manager.h>
 
 #include <memory>
+#include <mutex>
+#include <thread>
+#include <vector>
 
 namespace eCAL
 {

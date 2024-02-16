@@ -38,6 +38,8 @@
 #include "io/shm/ecal_memfile_db.h"
 
 #include <memory>
+#include <string>
+#include <vector>
 
 namespace eCAL
 {

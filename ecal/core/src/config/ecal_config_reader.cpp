@@ -21,19 +21,25 @@
  * @brief  Global config class
 **/
 
-#include <ecal/ecal_os.h>
+#include <algorithm>
+#include <cctype>
+#include <cstdlib>
 #include <ecal/ecal_defs.h>
+#include <ecal/ecal_os.h>
 
 #include "ecal_def.h"
 #include "ecal_config_reader.h"
 #include "ecal_global_accessors.h"
 #include "util/getenvvar.h"
 
-#include <iostream>
-#include <fstream>
 #include <cassert>
+#include <fstream>
+#include <iostream>
 
 #include <ecal_utils/filesystem.h>
+#include <memory>
+#include <string>
+#include <vector>
 
 #ifdef ECAL_OS_WINDOWS
 #include "ecal_win_main.h"

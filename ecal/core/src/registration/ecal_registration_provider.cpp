@@ -26,6 +26,7 @@
  * 
 **/
 
+#include <atomic>
 #include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
@@ -37,6 +38,10 @@
 #include "io/udp/ecal_udp_sample_sender.h"
 
 #include <chrono>
+#include <iostream>
+#include <memory>
+#include <mutex>
+#include <string>
 
 namespace eCAL
 {

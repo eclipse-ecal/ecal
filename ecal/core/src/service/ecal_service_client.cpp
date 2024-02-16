@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <string>
 
 #include "ecal_clientgate.h"
 #include "ecal_global_accessors.h"

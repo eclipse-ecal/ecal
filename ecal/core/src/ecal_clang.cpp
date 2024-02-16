@@ -21,6 +21,9 @@
  * @brief  eCAL C language interface
 **/
 
+#include <cstddef>
+#include <cstdlib>
+#include <cstring>
 #include <ecal/ecal.h>
 #include <ecal/ecal_clang.h>
 #include <ecal/msg/protobuf/dynamic_json_subscriber.h>

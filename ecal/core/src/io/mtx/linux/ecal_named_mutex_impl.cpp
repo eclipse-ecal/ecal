@@ -21,6 +21,7 @@
  * @brief  eCAL named mutex
 **/
 
+#include <ctime>
 #include <ecal/ecal_os.h>
 
 #include "ecal_named_mutex_impl.h"

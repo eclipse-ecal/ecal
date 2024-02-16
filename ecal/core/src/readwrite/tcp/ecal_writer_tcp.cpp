@@ -21,6 +21,13 @@
  * @brief  tcp writer
 **/
 
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <utility>
+#include <vector>
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
 #endif

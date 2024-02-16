@@ -21,6 +21,7 @@
  * @brief  eCAL time gateway class
 **/
 
+#include <atomic>
 #include <ecal/ecal.h>
 #include <ecal/ecal_os.h>
 
@@ -32,8 +33,9 @@
 #include "ecal_timegate.h"
 #include "util/getenvvar.h"
 
-#include <iostream>
 #include <chrono>
+#include <iostream>
+#include <string>
 #include <thread>
 
 #define etime_initialize_name            "etime_initialize"

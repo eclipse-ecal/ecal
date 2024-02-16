@@ -24,7 +24,9 @@
 
 #pragma once
 
+#include <cstddef>
 #include <ecal/msg/publisher.h>
+#include <string>
 
 namespace eCAL
 {

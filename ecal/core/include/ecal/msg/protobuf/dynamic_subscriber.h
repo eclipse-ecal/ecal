@@ -24,12 +24,15 @@
 
 #pragma once
 
-#include <exception>
-#include <sstream>
 #include <ecal/ecal.h>
 #include <ecal/ecal_deprecate.h>
-#include <ecal/protobuf/ecal_proto_dyn.h>
 #include <ecal/msg/dynamic.h>
+#include <ecal/protobuf/ecal_proto_dyn.h>
+#include <exception>
+#include <functional>
+#include <memory>
+#include <sstream>
+#include <string>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings

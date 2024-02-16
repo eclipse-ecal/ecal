@@ -29,12 +29,16 @@
 #include "pubsub/ecal_pubgate.h"
 #include "monitoring/ecal_monitoring_def.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <cstdlib>
 #include <iostream>
 #include <list>
+#include <map>
+#include <cstdio>
 #include <string>
+#include <tuple>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 #ifdef ECAL_OS_WINDOWS
 #include "ecal_win_main.h"

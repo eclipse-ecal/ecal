@@ -17,6 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <condition_variable>
 #include <cstdint>
 #include <ecal/service/client_session.h>
 #include <memory>

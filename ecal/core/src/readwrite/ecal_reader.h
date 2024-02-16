@@ -23,9 +23,13 @@
 
 #pragma once
 
+#include <chrono>
+#include <cstddef>
+#include <deque>
 #include <ecal/ecal.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_types.h>
+#include <map>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings

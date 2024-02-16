@@ -28,9 +28,11 @@
 
 #include "readwrite/ecal_writer.h"
 
-#include <shared_mutex>
 #include <atomic>
-#include <unordered_map>
+#include <map>
+#include <memory>
+#include <shared_mutex>
+#include <string>
 
 namespace eCAL
 {

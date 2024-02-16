@@ -28,8 +28,9 @@
 #include "ecal_log_impl.h"
 #include "io/udp/ecal_udp_configurations.h"
 
-#include <mutex>
 #include <cstdio>
+#include <functional>
+#include <mutex>
 
 #include <iostream>
 #include <sstream>
