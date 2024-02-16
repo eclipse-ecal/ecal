@@ -94,7 +94,7 @@ namespace
     pb_ostream = pb_ostream_from_buffer((pb_byte_t*)(target_buffer_.data()), target_buffer_.size());
     if (!pb_encode(&pb_ostream, eCAL_pb_Request_fields, &pb_request))
     {
-      std::cerr << "NanoPb eCAL::Service::Request encode failed: " << pb_ostream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Service::Request encode failed: " << pb_ostream.errmsg << '\n';
     }
     else
     {
@@ -140,10 +140,10 @@ namespace
     // decode it
     ///////////////////////////////////////////////
     pb_istream_t pb_istream;
-    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_);
+    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_); // NOLINT(*-pro-type-cstyle-cast)
     if (!pb_decode(&pb_istream, eCAL_pb_Request_fields, &pb_request))
     {
-      std::cerr << "NanoPb eCAL::Service::Request decode failed: " << pb_istream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Service::Request decode failed: " << pb_istream.errmsg << '\n';
     }
 
     ///////////////////////////////////////////////
@@ -220,7 +220,7 @@ namespace
     pb_ostream = pb_ostream_from_buffer((pb_byte_t*)(target_buffer_.data()), target_buffer_.size());
     if (!pb_encode(&pb_ostream, eCAL_pb_Response_fields, &pb_response))
     {
-      std::cerr << "NanoPb eCAL::Service::Response encode failed: " << pb_ostream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Service::Response encode failed: " << pb_ostream.errmsg << '\n';
     }
     else
     {
@@ -266,10 +266,10 @@ namespace
     // decode it
     ///////////////////////////////////////////////
     pb_istream_t pb_istream;
-    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_);
+    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_); // NOLINT(*-pro-type-cstyle-cast)
     if (!pb_decode(&pb_istream, eCAL_pb_Response_fields, &pb_response))
     {
-      std::cerr << "NanoPb eCAL::Service::Response decode failed: " << pb_istream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Service::Response decode failed: " << pb_istream.errmsg << '\n';
     }
 
     ///////////////////////////////////////////////

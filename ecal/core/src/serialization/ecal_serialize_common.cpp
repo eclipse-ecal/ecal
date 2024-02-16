@@ -47,15 +47,15 @@ namespace eCAL
       if (!pb_encode_tag_for_field(stream, field))
         return false;
 
-      auto* str = (std::string*)(*arg);
-      return pb_encode_string(stream, (pb_byte_t*)(str->c_str()), str->size());
+      auto* str = static_cast<std::string*>(*arg);
+      return pb_encode_string(stream, (pb_byte_t*)(str->data()), str->size()); // NOLINT(*-pro-type-cstyle-cast)
     }
 
     void encode_string(pb_callback_t& pb_callback, const std::string& str)
     {
       if (str.empty()) return;
 
-      pb_callback.funcs.encode = &encode_string_field;
+      pb_callback.funcs.encode = &encode_string_field; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = (void*)(&str);
     }
 
@@ -65,18 +65,15 @@ namespace eCAL
       if (*arg == nullptr) return false;
 
       size_t len = stream->bytes_left;
-      auto tgt_string = (std::string*)(*arg);
+      auto* tgt_string = static_cast<std::string*>(*arg);
       tgt_string->resize(len);
 
-      if (!pb_read(stream, (pb_byte_t*)(tgt_string->data()), tgt_string->size()))
-        return false;
-
-      return true;
+      return pb_read(stream, (pb_byte_t*)(tgt_string->data()), tgt_string->size()); // NOLINT(*-pro-type-cstyle-cast)
     }
 
     void decode_string(pb_callback_t& pb_callback, std::string& str)
     {
-      pb_callback.funcs.decode = &decode_string_field;
+      pb_callback.funcs.decode = &decode_string_field; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = &str;
     }
 
@@ -91,7 +88,7 @@ namespace eCAL
       if (!pb_encode_tag_for_field(stream, field))
         return false;
 
-      auto* bytes = (SNanoBytes*)(*arg);
+      auto* bytes = static_cast<SNanoBytes*>(*arg);
       return pb_encode_string(stream, (pb_byte_t*)bytes->content, bytes->length);
     }
 
@@ -99,7 +96,7 @@ namespace eCAL
     {
       if (nano_bytes.length == 0) return;
 
-      pb_callback.funcs.encode = &encode_bytes_field_nano_bytes;
+      pb_callback.funcs.encode = &encode_bytes_field_nano_bytes; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = (void*)(&nano_bytes);
     }
 
@@ -111,13 +108,13 @@ namespace eCAL
       if (!pb_encode_tag_for_field(stream, field))
         return false;
 
-      auto* vec = (std::vector<char>*)(*arg);
-      return pb_encode_string(stream, (pb_byte_t*)vec->data(), vec->size());
+      auto* vec = static_cast<std::vector<char>*>(*arg);
+      return pb_encode_string(stream, (pb_byte_t*)vec->data(), vec->size()); // NOLINT(*-pro-type-cstyle-cast)
     }
 
     void encode_bytes(pb_callback_t& pb_callback, const std::vector<char>& vec)
     {
-      pb_callback.funcs.encode = &encode_bytes_field_vec;
+      pb_callback.funcs.encode = &encode_bytes_field_vec; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = (void*)(&vec);
     }
 
@@ -127,18 +124,15 @@ namespace eCAL
       if (*arg == nullptr) return false;
 
       size_t len = stream->bytes_left;
-      auto tgt_vector = (std::vector<char>*)(*arg);
+      auto* tgt_vector = static_cast<std::vector<char>*>(*arg);
       tgt_vector->resize(len);
 
-      if (!pb_read(stream, (pb_byte_t*)(tgt_vector->data()), tgt_vector->size()))
-        return false;
-
-      return true;
+      return pb_read(stream, (pb_byte_t*)(tgt_vector->data()), tgt_vector->size()); // NOLINT(*-pro-type-cstyle-cast)
     }
 
     void decode_bytes(pb_callback_t& pb_callback, std::vector<char>& vec)
     {
-      pb_callback.funcs.decode = &decode_bytes_field;
+      pb_callback.funcs.decode = &decode_bytes_field; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = &vec;
     }
 
@@ -150,7 +144,7 @@ namespace eCAL
       if (arg == nullptr)  return false;
       if (*arg == nullptr) return false;
 
-      auto* attr_map = (std::map<std::string, std::string>*)(*arg);
+      auto* attr_map = static_cast<std::map<std::string, std::string>*>(*arg);
       for (const auto& iter : *attr_map)
       {
         if (!pb_encode_tag_for_field(stream, field))
@@ -173,7 +167,7 @@ namespace eCAL
 
     void encode_map(pb_callback_t& pb_callback, const std::map<std::string, std::string>& str_map)
     {
-      pb_callback.funcs.encode = &encode_map_field;
+      pb_callback.funcs.encode = &encode_map_field; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = (void*)(&str_map);
     }
 
@@ -193,7 +187,7 @@ namespace eCAL
         return false;
       }
 
-      auto tgt_map = (std::map<std::string, std::string>*)(*arg);
+      auto* tgt_map = static_cast<std::map<std::string, std::string>*>(*arg);
       (*tgt_map)[key] = value;
 
       return true;
@@ -201,7 +195,7 @@ namespace eCAL
 
     void decode_map(pb_callback_t& pb_callback, std::map<std::string, std::string>& str_map)
     {
-      pb_callback.funcs.decode = &decode_map_field;
+      pb_callback.funcs.decode = &decode_map_field; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = &str_map;
     }
 
@@ -213,7 +207,7 @@ namespace eCAL
       if (arg == nullptr)  return false;
       if (*arg == nullptr) return false;
 
-      auto* str_list = (std::list<std::string>*)(*arg);
+      auto* str_list = static_cast<std::list<std::string>*>(*arg);
 
       for (const auto& str : *str_list)
       {
@@ -222,7 +216,7 @@ namespace eCAL
           return false;
         }
 
-        if (!pb_encode_string(stream, (pb_byte_t*)str.c_str(), str.size()))
+        if (!pb_encode_string(stream, (pb_byte_t*)str.c_str(), str.size())) // NOLINT(*-pro-type-cstyle-cast)
         {
           return false;
         }
@@ -240,10 +234,10 @@ namespace eCAL
       std::string tgt_string;
       tgt_string.resize(len);
 
-      if (!pb_read(stream, (pb_byte_t*)(tgt_string.data()), tgt_string.size()))
+      if (!pb_read(stream, (pb_byte_t*)(tgt_string.data()), tgt_string.size())) // NOLINT(*-pro-type-cstyle-cast)
         return false;
 
-      auto tgt_list = (std::list<std::string>*)(*arg);
+      auto* tgt_list = static_cast<std::list<std::string>*>(*arg);
       tgt_list->push_back(tgt_string);
 
       return true;
@@ -257,7 +251,7 @@ namespace eCAL
       if (arg == nullptr)  return false;
       if (*arg == nullptr) return false;
 
-      auto* layer_vec = (std::vector<eCAL::Registration::TLayer>*)(*arg);
+      auto* layer_vec = static_cast<std::vector<eCAL::Registration::TLayer>*>(*arg);
 
       for (auto layer : *layer_vec)
       {
@@ -283,7 +277,7 @@ namespace eCAL
 
         // shm layer parameter
         pb_layer.par_layer.has_layer_par_shm = true;
-        pb_layer.par_layer.layer_par_shm.memory_file_list.funcs.encode = &encode_string_list_field;
+        pb_layer.par_layer.layer_par_shm.memory_file_list.funcs.encode = &encode_string_list_field; // NOLINT(*-pro-type-union-access)
         pb_layer.par_layer.layer_par_shm.memory_file_list.arg          = (void*)(&layer.par_layer.layer_par_shm.memory_file_list);
 
         if (!pb_encode_submessage(stream, eCAL_pb_TLayer_fields, &pb_layer))
@@ -297,7 +291,7 @@ namespace eCAL
 
     void encode_registration_layer(pb_callback_t& pb_callback, const std::vector<eCAL::Registration::TLayer>& layer_vec)
     {
-      pb_callback.funcs.encode = &encode_registration_layer_field;
+      pb_callback.funcs.encode = &encode_registration_layer_field; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = (void*)(&layer_vec);
     }
 
@@ -310,7 +304,7 @@ namespace eCAL
       eCAL::Registration::TLayer layer{};
 
       // decode shm layer parameter
-      pb_layer.par_layer.layer_par_shm.memory_file_list.funcs.decode = &decode_string_list_field;
+      pb_layer.par_layer.layer_par_shm.memory_file_list.funcs.decode = &decode_string_list_field; // NOLINT(*-pro-type-union-access)
       pb_layer.par_layer.layer_par_shm.memory_file_list.arg          = (void*)(&layer.par_layer.layer_par_shm.memory_file_list);
 
       if (!pb_decode(stream, eCAL_pb_TLayer_fields, &pb_layer))
@@ -327,7 +321,7 @@ namespace eCAL
       layer.par_layer.layer_par_tcp.port = pb_layer.par_layer.layer_par_tcp.port;
 
       // add layer
-      auto tgt_vector = (std::vector<eCAL::Registration::TLayer>*)(*arg);
+      auto* tgt_vector = static_cast<std::vector<eCAL::Registration::TLayer>*>(*arg);
       tgt_vector->push_back(layer);
 
       return true;
@@ -335,7 +329,7 @@ namespace eCAL
 
     void decode_registration_layer(pb_callback_t& pb_callback, std::vector<eCAL::Registration::TLayer>& layer_vec)
     {
-      pb_callback.funcs.decode = &decode_registration_layer_field;
+      pb_callback.funcs.decode = &decode_registration_layer_field; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = &layer_vec;
     }
 
@@ -347,7 +341,7 @@ namespace eCAL
       if (arg == nullptr)  return false;
       if (*arg == nullptr) return false;
 
-      auto* method_vec = (std::vector<eCAL::Service::Method>*)(*arg);
+      auto* method_vec = static_cast<std::vector<eCAL::Service::Method>*>(*arg);
 
       for (const auto& method : *method_vec)
       {
@@ -375,7 +369,7 @@ namespace eCAL
 
     void encode_service_methods(pb_callback_t& pb_callback, const std::vector<eCAL::Service::Method>& method_vec)
     {
-      pb_callback.funcs.encode = &encode_service_methods_field;
+      pb_callback.funcs.encode = &encode_service_methods_field; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = (void*)(&method_vec);
     }
 
@@ -404,7 +398,7 @@ namespace eCAL
       method.call_count = pb_method.call_count;
 
       // add method to vector
-      auto* method_vec = (std::vector<eCAL::Service::Method>*)(*arg);
+      auto* method_vec = static_cast<std::vector<eCAL::Service::Method>*>(*arg);
       method_vec->emplace_back(method);
 
       return true;
@@ -412,7 +406,7 @@ namespace eCAL
 
     void decode_service_methods(pb_callback_t& pb_callback, std::vector<eCAL::Service::Method>& method_vec)
     {
-      pb_callback.funcs.decode = &decode_service_methods_field;
+      pb_callback.funcs.decode = &decode_service_methods_field; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = &method_vec;
     }
   }

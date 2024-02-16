@@ -230,7 +230,7 @@ namespace
     pb_ostream = pb_ostream_from_buffer((pb_byte_t*)(target_buffer_.data()), target_buffer_.size());
     if (!pb_encode(&pb_ostream, eCAL_pb_Sample_fields, &pb_sample))
     {
-      std::cerr << "NanoPb eCAL::Registration::Sample encode failed: " << pb_ostream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Registration::Sample encode failed: " << pb_ostream.errmsg << '\n';
     }
     else
     {
@@ -428,10 +428,10 @@ namespace
     // decode it
     ///////////////////////////////////////////////
     pb_istream_t pb_istream;
-    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_);
+    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_); // NOLINT(*-pro-type-cstyle-cast)
     if (!pb_decode(&pb_istream, eCAL_pb_Sample_fields, &pb_sample))
     {
-      std::cerr << "NanoPb eCAL::Registration::Sample decode failed: " << pb_istream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Registration::Sample decode failed: " << pb_istream.errmsg << '\n';
     }
 
     ///////////////////////////////////////////////
@@ -450,7 +450,7 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    auto* sample_list = (std::list<eCAL::Registration::Sample>*)(*arg);
+    auto* sample_list = static_cast<std::list<eCAL::Registration::Sample>*>(*arg);
 
     for (const auto& sample : *sample_list)
     {
@@ -479,7 +479,7 @@ namespace
     ///////////////////////////////////////////////
     // prepare sample for encoding
     ///////////////////////////////////////////////
-    pb_sample_list_.samples.funcs.encode = &encode_sample_list_field;
+    pb_sample_list_.samples.funcs.encode = &encode_sample_list_field; // NOLINT(*-pro-type-union-access)
     pb_sample_list_.samples.arg = (void*)(&registration_list_.samples);
 
     ///////////////////////////////////////////////
@@ -511,7 +511,7 @@ namespace
     pb_ostream = pb_ostream_from_buffer((pb_byte_t*)(target_buffer_.data()), target_buffer_.size());
     if (!pb_encode(&pb_ostream, eCAL_pb_SampleList_fields, &pb_sample_list))
     {
-      std::cerr << "NanoPb eCAL::Registration::SampleList encode failed: " << pb_ostream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Registration::SampleList encode failed: " << pb_ostream.errmsg << '\n';
     }
     else
     {
@@ -542,7 +542,7 @@ namespace
     AssignValues(pb_sample, sample);
 
     // add sample to list
-    auto* sample_list = (std::list<eCAL::Registration::Sample>*)(*arg);
+    auto* sample_list = static_cast<std::list<eCAL::Registration::Sample>*>(*arg);
     sample_list->push_back(sample);
 
     return true;
@@ -559,17 +559,17 @@ namespace
     ///////////////////////////////////////////////
     // prepare sample for decoding
     ///////////////////////////////////////////////
-    pb_sample_list.samples.funcs.decode = &decode_sample_list_field;
+    pb_sample_list.samples.funcs.decode = &decode_sample_list_field; // NOLINT(*-pro-type-union-access)
     pb_sample_list.samples.arg = &registration_list_.samples;
 
     ///////////////////////////////////////////////
     // decode it
     ///////////////////////////////////////////////
     pb_istream_t pb_istream;
-    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_);
+    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_); // NOLINT(*-pro-type-cstyle-cast)
     if (!pb_decode(&pb_istream, eCAL_pb_SampleList_fields, &pb_sample_list))
     {
-      std::cerr << "NanoPb eCAL::Registration::Sample decode failed: " << pb_istream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Registration::Sample decode failed: " << pb_istream.errmsg << '\n';
     }
 
     return true;

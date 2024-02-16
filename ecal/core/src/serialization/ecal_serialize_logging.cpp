@@ -94,7 +94,7 @@ namespace
     pb_ostream = pb_ostream_from_buffer((pb_byte_t*)(target_buffer_.data()), target_buffer_.size());
     if (!pb_encode(&pb_ostream, eCAL_pb_LogMessage_fields, &pb_log_message))
     {
-      std::cerr << "NanoPb eCAL::Logging::LogMessage encode failed: " << pb_ostream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Logging::LogMessage encode failed: " << pb_ostream.errmsg << '\n';
     }
     else
     {
@@ -153,10 +153,10 @@ namespace
     // decode it
     ///////////////////////////////////////////////
     pb_istream_t pb_istream;
-    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_);
+    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_); // NOLINT(*-pro-type-cstyle-cast)
     if (!pb_decode(&pb_istream, eCAL_pb_LogMessage_fields, &pb_log_message))
     {
-      std::cerr << "NanoPb eCAL::Logging::LogMessage decode failed: " << pb_istream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Logging::LogMessage decode failed: " << pb_istream.errmsg << '\n';
     }
 
     ///////////////////////////////////////////////
@@ -175,7 +175,7 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    auto* sample_list = (std::list<eCAL::Logging::LogMessage>*)(*arg);
+    auto* sample_list = static_cast<std::list<eCAL::Logging::LogMessage>*>(*arg);
 
     for (const auto& sample : *sample_list)
     {
@@ -204,7 +204,7 @@ namespace
     ///////////////////////////////////////////////
     // prepare sample for encoding
     ///////////////////////////////////////////////
-    pb_log_message_list_.log_messages.funcs.encode = &encode_log_message_list_field;
+    pb_log_message_list_.log_messages.funcs.encode = &encode_log_message_list_field; // NOLINT(*-pro-type-union-access)
     pb_log_message_list_.log_messages.arg = (void*)(&log_message_list_.log_messages);
 
     ///////////////////////////////////////////////
@@ -234,7 +234,7 @@ namespace
     pb_ostream = pb_ostream_from_buffer((pb_byte_t*)(target_buffer_.data()), target_buffer_.size());
     if (!pb_encode(&pb_ostream, eCAL_pb_LogMessageList_fields, &pb_log_message_list))
     {
-      std::cerr << "NanoPb eCAL::Logging::LogMessageList encode failed: " << pb_ostream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Logging::LogMessageList encode failed: " << pb_ostream.errmsg << '\n';
     }
     else
     {
@@ -265,7 +265,7 @@ namespace
     AssignValues(pb_log_message, sample);
 
     // add sample to list
-    auto* sample_list = (std::list<eCAL::Logging::LogMessage>*)(*arg);
+    auto* sample_list = static_cast<std::list<eCAL::Logging::LogMessage>*>(*arg);
     sample_list->push_back(sample);
 
     return true;
@@ -282,17 +282,17 @@ namespace
     ///////////////////////////////////////////////
     // prepare sample for decoding
     ///////////////////////////////////////////////
-    pb_log_message_list.log_messages.funcs.decode = &decode_log_message_list_field;
+    pb_log_message_list.log_messages.funcs.decode = &decode_log_message_list_field; // NOLINT(*-pro-type-union-access)
     pb_log_message_list.log_messages.arg = &log_message_list_.log_messages;
 
     ///////////////////////////////////////////////
     // decode it
     ///////////////////////////////////////////////
     pb_istream_t pb_istream;
-    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_);
+    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_); // NOLINT(*-pro-type-cstyle-cast)
     if (!pb_decode(&pb_istream, eCAL_pb_LogMessageList_fields, &pb_log_message_list))
     {
-      std::cerr << "NanoPb eCAL::Logging::LogMessageList decode failed: " << pb_istream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Logging::LogMessageList decode failed: " << pb_istream.errmsg << '\n';
     }
 
     return true;

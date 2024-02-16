@@ -59,7 +59,7 @@ namespace
     // topic content payload
     if ((payload_addr != nullptr) && (payload_size > 0))
     {
-      nano_bytes_.content = (pb_byte_t*)(payload_addr);
+      nano_bytes_.content = (pb_byte_t*)(payload_addr); // NOLINT(*-pro-type-cstyle-cast)
       nano_bytes_.length  = payload_size;
     }
   }
@@ -126,7 +126,7 @@ namespace
     pb_ostream = pb_ostream_from_buffer((pb_byte_t*)(target_buffer_.data()), target_buffer_.size());
     if (!pb_encode(&pb_ostream, eCAL_pb_Sample_fields, &pb_sample))
     {
-      std::cerr << "NanoPb eCAL::Payload::Sample encode failed: " << pb_ostream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Payload::Sample encode failed: " << pb_ostream.errmsg << '\n';
     }
     else
     {
@@ -164,10 +164,10 @@ namespace
     // decode it
     ///////////////////////////////////////////////
     pb_istream_t pb_istream;
-    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_);
+    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_); // NOLINT(*-pro-type-cstyle-cast)
     if (!pb_decode(&pb_istream, eCAL_pb_Sample_fields, &pb_sample))
     {
-      std::cerr << "NanoPb eCAL::Payload::Sample decode failed: " << pb_istream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Payload::Sample decode failed: " << pb_istream.errmsg << '\n';
     }
 
     ///////////////////////////////////////////////

@@ -82,7 +82,7 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    auto* process_vec = (std::vector<eCAL::Monitoring::SProcessMon>*)(*arg);
+    auto* process_vec = static_cast<std::vector<eCAL::Monitoring::SProcessMon>*>(*arg);
 
     for (const auto& process : *process_vec)
     {
@@ -114,7 +114,7 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    auto* layer_vec = (std::vector<eCAL::Monitoring::TLayer>*)(*arg);
+    auto* layer_vec = static_cast<std::vector<eCAL::Monitoring::TLayer>*>(*arg);
 
     for (auto layer : *layer_vec)
     {
@@ -139,7 +139,7 @@ namespace
 
   void encode_mon_registration_layer(pb_callback_t& pb_callback, const std::vector<eCAL::Monitoring::TLayer>& layer_vec)
   {
-    pb_callback.funcs.encode = &encode_mon_registration_layer_field;
+    pb_callback.funcs.encode = &encode_mon_registration_layer_field; // NOLINT(*-pro-type-union-access)
     pb_callback.arg = (void*)(&layer_vec);
   }
 
@@ -196,7 +196,7 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    auto* monitoring   = (eCAL::Monitoring::SMonitoring*)(*arg);
+    auto* monitoring   = static_cast<eCAL::Monitoring::SMonitoring*>(*arg);
 
     //////////////////
     // publisher
@@ -253,7 +253,7 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    auto* method_vec = (std::vector<eCAL::Monitoring::SMethodMon>*)(*arg);
+    auto* method_vec = static_cast<std::vector<eCAL::Monitoring::SMethodMon>*>(*arg);
 
     for (const auto& method : *method_vec)
     {
@@ -281,7 +281,7 @@ namespace
 
   void encode_mon_service_methods(pb_callback_t& pb_callback, const std::vector<eCAL::Monitoring::SMethodMon>& method_vec)
   {
-    pb_callback.funcs.encode = &encode_mon_service_methods_field;
+    pb_callback.funcs.encode = &encode_mon_service_methods_field; // NOLINT(*-pro-type-union-access)
     pb_callback.arg = (void*)(&method_vec);
   }
 
@@ -319,7 +319,7 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    auto* service_vec = (std::vector<eCAL::Monitoring::SServerMon>*)(*arg);
+    auto* service_vec = static_cast<std::vector<eCAL::Monitoring::SServerMon>*>(*arg);
 
     for (const auto& service : *service_vec)
     {
@@ -374,7 +374,7 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    auto* client_vec = (std::vector<eCAL::Monitoring::SClientMon>*)(*arg);
+    auto* client_vec = static_cast<std::vector<eCAL::Monitoring::SClientMon>*>(*arg);
 
     for (const auto& client : *client_vec)
     {
@@ -406,25 +406,25 @@ namespace
     ///////////////////////////////////////////////
     // processes
     ///////////////////////////////////////////////
-    pb_mon_message_.processes.funcs.encode = &encode_mon_message_processes_field;
+    pb_mon_message_.processes.funcs.encode = &encode_mon_message_processes_field; // NOLINT(*-pro-type-union-access)
     pb_mon_message_.processes.arg = (void*)(&mon_message_.processes);
 
     ///////////////////////////////////////////////
     // topics (publisher/subscriber)
     ///////////////////////////////////////////////
-    pb_mon_message_.topics.funcs.encode = &encode_mon_message_topics_field;
+    pb_mon_message_.topics.funcs.encode = &encode_mon_message_topics_field; // NOLINT(*-pro-type-union-access)
     pb_mon_message_.topics.arg = (void*)(&mon_message_);
 
     ///////////////////////////////////////////////
     // services
     ///////////////////////////////////////////////
-    pb_mon_message_.services.funcs.encode = &encode_mon_message_services_field;
+    pb_mon_message_.services.funcs.encode = &encode_mon_message_services_field; // NOLINT(*-pro-type-union-access)
     pb_mon_message_.services.arg = (void*)(&mon_message_.server);
 
     ///////////////////////////////////////////////
     // clients
     ///////////////////////////////////////////////
-    pb_mon_message_.clients.funcs.encode = &encode_mon_message_clients_field;
+    pb_mon_message_.clients.funcs.encode = &encode_mon_message_clients_field; // NOLINT(*-pro-type-union-access)
     pb_mon_message_.clients.arg = (void*)(&mon_message_.clients);
   }
 
@@ -464,7 +464,7 @@ namespace
     pb_ostream = pb_ostream_from_buffer((pb_byte_t*)(target_buffer_.data()), target_buffer_.size());
     if (!pb_encode(&pb_ostream, eCAL_pb_Monitoring_fields, &pb_mon_message))
     {
-      std::cerr << "NanoPb eCAL::Monitoring::SMonitoring encode failed: " << pb_ostream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Monitoring::SMonitoring encode failed: " << pb_ostream.errmsg << '\n';
     }
     else
     {
@@ -545,7 +545,7 @@ namespace
     AssignValues(pb_process, process);
 
     // add sample to vector
-    auto* processes_vec = (std::vector<eCAL::Monitoring::SProcessMon>*)(*arg);
+    auto* processes_vec = static_cast<std::vector<eCAL::Monitoring::SProcessMon>*>(*arg);
     processes_vec->push_back(process);
 
     return true;
@@ -573,7 +573,7 @@ namespace
     layer.confirmed = pb_layer.confirmed;
 
     // add layer
-    auto tgt_vector = (std::vector<eCAL::Monitoring::TLayer>*)(*arg);
+    auto* tgt_vector = static_cast<std::vector<eCAL::Monitoring::TLayer>*>(*arg);
     tgt_vector->push_back(layer);
 
     return true;
@@ -581,7 +581,7 @@ namespace
 
   void decode_mon_registration_layer(pb_callback_t& pb_callback, std::vector<eCAL::Monitoring::TLayer>& layer_vec)
   {
-    pb_callback.funcs.decode = &decode_mon_registration_layer_field;
+    pb_callback.funcs.decode = &decode_mon_registration_layer_field; // NOLINT(*-pro-type-union-access)
     pb_callback.arg = &layer_vec;
   }
 
@@ -665,7 +665,7 @@ namespace
     AssignValues(pb_topic, topic);
 
     // add sample to vector
-    auto* monitoring = (eCAL::Monitoring::SMonitoring*)(*arg);
+    auto* monitoring = static_cast<eCAL::Monitoring::SMonitoring*>(*arg);
     if (topic.direction == "publisher")
     {
       monitoring->publisher.push_back(topic);
@@ -706,7 +706,7 @@ namespace
     method.call_count = pb_method.call_count;
 
     // add method to vector
-    auto* method_vec = (std::vector<eCAL::Monitoring::SMethodMon>*)(*arg);
+    auto* method_vec = static_cast<std::vector<eCAL::Monitoring::SMethodMon>*>(*arg);
     method_vec->emplace_back(method);
 
     return true;
@@ -714,7 +714,7 @@ namespace
 
   void decode_mon_service_methods(pb_callback_t& pb_callback, std::vector<eCAL::Monitoring::SMethodMon>& method_vec)
   {
-    pb_callback.funcs.decode = &decode_mon_service_methods_field;
+    pb_callback.funcs.decode = &decode_mon_service_methods_field; // NOLINT(*-pro-type-union-access)
     pb_callback.arg = &method_vec;
   }
 
@@ -778,7 +778,7 @@ namespace
     AssignValues(pb_service, service);
 
     // add sample to vector
-    auto* services_vec = (std::vector<eCAL::Monitoring::SServerMon>*)(*arg);
+    auto* services_vec = static_cast<std::vector<eCAL::Monitoring::SServerMon>*>(*arg);
     services_vec->push_back(service);
 
     return true;
@@ -841,7 +841,7 @@ namespace
     AssignValues(pb_client, client);
 
     // add sample to vector
-    auto* client_vec = (std::vector<eCAL::Monitoring::SClientMon>*)(*arg);
+    auto* client_vec = static_cast<std::vector<eCAL::Monitoring::SClientMon>*>(*arg);
     client_vec->push_back(client);
 
     return true;
@@ -861,35 +861,35 @@ namespace
     ///////////////////////////////////////////////
     // prepare processes for decoding
     ///////////////////////////////////////////////
-    pb_mon_message.processes.funcs.decode = &decode_processes_field;
+    pb_mon_message.processes.funcs.decode = &decode_processes_field; // NOLINT(*-pro-type-union-access)
     pb_mon_message.processes.arg = &mon_message_.processes;
 
     ///////////////////////////////////////////////
     // prepare topics for decoding
     ///////////////////////////////////////////////
-    pb_mon_message.topics.funcs.decode = &decode_topics_field;
+    pb_mon_message.topics.funcs.decode = &decode_topics_field; // NOLINT(*-pro-type-union-access)
     pb_mon_message.topics.arg = &mon_message_;
 
     ///////////////////////////////////////////////
     // prepare services for decoding
     ///////////////////////////////////////////////
-    pb_mon_message.services.funcs.decode = &decode_services_field;
+    pb_mon_message.services.funcs.decode = &decode_services_field; // NOLINT(*-pro-type-union-access)
     pb_mon_message.services.arg = &mon_message_.server;
 
     ///////////////////////////////////////////////
     // prepare clients for decoding
     ///////////////////////////////////////////////
-    pb_mon_message.clients.funcs.decode = &decode_clients_field;
+    pb_mon_message.clients.funcs.decode = &decode_clients_field; // NOLINT(*-pro-type-union-access)
     pb_mon_message.clients.arg = &mon_message_.clients;
 
     ///////////////////////////////////////////////
     // decode it
     ///////////////////////////////////////////////
     pb_istream_t pb_istream;
-    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_);
+    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_); // NOLINT(*-pro-type-cstyle-cast)
     if (!pb_decode(&pb_istream, eCAL_pb_Monitoring_fields, &pb_mon_message))
     {
-      std::cerr << "NanoPb eCAL::Monitoring::SMonitoring decode failed: " << pb_istream.errmsg << std::endl;
+      std::cerr << "NanoPb eCAL::Monitoring::SMonitoring decode failed: " << pb_istream.errmsg << '\n';
     }
 
     return true;
