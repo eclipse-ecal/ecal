@@ -42,7 +42,7 @@
       "description": "eCAL core library only configuration",
       "cacheVariables": {
         "HAS_HDF5": "OFF",
-        "HAS_QT5": "OFF",
+        "HAS_QT": "OFF",
         "HAS_CURL": "OFF",
         "HAS_FTXUI": "OFF",
         "BUILD_APPS": "OFF",
@@ -105,7 +105,7 @@
       "displayName": "GUI Apps",
       "description": "eCAL GUI and CLI applications",
       "cacheVariables": {
-        "HAS_QT5": "ON"
+        "HAS_QT": "ON"
       }
     }
   ],
