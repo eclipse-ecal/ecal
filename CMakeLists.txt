@@ -123,10 +123,10 @@ if(WIN32)
   cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                      ON  "HAS_QT" OFF)
 else()
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                         OFF)
+  option(ECAL_THIRDPARTY_BUILD_YAML-CPP        "Build yaml-cpp with eCAL"                                         OFF)
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                             OFF)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                             OFF)
   cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                     OFF "HAS_QT" OFF)
-  option(ECAL_THIRDPARTY_BUILD_YAML-CPP        "Build yaml-cpp with eCAL"                                         OFF)
 endif()
 
 # This should be ON, unless build ecal hdf5 for Matlab usage
