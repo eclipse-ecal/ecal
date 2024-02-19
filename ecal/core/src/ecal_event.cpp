@@ -41,7 +41,7 @@ namespace
     if(event_ == nullptr) return(false);
     eCAL::EventHandleT event;
     event.name   = event_name_;
-    event.handle = ::CreateEvent(nullptr, false, false, event_name_.c_str());
+    event.handle = ::CreateEvent(nullptr, FALSE, FALSE, event_name_.c_str());
     if(event.handle != nullptr)
     {
       *event_ = event;

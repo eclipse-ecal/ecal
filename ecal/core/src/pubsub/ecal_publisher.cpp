@@ -307,12 +307,12 @@ namespace eCAL
   {
     std::stringstream out;
 
-    out << indent_ << "----------------------" << std::endl;
-    out << indent_ << " class CPublisher"      << std::endl;
-    out << indent_ << "----------------------" << std::endl;
-    out << indent_ << "m_created:            " << m_created << std::endl;
+    out << indent_ << "----------------------" << '\n';
+    out << indent_ << " class CPublisher"      << '\n';
+    out << indent_ << "----------------------" << '\n';
+    out << indent_ << "m_created:            " << m_created << '\n';
     if((m_datawriter != nullptr) && m_datawriter->IsCreated()) out << indent_ << m_datawriter->Dump("    ");
-    out << std::endl;
+    out << '\n';
 
     return(out.str());
   }

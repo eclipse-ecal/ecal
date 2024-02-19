@@ -92,7 +92,6 @@ namespace eCAL
   std::atomic<bool> CRegistrationProvider::m_created;
 
   CRegistrationProvider::CRegistrationProvider() :
-                    m_reg_refresh(CMN_REGISTRATION_REFRESH),
                     m_reg_topics(false),
                     m_reg_services(false),
                     m_reg_process(false),
@@ -110,15 +109,13 @@ namespace eCAL
   {
     if(m_created) return;
 
-    m_reg_refresh     = Config::GetRegistrationRefreshMs();
-
-    m_reg_topics      = topics_;
-    m_reg_services    = services_;
-    m_reg_process     = process_;
+    m_reg_topics   = topics_;
+    m_reg_services = services_;
+    m_reg_process  = process_;
 
     // send registration to shared memory and to udp
     m_use_registration_udp = !Config::Experimental::IsNetworkMonitoringDisabled();
-    m_use_registration_shm     = Config::Experimental::IsShmMonitoringEnabled();
+    m_use_registration_shm = Config::Experimental::IsShmMonitoringEnabled();
 
     if (m_use_registration_udp)
     {
@@ -138,7 +135,7 @@ namespace eCAL
 #if ECAL_CORE_REGISTRATION_SHM
     if (m_use_registration_shm)
     {
-      std::cout << "Shared memory monitoring is enabled (domain: " << Config::Experimental::GetShmMonitoringDomain() << " - queue size: " << Config::Experimental::GetShmMonitoringQueueSize() << ")" << std::endl;
+      std::cout << "Shared memory monitoring is enabled (domain: " << Config::Experimental::GetShmMonitoringDomain() << " - queue size: " << Config::Experimental::GetShmMonitoringQueueSize() << ")" << '\n';
       m_memfile_broadcast.Create(Config::Experimental::GetShmMonitoringDomain(), Config::Experimental::GetShmMonitoringQueueSize());
       m_memfile_broadcast_writer.Bind(&m_memfile_broadcast);
     }

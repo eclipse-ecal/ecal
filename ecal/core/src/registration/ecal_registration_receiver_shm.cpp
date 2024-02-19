@@ -79,7 +79,7 @@ namespace eCAL
         {
           for (const auto& sample : sample_list.samples)
           {
-            if (g_registration_receiver()) g_registration_receiver()->ApplySample(sample);
+            if (g_registration_receiver() != nullptr) g_registration_receiver()->ApplySample(sample);
           }
         }
       }

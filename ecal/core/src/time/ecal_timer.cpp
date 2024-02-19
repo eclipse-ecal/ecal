@@ -36,7 +36,7 @@ namespace eCAL
   public:
     CTimerImpl() : m_stop(false), m_running(false), m_last_error(0) {}
 
-    CTimerImpl(const int timeout_, TimerCallbackT callback_, const int delay_) : m_stop(false), m_running(false) { Start(timeout_, callback_, delay_); }
+    CTimerImpl(const int timeout_, const TimerCallbackT& callback_, const int delay_) : m_stop(false), m_running(false) { Start(timeout_, callback_, delay_); }
 
     virtual ~CTimerImpl() { Stop(); }
     CTimerImpl(const CTimerImpl&) = delete;
@@ -44,7 +44,7 @@ namespace eCAL
     CTimerImpl(CTimerImpl&& rhs) = delete;
     CTimerImpl& operator=(CTimerImpl&& rhs) = delete;
 
-    bool Start(const int timeout_, TimerCallbackT callback_, const int delay_)
+    bool Start(const int timeout_, const TimerCallbackT& callback_, const int delay_)
     {
       assert(m_running == false);
       if(m_running)    return(false);
@@ -65,7 +65,7 @@ namespace eCAL
     }
 
   private:
-    void Thread(TimerCallbackT callback_, int timeout_, int delay_)
+    void Thread(const TimerCallbackT& callback_, int timeout_, int delay_)
     {
       assert(callback_ != nullptr);
       if (callback_ == nullptr) return;
@@ -139,7 +139,7 @@ namespace eCAL
     m_timer = std::make_unique<CTimerImpl>();
   }
 
-  CTimer::CTimer(const int timeout_, TimerCallbackT callback_, const int delay_ /*= 0*/) : m_timer(nullptr)
+  CTimer::CTimer(const int timeout_, const TimerCallbackT& callback_, const int delay_ /*= 0*/) : m_timer(nullptr)
   { 
     m_timer = std::make_unique<CTimerImpl>();
     m_timer->Start(timeout_, callback_, delay_);
@@ -151,7 +151,7 @@ namespace eCAL
     m_timer.reset();
   }
 
-  bool CTimer::Start(const int timeout_, TimerCallbackT callback_, const int delay_ /*= 0*/)
+  bool CTimer::Start(const int timeout_, const TimerCallbackT& callback_, const int delay_ /*= 0*/)
   {
     return(m_timer->Start(timeout_, callback_, delay_));
   }

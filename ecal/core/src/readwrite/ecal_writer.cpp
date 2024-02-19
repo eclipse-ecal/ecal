@@ -772,22 +772,22 @@ namespace eCAL
   {
     std::stringstream out;
 
-    out << std::endl;
-    out << indent_ << "--------------------------" << std::endl;
-    out << indent_ << " class CDataWriter        " << std::endl;
-    out << indent_ << "--------------------------" << std::endl;
-    out << indent_ << "m_host_name:              " << m_host_name << std::endl;
-    out << indent_ << "m_host_group_name:        " << m_host_group_name << std::endl;
-    out << indent_ << "m_topic_name:             " << m_topic_name << std::endl;
-    out << indent_ << "m_topic_id:               " << m_topic_id << std::endl;
-    out << indent_ << "m_topic_info.encoding:    " << m_topic_info.encoding << std::endl;
-    out << indent_ << "m_topic_info.name:        " << m_topic_info.name << std::endl;
-    out << indent_ << "m_topic_info.desc:        " << m_topic_info.descriptor << std::endl;
-    out << indent_ << "m_id:                     " << m_id << std::endl;
-    out << indent_ << "m_clock:                  " << m_clock << std::endl;
-    out << indent_ << "m_created:                " << m_created << std::endl;
-    out << indent_ << "m_loc_subscribed:         " << m_loc_subscribed << std::endl;
-    out << indent_ << "m_ext_subscribed:         " << m_ext_subscribed << std::endl;
+    out << '\n';
+    out << indent_ << "--------------------------" << '\n';
+    out << indent_ << " class CDataWriter        " << '\n';
+    out << indent_ << "--------------------------" << '\n';
+    out << indent_ << "m_host_name:              " << m_host_name << '\n';
+    out << indent_ << "m_host_group_name:        " << m_host_group_name << '\n';
+    out << indent_ << "m_topic_name:             " << m_topic_name << '\n';
+    out << indent_ << "m_topic_id:               " << m_topic_id << '\n';
+    out << indent_ << "m_topic_info.encoding:    " << m_topic_info.encoding << '\n';
+    out << indent_ << "m_topic_info.name:        " << m_topic_info.name << '\n';
+    out << indent_ << "m_topic_info.desc:        " << m_topic_info.descriptor << '\n';
+    out << indent_ << "m_id:                     " << m_id << '\n';
+    out << indent_ << "m_clock:                  " << m_clock << '\n';
+    out << indent_ << "m_created:                " << m_created << '\n';
+    out << indent_ << "m_loc_subscribed:         " << m_loc_subscribed << '\n';
+    out << indent_ << "m_ext_subscribed:         " << m_ext_subscribed << '\n';
     out << std::endl;
 
     return(out.str());

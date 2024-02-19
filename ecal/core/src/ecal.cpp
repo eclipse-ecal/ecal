@@ -214,12 +214,13 @@ namespace eCAL
    *
    * @param component_  Check specific component or 0 for general state of eCAL core.
    *
-   * @return True if eCAL is initialized.
+   * @return 1 if eCAL is initialized.
   **/
   int IsInitialized(unsigned int component_)
   {
     if (g_globals_ctx == nullptr) return(0);
-    return(g_globals()->IsInitialized(component_));
+    if(g_globals()->IsInitialized(component_)) return(1);
+    return(0);
   }
 
   /**

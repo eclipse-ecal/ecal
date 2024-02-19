@@ -149,8 +149,8 @@ extern "C"
 
   ECALC_API int eCAL_Util_GetTopicTypeName(const char* topic_name_, void* topic_type_, int topic_type_len_)
   {
-    if(!topic_name_) return(0);
-    if(!topic_type_) return(0);
+    if(topic_name_ == nullptr) return(0);
+    if(topic_type_ == nullptr) return(0);
     eCAL::SDataTypeInformation topic_info;
     if(eCAL::Util::GetTopicDataTypeInformation(topic_name_, topic_info))
     {
@@ -161,8 +161,8 @@ extern "C"
 
   ECALC_API int eCAL_Util_GetTopicEncoding(const char* topic_name_, void* topic_encoding_, int topic_encoding_len_)
   {
-    if (!topic_name_)     return(0);
-    if (!topic_encoding_) return(0);
+    if (topic_name_ == nullptr)     return(0);
+    if (topic_encoding_ == nullptr) return(0);
     eCAL::SDataTypeInformation topic_info;
     if (eCAL::Util::GetTopicDataTypeInformation(topic_name_, topic_info))
     {
@@ -173,8 +173,8 @@ extern "C"
 
   ECALC_API int eCAL_Util_GetTopicDescription(const char* topic_name_, void* topic_desc_, int topic_desc_len_)
   {
-    if(!topic_name_) return(0);
-    if(!topic_desc_) return(0);
+    if(topic_name_ == nullptr) return(0);
+    if(topic_desc_ == nullptr) return(0);
     eCAL::SDataTypeInformation topic_info;
     if (eCAL::Util::GetTopicDataTypeInformation(topic_name_, topic_info))
     {
@@ -185,9 +185,9 @@ extern "C"
 
   ECALC_API int eCAL_Util_GetServiceResponseTypeName(const char* service_name_, const char* method_name_, void* resp_type_, int resp_type_len_)
   {
-    if (!service_name_) return(0);
-    if (!method_name_)  return(0);
-    if (!resp_type_)    return(0);
+    if (service_name_ == nullptr) return(0);
+    if (method_name_ == nullptr)  return(0);
+    if (resp_type_ == nullptr)    return(0);
     std::string req_type, resp_type;
     if (eCAL::Util::GetServiceTypeNames(service_name_, method_name_, req_type, resp_type))
     {
@@ -198,9 +198,9 @@ extern "C"
 
   ECALC_API int eCAL_Util_GetServiceRequestDescription(const char* service_name_, const char* method_name_, void* req_desc_, int req_desc_len_)
   {
-    if (!service_name_) return(0);
-    if (!method_name_)  return(0);
-    if (!req_desc_)     return(0);
+    if (service_name_ == nullptr) return(0);
+    if (method_name_ == nullptr)  return(0);
+    if (req_desc_ == nullptr)     return(0);
     std::string req_desc, resp_desc;
     if (eCAL::Util::GetServiceDescription(service_name_, method_name_, req_desc, resp_desc))
     {
@@ -211,9 +211,9 @@ extern "C"
 
   ECALC_API int eCAL_Util_GetServiceResponseDescription(const char* service_name_, const char* method_name_, void* resp_desc_, int resp_desc_len_)
   {
-    if (!service_name_) return(0);
-    if (!method_name_)  return(0);
-    if (!resp_desc_)    return(0);
+    if (service_name_ == nullptr) return(0);
+    if (method_name_ == nullptr)  return(0);
+    if (resp_desc_ == nullptr)    return(0);
     std::string req_desc, resp_desc;
     if (eCAL::Util::GetServiceDescription(service_name_, method_name_, req_desc, resp_desc))
     {
@@ -605,7 +605,7 @@ extern "C"
     if (sub->ReceiveBuffer(buf, time_, rcv_timeout_))
     {
       CopyBuffer(buf_, ECAL_ALLOCATE_4ME, buf);
-      if (buf_len_) *buf_len_ = static_cast<int>(buf.size());
+      if (buf_len_ != nullptr) *buf_len_ = static_cast<int>(buf.size());
       return(1);
     }
     return(0);

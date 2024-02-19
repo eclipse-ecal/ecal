@@ -948,25 +948,25 @@ namespace eCAL
   {
     std::stringstream out;
 
-    out << std::endl;
-    out << indent_ << "------------------------------------"                                       << std::endl;
-    out << indent_ << " class CDataReader "                                                        << std::endl;
-    out << indent_ << "------------------------------------"                                       << std::endl;
-    out << indent_ << "m_host_name:                        " << m_host_name                        << std::endl;
-    out << indent_ << "m_host_group_name:                  " << m_host_group_name                  << std::endl;
-    out << indent_ << "m_topic_name:                       " << m_topic_name                       << std::endl;
-    out << indent_ << "m_topic_id:                         " << m_topic_id                         << std::endl;
-    out << indent_ << "m_topic_info.encoding:              " << m_topic_info.encoding              << std::endl;
-    out << indent_ << "m_topic_info.name:                  " << m_topic_info.name                  << std::endl;
-    out << indent_ << "m_topic_info.desc:                  " << m_topic_info.descriptor            << std::endl;
-    out << indent_ << "m_topic_size:                       " << m_topic_size                       << std::endl;
-    out << indent_ << "m_read_buf.size():                  " << m_read_buf.size()                  << std::endl;
-    out << indent_ << "m_read_time:                        " << m_read_time                        << std::endl;
-    out << indent_ << "m_clock:                            " << m_clock                            << std::endl;
-    out << indent_ << "m_rec_time:                         " << std::chrono::duration_cast<std::chrono::milliseconds>(m_rec_time.time_since_epoch()).count() << std::endl;
-    out << indent_ << "m_freq:                             " << m_freq                             << std::endl;
-    out << indent_ << "m_created:                          " << m_created                          << std::endl;
-    out << std::endl;
+    out << '\n';
+    out << indent_ << "------------------------------------"                                       << '\n';
+    out << indent_ << " class CDataReader "                                                        << '\n';
+    out << indent_ << "------------------------------------"                                       << '\n';
+    out << indent_ << "m_host_name:                        " << m_host_name                        << '\n';
+    out << indent_ << "m_host_group_name:                  " << m_host_group_name                  << '\n';
+    out << indent_ << "m_topic_name:                       " << m_topic_name                       << '\n';
+    out << indent_ << "m_topic_id:                         " << m_topic_id                         << '\n';
+    out << indent_ << "m_topic_info.encoding:              " << m_topic_info.encoding              << '\n';
+    out << indent_ << "m_topic_info.name:                  " << m_topic_info.name                  << '\n';
+    out << indent_ << "m_topic_info.desc:                  " << m_topic_info.descriptor            << '\n';
+    out << indent_ << "m_topic_size:                       " << m_topic_size                       << '\n';
+    out << indent_ << "m_read_buf.size():                  " << m_read_buf.size()                  << '\n';
+    out << indent_ << "m_read_time:                        " << m_read_time                        << '\n';
+    out << indent_ << "m_clock:                            " << m_clock                            << '\n';
+    out << indent_ << "m_rec_time:                         " << std::chrono::duration_cast<std::chrono::milliseconds>(m_rec_time.time_since_epoch()).count() << '\n';
+    out << indent_ << "m_freq:                             " << m_freq                             << '\n';
+    out << indent_ << "m_created:                          " << m_created                          << '\n';
+    out << '\n';
 
     return(out.str());
   }

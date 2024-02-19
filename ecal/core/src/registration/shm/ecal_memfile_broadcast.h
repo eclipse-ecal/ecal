@@ -72,7 +72,7 @@ namespace eCAL
   };
 #pragma pack(pop)
 
-  typedef std::vector<const SMemfileBroadcastEvent*> MemfileBroadcastEventListT;
+  using MemfileBroadcastEventListT = std::vector<const SMemfileBroadcastEvent *>;
 
   class CMemoryFileBroadcast
   {

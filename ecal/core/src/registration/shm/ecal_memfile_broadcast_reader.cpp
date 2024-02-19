@@ -76,7 +76,7 @@ namespace eCAL
           BuildPayloadMemfileName(m_memfile_broadcast->GetName(), event_id).c_str(), false, 0))
         {
 #ifndef NDEBUG
-          std::cerr << "Error opening payload memory file" << std::endl;
+          std::cerr << "Error opening payload memory file" << '\n';
 #endif
           return_result = false;
           continue;
@@ -105,7 +105,7 @@ namespace eCAL
           else
           {
 #ifndef NDEBUG
-            std::cerr << "Error acquiring read access on payload file" << std::endl;
+            std::cerr << "Error acquiring read access on payload file" << '\n';
 #endif
             return_result = false;
             continue;

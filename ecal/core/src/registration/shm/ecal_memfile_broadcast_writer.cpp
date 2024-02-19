@@ -39,7 +39,7 @@ namespace eCAL
     if (!m_payload_memfile->Create(BuildPayloadMemfileName(m_memfile_broadcast->GetName(), m_event_id).c_str(), true, 1024))
     {
 #ifndef NDEBUG
-      std::cerr << "Unable to create payload memfile" << std::endl;
+      std::cerr << "Unable to create payload memfile" << '\n';
 #endif
       return false;
     }
@@ -61,7 +61,7 @@ namespace eCAL
       if (!payload_memfile->Create(BuildPayloadMemfileName(m_memfile_broadcast->GetName(), event_id).c_str(), true, size * 2))
       {
 #ifndef NDEBUG
-        std::cerr << "Unable to create new payload memory file" << std::endl;
+        std::cerr << "Unable to create new payload memory file" << '\n';
 #endif
         return false;
       }
@@ -84,7 +84,7 @@ namespace eCAL
     else
     {
 #ifndef NDEBUG
-      std::cerr << "Error acquiring write access on payload file" << std::endl;
+      std::cerr << "Error acquiring write access on payload file" << '\n';
 #endif
       m_reset = true;
     }

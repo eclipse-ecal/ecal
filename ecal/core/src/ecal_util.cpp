@@ -22,10 +22,8 @@
 #include "registration/ecal_registration_receiver.h"
 #include "pubsub/ecal_pubgate.h"
 
-#include <list>
 #include <map>
 #include <string>
-#include <tuple>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -59,7 +57,7 @@ namespace eCAL
     // take monitoring snapshot
     static Monitoring::SMonitoring GetMonitoring()
     {
-      if (!IsInitialized(Init::Monitoring))
+      if (IsInitialized(Init::Monitoring) == 0)
       {
         Initialize(0, nullptr, "", Init::Monitoring);
         Process::SleepMS(1000);
@@ -100,7 +98,7 @@ namespace eCAL
       EventHandleT event;
       if (gOpenNamedEvent(&event, event_name, true))
       {
-        std::cout << "Shutdown local eCAL process " << process_id_ << std::endl;
+        std::cout << "Shutdown local eCAL process " << process_id_ << '\n';
         gSetEvent(event);
         gCloseEvent(event);
       }

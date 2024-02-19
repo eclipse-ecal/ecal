@@ -255,12 +255,12 @@ namespace eCAL
   {
     std::stringstream out;
 
-    out << indent_ << "----------------------" << std::endl;
-    out << indent_ << " class CSubscriber    " << std::endl;
-    out << indent_ << "----------------------" << std::endl;
-    out << indent_ << "m_created:            " << m_created << std::endl;
+    out << indent_ << "----------------------" << '\n';
+    out << indent_ << " class CSubscriber    " << '\n';
+    out << indent_ << "----------------------" << '\n';
+    out << indent_ << "m_created:            " << m_created << '\n';
     if((m_datareader != nullptr) && m_datareader->IsCreated()) out << indent_ << m_datareader->Dump("    ");
-    out << std::endl;
+    out << '\n';
 
     return(out.str());
   }

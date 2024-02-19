@@ -82,7 +82,6 @@ namespace eCAL
     bool SendSampleList(bool reset_sample_list_ = true);
 
     static std::atomic<bool>            m_created;
-    int                                 m_reg_refresh;
     bool                                m_reg_topics;
     bool                                m_reg_services;
     bool                                m_reg_process;

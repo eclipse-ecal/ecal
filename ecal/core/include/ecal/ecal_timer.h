@@ -53,7 +53,7 @@ namespace eCAL
      * @param callback_   The callback function. 
      * @param delay_      Timer callback delay for first call in ms.
     **/
-    ECAL_API CTimer(int timeout_, TimerCallbackT callback_, int delay_ = 0);
+    ECAL_API CTimer(int timeout_, const TimerCallbackT& callback_, int delay_ = 0);
 
     /**
      * @brief Destructor. 
@@ -75,7 +75,7 @@ namespace eCAL
      *
      * @return  True if timer could be started. 
     **/
-    ECAL_API bool Start(int timeout_, TimerCallbackT callback_, int delay_ = 0);
+    ECAL_API bool Start(int timeout_, const TimerCallbackT& callback_, int delay_ = 0);
 
     /**
      * @brief Stop the timer. 

@@ -109,7 +109,7 @@ public:
     return iterator(*this, invalid_index);
   }
 
-  RelocatableCircularQueue(): m_base_address(nullptr), m_header(nullptr)
+  RelocatableCircularQueue(): m_header(nullptr)
   {}
 
   void Push(const T& value)
@@ -218,7 +218,7 @@ private:
   };
 #pragma pack(pop)
 
-  void* m_base_address;
+  void* m_base_address{nullptr};
   Header* m_header;
 
   T * Value(std::uint64_t index)

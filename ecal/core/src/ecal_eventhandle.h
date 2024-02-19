@@ -37,11 +37,8 @@ namespace eCAL
     /**
      * @brief Event callback handle constructor.
     **/
-    SEventHandle() : name(), handle(nullptr)
-    {
-    };
-    std::string name;    //!< event name
-    void*       handle;  //!< event handle
+    std::string name;             //!< event name
+    void*       handle{nullptr};  //!< event handle
 
     /* @cond */
     bool operator==(const SEventHandle& rhs) const
@@ -52,6 +49,6 @@ namespace eCAL
   };
 
   /* @cond */
-  typedef SEventHandle              EventHandleT;
+  using EventHandleT = SEventHandle;
   /* @endcond */
 }

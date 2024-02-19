@@ -61,8 +61,8 @@ namespace eCAL
     CGlobals();
     ~CGlobals();
 
-    int Initialize    ( unsigned int components_, std::vector<std::string>* config_keys_ = nullptr);
-    int IsInitialized ( unsigned int component_  );
+    int Initialize     ( unsigned int components_, std::vector<std::string>* config_keys_ = nullptr);
+    bool IsInitialized ( unsigned int component_  );
 
     unsigned int GetComponents() const { return(components); };
 

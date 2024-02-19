@@ -56,7 +56,7 @@ namespace eCAL
     if (config_instance == nullptr)
     {
       config_instance = std::make_unique<CConfig>();
-      if (config_keys_)
+      if (config_keys_ != nullptr)
       {
         config_instance->OverwriteKeys(*config_keys_);
       }
@@ -66,13 +66,13 @@ namespace eCAL
       {
         const std::string emsg("Core initialization failed cause by a configuration error.");
 
-        std::cerr                                                                 << std::endl;
-        std::cerr << "----------------------------------------------------------" << std::endl;
-        std::cerr << "eCAL CORE PANIC :-("                                        << std::endl;
-        std::cerr                                                                 << std::endl;
-        std::cerr << emsg                                                         << std::endl;
-        std::cerr << "----------------------------------------------------------" << std::endl;
-        std::cerr                                                                 << std::endl;
+        std::cerr                                                                 << '\n';
+        std::cerr << "----------------------------------------------------------" << '\n';
+        std::cerr << "eCAL CORE PANIC :-("                                        << '\n';
+        std::cerr                                                                 << '\n';
+        std::cerr << emsg                                                         << '\n';
+        std::cerr << "----------------------------------------------------------" << '\n';
+        std::cerr                                                                 << '\n';
         
         throw std::runtime_error(emsg.c_str());
       }
@@ -259,7 +259,7 @@ namespace eCAL
     else                    return 1;
   }
 
-  int CGlobals::IsInitialized(unsigned int component_)
+  bool CGlobals::IsInitialized(unsigned int component_)
   {
     // check common initialization
     if (component_ == 0)
@@ -293,7 +293,7 @@ namespace eCAL
       return(timegate_instance != nullptr);
 #endif
     default:
-      return(0);
+      return(false);
     }
   }
 

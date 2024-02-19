@@ -207,7 +207,7 @@ namespace eCAL
 
     if(log_con != 0)
     {
-      std::cout << msg_ << std::endl;
+      std::cout << msg_ << '\n';
     }
 
     if((log_file != 0) && (m_logfile != nullptr))

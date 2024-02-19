@@ -141,11 +141,11 @@ namespace eCAL
     void DumpConfig(std::string& cfg_s_)
     {
       std::stringstream sstream;
-      sstream << "------------------------- SYSTEM ---------------------------------" << std::endl;
-      sstream << "Version                  : " << ECAL_VERSION << " (" << ECAL_DATE << ")" << std::endl;
+      sstream << "------------------------- SYSTEM ---------------------------------" << '\n';
+      sstream << "Version                  : " << ECAL_VERSION << " (" << ECAL_DATE << ")" << '\n';
 #ifdef ECAL_OS_WINDOWS
 #ifdef _WIN64
-      sstream << "Platform                 : x64" << std::endl;
+      sstream << "Platform                 : x64" << '\n';
 #else
       sstream << "Platform                 : win32" << std::endl;
 #endif
@@ -153,63 +153,63 @@ namespace eCAL
 #ifdef ECAL_OS_LINUX
       sstream << "Platform                 : linux" << std::endl;
 #endif
-      sstream << std::endl;
+      sstream << '\n';
 
       if (eCAL::IsInitialized() == 0)
       {
         sstream << "Components               : NOT INITIALIZED ( call eCAL::Initialize() )";
-        sstream << std::endl;
+        sstream << '\n';
         cfg_s_ = sstream.str();
         return;
       }
 
-      sstream << "------------------------- CONFIGURATION --------------------------" << std::endl;
-      sstream << "Default INI              : " << Config::GetLoadedEcalIniPath() << std::endl; 
-      sstream << std::endl;
+      sstream << "------------------------- CONFIGURATION --------------------------" << '\n';
+      sstream << "Default INI              : " << Config::GetLoadedEcalIniPath() << '\n';
+      sstream << '\n';
 
-      sstream << "------------------------- NETWORK --------------------------------" << std::endl;
-      sstream << "Host name                : " << Process::GetHostName() << std::endl;
-      sstream << "Host group name          : " << Process::GetHostGroupName() << std::endl;
+      sstream << "------------------------- NETWORK --------------------------------" << '\n';
+      sstream << "Host name                : " << Process::GetHostName() << '\n';
+      sstream << "Host group name          : " << Process::GetHostGroupName() << '\n';
 
       if (Config::IsNetworkEnabled())
       {
-        sstream << "Network mode             : cloud" << std::endl;
+        sstream << "Network mode             : cloud" << '\n';
       }
       else
       {
-        sstream << "Network mode             : local" << std::endl;
+        sstream << "Network mode             : local" << '\n';
       }
-      sstream << "Network ttl              : " << UDP::GetMulticastTtl() << std::endl;
-      sstream << "Network sndbuf           : " << GetBufferStr(Config::GetUdpMulticastSndBufSizeBytes()) << std::endl;
-      sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetUdpMulticastRcvBufSizeBytes()) << std::endl;
-      sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetUdpMulticastConfigVersion()) << std::endl;
-      sstream << "Multicast group          : " << Config::GetUdpMulticastGroup() << std::endl;
-      sstream << "Multicast mask           : " << Config::GetUdpMulticastMask() << std::endl;
+      sstream << "Network ttl              : " << UDP::GetMulticastTtl() << '\n';
+      sstream << "Network sndbuf           : " << GetBufferStr(Config::GetUdpMulticastSndBufSizeBytes()) << '\n';
+      sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetUdpMulticastRcvBufSizeBytes()) << '\n';
+      sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetUdpMulticastConfigVersion()) << '\n';
+      sstream << "Multicast group          : " << Config::GetUdpMulticastGroup() << '\n';
+      sstream << "Multicast mask           : " << Config::GetUdpMulticastMask() << '\n';
       const int port = Config::GetUdpMulticastPort();
-      sstream << "Multicast ports          : " << port << " - " << port + 10 << std::endl;
-      sstream << "Multicast join all IFs   : " << (Config::IsUdpMulticastJoinAllIfEnabled() ? "on" : "off") << std::endl;
-      sstream << std::endl;
+      sstream << "Multicast ports          : " << port << " - " << port + 10 << '\n';
+      sstream << "Multicast join all IFs   : " << (Config::IsUdpMulticastJoinAllIfEnabled() ? "on" : "off") << '\n';
+      sstream << '\n';
 
 #if ECAL_CORE_TIMEPLUGIN
-      sstream << "------------------------- TIME -----------------------------------" << std::endl;
-      sstream << "Synchronization realtime : " << Config::GetTimesyncModuleName() << std::endl;
-      sstream << "Synchronization replay   : " << eCALPAR(TIME, SYNC_MOD_REPLAY) << std::endl;
+      sstream << "------------------------- TIME -----------------------------------" << '\n';
+      sstream << "Synchronization realtime : " << Config::GetTimesyncModuleName() << '\n';
+      sstream << "Synchronization replay   : " << eCALPAR(TIME, SYNC_MOD_REPLAY) << '\n';
       sstream << "State                    : ";
-      if (g_timegate()->IsSynchronized()) sstream << " synchronized " << std::endl;
-      else                                sstream << " not synchronized " << std::endl;
+      if (g_timegate()->IsSynchronized()) sstream << " synchronized " << '\n';
+      else                                sstream << " not synchronized " << '\n';
       sstream << "Master / Slave           : ";
-      if (g_timegate()->IsMaster())       sstream << " Master " << std::endl;
-      else                                sstream << " Slave " << std::endl;
-      int         status_state;
+      if (g_timegate()->IsMaster())       sstream << " Master " << '\n';
+      else                                sstream << " Slave " << '\n';
+      int         status_state = 0;
       std::string status_msg;
       g_timegate()->GetStatus(status_state, &status_msg);
-      sstream << "Status (Code)            : \"" << status_msg << "\" (" << status_state << ")" << std::endl;
-      sstream << std::endl;
+      sstream << "Status (Code)            : \"" << status_msg << "\" (" << status_state << ")" << '\n';
+      sstream << '\n';
 #endif
 #if ECAL_CORE_SUBSCRIBER
-      sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------" << std::endl;
-      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::IsUdpMulticastRecEnabled()) << std::endl;
-      sstream << "Drop out-of-order msgs   : " << (Config::Experimental::GetDropOutOfOrderMessages() ? "on" : "off") << std::endl;
+      sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------" << '\n';
+      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::IsUdpMulticastRecEnabled()) << '\n';
+      sstream << "Drop out-of-order msgs   : " << (Config::Experimental::GetDropOutOfOrderMessages() ? "on" : "off") << '\n';
 #endif
 #ifdef ECAL_CORE_NPCAP_SUPPORT
       sstream << "Npcap UDP Reciever       : " << LayerMode(Config::IsNpcapEnabled());
@@ -223,7 +223,7 @@ namespace eCAL
         sstream << " (Npcap is enabled, but not configured via CMake!)";
       }
 #endif // ECAL_CORE_NPCAP_SUPPORT
-      sstream << std::endl;
+      sstream << '\n';
 
       // write it into std:string
       cfg_s_ = sstream.str();
@@ -240,7 +240,7 @@ namespace eCAL
         }
         else
         {
-          std::cerr << "Unable to get host name" << std::endl;
+          std::cerr << "Unable to get host name" << '\n';
         }
       }
       return(g_host_name);

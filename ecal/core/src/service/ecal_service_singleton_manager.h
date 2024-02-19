@@ -41,19 +41,19 @@ namespace eCAL
 	public:
 	  static ServiceManager* instance();
 
-	private:
+  private:
 	  ServiceManager();
-
-	  // Delete copy constructor and assignment operator
-	  ServiceManager(const ServiceManager&)            = delete;
-	  ServiceManager& operator=(const ServiceManager&) = delete;
-
-	  // Delete move constructor and assignment operator
-	  ServiceManager(ServiceManager&&)            = delete;
-	  ServiceManager& operator=(ServiceManager&&) = delete;
 
 	public:
 	  ~ServiceManager();
+
+    // Delete copy constructor and assignment operator
+    ServiceManager(const ServiceManager&)            = delete;
+    ServiceManager& operator=(const ServiceManager&) = delete;
+
+    // Delete move constructor and assignment operator
+    ServiceManager(ServiceManager&&)            = delete;
+    ServiceManager& operator=(ServiceManager&&) = delete;
 
 	////////////////////////////////////////////////////////////
 	// Public API
