@@ -184,11 +184,10 @@ namespace eCAL
   // blocking call, all responses will be returned in service_response_vec_
   bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_, int timeout_ms_, ServiceResponseVecT* service_response_vec_)
   {
-    auto responses = CallBlocking(method_name_, request_, std::chrono::milliseconds(timeout_ms_));
+    if(service_response_vec_ == nullptr) return false;
+    service_response_vec_->clear();
 
-    if (service_response_vec_)
-      service_response_vec_->clear();
-    
+    auto responses = CallBlocking(method_name_, request_, std::chrono::milliseconds(timeout_ms_));
     if (!responses)
     {
       return false;
