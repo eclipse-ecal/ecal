@@ -23,23 +23,32 @@ jobs:
           labels: |
             cherry-pick
           title: '[cherry-pick] {old_title}'
-          body: 'Cherry picking #{old_pull_request_id} onto this branch'            
-  cherry_pick_v_5_13:
+          body: 'Cherry picking #{old_pull_request_id} onto this branch'
+
+
+  # Create an empty PR, if the cherry_pick_v_5_12 job has failed
+  empty_pr_v5_12:
     runs-on: ubuntu-latest
-    name: Cherry pick into support/v5.13
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'cherry-pick-v5.13') && github.event.pull_request.merged == true }}
+    needs: cherry_pick_v_5_12
+    if: ${{ failure() }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Cherry pick into support/v5.13
-        uses: carloscastrojumo/github-cherry-pick-action@v1.0.9
+          ref: support/v5.12
+
+      - name: Create empty PR
+        uses: peter-evans/create-pull-request@v6
         with:
-          branch: support/v5.13
-          labels: |
-            cherry-pick
-          title: '[cherry-pick] {old_title}'
-          body: 'Cherry picking #{old_pull_request_id} onto this branch'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'cherry-pick: empty PR'
+          title: 'cherry-pick: empty PR'
+          body: 'This PR was created automatically to indicate that the cherry-pick to support/v5.12 failed.'
+          #branch: support/v5.12
+          base: support/v5.12
+          draft: true
+
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
