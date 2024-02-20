@@ -5,6 +5,7 @@ Thumbs.db
 /_build*
 /_setup
 /_vs_out*
+/out
 
 # Binary libraries
 /thirdparty/npcap/
@@ -41,6 +42,7 @@ doc/rst/_download_main_page
 doc/extensions/_autogen
 doc/rst/getting_started/**/*_pb2.py
 doc/rst/.venv
+.venv/
 *.pyc
 
 # Clion
@@ -49,3 +51,6 @@ cmake-build-*
 
 # clang-tidy
 log_*.txt
+
+# User CMake Presets
+CMakeUserPresets.json
