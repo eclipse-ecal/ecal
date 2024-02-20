@@ -1,35 +1,40 @@
 name: Cherry-pick to support branches
 
 on:
-  pull_request:
+  push:
     branches:
       - master
-    types: ["closed"]
+
+# on:
+#   pull_request:
+#     branches:
+#       - master
+#     types: ["closed"]
 
 jobs:
-  cherry_pick_v_5_12:
-    runs-on: ubuntu-latest
-    name: Cherry pick into support/v5.12
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'cherry-pick-v5.12') && github.event.pull_request.merged == true }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Cherry pick into support/v5.12
-        uses: carloscastrojumo/github-cherry-pick-action@v1.0.9
-        with:
-          branch: support/v5.12
-          labels: |
-            cherry-pick
-          title: '[cherry-pick] {old_title}'
-          body: 'Cherry picking #{old_pull_request_id} onto this branch'
+#   cherry_pick_v_5_12:
+#     runs-on: ubuntu-latest
+#     name: Cherry pick into support/v5.12
+#     if: ${{ contains(github.event.pull_request.labels.*.name, 'cherry-pick-v5.12') && github.event.pull_request.merged == true }}
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0
+#       - name: Cherry pick into support/v5.12
+#         uses: carloscastrojumo/github-cherry-pick-action@v1.0.9
+#         with:
+#           branch: support/v5.12
+#           labels: |
+#             cherry-pick
+#           title: '[cherry-pick] {old_title}'
+#           body: 'Cherry picking #{old_pull_request_id} onto this branch'
 
 
   # Create an empty PR, if the cherry_pick_v_5_12 job has failed
   empty_pr_v5_12:
     runs-on: ubuntu-latest
-    needs: cherry_pick_v_5_12
+    # needs: cherry_pick_v_5_12
     if: ${{ failure() }}
 
     steps:
@@ -42,11 +47,11 @@ jobs:
           ref: support/v5.12
 
       # Create a new branch from the support/v5.12 branch and commit an empty commit
-      - name: Create empty commit
-        run: |
-          git checkout -b empty-pr
-          git commit --allow-empty -m "cherry-pick: empty commit"
-          git push origin empty-pr
+      - uses: EndBug/add-and-commit@v9
+        with:
+          commit: --allow-empty
+          message: 'cherry-pick: empty commit'
+          new_branch: empty-pr-branch
 
       - name: Create empty PR
         uses: peter-evans/create-pull-request@v6
