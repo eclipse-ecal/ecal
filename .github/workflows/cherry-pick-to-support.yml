@@ -1,0 +1,43 @@
+on:
+  pull_request:
+    branches:
+      - master
+    types: ["closed"]
+
+jobs:
+  cherry_pick_v_5_12:
+    runs-on: ubuntu-latest
+    name: Cherry pick into support/v5.12
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'cherry-pick-v5.12') && github.event.pull_request.merged == true }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cherry pick into support/v5.12
+        uses: carloscastrojumo/github-cherry-pick-action@v1.0.9
+        with:
+          branch: support/v5.12
+          labels: |
+            cherry-pick
+          title: '[cherry-pick] {old_title}'
+          body: 'Cherry picking #{old_pull_request_id} onto this branch'            
+  cherry_pick_v_5_13:
+    runs-on: ubuntu-latest
+    name: Cherry pick into support/v5.12
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'cherry-pick-v5.13') && github.event.pull_request.merged == true }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cherry pick into support/v5.13
+        uses: carloscastrojumo/github-cherry-pick-action@v1.0.9
+        with:
+          branch: support/v5.13
+          labels: |
+            cherry-pick
+          title: '[cherry-pick] {old_title}'
+          body: 'Cherry picking #{old_pull_request_id} onto this branch'
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
