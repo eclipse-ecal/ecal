@@ -101,15 +101,15 @@ namespace eCAL
     m_topic_id = counter.str();
 
     // set registration expiration
-    const std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
+    const std::chrono::milliseconds registration_timeout = Config::GetCurrentConfig()->registration_options.getTimeout();
     m_loc_pub_map.set_expiration(registration_timeout);
     m_ext_pub_map.set_expiration(registration_timeout);
 
     // allow to share topic type
-    m_use_ttype = Config::IsTopicTypeSharingEnabled();
+    m_use_ttype = Config::GetCurrentConfig()->registration_options.share_ttype;
 
     // allow to share topic description
-    m_use_tdesc = Config::IsTopicDescriptionSharingEnabled();
+    m_use_tdesc = Config::GetCurrentConfig()->registration_options.share_tdesc;
 
     // start transport layers
     SubscribeToLayers();
@@ -169,13 +169,13 @@ namespace eCAL
   void CDataReader::InitializeLayers()
   {
     // initialize udp multicast layer
-    if (Config::IsUdpMulticastRecEnabled())
+    if (g_ecal_config()->receiving_options.udp_mc_recv_enabled)
     {
       CUDPReaderLayer::Get()->Initialize();
     }
 
     // initialize tcp layer
-    if (Config::IsTcpRecEnabled())
+    if (g_ecal_config()->receiving_options.tcp_recv_enabled)
     {
       CTCPReaderLayer::Get()->Initialize();
     }
@@ -184,13 +184,13 @@ namespace eCAL
   void CDataReader::SubscribeToLayers()
   {
     // subscribe topic to udp multicast layer
-    if (Config::IsUdpMulticastRecEnabled())
+    if (g_ecal_config()->receiving_options.udp_mc_recv_enabled)
     {
       CUDPReaderLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
 
     // subscribe topic to tcp layer
-    if (Config::IsTcpRecEnabled())
+    if (g_ecal_config()->receiving_options.tcp_recv_enabled)
     {
       CTCPReaderLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
@@ -199,13 +199,13 @@ namespace eCAL
   void CDataReader::UnsubscribeFromLayers()
   {
     // unsubscribe topic from udp multicast layer
-    if (Config::IsUdpMulticastRecEnabled())
+    if (g_ecal_config()->receiving_options.udp_mc_recv_enabled)
     {
       CUDPReaderLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
 
     // unsubscribe topic from tcp multicast layer
-    if (Config::IsTcpRecEnabled())
+    if (g_ecal_config()->receiving_options.tcp_recv_enabled)
     {
       CTCPReaderLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
@@ -853,7 +853,7 @@ namespace eCAL
         // -----------------------------------
         // drop messages in the wrong order
         // -----------------------------------
-        if (eCAL::Config::Experimental::GetDropOutOfOrderMessages())
+        if (Config::GetCurrentConfig()->transport_layer_options.drop_out_of_order_messages)
         {
           // do not update the internal clock counter
 

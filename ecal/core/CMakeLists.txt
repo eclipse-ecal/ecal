@@ -60,6 +60,7 @@ set(ecal_config_src
     src/config/ecal_config_reader.cpp
     src/config/ecal_config_reader.h
     src/config/ecal_config_reader_hlp.h
+    src/config/ecal_config_initializer.cpp
 )
 
 ######################################
@@ -335,6 +336,7 @@ set(ecal_cmn_src
     src/ecal_global_accessors.h
     src/ecal_globals.h
     src/ecal_sample_to_topicinfo.h
+    include/ecal/types/ecal_config_types.h
 )
 if (WIN32)
     list (APPEND
@@ -397,6 +399,7 @@ set(ecal_header_cmn
     include/ecal/ecalc_types.h
     include/ecal/ecal_types.h
     include/ecal/types/monitoring.h
+    include/ecal/types/ecal_config_types.h
 )
 
 set(ecal_header_cimpl

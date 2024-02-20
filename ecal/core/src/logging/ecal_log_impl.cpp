@@ -24,6 +24,7 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_config.h>
+#include "ecal_global_accessors.h"
 
 #include "ecal_log_impl.h"
 #include "io/udp/ecal_udp_configurations.h"
@@ -128,9 +129,9 @@ namespace eCAL
     m_level = log_level_info;
 
     // parse logging filter strings
-    m_filter_mask_con  = Config::GetConsoleLogFilter();
-    m_filter_mask_file = Config::GetFileLogFilter();
-    m_filter_mask_udp  = Config::GetUdpLogFilter();
+    m_filter_mask_con  = Config::GetCurrentConfig()->monitoring_options.filter_log_con;
+    m_filter_mask_file = Config::GetCurrentConfig()->monitoring_options.filter_log_file;
+    m_filter_mask_udp  = Config::GetCurrentConfig()->monitoring_options.filter_log_udp;
 
     // create log file
     if(m_filter_mask_file != 0)
@@ -154,7 +155,7 @@ namespace eCAL
       attr.ttl       = UDP::GetMulticastTtl();
       attr.broadcast = UDP::IsBroadcast();
       attr.loopback  = true;
-      attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
+      attr.sndbuf    = g_ecal_config()->transport_layer_options.mc_options.sndbuf.get();
 
       // create udp logging sender
       m_udp_logging_sender = std::make_unique<UDP::CLoggingSender>(attr);
@@ -166,7 +167,7 @@ namespace eCAL
     attr.port      = UDP::GetLoggingPort();
     attr.broadcast = UDP::IsBroadcast();
     attr.loopback  = true;
-    attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
+    attr.rcvbuf    = g_ecal_config()->transport_layer_options.mc_options.recbuf.get();
 
     // start logging receiver
     const UDP::CLoggingReceiver::LogMessageCallbackT log_message_callback = std::bind(&CLog::RegisterLogMessage, this, std::placeholders::_1);
@@ -349,7 +350,7 @@ namespace eCAL
   {
     // in "network mode" we accept all log messages
     // in "local mode" we accept log messages from this host only
-    if ((m_hname == log_msg_.hname()) || Config::IsNetworkEnabled())
+    if ((m_hname == log_msg_.hname()) || g_ecal_config()->transport_layer_options.network_enabled)
     {
       const std::lock_guard<std::mutex> lock(m_log_msglist_sync);
       m_log_msglist.emplace_back(log_msg_);

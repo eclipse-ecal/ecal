@@ -23,6 +23,7 @@
 
 #include <ecal/ecal_log.h>
 #include <ecal/ecal_config.h>
+#include "ecal/types/ecal_config_types.h"
 
 #include "ecal_descgate.h"
 #include <cassert>
@@ -32,8 +33,8 @@
 namespace eCAL
 {
   CDescGate::CDescGate() :
-    m_topic_info_map  (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
-    m_service_info_map(std::chrono::milliseconds(Config::GetMonitoringTimeoutMs()))
+    m_topic_info_map  (std::chrono::milliseconds(Config::GetCurrentConfig()->monitoring_options.monitoring_timeout.get())),
+    m_service_info_map(std::chrono::milliseconds(Config::GetCurrentConfig()->monitoring_options.monitoring_timeout.get()))
   {
   }
   CDescGate::~CDescGate() = default;

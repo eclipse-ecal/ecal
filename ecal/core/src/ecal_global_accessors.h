@@ -45,6 +45,10 @@ namespace eCAL
   class  CRegistrationReceiver;
   class  CMemFileThreadPool;
   class  CMemFileMap;
+  namespace Config
+  {
+	  struct eCALConfig;
+  }
 
   // Declaration of getter functions for globally accessible variable instances
   CGlobals*               g_globals();
@@ -61,6 +65,8 @@ namespace eCAL
   CRegistrationReceiver*  g_registration_receiver();
   CMemFileThreadPool*     g_memfile_pool();
   CMemFileMap*            g_memfile_map();
+  Config::eCALConfig*	  g_ecal_config();
+
 
   // declaration of globally accessible variables
   extern CGlobals*                     g_globals_ctx;

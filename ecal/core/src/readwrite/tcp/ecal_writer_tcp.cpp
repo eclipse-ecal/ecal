@@ -32,6 +32,7 @@
 #include "config/ecal_config_reader_hlp.h"
 
 #include <ecal/ecal_config.h>
+#include "ecal/types/ecal_config_types.h"
 
 #include "ecal_writer_tcp.h"
 #include "ecal_tcp_pubsub_logger.h"
@@ -76,7 +77,7 @@ namespace eCAL
       const std::lock_guard<std::mutex> lock(g_tcp_writer_executor_mtx);
       if (!g_tcp_writer_executor)
       {
-        g_tcp_writer_executor = std::make_shared<tcp_pubsub::Executor>(Config::GetTcpPubsubWriterThreadpoolSize(), TcpPubsubLogger);
+        g_tcp_writer_executor = std::make_shared<tcp_pubsub::Executor>(Config::GetCurrentConfig()->transport_layer_options.tcp_options.num_executor_writer, TcpPubsubLogger);
       }
     }
 

@@ -134,10 +134,10 @@ namespace eCAL
     // this can not be done in the constructor because a publisher is allowed
     // to construct before eCAL::Initialize and so global config is not
     // existing while construction
-    if (m_tlayer.sm_udp_mc == TLayer::smode_none) m_tlayer.sm_udp_mc = Config::GetPublisherUdpMulticastMode();
-    if (m_tlayer.sm_shm == TLayer::smode_none) m_tlayer.sm_shm = Config::GetPublisherShmMode();
-    if (m_tlayer.sm_tcp == TLayer::smode_none) m_tlayer.sm_tcp = Config::GetPublisherTcpMode();
-    if (m_tlayer.sm_inproc == TLayer::smode_none) m_tlayer.sm_inproc = Config::GetPublisherInprocMode();
+    if (m_tlayer.sm_udp_mc == TLayer::smode_none) m_tlayer.sm_udp_mc = Config::GetCurrentConfig()->publisher_options.use_udp_mc;
+    if (m_tlayer.sm_shm == TLayer::smode_none) m_tlayer.sm_shm       = Config::GetCurrentConfig()->publisher_options.use_shm;
+    if (m_tlayer.sm_tcp == TLayer::smode_none) m_tlayer.sm_tcp       = Config::GetCurrentConfig()->publisher_options.use_tcp;
+    if (m_tlayer.sm_inproc == TLayer::smode_none) m_tlayer.sm_inproc = Config::GetCurrentConfig()->publisher_options.use_inproc;
 
     // create data writer
     m_datawriter = std::make_shared<CDataWriter>();

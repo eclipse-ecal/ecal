@@ -71,14 +71,14 @@ namespace eCAL
   {
     if(m_created) return;
 
-    m_reg_refresh     = Config::GetRegistrationRefreshMs();
+    m_reg_refresh     = g_ecal_config()->registration_options.getRefresh().count();
 
     m_reg_topics      = topics_;
     m_reg_services    = services_;
     m_reg_process     = process_;
 
-    m_use_shm_monitoring     = Config::Experimental::IsShmMonitoringEnabled();
-    m_use_network_monitoring = !Config::Experimental::IsNetworkMonitoringDisabled();
+    m_use_shm_monitoring     = static_cast<bool>(Config::GetCurrentConfig()->monitoring_options.monitoring_mode & Config::MonitoringMode::shm_monitoring);
+    m_use_network_monitoring = !Config::GetCurrentConfig()->monitoring_options.network_monitoring_disabled;
 
     if (m_use_network_monitoring)
     {
@@ -89,7 +89,7 @@ namespace eCAL
       attr.ttl       = UDP::GetMulticastTtl();
       attr.broadcast = UDP::IsBroadcast();
       attr.loopback  = true;
-      attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
+      attr.sndbuf    = Config::GetCurrentConfig()->transport_layer_options.mc_options.sndbuf.get();
 
       // create udp registration sender
       m_reg_sample_snd = std::make_shared<UDP::CSampleSender>(attr);
@@ -101,14 +101,14 @@ namespace eCAL
 
     if (m_use_shm_monitoring)
     {
-      std::cout << "Shared memory monitoring is enabled (domain: " << Config::Experimental::GetShmMonitoringDomain() << " - queue size: " << Config::Experimental::GetShmMonitoringQueueSize() << ")" << std::endl;
-      m_memfile_broadcast.Create(Config::Experimental::GetShmMonitoringDomain(), Config::Experimental::GetShmMonitoringQueueSize());
+      std::cout << "Shared memory monitoring is enabled (domain: " << Config::GetCurrentConfig()->monitoring_options.shm_options.shm_monitoring_domain << " - queue size: " << Config::GetCurrentConfig()->monitoring_options.shm_options.shm_monitoring_queue_size << ")" << std::endl;
+      m_memfile_broadcast.Create(Config::GetCurrentConfig()->monitoring_options.shm_options.shm_monitoring_domain, Config::GetCurrentConfig()->monitoring_options.shm_options.shm_monitoring_queue_size);
       m_memfile_broadcast_writer.Bind(&m_memfile_broadcast);
     }
 
     // start cyclic registration thread
     m_reg_sample_snd_thread = std::make_shared<CCallbackThread>(std::bind(&CRegistrationProvider::RegisterSendThread, this));
-    m_reg_sample_snd_thread->start(std::chrono::milliseconds(Config::GetRegistrationRefreshMs()));
+    m_reg_sample_snd_thread->start(g_ecal_config()->registration_options.getRefresh());
 
     m_created = true;
   }

@@ -31,12 +31,18 @@
 
 namespace eCAL
 {
-  CGlobals::CGlobals() : initialized(false), components(0)
+  CGlobals::CGlobals() : initialized(false), components(0), ecal_default_config_instance(std::make_unique<Config::eCALConfig>())
   {}
 
   CGlobals::~CGlobals()
   {
     Finalize(Init::All);
+  }
+
+  void CGlobals::SetUserConfig(Config::eCALConfig* user_config_)
+  {
+      user_config_instance = std::make_unique<Config::eCALConfig>();
+      std::memcpy(user_config_instance.get(), user_config_, sizeof(Config::eCALConfig));
   }
 
   int CGlobals::Initialize(unsigned int components_, std::vector<std::string>* config_keys_ /*= nullptr*/)
@@ -70,6 +76,9 @@ namespace eCAL
         
         throw std::runtime_error(emsg.c_str());
       }
+
+      ecal_ini_config_instance = std::make_unique<Config::eCALConfig>(Config::GetIniConfig());
+      ecal_default_config_instance = std::make_unique<Config::eCALConfig>(Config::GetDefaultConfig());
 
       new_initialization = true;
     }
@@ -293,6 +302,9 @@ namespace eCAL
     memfile_map_instance            = nullptr;
     log_instance                    = nullptr;
     config_instance                 = nullptr;
+    user_config_instance.reset();
+    ecal_ini_config_instance.reset();
+    ecal_default_config_instance.reset();
 
     initialized = false;
 

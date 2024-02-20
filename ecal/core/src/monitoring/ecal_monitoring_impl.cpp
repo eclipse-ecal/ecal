@@ -40,11 +40,11 @@ namespace eCAL
   ////////////////////////////////////////
   CMonitoringImpl::CMonitoringImpl() :
     m_init(false),
-    m_process_map   (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
-    m_publisher_map (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
-    m_subscriber_map(std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
-    m_server_map    (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
-    m_clients_map   (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs()))
+    m_process_map   (std::chrono::milliseconds(Config::GetCurrentConfig()->monitoring_options.monitoring_timeout.get())),
+    m_publisher_map (std::chrono::milliseconds(Config::GetCurrentConfig()->monitoring_options.monitoring_timeout.get())),
+    m_subscriber_map(std::chrono::milliseconds(Config::GetCurrentConfig()->monitoring_options.monitoring_timeout.get())),
+    m_server_map    (std::chrono::milliseconds(Config::GetCurrentConfig()->monitoring_options.monitoring_timeout.get())),
+    m_clients_map   (std::chrono::milliseconds(Config::GetCurrentConfig()->monitoring_options.monitoring_timeout.get()))
   {
   }
 
@@ -59,8 +59,8 @@ namespace eCAL
     g_registration_receiver()->SetCustomApplySampleCallback([this](const auto& ecal_sample_){this->ApplySample(ecal_sample_, eCAL::pb::tl_none);});
 
     // setup blacklist and whitelist filter strings#
-    m_topic_filter_excl_s = Config::GetMonitoringFilterExcludeList();
-    m_topic_filter_incl_s = Config::GetMonitoringFilterIncludeList();
+    m_topic_filter_excl_s = Config::GetCurrentConfig()->monitoring_options.filter_excl;
+    m_topic_filter_incl_s = Config::GetCurrentConfig()->monitoring_options.filter_incl;
 
     // setup filtering on by default
     SetFilterState(true);

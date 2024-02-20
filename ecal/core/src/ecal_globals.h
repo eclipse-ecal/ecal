@@ -36,6 +36,7 @@
 #include "service/ecal_clientgate.h"
 #include "io/shm/ecal_memfile_pool.h"
 #include "io/shm/ecal_memfile_db.h"
+#include "ecal/types/ecal_config_types.h"
 
 #include <memory>
 
@@ -50,6 +51,8 @@ namespace eCAL
     int Initialize    ( unsigned int components_, std::vector<std::string>* config_keys_ = nullptr);
     int IsInitialized ( unsigned int component_  );
 
+    void SetUserConfig(Config::eCALConfig* user_settings_);
+    
     unsigned int GetComponents() { return(components); };
 
     int Finalize(unsigned int components_);
@@ -67,6 +70,10 @@ namespace eCAL
     const std::unique_ptr<CRegistrationReceiver>&                         registration_receiver()  { return registration_receiver_instance; };
     const std::unique_ptr<CMemFileThreadPool>&                            memfile_pool()           { return memfile_pool_instance; };
     const std::unique_ptr<CMemFileMap>&                                   memfile_map()            { return memfile_map_instance; };
+    const std::unique_ptr<Config::eCALConfig>&                            user_config()            { return user_config_instance; };
+    const std::unique_ptr<Config::eCALConfig>&                            ecal_ini_config()        { return ecal_ini_config_instance; };
+    const std::unique_ptr<Config::eCALConfig>&                            ecal_default_config()    { return ecal_default_config_instance; };
+    
 
   private:
     bool                                                                  initialized;
@@ -84,5 +91,8 @@ namespace eCAL
     std::unique_ptr<CRegistrationReceiver>                                registration_receiver_instance;
     std::unique_ptr<CMemFileThreadPool>                                   memfile_pool_instance;
     std::unique_ptr<CMemFileMap>                                          memfile_map_instance;
+    std::unique_ptr<Config::eCALConfig>                                   user_config_instance;
+    std::unique_ptr<Config::eCALConfig>                                   ecal_ini_config_instance;
+    std::unique_ptr<Config::eCALConfig>                                   ecal_default_config_instance;
   };
 }

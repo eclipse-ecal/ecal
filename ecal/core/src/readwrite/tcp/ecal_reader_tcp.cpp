@@ -77,7 +77,7 @@ namespace eCAL
     // add new session and activate callback if we add the first session
     if (new_session)
     {
-      m_subscriber->addSession(host_name_, port_, Config::GetTcpPubsubMaxReconnectionAttemps());
+      m_subscriber->addSession(host_name_, port_, Config::GetCurrentConfig()->transport_layer_options.tcp_options.max_reconnections);
       if (!m_callback_active)
       {
         m_subscriber->setCallback(std::bind(&CDataReaderTCP::OnTcpMessage, this, std::placeholders::_1));
@@ -132,7 +132,7 @@ namespace eCAL
   void CTCPReaderLayer::Initialize()
   {
     const tcp_pubsub::logger::logger_t tcp_pubsub_logger = std::bind(TcpPubsubLogger, std::placeholders::_1, std::placeholders::_2);
-    m_executor = std::make_shared<tcp_pubsub::Executor>(Config::GetTcpPubsubReaderThreadpoolSize(), tcp_pubsub_logger);
+    m_executor = std::make_shared<tcp_pubsub::Executor>(Config::GetCurrentConfig()->transport_layer_options.tcp_options.num_executor_reader, tcp_pubsub_logger);
   }
 
   void CTCPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)

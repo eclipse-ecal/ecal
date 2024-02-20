@@ -90,10 +90,10 @@ namespace eCAL
     m_created(false)
   {
     // initialize layer modes with configuration settings
-    m_writer.udp_mc_mode.requested = Config::GetPublisherUdpMulticastMode();
-    m_writer.shm_mode.requested    = Config::GetPublisherShmMode();
-    m_writer.tcp_mode.requested    = Config::GetPublisherTcpMode();
-    m_writer.inproc_mode.requested = Config::GetPublisherInprocMode();
+    m_writer.udp_mc_mode.requested = Config::GetCurrentConfig()->publisher_options.use_udp_mc;
+    m_writer.shm_mode.requested    = Config::GetCurrentConfig()->publisher_options.use_shm;
+    m_writer.tcp_mode.requested    = Config::GetCurrentConfig()->publisher_options.use_tcp;
+    m_writer.inproc_mode.requested = Config::GetCurrentConfig()->publisher_options.use_inproc;
   }
 
   CDataWriter::~CDataWriter()
@@ -114,10 +114,10 @@ namespace eCAL
     m_clock_old              = 0;
     m_snd_time               = std::chrono::steady_clock::time_point();
     m_freq                   = 0;
-    m_bandwidth_max_udp      = Config::GetMaxUdpBandwidthBytesPerSecond();
-    m_buffering_shm          = Config::GetMemfileBufferCount();
-    m_zero_copy              = Config::IsMemfileZerocopyEnabled();
-    m_acknowledge_timeout_ms = Config::GetMemfileAckTimeoutMs();
+    m_bandwidth_max_udp      = Config::GetCurrentConfig()->transport_layer_options.mc_options.bandwidth_max_udp;
+    m_buffering_shm          = Config::GetCurrentConfig()->transport_layer_options.shm_options.memfile_buffer_count.get();
+    m_zero_copy              = Config::GetCurrentConfig()->transport_layer_options.shm_options.memfile_zero_copy;
+    m_acknowledge_timeout_ms = Config::GetCurrentConfig()->transport_layer_options.shm_options.memfile_ack_timeout;
     m_connected              = false;
     m_ext_subscribed         = false;
     m_created                = false;
@@ -128,15 +128,15 @@ namespace eCAL
     m_topic_id = counter.str();
 
     // set registration expiration
-    const std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
+    const std::chrono::milliseconds registration_timeout = g_ecal_config()->registration_options.getTimeout();
     m_loc_sub_map.set_expiration(registration_timeout);
     m_ext_sub_map.set_expiration(registration_timeout);
 
     // allow to share topic type
-    m_use_ttype = Config::IsTopicTypeSharingEnabled();
+    m_use_ttype = Config::GetCurrentConfig()->registration_options.share_ttype;
 
     // allow to share topic description
-    m_use_tdesc = Config::IsTopicDescriptionSharingEnabled();
+    m_use_tdesc = Config::GetCurrentConfig()->registration_options.share_ttype;
 
     // register
     Register(false);
@@ -191,10 +191,10 @@ namespace eCAL
     m_clock_old              = 0;
     m_snd_time               = std::chrono::steady_clock::time_point();
     m_freq                   = 0;
-    m_bandwidth_max_udp      = Config::GetMaxUdpBandwidthBytesPerSecond();
-    m_buffering_shm          = Config::GetMemfileBufferCount();
-    m_zero_copy              = Config::IsMemfileZerocopyEnabled();
-    m_acknowledge_timeout_ms = Config::GetMemfileAckTimeoutMs();
+    m_bandwidth_max_udp      = g_ecal_config()->transport_layer_options.mc_options.bandwidth_max_udp;
+    m_buffering_shm          = Config::GetCurrentConfig()->transport_layer_options.shm_options.memfile_buffer_count.get();
+    m_zero_copy              = Config::GetCurrentConfig()->transport_layer_options.shm_options.memfile_zero_copy;
+    m_acknowledge_timeout_ms = Config::GetCurrentConfig()->transport_layer_options.shm_options.memfile_ack_timeout;
     m_connected              = false;
 
     // reset subscriber maps

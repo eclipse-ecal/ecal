@@ -50,7 +50,7 @@ namespace eCAL
     // start memfile broadcast receive thread
     m_memfile_broadcast_reader = memfile_broadcast_reader_;
     m_memfile_broadcast_reader_thread = std::make_shared<CCallbackThread>(std::bind(&CMemfileRegistrationReceiver::Receive, this));
-    m_memfile_broadcast_reader_thread->start(std::chrono::milliseconds(Config::GetRegistrationRefreshMs()/2));
+    m_memfile_broadcast_reader_thread->start(g_ecal_config()->registration_options.getRefresh());
 
     m_created = true;
   }
@@ -117,10 +117,10 @@ namespace eCAL
     if(m_created) return;
 
     // network mode
-    m_network = Config::IsNetworkEnabled();
+    m_network = g_ecal_config()->transport_layer_options.network_enabled;
 
-    m_use_shm_monitoring = Config::Experimental::IsShmMonitoringEnabled();
-    m_use_network_monitoring = !Config::Experimental::IsNetworkMonitoringDisabled();
+    m_use_shm_monitoring = static_cast<bool>(Config::GetCurrentConfig()->monitoring_options.monitoring_mode & Config::MonitoringMode::shm_monitoring);
+    m_use_network_monitoring = !Config::GetCurrentConfig()->monitoring_options.network_monitoring_disabled;
 
     if (m_use_network_monitoring)
     {
@@ -130,7 +130,7 @@ namespace eCAL
       attr.port      = UDP::GetRegistrationPort();
       attr.broadcast = UDP::IsBroadcast();
       attr.loopback  = true;
-      attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
+      attr.rcvbuf    = Config::GetCurrentConfig()->transport_layer_options.mc_options.recbuf.get();
 
       // start registration sample receiver
       m_registration_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CRegistrationReceiver::HasSample, this, std::placeholders::_1), std::bind(&CRegistrationReceiver::ApplySample, this, std::placeholders::_1));
@@ -138,7 +138,7 @@ namespace eCAL
 
     if (m_use_shm_monitoring)
     {
-      m_memfile_broadcast.Create(Config::Experimental::GetShmMonitoringDomain(), Config::Experimental::GetShmMonitoringQueueSize());
+      m_memfile_broadcast.Create(Config::GetCurrentConfig()->monitoring_options.shm_options.shm_monitoring_domain, Config::GetCurrentConfig()->monitoring_options.shm_options.shm_monitoring_queue_size);
       m_memfile_broadcast.FlushLocalEventQueue();
       m_memfile_broadcast_reader.Bind(&m_memfile_broadcast);
 

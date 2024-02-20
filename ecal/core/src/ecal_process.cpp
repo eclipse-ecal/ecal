@@ -26,6 +26,7 @@
 
 #include "ecal_def.h"
 #include "config/ecal_config_reader_hlp.h"
+#include "ecal/types/ecal_config_types.h"
 #include "registration/ecal_registration_receiver.h"
 #include "ecal_globals.h"
 #include "ecal_process.h"
@@ -214,14 +215,14 @@ namespace eCAL
       }
 
       sstream << "------------------------- CONFIGURATION --------------------------" << std::endl;
-      sstream << "Default INI              : " << Config::GetLoadedEcalIniPath() << std::endl; 
+      sstream << "Default INI              : " << Config::GetCurrentConfig()->loaded_ecal_ini_file << std::endl; 
       sstream << std::endl;
 
       sstream << "------------------------- NETWORK --------------------------------" << std::endl;
       sstream << "Host name                : " << Process::GetHostName() << std::endl;
       sstream << "Host group name          : " << Process::GetHostGroupName() << std::endl;
 
-      if (Config::IsNetworkEnabled())
+      if (Config::GetCurrentConfig()->transport_layer_options.network_enabled)
       {
         sstream << "Network mode             : cloud" << std::endl;
       }
@@ -229,16 +230,17 @@ namespace eCAL
       {
         sstream << "Network mode             : local" << std::endl;
       }
+      
       sstream << "Network ttl              : " << UDP::GetMulticastTtl() << std::endl;
-      sstream << "Network sndbuf           : " << GetBufferStr(Config::GetUdpMulticastSndBufSizeBytes()) << std::endl;
-      sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetUdpMulticastRcvBufSizeBytes()) << std::endl;
-      sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetUdpMulticastConfigVersion()) << std::endl;
-      sstream << "Multicast group          : " << Config::GetUdpMulticastGroup() << std::endl;
-      sstream << "Multicast mask           : " << Config::GetUdpMulticastMask() << std::endl;
-      const int port = Config::GetUdpMulticastPort();
+      sstream << "Network sndbuf           : " << GetBufferStr(Config::GetCurrentConfig()->transport_layer_options.mc_options.sndbuf.get()) << std::endl;
+      sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetCurrentConfig()->transport_layer_options.mc_options.recbuf.get()) << std::endl;
+      sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetCurrentConfig()->transport_layer_options.mc_options.config_version) << std::endl;
+      sstream << "Multicast group          : " << Config::GetCurrentConfig()->transport_layer_options.mc_options.group.get() << std::endl;
+      sstream << "Multicast mask           : " << Config::GetCurrentConfig()->transport_layer_options.mc_options.mask.get() << std::endl;
+      const int port = Config::GetCurrentConfig()->transport_layer_options.mc_options.port.get();
       sstream << "Multicast ports          : " << port << " - " << port + 10 << std::endl;
-      sstream << "Multicast join all IFs   : " << (Config::IsUdpMulticastJoinAllIfEnabled() ? "on" : "off") << std::endl;
-      auto bandwidth = Config::GetMaxUdpBandwidthBytesPerSecond();
+      sstream << "Multicast join all IFs   : " << (Config::GetCurrentConfig()->transport_layer_options.mc_options.join_all_interfaces ? "on" : "off") << std::endl;
+      auto bandwidth = Config::GetCurrentConfig()->transport_layer_options.mc_options.bandwidth_max_udp;
       if (bandwidth < 0)
       {
         sstream << "Bandwidth limit (udp)    : not limited" << std::endl;
@@ -250,7 +252,7 @@ namespace eCAL
       sstream << std::endl;
 
       sstream << "------------------------- TIME -----------------------------------" << std::endl;
-      sstream << "Synchronization realtime : " << Config::GetTimesyncModuleName() << std::endl;
+      sstream << "Synchronization realtime : " << Config::GetCurrentConfig()->timesync_options.timesync_module << std::endl;
       sstream << "Synchronization replay   : " << eCALPAR(TIME, SYNC_MOD_REPLAY) << std::endl;
       sstream << "State                    : ";
       if (g_timegate()->IsSynchronized()) sstream << " synchronized " << std::endl;
@@ -265,34 +267,34 @@ namespace eCAL
       sstream << std::endl;
 
       sstream << "------------------------- PUBLISHER LAYER DEFAULTS ---------------"       << std::endl;
-      sstream << "Layer Mode INPROC        : " << LayerMode(Config::GetPublisherInprocMode())  << std::endl;
-      auto zero_copy = Config::IsMemfileZerocopyEnabled();
+      sstream << "Layer Mode INPROC        : " << LayerMode(Config::GetCurrentConfig()->publisher_options.use_inproc)  << std::endl;
+      auto zero_copy = Config::GetCurrentConfig()->transport_layer_options.shm_options.memfile_zero_copy;
 
       if (zero_copy)
       {
-        sstream << "Layer Mode SHM (ZEROCPY) : " << LayerMode(Config::GetPublisherShmMode()) << std::endl;
+        sstream << "Layer Mode SHM (ZEROCPY) : " << LayerMode(Config::GetCurrentConfig()->publisher_options.use_shm) << std::endl;
       }
       else
       {
-        sstream << "Layer Mode SHM           : " << LayerMode(Config::GetPublisherShmMode()) << std::endl;
+        sstream << "Layer Mode SHM           : " << LayerMode(Config::GetCurrentConfig()->publisher_options.use_shm) << std::endl;
       }
-      sstream << "Layer Mode TCP           : " << LayerMode(Config::GetPublisherTcpMode()) << std::endl;
-      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::GetPublisherUdpMulticastMode()) << std::endl;
+      sstream << "Layer Mode TCP           : " << LayerMode(Config::GetCurrentConfig()->publisher_options.use_tcp) << std::endl;
+      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::GetCurrentConfig()->publisher_options.use_udp_mc) << std::endl;
       sstream << std::endl;
 
       sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------"               << std::endl;
-      sstream << "Layer Mode INPROC        : " << LayerMode(Config::IsInprocRecEnabled())  << std::endl;
-      sstream << "Layer Mode SHM           : " << LayerMode(Config::IsShmRecEnabled())     << std::endl;
-      sstream << "Layer Mode TCP           : " << LayerMode(Config::IsTcpRecEnabled())  << std::endl;
-      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::IsUdpMulticastRecEnabled())  << std::endl;
-      sstream << "Npcap UDP Reciever       : " << LayerMode(Config::IsNpcapEnabled());
+      sstream << "Layer Mode INPROC        : " << LayerMode(Config::GetCurrentConfig()->receiving_options.inproc_recv_enabled)  << std::endl;
+      sstream << "Layer Mode SHM           : " << LayerMode(Config::GetCurrentConfig()->receiving_options.shm_recv_enabled)     << std::endl;
+      sstream << "Layer Mode TCP           : " << LayerMode(Config::GetCurrentConfig()->receiving_options.tcp_recv_enabled)     << std::endl;
+      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::GetCurrentConfig()->receiving_options.udp_mc_recv_enabled)  << std::endl;
+      sstream << "Npcap UDP Receiver       : " << LayerMode(Config::GetCurrentConfig()->transport_layer_options.mc_options.npcap_enabled);
 #ifdef ECAL_NPCAP_SUPPORT
-      if(Config::IsNpcapEnabled() && !Udpcap::Initialize())
+      if(Config::GetCurrentConfig()->transport_layer_options.mc_options.npcap_enabled && !Udpcap::Initialize())
       {
         sstream << " (Init FAILED!)";
       }
 #else  // ECAL_NPCAP_SUPPORT
-      if (Config::IsNpcapEnabled())
+      if (Config::GetCurrentConfig()->transport_layer_options.mc_options.npcap_enabled)
       {
         sstream << " (Npcap is enabled, but not configured via CMake!)";
       }
@@ -303,11 +305,11 @@ namespace eCAL
       
 
       sstream << "------------------------- EXPERIMENTAL ---------------------------" << std::endl;
-      sstream << "SHM Monitoring           : " << (Config::Experimental::IsShmMonitoringEnabled() ? "on" : "off") << std::endl;
-      sstream << "SHM Monitoring (Domain)  : " << Config::Experimental::GetShmMonitoringDomain() << std::endl;
-      sstream << "SHM Monitoring (Queue)   : " << Config::Experimental::GetShmMonitoringQueueSize() << std::endl;
-      sstream << "Network Monitoring       : " << (!Config::Experimental::IsNetworkMonitoringDisabled() ? "on" : "off") << std::endl;
-      sstream << "Drop out-of-order msgs   : " << (Config::Experimental::GetDropOutOfOrderMessages() ? "on" : "off") << std::endl;
+      sstream << "SHM Monitoring           : " << ( static_cast<bool>(Config::GetCurrentConfig()->monitoring_options.monitoring_mode & Config::MonitoringMode::shm_monitoring) ? "on" : "off") << std::endl;
+      sstream << "SHM Monitoring (Domain)  : " << Config::GetCurrentConfig()->monitoring_options.shm_options.shm_monitoring_domain << std::endl;
+      sstream << "SHM Monitoring (Queue)   : " << Config::GetCurrentConfig()->monitoring_options.shm_options.shm_monitoring_queue_size << std::endl;
+      sstream << "Network Monitoring       : " << (!Config::GetCurrentConfig()->monitoring_options.network_monitoring_disabled ? "on" : "off") << std::endl;
+      sstream << "Drop out-of-order msgs   : " << (Config::GetCurrentConfig()->transport_layer_options.drop_out_of_order_messages ? "on" : "off") << std::endl;
       sstream << std::endl;
 
       // write it into std:string
@@ -333,7 +335,7 @@ namespace eCAL
 
     std::string GetHostGroupName()
     {
-      return Config::GetHostGroupName().empty() ? GetHostName() : Config::GetHostGroupName();
+      return Config::GetCurrentConfig()->transport_layer_options.shm_options.host_group_name.empty() ? GetHostName() : Config::GetCurrentConfig()->transport_layer_options.shm_options.host_group_name;
     }
 
     int GetHostID()
