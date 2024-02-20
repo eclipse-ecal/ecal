@@ -47,13 +47,21 @@ jobs:
           ref: support/v5.12
 
       # Create a new branch from the support/v5.12 branch and commit an empty commit
-      - uses: EndBug/add-and-commit@v9
-        with:
-          commit: --allow-empty
-          message: 'cherry-pick: empty commit'
-          new_branch: empty-pr-branch
+      # - uses: EndBug/add-and-commit@v9
+      #   with:
+      #     commit: --allow-empty
+      #     message: 'cherry-pick: empty commit'
+      #     new_branch: empty-pr-branch
 
-      - name: Create empty PR
+      # switch to a new branch and create an empty commit on that branch
+      - name: Create empty commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # git checkout -b empty-pr-branch
+          git commit --allow-empty -m "cherry-pick: empty commit"
+
+      - name: Create PR
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -61,7 +69,7 @@ jobs:
           title: 'cherry-pick: empty PR'
           body: 'This PR was created automatically to indicate that the cherry-pick to support/v5.12 failed.'
 #          branch: empty-pr-branch
-          base: support/v5.12
+#          base: support/v5.12
           draft: true
 
 env:
