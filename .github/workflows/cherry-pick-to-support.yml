@@ -33,11 +33,20 @@ jobs:
     if: ${{ failure() }}
 
     steps:
+
+      # Checkout the repository and switch to the support/v5.12 branch
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: support/v5.12
+
+      # Create a new branch from the support/v5.12 branch and commit an empty commit
+      - name: Create empty commit
+        run: |
+          git checkout -b empty-pr
+          git commit --allow-empty -m "cherry-pick: empty commit"
+          git push origin empty-pr
 
       - name: Create empty PR
         uses: peter-evans/create-pull-request@v6
@@ -46,7 +55,7 @@ jobs:
           commit-message: 'cherry-pick: empty PR'
           title: 'cherry-pick: empty PR'
           body: 'This PR was created automatically to indicate that the cherry-pick to support/v5.12 failed.'
-          #branch: support/v5.12
+          branch: empty-pr
           base: support/v5.12
           draft: true
 
