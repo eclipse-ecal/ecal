@@ -19,7 +19,6 @@
 
 #include "import_from_cloud_window.h"
 
-#include <QDesktopWidget>
 #include <QScreen>
 
 ImportFromCloudWindow::ImportFromCloudWindow(QWidget *parent)

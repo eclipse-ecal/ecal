@@ -68,6 +68,11 @@ namespace eCAL
     **/
     virtual ~CTimedCB() { Stop(); }
 
+    CTimedCB(const CTimedCB&) = delete;
+    CTimedCB& operator=(const CTimedCB&) = delete;
+    CTimedCB(CTimedCB&& rhs) = delete;
+    CTimedCB& operator=(CTimedCB&& rhs) = delete;
+
     /**
      * @brief Start the timer.
      *
@@ -97,16 +102,15 @@ namespace eCAL
     {
       if (!m_running) return(false);
       m_stop = true;
-      m_thread.join();
+      // Wait for the callback thread to finish
+      if (m_thread.joinable()) {
+        m_thread.join();
+      }
       m_running = false;
       return(true);
     }
 
   private:
-    // this object must not be copied.
-    CTimedCB(const CTimedCB&);
-    CTimedCB& operator=(const CTimedCB&);
-
     void Thread(TimerCallbackT callback_, int timeout_, int delay_)
     {
       assert(callback_ != nullptr);

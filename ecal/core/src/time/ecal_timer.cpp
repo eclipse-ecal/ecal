@@ -38,6 +38,10 @@ namespace eCAL
     CTimerImpl(const int timeout_, TimerCallbackT callback_, const int delay_) : m_stop(false), m_running(false) { Start(timeout_, callback_, delay_); }
 
     virtual ~CTimerImpl() { Stop(); }
+    CTimerImpl(const CTimerImpl&) = delete;
+    CTimerImpl& operator=(const CTimerImpl&) = delete;
+    CTimerImpl(CTimerImpl&& rhs) = delete;
+    CTimerImpl& operator=(CTimerImpl&& rhs) = delete;
 
     bool Start(const int timeout_, TimerCallbackT callback_, const int delay_)
     {
@@ -131,19 +135,19 @@ namespace eCAL
 
   CTimer::CTimer() : m_timer(nullptr)
   {
-    m_timer = new CTimerImpl();
+    m_timer = std::make_unique<CTimerImpl>();
   }
 
   CTimer::CTimer(const int timeout_, TimerCallbackT callback_, const int delay_ /*= 0*/) : m_timer(nullptr)
   { 
-    m_timer = new CTimerImpl();
+    m_timer = std::make_unique<CTimerImpl>();
     m_timer->Start(timeout_, callback_, delay_);
   }
 
   CTimer::~CTimer()
   {
     Stop();
-    delete m_timer;
+    m_timer.reset();
   }
 
   bool CTimer::Start(const int timeout_, TimerCallbackT callback_, const int delay_ /*= 0*/)

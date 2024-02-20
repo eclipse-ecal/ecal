@@ -50,7 +50,7 @@ QVariant JobHistoryModel::headerData(int section, Qt::Orientation orientation, i
   {
     return column_labels_.at((Columns)section);
   }
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 int JobHistoryModel::columnCount(const QModelIndex &/*parent*/) const

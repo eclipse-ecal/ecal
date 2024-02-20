@@ -34,7 +34,7 @@ namespace eCAL
     class OBinaryChannel
     {
     public:
-      OBinaryChannel(std::shared_ptr<base::Writer> meas_, const std::string& name_)
+      OBinaryChannel(std::shared_ptr<experimental::measurement::base::Writer> meas_, const std::string& name_)
         : channel_name(name_)
         , meas(meas_)
         , SenderID(0)
@@ -61,7 +61,7 @@ namespace eCAL
 
     private:
       const std::string channel_name;
-      std::shared_ptr<base::Writer> meas;
+      std::shared_ptr<experimental::measurement::base::Writer> meas;
 
       long long SenderID;
       long long clock;
@@ -72,7 +72,7 @@ namespace eCAL
     class OChannel
     {
     public:
-      OChannel(std::shared_ptr<base::Writer> meas_, std::string name_)
+      OChannel(std::shared_ptr<experimental::measurement::base::Writer> meas_, std::string name_)
         : binary_channel(meas_, name_)
       {
       }
@@ -113,13 +113,13 @@ namespace eCAL
       OChannel<T> Create(const std::string& channel) const;
 
     private:
-      std::shared_ptr<base::Writer> meas;
+      std::shared_ptr<experimental::measurement::base::Writer> meas;
     };
 
 
 
     inline OMeasurement::OMeasurement(const std::string& base_path_, const std::string& measurement_name_)
-      : meas{ std::make_shared<eCAL::measurement::hdf5::Writer>(base_path_) }
+      : meas{ std::make_shared<eCAL::experimental::measurement::hdf5::Writer>(base_path_) }
     {
       meas->SetFileBaseName(measurement_name_);
     }
@@ -132,8 +132,12 @@ namespace eCAL
     inline OChannel<T> OMeasurement::Create(const std::string& channel) const
     {
       static T msg;
-      meas->SetChannelType(channel, eCAL::message::GetTypeName(msg));
-      meas->SetChannelDescription(channel, eCAL::message::GetDescription(msg));
+      const eCAL::experimental::measurement::base::DataTypeInformation datatype_info{
+        eCAL::message::GetTypeName(msg),
+        eCAL::message::GetEncoding(msg),
+        eCAL::message::GetDescription(msg)
+      };
+      meas->SetChannelDataTypeInformation(channel, datatype_info);
         // Construct a channel based 
       return OChannel<T>{meas, channel};
     }

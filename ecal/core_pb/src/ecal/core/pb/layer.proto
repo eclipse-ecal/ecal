@@ -30,10 +30,6 @@ message LayerParShm
   repeated string  memory_file_list   =   1;    // list of memory file names
 }
 
-message LayerParInproc
-{
-}
-
 message LayerParTcp
 {
   int32            port               =   1;    // tcp writers port number
@@ -43,7 +39,7 @@ message ConnnectionPar                          // connection parameter for read
 {
   LayerParUdpMC    layer_par_udpmc    =   1;    // parameter for ecal udp multicast
   LayerParShm      layer_par_shm      =   2;    // parameter for ecal shared memory
-  LayerParInproc   layer_par_inproc   =   3;    // parameter for ecal inner process
+                                                // 3 = parameter for ecal inner process
   LayerParTcp      layer_par_tcp      =   4;    // parameter for ecal tcp
 }
 
@@ -55,7 +51,7 @@ enum eTLayerType                                // transport layer
                                                 // 3 = ecal udp metal (not supported anymore)
   tl_ecal_shm                         =   4;    // ecal shared memory
   tl_ecal_tcp                         =   5;    // ecal tcp
-  tl_inproc                           =  42;    // inproc (inner process)
+                                                // 42 = inproc (inner process)
   tl_all                              = 255;    // all layer
 }
 
@@ -64,14 +60,5 @@ message TLayer
   eTLayerType      type               =   1;    // transport layer type
   int32            version            =   2;    // transport layer version
   bool             confirmed          =   3;    // transport layer used ?
-
-  // ----------------------------------------------------------------------
-  // REMOVE ME IN ECAL6
-  // ----------------------------------------------------------------------
-  bytes            par_shm            =   4;    // transport layer parameter (shm only, deprecated)
-  // ----------------------------------------------------------------------
-  // REMOVE ME IN ECAL6
-  // ----------------------------------------------------------------------
-
   ConnnectionPar   par_layer          =   5;    // transport layer parameter
 }

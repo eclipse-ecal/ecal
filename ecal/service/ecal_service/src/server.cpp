@@ -17,9 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstdint>
 #include <ecal/service/server.h>
 
 #include <algorithm>
+#include <memory>
 
 #include "server_impl.h"
 

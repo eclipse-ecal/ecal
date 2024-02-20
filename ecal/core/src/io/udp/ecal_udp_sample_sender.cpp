@@ -47,6 +47,7 @@ namespace eCAL
     {
       if (!m_udp_sender) return(0);
 
+      std::lock_guard<std::mutex> const send_lock(m_payload_mutex);
       // return value
       size_t sent_sum(0);
 

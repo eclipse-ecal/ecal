@@ -20,7 +20,6 @@ jobs:
         sudo apt update
         sudo apt-get install ninja-build doxygen graphviz libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev qtbase5-dev libqwt-qt5-dev libyaml-cpp-dev
 
-
     - name: Install Cap'n Proto
       run: |
         mkdir "${{ runner.workspace }}/capnp"
@@ -33,7 +32,7 @@ jobs:
         sudo make install
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules:  'true'
         fetch-depth: 0
@@ -60,7 +59,7 @@ jobs:
         cmake $GITHUB_WORKSPACE -G "Ninja" \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DHAS_HDF5=ON \
-        -DHAS_QT5=ON \
+        -DHAS_QT=ON \
         -DHAS_CURL=ON \
         -DHAS_CAPNPROTO=ON \
         -DHAS_FTXUI=ON \

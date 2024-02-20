@@ -1,7 +1,8 @@
 #include <ecal/measurement/hdf5/writer.h>
 #include <ecalhdf5/eh5_meas.h>
 
-using namespace eCAL::measurement::hdf5;
+using namespace eCAL::experimental::measurement::hdf5;
+using namespace eCAL::experimental::measurement;
 
 Writer::Writer() 
   : measurement(std::make_unique<eh5::HDF5Meas>()) 
@@ -52,14 +53,9 @@ void Writer::SetOneFilePerChannelEnabled(bool enabled)
   return measurement->SetOneFilePerChannelEnabled(enabled);
 }
 
-void Writer::SetChannelDescription(const std::string& channel_name, const std::string& description)
+void Writer::SetChannelDataTypeInformation(const std::string& channel_name, const base::DataTypeInformation& info)
 {
-  return measurement->SetChannelDescription(channel_name, description);
-}
-
-void Writer::SetChannelType(const std::string& channel_name, const std::string& type)
-{
-  return measurement->SetChannelType(channel_name, type);
+  measurement->SetChannelDataTypeInformation(channel_name, info);
 }
 
 void Writer::SetFileBaseName(const std::string& base_name)

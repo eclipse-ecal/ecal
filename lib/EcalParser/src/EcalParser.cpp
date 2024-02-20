@@ -340,7 +340,7 @@ namespace EcalParser
       { "OS",       new EcalParser::FunctionOs() },
       { "OSSELECT", new EcalParser::FunctionOsselect() },
       { "TIME",     new EcalParser::FunctionTime()},
-      { "USERNAME",     new EcalParser::FunctionUsername()},
+      { "USERNAME", new EcalParser::FunctionUsername()},
     };
 
     return functions;

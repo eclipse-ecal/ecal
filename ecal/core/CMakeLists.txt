@@ -237,11 +237,6 @@ set(ecal_readwrite_src
     src/readwrite/ecal_writer_info.h
 )
 
-set(ecal_readwrite_inproc_src
-    src/readwrite/inproc/ecal_writer_inproc.cpp
-    src/readwrite/inproc/ecal_writer_inproc.h
-)
-
 set(ecal_readwrite_shm_src
     src/readwrite/shm/ecal_reader_shm.cpp
     src/readwrite/shm/ecal_reader_shm.h
@@ -385,7 +380,6 @@ set(ecal_header_cmn
     include/ecal/ecal_process_mode.h
     include/ecal/ecal_process_severity.h
     include/ecal/ecal_publisher.h
-    include/ecal/ecal_qos.h
     include/ecal/ecal_server.h
     include/ecal/ecal_service.h
     include/ecal/ecal_service_info.h
@@ -413,7 +407,6 @@ set(ecal_header_cimpl
     include/ecal/cimpl/ecal_process_cimpl.h
     include/ecal/cimpl/ecal_proto_dyn_json_subscriber_cimpl.h
     include/ecal/cimpl/ecal_publisher_cimpl.h
-    include/ecal/cimpl/ecal_qos_cimpl.h
     include/ecal/cimpl/ecal_server_cimpl.h
     include/ecal/cimpl/ecal_service_cimpl.h
     include/ecal/cimpl/ecal_service_info_cimpl.h
@@ -470,7 +463,6 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_monitoring_src} 
     ${ecal_pubsub_src} 
     ${ecal_readwrite_src} 
-    ${ecal_readwrite_inproc_src} 
     ${ecal_readwrite_shm_src} 
     ${ecal_readwrite_tcp_src} 
     ${ecal_readwrite_udp_src}
@@ -592,7 +584,6 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_monitoring_src}
     ${ecal_pubsub_src}
     ${ecal_readwrite_src}
-    ${ecal_readwrite_inproc_src} 
     ${ecal_readwrite_shm_src} 
     ${ecal_readwrite_tcp_src} 
     ${ecal_readwrite_udp_src} 

@@ -30,13 +30,12 @@ namespace eCAL
 {
   CMonitoring::CMonitoring()
   {
-    m_monitoring_impl = new CMonitoringImpl;
+    m_monitoring_impl = std::make_unique<CMonitoringImpl>();
   }
 
   CMonitoring::~CMonitoring()
   {
-    delete m_monitoring_impl;
-    m_monitoring_impl = nullptr;
+    m_monitoring_impl.reset();
   }
 
   void CMonitoring::Create()
@@ -127,7 +126,7 @@ namespace eCAL
 
     int GetLogging(std::string& log_)
     {
-      eCAL::pb::Logging logging;
+      eCAL::pb::LogMessageList logging;
       if (g_log() != nullptr) g_log()->GetLogging(logging);
 
       log_ = logging.SerializeAsString();

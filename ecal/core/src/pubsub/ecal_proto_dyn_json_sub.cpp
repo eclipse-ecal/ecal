@@ -79,7 +79,7 @@ namespace eCAL
         if (created) return;
 
         // create message decoder
-        msg_decoder = new eCAL::protobuf::CProtoDynDecoder();
+        msg_decoder = std::make_unique<eCAL::protobuf::CProtoDynDecoder>();
 
         // create subscriber
         msg_sub.Create(topic_name_);
@@ -101,7 +101,7 @@ namespace eCAL
         msg_sub.Destroy();
 
         // delete message decoder
-        delete msg_decoder;
+        msg_decoder.reset();
 
         created = false;
       }
@@ -173,11 +173,11 @@ namespace eCAL
         }
       }
 
-      bool                              created;
-      eCAL::protobuf::CProtoDynDecoder* msg_decoder;
-      std::string                       msg_string;
-      eCAL::CSubscriber                 msg_sub;
-      ReceiveCallbackT                  msg_callback;
+      bool                                              created;
+      std::unique_ptr<eCAL::protobuf::CProtoDynDecoder> msg_decoder;
+      std::string                                       msg_string;
+      eCAL::CSubscriber                                 msg_sub;
+      ReceiveCallbackT                                  msg_callback;
 
       std::string topic_type;
       std::string topic_type_full;
@@ -212,7 +212,7 @@ namespace eCAL
     void CDynamicJSONSubscriber::Create(const std::string& topic_name_)
     {
       if (created) return;
-      proto_dyn_sub_impl = new CDynamicJSONSubscriberImpl(topic_name_);
+      proto_dyn_sub_impl = std::make_unique<CDynamicJSONSubscriberImpl>(topic_name_);
       proto_dyn_sub_impl->Create(topic_name_);
       created = true;
     }
@@ -221,8 +221,7 @@ namespace eCAL
     {
       if (!created) return;
       proto_dyn_sub_impl->Destroy();
-      delete proto_dyn_sub_impl;
-      proto_dyn_sub_impl = nullptr;
+      proto_dyn_sub_impl.reset();
       created = false;
     }
 

@@ -144,8 +144,9 @@ bool eCAL::eh5::HDF5MeasFileV2::HasChannel(const std::string& channel_name) cons
   return std::find(channels.cbegin(), channels.cend(), channel_name) != channels.end();
 }
 
-std::string eCAL::eh5::HDF5MeasFileV2::GetChannelDescription(const std::string& channel_name) const
+eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileV2::GetChannelDataTypeInformation(const std::string& channel_name) const
 {
+  std::string type;
   std::string description;
 
   if (this->IsOk())
@@ -153,38 +154,19 @@ std::string eCAL::eh5::HDF5MeasFileV2::GetChannelDescription(const std::string& 
     auto dataset_id = H5Dopen(file_id_, channel_name.c_str(), H5P_DEFAULT);
     if (dataset_id >= 0)
     {
+      GetAttributeValue(dataset_id, kChnTypeAttrTitle, type);
       GetAttributeValue(dataset_id, kChnDescAttrTitle, description);
       H5Dclose(dataset_id);
     }
   }
 
-  return description;
+  return CreateInfo(type, description);
 }
 
-void eCAL::eh5::HDF5MeasFileV2::SetChannelDescription(const std::string& /*channel_name*/, const std::string& /*description*/)
+void eCAL::eh5::HDF5MeasFileV2::SetChannelDataTypeInformation(const std::string& /*channel_name*/, const eCAL::eh5::DataTypeInformation& /*info*/)
 {
 }
 
-std::string eCAL::eh5::HDF5MeasFileV2::GetChannelType(const std::string& channel_name) const
-{
-  std::string type;
-
-  if (this->IsOk())
-  {
-    auto dataset_id = H5Dopen(file_id_, channel_name.c_str(), H5P_DEFAULT);
-    if (dataset_id >= 0)
-    {
-      GetAttributeValue(dataset_id, kChnTypeAttrTitle, type);
-      H5Dclose(dataset_id);
-    }
-  }
-
-  return type;
-}
-
-void eCAL::eh5::HDF5MeasFileV2::SetChannelType(const std::string& /*channel_name*/, const std::string& /*type*/)
-{
-}
 
 long long eCAL::eh5::HDF5MeasFileV2::GetMinTimestamp(const std::string& channel_name) const
 {

@@ -50,6 +50,14 @@ ECAL_API const char* ecal_getversion()
 }
 
 /****************************************/
+/*      ecal_getversion_components      */
+/****************************************/
+ECAL_API int ecal_getversion_components(int* major_, int* minor_, int* patch_)
+{
+  return eCAL::GetVersion(major_, minor_, patch_);
+}
+
+/****************************************/
 /*      ecal_getdate                    */
 /****************************************/
 ECAL_API const char* ecal_getdate()
@@ -72,6 +80,23 @@ ECAL_API int ecal_finalize()
 {
   //* @return Zero if succeeded, 1 if still initialized, -1 if failed.
   return(eCAL::Finalize());
+}
+
+/****************************************/
+/*      ecal_is_initialized             */
+/****************************************/
+ECAL_API int ecal_is_initialized()
+{
+  //* @return 1 if eCAL is initialized.
+  return(eCAL::IsInitialized());
+}
+
+/****************************************/
+/*      ecal_set_unit_name              */
+/****************************************/
+ECAL_API int ecal_set_unit_name(const char* unit_name_)
+{
+  return(eCAL::SetUnitName(unit_name_));
 }
 
 /****************************************/
@@ -209,14 +234,6 @@ ECAL_API void log_setlevel(const int level_)
 }
 
 /****************************************/
-/*      log_setcoretime                 */
-/****************************************/
-ECAL_API void log_setcoretime(const double time_)
-{
-  eCAL::Logging::SetCoreTime(time_);
-}
-
-/****************************************/
 /*      log_message                     */
 /****************************************/
 ECAL_API void log_message(const char* message_)
@@ -281,24 +298,6 @@ ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, 
     return(pub->SetDescription(std::string(topic_desc_, static_cast<size_t>(topic_desc_length_))));
   }
   return(false);
-}
-
-/****************************************/
-/*      pub_set_qos                     */
-/****************************************/
-ECAL_API bool pub_set_qos(ECAL_HANDLE handle_, struct SWriterQOSC qos_) //-V813
-{
-  const int ret = eCAL_Pub_SetQOS(handle_, qos_);
-  return(ret == 0);
-}
-
-/****************************************/
-/*      pub_get_qos                     */
-/****************************************/
-ECAL_API bool pub_get_qos(ECAL_HANDLE handle_, struct SWriterQOSC* qos_)
-{
-  const int ret = eCAL_Pub_GetQOS(handle_, qos_);
-  return(ret == 0);
 }
 
 /****************************************/
@@ -424,24 +423,6 @@ ECAL_API bool sub_destroy(ECAL_HANDLE handle_)
     return(true);
   }
   return(false);
-}
-
-/****************************************/
-/*      sub_set_qos                     */
-/****************************************/
-ECAL_API bool sub_set_qos(ECAL_HANDLE handle_, struct SReaderQOSC qos_) //-V813
-{
-  const int ret = eCAL_Sub_SetQOS(handle_, qos_);
-  return(ret == 0);
-}
-
-/****************************************/
-/*      sub_get_qos                     */
-/****************************************/
-ECAL_API bool sub_get_qos(ECAL_HANDLE handle_, struct SReaderQOSC* qos_)
-{
-  const int ret = eCAL_Sub_GetQOS(handle_, qos_);
-  return(ret == 0);
 }
 
 /****************************************/

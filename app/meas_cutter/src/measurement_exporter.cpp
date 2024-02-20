@@ -21,7 +21,7 @@
 #include <ecal/measurement/hdf5/writer.h>
 
 MeasurementExporter::MeasurementExporter():
-  _writer(std::make_unique<eCAL::measurement::hdf5::Writer>())
+  _writer(std::make_unique<eCAL::experimental::measurement::hdf5::Writer>())
 {
 }
 
@@ -54,15 +54,18 @@ MeasurementExporter::~MeasurementExporter()
 void MeasurementExporter::createChannel(const std::string& channel_name, const eCALMeasCutterUtils::ChannelInfo& channel_info)
 {
   _current_channel_name = channel_name;
+  eCAL::experimental::measurement::base::DataTypeInformation data_type_info;
   if (channel_info.format == eCALMeasCutterUtils::SerializationFormat::PROTOBUF)
   {
-    _writer->SetChannelType(channel_name, "proto:" + channel_info.type);
+    data_type_info.encoding = "proto";
   }
   else
   {
-    _writer->SetChannelType(channel_name, channel_info.type);
+    data_type_info.encoding = "";
   }
-  _writer->SetChannelDescription(channel_name, channel_info.description);
+  data_type_info.name = channel_info.type;
+  data_type_info.descriptor = channel_info.description;
+  _writer->SetChannelDataTypeInformation(channel_name, data_type_info);
 }
 
 void MeasurementExporter::setData(eCALMeasCutterUtils::Timestamp timestamp, const eCALMeasCutterUtils::MetaData& meta_data, const std::string& payload)

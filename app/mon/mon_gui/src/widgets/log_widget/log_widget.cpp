@@ -187,7 +187,7 @@ LogWidget::~LogWidget()
 
 void LogWidget::getEcalLogs()
 {
-  eCAL::pb::Logging logging;
+  eCAL::pb::LogMessageList logging;
   std::string     logging_string;
 
   if (eCAL::Monitoring::GetLogging(logging_string))

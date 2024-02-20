@@ -32,7 +32,7 @@ jobs:
         sudo make install
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules:  'true'
         fetch-depth: 0
@@ -60,7 +60,7 @@ jobs:
         cmake $GITHUB_WORKSPACE -G "Ninja" \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DHAS_HDF5=ON \
-        -DHAS_QT5=ON \
+        -DHAS_QT=ON \
         -DHAS_CURL=ON \
         -DHAS_CAPNPROTO=ON \
         -DHAS_FTXUI=ON \

@@ -27,7 +27,6 @@
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_callback.h>
-#include <ecal/ecal_qos.h>
 #include <ecal/ecal_types.h>
 
 #include <memory>
@@ -178,22 +177,6 @@ namespace eCAL
      * @return  true if it succeeds, false if it fails. 
     **/
     ECAL_API bool Destroy();
-
-    /**
-     * @brief Set subscriber quality of service attributes.
-     *
-     * @param qos_  Quality of service policies.
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    ECAL_API bool SetQOS(const QOS::SReaderQOS& qos_);
-
-    /**
-     * @brief Get current subscriber quality of service attributes.
-     *
-     * @return  Quality of service attributes.
-    **/
-    ECAL_API QOS::SReaderQOS GetQOS();
 
     /**
      * @brief Set a set of id's to prefiltering topics (see CPublisher::SetID).
@@ -347,12 +330,10 @@ namespace eCAL
     ECAL_API std::string Dump(const std::string& indent_ = "") const;
 
   protected:
-    void InitializeQOS();
     bool ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
 
     // class members
     std::shared_ptr<CDataReader>     m_datareader;
-    struct ECAL_API QOS::SReaderQOS  m_qos;
     bool                             m_created;
     bool                             m_initialized;
   };

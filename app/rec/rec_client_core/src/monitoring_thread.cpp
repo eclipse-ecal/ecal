@@ -84,7 +84,7 @@ namespace eCAL
             if (topic_info_map_it == topic_info_map_.end())
             {
               // Create a new topic entry
-              topic_info_map_.emplace(topic.tname(), eCAL::rec::TopicInfo("", ""));
+              topic_info_map_.emplace(topic.tname(), eCAL::rec::TopicInfo("", "", ""));
               topic_info_map_it = topic_info_map_.find(topic.tname());
             }
 
@@ -166,18 +166,18 @@ namespace eCAL
             if ((channel_descriptor_entry_it != channel_descriptor_map.end())
               && (channel_descriptor_entry_it->second.first >= topic_info_map_entry.second.description_quality_))
             {
-              topic_info_map_entry.second.type_                = channel_descriptor_entry_it->second.second.first;
-              topic_info_map_entry.second.description_         = channel_descriptor_entry_it->second.second.second;
+              topic_info_map_entry.second.SetLegacyType(channel_descriptor_entry_it->second.second.first);
+              topic_info_map_entry.second.tinfo_.descriptor    = channel_descriptor_entry_it->second.second.second;
               topic_info_map_entry.second.description_quality_ = channel_descriptor_entry_it->second.first;
             }
 
-            if (!topic_info_map_entry.second.type_.empty())
+            if (!topic_info_map_entry.second.GetLegacyType().empty())
             {
-              auto type_descriptor_entry_it = type_descriptor_map.find(topic_info_map_entry.second.type_);
+              auto type_descriptor_entry_it = type_descriptor_map.find(topic_info_map_entry.second.GetLegacyType());
               if ((type_descriptor_entry_it != type_descriptor_map.end())
                 && (type_descriptor_entry_it->second.first >= topic_info_map_entry.second.description_quality_)) 
               {
-                topic_info_map_entry.second.description_         = type_descriptor_entry_it->second.second;
+                topic_info_map_entry.second.tinfo_.descriptor    = type_descriptor_entry_it->second.second;
                 topic_info_map_entry.second.description_quality_ = type_descriptor_entry_it->second.first;
               }
             }

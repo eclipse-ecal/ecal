@@ -148,7 +148,7 @@ QVariant GroupStateMinTaskStateTreeItem::data(Columns column, Qt::ItemDataRole r
     }
   }
 
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 bool GroupStateMinTaskStateTreeItem::setData(int column, const QVariant& data, Qt::ItemDataRole role)

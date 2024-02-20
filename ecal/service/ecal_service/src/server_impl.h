@@ -19,11 +19,13 @@
 
 #pragma once
 
-#include <functional>
-#include <string>
-#include <memory>
 #include <atomic>
+#include <cstdint>
+#include <functional>
+#include <memory>
 #include <mutex>
+#include <string>
+#include <vector>
 
 #ifdef _MSC_VER
 #pragma warning(push)

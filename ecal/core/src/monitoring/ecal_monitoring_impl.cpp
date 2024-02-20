@@ -199,13 +199,11 @@ namespace eCAL
     bool               topic_tlayer_ecal_udp_mc(false);
     bool               topic_tlayer_ecal_shm(false);
     bool               topic_tlayer_ecal_tcp(false);
-    bool               topic_tlayer_inproc(false);
     for (const auto& layer : sample_topic.tlayer())
     {
       topic_tlayer_ecal_udp_mc    |= (layer.type() == eCAL::pb::tl_ecal_udp_mc)    && layer.confirmed();
       topic_tlayer_ecal_shm       |= (layer.type() == eCAL::pb::tl_ecal_shm)       && layer.confirmed();
       topic_tlayer_ecal_tcp       |= (layer.type() == eCAL::pb::tl_ecal_tcp)       && layer.confirmed();
-      topic_tlayer_inproc         |= (layer.type() == eCAL::pb::tl_inproc)         && layer.confirmed();
     }
     const size_t       connections_loc = static_cast<size_t>(sample_topic.connections_loc());
     const size_t       connections_ext = static_cast<size_t>(sample_topic.connections_ext());
@@ -299,7 +297,6 @@ namespace eCAL
       TopicInfo.tlayer_ecal_udp_mc = topic_tlayer_ecal_udp_mc;
       TopicInfo.tlayer_ecal_shm    = topic_tlayer_ecal_shm;
       TopicInfo.tlayer_ecal_tcp    = topic_tlayer_ecal_tcp;
-      TopicInfo.tlayer_inproc      = topic_tlayer_inproc;
       TopicInfo.tsize              = static_cast<int>(topic_size);
       TopicInfo.connections_loc    = static_cast<int>(connections_loc);
       TopicInfo.connections_ext    = static_cast<int>(connections_ext);
@@ -342,9 +339,6 @@ namespace eCAL
     const int             process_id                   = sample_process.pid();
     const std::string&    process_param                = sample_process.pparam();
     const std::string&    unit_name                    = sample_process.uname();
-    const long long       process_memory               = sample_process.pmemory();
-    const float           process_cpu                  = sample_process.pcpu();
-    const float           process_usrptime             = sample_process.usrptime();
     const long long       process_datawrite            = sample_process.datawrite();
     const long long       process_dataread             = sample_process.dataread();
     const auto&           sample_process_state         = sample_process.state();
@@ -376,9 +370,6 @@ namespace eCAL
 
     // update flexible content
     ProcessInfo.rclock++;
-    ProcessInfo.pmemory              = process_memory;
-    ProcessInfo.pcpu                 = process_cpu;
-    ProcessInfo.usrptime             = process_usrptime;
     ProcessInfo.datawrite            = process_datawrite;
     ProcessInfo.dataread             = process_dataread;
     ProcessInfo.state_severity       = process_state_severity;
@@ -709,15 +700,6 @@ namespace eCAL
       // process parameter
       pMonProcs->set_pparam(process.second.pparam);
 
-      // process memory
-      pMonProcs->set_pmemory(process.second.pmemory);
-
-      // process cpu
-      pMonProcs->set_pcpu(process.second.pcpu);
-
-      // process user core time
-      pMonProcs->set_usrptime(process.second.usrptime);
-
       // process data write bytes
       pMonProcs->set_datawrite(process.second.datawrite);
 
@@ -899,12 +881,6 @@ namespace eCAL
       {
         auto *tlayer = pMonTopic->add_tlayer();
         tlayer->set_type(eCAL::pb::tl_ecal_tcp);
-        tlayer->set_confirmed(true);
-      }
-      if (topic.second.tlayer_inproc)
-      {
-        auto *tlayer = pMonTopic->add_tlayer();
-        tlayer->set_type(eCAL::pb::tl_inproc);
         tlayer->set_confirmed(true);
       }
 

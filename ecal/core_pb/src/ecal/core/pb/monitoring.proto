@@ -26,17 +26,6 @@ import "ecal/core/pb/topic.proto";
 
 package eCAL.pb;
 
-message LogMessage                                // eCAL monitoring log message
-{
-  int64                 time           =  1;      // time
-  string                hname          =  2;      // host name
-  int32                 pid            =  3;      // process id
-  string                pname          =  4;      // process name
-  string                uname          =  5;      // unit name
-  int32                 level          =  6;      // message level
-  string                content        =  7;      // message content
-}
-
 message Monitoring                                // eCAL monitoring information
 {
   repeated Host         hosts          =  1;      // hosts
@@ -44,9 +33,4 @@ message Monitoring                                // eCAL monitoring information
   repeated Service      services       =  3;      // services
   repeated Client       clients        =  5;      // clients
   repeated Topic        topics         =  4;      // topics
-}
-
-message Logging                                   // eCAL logging information
-{
-  repeated LogMessage   logs           =  1;      // log messages
 }

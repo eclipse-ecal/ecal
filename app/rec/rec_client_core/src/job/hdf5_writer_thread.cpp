@@ -42,7 +42,7 @@ namespace eCAL
       , new_topic_info_map_available_(true)
       , flushing_                    (false)
     {
-      hdf5_writer_ = std::make_unique<eCAL::measurement::hdf5::Writer>();
+      hdf5_writer_ = std::make_unique<eCAL::experimental::measurement::hdf5::Writer>();
     }
 
     Hdf5WriterThread::~Hdf5WriterThread()
@@ -169,8 +169,8 @@ namespace eCAL
 
           for (const auto& topic : topic_info_map_to_set)
           {
-            hdf5_writer_->SetChannelType(topic.first, topic.second.type_);
-            hdf5_writer_->SetChannelDescription(topic.first, topic.second.description_);
+            eCAL::experimental::measurement::base::DataTypeInformation const topic_info{ topic.second.tinfo_.name, topic.second.tinfo_.encoding, topic.second.tinfo_.descriptor };
+            hdf5_writer_->SetChannelDataTypeInformation(topic.first, topic_info);
           }
         }
         else if (frame)

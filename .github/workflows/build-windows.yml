@@ -22,9 +22,9 @@ jobs:
       uses: jurplel/install-qt-action@v3
       with:
         setup-python: 'false'
-        version: '5.15.2'
+        version: '6.6.1'
         target: 'desktop'
-        arch: 'win64_msvc2015_64'
+        arch: 'win64_msvc2019_64'
 
     # Downgrading nuget is required as of 2021-04-23, as nuget 5.9.1.111 fails installing protobuf
     # https://github.com/actions/virtual-environments/issues/3240
@@ -55,16 +55,10 @@ jobs:
 #        cmake --build . --target install --config Release
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules:  'true'
         fetch-depth: 0
-
-    - name: Download NPCAP
-      run: |
-        cd %GITHUB_WORKSPACE%
-        powershell -Command "& 'build_win\download_npcap.ps1'"
-      shell: cmd
 
     - name: Create Python virtualenv
       run: |
@@ -91,7 +85,7 @@ jobs:
 
         cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 ^
         -DHAS_HDF5=ON ^
-        -DHAS_QT5=ON ^
+        -DHAS_QT=ON ^
         -DHAS_CURL=OFF ^
         -DHAS_CAPNPROTO=OFF ^
         -DHAS_FTXUI=ON ^
@@ -131,7 +125,7 @@ jobs:
         cd "${{ runner.workspace }}/_build/complete"
         cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 ^
         -DHAS_HDF5=ON ^
-        -DHAS_QT5=ON ^
+        -DHAS_QT=ON ^
         -DHAS_CURL=ON ^
         -DHAS_CAPNPROTO=OFF ^
         -DHAS_FTXUI=ON ^

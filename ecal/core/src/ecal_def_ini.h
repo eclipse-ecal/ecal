@@ -53,7 +53,6 @@
 #define  NET_UDP_MC_REC_ENABLED_S                  "udp_mc_rec_enabled"
 #define  NET_SHM_REC_ENABLED_S                     "shm_rec_enabled"
 #define  NET_TCP_REC_ENABLED_S                     "tcp_rec_enabled"
-#define  NET_INPROC_REC_ENABLED_S                  "inproc_rec_enabled"
 
 #define  NET_NPCAP_ENABLED_S                       "npcap_enabled"
 
@@ -103,7 +102,6 @@
 #define  PUB_USE_UDP_MC_S                          "use_udp_mc"
 #define  PUB_USE_SHM_S                             "use_shm"
 #define  PUB_USE_TCP_S                             "use_tcp"
-#define  PUB_USE_INPROC_S                          "use_inproc"
 
 #define  PUB_MEMFILE_MINSIZE_S                     "memfile_minsize"
 #define  PUB_MEMFILE_RESERVE_S                     "memfile_reserve"

@@ -28,7 +28,6 @@
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_payload_writer.h>
-#include <ecal/ecal_qos.h>
 #include <ecal/ecal_tlayer.h>
 #include <ecal/ecal_types.h>
 
@@ -237,22 +236,6 @@ namespace eCAL
      * @return  True if it succeeds, false if it fails.
     **/
     ECAL_API bool ShareDescription(bool state_ = true);
-
-    /**
-     * @brief Set publisher quality of service attributes.
-     *
-     * @param qos_  Quality of service policies.
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    ECAL_API bool SetQOS(const QOS::SWriterQOS& qos_);
-
-    /**
-     * @brief Get current publisher quality of service attributes.
-     *
-     * @return  Quality of service attributes.
-    **/
-    ECAL_API QOS::SWriterQOS GetQOS();
 
     /**
      * @brief Set publisher send mode for specific transport layer. 
@@ -537,13 +520,11 @@ namespace eCAL
     ECAL_API std::string Dump(const std::string& indent_ = "") const;
 
   protected:
-    void InitializeQOS();
     void InitializeTLayer();
     bool ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
 
     // class members
     std::shared_ptr<CDataWriter>     m_datawriter;
-    struct ECAL_API QOS::SWriterQOS  m_qos;
     struct ECAL_API TLayer::STLayer  m_tlayer;
     long long                        m_id;
     bool                             m_created;

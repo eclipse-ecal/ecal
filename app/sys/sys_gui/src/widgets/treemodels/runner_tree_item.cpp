@@ -175,7 +175,7 @@ QVariant RunnerTreeItem::data(Columns column, Qt::ItemDataRole role) const
     return data(column, Qt::ItemDataRole::DisplayRole);
   }
 
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 

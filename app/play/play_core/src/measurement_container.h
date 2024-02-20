@@ -31,7 +31,7 @@
 class MeasurementContainer
 {
 public:
-  MeasurementContainer(std::shared_ptr<eCAL::measurement::base::Reader> hdf5_meas, const std::string& meas_dir = "", bool use_receive_timestamp = true);
+  MeasurementContainer(std::shared_ptr<eCAL::experimental::measurement::base::Reader> hdf5_meas, const std::string& meas_dir = "", bool use_receive_timestamp = true);
   ~MeasurementContainer();
 
   void CreatePublishers();
@@ -92,8 +92,8 @@ private:
     eCAL::CPublisher publisher_;
     long long message_counter_;
 
-    PublisherInfo(const std::string& topic_name, const std::string& topic_type = "", const std::string& topic_description = "")
-      : publisher_(topic_name, topic_type, topic_description)
+    PublisherInfo(const std::string& topic_name, const eCAL::SDataTypeInformation& info_)
+      : publisher_(topic_name, info_)
       , message_counter_(0)
     {}
   };
@@ -108,7 +108,7 @@ private:
     PublisherInfo*                     publisher_info_;
   };
 
-  std::shared_ptr<eCAL::measurement::base::Reader>      hdf5_meas_;
+  std::shared_ptr<eCAL::experimental::measurement::base::Reader>      hdf5_meas_;
   std::string                                           meas_dir_;
   bool                                                  use_receive_timestamp_;
 

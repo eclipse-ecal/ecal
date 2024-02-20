@@ -34,7 +34,6 @@
 #include "udp/ecal_writer_udp_mc.h"
 #include "shm/ecal_writer_shm.h"
 #include "tcp/ecal_writer_tcp.h"
-#include "inproc/ecal_writer_inproc.h"
 
 #include <mutex>
 #include <string>
@@ -86,8 +85,6 @@ namespace eCAL
     void ShareType(bool state_);
     void ShareDescription(bool state_);
 
-    bool SetQOS(const QOS::SWriterQOS& qos_);
-
     bool SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_);
     bool SetMaxBandwidthUDP(long bandwidth_);
 
@@ -135,7 +132,6 @@ namespace eCAL
     void SetUseUdpMC(TLayer::eSendMode mode_);
     void SetUseShm(TLayer::eSendMode mode_);
     void SetUseTcp(TLayer::eSendMode mode_);
-    void SetUseInProc(TLayer::eSendMode mode_);
 
     bool CheckWriterModes();
     size_t PrepareWrite(long long id_, size_t len_);
@@ -152,8 +148,6 @@ namespace eCAL
     SDataTypeInformation               m_topic_info;
     std::map<std::string, std::string> m_attr;
     size_t                             m_topic_size;
-
-    QOS::SWriterQOS    m_qos;
 
     size_t             m_buffering_shm;
     bool               m_zero_copy;
@@ -201,9 +195,6 @@ namespace eCAL
 
       SWriterMode        tcp_mode;
       CDataWriterTCP     tcp;
-
-      SWriterMode        inproc_mode;
-      CDataWriterInProc  inproc;
     };
     SWriter            m_writer;
 

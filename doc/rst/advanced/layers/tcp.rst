@@ -8,6 +8,13 @@ eCAL TCP Layer
 
 The eCAL TCP Transport Layer has been added with eCAL 5.10.
 
+.. tip:: 
+
+   You can test TCP communication by executing the ``ecal_sample_person_snd_tcp`` samples.
+   That sample will **always** send data via TCP, regardless of you system configuration.
+
+   You can use the eCAL Monitor or the regular ``ecal_sample_person_rec`` sample to receive the data.
+
 Motivation
 ==========
 
@@ -95,4 +102,5 @@ You can activate TCP in the following ways:
 
       Also see the ``person_snd_tcp`` sample:
 
-      https://github.com/eclipse-ecal/ecal/tree/master/samples/cpp/person/person_snd_tcp
+      https://github.com/eclipse-ecal/ecal/tree/master/samples/cpp/pubsub/protobuf/person_snd_tcp
+

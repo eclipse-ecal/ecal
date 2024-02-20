@@ -38,6 +38,17 @@
 ECAL_API const char* ecal_getversion();
 
 /**
+ * @brief  Get eCAL version as separated integer values.
+ *
+ * @param [out] major_  The eCAL major version number.
+ * @param [out] minor_  The eCAL minor version number.
+ * @param [out] patch_  The eCAL patch version number.
+ *
+ * @return  Zero if succeeded.
+**/
+ECAL_API int ecal_getversion_components(int* major_, int* minor_, int* patch_);
+
+/**
  * @brief  Get eCAL version date.
  *
  * @return  Full eCAL version date string.
@@ -61,6 +72,22 @@ ECAL_API int ecal_initialize(int argc_, char **argv_, const char* unit_name_);
  * @return Zero if succeeded, 1 if already initialized, -1 if failed.
 **/
 ECAL_API int ecal_finalize();
+
+/**
+ * @brief Check eCAL initialize state.
+ *
+ * @return 1 if eCAL is initialized.
+**/
+ECAL_API int ecal_is_initialized();
+
+/**
+ * @brief  Set/change the unit name of current module.
+ *
+ * @param unit_name_  Defines the name of the eCAL unit.
+ *
+ * @return  Zero if succeeded.
+**/
+ECAL_API int ecal_set_unit_name(const char *unit_name_);
 
 /**
  * @brief  Set process state info.
@@ -180,13 +207,6 @@ ECAL_API bool ecal_get_description(const char* topic_name_, const char** topic_d
 ECAL_API void log_setlevel(const int level_);
 
 /**
- * @brief Set the current measured core time in s (for user implemented measuring).
- *
- * @param time_  The core time.
-**/
-ECAL_API void log_setcoretime(const double time_);
-
-/**
  * @brief Log a message (with current log level).
  *
  * @param message_  The log message string.
@@ -236,26 +256,6 @@ ECAL_API bool pub_set_type_name(ECAL_HANDLE handle_, const char* topic_type_name
  * @return  True if succeeded.
 **/
 ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_);
-
-/**
- * @brief Set publisher quality of service attributes.
- *
- * @param handle_  Publisher handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool pub_set_qos(ECAL_HANDLE handle_, struct SWriterQOSC qos_);
-
-/**
- * @brief Get publisher quality of service attributes.
- *
- * @param handle_  Publisher handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool pub_get_qos(ECAL_HANDLE handle_, struct SWriterQOSC* qos_);
 
 /**
  * @brief Set publisher send mode for specific transport layer.
@@ -348,26 +348,6 @@ ECAL_API ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_
  * @return  True if succeeded.
 **/
 ECAL_API bool sub_destroy(ECAL_HANDLE handle_);
-
-/**
- * @brief Set subscriber quality of service attributes.
- *
- * @param handle_  Subscriber handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool sub_set_qos(ECAL_HANDLE handle_, struct SReaderQOSC qos_);
-
-/**
- * @brief Get subscriber quality of service attributes.
- *
- * @param handle_  Subscriber handle.
- * @param qos_     Quality of service policies.
- *
- * @return  True if succeeded.
-**/
-ECAL_API bool sub_get_qos(ECAL_HANDLE handle_, struct SReaderQOSC* qos_);
 
 /**
  * @brief Receive a message from the publisher.

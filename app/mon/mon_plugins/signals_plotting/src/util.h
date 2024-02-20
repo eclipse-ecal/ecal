@@ -32,7 +32,11 @@ namespace QtUtil
 {
   inline QString variantToString(const QVariant& variant)
   {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    switch (variant.typeId())
+#else
     switch ((QMetaType::Type)variant.type())
+#endif
     {
     case QMetaType::Bool:
       return variant.toBool() ? "True" : "False";

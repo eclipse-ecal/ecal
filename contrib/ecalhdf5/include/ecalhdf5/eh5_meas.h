@@ -55,7 +55,7 @@ namespace eCAL
        * @param access   Access type
        *
       **/
-      explicit HDF5Meas(const std::string& path, measurement::base::AccessType access = measurement::base::AccessType::RDONLY);
+      explicit HDF5Meas(const std::string& path, eAccessType access = RDONLY);
 
       /**
        * @brief Destructor
@@ -105,7 +105,7 @@ namespace eCAL
        * @return         true if output (eAccessType::CREATE) measurement directory structure can be accessed/created, false otherwise.
        *                 true if input (eAccessType::RDONLY) measurement/file path was opened, false otherwise.
       **/
-      bool Open(const std::string& path, measurement::base::AccessType access = measurement::base::AccessType::RDONLY);
+      bool Open(const std::string& path, eAccessType access = RDONLY);
 
       /**
        * @brief Close file
@@ -187,6 +187,7 @@ namespace eCAL
        *
        * @return              channel description
       **/
+      [[deprecated("Please use GetChannelDataTypeInformation instead")]]
       std::string GetChannelDescription(const std::string& channel_name) const;
 
       /**
@@ -195,6 +196,7 @@ namespace eCAL
        * @param channel_name    channel name
        * @param description     description of the channel
       **/
+      [[deprecated("Please use SetChannelDataTypeInformation instead")]]
       void SetChannelDescription(const std::string& channel_name, const std::string& description);
 
       /**
@@ -204,6 +206,7 @@ namespace eCAL
        *
        * @return              channel type
       **/
+      [[deprecated("Please use GetChannelDataTypeInformation instead")]]
       std::string GetChannelType(const std::string& channel_name) const;
 
       /**
@@ -212,7 +215,27 @@ namespace eCAL
        * @param channel_name  channel name
        * @param type          type of the channel
       **/
+      [[deprecated("Please use SetChannelDataTypeInformation instead")]]
       void SetChannelType(const std::string& channel_name, const std::string& type);
+
+      /**
+       * @brief Get data type information of the given channel
+       *
+       * @param channel_name  channel name
+       *
+       * @return              channel type
+      **/
+      DataTypeInformation GetChannelDataTypeInformation(const std::string& channel_name) const;
+
+      /**
+       * @brief Set data type information of the given channel
+       *
+       * @param channel_name  channel name
+       * @param info          datatype info of the channel
+       *
+       * @return              channel type
+      **/
+      void SetChannelDataTypeInformation(const std::string& channel_name, const DataTypeInformation& info);
 
       /**
        * @brief Gets minimum timestamp for specified channel
@@ -241,7 +264,7 @@ namespace eCAL
        *
        * @return                    true if succeeds, false if it fails
       **/
-      bool GetEntriesInfo(const std::string& channel_name, measurement::base::EntryInfoSet& entries) const;
+      bool GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const;
 
       /**
        * @brief Gets the header info for data entries for the given channel included in given time range (begin->end)
@@ -254,7 +277,7 @@ namespace eCAL
        *
        * @return                   true if succeeds, false if it fails
       **/
-      bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, measurement::base::EntryInfoSet& entries) const;
+      bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const;
 
       /**
        * @brief Gets data size of a specific entry

@@ -29,63 +29,90 @@
 
 namespace eCAL
 {
-  namespace measurement
+  namespace experimental
   {
-    namespace base
+
+    namespace measurement
     {
-      /**
-       * @brief Info struct for a single measurement entry
-      **/
-      struct EntryInfo
+      namespace base
       {
-        long long RcvTimestamp;   //!< Receive time stamp
-        long long ID;             //!< Channel ID
-        long long SndClock;       //!< Send clock
-        long long SndTimestamp;   //!< Send time stamp
-        long long SndID;          //!< Send ID
-
-        //!< @cond
-        EntryInfo() : RcvTimestamp(0), ID(0), SndClock(0), SndTimestamp(0), SndID(0) {}
-
-        EntryInfo(long long rcv_timestamp, long long id) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(0), SndTimestamp(0), SndID(0) {}
-
-        EntryInfo(long long rcv_timestamp, long long id, long long snd_clock) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(snd_clock), SndTimestamp(0), SndID(0) {}
-
-        EntryInfo(long long rcv_timestamp, long long id, long long snd_clock, long long snd_timestamp) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(snd_clock), SndTimestamp(snd_timestamp), SndID(0) {}
-
-        EntryInfo(long long rcv_timestamp, long long id, long long snd_clock, long long snd_timestamp, long long snd_id) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(snd_clock), SndTimestamp(snd_timestamp), SndID(snd_id) {}
-
-        bool operator==(const EntryInfo& other) const
+        /**
+         * @brief Optional compile time information associated with a given topic
+         *        (necessary for reflection / runtime type checking)
+        **/
+        struct DataTypeInformation
         {
-          return (ID == other.ID && SndTimestamp == other.SndTimestamp && RcvTimestamp == other.RcvTimestamp && SndClock == other.SndClock && SndID == other.SndID);
-        }
+          std::string name;          //!< name of the datatype
+          std::string encoding;      //!< encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
+          std::string descriptor;    //!< descriptor information of the datatype (necessary for reflection)
 
-        bool operator<(const EntryInfo& other) const
+          //!< @cond
+          bool operator==(const DataTypeInformation& other) const
+          {
+            return name == other.name && encoding == other.encoding && descriptor == other.descriptor;
+          }
+
+          bool operator!=(const DataTypeInformation& other) const
+          {
+            return !(*this == other);
+          }
+          //!< @endcond
+        };
+
+        /**
+         * @brief Info struct for a single measurement entry
+        **/
+        struct EntryInfo
         {
-          return (RcvTimestamp < other.RcvTimestamp);
-        }
-        //!< @endcond
-      };
+          long long RcvTimestamp;   //!< Receive time stamp
+          long long ID;             //!< Channel ID
+          long long SndClock;       //!< Send clock
+          long long SndTimestamp;   //!< Send time stamp
+          long long SndID;          //!< Send ID
 
-      /**
-       * @brief eCAL HDF5 entries (as set container)
-      **/
-      using EntryInfoSet = std::set<EntryInfo>;
+          //!< @cond
+          EntryInfo() : RcvTimestamp(0), ID(0), SndClock(0), SndTimestamp(0), SndID(0) {}
 
-      /**
-       * @brief eCAL HDF5 entries (as vector container)
-      **/
-      using EntryInfoVect = std::vector<EntryInfo>;
+          EntryInfo(long long rcv_timestamp, long long id) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(0), SndTimestamp(0), SndID(0) {}
 
-      /**
-       * @brief eCAL Measurement Access types
-      **/
-      enum AccessType
-      {
-        RDONLY,  //!< ReadOnly - the measurement can only be read
-        CREATE   //!< Create   - a new measurement will be created
-      };
+          EntryInfo(long long rcv_timestamp, long long id, long long snd_clock) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(snd_clock), SndTimestamp(0), SndID(0) {}
 
+          EntryInfo(long long rcv_timestamp, long long id, long long snd_clock, long long snd_timestamp) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(snd_clock), SndTimestamp(snd_timestamp), SndID(0) {}
+
+          EntryInfo(long long rcv_timestamp, long long id, long long snd_clock, long long snd_timestamp, long long snd_id) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(snd_clock), SndTimestamp(snd_timestamp), SndID(snd_id) {}
+
+          bool operator==(const EntryInfo& other) const
+          {
+            return (ID == other.ID && SndTimestamp == other.SndTimestamp && RcvTimestamp == other.RcvTimestamp && SndClock == other.SndClock && SndID == other.SndID);
+          }
+
+          bool operator<(const EntryInfo& other) const
+          {
+            return (RcvTimestamp < other.RcvTimestamp);
+          }
+          //!< @endcond
+        };
+
+        /**
+         * @brief eCAL HDF5 entries (as set container)
+        **/
+        using EntryInfoSet = std::set<EntryInfo>;
+
+        /**
+         * @brief eCAL HDF5 entries (as vector container)
+        **/
+        using EntryInfoVect = std::vector<EntryInfo>;
+
+        /**
+         * @brief eCAL Measurement Access types
+        **/
+        enum AccessType
+        {
+          RDONLY,  //!< ReadOnly - the measurement can only be read
+          CREATE   //!< Create   - a new measurement will be created
+        };
+
+      }
     }
   }
 }

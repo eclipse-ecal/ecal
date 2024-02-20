@@ -21,7 +21,7 @@ jobs:
         sudo apt-get install ninja-build doxygen graphviz libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules:  'true'
         fetch-depth: 0
@@ -48,7 +48,7 @@ jobs:
         cd "${{ runner.workspace }}/_build"
         cmake $GITHUB_WORKSPACE -G "Ninja" \
         -DHAS_HDF5=ON \
-        -DHAS_QT5=OFF \
+        -DHAS_QT=OFF \
         -DHAS_CURL=OFF \
         -DHAS_CAPNPROTO=OFF \
         -DHAS_FTXUI=ON \

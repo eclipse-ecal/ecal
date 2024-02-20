@@ -52,8 +52,8 @@ public:
 
 private:
   bool                                 isEcalMeasFile(const std::string& path);
-  bool                                 isProtoChannel(const std::string& channel_type);
-  std::unique_ptr<eCAL::measurement::base::Reader>      _reader;
+  bool                                 isProtoChannel(const eCAL::experimental::measurement::base::DataTypeInformation& channel_info);
+  std::unique_ptr<eCAL::experimental::measurement::base::Reader>      _reader;
   eCALMeasCutterUtils::ChannelData                      _current_opened_channel_data;
   std::string                                           _loaded_path;
   eCALMeasCutterUtils::ChannelNameSet                   _channel_names;

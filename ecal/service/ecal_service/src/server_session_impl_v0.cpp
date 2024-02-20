@@ -23,6 +23,12 @@
 #include "log_defs.h"
 
 #include "protocol_layout.h"
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <vector>
 
 ///////////////////////////////////////////////
 // Create, Constructor, Destructor

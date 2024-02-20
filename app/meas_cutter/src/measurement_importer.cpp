@@ -21,7 +21,7 @@
 #include <ecal/measurement/hdf5/reader.h>
 
 MeasurementImporter::MeasurementImporter() :
-  _reader(std::make_unique<eCAL::measurement::hdf5::Reader>()),
+  _reader(std::make_unique<eCAL::experimental::measurement::hdf5::Reader>()),
   _current_opened_channel_data()
 {
 }
@@ -67,20 +67,20 @@ void MeasurementImporter::openChannel(const std::string& channel_name)
   _current_opened_channel_data._timestamps.clear();
   _current_opened_channel_data._timestamp_entry_info_map.clear();
 
-  if (isProtoChannel(_reader->GetChannelType(channel_name)))
+  auto channel_information = _reader->GetChannelDataTypeInformation(channel_name);
+  if (isProtoChannel(channel_information))
   {
     _current_opened_channel_data._channel_info.format = eCALMeasCutterUtils::SerializationFormat::PROTOBUF;
-    _current_opened_channel_data._channel_info.type   = _reader->GetChannelType(channel_name).substr(6); // remove "proto:" from type string
   }
   else
   {
     _current_opened_channel_data._channel_info.format = eCALMeasCutterUtils::SerializationFormat::UNKNOWN;
-    _current_opened_channel_data._channel_info.type   = _reader->GetChannelType(channel_name);
   }
-  _current_opened_channel_data._channel_info.description = _reader->GetChannelDescription(channel_name);
+  _current_opened_channel_data._channel_info.type = channel_information.name;
+  _current_opened_channel_data._channel_info.description = channel_information.descriptor;
   _current_opened_channel_data._channel_info.name = channel_name;
 
-  eCAL::measurement::base::EntryInfoSet entry_info_set;
+  eCAL::experimental::measurement::base::EntryInfoSet entry_info_set;
   _reader->GetEntriesInfo(channel_name, entry_info_set);
 
   for (const auto& entry_info : entry_info_set)
@@ -177,10 +177,9 @@ bool MeasurementImporter::isEcalMeasFile(const std::string& path)
   return false;
 }
 
-bool MeasurementImporter::isProtoChannel(const std::string& channel_type)
+bool MeasurementImporter::isProtoChannel(const eCAL::experimental::measurement::base::DataTypeInformation& channel_info)
 {
-  std::string space = channel_type.substr(0, channel_type.find_first_of(':'));
-  return (space.compare("proto") == 0);
+  return (channel_info.encoding == "proto");
 }
 
 std::string MeasurementImporter::getLoadedPath()

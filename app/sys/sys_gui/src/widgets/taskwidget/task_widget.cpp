@@ -329,7 +329,13 @@ void TaskWidget::setEditControlsVisibility(bool visibile)
 void TaskWidget::filterTextChanged(QString text)
 {
   task_tree_sort_filter_proxy_model_->setFilterCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 12, 0)
+  // setFilterRegularExpression was added in Qt 5.12, so we need to backport it for older Qt Versions
   task_tree_sort_filter_proxy_model_->setFilterRegExp(text);
+#else
+  task_tree_sort_filter_proxy_model_->setFilterRegularExpression(text);
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 12, 0)
 }
 
 ////////////////////////////////////////////////////////////////////////////////

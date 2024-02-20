@@ -35,9 +35,6 @@ namespace eCAL
     bool has_mode_local       = false;
     bool has_mode_cloud       = false;
 
-    bool has_qos_history_kind = false;
-    bool has_qos_reliability  = false;
-
     int  send_size_max        = -1;
   };
 }

@@ -38,6 +38,7 @@
 
 #include <atomic>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <thread>
 
@@ -54,13 +55,25 @@ namespace eCAL
   class CMemfileRegistrationReceiver
   {
   public:
+    CMemfileRegistrationReceiver();
+    ~CMemfileRegistrationReceiver();
+
+    // default copy constructor
+    CMemfileRegistrationReceiver(const CMemfileRegistrationReceiver& other) = delete;
+    // default copy assignment operator
+    CMemfileRegistrationReceiver& operator=(const CMemfileRegistrationReceiver& other) = delete;
+    // default move constructor
+    CMemfileRegistrationReceiver(CMemfileRegistrationReceiver&& other) noexcept = delete;
+    // default move assignment operator
+    CMemfileRegistrationReceiver& operator=(CMemfileRegistrationReceiver&& other) noexcept = delete;
+
     void Create(CMemoryFileBroadcastReader* memfile_broadcast_reader_);
     void Destroy();
 
   private:
     void Receive();
 
-    CMemoryFileBroadcastReader*      m_memfile_broadcast_reader = nullptr;
+    CMemoryFileBroadcastReader*       m_memfile_broadcast_reader = nullptr;
     std::shared_ptr<CCallbackThread>  m_memfile_broadcast_reader_thread;
 
     bool m_created = false;
@@ -115,6 +128,7 @@ namespace eCAL
     bool                                  m_use_network_monitoring;
     bool                                  m_use_shm_monitoring;
 
+    std::mutex                            m_callback_custom_apply_sample_mtx;
     ApplySampleCallbackT                  m_callback_custom_apply_sample;
 
     std::string                           m_host_group_name;

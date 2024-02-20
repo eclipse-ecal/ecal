@@ -58,10 +58,10 @@ QVariant GroupTreeItem::data(int column, Qt::ItemDataRole role) const
     case ItemDataRoles::GroupRole:
       return group_identifier_;
     default:
-      return QVariant::Invalid;
+      return QVariant(); // Invalid QVariant
     }
   }
-  return QVariant::Invalid;
+  return QVariant(); // Invalid QVariant
 }
 
 int GroupTreeItem::type() const

@@ -149,7 +149,7 @@ QVariant LogModel::logLevelColor(int log_level)
   case eCAL_Logging_eLogLevel::log_level_fatal:
     return QColor(192, 0, 0);
   default:
-    return QVariant::Invalid; // Default color for "Debug x"
+    return QVariant(); // Invalid QVariant // Default color for "Debug x"
   }
 }
 
@@ -214,9 +214,9 @@ Qt::ItemFlags LogModel::flags(const QModelIndex &index) const
   return QAbstractItemModel::flags(index);
 }
 
-void LogModel::insertLogs(const eCAL::pb::Logging& logging_pb)
+void LogModel::insertLogs(const eCAL::pb::LogMessageList& logging_pb)
 {
-  int inserted_row_count = logging_pb.logs().size();
+  int inserted_row_count = logging_pb.log_messages().size();
   int size_before = logs_.size();
 
   // Remove entries from the top
@@ -244,7 +244,7 @@ void LogModel::insertLogs(const eCAL::pb::Logging& logging_pb)
   beginInsertRows(QModelIndex(), size_before, size_after - 1);
 
   int counter = inserted_row_count;
-  for (auto& log_message_pb : logging_pb.logs())
+  for (auto& log_message_pb : logging_pb.log_messages())
   {
     if (counter <= max_entries_)
     {
@@ -294,7 +294,11 @@ bool LogModel::dumpToCsv(const QString& path)
       {
         QVariant current_data = data(index(row, col), Qt::ItemDataRole::DisplayRole);
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        switch (current_data.typeId())
+#else
         switch ((QMetaType::Type)current_data.type())
+#endif
         {
         case QMetaType::QString:
           stream << "\"" << current_data.toString().replace("\"", "\"\"") << "\"";

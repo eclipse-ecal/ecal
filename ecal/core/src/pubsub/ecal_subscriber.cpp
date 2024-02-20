@@ -37,7 +37,6 @@ namespace eCAL
                  m_created(false),
                  m_initialized(false)
   {
-    InitializeQOS();
   }
 
   CSubscriber::CSubscriber(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ /* = "" */)
@@ -62,26 +61,23 @@ namespace eCAL
   }
 
   CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept :
-                 m_datareader(rhs.m_datareader),
-                 m_qos(rhs.m_qos),
+                 m_datareader(std::move(rhs.m_datareader)),
                  m_created(rhs.m_created),
                  m_initialized(rhs.m_initialized)
   {
-    InitializeQOS();
-
     rhs.m_created     = false;
     rhs.m_initialized = false;
   }
 
   CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept
   {
-    m_datareader      = std::move(rhs.m_datareader);
+    // Call destroy, to clean up the current state, then afterwards move all elements
+    Destroy();
 
-    m_qos             = rhs.m_qos;
+    m_datareader      = std::move(rhs.m_datareader);
     m_created         = rhs.m_created;
     m_initialized     = rhs.m_initialized;
 
-    InitializeQOS();
     rhs.m_created     = false;
     rhs.m_initialized = false;
 
@@ -113,8 +109,6 @@ namespace eCAL
 
     // create data reader
     m_datareader = std::make_shared<CDataReader>();
-    // set qos
-    m_datareader->SetQOS(m_qos);
     // create it
     if (!m_datareader->Create(topic_name_, topic_info_))
     {
@@ -173,18 +167,6 @@ namespace eCAL
     }
 
     return(true);
-  }
-
-  bool CSubscriber::SetQOS(const QOS::SReaderQOS& qos_)
-  {
-    if (m_created) return false;
-    m_qos = qos_;
-    return true;
-  }
-
-  QOS::SReaderQOS CSubscriber::GetQOS()
-  {
-    return m_qos;
   }
 
   bool CSubscriber::SetID(const std::set<long long>& id_set_)
@@ -283,12 +265,6 @@ namespace eCAL
   {
     if (m_datareader == nullptr) return(false);
     return(m_datareader->SetTimeout(timeout_));
-  }
-
-  void CSubscriber::InitializeQOS()
-  {
-    m_qos = QOS::SReaderQOS();
-    m_qos.reliability = QOS::best_effort_reliability_qos;
   }
 
   bool CSubscriber::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_)

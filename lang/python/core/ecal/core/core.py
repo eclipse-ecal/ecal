@@ -42,10 +42,31 @@ def finalize():
   return _ecal.finalize()
 
 
+def is_initialized():
+  """ get if ecal has been initialized
+  """
+  return _ecal.is_initialized()
+
+
 def getversion():
   """ get ecal version string
   """
   return _ecal.getversion()
+
+
+def getversion_components():
+  """ get ecal version as major, minor, patch tuple
+  """
+  return _ecal.getversion_components()
+
+
+def set_unit_name(unit_name):
+  """ set/change the unit name of the current module
+  
+  :param unit_name: Name of the eCAL unit
+  :type unit_name: string
+  """
+  return _ecal.set_unit_name(unit_name)
 
 
 def getdate():

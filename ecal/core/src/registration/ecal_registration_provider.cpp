@@ -273,9 +273,6 @@ namespace eCAL
     process_sample_mutable_process->set_pname(Process::GetProcessName());
     process_sample_mutable_process->set_uname(Process::GetUnitName());
     process_sample_mutable_process->set_pparam(Process::GetProcessParameter());
-    process_sample_mutable_process->set_pmemory(Process::GetProcessMemory());
-    process_sample_mutable_process->set_pcpu(Process::GetProcessCpuUsage());
-    process_sample_mutable_process->set_usrptime(static_cast<float>(Logging::GetCoreTime()));
     process_sample_mutable_process->set_datawrite(google::protobuf::int64(Process::GetWBytes()));
     process_sample_mutable_process->set_dataread(google::protobuf::int64(Process::GetRBytes()));
     process_sample_mutable_process->mutable_state()->set_severity(eCAL::pb::eProcessSeverity(g_process_severity));

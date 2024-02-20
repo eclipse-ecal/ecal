@@ -24,6 +24,7 @@ set(ProtoFiles
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/ecal.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/host.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/layer.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/logging.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/monitoring.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/process.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/service.proto

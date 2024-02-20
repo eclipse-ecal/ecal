@@ -92,9 +92,6 @@ void HostWidget::autoSizeColumns()
   example_process_pb->set_pname("");
   example_process_pb->set_uname("CameraSensorMapFusionCAF___");
   example_process_pb->set_pparam("");
-  example_process_pb->set_pmemory(99999999999);
-  example_process_pb->set_pcpu(1000);
-  example_process_pb->set_usrptime(999999.9999f);
   example_process_pb->set_datawrite(99999999999);
   example_process_pb->set_dataread(99999999999);
 

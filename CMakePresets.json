@@ -1,0 +1,141 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "Default",
+      "description": "Common settings for all presets.",
+      "binaryDir": "${sourceDir}/out/${presetName}/build",
+      "installDir": "${sourceDir}/out/${presetName}/install"
+    },
+    {
+      "name": "release",
+      "hidden": true,
+      "description": "Single config Release build for inheriting",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "debug",
+      "hidden": true,
+      "description": "Single config Debug build for inheriting",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "relwithdebinfo",
+      "hidden": true,
+      "description": "Single config RelWithDebInfo build for inheriting",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "core",
+      "inherits": [
+        "default",
+        "release"
+      ],
+      "displayName": "eCAL Core",
+      "description": "eCAL core library only configuration",
+      "cacheVariables": {
+        "HAS_HDF5": "OFF",
+        "HAS_QT": "OFF",
+        "HAS_CURL": "OFF",
+        "HAS_FTXUI": "OFF",
+        "BUILD_APPS": "OFF",
+        "BUILD_SAMPLES": "OFF",
+        "ECAL_INSTALL_SAMPLE_SOURCES": "OFF",
+        "ECAL_THIRDPARTY_BUILD_FINEFTP": "OFF",
+        "ECAL_THIRDPARTY_BUILD_FTXUI": "OFF",
+        "ECAL_THIRDPARTY_BUILD_SPDLOG": "OFF",
+        "ECAL_THIRDPARTY_BUILD_TERMCOLOR": "OFF",
+        "ECAL_THIRDPARTY_BUILD_TINYXML2": "OFF",
+        "ECAL_THIRDPARTY_BUILD_YAML-CPP": "OFF",
+        "ECAL_THIRDPARTY_BUILD_CURL": "OFF",
+        "ECAL_THIRDPARTY_BUILD_HDF5": "OFF"
+      }
+    },
+    {
+      "name": "wheel",
+      "inherits": "core",
+      "displayName": "Python Wheel",
+      "description": "Minimal build for standalone python wheel",
+      "cacheVariables": {
+        "HAS_HDF5": "ON",
+        "BUILD_PY_BINDING": "ON",
+        "BUILD_STANDALONE_PY_WHEEL": "ON",
+        "ECAL_THIRDPARTY_BUILD_HDF5": null
+      }
+    },
+    {
+      "name": "docs",
+      "inherits": "wheel",
+      "displayName": "Documentation",
+      "description": "Build documentation",
+      "cacheVariables": {
+        "BUILD_DOCS": "ON"
+      }
+    },
+    {
+      "name": "cli",
+      "inherits": "core",
+      "displayName": "CLI Apps",
+      "description": "eCAL CLI applications",
+      "cacheVariables": {
+        "HAS_HDF5": "ON",
+        "HAS_CURL": "ON",
+        "HAS_FTXUI": "ON",
+        "BUILD_APPS": "ON",
+        "ECAL_THIRDPARTY_BUILD_FINEFTP": "ON",
+        "ECAL_THIRDPARTY_BUILD_FTXUI": "ON",
+        "ECAL_THIRDPARTY_BUILD_SPDLOG": "ON",
+        "ECAL_THIRDPARTY_BUILD_TERMCOLOR": "ON",
+        "ECAL_THIRDPARTY_BUILD_TINYXML2": "ON",
+        "ECAL_THIRDPARTY_BUILD_YAML-CPP": null,
+        "ECAL_THIRDPARTY_BUILD_CURL": null,
+        "ECAL_THIRDPARTY_BUILD_HDF5": null
+      }
+    },
+    {
+      "name": "gui",
+      "inherits": "cli",
+      "displayName": "GUI Apps",
+      "description": "eCAL GUI and CLI applications",
+      "cacheVariables": {
+        "HAS_QT": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "core",
+      "description": "Build core library only",
+      "configurePreset": "core"
+    },
+    {
+      "name": "wheel",
+      "description": "Build standalone python wheel",
+      "configurePreset": "wheel",
+      "targets": "create_python_wheel"
+    },
+    {
+      "name": "docs",
+      "description": "Build sphinx documentation",
+      "configurePreset": "docs",
+      "targets": "documentation_sphinx" 
+    },
+    {
+      "name": "cli",
+      "description": "Build CLI apps",
+      "configurePreset": "cli"
+    },
+    {
+      "name": "gui",
+      "description": "Build GUI and CLI apps",
+      "configurePreset": "gui"
+    }
+  ]
+}

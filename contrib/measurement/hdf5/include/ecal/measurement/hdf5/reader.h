@@ -35,189 +35,183 @@ namespace eCAL
     class HDF5Meas;
   }
 
-  namespace measurement
-  { 
-    namespace hdf5
+  namespace experimental
+  {
+    namespace measurement
     {
-      /**
-       * @brief Hdf5 based Reader Implementation
-      **/
-      class Reader : public measurement::base::Reader
+      namespace hdf5
       {
-      public:
         /**
-         * @brief Constructor
+         * @brief Hdf5 based Reader Implementation
         **/
-        Reader();
+        class Reader : public measurement::base::Reader
+        {
+        public:
+          /**
+           * @brief Constructor
+          **/
+          Reader();
 
-        /**
-         * @brief Constructor
-         *
-         * @param path     Input file path / measurement directory path (see meas directory structure description bellow, in Open method).
-         *
-        **/
-        explicit Reader(const std::string& path);
+          /**
+           * @brief Constructor
+           *
+           * @param path     Input file path / measurement directory path (see meas directory structure description bellow, in Open method).
+           *
+          **/
+          explicit Reader(const std::string& path);
 
-        /**
-         * @brief Destructor
-        **/
-        virtual ~Reader();
+          /**
+           * @brief Destructor
+          **/
+          virtual ~Reader();
 
-        /**
-         * @brief Copy operator
-        **/
-        Reader(const Reader& other) = delete;
-        Reader& operator=(const Reader& other) = delete;
+          /**
+           * @brief Copy operator
+          **/
+          Reader(const Reader& other) = delete;
+          Reader& operator=(const Reader& other) = delete;
 
-        /**
-        * @brief Move operator
-        **/
-        Reader(Reader&&) noexcept;
-        Reader& operator=(Reader&&) noexcept;
+          /**
+          * @brief Move operator
+          **/
+          Reader(Reader&&) noexcept;
+          Reader& operator=(Reader&&) noexcept;
 
-        /**
-         * @brief Open file
-         *
-         * @param path     Input file path / Reader directory path.
-         *
-         *                 Default Reader directory structure:
-         *                  - root directory e.g.: M:\Reader_directory\Reader01
-         *                  - documents directory:                                |_doc
-         *                  - hosts directories:                                  |_Host1 (e.g.: CARPC01)
-         *                                                                        |_Host2 (e.g.: CARPC02)
-         *
-         *                 File path as input
-         *                  - root directory (e.g.: M:\Reader_directory\Reader01) in this case all hosts subdirectories will be iterated,
-         *                  - host directory (e.g.: M:\Reader_directory\Reader01\CARPC01),
-         *                  - file path, path to file from Reader (e.g.: M:\Reader_directory\Reader01\CARPC01\meas01_05.hdf5).
-         *
-         *
-         * @return         true if input measurement/file path was opened, false otherwise.
-        **/
-        bool Open(const std::string& path) override;
+          /**
+           * @brief Open file
+           *
+           * @param path     Input file path / Reader directory path.
+           *
+           *                 Default Reader directory structure:
+           *                  - root directory e.g.: M:\Reader_directory\Reader01
+           *                  - documents directory:                                |_doc
+           *                  - hosts directories:                                  |_Host1 (e.g.: CARPC01)
+           *                                                                        |_Host2 (e.g.: CARPC02)
+           *
+           *                 File path as input
+           *                  - root directory (e.g.: M:\Reader_directory\Reader01) in this case all hosts subdirectories will be iterated,
+           *                  - host directory (e.g.: M:\Reader_directory\Reader01\CARPC01),
+           *                  - file path, path to file from Reader (e.g.: M:\Reader_directory\Reader01\CARPC01\meas01_05.hdf5).
+           *
+           *
+           * @return         true if input measurement/file path was opened, false otherwise.
+          **/
+          bool Open(const std::string& path) override;
 
-        /**
-         * @brief Close file
-         *
-         * @return         true if succeeds, false if it fails
-        **/
-        bool Close() override;
+          /**
+           * @brief Close file
+           *
+           * @return         true if succeeds, false if it fails
+          **/
+          bool Close() override;
 
-        /**
-         * @brief Checks if file/measurement is ok
-         *
-         * @return  true if meas can be opened(read) false otherwise
-        **/
-        bool IsOk() const override;
+          /**
+           * @brief Checks if file/measurement is ok
+           *
+           * @return  true if meas can be opened(read) false otherwise
+          **/
+          bool IsOk() const override;
 
-        /**
-         * @brief Get the File Type Version of the current opened file
-         *
-         * @return       file version
-        **/
-        std::string GetFileVersion() const override;
+          /**
+           * @brief Get the File Type Version of the current opened file
+           *
+           * @return       file version
+          **/
+          std::string GetFileVersion() const override;
 
-        /**
-         * @brief Get the available channel names of the current opened file / measurement
-         *
-         * @return       channel names
-        **/
-        std::set<std::string> GetChannelNames() const override;
+          /**
+           * @brief Get the available channel names of the current opened file / measurement
+           *
+           * @return       channel names
+          **/
+          std::set<std::string> GetChannelNames() const override;
 
-        /**
-         * @brief Check if channel exists in measurement
-         *
-         * @param channel_name   name of the channel
-         *
-         * @return       true if exists, false otherwise
-        **/
-        bool HasChannel(const std::string& channel_name) const override;
+          /**
+           * @brief Check if channel exists in measurement
+           *
+           * @param channel_name   name of the channel
+           *
+           * @return       true if exists, false otherwise
+          **/
+          bool HasChannel(const std::string& channel_name) const override;
 
-        /**
-         * @brief Get the channel description for the given channel
-         *
-         * @param channel_name  channel name
-         *
-         * @return              channel description
-        **/
-        std::string GetChannelDescription(const std::string& channel_name) const override;
+          /**
+           * @brief Get data type information of the given channel
+           *
+           * @param channel_name  channel name
+           *
+           * @return              channel type
+          **/
+          base::DataTypeInformation GetChannelDataTypeInformation(const std::string& channel_name) const override;
 
-        /**
-         * @brief Gets the channel type of the given channel
-         *
-         * @param channel_name  channel name
-         *
-         * @return              channel type
-        **/
-        std::string GetChannelType(const std::string& channel_name) const override;
+          /**
+           * @brief Gets minimum timestamp for specified channel
+           *
+           * @param channel_name    channel name
+           *
+           * @return                minimum timestamp value
+          **/
+          long long GetMinTimestamp(const std::string& channel_name) const override;
 
-        /**
-         * @brief Gets minimum timestamp for specified channel
-         *
-         * @param channel_name    channel name
-         *
-         * @return                minimum timestamp value
-        **/
-        long long GetMinTimestamp(const std::string& channel_name) const override;
+          /**
+           * @brief Gets maximum timestamp for specified channel
+           *
+           * @param channel_name    channel name
+           *
+           * @return                maximum timestamp value
+          **/
+          long long GetMaxTimestamp(const std::string& channel_name) const override;
 
-        /**
-         * @brief Gets maximum timestamp for specified channel
-         *
-         * @param channel_name    channel name
-         *
-         * @return                maximum timestamp value
-        **/
-        long long GetMaxTimestamp(const std::string& channel_name) const override;
+          /**
+           * @brief Gets the header info for all data entries for the given channel
+           *        Header = timestamp + entry id
+           *
+           * @param [in]  channel_name  channel name
+           * @param [out] entries       header info for all data entries
+           *
+           * @return                    true if succeeds, false if it fails
+          **/
+          bool GetEntriesInfo(const std::string& channel_name, measurement::base::EntryInfoSet& entries) const override;
 
-        /**
-         * @brief Gets the header info for all data entries for the given channel
-         *        Header = timestamp + entry id
-         *
-         * @param [in]  channel_name  channel name
-         * @param [out] entries       header info for all data entries
-         *
-         * @return                    true if succeeds, false if it fails
-        **/
-        bool GetEntriesInfo(const std::string& channel_name, measurement::base::EntryInfoSet& entries) const override;
+          /**
+           * @brief Gets the header info for data entries for the given channel included in given time range (begin->end)
+           *        Header = timestamp + entry id
+           *
+           * @param [in]  channel_name channel name
+           * @param [in]  begin        time range begin timestamp
+           * @param [in]  end          time range end timestamp
+           * @param [out] entries      header info for data entries in given range
+           *
+           * @return                   true if succeeds, false if it fails
+          **/
+          bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, measurement::base::EntryInfoSet& entries) const override;
 
-        /**
-         * @brief Gets the header info for data entries for the given channel included in given time range (begin->end)
-         *        Header = timestamp + entry id
-         *
-         * @param [in]  channel_name channel name
-         * @param [in]  begin        time range begin timestamp
-         * @param [in]  end          time range end timestamp
-         * @param [out] entries      header info for data entries in given range
-         *
-         * @return                   true if succeeds, false if it fails
-        **/
-        bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, measurement::base::EntryInfoSet& entries) const override;
+          /**
+           * @brief Gets data size of a specific entry
+           *
+           * @param [in]  entry_id   Entry ID
+           * @param [out] size       Entry data size
+           *
+           * @return                 true if succeeds, false if it fails
+          **/
+          bool GetEntryDataSize(long long entry_id, size_t& size) const override;
 
-        /**
-         * @brief Gets data size of a specific entry
-         *
-         * @param [in]  entry_id   Entry ID
-         * @param [out] size       Entry data size
-         *
-         * @return                 true if succeeds, false if it fails
-        **/
-        bool GetEntryDataSize(long long entry_id, size_t& size) const override;
+          /**
+           * @brief Gets data from a specific entry
+           *
+           * @param [in]  entry_id   Entry ID
+           * @param [out] data       Entry data
+           *
+           * @return                 true if succeeds, false if it fails
+          **/
+          bool GetEntryData(long long entry_id, void* data) const override;
 
-        /**
-         * @brief Gets data from a specific entry
-         *
-         * @param [in]  entry_id   Entry ID
-         * @param [out] data       Entry data
-         *
-         * @return                 true if succeeds, false if it fails
-        **/
-        bool GetEntryData(long long entry_id, void* data) const override;
+        private:
+          std::unique_ptr<eh5::HDF5Meas> measurement;
 
-      private:
-        std::unique_ptr<eh5::HDF5Meas> measurement;
+        };
 
-      };
-
-    }  //namespace hdf5
-  }  // namespace measurement
+      }  //namespace hdf5
+    }  // namespace measurement
+  }  // namespace experimental
 }  // namespace eCAL

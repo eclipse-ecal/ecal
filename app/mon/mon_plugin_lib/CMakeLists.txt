@@ -16,12 +16,14 @@
 #
 # ========================= eCAL LICENSE =================================
 
+cmake_minimum_required(VERSION 3.14)
+
 project(mon_plugin_lib)
 
-find_package(Qt5 COMPONENTS
-    Core
-    Widgets
-REQUIRED)
+# Legacy Qt5 (pre 5.15) support as suggested by teh Qt Documentation:
+# https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html#supporting-older-qt-5-versions
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
 
 set(ecalmonpluginlib_src
   src/dummy.cpp
@@ -43,8 +45,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
-    Qt5::Core
-    Qt5::Widgets
+    Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::Widgets
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 

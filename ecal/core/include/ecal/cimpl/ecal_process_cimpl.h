@@ -117,20 +117,6 @@ extern "C"
   ECALC_API int eCAL_Process_GetProcessParameter(void* par_, int par_len_);
 
   /**
-   * @brief  Get CPU usage of current process. 
-   *
-   * @return  The CPU usage in percent. 
-  **/
-  ECALC_API float eCAL_Process_GetProcessCpuUsage();
-  
-  /**
-   * @brief  Get memory usage of current process. 
-   *
-   * @return  The memory usage in bytes. 
-  **/
-  ECALC_API unsigned long eCAL_Process_GetProcessMemory();
-
-  /**
   * @deprecated  Use the function eCAL_Process_GetWClock() instead
   **/
   ECALC_API long long eCAL_Process_GetSClock();
