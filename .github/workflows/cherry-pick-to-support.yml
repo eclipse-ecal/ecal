@@ -60,7 +60,7 @@ jobs:
           commit-message: 'cherry-pick: empty PR'
           title: 'cherry-pick: empty PR'
           body: 'This PR was created automatically to indicate that the cherry-pick to support/v5.12 failed.'
-          branch: empty-pr-branch
+#          branch: empty-pr-branch
           base: support/v5.12
           draft: true
 
