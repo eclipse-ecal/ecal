@@ -1,3 +1,4 @@
+Commit 4
 # ecal-service
 
 The eCAL Service lib encapsulates the binary data exchange of eCAL Servcies
