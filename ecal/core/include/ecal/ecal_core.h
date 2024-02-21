@@ -31,6 +31,7 @@
 #include <utility>
 
 #include <ecal/ecal_os.h>
+#include "ecal/types/ecal_config_types.h"
 
 namespace eCAL
 {
@@ -69,7 +70,7 @@ namespace eCAL
    *
    * @return Zero if succeeded, 1 if already initialized, -1 if failed.
   **/
-  ECAL_API int Initialize(int argc_ = 0, char **argv_ = nullptr, const char *unit_name_ = nullptr, unsigned int components_ = Init::Default);
+  ECAL_API int Initialize(int argc_ = 0, char** argv_ = nullptr, const char* unit_name_ = nullptr, unsigned int components_ = Init::Default, Config::eCALConfig* = nullptr);
 
   /**
    * @brief Initialize eCAL API.
@@ -80,7 +81,7 @@ namespace eCAL
    *
    * @return Zero if succeeded, 1 if already initialized, -1 if failed.
   **/
-  ECAL_API int Initialize(std::vector<std::string> args_, const char *unit_name_ = nullptr, unsigned int components_ = Init::Default);
+  ECAL_API int Initialize(std::vector<std::string> args_, const char *unit_name_ = nullptr, unsigned int components_ = Init::Default, Config::eCALConfig* user_settings_ = nullptr);
 
   /**
    * @brief Finalize eCAL API.

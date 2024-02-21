@@ -43,6 +43,7 @@
 #include <ecal/ecal_timer.h>
 #include <ecal/ecal_tlayer.h>
 #include <ecal/ecal_util.h>
+#include <ecal/types/ecal_config_types.h>
 
 /* Legacy namespace to be compatible with eCAL < 4.9 code, will be removed in future eCAL versions*/
 namespace eCAL

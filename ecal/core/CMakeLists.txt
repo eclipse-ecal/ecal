@@ -331,7 +331,6 @@ set(ecal_cmn_src
     src/ecal_global_accessors.h
     src/ecal_globals.h
     src/ecal_sample_to_topicinfo.h
-    include/ecal/types/ecal_config_types.h
 )
 if (WIN32)
     list (APPEND
