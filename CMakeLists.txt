@@ -121,12 +121,14 @@ if(WIN32)
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              ON)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              ON)
   cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                      ON  "HAS_QT" OFF)
+  option(BUILD_SHARED_LIBS                     "Build shared libraries; required off on MSVC"                     OFF)
 else()
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                         OFF)
+  option(ECAL_THIRDPARTY_BUILD_YAML-CPP        "Build yaml-cpp with eCAL"                                         OFF)
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                             OFF)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                             OFF)
   cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                     OFF "HAS_QT" OFF)
-  option(ECAL_THIRDPARTY_BUILD_YAML-CPP        "Build yaml-cpp with eCAL"                                         OFF)
+  # BUILD_SHARED_LIBS left undefined on non-MSVC to match prior behavior
 endif()
 
 # This should be ON, unless build ecal hdf5 for Matlab usage
@@ -165,6 +167,19 @@ file(TO_CMAKE_PATH "${CMAKE_MODULE_PATH}" CMAKE_MODULE_PATH)
 file(TO_CMAKE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
 message(STATUS "Module Path: ${CMAKE_MODULE_PATH}")
 message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
+
+# --------------------------------------------------------
+# detect qt library
+# --------------------------------------------------------
+if(MSVC)
+  if (HAS_QT)
+    find_package(QT NAMES Qt6 Qt5 COMPONENTS Core QUIET)
+    if (NOT "${QT_FOUND}")
+	  include("cmake/qt_msvc_path.cmake")
+      autodetect_qt_msvc_dir()
+    endif()
+  endif()
+endif()
 
 if(MSVC)
   message(STATUS "supress thirdparty warnings for windows platform ..")
@@ -220,19 +235,6 @@ if(MSVC)
 endif()
 
 find_package(CMakeFunctions REQUIRED)
-
-# --------------------------------------------------------
-# detect qt library
-# --------------------------------------------------------
-if(MSVC)
-  if (HAS_QT)
-    find_package(QT NAMES Qt6 Qt5 COMPONENTS Core QUIET)
-    if (NOT "${QT_FOUND}")
-      autodetect_qt_msvc_dir()
-    endif()
-  endif()
-endif()
-
 
 git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
 set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
@@ -545,6 +547,7 @@ message(STATUS "HAS_CURL                                       : ${HAS_CURL}")
 message(STATUS "HAS_CAPNPROTO                                  : ${HAS_CAPNPROTO}")
 message(STATUS "HAS_FLATBUFFERS                                : ${HAS_FLATBUFFERS}")
 message(STATUS "HAS_FTXUI                                      : ${HAS_FTXUI}")
+message(STATUS "BUILD_SHARED_LIBS                              : ${BUILD_SHARED_LIBS}")
 message(STATUS "BUILD_DOCS                                     : ${BUILD_DOCS}")
 message(STATUS "BUILD_APPS                                     : ${BUILD_APPS}")
 message(STATUS "BUILD_SAMPLES                                  : ${BUILD_SAMPLES}")

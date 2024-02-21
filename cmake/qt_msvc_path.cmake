@@ -113,13 +113,16 @@ macro(autodetect_qt_msvc_dir)
 
 		message(STATUS "Using Qt ${BEST_QT_MAJOR}.${BEST_QT_MINOR}.${BEST_QT_PATCH} MSVC ${BEST_QT_MSVC_YEAR} from ${BEST_QT_DIRECTORY}")
 		
+		list(APPEND CMAKE_PREFIX_PATH "${BEST_QT_DIRECTORY}")
 		# Dirs for legacy targets with version:
-		SET(Qt${BEST_QT_MAJOR}_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt${BEST_QT_MAJOR}/")
-		SET(Qt${BEST_QT_MAJOR}Test_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt${BEST_QT_MAJOR}Test")
+		
+		#SET(Qt${BEST_QT_MAJOR}_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt${BEST_QT_MAJOR}/")
+		#SET(Qt${BEST_QT_MAJOR}CoreTools_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt${BEST_QT_MAJOR}CoreTools/")
+		#SET(Qt${BEST_QT_MAJOR}Test_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt${BEST_QT_MAJOR}Test")
 		
 		# Dirs for modern version-less targets
-		SET(QT_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt${BEST_QT_MAJOR}/")
-		SET(QTTest_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt${BEST_QT_MAJOR}Test")
+		#SET(QT_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt${BEST_QT_MAJOR}/")
+		#SET(QTTest_DIR "${BEST_QT_DIRECTORY}/lib/cmake/Qt${BEST_QT_MAJOR}Test")
 	
 	endif()
 endmacro()
