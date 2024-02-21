@@ -83,7 +83,7 @@ namespace eCAL
         class LimitSize
         {
         public:
-            LimitSize(int size_ = 0)
+            LimitSize(int size_ = MIN)
             {
                 if (size_ >= m_size_min && size_ <= m_size_max && size_ % m_size_step == 0)
                 {
@@ -319,7 +319,7 @@ namespace eCAL
 
     struct eCAL_UDP_MC_Publisher_Options
     {
-        long max_bandwidth; // rausschmeißen
+        long max_bandwidth; // rausschmeiï¿½en
         // should we go as far as to put the MC address here?
 
     };
