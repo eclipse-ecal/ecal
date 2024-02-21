@@ -12,6 +12,7 @@ on:
 #     types: ["closed"]
 
 jobs:
+  
 #   cherry_pick_v_5_12:
 #     runs-on: ubuntu-latest
 #     name: Cherry pick into support/v5.12
@@ -46,13 +47,6 @@ jobs:
           fetch-depth: 0
           ref: support/v5.12
 
-      # Create a new branch from the support/v5.12 branch and commit an empty commit
-      # - uses: EndBug/add-and-commit@v9
-      #   with:
-      #     commit: --allow-empty
-      #     message: 'cherry-pick: empty commit'
-      #     new_branch: empty-pr-branch
-
       # switch to a new branch and create an empty commit on that branch
       - name: Create empty commit
         run: |
@@ -67,9 +61,18 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'cherry-pick: empty PR'
           title: 'cherry-pick: empty PR'
-          body: 'This PR was created automatically to indicate that the cherry-pick to support/v5.12 failed.'
-#          branch: empty-pr-branch
-#          base: support/v5.12
+          body: |
+            This is an empty PR to indicate that the cherry-pick into support/v5.12 has failed.
+
+            Use the following command to cherry-pick the changes manually:
+
+            ```
+            git fetch origin pull/ID/head:BRANCHNAME
+            git checkout BRANCHNAME
+            git cherry-pick COMMIT_HASH
+            git push origin BRANCHNAME
+            ```
+
           draft: true
 
 env:
