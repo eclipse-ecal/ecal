@@ -168,6 +168,19 @@ file(TO_CMAKE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
 message(STATUS "Module Path: ${CMAKE_MODULE_PATH}")
 message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 
+# --------------------------------------------------------
+# detect qt library
+# --------------------------------------------------------
+if(MSVC)
+  if (HAS_QT)
+    find_package(QT NAMES Qt6 Qt5 COMPONENTS Core QUIET)
+    if (NOT "${QT_FOUND}")
+	  include("cmake/qt_msvc_path.cmake")
+      autodetect_qt_msvc_dir()
+    endif()
+  endif()
+endif()
+
 if(MSVC)
   message(STATUS "supress thirdparty warnings for windows platform ..")
   set(CMAKE_CXX_FLAGS_OLD "${CMAKE_CXX_FLAGS}")
@@ -222,19 +235,6 @@ if(MSVC)
 endif()
 
 find_package(CMakeFunctions REQUIRED)
-
-# --------------------------------------------------------
-# detect qt library
-# --------------------------------------------------------
-if(MSVC)
-  if (HAS_QT)
-    find_package(QT NAMES Qt6 Qt5 COMPONENTS Core QUIET)
-    if (NOT "${QT_FOUND}")
-      autodetect_qt_msvc_dir()
-    endif()
-  endif()
-endif()
-
 
 git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
 set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})

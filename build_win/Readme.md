@@ -1,4 +1,4 @@
-If you want to build complete eCAL setup for windows then simply call.
+If you want to build complete eCAL setup for windows then simply call. 
 
 ```bash
 win_make_all.bat
