@@ -26,13 +26,6 @@ jobs:
         target: 'desktop'
         arch: 'win64_msvc2019_64'
 
-    # Downgrading nuget is required as of 2021-04-23, as nuget 5.9.1.111 fails installing protobuf
-    # https://github.com/actions/virtual-environments/issues/3240
-    - name: Downgrade nuget
-      uses: nuget/setup-nuget@v1
-      with:
-        nuget-version: '5.8.x'
-
     - name: Install Dependencies
       # choco install of version 1.9.3 produced a checksum error
       run: choco install doxygen.install --version=1.9.2
