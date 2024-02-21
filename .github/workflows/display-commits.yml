@@ -19,19 +19,10 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: Get the PR number
-        id: pr_number
-        run: echo "PR_NUMBER=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_ENV
-
-      - name: Get the PR commits
-        id: pr_commits
-        run: |
-          git fetch origin +refs/pull/${{ steps.pr_number.outputs.PR_NUMBER }}/merge
-          git log --pretty=format:"%h - %s" FETCH_HEAD..HEAD > pr_commits.txt
-          echo "::set-output name=commits::$(cat pr_commits.txt)"
-
-      - name: Display the PR commits
-        run: echo "${{ steps.pr_commits.outputs.commits }}"
+      - name: display merge commit sha
+        run: echo "The merge commit sha is ${{ github.event.pull_request.merge_commit_sha }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

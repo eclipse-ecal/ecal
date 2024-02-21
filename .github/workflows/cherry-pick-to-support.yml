@@ -1,79 +1,45 @@
 name: Cherry-pick to support branches
 
 on:
-  push:
+  pull_request:
     branches:
       - master
-
-# on:
-#   pull_request:
-#     branches:
-#       - master
-#     types: ["closed"]
+    types: ["closed"]
 
 jobs:
-  
-#   cherry_pick_v_5_12:
-#     runs-on: ubuntu-latest
-#     name: Cherry pick into support/v5.12
-#     if: ${{ contains(github.event.pull_request.labels.*.name, 'cherry-pick-v5.12') && github.event.pull_request.merged == true }}
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v4
-#         with:
-#           fetch-depth: 0
-#       - name: Cherry pick into support/v5.12
-#         uses: carloscastrojumo/github-cherry-pick-action@v1.0.9
-#         with:
-#           branch: support/v5.12
-#           labels: |
-#             cherry-pick
-#           title: '[cherry-pick] {old_title}'
-#           body: 'Cherry picking #{old_pull_request_id} onto this branch'
-
-
-  # Create an empty PR, if the cherry_pick_v_5_12 job has failed
-  empty_pr_v5_12:
+  cherry_pick_v_5_12:
     runs-on: ubuntu-latest
-    # needs: cherry_pick_v_5_12
-    # if: ${{ failure() }}
-
+    name: Cherry pick into support/v5.12
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'cherry-pick-v5.12') && github.event.pull_request.merged == true }}
     steps:
-
-      # Checkout the repository and switch to the support/v5.12 branch
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: support/v5.12
-
-      # switch to a new branch and create an empty commit on that branch
-      - name: Create empty commit
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          # git checkout -b empty-pr-branch
-          git commit --allow-empty -m "cherry-pick: empty commit"
-
-      - name: Create PR
-        uses: peter-evans/create-pull-request@v6
+      - name: Cherry pick into support/v5.12
+        uses: carloscastrojumo/github-cherry-pick-action@main
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'cherry-pick: empty PR'
-          title: 'cherry-pick: empty PR'
-          body: |
-            This is an empty PR to indicate that the cherry-pick into support/v5.12 has failed.
-
-            Use the following command to cherry-pick the changes manually:
-
-            ```
-            git fetch origin pull/ID/head:BRANCHNAME
-            git checkout BRANCHNAME
-            git cherry-pick COMMIT_HASH
-            git push origin BRANCHNAME
-            ```
-
-          draft: true
-
+          branch: support/v5.12
+          labels: |
+            cherry-pick
+          title: '[cherry-pick] {old_title}'
+          body: 'Cherry picking #{old_pull_request_id} onto this branch'            
+  cherry_pick_v_5_13:
+    runs-on: ubuntu-latest
+    name: Cherry pick into support/v5.13
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'cherry-pick-v5.13') && github.event.pull_request.merged == true }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cherry pick into support/v5.13
+        uses: carloscastrojumo/github-cherry-pick-action@main
+        with:
+          branch: support/v5.13
+          labels: |
+            cherry-pick
+          title: '[cherry-pick] {old_title}'
+          body: 'Cherry picking #{old_pull_request_id} onto this branch'
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
