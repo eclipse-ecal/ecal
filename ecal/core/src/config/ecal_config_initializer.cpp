@@ -254,9 +254,9 @@ namespace eCAL
             // receiving options
             auto receivingOptions = &config.receiving_options;
             receivingOptions->inproc_recv_enabled = iniConfig.get(NETWORK, "inproc_rec_enabled", true);
-            receivingOptions->shm_recv_enabled    = iniConfig.get(NETWORK, "inproc_rec_enabled", true);
-            receivingOptions->tcp_recv_enabled    = iniConfig.get(NETWORK, "inproc_rec_enabled", true);
-            receivingOptions->udp_mc_recv_enabled = iniConfig.get(NETWORK, "inproc_rec_enabled", true);
+            receivingOptions->shm_recv_enabled    = iniConfig.get(NETWORK, "shm_rec_enabled",    true);
+            receivingOptions->tcp_recv_enabled    = iniConfig.get(NETWORK, "tcp_rec_enabled",    true);
+            receivingOptions->udp_mc_recv_enabled = iniConfig.get(NETWORK, "udp_mc_rec_enabled", true);
 
             // publisher options
             auto publisherOptions = &config.publisher_options;
