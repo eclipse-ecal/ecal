@@ -45,7 +45,7 @@
     <link rel="shortcut icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="eCAL 5.12" href="5.12/whats_new.html" />
+    <link rel="next" title="eCAL 5.13" href="5.13/whats_new.html" />
     <link rel="prev" title="eCAL Versions" href="ecal_versions.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -1892,6 +1892,11 @@
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="5.13/whats_new.html">
+     eCAL 5.13
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="5.12/whats_new.html">
      eCAL 5.12
     </a>
@@ -2341,6 +2346,11 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ecal-5-13-vs-5-12">
+   eCAL 5.13 vs. 5.12
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#ecal-5-12-vs-5-11">
    eCAL 5.12 vs. 5.11
   </a>
@@ -2384,6 +2394,11 @@ title="Print to PDF"
                         </div>
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ecal-5-13-vs-5-12">
+   eCAL 5.13 vs. 5.12
+  </a>
+ </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#ecal-5-12-vs-5-11">
    eCAL 5.12 vs. 5.11
@@ -2447,11 +2462,58 @@ We increment the minor version, if:</p>
 You can upgrade through patch versions without having to expect any problems.
 Usually, you just want the latest release to profit from all bugfixes.</p></li>
 </ul>
+<section id="ecal-5-13-vs-5-12">
+<h2>eCAL 5.13 vs. 5.12<a class="headerlink" href="#ecal-5-13-vs-5-12" title="Permalink to this headline">#</a></h2>
+<p>Compatibility table when upgrading from eCAL 5.12:</p>
+<table class="colwidths-given table" id="id2">
+<caption><span class="caption-text">eCAL 5.13 vs. 5.12</span><a class="headerlink" href="#id2" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Wire compatibility</p></td>
+<td><ul>
+<li><p><strong>eCAL UDP</strong>: 100% compatible</p></li>
+<li><p><strong>eCAL TCP</strong>: 100% compatible</p></li>
+<li><p><strong>Services</strong>: 100% compatible (<strong>New protocol</strong>, but downwards and upwards compatible)</p>
+<p>eCAL 5.13 introduces a new protocol that fixes issues of the old protocol.
+Both protocols (v0 and v1) are supported and nodes agree on the best supported protocol before establishing a connection.</p>
+<p>When communicating with old nodes (eCAL 5.12 and older), the faulty v0 protocol is used.</p>
+</li>
+<li><p><strong>eCAL Shared Memory</strong>: 100% compatible</p></li>
+<li><p><strong>eCAL Registration Layer</strong>: 100% compatible</p>
+<p>New fields have been added to support the new service protocol.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>API / ABI</p></td>
+<td><ul class="simple">
+<li><p><strong>API</strong>: downwards compatible.</p></li>
+<li><p><strong>ABI</strong>: not compatible</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Tools</p></td>
+<td><p>The <strong>GUI Tools</strong> now support being compiled against Qt6.
+Official Windows builds are now shipped with Qt 6.6 by default.
+Therefore, custom <strong>eCAL Mon Plugins for Windows</strong> have to be <strong>re-compiled with Qt 6.6</strong> as well.</p>
+<ul class="simple">
+<li><p><strong>Rec</strong>: 100% compatible</p></li>
+<li><p><strong>Sys</strong>: 100% compatible</p></li>
+<li><p><strong>Measurements</strong>: 100% compatible</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="ecal-5-12-vs-5-11">
 <h2>eCAL 5.12 vs. 5.11<a class="headerlink" href="#ecal-5-12-vs-5-11" title="Permalink to this headline">#</a></h2>
 <p>Compatibility table when upgrading from eCAL 5.11:</p>
-<table class="colwidths-given table" id="id2">
-<caption><span class="caption-text">eCAL 5.12 vs. 5.11</span><a class="headerlink" href="#id2" title="Permalink to this table">#</a></caption>
+<table class="colwidths-given table" id="id3">
+<caption><span class="caption-text">eCAL 5.12 vs. 5.11</span><a class="headerlink" href="#id3" title="Permalink to this table">#</a></caption>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 80%" />
@@ -2501,8 +2563,8 @@ It is now aligned to the output structure of eCAL Rec.</p></li>
 <section id="ecal-5-11-vs-5-10">
 <h2>eCAL 5.11 vs. 5.10<a class="headerlink" href="#ecal-5-11-vs-5-10" title="Permalink to this headline">#</a></h2>
 <p>Compatibility table when upgrading from eCAL 5.10:</p>
-<table class="colwidths-given table" id="id3">
-<caption><span class="caption-text">eCAL 5.11 vs. 5.10</span><a class="headerlink" href="#id3" title="Permalink to this table">#</a></caption>
+<table class="colwidths-given table" id="id4">
+<caption><span class="caption-text">eCAL 5.11 vs. 5.10</span><a class="headerlink" href="#id4" title="Permalink to this table">#</a></caption>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 80%" />
@@ -2549,8 +2611,8 @@ This bug has been <strong>fixed in eCAL 5.10.2 and 5.9.10</strong>; those versio
 <section id="ecal-5-10-vs-5-9">
 <h2>eCAL 5.10 vs. 5.9<a class="headerlink" href="#ecal-5-10-vs-5-9" title="Permalink to this headline">#</a></h2>
 <p>Compatibility table when upgrading from eCAL 5.9:</p>
-<table class="colwidths-given table" id="id4">
-<caption><span class="caption-text">eCAL 5.10 vs. 5.9</span><a class="headerlink" href="#id4" title="Permalink to this table">#</a></caption>
+<table class="colwidths-given table" id="id5">
+<caption><span class="caption-text">eCAL 5.10 vs. 5.9</span><a class="headerlink" href="#id5" title="Permalink to this table">#</a></caption>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 80%" />
@@ -2595,8 +2657,8 @@ Please check <a class="reference internal" href="5.10/api_incompatibilities.html
 <section id="ecal-5-9-vs-5-8">
 <h2>eCAL 5.9 vs. 5.8<a class="headerlink" href="#ecal-5-9-vs-5-8" title="Permalink to this headline">#</a></h2>
 <p>Compatibility table when upgrading from eCAL 5.8:</p>
-<table class="colwidths-given table" id="id5">
-<caption><span class="caption-text">eCAL 5.9 vs. 5.8</span><a class="headerlink" href="#id5" title="Permalink to this table">#</a></caption>
+<table class="colwidths-given table" id="id6">
+<caption><span class="caption-text">eCAL 5.9 vs. 5.8</span><a class="headerlink" href="#id6" title="Permalink to this table">#</a></caption>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 80%" />
@@ -2634,8 +2696,8 @@ It should be possible to mix ecal_rec_gui and ecal_rec_client instances of both 
 <section id="ecal-5-8-vs-5-7">
 <h2>eCAL 5.8 vs. 5.7<a class="headerlink" href="#ecal-5-8-vs-5-7" title="Permalink to this headline">#</a></h2>
 <p>Compatibility table when upgrading from eCAL 5.7:</p>
-<table class="colwidths-given table" id="id6">
-<caption><span class="caption-text">eCAL 5.8 vs. 5.7</span><a class="headerlink" href="#id6" title="Permalink to this table">#</a></caption>
+<table class="colwidths-given table" id="id7">
+<caption><span class="caption-text">eCAL 5.8 vs. 5.7</span><a class="headerlink" href="#id7" title="Permalink to this table">#</a></caption>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 80%" />
@@ -2692,10 +2754,10 @@ It should be possible to mix ecal_rec_gui and ecal_rec_client instances of both 
             <p class="prev-next-title">eCAL Versions</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="5.12/whats_new.html" title="next page">
+    <a class='right-next' id="next-link" href="5.13/whats_new.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">eCAL 5.12</p>
+        <p class="prev-next-title">eCAL 5.13</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
