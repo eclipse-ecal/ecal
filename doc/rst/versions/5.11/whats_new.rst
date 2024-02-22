@@ -10,7 +10,7 @@ eCAL 5.11 was released in Nobember 2022.
 The release contains the eCAL Mon TUI, the eCAL Meas Cutter and the SHM Monitoring Layer.
 
 - **Release**: December 2022
-- **End of life**: March 2024 (planned)
+- **End of life**: March 2024 (after 13 Month)
 
 New features
 ============
