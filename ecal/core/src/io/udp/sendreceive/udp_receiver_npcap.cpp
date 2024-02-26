@@ -21,6 +21,8 @@
 
 #include <iostream>
 
+#include <udpcap/udpcap_version.h>
+
 namespace IO
 {
   namespace UDP
@@ -110,6 +112,12 @@ namespace IO
       {
         Udpcap::HostAddress source_address;
         uint16_t source_port;
+
+#if UDPCAP_VERSION_MAJOR == 1
+        // Show a compiler deprecation warning
+        // TODO: Remove for eCAL6
+        [[deprecated("Udpcap 1.x is deprecated and prone to data-loss. Please update udpcap to 2.x.")]]
+
         bytes_received = m_socket.receiveDatagram(buf_, len_, static_cast<unsigned long>(timeout_), &source_address, &source_port);
 
         if (bytes_received && source_address.isValid())
@@ -119,10 +127,32 @@ namespace IO
           address_->sin_port = source_port;
           memset(&(address_->sin_zero), 0, 8);
         }
+#else // Udpcap 2.x
+        Udpcap::Error error(Udpcap::Error::GENERIC_ERROR);
+        bytes_received = m_socket.receiveDatagram(buf_, len_, timeout_, &source_address, &source_port, error);
+
+        if (!error)
+        {
+          address_->sin_addr.s_addr = source_address.toInt();
+          address_->sin_family = AF_INET;
+          address_->sin_port = source_port;
+          memset(&(address_->sin_zero), 0, 8);
+        }
+#endif
+
       }
       else
       {
+#if UDPCAP_VERSION_MAJOR == 1
+        // Show a compiler deprecation warning
+        // TODO: Remove for eCAL6
+        [[deprecated("Udpcap 1.x is deprecated and prone to data-loss. Please update udpcap to 2.x.")]]
+
         bytes_received = m_socket.receiveDatagram(buf_, len_, static_cast<unsigned long>(timeout_));
+#else // Udpcap 2.x
+        Udpcap::Error error(Udpcap::Error::GENERIC_ERROR);
+        bytes_received = m_socket.receiveDatagram(buf_, len_, timeout_, error);
+#endif
       }
       return bytes_received;
     }
