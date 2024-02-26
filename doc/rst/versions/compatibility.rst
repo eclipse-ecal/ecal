@@ -33,6 +33,13 @@ Depending on what we changed in eCAL, we increment the appropriate number:
   You can upgrade through patch versions without having to expect any problems.
   Usually, you just want the latest release to profit from all bugfixes.
 
+eCAL 5.13 vs. 5.12
+==================
+
+Compatibility table when upgrading from eCAL 5.12:
+
+.. include:: 5.13/compatibility_table.txt
+
 eCAL 5.12 vs. 5.11
 ==================
 

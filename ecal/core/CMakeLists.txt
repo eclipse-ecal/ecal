@@ -736,7 +736,9 @@ if(UNIX)
         src/ecal_process_stub.cpp
         src/ecal_process_stub.h
     )
-
+    
+    target_compile_features(${PROJECT_NAME_PROCESS_STUB} PUBLIC cxx_std_14)
+    
     ecal_install_app(${PROJECT_NAME_PROCESS_STUB})
 
     set_property(TARGET ${PROJECT_NAME_PROCESS_STUB} PROPERTY FOLDER core)

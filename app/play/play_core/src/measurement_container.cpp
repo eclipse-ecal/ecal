@@ -187,7 +187,7 @@ bool MeasurementContainer::PublishersCreated() const
 bool MeasurementContainer::PublishFrame(long long index)
 {
   // Check that the user created the publishers before publishing a frame
-  if (!publishers_initialized_ || (index < 0) || index > GetFrameCount())
+  if (!publishers_initialized_ || (index < 0) || index >= GetFrameCount())
     return false;
 
   if (frame_table_[index].publisher_info_)
