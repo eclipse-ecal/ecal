@@ -52,10 +52,11 @@ extern "C"
 
   /**
    * @brief  Get unique host id.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @return  The host id.
   **/
-  ECALC_API int eCAL_Process_GetHostID();
+  ECALC_API_DEPRECATED int eCAL_Process_GetHostID();
 
   /**
    * @brief  Get process unit name (defined with eCAL_Initialize). 
@@ -118,55 +119,61 @@ extern "C"
 
   /**
    * @brief  Get CPU usage of current process. 
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @return  The CPU usage in percent. 
   **/
-  ECALC_API float eCAL_Process_GetProcessCpuUsage();
+  ECALC_API_DEPRECATED float eCAL_Process_GetProcessCpuUsage();
   
   /**
    * @brief  Get memory usage of current process. 
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @return  The memory usage in bytes. 
   **/
-  ECALC_API unsigned long eCAL_Process_GetProcessMemory();
+  ECALC_API_DEPRECATED unsigned long eCAL_Process_GetProcessMemory();
 
   /**
-  * @deprecated  Use the function eCAL_Process_GetWClock() instead
+   * @deprecated Will be removed in future eCAL versions.
   **/
-  ECALC_API long long eCAL_Process_GetSClock();
+  ECALC_API_DEPRECATED long long eCAL_Process_GetSClock();
 
   /**
-  * @deprecated  Use the function eCAL_Process_GetWBytes() instead
+   * @deprecated Will be removed in future eCAL versions.
   **/
-  ECALC_API long long eCAL_Process_GetSBytes();
+  ECALC_API_DEPRECATED long long eCAL_Process_GetSBytes();
 
   /**
    * @brief  Get the write clock of the current process. 
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @return  The message write count per second. 
   **/
-  ECALC_API long long eCAL_Process_GetWClock();
+  ECALC_API_DEPRECATED long long eCAL_Process_GetWClock();
 
   /**
    * @brief  Get the write bytes of the current process. 
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @return  The message write bytes per second. 
   **/
-  ECALC_API long long eCAL_Process_GetWBytes();
+  ECALC_API_DEPRECATED long long eCAL_Process_GetWBytes();
 
   /**
    * @brief  Get the read clock of the current process. 
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @return  The message read count per second. 
   **/
-  ECALC_API long long eCAL_Process_GetRClock();
+  ECALC_API_DEPRECATED long long eCAL_Process_GetRClock();
 
   /**
    * @brief  Get the read bytes of the current process. 
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @return  The message read bytes per second. 
   **/
-  ECALC_API long long eCAL_Process_GetRBytes();
+  ECALC_API_DEPRECATED long long eCAL_Process_GetRBytes();
 
   /**
    * @brief  Set process state info. 

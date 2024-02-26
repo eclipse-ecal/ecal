@@ -152,12 +152,12 @@ extern "C"
 
   ECALC_API int eCAL_Util_GetTopicTypeName(const char* topic_name_, void* topic_type_, int topic_type_len_)
   {
-    if(!topic_name_) return(0);
-    if(!topic_type_) return(0);
-    std::string topic_type;
-    if(eCAL::Util::GetTopicTypeName(topic_name_, topic_type))
+    if(topic_name_ == nullptr) return(0);
+    if(topic_type_ == nullptr) return(0);
+    eCAL::SDataTypeInformation topic_info;
+    if(eCAL::Util::GetTopicDataTypeInformation(topic_name_, topic_info))
     {
-      return(CopyBuffer(topic_type_, topic_type_len_, topic_type));
+      return(CopyBuffer(topic_type_, topic_type_len_, topic_info.name));
     }
     return(0);
   }
@@ -168,14 +168,26 @@ extern "C"
     return(eCAL_Util_GetTopicTypeName(topic_name_, topic_type_, topic_type_len_));
   }
 
+  ECALC_API int eCAL_Util_GetTopicEncoding(const char* topic_name_, void* topic_encoding_, int topic_encoding_len_)
+  {
+    if (topic_name_ == nullptr)     return(0);
+    if (topic_encoding_ == nullptr) return(0);
+    eCAL::SDataTypeInformation topic_info;
+    if (eCAL::Util::GetTopicDataTypeInformation(topic_name_, topic_info))
+    {
+      return(CopyBuffer(topic_encoding_, topic_encoding_len_, topic_info.encoding));
+    }
+    return(0);
+  }
+
   ECALC_API int eCAL_Util_GetTopicDescription(const char* topic_name_, void* topic_desc_, int topic_desc_len_)
   {
-    if(!topic_name_) return(0);
-    if(!topic_desc_) return(0);
-    std::string topic_desc;
-    if(eCAL::Util::GetTopicDescription(topic_name_, topic_desc))
+    if(topic_name_ == nullptr) return(0);
+    if(topic_desc_ == nullptr) return(0);
+    eCAL::SDataTypeInformation topic_info;
+    if (eCAL::Util::GetTopicDataTypeInformation(topic_name_, topic_info))
     {
-      return(CopyBuffer(topic_desc_, topic_desc_len_, topic_desc));
+      return(CopyBuffer(topic_desc_, topic_desc_len_, topic_info.descriptor));
     }
     return(0);
   }

@@ -68,23 +68,25 @@ extern "C"
 
   /**
    * @brief Set subscriber quality of service attributes.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_  Subscriber handle.
    * @param qos_     Quality of service policies.
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Sub_SetQOS(ECAL_HANDLE handle_, struct SReaderQOSC qos_);
+  ECALC_API_DEPRECATED int eCAL_Sub_SetQOS(ECAL_HANDLE handle_, struct SReaderQOSC qos_);
 
   /**
    * @brief Get subscriber quality of service attributes.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_  Subscriber handle.
    * @param qos_     Quality of service policies.
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Sub_GetQOS(ECAL_HANDLE handle_, struct SReaderQOSC* qos_);
+  ECALC_API_DEPRECATED int eCAL_Sub_GetQOS(ECAL_HANDLE handle_, struct SReaderQOSC* qos_);
 
   /**
    * @brief Set a set of id's to prefiltering topics (see eCAL_Pub_SetID).
@@ -261,15 +263,15 @@ extern "C"
   ECALC_API int eCAL_Sub_GetDescription(ECAL_HANDLE handle_, void* buf_, int buf_len_);
 
   /**
-   * @brief Set the timeout parameter for triggering
-   *          the timeout callback.
+   * @brief Set the timeout parameter for triggering the timeout callback.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_   Subscriber handle.
    * @param timeout_  The timeout in milliseconds.
    *
    * @return  True if succeeded, false if not.
   **/
-  ECALC_API int eCAL_Sub_SetTimeout(ECAL_HANDLE handle_, int timeout_);
+  ECALC_API_DEPRECATED int eCAL_Sub_SetTimeout(ECAL_HANDLE handle_, int timeout_);
 
   /**
    * @brief Dump the whole class state into a string buffer. 

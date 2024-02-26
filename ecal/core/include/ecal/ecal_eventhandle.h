@@ -24,6 +24,15 @@
 
 #pragma once
 
+#ifdef _MSC_VER
+#pragma message("WARNING: This header file is deprecated. It will be removed in future eCAL versions.")
+#endif /*_MSC_VER*/
+#ifdef __GNUC__
+#pragma message "WARNING: This header file is deprecated. It will be removed in future eCAL versions."
+#endif /* __GNUC__ */
+
+#include <ecal/ecal_deprecate.h>
+
 #include <string>
 #include <vector>
 
@@ -31,6 +40,7 @@ namespace eCAL
 {
   /**
    * @brief eCAL event callback handle.
+   * @deprecated Will be removed in future eCAL versions.
   **/
   struct SEventHandle
   {

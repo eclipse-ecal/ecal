@@ -34,7 +34,7 @@ enum eCAL_Subscriber_Event
   sub_event_connected         = 1,
   sub_event_disconnected      = 2,
   sub_event_dropped           = 3,
-  sub_event_timeout           = 4,
+  sub_event_timeout           = 4,  //!< deprecated, will be removed in future eCAL versions
   sub_event_corrupted         = 5,
   sub_event_update_connection = 6,
 };

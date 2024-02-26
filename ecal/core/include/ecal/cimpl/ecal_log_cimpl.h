@@ -56,25 +56,29 @@ extern "C"
 
   /**
    * @brief Mark the start of the user core process. 
+   * @deprecated Will be removed in future eCAL versions.
   **/
-  ECALC_API void eCAL_Logging_StartCoreTimer();
+  ECALC_API_DEPRECATED void eCAL_Logging_StartCoreTimer();
 
   /**
    * @brief Mark the stop of the user core process. 
+   * @deprecated Will be removed in future eCAL versions.
   **/
-  ECALC_API void eCAL_Logging_StopCoreTimer();
+  ECALC_API_DEPRECATED void eCAL_Logging_StopCoreTimer();
 
   /**
    * @brief Set the current measured core time in s (for user implemented measuring). 
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param time_  The core time.
   **/
-  ECALC_API void eCAL_Logging_SetCoreTime(double time_);
+  ECALC_API_DEPRECATED void eCAL_Logging_SetCoreTime(double time_);
 
   /**
    * @brief Returns the current measured core time in s. 
+   * @deprecated Will be removed in future eCAL versions.
   **/
-  ECALC_API double eCAL_Logging_GetCoreTime();
+  ECALC_API_DEPRECATED double eCAL_Logging_GetCoreTime();
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

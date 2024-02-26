@@ -25,6 +25,13 @@
 #ifndef ecal_event_cimpl_h_included
 #define ecal_event_cimpl_h_included
 
+#ifdef _MSC_VER
+#pragma message("WARNING: This header file is deprecated. It will be removed in future eCAL versions.")
+#endif /*_MSC_VER*/
+#ifdef __GNUC__
+#pragma message "WARNING: This header file is deprecated. It will be removed in future eCAL versions."
+#endif /* __GNUC__ */
+
 #include <ecal/ecal_os.h>
 #include <ecal/ecalc_types.h>
 
@@ -34,49 +41,54 @@ extern "C"
 #endif /*__cplusplus*/
   /**
    * @brief Open a named or unnamed event.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param  event_name_  Event name ("" == unnamed).
    *
    * @return  Handle to opened event or NULL if failed.
   **/
-  ECALC_API ECAL_HANDLE eCAL_Event_gOpenEvent(const char* event_name_);
+  ECALC_API_DEPRECATED ECAL_HANDLE eCAL_Event_gOpenEvent(const char* event_name_);
 
   /**
    * @brief Close an event.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_  Event handle.
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Event_gCloseEvent(ECAL_HANDLE handle_);
+  ECALC_API_DEPRECATED int eCAL_Event_gCloseEvent(ECAL_HANDLE handle_);
 
   /**
    * @brief Set an event active.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_  Event handle.
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Event_gSetEvent(ECAL_HANDLE handle_);
+  ECALC_API_DEPRECATED int eCAL_Event_gSetEvent(ECAL_HANDLE handle_);
 
   /**
    * @brief Wait for an event with timeout.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_   Event handle.
    * @param timeout_  Timeout in ms (-1 == infinite).
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Event_gWaitForEvent(ECAL_HANDLE handle_, long timeout_);
+  ECALC_API_DEPRECATED int eCAL_Event_gWaitForEvent(ECAL_HANDLE handle_, long timeout_);
 
   /**
    * @brief Check whether an event is valid or not.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_  Event handle.
    *
    * @return  None zero if event is valid.
   **/
-  ECALC_API int eCAL_Event_gEventIsValid(ECAL_HANDLE handle_);
+  ECALC_API_DEPRECATED int eCAL_Event_gEventIsValid(ECAL_HANDLE handle_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

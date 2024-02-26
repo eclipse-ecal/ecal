@@ -34,7 +34,7 @@ enum eTransportLayerC
   tlayer_udp_mc     = 1,
   tlayer_shm        = 4,
   tlayer_tcp        = 5,
-  tlayer_inproc     = 42,
+  tlayer_inproc     = 42,  /*!< deprecated, whole layer will be removed in future eCAL versions */
   tlayer_all        = 255
 };
 

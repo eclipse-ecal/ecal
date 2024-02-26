@@ -25,8 +25,16 @@
 #ifndef ecal_qos_cimpl_h_included
 #define ecal_qos_cimpl_h_included
 
+#ifdef _MSC_VER
+#pragma message("WARNING: This header file is deprecated. It will be removed in future eCAL versions.")
+#endif /*_MSC_VER*/
+#ifdef __GNUC__
+#pragma message "WARNING: This header file is deprecated. It will be removed in future eCAL versions."
+#endif /* __GNUC__ */
+
 /**
  * @brief eCAL QOS history kind mode.
+ * @deprecated Will be removed in future eCAL versions.
 **/
 enum eQOSPolicy_HistoryKindC
 {
@@ -36,6 +44,7 @@ enum eQOSPolicy_HistoryKindC
 
 /**
  * @brief eCAL QOS reliability mode.
+ * @deprecated Will be removed in future eCAL versions.
 **/
 enum eQOSPolicy_ReliabilityC
 {
@@ -45,6 +54,7 @@ enum eQOSPolicy_ReliabilityC
 
 /**
  * @brief eCAL data writer QOS settings.
+ * @deprecated Will be removed in future eCAL versions.
 **/
 struct SWriterQOSC
 {
@@ -55,6 +65,7 @@ struct SWriterQOSC
 
 /**
  * @brief eCAL data reader QOS settings.
+ * @deprecated Will be removed in future eCAL versions.
 **/
 struct SReaderQOSC
 {

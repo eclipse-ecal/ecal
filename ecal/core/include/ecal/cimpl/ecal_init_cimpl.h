@@ -40,7 +40,7 @@
                             | eCAL_Init_Monitoring \
                             | eCAL_Init_Logging    \
                             | eCAL_Init_TimeSync   \
-                            | eCAL_Init_RPC        \
+                            | eCAL_Init_RPC        \        /*!< deprecated, will be removed in future eCAL versions */
                             | eCAL_Init_ProcessReg)         /*!< Initialize complete eCAL API        */
 
 #define eCAL_Init_Default    (eCAL_Init_Publisher  \

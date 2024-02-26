@@ -92,12 +92,13 @@ namespace eCAL
 
     /**
      * @brief Constructor. 
+     * @deprecated Please use the constructor CSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in future eCAL versions..
      *
      * @param topic_name_   Unique topic name. 
      * @param topic_type_   Type name (optional for type checking).
      * @param topic_desc_   Type description (optional for description checking).
      **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in future eCAL versions.")
     ECAL_API CSubscriber(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
 
     /**
@@ -142,6 +143,7 @@ namespace eCAL
 
     /**
      * @brief Creates this object. 
+     * @deprecated Please use the create method bool Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in future eCAL versions.
      *
      * @param topic_name_   Unique topic name. 
      * @param topic_type_   Type name (optional for type checking).
@@ -149,7 +151,7 @@ namespace eCAL
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the create method bool Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the create method bool Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in future eCAL versions.")
     ECAL_API bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
 
     /**
@@ -182,18 +184,22 @@ namespace eCAL
 
     /**
      * @brief Set subscriber quality of service attributes.
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @param qos_  Quality of service policies.
      *
      * @return  True if it succeeds, false if it fails.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API bool SetQOS(const QOS::SReaderQOS& qos_);
 
     /**
      * @brief Get current subscriber quality of service attributes.
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @return  Quality of service attributes.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API QOS::SReaderQOS GetQOS();
 
     /**
@@ -228,6 +234,7 @@ namespace eCAL
 
     /**
      * @brief Receive a message from the publisher. 
+     * @deprecated Please use the method bool ReceiveBuffer(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) instead. This function will be removed in future eCAL versions.
      *
      * @param [out] buf_    Standard string for copying message content.
      * @param [out] time_   Time from publisher in us (default = nullptr).
@@ -235,7 +242,7 @@ namespace eCAL
      *
      * @return  Length of received buffer. 
     **/
-    ECAL_DEPRECATE_SINCE_5_10("Please use the method bool ReceiveBuffer(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) instead. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_10("Please use the method bool ReceiveBuffer(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) instead. This function will be removed in future eCAL versions.")
     ECAL_API size_t Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
 
     /**
@@ -307,18 +314,20 @@ namespace eCAL
 
     /**
      * @brief Gets type of the connected topic. 
+     * @deprecated Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the typename from the SDataTypeInformation variable. This function will be removed in future eCAL versions.
      *
      * @return  The type name. 
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the typename from the SDataTypeInformation variable. This function will be removed in future eCAL versions.")
     ECAL_API std::string GetTypeName() const;
 
     /**
      * @brief Gets description of the connected topic. 
+     * @deprecated Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the descriptor from the SDataTypeInformation variable. This function will be removed in future eCAL versions.
      *
      * @return  The description. 
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the descriptor from the SDataTypeInformation variable. This function will be removed in future eCAL versions.")
     ECAL_API std::string GetDescription() const;
 
     /**
@@ -329,13 +338,14 @@ namespace eCAL
     ECAL_API SDataTypeInformation GetDataTypeInformation() const;
 
     /**
-     * @brief Set the timeout parameter for triggering
-     *          the timeout callback.
+     * @brief Set the timeout parameter for triggering the timeout callback.
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @param timeout_  The timeout in milliseconds.
      *
      * @return  True if succeeded, false if not.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API bool SetTimeout(int timeout_);
 
     /**

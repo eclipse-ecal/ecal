@@ -169,7 +169,7 @@ namespace eCAL
        *
        * @return  True if successful.
       **/
-      ECAL_DEPRECATE_SINCE_5_10("Please use the method bool Call(const std::string& method_name_, const google::protobuf::Message& request_, const int timeout_, ServiceResponseVecT* service_response_vec_) instead. This function will be removed in eCAL6.")
+      ECAL_DEPRECATE_SINCE_5_10("Please use the method bool Call(const std::string& method_name_, const google::protobuf::Message& request_, const int timeout_, ServiceResponseVecT* service_response_vec_) instead. This function will be removed in future eCAL versions.")
       bool Call(const std::string& host_name_, const std::string& method_name_, const google::protobuf::Message& request_, struct SServiceResponse& service_response_, google::protobuf::Message& response_)
       {
         ServiceResponseVecT service_response_vec;
