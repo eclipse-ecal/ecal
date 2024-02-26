@@ -65,8 +65,6 @@ add_subdirectory(cpp/measurement/measurement_write)
 endif(HAS_HDF5)
 
 # misc
-add_subdirectory(cpp/misc/event_rec)
-add_subdirectory(cpp/misc/event_snd)
 add_subdirectory(cpp/misc/process)
 add_subdirectory(cpp/misc/time)
 add_subdirectory(cpp/misc/timer)
