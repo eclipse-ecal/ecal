@@ -31,7 +31,7 @@
 #define eCAL_Init_Monitoring  0x08                          /*!< Initialize Monitoring API           */
 #define eCAL_Init_Logging     0x10                          /*!< Initialize Logging API              */
 #define eCAL_Init_TimeSync    0x20                          /*!< Initialize Time API                 */
-#define eCAL_Init_RPC         0x40                          /*!< Initialize RPC API                  */
+#define eCAL_Init_RPC         0x40                          /*!< deprecated, will be removed in future eCAL versions */
 #define eCAL_Init_ProcessReg  0x80                          /*!< Initialize Process Registration API */
 
 #define eCAL_Init_All        (eCAL_Init_Publisher  \
@@ -40,7 +40,7 @@
                             | eCAL_Init_Monitoring \
                             | eCAL_Init_Logging    \
                             | eCAL_Init_TimeSync   \
-                            | eCAL_Init_RPC        \        /*!< deprecated, will be removed in future eCAL versions */
+                            | eCAL_Init_RPC        \
                             | eCAL_Init_ProcessReg)         /*!< Initialize complete eCAL API        */
 
 #define eCAL_Init_Default    (eCAL_Init_Publisher  \

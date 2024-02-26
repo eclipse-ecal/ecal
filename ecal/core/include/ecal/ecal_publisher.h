@@ -275,11 +275,13 @@ namespace eCAL
 
     /**
      * @brief Set publisher maximum transmit bandwidth for the udp layer.
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @param bandwidth_  Maximum bandwidth in bytes/s (-1 == unlimited).
      *
      * @return  True if it succeeds, false if it fails.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API bool SetMaxBandwidthUDP(long bandwidth_);
 
     /**

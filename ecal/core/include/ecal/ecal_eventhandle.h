@@ -25,10 +25,10 @@
 #pragma once
 
 #ifdef _MSC_VER
-#pragma message("WARNING: This header file is deprecated. It will be removed in future eCAL versions.")
+#pragma message("WARNING: The header file ecal_eventhandle.h is deprecated. It will be removed in future eCAL versions.")
 #endif /*_MSC_VER*/
 #ifdef __GNUC__
-#pragma message "WARNING: This header file is deprecated. It will be removed in future eCAL versions."
+#pragma message "WARNING: The header file ecal_eventhandle.h is deprecated. It will be removed in future eCAL versions."
 #endif /* __GNUC__ */
 
 #include <ecal/ecal_deprecate.h>

@@ -266,6 +266,7 @@ ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, 
 
 /**
  * @brief Set publisher quality of service attributes.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_  Publisher handle.
  * @param qos_     Quality of service policies.
@@ -276,6 +277,7 @@ ECAL_API bool pub_set_qos(ECAL_HANDLE handle_, struct SWriterQOSC qos_);
 
 /**
  * @brief Get publisher quality of service attributes.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_  Publisher handle.
  * @param qos_     Quality of service policies.
@@ -378,6 +380,7 @@ ECAL_API bool sub_destroy(ECAL_HANDLE handle_);
 
 /**
  * @brief Set subscriber quality of service attributes.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_  Subscriber handle.
  * @param qos_     Quality of service policies.
@@ -388,6 +391,7 @@ ECAL_API bool sub_set_qos(ECAL_HANDLE handle_, struct SReaderQOSC qos_);
 
 /**
  * @brief Get subscriber quality of service attributes.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_  Subscriber handle.
  * @param qos_     Quality of service policies.

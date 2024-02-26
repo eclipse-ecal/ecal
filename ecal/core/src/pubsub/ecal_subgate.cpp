@@ -27,6 +27,7 @@
 
 #include <cstddef>
 #include <ecal/ecal.h>
+#include <ecal/ecal_event.h>
 #include <functional>
 #include <iterator>
 #include <memory>

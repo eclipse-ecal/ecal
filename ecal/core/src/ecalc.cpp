@@ -28,6 +28,7 @@
 #include <mutex>
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_event.h>
 #include <ecal/ecalc.h>
 #include <ecal/msg/protobuf/dynamic_json_subscriber.h>
 #include <set>
@@ -538,12 +539,16 @@ static void g_pub_event_callback(const char* topic_name_, const struct eCAL::SPu
 {
   const std::lock_guard<std::recursive_mutex> lock(g_pub_callback_mtx);
   SPubEventCallbackDataC data;
-  data.type  = data_->type;
-  data.time  = data_->time;
-  data.clock = data_->clock;
-  data.tid   = data_->tid.c_str();
-  data.ttype = data_->ttype.c_str();
-  data.tdesc = data_->tdesc.c_str();
+  data.type      = data_->type;
+  data.time      = data_->time;
+  data.clock     = data_->clock;
+  data.tid       = data_->tid.c_str();
+  data.tname     = data_->tdatatype.name.c_str();
+  data.tencoding = data_->tdatatype.encoding.c_str();
+  data.tdesc     = data_->tdesc.c_str();
+
+  auto ttype     = eCAL::Util::CombinedTopicEncodingAndType(data_->tdatatype.encoding, data_->tdatatype.name);
+  data.ttype     = ttype.c_str();
   callback_(topic_name_, &data, par_);
 }
 
@@ -759,12 +764,16 @@ static void g_sub_event_callback(const char* topic_name_, const struct eCAL::SSu
 {
   const std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
   SSubEventCallbackDataC data;
-  data.type  = data_->type;
-  data.time  = data_->time;
-  data.clock = data_->clock;
-  data.tid   = data_->tid.c_str();
-  data.ttype = data_->ttype.c_str();
-  data.tdesc = data_->tdesc.c_str();
+  data.type      = data_->type;
+  data.time      = data_->time;
+  data.clock     = data_->clock;
+  data.tid       = data_->tid.c_str();
+  data.tname     = data_->tdatatype.name.c_str();
+  data.tencoding = data_->tdatatype.encoding.c_str();
+  data.tdesc     = data_->tdesc.c_str();
+
+  auto ttype     = eCAL::Util::CombinedTopicEncodingAndType(data_->tdatatype.encoding, data_->tdatatype.name);
+  data.ttype     = ttype.c_str();
   callback_(topic_name_, &data, par_);
 }
 
@@ -946,13 +955,45 @@ extern "C"
     return(0);
   }
 
+  ECALC_API int eCAL_Sub_GetTypeName(ECAL_HANDLE handle_, void* buf_, int buf_len_)
+  {
+    if (handle_ == nullptr) return(0);
+    auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+    const eCAL::SDataTypeInformation datatype_info = sub->GetDataTypeInformation();
+    int buffer_len = CopyBuffer(buf_, buf_len_, datatype_info.name);
+    if (buffer_len != static_cast<int>(datatype_info.name.size()))
+    {
+      return(0);
+    }
+    else
+    {
+      return(buffer_len);
+    }
+  }
+
+  ECALC_API int eCAL_Sub_GetEncoding(ECAL_HANDLE handle_, void* buf_, int buf_len_)
+  {
+    if (handle_ == nullptr) return(0);
+    auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+    const eCAL::SDataTypeInformation datatype_info = sub->GetDataTypeInformation();
+    int buffer_len = CopyBuffer(buf_, buf_len_, datatype_info.encoding);
+    if (buffer_len != static_cast<int>(datatype_info.encoding.size()))
+    {
+      return(0);
+    }
+    else
+    {
+      return(buffer_len);
+    }
+  }
+
   ECALC_API int eCAL_Sub_GetDescription(ECAL_HANDLE handle_, void* buf_, int buf_len_)
   {
-    if(handle_ == NULL) return(0);
-    eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
-    const std::string desc = sub->GetDescription();
-    int buffer_len = CopyBuffer(buf_, buf_len_, desc);
-    if (buffer_len != static_cast<int>(desc.size()))
+    if (handle_ == nullptr) return(0);
+    auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+    const eCAL::SDataTypeInformation datatype_info = sub->GetDataTypeInformation();
+    int buffer_len = CopyBuffer(buf_, buf_len_, datatype_info.descriptor);
+    if (buffer_len != static_cast<int>(datatype_info.descriptor.size()))
     {
       return(0);
     }

@@ -25,10 +25,10 @@
 #pragma once
 
 #ifdef _MSC_VER
-#pragma message("WARNING: This header file is deprecated. It will be removed in future eCAL versions. Please include <ecal/cimpl/ecal_server_cimpl.h> and / or <ecal/cimpl/ecal_client_cimpl.h> instead")
+#pragma message("WARNING: The header file cimpl/ecal_service_cimpl.h is deprecated. It will be removed in future eCAL versions. Please include <ecal/cimpl/ecal_server_cimpl.h> and / or <ecal/cimpl/ecal_client_cimpl.h> instead")
 #endif /*_MSC_VER*/
 #ifdef __GNUC__
-#pragma message "WARNING: This header file is deprecated. It will be removed in future eCAL versions. Please include <ecal/cimpl/ecal_server_cimpl.h> and / or <ecal/cimpl/ecal_client_cimpl.h> instead"
+#pragma message "WARNING: The header file cimpl/ecal_service_cimpl.h is deprecated. It will be removed in future eCAL versions. Please include <ecal/cimpl/ecal_server_cimpl.h> and / or <ecal/cimpl/ecal_client_cimpl.h> instead"
 #endif /* __GNUC__ */
 
 #include <ecal/cimpl/ecal_server_cimpl.h>

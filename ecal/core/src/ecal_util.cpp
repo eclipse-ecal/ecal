@@ -20,6 +20,7 @@
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_core.h>
 #include <ecal/ecal_types.h>
+#include <ecal/ecal_event.h>
 
 #include "ecal_def.h"
 #include "ecal_event_internal.h"
