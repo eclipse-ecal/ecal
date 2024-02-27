@@ -65,10 +65,11 @@ namespace eCAL
 
     /**
      * @brief  Get unique host id.
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @return  Host id or zero if failed.
     **/
-    ECAL_DEPRECATE_SINCE_5_10("This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_10("Will be removed in future eCAL versions.")
     ECAL_API int GetHostID();
 
     /**
@@ -155,57 +156,69 @@ namespace eCAL
 
     /**
      * @brief  Get CPU usage of current process. 
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @return  The CPU usage in percent. 
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API float GetProcessCpuUsage();
 
     /**
      * @brief  Get memory usage of current process. 
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @return  The memory usage in bytes. 
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API unsigned long GetProcessMemory();
 
     /**
-     * @deprecated  Use the function GetWClock() instead
+     * @deprecated Will be removed in future eCAL versions.
     **/
-    ECAL_DEPRECATE_SINCE_5_4("use GetWClock() instead")
+    ECAL_DEPRECATE_SINCE_5_4("Will be removed in future eCAL versions.")
     ECAL_API long long GetSClock();
 
     /**
-     * @deprecated  Use the function GetWBytes() instead
+     * @deprecated Will be removed in future eCAL versions.
     **/
 
-    ECAL_DEPRECATE_SINCE_5_4("use GetWBytes() instead")
+    ECAL_DEPRECATE_SINCE_5_4("Will be removed in future eCAL versions.")
     ECAL_API long long GetSBytes();
 
     /**
      * @brief  Get the write clock of the current process. 
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @return  The message write count per second. 
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API long long GetWClock();
 
     /**
      * @brief  Get the write bytes of the current process. 
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @return  The message write bytes per second. 
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API long long GetWBytes();
 
     /**
      * @brief  Get the read clock of the current process. 
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @return  The message read count per second. 
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API long long GetRClock();
 
     /**
      * @brief  Get the read bytes of the current process. 
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @return  The message read bytes per second. 
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API long long GetRBytes();
 
     /**

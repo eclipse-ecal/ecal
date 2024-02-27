@@ -249,10 +249,11 @@ namespace eCAL
 
       /**
       * @brief  Get type name of the capnp message.
+      * @deprecated Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the typename from the SDataTypeInformation variable. This function will be removed in future eCAL versions.
       *
       * @return  Type name.
       **/
-      ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeInformation GetDataTypeInformation() instead. This function will be removed in eCAL6.")
+      ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeInformation GetDataTypeInformation() instead. This function will be removed in future eCAL versions.")
       std::string GetTypeName() const
       {
         return eCAL::capnproto::TypeAsString<message_type>();

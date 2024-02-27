@@ -26,6 +26,8 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_log_level.h>
+#include <ecal/ecal_deprecate.h>
+
 #include <string>
 
 namespace eCAL
@@ -67,22 +69,30 @@ namespace eCAL
 
     /**
      * @brief Mark the start of the user core process. 
+     * @deprecated Will be removed in future eCAL versions.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API void StartCoreTimer();
 
     /**
      * @brief Mark the stop of the user core process. 
+     * @deprecated Will be removed in future eCAL versions.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API void StopCoreTimer();
 
     /**
      * @brief Set the current measured core time in s (for user implemented measuring). 
+     * @deprecated Will be removed in future eCAL versions.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API void SetCoreTime(double time_);
 
     /**
      * @brief Returns the current measured core time in s. 
+     * @deprecated Will be removed in future eCAL versions.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API double GetCoreTime();
   }
 }

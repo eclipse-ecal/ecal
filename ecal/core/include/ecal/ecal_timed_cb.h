@@ -19,7 +19,7 @@
 
 /**
  * @file   ecal_timed_cb.h
- * @brief  eCAL timer callback class (for internal use only !!)
+ * @brief  eCAL timer callback class (deprecated, will be removed in future eCAL versions)
 **/
 
 #pragma once
@@ -30,6 +30,8 @@
 #include <thread>
 #include <assert.h>
 
+#include <ecal/ecal_deprecate.h>
+
 #include "ecal_process.h"
 
 namespace eCAL
@@ -38,11 +40,13 @@ namespace eCAL
 
   /**
    * @brief Timer callback function type.
+   * @deprecated Will be removed in future eCAL versions.
   **/
   typedef std::function<void(void)> TimerCallbackT;
 
   /**
    * @brief eCAL timer callback class.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * The CTimedCB class is used to realize simple time triggered callbacks.
   **/
@@ -51,16 +55,20 @@ namespace eCAL
   public:
     /**
      * @brief Constructor.
+     * @deprecated Will be removed in future eCAL versions.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     CTimedCB() : m_stop(false), m_running(false) {}
 
     /**
      * @brief Constructor.
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @param timeout_    Timer callback loop time in ms.
      * @param callback_   The callback function.
      * @param delay_      Timer callback delay for first call in ms.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     CTimedCB(int timeout_, TimerCallbackT callback_, int delay_ = 0) : m_stop(false), m_running(false) { Start(timeout_, callback_, delay_); }
 
     /**
@@ -75,6 +83,7 @@ namespace eCAL
 
     /**
      * @brief Start the timer.
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @param timeout_    Timer callback loop time in ms.
      * @param callback_   The callback function.
@@ -82,6 +91,7 @@ namespace eCAL
      *
      * @return  True if timer could be started.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     bool Start(const int timeout_, TimerCallbackT callback_, const int delay_ = 0)
     {
       assert(m_running == false);
@@ -95,9 +105,11 @@ namespace eCAL
 
     /**
      * @brief Stop the timer.
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @return  True if timer could be stopped.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     bool Stop()
     {
       if (!m_running) return(false);

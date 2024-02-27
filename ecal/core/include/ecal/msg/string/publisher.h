@@ -66,12 +66,13 @@ namespace eCAL
 
       /**
        * @brief  Constructor.
+       * @deprecated Please use eCAL::string::CPublisher(const std::string& topic_name_) instead. This function will be removed in future eCAL versions.
        *
        * @param topic_name_  Unique topic name.
        * @param topic_type_  Type name (optional).
        * @param topic_desc_  Type description (optional).
       **/
-      ECAL_DEPRECATE_SINCE_5_13("Plase use eCAL::string::CPublisher(const std::string& topic_name_) instead. This function will be removed in eCAL6.")
+      ECAL_DEPRECATE_SINCE_5_13("Please use eCAL::string::CPublisher(const std::string& topic_name_) instead. This function will be removed in future eCAL versions.")
       CPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_) : CMsgPublisher<T>(topic_name_, topic_type_, topic_desc_)
       {
       }

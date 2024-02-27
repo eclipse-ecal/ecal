@@ -19,7 +19,7 @@
 
 /**
  * @file   ecal_proto_dyn_json_subscriber_cimpl.h
- * @brief  eCAL subscriber c interface
+ * @brief  eCAL subscriber c interface (deprecated, will be removed in future eCAL versions)
 **/
 
 #ifndef ecal_proto_dyn_json_subscriber_cimpl_h_included
@@ -36,25 +36,27 @@ extern "C"
 #endif /*__cplusplus*/
   /**
    * @brief Create a subscriber. 
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param topic_name_  Unique topic name. 
    *
    * @return  Handle to created subscriber or NULL if failed.
   **/
-  ECALC_API ECAL_HANDLE eCAL_Proto_Dyn_JSON_Sub_Create(const char* topic_name_);
+  ECALC_API_DEPRECATED ECAL_HANDLE eCAL_Proto_Dyn_JSON_Sub_Create(const char* topic_name_);
 
   /**
    * @brief Destroy a subscriber. 
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_  Subscriber handle. 
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Proto_Dyn_JSON_Sub_Destroy(ECAL_HANDLE handle_);
+  ECALC_API_DEPRECATED int eCAL_Proto_Dyn_JSON_Sub_Destroy(ECAL_HANDLE handle_);
 
   /**
    * @brief Add callback function for incoming receives. 
-   * @since eCAL 5.10.0
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_    Subscriber handle. 
    * @param callback_  The callback function to add.
@@ -62,11 +64,11 @@ extern "C"
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Proto_Dyn_JSON_Sub_AddReceiveCallback(ECAL_HANDLE handle_, ReceiveCallbackCT callback_, void* par_);
+  ECALC_API_DEPRECATED int eCAL_Proto_Dyn_JSON_Sub_AddReceiveCallback(ECAL_HANDLE handle_, ReceiveCallbackCT callback_, void* par_);
 
   /**
-   * @deprecated Please use eCAL_Proto_Dyn_JSON_Sub_AddReceiveCallback instead
    * @brief Add callback function for incoming receives.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_    Subscriber handle.
    * @param callback_  The callback function to add.
@@ -78,12 +80,13 @@ extern "C"
 
   /**
    * @brief Remove callback function for incoming receives. 
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param  handle_  Subscriber handle. 
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Proto_Dyn_JSON_Sub_RemReceiveCallback(ECAL_HANDLE handle_);
+  ECALC_API_DEPRECATED int eCAL_Proto_Dyn_JSON_Sub_RemReceiveCallback(ECAL_HANDLE handle_);
 
 #ifdef __cplusplus
 }

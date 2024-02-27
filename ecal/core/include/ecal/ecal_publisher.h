@@ -82,12 +82,13 @@ namespace eCAL
 
     /**
      * @brief Constructor. 
+     * @deprecated Please use the constructor CPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in future eCAL versions.
      *
      * @param topic_name_   Unique topic name. 
      * @param topic_type_   Type name. 
      * @param topic_desc_   Type description (optional). 
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in future eCAL versions.")
     ECAL_API CPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
 
     /**
@@ -132,6 +133,7 @@ namespace eCAL
 
     /**
      * @brief Creates this object. 
+     * @deprecated Please use the create method bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in future eCAL versions.
      *
      * @param topic_name_   Unique topic name. 
      * @param topic_type_   Type name (optional). 
@@ -139,7 +141,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails. 
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the create method bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the create method bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in future eCAL versions.")
     ECAL_API bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
 
     /**
@@ -173,22 +175,24 @@ namespace eCAL
 
     /**
      * @brief Setup topic type name.
+     * @deprecated Please use the method bool SetDataTypeInformation(const SDataTypeInformation& topic_info_) instead. This function will be removed in future eCAL versions.
      *
      * @param topic_type_name_   Topic type name.
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetDataTypeInformation(const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetDataTypeInformation(const SDataTypeInformation& topic_info_) instead. This function will be removed in future eCAL versions.")
     ECAL_API bool SetTypeName(const std::string& topic_type_name_);
 
     /**
      * @brief Setup topic description. 
+     * @deprecated Please use the method bool SetDataTypeInformation(const SDataTypeInformation& topic_info_) instead. This function will be removed in future eCAL versions.
      *
      * @param topic_desc_   Description string. 
      *
      * @return  True if it succeeds, false if it fails. 
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetDataTypeInformation(const SDataTypeInformation& topic_info_) instead. This function will be removed in eCAL6")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetDataTypeInformation(const SDataTypeInformation& topic_info_) instead. This function will be removed in future eCAL versions.")
     ECAL_API bool SetDescription(const std::string& topic_desc_);
 
     /**
@@ -241,18 +245,22 @@ namespace eCAL
 
     /**
      * @brief Set publisher quality of service attributes.
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @param qos_  Quality of service policies.
      *
      * @return  True if it succeeds, false if it fails.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API bool SetQOS(const QOS::SWriterQOS& qos_);
 
     /**
      * @brief Get current publisher quality of service attributes.
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @return  Quality of service attributes.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API QOS::SWriterQOS GetQOS();
 
     /**
@@ -267,11 +275,13 @@ namespace eCAL
 
     /**
      * @brief Set publisher maximum transmit bandwidth for the udp layer.
+     * @deprecated Will be removed in future eCAL versions.
      *
      * @param bandwidth_  Maximum bandwidth in bytes/s (-1 == unlimited).
      *
      * @return  True if it succeeds, false if it fails.
     **/
+    ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
     ECAL_API bool SetMaxBandwidthUDP(long bandwidth_);
 
     /**
@@ -402,9 +412,8 @@ namespace eCAL
 
     /**
      * @brief Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout).
+     * @deprecated Please use the method size_t Send(CPayloadWriter& payload_, long long time_, long long acknowledge_timeout_ms_) const instead. This function will be removed in future eCAL versions.
      * 
-     * This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.
-     *
      * @param buf_                     Pointer to content buffer.
      * @param len_                     Length of buffer.
      * @param time_                    Send time (-1 = use eCAL system time in us).
@@ -412,7 +421,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    ECAL_DEPRECATE_SINCE_5_12("Please use the method size_t Send(CPayloadWriter& payload_, long long time_, long long acknowledge_timeout_ms_) const instead. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_12("Please use the method size_t Send(CPayloadWriter& payload_, long long time_, long long acknowledge_timeout_ms_) const instead. This function will be removed in future eCAL versions.")
     ECAL_API size_t SendSynchronized(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
     {
       return Send(buf_, len_, time_, acknowledge_timeout_ms_);
@@ -507,18 +516,20 @@ namespace eCAL
 
     /**
      * @brief Gets type of the connected topic. 
+     * @deprecated Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the typename from the SDataTypeInformation variable. This function will be removed in future eCAL versions.
      *
      * @return  The type name. 
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the typename from the SDataTypeInformation variable. This function will be removed in future eCAL versions.")
     ECAL_API std::string GetTypeName() const;
 
     /**
      * @brief Gets description of the connected topic. 
+     * @deprecated Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the descriptor from the SDataTypeInformation variable. This function will be removed in future eCAL versions.
      *
      * @return  The description. 
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the descriptor from the SDataTypeInformation variable. This function will be removed in future eCAL versions.")
     ECAL_API std::string GetDescription() const;
 
     /**

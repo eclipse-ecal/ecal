@@ -19,10 +19,12 @@
 
 /**
  * @file   ecal_eventhandle.h
- * @brief  eCAL event handle
+ * @brief  eCAL event handle (deprecated, will be removed in future eCAL versions)
 **/
 
 #pragma once
+
+#include <ecal/ecal_deprecate.h>
 
 #include <string>
 #include <vector>
@@ -31,6 +33,7 @@ namespace eCAL
 {
   /**
    * @brief eCAL event callback handle.
+   * @deprecated Will be removed in future eCAL versions.
   **/
   struct SEventHandle
   {

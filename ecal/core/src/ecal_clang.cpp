@@ -397,12 +397,16 @@ static void g_pub_event_callback(const char* topic_name_, const struct eCAL::SPu
 {
   const std::lock_guard<std::mutex> lock(g_pub_event_callback_mtx);
   SPubEventCallbackDataC data;
-  data.type  = data_->type;
-  data.time  = data_->time;
-  data.clock = data_->clock;
-  data.tid   = data_->tid.c_str();
-  data.ttype = data_->ttype.c_str();
-  data.tdesc = data_->tdesc.c_str();
+  data.type      = data_->type;
+  data.time      = data_->time;
+  data.clock     = data_->clock;
+  data.tid       = data_->tid.c_str();
+  data.tname     = data_->tdatatype.name.c_str();
+  data.tencoding = data_->tdatatype.encoding.c_str();
+  data.tdesc     = data_->tdesc.c_str();
+
+  auto ttype     = eCAL::Util::CombinedTopicEncodingAndType(data_->tdatatype.encoding, data_->tdatatype.name);
+  data.ttype     = ttype.c_str();
   callback_(topic_name_, &data, par_);
 }
 
@@ -588,12 +592,16 @@ static void g_sub_event_callback(const char* topic_name_, const struct eCAL::SSu
 {
   const std::lock_guard<std::mutex> lock(g_sub_event_callback_mtx);
   SSubEventCallbackDataC data;
-  data.type  = data_->type;
-  data.time  = data_->time;
-  data.clock = data_->clock;
-  data.tid   = data_->tid.c_str();
-  data.ttype = data_->ttype.c_str();
-  data.tdesc = data_->tdesc.c_str();
+  data.type      = data_->type;
+  data.time      = data_->time;
+  data.clock     = data_->clock;
+  data.tid       = data_->tid.c_str();
+  data.tname     = data_->tdatatype.name.c_str();
+  data.tencoding = data_->tdatatype.encoding.c_str();
+  data.tdesc     = data_->tdesc.c_str();
+
+  auto ttype     = eCAL::Util::CombinedTopicEncodingAndType(data_->tdatatype.encoding, data_->tdatatype.name);
+  data.ttype     = ttype.c_str();
   callback_(topic_name_, &data, par_);
 }
 

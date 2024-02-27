@@ -18,6 +18,7 @@
 */
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_event.h>
 
 #include <gtest/gtest.h>
 

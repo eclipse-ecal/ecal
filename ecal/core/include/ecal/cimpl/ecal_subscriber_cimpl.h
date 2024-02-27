@@ -68,23 +68,25 @@ extern "C"
 
   /**
    * @brief Set subscriber quality of service attributes.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_  Subscriber handle.
    * @param qos_     Quality of service policies.
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Sub_SetQOS(ECAL_HANDLE handle_, struct SReaderQOSC qos_);
+  ECALC_API_DEPRECATED int eCAL_Sub_SetQOS(ECAL_HANDLE handle_, struct SReaderQOSC qos_);
 
   /**
    * @brief Get subscriber quality of service attributes.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_  Subscriber handle.
    * @param qos_     Quality of service policies.
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Sub_GetQOS(ECAL_HANDLE handle_, struct SReaderQOSC* qos_);
+  ECALC_API_DEPRECATED int eCAL_Sub_GetQOS(ECAL_HANDLE handle_, struct SReaderQOSC* qos_);
 
   /**
    * @brief Set a set of id's to prefiltering topics (see eCAL_Pub_SetID).
@@ -249,6 +251,30 @@ extern "C"
   ECALC_API int eCAL_Sub_RemEventCallback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_);
 
   /**
+   * @brief Gets type name of the connected topic.
+   *
+   * @param       handle_   Subscriber handle.
+   * @param [out] buf_      Pointer to store the subscriber type name string.
+   * @param       buf_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
+   *                        eCAL should allocate the buffer for you (see eCAL_FreeMem).
+   *
+   * @return  Type name buffer length or zero if failed.
+  **/
+  ECALC_API int eCAL_Sub_GetTypeName(ECAL_HANDLE handle_, void* buf_, int buf_len_);
+
+  /**
+   * @brief Gets encoding of the connected topic.
+   *
+   * @param       handle_   Subscriber handle.
+   * @param [out] buf_      Pointer to store the subscriber encoding string.
+   * @param       buf_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
+   *                        eCAL should allocate the buffer for you (see eCAL_FreeMem).
+   *
+   * @return  Encoding buffer length or zero if failed.
+  **/
+  ECALC_API int eCAL_Sub_GetEncoding(ECAL_HANDLE handle_, void* buf_, int buf_len_);
+
+  /**
    * @brief Gets description of the connected topic. 
    *
    * @param       handle_   Subscriber handle. 
@@ -261,15 +287,15 @@ extern "C"
   ECALC_API int eCAL_Sub_GetDescription(ECAL_HANDLE handle_, void* buf_, int buf_len_);
 
   /**
-   * @brief Set the timeout parameter for triggering
-   *          the timeout callback.
+   * @brief Set the timeout parameter for triggering the timeout callback.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_   Subscriber handle.
    * @param timeout_  The timeout in milliseconds.
    *
    * @return  True if succeeded, false if not.
   **/
-  ECALC_API int eCAL_Sub_SetTimeout(ECAL_HANDLE handle_, int timeout_);
+  ECALC_API_DEPRECATED int eCAL_Sub_SetTimeout(ECAL_HANDLE handle_, int timeout_);
 
   /**
    * @brief Dump the whole class state into a string buffer. 

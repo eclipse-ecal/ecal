@@ -135,23 +135,25 @@ extern "C"
 
   /**
    * @brief Set publisher quality of service attributes.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_  Publisher handle.
    * @param qos_     Quality of service policies.
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Pub_SetQOS(ECAL_HANDLE handle_, struct SWriterQOSC qos_);
+  ECALC_API_DEPRECATED int eCAL_Pub_SetQOS(ECAL_HANDLE handle_, struct SWriterQOSC qos_);
 
   /**
    * @brief Get publisher quality of service attributes.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_  Publisher handle.
    * @param qos_     Quality of service policies.
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Pub_GetQOS(ECAL_HANDLE handle_, struct SWriterQOSC* qos_);
+  ECALC_API_DEPRECATED int eCAL_Pub_GetQOS(ECAL_HANDLE handle_, struct SWriterQOSC* qos_);
 
   /**
    * @brief Set publisher send mode for specific transport layer.
@@ -166,13 +168,14 @@ extern "C"
 
   /**
    * @brief Set publisher maximum transmit bandwidth for the udp layer.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param handle_     Publisher handle.
    * @param bandwidth_  Maximum bandwidth in bytes/s (-1 == unlimited).
    *
    * @return  True if it succeeds, false if it fails.
   **/
-  ECALC_API int eCAL_Pub_SetMaxBandwidthUDP(ECAL_HANDLE handle_, long bandwidth_);
+  ECALC_API_DEPRECATED int eCAL_Pub_SetMaxBandwidthUDP(ECAL_HANDLE handle_, long bandwidth_);
 
   /**
    * @brief Set publisher maximum number of used shared memory buffers.

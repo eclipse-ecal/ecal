@@ -19,7 +19,7 @@
 
 /**
  * @file   ecal_qos_cimpl.h
- * @brief  eCAL quality of service settings
+ * @brief  eCAL quality of service settings (deprecated, will be removed in future eCAL versions)
 **/
 
 #ifndef ecal_qos_cimpl_h_included
@@ -27,6 +27,7 @@
 
 /**
  * @brief eCAL QOS history kind mode.
+ * @deprecated Will be removed in future eCAL versions.
 **/
 enum eQOSPolicy_HistoryKindC
 {
@@ -36,6 +37,7 @@ enum eQOSPolicy_HistoryKindC
 
 /**
  * @brief eCAL QOS reliability mode.
+ * @deprecated Will be removed in future eCAL versions.
 **/
 enum eQOSPolicy_ReliabilityC
 {
@@ -45,6 +47,7 @@ enum eQOSPolicy_ReliabilityC
 
 /**
  * @brief eCAL data writer QOS settings.
+ * @deprecated Will be removed in future eCAL versions.
 **/
 struct SWriterQOSC
 {
@@ -55,6 +58,7 @@ struct SWriterQOSC
 
 /**
  * @brief eCAL data reader QOS settings.
+ * @deprecated Will be removed in future eCAL versions.
 **/
 struct SReaderQOSC
 {
