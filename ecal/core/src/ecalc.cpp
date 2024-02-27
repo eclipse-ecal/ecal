@@ -339,10 +339,10 @@ extern "C"
 // Publisher
 /////////////////////////////////////////////////////////
 #if ECAL_CORE_PUBLISHER
-static std::recursive_mutex g_pub_callback_mtx;
+static std::recursive_mutex g_pub_event_callback_mtx;
 static void g_pub_event_callback(const char* topic_name_, const struct eCAL::SPubEventCallbackData* data_, const PubEventCallbackCT callback_, void* par_)
 {
-  const std::lock_guard<std::recursive_mutex> lock(g_pub_callback_mtx);
+  const std::lock_guard<std::recursive_mutex> lock(g_pub_event_callback_mtx);
   SPubEventCallbackDataC data{};
   data.type       = data_->type;
   data.time       = data_->time;
@@ -474,10 +474,10 @@ extern "C"
 // Subscriber
 /////////////////////////////////////////////////////////
 #if ECAL_CORE_SUBSCRIBER
-static std::recursive_mutex g_sub_callback_mtx;
+static std::recursive_mutex g_sub_receive_callback_mtx;
 static void g_sub_receive_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, const ReceiveCallbackCT callback_, void* par_)
 {
-  const std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
+  const std::lock_guard<std::recursive_mutex> lock(g_sub_receive_callback_mtx);
   SReceiveCallbackDataC data{};
   data.buf   = data_->buf;
   data.size  = data_->size;
@@ -487,9 +487,10 @@ static void g_sub_receive_callback(const char* topic_name_, const struct eCAL::S
   callback_(topic_name_, &data, par_);
 }
 
+static std::recursive_mutex g_sub_event_callback_mtx;
 static void g_sub_event_callback(const char* topic_name_, const struct eCAL::SSubEventCallbackData* data_, const SubEventCallbackCT callback_, void* par_)
 {
-  const std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
+  const std::lock_guard<std::recursive_mutex> lock(g_sub_event_callback_mtx);
   SSubEventCallbackDataC data{};
   data.type        = data_->type;
   data.time        = data_->time;
@@ -820,10 +821,10 @@ extern "C"
 #if ECAL_CORE_SERVICE
 extern "C"
 {
-  static std::recursive_mutex g_request_callback_mtx;
+  static std::recursive_mutex g_method_callback_mtx;
   static int g_method_callback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_, MethodCallbackCT callback_, void* par_)
   {
-    const std::lock_guard<std::recursive_mutex> lock(g_request_callback_mtx);
+    const std::lock_guard<std::recursive_mutex> lock(g_method_callback_mtx);
     void* response(nullptr);
     int   response_len(ECAL_ALLOCATE_4ME);
     const int ret_state = callback_(method_.c_str(), req_type_.c_str(), resp_type_.c_str(), request_.c_str(), static_cast<int>(request_.size()), &response, &response_len, par_);
