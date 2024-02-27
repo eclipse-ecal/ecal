@@ -27,7 +27,6 @@
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_deprecate.h>
 #include <ecal/types/monitoring.h>
-#include <ecal/ecal_deprecate.h>
 
 #include <string>
 

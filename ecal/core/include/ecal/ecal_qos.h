@@ -19,17 +19,10 @@
 
 /**
  * @file   ecal_qos.h
- * @brief  eCAL quality of service settings
+ * @brief  eCAL quality of service settings (deprecated, will be removed in future eCAL versions)
 **/
 
 #pragma once
-
-#ifdef _MSC_VER
-#pragma message("WARNING: The header file ecal_qos.h is deprecated. It will be removed in future eCAL versions.")
-#endif /*_MSC_VER*/
-#ifdef __GNUC__
-#pragma message "WARNING: The header file ecal_qos.h is deprecated. It will be removed in future eCAL versions."
-#endif /* __GNUC__ */
 
 #include "ecal_os.h"
 

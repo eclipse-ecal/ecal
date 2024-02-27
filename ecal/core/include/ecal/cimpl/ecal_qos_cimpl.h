@@ -19,18 +19,11 @@
 
 /**
  * @file   ecal_qos_cimpl.h
- * @brief  eCAL quality of service settings
+ * @brief  eCAL quality of service settings (deprecated, will be removed in future eCAL versions)
 **/
 
 #ifndef ecal_qos_cimpl_h_included
 #define ecal_qos_cimpl_h_included
-
-#ifdef _MSC_VER
-#pragma message("WARNING: The header file cimpl/ecal_qos_cimpl.h is deprecated. It will be removed in future eCAL versions.")
-#endif /*_MSC_VER*/
-#ifdef __GNUC__
-#pragma message "WARNING: The header file cimpl/ecal_qos_cimpl.h is deprecated. It will be removed in future eCAL versions."
-#endif /* __GNUC__ */
 
 /**
  * @brief eCAL QOS history kind mode.

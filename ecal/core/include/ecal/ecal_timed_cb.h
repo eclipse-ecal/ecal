@@ -19,17 +19,10 @@
 
 /**
  * @file   ecal_timed_cb.h
- * @brief  eCAL timer callback class (for internal use only !!)
+ * @brief  eCAL timer callback class (deprecated, will be removed in future eCAL versions)
 **/
 
 #pragma once
-
-#ifdef _MSC_VER
-#pragma message("WARNING: The header file ecal_timed_cb.h is deprecated. It will be removed in future eCAL versions.")
-#endif /*_MSC_VER*/
-#ifdef __GNUC__
-#pragma message "WARNING: The header file ecal_timed_cb.h is deprecated. It will be removed in future eCAL versions."
-#endif /* __GNUC__ */
 
 #include <atomic>
 #include <chrono>

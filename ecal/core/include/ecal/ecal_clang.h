@@ -19,18 +19,11 @@
 
 /**
  * @file   ecal_clang.h
- * @brief  eCAL C language interface (to wrap ecal into other languages easily)
+ * @brief  eCAL C language interface, to wrap ecal into other languages easily (deprecated, will be removed in future eCAL versions)
 **/
 
 #ifndef ECAL_CLANG_H_INCLUDED
 #define ECAL_CLANG_H_INCLUDED
-
-#ifdef _MSC_VER
-#pragma message("WARNING: The header file ecal_clang.h is deprecated. It will be removed in future eCAL versions. Please use the C API declared in ecalc.h.")
-#endif /*_MSC_VER*/
-#ifdef __GNUC__
-#pragma message "WARNING: The header file ecal_clang.h is deprecated. It will be removed in future eCAL versions. Please use the C API declared in ecalc.h."
-#endif /* __GNUC__ */
 
 #include <ecal/ecalc.h>
 

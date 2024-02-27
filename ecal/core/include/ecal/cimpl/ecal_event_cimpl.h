@@ -19,18 +19,11 @@
 
 /**
  * @file   ecal_event_cimpl.h
- * @brief  eCAL event c interface
+ * @brief  eCAL event c interface (deprecated, will be removed in future eCAL versions)
 **/
 
 #ifndef ecal_event_cimpl_h_included
 #define ecal_event_cimpl_h_included
-
-#ifdef _MSC_VER
-#pragma message("WARNING: The header file cimpl/ecal_event_cimpl.h is deprecated. It will be removed in future eCAL versions.")
-#endif /*_MSC_VER*/
-#ifdef __GNUC__
-#pragma message "WARNING: The header file cimpl/ecal_event_cimpl.h is deprecated. It will be removed in future eCAL versions."
-#endif /* __GNUC__ */
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecalc_types.h>
