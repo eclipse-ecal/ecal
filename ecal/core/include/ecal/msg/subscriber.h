@@ -205,7 +205,7 @@ namespace eCAL
 
 protected:
     // We cannot make it pure virtual, as it would break a bunch of implementations, who are not (yet) implementing this function
-    virtual struct SDataTypeInformation GetDataTypeInformation() const { return SDataTypeInformation{}; }
+    virtual SDataTypeInformation GetDataTypeInformation() const { return SDataTypeInformation{}; }
     virtual bool Deserialize(T& msg_, const void* buffer_, size_t size_) const = 0;
 
   private:
