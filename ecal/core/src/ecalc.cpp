@@ -868,21 +868,11 @@ extern "C"
     return server->AddMethodCallback(method_, req_type_, resp_type_, callback);
   }
 
-  ECALC_API_DEPRECATED int eCAL_Server_AddMethodCallbackC(ECAL_HANDLE handle_, const char* method_, const char* req_type_, const char* resp_type_, MethodCallbackCT callback_, void* par_)
-  {
-    return eCAL_Server_AddMethodCallback(handle_, method_, req_type_, resp_type_, callback_, par_);
-  }
-
   ECALC_API int eCAL_Server_RemMethodCallback(ECAL_HANDLE handle_, const char* method_)
   {
     if (handle_ == nullptr) return(0);
     auto* server = static_cast<eCAL::CServiceServer*>(handle_);
     return server->RemMethodCallback(method_);
-  }
-
-  ECALC_API_DEPRECATED int eCAL_Server_RemMethodCallbackC(ECAL_HANDLE handle_, const char* method_)
-  {
-    return eCAL_Server_RemMethodCallback(handle_, method_);
   }
 
   ECALC_API int eCAL_Server_AddEventCallback(ECAL_HANDLE handle_, eCAL_Server_Event type_, ServerEventCallbackCT callback_, void* par_)
@@ -1023,12 +1013,6 @@ int eCAL_Client_AddResponseCallback(ECAL_HANDLE handle_, ResponseCallbackCT call
   auto callback = std::bind(g_response_callback, std::placeholders::_1, callback_, par_);
   return client->AddResponseCallback(callback);
 }
-
-int eCAL_Client_AddResponseCallbackC(ECAL_HANDLE handle_, ResponseCallbackCT callback_, void* par_)
-{
-  return eCAL_Client_AddResponseCallback(handle_, callback_, par_);
-}
-
 
 int eCAL_Client_RemResponseCallback(ECAL_HANDLE handle_)
 {
