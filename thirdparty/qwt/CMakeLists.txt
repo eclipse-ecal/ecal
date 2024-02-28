@@ -277,7 +277,7 @@ set(qwt_sources
     qwt/src/qwt_widget_overlay.cpp
 )
 
-add_library(qwt SHARED ${qwt_headers} ${qwt_sources})
+add_library(qwt ${QWT_LIBRARY_TYPE} ${qwt_headers} ${qwt_sources})
 add_library(qwt::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(qwt PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/qwt/src)
