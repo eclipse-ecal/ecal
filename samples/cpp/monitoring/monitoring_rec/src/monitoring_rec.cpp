@@ -96,8 +96,6 @@ int main(int argc, char **argv)
         std::cout << "pname           : " << process.pname()             << std::endl;   // process name
         std::cout << "uname           : " << process.uname()             << std::endl;   // unit name
         std::cout << "pparam          : " << process.pparam()            << std::endl;   // process parameter
-        std::cout << "datawrite       : " << process.datawrite()         << std::endl;   // data write bytes per sec
-        std::cout << "dataread        : " << process.dataread()          << std::endl;   // date read bytes per sec
         std::cout << "severity        : " << process.state().severity()  << std::endl;   // process state severity
         std::cout << "info            : " << process.state().info()      << std::endl;   // process state info
         std::cout << "tsync state     : " << process.tsync_state()       << std::endl;   // time sync state
@@ -170,6 +168,7 @@ int main(int argc, char **argv)
         std::cout << "direction       : " << topic.direction()       << std::endl;   // direction (publisher, subscriber)
         std::cout << "ttype           : " << topic.ttype()           << std::endl;   // topic type
 //        std::cout << "tdesc           : " << topic.tdesc()           << std::endl;   // topic description
+//        std::cout << "tqos            : " << topic.tqos()            << std::endl;   // topic quality of service
         for (auto layer : topic.tlayer())
         {
           std::string layer_type("unknown");

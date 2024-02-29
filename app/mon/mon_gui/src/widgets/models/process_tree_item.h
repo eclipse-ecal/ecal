@@ -44,8 +44,6 @@ public:
     PNAME,
     UNAME,
     PPARAM,
-    DATAWRITE,
-    DATAREAD,
     SEVERITY,
     INFO,
     TSYNC_STATE,

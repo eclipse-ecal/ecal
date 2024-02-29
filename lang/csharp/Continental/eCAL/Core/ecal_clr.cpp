@@ -146,14 +146,22 @@ Publisher::Publisher() : m_pub(new ::eCAL::CPublisher())
 {
 }
 
-Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_desc_)
+Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, System::String^ topic_desc_)
 {
-  m_pub = new ::eCAL::CPublisher(StringToStlString(topic_name_), StringToStlString(topic_type_), StringToStlString(topic_desc_));
+  ::eCAL::SDataTypeInformation topic_info;
+  topic_info.name       = StringToStlString(topic_type_);
+  topic_info.encoding   = StringToStlString(topic_encoding_);
+  topic_info.descriptor = StringToStlString(topic_desc_);
+  m_pub = new ::eCAL::CPublisher(StringToStlString(topic_name_), topic_info);
 }
 
-Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, array<Byte>^ topic_desc_)
+Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, array<Byte>^ topic_desc_)
 {
-  m_pub = new ::eCAL::CPublisher(StringToStlString(topic_name_), StringToStlString(topic_type_), ByteArrayToStlString(topic_desc_));
+  ::eCAL::SDataTypeInformation topic_info;
+  topic_info.name       = StringToStlString(topic_type_);
+  topic_info.encoding   = StringToStlString(topic_encoding_);
+  topic_info.descriptor = ByteArrayToStlString(topic_desc_);
+  m_pub = new ::eCAL::CPublisher(StringToStlString(topic_name_), topic_info);
 }
 
 Publisher::~Publisher()
@@ -162,10 +170,13 @@ Publisher::~Publisher()
   delete m_pub;
 }
 
-bool Publisher::Create(System::String^ topic_name_, System::String^ topic_type_)
+bool Publisher::Create(System::String^ topic_name_, System::String^ topic_encoding_, System::String^ topic_type_)
 {
   if(m_pub == nullptr) return(false);
-  return(m_pub->Create(StringToStlString(topic_name_), StringToStlString(topic_type_)));
+  ::eCAL::SDataTypeInformation topic_info;
+  topic_info.name     = StringToStlString(topic_type_);
+  topic_info.encoding = StringToStlString(topic_encoding_);
+  return(m_pub->Create(StringToStlString(topic_name_), topic_info));
 }
 
 bool Publisher::Destroy()
@@ -204,12 +215,6 @@ System::String^ Publisher::GetTopicName()
   return(StlStringToString(m_pub->GetTopicName()));
 }
 
-System::String^ Publisher::GetTypeName()
-{
-  if(m_pub == nullptr) return("");
-  return(StlStringToString(m_pub->GetTypeName()));
-}
-
 System::String^ Publisher::Dump()
 {
   if(m_pub == nullptr) return("");
@@ -224,14 +229,22 @@ Subscriber::Subscriber() : m_sub(new ::eCAL::CSubscriber())
 {
 }
 
-Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_desc_)
+Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, System::String^ topic_desc_)
 {
-  m_sub = new ::eCAL::CSubscriber(StringToStlString(topic_name_), StringToStlString(topic_type_), StringToStlString(topic_desc_));
+  ::eCAL::SDataTypeInformation topic_info;
+  topic_info.name       = StringToStlString(topic_type_);
+  topic_info.encoding   = StringToStlString(topic_encoding_);
+  topic_info.descriptor = StringToStlString(topic_desc_);
+  m_sub = new ::eCAL::CSubscriber(StringToStlString(topic_name_), topic_info);
 }
 
-Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_, array<Byte>^ topic_desc_)
+Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, array<Byte>^ topic_desc_)
 {
-  m_sub = new ::eCAL::CSubscriber(StringToStlString(topic_name_), StringToStlString(topic_type_), ByteArrayToStlString(topic_desc_));
+  ::eCAL::SDataTypeInformation topic_info;
+  topic_info.name       = StringToStlString(topic_type_);
+  topic_info.encoding   = StringToStlString(topic_encoding_);
+  topic_info.descriptor = ByteArrayToStlString(topic_desc_);
+  m_sub = new ::eCAL::CSubscriber(StringToStlString(topic_name_), topic_info);
 }
 
 Subscriber::~Subscriber()
@@ -240,10 +253,13 @@ Subscriber::~Subscriber()
   delete m_sub;
 }
 
-bool Subscriber::Create(System::String^ topic_name_, System::String^ topic_type_)
+bool Subscriber::Create(System::String^ topic_name_, System::String^ topic_encoding_, System::String^ topic_type_)
 {
-  if(m_sub == nullptr) return(false);
-  return(m_sub->Create(StringToStlString(topic_name_), StringToStlString(topic_type_)));
+  if (m_sub == nullptr) return(false);
+  ::eCAL::SDataTypeInformation topic_info;
+  topic_info.name     = StringToStlString(topic_type_);
+  topic_info.encoding = StringToStlString(topic_encoding_);
+  return(m_sub->Create(StringToStlString(topic_name_), topic_info));
 }
 
 bool Subscriber::Destroy()
@@ -258,8 +274,8 @@ Subscriber::ReceiveCallbackData^ Subscriber::Receive(const int rcv_timeout_)
   long long rcv_time = 0;
   std::string rcv_buf;
 
-  auto size = m_sub->Receive(rcv_buf, &rcv_time, rcv_timeout_);
-  if (size > 0)
+  auto success = m_sub->ReceiveBuffer(rcv_buf, &rcv_time, rcv_timeout_);
+  if (success)
   {
     ReceiveCallbackData^ rcv_data = gcnew ReceiveCallbackData();
     rcv_data->id = 0;
@@ -279,15 +295,15 @@ Subscriber::ReceiveCallbackDataUnsafe^ Subscriber::ReceiveUnsafe(const int rcv_t
   if(m_sub == nullptr) return(nullptr);
   long long rcv_time = 0;
   std::string rcv_buf;
-  auto size = m_sub->Receive(rcv_buf, &rcv_time, rcv_timeout_);
-  if (size > 0)
+  auto success = m_sub->ReceiveBuffer(rcv_buf, &rcv_time, rcv_timeout_);
+  if (success)
   {
     ReceiveCallbackDataUnsafe^ rcv_data = gcnew ReceiveCallbackDataUnsafe();
     rcv_data->id = 0;
     rcv_data->clock = 0;
     rcv_data->time = rcv_time;
     rcv_data->data = (void*)rcv_buf.data();
-    rcv_data->size = size;
+    rcv_data->size = rcv_buf.size();
     return rcv_data;
   }
   else
@@ -358,12 +374,6 @@ System::String^ Subscriber::GetTopicName()
 {
   if(m_sub == nullptr) return("");
   return(StlStringToString(m_sub->GetTopicName()));
-}
-
-System::String^ Subscriber::GetTypeName()
-{
-  if(m_sub == nullptr) return("");
-  return(StlStringToString(m_sub->GetTypeName()));
 }
 
 System::String^ Subscriber::Dump()
@@ -509,88 +519,6 @@ List<ServiceClient::ServiceClientCallbackData^>^ ServiceClient::Call(System::Str
 }
 
 
-
-/////////////////////////////////////////////////////////////////////////////
-// JSONProtobufSubscriber
-/////////////////////////////////////////////////////////////////////////////
-JSONProtobufSubscriber::JSONProtobufSubscriber() : m_sub(new ::eCAL::protobuf::CDynamicJSONSubscriber())
-{
-}
-
-JSONProtobufSubscriber::JSONProtobufSubscriber(System::String^ topic_name_)
-{
-  m_sub = new ::eCAL::protobuf::CDynamicJSONSubscriber(StringToStlString(topic_name_));
-}
-
-JSONProtobufSubscriber::~JSONProtobufSubscriber()
-{
-  if(m_sub == nullptr) return;
-  delete m_sub;
-}
-
-void JSONProtobufSubscriber::Create(System::String^ topic_name_)
-{
-  if(m_sub == nullptr) return;
-  m_sub->Create(StringToStlString(topic_name_));
-}
-
-void JSONProtobufSubscriber::Destroy()
-{
-  if(m_sub == nullptr) return;
-  m_sub->Destroy();
-}
-
-
-bool JSONProtobufSubscriber::AddReceiveCallback(ReceiverCallback^ callback_)
-{
-  if(m_sub == nullptr) return(false);
-
-  if (m_callbacks == nullptr)
-  {
-    m_sub_callback = gcnew subCallback(this, &JSONProtobufSubscriber::OnReceive);
-    m_gch = GCHandle::Alloc(m_sub_callback);
-    IntPtr ip = Marshal::GetFunctionPointerForDelegate(m_sub_callback);
-    m_sub->AddReceiveCallback(static_cast<stdcall_eCAL_ReceiveCallbackT>(ip.ToPointer()));
-  }
-  m_callbacks += callback_;
-  return(true);
-}
-
-bool JSONProtobufSubscriber::RemReceiveCallback(ReceiverCallback^ callback_)
-{
-  if(m_sub == nullptr) return(false);
-
-  if (m_callbacks == callback_)
-  {
-    m_sub->RemReceiveCallback();
-    m_gch.Free();
-  }
-  m_callbacks -= callback_;
-
-  return(false);
-}
-
-bool JSONProtobufSubscriber::IsCreated()
-{
-  if(m_sub == nullptr) return(false);
-  return(m_sub->IsCreated());
-}
-
-void JSONProtobufSubscriber::OnReceive(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_)
-{
-  std::string received_bytes = std::string(static_cast<const char*>(data_->buf), static_cast<size_t>(data_->size));
-  ReceiveCallbackData^ data = gcnew ReceiveCallbackData();
-  data->data    = StlStringToString(received_bytes);
-  data->id      = data_->id;
-  data->time    = data_->time;
-  data->clock   = data_->clock;
-  std::string topic_name = std::string(topic_name_);
-  m_callbacks(StlStringToString(topic_name), data);
-}
-
-
-
-
 /////////////////////////////////////////////////////////////////////////////
 // Monitoring
 /////////////////////////////////////////////////////////////////////////////
@@ -614,7 +542,7 @@ String^ Monitoring::GetMonitoring()
 String^ Monitoring::GetLogging()
 {
     std::string logging;
-    ::eCAL::Monitoring::GetLogging(logging);
+    ::eCAL::Logging::GetLogging(logging);
     return StlStringToString(logging);
 }
 
@@ -630,7 +558,7 @@ array<Byte>^ Monitoring::GetMonitoringBytes()
 array<Byte>^ Monitoring::GetLoggingBytes()
 {
     std::string logging;
-    ::eCAL::Monitoring::GetLogging(logging);
+    ::eCAL::Logging::GetLogging(logging);
     array<Byte>^ data = gcnew array<Byte>(static_cast<int>(logging.size()));
     System::Runtime::InteropServices::Marshal::Copy(IntPtr(&logging[0]), data, 0, static_cast<int>(logging.size()));
     return data;

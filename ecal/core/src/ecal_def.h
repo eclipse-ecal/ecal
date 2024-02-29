@@ -43,7 +43,7 @@
 /* timeout for automatic removing monitoring topics in ms */
 #define MON_TIMEOUT                                5000
 /* topics blacklist as regular expression (will not be monitored) */
-#define MON_FILTER_EXCL                            "^__.*$"
+#define MON_FILTER_EXCL                            "_.*"
 /* topics whitelist as regular expression (will be monitored only) */
 #define MON_FILTER_INCL                            ""
 
@@ -72,8 +72,8 @@
 #define NET_UDP_MULTICAST_PORT                     14000
 #define NET_UDP_MULTICAST_TTL                      3
 #define NET_UDP_MULTICAST_PORT_REG_OFF             0
-#define NET_UDP_MULTICAST_PORT_LOG_OFF             1
 #define NET_UDP_MULTICAST_PORT_SAMPLE_OFF          2
+#define NET_UDP_MULTICAST_PORT_LOG_OFF             4
 #define NET_UDP_MULTICAST_SNDBUF                   (5*1024*1024)  /* 5 MByte */
 #define NET_UDP_MULTICAST_RCVBUF                   (5*1024*1024)  /* 5 MByte */
 #define NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED      false
@@ -81,12 +81,8 @@
 #define NET_UDP_RECBUFFER_TIMEOUT                  1000  /* ms */
 #define NET_UDP_RECBUFFER_CLEANUP                  10    /* ms */
 
-/* overall udp multicast bandwidth limitation in bytes/s, -1 == no limitation*/
-#define NET_BANDWIDTH_MAX_UDP                      (-1)
-
 #define NET_TCP_REC_ENABLED                        true
 #define NET_SHM_REC_ENABLED                        true
-
 #define NET_UDP_MC_REC_ENABLED                     true
 
 #define NET_NPCAP_ENABLED                          false

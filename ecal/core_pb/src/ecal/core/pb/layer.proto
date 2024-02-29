@@ -51,7 +51,7 @@ enum eTLayerType                                // transport layer
                                                 // 3 = ecal udp metal (not supported anymore)
   tl_ecal_shm                         =   4;    // ecal shared memory
   tl_ecal_tcp                         =   5;    // ecal tcp
-                                                // 42 = inproc (inner process)
+                                                // 42 = inproc (not supported anymore)
   tl_all                              = 255;    // all layer
 }
 

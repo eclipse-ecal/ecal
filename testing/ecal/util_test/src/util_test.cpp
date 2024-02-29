@@ -34,7 +34,6 @@ namespace {
     EXPECT_EQ(split.first, expected_encoding);
     EXPECT_EQ(split.second, expected_type);
   }
-
 }
 
 TEST(Util, CombineTopicEncodingAndType)

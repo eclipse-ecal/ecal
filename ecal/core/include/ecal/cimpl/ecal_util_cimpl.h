@@ -78,6 +78,30 @@ extern "C"
   ECALC_API int eCAL_Util_GetTopicTypeName(const char* topic_name_, void* topic_type_, int topic_type_len_);
 
   /**
+   * @brief Gets encoding of the specified topic.
+   *
+   * @param       topic_name_           Topic name.
+   * @param [out] topic_encoding_       Pointer to store the encoding information.
+   * @param       topic_encoding__len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
+   *                                    eCAL should allocate the buffer for you (see eCAL_FreeMem).
+   *
+   * @return  Type name buffer length or zero if failed.
+  **/
+  ECALC_API int eCAL_Util_GetTopicEncoding(const char* topic_name_, void* topic_encoding_, int topic_encoding_len_);
+
+  /**
+   * @brief Gets type description of the specified topic. 
+   *
+   * @param       topic_name_      Topic name. 
+   * @param [out] topic_desc_      Pointer to store the type description0 information. 
+   * @param       topic_desc_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
+   *                               eCAL should allocate the buffer for you (see eCAL_FreeMem). 
+   *
+   * @return  Type name buffer length or zero if failed. 
+  **/
+  ECALC_API int eCAL_Util_GetTopicDescription(const char* topic_name_, void* topic_desc_, int topic_desc_len_);
+
+  /**
    * @brief Gets service method request type name.
    *
    * @param       service_name_   Service name. 
@@ -127,32 +151,6 @@ extern "C"
    * @return  Response description buffer length or zero if failed.
   **/
   ECALC_API int eCAL_Util_GetServiceResponseDescription(const char* service_name_, const char* method_name_, void* resp_desc_, int resp_desc_len_);
-
-  /**
-   * @brief Gets type name of the specified topic.
-   *
-   * @param       topic_name_      Topic name.
-   * @param [out] topic_type_      Pointer to store the type name information.
-   * @param       topic_type_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
-   *                               eCAL should allocate the buffer for you (see eCAL_FreeMem).
-   *
-   * @return  Type name buffer length or zero if failed.
-  **/
-  // [[deprecated]]
-  ECALC_API int eCAL_Util_GetTypeName(const char* topic_name_, void* topic_type_, int topic_type_len_);
-
-  /**
-   * @brief Gets type description of the specified topic.
-   *
-   * @param       topic_name_      Topic name.
-   * @param [out] topic_desc_      Pointer to store the type description information.
-   * @param       topic_desc_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
-   *                               eCAL should allocate the buffer for you (see eCAL_FreeMem).
-   *
-   * @return  Type description buffer length or zero if failed.
-  **/
-  // [[deprecated]]
-  ECALC_API int eCAL_Util_GetDescription(const char* topic_name_, void* topic_desc_, int topic_desc_len_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

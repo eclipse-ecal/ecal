@@ -127,7 +127,7 @@ int main(int argc, char** argv)
   eCAL::CPublisher pub(topicName, { "custom", structTypeName, "" });
 
   // turn zero copy mode on
-  pub.ShmEnableZeroCopy(true);
+  //pub.ShmEnableZeroCopy(true);  // TODO: NEW PARAMETER API
 
   // create the simple struct payload
   CStructPayload struct_payload;

@@ -312,11 +312,6 @@ endif()
 add_subdirectory(contrib/ecalproto)
 
 # --------------------------------------------------------
-# ecal core protobuf interface
-# --------------------------------------------------------
-add_subdirectory(ecal/core_pb)
-
-# --------------------------------------------------------
 # ecal app protobuf interface
 # --------------------------------------------------------
 add_subdirectory(app/app_pb)
@@ -324,8 +319,7 @@ add_subdirectory(app/app_pb)
 # --------------------------------------------------------
 # ecal core
 # --------------------------------------------------------
-add_subdirectory(ecal/service)
-add_subdirectory(ecal/core)
+add_subdirectory(ecal)
 
 # --------------------------------------------------------
 # custom libs
@@ -472,17 +466,8 @@ if(BUILD_ECAL_TESTS)
   # ------------------------------------------------------
   # test ecal
   # ------------------------------------------------------
-  add_subdirectory(testing/ecal/clientserver_test)
-  
-  add_subdirectory(testing/ecal/core_test)
-  add_subdirectory(testing/ecal/event_test)
-  add_subdirectory(testing/ecal/expmap_test)
-  add_subdirectory(testing/ecal/io_memfile_test)
-  add_subdirectory(testing/ecal/pubsub_proto_test)
-  add_subdirectory(testing/ecal/pubsub_test)
-  add_subdirectory(testing/ecal/topic2mcast_test)
-  add_subdirectory(testing/ecal/util_test)
-  
+  add_subdirectory(testing/ecal)
+
   # ------------------------------------------------------
   # test apps
   # ------------------------------------------------------
@@ -594,5 +579,4 @@ message(STATUS "ECAL_THIRDPARTY_BUILD_UDPCAP                   : ${ECAL_THIRDPAR
 message(STATUS "ECAL_THIRDPARTY_BUILD_YAML-CPP                 : ${ECAL_THIRDPARTY_BUILD_YAML-CPP}")
 message(STATUS "ECAL_LINK_HDF5_SHARED                          : ${ECAL_LINK_HDF5_SHARED}")
 message(STATUS "CPACK_PACK_WITH_INNOSETUP                      : ${CPACK_PACK_WITH_INNOSETUP}")
-
 message(STATUS "--------------------------------------------------------------------------------")

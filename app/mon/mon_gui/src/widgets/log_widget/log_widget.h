@@ -61,7 +61,7 @@ signals:
   void paused(bool paused);
 
 private:
-  Ui::LogWidget ui_;
+  Ui::LogWidget ui_{};
 
   QTimer* log_update_timer_;
   int log_update_time_milliseconds_;
@@ -81,8 +81,8 @@ private:
   };
 
   QByteArray initial_tree_state_;
-  int        initial_log_level_filter_;
-  bool       initial_auto_scroll_;
+  int        initial_log_level_filter_{};
+  bool       initial_auto_scroll_{};
 
 
   void saveGuiSettings();

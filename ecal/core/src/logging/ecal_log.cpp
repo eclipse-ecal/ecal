@@ -22,11 +22,9 @@
 **/
 
 #include <ecal/ecal.h>
+#include <string>
 
 #include "ecal_log_impl.h"
-
-#include <atomic>
-#include <memory>
 
 namespace eCAL
 {
@@ -61,6 +59,19 @@ namespace eCAL
     void Log(const std::string& msg_)
     {
       if(g_log() != nullptr) g_log()->Log(msg_);
+    }
+
+    /**
+     * @brief Get logging as serialized protobuf string.
+     *
+     * @param [out] log_  String to store the logging information.
+     *
+     * @return  Monitoring buffer length or zero if failed.
+    **/
+    int GetLogging(std::string& log_)
+    {
+      if (g_log() != nullptr) g_log()->GetLogging(log_);
+      return static_cast<int>(log_.size());
     }
   }
 }

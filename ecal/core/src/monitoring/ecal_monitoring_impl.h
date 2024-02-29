@@ -28,18 +28,16 @@
 #include "ecal_def.h"
 #include "util/ecal_expmap.h"
 
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#include <ecal/core/pb/monitoring.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include "serialization/ecal_serialize_sample_registration.h"
 
 #include <memory>
 #include <mutex>
+#include <set>
 #include <string>
+
+#ifdef ECAL_OS_LINUX
+#include <strings.h>  // strcasecmp
+#endif
 
 namespace eCAL
 {
@@ -59,20 +57,20 @@ namespace eCAL
     void SetInclFilter(const std::string& filter_);
     void SetFilterState(bool state_);
 
-    void GetMonitoringPb(eCAL::pb::Monitoring& monitoring_, unsigned int entities_);
-    void GetMonitoringStructs(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_);
+    void GetMonitoring(std::string& monitoring_, unsigned int entities_);
+    void GetMonitoring(Monitoring::SMonitoring& monitoring_, unsigned int entities_);
 
   protected:
-    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/);
+    bool ApplySample(const Registration::Sample& ecal_sample_, eTLayerType /*layer_*/);
 
-    bool RegisterProcess(const eCAL::pb::Sample& sample_);
-    bool UnregisterProcess(const eCAL::pb::Sample& sample_);
+    bool RegisterProcess(const Registration::Sample& sample_);
+    bool UnregisterProcess(const Registration::Sample& sample_);
 
-    bool RegisterServer(const eCAL::pb::Sample& sample_);
-    bool UnregisterServer(const eCAL::pb::Sample& sample_);
+    bool RegisterServer(const Registration::Sample& sample_);
+    bool UnregisterServer(const Registration::Sample& sample_);
 
-    bool RegisterClient(const eCAL::pb::Sample& sample_);
-    bool UnregisterClient(const eCAL::pb::Sample& sample_);
+    bool RegisterClient(const Registration::Sample& sample_);
+    bool UnregisterClient(const Registration::Sample& sample_);
 
     enum ePubSub
     {
@@ -80,10 +78,10 @@ namespace eCAL
       subscriber = 2,
     };
 
-    bool RegisterTopic(const eCAL::pb::Sample& sample_, enum ePubSub pubsub_type_);
-    bool UnregisterTopic(const eCAL::pb::Sample& sample_, enum ePubSub pubsub_type_);
+    bool RegisterTopic(const Registration::Sample& sample_, enum ePubSub pubsub_type_);
+    bool UnregisterTopic(const Registration::Sample& sample_, enum ePubSub pubsub_type_);
 
-    using TopicMonMapT = eCAL::Util::CExpMap<std::string, eCAL::Monitoring::STopicMon>;
+    using TopicMonMapT = Util::CExpMap<std::string, Monitoring::STopicMon>;
     struct STopicMonMap
     {
       explicit STopicMonMap(const std::chrono::milliseconds& timeout_) :
@@ -94,7 +92,7 @@ namespace eCAL
       std::unique_ptr<TopicMonMapT>  map;
     };
 
-    using ProcessMonMapT = eCAL::Util::CExpMap<std::string, eCAL::Monitoring::SProcessMon>;
+    using ProcessMonMapT = Util::CExpMap<std::string, Monitoring::SProcessMon>;
     struct SProcessMonMap
     {
       explicit SProcessMonMap(const std::chrono::milliseconds& timeout_) :
@@ -105,7 +103,7 @@ namespace eCAL
       std::unique_ptr<ProcessMonMapT>  map;
     };
 
-    using ServerMonMapT = eCAL::Util::CExpMap<std::string, eCAL::Monitoring::SServerMon>;
+    using ServerMonMapT = Util::CExpMap<std::string, Monitoring::SServerMon>;
     struct SServerMonMap
     {
       explicit SServerMonMap(const std::chrono::milliseconds& timeout_) :
@@ -116,7 +114,7 @@ namespace eCAL
       std::unique_ptr<ServerMonMapT>  map;
     };
 
-    using ClientMonMapT = eCAL::Util::CExpMap<std::string, eCAL::Monitoring::SClientMon>;
+    using ClientMonMapT = Util::CExpMap<std::string, Monitoring::SClientMon>;
     struct SClientMonMap
     {
       explicit SClientMonMap(const std::chrono::milliseconds& timeout_) :
@@ -143,10 +141,10 @@ namespace eCAL
 
     STopicMonMap* GetMap(enum ePubSub pubsub_type_);
 
-    void MonitorProcs(eCAL::pb::Monitoring& monitoring_);
-    void MonitorServer(eCAL::pb::Monitoring& monitoring_);
-    void MonitorClients(eCAL::pb::Monitoring& monitoring_);
-    void MonitorTopics(STopicMonMap& map_, eCAL::pb::Monitoring& monitoring_, const std::string& direction_);
+    void MonitorProcs(Monitoring::SMonitoring& monitoring_);
+    void MonitorServer(Monitoring::SMonitoring& monitoring_);
+    void MonitorClients(Monitoring::SMonitoring& monitoring_);
+    void MonitorTopics(STopicMonMap& map_, Monitoring::SMonitoring& monitoring_, const std::string& direction_);
 
     void Tokenize(const std::string& str, StrICaseSetT& tokens, const std::string& delimiters, bool trimEmpty);
 

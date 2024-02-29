@@ -18,16 +18,19 @@
 */
 
 /**
- * @brief  UDP sample receiver to receive messages of type eCAL::pb::Sample
+ * @brief  UDP sample receiver to receive messages of type eCAL::Sample
 **/
 
 
 #include "rcv_fragments.h"
 #include "msg_type.h"
 
+#include <chrono>
 #include <ecal/ecal_log.h>
 
 #include <cstring>
+#include <string>
+#include <utility>
 
 namespace IO
 {

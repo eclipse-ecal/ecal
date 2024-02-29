@@ -65,8 +65,6 @@ add_subdirectory(cpp/measurement/measurement_write)
 endif(HAS_HDF5)
 
 # misc
-add_subdirectory(cpp/misc/event_rec)
-add_subdirectory(cpp/misc/event_snd)
 add_subdirectory(cpp/misc/process)
 add_subdirectory(cpp/misc/time)
 add_subdirectory(cpp/misc/timer)
@@ -117,9 +115,9 @@ add_subdirectory(cpp/pubsub/string/minimal_snd)
 
 # services
 add_subdirectory(cpp/services/ecalplayer_client)
-if(HAS_QT)
+if(HAS_QT5)
   add_subdirectory(cpp/services/ecalplayer_gui_client)
-endif()
+endif(HAS_QT5)
 add_subdirectory(cpp/services/ecalsys_client)
 add_subdirectory(cpp/services/latency_client)
 add_subdirectory(cpp/services/latency_server)
@@ -132,10 +130,10 @@ add_subdirectory(cpp/services/ping_client_dyn)
 add_subdirectory(cpp/services/ping_server)
 add_subdirectory(cpp/services/player_stepper)
 add_subdirectory(cpp/services/rec_client_service_cli)
-if(HAS_QT)
+if(HAS_QT5)
   add_subdirectory(cpp/services/rec_client_service_gui)
   add_subdirectory(cpp/services/rec_server_service_gui)
-endif()
+endif(HAS_QT5)
 
 # --------------------------------------------------------
 # python samples

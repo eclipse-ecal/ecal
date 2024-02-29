@@ -35,6 +35,7 @@
   #define WIN32_LEAN_AND_CLEAN
 #endif // !defined(WIN32_LEAN_AND_CLEAN)
 
+#include <winsock2.h>
 #include <windows.h>
 #include <direct.h>
 #include <psapi.h>

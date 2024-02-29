@@ -64,6 +64,7 @@ target_link_libraries (${PROJECT_NAME}
   Qt${QT_VERSION_MAJOR}::Core
   Qt${QT_VERSION_MAJOR}::Widgets
   eCAL::core
+  eCAL::proto
   eCAL::app_pb
   protobuf::libprotobuf
   MonitorTreeView

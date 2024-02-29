@@ -32,6 +32,7 @@
 #define PUBLISHER_NUMBER   200
 #define SUBSCRIBER_NUMBER    0
 #define USE_OMP              0
+#define USE_RELIABILITY      0
 
 void MultipleSend(int argc, char **argv)
 {
@@ -70,6 +71,9 @@ void MultipleSend(int argc, char **argv)
 
     // publisher topic name
     std::shared_ptr<eCAL::CPublisher> pub = std::make_shared<eCAL::CPublisher>();
+#if USE_RELIABILITY
+    pub->SetQOS_Reliability(eCAL::QOS::reliable_reliability_qos);
+#endif
     pub->Create(tname.str());
     struct SPubCount pub_count;
     pub_count.pub = std::move(pub);

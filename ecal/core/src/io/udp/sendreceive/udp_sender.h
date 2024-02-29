@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <ecal/ecal_os.h>
 
 #ifdef ECAL_OS_WINDOWS
@@ -57,7 +58,7 @@ namespace IO
     class CUDPSender
     {
     public:
-      CUDPSender(const SSenderAttr& attr_);
+      explicit CUDPSender(const SSenderAttr& attr_);
       size_t Send(const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
 
     protected:

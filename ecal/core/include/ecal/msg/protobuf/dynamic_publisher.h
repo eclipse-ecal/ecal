@@ -24,11 +24,17 @@
 
 #pragma once
 
+#include <cassert>
+#include <cstddef>
+#include <memory>
+#include <ostream>
 #include <sstream>
 
 #include <ecal/ecal.h>
+#include <ecal/msg/protobuf/ecal_proto_hlp.h>
 #include <ecal/msg/publisher.h>
-#include <ecal/protobuf/ecal_proto_hlp.h>
+#include <stdexcept>
+#include <string>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
@@ -55,7 +61,7 @@ namespace eCAL
        * @param topic_name_  Unique topic name.
        * @param msg_         Protobuf message object.
       **/
-      CDynamicPublisher(const std::string& topic_name_, std::shared_ptr<google::protobuf::Message> msg_)
+      CDynamicPublisher(const std::string& topic_name_, const std::shared_ptr<google::protobuf::Message>& msg_)
         : CMsgPublisher<google::protobuf::Message>(topic_name_, GetTopicInformationFromMessage(msg_.get()))
         , m_msg{ msg_ } {}
 
@@ -68,6 +74,11 @@ namespace eCAL
       CDynamicPublisher(const std::string& topic_name_, const std::string& proto_type_name_)
         : CMsgPublisher<google::protobuf::Message>(topic_name_, GetTopicInformationFromMessage(CreateMessageByName(proto_type_name_).get()))
         , m_msg{ CreateMessageByName(proto_type_name_) } {}
+
+      CDynamicPublisher(const CDynamicPublisher&) = delete;
+      CDynamicPublisher& operator=(const CDynamicPublisher&) = delete;
+      CDynamicPublisher(CDynamicPublisher&&) = default;
+      CDynamicPublisher& operator=(CDynamicPublisher&&) = default;
 
       /**
        * @brief  Send message.
@@ -102,9 +113,9 @@ namespace eCAL
         return std::dynamic_pointer_cast<T>(m_msg);
       }
 
-    private:
       size_t Send(const google::protobuf::Message& msg_, long long time_ = -1) = delete;
 
+    private:
       SDataTypeInformation GetDataTypeInformation() const override
       {
         return GetTopicInformationFromMessage(m_msg.get());
@@ -127,6 +138,7 @@ namespace eCAL
       static SDataTypeInformation GetTopicInformationFromMessage(const google::protobuf::Message* msg_ptr_)
       {
         assert(msg_ptr_);
+        if(msg_ptr_ == nullptr) return SDataTypeInformation();
 
         SDataTypeInformation topic_info;
         topic_info.encoding = "proto";
@@ -138,6 +150,7 @@ namespace eCAL
       static std::string GetDescriptorFromMessage(const google::protobuf::Message* msg_ptr_)
       {
         assert(msg_ptr_);
+        if(msg_ptr_ == nullptr) return "";
 
         const google::protobuf::Descriptor* desc = msg_ptr_->GetDescriptor();
         google::protobuf::FileDescriptorSet pset;
@@ -175,11 +188,6 @@ namespace eCAL
 
         return message;
       }
-
-      CDynamicPublisher(const CDynamicPublisher&) = delete;
-      CDynamicPublisher& operator=(const CDynamicPublisher&) = delete;
-      CDynamicPublisher(CDynamicPublisher&&) = default;
-      CDynamicPublisher& operator=(CDynamicPublisher&&) = default;
 
       std::shared_ptr<google::protobuf::Message> m_msg;
     };

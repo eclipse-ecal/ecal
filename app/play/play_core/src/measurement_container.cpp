@@ -18,6 +18,8 @@
 */
 
 #include "measurement_container.h"
+
+#include <ecal/ecal_util.h>
 #include <ecal/measurement/hdf5/reader.h>
 
 #include <algorithm>

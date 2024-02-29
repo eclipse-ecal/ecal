@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/ecal.h>
+#include "ecal_event.h"
 
 #include <gtest/gtest.h>
 

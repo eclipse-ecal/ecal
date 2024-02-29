@@ -18,13 +18,17 @@
 */
 
 /**
- * @brief  UDP sample sender to send messages of type eCAL::pb::Sample
+ * @brief  UDP sample sender to send messages of type eCAL::Sample
 **/
 
 #include "ecal_udp_sample_sender.h"
 #include "io/udp/fragmentation/snd_fragments.h"
 
-#include <ecal/ecal_log.h>
+#include <functional>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <vector>
 
 namespace
 {
@@ -43,7 +47,7 @@ namespace eCAL
       m_udp_sender = std::make_shared<IO::UDP::CUDPSender>(attr_);
     }
 
-    size_t CSampleSender::Send(const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, long bandwidth_)
+    size_t CSampleSender::Send(const std::string& sample_name_, const std::vector<char>& serialized_sample_)
     {
       if (!m_udp_sender) return(0);
 
@@ -51,16 +55,14 @@ namespace eCAL
       // return value
       size_t sent_sum(0);
 
-      const size_t data_size = IO::UDP::CreateSampleBuffer(sample_name_, ecal_sample_, m_payload);
+      const size_t data_size = IO::UDP::CreateSampleBuffer(sample_name_, serialized_sample_, m_payload);
       if (data_size > 0)
       {
         // and send it
-        sent_sum = SendFragmentedMessage(m_payload.data(), data_size, bandwidth_, std::bind(TransmitToUDP, std::placeholders::_1, std::placeholders::_2, m_udp_sender, m_attr.address));
+        sent_sum = SendFragmentedMessage(m_payload.data(), data_size, std::bind(TransmitToUDP, std::placeholders::_1, std::placeholders::_2, m_udp_sender, m_attr.address));
 
-#ifndef NDEBUG
         // log it
-        eCAL::Logging::Log(log_level_debug4, "UDP Sample Buffer Sent (" + std::to_string(sent_sum) + " Bytes)");
-#endif
+        //std::cout << "UDP Sample Buffer Sent (" << std::to_string(sent_sum) << " Bytes)" << std::endl;;
       }
 
       // return bytes sent

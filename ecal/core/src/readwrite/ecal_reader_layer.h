@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include "serialization/ecal_struct_sample_registration.h"
+
 #include <memory>
 #include <string>
 
@@ -32,11 +34,11 @@ namespace eCAL
   // transmitted from a writer to a reader
   struct SReaderLayerPar
   {
-    std::string host_name;
-    std::string process_id;
-    std::string topic_name;
-    std::string topic_id;
-    std::string parameter;
+    std::string                 host_name;
+    std::string                 process_id;
+    std::string                 topic_name;
+    std::string                 topic_id;
+    Registration::ConnectionPar parameter;
   };
 
   // ecal data layer base class
@@ -58,7 +60,7 @@ namespace eCAL
     // deactivate / destroy a specific subscription
     virtual void RemSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_) = 0;
 
-    // connection paramter from writer side
+    // connection parameter from writer side
     virtual void SetConnectionParameter(SReaderLayerPar& par_) = 0;
 
     static std::shared_ptr<T> Get()

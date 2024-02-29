@@ -36,7 +36,6 @@ struct Topic
   };
 
   int32_t registration_clock;
-  int32_t host_id;
   std::string host_name;
   int32_t pid;
   std::string process_name;

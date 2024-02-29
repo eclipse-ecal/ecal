@@ -19,7 +19,6 @@
 
 // std headers
 #include <chrono>
-#include <thread>
 // used libraries
 #include <gtest/gtest.h>
 // own project
@@ -27,10 +26,6 @@
 #include <ecal/msg/protobuf/publisher.h>
 
 #include <person.pb.h>
-
-
-// subscriber callback function
-
 
 class ProtoPublisherTest : public ::testing::Test {
 public:

@@ -18,24 +18,17 @@
 */
 
 /**
- * @brief  UDP sample sender to send messages of type eCAL::pb::Sample
+ * @brief  UDP sample sender to send messages of type eCAL::Sample
 **/
 
 #pragma once
 
 #include "io/udp/sendreceive/udp_sender.h"
 
-
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
+#include <cstddef>
 #include <memory>
 #include <mutex>
+#include <string>
 #include <vector>
 
 namespace eCAL
@@ -45,8 +38,8 @@ namespace eCAL
     class CSampleSender
     {
     public:
-      CSampleSender(const IO::UDP::SSenderAttr& attr_);
-      size_t Send(const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, long bandwidth_);
+      explicit CSampleSender(const IO::UDP::SSenderAttr& attr_);
+      size_t Send(const std::string& sample_name_, const std::vector<char>& serialized_sample_);
 
     private:
       IO::UDP::SSenderAttr                 m_attr;

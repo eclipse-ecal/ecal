@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -96,7 +96,7 @@ TEST(Core, LeakedPubSub)
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
 #endif
     }
-    });
+  });
 
   // let them work together
   std::this_thread::sleep_for(std::chrono::seconds(2));
@@ -171,7 +171,7 @@ TEST(Core, CallbackDestruction)
 /* excluded for now, system timer jitter too high */
 #if 0
 TEST(Core, TimerCallback)
-{
+{ 
   // initialize eCAL API
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "timer callback"));
 
