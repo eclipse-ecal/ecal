@@ -18,9 +18,11 @@
 */
 
 /**
- * @file   ecal_c_common.h
+ * @file   ecal_common_cimpl.h
  * @brief  C API common helper functions
 **/
+
+#pragma once
 
 #include <string>
 

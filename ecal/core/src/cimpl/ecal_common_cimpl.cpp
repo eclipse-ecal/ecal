@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   ecal_c_common.cpp
+ * @file   ecal_common_cimpl.cpp
  * @brief  C API common helper functions
 **/
 
