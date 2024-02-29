@@ -34,15 +34,11 @@ Includes
 
 - ``ecal/cimpl/ecal_core_cimpl.h``
 
-- ``ecal/cimpl/ecal_event_cimpl.h``
-
 - ``ecal/cimpl/ecal_log_cimpl.h``
 
 - ``ecal/cimpl/ecal_monitoring_cimpl.h``
 
 - ``ecal/cimpl/ecal_process_cimpl.h``
-
-- ``ecal/cimpl/ecal_proto_dyn_json_subscriber_cimpl.h``
 
 - ``ecal/cimpl/ecal_publisher_cimpl.h``
 

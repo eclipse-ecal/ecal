@@ -56,15 +56,9 @@ Program Listing for File ecal_tlayer.h
    
        struct ECAL_API STLayer
        {
-         STLayer()
-         {
-           sm_udp_mc  = smode_none;
-           sm_shm     = smode_none;
-           sm_tcp     = smode_none;
-         }
-         eSendMode sm_udp_mc;  
-         eSendMode sm_shm;     
-         eSendMode sm_tcp;     
+         eSendMode sm_udp_mc{smode_none};  
+         eSendMode sm_shm{smode_none};     
+         eSendMode sm_tcp{smode_none};     
        };
      }
    }

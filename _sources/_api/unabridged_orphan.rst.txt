@@ -120,16 +120,6 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_ecal_core_include_ecal_ecal_event.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_ecal_core_include_ecal_ecal_eventhandle.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
    file_ecal_core_include_ecal_ecal_init.h.rst
 
 .. toctree::
@@ -185,11 +175,6 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_ecal_core_include_ecal_ecal_service.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
    file_ecal_core_include_ecal_ecal_service_info.h.rst
 
 .. toctree::
@@ -201,11 +186,6 @@ Files
    :maxdepth: 5
 
    file_ecal_core_include_ecal_ecal_time.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_ecal_core_include_ecal_ecal_timed_cb.h.rst
 
 .. toctree::
    :maxdepth: 5
@@ -270,11 +250,6 @@ Files
 Pages
 *****
 
-
-.. toctree::
-   :maxdepth: 5
-
-   page_deprecated.rst
 
 .. toctree::
    :maxdepth: 5

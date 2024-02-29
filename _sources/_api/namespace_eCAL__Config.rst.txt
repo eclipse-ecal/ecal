@@ -41,8 +41,6 @@ Functions
 
 - :ref:`exhale_function_ecal__config_8h_1a0e61706ed81e23d251be210649974bba`
 
-- :ref:`exhale_function_ecal__config_8h_1a0e2293d2d291224c6715ed8441242970`
-
 - :ref:`exhale_function_ecal__config_8h_1a587f04c8d34bcff1de60110e9c620509`
 
 - :ref:`exhale_function_ecal__config_8h_1a1bf3ad9215f2024d6466864e3aa35798`

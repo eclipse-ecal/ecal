@@ -75,32 +75,34 @@ Program Listing for File ecal_clang.h
    
    ECAL_API int ecal_set_unit_name(const char *unit_name_);
    
-   ECAL_API void ecal_set_process_state(const int severity_, const int level_, const char* info_);
+   ECAL_API void ecal_set_process_state(int severity_, int level_, const char* info_);
    
    ECAL_API bool ecal_ok();
    
    ECAL_API void ecal_free_mem(void* mem_);
    
-   ECAL_API void ecal_sleep_ms(const long time_ms_);
+   ECAL_API void ecal_sleep_ms(long time_ms_);
    
    ECAL_API void ecal_shutdown_process_uname(const char* unit_name_);
    
-   ECAL_API void ecal_shutdown_process_id(const int process_id_);
+   ECAL_API void ecal_shutdown_process_id(int process_id_);
    
    ECAL_API void ecal_shutdown_processes();
    
    ECAL_API void ecal_shutdown_core();
    
-   ECAL_API void ecal_enable_loopback(const int state_);
+   ECAL_API void ecal_enable_loopback(int state_);
    
    ECAL_API bool ecal_get_type_name(const char* topic_name_, const char** topic_type_, int* topic_type_len_);
+   
+   ECAL_API bool ecal_get_type_encoding(const char* topic_name_, const char** topic_encoding_, int* topic_encoding_len_);
    
    ECAL_API bool ecal_get_description(const char* topic_name_, const char** topic_desc_, int* topic_desc_len_);
    
    /*************************************************************************/
    /*  logging                                                              */
    /*************************************************************************/
-   ECAL_API void log_setlevel(const int level_);
+   ECAL_API void log_setlevel(int level_);
    
    ECAL_API void log_message(const char* message_);
    
@@ -111,19 +113,9 @@ Program Listing for File ecal_clang.h
    
    ECAL_API bool pub_destroy(ECAL_HANDLE handle_);
    
-   ECAL_API bool pub_set_type_name(ECAL_HANDLE handle_, const char* topic_type_name_, const int topic_type_name_length_);
+   ECAL_API int pub_send(ECAL_HANDLE handle_, const char* payload_, int length_, long long time_);
    
-   ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_);
-   
-   ECAL_API bool pub_set_layer_mode(ECAL_HANDLE handle_, const int layer_, const int mode_);
-   
-   ECAL_API bool pub_set_max_bandwidth_udp(ECAL_HANDLE handle_, long bandwidth_);
-   
-   ECAL_API int pub_send(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_);
-   
-   ECAL_API int pub_send_sync(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_, const long long acknowledge_timeout_ms_);
-   
-   ECAL_API bool pub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, const PubEventCallbackCT callback_, void* par_);
+   ECAL_API bool pub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, PubEventCallbackCT callback_, void* par_);
    
    ECAL_API bool pub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_);
    
@@ -134,19 +126,17 @@ Program Listing for File ecal_clang.h
    
    ECAL_API bool sub_destroy(ECAL_HANDLE handle_);
    
-   ECAL_API int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_);
+   ECAL_API int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, int timeout_);
    
-   ECAL_API bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_);
+   ECAL_API bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, int timeout_);
    
-   ECAL_API bool sub_add_receive_callback(ECAL_HANDLE handle_, const ReceiveCallbackCT callback_, void* par_);
+   ECAL_API bool sub_add_receive_callback(ECAL_HANDLE handle_, ReceiveCallbackCT callback_, void* par_);
    
    ECAL_API bool sub_rem_receive_callback(ECAL_HANDLE handle_);
    
-   ECAL_API bool sub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_, const SubEventCallbackCT callback_, void* par_);
+   ECAL_API bool sub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_, SubEventCallbackCT callback_, void* par_);
    
    ECAL_API bool sub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_);
-   
-   ECAL_API bool sub_set_timeout(ECAL_HANDLE handle_, int timeout_);
    
    /*************************************************************************/
    /*  dyn_json_subscriber                                                  */
@@ -155,7 +145,7 @@ Program Listing for File ecal_clang.h
    
    ECAL_API bool dyn_json_sub_destroy(ECAL_HANDLE handle_);
    
-   ECAL_API bool dyn_json_sub_add_receive_callback(ECAL_HANDLE handle_, const ReceiveCallbackCT callback_, void* par_);
+   ECAL_API bool dyn_json_sub_add_receive_callback(ECAL_HANDLE handle_, ReceiveCallbackCT callback_, void* par_);
    
    ECAL_API bool dyn_json_sub_rem_receive_callback(ECAL_HANDLE handle_);
    
@@ -171,7 +161,7 @@ Program Listing for File ecal_clang.h
    
    ECAL_API bool server_destroy(ECAL_HANDLE handle_);
    
-   ECAL_API bool server_add_method_callback(ECAL_HANDLE handle_, const char* method_name_, const char* req_type_, const char* resp_type_, const MethodCallbackCT callback_, void* par_);
+   ECAL_API bool server_add_method_callback(ECAL_HANDLE handle_, const char* method_name_, const char* req_type_, const char* resp_type_, MethodCallbackCT callback_, void* par_);
    
    ECAL_API bool server_rem_method_callback(ECAL_HANDLE handle_, const char* method_name_);
    
@@ -181,9 +171,9 @@ Program Listing for File ecal_clang.h
    
    ECAL_API bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_);
    
-   ECAL_API bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_);
+   ECAL_API bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_);
    
-   ECAL_API bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_);
+   ECAL_API bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_);
    
    /* TODO: not implemented and not used for now */
    //ECAL_API client_add_response_callback
@@ -201,7 +191,7 @@ Program Listing for File ecal_clang.h
    
    ECAL_API int mon_set_incl_filter(const char* filter_);
    
-   ECAL_API int mon_set_filter_state(const bool state_);
+   ECAL_API int mon_set_filter_state(bool state_);
    
    ECAL_API int mon_get_monitoring(const char** mon_buf_, int* mon_buf_len_);
    
