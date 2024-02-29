@@ -101,22 +101,6 @@ extern "C"
   ECALC_API int eCAL_Sub_ClearAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_);
 
   /**
-   * @brief Receive a message from the publisher
-   *
-   * @deprecated  Use the eCAL_Sub_Receive_ToBuffer or eCAL_Sub_Receive_Alloc instead.
-   *
-   * @param       handle_       Subscriber handle. 
-   * @param [out] buf_          Buffer to store the received message content.
-   * @param       buf_len_      Length of the receive buffer or ECAL_ALLOCATE_4ME if
-   *                            eCAL should allocate the buffer for you (see eCAL_FreeMem).
-   * @param [out] time_         Time from publisher in us.
-   * @param       rcv_timeout_  Maximum time before receive operation returns (in milliseconds, -1 means infinite).
-   *
-   * @return  Length of received buffer. 
-  **/
-  ECALC_API int eCAL_Sub_Receive(ECAL_HANDLE handle_, void* buf_, int buf_len_, long long* time_, int rcv_timeout_);
-
-  /**
    * @brief Receive a message from the publisher in a preallocated buffer.
    *
    * @param       handle_       Subscriber handle. 
