@@ -111,7 +111,7 @@ extern "C"
     if (handle_ == nullptr) return(0);
     auto* server = static_cast<eCAL::CServiceServer*>(handle_);
     const std::string service_name = server->GetServiceName();
-    int buffer_len = CopyBuffer(buf_, buf_len_, service_name);
+    const int buffer_len = CopyBuffer(buf_, buf_len_, service_name);
     if (buffer_len != static_cast<int>(service_name.size()))
     {
       return(0);

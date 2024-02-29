@@ -60,7 +60,7 @@ extern "C"
   {
     if (handle_ == nullptr) return(0);
     auto* pub = static_cast<eCAL::CPublisher*>(handle_);
-    struct eCAL::SDataTypeInformation topic_info = { topic_type_name_, topic_type_encoding_, std::string(topic_desc_, static_cast<size_t>(topic_desc_len_)) };
+    const eCAL::SDataTypeInformation topic_info = { topic_type_name_, topic_type_encoding_, std::string(topic_desc_, static_cast<size_t>(topic_desc_len_)) };
     if (!pub->Create(topic_name_, topic_info)) return(0);
     return(1);
   }

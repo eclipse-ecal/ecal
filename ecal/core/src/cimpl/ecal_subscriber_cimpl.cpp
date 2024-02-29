@@ -73,7 +73,7 @@ extern "C"
   {
     if (handle_ == nullptr) return(0);
     auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
-    struct eCAL::SDataTypeInformation topic_info = { topic_type_name_, topic_type_encoding_, std::string(topic_desc_, static_cast<size_t>(topic_desc_len_)) };
+    const eCAL::SDataTypeInformation topic_info = { topic_type_name_, topic_type_encoding_, std::string(topic_desc_, static_cast<size_t>(topic_desc_len_)) };
     if (!sub->Create(topic_name_, topic_info)) return(0);
     return(1);
   }
@@ -210,7 +210,7 @@ extern "C"
     if (handle_ == nullptr) return(0);
     auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
     const eCAL::SDataTypeInformation datatype_info = sub->GetDataTypeInformation();
-    int buffer_len = CopyBuffer(buf_, buf_len_, datatype_info.name);
+    const int buffer_len = CopyBuffer(buf_, buf_len_, datatype_info.name);
     if (buffer_len != static_cast<int>(datatype_info.name.size()))
     {
       return(0);
@@ -226,7 +226,7 @@ extern "C"
     if (handle_ == nullptr) return(0);
     auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
     const eCAL::SDataTypeInformation datatype_info = sub->GetDataTypeInformation();
-    int buffer_len = CopyBuffer(buf_, buf_len_, datatype_info.encoding);
+    const int buffer_len = CopyBuffer(buf_, buf_len_, datatype_info.encoding);
     if (buffer_len != static_cast<int>(datatype_info.encoding.size()))
     {
       return(0);
@@ -242,7 +242,7 @@ extern "C"
     if (handle_ == nullptr) return(0);
     auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
     const eCAL::SDataTypeInformation datatype_info = sub->GetDataTypeInformation();
-    int buffer_len = CopyBuffer(buf_, buf_len_, datatype_info.descriptor);
+    const int buffer_len = CopyBuffer(buf_, buf_len_, datatype_info.descriptor);
     if (buffer_len != static_cast<int>(datatype_info.descriptor.size()))
     {
       return(0);
