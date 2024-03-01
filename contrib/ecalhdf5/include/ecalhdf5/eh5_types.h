@@ -51,9 +51,13 @@ namespace eCAL
     using SEntryInfo = eCAL::experimental::measurement::base::EntryInfo;
     using EntryInfoSet = eCAL::experimental::measurement::base::EntryInfoSet;
     using EntryInfoVect = eCAL::experimental::measurement::base::EntryInfoVect;
-    using eAccessType = eCAL::experimental::measurement::base::AccessType;
-    using eCAL::experimental::measurement::base::RDONLY;
-    using eCAL::experimental::measurement::base::CREATE;
+
+    enum eAccessType
+    {
+      RDONLY,    //!< ReadOnly - the measurement can only be read
+      CREATE,    //!< Create   - a new measurement will be created
+      CREATE_V5  //!< Create a legacy V5 hdf5 measurement (For testing purpose only!)
+    };
    
     using eCAL::experimental::measurement::base::DataTypeInformation;
     //!< @endcond

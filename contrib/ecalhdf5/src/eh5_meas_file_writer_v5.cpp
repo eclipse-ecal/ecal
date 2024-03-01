@@ -132,7 +132,20 @@ std::set<std::string> eCAL::eh5::HDF5MeasFileWriterV5::GetChannelNames() const
   return {};
 }
 
+std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasFileWriterV5::GetChannels() const
+{
+  // UNSUPPORTED FUNCTIONs
+  return std::set<eCAL::eh5::SChannel>();
+}
+
+
 bool eCAL::eh5::HDF5MeasFileWriterV5::HasChannel(const std::string& /*channel_name*/) const
+{
+  // UNSUPPORTED FUNCTION
+  return false;
+}
+
+bool eCAL::eh5::HDF5MeasFileWriterV5::HasChannel(const eCAL::eh5::SChannel& channel) const
 {
   // UNSUPPORTED FUNCTION
   return false;

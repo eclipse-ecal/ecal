@@ -62,7 +62,7 @@ bool eCAL::eh5::HDF5Meas::Open(const std::string& path, eAccessType access /*= e
     Close();
   }
 
-  if (access == eAccessType::CREATE)
+  if (access == eAccessType::CREATE || access == eAccessType::CREATE_V5)
   {
     EcalUtils::Filesystem::MkPath(path, EcalUtils::Filesystem::OsStyle::Current);
   }
@@ -135,7 +135,7 @@ bool eCAL::eh5::HDF5Meas::Open(const std::string& path, eAccessType access /*= e
     break;
   }
 
-  if (access == eAccessType::CREATE)
+  if (access == eAccessType::CREATE || access == eAccessType::CREATE_V5)
   {
     return hdf_meas_impl_ ? EcalUtils::Filesystem::IsDir(path, EcalUtils::Filesystem::OsStyle::Current) : false;
   }
@@ -272,6 +272,17 @@ bool eCAL::eh5::HDF5Meas::HasChannel(const std::string& channel_name) const
   return ret_val;
 }
 
+bool eCAL::eh5::HDF5Meas::HasChannel(const eCAL::eh5::SChannel& channel) const
+{
+  bool ret_val = false;
+  if (hdf_meas_impl_)
+  {
+    ret_val = hdf_meas_impl_->HasChannel(eCAL::eh5::SChannel{ GetEscapedTopicname(channel.name), channel.id });
+  }
+
+  return ret_val;
+}
+
 // deprecated
 // Return FIRST non-empty Datatype Information from a channel that contains channel_name
 std::string eCAL::eh5::HDF5Meas::GetChannelDescription(const std::string& channel_name) const
@@ -377,10 +388,10 @@ long long eCAL::eh5::HDF5Meas::GetMinTimestamp(const SChannel& channel) const
 long long eCAL::eh5::HDF5Meas::GetMaxTimestamp(const std::string& channel_name) const
 {
   auto channels = GetChannels(channel_name);
-  std::vector<long long> min_timestamps_per_channel;
-  std::transform(channels.begin(), channels.end(), std::back_inserter(min_timestamps_per_channel),
+  std::vector<long long> max_timestamps_per_channel;
+  std::transform(channels.begin(), channels.end(), std::back_inserter(max_timestamps_per_channel),
     [this](const eCAL::eh5::SChannel& channel) { return GetMaxTimestamp(channel); });
-  return *std::max_element(min_timestamps_per_channel.begin(), min_timestamps_per_channel.end());
+  return *std::max_element(max_timestamps_per_channel.begin(), max_timestamps_per_channel.end());
 }
 
 long long eCAL::eh5::HDF5Meas::GetMaxTimestamp(const SChannel& channel) const

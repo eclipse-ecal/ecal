@@ -176,6 +176,11 @@ bool eCAL::eh5::HDF5MeasFileV1::HasChannel(const std::string& channel_name) cons
   return std::find(channels.cbegin(), channels.cend(), channel_name) != channels.end();
 }
 
+bool eCAL::eh5::HDF5MeasFileV1::HasChannel(const eCAL::eh5::SChannel& channel) const
+{
+    return HasChannel(channel.name);
+}
+
 eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileV1::GetChannelDataTypeInformation(const SChannel& channel) const
 {
   std::string type;

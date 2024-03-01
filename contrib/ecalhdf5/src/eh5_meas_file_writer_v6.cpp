@@ -152,6 +152,12 @@ bool eCAL::eh5::HDF5MeasFileWriterV6::HasChannel(const std::string& /*channel_na
   return false;
 }
 
+bool eCAL::eh5::HDF5MeasFileWriterV6::HasChannel(const eCAL::eh5::SChannel& channel) const
+{
+  // UNSUPPORTED FUNCTION
+  return false;
+}
+
 eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileWriterV6::GetChannelDataTypeInformation(const SChannel& /*channel*/) const
 {
   // UNSUPPORTED FUNCTION

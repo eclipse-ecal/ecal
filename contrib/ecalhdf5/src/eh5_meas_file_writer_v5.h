@@ -132,6 +132,13 @@ namespace eCAL
       std::set<std::string> GetChannelNames() const override;
 
       /**
+       * @brief Get the available channel names of the current opened file / measurement
+       *
+       * @return       channel names & ids
+      **/
+      std::set<eCAL::eh5::SChannel> GetChannels() const override;
+
+      /**
       * @brief Check if channel exists in measurement
       *
       * @param channel_name   name of the channel
@@ -139,6 +146,15 @@ namespace eCAL
       * @return       true if exists, false otherwise
       **/
       bool HasChannel(const std::string& channel_name) const override;
+
+      /**
+       * @brief Check if channel exists in measurement
+       *
+       * @param channel   channel name & id
+       *
+       * @return       true if exists, false otherwise
+      **/
+      bool HasChannel(const eCAL::eh5::SChannel & channel) const override;
 
       /**
        * @brief Get data type information of the given channel

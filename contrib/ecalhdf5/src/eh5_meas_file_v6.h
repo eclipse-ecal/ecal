@@ -58,6 +58,15 @@ namespace eCAL
       **/
       std::set<eCAL::eh5::SChannel> GetChannels() const override;
 
+      /**
+       * @brief Check if channel exists in measurement
+       *
+       * @param channel   channel name & id
+       *
+       * @return       true if exists, false otherwise
+      **/
+      bool HasChannel(const eCAL::eh5::SChannel& channel) const override;
+
       DataTypeInformation GetChannelDataTypeInformation(const SChannel& channel) const override;
 
       bool GetEntriesInfo(const SChannel& channel, EntryInfoSet& entries) const override;
