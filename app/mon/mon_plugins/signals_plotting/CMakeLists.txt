@@ -92,8 +92,7 @@ endif(MSVC)
 
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
-target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
-target_compile_definitions(${PROJECT_NAME} PRIVATE QWT_DLL) 
+target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>) 
 
 ecal_install_mon_plugin(${PROJECT_NAME})
 
