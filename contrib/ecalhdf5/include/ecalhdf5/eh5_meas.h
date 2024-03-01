@@ -191,7 +191,7 @@ namespace eCAL
        * @param   channel_name   name of the channel
        * @return                 channel names & ids
       **/
-      std::set<eCAL::eh5::SChannel> GetChannels(const std::string & channel_name) const;
+      std::set<SChannel> GetChannels(const std::string & channel_name) const;
 
       /**
        * @brief Check if channel exists in measurement
@@ -201,6 +201,15 @@ namespace eCAL
        * @return       true if exists, false otherwise
       **/
       bool HasChannel(const std::string& channel_name) const;
+
+      /**
+       * @brief Check if channel exists in measurement
+       *
+       * @param channel   channel name & id
+       *
+       * @return       true if exists, false otherwise
+      **/
+      bool HasChannel(const eCAL::eh5::SChannel& channel) const;
 
       /**
        * @brief Get the channel description for the given channel

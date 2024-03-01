@@ -166,6 +166,15 @@ namespace eCAL
       virtual bool HasChannel(const std::string& channel_name) const = 0;
 
       /**
+      * @brief Check if channel exists in measurement
+      *
+      * @param channel   channel name & id
+      *
+      * @return       true if exists, false otherwise
+      **/
+      virtual bool HasChannel(const eCAL::eh5::SChannel& channel) const = 0;
+
+      /**
        * @brief Get data type information of the given channel
        *
        * @param channel_name  channel name

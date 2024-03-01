@@ -45,6 +45,12 @@ namespace eCAL
       }
     }
   }
+  namespace eh5
+  {
+    void PrintTo(const SChannel& channel, std::ostream* os) {
+      *os << "(" << channel.name << "," << channel.id << ")";
+    }
+  }
 }
 
 
@@ -208,9 +214,9 @@ TestingMeasEntry topic_2
   std::vector<char> data;
 }
 
-void CreateMeasurement(eCAL::eh5::HDF5Meas& hdf5_writer, std::string root_dir, std::string base_name)
+void CreateMeasurement(eCAL::eh5::HDF5Meas& hdf5_writer, std::string root_dir, std::string base_name, eCAL::eh5::eAccessType access_type = eCAL::eh5::eAccessType::CREATE)
 {
-  if (hdf5_writer.Open(root_dir, eCAL::eh5::eAccessType::CREATE))
+  if (hdf5_writer.Open(root_dir, access_type))
   {
     hdf5_writer.SetFileBaseName(base_name);
     hdf5_writer.SetMaxSizePerFile(max_size_per_file);
@@ -248,6 +254,9 @@ TEST(contrib, HDF5_WriteReadIntegrity)
   std::string meas_root_dir = output_dir + "/" + base_name;
 
   std::vector<TestingMeasEntry> meas_entries{ m1, m2, m3 };
+  eCAL::eh5::SChannel c1{ m1.channel_name, m1.id };
+  eCAL::eh5::SChannel c2{ m2.channel_name, m2.id };
+  eCAL::eh5::SChannel c3{ m3.channel_name, m2.id };
 
   // Write HDF5 file
   {
@@ -262,10 +271,16 @@ TEST(contrib, HDF5_WriteReadIntegrity)
     EXPECT_TRUE(hdf5_writer.Close());
   }
     
+  std::set<std::string> expected_names{ c1.name, c2.name, c3.name };
+  std::set<eCAL::eh5::SChannel> expected_channels{ c1, c2, c3 };
+
   // Read HDF5 file
   {
     eCAL::eh5::HDF5Meas hdf5_reader;
     EXPECT_TRUE(hdf5_reader.Open(meas_root_dir + "/" + base_name + ".hdf5"));
+
+    EXPECT_EQ(hdf5_reader.GetChannelNames(), expected_names);
+    EXPECT_EQ(hdf5_reader.GetChannels(), expected_channels);
 
     ValidateChannelsInMeasurement(hdf5_reader, meas_entries);
     for (const auto& entry : meas_entries)
@@ -278,6 +293,9 @@ TEST(contrib, HDF5_WriteReadIntegrity)
   {
     eCAL::eh5::HDF5Meas hdf5_reader;
     EXPECT_TRUE(hdf5_reader.Open(meas_root_dir));
+
+    EXPECT_EQ(hdf5_reader.GetChannelNames(), expected_names);
+    EXPECT_EQ(hdf5_reader.GetChannels(), expected_channels);
 
     ValidateChannelsInMeasurement(hdf5_reader, meas_entries);
     for (const auto& entry : meas_entries)
@@ -498,7 +516,8 @@ TEST(HDF5, WriteReadMultipleTopicTypeInformation)
   DataTypeInformation info1{ "mytype", "myencoding", "mydescriptor" };
   DataTypeInformation info2{ "mytype2", "myencoding2", "mydescriptor2" };
   // take one info whith \0 character, as protobuf descriptors may contain those
-  DataTypeInformation info3{ "mytype3", "myencoding3", "my\0\ndescriptor3" };
+  DataTypeInformation info3{ "mytype3", "myencoding3", std::string("my\0\ndescriptor3", 15)};
+  EXPECT_EQ(info3.descriptor.size(), 15);
 
   std::string base_name = "datatypeinformation_multiple";
   std::string meas_root_dir = output_dir + "/" + base_name;
@@ -802,6 +821,104 @@ TEST(HDF5, MergedMeasurements)
   }
 
 }
+
+
+TEST(HDF5, WriteReadEmptyMeasurement)
+{
+  eCAL::eh5::SChannel channel{ "topic", 0};
+  DataTypeInformation info{ "mytype", "myencoding", "mydescriptor" };
+
+  std::string base_name = "empty_measurement";
+  std::string meas_root_dir = output_dir + "/" + base_name;
+
+  // Write HDF5 file
+  {
+    eCAL::eh5::HDF5Meas hdf5_writer;
+    CreateMeasurement(hdf5_writer, meas_root_dir, base_name);
+    hdf5_writer.SetChannelDataTypeInformation(channel, info);
+
+    EXPECT_TRUE(hdf5_writer.Close());
+  }
+
+  // Read entries with HDF5 dir API
+  {
+    eCAL::eh5::HDF5Meas hdf5_reader;
+    EXPECT_TRUE(hdf5_reader.Open(meas_root_dir));
+
+    EXPECT_EQ(hdf5_reader.GetChannelDataTypeInformation(channel), info);
+
+    std::set<eCAL::eh5::SChannel> channels{ channel };
+    EXPECT_EQ(hdf5_reader.GetChannels(), channels);
+
+    EXPECT_EQ(hdf5_reader.GetMinTimestamp(channel), 0);
+    EXPECT_EQ(hdf5_reader.GetMaxTimestamp(channel), 0);
+  }
+}
+
+// This tests confirms if you write with the new API, you can read the information with the old API
+TEST(HDF5, TestReaderWriterV5)
+{
+  Channel::id_t id_1 = 0xAAAA;
+  Channel::id_t id_2 = 0x00AA;
+  std::string topic_name = "topic";
+
+  eCAL::eh5::SChannel channel_1{ topic_name, id_1 };
+  eCAL::eh5::SChannel channel_2{ topic_name, id_2 };
+
+  // Define data that will be written to the file
+  std::vector<TestingMeasEntry> meas_entries = {
+    TestingMeasEntry{ topic_name, "topic2: test data", 1001, 1002,  id_1,  0 },
+    TestingMeasEntry{ topic_name, "topic2: test data", 2001, 2002,  id_1,  1 },
+    TestingMeasEntry{ topic_name, "topic2: test data", 2051, 2052,  id_2,  0 },
+    TestingMeasEntry{ topic_name, "topic2: test data", 3001, 3002,  id_1,  2 },
+    TestingMeasEntry{ topic_name, "topic2: test data", 3051, 3052,  id_2,  1 },
+    TestingMeasEntry{ topic_name, "topic2: test data", 4001, 4002,  id_1,  3 },
+    TestingMeasEntry{ topic_name, "topic2: test data", 5001, 5002,  id_1,  4 },
+  };
+
+  std::string base_name = "read_write_v5";
+  std::string meas_root_dir = output_dir + "/" + base_name;
+
+  // Write HDF5 file
+  {
+    eCAL::eh5::HDF5Meas hdf5_writer;
+    CreateMeasurement(hdf5_writer, meas_root_dir, base_name, eCAL::eh5::CREATE_V5);
+
+    for (const auto& entry : meas_entries)
+    {
+      EXPECT_TRUE(WriteToHDF(hdf5_writer, entry));
+    }
+
+    EXPECT_TRUE(hdf5_writer.Close());
+  }
+
+  // Read entries with HDF5 dir API
+  {
+    eCAL::eh5::HDF5Meas hdf5_reader;
+    EXPECT_TRUE(hdf5_reader.Open(meas_root_dir));
+    EXPECT_EQ(hdf5_reader.GetFileVersion(), "5.0");
+    // New API
+    EXPECT_EQ(hdf5_reader.GetMinTimestamp(channel_1), 1002);
+    EXPECT_EQ(hdf5_reader.GetMinTimestamp(channel_2), 1002);
+
+    // Deprecated API
+    EXPECT_EQ(hdf5_reader.GetMinTimestamp(topic_name), 1002);
+
+    // New API
+    EXPECT_EQ(hdf5_reader.GetMaxTimestamp(channel_1), 5002);
+    EXPECT_EQ(hdf5_reader.GetMaxTimestamp(channel_2), 5002);
+
+    // Deprecated API
+    EXPECT_EQ(hdf5_reader.GetMaxTimestamp(topic_name), 5002);
+
+
+    for (const auto& entry : meas_entries)
+    {
+      ValidateDataInMeasurementDeprecated(hdf5_reader, entry);
+    }
+  }
+}
+
 
 
 

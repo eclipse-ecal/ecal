@@ -65,6 +65,20 @@ namespace eCAL
       return channels;
     }
 
+    bool HDF5MeasFileV6::HasChannel(const eCAL::eh5::SChannel& channel) const
+    {
+      bool has_channel_name = HasGroup(file_id_, channel.name);
+      if (!has_channel_name)
+      {
+        return false;
+      }
+      auto group_id = H5Gopen(file_id_, channel.name.c_str(), H5P_DEFAULT);
+      bool has_channel_id = HasGroup(group_id, printHex(channel.id).c_str());
+      H5Gclose(group_id);
+
+      return has_channel_id;
+    }
+
     eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileV6::GetChannelDataTypeInformation(const SChannel& channel) const
     {
       std::string type_name;

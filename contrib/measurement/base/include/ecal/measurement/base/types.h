@@ -145,15 +145,6 @@ namespace eCAL
         **/
         using EntryInfoVect = std::vector<EntryInfo>;
 
-        /**
-         * @brief eCAL Measurement Access types
-        **/
-        enum AccessType
-        {
-          RDONLY,  //!< ReadOnly - the measurement can only be read
-          CREATE   //!< Create   - a new measurement will be created
-        };
-
       }
     }
   }

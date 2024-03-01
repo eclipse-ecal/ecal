@@ -38,13 +38,11 @@ bool SetAttribute(hid_t id, const std::string& name, const std::string& value);
 **/
 bool GetAttribute(hid_t id, const std::string& name, std::string& value);
 
+bool HasGroup(hid_t root, const std::string& path);
 
 hid_t OpenOrCreateGroup(hid_t root, const std::string& name);
 
-
 std::vector<std::string> ListSubgroups(hid_t id);
-
-
 
 
 inline std::string printHex(eCAL::experimental::measurement::base::Channel::id_t id)

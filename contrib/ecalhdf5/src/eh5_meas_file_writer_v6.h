@@ -148,6 +148,15 @@ namespace eCAL
       bool HasChannel(const std::string& channel_name) const override;
 
       /**
+       * @brief Check if channel exists in measurement
+       *
+       * @param channel   channel name & id
+       *
+       * @return       true if exists, false otherwise
+      **/
+      bool HasChannel(const eCAL::eh5::SChannel & channel) const override;
+
+      /**
        * @brief Get data type information of the given channel
        *
        * @param channel_name  channel name

@@ -238,11 +238,16 @@ bool GetAttribute(hid_t id, const std::string& name, std::string& value)
   return ret_val;
 }
 
+bool HasGroup(hid_t root, const std::string& path)
+{
+  hid_t exists = H5Lexists(root, path.c_str(), H5P_DEFAULT);
+  return (exists > 0);
+}
+
 hid_t OpenOrCreateGroup(hid_t root, const std::string& name)
 {
-  auto exists = H5Lexists(root, name.c_str(), H5P_DEFAULT);
   hid_t group;
-  if (exists > 0)
+  if (HasGroup(root, name))
   {
     group = H5Gopen(root, name.c_str(), H5P_DEFAULT);
   }
@@ -267,6 +272,3 @@ std::vector<std::string> ListSubgroups(hid_t id)
   H5Literate(id, H5_INDEX_NAME, H5_ITER_INC, nullptr, iterate_lambda, (void*)&group_vector);
   return group_vector;
 }
-
-
-

@@ -10,7 +10,7 @@ Reader::Reader()
 {}
 
 Reader::Reader(const std::string& path) 
-  : measurement(std::make_unique<eh5::HDF5Meas>(path, eh5::eAccessType::RDONLY))
+  : measurement(std::make_unique<eh5::HDF5Meas>(path, eCAL::eh5::RDONLY))
 {}
 
 Reader::~Reader() = default;
@@ -21,7 +21,7 @@ Reader& Reader::operator=(Reader&&) noexcept = default;
 
 bool Reader::Open(const std::string& path) 
 {
-  return measurement->Open(path, eh5::eAccessType::RDONLY);
+  return measurement->Open(path, eCAL::eh5::RDONLY);
 }
 
 bool Reader::Close() 

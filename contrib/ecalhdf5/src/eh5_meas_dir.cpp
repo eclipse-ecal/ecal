@@ -24,6 +24,7 @@
 #include "eh5_meas_dir.h"
 #include "escape.h"
 
+#define NOMINMAX
 #ifdef WIN32
 #include <windows.h>
 #else
@@ -37,6 +38,7 @@
 #include <ecal_utils/filesystem.h>
 #include <ecal_utils/str_convert.h>
 
+#include "eh5_meas_file_writer_v5.h"
 #include "eh5_meas_file_writer_v6.h"
 
 // TODO: Test the one-file-per-channel setting with gtest
@@ -84,6 +86,7 @@ bool eCAL::eh5::HDF5MeasDir::Open(const std::string& path, eAccessType access /*
   //case eCAL::eh5::RDWR:
     return OpenRX(path, access);
   case eCAL::eh5::CREATE:
+  case eCAL::eh5::CREATE_V5:
     output_dir_ = path;
     return true;
   default:
@@ -97,7 +100,7 @@ bool eCAL::eh5::HDF5MeasDir::Close()
 {
   bool successfully_closed{ true };
 
-  if (access_ == eAccessType::CREATE)
+  if (access_ == eAccessType::CREATE || access_ == eAccessType::CREATE_V5)
   {
     // Close all existing file writers
     for (auto& file_writer : file_writers_)
@@ -139,6 +142,7 @@ bool eCAL::eh5::HDF5MeasDir::IsOk() const
   //case eCAL::eh5::RDWR:
     return !file_readers_.empty() && !entries_by_id_.empty();
   case eCAL::eh5::CREATE:
+  case eCAL::eh5::CREATE_V5:
     return true;
   default:
     return false;
@@ -207,6 +211,19 @@ bool eCAL::eh5::HDF5MeasDir::HasChannel(const std::string& channel_name) const
   return channels_info_.count(channel_name) != 0;
 }
 
+bool eCAL::eh5::HDF5MeasDir::HasChannel(const eCAL::eh5::SChannel& channel) const
+{
+  // If any writer has this channel, we have this channel.
+  for (auto file : file_readers_)
+  {
+    if (file->HasChannel(channel))
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
 eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasDir::GetChannelDataTypeInformation(const SChannel& channel) const
 {
   eCAL::eh5::DataTypeInformation ret_val;
@@ -235,46 +252,28 @@ void eCAL::eh5::HDF5MeasDir::SetChannelDataTypeInformation(const SChannel& chann
 
 long long eCAL::eh5::HDF5MeasDir::GetMinTimestamp(const SChannel& channel) const
 {
-  const auto& channel_name_it = entries_by_chn_.find(channel.name);
-  if (channel_name_it == entries_by_chn_.end())
+  long long min_timestamp = std::numeric_limits<long long>::max();
+  for (auto file : file_readers_)
   {
-    return 0;
+    if (file->HasChannel(channel))
+    {
+      min_timestamp = std::min(min_timestamp, file->GetMinTimestamp(channel));
+    }
   }
-
-  const auto& channel_id_it = channel_name_it->second.find(channel.id);
-  if (channel_id_it == channel_name_it->second.end())
-  {
-    return 0;
-  }
-
-  if (channel_id_it->second.empty())
-  {
-    return 0;
-  }
-
-  return channel_id_it->second.begin()->RcvTimestamp;
+  return min_timestamp;
 }
 
 long long eCAL::eh5::HDF5MeasDir::GetMaxTimestamp(const SChannel& channel) const
 {
-  const auto& channel_name_it = entries_by_chn_.find(channel.name);
-  if (channel_name_it == entries_by_chn_.end())
+  long long max_timestamp = std::numeric_limits<long long>::min();
+  for (auto file : file_readers_)
   {
-    return 0;
+    if (file->HasChannel(channel))
+    {
+      max_timestamp = std::max(max_timestamp, file->GetMaxTimestamp(channel));
+    }
   }
-
-  const auto& channel_id_it = channel_name_it->second.find(channel.id);
-  if (channel_id_it == channel_name_it->second.end())
-  {
-    return 0;
-  }
-
-  if (channel_id_it->second.empty())
-  {
-    return 0;
-  }
-
-  return channel_id_it->second.rbegin()->RcvTimestamp;
+  return max_timestamp;
 }
 
 bool eCAL::eh5::HDF5MeasDir::GetEntriesInfo(const SChannel& channel, EntryInfoSet& entries) const
@@ -353,7 +352,7 @@ void eCAL::eh5::HDF5MeasDir::SetFileBaseName(const std::string& base_name)
 
 bool eCAL::eh5::HDF5MeasDir::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock)
 {
-  if ((access_ != CREATE)
+  if ((access_ == RDONLY)
     || (output_dir_.empty())
     || (base_name_.empty()))
   {
@@ -486,9 +485,20 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
         {
           for (auto entry : entries)
           {
+            long long index;
+            // Account for the fact that previous to V6, has channel will return false for the given id.
+            if (reader->HasChannel(SChannel{ escaped_name, entry.SndID }))
+            {
+              index = entry.SndID;
+            }
+            else
+            {
+              index = 0;
+            }
+
             entries_by_id_[id] = EntryInfo(entry.ID, reader);
             entry.ID = id;
-            entries_by_chn_[escaped_name][entry.SndID].insert(entry);
+            entries_by_chn_[escaped_name][index].insert(entry);
             id++;
           }
         }
@@ -513,8 +523,15 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
   FileWriterMap::iterator file_writer_it = file_writers_.find(one_file_per_channel_ ? channel_name : "");
   if (file_writer_it == file_writers_.end())
   {
-    // No appropriate file writer was found. Let's create a new one!
-    file_writer_it = file_writers_.emplace(one_file_per_channel_ ? channel_name : "", std::make_unique<::eCAL::eh5::HDF5MeasFileWriterV6>()).first;
+    if (access_ == eAccessType::CREATE)
+    {
+      // No appropriate file writer was found. Let's create a new one!
+      file_writer_it = file_writers_.emplace(one_file_per_channel_ ? channel_name : "", std::make_unique<::eCAL::eh5::HDF5MeasFileWriterV6>()).first;
+    }
+    else
+    {
+      file_writer_it = file_writers_.emplace(one_file_per_channel_ ? channel_name : "", std::make_unique<::eCAL::eh5::HDF5MeasFileWriterV5>()).first;
+    }
 
     // Set the current parameters to the new file writer
     file_writer_it->second->SetMaxSizePerFile(GetMaxSizePerFile());

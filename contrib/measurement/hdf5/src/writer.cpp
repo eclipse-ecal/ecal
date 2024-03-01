@@ -9,7 +9,7 @@ Writer::Writer()
 {}
 
 Writer::Writer(const std::string& path) 
-  : measurement(std::make_unique<eh5::HDF5Meas>(path, eh5::eAccessType::CREATE))
+  : measurement(std::make_unique<eh5::HDF5Meas>(path, eCAL::eh5::CREATE))
 {}
 
 Writer::~Writer() = default;
@@ -20,7 +20,7 @@ Writer& Writer::operator=(Writer&&) noexcept = default;
 
 bool Writer::Open(const std::string& path)
 {
-  return measurement->Open(path, eh5::eAccessType::CREATE);
+  return measurement->Open(path, eCAL::eh5::CREATE);
 }
 
 bool Writer::Close()
