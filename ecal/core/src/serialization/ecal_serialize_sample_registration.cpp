@@ -72,6 +72,8 @@ namespace
     eCAL::nanopb::encode_string(pb_sample_.process.uname, registration_.process.uname);
     // pparam
     eCAL::nanopb::encode_string(pb_sample_.process.pparam, registration_.process.pparam);
+    // state
+    pb_sample_.process.has_state = true;
     // state.severity
     pb_sample_.process.state.severity = static_cast<eCAL_pb_eProcessSeverity>(registration_.process.state.severity);
     // state.severity_level
