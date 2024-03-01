@@ -301,6 +301,19 @@ jobs:
 
     # --------------------------------------------------------------------------------------------------
 
+  sign-windows-installer:
+    runs-on: windows-2019
+    needs: build-windows
+
+    steps:
+
+    # Download the installer from the previous job
+    - name: Download Windows setup
+      uses: actions/download-artifact@v4
+      with:
+        name: windows-setup
+        path: ${{ runner.workspace }}/_build/complete/_deploy
+
     - name: Sign the installer on Eclipse CI
       if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.JENKINS_USERNAME != '' && env.JENKINS_API_TOKEN != '' && env.JENKINS_JOB_TOKEN != ''
       run: |
@@ -313,8 +326,8 @@ jobs:
         $JENKINS_CRUMB_URL = "$JENKINS_BASE_URL/crumbIssuer/api/json"
         $JENKINS_JOB_URL = "$JENKINS_BASE_URL/job/$JENKINS_JOB"
         $JENKINS_TRIGGER_URL = "$JENKINS_JOB_URL/buildWithParameters?token=$Env:JENKINS_JOB_TOKEN"
-        $WAIT_FOR_JENKINS_SEC = 5
-        $COUNTER_LIMIT = 20
+        $WAIT_FOR_JENKINS_SEC = 10
+        $COUNTER_LIMIT = 30
         $RESPONSE_CODE = 0
         $CRUMB_ID = ''
         $CRUMB_FIELD = ''
