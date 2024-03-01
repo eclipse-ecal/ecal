@@ -81,7 +81,6 @@ Source: "{#ComponentStagingDir}\configuration\cfg\ecaltime.ini"; DestDir: "{comm
 
 ; applications
 Source: "{#ComponentStagingDir}\app\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: applications
-Source: "{#ComponentStagingDir}\qwt_runtime\*";       DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: applications
 
 ; samples
 Source: "{#ComponentStagingDir}\samples\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: samples
