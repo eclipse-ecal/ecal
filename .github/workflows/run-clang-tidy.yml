@@ -24,7 +24,7 @@ jobs:
 
       # https://github.com/actions/download-artifact
       - name: Download the built directory
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ecal-dir
 
@@ -46,7 +46,7 @@ jobs:
       # https://github.com/actions/upload-artifact
       # If make or clang-tidy is never called, artifact upload will fail (no log files) with just a warning.
       - name: Archive logs as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: clang_tidy_log_${{ steps.suffix.outputs.timestamp }}
           path: ~/work/ecal/_build/clang_tidy_log_*.txt
