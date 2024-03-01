@@ -126,7 +126,6 @@ extern "C"
 
   /**
    * @brief Receive a message from the publisher
-   *
    * @deprecated  Use the eCAL_Sub_Receive_ToBuffer or eCAL_Sub_Receive_Alloc instead.
    *
    * @param       handle_       Subscriber handle. 
@@ -138,7 +137,7 @@ extern "C"
    *
    * @return  Length of received buffer. 
   **/
-  ECALC_API int eCAL_Sub_Receive(ECAL_HANDLE handle_, void* buf_, int buf_len_, long long* time_, int rcv_timeout_);
+  ECALC_API_DEPRECATED int eCAL_Sub_Receive(ECAL_HANDLE handle_, void* buf_, int buf_len_, long long* time_, int rcv_timeout_);
 
   /**
    * @brief Receive a message from the publisher in a preallocated buffer.
