@@ -138,6 +138,9 @@ namespace eCAL
       sample.process.pname                = GenerateString(10);
       sample.process.uname                = GenerateString(5);
       sample.process.pparam               = GenerateString(12);
+      sample.process.state.severity       = static_cast<eProcessSeverity>(rand() % (proc_sev_failed + 1));
+      sample.process.state.severity_level = static_cast<eProcessSeverityLevel>(rand() % (proc_sev_level5 + 1));
+      sample.process.state.info           = GenerateString(10);
       sample.process.tsync_state          = static_cast<eTSyncState>(rand() % (tsync_replay + 1));
       sample.process.tsync_mod_name       = GenerateString(6);
       sample.process.component_init_state = rand() % 5;
