@@ -155,39 +155,3 @@ jobs:
       with:
         name: ubuntu-python-wheel
         path: ${{ runner.workspace }}/_build/_deploy/*.whl
-
-    #---------------------------------------------------------------------------
-
-    # GNU tar - Excluding Some Files
-    # https://www.gnu.org/software/tar/manual/html_node/exclude.html
-    # the emtpy '.git/' drectory is required, it marks the root directory
-    - name: 'Create a tarball'
-      run: |
-        cd ${{ runner.workspace }}
-        tar --exclude-vcs-ignore \
-            --exclude='bin' \
-            --exclude='doc' \
-            --exclude='_build/_CPack_Packages' \
-            --exclude='_build/_deploy' \
-            --exclude='_build/lib' \
-            --exclude='_build/python' \
-            --exclude='*.deb' \
-            --exclude='*.a' \
-            --exclude='*.o' \
-            --exclude='*.so' \
-            --exclude=ecal/.git/* \
-            -czf ecal.tar.gz ecal/ _build/
-        du -sh ecal.tar.gz
-
-
-    # https://github.com/actions/upload-artifact
-    - name: Upload the whole directory
-      uses: actions/upload-artifact@v4
-      with:
-        name: ecal-dir
-        path: ${{ runner.workspace }}/ecal.tar.gz
-
-  call-clang-tidy:
-    if: github.event_name == 'pull_request'
-    needs: build-ubuntu
-    uses: ./.github/workflows/run-clang-tidy.yml
