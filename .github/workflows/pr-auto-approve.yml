@@ -43,7 +43,7 @@ jobs:
           echo "${{ steps.protected-files-changes.outputs.all_changed_files }}"
           exit 1
             
-      - uses: hmarr/auto-approve-action@v3
+      - uses: hmarr/auto-approve-action@v4
         if: steps.protected-files-changes.outputs.any_changed == 'false'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
