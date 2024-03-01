@@ -293,17 +293,20 @@ if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     target_link_libraries(qwt PUBLIC Qt${QT_VERSION_MAJOR}::OpenGLWidgets)
 endif()
 
+# Check if the library is built as a shared library
+get_target_property(QWT_LIBRARY_TYPE qwt TYPE)
 
-target_compile_definitions(qwt PRIVATE QT_DLL QWT_DLL QWT_MAKEDLL QWT_MOC_INCLUDE) 
+target_compile_definitions(qwt PRIVATE QWT_MOC_INCLUDE)
+if(QWT_LIBRARY_TYPE STREQUAL "SHARED_LIBRARY")
+    target_compile_definitions(qwt PUBLIC QWT_DLL)
+    target_compile_definitions(qwt PRIVATE QWT_MAKEDLL)
+endif()
 
 # Export targets and install them
 install(TARGETS qwt
   EXPORT qwtTargets
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT qwt_runtime
 )
-
-# Check if the library is built as a shared library
-get_target_property(QWT_LIBRARY_TYPE qwt TYPE)
 
 # For shared libs we need to deploy the Qt DLLs
 if(QWT_LIBRARY_TYPE STREQUAL "SHARED_LIBRARY")
