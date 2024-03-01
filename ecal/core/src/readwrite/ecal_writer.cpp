@@ -830,7 +830,7 @@ namespace eCAL
       }
       if (share_tdesc)
       {
-        ecal_reg_sample_tdatatype.desc = m_topic_info.descriptor;
+        ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
       }
     }
     ecal_reg_sample_topic.attr  = m_attr;

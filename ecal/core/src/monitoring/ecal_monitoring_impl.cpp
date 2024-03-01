@@ -269,8 +269,8 @@ namespace eCAL
         }
       std::string topic_datatype_encoding = sample_topic.tdatatype.encoding;
       std::string topic_datatype_name     = sample_topic.tdatatype.name;
-      std::string topic_datatype_desc     = sample_topic.tdatatype.desc;
-      auto attr           = sample_topic.attr;
+      std::string topic_datatype_desc     = sample_topic.tdatatype.descriptor;
+      auto        attr                    = sample_topic.attr;
 
       // try to get topic info
       const std::string topic_name_id  = topic_name + topic_id;

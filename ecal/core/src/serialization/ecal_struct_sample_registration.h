@@ -27,6 +27,8 @@
 #include "ecal_struct_sample_common.h"
 #include "ecal_struct_service.h"
 
+#include <ecal/ecal_types.h>
+
 #include <cstdint>
 #include <list>
 #include <map>
@@ -136,14 +138,6 @@ namespace eCAL
       std::string                         ecal_runtime_version;         // loaded/runtime eCAL version of a component
     };
 
-    // Data type information
-    struct DataTypeInformation
-    {
-      std::string                         name;                         // name of the datatype
-      std::string                         encoding;                     // encoding of the datatype (e.g., protobuf, flatbuffers, capnproto)
-      std::string                         desc;                         // descriptor information of the datatype (necessary for reflection)
-    };
-
     // eCAL topic information
     struct Topic
     {
@@ -156,7 +150,7 @@ namespace eCAL
       std::string                         tid;                          // topic id
       std::string                         tname;                        // topic name
       std::string                         direction;                    // direction (publisher, subscriber)
-      DataTypeInformation                 tdatatype;                    // topic datatype information (encoding & type & description)
+      SDataTypeInformation                tdatatype;                    // topic datatype information (encoding & type & description)
 
       std::vector<TLayer>                 tlayer;                       // active topic transport layers and its specific parameter
       int32_t                             tsize = 0;                    // topic size

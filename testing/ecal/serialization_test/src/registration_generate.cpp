@@ -77,13 +77,13 @@ namespace eCAL
       return client;
     }
 
-    // generate DataTypeInformation
-    DataTypeInformation GenerateDataTypeInformation()
+    // generate SDataTypeInformation
+    SDataTypeInformation GenerateDataTypeInformation()
     {
-      DataTypeInformation dt;
-      dt.name     = GenerateString(8);
-      dt.encoding = GenerateString(6);
-      dt.desc     = GenerateString(10);
+      SDataTypeInformation dt;
+      dt.name       = GenerateString(8);
+      dt.encoding   = GenerateString(6);
+      dt.descriptor = GenerateString(10);
       return dt;
     }
 
