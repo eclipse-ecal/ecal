@@ -39,18 +39,4 @@ namespace eCAL
     topic.descriptor = tdatatype.desc;
     return topic;
   }
-  
-  // This function can be removed in eCAL6. For the time being we need to enrich incoming samples with additional topic information.
-  inline void ModifyIncomingSampleForBackwardsCompatibility(const eCAL::Registration::Sample& sample, eCAL::Registration::Sample& modified_sample)
-  {
-    modified_sample = sample;
-    if (!modified_sample.topic.ttype.empty() && modified_sample.topic.tdatatype.name.empty())
-    {
-      auto& topic_datatype = modified_sample.topic.tdatatype;
-      auto split_type = Util::SplitCombinedTopicType(modified_sample.topic.ttype);
-      topic_datatype.encoding = split_type.first;
-      topic_datatype.name     = split_type.second;
-      topic_datatype.desc     = modified_sample.topic.tdesc;
-    }
-  }
 }

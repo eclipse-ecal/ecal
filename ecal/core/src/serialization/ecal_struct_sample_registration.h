@@ -156,9 +156,6 @@ namespace eCAL
       std::string                         tid;                          // topic id
       std::string                         tname;                        // topic name
       std::string                         direction;                    // direction (publisher, subscriber)
-      std::string                         ttype;                        // topic type + topic encoding (deprecated)
-      std::string                         tdesc;                        // topic description (protocol descriptor) (deprecated)
-
       DataTypeInformation                 tdatatype;                    // topic datatype information (encoding & type & description)
 
       std::vector<TLayer>                 tlayer;                       // active topic transport layers and its specific parameter

@@ -32,6 +32,8 @@ message DataTypeInformation
 
 message Topic                                      // eCAL topic
 {
+  reserved 9, 10, 11, 14, 15, 22 to 26, 29;
+
   int32               rclock                =  1;  // registration clock (heart beat)
   string              hname                 =  2;  // host name
   string              hgname                = 28;  // host group name
@@ -41,9 +43,8 @@ message Topic                                      // eCAL topic
   string              tid                   =  6;  // topic id
   string              tname                 =  7;  // topic name
   string              direction             =  8;  // direction (publisher, subscriber)
-  string              ttype                 =  9;  // topic type + topic encoding (deprecated)
-  bytes               tdesc                 = 10;  // topic description (protocol descriptor) (deprecated)
-  
+                                                   // 9 = topic type + topic encoding (deprecated)
+                                                   // 10 = topic description (protocol descriptor) (deprecated)
   DataTypeInformation tdatatype             = 30;  // topic datatype information (encoding & type & description)
 
   repeated TLayer     tlayer                = 12;  // active topic transport layers and it's specific parameter

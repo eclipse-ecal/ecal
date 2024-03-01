@@ -158,17 +158,17 @@ int main(int argc, char **argv)
         if(!g_topics_filt_string.empty() && (g_topics_filt_string != topic.tname())) continue;
 
         // print topic details
-        std::cout << "rclock          : " << topic.rclock()          << std::endl;   // registration clock
-        std::cout << "hname           : " << topic.hname()           << std::endl;   // host name
-        std::cout << "pid             : " << topic.pid()             << std::endl;   // process id
-        std::cout << "pname           : " << topic.pname()           << std::endl;   // process name
-        std::cout << "uname           : " << topic.uname()           << std::endl;   // unit name
-        std::cout << "tid             : " << topic.tid()             << std::endl;   // topic id
-        std::cout << "tname           : " << topic.tname()           << std::endl;   // topic name
-        std::cout << "direction       : " << topic.direction()       << std::endl;   // direction (publisher, subscriber)
-        std::cout << "ttype           : " << topic.ttype()           << std::endl;   // topic type
-//        std::cout << "tdesc           : " << topic.tdesc()           << std::endl;   // topic description
-//        std::cout << "tqos            : " << topic.tqos()            << std::endl;   // topic quality of service
+        std::cout << "rclock          : " << topic.rclock()               << std::endl;   // registration clock
+        std::cout << "hname           : " << topic.hname()                << std::endl;   // host name
+        std::cout << "pid             : " << topic.pid()                  << std::endl;   // process id
+        std::cout << "pname           : " << topic.pname()                << std::endl;   // process name
+        std::cout << "uname           : " << topic.uname()                << std::endl;   // unit name
+        std::cout << "tid             : " << topic.tid()                  << std::endl;   // topic id
+        std::cout << "tname           : " << topic.tname()                << std::endl;   // topic name
+        std::cout << "direction       : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
+        std::cout << "ttype name      : " << topic.tdatatype().name()     << std::endl;   // topic type name
+        std::cout << "ttype encoding  : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
+        //std::cout << "tdesc           : " << topic.tdatatype().desc()     << std::endl;   // topic description
         for (auto layer : topic.tlayer())
         {
           std::string layer_type("unknown");

@@ -129,15 +129,15 @@ namespace eCAL
             if (topic_info_map_it != topic_info_map_.end())
             {
               // Only update the values if there are information available
-              if (!topic.ttype().empty() || !topic.tdesc().empty())
+              if (!topic.tdatatype().name().empty() || !topic.tdatatype().desc().empty())
               {
-                topic_info_map_it->second.type_ = topic.ttype();
+                topic_info_map_it->second.type_ = topic.tdatatype().name();
               }
             }
             else
             {
               // Create a new topic entry
-              topic_info_map_.emplace(topic.tname(), eCAL::rec_server::TopicInfo(topic.ttype()));
+              topic_info_map_.emplace(topic.tname(), eCAL::rec_server::TopicInfo(topic.tdatatype().name()));
               topic_info_map_it = topic_info_map_.find(topic.tname());
             }
 

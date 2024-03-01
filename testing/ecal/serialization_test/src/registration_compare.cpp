@@ -164,8 +164,6 @@ namespace eCAL
              (topic1.tid             == topic2.tid) &&
              (topic1.tname           == topic2.tname) &&
              (topic1.direction       == topic2.direction) &&
-             (topic1.ttype           == topic2.ttype) &&
-             (topic1.tdesc           == topic2.tdesc) &&
              CompareDataTypeInformation(topic1.tdatatype, topic2.tdatatype) &&
              CompareTLayer(topic1.tlayer, topic2.tlayer) &&
              (topic1.tsize           == topic2.tsize) &&

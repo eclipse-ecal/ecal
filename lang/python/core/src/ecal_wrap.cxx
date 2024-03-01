@@ -1187,12 +1187,6 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
       val = Py_BuildValue("s", topic.direction().c_str());
       PyDict_SetItemString(topicDict, "direction", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", topic.ttype().c_str());
-      PyDict_SetItemString(topicDict, "ttype", val); Py_DECREF(val);
-
-      val = Py_BuildValue("y#", topic.tdesc().c_str(), (Py_ssize_t)(topic.tdesc().length()));
-      PyDict_SetItemString(topicDict, "tdesc", val); Py_DECREF(val);
-
       val = Py_BuildValue("i", topic.tsize());
       PyDict_SetItemString(topicDict, "tsize", val); Py_DECREF(val);
 

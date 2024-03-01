@@ -247,9 +247,6 @@ namespace eCAL
     ecal_reg_sample_topic.tname  = m_topic_name;
     ecal_reg_sample_topic.tid    = m_topic_id;
     // topic_information
-    // Remove eCAL6!!
-    if (m_use_ttype) ecal_reg_sample_topic.ttype = Util::CombinedTopicEncodingAndType(m_topic_info.encoding, m_topic_info.name);
-    if (m_use_tdesc) ecal_reg_sample_topic.tdesc = m_topic_info.descriptor;
     {
       auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.tdatatype;
       if (m_use_ttype)

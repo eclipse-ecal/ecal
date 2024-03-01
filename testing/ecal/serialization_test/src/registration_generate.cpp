@@ -110,8 +110,6 @@ namespace eCAL
       topic.tid             = GenerateString(7);
       topic.tname           = GenerateString(8);
       topic.direction       = GenerateString(5);
-      topic.ttype           = GenerateString(10);
-      topic.tdesc           = GenerateString(12);
       topic.tdatatype       = GenerateDataTypeInformation();
       topic.tlayer.push_back(GenerateTLayer());
       topic.tlayer.push_back(GenerateTLayer());

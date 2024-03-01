@@ -162,10 +162,6 @@ namespace
     eCAL::nanopb::encode_string(pb_sample_.topic.tname, registration_.topic.tname);
     // direction
     eCAL::nanopb::encode_string(pb_sample_.topic.direction, registration_.topic.direction);
-    // ttype
-    eCAL::nanopb::encode_string(pb_sample_.topic.ttype, registration_.topic.ttype);
-    // tdesc
-    eCAL::nanopb::encode_string(pb_sample_.topic.tdesc, registration_.topic.tdesc);
     // tdatatype
     pb_sample_.topic.has_tdatatype = true;
     // tdatatype.name
@@ -324,10 +320,6 @@ namespace
     eCAL::nanopb::decode_string(pb_sample_.topic.tname, registration_.topic.tname);
     // direction
     eCAL::nanopb::decode_string(pb_sample_.topic.direction, registration_.topic.direction);
-    // ttype
-    eCAL::nanopb::decode_string(pb_sample_.topic.ttype, registration_.topic.ttype);
-    // tdesc
-    eCAL::nanopb::decode_string(pb_sample_.topic.tdesc, registration_.topic.tdesc);
     // tdatatype.name
     eCAL::nanopb::decode_string(pb_sample_.topic.tdatatype.name, registration_.topic.tdatatype.name);
     // tdatatype.encoding

@@ -158,15 +158,10 @@ namespace eCAL
   {
     if (!m_created) return false;
 
-    //Remove in eCAL6
-    // for the time being we need to copy the incoming sample and set the incompatible fields
-    Registration::Sample modified_ttype_sample;
-    ModifyIncomingSampleForBackwardsCompatibility(ecal_sample_, modified_ttype_sample);
-
     // forward all registration samples to outside "customer" (e.g. Monitoring)
     {
       const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_mtx);
-      m_callback_custom_apply_sample(modified_ttype_sample);
+      m_callback_custom_apply_sample(ecal_sample_);
     }
 
     std::string reg_sample;
@@ -177,10 +172,10 @@ namespace eCAL
       || m_callback_process
       )
     {
-      SerializeToBuffer(modified_ttype_sample, reg_sample);
+      SerializeToBuffer(ecal_sample_, reg_sample);
     }
 
-    switch (modified_ttype_sample.cmd_type)
+    switch (ecal_sample_.cmd_type)
     {
     case bct_none:
     case bct_set_sample:
@@ -192,7 +187,7 @@ namespace eCAL
       break;
 #if ECAL_CORE_SERVICE
     case bct_reg_service:
-      if (g_clientgate() != nullptr) g_clientgate()->ApplyServiceRegistration(modified_ttype_sample);
+      if (g_clientgate() != nullptr) g_clientgate()->ApplyServiceRegistration(ecal_sample_);
       if (m_callback_service) m_callback_service(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
     case bct_unreg_service:
@@ -207,12 +202,12 @@ namespace eCAL
       break;
     case bct_reg_subscriber:
     case bct_unreg_subscriber:
-      ApplySubscriberRegistration(modified_ttype_sample);
+      ApplySubscriberRegistration(ecal_sample_);
       if (m_callback_sub) m_callback_sub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
     case bct_reg_publisher:
     case bct_unreg_publisher:
-      ApplyPublisherRegistration(modified_ttype_sample);
+      ApplyPublisherRegistration(ecal_sample_);
       if (m_callback_pub) m_callback_pub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
     default:
