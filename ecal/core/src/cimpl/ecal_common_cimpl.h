@@ -18,18 +18,12 @@
 */
 
 /**
- * @file   ecal_service.h
- * @brief  eCAL service interface
+ * @file   ecal_common_cimpl.h
+ * @brief  C API common helper functions
 **/
 
 #pragma once
 
-#ifdef _MSC_VER
-#pragma message("WARNING: This header file is deprecated. It will be removed in future eCAL versions. Please include <ecal/cimpl/ecal_server_cimpl.h> and / or <ecal/cimpl/ecal_client_cimpl.h> instead")
-#endif /*_MSC_VER*/
-#ifdef __GNUC__
-#pragma message "WARNING: This header file is deprecated. It will be removed in future eCAL versions. Please include <ecal/cimpl/ecal_server_cimpl.h> and / or <ecal/cimpl/ecal_client_cimpl.h> instead"
-#endif /* __GNUC__ */
+#include <string>
 
-#include <ecal/cimpl/ecal_server_cimpl.h>
-#include <ecal/cimpl/ecal_client_cimpl.h>
+int CopyBuffer(void* target_, int target_len_, const std::string& source_s_);
