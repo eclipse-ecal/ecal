@@ -40,7 +40,6 @@ ecal_add_python_module(${PROJECT_NAME} SOURCES ${ecal_lang_py_src} PYTHON_CODE $
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
-        Python::Python
         eCAL::core
         eCAL::core_pb
 )
