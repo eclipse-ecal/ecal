@@ -199,7 +199,8 @@ class MonitorModel
       topic.id = std::move(*t.mutable_tid());
       topic.name = std::move(*t.mutable_tname());
       topic.direction = TopicDirection(t.direction());
-      topic.type = std::move(*t.mutable_tdatatype()->mutable_name());
+      std::string combined_enc_type = eCAL::Util::CombinedTopicEncodingAndType(t.mutable_tdatatype()->encoding(), t.mutable_tdatatype()->name());
+      topic.type = std::move(combined_enc_type);
       topic.type_descriptor = std::move(*t.mutable_tdatatype()->mutable_desc());
       for(auto &tl: t.tlayer())
       {
