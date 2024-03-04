@@ -20,10 +20,8 @@
 #include <ecal/ecal.h>
 #include <ecal/msg/string/publisher.h>
 #include <ecal/msg/string/subscriber.h>
-#include <algorithm>
 #include <atomic>
 #include <thread>
-#include <vector>
 #include <gtest/gtest.h>
 
 #define CMN_REGISTRATION_REFRESH   1000

@@ -17,19 +17,13 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/ecal.h>
 #include <ecal/msg/string/publisher.h>
-#include <ecal/msg/string/subscriber.h>
-#include <algorithm>
-#include <atomic>
 #include <thread>
-#include <vector>
 #include <gtest/gtest.h>
-#include <ecal/ecal_monitoring.h>
 
 namespace
 {
-  std::chrono::nanoseconds TimeOperation(std::function<void()> func)
+  std::chrono::nanoseconds TimeOperation(const std::function<void()>& func)
   {
     auto start = std::chrono::steady_clock::now();
     func();
@@ -38,7 +32,7 @@ namespace
   }
 
   template <typename Rep, typename Period>
-  void AssertOperationExecutionTimeInRange(std::function<void()> func, std::chrono::duration<Rep, Period> min, std::chrono::duration<Rep, Period> max)
+  void AssertOperationExecutionTimeInRange(const std::function<void()>& func, std::chrono::duration<Rep, Period> min, std::chrono::duration<Rep, Period> max)
   {
     auto operation_time = TimeOperation(func);
     EXPECT_GE(operation_time.count(), std::chrono::duration_cast<std::chrono::nanoseconds>(min).count()) << "Timed operation less than minimum threshold";

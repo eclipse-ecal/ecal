@@ -34,6 +34,7 @@ set(clientserver_test_proto
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${${PROJECT_NAME}_src})
+
 PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${clientserver_test_proto})
 
 target_link_libraries(${PROJECT_NAME}
@@ -46,7 +47,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_gtest(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER testing/ecal)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER core/tests/cpp/service)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
     ${${PROJECT_NAME}_src}

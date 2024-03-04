@@ -25,15 +25,23 @@ set(pubsub_test_src
   src/pubsub_acknowledge.cpp
   src/pubsub_gettopics.cpp
   src/pubsub_multibuffer.cpp
-  src/pubsub_test.cpp
   src/pubsub_receive_test.cpp
+  src/pubsub_test.cpp
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${pubsub_test_src})
+
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
     eCAL::core
     Threads::Threads)
+
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+
 ecal_install_gtest(${PROJECT_NAME})
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER testing/ecal/pubsub)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER core/tests/cpp/pubsub)
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
+    ${${PROJECT_NAME}_src}
+)

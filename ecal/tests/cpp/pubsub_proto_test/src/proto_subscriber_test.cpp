@@ -41,7 +41,7 @@ public:
     eCAL::Util::EnableLoopback(true);
   }
 
-  virtual ~ProtoSubscriberTest() {
+  ~ProtoSubscriberTest() override {
     // Finalize eCAL
     eCAL::Finalize();
   }

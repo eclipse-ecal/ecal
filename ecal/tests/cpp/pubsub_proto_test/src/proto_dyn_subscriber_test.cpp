@@ -32,8 +32,6 @@
 
 // subscriber callback function
 
-#define REGISTRATION_REFRESH_CYCLE 1000
-
 class ProtoDynSubscriberTest : public ::testing::Test {
 public:
   ProtoDynSubscriberTest()
@@ -45,7 +43,7 @@ public:
     eCAL::Util::EnableLoopback(true);
   }
 
-  virtual ~ProtoDynSubscriberTest() {
+  ~ProtoDynSubscriberTest() override {
     // Finalize eCAL
     eCAL::Finalize();
   }

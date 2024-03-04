@@ -24,23 +24,23 @@ find_package(GTest REQUIRED)
 set(memfile_test_src
     src/memfile_test.cpp
     src/memfile_naming_test.cpp
-    ../../../ecal/core/src/io/mtx/ecal_named_mutex.cpp
-    ../../../ecal/core/src/io/shm/ecal_memfile.cpp
-    ../../../ecal/core/src/io/shm/ecal_memfile_db.cpp
-    ../../../ecal/core/src/io/shm/ecal_memfile_naming.cpp
+    ../../../core/src/io/mtx/ecal_named_mutex.cpp
+    ../../../core/src/io/shm/ecal_memfile.cpp
+    ../../../core/src/io/shm/ecal_memfile_db.cpp
+    ../../../core/src/io/shm/ecal_memfile_naming.cpp
 )
 
 if(UNIX)
 set(memfile_test_os_src
-    ../../../ecal/core/src/io/mtx/linux/ecal_named_mutex_impl.cpp
-    ../../../ecal/core/src/io/shm/linux/ecal_memfile_os.cpp
+    ../../../core/src/io/mtx/linux/ecal_named_mutex_impl.cpp
+    ../../../core/src/io/shm/linux/ecal_memfile_os.cpp
 )
 endif()
 
 if(WIN32)
 set(memfile_test_os_src
-    ../../../ecal/core/src/io/mtx/win32/ecal_named_mutex_impl.cpp
-    ../../../ecal/core/src/io/shm/win32/ecal_memfile_os.cpp
+    ../../../core/src/io/mtx/win32/ecal_named_mutex_impl.cpp
+    ../../../core/src/io/shm/win32/ecal_memfile_os.cpp
 )
 endif()
 
@@ -60,4 +60,8 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE ECAL_CORE_TRANSPORT_SHM)
 
 ecal_install_gtest(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER testing/ecal/io)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER core/tests/cpp/io)
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
+    ${${PROJECT_NAME}_src}
+)

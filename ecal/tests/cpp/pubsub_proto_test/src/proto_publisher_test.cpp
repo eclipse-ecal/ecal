@@ -34,7 +34,7 @@ public:
     eCAL::Initialize();
   }
 
-  virtual ~ProtoPublisherTest() {
+  ~ProtoPublisherTest() override {
     eCAL::Finalize();
   }
 

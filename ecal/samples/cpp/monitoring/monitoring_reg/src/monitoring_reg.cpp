@@ -22,8 +22,7 @@
 #include <iostream>
 
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4800 4505) // disable proto warnings
+#pragma warning(push, 0)
 #endif
 #include <ecal/core/pb/ecal.pb.h>
 #ifdef _MSC_VER

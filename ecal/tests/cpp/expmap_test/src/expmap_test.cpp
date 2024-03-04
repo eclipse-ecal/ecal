@@ -27,8 +27,6 @@
 
 #include <gtest/gtest.h>
 
-#include <iostream>
-
 TEST(ExpMap, ExpMapSetGet)
 {
   // create the map with 2500 ms expiration

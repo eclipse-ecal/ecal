@@ -28,7 +28,7 @@
 const auto g_snd_size (8* 1024 * 1024);
 const auto g_snd_loops(1000);
 
-void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer layer, bool zero_copy = false)
+void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer /*layer*/, bool /*zero_copy*/)
 {
   // create payload
   CBinaryPayload payload(snd_size);
@@ -72,17 +72,17 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
   // end time
   auto finish = std::chrono::high_resolution_clock::now();
   const std::chrono::duration<double> elapsed = finish - start;
-  std::cout << "Elapsed time : " << elapsed.count() << " s" << std::endl;
+  std::cout << "Elapsed time : " << elapsed.count() << " s" << '\n';
 
   const size_t sum_snd_bytes = payload.GetSize() * snd_loops;
   const size_t sum_rcv_bytes = received_bytes;
-  std::cout << "Sent         : " << sum_snd_bytes / (1024 * 1024) << " MB" << std::endl;
-  std::cout << "Received     : " << sum_rcv_bytes / (1024 * 1024) << " MB" << std::endl;
+  std::cout << "Sent         : " << sum_snd_bytes / (1024 * 1024) << " MB" << '\n';
+  std::cout << "Received     : " << sum_rcv_bytes / (1024 * 1024) << " MB" << '\n';
   std::cout << "Lost         : " << sum_snd_bytes - sum_rcv_bytes << " bytes";
   std::cout << " (" << (sum_snd_bytes - sum_rcv_bytes) / (1024 * 1024) << " MB, ";
-  std::cout << (sum_snd_bytes - sum_rcv_bytes) * 100.0f / sum_snd_bytes << " %)" << std::endl;
-  std::cout << "Throughput   : " << int((sum_snd_bytes / (1024.0 * 1024.0)) / elapsed.count()) << " MB/s " << std::endl;
-  std::cout << "Throughput   : " << int((sum_snd_bytes / (1024.0 * 1024.0 * 1024.0)) / elapsed.count()) << " GB/s " << std::endl;
+  std::cout << (sum_snd_bytes - sum_rcv_bytes) * 100.0f / sum_snd_bytes << " %)" << '\n';
+  std::cout << "Throughput   : " << int((sum_snd_bytes / (1024.0 * 1024.0)) / elapsed.count()) << " MB/s " << '\n';
+  std::cout << "Throughput   : " << int((sum_snd_bytes / (1024.0 * 1024.0 * 1024.0)) / elapsed.count()) << " GB/s " << '\n';
 }
 
 // main entry
@@ -94,17 +94,17 @@ int main(int argc, char **argv)
   // publish / subscribe match in the same process
   eCAL::Util::EnableLoopback(true);
 
-  std::cout << "---------------------------" << std::endl;
-  std::cout << "LAYER: SHM"                  << std::endl;
-  std::cout << "---------------------------" << std::endl;
+  std::cout << "---------------------------" << '\n';
+  std::cout << "LAYER: SHM"                  << '\n';
+  std::cout << "---------------------------" << '\n';
   throughput_test(g_snd_size, g_snd_loops, eCAL::TLayer::tlayer_shm, false);
-  std::cout << std::endl << std::endl;
+  std::cout << '\n' << '\n';
 
-  std::cout << "---------------------------" << std::endl;
-  std::cout << "LAYER: SHM ZERO-COPY"        << std::endl;
-  std::cout << "---------------------------" << std::endl;
+  std::cout << "---------------------------" << '\n';
+  std::cout << "LAYER: SHM ZERO-COPY"        << '\n';
+  std::cout << "---------------------------" << '\n';
   throughput_test(g_snd_size, g_snd_loops, eCAL::TLayer::tlayer_shm, true);
-  std::cout << std::endl << std::endl;
+  std::cout << '\n' << '\n';
 
   // finalize eCAL API
   eCAL::Finalize();

@@ -32,10 +32,8 @@ ecal_add_sample(${PROJECT_NAME} ${monitoring_get_topics_src})
 
 target_link_libraries(${PROJECT_NAME} eCAL::core)
 
-target_link_libraries(${PROJECT_NAME} eCAL::core_pb)
-
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/monitoring)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER core/samples/cpp/monitoring)

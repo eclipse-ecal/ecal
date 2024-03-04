@@ -34,7 +34,7 @@ int main(int argc, char **argv)
   std::vector<char> snd_buf(MAX_BUFSIZE);
   for(int i = 0; i < MAX_BUFSIZE; ++i)
   {
-    switch (i % 4)
+    switch (i % 4) // NOLINT(*-switch-missing-default-case)
     {
     case 0:
       snd_buf[i] = 'A';
@@ -71,7 +71,7 @@ int main(int argc, char **argv)
     const size_t snd_len = pub.Send(snd_buf.data(), send_size, cnt);
     if((snd_len > 0) && (snd_len != send_size))
     {
-      std::cout << std::endl << "Sending failed !" << std::endl;
+      std::cout << '\n' << "Sending failed !" << '\n';
     }
 
     // print content
@@ -79,11 +79,11 @@ int main(int argc, char **argv)
     {
       if(send_size < 6*1024)
       {
-        std::cout << std::endl << "Sent message size: " << send_size        << " Byte"  << std::endl;
+        std::cout << '\n' << "Sent message size: " << send_size        << " Byte"  << '\n';
       }
       else
       {
-        std::cout << std::endl << "Sent message size: " << send_size/1024.0 << " kByte" << std::endl;
+        std::cout << '\n' << "Sent message size: " << send_size/1024.0 << " kByte" << '\n';
       }
     }
 

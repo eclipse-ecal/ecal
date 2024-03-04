@@ -44,14 +44,18 @@ option(ECAL_CORE_TRANSPORT_SHM                           "Enables the eCAL to tr
 # core internal feature configuration - end
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-cmake_dependent_option(ECAL_CORE_NPCAP_SUPPORT "Enable the eCAL Npcap Receiver (Win10 performance fix for UDP communication)" ON "ECAL_NPCAP_SUPPORT" OFF)
 
+cmake_dependent_option(ECAL_CORE_NPCAP_SUPPORT "Enable the eCAL Npcap Receiver (Win10 performance fix for UDP communication)" ON "ECAL_NPCAP_SUPPORT" OFF)
 
 add_subdirectory(core)
 add_subdirectory(core_pb)
 add_subdirectory(samples)
 add_subdirectory(service)
-add_subdirectory(tests)
+
+if(BUILD_ECAL_TESTS)
+  enable_testing()
+  add_subdirectory(tests)
+endif()
 
 
 message(STATUS "ECAL_CORE Build Options:")

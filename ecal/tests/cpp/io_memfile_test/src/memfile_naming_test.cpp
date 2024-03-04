@@ -21,9 +21,6 @@
 
 #include <atomic>
 #include <chrono>
-#include <memory>
-#include <iostream>
-#include <thread>
 
 #include <gtest/gtest.h>
 

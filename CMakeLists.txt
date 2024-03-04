@@ -464,11 +464,6 @@ if(BUILD_ECAL_TESTS)
   add_subdirectory(testing/contrib/ecalproto/ecal_proto_test)
 
   # ------------------------------------------------------
-  # test ecal
-  # ------------------------------------------------------
-  add_subdirectory(testing/ecal)
-
-  # ------------------------------------------------------
   # test apps
   # ------------------------------------------------------
   if (HAS_HDF5 AND HAS_QT)

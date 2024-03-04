@@ -168,11 +168,11 @@ TEST(ClientServer, ServerConnectEvent)
   {
     switch (data_->type)
     {
-    case client_event_connected:
+    case server_event_connected:
       std::cout << "event connected fired" << std::endl;
       event_connected_fired++;
       break;
-    case client_event_disconnected:
+    case server_event_disconnected:
       std::cout << "event disconnected fired" << std::endl;
       event_disconnected_fired++;
       break;
@@ -251,7 +251,7 @@ TEST(ClientServer, ClientServerBaseCallback)
   };
 
   // add method callbacks
-  for (auto service : service_vec)
+  for (const auto& service : service_vec)
   {
     service->AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", method_callback);
     service->AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", method_callback);
@@ -273,7 +273,7 @@ TEST(ClientServer, ClientServerBaseCallback)
   };
 
   // add callback for server response
-  for (auto client : client_vec)
+  for (const auto& client : client_vec)
   {
     client->AddResponseCallback(response_callback);
   }
@@ -289,7 +289,7 @@ TEST(ClientServer, ClientServerBaseCallback)
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
-    for (auto client : client_vec)
+    for (const auto& client : client_vec)
     {
       // call method 1
       success &= client->Call("foo::method1", "my request for method 1");
@@ -308,7 +308,7 @@ TEST(ClientServer, ClientServerBaseCallback)
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
-    for (auto client : client_vec)
+    for (const auto& client : client_vec)
     {
       // call method 1
       success &= client->Call("foo::method1", "my request for method 1");
@@ -365,7 +365,7 @@ TEST(ClientServer, ClientServerBaseCallbackTimeout)
                           };
 
   // add method callbacks
-  for (auto service : service_vec)
+  for (const auto& service : service_vec)
   {
     service->AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", method_callback);
     service->AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", method_callback);
@@ -387,7 +387,7 @@ TEST(ClientServer, ClientServerBaseCallbackTimeout)
                             };
 
   // add callback for server response
-  for (auto client : client_vec)
+  for (const auto& client : client_vec)
   {
     client->AddResponseCallback(response_callback);
   }
@@ -398,7 +398,7 @@ TEST(ClientServer, ClientServerBaseCallbackTimeout)
                         {
                           timeout_fired++;
                         };
-  for (auto client : client_vec)
+  for (const auto& client : client_vec)
   {
     // catch events
     client->AddEventCallback(client_event_timeout, std::bind(event_callback, std::placeholders::_2));
@@ -416,7 +416,7 @@ TEST(ClientServer, ClientServerBaseCallbackTimeout)
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
-    for (auto client : client_vec)
+    for (const auto& client : client_vec)
     {
       // call method 1
       success &= client->Call("foo::method1", "my request for method 1");
@@ -447,7 +447,7 @@ TEST(ClientServer, ClientServerBaseCallbackTimeout)
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
-    for (auto client : client_vec)
+    for (const auto& client : client_vec)
     {
       // call method 1
       success &= client->Call("foo::method1", "my request for method 1", method_process_time * 4);
@@ -478,7 +478,7 @@ TEST(ClientServer, ClientServerBaseCallbackTimeout)
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
-    for (auto client : client_vec)
+    for (const auto& client : client_vec)
     {
       // call method 1
       success &= client->Call("foo::method1", "my request for method 1", method_process_time / 10);
@@ -714,7 +714,7 @@ TEST(ClientServer, ClientServerBaseBlocking)
   };
 
   // add method callback
-  for (auto service : service_vec)
+  for (const auto& service : service_vec)
   {
     service->AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", method_callback);
     service->AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", method_callback);
@@ -737,7 +737,7 @@ TEST(ClientServer, ClientServerBaseBlocking)
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
-    for (auto client : client_vec)
+    for (const auto& client : client_vec)
     {
       // call method 1
       if (client->Call("foo::method1", "my request for method 1", -1, &service_response_vec))
@@ -775,7 +775,7 @@ TEST(ClientServer, ClientServerBaseBlocking)
   EXPECT_EQ(methods_called * num_services, responses_executed);
 
   // remove method callback
-  for (auto service : service_vec)
+  for (const auto& service : service_vec)
   {
     service->RemMethodCallback("foo::method1");
     service->RemMethodCallback("foo::method2");

@@ -40,7 +40,7 @@
 class MathServiceImpl : public MathService
 {
 public:
-  virtual void Add(::google::protobuf::RpcController* /* controller_ */, const ::SFloatTuple* request_, ::SFloat* response_, ::google::protobuf::Closure* /* done_ */)
+  void Add(::google::protobuf::RpcController* /* controller_ */, const ::SFloatTuple* request_, ::SFloat* response_, ::google::protobuf::Closure* /* done_ */) override
   {
     // print request and
     std::cout << "Received request MathService / Add      : " << request_->inp1() << " and " << request_->inp2() << std::endl << std::endl;
@@ -48,7 +48,7 @@ public:
     response_->set_out(request_->inp1() + request_->inp2());
   }
 
-  virtual void Multiply(::google::protobuf::RpcController* /* controller_ */, const ::SFloatTuple* request_, ::SFloat* response_, ::google::protobuf::Closure* /* done_ */)
+  void Multiply(::google::protobuf::RpcController* /* controller_ */, const ::SFloatTuple* request_, ::SFloat* response_, ::google::protobuf::Closure* /* done_ */) override
   {
     // print request and
     std::cout << "Received request MathService / Multiply : " << request_->inp1() << " and " << request_->inp2() << std::endl << std::endl;
@@ -56,7 +56,7 @@ public:
     response_->set_out(request_->inp1() * request_->inp2());
   }
 
-  virtual void Divide(::google::protobuf::RpcController* /* controller_ */, const ::SFloatTuple* request_, ::SFloat* response_, ::google::protobuf::Closure* /* done_ */)
+  void Divide(::google::protobuf::RpcController* /* controller_ */, const ::SFloatTuple* request_, ::SFloat* response_, ::google::protobuf::Closure* /* done_ */) override
   {
     // print request and
     std::cout << "Received request MathService / Divide   : " << request_->inp1() << " and " << request_->inp2() << std::endl << std::endl;
@@ -146,7 +146,7 @@ TEST(ClientServerProto, ClientServerProtoCallback)
 class PingServiceImpl : public PingService
 {
 public:
-  void Ping(::google::protobuf::RpcController* /* controller_ */, const ::PingRequest* request_, ::PingResponse* response_, ::google::protobuf::Closure* /* done_ */)
+  void Ping(::google::protobuf::RpcController* /* controller_ */, const ::PingRequest* request_, ::PingResponse* response_, ::google::protobuf::Closure* /* done_ */) override
   {
     // print request and
     std::cout << "Received request PingService / Ping     : " << request_->message() << std::endl << std::endl;
@@ -176,7 +176,7 @@ TEST(ClientServerProto, ClientServerProtoBlocking)
   ping_request.set_message("PING");
   ping_client.Call("Ping", ping_request, -1, &service_response_vec);
   std::cout << std::endl << "Ping method called with message : " << ping_request.message() << std::endl;
-  for (auto service_response : service_response_vec)
+  for (const auto& service_response : service_response_vec)
   {
     EXPECT_EQ(call_state_executed, service_response.call_state);
     switch (service_response.call_state)

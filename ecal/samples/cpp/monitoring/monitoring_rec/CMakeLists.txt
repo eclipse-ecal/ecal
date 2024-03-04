@@ -23,6 +23,7 @@ set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 project(monitoring_rec)
 
 find_package(eCAL REQUIRED)
+find_package(Protobuf REQUIRED)
 
 set(monitoring_rec_src
     src/monitoring_rec.cpp
@@ -30,12 +31,14 @@ set(monitoring_rec_src
 
 ecal_add_sample(${PROJECT_NAME} ${monitoring_rec_src})
 
-target_link_libraries(${PROJECT_NAME} eCAL::core)
-
-target_link_libraries(${PROJECT_NAME} eCAL::core_pb)
+target_link_libraries(${PROJECT_NAME}
+    eCAL::core
+    eCAL::core_pb
+    protobuf::libprotobuf
+)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/monitoring)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER core/samples/cpp/monitoring)
