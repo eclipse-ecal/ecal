@@ -26,8 +26,6 @@ typedef struct _eCAL_pb_Topic {
     pb_callback_t tid; /* topic id */
     pb_callback_t tname; /* topic name */
     pb_callback_t direction; /* direction (publisher, subscriber) */
-    pb_callback_t ttype; /* topic type + topic encoding (deprecated) */
-    pb_callback_t tdesc; /* topic description (protocol descriptor) (deprecated) */
     pb_callback_t tlayer; /* active topic transport layers and it's specific parameter */
     int32_t tsize; /* topic size */
     int32_t connections_loc; /* number of local connected entities */
@@ -38,6 +36,8 @@ typedef struct _eCAL_pb_Topic {
     int32_t dfreq; /* data frequency (send / receive samples per second) [mHz] */
     pb_callback_t attr; /* generic topic description */
     pb_callback_t hgname; /* host group name */
+    /* 9 = topic type + topic encoding (deprecated)
+ 10 = topic description (protocol descriptor) (deprecated) */
     bool has_tdatatype;
     eCAL_pb_DataTypeInformation tdatatype; /* topic datatype information (encoding & type & description) */
 } eCAL_pb_Topic;
@@ -54,10 +54,10 @@ extern "C" {
 
 /* Initializer values for message structs */
 #define eCAL_pb_DataTypeInformation_init_default {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define eCAL_pb_Topic_init_default               {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_DataTypeInformation_init_default}
+#define eCAL_pb_Topic_init_default               {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_DataTypeInformation_init_default}
 #define eCAL_pb_Topic_AttrEntry_init_default     {{{NULL}, NULL}, {{NULL}, NULL}}
 #define eCAL_pb_DataTypeInformation_init_zero    {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define eCAL_pb_Topic_init_zero                  {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_DataTypeInformation_init_zero}
+#define eCAL_pb_Topic_init_zero                  {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_DataTypeInformation_init_zero}
 #define eCAL_pb_Topic_AttrEntry_init_zero        {{{NULL}, NULL}, {{NULL}, NULL}}
 
 /* Field tags (for use in manual encoding/decoding) */
@@ -72,8 +72,6 @@ extern "C" {
 #define eCAL_pb_Topic_tid_tag                    6
 #define eCAL_pb_Topic_tname_tag                  7
 #define eCAL_pb_Topic_direction_tag              8
-#define eCAL_pb_Topic_ttype_tag                  9
-#define eCAL_pb_Topic_tdesc_tag                  10
 #define eCAL_pb_Topic_tlayer_tag                 12
 #define eCAL_pb_Topic_tsize_tag                  13
 #define eCAL_pb_Topic_connections_loc_tag        16
@@ -105,8 +103,6 @@ X(a, CALLBACK, SINGULAR, STRING,   uname,             5) \
 X(a, CALLBACK, SINGULAR, STRING,   tid,               6) \
 X(a, CALLBACK, SINGULAR, STRING,   tname,             7) \
 X(a, CALLBACK, SINGULAR, STRING,   direction,         8) \
-X(a, CALLBACK, SINGULAR, STRING,   ttype,             9) \
-X(a, CALLBACK, SINGULAR, BYTES,    tdesc,            10) \
 X(a, CALLBACK, REPEATED, MESSAGE,  tlayer,           12) \
 X(a, STATIC,   SINGULAR, INT32,    tsize,            13) \
 X(a, STATIC,   SINGULAR, INT32,    connections_loc,  16) \

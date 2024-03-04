@@ -77,13 +77,13 @@ namespace eCAL
       return client;
     }
 
-    // generate DataTypeInformation
-    DataTypeInformation GenerateDataTypeInformation()
+    // generate SDataTypeInformation
+    SDataTypeInformation GenerateDataTypeInformation()
     {
-      DataTypeInformation dt;
-      dt.name     = GenerateString(8);
-      dt.encoding = GenerateString(6);
-      dt.desc     = GenerateString(10);
+      SDataTypeInformation dt;
+      dt.name       = GenerateString(8);
+      dt.encoding   = GenerateString(6);
+      dt.descriptor = GenerateString(10);
       return dt;
     }
 
@@ -110,8 +110,6 @@ namespace eCAL
       topic.tid             = GenerateString(7);
       topic.tname           = GenerateString(8);
       topic.direction       = GenerateString(5);
-      topic.ttype           = GenerateString(10);
-      topic.tdesc           = GenerateString(12);
       topic.tdatatype       = GenerateDataTypeInformation();
       topic.tlayer.push_back(GenerateTLayer());
       topic.tlayer.push_back(GenerateTLayer());

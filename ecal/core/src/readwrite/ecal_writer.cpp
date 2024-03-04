@@ -820,8 +820,6 @@ namespace eCAL
     ecal_reg_sample_topic.hgname = m_host_group_name;
     ecal_reg_sample_topic.tname  = m_topic_name;
     ecal_reg_sample_topic.tid    = m_topic_id;
-    if (share_ttype) ecal_reg_sample_topic.ttype = Util::CombinedTopicEncodingAndType(m_topic_info.encoding, m_topic_info.name);
-    if (share_tdesc) ecal_reg_sample_topic.tdesc = m_topic_info.descriptor;
     // topic_information
     {
       auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.tdatatype;
@@ -832,7 +830,7 @@ namespace eCAL
       }
       if (share_tdesc)
       {
-        ecal_reg_sample_tdatatype.desc = m_topic_info.descriptor;
+        ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
       }
     }
     ecal_reg_sample_topic.attr  = m_attr;

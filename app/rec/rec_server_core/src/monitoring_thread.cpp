@@ -125,19 +125,22 @@ namespace eCAL
           // Update topic list
           for (const auto& topic : monitoring_pb.topics())
           {
+            // Create combined encoding:type type (to be fully compatible to old behavior)
+            std::string combined_enc_type = eCAL::Util::CombinedTopicEncodingAndType(topic.tdatatype().encoding(), topic.tdatatype().name());
+
             auto topic_info_map_it = topic_info_map_.find(topic.tname());
             if (topic_info_map_it != topic_info_map_.end())
             {
               // Only update the values if there are information available
-              if (!topic.ttype().empty() || !topic.tdesc().empty())
+              if (!combined_enc_type.empty() || !topic.tdatatype().name().empty())
               {
-                topic_info_map_it->second.type_ = topic.ttype();
+                topic_info_map_it->second.type_ = combined_enc_type;
               }
             }
             else
             {
               // Create a new topic entry
-              topic_info_map_.emplace(topic.tname(), eCAL::rec_server::TopicInfo(topic.ttype()));
+              topic_info_map_.emplace(topic.tname(), eCAL::rec_server::TopicInfo(combined_enc_type));
               topic_info_map_it = topic_info_map_.find(topic.tname());
             }
 

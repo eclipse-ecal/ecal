@@ -429,7 +429,6 @@ set(ecal_cmn_src
     src/ecal_globals.cpp
     src/ecal_globals.h
     src/ecal_process.cpp
-    src/ecal_sample_to_topicinfo.h
     src/ecal_util.cpp
     src/ecal_win_main.h
 )

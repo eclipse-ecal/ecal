@@ -102,9 +102,9 @@ namespace eCAL
     }
 
     // compare two DataTypeInformation objects
-    bool CompareDataTypeInformation(const DataTypeInformation& dt1, const DataTypeInformation& dt2)
+    bool CompareDataTypeInformation(const SDataTypeInformation& dt1, const SDataTypeInformation& dt2)
     {
-      return (dt1.name == dt2.name) && (dt1.encoding == dt2.encoding) && (dt1.desc == dt2.desc);
+      return (dt1.name == dt2.name) && (dt1.encoding == dt2.encoding) && (dt1.descriptor == dt2.descriptor);
     }
 
     // compare two LayerParUdpMC objects
@@ -164,8 +164,6 @@ namespace eCAL
              (topic1.tid             == topic2.tid) &&
              (topic1.tname           == topic2.tname) &&
              (topic1.direction       == topic2.direction) &&
-             (topic1.ttype           == topic2.ttype) &&
-             (topic1.tdesc           == topic2.tdesc) &&
              CompareDataTypeInformation(topic1.tdatatype, topic2.tdatatype) &&
              CompareTLayer(topic1.tlayer, topic2.tlayer) &&
              (topic1.tsize           == topic2.tsize) &&
