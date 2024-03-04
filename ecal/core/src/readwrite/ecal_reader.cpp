@@ -70,8 +70,7 @@ namespace eCAL
                  m_read_time(0),
                  m_receive_time(0),
                  m_clock(0),
-                 m_clock_old(0),
-                 m_freq(0),
+                 m_frequency_calculator(3.0f),
                  m_message_drops(0),
                  m_loc_published(false),
                  m_ext_published(false),
@@ -97,10 +96,7 @@ namespace eCAL
     m_topic_name    = topic_name_;
     m_topic_id.clear();
     m_topic_info    = topic_info_;
-    m_clock         = 0;
-    m_clock_old     = 0;
     m_message_drops = 0;
-    m_rec_time      = std::chrono::steady_clock::time_point();
     m_created       = false;
 #ifndef NDEBUG
     // log it
@@ -163,11 +159,7 @@ namespace eCAL
 
     // reset defaults
     m_created                 = false;
-    m_clock                   = 0;
-    m_clock_old               = 0;
-    m_freq                    = 0;
     m_message_drops           = 0;
-    m_rec_time                = std::chrono::steady_clock::time_point();
 
     m_use_udp_mc_confirmed    = false;
     m_use_shm_confirmed       = false;
@@ -299,7 +291,10 @@ namespace eCAL
     ecal_reg_sample_topic.pname         = m_pname;
     ecal_reg_sample_topic.uname         = Process::GetUnitName();
     ecal_reg_sample_topic.dclock        = m_clock;
-    ecal_reg_sample_topic.dfreq         = m_freq;
+    {
+      std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
+      ecal_reg_sample_topic.dfreq = static_cast<int32_t>(m_frequency_calculator.getFrequency(std::chrono::steady_clock::now()) * 1000);
+    }
     ecal_reg_sample_topic.message_drops = static_cast<int32_t>(m_message_drops);
 
     // we do not know the number of connections ..
@@ -476,6 +471,12 @@ namespace eCAL
 
     // increase read clock
     m_clock++;
+
+    // Update frequency calculation
+    {
+      std::lock_guard<std::mutex> freq_lock(m_frequency_calculator_mutex);
+      m_frequency_calculator.addTick(std::chrono::steady_clock::now());
+    }
 
     // reset timeout
     m_receive_time = 0;
@@ -896,30 +897,6 @@ namespace eCAL
 
     // ensure that registration is not called within zero nanoseconds
     // normally it will be called from registration logic every second
-    auto curr_time = std::chrono::steady_clock::now();
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - m_rec_time) > std::chrono::milliseconds(0))
-    {
-      // reset clock and time on first call
-      if (m_clock_old == 0)
-      {
-        m_clock_old = m_clock;
-        m_rec_time  = curr_time;
-      }
-
-      // check for clock difference
-      else if ((m_clock - m_clock_old) > 0)
-      {
-        // calculate frequency in mHz
-        m_freq = static_cast<long>((1000 * 1000 * (m_clock - m_clock_old)) / std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - m_rec_time).count());
-        // reset clock and time
-        m_clock_old = m_clock;
-        m_rec_time  = curr_time;
-      }
-      else
-      {
-        m_freq = 0;
-      }
-    }
 
     // register without send
     Register(false);
@@ -943,7 +920,14 @@ namespace eCAL
 
   std::string CDataReader::Dump(const std::string& indent_ /* = "" */)
   {
+    double frequency;
+    {
+      std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
+      frequency = m_frequency_calculator.getFrequency(std::chrono::steady_clock::now()) * 1000;
+    }
+
     std::stringstream out;
+
 
     out << '\n';
     out << indent_ << "------------------------------------"                                       << '\n';
@@ -960,8 +944,7 @@ namespace eCAL
     out << indent_ << "m_read_buf.size():                  " << m_read_buf.size()                  << '\n';
     out << indent_ << "m_read_time:                        " << m_read_time                        << '\n';
     out << indent_ << "m_clock:                            " << m_clock                            << '\n';
-    out << indent_ << "m_rec_time:                         " << std::chrono::duration_cast<std::chrono::milliseconds>(m_rec_time.time_since_epoch()).count() << '\n';
-    out << indent_ << "m_freq:                             " << m_freq                             << '\n';
+    out << indent_ << "frequency [mHz]:                    " << frequency                          << '\n';
     out << indent_ << "m_created:                          " << m_created                          << '\n';
     out << '\n';
 

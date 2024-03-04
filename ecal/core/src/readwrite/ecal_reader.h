@@ -44,6 +44,8 @@
 #include <string>
 #include <unordered_map>
 
+#include <util/frequency_calculator.h>
+
 namespace eCAL
 {
   class CDataReader
@@ -141,9 +143,9 @@ namespace eCAL
     EventCallbackMapT                         m_event_callback_map;
 
     std::atomic<long long>                    m_clock;
-    long long                                 m_clock_old;
-    std::chrono::steady_clock::time_point     m_rec_time;
-    long                                      m_freq;
+
+    std::mutex                                               m_frequency_calculator_mutex;
+    ResettableFrequencyCalculator<std::chrono::steady_clock> m_frequency_calculator;
 
     std::set<long long>                       m_id_set;
 
