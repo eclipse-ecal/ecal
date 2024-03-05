@@ -19,37 +19,35 @@
 cmake_minimum_required(VERSION 3.13)
 
 # --------------------------------------------------------
-# core
+# c tests
 # --------------------------------------------------------
-add_subdirectory(core)
 
-if(ECAL_CORE_BUILD_SAMPLES_PROTOBUF)
-  add_subdirectory(core_pb)
+# --------------------------------------------------------
+# cpp tests
+# --------------------------------------------------------
+add_subdirectory(cpp/event_test)
+add_subdirectory(cpp/expmap_test)
+add_subdirectory(cpp/serialization_test)
+add_subdirectory(cpp/topic2mcast_test)
+add_subdirectory(cpp/util_test)
+
+if(ECAL_CORE_REGISTRATION_SHM OR ECAL_CORE_TRANSPORT_SHM)
+  add_subdirectory(cpp/io_memfile_test)
 endif()
 
-# --------------------------------------------------------
-# core config
-# --------------------------------------------------------
-add_subdirectory(core/cfg)
+if(ECAL_CORE_REGISTRATION AND ECAL_CORE_PUBLISHER AND ECAL_CORE_SUBSCRIBER)
+  add_subdirectory(cpp/core_test)
+  if(ECAL_CORE_TRANSPORT_SHM OR ECAL_CORE_TRANSPORT_UDP) # this test is running for shm and udp layer only, needs to be fixed for tcp
+    add_subdirectory(cpp/pubsub_test)
+  endif()
+  if(ECAL_CORE_BUILD_TESTS_PROTOBUF)
+    add_subdirectory(cpp/pubsub_proto_test)
+  endif()
+endif()
 
-# --------------------------------------------------------
-# services
-# --------------------------------------------------------
 if(ECAL_CORE_SERVICE)
-  add_subdirectory(service)
-endif()
-
-# --------------------------------------------------------
-# samples
-# --------------------------------------------------------
-if(ECAL_CORE_BUILD_SAMPLES)
-  add_subdirectory(samples)
-endif()
-
-# --------------------------------------------------------
-# tests
-# --------------------------------------------------------
-if(ECAL_CORE_BUILD_TESTS)
-  enable_testing()
-  add_subdirectory(tests)
+  add_subdirectory(cpp/clientserver_test)
+  if(ECAL_CORE_BUILD_TESTS_PROTOBUF)
+    add_subdirectory(cpp/clientserver_proto_test)
+  endif()
 endif()
