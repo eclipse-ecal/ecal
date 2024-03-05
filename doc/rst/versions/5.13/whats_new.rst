@@ -14,7 +14,6 @@ eCAL 5.13 was released in March 2024.
 New features
 ============
 
-
 - Check out the `entire 5.13.0 changelog <https://github.com/eclipse-ecal/ecal/releases/tag/v5.13.0>`_!.
 
 Compatibility table
