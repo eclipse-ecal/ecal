@@ -492,11 +492,6 @@ if(BUILD_ECAL_TESTS)
   endif()
 endif()
 
-# --------------------------------------------------------
-# configs
-# --------------------------------------------------------
-add_subdirectory(ecal/core/cfg)
-
 if(BUILD_DOCS)
   add_subdirectory(doc)
 endif()
