@@ -32,7 +32,7 @@ int main(int argc, char **argv)
 
   // create publisher "Hello"
   pub = eCAL_Pub_New();
-  eCAL_Pub_Create(pub, "Hello", "base", "std::string", "", 0);
+  eCAL_Pub_Create(pub, "Hello", "std::string", "base", "", 0);
 
   // send updates
   while(eCAL_Ok())

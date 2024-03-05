@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 
   // create subscriber "Hello"
   sub = eCAL_Sub_New();
-  eCAL_Sub_Create(sub, "Hello", "base", "std::string", "", 0);
+  eCAL_Sub_Create(sub, "Hello", "std::string", "base", "", 0);
 
   // add callback
   eCAL_Sub_AddReceiveCallback(sub, OnReceive, NULL);
