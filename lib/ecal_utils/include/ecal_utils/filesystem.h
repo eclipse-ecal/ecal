@@ -138,5 +138,5 @@ namespace EcalUtils
     std::string FileName(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
 
     std::string BaseName(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
-  };
+  }
 }
