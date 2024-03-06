@@ -42,7 +42,7 @@ namespace eCAL
     template<class Key,
       class T,
       class Compare = std::less<Key>,
-      class Alloc   = std::allocator<std::pair<const Key, T> > >
+      class Alloc = std::allocator<std::pair<const Key, T> > >
     class CExpMap
     {
     public:
@@ -54,12 +54,12 @@ namespace eCAL
       // Key to value and key history iterator 
       using key_to_value_type = std::map<Key, std::pair<T, typename key_tracker_type::iterator>>;
 
-      using allocator_type  = Alloc;
-      using value_type      = std::pair<const Key, T>;
-      using reference       = typename Alloc::reference;
-      using size_type       = typename Alloc::size_type;
-      using key_type        = Key;
-      using mapped_type     = T;
+      using allocator_type = Alloc;
+      using value_type = std::pair<const Key, T>;
+      using reference = typename Alloc::reference;
+      using size_type = typename Alloc::size_type;
+      using key_type = Key;
+      using mapped_type = T;
 
       class iterator
       {
@@ -67,10 +67,10 @@ namespace eCAL
 
       public:
         using iterator_category = std::bidirectional_iterator_tag;
-        using value_type        = std::pair<Key, T>;
-        using difference_type   = std::ptrdiff_t;
-        using pointer           = std::pair<Key, T>*;
-        using reference         = std::pair<Key, T>&;
+        using value_type = std::pair<Key, T>;
+        using difference_type = std::ptrdiff_t;
+        using pointer = std::pair<Key, T>*;
+        using reference = std::pair<Key, T>&;
 
         explicit iterator(const typename key_to_value_type::iterator _it)
           : it(_it)
@@ -105,10 +105,10 @@ namespace eCAL
       {
       public:
         using iterator_category = std::bidirectional_iterator_tag;
-        using value_type        = std::pair<Key, T>;
-        using difference_type   = std::ptrdiff_t;
-        using pointer           = std::pair<Key, T>*;
-        using reference         = std::pair<Key, T>&;
+        using value_type = std::pair<Key, T>;
+        using difference_type = std::ptrdiff_t;
+        using pointer = std::pair<Key, T>*;
+        using reference = std::pair<Key, T>&;
 
         explicit const_iterator(const iterator& other)
           : it(other.it)

@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -83,7 +83,7 @@ static std::string get_time_str()
 {
   char            fmt[64];
   struct timeval  tv;
-  struct tm       *tm;
+  struct tm* tm;
   gettimeofday(&tv, NULL);
   if ((tm = localtime(&tv.tv_sec)) != NULL)
   {
@@ -96,13 +96,13 @@ static std::string get_time_str()
 namespace eCAL
 {
   CLog::CLog() :
-          m_created(false),
-          m_pid(0),
-          m_logfile(nullptr),
-          m_level(log_level_none),
-          m_filter_mask_con(log_level_info | log_level_warning | log_level_error | log_level_fatal),
-          m_filter_mask_file(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2),
-          m_filter_mask_udp(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2)
+    m_created(false),
+    m_pid(0),
+    m_logfile(nullptr),
+    m_level(log_level_none),
+    m_filter_mask_con(log_level_info | log_level_warning | log_level_error | log_level_fatal),
+    m_filter_mask_file(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2),
+    m_filter_mask_udp(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2)
   {
   }
 
@@ -114,17 +114,17 @@ namespace eCAL
   void CLog::Create()
   {
     m_hname = Process::GetHostName();
-    m_pid   = Process::GetProcessID();
+    m_pid = Process::GetProcessID();
     m_pname = Process::GetProcessName();
     m_level = log_level_info;
 
     // parse logging filter strings
-    m_filter_mask_con  = Config::GetConsoleLogFilter();
+    m_filter_mask_con = Config::GetConsoleLogFilter();
     m_filter_mask_file = Config::GetFileLogFilter();
-    m_filter_mask_udp  = Config::GetUdpLogFilter();
+    m_filter_mask_udp = Config::GetUdpLogFilter();
 
     // create log file
-    if(m_filter_mask_file != 0)
+    if (m_filter_mask_file != 0)
     {
       // check ECAL_DATA
       const std::string ecal_log_path = Util::GeteCALLogPath();
@@ -136,16 +136,16 @@ namespace eCAL
       m_logfile = fopen(m_logfile_name.c_str(), "w");
     }
 
-    if(m_filter_mask_udp != 0)
+    if (m_filter_mask_udp != 0)
     {
       // set logging send network attributes
       IO::UDP::SSenderAttr attr;
-      attr.address   = UDP::GetLoggingAddress();
-      attr.port      = UDP::GetLoggingPort();
-      attr.ttl       = UDP::GetMulticastTtl();
+      attr.address = UDP::GetLoggingAddress();
+      attr.port = UDP::GetLoggingPort();
+      attr.ttl = UDP::GetMulticastTtl();
       attr.broadcast = UDP::IsBroadcast();
-      attr.loopback  = true;
-      attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
+      attr.loopback = true;
+      attr.sndbuf = Config::GetUdpMulticastSndBufSizeBytes();
 
       // create udp logging sender
       m_udp_logging_sender = std::make_unique<UDP::CSampleSender>(attr);
@@ -153,11 +153,11 @@ namespace eCAL
 
     // set logging receive network attributes
     IO::UDP::SReceiverAttr attr;
-    attr.address   = UDP::GetLoggingAddress();
-    attr.port      = UDP::GetLoggingPort();
+    attr.address = UDP::GetLoggingAddress();
+    attr.port = UDP::GetLoggingPort();
     attr.broadcast = UDP::IsBroadcast();
-    attr.loopback  = true;
-    attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
+    attr.loopback = true;
+    attr.rcvbuf = Config::GetUdpMulticastRcvBufSizeBytes();
 
     // start logging receiver
     m_log_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CLog::HasSample, this, std::placeholders::_1), std::bind(&CLog::ApplySample, this, std::placeholders::_1, std::placeholders::_2));
@@ -167,13 +167,13 @@ namespace eCAL
 
   void CLog::Destroy()
   {
-    if(!m_created) return;
+    if (!m_created) return;
 
     const std::lock_guard<std::mutex> lock(m_log_sync);
 
     m_udp_logging_sender.reset();
 
-    if(m_logfile != nullptr) fclose(m_logfile);
+    if (m_logfile != nullptr) fclose(m_logfile);
     m_logfile = nullptr;
 
     m_created = false;
@@ -195,22 +195,22 @@ namespace eCAL
   {
     const std::lock_guard<std::mutex> lock(m_log_sync);
 
-    if(!m_created) return;
-    if(msg_.empty()) return;
+    if (!m_created) return;
+    if (msg_.empty()) return;
 
-    const eCAL_Logging_Filter log_con  = level_ & m_filter_mask_con;
+    const eCAL_Logging_Filter log_con = level_ & m_filter_mask_con;
     const eCAL_Logging_Filter log_file = level_ & m_filter_mask_file;
-    const eCAL_Logging_Filter log_udp  = level_ & m_filter_mask_udp;
-    if((log_con | log_file | log_udp) == 0) return;
+    const eCAL_Logging_Filter log_udp = level_ & m_filter_mask_udp;
+    if ((log_con | log_file | log_udp) == 0) return;
 
     auto log_time = eCAL::Time::ecal_clock::now();
 
-    if(log_con != 0)
+    if (log_con != 0)
     {
       std::cout << msg_ << '\n';
     }
 
-    if((log_file != 0) && (m_logfile != nullptr))
+    if ((log_file != 0) && (m_logfile != nullptr))
     {
       std::stringstream msg_stream;
       msg_stream << std::chrono::duration_cast<std::chrono::milliseconds>(log_time.time_since_epoch()).count();
@@ -222,7 +222,7 @@ namespace eCAL
       msg_stream << " | ";
       msg_stream << m_pid;
       msg_stream << " | ";
-      switch(level_)
+      switch (level_)
       {
       case log_level_none:
       case log_level_all:
@@ -259,16 +259,16 @@ namespace eCAL
       fflush(m_logfile);
     }
 
-    if((log_udp != 0) && m_udp_logging_sender)
+    if ((log_udp != 0) && m_udp_logging_sender)
     {
       // set up log message
       Logging::LogMessage log_message;
-      log_message.time    = std::chrono::duration_cast<std::chrono::microseconds>(log_time.time_since_epoch()).count();
-      log_message.hname   = m_hname;
-      log_message.pid     = m_pid;
-      log_message.pname   = m_pname;
-      log_message.uname   = eCAL::Process::GetUnitName();
-      log_message.level   = level_;
+      log_message.time = std::chrono::duration_cast<std::chrono::microseconds>(log_time.time_since_epoch()).count();
+      log_message.hname = m_hname;
+      log_message.pid = m_pid;
+      log_message.pname = m_pname;
+      log_message.uname = eCAL::Process::GetUnitName();
+      log_message.level = level_;
       log_message.content = msg_;
 
       // sent it
@@ -290,7 +290,7 @@ namespace eCAL
 
     // serialize message list to target list string
     SerializeToBuffer(m_log_msglist, log_msg_list_string_);
- 
+
     // empty message list
     m_log_msglist.log_messages.clear();
   }

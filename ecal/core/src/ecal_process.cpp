@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -213,7 +213,7 @@ namespace eCAL
 #endif
 #ifdef ECAL_CORE_NPCAP_SUPPORT
       sstream << "Npcap UDP Reciever       : " << LayerMode(Config::IsNpcapEnabled());
-      if(Config::IsNpcapEnabled() && !Udpcap::Initialize())
+      if (Config::IsNpcapEnabled() && !Udpcap::Initialize())
       {
         sstream << " (Init FAILED!)";
       }
@@ -269,25 +269,25 @@ namespace eCAL
 
     void SleepMS(const long time_ms_)
     {
-      #ifdef ECAL_OS_WINDOWS
+#ifdef ECAL_OS_WINDOWS
       {
         Sleep(time_ms_);
       }
-      #else
-        std::this_thread::sleep_for(std::chrono::milliseconds(time_ms_));
-      #endif
+#else
+      std::this_thread::sleep_for(std::chrono::milliseconds(time_ms_));
+#endif
     }
 
     void SleepNS(const long long time_ns_)
     {
-      #ifdef ECAL_OS_WINDOWS
+#ifdef ECAL_OS_WINDOWS
       {
         auto milliseconds = time_ns_ / 1000000 + ((time_ns_ % 1000000) != 0);
         Sleep(static_cast<DWORD>(milliseconds));
       }
-      #else
-        std::this_thread::sleep_for(std::chrono::nanoseconds(time_ns_));
-      #endif
+#else
+      std::this_thread::sleep_for(std::chrono::nanoseconds(time_ns_));
+#endif
     }
 
     void SetState(eCAL_Process_eSeverity severity_, eCAL_Process_eSeverity_Level level_, const char* info_)
@@ -329,7 +329,7 @@ namespace
   {
     if (eCAL::g_process_id == 0)
     {
-      eCAL::g_process_id   = GetCurrentProcessId();
+      eCAL::g_process_id = GetCurrentProcessId();
       eCAL::g_process_id_s = std::to_string(eCAL::g_process_id);
     }
   }
@@ -457,10 +457,10 @@ namespace eCAL
         NULL                          //HANDLE  hStdError;
       };
 
-      std::wstring w_proc_name   = EcalUtils::StrConvert::Utf8ToWide(proc_name);
+      std::wstring w_proc_name = EcalUtils::StrConvert::Utf8ToWide(proc_name);
       std::wstring w_working_dir = EcalUtils::StrConvert::Utf8ToWide(working_dir);
 
-      w_proc_name.  push_back('\0'); // 0-termiante string
+      w_proc_name.push_back('\0'); // 0-termiante string
       w_working_dir.push_back('\0'); // 0-termiante string
 
 
@@ -608,7 +608,7 @@ namespace eCAL
 
 #ifdef ECAL_OS_LINUX
 
-extern char **environ;
+extern char** environ;
 
 namespace
 {
@@ -616,7 +616,7 @@ namespace
   {
     if (eCAL::g_process_id == 0)
     {
-      eCAL::g_process_id   = getpid();
+      eCAL::g_process_id = getpid();
       eCAL::g_process_id_s = std::to_string(eCAL::g_process_id);
     }
   }
@@ -671,7 +671,7 @@ namespace
     {
       while (fgets(buffer.data(), buffer.size(), pipe) != nullptr)
       {
-          process_stub_output += buffer.data();
+        process_stub_output += buffer.data();
       }
       process_stub_output = EcalUtils::String::Trim(process_stub_output);
 
@@ -680,7 +680,7 @@ namespace
       if (process_stub_output != std::string(ECAL_PROCESS_STUB_VERSION_STRING))
       {
         std::cerr << "[PID " << getpid() << "]: " << "Error testing for ecal_process_stub: Got faulty version string: \"" << process_stub_output << "\". "
-                  << "Maybe eCAL is not installed correctly. Switching to fallback mode." << std::endl;
+          << "Maybe eCAL is not installed correctly. Switching to fallback mode." << std::endl;
         return "";
       }
 
@@ -697,7 +697,7 @@ namespace
     else
     {
       std::cerr << "[PID " << getpid() << "]: " << "Error testing for ecal_process_stub: " << strerror(errno) << ". "
-                << "Maybe eCAL is not installed correctly. Switching to fallback mode." << std::endl;
+        << "Maybe eCAL is not installed correctly. Switching to fallback mode." << std::endl;
       return "";
     }
 
@@ -740,11 +740,11 @@ namespace eCAL
         }
         length = strlen(buf);
 #elif defined(ECAL_OS_QNX)
-        size_t length {0};
+        size_t length{ 0 };
         // TODO: Find a suitable method on QNX to retrieve current process name
 #elif defined(ECAL_OS_FREEBSD)
-        size_t length {0};
-        struct kinfo_proc *proc = kinfo_getproc(getpid());
+        size_t length{ 0 };
+        struct kinfo_proc* proc = kinfo_getproc(getpid());
         if (proc)
         {
           strncpy(buf, proc->ki_comm, sizeof(buf));
@@ -902,17 +902,17 @@ namespace eCAL
         mib[3] = getpid();
 
         // get the length of the return value buffer
-        size_t len {0};
-        sysctl(mib, sizeof mib , NULL, &len, NULL, 0);
+        size_t len{ 0 };
+        sysctl(mib, sizeof mib, NULL, &len, NULL, 0);
 
         // retrieve process arguments as null-character seperated c-string
         auto buffer = std::make_unique<char[]>(len);
         sysctl(mib, sizeof mib, buffer.get(), &len, NULL, 0);
         size_t position = 0;
-        
+
         // convert null-character seperated c-string to std::vector<std::string>
         std::vector<std::string> argument_vector;
-        while(position < len)
+        while (position < len)
         {
           const char* arg = &(buffer.get()[position]);
           argument_vector.push_back(arg);
@@ -963,7 +963,7 @@ namespace eCAL
           }
           if (constains_space) escaped_arg += '\"';
 
-          if(escaped_arg.empty())
+          if (escaped_arg.empty())
             escaped_arg = "\"\"";
 
           complete_char_num += escaped_arg.size();
@@ -1064,18 +1064,18 @@ namespace eCAL
 
       static int unique_counter = 0; // static counter to make sure we always get a unique fifo name
       std::string unique_name = "ecal_process_"
-                              + std::to_string(getpid())
-                              + "_"
-                              + std::to_string(unique_counter++)
-                              + "_"
-                              + std::to_string(std::chrono::steady_clock::now().time_since_epoch().count());
+        + std::to_string(getpid())
+        + "_"
+        + std::to_string(unique_counter++)
+        + "_"
+        + std::to_string(std::chrono::steady_clock::now().time_since_epoch().count());
 
-      std::string fifo_name     = "/tmp/" + unique_name;
+      std::string fifo_name = "/tmp/" + unique_name;
       std::string lockfile_name = "/var/lock/" + unique_name + ".lock";
 
       STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Creating FIFO \"" << fifo_name << "\"" << std::endl);
 
-      if(mkfifo(fifo_name.c_str(), S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) == -1)
+      if (mkfifo(fifo_name.c_str(), S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) == -1)
       {
         std::cerr << "[PID " << getpid() << "]: " << "Error creating FIFO \"" << fifo_name << ": " << strerror(errno) << std::endl;
       }
@@ -1204,7 +1204,7 @@ namespace eCAL
           }
 
           // create C-style argv
-          const char** c_argv = new const char*[argv.size() + 1];
+          const char** c_argv = new const char* [argv.size() + 1];
           for (size_t i = 0; i < argv.size(); i++)
           {
             c_argv[i] = argv[i].c_str();
@@ -1259,7 +1259,7 @@ namespace eCAL
             STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Opening FIFO \"" << fifo_name << "\"" << std::endl);
             int fifo_fd = open(fifo_name.c_str(), O_WRONLY);
 
-            if(fifo_fd < 0)
+            if (fifo_fd < 0)
             {
               std::cerr << "[PID " << getpid() << "]: " << "Error opening FIFO \"" << fifo_name << ": " << strerror(errno) << std::endl;
             }
@@ -1336,7 +1336,7 @@ namespace eCAL
             STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Opening FIFO \"" << fifo_name << "\"" << std::endl);
             int fifo_fd = open(fifo_name.c_str(), O_WRONLY);
 
-            if(fifo_fd < 0)
+            if (fifo_fd < 0)
             {
               std::cerr << "[PID " << getpid() << "]: " << "Error opening FIFO \"" << fifo_name << ": " << strerror(errno) << std::endl;
             }
@@ -1406,7 +1406,7 @@ namespace eCAL
         // lock.
         STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Opening FIFO \"" << fifo_name << "\"" << std::endl);
         int fifo_fd = open(fifo_name.c_str(), O_RDWR, O_NONBLOCK);  // Open FIFO non-blocking requires to open it Read-Write, although we only want to read it.
-        if(fifo_fd < 0)
+        if (fifo_fd < 0)
         {
           std::cerr << "[PID " << getpid() << "]: " << "Error opening FIFO \"" << fifo_name << ": " << strerror(errno) << std::endl;
         }
@@ -1426,7 +1426,7 @@ namespace eCAL
 
           int ready = select(fifo_fd + 1, &fifo_fd_set, NULL, NULL, &timeout);
 
-          if(ready == -1)
+          if (ready == -1)
           {
             std::cerr << "[PID " << getpid() << "]: " << "Error waiting for PID in FIFO \"" << fifo_name << ": " << strerror(errno) << std::endl;
           }
@@ -1438,7 +1438,7 @@ namespace eCAL
           {
             STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Reading PID of new process..." << std::endl);
 
-            if(read(fifo_fd, &process_pid, sizeof(process_pid)) >= 0)
+            if (read(fifo_fd, &process_pid, sizeof(process_pid)) >= 0)
             {
               STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Received PID " << process_pid << std::endl);
             }

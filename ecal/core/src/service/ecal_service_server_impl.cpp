@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -68,7 +68,7 @@ namespace eCAL
 
   std::shared_ptr<CServiceServerImpl> CServiceServerImpl::CreateInstance(const std::string& service_name_)
   {
-    auto instance = std::shared_ptr<CServiceServerImpl> (new CServiceServerImpl());
+    auto instance = std::shared_ptr<CServiceServerImpl>(new CServiceServerImpl());
     instance->Create(service_name_);
     return instance;
   }
@@ -100,38 +100,38 @@ namespace eCAL
 
     // Create callback functions
     const eCAL::service::Server::EventCallbackT event_callback
-            = [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())]
-              (eCAL::service::ServerEventType event, const std::string& message)
-              {
-                auto me = weak_me.lock();
+      = [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())]
+      (eCAL::service::ServerEventType event, const std::string& message)
+      {
+        auto me = weak_me.lock();
 
-                eCAL_Server_Event ecal_server_event = eCAL_Server_Event::server_event_none;
-                switch (event)
-                {
-                case eCAL::service::ServerEventType::Connected:
-                  ecal_server_event = eCAL_Server_Event::server_event_connected;
-                  break;
-                case eCAL::service::ServerEventType::Disconnected:
-                  ecal_server_event = eCAL_Server_Event::server_event_disconnected;
-                  break;
-                default:
-                  break;
-                }
+        eCAL_Server_Event ecal_server_event = eCAL_Server_Event::server_event_none;
+        switch (event)
+        {
+        case eCAL::service::ServerEventType::Connected:
+          ecal_server_event = eCAL_Server_Event::server_event_connected;
+          break;
+        case eCAL::service::ServerEventType::Disconnected:
+          ecal_server_event = eCAL_Server_Event::server_event_disconnected;
+          break;
+        default:
+          break;
+        }
 
-                if (me)
-                  me->EventCallback(ecal_server_event, message);
-              };
-    
+        if (me)
+          me->EventCallback(ecal_server_event, message);
+      };
+
     const eCAL::service::Server::ServiceCallbackT service_callback
-            = [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())]
-              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
-              {
-                auto me = weak_me.lock();
-                if (me)
-                  return me->RequestCallback(*request, *response);
-                else
-                  return -1;
-              };
+      = [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())]
+      (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+      {
+        auto me = weak_me.lock();
+        if (me)
+          return me->RequestCallback(*request, *response);
+        else
+          return -1;
+      };
 
     // start service protocol version 0
     if (Config::IsServiceProtocolV0Enabled())
@@ -189,7 +189,7 @@ namespace eCAL
       m_connected_v1 = false;
     }
 
-    m_created      = false;
+    m_created = false;
 
     return(true);
   }
@@ -201,18 +201,18 @@ namespace eCAL
       auto iter = m_method_map.find(method_);
       if (iter != m_method_map.end())
       {
-        iter->second.method.mname     = method_;
-        iter->second.method.req_type  = request_type_information_.name;
-        iter->second.method.req_desc  = request_type_information_.descriptor;
+        iter->second.method.mname = method_;
+        iter->second.method.req_type = request_type_information_.name;
+        iter->second.method.req_desc = request_type_information_.descriptor;
         iter->second.method.resp_type = response_type_information_.name;
         iter->second.method.resp_desc = response_type_information_.descriptor;
       }
       else
       {
         SMethod method;
-        method.method.mname     = method_;
-        method.method.req_type  = request_type_information_.name;
-        method.method.req_desc  = request_type_information_.descriptor;
+        method.method.mname = method_;
+        method.method.req_type = request_type_information_.name;
+        method.method.req_desc = request_type_information_.descriptor;
         method.method.resp_type = response_type_information_.name;
         method.method.resp_desc = response_type_information_.descriptor;
         m_method_map[method_] = method;
@@ -234,33 +234,33 @@ namespace eCAL
       if (iter != m_method_map.end())
       {
         // should we overwrite this ?
-        iter->second.method.mname     = method_;
-        iter->second.method.req_type  = req_type_;
+        iter->second.method.mname = method_;
+        iter->second.method.req_type = req_type_;
         iter->second.method.resp_type = resp_type_;
         // set callback
         iter->second.callback = callback_;
 
         // read descriptors back from existing service method
-        req_desc  = iter->second.method.req_desc;
+        req_desc = iter->second.method.req_desc;
         resp_desc = iter->second.method.resp_desc;
       }
       else
       {
         SMethod method;
-        method.method.mname     = method_;
-        method.method.req_type  = req_type_;
+        method.method.mname = method_;
+        method.method.req_type = req_type_;
         method.method.resp_type = resp_type_;
-        method.callback         = callback_;
+        method.callback = callback_;
         m_method_map[method_] = method;
       }
     }
 
     SDataTypeInformation request_type_information;
-    request_type_information.name       = req_type_;
+    request_type_information.name = req_type_;
     request_type_information.descriptor = req_desc;
 
     SDataTypeInformation response_type_information;
-    response_type_information.name       = resp_type_;
+    response_type_information.name = resp_type_;
     response_type_information.descriptor = resp_desc;
 
     // update descgate infos
@@ -325,7 +325,7 @@ namespace eCAL
     if (!m_created) return false;
 
     return (m_tcp_server_v0 && m_tcp_server_v0->is_connected())
-            || (m_tcp_server_v1 && m_tcp_server_v1->is_connected());
+      || (m_tcp_server_v1 && m_tcp_server_v1->is_connected());
   }
 
   // called by the eCAL::CServiceGate to register a client
@@ -353,15 +353,15 @@ namespace eCAL
 
     // create service registration sample
     Registration::Sample sample;
-    sample.cmd_type     = bct_reg_service;
-    auto& service       = sample.service;
-    service.version     = m_server_version;
-    service.hname       = Process::GetHostName();
-    service.pname       = Process::GetProcessName();
-    service.uname       = Process::GetUnitName();
-    service.pid         = Process::GetProcessID();
-    service.sname       = m_service_name;
-    service.sid         = m_service_id;
+    sample.cmd_type = bct_reg_service;
+    auto& service = sample.service;
+    service.version = m_server_version;
+    service.hname = Process::GetHostName();
+    service.pname = Process::GetProcessName();
+    service.uname = Process::GetUnitName();
+    service.pid = Process::GetProcessID();
+    service.sname = m_service_name;
+    service.sid = m_service_id;
     service.tcp_port_v0 = server_tcp_port_v0;
     service.tcp_port_v1 = server_tcp_port_v1;
 
@@ -371,11 +371,11 @@ namespace eCAL
       for (const auto& iter : m_method_map)
       {
         Service::Method method;
-        method.mname      = iter.first;
-        method.req_type   = iter.second.method.req_type;
-        method.req_desc   = iter.second.method.req_desc;
-        method.resp_type  = iter.second.method.resp_type;
-        method.resp_desc  = iter.second.method.resp_desc;
+        method.mname = iter.first;
+        method.req_type = iter.second.method.req_type;
+        method.req_desc = iter.second.method.req_desc;
+        method.resp_type = iter.second.method.resp_type;
+        method.resp_desc = iter.second.method.resp_desc;
         method.call_count = iter.second.method.call_count;
         service.methods.push_back(method);
       }
@@ -391,15 +391,15 @@ namespace eCAL
 
     // create service registration sample
     Registration::Sample sample;
-    sample.cmd_type     = bct_unreg_service;
-    auto& service       = sample.service;
-    service.version     = m_server_version;
-    service.hname       = Process::GetHostName();
-    service.pname       = Process::GetProcessName();
-    service.uname       = Process::GetUnitName();
-    service.pid         = Process::GetProcessID();
-    service.sname       = m_service_name;
-    service.sid         = m_service_id;
+    sample.cmd_type = bct_unreg_service;
+    auto& service = sample.service;
+    service.version = m_server_version;
+    service.hname = Process::GetHostName();
+    service.pname = Process::GetProcessName();
+    service.uname = Process::GetUnitName();
+    service.pid = Process::GetProcessID();
+    service.sname = m_service_name;
+    service.sid = m_service_id;
 
     // unregister entity
     if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterServer(m_service_name, m_service_id, sample, true);
@@ -412,7 +412,7 @@ namespace eCAL
     auto& response_header = response.header;
     response_header.hname = Process::GetHostName();
     response_header.sname = m_service_name;
-    response_header.sid   = m_service_id;
+    response_header.sid = m_service_id;
 
     // try to parse request
     Service::Request request;
@@ -476,7 +476,7 @@ namespace eCAL
     // set method call state 'executed'
     response_header.state = Service::eMethodCallState::executed;
     // set method response and return state
-    response.response  = response_s;
+    response.response = response_s;
     response.ret_state = service_return_state;
 
     // TODO: The next version of the service protocol should omit the double-serialization (i.e. copying the binary data in a protocol buffer and then serializing that again)
@@ -499,7 +499,7 @@ namespace eCAL
       {
         if (m_tcp_server_v0 && !m_tcp_server_v0->is_connected())
         {
-          mode_changed   = true;
+          mode_changed = true;
           m_connected_v0 = false;
           Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 0 disconnected");
         }
@@ -508,7 +508,7 @@ namespace eCAL
       {
         if (m_tcp_server_v0 && m_tcp_server_v0->is_connected())
         {
-          mode_changed   = true;
+          mode_changed = true;
           m_connected_v0 = true;
           Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 0 connected");
         }
@@ -519,7 +519,7 @@ namespace eCAL
       {
         if (m_tcp_server_v1 && !m_tcp_server_v1->is_connected())
         {
-          mode_changed   = true;
+          mode_changed = true;
           m_connected_v1 = false;
           Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 1 disconnected");
         }
@@ -528,7 +528,7 @@ namespace eCAL
       {
         if (m_tcp_server_v1 && m_tcp_server_v1->is_connected())
         {
-          mode_changed   = true;
+          mode_changed = true;
           m_connected_v1 = true;
           Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 1 connected");
         }

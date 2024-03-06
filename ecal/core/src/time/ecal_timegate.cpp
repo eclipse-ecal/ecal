@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,13 +72,13 @@ namespace eCAL
 
   void CTimeGate::Create(enum eTimeSyncMode sync_mode_)
   {
-    if(m_created) return;
+    if (m_created) return;
 
     // load time sync modules
     m_time_sync_modname.clear();
-    m_is_initialized_rt     = false;
+    m_is_initialized_rt = false;
     m_is_initialized_replay = false;
-    m_sync_mode             = sync_mode_;
+    m_sync_mode = sync_mode_;
 
     switch (m_sync_mode)
     {
@@ -111,7 +111,7 @@ namespace eCAL
 
   void CTimeGate::Destroy()
   {
-    if(!m_created) return;
+    if (!m_created) return;
     switch (m_sync_mode)
     {
     case eTimeSyncMode::none:
@@ -127,7 +127,7 @@ namespace eCAL
     default:
       break;
     }
-    m_is_initialized_rt     = false;
+    m_is_initialized_rt = false;
     m_is_initialized_replay = false;
 
     m_created = false;
@@ -251,7 +251,7 @@ namespace eCAL
         m_time_sync_rt.etime_sleep_for_nanoseconds_ptr(duration_nsecs_);
       }
       else {
-      eCAL::Process::SleepFor(std::chrono::nanoseconds(duration_nsecs_));
+        eCAL::Process::SleepFor(std::chrono::nanoseconds(duration_nsecs_));
       }
       break;
     case eTimeSyncMode::replay:
@@ -259,7 +259,7 @@ namespace eCAL
         m_time_sync_replay.etime_sleep_for_nanoseconds_ptr(duration_nsecs_);
       }
       else {
-      eCAL::Process::SleepFor(std::chrono::nanoseconds(duration_nsecs_));
+        eCAL::Process::SleepFor(std::chrono::nanoseconds(duration_nsecs_));
       }
       break;
     default:
@@ -287,16 +287,17 @@ namespace eCAL
         }
         break;
       case eTimeSyncMode::realtime:
-        if (!m_successfully_loaded_rt){
+        if (!m_successfully_loaded_rt) {
           error_ = -1;
           if (status_message_ != nullptr) {
             status_message_->assign("Failed to load realtime timesync module ");
             status_message_->append(GetName());
           }
-        } else {
+        }
+        else {
           if (status_message_ != nullptr) {
             char buffer[buffer_len];
-            buffer[0] = 0x0; 
+            buffer[0] = 0x0;
             m_time_sync_rt.etime_get_status_ptr(&error_, buffer, buffer_len);
             buffer[buffer_len - 1] = 0x0;              // Just in case the module forgot to null-terminate the string
             status_message_->assign(buffer);
@@ -307,13 +308,14 @@ namespace eCAL
         }
         break;
       case eTimeSyncMode::replay:
-        if (!m_successfully_loaded_replay){
+        if (!m_successfully_loaded_replay) {
           error_ = -1;
           if (status_message_ != nullptr) {
             status_message_->assign("Failed to load realtime timesync module ");
             status_message_->append(GetName());
           }
-        } else {
+        }
+        else {
           if (status_message_ != nullptr) {
             char buffer[buffer_len];
             buffer[0] = 0x0;
@@ -353,7 +355,7 @@ namespace eCAL
       {
         module_name.erase(0, 1);
       }
-      if (module_name[module_name.size()-1] == '\"' || module_name[module_name.size() - 1] == '\'')
+      if (module_name[module_name.size() - 1] == '\"' || module_name[module_name.size() - 1] == '\'')
       {
         module_name.erase(module_name.size() - 1);
       }
@@ -362,19 +364,19 @@ namespace eCAL
     const auto ecal_time_plugin_paths = splitPaths(getEnvVar("ECAL_TIME_PLUGIN_PATH"));
 
 #ifdef _WIN32
-  #ifndef NDEBUG
-      module_name += "d";
-  #endif // !NDEBUG
-      // set extension
-      module_name += ".dll";
+#ifndef NDEBUG
+    module_name += "d";
+#endif // !NDEBUG
+    // set extension
+    module_name += ".dll";
 #endif // _WIN32
 
 #ifdef __linux__
-      module_name = "lib" + module_name + ".so";
+    module_name = "lib" + module_name + ".so";
 #endif // __linux__
 
 #ifdef __APPLE__
-      module_name = "lib" + module_name + ".dylib";
+    module_name = "lib" + module_name + ".dylib";
 #endif // __APPLE__
 
     if (interface_.module_handle == nullptr)
@@ -426,36 +428,36 @@ namespace eCAL
       else
       {
 #ifdef _WIN32
-        interface_.module_name               = module_name;
-        interface_.etime_initialize_ptr      = (etime_initialize)                  GetProcAddress(interface_.module_handle, etime_initialize_name);
-        interface_.etime_finalize_ptr        = (etime_finalize)                    GetProcAddress(interface_.module_handle, etime_finalize_name);
-        interface_.etime_get_nanoseconds_ptr = (etime_get_nanoseconds)             GetProcAddress(interface_.module_handle, etime_get_nanoseconds_name);
-        interface_.etime_set_nanoseconds_ptr = (etime_set_nanoseconds)             GetProcAddress(interface_.module_handle, etime_set_nanoseconds_name);
-        interface_.etime_is_synchronized_ptr = (etime_is_synchronized)             GetProcAddress(interface_.module_handle, etime_is_synchronized_name);
-        interface_.etime_is_master_ptr       = (etime_is_master)                   GetProcAddress(interface_.module_handle, etime_is_master_name);
-        interface_.etime_sleep_for_nanoseconds_ptr = (etime_sleep_for_nanoseconds) GetProcAddress(interface_.module_handle, etime_sleep_for_nanoseconds_name);
-        interface_.etime_get_status_ptr       = (etime_get_status)                 GetProcAddress(interface_.module_handle, etime_get_status_name);
+        interface_.module_name = module_name;
+        interface_.etime_initialize_ptr = (etime_initialize)GetProcAddress(interface_.module_handle, etime_initialize_name);
+        interface_.etime_finalize_ptr = (etime_finalize)GetProcAddress(interface_.module_handle, etime_finalize_name);
+        interface_.etime_get_nanoseconds_ptr = (etime_get_nanoseconds)GetProcAddress(interface_.module_handle, etime_get_nanoseconds_name);
+        interface_.etime_set_nanoseconds_ptr = (etime_set_nanoseconds)GetProcAddress(interface_.module_handle, etime_set_nanoseconds_name);
+        interface_.etime_is_synchronized_ptr = (etime_is_synchronized)GetProcAddress(interface_.module_handle, etime_is_synchronized_name);
+        interface_.etime_is_master_ptr = (etime_is_master)GetProcAddress(interface_.module_handle, etime_is_master_name);
+        interface_.etime_sleep_for_nanoseconds_ptr = (etime_sleep_for_nanoseconds)GetProcAddress(interface_.module_handle, etime_sleep_for_nanoseconds_name);
+        interface_.etime_get_status_ptr = (etime_get_status)GetProcAddress(interface_.module_handle, etime_get_status_name);
 #endif // _WIN32
 #if defined(__linux__) || defined(__APPLE__)
-        interface_.module_name               = module_name;
-        interface_.etime_initialize_ptr      = (etime_initialize)                  dlsym(interface_.module_handle, etime_initialize_name);
-        interface_.etime_finalize_ptr        = (etime_finalize)                    dlsym(interface_.module_handle, etime_finalize_name);
-        interface_.etime_get_nanoseconds_ptr = (etime_get_nanoseconds)             dlsym(interface_.module_handle, etime_get_nanoseconds_name);
-        interface_.etime_set_nanoseconds_ptr = (etime_set_nanoseconds)             dlsym(interface_.module_handle, etime_set_nanoseconds_name);
-        interface_.etime_is_synchronized_ptr = (etime_is_synchronized)             dlsym(interface_.module_handle, etime_is_synchronized_name);
-        interface_.etime_is_master_ptr       = (etime_is_master)                   dlsym(interface_.module_handle, etime_is_master_name);
-        interface_.etime_sleep_for_nanoseconds_ptr = (etime_sleep_for_nanoseconds) dlsym(interface_.module_handle, etime_sleep_for_nanoseconds_name);
-        interface_.etime_get_status_ptr      = (etime_get_status)                  dlsym(interface_.module_handle, etime_get_status_name);
+        interface_.module_name = module_name;
+        interface_.etime_initialize_ptr = (etime_initialize)dlsym(interface_.module_handle, etime_initialize_name);
+        interface_.etime_finalize_ptr = (etime_finalize)dlsym(interface_.module_handle, etime_finalize_name);
+        interface_.etime_get_nanoseconds_ptr = (etime_get_nanoseconds)dlsym(interface_.module_handle, etime_get_nanoseconds_name);
+        interface_.etime_set_nanoseconds_ptr = (etime_set_nanoseconds)dlsym(interface_.module_handle, etime_set_nanoseconds_name);
+        interface_.etime_is_synchronized_ptr = (etime_is_synchronized)dlsym(interface_.module_handle, etime_is_synchronized_name);
+        interface_.etime_is_master_ptr = (etime_is_master)dlsym(interface_.module_handle, etime_is_master_name);
+        interface_.etime_sleep_for_nanoseconds_ptr = (etime_sleep_for_nanoseconds)dlsym(interface_.module_handle, etime_sleep_for_nanoseconds_name);
+        interface_.etime_get_status_ptr = (etime_get_status)dlsym(interface_.module_handle, etime_get_status_name);
 #endif // defined(__linux__) || defined(__APPLE__)
 
-        if (  (interface_.etime_initialize_ptr            == nullptr)
-           || (interface_.etime_finalize_ptr              == nullptr)
-           || (interface_.etime_get_nanoseconds_ptr       == nullptr)
-           || (interface_.etime_set_nanoseconds_ptr       == nullptr)
-           || (interface_.etime_is_synchronized_ptr       == nullptr)
-           || (interface_.etime_is_master_ptr             == nullptr)
-           || (interface_.etime_sleep_for_nanoseconds_ptr == nullptr)
-           || (interface_.etime_get_status_ptr            == nullptr)
+        if ((interface_.etime_initialize_ptr == nullptr)
+          || (interface_.etime_finalize_ptr == nullptr)
+          || (interface_.etime_get_nanoseconds_ptr == nullptr)
+          || (interface_.etime_set_nanoseconds_ptr == nullptr)
+          || (interface_.etime_is_synchronized_ptr == nullptr)
+          || (interface_.etime_is_master_ptr == nullptr)
+          || (interface_.etime_sleep_for_nanoseconds_ptr == nullptr)
+          || (interface_.etime_get_status_ptr == nullptr)
           )
         {
           eCAL::Logging::Log(log_level_error, "Could not load eCAL time sync module " + module_name);

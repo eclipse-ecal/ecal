@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,11 +19,11 @@
 
 /**
  * @brief  eCAL registration provider
- * 
+ *
  * All process internal publisher/subscriber, server/clients register here with all their attributes.
- * 
+ *
  * These information will be send cyclic (registration refresh) via UDP to external eCAL processes.
- * 
+ *
 **/
 
 #include <atomic>
@@ -92,11 +92,11 @@ namespace eCAL
   std::atomic<bool> CRegistrationProvider::m_created;
 
   CRegistrationProvider::CRegistrationProvider() :
-                    m_reg_topics(false),
-                    m_reg_services(false),
-                    m_reg_process(false),
-                    m_use_registration_udp(false),
-                    m_use_registration_shm(false)
+    m_reg_topics(false),
+    m_reg_services(false),
+    m_reg_process(false),
+    m_use_registration_udp(false),
+    m_use_registration_shm(false)
   {
   }
 
@@ -107,11 +107,11 @@ namespace eCAL
 
   void CRegistrationProvider::Create(bool topics_, bool services_, bool process_)
   {
-    if(m_created) return;
+    if (m_created) return;
 
-    m_reg_topics   = topics_;
+    m_reg_topics = topics_;
     m_reg_services = services_;
-    m_reg_process  = process_;
+    m_reg_process = process_;
 
     // send registration to shared memory and to udp
     m_use_registration_udp = !Config::Experimental::IsNetworkMonitoringDisabled();
@@ -121,12 +121,12 @@ namespace eCAL
     {
       // set network attributes
       IO::UDP::SSenderAttr attr;
-      attr.address   = UDP::GetRegistrationAddress();
-      attr.port      = UDP::GetRegistrationPort();
-      attr.ttl       = UDP::GetMulticastTtl();
+      attr.address = UDP::GetRegistrationAddress();
+      attr.port = UDP::GetRegistrationPort();
+      attr.ttl = UDP::GetMulticastTtl();
       attr.broadcast = UDP::IsBroadcast();
-      attr.loopback  = true;
-      attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
+      attr.loopback = true;
+      attr.sndbuf = Config::GetUdpMulticastSndBufSizeBytes();
 
       // create udp registration sender
       m_reg_sample_snd = std::make_shared<UDP::CSampleSender>(attr);
@@ -150,7 +150,7 @@ namespace eCAL
 
   void CRegistrationProvider::Destroy()
   {
-    if(!m_created) return;
+    if (!m_created) return;
 
     // stop cyclic registration thread
     m_reg_sample_snd_thread->stop();
@@ -180,7 +180,7 @@ namespace eCAL
 
     const std::lock_guard<std::mutex> lock(m_topics_map_sync);
     m_topics_map[topic_name_ + topic_id_] = ecal_sample_;
-    if(force_)
+    if (force_)
     {
       RegisterProcess();
       // apply registration sample
@@ -194,7 +194,7 @@ namespace eCAL
 
   bool CRegistrationProvider::UnregisterTopic(const std::string& topic_name_, const std::string& topic_id_, const Registration::Sample& ecal_sample_, const bool force_)
   {
-    if(!m_created) return(false);
+    if (!m_created) return(false);
 
     if (force_)
     {
@@ -207,7 +207,7 @@ namespace eCAL
     SampleMapT::iterator iter;
     const std::lock_guard<std::mutex> lock(m_topics_map_sync);
     iter = m_topics_map.find(topic_name_ + topic_id_);
-    if(iter != m_topics_map.end())
+    if (iter != m_topics_map.end())
     {
       m_topics_map.erase(iter);
       return(true);
@@ -310,15 +310,15 @@ namespace eCAL
     Registration::Sample process_sample;
     process_sample.cmd_type = bct_reg_process;
     auto& process_sample_process = process_sample.process;
-    process_sample_process.hname                = Process::GetHostName();
-    process_sample_process.hgname               = Process::GetHostGroupName();
-    process_sample_process.pid                  = Process::GetProcessID();
-    process_sample_process.pname                = Process::GetProcessName();
-    process_sample_process.uname                = Process::GetUnitName();
-    process_sample_process.pparam               = Process::GetProcessParameter();
-    process_sample_process.state.severity       = static_cast<Registration::eProcessSeverity>(g_process_severity);
+    process_sample_process.hname = Process::GetHostName();
+    process_sample_process.hgname = Process::GetHostGroupName();
+    process_sample_process.pid = Process::GetProcessID();
+    process_sample_process.pname = Process::GetProcessName();
+    process_sample_process.uname = Process::GetUnitName();
+    process_sample_process.pparam = Process::GetProcessParameter();
+    process_sample_process.state.severity = static_cast<Registration::eProcessSeverity>(g_process_severity);
     process_sample_process.state.severity_level = static_cast<Registration::eProcessSeverityLevel>(g_process_severity_level);
-    process_sample_process.state.info           = g_process_info;
+    process_sample_process.state.info = g_process_info;
 #if ECAL_CORE_TIMEPLUGIN
     if (g_timegate() == nullptr)
     {
@@ -353,10 +353,10 @@ namespace eCAL
     const unsigned int comp_state(g_globals()->GetComponents());
     process_sample_process.component_init_state = static_cast<int32_t>(comp_state);
     std::string component_info;
-    if ((comp_state & Init::Publisher)  != 0u) component_info += "|pub";
+    if ((comp_state & Init::Publisher) != 0u) component_info += "|pub";
     if ((comp_state & Init::Subscriber) != 0u) component_info += "|sub";
-    if ((comp_state & Init::Logging)    != 0u) component_info += "|log";
-    if ((comp_state & Init::TimeSync)   != 0u) component_info += "|time";
+    if ((comp_state & Init::Logging) != 0u) component_info += "|log";
+    if ((comp_state & Init::TimeSync) != 0u) component_info += "|time";
     if (!component_info.empty()) component_info = component_info.substr(1);
     process_sample_process.component_init_info = component_info;
 
@@ -370,21 +370,21 @@ namespace eCAL
 
   bool CRegistrationProvider::UnregisterProcess()
   {
-	  if (!m_created)     return(false);
-	  if (!m_reg_process) return(false);
+    if (!m_created)     return(false);
+    if (!m_reg_process) return(false);
 
-	  Registration::Sample process_sample;
-	  process_sample.cmd_type = bct_unreg_process;
-	  auto& process_sample_process = process_sample.process;
-	  process_sample_process.hname = Process::GetHostName();
-	  process_sample_process.pid   = Process::GetProcessID();
-	  process_sample_process.pname = Process::GetProcessName();
-	  process_sample_process.uname = Process::GetUnitName();
+    Registration::Sample process_sample;
+    process_sample.cmd_type = bct_unreg_process;
+    auto& process_sample_process = process_sample.process;
+    process_sample_process.hname = Process::GetHostName();
+    process_sample_process.pid = Process::GetProcessID();
+    process_sample_process.pname = Process::GetProcessName();
+    process_sample_process.uname = Process::GetUnitName();
 
     // apply unregistration sample
     const bool return_value = ApplySample(Process::GetHostName(), process_sample);
 
-	  return return_value;
+    return return_value;
   }
 
   bool CRegistrationProvider::RegisterTopics()
@@ -392,9 +392,9 @@ namespace eCAL
     if (!m_created)    return(false);
     if (!m_reg_topics) return(false);
 
-    bool return_value {true};
+    bool return_value{ true };
     const std::lock_guard<std::mutex> lock(m_topics_map_sync);
-    for(SampleMapT::const_iterator iter = m_topics_map.begin(); iter != m_topics_map.end(); ++iter)
+    for (SampleMapT::const_iterator iter = m_topics_map.begin(); iter != m_topics_map.end(); ++iter)
     {
       //////////////////////////////////////////////
       // update description
@@ -405,8 +405,8 @@ namespace eCAL
 
       SDataTypeInformation topic_info;
       const auto& topic_datatype = iter->second.topic.tdatatype;
-      topic_info.encoding   = topic_datatype.encoding;
-      topic_info.name       = topic_datatype.name;
+      topic_info.encoding = topic_datatype.encoding;
+      topic_info.name = topic_datatype.name;
       topic_info.descriptor = topic_datatype.desc;
 
       ApplyTopicDescription(topic_name, topic_info, topic_is_a_publisher);
@@ -425,7 +425,7 @@ namespace eCAL
     if (!m_created)      return(false);
     if (!m_reg_services) return(false);
 
-    bool return_value {true};
+    bool return_value{ true };
     const std::lock_guard<std::mutex> lock(m_server_map_sync);
     for (SampleMapT::const_iterator iter = m_server_map.begin(); iter != m_server_map.end(); ++iter)
     {
@@ -436,11 +436,11 @@ namespace eCAL
       for (const auto& method : ecal_sample_service.methods)
       {
         SDataTypeInformation request_type;
-        request_type.name        = method.req_type;
-        request_type.descriptor  = method.req_desc;
+        request_type.name = method.req_type;
+        request_type.descriptor = method.req_desc;
 
         SDataTypeInformation response_type;
-        response_type.name       = method.resp_type;
+        response_type.name = method.resp_type;
         response_type.descriptor = method.resp_desc;
 
         ApplyServiceDescription(ecal_sample_service.sname, method.mname, request_type, response_type);
@@ -460,7 +460,7 @@ namespace eCAL
     if (!m_created)      return(false);
     if (!m_reg_services) return(false);
 
-    bool return_value {true};
+    bool return_value{ true };
     const std::lock_guard<std::mutex> lock(m_client_map_sync);
     for (SampleMapT::const_iterator iter = m_client_map.begin(); iter != m_client_map.end(); ++iter)
     {
@@ -473,9 +473,9 @@ namespace eCAL
 
   bool CRegistrationProvider::ApplySample(const std::string& sample_name_, const Registration::Sample& sample_)
   {
-    if(!m_created) return(false);
+    if (!m_created) return(false);
 
-    bool return_value {true};
+    bool return_value{ true };
 
     if (m_use_registration_udp && m_reg_sample_snd)
     {

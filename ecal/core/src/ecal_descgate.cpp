@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,7 @@
 namespace eCAL
 {
   CDescGate::CDescGate() :
-    m_topic_info_map  (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
+    m_topic_info_map(std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
     m_service_info_map(std::chrono::milliseconds(Config::GetMonitoringTimeoutMs()))
   {
   }
@@ -56,14 +56,14 @@ namespace eCAL
     m_topic_info_map.map->remove_deprecated();
 
     const auto topic_info_it = m_topic_info_map.map->find(topic_name_);
-    
+
     // new element (no need to check anything, just add it)
-    if(topic_info_it == m_topic_info_map.map->end())
+    if (topic_info_it == m_topic_info_map.map->end())
     {
       // create a new topic entry
       STopicInfoQuality& topic_info = (*m_topic_info_map.map)[topic_name_];
-      topic_info.info               = topic_info_;
-      topic_info.quality            = description_quality_;
+      topic_info.info = topic_info_;
+      topic_info.quality = description_quality_;
       return true;
     }
 
@@ -82,7 +82,7 @@ namespace eCAL
     if (description_quality_ > topic_info.quality)
     {
       // overwrite attributes
-      topic_info.info    = topic_info_;
+      topic_info.info = topic_info_;
       topic_info.quality = description_quality_;
 
       // update attributes and return
@@ -166,7 +166,7 @@ namespace eCAL
 
     // topic type description differs
     // we log the error and update the entry one time
-    if ( !topic_info_.descriptor.empty()
+    if (!topic_info_.descriptor.empty()
       && !topic_info.info.descriptor.empty()
       && (topic_info.info.descriptor != topic_info_.descriptor)
       )
@@ -230,12 +230,12 @@ namespace eCAL
     topic_info_ = (*topic_info_it).second.info;
     return(true);
   }
-  
+
   bool CDescGate::ApplyServiceDescription(const std::string& service_name_
-                                        , const std::string& method_name_
-                                        , const SDataTypeInformation& request_type_information_
-                                        , const SDataTypeInformation& response_type_information_
-                                        , const QualityFlags description_quality_)
+    , const std::string& method_name_
+    , const SDataTypeInformation& request_type_information_
+    , const SDataTypeInformation& response_type_information_
+    , const QualityFlags description_quality_)
   {
     std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
 
@@ -247,9 +247,9 @@ namespace eCAL
     {
       // create a new service entry
       SServiceMethodInfoQuality& service_info = (*m_service_info_map.map)[service_method_tuple];
-      service_info.info.request_type   = request_type_information_;
-      service_info.info.response_type  = response_type_information_;
-      service_info.quality             = description_quality_;
+      service_info.info.request_type = request_type_information_;
+      service_info.info.response_type = response_type_information_;
+      service_info.quality = description_quality_;
       return true;
     }
 
@@ -259,9 +259,9 @@ namespace eCAL
     SServiceMethodInfoQuality service_info = (*service_info_map_it).second;
     if (description_quality_ > service_info.quality)
     {
-      service_info.info.request_type   =  request_type_information_;
-      service_info.info.response_type  = response_type_information_;
-      service_info.quality             = description_quality_;
+      service_info.info.request_type = request_type_information_;
+      service_info.info.response_type = response_type_information_;
+      service_info.quality = description_quality_;
       ret_value = true;
     }
 
@@ -307,7 +307,7 @@ namespace eCAL
     auto service_info_map_it = m_service_info_map.map->find(service_method_tuple);
 
     if (service_info_map_it == m_service_info_map.map->end()) return false;
-    req_type_name_  = (*service_info_map_it).second.info.request_type.name;
+    req_type_name_ = (*service_info_map_it).second.info.request_type.name;
     resp_type_name_ = (*service_info_map_it).second.info.response_type.name;
     return true;
   }
@@ -320,7 +320,7 @@ namespace eCAL
     auto service_info_map_it = m_service_info_map.map->find(service_method_tuple);
 
     if (service_info_map_it == m_service_info_map.map->end()) return false;
-    req_type_desc_  = (*service_info_map_it).second.info.request_type.descriptor;
+    req_type_desc_ = (*service_info_map_it).second.info.request_type.descriptor;
     resp_type_desc_ = (*service_info_map_it).second.info.response_type.descriptor;
     return true;
   }

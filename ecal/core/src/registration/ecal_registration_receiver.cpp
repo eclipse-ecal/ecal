@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,17 +48,17 @@ namespace eCAL
   std::atomic<bool> CRegistrationReceiver::m_created;
 
   CRegistrationReceiver::CRegistrationReceiver() :
-                         m_network(NET_ENABLED),
-                         m_loopback(false),
-                         m_callback_pub(nullptr),
-                         m_callback_sub(nullptr),
-                         m_callback_service(nullptr),
-                         m_callback_client(nullptr),
-                         m_callback_process(nullptr),
-                         m_use_registration_udp(false),
-                         m_use_registration_shm(false),
-                         m_callback_custom_apply_sample([](const auto&) {}),
-                         m_host_group_name(Process::GetHostGroupName())
+    m_network(NET_ENABLED),
+    m_loopback(false),
+    m_callback_pub(nullptr),
+    m_callback_sub(nullptr),
+    m_callback_service(nullptr),
+    m_callback_client(nullptr),
+    m_callback_process(nullptr),
+    m_use_registration_udp(false),
+    m_use_registration_shm(false),
+    m_callback_custom_apply_sample([](const auto&) {}),
+    m_host_group_name(Process::GetHostGroupName())
   {
   }
 
@@ -69,24 +69,24 @@ namespace eCAL
 
   void CRegistrationReceiver::Create()
   {
-    if(m_created) return;
+    if (m_created) return;
 
     // network mode
     m_network = Config::IsNetworkEnabled();
 
     // receive registration from shared memory and or udp
     m_use_registration_udp = !Config::Experimental::IsNetworkMonitoringDisabled();
-    m_use_registration_shm     = Config::Experimental::IsShmMonitoringEnabled();
+    m_use_registration_shm = Config::Experimental::IsShmMonitoringEnabled();
 
     if (m_use_registration_udp)
     {
       // set network attributes
       IO::UDP::SReceiverAttr attr;
-      attr.address   = UDP::GetRegistrationAddress();
-      attr.port      = UDP::GetRegistrationPort();
+      attr.address = UDP::GetRegistrationAddress();
+      attr.port = UDP::GetRegistrationPort();
       attr.broadcast = UDP::IsBroadcast();
-      attr.loopback  = true;
-      attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
+      attr.loopback = true;
+      attr.rcvbuf = Config::GetUdpMulticastRcvBufSizeBytes();
 
       // start registration sample receiver
       m_registration_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CRegistrationReceiver::HasSample, this, std::placeholders::_1), std::bind(&CRegistrationReceiver::ApplySerializedSample, this, std::placeholders::_1, std::placeholders::_2));
@@ -108,7 +108,7 @@ namespace eCAL
 
   void CRegistrationReceiver::Destroy()
   {
-    if(!m_created) return;
+    if (!m_created) return;
 
     // stop network registration receive thread
     m_registration_receiver = nullptr;
@@ -129,14 +129,14 @@ namespace eCAL
 #endif
 
     // reset callbacks
-    m_callback_pub     = nullptr;
-    m_callback_sub     = nullptr;
+    m_callback_pub = nullptr;
+    m_callback_sub = nullptr;
     m_callback_service = nullptr;
-    m_callback_client  = nullptr;
+    m_callback_client = nullptr;
     m_callback_process = nullptr;
 
     // finished
-    m_created          = false;
+    m_created = false;
   }
 
   void CRegistrationReceiver::EnableLoopback(bool state_)
@@ -146,7 +146,7 @@ namespace eCAL
 
   bool CRegistrationReceiver::ApplySerializedSample(const char* serialized_sample_data_, size_t serialized_sample_size_)
   {
-    if(!m_created) return false;
+    if (!m_created) return false;
 
     Registration::Sample ecal_sample;
     if (!DeserializeFromBuffer(serialized_sample_data_, serialized_sample_size_, ecal_sample)) return false;
@@ -375,9 +375,9 @@ namespace eCAL
   {
     const std::string& sample_host_group_name = ecal_sample_.topic.hgname.empty() ? ecal_sample_.topic.hname : ecal_sample_.topic.hgname;
 
-    if (sample_host_group_name.empty() || m_host_group_name.empty()) 
+    if (sample_host_group_name.empty() || m_host_group_name.empty())
       return false;
-    if (sample_host_group_name != m_host_group_name) 
+    if (sample_host_group_name != m_host_group_name)
       return false;
 
     return true;

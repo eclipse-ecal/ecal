@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,7 +72,7 @@ namespace eCAL
     CPublisher::Create(topic_name_, data_type_info_);
   }
 
-  CPublisher::CPublisher(const std::string& topic_name_) 
+  CPublisher::CPublisher(const std::string& topic_name_)
     : CPublisher(topic_name_, SDataTypeInformation{})
   {}
 
@@ -85,12 +85,12 @@ namespace eCAL
    * @brief CPublisher are move-enabled
   **/
   CPublisher::CPublisher(CPublisher&& rhs) noexcept :
-                m_datawriter(std::move(rhs.m_datawriter)),
-                m_id(rhs.m_id),
-                m_created(rhs.m_created),
-                m_initialized(rhs.m_initialized)
+    m_datawriter(std::move(rhs.m_datawriter)),
+    m_id(rhs.m_id),
+    m_created(rhs.m_created),
+    m_initialized(rhs.m_initialized)
   {
-    rhs.m_created     = false;
+    rhs.m_created = false;
     rhs.m_initialized = false;
   }
 
@@ -102,12 +102,12 @@ namespace eCAL
     // Call destroy, to clean up the current state, then afterwards move all elements
     Destroy();
 
-    m_datawriter      = std::move(rhs.m_datawriter);
-    m_id              = rhs.m_id;
-    m_created         = rhs.m_created;
-    m_initialized     = rhs.m_initialized;
+    m_datawriter = std::move(rhs.m_datawriter);
+    m_id = rhs.m_id;
+    m_created = rhs.m_created;
+    m_initialized = rhs.m_initialized;
 
-    rhs.m_created     = false;
+    rhs.m_created = false;
     rhs.m_initialized = false;
 
     return *this;
@@ -159,14 +159,14 @@ namespace eCAL
 
   bool CPublisher::Destroy()
   {
-    if(!m_created)             return(false);
-    if(g_globals() == nullptr) return(false);
+    if (!m_created)             return(false);
+    if (g_globals() == nullptr) return(false);
 
     // destroy data writer
     m_datawriter->Destroy();
 
     // unregister data writer
-    if(g_pubgate() != nullptr) g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
+    if (g_pubgate() != nullptr) g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
 #ifndef NDEBUG
     // log it
     if (g_log() != nullptr) g_log()->Log(log_level_debug1, std::string(m_datawriter->GetTopicName() + "::CPublisher::Destroy"));
@@ -198,13 +198,13 @@ namespace eCAL
 
   bool CPublisher::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
   {
-    if(m_datawriter == nullptr) return false;
+    if (m_datawriter == nullptr) return false;
     return m_datawriter->SetAttribute(attr_name_, attr_value_);
   }
 
   bool CPublisher::ClearAttribute(const std::string& attr_name_)
   {
-    if(m_datawriter == nullptr) return false;
+    if (m_datawriter == nullptr) return false;
     return m_datawriter->ClearAttribute(attr_name_);
   }
 
@@ -233,28 +233,28 @@ namespace eCAL
     CBufferPayloadWriter payload{ buf_, len_ };
     return Send(payload, time_);
   }
-  
+
   size_t CPublisher::Send(CPayloadWriter& payload_, long long time_) const
   {
-     if (!m_created) return(0);
+    if (!m_created) return(0);
 
-     // in an optimization case the
-     // publisher can send an empty package
-     // or we do not have any subscription at all
-     // then the data writer will only do some statistics
-     // for the monitoring layer and return
-     if (!IsSubscribed())
-     {
-       m_datawriter->RefreshSendCounter();
-       return(payload_.GetSize());
-     }
+    // in an optimization case the
+    // publisher can send an empty package
+    // or we do not have any subscription at all
+    // then the data writer will only do some statistics
+    // for the monitoring layer and return
+    if (!IsSubscribed())
+    {
+      m_datawriter->RefreshSendCounter();
+      return(payload_.GetSize());
+    }
 
-     // send content via data writer layer
-     const long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
-     const size_t written_bytes = m_datawriter->Write(payload_, write_time, m_id);
+    // send content via data writer layer
+    const long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
+    const size_t written_bytes = m_datawriter->Write(payload_, write_time, m_id);
 
-     // return number of bytes written
-     return written_bytes;
+    // return number of bytes written
+    return written_bytes;
   }
 
   size_t CPublisher::Send(const std::string& s_, long long time_) const
@@ -278,7 +278,7 @@ namespace eCAL
   bool CPublisher::IsSubscribed() const
   {
 #if ECAL_CORE_REGISTRATION
-    if(m_datawriter == nullptr) return(false);
+    if (m_datawriter == nullptr) return(false);
     return(m_datawriter->IsSubscribed());
 #else  // ECAL_CORE_REGISTRATION
     return(true);
@@ -293,7 +293,7 @@ namespace eCAL
 
   std::string CPublisher::GetTopicName() const
   {
-    if(m_datawriter == nullptr) return("");
+    if (m_datawriter == nullptr) return("");
     return(m_datawriter->GetTopicName());
   }
 
@@ -308,10 +308,10 @@ namespace eCAL
     std::stringstream out;
 
     out << indent_ << "----------------------" << '\n';
-    out << indent_ << " class CPublisher"      << '\n';
+    out << indent_ << " class CPublisher" << '\n';
     out << indent_ << "----------------------" << '\n';
     out << indent_ << "m_created:            " << m_created << '\n';
-    if((m_datawriter != nullptr) && m_datawriter->IsCreated()) out << indent_ << m_datawriter->Dump("    ");
+    if ((m_datawriter != nullptr) && m_datawriter->IsCreated()) out << indent_ << m_datawriter->Dump("    ");
     out << '\n';
 
     return(out.str());

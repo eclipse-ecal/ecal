@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,13 +51,13 @@ namespace eCAL
   {
     SWriterInfo info_;
 
-    info_.name                 = "tcp";
-    info_.description          = "tcp data writer";
+    info_.name = "tcp";
+    info_.description = "tcp data writer";
 
-    info_.has_mode_local       = true;
-    info_.has_mode_cloud       = true;
+    info_.has_mode_local = true;
+    info_.has_mode_cloud = true;
 
-    info_.send_size_max        = -1;
+    info_.send_size_max = -1;
 
     return info_;
   }
@@ -74,23 +74,23 @@ namespace eCAL
 
     // create publisher
     m_publisher = std::make_shared<tcp_pubsub::Publisher>(g_tcp_writer_executor);
-    m_port      = m_publisher->getPort();
+    m_port = m_publisher->getPort();
 
     // writer parameter
-    m_host_name  = host_name_;
+    m_host_name = host_name_;
     m_topic_name = topic_name_;
-    m_topic_id   = topic_id_;
+    m_topic_id = topic_id_;
 
     return true;
   }
 
   bool CDataWriterTCP::Destroy()
   {
-    if(!m_publisher) return true;
+    if (!m_publisher) return true;
 
     // destroy publisher
     m_publisher = nullptr;
-    m_port      = 0;
+    m_port = 0;
 
     return true;
   }
@@ -103,15 +103,15 @@ namespace eCAL
     Payload::Sample proto_header;
     auto& proto_header_topic = proto_header.topic;
     proto_header_topic.tname = m_topic_name;
-    proto_header_topic.tid   = m_topic_id;
+    proto_header_topic.tid = m_topic_id;
 
     // set payload content (without payload)
     auto& proto_header_content = proto_header.content;
-    proto_header_content.id    = attr_.id;
+    proto_header_content.id = attr_.id;
     proto_header_content.clock = attr_.clock;
-    proto_header_content.time  = attr_.time;
-    proto_header_content.hash  = static_cast<int64_t>(attr_.hash);
-    proto_header_content.size  = static_cast<int32_t>(attr_.len); // we use this size attribute for "header only"
+    proto_header_content.time = attr_.time;
+    proto_header_content.hash = static_cast<int64_t>(attr_.hash);
+    proto_header_content.size = static_cast<int32_t>(attr_.len); // we use this size attribute for "header only"
 
     // Compute size of "ECAL" pre-header
     constexpr size_t ecal_magic_size(4 * sizeof(char));
@@ -124,9 +124,9 @@ namespace eCAL
     auto proto_header_size = static_cast<uint16_t>(serialized_proto_header.size());
 
     // Compute needed padding for aligning the payload
-    constexpr size_t alignment_bytes     = 8;
-    const     size_t minimal_header_size = ecal_magic_size +  sizeof(uint16_t)    +  proto_header_size;
-    const     size_t padding_size        = (alignment_bytes - (minimal_header_size % alignment_bytes)) % alignment_bytes;
+    constexpr size_t alignment_bytes = 8;
+    const     size_t minimal_header_size = ecal_magic_size + sizeof(uint16_t) + proto_header_size;
+    const     size_t padding_size = (alignment_bytes - (minimal_header_size % alignment_bytes)) % alignment_bytes;
 
     // Add more bytes to the protobuf message to blow it up to the alignment
     // Aligning the user payload this way should be 100% compatible with previous
@@ -143,7 +143,7 @@ namespace eCAL
 
     // prepare the header buffer
     //                    'ECAL'           + proto header size field  + proto header
-    m_header_buffer.resize(ecal_magic_size + sizeof(uint16_t)         + proto_header_size);
+    m_header_buffer.resize(ecal_magic_size + sizeof(uint16_t) + proto_header_size);
 
     // add magic ecal header :-)
     m_header_buffer[0] = 'E';

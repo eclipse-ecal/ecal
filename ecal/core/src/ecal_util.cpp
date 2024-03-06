@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,13 +72,13 @@ namespace eCAL
     void ShutdownProcess(const std::string& process_name_)
     {
       const Monitoring::SMonitoring monitoring = GetMonitoring();
-      const std::string             host_name  = Process::GetHostName();
+      const std::string             host_name = Process::GetHostName();
 
       std::vector<int> proc_id_list;
       for (const auto& process : monitoring.processes)
       {
         const std::string pname = process.pname;
-        if ( (pname         == process_name_)
+        if ((pname == process_name_)
           && (process.hname == host_name)
           )
         {
@@ -113,7 +113,7 @@ namespace eCAL
       for (const auto& process : monitoring.processes)
       {
         const std::string uname = process.uname;
-        if  ((uname != "eCALMon")
+        if ((uname != "eCALMon")
           && (uname != "eCALPlay")
           && (uname != "eCALPlayGUI")
           && (uname != "eCALRec")
@@ -138,7 +138,7 @@ namespace eCAL
     void ShutdownCore()
     {
       const Monitoring::SMonitoring monitoring = GetMonitoring();
-      const std::string             host_name  = Process::GetHostName();
+      const std::string             host_name = Process::GetHostName();
 
       std::vector<int> proc_id_list;
       for (const auto& process : monitoring.processes)

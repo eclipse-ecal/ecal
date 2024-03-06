@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,20 +49,20 @@ namespace
 
 namespace eCAL
 {
- /**
-   * @brief  Get eCAL version string. 
-   *
-   * @return  Full eCAL version string. 
-  **/
+  /**
+    * @brief  Get eCAL version string.
+    *
+    * @return  Full eCAL version string.
+   **/
   const char* GetVersionString()
   {
     return(ECAL_VERSION);
   }
 
   /**
-   * @brief  Get eCAL version date. 
+   * @brief  Get eCAL version date.
    *
-   * @return  Full eCAL version date string. 
+   * @return  Full eCAL version date string.
   **/
   const char* GetVersionDateString()
   {
@@ -70,7 +70,7 @@ namespace eCAL
   }
 
   /**
-   * @brief  Get eCAL version as separated integer values. 
+   * @brief  Get eCAL version as separated integer values.
    *
    * @param [out] major_  The eCAL major version number.
    * @param [out] minor_  The eCAL minor version number.
@@ -80,7 +80,7 @@ namespace eCAL
   **/
   int GetVersion(int* major_, int* minor_, int* patch_)
   {
-    if((major_ == nullptr) || (minor_ == nullptr) || (patch_ == nullptr)) return(-1);
+    if ((major_ == nullptr) || (minor_ == nullptr) || (patch_ == nullptr)) return(-1);
     *major_ = ECAL_VERSION_MAJOR;
     *minor_ = ECAL_VERSION_MINOR;
     *patch_ = ECAL_VERSION_PATCH;
@@ -90,14 +90,14 @@ namespace eCAL
   /**
    * @brief Initialize eCAL API.
    *
-   * @param argc_        Number of command line arguments. 
-   * @param argv_        Array of command line arguments. 
-   * @param unit_name_   Defines the name of the eCAL unit. 
+   * @param argc_        Number of command line arguments.
+   * @param argv_        Array of command line arguments.
+   * @param unit_name_   Defines the name of the eCAL unit.
    * @param components_  Defines which component to initialize.
    *
    * @return Zero if succeeded, 1 if already initialized, -1 if failed.
   **/
-  int Initialize(int argc_ , char **argv_, const char *unit_name_, unsigned int components_)
+  int Initialize(int argc_, char** argv_, const char* unit_name_, unsigned int components_)
   {
     bool dump_config(false);
     std::vector<std::string> config_keys;
@@ -109,9 +109,9 @@ namespace eCAL
       TCLAP::CmdLine cmd("", ' ', ECAL_VERSION);
 
       // define command line arguments
-      TCLAP::SwitchArg             dump_config_arg     ("", "ecal-dump-config",    "Dump current configuration.", false);
-      TCLAP::ValueArg<std::string> default_ini_file_arg("", "ecal-ini-file",       "Load default configuration from that file.", false, ECAL_DEFAULT_CFG, "string");
-      TCLAP::MultiArg<std::string> set_config_key_arg  ("", "ecal-set-config-key", "Overwrite a specific configuration key (ecal-set-config-key \"section/key:value\".", false, "string");
+      TCLAP::SwitchArg             dump_config_arg("", "ecal-dump-config", "Dump current configuration.", false);
+      TCLAP::ValueArg<std::string> default_ini_file_arg("", "ecal-ini-file", "Load default configuration from that file.", false, ECAL_DEFAULT_CFG, "string");
+      TCLAP::MultiArg<std::string> set_config_key_arg("", "ecal-set-config-key", "Overwrite a specific configuration key (ecal-set-config-key \"section/key:value\".", false, "string");
 
       TCLAP::UnlabeledMultiArg<std::string> dummy_arg("__dummy__", "Dummy", false, ""); // Dummy arg to eat all unrecognized arguments
 
@@ -148,7 +148,7 @@ namespace eCAL
     {
       g_globals_ctx = new CGlobals;
 
-      if(unit_name_ != nullptr) g_unit_name = unit_name_;
+      if (unit_name_ != nullptr) g_unit_name = unit_name_;
       if (g_unit_name.empty())
       {
         g_unit_name = Process::GetProcessName();
@@ -156,7 +156,7 @@ namespace eCAL
         size_t p = g_unit_name.rfind('\\');
         if (p != std::string::npos)
         {
-          g_unit_name = g_unit_name.substr(p+1);
+          g_unit_name = g_unit_name.substr(p + 1);
         }
         p = g_unit_name.rfind('.');
         if (p != std::string::npos)
@@ -201,11 +201,11 @@ namespace eCAL
    *
    * @return Zero if succeeded, 1 if already initialized, -1 if failed.
   **/
-  int Initialize(std::vector<std::string> args_, const char *unit_name_, unsigned int components_) //-V826
+  int Initialize(std::vector<std::string> args_, const char* unit_name_, unsigned int components_) //-V826
   {
     args_.emplace(args_.begin(), eCAL::Process::GetProcessName());
     std::vector<const char*> argv(args_.size());
-    std::transform(args_.begin(), args_.end(), argv.begin(), [](std::string& s) {return s.c_str();});
+    std::transform(args_.begin(), args_.end(), argv.begin(), [](std::string& s) {return s.c_str(); });
     return Initialize(static_cast<int>(argv.size()), const_cast<char**>(argv.data()), unit_name_, components_);
   }
 
@@ -219,18 +219,18 @@ namespace eCAL
   int IsInitialized(unsigned int component_)
   {
     if (g_globals_ctx == nullptr) return(0);
-    if(g_globals()->IsInitialized(component_)) return(1);
+    if (g_globals()->IsInitialized(component_)) return(1);
     return(0);
   }
 
   /**
    * @brief  Set/change the unit name of current module.
    *
-   * @param unit_name_  Defines the name of the eCAL unit. 
+   * @param unit_name_  Defines the name of the eCAL unit.
    *
    * @return  Zero if succeeded.
   **/
-  int SetUnitName(const char *unit_name_)
+  int SetUnitName(const char* unit_name_)
   {
     g_unit_name = unit_name_;
     return(0);

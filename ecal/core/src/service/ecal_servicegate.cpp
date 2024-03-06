@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,13 +42,13 @@ namespace eCAL
 
   void CServiceGate::Create()
   {
-    if(m_created) return;
+    if (m_created) return;
     m_created = true;
   }
 
   void CServiceGate::Destroy()
   {
-    if(!m_created) return;
+    if (!m_created) return;
 
     // destroy all remaining server
     const std::shared_lock<std::shared_timed_mutex> lock(m_service_set_sync);
@@ -62,7 +62,7 @@ namespace eCAL
 
   bool CServiceGate::Register(CServiceServerImpl* service_)
   {
-    if(!m_created) return(false);
+    if (!m_created) return(false);
 
     // register internal service
     const std::unique_lock<std::shared_timed_mutex> lock(m_service_set_sync);
@@ -73,7 +73,7 @@ namespace eCAL
 
   bool CServiceGate::Unregister(CServiceServerImpl* service_)
   {
-    if(!m_created) return(false);
+    if (!m_created) return(false);
     bool ret_state(false);
 
     // unregister internal service

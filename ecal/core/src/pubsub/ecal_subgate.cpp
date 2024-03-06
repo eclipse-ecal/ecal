@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -74,7 +74,7 @@ namespace eCAL
 
   void CSubGate::Create()
   {
-    if(m_created) return;
+    if (m_created) return;
 
     // initialize data reader layers
     CDataReader::InitializeLayers();
@@ -84,7 +84,7 @@ namespace eCAL
 
   void CSubGate::Destroy()
   {
-    if(!m_created) return;
+    if (!m_created) return;
 
     // destroy all remaining subscriber
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
@@ -98,7 +98,7 @@ namespace eCAL
 
   bool CSubGate::Register(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_)
   {
-    if(!m_created) return(false);
+    if (!m_created) return(false);
 
     // register reader
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
@@ -109,14 +109,14 @@ namespace eCAL
 
   bool CSubGate::Unregister(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_)
   {
-    if(!m_created) return(false);
+    if (!m_created) return(false);
     bool ret_state = false;
 
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
     auto res = m_topic_name_datareader_map.equal_range(topic_name_);
-    for(auto iter = res.first; iter != res.second; ++iter)
+    for (auto iter = res.first; iter != res.second; ++iter)
     {
-      if(iter->second == datareader_)
+      if (iter->second == datareader_)
       {
         m_topic_name_datareader_map.erase(iter);
         ret_state = true;
@@ -135,7 +135,7 @@ namespace eCAL
 
   bool CSubGate::ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_, eTLayerType layer_)
   {
-    if(!m_created) return false;
+    if (!m_created) return false;
 
     Payload::Sample ecal_sample;
     if (!DeserializeFromBuffer(serialized_sample_data_, serialized_sample_size_, ecal_sample)) return false;
@@ -173,7 +173,7 @@ namespace eCAL
 
       // apply sample to data reader
       std::vector<std::shared_ptr<CDataReader>> readers_to_apply;
-        
+
       // Lock the sync map only while extracting the relevant shared pointers to the Datareaders.
       // Apply the samples to the readers afterward.
       {
@@ -237,7 +237,7 @@ namespace eCAL
 
   void CSubGate::ApplyLocPubRegistration(const Registration::Sample& ecal_sample_)
   {
-    if(!m_created) return;
+    if (!m_created) return;
 
     // check topic name
     const auto& ecal_sample = ecal_sample_.topic;
@@ -274,8 +274,8 @@ namespace eCAL
     // check topic name
     const auto& ecal_sample = ecal_sample_.topic;
     const std::string& topic_name = ecal_sample.tname;
-    const std::string& topic_id   = ecal_sample.tid;
-    const std::string process_id  = std::to_string(ecal_sample_.topic.pid);
+    const std::string& topic_id = ecal_sample.tid;
+    const std::string process_id = std::to_string(ecal_sample_.topic.pid);
 
     // store description
     const SDataTypeInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
@@ -292,12 +292,12 @@ namespace eCAL
 
   void CSubGate::ApplyExtPubRegistration(const Registration::Sample& ecal_sample_)
   {
-    if(!m_created) return;
+    if (!m_created) return;
 
     const auto& ecal_sample = ecal_sample_.topic;
-    const std::string& host_name  = ecal_sample.hname;
+    const std::string& host_name = ecal_sample.hname;
     const std::string& topic_name = ecal_sample.tname;
-    const std::string& topic_id   = ecal_sample.tid;
+    const std::string& topic_id = ecal_sample.tid;
     const SDataTypeInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
     const std::string  process_id = std::to_string(ecal_sample.pid);
 
@@ -322,9 +322,9 @@ namespace eCAL
     if (!m_created) return;
 
     const auto& ecal_sample = ecal_sample_.topic;
-    const std::string& host_name  = ecal_sample.hname;
+    const std::string& host_name = ecal_sample.hname;
     const std::string& topic_name = ecal_sample.tname;
-    const std::string& topic_id   = ecal_sample.tid;
+    const std::string& topic_id = ecal_sample.tid;
     const std::string  process_id = std::to_string(ecal_sample.pid);
 
     // unregister local subscriber

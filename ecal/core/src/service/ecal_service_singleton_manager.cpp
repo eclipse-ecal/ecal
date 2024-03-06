@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,37 +33,37 @@ namespace eCAL
     eCAL::service::LoggerT ecal_logger(const std::string& node_name)
     {
       return [node_name](const LogLevel log_level, const std::string& message)
-                        {
-                          switch (log_level)
-                          {
-                          case LogLevel::DebugVerbose:
-                            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_debug4, "[" + node_name + "] " + message);
-                            break;
-                          case LogLevel::Debug:
-                            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_debug1, "[" + node_name + "] " + message);
-                            break;
-                          case LogLevel::Info:
-                            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_info, "[" + node_name + "] " + message);
-                            break;
-                          case LogLevel::Warning:
-                            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning, "[" + node_name + "] " + message);
-                            break;
-                          case LogLevel::Error:
-                            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_error, "[" + node_name + "] " + message);
-                            break;
-                          case LogLevel::Fatal:
-                            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_fatal, "[" + node_name + "] " + message);
-                            break;
-                          default:
-                            break;
-                          }
-                        };
+        {
+          switch (log_level)
+          {
+          case LogLevel::DebugVerbose:
+            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_debug4, "[" + node_name + "] " + message);
+            break;
+          case LogLevel::Debug:
+            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_debug1, "[" + node_name + "] " + message);
+            break;
+          case LogLevel::Info:
+            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_info, "[" + node_name + "] " + message);
+            break;
+          case LogLevel::Warning:
+            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning, "[" + node_name + "] " + message);
+            break;
+          case LogLevel::Error:
+            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_error, "[" + node_name + "] " + message);
+            break;
+          case LogLevel::Fatal:
+            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_fatal, "[" + node_name + "] " + message);
+            break;
+          default:
+            break;
+          }
+        };
 
     }
 
     ////////////////////////////////////////////////////////////
-	// Singleton interface, Constructor, destructor
-	////////////////////////////////////////////////////////////
+    // Singleton interface, Constructor, destructor
+    ////////////////////////////////////////////////////////////
     constexpr size_t ServiceManager::num_io_threads;
 
     ServiceManager* ServiceManager::instance()
@@ -81,9 +81,9 @@ namespace eCAL
       stop();
     }
 
-	////////////////////////////////////////////////////////////
-	// Public API
-	////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
+    // Public API
+    ////////////////////////////////////////////////////////////
 
     std::shared_ptr<eCAL::service::ClientManager> ServiceManager::get_client_manager()
     {
@@ -113,7 +113,7 @@ namespace eCAL
             io_threads.emplace_back(std::make_unique<std::thread>([this]() { io_context->run(); }));
           }
         }
-        
+
         // Return the client manager. The client manager has its own dummy work
         // object, so it will keep the io_context alive, until the
         // client_manager is stopped.
@@ -150,7 +150,7 @@ namespace eCAL
             io_threads.emplace_back(std::make_unique<std::thread>([this]() { io_context->run(); }));
           }
         }
-        
+
         // Return the server manager. The server manager has its own dummy work
         // object, so it will keep the io_context alive, until the
         // client_manager is stopped.

@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,9 +37,9 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  CUDPReaderLayer::CUDPReaderLayer() : 
-                   m_started(false),
-                   m_local_mode(false)
+  CUDPReaderLayer::CUDPReaderLayer() :
+    m_started(false),
+    m_local_mode(false)
   {}
 
   CUDPReaderLayer::~CUDPReaderLayer() = default;
@@ -57,11 +57,11 @@ namespace eCAL
 
       // set network attributes
       IO::UDP::SReceiverAttr attr;
-      attr.address   = UDP::GetPayloadAddress();
-      attr.port      = UDP::GetPayloadPort();
+      attr.address = UDP::GetPayloadAddress();
+      attr.port = UDP::GetPayloadPort();
       attr.broadcast = UDP::IsBroadcast();
-      attr.loopback  = true;
-      attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
+      attr.loopback = true;
+      attr.rcvbuf = Config::GetUdpMulticastRcvBufSizeBytes();
 
       // start payload sample receiver
       m_payload_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CUDPReaderLayer::HasSample, this, std::placeholders::_1), std::bind(&CUDPReaderLayer::ApplySample, this, std::placeholders::_1, std::placeholders::_2));

@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,11 +38,11 @@ namespace
 {
   bool OpenEvent(eCAL::EventHandleT* event_, const std::string& event_name_)
   {
-    if(event_ == nullptr) return(false);
+    if (event_ == nullptr) return(false);
     eCAL::EventHandleT event;
-    event.name   = event_name_;
+    event.name = event_name_;
     event.handle = ::CreateEvent(nullptr, FALSE, FALSE, event_name_.c_str());
-    if(event.handle != nullptr)
+    if (event.handle != nullptr)
     {
       *event_ = event;
       return(true);
@@ -71,20 +71,20 @@ namespace eCAL
 
   bool gCloseEvent(const EventHandleT& event_)
   {
-    if(event_.handle == nullptr) return(false);
+    if (event_.handle == nullptr) return(false);
     return(::CloseHandle(event_.handle) != 0);
   }
 
   bool gSetEvent(const EventHandleT& event_)
   {
-    if(event_.handle == nullptr) return(false);
+    if (event_.handle == nullptr) return(false);
     return(::SetEvent(event_.handle) != 0);
   }
 
   bool gWaitForEvent(const EventHandleT& event_, const long timeout_)
   {
-    if(event_.handle == nullptr) return(false);
-    if(timeout_ < 0)
+    if (event_.handle == nullptr) return(false);
+    if (timeout_ < 0)
     {
       return(::WaitForSingleObject(event_.handle, INFINITE) == WAIT_OBJECT_0);
     }
@@ -96,8 +96,8 @@ namespace eCAL
 
   bool gInvalidateEvent(EventHandleT* event_)
   {
-    if(event_ == nullptr) return(false);
-    if(event_->handle == nullptr) return(false);
+    if (event_ == nullptr) return(false);
+    if (event_->handle == nullptr) return(false);
     event_->handle = nullptr;
     return(true);
   }
@@ -143,7 +143,7 @@ namespace
     if (fd < 0) return nullptr;
 
     // set size to size of named mutex struct 
-    if(ftruncate(fd, sizeof(named_event_t)) == -1)
+    if (ftruncate(fd, sizeof(named_event_t)) == -1)
     {
       ::close(fd);
       return nullptr;
@@ -237,9 +237,9 @@ namespace
         if (ts_)
         {
 #ifndef ECAL_OS_MACOS
-            ret = pthread_cond_timedwait(&evt_->cvar, &evt_->mtx, ts_);
+          ret = pthread_cond_timedwait(&evt_->cvar, &evt_->mtx, ts_);
 #else
-            ret = pthread_cond_timedwait_relative_np(&evt_->cvar, &evt_->mtx, ts_);
+          ret = pthread_cond_timedwait_relative_np(&evt_->cvar, &evt_->mtx, ts_);
 #endif
         }
         // blocking wait for unlock signal
@@ -294,16 +294,16 @@ namespace eCAL
     bool wait()
     {
       std::unique_lock< std::mutex > lock(m_mutex);
-      m_condition.wait(lock,[&]()->bool{ return m_sigcount>0; });
+      m_condition.wait(lock, [&]()->bool { return m_sigcount > 0; });
       --m_sigcount;
       return true;
     }
 
-    template< typename R,typename P >
-    bool wait(const std::chrono::duration<R,P>& timeout_)
+    template< typename R, typename P >
+    bool wait(const std::chrono::duration<R, P>& timeout_)
     {
       std::unique_lock< std::mutex > lock(m_mutex);
-      if (!m_condition.wait_for(lock, timeout_, [&]()->bool{ return m_sigcount>0; }))
+      if (!m_condition.wait_for(lock, timeout_, [&]()->bool { return m_sigcount > 0; }))
       {
         return false;
       }
@@ -327,7 +327,7 @@ namespace eCAL
     {
       m_name = (m_name[0] != '/') ? "/" + m_name : m_name; // make memory file path compatible for all posix systems
       m_event = named_event_open(m_name.c_str());
-      if(m_event == nullptr)
+      if (m_event == nullptr)
       {
         m_event = named_event_create(m_name.c_str());
       }
@@ -335,9 +335,9 @@ namespace eCAL
 
     ~CNamedEvent()
     {
-      if(m_event == nullptr) return;
+      if (m_event == nullptr) return;
       named_event_close(m_event);
-      if(m_owner)
+      if (m_owner)
       {
         named_event_destroy(m_name.c_str());
       }
@@ -345,13 +345,13 @@ namespace eCAL
 
     void set()
     {
-      if(m_event == nullptr) return;
+      if (m_event == nullptr) return;
       named_event_set(m_event);
     }
 
     bool wait()
     {
-      if(m_event == nullptr) return false;
+      if (m_event == nullptr) return false;
       return(named_event_wait(m_event, nullptr));
     }
 
@@ -392,19 +392,19 @@ namespace eCAL
     CNamedEvent& operator=(const CNamedEvent&);  // prevent assignment
 
     std::string     m_name;
-    named_event_t*  m_event;
+    named_event_t* m_event;
     bool            m_owner;
   };
 
   bool gOpenNamedEvent(EventHandleT* event_, const std::string& event_name_, bool ownership_)
   {
-    if(event_ == nullptr) return(false);
+    if (event_ == nullptr) return(false);
 
     EventHandleT event;
-    event.name   = event_name_;
+    event.name = event_name_;
     event.handle = new CNamedEvent(event.name, ownership_);
 
-    if(event.handle != nullptr)
+    if (event.handle != nullptr)
     {
       *event_ = event;
       return true;
@@ -414,13 +414,13 @@ namespace eCAL
 
   bool gOpenUnnamedEvent(EventHandleT* event_)
   {
-    if(event_ == nullptr) return(false);
+    if (event_ == nullptr) return(false);
 
     EventHandleT event;
-    event.name   = "";
+    event.name = "";
     event.handle = new CEvent();
 
-    if(event.handle != nullptr)
+    if (event.handle != nullptr)
     {
       *event_ = event;
       return true;
@@ -431,12 +431,12 @@ namespace eCAL
   // deprecated
   bool gOpenEvent(EventHandleT* event_, const std::string& event_name_)
   {
-    if(event_ == nullptr) return(false);
+    if (event_ == nullptr) return(false);
 
     EventHandleT event;
     event.name = event_name_;
 
-    if(event.name.empty())
+    if (event.name.empty())
     {
       event.handle = new CEvent();
     }
@@ -445,7 +445,7 @@ namespace eCAL
       event.handle = new CNamedEvent(event.name, true);
     }
 
-    if(event.handle != nullptr)
+    if (event.handle != nullptr)
     {
       *event_ = event;
       return true;
@@ -455,8 +455,8 @@ namespace eCAL
 
   bool gCloseEvent(const EventHandleT& event_)
   {
-    if(!event_.handle) return false;
-    if(event_.name.empty())
+    if (!event_.handle) return false;
+    if (event_.name.empty())
     {
       delete static_cast<CEvent*>(event_.handle);
     }
@@ -469,8 +469,8 @@ namespace eCAL
 
   bool gSetEvent(const EventHandleT& event_)
   {
-    if(!event_.handle) return false;
-    if(event_.name.empty())
+    if (!event_.handle) return false;
+    if (event_.name.empty())
     {
       static_cast<CEvent*>(event_.handle)->set();
     }
@@ -483,10 +483,10 @@ namespace eCAL
 
   bool gWaitForEvent(const EventHandleT& event_, const long timeout_)
   {
-    if(!event_.handle) return false;
-    if(event_.name.empty())
+    if (!event_.handle) return false;
+    if (event_.name.empty())
     {
-      if(timeout_ < 0)
+      if (timeout_ < 0)
       {
         return(static_cast<CEvent*>(event_.handle)->wait());
       }
@@ -497,7 +497,7 @@ namespace eCAL
     }
     else
     {
-      if(timeout_ < 0)
+      if (timeout_ < 0)
       {
         return(static_cast<CNamedEvent*>(event_.handle)->wait());
       }
@@ -510,8 +510,8 @@ namespace eCAL
 
   bool gInvalidateEvent(EventHandleT* event_)
   {
-    if(!event_->handle) return false;
-    if(event_->handle == nullptr) return false;
+    if (!event_->handle) return false;
+    if (event_->handle == nullptr) return false;
     event_->handle = nullptr;
     return true;
   }

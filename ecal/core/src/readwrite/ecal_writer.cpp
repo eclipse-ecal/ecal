@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -95,10 +95,10 @@ namespace eCAL
     m_writer.udp_mc_mode.requested = Config::GetPublisherUdpMulticastMode();
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-    m_writer.shm_mode.requested    = Config::GetPublisherShmMode();
+    m_writer.shm_mode.requested = Config::GetPublisherShmMode();
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-    m_writer.tcp_mode.requested    = Config::GetPublisherTcpMode();
+    m_writer.tcp_mode.requested = Config::GetPublisherTcpMode();
 #endif
   }
 
@@ -112,20 +112,20 @@ namespace eCAL
     if (m_created) return(false);
 
     // set defaults
-    m_topic_name             = topic_name_;
+    m_topic_name = topic_name_;
     m_topic_id.clear();
-    m_topic_info             = topic_info_;
-    m_id                     = 0;
-    m_clock                  = 0;
-    m_clock_old              = 0;
-    m_snd_time               = std::chrono::steady_clock::time_point();
-    m_freq                   = 0;
-    m_buffering_shm          = Config::GetMemfileBufferCount();
-    m_zero_copy              = Config::IsMemfileZerocopyEnabled();
+    m_topic_info = topic_info_;
+    m_id = 0;
+    m_clock = 0;
+    m_clock_old = 0;
+    m_snd_time = std::chrono::steady_clock::time_point();
+    m_freq = 0;
+    m_buffering_shm = Config::GetMemfileBufferCount();
+    m_zero_copy = Config::IsMemfileZerocopyEnabled();
     m_acknowledge_timeout_ms = Config::GetMemfileAckTimeoutMs();
-    m_connected              = false;
-    m_ext_subscribed         = false;
-    m_created                = false;
+    m_connected = false;
+    m_ext_subscribed = false;
+    m_created = false;
 
     // build topic id
     std::stringstream counter;
@@ -194,15 +194,15 @@ namespace eCAL
 #endif
 
     // reset defaults
-    m_id                     = 0;
-    m_clock                  = 0;
-    m_clock_old              = 0;
-    m_snd_time               = std::chrono::steady_clock::time_point();
-    m_freq                   = 0;
-    m_buffering_shm          = Config::GetMemfileBufferCount();
-    m_zero_copy              = Config::IsMemfileZerocopyEnabled();
+    m_id = 0;
+    m_clock = 0;
+    m_clock_old = 0;
+    m_snd_time = std::chrono::steady_clock::time_point();
+    m_freq = 0;
+    m_buffering_shm = Config::GetMemfileBufferCount();
+    m_zero_copy = Config::IsMemfileZerocopyEnabled();
     m_acknowledge_timeout_ms = Config::GetMemfileAckTimeoutMs();
-    m_connected              = false;
+    m_connected = false;
 
     // reset subscriber maps
     {
@@ -421,9 +421,9 @@ namespace eCAL
     // can we do a zero copy write ?
     const bool allow_zero_copy =
       m_zero_copy                       // zero copy mode activated by user
-   && m_writer.shm_mode.activated       // shm layer active
-   && !m_writer.udp_mc_mode.activated
-   && !m_writer.tcp_mode.activated;
+      && m_writer.shm_mode.activated       // shm layer active
+      && !m_writer.udp_mc_mode.activated
+      && !m_writer.tcp_mode.activated;
 
     // create a payload copy for all layer
     if (!allow_zero_copy)
@@ -454,13 +454,13 @@ namespace eCAL
       {
         // fill writer data
         struct SWriterAttr wattr;
-        wattr.len                    = payload_buf_size;
-        wattr.id                     = m_id;
-        wattr.clock                  = m_clock;
-        wattr.hash                   = snd_hash;
-        wattr.time                   = time_;
-        wattr.buffering              = m_buffering_shm;
-        wattr.zero_copy              = m_zero_copy;
+        wattr.len = payload_buf_size;
+        wattr.id = m_id;
+        wattr.clock = m_clock;
+        wattr.hash = snd_hash;
+        wattr.time = time_;
+        wattr.buffering = m_buffering_shm;
+        wattr.zero_copy = m_zero_copy;
         wattr.acknowledge_timeout_ms = m_acknowledge_timeout_ms;
 
         // prepare send
@@ -528,12 +528,12 @@ namespace eCAL
 
         // fill writer data
         struct SWriterAttr wattr;
-        wattr.len       = payload_buf_size;
-        wattr.id        = m_id;
-        wattr.clock     = m_clock;
-        wattr.hash      = snd_hash;
-        wattr.time      = time_;
-        wattr.loopback  = loopback;
+        wattr.len = payload_buf_size;
+        wattr.id = m_id;
+        wattr.clock = m_clock;
+        wattr.hash = snd_hash;
+        wattr.time = time_;
+        wattr.loopback = loopback;
 
         // prepare send
         if (m_writer.udp_mc.PrepareWrite(wattr))
@@ -579,11 +579,11 @@ namespace eCAL
       {
         // fill writer data
         struct SWriterAttr wattr;
-        wattr.len   = payload_buf_size;
-        wattr.id    = m_id;
+        wattr.len = payload_buf_size;
+        wattr.id = m_id;
         wattr.clock = m_clock;
-        wattr.hash  = snd_hash;
-        wattr.time  = time_;
+        wattr.hash = snd_hash;
+        wattr.time = time_;
 
         // write to tcp layer
         tcp_sent = m_writer.tcp.Write(m_payload_buffer.data(), wattr);
@@ -816,10 +816,10 @@ namespace eCAL
     ecal_reg_sample.cmd_type = bct_reg_publisher;
 
     auto& ecal_reg_sample_topic = ecal_reg_sample.topic;
-    ecal_reg_sample_topic.hname  = m_host_name;
+    ecal_reg_sample_topic.hname = m_host_name;
     ecal_reg_sample_topic.hgname = m_host_group_name;
-    ecal_reg_sample_topic.tname  = m_topic_name;
-    ecal_reg_sample_topic.tid    = m_topic_id;
+    ecal_reg_sample_topic.tname = m_topic_name;
+    ecal_reg_sample_topic.tid = m_topic_id;
     if (share_ttype) ecal_reg_sample_topic.ttype = Util::CombinedTopicEncodingAndType(m_topic_info.encoding, m_topic_info.name);
     if (share_tdesc) ecal_reg_sample_topic.tdesc = m_topic_info.descriptor;
     // topic_information
@@ -827,24 +827,24 @@ namespace eCAL
       auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.tdatatype;
       if (share_ttype)
       {
-        ecal_reg_sample_tdatatype.encoding   = m_topic_info.encoding;
-        ecal_reg_sample_tdatatype.name       = m_topic_info.name;
+        ecal_reg_sample_tdatatype.encoding = m_topic_info.encoding;
+        ecal_reg_sample_tdatatype.name = m_topic_info.name;
       }
       if (share_tdesc)
       {
         ecal_reg_sample_tdatatype.desc = m_topic_info.descriptor;
       }
     }
-    ecal_reg_sample_topic.attr  = m_attr;
+    ecal_reg_sample_topic.attr = m_attr;
     ecal_reg_sample_topic.tsize = static_cast<int32_t>(m_topic_size);
 
 #if ECAL_CORE_TRANSPORT_UDP
     // udp multicast layer
     {
       eCAL::Registration::TLayer udp_tlayer;
-      udp_tlayer.type                      = tl_ecal_udp_mc;
-      udp_tlayer.version                   = 1;
-      udp_tlayer.confirmed                 = m_writer.udp_mc_mode.confirmed;
+      udp_tlayer.type = tl_ecal_udp_mc;
+      udp_tlayer.version = 1;
+      udp_tlayer.confirmed = m_writer.udp_mc_mode.confirmed;
       udp_tlayer.par_layer.layer_par_udpmc = m_writer.udp_mc.GetConnectionParameter().layer_par_udpmc;
       ecal_reg_sample_topic.tlayer.push_back(udp_tlayer);
     }
@@ -854,9 +854,9 @@ namespace eCAL
     // shm layer
     {
       eCAL::Registration::TLayer shm_tlayer;
-      shm_tlayer.type                    = tl_ecal_shm;
-      shm_tlayer.version                 = 1;
-      shm_tlayer.confirmed               = m_writer.shm_mode.confirmed;
+      shm_tlayer.type = tl_ecal_shm;
+      shm_tlayer.version = 1;
+      shm_tlayer.confirmed = m_writer.shm_mode.confirmed;
       shm_tlayer.par_layer.layer_par_shm = m_writer.shm.GetConnectionParameter().layer_par_shm;
       ecal_reg_sample_topic.tlayer.push_back(shm_tlayer);
     }
@@ -866,20 +866,20 @@ namespace eCAL
     // tcp layer
     {
       eCAL::Registration::TLayer tcp_tlayer;
-      tcp_tlayer.type                    = tl_ecal_tcp;
-      tcp_tlayer.version                 = 1;
-      tcp_tlayer.confirmed               = m_writer.tcp_mode.confirmed;
+      tcp_tlayer.type = tl_ecal_tcp;
+      tcp_tlayer.version = 1;
+      tcp_tlayer.confirmed = m_writer.tcp_mode.confirmed;
       tcp_tlayer.par_layer.layer_par_tcp = m_writer.tcp.GetConnectionParameter().layer_par_tcp;
       ecal_reg_sample_topic.tlayer.push_back(tcp_tlayer);
     }
 #endif
 
-    ecal_reg_sample_topic.pid    = m_pid;
-    ecal_reg_sample_topic.pname  = m_pname;
-    ecal_reg_sample_topic.uname  = Process::GetUnitName();
-    ecal_reg_sample_topic.did    = m_id;
+    ecal_reg_sample_topic.pid = m_pid;
+    ecal_reg_sample_topic.pname = m_pname;
+    ecal_reg_sample_topic.uname = Process::GetUnitName();
+    ecal_reg_sample_topic.did = m_id;
     ecal_reg_sample_topic.dclock = m_clock;
-    ecal_reg_sample_topic.dfreq  = m_freq;
+    ecal_reg_sample_topic.dfreq = m_freq;
 
     size_t loc_connections(0);
     size_t ext_connections(0);
@@ -912,14 +912,14 @@ namespace eCAL
     Registration::Sample ecal_unreg_sample;
     ecal_unreg_sample.cmd_type = bct_unreg_publisher;
 
-    auto& ecal_reg_sample_topic  = ecal_unreg_sample.topic;
-    ecal_reg_sample_topic.hname  = m_host_name;
+    auto& ecal_reg_sample_topic = ecal_unreg_sample.topic;
+    ecal_reg_sample_topic.hname = m_host_name;
     ecal_reg_sample_topic.hgname = m_host_group_name;
-    ecal_reg_sample_topic.pname  = m_pname;
-    ecal_reg_sample_topic.pid    = m_pid;
-    ecal_reg_sample_topic.tname  = m_topic_name;
-    ecal_reg_sample_topic.tid    = m_topic_id;
-    ecal_reg_sample_topic.uname  = Process::GetUnitName();
+    ecal_reg_sample_topic.pname = m_pname;
+    ecal_reg_sample_topic.pid = m_pid;
+    ecal_reg_sample_topic.tname = m_topic_name;
+    ecal_reg_sample_topic.tid = m_topic_id;
+    ecal_reg_sample_topic.uname = Process::GetUnitName();
 
     // unregister publisher
     if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_topic_name, m_topic_id, ecal_unreg_sample, true);
@@ -949,8 +949,8 @@ namespace eCAL
         auto iter = m_event_callback_map.find(pub_event_connected);
         if (iter != m_event_callback_map.end() && iter->second)
         {
-          data.type      = pub_event_connected;
-          data.tid       = tid_;
+          data.type = pub_event_connected;
+          data.tid = tid_;
           data.tdatatype = tinfo_;
           (iter->second)(m_topic_name.c_str(), &data);
         }
@@ -963,8 +963,8 @@ namespace eCAL
       auto iter = m_event_callback_map.find(pub_event_update_connection);
       if (iter != m_event_callback_map.end() && iter->second)
       {
-        data.type      = pub_event_update_connection;
-        data.tid       = tid_;
+        data.type = pub_event_update_connection;
+        data.tid = tid_;
         data.tdatatype = tinfo_;
         (iter->second)(m_topic_name.c_str(), &data);
       }
@@ -984,8 +984,8 @@ namespace eCAL
         if (iter != m_event_callback_map.end() && iter->second)
         {
           SPubEventCallbackData data;
-          data.type  = pub_event_disconnected;
-          data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+          data.type = pub_event_disconnected;
+          data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
           data.clock = 0;
           (iter->second)(m_topic_name.c_str(), &data);
         }
@@ -1095,22 +1095,22 @@ namespace eCAL
   {
     // if nothing is activated, we use defaults shm = auto, udp = auto
     if ((m_writer.udp_mc_mode.requested == TLayer::smode_off)
-     && (m_writer.shm_mode.requested    == TLayer::smode_off)
-     && (m_writer.tcp_mode.requested    == TLayer::smode_off)
+      && (m_writer.shm_mode.requested == TLayer::smode_off)
+      && (m_writer.tcp_mode.requested == TLayer::smode_off)
       )
     {
 #if ECAL_CORE_TRANSPORT_UDP
       m_writer.udp_mc_mode.requested = TLayer::smode_auto;
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-      m_writer.shm_mode.requested    = TLayer::smode_auto;
+      m_writer.shm_mode.requested = TLayer::smode_auto;
 #endif
     }
 
     // if shm layer is off, we need a local transport layer switch to on
     // prio 1: udp = on
     // prio 2: tcp = on
-    if ( (m_writer.shm_mode.requested == TLayer::smode_off)
+    if ((m_writer.shm_mode.requested == TLayer::smode_off)
       && (m_writer.shm_mode.requested != TLayer::smode_on)
       && (m_writer.tcp_mode.requested != TLayer::smode_on)
       )
@@ -1123,7 +1123,7 @@ namespace eCAL
         new_local_layer = true;
       }
 #else
-  #if ECAL_CORE_TRANSPORT_TCP
+#if ECAL_CORE_TRANSPORT_TCP
       if (m_writer.tcp_mode.requested != TLayer::smode_on)
       {
         m_writer.tcp_mode.requested = TLayer::smode_on;
@@ -1146,7 +1146,7 @@ namespace eCAL
       }
     }
 
-    if ( (m_writer.tcp_mode.requested    == TLayer::smode_auto)
+    if ((m_writer.tcp_mode.requested == TLayer::smode_auto)
       && (m_writer.udp_mc_mode.requested == TLayer::smode_auto)
       )
     {

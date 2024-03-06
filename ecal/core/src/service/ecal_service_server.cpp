@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,32 +31,32 @@
 namespace eCAL
 {
   /**
-   * @brief Service Server class. 
+   * @brief Service Server class.
   **/
 
   /**
-  * @brief Constructor. 
+  * @brief Constructor.
   **/
   CServiceServer::CServiceServer() :
-                  m_service_server_impl(nullptr),
-                  m_created(false)
+    m_service_server_impl(nullptr),
+    m_created(false)
   {
   }
 
   /**
-   * @brief Constructor. 
+   * @brief Constructor.
    *
    * @param service_name_  Service name.
   **/
   CServiceServer::CServiceServer(const std::string& service_name_) :
-                  m_service_server_impl(nullptr),
-                  m_created(false)
+    m_service_server_impl(nullptr),
+    m_created(false)
   {
     Create(service_name_);
   }
 
   /**
-   * @brief Destructor. 
+   * @brief Destructor.
   **/
   CServiceServer::~CServiceServer()
   {
@@ -64,15 +64,15 @@ namespace eCAL
   }
 
   /**
-   * @brief Creates this object. 
+   * @brief Creates this object.
    *
    * @param service_name_  Service name.
    *
-   * @return  True if successful. 
+   * @return  True if successful.
   **/
   bool CServiceServer::Create(const std::string& service_name_)
   {
-    if(m_created) return(false);
+    if (m_created) return(false);
 
     m_service_server_impl = CServiceServerImpl::CreateInstance(service_name_);
 
@@ -84,13 +84,13 @@ namespace eCAL
   }
 
   /**
-   * @brief Destroys this object. 
+   * @brief Destroys this object.
    *
-   * @return  True if successful. 
+   * @return  True if successful.
   **/
   bool CServiceServer::Destroy()
   {
-    if(!m_created) return(false);
+    if (!m_created) return(false);
     m_created = false;
 
     // unregister this service

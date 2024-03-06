@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -66,14 +66,14 @@ namespace eCAL
       {
         const std::string emsg("Core initialization failed cause by a configuration error.");
 
-        std::cerr                                                                 << '\n';
+        std::cerr << '\n';
         std::cerr << "----------------------------------------------------------" << '\n';
-        std::cerr << "eCAL CORE PANIC :-("                                        << '\n';
-        std::cerr                                                                 << '\n';
-        std::cerr << emsg                                                         << '\n';
+        std::cerr << "eCAL CORE PANIC :-(" << '\n';
+        std::cerr << '\n';
+        std::cerr << emsg << '\n';
         std::cerr << "----------------------------------------------------------" << '\n';
-        std::cerr                                                                 << '\n';
-        
+        std::cerr << '\n';
+
         throw std::runtime_error(emsg.c_str());
       }
 
@@ -93,7 +93,7 @@ namespace eCAL
     /////////////////////
     // REGISTRATION RECEIVER
     /////////////////////
-    if(registration_receiver_instance == nullptr) 
+    if (registration_receiver_instance == nullptr)
     {
       registration_receiver_instance = std::make_unique<CRegistrationReceiver>();
       new_initialization = true;
@@ -252,8 +252,8 @@ namespace eCAL
 #if ECAL_CORE_MONITORING
     if (monitoring_instance && ((components_ & Init::Monitoring) != 0u))  monitoring_instance->Create();
 #endif
-    initialized =  true;
-    components  |= components_;
+    initialized = true;
+    components |= components_;
 
     if (new_initialization) return 0;
     else                    return 1;
@@ -337,32 +337,32 @@ namespace eCAL
     //if (config_instance)                 config_instance->Destroy();
 
 #if ECAL_CORE_MONITORING
-    monitoring_instance             = nullptr;
+    monitoring_instance = nullptr;
 #endif
 #if ECAL_CORE_TIMEPLUGIN
-    timegate_instance               = nullptr;
+    timegate_instance = nullptr;
 #endif
 #if ECAL_CORE_SERVICE
-    servicegate_instance            = nullptr;
-    clientgate_instance             = nullptr;
+    servicegate_instance = nullptr;
+    clientgate_instance = nullptr;
 #endif
 #if ECAL_CORE_PUBLISHER
-    pubgate_instance                = nullptr;
+    pubgate_instance = nullptr;
 #endif
 #if ECAL_CORE_SUBSCRIBER
-    subgate_instance                = nullptr;
+    subgate_instance = nullptr;
 #endif
 #if ECAL_CORE_REGISTRATION
-    registration_receiver_instance  = nullptr;
-    registration_provider_instance  = nullptr;
+    registration_receiver_instance = nullptr;
+    registration_provider_instance = nullptr;
 #endif
-    descgate_instance               = nullptr;
+    descgate_instance = nullptr;
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
-    memfile_pool_instance           = nullptr;
-    memfile_map_instance            = nullptr;
+    memfile_pool_instance = nullptr;
+    memfile_map_instance = nullptr;
 #endif
-    log_instance                    = nullptr;
-    config_instance                 = nullptr;
+    log_instance = nullptr;
+    config_instance = nullptr;
 
     initialized = false;
 

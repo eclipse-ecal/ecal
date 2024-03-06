@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,7 +37,7 @@ namespace CustomTclap
     : AdvancedTclapOutput(std::vector<std::ostream*>{output_stream}, max_width)
   {}
 
-  void AdvancedTclapOutput::version(TCLAP::CmdLineInterface &cmd)
+  void AdvancedTclapOutput::version(TCLAP::CmdLineInterface& cmd)
   {
     const std::string progName = cmd.getProgramName();
     const std::string xversion = cmd.getVersion();
@@ -56,7 +56,7 @@ namespace CustomTclap
     }
   }
 
-  void AdvancedTclapOutput::usage(TCLAP::CmdLineInterface &cmd)
+  void AdvancedTclapOutput::usage(TCLAP::CmdLineInterface& cmd)
   {
     std::stringstream ss;
 
@@ -74,7 +74,7 @@ namespace CustomTclap
     }
   }
 
-  void AdvancedTclapOutput::failure(TCLAP::CmdLineInterface &cmd, TCLAP::ArgException &e)
+  void AdvancedTclapOutput::failure(TCLAP::CmdLineInterface& cmd, TCLAP::ArgException& e)
   {
     std::stringstream ss;
 
@@ -206,7 +206,7 @@ namespace CustomTclap
     std::vector<std::vector<TCLAP::Arg*>> cleaned_xor_list;
 
     // Remove hidden arguments from XOR list
-    for (const auto & i : xor_list)
+    for (const auto& i : xor_list)
     {
       std::vector<TCLAP::Arg*> arg_list;
       for (size_t j = 0; j < i.size(); j++)

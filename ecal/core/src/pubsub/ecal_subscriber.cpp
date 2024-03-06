@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -79,11 +79,11 @@ namespace eCAL
   }
 
   CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept :
-                 m_datareader(std::move(rhs.m_datareader)),
-                 m_created(rhs.m_created),
-                 m_initialized(rhs.m_initialized)
+    m_datareader(std::move(rhs.m_datareader)),
+    m_created(rhs.m_created),
+    m_initialized(rhs.m_initialized)
   {
-    rhs.m_created     = false;
+    rhs.m_created = false;
     rhs.m_initialized = false;
   }
 
@@ -92,11 +92,11 @@ namespace eCAL
     // Call destroy, to clean up the current state, then afterwards move all elements
     Destroy();
 
-    m_datareader      = std::move(rhs.m_datareader);
-    m_created         = rhs.m_created;
-    m_initialized     = rhs.m_initialized;
+    m_datareader = std::move(rhs.m_datareader);
+    m_created = rhs.m_created;
+    m_initialized = rhs.m_initialized;
 
-    rhs.m_created     = false;
+    rhs.m_created = false;
     rhs.m_initialized = false;
 
     return *this;
@@ -149,14 +149,14 @@ namespace eCAL
 
   bool CSubscriber::Destroy()
   {
-    if(!m_created)             return(false);
-    if(g_globals() == nullptr) return(false);
+    if (!m_created)             return(false);
+    if (g_globals() == nullptr) return(false);
 
     // remove receive callback
     RemReceiveCallback();
 
     // first unregister data reader
-    if(g_subgate() != nullptr) g_subgate()->Unregister(m_datareader->GetTopicName(), m_datareader);
+    if (g_subgate() != nullptr) g_subgate()->Unregister(m_datareader->GetTopicName(), m_datareader);
 #ifndef NDEBUG
     // log it
     if (g_log() != nullptr) g_log()->Log(log_level_debug1, std::string(m_datareader->GetTopicName() + "::CSubscriber::Destroy"));
@@ -167,7 +167,7 @@ namespace eCAL
 
     // free datareader
     m_datareader.reset();
-    
+
     // we made it :-)
     m_created = false;
 
@@ -191,13 +191,13 @@ namespace eCAL
 
   bool CSubscriber::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
   {
-    if(m_datareader == nullptr) return false;
+    if (m_datareader == nullptr) return false;
     return m_datareader->SetAttribute(attr_name_, attr_value_);
   }
 
   bool CSubscriber::ClearAttribute(const std::string& attr_name_)
   {
-    if(m_datareader == nullptr) return false;
+    if (m_datareader == nullptr) return false;
     return m_datareader->ClearAttribute(attr_name_);
   }
 
@@ -209,14 +209,14 @@ namespace eCAL
 
   bool CSubscriber::AddReceiveCallback(ReceiveCallbackT callback_)
   {
-    if(m_datareader == nullptr) return(false);
+    if (m_datareader == nullptr) return(false);
     RemReceiveCallback();
     return(m_datareader->AddReceiveCallback(std::move(callback_)));
   }
 
   bool CSubscriber::RemReceiveCallback()
   {
-    if(m_datareader == nullptr) return(false);
+    if (m_datareader == nullptr) return(false);
     return(m_datareader->RemReceiveCallback());
   }
 
@@ -241,10 +241,10 @@ namespace eCAL
 
   std::string CSubscriber::GetTopicName() const
   {
-    if(m_datareader == nullptr) return("");
+    if (m_datareader == nullptr) return("");
     return(m_datareader->GetTopicName());
   }
-  
+
   SDataTypeInformation CSubscriber::GetDataTypeInformation() const
   {
     if (m_datareader == nullptr) return(SDataTypeInformation{});
@@ -259,7 +259,7 @@ namespace eCAL
     out << indent_ << " class CSubscriber    " << '\n';
     out << indent_ << "----------------------" << '\n';
     out << indent_ << "m_created:            " << m_created << '\n';
-    if((m_datareader != nullptr) && m_datareader->IsCreated()) out << indent_ << m_datareader->Dump("    ");
+    if ((m_datareader != nullptr) && m_datareader->IsCreated()) out << indent_ << m_datareader->Dump("    ");
     out << '\n';
 
     return(out.str());

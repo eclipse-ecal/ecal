@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,8 +47,8 @@ namespace eCAL
     bool Start(const int timeout_, const TimerCallbackT& callback_, const int delay_)
     {
       assert(m_running == false);
-      if(m_running)    return(false);
-      if(timeout_ < 0) return(false);
+      if (m_running)    return(false);
+      if (timeout_ < 0) return(false);
       m_stop = false;
       m_thread = std::thread(&CTimerImpl::Thread, this, callback_, timeout_, delay_);
       m_running = true;
@@ -57,7 +57,7 @@ namespace eCAL
 
     bool Stop()
     {
-      if(!m_running) return(false);
+      if (!m_running) return(false);
       m_stop = true;
       m_thread.join();
       m_running = false;
@@ -91,7 +91,7 @@ namespace eCAL
         {
           // Correct loop duration by last duration error
           auto loop_duration_corr = loop_duration - m_last_error;
-          auto sleep_remaining    = loop_duration_corr - (end - start);
+          auto sleep_remaining = loop_duration_corr - (end - start);
 #if _WIN32
           // Sleep for the remaining time in multiple loops of smaller sleeps
 
@@ -100,13 +100,13 @@ namespace eCAL
           const auto sleep_resolution_min = std::chrono::microseconds(1);
 
           // Sleep threshold for switching to minimal sleep intervalls
-          const auto sleep_precision_thr  = std::chrono::milliseconds(5);
+          const auto sleep_precision_thr = std::chrono::milliseconds(5);
 
           while (sleep_remaining.count() > 0)
           {
             // We start with half of the remaining time
             sleep_remaining = sleep_remaining / 2;
-            
+
             // If we reach the system clock sleep precision
             // we reduce the sleep time to the minimum resolution
             if (sleep_remaining < sleep_precision_thr) sleep_remaining = sleep_resolution_min;
@@ -140,7 +140,7 @@ namespace eCAL
   }
 
   CTimer::CTimer(const int timeout_, const TimerCallbackT& callback_, const int delay_ /*= 0*/) : m_timer(nullptr)
-  { 
+  {
     m_timer = std::make_unique<CTimerImpl>();
     m_timer->Start(timeout_, callback_, delay_);
   }

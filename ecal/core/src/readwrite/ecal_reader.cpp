@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,27 +60,27 @@ namespace eCAL
   // CDataReader
   ////////////////////////////////////////
   CDataReader::CDataReader() :
-                 m_host_name(Process::GetHostName()),
-                 m_host_group_name(Process::GetHostGroupName()),
-                 m_pid(Process::GetProcessID()),
-                 m_pname(Process::GetProcessName()),
-                 m_topic_size(0),
-                 m_connected(false),
-                 m_read_buf_received(false),
-                 m_read_time(0),
-                 m_receive_time(0),
-                 m_clock(0),
-                 m_clock_old(0),
-                 m_freq(0),
-                 m_message_drops(0),
-                 m_loc_published(false),
-                 m_ext_published(false),
-                 m_use_ttype(true),
-                 m_use_tdesc(true),
-                 m_use_udp_mc_confirmed(false),
-                 m_use_shm_confirmed(false),
-                 m_use_tcp_confirmed(false),
-                 m_created(false)
+    m_host_name(Process::GetHostName()),
+    m_host_group_name(Process::GetHostGroupName()),
+    m_pid(Process::GetProcessID()),
+    m_pname(Process::GetProcessName()),
+    m_topic_size(0),
+    m_connected(false),
+    m_read_buf_received(false),
+    m_read_time(0),
+    m_receive_time(0),
+    m_clock(0),
+    m_clock_old(0),
+    m_freq(0),
+    m_message_drops(0),
+    m_loc_published(false),
+    m_ext_published(false),
+    m_use_ttype(true),
+    m_use_tdesc(true),
+    m_use_udp_mc_confirmed(false),
+    m_use_shm_confirmed(false),
+    m_use_tcp_confirmed(false),
+    m_created(false)
   {
   }
 
@@ -91,17 +91,17 @@ namespace eCAL
 
   bool CDataReader::Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
   {
-    if(m_created) return(false);
+    if (m_created) return(false);
 
     // set defaults
-    m_topic_name    = topic_name_;
+    m_topic_name = topic_name_;
     m_topic_id.clear();
-    m_topic_info    = topic_info_;
-    m_clock         = 0;
-    m_clock_old     = 0;
+    m_topic_info = topic_info_;
+    m_clock = 0;
+    m_clock_old = 0;
     m_message_drops = 0;
-    m_rec_time      = std::chrono::steady_clock::time_point();
-    m_created       = false;
+    m_rec_time = std::chrono::steady_clock::time_point();
+    m_created = false;
 #ifndef NDEBUG
     // log it
     Logging::Log(log_level_debug1, m_topic_name + "::CDataReader::Create");
@@ -162,20 +162,20 @@ namespace eCAL
     Unregister();
 
     // reset defaults
-    m_created                 = false;
-    m_clock                   = 0;
-    m_clock_old               = 0;
-    m_freq                    = 0;
-    m_message_drops           = 0;
-    m_rec_time                = std::chrono::steady_clock::time_point();
+    m_created = false;
+    m_clock = 0;
+    m_clock_old = 0;
+    m_freq = 0;
+    m_message_drops = 0;
+    m_rec_time = std::chrono::steady_clock::time_point();
 
-    m_use_udp_mc_confirmed    = false;
-    m_use_shm_confirmed       = false;
-    m_use_tcp_confirmed       = false;
+    m_use_udp_mc_confirmed = false;
+    m_use_shm_confirmed = false;
+    m_use_tcp_confirmed = false;
 
     return(true);
   }
-    
+
   void CDataReader::InitializeLayers()
   {
     // initialize udp multicast layer
@@ -213,7 +213,7 @@ namespace eCAL
     }
 #endif
   }
-  
+
   void CDataReader::UnsubscribeFromLayers()
   {
     // unsubscribe topic from udp multicast layer
@@ -236,16 +236,16 @@ namespace eCAL
   bool CDataReader::Register(const bool force_)
   {
 #if ECAL_CORE_REGISTRATION
-    if(m_topic_name.empty()) return(false);
+    if (m_topic_name.empty()) return(false);
 
     // create command parameter
     Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_reg_subscriber;
     auto& ecal_reg_sample_topic = ecal_reg_sample.topic;
-    ecal_reg_sample_topic.hname  = m_host_name;
+    ecal_reg_sample_topic.hname = m_host_name;
     ecal_reg_sample_topic.hgname = m_host_group_name;
-    ecal_reg_sample_topic.tname  = m_topic_name;
-    ecal_reg_sample_topic.tid    = m_topic_id;
+    ecal_reg_sample_topic.tname = m_topic_name;
+    ecal_reg_sample_topic.tid = m_topic_id;
     // topic_information
     // Remove eCAL6!!
     if (m_use_ttype) ecal_reg_sample_topic.ttype = Util::CombinedTopicEncodingAndType(m_topic_info.encoding, m_topic_info.name);
@@ -255,22 +255,22 @@ namespace eCAL
       if (m_use_ttype)
       {
         ecal_reg_sample_tdatatype.encoding = m_topic_info.encoding;
-        ecal_reg_sample_tdatatype.name     = m_topic_info.name;
+        ecal_reg_sample_tdatatype.name = m_topic_info.name;
       }
       if (m_use_tdesc)
       {
         ecal_reg_sample_tdatatype.desc = m_topic_info.descriptor;
       }
     }
-    ecal_reg_sample_topic.attr  = m_attr;
+    ecal_reg_sample_topic.attr = m_attr;
     ecal_reg_sample_topic.tsize = static_cast<int32_t>(m_topic_size);
 
 #if ECAL_CORE_TRANSPORT_UDP
     // udp multicast layer
     {
       Registration::TLayer udp_tlayer;
-      udp_tlayer.type      = tl_ecal_udp_mc;
-      udp_tlayer.version   = 1;
+      udp_tlayer.type = tl_ecal_udp_mc;
+      udp_tlayer.version = 1;
       udp_tlayer.confirmed = m_use_udp_mc_confirmed;
       ecal_reg_sample_topic.tlayer.push_back(udp_tlayer);
     }
@@ -280,8 +280,8 @@ namespace eCAL
     // shm layer
     {
       Registration::TLayer shm_tlayer;
-      shm_tlayer.type      = tl_ecal_shm;
-      shm_tlayer.version   = 1;
+      shm_tlayer.type = tl_ecal_shm;
+      shm_tlayer.version = 1;
       shm_tlayer.confirmed = m_use_shm_confirmed;
       ecal_reg_sample_topic.tlayer.push_back(shm_tlayer);
     }
@@ -291,18 +291,18 @@ namespace eCAL
     // tcp layer
     {
       Registration::TLayer tcp_tlayer;
-      tcp_tlayer.type      = tl_ecal_tcp;
-      tcp_tlayer.version   = 1;
+      tcp_tlayer.type = tl_ecal_tcp;
+      tcp_tlayer.version = 1;
       tcp_tlayer.confirmed = m_use_tcp_confirmed;
       ecal_reg_sample_topic.tlayer.push_back(tcp_tlayer);
     }
 #endif
 
-    ecal_reg_sample_topic.pid           = m_pid;
-    ecal_reg_sample_topic.pname         = m_pname;
-    ecal_reg_sample_topic.uname         = Process::GetUnitName();
-    ecal_reg_sample_topic.dclock        = m_clock;
-    ecal_reg_sample_topic.dfreq         = m_freq;
+    ecal_reg_sample_topic.pid = m_pid;
+    ecal_reg_sample_topic.pname = m_pname;
+    ecal_reg_sample_topic.uname = Process::GetUnitName();
+    ecal_reg_sample_topic.dclock = m_clock;
+    ecal_reg_sample_topic.dfreq = m_freq;
     ecal_reg_sample_topic.message_drops = static_cast<int32_t>(m_message_drops);
 
     // we do not know the number of connections ..
@@ -310,7 +310,7 @@ namespace eCAL
     ecal_reg_sample_topic.connections_ext = 0;
 
     // register subscriber
-    if(g_registration_provider() != nullptr) g_registration_provider()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
+    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
 #ifndef NDEBUG
     // log it
     Logging::Log(log_level_debug4, m_topic_name + "::CDataReader::DoRegister");
@@ -329,13 +329,13 @@ namespace eCAL
     Registration::Sample ecal_unreg_sample;
     ecal_unreg_sample.cmd_type = bct_unreg_subscriber;
     auto& ecal_reg_sample_topic = ecal_unreg_sample.topic;
-    ecal_reg_sample_topic.hname  = m_host_name;
+    ecal_reg_sample_topic.hname = m_host_name;
     ecal_reg_sample_topic.hgname = m_host_group_name;
-    ecal_reg_sample_topic.pname  = m_pname;
-    ecal_reg_sample_topic.pid    = m_pid;
-    ecal_reg_sample_topic.tname  = m_topic_name;
-    ecal_reg_sample_topic.tid    = m_topic_id;
-    ecal_reg_sample_topic.uname  = Process::GetUnitName();
+    ecal_reg_sample_topic.pname = m_pname;
+    ecal_reg_sample_topic.pid = m_pid;
+    ecal_reg_sample_topic.tname = m_topic_name;
+    ecal_reg_sample_topic.tid = m_topic_id;
+    ecal_reg_sample_topic.uname = Process::GetUnitName();
 
     // unregister subscriber
     if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_topic_name, m_topic_id, ecal_unreg_sample, true);
@@ -415,7 +415,7 @@ namespace eCAL
       m_read_buf_received = false;
 
       // apply time
-      if(time_ != nullptr) *time_ = m_read_time;
+      if (time_ != nullptr) *time_ = m_read_time;
 
       // return success
       return(true);
@@ -432,8 +432,8 @@ namespace eCAL
 
     // store receive layer
     m_use_udp_mc_confirmed |= layer_ == tl_ecal_udp_mc;
-    m_use_shm_confirmed    |= layer_ == tl_ecal_shm;
-    m_use_tcp_confirmed    |= layer_ == tl_ecal_tcp;
+    m_use_shm_confirmed |= layer_ == tl_ecal_shm;
+    m_use_tcp_confirmed |= layer_ == tl_ecal_tcp;
 
     // number of hash values to track for duplicates
     constexpr int hash_queue_size(64);
@@ -441,7 +441,7 @@ namespace eCAL
     // use hash to discard multiple receives of the same payload
     //   if a hash is in the queue we received this message recently (on another transport layer ?)
     //   so we return and do not process this sample again
-    if(std::find(m_sample_hash_queue.begin(), m_sample_hash_queue.end(), hash_) != m_sample_hash_queue.end())
+    if (std::find(m_sample_hash_queue.begin(), m_sample_hash_queue.end(), hash_) != m_sample_hash_queue.end())
     {
 #ifndef NDEBUG
       // log it
@@ -490,7 +490,7 @@ namespace eCAL
     bool processed = false;
     {
       // call user receive callback function
-      if(m_receive_callback)
+      if (m_receive_callback)
       {
 #ifndef NDEBUG
         // log it
@@ -498,10 +498,10 @@ namespace eCAL
 #endif
         // prepare data struct
         SReceiveCallbackData cb_data;
-        cb_data.buf   = const_cast<char*>(payload_);
-        cb_data.size  = long(size_);
-        cb_data.id    = id_;
-        cb_data.time  = time_;
+        cb_data.buf = const_cast<char*>(payload_);
+        cb_data.size = long(size_);
+        cb_data.id = id_;
+        cb_data.time = time_;
         cb_data.clock = clock_;
         // execute it
         (m_receive_callback)(m_topic_name.c_str(), &cb_data);
@@ -510,7 +510,7 @@ namespace eCAL
     }
 
     // if not consumed by user receive call
-    if(!processed)
+    if (!processed)
     {
       // push sample into read buffer
       const std::lock_guard<std::mutex> read_buffer_lock(m_read_buf_mutex);
@@ -650,7 +650,7 @@ namespace eCAL
       m_ext_pub_map.erase(topic_key);
     }
   }
-  
+
   void CDataReader::ApplyLocLayerParameter(const std::string& process_id_, const std::string& topic_id_, eTLayerType type_, const Registration::ConnectionPar& parameter_)
   {
     // process only for shm and tcp layer
@@ -664,11 +664,11 @@ namespace eCAL
     }
 
     SReaderLayerPar par;
-    par.host_name  = m_host_name;
+    par.host_name = m_host_name;
     par.process_id = process_id_;
     par.topic_name = m_topic_name;
-    par.topic_id   = topic_id_;
-    par.parameter  = parameter_;
+    par.topic_id = topic_id_;
+    par.parameter = parameter_;
 
     switch (type_)
     {
@@ -695,15 +695,15 @@ namespace eCAL
     case tl_ecal_tcp:
 #if ECAL_CORE_TRANSPORT_TCP
     {
-        SReaderLayerPar par;
-        par.host_name  = host_name_;
-        par.topic_name = m_topic_name;
-        par.topic_id   = m_topic_id;
-        par.parameter  = parameter_;
+      SReaderLayerPar par;
+      par.host_name = host_name_;
+      par.topic_name = m_topic_name;
+      par.topic_id = m_topic_id;
+      par.parameter = parameter_;
 
-        // process only for tcp layer
-        CTCPReaderLayer::Get()->SetConnectionParameter(par);
-      }
+      // process only for tcp layer
+      CTCPReaderLayer::Get()->SetConnectionParameter(par);
+    }
 #else
       (void)host_name_;
       (void)parameter_;
@@ -717,7 +717,7 @@ namespace eCAL
   void CDataReader::Connect(const std::string& tid_, const SDataTypeInformation& tinfo_)
   {
     SSubEventCallbackData data;
-    data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+    data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
     data.clock = 0;
 
     if (!m_connected)
@@ -730,8 +730,8 @@ namespace eCAL
         auto iter = m_event_callback_map.find(sub_event_connected);
         if (iter != m_event_callback_map.end() && iter->second)
         {
-          data.type      = sub_event_connected;
-          data.tid       = tid_;
+          data.type = sub_event_connected;
+          data.tid = tid_;
           data.tdatatype = tinfo_;
           (iter->second)(m_topic_name.c_str(), &data);
         }
@@ -742,10 +742,10 @@ namespace eCAL
     {
       const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
       auto iter = m_event_callback_map.find(sub_event_update_connection);
-        if (iter != m_event_callback_map.end() && iter->second)
+      if (iter != m_event_callback_map.end() && iter->second)
       {
-        data.type      = sub_event_update_connection;
-        data.tid       = tid_;
+        data.type = sub_event_update_connection;
+        data.tid = tid_;
         data.tdatatype = tinfo_;
         (iter->second)(m_topic_name.c_str(), &data);
       }
@@ -765,8 +765,8 @@ namespace eCAL
         if (iter != m_event_callback_map.end() && iter->second)
         {
           SSubEventCallbackData data;
-          data.type  = sub_event_disconnected;
-          data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+          data.type = sub_event_disconnected;
+          data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
           data.clock = 0;
           (iter->second)(m_topic_name.c_str(), &data);
         }
@@ -777,7 +777,7 @@ namespace eCAL
   bool CDataReader::CheckMessageClock(const std::string& tid_, long long current_clock_)
   {
     auto iter = m_writer_counter_map.find(tid_);
-    
+
     // initial entry
     if (iter == m_writer_counter_map.end())
     {
@@ -835,8 +835,8 @@ namespace eCAL
           if (citer != m_event_callback_map.end() && citer->second)
           {
             SSubEventCallbackData data;
-            data.type  = sub_event_dropped;
-            data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+            data.type = sub_event_dropped;
+            data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
             data.clock = current_clock_;
             (citer->second)(m_topic_name.c_str(), &data);
           }
@@ -892,10 +892,10 @@ namespace eCAL
     // should never be reached
     return false;
   }
-    
+
   void CDataReader::RefreshRegistration()
   {
-    if(!m_created) return;
+    if (!m_created) return;
 
     // ensure that registration is not called within zero nanoseconds
     // normally it will be called from registration logic every second
@@ -906,7 +906,7 @@ namespace eCAL
       if (m_clock_old == 0)
       {
         m_clock_old = m_clock;
-        m_rec_time  = curr_time;
+        m_rec_time = curr_time;
       }
 
       // check for clock difference
@@ -916,7 +916,7 @@ namespace eCAL
         m_freq = static_cast<long>((1000 * 1000 * (m_clock - m_clock_old)) / std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - m_rec_time).count());
         // reset clock and time
         m_clock_old = m_clock;
-        m_rec_time  = curr_time;
+        m_rec_time = curr_time;
       }
       else
       {
@@ -949,23 +949,23 @@ namespace eCAL
     std::stringstream out;
 
     out << '\n';
-    out << indent_ << "------------------------------------"                                       << '\n';
-    out << indent_ << " class CDataReader "                                                        << '\n';
-    out << indent_ << "------------------------------------"                                       << '\n';
-    out << indent_ << "m_host_name:                        " << m_host_name                        << '\n';
-    out << indent_ << "m_host_group_name:                  " << m_host_group_name                  << '\n';
-    out << indent_ << "m_topic_name:                       " << m_topic_name                       << '\n';
-    out << indent_ << "m_topic_id:                         " << m_topic_id                         << '\n';
-    out << indent_ << "m_topic_info.encoding:              " << m_topic_info.encoding              << '\n';
-    out << indent_ << "m_topic_info.name:                  " << m_topic_info.name                  << '\n';
-    out << indent_ << "m_topic_info.desc:                  " << m_topic_info.descriptor            << '\n';
-    out << indent_ << "m_topic_size:                       " << m_topic_size                       << '\n';
-    out << indent_ << "m_read_buf.size():                  " << m_read_buf.size()                  << '\n';
-    out << indent_ << "m_read_time:                        " << m_read_time                        << '\n';
-    out << indent_ << "m_clock:                            " << m_clock                            << '\n';
+    out << indent_ << "------------------------------------" << '\n';
+    out << indent_ << " class CDataReader " << '\n';
+    out << indent_ << "------------------------------------" << '\n';
+    out << indent_ << "m_host_name:                        " << m_host_name << '\n';
+    out << indent_ << "m_host_group_name:                  " << m_host_group_name << '\n';
+    out << indent_ << "m_topic_name:                       " << m_topic_name << '\n';
+    out << indent_ << "m_topic_id:                         " << m_topic_id << '\n';
+    out << indent_ << "m_topic_info.encoding:              " << m_topic_info.encoding << '\n';
+    out << indent_ << "m_topic_info.name:                  " << m_topic_info.name << '\n';
+    out << indent_ << "m_topic_info.desc:                  " << m_topic_info.descriptor << '\n';
+    out << indent_ << "m_topic_size:                       " << m_topic_size << '\n';
+    out << indent_ << "m_read_buf.size():                  " << m_read_buf.size() << '\n';
+    out << indent_ << "m_read_time:                        " << m_read_time << '\n';
+    out << indent_ << "m_clock:                            " << m_clock << '\n';
     out << indent_ << "m_rec_time:                         " << std::chrono::duration_cast<std::chrono::milliseconds>(m_rec_time.time_since_epoch()).count() << '\n';
-    out << indent_ << "m_freq:                             " << m_freq                             << '\n';
-    out << indent_ << "m_created:                          " << m_created                          << '\n';
+    out << indent_ << "m_freq:                             " << m_freq << '\n';
+    out << indent_ << "m_created:                          " << m_created << '\n';
     out << '\n';
 
     return(out.str());

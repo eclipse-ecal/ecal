@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,7 +49,7 @@ namespace eCAL
   bool CDataReaderTCP::Destroy()
   {
     if (!m_subscriber) return false;
-    m_subscriber      = nullptr;
+    m_subscriber = nullptr;
     m_callback_active = false;
     return true;
   }
@@ -65,7 +65,7 @@ namespace eCAL
     for (const auto& session : sessions)
     {
       auto address = session->getAddress();
-      auto port    = session->getPort();
+      auto port = session->getPort();
       if ((address == host_name_) && (port == port_))
       {
         new_session = false;
@@ -93,12 +93,12 @@ namespace eCAL
     const size_t ecal_magic(4 * sizeof(char));
     //                             ECAL       +  header size field
     const size_t   header_length = ecal_magic + sizeof(uint16_t);
-    const uint16_t header_size   = le16toh(*reinterpret_cast<uint16_t*>(data_.buffer_->data() + ecal_magic));
+    const uint16_t header_size = le16toh(*reinterpret_cast<uint16_t*>(data_.buffer_->data() + ecal_magic));
 
     // extract header
     const char* header_payload = data_.buffer_->data() + header_length;
     // extract data payload
-    const char* data_payload   = header_payload + header_size;
+    const char* data_payload = header_payload + header_size;
 
     // parse header
     if (DeserializeFromBuffer(header_payload, header_size, m_ecal_header))
@@ -106,7 +106,7 @@ namespace eCAL
       if (g_subgate() != nullptr)
       {
         // use this intermediate variables as optimization
-        const auto& ecal_header_topic   = m_ecal_header.topic;
+        const auto& ecal_header_topic = m_ecal_header.topic;
         const auto& ecal_header_content = m_ecal_header.content;
         // apply sample
         g_subgate()->ApplySample(
@@ -122,7 +122,7 @@ namespace eCAL
       }
     }
   }
-  
+
   ////////////////
   // LAYER
   ////////////////
@@ -167,7 +167,7 @@ namespace eCAL
     // get parameter from a new writer
     //////////////////////////////////
     const auto& remote_hostname = par_.host_name;
-    auto        remote_port     = par_.parameter.layer_par_tcp.port;
+    auto        remote_port = par_.parameter.layer_par_tcp.port;
 
     const std::string map_key(par_.topic_name);
 

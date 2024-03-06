@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,14 +35,14 @@
 namespace eCAL
 {
   /**
-   * @brief Service client implementation class. 
+   * @brief Service client implementation class.
   **/
   class CServiceClientImpl : public std::enable_shared_from_this<CServiceClientImpl>
   {
   public:
     static std::shared_ptr<CServiceClientImpl> CreateInstance();
     static std::shared_ptr<CServiceClientImpl> CreateInstance(const std::string& service_name_);
-  
+
   private:
     CServiceClientImpl();
 
@@ -62,7 +62,7 @@ namespace eCAL
     // add and remove callback function for client events
     bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
     bool RemEventCallback(eCAL_Client_Event type_);
-      
+
     // blocking call, all responses will be returned in service_response_vec_
     bool Call(const std::string& method_name_, const std::string& request_, int timeout_ms_, ServiceResponseVecT* service_response_vec_);
 
@@ -100,7 +100,7 @@ namespace eCAL
 
     void CheckForNewServices();
 
-    void ErrorCallback(const std::string &method_name_, const std::string &error_message_);
+    void ErrorCallback(const std::string& method_name_, const std::string& error_message_);
 
     using ClientMapT = std::map<std::string, std::shared_ptr<eCAL::service::ClientSession>>;
     std::mutex            m_client_map_sync;

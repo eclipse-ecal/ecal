@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,13 +72,13 @@ namespace eCAL
 
   void CPubGate::Create()
   {
-    if(m_created) return;
+    if (m_created) return;
     m_created = true;
   }
 
   void CPubGate::Destroy()
   {
-    if(!m_created) return;
+    if (!m_created) return;
 
     // destroy all remaining publisher
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
@@ -102,7 +102,7 @@ namespace eCAL
 
   bool CPubGate::Register(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_)
   {
-    if(!m_created) return(false);
+    if (!m_created) return(false);
 
     // register writer and multicast group
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
@@ -113,14 +113,14 @@ namespace eCAL
 
   bool CPubGate::Unregister(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_)
   {
-    if(!m_created) return(false);
+    if (!m_created) return(false);
     bool ret_state = false;
 
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     auto res = m_topic_name_datawriter_map.equal_range(topic_name_);
-    for(auto iter = res.first; iter != res.second; ++iter)
+    for (auto iter = res.first; iter != res.second; ++iter)
     {
-      if(iter->second == datawriter_)
+      if (iter->second == datawriter_)
       {
         m_topic_name_datawriter_map.erase(iter);
         ret_state = true;
@@ -133,7 +133,7 @@ namespace eCAL
 
   void CPubGate::ApplyLocSubRegistration(const Registration::Sample& ecal_sample_)
   {
-    if(!m_created) return;
+    if (!m_created) return;
 
     const auto& ecal_sample = ecal_sample_.topic;
     const std::string& topic_name = ecal_sample.tname;
@@ -159,7 +159,7 @@ namespace eCAL
     // register local subscriber
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     auto res = m_topic_name_datawriter_map.equal_range(topic_name);
-    for(TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
+    for (TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
       iter->second->ApplyLocSubscription(subscription_info, topic_information, reader_par);
     }
@@ -186,13 +186,13 @@ namespace eCAL
 
   void CPubGate::ApplyExtSubRegistration(const Registration::Sample& ecal_sample_)
   {
-    if(!m_created) return;
+    if (!m_created) return;
 
     const auto& ecal_sample = ecal_sample_.topic;
     const std::string& topic_name = ecal_sample.tname;
     CDataWriter::SExternalSubscriptionInfo subscription_info;
-    subscription_info.host_name  = ecal_sample.hname;
-    subscription_info.topic_id   = ecal_sample.tid;
+    subscription_info.host_name = ecal_sample.hname;
+    subscription_info.topic_id = ecal_sample.tid;
     subscription_info.process_id = std::to_string(ecal_sample.pid);
     const SDataTypeInformation topic_information{ eCALSampleToTopicInformation(ecal_sample_) };
 
@@ -213,7 +213,7 @@ namespace eCAL
     // register external subscriber
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     auto res = m_topic_name_datawriter_map.equal_range(topic_name);
-    for(TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
+    for (TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
       iter->second->ApplyExtSubscription(subscription_info, topic_information, reader_par);
     }

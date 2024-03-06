@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -61,37 +61,37 @@ namespace eCAL
 #endif
 
   // Declaration of getter functions for globally accessible variable instances
-  CGlobals*               g_globals();
-  CConfig*                g_config();
-  CLog*                   g_log();
+  CGlobals* g_globals();
+  CConfig* g_config();
+  CLog* g_log();
 #if ECAL_CORE_MONITORING
-  CMonitoring*            g_monitoring();
+  CMonitoring* g_monitoring();
 #endif
 #if ECAL_CORE_TIMEPLUGIN
-  CTimeGate*              g_timegate();
+  CTimeGate* g_timegate();
 #endif
 #if ECAL_CORE_REGISTRATION
-  CRegistrationProvider*  g_registration_provider();
-  CRegistrationReceiver*  g_registration_receiver();
+  CRegistrationProvider* g_registration_provider();
+  CRegistrationReceiver* g_registration_receiver();
 #endif
-  CDescGate*              g_descgate();
+  CDescGate* g_descgate();
 #if ECAL_CORE_SUBSCRIBER
-  CSubGate*               g_subgate();
+  CSubGate* g_subgate();
 #endif
 #if ECAL_CORE_PUBLISHER
-  CPubGate*               g_pubgate();
+  CPubGate* g_pubgate();
 #endif
 #if ECAL_CORE_SERVICE
-  CServiceGate*           g_servicegate();
-  CClientGate*            g_clientgate();
+  CServiceGate* g_servicegate();
+  CClientGate* g_clientgate();
 #endif
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
-  CMemFileThreadPool*     g_memfile_pool();
-  CMemFileMap*            g_memfile_map();
+  CMemFileThreadPool* g_memfile_pool();
+  CMemFileMap* g_memfile_map();
 #endif
 
   // declaration of globally accessible variables
-  extern CGlobals*                     g_globals_ctx;
+  extern CGlobals* g_globals_ctx;
   extern std::atomic<int>              g_globals_ctx_ref_cnt;
 
   extern std::string                   g_default_ini_file;

@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -70,9 +70,9 @@ namespace CustomTclap
      */
     AdvancedTclapOutput(std::ostream* output_stream, int max_width);
 
-    void version(TCLAP::CmdLineInterface &cmd) override;
-    void usage(TCLAP::CmdLineInterface &cmd) override;
-    void failure(TCLAP::CmdLineInterface &cmd, TCLAP::ArgException &e) override;
+    void version(TCLAP::CmdLineInterface& cmd) override;
+    void usage(TCLAP::CmdLineInterface& cmd) override;
+    void failure(TCLAP::CmdLineInterface& cmd, TCLAP::ArgException& e) override;
 
     /**
      * @brief Hides / un-hides an argument
