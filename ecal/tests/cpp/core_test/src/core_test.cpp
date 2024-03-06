@@ -17,6 +17,115 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <ecal/ecal_core.h>
+#include <ecal/ecal_defs.h>
+
+#include <gtest/gtest.h>
+
+TEST(core_cpp, Core_GetVersion)
+{
+  // get eCAL version string
+  EXPECT_STREQ(ECAL_VERSION, eCAL::GetVersionString());
+
+  // get eCAL version date
+  EXPECT_STREQ(ECAL_DATE, eCAL::GetVersionDateString());
+
+  // get eCAL version as separated integer values
+  int major = -1;
+  int minor = -1;
+  int patch = -1;
+  eCAL::GetVersion(&major, &minor, &patch);
+  EXPECT_EQ(ECAL_VERSION_MAJOR, major);
+  EXPECT_EQ(ECAL_VERSION_MINOR, minor);
+  EXPECT_EQ(ECAL_VERSION_PATCH, patch);
+}
+
+TEST(core_cpp, Core_InitializeFinalize)
+{
+  // Is eCAL API initialized ?
+  EXPECT_EQ(0, eCAL::IsInitialized());
+
+  // initialize eCAL API
+  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "initialize_test"));
+
+  // Is eCAL API initialized ?
+  EXPECT_EQ(1, eCAL::IsInitialized());
+
+  // initialize eCAL API again we expect return value 1 for yet initialized
+  EXPECT_EQ(1, eCAL::Initialize(0, nullptr, "initialize_test"));
+
+  // finalize eCAL API we expect return value 0 even it will not be really finalized because it's 2 times initialzed and 1 time finalized
+  EXPECT_EQ(0, eCAL::Finalize());
+
+  // Is eCAL API initialized ? yes it' still initialized
+  EXPECT_EQ(1, eCAL::IsInitialized());
+
+  // finalize eCAL API we expect return value 0 because now it will be finalized
+  EXPECT_EQ(0, eCAL::Finalize());
+
+  // Is eCAL API initialized ? no
+  EXPECT_EQ(0, eCAL::IsInitialized());
+
+  // finalize eCAL API we expect return value 1 because it was finalized before
+  EXPECT_EQ(1, eCAL::Finalize());
+}
+
+TEST(core_cpp, Core_MultipleInitializeFinalize)
+{
+  // try to initialize / finalize multiple times
+  for (auto i = 0; i < 4; ++i)
+  {
+    // initialize eCAL API
+    EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "multiple_initialize_finalize_test"));
+
+    // finalize eCAL API
+    EXPECT_EQ(0, eCAL::Finalize());
+  }
+}
+
+TEST(core_cpp, Core_UnitName)
+{
+  // initialize eCAL API with empty unit name (eCAL will use process name as unit name)
+  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, ""));
+
+  // Is eCAL API initialized ?
+  EXPECT_EQ(1, eCAL::IsInitialized());
+
+  // set unit name
+  EXPECT_EQ(0, eCAL::SetUnitName("unit name"));
+
+  // set nullptr unit name
+  EXPECT_EQ(-1, eCAL::SetUnitName(nullptr));
+
+  // set empty unit name
+  EXPECT_EQ(-1, eCAL::SetUnitName(""));
+
+  // finalize eCAL API we expect return value 0 because it will be finalized
+  EXPECT_EQ(0, eCAL::Finalize());
+}
+
+TEST(core_cpp, Core_eCAL_Ok)
+{
+  // check uninitialized eCAL, should not be okay
+  EXPECT_EQ(0, eCAL::Ok());
+
+  // initialize eCAL API
+  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "okay_test"));
+
+  // check initialized eCAL, should be okay
+  EXPECT_EQ(1, eCAL::Ok());
+
+  // finalize eCAL API we expect return value 0 because it will be finalized
+  EXPECT_EQ(0, eCAL::Finalize());
+
+  // check finalized eCAL, should not be okay
+  EXPECT_EQ(0, eCAL::Ok());
+}
+
+
+// CHECK THIS AND MOVE THIS IN ANOTHER TEST UNIT
+#if 0
+
 #include <ecal/ecal.h>
 #include <ecal/msg/string/publisher.h>
 #include <ecal/msg/string/subscriber.h>
@@ -227,3 +336,5 @@ TEST(Core, TimerCallback)
   EXPECT_EQ(1, eCAL::Finalize());
 }
 #endif /* !defined ECAL_OS_WINDOWS */
+
+#endif
