@@ -122,19 +122,19 @@ int main(int argc, char **argv)
       math_request.set_inp1(inp1++);
       math_request.set_inp2(inp2++);
 
-      std::cout << std::endl << "Calling MathService::Add method with      : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
+      std::cout << std::endl << "Calling MathService::Add method with      : " << math_request.inp1() << " and " << math_request.inp2() << std::endl;
       if (!math_client.Call("Add", math_request))
       {
         std::cout << "MathService::Add method call failed .." << std::endl << std::endl;
       }
 
-      std::cout << std::endl << "Calling MathService::Multiply method with : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
+      std::cout << std::endl << "Calling MathService::Multiply method with : " << math_request.inp1() << " and " << math_request.inp2() << std::endl;
       if (!math_client.Call("Multiply", math_request))
       {
         std::cout << "MathService::Multiply method call failed .." << std::endl << std::endl;
       }
 
-      std::cout << std::endl << "Calling MathService::Divide method with   : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
+      std::cout << std::endl << "Calling MathService::Divide method with   : " << math_request.inp1() << " and " << math_request.inp2() << std::endl;
       if (!math_client.Call("Divide", math_request))
       {
         std::cout << "MathService::Divide method call failed .." << std::endl << std::endl;
