@@ -28,7 +28,7 @@ namespace eCAL
     LogMessage GenerateLogMessage();
     bool CompareLogMessages(const LogMessage& message1, const LogMessage& message2);
 
-    TEST(Serialization, LogMessage2String)
+    TEST(core_cpp_serialization, LogMessage2String)
     {
       LogMessage message_in = GenerateLogMessage();
 
@@ -41,7 +41,7 @@ namespace eCAL
       ASSERT_TRUE(CompareLogMessages(message_in, message_out));
     }
 
-    TEST(Serialization, LogMessage2Vector)
+    TEST(core_cpp_serialization, LogMessage2Vector)
     {
       LogMessage message_in = GenerateLogMessage();
 
@@ -55,7 +55,7 @@ namespace eCAL
     }
 
 
-    TEST(Serialization, LogMessageList2String)
+    TEST(core_cpp_serialization, LogMessageList2String)
     {
       LogMessageList message_list_in;
       message_list_in.log_messages.push_back(GenerateLogMessage());
@@ -72,7 +72,7 @@ namespace eCAL
       ASSERT_TRUE(std::equal(message_list_in.log_messages.begin(), message_list_in.log_messages.end(), message_list_out.log_messages.begin(), CompareLogMessages));
     }
 
-    TEST(Serialization, LogMessageList2Vector)
+    TEST(core_cpp_serialization, LogMessageList2Vector)
     {
       LogMessageList message_list_in;
       message_list_in.log_messages.push_back(GenerateLogMessage());

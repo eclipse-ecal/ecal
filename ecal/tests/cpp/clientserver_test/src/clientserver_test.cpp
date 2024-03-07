@@ -84,7 +84,7 @@ namespace
 
 #if ClientConnectEventTest
 
-TEST(ClientServer, ClientConnectEvent)
+TEST(core_cpp_clientserver, ClientConnectEvent)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver base connect event callback");
@@ -153,7 +153,7 @@ TEST(ClientServer, ClientConnectEvent)
 
 #if ServerConnectEventTest
 
-TEST(ClientServer, ServerConnectEvent)
+TEST(core_cpp_clientserver, ServerConnectEvent)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver base connect event callback");
@@ -221,7 +221,7 @@ TEST(ClientServer, ServerConnectEvent)
 
 #if ClientServerBaseCallbackTest
 
-TEST(ClientServer, ClientServerBaseCallback)
+TEST(core_cpp_clientserver, BaseCallback)
 {
   const int num_services(2);
   const int num_clients(3);
@@ -335,7 +335,7 @@ TEST(ClientServer, ClientServerBaseCallback)
 
 #if ClientServerBaseCallbackTimeoutTest
 
-TEST(ClientServer, ClientServerBaseCallbackTimeout)
+TEST(core_cpp_clientserver, BaseCallbackTimeout)
 {
   const int num_services(2);
   const int num_clients(3);
@@ -505,7 +505,7 @@ TEST(ClientServer, ClientServerBaseCallbackTimeout)
 
 #if ClientServerBaseAsyncCallbackTest
 
-TEST(ClientServer, ClientServerBaseAsyncCallback)
+TEST(core_cpp_clientserver, BaseAsyncCallback)
 {
   const int calls(1);
   const int sleep(100);
@@ -579,7 +579,7 @@ TEST(ClientServer, ClientServerBaseAsyncCallback)
 
 #if ClientServerBaseAsyncTest
 
-TEST(ClientServer, ClientServerBaseAsync)
+TEST(core_cpp_clientserver, BaseAsync)
 {
   const int calls(5);
 
@@ -686,7 +686,7 @@ TEST(ClientServer, ClientServerBaseAsync)
 
 #if ClientServerBaseBlockingTest
 
-TEST(ClientServer, ClientServerBaseBlocking)
+TEST(core_cpp_clientserver, BaseBlocking)
 {
   const int num_services(2);
   const int num_clients(3);
@@ -789,7 +789,7 @@ TEST(ClientServer, ClientServerBaseBlocking)
 
 #if NestedRPCCallTest
 
-TEST(ClientServer, NestedRPCCall)
+TEST(core_cpp_clientserver, NestedRPCCall)
 {
   const int calls(1);
   const int sleep(0);

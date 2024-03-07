@@ -31,7 +31,7 @@ namespace eCAL
     Response GenerateResponse();
     bool CompareResponses(const Response& response1, const Response& response2);
 
-    TEST(Serialization, Request2String)
+    TEST(core_cpp_serialization, Request2String)
     {
       Request sample_in = GenerateRequest();
 
@@ -44,7 +44,7 @@ namespace eCAL
       ASSERT_TRUE(CompareRequests(sample_in, sample_out));
     }
 
-    TEST(Serialization, Request2Vector)
+    TEST(core_cpp_serialization, Request2Vector)
     {
       Request sample_in = GenerateRequest();
 
@@ -57,7 +57,7 @@ namespace eCAL
       ASSERT_TRUE(CompareRequests(sample_in, sample_out));
     }
 
-    TEST(Serialization, Response2String)
+    TEST(core_cpp_serialization, Response2String)
     {
       Response sample_in = GenerateResponse();
 
@@ -70,7 +70,7 @@ namespace eCAL
       ASSERT_TRUE(CompareResponses(sample_in, sample_out));
     }
 
-    TEST(Serialization, Response2Vector)
+    TEST(core_cpp_serialization, Response2Vector)
     {
       Response sample_in = GenerateResponse();
 

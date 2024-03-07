@@ -28,7 +28,7 @@ namespace eCAL
     Sample GenerateRegistrationSample();
     bool   CompareRegistrationSamples(const Sample& sample1, const Sample& sample2);
 
-    TEST(Serialization, Registration2String)
+    TEST(core_cpp_serialization, Registration2String)
     {
       Sample sample_in = GenerateRegistrationSample();
 
@@ -41,7 +41,7 @@ namespace eCAL
       ASSERT_TRUE(CompareRegistrationSamples(sample_in, sample_out));
     }
 
-    TEST(Serialization, Registration2Vector)
+    TEST(core_cpp_serialization, Registration2Vector)
     {
       Sample sample_in = GenerateRegistrationSample();
 
@@ -54,7 +54,7 @@ namespace eCAL
       ASSERT_TRUE(CompareRegistrationSamples(sample_in, sample_out));
     }
 
-    TEST(Serialization, RegistrationList2String)
+    TEST(core_cpp_serialization, RegistrationList2String)
     {
       SampleList sample_list_in;
       sample_list_in.samples.push_back(GenerateRegistrationSample());
@@ -71,7 +71,7 @@ namespace eCAL
       ASSERT_TRUE(std::equal(sample_list_in.samples.begin(), sample_list_in.samples.end(), sample_list_out.samples.begin(), CompareRegistrationSamples));
     }
 
-    TEST(Serialization, RegistrationList2Vector)
+    TEST(core_cpp_serialization, RegistrationList2Vector)
     {
       SampleList sample_list_in;
       sample_list_in.samples.push_back(GenerateRegistrationSample());

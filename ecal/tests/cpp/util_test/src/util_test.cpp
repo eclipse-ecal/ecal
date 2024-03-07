@@ -36,7 +36,7 @@ namespace {
   }
 }
 
-TEST(Util, CombineTopicEncodingAndType)
+TEST(core_cpp_util, Util_CombineTopicEncodingAndType)
 {
   TestCombinedTopicEncodingAndType("", "", "");
   TestCombinedTopicEncodingAndType("proto", "pb.Person.People", "proto:pb.Person.People");
@@ -44,7 +44,7 @@ TEST(Util, CombineTopicEncodingAndType)
   TestCombinedTopicEncodingAndType("", "MyType", "MyType");
 }
 
-TEST(Util, SplitCombinedTopicType)
+TEST(core_cpp_util, Util_SplitCombinedTopicType)
 {
   TestSplitCombinedTopicType("", "", "");
   TestSplitCombinedTopicType("proto:pb.Person.People", "proto", "pb.Person.People");

@@ -21,7 +21,7 @@
 
 #include <gtest/gtest.h>
 
-TEST(Event, EventSetGet)
+TEST(core_cpp_core, Event_EventSetGet)
 { 
   // global parameter
   const std::string event_name = "my_event";

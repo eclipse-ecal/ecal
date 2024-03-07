@@ -29,6 +29,8 @@ add_subdirectory(c/core_test)
 add_subdirectory(cpp/core_test)
 
 
+
+
 add_subdirectory(cpp/event_test)
 add_subdirectory(cpp/expmap_test)
 add_subdirectory(cpp/serialization_test)
@@ -44,7 +46,9 @@ if(ECAL_CORE_REGISTRATION AND ECAL_CORE_PUBLISHER AND ECAL_CORE_SUBSCRIBER)
     add_subdirectory(cpp/pubsub_test)
   endif()
   if(ECAL_CORE_BUILD_TESTS_PROTOBUF)
-    add_subdirectory(cpp/pubsub_proto_test)
+    add_subdirectory(cpp/pubsub_proto_dyn_test)
+    add_subdirectory(cpp/pubsub_proto_pub_test)
+    add_subdirectory(cpp/pubsub_proto_sub_test)
   endif()
 endif()
 

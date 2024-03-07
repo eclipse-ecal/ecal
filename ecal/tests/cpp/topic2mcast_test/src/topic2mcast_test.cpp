@@ -121,7 +121,7 @@ struct Topic2McastInput
 std::vector<std::tuple<Topic2McastInput, std::string, std::string>> test;
 
 
-TEST(Topic2Mcast, ParseIPV4)
+TEST(core_cpp_core, Topic2Mcast_ParseIPV4)
 { 
    for (const auto& ip : ipv4_int_string_vector)
    {
@@ -129,7 +129,7 @@ TEST(Topic2Mcast, ParseIPV4)
    }
 }
 
-TEST(Topic2Mcast, SerializeIPV4)
+TEST(core_cpp_core, Topic2Mcast_SerializeIPV4)
 {
   for (const auto& ip : ipv4_int_string_vector)
   {
@@ -137,7 +137,7 @@ TEST(Topic2Mcast, SerializeIPV4)
   }
 }
 
-TEST(Topic2Mcast, CombineIpAndHashWithMask)
+TEST(core_cpp_core, Topic2Mcast_CombineIpAndHashWithMask)
 {
   for (const auto& object : ip_hash_mask_result_vector)
   {
@@ -145,7 +145,7 @@ TEST(Topic2Mcast, CombineIpAndHashWithMask)
   } 
 }
 
-TEST(Topic2Mcast, IncreaseByOne)
+TEST(core_cpp_core, Topic2Mcast_IncreaseByOne)
 {
   for (const auto& object : increase_by_one_vector)
   {
@@ -153,11 +153,10 @@ TEST(Topic2Mcast, IncreaseByOne)
   }
 }
 
-TEST(Topic2Mcast, LegacyBehavior)
+TEST(core_cpp_core, Topic2Mcast_LegacyBehavior)
 {
   for (const auto& object : v1_behavior_vector)
   {
     EXPECT_EQ(eCAL::UDP::V1::topic2mcast_hash(object.hash, object.ip, object.mask), object.result);
   }
 }
-

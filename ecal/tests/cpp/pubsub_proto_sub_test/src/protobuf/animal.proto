@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,21 +17,12 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "io/shm/ecal_memfile_naming.h"
+syntax = "proto3";
 
-#include <atomic>
-#include <chrono>
+package pb.Animal;
 
-#include <gtest/gtest.h>
-
-
-TEST(core_cpp_core, MemFile_MemfileNaming)
+message Dog
 {
-  std::chrono::steady_clock::time_point timepoint{};
-
-  std::string memfile_name_1{ eCAL::memfile::BuildRandomMemFileName("test_")};
-  std::string memfile_name_2{ eCAL::memfile::BuildRandomMemFileName("test_")};
-
-  EXPECT_LE(memfile_name_1.size(), 13);
-  EXPECT_NE(memfile_name_1, memfile_name_2);
+  string name   = 1;
+  string colour = 2;
 }

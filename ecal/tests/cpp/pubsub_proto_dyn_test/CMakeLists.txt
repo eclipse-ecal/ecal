@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(test_pubsub_proto)
+project(test_pubsub_proto_dyn)
 
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
@@ -26,11 +26,9 @@ create_targets_protobuf()
 
 set(${PROJECT_NAME}_src
   src/proto_dyn_subscriber_test.cpp
-  src/proto_publisher_test.cpp
-  src/proto_subscriber_test.cpp
 )
 
-set(pubsub_proto_test_proto
+set(pubsub_proto_dyn_test_proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/animal.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/house.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/person.proto
@@ -38,7 +36,7 @@ set(pubsub_proto_test_proto
 
 ecal_add_gtest(${PROJECT_NAME} ${${PROJECT_NAME}_src})
 
-PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${pubsub_proto_test_proto})
+PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${pubsub_proto_dyn_test_proto})
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE

@@ -24,7 +24,7 @@
 
 #define CMN_MONITORING_TIMEOUT 5000
 
-TEST(ClientServer, GetServices)
+TEST(core_cpp_clientserver, GetServices)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver_getservices");
