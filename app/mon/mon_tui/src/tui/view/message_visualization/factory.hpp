@@ -28,14 +28,14 @@
 #include "utils/string.hpp"
 
 std::shared_ptr<MessageVisualizationView> CreateVisualizationView(std::shared_ptr<ViewFactory> factory,
-    std::shared_ptr<ViewModelFactory> vm_factory, const std::string &topic, const std::string &type_name)
+    std::shared_ptr<ViewModelFactory> vm_factory, const std::string &topic, const std::string &encoding, const std::string &type_name)
 {
-  if(type_name == "base:std::string")
+  if(type_name == "std::string")
   {
     auto vm = vm_factory->Create<StringMessageVisualizationViewModel>(topic);
     return factory->Create<StringMessageVisualizationView>(vm);
   }
-  else if(StartsWith(type_name, "proto:"))
+  else if(encoding == "proto")
   {
     auto vm = vm_factory->Create<ProtoMessageVisualizationViewModel>(topic);
     return factory->Create<ProtoMessageVisualizationView>(vm);
