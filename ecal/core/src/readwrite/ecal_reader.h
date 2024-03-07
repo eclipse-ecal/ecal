@@ -110,6 +110,8 @@ namespace eCAL
     void Disconnect();
     bool CheckMessageClock(const std::string& tid_, long long current_clock_);
 
+    int32_t GetFrequency();
+
     std::string                               m_host_name;
     std::string                               m_host_group_name;
     int                                       m_pid;

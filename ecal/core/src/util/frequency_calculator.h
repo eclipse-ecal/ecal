@@ -26,6 +26,7 @@
 
 #include <atomic>
 #include <chrono>
+#include <memory>
 #include <numeric>
 
 namespace eCAL

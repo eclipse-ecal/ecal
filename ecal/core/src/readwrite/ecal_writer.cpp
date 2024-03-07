@@ -403,8 +403,9 @@ namespace eCAL
   {
     {
       // we should think about if we would like to potentially use the `time_` variable to tick with (but we would need the same base for checking incoming samples then....
-      std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
-      m_frequency_calculator.addTick(std::chrono::steady_clock::now());
+      const auto send_time = std::chrono::steady_clock::now();
+      const std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
+      m_frequency_calculator.addTick(send_time);
     }
 
     // check writer modes
@@ -743,12 +744,6 @@ namespace eCAL
 
   std::string CDataWriter::Dump(const std::string& indent_ /* = "" */)
   {
-    double frequency;
-    {
-      std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
-      frequency = m_frequency_calculator.getFrequency(std::chrono::steady_clock::now()) * 1000000;
-    }
-
     std::stringstream out;
 
     out << '\n';
@@ -764,7 +759,7 @@ namespace eCAL
     out << indent_ << "m_topic_info.desc:        " << m_topic_info.descriptor << '\n';
     out << indent_ << "m_id:                     " << m_id << '\n';
     out << indent_ << "m_clock:                  " << m_clock << '\n';
-    out << indent_ << "frequency [mHz]:          " << frequency << '\n';
+    out << indent_ << "frequency [mHz]:          " << GetFrequency() << '\n';
     out << indent_ << "m_created:                " << m_created << '\n';
     out << indent_ << "m_loc_subscribed:         " << m_loc_subscribed << '\n';
     out << indent_ << "m_ext_subscribed:         " << m_ext_subscribed << '\n';
@@ -857,10 +852,7 @@ namespace eCAL
     ecal_reg_sample_topic.uname  = Process::GetUnitName();
     ecal_reg_sample_topic.did    = m_id;
     ecal_reg_sample_topic.dclock = m_clock;
-    {
-      std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
-      ecal_reg_sample_topic.dfreq = static_cast<int32_t>(m_frequency_calculator.getFrequency(std::chrono::steady_clock::now()) * 1000);
-    }
+    ecal_reg_sample_topic.dfreq  = GetFrequency();
 
     size_t loc_connections(0);
     size_t ext_connections(0);
@@ -1231,5 +1223,10 @@ namespace eCAL
     (void)smode_;
     (void)base_msg_;
 #endif
+  }
+  int32_t CDataWriter::GetFrequency()
+  {
+    const std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
+    return static_cast<int32_t>(m_frequency_calculator.getFrequency(std::chrono::steady_clock::now()) * 1000);
   }
 }

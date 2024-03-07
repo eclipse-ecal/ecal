@@ -149,6 +149,8 @@ namespace eCAL
     bool IsInternalSubscribedOnly();
     void LogSendMode(TLayer::eSendMode smode_, const std::string& base_msg_);
 
+    int32_t GetFrequency();
+
     std::string                            m_host_name;
     std::string                            m_host_group_name;
     int                                    m_pid;
