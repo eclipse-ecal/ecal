@@ -39,6 +39,10 @@ namespace EcalParser
     return "NetBSD";
 #elif __OpenBSD__
     return "OpenBSD";
+#elif defined(__QNX__)
+    return "QNX";
+#else
+    return "UNKNOWN_OS";
 #endif
   }
 
