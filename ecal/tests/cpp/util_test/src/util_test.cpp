@@ -61,7 +61,7 @@ struct MillisecondFrequencyPair
   double frequency;
 };
 
-std::vector<MillisecondFrequencyPair> pairs =
+const std::vector<MillisecondFrequencyPair> frequency_pairs =
 {
   {std::chrono::milliseconds(1000),   1.0},
   {std::chrono::milliseconds(1250),   0.8},
@@ -75,9 +75,9 @@ std::vector<MillisecondFrequencyPair> pairs =
 };
 
 
-TEST(FrequencyCalculator, FrequencyCalculator)
+TEST(Util, FrequencyCalculator)
 {
-  for (const auto& pair : pairs)
+  for (const auto& pair : frequency_pairs)
   {
     {
       auto now = std::chrono::steady_clock::now();
@@ -110,12 +110,12 @@ TEST(FrequencyCalculator, FrequencyCalculator)
   }
 }
 
-TEST(FrequencyCalculator, ResettableFrequencyCalculator)
+TEST(Util, ResettableFrequencyCalculator)
 {
   const auto check_delta_t = std::chrono::milliseconds(999);
 
 
-  for (const auto& pair : pairs)
+  for (const auto& pair : frequency_pairs)
   {
     {
       //auto start = std::chrono::steady_clock::now();
@@ -188,8 +188,6 @@ TEST(FrequencyCalculator, ResettableFrequencyCalculator)
           EXPECT_DOUBLE_EQ(calculator.getFrequency(next_frequency_update), pair.frequency);
         }
       }
-
-      // Then start again sending
     }
   }
 }
