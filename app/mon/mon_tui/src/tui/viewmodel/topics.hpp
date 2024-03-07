@@ -32,11 +32,11 @@ class TopicsViewModel : public TableViewModel<Topic>
 public:
   enum Column
   {
-    Id, Host, Process, Name, Type, Direction, Layer, Size, DataClock, Frequency
+    Id, Host, Process, Name, Encoding, Type, Direction, Layer, Size, DataClock, Frequency
   };
 
   TopicsViewModel(std::shared_ptr<MonitorModel> model_)
-    : TableViewModel<Topic>({"Id", "Host", "Process", "Topic", "Type", "Direction", "Layer", "Size", "DataClock", "Frequency"})
+    : TableViewModel<Topic>({"Id", "Host", "Process", "Topic", "Encoding", "Type", "Direction", "Layer", "Size", "DataClock", "Frequency"})
   {
     title = "Topics";
 
@@ -60,6 +60,8 @@ public:
         return value.unit_name;
       case Column::Name:
         return value.name;
+      case Column::Encoding:
+        return value.encoding;
       case Column::Type:
         return value.type;
       case Column::Direction:
