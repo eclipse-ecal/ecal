@@ -893,8 +893,9 @@ namespace eCAL
 
   int32_t CDataReader::GetFrequency()
   {
+    const auto frequency_time = std::chrono::steady_clock::now();
     const std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
-    return static_cast<int32_t>(m_frequency_calculator.getFrequency(std::chrono::steady_clock::now()) * 1000);
+    return static_cast<int32_t>(m_frequency_calculator.getFrequency(frequency_time) * 1000);
   }
     
   void CDataReader::RefreshRegistration()
