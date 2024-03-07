@@ -63,7 +63,6 @@ set(ecal_serialize_src
   ../../../core/src/serialization/ecal_serialize_sample_registration.h
   ../../../core/src/serialization/ecal_serialize_service.cpp
   ../../../core/src/serialization/ecal_serialize_service.h
-  ../../../core/src/serialization/ecal_struct_logging.h
   ../../../core/src/serialization/ecal_struct_sample_common.h
   ../../../core/src/serialization/ecal_struct_sample_payload.h
   ../../../core/src/serialization/ecal_struct_sample_registration.h

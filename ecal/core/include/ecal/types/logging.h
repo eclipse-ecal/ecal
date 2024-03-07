@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,8 +18,8 @@
 */
 
 /**
- * @file   ecal_struct_logging.h
- * @brief  eCAL logging as struct
+ * @file   logging.h
+ * @brief  eCAL logging struct interface
 **/
 
 #pragma once
@@ -34,7 +34,7 @@ namespace eCAL
 {
   namespace Logging
   {
-    struct LogMessage
+    struct SLogMessage
     {
       int64_t                time  = 0;               // time
       std::string            hname;                   // host name
@@ -45,10 +45,9 @@ namespace eCAL
       std::string            content;                 // message content
     };
 
-    // LogMessage list
-    struct LogMessageList
+    struct SLogging
     {
-      std::list<LogMessage>  log_messages;            // log messages
+      std::list<SLogMessage>  log_messages;            // log messages
     };
   }
 }
