@@ -160,6 +160,7 @@ namespace eCAL
 
     // reset defaults
     m_created                 = false;
+    m_clock                   = 0;
     m_message_drops           = 0;
 
     m_use_udp_mc_confirmed    = false;
