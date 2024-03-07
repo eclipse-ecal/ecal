@@ -96,6 +96,7 @@ namespace eCAL
     m_topic_name    = topic_name_;
     m_topic_id.clear();
     m_topic_info    = topic_info_;
+    m_clock         = 0;
     m_message_drops = 0;
     m_created       = false;
 #ifndef NDEBUG
