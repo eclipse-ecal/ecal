@@ -40,7 +40,7 @@ namespace
   /////////////////////////////////////////////////////////////////////////////////
   // eCAL::Logging::LogMessage
   /////////////////////////////////////////////////////////////////////////////////
-  void PrepareEncoding(const eCAL::Logging::LogMessage& log_message_, eCAL_pb_LogMessage& pb_log_message_)
+  void PrepareEncoding(const eCAL::Logging::SLogMessage& log_message_, eCAL_pb_LogMessage& pb_log_message_)
   {
     // time
     pb_log_message_.time = log_message_.time;
@@ -58,7 +58,7 @@ namespace
     eCAL::nanopb::encode_string(pb_log_message_.content, log_message_.content);
   }
 
-  size_t LogMessageStruct2PbLogMessage(const eCAL::Logging::LogMessage& log_message_, eCAL_pb_LogMessage& pb_log_message_)
+  size_t LogMessageStruct2PbLogMessage(const eCAL::Logging::SLogMessage& log_message_, eCAL_pb_LogMessage& pb_log_message_)
   {
     ///////////////////////////////////////////////
     // prepare sample for encoding
@@ -76,7 +76,7 @@ namespace
   }
 
   template <typename T>
-  bool LogMessageStruct2Buffer(const eCAL::Logging::LogMessage& log_message_, T& target_buffer_)
+  bool LogMessageStruct2Buffer(const eCAL::Logging::SLogMessage& log_message_, T& target_buffer_)
   {
     target_buffer_.clear();
 
@@ -104,7 +104,7 @@ namespace
     return false;
   }
 
-  void PrepareDecoding(eCAL_pb_LogMessage& pb_log_message_, eCAL::Logging::LogMessage& log_message_)
+  void PrepareDecoding(eCAL_pb_LogMessage& pb_log_message_, eCAL::Logging::SLogMessage& log_message_)
   {
     // initialize
     pb_log_message_ = eCAL_pb_LogMessage_init_default;
@@ -123,7 +123,7 @@ namespace
     eCAL::nanopb::decode_string(pb_log_message_.content, log_message_.content);
   }
 
-  void AssignValues(const eCAL_pb_LogMessage& pb_log_message_, eCAL::Logging::LogMessage& log_message_)
+  void AssignValues(const eCAL_pb_LogMessage& pb_log_message_, eCAL::Logging::SLogMessage& log_message_)
   {
     ///////////////////////////////////////////////
     // assign values
@@ -136,7 +136,7 @@ namespace
     log_message_.level = static_cast<eCAL_Logging_eLogLevel>(pb_log_message_.level);
   }
 
-  bool Buffer2LogMessageStruct(const char* data_, size_t size_, eCAL::Logging::LogMessage& log_message_)
+  bool Buffer2LogMessageStruct(const char* data_, size_t size_, eCAL::Logging::SLogMessage& log_message_)
   {
     if (data_ == nullptr) return false;
     if (size_ == 0)       return false;
@@ -175,7 +175,7 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    auto* sample_list = static_cast<std::list<eCAL::Logging::LogMessage>*>(*arg);
+    auto* sample_list = static_cast<std::list<eCAL::Logging::SLogMessage>*>(*arg);
 
     for (const auto& sample : *sample_list)
     {
@@ -199,7 +199,7 @@ namespace
     return true;
   }
 
-  size_t LogMessageListStruct2PbLogMessageList(const eCAL::Logging::LogMessageList& log_message_list_, eCAL_pb_LogMessageList& pb_log_message_list_)
+  size_t LogMessageListStruct2PbLogMessageList(const eCAL::Logging::SLogging& log_message_list_, eCAL_pb_LogMessageList& pb_log_message_list_)
   {
     ///////////////////////////////////////////////
     // prepare sample for encoding
@@ -218,7 +218,7 @@ namespace
   }
 
   template <typename T>
-  bool LogMessageListStruct2Buffer(const eCAL::Logging::LogMessageList& log_message_list_, T& target_buffer_)
+  bool LogMessageListStruct2Buffer(const eCAL::Logging::SLogging& log_message_list_, T& target_buffer_)
   {
     ///////////////////////////////////////////////
     // prepare sample for encoding
@@ -250,7 +250,7 @@ namespace
     if (*arg == nullptr) return false;
 
     eCAL_pb_LogMessage pb_log_message = eCAL_pb_LogMessage_init_default;
-    eCAL::Logging::LogMessage sample{};
+    eCAL::Logging::SLogMessage sample{};
 
     // prepare sample for decoding
     PrepareDecoding(pb_log_message, sample);
@@ -265,13 +265,13 @@ namespace
     AssignValues(pb_log_message, sample);
 
     // add sample to list
-    auto* sample_list = static_cast<std::list<eCAL::Logging::LogMessage>*>(*arg);
+    auto* sample_list = static_cast<std::list<eCAL::Logging::SLogMessage>*>(*arg);
     sample_list->push_back(sample);
 
     return true;
   }
 
-  bool Buffer2LogMessageListStruct(const char* data_, size_t size_, eCAL::Logging::LogMessageList& log_message_list_)
+  bool Buffer2LogMessageListStruct(const char* data_, size_t size_, eCAL::Logging::SLogging& log_message_list_)
   {
     if (data_ == nullptr) return false;
     if (size_ == 0)       return false;
@@ -302,34 +302,34 @@ namespace
 namespace eCAL
 {
   // log message - serialize/deserialize
-  bool SerializeToBuffer(const Logging::LogMessage& source_sample_, std::vector<char>& target_buffer_)
+  bool SerializeToBuffer(const Logging::SLogMessage& source_sample_, std::vector<char>& target_buffer_)
   {
     return LogMessageStruct2Buffer(source_sample_, target_buffer_);
   }
 
-  bool SerializeToBuffer(const Logging::LogMessage& source_sample_, std::string& target_buffer_)
+  bool SerializeToBuffer(const Logging::SLogMessage& source_sample_, std::string& target_buffer_)
   {
     return LogMessageStruct2Buffer(source_sample_, target_buffer_);
   }
 
-  bool DeserializeFromBuffer(const char* data_, size_t size_, Logging::LogMessage& target_sample_)
+  bool DeserializeFromBuffer(const char* data_, size_t size_, Logging::SLogMessage& target_sample_)
   {
     return Buffer2LogMessageStruct(data_, size_, target_sample_);
   }
 
-  bool SerializeToBuffer(const Logging::LogMessageList& source_sample_, std::vector<char>& target_buffer_)
+  bool SerializeToBuffer(const Logging::SLogging& source_sample_, std::vector<char>& target_buffer_)
   {
     target_buffer_.clear();
     return LogMessageListStruct2Buffer(source_sample_, target_buffer_);
   }
 
-  bool SerializeToBuffer(const Logging::LogMessageList& source_sample_, std::string& target_buffer_)
+  bool SerializeToBuffer(const Logging::SLogging& source_sample_, std::string& target_buffer_)
   {
     target_buffer_.clear();
     return LogMessageListStruct2Buffer(source_sample_, target_buffer_);
   }
 
-  bool DeserializeFromBuffer(const char* data_, size_t size_, Logging::LogMessageList& target_sample_)
+  bool DeserializeFromBuffer(const char* data_, size_t size_, Logging::SLogging& target_sample_)
   {
     return Buffer2LogMessageListStruct(data_, size_, target_sample_);
   }

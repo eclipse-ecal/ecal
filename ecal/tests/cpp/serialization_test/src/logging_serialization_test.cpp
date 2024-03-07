@@ -25,17 +25,17 @@ namespace eCAL
 {
   namespace Logging
   {
-    LogMessage GenerateLogMessage();
-    bool CompareLogMessages(const LogMessage& message1, const LogMessage& message2);
+    SLogMessage GenerateLogMessage();
+    bool CompareLogMessages(const SLogMessage& message1, const SLogMessage& message2);
 
     TEST(Serialization, LogMessage2String)
     {
-      LogMessage message_in = GenerateLogMessage();
+      SLogMessage message_in = GenerateLogMessage();
 
       std::string message_buffer;
       ASSERT_TRUE(SerializeToBuffer(message_in, message_buffer));
 
-      LogMessage message_out;
+      SLogMessage message_out;
       ASSERT_TRUE(DeserializeFromBuffer(message_buffer.data(), message_buffer.size(), message_out));
 
       ASSERT_TRUE(CompareLogMessages(message_in, message_out));
@@ -43,12 +43,12 @@ namespace eCAL
 
     TEST(Serialization, LogMessage2Vector)
     {
-      LogMessage message_in = GenerateLogMessage();
+      SLogMessage message_in = GenerateLogMessage();
 
       std::vector<char> message_buffer;
       ASSERT_TRUE(SerializeToBuffer(message_in, message_buffer));
 
-      LogMessage message_out;
+      SLogMessage message_out;
       ASSERT_TRUE(DeserializeFromBuffer(message_buffer.data(), message_buffer.size(), message_out));
 
       ASSERT_TRUE(CompareLogMessages(message_in, message_out));
@@ -57,7 +57,7 @@ namespace eCAL
 
     TEST(Serialization, LogMessageList2String)
     {
-      LogMessageList message_list_in;
+      SLogging message_list_in;
       message_list_in.log_messages.push_back(GenerateLogMessage());
       message_list_in.log_messages.push_back(GenerateLogMessage());
       message_list_in.log_messages.push_back(GenerateLogMessage());
@@ -65,7 +65,7 @@ namespace eCAL
       std::string sample_buffer;
       ASSERT_TRUE(SerializeToBuffer(message_list_in, sample_buffer));
 
-      LogMessageList message_list_out;
+      SLogging message_list_out;
       ASSERT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), message_list_out));
 
       ASSERT_TRUE(message_list_in.log_messages.size() == message_list_out.log_messages.size());
@@ -74,7 +74,7 @@ namespace eCAL
 
     TEST(Serialization, LogMessageList2Vector)
     {
-      LogMessageList message_list_in;
+      SLogging message_list_in;
       message_list_in.log_messages.push_back(GenerateLogMessage());
       message_list_in.log_messages.push_back(GenerateLogMessage());
       message_list_in.log_messages.push_back(GenerateLogMessage());
@@ -82,7 +82,7 @@ namespace eCAL
       std::vector<char> sample_buffer;
       ASSERT_TRUE(SerializeToBuffer(message_list_in, sample_buffer));
 
-      LogMessageList message_list_out;
+      SLogging message_list_out;
       ASSERT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), message_list_out));
 
       ASSERT_TRUE(message_list_in.log_messages.size() == message_list_out.log_messages.size());

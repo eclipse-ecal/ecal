@@ -355,7 +355,6 @@ set(ecal_serialization_src
     src/serialization/ecal_serialize_sample_registration.h
     src/serialization/ecal_serialize_service.cpp
     src/serialization/ecal_serialize_service.h
-    src/serialization/ecal_struct_logging.h
     src/serialization/ecal_struct_sample_common.h
     src/serialization/ecal_struct_sample_payload.h
     src/serialization/ecal_struct_sample_registration.h
@@ -471,6 +470,7 @@ endif()
 # public header
 ######################################
 set(ecal_header_cmn
+    include/ecal/types/logging.h
     include/ecal/types/monitoring.h
     include/ecal/ecal.h
     include/ecal/ecal_callback.h

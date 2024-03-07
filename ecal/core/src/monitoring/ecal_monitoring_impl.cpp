@@ -591,11 +591,10 @@ namespace eCAL
 
   void CMonitoringImpl::GetMonitoring(Monitoring::SMonitoring& monitoring_, unsigned int entities_)
   {
+    // processes
+    monitoring_.processes.clear();
     if ((entities_ & Monitoring::Entity::Process) != 0u)
     {
-      // clear target
-      monitoring_.processes.clear();
-
       // lock map
       const std::lock_guard<std::mutex> lock(m_process_map.sync);
 
@@ -610,11 +609,10 @@ namespace eCAL
       }
     }
 
+    // publisher
+    monitoring_.publisher.clear();
     if ((entities_ & Monitoring::Entity::Publisher) != 0u)
     {
-      // clear target
-      monitoring_.publisher.clear();
-
       // lock map
       const std::lock_guard<std::mutex> lock(m_publisher_map.sync);
 
@@ -629,11 +627,10 @@ namespace eCAL
       }
     }
 
+    // subscriber
+    monitoring_.subscriber.clear();
     if ((entities_ & Monitoring::Entity::Subscriber) != 0u)
     {
-      // clear target
-      monitoring_.subscriber.clear();
-
       // lock map
       const std::lock_guard<std::mutex> lock(m_subscriber_map.sync);
 
@@ -648,11 +645,10 @@ namespace eCAL
       }
     }
 
+    // server
+    monitoring_.server.clear();
     if ((entities_ & Monitoring::Entity::Server) != 0u)
     {
-      // clear target
-      monitoring_.server.clear();
-
       // lock map
       const std::lock_guard<std::mutex> lock(m_server_map.sync);
 
@@ -667,11 +663,10 @@ namespace eCAL
       }
     }
 
+    // clients
+    monitoring_.clients.clear();
     if ((entities_ & Monitoring::Entity::Client) != 0u)
     {
-      // clear target
-      monitoring_.clients.clear();
-
       // lock map
       const std::lock_guard<std::mutex> lock(m_clients_map.sync);
 

@@ -25,6 +25,8 @@
 #include <ecal/ecal.h>
 #include <ecal/cimpl/ecal_log_cimpl.h>
 
+#include "ecal_common_cimpl.h"
+
 extern "C"
 {
   ECALC_API void eCAL_Logging_SetLogLevel(enum eCAL_Logging_eLogLevel level_)
@@ -40,5 +42,15 @@ extern "C"
   ECALC_API void eCAL_Logging_Log(const char* const msg_)
   {
     eCAL::Logging::Log(msg_);
+  }
+
+  ECALC_API int eCAL_Logging_GetLogging(void* buf_, int buf_len_)
+  {
+    std::string buf;
+    if (eCAL::Logging::GetLogging(buf) != 0)
+    {
+      return(CopyBuffer(buf_, buf_len_, buf));
+    }
+    return(0);
   }
 }

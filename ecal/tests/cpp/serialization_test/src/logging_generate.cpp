@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "../../serialization/ecal_struct_logging.h"
+#include <ecal/types/logging.h>
 
 #include <cstdlib>
 
@@ -27,9 +27,9 @@ namespace eCAL
 
   namespace Logging
   {
-    LogMessage GenerateLogMessage()
+    SLogMessage GenerateLogMessage()
     {
-      LogMessage logMessage;
+      SLogMessage logMessage;
       logMessage.time    = rand() % 1000;
       logMessage.hname   = GenerateString(10);
       logMessage.pid     = rand() % 1000;

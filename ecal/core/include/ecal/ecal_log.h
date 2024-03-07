@@ -26,6 +26,7 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_log_level.h>
+#include <ecal/types/logging.h>
 
 #include <list>
 #include <string>
@@ -72,8 +73,17 @@ namespace eCAL
      *
      * @param [out] log_  String to store the logging information.
      *
-     * @return  Monitoring buffer length or zero if failed.
+     * @return  Logging buffer length or zero if failed.
     **/
     ECAL_API int GetLogging(std::string& log_);
+
+    /**
+     * @brief Get logging as struct.
+     *
+     * @param [out] log_  Target struct to store the logging information.
+     *
+     * @return Number of log messages.
+    **/
+    ECAL_API int GetLogging(Logging::SLogging& log_);
   }
 }
