@@ -41,8 +41,8 @@ namespace eCAL
       , new_topic_info_map_          (initial_topic_info_map)
       , new_topic_info_map_available_(true)
       , flushing_                    (false)
+      , hdf5_writer_                 (nullptr)
     {
-      hdf5_writer_ = std::make_unique<eCAL::experimental::measurement::hdf5::Writer>();
     }
 
     Hdf5WriterThread::~Hdf5WriterThread()
@@ -181,19 +181,15 @@ namespace eCAL
             break;
 
           // Write Frame element to HDF5
-          if (!hdf5_writer_->AddEntryToFile(
+          experimental::measurement::base::WriterEntry entry{
             frame->data_.data(),
             frame->data_.size(),
             std::chrono::duration_cast<std::chrono::microseconds>(frame->ecal_publish_time_.time_since_epoch()).count(),
             std::chrono::duration_cast<std::chrono::microseconds>(frame->ecal_receive_time_.time_since_epoch()).count(),
-            frame->topic_name_,
-            frame->id_,
+            eCAL::experimental::measurement::base::Channel{ frame->topic_name_,frame->id_ },
             frame->clock_
-          ))
-          {
-            last_status_.info_ = { false, "Error adding frame to measurement" };
-            EcalRecLogger::Instance()->error("Hdf5WriterThread::Run(): Unable to add Frame to measurement");
-          }
+          };
+          hdf5_writer_->AddEntryToFile(entry);
         }
         else
         {
@@ -255,7 +251,7 @@ namespace eCAL
     ///////////////////////////////
     // Helper Methods
     ///////////////////////////////
-    bool Hdf5WriterThread::OpenHdf5Writer() const
+    bool Hdf5WriterThread::OpenHdf5Writer()
     {
       std::string host_name = eCAL::Process::GetHostName();
       std::string hdf5_dir  = EcalUtils::Filesystem::ToNativeSeperators(job_config_.GetCompleteMeasurementPath() + "/" + host_name);
@@ -265,15 +261,19 @@ namespace eCAL
 #endif // NDEBUG
       std::unique_lock<decltype(hdf5_writer_mutex_)> hdf5_writer_lock(hdf5_writer_mutex_);
 
-      if (hdf5_writer_->Open(hdf5_dir))
+      experimental::measurement::base::WriterOptions writer_options;
+      writer_options.file_options.path = hdf5_dir;
+      writer_options.file_options.base_name = host_name;
+      writer_options.channel_splitting = job_config_.GetOneFilePerTopicEnabled();
+      writer_options.size_splitting = job_config_.GetMaxFileSize();
+
+      hdf5_writer_ = experimental::measurement::hdf5::CreateWriter(writer_options);
+
+      if (hdf5_writer_)
       {
 #ifndef NDEBUG
         EcalRecLogger::Instance()->debug("Hdf5WriterThread::Open(): Successfully opened HDF5-Writer with path \"" + hdf5_dir + "\"");
 #endif // NDEBUG
-
-        hdf5_writer_->SetFileBaseName(host_name);
-        hdf5_writer_->SetMaxSizePerFile(job_config_.GetMaxFileSize());
-        hdf5_writer_->SetOneFilePerChannelEnabled(job_config_.GetOneFilePerTopicEnabled());
       }
       else
       {
@@ -292,19 +292,12 @@ namespace eCAL
 #endif // NDEBUG
 
       std::unique_lock<decltype(hdf5_writer_mutex_)> hdf5_writer_lock(hdf5_writer_mutex_);
+      hdf5_writer_.reset();
 
-      if (!hdf5_writer_->Close())
-      {
-        EcalRecLogger::Instance()->error("Hdf5WriterThread::Close(): Unable to close measurement");
-        return false;
-      }
-      else
-      {
 #ifndef NDEBUG
-        EcalRecLogger::Instance()->debug("Hdf5WriterThread::Close(): Successfully closed measurement");
+      EcalRecLogger::Instance()->debug("Hdf5WriterThread::Close(): Successfully closed measurement");
 #endif // NDEBUG
-        return true;
-      }
+      return true;
     }
   }
 }

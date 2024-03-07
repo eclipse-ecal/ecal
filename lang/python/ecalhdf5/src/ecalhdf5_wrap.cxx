@@ -107,11 +107,11 @@ static PyObject* Meas_Open(Meas *self, PyObject *args)
   switch (access)
   {
   case 0:
-    open_meas = self->hdf5_meas->Open(path, eCAL::experimental::measurement::base::AccessType::RDONLY);
+    open_meas = self->hdf5_meas->Open(path, eCAL::eh5::RDONLY);
     break;
 
   case 1:
-    open_meas = self->hdf5_meas->Open(path, eCAL::experimental::measurement::base::AccessType::CREATE);
+    open_meas = self->hdf5_meas->Open(path, eCAL::eh5::CREATE);
     break;
 
   default:

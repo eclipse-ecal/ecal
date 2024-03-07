@@ -135,6 +135,40 @@ TEST(core_cpp, Core_eCAL_Ok)
 
 #define CMN_REGISTRATION_REFRESH   1000
 
+class ExceptionWrapper
+{
+public:
+  ExceptionWrapper()
+  {
+    eCAL::Initialize(0, nullptr, "exception");
+    eCAL::Util::EnableLoopback(true);
+
+    pub.Create("person");
+    sub.Create("person");
+  }
+
+  ~ExceptionWrapper()
+  {
+    //eCAL::Finalize();
+  }
+
+  void Send()
+  {
+    pub.Send("Hello");
+  }
+
+  void ThrowException()
+  {
+    throw std::runtime_error("Exception!!");
+  }
+
+private:
+  eCAL::string::CPublisher<std::string> pub;
+  eCAL::string::CSubscriber<std::string> sub;
+};
+
+
+
 namespace {
   // subscriber callback function
   void OnReceive(long long clock_)
@@ -274,6 +308,25 @@ TEST(Core, CallbackDestruction)
     EXPECT_EQ(0, eCAL::Finalize());
   }
 }
+
+TEST(Core, StackUnwinding)
+{
+  for (int i = 0; i < 10000 ; ++i)
+  {
+    try
+    {
+      ExceptionWrapper wrapper;
+      std::this_thread::sleep_for(std::chrono::seconds(1));
+      wrapper.Send();
+      wrapper.ThrowException();
+    }
+    catch (...)
+    {
+
+    }
+  }
+}
+
 
 /* excluded for now, system timer jitter too high */
 #if 0

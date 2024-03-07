@@ -44,7 +44,7 @@ namespace eCAL
       *
       * @param path    Input file path
       **/
-      explicit HDF5MeasFileV4(const std::string& path, eAccessType access = eAccessType::RDONLY);
+      explicit HDF5MeasFileV4(const std::string& path, eAccessType access = RDONLY);
 
       /**
       * @brief Destructor

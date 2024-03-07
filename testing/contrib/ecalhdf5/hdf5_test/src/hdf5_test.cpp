@@ -69,6 +69,9 @@ bool MeasEntryEqualsEntryInfo(const TestingMeasEntry& meas_entry, const EntryInf
 
 bool WriteToHDF(eCAL::eh5::HDF5Meas& writer, const TestingMeasEntry& entry)
 {
+  base::WriterEntry entry{
+
+  };
   return writer.AddEntryToFile(
     entry.data.data(),   // data
     entry.data.size(),   // data size

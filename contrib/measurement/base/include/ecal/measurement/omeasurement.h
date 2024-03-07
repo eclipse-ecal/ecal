@@ -44,7 +44,10 @@ namespace eCAL
 
       OBinaryChannel& operator<<(const BinaryFrame& entry_)
       {
-        meas->AddEntryToFile((void*)entry_.message.data(), entry_.message.size(), entry_.send_timestamp, entry_.receive_timestamp, channel_name, SenderID, clock);
+        eCAL::experimental::measurement::base::WriterEntry writer_entry{
+          (void*)entry_.message.data(), entry_.message.size(), entry_.send_timestamp, entry_.receive_timestamp, eCAL::experimental::measurement::base::Channel{ channel_name, SenderID }, clock
+        };
+        meas->AddEntryToFile(writer_entry);
         ++clock;
         return *this;
       }
@@ -117,11 +120,14 @@ namespace eCAL
     };
 
 
-
+    // We should provide here the WriterOptions instead!
     inline OMeasurement::OMeasurement(const std::string& base_path_, const std::string& measurement_name_)
-      : meas{ std::make_shared<eCAL::experimental::measurement::hdf5::Writer>(base_path_) }
     {
-      meas->SetFileBaseName(measurement_name_);
+      eCAL::experimental::measurement::base::WriterOptions writer_options;
+      writer_options.file_options.path = base_path_;
+      writer_options.file_options.base_name = measurement_name_;
+      
+      meas = eCAL::experimental::measurement::hdf5::CreateWriter(writer_options);
     }
 
     // This will return a nullptr if channel name and 

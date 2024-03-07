@@ -74,7 +74,7 @@ namespace eCAL
     // Helper Methods
     ///////////////////////////////
     private:
-      bool        OpenHdf5Writer() const;
+      bool        OpenHdf5Writer();
       bool        CloseHdf5Writer();
 
     ///////////////////////////////

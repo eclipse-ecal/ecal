@@ -1,69 +1,19 @@
 #include <ecal/measurement/hdf5/writer.h>
-#include <ecalhdf5/eh5_meas.h>
 
-using namespace eCAL::experimental::measurement::hdf5;
+#include <writer_escaping.h>
+#include <writer_splitting.h>
+#include <writer_hdf5_v5.h>
+#include <writer_hdf5_v6.h>
+
+
 using namespace eCAL::experimental::measurement;
 
-Writer::Writer() 
-  : measurement(std::make_unique<eh5::HDF5Meas>()) 
-{}
-
-Writer::Writer(const std::string& path) 
-  : measurement(std::make_unique<eh5::HDF5Meas>(path, eh5::eAccessType::CREATE))
-{}
-
-Writer::~Writer() = default;
-
-Writer::Writer(Writer&&) noexcept = default;
-
-Writer& Writer::operator=(Writer&&) noexcept = default;
-
-bool Writer::Open(const std::string& path)
+std::unique_ptr<base::Writer> hdf5::CreateWriter(const base::WriterOptions& writer_options_)
 {
-  return measurement->Open(path, eh5::eAccessType::CREATE);
-}
-
-bool Writer::Close()
-{
-  return measurement->Close();
-}
-
-bool Writer::IsOk() const
-{
-  return measurement->IsOk();
-}
-
-size_t Writer::GetMaxSizePerFile() const
-{
-  return measurement->GetMaxSizePerFile();
-}
-
-void Writer::SetMaxSizePerFile(size_t size)
-{
-  return measurement->SetMaxSizePerFile(size);
-}
-
-bool Writer::IsOneFilePerChannelEnabled() const
-{
-  return measurement->IsOneFilePerChannelEnabled();
-}
-
-void Writer::SetOneFilePerChannelEnabled(bool enabled)
-{
-  return measurement->SetOneFilePerChannelEnabled(enabled);
-}
-
-void Writer::SetChannelDataTypeInformation(const std::string& channel_name, const base::DataTypeInformation& info)
-{
-  measurement->SetChannelDataTypeInformation(channel_name, info);
-}
-
-void Writer::SetFileBaseName(const std::string& base_name)
-{
-  return measurement->SetFileBaseName(base_name);
-}
-
-bool Writer::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock)
-{
-  return measurement->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel_name, id, clock);
+  // at some point we have to do some kind of error checking, regarding folder etc. but this comes later
+  auto hdf5_creator = hdf5::V6Writer::GetCreator();
+  auto splitting_size_creator = base::SizeSplittingWriter::GetCreator(hdf5_creator, writer_options_.size_splitting);
+  auto channel_splitting_creator = base::ChannelSplittingWriter::GetCreator(splitting_size_creator, writer_options_.channel_splitting);
+  auto escaping_creator = base::EscapingWriter::GetCreator(channel_splitting_creator);
+  return escaping_creator(writer_options_.file_options);
 }

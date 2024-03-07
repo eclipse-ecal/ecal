@@ -1,16 +1,17 @@
 #include <ecal/measurement/hdf5/reader.h>
-#include <ecalhdf5/eh5_meas.h>
 
+namespace eCAL {
+  class ReaderImplementation {
+  };
+}
 
 using namespace eCAL::experimental::measurement::hdf5;
 using namespace eCAL::experimental::measurement;
 
 Reader::Reader() 
-  : measurement(std::make_unique<eh5::HDF5Meas>()) 
 {}
 
 Reader::Reader(const std::string& path) 
-  : measurement(std::make_unique<eh5::HDF5Meas>(path, eh5::eAccessType::RDONLY))
 {}
 
 Reader::~Reader() = default;
@@ -21,65 +22,75 @@ Reader& Reader::operator=(Reader&&) noexcept = default;
 
 bool Reader::Open(const std::string& path) 
 {
-  return measurement->Open(path, eh5::eAccessType::RDONLY);
+  return true;
 }
 
 bool Reader::Close() 
 {
-  return measurement->Close(); 
+  return {};
 }
 
 bool Reader::IsOk() const
 {
-  return measurement->IsOk();
+  return {};
 }
 
 std::string Reader::GetFileVersion() const
 {
-  return measurement->GetFileVersion();
+  return {};
 }
 
 std::set<std::string> Reader::GetChannelNames() const
 {
-  return measurement->GetChannelNames();
+  return {};
 }
 
-bool Reader::HasChannel(const std::string& channel_name) const
+std::set<eCAL::experimental::measurement::base::Channel> eCAL::experimental::measurement::hdf5::Reader::GetChannels() const
 {
-  return measurement->HasChannel(channel_name);
+  return {};
 }
 
-base::DataTypeInformation Reader::GetChannelDataTypeInformation(const std::string& channel_name) const
+std::set<eCAL::experimental::measurement::base::Channel> eCAL::experimental::measurement::hdf5::Reader::GetChannels(const std::string& channel_name) const
 {
-  return measurement->GetChannelDataTypeInformation(channel_name);
+  return {};
 }
 
-long long Reader::GetMinTimestamp(const std::string& channel_name) const
+bool Reader::HasChannel(const eCAL::experimental::measurement::base::Channel& channel) const
 {
-  return measurement->GetMinTimestamp(channel_name);
+  return {};
 }
 
-long long Reader::GetMaxTimestamp(const std::string& channel_name) const
+base::DataTypeInformation Reader::GetChannelDataTypeInformation(const base::Channel& channel) const
 {
-  return measurement->GetMaxTimestamp(channel_name);
+  return {};
 }
 
-bool Reader::GetEntriesInfo(const std::string& channel_name, base::EntryInfoSet& entries) const
+long long Reader::GetMinTimestamp(const base::Channel& channel) const
 {
-  return measurement->GetEntriesInfo(channel_name, entries);
+  return {};
 }
 
-bool Reader::GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, base::EntryInfoSet& entries) const
+long long Reader::GetMaxTimestamp(const base::Channel& channel) const
 {
-  return measurement->GetEntriesInfoRange(channel_name, begin, end, entries);
+  return {};
+}
+
+bool Reader::GetEntriesInfo(const base::Channel& channel, base::EntryInfoSet& entries) const
+{
+  return {};
+}
+
+bool Reader::GetEntriesInfoRange(const base::Channel& channel, long long begin, long long end, base::EntryInfoSet& entries) const
+{
+  return {};
 }
 
 bool Reader::GetEntryDataSize(long long entry_id, size_t& size) const
 {
-  return measurement->GetEntryDataSize(entry_id, size);
+  return {};
 }
 
 bool Reader::GetEntryData(long long entry_id, void* data) const
 {
-  return measurement->GetEntryData(entry_id, data);
+  return {};
 }
