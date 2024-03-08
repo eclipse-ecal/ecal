@@ -1079,7 +1079,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
   PyObject* retDict = PyDict_New();
 
   eCAL::Monitoring::SMonitoring monitoring;
-  if (eCAL::Monitoring::GetMonitoring(monitoring))
+  if (eCAL::Monitoring::GetMonitoring(monitoring) != 0)
   {
     PyObject* val;
 
@@ -1240,7 +1240,7 @@ PyObject* mon_logging(PyObject* /*self*/, PyObject* /*args*/)
   PyObject* retList = PyList_New(0);
 
   eCAL::Logging::SLogging logging;
-  if (eCAL::Logging::GetLogging(logging))
+  if (eCAL::Logging::GetLogging(logging) != 0)
   {
     for (const auto& log : logging.log_messages)
     {
