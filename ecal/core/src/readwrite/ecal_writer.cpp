@@ -80,8 +80,7 @@ namespace eCAL
     m_connected(false),
     m_id(0),
     m_clock(0),
-    m_clock_old(0),
-    m_freq(0),
+    m_frequency_calculator(3.0f),
     m_loc_subscribed(false),
     m_ext_subscribed(false),
     m_use_ttype(true),
@@ -117,9 +116,6 @@ namespace eCAL
     m_topic_info             = topic_info_;
     m_id                     = 0;
     m_clock                  = 0;
-    m_clock_old              = 0;
-    m_snd_time               = std::chrono::steady_clock::time_point();
-    m_freq                   = 0;
     m_buffering_shm          = Config::GetMemfileBufferCount();
     m_zero_copy              = Config::IsMemfileZerocopyEnabled();
     m_acknowledge_timeout_ms = Config::GetMemfileAckTimeoutMs();
@@ -196,9 +192,6 @@ namespace eCAL
     // reset defaults
     m_id                     = 0;
     m_clock                  = 0;
-    m_clock_old              = 0;
-    m_snd_time               = std::chrono::steady_clock::time_point();
-    m_freq                   = 0;
     m_buffering_shm          = Config::GetMemfileBufferCount();
     m_zero_copy              = Config::IsMemfileZerocopyEnabled();
     m_acknowledge_timeout_ms = Config::GetMemfileAckTimeoutMs();
@@ -408,6 +401,13 @@ namespace eCAL
 
   size_t CDataWriter::Write(CPayloadWriter& payload_, long long time_, long long id_)
   {
+    {
+      // we should think about if we would like to potentially use the `time_` variable to tick with (but we would need the same base for checking incoming samples then....
+      const auto send_time = std::chrono::steady_clock::now();
+      const std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
+      m_frequency_calculator.addTick(send_time);
+    }
+
     // check writer modes
     if (!CheckWriterModes())
     {
@@ -717,32 +717,6 @@ namespace eCAL
   {
     if (!m_created) return;
 
-    // force to register every second to refresh data clock information
-    auto curr_time = std::chrono::steady_clock::now();
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - m_snd_time) > std::chrono::milliseconds(0))
-    {
-      // reset clock and time on first call
-      if (m_clock_old == 0)
-      {
-        m_clock_old = m_clock;
-        m_snd_time = curr_time;
-      }
-
-      // check for clock difference
-      if ((m_clock - m_clock_old) > 0)
-      {
-        // calculate frequency in mHz
-        m_freq = static_cast<long>((1000 * 1000 * (m_clock - m_clock_old)) / std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - m_snd_time).count());
-        // reset clock and time
-        m_clock_old = m_clock;
-        m_snd_time = curr_time;
-      }
-      else
-      {
-        m_freq = 0;
-      }
-    }
-
     // register without send
     Register(false);
 
@@ -785,6 +759,7 @@ namespace eCAL
     out << indent_ << "m_topic_info.desc:        " << m_topic_info.descriptor << '\n';
     out << indent_ << "m_id:                     " << m_id << '\n';
     out << indent_ << "m_clock:                  " << m_clock << '\n';
+    out << indent_ << "frequency [mHz]:          " << GetFrequency() << '\n';
     out << indent_ << "m_created:                " << m_created << '\n';
     out << indent_ << "m_loc_subscribed:         " << m_loc_subscribed << '\n';
     out << indent_ << "m_ext_subscribed:         " << m_ext_subscribed << '\n';
@@ -877,7 +852,7 @@ namespace eCAL
     ecal_reg_sample_topic.uname  = Process::GetUnitName();
     ecal_reg_sample_topic.did    = m_id;
     ecal_reg_sample_topic.dclock = m_clock;
-    ecal_reg_sample_topic.dfreq  = m_freq;
+    ecal_reg_sample_topic.dfreq  = GetFrequency();
 
     size_t loc_connections(0);
     size_t ext_connections(0);
@@ -1248,5 +1223,11 @@ namespace eCAL
     (void)smode_;
     (void)base_msg_;
 #endif
+  }
+  int32_t CDataWriter::GetFrequency()
+  {
+    const auto frequency_time = std::chrono::steady_clock::now();
+    const std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
+    return static_cast<int32_t>(m_frequency_calculator.getFrequency(frequency_time) * 1000);
   }
 }

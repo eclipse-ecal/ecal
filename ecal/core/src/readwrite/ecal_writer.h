@@ -33,6 +33,7 @@
 
 #include "ecal_def.h"
 #include "util/ecal_expmap.h"
+#include <util/frequency_calculator.h>
 
 #if ECAL_CORE_TRANSPORT_UDP
 #include "udp/ecal_writer_udp_mc.h"
@@ -148,6 +149,8 @@ namespace eCAL
     bool IsInternalSubscribedOnly();
     void LogSendMode(TLayer::eSendMode smode_, const std::string& base_msg_);
 
+    int32_t GetFrequency();
+
     std::string                            m_host_name;
     std::string                            m_host_group_name;
     int                                    m_pid;
@@ -178,9 +181,9 @@ namespace eCAL
 
     long long                              m_id;
     long long                              m_clock;
-    long long                              m_clock_old;
-    std::chrono::steady_clock::time_point  m_snd_time;
-    long                                   m_freq;
+
+    std::mutex                                               m_frequency_calculator_mutex;
+    ResettableFrequencyCalculator<std::chrono::steady_clock> m_frequency_calculator;
 
     std::atomic<bool>                      m_loc_subscribed;
     std::atomic<bool>                      m_ext_subscribed;
