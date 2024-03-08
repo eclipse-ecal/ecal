@@ -32,17 +32,6 @@
 #include <atomic>
 
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4800 4505) // disable proto warnings
-#endif
-#include <ecal/core/pb/logging.pb.h>
-#include <ecal/core/pb/monitoring.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
-
 /****************************************/
 /*      types                           */
 /****************************************/
@@ -1040,161 +1029,203 @@ PyObject* mon_setfilterstate(PyObject* /*self*/, PyObject* args)
 /****************************************/
 /*      mon_monitoring                  */
 /****************************************/
+namespace
+{
+  void PopulateTopics2List(PyObject* topic_list_, const std::vector<eCAL::Monitoring::STopicMon>& topic_vec_)
+  {
+    for (const auto& topic : topic_vec_)
+    {
+      PyObject* topicDict = PyDict_New();
+      PyList_Append(topic_list_, topicDict); Py_DECREF(topicDict);
+
+      PyObject* val = Py_BuildValue("i", topic.rclock);
+      PyDict_SetItemString(topicDict, "rclock", val); Py_DECREF(val);
+
+      val = Py_BuildValue("s", topic.hname.c_str());
+      PyDict_SetItemString(topicDict, "hname", val); Py_DECREF(val);
+
+      val = Py_BuildValue("i", topic.pid);
+      PyDict_SetItemString(topicDict, "pid", val); Py_DECREF(val);
+
+      val = Py_BuildValue("s", topic.pname.c_str());
+      PyDict_SetItemString(topicDict, "pname", val); Py_DECREF(val);
+
+      val = Py_BuildValue("s", topic.uname.c_str());
+      PyDict_SetItemString(topicDict, "uname", val); Py_DECREF(val);
+
+      val = Py_BuildValue("s", topic.tid.c_str());
+      PyDict_SetItemString(topicDict, "tid", val); Py_DECREF(val);
+
+      val = Py_BuildValue("s", topic.tname.c_str());
+      PyDict_SetItemString(topicDict, "tname", val); Py_DECREF(val);
+
+      val = Py_BuildValue("s", topic.direction.c_str());
+      PyDict_SetItemString(topicDict, "direction", val); Py_DECREF(val);
+
+      val = Py_BuildValue("i", topic.tsize);
+      PyDict_SetItemString(topicDict, "tsize", val); Py_DECREF(val);
+
+      val = Py_BuildValue("i", topic.dclock);
+      PyDict_SetItemString(topicDict, "dclock", val); Py_DECREF(val);
+
+      val = Py_BuildValue("i", topic.dfreq);
+      PyDict_SetItemString(topicDict, "dfreq", val); Py_DECREF(val);
+    }
+  }
+}
+
 PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
 {
   PyObject* retDict = PyDict_New();
 
-  std::string monitoring_s;
-  if (eCAL::Monitoring::GetMonitoring(monitoring_s))
+  eCAL::Monitoring::SMonitoring monitoring;
+  if (eCAL::Monitoring::GetMonitoring(monitoring) != 0)
   {
-    eCAL::pb::Monitoring monitoring;
-    monitoring.ParsePartialFromString(monitoring_s);
     PyObject* val;
 
     // collect process infos
-    PyObject* processList = PyList_New(0);
-    PyDict_SetItemString(retDict, "processes", processList); Py_DECREF(processList);
-
-    for(int i = 0; i < monitoring.processes().size(); ++i)
     {
-      PyObject* processDict = PyDict_New();
-      PyList_Append(processList, processDict); Py_DECREF(processDict);
+      PyObject* processList = PyList_New(0);
+      PyDict_SetItemString(retDict, "processes", processList); Py_DECREF(processList);
 
-      const eCAL::pb::Process& process = monitoring.processes(i);
+      for (const auto& process : monitoring.processes)
+      {
+        PyObject* processDict = PyDict_New();
+        PyList_Append(processList, processDict); Py_DECREF(processDict);
 
-      val = Py_BuildValue("i", process.rclock());
-      PyDict_SetItemString(processDict, "rclock", val); Py_DECREF(val);
+        val = Py_BuildValue("i", process.rclock);
+        PyDict_SetItemString(processDict, "rclock", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", process.hname().c_str());
-      PyDict_SetItemString(processDict, "hname", val); Py_DECREF(val);
+        val = Py_BuildValue("s", process.hname.c_str());
+        PyDict_SetItemString(processDict, "hname", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", process.pid());
-      PyDict_SetItemString(processDict, "pid", val); Py_DECREF(val);
+        val = Py_BuildValue("i", process.pid);
+        PyDict_SetItemString(processDict, "pid", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", process.pname().c_str());
-      PyDict_SetItemString(processDict, "pname", val); Py_DECREF(val);
+        val = Py_BuildValue("s", process.pname.c_str());
+        PyDict_SetItemString(processDict, "pname", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", process.uname().c_str());
-      PyDict_SetItemString(processDict, "uname", val); Py_DECREF(val);
+        val = Py_BuildValue("s", process.uname.c_str());
+        PyDict_SetItemString(processDict, "uname", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", process.pparam().c_str());
-      PyDict_SetItemString(processDict, "pparam", val); Py_DECREF(val);
+        val = Py_BuildValue("s", process.pparam.c_str());
+        PyDict_SetItemString(processDict, "pparam", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", process.state().severity());
-      PyDict_SetItemString(processDict, "state_severity", val); Py_DECREF(val);
+        val = Py_BuildValue("i", process.state_severity);
+        PyDict_SetItemString(processDict, "state_severity", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", process.state().severity_level());
-      PyDict_SetItemString(processDict, "state_severity_level", val); Py_DECREF(val);
+        val = Py_BuildValue("i", process.state_severity_level);
+        PyDict_SetItemString(processDict, "state_severity_level", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", process.state().info().c_str());
-      PyDict_SetItemString(processDict, "state_info", val); Py_DECREF(val);
+        val = Py_BuildValue("s", process.state_info.c_str());
+        PyDict_SetItemString(processDict, "state_info", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", process.tsync_state());
-      PyDict_SetItemString(processDict, "tsync_state", val); Py_DECREF(val);
+        val = Py_BuildValue("i", process.tsync_state);
+        PyDict_SetItemString(processDict, "tsync_state", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", process.tsync_mod_name().c_str());
-      PyDict_SetItemString(processDict, "tsync_mod_name", val); Py_DECREF(val);
+        val = Py_BuildValue("s", process.tsync_mod_name.c_str());
+        PyDict_SetItemString(processDict, "tsync_mod_name", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", process.component_init_state());
-      PyDict_SetItemString(processDict, "component_init_state", val); Py_DECREF(val);
+        val = Py_BuildValue("i", process.component_init_state);
+        PyDict_SetItemString(processDict, "component_init_state", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", process.component_init_info().c_str());
-      PyDict_SetItemString(processDict, "component_init_info", val); Py_DECREF(val);
+        val = Py_BuildValue("s", process.component_init_info.c_str());
+        PyDict_SetItemString(processDict, "component_init_info", val); Py_DECREF(val);
+      }
     }
 
     // collect service infos
-    PyObject* serviceList = PyList_New(0);
-    PyDict_SetItemString(retDict, "services", serviceList); Py_DECREF(serviceList);
-
-    for (int i = 0; i < monitoring.services().size(); ++i)
     {
-      PyObject* serviceDict = PyDict_New();
-      PyList_Append(serviceList, serviceDict); Py_DECREF(serviceDict);
+      PyObject* serviceList = PyList_New(0);
+      PyDict_SetItemString(retDict, "services", serviceList); Py_DECREF(serviceList);
 
-      const eCAL::pb::Service& service = monitoring.services(i);
+      for (const auto& service : monitoring.server)
+      {
+        PyObject* serviceDict = PyDict_New();
+        PyList_Append(serviceList, serviceDict); Py_DECREF(serviceDict);
 
-      val = Py_BuildValue("i", service.rclock());
-      PyDict_SetItemString(serviceDict, "rclock", val); Py_DECREF(val);
+        val = Py_BuildValue("i", service.rclock);
+        PyDict_SetItemString(serviceDict, "rclock", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", service.hname().c_str());
-      PyDict_SetItemString(serviceDict, "hname", val); Py_DECREF(val);
+        val = Py_BuildValue("s", service.hname.c_str());
+        PyDict_SetItemString(serviceDict, "hname", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", service.pname().c_str());
-      PyDict_SetItemString(serviceDict, "pname", val); Py_DECREF(val);
+        val = Py_BuildValue("s", service.pname.c_str());
+        PyDict_SetItemString(serviceDict, "pname", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", service.uname().c_str());
-      PyDict_SetItemString(serviceDict, "uname", val); Py_DECREF(val);
+        val = Py_BuildValue("s", service.uname.c_str());
+        PyDict_SetItemString(serviceDict, "uname", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", service.pid());
-      PyDict_SetItemString(serviceDict, "pid", val); Py_DECREF(val);
+        val = Py_BuildValue("i", service.pid);
+        PyDict_SetItemString(serviceDict, "pid", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", service.sname().c_str());
-      PyDict_SetItemString(serviceDict, "sname", val); Py_DECREF(val);
+        val = Py_BuildValue("s", service.sname.c_str());
+        PyDict_SetItemString(serviceDict, "sname", val); Py_DECREF(val);
 
-      PyObject* methodsDict = PyDict_New();
-      PyDict_SetItemString(serviceDict, "methods", methodsDict); Py_DECREF(methodsDict);
+        val = Py_BuildValue("s", service.sid.c_str());
+        PyDict_SetItemString(serviceDict, "sid", val); Py_DECREF(val);
 
-     // for(int i = 0; i < service.methods().size(); ++i)
-     // {
-     //   const eCAL::pb::Method& method = service.methods(i);
+        PyObject* methodsDict = PyDict_New();
+        PyDict_SetItemString(serviceDict, "methods", methodsDict); Py_DECREF(methodsDict);
 
-     //   val = Py_BuildValue("s", method.mname().c_str());
-     //   PyDict_SetItemString(methodsDict, "mname", val); Py_DECREF(val);
+        for (const auto method : service.methods)
+        {
+          val = Py_BuildValue("s", method.mname.c_str());
+          PyDict_SetItemString(methodsDict, "mname", val); Py_DECREF(val);
 
-     //   val = Py_BuildValue("s", method.inp_type().c_str());
-     //   PyDict_SetItemString(methodsDict, "inp_type", val); Py_DECREF(val);
+          val = Py_BuildValue("s", method.req_type.c_str());
+          PyDict_SetItemString(methodsDict, "req_type", val); Py_DECREF(val);
 
-     //   val = Py_BuildValue("s", method.out_type().c_str());
-     //   PyDict_SetItemString(methodsDict, "out_type", val); Py_DECREF(val);
+          val = Py_BuildValue("s", method.resp_type.c_str());
+          PyDict_SetItemString(methodsDict, "resp_type", val); Py_DECREF(val);
 
-     //   val = Py_BuildValue("i", method.call_count());
-     //   PyDict_SetItemString(methodsDict, "call_count", val); Py_DECREF(val);
-     //}
+          val = Py_BuildValue("i", method.call_count);
+          PyDict_SetItemString(methodsDict, "call_count", val); Py_DECREF(val);
+        }
+      }
+    }
+
+    // collect client infos
+    {
+      PyObject* clientList = PyList_New(0);
+      PyDict_SetItemString(retDict, "clients", clientList); Py_DECREF(clientList);
+
+      for (const auto& client : monitoring.clients)
+      {
+        PyObject* clientDict = PyDict_New();
+        PyList_Append(clientList, clientDict); Py_DECREF(clientDict);
+
+        val = Py_BuildValue("i", client.rclock);
+        PyDict_SetItemString(clientDict, "rclock", val); Py_DECREF(val);
+
+        val = Py_BuildValue("s", client.hname.c_str());
+        PyDict_SetItemString(clientDict, "hname", val); Py_DECREF(val);
+
+        val = Py_BuildValue("s", client.pname.c_str());
+        PyDict_SetItemString(clientDict, "pname", val); Py_DECREF(val);
+
+        val = Py_BuildValue("s", client.uname.c_str());
+        PyDict_SetItemString(clientDict, "uname", val); Py_DECREF(val);
+
+        val = Py_BuildValue("i", client.pid);
+        PyDict_SetItemString(clientDict, "pid", val); Py_DECREF(val);
+
+        val = Py_BuildValue("s", client.sname.c_str());
+        PyDict_SetItemString(clientDict, "sname", val); Py_DECREF(val);
+
+        val = Py_BuildValue("s", client.sid.c_str());
+        PyDict_SetItemString(clientDict, "sid", val); Py_DECREF(val);
+      }
     }
 
     // collect topic infos
-    PyObject* topicList = PyList_New(0);
-    PyDict_SetItemString(retDict, "topics", topicList); Py_DECREF(topicList);
-
-    for (int i = 0; i < monitoring.topics().size(); ++i)
     {
-      PyObject* topicDict = PyDict_New();
-      PyList_Append(topicList, topicDict); Py_DECREF(topicDict);
-
-      const eCAL::pb::Topic& topic = monitoring.topics(i);
-
-      val = Py_BuildValue("i", topic.rclock());
-      PyDict_SetItemString(topicDict, "rclock", val); Py_DECREF(val);
-
-      val = Py_BuildValue("s", topic.hname().c_str());
-      PyDict_SetItemString(topicDict, "hname", val); Py_DECREF(val);
-
-      val = Py_BuildValue("i", topic.pid());
-      PyDict_SetItemString(topicDict, "pid", val); Py_DECREF(val);
-
-      val = Py_BuildValue("s", topic.pname().c_str());
-      PyDict_SetItemString(topicDict, "pname", val); Py_DECREF(val);
-
-      val = Py_BuildValue("s", topic.uname().c_str());
-      PyDict_SetItemString(topicDict, "uname", val); Py_DECREF(val);
-
-      val = Py_BuildValue("s", topic.tid().c_str());
-      PyDict_SetItemString(topicDict, "tid", val); Py_DECREF(val);
-
-      val = Py_BuildValue("s", topic.tname().c_str());
-      PyDict_SetItemString(topicDict, "tname", val); Py_DECREF(val);
-
-      val = Py_BuildValue("s", topic.direction().c_str());
-      PyDict_SetItemString(topicDict, "direction", val); Py_DECREF(val);
-
-      val = Py_BuildValue("i", topic.tsize());
-      PyDict_SetItemString(topicDict, "tsize", val); Py_DECREF(val);
-
-      val = Py_BuildValue("i", topic.dclock());
-      PyDict_SetItemString(topicDict, "dclock", val); Py_DECREF(val);
-
-      val = Py_BuildValue("i", topic.dfreq());
-      PyDict_SetItemString(topicDict, "dfreq", val); Py_DECREF(val);
+      PyObject* topicList = PyList_New(0);
+      PyDict_SetItemString(retDict, "topics", topicList); Py_DECREF(topicList);
+      // read out publisher
+      PopulateTopics2List(topicList, monitoring.publisher);
+      // read out subscriber
+      PopulateTopics2List(topicList, monitoring.subscriber);
     }
   }
 
@@ -1208,36 +1239,32 @@ PyObject* mon_logging(PyObject* /*self*/, PyObject* /*args*/)
 {
   PyObject* retList = PyList_New(0);
 
-  std::string logging_s;
-  if (eCAL::Logging::GetLogging(logging_s))
+  eCAL::Logging::SLogging logging;
+  if (eCAL::Logging::GetLogging(logging) != 0)
   {
-    eCAL::pb::LogMessageList logging;
-    logging.ParseFromString(logging_s);
-
-    for (int i = 0; i < logging.log_messages().size(); ++i)
+    for (const auto& log : logging.log_messages)
     {
       PyObject* logDict = PyDict_New();
       PyList_Append(retList, logDict); Py_DECREF(logDict);
 
-      const eCAL::pb::LogMessage& log = logging.log_messages(i);
       PyObject* val;
 
-      val = Py_BuildValue("L", log.time());
+      val = Py_BuildValue("L", log.time);
       PyDict_SetItemString(logDict, "time", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", log.hname().c_str());
+      val = Py_BuildValue("s", log.hname.c_str());
       PyDict_SetItemString(logDict, "hname", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", log.pid());
+      val = Py_BuildValue("i", log.pid);
       PyDict_SetItemString(logDict, "pid", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", log.pname().c_str());
+      val = Py_BuildValue("s", log.pname.c_str());
       PyDict_SetItemString(logDict, "pname", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", log.level());
+      val = Py_BuildValue("i", log.level);
       PyDict_SetItemString(logDict, "level", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", log.content().c_str());
+      val = Py_BuildValue("s", log.content.c_str());
       PyDict_SetItemString(logDict, "content", val); Py_DECREF(val);
     }
   }
