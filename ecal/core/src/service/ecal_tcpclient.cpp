@@ -364,4 +364,4 @@ namespace eCAL
     m_async_request_in_progress = false;
     callback_(data_, success_);
   }  
-};
+}
