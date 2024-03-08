@@ -17,6 +17,8 @@ Functions
 ---------
 
 
+- :ref:`exhale_function_ecal__log_8h_1afcd7c660d38d811e0f272dc6878b9526`
+
 - :ref:`exhale_function_ecal__log_8h_1aa0ffe0010975e2781ebf7c33b15d0f94`
 
 - :ref:`exhale_function_ecal__log_8h_1ae02f62df75715df74abc07018d19fd9b`

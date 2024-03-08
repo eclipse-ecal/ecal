@@ -757,7 +757,12 @@
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="function_ecal__log_8h_1aa0ffe0010975e2781ebf7c33b15d0f94.html">
-       Function eCAL::Logging::GetLogging
+       Function eCAL::Logging::GetLogging(std::string&amp;)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="function_ecal__log_8h_1afcd7c660d38d811e0f272dc6878b9526.html">
+       Function eCAL::Logging::GetLogging(Logging::SLogging&amp;)
       </a>
      </li>
      <li class="toctree-l3">
@@ -2191,6 +2196,7 @@ title="Print to PDF"
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_os.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_log_level.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/types/logging.h&gt;</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;list&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
@@ -2212,6 +2218,8 @@ title="Print to PDF"
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">GetLogging</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">log_</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">GetLogging</span><span class="p">(</span><span class="n">Logging</span><span class="o">::</span><span class="n">SLogging</span><span class="o">&amp;</span><span class="w"> </span><span class="n">log_</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>

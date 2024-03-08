@@ -1,7 +1,0 @@
-ecal.core.pb.logging\_pb2 module
-================================
-
-.. automodule:: ecal.core.pb.logging_pb2
-   :members:
-   :undoc-members:
-   :show-inheritance:
