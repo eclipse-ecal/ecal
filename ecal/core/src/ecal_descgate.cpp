@@ -320,4 +320,4 @@ namespace eCAL
     resp_type_desc_ = (*service_info_map_it).second.info.response_type.descriptor;
     return true;
   }
-};
+}

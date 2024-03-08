@@ -207,4 +207,4 @@ namespace eCAL
    * @param data_  Event callback data structure with the event specific informations.
   **/
   typedef std::function<void(const char* name_, const struct SServerEventCallbackData* data_)> ServerEventCallbackT;
-};
+}

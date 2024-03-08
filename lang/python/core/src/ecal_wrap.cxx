@@ -658,7 +658,7 @@ PyObject* sub_set_callback(PyObject* /*self*/, PyObject* args)
     }
   }
   return Py_BuildValue("is", 0, "error: could not set callback");
-};
+}
 
 /****************************************/
 /*      sub_rem_callback                */
@@ -697,7 +697,7 @@ PyObject* sub_rem_callback(PyObject* /*self*/, PyObject* args)
   {
     return Py_BuildValue("is", 0, "error: could not remove callback");
   }
-};
+}
 
 /****************************************/
 /*      dyn_json_sub_create             */
@@ -783,7 +783,7 @@ PyObject* dyn_json_sub_set_callback(PyObject* /*self*/, PyObject* args)
     }
   }
   return Py_BuildValue("is", 0, "error: could not set callback");
-};
+}
 
 /****************************************/
 /*      dyn_json_sub_rem_callback       */
@@ -822,7 +822,7 @@ PyObject* dyn_json_sub_rem_callback(PyObject* /*self*/, PyObject* args)
   {
     return Py_BuildValue("is", 0, "error: could not remove callback");
   }
-};
+}
 
 
 /****************************************/

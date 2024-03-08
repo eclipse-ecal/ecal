@@ -85,7 +85,7 @@ namespace
     std::cout << "Execution error msg   : " << service_response_.error_msg << std::endl;
     std::cout << "Response              : " << service_response_.response  << std::endl  << std::endl;
     std::cout << std::endl;
-  };
+  }
 }
 
 #if ClientConnectEventTest

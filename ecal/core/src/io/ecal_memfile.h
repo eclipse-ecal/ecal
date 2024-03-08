@@ -226,4 +226,4 @@ namespace eCAL
     CMemoryFile(const CMemoryFile&);                 // prevent copy-construction
     CMemoryFile& operator=(const CMemoryFile&);      // prevent assignment
   };
-};
+}

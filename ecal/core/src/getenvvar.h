@@ -63,4 +63,4 @@ inline std::vector<std::string> splitPaths(const std::string& paths_value)
     tokens.push_back(token);
   }
   return tokens;
-};
+}

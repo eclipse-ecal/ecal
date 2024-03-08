@@ -60,7 +60,7 @@ namespace eCAL
         constexpr int REVERSE   = (1 << 5);
         constexpr int CONCEALED = (1 << 6);
         constexpr int CROSSED   = (1 << 7);
-      };
+      }
 
       struct TableEntry
       {
