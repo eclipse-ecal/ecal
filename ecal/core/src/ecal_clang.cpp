@@ -276,10 +276,13 @@ ECAL_API void log_message(const char* message_)
 /****************************************/
 /*      pub_create                      */
 /****************************************/
-ECAL_API ECAL_HANDLE pub_create(const char* topic_name_, const char* topic_type_)
+ECAL_API ECAL_HANDLE pub_create(const char* topic_name_, const char* topic_type_, const char* topic_enc_, const char* topic_desc_, const int topic_desc_length_)
 {
   eCAL::SDataTypeInformation topic_info;
-  topic_info.name = topic_type_;
+  topic_info.name       = topic_type_;
+  topic_info.encoding   = topic_enc_;
+  topic_info.descriptor = std::string(topic_desc_, static_cast<size_t>(topic_desc_length_));
+
   auto* pub = new eCAL::CPublisher;
   if (!pub->Create(topic_name_, topic_info))
   {
@@ -365,10 +368,13 @@ ECAL_API bool pub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Ev
 /****************************************/
 /*      sub_create                      */
 /****************************************/
-ECAL_API ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_)
+ECAL_API ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_, const char* topic_enc_, const char* topic_desc_, const int topic_desc_length_)
 {
   eCAL::SDataTypeInformation topic_info;
-  topic_info.name = topic_type_;
+  topic_info.name       = topic_type_;
+  topic_info.encoding   = topic_enc_;
+  topic_info.descriptor = std::string(topic_desc_, static_cast<size_t>(topic_desc_length_));
+
   auto* sub = new eCAL::CSubscriber;
   if (!sub->Create(topic_name_, topic_info))
   {

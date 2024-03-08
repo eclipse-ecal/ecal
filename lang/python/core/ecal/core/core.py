@@ -171,19 +171,20 @@ def log_message(message):
   return _ecal.log_message(message)
 
 
-def pub_create(topic_name, topic_type, topic_desc):
+def pub_create(topic_name, topic_type, topic_enc, topic_desc):
   """ create publisher
 
   :param topic_name: the unique topic name
   :type topic_name: string
   :param topic_type: optional type name
   :type topic_type: string
+  :param topic_enc: optional type encoding
+  :type topic_enc: string
   :param topic_desc: optional type description
   :type topic_desc: bytes
 
   """
-  topic_handle = _ecal.pub_create(topic_name, topic_type)
-  pub_set_description(topic_handle, topic_desc)
+  topic_handle = _ecal.pub_create(topic_name, topic_type, topic_enc, topic_desc)
   return topic_handle
 
 
@@ -194,81 +195,6 @@ def pub_destroy(topic_handle):
 
   """
   return _ecal.pub_destroy(topic_handle)
-
-
-def pub_set_topic_type_name(topic_handle, topic_type_name):
-  """ set publisher topic type name
-
-  :param topic_handle:    the topic handle
-  :type topic_handle:     string
-  :param topic_type_name: the topic type name
-  :type topic_type_name:  string
-
-  """
-  return _ecal.pub_set_topic_type_name(topic_handle, topic_type_name)
-
-def pub_set_description(topic_handle, description):
-  """ set publisher topic type description
-
-  :param topic_handle: the topic handle
-  :type topic_handle: string
-  :param description:  the topic type description
-  :type description: bytes
-
-  """
-  return _ecal.pub_set_description(topic_handle, description)
-
-
-def pub_set_qos_historykind(topic_handle, qpolicy, depth):
-  """ set publisher quality of service historykind mode and depth
-
-  :param topic_handle: the topic handle
-  :param qpolicy: 0 = keep_last_history_qos, 1 = keep_all_history_qos
-  :type qpolicy: int
-  :param depth: history kind buffer depth
-
-  """
-
-  return _ecal.pub_set_qos_historykind(topic_handle, qpolicy, depth)
-
-
-def pub_set_qos_reliability(topic_handle, qpolicy):
-  """ set publisher quality of service reliability mode
-
-  :param topic_handle: the topic handle
-  :param qpolicy: 0 = best_effort_reliability_qos, 1 = reliable_reliability_qos
-  :type qpolicy: int
-  :param depth: history kind buffer depth
-  
-  """
-
-  return _ecal.pub_set_qos_reliability(topic_handle, qpolicy)
-
-
-def pub_set_layer_mode(topic_handle, layer, mode):
-  """ set send mode for specific transport layer
-
-  :param topic_handle: the topic handle
-  :param layer: 0 = udp, 1 = shm, 42 = inproc
-  :type layer: int
-  :param mode: 0 = off, 1 = on,  2 = auto
-  :type mode: int
-
-  """
-
-  return _ecal.pub_set_layer_mode(topic_handle, layer, mode)
-
-
-def pub_set_max_bandwidth_udp(topic_handle, bandwidth):
-  """ set publisher maximum transmit bandwidth for the udp layer.
-
-  :param topic_handle: the topic handle
-  :param bandwidth:    maximum bandwidth in bytes/s (-1 == unlimited)
-  :type bandwidth:     int
-
-  """
-
-  return _ecal.pub_set_max_bandwidth_udp(topic_handle, bandwidth)
 
 
 def pub_send(topic_handle, msg_payload, msg_time=-1):
@@ -284,30 +210,21 @@ def pub_send(topic_handle, msg_payload, msg_time=-1):
   return _ecal.pub_send(topic_handle, msg_payload, msg_time)
 
 
-def pub_send_sync(topic_handle, msg_payload, msg_time, ack_timeout_ms):
-  """ send publisher content synchronized to connected local subscribers with acknowledge timeout
-
-  :param topic_handle:    the topic handle
-  :param msg_payload:     message python string (can contain zeros)
-  :type msg_payload:      bytes
-  :param msg_time:        message time in us (-1 == eCAL system time)
-  :type msg_time:         int
-  :param ack_timeout_ms:  Maximum time to wait for all subscribers acknowledge feedback in ms (message received and processed)
-  :type ack_timeout_ms:   int
-
-  """
-  return _ecal.pub_send_sync(topic_handle, msg_payload, msg_time, ack_timeout_ms)
-
-def sub_create(topic_name, topic_type):
+def sub_create(topic_name, topic_type, topic_enc, topic_desc):
   """ create subscriber
 
   :param topic_name: the unique topic name
-  :type topic_name:  string
-  :param topic_type: optional topic type
-  :type topic_type:  string
-  
+  :type topic_name: string
+  :param topic_type: optional type name
+  :type topic_type: string
+  :param topic_enc: optional type encoding
+  :type topic_enc: string
+  :param topic_desc: optional type description
+  :type topic_desc: bytes
+
   """
-  return _ecal.sub_create(topic_name, topic_type)
+  topic_handle = _ecal.sub_create(topic_name, topic_type, topic_enc, topic_desc)
+  return topic_handle
 
 
 def sub_destroy(topic_handle):
@@ -317,32 +234,6 @@ def sub_destroy(topic_handle):
 
   """
   return _ecal.sub_destroy(topic_handle)
-
-
-def sub_set_qos_historykind(topic_handle, qpolicy, depth):
-  """ set subscriber quality of service historykind mode and depth
-
-  :param topic_handle: the topic handle
-  :param qpolicy:      0 = keep_last_history_qos, 1 = keep_all_history_qos
-  :type qpolicy:       int
-  :param depth:        history kind buffer depth
-  :type depth:         int
-
-  """
-
-  return _ecal.sub_set_qos_historykind(topic_handle, qpolicy, depth)
-
-
-def sub_set_qos_reliability(topic_handle, qpolicy):
-  """ set subscriber quality of service reliability mode
-
-  :param topic_handle: the topic handle
-  :param qpolicy:      0 = best_effort_reliability_qos, 1 = reliable_reliability_qos
-  :type qpolicy:       int
-
-  """
-
-  return _ecal.sub_set_qos_reliability(topic_handle, qpolicy)
 
 
 def sub_receive(topic_handle, timeout=0):
@@ -374,45 +265,6 @@ def sub_rem_callback(topic_handle, callback):
 
   """
   return _ecal.sub_rem_callback(topic_handle, callback)
-
-
-def dyn_json_sub_create(topic_name):
-  """ create subscriber
-
-  :param topic_name: the unique topic name
-  :type topic_name:  string
-
-  """
-  return _ecal.dyn_json_sub_create(topic_name)
-
-
-def dyn_json_sub_destroy(topic_handle):
-  """ destroy subscriber
-
-  :param topic_handle: the topic handle
-
-  """
-  return _ecal.dyn_json_sub_destroy(topic_handle)
-
-
-def dyn_json_sub_set_callback(topic_handle, callback):
-  """ set callback function for incoming messages
-
-  :param topic_handle: the topic handle
-  :param callback:     python callback function (f(topic_name, msg, time))
-
-  """
-  return _ecal.dyn_json_sub_set_callback(topic_handle, callback)
-
-
-def dyn_json_sub_rem_callback(topic_handle, callback):
-  """ remove callback function for incoming messages
-
-  :param topic_handle: the topic handle
-  :param callback:     python callback function (f(topic_name, msg, time))
-
-  """
-  return _ecal.dyn_json_sub_rem_callback(topic_handle, callback)
 
 
 def server_create(service_name):
@@ -576,40 +428,20 @@ def mon_logging():
   return _ecal.mon_logging()
 
 
-def mon_pubmonitoring(state_, name_):
-  """ activate an eCAL internal publisher for monitoring info
-
-  :param state_: publisher state on / off
-  :param name_:  topic name for the publisher
-  :type name_:   string
-
-  """
-  return _ecal.mon_pubmonitoring(state_, name_)
-
-
-def mon_publogging(state_, name_):
-  """ activate an eCAL internal publisher for logging info
-
-  :param state_: publisher state on / off
-  :param name_:  topic name for the publisher
-  :type name_:   string  
-
-  """
-  return _ecal.mon_publogging(state_, name_)
-
-
 class publisher(object):
   """ eCAL publisher """
 
-  def __init__(self, topic_name, topic_type="", topic_desc=b""):
+  def __init__(self, topic_name, topic_type="", topic_enc="", topic_desc=b""):
     """ initialize publisher
 
     :param topic_name: the unique topic name
-    :type topic_name:  string
-    :param topic_type: optional topic type name
-    :type topic_type:  string
-    :param topic_desc: optional topic type description
-    :type topic_desc:  bytes
+    :type topic_name: string
+    :param topic_type: optional type name
+    :type topic_type: string
+    :param topic_enc: optional type encoding
+    :type topic_enc: string
+    :param topic_desc: optional type description
+    :type topic_desc: bytes
 
     """
     # topic name
@@ -617,74 +449,16 @@ class publisher(object):
     # topic type
     self.ttype = topic_type
     # topic description
+    self.tenc = topic_enc
+    # topic description
     self.tdesc = topic_desc
     # topic handle
-    self.thandle = pub_create(self.tname, self.ttype, self.tdesc)
+    self.thandle = pub_create(self.tname, self.ttype, self.tenc, self.tdesc)
     
   def destroy(self):
     """ destroy publisher
     """
     return pub_destroy(self.thandle)
-
-  def set_topic_type_name(self, topic_type_name):
-    """ set topic type name
-
-    :param topic_type_name: the topic type name
-    :type topic_type_name:  string
-
-    """
-
-    return pub_set_topic_type_name(self.thandle, topic_type_name)
-
-  def set_topic_description(self, description):
-    """ set topic description
-
-    :param description: the topic type description
-    :type description: bytes
-
-    """
-
-    return pub_set_description(self.thandle, description)
-
-  def set_qos_historykind(self, qpolicy, depth):
-    """ set quality of service historykind mode and depth
-
-    :param qpolicy: 0 = keep_last_history_qos, 1 = keep_all_history_qos
-    :param depth:   history kind buffer depth
-
-    """
-
-    return pub_set_qos_historykind(self.thandle, qpolicy, depth)
-
-  def set_qos_reliability(self, qpolicy):
-    """ set quality of service reliability mode
-
-    :param qpolicy: 0 = best_effort_reliability_qos, 1 = reliable_reliability_qos
-
-    """
-
-    return pub_set_qos_reliability(self.thandle, qpolicy)
-
-  def set_layer_mode(self, layer, mode):
-    """ set send mode for specific transport layer
-
-    :param layer: 0 = udp, 1 = shm, 42 = inproc
-    :type layer:  int
-    :param mode:  0 = off, 1 = on,  2 = auto
-    :type layer:  int
-    
-    """
-    return _ecal.pub_set_layer_mode(self.thandle, layer, mode)
-
-  def set_max_bandwidth_udp(self, bandwidth):
-    """ set publisher maximum transmit bandwidth for the udp layer.
-
-    :param bandwidth: maximum bandwidth in bytes/s (-1 == unlimited)
-    :type bandwidth:  int
-
-    """
-
-    return _ecal.pub_set_max_bandwidth_udp(self.thandle, bandwidth)
 
   def send(self, msg_payload, msg_time=-1):
     """ send publisher content
@@ -697,66 +471,39 @@ class publisher(object):
     """
     return pub_send(self.thandle, msg_payload, msg_time)
 
-  def send_sync(self, msg_payload, msg_time, ack_timeout_ms):
-    """ send publisher content synchronized to connected local subscribers with acknowledge timeout
-
-    :param msg_payload:     message python string (can contain zeros)
-    :type msg_payload:      bytes
-    :param msg_time:        message time in us (-1 == eCAL system time)
-    :type msg_time:         int
-    :param ack_timeout_ms:  Maximum time to wait for subscriber receive and process acknowledge feedback in ms
-    :type ack_timeout_ms:   int
-
-    """
-    return pub_send_sync(self.thandle, msg_payload, msg_time, ack_timeout_ms)
-
 
 class subscriber(object):
   """ eCAL subscriber
   """
 
-  def __init__(self, topic_name, topic_type=""):
+  def __init__(self, topic_name, topic_type="", topic_enc="", topic_desc=b""):
     """ initialize subscriber
 
     :param topic_name: the unique topic name
-    :type topic_name:  string
-    :param topic_type: optional topic type name
-    :type topic_type:  string
+    :type topic_name: string
+    :param topic_type: optional type name
+    :type topic_type: string
+    :param topic_enc: optional type encoding
+    :type topic_enc: string
+    :param topic_desc: optional type description
+    :type topic_desc: bytes
 
     """
     # topic name
     self.tname = topic_name
     # topic type
     self.ttype = topic_type
+    # topic description
+    self.tenc = topic_enc
+    # topic description
+    self.tdesc = topic_desc
     # topic handle
-    self.thandle = sub_create(self.tname, self.ttype)
+    self.thandle = sub_create(self.tname, self.ttype, self.tenc, self.tdesc)
     
   def destroy(self):
     """ destroy subscriber
     """
     return sub_destroy(self.thandle)
-
-  def set_qos_historykind(self, qpolicy, depth):
-    """ set quality of service historykind mode and depth
-
-    :param qpolicy: 0 = keep_last_history_qos, 1 = keep_all_history_qos
-    :type qpolicy:  int
-    :param depth:   history kind buffer depth
-    :type depth:    int
-
-    """
-
-    return sub_set_qos_historykind(self.thandle, qpolicy, depth)
-
-  def set_qos_reliability(self, qpolicy):
-    """ set quality of service reliability mode
-
-    :param qpolicy: 0 = best_effort_reliability_qos, 1 = reliable_reliability_qos
-    :type qpolicy:  int
-
-    """
-
-    return sub_set_qos_reliability(self.thandle, qpolicy)
 
   def receive(self, timeout=0):
     """ receive subscriber content with timeout
@@ -782,41 +529,3 @@ class subscriber(object):
 
     """
     return sub_rem_callback(self.thandle, callback)
-
-
-class subscriberDynJSON(object):
-  """ eCAL Protobuf dynamic JSON subscriber
-  """
-
-  def __init__(self, topic_name):
-    """ initialize subscriber
-
-    :param topic_name: the unique topic name
-    :type topic_name:  string
-
-    """
-    # topic name
-    self.tname = topic_name
-    # topic handle
-    self.thandle = dyn_json_sub_create(self.tname)
-    
-  def destroy(self):
-    """ destroy subscriber
-    """
-    return dyn_json_sub_destroy(self.thandle)
-
-  def set_callback(self, callback):
-    """ set callback function for incoming messages
-
-    :param callback: python callback function (f(topic_name, msg, time))
-
-    """
-    return dyn_json_sub_set_callback(self.thandle, callback)
-
-  def rem_callback(self, callback):
-    """ remove callback function for incoming messages
-
-    :param callback: python callback function (f(topic_name, msg, time))
-
-    """
-    return dyn_json_sub_rem_callback(self.thandle, callback)
