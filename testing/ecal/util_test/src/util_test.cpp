@@ -17,8 +17,10 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <vector>
 #include <ecal/ecal.h>
 #include <gtest/gtest.h>
+#include <util/frequency_calculator.h>
 
 
 namespace {
@@ -53,3 +55,141 @@ TEST(Util, SplitCombinedTopicType)
   TestSplitCombinedTopicType("base:std::string", "base", "std::string");
   TestSplitCombinedTopicType("MyType", "", "MyType");
 }
+
+struct MillisecondFrequencyPair
+{
+  std::chrono::milliseconds delta_t;
+  double frequency;
+};
+
+const std::vector<MillisecondFrequencyPair> frequency_pairs =
+{
+  {std::chrono::milliseconds(1000),   1.0},
+  {std::chrono::milliseconds(1250),   0.8},
+  {std::chrono::milliseconds(5000),   0.2},
+  {std::chrono::milliseconds(20000),  0.05},
+  {std::chrono::milliseconds(500),    2.0},
+  {std::chrono::milliseconds(200),    5.0},
+  {std::chrono::milliseconds(100),   10.0},
+  {std::chrono::milliseconds(20),    50.0},
+  {std::chrono::milliseconds(2),    500.0},
+};
+
+
+TEST(Util, FrequencyCalculator)
+{
+  for (const auto& pair : frequency_pairs)
+  {
+    {
+      auto now = std::chrono::steady_clock::now();
+      eCAL::FrequencyCalculator<std::chrono::steady_clock> calculator(now);
+      EXPECT_DOUBLE_EQ(calculator.getFrequency(), 0.0f);
+
+      for (int j = 0; j < 100; ++j)
+      {
+        for (int i = 0; i < 20; ++i)
+        {
+          now = now + pair.delta_t;
+          calculator.addTick(now);
+        }
+
+        EXPECT_DOUBLE_EQ(calculator.getFrequency(), pair.frequency);
+      }
+    }
+
+    {
+      auto now = std::chrono::steady_clock::now();
+      eCAL::FrequencyCalculator<std::chrono::steady_clock> calculator(now);
+
+      for (int i = 0; i < 5; ++i)
+      {
+        now = now + pair.delta_t;
+        calculator.addTick(now);
+        EXPECT_DOUBLE_EQ(calculator.getFrequency(), pair.frequency);
+      }
+    }
+  }
+}
+
+TEST(Util, ResettableFrequencyCalculator)
+{
+  const auto check_delta_t = std::chrono::milliseconds(999);
+
+
+  for (const auto& pair : frequency_pairs)
+  {
+    {
+      //auto start = std::chrono::steady_clock::now();
+      auto start = std::chrono::steady_clock::time_point(std::chrono::milliseconds(0));
+      auto next_frequency_update = start;
+      auto next_tick = start;
+      eCAL::ResettableFrequencyCalculator<std::chrono::steady_clock> calculator(3.0f);
+      calculator.addTick(next_tick);
+      EXPECT_DOUBLE_EQ(calculator.getFrequency(next_frequency_update), 0.0f);
+
+      for (int i = 0; i < 100; ++i)
+      {
+        next_frequency_update = next_frequency_update + check_delta_t;
+
+        while (next_tick + pair.delta_t <= next_frequency_update)
+        {
+          next_tick = next_tick + pair.delta_t;
+          calculator.addTick(next_tick);
+        }
+
+        if (next_frequency_update - start < pair.delta_t)
+        {
+          // no updates happened yet - expect 0 frequency
+          EXPECT_DOUBLE_EQ(calculator.getFrequency(next_frequency_update), 0.0);
+        }
+        else
+        {
+          EXPECT_DOUBLE_EQ(calculator.getFrequency(next_frequency_update), pair.frequency);
+        }
+      }
+
+      // Now check timeout behavior
+      // Calculate when timeout should happen
+      auto timeout_time = next_tick + 3.0f * pair.delta_t;
+      for (int i = 0; i < 100; ++i)
+      {
+        next_frequency_update = next_frequency_update + check_delta_t;
+        if (next_frequency_update <= timeout_time)
+        {
+          EXPECT_DOUBLE_EQ(calculator.getFrequency(next_frequency_update), pair.frequency);
+        }
+        else
+        {
+          EXPECT_DOUBLE_EQ(calculator.getFrequency(next_frequency_update), 0.0);
+        }
+      }
+
+      // Finally we're getting new ticks again! let's check frequencies again!
+      auto new_start = next_frequency_update;
+      next_tick = next_frequency_update;
+      // Check that filter goes back
+      calculator.addTick(next_tick);
+      for (int i = 0; i < 100; ++i)
+      {
+        next_frequency_update = next_frequency_update + check_delta_t;
+
+        while (next_tick + pair.delta_t <= next_frequency_update)
+        {
+          next_tick = next_tick + pair.delta_t;
+          calculator.addTick(next_tick);
+        }
+
+        if (next_frequency_update - new_start < pair.delta_t)
+        {
+          // no updates happened yet - expect 0 frequency
+          EXPECT_DOUBLE_EQ(calculator.getFrequency(next_frequency_update), 0.0);
+        }
+        else
+        {
+          EXPECT_DOUBLE_EQ(calculator.getFrequency(next_frequency_update), pair.frequency);
+        }
+      }
+    }
+  }
+}
+
