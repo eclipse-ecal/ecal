@@ -66,7 +66,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Create new branch for cherry picking
-      if: ${{ steps.pr.outputs.pr_number != '' }}
+      if: ${{ env.continue_workflow == 'true' }}
       run: |
         # Set the git config to the pr_author and pr_author_email
         git config user.name '${{ github.event.pusher.name }}'
