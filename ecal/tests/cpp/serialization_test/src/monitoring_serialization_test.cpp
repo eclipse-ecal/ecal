@@ -28,7 +28,7 @@ namespace eCAL
     SMonitoring GenerateMonitoring();
     bool CompareMonitorings(const SMonitoring& monitoring1, const SMonitoring& monitoring2);
 
-    TEST(Serialization, Monitoring2String)
+    TEST(core_cpp_serialization, Monitoring2String)
     {
       SMonitoring message_in = GenerateMonitoring();
 
@@ -41,7 +41,7 @@ namespace eCAL
       ASSERT_TRUE(CompareMonitorings(message_in, message_out));
     }
 
-    TEST(Serialization, Monitoring2Vector)
+    TEST(core_cpp_serialization, Monitoring2Vector)
     {
       SMonitoring message_in = GenerateMonitoring();
 
