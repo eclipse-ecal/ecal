@@ -61,9 +61,9 @@ public:
 
   std::atomic<int> received_callbacks;
 };
-using core_cpp_pubsub_proto = ProtoSubscriberTest;
+using core_cpp_pubsub_proto_sub = ProtoSubscriberTest;
 
-TEST_F(core_cpp_pubsub_proto, ProtoSubscriberTest_SendReceive)
+TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_SendReceive)
 {
   // Assert that the Subscriber can be move constructed.
   eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
@@ -82,7 +82,7 @@ TEST_F(core_cpp_pubsub_proto, ProtoSubscriberTest_SendReceive)
 
 }
 
-TEST_F(core_cpp_pubsub_proto, ProtoSubscriberTest_MoveAssignment)
+TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveAssignment)
 {
   eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
   auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
@@ -113,7 +113,7 @@ TEST_F(core_cpp_pubsub_proto, ProtoSubscriberTest_MoveAssignment)
   ASSERT_EQ(1, received_callbacks);
 }
 
-TEST_F(core_cpp_pubsub_proto, ProtoSubscriberTest_MoveConstruction)
+TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveConstruction)
 {
   // Assert that the Subscriber can be move constructed.
   eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");

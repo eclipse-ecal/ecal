@@ -39,9 +39,9 @@ public:
   }
 
 };
-using core_cpp_pubsub_proto = ProtoPublisherTest;
+using core_cpp_pubsub_proto_pub = ProtoPublisherTest;
 
-TEST_F(core_cpp_pubsub_proto, ProtoPublisherTest_MoveAssignment)
+TEST_F(core_cpp_pubsub_proto_pub, ProtoPublisherTest_MoveAssignment)
 {
   eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoPublisherTest");
 
@@ -59,7 +59,7 @@ TEST_F(core_cpp_pubsub_proto, ProtoPublisherTest_MoveAssignment)
   ASSERT_FALSE(person_pub.IsCreated());
 }
 
-TEST_F(core_cpp_pubsub_proto, ProtoPublisherTest_MoveConstruction)
+TEST_F(core_cpp_pubsub_proto_pub, ProtoPublisherTest_MoveConstruction)
 {
   eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoPublisherTest");
 

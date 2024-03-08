@@ -65,7 +65,7 @@ public:
 
   std::atomic<int> received_callbacks;
 };
-using core_cpp_pubsub_proto = ProtoDynSubscriberTest;
+using core_cpp_pubsub_proto_dyn = ProtoDynSubscriberTest;
 
 int extract_id(const google::protobuf::Message& msg_)
 {
@@ -91,7 +91,7 @@ int extract_id(const google::protobuf::Message& msg_)
   return 0;
 }
 
-TEST_F(core_cpp_pubsub_proto, ProtoDynSubscriberTest_SendReceiveCB)
+TEST_F(core_cpp_pubsub_proto_dyn, ProtoDynSubscriberTest_SendReceiveCB)
 {
   // Assert that the Subscriber can be move constructed.
   eCAL::protobuf::CDynamicSubscriber person_dyn_rec("ProtoSubscriberTest");
@@ -109,7 +109,7 @@ TEST_F(core_cpp_pubsub_proto, ProtoDynSubscriberTest_SendReceiveCB)
   ASSERT_EQ(1, received_callbacks);
 }
 
-TEST_F(core_cpp_pubsub_proto, ProtoDynSubscriberTest_SendReceive)
+TEST_F(core_cpp_pubsub_proto_dyn, ProtoDynSubscriberTest_SendReceive)
 {
   // Assert that the Subscriber can be move constructed.
   eCAL::protobuf::CDynamicSubscriber person_dyn_rec("ProtoSubscriberTest");
