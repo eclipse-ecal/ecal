@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "ecal_struct_logging.h"
+#include <ecal/types/logging.h>
 
 #include <string>
 #include <vector>
@@ -32,12 +32,12 @@
 namespace eCAL
 {
   // logmessage - serialize/deserialize
-  bool SerializeToBuffer     (const Logging::LogMessage& source_sample_, std::vector<char>& target_buffer_);
-  bool SerializeToBuffer     (const Logging::LogMessage& source_sample_, std::string& target_buffer_);
-  bool DeserializeFromBuffer (const char* data_, size_t size_, Logging::LogMessage& target_sample_);
+  bool SerializeToBuffer     (const Logging::SLogMessage& source_sample_, std::vector<char>& target_buffer_);
+  bool SerializeToBuffer     (const Logging::SLogMessage& source_sample_, std::string& target_buffer_);
+  bool DeserializeFromBuffer (const char* data_, size_t size_, Logging::SLogMessage& target_sample_);
 
   // logmessage list - serialize/deserialize
-  bool SerializeToBuffer     (const Logging::LogMessageList& source_sample_, std::vector<char>& target_buffer_);
-  bool SerializeToBuffer     (const Logging::LogMessageList& source_sample_, std::string& target_buffer_);
-  bool DeserializeFromBuffer (const char* data_, size_t size_, Logging::LogMessageList& target_sample_);
+  bool SerializeToBuffer     (const Logging::SLogging& source_sample_, std::vector<char>& target_buffer_);
+  bool SerializeToBuffer     (const Logging::SLogging& source_sample_, std::string& target_buffer_);
+  bool DeserializeFromBuffer (const char* data_, size_t size_, Logging::SLogging& target_sample_);
 }

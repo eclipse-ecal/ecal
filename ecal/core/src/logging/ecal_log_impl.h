@@ -25,13 +25,13 @@
 
 #include "io/udp/ecal_udp_sample_receiver.h"
 #include "io/udp/ecal_udp_sample_sender.h"
-#include "serialization/ecal_struct_logging.h"
 
 #include <cstddef>
 #include <ecal/ecal.h>
 #include <ecal/ecal_os.h>
 
 #include <ecal/ecal_log_level.h>
+#include <ecal/types/logging.h>
 
 #include "ecal_global_accessors.h"
 
@@ -97,6 +97,7 @@ namespace eCAL
     void Log(const std::string& msg_);
 
     void GetLogging(std::string& log_msg_list_string_);
+    void GetLogging(Logging::SLogging& log_);
 
   private:
     bool HasSample(const std::string& sample_name_);
@@ -105,15 +106,14 @@ namespace eCAL
     CLog(const CLog&);                 // prevent copy-construction
     CLog& operator=(const CLog&);      // prevent assignment
 
-    std::mutex                             m_log_sync;
-    std::vector<char>                      m_log_message_vec;
+    std::mutex                             m_log_mtx;
 
     std::atomic<bool>                      m_created;
     std::unique_ptr<UDP::CSampleSender>    m_udp_logging_sender;
 
-    // log messages
-    std::mutex                             m_log_msglist_sync;
-    Logging::LogMessageList                m_log_msglist;
+    // log message list and log message serialization buffer
+    Logging::SLogging                      m_log_msglist;
+    std::vector<char>                      m_log_message_vec;
 
     // udp logging receiver
     std::shared_ptr<UDP::CSampleReceiver>  m_log_receiver;

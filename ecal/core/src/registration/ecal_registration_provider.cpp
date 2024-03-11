@@ -407,7 +407,7 @@ namespace eCAL
       const auto& topic_datatype = iter->second.topic.tdatatype;
       topic_info.encoding   = topic_datatype.encoding;
       topic_info.name       = topic_datatype.name;
-      topic_info.descriptor = topic_datatype.desc;
+      topic_info.descriptor = topic_datatype.descriptor;
 
       ApplyTopicDescription(topic_name, topic_info, topic_is_a_publisher);
 

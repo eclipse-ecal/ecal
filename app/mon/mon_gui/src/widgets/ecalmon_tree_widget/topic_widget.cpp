@@ -85,7 +85,7 @@ TopicWidget::TopicWidget(QWidget *parent)
     (int)TopicTreeModel::Columns::PROCESS_NAME,
     (int)TopicTreeModel::Columns::UNIT_NAME,
     (int)TopicTreeModel::Columns::TOPIC_ENCODING,
-    (int)TopicTreeModel::Columns::MESSAGE_TYPE,
+    (int)TopicTreeModel::Columns::TOPIC_TYPE,
     (int)TopicTreeModel::Columns::TRANSPORT_LAYER,
   };
   setFilterColumns(filter_columns);
@@ -99,7 +99,7 @@ TopicWidget::TopicWidget(QWidget *parent)
     (int)TopicTreeModel::Columns::HOST_NAME,
     (int)TopicTreeModel::Columns::PROCESS_NAME,
     (int)TopicTreeModel::Columns::TOPIC_ENCODING,
-    (int)TopicTreeModel::Columns::MESSAGE_TYPE,
+    (int)TopicTreeModel::Columns::TOPIC_TYPE,
     (int)TopicTreeModel::Columns::TRANSPORT_LAYER,
   };
 
@@ -130,7 +130,7 @@ TopicWidget::TopicWidget(QWidget *parent)
   preconfigured_group_by_settings.push_back(encoding);
 
   EcalmonTreeWidget::GroupSetting type;
-  type.group_by_columns = { (int)TopicTreeModel::Columns::MESSAGE_TYPE, (int)TopicTreeModel::Columns::TOPIC_NAME };
+  type.group_by_columns = { (int)TopicTreeModel::Columns::TOPIC_TYPE, (int)TopicTreeModel::Columns::TOPIC_NAME };
   type.auto_expand = -1;
   type.name = "Type";
   preconfigured_group_by_settings.push_back(type);
@@ -153,7 +153,7 @@ TopicWidget::TopicWidget(QWidget *parent)
     (int)TopicTreeModel::Columns::HOST_NAME,
     (int)TopicTreeModel::Columns::PID,
     (int)TopicTreeModel::Columns::TOPIC_ENCODING,
-    (int)TopicTreeModel::Columns::MESSAGE_TYPE,
+    (int)TopicTreeModel::Columns::TOPIC_TYPE,
     (int)TopicTreeModel::Columns::TOPIC_SIZE,
     (int)TopicTreeModel::Columns::MESSAGE_DROPS,
     (int)TopicTreeModel::Columns::DATA_CLOCK,
@@ -221,15 +221,16 @@ void TopicWidget::autoSizeColumns()
   eCAL::pb::Topic example_topic_pb;
 
   example_topic_pb.set_rclock(999999);
-  example_topic_pb.set_hname("CARPC00____");
+  example_topic_pb.set_hname("HOSTNAME____");
   example_topic_pb.set_pid(999999);
   example_topic_pb.set_pname("");
-  example_topic_pb.set_uname("CameraSensorMapFusionCAF___");
+  example_topic_pb.set_uname("ATypicalLongUnitName___");
   example_topic_pb.set_tid("");
-  example_topic_pb.set_tname("CameraSensorMapFusionCAF___");
+  example_topic_pb.set_tname("ATypicalLongTopicName___");
   example_topic_pb.set_direction("subscriber__");
-  example_topic_pb.set_ttype("proto:pb.People.Person____");
-  //example_topic_pb.set_tdesc();
+  example_topic_pb.mutable_tdatatype()->set_name("Enc.TypeName.Name____");
+  example_topic_pb.mutable_tdatatype()->set_encoding("encdg:");
+  //example_topic_pb.mutable_tdatatype()->set_desc("");
 
   example_topic_pb.mutable_tlayer()->Add()->set_type(eCAL::pb::eTLayerType::tl_ecal_shm);
   example_topic_pb.mutable_tlayer()->Add()->set_type(eCAL::pb::eTLayerType::tl_ecal_udp_mc);
@@ -241,7 +242,7 @@ void TopicWidget::autoSizeColumns()
   example_topic_pb.set_dfreq(999999);
 
   TopicTreeItem* example_topic_item = new TopicTreeItem(example_topic_pb);
-  GroupTreeItem* example_group_item = new GroupTreeItem("CameraSensorMapFusionCAF___", "", "", QVariant(), "");
+  GroupTreeItem* example_group_item = new GroupTreeItem("ATypicalLongGroupName___", "", "", QVariant(), "");
 
   topic_tree_model_->insertItem(example_group_item);
   auto group_index = topic_tree_model_->index(example_group_item);
@@ -260,7 +261,7 @@ void TopicWidget::autoSizeColumns()
     (int)TopicTreeModel::Columns::HOST_NAME,
     (int)TopicTreeModel::Columns::PID,
     (int)TopicTreeModel::Columns::TOPIC_ENCODING,
-    (int)TopicTreeModel::Columns::MESSAGE_TYPE,
+    (int)TopicTreeModel::Columns::TOPIC_TYPE,
     (int)TopicTreeModel::Columns::HEARTBEAT,
     (int)TopicTreeModel::Columns::TRANSPORT_LAYER,
     (int)TopicTreeModel::Columns::TOPIC_SIZE,

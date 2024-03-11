@@ -28,6 +28,8 @@ package eCAL.pb;
 
 message Content                                // topic content
 {
+  reserved 5;
+
   int64        id                    =  1;     // sample id
   int64        clock                 =  2;     // internal used clock
   int64        time                  =  3;     // time the content was updated
@@ -38,6 +40,8 @@ message Content                                // topic content
 
 enum eCmdType                                  // command type
 {
+  reserved 7 to 11;
+
   bct_none             =  0;                   // undefined command
   bct_set_sample       =  1;                   // set sample content
   bct_reg_publisher    =  2;                   // register publisher

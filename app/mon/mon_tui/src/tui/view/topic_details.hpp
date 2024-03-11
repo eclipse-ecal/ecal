@@ -73,13 +73,14 @@ class TopicDetailsView : public View
       vizualization_view = ftxui::Renderer([]{ return ftxui::emptyElement(); });
     }
 
-    auto tname = topic->name;
-    auto ttype = topic->type;
+    const auto tname = topic->name;
+    const auto tencoding = topic->encoding;
+    const auto ttype = topic->type;
     if(tname != prev_topic)
     {
       prev_topic = tname;
       vizualization_view->Detach();
-      vizualization_view = CreateVisualizationView(view_factory, view_model->view_model_factory, tname, ttype);
+      vizualization_view = CreateVisualizationView(view_factory, view_model->view_model_factory, tname, tencoding, ttype);
       Add(vizualization_view);
     }
     return vizualization_view;

@@ -199,8 +199,9 @@ class MonitorModel
       topic.id = std::move(*t.mutable_tid());
       topic.name = std::move(*t.mutable_tname());
       topic.direction = TopicDirection(t.direction());
-      topic.type = std::move(*t.mutable_ttype());
-      topic.type_descriptor = std::move(*t.mutable_tdesc());
+      topic.encoding = std::move(*t.mutable_tdatatype()->mutable_encoding());
+      topic.type = std::move(*t.mutable_tdatatype()->mutable_name());
+      topic.type_descriptor = std::move(*t.mutable_tdatatype()->mutable_desc());
       for(auto &tl: t.tlayer())
       {
         topic.transport_layers.emplace_back(TopicTransportLayer(tl.type()));

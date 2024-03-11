@@ -164,10 +164,6 @@ namespace
     eCAL::nanopb::encode_string(pb_sample_.topic.tname, registration_.topic.tname);
     // direction
     eCAL::nanopb::encode_string(pb_sample_.topic.direction, registration_.topic.direction);
-    // ttype
-    eCAL::nanopb::encode_string(pb_sample_.topic.ttype, registration_.topic.ttype);
-    // tdesc
-    eCAL::nanopb::encode_string(pb_sample_.topic.tdesc, registration_.topic.tdesc);
     // tdatatype
     pb_sample_.topic.has_tdatatype = true;
     // tdatatype.name
@@ -175,7 +171,7 @@ namespace
     // tdatatype.encoding
     eCAL::nanopb::encode_string(pb_sample_.topic.tdatatype.encoding, registration_.topic.tdatatype.encoding);
     // tdatatype.desc
-    eCAL::nanopb::encode_string(pb_sample_.topic.tdatatype.desc, registration_.topic.tdatatype.desc);
+    eCAL::nanopb::encode_string(pb_sample_.topic.tdatatype.desc, registration_.topic.tdatatype.descriptor);
     // tsize
     pb_sample_.topic.tsize = registration_.topic.tsize;
     // connections_loc
@@ -326,16 +322,12 @@ namespace
     eCAL::nanopb::decode_string(pb_sample_.topic.tname, registration_.topic.tname);
     // direction
     eCAL::nanopb::decode_string(pb_sample_.topic.direction, registration_.topic.direction);
-    // ttype
-    eCAL::nanopb::decode_string(pb_sample_.topic.ttype, registration_.topic.ttype);
-    // tdesc
-    eCAL::nanopb::decode_string(pb_sample_.topic.tdesc, registration_.topic.tdesc);
     // tdatatype.name
     eCAL::nanopb::decode_string(pb_sample_.topic.tdatatype.name, registration_.topic.tdatatype.name);
     // tdatatype.encoding
     eCAL::nanopb::decode_string(pb_sample_.topic.tdatatype.encoding, registration_.topic.tdatatype.encoding);
     // tdatatype.desc
-    eCAL::nanopb::decode_string(pb_sample_.topic.tdatatype.desc, registration_.topic.tdatatype.desc);
+    eCAL::nanopb::decode_string(pb_sample_.topic.tdatatype.desc, registration_.topic.tdatatype.descriptor);
     // tlayer
     eCAL::nanopb::decode_registration_layer(pb_sample_.topic.tlayer, registration_.topic.tlayer);
     // attr

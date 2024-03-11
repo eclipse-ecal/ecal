@@ -98,6 +98,27 @@ option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samp
 option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
 option(ECAL_USE_CLOCKLOCK_MUTEX                "Use native mutex with monotonic clock (requires glibc >= 2.30)"   OFF)
 
+# --------------------------------------------------------
+# ecal core configuration
+# --------------------------------------------------------
+set(ECAL_CORE_BUILD_SAMPLES                                                                          ${BUILD_SAMPLES})
+set(ECAL_CORE_BUILD_SAMPLES_PROTOBUF                                                                 ${BUILD_SAMPLES})
+set(ECAL_CORE_BUILD_TESTS                                                                         ${BUILD_ECAL_TESTS})
+set(ECAL_CORE_BUILD_TESTS_PROTOBUF                                                                ${BUILD_ECAL_TESTS})
+set(ECAL_CORE_CONFIG_INIFILE                                                                                       ON)
+set(ECAL_CORE_COMMAND_LINE                                                                                         ON)
+set(ECAL_CORE_REGISTRATION                                                                                         ON)
+set(ECAL_CORE_MONITORING                                                                                           ON)
+set(ECAL_CORE_PUBLISHER                                                                                            ON)
+set(ECAL_CORE_SUBSCRIBER                                                                                           ON)
+set(ECAL_CORE_SERVICE                                                                                              ON)
+set(ECAL_CORE_TIMEPLUGIN                                                                                           ON)
+set(ECAL_CORE_NPCAP_SUPPORT                                                                     ${ECAL_NPCAP_SUPPORT})
+set(ECAL_CORE_REGISTRATION_SHM                                                                                     ON)
+set(ECAL_CORE_TRANSPORT_UDP                                                                                        ON)
+set(ECAL_CORE_TRANSPORT_TCP                                                                                        ON)
+set(ECAL_CORE_TRANSPORT_SHM                                                                                        ON)
+
 # Set option regarding third party library builds
 # option(ECAL_THIRDPARTY_BUILD_LIBSSH2           "Build libssh2 with eCAL"                                           ON)
 # option(ECAL_THIRDPARTY_BUILD_ZLIB              "Build zlib with eCAL"                                              ON)
@@ -464,22 +485,12 @@ if(BUILD_ECAL_TESTS)
   add_subdirectory(testing/contrib/ecalproto/ecal_proto_test)
 
   # ------------------------------------------------------
-  # test ecal
-  # ------------------------------------------------------
-  add_subdirectory(testing/ecal)
-
-  # ------------------------------------------------------
   # test apps
   # ------------------------------------------------------
   if (HAS_HDF5 AND HAS_QT)
     add_subdirectory(app/rec/rec_tests/rec_rpc_tests)
   endif()
 endif()
-
-# --------------------------------------------------------
-# configs
-# --------------------------------------------------------
-add_subdirectory(ecal/core/cfg)
 
 if(BUILD_DOCS)
   add_subdirectory(doc)

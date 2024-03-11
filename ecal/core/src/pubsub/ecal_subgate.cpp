@@ -22,7 +22,6 @@
 **/
 
 #include "pubsub/ecal_subgate.h"
-#include "ecal_sample_to_topicinfo.h"
 #include "ecal_globals.h"
 
 #include <algorithm>
@@ -240,14 +239,13 @@ namespace eCAL
     if(!m_created) return;
 
     // check topic name
-    const auto& ecal_sample = ecal_sample_.topic;
-    const std::string& topic_name = ecal_sample.tname;
+    const auto&        ecal_topic = ecal_sample_.topic;
+    const std::string& topic_name = ecal_topic.tname;
     if (topic_name.empty()) return;
 
     // store description
-    const std::string& topic_id = ecal_sample.tid;
-    const SDataTypeInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
-    ApplyTopicDescription(topic_name, topic_info);
+    const std::string& topic_id = ecal_topic.tid;
+    ApplyTopicDescription(topic_name, ecal_topic.tdatatype);
 
     // get process id
     const std::string process_id = std::to_string(ecal_sample_.topic.pid);
@@ -263,7 +261,7 @@ namespace eCAL
         iter->second->ApplyLocLayerParameter(process_id, topic_id, tlayer.type, tlayer.par_layer);
       }
       // inform for local publisher connection
-      iter->second->ApplyLocPublication(process_id, topic_id, topic_info);
+      iter->second->ApplyLocPublication(process_id, topic_id, ecal_topic.tdatatype);
     }
   }
 
@@ -272,14 +270,13 @@ namespace eCAL
     if (!m_created) return;
 
     // check topic name
-    const auto& ecal_sample = ecal_sample_.topic;
-    const std::string& topic_name = ecal_sample.tname;
-    const std::string& topic_id   = ecal_sample.tid;
-    const std::string process_id  = std::to_string(ecal_sample_.topic.pid);
+    const auto&        ecal_topic = ecal_sample_.topic;
+    const std::string& topic_name = ecal_topic.tname;
+    const std::string& topic_id   = ecal_topic.tid;
+    const std::string  process_id = std::to_string(ecal_sample_.topic.pid);
 
     // store description
-    const SDataTypeInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
-    ApplyTopicDescription(topic_name, topic_info);
+    ApplyTopicDescription(topic_name, ecal_topic.tdatatype);
 
     // unregister local publisher
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
@@ -294,12 +291,11 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    const auto& ecal_sample = ecal_sample_.topic;
-    const std::string& host_name  = ecal_sample.hname;
-    const std::string& topic_name = ecal_sample.tname;
-    const std::string& topic_id   = ecal_sample.tid;
-    const SDataTypeInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
-    const std::string  process_id = std::to_string(ecal_sample.pid);
+    const auto&        ecal_topic = ecal_sample_.topic;
+    const std::string& host_name  = ecal_topic.hname;
+    const std::string& topic_name = ecal_topic.tname;
+    const std::string& topic_id   = ecal_topic.tid;
+    const std::string  process_id = std::to_string(ecal_topic.pid);
 
     // handle external publisher connection
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
@@ -313,7 +309,7 @@ namespace eCAL
       }
 
       // inform for external publisher connection
-      iter->second->ApplyExtPublication(host_name, process_id, topic_id, topic_info);
+      iter->second->ApplyExtPublication(host_name, process_id, topic_id, ecal_topic.tdatatype);
     }
   }
 

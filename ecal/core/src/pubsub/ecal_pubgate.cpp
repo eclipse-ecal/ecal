@@ -22,7 +22,6 @@
 **/
 
 #include "ecal_pubgate.h"
-#include "ecal_sample_to_topicinfo.h"
 #include "ecal_globals.h"
 
 #include <atomic>
@@ -135,12 +134,13 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    const auto& ecal_sample = ecal_sample_.topic;
-    const std::string& topic_name = ecal_sample.tname;
+    const auto&        ecal_topic = ecal_sample_.topic;
+    const std::string& topic_name = ecal_topic.tname;
+
     CDataWriter::SLocalSubscriptionInfo subscription_info;
-    subscription_info.topic_id = ecal_sample.tid;
-    subscription_info.process_id = std::to_string(ecal_sample.pid);
-    const SDataTypeInformation topic_information{ eCALSampleToTopicInformation(ecal_sample_) };
+    subscription_info.topic_id                   = ecal_topic.tid;
+    subscription_info.process_id                 = std::to_string(ecal_topic.pid);
+    const SDataTypeInformation topic_information = ecal_topic.tdatatype;
 
     std::string reader_par;
 #if 0
@@ -188,13 +188,14 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    const auto& ecal_sample = ecal_sample_.topic;
-    const std::string& topic_name = ecal_sample.tname;
+    const auto&        ecal_topic = ecal_sample_.topic;
+    const std::string& topic_name = ecal_topic.tname;
+
     CDataWriter::SExternalSubscriptionInfo subscription_info;
-    subscription_info.host_name  = ecal_sample.hname;
-    subscription_info.topic_id   = ecal_sample.tid;
-    subscription_info.process_id = std::to_string(ecal_sample.pid);
-    const SDataTypeInformation topic_information{ eCALSampleToTopicInformation(ecal_sample_) };
+    subscription_info.host_name                  = ecal_topic.hname;
+    subscription_info.topic_id                   = ecal_topic.tid;
+    subscription_info.process_id                 = std::to_string(ecal_topic.pid);
+    const SDataTypeInformation topic_information = ecal_topic.tdatatype;
 
     std::string reader_par;
 #if 0

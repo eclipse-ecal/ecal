@@ -228,12 +228,17 @@ namespace eCAL
    *
    * @param unit_name_  Defines the name of the eCAL unit. 
    *
-   * @return  Zero if succeeded.
+   * @return  Zero if succeeded, -1 if failed.
   **/
   int SetUnitName(const char *unit_name_)
   {
-    g_unit_name = unit_name_;
-    return(0);
+    if (unit_name_ == nullptr) return -1;
+    
+    const std::string uname = unit_name_;
+    if (uname.empty()) return -1;
+ 
+    g_unit_name = uname;
+    return 0;
   }
 
   /**

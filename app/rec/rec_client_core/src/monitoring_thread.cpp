@@ -88,10 +88,13 @@ namespace eCAL
               topic_info_map_it = topic_info_map_.find(topic.tname());
             }
 
+            // Create combined encoding:type type (to be fully compatible to old behavior)
+            std::string combined_enc_type = eCAL::Util::CombinedTopicEncodingAndType(topic.tdatatype().encoding(), topic.tdatatype().name());
+
             // Evaluate the quality of the current descriptor information
             int this_topic_info_quality = 0;
 
-            if (!topic.tdesc().empty())
+            if (!topic.tdatatype().desc().empty())
             {
               this_topic_info_quality |= DESCRIPTION_AVAILABLE_QUALITYBIT;
             }
@@ -114,7 +117,7 @@ namespace eCAL
               }
             }
 
-            if (!topic.ttype().empty())
+            if (!combined_enc_type.empty())
             {
               this_topic_info_quality |= TYPE_AVAILABLE_QUALITYBIT;
             }
@@ -125,35 +128,35 @@ namespace eCAL
               if (channel_descriptor_map_it == channel_descriptor_map.end())
               {
                 // Save the new descriptor
-                channel_descriptor_map.emplace(topic.tname(), std::make_pair(this_topic_info_quality, std::make_pair(topic.ttype(), topic.tdesc())));
+                channel_descriptor_map.emplace(topic.tname(), std::make_pair(this_topic_info_quality, std::make_pair(combined_enc_type, topic.tdatatype().desc())));
               }
               else
               {
                 if(channel_descriptor_map_it->second.first < this_topic_info_quality)
                 {
                   // If the old descriptor has a lower quality than the current descriptor, we may overwrite it!
-                  channel_descriptor_map_it->second = std::make_pair(this_topic_info_quality, std::make_pair(topic.ttype(), topic.tdesc()));
+                  channel_descriptor_map_it->second = std::make_pair(this_topic_info_quality, std::make_pair(combined_enc_type, topic.tdatatype().desc()));
                 }
               }
             }
 
             // Update the type_descriptor_map (can of course only work if we have the type information available)
-            if (!topic.ttype().empty())
+            if (!combined_enc_type.empty())
             {
               int quality_for_other_channels = (this_topic_info_quality & ~INFO_COMES_FROM_CORRECT_TOPIC_QUALITYBIT);
 
-              auto type_descriptor_map_it = type_descriptor_map.find(topic.ttype());
+              auto type_descriptor_map_it = type_descriptor_map.find(combined_enc_type);
               if (type_descriptor_map_it == type_descriptor_map.end())
               {
                 // Save the new descriptor
-                type_descriptor_map.emplace(topic.ttype(), std::make_pair(quality_for_other_channels, topic.tdesc()));
+                type_descriptor_map.emplace(combined_enc_type, std::make_pair(quality_for_other_channels, topic.tdatatype().desc()));
               }
               else
               {
                 if(type_descriptor_map_it->second.first < quality_for_other_channels)
                 {
                   // If the old descriptor has a lower quality than the current descriptor, we may overwrite it!
-                  type_descriptor_map_it->second = std::make_pair(quality_for_other_channels, topic.tdesc());
+                  type_descriptor_map_it->second = std::make_pair(quality_for_other_channels, topic.tdatatype().desc());
                 }
               }
             }

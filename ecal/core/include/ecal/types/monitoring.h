@@ -18,8 +18,8 @@
 */
 
 /**
- * @file   ecal_monitoring_pb.h
- * @brief  eCAL monitoring interface using structs
+ * @file   monitoring.h
+ * @brief  eCAL monitoring struct interface
 **/
 
 #pragma once
