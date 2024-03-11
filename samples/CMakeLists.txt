@@ -28,7 +28,7 @@ endif(HAS_HDF5)
 # --------------------------------------------------------
 # measurement
 if(HAS_HDF5)
-add_subdirectory(cpp/benchmarks/measurement)
+add_subdirectory(cpp/measurement/benchmark)
 add_subdirectory(cpp/measurement/measurement_read)
 add_subdirectory(cpp/measurement/measurement_write)
 endif(HAS_HDF5)

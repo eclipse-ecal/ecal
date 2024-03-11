@@ -16,36 +16,22 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(test_dynproto)
+cmake_minimum_required(VERSION 3.10)
 
-find_package(Threads REQUIRED)
-find_package(GTest REQUIRED)
-find_package(Protobuf REQUIRED)
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
-create_targets_protobuf()
+project(benchmark_hdf5)
 
-set(dynproto_test_src
-  src/dynproto_test.cpp
-)
+find_package(eCAL REQUIRED)
 
-set(test_dynproto_proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/animal.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/attitude.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/house.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/person.proto
-)
-
-ecal_add_gtest(${PROJECT_NAME} ${dynproto_test_src})
-PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${${PROJECT_NAME}_proto})
+ecal_add_sample(${PROJECT_NAME} src/main.cpp)
 
 target_link_libraries(${PROJECT_NAME}
-  PRIVATE
-    Threads::Threads
-    eCAL::proto
-    protobuf::libprotobuf)
+  eCAL::hdf5
+)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
-ecal_install_gtest(${PROJECT_NAME})
+ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER testing/contrib/ecalproto)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/measurement)

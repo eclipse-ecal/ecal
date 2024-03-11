@@ -25,4 +25,4 @@ ecal_add_sample(minimal_client_cs minimal_client.cs)
 
 target_link_libraries(minimal_client_cs PRIVATE Continental.eCAL.Core)
 
-set_property(TARGET minimal_client_cs PROPERTY FOLDER samples/csharp/services)
+set_property(TARGET minimal_client_cs PROPERTY FOLDER samples/csharp/services/minimal)

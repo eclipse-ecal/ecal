@@ -16,7 +16,7 @@ run-host: build-host
 	docker run --rm -it \
 		-u $(shell id -u):$(shell id -u) \
 		-v $(PWD)/../../..:/workspaces/ecal \
-		-w /workspaces/ecal/testing/contrib/cross \
+		-w /workspaces/ecal/tests/contrib/cross \
 		ecal-crossbuild-host \
 		/bin/bash
 

@@ -16,22 +16,24 @@
 #
 # ========================= eCAL LICENSE =================================
 
-cmake_minimum_required(VERSION 3.10)
+project(test_hdf5)
 
-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
+find_package(Threads REQUIRED)
+find_package(GTest REQUIRED)
 
-project(benchmark_hdf5)
+set(hdf5_test_src
+  src/hdf5_test.cpp
+)
 
-find_package(eCAL REQUIRED)
-
-ecal_add_sample(${PROJECT_NAME} src/main.cpp)
+ecal_add_gtest(${PROJECT_NAME} ${hdf5_test_src})
 
 target_link_libraries(${PROJECT_NAME}
-  eCAL::hdf5
-)
+  PRIVATE
+    eCAL::hdf5
+    Threads::Threads)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
-ecal_install_sample(${PROJECT_NAME})
+ecal_install_gtest(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/benchmarks/measurement)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/contrib/ecalhdf5)

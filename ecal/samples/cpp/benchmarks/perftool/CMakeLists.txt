@@ -53,4 +53,4 @@ source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
 
 ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER core/samples/cpp/benchmarks/perftool)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/benchmarks/perftool)
