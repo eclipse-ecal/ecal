@@ -16,36 +16,24 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(test_dynproto)
+project(test_hdf5)
 
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
-find_package(Protobuf REQUIRED)
 
-create_targets_protobuf()
-
-set(dynproto_test_src
-  src/dynproto_test.cpp
+set(hdf5_test_src
+  src/hdf5_test.cpp
 )
 
-set(test_dynproto_proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/animal.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/attitude.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/house.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/person.proto
-)
-
-ecal_add_gtest(${PROJECT_NAME} ${dynproto_test_src})
-PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${${PROJECT_NAME}_proto})
+ecal_add_gtest(${PROJECT_NAME} ${hdf5_test_src})
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
-    Threads::Threads
-    eCAL::proto
-    protobuf::libprotobuf)
+    eCAL::hdf5
+    Threads::Threads)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_gtest(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER testing/contrib/ecalproto)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/contrib/ecalhdf5)
