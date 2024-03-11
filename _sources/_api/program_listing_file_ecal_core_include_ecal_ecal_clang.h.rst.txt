@@ -109,7 +109,7 @@ Program Listing for File ecal_clang.h
    /*************************************************************************/
    /*  publisher                                                            */
    /*************************************************************************/
-   ECAL_API ECAL_HANDLE pub_create(const char* topic_name_, const char* topic_type_);
+   ECAL_API ECAL_HANDLE pub_create(const char* topic_name_, const char* topic_type_, const char* topic_enc_, const char* topic_desc_, const int topic_desc_length_);
    
    ECAL_API bool pub_destroy(ECAL_HANDLE handle_);
    
@@ -122,7 +122,7 @@ Program Listing for File ecal_clang.h
    /*************************************************************************/
    /*  subscriber                                                           */
    /*************************************************************************/
-   ECAL_API ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_);
+   ECAL_API ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_, const char* topic_enc_, const char* topic_desc_, const int topic_desc_length_);
    
    ECAL_API bool sub_destroy(ECAL_HANDLE handle_);
    

@@ -117,7 +117,7 @@ Functions
 
 - :ref:`exhale_function_ecal__clang_8h_1af186616e05b698e4d10b2c8011eac492`
 
-- :ref:`exhale_function_ecal__clang_8h_1ab77da4eb0646292a113b9025a2dd38c7`
+- :ref:`exhale_function_ecal__clang_8h_1ada51627158cf7e68defa9dbe932e8e1f`
 
 - :ref:`exhale_function_ecal__clang_8h_1a02d6437f4a1da37f22bfd7d9efbf3f15`
 
@@ -137,7 +137,7 @@ Functions
 
 - :ref:`exhale_function_ecal__clang_8h_1ac1cec86ceba5a369409f33a2fdc238c2`
 
-- :ref:`exhale_function_ecal__clang_8h_1a1831f04989002bff9548bfc18f35bcc0`
+- :ref:`exhale_function_ecal__clang_8h_1ab7965030562d4f0b3fcb86c7f6a7a787`
 
 - :ref:`exhale_function_ecal__clang_8h_1afe3c3a74ccfa61f0d811befc8d40f60a`
 

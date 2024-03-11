@@ -1,4 +1,4 @@
-.. _exhale_function_ecal__clang_8h_1a1831f04989002bff9548bfc18f35bcc0:
+.. _exhale_function_ecal__clang_8h_1ab7965030562d4f0b3fcb86c7f6a7a787:
 
 Function sub_create
 ===================
@@ -10,5 +10,5 @@ Function Documentation
 ----------------------
 
 
-.. doxygenfunction:: sub_create(const char *, const char *)
+.. doxygenfunction:: sub_create(const char *, const char *, const char *, const char *, const int)
    :project: eCAL

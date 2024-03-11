@@ -1,4 +1,4 @@
-.. _exhale_function_ecal__clang_8h_1ab77da4eb0646292a113b9025a2dd38c7:
+.. _exhale_function_ecal__clang_8h_1ada51627158cf7e68defa9dbe932e8e1f:
 
 Function pub_create
 ===================
@@ -10,5 +10,5 @@ Function Documentation
 ----------------------
 
 
-.. doxygenfunction:: pub_create(const char *, const char *)
+.. doxygenfunction:: pub_create(const char *, const char *, const char *, const char *, const int)
    :project: eCAL
