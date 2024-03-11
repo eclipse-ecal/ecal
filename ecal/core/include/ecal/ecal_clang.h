@@ -231,12 +231,15 @@ ECAL_API void log_message(const char* message_);
 /**
  * @brief Create a publisher.
  *
- * @param topic_name_      Unique topic name.
- * @param topic_type_      Topic type name.
+ * @param topic_name_         Unique topic name.
+ * @param topic_type_         Topic type name.
+ * @param topic_enc_          Topic type encoding.
+ * @param topic_desc_         Topic type description.
+ * @param topic_desc_length_  Topic type description length.
  *
  * @return  Handle of the created publisher or NULL if failed.
 **/
-ECAL_API ECAL_HANDLE pub_create(const char* topic_name_, const char* topic_type_);
+ECAL_API ECAL_HANDLE pub_create(const char* topic_name_, const char* topic_type_, const char* topic_enc_, const char* topic_desc_, const int topic_desc_length_);
 
 /**
  * @brief Destroy a publisher. 
@@ -287,12 +290,15 @@ ECAL_API bool pub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Ev
 /**
 * @brief Create a subscriber.
  *
- * @param topic_name_      Unique topic name.
- * @param topic_type_      Topic type name.
+ * @param topic_name_         Unique topic name.
+ * @param topic_type_         Topic type name.
+ * @param topic_enc_          Topic type encoding.
+ * @param topic_desc_         Topic type description.
+ * @param topic_desc_length_  Topic type description length.
  *
  * @return  Handle of the created subscriber or NULL if failed.
 **/
-ECAL_API ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_);
+ECAL_API ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_, const char* topic_enc_, const char* topic_desc_, const int topic_desc_length_);
 
 /**
  * @brief Destroy a subscriber.

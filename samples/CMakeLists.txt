@@ -69,7 +69,6 @@ if(BUILD_PY_BINDING)
     # pubsub
     add_subdirectory(python/pubsub/protobuf/person_rec)
     add_subdirectory(python/pubsub/protobuf/person_rec_cb)
-    add_subdirectory(python/pubsub/protobuf/person_rec_json)  
     add_subdirectory(python/pubsub/protobuf/person_snd)
     add_subdirectory(python/pubsub/string/minimal_rec)
     add_subdirectory(python/pubsub/string/minimal_rec_cb)

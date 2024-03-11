@@ -312,13 +312,16 @@ PyObject* log_message(PyObject* /*self*/, PyObject* args)
 /****************************************/
 PyObject* pub_create(PyObject* /*self*/, PyObject* args)
 {
-  char* topic_name = nullptr;
-  char* topic_type = nullptr;
+  char*       topic_name     = nullptr;
+  char*       topic_type     = nullptr;
+  char*       topic_enc      = nullptr;
+  char*       topic_desc     = nullptr;
+  Py_ssize_t  topic_desc_len = 0;
 
-  if (!PyArg_ParseTuple(args, "ss", &topic_name, &topic_type)) 
+  if (!PyArg_ParseTuple(args, "sssy#", &topic_name, &topic_type, &topic_enc, &topic_desc, &topic_desc_len))
     return nullptr;
 
-  return(PyAnswerHandle(pub_create(topic_name, topic_type)));
+  return(PyAnswerHandle(pub_create(topic_name, topic_type, topic_enc, topic_desc, (int)topic_desc_len)));
 }
 
 /****************************************/
@@ -361,18 +364,22 @@ PyObject* pub_send(PyObject* /*self*/, PyObject* args)
 /****************************************/
 PyObject* sub_create(PyObject* /*self*/, PyObject* args)
 {
-  char* topic_name = nullptr;
-  char* topic_type = nullptr;
+  char*       topic_name     = nullptr;
+  char*       topic_type     = nullptr;
+  char*       topic_enc      = nullptr;
+  char*       topic_desc     = nullptr;
+  Py_ssize_t  topic_desc_len = 0;
 
-  if (!PyArg_ParseTuple(args, "ss", &topic_name, &topic_type)) 
+  if (!PyArg_ParseTuple(args, "sssy#", &topic_name, &topic_type, &topic_enc, &topic_desc, &topic_desc_len))
     return nullptr;
 
   ECAL_HANDLE sub{ nullptr };
   Py_BEGIN_ALLOW_THREADS
-    sub = sub_create(topic_name, topic_type);
+    sub = sub_create(topic_name, topic_type, topic_enc, topic_desc, (int)topic_desc_len);
   Py_END_ALLOW_THREADS
-  return(PyAnswerHandle(sub));
+    return(PyAnswerHandle(sub));
 }
+
 
 /****************************************/
 /*      sub_destroy                     */
@@ -1300,12 +1307,12 @@ static PyMethodDef _ecal_methods[] =
   {"log_setlevel",                  log_setlevel,                  METH_VARARGS,  "log_setlevel(level)"},
   {"log_message",                   log_message,                   METH_VARARGS,  "log_message(message)"},
 
-  {"pub_create",                    pub_create,                    METH_VARARGS,  "pub_create(topic_name, topic_type)"},
+  {"pub_create",                    pub_create,                    METH_VARARGS,  "pub_create(topic_name, topic_type, topic_encoding, topic_desc)"},
   {"pub_destroy",                   pub_destroy,                   METH_VARARGS,  "pub_destroy(topic_handle)"},
 
   {"pub_send",                      pub_send,                      METH_VARARGS,  "pub_send(topic_handle, payload, time)"},
 
-  {"sub_create",                    sub_create,                    METH_VARARGS,  "sub_create(topic_name, topuic_type)"},
+  {"sub_create",                    sub_create,                    METH_VARARGS,  "sub_create(topic_name, topic_type, topic_encoding, topic_desc)"},
   {"sub_destroy",                   sub_destroy,                   METH_VARARGS,  "sub_destroy(topic_handle)"},
 
   {"sub_receive",                   sub_receive,                   METH_VARARGS,  "sub_receive(topic_handle, timeout)"},
