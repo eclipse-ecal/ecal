@@ -67,4 +67,4 @@ namespace eCAL
     std::shared_ptr<CAsioServer>       m_server;
     std::thread                        m_server_thread;
   };
-};
+}
