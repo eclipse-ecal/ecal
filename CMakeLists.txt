@@ -127,6 +127,9 @@ option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL" 
 option(ECAL_THIRDPARTY_BUILD_FINEFTP           "Build fineFTP with eCAL"                                           ON)
 option(ECAL_THIRDPARTY_BUILD_FTXUI             "Build ftxui with eCAL"                                             ON)
 option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"                                            OFF)
+if (BUILD_PY_BINDING)
+option(ECAL_THIRDPARTY_BUILD_NANOBIND          "Build nanobind with eCAL"                                          ON)
+endif()
 option(ECAL_THIRDPARTY_BUILD_RECYCLE           "Build steinwurf::recylce with eCAL"                                ON)
 option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                            ON)
 option(ECAL_THIRDPARTY_BUILD_SIMPLEINI         "Build simpleini with eCAL"                                         ON)
@@ -223,6 +226,7 @@ set(possible_subprojects
   GTest
   HDF5
   #libssh2
+  nanobind
   Protobuf
   qwt
   recycle

@@ -55,3 +55,6 @@
 [submodule "thirdparty/udpcap"]
 	path = thirdparty/udpcap/udpcap
 	url = https://github.com/eclipse-ecal/udpcap.git
+[submodule "thirdparty/nanobind/nanobind"]
+	path = thirdparty/nanobind/nanobind
+	url = https://github.com/wjakob/nanobind.git

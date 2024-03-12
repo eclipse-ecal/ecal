@@ -64,6 +64,7 @@ else()
 endif()
 
 add_subdirectory(core)
+add_subdirectory(nanobind_core)
 if(HAS_HDF5)
   add_subdirectory(ecalhdf5)
 endif()

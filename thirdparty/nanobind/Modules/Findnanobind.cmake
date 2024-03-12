@@ -1,0 +1,1 @@
+set(nanobind_FOUND TRUE)
