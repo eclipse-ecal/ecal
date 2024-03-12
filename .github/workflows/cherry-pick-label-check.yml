@@ -6,7 +6,7 @@ on:
       - labeled
       - unlabeled
     branches:
-      - main
+      - master
 
 jobs:
   cherry-pick-label-check:
