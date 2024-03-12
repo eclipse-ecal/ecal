@@ -143,7 +143,9 @@ jobs:
           echo "git branch -u origin/${{ env.cherry_pick_branch }}" >> $GITHUB_OUTPUT
           echo "git cherry-pick ${{ github.event.before }}..${{ github.event.after }}" >> $GITHUB_OUTPUT
           echo "" >> $GITHUB_OUTPUT
-          echo "# Resolve conflicts and use git cherry-pick --contiue until all conflicts are resolved" >> $GITHUB_OUTPUT
+          echo "# Resolve conflicts and use" >> $GITHUB_OUTPUT
+          echo "#     git cherry-pick --continue" >> $GITHUB_OUTPUT
+          echo "# until all conflicts are resolved." >> $GITHUB_OUTPUT
           echo "" >> $GITHUB_OUTPUT
           echo "git push -f origin HEAD:${{ env.cherry_pick_branch }}" >> $GITHUB_OUTPUT
           echo "\`\`\`" >> $GITHUB_OUTPUT
