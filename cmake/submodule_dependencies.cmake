@@ -13,6 +13,7 @@ set(ecal_submodule_dependencies
   GTest
   HDF5
   #libssh2
+  nanobind
   Protobuf
   qwt
   recycle
