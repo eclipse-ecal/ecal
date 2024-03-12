@@ -23,6 +23,14 @@ set(python_samples_core
   core/service/minimal_service_server.py
 )
 
+set(python_samples_nanobind_core
+  nanobind_core/pubsub/nb_binary_rec.py
+  nanobind_core/pubsub/nb_binary_rec_cb.py
+  nanobind_core/pubsub/nb_binary_snd.py
+  nanobind_core/service/nb_minimal_service_client.py
+  nanobind_core/service/nb_minimal_service_server.py
+)
+
 function(add_sample_to_solution python_filenname)
   cmake_path(GET python_filenname PARENT_PATH subfolder)
   cmake_path(GET python_filenname STEM        stem)
@@ -40,7 +48,13 @@ if(ECAL_PYTHON_USE_HDF5)
   endforeach()
 endif()
 
+# Core samples
 foreach(python_sample ${python_samples_core})
+  add_sample_to_solution(${python_sample})
+endforeach()
+
+# Nanobind samples
+foreach(python_sample ${python_samples_nanobind_core})
   add_sample_to_solution(${python_sample})
 endforeach()
 endif()
