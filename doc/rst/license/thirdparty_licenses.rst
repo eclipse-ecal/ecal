@@ -149,6 +149,13 @@ They are used by Eclipse eCAL, but not associated to it in any way.
      - - |fa-file-alt| Copy in repository: :file:`/cpack/innosetup/modpath.iss`
        - |fa-windows| Binary distributions for Windows (Installer only)
 
+   * - `nanobind <https://github.com/wjakob/nanobind>`_
+     - :ref:`bsd_3`
+     - 2022, Wenzel Jakob
+     - - |fa-github| Git submodule ``/tirdparty/nanobind``
+       - |fa-windows| Binary distributions for Windows
+       - |fa-ubuntu| Binary distributions for Linux
+
    * - `nanopb <https://github.com/nanopb/nanopb>`_
      - :ref:`zlib_license`
      - 2011 Petteri Aimonen \<jpa at nanopb.mail.kapsi.fi\>

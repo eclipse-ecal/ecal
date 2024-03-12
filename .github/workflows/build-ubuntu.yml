@@ -59,7 +59,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        submodules:  'false'
+        submodules:  'recursive'
         fetch-depth: 0
         filter: 'tree:0' # Download all commits but blobs and trees on demand
 
