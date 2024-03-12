@@ -69,6 +69,8 @@
       "cacheVariables": {
         "HAS_HDF5": "ON",
         "BUILD_PY_BINDING": "ON",
+        "BUILD_APPS": "OFF",
+        "BUILD_SAMPLES": "OFF",
         "BUILD_SHARED": "OFF",
         "ECAL_THIRDPARTY_BUILD_HDF5": "ON"
       }

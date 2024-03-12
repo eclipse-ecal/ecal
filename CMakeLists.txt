@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -489,6 +489,7 @@ message(STATUS "ECAL_THIRDPARTY_BUILD_FINEFTP                  : ${ECAL_THIRDPAR
 message(STATUS "ECAL_THIRDPARTY_BUILD_FTXUI                    : ${ECAL_THIRDPARTY_BUILD_FTXUI}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_GTEST                    : ${ECAL_THIRDPARTY_BUILD_GTEST}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_HDF5                     : ${ECAL_THIRDPARTY_BUILD_HDF5}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_NANOBIND                 : ${ECAL_THIRDPARTY_BUILD_NANOBIND}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_PROTOBUF                 : ${ECAL_THIRDPARTY_BUILD_PROTOBUF}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_QWT                      : ${ECAL_THIRDPARTY_BUILD_QWT}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_RECYCLE                  : ${ECAL_THIRDPARTY_BUILD_RECYCLE}")
