@@ -3,7 +3,7 @@ sphinx-book-theme==1.1.2
 sphinx-tabs==3.4.5
 PyGithub
 autodoc
-empy
+empy==3.3.4           # The empy_helpers are incompatible with Empy 4.0. Also see this issue: https://github.com/ros2/rosidl/issues/779
 semantic-version 
 exhale
 Jinja2
