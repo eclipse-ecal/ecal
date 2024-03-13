@@ -65,8 +65,7 @@ namespace eCAL
                  m_receive_timeout(0),
                  m_receive_time(0),
                  m_clock(0),
-                 m_clock_old(0),
-                 m_freq(0),
+                 m_frequency_calculator(3.0f),
                  m_message_drops(0),
                  m_loc_published(false),
                  m_ext_published(false),
@@ -94,9 +93,7 @@ namespace eCAL
     m_topic_id.clear();
     m_topic_info    = topic_info_;
     m_clock         = 0;
-    m_clock_old     = 0;
     m_message_drops = 0;
-    m_rec_time      = std::chrono::steady_clock::time_point();
     m_created       = false;
 #ifndef NDEBUG
     // log it
@@ -160,10 +157,7 @@ namespace eCAL
     // reset defaults
     m_created                 = false;
     m_clock                   = 0;
-    m_clock_old               = 0;
-    m_freq                    = 0;
     m_message_drops           = 0;
-    m_rec_time                = std::chrono::steady_clock::time_point();
 
     m_use_udp_mc_confirmed    = false;
     m_use_shm_confirmed       = false;
@@ -281,7 +275,7 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_pname(m_pname);
     ecal_reg_sample_mutable_topic->set_uname(Process::GetUnitName());
     ecal_reg_sample_mutable_topic->set_dclock(m_clock);
-    ecal_reg_sample_mutable_topic->set_dfreq(m_freq);
+    ecal_reg_sample_mutable_topic->set_dfreq(GetFrequency());
     ecal_reg_sample_mutable_topic->set_message_drops(google::protobuf::int32(m_message_drops));
 
     size_t loc_connections(0);
@@ -489,6 +483,13 @@ namespace eCAL
 
     // increase read clock
     m_clock++;
+
+    // Update frequency calculation
+    {
+      const auto receive_time = std::chrono::steady_clock::now();
+      const std::lock_guard<std::mutex> freq_lock(m_frequency_calculator_mutex);
+      m_frequency_calculator.addTick(receive_time);
+    }
 
     // reset timeout
     m_receive_time = 0;
@@ -903,6 +904,13 @@ namespace eCAL
     // should never be reached
     return false;
   }
+
+  int32_t CDataReader::GetFrequency()
+  {
+    const auto frequency_time = std::chrono::steady_clock::now();
+    const std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
+    return static_cast<int32_t>(m_frequency_calculator.getFrequency(frequency_time) * 1000);
+  }
     
   void CDataReader::RefreshRegistration()
   {
@@ -910,30 +918,6 @@ namespace eCAL
 
     // ensure that registration is not called within zero nanoseconds
     // normally it will be called from registration logic every second
-    auto curr_time = std::chrono::steady_clock::now();
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - m_rec_time) > std::chrono::milliseconds(0))
-    {
-      // reset clock and time on first call
-      if (m_clock_old == 0)
-      {
-        m_clock_old = m_clock;
-        m_rec_time  = curr_time;
-      }
-
-      // check for clock difference
-      else if ((m_clock - m_clock_old) > 0)
-      {
-        // calculate frequency in mHz
-        m_freq = static_cast<long>((1000 * 1000 * (m_clock - m_clock_old)) / std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - m_rec_time).count());
-        // reset clock and time
-        m_clock_old = m_clock;
-        m_rec_time  = curr_time;
-      }
-      else
-      {
-        m_freq = 0;
-      }
-    }
 
     // register without send
     Register(false);
@@ -996,6 +980,7 @@ namespace eCAL
   {
     std::stringstream out;
 
+
     out << std::endl;
     out << indent_ << "------------------------------------"                                       << std::endl;
     out << indent_ << " class CDataReader "                                                        << std::endl;
@@ -1012,8 +997,7 @@ namespace eCAL
     out << indent_ << "m_read_buf.size():                  " << m_read_buf.size()                  << std::endl;
     out << indent_ << "m_read_time:                        " << m_read_time                        << std::endl;
     out << indent_ << "m_clock:                            " << m_clock                            << std::endl;
-    out << indent_ << "m_rec_time:                         " << std::chrono::duration_cast<std::chrono::milliseconds>(m_rec_time.time_since_epoch()).count() << std::endl;
-    out << indent_ << "m_freq:                             " << m_freq                             << std::endl;
+    out << indent_ << "frequency [mHz]:                    " << GetFrequency()                     << std::endl;
     out << indent_ << "m_created:                          " << m_created                          << std::endl;
     out << std::endl;
 

@@ -311,6 +311,7 @@ set(ecal_util_src
     src/util/convert_utf.h
     src/util/ecal_expmap.h
     src/util/ecal_thread.h
+    src/util/frequency_calculator.h
     src/util/getenvvar.h
     src/util/sys_usage.cpp
     src/util/sys_usage.h
