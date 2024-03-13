@@ -24,6 +24,10 @@
 
      - * **API**: downwards compatible.
          
+         A lot of deprecations were added.
+         Users should make sure to only use non-deprecated API and files in order to later make upgrading to eCAL 6 easier.
+         Deprecations can be found :ref:`in this document <compatibility_details_5_13_deprecations>`
+         
        * **ABI**: not compatible
 
    * - Tools
