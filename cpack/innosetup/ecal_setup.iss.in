@@ -141,7 +141,6 @@ Name: "{commondesktop}\eCAL Launcher";                Filename: "{app}\bin\ecal_
 ; Root key HKA is only available in Version 6 and above
 ; In Case of Non-Admin install mode, HKA will be resolved to HKCU, otherwise HKLM - see https://jrsoftware.org/ishelp/index.php?topic=setup_privilegesrequiredoverridesallowed
 Root: HKA; Subkey: {code:GetEnvironmentSubkey};                         ValueType: string; ValueName: "ECAL_HOME"; ValueData: "{app}";                                  Flags: uninsdeletevalue; Components: applications
-Root: HKA; Subkey: {code:GetEnvironmentSubkey};                         ValueType: string; ValueName: "ECAL_DATA"; ValueData: "{commonappdata}\eCAL";                   Flags: uninsdeletevalue; Components: applications
 
 Root: HKA; Subkey: "SOFTWARE\Classes\.ecalrec";                         ValueType: string; ValueName: "";          ValueData: "ecal_rec_gui";                           Flags: uninsdeletevalue; Components: applications
 Root: HKA; Subkey: "SOFTWARE\Classes\ecal_rec_gui";                     ValueType: string; ValueName: "";          ValueData: "eCAL Recorder Configuration";            Flags: uninsdeletekey;   Components: applications
