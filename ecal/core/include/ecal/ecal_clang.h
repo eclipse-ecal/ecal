@@ -26,19 +26,23 @@
 #define ECAL_CLANG_H_INCLUDED
 
 #include <ecal/ecalc.h>
+#include <ecal/ecal_deprecate.h>
 
 /*************************************************************************/
 /*  common                                                               */
 /*************************************************************************/
 /**
  * @brief  Get eCAL version string.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @return  Full eCAL version string.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API const char* ecal_getversion();
 
 /**
  * @brief  Get eCAL version as separated integer values.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param [out] major_  The eCAL major version number.
  * @param [out] minor_  The eCAL minor version number.
@@ -46,17 +50,21 @@ ECAL_API const char* ecal_getversion();
  *
  * @return  Zero if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API int ecal_getversion_components(int* major_, int* minor_, int* patch_);
 
 /**
  * @brief  Get eCAL version date.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @return  Full eCAL version date string.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API const char* ecal_getdate();
 
 /**
  * @brief Initialize eCAL API.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param argc_        Number of command line arguments.
  * @param argv_        Array of command line arguments.
@@ -64,46 +72,57 @@ ECAL_API const char* ecal_getdate();
  *
  * @return Zero if succeeded, 1 if already initialized, -1 if failed.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API int ecal_initialize(int argc_, char **argv_, const char* unit_name_);
 
 /**
  * @brief Finalize eCAL API.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @return Zero if succeeded, 1 if already initialized, -1 if failed.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API int ecal_finalize();
 
 /**
  * @brief Check eCAL initialize state.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @return 1 if eCAL is initialized.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API int ecal_is_initialized();
 
 /**
  * @brief  Set/change the unit name of current module.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param unit_name_  Defines the name of the eCAL unit.
  *
  * @return  Zero if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API int ecal_set_unit_name(const char *unit_name_);
 
 /**
  * @brief  Set process state info.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param severity_  Severity.
  * @param level_     Severity level.
  * @param info_      Info message.
  *
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API void ecal_set_process_state(const int severity_, const int level_, const char* info_);
 
 /**
  * @brief Return the eCAL process state.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @return  True if eCAL is in proper state.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool ecal_ok();
 
 /**
@@ -111,6 +130,7 @@ ECAL_API bool ecal_ok();
  *         mon_get_monitoring, mon_get_logging,
  *         sub_receive, that let eCAL allocate
  *         the memory internally.
+ * @deprecated Will be removed in future eCAL versions.
 **/
 /**
  * @code
@@ -130,50 +150,64 @@ ECAL_API bool ecal_ok();
  *            }
  * @endcode
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API void ecal_free_mem(void* mem_);
 
 /**
  * @brief  Sleep current thread.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param  time_ms_  Time to sleep in ms.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API void ecal_sleep_ms(const long time_ms_);
 
 /**
  * @brief Send shutdown event to specified local user process using it's unit name.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param unit_name_  Process unit name.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API void ecal_shutdown_process_uname(const char* unit_name_);
 
 /**
  * @brief Send shutdown event to specified local user process using it's process id.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param process_id_  Process id.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API void ecal_shutdown_process_id(const int process_id_);
 
 /**
  * @brief Send shutdown event to all local user processes.
+ * @deprecated Will be removed in future eCAL versions.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API void ecal_shutdown_processes();
 
 /**
  * @brief Send shutdown event to all local core components.
+ * @deprecated Will be removed in future eCAL versions.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API void ecal_shutdown_core();
 
 /**
  * @brief Enable eCAL message loop back,
  *          that means subscriber will receive messages from
  *          publishers of the same process (default == false).
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param state_  Switch on message loop back..
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API void ecal_enable_loopback(const int state_);
 
 /**
  * @brief Gets type name of the specified topic.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param       topic_name_      Topic name.
  * @param [out] topic_type_      Pointer to store the type name information.
@@ -182,10 +216,12 @@ ECAL_API void ecal_enable_loopback(const int state_);
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool ecal_get_type_name(const char* topic_name_, const char** topic_type_, int* topic_type_len_);
 
 /**
  * @brief Gets type description of the specified topic.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param       topic_name_      Topic name.
  * @param [out] topic_desc_      Pointer to store the type description information.
@@ -194,6 +230,7 @@ ECAL_API bool ecal_get_type_name(const char* topic_name_, const char** topic_typ
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool ecal_get_description(const char* topic_name_, const char** topic_desc_, int* topic_desc_len_);
 
 /*************************************************************************/
@@ -201,23 +238,29 @@ ECAL_API bool ecal_get_description(const char* topic_name_, const char** topic_d
 /*************************************************************************/
 /**
  * @brief Sets the log level.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param level_  The level.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API void log_setlevel(const int level_);
 
 /**
  * @brief Set the current measured core time in s (for user implemented measuring).
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param time_  The core time.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API void log_setcoretime(const double time_);
 
 /**
  * @brief Log a message (with current log level).
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param message_  The log message string.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API void log_message(const char* message_);
 
 /*************************************************************************/
@@ -225,25 +268,30 @@ ECAL_API void log_message(const char* message_);
 /*************************************************************************/
 /**
  * @brief Create a publisher.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param topic_name_      Unique topic name.
  * @param topic_type_      Topic type name.
  *
  * @return  Handle of the created publisher or NULL if failed.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API ECAL_HANDLE pub_create(const char* topic_name_, const char* topic_type_);
 
 /**
  * @brief Destroy a publisher. 
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_  Publisher handle. 
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool pub_destroy(ECAL_HANDLE handle_);
 
 /**
  * @brief Setup topic type name.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_                  Publisher handle.
  * @param topic_type_name_         Topic type name.
@@ -251,10 +299,12 @@ ECAL_API bool pub_destroy(ECAL_HANDLE handle_);
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool pub_set_type_name(ECAL_HANDLE handle_, const char* topic_type_name_, const int topic_type_name_length_);
 
 /**
  * @brief Setup topic type description.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_             Publisher handle.
  * @param topic_desc_         Topic type description.
@@ -262,6 +312,7 @@ ECAL_API bool pub_set_type_name(ECAL_HANDLE handle_, const char* topic_type_name
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_);
 
 /**
@@ -273,6 +324,7 @@ ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, 
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool pub_set_qos(ECAL_HANDLE handle_, struct SWriterQOSC qos_);
 
 /**
@@ -284,10 +336,12 @@ ECAL_API bool pub_set_qos(ECAL_HANDLE handle_, struct SWriterQOSC qos_);
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool pub_get_qos(ECAL_HANDLE handle_, struct SWriterQOSC* qos_);
 
 /**
  * @brief Set publisher send mode for specific transport layer.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_  Publisher handle.
  * @param layer_   Transport layer.
@@ -295,20 +349,24 @@ ECAL_API bool pub_get_qos(ECAL_HANDLE handle_, struct SWriterQOSC* qos_);
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool pub_set_layer_mode(ECAL_HANDLE handle_, const int layer_, const int mode_);
 
 /**
  * @brief Set publisher maximum transmit bandwidth for the udp layer.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_     Publisher handle.
  * @param bandwidth_  Maximum bandwidth in bytes/s (-1 == unlimited).
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool pub_set_max_bandwidth_udp(ECAL_HANDLE handle_, long bandwidth_);
 
 /**
  * @brief Send a message to all subscribers.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_   Publisher handle.
  * @param payload_  Buffer that contains content to send.
@@ -317,10 +375,12 @@ ECAL_API bool pub_set_max_bandwidth_udp(ECAL_HANDLE handle_, long bandwidth_);
  *
  * @return  Number of bytes sent.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API int pub_send(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_);
 
 /**
  * @brief Send a message to all subscribers synchronized with acknowledge timeout.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.
  *
@@ -332,10 +392,12 @@ ECAL_API int pub_send(ECAL_HANDLE handle_, const char* payload_, const int lengt
  *
  * @return  Number of bytes sent.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API int pub_send_sync(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_, const long long acknowledge_timeout_ms_);
 
 /**
  * @brief Add callback function for publisher events.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_    Publisher handle.
  * @param type_      The event type to react on.
@@ -344,38 +406,45 @@ ECAL_API int pub_send_sync(ECAL_HANDLE handle_, const char* payload_, const int 
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool pub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, const PubEventCallbackCT callback_, void* par_);
 
 /**
  * @brief Remove callback function for publisher events.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_  Publisher handle.
  * @param type_    The event type to remove.
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool pub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_);
 
 /*************************************************************************/
 /*  subscriber                                                           */
 /*************************************************************************/
 /**
-* @brief Create a subscriber.
+ * @brief Create a subscriber.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param topic_name_      Unique topic name.
  * @param topic_type_      Topic type name.
  *
  * @return  Handle of the created subscriber or NULL if failed.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_);
 
 /**
  * @brief Destroy a subscriber.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_  Subscriber handle.
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool sub_destroy(ECAL_HANDLE handle_);
 
 /**
@@ -387,6 +456,7 @@ ECAL_API bool sub_destroy(ECAL_HANDLE handle_);
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool sub_set_qos(ECAL_HANDLE handle_, struct SReaderQOSC qos_);
 
 /**
@@ -398,10 +468,12 @@ ECAL_API bool sub_set_qos(ECAL_HANDLE handle_, struct SReaderQOSC qos_);
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool sub_get_qos(ECAL_HANDLE handle_, struct SReaderQOSC* qos_);
 
 /**
  * @brief Receive a message from the publisher.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param       handle_       Subscriber handle.
  * @param [out] rcv_buf_      Buffer to store the received message content.
@@ -412,10 +484,12 @@ ECAL_API bool sub_get_qos(ECAL_HANDLE handle_, struct SReaderQOSC* qos_);
  *
  * @return  Length of received buffer.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_);
 
 /**
  * @brief Receive a message from the publisher (able to process zero length buffer).
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param       handle_       Subscriber handle.
  * @param [out] rcv_buf_      Buffer to store the received message content.
@@ -426,10 +500,12 @@ ECAL_API int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_bu
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_);
 
 /**
  * @brief Add callback function for incoming receives.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_    Subscriber handle.
  * @param callback_  The callback function to add.
@@ -437,19 +513,23 @@ ECAL_API bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool sub_add_receive_callback(ECAL_HANDLE handle_, const ReceiveCallbackCT callback_, void* par_);
 
 /**
  * @brief Remove callback function for incoming receives.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param  handle_  Subscriber handle.
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool sub_rem_receive_callback(ECAL_HANDLE handle_);
 
 /**
  * @brief Add callback function for subscriber events.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_    Subscriber handle.
  * @param type_      The event type to react on.
@@ -458,27 +538,32 @@ ECAL_API bool sub_rem_receive_callback(ECAL_HANDLE handle_);
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool sub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_, const SubEventCallbackCT callback_, void* par_);
 
 /**
  * @brief Remove callback function for subscriber events.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_  Subscriber handle.
  * @param type_    The event type to remove.
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool sub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_);
 
 /**
  * @brief Set the timeout parameter for triggering
  *          the timeout callback.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_   Subscriber handle.
  * @param timeout_  The timeout in milliseconds.
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool sub_set_timeout(ECAL_HANDLE handle_, int timeout_);
 
 /*************************************************************************/
@@ -486,24 +571,29 @@ ECAL_API bool sub_set_timeout(ECAL_HANDLE handle_, int timeout_);
 /*************************************************************************/
 /**
  * @brief Create a subscriber.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param topic_name_  Unique topic name.
  *
  * @return  Handle to created subscriber or NULL if failed.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API ECAL_HANDLE dyn_json_sub_create(const char* topic_name_);
 
 /**
  * @brief Destroy a subscriber.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_  Subscriber handle.
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool dyn_json_sub_destroy(ECAL_HANDLE handle_);
 
 /**
  * @brief Add callback function for incoming receives.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_    Subscriber handle.
  * @param callback_  The callback function to add.
@@ -511,15 +601,18 @@ ECAL_API bool dyn_json_sub_destroy(ECAL_HANDLE handle_);
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool dyn_json_sub_add_receive_callback(ECAL_HANDLE handle_, const ReceiveCallbackCT callback_, void* par_);
 
 /**
  * @brief Remove callback function for incoming receives.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param  handle_  Subscriber handle.
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool dyn_json_sub_rem_receive_callback(ECAL_HANDLE handle_);
 
 /* TODO: not implemented and not used for now */
@@ -532,24 +625,29 @@ ECAL_API bool dyn_json_sub_rem_receive_callback(ECAL_HANDLE handle_);
 /*************************************************************************/
 /**
  * @brief Create a server.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param service_name_  Service name.
  *
  * @return  Handle to created server or NULL if failed.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API ECAL_HANDLE server_create(const char* service_name_);
 
 /**
  * @brief Destroy a server.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_  Server handle.
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool server_destroy(ECAL_HANDLE handle_);
 
 /**
  * @brief Add server method callback.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_       Server handle.
  * @param method_name_  Service method name.
@@ -560,48 +658,58 @@ ECAL_API bool server_destroy(ECAL_HANDLE handle_);
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool server_add_method_callback(ECAL_HANDLE handle_, const char* method_name_, const char* req_type_, const char* resp_type_, const MethodCallbackCT callback_, void* par_);
 
 /**
  * @brief Remove server method callback.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_       Server handle.
  * @param method_name_  Service method name.
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool server_rem_method_callback(ECAL_HANDLE handle_, const char* method_name_);
 
 /**
  * @brief Create a client.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param service_name_  Service name.
  *
  * @return  Handle to created client or NULL if failed.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API ECAL_HANDLE client_create(const char* service_name_);
 
 /**
  * @brief Destroy a client.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_  Client handle.
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool client_destroy(ECAL_HANDLE handle_);
 
 /**
  * @brief Change the host name filter for that client instance
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_     Client handle.
  * @param host_name_  Host name filter (empty or "*" == all hosts)
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_);
 
 /**
  * @brief Call method of this service (none blocking variant with callback).
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_       Client handle.
  * @param method_name_  Method name.
@@ -611,10 +719,12 @@ ECAL_API bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_);
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_);
 
 /**
  * @brief Call method of this service (asynchronously with callback).
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param handle_       Client handle.
  * @param method_name_  Method name.
@@ -624,6 +734,7 @@ ECAL_API bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, 
  *
  * @return  True if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_);
 
 /* TODO: not implemented and not used for now */
@@ -636,47 +747,58 @@ ECAL_API bool client_call_method_async(ECAL_HANDLE handle_, const char* method_n
 /*************************************************************************/
 /**
  * @brief Initialize eCAL monitoring API.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @return Zero if succeeded, 1 if already initialized, -1 if failed.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API int mon_initialize();
 
 /**
  * @brief Finalize eCAL monitoring API.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @return Zero if succeeded, 1 if already initialized, -1 if failed.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API int mon_finalize();
 
 /**
  * @brief Set topics filter blacklist regular expression.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param filter_  Topic filter as regular expression.
  *
  * @return Zero if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API int mon_set_excl_filter(const char* filter_);
 
 /**
  * @brief Set topics filter whitelist regular expression.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param filter_  Topic filter as regular expression.
  *
  * @return Zero if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API int mon_set_incl_filter(const char* filter_);
 
 /**
  * @brief Switch topics filter using regular expression on/off.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param state_  Filter on / off state.
  *
  * @return Zero if succeeded.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API int mon_set_filter_state(const bool state_);
 
 /**
  * @brief Get monitoring protobuf string.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param [out] mon_buf_      Pointer to store the monitoring information.
  * @param [out] mon_buf_len_  Length of allocated buffer,
@@ -700,10 +822,12 @@ ECAL_API int mon_set_filter_state(const bool state_);
  *            }
  * @endcode
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API int mon_get_monitoring(const char** mon_buf_, int* mon_buf_len_);
 
 /**
  * @brief Get logging string.
+ * @deprecated Will be removed in future eCAL versions.
  *
  * @param [out] log_buf_      Pointer to store the monitoring information.
  * @param [out] log_buf_len_  Length of allocated buffer,
@@ -711,6 +835,7 @@ ECAL_API int mon_get_monitoring(const char** mon_buf_, int* mon_buf_len_);
  *
  * @return  Logging buffer length or zero if failed.
 **/
+ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
 ECAL_API int mon_get_logging(const char** log_buf_, int* log_buf_len_);
 
 #endif /* ECAL_CLANG_H_INCLUDED */
