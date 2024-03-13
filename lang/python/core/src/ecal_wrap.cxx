@@ -26,7 +26,7 @@
 
 #include <ecal/ecal.h>
 
-#include <ecal/ecal_clang.h>
+#include "ecal_clang.h"
 
 #include <unordered_map>
 #include <atomic>
