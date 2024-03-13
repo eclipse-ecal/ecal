@@ -64,11 +64,5 @@ Includes
 
 
 
-Included By
------------
-
-
-- :ref:`file_ecal_core_include_ecal_ecal_clang.h`
-
 
 
