@@ -95,6 +95,8 @@ Deprecated API
   
 - :file:`cimpl/ecal_monitoring_cimpl.h`:
   
+  .. code-block:: cpp
+  
      int eCAL_Monitoring_PubMonitoring(int state_, const char* name_);
      int eCAL_Monitoring_PubLogging(int state_, const char* name_);
   
@@ -105,6 +107,7 @@ Deprecated API
      int eCAL_Process_GetHostID();
      float eCAL_Process_GetProcessCpuUsage();
      unsigned long eCAL_Process_GetProcessMemory();
+
      long long eCAL_Process_GetSClock();
      long long eCAL_Process_GetSBytes();
      long long eCAL_Process_GetWClock();
@@ -118,6 +121,7 @@ Deprecated API
   
      int eCAL_Pub_SetQOS(ECAL_HANDLE handle_, struct SWriterQOSC qos_);
      int eCAL_Pub_GetQOS(ECAL_HANDLE handle_, struct SWriterQOSC* qos_);
+
      int eCAL_Pub_SetMaxBandwidthUDP(ECAL_HANDLE handle_, long bandwidth_);
   
 - :file:`cimpl/ecal_server_cimpl.h`:
@@ -133,6 +137,7 @@ Deprecated API
   
      int eCAL_Sub_SetQOS(ECAL_HANDLE handle_, struct SReaderQOSC qos_);
      int eCAL_Sub_GetQOS(ECAL_HANDLE handle_, struct SReaderQOSC* qos_);
+
      int eCAL_Sub_SetTimeout(ECAL_HANDLE handle_, int timeout_);
   
 - :file:`cimpl/ecal_tlayer_cimpl.h`:
@@ -157,6 +162,8 @@ Deprecated API
      int eCAL_Util_GetDescription(const char* topic_name_, void* topic_desc_, int topic_desc_len_);
   
 - :file:`ecal_callback.h`:
+  
+  .. code-block:: cpp
   
     struct SPubEventCallbackData
       {
@@ -206,6 +213,7 @@ Deprecated API
      int GetHostID();
      float GetProcessCpuUsage();
      unsigned long GetProcessMemory();
+
      long long GetWClock();
      long long GetWBytes();
      long long GetRClock();
@@ -217,11 +225,15 @@ Deprecated API
   
      CPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
      bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
+
      bool SetTypeName(const std::string& topic_type_name_);
      bool SetDescription(const std::string& topic_desc_);
+
      bool SetQOS(const QOS::SWriterQOS& qos_);
      QOS::SWriterQOS GetQOS();
+
      bool SetMaxBandwidthUDP(long bandwidth_);
+
      std::string GetTypeName() const;
      std::string GetDescription() const;
   
@@ -231,10 +243,13 @@ Deprecated API
   
      CSubscriber(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
      bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
+
      bool SetQOS(const QOS::SReaderQOS& qos_);
      QOS::SReaderQOS GetQOS();
+
      std::string GetTypeName() const;
      std::string GetDescription() const;
+
      bool SetTimeout(int timeout_);
   
 - :file:`ecal_tlayer.h`:
@@ -268,40 +283,57 @@ Deprecated API
   
 - :file:`ecal_util.h`:
   
+  .. code-block:: cpp
+  
      bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
      std::string GetTopicTypeName(const std::string& topic_name_);
+
      bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
      std::string GetTopicDescription(const std::string& topic_name_);
      std::string GetDescription(const std::string& topic_name_);
   
 - :file:`msg/capnproto/dynamic.h`:
   
+  .. code-block:: cpp
+  
     std::string GetTypeName() const;
   
 - :file:`msg/capnproto/subscriber.h`:
   
+  .. code-block:: cpp
+  
     std::string GetTypeName() const;
   
 - :file:`msg/protobuf/publisher.h`:
+  
+  .. code-block:: cpp
   
     std::string GetTypeName() const;
     std::string GetDescription() const;
   
 - :file:`msg/string/publisher.h`:
   
+  .. code-block:: cpp
+  
     CPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
   
 - :file:`msg/publisher.h`:
   
+  .. code-block:: cpp
+  
     CMsgPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
     bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+
     virtual std::string GetTypeName() const;
     virtual std::string GetDescription() const;
   
 - :file:`msg/subscriber.h`:
   
+  .. code-block:: cpp
+  
     CMsgSubscriber(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
     bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "")
+
     virtual std::string GetTypeName() const;
     virtual std::string GetDescription() const;
   
