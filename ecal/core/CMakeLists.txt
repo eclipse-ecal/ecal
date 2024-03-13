@@ -416,7 +416,6 @@ endif()
 ######################################
 set(ecal_cmn_src
     src/ecal.cpp
-    src/ecal_clang.cpp
     src/ecal_def.h
     src/ecal_def_ini.h
     src/ecal_descgate.cpp
@@ -475,7 +474,6 @@ set(ecal_header_cmn
     include/ecal/types/monitoring.h
     include/ecal/ecal.h
     include/ecal/ecal_callback.h
-    include/ecal/ecal_clang.h
     include/ecal/ecal_client.h
     include/ecal/ecal_config.h
     include/ecal/ecal_core.h

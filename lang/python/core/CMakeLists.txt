@@ -33,6 +33,8 @@ find_package(Python COMPONENTS Development Interpreter)
 find_package(Protobuf REQUIRED)
 
 set(ecal_lang_py_src
+    src/ecal_clang.cpp
+    src/ecal_clang.h
     src/ecal_wrap.cxx
 )
 
