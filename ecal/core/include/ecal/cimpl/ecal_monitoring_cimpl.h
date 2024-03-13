@@ -96,24 +96,26 @@ extern "C"
   ECALC_API int eCAL_Monitoring_GetLogging(void* buf_, int buf_len_);
 
   /**
-  * @brief Publish monitoring protobuf message.
+   * @brief Publish monitoring protobuf message.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param state_  Switch publishing on/off.
    * @param name_   Monitoring topic name.
    *
    * @return Zero if succeeded.
   **/
-  ECALC_API int eCAL_Monitoring_PubMonitoring(int state_, const char* name_);
+  ECALC_API_DEPRECATED int eCAL_Monitoring_PubMonitoring(int state_, const char* name_);
 
   /**
    * @brief Publish logging protobuf message.
+   * @deprecated Will be removed in future eCAL versions.
    *
    * @param state_  Switch publishing on/off.
    * @param name_   Logging topic name.
    *
    * @return Zero if succeeded.
   **/
-  ECALC_API int eCAL_Monitoring_PubLogging(int state_, const char* name_);
+  ECALC_API_DEPRECATED int eCAL_Monitoring_PubLogging(int state_, const char* name_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/
