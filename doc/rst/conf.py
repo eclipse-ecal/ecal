@@ -187,22 +187,10 @@ html_theme = 'sphinx_book_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-
-# Original hirarchy:
-#  1. theme.css
-#  2. pydata-sphinx-theme.css
-#  3. all.min.css
-#  4. pygments.css
-#  5. sphinx-book-theme.css
-#  6. tabs.css
 html_css_files = [
-    'css/theme-ecal-addon.css',         # Override some colors of theme.css (-> Addon)
-    'css/pydata-ecal.css',              # Replace entire pydata-sphinx-theme.css with custom one (created by python script)
-    'css/pydata-ecal-addon.css',        # Override some colors of the custom pydata-ecal.css again (-> Addon)
-    'css/book-ecal-addon.css',          # Override some size values of sphinx-book-theme.css (-> Addon)
-    'css/bignums.css',                  # Enable th bignum feature from the sphinx-typo3-theme
-    'css/tabs.css',                     # Custom styling for sphinx-tabs
-    'css/pygments-ecal-addon.css',      # Override some sizes of pygments.css (-> Addon)
+    'css/bignums.css',                              # Enable the bignum feature from the sphinx-typo3-theme
+    'css/sphinx-book-theme-1.1.2-ecaladdon.css',    # Change colors of the sphinx-book-theme
+    'css/tabs-3.4.5-ecaladdon.css',                 # Change colors of the sphinx-tabs
 ]
 
 html_title = "Eclipse eCAL™"
@@ -220,24 +208,8 @@ html_theme_options = {
     "repository_branch": "master",
     "path_to_docs": "doc/rst/",
     "extra_navbar": "", # => Remove the default text
-    "extra_footer":     '<h5>Eclipse Foundation</h5>'
-                        '<ul>'
-                            '<li>'
-                                '<p><a href="http://www.eclipse.org">Website</a></p>'
-                            '</li>'
-                            '<li>'
-                                '<p><a href="http://www.eclipse.org/legal/privacy.php">Privacy policy</a></p>'
-                            '</li>'
-                            '<li>'
-                                '<p><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></p>'
-                            '</li>'
-                            '<li>'
-                                '<p><a href="http://www.eclipse.org/legal/copyright.php">Copyright agent</a></p>'
-                            '</li>'
-                            '<li>'
-                                '<p><a href="http://www.eclipse.org/legal">Legal</a></p>'
-                            '</li>'
-                        '</ul>',
+    "footer_start": ["footer.html"],
+    "extra_footer": '',
 }
 
 # -- Options for HTMLHelp output ---------------------------------------------
