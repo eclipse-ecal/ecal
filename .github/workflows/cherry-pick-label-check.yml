@@ -5,6 +5,7 @@ on:
     types: 
       - labeled
       - unlabeled
+      - opened
     branches:
       - master
 
