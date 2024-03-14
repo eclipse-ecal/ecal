@@ -810,15 +810,16 @@ future eCAL6 API.</p>
 </div>
 </li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">cimpl/ecal_monitoring_cimpl.h</span></code>:</p>
-<blockquote>
-<div><p>int eCAL_Monitoring_PubMonitoring(int <a href="#id1"><span class="problematic" id="id2">state_</span></a>, const char* <a href="#id3"><span class="problematic" id="id4">name_</span></a>);
-int eCAL_Monitoring_PubLogging(int <a href="#id5"><span class="problematic" id="id6">state_</span></a>, const char* <a href="#id7"><span class="problematic" id="id8">name_</span></a>);</p>
-</div></blockquote>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">eCAL_Monitoring_PubMonitoring</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">state_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">name_</span><span class="p">);</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">eCAL_Monitoring_PubLogging</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">state_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">name_</span><span class="p">);</span>
+</pre></div>
+</div>
 </li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">cimpl/ecal_process_cimpl.h</span></code>:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">eCAL_Process_GetHostID</span><span class="p">();</span>
 <span class="kt">float</span><span class="w"> </span><span class="nf">eCAL_Process_GetProcessCpuUsage</span><span class="p">();</span>
 <span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">eCAL_Process_GetProcessMemory</span><span class="p">();</span>
+
 <span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">eCAL_Process_GetSClock</span><span class="p">();</span>
 <span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">eCAL_Process_GetSBytes</span><span class="p">();</span>
 <span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">eCAL_Process_GetWClock</span><span class="p">();</span>
@@ -831,6 +832,7 @@ int eCAL_Monitoring_PubLogging(int <a href="#id5"><span class="problematic" id="
 <li><p><code class="file docutils literal notranslate"><span class="pre">cimpl/ecal_publisher_cimpl.h</span></code>:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">eCAL_Pub_SetQOS</span><span class="p">(</span><span class="n">ECAL_HANDLE</span><span class="w"> </span><span class="n">handle_</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">SWriterQOSC</span><span class="w"> </span><span class="n">qos_</span><span class="p">);</span>
 <span class="kt">int</span><span class="w"> </span><span class="nf">eCAL_Pub_GetQOS</span><span class="p">(</span><span class="n">ECAL_HANDLE</span><span class="w"> </span><span class="n">handle_</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">SWriterQOSC</span><span class="o">*</span><span class="w"> </span><span class="n">qos_</span><span class="p">);</span>
+
 <span class="kt">int</span><span class="w"> </span><span class="nf">eCAL_Pub_SetMaxBandwidthUDP</span><span class="p">(</span><span class="n">ECAL_HANDLE</span><span class="w"> </span><span class="n">handle_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">bandwidth_</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -844,6 +846,7 @@ int eCAL_Monitoring_PubLogging(int <a href="#id5"><span class="problematic" id="
 <li><p><code class="file docutils literal notranslate"><span class="pre">cimpl/ecal_subscriber_cimpl.h</span></code>:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">eCAL_Sub_SetQOS</span><span class="p">(</span><span class="n">ECAL_HANDLE</span><span class="w"> </span><span class="n">handle_</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">SReaderQOSC</span><span class="w"> </span><span class="n">qos_</span><span class="p">);</span>
 <span class="kt">int</span><span class="w"> </span><span class="nf">eCAL_Sub_GetQOS</span><span class="p">(</span><span class="n">ECAL_HANDLE</span><span class="w"> </span><span class="n">handle_</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">SReaderQOSC</span><span class="o">*</span><span class="w"> </span><span class="n">qos_</span><span class="p">);</span>
+
 <span class="kt">int</span><span class="w"> </span><span class="nf">eCAL_Sub_SetTimeout</span><span class="p">(</span><span class="n">ECAL_HANDLE</span><span class="w"> </span><span class="n">handle_</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">timeout_</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -868,34 +871,31 @@ int eCAL_Monitoring_PubLogging(int <a href="#id5"><span class="problematic" id="
 </div>
 </li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">ecal_callback.h</span></code>:</p>
-<blockquote>
-<div><dl>
-<dt>struct SPubEventCallbackData</dt><dd><dl>
-<dt>{</dt><dd><p>eCAL_Publisher_Event type;
-long long            time;
-long long            clock;
-std::string          tid;
-std::string          ttype;       //!&lt; deprecated, please use new tdatatype field
-std::string          tdesc;       //!&lt; deprecated, please use new tdatatype field</p>
-<p>SDataTypeInformation tdatatype;</p>
-</dd>
-</dl>
-<p>};</p>
-</dd>
-<dt>struct SSubEventCallbackData</dt><dd><dl>
-<dt>{</dt><dd><p>eCAL_Subscriber_Event type;
-long long             time;
-long long             clock;
-std::string           tid;
-std::string           ttype;       //!&lt; deprecated, please use new tdatatype field
-std::string           tdesc;       //!&lt; deprecated, please use new tdatatype field</p>
-<p>SDataTypeInformation  tdatatype;</p>
-</dd>
-</dl>
-<p>};</p>
-</dd>
-</dl>
-</div></blockquote>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">SPubEventCallbackData</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">eCAL_Publisher_Event</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w">            </span><span class="n">time</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w">            </span><span class="n">clock</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w">          </span><span class="n">tid</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w">          </span><span class="n">ttype</span><span class="p">;</span><span class="w">       </span><span class="c1">//!&lt; deprecated, please use new tdatatype field</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w">          </span><span class="n">tdesc</span><span class="p">;</span><span class="w">       </span><span class="c1">//!&lt; deprecated, please use new tdatatype field</span>
+
+<span class="w">  </span><span class="n">SDataTypeInformation</span><span class="w"> </span><span class="n">tdatatype</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">SSubEventCallbackData</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">eCAL_Subscriber_Event</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w">             </span><span class="n">time</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w">             </span><span class="n">clock</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w">           </span><span class="n">tid</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w">           </span><span class="n">ttype</span><span class="p">;</span><span class="w">       </span><span class="c1">//!&lt; deprecated, please use new tdatatype field</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w">           </span><span class="n">tdesc</span><span class="p">;</span><span class="w">       </span><span class="c1">//!&lt; deprecated, please use new tdatatype field</span>
+
+<span class="w">  </span><span class="n">SDataTypeInformation</span><span class="w">  </span><span class="n">tdatatype</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
 </li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">ecal_log.h</span></code>:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">StartCoreTimer</span><span class="p">();</span>
@@ -916,6 +916,7 @@ std::string           tdesc;       //!&lt; deprecated, please use new tdatatype 
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">GetHostID</span><span class="p">();</span>
 <span class="kt">float</span><span class="w"> </span><span class="nf">GetProcessCpuUsage</span><span class="p">();</span>
 <span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">GetProcessMemory</span><span class="p">();</span>
+
 <span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">GetWClock</span><span class="p">();</span>
 <span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">GetWBytes</span><span class="p">();</span>
 <span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">GetRClock</span><span class="p">();</span>
@@ -926,11 +927,15 @@ std::string           tdesc;       //!&lt; deprecated, please use new tdatatype 
 <li><p><code class="file docutils literal notranslate"><span class="pre">ecal_publisher.h</span></code>:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">CPublisher</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span>
 <span class="kt">bool</span><span class="w"> </span><span class="n">Create</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span>
+
 <span class="kt">bool</span><span class="w"> </span><span class="nf">SetTypeName</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_name_</span><span class="p">);</span>
 <span class="kt">bool</span><span class="w"> </span><span class="nf">SetDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="p">);</span>
+
 <span class="kt">bool</span><span class="w"> </span><span class="nf">SetQOS</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">QOS</span><span class="o">::</span><span class="n">SWriterQOS</span><span class="o">&amp;</span><span class="w"> </span><span class="n">qos_</span><span class="p">);</span>
 <span class="n">QOS</span><span class="o">::</span><span class="n">SWriterQOS</span><span class="w"> </span><span class="nf">GetQOS</span><span class="p">();</span>
+
 <span class="kt">bool</span><span class="w"> </span><span class="nf">SetMaxBandwidthUDP</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">bandwidth_</span><span class="p">);</span>
+
 <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetTypeName</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
 <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
 </pre></div>
@@ -939,10 +944,13 @@ std::string           tdesc;       //!&lt; deprecated, please use new tdatatype 
 <li><p><code class="file docutils literal notranslate"><span class="pre">ecal_subscriber.h</span></code>:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">CSubscriber</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span>
 <span class="kt">bool</span><span class="w"> </span><span class="n">Create</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span>
+
 <span class="kt">bool</span><span class="w"> </span><span class="nf">SetQOS</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">QOS</span><span class="o">::</span><span class="n">SReaderQOS</span><span class="o">&amp;</span><span class="w"> </span><span class="n">qos_</span><span class="p">);</span>
 <span class="n">QOS</span><span class="o">::</span><span class="n">SReaderQOS</span><span class="w"> </span><span class="nf">GetQOS</span><span class="p">();</span>
+
 <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetTypeName</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
 <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+
 <span class="kt">bool</span><span class="w"> </span><span class="nf">SetTimeout</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">timeout_</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -960,13 +968,6 @@ std::string           tdesc;       //!&lt; deprecated, please use new tdatatype 
 
 <span class="k">struct</span><span class="w"> </span><span class="nc">ECAL_API</span><span class="w"> </span><span class="n">STLayer</span>
 <span class="p">{</span>
-<span class="w">  </span><span class="n">STLayer</span><span class="p">()</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="n">sm_udp_mc</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">smode_none</span><span class="p">;</span>
-<span class="w">    </span><span class="n">sm_shm</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">smode_none</span><span class="p">;</span>
-<span class="w">    </span><span class="n">sm_inproc</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">smode_none</span><span class="p">;</span>
-<span class="w">    </span><span class="n">sm_tcp</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">smode_none</span><span class="p">;</span>
-<span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="n">eSendMode</span><span class="w"> </span><span class="n">sm_udp_mc</span><span class="p">;</span>
 <span class="w">  </span><span class="n">eSendMode</span><span class="w"> </span><span class="n">sm_shm</span><span class="p">;</span>
 <span class="w">  </span><span class="n">eSendMode</span><span class="w"> </span><span class="n">sm_inproc</span><span class="p">;</span><span class="w">  </span><span class="c1">//!&lt; deprecated, whole layer will be removed in future eCAL versions */</span>
@@ -976,50 +977,53 @@ std::string           tdesc;       //!&lt; deprecated, please use new tdatatype 
 </div>
 </li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">ecal_util.h</span></code>:</p>
-<blockquote>
-<div><p>bool GetTopicTypeName(const std::string&amp; <a href="#id9"><span class="problematic" id="id10">topic_name_</span></a>, std::string&amp; <a href="#id11"><span class="problematic" id="id12">topic_type_</span></a>);
-std::string GetTopicTypeName(const std::string&amp; <a href="#id13"><span class="problematic" id="id14">topic_name_</span></a>);
-bool GetTopicDescription(const std::string&amp; <a href="#id15"><span class="problematic" id="id16">topic_name_</span></a>, std::string&amp; <a href="#id17"><span class="problematic" id="id18">topic_desc_</span></a>);
-std::string GetTopicDescription(const std::string&amp; <a href="#id19"><span class="problematic" id="id20">topic_name_</span></a>);
-std::string GetDescription(const std::string&amp; <a href="#id21"><span class="problematic" id="id22">topic_name_</span></a>);</p>
-</div></blockquote>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span><span class="w"> </span><span class="nf">GetTopicTypeName</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetTopicTypeName</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">);</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="nf">GetTopicDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetTopicDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">);</span>
+</pre></div>
+</div>
 </li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">msg/capnproto/dynamic.h</span></code>:</p>
-<blockquote>
-<div><p>std::string GetTypeName() const;</p>
-</div></blockquote>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetTypeName</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+</pre></div>
+</div>
 </li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">msg/capnproto/subscriber.h</span></code>:</p>
-<blockquote>
-<div><p>std::string GetTypeName() const;</p>
-</div></blockquote>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetTypeName</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+</pre></div>
+</div>
 </li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">msg/protobuf/publisher.h</span></code>:</p>
-<blockquote>
-<div><p>std::string GetTypeName() const;
-std::string GetDescription() const;</p>
-</div></blockquote>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetTypeName</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+</pre></div>
+</div>
 </li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">msg/string/publisher.h</span></code>:</p>
-<blockquote>
-<div><p>CPublisher(const std::string&amp; <a href="#id23"><span class="problematic" id="id24">topic_name_</span></a>, const std::string&amp; <a href="#id25"><span class="problematic" id="id26">topic_type_</span></a>, const std::string&amp; <a href="#id27"><span class="problematic" id="id28">topic_desc_</span></a>);</p>
-</div></blockquote>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">CPublisher</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="p">);</span>
+</pre></div>
+</div>
 </li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">msg/publisher.h</span></code>:</p>
-<blockquote>
-<div><p>CMsgPublisher(const std::string&amp; <a href="#id29"><span class="problematic" id="id30">topic_name_</span></a>, const std::string&amp; <a href="#id31"><span class="problematic" id="id32">topic_type_</span></a>, const std::string&amp; <a href="#id33"><span class="problematic" id="id34">topic_desc_</span></a> = “”);
-bool Create(const std::string&amp; <a href="#id35"><span class="problematic" id="id36">topic_name_</span></a>, const std::string&amp; <a href="#id37"><span class="problematic" id="id38">topic_type_</span></a> = “”, const std::string&amp; <a href="#id39"><span class="problematic" id="id40">topic_desc_</span></a> = “”);
-virtual std::string GetTypeName() const;
-virtual std::string GetDescription() const;</p>
-</div></blockquote>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">CMsgPublisher</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span>
+<span class="kt">bool</span><span class="w"> </span><span class="n">Create</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span>
+
+<span class="k">virtual</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetTypeName</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="k">virtual</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+</pre></div>
+</div>
 </li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">msg/subscriber.h</span></code>:</p>
-<blockquote>
-<div><p>CMsgSubscriber(const std::string&amp; <a href="#id41"><span class="problematic" id="id42">topic_name_</span></a>, const std::string&amp; <a href="#id43"><span class="problematic" id="id44">topic_type_</span></a> = “”, const std::string&amp; <a href="#id45"><span class="problematic" id="id46">topic_desc_</span></a> = “”);
-bool Create(const std::string&amp; <a href="#id47"><span class="problematic" id="id48">topic_name_</span></a>, const std::string&amp; <a href="#id49"><span class="problematic" id="id50">topic_type_</span></a> = “”, const std::string&amp; <a href="#id51"><span class="problematic" id="id52">topic_desc_</span></a> = “”)
-virtual std::string GetTypeName() const;
-virtual std::string GetDescription() const;</p>
-</div></blockquote>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">CMsgSubscriber</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span>
+<span class="kt">bool</span><span class="w"> </span><span class="n">Create</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span>
+
+<span class="k">virtual</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GetTypeName</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="k">virtual</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+</pre></div>
+</div>
 </li>
 </ul>
 </section>
