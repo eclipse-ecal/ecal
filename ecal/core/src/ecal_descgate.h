@@ -107,7 +107,7 @@ namespace eCAL
         map(std::make_unique<TopicInfoMap>(timeout_))
       {
       };
-      mutable std::shared_timed_mutex sync;                                        //!< Mutex protecting the map
+      mutable std::mutex              sync;                                        //!< Mutex protecting the map
       std::unique_ptr<TopicInfoMap>   map;                                         //!< Map containing information about each known topic
     };
     STopicInfoMap m_topic_info_map;
@@ -120,7 +120,7 @@ namespace eCAL
         map(std::make_unique<ServiceMethodInfoMap>(timeout_))
       {
       };
-      mutable std::shared_timed_mutex       sync;                                  //!< Mutex protecting the map
+      mutable std::mutex                    sync;                                  //!< Mutex protecting the map
       std::unique_ptr<ServiceMethodInfoMap> map;                                   //!< Map containing information about each known service
     };
     SServiceMethodInfoMap m_service_info_map;
