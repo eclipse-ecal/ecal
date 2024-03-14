@@ -18,7 +18,10 @@
 */
 
 #include <ecal/cimpl/ecal_core_cimpl.h>
+#include <ecal/cimpl/ecal_process_cimpl.h>
 #include <ecal/ecal_defs.h>
+
+#include <cstring>
 
 #include <gtest/gtest.h>
 
@@ -91,14 +94,28 @@ TEST(core_c_core, UnitName)
   // Is eCAL API initialized ?
   EXPECT_EQ(1, eCAL_IsInitialized(0));
 
-  // set unit name
+  // if we call eCAL_Initialize with empty unit name, eCAL will use the process name as unit name
+  char unit_name[1024] = {0};
+  eCAL_Process_GetUnitName(unit_name, sizeof(unit_name));
+  EXPECT_STREQ("ecal_test_core_c", unit_name);
+
+  // set unit name (should change the name to 'unit name')
   EXPECT_EQ(0, eCAL_SetUnitName("unit name"));
+  memset(unit_name, 0, sizeof(unit_name));
+  eCAL_Process_GetUnitName(unit_name, sizeof(unit_name));
+  EXPECT_STREQ("unit name", unit_name);
 
-  // set nullptr unit name
+  // set nullptr unit name (should not change the unit name)
   EXPECT_EQ(-1, eCAL_SetUnitName(nullptr));
+  memset(unit_name, 0, sizeof(unit_name));
+  eCAL_Process_GetUnitName(unit_name, sizeof(unit_name));
+  EXPECT_STREQ("unit name", unit_name);
 
-  // set empty unit name
+  // set empty unit name (should not change the unit name)
   EXPECT_EQ(-1, eCAL_SetUnitName(""));
+  memset(unit_name, 0, sizeof(unit_name));
+  eCAL_Process_GetUnitName(unit_name, sizeof(unit_name));
+  EXPECT_STREQ("unit name", unit_name);
 
   // finalize eCAL API we expect return value 0 because it will be finalized
   EXPECT_EQ(0, eCAL_Finalize(0));
