@@ -9,12 +9,12 @@
 .sphinx-tabs-tab {
   position: relative;
   font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
-  color: #6b6b6b;;
+  color: var(--pst-color-muted);
   line-height: 24px;
   margin: 0;
   font-size: 16px;
   font-weight: 400;
-  background-color: rgba(255, 255, 255, 0);
+  background-color: var(--pst-color-background);
   border-radius: 5px 5px 0 0;
   border: 0;
   padding: 1rem 1.5rem;
@@ -24,11 +24,11 @@
 .sphinx-tabs-tab[aria-selected="true"] {
   font-weight: 700;
   border: 1px solid #a0a0a0;
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid var(--pst-color-background);
   margin: -1px;
-  background-color: white;
+  background-color: var(--pst-color-background);
 
-  box-shadow: 0 9px 0px -1px rgb(255, 255, 255, 255), 0 3px 3px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 9px 0px -1px var(--pst-color-background), 0 3px 3px 0 var(--pst-color-shadow);
 }
 
 .sphinx-tabs-tab:focus {
@@ -39,13 +39,13 @@
 .sphinx-tabs-panel {
   position: relative;
   padding: 1rem;
-  border: 1px solid #a0b3bf;
+  border: 1px solid #a0a0a0;
   margin: 0px -1px -1px -1px;
   border-radius: 0 0 5px 5px;
   border-top: 0;
-  background: white;
+  background: var(--pst-color-background);
 
-  box-shadow: 0 3px 3px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 3px 0px var(--pst-color-shadow);
 }
 
 .sphinx-tabs-panel.code-tab {
