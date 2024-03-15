@@ -38,7 +38,7 @@ namespace {
   }
 }
 
-TEST(core_cpp_util, Util_CombineTopicEncodingAndType)
+TEST(core_cpp_util, Topic_CombinedTopicEncodingAndType)
 {
   TestCombinedTopicEncodingAndType("", "", "");
   TestCombinedTopicEncodingAndType("proto", "pb.Person.People", "proto:pb.Person.People");
@@ -46,7 +46,7 @@ TEST(core_cpp_util, Util_CombineTopicEncodingAndType)
   TestCombinedTopicEncodingAndType("", "MyType", "MyType");
 }
 
-TEST(core_cpp_util, Util_SplitCombinedTopicType)
+TEST(core_cpp_util, Topic_SplitCombinedTopicType)
 {
   TestSplitCombinedTopicType("", "", "");
   TestSplitCombinedTopicType("proto:pb.Person.People", "proto", "pb.Person.People");
@@ -55,27 +55,29 @@ TEST(core_cpp_util, Util_SplitCombinedTopicType)
   TestSplitCombinedTopicType("MyType", "", "MyType");
 }
 
-struct MillisecondFrequencyPair
+namespace
 {
-  std::chrono::milliseconds delta_t;
-  double frequency;
-};
+  struct MillisecondFrequencyPair
+  {
+    std::chrono::milliseconds delta_t;
+    double frequency;
+  };
 
-const std::vector<MillisecondFrequencyPair> frequency_pairs =
-{
-  {std::chrono::milliseconds(1000),   1.0},
-  {std::chrono::milliseconds(1250),   0.8},
-  {std::chrono::milliseconds(5000),   0.2},
-  {std::chrono::milliseconds(20000),  0.05},
-  {std::chrono::milliseconds(500),    2.0},
-  {std::chrono::milliseconds(200),    5.0},
-  {std::chrono::milliseconds(100),   10.0},
-  {std::chrono::milliseconds(20),    50.0},
-  {std::chrono::milliseconds(2),    500.0},
-};
+  const std::vector<MillisecondFrequencyPair> frequency_pairs =
+  {
+    {std::chrono::milliseconds(1000),   1.0},
+    {std::chrono::milliseconds(1250),   0.8},
+    {std::chrono::milliseconds(5000),   0.2},
+    {std::chrono::milliseconds(20000),  0.05},
+    {std::chrono::milliseconds(500),    2.0},
+    {std::chrono::milliseconds(200),    5.0},
+    {std::chrono::milliseconds(100),   10.0},
+    {std::chrono::milliseconds(20),    50.0},
+    {std::chrono::milliseconds(2),    500.0},
+  };
+}
 
-
-TEST(Util, FrequencyCalculator)
+TEST(core_cpp_util, Freq_FrequencyCalculator)
 {
   for (const auto& pair : frequency_pairs)
   {
@@ -110,7 +112,7 @@ TEST(Util, FrequencyCalculator)
   }
 }
 
-TEST(Util, ResettableFrequencyCalculator)
+TEST(core_cpp_util, Freq_ResettableFrequencyCalculator)
 {
   const auto check_delta_t = std::chrono::milliseconds(999);
 
@@ -191,4 +193,3 @@ TEST(Util, ResettableFrequencyCalculator)
     }
   }
 }
-

@@ -18,6 +18,8 @@
 */
 
 #include <ecal/ecal_core.h>
+#include <ecal/ecal_os.h>
+#include <ecal/ecal_process.h>
 #include <ecal/ecal_defs.h>
 
 #include <gtest/gtest.h>
@@ -83,6 +85,33 @@ TEST(core_cpp_core, MultipleInitializeFinalize)
   }
 }
 
+namespace
+{
+  std::string extractProcessName(const std::string& full_path_)
+  {
+    // initialize process name with full path
+    std::string processName = full_path_;
+
+    // extract the substring after the last separator
+    size_t lastSeparatorPos = full_path_.find_last_of("\\/");
+    if (lastSeparatorPos != std::string::npos)
+    {
+      processName = full_path_.substr(lastSeparatorPos + 1);
+    }
+
+#ifdef ECAL_OS_WINDOWS
+    // remove the file extension if found
+    size_t lastDotPos = processName.find_last_of('.');
+    if (lastDotPos != std::string::npos)
+    {
+      processName = processName.substr(0, lastDotPos);
+    }
+#endif // ECAL_OS_WINDOWS
+
+    return processName;
+  }
+}
+
 TEST(core_cpp_core, SetGetUnitName)
 {
   // initialize eCAL API with empty unit name (eCAL will use process name as unit name)
@@ -91,14 +120,21 @@ TEST(core_cpp_core, SetGetUnitName)
   // Is eCAL API initialized ?
   EXPECT_EQ(1, eCAL::IsInitialized());
 
-  // set unit name
+  // if we call eCAL_Initialize with empty unit name, eCAL will use the process name as unit name
+  std::string process_name = extractProcessName(eCAL::Process::GetProcessName());
+  EXPECT_STREQ(process_name.c_str(), eCAL::Process::GetUnitName().c_str());
+
+  // set unit name (should change the name to 'unit name')
   EXPECT_EQ(0, eCAL::SetUnitName("unit name"));
+  EXPECT_STREQ("unit name", eCAL::Process::GetUnitName().c_str());
 
-  // set nullptr unit name
+  // set nullptr unit name (should not change the unit name)
   EXPECT_EQ(-1, eCAL::SetUnitName(nullptr));
+  EXPECT_STREQ("unit name", eCAL::Process::GetUnitName().c_str());
 
-  // set empty unit name
+  // set empty unit name (should not change the unit name)
   EXPECT_EQ(-1, eCAL::SetUnitName(""));
+  EXPECT_STREQ("unit name", eCAL::Process::GetUnitName().c_str());
 
   // finalize eCAL API we expect return value 0 because it will be finalized
   EXPECT_EQ(0, eCAL::Finalize());
@@ -122,28 +158,10 @@ TEST(core_cpp_core, eCAL_Ok)
   EXPECT_EQ(0, eCAL::Ok());
 }
 
-
-// CHECK THIS AND MOVE THIS IN ANOTHER TEST UNIT
+/* excluded for now, system timer jitter too high */
 #if 0
-
-#include <ecal/ecal.h>
-#include <ecal/msg/string/publisher.h>
-#include <ecal/msg/string/subscriber.h>
-#include <atomic>
-#include <thread>
-#include <gtest/gtest.h>
-
-#define CMN_REGISTRATION_REFRESH   1000
-
-namespace {
-  // subscriber callback function
-  void OnReceive(long long clock_)
-  {
-    static long long accumulated_clock = 0;
-    accumulated_clock += clock_;
-  }
-
-#if 0
+namespace
+{
   // timer callback function
   std::atomic_size_t     g_callback_received{ 0 };
   std::vector<long long> g_timer_vec(100);
@@ -152,131 +170,8 @@ namespace {
     if (g_callback_received < g_timer_vec.size()) g_timer_vec[g_callback_received] = eCAL::Time::GetMicroSeconds();
     g_callback_received += 1;
   }
-#endif
 }
 
-TEST(Core, MultipleInitializeFinalize)
-{
-  // try to initialize / finalize multiple times
-  for (auto i = 0; i < 4; ++i)
-  {
-    // initialize eCAL API
-    EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "multiple initialize/finalize"));
-
-    // finalize eCAL API
-    EXPECT_EQ(0, eCAL::Finalize());
-  }
-}
-
-TEST(Core, LeakedPubSub)
-{
-  // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "leaked pub/sub"));
-
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
-
-  // create subscriber and register a callback
-  eCAL::string::CSubscriber<std::string> sub("foo");
-  sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_4));
-
-  // create publisher
-  eCAL::string::CPublisher<std::string> pub("foo");
-
-  // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
-
-  // start publishing thread
-  std::atomic<bool> pub_stop(false);
-  std::thread pub_t([&]() {
-    while (!pub_stop)
-    {
-      pub.Send("Hello World");
-#if 0
-      // some kind of busy waiting....
-      int y = 0;
-      for (int i = 0; i < 100000; i++)
-      {
-        y += i;
-      }
-#else
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
-#endif
-    }
-  });
-
-  // let them work together
-  std::this_thread::sleep_for(std::chrono::seconds(2));
-
-  // finalize eCAL API
-  // without destroying any pub / sub
-  EXPECT_EQ(0, eCAL::Finalize());
-
-  // stop publishing thread
-  pub_stop = true; pub_t.join();
-}
-
-TEST(Core, CallbackDestruction)
-{
-  for (int i = 0; i < 10; ++i)
-  {
-    // initialize eCAL API
-    EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "callback destruction"));
-
-    // enable loop back communication in the same thread
-    eCAL::Util::EnableLoopback(true);
-
-    // create subscriber and register a callback
-    std::shared_ptr<eCAL::string::CSubscriber<std::string>> sub;
-
-    // create publisher
-    eCAL::string::CPublisher<std::string> pub("foo");
-
-    // start publishing thread
-    std::atomic<bool> pub_stop(false);
-    std::thread pub_t([&]() {
-      while (!pub_stop) {
-        pub.Send("Hello World");
-#if 0
-        // some kind of busy waiting....
-        int y = 0;
-        for (int i = 0; i < 100000; i++)
-        {
-          y += i;
-        }
-#else
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-#endif
-      }
-      });
-
-    std::atomic<bool> sub_stop(false);
-    std::thread sub_t([&]() {
-      while (!sub_stop) {
-        sub = std::make_shared<eCAL::string::CSubscriber<std::string>>("foo");
-        sub->AddReceiveCallback(std::bind(OnReceive, std::placeholders::_4));
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-      }
-      });
-
-    // let them work together
-    std::this_thread::sleep_for(std::chrono::seconds(10));
-
-    // stop publishing thread
-    pub_stop = true;
-    pub_t.join();
-
-    sub_stop = true;
-    sub_t.join();
-
-    // finalize eCAL API
-    // without destroying any pub / sub
-    EXPECT_EQ(0, eCAL::Finalize());
-  }
-}
-
-/* excluded for now, system timer jitter too high */
-#if 0
 TEST(Core, TimerCallback)
 { 
   // initialize eCAL API
@@ -335,6 +230,4 @@ TEST(Core, TimerCallback)
   // finalize eCAL API again we expect 1 because yet finalized
   EXPECT_EQ(1, eCAL::Finalize());
 }
-#endif /* !defined ECAL_OS_WINDOWS */
-
 #endif
