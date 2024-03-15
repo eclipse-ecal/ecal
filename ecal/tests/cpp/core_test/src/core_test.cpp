@@ -18,6 +18,7 @@
 */
 
 #include <ecal/ecal_core.h>
+#include <ecal/ecal_os.h>
 #include <ecal/ecal_process.h>
 #include <ecal/ecal_defs.h>
 
@@ -98,12 +99,14 @@ namespace
       processName = full_path_.substr(lastSeparatorPos + 1);
     }
 
+#ifdef ECAL_OS_WINDOWS
     // remove the file extension if found
     size_t lastDotPos = processName.find_last_of('.');
     if (lastDotPos != std::string::npos)
     {
       processName = processName.substr(0, lastDotPos);
     }
+#endif // ECAL_OS_WINDOWS
 
     return processName;
   }

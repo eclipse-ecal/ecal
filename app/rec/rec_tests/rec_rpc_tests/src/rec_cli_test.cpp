@@ -149,7 +149,7 @@ std::vector<TestCase> getRpcConfigTestcases()
   return testcases;
 }
 
-TEST(EcalRecCli, NoDefault)
+TEST(app, EcalRecCli_NoDefault)
 {
   eCAL::rec_server::RecServerConfig config;
 
@@ -159,7 +159,7 @@ TEST(EcalRecCli, NoDefault)
   EXPECT_EQ(config, eCAL::rec_server::RecServerConfig());
 }
 
-TEST(EcalRecCli, SetConfigViaRPC)
+TEST(app, EcalRecCli_SetConfigViaRPC)
 {
   auto test_cases = getRpcConfigTestcases();
   auto rec = ExternalEcalRecInstance();
@@ -177,7 +177,7 @@ TEST(EcalRecCli, SetConfigViaRPC)
   }
 }
 
-TEST(EcalRecGui, SetConfigViaRPC)
+TEST(app, EcalRecGui_SetConfigViaRPC)
 {
   auto test_cases = getRpcConfigTestcases();
   auto rec = ExternalEcalRecInstance(true);
