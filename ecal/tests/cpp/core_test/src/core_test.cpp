@@ -84,6 +84,31 @@ TEST(core_cpp_core, MultipleInitializeFinalize)
   }
 }
 
+namespace
+{
+  std::string extractProcessName(const std::string& full_path_)
+  {
+    // initialize process name with full path
+    std::string processName = full_path_;
+
+    // extract the substring after the last separator
+    size_t lastSeparatorPos = full_path_.find_last_of("\\/");
+    if (lastSeparatorPos != std::string::npos)
+    {
+      processName = full_path_.substr(lastSeparatorPos + 1);
+    }
+
+    // remove the file extension if found
+    size_t lastDotPos = processName.find_last_of('.');
+    if (lastDotPos != std::string::npos)
+    {
+      processName = processName.substr(0, lastDotPos);
+    }
+
+    return processName;
+  }
+}
+
 TEST(core_cpp_core, SetGetUnitName)
 {
   // initialize eCAL API with empty unit name (eCAL will use process name as unit name)
@@ -93,7 +118,8 @@ TEST(core_cpp_core, SetGetUnitName)
   EXPECT_EQ(1, eCAL::IsInitialized());
 
   // if we call eCAL_Initialize with empty unit name, eCAL will use the process name as unit name
-  EXPECT_STREQ("ecal_test_core", eCAL::Process::GetUnitName().c_str());
+  std::string process_name = extractProcessName(eCAL::Process::GetProcessName());
+  EXPECT_STREQ(process_name.c_str(), eCAL::Process::GetUnitName().c_str());
 
   // set unit name (should change the name to 'unit name')
   EXPECT_EQ(0, eCAL::SetUnitName("unit name"));
