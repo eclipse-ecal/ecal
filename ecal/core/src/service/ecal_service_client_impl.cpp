@@ -29,6 +29,7 @@
 #include "registration/ecal_registration_provider.h"
 #include "serialization/ecal_serialize_service.h"
 
+#include <atomic>
 #include <chrono>
 #include <memory>
 #include <mutex>

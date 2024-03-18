@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <atomic>
 #include <chrono>
 #include <cstddef>
 #include <ecal/ecal_callback.h>

@@ -27,6 +27,7 @@
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
 
+#include <atomic>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -121,10 +122,10 @@ namespace eCAL
     std::mutex            m_event_callback_map_sync;
     EventCallbackMapT     m_event_callback_map;
     
-    std::atomic<bool>     m_created      = false;
-
     mutable std::mutex    m_connected_mutex;          //!< mutex protecting the m_connected_v0 and m_connected_v1 variable, as those are modified by the event callbacks in another thread.
     bool                  m_connected_v0 = false;
     bool                  m_connected_v1 = false;
+
+    std::atomic<bool>     m_created;
   };
 }
