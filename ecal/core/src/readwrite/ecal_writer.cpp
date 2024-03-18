@@ -142,7 +142,7 @@ namespace eCAL
     // register
     Register(false);
 
-    // mark as created
+    // and mark as created
     m_created = true;
 
     // create udp multicast layer
@@ -210,10 +210,11 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
-    // unregister
-    Unregister();
-
+    // mark as no more created
     m_created = false;
+
+    // and unregister
+    Unregister();
 
     return(true);
   }
@@ -771,6 +772,7 @@ namespace eCAL
   bool CDataWriter::Register(bool force_)
   {
 #if ECAL_CORE_REGISTRATION
+    if (!m_created)           return(false);
     if (m_topic_name.empty()) return(false);
 
     //@Rex: why is the logic different in CDataReader???

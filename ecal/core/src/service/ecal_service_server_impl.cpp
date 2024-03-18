@@ -148,7 +148,7 @@ namespace eCAL
     // register this service
     Register(false);
 
-    // mark as created
+    // and mark as created
     m_created = true;
 
     return(true);
@@ -176,7 +176,10 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
-    // unregister this service
+    // mark as no more created
+    m_created = false;
+
+    // and unregister this service
     Unregister();
 
     // reset internals
@@ -188,8 +191,6 @@ namespace eCAL
       m_connected_v0 = false;
       m_connected_v1 = false;
     }
-
-    m_created      = false;
 
     return(true);
   }
@@ -342,6 +343,7 @@ namespace eCAL
 
   void CServiceServerImpl::Register(const bool force_)
   {
+    if (!m_created)             return;
     if (m_service_name.empty()) return;
 
     // might be zero in contruction phase

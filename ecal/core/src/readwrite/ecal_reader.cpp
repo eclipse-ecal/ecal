@@ -125,7 +125,7 @@ namespace eCAL
     // register
     Register(false);
 
-    // mark as created
+    // and mark as created
     m_created = true;
 
     return(true);
@@ -155,11 +155,13 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
-    // unregister
+    // mark as no more created
+    m_created = false;
+
+    // and unregister
     Unregister();
 
     // reset defaults
-    m_created                 = false;
     m_clock                   = 0;
     m_message_drops           = 0;
 
@@ -230,6 +232,7 @@ namespace eCAL
   bool CDataReader::Register(const bool force_)
   {
 #if ECAL_CORE_REGISTRATION
+    if (!m_created)          return(false);
     if(m_topic_name.empty()) return(false);
 
     // create command parameter

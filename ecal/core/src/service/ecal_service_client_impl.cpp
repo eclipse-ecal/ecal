@@ -80,7 +80,7 @@ namespace eCAL
     // register this client
     Register(false);
 
-    // mark as created
+    // and mark as created
     m_created = true;
 
     return(true);
@@ -108,16 +108,16 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
-    // unregister this client
+    // mark as no more created
+    m_created = false;
+
+    // and unregister this client
     Unregister();
 
     // reset internals
     m_service_name.clear();
     m_service_id.clear();
     m_host_name.clear();
-
-    // mark as not created
-    m_created = false;
 
     return(true);
   }
@@ -616,6 +616,7 @@ namespace eCAL
 
   void CServiceClientImpl::Register(const bool force_)
   {
+    if (!m_created)             return;
     if (m_service_name.empty()) return;
 
     Registration::Sample sample;
