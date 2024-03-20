@@ -66,11 +66,11 @@ Program Listing for File ecal_time.h
        /* @cond */
        struct ecal_clock
        {
-         using duration   = std::chrono::nanoseconds;
-         using rep        = duration::rep;
-         using period     = duration::period;
-         using time_point = std::chrono::time_point<ecal_clock>;
-         static const bool is_steady = false;
+         typedef std::chrono::nanoseconds            duration;
+         typedef duration::rep                       rep;
+         typedef duration::period                    period;
+         typedef std::chrono::time_point<ecal_clock> time_point;
+         static const bool                           is_steady = false;
    
          static time_point now()
          {

@@ -32,7 +32,9 @@ Program Listing for File ecal_monitoring.h
    #pragma once
    
    #include <ecal/ecal_os.h>
+   #include <ecal/ecal_deprecate.h>
    #include <ecal/types/monitoring.h>
+   
    #include <string>
    
    namespace eCAL
@@ -45,8 +47,20 @@ Program Listing for File ecal_monitoring.h
    
        ECAL_API int SetFilterState(bool state_);
    
-       ECAL_API int GetMonitoring(std::string& mon_, unsigned int entities_ = Entity::All);
+       ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions. Please use GetMonitoring(std::string& mon_, unsigned int entities_) instead.")
+       ECAL_API int GetMonitoring(std::string& mon_);
+   
+       ECAL_API int GetMonitoring(std::string& mon_, unsigned int entities_);
        
-       ECAL_API int GetMonitoring(SMonitoring& mon_, unsigned int entities_ = Entity::All);
+       ECAL_API int GetMonitoring(eCAL::Monitoring::SMonitoring& mon_, unsigned int entities_ = Entity::All);
+       
+   
+       ECAL_API int GetLogging(std::string& log_);
+   
+       ECAL_DEPRECATE_SINCE_5_12("Will be removed in future eCAL versions.")
+       ECAL_API int PubMonitoring(bool state_, std::string name_ = "ecal.monitoring");
+   
+       ECAL_DEPRECATE_SINCE_5_12("Will be removed in future eCAL versions.")
+       ECAL_API int PubLogging(bool state_, std::string name_ = "ecal.logging");
      }
    }

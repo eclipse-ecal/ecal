@@ -35,6 +35,7 @@ Program Listing for File ecal_subscriber.h
    #include <ecal/ecal_callback.h>
    #include <ecal/ecal_deprecate.h>
    #include <ecal/ecal_os.h>
+   #include <ecal/ecal_qos.h>
    #include <ecal/ecal_types.h>
    
    #include <memory>
@@ -50,31 +51,48 @@ Program Listing for File ecal_subscriber.h
      public:
        ECAL_API CSubscriber();
    
+       ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in future eCAL versions.")
+       ECAL_API CSubscriber(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
+   
        ECAL_API CSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
    
-       ECAL_API explicit CSubscriber(const std::string& topic_name_);
+       ECAL_API CSubscriber(const std::string& topic_name_);
    
        ECAL_API virtual ~CSubscriber();
    
-       CSubscriber(const CSubscriber&) = delete;
+       ECAL_API CSubscriber(const CSubscriber&) = delete;
    
-       CSubscriber& operator=(const CSubscriber&) = delete;
+       ECAL_API CSubscriber& operator=(const CSubscriber&) = delete;
    
        ECAL_API CSubscriber(CSubscriber&& rhs) noexcept;
    
        ECAL_API CSubscriber& operator=(CSubscriber&& rhs) noexcept;
    
-       ECAL_API bool Create(const std::string& topic_name_);
+       ECAL_DEPRECATE_SINCE_5_13("Please use the create method bool Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in future eCAL versions.")
+       ECAL_API bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
+   
+       ECAL_API bool Create(const std::string& topic_name_) {
+         return Create(topic_name_, SDataTypeInformation{});
+       }
    
        ECAL_API bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
    
        ECAL_API bool Destroy();
+   
+       ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
+       ECAL_API bool SetQOS(const QOS::SReaderQOS& qos_);
+   
+       ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
+       ECAL_API QOS::SReaderQOS GetQOS();
    
        ECAL_API bool SetID(const std::set<long long>& id_set_);
    
        ECAL_API bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
    
        ECAL_API bool ClearAttribute(const std::string& attr_name_);
+   
+       ECAL_DEPRECATE_SINCE_5_10("Please use the method bool ReceiveBuffer(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) instead. This function will be removed in future eCAL versions.")
+       ECAL_API size_t Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
    
        ECAL_API bool ReceiveBuffer(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
    
@@ -92,13 +110,26 @@ Program Listing for File ecal_subscriber.h
    
        ECAL_API std::string GetTopicName() const;
    
+       ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the typename from the SDataTypeInformation variable. This function will be removed in future eCAL versions.")
+       ECAL_API std::string GetTypeName() const;
+   
+       ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the descriptor from the SDataTypeInformation variable. This function will be removed in future eCAL versions.")
+       ECAL_API std::string GetDescription() const;
+   
        ECAL_API SDataTypeInformation GetDataTypeInformation() const;
+   
+       ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
+       ECAL_API bool SetTimeout(int timeout_);
    
        ECAL_API std::string Dump(const std::string& indent_ = "") const;
    
      protected:
+       void InitializeQOS();
+       bool ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
+   
        // class members
        std::shared_ptr<CDataReader>     m_datareader;
+       struct ECAL_API QOS::SReaderQOS  m_qos;
        bool                             m_created;
        bool                             m_initialized;
      };

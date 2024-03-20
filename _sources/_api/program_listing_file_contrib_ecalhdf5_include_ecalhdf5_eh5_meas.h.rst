@@ -79,21 +79,13 @@ Program Listing for File eh5_meas.h
    
          bool HasChannel(const std::string& channel_name) const;
    
-         [[deprecated("Please use GetChannelDataTypeInformation instead")]]
          std::string GetChannelDescription(const std::string& channel_name) const;
    
-         [[deprecated("Please use SetChannelDataTypeInformation instead")]]
          void SetChannelDescription(const std::string& channel_name, const std::string& description);
    
-         [[deprecated("Please use GetChannelDataTypeInformation instead")]]
          std::string GetChannelType(const std::string& channel_name) const;
    
-         [[deprecated("Please use SetChannelDataTypeInformation instead")]]
          void SetChannelType(const std::string& channel_name, const std::string& type);
-   
-         DataTypeInformation GetChannelDataTypeInformation(const std::string& channel_name) const;
-   
-         void SetChannelDataTypeInformation(const std::string& channel_name, const DataTypeInformation& info);
    
          long long GetMinTimestamp(const std::string& channel_name) const;
    

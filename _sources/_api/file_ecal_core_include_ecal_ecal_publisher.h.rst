@@ -48,6 +48,10 @@ Includes
 
 - ``ecal/ecal_payload_writer.h`` (:ref:`file_ecal_core_include_ecal_ecal_payload_writer.h`)
 
+- ``ecal/ecal_qos.h`` (:ref:`file_ecal_core_include_ecal_ecal_qos.h`)
+
+- ``ecal/ecal_tlayer.h`` (:ref:`file_ecal_core_include_ecal_ecal_tlayer.h`)
+
 - ``ecal/ecal_types.h`` (:ref:`file_ecal_core_include_ecal_ecal_types.h`)
 
 - ``memory``

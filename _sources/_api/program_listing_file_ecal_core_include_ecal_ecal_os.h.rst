@@ -70,15 +70,19 @@ Program Listing for File ecal_os.h
      #define ECAL_API
    #endif
    
-   #ifdef _MSC_VER
-     #ifdef eCAL_EXPORTS
-       #define ECALC_API_DEPRECATED __declspec(dllexport deprecated)
-     #else /* eCAL_EXPORTS */
-       #define ECALC_API_DEPRECATED __declspec(dllimport deprecated)
-     #endif /* eCAL_EXPORTS */
-   #elif defined(__GNUC__) || defined(__clang__)
-     #define ECALC_API_DEPRECATED __attribute__((deprecated))
+   #if !defined(ECALC_NO_DEPRECATION_WARNINGS)
+     #ifdef _MSC_VER
+       #ifdef eCAL_EXPORTS
+         #define ECALC_API_DEPRECATED __declspec(dllexport deprecated)
+       #else /* eCAL_EXPORTS */
+         #define ECALC_API_DEPRECATED __declspec(dllimport deprecated)
+       #endif /* eCAL_EXPORTS */
+     #elif defined(__GNUC__) || defined(__clang__)
+       #define ECALC_API_DEPRECATED __attribute__((deprecated))
+     #else
+       #pragma message("WARNING: You need to implement DEPRECATED for this compiler")
+       #define ECALC_API_DEPRECATED
+     #endif
    #else
-     #pragma message("WARNING: You need to implement DEPRECATED for this compiler")
-     #define ECALC_API_DEPRECATED
+     #define ECALC_API_DEPRECATED ECALC_API
    #endif

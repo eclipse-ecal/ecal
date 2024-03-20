@@ -50,13 +50,13 @@ Program Listing for File ecal_client.h
      public:
        ECAL_API CServiceClient();
    
-       ECAL_API explicit CServiceClient(const std::string& service_name_);
+       ECAL_API CServiceClient(const std::string& service_name_);
    
        ECAL_API virtual ~CServiceClient();
    
-       CServiceClient(const CServiceClient&) = delete;
+       ECAL_API CServiceClient(const CServiceClient&) = delete;
    
-       CServiceClient& operator=(const CServiceClient&) = delete;
+       ECAL_API CServiceClient& operator=(const CServiceClient&) = delete;
    
        ECAL_API bool Create(const std::string& service_name_);
    
@@ -67,6 +67,9 @@ Program Listing for File ecal_client.h
        ECAL_API bool Call(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
    
        ECAL_API bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_);
+   
+       ECAL_DEPRECATE_SINCE_5_10("Please use the create method bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_) instead. This function will be removed in future eCAL versions.")
+       ECAL_API bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_info_, std::string& response_);
    
        ECAL_API bool CallAsync(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
    

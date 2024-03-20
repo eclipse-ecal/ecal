@@ -33,9 +33,8 @@ Program Listing for File ecal_log.h
    
    #include <ecal/ecal_os.h>
    #include <ecal/ecal_log_level.h>
-   #include <ecal/types/logging.h>
+   #include <ecal/ecal_deprecate.h>
    
-   #include <list>
    #include <string>
    
    namespace eCAL
@@ -43,7 +42,7 @@ Program Listing for File ecal_log.h
      namespace Logging
      {
        ECAL_API void SetLogLevel(eCAL_Logging_eLogLevel level_);
-   
+     
        ECAL_API eCAL_Logging_eLogLevel GetLogLevel();
    
        ECAL_API void Log(const std::string& msg_);
@@ -54,8 +53,16 @@ Program Listing for File ecal_log.h
          Log(msg_);
        }
    
-       ECAL_API int GetLogging(std::string& log_);
+       ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
+       ECAL_API void StartCoreTimer();
    
-       ECAL_API int GetLogging(Logging::SLogging& log_);
+       ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
+       ECAL_API void StopCoreTimer();
+   
+       ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
+       ECAL_API void SetCoreTime(double time_);
+   
+       ECAL_DEPRECATE_SINCE_5_13("Will be removed in future eCAL versions.")
+       ECAL_API double GetCoreTime();
      }
    }

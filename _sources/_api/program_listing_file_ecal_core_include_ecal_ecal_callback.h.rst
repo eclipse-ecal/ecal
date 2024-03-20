@@ -51,20 +51,40 @@ Program Listing for File ecal_callback.h
    
      struct SPubEventCallbackData
      {
-       eCAL_Publisher_Event type{pub_event_none};  
-       long long            time{0};               
-       long long            clock{0};              
-       std::string          tid;                   
-       SDataTypeInformation tdatatype;             
+       SPubEventCallbackData()
+       {
+         type  = pub_event_none;
+         time  = 0;
+         clock = 0;
+       };
+       eCAL_Publisher_Event type;        
+       long long            time;        
+       long long            clock;       
+       std::string          tid;         
+       ECAL_DEPRECATE_SINCE_5_13("Use the separate infos encoding and type in member tdatatype instead of ttype.")
+       std::string          ttype;       
+       ECAL_DEPRECATE_SINCE_5_13("Use the tdatatype.descriptor instead of tdesc.")
+       std::string          tdesc;       
+       SDataTypeInformation tdatatype;   
      };
    
      struct SSubEventCallbackData
      {
-       eCAL_Subscriber_Event type{sub_event_none}; 
-       long long             time{0};              
-       long long             clock{0};             
-       std::string           tid;                  
-       SDataTypeInformation  tdatatype;            
+       SSubEventCallbackData()
+       {
+         type  = sub_event_none;
+         time  = 0;
+         clock = 0;
+       };
+       eCAL_Subscriber_Event type;       
+       long long             time;       
+       long long             clock;      
+       std::string           tid;        
+       ECAL_DEPRECATE_SINCE_5_13("Use the separate infos encoding and type in member tdatatype instead of ttype.")
+       std::string           ttype;      
+       ECAL_DEPRECATE_SINCE_5_13("Use the tdatatype.descriptor instead of tdesc.")
+       std::string           tdesc;      
+       SDataTypeInformation  tdatatype;  
      };
    
      struct SServiceAttr

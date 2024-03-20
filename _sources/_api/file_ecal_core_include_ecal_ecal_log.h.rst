@@ -30,13 +30,11 @@ Includes
 --------
 
 
+- ``ecal/ecal_deprecate.h`` (:ref:`file_ecal_core_include_ecal_ecal_deprecate.h`)
+
 - ``ecal/ecal_log_level.h`` (:ref:`file_ecal_core_include_ecal_ecal_log_level.h`)
 
 - ``ecal/ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
-
-- ``ecal/types/logging.h``
-
-- ``list``
 
 - ``string``
 
@@ -64,9 +62,7 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_ecal__log_8h_1aa0ffe0010975e2781ebf7c33b15d0f94`
-
-- :ref:`exhale_function_ecal__log_8h_1afcd7c660d38d811e0f272dc6878b9526`
+- :ref:`exhale_function_ecal__log_8h_1a30cdf6309f4f3eedde84449c8060bc20`
 
 - :ref:`exhale_function_ecal__log_8h_1ae02f62df75715df74abc07018d19fd9b`
 
@@ -74,5 +70,11 @@ Functions
 
 - :ref:`exhale_function_ecal__log_8h_1aeec9794d43afeaf2877b5e7ced2469d5`
 
+- :ref:`exhale_function_ecal__log_8h_1a23722a569cb8c0b63fa45c25d45c8791`
+
 - :ref:`exhale_function_ecal__log_8h_1a4d2ffa95eadc0a05c9f8a2886867848a`
+
+- :ref:`exhale_function_ecal__log_8h_1aab10190f69cced3fa2ab4c2b3c371934`
+
+- :ref:`exhale_function_ecal__log_8h_1ae50c6eca86af0f85cd36c6f8e7a8640e`
 

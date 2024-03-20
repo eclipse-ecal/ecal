@@ -52,7 +52,12 @@ Program Listing for File subscriber.h
        {
        }
    
-       CMsgSubscriber(const std::string& topic_name_, const struct SDataTypeInformation& topic_info_) : CSubscriber(topic_name_, topic_info_)
+       ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CMsgSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in future eCAL versions.")
+       CMsgSubscriber(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "") : CSubscriber(topic_name_, topic_type_, topic_desc_)
+       {
+       }
+   
+       CMsgSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_) : CSubscriber(topic_name_, topic_info_)
        {
        }
    
@@ -62,7 +67,7 @@ Program Listing for File subscriber.h
    
        CMsgSubscriber& operator=(const CMsgSubscriber&) = delete;
    
-       CMsgSubscriber(CMsgSubscriber&& rhs) noexcept
+       CMsgSubscriber(CMsgSubscriber&& rhs)
          : CSubscriber(std::move(rhs))
          , m_cb_callback(std::move(rhs.m_cb_callback))
        {
@@ -77,7 +82,7 @@ Program Listing for File subscriber.h
          }
        }
    
-       CMsgSubscriber& operator=(CMsgSubscriber&& rhs) noexcept
+       CMsgSubscriber& operator=(CMsgSubscriber&& rhs)
        {
          CSubscriber::operator=(std::move(rhs));
    
@@ -95,7 +100,13 @@ Program Listing for File subscriber.h
          return *this;
        }
    
-       bool Create(const std::string& topic_name_, const struct SDataTypeInformation& topic_info_)
+       ECAL_DEPRECATE_SINCE_5_13("Please use the method CMsgSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in future eCAL versions.")
+       bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "")
+       {
+         return(CSubscriber::Create(topic_name_, topic_type_, topic_desc_));
+       }
+   
+       bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
        {
          return(CSubscriber::Create(topic_name_, topic_info_));
        }
@@ -115,7 +126,7 @@ Program Listing for File subscriber.h
          return(Deserialize(msg_, rec_buf.c_str(), rec_buf.size()));
        }
    
-       using MsgReceiveCallbackT = std::function<void (const char *, const T &, long long, long long, long long)>;
+       typedef std::function<void(const char* topic_name_, const T& msg_, long long time_, long long clock_, long long id_)> MsgReceiveCallbackT;
    
        bool AddReceiveCallback(MsgReceiveCallbackT callback_)
        {
@@ -141,6 +152,19 @@ Program Listing for File subscriber.h
        }
    
    protected:
+       ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeInformation GetDataTypeInformation() instead. This function will be removed in future eCAL versions.")
+       virtual std::string GetTypeName() const
+       {
+         SDataTypeInformation topic_info{ GetDataTypeInformation() };
+         return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.name);
+       };
+   
+       ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeInformation GetDataTypeInformation() instead. This function will be removed in future eCAL versions.")
+       virtual std::string GetDescription() const
+       {
+         return GetDataTypeInformation().descriptor;
+       };
+   
        // We cannot make it pure virtual, as it would break a bunch of implementations, who are not (yet) implementing this function
        virtual SDataTypeInformation GetDataTypeInformation() const { return SDataTypeInformation{}; }
        virtual bool Deserialize(T& msg_, const void* buffer_, size_t size_) const = 0;
@@ -148,7 +172,7 @@ Program Listing for File subscriber.h
      private:
        void ReceiveCallback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
        {
-         MsgReceiveCallbackT fn_callback(nullptr);
+         MsgReceiveCallbackT fn_callback = nullptr;
          {
            std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
            fn_callback = m_cb_callback;

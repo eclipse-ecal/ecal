@@ -55,7 +55,5 @@ Program Listing for File eh5_types.h
        using eAccessType = eCAL::experimental::measurement::base::AccessType;
        using eCAL::experimental::measurement::base::RDONLY;
        using eCAL::experimental::measurement::base::CREATE;
-      
-       using eCAL::experimental::measurement::base::DataTypeInformation;
      }  // namespace eh5
    }  // namespace eCAL

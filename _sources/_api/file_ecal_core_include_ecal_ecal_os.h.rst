@@ -40,6 +40,8 @@ Included By
 
 - :ref:`file_ecal_core_include_ecal_ecal_core.h`
 
+- :ref:`file_ecal_core_include_ecal_ecal_event.h`
+
 - :ref:`file_ecal_core_include_ecal_ecal_log.h`
 
 - :ref:`file_ecal_core_include_ecal_ecal_monitoring.h`
@@ -47,6 +49,8 @@ Included By
 - :ref:`file_ecal_core_include_ecal_ecal_process.h`
 
 - :ref:`file_ecal_core_include_ecal_ecal_publisher.h`
+
+- :ref:`file_ecal_core_include_ecal_ecal_qos.h`
 
 - :ref:`file_ecal_core_include_ecal_ecal_server.h`
 

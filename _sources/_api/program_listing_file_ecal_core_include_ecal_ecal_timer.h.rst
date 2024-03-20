@@ -38,14 +38,14 @@ Program Listing for File ecal_timer.h
    namespace eCAL
    {
      class CTimerImpl;
-     using TimerCallbackT = std::function<void ()>;
+     typedef std::function<void(void)> TimerCallbackT;
    
      class CTimer 
      {
      public:
        ECAL_API CTimer();
    
-       ECAL_API CTimer(int timeout_, const TimerCallbackT& callback_, int delay_ = 0);
+       ECAL_API CTimer(int timeout_, TimerCallbackT callback_, int delay_ = 0);
    
        ECAL_API virtual ~CTimer();
    
@@ -55,7 +55,7 @@ Program Listing for File ecal_timer.h
        CTimer(CTimer&& rhs) = delete;
        CTimer& operator=(CTimer&& rhs) = delete;
    
-       ECAL_API bool Start(int timeout_, const TimerCallbackT& callback_, int delay_ = 0);
+       ECAL_API bool Start(int timeout_, TimerCallbackT callback_, int delay_ = 0);
    
        ECAL_API bool Stop();
    

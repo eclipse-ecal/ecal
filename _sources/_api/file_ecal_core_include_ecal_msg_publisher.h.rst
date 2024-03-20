@@ -25,9 +25,7 @@ Includes
 --------
 
 
-- ``cassert``
-
-- ``cstring``
+- ``assert.h``
 
 - ``ecal/ecal_deprecate.h`` (:ref:`file_ecal_core_include_ecal_ecal_deprecate.h`)
 
@@ -38,6 +36,8 @@ Includes
 - ``functional``
 
 - ``string``
+
+- ``string.h``
 
 - ``vector``
 

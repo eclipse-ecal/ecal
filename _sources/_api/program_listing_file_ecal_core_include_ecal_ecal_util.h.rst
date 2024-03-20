@@ -46,6 +46,9 @@ Program Listing for File ecal_util.h
    {
      namespace Util
      {
+       ECAL_DEPRECATE_SINCE_5_10("Please use the method std::string GeteCALConfigPath() instead. This function will be removed in future eCAL versions.")
+       ECAL_API std::string GeteCALHomePath();
+   
        ECAL_API std::string GeteCALConfigPath();
    
        ECAL_API std::string GeteCALUserSettingsPath();
@@ -53,6 +56,9 @@ Program Listing for File ecal_util.h
        ECAL_API std::string GeteCALLogPath();
    
        ECAL_API std::string GeteCALActiveIniFile();
+   
+       ECAL_DEPRECATE_SINCE_5_10("Please use the method std::string GeteCALActiveIniFile() instead. This function will be removed in future eCAL versions.")
+       ECAL_API std::string GeteCALDefaultIniFile();
    
        ECAL_API void ShutdownProcess(const std::string& unit_name_);
    
@@ -72,6 +78,18 @@ Program Listing for File ecal_util.h
    
        ECAL_API void GetTopicNames(std::vector<std::string>& topic_names_);
    
+       ECAL_DEPRECATE_SINCE_5_13("Please use the method bool GetTopicDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the SDataTypeInformation variable. This function will be removed in future eCAL versions.")
+       ECAL_API bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
+   
+       ECAL_DEPRECATE_SINCE_5_13("Please use the method bool GetTopicDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the SDataTypeInformation variable. This function will be removed in future eCAL versions.")
+       ECAL_API std::string GetTopicTypeName(const std::string& topic_name_);
+   
+       ECAL_DEPRECATE_SINCE_5_13("Please use the method bool GetTopicDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in future eCAL versions.")
+       ECAL_API bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
+   
+       ECAL_DEPRECATE_SINCE_5_13("Please use the method bool GetTopicDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in future eCAL versions.")
+       ECAL_API std::string GetTopicDescription(const std::string& topic_name_);
+   
        ECAL_API bool GetTopicDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_);
    
        ECAL_API void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_);
@@ -81,6 +99,18 @@ Program Listing for File ecal_util.h
        ECAL_API bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_);
    
        ECAL_API bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_desc_, std::string& resp_desc_);
+   
+       ECAL_DEPRECATE_SINCE_5_10("Please use the method bool GetTopicDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the SDataTypeInformation variable. This function will be removed in future eCAL versions.")
+       ECAL_API bool GetTypeName(const std::string& topic_name_, std::string& topic_type_);
+   
+       ECAL_DEPRECATE_SINCE_5_10("Please use the method bool GetTopicDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the SDataTypeInformation variable. This function will be removed in future eCAL versions.")
+       ECAL_API std::string GetTypeName(const std::string& topic_name_);
+   
+       ECAL_DEPRECATE_SINCE_5_10("Please use the method bool GetTopicDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_) instead. You can extract the descriptor from the SDataTypeInformation variable. This function will be removed in future eCAL versions.")
+       ECAL_API bool GetDescription(const std::string& topic_name_, std::string& topic_desc_);
+   
+       ECAL_DEPRECATE_SINCE_5_13("Please use the method bool GetTopicDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_) instead. You can extract the descriptor from the SDataTypeInformation variable. This function will be removed in future eCAL versions.")
+       ECAL_API std::string GetDescription(const std::string& topic_name_);
    
        ECAL_API std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& combined_topic_type_);
    

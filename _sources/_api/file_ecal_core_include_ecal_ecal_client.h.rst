@@ -54,6 +54,8 @@ Included By
 
 - :ref:`file_ecal_core_include_ecal_ecal.h`
 
+- :ref:`file_ecal_core_include_ecal_ecal_service.h`
+
 
 
 

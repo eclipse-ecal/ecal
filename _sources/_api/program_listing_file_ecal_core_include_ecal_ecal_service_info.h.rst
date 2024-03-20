@@ -55,9 +55,9 @@ Program Listing for File ecal_service_info.h
        eCallState   call_state;     
        std::string  response;       
      };
-     using ServiceResponseVecT = std::vector<SServiceResponse>; 
+     typedef std::vector<SServiceResponse> ServiceResponseVecT; 
    
-     using MethodCallbackT = std::function<int (const std::string &, const std::string &, const std::string &, const std::string &, std::string &)>;
+     typedef std::function<int(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_)> MethodCallbackT;
    
-     using ResponseCallbackT = std::function<void (const struct SServiceResponse &)>;
+     typedef std::function<void(const struct SServiceResponse& service_response_)> ResponseCallbackT;
    }

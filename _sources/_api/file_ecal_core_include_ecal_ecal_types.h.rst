@@ -64,3 +64,5 @@ Classes
 
 - :ref:`exhale_struct_structeCAL_1_1SServiceMethodInformation`
 
+- :ref:`exhale_struct_structeCAL_1_1STopicInformation`
+

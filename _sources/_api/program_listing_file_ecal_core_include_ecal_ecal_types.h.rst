@@ -34,36 +34,52 @@ Program Listing for File ecal_types.h
    
    namespace eCAL
    {
-     struct SDataTypeInformation
-     {
-       std::string name;          
-       std::string encoding;      
-       std::string descriptor;    
-   
-       bool operator==(const SDataTypeInformation& other) const
+       struct SDataTypeInformation
        {
-         return name == other.name && encoding == other.encoding && descriptor == other.descriptor;
-       }
+         std::string name;          
+         std::string encoding;      
+         std::string descriptor;    
    
-       bool operator!=(const SDataTypeInformation& other) const
+         bool operator==(const SDataTypeInformation& other) const
+         {
+           return name == other.name && encoding == other.encoding && descriptor == other.descriptor;
+         }
+   
+         bool operator!=(const SDataTypeInformation& other) const
+         {
+           return !(*this == other);
+         }
+       };
+   
+       struct STopicInformation
        {
-         return !(*this == other);
-       }
-     };
+         SDataTypeInformation topic_type; 
    
-     struct SServiceMethodInformation
-     {
-       SDataTypeInformation request_type;   
-       SDataTypeInformation response_type;  
+         bool operator==(const STopicInformation& other) const
+         {
+           return topic_type == other.topic_type;
+         }
    
-       bool operator==(const SServiceMethodInformation& other) const
+         bool operator!=(const STopicInformation& other) const
+         {
+           return !(*this == other);
+         }
+       };
+   
+       struct SServiceMethodInformation
        {
-         return request_type == other.request_type && response_type == other.response_type;
-       }
+         SDataTypeInformation request_type;   
+         SDataTypeInformation response_type;  
    
-       bool operator!=(const SServiceMethodInformation& other) const
-       {
-         return !(*this == other);
-       }
-     };
+         bool operator==(const SServiceMethodInformation& other) const
+         {
+           return request_type == other.request_type && response_type == other.response_type;
+         }
+   
+         bool operator!=(const SServiceMethodInformation& other) const
+         {
+           return !(*this == other);
+         }
+       };
+   
    }

@@ -49,13 +49,13 @@ Program Listing for File ecal_server.h
      public:
        ECAL_API CServiceServer();
    
-       ECAL_API explicit CServiceServer(const std::string& service_name_);
+       ECAL_API CServiceServer(const std::string& service_name_);
    
        ECAL_API virtual ~CServiceServer();
    
-       CServiceServer(const CServiceServer&) = delete;
+       ECAL_API CServiceServer(const CServiceServer&) = delete;
    
-       CServiceServer& operator=(const CServiceServer&) = delete;
+       ECAL_API CServiceServer& operator=(const CServiceServer&) = delete;
    
        ECAL_API bool Create(const std::string& service_name_);
    

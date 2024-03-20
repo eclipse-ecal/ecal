@@ -40,6 +40,8 @@ Includes
 
 - ``ecal/ecal_defs.h``
 
+- ``ecal/ecal_event.h`` (:ref:`file_ecal_core_include_ecal_ecal_event.h`)
+
 - ``ecal/ecal_log.h`` (:ref:`file_ecal_core_include_ecal_ecal_log.h`)
 
 - ``ecal/ecal_monitoring.h`` (:ref:`file_ecal_core_include_ecal_ecal_monitoring.h`)
@@ -49,6 +51,8 @@ Includes
 - ``ecal/ecal_process.h`` (:ref:`file_ecal_core_include_ecal_ecal_process.h`)
 
 - ``ecal/ecal_publisher.h`` (:ref:`file_ecal_core_include_ecal_ecal_publisher.h`)
+
+- ``ecal/ecal_qos.h`` (:ref:`file_ecal_core_include_ecal_ecal_qos.h`)
 
 - ``ecal/ecal_server.h`` (:ref:`file_ecal_core_include_ecal_ecal_server.h`)
 
@@ -67,4 +71,13 @@ Includes
 
 
 
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_eCAL`
+
+- :ref:`namespace_eCAL__pb`
 

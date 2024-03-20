@@ -42,7 +42,7 @@ Program Listing for File dynamic.h
      {
      public:
        DynamicReflectionException(const std::string& message) : message_(message) {}
-       virtual const char* what() const noexcept { return message_.c_str(); }
+       virtual const char* what() const throw() { return message_.c_str(); }
      private:
        std::string message_;
      };

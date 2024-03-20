@@ -38,8 +38,8 @@ Program Listing for File publisher.h
    #include <string>
    #include <vector>
    #include <functional>
-   #include <cassert>
-   #include <cstring>
+   #include <assert.h>
+   #include <string.h>
    
    namespace eCAL
    {
@@ -51,11 +51,16 @@ Program Listing for File publisher.h
        {
        }
    
-       CMsgPublisher(const std::string& topic_name_, const struct SDataTypeInformation& topic_info_) : CPublisher(topic_name_, topic_info_)
+       ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in future eCAL versions.")
+       CMsgPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "") : CPublisher(topic_name_, topic_type_, topic_desc_)
        {
        }
    
-       explicit CMsgPublisher(const std::string& topic_name_) : CMsgPublisher(topic_name_, GetDataTypeInformation())
+       CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_) : CPublisher(topic_name_, topic_info_)
+       {
+       }
+   
+       CMsgPublisher(const std::string& topic_name_) : CMsgPublisher(topic_name_, GetDataTypeInformation())
        {
        }
    
@@ -67,9 +72,17 @@ Program Listing for File publisher.h
    
        CMsgPublisher& operator=(CMsgPublisher&&) = default;
    
-       ~CMsgPublisher() override = default;
+       virtual ~CMsgPublisher() = default;
    
-       bool Create(const std::string& topic_name_, const struct SDataTypeInformation& topic_info_)
+   
+   
+       ECAL_DEPRECATE_SINCE_5_13("Please use the method Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_) instead. This function will be removed in future eCAL versions.")
+       bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "")
+       {
+         return(CPublisher::Create(topic_name_, topic_type_, topic_desc_));
+       }
+   
+       bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
        {
          return(CPublisher::Create(topic_name_, topic_info_));
        }
@@ -79,16 +92,21 @@ Program Listing for File publisher.h
          return(CPublisher::Destroy());
        }
    
-       size_t Send(const T& msg_, long long time_ = DEFAULT_TIME_ARGUMENT)
+       size_t Send(const T& msg_, long long time_ = eCAL::CPublisher::DEFAULT_TIME_ARGUMENT)
+       {
+         return Send(msg_, time_, eCAL::CPublisher::DEFAULT_ACKNOWLEDGE_ARGUMENT);
+       }
+   
+       size_t Send(const T& msg_, long long time_, long long acknowledge_timeout_ms_)
        {
          // this is an optimization ...
          // if there is no subscription we do not waste time for
-         // serialization, but we send an empty payload
+         // serialization but we send an empty payload
          // to still do some statistics like message clock
-           // counting and frequency calculation for the monitoring layer
+         // counting and frequency calculation for the monitoring layer
          if (!IsSubscribed())
          {
-           return(CPublisher::Send(nullptr, 0, time_));
+           return(CPublisher::Send(nullptr, 0, time_, acknowledge_timeout_ms_));
          }
    
          // if we have a subscription allocate memory for the
@@ -98,22 +116,35 @@ Program Listing for File publisher.h
          if (size > 0)
          {
            m_buffer.resize(size);
-           if (Serialize(msg_, m_buffer.data(), m_buffer.size()))
+           if (Serialize(msg_, &m_buffer[0], m_buffer.size()))
            {
-             return(CPublisher::Send(m_buffer.data(), size, time_));
+             return(CPublisher::Send(&m_buffer[0], size, time_, acknowledge_timeout_ms_));
            }
          }
          else
          {
            // send a zero payload length message to trigger the subscriber side
-           return(CPublisher::Send(nullptr, 0, time_));
+           return(CPublisher::Send(nullptr, 0, time_, acknowledge_timeout_ms_));
          }
          return(0);
        }
    
      protected:
+       ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeInformation GetDataTypeInformation() instead. This function will be removed in future eCAL versions.")
+       virtual std::string GetTypeName() const
+       {
+         SDataTypeInformation topic_info{ GetDataTypeInformation() };
+         return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.name);
+       };
+   
+       ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeInformation GetDataTypeInformation() instead. This function will be removed in future eCAL versions.")
+       virtual std::string GetDescription() const
+       {
+         return GetDataTypeInformation().descriptor;
+       };
+       
        // We cannot make it pure virtual, as it would break a bunch of implementations, who are not (yet) implementing this function
-       virtual struct SDataTypeInformation GetDataTypeInformation() const { return SDataTypeInformation{}; }
+       virtual SDataTypeInformation GetDataTypeInformation() const { return SDataTypeInformation{}; }
      private:
        virtual size_t GetSize(const T& msg_) const = 0;
        virtual bool Serialize(const T& msg_, char* buffer_, size_t size_) const = 0;

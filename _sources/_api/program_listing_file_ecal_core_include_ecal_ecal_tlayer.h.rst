@@ -43,6 +43,7 @@ Program Listing for File ecal_tlayer.h
          tlayer_udp_mc     = 1,
          tlayer_shm        = 4,
          tlayer_tcp        = 5,
+         tlayer_inproc     = 42,  
          tlayer_all        = 255
        };
    
@@ -56,9 +57,17 @@ Program Listing for File ecal_tlayer.h
    
        struct ECAL_API STLayer
        {
-         eSendMode sm_udp_mc{smode_none};  
-         eSendMode sm_shm{smode_none};     
-         eSendMode sm_tcp{smode_none};     
+         STLayer()
+         {
+           sm_udp_mc  = smode_none;
+           sm_shm     = smode_none;
+           sm_inproc  = smode_none;
+           sm_tcp     = smode_none;
+         }
+         eSendMode sm_udp_mc;  
+         eSendMode sm_shm;     
+         eSendMode sm_inproc;  
+         eSendMode sm_tcp;     
        };
      }
    }

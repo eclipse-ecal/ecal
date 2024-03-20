@@ -68,9 +68,12 @@ Program Listing for File ecal_config.h
    
        ECAL_API bool              IsUdpMulticastJoinAllIfEnabled       ();
    
+       ECAL_API int               GetMaxUdpBandwidthBytesPerSecond     ();
+   
        ECAL_API bool              IsUdpMulticastRecEnabled             ();
        ECAL_API bool              IsShmRecEnabled                      ();
        ECAL_API bool              IsTcpRecEnabled                      ();
+       ECAL_API bool              IsInprocRecEnabled                   ();
    
        ECAL_API bool              IsNpcapEnabled                       ();
    
@@ -102,6 +105,7 @@ Program Listing for File ecal_config.h
        ECAL_API std::string         GetEcalSysFilterExcludeList          ();
    
        // publisher
+       ECAL_API TLayer::eSendMode GetPublisherInprocMode               ();
        ECAL_API TLayer::eSendMode GetPublisherShmMode                  ();
        ECAL_API TLayer::eSendMode GetPublisherTcpMode                  ();
        ECAL_API TLayer::eSendMode GetPublisherUdpMulticastMode         ();
