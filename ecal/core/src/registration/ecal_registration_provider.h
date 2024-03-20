@@ -43,7 +43,6 @@
 #include <memory>
 #include <mutex>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 namespace eCAL
@@ -54,64 +53,49 @@ namespace eCAL
     CRegistrationProvider();
     ~CRegistrationProvider();
 
-    void Create(bool topics_, bool services_, bool process_);
+    void Create();
     void Destroy();
 
-    bool RegisterTopic(const std::string& topic_name_, const std::string& topic_id_, const Registration::Sample& ecal_sample_, bool force_);
-    bool UnregisterTopic(const std::string& topic_name_, const std::string& topic_id_, const Registration::Sample& ecal_sample_, bool force_);
+    bool ApplySample(const Registration::Sample& sample_, bool force_);
 
-    bool RegisterServer(const std::string& service_name_, const std::string& service_id_, const Registration::Sample& ecal_sample_, bool force_);
-    bool UnregisterServer(const std::string& service_name_, const std::string& service_id_, const Registration::Sample& ecal_sample_, bool force_);
-
-    bool RegisterClient(const std::string& client_name_, const std::string& client_id_, const Registration::Sample& ecal_sample_, bool force_);
-    bool UnregisterClient(const std::string& client_name_, const std::string& client_id_, const Registration::Sample& ecal_sample_, bool force_);
+    using ApplySampleCallbackT = std::function<void(const Registration::Sample&)>;
+    void SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_);
+    void RemCustomApplySampleCallback(const std::string& customer_);
 
   protected:
-    bool RegisterProcess();
-    bool UnregisterProcess();
-      
-    bool RegisterTopics();
+    void AddSample2SampleList(const Registration::Sample& sample_);
+    bool SendSample2UDP(const Registration::Sample& sample_);
 
-    bool RegisterServer();
-    bool RegisterClient();
+    bool SendSampleList2UDP();
+    bool SendSampleList2SHM();
+    void ClearSampleList();
 
-    bool ApplySample(const std::string& sample_name_, const eCAL::Registration::Sample& sample_);
-      
     void RegisterSendThread();
 
-    bool SendSampleList(bool reset_sample_list_ = true);
+    Registration::Sample GetProcessRegisterSample();
+    Registration::Sample GetProcessUnregisterSample();
 
     static std::atomic<bool>            m_created;
-    bool                                m_reg_topics;
-    bool                                m_reg_services;
-    bool                                m_reg_process;
 
     std::shared_ptr<UDP::CSampleSender> m_reg_sample_snd;
     std::shared_ptr<CCallbackThread>    m_reg_sample_snd_thread;
 
-    std::mutex                          m_sample_buffer_sync;
+    std::mutex                          m_sample_buffer_mtx;
     std::vector<char>                   m_sample_buffer;
 
-    using SampleMapT = std::unordered_map<std::string, Registration::Sample>;
-    std::mutex                          m_topics_map_sync;
-    SampleMapT                          m_topics_map;
-
-    std::mutex                          m_server_map_sync;
-    SampleMapT                          m_server_map;
-
-    std::mutex                          m_client_map_sync;
-    SampleMapT                          m_client_map;
+    std::mutex                          m_sample_list_mtx;
+    Registration::SampleList            m_sample_list;
 
 #if ECAL_CORE_REGISTRATION_SHM
-    std::mutex                          m_sample_list_sync;
-    Registration::SampleList            m_sample_list;
     std::vector<char>                   m_sample_list_buffer;
-
     CMemoryFileBroadcast                m_memfile_broadcast;
     CMemoryFileBroadcastWriter          m_memfile_broadcast_writer;
 #endif
 
     bool                                m_use_registration_udp;
     bool                                m_use_registration_shm;
+
+    std::mutex                            m_callback_custom_apply_sample_map_mtx;
+    std::map<std::string, ApplySampleCallbackT> m_callback_custom_apply_sample_map;
   };
 }

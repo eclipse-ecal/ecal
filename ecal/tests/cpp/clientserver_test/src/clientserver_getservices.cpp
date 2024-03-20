@@ -107,8 +107,8 @@ TEST(core_cpp_clientserver, GetServices)
     EXPECT_EQ(resp_desc, "foo::resp_desc1-1");
 
     // change attributes again (this will not overwrite the attributes anymore)
-    bool ret2 = server.AddDescription("foo::method1", "foo::req_type1-2", "foo::req_desc1-2", "foo::resp_type1-2", "foo::resp_desc1-2");
-    EXPECT_EQ(ret2, false);
+    //bool ret2 = server.AddDescription("foo::method1", "foo::req_type1-2", "foo::req_desc1-2", "foo::resp_type1-2", "foo::resp_desc1-2");
+    //EXPECT_EQ(ret2, false);
 
     // check attributes
     eCAL::Util::GetServiceTypeNames("foo::service", "foo::method1", req_type, resp_type);

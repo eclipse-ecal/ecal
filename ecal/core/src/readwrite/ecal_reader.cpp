@@ -122,11 +122,11 @@ namespace eCAL
     // start transport layers
     SubscribeToLayers();
 
+    // mark as created
+    m_created = true;
+
     // register
     Register(false);
-
-    // and mark as created
-    m_created = true;
 
     return(true);
   }
@@ -304,7 +304,7 @@ namespace eCAL
     ecal_reg_sample_topic.connections_ext = 0;
 
     // register subscriber
-    if(g_registration_provider() != nullptr) g_registration_provider()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
+    if(g_registration_provider() != nullptr) g_registration_provider()->ApplySample(ecal_reg_sample, force_);
 #ifndef NDEBUG
     // log it
     Logging::Log(log_level_debug4, m_topic_name + "::CDataReader::DoRegister");
@@ -332,7 +332,7 @@ namespace eCAL
     ecal_reg_sample_topic.uname  = Process::GetUnitName();
 
     // unregister subscriber
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_topic_name, m_topic_id, ecal_unreg_sample, true);
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(ecal_unreg_sample, true);
 #ifndef NDEBUG
     // log it
     Logging::Log(log_level_debug4, m_topic_name + "::CDataReader::Unregister");

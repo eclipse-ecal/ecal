@@ -229,7 +229,7 @@ namespace eCAL
     //if (config_instance)                                                config_instance->Create();
     if (log_instance && ((components_ & Init::Logging) != 0u))            log_instance->Create();
 #if ECAL_CORE_REGISTRATION
-    if (registration_provider_instance)                                   registration_provider_instance->Create(true, true, (components_ & Init::ProcessReg) != 0x0);
+    if (registration_provider_instance)                                   registration_provider_instance->Create();
     if (registration_receiver_instance)                                   registration_receiver_instance->Create();
 #endif
     if (descgate_instance)                                                descgate_instance->Create();

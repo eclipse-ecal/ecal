@@ -30,7 +30,9 @@
 
 #include <regex>
 
+#include "registration/ecal_registration_provider.h"
 #include "registration/ecal_registration_receiver.h"
+
 #include "serialization/ecal_serialize_monitoring.h"
 
 
@@ -56,8 +58,9 @@ namespace eCAL
     // get name of this host
     m_host_name = Process::GetHostName();
 
-    // utilize registration receiver to enrich monitor information
-    g_registration_receiver()->SetCustomApplySampleCallback([this](const auto& sample_){this->ApplySample(sample_, tl_none);});
+    // utilize registration provider and receiver to enrich monitor information
+    g_registration_provider()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_) {this->ApplySample(sample_, tl_none); });
+    g_registration_receiver()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
 
     // setup blacklist and whitelist filter strings#
     m_topic_filter_excl_s = Config::GetMonitoringFilterExcludeList();
@@ -71,7 +74,9 @@ namespace eCAL
 
   void CMonitoringImpl::Destroy()
   {
-    g_registration_receiver()->RemCustomApplySampleCallback();
+    // stop registration provider and receiver utilization to enrich monitor information
+    g_registration_provider()->RemCustomApplySampleCallback("monitoring");
+    g_registration_receiver()->RemCustomApplySampleCallback("monitoring");
     m_init = false;
   }
 

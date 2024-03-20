@@ -24,7 +24,6 @@
 #include <ecal/ecal_config.h>
 
 #include "registration/ecal_registration_provider.h"
-#include "ecal_descgate.h"
 #include "ecal_global_accessors.h"
 #include "ecal_service_server_impl.h"
 #include "ecal_service_singleton_manager.h"
@@ -36,28 +35,6 @@
 #include <sstream>
 #include <string>
 #include <utility>
-
-namespace
-{
-  // TODO: remove me with new CDescGate
-  bool ApplyServiceDescription(const std::string& service_name_, const std::string& method_name_,
-    const eCAL::SDataTypeInformation& request_type_information_,
-    const eCAL::SDataTypeInformation& response_type_information_)
-  {
-    if (eCAL::g_descgate() != nullptr)
-    {
-      // calculate the quality of the current info
-      eCAL::CDescGate::QualityFlags quality = eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!(request_type_information_.name.empty() && response_type_information_.name.empty()))
-        quality |= eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!(request_type_information_.descriptor.empty() && response_type_information_.descriptor.empty()))
-        quality |= eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-
-      return eCAL::g_descgate()->ApplyServiceDescription(service_name_, method_name_, request_type_information_, response_type_information_, quality);
-    }
-    return false;
-  }
-}
 
 namespace eCAL
 {
@@ -148,11 +125,11 @@ namespace eCAL
       m_tcp_server_v1 = server_manager->create_server(1, 0, service_callback, true, event_callback);
     }
 
+    // mark as created
+    m_created = true;
+
     // register this service
     Register(false);
-
-    // and mark as created
-    m_created = true;
 
     return(true);
   }
@@ -223,8 +200,10 @@ namespace eCAL
       }
     }
 
-    // update descgate infos
-    return ApplyServiceDescription(m_service_name, method_, request_type_information_, response_type_information_);
+    // register this service
+    Register(false);
+
+    return true;
   }
 
   // add callback function for server method calls
@@ -259,16 +238,8 @@ namespace eCAL
       }
     }
 
-    SDataTypeInformation request_type_information;
-    request_type_information.name       = req_type_;
-    request_type_information.descriptor = req_desc;
-
-    SDataTypeInformation response_type_information;
-    response_type_information.name       = resp_type_;
-    response_type_information.descriptor = resp_desc;
-
-    // update descgate infos
-    ApplyServiceDescription(m_service_name, method_, request_type_information, response_type_information);
+    // register this service
+    Register(false);
 
     return true;
   }
@@ -387,7 +358,7 @@ namespace eCAL
     }
 
     // register entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterServer(m_service_name, m_service_id, sample, force_);
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, force_);
   }
 
   void CServiceServerImpl::Unregister()
@@ -407,7 +378,7 @@ namespace eCAL
     service.sid         = m_service_id;
 
     // unregister entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterServer(m_service_name, m_service_id, sample, true);
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, true);
   }
 
   int CServiceServerImpl::RequestCallback(const std::string& request_pb_, std::string& response_pb_)

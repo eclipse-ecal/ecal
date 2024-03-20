@@ -31,27 +31,6 @@
 #include <string>
 #include <utility>
 
-namespace
-{
-  // TODO: remove me with new CDescGate
-  bool ApplyTopicDescription(const std::string& topic_name_, const eCAL::SDataTypeInformation& topic_info_)
-  {
-    if (eCAL::g_descgate() != nullptr)
-    {
-      // Calculate the quality of the current info
-      eCAL::CDescGate::QualityFlags quality = eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_info_.name.empty() || !topic_info_.encoding.empty())
-        quality |= eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_info_.descriptor.empty())
-        quality |= eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-      quality |= eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
-
-      return eCAL::g_descgate()->ApplyTopicDescription(topic_name_, topic_info_, quality);
-    }
-    return false;
-  }
-}
-
 namespace eCAL
 {
   //////////////////////////////////////////////////////////////////
@@ -153,9 +132,6 @@ namespace eCAL
     }
 #endif
 
-    // store description
-    ApplyTopicDescription(topic_name, topic_information);
-
     // register local subscriber
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     auto res = m_topic_name_datawriter_map.equal_range(topic_name);
@@ -208,9 +184,6 @@ namespace eCAL
     }
 #endif
 
-    // store description
-    ApplyTopicDescription(topic_name, topic_information);
-
     // register external subscriber
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     auto res = m_topic_name_datawriter_map.equal_range(topic_name);
@@ -248,6 +221,7 @@ namespace eCAL
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     for (const auto& iter : m_topic_name_datawriter_map)
     {
+      // force data writer to (re)register itself on registration provider
       iter.second->RefreshRegistration();
     }
   }

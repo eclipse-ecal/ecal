@@ -41,6 +41,7 @@
 
 #include <atomic>
 #include <functional>
+#include <map>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -60,22 +61,22 @@ namespace eCAL
     void EnableLoopback(bool state_);
 
     bool HasSample(const std::string& /*sample_name_*/) { return(true); };
-    bool ApplySerializedSample(const char* serialized_sample_data_, size_t serialized_sample_size_);
-
-    bool ApplySample(const Registration::Sample& ecal_sample_);
+    bool ApplySample(const Registration::Sample& sample_);
 
     bool AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_);
     bool RemRegistrationCallback(enum eCAL_Registration_Event event_);
 
     using ApplySampleCallbackT = std::function<void(const Registration::Sample&)>;
-    void SetCustomApplySampleCallback(const ApplySampleCallbackT& callback_);
-    void RemCustomApplySampleCallback();
+    void SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_);
+    void RemCustomApplySampleCallback(const std::string& customer_);
 
   protected:
-    void ApplySubscriberRegistration(const eCAL::Registration::Sample& ecal_sample_);
-    void ApplyPublisherRegistration(const eCAL::Registration::Sample& ecal_sample_);
+    bool ApplySerializedSample(const char* serialized_sample_data_, size_t serialized_sample_size_);
 
-    bool IsHostGroupMember(const eCAL::Registration::Sample& ecal_sample_);
+    void ApplySubscriberRegistration(const eCAL::Registration::Sample& sample_);
+    void ApplyPublisherRegistration(const eCAL::Registration::Sample& sample_);
+
+    bool IsHostGroupMember(const eCAL::Registration::Sample& sample_);
 
     static std::atomic<bool>              m_created;
     bool                                  m_network;
@@ -99,8 +100,8 @@ namespace eCAL
     bool                                  m_use_registration_udp;
     bool                                  m_use_registration_shm;
 
-    std::mutex                            m_callback_custom_apply_sample_mtx;
-    ApplySampleCallbackT                  m_callback_custom_apply_sample;
+    std::mutex                            m_callback_custom_apply_sample_map_mtx;
+    std::map<std::string, ApplySampleCallbackT> m_callback_custom_apply_sample_map;
 
     std::string                           m_host_group_name;
   };

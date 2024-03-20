@@ -32,28 +32,6 @@
 #include <string>
 #include <utility>
 
-namespace
-{
-  // TODO: remove me with new CDescGate
-  bool ApplyTopicDescription(const std::string& topic_name_, const eCAL::SDataTypeInformation& topic_info_)
-  {
-    if (eCAL::g_descgate() != nullptr)
-    {
-      // Calculate the quality of the current info
-      eCAL::CDescGate::QualityFlags quality = eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_info_.name.empty() || !topic_info_.encoding.empty())
-        quality |= eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_info_.descriptor.empty())
-        quality |= eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-      quality |= eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
-      quality |= eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
-
-      return eCAL::g_descgate()->ApplyTopicDescription(topic_name_, topic_info_, quality);
-    }
-    return false;
-  }
-}
-
 namespace eCAL
 {
   CSubscriber::CSubscriber() :
@@ -137,9 +115,6 @@ namespace eCAL
 #endif
     // register to subscriber gateway for publisher memory file receive thread
     g_subgate()->Register(topic_name_, m_datareader);
-
-    // register to description gateway for type / description checking
-    ApplyTopicDescription(topic_name_, topic_info_);
 
     // we made it :-)
     m_created = true;
