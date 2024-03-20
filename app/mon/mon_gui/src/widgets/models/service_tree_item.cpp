@@ -111,7 +111,7 @@ QVariant ServiceTreeItem::data(Columns column, Qt::ItemDataRole role) const
       }
       else if (column == Columns::CALL_COUNT)
       {
-        return method_.call_count();
+        return (long long)method_.call_count();
       }
       else
       {
