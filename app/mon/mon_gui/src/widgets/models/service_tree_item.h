@@ -43,6 +43,7 @@ public:
     UNAME,
     PID,
     SNAME,
+    STYPE,
     TCP_PORT,
     MNAME,
     REQ_TYPE,
@@ -52,6 +53,7 @@ public:
 
   ServiceTreeItem();
   ServiceTreeItem(const eCAL::pb::Service& service, const eCAL::pb::Method& method);
+  ServiceTreeItem(const eCAL::pb::Client& client, const eCAL::pb::Method& method);
 
   ~ServiceTreeItem();
 
@@ -62,13 +64,18 @@ public:
   int type() const;
 
   std::string identifier() const;
+
   static std::string generateIdentifier(const eCAL::pb::Service& service, const eCAL::pb::Method& method);
+  static std::string generateIdentifier(const eCAL::pb::Client& client, const eCAL::pb::Method& method);
 
   void update(const eCAL::pb::Service& service, const eCAL::pb::Method& method);
+  void update(const eCAL::pb::Client& client, const eCAL::pb::Method& method);
 
 private:
   eCAL::pb::Service service_;
+  eCAL::pb::Client client_;
   eCAL::pb::Method  method_;
   std::string identifier_;
+  bool is_client_;
 };
 

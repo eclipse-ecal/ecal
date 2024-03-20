@@ -29,14 +29,25 @@
 ServiceTreeItem::ServiceTreeItem()
   : QAbstractTreeItem()
   , identifier_("")
+  , is_client_(false)
 {
 }
 
 ServiceTreeItem::ServiceTreeItem(const eCAL::pb::Service& service, const eCAL::pb::Method& method)
   : QAbstractTreeItem()
   , identifier_("")
+  , is_client_(false)
 {
   update(service, method);
+
+}
+
+ServiceTreeItem::ServiceTreeItem(const eCAL::pb::Client& client, const eCAL::pb::Method& method)
+  : QAbstractTreeItem()
+  , identifier_("")
+  , is_client_(true)
+{
+  update(client, method);
 }
 
 ServiceTreeItem::~ServiceTreeItem()
@@ -52,53 +63,115 @@ QVariant ServiceTreeItem::data(Columns column, Qt::ItemDataRole role) const
 {
   if (role == (Qt::ItemDataRole)ItemDataRoles::RawDataRole) //-V1016 //-V547
   {
-    if (column == Columns::RCLOCK)
+    if (is_client_)
     {
-      return service_.rclock();
-    }
-    else if (column == Columns::HNAME)
-    {
-      return service_.hname().c_str();
-    }
-    else if (column == Columns::PNAME)
-    {
-      return service_.pname().c_str();
-    }
-    else if (column == Columns::UNAME)
-    {
-      return service_.uname().c_str();
-    }
-    else if (column == Columns::PID)
-    {
-      return service_.pid();
-    }
-    else if (column == Columns::SNAME)
-    {
-      return service_.sname().c_str();
-    }
-    else if (column == Columns::TCP_PORT)
-    {
-      return service_.tcp_port_v1();
-    }
-    else if (column == Columns::MNAME)
-    {
-      return method_.mname().c_str();
-    }
-    else if (column == Columns::REQ_TYPE)
-    {
-      return method_.req_type().c_str();
-    }
-    else if (column == Columns::RESP_TYPE)
-    {
-      return method_.resp_type().c_str();
-    }
-    else if (column == Columns::CALL_COUNT)
-    {
-      return (long long)method_.call_count();
+      if (column == Columns::RCLOCK)
+      {
+        return client_.rclock();
+      }
+      else if (column == Columns::HNAME)
+      {
+        return client_.hname().c_str();
+      }
+      else if (column == Columns::PNAME)
+      {
+        return client_.pname().c_str();
+      }
+      else if (column == Columns::UNAME)
+      {
+        return client_.uname().c_str();
+      }
+      else if (column == Columns::PID)
+      {
+        return client_.pid();
+      }
+      else if (column == Columns::SNAME)
+      {
+        return client_.sname().c_str();
+      }
+      else if (column == Columns::STYPE)
+      {
+        return "Client";
+      }
+      else if (column == Columns::TCP_PORT)
+      {
+        return QVariant();
+      }
+      else if (column == Columns::MNAME)
+      {
+        return method_.mname().c_str();
+      }
+      else if (column == Columns::REQ_TYPE)
+      {
+        return method_.req_type().c_str();
+      }
+      else if (column == Columns::RESP_TYPE)
+      {
+        return method_.resp_type().c_str();
+      }
+      else if (column == Columns::CALL_COUNT)
+      {
+        return method_.call_count();
+      }
+      else
+      {
+        return QVariant();
+      }
     }
     else
     {
-      return QVariant();
+      if (column == Columns::RCLOCK)
+      {
+        return service_.rclock();
+      }
+      else if (column == Columns::HNAME)
+      {
+        return service_.hname().c_str();
+      }
+      else if (column == Columns::PNAME)
+      {
+        return service_.pname().c_str();
+      }
+      else if (column == Columns::UNAME)
+      {
+        return service_.uname().c_str();
+      }
+      else if (column == Columns::PID)
+      {
+        return service_.pid();
+      }
+      else if (column == Columns::SNAME)
+      {
+        return service_.sname().c_str();
+      }
+      else if (column == Columns::STYPE)
+      {
+        return "Server";
+      }
+      else if (column == Columns::TCP_PORT)
+      {
+        return service_.tcp_port_v1();
+      }
+      else if (column == Columns::MNAME)
+      {
+        return method_.mname().c_str();
+      }
+      else if (column == Columns::REQ_TYPE)
+      {
+        return method_.req_type().c_str();
+      }
+      else if (column == Columns::RESP_TYPE)
+      {
+        return method_.resp_type().c_str();
+      }
+      else if (column == Columns::CALL_COUNT)
+      {
+        return (long long)method_.call_count();
+      }
+      else
+      {
+        return QVariant();
+      }
     }
   }
 
@@ -149,29 +222,59 @@ QVariant ServiceTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
   else if (role == ItemDataRoles::GroupRole) //-V547
   {
-    if (column == Columns::PNAME)
+    if (is_client_)
     {
-      QStringList list{service_.hname().c_str(), service_.pname().c_str()};
-      return list;
-    }
-    else if (column == Columns::PID)
-    {
-      QStringList list{ service_.hname().c_str(), QString::number(service_.pid()) };
-      return list;
-    }
-    else if (column == Columns::UNAME)
-    {
-      QStringList list{ service_.hname().c_str(), service_.uname().c_str(), QString::number(service_.pid()) };
-      return list;
-    }
-    else if (column == Columns::SNAME)
-    {
-      QStringList list{ service_.sname().c_str(), service_.hname().c_str(), service_.uname().c_str(), QString::number(service_.pid()) };
-      return list;
+      if (column == Columns::PNAME)
+      {
+        QStringList list{ client_.hname().c_str(), client_.pname().c_str() };
+        return list;
+      }
+      else if (column == Columns::PID)
+      {
+        QStringList list{ client_.hname().c_str(), QString::number(client_.pid()) };
+        return list;
+      }
+      else if (column == Columns::UNAME)
+      {
+        QStringList list{ client_.hname().c_str(), client_.uname().c_str(), QString::number(client_.pid()) };
+        return list;
+      }
+      else if (column == Columns::SNAME)
+      {
+        QStringList list{ client_.sname().c_str(), client_.hname().c_str(), client_.uname().c_str(), QString::number(client_.pid()) };
+        return list;
+      }
+      else
+      {
+        return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
+      }
     }
     else
     {
-      return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
+      if (column == Columns::PNAME)
+      {
+        QStringList list{ service_.hname().c_str(), service_.pname().c_str() };
+        return list;
+      }
+      else if (column == Columns::PID)
+      {
+        QStringList list{ service_.hname().c_str(), QString::number(service_.pid()) };
+        return list;
+      }
+      else if (column == Columns::UNAME)
+      {
+        QStringList list{ service_.hname().c_str(), service_.uname().c_str(), QString::number(service_.pid()) };
+        return list;
+      }
+      else if (column == Columns::SNAME)
+      {
+        QStringList list{ service_.sname().c_str(), service_.hname().c_str(), service_.uname().c_str(), QString::number(service_.pid()) };
+        return list;
+      }
+      else
+      {
+        return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
+      }
     }
   }
 
@@ -181,6 +284,7 @@ QVariant ServiceTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::PNAME)
       || (column == Columns::UNAME)
       || (column == Columns::SNAME)
+      || (column == Columns::STYPE)
       || (column == Columns::MNAME)
       || (column == Columns::REQ_TYPE)
       || (column == Columns::RESP_TYPE))
@@ -216,6 +320,11 @@ std::string ServiceTreeItem::generateIdentifier(const eCAL::pb::Service& service
   return std::to_string(service.pid()) + "@" + service.hname() + "@" + method.mname();
 }
 
+std::string ServiceTreeItem::generateIdentifier(const eCAL::pb::Client& client, const eCAL::pb::Method& method)
+{
+  return std::to_string(client.pid()) + "@" + client.hname() + "@" + method.mname();;
+}
+
 std::string ServiceTreeItem::identifier() const
 {
   return identifier_;
@@ -228,4 +337,13 @@ void ServiceTreeItem::update(const eCAL::pb::Service& service, const eCAL::pb::M
   method_.Clear();
   method_.CopyFrom(method);
   identifier_ = generateIdentifier(service_, method_);
+}
+
+void ServiceTreeItem::update(const eCAL::pb::Client& client, const eCAL::pb::Method& method)
+{
+  client_.Clear();
+  client_.CopyFrom(client);
+  method_.Clear();
+  method_.CopyFrom(method);
+  identifier_ = generateIdentifier(client_, method);
 }

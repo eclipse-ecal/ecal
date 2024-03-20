@@ -46,6 +46,7 @@ public:
   {
     GROUP,
     UNIT_NAME,
+    SERVICE_TYPE,
     SERVICE_NAME,
     PROCESS_NAME,
     HOST_NAME,
@@ -85,6 +86,7 @@ private:
     { Columns::PROCESS_NAME,         "Process Path" },
     { Columns::UNIT_NAME,            "Process" },
     { Columns::SERVICE_NAME,         "Service" },
+    { Columns::SERVICE_TYPE,         "Type" },
     { Columns::TCP_PORT,             "TCP Port" },
     { Columns::METHOD_NAME,          "Method" },
     { Columns::METHOD_REQUEST_TYPE,  "Req. Type" },
@@ -101,6 +103,7 @@ private:
     { Columns::PROCESS_NAME,         (int)ServiceTreeItem::Columns::PNAME },
     { Columns::UNIT_NAME,            (int)ServiceTreeItem::Columns::UNAME },
     { Columns::SERVICE_NAME,         (int)ServiceTreeItem::Columns::SNAME },
+    { Columns::SERVICE_TYPE,         (int)ServiceTreeItem::Columns::STYPE },
     { Columns::TCP_PORT,             (int)ServiceTreeItem::Columns::TCP_PORT },
     { Columns::METHOD_NAME,          (int)ServiceTreeItem::Columns::MNAME },
     { Columns::METHOD_REQUEST_TYPE,  (int)ServiceTreeItem::Columns::REQ_TYPE },

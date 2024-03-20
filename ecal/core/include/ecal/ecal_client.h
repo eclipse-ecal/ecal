@@ -57,6 +57,14 @@ namespace eCAL
     ECAL_API explicit CServiceClient(const std::string& service_name_);
 
     /**
+     * @brief Constructor.
+     *
+     * @param service_name_  Unique service name.
+     * @param method_information_map_  Map of method names and corresponding datatype information.
+    **/
+    ECAL_API explicit CServiceClient(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
+
+    /**
      * @brief Destructor. 
     **/
     ECAL_API virtual ~CServiceClient();
@@ -79,6 +87,16 @@ namespace eCAL
      * @return  True if successful. 
     **/
     ECAL_API bool Create(const std::string& service_name_);
+
+    /**
+     * @brief Creates this object.
+     *
+     * @param service_name_  Unique service name.
+     * @param method_information_map_  Map of method names and corresponding datatype information.
+     *
+     * @return  True if successful.
+    **/
+    ECAL_API bool Create(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
 
     /**
      * @brief Destroys this object. 

@@ -49,6 +49,7 @@ ServiceWidget::ServiceWidget(QWidget *parent)
     (int)ServiceTreeModel::Columns::UNIT_NAME,
     (int)ServiceTreeModel::Columns::PID,
     (int)ServiceTreeModel::Columns::SERVICE_NAME,
+    (int)ServiceTreeModel::Columns::SERVICE_TYPE,
     (int)ServiceTreeModel::Columns::TCP_PORT,
     (int)ServiceTreeModel::Columns::METHOD_NAME,
     (int)ServiceTreeModel::Columns::METHOD_REQUEST_TYPE,
@@ -79,6 +80,7 @@ ServiceWidget::ServiceWidget(QWidget *parent)
   {
     (int)ServiceTreeModel::Columns::UNIT_NAME,
     (int)ServiceTreeModel::Columns::SERVICE_NAME,
+    (int)ServiceTreeModel::Columns::SERVICE_TYPE,
     (int)ServiceTreeModel::Columns::HOST_NAME,
     (int)ServiceTreeModel::Columns::PID,
     (int)ServiceTreeModel::Columns::METHOD_NAME,

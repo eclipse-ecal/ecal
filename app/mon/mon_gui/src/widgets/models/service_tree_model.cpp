@@ -97,6 +97,28 @@ void ServiceTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
     }
   }
 
+  for (const auto& client : monitoring_pb.clients())
+  {
+    for (const auto& method : client.methods())
+    {
+      std::string client_identifier = ServiceTreeItem::generateIdentifier(client, method);
+
+      if (tree_item_map_.find(client_identifier) == tree_item_map_.end())
+      {
+        // Got a new service-method
+        ServiceTreeItem* service_tree_item = new ServiceTreeItem(client, method);
+        insertItemIntoGroups(service_tree_item);
+        tree_item_map_[client_identifier] = service_tree_item;
+      }
+      else
+      {
+        // Update an existing service-method
+        tree_item_map_.at(client_identifier)->update(client, method);
+        service_still_existing[client_identifier] = true;
+      }
+    }
+  }
+
   // Remove obsolete items
   for (const auto& service_tree_item : service_still_existing)
   {
