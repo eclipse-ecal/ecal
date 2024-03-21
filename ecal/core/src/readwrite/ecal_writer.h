@@ -211,6 +211,6 @@ namespace eCAL
     bool               m_use_tdesc;
     int                m_share_ttype;
     int                m_share_tdesc;
-    bool               m_created;
+    std::atomic<bool>  m_created;
   };
 }

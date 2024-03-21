@@ -27,6 +27,7 @@
 
 #include "service/ecal_tcpclient.h"
 
+#include <atomic>
 #include <map>
 #include <mutex>
 
@@ -120,6 +121,6 @@ namespace eCAL
     std::string           m_service_id;
     std::string           m_host_name;
 
-    bool                  m_created;
+    std::atomic<bool>     m_created;
   };
 }

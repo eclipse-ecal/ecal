@@ -68,11 +68,11 @@ namespace eCAL
     m_tcp_server.Start(std::bind(&CServiceServerImpl::RequestCallback, this, std::placeholders::_1, std::placeholders::_2),
                        std::bind(&CServiceServerImpl::EventCallback,   this, std::placeholders::_1, std::placeholders::_2));
 
-    // register this service
-    Register(false);
-
     // mark as created
     m_created = true;
+
+    // register this service
+    Register(false);
 
     return(true);
   }
@@ -96,6 +96,9 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
+    // mark as no more created (and prevent reregistering)
+    m_created = false;
+
     // unregister this service
     Unregister();
 
@@ -105,7 +108,6 @@ namespace eCAL
 
     // mark as unconnected and not created
     m_connected = false;
-    m_created   = false;
 
     return(true);
   }
@@ -240,15 +242,18 @@ namespace eCAL
     return m_tcp_server.IsConnected();
   }
 
-  // called by eCAL:CServiceGate every second to update registration layer
   void CServiceServerImpl::RefreshRegistration()
   {
+    // this function will be called finally from registration provider every second (by default settings)
     if (!m_created) return;
+
+    // register without send
     Register(false);
   }
 
   void CServiceServerImpl::Register(const bool force_)
   {
+    if (!m_created)             return;
     if (m_service_name.empty()) return;
 
     // might be zero in construction phase

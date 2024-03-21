@@ -114,11 +114,11 @@ namespace eCAL
     // start transport layers
     SubscribeToLayers();
 
-    // register
-    Register(false);
-
     // mark as created
     m_created = true;
+
+    // register
+    Register(false);
 
     return(true);
   }
@@ -147,11 +147,13 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
+    // mark as no more created (and prevent reregistering)
+    m_created = false;
+
     // unregister
     Unregister();
 
     // reset defaults
-    m_created                 = false;
     m_clock                   = 0;
     m_clock_old               = 0;
     m_freq                    = 0;
@@ -213,7 +215,8 @@ namespace eCAL
 
   bool CDataReader::Register(const bool force_)
   {
-    if(m_topic_name.empty()) return(false);
+    if (!m_created)           return(false);
+    if (m_topic_name.empty()) return(false);
 
     // create command parameter
     eCAL::pb::Sample ecal_reg_sample;
@@ -899,10 +902,8 @@ namespace eCAL
     
   void CDataReader::RefreshRegistration()
   {
+    // this function will be called finally from registration provider every second (by default settings)
     if(!m_created) return;
-
-    // ensure that registration is not called within zero nanoseconds
-    // normally it will be called from registration logic every second
     auto curr_time = std::chrono::steady_clock::now();
     if (std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - m_rec_time) > std::chrono::milliseconds(0))
     {
