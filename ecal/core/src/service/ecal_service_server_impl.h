@@ -26,6 +26,8 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_callback.h>
 
+#include <atomic>
+
 #include "ecal_tcpserver.h"
 
 #ifdef _MSC_VER
@@ -119,6 +121,6 @@ namespace eCAL
     EventCallbackMapT     m_event_callback_map;
     
     bool                  m_connected;
-    bool                  m_created;
+    std::atomic<bool>     m_created;
   };
 }

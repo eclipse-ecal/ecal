@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <atomic>
 #include <ecal/ecal.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_types.h>
