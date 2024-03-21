@@ -197,7 +197,8 @@ TEST(core_cpp_util, Freq_ResettableFrequencyCalculator)
 
 TEST(core_cpp_util, ParallelGetTopics)
 {
-  constexpr const int max_publisher_count(1000);
+  constexpr const int max_publisher_count(2000);
+  constexpr const int waiting_time_thread(1000);
   constexpr const int parallel_threads(1);
 
   eCAL::Initialize();
@@ -211,6 +212,7 @@ TEST(core_cpp_util, ParallelGetTopics)
       std::unique_ptr<eCAL::CPublisher> publisher = std::make_unique<eCAL::CPublisher>(topic_name + std::to_string(pub_count));
       publishers.push_back(std::move(publisher));
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(waiting_time_thread));
     };
 
   auto get_topics_from_ecal = [&]() {
@@ -248,13 +250,13 @@ TEST(core_cpp_util, ParallelGetTopics)
     th.join();
   }
 
-  std::vector<std::string> tmp_topic_names;
-  std::unordered_map<std::string, eCAL::SDataTypeInformation> topics;
-  eCAL::Util::GetTopicNames(tmp_topic_names);
-  eCAL::Util::GetTopics(topics);
+  std::vector<std::string> final_topic_names;
+  std::unordered_map<std::string, eCAL::SDataTypeInformation> final_topics;
+  eCAL::Util::GetTopicNames(final_topic_names);
+  eCAL::Util::GetTopics(final_topics);
 
-  EXPECT_EQ(tmp_topic_names.size(), 0);
-  EXPECT_EQ(topics.size(), 0);
+  EXPECT_EQ(final_topic_names.size(), 0);
+  EXPECT_EQ(final_topics.size(), 0);
 
   eCAL::Finalize();
 }

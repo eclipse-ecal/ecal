@@ -178,6 +178,12 @@ namespace eCAL
     }
       break;
     case bct_unreg_service:
+    {
+      for (const auto& method : sample_.service.methods)
+      {
+        RemoveServiceDescription(sample_.service.sname, method.mname);
+      }
+    }
       break;
     case bct_reg_client:
       //for (const auto& method : sample_.client.methods)
@@ -194,16 +200,22 @@ namespace eCAL
       //}
       break;
     case bct_unreg_client:
+      //for (const auto& method : sample_.client.methods)
+      //{
+      //  RemoveClientDescription(sample_.service.sname, method.mname);
+      //}
       break;
     case bct_reg_publisher:
       ApplyTopicDescription(sample_.topic.tname, sample_.topic.tdatatype);
       break;
     case bct_unreg_publisher:
+      RemoveTopicDescription(sample_.topic.tname);
       break;
     case bct_reg_subscriber:
       ApplyTopicDescription(sample_.topic.tname, sample_.topic.tdatatype);
       break;
     case bct_unreg_subscriber:
+      RemoveTopicDescription(sample_.topic.tname);
       break;
     default:
     {
@@ -225,6 +237,14 @@ namespace eCAL
     return true;
   }
 
+  bool CDescGate::RemoveTopicDescription(const std::string& topic_name_)
+  {
+    const std::unique_lock<std::mutex> lock(m_topic_info_map.sync);
+
+    // remove topic entry
+    return (*m_topic_info_map.map).erase(topic_name_);
+  }
+
   bool CDescGate::ApplyServiceDescription(const std::string& service_name_
                                         , const std::string& method_name_
                                         , const SDataTypeInformation& request_type_information_
@@ -243,5 +263,15 @@ namespace eCAL
     // update service entry (and its timestamp)
     (*m_service_info_map.map)[service_method_tuple] = service_info;
     return true;
+  }
+
+  bool CDescGate::RemoveServiceDescription(const std::string& service_name_, const std::string& method_name_)
+  {
+    std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
+
+    const std::lock_guard<std::mutex> lock(m_service_info_map.sync);
+
+    // remove service entry
+    return (*m_service_info_map.map).erase(service_method_tuple);
   }
 }

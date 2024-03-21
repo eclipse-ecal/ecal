@@ -67,10 +67,15 @@ namespace eCAL
     bool ApplyTopicDescription(const std::string& topic_name_,
                                const SDataTypeInformation& topic_info_);
 
+    bool RemoveTopicDescription(const std::string& topic_name_);
+
     bool ApplyServiceDescription(const std::string& service_name_, 
                                  const std::string& method_name_, 
                                  const SDataTypeInformation& request_type_information_,
                                  const SDataTypeInformation& response_type_information_);
+
+    bool RemoveServiceDescription(const std::string& service_name_,
+                                  const std::string& method_name_);
 
     // key: topic name | value: topic (type/desc), quality
     using TopicInfoMap = eCAL::Util::CExpMap<std::string, SDataTypeInformation>;      //!< Map containing { TopicName -> (Type, Description) } mapping of all topics that are currently known
