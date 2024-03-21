@@ -897,7 +897,7 @@ namespace eCAL
     ecal_reg_sample_topic.uname  = Process::GetUnitName();
 
     // unregister publisher
-    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(ecal_unreg_sample, true);
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(ecal_unreg_sample, false);
 
 #ifndef NDEBUG
     // log it

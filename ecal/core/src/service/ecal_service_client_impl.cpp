@@ -685,7 +685,7 @@ namespace eCAL
     service_client.version = m_client_version;
 
     // unregister entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, true);
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, false);
   }
 
   void CServiceClientImpl::CheckForNewServices()

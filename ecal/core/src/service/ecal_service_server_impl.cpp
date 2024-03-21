@@ -378,7 +378,7 @@ namespace eCAL
     service.sid         = m_service_id;
 
     // unregister entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, true);
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, false);
   }
 
   int CServiceServerImpl::RequestCallback(const std::string& request_pb_, std::string& response_pb_)
