@@ -80,11 +80,11 @@ namespace eCAL
     counter << std::chrono::steady_clock::now().time_since_epoch().count();
     m_service_id = counter.str();
 
-    // register this client
-    Register(false);
-
     // mark as created
     m_created = true;
+
+    // register this client
+    Register(false);
 
     return(true);
   }
@@ -111,6 +111,9 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
+    // mark as no more created (and prevent reregistering)
+    m_created = false;
+
     // unregister this client
     Unregister();
 
@@ -118,9 +121,6 @@ namespace eCAL
     m_service_name.clear();
     m_service_id.clear();
     m_host_name.clear();
-
-    // mark as not created
-    m_created = false;
 
     return(true);
   }
@@ -613,10 +613,12 @@ namespace eCAL
     }
   }
 
-  // called by eCAL:CClientGate every second to update registration layer
   void CServiceClientImpl::RefreshRegistration()
   {
+    // this function will be called finally from registration provider every second (by default settings)
     if (!m_created) return;
+
+    // register without send
     Register(false);
   }
 
@@ -661,6 +663,7 @@ namespace eCAL
 
   void CServiceClientImpl::Register(const bool force_)
   {
+    if (!m_created)             return;
     if (m_service_name.empty()) return;
 
     eCAL::pb::Sample sample;
