@@ -137,11 +137,11 @@ namespace eCAL
     // allow to share topic description
     m_use_tdesc = Config::IsTopicDescriptionSharingEnabled();
 
-    // register
-    Register(false);
-
     // mark as created
     m_created = true;
+
+    // register
+    Register(false);
 
     // create udp multicast layer
     SetUseUdpMC(m_writer.udp_mc_mode.requested);
@@ -206,10 +206,11 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
+    // mark as no more created (and prevent reregistering)
+    m_created = false;
+
     // unregister
     Unregister();
-
-    m_created = false;
 
     return(true);
   }
@@ -739,6 +740,7 @@ namespace eCAL
 
   void CDataWriter::RefreshRegistration()
   {
+    // this function will be called finally from registration provider every second (by default settings)
     if (!m_created) return;
 
     // register without send
@@ -798,6 +800,7 @@ namespace eCAL
 
   bool CDataWriter::Register(bool force_)
   {
+    if (!m_created)           return(false);
     if (m_topic_name.empty()) return(false);
 
     //@Rex: why is the logic different in CDataReader???
