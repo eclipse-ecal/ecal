@@ -204,7 +204,7 @@ TEST(core_cpp_util, ParallelGetTopics)
 
   auto create_publishers = [&]() {
     std::string topic_name = "Test.ParallelUtilFunctions";
-    std::atomic<int> call_back_count = 0;
+    std::atomic<int> call_back_count{ 0 };
 
     std::vector<std::unique_ptr<eCAL::CPublisher>> publishers;
     for (int pub_count = 0; pub_count < max_publisher_count; pub_count++) {
