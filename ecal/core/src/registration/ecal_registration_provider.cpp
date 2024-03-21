@@ -104,8 +104,7 @@ namespace eCAL
     // stop cyclic registration thread
     m_reg_sample_snd_thread->stop();
 
-    // prepare unregistration
-    ClearSampleList();
+    // add process unregistration sample
     AddSample2SampleList(GetProcessUnregisterSample());
 
     if (m_use_registration_udp)
