@@ -153,8 +153,10 @@ namespace eCAL
       // send single registration sample over udp
       SendSample2UDP(sample_);
 
+#if ECAL_CORE_REGISTRATION_SHM
       // broadcast (updated) sample list over shm
       SendSampleList2SHM();
+#endif
     }
 
     return(true);
@@ -221,11 +223,11 @@ namespace eCAL
     return return_value;
   }
 
+#if ECAL_CORE_REGISTRATION_SHM
   bool CRegistrationProvider::SendSampleList2SHM()
   {
     if (!m_created) return(false);
 
-#if ECAL_CORE_REGISTRATION_SHM
     bool return_value{ true };
 
     // send sample list over shm
@@ -245,10 +247,8 @@ namespace eCAL
       }
     }
     return return_value;
-#else
-    return false;
-#endif
   }
+#endif
 
   void CRegistrationProvider::ClearSampleList()
   {
@@ -281,8 +281,10 @@ namespace eCAL
     // send out sample list over udp
     SendSampleList2UDP();
 
+#if ECAL_CORE_REGISTRATION_SHM
     // broadcast sample list over shm
     SendSampleList2SHM();
+#endif
 
     // clear registration sample list
     ClearSampleList();
