@@ -70,6 +70,8 @@ namespace eCAL
           std::string message;
         };
 
+        using WriterException = Exception<WriterError>;
+
         struct WriterEntry
         {
           void* data = nullptr;

@@ -30,6 +30,7 @@
 #include <memory>
 
 #include <ecal/measurement/base/types.h>
+#include <filesystem>
 
 namespace eCAL
 {
@@ -39,49 +40,100 @@ namespace eCAL
     {
       namespace base
       {
+
+        class MessageView;
+        // visitor for each type (e.g. template based on data in the measurement... could be interesting)
+
+        // When I have a measurement I would like to know what channels are in the measurement
+        // i would like to find out more about the Channels, e.g. how many elements, timestamps of first & last element
+        // i would like to be able to iterate over a measurement channel by channel
+        // i would like to be able to iterate over all elements of a measurement
+
+
+
+
+        class MessageView
+        {
+          class const_iterator;
+
+          const_iterator begin();
+          const_iterator end();
+          const_iterator rbegin();
+          const_iterator rend();
+
+
+        };
+
+
+        struct MessageMetaData
+        {
+          Channel channel;
+        };
+
+        using MessageFilter = std::function<bool(const MessageMetaData& metadata)>;
+
+        class Reader {
+        public:
+          virtual ~Reader();
+
+          virtual MessageView getMessageView() = 0;
+          virtual MessageView getMessageView(const MessageFilter& filter);
+          virtual MessageView getMessageView(const Channel& channel);
+
+          std::set<Channel> GetChannels();
+        };
+
+        class DirectoryReader : Reader {
+
+
+
+        };
+
+
+
         /**
-         * @brief eCAL Measurement Reader API
+         * @brief eCAL Measurement ReaderOld API
         **/
-        class Reader
+        class ReaderOld
         {
         public:
           /**
            * @brief Constructor
           **/
-          Reader() = default;
+          ReaderOld() = default;
 
           /**
            * @brief Destructor
           **/
-          virtual ~Reader() = default;
+          virtual ~ReaderOld() = default;
 
           /**
            * @brief Copy operator
           **/
-          Reader(const Reader& other) = delete;
-          Reader& operator=(const Reader& other) = delete;
+          ReaderOld(const ReaderOld& other) = delete;
+          ReaderOld& operator=(const ReaderOld& other) = delete;
 
           /**
           * @brief Move operator
           **/
-          Reader(Reader&&) = default;
-          Reader& operator=(Reader&&) = default;
+          ReaderOld(ReaderOld&&) = default;
+          ReaderOld& operator=(ReaderOld&&) = default;
 
           /**
            * @brief Open file
            *
-           * @param path     Input file path / Reader directory path.
+           * @param path     Input file path / ReaderOld directory path.
            *
-           *                 Default Reader directory structure:
-           *                  - root directory e.g.: M:\Reader_directory\Reader01
+           *                 Default ReaderOld directory structure:
+           *                  - root directory e.g.: M:\ReaderOld_directory\ReaderOld01
            *                  - documents directory:                                |_doc
            *                  - hosts directories:                                  |_Host1 (e.g.: CARPC01)
            *                                                                        |_Host2 (e.g.: CARPC02)
            *
            *                 File path as input
-           *                  - root directory (e.g.: M:\Reader_directory\Reader01) in this case all hosts subdirectories will be iterated,
-           *                  - host directory (e.g.: M:\Reader_directory\Reader01\CARPC01),
-           *                  - file path, path to file from Reader (e.g.: M:\Reader_directory\Reader01\CARPC01\meas01_05.hdf5).
+           *                  - root directory (e.g.: M:\ReaderOld_directory\ReaderOld01) in this case all hosts subdirectories will be iterated,
+           *                  - host directory (e.g.: M:\ReaderOld_directory\ReaderOld01\CARPC01),
+           *                  - file path, path to file from ReaderOld (e.g.: M:\ReaderOld_directory\ReaderOld01\CARPC01\meas01_05.hdf5).
            *
            *
            * @return         true if input measurement/file path was opened, false otherwise.

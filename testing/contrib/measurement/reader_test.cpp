@@ -133,10 +133,6 @@ TEST(Measurement, WriterEscapingTopicnames)
 
   auto writer_creator = EscapingWriter::GetCreator(create_mockingWriter);
   auto writer = writer_creator(options);
-
-
-
-
 }
 
 

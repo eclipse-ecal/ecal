@@ -79,7 +79,7 @@ public:
    * @param measurement    The new measurement
    * @param path           The (optional) path from where the measurement was loaded
    */
-  void SetMeasurement(const std::shared_ptr<eCAL::experimental::measurement::base::Reader>& measurement, const std::string& path = "");
+  void SetMeasurement(const std::shared_ptr<eCAL::experimental::measurement::base::ReaderOld>& measurement, const std::string& path = "");
 
   /**
    * @brief Returns whether a measurement has successfully been loaded

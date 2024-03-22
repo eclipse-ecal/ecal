@@ -21,7 +21,10 @@ project(test_measurement)
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
-ecal_add_gtest(${PROJECT_NAME} reader_test.cpp)
+ecal_add_gtest(${PROJECT_NAME} 
+  reader_test.cpp
+  writer_test.cpp
+)
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE

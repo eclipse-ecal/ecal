@@ -32,7 +32,6 @@ namespace eCAL
 {
   class ReaderImplementation;
   
-
   namespace experimental
   {
     namespace measurement
@@ -42,7 +41,7 @@ namespace eCAL
         /**
          * @brief Hdf5 based Reader Implementation
         **/
-        class Reader : public measurement::base::Reader
+        class Reader : public measurement::base::ReaderOld
         {
         public:
           /**

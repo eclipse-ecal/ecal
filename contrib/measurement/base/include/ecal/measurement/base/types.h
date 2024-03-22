@@ -145,6 +145,26 @@ namespace eCAL
         **/
         using EntryInfoVect = std::vector<EntryInfo>;
 
+
+        template<typename DATA_T>
+        class Exception
+        {
+        public:
+          Exception(const std::string& str, const DATA_T& data)
+            : error_string(str)
+            , user_data(data)
+          {}
+
+          std::string& what() { error_string; }
+          DATA_T data() { return user_data; }
+
+        private:
+          std::string error_string;
+          DATA_T user_data;
+
+
+        };
+
       }
     }
   }
