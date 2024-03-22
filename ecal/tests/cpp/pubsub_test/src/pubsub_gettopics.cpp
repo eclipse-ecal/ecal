@@ -36,12 +36,12 @@ TEST(core_cpp_pubsub, GetTopics)
   // create and check a few pub/sub entities
   {
     eCAL::SDataTypeInformation info_A1  { "typeA1"  ,"",  "descA1"   };
-    //eCAL::SDataTypeInformation info_A1_2{ "typeA1.2","",  "descA1.2" };
+    eCAL::SDataTypeInformation info_A1_2{ "typeA1.2","",  "descA1.2" };
     eCAL::SDataTypeInformation info_A2  { "typeA2"  ,"",  "descA2"   };
     eCAL::SDataTypeInformation info_A3  { "typeA3"  ,"",  "descA3"   };
 
     eCAL::SDataTypeInformation info_B1  { "typeB1"  ,"",  "descB1"   };
-    //eCAL::SDataTypeInformation info_B1_2{ "typeB1.2","",  "descB1.2" };
+    eCAL::SDataTypeInformation info_B1_2{ "typeB1.2","",  "descB1.2" };
     eCAL::SDataTypeInformation info_B2  { "typeB2"  ,"",  "descB2"   };
 
     // create 3 publisher
@@ -51,7 +51,7 @@ TEST(core_cpp_pubsub, GetTopics)
 
     // create a missmatching publisher
     // this should trigger a warning but not increase map size
-    //eCAL::CPublisher pub12("A1", info_A1_2);
+    eCAL::CPublisher pub12("A1", info_A1_2);
 
     // create 2 subscriber
     eCAL::CSubscriber sub1("B1", info_B1);
@@ -59,7 +59,7 @@ TEST(core_cpp_pubsub, GetTopics)
 
     // create a missmatching subscriber
     // this should trigger a warning but not increase map size
-    //eCAL::CSubscriber sub12("B1", info_B1_2);
+    eCAL::CSubscriber sub12("B1", info_B1_2);
 
     // get all topics
     eCAL::Util::GetTopics(topic_info_map);
@@ -110,19 +110,19 @@ TEST(core_cpp_pubsub, GetTopics)
     eCAL::Util::GetTopics(topic_info_map);
 
     // size should be 5 again (because of pub1.2 and sub1.2 should have replaced pub1 and sub1 attributes now)
-    //EXPECT_EQ(topic_info_map.size(), 5);
+    EXPECT_EQ(topic_info_map.size(), 5);
 
     // check overwritten attributes
-    //{
-    //  eCAL::SDataTypeInformation utils_topic_info;
-    //  eCAL::Util::GetTopicDataTypeInformation("A1", utils_topic_info);
-    //  EXPECT_EQ(utils_topic_info, info_A1_2);
-    //}
-    //{
-    //  eCAL::SDataTypeInformation utils_topic_info;
-    //  eCAL::Util::GetTopicDataTypeInformation("B1", utils_topic_info);
-    //  EXPECT_EQ(utils_topic_info, info_B1_2);
-    //}
+    {
+      eCAL::SDataTypeInformation utils_topic_info;
+      eCAL::Util::GetTopicDataTypeInformation("A1", utils_topic_info);
+      EXPECT_EQ(utils_topic_info, info_A1_2);
+    }
+    {
+      eCAL::SDataTypeInformation utils_topic_info;
+      eCAL::Util::GetTopicDataTypeInformation("B1", utils_topic_info);
+      EXPECT_EQ(utils_topic_info, info_B1_2);
+    }
   }
 
   // let's unregister them
