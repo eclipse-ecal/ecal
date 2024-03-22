@@ -67,7 +67,9 @@ namespace eCAL
     bool SendSample2UDP(const Registration::Sample& sample_);
 
     bool SendSampleList2UDP();
+#if ECAL_CORE_REGISTRATION_SHM
     bool SendSampleList2SHM();
+#endif
     void ClearSampleList();
 
     void RegisterSendThread();
