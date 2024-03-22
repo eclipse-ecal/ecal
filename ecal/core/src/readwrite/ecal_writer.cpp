@@ -139,11 +139,11 @@ namespace eCAL
     // allow to share topic description
     m_use_tdesc = Config::IsTopicDescriptionSharingEnabled();
 
-    // register
-    Register(false);
-
     // mark as created
     m_created = true;
+
+    // register
+    Register(false);
 
     // create udp multicast layer
     SetUseUdpMC(m_writer.udp_mc_mode.requested);
@@ -210,10 +210,11 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
-    // unregister
-    Unregister();
-
+    // mark as no more created
     m_created = false;
+
+    // and unregister
+    Unregister();
 
     return(true);
   }
@@ -771,6 +772,7 @@ namespace eCAL
   bool CDataWriter::Register(bool force_)
   {
 #if ECAL_CORE_REGISTRATION
+    if (!m_created)           return(false);
     if (m_topic_name.empty()) return(false);
 
     //@Rex: why is the logic different in CDataReader???
@@ -865,7 +867,7 @@ namespace eCAL
     ecal_reg_sample_topic.connections_ext = static_cast<int32_t>(ext_connections);
 
     // register publisher
-    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(ecal_reg_sample, force_);
 
 #ifndef NDEBUG
     // log it
@@ -895,7 +897,7 @@ namespace eCAL
     ecal_reg_sample_topic.uname  = Process::GetUnitName();
 
     // unregister publisher
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_topic_name, m_topic_id, ecal_unreg_sample, true);
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(ecal_unreg_sample, false);
 
 #ifndef NDEBUG
     // log it

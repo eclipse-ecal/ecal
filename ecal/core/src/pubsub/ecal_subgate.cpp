@@ -35,28 +35,6 @@
 #include <utility>
 #include <vector>
 
-namespace
-{
-  // TODO: remove me with new CDescGate
-  bool ApplyTopicDescription(const std::string& topic_name_, const eCAL::SDataTypeInformation& topic_info_)
-  {
-    if (eCAL::g_descgate() != nullptr)
-    {
-      // Calculate the quality of the current info
-      eCAL::CDescGate::QualityFlags quality = eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_info_.name.empty() || !topic_info_.encoding.empty())
-        quality |= eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_info_.descriptor.empty())
-        quality |= eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-      quality |= eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
-      quality |= eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PRODUCER;
-
-      return eCAL::g_descgate()->ApplyTopicDescription(topic_name_, topic_info_, quality);
-    }
-    return false;
-  }
-}
-
 namespace eCAL
 {
   //////////////////////////////////////////////////////////////////
@@ -243,9 +221,8 @@ namespace eCAL
     const std::string& topic_name = ecal_topic.tname;
     if (topic_name.empty()) return;
 
-    // store description
+    // get topic id
     const std::string& topic_id = ecal_topic.tid;
-    ApplyTopicDescription(topic_name, ecal_topic.tdatatype);
 
     // get process id
     const std::string process_id = std::to_string(ecal_sample_.topic.pid);
@@ -274,9 +251,6 @@ namespace eCAL
     const std::string& topic_name = ecal_topic.tname;
     const std::string& topic_id   = ecal_topic.tid;
     const std::string  process_id = std::to_string(ecal_sample_.topic.pid);
-
-    // store description
-    ApplyTopicDescription(topic_name, ecal_topic.tdatatype);
 
     // unregister local publisher
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
@@ -340,6 +314,7 @@ namespace eCAL
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
     for (const auto& iter : m_topic_name_datareader_map)
     {
+      // force data reader to (re)register itself on registration provider
       iter.second->RefreshRegistration();
     }
   }

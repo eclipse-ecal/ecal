@@ -43,58 +43,11 @@
 #include <mutex>
 #include <string>
 
-namespace
-{
-  // TODO: remove me with new CDescGate
-  bool ApplyTopicDescription(const std::string& topic_name_, const eCAL::SDataTypeInformation& topic_info_, bool topic_is_a_publisher_)
-  {
-    if (eCAL::g_descgate() != nullptr)
-    {
-      // calculate the quality of the current info
-      eCAL::CDescGate::QualityFlags quality = eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_info_.encoding.empty() || !topic_info_.name.empty())
-        quality |= eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_info_.descriptor.empty())
-        quality |= eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-      if (topic_is_a_publisher_)
-        quality |= eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PRODUCER;
-      quality |= eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
-      quality |= eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
-      // update description
-      return eCAL::g_descgate()->ApplyTopicDescription(topic_name_, topic_info_, quality);
-    }
-    return false;
-  }
-
-  // TODO: remove me with new CDescGate
-  bool ApplyServiceDescription(const std::string& service_name_, const std::string& method_name_,
-    const eCAL::SDataTypeInformation& request_type_information_,
-    const eCAL::SDataTypeInformation& response_type_information_)
-  {
-    if (eCAL::g_descgate() != nullptr)
-    {
-      // Calculate the quality of the current info
-      eCAL::CDescGate::QualityFlags quality = eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!(request_type_information_.name.empty() && response_type_information_.name.empty()))
-        quality |= eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!(request_type_information_.descriptor.empty() && response_type_information_.descriptor.empty()))
-        quality |= eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-      quality |= eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
-
-      return eCAL::g_descgate()->ApplyServiceDescription(service_name_, method_name_, request_type_information_, response_type_information_, quality);
-    }
-    return false;
-  }
-}
-
 namespace eCAL
 {
   std::atomic<bool> CRegistrationProvider::m_created;
 
   CRegistrationProvider::CRegistrationProvider() :
-                    m_reg_topics(false),
-                    m_reg_services(false),
-                    m_reg_process(false),
                     m_use_registration_udp(false),
                     m_use_registration_shm(false)
   {
@@ -105,13 +58,9 @@ namespace eCAL
     Destroy();
   }
 
-  void CRegistrationProvider::Create(bool topics_, bool services_, bool process_)
+  void CRegistrationProvider::Create()
   {
     if(m_created) return;
-
-    m_reg_topics   = topics_;
-    m_reg_services = services_;
-    m_reg_process  = process_;
 
     // send registration to shared memory and to udp
     m_use_registration_udp = !Config::Experimental::IsNetworkMonitoringDisabled();
@@ -155,16 +104,25 @@ namespace eCAL
     // stop cyclic registration thread
     m_reg_sample_snd_thread->stop();
 
-    // send one last (un)registration message to the world
-    // thank you and goodbye :-)
-    UnregisterProcess();
+    // add process unregistration sample
+    AddSample2SampleList(GetProcessUnregisterSample());
 
-    // destroy registration sample sender
-    m_reg_sample_snd.reset();
+    if (m_use_registration_udp)
+    {
+      // send process unregistration sample over udp
+      SendSampleList2UDP();
+
+      // destroy udp registration sample sender
+      m_reg_sample_snd.reset();
+    }
 
 #if ECAL_CORE_REGISTRATION_SHM
     if (m_use_registration_shm)
     {
+      // broadcast process unregistration sample over shm
+      SendSampleList2SHM();
+
+      // destroy shm registration sample writer
       m_memfile_broadcast_writer.Unbind();
       m_memfile_broadcast.Destroy();
     }
@@ -173,143 +131,171 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CRegistrationProvider::RegisterTopic(const std::string& topic_name_, const std::string& topic_id_, const Registration::Sample& ecal_sample_, const bool force_)
-  {
-    if (!m_created)    return(false);
-    if (!m_reg_topics) return(false);
-
-    const std::lock_guard<std::mutex> lock(m_topics_map_sync);
-    m_topics_map[topic_name_ + topic_id_] = ecal_sample_;
-    if(force_)
-    {
-      RegisterProcess();
-      // apply registration sample
-      ApplySample(topic_name_, ecal_sample_);
-      // apply registration sample to shm registration
-      SendSampleList(false);
-    }
-
-    return(true);
-  }
-
-  bool CRegistrationProvider::UnregisterTopic(const std::string& topic_name_, const std::string& topic_id_, const Registration::Sample& ecal_sample_, const bool force_)
-  {
-    if(!m_created) return(false);
-
-    if (force_)
-    {
-      // apply unregistration sample
-      ApplySample(topic_name_, ecal_sample_);
-      // apply registration sample to shm registration
-      SendSampleList(false);
-    }
-
-    SampleMapT::iterator iter;
-    const std::lock_guard<std::mutex> lock(m_topics_map_sync);
-    iter = m_topics_map.find(topic_name_ + topic_id_);
-    if(iter != m_topics_map.end())
-    {
-      m_topics_map.erase(iter);
-      return(true);
-    }
-
-    return(false);
-  }
-
-  bool CRegistrationProvider::RegisterServer(const std::string& service_name_, const std::string& service_id_, const Registration::Sample& ecal_sample_, bool force_)
-  {
-    if (!m_created)      return(false);
-    if (!m_reg_services) return(false);
-
-    const std::lock_guard<std::mutex> lock(m_server_map_sync);
-    m_server_map[service_name_ + service_id_] = ecal_sample_;
-    if (force_)
-    {
-      RegisterProcess();
-      // apply registration sample
-      ApplySample(service_name_, ecal_sample_);
-      // apply registration sample to shm registration
-      SendSampleList(false);
-    }
-
-    return(true);
-  }
-
-  bool CRegistrationProvider::UnregisterServer(const std::string& service_name_, const std::string& service_id_, const Registration::Sample& ecal_sample_, bool force_)
+  bool CRegistrationProvider::ApplySample(const Registration::Sample& sample_, const bool force_)
   {
     if (!m_created) return(false);
 
-    if (force_)
+    // forward all registration samples to outside "customer" (e.g. monitoring, descgate)
     {
-      // apply unregistration sample
-      ApplySample(service_name_, ecal_sample_);
-      // apply registration sample to shm registration
-      SendSampleList(false);
+      const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
+      for (const auto& iter : m_callback_custom_apply_sample_map)
+      {
+        iter.second(sample_);
+      }
     }
 
-    SampleMapT::iterator iter;
-    const std::lock_guard<std::mutex> lock(m_server_map_sync);
-    iter = m_server_map.find(service_name_ + service_id_);
-    if (iter != m_server_map.end())
-    {
-      m_server_map.erase(iter);
-      return(true);
-    }
+    // update sample list
+    AddSample2SampleList(sample_);
 
-    return(false);
-  }
-
-  bool CRegistrationProvider::RegisterClient(const std::string& client_name_, const std::string& client_id_, const Registration::Sample& ecal_sample_, bool force_)
-  {
-    if (!m_created)      return(false);
-    if (!m_reg_services) return(false);
-
-    const std::lock_guard<std::mutex> lock(m_client_map_sync);
-    m_client_map[client_name_ + client_id_] = ecal_sample_;
+    // if registration is forced
     if (force_)
     {
-      RegisterProcess();
-      // apply registration sample
-      ApplySample(client_name_, ecal_sample_);
-      // apply registration sample to shm registration
-      SendSampleList(false);
+      // send single registration sample over udp
+      SendSample2UDP(sample_);
+
+      // broadcast (updated) sample list over shm
+      SendSampleList2SHM();
     }
 
     return(true);
   }
 
-  bool CRegistrationProvider::UnregisterClient(const std::string& client_name_, const std::string& client_id_, const Registration::Sample& ecal_sample_, bool force_)
+  void CRegistrationProvider::SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_)
+  {
+    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
+    m_callback_custom_apply_sample_map[customer_] = callback_;
+  }
+
+  void CRegistrationProvider::RemCustomApplySampleCallback(const std::string& customer_)
+  {
+    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
+    auto iter = m_callback_custom_apply_sample_map.find(customer_);
+    if (iter != m_callback_custom_apply_sample_map.end())
+    {
+      m_callback_custom_apply_sample_map.erase(iter);
+    }
+  }
+
+  void CRegistrationProvider::AddSample2SampleList(const Registration::Sample& sample_)
+  {
+    const std::lock_guard<std::mutex> lock(m_sample_list_mtx);
+    m_sample_list.samples.push_back(sample_);
+  }
+
+  bool CRegistrationProvider::SendSample2UDP(const Registration::Sample& sample_)
   {
     if (!m_created) return(false);
 
-    if (force_)
+    if (m_use_registration_udp && m_reg_sample_snd)
     {
-      // apply unregistration sample
-      ApplySample(client_name_, ecal_sample_);
-      // apply registration sample to shm registration
-      SendSampleList(false);
-    }
+      // lock sample buffer
+      const std::lock_guard<std::mutex> lock(m_sample_buffer_mtx);
 
-    SampleMapT::iterator iter;
-    const std::lock_guard<std::mutex> lock(m_client_map_sync);
-    iter = m_client_map.find(client_name_ + client_id_);
-    if (iter != m_client_map.end())
-    {
-      m_client_map.erase(iter);
-      return(true);
+      // serialize single sample
+      if (SerializeToBuffer(sample_, m_sample_buffer))
+      {
+        // send single sample over udp
+        return m_reg_sample_snd->Send("reg_sample", m_sample_buffer) != 0;
+      }
     }
-
     return(false);
   }
 
-  bool CRegistrationProvider::RegisterProcess()
+  bool CRegistrationProvider::SendSampleList2UDP()
   {
-    if (!m_created)     return(false);
-    if (!m_reg_process) return(false);
+    if (!m_created) return(false);
+    bool return_value{ true };
 
+    // lock sample list
+    const std::lock_guard<std::mutex> lock(m_sample_list_mtx);
+
+    // send all (single) samples over udp
+    if (m_use_registration_udp && m_reg_sample_snd)
+    {
+      for (const auto& sample : m_sample_list.samples)
+      {
+        return_value &= SendSample2UDP(sample);
+      }
+    }
+
+    return return_value;
+  }
+
+  bool CRegistrationProvider::SendSampleList2SHM()
+  {
+    if (!m_created) return(false);
+
+#if ECAL_CORE_REGISTRATION_SHM
+    bool return_value{ true };
+
+    // send sample list over shm
+    if (m_use_registration_shm)
+    {
+      // lock sample list
+      const std::lock_guard<std::mutex> lock(m_sample_list_mtx);
+
+      // serialize whole sample list
+      if (SerializeToBuffer(m_sample_list, m_sample_list_buffer))
+      {
+        if (!m_sample_list_buffer.empty())
+        {
+          // broadcast sample list over shm
+          return_value &= m_memfile_broadcast_writer.Write(m_sample_list_buffer.data(), m_sample_list_buffer.size());
+        }
+      }
+    }
+    return return_value;
+#else
+    return false;
+#endif
+  }
+
+  void CRegistrationProvider::ClearSampleList()
+  {
+    // lock sample list
+    const std::lock_guard<std::mutex> lock(m_sample_list_mtx);
+    // clear sample list
+    m_sample_list.samples.clear();
+  }
+
+  void CRegistrationProvider::RegisterSendThread()
+  {
+#if ECAL_CORE_SUBSCRIBER
+    // refresh subscriber registration
+    if (g_subgate() != nullptr) g_subgate()->RefreshRegistrations();
+#endif
+
+#if ECAL_CORE_PUBLISHER
+    // refresh publisher registration
+    if (g_pubgate() != nullptr) g_pubgate()->RefreshRegistrations();
+#endif
+
+#if ECAL_CORE_SERVICE
+    // refresh server registration
+    if (g_servicegate() != nullptr) g_servicegate()->RefreshRegistrations();
+
+    // refresh client registration
+    if (g_clientgate() != nullptr) g_clientgate()->RefreshRegistrations();
+#endif
+
+    // send out sample list over udp
+    SendSampleList2UDP();
+
+    // broadcast sample list over shm
+    SendSampleList2SHM();
+
+    // clear registration sample list
+    ClearSampleList();
+
+    // add process registration sample to internal sample list as first sample (for next registration loop)
+    AddSample2SampleList(GetProcessRegisterSample());
+  }
+
+  Registration::Sample CRegistrationProvider::GetProcessRegisterSample()
+  {
     Registration::Sample process_sample;
-    process_sample.cmd_type = bct_reg_process;
-    auto& process_sample_process = process_sample.process;
+    process_sample.cmd_type                     = bct_reg_process;
+    auto& process_sample_process                = process_sample.process;
     process_sample_process.hname                = Process::GetHostName();
     process_sample_process.hgname               = Process::GetHostGroupName();
     process_sample_process.pid                  = Process::GetProcessID();
@@ -362,205 +348,19 @@ namespace eCAL
 
     process_sample_process.ecal_runtime_version = GetVersionString();
 
-    // apply registration sample
-    const bool return_value = ApplySample(Process::GetHostName(), process_sample);
-
-    return return_value;
+    return process_sample;
   }
 
-  bool CRegistrationProvider::UnregisterProcess()
+  Registration::Sample CRegistrationProvider::GetProcessUnregisterSample()
   {
-	  if (!m_created)     return(false);
-	  if (!m_reg_process) return(false);
+    Registration::Sample process_sample;
+    process_sample.cmd_type      = bct_unreg_process;
+    auto& process_sample_process = process_sample.process;
+    process_sample_process.hname = Process::GetHostName();
+    process_sample_process.pid   = Process::GetProcessID();
+    process_sample_process.pname = Process::GetProcessName();
+    process_sample_process.uname = Process::GetUnitName();
 
-	  Registration::Sample process_sample;
-	  process_sample.cmd_type = bct_unreg_process;
-	  auto& process_sample_process = process_sample.process;
-	  process_sample_process.hname = Process::GetHostName();
-	  process_sample_process.pid   = Process::GetProcessID();
-	  process_sample_process.pname = Process::GetProcessName();
-	  process_sample_process.uname = Process::GetUnitName();
-
-    // apply unregistration sample
-    const bool return_value = ApplySample(Process::GetHostName(), process_sample);
-
-	  return return_value;
-  }
-
-  bool CRegistrationProvider::RegisterTopics()
-  {
-    if (!m_created)    return(false);
-    if (!m_reg_topics) return(false);
-
-    bool return_value {true};
-    const std::lock_guard<std::mutex> lock(m_topics_map_sync);
-    for(SampleMapT::const_iterator iter = m_topics_map.begin(); iter != m_topics_map.end(); ++iter)
-    {
-      //////////////////////////////////////////////
-      // update description
-      //////////////////////////////////////////////
-      // read attributes
-      const std::string topic_name(iter->second.topic.tname);
-      const bool topic_is_a_publisher(iter->second.cmd_type == eCAL::bct_reg_publisher);
-
-      SDataTypeInformation topic_info;
-      const auto& topic_datatype = iter->second.topic.tdatatype;
-      topic_info.encoding   = topic_datatype.encoding;
-      topic_info.name       = topic_datatype.name;
-      topic_info.descriptor = topic_datatype.descriptor;
-
-      ApplyTopicDescription(topic_name, topic_info, topic_is_a_publisher);
-
-      //////////////////////////////////////////////
-      // send sample to registration layer
-      //////////////////////////////////////////////
-      return_value &= ApplySample(iter->second.topic.tname, iter->second);
-    }
-
-    return return_value;
-  }
-
-  bool CRegistrationProvider::RegisterServer()
-  {
-    if (!m_created)      return(false);
-    if (!m_reg_services) return(false);
-
-    bool return_value {true};
-    const std::lock_guard<std::mutex> lock(m_server_map_sync);
-    for (SampleMapT::const_iterator iter = m_server_map.begin(); iter != m_server_map.end(); ++iter)
-    {
-      //////////////////////////////////////////////
-      // update description
-      //////////////////////////////////////////////
-      const auto& ecal_sample_service = iter->second.service;
-      for (const auto& method : ecal_sample_service.methods)
-      {
-        SDataTypeInformation request_type;
-        request_type.name        = method.req_type;
-        request_type.descriptor  = method.req_desc;
-
-        SDataTypeInformation response_type;
-        response_type.name       = method.resp_type;
-        response_type.descriptor = method.resp_desc;
-
-        ApplyServiceDescription(ecal_sample_service.sname, method.mname, request_type, response_type);
-      }
-
-      //////////////////////////////////////////////
-      // send sample to registration layer
-      //////////////////////////////////////////////
-      return_value &= ApplySample(iter->second.service.sname, iter->second);
-    }
-
-    return return_value;
-  }
-
-  bool CRegistrationProvider::RegisterClient()
-  {
-    if (!m_created)      return(false);
-    if (!m_reg_services) return(false);
-
-    bool return_value {true};
-    const std::lock_guard<std::mutex> lock(m_client_map_sync);
-    for (SampleMapT::const_iterator iter = m_client_map.begin(); iter != m_client_map.end(); ++iter)
-    {
-      // apply registration sample
-      return_value &= ApplySample(iter->second.client.sname, iter->second);
-    }
-
-    return return_value;
-  }
-
-  bool CRegistrationProvider::ApplySample(const std::string& sample_name_, const Registration::Sample& sample_)
-  {
-    if(!m_created) return(false);
-
-    bool return_value {true};
-
-    if (m_use_registration_udp && m_reg_sample_snd)
-    {
-      const std::lock_guard<std::mutex> lock(m_sample_buffer_sync);
-      if (SerializeToBuffer(sample_, m_sample_buffer))
-      {
-        return_value &= (m_reg_sample_snd->Send(sample_name_, m_sample_buffer) != 0);
-      }
-    }
-
-#if ECAL_CORE_REGISTRATION_SHM
-    if (m_use_registration_shm)
-    {
-      const std::lock_guard<std::mutex> lock(m_sample_list_sync);
-      m_sample_list.samples.push_back(sample_);
-    }
-#endif
-
-    return return_value;
-  }
-
-  bool CRegistrationProvider::SendSampleList(bool reset_sample_list_)
-  {
-    if (!m_created) return(false);
-    bool return_value{ true };
-
-#if ECAL_CORE_REGISTRATION_SHM
-    if (m_use_registration_shm)
-    {
-      {
-        const std::lock_guard<std::mutex> lock(m_sample_list_sync);
-        if (SerializeToBuffer(m_sample_list, m_sample_list_buffer))
-        {
-          if (reset_sample_list_)
-          {
-            m_sample_list.samples.clear();
-          }
-        }
-      }
-
-      if (!m_sample_list_buffer.empty())
-      {
-        return_value &= m_memfile_broadcast_writer.Write(m_sample_list_buffer.data(), m_sample_list_buffer.size());
-      }
-    }
-#endif
-
-    return return_value;
-  }
-
-  void CRegistrationProvider::RegisterSendThread()
-  {
-#if ECAL_CORE_SUBSCRIBER
-    // refresh subscriber registration
-    if (g_subgate() != nullptr) g_subgate()->RefreshRegistrations();
-#endif
-
-#if ECAL_CORE_PUBLISHER
-    // refresh publisher registration
-    if (g_pubgate() != nullptr) g_pubgate()->RefreshRegistrations();
-#endif
-
-#if ECAL_CORE_SERVICE
-    // refresh server registration
-    if (g_servicegate() != nullptr) g_servicegate()->RefreshRegistrations();
-
-    // refresh client registration
-    if (g_clientgate() != nullptr) g_clientgate()->RefreshRegistrations();
-#endif
-
-    // register process
-    RegisterProcess();
-
-#if ECAL_CORE_SERVICE
-    // register server
-    RegisterServer();
-
-    // register clients
-    RegisterClient();
-#endif
-
-    // register topics
-    RegisterTopics();
-
-    // write sample list to shared memory
-    SendSampleList();
+    return process_sample;
   }
 }

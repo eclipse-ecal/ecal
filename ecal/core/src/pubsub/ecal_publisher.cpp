@@ -33,29 +33,6 @@
 #include <string>
 #include <utility>
 
-namespace
-{
-  // TODO: remove me with new CDescGate
-  bool ApplyTopicDescription(const std::string& topic_name_, const eCAL::SDataTypeInformation& data_type_info_)
-  {
-    if (eCAL::g_descgate() != nullptr)
-    {
-      // Calculate the quality of the current info
-      eCAL::CDescGate::QualityFlags quality = eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!data_type_info_.name.empty() || !data_type_info_.encoding.empty())
-        quality |= eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!data_type_info_.descriptor.empty())
-        quality |= eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-      quality |= eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
-      quality |= eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
-      quality |= eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PRODUCER;
-
-      return eCAL::g_descgate()->ApplyTopicDescription(topic_name_, data_type_info_, quality);
-    }
-    return false;
-  }
-}
-
 namespace eCAL
 {
   CPublisher::CPublisher() :
@@ -143,9 +120,6 @@ namespace eCAL
     // register publisher gateway (for publisher memory file and event name)
     g_pubgate()->Register(topic_name_, m_datawriter);
 
-    // register to description gateway for type / description checking
-    ApplyTopicDescription(topic_name_, data_type_info_);
-
     // we made it :-)
     m_created = true;
 
@@ -192,7 +166,6 @@ namespace eCAL
   bool CPublisher::SetDataTypeInformation(const SDataTypeInformation& data_type_info_)
   {
     if (m_datawriter == nullptr) return false;
-    ApplyTopicDescription(m_datawriter->GetTopicName(), data_type_info_);
     return m_datawriter->SetDataTypeInformation(data_type_info_);
   }
 

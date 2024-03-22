@@ -122,11 +122,11 @@ namespace eCAL
     // start transport layers
     SubscribeToLayers();
 
-    // register
-    Register(false);
-
     // mark as created
     m_created = true;
+
+    // register
+    Register(false);
 
     return(true);
   }
@@ -155,11 +155,13 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
-    // unregister
+    // mark as no more created
+    m_created = false;
+
+    // and unregister
     Unregister();
 
     // reset defaults
-    m_created                 = false;
     m_clock                   = 0;
     m_message_drops           = 0;
 
@@ -230,6 +232,7 @@ namespace eCAL
   bool CDataReader::Register(const bool force_)
   {
 #if ECAL_CORE_REGISTRATION
+    if (!m_created)          return(false);
     if(m_topic_name.empty()) return(false);
 
     // create command parameter
@@ -301,7 +304,7 @@ namespace eCAL
     ecal_reg_sample_topic.connections_ext = 0;
 
     // register subscriber
-    if(g_registration_provider() != nullptr) g_registration_provider()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
+    if(g_registration_provider() != nullptr) g_registration_provider()->ApplySample(ecal_reg_sample, force_);
 #ifndef NDEBUG
     // log it
     Logging::Log(log_level_debug4, m_topic_name + "::CDataReader::DoRegister");
@@ -329,7 +332,7 @@ namespace eCAL
     ecal_reg_sample_topic.uname  = Process::GetUnitName();
 
     // unregister subscriber
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_topic_name, m_topic_id, ecal_unreg_sample, true);
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(ecal_unreg_sample, false);
 #ifndef NDEBUG
     // log it
     Logging::Log(log_level_debug4, m_topic_name + "::CDataReader::Unregister");
