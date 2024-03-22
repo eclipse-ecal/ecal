@@ -27,6 +27,8 @@
 #include "ecal_globals.h"
 #include "ecal_descgate.h"
 
+#include <algorithm>
+
 namespace
 {
   // TODO: remove me with new CDescGate

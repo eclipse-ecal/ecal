@@ -23,7 +23,6 @@
 
 #pragma once
 
-#include <chrono>
 #include <ecal/ecal_types.h>
 #include <ecal/ecal_util.h>
 
@@ -32,6 +31,7 @@
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "util/ecal_expmap.h"
 
+#include <chrono>
 #include <map>
 #include <memory>
 #include <shared_mutex>
