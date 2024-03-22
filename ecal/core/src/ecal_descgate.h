@@ -83,16 +83,11 @@ namespace eCAL
                                const SDataTypeInformation& topic_info_,
                                QualityFlags description_quality_);
 
-    bool RemoveTopicDescription(const std::string& topic_name_);
-
     bool ApplyServiceDescription(const std::string& service_name_, 
                                  const std::string& method_name_, 
                                  const SDataTypeInformation& request_type_information_,
                                  const SDataTypeInformation& response_type_information_,
                                  QualityFlags description_quality_);
-
-    bool RemoveServiceDescription(const std::string& service_name_,
-                                  const std::string& method_name_);
 
     struct STopicInfoQuality
     {

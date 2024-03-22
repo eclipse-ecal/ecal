@@ -32,9 +32,7 @@
 namespace
 {
   // TODO: remove me with new CDescGate
-  eCAL::CDescGate::QualityFlags GetServiceMethodQuality(const std::string& service_name_, const std::string& method_name_,
-                                                        const eCAL::SDataTypeInformation& request_info_,
-                                                        const eCAL::SDataTypeInformation& response_info_)
+  eCAL::CDescGate::QualityFlags GetServiceMethodQuality(const eCAL::SDataTypeInformation& request_info_, const eCAL::SDataTypeInformation& response_info_)
   {
     eCAL::CDescGate::QualityFlags quality = eCAL::CDescGate::QualityFlags::NO_QUALITY;
     if (!(request_info_.name.empty() && response_info_.name.empty()))
@@ -45,7 +43,7 @@ namespace
     return quality;
   }
 
-  eCAL::CDescGate::QualityFlags GetPublisherQuality(const std::string& topic_name_, const eCAL::SDataTypeInformation& topic_info_)
+  eCAL::CDescGate::QualityFlags GetPublisherQuality(const eCAL::SDataTypeInformation& topic_info_)
   {
     eCAL::CDescGate::QualityFlags quality = eCAL::CDescGate::QualityFlags::NO_QUALITY;
     if (!topic_info_.name.empty() || !topic_info_.encoding.empty())
@@ -58,7 +56,7 @@ namespace
     return quality;
   }
 
-  eCAL::CDescGate::QualityFlags GetSubscriberQuality(const std::string& topic_name_, const eCAL::SDataTypeInformation& topic_info_)
+  eCAL::CDescGate::QualityFlags GetSubscriberQuality(const eCAL::SDataTypeInformation& topic_info_)
   {
     eCAL::CDescGate::QualityFlags quality = eCAL::CDescGate::QualityFlags::NO_QUALITY;
     if (!topic_info_.name.empty() || !topic_info_.encoding.empty())
@@ -217,19 +215,15 @@ namespace eCAL
         response_type.name       = method.resp_type;
         response_type.descriptor = method.resp_desc;
 
-        ApplyServiceDescription(sample_.service.sname, method.mname, request_type, response_type, GetServiceMethodQuality(sample_.service.sname, method.mname, request_type, response_type));
+        ApplyServiceDescription(sample_.service.sname, method.mname, request_type, response_type, GetServiceMethodQuality(request_type, response_type));
       }
     }
     break;
     case bct_unreg_service:
-      //{
-      //  for (const auto& method : sample_.service.methods)
-      //  {
-      //    RemoveServiceDescription(sample_.service.sname, method.mname);
-      //  }
-      //}
+      // TODO: Implement fast unregistration
       break;
     case bct_reg_client:
+      // TODO: Implement this after client methods are available
       //for (const auto& method : sample_.client.methods)
       //{
       //  SDataTypeInformation request_type;
@@ -244,22 +238,19 @@ namespace eCAL
       //}
       break;
     case bct_unreg_client:
-      //for (const auto& method : sample_.client.methods)
-      //{
-      //  RemoveClientDescription(sample_.service.sname, method.mname);
-      //}
+      // TODO: Implement fast unregistration
       break;
     case bct_reg_publisher:
-      ApplyTopicDescription(sample_.topic.tname, sample_.topic.tdatatype, GetPublisherQuality(sample_.topic.tname, sample_.topic.tdatatype));
+      ApplyTopicDescription(sample_.topic.tname, sample_.topic.tdatatype, GetPublisherQuality(sample_.topic.tdatatype));
       break;
     case bct_unreg_publisher:
-      //RemoveTopicDescription(sample_.topic.tname);
+      // TODO: Implement fast unregistration
       break;
     case bct_reg_subscriber:
-      ApplyTopicDescription(sample_.topic.tname, sample_.topic.tdatatype, GetSubscriberQuality(sample_.topic.tname, sample_.topic.tdatatype));
+      ApplyTopicDescription(sample_.topic.tname, sample_.topic.tdatatype, GetSubscriberQuality(sample_.topic.tdatatype));
       break;
     case bct_unreg_subscriber:
-      //RemoveTopicDescription(sample_.topic.tname);
+      // TODO: Implement fast unregistration
       break;
     default:
     {
@@ -411,14 +402,6 @@ namespace eCAL
     return false;
   }
 
-  bool CDescGate::RemoveTopicDescription(const std::string& topic_name_)
-  {
-    const std::unique_lock<std::mutex> lock(m_topic_info_map.sync);
-
-    // remove topic entry
-    return (*m_topic_info_map.map).erase(topic_name_);
-  }
-
   bool CDescGate::ApplyServiceDescription(const std::string& service_name_
     , const std::string& method_name_
     , const SDataTypeInformation& request_type_information_
@@ -457,15 +440,5 @@ namespace eCAL
     (*m_service_info_map.map)[service_method_tuple] = service_info;
 
     return ret_value;
-  }
-
-  bool CDescGate::RemoveServiceDescription(const std::string& service_name_, const std::string& method_name_)
-  {
-    std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
-
-    const std::lock_guard<std::mutex> lock(m_service_info_map.sync);
-
-    // remove service entry
-    return (*m_service_info_map.map).erase(service_method_tuple);
   }
 }
