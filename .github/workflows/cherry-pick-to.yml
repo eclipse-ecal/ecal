@@ -31,6 +31,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
+        token: ${{ secrets.CHERRY_PICK_GITHUB_TOKEN }} # This token was created on 2024-03-26 and is valid for 1 year: https://gitlab.eclipse.org/eclipsefdn/helpdesk/-/issues/4466#note_1987666
 
     - name: Determine PR number (if any)
       id: pr
@@ -44,7 +45,7 @@ jobs:
           echo continue_workflow=false >> $GITHUB_ENV
         fi
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.CHERRY_PICK_GITHUB_TOKEN }} # This token was created on 2024-03-26 and is valid for 1 year: https://gitlab.eclipse.org/eclipsefdn/helpdesk/-/issues/4466#note_1987666
 
     - name: Check for a cherry pick label and save whether that is the case
       if: ${{ env.continue_workflow == 'true' }}
@@ -63,7 +64,7 @@ jobs:
           echo continue_workflow=false >> $GITHUB_ENV
         fi
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.CHERRY_PICK_GITHUB_TOKEN }}
 
     - name: Create new branch for cherry picking
       if: ${{ env.continue_workflow == 'true' }}
@@ -74,16 +75,12 @@ jobs:
 
         git checkout ${{ matrix.target-branch }}
         git checkout -b ${{ env.cherry_pick_branch }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Cherry pick the commit between the before (exclusive) and after (inclusive) commits
       id: cherry-pick
       if: ${{ env.continue_workflow == 'true' }}
       run: |
         git cherry-pick ${{ github.event.before }}..${{ github.event.after }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       continue-on-error: true
 
     - name: Create PR description
@@ -154,7 +151,7 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
         fi
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.CHERRY_PICK_GITHUB_TOKEN }}
 
     # If the cherry-pick fails, abort the cherry-pick and create an empty commit on it.
     - name: Abort cherry-pick if it failed and add empty commit for PR creation
@@ -170,14 +167,10 @@ jobs:
         git commit --allow-empty -m "Cherry-pick failed"
 
         git log --oneline -n 5
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Push the cherry-pick branch
       if: ${{ env.continue_workflow == 'true' }}
       run: git push origin ${{ env.cherry_pick_branch }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
     - name: create pull request
       if: ${{ env.continue_workflow == 'true' }}
@@ -187,10 +180,10 @@ jobs:
 
         # Create the pull request
         gh pr create -B '${{ matrix.target-branch }}' \
-                     -H '${{ env.cherry_pick_branch }}' \
-                     --title '${{ steps.pr-description.outputs.pr_title }}' \
-                     --body '${{ steps.pr-description.outputs.pr_description }}' \
-                     --label '${{ steps.pr-description.outputs.pr_label }}' \
-                     ${{ steps.pr-description.outputs.pr_draft_command }}
+                      -H '${{ env.cherry_pick_branch }}' \
+                      --title '${{ steps.pr-description.outputs.pr_title }}' \
+                      --body '${{ steps.pr-description.outputs.pr_description }}' \
+                      --label '${{ steps.pr-description.outputs.pr_label }}' \
+                      ${{ steps.pr-description.outputs.pr_draft_command }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.CHERRY_PICK_GITHUB_TOKEN }}
