@@ -20,9 +20,11 @@
 #include "about_dialog.h"
 #include "ecalmon_globals.h"
 
-#include <ecal/ecal_defs.h>
+#include <ecal/ecal.h>
 
 #include <QPushButton>
+#include <QtVersion>
+#include <QLibraryInfo>
 
 AboutDialog::AboutDialog(QWidget *parent)
   : QDialog(parent)
@@ -30,6 +32,12 @@ AboutDialog::AboutDialog(QWidget *parent)
   ui_.setupUi(this);
   ui_.version_label->setText("Version: " + QString(EcalmonGlobals::VERSION_STRING));
   ui_.ecalversion_label->setText("eCAL " + QString(ECAL_VERSION) + " (" + QString(ECAL_DATE) + ")");
+
+  ui_.ecal_runtime_version_string_label->setText(QString(eCAL::GetVersionString()) + " (" + QString(eCAL::GetVersionDateString()) + ")");
+  ui_.ecal_compiletime_versin_string_label->setText(QString(ECAL_VERSION) + " (" + QString(ECAL_DATE) + ")");
+  ui_.qt_runtime_version_string_label->setText(QString(qVersion()));
+  ui_.qt_compiletime_version_string_label->setText(QString(QT_VERSION_STR));
+
   connect(ui_.button_box->button(QDialogButtonBox::StandardButton::Ok), SIGNAL(clicked()), this, SLOT(close()));
 }
 
