@@ -20,7 +20,7 @@
 /**
  * @brief  eCAL ini file keys
 **/
-
+// TODO PG: Delete - deprecated
 #pragma once
 
 /////////////////////////////////////
