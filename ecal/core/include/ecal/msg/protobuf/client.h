@@ -26,7 +26,10 @@
 
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_client.h>
-#include <ecal/msg/protobuf/ecal_proto_hlp.h>
+#include <ecal/msg/dynamic.h>
+#include <ecal/msg/protobuf/ecal_proto_dyn.h>
+
+
 
 // protobuf includes
 #ifdef _MSC_VER
@@ -39,6 +42,8 @@
 
 // stl includes
 #include <string>
+#include <functional>
+#include <map>
 
 namespace eCAL
 {
@@ -57,7 +62,11 @@ namespace eCAL
       **/
       CServiceClient()
       {
-        Create(T::descriptor()->full_name());
+        struct U : T {};
+        std::shared_ptr<U> service = std::make_shared<U>();
+        const google::protobuf::ServiceDescriptor* service_descriptor = service->GetDescriptor();
+
+        Create(service_descriptor->full_name(), CreateMethodInformationMap());
       }
 
       /**
@@ -67,7 +76,7 @@ namespace eCAL
       **/
       explicit CServiceClient(const std::string& service_name_)
       {
-        Create(service_name_);
+        Create(service_name_, CreateMethodInformationMap());
       }
 
       /**
@@ -189,6 +198,43 @@ namespace eCAL
 
       using eCAL::CServiceClient::Call;
       using eCAL::CServiceClient::CallAsync;
+    private:
+      ServiceMethodInformationMapT CreateMethodInformationMap()
+      {
+        struct U : T {};
+        std::shared_ptr<U> service = std::make_shared<U>();
+        const google::protobuf::ServiceDescriptor* service_descriptor = service->GetDescriptor();
+
+        std::string error_s;
+        ServiceMethodInformationMapT method_information_map;
+        CProtoDynDecoder dyn_decoder;
+        for (int i = 0; i < service_descriptor->method_count(); ++i)
+        {
+          // get method name and descriptor
+          const google::protobuf::MethodDescriptor* method_descriptor = service_descriptor->method(i);
+          std::string method_name = method_descriptor->name();
+
+          // get message type names
+          std::string input_type_name = method_descriptor->input_type()->name();
+          std::string output_type_name = method_descriptor->output_type()->name();
+
+          // get message type descriptors
+          std::string input_type_desc;
+          std::string output_type_desc;
+
+          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, input_type_name, input_type_desc, error_s);
+          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, output_type_name, output_type_desc, error_s);
+
+
+          method_information_map[method_name] = SServiceMethodInformation({
+            {input_type_name, "protobuf", input_type_desc} ,
+            {output_type_name, "protobuf", output_type_desc}
+            });
+
+        }
+
+        return method_information_map;
+      }
     };
   }
 }

@@ -365,6 +365,8 @@ namespace
     eCAL::nanopb::encode_string(pb_client_.sname, client_.sname);
     // sid
     eCAL::nanopb::encode_string(pb_client_.sid, client_.sid);
+    // methods
+    encode_mon_service_methods(pb_client_.methods, client_.methods);
     // version
     pb_client_.version = client_.version;
   }
@@ -805,6 +807,8 @@ namespace
     eCAL::nanopb::decode_string(pb_client_.sname, client_.sname);
     // sid
     eCAL::nanopb::decode_string(pb_client_.sid, client_.sid);
+    // methods
+    decode_mon_service_methods(pb_client_.methods, client_.methods);
   }
 
   void AssignValues(const eCAL_pb_Client& pb_client_, eCAL::Monitoring::SClientMon& client_)

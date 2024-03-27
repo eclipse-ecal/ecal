@@ -74,6 +74,7 @@ typedef struct _eCAL_pb_Client {
     pb_callback_t sid; /* service id */
     /* transport specific parameter (for internal use) */
     uint32_t version; /* client protocol version */
+    pb_callback_t methods; /* list of methods */
 } eCAL_pb_Client;
 
 
@@ -106,7 +107,7 @@ extern "C" {
 #define eCAL_pb_Response_init_zero               {false, eCAL_pb_ServiceHeader_init_zero, {{NULL}, NULL}, 0}
 #define eCAL_pb_Method_init_zero                 {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}}
 #define eCAL_pb_Service_init_zero                {0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0}
-#define eCAL_pb_Client_init_zero                 {0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, 0}
+#define eCAL_pb_Client_init_zero                 {0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define eCAL_pb_ServiceHeader_hname_tag          1
@@ -146,6 +147,7 @@ extern "C" {
 #define eCAL_pb_Client_sname_tag                 6
 #define eCAL_pb_Client_sid_tag                   7
 #define eCAL_pb_Client_version_tag               8
+#define eCAL_pb_Client_methods_tag               9
 
 /* Struct field encoding specification for nanopb */
 #define eCAL_pb_ServiceHeader_FIELDLIST(X, a) \
@@ -208,9 +210,11 @@ X(a, CALLBACK, SINGULAR, STRING,   uname,             4) \
 X(a, STATIC,   SINGULAR, INT32,    pid,               5) \
 X(a, CALLBACK, SINGULAR, STRING,   sname,             6) \
 X(a, CALLBACK, SINGULAR, STRING,   sid,               7) \
-X(a, STATIC,   SINGULAR, UINT32,   version,           8)
+X(a, STATIC,   SINGULAR, UINT32,   version,           8) \
+X(a, CALLBACK, REPEATED, MESSAGE,  methods,           9)
 #define eCAL_pb_Client_CALLBACK pb_default_field_callback
 #define eCAL_pb_Client_DEFAULT NULL
+#define eCAL_pb_Client_methods_MSGTYPE eCAL_pb_Method
 
 extern const pb_msgdesc_t eCAL_pb_ServiceHeader_msg;
 extern const pb_msgdesc_t eCAL_pb_Request_msg;

@@ -72,6 +72,8 @@ namespace eCAL
       client.pid     = rand() % 100;
       client.sname   = GenerateString(8);
       client.sid     = GenerateString(7);
+      client.methods.push_back(GenerateMethod());
+      client.methods.push_back(GenerateMethod());
       client.version = rand() % 10;
 
       return client;

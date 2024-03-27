@@ -102,7 +102,6 @@ set(source_files
     src/widgets/models/process_tree_item.h
     src/widgets/models/process_tree_model.cpp
     src/widgets/models/process_tree_model.h
-    src/widgets/models/service_tree_item.cpp
     src/widgets/models/service_tree_item.h
     src/widgets/models/service_tree_model.cpp
     src/widgets/models/service_tree_model.h

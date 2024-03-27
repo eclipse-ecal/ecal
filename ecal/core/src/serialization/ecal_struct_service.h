@@ -104,6 +104,7 @@ namespace eCAL
       int32_t              pid = 0;          // Process id
       std::string          sname;            // Service name
       std::string          sid;              // Service id
+      std::vector<Method>  methods;          // List of methods
       uint32_t             version = 0;      // Client protocol version
     };
   }
