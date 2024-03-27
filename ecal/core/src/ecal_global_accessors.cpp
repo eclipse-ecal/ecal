@@ -142,8 +142,6 @@ namespace eCAL
   {
     // TODO PG: discuss the priority
     if (g_globals() == nullptr) return(nullptr);
-    if (g_globals()->user_config() != nullptr) return(g_globals()->user_config().get());
-    if (g_globals()->ecal_ini_config() != nullptr) return(g_globals()->ecal_ini_config().get());
-    if (g_globals()->ecal_default_config() != nullptr) return(g_globals()->ecal_default_config().get());
+    if (g_globals()->ecal_config() != nullptr) return(g_globals()->ecal_config().get());
   }
-  }
+}

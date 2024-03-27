@@ -65,7 +65,7 @@ namespace eCAL
   CRegistrationReceiver*  g_registration_receiver();
   CMemFileThreadPool*     g_memfile_pool();
   CMemFileMap*            g_memfile_map();
-  Config::eCALConfig*	  g_ecal_config();
+  Config::eCALConfig*	    g_ecal_config();
 
 
   // declaration of globally accessible variables

@@ -166,7 +166,7 @@ namespace eCAL
 
     if (user_config_ != nullptr)
     {        
-        g_globals()->SetUserConfig(user_config_);
+        g_globals()->SetUserConfig(*user_config_);
     }
 
     // (post)initialize single components
