@@ -107,7 +107,7 @@ extern "C"
 
   /**
    * @brief  Free an eCAL memory block allocated by functions like
-   *         eCAL_Monitoring_GetMonitoring, eCAL_Monitoring_GetLogging, 
+   *         eCAL_Monitoring_GetMonitoring, eCAL_Logging_GetLogging, 
    *         eCAL_Sub_Receive ... that use 'ECAL_ALLOCATE_4ME' as 
    *         buffer length parameter and let eCAL allocate 
    *         the memory internally.

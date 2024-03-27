@@ -355,7 +355,6 @@ set(ecal_serialization_src
     src/serialization/ecal_serialize_sample_registration.h
     src/serialization/ecal_serialize_service.cpp
     src/serialization/ecal_serialize_service.h
-    src/serialization/ecal_struct_logging.h
     src/serialization/ecal_struct_sample_common.h
     src/serialization/ecal_struct_sample_payload.h
     src/serialization/ecal_struct_sample_registration.h
@@ -402,6 +401,7 @@ endif()
 set(ecal_util_src
     src/util/ecal_expmap.h
     src/util/ecal_thread.h
+    src/util/frequency_calculator.h
     src/util/getenvvar.h
 )
 if (ECAL_CORE_COMMAND_LINE)
@@ -416,7 +416,6 @@ endif()
 ######################################
 set(ecal_cmn_src
     src/ecal.cpp
-    src/ecal_clang.cpp
     src/ecal_def.h
     src/ecal_def_ini.h
     src/ecal_descgate.cpp
@@ -471,10 +470,10 @@ endif()
 # public header
 ######################################
 set(ecal_header_cmn
+    include/ecal/types/logging.h
     include/ecal/types/monitoring.h
     include/ecal/ecal.h
     include/ecal/ecal_callback.h
-    include/ecal/ecal_clang.h
     include/ecal/ecal_client.h
     include/ecal/ecal_config.h
     include/ecal/ecal_core.h

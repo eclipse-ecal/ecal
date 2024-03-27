@@ -17,14 +17,14 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "../../serialization/ecal_struct_logging.h"
+#include <ecal/types/logging.h>
 
 namespace eCAL
 {
   namespace Logging
   {
     // compare two LogMessages for equality
-    bool CompareLogMessages(const LogMessage& message1, const LogMessage& message2)
+    bool CompareLogMessages(const SLogMessage& message1, const SLogMessage& message2)
     {
       return (message1.time    == message2.time &&
               message1.hname   == message2.hname &&

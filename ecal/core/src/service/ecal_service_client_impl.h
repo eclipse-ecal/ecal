@@ -130,6 +130,6 @@ namespace eCAL
     using MethodCallCountMapT = std::map<std::string, uint64_t>;
     MethodCallCountMapT  m_method_call_count_map;
 
-    bool                  m_created;
+    std::atomic<bool>     m_created;
   };
 }

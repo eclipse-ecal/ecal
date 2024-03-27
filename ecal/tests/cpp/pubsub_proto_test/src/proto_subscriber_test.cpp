@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,8 +32,8 @@
 
 class ProtoSubscriberTest : public ::testing::Test {
 public:
-  ProtoSubscriberTest() 
-  : received_callbacks(0)
+  ProtoSubscriberTest()
+    : received_callbacks(0)
   {
     // Initialize eCAL
     eCAL::Initialize();
@@ -53,7 +53,7 @@ public:
     p.set_name("Max");
     pub.Send(p);
   }
-  
+
   void OnPerson(const char*, const pb::People::Person&, long long, long long)
   {
     received_callbacks++;
@@ -61,8 +61,9 @@ public:
 
   std::atomic<int> received_callbacks;
 };
+using core_cpp_pubsub_proto_sub = ProtoSubscriberTest;
 
-TEST_F(ProtoSubscriberTest, SendReceive)
+TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_SendReceive)
 {
   // Assert that the Subscriber can be move constructed.
   eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
@@ -81,7 +82,7 @@ TEST_F(ProtoSubscriberTest, SendReceive)
 
 }
 
-TEST_F(ProtoSubscriberTest, MoveAssignment)
+TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveAssignment)
 {
   eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
   auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
@@ -112,7 +113,7 @@ TEST_F(ProtoSubscriberTest, MoveAssignment)
   ASSERT_EQ(1, received_callbacks);
 }
 
-TEST_F(ProtoSubscriberTest, MoveConstruction)
+TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveConstruction)
 {
   // Assert that the Subscriber can be move constructed.
   eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");

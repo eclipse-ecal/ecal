@@ -43,6 +43,7 @@ struct Topic
   std::string id;
   std::string name;
   Direction direction;
+  std::string encoding;
   std::string type;
   std::string type_descriptor;
   std::vector<TransportLayer> transport_layers;

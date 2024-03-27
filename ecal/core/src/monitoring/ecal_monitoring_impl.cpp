@@ -30,7 +30,9 @@
 
 #include <regex>
 
+#include "registration/ecal_registration_provider.h"
 #include "registration/ecal_registration_receiver.h"
+
 #include "serialization/ecal_serialize_monitoring.h"
 
 
@@ -56,8 +58,9 @@ namespace eCAL
     // get name of this host
     m_host_name = Process::GetHostName();
 
-    // utilize registration receiver to enrich monitor information
-    g_registration_receiver()->SetCustomApplySampleCallback([this](const auto& sample_){this->ApplySample(sample_, tl_none);});
+    // utilize registration provider and receiver to enrich monitor information
+    g_registration_provider()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_) {this->ApplySample(sample_, tl_none); });
+    g_registration_receiver()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
 
     // setup blacklist and whitelist filter strings#
     m_topic_filter_excl_s = Config::GetMonitoringFilterExcludeList();
@@ -71,7 +74,9 @@ namespace eCAL
 
   void CMonitoringImpl::Destroy()
   {
-    g_registration_receiver()->RemCustomApplySampleCallback();
+    // stop registration provider and receiver utilization to enrich monitor information
+    g_registration_provider()->RemCustomApplySampleCallback("monitoring");
+    g_registration_receiver()->RemCustomApplySampleCallback("monitoring");
     m_init = false;
   }
 
@@ -603,11 +608,10 @@ namespace eCAL
 
   void CMonitoringImpl::GetMonitoring(Monitoring::SMonitoring& monitoring_, unsigned int entities_)
   {
+    // processes
+    monitoring_.processes.clear();
     if ((entities_ & Monitoring::Entity::Process) != 0u)
     {
-      // clear target
-      monitoring_.processes.clear();
-
       // lock map
       const std::lock_guard<std::mutex> lock(m_process_map.sync);
 
@@ -622,11 +626,10 @@ namespace eCAL
       }
     }
 
+    // publisher
+    monitoring_.publisher.clear();
     if ((entities_ & Monitoring::Entity::Publisher) != 0u)
     {
-      // clear target
-      monitoring_.publisher.clear();
-
       // lock map
       const std::lock_guard<std::mutex> lock(m_publisher_map.sync);
 
@@ -641,11 +644,10 @@ namespace eCAL
       }
     }
 
+    // subscriber
+    monitoring_.subscriber.clear();
     if ((entities_ & Monitoring::Entity::Subscriber) != 0u)
     {
-      // clear target
-      monitoring_.subscriber.clear();
-
       // lock map
       const std::lock_guard<std::mutex> lock(m_subscriber_map.sync);
 
@@ -660,11 +662,10 @@ namespace eCAL
       }
     }
 
+    // server
+    monitoring_.server.clear();
     if ((entities_ & Monitoring::Entity::Server) != 0u)
     {
-      // clear target
-      monitoring_.server.clear();
-
       // lock map
       const std::lock_guard<std::mutex> lock(m_server_map.sync);
 
@@ -679,11 +680,10 @@ namespace eCAL
       }
     }
 
+    // clients
+    monitoring_.clients.clear();
     if ((entities_ & Monitoring::Entity::Client) != 0u)
     {
-      // clear target
-      monitoring_.clients.clear();
-
       // lock map
       const std::lock_guard<std::mutex> lock(m_clients_map.sync);
 

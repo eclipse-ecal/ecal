@@ -1,16 +1,11 @@
 wheel
-sphinx-book-theme==0.3.3
-sphinx-tabs==3.3.1
+sphinx-book-theme==1.1.2
+sphinx-tabs==3.4.5
 PyGithub
 autodoc
-empy<=3.3.4
+empy==3.3.4           # The empy_helpers are incompatible with Empy 4.0. Also see this issue: https://github.com/ros2/rosidl/issues/779
 semantic-version 
 exhale
 Jinja2
-sphinxcontrib-youtube<=1.2
 sphinxcontrib-apidoc
-sphinxcontrib-applehelp<=1.0.7        # 2024-01-15: Newer packages needs Sphinx 5 or up, but our old sphinx-book-theme 0.3.3 requires Sphinx 4
-sphinxcontrib-devhelp<=1.0.5          # 2024-01-15: Newer packages need Sphinx 5 or up, but our old sphinx-book-theme 0.3.3 requires Sphinx 4
-sphinxcontrib-htmlhelp<=2.0.4         # 2024-01-15: Newer packages (probably) need Sphinx 5 or up, but our old sphinx-book-theme 0.3.3 requires Sphinx 4
-sphinxcontrib-qthelp<=1.0.6           # 2024-01-15: Newer packages (probably) need Sphinx 5 or up, but our old sphinx-book-theme 0.3.3 requires Sphinx 4
-sphinxcontrib-serializinghtml<=1.1.9  # 2024-01-15: Newer packages (probably) need Sphinx 5 or up, but our old sphinx-book-theme 0.3.3 requires Sphinx 4
+sphinxcontrib-youtube

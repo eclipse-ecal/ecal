@@ -169,7 +169,7 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    const std::lock_guard<std::mutex> lock(m_log_sync);
+    const std::lock_guard<std::mutex> lock(m_log_mtx);
 
     m_udp_logging_sender.reset();
 
@@ -181,19 +181,19 @@ namespace eCAL
 
   void CLog::SetLogLevel(const eCAL_Logging_eLogLevel level_)
   {
-    const std::lock_guard<std::mutex> lock(m_log_sync);
+    const std::lock_guard<std::mutex> lock(m_log_mtx);
     m_level = level_;
   }
 
   eCAL_Logging_eLogLevel CLog::GetLogLevel()
   {
-    const std::lock_guard<std::mutex> lock(m_log_sync);
+    const std::lock_guard<std::mutex> lock(m_log_mtx);
     return(m_level);
   }
 
   void CLog::Log(const eCAL_Logging_eLogLevel level_, const std::string& msg_)
   {
-    const std::lock_guard<std::mutex> lock(m_log_sync);
+    const std::lock_guard<std::mutex> lock(m_log_mtx);
 
     if(!m_created) return;
     if(msg_.empty()) return;
@@ -262,7 +262,7 @@ namespace eCAL
     if((log_udp != 0) && m_udp_logging_sender)
     {
       // set up log message
-      Logging::LogMessage log_message;
+      Logging::SLogMessage log_message;
       log_message.time    = std::chrono::duration_cast<std::chrono::microseconds>(log_time.time_since_epoch()).count();
       log_message.hname   = m_hname;
       log_message.pid     = m_pid;
@@ -288,11 +288,25 @@ namespace eCAL
     // clear target list string
     log_msg_list_string_.clear();
 
-    // serialize message list to target list string
-    SerializeToBuffer(m_log_msglist, log_msg_list_string_);
- 
-    // empty message list
-    m_log_msglist.log_messages.clear();
+    // serialize message list
+    {
+      const std::lock_guard<std::mutex> lock(m_log_mtx);
+      // serialize message list to target list string
+      SerializeToBuffer(m_log_msglist, log_msg_list_string_);
+      // clear message list
+      m_log_msglist.log_messages.clear();
+    }
+  }
+
+  void CLog::GetLogging(Logging::SLogging& log_)
+  {
+    // copy message list
+    {
+      const std::lock_guard<std::mutex> lock(m_log_mtx);
+      log_ = m_log_msglist;
+      // clear message list
+      m_log_msglist.log_messages.clear();
+    }
   }
 
   bool CLog::HasSample(const std::string& sample_name_)
@@ -303,14 +317,14 @@ namespace eCAL
   bool CLog::ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_)
   {
     // TODO: Limit maximum size of collected log messages !
-    Logging::LogMessage log_message;
+    Logging::SLogMessage log_message;
     if (DeserializeFromBuffer(serialized_sample_data_, serialized_sample_size_, log_message))
     {
       // in "network mode" we accept all log messages
       // in "local mode" we accept log messages from this host only
       if ((m_hname == log_message.hname) || Config::IsNetworkEnabled())
       {
-        const std::lock_guard<std::mutex> lock(m_log_msglist_sync);
+        const std::lock_guard<std::mutex> lock(m_log_mtx);
         m_log_msglist.log_messages.emplace_back(log_message);
       }
       return true;

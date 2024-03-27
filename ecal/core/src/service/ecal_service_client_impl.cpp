@@ -29,6 +29,7 @@
 #include "registration/ecal_registration_provider.h"
 #include "serialization/ecal_serialize_service.h"
 
+#include <atomic>
 #include <chrono>
 #include <memory>
 #include <mutex>
@@ -84,11 +85,11 @@ namespace eCAL
     counter << std::chrono::steady_clock::now().time_since_epoch().count();
     m_service_id = counter.str();
 
-    // register this client
-    Register(true);
-
     // mark as created
     m_created = true;
+
+    // register this client
+    Register(true);
 
     return(true);
   }
@@ -115,16 +116,16 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
-    // unregister this client
+    // mark as no more created
+    m_created = false;
+
+    // and unregister this client
     Unregister();
 
     // reset internals
     m_service_name.clear();
     m_service_id.clear();
     m_host_name.clear();
-
-    // mark as not created
-    m_created = false;
 
     return(true);
   }
@@ -630,6 +631,7 @@ namespace eCAL
 
   void CServiceClientImpl::Register(const bool force_)
   {
+    if (!m_created)             return;
     if (m_service_name.empty()) return;
 
     Registration::Sample sample;
@@ -664,7 +666,7 @@ namespace eCAL
     }
 
     // register entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterClient(m_service_name, m_service_id, sample, force_);
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, force_);
 
     // refresh connected services map
     CheckForNewServices();
@@ -736,7 +738,7 @@ namespace eCAL
     }
 
     // unregister entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterClient(m_service_name, m_service_id, sample, true);
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, false);
   }
 
   void CServiceClientImpl::CheckForNewServices()

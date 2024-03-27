@@ -65,7 +65,7 @@ namespace eCAL
      * @param [out] mon_       Target string to store the monitoring information. 
      * @param       entities_  Entities to get.
      *
-     * @return Zero if succeeded.
+     * @return  Monitoring buffer length or zero if failed.
     **/
     ECAL_API int GetMonitoring(std::string& mon_, unsigned int entities_ = Entity::All);
     
@@ -75,7 +75,7 @@ namespace eCAL
      * @param [out] mon_       Target struct to store the monitoring information.
      * @param       entities_  Entities definition.
      *
-     * @return Number of struct elements if succeeded.
+     * @return Number of struct elements.
     **/
     ECAL_API int GetMonitoring(SMonitoring& mon_, unsigned int entities_ = Entity::All);
   }

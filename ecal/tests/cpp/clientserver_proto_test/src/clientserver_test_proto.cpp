@@ -66,7 +66,7 @@ public:
   }
 };
 
-TEST(ClientServerProto, ClientServerProtoCallback)
+TEST(core_cpp_clientserver_proto, ProtoCallback)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver proto callback test");
@@ -155,7 +155,7 @@ public:
   }
 };
 
-TEST(ClientServerProto, ClientServerProtoBlocking)
+TEST(core_cpp_clientserver_proto, ProtoBlocking)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver proto blocking test");

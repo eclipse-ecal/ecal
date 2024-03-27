@@ -128,6 +128,7 @@ namespace eCAL
                         , *endpoint_sequence
                         , service_call_queue_strand_.wrap([me = shared_from_this(), endpoint_sequence](asio::error_code ec, const asio::ip::tcp::endpoint& endpoint)
                           {
+                            (void)endpoint;
                             if (ec)
                             {
                               const std::string message = "Failed to connect to endpoint [" + me->address_ + ":" + std::to_string(me->port_) + "]: " + ec.message();

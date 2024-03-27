@@ -63,7 +63,6 @@ set(ecal_serialize_src
   ../../../core/src/serialization/ecal_serialize_sample_registration.h
   ../../../core/src/serialization/ecal_serialize_service.cpp
   ../../../core/src/serialization/ecal_serialize_service.h
-  ../../../core/src/serialization/ecal_struct_logging.h
   ../../../core/src/serialization/ecal_struct_sample_common.h
   ../../../core/src/serialization/ecal_struct_sample_payload.h
   ../../../core/src/serialization/ecal_struct_sample_registration.h
@@ -110,7 +109,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_gtest(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER core/tests/cpp/core)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/core)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
     ${${PROJECT_NAME}_src}

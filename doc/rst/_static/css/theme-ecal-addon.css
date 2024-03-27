@@ -1,9 +1,0 @@
-:root {
-  --pst-color-active-navigation: 83, 56, 6;
-  --pst-color-navbar-link-hover: var(--pst-color-active-navigation);
-  --pst-color-navbar-link-active: var(--pst-color-active-navigation);
-  --pst-color-sidebar-link-hover: var(--pst-color-active-navigation);
-  --pst-color-sidebar-link-active: var(--pst-color-active-navigation);
-  --pst-color-toc-link-hover: var(--pst-color-active-navigation);
-  --pst-color-toc-link-active: var(--pst-color-active-navigation);
-}

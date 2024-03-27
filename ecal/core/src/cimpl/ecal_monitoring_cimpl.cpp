@@ -54,15 +54,5 @@ extern "C"
     }
     return(0);
   }
-
-  ECALC_API int eCAL_Monitoring_GetLogging(void* buf_, int buf_len_)
-  {
-    std::string buf;
-    if (eCAL::Logging::GetLogging(buf) != 0)
-    {
-      return(CopyBuffer(buf_, buf_len_, buf));
-    }
-    return(0);
-  }
 }
 #endif // ECAL_CORE_MONITORING

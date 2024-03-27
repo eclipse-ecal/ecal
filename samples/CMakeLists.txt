@@ -28,23 +28,23 @@ endif(HAS_HDF5)
 # --------------------------------------------------------
 # measurement
 if(HAS_HDF5)
-add_subdirectory(cpp/benchmarks/measurement)
+add_subdirectory(cpp/measurement/benchmark)
 add_subdirectory(cpp/measurement/measurement_read)
 add_subdirectory(cpp/measurement/measurement_write)
 endif(HAS_HDF5)
 
 # services
 add_subdirectory(cpp/services/ecalplayer_client)
-if(HAS_QT5)
+if(HAS_QT)
   add_subdirectory(cpp/services/ecalplayer_gui_client)
-endif(HAS_QT5)
+endif(HAS_QT)
 add_subdirectory(cpp/services/ecalsys_client)
 add_subdirectory(cpp/services/player_stepper)
 add_subdirectory(cpp/services/rec_client_service_cli)
-if(HAS_QT5)
+if(HAS_QT)
   add_subdirectory(cpp/services/rec_client_service_gui)
   add_subdirectory(cpp/services/rec_server_service_gui)
-endif(HAS_QT5)
+endif(HAS_QT)
 
 # --------------------------------------------------------
 # python samples
@@ -69,7 +69,6 @@ if(BUILD_PY_BINDING)
     # pubsub
     add_subdirectory(python/pubsub/protobuf/person_rec)
     add_subdirectory(python/pubsub/protobuf/person_rec_cb)
-    add_subdirectory(python/pubsub/protobuf/person_rec_json)  
     add_subdirectory(python/pubsub/protobuf/person_snd)
     add_subdirectory(python/pubsub/string/minimal_rec)
     add_subdirectory(python/pubsub/string/minimal_rec_cb)

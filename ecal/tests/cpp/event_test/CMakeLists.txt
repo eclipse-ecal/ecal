@@ -41,7 +41,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_gtest(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER core/tests/cpp/io)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/io)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
     ${${PROJECT_NAME}_src}

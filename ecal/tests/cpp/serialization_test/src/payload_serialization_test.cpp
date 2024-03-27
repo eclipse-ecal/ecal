@@ -49,7 +49,7 @@ namespace eCAL
 
     bool   ComparePayloadSamples(const Sample& sample1, const Sample& sample2);
 
-    TEST(Serialization, RawPayload2String)
+    TEST(core_cpp_serialization, RawPayload2String)
     {
       std::vector<char> payload;
       InitializeVec(payload, 1024);
@@ -65,7 +65,7 @@ namespace eCAL
       ASSERT_TRUE(ComparePayloadSamples(sample_in, sample_out));
     }
 
-    TEST(Serialization, RawPayload2Vector)
+    TEST(core_cpp_serialization, RawPayload2Vector)
     {
       std::vector<char> payload;
       InitializeVec(payload, 1024);
@@ -81,7 +81,7 @@ namespace eCAL
       ASSERT_TRUE(ComparePayloadSamples(sample_in, sample_out));
     }
 
-    TEST(Serialization, VecPayload2String)
+    TEST(core_cpp_serialization, VecPayload2String)
     {
       std::vector<char> payload;
       InitializeVec(payload, 1024);
@@ -97,7 +97,7 @@ namespace eCAL
       ASSERT_TRUE(ComparePayloadSamples(sample_in, sample_out));
     }
 
-    TEST(Serialization, VecPayload2Vector)
+    TEST(core_cpp_serialization, VecPayload2Vector)
     {
       std::vector<char> payload;
       InitializeVec(payload, 1024);
@@ -113,7 +113,7 @@ namespace eCAL
       ASSERT_TRUE(ComparePayloadSamples(sample_in, sample_out));
     }
 
-    TEST(Serialization, VecPayloadEmpty)
+    TEST(core_cpp_serialization, VecPayloadEmpty)
     {
       std::vector<char> payload;
 
@@ -128,7 +128,7 @@ namespace eCAL
       ASSERT_TRUE(ComparePayloadSamples(sample_in, sample_out));
     }
 
-    TEST(Serialization, RawPayloadEmpty)
+    TEST(core_cpp_serialization, RawPayloadEmpty)
     {
       Sample sample_in = GeneratePayloadSample(nullptr, 0);
 

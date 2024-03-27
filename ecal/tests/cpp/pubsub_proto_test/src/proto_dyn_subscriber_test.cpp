@@ -21,8 +21,10 @@
 #include <atomic>
 #include <chrono>
 #include <thread>
+
 // used libraries
 #include <gtest/gtest.h>
+
 // own project
 #include <ecal/ecal.h>
 #include <ecal/msg/protobuf/publisher.h>
@@ -63,6 +65,7 @@ public:
 
   std::atomic<int> received_callbacks;
 };
+using core_cpp_pubsub_proto_dyn = ProtoDynSubscriberTest;
 
 int extract_id(const google::protobuf::Message& msg_)
 {
@@ -88,8 +91,7 @@ int extract_id(const google::protobuf::Message& msg_)
   return 0;
 }
 
-
-TEST_F(ProtoDynSubscriberTest, SendReceiveCB)
+TEST_F(core_cpp_pubsub_proto_dyn, ProtoDynSubscriberTest_SendReceiveCB)
 {
   // Assert that the Subscriber can be move constructed.
   eCAL::protobuf::CDynamicSubscriber person_dyn_rec("ProtoSubscriberTest");
@@ -107,7 +109,7 @@ TEST_F(ProtoDynSubscriberTest, SendReceiveCB)
   ASSERT_EQ(1, received_callbacks);
 }
 
-TEST_F(ProtoDynSubscriberTest, SendReceive)
+TEST_F(core_cpp_pubsub_proto_dyn, ProtoDynSubscriberTest_SendReceive)
 {
   // Assert that the Subscriber can be move constructed.
   eCAL::protobuf::CDynamicSubscriber person_dyn_rec("ProtoSubscriberTest");

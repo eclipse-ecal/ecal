@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <atomic>
 #include <chrono>
 #include <cstddef>
 #include <deque>
@@ -43,6 +44,8 @@
 
 #include <string>
 #include <unordered_map>
+
+#include <util/frequency_calculator.h>
 
 namespace eCAL
 {
@@ -108,6 +111,8 @@ namespace eCAL
     void Disconnect();
     bool CheckMessageClock(const std::string& tid_, long long current_clock_);
 
+    int32_t GetFrequency();
+
     std::string                               m_host_name;
     std::string                               m_host_group_name;
     int                                       m_pid;
@@ -141,9 +146,9 @@ namespace eCAL
     EventCallbackMapT                         m_event_callback_map;
 
     std::atomic<long long>                    m_clock;
-    long long                                 m_clock_old;
-    std::chrono::steady_clock::time_point     m_rec_time;
-    long                                      m_freq;
+
+    std::mutex                                               m_frequency_calculator_mutex;
+    ResettableFrequencyCalculator<std::chrono::steady_clock> m_frequency_calculator;
 
     std::set<long long>                       m_id_set;
 

@@ -62,7 +62,7 @@ constexpr std::uint8_t max_protocol_version = 1;
 
 
 #if 1
-TEST(RAII, TcpServiceServer) // NOLINT
+TEST(ecal_service, RAII_TcpServiceServer) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -113,7 +113,7 @@ TEST(RAII, TcpServiceServer) // NOLINT
 #endif
 
 #if 1
-TEST(RAII, TcpServiceClient) // NOLINT
+TEST(ecal_service, RAII_TcpServiceClient) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -144,7 +144,7 @@ TEST(RAII, TcpServiceClient) // NOLINT
 #endif
 
 #if 1
-TEST(RAII, TcpServiceServerAndClient) // NOLINT
+TEST(ecal_service, RAII_TcpServiceServerAndClient) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -231,7 +231,7 @@ TEST(RAII, TcpServiceServerAndClient) // NOLINT
 #endif
 
 #if 1
-TEST(RAII, StopDuringServiceCall) // NOLINT
+TEST(ecal_service, RAII_StopDuringServiceCall) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -310,7 +310,7 @@ TEST(RAII, StopDuringServiceCall) // NOLINT
 #endif
 
 #if 1
-TEST(Communication, SlowCommunication) // NOLINT
+TEST(ecal_service, Communication_SlowCommunication) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -420,7 +420,7 @@ TEST(Communication, SlowCommunication) // NOLINT
 #endif
 
 #if 1
-TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst) // NOLINT
+TEST(ecal_service, CallbacksConnectDisconnect_ClientDisconnectsFirst) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -527,7 +527,7 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst) // NOLINT
 #endif
 
 #if 1
-TEST(CommunicationAndCallbacks, ClientsDisconnectFirst) // NOLINT
+TEST(ecal_service, CommunicationAndCallbacks_ClientsDisconnectFirst) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -720,7 +720,7 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst) // NOLINT
 #endif
 
 #if 1
-TEST(CommunicationAndCallbacks, ServerDisconnectsFirst) // NOLINT
+TEST(ecal_service, CommunicationAndCallbacks_ServerDisconnectsFirst) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -868,7 +868,7 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst) // NOLINT
 #endif
 
 #if 1
-TEST(CommunicationAndCallbacks, StressfulCommunication) // NOLINT
+TEST(ecal_service, CommunicationAndCallbacks_StressfulCommunication) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -1023,7 +1023,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunication) // NOLINT
 #endif
 
 #if 1
-TEST(CommunicationAndCallbacks, StressfulCommunicationNoParallelCalls) // NOLINT
+TEST(ecal_service, CommunicationAndCallbacks_StressfulCommunicationNoParallelCalls) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -1150,7 +1150,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationNoParallelCalls) // NOLINT
 #endif
 
 #if 1
-TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload) // NOLINT
+TEST(ecal_service, CommunicationAndCallbacks_StressfulCommunicationMassivePayload) // NOLINT
 {
   // This test does not work for Protocol version 0 and there is no way to fix that (which is the reason why we invented protocol version 1)
 
@@ -1307,7 +1307,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload) // NOLINT
 #endif
 
 #if 1
-TEST(Callback, ServerAndClientManagers) // NOLINT
+TEST(ecal_service, Callback_ServerAndClientManagers) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -1442,7 +1442,7 @@ TEST(Callback, ServerAndClientManagers) // NOLINT
 #endif
 
 #if 1
-TEST(Callback, ServiceCallFromCallback) // NOLINT
+TEST(ecal_service, Callback_ServiceCallFromCallback) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -1512,7 +1512,7 @@ TEST(Callback, ServiceCallFromCallback) // NOLINT
 #endif
 
 #if 1
-TEST(Callback, SerializedServiceCallbacks) // NOLINT
+TEST(ecal_service, Callback_SerializedServiceCallbacks) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -1606,7 +1606,7 @@ TEST(Callback, SerializedServiceCallbacks) // NOLINT
 #endif
 
 #if 1
-TEST(ErrorCallback, ErrorCallbackNoServer) // NOLINT
+TEST(ecal_service, ErrorCallback_ErrorCallbackNoServer) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -1658,7 +1658,7 @@ TEST(ErrorCallback, ErrorCallbackNoServer) // NOLINT
 #endif
 
 #if 1
-TEST(ErrorCallback, ErrorCallbackServerHasDisconnected) // NOLINT
+TEST(ecal_service, ErrorCallback_ErrorCallbackServerHasDisconnected) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -1825,7 +1825,7 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected) // NOLINT
 #endif
 
 #if 1
-TEST(ErrorCallback, ErrorCallbackClientDisconnects) // NOLINT
+TEST(ecal_service, ErrorCallback_ErrorCallbackClientDisconnects) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -1924,7 +1924,7 @@ TEST(ErrorCallback, ErrorCallbackClientDisconnects) // NOLINT
 #endif
 
 #if 1
-TEST(ErrorCallback, StressfulErrorsHalfwayThrough) // NOLINT
+TEST(ecal_service, ErrorCallback_StressfulErrorsHalfwayThrough) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -2107,7 +2107,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough) // NOLINT
 #endif
 
 #if 1
-TEST(ErrorCallback, StressfulErrorsHalfwayThroughWithManagers) // NOLINT
+TEST(ecal_service, ErrorCallback_StressfulErrorsHalfwayThroughWithManagers) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -2289,7 +2289,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThroughWithManagers) // NOLINT
 #endif
 
 #if 1
-TEST(BlockingCall, RegularBlockingCall) // NOLINT
+TEST(ecal_service, BlockingCall_RegularBlockingCall) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -2360,7 +2360,7 @@ TEST(BlockingCall, RegularBlockingCall) // NOLINT
 #endif
 
 #if 1
-TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough) // NOLINT
+TEST(ecal_service, BlockingCall_BlockingCallWithErrorHalfwayThrough) // NOLINT
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
@@ -2494,7 +2494,7 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough) // NOLINT
 #endif
 
 #if 1
-TEST(BlockingCall, Stopped)  // NOLINT // This test shows the proper way to stop everything. I should adapt all other tests, too
+TEST(ecal_service, BlockingCall_Stopped)  // NOLINT // This test shows the proper way to stop everything. I should adapt all other tests, too
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {

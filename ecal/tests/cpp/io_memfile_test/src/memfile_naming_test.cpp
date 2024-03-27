@@ -25,7 +25,7 @@
 #include <gtest/gtest.h>
 
 
-TEST(MemFile, MemfileNaming)
+TEST(core_cpp_core, MemFile_MemfileNaming)
 {
   std::chrono::steady_clock::time_point timepoint{};
 

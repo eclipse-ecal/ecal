@@ -50,50 +50,7 @@ static std::string CreatePayLoad(size_t payload_size_)
   return(s);
 }
 
-TEST(PubSub, InitializeFinalize)
-{
-  // Is eCAL API initialized ?
-  EXPECT_EQ(0, eCAL::IsInitialized());
-
-  // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "initialize_test"));
-
-  // Is eCAL API initialized ?
-  EXPECT_EQ(1, eCAL::IsInitialized());
-
-  // initialize eCAL API again we expect return value 1 for yet initialized
-  EXPECT_EQ(1, eCAL::Initialize(0, nullptr, "initialize_test"));
-
-  // finalize eCAL API we expect return value 0 even it will not be really finalized because it's 2 times initialzed and 1 time finalized
-  EXPECT_EQ(0, eCAL::Finalize());
-
-  // Is eCAL API initialized ? yes it' still initialized
-  EXPECT_EQ(1, eCAL::IsInitialized());
-
-  // finalize eCAL API we expect return value 0 because now it will be finalized
-  EXPECT_EQ(0, eCAL::Finalize());
-
-  // Is eCAL API initialized ? no
-  EXPECT_EQ(0, eCAL::IsInitialized());
-
-  // finalize eCAL API we expect return value 1 because it was finalized before
-  EXPECT_EQ(1, eCAL::Finalize());
-}
-
-TEST(PubSub, MultipleInitializeFinalize)
-{
-  // try to initialize / finalize multiple times
-  for (auto i = 0; i < 4; ++i)
-  {
-    // initialize eCAL API
-    EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "multiple initialize/finalize"));
-
-    // finalize eCAL API
-    EXPECT_EQ(0, eCAL::Finalize());
-  }
-}
-
-TEST(PubSub, LeakedPubSub)
+TEST(core_cpp_pubsub, LeakedPubSub)
 {
   // initialize eCAL API
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "leaked pub/sub"));
@@ -141,7 +98,7 @@ TEST(PubSub, LeakedPubSub)
   pub_stop = true; pub_t.join();
 }
 
-TEST(PubSub, CallbackDestruction)
+TEST(core_cpp_pubsub, CallbackDestruction)
 {
   // initialize eCAL API
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "callback destruction"));
@@ -199,7 +156,7 @@ TEST(PubSub, CallbackDestruction)
   EXPECT_EQ(0, eCAL::Finalize());
 }
 
-TEST(PubSub, CreateDestroy)
+TEST(core_cpp_pubsub, CreateDestroy)
 { 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
@@ -238,7 +195,7 @@ TEST(PubSub, CreateDestroy)
   eCAL::Finalize();
 }
 
-TEST(PubSub, SimpleMessage1)
+TEST(core_cpp_pubsub, SimpleMessage1)
 { 
   // default send / receive strings
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
@@ -283,7 +240,7 @@ TEST(PubSub, SimpleMessage1)
   eCAL::Finalize();
 }
 
-TEST(PubSub, SimpleMessage2)
+TEST(core_cpp_pubsub, SimpleMessage2)
 { 
   // default send / receive strings
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
@@ -322,7 +279,7 @@ TEST(PubSub, SimpleMessage2)
   eCAL::Finalize();
 }
 
-TEST(PubSub, SimpleMessageCB)
+TEST(core_cpp_pubsub, SimpleMessageCB)
 { 
   // default send string
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
@@ -401,7 +358,7 @@ TEST(PubSub, SimpleMessageCB)
   eCAL::Finalize();
 }
 
-TEST(PubSub, DynamicSizeCB)
+TEST(core_cpp_pubsub, DynamicSizeCB)
 { 
   // default send string
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
@@ -457,7 +414,7 @@ TEST(PubSub, DynamicSizeCB)
   eCAL::Finalize();
 }
 
-TEST(PubSub, DynamicCreate)
+TEST(core_cpp_pubsub, DynamicCreate)
 { 
   // default send string
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
@@ -549,7 +506,7 @@ TEST(PubSub, DynamicCreate)
   eCAL::Finalize();
 }
 
-TEST(PubSub, ZeroPayloadMessageUDP)
+TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
 {
   // default send string
   std::string send_s;
@@ -595,7 +552,7 @@ TEST(PubSub, ZeroPayloadMessageUDP)
   eCAL::Finalize();
 }
 
-TEST(PubSub, MultipleSendsUDP)
+TEST(core_cpp_pubsub, MultipleSendsUDP)
 {
   // default send string
   std::vector<std::string> send_vector{ "this", "is", "a", "", "testtest" };
@@ -644,7 +601,7 @@ TEST(PubSub, MultipleSendsUDP)
   eCAL::Finalize();
 }
 
-TEST(PubSub, DestroyInCallback)
+TEST(core_cpp_pubsub, DestroyInCallback)
 {
   /* Test setup :
    * 2 pair of pub_sub connections ("foo" and "destroy")
@@ -709,7 +666,7 @@ TEST(PubSub, DestroyInCallback)
   eCAL::Finalize();
 }
 
-TEST(PubSub, SubscriberReconnection)
+TEST(core_cpp_pubsub, SubscriberReconnection)
 {
   /* Test setup :
    * publisher runs permanently in a thread

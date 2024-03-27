@@ -63,7 +63,7 @@ void measure_execution_within_range(const std::string& description, std::functio
   EXPECT_TRUE(within_epsilon) << "Execution of " << description << " took " << duration.count() << " ns but expected was " << expected_runtime.count()*1000000 << "ns";
 }
 
-TEST(PubSub, TimingSubscriberReceive)
+TEST(core_cpp_pubsub, TimingSubscriberReceive)
 {
   // initialize eCAL API
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "subscriber_receive_timing"));
@@ -160,7 +160,7 @@ TEST(PubSub, TimingSubscriberReceive)
 }
 
 // This tests test for sporadically received empty messages which were a problem.
-TEST(PubSub, SporadicEmptyReceives)
+TEST(core_cpp_pubsub, SporadicEmptyReceives)
 { 
   // initialize eCAL API
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "sporadic_empty_receives"));
