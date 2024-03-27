@@ -31,7 +31,6 @@
 /**********************************************************************************************/
 /* base data path name */
 constexpr char ECAL_HOME_PATH_WINDOWS[] = "";
-constexpr char ECAL_HOME_PATH_WINDOWS[] = "";
 constexpr char ECAL_HOME_PATH_LINUX[]   = ".ecal";
 constexpr char ECAL_LOG_PATH[]          = "logs";
 constexpr char ECAL_SETTINGS_PATH[]     = "cfg";
