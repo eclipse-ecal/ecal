@@ -23,8 +23,7 @@
 #include <ecal/ecal.h>
 
 #include <QPushButton>
-#include <QtVersion>
-#include <QLibraryInfo>
+#include <QtGlobal>
 
 AboutDialog::AboutDialog(QWidget *parent)
   : QDialog(parent)
