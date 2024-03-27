@@ -97,19 +97,20 @@ private:
   std::map<Columns, int> tree_item_column_mapping =
   {
     { Columns::GROUP,                -1 },
-    { Columns::HEARTBEAT,            (int)ServiceTreeItem::Columns::RCLOCK },
-    { Columns::HOST_NAME,            (int)ServiceTreeItem::Columns::HNAME },
-    { Columns::PID,                  (int)ServiceTreeItem::Columns::PID },
-    { Columns::PROCESS_NAME,         (int)ServiceTreeItem::Columns::PNAME },
-    { Columns::UNIT_NAME,            (int)ServiceTreeItem::Columns::UNAME },
-    { Columns::SERVICE_NAME,         (int)ServiceTreeItem::Columns::SNAME },
-    { Columns::SERVICE_TYPE,         (int)ServiceTreeItem::Columns::STYPE },
-    { Columns::TCP_PORT,             (int)ServiceTreeItem::Columns::TCP_PORT },
-    { Columns::METHOD_NAME,          (int)ServiceTreeItem::Columns::MNAME },
-    { Columns::METHOD_REQUEST_TYPE,  (int)ServiceTreeItem::Columns::REQ_TYPE },
-    { Columns::METHOD_RESPONSE_TYPE, (int)ServiceTreeItem::Columns::RESP_TYPE },
-    { Columns::CALL_COUNT,           (int)ServiceTreeItem::Columns::CALL_COUNT },
+    { Columns::HEARTBEAT,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::RCLOCK },
+    { Columns::HOST_NAME,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::HNAME },
+    { Columns::PID,                  (int)ServiceTreeItem<eCAL::pb::Service>::Columns::PID },
+    { Columns::PROCESS_NAME,         (int)ServiceTreeItem<eCAL::pb::Service>::Columns::PNAME },
+    { Columns::UNIT_NAME,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::UNAME },
+    { Columns::SERVICE_NAME,         (int)ServiceTreeItem<eCAL::pb::Service>::Columns::SNAME },
+    { Columns::SERVICE_TYPE,         (int)ServiceTreeItem<eCAL::pb::Service>::Columns::STYPE },
+    { Columns::TCP_PORT,             (int)ServiceTreeItem<eCAL::pb::Service>::Columns::TCP_PORT },
+    { Columns::METHOD_NAME,          (int)ServiceTreeItem<eCAL::pb::Service>::Columns::MNAME },
+    { Columns::METHOD_REQUEST_TYPE,  (int)ServiceTreeItem<eCAL::pb::Service>::Columns::REQ_TYPE },
+    { Columns::METHOD_RESPONSE_TYPE, (int)ServiceTreeItem<eCAL::pb::Service>::Columns::RESP_TYPE },
+    { Columns::CALL_COUNT,           (int)ServiceTreeItem<eCAL::pb::Service>::Columns::CALL_COUNT },
   };
 
-  std::map<std::string, ServiceTreeItem*> tree_item_map_;
+  std::map<std::string, ServiceTreeItem<eCAL::pb::Client>*> tree_item_client_map_;
+  std::map<std::string, ServiceTreeItem<eCAL::pb::Service>*> tree_item_server_map_;
 };

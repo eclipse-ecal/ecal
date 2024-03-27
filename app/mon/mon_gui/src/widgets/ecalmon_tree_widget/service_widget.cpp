@@ -124,7 +124,7 @@ void ServiceWidget::autoSizeColumns()
   method->set_resp_type("ShutdownProcessNameResponse____");
   method->set_call_count(999999);
 
-  ServiceTreeItem* example_topic_item = new ServiceTreeItem(example_service_pb, *method);
+  auto* example_topic_item = new ServiceTreeItem<eCAL::pb::Service>(example_service_pb, *method);
   GroupTreeItem* example_group_item = new GroupTreeItem("__ / eCALRPCService____", "", "", QVariant(), "");
 
   service_tree_model_->insertItem(example_topic_item);

@@ -21,6 +21,14 @@
 
 #include "CustomQt/QAbstractTreeItem.h"
 
+#include <QColor>
+#include <QFont>
+
+#include <type_traits>
+
+#include "item_data_roles.h"
+#include "tree_item_type.h"
+
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
@@ -30,6 +38,7 @@
 #pragma warning(pop)
 #endif
 
+template <class T>
 class ServiceTreeItem :
   public QAbstractTreeItem
 {
@@ -51,31 +60,219 @@ public:
     CALL_COUNT,
   };
 
-  ServiceTreeItem();
-  ServiceTreeItem(const eCAL::pb::Service& service, const eCAL::pb::Method& method);
-  ServiceTreeItem(const eCAL::pb::Client& client, const eCAL::pb::Method& method);
+  ServiceTreeItem() : QAbstractTreeItem()
+    , identifier_("")
+  {
+  }
 
-  ~ServiceTreeItem();
+  ServiceTreeItem(const T& service, const eCAL::pb::Method& method)
+    : QAbstractTreeItem()
+    , identifier_("")
+  {
+    update(service, method);
 
-  QVariant data(int column, Qt::ItemDataRole role = Qt::ItemDataRole::DisplayRole) const;
+  }
 
-  QVariant data(Columns column, Qt::ItemDataRole role = Qt::ItemDataRole::DisplayRole) const;
+  ~ServiceTreeItem()
+  {
 
-  int type() const;
+  }
 
-  std::string identifier() const;
+  QVariant data(int column, Qt::ItemDataRole role = Qt::ItemDataRole::DisplayRole) const
+  {
+    return data((Columns)column, role);
+  }
 
-  static std::string generateIdentifier(const eCAL::pb::Service& service, const eCAL::pb::Method& method);
-  static std::string generateIdentifier(const eCAL::pb::Client& client, const eCAL::pb::Method& method);
+  QVariant data(Columns column, Qt::ItemDataRole role = Qt::ItemDataRole::DisplayRole) const
+  {
+    if (role == (Qt::ItemDataRole)ItemDataRoles::RawDataRole) //-V1016 //-V547
+    {
+      if (column == Columns::RCLOCK)
+      {
+        return service_.rclock();
+      }
+      else if (column == Columns::HNAME)
+      {
+        return service_.hname().c_str();
+      }
+      else if (column == Columns::PNAME)
+      {
+        return service_.pname().c_str();
+      }
+      else if (column == Columns::UNAME)
+      {
+        return service_.uname().c_str();
+      }
+      else if (column == Columns::PID)
+      {
+        return service_.pid();
+      }
+      else if (column == Columns::SNAME)
+      {
+        return service_.sname().c_str();
+      }
+      else if (column == Columns::STYPE)
+      {
+        return std::is_same<T, eCAL::pb::Service>::value ? "Server" : "Client";
+      }
+      else if (column == Columns::TCP_PORT)
+      {
+        return QVariant();
+        //return service_.tcp_port_v1();
+      }
+      else if (column == Columns::MNAME)
+      {
+        return method_.mname().c_str();
+      }
+      else if (column == Columns::REQ_TYPE)
+      {
+        return method_.req_type().c_str();
+      }
+      else if (column == Columns::RESP_TYPE)
+      {
+        return method_.resp_type().c_str();
+      }
+      else if (column == Columns::CALL_COUNT)
+      {
+        return (long long)method_.call_count();
+      }
+      else
+      {
+        return QVariant();
+      }
+    }
+    else if ((role == Qt::ItemDataRole::DisplayRole) || (role == Qt::ItemDataRole::ToolTipRole))
+    {
+      if ((column == Columns::HNAME)
+        || (column == Columns::PNAME)
+        || (column == Columns::UNAME)
+        || (column == Columns::SNAME)
+        || (column == Columns::MNAME)
+        || (column == Columns::REQ_TYPE)
+        || (column == Columns::RESP_TYPE))
+      {
+        QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
+        return (!raw_data.isEmpty() ? raw_data : "- ? -");
+      }
+      else
+      {
+        return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
+      }
+    }
 
-  void update(const eCAL::pb::Service& service, const eCAL::pb::Method& method);
-  void update(const eCAL::pb::Client& client, const eCAL::pb::Method& method);
+    else if (role == ItemDataRoles::SortRole) //-V547
+    {
+      return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
+    }
+
+    else if (role == ItemDataRoles::FilterRole) //-V547
+    {
+      return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
+    }
+
+    else if (role == Qt::ItemDataRole::TextAlignmentRole)
+    {
+      if ((column == Columns::RCLOCK)
+        || (column == Columns::PID)
+        || (column == Columns::TCP_PORT)
+        || (column == Columns::CALL_COUNT)
+        )
+      {
+        return Qt::AlignmentFlag::AlignRight;
+      }
+      else
+      {
+        return Qt::AlignmentFlag::AlignLeft;
+      }
+    }
+
+    else if (role == ItemDataRoles::GroupRole) //-V547
+    {
+        if (column == Columns::PNAME)
+        {
+          QStringList list{ service_.hname().c_str(), service_.pname().c_str() };
+          return list;
+        }
+        else if (column == Columns::PID)
+        {
+          QStringList list{ service_.hname().c_str(), QString::number(service_.pid()) };
+          return list;
+        }
+        else if (column == Columns::UNAME)
+        {
+          QStringList list{ service_.hname().c_str(), service_.uname().c_str(), QString::number(service_.pid()) };
+          return list;
+        }
+        else if (column == Columns::SNAME)
+        {
+          QStringList list{ service_.sname().c_str(), service_.hname().c_str(), service_.uname().c_str(), QString::number(service_.pid()) };
+          return list;
+        }
+        else
+        {
+          return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
+        }
+    }
+
+    else if (role == Qt::ItemDataRole::FontRole)
+    {
+      if ((column == Columns::HNAME)
+        || (column == Columns::PNAME)
+        || (column == Columns::UNAME)
+        || (column == Columns::SNAME)
+        || (column == Columns::STYPE)
+        || (column == Columns::MNAME)
+        || (column == Columns::REQ_TYPE)
+        || (column == Columns::RESP_TYPE))
+      {
+        QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
+        if (raw_data.isEmpty())
+        {
+          QFont font;
+          font.setItalic(true);
+          return font;
+        }
+        else
+        {
+          return QVariant(); // Invalid QVariant
+        }
+      }
+      else
+      {
+        return QVariant(); // Invalid QVariant
+      }
+    }
+
+    return QVariant(); // Invalid QVariant
+  }
+
+  int type() const
+  {
+    return (int)TreeItemType::Service;
+  }
+
+  std::string identifier() const
+  {
+    return identifier_;
+  }
+
+  static std::string generateIdentifier(const T& service, const eCAL::pb::Method& method)
+  {
+    return std::to_string(service.pid()) + "@" + service.hname() + "@" + method.mname();
+  }
+
+  void update(const T& service, const eCAL::pb::Method& method)
+  {
+    service_.Clear();
+    service_.CopyFrom(service);
+    method_.Clear();
+    method_.CopyFrom(method);
+    identifier_ = generateIdentifier(service_, method_);
+  }
 
 private:
-  eCAL::pb::Service service_;
-  eCAL::pb::Client client_;
+  T service_;
   eCAL::pb::Method  method_;
   std::string identifier_;
-  bool is_client_;
 };
 
