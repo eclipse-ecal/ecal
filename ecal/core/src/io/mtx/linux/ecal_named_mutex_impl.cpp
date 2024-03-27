@@ -292,8 +292,9 @@ namespace eCAL
     else
     {
       struct timespec abstime {};
+#ifndef ECAL_OS_MACOS
       clock_gettime(CLOCK_MONOTONIC, &abstime);
-
+#endif
       abstime.tv_sec = abstime.tv_sec + timeout_ / 1000;
       abstime.tv_nsec = abstime.tv_nsec + (timeout_ % 1000) * 1000000;
       while (abstime.tv_nsec >= 1000000000)
