@@ -26,7 +26,7 @@
 
 #include "ecal_custom_data_types.h"
 
-#include "../ecal_log_level.h"
+#include <ecal/ecal_log_level.h>
 
 namespace eCAL
 {

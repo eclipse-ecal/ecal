@@ -25,6 +25,7 @@
 #include "ecal_config_reader.h"
 
 #include "ecal_global_accessors.h"
+#include "ecal_def.h"
 #include "config/ecal_config_reader.h"
 
 constexpr char COMMON[]       = "common";
@@ -97,88 +98,87 @@ namespace eCAL
     {
       // transport layer options
       auto& transportLayerOptions = config.transport_layer_options;
-      transportLayerOptions.network_enabled            = false;
-      transportLayerOptions.drop_out_of_order_messages = false;
+      transportLayerOptions.network_enabled            = NET_ENABLED;
+      transportLayerOptions.drop_out_of_order_messages = EXP_DROP_OUT_OF_ORDER_MESSAGES;
       
       auto& multicastOptions = transportLayerOptions.mc_options;
-      multicastOptions.config_version      = UdpConfigVersion::V1;
-      multicastOptions.group			         = std::string("239.0.0.1");
-      multicastOptions.mask                = std::string("0.0.0.15");
-      multicastOptions.port			           = 14000;
-      multicastOptions.ttl                 = 2;
-      multicastOptions.recbuf              = (1024 * 1024 * 5);
-      multicastOptions.sndbuf              = (1024 * 1024 * 5);
-      multicastOptions.join_all_interfaces = false;
-      multicastOptions.bandwidth_max_udp   = -1;
-      multicastOptions.npcap_enabled       = false;
+      multicastOptions.config_version      = NET_UDP_MULTICAST_CONFIG_VERSION;
+      multicastOptions.group			         = std::string(NET_UDP_MULTICAST_GROUP);
+      multicastOptions.mask                = std::string(NET_UDP_MULTICAST_MASK);
+      multicastOptions.port			           = NET_UDP_MULTICAST_PORT;
+      multicastOptions.ttl                 = NET_UDP_MULTICAST_TTL;
+      multicastOptions.recbuf              = NET_UDP_MULTICAST_RCVBUF;
+      multicastOptions.sndbuf              = NET_UDP_MULTICAST_SNDBUF;
+      multicastOptions.join_all_interfaces = NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED;
+      multicastOptions.bandwidth_max_udp   = NET_BANDWIDTH_MAX_UDP;
+      multicastOptions.npcap_enabled       = NET_NPCAP_ENABLED;
 
       auto& tcpPubSubOptions = transportLayerOptions.tcp_options;
-      tcpPubSubOptions.num_executor_reader = 4;
-      tcpPubSubOptions.num_executor_writer = 4;
-      tcpPubSubOptions.max_reconnections   = 5;
+      tcpPubSubOptions.num_executor_reader = NET_TCP_PUBSUB_NUM_EXECUTOR_READER;
+      tcpPubSubOptions.num_executor_writer = NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER;
+      tcpPubSubOptions.max_reconnections   = NET_TCP_PUBSUB_MAX_RECONNECTIONS;
 
       auto& shmOptions = transportLayerOptions.shm_options;
-      shmOptions.host_group_name		        = "";
-      shmOptions.memfile_minsize		        = 4096;
-      shmOptions.memfile_reserve		        = 50;
-      shmOptions.memfile_ack_timeout        = 0;
-      shmOptions.memfile_buffer_count       = 1;
-      shmOptions.drop_out_of_order_messages = false;
-      shmOptions.memfile_zero_copy		      = false;
+      shmOptions.host_group_name		        = NET_HOST_GROUP_NAME;
+      shmOptions.memfile_minsize		        = PUB_MEMFILE_MINSIZE;
+      shmOptions.memfile_reserve		        = PUB_MEMFILE_RESERVE;
+      shmOptions.memfile_ack_timeout        = PUB_MEMFILE_ACK_TO;
+      shmOptions.memfile_buffer_count       = PUB_MEMFILE_BUF_COUNT;
+      shmOptions.drop_out_of_order_messages = EXP_DROP_OUT_OF_ORDER_MESSAGES;
+      shmOptions.memfile_zero_copy		      = PUB_MEMFILE_ZERO_COPY;
 
       // registration options
       auto& registrationOptions = config.registration_options;
-      registrationOptions              = RegistrationOptions(60000U, 1000U);
-      registrationOptions.share_tdesc = true;
-      registrationOptions.share_ttype = true;
+      registrationOptions             = RegistrationOptions(CMN_REGISTRATION_TO, CMN_REGISTRATION_REFRESH);
+      registrationOptions.share_tdesc = PUB_SHARE_TDESC;
+      registrationOptions.share_ttype = PUB_SHARE_TTYPE;
 
       // monitoring options
       auto& monitoringOptions = config.monitoring_options;
-      monitoringOptions.monitoring_mode             = MonitoringMode::none;
-      monitoringOptions.monitoring_timeout          = 5000;
-      monitoringOptions.network_monitoring_disabled = false;
-      monitoringOptions.filter_excl                 = "__.*";
-      monitoringOptions.filter_incl                 = "";
-      monitoringOptions.filter_log_con              = log_level_error | log_level_fatal | log_level_warning;
-      monitoringOptions.filter_log_file             = log_level_none;
-      monitoringOptions.filter_log_udp              = log_level_info | log_level_error | log_level_fatal | log_level_warning;
+      monitoringOptions.monitoring_mode             = EXP_MONITORING_MODE;
+      monitoringOptions.monitoring_timeout          = MON_TIMEOUT;
+      monitoringOptions.network_monitoring_disabled = EXP_NETWORK_MONITORING_DISABLED;
+      monitoringOptions.filter_excl                 = MON_FILTER_EXCL;
+      monitoringOptions.filter_incl                 = MON_FILTER_INCL;
+      monitoringOptions.filter_log_con              = MON_LOG_FILTER_CON;
+      monitoringOptions.filter_log_file             = MON_LOG_FILTER_FILE;
+      monitoringOptions.filter_log_udp              = MON_LOG_FILTER_UDP;
 
-      auto& udpMonitoringOptions = monitoringOptions.udp_options;
+      // auto& udpMonitoringOptions = monitoringOptions.udp_options;
       // TODO: Nothing here yet
 
       auto& shmMonitoringOptions = monitoringOptions.shm_options;
-      shmMonitoringOptions.shm_monitoring_domain     = "ecal_monitoring";
-      shmMonitoringOptions.shm_monitoring_queue_size = 1024;
+      shmMonitoringOptions.shm_monitoring_domain     = std::string(EXP_SHM_MONITORING_DOMAIN);
+      shmMonitoringOptions.shm_monitoring_queue_size = EXP_SHM_MONITORING_QUEUE_SIZE;
 
       // receiving options
       auto& receivingOptions = config.receiving_options;
-      receivingOptions.shm_recv_enabled    = true;
-      receivingOptions.tcp_recv_enabled    = true;
-      receivingOptions.udp_mc_recv_enabled = true;
+      receivingOptions.shm_recv_enabled    = NET_SHM_REC_ENABLED;
+      receivingOptions.tcp_recv_enabled    = NET_TCP_REC_ENABLED;
+      receivingOptions.udp_mc_recv_enabled = NET_UDP_MC_REC_ENABLED;
 
       // publisher options
       auto& publisherOptions = config.publisher_options;
-      publisherOptions.use_inproc = TLayer::smode_off;
-      publisherOptions.use_shm    = TLayer::smode_auto;
-      publisherOptions.use_tcp    = TLayer::smode_off;
-      publisherOptions.use_udp_mc = TLayer::smode_auto;
+      publisherOptions.use_shm    = PUB_USE_SHM;
+      publisherOptions.use_tcp    = PUB_USE_TCP;
+      publisherOptions.use_udp_mc = PUB_USE_UDP_MC;
       
       // timesync options
       auto& timesyncOptions = config.timesync_options;
-      timesyncOptions.timesync_module = "ecaltime-localtime";
+      timesyncOptions.timesync_module = TIME_SYNC_MODULE;
 
       // service options
       auto& serviceOptions = config.service_options;
-      serviceOptions.protocol_v0 = true;
-      serviceOptions.protocol_v1 = true;
+      serviceOptions.protocol_v0 = SERVICE_PROTOCOL_V0;
+      serviceOptions.protocol_v1 = SERVICE_PROTOCOL_V1;
 
       // sys options
       auto& sysOptions = config.application_options.sys_options;
-      sysOptions.filter_excl = "^eCALSysClient$|^eCALSysGUI$|^eCALSys$";
+      sysOptions.filter_excl = SYS_FILTER_EXCL;
 
       // process options
       auto& processOptions = config.application_options.process_options;
-      processOptions.terminal_emulator = "";
+      processOptions.terminal_emulator = PROCESS_TERMINAL_EMULATOR;
 
       return config;
     };
