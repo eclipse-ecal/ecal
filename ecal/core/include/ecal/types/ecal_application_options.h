@@ -39,5 +39,11 @@ namespace eCAL
     {
       std::string terminal_emulator;
     };
+
+    struct ApplicationOptions
+    {
+      SysOptions     sys_options;
+      ProcessOptions process_options;
+    };
   }
 }

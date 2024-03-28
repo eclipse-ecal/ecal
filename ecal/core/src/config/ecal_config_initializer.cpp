@@ -163,10 +163,6 @@ namespace eCAL
       publisherOptions.use_tcp    = TLayer::smode_off;
       publisherOptions.use_udp_mc = TLayer::smode_auto;
       
-      // sys options
-      auto& sysOptions = config.sys_options;
-      sysOptions.filter_excl = "^eCALSysClient$|^eCALSysGUI$|^eCALSys$";
-
       // timesync options
       auto& timesyncOptions = config.timesync_options;
       timesyncOptions.timesync_module = "ecaltime-localtime";
@@ -176,8 +172,12 @@ namespace eCAL
       serviceOptions.protocol_v0 = true;
       serviceOptions.protocol_v1 = true;
 
+      // sys options
+      auto& sysOptions = config.application_options.sys_options;
+      sysOptions.filter_excl = "^eCALSysClient$|^eCALSysGUI$|^eCALSys$";
+
       // process options
-      auto& processOptions = config.process_options;
+      auto& processOptions = config.application_options.process_options;
       processOptions.terminal_emulator = "";
 
       return config;
@@ -265,10 +265,6 @@ namespace eCAL
       publisherOptions.use_tcp    = TLayer::eSendMode(iniConfig.get(PUBLISHER, "use_tcp",    0));
       publisherOptions.use_udp_mc = TLayer::eSendMode(iniConfig.get(PUBLISHER, "use_udp_mc", 0));
 
-      // sys options
-      auto& sysOptions = config.sys_options;
-      sysOptions.filter_excl = iniConfig.get(SYS, "filter_excl", "^eCALSysClient$|^eCALSysGUI$|^eCALSys$*"); // default different than ini file
-
       // timesync options
       auto& timesyncOptions = config.timesync_options;
       timesyncOptions.timesync_module = iniConfig.get(TIME, "timesync_module_rt", "");
@@ -278,8 +274,12 @@ namespace eCAL
       serviceOptions.protocol_v0 = iniConfig.get(SERVICE, "protocol_v0", 1) != 0;
       serviceOptions.protocol_v1 = iniConfig.get(SERVICE, "protocol_v1", 1) != 0;
 
+      // sys options
+      auto& sysOptions = config.application_options.sys_options;
+      sysOptions.filter_excl = iniConfig.get(SYS, "filter_excl", "^eCALSysClient$|^eCALSysGUI$|^eCALSys$*"); // default different than ini file
+
       // process options
-      auto& processOptions = config.process_options;
+      auto& processOptions = config.application_options.process_options;
       processOptions.terminal_emulator = iniConfig.get(PROCESS, "terminal_emulator", "");
 
       return config;

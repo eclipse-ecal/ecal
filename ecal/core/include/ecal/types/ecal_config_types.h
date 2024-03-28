@@ -55,10 +55,9 @@ namespace eCAL
         MonitoringOptions     monitoring_options;
         ReceivingOptions      receiving_options;
         PublisherOptions      publisher_options;
-        SysOptions            sys_options;
         TimesyncOptions       timesync_options;
         ServiceOptions        service_options;
-        ProcessOptions        process_options;
+        ApplicationOptions    application_options;
         std::string           loaded_ecal_ini_file;
 
         eCALConfig(const eCALConfig& ecal_config) { *this = ecal_config; };
