@@ -56,8 +56,7 @@ namespace eCAL
 
   struct eCAL_UDP_MC_Publisher_Options
   {
-    long max_bandwidth; // rausschmeissen
-    // should we go as far as to put the MC address here?
+    
   };
 
   struct eCAL_TCP_Publisher_Options
