@@ -102,7 +102,7 @@ jobs:
           echo "pr_description<<EOF" >> $GITHUB_OUTPUT
           echo "# Cherry-pick" >> $GITHUB_OUTPUT
           echo "Cherry-picked PR #${{ steps.pr.outputs.pr_number }} to branch \`${{ matrix.target-branch }}\`." >> $GITHUB_OUTPUT
-          echo "The cherry-pick was **successfull**." >> $GITHUB_OUTPUT
+          echo "The cherry-pick was **successful**." >> $GITHUB_OUTPUT
           echo "" >> $GITHUB_OUTPUT
           echo "Please review the changes and **rebase-merge** if desired." >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -123,7 +123,7 @@ jobs:
           echo "pr_description<<EOF" >> $GITHUB_OUTPUT
           echo "# Cherry-pick failed" >> $GITHUB_OUTPUT
           echo "Cherry-picked PR #${{ steps.pr.outputs.pr_number }} to branch \`${{ matrix.target-branch }}\`." >> $GITHUB_OUTPUT
-          echo "The cherry-pick has **failed**" >> $GITHUB_OUTPUT
+          echo "The cherry-pick has **failed**." >> $GITHUB_OUTPUT
           echo "" >> $GITHUB_OUTPUT
           echo "The following files have caused conflicts:" >> $GITHUB_OUTPUT
           echo "" >> $GITHUB_OUTPUT
