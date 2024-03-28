@@ -58,7 +58,7 @@ namespace eCAL
     // start memfile broadcast receive thread
     m_memfile_broadcast_reader = memfile_broadcast_reader_;
     m_memfile_broadcast_reader_thread = std::make_shared<CCallbackThread>(std::bind(&CMemfileRegistrationReceiver::Receive, this));
-    m_memfile_broadcast_reader_thread->start(g_ecal_config()->registration_options.getRefresh());
+    m_memfile_broadcast_reader_thread->start(g_ecal_config()->registration_options.getRefreshMS());
 
     m_created = true;
   }

@@ -34,9 +34,8 @@ namespace eCAL
     struct RegistrationOptions
     {
       public:
-        using ms_t = std::chrono::milliseconds;
         RegistrationOptions() = default;
-        RegistrationOptions(ms_t reg_timeout_, ms_t reg_refresh_)
+        RegistrationOptions(unsigned int reg_timeout_, unsigned int reg_refresh_)
         {
           if (reg_refresh_ < reg_timeout_)
           {
@@ -49,15 +48,15 @@ namespace eCAL
           }
         };
 
-        ms_t getTimeout() const { return registration_timeout; }
-        ms_t getRefresh() const { return registration_refresh; }
+        unsigned int getTimeoutMS() const { return registration_timeout; }
+        unsigned int getRefreshMS() const { return registration_refresh; }
 
         bool share_ttype = true;
         bool share_tdesc = true;
 
       private:
-        ms_t registration_timeout = ms_t(60000);
-        ms_t registration_refresh = ms_t(1000);
+        unsigned int registration_timeout = unsigned int(60000);
+        unsigned int registration_refresh = unsigned int(1000);
     };
   }
 }

@@ -96,7 +96,7 @@ namespace eCAL
         const std::string memfile_event = memfile_name + "_" + process_id;
         const MemFileDataCallbackT memfile_data_callback = std::bind(&CSHMReaderLayer::OnNewShmFileContent, this,
           std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, std::placeholders::_7, std::placeholders::_8);
-        g_memfile_pool()->ObserveFile(memfile_name, memfile_event, par_.topic_name, par_.topic_id, g_ecal_config()->registration_options.getTimeout().count(), memfile_data_callback);
+        g_memfile_pool()->ObserveFile(memfile_name, memfile_event, par_.topic_name, par_.topic_id, g_ecal_config()->registration_options.getTimeoutMS(), memfile_data_callback);
       }
     }
   }

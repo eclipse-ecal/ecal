@@ -127,7 +127,7 @@ namespace eCAL
     m_topic_id = counter.str();
 
     // set registration expiration
-    const std::chrono::milliseconds registration_timeout = g_ecal_config()->registration_options.getTimeout();
+    const std::chrono::milliseconds registration_timeout(g_ecal_config()->registration_options.getTimeoutMS());
     m_loc_sub_map.set_expiration(registration_timeout);
     m_ext_sub_map.set_expiration(registration_timeout);
 

@@ -71,7 +71,7 @@ namespace eCAL
   {
     if(m_created) return;
 
-    m_reg_refresh     = g_ecal_config()->registration_options.getRefresh().count();
+    m_reg_refresh     = g_ecal_config()->registration_options.getRefreshMS();
 
     m_reg_topics      = topics_;
     m_reg_services    = services_;
@@ -108,7 +108,7 @@ namespace eCAL
 
     // start cyclic registration thread
     m_reg_sample_snd_thread = std::make_shared<CCallbackThread>(std::bind(&CRegistrationProvider::RegisterSendThread, this));
-    m_reg_sample_snd_thread->start(g_ecal_config()->registration_options.getRefresh());
+    m_reg_sample_snd_thread->start(g_ecal_config()->registration_options.getRefreshMS());
 
     m_created = true;
   }

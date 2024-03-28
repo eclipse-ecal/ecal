@@ -127,7 +127,7 @@ namespace eCAL
 
       // registration options
       auto& registrationOptions = config.registration_options;
-      registrationOptions              = RegistrationOptions(RegistrationOptions::ms_t(60000), RegistrationOptions::ms_t(1000));
+      registrationOptions              = RegistrationOptions(60000U, 1000U);
       registrationOptions.share_tdesc = true;
       registrationOptions.share_ttype = true;
 
@@ -223,7 +223,7 @@ namespace eCAL
       // registration options
       auto registrationTimeout        = iniConfig.get(COMMON,     "registration_timeout", 5000);
       auto registrationRefresh        = iniConfig.get(COMMON,     "registration_refresh", 1000);
-      config.registration_options     = RegistrationOptions(RegistrationOptions::ms_t(registrationTimeout), RegistrationOptions::ms_t(registrationRefresh));
+      config.registration_options     = RegistrationOptions(registrationTimeout, registrationRefresh);
       auto& registrationOptions       = config.registration_options;
       registrationOptions.share_tdesc = (iniConfig.get(PUBLISHER, "share_tdesc",          1) == 1) ? true : false;
       registrationOptions.share_ttype = (iniConfig.get(PUBLISHER, "share_ttype",          1) == 1) ? true : false;
