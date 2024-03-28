@@ -61,24 +61,17 @@ public:
   };
 
   ServiceTreeItem() : QAbstractTreeItem()
-    , identifier_("")
   {
   }
 
   ServiceTreeItem(const T& service, const eCAL::pb::Method& method)
     : QAbstractTreeItem()
-    , identifier_("")
   {
     update(service, method);
 
   }
 
-  ~ServiceTreeItem()
-  {
-
-  }
-
-  QVariant data(int column, Qt::ItemDataRole role = Qt::ItemDataRole::DisplayRole) const
+  QVariant data(int column, Qt::ItemDataRole role = Qt::ItemDataRole::DisplayRole) const override
   {
     return data((Columns)column, role);
   }
@@ -117,8 +110,7 @@ public:
       }
       else if (column == Columns::TCP_PORT)
       {
-        return QVariant();
-        //return service_.tcp_port_v1();
+        return tcpPort() != 0 ? tcpPort() : QVariant();
       }
       else if (column == Columns::MNAME)
       {
@@ -246,7 +238,7 @@ public:
     return QVariant(); // Invalid QVariant
   }
 
-  int type() const
+  int type() const override
   {
     return (int)TreeItemType::Service;
   }
@@ -271,6 +263,21 @@ public:
   }
 
 private:
+  // This workaround is required to utilize this template class with
+  //eCAL::pb::Client even though it has no tcp_port_v1() signature
+  // exposed. However, when upgrading eCAL to a newer C++ standard 
+  // in the future, the workaround can be replace with if constexpr.
+  template <class U = T>
+  typename std::enable_if<std::is_same<eCAL::pb::Service, U>::value, int>::type
+    tcpPort() const {
+    return service_.tcp_port_v1();
+  }
+  template <class U = T>
+  typename std::enable_if<std::is_same<eCAL::pb::Client, U>::value, int>::type
+    tcpPort() const {
+    return 0;
+  }
+
   T service_;
   eCAL::pb::Method  method_;
   std::string identifier_;

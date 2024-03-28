@@ -85,18 +85,18 @@ void ServiceTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
   {
     for (const auto& method : service.methods())
     {
-      std::string service_identifier = ServiceTreeItem<eCAL::pb::Service>::generateIdentifier(service, method);
+      const std::string service_identifier = ServiceTreeItem<eCAL::pb::Service>::generateIdentifier(service, method);
 
       if (tree_item_server_map_.find(service_identifier) == tree_item_server_map_.end())
       {
-        // Got a new service-method
-        const auto server_tree_item = new ServiceTreeItem<eCAL::pb::Service>(service, method);
+        // Got a new server-method
+        auto* const server_tree_item = new ServiceTreeItem<eCAL::pb::Service>(service, method);
         insertItemIntoGroups(server_tree_item);
         tree_item_server_map_[service_identifier] = server_tree_item;
       }
       else
       {
-        // Update an existing service-method
+        // Update an existing server-method
         tree_item_server_map_.at(service_identifier)->update(service, method);
         server_still_existing[service_identifier] = true;
       }
@@ -107,18 +107,18 @@ void ServiceTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
   {
     for (const auto& method : client.methods())
     {
-      std::string client_identifier = ServiceTreeItem<eCAL::pb::Client>::generateIdentifier(client, method);
+      const std::string client_identifier = ServiceTreeItem<eCAL::pb::Client>::generateIdentifier(client, method);
 
       if (tree_item_client_map_.find(client_identifier) == tree_item_client_map_.end())
       {
-        // Got a new service-method
-        const auto client_tree_item = new ServiceTreeItem<eCAL::pb::Client>(client, method);
+        // Got a new client-method
+        auto* const client_tree_item = new ServiceTreeItem<eCAL::pb::Client>(client, method);
         insertItemIntoGroups(client_tree_item);
         tree_item_client_map_[client_identifier] = client_tree_item;
       }
       else
       {
-        // Update an existing service-method
+        // Update an existing client-method
         tree_item_client_map_.at(client_identifier)->update(client, method);
         client_still_existing[client_identifier] = true;
       }

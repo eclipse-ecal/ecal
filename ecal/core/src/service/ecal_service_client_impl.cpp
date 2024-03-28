@@ -647,7 +647,7 @@ namespace eCAL
 
 
     {
-      std::lock_guard<std::mutex> lock(m_method_sync);
+      const std::lock_guard<std::mutex> lock(m_method_sync);
 
       for (const auto& method_information_pair : m_method_information_map)
       {

@@ -212,11 +212,11 @@ namespace eCAL
         {
           // get method name and descriptor
           const google::protobuf::MethodDescriptor* method_descriptor = service_descriptor->method(i);
-          std::string method_name = method_descriptor->name();
+          const std::string method_name = method_descriptor->name();
 
           // get message type names
-          std::string input_type_name = method_descriptor->input_type()->name();
-          std::string output_type_name = method_descriptor->output_type()->name();
+          const std::string input_type_name = method_descriptor->input_type()->name();
+          const std::string output_type_name = method_descriptor->output_type()->name();
 
           // get message type descriptors
           std::string input_type_desc;

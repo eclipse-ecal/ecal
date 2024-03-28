@@ -423,7 +423,7 @@ namespace eCAL
       const google::protobuf::FileDescriptor* file_desc = service_desc_->file();
       if (file_desc == nullptr) return false;
 
-      std::string file_desc_s = file_desc->DebugString();
+      const std::string file_desc_s = file_desc->DebugString();
       google::protobuf::FileDescriptorProto file_desc_proto;
       if (!GetFileDescriptorFromString(file_desc_s, &file_desc_proto, error_s_)) return false;
 
@@ -431,7 +431,7 @@ namespace eCAL
       google::protobuf::FileDescriptorProto* pdesc = pset.add_file();
       pdesc->CopyFrom(file_desc_proto);
 
-      std::shared_ptr<google::protobuf::Message> req_msg(GetProtoMessageFromDescriptorSet(pset, type_name_, error_s_));
+      const std::shared_ptr<google::protobuf::Message> req_msg(GetProtoMessageFromDescriptorSet(pset, type_name_, error_s_));
       if (!req_msg) return false;
 
       type_desc_ = pset.SerializeAsString();
