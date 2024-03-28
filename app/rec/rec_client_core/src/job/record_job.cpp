@@ -21,6 +21,7 @@
 
 #include <ecal_utils/filesystem.h>
 #include <ecal_utils/ecal_utils.h>
+#include <ecal/ecal_config.h>
 
 #include "hdf5_writer_thread.h"
 
@@ -170,7 +171,7 @@ namespace eCAL
 #undef CopyFile
 #endif // CopyFile
         {
-          std::string ecal_ini_original_path = eCAL::Config::GetLoadedEcalIniPath();
+          std::string ecal_ini_original_path = Config::GetCurrentConfig()->loaded_ecal_ini_file;
 
           if (ecal_ini_original_path.empty())
           {
