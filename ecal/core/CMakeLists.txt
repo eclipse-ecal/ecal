@@ -56,7 +56,6 @@ endif()
 # config
 ######################################
 set(ecal_config_src
-    src/config/ecal_config.cpp
     src/config/ecal_config_reader.cpp
     src/config/ecal_config_reader.h
     src/config/ecal_config_reader_hlp.h
@@ -364,7 +363,6 @@ set(ecal_header_cmn
     include/ecal/ecal_callback.h
     include/ecal/ecal_clang.h
     include/ecal/ecal_client.h
-    include/ecal/ecal_config.h
     include/ecal/ecal_core.h
     include/ecal/ecal_deprecate.h
     include/ecal/ecal_event.h
