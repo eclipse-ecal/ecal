@@ -719,7 +719,7 @@ namespace eCAL
     service_client.version = m_client_version;
 
     {
-      std::lock_guard<std::mutex> lock(m_method_sync);
+      const std::lock_guard<std::mutex> lock(m_method_sync);
 
       for (const auto& method_information_pair : m_method_information_map)
       {
@@ -793,7 +793,7 @@ namespace eCAL
 
   void CServiceClientImpl::IncrementMethodCallCount(const std::string& method_name_)
   {
-    std::lock_guard<std::mutex> lock(m_method_sync);
+    const std::lock_guard<std::mutex> lock(m_method_sync);
     if (m_method_information_map.find(method_name_) == m_method_information_map.end())
     {
       m_method_information_map[method_name_] = SServiceMethodInformation();

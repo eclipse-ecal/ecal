@@ -264,7 +264,7 @@ public:
 
 private:
   // This workaround is required to utilize this template class with
-  //eCAL::pb::Client even though it has no tcp_port_v1() signature
+  // eCAL::pb::Client even though it has no tcp_port_v1() signature
   // exposed. However, when upgrading eCAL to a newer C++ standard 
   // in the future, the workaround can be replace with if constexpr.
   template <class U = T>

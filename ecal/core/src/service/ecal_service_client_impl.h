@@ -125,8 +125,9 @@ namespace eCAL
     std::string           m_service_id;
     std::string           m_host_name;
 
-    std::mutex            m_method_sync;
+    std::mutex                   m_method_sync;
     ServiceMethodInformationMapT m_method_information_map;
+
     using MethodCallCountMapT = std::map<std::string, uint64_t>;
     MethodCallCountMapT  m_method_call_count_map;
 
