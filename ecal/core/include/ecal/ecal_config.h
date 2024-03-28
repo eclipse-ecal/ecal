@@ -16,7 +16,7 @@
  *
  * ========================= eCAL LICENSE =================================
 */
-
+// TODO PG: Remove, deprecated
 #pragma once
 
 #include <ecal/ecal_os.h>

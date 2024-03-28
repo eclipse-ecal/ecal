@@ -59,7 +59,7 @@ constexpr eCAL_Logging_Filter MON_LOG_FILTER_UDP  = (log_level_info | log_level_
 /*                                     sys settings                                       */
 /**********************************************************************************************/
 /* sys app witch will not be imported from cloud */
-constexpr char SYS_FILTER_EXCL[]        = "^eCALSysClient$|^eCALSysGUI$|^eCALSys$*";
+constexpr char SYS_FILTER_EXCL[]        = "^eCALSysClient$|^eCALSysGUI$|^eCALSys$";
 
 /**********************************************************************************************/
 /*                                     network settings                                       */

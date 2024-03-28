@@ -190,8 +190,8 @@ namespace eCAL
 
       // transport layer options
       auto& transportLayerOptions = config.transport_layer_options;
-      transportLayerOptions.network_enabled			       = iniConfig.get(NETWORK,      "network_enabled",            false);
-      transportLayerOptions.drop_out_of_order_messages = iniConfig.get(EXPERIMENTAL, "drop_out_of_order_messages", false);
+      transportLayerOptions.network_enabled			       = iniConfig.get(NETWORK,      "network_enabled",            NET_ENABLED);
+      transportLayerOptions.drop_out_of_order_messages = iniConfig.get(EXPERIMENTAL, "drop_out_of_order_messages", EXP_DROP_OUT_OF_ORDER_MESSAGES);
 
       auto& multicastOptions = transportLayerOptions.mc_options;
       
@@ -201,86 +201,85 @@ namespace eCAL
       if (udp_config_version_string == "v2")
         multicastOptions.config_version = UdpConfigVersion::V2;
       
-      multicastOptions.group               = iniConfig.get(NETWORK, "multicast_group",       "239.0.0.0");
-      multicastOptions.mask                = iniConfig.get(NETWORK, "multicast_mask",        "0.0.0.15");
-      multicastOptions.port                = iniConfig.get(NETWORK, "multicast_port",        14000);
-      multicastOptions.ttl                 = iniConfig.get(NETWORK, "multicast_ttl",         3);
-      multicastOptions.recbuf              = iniConfig.get(NETWORK, "multicast_rcvbuf",      (1024 * 1024 * 5));
-      multicastOptions.sndbuf              = iniConfig.get(NETWORK, "multicast_sndbuf",      (1024 * 1024 * 5));
-      multicastOptions.join_all_interfaces = iniConfig.get(NETWORK, "multicast_join_all_if", false);
-      multicastOptions.bandwidth_max_udp   = iniConfig.get(NETWORK, "bandwidth_max_udp",     (- 1));
-      multicastOptions.npcap_enabled       = iniConfig.get(NETWORK, "npcap_enabled",         false);
+      multicastOptions.group               = iniConfig.get(NETWORK, "multicast_group",       NET_UDP_MULTICAST_GROUP);
+      multicastOptions.mask                = iniConfig.get(NETWORK, "multicast_mask",        NET_UDP_MULTICAST_MASK);
+      multicastOptions.port                = iniConfig.get(NETWORK, "multicast_port",        NET_UDP_MULTICAST_PORT);
+      multicastOptions.ttl                 = iniConfig.get(NETWORK, "multicast_ttl",         NET_UDP_MULTICAST_TTL);
+      multicastOptions.recbuf              = iniConfig.get(NETWORK, "multicast_rcvbuf",      NET_UDP_MULTICAST_RCVBUF);
+      multicastOptions.sndbuf              = iniConfig.get(NETWORK, "multicast_sndbuf",      NET_UDP_MULTICAST_SNDBUF);
+      multicastOptions.join_all_interfaces = iniConfig.get(NETWORK, "multicast_join_all_if", NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED);
+      multicastOptions.bandwidth_max_udp   = iniConfig.get(NETWORK, "bandwidth_max_udp",     NET_BANDWIDTH_MAX_UDP);
+      multicastOptions.npcap_enabled       = iniConfig.get(NETWORK, "npcap_enabled",         NET_NPCAP_ENABLED);
 
       auto& tcpPubSubOptions = transportLayerOptions.tcp_options;
-      tcpPubSubOptions.num_executor_reader = iniConfig.get(NETWORK, "tcp_pubsup_num_executor_reader", 4);
-      tcpPubSubOptions.num_executor_writer = iniConfig.get(NETWORK, "tcp_pubsup_num_executor_writer", 4);
-      tcpPubSubOptions.max_reconnections   = iniConfig.get(NETWORK, "tcp_pubsup_max_reconnections",   5);
+      tcpPubSubOptions.num_executor_reader = iniConfig.get(NETWORK, "tcp_pubsup_num_executor_reader", NET_TCP_PUBSUB_NUM_EXECUTOR_READER);
+      tcpPubSubOptions.num_executor_writer = iniConfig.get(NETWORK, "tcp_pubsup_num_executor_writer", NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER);
+      tcpPubSubOptions.max_reconnections   = iniConfig.get(NETWORK, "tcp_pubsup_max_reconnections",   NET_TCP_PUBSUB_MAX_RECONNECTIONS);
 
       auto& shmOptions = transportLayerOptions.shm_options;
-      shmOptions.host_group_name            = iniConfig.get(NETWORK,      "host_group_name",            "");
-      shmOptions.memfile_minsize            = iniConfig.get(PUBLISHER,    "memfile_minsize",            (4 * 1024));
-      shmOptions.memfile_reserve            = iniConfig.get(PUBLISHER,    "memfile_reserve",            50);
-      shmOptions.memfile_ack_timeout        = iniConfig.get(PUBLISHER,    "memfile_ack_timeout",        0);
-      shmOptions.memfile_buffer_count       = iniConfig.get(PUBLISHER,    "memfile_buffer_count",       1);
-      shmOptions.drop_out_of_order_messages = iniConfig.get(EXPERIMENTAL, "drop_out_of_order_messages", false);
-      shmOptions.memfile_zero_copy          = (iniConfig.get(PUBLISHER,   "memfile_zero_copy",          0) == 1) ? true : false;
+      shmOptions.host_group_name            = iniConfig.get(NETWORK,      "host_group_name",            NET_HOST_GROUP_NAME);
+      shmOptions.memfile_minsize            = iniConfig.get(PUBLISHER,    "memfile_minsize",            PUB_MEMFILE_MINSIZE);
+      shmOptions.memfile_reserve            = iniConfig.get(PUBLISHER,    "memfile_reserve",            PUB_MEMFILE_RESERVE);
+      shmOptions.memfile_ack_timeout        = iniConfig.get(PUBLISHER,    "memfile_ack_timeout",        PUB_MEMFILE_ACK_TO);
+      shmOptions.memfile_buffer_count       = iniConfig.get(PUBLISHER,    "memfile_buffer_count",       PUB_MEMFILE_BUF_COUNT);
+      shmOptions.drop_out_of_order_messages = iniConfig.get(EXPERIMENTAL, "drop_out_of_order_messages", EXP_DROP_OUT_OF_ORDER_MESSAGES);
+      shmOptions.memfile_zero_copy          = iniConfig.get(PUBLISHER,    "memfile_zero_copy",          PUB_MEMFILE_ZERO_COPY);
 
       // registration options
-      auto registrationTimeout        = iniConfig.get(COMMON,     "registration_timeout", 5000);
-      auto registrationRefresh        = iniConfig.get(COMMON,     "registration_refresh", 1000);
+      auto registrationTimeout        = iniConfig.get(COMMON,    "registration_timeout", CMN_REGISTRATION_TO);
+      auto registrationRefresh        = iniConfig.get(COMMON,    "registration_refresh", CMN_REGISTRATION_REFRESH);
       config.registration_options     = RegistrationOptions(registrationTimeout, registrationRefresh);
       auto& registrationOptions       = config.registration_options;
-      registrationOptions.share_tdesc = (iniConfig.get(PUBLISHER, "share_tdesc",          1) == 1) ? true : false;
-      registrationOptions.share_ttype = (iniConfig.get(PUBLISHER, "share_ttype",          1) == 1) ? true : false;
+      registrationOptions.share_tdesc = iniConfig.get(PUBLISHER, "share_tdesc",          PUB_SHARE_TDESC);
+      registrationOptions.share_ttype = iniConfig.get(PUBLISHER, "share_ttype",          PUB_SHARE_TTYPE);
 
       // monitoring options
       auto& monitoringOptions = config.monitoring_options;
       auto  monitoringMode                          = iniConfig.get(EXPERIMENTAL, "shm_monitoring_enabled",      false) == true ? MonitoringMode::shm_monitoring : MonitoringMode::none;
       monitoringOptions.monitoring_mode             = monitoringMode;
-      monitoringOptions.monitoring_timeout          = iniConfig.get(MONITORING,   "timeout", 5000);;
-      monitoringOptions.network_monitoring_disabled = iniConfig.get(EXPERIMENTAL, "network_monitoring_disabled", false);
-      monitoringOptions.filter_excl                 = iniConfig.get(MONITORING,   "filter_excl",                 "__.*");
-      monitoringOptions.filter_incl                 = iniConfig.get(MONITORING,   "filter_incl",                 "");
+      monitoringOptions.monitoring_timeout          = iniConfig.get(MONITORING,   "timeout", MON_TIMEOUT);;
+      monitoringOptions.network_monitoring_disabled = iniConfig.get(EXPERIMENTAL, "network_monitoring_disabled", EXP_NETWORK_MONITORING_DISABLED);
+      monitoringOptions.filter_excl                 = iniConfig.get(MONITORING,   "filter_excl",                 MON_FILTER_EXCL);
+      monitoringOptions.filter_incl                 = iniConfig.get(MONITORING,   "filter_incl",                 MON_FILTER_INCL);
       monitoringOptions.filter_log_con              = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_con",  "info,warning,error,fatal"));
       monitoringOptions.filter_log_file             = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_file", ""));
       monitoringOptions.filter_log_udp              = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_udp",  "info,warning,error,fatal"));
 
-      auto& udpMonitoringOptions = monitoringOptions.udp_options;
+      // auto& udpMonitoringOptions = monitoringOptions.udp_options;
       // TODO: Nothing here yet
 
       auto& shmMonitoringOptions = monitoringOptions.shm_options;
-      shmMonitoringOptions.shm_monitoring_domain     = iniConfig.get(EXPERIMENTAL, "shm_monitoring_domain",     "ecal_monitoring");
-      shmMonitoringOptions.shm_monitoring_queue_size = iniConfig.get(EXPERIMENTAL, "shm_monitoring_queue_size", 1024);
+      shmMonitoringOptions.shm_monitoring_domain     = iniConfig.get(EXPERIMENTAL, "shm_monitoring_domain",     EXP_SHM_MONITORING_DOMAIN);
+      shmMonitoringOptions.shm_monitoring_queue_size = iniConfig.get(EXPERIMENTAL, "shm_monitoring_queue_size", EXP_SHM_MONITORING_QUEUE_SIZE);
 
       // receiving options
       auto& receivingOptions = config.receiving_options;
-      receivingOptions.shm_recv_enabled    = iniConfig.get(NETWORK, "shm_rec_enabled",    true);
-      receivingOptions.tcp_recv_enabled    = iniConfig.get(NETWORK, "tcp_rec_enabled",    true);
-      receivingOptions.udp_mc_recv_enabled = iniConfig.get(NETWORK, "udp_mc_rec_enabled", true);
+      receivingOptions.shm_recv_enabled    = iniConfig.get(NETWORK, "shm_rec_enabled",    NET_SHM_REC_ENABLED);
+      receivingOptions.tcp_recv_enabled    = iniConfig.get(NETWORK, "tcp_rec_enabled",    NET_TCP_REC_ENABLED);
+      receivingOptions.udp_mc_recv_enabled = iniConfig.get(NETWORK, "udp_mc_rec_enabled", NET_UDP_MC_REC_ENABLED);
 
       // publisher options
       auto& publisherOptions = config.publisher_options;
-      publisherOptions.use_inproc = TLayer::eSendMode(iniConfig.get(PUBLISHER, "use_inproc", 0));
-      publisherOptions.use_shm    = TLayer::eSendMode(iniConfig.get(PUBLISHER, "use_shm",    0));
-      publisherOptions.use_tcp    = TLayer::eSendMode(iniConfig.get(PUBLISHER, "use_tcp",    0));
-      publisherOptions.use_udp_mc = TLayer::eSendMode(iniConfig.get(PUBLISHER, "use_udp_mc", 0));
+      publisherOptions.use_shm    = static_cast<TLayer::eSendMode>(iniConfig.get(PUBLISHER, "use_shm",    static_cast<int>(PUB_USE_SHM)));
+      publisherOptions.use_tcp    = static_cast<TLayer::eSendMode>(iniConfig.get(PUBLISHER, "use_tcp",    static_cast<int>(PUB_USE_TCP)));
+      publisherOptions.use_udp_mc = static_cast<TLayer::eSendMode>(iniConfig.get(PUBLISHER, "use_udp_mc", static_cast<int>(PUB_USE_UDP_MC)));
 
       // timesync options
       auto& timesyncOptions = config.timesync_options;
-      timesyncOptions.timesync_module = iniConfig.get(TIME, "timesync_module_rt", "");
+      timesyncOptions.timesync_module = iniConfig.get(TIME, "timesync_module_rt", TIME_SYNC_MODULE);
 
       // service options
       auto& serviceOptions = config.service_options;
-      serviceOptions.protocol_v0 = iniConfig.get(SERVICE, "protocol_v0", 1) != 0;
-      serviceOptions.protocol_v1 = iniConfig.get(SERVICE, "protocol_v1", 1) != 0;
+      serviceOptions.protocol_v0 = iniConfig.get(SERVICE, "protocol_v0", SERVICE_PROTOCOL_V0);
+      serviceOptions.protocol_v1 = iniConfig.get(SERVICE, "protocol_v1", SERVICE_PROTOCOL_V1);
 
       // sys options
       auto& sysOptions = config.application_options.sys_options;
-      sysOptions.filter_excl = iniConfig.get(SYS, "filter_excl", "^eCALSysClient$|^eCALSysGUI$|^eCALSys$*"); // default different than ini file
+      sysOptions.filter_excl = iniConfig.get(SYS, "filter_excl", SYS_FILTER_EXCL);
 
       // process options
       auto& processOptions = config.application_options.process_options;
-      processOptions.terminal_emulator = iniConfig.get(PROCESS, "terminal_emulator", "");
+      processOptions.terminal_emulator = iniConfig.get(PROCESS, "terminal_emulator", PROCESS_TERMINAL_EMULATOR);
 
       return config;
     };
