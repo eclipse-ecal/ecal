@@ -60,7 +60,6 @@ namespace eCAL
         std::string           loaded_ecal_ini_file;
 
         eCALConfig();
-        // eCALConfig& operator=(const eCALConfig& ecal_config) { *this = ecal_config; };
     };
 
     ECAL_API eCALConfig* GetCurrentConfig();
