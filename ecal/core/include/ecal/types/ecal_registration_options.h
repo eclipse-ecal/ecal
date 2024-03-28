@@ -55,8 +55,8 @@ namespace eCAL
         bool share_tdesc = true;
 
       private:
-        unsigned int registration_timeout = unsigned int(60000);
-        unsigned int registration_refresh = unsigned int(1000);
+        unsigned int registration_timeout = 60000U;
+        unsigned int registration_refresh = 1000U;
     };
   }
 }

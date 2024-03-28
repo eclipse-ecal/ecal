@@ -71,17 +71,17 @@ constexpr bool NET_ENABLED              = false;
 constexpr eCAL::Config::UdpConfigVersion NET_UDP_MULTICAST_CONFIG_VERSION = eCAL::Config::UdpConfigVersion::V1;
 constexpr char NET_UDP_MULTICAST_GROUP[]                                  = "239.0.0.1";
 constexpr char NET_UDP_MULTICAST_MASK[]                                   = "0.0.0.15";
-constexpr unsigned int NET_UDP_MULTICAST_PORT                             = 14000;
-constexpr unsigned int NET_UDP_MULTICAST_TTL                              = 3;
-constexpr unsigned int NET_UDP_MULTICAST_PORT_REG_OFF                     = 0;
-constexpr unsigned int NET_UDP_MULTICAST_PORT_LOG_OFF                     = 1;
-constexpr unsigned int NET_UDP_MULTICAST_PORT_SAMPLE_OFF                  = 2;
-constexpr unsigned int NET_UDP_MULTICAST_SNDBUF                           = (5*1024*1024);  /* 5 MByte */
-constexpr unsigned int NET_UDP_MULTICAST_RCVBUF                           = (5*1024*1024);  /* 5 MByte */
+constexpr unsigned int NET_UDP_MULTICAST_PORT                             = 14000U;
+constexpr unsigned int NET_UDP_MULTICAST_TTL                              = 3U;
+constexpr unsigned int NET_UDP_MULTICAST_PORT_REG_OFF                     = 0U;
+constexpr unsigned int NET_UDP_MULTICAST_PORT_LOG_OFF                     = 1U;
+constexpr unsigned int NET_UDP_MULTICAST_PORT_SAMPLE_OFF                  = 2U;
+constexpr unsigned int NET_UDP_MULTICAST_SNDBUF                           = (5U*1024U*1024U);  /* 5 MByte */
+constexpr unsigned int NET_UDP_MULTICAST_RCVBUF                           = (5U*1024U*1024U);  /* 5 MByte */
 constexpr bool NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED                      = false;
 
-constexpr unsigned int NET_UDP_RECBUFFER_TIMEOUT          = 1000;  /* ms */
-constexpr unsigned int NET_UDP_RECBUFFER_CLEANUP          = 10;    /* ms */
+constexpr unsigned int NET_UDP_RECBUFFER_TIMEOUT          = 1000U;  /* ms */
+constexpr unsigned int NET_UDP_RECBUFFER_CLEANUP          = 10U;    /* ms */
 
 /* overall udp multicast bandwidth limitation in bytes/s, -1 == no limitation*/
 constexpr int NET_BANDWIDTH_MAX_UDP                       = (-1);
@@ -93,9 +93,9 @@ constexpr bool NET_UDP_MC_REC_ENABLED                     = true;
 
 constexpr bool NET_NPCAP_ENABLED                          = false;
 
-constexpr unsigned int NET_TCP_PUBSUB_NUM_EXECUTOR_READER = 4;
-constexpr unsigned int NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER = 4;
-constexpr unsigned int NET_TCP_PUBSUB_MAX_RECONNECTIONS   = 5;
+constexpr unsigned int NET_TCP_PUBSUB_NUM_EXECUTOR_READER = 4U;
+constexpr unsigned int NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER = 4U;
+constexpr unsigned int NET_TCP_PUBSUB_MAX_RECONNECTIONS   = 5U;
 
 /* common host group name that enables interprocess mechanisms across (virtual) host borders (e.g, Docker); by default equivalent to local host name */
 constexpr char NET_HOST_GROUP_NAME[]                      = "";
@@ -116,16 +116,16 @@ constexpr bool PUB_SHARE_TTYPE                            = true;
 constexpr bool PUB_SHARE_TDESC                            = true;
 
 /* minimum size for created shared memory files */
-constexpr unsigned int PUB_MEMFILE_MINSIZE                = (4*1024);
+constexpr unsigned int PUB_MEMFILE_MINSIZE                = (4U*1024U);
 /* reserve buffer size before reallocation in % */
-constexpr unsigned int PUB_MEMFILE_RESERVE                = 50;
+constexpr unsigned int PUB_MEMFILE_RESERVE                = 50U;
 
 /* timeout for create / open a memory file using mutex lock in ms */
-constexpr unsigned int PUB_MEMFILE_CREATE_TO              = 200;
-constexpr unsigned int PUB_MEMFILE_OPEN_TO                = 200;
+constexpr unsigned int PUB_MEMFILE_CREATE_TO              = 200U;
+constexpr unsigned int PUB_MEMFILE_OPEN_TO                = 200U;
 
 /* timeout for memory read acknowledge signal from data reader in ms */
-constexpr unsigned int PUB_MEMFILE_ACK_TO                 = 0;  /* ms */
+constexpr unsigned int PUB_MEMFILE_ACK_TO                 = 0U;  /* ms */
 
 /* defines number of memory files handle by the publisher for a 1:n connection
    a higher number will increase data throughput, but will also increase the size of used memory, number of semaphores
@@ -133,7 +133,7 @@ constexpr unsigned int PUB_MEMFILE_ACK_TO                 = 0;  /* ms */
    higher values than 3 are not recommended
    values > 1 will break local IPC compatibility to eCAL 5.9 and older
 */
-constexpr unsigned int PUB_MEMFILE_BUF_COUNT              = 1;
+constexpr unsigned int PUB_MEMFILE_BUF_COUNT              = 1U;
 
 /* allow subscriber to access memory file without copying content in advance (zero copy)
    this memory file is blocked for other readers wihle processed by the user callback function
@@ -166,16 +166,16 @@ constexpr char PROCESS_TERMINAL_EMULATOR[]                = "";
 /*                                     ecal internal timings                                  */
 /**********************************************************************************************/
 /* timeout for automatic removing registered topics and memory files in global database in ms */
-constexpr unsigned int CMN_REGISTRATION_TO                  = (60*1000);
+constexpr unsigned int CMN_REGISTRATION_TO                  = (60U*1000U);
 
 /* time for resend registration info from publisher/subscriber in ms */
-constexpr unsigned int CMN_REGISTRATION_REFRESH             = 1000;
+constexpr unsigned int CMN_REGISTRATION_REFRESH             = 1000U;
 
 /* delta time to check timeout for data readers in ms */
-constexpr unsigned int CMN_DATAREADER_TIMEOUT_RESOLUTION_MS = 100;
+constexpr unsigned int CMN_DATAREADER_TIMEOUT_RESOLUTION_MS = 100U;
 
 /* cylce time udp receive threads in ms */
-constexpr unsigned int CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS = 1000;
+constexpr unsigned int CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS = 1000U;
 
 /**********************************************************************************************/
 /*                                     events                                                 */
@@ -191,11 +191,11 @@ constexpr bool EXP_SHM_MONITORING_ENABLED                   = false;
 /* disable distribution of monitoring/registration information via network (default) */
 constexpr bool EXP_NETWORK_MONITORING_DISABLED              = false;
 /* queue size of monitoring/registration events  */
-constexpr size_t EXP_SHM_MONITORING_QUEUE_SIZE              = 1024;
+constexpr size_t EXP_SHM_MONITORING_QUEUE_SIZE              = 1024U;
 /* domain name for shared memory based monitoring/registration */
 constexpr char EXP_SHM_MONITORING_DOMAIN[]                  = "ecal_monitoring";
 /* memory file access timeout */
-constexpr unsigned int EXP_MEMFILE_ACCESS_TIMEOUT           = 100;
+constexpr unsigned int EXP_MEMFILE_ACCESS_TIMEOUT           = 100U;
 
 /* enable dropping of payload messages that arrive out of order */
 constexpr bool EXP_DROP_OUT_OF_ORDER_MESSAGES               = false;

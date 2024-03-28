@@ -67,10 +67,10 @@ namespace eCAL
 
   struct eCAL_SHM_Publisher_Options
   {
-    bool      enable_zero_copy = false;
+    bool      enable_zero_copy;
 
-    long      buffer_count = 1;                      // 1 .. x
-    long long acknowledge_timeout_ms = -1; // -1 -> no timeout (or directly std::chrono?
+    long      buffer_count;                      // 1 .. x
+    long long acknowledge_timeout_ms; // -1 -> no timeout (or directly std::chrono?
 
     // should we go as far as to put the memory filename (base) here? - No
     // however, part of it will be communicated via the registration layer, invisible to the user
