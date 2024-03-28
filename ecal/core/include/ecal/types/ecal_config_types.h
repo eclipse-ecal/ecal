@@ -49,7 +49,6 @@ namespace eCAL
   {        
     struct eCALConfig
     {
-      public:
         TransportLayerOptions transport_layer_options;
         RegistrationOptions   registration_options;
         MonitoringOptions     monitoring_options;
@@ -60,8 +59,8 @@ namespace eCAL
         ApplicationOptions    application_options;
         std::string           loaded_ecal_ini_file;
 
-        eCALConfig(const eCALConfig& ecal_config) { *this = ecal_config; };
         eCALConfig();
+        eCALConfig(const eCALConfig& ecal_config) { *this = ecal_config; };
     };
 
     ECAL_API eCALConfig* GetCurrentConfig();

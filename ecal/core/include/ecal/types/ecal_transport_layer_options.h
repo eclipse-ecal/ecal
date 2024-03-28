@@ -65,8 +65,8 @@ namespace eCAL
       
     struct TransportLayerOptions
     {
-      bool                network_enabled = false;
-      bool                drop_out_of_order_messages = false;
+      bool                network_enabled;
+      bool                drop_out_of_order_messages;
       UdpMulticastOptions mc_options;
       TCPubsubOptions     tcp_options;
       SHMOptions          shm_options;

@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  Functions for setting default config values
+ * @brief  Function definitions for setting default config values
 **/
 
 #include "ecal/types/ecal_config_types.h"

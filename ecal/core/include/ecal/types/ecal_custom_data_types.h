@@ -32,45 +32,35 @@ namespace eCAL
 {
   namespace Config
   {
+    /**
+     * @brief  Class for evaluation and storing IP addresses.
+     *
+     * @param ip_adress_  The IP address as std::string.
+    **/
     class IpAddressV4
     {
     public:
       IpAddressV4() = default;
-      IpAddressV4(const std::string ip_address_)
-      {
-        if (checkIpString(ip_address_))
-        {
-          m_ip_address = ip_address_;
-        }
-        else
-        {
-          std::cout << "IpAddressV4 error: check your IpAddress settings." << std::endl;
-        }
-      }            
-
+      IpAddressV4(const std::string ip_address_);  
+             
       const std::string get() { return m_ip_address; }
 
     private:            
-      static bool checkIpString(std::string ip_address_)
-      {
-        if (std::regex_match(ip_address_, std::regex("(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])")))
-        {
-          return true;
-        }
-        else if (std::regex_match(ip_address_, std::regex("(([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])\\.){3}([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])")))
-        {
-          return true;
-        }
-        else
-        {
-          return false;
-        }
-      }
-        
-      std::string     m_ip_address;
+      static bool checkIpString(std::string ip_address_);  
+
+      std::string     m_ip_address{};
     };
 
-    template<int MIN = 0, int STEP = 1, long long MAX = std::numeric_limits<int>::max()>
+    /**
+     * @brief  Template class to specify sizes with a concrete minimum, maximum and step size definition.
+     *
+     * @tparam MIN   Optional minimum possible size. Default: 0
+     * @tparam STEP  Optional step size.             Default: 1 
+     * @tparam MAX   Optional maximum possible size. Default: std::numeric_limits<int>::max()
+     * 
+     * @param size_  Optional size value. If not set, LimitSize::get() will return the MIN value.
+    **/
+    template<int MIN = 0, int STEP = 1, int MAX = std::numeric_limits<int>::max()>
     class LimitSize
     {
     public:
@@ -90,7 +80,7 @@ namespace eCAL
 
     private:
       int       m_size_min  = MIN;
-      long long m_size_max  = MAX;
+      int       m_size_max  = MAX;
       int       m_size_step = STEP;
 
       int m_size = MIN;
