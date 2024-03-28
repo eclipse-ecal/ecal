@@ -58,6 +58,7 @@ namespace eCAL
         SysOptions            sys_options;
         TimesyncOptions       timesync_options;
         ServiceOptions        service_options;
+        ProcessOptions        process_options;
         std::string           loaded_ecal_ini_file;
 
         eCALConfig(const eCALConfig& ecal_config) { *this = ecal_config; };

@@ -35,6 +35,7 @@ constexpr char PUBLISHER[]    = "publisher";
 constexpr char SYS[]          = "sys";
 constexpr char TIME[]         = "time";
 constexpr char SERVICE[]      = "service";
+constexpr char PROCESS[]      = "process";
 
 namespace {
   void tokenize(const std::string& str, std::vector<std::string>& tokens,
@@ -175,6 +176,10 @@ namespace eCAL
       serviceOptions.protocol_v0 = true;
       serviceOptions.protocol_v1 = true;
 
+      // process options
+      auto& processOptions = config.process_options;
+      processOptions.terminal_emulator = "";
+
       return config;
     };
 
@@ -272,6 +277,10 @@ namespace eCAL
       auto& serviceOptions = config.service_options;
       serviceOptions.protocol_v0 = iniConfig.get(SERVICE, "protocol_v0", 1) != 0;
       serviceOptions.protocol_v1 = iniConfig.get(SERVICE, "protocol_v1", 1) != 0;
+
+      // process options
+      auto& processOptions = config.process_options;
+      processOptions.terminal_emulator = iniConfig.get(PROCESS, "terminal_emulator", "");
 
       return config;
     };
