@@ -231,8 +231,8 @@ namespace eCAL
 
 
           method_information_map[method_name] = SServiceMethodInformation({
-            {request_type_name, "protobuf", request_type_descriptor} ,
-            {response_type_name, "protobuf", response_type_descriptor}
+            {request_type_name, "proto", request_type_descriptor} ,
+            {response_type_name, "proto", response_type_descriptor}
             });
 
         }
