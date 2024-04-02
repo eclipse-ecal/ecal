@@ -89,6 +89,7 @@
         "HAS_CURL": "ON",
         "HAS_FTXUI": "ON",
         "BUILD_APPS": "ON",
+        "BUILD_SAMPLES": "ON",
         "ECAL_THIRDPARTY_BUILD_FINEFTP": "ON",
         "ECAL_THIRDPARTY_BUILD_FTXUI": "ON",
         "ECAL_THIRDPARTY_BUILD_SPDLOG": "ON",
