@@ -27,6 +27,7 @@
 #include <string>
 #include <iostream>
 #include <regex>
+#include <limits>
 
 namespace eCAL
 {

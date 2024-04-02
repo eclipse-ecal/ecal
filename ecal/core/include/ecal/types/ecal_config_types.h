@@ -41,7 +41,6 @@
 #include <vector>
 #include <iostream>
 #include <chrono>
-#include <limits>
 
 namespace eCAL
 {
