@@ -26,29 +26,25 @@
 #include "ecal_globals.h"
 #include "readwrite/ecal_reader.h"
 
-#include <sstream>
 #include <iostream>
-
+#include <set>
+#include <sstream>
+#include <string>
+#include <utility>
 
 namespace eCAL
 {
   CSubscriber::CSubscriber() :
-                 m_datareader(nullptr),
-                 m_created(false),
-                 m_initialized(false)
+    m_datareader(nullptr),
+    m_created(false),
+    m_initialized(false)
   {
-  }
-
-  CSubscriber::CSubscriber(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ /* = "" */)
-    : CSubscriber()
-  {
-    Create(topic_name_, topic_type_, topic_desc_);
   }
 
   CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
     : CSubscriber()
   {
-    Create(topic_name_, topic_info_);
+    CSubscriber::Create(topic_name_, topic_info_);
   }
 
   CSubscriber::CSubscriber(const std::string& topic_name_)
@@ -57,7 +53,7 @@ namespace eCAL
 
   CSubscriber::~CSubscriber()
   {
-    Destroy();
+    CSubscriber::Destroy();
   }
 
   CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept :
@@ -84,14 +80,9 @@ namespace eCAL
     return *this;
   }
 
-  bool CSubscriber::Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ /* = "" */)
+  bool CSubscriber::Create(const std::string& topic_name_)
   {
-    SDataTypeInformation info;
-    auto split_type = Util::SplitCombinedTopicType(topic_type_);
-    info.encoding = split_type.first;
-    info.name = split_type.second;
-    info.descriptor = topic_desc_;
-    return Create(topic_name_, info);
+    return Create(topic_name_, SDataTypeInformation{});
   }
 
   bool CSubscriber::Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
@@ -124,9 +115,6 @@ namespace eCAL
 #endif
     // register to subscriber gateway for publisher memory file receive thread
     g_subgate()->Register(topic_name_, m_datareader);
-
-    // register to description gateway for type / description checking
-    ApplyTopicToDescGate(topic_name_, topic_info_);
 
     // we made it :-)
     m_created = true;
@@ -188,16 +176,6 @@ namespace eCAL
     return m_datareader->ClearAttribute(attr_name_);
   }
 
-  size_t CSubscriber::Receive(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */) const
-  {
-    if(!m_created) return(0);
-    if (m_datareader->Receive(buf_, time_, rcv_timeout_))
-    {
-      return(buf_.size());
-    }
-    return(0);
-  }
-
   bool CSubscriber::ReceiveBuffer(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */) const
   {
     if (!m_created) return(false);
@@ -208,7 +186,7 @@ namespace eCAL
   {
     if(m_datareader == nullptr) return(false);
     RemReceiveCallback();
-    return(m_datareader->AddReceiveCallback(callback_));
+    return(m_datareader->AddReceiveCallback(std::move(callback_)));
   }
 
   bool CSubscriber::RemReceiveCallback()
@@ -232,7 +210,7 @@ namespace eCAL
 
   size_t CSubscriber::GetPublisherCount() const
   {
-    if(m_datareader == nullptr) return(0);
+    if (m_datareader == nullptr) return(0);
     return(m_datareader->GetPublisherCount());
   }
 
@@ -241,19 +219,6 @@ namespace eCAL
     if(m_datareader == nullptr) return("");
     return(m_datareader->GetTopicName());
   }
-
-  std::string CSubscriber::GetTypeName() const
-  {
-    if(m_datareader == nullptr) return("");
-    const SDataTypeInformation info = m_datareader->GetDataTypeInformation();
-    return(Util::CombinedTopicEncodingAndType(info.encoding, info.name));
-  }
-
-  std::string CSubscriber::GetDescription() const
-  {
-    if(m_datareader == nullptr) return("");
-    return(m_datareader->GetDataTypeInformation().descriptor);
-  }
   
   SDataTypeInformation CSubscriber::GetDataTypeInformation() const
   {
@@ -261,40 +226,16 @@ namespace eCAL
     return(m_datareader->GetDataTypeInformation());
   }
 
-  bool CSubscriber::SetTimeout(int timeout_)
-  {
-    if (m_datareader == nullptr) return(false);
-    return(m_datareader->SetTimeout(timeout_));
-  }
-
-  bool CSubscriber::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
-  {
-    if (g_descgate() != nullptr)
-    {
-      // Calculate the quality of the current info
-      ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_info_.name.empty() || !topic_info_.encoding.empty())
-        quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_info_.descriptor.empty())
-        quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
-      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
-
-      return g_descgate()->ApplyTopicDescription(topic_name_, topic_info_, quality);
-    }
-    return false;
-  }
-
   std::string CSubscriber::Dump(const std::string& indent_ /* = "" */) const
   {
     std::stringstream out;
 
-    out << indent_ << "----------------------" << std::endl;
-    out << indent_ << " class CSubscriber    " << std::endl;
-    out << indent_ << "----------------------" << std::endl;
-    out << indent_ << "m_created:            " << m_created << std::endl;
+    out << indent_ << "----------------------" << '\n';
+    out << indent_ << " class CSubscriber    " << '\n';
+    out << indent_ << "----------------------" << '\n';
+    out << indent_ << "m_created:            " << m_created << '\n';
     if((m_datareader != nullptr) && m_datareader->IsCreated()) out << indent_ << m_datareader->Dump("    ");
-    out << std::endl;
+    out << '\n';
 
     return(out.str());
   }

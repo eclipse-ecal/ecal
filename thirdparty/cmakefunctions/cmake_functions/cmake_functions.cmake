@@ -7,7 +7,6 @@ set (file_list_include
 
 if(WIN32)
   list(APPEND file_list_include
-    qt/qt_msvc_path.cmake
     qt/qt_windeployqt.cmake
   )
 endif()

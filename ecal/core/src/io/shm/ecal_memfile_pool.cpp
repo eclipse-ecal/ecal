@@ -22,11 +22,15 @@
  * @brief  memory file pool handler
 **/
 
-#include "ecal_def.h"
-#include "ecal_event_internal.h"
+#include "ecal_event.h"
 #include "ecal_memfile_pool.h"
 
 #include <chrono>
+#include <mutex>
+#include <string>
+#include <thread>
+#include <utility>
+#include <vector>
 
 namespace eCAL
 {
@@ -98,7 +102,7 @@ namespace eCAL
     if (m_is_observing) return false;
 
     // assign callback
-    m_data_callback = std::move(callback_);
+    m_data_callback = callback_;
 
     // mark as running
     m_is_observing = true;

@@ -25,8 +25,9 @@
 #pragma once
 
 #include <ecal/ecal_server.h>
-#include <ecal/protobuf/ecal_proto_dyn.h>
 #include <ecal/msg/dynamic.h>
+#include <ecal/msg/protobuf/ecal_proto_dyn.h>
+#include <functional>
 
 // protobuf includes
 #ifdef _MSC_VER
@@ -38,6 +39,7 @@
 #endif
 
 // stl includes
+#include <iostream>
 #include <map>
 #include <memory>
 #include <string>
@@ -84,7 +86,7 @@ namespace eCAL
       /**
        * @brief Destructor.
       **/
-      ~CServiceServer()
+      ~CServiceServer() override
       {
         Destroy();
       }
@@ -147,7 +149,8 @@ namespace eCAL
           std::string output_type_name = method_descriptor->output_type()->name();
 
           // get message type descriptors
-          std::string input_type_desc, output_type_desc;
+          std::string input_type_desc;
+          std::string output_type_desc;
           GetServiceMessageDescFromType(service_descriptor, input_type_name, input_type_desc, error_s);
           GetServiceMessageDescFromType(service_descriptor, output_type_name, output_type_desc, error_s);
 
@@ -192,6 +195,7 @@ namespace eCAL
         google::protobuf::Message* request(m_service->GetRequestPrototype(method_descriptor).New());
         if (!request->ParseFromString(request_))
         {
+          std::cerr << "Protobuf Service " << GetServiceName() << " failed to parse request message!" << std::endl;
           delete request;
           return -1;
         }
@@ -213,7 +217,7 @@ namespace eCAL
         eCAL::protobuf::CProtoDynDecoder msg_decoder;
 
         const google::protobuf::FileDescriptor* file_desc = service_desc_->file();
-        if (!file_desc) return false;
+        if (file_desc == nullptr) return false;
 
         std::string file_desc_s = file_desc->DebugString();
         google::protobuf::FileDescriptorProto file_desc_proto;

@@ -21,9 +21,10 @@
  * @brief  Global monitoring class
 **/
 
+#include <ecal/ecal.h>
+
 #include "ecal_monitoring_def.h"
 #include "ecal_monitoring_impl.h"
-#include "logging/ecal_log_impl.h"
 #include "ecal_global_accessors.h"
 
 namespace eCAL
@@ -63,14 +64,14 @@ namespace eCAL
     m_monitoring_impl->SetFilterState(state_);
   }
 
-  void CMonitoring::GetMonitoring(eCAL::pb::Monitoring& monitoring_, unsigned int entities_)
+  void CMonitoring::GetMonitoring(std::string& monitoring_, unsigned int entities_)
   {
-    m_monitoring_impl->GetMonitoringPb(monitoring_, entities_);
+    m_monitoring_impl->GetMonitoring(monitoring_, entities_);
   }
 
   void CMonitoring::GetMonitoring(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_)
   {
-    m_monitoring_impl->GetMonitoringStructs(monitoring_, entities_);
+    m_monitoring_impl->GetMonitoring(monitoring_, entities_);
   }
 
   namespace Monitoring
@@ -96,53 +97,21 @@ namespace eCAL
       return(0);
     }
 
-    int GetMonitoring(std::string& mon_)
-    {
-      eCAL::pb::Monitoring monitoring;
-      if (g_monitoring() != nullptr) g_monitoring()->GetMonitoring(monitoring);
-
-      mon_ = monitoring.SerializeAsString();
-      return((int)mon_.size());
-    }
-
     int GetMonitoring(std::string& mon_, unsigned int entities_)
     {
-      eCAL::pb::Monitoring monitoring;
-      if (g_monitoring() != nullptr) g_monitoring()->GetMonitoring(monitoring, entities_);
-
-      mon_ = monitoring.SerializeAsString();
+      mon_.clear();
+      if (g_monitoring() != nullptr) g_monitoring()->GetMonitoring(mon_, entities_);
       return((int)mon_.size());
     }
 
-    int GetMonitoring(eCAL::Monitoring::SMonitoring& mon_, unsigned int entities_)
+    int GetMonitoring(SMonitoring& mon_, unsigned int entities_)
     {
       if (g_monitoring() != nullptr)
       {
         g_monitoring()->GetMonitoring(mon_, entities_);
-        return(static_cast<int>(mon_.process.size() + mon_.publisher.size() + mon_.subscriber.size() + mon_.server.size() + mon_.clients.size()));
+        return(static_cast<int>(mon_.processes.size() + mon_.publisher.size() + mon_.subscriber.size() + mon_.server.size() + mon_.clients.size()));
       }
       return(0);
-    }
-
-    int GetLogging(std::string& log_)
-    {
-      eCAL::pb::LogMessageList logging;
-      if (g_log() != nullptr) g_log()->GetLogging(logging);
-
-      log_ = logging.SerializeAsString();
-      return((int)log_.size());
-    }
-
-    int PubMonitoring(bool /*state_*/, std::string /*name_*/)
-    {
-      // TODO: Remove this function from the API
-      return 0;
-    }
-
-    int PubLogging(bool /*state_*/, std::string /*name_*/)
-    {
-      // TODO: Remove this function from the API
-      return 0;
     }
   }
 }

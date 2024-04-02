@@ -18,7 +18,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt update
-        sudo apt-get install ninja-build doxygen graphviz libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev qtbase5-dev libqwt-qt5-dev libyaml-cpp-dev
+        sudo apt-get install ninja-build doxygen graphviz libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev qtbase5-dev libqt5opengl5-dev libqt5svg5-dev libyaml-cpp-dev
 
     - name: Install Cap'n Proto
       run: |
@@ -85,7 +85,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
-        -DECAL_THIRDPARTY_BUILD_QWT=OFF \
+        -DECAL_THIRDPARTY_BUILD_QWT=ON \
         -DECAL_THIRDPARTY_BUILD_YAML-CPP=OFF \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_SYSCONFDIR=/etc \
@@ -144,13 +144,13 @@ jobs:
       working-directory: ${{ runner.workspace }}/_build
 
     - name: Upload Debian
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ubuntu-debian
         path: ${{ runner.workspace }}/_build/_deploy/*.deb
 
     - name: Upload Python Wheel
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ubuntu-python-wheel
         path: ${{ runner.workspace }}/_build/_deploy/*.whl

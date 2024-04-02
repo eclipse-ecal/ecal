@@ -21,10 +21,31 @@
  * @brief  eCAL core functions
 **/
 
+#include "ecal_def.h"
+#include "ecal_event.h"
 #include "ecal_globals.h"
+#include <string>
+#include <vector>
 
-#include <tclap/CmdLine.h>
+#if ECAL_CORE_COMMAND_LINE
 #include "util/advanced_tclap_output.h"
+#endif
+
+#include <algorithm>
+
+namespace
+{
+  const eCAL::EventHandleT& ShutdownProcEvent()
+  {
+    static eCAL::EventHandleT evt;
+    static const std::string event_name(EVENT_SHUTDOWN_PROC + std::string("_") + std::to_string(eCAL::Process::GetProcessID()));
+    if (!gEventIsValid(evt))
+    {
+      gOpenNamedEvent(&evt, event_name, true);
+    }
+    return(evt);
+  }
+}
 
 namespace eCAL
 {
@@ -80,6 +101,8 @@ namespace eCAL
   {
     bool dump_config(false);
     std::vector<std::string> config_keys;
+
+#if ECAL_CORE_COMMAND_LINE
     if ((argc_ > 0) && (argv_ != nullptr))
     {
       // define command line object
@@ -118,6 +141,7 @@ namespace eCAL
         config_keys = set_config_key_arg.getValue();
       }
     }
+#endif
 
     // first call
     if (g_globals_ctx == nullptr)
@@ -153,14 +177,6 @@ namespace eCAL
       {
         for (size_t i = 0; i < static_cast<size_t>(argc_); ++i) if (argv_[i] != nullptr) g_task_parameter.emplace_back(argv_[i]);
       }
-
-      g_process_wclock = 0;
-      g_process_wbytes = 0;
-      g_process_wbytes_sum = 0;
-
-      g_process_rclock = 0;
-      g_process_rbytes = 0;
-      g_process_rbytes_sum = 0;
     }
     g_globals_ctx_ref_cnt++;
 
@@ -203,12 +219,13 @@ namespace eCAL
    *
    * @param component_  Check specific component or 0 for general state of eCAL core.
    *
-   * @return True if eCAL is initialized.
+   * @return 1 if eCAL is initialized.
   **/
   int IsInitialized(unsigned int component_)
   {
     if (g_globals_ctx == nullptr) return(0);
-    return(g_globals()->IsInitialized(component_));
+    if(g_globals()->IsInitialized(component_)) return(1);
+    return(0);
   }
 
   /**
@@ -216,12 +233,17 @@ namespace eCAL
    *
    * @param unit_name_  Defines the name of the eCAL unit. 
    *
-   * @return  Zero if succeeded.
+   * @return  Zero if succeeded, -1 if failed.
   **/
   int SetUnitName(const char *unit_name_)
   {
-    g_unit_name = unit_name_;
-    return(0);
+    if (unit_name_ == nullptr) return -1;
+    
+    const std::string uname = unit_name_;
+    if (uname.empty()) return -1;
+ 
+    g_unit_name = uname;
+    return 0;
   }
 
   /**
@@ -240,5 +262,16 @@ namespace eCAL
     delete g_globals_ctx;
     g_globals_ctx = nullptr;
     return(ret);
+  }
+
+  /**
+   * @brief Return the eCAL process state.
+   *
+   * @return  True if eCAL is in proper state.
+  **/
+  bool Ok()
+  {
+    const bool ecal_is_ok = (g_globals_ctx != nullptr) && !gWaitForEvent(ShutdownProcEvent(), 0);
+    return(ecal_is_ok);
   }
 }

@@ -54,12 +54,12 @@ LogWidget::LogWidget(QWidget *parent)
   : QWidget(parent)
   , log_update_time_milliseconds_(100)
   , parse_time_enabled_(true)
+  , log_model_(new LogModel(this))
+  , log_proxy_model_(new LogSortFilterProxyModel(this))
 {
   ui_.setupUi(this);
 
   // Tree Model
-  log_model_ = new LogModel(this);
-  log_proxy_model_ = new LogSortFilterProxyModel(this);
   log_proxy_model_->setFilterRole(ItemDataRoles::FilterRole);
   log_proxy_model_->setSortRole(ItemDataRoles::SortRole);
   log_proxy_model_->setFilterCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
@@ -188,9 +188,9 @@ LogWidget::~LogWidget()
 void LogWidget::getEcalLogs()
 {
   eCAL::pb::LogMessageList logging;
-  std::string     logging_string;
+  std::string              logging_string;
 
-  if (eCAL::Monitoring::GetLogging(logging_string))
+  if (eCAL::Logging::GetLogging(logging_string) != 0)
   {
     logging.ParseFromString(logging_string);
   }
@@ -420,7 +420,7 @@ void LogWidget::setLogLevelFilter(int log_level)
 void LogWidget::contextMenu(const QPoint &pos)
 {
   auto selected_proxy_rows = ui_.log_tree->selectionModel()->selectedRows(LogModel::Columns::TIME);
-  if (selected_proxy_rows.size() > 0)
+  if (!selected_proxy_rows.empty())
   {
     QMenu context_menu(this);
 
@@ -443,7 +443,7 @@ void LogWidget::copySelectedRows()
   for (auto& proxy_row : selected_proxy_rows)
   {
     bool first_element = true;
-    auto ui_log_tree_model = ui_.log_tree->model();
+    auto *ui_log_tree_model = ui_.log_tree->model();
     for (int column = 0; column < ui_log_tree_model->columnCount(); column++)
     {
       if (!ui_.log_tree->isColumnHidden(column))

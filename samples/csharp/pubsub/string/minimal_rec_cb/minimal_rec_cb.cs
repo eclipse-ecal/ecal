@@ -37,7 +37,7 @@ public class minimal_rcv_cb
     System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Util.GetVersion(), Util.GetDate()));
 
     // create a subscriber (topic name "Hello", type "base:std::string")
-    Subscriber subscriber = new Subscriber("Hello", "base:std::string", "");
+    Subscriber subscriber = new Subscriber("Hello", "std::string", "base", "");
     Subscriber.ReceiverCallback callback = MyCallback;
     subscriber.AddReceiveCallback(callback);
 

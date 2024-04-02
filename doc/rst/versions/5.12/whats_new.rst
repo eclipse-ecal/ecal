@@ -9,7 +9,7 @@ eCAL 5.12
 eCAL 5.12 was released in August 2023.
 
 - **Release**: August 2023
-- **End of life**: August 2024 (planned)
+- **End of life**: September 2024 (planned)
 
 New features
 ============

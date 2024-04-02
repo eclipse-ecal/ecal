@@ -27,7 +27,6 @@
 #include <chrono>
 #include <string>
 
-#include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_process_mode.h>
 #include <ecal/ecal_process_severity.h>
@@ -57,19 +56,11 @@ namespace eCAL
     ECAL_API std::string GetHostName();
 
     /**
-    * @brief  Get current host group name.
-    *
-    * @return  Host group name or empty string if failed.
+     * @brief  Get current host group name.
+     *
+     * @return  Host group name or empty string if failed.
     **/
     ECAL_API std::string GetHostGroupName();
-
-    /**
-     * @brief  Get unique host id.
-     *
-     * @return  Host id or zero if failed.
-    **/
-    ECAL_DEPRECATE_SINCE_5_10("This function will be removed in eCAL6.")
-    ECAL_API int GetHostID();
 
     /**
      * @brief  Get current unit name (defined via eCAL::Initialize). 
@@ -107,7 +98,7 @@ namespace eCAL
      *
      * @param  time_ns_  Time to sleep in ns.
     **/
-    ECAL_API void SleepNS(const long long time_ns_);
+    ECAL_API void SleepNS(long long time_ns_);
 
     /**
      * @brief  Sleep current thread.
@@ -154,47 +145,6 @@ namespace eCAL
     ECAL_API std::string GetProcessParameter();
 
     /**
-     * @deprecated  Use the function GetWClock() instead
-    **/
-    ECAL_DEPRECATE_SINCE_5_4("use GetWClock() instead")
-    ECAL_API long long GetSClock();
-
-    /**
-     * @deprecated  Use the function GetWBytes() instead
-    **/
-
-    ECAL_DEPRECATE_SINCE_5_4("use GetWBytes() instead")
-    ECAL_API long long GetSBytes();
-
-    /**
-     * @brief  Get the write clock of the current process. 
-     *
-     * @return  The message write count per second. 
-    **/
-    ECAL_API long long GetWClock();
-
-    /**
-     * @brief  Get the write bytes of the current process. 
-     *
-     * @return  The message write bytes per second. 
-    **/
-    ECAL_API long long GetWBytes();
-
-    /**
-     * @brief  Get the read clock of the current process. 
-     *
-     * @return  The message read count per second. 
-    **/
-    ECAL_API long long GetRClock();
-
-    /**
-     * @brief  Get the read bytes of the current process. 
-     *
-     * @return  The message read bytes per second. 
-    **/
-    ECAL_API long long GetRBytes();
-
-    /**
      * @brief  Set process state info. 
      *
      * @param severity_  Severity. 
@@ -212,14 +162,14 @@ namespace eCAL
      *
      * @return  Zero if succeeded.
     **/
-    ECAL_API int AddRegistrationCallback(enum eCAL_Registration_Event event_, RegistrationCallbackT callback_);
+    ECAL_API int AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_);
 
     /**
-    * @brief  Remove registration callback.
-    *
-    * @param event_          The type of registration.
-    *
-    * @return  Zero if succeeded.
+     * @brief  Remove registration callback.
+     *
+     * @param event_          The type of registration.
+     *
+     * @return  Zero if succeeded.
     **/
     ECAL_API int RemRegistrationCallback(enum eCAL_Registration_Event event_);
 

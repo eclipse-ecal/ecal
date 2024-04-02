@@ -120,13 +120,13 @@ jobs:
       working-directory: ${{ runner.workspace }}/_build
 
     - name: Upload DMG
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: macos-dmg
         path: ${{ runner.workspace }}/_build/_deploy/*.dmg
 
     - name: Upload Python Wheel
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: macos-python-wheel
         path: ${{ runner.workspace }}/_build/_deploy/*.whl

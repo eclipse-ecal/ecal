@@ -24,7 +24,7 @@ namespace Continental
         public ProtobufPublisher(string topicName)
         {
           T message = new T();
-          binaryPublisher = new Publisher(topicName, Common.ProtobufHelper.GetProtoMessageTypeName(message), Common.ProtobufHelper.GetProtoMessageDescription(message));
+          binaryPublisher = new Publisher(topicName, Common.ProtobufHelper.GetProtoMessageTypeName(message), "proto", Common.ProtobufHelper.GetProtoMessageDescription(message));
         }
 
         /**

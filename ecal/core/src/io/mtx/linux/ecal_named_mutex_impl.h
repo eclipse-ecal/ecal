@@ -24,6 +24,8 @@
 #pragma once
 
 #include "io/mtx/ecal_named_mutex_base.h"
+#include <cstdint>
+#include <string>
 
 typedef struct named_mutex named_mutex_t;
 

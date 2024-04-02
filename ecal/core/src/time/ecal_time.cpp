@@ -24,10 +24,11 @@
 #include <ecal/ecal.h>
 
 #include <chrono>
-#include <thread>
+#include <string>
 
+#if ECAL_CORE_TIMEGATE
 #include "ecal_timegate.h"
-#include "ecal_process.h"
+#endif
 
 namespace eCAL
 {
@@ -35,70 +36,106 @@ namespace eCAL
   {
     std::string GetName()
     {
-      if ((g_timegate() == nullptr) || !g_timegate()->IsValid()) return("");
-      return(g_timegate()->GetName());
+#if ECAL_CORE_TIMEGATE
+      if ((g_timegate() != nullptr) && g_timegate()->IsValid())
+      {
+        return(g_timegate()->GetName());
+      }
+#endif
+      return "";
     }
 
     long long GetMicroSeconds()
     {
-      if ((g_timegate() == nullptr) || !g_timegate()->IsValid())
+#if ECAL_CORE_TIMEGATE
+      if ((g_timegate() != nullptr) && g_timegate()->IsValid())
       {
-        const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-        return(std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count());
+        return(g_timegate()->GetMicroSeconds());
       }
-      return(g_timegate()->GetMicroSeconds());
+#endif
+      const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+      return(std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count());
     }
 
     long long GetNanoSeconds()
     {
-      if ((g_timegate() == nullptr) || !g_timegate()->IsValid())
+#if ECAL_CORE_TIMEGATE
+      if ((g_timegate() != nullptr) && g_timegate()->IsValid())
       {
-        const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-        return(std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count());
+        return(g_timegate()->GetNanoSeconds());
       }
-      return(g_timegate()->GetNanoSeconds());
+#endif
+      const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+      return(std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count());
     }
 
     bool SetNanoSeconds(long long time_)
     {
-      if ((g_timegate() == nullptr) || !g_timegate()->IsValid()) return(false);
-      return(g_timegate()->SetNanoSeconds(time_));
+#if ECAL_CORE_TIMEGATE
+      if ((g_timegate() != nullptr) && g_timegate()->IsValid())
+      {
+        return(g_timegate()->SetNanoSeconds(time_));
+      }
+#endif
+      (void)time_;
+      return(false);
     }
 
     bool IsSynchronized()
     {
-      if ((g_timegate() == nullptr) || !g_timegate()->IsValid()) return(false);
-      return(g_timegate()->IsSynchronized());
+#if ECAL_CORE_TIMEGATE
+      if ((g_timegate() != nullptr) && g_timegate()->IsValid())
+      {
+        return(g_timegate()->IsSynchronized());
+      }
+#endif
+      return(false);
     }
 
     bool IsMaster()
     {
-      if ((g_timegate() == nullptr) || !g_timegate()->IsValid()) return(false);
-      return(g_timegate()->IsMaster());
+#if ECAL_CORE_TIMEGATE
+      if ((g_timegate() != nullptr) && g_timegate()->IsValid())
+      {
+        return(g_timegate()->IsMaster());
+      }
+#endif
+      return(false);
     }
     
     void SleepForNanoseconds(long long duration_nsecs_)
     {
-      if ((g_timegate() == nullptr) || !g_timegate()->IsValid())
-      {
-        eCAL::Process::SleepFor(std::chrono::nanoseconds(duration_nsecs_));
-      }
-      else
+#if ECAL_CORE_TIMEGATE
+      if ((g_timegate() != nullptr) && g_timegate()->IsValid())
       {
         g_timegate()->SleepForNanoseconds(duration_nsecs_);
       }
+#endif
+      eCAL::Process::SleepFor(std::chrono::nanoseconds(duration_nsecs_));
     }
 
-    void GetStatus(int& error_, std::string* const status_message_) {
-      if (g_timegate() == nullptr) {
+    void GetStatus(int& error_, std::string* const status_message_)
+    {
+#if ECAL_CORE_TIMEGATE
+      if (g_timegate() == nullptr)
+      {
         error_ = -1;
-        if (status_message_ != nullptr) {
+        if (status_message_ != nullptr)
+        {
           status_message_->assign("Timegate has not been initialized!");
         }
       }
-      else {
+      else 
+      {
         g_timegate()->GetStatus(error_, status_message_);
       }
+#else
+      error_ = -1;
+      if (status_message_ != nullptr)
+      {
+        status_message_->assign("Timegate functionality not available.");
+      }
+#endif
     }
   }
 }

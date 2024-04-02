@@ -25,20 +25,23 @@
 #include "msg_type.h"
 
 #include <chrono>
+#include <cstdint>
+#include <cstring>
 #include <mutex>
+#include <string>
 #include <thread>
+#include <vector>
 
 namespace
 {
   // random number generator
   unsigned long xorshf96(unsigned long& x, unsigned long& y, unsigned long& z)  // period 2^96-1
   {
-    unsigned long t(0);
     x ^= x << 16;
     x ^= x >> 5;
     x ^= x << 1;
 
-    t = x;
+    unsigned long t = x;
     x = y;
     y = z;
     z = t ^ x ^ y;
@@ -51,15 +54,11 @@ namespace IO
 {
   namespace UDP
   {
-    size_t CreateSampleBuffer(const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, std::vector<char>& payload_)
+    size_t CreateSampleBuffer(const std::string& sample_name_, const std::vector<char>& serialized_sample_, std::vector<char>& payload_)
     {
       const unsigned short sample_name_size = (unsigned short)sample_name_.size() + 1;
-#if GOOGLE_PROTOBUF_VERSION >= 3001000
-      const size_t         sample_size = ecal_sample_.ByteSizeLong();
-#else
-      size_t         sample_size = ecal_sample_.ByteSize();
-#endif
-      const size_t         data_size = sizeof(sample_name_size) + sample_name_size + sample_size;
+      const size_t   sample_size = serialized_sample_.size();
+      const size_t   data_size   = sizeof(sample_name_size) + sample_name_size + sample_size;
 
       // create payload buffer with reserved space for first message head
       payload_.resize(data_size + sizeof(struct SUDPMessageHead));
@@ -69,24 +68,19 @@ namespace IO
       ((unsigned short*)payload_data)[0] = sample_name_size;
       // write topic name
       memcpy(payload_data + sizeof(sample_name_size), sample_name_.c_str(), sample_name_size);
-
       // write payload
-      if (ecal_sample_.SerializeWithCachedSizesToArray((google::protobuf::uint8*)payload_data + sizeof(sample_name_size) + sample_name_size))
-      {
-        return data_size;
-      }
+      memcpy(payload_data + sizeof(sample_name_size) + sample_name_size, serialized_sample_.data(), sample_size);
 
-      return (0);
+      return data_size;
     }
 
-    size_t SendFragmentedMessage(char* buf_, size_t buf_len_, long bandwidth_, const TransmitCallbackT& transmit_cb_)
+    size_t SendFragmentedMessage(char* buf_, size_t buf_len_, const TransmitCallbackT& transmit_cb_)
     {
       if (buf_ == nullptr) return(0);
 
-      size_t sent(0);
       size_t sent_sum(0);
 
-      int32_t total_packet_num = int32_t(buf_len_ / MSG_PAYLOAD_SIZE);
+      auto total_packet_num = int32_t(buf_len_ / MSG_PAYLOAD_SIZE);
       if (buf_len_ % MSG_PAYLOAD_SIZE) total_packet_num++;
 
       // create message header
@@ -106,7 +100,7 @@ namespace IO
         memcpy(buf_, &msg_header, sizeof(struct SUDPMessageHead));
 
         // send single header + data package
-        sent = transmit_cb_(buf_, sizeof(struct SUDPMessageHead) + buf_len_);
+        size_t sent = transmit_cb_(buf_, sizeof(struct SUDPMessageHead) + buf_len_);
         if (sent == 0) return(sent);
         sent_sum += sent;
 
@@ -118,15 +112,6 @@ namespace IO
       break;
       default:
       {
-        // calculate bandwidth timing parameter
-        long long send_sleep_us(0);
-        if (bandwidth_ > 0)
-        {
-          send_sleep_us = MSG_BUFFER_SIZE;
-          send_sleep_us *= 1000 * 1000;
-          send_sleep_us /= bandwidth_;
-        }
-
         // create start package
         msg_header.type = msg_type_header;
         {
@@ -141,14 +126,14 @@ namespace IO
             static unsigned long y = 362436069;
             static unsigned long z = 521288629;
 
-            msg_header.id = xorshf96(x, y, z);
+            msg_header.id = static_cast<int32_t>(xorshf96(x, y, z));
           }
         }
         msg_header.num = total_packet_num;
         msg_header.len = int32_t(buf_len_);
 
         // send start package
-        sent = transmit_cb_(&msg_header, sizeof(struct SUDPMessageHead));
+        size_t sent = transmit_cb_(&msg_header, sizeof(struct SUDPMessageHead));
         if (sent == 0) return(sent);
         sent_sum += sent;
 
@@ -180,11 +165,6 @@ namespace IO
             // send data package
             sent = transmit_cb_(buf_ + static_cast<size_t>(current_packet_num) * MSG_PAYLOAD_SIZE, sizeof(struct SUDPMessageHead) + current_snd_len);
             if (sent == 0) return(sent);
-            if (send_sleep_us != 0)
-            {
-              auto start = std::chrono::steady_clock::now();
-              std::this_thread::sleep_until(start + std::chrono::microseconds(send_sleep_us));
-            }
 
 #ifndef NDEBUG
             // log it

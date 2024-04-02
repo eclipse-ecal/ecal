@@ -58,15 +58,9 @@ namespace eCAL
     **/
     struct ECAL_API STLayer
     {
-      STLayer()
-      {
-        sm_udp_mc  = smode_none;
-        sm_shm     = smode_none;
-        sm_tcp     = smode_none;
-      }
-      eSendMode sm_udp_mc;  //!< udp multicast
-      eSendMode sm_shm;     //!< shared memory
-      eSendMode sm_tcp;     //!< tcp
+      eSendMode sm_udp_mc{smode_none};  //!< udp multicast
+      eSendMode sm_shm{smode_none};     //!< shared memory
+      eSendMode sm_tcp{smode_none};     //!< tcp
     };
   }
 }

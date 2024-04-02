@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,21 +23,20 @@
 
 #pragma once
 
+#include <atomic>
+#include <chrono>
+#include <cstddef>
+#include <deque>
 #include <ecal/ecal.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_types.h>
 
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
+#include "serialization/ecal_serialize_sample_payload.h"
+#include "serialization/ecal_serialize_sample_registration.h"
 #include "util/ecal_expmap.h"
 
 #include <condition_variable>
+#include <map>
 #include <mutex>
 #include <atomic>
 #include <set>
@@ -45,6 +44,8 @@
 
 #include <string>
 #include <unordered_map>
+
+#include <util/frequency_calculator.h>
 
 namespace eCAL
 {
@@ -67,8 +68,6 @@ namespace eCAL
     bool AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Subscriber_Event type_);
 
-    bool SetTimeout(int timeout_);
-
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
     bool ClearAttribute(const std::string& attr_name_);
 
@@ -80,12 +79,12 @@ namespace eCAL
     void ApplyExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_);
     void RemoveExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_);
 
-    void ApplyLocLayerParameter(const std::string& process_id_, const std::string& topic_id_, eCAL::pb::eTLayerType type_, const std::string& parameter_);
-    void ApplyExtLayerParameter(const std::string& host_name_, eCAL::pb::eTLayerType type_, const std::string& parameter_);
+    void ApplyLocLayerParameter(const std::string& process_id_, const std::string& topic_id_, eTLayerType type_, const Registration::ConnectionPar& parameter_);
+    void ApplyExtLayerParameter(const std::string& host_name_, eTLayerType type_, const Registration::ConnectionPar& parameter_);
 
     std::string Dump(const std::string& indent_ = "");
 
-    bool IsCreated() const {return(m_created);}
+    bool IsCreated() const { return(m_created); }
 
     size_t GetPublisherCount() const
     {
@@ -93,14 +92,13 @@ namespace eCAL
       return(m_loc_pub_map.size() + m_ext_pub_map.size());
     }
 
-    std::string          GetTopicName()        const {return(m_topic_name);}
-    std::string          GetTopicID()          const {return(m_topic_id);}
-    SDataTypeInformation GetDataTypeInformation() const {return(m_topic_info);}
+    std::string          GetTopicName()        const { return(m_topic_name); }
+    std::string          GetTopicID()          const { return(m_topic_id); }
+    SDataTypeInformation GetDataTypeInformation() const { return(m_topic_info); }
 
     void RefreshRegistration();
-    void CheckReceiveTimeout();
 
-    size_t AddSample(const std::string& tid_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eCAL::pb::eTLayerType layer_);
+    size_t AddSample(const std::string& tid_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
 
   protected:
     void SubscribeToLayers();
@@ -109,13 +107,14 @@ namespace eCAL
     bool Register(bool force_);
     bool Unregister();
 
-    void Connect(const std::string& tid_, const SDataTypeInformation& topic_info_);
+    void Connect(const std::string& tid_, const SDataTypeInformation& tinfo_);
     void Disconnect();
     bool CheckMessageClock(const std::string& tid_, long long current_clock_);
 
+    int32_t GetFrequency();
+
     std::string                               m_host_name;
     std::string                               m_host_group_name;
-    int                                       m_host_id;
     int                                       m_pid;
     std::string                               m_pname;
     std::string                               m_topic_name;
@@ -138,22 +137,21 @@ namespace eCAL
 
     std::mutex                                m_receive_callback_sync;
     ReceiveCallbackT                          m_receive_callback;
-    std::atomic<int>                          m_receive_timeout;
     std::atomic<int>                          m_receive_time;
 
     std::deque<size_t>                        m_sample_hash_queue;
 
-    std::mutex                                m_event_callback_map_sync;
     using EventCallbackMapT = std::map<eCAL_Subscriber_Event, SubEventCallbackT>;
+    std::mutex                                m_event_callback_map_sync;
     EventCallbackMapT                         m_event_callback_map;
 
     std::atomic<long long>                    m_clock;
-    long long                                 m_clock_old;
-    std::chrono::steady_clock::time_point     m_rec_time;
-    long                                      m_freq;
+
+    std::mutex                                               m_frequency_calculator_mutex;
+    ResettableFrequencyCalculator<std::chrono::steady_clock> m_frequency_calculator;
 
     std::set<long long>                       m_id_set;
-    
+
     using WriterCounterMapT = std::unordered_map<std::string, long long>;
     WriterCounterMapT                         m_writer_counter_map;
     long long                                 m_message_drops;

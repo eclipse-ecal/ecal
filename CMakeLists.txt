@@ -98,6 +98,27 @@ option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samp
 option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
 option(ECAL_USE_CLOCKLOCK_MUTEX                "Use native mutex with monotonic clock (requires glibc >= 2.30)"   OFF)
 
+# --------------------------------------------------------
+# ecal core configuration
+# --------------------------------------------------------
+set(ECAL_CORE_BUILD_SAMPLES                                                                          ${BUILD_SAMPLES})
+set(ECAL_CORE_BUILD_SAMPLES_PROTOBUF                                                                 ${BUILD_SAMPLES})
+set(ECAL_CORE_BUILD_TESTS                                                                         ${BUILD_ECAL_TESTS})
+set(ECAL_CORE_BUILD_TESTS_PROTOBUF                                                                ${BUILD_ECAL_TESTS})
+set(ECAL_CORE_CONFIG_INIFILE                                                                                       ON)
+set(ECAL_CORE_COMMAND_LINE                                                                                         ON)
+set(ECAL_CORE_REGISTRATION                                                                                         ON)
+set(ECAL_CORE_MONITORING                                                                                           ON)
+set(ECAL_CORE_PUBLISHER                                                                                            ON)
+set(ECAL_CORE_SUBSCRIBER                                                                                           ON)
+set(ECAL_CORE_SERVICE                                                                                              ON)
+set(ECAL_CORE_TIMEPLUGIN                                                                                           ON)
+set(ECAL_CORE_NPCAP_SUPPORT                                                                     ${ECAL_NPCAP_SUPPORT})
+set(ECAL_CORE_REGISTRATION_SHM                                                                                     ON)
+set(ECAL_CORE_TRANSPORT_UDP                                                                                        ON)
+set(ECAL_CORE_TRANSPORT_TCP                                                                                        ON)
+set(ECAL_CORE_TRANSPORT_SHM                                                                                        ON)
+
 # Set option regarding third party library builds
 # option(ECAL_THIRDPARTY_BUILD_LIBSSH2           "Build libssh2 with eCAL"                                           ON)
 # option(ECAL_THIRDPARTY_BUILD_ZLIB              "Build zlib with eCAL"                                              ON)
@@ -168,6 +189,19 @@ file(TO_CMAKE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
 message(STATUS "Module Path: ${CMAKE_MODULE_PATH}")
 message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 
+# --------------------------------------------------------
+# detect qt library
+# --------------------------------------------------------
+if(MSVC)
+  if (HAS_QT)
+    find_package(QT NAMES Qt6 Qt5 COMPONENTS Core QUIET)
+    if (NOT "${QT_FOUND}")
+	  include("cmake/qt_msvc_path.cmake")
+      autodetect_qt_msvc_dir()
+    endif()
+  endif()
+endif()
+
 if(MSVC)
   message(STATUS "supress thirdparty warnings for windows platform ..")
   set(CMAKE_CXX_FLAGS_OLD "${CMAKE_CXX_FLAGS}")
@@ -222,19 +256,6 @@ if(MSVC)
 endif()
 
 find_package(CMakeFunctions REQUIRED)
-
-# --------------------------------------------------------
-# detect qt library
-# --------------------------------------------------------
-if(MSVC)
-  if (HAS_QT)
-    find_package(QT NAMES Qt6 Qt5 COMPONENTS Core QUIET)
-    if (NOT "${QT_FOUND}")
-      autodetect_qt_msvc_dir()
-    endif()
-  endif()
-endif()
-
 
 git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
 set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
@@ -312,11 +333,6 @@ endif()
 add_subdirectory(contrib/ecalproto)
 
 # --------------------------------------------------------
-# ecal core protobuf interface
-# --------------------------------------------------------
-add_subdirectory(ecal/core_pb)
-
-# --------------------------------------------------------
 # ecal app protobuf interface
 # --------------------------------------------------------
 add_subdirectory(app/app_pb)
@@ -324,8 +340,7 @@ add_subdirectory(app/app_pb)
 # --------------------------------------------------------
 # ecal core
 # --------------------------------------------------------
-add_subdirectory(ecal/service)
-add_subdirectory(ecal/core)
+add_subdirectory(ecal)
 
 # --------------------------------------------------------
 # custom libs
@@ -464,25 +479,11 @@ if(BUILD_ECAL_TESTS)
   # test contrib
   # ------------------------------------------------------
   if(HAS_HDF5)
-    add_subdirectory(testing/contrib/ecalhdf5/hdf5_test)
+    add_subdirectory(tests/contrib/ecalhdf5/hdf5_test)
   endif()
-  add_subdirectory(testing/contrib/ecalproto/dynproto_test)
-  add_subdirectory(testing/contrib/ecalproto/ecal_proto_test)
+  add_subdirectory(tests/contrib/ecalproto/dynproto_test)
+  add_subdirectory(tests/contrib/ecalproto/ecal_proto_test)
 
-  # ------------------------------------------------------
-  # test ecal
-  # ------------------------------------------------------
-  add_subdirectory(testing/ecal/clientserver_test)
-  
-  add_subdirectory(testing/ecal/core_test)
-  add_subdirectory(testing/ecal/event_test)
-  add_subdirectory(testing/ecal/expmap_test)
-  add_subdirectory(testing/ecal/io_memfile_test)
-  add_subdirectory(testing/ecal/pubsub_proto_test)
-  add_subdirectory(testing/ecal/pubsub_test)
-  add_subdirectory(testing/ecal/topic2mcast_test)
-  add_subdirectory(testing/ecal/util_test)
-  
   # ------------------------------------------------------
   # test apps
   # ------------------------------------------------------
@@ -490,11 +491,6 @@ if(BUILD_ECAL_TESTS)
     add_subdirectory(app/rec/rec_tests/rec_rpc_tests)
   endif()
 endif()
-
-# --------------------------------------------------------
-# configs
-# --------------------------------------------------------
-add_subdirectory(ecal/core/cfg)
 
 if(BUILD_DOCS)
   add_subdirectory(doc)
@@ -594,5 +590,4 @@ message(STATUS "ECAL_THIRDPARTY_BUILD_UDPCAP                   : ${ECAL_THIRDPAR
 message(STATUS "ECAL_THIRDPARTY_BUILD_YAML-CPP                 : ${ECAL_THIRDPARTY_BUILD_YAML-CPP}")
 message(STATUS "ECAL_LINK_HDF5_SHARED                          : ${ECAL_LINK_HDF5_SHARED}")
 message(STATUS "CPACK_PACK_WITH_INNOSETUP                      : ${CPACK_PACK_WITH_INNOSETUP}")
-
 message(STATUS "--------------------------------------------------------------------------------")

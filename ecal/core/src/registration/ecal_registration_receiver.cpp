@@ -26,74 +26,21 @@
 **/
 
 #include "ecal_registration_receiver.h"
+#include "ecal_global_accessors.h"
 
 #include "pubsub/ecal_subgate.h"
 #include "pubsub/ecal_pubgate.h"
 #include "service/ecal_clientgate.h"
-#include "service/ecal_servicegate.h"
 
 #include "io/udp/ecal_udp_configurations.h"
-#include "ecal_sample_to_topicinfo.h"
-
-#include <chrono>
+#include <atomic>
+#include <functional>
+#include <memory>
+#include <mutex>
+#include <string>
 
 namespace eCAL
 {
-  //////////////////////////////////////////////////////////////////
-  // CMemfileRegistrationReceiver
-  //////////////////////////////////////////////////////////////////
-
-  CMemfileRegistrationReceiver::CMemfileRegistrationReceiver() 
-  = default;
-  
-  CMemfileRegistrationReceiver::~CMemfileRegistrationReceiver()
-  {
-    Destroy();
-  }
-
-  void CMemfileRegistrationReceiver::Create(eCAL::CMemoryFileBroadcastReader* memfile_broadcast_reader_)
-  {
-    if (m_created) return;
-
-    // start memfile broadcast receive thread
-    m_memfile_broadcast_reader = memfile_broadcast_reader_;
-    m_memfile_broadcast_reader_thread = std::make_shared<CCallbackThread>(std::bind(&CMemfileRegistrationReceiver::Receive, this));
-    m_memfile_broadcast_reader_thread->start(std::chrono::milliseconds(g_ecal_config()->registration_options.getRefreshMS()/2));
-
-    m_created = true;
-  }
-
-  void CMemfileRegistrationReceiver::Destroy()
-  {
-    if (!m_created) return;
-
-    // stop memfile broadcast receive thread
-    m_memfile_broadcast_reader_thread->stop();
-    m_memfile_broadcast_reader = nullptr;
-
-    m_created = false;
-  }
-
-  void CMemfileRegistrationReceiver::Receive()
-  {
-    MemfileBroadcastMessageListT message_list;
-    if (m_memfile_broadcast_reader->Read(message_list, 0))
-    {
-      eCAL::pb::SampleList sample_list;
-
-      for (const auto& message : message_list)
-      {
-        if (sample_list.ParseFromArray(message.data, static_cast<int>(message.size)))
-        {
-          for (const auto& sample : sample_list.samples())
-          {
-            if (g_registration_receiver()) g_registration_receiver()->ApplySample(sample);
-          }
-        }
-      }
-    }
-  }
-
   //////////////////////////////////////////////////////////////////
   // CRegistrationReceiver
   //////////////////////////////////////////////////////////////////
@@ -107,11 +54,9 @@ namespace eCAL
                          m_callback_service(nullptr),
                          m_callback_client(nullptr),
                          m_callback_process(nullptr),
-                         m_use_network_monitoring(false),
-                         m_use_shm_monitoring(false),
-                         m_callback_custom_apply_sample([](const auto&){}),
+                         m_use_registration_udp(false),
+                         m_use_registration_shm(false),
                          m_host_group_name(Process::GetHostGroupName())
-
   {
   }
 
@@ -127,10 +72,12 @@ namespace eCAL
     // network mode
     m_network = g_ecal_config()->transport_layer_options.network_enabled;
 
-    m_use_shm_monitoring = static_cast<bool>(Config::GetCurrentConfig()->monitoring_options.monitoring_mode & Config::MonitoringMode::shm_monitoring);
-    m_use_network_monitoring = !Config::GetCurrentConfig()->monitoring_options.network_monitoring_disabled;
+    // receive registration from shared memory and or udp
+    // TODO PG: Adapt to new config management
+    m_use_registration_udp = !Config::Experimental::IsNetworkMonitoringDisabled();
+    m_use_registration_shm     = Config::Experimental::IsShmMonitoringEnabled();
 
-    if (m_use_network_monitoring)
+    if (m_use_registration_udp)
     {
       // set network attributes
       IO::UDP::SReceiverAttr attr;
@@ -141,10 +88,11 @@ namespace eCAL
       attr.rcvbuf    = Config::GetCurrentConfig()->transport_layer_options.mc_options.recbuf.get();
 
       // start registration sample receiver
-      m_registration_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CRegistrationReceiver::HasSample, this, std::placeholders::_1), std::bind(&CRegistrationReceiver::ApplySample, this, std::placeholders::_1));
+      m_registration_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CRegistrationReceiver::HasSample, this, std::placeholders::_1), std::bind(&CRegistrationReceiver::ApplySerializedSample, this, std::placeholders::_1, std::placeholders::_2));
     }
 
-    if (m_use_shm_monitoring)
+#if ECAL_CORE_REGISTRATION_SHM
+    if (m_use_registration_shm)
     {
       m_memfile_broadcast.Create(Config::GetCurrentConfig()->monitoring_options.shm_options.shm_monitoring_domain, Config::GetCurrentConfig()->monitoring_options.shm_options.shm_monitoring_queue_size);
       m_memfile_broadcast.FlushLocalEventQueue();
@@ -152,6 +100,7 @@ namespace eCAL
 
       m_memfile_reg_rcv.Create(&m_memfile_broadcast_reader);
     }
+#endif
 
     m_created = true;
   }
@@ -161,17 +110,22 @@ namespace eCAL
     if(!m_created) return;
 
     // stop network registration receive thread
-    if(m_use_network_monitoring)
+    m_registration_receiver = nullptr;
+
+    // stop network registration receive thread
+    if (m_use_registration_udp)
     {
       m_registration_receiver = nullptr;
     }
 
-    if(m_use_shm_monitoring)
+#if ECAL_CORE_REGISTRATION_SHM
+    if (m_use_registration_shm)
     {
       // stop memfile registration receive thread and unbind reader
       m_memfile_broadcast_reader.Unbind();
       m_memfile_broadcast.Destroy();
     }
+#endif
 
     // reset callbacks
     m_callback_pub     = nullptr;
@@ -189,70 +143,77 @@ namespace eCAL
     m_loopback = state_;
   }
 
-  bool CRegistrationReceiver::ApplySample(const eCAL::pb::Sample& ecal_sample_)
+  bool CRegistrationReceiver::ApplySerializedSample(const char* serialized_sample_data_, size_t serialized_sample_size_)
   {
     if(!m_created) return false;
 
-    //Remove in eCAL6
-    // for the time being we need to copy the incoming sample and set the incompatible fields
-    eCAL::pb::Sample modified_ttype_sample;
-    ModifyIncomingSampleForBackwardsCompatibility(ecal_sample_, modified_ttype_sample);
+    Registration::Sample sample;
+    if (!DeserializeFromBuffer(serialized_sample_data_, serialized_sample_size_, sample)) return false;
 
-    // forward all registration samples to outside "customer" (e.g. Monitoring)
+    return ApplySample(sample);
+  }
+
+  bool CRegistrationReceiver::ApplySample(const Registration::Sample& sample_)
+  {
+    if (!m_created) return false;
+
+    // forward all registration samples to outside "customer" (e.g. monitoring, descgate)
     {
-      const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_mtx);
-      m_callback_custom_apply_sample(modified_ttype_sample);
+      const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
+      for (const auto& iter : m_callback_custom_apply_sample_map)
+      {
+        iter.second(sample_);
+      }
     }
 
     std::string reg_sample;
-    if ( m_callback_pub
+    if (m_callback_pub
       || m_callback_sub
       || m_callback_service
       || m_callback_client
       || m_callback_process
       )
     {
-      reg_sample = modified_ttype_sample.SerializeAsString();
+      SerializeToBuffer(sample_, reg_sample);
     }
 
-    switch(modified_ttype_sample.cmd_type())
+    switch (sample_.cmd_type)
     {
-    case eCAL::pb::bct_none:
-    case eCAL::pb::bct_set_sample:
+    case bct_none:
+    case bct_set_sample:
       break;
-    case eCAL::pb::bct_reg_process:
-    case eCAL::pb::bct_unreg_process:
+    case bct_reg_process:
+    case bct_unreg_process:
       // unregistration event not implemented currently
       if (m_callback_process) m_callback_process(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
-    case eCAL::pb::bct_reg_service:
-      if (g_clientgate() != nullptr)  g_clientgate()->ApplyServiceRegistration(modified_ttype_sample);
+#if ECAL_CORE_SERVICE
+    case bct_reg_service:
+      if (g_clientgate() != nullptr) g_clientgate()->ApplyServiceRegistration(sample_);
       if (m_callback_service) m_callback_service(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
-    case eCAL::pb::bct_unreg_service:
+    case bct_unreg_service:
       // current client implementation doesn't need that information
       if (m_callback_service) m_callback_service(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
-    case eCAL::pb::bct_reg_client:
+#endif
+    case bct_reg_client:
+    case bct_unreg_client:
       // current service implementation doesn't need that information
       if (m_callback_client) m_callback_client(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
-    case eCAL::pb::bct_unreg_client:
-      // current service implementation doesn't need that information
-      if (m_callback_client) m_callback_client(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
-      break;
-    case eCAL::pb::bct_reg_subscriber:
-    case eCAL::pb::bct_unreg_subscriber:
-      ApplySubscriberRegistration(modified_ttype_sample);
+    case bct_reg_subscriber:
+    case bct_unreg_subscriber:
+      ApplySubscriberRegistration(sample_);
       if (m_callback_sub) m_callback_sub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
-    case eCAL::pb::bct_reg_publisher:
-    case eCAL::pb::bct_unreg_publisher:
-      ApplyPublisherRegistration(modified_ttype_sample);
+    case bct_reg_publisher:
+    case bct_unreg_publisher:
+      ApplyPublisherRegistration(sample_);
       if (m_callback_pub) m_callback_pub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
     default:
-      eCAL::Logging::Log(log_level_debug1, "CRegistrationReceiver::ApplySample : unknown sample type");
+      Logging::Log(log_level_debug1, "CRegistrationReceiver::ApplySample : unknown sample type");
       break;
     }
 
@@ -309,23 +270,24 @@ namespace eCAL
     }
   }
 
-  void CRegistrationReceiver::ApplySubscriberRegistration(const eCAL::pb::Sample& ecal_sample_)
+  void CRegistrationReceiver::ApplySubscriberRegistration(const Registration::Sample& sample_)
   {
+#if ECAL_CORE_PUBLISHER
     // process registrations from same host group
-    if (IsHostGroupMember(ecal_sample_))
+    if (IsHostGroupMember(sample_))
     {
       // do not register local entities, only if loop back flag is set true
-      if (m_loopback || (ecal_sample_.topic().pid() != Process::GetProcessID()))
+      if (m_loopback || (sample_.topic.pid != Process::GetProcessID()))
       {
         if (g_pubgate() != nullptr)
         {
-          switch (ecal_sample_.cmd_type())
+          switch (sample_.cmd_type)
           {
-          case eCAL::pb::bct_reg_subscriber:
-            g_pubgate()->ApplyLocSubRegistration(ecal_sample_);
+          case bct_reg_subscriber:
+            g_pubgate()->ApplyLocSubRegistration(sample_);
             break;
-          case eCAL::pb::bct_unreg_subscriber:
-            g_pubgate()->ApplyLocSubUnregistration(ecal_sample_);
+          case bct_unreg_subscriber:
+            g_pubgate()->ApplyLocSubUnregistration(sample_);
             break;
           default:
             break;
@@ -340,13 +302,13 @@ namespace eCAL
       {
         if (g_pubgate() != nullptr)
         {
-          switch (ecal_sample_.cmd_type())
+          switch (sample_.cmd_type)
           {
-          case eCAL::pb::bct_reg_subscriber:
-            g_pubgate()->ApplyExtSubRegistration(ecal_sample_);
+          case bct_reg_subscriber:
+            g_pubgate()->ApplyExtSubRegistration(sample_);
             break;
-          case eCAL::pb::bct_unreg_subscriber:
-            g_pubgate()->ApplyExtSubUnregistration(ecal_sample_);
+          case bct_unreg_subscriber:
+            g_pubgate()->ApplyExtSubUnregistration(sample_);
             break;
           default:
             break;
@@ -354,25 +316,27 @@ namespace eCAL
         }
       }
     }
+#endif
   }
 
-  void CRegistrationReceiver::ApplyPublisherRegistration(const eCAL::pb::Sample& ecal_sample_)
+  void CRegistrationReceiver::ApplyPublisherRegistration(const Registration::Sample& sample_)
   {
+#if ECAL_CORE_SUBSCRIBER
     // process registrations from same host group 
-    if (IsHostGroupMember(ecal_sample_))
+    if (IsHostGroupMember(sample_))
     {
       // do not register local entities, only if loop back flag is set true
-      if (m_loopback || (ecal_sample_.topic().pid() != Process::GetProcessID()))
+      if (m_loopback || (sample_.topic.pid != Process::GetProcessID()))
       {
         if (g_subgate() != nullptr)
         {
-          switch (ecal_sample_.cmd_type())
+          switch (sample_.cmd_type)
           {
-          case eCAL::pb::bct_reg_publisher:
-            g_subgate()->ApplyLocPubRegistration(ecal_sample_);
+          case bct_reg_publisher:
+            g_subgate()->ApplyLocPubRegistration(sample_);
             break;
-          case eCAL::pb::bct_unreg_publisher:
-            g_subgate()->ApplyLocPubUnregistration(ecal_sample_);
+          case bct_unreg_publisher:
+            g_subgate()->ApplyLocPubUnregistration(sample_);
             break;
           default:
             break;
@@ -387,13 +351,13 @@ namespace eCAL
       {
         if (g_subgate() != nullptr)
         {
-          switch (ecal_sample_.cmd_type())
+          switch (sample_.cmd_type)
           {
-          case eCAL::pb::bct_reg_publisher:
-            g_subgate()->ApplyExtPubRegistration(ecal_sample_);
+          case bct_reg_publisher:
+            g_subgate()->ApplyExtPubRegistration(sample_);
             break;
-          case eCAL::pb::bct_unreg_publisher:
-            g_subgate()->ApplyExtPubUnregistration(ecal_sample_);
+          case bct_unreg_publisher:
+            g_subgate()->ApplyExtPubUnregistration(sample_);
             break;
           default:
             break;
@@ -401,11 +365,12 @@ namespace eCAL
         }
       }
     }
+#endif
   }
 
-  bool CRegistrationReceiver::IsHostGroupMember(const eCAL::pb::Sample& ecal_sample_)
+  bool CRegistrationReceiver::IsHostGroupMember(const Registration::Sample& sample_)
   {
-    const std::string& sample_host_group_name = ecal_sample_.topic().hgname().empty() ? ecal_sample_.topic().hname() : ecal_sample_.topic().hgname();
+    const std::string& sample_host_group_name = sample_.topic.hgname.empty() ? sample_.topic.hname : sample_.topic.hgname;
 
     if (sample_host_group_name.empty() || m_host_group_name.empty()) 
       return false;
@@ -415,15 +380,19 @@ namespace eCAL
     return true;
   }
 
-  void CRegistrationReceiver::SetCustomApplySampleCallback(const ApplySampleCallbackT& callback_)
+  void CRegistrationReceiver::SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_)
   {
-    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_mtx);
-    m_callback_custom_apply_sample = callback_;
+    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
+    m_callback_custom_apply_sample_map[customer_] = callback_;
   }
 
-  void CRegistrationReceiver::RemCustomApplySampleCallback()
+  void CRegistrationReceiver::RemCustomApplySampleCallback(const std::string& customer_)
   {
-    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_mtx);
-    m_callback_custom_apply_sample = [](const auto&){};
+    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
+    auto iter = m_callback_custom_apply_sample_map.find(customer_);
+    if(iter != m_callback_custom_apply_sample_map.end())
+    {
+      m_callback_custom_apply_sample_map.erase(iter);
+    }
   }
 }

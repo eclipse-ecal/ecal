@@ -32,14 +32,6 @@
 #include <string>
 #include <vector>
 
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
 namespace eCAL
 {
   // ecal tcp writer
@@ -58,16 +50,15 @@ namespace eCAL
 
     bool Write(const void* buf_, const SWriterAttr& attr_) override;
 
-    std::string GetConnectionParameter() override;
+    Registration::ConnectionPar GetConnectionParameter() override;
 
   private:
+    std::vector<char>                            m_header_buffer;
+
     static std::mutex                            g_tcp_writer_executor_mtx;
     static std::shared_ptr<tcp_pubsub::Executor> g_tcp_writer_executor;
 
     std::shared_ptr<tcp_pubsub::Publisher>       m_publisher;
     uint16_t                                     m_port;
-
-    eCAL::pb::Sample                             m_ecal_header;
-    std::vector<char>                            m_header_buffer;
   };
 }

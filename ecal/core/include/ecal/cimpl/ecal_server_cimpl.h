@@ -69,21 +69,6 @@ extern "C"
   ECALC_API int eCAL_Server_AddMethodCallback(ECAL_HANDLE handle_, const char* method_, const char* req_type_, const char* resp_type_, MethodCallbackCT callback_, void * par_);
 
   /**
-   * @deprecated Please use eCAL_Server_AddMethodCallback instead
-   * @brief Add a server method callback.
-   *
-   * @param handle_     Server handle.
-   * @param method_     Service method name.
-   * @param req_type_   Method request type (default = "").
-   * @param resp_type_  Method response type (default = "").
-   * @param callback_   Callback function for server request.
-   * @param par_        User defined context that will be forwarded to the request function.
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API_DEPRECATED int eCAL_Server_AddMethodCallbackC(ECAL_HANDLE handle_, const char* method_, const char* req_type_, const char* resp_type_, MethodCallbackCT callback_, void* par_);
-
-  /**
    * @brief Remove a server method callback.
    * @since eCAL 5.10.0   
    *
@@ -93,17 +78,6 @@ extern "C"
    * @return  None zero if succeeded.
   **/
   ECALC_API int eCAL_Server_RemMethodCallback(ECAL_HANDLE handle_, const char* method_);
-
-  /**
-   * @deprecated Please use eCAL_Server_RemMethodCallback instead
-   * @brief Remove a server method callback.
-   *
-   * @param handle_  Server handle.
-   * @param method_  Service method name.
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API_DEPRECATED int eCAL_Server_RemMethodCallbackC(ECAL_HANDLE handle_, const char* method_);
 
   /**
    * @brief Add server event callback function.

@@ -22,8 +22,13 @@
 **/
 
 #include "ecal_clientgate.h"
-#include "ecal_descgate.h"
 #include "service/ecal_service_client_impl.h"
+
+#include <atomic>
+#include <mutex>
+#include <shared_mutex>
+#include <string>
+#include <vector>
 
 namespace eCAL
 {
@@ -92,34 +97,21 @@ namespace eCAL
     return(ret_state);
   }
 
-  void CClientGate::ApplyServiceRegistration(const eCAL::pb::Sample& ecal_sample_)
+  void CClientGate::ApplyServiceRegistration(const Registration::Sample& ecal_sample_)
   {
     SServiceAttr service;
-    const auto& ecal_sample_service = ecal_sample_.service();
-    service.hname       = ecal_sample_service.hname();
-    service.pname       = ecal_sample_service.pname();
-    service.uname       = ecal_sample_service.uname();
-    service.sname       = ecal_sample_service.sname();
-    service.sid         = ecal_sample_service.sid();
-    service.pid         = static_cast<int>(ecal_sample_service.pid());
+    const auto& ecal_sample_service = ecal_sample_.service;
+    service.hname = ecal_sample_service.hname;
+    service.pname = ecal_sample_service.pname;
+    service.uname = ecal_sample_service.uname;
+    service.sname = ecal_sample_service.sname;
+    service.sid   = ecal_sample_service.sid;
+    service.pid   = static_cast<int>(ecal_sample_service.pid);
 
     // internal protocol specifics
-    service.version     = static_cast<unsigned int>(ecal_sample_service.version());
-    service.tcp_port_v0 = static_cast<unsigned short>(ecal_sample_service.tcp_port_v0());
-    service.tcp_port_v1 = static_cast<unsigned short>(ecal_sample_service.tcp_port_v1());
-
-    // store description
-    for (const auto& method : ecal_sample_service.methods())
-    {
-      SDataTypeInformation request_type;
-      request_type.name = method.req_type();
-      request_type.descriptor = method.req_desc();
-      SDataTypeInformation response_type{};
-      response_type.name = method.resp_type();
-      response_type.descriptor = method.resp_desc();
-
-      ApplyServiceToDescGate(ecal_sample_service.sname(), method.mname(), request_type, response_type);
-    }
+    service.version     = static_cast<unsigned int>(ecal_sample_service.version);
+    service.tcp_port_v0 = static_cast<unsigned short>(ecal_sample_service.tcp_port_v0);
+    service.tcp_port_v1 = static_cast<unsigned short>(ecal_sample_service.tcp_port_v1);
 
     // create service key
     service.key = service.sname + ":" + service.sid + "@" + std::to_string(service.pid) + "@" + service.hname;
@@ -168,30 +160,12 @@ namespace eCAL
   {
     if (!m_created) return;
 
-    // refresh service registrations
+    // refresh client registrations
     const std::shared_lock<std::shared_timed_mutex> lock(m_client_set_sync);
     for (auto *iter : m_client_set)
     {
+      // force client to (re)register itself on registration provider
       iter->RefreshRegistration();
     }
-  }
-
-  bool CClientGate::ApplyServiceToDescGate(const std::string& service_name_
-    , const std::string& method_name_
-    , const SDataTypeInformation& request_type_information_
-    , const SDataTypeInformation& response_type_information_)
-  {
-    if (g_descgate() != nullptr)
-    {
-      // calculate the quality of the current info
-      ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!(request_type_information_.name.empty() && response_type_information_.name.empty()))
-        quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!(request_type_information_.descriptor.empty() && response_type_information_.descriptor.empty()))
-        quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-
-      return g_descgate()->ApplyServiceDescription(service_name_, method_name_, request_type_information_, response_type_information_, quality);
-    }
-    return false;
   }
 }

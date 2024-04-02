@@ -44,7 +44,7 @@ def do_run():
     msg_num += 1
     msg_size = len(msg)
     # reply
-    pub.send(msg)
+    pub.send(bytes(msg))
 
   # apply message callback to subscriber
   sub.set_callback(callback)
@@ -76,5 +76,5 @@ def do_run():
 
 if __name__ == "__main__":
 
-  while ecal_core.ok():
+  while True:
     do_run()

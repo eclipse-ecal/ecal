@@ -21,33 +21,35 @@
 * @brief  eCAL process interface
 **/
 
+#include <cstdint>
 #include <ecal/ecal.h>
-#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
-#include "config/ecal_config_reader_hlp.h"
 #include "ecal/types/ecal_config_types.h"
-#include "registration/ecal_registration_receiver.h"
 #include "ecal_globals.h"
-#include "ecal_process.h"
+
+#include "ecal_process_stub.h"
+#include "ecal_utils/command_line.h"
+#include "ecal_utils/ecal_utils.h"
+#include "ecal_utils/str_convert.h"
+
+#include "config/ecal_config_reader_hlp.h"
 #include "io/udp/ecal_udp_configurations.h"
 
-#include <array>
-#include <chrono>
-#include <thread>
-#include <iostream>
-#include <sstream>
 #include <algorithm>
-#include <memory>
-#include <fstream>
-
-#include "util/sys_usage.h"
-
-#include <cstdlib>
-#include <cstdio>
-#include <string>
-#include <cstring>
+#include <array>
 #include <atomic>
+#include <chrono>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
+#include <iostream>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <thread>
+#include <vector>
 
 #ifdef ECAL_OS_WINDOWS
 #include "ecal_win_main.h"
@@ -67,10 +69,6 @@
 #include <sys/select.h>
 #include <limits.h>
 #include <netinet/in.h>
-
-#include "ecal_process_stub.h"
-#include <ecal_utils/ecal_utils.h>
-
 #endif /* ECAL_OS_LINUX */
 
 #ifdef ECAL_OS_MACOS
@@ -84,11 +82,9 @@
 #include <libutil.h>
 #endif
 
-#ifdef ECAL_NPCAP_SUPPORT
+#ifdef ECAL_CORE_NPCAP_SUPPORT
 #include <udpcap/npcap_helpers.h>
-#endif // ECAL_NPCAP_SUPPORT
-
-#include <ecal_utils/command_line.h>
+#endif // ECAL_CORE_NPCAP_SUPPORT
 
 #ifndef NDEBUG
 #define STD_COUT_DEBUG( x ) { std::stringstream ss; ss << x; std::cout << ss.str(); }
@@ -130,52 +126,6 @@ namespace
     }
     return "???";
   }
-#if defined(ECAL_OS_WINDOWS)
-  std::pair<bool, int> get_host_id()
-  {
-    // retrieve needed buffer size for GetAdaptersInfo
-    ULONG alloc_adapters_size(0);
-    {
-      IP_ADAPTER_INFO AdapterInfo;
-      GetAdaptersInfo(&AdapterInfo, &alloc_adapters_size);
-    }
-    if(alloc_adapters_size == 0) return std::make_pair(false, 0);
-
-    // allocate adapter memory
-    auto adapter_mem = std::make_unique<char[]>(static_cast<size_t>(alloc_adapters_size));
-
-    // get all adapter infos
-    PIP_ADAPTER_INFO pAdapter(nullptr);
-    pAdapter = reinterpret_cast<PIP_ADAPTER_INFO>(adapter_mem.get());
-    const DWORD dwStatus = GetAdaptersInfo(pAdapter, &alloc_adapters_size);
-    if (dwStatus != ERROR_SUCCESS) return std::make_pair(false, 0);
-
-    // iterate adapters and create hash
-    int hash(0);
-    while(pAdapter != nullptr)
-    {
-      for (UINT i = 0; i < pAdapter->AddressLength; ++i)
-      {
-        hash += (pAdapter->Address[i] << ((i & 1) * 8));
-      }
-      pAdapter = pAdapter->Next;
-    }
-
-    // return success
-    return std::make_pair(true, hash);
-  }
-#elif defined(ECAL_OS_QNX)
-  std::pair<bool, int> get_host_id()
-  {
-    // TODO: Find a suitable method on QNX to calculate an unqiue host identifier
-    return std::make_pair(true, -1);
-  }
-#else
-  std::pair<bool, int> get_host_id()
-  {
-    return std::make_pair(true, static_cast<int>(gethostid()));
-  }
-#endif
 }
 
 namespace eCAL
@@ -192,11 +142,11 @@ namespace eCAL
     void DumpConfig(std::string& cfg_s_)
     {
       std::stringstream sstream;
-      sstream << "------------------------- SYSTEM ---------------------------------" << std::endl;
-      sstream << "Version                  : " << ECAL_VERSION << " (" << ECAL_DATE << ")" << std::endl;
+      sstream << "------------------------- SYSTEM ---------------------------------" << '\n';
+      sstream << "Version                  : " << ECAL_VERSION << " (" << ECAL_DATE << ")" << '\n';
 #ifdef ECAL_OS_WINDOWS
 #ifdef _WIN64
-      sstream << "Platform                 : x64" << std::endl;
+      sstream << "Platform                 : x64" << '\n';
 #else
       sstream << "Platform                 : win32" << std::endl;
 #endif
@@ -204,111 +154,77 @@ namespace eCAL
 #ifdef ECAL_OS_LINUX
       sstream << "Platform                 : linux" << std::endl;
 #endif
-      sstream << std::endl;
+      sstream << '\n';
 
       if (eCAL::IsInitialized() == 0)
       {
         sstream << "Components               : NOT INITIALIZED ( call eCAL::Initialize() )";
-        sstream << std::endl;
+        sstream << '\n';
         cfg_s_ = sstream.str();
         return;
       }
 
-      sstream << "------------------------- CONFIGURATION --------------------------" << std::endl;
-      sstream << "Default INI              : " << Config::GetCurrentConfig()->loaded_ecal_ini_file << std::endl; 
-      sstream << std::endl;
+      sstream << "------------------------- CONFIGURATION --------------------------" << '\n';
+      sstream << "Default INI              : " << Config::GetCurrentConfig()->loaded_ecal_ini_file << '\n';
+      sstream << '\n';
 
-      sstream << "------------------------- NETWORK --------------------------------" << std::endl;
-      sstream << "Host name                : " << Process::GetHostName() << std::endl;
-      sstream << "Host group name          : " << Process::GetHostGroupName() << std::endl;
+      sstream << "------------------------- NETWORK --------------------------------" << '\n';
+      sstream << "Host name                : " << Process::GetHostName() << '\n';
+      sstream << "Host group name          : " << Process::GetHostGroupName() << '\n';
 
       if (Config::GetCurrentConfig()->transport_layer_options.network_enabled)
       {
-        sstream << "Network mode             : cloud" << std::endl;
+        sstream << "Network mode             : cloud" << '\n';
       }
       else
       {
-        sstream << "Network mode             : local" << std::endl;
+        sstream << "Network mode             : local" << '\n';
       }
       
-      sstream << "Network ttl              : " << UDP::GetMulticastTtl() << std::endl;
-      sstream << "Network sndbuf           : " << GetBufferStr(Config::GetCurrentConfig()->transport_layer_options.mc_options.sndbuf.get()) << std::endl;
-      sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetCurrentConfig()->transport_layer_options.mc_options.recbuf.get()) << std::endl;
-      sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetCurrentConfig()->transport_layer_options.mc_options.config_version) << std::endl;
-      sstream << "Multicast group          : " << Config::GetCurrentConfig()->transport_layer_options.mc_options.group.get() << std::endl;
-      sstream << "Multicast mask           : " << Config::GetCurrentConfig()->transport_layer_options.mc_options.mask.get() << std::endl;
+      sstream << "Network ttl              : " << UDP::GetMulticastTtl() << '\n';
+      sstream << "Network sndbuf           : " << GetBufferStr(Config::GetCurrentConfig()->transport_layer_options.mc_options.sndbuf.get()) << '\n';
+      sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetCurrentConfig()->transport_layer_options.mc_options.recbuf.get()) << '\n';
+      sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetCurrentConfig()->transport_layer_options.mc_options.config_version) << '\n';
+      sstream << "Multicast group          : " << Config::GetCurrentConfig()->transport_layer_options.mc_options.group.get() << '\n';
+      sstream << "Multicast mask           : " << Config::GetCurrentConfig()->transport_layer_options.mc_options.mask.get() << '\n';
       const int port = Config::GetCurrentConfig()->transport_layer_options.mc_options.port.get();
-      sstream << "Multicast ports          : " << port << " - " << port + 10 << std::endl;
-      sstream << "Multicast join all IFs   : " << (Config::GetCurrentConfig()->transport_layer_options.mc_options.join_all_interfaces ? "on" : "off") << std::endl;
-      auto bandwidth = Config::GetCurrentConfig()->transport_layer_options.mc_options.bandwidth_max_udp;
-      if (bandwidth < 0)
-      {
-        sstream << "Bandwidth limit (udp)    : not limited" << std::endl;
-      }
-      else
-      {
-        sstream << "Bandwidth limit udp      : " << GetBufferStr(bandwidth) + "/s" << std::endl;
-      }
-      sstream << std::endl;
+      sstream << "Multicast ports          : " << port << " - " << port + 10 << '\n';
+      sstream << "Multicast join all IFs   : " << (Config::GetCurrentConfig()->transport_layer_options.mc_options.join_all_interfaces ? "on" : "off") << '\n';
 
-      sstream << "------------------------- TIME -----------------------------------" << std::endl;
-      sstream << "Synchronization realtime : " << Config::GetCurrentConfig()->timesync_options.timesync_module << std::endl;
-      sstream << "Synchronization replay   : " << eCALPAR(TIME, SYNC_MOD_REPLAY) << std::endl;
+
+#if ECAL_CORE_TIMEPLUGIN
+      sstream << "------------------------- TIME -----------------------------------" << '\n';
+      sstream << "Synchronization realtime : " << Config::GetCurrentConfig()->timesync_options.timesync_module << '\n';
+      sstream << "Synchronization replay   : " << eCALPAR(TIME, SYNC_MOD_REPLAY) << '\n';
       sstream << "State                    : ";
-      if (g_timegate()->IsSynchronized()) sstream << " synchronized " << std::endl;
-      else                                sstream << " not synchronized " << std::endl;
+      if (g_timegate()->IsSynchronized()) sstream << " synchronized " << '\n';
+      else                                sstream << " not synchronized " << '\n';
       sstream << "Master / Slave           : ";
-      if (g_timegate()->IsMaster())       sstream << " Master " << std::endl;
-      else                                sstream << " Slave " << std::endl;
-      int         status_state;
+      if (g_timegate()->IsMaster())       sstream << " Master " << '\n';
+      else                                sstream << " Slave " << '\n';
+      int         status_state = 0;
       std::string status_msg;
       g_timegate()->GetStatus(status_state, &status_msg);
-      sstream << "Status (Code)            : \"" << status_msg << "\" (" << status_state << ")" << std::endl;
-      sstream << std::endl;
-
-      sstream << "------------------------- PUBLISHER LAYER DEFAULTS ---------------"       << std::endl;
-      auto zero_copy = Config::GetCurrentConfig()->transport_layer_options.shm_options.memfile_zero_copy;
-
-      if (zero_copy)
-      {
-        sstream << "Layer Mode SHM (ZEROCPY) : " << LayerMode(Config::GetCurrentConfig()->publisher_options.use_shm) << std::endl;
-      }
-      else
-      {
-        sstream << "Layer Mode SHM           : " << LayerMode(Config::GetCurrentConfig()->publisher_options.use_shm) << std::endl;
-      }
-      sstream << "Layer Mode TCP           : " << LayerMode(Config::GetCurrentConfig()->publisher_options.use_tcp) << std::endl;
-      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::GetCurrentConfig()->publisher_options.use_udp_mc) << std::endl;
-      sstream << std::endl;
-
-      sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------"               << std::endl;
-      sstream << "Layer Mode SHM           : " << LayerMode(Config::GetCurrentConfig()->receiving_options.shm_recv_enabled)     << std::endl;
-      sstream << "Layer Mode TCP           : " << LayerMode(Config::GetCurrentConfig()->receiving_options.tcp_recv_enabled)     << std::endl;
-      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::GetCurrentConfig()->receiving_options.udp_mc_recv_enabled)  << std::endl;
-      sstream << "Npcap UDP Receiver       : " << LayerMode(Config::GetCurrentConfig()->transport_layer_options.mc_options.npcap_enabled);
+      sstream << "Status (Code)            : \"" << status_msg << "\" (" << status_state << ")" << '\n';
+      sstream << '\n';
+#endif
+#if ECAL_CORE_SUBSCRIBER
+      sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------" << '\n';
+      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::GetCurrentConfig()->receiving_options.udp_mc_recv_enabled)  << '\n';
+      sstream << "Drop out-of-order msgs   : " << (Config::Experimental::GetDropOutOfOrderMessages() ? "on" : "off") << '\n';
+#endif
 #ifdef ECAL_NPCAP_SUPPORT
       if(Config::GetCurrentConfig()->transport_layer_options.mc_options.npcap_enabled && !Udpcap::Initialize())
       {
         sstream << " (Init FAILED!)";
       }
-#else  // ECAL_NPCAP_SUPPORT
+#else  // ECAL_CORE_NPCAP_SUPPORT
       if (Config::GetCurrentConfig()->transport_layer_options.mc_options.npcap_enabled)
       {
         sstream << " (Npcap is enabled, but not configured via CMake!)";
       }
-#endif // ECAL_NPCAP_SUPPORT
-      sstream << std::endl;
-      sstream << std::endl;
-
-      
-
-      sstream << "------------------------- EXPERIMENTAL ---------------------------" << std::endl;
-      sstream << "SHM Monitoring           : " << ( static_cast<bool>(Config::GetCurrentConfig()->monitoring_options.monitoring_mode & Config::MonitoringMode::shm_monitoring) ? "on" : "off") << std::endl;
-      sstream << "SHM Monitoring (Domain)  : " << Config::GetCurrentConfig()->monitoring_options.shm_options.shm_monitoring_domain << std::endl;
-      sstream << "SHM Monitoring (Queue)   : " << Config::GetCurrentConfig()->monitoring_options.shm_options.shm_monitoring_queue_size << std::endl;
-      sstream << "Network Monitoring       : " << (!Config::GetCurrentConfig()->monitoring_options.network_monitoring_disabled ? "on" : "off") << std::endl;
-      sstream << "Drop out-of-order msgs   : " << (Config::GetCurrentConfig()->transport_layer_options.drop_out_of_order_messages ? "on" : "off") << std::endl;
-      sstream << std::endl;
+#endif // ECAL_CORE_NPCAP_SUPPORT
+      sstream << '\n';
 
       // write it into std:string
       cfg_s_ = sstream.str();
@@ -325,7 +241,7 @@ namespace eCAL
         }
         else
         {
-          std::cerr << "Unable to get host name" << std::endl;
+          std::cerr << "Unable to get host name" << '\n';
         }
       }
       return(g_host_name);
@@ -333,37 +249,7 @@ namespace eCAL
 
     std::string GetHostGroupName()
     {
-      return Config::GetCurrentConfig()->transport_layer_options.shm_options.host_group_name.empty() ? GetHostName() : Config::GetCurrentConfig()->transport_layer_options.shm_options.host_group_name;
-    }
-
-    int GetHostID()
-    {
-      return internal::GetHostID();
-    }
-
-    namespace internal
-    {
-      int GetHostID()
-      {
-        if (g_host_id == 0)
-        {
-          // try to get unique host id
-          bool success(false);
-          int  id(0);
-          std::tie(success, id) = get_host_id();
-          if (success)
-          {
-            g_host_id = id;
-          }
-          // never try again to not waste time
-          else
-          {
-            g_host_id = -1;
-            std::cerr << "Unable to get host id" << std::endl;
-          }
-        }
-        return(g_host_id);
-      }
+      return Config::GetHostGroupName().empty() ? GetHostName() : Config::GetHostGroupName();
     }
 
     std::string GetUnitName()
@@ -374,7 +260,7 @@ namespace eCAL
     std::string GetTaskParameter(const char* sep_)
     {
       std::string par_line;
-      for (auto par : g_task_parameter)
+      for (const auto& par : g_task_parameter)
       {
         if (!par_line.empty()) par_line += sep_;
         par_line += par;
@@ -405,36 +291,6 @@ namespace eCAL
       #endif
     }
 
-    long long GetSClock()
-    {
-      return(GetWClock());
-    }
-
-    long long GetSBytes()
-    {
-      return(GetWBytes());
-    }
-
-    long long GetWClock()
-    {
-      return(g_process_wclock);
-    }
-
-    long long GetWBytes()
-    {
-      return(g_process_wbytes);
-    }
-
-    long long GetRClock()
-    {
-      return(g_process_rclock);
-    }
-
-    long long GetRBytes()
-    {
-      return(g_process_rbytes);
-    }
-
     void SetState(eCAL_Process_eSeverity severity_, eCAL_Process_eSeverity_Level level_, const char* info_)
     {
       g_process_severity = severity_;
@@ -445,17 +301,21 @@ namespace eCAL
       }
     }
 
-    int AddRegistrationCallback(enum eCAL_Registration_Event event_, RegistrationCallbackT callback_)
+    int AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_)
     {
+#if ECAL_CORE_REGISTRATION
       if (g_registration_receiver() == nullptr) return -1;
       if (g_registration_receiver()->AddRegistrationCallback(event_, callback_)) return 0;
+#endif
       return -1;
     }
 
     int RemRegistrationCallback(enum eCAL_Registration_Event event_)
     {
+#if ECAL_CORE_REGISTRATION
       if (g_registration_receiver() == nullptr) return -1;
       if (g_registration_receiver()->RemRegistrationCallback(event_)) return 0;
+#endif
       return -1;
     }
   }
@@ -497,7 +357,7 @@ namespace eCAL
       if (g_process_name.empty())
       {
         WCHAR pname[1024] = { 0 };
-        GetModuleFileNameExW(GetCurrentProcess(), 0, pname, 1024);
+        GetModuleFileNameExW(GetCurrentProcess(), nullptr, pname, 1024);
         g_process_name = EcalUtils::StrConvert::WideToUtf8(pname);
       }
       return(g_process_name);
@@ -760,15 +620,6 @@ namespace
       eCAL::g_process_id   = getpid();
       eCAL::g_process_id_s = std::to_string(eCAL::g_process_id);
     }
-  }
-
-  int parseLine(char* line)
-  {
-    int i = strlen(line);
-    while (*line < '0' || *line > '9') line++;
-    line[i - 3] = '\0';
-    i = atoi(line);
-    return i;
   }
 
   /**

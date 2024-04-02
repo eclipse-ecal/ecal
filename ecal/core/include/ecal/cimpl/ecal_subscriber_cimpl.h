@@ -30,8 +30,6 @@
 
 #include <ecal/cimpl/ecal_callback_cimpl.h>
 
-#include "ecal_tlayer_cimpl.h"
-
 #ifdef __cplusplus
 extern "C"
 {
@@ -44,17 +42,18 @@ extern "C"
   ECALC_API ECAL_HANDLE eCAL_Sub_New();
 
   /**
-   * @brief Create a subscriber. 
+   * @brief Create a subscriber.
    *
-   * @param handle_          Subscriber handle.
-   * @param topic_name_      Unique topic name.
-   * @param topic_type_      Topic type name. 
-   * @param topic_desc_      Topic description.
-   * @param topic_desc_len_  Topic type description length.
+   * @param handle_                   Publisher handle.
+   * @param topic_name_               Unique topic name.
+   * @param topic_type_name_          Topic type name     (like 'string', 'person').
+   * @param topic_type_encoding_      Topic type encoding (like 'base', 'proto').
+   * @param topic_desc_               Topic type description.
+   * @param topic_desc_len_           Topic type description length.
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Sub_Create(ECAL_HANDLE handle_, const char* topic_name_, const char* topic_type_, const char* topic_desc_, int topic_desc_len_);
+  ECALC_API int eCAL_Sub_Create(ECAL_HANDLE handle_, const char* topic_name_, const char* topic_type_name_, const char* topic_type_encoding_, const char* topic_desc_, int topic_desc_len_);
 
   /**
    * @brief Destroy a subscriber. 
@@ -100,22 +99,6 @@ extern "C"
    * @experimental
   **/
   ECALC_API int eCAL_Sub_ClearAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_);
-
-  /**
-   * @brief Receive a message from the publisher
-   *
-   * @deprecated  Use the eCAL_Sub_Receive_ToBuffer or eCAL_Sub_Receive_Alloc instead.
-   *
-   * @param       handle_       Subscriber handle. 
-   * @param [out] buf_          Buffer to store the received message content.
-   * @param       buf_len_      Length of the receive buffer or ECAL_ALLOCATE_4ME if
-   *                            eCAL should allocate the buffer for you (see eCAL_FreeMem).
-   * @param [out] time_         Time from publisher in us.
-   * @param       rcv_timeout_  Maximum time before receive operation returns (in milliseconds, -1 means infinite).
-   *
-   * @return  Length of received buffer. 
-  **/
-  ECALC_API int eCAL_Sub_Receive(ECAL_HANDLE handle_, void* buf_, int buf_len_, long long* time_, int rcv_timeout_);
 
   /**
    * @brief Receive a message from the publisher in a preallocated buffer.
@@ -171,18 +154,6 @@ extern "C"
   ECALC_API int eCAL_Sub_AddReceiveCallback(ECAL_HANDLE handle_, ReceiveCallbackCT callback_, void* par_);
 
   /**
-   * @brief Add callback function for incoming receives.
-   * @deprecated Please use eCAL_Sub_AddReceiveCallback instead
-   *
-   * @param handle_    Subscriber handle.
-   * @param callback_  The callback function to add.
-   * @param par_       User defined context that will be forwarded to the callback function.
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API_DEPRECATED int eCAL_Sub_AddReceiveCallbackC(ECAL_HANDLE handle_, ReceiveCallbackCT callback_, void* par_);
-
-  /**
    * @brief Remove callback function for incoming receives. 
    *
    * @param  handle_  Subscriber handle. 
@@ -193,7 +164,6 @@ extern "C"
 
   /**
    * @brief Add callback function for subscriber events.
-   * @since eCAL 5.10.0   
    *
    * @param handle_    Subscriber handle.
    * @param type_      The event type to react on.
@@ -203,19 +173,6 @@ extern "C"
    * @return  None zero if succeeded.
   **/
   ECALC_API int eCAL_Sub_AddEventCallback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_, SubEventCallbackCT callback_, void* par_);
-
-  /**
-   * @deprecated Use eCAL_Sub_AddEventCallback instead 
-   * @brief Add callback function for subscriber events.
-   *
-   * @param handle_    Subscriber handle.
-   * @param type_      The event type to react on.
-   * @param callback_  The callback function to add.
-   * @param par_       User defined context that will be forwarded to the callback function.
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API_DEPRECATED int eCAL_Sub_AddEventCallbackC(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_, SubEventCallbackCT callback_, void* par_);
 
   /**
    * @brief Remove callback function for subscriber events.
@@ -228,27 +185,40 @@ extern "C"
   ECALC_API int eCAL_Sub_RemEventCallback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_);
 
   /**
-   * @brief Gets description of the connected topic. 
+   * @brief Gets type name of the connected topic.
    *
-   * @param       handle_   Subscriber handle. 
-   * @param [out] buf_      Pointer to store the subscriber description string. 
+   * @param       handle_   Subscriber handle.
+   * @param [out] buf_      Pointer to store the subscriber type name string.
    * @param       buf_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
-   *                        eCAL should allocate the buffer for you (see eCAL_FreeMem). 
+   *                        eCAL should allocate the buffer for you (see eCAL_FreeMem).
    *
-   * @return  Description buffer length or zero if failed. 
+   * @return  Type name buffer length or zero if failed.
   **/
-  ECALC_API int eCAL_Sub_GetDescription(ECAL_HANDLE handle_, void* buf_, int buf_len_);
+  ECALC_API int eCAL_Sub_GetTypeName(ECAL_HANDLE handle_, void* buf_, int buf_len_);
 
   /**
-   * @brief Set the timeout parameter for triggering
-   *          the timeout callback.
+   * @brief Gets encoding of the connected topic.
    *
-   * @param handle_   Subscriber handle.
-   * @param timeout_  The timeout in milliseconds.
+   * @param       handle_   Subscriber handle.
+   * @param [out] buf_      Pointer to store the subscriber encoding string.
+   * @param       buf_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
+   *                        eCAL should allocate the buffer for you (see eCAL_FreeMem).
    *
-   * @return  True if succeeded, false if not.
+   * @return  Encoding buffer length or zero if failed.
   **/
-  ECALC_API int eCAL_Sub_SetTimeout(ECAL_HANDLE handle_, int timeout_);
+  ECALC_API int eCAL_Sub_GetEncoding(ECAL_HANDLE handle_, void* buf_, int buf_len_);
+
+  /**
+   * @brief Gets description of the connected topic.
+   *
+   * @param       handle_   Subscriber handle.
+   * @param [out] buf_      Pointer to store the subscriber description string.
+   * @param       buf_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
+   *                        eCAL should allocate the buffer for you (see eCAL_FreeMem).
+   *
+   * @return  Description buffer length or zero if failed.
+  **/
+  ECALC_API int eCAL_Sub_GetDescription(ECAL_HANDLE handle_, void* buf_, int buf_len_);
 
   /**
    * @brief Dump the whole class state into a string buffer. 

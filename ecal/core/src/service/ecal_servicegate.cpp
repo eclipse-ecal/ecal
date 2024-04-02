@@ -23,6 +23,9 @@
 
 #include "ecal_servicegate.h"
 #include "service/ecal_service_server_impl.h"
+#include <atomic>
+#include <mutex>
+#include <shared_mutex>
 
 namespace eCAL
 {

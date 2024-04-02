@@ -39,38 +39,38 @@ namespace eCAL
    * is activated. If zero-copy is not enabled, the `WriteModified` method is ignored and the 
    * `WriteFull` method is always executed (see CPublisher::ShmEnableZeroCopy)
    * 
-   */
+  **/
   class CPayloadWriter
   {
   public:
     /**
      * @brief Default constructor for CPayloadWriter.
-     */
+    **/
     CPayloadWriter() = default;
 
     /**
      * @brief Virtual destructor for CPayloadWriter.
-     */
+    **/
     virtual ~CPayloadWriter() = default;
 
     /**
      * @brief Copy constructor (deleted).
-     */
+    **/
     CPayloadWriter(const CPayloadWriter&) = default;
 
     /**
      * @brief Move constructor (deleted).
-     */
+    **/
     CPayloadWriter(CPayloadWriter&&) = default;
 
     /**
      * @brief Copy assignment operator (deleted).
-     */
+    **/
     CPayloadWriter& operator=(const CPayloadWriter&) = default;
 
     /**
      * @brief Move assignment operator (deleted).
-     */
+    **/
     CPayloadWriter& operator=(CPayloadWriter&&) = default;
 
     /**
@@ -84,7 +84,7 @@ namespace eCAL
      * @param size_   Size of the data to be written.
      *
      * @return True if the write operation is successful, false otherwise.
-     */
+    **/
     virtual bool WriteFull(void* buffer_, size_t size_) = 0;
 
     /**
@@ -102,7 +102,7 @@ namespace eCAL
      * @param size_   Size of the data to be modified.
      *
      * @return True if the write/update operation is successful, false otherwise.
-     */
+    **/
     virtual bool WriteModified(void* buffer_, size_t size_) { return WriteFull(buffer_, size_); };
 
     /**
@@ -112,7 +112,7 @@ namespace eCAL
      * that eCAL needs to allocate.
      *
      * @return The size of the required memory.
-     */
+    **/
     virtual size_t GetSize() = 0;
   };
 

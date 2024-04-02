@@ -53,6 +53,17 @@ extern "C"
    * @param msg_  The log message string.
   **/
   ECALC_API void eCAL_Logging_Log(const char* const msg_);
+
+  /**
+   * @brief Get logging string.
+   *
+   * @param [out] buf_      Pointer to store the logging information.
+   * @param       buf_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
+   *                        eCAL should allocate the buffer for you (see eCAL_FreeMem).
+   *
+   * @return  Logging buffer length or zero if failed.
+  **/
+  ECALC_API int eCAL_Logging_GetLogging(void* buf_, int buf_len_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

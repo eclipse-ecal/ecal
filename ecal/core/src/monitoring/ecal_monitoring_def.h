@@ -24,16 +24,9 @@
 #pragma once
 
 #include <ecal/types/monitoring.h>
-#include <string>
 
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#include <ecal/core/pb/monitoring.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include <memory>
+#include <string>
 
 namespace eCAL
 {
@@ -54,7 +47,7 @@ namespace eCAL
     void SetInclFilter(const std::string& filter_);
     void SetFilterState(bool state_);
 
-    void GetMonitoring(eCAL::pb::Monitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
+    void GetMonitoring(std::string& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
     void GetMonitoring(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
 
   protected:

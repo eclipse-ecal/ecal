@@ -32,7 +32,7 @@ jobs:
           build_dir: _build
           apt_packages: "cmake,ninja-build,build-essential,zlib1g-dev,qtbase5-dev,libhdf5-dev,libprotobuf-dev,libprotoc-dev,protobuf-compiler,libcurl4-openssl-dev,libqwt-qt5-dev,libyaml-cpp-dev"
           config_file: ".clang-tidy"
-          exclude: "thirdparty/*,_build/*,convert_utf.cpp,convert_utf.h,testing/*"
+          exclude: "ecal/core/src/serialization/nanopb/*,thirdparty/*,_build/*,convert_utf.cpp,convert_utf.h,tests/*"
           split_workflow: true
           lgtm_comment_body: ""
           cmake_command: |
@@ -40,7 +40,7 @@ jobs:
                     -G Ninja \
                     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
                     -DHAS_HDF5=ON \
-                    -DHAS_QT5=ON \
+                    -DHAS_QT=ON \
                     -DHAS_CURL=ON \
                     -DHAS_CAPNPROTO=OFF \
                     -DHAS_FTXUI=ON \

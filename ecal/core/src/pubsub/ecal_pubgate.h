@@ -23,13 +23,14 @@
 
 #pragma once
 
-#include "ecal_global_accessors.h"
-#include "ecal_def.h"
-
 #include "readwrite/ecal_writer.h"
+#include "serialization/ecal_struct_sample_registration.h"
 
-#include <shared_mutex>
 #include <atomic>
+#include <map>
+#include <memory>
+#include <shared_mutex>
+#include <string>
 #include <unordered_map>
 
 namespace eCAL
@@ -52,15 +53,13 @@ namespace eCAL
     bool Register(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_);
     bool Unregister(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_);
 
-    void ApplyLocSubRegistration(const eCAL::pb::Sample& ecal_sample_);
-    void ApplyLocSubUnregistration(const eCAL::pb::Sample& ecal_sample_);
+    void ApplyLocSubRegistration(const Registration::Sample& ecal_sample_);
+    void ApplyLocSubUnregistration(const Registration::Sample& ecal_sample_);
 
-    void ApplyExtSubRegistration(const eCAL::pb::Sample& ecal_sample_);
-    void ApplyExtSubUnregistration(const eCAL::pb::Sample& ecal_sample_);
+    void ApplyExtSubRegistration(const Registration::Sample& ecal_sample_);
+    void ApplyExtSubUnregistration(const Registration::Sample& ecal_sample_);
 
     void RefreshRegistrations();
-
-    bool ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
 
   protected:
     static std::atomic<bool>  m_created;

@@ -84,7 +84,6 @@ target_compile_options(${PROJECT_NAME} PRIVATE
                            $<$<CXX_COMPILER_ID:MSVC>:
                                 /W4>)
 
-
 # Add own public include directory
 target_include_directories(${PROJECT_NAME}
   PUBLIC 
@@ -96,7 +95,7 @@ target_include_directories(${PROJECT_NAME}
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     OUTPUT_NAME ${PROJECT_NAME}
-    FOLDER ecal/service
+    FOLDER core/service
 )
 
 ##################################

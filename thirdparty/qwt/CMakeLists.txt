@@ -277,7 +277,7 @@ set(qwt_sources
     qwt/src/qwt_widget_overlay.cpp
 )
 
-add_library(qwt SHARED ${qwt_headers} ${qwt_sources})
+add_library(qwt ${QWT_LIBRARY_TYPE} ${qwt_headers} ${qwt_sources})
 add_library(qwt::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(qwt PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/qwt/src)
@@ -293,8 +293,14 @@ if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     target_link_libraries(qwt PUBLIC Qt${QT_VERSION_MAJOR}::OpenGLWidgets)
 endif()
 
+# Check if the library is built as a shared library
+get_target_property(QWT_LIBRARY_TYPE qwt TYPE)
 
-target_compile_definitions(qwt PRIVATE QT_DLL QWT_DLL QWT_MAKEDLL QWT_MOC_INCLUDE) 
+target_compile_definitions(qwt PRIVATE QWT_MOC_INCLUDE)
+if(QWT_LIBRARY_TYPE STREQUAL "SHARED_LIBRARY")
+    target_compile_definitions(qwt PUBLIC QWT_DLL)
+    target_compile_definitions(qwt PRIVATE QWT_MAKEDLL)
+endif()
 
 # Export targets and install them
 install(TARGETS qwt
@@ -302,65 +308,67 @@ install(TARGETS qwt
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT qwt_runtime
 )
 
+# For shared libs we need to deploy the Qt DLLs
+if(QWT_LIBRARY_TYPE STREQUAL "SHARED_LIBRARY")
+    if ((WIN32 OR APPLE) AND (${QT_VERSION_MAJOR} GREATER_EQUAL 6))
 
-if ((WIN32 OR APPLE) AND (${QT_VERSION_MAJOR} GREATER_EQUAL 6))
+        # Generate a script that will deploy all necessary Qt DLLs to the binary folder
+        # https://doc.qt.io/qt-6/qt-deploy-runtime-dependencies.html
+        # Available for Qt 6.3 and up (=> Not for Qt5!)
+        # Executing it requires CMake 3.14 and up, due to policy https://cmake.org/cmake/help/latest/policy/CMP0087.html
+        qt_generate_deploy_app_script(
+            TARGET ${PROJECT_NAME}
+            OUTPUT_SCRIPT qt_deploy_script
+            NO_COMPILER_RUNTIME
+            NO_UNSUPPORTED_PLATFORM_ERROR
+        )
 
-    # Generate a script that will deploy all necessary Qt DLLs to the binary folder
-    # https://doc.qt.io/qt-6/qt-deploy-runtime-dependencies.html
-    # Available for Qt 6.3 and up (=> Not for Qt5!)
-    # Executing it requires CMake 3.14 and up, due to policy https://cmake.org/cmake/help/latest/policy/CMP0087.html
-    qt_generate_deploy_app_script(
-        TARGET ${PROJECT_NAME}
-        OUTPUT_SCRIPT qt_deploy_script
-        NO_COMPILER_RUNTIME
-        NO_UNSUPPORTED_PLATFORM_ERROR
-    )
+        # Add a postbuild script that will also execute the created script via cmake -P
+        # This is necessary to make the application startable / debuggable from the build directory.
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -DQT_DEPLOY_PREFIX=$<TARGET_FILE_DIR:${PROJECT_NAME}> -DQT_DEPLOY_BIN_DIR=. -P ${qt_deploy_script}
+        )
 
-    # Add a postbuild script that will also execute the created script via cmake -P
-    # This is necessary to make the application startable / debuggable from the build directory.
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -DQT_DEPLOY_PREFIX=$<TARGET_FILE_DIR:${PROJECT_NAME}> -DQT_DEPLOY_BIN_DIR=. -P ${qt_deploy_script}
-    )
+        # Use the script for deploying the qt dlls in the install dir
+        install(SCRIPT ${qt_deploy_script})
 
-    # Use the script for deploying the qt dlls in the install dir
-    install(SCRIPT ${qt_deploy_script})
+    elseif(WIN32)
 
-elseif(WIN32)
+        # For Qt5 we use our legacy script.
+        # Deploy Qt DLLs in the binary folder. This is necessary for starting the application from whithin the IDE without having to copy QtCore.dll, QtWidgets.dll etc. by hand each time
+        qt_add_windeployqt_postbuild(--no-system-d3d-compiler --no-compiler-runtime --no-opengl-sw --pdb "$<TARGET_FILE:qwt>")
 
-    # For Qt5 we use our legacy script.
-    # Deploy Qt DLLs in the binary folder. This is necessary for starting the application from whithin the IDE without having to copy QtCore.dll, QtWidgets.dll etc. by hand each time
-    qt_add_windeployqt_postbuild(--no-system-d3d-compiler --no-compiler-runtime --no-opengl-sw --pdb "$<TARGET_FILE:qwt>")
+        get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
+        get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
+        find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
 
-    get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
-    get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
-    find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
-
-    install(CODE
-        "
-        set(_file ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/qwt.dll)
-        execute_process(
-                COMMAND \"${CMAKE_COMMAND}\" -E
-                    env PATH=\"${_qt_bin_dir}\" \"${WINDEPLOYQT_EXECUTABLE}\"
-                        --dry-run
-                        --no-compiler-runtime
-                        --no-angle
-                        --no-opengl-sw
-                        --list mapping
-                        \${_file}
-                OUTPUT_VARIABLE _output
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-            )
-        separate_arguments(_files WINDOWS_COMMAND \${_output})
-        while(_files)
-                list(GET _files 0 _src)
-                list(GET _files 1 _dest)
-                execute_process(
+        install(CODE
+            "
+            set(_file ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/qwt.dll)
+            execute_process(
                     COMMAND \"${CMAKE_COMMAND}\" -E
-                        copy \${_src} \"\${CMAKE_INSTALL_PREFIX}/bin/\${_dest}\"
+                        env PATH=\"${_qt_bin_dir}\" \"${WINDEPLOYQT_EXECUTABLE}\"
+                            --dry-run
+                            --no-compiler-runtime
+                            --no-angle
+                            --no-opengl-sw
+                            --list mapping
+                            \${_file}
+                    OUTPUT_VARIABLE _output
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
                 )
-                list(REMOVE_AT _files 0 1)
-        endwhile()
-        "
-    )
+            separate_arguments(_files WINDOWS_COMMAND \${_output})
+            while(_files)
+                    list(GET _files 0 _src)
+                    list(GET _files 1 _dest)
+                    execute_process(
+                        COMMAND \"${CMAKE_COMMAND}\" -E
+                            copy \${_src} \"\${CMAKE_INSTALL_PREFIX}/bin/\${_dest}\"
+                    )
+                    list(REMOVE_AT _files 0 1)
+            endwhile()
+            "
+        )
 
+    endif()
 endif()

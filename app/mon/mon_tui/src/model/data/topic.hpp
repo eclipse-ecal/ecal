@@ -36,7 +36,6 @@ struct Topic
   };
 
   int32_t registration_clock;
-  int32_t host_id;
   std::string host_name;
   int32_t pid;
   std::string process_name;
@@ -44,6 +43,7 @@ struct Topic
   std::string id;
   std::string name;
   Direction direction;
+  std::string encoding;
   std::string type;
   std::string type_descriptor;
   std::vector<TransportLayer> transport_layers;

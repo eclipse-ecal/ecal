@@ -18,13 +18,20 @@
 */
 
 /**
- * @brief  UDP sample receiver to receive messages of type eCAL::pb::Sample
+ * @brief  UDP sample receiver to receive messages of type eCAL::Sample
 **/
 
 #include "ecal_udp_sample_receiver.h"
 #include "io/udp/fragmentation/msg_type.h"
 
+#include <chrono>
 #include <ecal/ecal_log.h>
+
+#include <cstring>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace eCAL
 {
@@ -48,59 +55,15 @@ namespace eCAL
 
       if (m_sample_receiver->m_has_sample_callback(sample_name))
       {
-        // read sample
-        if (!m_ecal_sample.ParseFromArray(msg_buffer_.data() + sizeof(sample_name_size) + sample_name_size, static_cast<int>(msg_buffer_.size() - (sizeof(sample_name_size) + sample_name_size)))) return(0);
-#ifndef NDEBUG
-        // log it
-        eCAL::Logging::Log(log_level_debug3, sample_name + "::UDP Sample Completed");
-
-        // log it
-        switch (m_ecal_sample.cmd_type())
-        {
-        case eCAL::pb::bct_none:
-          eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - NONE");
-          break;
-        case eCAL::pb::bct_set_sample:
-          eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - SAMPLE");
-          break;
-        case eCAL::pb::bct_reg_publisher:
-          eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER PUBLISHER");
-          break;
-        case eCAL::pb::bct_reg_subscriber:
-          eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER SUBSCRIBER");
-          break;
-        case eCAL::pb::bct_reg_process:
-          eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER PROCESS");
-          break;
-        case eCAL::pb::bct_reg_service:
-          eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER SERVER");
-          break;
-        case eCAL::pb::bct_reg_client:
-          eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER CLIENT");
-          break;
-        default:
-          eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - UNKNOWN");
-          break;
-        }
-#endif
-        // get layer if this is a payload sample
-        eCAL::pb::eTLayerType layer = eCAL::pb::eTLayerType::tl_none;
-        if (m_ecal_sample.cmd_type() == eCAL::pb::eCmdType::bct_set_sample)
-        {
-          if (m_ecal_sample.topic().tlayer_size() > 0)
-          {
-            layer = m_ecal_sample.topic().tlayer(0).type();
-          }
-        }
         // apply sample
-        m_sample_receiver->m_apply_sample_callback(m_ecal_sample, layer);
+        m_sample_receiver->m_apply_sample_callback(msg_buffer_.data() + sizeof(sample_name_size) + sample_name_size, static_cast<int>(msg_buffer_.size() - (sizeof(sample_name_size) + sample_name_size)));
       }
 
       return(0);
     }
 
     CSampleReceiver::CSampleReceiver(const IO::UDP::SReceiverAttr& attr_, HasSampleCallbackT has_sample_callback_, ApplySampleCallbackT apply_sample_callback_) :
-      m_has_sample_callback(has_sample_callback_), m_apply_sample_callback(apply_sample_callback_)
+      m_has_sample_callback(std::move(has_sample_callback_)), m_apply_sample_callback(std::move(apply_sample_callback_))
     {
       // create udp receiver
       m_udp_receiver.Create(attr_);
@@ -109,7 +72,7 @@ namespace eCAL
       m_msg_buffer.resize(MSG_BUFFER_SIZE);
 
       // start receiver thread
-      m_udp_receiver_thread = std::make_shared<eCAL::CCallbackThread>(std::bind(&CSampleReceiver::ReceiveThread, this));
+      m_udp_receiver_thread = std::make_shared<eCAL::CCallbackThread>([this] { ReceiveThread(); });
       m_udp_receiver_thread->start(std::chrono::milliseconds(0));
 
       m_cleanup_start = std::chrono::steady_clock::now();
@@ -150,7 +113,7 @@ namespace eCAL
       if (sample_buffer_len_ < sizeof(IO::UDP::SUDPMessageHead)) return;
 
       // cast buffer to udp message struct
-      struct IO::UDP::SUDPMessage* ecal_message = (struct IO::UDP::SUDPMessage*)sample_buffer_;
+      auto ecal_message = (struct IO::UDP::SUDPMessage*)sample_buffer_;
 
       // check for eCAL 4.x header
       if (
@@ -218,53 +181,8 @@ namespace eCAL
 
         if (m_has_sample_callback(sample_name))
         {
-          // read sample
-          if (!m_ecal_sample.ParseFromArray(ecal_message->payload + static_cast<size_t>(sizeof(sample_name_size) + sample_name_size), static_cast<int>(static_cast<size_t>(ecal_message->header.len) - (sizeof(sample_name_size) + sample_name_size)))) return;
-
-#ifndef NDEBUG
-          // log it
-          eCAL::Logging::Log(log_level_debug3, sample_name + "::UDP Sample Completed");
-
-          // log it
-          switch (m_ecal_sample.cmd_type())
-          {
-          case eCAL::pb::bct_none:
-            eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - NONE");
-            break;
-          case eCAL::pb::bct_set_sample:
-            eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - SAMPLE");
-            break;
-          case eCAL::pb::bct_reg_publisher:
-            eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER PUBLISHER");
-            break;
-          case eCAL::pb::bct_reg_subscriber:
-            eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER SUBSCRIBER");
-            break;
-          case eCAL::pb::bct_reg_process:
-            eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER PROCESS");
-            break;
-          case eCAL::pb::bct_reg_service:
-            eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER SERVICE");
-            break;
-          case eCAL::pb::bct_reg_client:
-            eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER CLIENT");
-            break;
-          default:
-            eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - UNKNOWN");
-            break;
-          }
-#endif
-          // get layer if this is a payload sample
-          eCAL::pb::eTLayerType layer = eCAL::pb::eTLayerType::tl_none;
-          if (m_ecal_sample.cmd_type() == eCAL::pb::eCmdType::bct_set_sample)
-          {
-            if (m_ecal_sample.topic().tlayer_size() > 0)
-            {
-              layer = m_ecal_sample.topic().tlayer(0).type();
-            }
-          }
           // apply sample
-          m_apply_sample_callback(m_ecal_sample, layer);
+          m_apply_sample_callback(ecal_message->payload + static_cast<size_t>(sizeof(sample_name_size) + sample_name_size), static_cast<int>(static_cast<size_t>(ecal_message->header.len) - (sizeof(sample_name_size) + sample_name_size)));
         }
       }
       break;
@@ -332,7 +250,7 @@ namespace eCAL
       {
         m_cleanup_start = std::chrono::steady_clock::now();
 
-        for (SampleDefragmentationMapT::iterator riter = m_defrag_sample_map.begin(); riter != m_defrag_sample_map.end();)
+        for (auto riter = m_defrag_sample_map.begin(); riter != m_defrag_sample_map.end();)
         {
           const bool finished = riter->second->HasFinished();
           const bool timeouted = riter->second->HasTimedOut(step_time);

@@ -34,14 +34,14 @@ namespace eCAL
   class CNamedMutex
   {
   public:
-    CNamedMutex(const std::string& name_, bool recoverable_ = false);
+    explicit CNamedMutex(const std::string& name_, bool recoverable_ = false);
     CNamedMutex();
     ~CNamedMutex();
 
     CNamedMutex(const CNamedMutex&) = delete;
     CNamedMutex& operator=(const CNamedMutex&) = delete;
-    CNamedMutex(CNamedMutex&& named_mutex);
-    CNamedMutex& operator=(CNamedMutex&& named_mutex) ;
+    CNamedMutex(CNamedMutex&& named_mutex) noexcept;
+    CNamedMutex& operator=(CNamedMutex&& named_mutex)  noexcept;
 
     bool Create(const std::string& name_, bool recoverable_ = false);
     void Destroy();

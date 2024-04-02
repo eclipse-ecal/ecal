@@ -53,7 +53,7 @@ namespace Continental
 
         public static string GetProtoMessageTypeName(Google.Protobuf.IMessage message)
         {
-          return ("proto:" + message.Descriptor.FullName);
+          return (message.Descriptor.FullName);
         }
       }
     }

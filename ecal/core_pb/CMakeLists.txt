@@ -75,4 +75,4 @@ if(BUILD_PY_BINDING)
   set_source_files_properties(${python_sources} PROPERTIES HEADER_FILE_ONLY TRUE)
 endif()
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ecal/core_pb)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER core)

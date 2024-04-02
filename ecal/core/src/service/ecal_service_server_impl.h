@@ -25,19 +25,17 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_callback.h>
+#include <ecal/ecal_service_info.h>
 
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
+#include <atomic>
 #include <map>
+#include <memory>
 #include <mutex>
 
 #include <ecal/service/server.h>
+#include <string>
+
+#include "serialization/ecal_struct_service.h"
 
 namespace eCAL
 {
@@ -59,7 +57,6 @@ namespace eCAL
     CServiceServerImpl(CServiceServerImpl&&)                 = delete;  // Move construct
     CServiceServerImpl& operator=(const CServiceServerImpl&) = delete;  // Copy assign
     CServiceServerImpl& operator=(CServiceServerImpl&&)      = delete;  // Move assign
-
 
     ~CServiceServerImpl();
 
@@ -100,12 +97,8 @@ namespace eCAL
      * 
      * @return  0 if succeeded, -1 if not.
      */
-    int RequestCallback(const std::string& request_, std::string& response_);
+    int RequestCallback(const std::string& request_pb_, std::string& response_pb_);
     void EventCallback(eCAL_Server_Event event_, const std::string& message_);
-
-    bool ApplyServiceToDescGate(const std::string& method_name_
-      , const SDataTypeInformation& request_type_information_
-      , const SDataTypeInformation& response_type_information_);
 
     std::shared_ptr<eCAL::service::Server> m_tcp_server_v0;
     std::shared_ptr<eCAL::service::Server> m_tcp_server_v1;
@@ -117,21 +110,22 @@ namespace eCAL
 
     struct SMethod
     {
-      eCAL::pb::Method method_pb;
-      MethodCallbackT  callback;
+      Service::Method method;
+      MethodCallbackT callback;
     };
-    std::mutex            m_method_map_sync;
-    using MethodMapT = std::map<std::string, SMethod>;
-    MethodMapT m_method_map;
 
-    std::mutex            m_event_callback_map_sync;
+    using MethodMapT = std::map<std::string, SMethod>;
+    std::mutex            m_method_map_sync;
+    MethodMapT            m_method_map;
+
     using EventCallbackMapT = std::map<eCAL_Server_Event, ServerEventCallbackT>;
+    std::mutex            m_event_callback_map_sync;
     EventCallbackMapT     m_event_callback_map;
     
-    bool                  m_created      = false;
-
     mutable std::mutex    m_connected_mutex;          //!< mutex protecting the m_connected_v0 and m_connected_v1 variable, as those are modified by the event callbacks in another thread.
     bool                  m_connected_v0 = false;
     bool                  m_connected_v1 = false;
+
+    std::atomic<bool>     m_created;
   };
 }

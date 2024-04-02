@@ -62,7 +62,7 @@ namespace eCAL
             flProtect = PAGE_READONLY;
           }
           mem_file_info_.map_region = CreateFileMapping(INVALID_HANDLE_VALUE, nullptr, flProtect, 0, (DWORD)mem_file_info_.size, mem_file_info_.name.c_str());
-          if (mem_file_info_.map_region == NULL) return(false);
+          if (mem_file_info_.map_region == nullptr) return(false);
           if (GetLastError() == ERROR_ALREADY_EXISTS) mem_file_info_.exists = true;
         }
 

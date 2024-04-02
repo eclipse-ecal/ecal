@@ -25,8 +25,8 @@ if (ISSC_PATH STREQUAL "ISSC_PATH-NOTFOUND")
   message(FATAL_ERROR "Unable to find Innosetup (ISCC.exe)")
 else()
   message(STATUS "Found Innosetup at ${ISSC_PATH}")
-  exec_program("${ISSC_PATH}"
-    ARGS
-      "${CPACK_TOPLEVEL_DIRECTORY}/innosetup/ecal_setup.iss"
+  execute_process(
+    COMMAND "${ISSC_PATH}" "${CPACK_TOPLEVEL_DIRECTORY}/innosetup/ecal_setup.iss"
+    WORKING_DIRECTORY "${CPACK_TOPLEVEL_DIRECTORY}/innosetup"
   )
 endif()

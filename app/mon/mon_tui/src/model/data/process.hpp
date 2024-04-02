@@ -43,8 +43,6 @@ struct Process
   std::string host_name;
   std::string unit_name;
   std::string params;
-  int64_t data_sent_bytes;
-  int64_t data_recieved_bytes;
   Severity severity;
   SeverityLevel severity_level;
   std::string state_info;

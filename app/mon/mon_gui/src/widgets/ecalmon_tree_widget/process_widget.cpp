@@ -86,8 +86,6 @@ ProcessWidget::ProcessWidget(QWidget *parent)
     (int)ProcessTreeModel::Columns::STATE,
     (int)ProcessTreeModel::Columns::INFO,
     (int)ProcessTreeModel::Columns::HEARTBEAT,
-    (int)ProcessTreeModel::Columns::DATAWRITE,
-    (int)ProcessTreeModel::Columns::DATAREAD,
     (int)ProcessTreeModel::Columns::ECAL_RUNTIME_VERSION,
   };
   setVisibleColumns(default_visible_columns);
@@ -116,8 +114,6 @@ void ProcessWidget::autoSizeColumns()
   example_process_pb.set_pname("");
   example_process_pb.set_uname("eCALProcessUnitNameABCDE___");
   example_process_pb.set_pparam("");
-  example_process_pb.set_datawrite(99999999999);
-  example_process_pb.set_dataread(99999999999);
 
   example_process_pb.mutable_state()->set_severity(eCAL::pb::eProcessSeverity::proc_sev_warning);
   example_process_pb.mutable_state()->set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level5);
@@ -138,8 +134,6 @@ void ProcessWidget::autoSizeColumns()
     (int)ProcessTreeModel::Columns::PROCESS_NAME,
     (int)ProcessTreeModel::Columns::STATE,
     (int)ProcessTreeModel::Columns::HEARTBEAT,
-    (int)ProcessTreeModel::Columns::DATAWRITE,
-    (int)ProcessTreeModel::Columns::DATAREAD,
     (int)ProcessTreeModel::Columns::TIMESYNC_STATE,
     (int)ProcessTreeModel::Columns::TIMESYNC_MOD_NAME,
     (int)ProcessTreeModel::Columns::COMPONENT_INIT_INFO,

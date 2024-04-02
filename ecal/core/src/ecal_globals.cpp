@@ -25,9 +25,15 @@
 
 #include "config/ecal_config_reader.h"
 
+#include <iostream>
+#include <memory>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
+#if ECAL_CORE_SERVICE
 #include "service/ecal_service_singleton_manager.h"
+#endif
 
 namespace eCAL
 {
@@ -57,21 +63,13 @@ namespace eCAL
       ecal_config_instance = std::make_unique<Config::eCALConfig>();
     }
 
+#if ECAL_CORE_REGISTRATION
     /////////////////////
     // REGISTRATION PROVIDER
     /////////////////////
     if (registration_provider_instance == nullptr)
     {
       registration_provider_instance = std::make_unique<CRegistrationProvider>();
-      new_initialization = true;
-    }
-
-    /////////////////////
-    // DESCRIPTION GATE
-    /////////////////////
-    if(descgate_instance == nullptr) 
-    {
-      descgate_instance = std::make_unique<CDescGate>();
       new_initialization = true;
     }
 
@@ -83,11 +81,22 @@ namespace eCAL
       registration_receiver_instance = std::make_unique<CRegistrationReceiver>();
       new_initialization = true;
     }
+#endif // ECAL_CORE_REGISTRATION
 
+    /////////////////////
+    // DESCRIPTION GATE
+    /////////////////////
+    if (descgate_instance == nullptr)
+    {
+      descgate_instance = std::make_unique<CDescGate>();
+      new_initialization = true;
+    }
+
+#if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
     /////////////////////
     // MEMFILE MAP
     /////////////////////
-    if(memfile_map_instance == nullptr) 
+    if (memfile_map_instance == nullptr)
     {
       memfile_map_instance = std::make_unique<CMemFileMap>();
       new_initialization = true;
@@ -96,12 +105,14 @@ namespace eCAL
     /////////////////////
     // MEMFILE POOL
     /////////////////////
-    if(memfile_pool_instance == nullptr) 
+    if (memfile_pool_instance == nullptr)
     {
       memfile_pool_instance = std::make_unique<CMemFileThreadPool>();
       new_initialization = true;
     }
+#endif // defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
 
+#if ECAL_CORE_SUBSCRIBER
     /////////////////////
     // SUBSCRIBER GATE
     /////////////////////
@@ -113,7 +124,9 @@ namespace eCAL
         new_initialization = true;
       }
     }
+#endif // ECAL_CORE_SUBSCRIBER
 
+#if ECAL_CORE_PUBLISHER
     /////////////////////
     // PUBLISHER GATE
     /////////////////////
@@ -125,7 +138,9 @@ namespace eCAL
         new_initialization = true;
       }
     }
+#endif // ECAL_CORE_PUBLISHER
 
+#if ECAL_CORE_SERVICE
     if ((components_ & Init::Service) != 0u)
     {
       // Reset the service manager, so it will be able to create new services, again
@@ -149,7 +164,9 @@ namespace eCAL
         new_initialization = true;
       }
     }
+#endif // ECAL_CORE_SERVICE
 
+#if ECAL_CORE_TIMEPLUGIN
     /////////////////////
     // TIMEGATE
     /////////////////////
@@ -161,7 +178,9 @@ namespace eCAL
         new_initialization = true;
       }
     }
+#endif // ECAL_CORE_TIMEPLUGIN
 
+#if ECAL_CORE_MONITORING
     /////////////////////
     // MONITORING
     /////////////////////
@@ -173,6 +192,7 @@ namespace eCAL
         new_initialization = true;
       }
     }
+#endif // ECAL_CORE_MONITORING
 
     /////////////////////
     // LOGGING
@@ -191,17 +211,30 @@ namespace eCAL
     /////////////////////
     //if (config_instance)                                                config_instance->Create();
     if (log_instance && ((components_ & Init::Logging) != 0u))            log_instance->Create();
-    if (registration_provider_instance)                                   registration_provider_instance->Create(true, true, (components_ & Init::ProcessReg) != 0x0);
-    if (descgate_instance)                                                descgate_instance->Create();
+#if ECAL_CORE_REGISTRATION
+    if (registration_provider_instance)                                   registration_provider_instance->Create();
     if (registration_receiver_instance)                                   registration_receiver_instance->Create();
+#endif
+    if (descgate_instance)                                                descgate_instance->Create();
+#if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
     if (memfile_pool_instance)                                            memfile_pool_instance->Create();
+#endif
+#if ECAL_CORE_SUBSCRIBER
     if (subgate_instance && ((components_ & Init::Subscriber) != 0u))     subgate_instance->Create();
+#endif
+#if ECAL_CORE_PUBLISHER
     if (pubgate_instance && ((components_ & Init::Publisher) != 0u))      pubgate_instance->Create();
+#endif
+#if ECAL_CORE_SERVICE
     if (servicegate_instance && ((components_ & Init::Service) != 0u))    servicegate_instance->Create();
     if (clientgate_instance && ((components_ & Init::Service) != 0u))     clientgate_instance->Create();
+#endif
+#if ECAL_CORE_TIMEPLUGIN
     if (timegate_instance && ((components_ & Init::TimeSync) != 0u))      timegate_instance->Create(CTimeGate::eTimeSyncMode::realtime);
+#endif
+#if ECAL_CORE_MONITORING
     if (monitoring_instance && ((components_ & Init::Monitoring) != 0u))  monitoring_instance->Create();
-
+#endif
     initialized =  true;
     components  |= components_;
 
@@ -209,7 +242,7 @@ namespace eCAL
     else                    return 1;
   }
 
-  int CGlobals::IsInitialized(unsigned int component_)
+  bool CGlobals::IsInitialized(unsigned int component_)
   {
     // check common initialization
     if (component_ == 0)
@@ -220,20 +253,30 @@ namespace eCAL
     // check single component initialization
     switch (component_)
     {
+#if ECAL_CORE_PUBLISHER
     case Init::Publisher:
       return(pubgate_instance != nullptr);
+#endif
+#if ECAL_CORE_SUBSCRIBER
     case Init::Subscriber:
       return(subgate_instance != nullptr);
+#endif
+#if ECAL_CORE_SERVICE
     case Init::Service:
       return(servicegate_instance != nullptr);
+#endif
+#if ECAL_CORE_MONITORING
     case Init::Monitoring:
       return(monitoring_instance != nullptr);
+#endif
     case Init::Logging:
       return(log_instance != nullptr);
+#if ECAL_CORE_TIMEPLUGIN
     case Init::TimeSync:
       return(timegate_instance != nullptr);
+#endif
     default:
-      return(0);
+      return(false);
     }
   }
 
@@ -242,38 +285,65 @@ namespace eCAL
     if (!initialized) return(1);
 
     // start destruction
+#if ECAL_CORE_MONITORING
     if (monitoring_instance)             monitoring_instance->Destroy();
+#endif
+#if ECAL_CORE_TIMEPLUGIN
     if (timegate_instance)               timegate_instance->Destroy();
-
+#endif
+#if ECAL_CORE_SERVICE
     // The order here is EXTREMELY important! First, the actual service
     // implementation must be stopped (->Service Manager), then the
-    // clientgate/servicegat. The callbacks in the service implementation carry
+    // clientgate/servicegate. The callbacks in the service implementation carry
     // raw pointers to the gate's functions, so we must make sure that everything
     // has been executed, before we delete the gates.
     eCAL::service::ServiceManager::instance()->stop();
     if (clientgate_instance)             clientgate_instance->Destroy();
     if (servicegate_instance)            servicegate_instance->Destroy();
-
+#endif
+#if ECAL_CORE_PUBLISHER
     if (pubgate_instance)                pubgate_instance->Destroy();
+#endif
+#if ECAL_CORE_SUBSCRIBER
     if (subgate_instance)                subgate_instance->Destroy();
-    if (registration_receiver_instance)  registration_receiver_instance->Destroy();
+#endif
     if (descgate_instance)               descgate_instance->Destroy();
+#if ECAL_CORE_REGISTRATION
+    if (registration_receiver_instance)  registration_receiver_instance->Destroy();
     if (registration_provider_instance)  registration_provider_instance->Destroy();
+#endif
+#if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
     if (memfile_pool_instance)           memfile_pool_instance->Destroy();
     if (memfile_map_instance)            memfile_map_instance->Destroy();
+#endif
     if (log_instance)                    log_instance->Destroy();
     //if (config_instance)                 config_instance->Destroy();
 
+#if ECAL_CORE_MONITORING
     monitoring_instance             = nullptr;
+#endif
+#if ECAL_CORE_TIMEPLUGIN
     timegate_instance               = nullptr;
+#endif
+#if ECAL_CORE_SERVICE
     servicegate_instance            = nullptr;
+    clientgate_instance             = nullptr;
+#endif
+#if ECAL_CORE_PUBLISHER
     pubgate_instance                = nullptr;
+#endif
+#if ECAL_CORE_SUBSCRIBER
     subgate_instance                = nullptr;
+#endif
+#if ECAL_CORE_REGISTRATION
     registration_receiver_instance  = nullptr;
-    descgate_instance               = nullptr;
     registration_provider_instance  = nullptr;
+#endif
+    descgate_instance               = nullptr;
+#if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
     memfile_pool_instance           = nullptr;
     memfile_map_instance            = nullptr;
+#endif
     log_instance                    = nullptr;
     config_instance                 = nullptr;
     ecal_config_instance.reset();

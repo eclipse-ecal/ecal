@@ -62,7 +62,7 @@ namespace eCAL
   struct eCAL_TCP_Publisher_Options
   {
     // should we go as far as to put the  TCP address and port here? - NO only user options
-        // both pub/sub need to know
+    // both pub/sub need to know
   };
 
   struct eCAL_SHM_Publisher_Options

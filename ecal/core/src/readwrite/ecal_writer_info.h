@@ -32,9 +32,9 @@ namespace eCAL
     std::string name;
     std::string description;
 
-    bool has_mode_local       = false;
-    bool has_mode_cloud       = false;
+    bool has_mode_local = false;
+    bool has_mode_cloud = false;
 
-    int  send_size_max        = -1;
+    int  send_size_max  = -1;
   };
 }

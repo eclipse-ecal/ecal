@@ -71,7 +71,7 @@ extern "C"
    * @code
    *            // let eCAL allocate memory for the monitoring buffer and return the pointer to 'buf'
    *            void*     buf      = NULL;
-   *            int       buf_len  = eCAL_Monitoring_GetLogging(subscriber_handle, &buf, ECAL_ALLOCATE_4ME);
+   *            int       buf_len  = eCAL_Monitoring_GetMonitoring(&buf, ECAL_ALLOCATE_4ME);
    *            if(buf_len > 0)
    *            {
    *              ...
@@ -83,37 +83,6 @@ extern "C"
    * @endcode
   **/
   ECALC_API int eCAL_Monitoring_GetMonitoring(void* buf_, int buf_len_);
-
-  /**
-   * @brief Get logging string.
-   *
-   * @param [out] buf_      Pointer to store the logging information. 
-   * @param       buf_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
-   *                        eCAL should allocate the buffer for you (see eCAL_FreeMem). 
-   *
-   * @return  Logging buffer length or zero if failed. 
-  **/
-  ECALC_API int eCAL_Monitoring_GetLogging(void* buf_, int buf_len_);
-
-  /**
-  * @brief Publish monitoring protobuf message.
-   *
-   * @param state_  Switch publishing on/off.
-   * @param name_   Monitoring topic name.
-   *
-   * @return Zero if succeeded.
-  **/
-  ECALC_API int eCAL_Monitoring_PubMonitoring(int state_, const char* name_);
-
-  /**
-   * @brief Publish logging protobuf message.
-   *
-   * @param state_  Switch publishing on/off.
-   * @param name_   Logging topic name.
-   *
-   * @return Zero if succeeded.
-  **/
-  ECALC_API int eCAL_Monitoring_PubLogging(int state_, const char* name_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

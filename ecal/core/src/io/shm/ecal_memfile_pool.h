@@ -23,9 +23,11 @@
 
 #pragma once
 
-#include <ecal/ecal_event.h>
+#include <chrono>
+#include <cstddef>
 #include <ecal/ecal_log.h>
 
+#include "ecal_event.h"
 #include "ecal_memfile.h"
 #include "ecal_memfile_header.h"
 
@@ -35,6 +37,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <string>
 #include <thread>
 
 namespace eCAL
@@ -58,14 +61,14 @@ namespace eCAL
     bool Create(const std::string& memfile_name_, const std::string& memfile_event_);
     bool Destroy();
 
-    bool Start(const std::string& topic_name_, const std::string& topic_id_, const int timeout_, const MemFileDataCallbackT& callback_);
+    bool Start(const std::string& topic_name_, const std::string& topic_id_, int timeout_, const MemFileDataCallbackT& callback_);
     bool Stop();
     bool IsObserving() {return(m_is_observing);};
 
     bool ResetTimeout();
 
   protected:
-    void Observe(const std::string& topic_name_, const std::string& topic_id_, const int timeout_);
+    void Observe(const std::string& topic_name_, const std::string& topic_id_, int timeout_);
     bool ReadFileHeader(SMemFileHeader& memfile_hdr);
 
     std::atomic<bool>       m_created;

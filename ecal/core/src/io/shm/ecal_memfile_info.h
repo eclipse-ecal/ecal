@@ -23,8 +23,9 @@
 
 #pragma once
 
-#include <string>
+#include <cstddef>
 #include <memory>
+#include <string>
 
 #include <ecal/ecal_os.h>
 

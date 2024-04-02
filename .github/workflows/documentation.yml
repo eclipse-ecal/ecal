@@ -3,7 +3,7 @@ name: Documentation build
 on:  
   push:
     branches:
-      - master
+      - support/v5.13
   release:
     types:
       - released
@@ -12,7 +12,7 @@ on:
 
 jobs:
   documentation-build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
     - name: Install Dependencies
@@ -25,7 +25,7 @@ jobs:
       with:
         submodules:  'true'
         fetch-depth: 0
-        ref: 'master'
+        ref: 'support/v5.13'
         
     - name: Install Python requirements
       shell: bash
@@ -42,8 +42,6 @@ jobs:
       run: |
         source ".venv_build/bin/activate"
         
-        export CC=/usr/bin/gcc-9
-        export CXX=/usr/bin/g++-9
         mkdir "${{ runner.workspace }}/_build"
         cd "${{ runner.workspace }}/_build"
         cmake $GITHUB_WORKSPACE -G "Ninja" \
@@ -90,7 +88,7 @@ jobs:
       working-directory: ${{ runner.workspace }}/_build
 
     - name: Deploy Documentation
-      uses: peaceiris/actions-gh-pages@v3.6.4
+      uses: peaceiris/actions-gh-pages@v3
       with:
         publish_branch: gh-pages
         github_token: ${{ secrets.GITHUB_TOKEN }}

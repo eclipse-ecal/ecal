@@ -34,49 +34,75 @@ namespace eCAL
   class  CGlobals;
   class  CConfig;
   class  CLog;
-  class  CMonitoring;
-  class  CTimeGate;
-  class  CRegistrationProvider;
-  class  CDescGate;
-  class  CSubGate;
-  class  CPubGate;
-  class  CServiceGate;
-  class  CClientGate;
-  class  CRegistrationReceiver;
-  class  CMemFileThreadPool;
-  class  CMemFileMap;
   namespace Config
   {
 	  struct eCALConfig;
   }
+#if ECAL_CORE_MONITORING
+  class  CMonitoring;
+#endif
+#if ECAL_CORE_TIMEPLUGIN
+  class  CTimeGate;
+#endif
+#if ECAL_CORE_REGISTRATION
+  class  CRegistrationProvider;
+  class  CRegistrationReceiver;
+#endif
+  class  CDescGate;
+#if ECAL_CORE_SUBSCRIBER
+  class  CSubGate;
+#endif
+#if ECAL_CORE_PUBLISHER
+  class  CPubGate;
+#endif
+#if ECAL_CORE_SERVICE
+  class  CServiceGate;
+  class  CClientGate;
+#endif
+#if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
+  class  CMemFileThreadPool;
+  class  CMemFileMap;
+#endif
 
   // Declaration of getter functions for globally accessible variable instances
   CGlobals*               g_globals();
   CConfig*                g_config();
   CLog*                   g_log();
+  Config::eCALConfig*	    g_ecal_config();
+#if ECAL_CORE_MONITORING
   CMonitoring*            g_monitoring();
+#endif
+#if ECAL_CORE_TIMEPLUGIN
   CTimeGate*              g_timegate();
+#endif
+#if ECAL_CORE_REGISTRATION
   CRegistrationProvider*  g_registration_provider();
+  CRegistrationReceiver*  g_registration_receiver();
+#endif
   CDescGate*              g_descgate();
+#if ECAL_CORE_SUBSCRIBER
   CSubGate*               g_subgate();
+#endif
+#if ECAL_CORE_PUBLISHER
   CPubGate*               g_pubgate();
+#endif
+#if ECAL_CORE_SERVICE
   CServiceGate*           g_servicegate();
   CClientGate*            g_clientgate();
-  CRegistrationReceiver*  g_registration_receiver();
+#endif
+#if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
   CMemFileThreadPool*     g_memfile_pool();
   CMemFileMap*            g_memfile_map();
-  Config::eCALConfig*	    g_ecal_config();
 
+#endif
 
   // declaration of globally accessible variables
   extern CGlobals*                     g_globals_ctx;
   extern std::atomic<int>              g_globals_ctx_ref_cnt;
-  extern std::atomic<int>              g_shutdown;
 
   extern std::string                   g_default_ini_file;
 
   extern std::string                   g_host_name;
-  extern int                           g_host_id;
   extern std::string                   g_unit_name;
   extern std::vector<std::string>      g_task_parameter;
 
@@ -88,12 +114,4 @@ namespace eCAL
 
   extern eCAL_Process_eSeverity        g_process_severity;
   extern eCAL_Process_eSeverity_Level  g_process_severity_level;
-
-  extern std::atomic<long long>        g_process_wclock;
-  extern std::atomic<long long>        g_process_wbytes;
-  extern std::atomic<long long>        g_process_wbytes_sum;
-
-  extern std::atomic<long long>        g_process_rclock;
-  extern std::atomic<long long>        g_process_rbytes;
-  extern std::atomic<long long>        g_process_rbytes_sum;
 }

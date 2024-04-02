@@ -24,6 +24,7 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_callback.h>
+#include <ecal/ecal_service_info.h>
 
 #include <ecal/service/client_session.h>
 
@@ -62,14 +63,6 @@ namespace eCAL
     bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
     bool RemEventCallback(eCAL_Client_Event type_);
       
-    // blocking call, no broadcast, first matching service only, response will be returned in service_response_
-    ECAL_DEPRECATE_SINCE_5_10("Please use bool Call(const std::string& method_name_, const std::string& request_, int timeout_ms_, ServiceResponseVecT* service_response_vec_) instead. This function will be removed in eCAL6.")
-    bool Call(const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_);
-    
-  private:
-    std::shared_ptr<std::vector<std::pair<bool, eCAL::SServiceResponse>>> CallBlocking(const std::string& method_name_, const std::string& request_, std::chrono::nanoseconds timeout_);
-
-  public:
     // blocking call, all responses will be returned in service_response_vec_
     bool Call(const std::string& method_name_, const std::string& request_, int timeout_ms_, ServiceResponseVecT* service_response_vec_);
 
@@ -97,8 +90,10 @@ namespace eCAL
     CServiceClientImpl& operator=(CServiceClientImpl&&) = delete;
 
   private:
-    static void fromSerializedProtobuf(const std::string&        response_pb_string, eCAL::SServiceResponse& response);
-    static void fromProtobuf          (const eCAL::pb::Response& response_pb,        eCAL::SServiceResponse& response);
+    std::shared_ptr<std::vector<std::pair<bool, eCAL::SServiceResponse>>> CallBlocking(const std::string& method_name_, const std::string& request_, std::chrono::nanoseconds timeout_);
+
+    static void fromSerializedProtobuf(const std::string& response_pb_, eCAL::SServiceResponse& response_);
+    static void fromStruct(const Service::Response& response_struct_, eCAL::SServiceResponse& response_);
 
     void Register(bool force_);
     void Unregister();
@@ -128,6 +123,6 @@ namespace eCAL
     std::string           m_service_id;
     std::string           m_host_name;
 
-    bool                  m_created;
+    std::atomic<bool>     m_created;
   };
 }

@@ -21,16 +21,18 @@
  * @brief  synchronized memory file interface
 **/
 
-#include <ecal/ecal_event.h>
 #include <ecal/ecal_log.h>
 
-#include "ecal_event_internal.h"
+#include "ecal_event.h"
 #include "ecal_memfile_header.h"
 #include "ecal_memfile_naming.h"
 #include "ecal_memfile_sync.h"
 
 #include <chrono>
+#include <mutex>
 #include <sstream>
+#include <string>
+#include <utility>
 
 namespace eCAL
 {

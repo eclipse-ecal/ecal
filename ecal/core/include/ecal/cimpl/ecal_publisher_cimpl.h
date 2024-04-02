@@ -30,8 +30,6 @@
 
 #include <ecal/cimpl/ecal_callback_cimpl.h>
 
-#include "ecal_tlayer_cimpl.h"
-
 #ifdef __cplusplus
 extern "C"
 {
@@ -46,15 +44,16 @@ extern "C"
   /**
    * @brief Create a publisher. 
    *
-   * @param handle_          Publisher handle.
-   * @param topic_name_      Unique topic name.
-   * @param topic_type_      Topic type name. 
-   * @param topic_desc_      Topic type description. 
-   * @param topic_desc_len_  Topic type description length. 
+   * @param handle_                   Publisher handle.
+   * @param topic_name_               Unique topic name.
+   * @param topic_type_name_          Topic type name     (like 'string', 'person').
+   * @param topic_type_encoding_      Topic type encoding (like 'base', 'proto').
+   * @param topic_desc_               Topic type description.
+   * @param topic_desc_len_           Topic type description length. 
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Pub_Create(ECAL_HANDLE handle_, const char* topic_name_, const char* topic_type_, const char* topic_desc_, int topic_desc_len_);
+  ECALC_API int eCAL_Pub_Create(ECAL_HANDLE handle_, const char* topic_name_, const char* topic_type_name_, const char* topic_type_encoding_, const char* topic_desc_, int topic_desc_len_);
 
   /**
    * @brief Destroy a publisher. 
@@ -64,28 +63,6 @@ extern "C"
    * @return  None zero if succeeded.
   **/
   ECALC_API int eCAL_Pub_Destroy(ECAL_HANDLE handle_);
-
-  /**
-   * @brief Setup topic type name.
-   *
-   * @param handle_               Publisher handle.
-   * @param topic_type_name_      Topic type name.
-   * @param topic_type_name_len_  Topic type name length.
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Pub_SetTypeName(ECAL_HANDLE handle_, const char* topic_type_name_, int topic_type_name_len_);
-
-  /**
-   * @brief Setup topic type description. 
-   *
-   * @param handle_          Publisher handle. 
-   * @param topic_desc_      Topic type description. 
-   * @param topic_desc_len_  Topic type description length. 
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Pub_SetDescription(ECAL_HANDLE handle_, const char* topic_desc_, int topic_desc_len_);
 
   /**
    * @brief Sets publisher attribute. 
@@ -133,66 +110,7 @@ extern "C"
   ECALC_API int eCAL_Pub_ShareDescription(ECAL_HANDLE handle_, int state_);
 
   /**
-   * @brief Set publisher send mode for specific transport layer.
-   *
-   * @param handle_  Publisher handle.
-   * @param layer_   Transport layer.
-   * @param mode_    Send mode.
-   *
-   * @return  True if it succeeds, false if it fails.
-  **/
-  ECALC_API int eCAL_Pub_SetLayerMode(ECAL_HANDLE handle_, enum eTransportLayerC layer_, enum eSendModeC mode_);
-
-  /**
-   * @brief Set publisher maximum transmit bandwidth for the udp layer.
-   *
-   * @param handle_     Publisher handle.
-   * @param bandwidth_  Maximum bandwidth in bytes/s (-1 == unlimited).
-   *
-   * @return  True if it succeeds, false if it fails.
-  **/
-  ECALC_API int eCAL_Pub_SetMaxBandwidthUDP(ECAL_HANDLE handle_, long bandwidth_);
-
-  /**
-   * @brief Set publisher maximum number of used shared memory buffers.
-   *
-   * @param buffering_  Maximum number of used buffers (needs to be greater than 1, default = 1).
-   *
-   * @return  True if it succeeds, false if it fails.
-  **/
-  ECALC_API int eCAL_Pub_ShmSetBufferCount(ECAL_HANDLE handle_, long buffering_);
-
-  /**
-   * @brief Enable zero copy shared memory trasnport mode.
-   *
-   * By default, the builtin shared memory layer is configured to make one memory copy
-   * on the receiver side. That means the payload is copied by the internal eCAL memory pool manager
-   * out of the memory file and the file is closed immediately after this.
-   * The intention of this implementation is to free the file as fast as possible after reading
-   * its content to allow other subscribing processes to access the content with minimal latency.
-   * The different reading subscribers are fully decoupled and can access their memory copy
-   * independently.
-   *
-   * If ShmEnableZeroCopy is switched on no memory will be copied at all. The user message callback is
-   * called right after opening the memory file. A direct pointer to the memory payload is forwarded
-   * and can be processed with no latency. The memory file will be closed after the user callback function
-   * returned. The advantage of this configuration is a much higher performance for large payloads (> 1024 kB).
-   * The disadvantage of this configuration is that in the time when the callback is executed the memory file
-   * is blocked for other subscribers and for writing publishers too. Maybe this can be eliminated
-   * by a better memory file read/write access implementation (lock free read) in future releases.
-   *
-   * Today, for specific scenarios (1:1 pub/sub connections with large payloads for example) this feature
-   * can increase the performance remarkable. But please keep in mind to return from the message callback function
-   * as fast as possible to not delay subsequent read/write access operations.
-   *
-   * @state_  Set type zero copy mode for shared memory trasnport layer (true == zero copy enabled).
-   *
-   * @return  True if it succeeds, false if it fails.
-  **/
-  ECALC_API int eCAL_Pub_ShmEnableZeroCopy(ECAL_HANDLE handle_, int state_);
-
-  /**
-   * @brief Set publisher maximum transmit bandwidth for the udp layer.
+   * @brief Set the specific topic id.
    *
    * @param handle_  Publisher handle.
    * @param id_      The topic id for subscriber side filtering (0 == no id).
@@ -224,7 +142,6 @@ extern "C"
 
   /**
    * @brief Add callback function for publisher events.
-   * @since eCAL 5.10.0
    *
    * @param handle_    Publisher handle.
    * @param type_      The event type to react on.
@@ -234,19 +151,6 @@ extern "C"
    * @return  None zero if succeeded.
   **/
   ECALC_API int eCAL_Pub_AddEventCallback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, PubEventCallbackCT callback_, void* par_);
-
-  /**
-   * @brief Add callback function for publisher events.
-   * @deprecated Please use eCAL_Pub_AddEventCallback instead
-   *
-   * @param handle_    Publisher handle.
-   * @param type_      The event type to react on.
-   * @param callback_  The callback function to add.
-   * @param par_       User defined context that will be forwarded to the callback function.
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API_DEPRECATED int eCAL_Pub_AddEventCallbackC(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, PubEventCallbackCT callback_, void* par_);
 
   /**
    * @brief Remove callback function for publisher events.

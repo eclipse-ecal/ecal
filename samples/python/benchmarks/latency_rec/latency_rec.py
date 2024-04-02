@@ -70,5 +70,5 @@ def do_run():
 
 if __name__ == "__main__":
 
-  while ecal_core.ok():
+  while True:
     do_run()

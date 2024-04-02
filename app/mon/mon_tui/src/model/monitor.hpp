@@ -162,8 +162,6 @@ class MonitorModel
       process.host_name = std::move(*p.mutable_hname());
       process.unit_name = std::move(*p.mutable_uname());
       process.params = std::move(*p.mutable_pparam());
-      process.data_sent_bytes = p.datawrite();
-      process.data_recieved_bytes = p.dataread();
       process.severity = Severity(p.state().severity());
       process.severity_level = SeverityLevel(p.state().severity_level());
       process.state_info = std::move(*p.mutable_state()->mutable_info());
@@ -194,7 +192,6 @@ class MonitorModel
       }
       auto &topic = topics.emplace_back();
       topic.registration_clock = t.rclock();
-      topic.host_id = t.hid();
       topic.host_name = std::move(*t.mutable_hname());
       topic.pid = t.pid();
       topic.process_name = std::move(*t.mutable_pname());
@@ -202,8 +199,9 @@ class MonitorModel
       topic.id = std::move(*t.mutable_tid());
       topic.name = std::move(*t.mutable_tname());
       topic.direction = TopicDirection(t.direction());
-      topic.type = std::move(*t.mutable_ttype());
-      topic.type_descriptor = std::move(*t.mutable_tdesc());
+      topic.encoding = std::move(*t.mutable_tdatatype()->mutable_encoding());
+      topic.type = std::move(*t.mutable_tdatatype()->mutable_name());
+      topic.type_descriptor = std::move(*t.mutable_tdatatype()->mutable_desc());
       for(auto &tl: t.tlayer())
       {
         topic.transport_layers.emplace_back(TopicTransportLayer(tl.type()));

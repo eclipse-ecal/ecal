@@ -23,18 +23,18 @@
 
 #include <ecal/ecal_config.h>
 
-#include "ecal_descgate.h"
 #include "registration/ecal_registration_provider.h"
-#include "ecal_servicegate.h"
 #include "ecal_global_accessors.h"
 #include "ecal_service_server_impl.h"
+#include "ecal_service_singleton_manager.h"
+#include "serialization/ecal_serialize_service.h"
 
 #include <chrono>
-#include <iostream>
+#include <memory>
+#include <mutex>
 #include <sstream>
+#include <string>
 #include <utility>
-
-#include "ecal_service_singleton_manager.h"
 
 namespace eCAL
 {
@@ -50,8 +50,10 @@ namespace eCAL
     return instance;
   }
 
-  CServiceServerImpl::CServiceServerImpl()
-  {}
+  CServiceServerImpl::CServiceServerImpl() :
+    m_created(false)
+  {
+  }
 
   CServiceServerImpl::~CServiceServerImpl()
   {
@@ -123,11 +125,11 @@ namespace eCAL
       m_tcp_server_v1 = server_manager->create_server(1, 0, service_callback, true, event_callback);
     }
 
-    // register this service
-    Register(false);
-
     // mark as created
     m_created = true;
+
+    // register this service
+    Register(false);
 
     return(true);
   }
@@ -154,7 +156,10 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
-    // unregister this service
+    // mark as no more created
+    m_created = false;
+
+    // and unregister this service
     Unregister();
 
     // reset internals
@@ -167,8 +172,6 @@ namespace eCAL
       m_connected_v1 = false;
     }
 
-    m_created      = false;
-
     return(true);
   }
 
@@ -179,26 +182,28 @@ namespace eCAL
       auto iter = m_method_map.find(method_);
       if (iter != m_method_map.end())
       {
-        iter->second.method_pb.set_mname(method_);
-        iter->second.method_pb.set_req_type(request_type_information_.name);
-        iter->second.method_pb.set_req_desc(request_type_information_.descriptor);
-        iter->second.method_pb.set_resp_type(response_type_information_.name);
-        iter->second.method_pb.set_resp_desc(response_type_information_.descriptor);
+        iter->second.method.mname     = method_;
+        iter->second.method.req_type  = request_type_information_.name;
+        iter->second.method.req_desc  = request_type_information_.descriptor;
+        iter->second.method.resp_type = response_type_information_.name;
+        iter->second.method.resp_desc = response_type_information_.descriptor;
       }
       else
       {
         SMethod method;
-        method.method_pb.set_mname(method_);
-        method.method_pb.set_req_type(request_type_information_.name);
-        method.method_pb.set_req_desc(request_type_information_.descriptor);
-        method.method_pb.set_resp_type(response_type_information_.name);
-        method.method_pb.set_resp_desc(response_type_information_.descriptor);
+        method.method.mname     = method_;
+        method.method.req_type  = request_type_information_.name;
+        method.method.req_desc  = request_type_information_.descriptor;
+        method.method.resp_type = response_type_information_.name;
+        method.method.resp_desc = response_type_information_.descriptor;
         m_method_map[method_] = method;
       }
     }
 
-    // update descgate infos
-    return ApplyServiceToDescGate(method_, request_type_information_, response_type_information_);
+    // register this service
+    Register(false);
+
+    return true;
   }
 
   // add callback function for server method calls
@@ -212,35 +217,29 @@ namespace eCAL
       if (iter != m_method_map.end())
       {
         // should we overwrite this ?
-        iter->second.method_pb.set_mname(method_);
-        iter->second.method_pb.set_req_type(req_type_);
-        iter->second.method_pb.set_resp_type(resp_type_);
+        iter->second.method.mname     = method_;
+        iter->second.method.req_type  = req_type_;
+        iter->second.method.resp_type = resp_type_;
         // set callback
         iter->second.callback = callback_;
 
         // read descriptors back from existing service method
-        req_desc = iter->second.method_pb.req_desc();
-        resp_desc = iter->second.method_pb.resp_desc();
+        req_desc  = iter->second.method.req_desc;
+        resp_desc = iter->second.method.resp_desc;
       }
       else
       {
         SMethod method;
-        method.method_pb.set_mname(method_);
-        method.method_pb.set_req_type(req_type_);
-        method.method_pb.set_resp_type(resp_type_);
-        method.callback = callback_;
+        method.method.mname     = method_;
+        method.method.req_type  = req_type_;
+        method.method.resp_type = resp_type_;
+        method.callback         = callback_;
         m_method_map[method_] = method;
       }
     }
 
-    SDataTypeInformation request_datatype_information;
-    request_datatype_information.name = req_type_;
-    request_datatype_information.descriptor = req_desc;
-    SDataTypeInformation response_datatype_information;
-    response_datatype_information.name = resp_type_;
-    response_datatype_information.descriptor = resp_desc;
-    // update descgate infos
-    ApplyServiceToDescGate(method_, request_datatype_information, response_datatype_information);
+    // register this service
+    Register(false);
 
     return true;
   }
@@ -318,6 +317,7 @@ namespace eCAL
 
   void CServiceServerImpl::Register(const bool force_)
   {
+    if (!m_created)             return;
     if (m_service_name.empty()) return;
 
     // might be zero in contruction phase
@@ -328,36 +328,37 @@ namespace eCAL
     if ((Config::GetCurrentConfig()->service_options.protocol_v1) && (server_tcp_port_v1 == 0)) return;
 
     // create service registration sample
-    eCAL::pb::Sample sample;
-    sample.set_cmd_type(eCAL::pb::bct_reg_service);
-    auto *service_mutable_service = sample.mutable_service();
-    service_mutable_service->set_version(m_server_version);
-    service_mutable_service->set_hname(Process::GetHostName());
-    service_mutable_service->set_pname(Process::GetProcessName());
-    service_mutable_service->set_uname(Process::GetUnitName());
-    service_mutable_service->set_pid(Process::GetProcessID());
-    service_mutable_service->set_sname(m_service_name);
-    service_mutable_service->set_sid(m_service_id);
-    service_mutable_service->set_tcp_port_v0(server_tcp_port_v0);
-    service_mutable_service->set_tcp_port_v1(server_tcp_port_v1);
+    Registration::Sample sample;
+    sample.cmd_type     = bct_reg_service;
+    auto& service       = sample.service;
+    service.version     = m_server_version;
+    service.hname       = Process::GetHostName();
+    service.pname       = Process::GetProcessName();
+    service.uname       = Process::GetUnitName();
+    service.pid         = Process::GetProcessID();
+    service.sname       = m_service_name;
+    service.sid         = m_service_id;
+    service.tcp_port_v0 = server_tcp_port_v0;
+    service.tcp_port_v1 = server_tcp_port_v1;
 
     // add methods
     {
       std::lock_guard<std::mutex> const lock(m_method_map_sync);
       for (const auto& iter : m_method_map)
       {
-        auto *method = service_mutable_service->add_methods();
-        method->set_mname(iter.first);
-        method->set_req_type(iter.second.method_pb.req_type());
-        method->set_req_desc(iter.second.method_pb.req_desc());
-        method->set_resp_type(iter.second.method_pb.resp_type());
-        method->set_resp_desc(iter.second.method_pb.resp_desc());
-        method->set_call_count(iter.second.method_pb.call_count());
+        Service::Method method;
+        method.mname      = iter.first;
+        method.req_type   = iter.second.method.req_type;
+        method.req_desc   = iter.second.method.req_desc;
+        method.resp_type  = iter.second.method.resp_type;
+        method.resp_desc  = iter.second.method.resp_desc;
+        method.call_count = iter.second.method.call_count;
+        service.methods.push_back(method);
       }
     }
 
     // register entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterServer(m_service_name, m_service_id, sample, force_);
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, force_);
   }
 
   void CServiceServerImpl::Unregister()
@@ -365,42 +366,43 @@ namespace eCAL
     if (m_service_name.empty()) return;
 
     // create service registration sample
-    eCAL::pb::Sample sample;
-    sample.set_cmd_type(eCAL::pb::bct_unreg_service);
-    auto* service_mutable_service = sample.mutable_service();
-    service_mutable_service->set_version(m_server_version);
-    service_mutable_service->set_hname(Process::GetHostName());
-    service_mutable_service->set_pname(Process::GetProcessName());
-    service_mutable_service->set_uname(Process::GetUnitName());
-    service_mutable_service->set_pid(Process::GetProcessID());
-    service_mutable_service->set_sname(m_service_name);
-    service_mutable_service->set_sid(m_service_id);
+    Registration::Sample sample;
+    sample.cmd_type     = bct_unreg_service;
+    auto& service       = sample.service;
+    service.version     = m_server_version;
+    service.hname       = Process::GetHostName();
+    service.pname       = Process::GetProcessName();
+    service.uname       = Process::GetUnitName();
+    service.pid         = Process::GetProcessID();
+    service.sname       = m_service_name;
+    service.sid         = m_service_id;
 
-    // register entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterServer(m_service_name, m_service_id, sample, true);
+    // unregister entity
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, false);
   }
 
-  int CServiceServerImpl::RequestCallback(const std::string& request_, std::string& response_)
+  int CServiceServerImpl::RequestCallback(const std::string& request_pb_, std::string& response_pb_)
   {
     // prepare response
-    eCAL::pb::Response response_pb;
-    auto* response_pb_mutable_header = response_pb.mutable_header();
-    response_pb_mutable_header->set_hname(eCAL::Process::GetHostName());
-    response_pb_mutable_header->set_sname(m_service_name);
-    response_pb_mutable_header->set_sid(m_service_id);
+    Service::Response response;
+    auto& response_header = response.header;
+    response_header.hname = Process::GetHostName();
+    response_header.sname = m_service_name;
+    response_header.sid   = m_service_id;
 
     // try to parse request
-    eCAL::pb::Request  request_pb;
-    if (!request_pb.ParseFromString(request_))
+    Service::Request request;
+    if (!DeserializeFromBuffer(request_pb_.c_str(), request_pb_.size(), request))
     {
       Logging::Log(log_level_error, m_service_name + "::CServiceServerImpl::RequestCallback failed to parse request message");
 
-      response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
+      response_header.state = Service::eMethodCallState::failed;
       std::string const emsg = "Service '" + m_service_name + "' request message could not be parsed.";
-      response_pb_mutable_header->set_error(emsg);
+      response_header.error = emsg;
 
+      // TODO: The next version of the service protocol should omit the double-serialization (i.e. copying the binary data in a protocol buffer and then serializing that again)
       // serialize response and return "request message could not be parsed"
-      response_ = response_pb.SerializeAsString();
+      SerializeToBuffer(response, response_pb_);
 
       // Return Failed (error_code = -1), as parsing the request failed. The
       // return value is not propagated to the remote caller.
@@ -409,22 +411,23 @@ namespace eCAL
 
     // get method
     SMethod method;
-    const auto& request_pb_header = request_pb.header();
-    response_pb_mutable_header->set_mname(request_pb_header.mname());
+    const auto& request_header = request.header;
+    response_header.mname = request_header.mname;
     {
       std::lock_guard<std::mutex> const lock(m_method_map_sync);
 
-      auto requested_method_iterator = m_method_map.find(request_pb_header.mname());
+      auto requested_method_iterator = m_method_map.find(request_header.mname);
       if (requested_method_iterator == m_method_map.end())
       {
         // set method call state 'failed'
-        response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
+        response_header.state = Service::eMethodCallState::failed;
         // set error message
-        std::string const emsg = "Service '" + m_service_name + "' has no method named '" + request_pb_header.mname() + "'";
-        response_pb_mutable_header->set_error(emsg);
+        std::string const emsg = "Service '" + m_service_name + "' has no method named '" + request_header.mname + "'";
+        response_header.error = emsg;
 
+        // TODO: The next version of the service protocol should omit the double-serialization (i.e. copying the binary data in a protocol buffer and then serializing that again)
         // serialize response and return "method not found"
-        response_ = response_pb.SerializeAsString();
+        SerializeToBuffer(response, response_pb_);
 
         // Return Success (error_code = 0), as parsing the request worked. The
         // return value is not propagated to the remote caller.
@@ -433,8 +436,8 @@ namespace eCAL
       else
       {
         // increase call count
-        auto call_count = requested_method_iterator->second.method_pb.call_count();
-        requested_method_iterator->second.method_pb.set_call_count(++call_count);
+        auto call_count = requested_method_iterator->second.method.call_count;
+        requested_method_iterator->second.method.call_count = ++call_count;
 
         // store (copy) the method object, so we can release the mutex before calling the function
         method = requested_method_iterator->second;
@@ -442,18 +445,19 @@ namespace eCAL
     }
 
     // execute method (outside lock guard)
-    const std::string& request_s = request_pb.request();
+    const std::string& request_s = request.request;
     std::string response_s;
-    int const service_return_state = method.callback(method.method_pb.mname(), method.method_pb.req_type(), method.method_pb.resp_type(), request_s, response_s);
+    int const service_return_state = method.callback(method.method.mname, method.method.req_type, method.method.resp_type, request_s, response_s);
 
     // set method call state 'executed'
-    response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
+    response_header.state = Service::eMethodCallState::executed;
     // set method response and return state
-    response_pb.set_response(response_s);
-    response_pb.set_ret_state(service_return_state);
+    response.response  = response_s;
+    response.ret_state = service_return_state;
 
-    // serialize response and return
-    response_ = response_pb.SerializeAsString();
+    // TODO: The next version of the service protocol should omit the double-serialization (i.e. copying the binary data in a protocol buffer and then serializing that again)
+    // serialize response and return "method not found"
+    SerializeToBuffer(response, response_pb_);
 
     // return success (error code 0)
     return 0;
@@ -520,24 +524,5 @@ namespace eCAL
         (e_iter->second)(m_service_name.c_str(), &sdata);
       }
     }
-  }
-
-  bool CServiceServerImpl::ApplyServiceToDescGate(const std::string& method_name_
-    , const SDataTypeInformation& request_type_information_
-    , const SDataTypeInformation& response_type_information_)
-  {
-    if (g_descgate() != nullptr)
-    {
-      // Calculate the quality of the current info
-      ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!(request_type_information_.name.empty() && response_type_information_.name.empty()))
-        quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!(request_type_information_.descriptor.empty() && response_type_information_.descriptor.empty()))
-        quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
-
-      return g_descgate()->ApplyServiceDescription(m_service_name, method_name_, request_type_information_, response_type_information_, quality);
-    }
-    return false;
   }
 }

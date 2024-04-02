@@ -31,7 +31,6 @@
 #include <ecal/ecal_client.h>
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_core.h>
-#include <ecal/ecal_event.h>
 #include <ecal/ecal_log.h>
 #include <ecal/ecal_process.h>
 #include <ecal/ecal_monitoring.h>
@@ -44,13 +43,3 @@
 #include <ecal/ecal_tlayer.h>
 #include <ecal/ecal_util.h>
 #include <ecal/types/ecal_config_types.h>
-
-/* Legacy namespace to be compatible with eCAL < 4.9 code, will be removed in future eCAL versions*/
-namespace eCAL
-{
-  namespace pb
-  { 
-  }
-}
-namespace eCALPB = eCAL::pb;
-

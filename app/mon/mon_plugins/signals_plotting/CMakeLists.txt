@@ -76,6 +76,7 @@ target_link_libraries (${PROJECT_NAME}
   Qt${QT_VERSION_MAJOR}::Core
   Qt${QT_VERSION_MAJOR}::Widgets
   eCAL::core
+  eCAL::proto
   eCAL::app_pb
   protobuf::libprotobuf
   eCAL::mon_plugin_lib
@@ -91,8 +92,7 @@ endif(MSVC)
 
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
-target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
-target_compile_definitions(${PROJECT_NAME} PRIVATE QWT_DLL) 
+target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>) 
 
 ecal_install_mon_plugin(${PROJECT_NAME})
 

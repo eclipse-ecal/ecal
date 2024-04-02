@@ -1,0 +1,43 @@
+.. list-table:: eCAL 5.13 vs. 5.12
+   :widths: 20 80
+
+   * - Wire compatibility
+     
+     - * **eCAL UDP**: 100% compatible
+  
+       * **eCAL TCP**: 100% compatible
+
+       * **Services**: 100% compatible (**New protocol**, but downwards and upwards compatible)
+         
+         eCAL 5.13 introduces a new protocol that fixes issues of the old protocol.
+         Both protocols (v0 and v1) are supported and nodes agree on the best supported protocol before establishing a connection.
+
+         When communicating with old nodes (eCAL 5.12 and older), the faulty v0 protocol is used.
+
+       * **eCAL Shared Memory**: 100% compatible
+
+       * **eCAL Registration Layer**: 100% compatible
+
+         New fields have been added to support the new service protocol.
+
+   * - API / ABI
+
+     - * **API**: downwards compatible.
+         
+         A lot of deprecations were added.
+         Users should make sure to only use non-deprecated API and files in order to later make upgrading to eCAL 6 easier.
+         Deprecations can be found :ref:`in this document <compatibility_details_5_13_deprecations>`
+         
+       * **ABI**: not compatible
+
+   * - Tools
+
+     - The **GUI Tools** now support being compiled against Qt6.
+       Official Windows builds are now shipped with Qt 6.6 by default.
+       Therefore, custom **eCAL Mon Plugins for Windows** have to be **re-compiled with Qt 6.6** as well.
+       
+       * **Rec**: 100% compatible
+
+       * **Sys**: 100% compatible
+
+       * **Measurements**: 100% compatible

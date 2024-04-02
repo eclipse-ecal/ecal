@@ -30,25 +30,20 @@
 
 #include "io/udp/ecal_udp_sample_sender.h"
 
-#include "io/shm/ecal_memfile_broadcast.h"
-#include "io/shm/ecal_memfile_broadcast_writer.h"
-
 #include "util/ecal_thread.h"
+
+#if ECAL_CORE_REGISTRATION_SHM
+#include "shm/ecal_memfile_broadcast.h"
+#include "shm/ecal_memfile_broadcast_writer.h"
+#endif
+
+#include "serialization/ecal_serialize_sample_registration.h"
 
 #include <atomic>
 #include <memory>
 #include <mutex>
 #include <string>
-#include <thread>
-#include <unordered_map>
-
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include <vector>
 
 namespace eCAL
 {
@@ -58,68 +53,51 @@ namespace eCAL
     CRegistrationProvider();
     ~CRegistrationProvider();
 
-    void Create(bool topics_, bool services_, bool process_);
+    void Create();
     void Destroy();
 
-    bool RegisterTopic(const std::string& topic_name_, const std::string& topic_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
-    bool UnregisterTopic(const std::string& topic_name_, const std::string& topic_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
+    bool ApplySample(const Registration::Sample& sample_, bool force_);
 
-    bool RegisterServer(const std::string& service_name_, const std::string& service_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
-    bool UnregisterServer(const std::string& service_name_, const std::string& service_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
-
-    bool RegisterClient(const std::string& client_name_, const std::string& client_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
-    bool UnregisterClient(const std::string& client_name_, const std::string& client_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
+    using ApplySampleCallbackT = std::function<void(const Registration::Sample&)>;
+    void SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_);
+    void RemCustomApplySampleCallback(const std::string& customer_);
 
   protected:
-    bool RegisterProcess();
-    bool UnregisterProcess();
-      
-    bool RegisterServer();
-    bool RegisterClient();
-    bool RegisterTopics();
+    void AddSample2SampleList(const Registration::Sample& sample_);
+    bool SendSample2UDP(const Registration::Sample& sample_);
 
-    bool ApplySample(const std::string& sample_name_, const eCAL::pb::Sample& sample_);
-      
+    bool SendSampleList2UDP();
+#if ECAL_CORE_REGISTRATION_SHM
+    bool SendSampleList2SHM();
+#endif
+    void ClearSampleList();
+
     void RegisterSendThread();
 
-    bool ApplyTopicToDescGate(const std::string& topic_name_
-      , const SDataTypeInformation& topic_info_
-      , bool topic_is_a_publisher_);
-
-    bool ApplyServiceToDescGate(const std::string& service_name_
-      , const std::string& method_name_
-      , const SDataTypeInformation& request_type_information_
-      , const SDataTypeInformation& response_type_information_);
-
-    bool SendSampleList(bool reset_sample_list_ = true);
+    Registration::Sample GetProcessRegisterSample();
+    Registration::Sample GetProcessUnregisterSample();
 
     static std::atomic<bool>            m_created;
-    int                                 m_reg_refresh;
-    bool                                m_reg_topics;
-    bool                                m_reg_services;
-    bool                                m_reg_process;
 
     std::shared_ptr<UDP::CSampleSender> m_reg_sample_snd;
     std::shared_ptr<CCallbackThread>    m_reg_sample_snd_thread;
 
-    using SampleMapT = std::unordered_map<std::string, eCAL::pb::Sample>;
-    std::mutex                          m_topics_map_sync;
-    SampleMapT                          m_topics_map;
+    std::mutex                          m_sample_buffer_mtx;
+    std::vector<char>                   m_sample_buffer;
 
-    std::mutex                          m_server_map_sync;
-    SampleMapT                          m_server_map;
+    std::mutex                          m_sample_list_mtx;
+    Registration::SampleList            m_sample_list;
 
-    std::mutex                          m_client_map_sync;
-    SampleMapT                          m_client_map;
+#if ECAL_CORE_REGISTRATION_SHM
+    std::vector<char>                   m_sample_list_buffer;
+    CMemoryFileBroadcast                m_memfile_broadcast;
+    CMemoryFileBroadcastWriter          m_memfile_broadcast_writer;
+#endif
 
-    std::mutex                          m_sample_list_sync;
-    eCAL::pb::SampleList                m_sample_list;
-    std::string                         m_sample_list_buffer;
+    bool                                m_use_registration_udp;
+    bool                                m_use_registration_shm;
 
-    eCAL::CMemoryFileBroadcast          m_memfile_broadcast;
-    eCAL::CMemoryFileBroadcastWriter    m_memfile_broadcast_writer;
-
-    bool                                m_use_network_monitoring;
-    bool                                m_use_shm_monitoring;
+    std::mutex                            m_callback_custom_apply_sample_map_mtx;
+    std::map<std::string, ApplySampleCallbackT> m_callback_custom_apply_sample_map;
   };
 }

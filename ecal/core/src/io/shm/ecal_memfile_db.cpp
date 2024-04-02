@@ -26,6 +26,8 @@
 #include "ecal_memfile_db.h"
 
 #include <cassert>
+#include <mutex>
+#include <string>
 
 namespace eCAL
 {
@@ -40,7 +42,7 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
 
     // erase memory files from memory map
-    for (MemFileMapT::iterator iter = m_memfile_map.begin(); iter != m_memfile_map.end(); ++iter)
+    for (auto iter = m_memfile_map.begin(); iter != m_memfile_map.end(); ++iter)
     {
       auto& memfile_info = iter->second;
 

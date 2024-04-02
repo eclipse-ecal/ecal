@@ -23,21 +23,24 @@
 
 #pragma once
 
-#include "io/udp/ecal_udp_logging_receiver.h"
-#include "io/udp/ecal_udp_logging_sender.h"
+#include "io/udp/ecal_udp_sample_receiver.h"
+#include "io/udp/ecal_udp_sample_sender.h"
 
+#include <cstddef>
 #include <ecal/ecal.h>
 #include <ecal/ecal_os.h>
 
 #include <ecal/ecal_log_level.h>
+#include <ecal/types/logging.h>
 
 #include "ecal_global_accessors.h"
 
 #include <atomic>
 #include <list>
-#include <mutex>
 #include <memory>
-#include <chrono>
+#include <mutex>
+#include <string>
+#include <vector>
 
 namespace eCAL
 {
@@ -69,7 +72,7 @@ namespace eCAL
       *
       * @param level_ The level.
     **/
-    void SetLogLevel(const eCAL_Logging_eLogLevel level_);
+    void SetLogLevel(eCAL_Logging_eLogLevel level_);
 
     /**
       * @brief Set the current log level.
@@ -84,7 +87,7 @@ namespace eCAL
       * @param level_  The level.
       * @param msg_    The message.
     **/
-    void Log(const eCAL_Logging_eLogLevel level_, const std::string& msg_);
+    void Log(eCAL_Logging_eLogLevel level_, const std::string& msg_);
 
     /**
       * @brief Log a message (with the current log level).
@@ -93,26 +96,27 @@ namespace eCAL
     **/
     void Log(const std::string& msg_);
 
-    void GetLogging(eCAL::pb::LogMessageList& logging_);
+    void GetLogging(std::string& log_msg_list_string_);
+    void GetLogging(Logging::SLogging& log_);
 
   private:
-    void RegisterLogMessage(const eCAL::pb::LogMessage& log_msg_);
+    bool HasSample(const std::string& sample_name_);
+    bool ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_);
 
     CLog(const CLog&);                 // prevent copy-construction
     CLog& operator=(const CLog&);      // prevent assignment
 
-    std::mutex                             m_log_sync;
+    std::mutex                             m_log_mtx;
 
     std::atomic<bool>                      m_created;
-    std::unique_ptr<UDP::CLoggingSender>   m_udp_logging_sender;
+    std::unique_ptr<UDP::CSampleSender>    m_udp_logging_sender;
 
-    // log messages
-    using LogMessageListT = std::list<eCAL::pb::LogMessage>;
-    std::mutex                             m_log_msglist_sync;
-    LogMessageListT                        m_log_msglist;
+    // log message list and log message serialization buffer
+    Logging::SLogging                      m_log_msglist;
+    std::vector<char>                      m_log_message_vec;
 
     // udp logging receiver
-    std::shared_ptr<UDP::CLoggingReceiver> m_log_receiver;
+    std::shared_ptr<UDP::CSampleReceiver>  m_log_receiver;
 
     std::string                            m_hname;
     int                                    m_pid;

@@ -27,60 +27,28 @@
 
 #pragma once
 
+#include <cstddef>
 #include <ecal/ecal.h>
 
 #include "ecal_def.h"
 
 #include "io/udp/ecal_udp_sample_receiver.h"
+#include "serialization/ecal_struct_sample_registration.h"
 
-#include "io/shm/ecal_memfile_broadcast.h"
-#include "io/shm/ecal_memfile_broadcast_reader.h"
+#if ECAL_CORE_REGISTRATION_SHM
+#include "ecal_registration_receiver_shm.h"
+#endif
 
 #include <atomic>
+#include <functional>
+#include <map>
 #include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
 
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
 namespace eCAL
 {
-  class CMemfileRegistrationReceiver
-  {
-  public:
-    CMemfileRegistrationReceiver();
-    ~CMemfileRegistrationReceiver();
-
-    // default copy constructor
-    CMemfileRegistrationReceiver(const CMemfileRegistrationReceiver& other) = delete;
-    // default copy assignment operator
-    CMemfileRegistrationReceiver& operator=(const CMemfileRegistrationReceiver& other) = delete;
-    // default move constructor
-    CMemfileRegistrationReceiver(CMemfileRegistrationReceiver&& other) noexcept = delete;
-    // default move assignment operator
-    CMemfileRegistrationReceiver& operator=(CMemfileRegistrationReceiver&& other) noexcept = delete;
-
-    void Create(CMemoryFileBroadcastReader* memfile_broadcast_reader_);
-    void Destroy();
-
-  private:
-    void Receive();
-
-    CMemoryFileBroadcastReader*       m_memfile_broadcast_reader = nullptr;
-    std::shared_ptr<CCallbackThread>  m_memfile_broadcast_reader_thread;
-
-    bool m_created = false;
-  };
-
-  using ApplySampleCallbackT = std::function<void (const eCAL::pb::Sample &)>;
-
   class CRegistrationReceiver
   {
   public:
@@ -91,22 +59,24 @@ namespace eCAL
     void Destroy();
 
     void EnableLoopback(bool state_);
-    bool LoopBackEnabled() const { return m_loopback; };
 
     bool HasSample(const std::string& /*sample_name_*/) { return(true); };
-    bool ApplySample(const eCAL::pb::Sample& ecal_sample_);
+    bool ApplySample(const Registration::Sample& sample_);
 
     bool AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_);
     bool RemRegistrationCallback(enum eCAL_Registration_Event event_);
 
-    void SetCustomApplySampleCallback(const ApplySampleCallbackT& callback_);
-    void RemCustomApplySampleCallback();
+    using ApplySampleCallbackT = std::function<void(const Registration::Sample&)>;
+    void SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_);
+    void RemCustomApplySampleCallback(const std::string& customer_);
 
   protected:
-    void ApplySubscriberRegistration(const eCAL::pb::Sample& ecal_sample_);
-    void ApplyPublisherRegistration(const eCAL::pb::Sample& ecal_sample_);
+    bool ApplySerializedSample(const char* serialized_sample_data_, size_t serialized_sample_size_);
 
-    bool IsHostGroupMember(const eCAL::pb::Sample & ecal_sample_);
+    void ApplySubscriberRegistration(const eCAL::Registration::Sample& sample_);
+    void ApplyPublisherRegistration(const eCAL::Registration::Sample& sample_);
+
+    bool IsHostGroupMember(const eCAL::Registration::Sample& sample_);
 
     static std::atomic<bool>              m_created;
     bool                                  m_network;
@@ -120,16 +90,18 @@ namespace eCAL
                                      
     std::shared_ptr<UDP::CSampleReceiver> m_registration_receiver;
 
+#if ECAL_CORE_REGISTRATION_SHM
     CMemoryFileBroadcast                  m_memfile_broadcast;
     CMemoryFileBroadcastReader            m_memfile_broadcast_reader;
 
     CMemfileRegistrationReceiver          m_memfile_reg_rcv;
+#endif
 
-    bool                                  m_use_network_monitoring;
-    bool                                  m_use_shm_monitoring;
+    bool                                  m_use_registration_udp;
+    bool                                  m_use_registration_shm;
 
-    std::mutex                            m_callback_custom_apply_sample_mtx;
-    ApplySampleCallbackT                  m_callback_custom_apply_sample;
+    std::mutex                            m_callback_custom_apply_sample_map_mtx;
+    std::map<std::string, ApplySampleCallbackT> m_callback_custom_apply_sample_map;
 
     std::string                           m_host_group_name;
   };

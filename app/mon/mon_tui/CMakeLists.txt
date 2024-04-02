@@ -120,6 +120,7 @@ target_link_libraries(${PROJECT_NAME}
   tclap::tclap
   eCAL::core
   eCAL::core_pb
+  eCAL::proto
   ftxui::screen
   ftxui::dom
   ftxui::component)

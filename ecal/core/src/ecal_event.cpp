@@ -21,15 +21,14 @@
  * @brief  eCAL handle helper class
 **/
 
-#include <ecal/ecal.h>
+#include <chrono>
+#include <cstdint>
 #include <ecal/ecal_os.h>
 
-#include <ecal/ecal_event.h>
+#include "ecal_event.h"
 
 #include <sstream>
-#include <memory>
-#include <chrono>
-#include <thread>
+#include <string>
 
 #ifdef ECAL_OS_WINDOWS
 
@@ -42,7 +41,7 @@ namespace
     if(event_ == nullptr) return(false);
     eCAL::EventHandleT event;
     event.name   = event_name_;
-    event.handle = ::CreateEvent(nullptr, false, false, event_name_.c_str());
+    event.handle = ::CreateEvent(nullptr, FALSE, FALSE, event_name_.c_str());
     if(event.handle != nullptr)
     {
       *event_ = event;

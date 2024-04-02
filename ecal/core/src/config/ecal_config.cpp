@@ -18,9 +18,9 @@
 */
 
 #include <ecal/ecal_config.h>
-#include <ecal/ecal_log_level.h>
+#include <string>
+#include <vector>
 
-#include "ecal_config_reader.h"
 #include "ecal_config_reader_hlp.h"
 #include "ecal_def.h"
 
@@ -119,9 +119,6 @@ namespace eCAL
     ECAL_API int               GetUdpMulticastRcvBufSizeBytes       () { return eCALPAR(NET, UDP_MULTICAST_RCVBUF); }
     ECAL_API bool              IsUdpMulticastJoinAllIfEnabled       () { return eCALPAR(NET, UDP_MULTICAST_JOIN_ALL_IF_ENABLED); }
 
-
-    ECAL_API int               GetMaxUdpBandwidthBytesPerSecond     () { return eCALPAR(NET, BANDWIDTH_MAX_UDP); }
-
     ECAL_API bool              IsUdpMulticastRecEnabled             () { return eCALPAR(NET, UDP_MC_REC_ENABLED); }
     ECAL_API bool              IsShmRecEnabled                      () { return eCALPAR(NET, SHM_REC_ENABLED); }
     ECAL_API bool              IsTcpRecEnabled                      () { return eCALPAR(NET, TCP_REC_ENABLED); }
@@ -150,18 +147,18 @@ namespace eCAL
     // monitoring
     /////////////////////////////////////
     
-    ECAL_API int                 GetMonitoringTimeoutMs               () { return eCALPAR(MON, TIMEOUT); }
-    ECAL_API std::string         GetMonitoringFilterExcludeList       () { return eCALPAR(MON, FILTER_EXCL); }
-    ECAL_API std::string         GetMonitoringFilterIncludeList       () { return eCALPAR(MON, FILTER_INCL); }
-    ECAL_API eCAL_Logging_Filter GetConsoleLogFilter                  () { return ParseLogLevel(eCALPAR(MON, LOG_FILTER_CON)); }
-    ECAL_API eCAL_Logging_Filter GetFileLogFilter                     () { return ParseLogLevel(eCALPAR(MON, LOG_FILTER_FILE)); }
-    ECAL_API eCAL_Logging_Filter GetUdpLogFilter                      () { return ParseLogLevel(eCALPAR(MON, LOG_FILTER_UDP)); }
+    ECAL_API int                 GetMonitoringTimeoutMs             () { return eCALPAR(MON, TIMEOUT); }
+    ECAL_API std::string         GetMonitoringFilterExcludeList     () { return eCALPAR(MON, FILTER_EXCL); }
+    ECAL_API std::string         GetMonitoringFilterIncludeList     () { return eCALPAR(MON, FILTER_INCL); }
+    ECAL_API eCAL_Logging_Filter GetConsoleLogFilter                () { return ParseLogLevel(eCALPAR(MON, LOG_FILTER_CON)); }
+    ECAL_API eCAL_Logging_Filter GetFileLogFilter                   () { return ParseLogLevel(eCALPAR(MON, LOG_FILTER_FILE)); }
+    ECAL_API eCAL_Logging_Filter GetUdpLogFilter                    () { return ParseLogLevel(eCALPAR(MON, LOG_FILTER_UDP)); }
 
     /////////////////////////////////////
     // sys
     /////////////////////////////////////
     
-    ECAL_API std::string       GetEcalSysFilterExcludeList            () { return eCALPAR(SYS, FILTER_EXCL); }
+    ECAL_API std::string       GetEcalSysFilterExcludeList          () { return eCALPAR(SYS, FILTER_EXCL); }
 
     /////////////////////////////////////
     // publisher

@@ -45,7 +45,7 @@ constexpr char ECAL_DEFAULT_CFG[]       = "ecal.ini";
 /* timeout for automatic removing monitoring topics in ms */
 constexpr unsigned int MON_TIMEOUT      = 5000U;
 /* topics blacklist as regular expression (will not be monitored) */
-constexpr char MON_FILTER_EXCL[]        =    "^__.*$";
+constexpr char MON_FILTER_EXCL[]        =    "_.*";
 /* topics whitelist as regular expression (will be monitored only) */
 constexpr char MON_FILTER_INCL[]        =    "";
 
@@ -76,6 +76,7 @@ constexpr unsigned int NET_UDP_MULTICAST_TTL                              = 3U;
 constexpr unsigned int NET_UDP_MULTICAST_PORT_REG_OFF                     = 0U;
 constexpr unsigned int NET_UDP_MULTICAST_PORT_LOG_OFF                     = 1U;
 constexpr unsigned int NET_UDP_MULTICAST_PORT_SAMPLE_OFF                  = 2U;
+constexpr unsigned int NET_UDP_MULTICAST_PORT_LOG_OFF                     = 4U;
 constexpr unsigned int NET_UDP_MULTICAST_SNDBUF                           = (5U*1024U*1024U);  /* 5 MByte */
 constexpr unsigned int NET_UDP_MULTICAST_RCVBUF                           = (5U*1024U*1024U);  /* 5 MByte */
 constexpr bool NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED                      = false;

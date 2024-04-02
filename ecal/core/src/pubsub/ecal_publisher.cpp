@@ -22,40 +22,31 @@
 **/
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_tlayer.h>
-#include <ecal/ecal_config.h>
 
-#include "config/ecal_config_reader_hlp.h"
-#include "readwrite/ecal_buffer_payload_writer.h"
 #include "ecal_globals.h"
-
 #include "readwrite/ecal_writer.h"
+#include "readwrite/ecal_writer_buffer_payload.h"
 
-#include <sstream>
 #include <iostream>
+#include <memory>
+#include <sstream>
+#include <string>
 #include <utility>
 
 namespace eCAL
 {
   CPublisher::CPublisher() :
-                m_datawriter(nullptr),
-                m_id(0),
-                m_created(false),
-                m_initialized(false)
+    m_datawriter(nullptr),
+    m_id(0),
+    m_created(false),
+    m_initialized(false)
   {
-    InitializeTLayer();
-  }
-
-  CPublisher::CPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ /* = "" */) 
-    : CPublisher()
-  {
-    Create(topic_name_, topic_type_, topic_desc_);
   }
 
   CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_)
     : CPublisher()
   {
-    Create(topic_name_, data_type_info_);
+    CPublisher::Create(topic_name_, data_type_info_);
   }
 
   CPublisher::CPublisher(const std::string& topic_name_) 
@@ -64,7 +55,7 @@ namespace eCAL
 
   CPublisher::~CPublisher()
   {
-    Destroy();
+    CPublisher::Destroy();
   }
 
   /**
@@ -72,7 +63,6 @@ namespace eCAL
   **/
   CPublisher::CPublisher(CPublisher&& rhs) noexcept :
                 m_datawriter(std::move(rhs.m_datawriter)),
-                m_tlayer(rhs.m_tlayer),
                 m_id(rhs.m_id),
                 m_created(rhs.m_created),
                 m_initialized(rhs.m_initialized)
@@ -90,7 +80,6 @@ namespace eCAL
     Destroy();
 
     m_datawriter      = std::move(rhs.m_datawriter);
-    m_tlayer          = rhs.m_tlayer,
     m_id              = rhs.m_id;
     m_created         = rhs.m_created;
     m_initialized     = rhs.m_initialized;
@@ -99,16 +88,6 @@ namespace eCAL
     rhs.m_initialized = false;
 
     return *this;
-  }
-
-  bool CPublisher::Create(const std::string& topic_name_, const std::string& topic_type_ /* = "" */, const std::string& topic_desc_ /* = "" */)
-  {
-    SDataTypeInformation info;
-    auto split_type = Util::SplitCombinedTopicType(topic_type_);
-    info.encoding = split_type.first;
-    info.name = split_type.second;
-    info.descriptor = topic_desc_;
-    return Create(topic_name_, info);
   }
 
   bool CPublisher::Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_)
@@ -124,23 +103,8 @@ namespace eCAL
       m_initialized = true;
     }
 
-    // check transport layer initialization
-    // if layer API was not accessed before creation of this class
-    // the layer mode will be initialized by the global config
-    // this can not be done in the constructor because a publisher is allowed
-    // to construct before eCAL::Initialize and so global config is not
-    // existing while construction
-    if (m_tlayer.sm_udp_mc == TLayer::smode_none) m_tlayer.sm_udp_mc = Config::GetCurrentConfig()->publisher_options.use_udp_mc;
-    if (m_tlayer.sm_shm == TLayer::smode_none) m_tlayer.sm_shm       = Config::GetCurrentConfig()->publisher_options.use_shm;
-    if (m_tlayer.sm_tcp == TLayer::smode_none) m_tlayer.sm_tcp       = Config::GetCurrentConfig()->publisher_options.use_tcp;
-
     // create data writer
     m_datawriter = std::make_shared<CDataWriter>();
-    // set transport layer
-    m_datawriter->SetLayerMode(TLayer::tlayer_udp_mc, m_tlayer.sm_udp_mc);
-    m_datawriter->SetLayerMode(TLayer::tlayer_shm, m_tlayer.sm_shm);
-    m_datawriter->SetLayerMode(TLayer::tlayer_tcp, m_tlayer.sm_tcp);
-    // create it
     if (!m_datawriter->Create(topic_name_, data_type_info_))
     {
 #ifndef NDEBUG
@@ -156,13 +120,15 @@ namespace eCAL
     // register publisher gateway (for publisher memory file and event name)
     g_pubgate()->Register(topic_name_, m_datawriter);
 
-    // register to description gateway for type / description checking
-    ApplyTopicToDescGate(topic_name_, data_type_info_);
-
     // we made it :-)
     m_created = true;
 
     return(m_created);
+  }
+
+  bool CPublisher::Create(const std::string& topic_name_)
+  {
+    return Create(topic_name_, SDataTypeInformation());
   }
 
   bool CPublisher::Destroy()
@@ -197,37 +163,9 @@ namespace eCAL
     return(true);
   }
 
-  bool CPublisher::SetTypeName(const std::string& topic_type_name_)
-  {
-    if (m_datawriter == nullptr) return false;
-
-    // register to description gateway for type / description checking
-    SDataTypeInformation data_type_info = m_datawriter->GetDataTypeInformation();
-    // split the topic_type_name
-    auto split_type = Util::SplitCombinedTopicType(topic_type_name_);
-    data_type_info.encoding = split_type.first;
-    data_type_info.name = split_type.second;
-    ApplyTopicToDescGate(m_datawriter->GetTopicName(), data_type_info);
-
-    return m_datawriter->SetDataTypeInformation(data_type_info);
-  }
-
-  bool CPublisher::SetDescription(const std::string& topic_desc_)
-  {
-    if(m_datawriter == nullptr) return false;
-
-    // register to description gateway for type / description checking
-    SDataTypeInformation data_type_info = m_datawriter->GetDataTypeInformation();
-    data_type_info.descriptor = topic_desc_;
-    ApplyTopicToDescGate(m_datawriter->GetTopicName(), data_type_info);
-
-    return m_datawriter->SetDataTypeInformation(data_type_info);
-  }
-
   bool CPublisher::SetDataTypeInformation(const SDataTypeInformation& data_type_info_)
   {
     if (m_datawriter == nullptr) return false;
-    ApplyTopicToDescGate(m_datawriter->GetTopicName(), data_type_info_);
     return m_datawriter->SetDataTypeInformation(data_type_info_);
   }
 
@@ -257,58 +195,6 @@ namespace eCAL
     return true;
   }
 
-  bool CPublisher::SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_)
-  {
-    switch (layer_)
-    {
-    case TLayer::tlayer_udp_mc:
-      m_tlayer.sm_udp_mc = mode_;
-      break;
-    case TLayer::tlayer_shm:
-      m_tlayer.sm_shm = mode_;
-      break;
-    case TLayer::tlayer_tcp:
-      m_tlayer.sm_tcp = mode_;
-      break;
-    case TLayer::tlayer_all:
-      m_tlayer.sm_udp_mc  = mode_;
-      m_tlayer.sm_shm     = mode_;
-      m_tlayer.sm_tcp     = mode_;
-      break;
-    default:
-      break;
-    }
-    if (m_created)
-    {
-      return m_datawriter->SetLayerMode(layer_, mode_);
-    }
-    return true;
-  }
-
-  bool CPublisher::SetMaxBandwidthUDP(long bandwidth_)
-  {
-    if (!m_created) return(false);
-    return m_datawriter->SetMaxBandwidthUDP(bandwidth_);
-  }
-
-  bool CPublisher::ShmSetBufferCount(long buffering_)
-  {
-    if (!m_created) return(false);
-    return m_datawriter->ShmSetBufferCount(buffering_);
-  }
-
-  bool CPublisher::ShmEnableZeroCopy(bool state_)
-  {
-    if (!m_created) return(false);
-    return m_datawriter->ShmEnableZeroCopy(state_);
-  }
-
-  bool CPublisher::ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_)
-  {
-    if (!m_created) return(false);
-    return m_datawriter->ShmSetAcknowledgeTimeout(acknowledge_timeout_ms_);
-  }
-
   bool CPublisher::SetID(long long id_)
   {
     m_id = id_;
@@ -317,22 +203,11 @@ namespace eCAL
 
   size_t CPublisher::Send(const void* const buf_, const size_t len_, const long long time_ /* = DEFAULT_TIME_ARGUMENT */) const
   {
-    return Send(buf_, len_, time_, DEFAULT_ACKNOWLEDGE_ARGUMENT);
-  }
-
-  size_t CPublisher::Send(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
-  {
     CBufferPayloadWriter payload{ buf_, len_ };
-    return Send(payload, time_, acknowledge_timeout_ms_);
-  }
-
-  // @Rex, do we even need this function? I guess so for convenience...
-  size_t CPublisher::Send(CPayloadWriter& payload_, long long time_) const
-  {
-    return Send(payload_, time_, DEFAULT_ACKNOWLEDGE_ARGUMENT);
+    return Send(payload, time_);
   }
   
-  size_t CPublisher::Send(CPayloadWriter& payload_, long long time_, long long acknowledge_timeout_ms_) const
+  size_t CPublisher::Send(CPayloadWriter& payload_, long long time_) const
   {
      if (!m_created) return(0);
 
@@ -347,26 +222,17 @@ namespace eCAL
        return(payload_.GetSize());
      }
 
-     long long current_acknowledge_timeout_ms{ 0 };
-     // set new acknowledge timeout
-     if (acknowledge_timeout_ms_ != DEFAULT_ACKNOWLEDGE_ARGUMENT)
-     {
-       current_acknowledge_timeout_ms = m_datawriter->ShmGetAcknowledgeTimeout();
-       m_datawriter->ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms_));
-     }
-
      // send content via data writer layer
      const long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
      const size_t written_bytes = m_datawriter->Write(payload_, write_time, m_id);
 
-     if (acknowledge_timeout_ms_ != DEFAULT_ACKNOWLEDGE_ARGUMENT)
-     {
-       // reset acknowledge timeout
-       m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);
-     }
-
      // return number of bytes written
      return written_bytes;
+  }
+
+  size_t CPublisher::Send(const std::string& s_, long long time_) const
+  {
+    return(Send(s_.data(), s_.size(), time_));
   }
 
   bool CPublisher::AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_)
@@ -384,13 +250,17 @@ namespace eCAL
 
   bool CPublisher::IsSubscribed() const
   {
+#if ECAL_CORE_REGISTRATION
     if(m_datawriter == nullptr) return(false);
     return(m_datawriter->IsSubscribed());
+#else  // ECAL_CORE_REGISTRATION
+    return(true);
+#endif // ECAL_CORE_REGISTRATION
   }
 
   size_t CPublisher::GetSubscriberCount() const
   {
-    if(m_datawriter == nullptr) return(0);
+    if (m_datawriter == nullptr) return(0);
     return(m_datawriter->GetSubscriberCount());
   }
 
@@ -400,57 +270,22 @@ namespace eCAL
     return(m_datawriter->GetTopicName());
   }
 
-  std::string CPublisher::GetTypeName() const
-  {
-    const SDataTypeInformation info = GetDataTypeInformation();
-    return(Util::CombinedTopicEncodingAndType(info.encoding, info.name));
-  }
-
-  std::string CPublisher::GetDescription() const
-  {
-    return(GetDataTypeInformation().descriptor);
-  }
-
   SDataTypeInformation CPublisher::GetDataTypeInformation() const
   {
     if (m_datawriter == nullptr) return(SDataTypeInformation{});
     return(m_datawriter->GetDataTypeInformation());
   }
 
-  void CPublisher::InitializeTLayer()
-  {
-    m_tlayer = TLayer::STLayer();
-  }
-
-  bool CPublisher::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& data_type_info_)
-  {
-    if (g_descgate() != nullptr)
-    {
-      // Calculate the quality of the current info
-      ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!data_type_info_.name.empty() || !data_type_info_.encoding.empty())
-        quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!data_type_info_.descriptor.empty())
-        quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
-      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
-      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PRODUCER;
-
-      return g_descgate()->ApplyTopicDescription(topic_name_, data_type_info_, quality);
-    }
-    return false;
-  }
-
   std::string CPublisher::Dump(const std::string& indent_ /* = "" */) const
   {
     std::stringstream out;
 
-    out << indent_ << "----------------------" << std::endl;
-    out << indent_ << " class CPublisher"      << std::endl;
-    out << indent_ << "----------------------" << std::endl;
-    out << indent_ << "m_created:            " << m_created << std::endl;
+    out << indent_ << "----------------------" << '\n';
+    out << indent_ << " class CPublisher"      << '\n';
+    out << indent_ << "----------------------" << '\n';
+    out << indent_ << "m_created:            " << m_created << '\n';
     if((m_datawriter != nullptr) && m_datawriter->IsCreated()) out << indent_ << m_datawriter->Dump("    ");
-    out << std::endl;
+    out << '\n';
 
     return(out.str());
   }

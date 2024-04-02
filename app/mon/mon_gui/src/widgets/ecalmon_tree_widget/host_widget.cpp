@@ -92,8 +92,6 @@ void HostWidget::autoSizeColumns()
   example_process_pb->set_pname("");
   example_process_pb->set_uname("CameraSensorMapFusionCAF___");
   example_process_pb->set_pparam("");
-  example_process_pb->set_datawrite(99999999999);
-  example_process_pb->set_dataread(99999999999);
 
   HostTreeItem* example_host_item = new HostTreeItem("CARPC00____");
   example_host_item->update(example_monitoring_pb);

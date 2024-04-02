@@ -36,10 +36,10 @@ inline std::string getEnvVar(const std::string& key, const std::string& def = ""
   wchar_t*  val(nullptr);
   size_t len(0);
   errno_t err = _wdupenv_s(&val, &len, EcalUtils::StrConvert::Utf8ToWide(key).c_str());
-  if (err)            return def;
+  if (err != 0)       return def;
   if (val == nullptr) return def;
   std::string ret = EcalUtils::StrConvert::WideToUtf8(val);
-  free(val);
+  free(val); // NOLINT(*-no-malloc, *-owning-memory)
   return ret;
 #else
   char* val = std::getenv(key.c_str());

@@ -27,70 +27,48 @@
 
 namespace eCAL
 {
-    /**
-     * @brief Optional compile time information associated with a given topic
-     *        (necessary for reflection / runtime type checking)
-    **/
-    struct SDataTypeInformation
+  /**
+   * @brief Optional compile time information associated with a given topic
+   *        (necessary for reflection / runtime type checking)
+  **/
+  struct SDataTypeInformation
+  {
+    std::string name;          //!< name of the datatype
+    std::string encoding;      //!< encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
+    std::string descriptor;    //!< descriptor information of the datatype (necessary for reflection)
+
+    //!< @cond
+    bool operator==(const SDataTypeInformation& other) const
     {
-      std::string name;          //!< name of the datatype
-      std::string encoding;      //!< encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
-      std::string descriptor;    //!< descriptor information of the datatype (necessary for reflection)
+      return name == other.name && encoding == other.encoding && descriptor == other.descriptor;
+    }
 
-      //!< @cond
-      bool operator==(const SDataTypeInformation& other) const
-      {
-        return name == other.name && encoding == other.encoding && descriptor == other.descriptor;
-      }
-
-      bool operator!=(const SDataTypeInformation& other) const
-      {
-        return !(*this == other);
-      }
-      //!< @endcond
-    };
-
-    /**
-     * @brief Optional compile time information associated with a given topic
-     *        (necessary for reflection / runtime type checking)
-    **/
-    struct STopicInformation
+    bool operator!=(const SDataTypeInformation& other) const
     {
-      SDataTypeInformation topic_type; //!< Data type description of the topic
+      return !(*this == other);
+    }
+    //!< @endcond
+  };
 
-      //!< @cond
-      bool operator==(const STopicInformation& other) const
-      {
-        return topic_type == other.topic_type;
-      }
+  /**
+   * @brief Optional compile time information associated with a given service method
+   *        (necessary for reflection / runtime type checking)
+  **/
+  struct SServiceMethodInformation
+  {
+    SDataTypeInformation request_type;   //!< Data type description of the request
+    SDataTypeInformation response_type;  //!< Data type description of the response
 
-      bool operator!=(const STopicInformation& other) const
-      {
-        return !(*this == other);
-      }
-      //!< @endcond
-    };
-
-    /**
-     * @brief Optional compile time information associated with a given service method
-     *        (necessary for reflection / runtime type checking)
-    **/
-    struct SServiceMethodInformation
+    //!< @cond
+    bool operator==(const SServiceMethodInformation& other) const
     {
-      SDataTypeInformation request_type;   //!< Data type description of the request
-      SDataTypeInformation response_type;  //!< Data type description of the response
+      return request_type == other.request_type && response_type == other.response_type;
+    }
 
-      //!< @cond
-      bool operator==(const SServiceMethodInformation& other) const
-      {
-        return request_type == other.request_type && response_type == other.response_type;
-      }
-
-      bool operator!=(const SServiceMethodInformation& other) const
-      {
-        return !(*this == other);
-      }
-      //!< @endcond
-    };
-
+    bool operator!=(const SServiceMethodInformation& other) const
+    {
+      return !(*this == other);
+    }
+    //!< @endcond
+  };
 }

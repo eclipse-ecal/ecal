@@ -26,13 +26,6 @@ jobs:
         target: 'desktop'
         arch: 'win64_msvc2019_64'
 
-    # Downgrading nuget is required as of 2021-04-23, as nuget 5.9.1.111 fails installing protobuf
-    # https://github.com/actions/virtual-environments/issues/3240
-    - name: Downgrade nuget
-      uses: nuget/setup-nuget@v1
-      with:
-        nuget-version: '5.8.x'
-
     - name: Install Dependencies
       # choco install of version 1.9.3 produced a checksum error
       run: choco install doxygen.install --version=1.9.2
@@ -295,18 +288,31 @@ jobs:
         debug: false
 
     - name: Upload Windows setup
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: windows-setup
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.exe
 
     - name: Upload Python Wheels
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: windows-python-wheels
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
 
     # --------------------------------------------------------------------------------------------------
+
+  sign-windows-installer:
+    runs-on: windows-2019
+    needs: build-windows
+
+    steps:
+
+    # Download the installer from the previous job
+    - name: Download Windows setup
+      uses: actions/download-artifact@v4
+      with:
+        name: windows-setup
+        path: ${{ runner.workspace }}/_build/complete/_deploy
 
     - name: Sign the installer on Eclipse CI
       if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.JENKINS_USERNAME != '' && env.JENKINS_API_TOKEN != '' && env.JENKINS_JOB_TOKEN != ''
@@ -320,8 +326,8 @@ jobs:
         $JENKINS_CRUMB_URL = "$JENKINS_BASE_URL/crumbIssuer/api/json"
         $JENKINS_JOB_URL = "$JENKINS_BASE_URL/job/$JENKINS_JOB"
         $JENKINS_TRIGGER_URL = "$JENKINS_JOB_URL/buildWithParameters?token=$Env:JENKINS_JOB_TOKEN"
-        $WAIT_FOR_JENKINS_SEC = 5
-        $COUNTER_LIMIT = 20
+        $WAIT_FOR_JENKINS_SEC = 10
+        $COUNTER_LIMIT = 30
         $RESPONSE_CODE = 0
         $CRUMB_ID = ''
         $CRUMB_FIELD = ''
@@ -477,7 +483,7 @@ jobs:
 
     - name: Upload Windows setup signed on Eclipse CI
       if: env.IS_DOWNLOAD_AVAILABLE == 'true'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: windows-setup-signed
         path: ${{ runner.workspace }}/_build/complete/_deploy/${{ env.ASSET_NAME }}

@@ -21,11 +21,15 @@
  * @brief  udp data writer
 **/
 
-#include <ecal/ecal_log.h>
+#include <cstddef>
 #include <ecal/types/ecal_config_types.h>
+#include <ecal/ecal_log.h>
+#include <memory>
+#include <string>
 
 #include "ecal_writer_udp_mc.h"
 #include "io/udp/ecal_udp_configurations.h"
+#include "serialization/ecal_serialize_sample_payload.h"
 
 namespace eCAL
 {
@@ -39,7 +43,7 @@ namespace eCAL
     SWriterInfo info_;
 
     info_.name                 = "udp";
-    info_.description          = "UDP multicast data writer";
+    info_.description          = "udp multicast data writer";
 
     info_.has_mode_local       = true;
     info_.has_mode_cloud       = true;
@@ -51,7 +55,7 @@ namespace eCAL
 
   bool CDataWriterUdpMC::Create(const std::string & host_name_, const std::string & topic_name_, const std::string & topic_id_)
   {
-    if (m_created) return false;
+    if (m_created) return true;
 
     m_host_name   = host_name_;
     m_topic_name  = topic_name_;
@@ -79,7 +83,7 @@ namespace eCAL
 
   bool CDataWriterUdpMC::Destroy()
   {
-    if (!m_created) return false;
+    if (!m_created) return true;
 
     m_sample_sender_loopback.reset();
     m_sample_sender_no_loopback.reset();
@@ -93,41 +97,41 @@ namespace eCAL
     if (!m_created) return false;
 
     // create new sample
-    m_ecal_sample.Clear();
-    m_ecal_sample.set_cmd_type(eCAL::pb::bct_set_sample);
-    auto *ecal_sample_mutable_topic = m_ecal_sample.mutable_topic();
-    ecal_sample_mutable_topic->set_hname(m_host_name);
-    ecal_sample_mutable_topic->set_tname(m_topic_name);
-    ecal_sample_mutable_topic->set_tid(m_topic_id);
+    Payload::Sample ecal_sample;
+    ecal_sample.cmd_type = eCmdType::bct_set_sample;
 
-    // set layer
-    auto *layer = ecal_sample_mutable_topic->add_tlayer();
-    layer->set_type(eCAL::pb::eTLayerType::tl_ecal_udp_mc);
-    layer->set_confirmed(true);
+    auto& ecal_sample_topic = ecal_sample.topic;
+    ecal_sample_topic.hname = m_host_name;
+    ecal_sample_topic.tname = m_topic_name;
+    ecal_sample_topic.tid   = m_topic_id;
 
     // append content
-    auto *ecal_sample_mutable_content = m_ecal_sample.mutable_content();
-    ecal_sample_mutable_content->set_id(attr_.id);
-    ecal_sample_mutable_content->set_clock(attr_.clock);
-    ecal_sample_mutable_content->set_time(attr_.time);
-    ecal_sample_mutable_content->set_hash(attr_.hash);
-    ecal_sample_mutable_content->set_size((google::protobuf::int32)attr_.len);
-    ecal_sample_mutable_content->set_payload(buf_, attr_.len);
+    auto& ecal_sample_content = ecal_sample.content;
+    ecal_sample_content.id               = attr_.id;
+    ecal_sample_content.clock            = attr_.clock;
+    ecal_sample_content.time             = attr_.time;
+    ecal_sample_content.hash             = attr_.hash;
+    ecal_sample_content.payload.type     = Payload::pl_raw;
+    ecal_sample_content.payload.raw_addr = static_cast<const char*>(buf_);
+    ecal_sample_content.payload.raw_size = attr_.len;
 
     // send it
     size_t sent = 0;
-    if (attr_.loopback)
+    if (SerializeToBuffer(ecal_sample, m_sample_buffer))
     {
-      if (m_sample_sender_loopback)
+      if (attr_.loopback)
       {
-        sent = m_sample_sender_loopback->Send(m_ecal_sample.topic().tname(), m_ecal_sample, attr_.bandwidth);
+        if (m_sample_sender_loopback)
+        {
+          sent = m_sample_sender_loopback->Send(ecal_sample.topic.tname, m_sample_buffer);
+        }
       }
-    }
-    else
-    {
-      if (m_sample_sender_no_loopback)
+      else
       {
-        sent = m_sample_sender_no_loopback->Send(m_ecal_sample.topic().tname(), m_ecal_sample, attr_.bandwidth);
+        if (m_sample_sender_no_loopback)
+        {
+          sent = m_sample_sender_no_loopback->Send(ecal_sample.topic.tname, m_sample_buffer);
+        }
       }
     }
 

@@ -25,7 +25,8 @@
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
 #endif
-#include <ecal/core/pb/logging.pb.h>
+#include "ecal/core/pb/logging.pb.h"
+#include "ecal/core/pb/monitoring.pb.h"
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
@@ -110,7 +111,7 @@ class LogModel
     {
       std::lock_guard<std::mutex> lock{mtx};
       std::string raw_data;
-      eCAL::Monitoring::GetLogging(raw_data);
+      eCAL::Logging::GetLogging(raw_data);
       logs.ParseFromString(raw_data);
 
       auto &pb_logs = logs.log_messages();

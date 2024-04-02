@@ -22,21 +22,13 @@
 **/
 
 #include <ecal/ecal.h>
-
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/layer.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include <functional>
+#include <string>
 
 #include "ecal_global_accessors.h"
 #include "pubsub/ecal_subgate.h"
 #include "io/shm/ecal_memfile_pool.h"
 #include "ecal_reader_shm.h"
-
-#include <iostream>
 
 namespace eCAL
 {
@@ -45,57 +37,22 @@ namespace eCAL
   ////////////////
   void CSHMReaderLayer::SetConnectionParameter(SReaderLayerPar& par_)
   {
-    // list of memory file to register
-    std::vector<std::string> memfile_names;
-
-    // ----------------------------------------------------------------------
-    // REMOVE ME IN ECAL6
-    // ----------------------------------------------------------------------
-    // check for old behavior
-    bool              par_shm(false);
-    const std::string par_shm_prefix("#PAR_SHM#");
-    if (par_.parameter.size() > par_shm_prefix.size())
-    {
-      const std::string prefix = par_.parameter.substr(0, par_shm_prefix.size());
-      if (prefix == par_shm_prefix)
-      {
-        const std::string memfile_name = par_.parameter.substr(par_shm_prefix.size(), par_.parameter.size());
-        memfile_names.push_back(memfile_name);
-        par_shm = true;
-      }
-    }
-    // ----------------------------------------------------------------------
-    // REMOVE ME IN ECAL6
-    // ----------------------------------------------------------------------
-
-    if (!par_shm)
-    {
-      // new behavior (eCAL version > 5.8.13/5.9.0)
-      // layer parameter google protobuf message
-      eCAL::pb::ConnnectionPar connection_par;
-      if (connection_par.ParseFromString(par_.parameter))
-      {
-        for (const auto& memfile_name : connection_par.layer_par_shm().memory_file_list())
-        {
-          memfile_names.push_back(memfile_name);
-        }
-      }
-      else
-      {
-        std::cout << "FATAL ERROR: Could not parse layer connection parameter ! Did you mix up different eCAL versions on the same host ?" << std::endl;
-        return;
-      }
-    }
-
-    for (const auto& memfile_name : memfile_names)
+    for (const auto& memfile_name : par_.parameter.layer_par_shm.memory_file_list)
     {
       // start memory file receive thread if topic is subscribed in this process
       if (g_memfile_pool() != nullptr)
       {
-        const std::string process_id = std::to_string(Process::GetProcessID());
+        const std::string process_id    = std::to_string(Process::GetProcessID());
         const std::string memfile_event = memfile_name + "_" + process_id;
         const MemFileDataCallbackT memfile_data_callback = std::bind(&CSHMReaderLayer::OnNewShmFileContent, this,
-          std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, std::placeholders::_7, std::placeholders::_8);
+          std::placeholders::_1,
+          std::placeholders::_2,
+          std::placeholders::_3,
+          std::placeholders::_4,
+          std::placeholders::_5,
+          std::placeholders::_6,
+          std::placeholders::_7,
+          std::placeholders::_8);
         g_memfile_pool()->ObserveFile(memfile_name, memfile_event, par_.topic_name, par_.topic_id, g_ecal_config()->registration_options.getTimeoutMS(), memfile_data_callback);
       }
     }
@@ -105,7 +62,7 @@ namespace eCAL
   {
     if (g_subgate() != nullptr)
     {
-      if (g_subgate()->ApplySample(topic_name_, topic_id_, buf_, len_, id_, clock_, time_, hash_, eCAL::pb::tl_ecal_shm))
+      if (g_subgate()->ApplySample(topic_name_, topic_id_, buf_, len_, id_, clock_, time_, hash_, tl_ecal_shm))
       {
         return len_;
       }

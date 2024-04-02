@@ -25,19 +25,20 @@ class MessagePublisher(object):
   Classes inheriting from this class need to implement the 
   :func:`~msg_publisher.msg_publisher.send` function.
   """
-  def __init__(self, name, topic_type="", topic_descriptor=b""):
+
+  def __init__(self, topic_name, topic_type="", topic_encoding="", topic_descriptor=b""):
     """ Initialize a message publisher
 
-    :param name:             subscription name of the publisher
-    :type name:              string
+    :param topic_name:       topic name of the publisher
+    :type topic_name:        string
     :param topic_type:       optional, type of the transported payload, eg a a string, a protobuf message
     :type topic_type:        string
-    :param topic_descriptor: optional, a string which can be registered with ecal to allow io
-      reflection features
+    :param topic_encoding:   optional type encoding (e.g. base, proto ..)
+    :type topic_encoding:    string
+    :param topic_descriptor: optional, a string which can be registered with ecal to allow io reflection features
     :type topic_descriptor:  bytes
-
     """
-    self.c_publisher = ecal_core.publisher(name, topic_type, topic_descriptor)
+    self.c_publisher = ecal_core.publisher(topic_name, topic_type, topic_encoding, topic_descriptor)
 
   def send(self, msg, time=-1):
     """ Send out a message
@@ -49,88 +50,32 @@ class MessagePublisher(object):
     """
     raise NotImplementedError("Please Implement this method")
 
-  def set_topic_type_name(self, topic_type_name):
-    """ set topic type name
-
-    :param topic_type_name: the topic type name
-    :type topic_type_name:  string
-
-    """
-
-    return self.c_publisher.set_topic_type_name(topic_type_name)
-
-  def set_topic_description(self, topic_desc):
-    """ set topic description
-
-    :param topic_desc: the topic type description
-    :type topic_desc: bytes
-
-    """
-
-    return self.c_publisher.set_topic_description(topic_desc)
-
-  def set_qos(self, qos):
-    """ set publisher quality of service
-
-    :param qos: 0 = default, 1 = best effort, 2 = reliable
-    :type qos:  int
-
-    """
-    return self.c_publisher.set_qos(qos)
-
-  def set_layer_mode(self, layer, mode):
-    """ set send mode for specific transport layer
-
-    :param layer: 0 = udp, 1 = shm, 2 = hdf5
-    :type layer:  int
-    :param mode:  0 = off, 1 = on,  2 = auto
-    :type layer:  int
-
-    """
-    return self.c_publisher.set_layer_mode(layer, mode)
-
-  def set_max_bandwidth_udp(self, bandwidth):
-    """ set publisher maximum transmit bandwidth for the udp layer.
-
-    :param bandwidth:    maximum bandwidth in bytes/s (-1 == unlimited)
-    :type bandwidth:     int
-
-    """
-
-    return self.c_publisher.pub_set_max_bandwidth_upd(bandwidth)
-
-
 class ProtoPublisher(MessagePublisher):
   """Spezialized publisher that sends out protobuf messages
   """
   def __init__(self, name, type_=None):
     if type_ is not None:
-      topic_type = "proto:" + type_.DESCRIPTOR.full_name
+      topic_type = type_.DESCRIPTOR.full_name
+      topic_enc  = "proto"
       topic_desc = pb_helper.get_descriptor_from_type(type_)
-      super(ProtoPublisher, self).__init__(name, topic_type, topic_desc)
+      super(ProtoPublisher, self).__init__(name, topic_type, topic_enc, topic_desc)
     else:
       super(ProtoPublisher, self).__init__(name)
 
   def send(self, msg, time=-1):
     return self.c_publisher.send(msg.SerializeToString(), time)
 
-  def send_sync(self, msg, time, ack_timeout_ms):
-    return self.c_publisher.send_sync(msg.SerializeToString(), time, ack_timeout_ms)
-
-
 class StringPublisher(MessagePublisher):
   """Spezialized publisher that sends out plain strings
   """
   def __init__(self, name):
-    topic_type = "base:std::string"
+    topic_type = "std::string"
+    topic_enc  = "base"
     topic_desc = b""
-    super(StringPublisher, self).__init__(name, topic_type, topic_desc)
+    super(StringPublisher, self).__init__(name, topic_type, topic_enc, topic_desc)
 
   def send(self, msg, time=-1):
     return self.c_publisher.send(msg.encode(), time)
-
-  def send_sync(self, msg, time, ack_timeout_ms):
-    return self.c_publisher.send_sync(msg.encode(), time, ack_timeout_ms)
 
 
 if __name__ == '__main__':
