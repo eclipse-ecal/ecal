@@ -98,6 +98,7 @@ namespace eCAL
              (client1.pid     == client2.pid) &&
              (client1.sname   == client2.sname) &&
              (client1.sid     == client2.sid) &&
+             CompareMethods(client1.methods, client2.methods) &&
              (client1.version == client2.version);
     }
 

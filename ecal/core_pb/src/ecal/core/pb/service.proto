@@ -88,6 +88,7 @@ message Client                        // client
   int32            pid         =  5;  // process id
   string           sname       =  6;  // service name
   string           sid         =  7;  // service id
+  repeated Method  methods     =  9;  // list of methods
 
   // transport specific parameter (for internal use)
   uint32           version     =  8;  // client protocol version

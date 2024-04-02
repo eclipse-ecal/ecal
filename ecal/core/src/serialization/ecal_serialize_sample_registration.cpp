@@ -138,6 +138,8 @@ namespace
     eCAL::nanopb::encode_string(pb_sample_.client.sname, registration_.client.sname);
     // sid
     eCAL::nanopb::encode_string(pb_sample_.client.sid, registration_.client.sid);
+    // methods
+    eCAL::nanopb::encode_service_methods(pb_sample_.client.methods, registration_.client.methods);
     // version
     pb_sample_.client.version = registration_.client.version;
 
@@ -304,6 +306,8 @@ namespace
     eCAL::nanopb::decode_string(pb_sample_.client.sname, registration_.client.sname);
     // sid
     eCAL::nanopb::decode_string(pb_sample_.client.sid, registration_.client.sid);
+    // methods
+    eCAL::nanopb::decode_service_methods(pb_sample_.client.methods, registration_.client.methods);
 
     ///////////////////////////////////////////////
     // topic information

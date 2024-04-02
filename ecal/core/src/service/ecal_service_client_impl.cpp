@@ -45,10 +45,10 @@ namespace eCAL
     return(std::shared_ptr<CServiceClientImpl>(new CServiceClientImpl()));
   }
 
-  std::shared_ptr<CServiceClientImpl> CServiceClientImpl::CreateInstance(const std::string& service_name_)
+  std::shared_ptr<CServiceClientImpl> CServiceClientImpl::CreateInstance(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
   {
     auto instance = std::shared_ptr<CServiceClientImpl>(new CServiceClientImpl());
-    instance->Create(service_name_);
+    instance->Create(service_name_, method_information_map_);
     return instance;
   }
 
@@ -66,12 +66,19 @@ namespace eCAL
     Destroy();
   }
 
-  bool CServiceClientImpl::Create(const std::string& service_name_)
+  bool CServiceClientImpl::Create(const std::string& service_name_, const ServiceMethodInformationMapT& methods_information_map_)
   {
     if (m_created) return(false);
 
-    // set service name
+    // set service name and methods
     m_service_name = service_name_;
+    m_method_information_map = methods_information_map_;
+    
+    // initialize call count map
+    for (const auto& method_information_pair : m_method_information_map)
+    {
+      m_method_call_count_map[method_information_pair.first] = 0;
+    }
 
     // create service id
     std::stringstream counter;
@@ -82,7 +89,7 @@ namespace eCAL
     m_created = true;
 
     // register this client
-    Register(false);
+    Register(true);
 
     return(true);
   }
@@ -371,9 +378,12 @@ namespace eCAL
                             me->m_response_callback(service_response_struct);
                           }
                         };
-
+          
           if (client->second->async_call_service(request_shared_ptr, response_callback))
+          {
+            IncrementMethodCallCount(method_name_);
             at_least_one_service_was_called = true;
+          }
         }
       }
     }
@@ -535,6 +545,10 @@ namespace eCAL
               responses->back().second.ret_state    = 0;
               responses->back().second.call_state   = eCallState::call_state_failed;
             }
+            else
+            {
+              IncrementMethodCallCount(method_name_);
+            }
 
           } // unlock mutex
 
@@ -631,6 +645,26 @@ namespace eCAL
     service_client.sname   = m_service_name;
     service_client.sid     = m_service_id;
 
+
+    {
+      const std::lock_guard<std::mutex> lock(m_method_sync);
+
+      for (const auto& method_information_pair : m_method_information_map)
+      {
+        const auto& method_name = method_information_pair.first;
+        const auto& method_information = method_information_pair.second;
+
+        Service::Method method;
+        method.mname = method_name;
+        method.req_type = method_information.request_type.name;
+        method.req_desc = method_information.request_type.descriptor;
+        method.resp_type = method_information.response_type.name;
+        method.resp_desc = method_information.response_type.descriptor;
+        method.call_count = m_method_call_count_map.at(method_name);
+        service_client.methods.push_back(method);
+      }
+    }
+
     // register entity
     if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, force_);
 
@@ -684,6 +718,7 @@ namespace eCAL
     service_client.sid     = m_service_id;
     service_client.version = m_client_version;
 
+
     // unregister entity
     if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, false);
   }
@@ -736,5 +771,16 @@ namespace eCAL
       service_response.response.clear();
       m_response_callback(service_response);
     }
+  }
+
+  void CServiceClientImpl::IncrementMethodCallCount(const std::string& method_name_)
+  {
+    const std::lock_guard<std::mutex> lock(m_method_sync);
+    if (m_method_information_map.find(method_name_) == m_method_information_map.end())
+    {
+      m_method_information_map[method_name_] = SServiceMethodInformation();
+      m_method_call_count_map[method_name_] = 0;
+    }
+    ++m_method_call_count_map.at(method_name_);
   }
 }

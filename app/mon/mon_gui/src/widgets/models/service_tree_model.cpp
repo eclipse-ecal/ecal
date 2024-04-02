@@ -69,41 +69,79 @@ int ServiceTreeModel::groupColumn() const
 void ServiceTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
 {
   // Create a list of all service methods to check if we have to remove them
-  std::map<std::string, bool> service_still_existing;
-  for(const auto& service_tree_item : tree_item_map_)
+  std::map<std::string, bool> server_still_existing;
+  for(const auto& server_tree_item : tree_item_server_map_)
   {
-    service_still_existing[service_tree_item.first] = false;
+    server_still_existing[server_tree_item.first] = false;
+  }
+
+  std::map<std::string, bool> client_still_existing;
+  for (const auto& client_tree_item : tree_item_client_map_)
+  {
+    client_still_existing[client_tree_item.first] = false;
   }
 
   for (const auto& service : monitoring_pb.services())
   {
     for (const auto& method : service.methods())
     {
-      std::string service_identifier = ServiceTreeItem::generateIdentifier(service, method);
+      const std::string service_identifier = ServiceTreeItem<eCAL::pb::Service>::generateIdentifier(service, method);
 
-      if (tree_item_map_.find(service_identifier) == tree_item_map_.end())
+      if (tree_item_server_map_.find(service_identifier) == tree_item_server_map_.end())
       {
-        // Got a new service-method
-        ServiceTreeItem* service_tree_item = new ServiceTreeItem(service, method);
-        insertItemIntoGroups(service_tree_item);
-        tree_item_map_[service_identifier] = service_tree_item;
+        // Got a new server-method
+        auto* const server_tree_item = new ServiceTreeItem<eCAL::pb::Service>(service, method);
+        insertItemIntoGroups(server_tree_item);
+        tree_item_server_map_[service_identifier] = server_tree_item;
       }
       else
       {
-        // Update an existing service-method
-        tree_item_map_.at(service_identifier)->update(service, method);
-        service_still_existing[service_identifier] = true;
+        // Update an existing server-method
+        tree_item_server_map_.at(service_identifier)->update(service, method);
+        server_still_existing[service_identifier] = true;
+      }
+    }
+  }
+
+  for (const auto& client : monitoring_pb.clients())
+  {
+    for (const auto& method : client.methods())
+    {
+      const std::string client_identifier = ServiceTreeItem<eCAL::pb::Client>::generateIdentifier(client, method);
+
+      if (tree_item_client_map_.find(client_identifier) == tree_item_client_map_.end())
+      {
+        // Got a new client-method
+        auto* const client_tree_item = new ServiceTreeItem<eCAL::pb::Client>(client, method);
+        insertItemIntoGroups(client_tree_item);
+        tree_item_client_map_[client_identifier] = client_tree_item;
+      }
+      else
+      {
+        // Update an existing client-method
+        tree_item_client_map_.at(client_identifier)->update(client, method);
+        client_still_existing[client_identifier] = true;
       }
     }
   }
 
   // Remove obsolete items
-  for (const auto& service_tree_item : service_still_existing)
+  for (const auto& server_tree_item : server_still_existing)
   {
-    if (!service_tree_item.second)
+    if (!server_tree_item.second)
     {
-      removeItemFromGroups(tree_item_map_.at(service_tree_item.first));
-      tree_item_map_.erase(service_tree_item.first);
+      removeItemFromGroups(tree_item_server_map_.at(server_tree_item.first));
+      tree_item_server_map_.erase(server_tree_item.first);
+    }
+  }
+
+  // Remove obsolete items
+  for (const auto& client_tree_item : client_still_existing)
+  {
+    if (!client_tree_item.second)
+    {
+      removeItemFromGroups(tree_item_client_map_.at(client_tree_item.first));
+      tree_item_client_map_.erase(client_tree_item.first);
     }
   }
 

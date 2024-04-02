@@ -26,7 +26,10 @@
 
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_client.h>
-#include <ecal/msg/protobuf/ecal_proto_hlp.h>
+#include <ecal/msg/dynamic.h>
+#include <ecal/msg/protobuf/ecal_proto_dyn.h>
+
+
 
 // protobuf includes
 #ifdef _MSC_VER
@@ -39,6 +42,8 @@
 
 // stl includes
 #include <string>
+#include <functional>
+#include <map>
 
 namespace eCAL
 {
@@ -57,7 +62,13 @@ namespace eCAL
       **/
       CServiceClient()
       {
-        Create(T::descriptor()->full_name());
+        // As google::protobuf::Service::GetDescriptor() is defined in a protected class scope
+        // we need to inherit public from T in order to make the method accessible in our code.
+        struct U : T {};
+        std::shared_ptr<U> service = std::make_shared<U>();
+        const google::protobuf::ServiceDescriptor* service_descriptor = service->GetDescriptor();
+
+        Create(service_descriptor->full_name(), CreateMethodInformationMap());
       }
 
       /**
@@ -67,7 +78,7 @@ namespace eCAL
       **/
       explicit CServiceClient(const std::string& service_name_)
       {
-        Create(service_name_);
+        Create(service_name_, CreateMethodInformationMap());
       }
 
       /**
@@ -189,6 +200,45 @@ namespace eCAL
 
       using eCAL::CServiceClient::Call;
       using eCAL::CServiceClient::CallAsync;
+    private:
+      ServiceMethodInformationMapT CreateMethodInformationMap()
+      {
+        // As google::protobuf::Service::GetDescriptor() is defined in a protected class scope
+        // we need to inherit public from T in order to make the method accessible in our code.
+        struct U : T {};
+        std::shared_ptr<U> service = std::make_shared<U>();
+        const google::protobuf::ServiceDescriptor* service_descriptor = service->GetDescriptor();
+
+        std::string error_s;
+        ServiceMethodInformationMapT method_information_map;
+        CProtoDynDecoder dyn_decoder;
+        for (int i = 0; i < service_descriptor->method_count(); ++i)
+        {
+          // get method name and descriptor
+          const google::protobuf::MethodDescriptor* method_descriptor = service_descriptor->method(i);
+          const std::string method_name = method_descriptor->name();
+
+          // get message type names
+          const std::string request_type_name = method_descriptor->input_type()->name();
+          const std::string response_type_name = method_descriptor->output_type()->name();
+
+          // get message type descriptors
+          std::string request_type_descriptor;
+          std::string response_type_descriptor;
+
+          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, request_type_name, request_type_descriptor, error_s);
+          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, response_type_name, response_type_descriptor, error_s);
+
+
+          method_information_map[method_name] = SServiceMethodInformation({
+            {request_type_name, "proto", request_type_descriptor} ,
+            {response_type_name, "proto", response_type_descriptor}
+            });
+
+        }
+
+        return method_information_map;
+      }
     };
   }
 }

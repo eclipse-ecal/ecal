@@ -25,10 +25,12 @@
 #pragma once
 
 #include <ecal/cimpl/ecal_service_info_cimpl.h>
+#include <ecal/ecal_types.h>
 
 #include <functional>
 #include <string>
 #include <vector>
+#include <map>
 
 namespace eCAL
 {
@@ -70,4 +72,6 @@ namespace eCAL
    * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
   **/
   using ResponseCallbackT = std::function<void (const struct SServiceResponse &)>;
+
+  using ServiceMethodInformationMapT = std::map<std::string, SServiceMethodInformation>;
 }

@@ -174,9 +174,23 @@ namespace eCAL
           monitoring1.clients[i].pid != monitoring2.clients[i].pid ||
           monitoring1.clients[i].sname != monitoring2.clients[i].sname ||
           monitoring1.clients[i].sid != monitoring2.clients[i].sid ||
+          monitoring1.clients[i].methods.size() != monitoring2.clients[i].methods.size() ||
           monitoring1.clients[i].version != monitoring2.clients[i].version)
         {
           return false;
+        }
+
+        for (size_t j = 0; j < monitoring1.clients[i].methods.size(); ++j)
+        {
+          if (monitoring1.clients[i].methods[j].mname != monitoring2.clients[i].methods[j].mname ||
+            monitoring1.clients[i].methods[j].req_type != monitoring2.clients[i].methods[j].req_type ||
+            monitoring1.clients[i].methods[j].req_desc != monitoring2.clients[i].methods[j].req_desc ||
+            monitoring1.clients[i].methods[j].resp_type != monitoring2.clients[i].methods[j].resp_type ||
+            monitoring1.clients[i].methods[j].resp_desc != monitoring2.clients[i].methods[j].resp_desc ||
+            monitoring1.clients[i].methods[j].call_count != monitoring2.clients[i].methods[j].call_count)
+          {
+            return false;
+          }
         }
       }
 

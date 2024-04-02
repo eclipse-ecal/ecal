@@ -41,7 +41,7 @@ namespace eCAL
   {
   public:
     static std::shared_ptr<CServiceClientImpl> CreateInstance();
-    static std::shared_ptr<CServiceClientImpl> CreateInstance(const std::string& service_name_);
+    static std::shared_ptr<CServiceClientImpl> CreateInstance(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
   
   private:
     CServiceClientImpl();
@@ -49,7 +49,7 @@ namespace eCAL
   public:
     ~CServiceClientImpl();
 
-    bool Create(const std::string& service_name_);
+    bool Create(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
 
     bool Destroy();
 
@@ -102,6 +102,8 @@ namespace eCAL
 
     void ErrorCallback(const std::string &method_name_, const std::string &error_message_);
 
+    void IncrementMethodCallCount(const std::string& method_name_);
+
     using ClientMapT = std::map<std::string, std::shared_ptr<eCAL::service::ClientSession>>;
     std::mutex            m_client_map_sync;
     ClientMapT            m_client_map;
@@ -122,6 +124,12 @@ namespace eCAL
     std::string           m_service_name;
     std::string           m_service_id;
     std::string           m_host_name;
+
+    std::mutex                   m_method_sync;
+    ServiceMethodInformationMapT m_method_information_map;
+
+    using MethodCallCountMapT = std::map<std::string, uint64_t>;
+    MethodCallCountMapT  m_method_call_count_map;
 
     std::atomic<bool>     m_created;
   };
