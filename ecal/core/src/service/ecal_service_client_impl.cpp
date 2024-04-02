@@ -718,24 +718,6 @@ namespace eCAL
     service_client.sid     = m_service_id;
     service_client.version = m_client_version;
 
-    {
-      const std::lock_guard<std::mutex> lock(m_method_sync);
-
-      for (const auto& method_information_pair : m_method_information_map)
-      {
-        const auto& method_name = method_information_pair.first;
-        const auto& method_information = method_information_pair.second;
-
-        Service::Method method;
-        method.mname = method_name;
-        method.req_type = method_information.request_type.name;
-        method.req_desc = method_information.request_type.descriptor;
-        method.resp_type = method_information.response_type.name;
-        method.resp_desc = method_information.response_type.descriptor;
-        method.call_count = m_method_call_count_map.at(method_name);
-        service_client.methods.push_back(method);
-      }
-    }
 
     // unregister entity
     if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, false);

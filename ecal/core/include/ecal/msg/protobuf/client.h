@@ -62,6 +62,8 @@ namespace eCAL
       **/
       CServiceClient()
       {
+        // As google::protobuf::Service::GetDescriptor() is defined in a protected class scope
+        // we need to inherit public from T in order to make the method accessible in our code.
         struct U : T {};
         std::shared_ptr<U> service = std::make_shared<U>();
         const google::protobuf::ServiceDescriptor* service_descriptor = service->GetDescriptor();
@@ -201,6 +203,8 @@ namespace eCAL
     private:
       ServiceMethodInformationMapT CreateMethodInformationMap()
       {
+        // As google::protobuf::Service::GetDescriptor() is defined in a protected class scope
+        // we need to inherit public from T in order to make the method accessible in our code.
         struct U : T {};
         std::shared_ptr<U> service = std::make_shared<U>();
         const google::protobuf::ServiceDescriptor* service_descriptor = service->GetDescriptor();
@@ -215,20 +219,20 @@ namespace eCAL
           const std::string method_name = method_descriptor->name();
 
           // get message type names
-          const std::string input_type_name = method_descriptor->input_type()->name();
-          const std::string output_type_name = method_descriptor->output_type()->name();
+          const std::string request_type_name = method_descriptor->input_type()->name();
+          const std::string response_type_name = method_descriptor->output_type()->name();
 
           // get message type descriptors
-          std::string input_type_desc;
-          std::string output_type_desc;
+          std::string request_type_descriptor;
+          std::string response_type_descriptor;
 
-          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, input_type_name, input_type_desc, error_s);
-          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, output_type_name, output_type_desc, error_s);
+          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, request_type_name, request_type_descriptor, error_s);
+          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, response_type_name, response_type_descriptor, error_s);
 
 
           method_information_map[method_name] = SServiceMethodInformation({
-            {input_type_name, "protobuf", input_type_desc} ,
-            {output_type_name, "protobuf", output_type_desc}
+            {request_type_name, "protobuf", request_type_descriptor} ,
+            {response_type_name, "protobuf", response_type_descriptor}
             });
 
         }
