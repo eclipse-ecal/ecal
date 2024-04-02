@@ -35,6 +35,7 @@
 
 #include "config/ecal_config_reader_hlp.h"
 #include "io/udp/ecal_udp_configurations.h"
+#include "ecal/types/ecal_config_types.h"
 
 #include <algorithm>
 #include <array>
@@ -211,7 +212,7 @@ namespace eCAL
 #if ECAL_CORE_SUBSCRIBER
       sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------" << '\n';
       sstream << "Layer Mode UDP MC        : " << LayerMode(Config::GetCurrentConfig()->receiving_options.udp_mc_recv_enabled)  << '\n';
-      sstream << "Drop out-of-order msgs   : " << (Config::Experimental::GetDropOutOfOrderMessages() ? "on" : "off") << '\n';
+      sstream << "Drop out-of-order msgs   : " << (Config::GetCurrentConfig()->transport_layer_options.drop_out_of_order_messages ? "on" : "off") << '\n';
 #endif
 #ifdef ECAL_NPCAP_SUPPORT
       if(Config::GetCurrentConfig()->transport_layer_options.mc_options.npcap_enabled && !Udpcap::Initialize())
@@ -249,7 +250,7 @@ namespace eCAL
 
     std::string GetHostGroupName()
     {
-      return Config::GetHostGroupName().empty() ? GetHostName() : Config::GetHostGroupName();
+      return Config::GetCurrentConfig()->transport_layer_options.shm_options.host_group_name.empty() ? GetHostName() : Config::GetCurrentConfig()->transport_layer_options.shm_options.host_group_name;
     }
 
     std::string GetUnitName()

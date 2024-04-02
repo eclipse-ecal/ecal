@@ -74,7 +74,6 @@ constexpr char NET_UDP_MULTICAST_MASK[]                                   = "0.0
 constexpr unsigned int NET_UDP_MULTICAST_PORT                             = 14000U;
 constexpr unsigned int NET_UDP_MULTICAST_TTL                              = 3U;
 constexpr unsigned int NET_UDP_MULTICAST_PORT_REG_OFF                     = 0U;
-constexpr unsigned int NET_UDP_MULTICAST_PORT_LOG_OFF                     = 1U;
 constexpr unsigned int NET_UDP_MULTICAST_PORT_SAMPLE_OFF                  = 2U;
 constexpr unsigned int NET_UDP_MULTICAST_PORT_LOG_OFF                     = 4U;
 constexpr unsigned int NET_UDP_MULTICAST_SNDBUF                           = (5U*1024U*1024U);  /* 5 MByte */
@@ -189,8 +188,8 @@ constexpr char EVENT_SHUTDOWN_PROC[]                        = "ecal_shutdown_pro
 /**********************************************************************************************/
 /* enable distribution of monitoring/registration information via shared memory */
 constexpr bool EXP_SHM_MONITORING_ENABLED                   = false;
-/* disable distribution of monitoring/registration information via network (default) */
-constexpr bool EXP_NETWORK_MONITORING_DISABLED              = false;
+/* enable distribution of monitoring/registration information via network (default) */
+constexpr bool EXP_NETWORK_MONITORING_ENABLED              = true;
 /* queue size of monitoring/registration events  */
 constexpr size_t EXP_SHM_MONITORING_QUEUE_SIZE              = 1024U;
 /* domain name for shared memory based monitoring/registration */

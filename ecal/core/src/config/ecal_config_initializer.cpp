@@ -137,7 +137,7 @@ namespace eCAL
       auto& monitoringOptions = config.monitoring_options;
       monitoringOptions.monitoring_mode             = EXP_MONITORING_MODE;
       monitoringOptions.monitoring_timeout          = MON_TIMEOUT;
-      monitoringOptions.network_monitoring_disabled = EXP_NETWORK_MONITORING_DISABLED;
+      monitoringOptions.network_monitoring = EXP_NETWORK_MONITORING_ENABLED;
       monitoringOptions.filter_excl                 = MON_FILTER_EXCL;
       monitoringOptions.filter_incl                 = MON_FILTER_INCL;
       monitoringOptions.filter_log_con              = MON_LOG_FILTER_CON;
@@ -238,7 +238,7 @@ namespace eCAL
       auto  monitoringMode                          = iniConfig.get(EXPERIMENTAL, "shm_monitoring_enabled",      false) == true ? MonitoringMode::shm_monitoring : MonitoringMode::none;
       monitoringOptions.monitoring_mode             = monitoringMode;
       monitoringOptions.monitoring_timeout          = iniConfig.get(MONITORING,   "timeout", MON_TIMEOUT);;
-      monitoringOptions.network_monitoring_disabled = iniConfig.get(EXPERIMENTAL, "network_monitoring_disabled", EXP_NETWORK_MONITORING_DISABLED);
+      monitoringOptions.network_monitoring          = iniConfig.get(EXPERIMENTAL, "network_monitoring", EXP_NETWORK_MONITORING_ENABLED);
       monitoringOptions.filter_excl                 = iniConfig.get(MONITORING,   "filter_excl",                 MON_FILTER_EXCL);
       monitoringOptions.filter_incl                 = iniConfig.get(MONITORING,   "filter_incl",                 MON_FILTER_INCL);
       monitoringOptions.filter_log_con              = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_con",  "info,warning,error,fatal"));

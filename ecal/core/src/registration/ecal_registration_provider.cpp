@@ -63,9 +63,8 @@ namespace eCAL
     if(m_created) return;
 
     // send registration to shared memory and to udp
-    // TODO PG: Check for new config
-    m_use_registration_udp = !Config::Experimental::IsNetworkMonitoringDisabled();
-    m_use_registration_shm = Config::Experimental::IsShmMonitoringEnabled();
+    m_use_registration_udp = Config::GetCurrentConfig()->monitoring_options.network_monitoring;
+    m_use_registration_shm = (Config::GetCurrentConfig()->monitoring_options.monitoring_mode & Config::MonitoringMode::shm_monitoring) ? true : false;
 
     if (m_use_registration_udp)
     {
