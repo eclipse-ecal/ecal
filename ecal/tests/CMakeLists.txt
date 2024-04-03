@@ -30,7 +30,7 @@ add_subdirectory(cpp/core_test)
 
 
 
-
+add_subdirectory(cpp/config_test)
 add_subdirectory(cpp/event_test)
 add_subdirectory(cpp/expmap_test)
 add_subdirectory(cpp/serialization_test)
