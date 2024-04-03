@@ -66,9 +66,8 @@ namespace eCAL
 
   Config::eCALConfig* g_ecal_config()
   {
-    // TODO PG: discuss the priority
     if (g_globals() == nullptr) return(nullptr);
-    if (g_globals()->ecal_config() != nullptr) return(g_globals()->ecal_config().get());
+    return(g_globals()->ecal_config().get());
   }
 
 #if ECAL_CORE_MONITORING
