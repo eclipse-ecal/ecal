@@ -34,7 +34,7 @@ namespace eCAL
   namespace Config
   {
     /**
-     * @brief  Class for evaluation and storing IP addresses.
+     * @brief  Class for evaluation and storing an IP address.
      *
      * @param ip_adress_  The IP address as std::string.
     **/
@@ -67,24 +67,21 @@ namespace eCAL
     public:
       LimitSize(int size_ = MIN)
       {
-        if (size_ >= m_size_min && size_ <= m_size_max && size_ % m_size_step == 0)
+        if (size_ >= MIN && size_ <= MAX && size_ % STEP == 0)
         {
           m_size = size_;
         }
         else
         {
-          std::cout << "LimitSize: faulty size configuration or assignment - using minimum size " << m_size_min << std::endl;
+          std::cerr << "[LimitSize] Faulty size configuration or assignment. MIN: " << MIN << " MAX: " << MAX << " STEP: " << STEP << " VALUE:" << size_ << "\n";
+          exit(EXIT_FAILURE);
         }
       };
 
       int get() { return m_size; };
 
     private:
-      int       m_size_min  = MIN;
-      int       m_size_max  = MAX;
-      int       m_size_step = STEP;
-
-      int m_size = MIN;
+      int m_size;
     };
 
     enum class UdpConfigVersion

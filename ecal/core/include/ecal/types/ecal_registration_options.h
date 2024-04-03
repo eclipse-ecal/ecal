@@ -44,7 +44,8 @@ namespace eCAL
           }
           else
           {
-            std::cout << "RegistrationOptions: custom registration refresh >= registration timout. Using default values." << "\n";
+            std::cerr << "[RegistrationOptions] Refresh(" << reg_refresh_ << ") >= registration timeout (" << reg_timeout_ << ")." << "\n";
+            exit(EXIT_FAILURE);
           }
         };
 

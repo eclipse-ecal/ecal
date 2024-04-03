@@ -58,7 +58,7 @@ namespace eCAL
         ApplicationOptions    application_options;
         std::string           loaded_ecal_ini_file;
 
-        eCALConfig();
+        eCALConfig(const std::vector<std::string>* config_keys_ = nullptr);
     };
 
     ECAL_API eCALConfig* GetCurrentConfig();

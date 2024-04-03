@@ -38,7 +38,8 @@ namespace eCAL
       }
       else
       {
-        std::cout << "IpAddressV4 error: check your IpAddress settings." << std::endl;
+        std::cerr << "[IpAddressV4] No valid IPv4 address: " << ip_address_ << "\n";
+        exit(EXIT_FAILURE);
       }
     } 
 
