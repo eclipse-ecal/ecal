@@ -1,8 +1,9 @@
+include_guard(GLOBAL)
+
 set(YAML_CPP_BUILD_TESTS OFF CACHE BOOL "My option" FORCE)
 set(YAML_MSVC_SHARED_RT ON CACHE BOOL "My option" FORCE)
 set(YAML_BUILD_SHARED_LIBS OFF CACHE BOOL "My option" FORCE)
 set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "My option" FORCE)
 set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL "My option" FORCE)
-add_subdirectory(thirdparty/yaml-cpp/yaml-cpp EXCLUDE_FROM_ALL)
-
-list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/yaml-cpp thirdparty/yaml-cpp EXCLUDE_FROM_ALL SYSTEM)
+set_property(TARGET yaml-cpp PROPERTY FOLDER thirdparty/yaml-cpp)

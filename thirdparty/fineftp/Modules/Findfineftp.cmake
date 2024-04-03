@@ -1,1 +1,0 @@
-set(fineftp_FOUND TRUE)

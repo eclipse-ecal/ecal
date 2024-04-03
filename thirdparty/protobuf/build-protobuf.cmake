@@ -1,9 +1,11 @@
+include_guard(GLOBAL)
+
 set(protobuf_BUILD_TESTS OFF CACHE BOOL "My option" FORCE)
 set(protobuf_MSVC_STATIC_RUNTIME OFF CACHE BOOL "My option" FORCE)
 if(UNIX)
   set(protobuf_BUILD_SHARED_LIBS ON CACHE BOOL "My option" FORCE)
 endif()
-add_subdirectory(thirdparty/protobuf/protobuf/cmake)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/protobuf/cmake thirdparty/protobuf SYSTEM)
 
 if (NOT TARGET protobuf::libprotobuf)
   add_library(protobuf::libprotobuf ALIAS libprotobuf)
@@ -46,7 +48,22 @@ if (NOT is_imported)
   )
 endif()
 
+if (TARGET libprotobuf)
+set_property(TARGET libprotobuf PROPERTY FOLDER thirdparty/protobuf)
+endif ()
+
+if (TARGET libprotobuf-lite)
+set_property(TARGET libprotobuf-lite PROPERTY FOLDER thirdparty/protobuf)
+endif () 
+
+if (TARGET libprotoc)
+set_property(TARGET libprotoc PROPERTY FOLDER thirdparty/protobuf)
+endif ()
+
+if (TARGET protoc)
+set_property(TARGET protoc PROPERTY FOLDER thirdparty/protobuf)
+endif ()
+
+
 set(Protobuf_PROTOC_EXECUTABLE protoc)
 set(Protobuf_VERSION 3.11.4)
-
-list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules)
