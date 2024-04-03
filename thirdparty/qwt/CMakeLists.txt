@@ -294,10 +294,10 @@ if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 endif()
 
 # Check if the library is built as a shared library
-get_target_property(QWT_LIBRARY_TYPE qwt TYPE)
+get_target_property(QWT_TARGET_PROPERTY_TYPE qwt TYPE)
 
 target_compile_definitions(qwt PRIVATE QWT_MOC_INCLUDE)
-if(QWT_LIBRARY_TYPE STREQUAL "SHARED_LIBRARY")
+if(QWT_TARGET_PROPERTY_TYPE STREQUAL "SHARED_LIBRARY")
     target_compile_definitions(qwt PUBLIC QWT_DLL)
     target_compile_definitions(qwt PRIVATE QWT_MAKEDLL)
 endif()
@@ -309,7 +309,7 @@ install(TARGETS qwt
 )
 
 # For shared libs we need to deploy the Qt DLLs
-if(QWT_LIBRARY_TYPE STREQUAL "SHARED_LIBRARY")
+if(QWT_TARGET_PROPERTY_TYPE STREQUAL "SHARED_LIBRARY")
     if ((WIN32 OR APPLE) AND (${QT_VERSION_MAJOR} GREATER_EQUAL 6))
 
         # Generate a script that will deploy all necessary Qt DLLs to the binary folder
