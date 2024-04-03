@@ -24,6 +24,8 @@
 
 #pragma once
 
+#include "ecal/ecal_os.h"
+
 #include <string>
 #include <iostream>
 #include <regex>
@@ -40,9 +42,9 @@ namespace eCAL
     **/
     class IpAddressV4
     {
-    public:
+    public:      
       IpAddressV4() = default;
-      IpAddressV4(const std::string ip_address_);  
+      ECAL_API IpAddressV4(const std::string ip_address_);  
              
       const std::string get() { return m_ip_address; }
 

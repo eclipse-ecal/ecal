@@ -61,6 +61,11 @@ namespace eCAL
     if (ecal_config_instance == nullptr)
     {
       ecal_config_instance = std::make_unique<Config::eCALConfig>();
+      
+      if (config_keys_)
+      {
+        // Config key handling here
+      }
     }
 
 #if ECAL_CORE_REGISTRATION
