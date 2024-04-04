@@ -20,6 +20,8 @@ nanobind_add_module(
   main.cpp
 )
 
+target_link_libraries(nanobind_core PRIVATE eCAL::core)
+
 # Install directive for scikit-build-core
 install(TARGETS nanobind_core LIBRARY DESTINATION nanobind_core)
 
