@@ -80,8 +80,14 @@ namespace eCAL
         }
       };
 
-      int get() { return m_size; };
-
+      const int get() const { return m_size; };
+      
+      bool operator==(const LimitSize& other) const { return this->m_size == other.get(); };
+      friend bool operator==(const LimitSize& lhs, const int& rhs) { return lhs.get() == rhs; };
+      friend bool operator==(const int& lhs, const LimitSize& rhs) { return rhs == lhs; };
+      friend bool operator==(const LimitSize& lhs, const unsigned int& rhs) { return lhs.get() == static_cast<int>(rhs); };
+      friend bool operator==(const unsigned int& lhs, const LimitSize& rhs) { return rhs == lhs; };
+      
     private:
       int m_size;
     };
