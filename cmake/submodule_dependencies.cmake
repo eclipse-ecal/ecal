@@ -23,6 +23,7 @@ set(ecal_submodule_dependencies
   tinyxml2
   udpcap
   yaml-cpp
+  ecaludp
 )
 
 set(ecal_inproject_dependencies
