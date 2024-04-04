@@ -49,6 +49,7 @@ ServiceWidget::ServiceWidget(QWidget *parent)
     (int)ServiceTreeModel::Columns::UNIT_NAME,
     (int)ServiceTreeModel::Columns::PID,
     (int)ServiceTreeModel::Columns::SERVICE_NAME,
+    (int)ServiceTreeModel::Columns::SERVICE_TYPE,
     (int)ServiceTreeModel::Columns::TCP_PORT,
     (int)ServiceTreeModel::Columns::METHOD_NAME,
     (int)ServiceTreeModel::Columns::METHOD_REQUEST_TYPE,
@@ -79,6 +80,7 @@ ServiceWidget::ServiceWidget(QWidget *parent)
   {
     (int)ServiceTreeModel::Columns::UNIT_NAME,
     (int)ServiceTreeModel::Columns::SERVICE_NAME,
+    (int)ServiceTreeModel::Columns::SERVICE_TYPE,
     (int)ServiceTreeModel::Columns::HOST_NAME,
     (int)ServiceTreeModel::Columns::PID,
     (int)ServiceTreeModel::Columns::METHOD_NAME,
@@ -122,7 +124,7 @@ void ServiceWidget::autoSizeColumns()
   method->set_resp_type("ShutdownProcessNameResponse____");
   method->set_call_count(999999);
 
-  ServiceTreeItem* example_topic_item = new ServiceTreeItem(example_service_pb, *method);
+  auto* example_topic_item = new ServiceTreeItem<eCAL::pb::Service>(example_service_pb, *method);
   GroupTreeItem* example_group_item = new GroupTreeItem("__ / eCALRPCService____", "", "", QVariant(), "");
 
   service_tree_model_->insertItem(example_topic_item);

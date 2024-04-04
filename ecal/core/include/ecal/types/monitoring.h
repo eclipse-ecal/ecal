@@ -170,6 +170,8 @@ namespace eCAL
       std::string  sname;                                       //<! service name
       std::string  sid;                                         //<! service id
 
+      std::vector<SMethodMon>  methods;                         //<! list of methods
+
       uint32_t     version{0};                                  //<! client protocol version
     };
 

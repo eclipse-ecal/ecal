@@ -52,6 +52,19 @@ namespace eCAL
   }
 
   /**
+   * @brief Constructor.
+   *
+   * @param service_name_  Service name.
+   * @param method_information_map_  Map of method names and corresponding datatype information.
+  **/
+  CServiceClient::CServiceClient(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_) :
+    m_service_client_impl(nullptr),
+    m_created(false)
+  {
+    Create(service_name_, method_information_map_);
+  }
+
+  /**
    * @brief Destructor. 
   **/
   CServiceClient::~CServiceClient()
@@ -68,10 +81,22 @@ namespace eCAL
   **/
   bool CServiceClient::Create(const std::string& service_name_)
   {
-    if(m_created) return(false);
+    return Create(service_name_, ServiceMethodInformationMapT());
+  }
 
-    m_service_client_impl = CServiceClientImpl::CreateInstance(service_name_);
-    m_service_client_impl->Create(service_name_);
+  /**
+   * @brief Creates this object.
+   *
+   * @param service_name_  Service name.
+   * @param method_information_map_  Map of method names and corresponding datatype information.
+   *
+   * @return  True if successful.
+  **/
+  bool CServiceClient::Create(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
+  {
+    if (m_created) return(false);
+
+    m_service_client_impl = CServiceClientImpl::CreateInstance(service_name_, method_information_map_);
 
     // register this client
     if (g_clientgate() != nullptr) g_clientgate()->Register(m_service_client_impl.get());

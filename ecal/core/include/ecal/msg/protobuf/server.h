@@ -137,6 +137,8 @@ namespace eCAL
         }
 
         std::string error_s;
+        CProtoDynDecoder dyn_decoder;
+
         for (int i = 0; i < service_descriptor->method_count(); ++i)
         {
           // get method name and descriptor
@@ -151,8 +153,8 @@ namespace eCAL
           // get message type descriptors
           std::string input_type_desc;
           std::string output_type_desc;
-          GetServiceMessageDescFromType(service_descriptor, input_type_name, input_type_desc, error_s);
-          GetServiceMessageDescFromType(service_descriptor, output_type_name, output_type_desc, error_s);
+          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, input_type_name, input_type_desc, error_s);
+          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, output_type_name, output_type_desc, error_s);
 
           // store descriptions
           AddDescription(method_name, input_type_name, input_type_desc, output_type_name, output_type_desc);
@@ -211,28 +213,6 @@ namespace eCAL
 
         return 0;
       };
-
-      bool GetServiceMessageDescFromType(const google::protobuf::ServiceDescriptor* service_desc_, const std::string& type_name_, std::string& type_desc_, std::string& error_s_)
-      {
-        eCAL::protobuf::CProtoDynDecoder msg_decoder;
-
-        const google::protobuf::FileDescriptor* file_desc = service_desc_->file();
-        if (file_desc == nullptr) return false;
-
-        std::string file_desc_s = file_desc->DebugString();
-        google::protobuf::FileDescriptorProto file_desc_proto;
-        if (!msg_decoder.GetFileDescriptorFromString(file_desc_s, &file_desc_proto, error_s_)) return false;
-
-        google::protobuf::FileDescriptorSet pset;
-        google::protobuf::FileDescriptorProto* pdesc = pset.add_file();
-        pdesc->CopyFrom(file_desc_proto);
-
-        std::shared_ptr<google::protobuf::Message> req_msg(msg_decoder.GetProtoMessageFromDescriptorSet(pset, type_name_, error_s_));
-        if (!req_msg) return false;
-
-        type_desc_ = pset.SerializeAsString();
-        return true;
-      }
 
       std::shared_ptr<T>                                                m_service;
       std::map<std::string, const google::protobuf::MethodDescriptor*>  m_methods;

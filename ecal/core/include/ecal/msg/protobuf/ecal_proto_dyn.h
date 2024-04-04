@@ -172,6 +172,8 @@ namespace eCAL
       **/
       bool GetFileDescriptorFromString(const std::string& proto_string_, google::protobuf::FileDescriptorProto* file_desc_proto_, std::string& error_s_);
 
+      bool GetServiceMessageDescFromType(const google::protobuf::ServiceDescriptor* service_desc_, const std::string& type_name_, std::string& type_desc_, std::string& error_s_);
+
     protected:
       google::protobuf::DescriptorPool        m_descriptor_pool;
       google::protobuf::DynamicMessageFactory m_message_factory;
@@ -414,6 +416,26 @@ namespace eCAL
       }
 
       return (true);
+    }
+
+    inline bool CProtoDynDecoder::GetServiceMessageDescFromType(const google::protobuf::ServiceDescriptor* service_desc_, const std::string& type_name_, std::string& type_desc_, std::string& error_s_)
+    {
+      const google::protobuf::FileDescriptor* file_desc = service_desc_->file();
+      if (file_desc == nullptr) return false;
+
+      const std::string file_desc_s = file_desc->DebugString();
+      google::protobuf::FileDescriptorProto file_desc_proto;
+      if (!GetFileDescriptorFromString(file_desc_s, &file_desc_proto, error_s_)) return false;
+
+      google::protobuf::FileDescriptorSet pset;
+      google::protobuf::FileDescriptorProto* pdesc = pset.add_file();
+      pdesc->CopyFrom(file_desc_proto);
+
+      const std::shared_ptr<google::protobuf::Message> req_msg(GetProtoMessageFromDescriptorSet(pset, type_name_, error_s_));
+      if (!req_msg) return false;
+
+      type_desc_ = pset.SerializeAsString();
+      return true;
     }
   }
 }
