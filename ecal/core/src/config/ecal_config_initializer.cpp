@@ -236,7 +236,7 @@ namespace eCAL
       // monitoring options
       auto& monitoringOptions = config.monitoring_options;
       auto  monitoringMode                          = iniConfig.get(EXPERIMENTAL, "shm_monitoring_enabled",      false) == true ? MonitoringMode::shm_monitoring : MonitoringMode::none;
-      monitoringOptions.monitoring_mode             = monitoringMode;
+      monitoringOptions.monitoring_mode             = static_cast<eCAL_MonitoringMode_Filter>(monitoringMode);
       monitoringOptions.monitoring_timeout          = iniConfig.get(MONITORING,   "timeout", MON_TIMEOUT);;
       monitoringOptions.network_monitoring          = iniConfig.get(EXPERIMENTAL, "network_monitoring", EXP_NETWORK_MONITORING_ENABLED);
       monitoringOptions.filter_excl                 = iniConfig.get(MONITORING,   "filter_excl",                 MON_FILTER_EXCL);

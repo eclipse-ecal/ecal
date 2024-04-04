@@ -76,7 +76,7 @@ namespace eCAL
     // add new session and activate callback if we add the first session
     if (new_session)
     {
-      m_subscriber->addSession(host_name_, port_, Config::GetCurrentConfig()->transport_layer_options.tcp_options.max_reconnections);
+      m_subscriber->addSession(host_name_, port_, static_cast<int>(Config::GetCurrentConfig()->transport_layer_options.tcp_options.max_reconnections));
       if (!m_callback_active)
       {
         m_subscriber->setCallback(std::bind(&CDataReaderTCP::OnTcpMessage, this, std::placeholders::_1));
