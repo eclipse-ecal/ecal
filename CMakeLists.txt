@@ -135,6 +135,7 @@ option(ECAL_THIRDPARTY_BUILD_TCP_PUBSUB        "Build tcp_pubsub library with eC
 option(ECAL_THIRDPARTY_BUILD_TERMCOLOR         "Build termcolor with eCAL"                                         ON)
 option(ECAL_THIRDPARTY_BUILD_TINYXML2          "Build tinyxml2 with eCAL"                                          ON)
 option(ECAL_THIRDPARTY_BUILD_UDPCAP            "Build udpcap library with eCAL"                                   OFF)
+option(ECAL_THIRDPARTY_BUILD_ECALUDP           "Build the builtin ecaludp library from the submodule"              ON)
 
 if(WIN32)
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                          ON)
@@ -234,7 +235,8 @@ set(possible_subprojects
   tinyxml2
   udpcap
   yaml-cpp
-  #zlib zlibstatic  
+  #zlib zlibstatic
+  ecaludp
 )
 
 # We should rename the option, but don't know how to do in in a
@@ -588,6 +590,7 @@ message(STATUS "ECAL_THIRDPARTY_BUILD_TERMCOLOR                : ${ECAL_THIRDPAR
 message(STATUS "ECAL_THIRDPARTY_BUILD_TINYXML2                 : ${ECAL_THIRDPARTY_BUILD_TINYXML2}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_UDPCAP                   : ${ECAL_THIRDPARTY_BUILD_UDPCAP}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_YAML-CPP                 : ${ECAL_THIRDPARTY_BUILD_YAML-CPP}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_ECALUDP                  : ${ECAL_THIRDPARTY_BUILD_ECALUDP}")
 message(STATUS "ECAL_LINK_HDF5_SHARED                          : ${ECAL_LINK_HDF5_SHARED}")
 message(STATUS "CPACK_PACK_WITH_INNOSETUP                      : ${CPACK_PACK_WITH_INNOSETUP}")
 message(STATUS "--------------------------------------------------------------------------------")
