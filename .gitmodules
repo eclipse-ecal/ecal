@@ -57,4 +57,4 @@
 	url = https://github.com/eclipse-ecal/udpcap.git
 [submodule "thirdparty/ecaludp/ecaludp"]
 	path = thirdparty/ecaludp/ecaludp
-	url = https://github.com/eclipse-ecal/ecaludp
+	url = https://github.com/eclipse-ecal/ecaludp.git
