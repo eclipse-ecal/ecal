@@ -32,14 +32,74 @@ TEST(core_cpp_config, user_config_passing)
 {
   eCAL::Config::eCALConfig custom_config;
 
-  custom_config.transport_layer_options.network_enabled = true;
-  // initialize ecal api with custom config
+  // Test value assignments from each category
+  // How the user would utilize it
+  
+  // Transport layer options
+  bool network_enabled   = true;
+  std::string ip_address = "238.200.100.2";
+  int upd_snd_buff       = (5242880 + 1024);
+
+  custom_config.transport_layer_options.network_enabled   = network_enabled;
+  custom_config.transport_layer_options.mc_options.group  = ip_address;
+  custom_config.transport_layer_options.mc_options.sndbuf = upd_snd_buff;
+  
+  // Monitoring options
+  unsigned int mon_timeout                                 = 6000U;
+  std::string mon_filter_excl                              = "_A.*";
+  eCAL_Logging_Filter mon_log_filter_con                   = log_level_warning;
+  eCAL::Config::eCAL_MonitoringMode_Filter monitoring_mode = eCAL::Config::MonitoringMode::udp_monitoring;
+  
+  custom_config.monitoring_options.monitoring_timeout = mon_timeout;
+  custom_config.monitoring_options.filter_excl        = mon_filter_excl;
+  custom_config.monitoring_options.filter_log_con     = mon_log_filter_con;
+  custom_config.monitoring_options.monitoring_mode    = monitoring_mode;
+
+  // Publisher options
+  eCAL::TLayer::eSendMode pub_use_shm = eCAL::TLayer::eSendMode::smode_off;
+
+  custom_config.publisher_options.use_shm = pub_use_shm;
+
+  // Registration options
+  unsigned int registration_timeout = 80000U;
+  unsigned int registration_refresh = 2000U;
+  eCAL::Config::RegistrationOptions registration_options = eCAL::Config::RegistrationOptions(registration_timeout, registration_refresh);
+
+  custom_config.registration_options = registration_options;
+
+
+  // Initialize ecal api with custom config
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "user_config_passing test", eCAL::Init::Default, &custom_config));
 
-  // test if created value is accessible, default was false
-  EXPECT_EQ(true, eCAL::Config::GetCurrentConfig()->transport_layer_options.network_enabled);
+  // Test boolean assignment, default is false
+  EXPECT_EQ(network_enabled, eCAL::Config::GetCurrentConfig()->transport_layer_options.network_enabled);
 
-  // finalize eCAL API
+  // Test IP address assignment, default is 239.0.0.1
+  EXPECT_EQ(ip_address, eCAL::Config::GetCurrentConfig()->transport_layer_options.mc_options.group.get());
+
+  // Test UDP send buffer assignment, default is 5242880
+  EXPECT_EQ(upd_snd_buff, eCAL::Config::GetCurrentConfig()->transport_layer_options.mc_options.sndbuf);
+
+  // Test monitoring timeout assignment, default is 5000U
+  EXPECT_EQ(mon_timeout, eCAL::Config::GetCurrentConfig()->monitoring_options.monitoring_timeout);
+
+  // Test monitoring filter exclude assignment, default is "_.*"
+  EXPECT_EQ(mon_filter_excl, eCAL::Config::GetCurrentConfig()->monitoring_options.filter_excl);
+
+  // Test monitoring console log assignment, default is (log_level_info | log_level_warning | log_level_error | log_level_fatal)
+  EXPECT_EQ(mon_log_filter_con, eCAL::Config::GetCurrentConfig()->monitoring_options.filter_log_con);
+
+  // Test monitoring mode assignment, default iseCAL::Config::MonitoringMode::none
+  EXPECT_EQ(monitoring_mode, eCAL::Config::GetCurrentConfig()->monitoring_options.monitoring_mode);
+
+  // Test publisher sendmode assignment, default is eCAL::TLayer::eSendMode::smode_auto
+  EXPECT_EQ(pub_use_shm, eCAL::Config::GetCurrentConfig()->publisher_options.use_shm);
+
+  // Test registration option assignment, default timeout is 60000U and default refresh is 1000U
+  EXPECT_EQ(registration_timeout, eCAL::Config::GetCurrentConfig()->registration_options.getTimeoutMS());
+  EXPECT_EQ(registration_refresh, eCAL::Config::GetCurrentConfig()->registration_options.getRefreshMS());
+
+  // Finalize eCAL API
   EXPECT_EQ(0, eCAL::Finalize());
 }
 
@@ -53,7 +113,18 @@ TEST(ConfigDeathTest, user_config_death_test)
     ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
 
   // Test the LimitSize class with wrong values. Default are MIN = 5242880, STEP = 1024
+  // Value below MIN
   EXPECT_EXIT(
     SetValue(custom_config.transport_layer_options.mc_options.sndbuf, 42),
+    ::testing::ExitedWithCode(EXIT_FAILURE), "LimitSize");
+  
+  // Wrong step. Default STEP = 1024
+  EXPECT_EXIT(
+    SetValue(custom_config.transport_layer_options.mc_options.sndbuf, (5242880 + 512)),
+    ::testing::ExitedWithCode(EXIT_FAILURE), "LimitSize");
+
+  // Value exceeds MAX. Default MAX = 100
+  EXPECT_EXIT(
+    SetValue(custom_config.transport_layer_options.shm_options.memfile_reserve, 150),
     ::testing::ExitedWithCode(EXIT_FAILURE), "LimitSize");
 }
