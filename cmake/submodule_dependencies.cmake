@@ -7,6 +7,7 @@ set(ecal_submodule_dependencies
   asio
   CMakeFunctions
   CURL
+  ecaludp
   fineftp
   ftxui
   GTest
@@ -23,7 +24,6 @@ set(ecal_submodule_dependencies
   tinyxml2
   udpcap
   yaml-cpp
-  ecaludp
 )
 
 set(ecal_inproject_dependencies

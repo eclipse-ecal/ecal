@@ -12,4 +12,4 @@ set(ECALUDP_LIBRARY_TYPE        STATIC)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/ecaludp thirdparty/ecaludp EXCLUDE_FROM_ALL SYSTEM)
 
 # move the ecaludp target to a subdirectory in the IDE
-set_property(TARGET ecaludp PROPERTY FOLDER lib/ecaludp)
+set_property(TARGET ecaludp PROPERTY FOLDER thirdparty/ecaludp)
