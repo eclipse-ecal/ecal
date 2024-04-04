@@ -1,6 +1,12 @@
 <RCC>
     <qresource prefix="/ecallauncher">
         <file alias="APP_ICON">ecallauncher.ico</file>
-        <file alias="APP_FONT">NEURPOLI.TTF</file>
+        <file alias="LABEL_EXIT">labels/exit.svg</file>
+        <file alias="LABEL_INFO">labels/info.svg</file>
+        <file alias="LOGO">labels/logo.svg</file>
+        <file alias="LABEL_MONITOR">labels/monitor.svg</file>
+        <file alias="LABEL_PLAY">labels/play.svg</file>
+        <file alias="LABEL_REC">labels/rec.svg</file>
+        <file alias="LABEL_SYS">labels/sys.svg</file>
     </qresource>
 </RCC>
