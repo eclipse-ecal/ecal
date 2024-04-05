@@ -1,2 +1,3 @@
-add_subdirectory(thirdparty/cmakefunctions/cmake_functions)
-list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules)
+include_guard(GLOBAL)
+
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/cmake_functions thirdparty/cmake_functions)
