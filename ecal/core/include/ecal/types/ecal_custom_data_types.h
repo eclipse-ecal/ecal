@@ -46,7 +46,7 @@ namespace eCAL
       IpAddressV4() = default;
       ECAL_API IpAddressV4(const std::string ip_address_);  
              
-      const std::string get() { return m_ip_address; }
+      std::string get() const { return m_ip_address; }
 
     private:            
       static bool checkIpString(std::string ip_address_);  
@@ -80,7 +80,7 @@ namespace eCAL
         }
       };
 
-      const int get() const { return m_size; };
+      int get() const { return m_size; };
       
       bool operator==(const LimitSize& other) const { return this->m_size == other.get(); };
       friend bool operator==(const LimitSize& lhs, const int& rhs) { return lhs.get() == rhs; };
