@@ -43,7 +43,7 @@
    <enum>Qt::PreventContextMenu</enum>
   </property>
   <property name="windowTitle">
-   <string>eCALLauncher</string>
+   <string>eCAL Launcher</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../resources/resources.qrc">
@@ -130,7 +130,6 @@
           </property>
           <property name="font">
            <font>
-            <family>Neuropolitical</family>
             <pointsize>11</pointsize>
             <weight>75</weight>
             <bold>true</bold>
@@ -164,10 +163,7 @@ QPushButton:!hover {background-color: rgb(0,0,0);color:rgb(255,200,0);padding_bo
           </property>
           <property name="font">
            <font>
-            <family>Neuropolitical</family>
             <pointsize>11</pointsize>
-            <weight>50</weight>
-            <bold>false</bold>
            </font>
           </property>
           <property name="focusPolicy">
@@ -201,20 +197,18 @@ QPushButton:!hover {background-color: rgb(0,0,0);color:rgb(255,200,0)}</string>
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="label">
-        <property name="font">
-         <font>
-          <family>Neuropolitical</family>
-          <pointsize>48</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
-         </font>
+       <widget class="QLabel" name="logo_label">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>90</height>
+         </size>
         </property>
-        <property name="styleSheet">
-         <string notr="true">QLabel {color:rgb(255,200,0)}</string>
+        <property name="pixmap">
+         <pixmap resource="../resources/resources.qrc">:/ecallauncher/LOGO</pixmap>
         </property>
-        <property name="text">
-         <string>eCAL5</string>
+        <property name="scaledContents">
+         <bool>false</bool>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -274,18 +268,19 @@ QPushButton:!hover {background-color: rgb(0,0,0);color:rgb(255,200,0)}</string>
               <height>80</height>
              </size>
             </property>
-            <property name="font">
-             <font>
-              <family>Neuropolitical</family>
-              <pointsize>22</pointsize>
-             </font>
-            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton:hover {background-color:rgb(125, 125, 125);color:rgb(0,0,0)}
 QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
             </property>
-            <property name="text">
-             <string>monitor</string>
+            <property name="icon">
+             <iconset resource="../resources/resources.qrc">
+              <normaloff>:/ecallauncher/LABEL_MONITOR</normaloff>:/ecallauncher/LABEL_MONITOR</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>1024</width>
+              <height>30</height>
+             </size>
             </property>
            </widget>
           </item>
@@ -316,15 +311,6 @@ QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
               <height>80</height>
              </size>
             </property>
-            <property name="font">
-             <font>
-              <family>Neuropolitical</family>
-              <pointsize>22</pointsize>
-              <weight>50</weight>
-              <italic>false</italic>
-              <bold>false</bold>
-             </font>
-            </property>
             <property name="focusPolicy">
              <enum>Qt::NoFocus</enum>
             </property>
@@ -335,11 +321,15 @@ QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
              <string notr="true">QPushButton:hover {background-color:rgb(125, 125, 125);color:rgb(0,0,0)}
 QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
             </property>
-            <property name="text">
-             <string>play</string>
+            <property name="icon">
+             <iconset resource="../resources/resources.qrc">
+              <normaloff>:/ecallauncher/LABEL_PLAY</normaloff>:/ecallauncher/LABEL_PLAY</iconset>
             </property>
-            <property name="flat">
-             <bool>false</bool>
+            <property name="iconSize">
+             <size>
+              <width>1024</width>
+              <height>30</height>
+             </size>
             </property>
            </widget>
           </item>
@@ -376,15 +366,6 @@ QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
               <height>50</height>
              </size>
             </property>
-            <property name="font">
-             <font>
-              <family>Neuropolitical</family>
-              <pointsize>16</pointsize>
-              <weight>50</weight>
-              <italic>false</italic>
-              <bold>false</bold>
-             </font>
-            </property>
             <property name="focusPolicy">
              <enum>Qt::NoFocus</enum>
             </property>
@@ -398,8 +379,15 @@ QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
              <string notr="true">QPushButton:hover {background-color:rgb(125, 125, 125);color:rgb(0,0,0)}
 QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
             </property>
-            <property name="text">
-             <string>info</string>
+            <property name="icon">
+             <iconset resource="../resources/resources.qrc">
+              <normaloff>:/ecallauncher/LABEL_INFO</normaloff>:/ecallauncher/LABEL_INFO</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>1024</width>
+              <height>20</height>
+             </size>
             </property>
             <property name="flat">
              <bool>false</bool>
@@ -450,18 +438,19 @@ QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
               <height>80</height>
              </size>
             </property>
-            <property name="font">
-             <font>
-              <family>Neuropolitical</family>
-              <pointsize>22</pointsize>
-             </font>
-            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton:hover {background-color:rgb(125, 125, 125);color:rgb(0,0,0)}
 QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
             </property>
-            <property name="text">
-             <string>sys</string>
+            <property name="icon">
+             <iconset resource="../resources/resources.qrc">
+              <normaloff>:/ecallauncher/LABEL_SYS</normaloff>:/ecallauncher/LABEL_SYS</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>1024</width>
+              <height>30</height>
+             </size>
             </property>
            </widget>
           </item>
@@ -492,15 +481,6 @@ QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
               <height>80</height>
              </size>
             </property>
-            <property name="font">
-             <font>
-              <family>Neuropolitical</family>
-              <pointsize>22</pointsize>
-              <weight>50</weight>
-              <italic>false</italic>
-              <bold>false</bold>
-             </font>
-            </property>
             <property name="focusPolicy">
              <enum>Qt::NoFocus</enum>
             </property>
@@ -511,8 +491,15 @@ QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
              <string notr="true">QPushButton:hover {background-color:rgb(125, 125, 125);color:rgb(0,0,0)}
 QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
             </property>
-            <property name="text">
-             <string>rec</string>
+            <property name="icon">
+             <iconset resource="../resources/resources.qrc">
+              <normaloff>:/ecallauncher/LABEL_REC</normaloff>:/ecallauncher/LABEL_REC</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>1024</width>
+              <height>30</height>
+             </size>
             </property>
             <property name="flat">
              <bool>false</bool>
@@ -549,15 +536,6 @@ QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
               <height>50</height>
              </size>
             </property>
-            <property name="font">
-             <font>
-              <family>Neuropolitical</family>
-              <pointsize>16</pointsize>
-              <weight>50</weight>
-              <italic>false</italic>
-              <bold>false</bold>
-             </font>
-            </property>
             <property name="focusPolicy">
              <enum>Qt::NoFocus</enum>
             </property>
@@ -568,8 +546,15 @@ QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
              <string notr="true">QPushButton:hover {background-color:rgb(125, 125, 125);color:rgb(0,0,0)}
 QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
             </property>
-            <property name="text">
-             <string>exit</string>
+            <property name="icon">
+             <iconset resource="../resources/resources.qrc">
+              <normaloff>:/ecallauncher/LABEL_EXIT</normaloff>:/ecallauncher/LABEL_EXIT</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>1024</width>
+              <height>20</height>
+             </size>
             </property>
             <property name="flat">
              <bool>false</bool>
@@ -615,6 +600,10 @@ QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>pushButton_monitor</tabstop>
+  <tabstop>pushButton_sys</tabstop>
+ </tabstops>
  <resources>
   <include location="../resources/resources.qrc"/>
  </resources>
