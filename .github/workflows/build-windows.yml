@@ -77,7 +77,7 @@ jobs:
         cd "${{ runner.workspace }}/_build/sdk"
 
         cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 ^
-        "-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake" ^
+        -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake ^
         -DHAS_HDF5=ON ^
         -DHAS_QT=ON ^
         -DHAS_CURL=OFF ^
@@ -108,7 +108,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_YAML-CPP=OFF ^
         -DECAL_THIRDPARTY_BUILD_UDPCAP=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
-        "-DCMAKE_PREFIX_PATH=%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
+        -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Debug ^
         -DCPACK_PACK_WITH_INNOSETUP=OFF
       shell: cmd
@@ -118,7 +118,7 @@ jobs:
         CALL "${{ runner.workspace }}\.venv\Scripts\activate.bat"
         cd "${{ runner.workspace }}/_build/complete"
         cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 ^
-        "-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake" ^        
+        -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake ^
         -DHAS_HDF5=ON ^
         -DHAS_QT=ON ^
         -DHAS_CURL=ON ^
@@ -149,7 +149,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON ^
         -DECAL_THIRDPARTY_BUILD_UDPCAP=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
-        "-DCMAKE_PREFIX_PATH=%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
+        -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Release ^
         -DCPACK_PACK_WITH_INNOSETUP=ON
         mkdir "%ALLUSERSPROFILE%\eCAL"
