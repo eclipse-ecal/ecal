@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <ctime>
 #include <list>
 #include <string>
 #include <vector>
