@@ -1,3 +1,6 @@
+set(Protobuf_PROTOC_EXECUTABLE protoc)
+set(Protobuf_VERSION 3.11.4)
+
 include_guard(GLOBAL)
 
 set(protobuf_BUILD_TESTS OFF CACHE BOOL "My option" FORCE)
@@ -5,7 +8,20 @@ set(protobuf_MSVC_STATIC_RUNTIME OFF CACHE BOOL "My option" FORCE)
 if(UNIX)
   set(protobuf_BUILD_SHARED_LIBS ON CACHE BOOL "My option" FORCE)
 endif()
+
+if(MSVC)
+  message(STATUS "supress thirdparty warnings for windows platform ..")
+  set(CMAKE_CXX_FLAGS_OLD "${CMAKE_CXX_FLAGS}")
+  if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
+    string(REGEX REPLACE "/W[0-4]" "/W0" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W0")
+  endif()
+endif()
+
+ecal_disable_all_warnings()
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/protobuf/cmake thirdparty/protobuf SYSTEM)
+ecal_restore_warning_level()
 
 if (NOT TARGET protobuf::libprotobuf)
   add_library(protobuf::libprotobuf ALIAS libprotobuf)
@@ -65,5 +81,18 @@ set_property(TARGET protoc PROPERTY FOLDER thirdparty/protobuf)
 endif ()
 
 
-set(Protobuf_PROTOC_EXECUTABLE protoc)
-set(Protobuf_VERSION 3.11.4)
+if (TARGET libprotobuf)
+set_property(TARGET libprotobuf PROPERTY FOLDER thirdparty/protobuf)
+endif ()
+
+if (TARGET libprotobuf-lite)
+set_property(TARGET libprotobuf-lite PROPERTY FOLDER thirdparty/protobuf)
+endif () 
+
+if (TARGET libprotoc)
+set_property(TARGET libprotoc PROPERTY FOLDER thirdparty/protobuf)
+endif ()
+
+if (TARGET protoc)
+set_property(TARGET protoc PROPERTY FOLDER thirdparty/protobuf)
+endif ()
