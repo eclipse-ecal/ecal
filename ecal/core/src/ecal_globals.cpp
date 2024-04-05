@@ -66,6 +66,8 @@ namespace eCAL
       {
         // Config key handling here
       }
+
+      new_initialization = true;
     }
 
 #if ECAL_CORE_REGISTRATION
