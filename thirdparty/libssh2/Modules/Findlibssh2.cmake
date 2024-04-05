@@ -1,1 +1,0 @@
-set(libssh2_FOUND TRUE)

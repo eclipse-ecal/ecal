@@ -77,6 +77,7 @@ jobs:
         cd "${{ runner.workspace }}/_build/sdk"
 
         cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 ^
+        -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake ^
         -DHAS_HDF5=ON ^
         -DHAS_QT=ON ^
         -DHAS_CURL=OFF ^
@@ -117,6 +118,7 @@ jobs:
         CALL "${{ runner.workspace }}\.venv\Scripts\activate.bat"
         cd "${{ runner.workspace }}/_build/complete"
         cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 ^
+        -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake ^
         -DHAS_HDF5=ON ^
         -DHAS_QT=ON ^
         -DHAS_CURL=ON ^

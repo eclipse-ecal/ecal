@@ -1,5 +1,5 @@
-add_subdirectory(thirdparty/tcp_pubsub/tcp_pubsub/tcp_pubsub EXCLUDE_FROM_ALL)
-set_property(TARGET tcp_pubsub PROPERTY FOLDER lib/tcp_pubsub)
-add_library(tcp_pubsub::tcp_pubsub ALIAS tcp_pubsub)
+include_guard(GLOBAL)
 
-list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/tcp_pubsub/tcp_pubsub thirdparty/tcp_pubsub EXCLUDE_FROM_ALL SYSTEM)
+
+set_property(TARGET tcp_pubsub PROPERTY FOLDER thirdparty/tcp_pubsub)
