@@ -80,6 +80,7 @@ sdist.include = [
 ]
 
 [tool.scikit-build.cmake.define]
+CMAKE_PROJECT_TOP_LEVEL_INCLUDES = "cmake/submodule_dependencies.cmake"
 HAS_HDF5 = "ON"
 HAS_QT = "OFF"
 HAS_CURL = "OFF"
