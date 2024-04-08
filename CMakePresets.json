@@ -6,7 +6,10 @@
       "displayName": "Default",
       "description": "Common settings for all presets.",
       "binaryDir": "${sourceDir}/out/${presetName}/build",
-      "installDir": "${sourceDir}/out/${presetName}/install"
+      "installDir": "${sourceDir}/out/${presetName}/install",
+      "cacheVariables": {
+        "CMAKE_PROJECT_TOP_LEVEL_INCLUDES": "cmake/submodule_dependencies.cmake"
+      }
     },
     {
       "name": "release",

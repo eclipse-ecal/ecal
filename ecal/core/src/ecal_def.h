@@ -31,25 +31,28 @@
 /*                                     config settings                                        */
 /**********************************************************************************************/
 /* base data path name */
-constexpr char ECAL_HOME_PATH_WINDOWS[] = "";
-constexpr char ECAL_HOME_PATH_LINUX[]   = ".ecal";
-constexpr char ECAL_LOG_PATH[]          = "logs";
-constexpr char ECAL_SETTINGS_PATH[]     = "cfg";
+constexpr const char* ECAL_HOME_PATH_WINDOWS = "";
+constexpr const char* ECAL_HOME_PATH_LINUX   = ".ecal";
+constexpr const char* ECAL_LOG_PATH          = "logs";
+constexpr const char* ECAL_SETTINGS_PATH     = "cfg";
 
 /* ini file name */
-constexpr char ECAL_DEFAULT_CFG[]       = "ecal.ini";
+constexpr const char* ECAL_DEFAULT_CFG       = "ecal.ini";
 
 /**********************************************************************************************/
 /*                                     monitor settings                                       */
 /**********************************************************************************************/
 /* timeout for automatic removing monitoring topics in ms */
-constexpr unsigned int MON_TIMEOUT      = 5000U;
+constexpr unsigned int MON_TIMEOUT        = 5000U;
 /* topics blacklist as regular expression (will not be monitored) */
-constexpr char MON_FILTER_EXCL[]        =    "_.*";
+constexpr const char* MON_FILTER_EXCL     =    "^__.*$";
 /* topics whitelist as regular expression (will be monitored only) */
-constexpr char MON_FILTER_INCL[]        =    "";
+constexpr const char* MON_FILTER_INCL     =    "";
 
 /* logging filter settings */
+constexpr const char* MON_LOG_FILTER_CON  = "info,warning,error,fatal";
+constexpr const char* MON_LOG_FILTER_FILE = "";
+constexpr const char* MON_LOG_FILTER_UDP  = "info,warning,error,fatal";
 constexpr eCAL_Logging_Filter MON_LOG_FILTER_CON  = (log_level_info | log_level_warning | log_level_error | log_level_fatal);
 constexpr eCAL_Logging_Filter MON_LOG_FILTER_FILE = log_level_none;
 constexpr eCAL_Logging_Filter MON_LOG_FILTER_UDP  = (log_level_info | log_level_warning | log_level_error | log_level_fatal);
@@ -59,7 +62,7 @@ constexpr eCAL_Logging_Filter MON_LOG_FILTER_UDP  = (log_level_info | log_level_
 /*                                     sys settings                                       */
 /**********************************************************************************************/
 /* sys app witch will not be imported from cloud */
-constexpr char SYS_FILTER_EXCL[]        = "^eCALSysClient$|^eCALSysGUI$|^eCALSys$";
+constexpr const char* SYS_FILTER_EXCL     = "^eCALSysClient$|^eCALSysGUI$|^eCALSys$*";
 
 /**********************************************************************************************/
 /*                                     network settings                                       */
@@ -68,17 +71,17 @@ constexpr char SYS_FILTER_EXCL[]        = "^eCALSysClient$|^eCALSysGUI$|^eCALSys
 constexpr bool NET_ENABLED              = false;
 
 /* eCAL udp multicast defines */
-constexpr eCAL::Config::UdpConfigVersion NET_UDP_MULTICAST_CONFIG_VERSION = eCAL::Config::UdpConfigVersion::V1;
-constexpr char NET_UDP_MULTICAST_GROUP[]                                  = "239.0.0.1";
-constexpr char NET_UDP_MULTICAST_MASK[]                                   = "0.0.0.15";
-constexpr unsigned int NET_UDP_MULTICAST_PORT                             = 14000U;
-constexpr unsigned int NET_UDP_MULTICAST_TTL                              = 3U;
-constexpr unsigned int NET_UDP_MULTICAST_PORT_REG_OFF                     = 0U;
-constexpr unsigned int NET_UDP_MULTICAST_PORT_SAMPLE_OFF                  = 2U;
-constexpr unsigned int NET_UDP_MULTICAST_PORT_LOG_OFF                     = 4U;
-constexpr unsigned int NET_UDP_MULTICAST_SNDBUF                           = (5U*1024U*1024U);  /* 5 MByte */
-constexpr unsigned int NET_UDP_MULTICAST_RCVBUF                           = (5U*1024U*1024U);  /* 5 MByte */
-constexpr bool NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED                      = false;
+constexpr eCAL::Config::UdpConfigVersion  NET_UDP_MULTICAST_CONFIG_VERSION   = "v1";
+constexpr const char* NET_UDP_MULTICAST_GROUP                               = "239.0.0.1";
+constexpr const char* NET_UDP_MULTICAST_MASK                                = "0.0.0.15";
+constexpr unsigned int NET_UDP_MULTICAST_PORT                               = 14000U;
+constexpr unsigned int NET_UDP_MULTICAST_TTL                                = 3U;
+constexpr unsigned int NET_UDP_MULTICAST_PORT_REG_OFF                       = 0U;
+constexpr unsigned int NET_UDP_MULTICAST_PORT_LOG_OFF                       = 1U;
+constexpr unsigned int NET_UDP_MULTICAST_PORT_SAMPLE_OFF                    = 2U;
+constexpr unsigned int NET_UDP_MULTICAST_SNDBUF                             = (5U*1024U*1024U);  /* 5 MByte */
+constexpr unsigned int NET_UDP_MULTICAST_RCVBUF                             = (5U*1024U*1024U);  /* 5 MByte */
+constexpr bool NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED                        = false;
 
 constexpr unsigned int NET_UDP_RECBUFFER_TIMEOUT          = 1000U;  /* ms */
 constexpr unsigned int NET_UDP_RECBUFFER_CLEANUP          = 10U;    /* ms */
@@ -98,7 +101,7 @@ constexpr unsigned int NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER = 4U;
 constexpr unsigned int NET_TCP_PUBSUB_MAX_RECONNECTIONS   = 5U;
 
 /* common host group name that enables interprocess mechanisms across (virtual) host borders (e.g, Docker); by default equivalent to local host name */
-constexpr char NET_HOST_GROUP_NAME[]                      = "";
+constexpr const char* NET_HOST_GROUP_NAME                 = "";
 
 /**********************************************************************************************/
 /*                                     publisher settings                                     */
@@ -153,14 +156,14 @@ constexpr bool SERVICE_PROTOCOL_V1                       = true;
 /**********************************************************************************************/
 /*                                     time settings                                          */
 /**********************************************************************************************/
-constexpr char TIME_SYNC_MOD_RT[]                         = "";
-constexpr char TIME_SYNC_MOD_REPLAY[]                     = "";
-constexpr char TIME_SYNC_MODULE[]                         = "ecaltime-localtime";
+constexpr const char* TIME_SYNC_MOD_RT                    = "";
+constexpr const char* TIME_SYNC_MOD_REPLAY                = "";
+constexpr const char* TIME_SYNC_MODULE                    = "ecaltime-localtime";
 
 /**********************************************************************************************/
 /*                                     process settings                                       */
 /**********************************************************************************************/
-constexpr char PROCESS_TERMINAL_EMULATOR[]                = "";
+constexpr const char* PROCESS_TERMINAL_EMULATOR           = "";
 
 /**********************************************************************************************/
 /*                                     ecal internal timings                                  */
@@ -181,7 +184,7 @@ constexpr unsigned int CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS = 1000U;
 /*                                     events                                                 */
 /**********************************************************************************************/
 /* common stop event prefix to shut down a local user process */
-constexpr char EVENT_SHUTDOWN_PROC[]                        = "ecal_shutdown_process";
+constexpr const char* EVENT_SHUTDOWN_PROC                   = "ecal_shutdown_process";
 
 /**********************************************************************************************/
 /*                                     experimental                                           */
@@ -193,7 +196,7 @@ constexpr bool EXP_NETWORK_MONITORING_ENABLED              = true;
 /* queue size of monitoring/registration events  */
 constexpr size_t EXP_SHM_MONITORING_QUEUE_SIZE              = 1024U;
 /* domain name for shared memory based monitoring/registration */
-constexpr char EXP_SHM_MONITORING_DOMAIN[]                  = "ecal_monitoring";
+constexpr const char* EXP_SHM_MONITORING_DOMAIN             = "ecal_monitoring";
 /* memory file access timeout */
 constexpr unsigned int EXP_MEMFILE_ACCESS_TIMEOUT           = 100U;
 

@@ -1,1 +1,0 @@
-set(termcolor_FOUND TRUE)

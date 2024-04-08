@@ -5,6 +5,7 @@ pushd "%~dp0\.."
 call build_win\win_set_vars.bat
 
 set CMAKE_OPTIONS_COMPLETE=-DCMAKE_INSTALL_PREFIX=_install ^
+-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake ^
 -DHAS_HDF5=ON ^
 -DHAS_QT=ON ^
 -DHAS_CURL=ON ^
@@ -38,6 +39,7 @@ set CMAKE_OPTIONS_COMPLETE=-DCMAKE_INSTALL_PREFIX=_install ^
 -DCPACK_PACK_WITH_INNOSETUP=ON
 
 set CMAKE_OPTIONS_SDK=-DCMAKE_INSTALL_PREFIX=_install ^
+-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake ^
 -DHAS_HDF5=ON ^
 -DHAS_QT=ON ^
 -DHAS_CURL=OFF ^
