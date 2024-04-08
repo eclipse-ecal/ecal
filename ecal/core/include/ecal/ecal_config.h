@@ -16,14 +16,13 @@
  *
  * ========================= eCAL LICENSE =================================
 */
-// TODO PG: Remove, deprecated
+
 #pragma once
 
 #include <cstddef>
 #include <ecal/ecal_log_level.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_tlayer.h>
-#include <ecal/ecal_log_level.h>
 #include "ecal/types/ecal_config_types.h"
 
 #include <string>
@@ -33,11 +32,8 @@ namespace eCAL
 {
   namespace Config
   {
-    // enum class UdpConfigVersion
-    // {
-    //   V1 = 1, // Legacy
-    //   V2 = 2
-    // };
+    
+    ECAL_API eCALConfig* GetCurrentConfig();
 
     /////////////////////////////////////
     // common

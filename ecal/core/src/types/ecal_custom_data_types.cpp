@@ -30,7 +30,9 @@ namespace eCAL
 
     // IpAddressV4 definitions
 
-    IpAddressV4::IpAddressV4(const std::string ip_address_)
+    IpAddressV4::IpAddressV4() = default;
+
+    IpAddressV4::IpAddressV4(const std::string& ip_address_)
     {
       if (checkIpString(ip_address_))
       {

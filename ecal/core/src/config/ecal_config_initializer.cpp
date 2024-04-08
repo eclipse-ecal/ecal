@@ -21,7 +21,7 @@
  * @brief  Function definitions for setting default config values
 **/
 
-#include "ecal/types/ecal_config_types.h"
+#include "ecal/ecal_config.h"
 #include "ecal_config_reader.h"
 
 #include "ecal_global_accessors.h"

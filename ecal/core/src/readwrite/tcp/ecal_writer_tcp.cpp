@@ -25,7 +25,7 @@
 #include "serialization/ecal_serialize_sample_payload.h"
 
 #include <ecal/ecal_config.h>
-#include "ecal/types/ecal_config_types.h"
+#include "ecal/ecal_config.h"
 
 #include "ecal_writer_tcp.h"
 #include "ecal_tcp_pubsub_logger.h"

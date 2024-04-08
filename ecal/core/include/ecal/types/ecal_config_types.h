@@ -60,7 +60,5 @@ namespace eCAL
 
         ECAL_API eCALConfig();
     };
-
-    ECAL_API eCALConfig* GetCurrentConfig();
 	}
 }

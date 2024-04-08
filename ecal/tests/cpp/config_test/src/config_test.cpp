@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal_core.h>
-#include <ecal/types/ecal_config_types.h>
+#include <ecal/ecal_config.h>
 
 #include <gtest/gtest.h>
 

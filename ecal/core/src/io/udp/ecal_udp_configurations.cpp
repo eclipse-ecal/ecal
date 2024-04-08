@@ -21,7 +21,7 @@
 
 #include "ecal_def.h"
 #include "ecal_udp_topic2mcast.h"
-#include "ecal/types/ecal_config_types.h"
+#include "ecal/ecal_config.h"
 
 #include <ecal/ecal_config.h>
 #include <string>

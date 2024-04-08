@@ -43,8 +43,8 @@ namespace eCAL
     class IpAddressV4
     {
     public:      
-      IpAddressV4() = default;
-      ECAL_API IpAddressV4(const std::string ip_address_);  
+      ECAL_API IpAddressV4();
+      ECAL_API IpAddressV4(const std::string& ip_address_);  
              
       std::string get() const { return m_ip_address; }
 

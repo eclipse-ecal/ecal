@@ -23,7 +23,6 @@
 
 #include <ecal/ecal_log.h>
 #include <ecal/ecal_config.h>
-#include "ecal/types/ecal_config_types.h"
 
 #include "ecal_globals.h"
 #include "ecal_descgate.h"
