@@ -186,7 +186,7 @@ namespace eCAL
       sysOptions.filter_excl = iniConfig.get(SYS, "filter_excl", SYS_FILTER_EXCL);
 
       // process options
-      auto& processOptions = config.application_options.process_options;
+      auto& processOptions = config.application_options.startup_options;
       processOptions.terminal_emulator = iniConfig.get(PROCESS, "terminal_emulator", PROCESS_TERMINAL_EMULATOR);
 
       auto& loggingOptions = config.logging_options;
