@@ -6,6 +6,8 @@ option(ECAL_CORE_HAS_PROTOBUF                            "Protobuf library is av
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # additional builds (adapt to your needs)
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+option(ECAL_CORE_BUILD_SHARED                            "Build eCAL core as a shared library (static library build is experimental!)"                           ON)
+mark_as_advanced(ECAL_CORE_BUILD_SHARED)
 option(ECAL_CORE_BUILD_SAMPLES                           "Build the eCAL samples"                                                                                ON)
 option(ECAL_CORE_BUILD_TESTS                             "Build the eCAL google tests"                                                                           ON)
 

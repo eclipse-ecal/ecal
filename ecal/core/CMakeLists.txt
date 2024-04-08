@@ -59,6 +59,11 @@ if(UNIX)
   endif()
 endif()
 
+function(ecal_core_add_library TARGET_NAME)
+  set(BUILD_SHARED_LIBS ${ECAL_CORE_BUILD_SHARED})
+  ecal_add_library(${TARGET_NAME} ${ARGN})
+endfunction()
+
 ######################################
 # config
 ######################################
@@ -532,7 +537,7 @@ set(ecal_sources
     ${ecal_header_msg}
 )
 
-ecal_add_ecal_shared_library(${PROJECT_NAME}
+ecal_core_add_library(${PROJECT_NAME}
     ${ecal_sources}
     ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h
 )
@@ -547,7 +552,7 @@ set(ecal_c_sources
     ${ecal_header_cimpl}
 )
 
-ecal_add_ecal_shared_library(${PROJECT_NAME}_c 
+ecal_core_add_library(${PROJECT_NAME}_c
     ${ecal_c_sources}
 )
 
@@ -561,8 +566,9 @@ target_compile_definitions(${PROJECT_NAME}_c
   PUBLIC
     ASIO_STANDALONE
     ASIO_DISABLE_VISIBILITY
-  PRIVATE 
-    eCAL_EXPORTS
+    $<IF:$<BOOL:${ECAL_CORE_BUILD_SHARED}>,"","ECAL_STATIC">
+  PRIVATE
+    $<$<BOOL:${ECAL_CORE_BUILD_SHARED}>:eCAL_EXPORTS>
     ECAL_NO_DEPRECATION_WARNINGS
 )
 
@@ -570,8 +576,9 @@ target_compile_definitions(${PROJECT_NAME}
   PUBLIC
     ASIO_STANDALONE
     ASIO_DISABLE_VISIBILITY
+    $<IF:$<BOOL:${ECAL_CORE_BUILD_SHARED}>,"","ECAL_STATIC">
   PRIVATE
-    eCAL_EXPORTS
+    $<$<BOOL:${ECAL_CORE_BUILD_SHARED}>:eCAL_EXPORTS>
     $<$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>:ECAL_HAS_CLOCKLOCK_MUTEX>
     $<$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>:ECAL_HAS_ROBUST_MUTEX>
     $<$<BOOL:${ECAL_USE_CLOCKLOCK_MUTEX}>:ECAL_USE_CLOCKLOCK_MUTEX>
@@ -606,21 +613,21 @@ endforeach()
 if(ECAL_CORE_CONFIG_INIFILE)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
-      simpleini::simpleini
+      $<BUILD_INTERFACE:simpleini::simpleini>
   )
 endif()
 
 if(ECAL_CORE_COMMAND_LINE)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
-      tclap::tclap
+      $<BUILD_INTERFACE:tclap::tclap>
   )
 endif()
 
 if(ECAL_CORE_SERVICE)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
-      ecal_service
+      $<BUILD_INTERFACE:ecal_service>
   )
 endif()
 
@@ -659,7 +666,7 @@ target_link_libraries(${PROJECT_NAME}
     $<$<BOOL:${WIN32}>:ws2_32> 
     $<$<BOOL:${WIN32}>:wsock32>
     $<$<BOOL:${QNXNTO}>:socket>
-    asio::asio
+    $<BUILD_INTERFACE:asio::asio>
     Threads::Threads
     eCAL::ecal-utils
 )
@@ -667,8 +674,8 @@ target_link_libraries(${PROJECT_NAME}
 set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER core)
 set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER core)
 
-ecal_install_ecal_shared_library(${PROJECT_NAME}_c)
-ecal_install_ecal_shared_library(${PROJECT_NAME})
+ecal_install_library(${PROJECT_NAME}_c)
+ecal_install_library(${PROJECT_NAME})
 
 install(DIRECTORY
    "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk

@@ -47,31 +47,42 @@
 #define ECAL_OS_FREEBSD
 #endif
 
-#ifdef _MSC_VER
-  #ifdef eCAL_EXPORTS
-    #define ECALC_API __declspec(dllexport)
-  #else /* eCAL_EXPORTS */
-    #define ECALC_API __declspec(dllimport)
-  #endif /* eCAL_EXPORTS */
-  #ifdef ECAL_C_DLL
-    #define ECAL_API
-  #else /* ECAL_C_DLL */
-    #define ECAL_API ECALC_API
-  #endif /* ECAL_C_DLL */
-#else /* _MSC_VER */
-  #define ECALC_API
-  #define ECAL_API
+// The following is adapted from https://gcc.gnu.org/wiki/Visibility
+// Helper definitions for shared library support
+#if defined _WIN32 || defined __CYGWIN__
+  #define ECAL_HELPER_DLL_IMPORT __declspec(dllimport)
+  #define ECAL_HELPER_DLL_EXPORT __declspec(dllexport)
+  #define ECAL_HELPER_DLL_LOCAL
+  #define ECAL_HELPER_DEPRECATED __declspec(deprecated)
+#elif defined(__GNUC__) || defined(__clang__)
+  #define ECAL_HELPER_DLL_IMPORT __attribute__ ((visibility ("default")))
+  #define ECAL_HELPER_DLL_EXPORT __attribute__ ((visibility ("default")))
+  #define ECAL_HELPER_DLL_LOCAL __attribute__ ((visibility ("hidden")))
+  #define ECAL_HELPER_DEPRECATED __attribute__ ((visibility ("default")))
+#else
+  #error "Symbol visibility scheme unknown for your compiler, please update ecal_os.h"
 #endif
 
-#ifdef _MSC_VER
-  #ifdef eCAL_EXPORTS
-    #define ECALC_API_DEPRECATED __declspec(dllexport deprecated)
-  #else /* eCAL_EXPORTS */
-    #define ECALC_API_DEPRECATED __declspec(dllimport deprecated)
-  #endif /* eCAL_EXPORTS */
-#elif defined(__GNUC__) || defined(__clang__)
-  #define ECALC_API_DEPRECATED __attribute__((deprecated))
-#else
-  #pragma message("WARNING: You need to implement DEPRECATED for this compiler")
+// Helper definitions for API marking
+#ifdef ECAL_STATIC // eCAL is static library
+  #define ECAL_API
+  #define ECAL_API_DEPRECATED
+  #define ECALC_API
   #define ECALC_API_DEPRECATED
+#else // eCAL is a shared library
+  #ifdef eCAL_EXPORTS // We are building eCAL
+    #define ECALC_API ECAL_HELPER_DLL_EXPORT
+    #define ECALC_API_DEPRECATED ECAL_HELPER_DLL_EXPORT ECAL_HELPER_DEPRECATED
+  #else // We are using eCAL
+    #define ECALC_API ECAL_HELPER_DLL_IMPORT
+    #define ECALC_API_DEPRECATED ECAL_HELPER_DLL_IMPORT ECAL_HELPER_DEPRECATED
+  #endif
+
+  #ifdef ECAL_C_DLL //Dont interpret eCAL C++ symbols as available
+    #define ECAL_API
+    #define ECAL_API_DEPRECATED
+  #else
+    #define ECAL_API ECALC_API
+    #define ECAL_API_DEPRECATED ECALC_API_DEPRECATED
+  #endif
 #endif
