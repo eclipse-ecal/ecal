@@ -56,7 +56,7 @@ jobs:
         mkdir "${{ runner.workspace }}/_build"
         cd "${{ runner.workspace }}/_build"
         cmake $GITHUB_WORKSPACE -G "Ninja" \
-        -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="cmake/submodule_dependencies.cmake" \
+        -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake \
         -DHAS_HDF5=ON \
         -DHAS_QT5=ON \
         -DHAS_CURL=ON \
