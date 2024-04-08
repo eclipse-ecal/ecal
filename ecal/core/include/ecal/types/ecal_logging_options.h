@@ -18,48 +18,23 @@
  */
 
 /**
- * @file   ecal_monitoring_options.h
- * @brief  eCAL options for monitoring configuration
+ * @file   ecal_logging_options.h
+ * @brief  eCAL options for logging configuration
 **/
 
 #pragma once
 
-#include "ecal_custom_data_types.h"
+#include <ecal/ecal_log_level.h>
 
 namespace eCAL
 {
   namespace Config
   {
-    enum MonitoringMode
+    struct LoggingOptions
     {
-      none = 0,
-      udp_monitoring = 1 << 0,
-      shm_monitoring = 1 << 1
-    };
-
-    using eCAL_MonitoringMode_Filter = char;
-
-    struct UDPMonitoringOptions
-    {
-      // Here?
-    };
-
-    struct SHMMonitoringOptions
-    {
-      std::string shm_monitoring_domain;
-      size_t      shm_monitoring_queue_size;  
-    };
-
-    struct MonitoringOptions
-    {
-      eCAL_MonitoringMode_Filter monitoring_mode;
-      LimitSize<1000, 1000>      monitoring_timeout;
-      bool                       network_monitoring;
-      UDPMonitoringOptions       udp_options;
-      SHMMonitoringOptions       shm_options;
-
-      std::string         filter_excl;
-      std::string         filter_incl;
+      eCAL_Logging_Filter filter_log_con;
+      eCAL_Logging_Filter filter_log_file;
+      eCAL_Logging_Filter filter_log_udp;
     };
   }
 }

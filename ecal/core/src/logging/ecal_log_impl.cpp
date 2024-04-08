@@ -120,9 +120,9 @@ namespace eCAL
     m_level = log_level_info;
 
     // parse logging filter strings
-    m_filter_mask_con  = Config::GetCurrentConfig()->monitoring_options.filter_log_con;
-    m_filter_mask_file = Config::GetCurrentConfig()->monitoring_options.filter_log_file;
-    m_filter_mask_udp  = Config::GetCurrentConfig()->monitoring_options.filter_log_udp;
+    m_filter_mask_con  = Config::GetCurrentConfig()->logging_options.filter_log_con;
+    m_filter_mask_file = Config::GetCurrentConfig()->logging_options.filter_log_file;
+    m_filter_mask_udp  = Config::GetCurrentConfig()->logging_options.filter_log_udp;
 
     // create log file
     if(m_filter_mask_file != 0)

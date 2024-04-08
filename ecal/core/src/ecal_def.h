@@ -50,9 +50,6 @@ constexpr const char* MON_FILTER_EXCL     =    "^__.*$";
 constexpr const char* MON_FILTER_INCL     =    "";
 
 /* logging filter settings */
-constexpr const char* MON_LOG_FILTER_CON  = "info,warning,error,fatal";
-constexpr const char* MON_LOG_FILTER_FILE = "";
-constexpr const char* MON_LOG_FILTER_UDP  = "info,warning,error,fatal";
 constexpr eCAL_Logging_Filter MON_LOG_FILTER_CON  = (log_level_info | log_level_warning | log_level_error | log_level_fatal);
 constexpr eCAL_Logging_Filter MON_LOG_FILTER_FILE = log_level_none;
 constexpr eCAL_Logging_Filter MON_LOG_FILTER_UDP  = (log_level_info | log_level_warning | log_level_error | log_level_fatal);
@@ -71,7 +68,7 @@ constexpr const char* SYS_FILTER_EXCL     = "^eCALSysClient$|^eCALSysGUI$|^eCALS
 constexpr bool NET_ENABLED              = false;
 
 /* eCAL udp multicast defines */
-constexpr eCAL::Config::UdpConfigVersion  NET_UDP_MULTICAST_CONFIG_VERSION   = "v1";
+constexpr eCAL::Config::UdpConfigVersion  NET_UDP_MULTICAST_CONFIG_VERSION   = eCAL::Config::UdpConfigVersion::V1;
 constexpr const char* NET_UDP_MULTICAST_GROUP                               = "239.0.0.1";
 constexpr const char* NET_UDP_MULTICAST_MASK                                = "0.0.0.15";
 constexpr unsigned int NET_UDP_MULTICAST_PORT                               = 14000U;

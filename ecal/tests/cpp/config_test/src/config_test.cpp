@@ -52,8 +52,8 @@ TEST(core_cpp_config, user_config_passing)
   
   custom_config.monitoring_options.monitoring_timeout = mon_timeout;
   custom_config.monitoring_options.filter_excl        = mon_filter_excl;
-  custom_config.monitoring_options.filter_log_con     = mon_log_filter_con;
   custom_config.monitoring_options.monitoring_mode    = monitoring_mode;
+  custom_config.logging_options.filter_log_con     = mon_log_filter_con;
 
   // Publisher options
   eCAL::TLayer::eSendMode pub_use_shm = eCAL::TLayer::eSendMode::smode_off;
@@ -87,7 +87,7 @@ TEST(core_cpp_config, user_config_passing)
   EXPECT_EQ(mon_filter_excl, eCAL::Config::GetCurrentConfig()->monitoring_options.filter_excl);
 
   // Test monitoring console log assignment, default is (log_level_info | log_level_warning | log_level_error | log_level_fatal)
-  EXPECT_EQ(mon_log_filter_con, eCAL::Config::GetCurrentConfig()->monitoring_options.filter_log_con);
+  EXPECT_EQ(mon_log_filter_con, eCAL::Config::GetCurrentConfig()->logging_options.filter_log_con);
 
   // Test monitoring mode assignment, default iseCAL::Config::MonitoringMode::none
   EXPECT_EQ(monitoring_mode, eCAL::Config::GetCurrentConfig()->monitoring_options.monitoring_mode);

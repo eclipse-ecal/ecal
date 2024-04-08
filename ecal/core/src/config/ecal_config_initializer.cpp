@@ -152,9 +152,6 @@ namespace eCAL
       monitoringOptions.network_monitoring          = iniConfig.get(EXPERIMENTAL, "network_monitoring", EXP_NETWORK_MONITORING_ENABLED);
       monitoringOptions.filter_excl                 = iniConfig.get(MONITORING,   "filter_excl",                 MON_FILTER_EXCL);
       monitoringOptions.filter_incl                 = iniConfig.get(MONITORING,   "filter_incl",                 MON_FILTER_INCL);
-      monitoringOptions.filter_log_con              = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_con",  "info,warning,error,fatal"));
-      monitoringOptions.filter_log_file             = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_file", ""));
-      monitoringOptions.filter_log_udp              = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_udp",  "info,warning,error,fatal"));
 
       // auto& udpMonitoringOptions = monitoringOptions.udp_options;
       // TODO: Nothing here yet
@@ -191,6 +188,11 @@ namespace eCAL
       // process options
       auto& processOptions = config.application_options.process_options;
       processOptions.terminal_emulator = iniConfig.get(PROCESS, "terminal_emulator", PROCESS_TERMINAL_EMULATOR);
+
+      auto& loggingOptions = config.logging_options;
+      loggingOptions.filter_log_con              = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_con",  "info,warning,error,fatal"));
+      loggingOptions.filter_log_file             = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_file", ""));
+      loggingOptions.filter_log_udp              = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_udp",  "info,warning,error,fatal"));
 
       return config;
     };

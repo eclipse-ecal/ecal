@@ -31,7 +31,7 @@
 #include "ecal_receiving_options.h"
 #include "ecal_registration_options.h"
 #include "ecal_service_options.h"
-#include "ecal_internal_options.h"
+#include "ecal_logging_options.h"
 #include "ecal_transport_layer_options.h"
 
 #include "ecal/ecal_os.h"
@@ -56,6 +56,7 @@ namespace eCAL
         TimesyncOptions       timesync_options;
         ServiceOptions        service_options;
         ApplicationOptions    application_options;
+        LoggingOptions        logging_options;
         std::string           loaded_ecal_ini_file;
 
         ECAL_API eCALConfig();
