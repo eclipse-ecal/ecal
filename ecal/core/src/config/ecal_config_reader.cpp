@@ -425,6 +425,16 @@ namespace eCAL
     return static_cast<int>(m_impl->GetLongValue(section_.c_str(), key_.c_str(), static_cast<long>(default_)));
   }
 
+  unsigned int CConfig::get(const std::string& section_, const std::string& key_, unsigned int default_)
+  {
+    return static_cast<unsigned int>(m_impl->GetLongValue(section_.c_str(), key_.c_str(), static_cast<long>(default_)));
+  }
+
+  size_t CConfig::get(const std::string& section_, const std::string& key_, size_t default_)
+  {
+    return static_cast<size_t>(m_impl->GetLongValue(section_.c_str(), key_.c_str(), static_cast<long>(default_)));
+  }
+
   double CConfig::get(const std::string& section_, const std::string& key_, double default_)
   {
     return m_impl->GetDoubleValue(section_.c_str(), key_.c_str(), default_);
