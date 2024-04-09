@@ -97,7 +97,7 @@ namespace eCAL
    *
    * @return Zero if succeeded, 1 if already initialized, -1 if failed.
   **/
-  int Initialize(int argc_ , char **argv_, const char *unit_name_, unsigned int components_, Config::eCALConfig* user_config_)
+  int Initialize(int argc_ , char **argv_, const char *unit_name_, unsigned int components_)
   {
     bool dump_config(false);
     std::vector<std::string> config_keys;
@@ -180,11 +180,6 @@ namespace eCAL
     }
     g_globals_ctx_ref_cnt++;
 
-    if (user_config_ != nullptr)
-    {        
-        g_globals()->SetUserConfig(*user_config_);
-    }
-
     // (post)initialize single components
     const int success = g_globals()->Initialize(components_, &config_keys);
 
@@ -206,12 +201,12 @@ namespace eCAL
    *
    * @return Zero if succeeded, 1 if already initialized, -1 if failed.
   **/
-  int Initialize(std::vector<std::string> args_, const char *unit_name_, unsigned int components_, Config::eCALConfig* user_settings_) //-V826
+  int Initialize(std::vector<std::string> args_, const char *unit_name_, unsigned int components_) //-V826
   {
     args_.emplace(args_.begin(), eCAL::Process::GetProcessName());
     std::vector<const char*> argv(args_.size());
     std::transform(args_.begin(), args_.end(), argv.begin(), [](std::string& s) {return s.c_str();});
-    return Initialize(static_cast<int>(argv.size()), const_cast<char**>(argv.data()), unit_name_, components_, user_settings_);
+    return Initialize(static_cast<int>(argv.size()), const_cast<char**>(argv.data()), unit_name_, components_);
   }
 
   /**

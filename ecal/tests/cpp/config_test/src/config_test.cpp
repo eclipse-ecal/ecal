@@ -45,8 +45,8 @@ TEST(core_cpp_config, user_config_passing)
   custom_config.transport_layer_options.mc_options.sndbuf = upd_snd_buff;
   
   // Monitoring options
-  unsigned int mon_timeout                                 = 6000U;
-  std::string mon_filter_excl                              = "_A.*";
+  unsigned int        mon_timeout                          = 6000U;
+  std::string         mon_filter_excl                      = "_A.*";
   eCAL_Logging_Filter mon_log_filter_con                   = log_level_warning;
   eCAL::Config::eCAL_MonitoringMode_Filter monitoring_mode = eCAL::Config::MonitoringMode::udp_monitoring;
   
@@ -145,10 +145,9 @@ TEST(ConfigDeathTest, user_config_death_test)
   EXPECT_EXIT(
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("000.000.000.000")),
     ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
-    EXPECT_EXIT(
+  EXPECT_EXIT(
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("0.00.000.0")),
     ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
-
 
   // Test the LimitSize class with wrong values. Default are MIN = 5242880, STEP = 1024
   // Value below MIN
