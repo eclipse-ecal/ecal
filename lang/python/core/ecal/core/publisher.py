@@ -65,6 +65,20 @@ class ProtoPublisher(MessagePublisher):
   def send(self, msg, time=-1):
     return self.c_publisher.send(msg.SerializeToString(), time)
 
+class BinaryPublisher(MessagePublisher):
+  """Spezialized publisher that sends out byte
+  """
+  def __init__(self, name):
+    topic_type = "base:binary"
+    topic_desc = b""
+    super(BinaryPublisher, self).__init__(name, topic_type, topic_desc)
+
+  def send(self, msg, time=-1):
+    return self.c_publisher.send(msg, time)
+
+  def send_sync(self, msg, time, ack_timeout_ms):
+    return self.c_publisher.send_sync(msg, time, ack_timeout_ms)
+
 class StringPublisher(MessagePublisher):
   """Spezialized publisher that sends out plain strings
   """
