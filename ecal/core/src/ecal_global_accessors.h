@@ -68,7 +68,7 @@ namespace eCAL
   CGlobals*               g_globals();
   CConfig*                g_config();
   CLog*                   g_log();
-  Config::eCALConfig*	    g_ecal_config();
+  Config::eCALConfig&	    g_ecal_config();
 #if ECAL_CORE_MONITORING
   CMonitoring*            g_monitoring();
 #endif

@@ -64,10 +64,9 @@ namespace eCAL
     return(g_globals()->log().get());
   }
 
-  Config::eCALConfig* g_ecal_config()
+  Config::eCALConfig& g_ecal_config()
   {
-    if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->ecal_config().get());
+    return(g_globals()->ecal_config());
   }
 
 #if ECAL_CORE_MONITORING

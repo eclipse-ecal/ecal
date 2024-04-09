@@ -73,7 +73,7 @@ namespace eCAL
 
     const std::unique_ptr<CConfig>&                                       config()                 { return config_instance; };
     const std::unique_ptr<CLog>&                                          log()                    { return log_instance; };
-    const std::unique_ptr<Config::eCALConfig>&                            ecal_config()            { return ecal_config_instance; };
+    Config::eCALConfig&                                                   ecal_config()            { return ecal_config_instance; };
 
 #if ECAL_CORE_MONITORING
     const std::unique_ptr<CMonitoring>&                                   monitoring()             { return monitoring_instance; };
@@ -133,6 +133,6 @@ namespace eCAL
     
 #endif
     std::unique_ptr<CDescGate>                                            descgate_instance;
-    std::unique_ptr<Config::eCALConfig>                                   ecal_config_instance;
+    Config::eCALConfig                                                    ecal_config_instance;
   };
 }
