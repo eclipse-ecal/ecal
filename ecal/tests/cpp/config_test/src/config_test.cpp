@@ -53,7 +53,7 @@ TEST(core_cpp_config, user_config_passing)
   custom_config.monitoring_options.monitoring_timeout = mon_timeout;
   custom_config.monitoring_options.filter_excl        = mon_filter_excl;
   custom_config.monitoring_options.monitoring_mode    = monitoring_mode;
-  custom_config.logging_options.filter_log_con     = mon_log_filter_con;
+  custom_config.logging_options.filter_log_con        = mon_log_filter_con;
 
   // Publisher options
   eCAL::TLayer::eSendMode pub_use_shm = eCAL::TLayer::eSendMode::smode_off;
@@ -111,6 +111,44 @@ TEST(ConfigDeathTest, user_config_death_test)
   EXPECT_EXIT(
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("42")),
     ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+
+  // Test the IpAddressV4 class with invalid addresses
+  EXPECT_EXIT(
+    SetValue(custom_config.transport_layer_options.mc_options.group, std::string("256.0.0.0")),
+    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+  EXPECT_EXIT(
+    SetValue(custom_config.transport_layer_options.mc_options.group, std::string("127.0.0.1")),
+    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+  EXPECT_EXIT(
+    SetValue(custom_config.transport_layer_options.mc_options.group, std::string("255.255.255.255")),
+    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+
+  EXPECT_EXIT(
+    SetValue(custom_config.transport_layer_options.mc_options.group, std::string("FFF.FF.FF.FF")),
+    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+  EXPECT_EXIT(
+    SetValue(custom_config.transport_layer_options.mc_options.group, std::string("FF.FF.FF.FF")),
+    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+  EXPECT_EXIT(
+    SetValue(custom_config.transport_layer_options.mc_options.group, std::string("Ff.fF.ff.Ff")),
+    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+  EXPECT_EXIT(
+    SetValue(custom_config.transport_layer_options.mc_options.group, std::string("7f.0.0.1")),
+    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+
+  EXPECT_EXIT(
+    SetValue(custom_config.transport_layer_options.mc_options.group, std::string("0.0.0.0")),
+    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+  EXPECT_EXIT(
+    SetValue(custom_config.transport_layer_options.mc_options.group, std::string("00.00.00.00")),
+    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+  EXPECT_EXIT(
+    SetValue(custom_config.transport_layer_options.mc_options.group, std::string("000.000.000.000")),
+    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+    EXPECT_EXIT(
+    SetValue(custom_config.transport_layer_options.mc_options.group, std::string("0.00.000.0")),
+    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+
 
   // Test the LimitSize class with wrong values. Default are MIN = 5242880, STEP = 1024
   // Value below MIN

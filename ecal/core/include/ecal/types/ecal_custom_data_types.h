@@ -28,7 +28,6 @@
 
 #include <string>
 #include <iostream>
-#include <regex>
 #include <limits>
 
 namespace eCAL
@@ -36,7 +35,8 @@ namespace eCAL
   namespace Config
   {
     /**
-     * @brief  Class for evaluation and storing an IP address.
+     * @brief  Class for evaluation and storing an IPv4/IPv6 address.
+     *         Invalid addresses: 255.255.255.255, 127.0.0.1, 0.0.0.0
      *
      * @param ip_adress_  The IP address as std::string.
     **/
@@ -49,9 +49,9 @@ namespace eCAL
       std::string get() const { return m_ip_address; }
 
     private:            
-      static bool checkIpString(std::string ip_address_);  
+      static bool validateIpString(std::string ip_address_);  
 
-      std::string     m_ip_address{};
+      std::string m_ip_address{};
     };
 
     /**

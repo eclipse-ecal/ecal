@@ -22,6 +22,20 @@
 **/
 
 #include "ecal/types/ecal_custom_data_types.h"
+#include <array>
+#include <regex>
+#include <algorithm>
+#include <cctype>
+
+namespace{
+  static const std::array<const std::regex, 3> INVALID_IPV4_ADDRESSES = {
+      std::regex("((255|[fF][fF])\\.){3}(255|[fF][fF])"),       // 255.255.255.255
+      std::regex("((127|7[fF]).((0|00|000)\\.){2}(1|01|001))"), // 127.0.0.1 
+      std::regex("((0|00|000)\\.){3}(0|00|000)")                // 0.0.0.0 
+  };
+  static const std::regex IPV4_DEC_REGEX                          = std::regex("(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])");
+  static const std::regex IPV4_HEX_REGEX                          = std::regex("(([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])\\.){3}([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])");
+}
 
 namespace eCAL
 {
@@ -34,31 +48,35 @@ namespace eCAL
 
     IpAddressV4::IpAddressV4(const std::string& ip_address_)
     {
-      if (checkIpString(ip_address_))
+      if (validateIpString(ip_address_))
       {
         m_ip_address = ip_address_;
       }
       else
       {
-        std::cerr << "[IpAddressV4] No valid IPv4 address: " << ip_address_ << "\n";
+        std::cerr << "[IpAddressV4] No valid IP address: " << ip_address_ << "\n";
         exit(EXIT_FAILURE);
       }
     } 
 
-    bool IpAddressV4::checkIpString(std::string ip_address_)
+    bool IpAddressV4::validateIpString(std::string ip_address_)
     {
-      if (std::regex_match(ip_address_, std::regex("(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])")))
+      if (  std::regex_match(ip_address_, IPV4_DEC_REGEX)
+         || std::regex_match(ip_address_, IPV4_HEX_REGEX)
+      )
       {
+        for (auto& inv_ip_regex : INVALID_IPV4_ADDRESSES)
+        {
+          if (std::regex_match(ip_address_, inv_ip_regex))
+          {
+            return false;
+          }
+        }
+
         return true;
       }
-      else if (std::regex_match(ip_address_, std::regex("(([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])\\.){3}([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])")))
-      {
-        return true;
-      }
-      else
-      {
-        return false;
-      }
+
+      return false;
     }
   }
 }
