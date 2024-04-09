@@ -35,7 +35,7 @@ namespace eCAL
       std::string filter_excl;
     };
 
-    struct ProcessOptions
+    struct StartupOptions
     {
       std::string terminal_emulator;
     };
@@ -43,7 +43,7 @@ namespace eCAL
     struct ApplicationOptions
     {
       SysOptions     sys_options;
-      ProcessOptions process_options;
+      StartupOptions startup_options;
     };
   }
 }
