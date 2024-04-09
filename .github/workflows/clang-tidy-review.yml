@@ -38,6 +38,7 @@ jobs:
           cmake_command: |
             cmake . -B _build \
                     -G Ninja \
+                    -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake \
                     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
                     -DHAS_HDF5=ON \
                     -DHAS_QT=ON \
