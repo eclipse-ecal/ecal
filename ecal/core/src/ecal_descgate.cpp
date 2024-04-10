@@ -459,10 +459,10 @@ namespace eCAL
     }
 
     // the entry is existing, the requested quality is not higher
-    // update the existing entry if it has the same attributes (independing from the unique id)
+    // update the timestamp of the existing entry
     if (service_info.info == req_service_info.info)
     {
-      (*service_method_map_.map)[service_method_tuple] = req_service_info;
+      (*service_method_map_.map)[service_method_tuple] = service_info;
       return true;
     }
 
