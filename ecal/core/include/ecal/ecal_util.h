@@ -161,7 +161,7 @@ namespace eCAL
      *
      * @param service_method_names_ Vector to store the service/method tuples (Vector { (ServiceName, MethodName) }).
     **/
-    ECAL_API void GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_);
+    ECAL_API void GetServiceMethodNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_);
 
     /**
      * @brief Gets service method request and response type names.
@@ -186,6 +186,45 @@ namespace eCAL
      * @return  True if succeeded.
     **/
     ECAL_API bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_desc_, std::string& resp_desc_);
+
+    /**
+     * @brief Get complete client map (including request and response types and descriptions).
+     *
+     * @param client_info_map_  Map to store the datatype descriptions.
+     *                          Map { (ClientName, MethodName) -> ( (ReqType, ReqDescription), (RespType, RespDescription) ) } mapping of all currently known clients.
+    **/
+    ECAL_API void GetClients(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& client_info_map_);
+
+    /**
+     * @brief Get all client/method names.
+     *
+     * @param client_method_names_ Vector to store the client/method tuples (Vector { (ClientName, MethodName) }).
+    **/
+    ECAL_API void GetClientMethodNames(std::vector<std::tuple<std::string, std::string>>& client_method_names_);
+
+    /**
+     * @brief Gets client method request and response type names.
+     *
+     * @param client_name_  Client name.
+     * @param method_name_  Method name.
+     * @param req_type_     String to store request type.
+     * @param resp_type_    String to store response type.
+     *
+     * @return  True if succeeded.
+    **/
+    ECAL_API bool GetClientTypeNames(const std::string& client_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_);
+
+    /**
+     * @brief Gets client method request and response descriptions.
+     *
+     * @param client_name_  Client name.
+     * @param method_name_  Method name.
+     * @param req_desc_     String to store request description.
+     * @param resp_desc_    String to store response description.
+     *
+     * @return  True if succeeded.
+    **/
+    ECAL_API bool GetClientDescription(const std::string& client_name_, const std::string& method_name_, std::string& req_desc_, std::string& resp_desc_);
 
     /**
      * @brief Splits the topic type (eCAL < 5.12) into encoding and types (>= eCAL 5.12)

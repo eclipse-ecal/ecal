@@ -52,14 +52,14 @@ int main(int argc, char **argv)
       std::cout << std::endl;
     }
 
-    // GetServiceNames
+    // GetServiceMethodNames
     {
       std::vector<std::tuple<std::string, std::string>> service_method_names;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        eCAL::Util::GetServiceNames(service_method_names);
+        eCAL::Util::GetServiceMethodNames(service_method_names);
       }
 
       auto num_services = service_method_names.size();

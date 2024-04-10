@@ -24,10 +24,10 @@
 
 #define CMN_MONITORING_TIMEOUT 5000
 
-TEST(core_cpp_clientserver, GetServices)
+TEST(core_cpp_util, GetServices)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver_getservices");
+  eCAL::Initialize(0, nullptr, "util_getservices");
 
   std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation> service_info_map;
   
@@ -54,10 +54,8 @@ TEST(core_cpp_clientserver, GetServices)
     // check size
     EXPECT_EQ(service_info_map.size(), 1);
   }
-  // let's unregister them
-  eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT + 1000);
 
-  // get all services again, now all services 
+  // get all services again, all services 
   // should be removed from the map
   eCAL::Util::GetServices(service_info_map);
 
@@ -125,10 +123,8 @@ TEST(core_cpp_clientserver, GetServices)
     // check size
     EXPECT_EQ(service_info_map.size(), 1);
   }
-  // let's unregister them
-  eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT + 1000);
 
-  // get all services again, now all services 
+  // get all services again, all services 
   // should be removed from the map
   eCAL::Util::GetServices(service_info_map);
 

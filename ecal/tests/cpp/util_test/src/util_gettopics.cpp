@@ -20,13 +20,15 @@
 #include <ecal/ecal.h>
 
 #include <unordered_map>
+#include <thread>
+#include <vector>
 
 #include <gtest/gtest.h>
 
-#define CMN_REGISTRATION_REFRESH   1000
-#define CMN_MONITORING_TIMEOUT     5000
+#define CMN_REGISTRATION_REFRESH 1000
+#define CMN_MONITORING_TIMEOUT   5000
 
-TEST(core_cpp_pubsub, GetTopics)
+TEST(core_cpp_util, GetTopics)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_gettopics");
@@ -91,20 +93,15 @@ TEST(core_cpp_pubsub, GetTopics)
     pub1.Destroy();
     sub1.Destroy();
 
-    // pub1 and sub1 still exists
     {
       eCAL::SDataTypeInformation utils_topic_info;
       eCAL::Util::GetTopicDataTypeInformation("A1", utils_topic_info);
-      EXPECT_EQ(utils_topic_info, info_A1);
-    }
-    {
-      eCAL::SDataTypeInformation utils_topic_info;
-      eCAL::Util::GetTopicDataTypeInformation("B1", utils_topic_info);
-      EXPECT_EQ(utils_topic_info, info_B1);
+      EXPECT_EQ(false, eCAL::Util::GetTopicDataTypeInformation("A1", utils_topic_info));
+      EXPECT_EQ(false, eCAL::Util::GetTopicDataTypeInformation("B1", utils_topic_info));
     }
 
-    // wait a monitoring timeout long, and let pub1.2 and sub1.2 register
-    eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT + CMN_REGISTRATION_REFRESH);
+    // 2 registration cycles
+    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
 
     // update map
     eCAL::Util::GetTopics(topic_info_map);
@@ -136,5 +133,71 @@ TEST(core_cpp_pubsub, GetTopics)
   EXPECT_EQ(topic_info_map.size(), 0);
 
   // finalize eCAL API
+  eCAL::Finalize();
+}
+
+TEST(core_cpp_util, GetTopicsParallel)
+{
+  constexpr const int max_publisher_count(2000);
+  constexpr const int waiting_time_thread(1000);
+  constexpr const int parallel_threads(1);
+
+  eCAL::Initialize();
+
+  auto create_publishers = [&]() {
+    std::string topic_name = "Test.ParallelUtilFunctions";
+    std::atomic<int> call_back_count{ 0 };
+
+    std::vector<std::unique_ptr<eCAL::CPublisher>> publishers;
+    for (int pub_count = 0; pub_count < max_publisher_count; pub_count++) {
+      std::unique_ptr<eCAL::CPublisher> publisher = std::make_unique<eCAL::CPublisher>(topic_name + std::to_string(pub_count));
+      publishers.push_back(std::move(publisher));
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(waiting_time_thread));
+    };
+
+  auto get_topics_from_ecal = [&]() {
+    size_t found_topics = 0;
+    std::vector<std::string> tmp_topic_names;
+    std::unordered_map<std::string, eCAL::SDataTypeInformation> topics;
+    do {
+      eCAL::Util::GetTopicNames(tmp_topic_names);
+      eCAL::Util::GetTopics(topics);
+
+      found_topics = tmp_topic_names.size();
+      std::cout << "Number of topics found by ecal: " << found_topics << "\n";
+      std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    } while (found_topics < max_publisher_count);
+
+    // do it again until all publishers are deleted
+    do {
+      eCAL::Util::GetTopicNames(tmp_topic_names);
+      eCAL::Util::GetTopics(topics);
+
+      found_topics = tmp_topic_names.size();
+      std::cout << "Number of topics found by ecal: " << found_topics << "\n";
+      std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    } while (found_topics != 0);
+    };
+
+  std::vector<std::thread> threads_container;
+  threads_container.push_back(std::thread(create_publishers));
+
+  for (size_t i = 0; i < parallel_threads; i++) {
+    threads_container.push_back(std::thread(get_topics_from_ecal));
+  }
+
+  for (auto& th : threads_container) {
+    th.join();
+  }
+
+  std::vector<std::string> final_topic_names;
+  std::unordered_map<std::string, eCAL::SDataTypeInformation> final_topics;
+  eCAL::Util::GetTopicNames(final_topic_names);
+  eCAL::Util::GetTopics(final_topics);
+
+  EXPECT_EQ(final_topic_names.size(), 0);
+  EXPECT_EQ(final_topics.size(), 0);
+
   eCAL::Finalize();
 }

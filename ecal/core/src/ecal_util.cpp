@@ -192,10 +192,10 @@ namespace eCAL
       g_descgate()->GetServices(service_info_map_);
     }
 
-    void GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_)
+    void GetServiceMethodNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_)
     {
       if (g_descgate() == nullptr) return;
-      g_descgate()->GetServiceNames(service_method_names_);
+      g_descgate()->GetServiceMethodNames(service_method_names_);
     }
 
     bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_)
@@ -208,6 +208,30 @@ namespace eCAL
     {
       if (g_descgate() == nullptr) return(false);
       return(g_descgate()->GetServiceDescription(service_name_, method_name_, req_desc_, resp_desc_));
+    }
+
+    void GetClients(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& client_info_map_)
+    {
+      if (g_descgate() == nullptr) return;
+      g_descgate()->GetClients(client_info_map_);
+    }
+
+    void GetClientMethodNames(std::vector<std::tuple<std::string, std::string>>& client_method_names_)
+    {
+      if (g_descgate() == nullptr) return;
+      g_descgate()->GetClientMethodNames(client_method_names_);
+    }
+
+    bool GetClientTypeNames(const std::string& client_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_)
+    {
+      if (g_descgate() == nullptr) return(false);
+      return(g_descgate()->GetClientTypeNames(client_name_, method_name_, req_type_, resp_type_));
+    }
+
+    bool GetClientDescription(const std::string& client_name_, const std::string& method_name_, std::string& req_desc_, std::string& resp_desc_)
+    {
+      if (g_descgate() == nullptr) return(false);
+      return(g_descgate()->GetClientDescription(client_name_, method_name_, req_desc_, resp_desc_));
     }
 
     std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& combined_topic_type_)

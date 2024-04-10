@@ -21,7 +21,11 @@ project(test_util)
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
+
 set(util_test_src
+  src/util_getclients.cpp
+  src/util_getservices.cpp
+  src/util_gettopics.cpp
   src/util_test.cpp
 )
 
