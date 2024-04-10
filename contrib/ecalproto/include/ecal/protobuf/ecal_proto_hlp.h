@@ -18,12 +18,14 @@
 */
 
 /**
+ * @file   ecal_proto_hlp.h
  * @brief  protobuf message description handling
 **/
 
 #pragma once
 
 #include <algorithm>
+#include <iterator>
 #include <string>
 #include <vector>
 
@@ -161,7 +163,7 @@ namespace protobuf
     auto count = descriptor->field_count();
     for (int i = 0; i < count; ++i)
     {
-      auto field = descriptor->field(i);
+      const auto *field = descriptor->field(i);
       names_vec.push_back(field->name());
     }
     return names_vec;

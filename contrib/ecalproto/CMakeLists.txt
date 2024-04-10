@@ -22,7 +22,6 @@ project(proto)
 
 set(ecal_protobuf_src
     src/ecal_proto_decoder.cpp
-    src/ecal_proto_dyn.cpp
     src/ecal_proto_maximum_array_dimensions.cpp
     src/ecal_proto_message_filter.cpp
     src/ecal_proto_visitor.cpp
