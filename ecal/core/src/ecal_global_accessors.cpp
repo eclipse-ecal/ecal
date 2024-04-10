@@ -47,6 +47,37 @@ namespace eCAL
   eCAL_Process_eSeverity        g_process_severity(eCAL_Process_eSeverity::proc_sev_unknown);
   eCAL_Process_eSeverity_Level  g_process_severity_level(eCAL_Process_eSeverity_Level::proc_sev_level1);
 
+  void SetGlobalUnitName(const char *unit_name_)
+  {
+    // There is a function already "SetUnitName" which sets the g_unit_name just as string.
+    // Used in global API. It does not have the following logic -> should that be added/removed/combined?
+    // For previous consistency this function is added here for the time being.
+    if(unit_name_ != nullptr) g_unit_name = unit_name_;
+      if (g_unit_name.empty())
+      {
+        g_unit_name = Process::GetProcessName();
+#ifdef ECAL_OS_WINDOWS
+        size_t p = g_unit_name.rfind('\\');
+        if (p != std::string::npos)
+        {
+          g_unit_name = g_unit_name.substr(p+1);
+        }
+        p = g_unit_name.rfind('.');
+        if (p != std::string::npos)
+        {
+          g_unit_name = g_unit_name.substr(0, p);
+        }
+#endif
+#ifdef ECAL_OS_LINUX
+        size_t p = g_unit_name.rfind('/');
+        if (p != std::string::npos)
+        {
+          g_unit_name = g_unit_name.substr(p + 1);
+        }
+#endif
+      }
+  };
+
   CGlobals* g_globals()
   {
     return g_globals_ctx;

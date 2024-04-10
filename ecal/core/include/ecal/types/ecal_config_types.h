@@ -48,18 +48,22 @@ namespace eCAL
   {        
     struct eCALConfig
     {
-        TransportLayerOptions transport_layer_options;
-        RegistrationOptions   registration_options;
-        MonitoringOptions     monitoring_options;
-        ReceivingOptions      receiving_options;
-        PublisherOptions      publisher_options;
-        TimesyncOptions       timesync_options;
-        ServiceOptions        service_options;
-        ApplicationOptions    application_options;
-        LoggingOptions        logging_options;
-        std::string           loaded_ecal_ini_file;
+        TransportLayerOptions    transport_layer_options{};
+        RegistrationOptions      registration_options{};
+        MonitoringOptions        monitoring_options{};
+        ReceivingOptions         receiving_options{};
+        PublisherOptions         publisher_options{};
+        TimesyncOptions          timesync_options{};
+        ServiceOptions           service_options{};
+        ApplicationOptions       application_options{};
+        LoggingOptions           logging_options{};
+        std::string              loaded_ecal_ini_file{};
+        std::vector<std::string> config_keys{};
+        
+        ECAL_API eCALConfig(int argc_ , char **argv_);
 
-        ECAL_API eCALConfig();
+        private:
+        void InitConfig();
     };
 	}
 }

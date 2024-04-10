@@ -70,12 +70,12 @@ namespace eCAL
     if(m_created) return;
 
     // network mode
-    m_network = g_ecal_config()->transport_layer_options.network_enabled;
+    m_network = g_ecal_config().transport_layer_options.network_enabled;
 
     // receive registration from shared memory and or udp
     // TODO PG: Adapt to new config management
-    m_use_registration_udp = Config::GetCurrentConfig()->monitoring_options.network_monitoring;
-    m_use_registration_shm = (Config::GetCurrentConfig()->monitoring_options.monitoring_mode & Config::MonitoringMode::shm_monitoring) ? true : false;
+    m_use_registration_udp = Config::GetCurrentConfig().monitoring_options.network_monitoring;
+    m_use_registration_shm = (Config::GetCurrentConfig().monitoring_options.monitoring_mode & Config::MonitoringMode::shm_monitoring) ? true : false;
 
     if (m_use_registration_udp)
     {
@@ -85,7 +85,7 @@ namespace eCAL
       attr.port      = UDP::GetRegistrationPort();
       attr.broadcast = UDP::IsBroadcast();
       attr.loopback  = true;
-      attr.rcvbuf    = Config::GetCurrentConfig()->transport_layer_options.mc_options.recbuf.get();
+      attr.rcvbuf    = Config::GetCurrentConfig().transport_layer_options.mc_options.recbuf.get();
 
       // start registration sample receiver
       m_registration_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CRegistrationReceiver::HasSample, this, std::placeholders::_1), std::bind(&CRegistrationReceiver::ApplySerializedSample, this, std::placeholders::_1, std::placeholders::_2));
@@ -94,7 +94,7 @@ namespace eCAL
 #if ECAL_CORE_REGISTRATION_SHM
     if (m_use_registration_shm)
     {
-      m_memfile_broadcast.Create(Config::GetCurrentConfig()->monitoring_options.shm_options.shm_monitoring_domain, Config::GetCurrentConfig()->monitoring_options.shm_options.shm_monitoring_queue_size);
+      m_memfile_broadcast.Create(Config::GetCurrentConfig().monitoring_options.shm_options.shm_monitoring_domain, Config::GetCurrentConfig().monitoring_options.shm_options.shm_monitoring_queue_size);
       m_memfile_broadcast.FlushLocalEventQueue();
       m_memfile_broadcast_reader.Bind(&m_memfile_broadcast);
 

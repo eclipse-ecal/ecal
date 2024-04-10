@@ -32,9 +32,9 @@ namespace eCAL
   {
     struct LoggingOptions
     {
-      eCAL_Logging_Filter filter_log_con;
-      eCAL_Logging_Filter filter_log_file;
-      eCAL_Logging_Filter filter_log_udp;
+      eCAL_Logging_Filter filter_log_con{};
+      eCAL_Logging_Filter filter_log_file{};
+      eCAL_Logging_Filter filter_log_udp{};
     };
   }
 }

@@ -37,7 +37,7 @@ namespace eCAL
      */
     bool IsBroadcast()
     {
-      return !Config::GetCurrentConfig()->transport_layer_options.network_enabled;
+      return !Config::GetCurrentConfig().transport_layer_options.network_enabled;
     }
 
     /**
@@ -47,7 +47,7 @@ namespace eCAL
      */
     bool IsNpcapEnabled()
     {
-      return Config::GetCurrentConfig()->transport_layer_options.mc_options.npcap_enabled;
+      return Config::GetCurrentConfig().transport_layer_options.mc_options.npcap_enabled;
     }
 
     /**
@@ -59,7 +59,7 @@ namespace eCAL
      */
     bool IsUdpMulticastJoinAllIfEnabled()
     {
-      return Config::GetCurrentConfig()->transport_layer_options.mc_options.join_all_interfaces;
+      return Config::GetCurrentConfig().transport_layer_options.mc_options.join_all_interfaces;
     }
 
     /**
@@ -80,20 +80,20 @@ namespace eCAL
     std::string GetRegistrationAddress()
     {
       // check if the network is disabled
-      const bool local_only = !Config::GetCurrentConfig()->transport_layer_options.network_enabled;
+      const bool local_only = !Config::GetCurrentConfig().transport_layer_options.network_enabled;
       if (local_only)
       {
         return GetLocalBroadcastAddress();
       }
 
       // both in v1 and v2, the multicast group is returned as the adress for the registration layer
-      return Config::GetCurrentConfig()->transport_layer_options.mc_options.group.get();
+      return Config::GetCurrentConfig().transport_layer_options.mc_options.group.get();
     }
 
     int GetRegistrationPort()
     {
       // retrieve the configured UDP multicast port from the configuration
-      const int configured_port = Config::GetCurrentConfig()->transport_layer_options.mc_options.port.get();
+      const int configured_port = Config::GetCurrentConfig().transport_layer_options.mc_options.port.get();
 
       // add the specific offset, NET_UDP_MULTICAST_PORT_REG_OFF, to obtain the registration port
       return configured_port + NET_UDP_MULTICAST_PORT_REG_OFF;
@@ -108,7 +108,7 @@ namespace eCAL
     int GetLoggingPort()
     {
       // retrieve the configured UDP multicast port from the configuration
-      const int configured_port = Config::GetCurrentConfig()->transport_layer_options.mc_options.port.get();
+      const int configured_port = Config::GetCurrentConfig().transport_layer_options.mc_options.port.get();
 
       // add the specific offset, NET_UDP_MULTICAST_PORT_LOG_OFF, to obtain the logging port
       return configured_port + NET_UDP_MULTICAST_PORT_LOG_OFF;
@@ -123,7 +123,7 @@ namespace eCAL
     std::string GetTopicPayloadAddress(const std::string& topic_name)
     {
       // check if the network is disabled
-      const bool local_only = !Config::GetCurrentConfig()->transport_layer_options.network_enabled;
+      const bool local_only = !Config::GetCurrentConfig().transport_layer_options.network_enabled;
       if (local_only)
       {
         // if network is disabled, return the local broadcast address
@@ -131,23 +131,23 @@ namespace eCAL
       }
 
       // determine the UDP multicast configuration version
-      if (Config::GetCurrentConfig()->transport_layer_options.mc_options.config_version == Config::UdpConfigVersion::V1)
+      if (Config::GetCurrentConfig().transport_layer_options.mc_options.config_version == Config::UdpConfigVersion::V1)
       {
         // retrieve the corresponding multicast address based on the topic name using v1 implementation
-        return UDP::V1::topic2mcast(topic_name, Config::GetCurrentConfig()->transport_layer_options.mc_options.group.get(), Config::GetCurrentConfig()->transport_layer_options.mc_options.mask.get());
+        return UDP::V1::topic2mcast(topic_name, Config::GetCurrentConfig().transport_layer_options.mc_options.group.get(), Config::GetCurrentConfig().transport_layer_options.mc_options.mask.get());
       }
       // v2
       else
       {
         // retrieve the corresponding multicast address based on the topic name using v2 implementation
-        return  UDP::V2::topic2mcast(topic_name, Config::GetCurrentConfig()->transport_layer_options.mc_options.group.get(), Config::GetCurrentConfig()->transport_layer_options.mc_options.mask.get());
+        return  UDP::V2::topic2mcast(topic_name, Config::GetCurrentConfig().transport_layer_options.mc_options.group.get(), Config::GetCurrentConfig().transport_layer_options.mc_options.mask.get());
       }
     }
 
     int GetPayloadPort()
     {
       // retrieve the configured UDP multicat port from the configuration
-      const int configured_port = Config::GetCurrentConfig()->transport_layer_options.mc_options.port.get();
+      const int configured_port = Config::GetCurrentConfig().transport_layer_options.mc_options.port.get();
 
       // add the specific offset, NET_UDP_MULTICAST_PORT_SAMPLE_OFF, to obtain the payload port
       return configured_port + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
@@ -156,7 +156,7 @@ namespace eCAL
     int GetMulticastTtl()
     {
       // check if the network is disabled
-      const bool local_only = !Config::GetCurrentConfig()->transport_layer_options.network_enabled;
+      const bool local_only = !Config::GetCurrentConfig().transport_layer_options.network_enabled;
       if (local_only)
       {
         // if network is disabled, return a TTL of 0 to restrict multicast packets to the local machine
@@ -164,7 +164,7 @@ namespace eCAL
       }
       
       // if network is enabled, return the configured UDP multicast TTL value
-      return Config::GetCurrentConfig()->transport_layer_options.mc_options.ttl;
+      return Config::GetCurrentConfig().transport_layer_options.mc_options.ttl;
     }
   }
 }

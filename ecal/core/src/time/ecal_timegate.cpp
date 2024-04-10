@@ -85,7 +85,7 @@ namespace eCAL
     case eTimeSyncMode::none:
       break;
     case eTimeSyncMode::realtime:
-      m_time_sync_modname = Config::GetCurrentConfig()->timesync_options.timesync_module;
+      m_time_sync_modname = Config::GetCurrentConfig().timesync_options.timesync_module;
       m_successfully_loaded_rt = LoadModule(m_time_sync_modname, m_time_sync_rt);
       break;
     case eTimeSyncMode::replay:

@@ -115,7 +115,7 @@ public:
   {
     using namespace std::placeholders;
 
-    network_mode = eCAL::Config::GetCurrentConfig()->transport_layer_options.network_enabled ? "cloud" : "local";
+    network_mode = eCAL::Config::GetCurrentConfig().transport_layer_options.network_enabled ? "cloud" : "local";
     is_polling_time = true;
     time_updater = std::thread(std::bind(&CommandLineViewModel::UpdateCurrentEcalTime, this));
 

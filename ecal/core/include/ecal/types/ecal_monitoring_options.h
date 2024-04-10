@@ -46,20 +46,20 @@ namespace eCAL
 
     struct SHMMonitoringOptions
     {
-      std::string shm_monitoring_domain;
-      size_t      shm_monitoring_queue_size;  
+      std::string shm_monitoring_domain{};
+      size_t      shm_monitoring_queue_size{};  
     };
 
     struct MonitoringOptions
     {
-      eCAL_MonitoringMode_Filter monitoring_mode;
-      LimitSize<1000, 1000>      monitoring_timeout;
-      bool                       network_monitoring;
-      UDPMonitoringOptions       udp_options;
-      SHMMonitoringOptions       shm_options;
+      eCAL_MonitoringMode_Filter monitoring_mode{};
+      LimitSize<1000, 1000>      monitoring_timeout{};
+      bool                       network_monitoring{};
+      UDPMonitoringOptions       udp_options{};
+      SHMMonitoringOptions       shm_options{};
 
-      std::string         filter_excl;
-      std::string         filter_incl;
+      std::string         filter_excl{};
+      std::string         filter_incl{};
     };
   }
 }

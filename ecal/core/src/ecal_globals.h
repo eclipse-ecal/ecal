@@ -65,7 +65,7 @@ namespace eCAL
     int Initialize     ( unsigned int components_, std::vector<std::string>* config_keys_ = nullptr);
     bool IsInitialized ( unsigned int component_  );
 
-    void SetUserConfig(Config::eCALConfig& user_config_);
+    void SetEcalConfig(Config::eCALConfig& ecal_config_);
     
     unsigned int GetComponents() const { return(components); };
 

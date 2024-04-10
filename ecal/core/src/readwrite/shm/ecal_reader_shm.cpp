@@ -53,7 +53,7 @@ namespace eCAL
           std::placeholders::_6,
           std::placeholders::_7,
           std::placeholders::_8);
-        g_memfile_pool()->ObserveFile(memfile_name, memfile_event, par_.topic_name, par_.topic_id, g_ecal_config()->registration_options.getTimeoutMS(), memfile_data_callback);
+        g_memfile_pool()->ObserveFile(memfile_name, memfile_event, par_.topic_name, par_.topic_id, g_ecal_config().registration_options.getTimeoutMS(), memfile_data_callback);
       }
     }
   }

@@ -26,6 +26,7 @@
 #include <regex>
 #include <algorithm>
 #include <cctype>
+#include <ecal_def.h>
 
 namespace{
   static const std::array<const std::regex, 3> INVALID_IPV4_ADDRESSES = {
@@ -43,23 +44,15 @@ namespace eCAL
   {
 
     // IpAddressV4 definitions
-
-    IpAddressV4::IpAddressV4() = default;
+    // TODO PG: Discuss default initialization
+    IpAddressV4::IpAddressV4() : IpAddressV4(NET_UDP_MULTICAST_GROUP) {};
 
     IpAddressV4::IpAddressV4(const std::string& ip_address_)
     {
-      if (validateIpString(ip_address_))
-      {
-        m_ip_address = ip_address_;
-      }
-      else
-      {
-        std::cerr << "[IpAddressV4] No valid IP address: " << ip_address_ << "\n";
-        exit(EXIT_FAILURE);
-      }
+      validateIpString(ip_address_);
     } 
 
-    bool IpAddressV4::validateIpString(std::string ip_address_)
+    void IpAddressV4::validateIpString(const std::string& ip_address_)
     {
       if (  std::regex_match(ip_address_, IPV4_DEC_REGEX)
          || std::regex_match(ip_address_, IPV4_HEX_REGEX)
@@ -69,14 +62,23 @@ namespace eCAL
         {
           if (std::regex_match(ip_address_, inv_ip_regex))
           {
-            return false;
+            exitApp(ip_address_);
+            return;
           }
         }
 
-        return true;
+        m_ip_address = ip_address_;
       }
+      else
+      {
+        exitApp(ip_address_);
+      }
+    }
 
-      return false;
+    void IpAddressV4::exitApp(const std::string& ip_address_ /*std::string("")*/)
+    {
+      std::cerr << "[IpAddressV4] No valid IP address: " << ip_address_ << "\n";
+      exit(EXIT_FAILURE);
     }
   }
 }

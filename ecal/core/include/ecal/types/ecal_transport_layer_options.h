@@ -32,44 +32,44 @@ namespace eCAL
   {
     struct TCPubsubOptions
     {
-      size_t num_executor_reader;
-      size_t num_executor_writer;
-      size_t max_reconnections;
+      size_t num_executor_reader{};
+      size_t num_executor_writer{};
+      size_t max_reconnections{};
     };
 
     struct SHMOptions
     {
-      std::string           host_group_name;
-      LimitSize<4096, 4096> memfile_minsize;
-      LimitSize<50, 1, 100> memfile_reserve;
-      int                   memfile_ack_timeout;
-      LimitSize<0, 1>       memfile_buffer_count;
-      bool                  drop_out_of_order_messages;
-      bool                  memfile_zero_copy;
+      std::string           host_group_name{};
+      LimitSize<4096, 4096> memfile_minsize{};
+      LimitSize<50, 1, 100> memfile_reserve{};
+      int                   memfile_ack_timeout{};
+      LimitSize<0, 1>       memfile_buffer_count{};
+      bool                  drop_out_of_order_messages{};
+      bool                  memfile_zero_copy{};
     };
 
     struct UdpMulticastOptions
     {
-      UdpConfigVersion         config_version;        
-      IpAddressV4              group;
-      IpAddressV4              mask;
-      LimitSize<14000, 10>     port;
-      unsigned int             ttl;
-      LimitSize<5242880, 1024> sndbuf;
-      LimitSize<5242880, 1024> recbuf;
-      bool                     join_all_interfaces;
+      UdpConfigVersion         config_version{};        
+      IpAddressV4              group{};
+      IpAddressV4              mask{};
+      LimitSize<14000, 10>     port{};
+      unsigned int             ttl{};
+      LimitSize<5242880, 1024> sndbuf{};
+      LimitSize<5242880, 1024> recbuf{};
+      bool                     join_all_interfaces{};
 
-      int  bandwidth_max_udp;
-      bool npcap_enabled;
+      int  bandwidth_max_udp{};
+      bool npcap_enabled{};
     }; 
       
     struct TransportLayerOptions
     {
-      bool                network_enabled;
-      bool                drop_out_of_order_messages;
-      UdpMulticastOptions mc_options;
-      TCPubsubOptions     tcp_options;
-      SHMOptions          shm_options;
+      bool                network_enabled{};
+      bool                drop_out_of_order_messages{};
+      UdpMulticastOptions mc_options{};
+      TCPubsubOptions     tcp_options{};
+      SHMOptions          shm_options{};
     };
   }
 }

@@ -33,7 +33,7 @@ namespace eCAL
   namespace Config
   {
     
-    ECAL_API eCALConfig* GetCurrentConfig();
+    ECAL_API eCALConfig& GetCurrentConfig();
 
     /////////////////////////////////////
     // common

@@ -32,18 +32,18 @@ namespace eCAL
   {
     struct SysOptions
     {
-      std::string filter_excl;
+      std::string filter_excl{};
     };
 
     struct StartupOptions
     {
-      std::string terminal_emulator;
+      std::string terminal_emulator{};
     };
 
     struct ApplicationOptions
     {
-      SysOptions     sys_options;
-      StartupOptions startup_options;
+      SysOptions     sys_options{};
+      StartupOptions startup_options{};
     };
   }
 }

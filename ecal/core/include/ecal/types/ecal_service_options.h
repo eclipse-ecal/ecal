@@ -32,13 +32,13 @@ namespace eCAL
   {
     struct ServiceOptions
     {
-      bool protocol_v0;
-      bool protocol_v1;
+      bool protocol_v0{};
+      bool protocol_v1{};
     };
 
     struct TimesyncOptions
     {
-      std::string timesync_module;
+      std::string timesync_module{};
     };
   }
 }

@@ -927,8 +927,8 @@ void ImportFromCloudWidget::loadExcludeTasksFilter()
   QFile default_cfg_file(default_cfg_file_path.c_str());
   if (default_cfg_file.exists())
   {
-    std::regex reg(eCAL::Config::GetCurrentConfig()->application_options.sys_options.filter_excl, std::regex::icase);
-    exclude_tasks_regex_valid_ = !eCAL::Config::GetCurrentConfig()->application_options.sys_options.filter_excl.empty();
+    std::regex reg(eCAL::Config::GetCurrentConfig().application_options.sys_options.filter_excl, std::regex::icase);
+    exclude_tasks_regex_valid_ = !eCAL::Config::GetCurrentConfig().application_options.sys_options.filter_excl.empty();
     exclude_tasks_regex_ = reg;
   }
 }

@@ -64,6 +64,8 @@ namespace eCAL
   class  CMemFileMap;
 #endif
 
+  void SetGlobalUnitName(const char *unit_name_);
+
   // Declaration of getter functions for globally accessible variable instances
   CGlobals*               g_globals();
   CConfig*                g_config();

@@ -37,7 +37,7 @@
 
 namespace eCAL
 {
-  CGlobals::CGlobals() : initialized(false), components(0)
+  CGlobals::CGlobals() : initialized(false), components(0), ecal_config_instance(0, nullptr)
   {}
 
   CGlobals::~CGlobals()
@@ -45,40 +45,15 @@ namespace eCAL
     Finalize(Init::All);
   }
 
+  void CGlobals::SetEcalConfig(Config::eCALConfig& ecal_config_)
+  {    
+    ecal_config_instance = ecal_config_; 
+  }
+
   int CGlobals::Initialize(unsigned int components_, std::vector<std::string>* config_keys_ /*= nullptr*/)
   {
     // will be set if any new module was initialized
     bool new_initialization(false);
-
-    /////////////////////
-    // CONFIG
-    /////////////////////
-    if (config_instance == nullptr)
-    {
-      config_instance = std::make_unique<CConfig>();
-      if (config_keys_ != nullptr)
-      {
-        config_instance->OverwriteKeys(*config_keys_);
-      }
-      config_instance->AddFile(g_default_ini_file);
-
-      if (!config_instance->Validate())
-      {
-        const std::string emsg("Core initialization failed cause by a configuration error.");
-
-        std::cerr                                                                 << '\n';
-        std::cerr << "----------------------------------------------------------" << '\n';
-        std::cerr << "eCAL CORE PANIC :-("                                        << '\n';
-        std::cerr                                                                 << '\n';
-        std::cerr << emsg                                                         << '\n';
-        std::cerr << "----------------------------------------------------------" << '\n';
-        std::cerr                                                                 << '\n';
-        
-        throw std::runtime_error(emsg.c_str());
-      }
-
-      new_initialization = true;
-    }
 
 #if ECAL_CORE_REGISTRATION
     /////////////////////

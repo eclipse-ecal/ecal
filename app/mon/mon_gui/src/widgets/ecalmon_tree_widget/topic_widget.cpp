@@ -187,9 +187,9 @@ void TopicWidget::loadRegExpLists()
 
   QString exclude_string;
   QString include_string;
-  exclude_string = QString::fromStdString(eCAL::Config::GetCurrentConfig()->monitoring_options.filter_excl);
+  exclude_string = QString::fromStdString(eCAL::Config::GetCurrentConfig().monitoring_options.filter_excl);
 
-  include_string = QString::fromStdString(eCAL::Config::GetCurrentConfig()->monitoring_options.filter_incl);
+  include_string = QString::fromStdString(eCAL::Config::GetCurrentConfig().monitoring_options.filter_incl);
 
 
   // The ecal.ini defines a very strange regex format: A filter consists of

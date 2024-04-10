@@ -47,11 +47,15 @@ namespace eCAL
       ECAL_API IpAddressV4(const std::string& ip_address_);  
              
       std::string get() const { return m_ip_address; }
+      
+      void operator=(IpAddressV4& other)       { this->m_ip_address = other.get(); };
+      void operator=(const std::string& other) { this->validateIpString(other); };
 
     private:            
-      static bool validateIpString(std::string ip_address_);  
+      ECAL_API void validateIpString(const std::string& ip_address_); 
+      void exitApp(const std::string& ip_adress_ = std::string("")); 
 
-      std::string m_ip_address{};
+      std::string m_ip_address;
     };
 
     /**
@@ -83,6 +87,7 @@ namespace eCAL
       int get() const { return m_size; };
       
       bool operator==(const LimitSize& other) const { return this->m_size == other.get(); };
+      void operator=(const LimitSize& other) { this->m_size = other.get(); };
       friend bool operator==(const LimitSize& lhs, const int& rhs) { return lhs.get() == rhs; };
       friend bool operator==(const int& lhs, const LimitSize& rhs) { return rhs == lhs; };
       friend bool operator==(const LimitSize& lhs, const unsigned int& rhs) { return lhs.get() == static_cast<int>(rhs); };

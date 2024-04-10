@@ -165,14 +165,14 @@ namespace eCAL
       }
 
       sstream << "------------------------- CONFIGURATION --------------------------" << '\n';
-      sstream << "Default INI              : " << Config::GetCurrentConfig()->loaded_ecal_ini_file << '\n';
+      sstream << "Default INI              : " << Config::GetCurrentConfig().loaded_ecal_ini_file << '\n';
       sstream << '\n';
 
       sstream << "------------------------- NETWORK --------------------------------" << '\n';
       sstream << "Host name                : " << Process::GetHostName() << '\n';
       sstream << "Host group name          : " << Process::GetHostGroupName() << '\n';
 
-      if (Config::GetCurrentConfig()->transport_layer_options.network_enabled)
+      if (Config::GetCurrentConfig().transport_layer_options.network_enabled)
       {
         sstream << "Network mode             : cloud" << '\n';
       }
@@ -182,19 +182,19 @@ namespace eCAL
       }
       
       sstream << "Network ttl              : " << UDP::GetMulticastTtl() << '\n';
-      sstream << "Network sndbuf           : " << GetBufferStr(Config::GetCurrentConfig()->transport_layer_options.mc_options.sndbuf.get()) << '\n';
-      sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetCurrentConfig()->transport_layer_options.mc_options.recbuf.get()) << '\n';
-      sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetCurrentConfig()->transport_layer_options.mc_options.config_version) << '\n';
-      sstream << "Multicast group          : " << Config::GetCurrentConfig()->transport_layer_options.mc_options.group.get() << '\n';
-      sstream << "Multicast mask           : " << Config::GetCurrentConfig()->transport_layer_options.mc_options.mask.get() << '\n';
-      const int port = Config::GetCurrentConfig()->transport_layer_options.mc_options.port.get();
+      sstream << "Network sndbuf           : " << GetBufferStr(Config::GetCurrentConfig().transport_layer_options.mc_options.sndbuf.get()) << '\n';
+      sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetCurrentConfig().transport_layer_options.mc_options.recbuf.get()) << '\n';
+      sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetCurrentConfig().transport_layer_options.mc_options.config_version) << '\n';
+      sstream << "Multicast group          : " << Config::GetCurrentConfig().transport_layer_options.mc_options.group.get() << '\n';
+      sstream << "Multicast mask           : " << Config::GetCurrentConfig().transport_layer_options.mc_options.mask.get() << '\n';
+      const int port = Config::GetCurrentConfig().transport_layer_options.mc_options.port.get();
       sstream << "Multicast ports          : " << port << " - " << port + 10 << '\n';
-      sstream << "Multicast join all IFs   : " << (Config::GetCurrentConfig()->transport_layer_options.mc_options.join_all_interfaces ? "on" : "off") << '\n';
+      sstream << "Multicast join all IFs   : " << (Config::GetCurrentConfig().transport_layer_options.mc_options.join_all_interfaces ? "on" : "off") << '\n';
 
 
 #if ECAL_CORE_TIMEPLUGIN
       sstream << "------------------------- TIME -----------------------------------" << '\n';
-      sstream << "Synchronization realtime : " << Config::GetCurrentConfig()->timesync_options.timesync_module << '\n';
+      sstream << "Synchronization realtime : " << Config::GetCurrentConfig().timesync_options.timesync_module << '\n';
       sstream << "Synchronization replay   : " << eCALPAR(TIME, SYNC_MOD_REPLAY) << '\n';
       sstream << "State                    : ";
       if (g_timegate()->IsSynchronized()) sstream << " synchronized " << '\n';
@@ -210,16 +210,16 @@ namespace eCAL
 #endif
 #if ECAL_CORE_SUBSCRIBER
       sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------" << '\n';
-      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::GetCurrentConfig()->receiving_options.udp_mc_recv_enabled)  << '\n';
-      sstream << "Drop out-of-order msgs   : " << (Config::GetCurrentConfig()->transport_layer_options.drop_out_of_order_messages ? "on" : "off") << '\n';
+      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::GetCurrentConfig().receiving_options.udp_mc_recv_enabled)  << '\n';
+      sstream << "Drop out-of-order msgs   : " << (Config::GetCurrentConfig().transport_layer_options.drop_out_of_order_messages ? "on" : "off") << '\n';
 #endif
 #ifdef ECAL_NPCAP_SUPPORT
-      if(Config::GetCurrentConfig()->transport_layer_options.mc_options.npcap_enabled && !Udpcap::Initialize())
+      if(Config::GetCurrentConfig().transport_layer_options.mc_options.npcap_enabled && !Udpcap::Initialize())
       {
         sstream << " (Init FAILED!)";
       }
 #else  // ECAL_CORE_NPCAP_SUPPORT
-      if (Config::GetCurrentConfig()->transport_layer_options.mc_options.npcap_enabled)
+      if (Config::GetCurrentConfig().transport_layer_options.mc_options.npcap_enabled)
       {
         sstream << " (Npcap is enabled, but not configured via CMake!)";
       }
@@ -249,7 +249,7 @@ namespace eCAL
 
     std::string GetHostGroupName()
     {
-      return Config::GetCurrentConfig()->transport_layer_options.shm_options.host_group_name.empty() ? GetHostName() : Config::GetCurrentConfig()->transport_layer_options.shm_options.host_group_name;
+      return Config::GetCurrentConfig().transport_layer_options.shm_options.host_group_name.empty() ? GetHostName() : Config::GetCurrentConfig().transport_layer_options.shm_options.host_group_name;
     }
 
     std::string GetUnitName()
@@ -649,7 +649,7 @@ namespace
 
     // -------------------- terminal_emulator command check --------------------
 
-    const std::string terminal_emulator_command = eCAL::Config::GetCurrentConfig()->application_options.startup_options.terminal_emulator;
+    const std::string terminal_emulator_command = eCAL::Config::GetCurrentConfig().application_options.startup_options.terminal_emulator;
     if (!terminal_emulator_command.empty())
     {
       STD_COUT_DEBUG("[PID " << getpid() << "]: " << "ecal.ini terminal emulator command is: " << terminal_emulator_command << std::endl);

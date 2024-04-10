@@ -30,9 +30,9 @@ namespace eCAL
   {
     struct ReceivingOptions
     {
-      bool shm_recv_enabled;
-      bool tcp_recv_enabled;
-      bool udp_mc_recv_enabled;
+      bool shm_recv_enabled{};
+      bool tcp_recv_enabled{};
+      bool udp_mc_recv_enabled{};
     };
   }
 }

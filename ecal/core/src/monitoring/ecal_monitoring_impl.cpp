@@ -43,11 +43,11 @@ namespace eCAL
   ////////////////////////////////////////
   CMonitoringImpl::CMonitoringImpl() :
     m_init(false),
-    m_process_map   (std::chrono::milliseconds(Config::GetCurrentConfig()->monitoring_options.monitoring_timeout.get())),
-    m_publisher_map (std::chrono::milliseconds(Config::GetCurrentConfig()->monitoring_options.monitoring_timeout.get())),
-    m_subscriber_map(std::chrono::milliseconds(Config::GetCurrentConfig()->monitoring_options.monitoring_timeout.get())),
-    m_server_map    (std::chrono::milliseconds(Config::GetCurrentConfig()->monitoring_options.monitoring_timeout.get())),
-    m_clients_map   (std::chrono::milliseconds(Config::GetCurrentConfig()->monitoring_options.monitoring_timeout.get()))
+    m_process_map   (std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout.get())),
+    m_publisher_map (std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout.get())),
+    m_subscriber_map(std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout.get())),
+    m_server_map    (std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout.get())),
+    m_clients_map   (std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout.get()))
   {
   }
 
@@ -63,8 +63,8 @@ namespace eCAL
     g_registration_receiver()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
 
     // setup blacklist and whitelist filter strings#
-    m_topic_filter_excl_s = Config::GetCurrentConfig()->monitoring_options.filter_excl;
-    m_topic_filter_incl_s = Config::GetCurrentConfig()->monitoring_options.filter_incl;
+    m_topic_filter_excl_s = Config::GetCurrentConfig().monitoring_options.filter_excl;
+    m_topic_filter_incl_s = Config::GetCurrentConfig().monitoring_options.filter_incl;
 
     // setup filtering on by default
     SetFilterState(true);

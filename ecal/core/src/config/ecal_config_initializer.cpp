@@ -22,11 +22,13 @@
 **/
 
 #include "ecal/ecal_config.h"
-#include "ecal_config_reader.h"
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
 #include "config/ecal_config_reader.h"
+
+#include "ecal/ecal_process.h"
+#include "config/ecal_cmd_parser.h"
 
 constexpr char COMMON[]       = "common";
 constexpr char MONITORING[]   = "monitoring";
@@ -94,13 +96,21 @@ namespace eCAL
 {
   namespace Config
   {
-    eCALConfig GetIniConfig(eCALConfig& config)
+    void eCALConfig::InitConfig()
     {
       CConfig iniConfig;
+      iniConfig.OverwriteKeys(config_keys);
       iniConfig.AddFile(g_default_ini_file);
 
+      // g_default_ini_file will be altered in case the loading is successful
+      // otherwise config.loaded_ecal_ini_file will stay empty
+      if (g_default_ini_file != ECAL_DEFAULT_CFG)
+      {
+        loaded_ecal_ini_file = g_default_ini_file;
+      }
+
       // transport layer options
-      auto& transportLayerOptions = config.transport_layer_options;
+      auto& transportLayerOptions = transport_layer_options;
       transportLayerOptions.network_enabled			       = iniConfig.get(NETWORK,      "network_enabled",            NET_ENABLED);
       transportLayerOptions.drop_out_of_order_messages = iniConfig.get(EXPERIMENTAL, "drop_out_of_order_messages", EXP_DROP_OUT_OF_ORDER_MESSAGES);
 
@@ -139,13 +149,13 @@ namespace eCAL
       // registration options
       auto registrationTimeout        = iniConfig.get(COMMON,    "registration_timeout", CMN_REGISTRATION_TO);
       auto registrationRefresh        = iniConfig.get(COMMON,    "registration_refresh", CMN_REGISTRATION_REFRESH);
-      config.registration_options     = RegistrationOptions(registrationTimeout, registrationRefresh);
-      auto& registrationOptions       = config.registration_options;
+      registration_options            = RegistrationOptions(registrationTimeout, registrationRefresh);
+      auto& registrationOptions       = registration_options;
       registrationOptions.share_tdesc = iniConfig.get(PUBLISHER, "share_tdesc",          PUB_SHARE_TDESC);
       registrationOptions.share_ttype = iniConfig.get(PUBLISHER, "share_ttype",          PUB_SHARE_TTYPE);
 
       // monitoring options
-      auto& monitoringOptions = config.monitoring_options;
+      auto& monitoringOptions = monitoring_options;
       auto  monitoringMode                          = iniConfig.get(EXPERIMENTAL, "shm_monitoring_enabled",      false) == true ? MonitoringMode::shm_monitoring : MonitoringMode::none;
       monitoringOptions.monitoring_mode             = static_cast<eCAL_MonitoringMode_Filter>(monitoringMode);
       monitoringOptions.monitoring_timeout          = iniConfig.get(MONITORING,   "timeout", MON_TIMEOUT);;
@@ -161,49 +171,57 @@ namespace eCAL
       shmMonitoringOptions.shm_monitoring_queue_size = iniConfig.get(EXPERIMENTAL, "shm_monitoring_queue_size", EXP_SHM_MONITORING_QUEUE_SIZE);
 
       // receiving options
-      auto& receivingOptions = config.receiving_options;
+      auto& receivingOptions = receiving_options;
       receivingOptions.shm_recv_enabled    = iniConfig.get(NETWORK, "shm_rec_enabled",    NET_SHM_REC_ENABLED);
       receivingOptions.tcp_recv_enabled    = iniConfig.get(NETWORK, "tcp_rec_enabled",    NET_TCP_REC_ENABLED);
       receivingOptions.udp_mc_recv_enabled = iniConfig.get(NETWORK, "udp_mc_rec_enabled", NET_UDP_MC_REC_ENABLED);
 
       // publisher options
-      auto& publisherOptions = config.publisher_options;
+      auto& publisherOptions = publisher_options;
       publisherOptions.use_shm    = static_cast<TLayer::eSendMode>(iniConfig.get(PUBLISHER, "use_shm",    static_cast<int>(PUB_USE_SHM)));
       publisherOptions.use_tcp    = static_cast<TLayer::eSendMode>(iniConfig.get(PUBLISHER, "use_tcp",    static_cast<int>(PUB_USE_TCP)));
       publisherOptions.use_udp_mc = static_cast<TLayer::eSendMode>(iniConfig.get(PUBLISHER, "use_udp_mc", static_cast<int>(PUB_USE_UDP_MC)));
 
       // timesync options
-      auto& timesyncOptions = config.timesync_options;
+      auto& timesyncOptions = timesync_options;
       timesyncOptions.timesync_module = iniConfig.get(TIME, "timesync_module_rt", TIME_SYNC_MODULE);
 
       // service options
-      auto& serviceOptions = config.service_options;
+      auto& serviceOptions = service_options;
       serviceOptions.protocol_v0 = iniConfig.get(SERVICE, "protocol_v0", SERVICE_PROTOCOL_V0);
       serviceOptions.protocol_v1 = iniConfig.get(SERVICE, "protocol_v1", SERVICE_PROTOCOL_V1);
 
       // sys options
-      auto& sysOptions = config.application_options.sys_options;
+      auto& sysOptions = application_options.sys_options;
       sysOptions.filter_excl = iniConfig.get(SYS, "filter_excl", SYS_FILTER_EXCL);
 
       // process options
-      auto& processOptions = config.application_options.startup_options;
+      auto& processOptions = application_options.startup_options;
       processOptions.terminal_emulator = iniConfig.get(PROCESS, "terminal_emulator", PROCESS_TERMINAL_EMULATOR);
 
-      auto& loggingOptions = config.logging_options;
+      auto& loggingOptions = logging_options;
+      // needs to be adapted when switching from simpleini
       loggingOptions.filter_log_con              = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_con",  "info,warning,error,fatal"));
       loggingOptions.filter_log_file             = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_file", ""));
       loggingOptions.filter_log_udp              = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_udp",  "info,warning,error,fatal"));
-
-      return config;
     };
 
-    eCALConfig::eCALConfig()
+    eCALConfig::eCALConfig(int argc_ , char **argv_)
     {
-      GetIniConfig(*this);
+      CmdParser cmd_parser(argc_, argv_);
+
+      config_keys = cmd_parser.getConfigKeys();
+      
+      InitConfig();
+
+      if (cmd_parser.dumpConfig())
+      {
+        Process::DumpConfig();
+      }
     }
 
     // after initialization
-    eCALConfig* GetCurrentConfig()
+    eCALConfig& GetCurrentConfig()
     {
       return g_ecal_config();
     };

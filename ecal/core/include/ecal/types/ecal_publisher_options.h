@@ -32,9 +32,9 @@ namespace eCAL
   {
     struct PublisherOptions
     {
-      TLayer::eSendMode use_shm;
-      TLayer::eSendMode use_tcp;
-      TLayer::eSendMode use_udp_mc;
+      TLayer::eSendMode use_shm{};
+      TLayer::eSendMode use_tcp{};
+      TLayer::eSendMode use_udp_mc{};
     };
   }
 }

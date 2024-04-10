@@ -171,7 +171,7 @@ namespace eCAL
 #undef CopyFile
 #endif // CopyFile
         {
-          std::string ecal_ini_original_path = Config::GetCurrentConfig()->loaded_ecal_ini_file;
+          std::string ecal_ini_original_path = Config::GetCurrentConfig().loaded_ecal_ini_file;
 
           if (ecal_ini_original_path.empty())
           {
