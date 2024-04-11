@@ -36,7 +36,7 @@ add_subdirectory(cpp/expmap_test)
 add_subdirectory(cpp/serialization_test)
 add_subdirectory(cpp/topic2mcast_test)
 
-if(ECAL_CORE_REGISTRATION)
+if(ECAL_CORE_REGISTRATION AND ECAL_CORE_PUBLISHER)
   add_subdirectory(cpp/util_test)
 endif()
 

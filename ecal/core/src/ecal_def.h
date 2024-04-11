@@ -191,7 +191,7 @@ constexpr bool EXP_SHM_MONITORING_ENABLED                   = false;
 /* enable distribution of monitoring/registration information via network (default) */
 constexpr bool EXP_NETWORK_MONITORING_ENABLED              = true;
 /* queue size of monitoring/registration events  */
-constexpr size_t EXP_SHM_MONITORING_QUEUE_SIZE              = 1024U;
+constexpr unsigned int EXP_SHM_MONITORING_QUEUE_SIZE        = 1024U;
 /* domain name for shared memory based monitoring/registration */
 constexpr const char* EXP_SHM_MONITORING_DOMAIN             = "ecal_monitoring";
 /* memory file access timeout */
