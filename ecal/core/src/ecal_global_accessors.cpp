@@ -47,6 +47,11 @@ namespace eCAL
   eCAL_Process_eSeverity        g_process_severity(eCAL_Process_eSeverity::proc_sev_unknown);
   eCAL_Process_eSeverity_Level  g_process_severity_level(eCAL_Process_eSeverity_Level::proc_sev_level1);
 
+  void InitGlobals()
+  {
+    g_globals_ctx = new CGlobals;
+  }
+
   void SetGlobalUnitName(const char *unit_name_)
   {
     // There is a function already "SetUnitName" which sets the g_unit_name just as string.

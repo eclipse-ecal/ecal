@@ -105,7 +105,7 @@ namespace eCAL
     // in case of first call
     if (g_globals_ctx == nullptr)
     {
-      g_globals_ctx = new CGlobals();             
+      InitGlobals();             
     }
 
     if (argc_ > 0 && argv_ != nullptr)
@@ -162,7 +162,7 @@ namespace eCAL
   {
     if (g_globals() == nullptr)
     {
-      g_globals_ctx = new CGlobals();
+      InitGlobals();
     }
     
     g_globals()->SetEcalConfig(config_);

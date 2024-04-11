@@ -65,6 +65,7 @@ namespace eCAL
 #endif
 
   void SetGlobalUnitName(const char *unit_name_);
+  void InitGlobals();
 
   // Declaration of getter functions for globally accessible variable instances
   CGlobals*               g_globals();
