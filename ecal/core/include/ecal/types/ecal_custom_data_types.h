@@ -85,6 +85,8 @@ namespace eCAL
           exit(EXIT_FAILURE);
         }
       };
+
+      ~LimitSize() = default;
      
       LimitSize(const LimitSize& other) { this->m_size = other; };
       operator int() const { return m_size; };
