@@ -78,7 +78,7 @@ TEST(core_cpp_config, user_config_passing)
   EXPECT_EQ(ip_address, eCAL::Config::GetCurrentConfig().transport_layer_options.mc_options.group.get());
 
   // Test UDP send buffer assignment, default is 5242880
-  EXPECT_EQ(upd_snd_buff, eCAL::Config::GetCurrentConfig().transport_layer_options.mc_options.sndbuf);
+  EXPECT_EQ(upd_snd_buff, static_cast<int>(eCAL::Config::GetCurrentConfig().transport_layer_options.mc_options.sndbuf));
 
   // Test monitoring timeout assignment, default is 5000U
   EXPECT_EQ(mon_timeout, eCAL::Config::GetCurrentConfig().monitoring_options.monitoring_timeout);
@@ -179,11 +179,11 @@ TEST(core_cpp_config, config_custom_datatypes)
 
   eCAL::Config::LimitSize<0,1,10> s1;
   eCAL::Config::LimitSize<0,1,10> s2;
-  EXPECT_EQ(s1.get(), s2.get());
+  EXPECT_EQ(static_cast<int>(s1), static_cast<int>(s2));
 
   s1 = 5;
   s2 = s1;
-  EXPECT_EQ(s1.get(), s2.get());
+  EXPECT_EQ(static_cast<int>(s1), static_cast<int>(s2));
 
   // test copy method for config structure
   eCAL::Config::eCALConfig config1(0, nullptr);

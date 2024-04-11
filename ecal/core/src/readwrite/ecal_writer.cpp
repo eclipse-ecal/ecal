@@ -116,7 +116,7 @@ namespace eCAL
     m_topic_info             = topic_info_;
     m_id                     = 0;
     m_clock                  = 0;
-    m_buffering_shm          = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_buffer_count.get();
+    m_buffering_shm          = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_buffer_count;
     m_zero_copy              = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_zero_copy;
     m_acknowledge_timeout_ms = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_ack_timeout;
     m_connected              = false;
@@ -192,7 +192,7 @@ namespace eCAL
     // reset defaults
     m_id                     = 0;
     m_clock                  = 0;
-    m_buffering_shm          = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_buffer_count.get();
+    m_buffering_shm          = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_buffer_count;
     m_zero_copy              = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_zero_copy;
     m_acknowledge_timeout_ms = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_ack_timeout;
     m_connected              = false;

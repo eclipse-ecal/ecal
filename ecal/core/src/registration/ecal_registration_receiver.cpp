@@ -85,7 +85,7 @@ namespace eCAL
       attr.port      = UDP::GetRegistrationPort();
       attr.broadcast = UDP::IsBroadcast();
       attr.loopback  = true;
-      attr.rcvbuf    = Config::GetCurrentConfig().transport_layer_options.mc_options.recbuf.get();
+      attr.rcvbuf    = Config::GetCurrentConfig().transport_layer_options.mc_options.recbuf;
 
       // start registration sample receiver
       m_registration_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CRegistrationReceiver::HasSample, this, std::placeholders::_1), std::bind(&CRegistrationReceiver::ApplySerializedSample, this, std::placeholders::_1, std::placeholders::_2));

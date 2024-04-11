@@ -75,7 +75,7 @@ namespace eCAL
       attr.ttl       = UDP::GetMulticastTtl();
       attr.broadcast = UDP::IsBroadcast();
       attr.loopback  = true;
-      attr.sndbuf    = Config::GetCurrentConfig().transport_layer_options.mc_options.sndbuf.get();
+      attr.sndbuf    = Config::GetCurrentConfig().transport_layer_options.mc_options.sndbuf;
 
       // create udp registration sender
       m_reg_sample_snd = std::make_shared<UDP::CSampleSender>(attr);

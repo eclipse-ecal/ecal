@@ -182,12 +182,12 @@ namespace eCAL
       }
       
       sstream << "Network ttl              : " << UDP::GetMulticastTtl() << '\n';
-      sstream << "Network sndbuf           : " << GetBufferStr(Config::GetCurrentConfig().transport_layer_options.mc_options.sndbuf.get()) << '\n';
-      sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetCurrentConfig().transport_layer_options.mc_options.recbuf.get()) << '\n';
+      sstream << "Network sndbuf           : " << GetBufferStr(Config::GetCurrentConfig().transport_layer_options.mc_options.sndbuf) << '\n';
+      sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetCurrentConfig().transport_layer_options.mc_options.recbuf) << '\n';
       sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetCurrentConfig().transport_layer_options.mc_options.config_version) << '\n';
       sstream << "Multicast group          : " << Config::GetCurrentConfig().transport_layer_options.mc_options.group.get() << '\n';
       sstream << "Multicast mask           : " << Config::GetCurrentConfig().transport_layer_options.mc_options.mask.get() << '\n';
-      const int port = Config::GetCurrentConfig().transport_layer_options.mc_options.port.get();
+      const int port = Config::GetCurrentConfig().transport_layer_options.mc_options.port;
       sstream << "Multicast ports          : " << port << " - " << port + 10 << '\n';
       sstream << "Multicast join all IFs   : " << (Config::GetCurrentConfig().transport_layer_options.mc_options.join_all_interfaces ? "on" : "off") << '\n';
 

@@ -48,7 +48,7 @@ namespace eCAL
              
       std::string get() const { return m_ip_address; }
       
-      void operator=(IpAddressV4& other)       { this->m_ip_address = other.get(); };
+      IpAddressV4(IpAddressV4& other)       { this->m_ip_address = other.get(); };
       void operator=(const std::string& other) { this->validateIpString(other); };
 
     private:            
@@ -83,15 +83,10 @@ namespace eCAL
           exit(EXIT_FAILURE);
         }
       };
-
-      int get() const { return m_size; };
-      
-      bool operator==(const LimitSize& other) const { return this->m_size == other.get(); };
-      void operator=(const LimitSize& other) { this->m_size = other.get(); };
-      friend bool operator==(const LimitSize& lhs, const int& rhs) { return lhs.get() == rhs; };
-      friend bool operator==(const int& lhs, const LimitSize& rhs) { return rhs == lhs; };
-      friend bool operator==(const LimitSize& lhs, const unsigned int& rhs) { return lhs.get() == static_cast<int>(rhs); };
-      friend bool operator==(const unsigned int& lhs, const LimitSize& rhs) { return rhs == lhs; };
+     
+      LimitSize(const LimitSize& other) { this->m_size = other; };
+      operator int() const { return m_size; };
+      bool operator==(const LimitSize& other) const { return this->m_size == other; };
       
     private:
       int m_size;

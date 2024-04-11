@@ -93,7 +93,7 @@ namespace eCAL
     int GetRegistrationPort()
     {
       // retrieve the configured UDP multicast port from the configuration
-      const int configured_port = Config::GetCurrentConfig().transport_layer_options.mc_options.port.get();
+      const int configured_port = Config::GetCurrentConfig().transport_layer_options.mc_options.port;
 
       // add the specific offset, NET_UDP_MULTICAST_PORT_REG_OFF, to obtain the registration port
       return configured_port + NET_UDP_MULTICAST_PORT_REG_OFF;
@@ -108,7 +108,7 @@ namespace eCAL
     int GetLoggingPort()
     {
       // retrieve the configured UDP multicast port from the configuration
-      const int configured_port = Config::GetCurrentConfig().transport_layer_options.mc_options.port.get();
+      const int configured_port = Config::GetCurrentConfig().transport_layer_options.mc_options.port;
 
       // add the specific offset, NET_UDP_MULTICAST_PORT_LOG_OFF, to obtain the logging port
       return configured_port + NET_UDP_MULTICAST_PORT_LOG_OFF;
@@ -147,7 +147,7 @@ namespace eCAL
     int GetPayloadPort()
     {
       // retrieve the configured UDP multicat port from the configuration
-      const int configured_port = Config::GetCurrentConfig().transport_layer_options.mc_options.port.get();
+      const int configured_port = Config::GetCurrentConfig().transport_layer_options.mc_options.port;
 
       // add the specific offset, NET_UDP_MULTICAST_PORT_SAMPLE_OFF, to obtain the payload port
       return configured_port + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;

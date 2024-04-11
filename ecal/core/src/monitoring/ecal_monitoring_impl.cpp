@@ -43,11 +43,11 @@ namespace eCAL
   ////////////////////////////////////////
   CMonitoringImpl::CMonitoringImpl() :
     m_init(false),
-    m_process_map   (std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout.get())),
-    m_publisher_map (std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout.get())),
-    m_subscriber_map(std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout.get())),
-    m_server_map    (std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout.get())),
-    m_clients_map   (std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout.get()))
+    m_process_map   (std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout)),
+    m_publisher_map (std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout)),
+    m_subscriber_map(std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout)),
+    m_server_map    (std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout)),
+    m_clients_map   (std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout))
   {
   }
 

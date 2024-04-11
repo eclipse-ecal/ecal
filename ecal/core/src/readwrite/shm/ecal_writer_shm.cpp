@@ -62,8 +62,8 @@ namespace eCAL
     m_write_idx = 0;
 
     // set attributes
-    m_memory_file_attr.min_size        = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_minsize.get();
-    m_memory_file_attr.reserve         = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_reserve.get();
+    m_memory_file_attr.min_size        = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_minsize;
+    m_memory_file_attr.reserve         = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_reserve;
     m_memory_file_attr.timeout_open_ms = PUB_MEMFILE_OPEN_TO;
     m_memory_file_attr.timeout_ack_ms  = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_ack_timeout;
 
