@@ -38,7 +38,7 @@ namespace eCAL
      * @brief  Class for evaluation and storing an IPv4/IPv6 address.
      *         Invalid addresses: 255.255.255.255, 127.0.0.1, 0.0.0.0
      *
-     * @param ip_adress_  The IP address as std::string.
+     * @param ip_address_  The IP address as std::string.
     **/
     class IpAddressV4
     {
