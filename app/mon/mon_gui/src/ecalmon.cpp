@@ -93,8 +93,8 @@ Ecalmon::Ecalmon(QWidget *parent)
   network_mode_warning_icon_->setPixmap(warning_icon);
   network_mode_warning_icon_->setVisible(false);
 
-  bool network_mode = eCAL::Config::GetCurrentConfig().transport_layer_options.network_enabled;
-  int multicast_ttl = eCAL::Config::GetCurrentConfig().transport_layer_options.mc_options.ttl;
+  const bool network_mode = eCAL::Config::GetCurrentConfig().transport_layer_options.network_enabled;
+  const int multicast_ttl = eCAL::Config::GetCurrentConfig().transport_layer_options.mc_options.ttl;
 
   if (network_mode)
   {

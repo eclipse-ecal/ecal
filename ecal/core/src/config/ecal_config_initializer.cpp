@@ -44,7 +44,8 @@ namespace {
   void tokenize(const std::string& str, std::vector<std::string>& tokens,
       const std::string& delimiters = " ", bool trimEmpty = false)
   {
-    std::string::size_type pos, lastPos = 0;
+    std::string::size_type pos = 0;
+    std::string::size_type lastPos = 0;
 
     for (;;)
     {
@@ -54,7 +55,7 @@ namespace {
         pos = str.length();
         if (pos != lastPos || !trimEmpty)
         {
-          tokens.emplace_back(std::string(str.data() + lastPos, pos - lastPos));
+          tokens.emplace_back(str.data() + lastPos, pos - lastPos);
         }
         break;
       }
@@ -62,7 +63,7 @@ namespace {
       {
         if (pos != lastPos || !trimEmpty)
         {
-          tokens.emplace_back(std::string(str.data() + lastPos, pos - lastPos));
+          tokens.emplace_back(str.data() + lastPos, pos - lastPos);
         }
       }
       lastPos = pos + 1;
@@ -156,7 +157,7 @@ namespace eCAL
 
       // monitoring options
       auto& monitoringOptions = monitoring_options;
-      auto  monitoringMode                          = iniConfig.get(EXPERIMENTAL, "shm_monitoring_enabled",      false) == true ? MonitoringMode::shm_monitoring : MonitoringMode::none;
+      auto  monitoringMode                          = iniConfig.get(EXPERIMENTAL, "shm_monitoring_enabled",      false) ? MonitoringMode::shm_monitoring : MonitoringMode::none;
       monitoringOptions.monitoring_mode             = static_cast<eCAL_MonitoringMode_Filter>(monitoringMode);
       monitoringOptions.monitoring_timeout          = iniConfig.get(MONITORING,   "timeout", MON_TIMEOUT);;
       monitoringOptions.network_monitoring          = iniConfig.get(EXPERIMENTAL, "network_monitoring", EXP_NETWORK_MONITORING_ENABLED);

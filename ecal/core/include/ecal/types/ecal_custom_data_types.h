@@ -53,7 +53,7 @@ namespace eCAL
 
     private:            
       ECAL_API void validateIpString(const std::string& ip_address_); 
-      void exitApp(const std::string& ip_adress_ = std::string("")); 
+      void exitApp(const std::string& ip_address_ = std::string("")); 
 
       std::string m_ip_address;
     };
