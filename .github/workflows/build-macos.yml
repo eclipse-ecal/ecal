@@ -86,7 +86,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_QWT=ON \
         -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_PREFIX_PATH=/usr/local/opt/hdf5@1.10;/usr/local/opt/protobuf@21 \
+        -DCMAKE_PREFIX_PATH="/usr/local/opt/hdf5@1.10:/usr/local/opt/protobuf@21" \
         -DCMAKE_CXX_STANDARD=17 \
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
         -DPython_FIND_STRATEGY=LOCATION \
