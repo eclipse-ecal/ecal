@@ -20,12 +20,12 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
-project(config)
+project(config_sample)
 
 find_package(eCAL REQUIRED)
 
 set(config_src
-    src/config.cpp
+    src/config_sample.cpp
 )
 
 ecal_add_sample(${PROJECT_NAME} ${config_src})
