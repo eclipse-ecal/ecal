@@ -30,15 +30,15 @@
 #include "ecal/ecal_process.h"
 #include "config/ecal_cmd_parser.h"
 
-constexpr char COMMON[]       = "common";
-constexpr char MONITORING[]   = "monitoring";
-constexpr char NETWORK[]      = "network";
-constexpr char EXPERIMENTAL[] = "experimental";
-constexpr char PUBLISHER[]    = "publisher";
-constexpr char SYS[]          = "sys";
-constexpr char TIME[]         = "time";
-constexpr char SERVICE[]      = "service";
-constexpr char PROCESS[]      = "process";
+constexpr const char* COMMON       = "common";
+constexpr const char* MONITORING   = "monitoring";
+constexpr const char* NETWORK      = "network";
+constexpr const char* EXPERIMENTAL = "experimental";
+constexpr const char* PUBLISHER    = "publisher";
+constexpr const char* SYS          = "sys";
+constexpr const char* TIME         = "time";
+constexpr const char* SERVICE      = "service";
+constexpr const char* PROCESS      = "process";
 
 namespace {
   void tokenize(const std::string& str, std::vector<std::string>& tokens,
