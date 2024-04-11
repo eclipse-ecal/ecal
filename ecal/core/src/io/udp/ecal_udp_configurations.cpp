@@ -87,7 +87,7 @@ namespace eCAL
       }
 
       // both in v1 and v2, the multicast group is returned as the adress for the registration layer
-      return Config::GetCurrentConfig().transport_layer_options.mc_options.group.get();
+      return Config::GetCurrentConfig().transport_layer_options.mc_options.group;
     }
 
     int GetRegistrationPort()
@@ -134,13 +134,13 @@ namespace eCAL
       if (Config::GetCurrentConfig().transport_layer_options.mc_options.config_version == Config::UdpConfigVersion::V1)
       {
         // retrieve the corresponding multicast address based on the topic name using v1 implementation
-        return UDP::V1::topic2mcast(topic_name, Config::GetCurrentConfig().transport_layer_options.mc_options.group.get(), Config::GetCurrentConfig().transport_layer_options.mc_options.mask.get());
+        return UDP::V1::topic2mcast(topic_name, Config::GetCurrentConfig().transport_layer_options.mc_options.group, Config::GetCurrentConfig().transport_layer_options.mc_options.mask);
       }
       // v2
       else
       {
         // retrieve the corresponding multicast address based on the topic name using v2 implementation
-        return  UDP::V2::topic2mcast(topic_name, Config::GetCurrentConfig().transport_layer_options.mc_options.group.get(), Config::GetCurrentConfig().transport_layer_options.mc_options.mask.get());
+        return  UDP::V2::topic2mcast(topic_name, Config::GetCurrentConfig().transport_layer_options.mc_options.group, Config::GetCurrentConfig().transport_layer_options.mc_options.mask);
       }
     }
 

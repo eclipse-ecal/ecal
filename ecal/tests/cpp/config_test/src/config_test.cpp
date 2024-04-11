@@ -75,7 +75,7 @@ TEST(core_cpp_config, user_config_passing)
   EXPECT_EQ(network_enabled, eCAL::Config::GetCurrentConfig().transport_layer_options.network_enabled);
 
   // Test IP address assignment, default is 239.0.0.1
-  EXPECT_EQ(ip_address, eCAL::Config::GetCurrentConfig().transport_layer_options.mc_options.group.get());
+  EXPECT_EQ(ip_address, static_cast<std::string>(eCAL::Config::GetCurrentConfig().transport_layer_options.mc_options.group));
 
   // Test UDP send buffer assignment, default is 5242880
   EXPECT_EQ(upd_snd_buff, static_cast<int>(eCAL::Config::GetCurrentConfig().transport_layer_options.mc_options.sndbuf));
@@ -171,11 +171,11 @@ TEST(core_cpp_config, config_custom_datatypes)
   // test custom datatype assignment operators
   eCAL::Config::IpAddressV4 ip1;
   eCAL::Config::IpAddressV4 ip2;
-  EXPECT_EQ(ip1.get(), ip2.get());
+  EXPECT_EQ(static_cast<std::string>(ip1), static_cast<std::string>(ip2));
 
   ip1 = "192.168.0.2";
   ip2 = ip1;
-  EXPECT_EQ(ip1.get(), ip2.get());
+  EXPECT_EQ(static_cast<std::string>(ip1), static_cast<std::string>(ip2));
 
   eCAL::Config::LimitSize<0,1,10> s1;
   eCAL::Config::LimitSize<0,1,10> s2;
@@ -193,5 +193,5 @@ TEST(core_cpp_config, config_custom_datatypes)
   auto& config2ref = config2;
   config1 = config2ref;
 
-  EXPECT_EQ(config1.transport_layer_options.mc_options.group.get(), testValue);
+  EXPECT_EQ(static_cast<std::string>(config1.transport_layer_options.mc_options.group), testValue);
 }

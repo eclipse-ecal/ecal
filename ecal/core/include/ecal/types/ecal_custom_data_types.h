@@ -45,11 +45,12 @@ namespace eCAL
     public:      
       ECAL_API IpAddressV4();
       ECAL_API IpAddressV4(const std::string& ip_address_);  
-             
-      std::string get() const { return m_ip_address; }
+                  
+      IpAddressV4(IpAddressV4& other)                  { this->m_ip_address = other; };
+      IpAddressV4& operator=(const std::string& other) { this->validateIpString(other); return *this; };
+      operator std::string()                           { return m_ip_address; };
       
-      IpAddressV4(IpAddressV4& other)       { this->m_ip_address = other.get(); };
-      void operator=(const std::string& other) { this->validateIpString(other); };
+      friend std::ostream& operator<<(std::ostream& os, const IpAddressV4& ipv4) { os << ipv4.m_ip_address; return os; };
 
     private:            
       ECAL_API void validateIpString(const std::string& ip_address_); 
