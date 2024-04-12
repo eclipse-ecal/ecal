@@ -121,8 +121,10 @@ class BinarySubscriber(MessageSubscriber):
   """Specialized subscriber that subscribes to binary messages
   """
   def __init__(self, name):
-    topic_type = "base:binary"
-    super(BinarySubscriber, self).__init__(name, topic_type)
+    topic_type = "binary"
+    topic_enc = "base"
+    topic_desc = b""
+    super(BinarySubscriber, self).__init__(name, topic_type, topic_enc, topic_desc)
     self.callback = None
 
   def receive(self, timeout=0):

@@ -16,17 +16,37 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(byte_rec)
+import sys
+import time
 
-find_package(eCAL REQUIRED)
+import ecal.core.core as ecal_core
+from ecal.core.subscriber import BinarySubscriber
 
-set(PROJECT_GROUP minimal)
+# eCAL receive callback
+def callback(topic_name, msg, time):
+  print("Received:  {} ms   {}".format(time, msg))
 
-if(ECAL_INCLUDE_PY_SAMPLES)
-  if(WIN32)
+def main():  
+  # print eCAL version and date
+  print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
+  
+  # initialize eCAL API
+  ecal_core.initialize(sys.argv, "py_binary_rec_cb")
+  
+  # set process state
+  ecal_core.set_process_state(1, 1, "I feel good")
 
-    include_external_msproject(${PROJECT_NAME}_py ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pyproj)
-    set_property(TARGET ${PROJECT_NAME}_py PROPERTY FOLDER samples/python/${PROJECT_GROUP})
+  # create subscriber and connect callback
+  sub = BinarySubscriber("Hello")
+  sub.set_callback(callback)
+  
+  # idle main thread
+  while ecal_core.ok():
+    time.sleep(0.1)
+  
+  # finalize eCAL API
+  ecal_core.finalize()
+  
+if __name__ == "__main__":
+  main()
 
-  endif()
-endif()

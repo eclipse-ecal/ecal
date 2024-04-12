@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(byte_snd)
+project(binary_rec_cb)
 
 find_package(eCAL REQUIRED)
 
