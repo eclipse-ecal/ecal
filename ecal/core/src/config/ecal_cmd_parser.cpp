@@ -62,6 +62,5 @@ namespace eCAL
       }
     }
         
-    CmdParser::~CmdParser() = default;
   }
 }

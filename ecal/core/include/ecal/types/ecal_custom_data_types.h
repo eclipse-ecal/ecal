@@ -48,6 +48,7 @@ namespace eCAL
       ECAL_API ~IpAddressV4(); 
                   
       IpAddressV4(IpAddressV4& other)                  { this->m_ip_address = other; };
+      IpAddressV4& operator=(IpAddressV4& other)       { this->m_ip_address = other; return *this; };
       IpAddressV4& operator=(const std::string& other) { this->validateIpString(other); return *this; };
       operator std::string()                           { return m_ip_address; };
       
@@ -55,7 +56,7 @@ namespace eCAL
 
     private:            
       ECAL_API void validateIpString(const std::string& ip_address_); 
-      void exitApp(const std::string& ip_address_ = std::string("")); 
+      static void exitApp(const std::string& ip_address_ = std::string("")); 
 
       std::string m_ip_address;
     };
@@ -89,9 +90,9 @@ namespace eCAL
       ~LimitSize() = default;
      
       LimitSize(const LimitSize& other) { this->m_size = other; };
+      LimitSize& operator=(const LimitSize& other) { this->m_size = other; return *this; };
       operator int() const { return m_size; };
       bool operator==(const LimitSize& other) const { return this->m_size == other; };
-      void operator=(const LimitSize& other) { this->m_size = other; };
       
     private:
       int m_size{};

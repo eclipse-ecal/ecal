@@ -56,14 +56,14 @@ TEST(core_cpp_config, user_config_passing)
   custom_config.logging_options.filter_log_con        = mon_log_filter_con;
 
   // Publisher options
-  eCAL::TLayer::eSendMode pub_use_shm = eCAL::TLayer::eSendMode::smode_off;
+  const eCAL::TLayer::eSendMode pub_use_shm = eCAL::TLayer::eSendMode::smode_off;
 
   custom_config.publisher_options.use_shm = pub_use_shm;
 
   // Registration options
-  unsigned int registration_timeout = 80000U;
-  unsigned int registration_refresh = 2000U;
-  eCAL::Config::RegistrationOptions registration_options = eCAL::Config::RegistrationOptions(registration_timeout, registration_refresh);
+  const unsigned int registration_timeout = 80000U;
+  const unsigned int registration_refresh = 2000U;
+  const eCAL::Config::RegistrationOptions registration_options = eCAL::Config::RegistrationOptions(registration_timeout, registration_refresh);
 
   custom_config.registration_options = registration_options;
 

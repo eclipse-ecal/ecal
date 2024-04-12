@@ -32,7 +32,6 @@ namespace eCAL
     {    
     public:
       CmdParser(int argc_ , char **argv_);
-      ~CmdParser();
 
       bool dumpConfig() const                      { return m_dump_config; };
       std::vector<std::string>& getConfigKeys()    { return m_config_keys; };

@@ -210,6 +210,7 @@ namespace eCAL
 #endif
 #if ECAL_CORE_SUBSCRIBER
       sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------" << '\n';
+      // TODO PG: This is probably the wrong struct and member. Which one is correct?
       sstream << "Layer Mode UDP MC        : " << LayerMode(Config::GetCurrentConfig().receiving_options.udp_mc_recv_enabled)  << '\n';
       sstream << "Drop out-of-order msgs   : " << (Config::GetCurrentConfig().transport_layer_options.drop_out_of_order_messages ? "on" : "off") << '\n';
 #endif

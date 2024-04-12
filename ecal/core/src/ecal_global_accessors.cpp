@@ -74,7 +74,7 @@ namespace eCAL
         }
 #endif
 #ifdef ECAL_OS_LINUX
-        size_t p = g_unit_name.rfind('/');
+        const size_t p = g_unit_name.rfind('/');
         if (p != std::string::npos)
         {
           g_unit_name = g_unit_name.substr(p + 1);

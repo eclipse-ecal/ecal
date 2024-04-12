@@ -29,13 +29,13 @@
 #include <ecal_def.h>
 
 namespace{
-  static const std::array<const std::regex, 3> INVALID_IPV4_ADDRESSES = {
+  const std::array<const std::regex, 3> INVALID_IPV4_ADDRESSES = {
       std::regex("((255|[fF][fF])\\.){3}(255|[fF][fF])"),       // 255.255.255.255
       std::regex("((127|7[fF]).((0|00|000)\\.){2}(1|01|001))"), // 127.0.0.1 
       std::regex("((0|00|000)\\.){3}(0|00|000)")                // 0.0.0.0 
   };
-  static const std::regex IPV4_DEC_REGEX                          = std::regex("(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])");
-  static const std::regex IPV4_HEX_REGEX                          = std::regex("(([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])\\.){3}([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])");
+  const std::regex IPV4_DEC_REGEX                          = std::regex("(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])");
+  const std::regex IPV4_HEX_REGEX                          = std::regex("(([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])\\.){3}([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])");
 }
 
 namespace eCAL
@@ -60,7 +60,7 @@ namespace eCAL
          || std::regex_match(ip_address_, IPV4_HEX_REGEX)
       )
       {
-        for (auto& inv_ip_regex : INVALID_IPV4_ADDRESSES)
+        for (const auto& inv_ip_regex : INVALID_IPV4_ADDRESSES)
         {
           if (std::regex_match(ip_address_, inv_ip_regex))
           {
