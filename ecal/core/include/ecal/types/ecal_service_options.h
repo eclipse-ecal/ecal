@@ -38,7 +38,8 @@ namespace eCAL
 
     struct TimesyncOptions
     {
-      std::string timesync_module{};
+      std::string timesync_module_rt{};
+      std::string timesync_module_replay{};
     };
   }
 }

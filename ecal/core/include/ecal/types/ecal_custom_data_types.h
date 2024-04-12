@@ -91,9 +91,10 @@ namespace eCAL
       LimitSize(const LimitSize& other) { this->m_size = other; };
       operator int() const { return m_size; };
       bool operator==(const LimitSize& other) const { return this->m_size == other; };
+      void operator=(const LimitSize& other) { this->m_size = other; };
       
     private:
-      int m_size;
+      int m_size{};
     };
 
     enum class UdpConfigVersion

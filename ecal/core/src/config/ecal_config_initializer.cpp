@@ -185,7 +185,8 @@ namespace eCAL
 
       // timesync options
       auto& timesyncOptions = timesync_options;
-      timesyncOptions.timesync_module = iniConfig.get(TIME, "timesync_module_rt", TIME_SYNC_MODULE);
+      timesyncOptions.timesync_module_rt     = iniConfig.get(TIME, "timesync_module_rt", TIME_SYNC_MODULE);
+      timesyncOptions.timesync_module_replay = iniConfig.get(TIME, "timesync_module_replay", TIME_SYNC_MOD_REPLAY);
 
       // service options
       auto& serviceOptions = service_options;
