@@ -44,10 +44,12 @@ namespace eCAL
     bool Validate();
 
     // common getter
-    bool        get(const std::string& section_, const std::string& key_, bool        default_);
-    int         get(const std::string& section_, const std::string& key_, int         default_);
-    double      get(const std::string& section_, const std::string& key_, double      default_);
-    std::string get(const std::string& section_, const std::string& key_, const char* default_);
+    bool         get(const std::string& section_, const std::string& key_, bool         default_);
+    int          get(const std::string& section_, const std::string& key_, int          default_);
+    double       get(const std::string& section_, const std::string& key_, double       default_);
+    std::string  get(const std::string& section_, const std::string& key_, const char*  default_);
+    unsigned int get(const std::string& section_, const std::string& key_, unsigned int default_);
+    size_t       get(const std::string& section_, const std::string& key_, size_t       default_);
 
   private:
     std::unique_ptr<CConfigImpl> m_impl;
