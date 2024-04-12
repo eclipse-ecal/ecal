@@ -28,6 +28,60 @@
 #include <utility>
 #include <vector>
 
+namespace
+{
+  std::vector<eCAL::Util::SQualityDataTypeInformation> GetTopicDataTypeInformation(const std::string& topic_name_, const std::multimap<std::string, eCAL::Util::SQualityDataTypeInformation>& data_info_multi_map_)
+  {
+    std::vector<eCAL::Util::SQualityDataTypeInformation> data_info_vec;
+
+    const auto data_info_range = data_info_multi_map_.equal_range(topic_name_);
+    for (auto data_info_range_it = data_info_range.first; data_info_range_it != data_info_range.second; ++data_info_range_it)
+    {
+      data_info_vec.push_back(data_info_range_it->second);
+    }
+
+    return data_info_vec;
+  }
+
+  std::vector<eCAL::Util::SQualityServiceMethodInformation> GetServiceTypeInformation(const std::string& service_name_, const std::string& method_name_, std::multimap<std::tuple<std::string, std::string>, eCAL::Util::SQualityServiceMethodInformation> service_info_map_)
+  {
+    std::vector<eCAL::Util::SQualityServiceMethodInformation> service_method_info_vec;
+
+    const auto service_info_range = service_info_map_.equal_range(std::make_pair(service_name_, method_name_));
+    for (auto service_info_range_it = service_info_range.first; service_info_range_it != service_info_range.second; ++service_info_range_it)
+    {
+      service_method_info_vec.push_back(service_info_range_it->second);
+    }
+
+    return service_method_info_vec;
+  }
+
+  void CopyDataTypeInfoWithQualityComparison(const std::multimap<std::string, eCAL::Util::SQualityDataTypeInformation>& source_multi_map_, std::unordered_map<std::string, eCAL::Util::SQualityDataTypeInformation>& target_map_)
+  {
+    for (const auto& source_pair : source_multi_map_)
+    {
+      const std::string&                             source_key   = source_pair.first;
+      const eCAL::Util::SQualityDataTypeInformation& source_value = source_pair.second;
+
+      auto target_it = target_map_.find(source_key);
+      if (target_it != target_map_.end())
+      {
+        // key exists in target map
+        if (source_value.quality > target_it->second.quality)
+        {
+          // source quality is greater, overwrite
+          target_it->second = source_value;
+        }
+      }
+      else
+      {
+        // key does not exist in target map, insert source pair
+        target_map_.insert(source_pair);
+      }
+    }
+  }
+}
+
 namespace eCAL
 {
   namespace Util
@@ -168,71 +222,263 @@ namespace eCAL
     }
 #endif // ECAL_CORE_MONITORING
 
-    void GetTopics(std::unordered_map<std::string, SDataTypeInformation>& topic_info_map_)
+    std::multimap<std::string, SQualityDataTypeInformation> GetPublisher()
+    {
+      std::multimap<std::string, SQualityDataTypeInformation> multi_map;
+      if (g_descgate() == nullptr) return multi_map;
+
+      // insert publisher into target multimap
+      for (const auto& topic : g_descgate()->GetPublisher())
+      {
+        multi_map.insert(std::pair<std::string, SQualityDataTypeInformation>(topic.first.topic_name, topic.second));
+      }
+
+      return multi_map;
+    }
+
+    std::vector<SQualityDataTypeInformation> GetPublisher(const std::string& topic_name_)
+    {
+      return ::GetTopicDataTypeInformation(topic_name_, GetPublisher());
+    }
+
+    std::multimap<std::string, SQualityDataTypeInformation> GetSubscriber()
+    {
+      std::multimap<std::string, SQualityDataTypeInformation> multi_map;
+      if (g_descgate() == nullptr) return multi_map;
+
+      // insert subscriber into target multimap
+      for (const auto& topic : g_descgate()->GetSubscriber())
+      {
+        multi_map.insert(std::pair<std::string, SQualityDataTypeInformation>(topic.first.topic_name, topic.second));
+      }
+
+      return multi_map;
+    }
+
+    std::vector<SQualityDataTypeInformation> GetSubscriber(const std::string& topic_name_)
+    {
+      return ::GetTopicDataTypeInformation(topic_name_, GetSubscriber());
+    }
+
+    SDataTypeInformation GetHighestQualifiedDataTypeInformation(const std::vector<SQualityDataTypeInformation>& data_type_info_vec_)
+    {
+      SQualityDataTypeInformation quality_info;
+      for (const auto& info : data_type_info_vec_)
+      {
+        if (info.quality > quality_info.quality)
+        {
+          quality_info = info;
+        }
+      }
+      return quality_info.info;
+    }
+
+    ECAL_API std::multimap<std::tuple<std::string, std::string>, SQualityServiceMethodInformation> GetServices()
+    {
+      std::multimap<std::tuple<std::string, std::string>, SQualityServiceMethodInformation> multi_map;
+      if (g_descgate() == nullptr) return multi_map;
+
+      // insert services into target multimap
+      for (const auto& service : g_descgate()->GetServices())
+      {
+        multi_map.insert(std::pair<std::tuple<std::string, std::string>, SQualityServiceMethodInformation>(std::make_tuple(service.first.service_name, service.first.method_name), service.second));
+      }
+      return multi_map;
+    }
+
+    ECAL_API std::multimap<std::tuple<std::string, std::string>, SQualityServiceMethodInformation> GetClients()
+    {
+      std::multimap<std::tuple<std::string, std::string>, SQualityServiceMethodInformation> multi_map;
+      if (g_descgate() == nullptr) return multi_map;
+
+      // insert clients into target multimap
+      for (const auto& client : g_descgate()->GetClients())
+      {
+        multi_map.insert(std::pair<std::tuple<std::string, std::string>, SQualityServiceMethodInformation>(std::make_tuple(client.first.service_name, client.first.method_name), client.second));
+      }
+      return multi_map;
+    }
+
+    SServiceMethodInformation GetHighestQualifiedServiceMethodInformation(const std::vector<SQualityServiceMethodInformation>& service_method_info_vec_)
+    {
+      SQualityServiceMethodInformation quality_info;
+      for (const auto& info : service_method_info_vec_)
+      {
+        if (info.quality > quality_info.quality)
+        {
+          quality_info = info;
+        }
+      }
+      return quality_info.info;
+    }
+
+    void GetTopics(std::unordered_map<std::string, SDataTypeInformation>& data_type_info_map_)
+    {
+      std::unordered_map<std::string, SQualityDataTypeInformation> qualified_data_type_info_map;
+      GetTopics(qualified_data_type_info_map);
+
+      // transform into target map
+      for (const auto& qualified_data_type_info : qualified_data_type_info_map)
+      {
+        data_type_info_map_.insert(std::pair<std::string, SDataTypeInformation>(qualified_data_type_info.first, qualified_data_type_info.second.info));
+      }
+    }
+
+    void GetTopics(std::unordered_map<std::string, SQualityDataTypeInformation>& qualified_data_type_info_map_)
     {
       if (g_descgate() == nullptr) return;
-      g_descgate()->GetTopics(topic_info_map_);
+
+      std::multimap<std::string, SQualityDataTypeInformation> merged_pub_sub_map;
+
+      // insert publisher
+      for (const auto& topic : g_descgate()->GetPublisher())
+      {
+        merged_pub_sub_map.insert(std::pair<std::string, SQualityDataTypeInformation>(topic.first.topic_name, topic.second));
+      }
+
+      // insert subscriber
+      for (const auto& topic : g_descgate()->GetSubscriber())
+      {
+        merged_pub_sub_map.insert(std::pair<std::string, SQualityDataTypeInformation>(topic.first.topic_name, topic.second));
+      }
+
+      // transform into a map with the highest qualified data type information
+      ::CopyDataTypeInfoWithQualityComparison(merged_pub_sub_map, qualified_data_type_info_map_);
     }
 
     void GetTopicNames(std::vector<std::string>& topic_names_)
     {
-      if (g_descgate() == nullptr) return;
-      g_descgate()->GetTopicNames(topic_names_);
+      // get publisher & subscriber multi maps
+      auto pub_multi_map = GetPublisher();
+      auto sub_multi_map = GetSubscriber();
+
+      // filter out unique topic names into a set
+      std::set<std::string> set;
+      for (const auto& publisher : pub_multi_map)
+      {
+        set.insert(publisher.first);
+      }
+      for (const auto& subscriber : sub_multi_map)
+      {
+        set.insert(subscriber.first);
+      }
+
+      // transform set into target vector
+      topic_names_ = std::vector<std::string>(set.begin(), set.end());
     }
 
     bool GetTopicDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_)
     {
-      if (g_descgate() == nullptr) return(false);
-      return(g_descgate()->GetDataTypeInformation(topic_name_, topic_info_));
+      auto       info_vec     = GetPublisher(topic_name_);
+      const auto sub_info_vec = GetSubscriber(topic_name_);
+
+      info_vec.insert(info_vec.end(), sub_info_vec.begin(), sub_info_vec.end());
+      topic_info_ = GetHighestQualifiedDataTypeInformation(sub_info_vec);
+
+      return !info_vec.empty();
     }
 
     void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_)
     {
-      if (g_descgate() == nullptr) return;
-      g_descgate()->GetServices(service_info_map_);
+      // TODO with comparison
     }
 
     void GetServiceMethodNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_)
     {
-      if (g_descgate() == nullptr) return;
-      g_descgate()->GetServiceMethodNames(service_method_names_);
+      // TODO with comparison
     }
 
     bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_)
     {
-      if (g_descgate() == nullptr) return(false);
-      return(g_descgate()->GetServiceTypeNames(service_name_, method_name_, req_type_, resp_type_));
+      std::vector<SQualityServiceMethodInformation> service_method_info_vec = GetServiceTypeInformation(service_name_, method_name_, GetServices());
+
+      SServiceMethodInformation service_method_info = GetHighestQualifiedServiceMethodInformation(service_method_info_vec);
+      req_type_  = service_method_info.request_type.name;
+      resp_type_ = service_method_info.response_type.name;
+
+      return !service_method_info_vec.empty();
     }
 
     bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_desc_, std::string& resp_desc_)
     {
-      if (g_descgate() == nullptr) return(false);
-      return(g_descgate()->GetServiceDescription(service_name_, method_name_, req_desc_, resp_desc_));
+      std::vector<SQualityServiceMethodInformation> service_method_info_vec = GetServiceTypeInformation(service_name_, method_name_, GetServices());
+
+      SServiceMethodInformation service_method_info = GetHighestQualifiedServiceMethodInformation(service_method_info_vec);
+      req_desc_ = service_method_info.request_type.descriptor;
+      resp_desc_ = service_method_info.response_type.descriptor;
+
+      return !service_method_info_vec.empty();
     }
 
     void GetClients(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& client_info_map_)
     {
-      if (g_descgate() == nullptr) return;
-      g_descgate()->GetClients(client_info_map_);
+      // TODO: Implement this again
     }
 
     void GetClientMethodNames(std::vector<std::tuple<std::string, std::string>>& client_method_names_)
     {
-      if (g_descgate() == nullptr) return;
-      g_descgate()->GetClientMethodNames(client_method_names_);
+      // TODO: Implement this again
     }
 
     bool GetClientTypeNames(const std::string& client_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_)
     {
-      if (g_descgate() == nullptr) return(false);
-      return(g_descgate()->GetClientTypeNames(client_name_, method_name_, req_type_, resp_type_));
+      std::vector<SQualityServiceMethodInformation> service_method_info_vec = GetServiceTypeInformation(client_name_, method_name_, GetClients());
+
+      SServiceMethodInformation service_method_info = GetHighestQualifiedServiceMethodInformation(service_method_info_vec);
+      req_type_  = service_method_info.request_type.name;
+      resp_type_ = service_method_info.response_type.name;
+
+      return !service_method_info_vec.empty();
     }
 
     bool GetClientDescription(const std::string& client_name_, const std::string& method_name_, std::string& req_desc_, std::string& resp_desc_)
     {
-      if (g_descgate() == nullptr) return(false);
-      return(g_descgate()->GetClientDescription(client_name_, method_name_, req_desc_, resp_desc_));
+      std::vector<SQualityServiceMethodInformation> service_method_info_vec = GetServiceTypeInformation(client_name_, method_name_, GetClients());
+
+      SServiceMethodInformation service_method_info = GetHighestQualifiedServiceMethodInformation(service_method_info_vec);
+      req_desc_  = service_method_info.request_type.descriptor;
+      resp_desc_ = service_method_info.response_type.descriptor;
+
+      return !service_method_info_vec.empty();
     }
+
+#if 0
+    std::multimap<std::string, SQualityDataTypeInformation> GetTopics()
+    {
+      std::multimap<std::string, SQualityDataTypeInformation> multi_map;
+      if (g_descgate() == nullptr) return multi_map;
+
+      // insert publisher topics
+      for (const auto& topic : g_descgate()->GetPublisher())
+      {
+        multi_map.insert(std::pair<std::string, SQualityDataTypeInformation>(topic.first.topic_name, topic.second));
+      }
+
+      // insert subscriber topics
+      for (const auto& topic : g_descgate()->GetSubscriber())
+      {
+        multi_map.insert(std::pair<std::string, SQualityDataTypeInformation>(topic.first.topic_name, topic.second));
+      }
+
+      return multi_map;
+    }
+
+    std::set<std::string> GetTopicNames()
+    {
+      // get all topics as multimap
+      std::multimap<std::string, SQualityDataTypeInformation> topic_info_multi_map = GetTopics();
+
+      // filter out unique topic names into a set
+      std::set<std::string> set;
+      for (const auto& topic : topic_info_multi_map)
+      {
+        set.insert(topic.first);
+      }
+
+      // return set
+      return set;
+    }
+#endif
 
     std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& combined_topic_type_)
     {
