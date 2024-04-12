@@ -88,36 +88,23 @@ TEST(core_cpp_util, GetTopics)
     EXPECT_EQ(topic_info_map.size(), 5);
 
     // now destroy publisher pub1 and subscriber sub1
-    // after map expiration time the entities p12 and sub12 
-    // should replace them (by overwriting type name and description)
+    // the entities pub12 and sub12 should replace them
+    // by overwriting their type names and descriptions
     pub1.Destroy();
     sub1.Destroy();
 
-    {
-      eCAL::SDataTypeInformation utils_topic_info;
-      eCAL::Util::GetTopicDataTypeInformation("A1", utils_topic_info);
-      EXPECT_EQ(false, eCAL::Util::GetTopicDataTypeInformation("A1", utils_topic_info));
-      EXPECT_EQ(false, eCAL::Util::GetTopicDataTypeInformation("B1", utils_topic_info));
-    }
-
-    // 2 registration cycles
-    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
-
-    // update map
-    eCAL::Util::GetTopics(topic_info_map);
-
-    // size should be 5 again (because of pub1.2 and sub1.2 should have replaced pub1 and sub1 attributes now)
+    // size should be 5 again (because of pub12 and sub12 should have replaced pub1 and sub1 attributes now)
     EXPECT_EQ(topic_info_map.size(), 5);
 
     // check overwritten attributes
     {
       eCAL::SDataTypeInformation utils_topic_info;
-      eCAL::Util::GetTopicDataTypeInformation("A1", utils_topic_info);
+      EXPECT_EQ(true, eCAL::Util::GetTopicDataTypeInformation("A1", utils_topic_info));
       EXPECT_EQ(utils_topic_info, info_A1_2);
     }
     {
       eCAL::SDataTypeInformation utils_topic_info;
-      eCAL::Util::GetTopicDataTypeInformation("B1", utils_topic_info);
+      EXPECT_EQ(true, eCAL::Util::GetTopicDataTypeInformation("B1", utils_topic_info));
       EXPECT_EQ(utils_topic_info, info_B1_2);
     }
   }

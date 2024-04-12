@@ -318,6 +318,8 @@ namespace eCAL
 
     void GetTopics(std::unordered_map<std::string, SDataTypeInformation>& data_type_info_map_)
     {
+      data_type_info_map_.clear();
+
       std::unordered_map<std::string, SQualityDataTypeInformation> qualified_data_type_info_map;
       GetTopics(qualified_data_type_info_map);
 
@@ -330,6 +332,7 @@ namespace eCAL
 
     void GetTopics(std::unordered_map<std::string, SQualityDataTypeInformation>& qualified_data_type_info_map_)
     {
+      qualified_data_type_info_map_.clear();
       if (g_descgate() == nullptr) return;
 
       std::multimap<std::string, SQualityDataTypeInformation> merged_pub_sub_map;
@@ -352,6 +355,8 @@ namespace eCAL
 
     void GetTopicNames(std::vector<std::string>& topic_names_)
     {
+      topic_names_.clear();
+
       // get publisher & subscriber multi maps
       auto pub_multi_map = GetPublisher();
       auto sub_multi_map = GetSubscriber();
@@ -377,19 +382,24 @@ namespace eCAL
       const auto sub_info_vec = GetSubscriber(topic_name_);
 
       info_vec.insert(info_vec.end(), sub_info_vec.begin(), sub_info_vec.end());
-      topic_info_ = GetHighestQualifiedDataTypeInformation(sub_info_vec);
+      topic_info_ = GetHighestQualifiedDataTypeInformation(info_vec);
 
       return !info_vec.empty();
     }
 
     void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_)
     {
-      // TODO with comparison
+      // TODO: Implement this with comparison
+    }
+
+    void GetServices(std::map<std::tuple<std::string, std::string>, SQualityServiceMethodInformation>& qualified_service_info_map_)
+    {
+      // TODO: Implement this
     }
 
     void GetServiceMethodNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_)
     {
-      // TODO with comparison
+      // TODO: Implement this with comparison
     }
 
     bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_)
@@ -416,12 +426,17 @@ namespace eCAL
 
     void GetClients(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& client_info_map_)
     {
-      // TODO: Implement this again
+      // TODO: Implement this with comparison
+    }
+
+    void GetClients(std::map<std::tuple<std::string, std::string>, SQualityServiceMethodInformation>& qualified_client_info_map_)
+    {
+      // TODO: Implement this
     }
 
     void GetClientMethodNames(std::vector<std::tuple<std::string, std::string>>& client_method_names_)
     {
-      // TODO: Implement this again
+      // TODO: Implement this with comparison
     }
 
     bool GetClientTypeNames(const std::string& client_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_)
@@ -445,44 +460,6 @@ namespace eCAL
 
       return !service_method_info_vec.empty();
     }
-
-#if 0
-    std::multimap<std::string, SQualityDataTypeInformation> GetTopics()
-    {
-      std::multimap<std::string, SQualityDataTypeInformation> multi_map;
-      if (g_descgate() == nullptr) return multi_map;
-
-      // insert publisher topics
-      for (const auto& topic : g_descgate()->GetPublisher())
-      {
-        multi_map.insert(std::pair<std::string, SQualityDataTypeInformation>(topic.first.topic_name, topic.second));
-      }
-
-      // insert subscriber topics
-      for (const auto& topic : g_descgate()->GetSubscriber())
-      {
-        multi_map.insert(std::pair<std::string, SQualityDataTypeInformation>(topic.first.topic_name, topic.second));
-      }
-
-      return multi_map;
-    }
-
-    std::set<std::string> GetTopicNames()
-    {
-      // get all topics as multimap
-      std::multimap<std::string, SQualityDataTypeInformation> topic_info_multi_map = GetTopics();
-
-      // filter out unique topic names into a set
-      std::set<std::string> set;
-      for (const auto& topic : topic_info_multi_map)
-      {
-        set.insert(topic.first);
-      }
-
-      // return set
-      return set;
-    }
-#endif
 
     std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& combined_topic_type_)
     {
