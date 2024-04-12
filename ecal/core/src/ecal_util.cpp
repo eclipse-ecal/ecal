@@ -56,15 +56,17 @@ namespace
     return service_method_info_vec;
   }
 
-  void CopyDataTypeInfoWithQualityComparison(const std::multimap<std::string, eCAL::Util::SQualityDataTypeInformation>& source_multi_map_, std::unordered_map<std::string, eCAL::Util::SQualityDataTypeInformation>& target_map_)
+  std::unordered_map<std::string, eCAL::Util::SQualityDataTypeInformation> GetQualifiedMap(const std::multimap<std::string, eCAL::Util::SQualityDataTypeInformation>& source_multi_map_)
   {
+    std::unordered_map<std::string, eCAL::Util::SQualityDataTypeInformation> target_map;
+
     for (const auto& source_pair : source_multi_map_)
     {
       const std::string&                             source_key   = source_pair.first;
       const eCAL::Util::SQualityDataTypeInformation& source_value = source_pair.second;
 
-      auto target_it = target_map_.find(source_key);
-      if (target_it != target_map_.end())
+      auto target_it = target_map.find(source_key);
+      if (target_it != target_map.end())
       {
         // key exists in target map
         if (source_value.quality > target_it->second.quality)
@@ -76,9 +78,11 @@ namespace
       else
       {
         // key does not exist in target map, insert source pair
-        target_map_.insert(source_pair);
+        target_map.insert(source_pair);
       }
     }
+
+    return target_map;
   }
 }
 
@@ -343,7 +347,7 @@ namespace eCAL
       }
 
       // transform into a map with the highest qualified data type information
-      ::CopyDataTypeInfoWithQualityComparison(merged_pub_sub_map, qualified_data_type_info_map_);
+      qualified_data_type_info_map_ = GetQualifiedMap(merged_pub_sub_map);
     }
 
     void GetTopicNames(std::vector<std::string>& topic_names_)

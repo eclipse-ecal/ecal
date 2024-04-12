@@ -111,7 +111,7 @@ namespace eCAL
     SServiceMethodInfoMap m_service_info_map;
     SServiceMethodInfoMap m_client_info_map;
 
-    ServiceMethodNameIdMap CDescGate::GetServices(const SServiceMethodInfoMap& service_method_info_map_);
+    ServiceMethodNameIdMap GetServices(const SServiceMethodInfoMap& service_method_info_map_);
 
     void ApplySample(const Registration::Sample& sample_, eTLayerType layer_);
       
