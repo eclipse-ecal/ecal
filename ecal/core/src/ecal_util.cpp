@@ -516,13 +516,13 @@ namespace eCAL
       }
     }
 
-    void GetClients(std::map<std::tuple<std::string, std::string>, SQualityServiceInfo>& quality_client_method_info_map_)
+    void GetClients(std::map<std::tuple<std::string, std::string>, SQualityServiceInfo>& quality_client_info_map_)
     {
-      quality_client_method_info_map_.clear();
+      quality_client_info_map_.clear();
       if (g_descgate() == nullptr) return;
 
       // transform into a map with the highest quality service method information
-      quality_client_method_info_map_ = ReduceQualityServiceIdMap(g_descgate()->GetClients());
+      quality_client_info_map_ = ReduceQualityServiceIdMap(g_descgate()->GetClients());
     }
 
     void GetClientMethodNames(std::vector<std::tuple<std::string, std::string>>& client_method_names_)

@@ -182,11 +182,11 @@ namespace eCAL
     /**
      * @brief Get highest quality data type information out of a vector of quality data type information.
      * 
-     * @param data_type_info_vec_  Vector of quality data type information
+     * @param quality_topic_info_vec_  Vector of quality data type information
      *
      * @return Highest quality data type information.
     **/
-    ECAL_API SDataTypeInformation GetHighestQualityDataTypeInformation(const std::vector<SQualityTopicInfo>& data_type_info_vec_);
+    ECAL_API SDataTypeInformation GetHighestQualityDataTypeInformation(const std::vector<SQualityTopicInfo>& quality_topic_info_vec_);
 
     /**
      * @brief Get complete snapshot of service method information with quality and service id for all known services.
@@ -205,27 +205,27 @@ namespace eCAL
     /**
      * @brief Get highest quality service method type information out of a vector of quality service method information.
      *
-     * @param service_method_info_vec_  Vector of quality service method information
+     * @param quality_service_info_vec_  Vector of quality service method information
      *
      * @return Highest quality service method information.
     **/
-    ECAL_API SServiceMethodInformation GetHighestQualityServiceMethodInformation(const std::vector<SQualityServiceInfo>& service_method_info_vec_);
+    ECAL_API SServiceMethodInformation GetHighestQualityServiceMethodInformation(const std::vector<SQualityServiceInfo>& quality_service_info_vec_);
 
     /**
      * @brief Get complete topic map.
      *
-     * @param topic_info_map_  Map to store the datatype information.
-     *                         Map { TopicName -> SDataTypeInformation } mapping of all currently known publisher/subscriber.
+     * @param data_type_info_map_  Map to store the datatype information.
+     *                             Map { TopicName -> SDataTypeInformation } mapping of all currently known publisher/subscriber.
     **/
     ECAL_API void GetTopics(std::map<std::string, SDataTypeInformation>& data_type_info_map_);
 
     /**
      * @brief Get complete quality topic map.
      *
-     * @param quality_data_type_info_map_  Map to store the quality datatype information.
-     *                                     Map { TopicName -> SQualityDataTypeInformation } mapping of all currently known publisher/subscriber.
+     * @param quality_topic_info_map_  Map to store the quality datatype information.
+     *                                 Map { TopicName -> SQualityDataTypeInformation } mapping of all currently known publisher/subscriber.
     **/
-    ECAL_API void GetTopics(std::map<std::string, SQualityTopicInfo>& quality_data_type_info_map_);
+    ECAL_API void GetTopics(std::map<std::string, SQualityTopicInfo>& quality_topic_info_map_);
 
     /**
      * @brief Get all topic names.
@@ -237,26 +237,26 @@ namespace eCAL
     /**
      * @brief Gets description of the specified topic.
      *
-     * @param topic_name_   Topic name.
-     * @param topic_info_   SDataTypeInformation to be filled by this function.
+     * @param topic_name_       Topic name.
+     * @param data_type_info_   SDataTypeInformation to be filled by this function.
      *
      * @return True if TopicInformation for specified topic could be retrieved, false otherwise.
     **/
-    ECAL_API bool GetTopicDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_);
+    ECAL_API bool GetTopicDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& data_type_info_);
 
     /**
      * @brief Get complete service map.
      *
-     * @param service_info_map_  Map to store the service/method descriptions.
-     *                           Map { (ServiceName, MethodName) -> SServiceMethodInformation } mapping of all currently known services.
+     * @param service_method_info_map_  Map to store the service/method descriptions.
+     *                                  Map { (ServiceName, MethodName) -> SServiceMethodInformation } mapping of all currently known services.
     **/
-      ECAL_API void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_);
+      ECAL_API void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_method_info_map_);
 
     /**
      * @brief Get complete quality service map.
      *
      * @param quality_service_info_map_  Map to store the quality service/method descriptions.
-     *                                   Map { (ServiceName, MethodName) -> SQualityServiceMethodInformation } mapping of all currently known services.
+     *                                     Map { (ServiceName, MethodName) -> SQualityServiceMethodInformation } mapping of all currently known services.
     **/
     ECAL_API void GetServices(std::map<std::tuple<std::string, std::string>, SQualityServiceInfo>& quality_service_info_map_);
 
@@ -294,10 +294,10 @@ namespace eCAL
     /**
      * @brief Get complete client map.
      *
-     * @param client_info_map_  Map to store the client/method descriptions.
-     *                          Map { (ClientName, MethodName) ->  SServiceMethodInformation } mapping of all currently known clients.
+     * @param client_method_info_map_  Map to store the client/method descriptions.
+     *                                 Map { (ClientName, MethodName) ->  SServiceMethodInformation } mapping of all currently known clients.
     **/
-    ECAL_API void GetClients(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& client_info_map_);
+    ECAL_API void GetClients(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& client_method_info_map_);
 
     /**
      * @brief Get complete quality client map.
