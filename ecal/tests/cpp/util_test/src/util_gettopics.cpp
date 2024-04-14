@@ -19,7 +19,7 @@
 
 #include <ecal/ecal.h>
 
-#include <unordered_map>
+#include <map>
 #include <thread>
 #include <vector>
 
@@ -33,7 +33,7 @@ TEST(core_cpp_util, GetTopics)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_gettopics");
 
-  std::unordered_map<std::string, eCAL::SDataTypeInformation> topic_info_map;
+  std::map<std::string, eCAL::SDataTypeInformation> topic_info_map;
 
   // create and check a few pub/sub entities
   {
@@ -146,7 +146,7 @@ TEST(core_cpp_util, GetTopicsParallel)
   auto get_topics_from_ecal = [&]() {
     size_t found_topics = 0;
     std::vector<std::string> tmp_topic_names;
-    std::unordered_map<std::string, eCAL::SDataTypeInformation> topics;
+    std::map<std::string, eCAL::SDataTypeInformation> topics;
     do {
       eCAL::Util::GetTopicNames(tmp_topic_names);
       eCAL::Util::GetTopics(topics);
@@ -179,7 +179,7 @@ TEST(core_cpp_util, GetTopicsParallel)
   }
 
   std::vector<std::string> final_topic_names;
-  std::unordered_map<std::string, eCAL::SDataTypeInformation> final_topics;
+  std::map<std::string, eCAL::SDataTypeInformation> final_topics;
   eCAL::Util::GetTopicNames(final_topic_names);
   eCAL::Util::GetTopics(final_topics);
 

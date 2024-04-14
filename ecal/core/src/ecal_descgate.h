@@ -36,96 +36,98 @@
 
 namespace eCAL
 {
+  struct STopicIdKey
+  {
+    std::string topic_name;
+    std::string topic_id;
+
+    bool operator<(const STopicIdKey& other) const
+    {
+      if (topic_name != other.topic_name)
+        return topic_name < other.topic_name;
+      return topic_id < other.topic_id;
+    }
+  };
+
+  struct SServiceIdKey
+  {
+    std::string service_name;
+    std::string service_id;
+    std::string method_name;
+
+    bool operator<(const SServiceIdKey& other) const
+    {
+      if (service_name != other.service_name)
+        return service_name < other.service_name;
+      if (service_id != other.service_id)
+        return service_id < other.service_id;
+      return method_name < other.method_name;
+    }
+  };
+
+  using QualityTopicIdMap   = std::map<STopicIdKey, Util::SQualityTopicInfo>;
+  using QualityServiceIdMap = std::map<SServiceIdKey, Util::SQualityServiceInfo>;
+
   class CDescGate
   {
   public:
+
     CDescGate();
     ~CDescGate();
 
     void Create();
     void Destroy();
 
-    struct STopicNameId
-    {
-      std::string topic_name;
-      std::string topic_id;
+    QualityTopicIdMap GetPublisher();
+    QualityTopicIdMap GetSubscriber();
 
-      bool operator<(const STopicNameId& other) const
-      {
-        if (topic_name != other.topic_name)
-          return topic_name < other.topic_name;
-        return topic_id < other.topic_id;
-      }
-    };
-
-    using TopicNameIdMap = std::map<STopicNameId, Util::SQualityDataTypeInformation>;
-    TopicNameIdMap GetPublisher();
-    TopicNameIdMap GetSubscriber();
-
-    struct SServiceMethodNameId
-    {
-      std::string service_name;
-      std::string service_id;
-      std::string method_name;
-
-      bool operator<(const SServiceMethodNameId& other) const
-      {
-        if (service_name != other.service_name)
-          return service_name < other.service_name;
-        if (service_id != other.service_id)
-          return service_id < other.service_id;
-        return method_name < other.method_name;
-      }
-    };
-
-    using ServiceMethodNameIdMap = std::map<SServiceMethodNameId, Util::SQualityServiceMethodInformation>;
-    ServiceMethodNameIdMap GetServices();
-    ServiceMethodNameIdMap GetClients();
+    QualityServiceIdMap GetServices();
+    QualityServiceIdMap GetClients();
 
   protected:
-    using TopicInfoMap = eCAL::Util::CExpMap<STopicNameId, Util::SQualityDataTypeInformation>;
-    struct STopicInfoMap
+    using QualityTopicIdExpMap = eCAL::Util::CExpMap<STopicIdKey, Util::SQualityTopicInfo>;
+    struct SQualityTopicIdMap
     {
-      explicit STopicInfoMap(const std::chrono::milliseconds& timeout_) :
-        map(std::make_unique<TopicInfoMap>(timeout_))
+      explicit SQualityTopicIdMap(const std::chrono::milliseconds& timeout_) :
+        map(std::make_unique<QualityTopicIdExpMap>(timeout_))
       {
       };
-      mutable std::mutex            sync;
-      std::unique_ptr<TopicInfoMap> map;
+      mutable std::mutex                    mtx;
+      std::unique_ptr<QualityTopicIdExpMap> map;
     };
-    STopicInfoMap m_publisher_info_map;
-    STopicInfoMap m_subscriber_info_map;
 
-    TopicNameIdMap GetTopics(const STopicInfoMap& topic_map_);
-
-    using ServiceMethodInfoMap = eCAL::Util::CExpMap<SServiceMethodNameId, Util::SQualityServiceMethodInformation>;
-    struct SServiceMethodInfoMap
+    using QualityServiceIdExpMap = eCAL::Util::CExpMap<SServiceIdKey, Util::SQualityServiceInfo>;
+    struct SQualityServiceIdMap
     {
-      explicit SServiceMethodInfoMap(const std::chrono::milliseconds& timeout_) :
-        map(std::make_unique<ServiceMethodInfoMap>(timeout_))
+      explicit SQualityServiceIdMap(const std::chrono::milliseconds& timeout_) :
+        map(std::make_unique<QualityServiceIdExpMap>(timeout_))
       {
       };
-      mutable std::mutex                    sync;
-      std::unique_ptr<ServiceMethodInfoMap> map;
+      mutable std::mutex                      mtx;
+      std::unique_ptr<QualityServiceIdExpMap> map;
     };
-    SServiceMethodInfoMap m_service_info_map;
-    SServiceMethodInfoMap m_client_info_map;
 
-    ServiceMethodNameIdMap GetServices(const SServiceMethodInfoMap& service_method_info_map_);
+    SQualityTopicIdMap   m_publisher_info_map;
+    SQualityTopicIdMap   m_subscriber_info_map;
+    SQualityServiceIdMap m_service_info_map;
+    SQualityServiceIdMap m_client_info_map;
+
+    QualityTopicIdMap   GetTopics(const SQualityTopicIdMap& topic_map_);
+    QualityServiceIdMap GetServices(const SQualityServiceIdMap& service_method_info_map_);
 
     void ApplySample(const Registration::Sample& sample_, eTLayerType layer_);
       
-    void ApplyTopicDescription(STopicInfoMap& topic_info_map_,
+    void ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
                                const std::string& topic_name_,
                                const std::string& topic_id_,
                                const SDataTypeInformation& topic_info_,
                                Util::DescQualityFlags topic_quality_);
 
-    void RemTopicDescription(STopicInfoMap& topic_info_map_,
+    void RemTopicDescription(SQualityTopicIdMap& topic_info_map_,
                              const std::string& topic_name_,
                              const std::string& topic_id_);
 
-    void ApplyServiceDescription(SServiceMethodInfoMap& service_method_info_map_,
+    void ApplyServiceDescription(SQualityServiceIdMap& service_method_info_map_,
                                  const std::string& service_name_,
                                  const std::string& service_id_,
                                  const std::string& method_name_,
@@ -133,7 +135,7 @@ namespace eCAL
                                  const SDataTypeInformation& response_type_information_,
                                  Util::DescQualityFlags service_quality_);
 
-    void RemServiceDescription(SServiceMethodInfoMap& service_method_info_map_,
+    void RemServiceDescription(SQualityServiceIdMap& service_method_info_map_,
                                const std::string& service_name_,
                                const std::string& service_id_);
   };

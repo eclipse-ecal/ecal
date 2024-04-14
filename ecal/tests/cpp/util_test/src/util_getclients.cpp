@@ -134,15 +134,7 @@ TEST(core_cpp_util, GetClients)
     // destroy client 1
     client1.Destroy();
 
-    // check attributes (client 1 is still in the map)
-    eCAL::Util::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
-    EXPECT_EQ(req_type, "foo::req_type1");
-    EXPECT_EQ(resp_type, "foo::resp_type1");
-
-    // let's wait a registration cylce long
-    eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH);
-
-    // check attributes (client 1 should be replaced by client 2 now)
+    // check attributes (client 1 should be replaced by client 2 immediately)
     eCAL::Util::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
     EXPECT_EQ(req_type, "foo::req_type2");
     EXPECT_EQ(resp_type, "foo::resp_type2");

@@ -97,31 +97,31 @@ namespace eCAL
 #endif
   }
 
-  CDescGate::TopicNameIdMap CDescGate::GetPublisher()
+  QualityTopicIdMap CDescGate::GetPublisher()
   {
     return GetTopics(m_publisher_info_map);
   }
 
-  CDescGate::TopicNameIdMap CDescGate::GetSubscriber()
+  QualityTopicIdMap CDescGate::GetSubscriber()
   {
     return GetTopics(m_subscriber_info_map);
   }
 
-  CDescGate::ServiceMethodNameIdMap CDescGate::GetServices()
+  QualityServiceIdMap CDescGate::GetServices()
   {
     return GetServices(m_service_info_map);
   }
 
-  CDescGate::ServiceMethodNameIdMap CDescGate::GetClients()
+  QualityServiceIdMap CDescGate::GetClients()
   {
     return GetServices(m_client_info_map);
   }
 
-  CDescGate::TopicNameIdMap CDescGate::GetTopics(const STopicInfoMap& topic_map_)
+  QualityTopicIdMap CDescGate::GetTopics(const SQualityTopicIdMap& topic_map_)
   {
-    TopicNameIdMap map;
+    QualityTopicIdMap map;
 
-    const std::lock_guard<std::mutex> lock(topic_map_.sync);
+    const std::lock_guard<std::mutex> lock(topic_map_.mtx);
     topic_map_.map->remove_deprecated();
 
     for (const auto& topic_map_it : (*topic_map_.map))
@@ -131,11 +131,11 @@ namespace eCAL
     return map;
   }
 
-  CDescGate::ServiceMethodNameIdMap CDescGate::GetServices(const SServiceMethodInfoMap& service_method_info_map_)
+  QualityServiceIdMap CDescGate::GetServices(const SQualityServiceIdMap& service_method_info_map_)
   {
-    ServiceMethodNameIdMap map;
+    QualityServiceIdMap map;
 
-    const std::lock_guard<std::mutex> lock(service_method_info_map_.sync);
+    const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
     service_method_info_map_.map->remove_deprecated();
 
     for (const auto& service_method_info_map_it : (*service_method_info_map_.map))
@@ -210,20 +210,20 @@ namespace eCAL
     }
   }
 
-  void CDescGate::ApplyTopicDescription(STopicInfoMap& topic_info_map_,
+  void CDescGate::ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
     const std::string& topic_name_,
     const std::string& topic_id_,
     const SDataTypeInformation& topic_info_,
     Util::DescQualityFlags topic_quality_)
   {
-    const auto topic_info_key = STopicNameId{ topic_name_, topic_id_ };
+    const auto topic_info_key = STopicIdKey{ topic_name_, topic_id_ };
 
-    Util::SQualityDataTypeInformation topic_quality_info;
+    Util::SQualityTopicInfo topic_quality_info;
     topic_quality_info.id      = topic_id_;
     topic_quality_info.info    = topic_info_;
     topic_quality_info.quality = topic_quality_;
 
-    const std::unique_lock<std::mutex> lock(topic_info_map_.sync);
+    const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
     topic_info_map_.map->remove_deprecated();
 
     const auto topic_info_it = topic_info_map_.map->find(topic_info_key);
@@ -231,14 +231,14 @@ namespace eCAL
     (*topic_info_map_.map)[topic_info_key] = topic_quality_info;
   }
 
-  void CDescGate::RemTopicDescription(STopicInfoMap& topic_info_map_, const std::string& topic_name_, const std::string& topic_id_)
+  void CDescGate::RemTopicDescription(SQualityTopicIdMap& topic_info_map_, const std::string& topic_name_, const std::string& topic_id_)
   {
-    const std::unique_lock<std::mutex> lock(topic_info_map_.sync);
+    const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
     topic_info_map_.map->remove_deprecated();
-    topic_info_map_.map->erase(STopicNameId{ topic_name_, topic_id_ });
+    topic_info_map_.map->erase(STopicIdKey{ topic_name_, topic_id_ });
   }
 
-  void CDescGate::ApplyServiceDescription(SServiceMethodInfoMap& service_method_info_map_,
+  void CDescGate::ApplyServiceDescription(SQualityServiceIdMap& service_method_info_map_,
     const std::string& service_name_,
     const std::string& service_id_,
     const std::string& method_name_,
@@ -246,24 +246,24 @@ namespace eCAL
     const SDataTypeInformation& response_type_information_,
     const Util::DescQualityFlags service_quality_)
   {
-    const auto service_method_info_key = SServiceMethodNameId{ service_name_, service_id_, method_name_ };
+    const auto service_method_info_key = SServiceIdKey{ service_name_, service_id_, method_name_ };
 
-    Util::SQualityServiceMethodInformation service_quality_info;
+    Util::SQualityServiceInfo service_quality_info;
     service_quality_info.id                 = service_id_;
     service_quality_info.info.request_type  = request_type_information_;
     service_quality_info.info.response_type = response_type_information_;
     service_quality_info.quality            = service_quality_;
 
-    const std::lock_guard<std::mutex> lock(service_method_info_map_.sync);
+    const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
     service_method_info_map_.map->remove_deprecated();
     (*service_method_info_map_.map)[service_method_info_key] = service_quality_info;
   }
 
-  void CDescGate::RemServiceDescription(SServiceMethodInfoMap& service_method_info_map_, const std::string& service_name_, const std::string& service_id_)
+  void CDescGate::RemServiceDescription(SQualityServiceIdMap& service_method_info_map_, const std::string& service_name_, const std::string& service_id_)
   {
-    std::list<SServiceMethodNameId> service_method_infos_to_remove;
+    std::list<SServiceIdKey> service_method_infos_to_remove;
 
-    const std::lock_guard<std::mutex> lock(service_method_info_map_.sync);
+    const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
     service_method_info_map_.map->remove_deprecated();
 
     for (auto&& service_it : *service_method_info_map_.map)
