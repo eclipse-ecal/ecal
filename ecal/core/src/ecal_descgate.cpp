@@ -225,9 +225,6 @@ namespace eCAL
 
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
     topic_info_map_.map->remove_deprecated();
-
-    const auto topic_info_it = topic_info_map_.map->find(topic_info_key);
-
     (*topic_info_map_.map)[topic_info_key] = topic_quality_info;
   }
 

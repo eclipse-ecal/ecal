@@ -71,7 +71,6 @@ namespace eCAL
   class CDescGate
   {
   public:
-
     CDescGate();
     ~CDescGate();
 
@@ -83,6 +82,14 @@ namespace eCAL
 
     QualityServiceIdMap GetServices();
     QualityServiceIdMap GetClients();
+
+    // delete copy constructor and copy assignment operator
+    CDescGate(const CDescGate&) = delete;
+    CDescGate& operator=(const CDescGate&) = delete;
+
+    // delete move constructor and move assignment operator
+    CDescGate(CDescGate&&) = delete;
+    CDescGate& operator=(CDescGate&&) = delete;
 
   protected:
     using QualityTopicIdExpMap = eCAL::Util::CExpMap<STopicIdKey, Util::SQualityTopicInfo>;

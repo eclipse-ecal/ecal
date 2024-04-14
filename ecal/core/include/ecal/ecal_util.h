@@ -39,7 +39,7 @@ namespace eCAL
     namespace Util
     {
     // enumeration of quality bits used for detecting how good a data information is
-    enum class DescQualityFlags : int
+    enum class DescQualityFlags : std::uint8_t
     {
       NO_QUALITY                = 0,         //!< Special value for initialization
       DESCRIPTION_AVAILABLE     = 0x1 << 3,  //!< Having a type descriptor available
@@ -47,7 +47,7 @@ namespace eCAL
       TYPENAME_AVAILABLE        = 0x1 << 1,  //!< Having a type name available
       INFO_COMES_FROM_PRODUCER  = 0x1 << 0   //!< Info is coming from the producer (like a publisher, service)
     };
-    inline DescQualityFlags& operator|= (DescQualityFlags& a, DescQualityFlags b) { return reinterpret_cast<DescQualityFlags&>(reinterpret_cast<std::underlying_type<DescQualityFlags>::type&>(a) |= static_cast<std::underlying_type<DescQualityFlags>::type>(b)); }
+    inline DescQualityFlags& operator|= (DescQualityFlags& a, DescQualityFlags b) { return reinterpret_cast<DescQualityFlags&>(reinterpret_cast<std::underlying_type_t<DescQualityFlags>&>(a) |= static_cast<std::underlying_type_t<DescQualityFlags>>(b)); }
 
     struct SQualityTopicInfo
     {
@@ -150,7 +150,7 @@ namespace eCAL
     /**
      * @brief Get complete snapshot of data type information with quality and topic id for all known publisher.
      *
-     * @return MultiMap containing the qualified datatype information and the topic id's.
+     * @return MultiMap containing the quality datatype information and the topic id's.
     **/
     ECAL_API std::multimap<std::string, SQualityTopicInfo> GetPublisher();
 
@@ -159,14 +159,14 @@ namespace eCAL
      *
      * @param topic_name_  Topic name.
      *
-     * @return Vector containing the qualified datatype information for this publisher.
+     * @return Vector containing the quality datatype information for this publisher.
     **/
     ECAL_API std::vector<SQualityTopicInfo> GetPublisher(const std::string& topic_name_);
 
     /**
      * @brief Get complete snapshot of data type information with quality and topic id for all known subscriber.
      *
-     * @return MultiMap containing the qualified datatype information and the topic id's.
+     * @return MultiMap containing the quality datatype information and the topic id's.
     **/
     ECAL_API std::multimap<std::string, SQualityTopicInfo> GetSubscriber();
 
@@ -175,39 +175,39 @@ namespace eCAL
      *
      * @param topic_name_  Topic name.
      *
-     * @return Vector containing the qualified datatype information for this subscriber.
+     * @return Vector containing the quality datatype information for this subscriber.
     **/
     ECAL_API std::vector<SQualityTopicInfo> GetSubscriber(const std::string& topic_name_);
 
     /**
-     * @brief Get highest qualified data type information out of a vector of qualified data type information.
+     * @brief Get highest quality data type information out of a vector of quality data type information.
      * 
-     * @param data_type_info_vec_  Vector of qualified data type information
+     * @param data_type_info_vec_  Vector of quality data type information
      *
-     * @return Highest qualified data type information.
+     * @return Highest quality data type information.
     **/
     ECAL_API SDataTypeInformation GetHighestQualityDataTypeInformation(const std::vector<SQualityTopicInfo>& data_type_info_vec_);
 
     /**
      * @brief Get complete snapshot of service method information with quality and service id for all known services.
      *
-     * @return MultiMap<ServiceName, MethodName> containing the qualified datatype information and the service id's.
+     * @return MultiMap<ServiceName, MethodName> containing the quality datatype information and the service id's.
     **/
     ECAL_API std::multimap<std::tuple<std::string, std::string>, SQualityServiceInfo> GetServices();
 
     /**
      * @brief Get complete snapshot of service method information with quality and client id for all known clients.
      *
-     * @return MultiMap<ClientName, MethodName> containing the qualified datatype information and the client id's.
+     * @return MultiMap<ClientName, MethodName> containing the quality datatype information and the client id's.
     **/
     ECAL_API std::multimap<std::tuple<std::string, std::string>, SQualityServiceInfo> GetClients();
 
     /**
-     * @brief Get highest qualified service method type information out of a vector of qualified service method information.
+     * @brief Get highest quality service method type information out of a vector of quality service method information.
      *
-     * @param service_method_info_vec_  Vector of qualified service method information
+     * @param service_method_info_vec_  Vector of quality service method information
      *
-     * @return Highest qualified service method information.
+     * @return Highest quality service method information.
     **/
     ECAL_API SServiceMethodInformation GetHighestQualityServiceMethodInformation(const std::vector<SQualityServiceInfo>& service_method_info_vec_);
 
@@ -220,12 +220,12 @@ namespace eCAL
     ECAL_API void GetTopics(std::map<std::string, SDataTypeInformation>& data_type_info_map_);
 
     /**
-     * @brief Get complete qualified topic map.
+     * @brief Get complete quality topic map.
      *
-     * @param qualfied_data_type_info_map_  Map to store the qualified datatype information.
-     *                                      Map { TopicName -> SQualityDataTypeInformation } mapping of all currently known publisher/subscriber.
+     * @param quality_data_type_info_map_  Map to store the quality datatype information.
+     *                                     Map { TopicName -> SQualityDataTypeInformation } mapping of all currently known publisher/subscriber.
     **/
-    ECAL_API void GetTopics(std::map<std::string, SQualityTopicInfo>& qualfied_data_type_info_map_);
+    ECAL_API void GetTopics(std::map<std::string, SQualityTopicInfo>& quality_data_type_info_map_);
 
     /**
      * @brief Get all topic names.
@@ -253,12 +253,12 @@ namespace eCAL
       ECAL_API void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_);
 
     /**
-     * @brief Get complete qualified service map.
+     * @brief Get complete quality service map.
      *
-     * @param qualified_service_info_map_  Map to store the qualified service/method descriptions.
-     *                                     Map { (ServiceName, MethodName) -> SQualityServiceMethodInformation } mapping of all currently known services.
+     * @param quality_service_info_map_  Map to store the quality service/method descriptions.
+     *                                   Map { (ServiceName, MethodName) -> SQualityServiceMethodInformation } mapping of all currently known services.
     **/
-    ECAL_API void GetServices(std::map<std::tuple<std::string, std::string>, SQualityServiceInfo>& qualified_service_info_map_);
+    ECAL_API void GetServices(std::map<std::tuple<std::string, std::string>, SQualityServiceInfo>& quality_service_info_map_);
 
     /**
      * @brief Get all service/method names.
@@ -300,12 +300,12 @@ namespace eCAL
     ECAL_API void GetClients(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& client_info_map_);
 
     /**
-     * @brief Get complete qualified client map.
+     * @brief Get complete quality client map.
      *
-     * @param qualified_client_info_map_  Map to store the qualified client/method descriptions.
-     *                                    Map { (ClientName, MethodName) ->  SQualityServiceMethodInformation } mapping of all currently known clients.
+     * @param quality_client_info_map_  Map to store the quality client/method descriptions.
+     *                                  Map { (ClientName, MethodName) ->  SQualityServiceMethodInformation } mapping of all currently known clients.
     **/
-    ECAL_API void GetClients(std::map<std::tuple<std::string, std::string>, SQualityServiceInfo>& qualified_client_info_map_);
+    ECAL_API void GetClients(std::map<std::tuple<std::string, std::string>, SQualityServiceInfo>& quality_client_info_map_);
 
     /**
      * @brief Get all client/method names.
