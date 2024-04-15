@@ -28,6 +28,13 @@ add_subdirectory(c/core_test)
 # --------------------------------------------------------
 add_subdirectory(cpp/core_test)
 
+add_subdirectory(cpp/descgate_test)
+
+if(ECAL_CORE_REGISTRATION AND ECAL_CORE_PUBLISHER)
+  add_subdirectory(cpp/util_test)
+endif()
+
+
 
 
 
@@ -35,10 +42,6 @@ add_subdirectory(cpp/event_test)
 add_subdirectory(cpp/expmap_test)
 add_subdirectory(cpp/serialization_test)
 add_subdirectory(cpp/topic2mcast_test)
-
-if(ECAL_CORE_REGISTRATION AND ECAL_CORE_PUBLISHER)
-  add_subdirectory(cpp/util_test)
-endif()
 
 if(ECAL_CORE_REGISTRATION_SHM OR ECAL_CORE_TRANSPORT_SHM)
   add_subdirectory(cpp/io_memfile_test)
