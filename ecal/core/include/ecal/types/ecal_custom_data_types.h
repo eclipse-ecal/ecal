@@ -48,7 +48,7 @@ namespace eCAL
       ECAL_API ~IpAddressV4(); 
                   
       IpAddressV4(IpAddressV4& other)                  { this->m_ip_address = other; };
-      IpAddressV4& operator=(IpAddressV4& other)       { this->m_ip_address = other; return *this; };
+      IpAddressV4& operator=(IpAddressV4& const other) { this->m_ip_address = other; return *this; };
       IpAddressV4& operator=(const std::string& other) { this->validateIpString(other); return *this; };
       operator std::string()                           { return m_ip_address; };
       
