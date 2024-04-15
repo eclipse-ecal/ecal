@@ -128,7 +128,7 @@ namespace eCAL
                                const std::string& topic_name_,
                                const std::string& topic_id_,
                                const SDataTypeInformation& topic_info_,
-                               Util::DescQualityFlags topic_quality_);
+                               const Util::DescQualityFlags topic_quality_);
 
     void RemTopicDescription(SQualityTopicIdMap& topic_info_map_,
                              const std::string& topic_name_,
@@ -140,7 +140,8 @@ namespace eCAL
                                  const std::string& method_name_,
                                  const SDataTypeInformation& request_type_information_,
                                  const SDataTypeInformation& response_type_information_,
-                                 Util::DescQualityFlags service_quality_);
+                                 const Util::DescQualityFlags request_type_quality_,
+                                 const Util::DescQualityFlags response_type_quality_);
 
     void RemServiceDescription(SQualityServiceIdMap& service_method_info_map_,
                                const std::string& service_name_,

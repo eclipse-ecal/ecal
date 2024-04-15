@@ -24,26 +24,34 @@
 
 #define CMN_MONITORING_TIMEOUT 5000
 
-TEST(core_cpp_util, GetServices)
+TEST(core_cpp_util, ServiceExpiration)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "util_getservices");
+  eCAL::Initialize(0, nullptr, "core_cpp_util");
 
   std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation> service_info_map;
-  
-  // add and expire simple service
+
+  // create simple service and let it expire
   {
-    // create server
-    eCAL::CServiceServer server("foo::service");
+    // create service
+    eCAL::CServiceServer service("foo::service");
+    service.AddDescription("foo::method", "foo::req_type", "foo::req_desc", "foo::resp_type", "foo::resp_desc");
 
-    // add a description only
-    server.AddDescription("foo::method1", "foo::req_type1", "foo::req_desc1", "foo::resp_type1", "foo::resp_desc1");
-
-    // get all service
+    // get all services
     eCAL::Util::GetServices(service_info_map);
 
     // check size
     EXPECT_EQ(service_info_map.size(), 1);
+
+    // check service/method names
+    std::vector<std::tuple<std::string, std::string>> service_method_names;
+    eCAL::Util::GetServiceMethodNames(service_method_names);
+    EXPECT_EQ(service_method_names.size(), 1);
+    for (const auto& method_name : service_method_names)
+    {
+      EXPECT_EQ(std::get<0>(method_name), "foo::service");
+      EXPECT_EQ(std::get<1>(method_name), "foo::method");
+    }
 
     // let's wait a monitoring timeout long
     eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT);
@@ -55,27 +63,31 @@ TEST(core_cpp_util, GetServices)
     EXPECT_EQ(service_info_map.size(), 1);
   }
 
-  // get all services again, all services 
+  // get all services again, all services
   // should be removed from the map
   eCAL::Util::GetServices(service_info_map);
 
   // check size
   EXPECT_EQ(service_info_map.size(), 0);
 
-  // add a service with method callback
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+TEST(core_cpp_util, ServiceEqualQualities)
+{
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "core_cpp_util");
+
+  std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation> service_info_map;
+
+  // create 2 services with the same quality of data type information
   {
-    // create server
-    eCAL::CServiceServer server("foo::service");
+    // create service 1
+    eCAL::CServiceServer service1("foo::service");
+    service1.AddDescription("foo::method", "foo::req_type1", "foo::req_desc1", "foo::resp_type1", "foo::resp_desc1");
 
-    auto method_callback = [&](const std::string& /*method_*/, const std::string& /*req_type_*/, const std::string& /*resp_type_*/, const std::string& /*request_*/, std::string& /*response_*/) -> int
-    {
-      return 42;
-    };
-
-    // add method callback
-    server.AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", method_callback);
-
-    // get all service
+    // get all services
     eCAL::Util::GetServices(service_info_map);
 
     // check size
@@ -85,46 +97,108 @@ TEST(core_cpp_util, GetServices)
     std::string req_type, resp_type;
     std::string req_desc, resp_desc;
 
-    eCAL::Util::GetServiceTypeNames("foo::service", "foo::method1", req_type, resp_type);
+    eCAL::Util::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
     EXPECT_EQ(req_type,  "foo::req_type1");
     EXPECT_EQ(resp_type, "foo::resp_type1");
-    eCAL::Util::GetServiceDescription("foo::service", "foo::method1", req_desc, resp_desc);
-    EXPECT_EQ(req_desc, "");
-    EXPECT_EQ(resp_desc, "");
+    eCAL::Util::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
+    EXPECT_EQ(req_desc,  "foo::req_desc1");
+    EXPECT_EQ(resp_desc, "foo::resp_desc1");
 
-    // change attributes
-    server.AddDescription("foo::method1", "foo::req_type1-1", "foo::req_desc1-1", "foo::resp_type1-1", "foo::resp_desc1-1");
-
-    // check attributes
-    eCAL::Util::GetServiceTypeNames("foo::service", "foo::method1", req_type, resp_type);
-    EXPECT_EQ(req_type, "foo::req_type1-1");
-    EXPECT_EQ(resp_type, "foo::resp_type1-1");
-    eCAL::Util::GetServiceDescription("foo::service", "foo::method1", req_desc, resp_desc);
-    EXPECT_EQ(req_desc, "foo::req_desc1-1");
-    EXPECT_EQ(resp_desc, "foo::resp_desc1-1");
-
-    // change attributes again (this will not overwrite the attributes anymore)
-    server.AddDescription("foo::method1", "foo::req_type1-2", "foo::req_desc1-2", "foo::resp_type1-2", "foo::resp_desc1-2");
+    // create service 2
+    // this will not overwrite the attributes from service 1, because the quality is not higher
+    eCAL::CServiceServer service2("foo::service");
+    service2.AddDescription("foo::method", "foo::req_type2", "foo::req_desc2", "foo::resp_type2", "foo::resp_desc2");
 
     // check attributes
-    eCAL::Util::GetServiceTypeNames("foo::service", "foo::method1", req_type, resp_type);
-    EXPECT_EQ(req_type, "foo::req_type1-1");
-    EXPECT_EQ(resp_type, "foo::resp_type1-1");
-    eCAL::Util::GetServiceDescription("foo::service", "foo::method1", req_desc, resp_desc);
-    EXPECT_EQ(req_desc, "foo::req_desc1-1");
-    EXPECT_EQ(resp_desc, "foo::resp_desc1-1");
+    eCAL::Util::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
+    EXPECT_EQ(req_type,  "foo::req_type1");
+    EXPECT_EQ(resp_type, "foo::resp_type1");
+    eCAL::Util::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
+    EXPECT_EQ(req_desc,  "foo::req_desc1");
+    EXPECT_EQ(resp_desc, "foo::resp_desc1");
+
+    // check size it's service 1 only
+    EXPECT_EQ(service_info_map.size(), 1);
 
     // let's wait a monitoring timeout long
     eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT);
 
-    // get all services again, service should not be expired
+    // get all services again, services should not be expired
     eCAL::Util::GetServices(service_info_map);
 
     // check size
     EXPECT_EQ(service_info_map.size(), 1);
+
+    // destroy service 1
+    service1.Destroy();
+
+    // check attributes, service 1 attributes should be replaced by service 2 attributes now
+    eCAL::Util::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
+    EXPECT_EQ(req_type,  "foo::req_type2");
+    EXPECT_EQ(resp_type, "foo::resp_type2");
+    eCAL::Util::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
+    EXPECT_EQ(req_desc,  "foo::req_desc2");
+    EXPECT_EQ(resp_desc, "foo::resp_desc2");
   }
 
   // get all services again, all services 
+  // should be removed from the map
+  eCAL::Util::GetServices(service_info_map);
+
+  // check size
+  EXPECT_EQ(service_info_map.size(), 0);
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+TEST(core_cpp_util, ServiceDifferentQualities)
+{
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "core_cpp_util");
+
+  std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation> service_info_map;
+
+  // create 2 services with different qualities of data type information
+  {
+    // create service 1, response type name and response description are missing
+    eCAL::CServiceServer service1("foo::service");
+    service1.AddDescription("foo::method", "foo::req_type1", "foo::req_desc1", "", "");
+
+    // get all services
+    eCAL::Util::GetServices(service_info_map);
+
+    // check size
+    EXPECT_EQ(service_info_map.size(), 1);
+
+    // check attributes
+    std::string req_type, resp_type;
+    std::string req_desc, resp_desc;
+
+    eCAL::Util::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
+    EXPECT_EQ(req_type,  "foo::req_type1");
+    EXPECT_EQ(resp_type, "");
+    eCAL::Util::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
+    EXPECT_EQ(req_desc,  "foo::req_desc1");
+    EXPECT_EQ(resp_desc, "");
+
+    // create service 2, with higher quality than service 1
+    eCAL::CServiceServer service2("foo::service");
+    service2.AddDescription("foo::method", "foo::req_type2", "foo::req_desc2", "foo::resp_type2", "foo::resp_desc2");
+
+    // check attributes, we expect attributes from service 2 here
+    eCAL::Util::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
+    EXPECT_EQ(req_type,  "foo::req_type2");
+    EXPECT_EQ(resp_type, "foo::resp_type2");
+    eCAL::Util::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
+    EXPECT_EQ(req_desc,  "foo::req_desc2");
+    EXPECT_EQ(resp_desc, "foo::resp_desc2");
+
+    // check size it's service 2 only
+    EXPECT_EQ(service_info_map.size(), 1);
+  }
+
+  // get all services again, all services
   // should be removed from the map
   eCAL::Util::GetServices(service_info_map);
 

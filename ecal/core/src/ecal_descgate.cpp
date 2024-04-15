@@ -29,41 +29,16 @@
 
 namespace
 {
-  eCAL::Util::DescQualityFlags GetClientQuality(const eCAL::SDataTypeInformation& request_info_, const eCAL::SDataTypeInformation& response_info_)
+  eCAL::Util::DescQualityFlags GetDataTypeInfoQuality(const eCAL::SDataTypeInformation& data_type_info_, bool is_producer_)
   {
     eCAL::Util::DescQualityFlags quality = eCAL::Util::DescQualityFlags::NO_QUALITY;
-    if (!(request_info_.name.empty() && response_info_.name.empty()))
+    if (!data_type_info_.name.empty())
       quality |= eCAL::Util::DescQualityFlags::TYPENAME_AVAILABLE;
-    if (!(request_info_.encoding.empty() && response_info_.encoding.empty()))
+    if (!data_type_info_.encoding.empty())
       quality |= eCAL::Util::DescQualityFlags::ENCODING_AVAILABLE;
-    if (!(request_info_.descriptor.empty() && response_info_.descriptor.empty()))
+    if (!data_type_info_.descriptor.empty())
       quality |= eCAL::Util::DescQualityFlags::DESCRIPTION_AVAILABLE;
-    return quality;
-  }
-
-  eCAL::Util::DescQualityFlags GetServiceQuality(const eCAL::SDataTypeInformation& request_info_, const eCAL::SDataTypeInformation& response_info_)
-  {
-    eCAL::Util::DescQualityFlags quality = GetClientQuality(request_info_, response_info_);
-    quality |= eCAL::Util::DescQualityFlags::INFO_COMES_FROM_PRODUCER;
-    return quality;
-  }
-
-  eCAL::Util::DescQualityFlags GetSubscriberQuality(const eCAL::SDataTypeInformation& topic_info_)
-  {
-    eCAL::Util::DescQualityFlags quality = eCAL::Util::DescQualityFlags::NO_QUALITY;
-    if (!topic_info_.name.empty())
-      quality |= eCAL::Util::DescQualityFlags::TYPENAME_AVAILABLE;
-    if (!topic_info_.encoding.empty())
-      quality |= eCAL::Util::DescQualityFlags::ENCODING_AVAILABLE;
-    if (!topic_info_.descriptor.empty())
-      quality |= eCAL::Util::DescQualityFlags::DESCRIPTION_AVAILABLE;
-    return quality;
-  }
-
-  eCAL::Util::DescQualityFlags GetPublisherQuality(const eCAL::SDataTypeInformation& topic_info_)
-  {
-    eCAL::Util::DescQualityFlags quality = GetSubscriberQuality(topic_info_);
-    quality |= eCAL::Util::DescQualityFlags::INFO_COMES_FROM_PRODUCER;
+    if(is_producer_) quality |= eCAL::Util::DescQualityFlags::INFO_COMES_FROM_PRODUCER;
     return quality;
   }
 }
@@ -166,7 +141,7 @@ namespace eCAL
         response_type.name       = method.resp_type;
         response_type.descriptor = method.resp_desc;
 
-        ApplyServiceDescription(m_service_info_map, sample_.service.sname, sample_.service.sid, method.mname, request_type, response_type, GetServiceQuality(request_type, response_type));
+        ApplyServiceDescription(m_service_info_map, sample_.service.sname, sample_.service.sid, method.mname, request_type, response_type, GetDataTypeInfoQuality(request_type, true), GetDataTypeInfoQuality(response_type, true));
       }
     }
     break;
@@ -184,20 +159,20 @@ namespace eCAL
         response_type.name       = method.resp_type;
         response_type.descriptor = method.resp_desc;
 
-        ApplyServiceDescription(m_client_info_map, sample_.client.sname, sample_.client.sid, method.mname, request_type, response_type, GetClientQuality(request_type, response_type));
+        ApplyServiceDescription(m_client_info_map, sample_.client.sname, sample_.client.sid, method.mname, request_type, response_type, GetDataTypeInfoQuality(request_type, false), GetDataTypeInfoQuality(response_type, false));
       }
       break;
     case bct_unreg_client:
       RemServiceDescription(m_client_info_map, sample_.client.sname, sample_.client.sid);
       break;
     case bct_reg_publisher:
-      ApplyTopicDescription(m_publisher_info_map, sample_.topic.tname, sample_.topic.tid, sample_.topic.tdatatype, GetPublisherQuality(sample_.topic.tdatatype));
+      ApplyTopicDescription(m_publisher_info_map, sample_.topic.tname, sample_.topic.tid, sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, true));
       break;
     case bct_unreg_publisher:
       RemTopicDescription(m_publisher_info_map, sample_.topic.tname, sample_.topic.tid);
       break;
     case bct_reg_subscriber:
-      ApplyTopicDescription(m_subscriber_info_map, sample_.topic.tname, sample_.topic.tid, sample_.topic.tdatatype, GetSubscriberQuality(sample_.topic.tdatatype));
+      ApplyTopicDescription(m_subscriber_info_map, sample_.topic.tname, sample_.topic.tid, sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, false));
       break;
     case bct_unreg_subscriber:
       RemTopicDescription(m_subscriber_info_map, sample_.topic.tname, sample_.topic.tid);
@@ -214,7 +189,7 @@ namespace eCAL
     const std::string& topic_name_,
     const std::string& topic_id_,
     const SDataTypeInformation& topic_info_,
-    Util::DescQualityFlags topic_quality_)
+    const Util::DescQualityFlags topic_quality_)
   {
     const auto topic_info_key = STopicIdKey{ topic_name_, topic_id_ };
 
@@ -241,7 +216,8 @@ namespace eCAL
     const std::string& method_name_,
     const SDataTypeInformation& request_type_information_,
     const SDataTypeInformation& response_type_information_,
-    const Util::DescQualityFlags service_quality_)
+    const Util::DescQualityFlags request_type_quality_,
+    const Util::DescQualityFlags response_type_quality_)
   {
     const auto service_method_info_key = SServiceIdKey{ service_name_, service_id_, method_name_ };
 
@@ -249,7 +225,8 @@ namespace eCAL
     service_quality_info.id                 = service_id_;
     service_quality_info.info.request_type  = request_type_information_;
     service_quality_info.info.response_type = response_type_information_;
-    service_quality_info.quality            = service_quality_;
+    service_quality_info.request_quality    = request_type_quality_;
+    service_quality_info.response_quality   = response_type_quality_;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
     service_method_info_map_.map->remove_deprecated();

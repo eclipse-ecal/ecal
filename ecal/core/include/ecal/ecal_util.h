@@ -60,7 +60,8 @@ namespace eCAL
     {
       std::string               id;
       SServiceMethodInformation info;
-      DescQualityFlags          quality = DescQualityFlags::NO_QUALITY;
+      DescQualityFlags          request_quality  = DescQualityFlags::NO_QUALITY;
+      DescQualityFlags          response_quality = DescQualityFlags::NO_QUALITY;
     };
 
     /**

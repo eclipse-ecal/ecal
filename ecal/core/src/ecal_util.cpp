@@ -130,7 +130,8 @@ namespace
       if (target_it != target_map.end())
       {
         // key exists in target map
-        if (source_value.quality > target_it->second.quality)
+        if ( (source_value.request_quality  > target_it->second.request_quality)
+          || (source_value.response_quality > target_it->second.response_quality))
         {
           // source quality is greater, overwrite
           target_it->second = source_value;
@@ -370,7 +371,8 @@ namespace eCAL
       SQualityServiceInfo highest_quality_service_info;
       for (const auto& info : quality_service_info_vec_)
       {
-        if (info.quality > highest_quality_service_info.quality)
+        if ( (info.request_quality  > highest_quality_service_info.request_quality)
+          || (info.response_quality > highest_quality_service_info.response_quality))
         {
           highest_quality_service_info = info;
         }
@@ -484,7 +486,7 @@ namespace eCAL
     {
       std::vector<SQualityServiceInfo> service_method_info_vec = GetQualityServiceInfoVec(service_name_, method_name_, GetServices());
 
-      SServiceMethodInformation service_method_info = GetHighestQualityServiceMethodInformation(service_method_info_vec);
+      const SServiceMethodInformation service_method_info = GetHighestQualityServiceMethodInformation(service_method_info_vec);
       req_type_  = service_method_info.request_type.name;
       resp_type_ = service_method_info.response_type.name;
 
@@ -495,8 +497,8 @@ namespace eCAL
     {
       std::vector<SQualityServiceInfo> service_method_info_vec = GetQualityServiceInfoVec(service_name_, method_name_, GetServices());
 
-      SServiceMethodInformation service_method_info = GetHighestQualityServiceMethodInformation(service_method_info_vec);
-      req_desc_ = service_method_info.request_type.descriptor;
+      const SServiceMethodInformation service_method_info = GetHighestQualityServiceMethodInformation(service_method_info_vec);
+      req_desc_  = service_method_info.request_type.descriptor;
       resp_desc_ = service_method_info.response_type.descriptor;
 
       return !service_method_info_vec.empty();
@@ -547,7 +549,7 @@ namespace eCAL
     {
       std::vector<SQualityServiceInfo> service_method_info_vec = GetQualityServiceInfoVec(client_name_, method_name_, GetClients());
 
-      SServiceMethodInformation service_method_info = GetHighestQualityServiceMethodInformation(service_method_info_vec);
+      const SServiceMethodInformation service_method_info = GetHighestQualityServiceMethodInformation(service_method_info_vec);
       req_type_  = service_method_info.request_type.name;
       resp_type_ = service_method_info.response_type.name;
 
@@ -558,7 +560,7 @@ namespace eCAL
     {
       std::vector<SQualityServiceInfo> service_method_info_vec = GetQualityServiceInfoVec(client_name_, method_name_, GetClients());
 
-      SServiceMethodInformation service_method_info = GetHighestQualityServiceMethodInformation(service_method_info_vec);
+      const SServiceMethodInformation service_method_info = GetHighestQualityServiceMethodInformation(service_method_info_vec);
       req_desc_  = service_method_info.request_type.descriptor;
       resp_desc_ = service_method_info.response_type.descriptor;
 

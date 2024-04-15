@@ -25,13 +25,12 @@
 
 #include <gtest/gtest.h>
 
-#define CMN_REGISTRATION_REFRESH 1000
-#define CMN_MONITORING_TIMEOUT   5000
+#define CMN_MONITORING_TIMEOUT 5000
 
 TEST(core_cpp_util, GetTopics)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_gettopics");
+  eCAL::Initialize(0, nullptr, "core_cpp_util");
 
   std::map<std::string, eCAL::SDataTypeInformation> topic_info_map;
 
@@ -129,7 +128,8 @@ TEST(core_cpp_util, GetTopicsParallel)
   constexpr const int waiting_time_thread(1000);
   constexpr const int parallel_threads(1);
 
-  eCAL::Initialize();
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "core_cpp_util");
 
   auto create_publishers = [&]() {
     std::string topic_name = "Test.ParallelUtilFunctions";
@@ -186,5 +186,6 @@ TEST(core_cpp_util, GetTopicsParallel)
   EXPECT_EQ(final_topic_names.size(), 0);
   EXPECT_EQ(final_topics.size(), 0);
 
+  // finalize eCAL API
   eCAL::Finalize();
 }
