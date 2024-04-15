@@ -25,7 +25,10 @@
 
 #include <gtest/gtest.h>
 
-enum { CMN_MONITORING_TIMEOUT = 5000 };
+enum {
+  CMN_MONITORING_TIMEOUT = 5000,
+  CMN_REGISTRATION_REFRESH = 1000
+};
 
 TEST(core_cpp_util, GetTopics)
 {
@@ -108,8 +111,8 @@ TEST(core_cpp_util, GetTopics)
     }
   }
 
-  // let's unregister them
-  eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT + 2000);
+  // let's unregister
+  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH);
 
   // get all topics again, now all topics 
   // should be removed from the map

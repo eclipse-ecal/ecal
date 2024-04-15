@@ -26,13 +26,13 @@
 #include <ecal/ecal_types.h>
 #include <ecal/ecal_util.h>
 
-#include "serialization/ecal_serialize_sample_registration.h"
+#include "serialization/ecal_struct_sample_registration.h"
 #include "util/ecal_expmap.h"
 
+#include <chrono>
 #include <map>
 #include <mutex>
 #include <string>
-#include <type_traits>
 
 namespace eCAL
 {
@@ -65,21 +65,23 @@ namespace eCAL
     }
   };
 
-  using QualityTopicIdMap   = std::map<STopicIdKey, Util::SQualityTopicInfo>;
+  using QualityTopicIdMap   = std::map<STopicIdKey,   Util::SQualityTopicInfo>;
   using QualityServiceIdMap = std::map<SServiceIdKey, Util::SQualityServiceInfo>;
 
   class CDescGate
   {
   public:
-    CDescGate();
+    CDescGate(const std::chrono::milliseconds& exp_timeout_);
     ~CDescGate();
 
-    void Create();
-    void Destroy();
+    // apply samples to description gate
+    void ApplySample(const Registration::Sample& sample_, eTLayerType layer_);
 
+    // get publisher/subscriber maps
     QualityTopicIdMap GetPublisher();
     QualityTopicIdMap GetSubscriber();
 
+    // get service/clients maps
     QualityServiceIdMap GetServices();
     QualityServiceIdMap GetClients();
 
@@ -122,8 +124,6 @@ namespace eCAL
     QualityTopicIdMap   GetTopics(const SQualityTopicIdMap& topic_map_);
     QualityServiceIdMap GetServices(const SQualityServiceIdMap& service_method_info_map_);
 
-    void ApplySample(const Registration::Sample& sample_, eTLayerType layer_);
-      
     void ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
                                const std::string& topic_name_,
                                const std::string& topic_id_,

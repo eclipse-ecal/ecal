@@ -22,7 +22,10 @@
 
 #include <gtest/gtest.h>
 
-enum { CMN_MONITORING_TIMEOUT = 5000 };
+enum {
+  CMN_MONITORING_TIMEOUT = 5000,
+  CMN_REGISTRATION_REFRESH = 1000
+};
 
 TEST(core_cpp_util, ServiceExpiration)
 {
@@ -62,6 +65,9 @@ TEST(core_cpp_util, ServiceExpiration)
     // check size
     EXPECT_EQ(service_info_map.size(), 1);
   }
+
+  // let's unregister
+  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH);
 
   // get all services again, all services
   // should be removed from the map
@@ -141,6 +147,9 @@ TEST(core_cpp_util, ServiceEqualQualities)
     EXPECT_EQ(resp_desc, "foo::resp_desc2");
   }
 
+  // let's unregister
+  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH);
+
   // get all services again, all services 
   // should be removed from the map
   eCAL::Util::GetServices(service_info_map);
@@ -197,6 +206,9 @@ TEST(core_cpp_util, ServiceDifferentQualities)
     // check size it's service 2 only
     EXPECT_EQ(service_info_map.size(), 1);
   }
+
+  // let's unregister
+  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH);
 
   // get all services again, all services
   // should be removed from the map

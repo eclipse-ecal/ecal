@@ -21,11 +21,9 @@
  * @brief  eCAL description gateway class
 **/
 
-#include <ecal/ecal_log.h>
-#include <ecal/ecal_config.h>
-
-#include "ecal_globals.h"
 #include "ecal_descgate.h"
+
+#include <iostream>
 
 namespace
 {
@@ -45,32 +43,14 @@ namespace
 
 namespace eCAL
 {
-  CDescGate::CDescGate() :
-    m_publisher_info_map  (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
-    m_subscriber_info_map (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
-    m_service_info_map    (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
-    m_client_info_map     (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs()))
+  CDescGate::CDescGate(const std::chrono::milliseconds& exp_timeout_) :
+    m_publisher_info_map  (exp_timeout_),
+    m_subscriber_info_map (exp_timeout_),
+    m_service_info_map    (exp_timeout_),
+    m_client_info_map     (exp_timeout_)
   {
   }
   CDescGate::~CDescGate() = default;
-
-  void CDescGate::Create()
-  {
-#if ECAL_CORE_REGISTRATION
-    // utilize registration provider and receiver to get descriptions
-    g_registration_provider()->SetCustomApplySampleCallback("descgate", [this](const auto& sample_) {this->ApplySample(sample_, tl_none); });
-    g_registration_receiver()->SetCustomApplySampleCallback("descgate", [this](const auto& sample_) {this->ApplySample(sample_, tl_none); });
-#endif
-  }
-
-  void CDescGate::Destroy()
-  {
-#if ECAL_CORE_REGISTRATION
-    // stop registration provider and receiver utilization to get descriptions
-    g_registration_provider()->RemCustomApplySampleCallback("descgate");
-    g_registration_receiver()->RemCustomApplySampleCallback("descgate");
-#endif
-  }
 
   QualityTopicIdMap CDescGate::GetPublisher()
   {
@@ -179,7 +159,7 @@ namespace eCAL
       break;
     default:
     {
-      Logging::Log(log_level_debug1, "CDescGate::ApplySample : unknown sample type");
+      std::cerr << "CDescGate::ApplySample : unknown sample type" << '\n';
     }
     break;
     }

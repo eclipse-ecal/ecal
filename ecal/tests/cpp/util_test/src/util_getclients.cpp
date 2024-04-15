@@ -22,7 +22,10 @@
 
 #include <gtest/gtest.h>
 
-enum { CMN_MONITORING_TIMEOUT = 5000};
+enum {
+  CMN_MONITORING_TIMEOUT = 5000,
+  CMN_REGISTRATION_REFRESH = 1000
+};
 
 TEST(core_cpp_util, ClientExpiration)
 {
@@ -66,6 +69,9 @@ TEST(core_cpp_util, ClientExpiration)
     // check size
     EXPECT_EQ(client_info_map.size(), 1);
   }
+
+  // let's unregister
+  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH);
 
   // get all clients again, all clients 
   // should be removed from the map
@@ -153,6 +159,9 @@ TEST(core_cpp_util, ClientEqualQualities)
     EXPECT_EQ(resp_desc, "foo::resp_desc2");
   }
 
+  // let's unregister
+  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH);
+
   // get all clients again, all clients 
   // should be removed from the map
   eCAL::Util::GetClients(client_info_map);
@@ -217,6 +226,9 @@ TEST(core_cpp_util, ClientDifferentQualities)
     // check size it's client 2 only
     EXPECT_EQ(client_info_map.size(), 1);
   }
+
+  // let's unregister
+  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH);
 
   // get all clients again, all clients
   // should be removed from the map

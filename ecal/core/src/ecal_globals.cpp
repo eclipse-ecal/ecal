@@ -105,7 +105,8 @@ namespace eCAL
     /////////////////////
     if (descgate_instance == nullptr)
     {
-      descgate_instance = std::make_unique<CDescGate>();
+      // create description gate with configured expiration timeout
+      descgate_instance = std::make_unique<CDescGate>(std::chrono::milliseconds(Config::GetMonitoringTimeoutMs()));
       new_initialization = true;
     }
 
@@ -232,7 +233,14 @@ namespace eCAL
     if (registration_provider_instance)                                   registration_provider_instance->Create();
     if (registration_receiver_instance)                                   registration_receiver_instance->Create();
 #endif
-    if (descgate_instance)                                                descgate_instance->Create();
+    if (descgate_instance)
+    {
+#if ECAL_CORE_REGISTRATION
+      // utilize registration provider and receiver to get descriptions
+      g_registration_provider()->SetCustomApplySampleCallback("descgate", [](const auto& sample_) {g_descgate()->ApplySample(sample_, tl_none); });
+      g_registration_receiver()->SetCustomApplySampleCallback("descgate", [](const auto& sample_) {g_descgate()->ApplySample(sample_, tl_none); });
+#endif
+    }
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
     if (memfile_pool_instance)                                            memfile_pool_instance->Create();
 #endif
@@ -324,7 +332,14 @@ namespace eCAL
 #if ECAL_CORE_SUBSCRIBER
     if (subgate_instance)                subgate_instance->Destroy();
 #endif
-    if (descgate_instance)               descgate_instance->Destroy();
+    if (descgate_instance)
+    {
+#if ECAL_CORE_REGISTRATION
+      // stop registration provider and receiver utilization to get descriptions
+      g_registration_provider()->RemCustomApplySampleCallback("descgate");
+      g_registration_receiver()->RemCustomApplySampleCallback("descgate");
+#endif
+    }
 #if ECAL_CORE_REGISTRATION
     if (registration_receiver_instance)  registration_receiver_instance->Destroy();
     if (registration_provider_instance)  registration_provider_instance->Destroy();
