@@ -44,7 +44,6 @@ namespace eCAL
   {
 
     // IpAddressV4 definitions
-    // TODO PG: Discuss default initialization
     IpAddressV4::IpAddressV4() : IpAddressV4(NET_UDP_MULTICAST_GROUP) {};
 
     IpAddressV4::IpAddressV4(const std::string& ip_address_)

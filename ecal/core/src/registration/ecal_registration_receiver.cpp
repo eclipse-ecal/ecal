@@ -73,7 +73,6 @@ namespace eCAL
     m_network = g_ecal_config().transport_layer_options.network_enabled;
 
     // receive registration from shared memory and or udp
-    // TODO PG: Adapt to new config management
     m_use_registration_udp = Config::GetCurrentConfig().monitoring_options.network_monitoring;
     m_use_registration_shm = (Config::GetCurrentConfig().monitoring_options.monitoring_mode & Config::MonitoringMode::shm_monitoring) != 0;
 
