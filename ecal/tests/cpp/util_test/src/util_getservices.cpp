@@ -22,7 +22,7 @@
 
 #include <gtest/gtest.h>
 
-#define CMN_MONITORING_TIMEOUT 5000
+enum { CMN_MONITORING_TIMEOUT = 5000 };
 
 TEST(core_cpp_util, ServiceExpiration)
 {
