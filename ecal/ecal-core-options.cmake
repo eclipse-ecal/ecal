@@ -1,10 +1,13 @@
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# available (optional) thirdparty dependencies
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+option(ECAL_CORE_HAS_PROTOBUF                            "Protobuf library is available, eCAL protobuf support will be enabled"                                  ON)
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # additional builds (adapt to your needs)
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 option(ECAL_CORE_BUILD_SAMPLES                           "Build the eCAL samples"                                                                                ON)
-option(ECAL_CORE_BUILD_SAMPLES_PROTOBUF                  "Build the eCAL samples using google protobuf message definition"                                       ON)
 option(ECAL_CORE_BUILD_TESTS                             "Build the eCAL google tests"                                                                           ON)
-option(ECAL_CORE_BUILD_TESTS_PROTOBUF                    "Build the eCAL google tests using google protobuf message definition"                                  ON)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # core internal feature configuration (adapt to your needs)
