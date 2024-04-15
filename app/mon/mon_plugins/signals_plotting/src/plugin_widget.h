@@ -46,7 +46,7 @@
 
 #include "ui_plugin_widget.h"
 
-#include <ecal/protobuf/ecal_proto_decoder.h>
+#include <ecal/msg/protobuf/ecal_proto_decoder.h>
 #include <protobuf_tree_builder.h>
 
 class PluginWidget : public QWidget, public eCAL::mon::PluginWidgetInterface

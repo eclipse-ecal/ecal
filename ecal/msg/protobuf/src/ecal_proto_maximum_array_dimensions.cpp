@@ -17,9 +17,9 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/protobuf/ecal_proto_maximum_array_dimensions.h>
+#include <ecal/msg/protobuf/ecal_proto_maximum_array_dimensions.h>
 
-#include <ecal/protobuf/ecal_proto_hlp.h>
+#include <ecal/msg/protobuf/ecal_proto_hlp.h>
 
 namespace eCAL
 {

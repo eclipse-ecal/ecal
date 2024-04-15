@@ -21,11 +21,11 @@
  * @brief  eCALMonitor proto message decoding class
 **/
 
-#include <ecal/protobuf/ecal_proto_decoder.h>
+#include <ecal/msg/protobuf/ecal_proto_decoder.h>
 
-#include <ecal/protobuf/ecal_proto_hlp.h>
-#include <ecal/protobuf/ecal_proto_message_filter.h>
-#include <ecal/protobuf/ecal_proto_visitor.h>
+#include <ecal/msg/protobuf/ecal_proto_hlp.h>
+#include <ecal/msg/protobuf/ecal_proto_message_filter.h>
+#include <ecal/msg/protobuf/ecal_proto_visitor.h>
 
 #include <sstream>
 
