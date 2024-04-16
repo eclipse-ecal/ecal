@@ -51,14 +51,14 @@ namespace eCAL
 
     struct SQualityTopicInfo
     {
-      std::string          id;
+      std::uint64_t        id;
       SDataTypeInformation info;
       DescQualityFlags     quality = DescQualityFlags::NO_QUALITY;
     };
 
     struct SQualityServiceInfo
     {
-      std::string               id;
+      std::uint64_t             id;
       SServiceMethodInformation info;
       DescQualityFlags          request_quality  = DescQualityFlags::NO_QUALITY;
       DescQualityFlags          response_quality = DescQualityFlags::NO_QUALITY;

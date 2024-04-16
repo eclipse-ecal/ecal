@@ -21,42 +21,25 @@
 #include <ecal/msg/string/publisher.h>
 
 #include <iostream>
-#include <sstream>
+#include <chrono>
+
+class CDescGate
+{
+public:
+  CDescGate(const std::chrono::milliseconds& exp_timeout_)
+  {
+    std::cout << "Constructor" << std::endl;
+  }
+  void Foo()
+  {
+    std::cout << "Foo" << std::endl;
+  }
+};
 
 int main(int argc, char **argv)
 {
-  std::cout << "-------------------------------" << std::endl;
-  std::cout << " HELLO WORLD SENDER"             << std::endl;
-  std::cout << "-------------------------------" << std::endl;
-
-  // initialize eCAL API
-  eCAL::Initialize(argc, argv, "minimal_snd");
-
-  // publisher for topic "Hello"
-  eCAL::string::CPublisher<std::string> pub("Hello");
-
-  // set some attributes
-  pub.SetAttribute("Hello", "World");
-  pub.SetAttribute("Hallo", "Welt");
-
-  // send updates
-  int cnt = 0;
-  while (eCAL::Ok())
-  {
-    // build string
-    std::stringstream snd_content;
-    snd_content << "Hello World" << " (" << ++cnt << ")";
-
-    // send content
-    pub.Send(snd_content.str(), cnt);
-    std::cout << "Sent \"" << snd_content.str() << "\"" << std::endl;
-
-    // sleep 10 ms
-    eCAL::Process::SleepMS(10);
-  }
-
-  // finalize eCAL API
-  eCAL::Finalize();
-
+  long long time_ms(5000);
+  CDescGate desc_gate(std::chrono::milliseconds(time_ms));
+  desc_gate.Foo();
   return(0);
 }

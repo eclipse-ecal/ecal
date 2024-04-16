@@ -121,12 +121,12 @@ namespace eCAL
         response_type.name       = method.resp_type;
         response_type.descriptor = method.resp_desc;
 
-        ApplyServiceDescription(m_service_info_map, sample_.service.sname, sample_.service.sid, method.mname, request_type, response_type, GetDataTypeInfoQuality(request_type, true), GetDataTypeInfoQuality(response_type, true));
+        ApplyServiceDescription(m_service_info_map, sample_.service.sname, method.mname, std::stoull(sample_.service.sid), request_type, response_type, GetDataTypeInfoQuality(request_type, true), GetDataTypeInfoQuality(response_type, true));
       }
     }
     break;
     case bct_unreg_service:
-      RemServiceDescription(m_service_info_map, sample_.service.sname, sample_.service.sid);
+      RemServiceDescription(m_service_info_map, sample_.service.sname, std::stoull(sample_.service.sid));
       break;
     case bct_reg_client:
       for (const auto& method : sample_.client.methods)
@@ -139,23 +139,23 @@ namespace eCAL
         response_type.name       = method.resp_type;
         response_type.descriptor = method.resp_desc;
 
-        ApplyServiceDescription(m_client_info_map, sample_.client.sname, sample_.client.sid, method.mname, request_type, response_type, GetDataTypeInfoQuality(request_type, false), GetDataTypeInfoQuality(response_type, false));
+        ApplyServiceDescription(m_client_info_map, sample_.client.sname, method.mname, std::stoull(sample_.client.sid), request_type, response_type, GetDataTypeInfoQuality(request_type, false), GetDataTypeInfoQuality(response_type, false));
       }
       break;
     case bct_unreg_client:
-      RemServiceDescription(m_client_info_map, sample_.client.sname, sample_.client.sid);
+      RemServiceDescription(m_client_info_map, sample_.client.sname, std::stoull(sample_.client.sid));
       break;
     case bct_reg_publisher:
-      ApplyTopicDescription(m_publisher_info_map, sample_.topic.tname, sample_.topic.tid, sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, true));
+      ApplyTopicDescription(m_publisher_info_map, sample_.topic.tname, std::stoull(sample_.topic.tid), sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, true));
       break;
     case bct_unreg_publisher:
-      RemTopicDescription(m_publisher_info_map, sample_.topic.tname, sample_.topic.tid);
+      RemTopicDescription(m_publisher_info_map, sample_.topic.tname, std::stoull(sample_.topic.tid));
       break;
     case bct_reg_subscriber:
-      ApplyTopicDescription(m_subscriber_info_map, sample_.topic.tname, sample_.topic.tid, sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, false));
+      ApplyTopicDescription(m_subscriber_info_map, sample_.topic.tname, std::stoull(sample_.topic.tid), sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, false));
       break;
     case bct_unreg_subscriber:
-      RemTopicDescription(m_subscriber_info_map, sample_.topic.tname, sample_.topic.tid);
+      RemTopicDescription(m_subscriber_info_map, sample_.topic.tname, std::stoull(sample_.topic.tid));
       break;
     default:
     {
@@ -167,7 +167,7 @@ namespace eCAL
 
   void CDescGate::ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
     const std::string& topic_name_,
-    const std::string& topic_id_,
+    const std::uint64_t& topic_id_,
     const SDataTypeInformation& topic_info_,
     const Util::DescQualityFlags topic_quality_)
   {
@@ -183,7 +183,7 @@ namespace eCAL
     (*topic_info_map_.map)[topic_info_key] = topic_quality_info;
   }
 
-  void CDescGate::RemTopicDescription(SQualityTopicIdMap& topic_info_map_, const std::string& topic_name_, const std::string& topic_id_)
+  void CDescGate::RemTopicDescription(SQualityTopicIdMap& topic_info_map_, const std::string& topic_name_, const std::uint64_t& topic_id_)
   {
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
     topic_info_map_.map->remove_deprecated();
@@ -192,14 +192,14 @@ namespace eCAL
 
   void CDescGate::ApplyServiceDescription(SQualityServiceIdMap& service_method_info_map_,
     const std::string& service_name_,
-    const std::string& service_id_,
     const std::string& method_name_,
+    const std::uint64_t& service_id_,
     const SDataTypeInformation& request_type_information_,
     const SDataTypeInformation& response_type_information_,
     const Util::DescQualityFlags request_type_quality_,
     const Util::DescQualityFlags response_type_quality_)
   {
-    const auto service_method_info_key = SServiceIdKey{ service_name_, service_id_, method_name_ };
+    const auto service_method_info_key = SServiceIdKey{ service_name_, method_name_, service_id_};
 
     Util::SQualityServiceInfo service_quality_info;
     service_quality_info.id                 = service_id_;
@@ -213,7 +213,7 @@ namespace eCAL
     (*service_method_info_map_.map)[service_method_info_key] = service_quality_info;
   }
 
-  void CDescGate::RemServiceDescription(SQualityServiceIdMap& service_method_info_map_, const std::string& service_name_, const std::string& service_id_)
+  void CDescGate::RemServiceDescription(SQualityServiceIdMap& service_method_info_map_, const std::string& service_name_, const std::uint64_t& service_id_)
   {
     std::list<SServiceIdKey> service_method_infos_to_remove;
 
