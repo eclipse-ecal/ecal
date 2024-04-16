@@ -21,32 +21,275 @@
 
 #include <gtest/gtest.h>
 
-TEST(core_cpp_descgate, GetPublisher)
+#include <chrono>
+#include <thread>
+
+#define DESCGATE_EXPIRATION_MS 500
+
+namespace
 {
-#if 0
-  constexpr int desc_gate_expiration_ms(5000);
-  eCAL::CDescGate desc_gate(std::chrono::milliseconds(desc_gate_expiration_ms));
+  eCAL::Registration::Sample CreatePublisher(const std::string& topic_name_)
+  {
+    eCAL::Registration::Sample reg_sample;
+    reg_sample.cmd_type                   = eCAL::bct_reg_publisher;
+    reg_sample.topic.tname                = topic_name_;
+    reg_sample.topic.tid                  = topic_name_ + "-id";
+    reg_sample.topic.tdatatype.name       = topic_name_ + "-tdatatype.name";
+    reg_sample.topic.tdatatype.encoding   = topic_name_ + "-tdatatype.encoding";
+    reg_sample.topic.tdatatype.descriptor = topic_name_ + "-tdatatype.descriptor";
+    return reg_sample;
+  }
 
-  auto pub_map = desc_gate.GetPublisher();
-  EXPECT_EQ(0, pub_map.size());
-#else
-  constexpr int desc_gate_expiration_ms(5000);
-  auto desc_gate = std::make_shared<eCAL::CDescGate>(std::chrono::milliseconds(desc_gate_expiration_ms));
+  eCAL::Registration::Sample CreateSubscriber(const std::string& topic_name_)
+  {
+    eCAL::Registration::Sample reg_sample;
+    reg_sample.cmd_type                   = eCAL::bct_reg_subscriber;
+    reg_sample.topic.tname                = topic_name_;
+    reg_sample.topic.tid                  = topic_name_ + "-id";
+    reg_sample.topic.tdatatype.name       = topic_name_ + "-tdatatype.name";
+    reg_sample.topic.tdatatype.encoding   = topic_name_ + "-tdatatype.encoding";
+    reg_sample.topic.tdatatype.descriptor = topic_name_ + "-tdatatype.descriptor";
+    return reg_sample;
+  }
 
-  auto pub_map = desc_gate->GetPublisher();
-  EXPECT_EQ(0, pub_map.size());
+  eCAL::Registration::Sample CreateService(const std::string& service_name_)
+  {
+    eCAL::Registration::Sample reg_sample;
+    reg_sample.cmd_type      = eCAL::bct_reg_service;
+    reg_sample.service.sname = service_name_;
+    reg_sample.service.sid   = service_name_ + "-id";
 
-  eCAL::Registration::Sample reg_sample;
-  reg_sample.cmd_type = eCAL::bct_reg_publisher;
+    eCAL::Service::Method method;
+    method.mname = "method_name";
+    reg_sample.service.methods.push_back(method);
+    return reg_sample;
+  }
 
-  auto& ecal_reg_sample_topic = reg_sample.topic;
-  ecal_reg_sample_topic.tname  = "foo";
-  ecal_reg_sample_topic.tid    = "12345";
+  eCAL::Registration::Sample CreateClient(const std::string& client_name_)
+  {
+    eCAL::Registration::Sample reg_sample;
+    reg_sample.cmd_type     = eCAL::bct_reg_client;
+    reg_sample.client.sname = client_name_;
+    reg_sample.client.sid   = client_name_ + "-id";
 
-  desc_gate->ApplySample(reg_sample, eCAL::tl_none);
+    eCAL::Service::Method method;
+    method.mname = "method_name";
+    reg_sample.client.methods.push_back(method);
+    return reg_sample;
+  }
+}
 
-  pub_map = desc_gate->GetPublisher();
-  EXPECT_EQ(0, pub_map.size());
+TEST(core_cpp_descgate, PublisherExpiration)
+{
+  eCAL::CDescGate desc_gate(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
 
-#endif
+  // apply sample 5 times, sample should not expire
+  auto runs(5);
+  while (runs--)
+  {
+    desc_gate.ApplySample(CreatePublisher("pub1"), eCAL::tl_none);
+    std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS / 2));
+
+    EXPECT_EQ(1, desc_gate.GetPublisher().size());
+  }
+
+  // now let the sample expire
+  std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  // sample should be expired
+  EXPECT_EQ(0, desc_gate.GetPublisher().size());
+}
+
+TEST(core_cpp_descgate, PublisherQualities)
+{
+  eCAL::CDescGate desc_gate(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  // create and apply publisher pub1
+  desc_gate.ApplySample(CreatePublisher("pub1"), eCAL::tl_none);
+
+  // create and apply publisher pub2
+  desc_gate.ApplySample(CreatePublisher("pub2"), eCAL::tl_none);
+
+  // check gate size
+  auto sample_map = desc_gate.GetPublisher();
+  EXPECT_EQ(2, sample_map.size());
+
+  // check pub1 quality
+  {
+    auto pub_it = sample_map.find({ "pub1", "pub1-id" });
+    EXPECT_NE(pub_it, sample_map.end());
+    if (pub_it != sample_map.end())
+    {
+      EXPECT_EQ("pub1-id",                   pub_it->second.id);
+      EXPECT_EQ("pub1-tdatatype.name",       pub_it->second.info.name);
+      EXPECT_EQ("pub1-tdatatype.encoding",   pub_it->second.info.encoding);
+      EXPECT_EQ("pub1-tdatatype.descriptor", pub_it->second.info.descriptor);
+    }
+  }
+
+  // check pub2 quality
+  {
+    auto pub_it = sample_map.find({ "pub2", "pub2-id" });
+    EXPECT_NE(pub_it, sample_map.end());
+    if (pub_it != sample_map.end())
+    {
+      EXPECT_EQ("pub2-id",                   pub_it->second.id);
+      EXPECT_EQ("pub2-tdatatype.name",       pub_it->second.info.name);
+      EXPECT_EQ("pub2-tdatatype.encoding",   pub_it->second.info.encoding);
+      EXPECT_EQ("pub2-tdatatype.descriptor", pub_it->second.info.descriptor);
+    }
+  }
+
+  // now let the sample expire
+  std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  // sample should be expired
+  EXPECT_EQ(0, desc_gate.GetPublisher().size());
+}
+
+TEST(core_cpp_descgate, ManyPublisher)
+{
+  eCAL::CDescGate desc_gate(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  constexpr int num_pub(1000);
+  for (auto pub = 0; pub < num_pub; ++pub)
+  {
+    // create registration sample for pub-xx
+    desc_gate.ApplySample(CreatePublisher("pub" + std::to_string(pub)), eCAL::tl_none);
+  }
+
+  // map should contain num_pub samples
+  EXPECT_EQ(num_pub, desc_gate.GetPublisher().size());
+
+  // now let the samples expire
+  std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  // samples should be expired
+  EXPECT_EQ(0, desc_gate.GetPublisher().size());
+}
+
+TEST(core_cpp_descgate, SubscriberExpiration)
+{
+  eCAL::CDescGate desc_gate(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  // apply sample 5 times, sample should not expire
+  auto runs(5);
+  while (runs--)
+  {
+    desc_gate.ApplySample(CreateSubscriber("sub1"), eCAL::tl_none);
+    std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS / 2));
+
+    EXPECT_EQ(1, desc_gate.GetSubscriber().size());
+  }
+
+  // now let the sample expire
+  std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  // sample should be expired
+  EXPECT_EQ(0, desc_gate.GetSubscriber().size());
+}
+
+TEST(core_cpp_descgate, ManySubscriber)
+{
+  eCAL::CDescGate desc_gate(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  constexpr int num_sub(1000);
+  for (auto sub = 0; sub < num_sub; ++sub)
+  {
+    // create registration sample for sub-xx
+    desc_gate.ApplySample(CreateSubscriber("sub" + std::to_string(sub)), eCAL::tl_none);
+  }
+
+  // map should contain num_sub samples
+  EXPECT_EQ(num_sub, desc_gate.GetSubscriber().size());
+
+  // now let the samples expire
+  std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  // samples should be expired
+  EXPECT_EQ(0, desc_gate.GetSubscriber().size());
+}
+
+TEST(core_cpp_descgate, ServiceExpiration)
+{
+  eCAL::CDescGate desc_gate(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  // apply sample 5 times, sample should not expire
+  auto runs(5);
+  while (runs--)
+  {
+    desc_gate.ApplySample(CreateService("service1"), eCAL::tl_none);
+    std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS / 2));
+
+    EXPECT_EQ(1, desc_gate.GetServices().size());
+  }
+
+  // now let the sample expire
+  std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  // sample should be expired
+  EXPECT_EQ(0, desc_gate.GetServices().size());
+}
+
+TEST(core_cpp_descgate, ManyService)
+{
+  eCAL::CDescGate desc_gate(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  constexpr int num_service(1000);
+  for (auto service = 0; service < num_service; ++service)
+  {
+    // create registration sample for service-xx
+    desc_gate.ApplySample(CreateService("service" + std::to_string(service)), eCAL::tl_none);
+  }
+
+  // map should contain num_service samples
+  EXPECT_EQ(num_service, desc_gate.GetServices().size());
+
+  // now let the samples expire
+  std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  // samples should be expired
+  EXPECT_EQ(0, desc_gate.GetServices().size());
+}
+
+TEST(core_cpp_descgate, ClientExpiration)
+{
+  eCAL::CDescGate desc_gate(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  // apply sample 5 times, sample should not expire
+  auto runs(5);
+  while (runs--)
+  {
+    desc_gate.ApplySample(CreateClient("client1"), eCAL::tl_none);
+    std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS / 2));
+
+    EXPECT_EQ(1, desc_gate.GetClients().size());
+  }
+
+  // now let the sample expire
+  std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  // sample should be expired
+  EXPECT_EQ(0, desc_gate.GetClients().size());
+}
+
+TEST(core_cpp_descgate, ManyClient)
+{
+  eCAL::CDescGate desc_gate(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  constexpr int num_client(1000);
+  for (auto client = 0; client < num_client; ++client)
+  {
+    // create registration sample for client-xx
+    desc_gate.ApplySample(CreateClient("client" + std::to_string(client)), eCAL::tl_none);
+  }
+
+  // map should contain num_client samples
+  EXPECT_EQ(num_client, desc_gate.GetClients().size());
+
+  // now let the samples expire
+  std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
+
+  // samples should be expired
+  EXPECT_EQ(0, desc_gate.GetClients().size());
 }
