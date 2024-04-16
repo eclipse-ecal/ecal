@@ -14,3 +14,4 @@ Configuration
    configuration/npcap
    configuration/player
    configuration/options
+   configuration/runtime_configuration
