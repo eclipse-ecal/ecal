@@ -5,6 +5,8 @@ on:
   pull_request:
     branches:
       - master
+      - support/v5.12
+      
 env:
   IS_GITHUB_SIGNING_ALLOWED: true
   IS_JENKINS_SIGNING_ALLOWED: true
