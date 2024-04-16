@@ -7,6 +7,7 @@ set(ecal_submodule_dependencies
   asio
   CMakeFunctions
   CURL
+  ecaludp
   fineftp
   ftxui
   GTest
