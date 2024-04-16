@@ -25,7 +25,7 @@ jobs:
         target: 'desktop'
 
     - name: Install Dependencies
-      run: brew install ninja doxygen graphviz protobuf hdf5@1.10 pkg-config
+      run: brew install ninja doxygen graphviz protobuf@21 hdf5@1.10 pkg-config
 
     - name: Install Cap’n Proto
       run: |
@@ -56,7 +56,7 @@ jobs:
         mkdir "${{ runner.workspace }}/_build"
         cd "${{ runner.workspace }}/_build"
         cmake $GITHUB_WORKSPACE -G "Ninja" \
-        -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="cmake/submodule_dependencies.cmake" \
+        -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake \
         -DHAS_HDF5=ON \
         -DHAS_QT5=ON \
         -DHAS_CURL=ON \
@@ -86,7 +86,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_QWT=ON \
         -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_PREFIX_PATH=/usr/local/opt/hdf5@1.10 \
+        -DCMAKE_PREFIX_PATH="/usr/local/opt/hdf5@1.10:/usr/local/opt/protobuf@21" \
         -DCMAKE_CXX_STANDARD=17 \
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
         -DPython_FIND_STRATEGY=LOCATION \

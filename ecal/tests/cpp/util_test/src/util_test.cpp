@@ -195,8 +195,6 @@ TEST(core_cpp_util, Freq_ResettableFrequencyCalculator)
   }
 }
 
-
-#if ECAL_CORE_PUBLISHER
 TEST(core_cpp_util, ParallelGetTopics)
 {
   constexpr const int max_publisher_count(2000);
@@ -262,4 +260,3 @@ TEST(core_cpp_util, ParallelGetTopics)
 
   eCAL::Finalize();
 }
-#endif // ECAL_CORE_PUBLISHER

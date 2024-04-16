@@ -29,97 +29,101 @@
 /*                                     config settings                                        */
 /**********************************************************************************************/
 /* base data path name */
-#define ECAL_HOME_PATH_WINDOWS                     ""
-#define ECAL_HOME_PATH_LINUX                       ".ecal"
-#define ECAL_LOG_PATH                              "logs"
-#define ECAL_SETTINGS_PATH                         "cfg"
+constexpr const char* ECAL_HOME_PATH_WINDOWS = "";
+constexpr const char* ECAL_HOME_PATH_LINUX   = ".ecal";
+constexpr const char* ECAL_LOG_PATH          = "logs";
+constexpr const char* ECAL_SETTINGS_PATH     = "cfg";
 
 /* ini file name */
-#define ECAL_DEFAULT_CFG                           "ecal.ini"
+constexpr const char* ECAL_DEFAULT_CFG       = "ecal.ini";
 
 /**********************************************************************************************/
 /*                                     monitor settings                                       */
 /**********************************************************************************************/
 /* timeout for automatic removing monitoring topics in ms */
-#define MON_TIMEOUT                                5000
+constexpr unsigned int MON_TIMEOUT        = 5000U;
 /* topics blacklist as regular expression (will not be monitored) */
-#define MON_FILTER_EXCL                            "_.*"
+constexpr const char* MON_FILTER_EXCL     =    "^__.*$";
 /* topics whitelist as regular expression (will be monitored only) */
-#define MON_FILTER_INCL                            ""
+constexpr const char* MON_FILTER_INCL     =    "";
 
 /* logging filter settings */
-#define MON_LOG_FILTER_CON                         "info,warning,error,fatal"
-#define MON_LOG_FILTER_FILE                        ""
-#define MON_LOG_FILTER_UDP                         "info,warning,error,fatal"
+constexpr const char* MON_LOG_FILTER_CON  = "info,warning,error,fatal";
+constexpr const char* MON_LOG_FILTER_FILE = "";
+constexpr const char* MON_LOG_FILTER_UDP  = "info,warning,error,fatal";
 
 
 /**********************************************************************************************/
 /*                                     sys settings                                       */
 /**********************************************************************************************/
 /* sys app witch will not be imported from cloud */
-#define SYS_FILTER_EXCL                            "^eCALSysClient$|^eCALSysGUI$|^eCALSys$*"
+constexpr const char* SYS_FILTER_EXCL     = "^eCALSysClient$|^eCALSysGUI$|^eCALSys$*";
 
 /**********************************************************************************************/
 /*                                     network settings                                       */
 /**********************************************************************************************/
 /* network switch */
-#define NET_ENABLED                                false
+constexpr bool NET_ENABLED              = false;
 
 /* eCAL udp multicast defines */
-#define NET_UDP_MULTICAST_CONFIG_VERSION           "v1"
-#define NET_UDP_MULTICAST_GROUP                    "239.0.0.1"
-#define NET_UDP_MULTICAST_MASK                     "0.0.0.15"
-#define NET_UDP_MULTICAST_PORT                     14000
-#define NET_UDP_MULTICAST_TTL                      3
-#define NET_UDP_MULTICAST_PORT_REG_OFF             0
-#define NET_UDP_MULTICAST_PORT_SAMPLE_OFF          2
-#define NET_UDP_MULTICAST_PORT_LOG_OFF             4
-#define NET_UDP_MULTICAST_SNDBUF                   (5*1024*1024)  /* 5 MByte */
-#define NET_UDP_MULTICAST_RCVBUF                   (5*1024*1024)  /* 5 MByte */
-#define NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED      false
+constexpr const char* NET_UDP_MULTICAST_CONFIG_VERSION    = "v1";
+constexpr const char* NET_UDP_MULTICAST_GROUP             = "239.0.0.1";
+constexpr const char* NET_UDP_MULTICAST_MASK              = "0.0.0.15";
+constexpr unsigned int NET_UDP_MULTICAST_PORT             = 14000U;
+constexpr unsigned int NET_UDP_MULTICAST_TTL              = 3U;
+constexpr unsigned int NET_UDP_MULTICAST_PORT_REG_OFF     = 0U;
+constexpr unsigned int NET_UDP_MULTICAST_PORT_LOG_OFF     = 1U;
+constexpr unsigned int NET_UDP_MULTICAST_PORT_SAMPLE_OFF  = 2U;
+constexpr unsigned int NET_UDP_MULTICAST_SNDBUF           = (5U*1024U*1024U);  /* 5 MByte */
+constexpr unsigned int NET_UDP_MULTICAST_RCVBUF           = (5U*1024U*1024U);  /* 5 MByte */
+constexpr bool NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED      = false;
 
-#define NET_UDP_RECBUFFER_TIMEOUT                  1000  /* ms */
-#define NET_UDP_RECBUFFER_CLEANUP                  10    /* ms */
+constexpr unsigned int NET_UDP_RECBUFFER_TIMEOUT          = 1000U;  /* ms */
+constexpr unsigned int NET_UDP_RECBUFFER_CLEANUP          = 10U;    /* ms */
 
-#define NET_TCP_REC_ENABLED                        true
-#define NET_SHM_REC_ENABLED                        true
-#define NET_UDP_MC_REC_ENABLED                     true
+/* overall udp multicast bandwidth limitation in bytes/s, -1 == no limitation*/
+constexpr int NET_BANDWIDTH_MAX_UDP                       = (-1);
 
-#define NET_NPCAP_ENABLED                          false
+constexpr bool NET_TCP_REC_ENABLED                        = true;
+constexpr bool NET_SHM_REC_ENABLED                        = true;
 
-#define NET_TCP_PUBSUB_NUM_EXECUTOR_READER         4
-#define NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER         4
-#define NET_TCP_PUBSUB_MAX_RECONNECTIONS           5
+constexpr bool NET_UDP_MC_REC_ENABLED                     = true;
+
+constexpr bool NET_NPCAP_ENABLED                          = false;
+
+constexpr unsigned int NET_TCP_PUBSUB_NUM_EXECUTOR_READER = 4U;
+constexpr unsigned int NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER = 4U;
+constexpr unsigned int NET_TCP_PUBSUB_MAX_RECONNECTIONS   = 5U;
 
 /* common host group name that enables interprocess mechanisms across (virtual) host borders (e.g, Docker); by default equivalent to local host name */
-#define NET_HOST_GROUP_NAME                         ""
+constexpr const char* NET_HOST_GROUP_NAME                 = "";
 
 /**********************************************************************************************/
 /*                                     publisher settings                                     */
 /**********************************************************************************************/
 /* use shared memory transport layer [auto = 2, on = 1, off = 0] */
-#define PUB_USE_SHM                                2
+constexpr unsigned int PUB_USE_SHM                        = 2U;
 /* use tcp transport layer           [auto = 2, on = 1, off = 0] */
-#define PUB_USE_TCP                                0
+constexpr unsigned int PUB_USE_TCP                        = 0U;
 /* use udp multicast transport layer [auto = 2, on = 1, off = 0] */
-#define PUB_USE_UDP_MC                             2
+constexpr unsigned int PUB_USE_UDP_MC                     = 2U;
 
 /* share topic type                  [          on = 1, off = 0] */
-#define PUB_SHARE_TTYPE                            1
+constexpr unsigned int PUB_SHARE_TTYPE                    = 1U;
 /* share topic description           [          on = 1, off = 0] */
-#define PUB_SHARE_TDESC                            1
+constexpr unsigned int PUB_SHARE_TDESC                    = 1U;
 
 /* minimum size for created shared memory files */
-#define PUB_MEMFILE_MINSIZE                        (4*1024)
+constexpr unsigned int PUB_MEMFILE_MINSIZE                = (4U*1024U);
 /* reserve buffer size before reallocation in % */
-#define PUB_MEMFILE_RESERVE                        50
+constexpr unsigned int PUB_MEMFILE_RESERVE                = 50U;
 
 /* timeout for create / open a memory file using mutex lock in ms */
-#define PUB_MEMFILE_CREATE_TO                      200
-#define PUB_MEMFILE_OPEN_TO                        200
+constexpr unsigned int PUB_MEMFILE_CREATE_TO              = 200U;
+constexpr unsigned int PUB_MEMFILE_OPEN_TO                = 200U;
 
 /* timeout for memory read acknowledge signal from data reader in ms */
-#define PUB_MEMFILE_ACK_TO                          0  /* ms */
+constexpr unsigned int PUB_MEMFILE_ACK_TO                 = 0U;  /* ms */
 
 /* defines number of memory files handle by the publisher for a 1:n connection
    a higher number will increase data throughput, but will also increase the size of used memory, number of semaphores
@@ -127,68 +131,68 @@
    higher values than 3 are not recommended
    values > 1 will break local IPC compatibility to eCAL 5.9 and older
 */
-#define PUB_MEMFILE_BUF_COUNT                      1
+constexpr unsigned int PUB_MEMFILE_BUF_COUNT              = 1U;
 
 /* allow subscriber to access memory file without copying content in advance (zero copy)
    this memory file is blocked for other readers wihle processed by the user callback function
    this option is fully IPC compatible to all eCAL 5.x versions
 */
-#define PUB_MEMFILE_ZERO_COPY                      0
+constexpr unsigned int PUB_MEMFILE_ZERO_COPY              = 0U;
 
 /**********************************************************************************************/
 /*                                     service settings                                       */
 /**********************************************************************************************/
 /* support service protocol v0, eCAL 5.11 and older (0 = off, 1 = on) */
-#define SERVICE_PROTOCOL_V0                        1
+constexpr unsigned int SERVICE_PROTOCOL_V0                = 1U;
 
 /* support service protocol v1, eCAL 5.12 and newer (0 = off, 1 = on) */
-#define SERVICE_PROTOCOL_V1                        1
+constexpr unsigned int SERVICE_PROTOCOL_V1                = 1U;
 
 /**********************************************************************************************/
 /*                                     time settings                                          */
 /**********************************************************************************************/
-#define TIME_SYNC_MOD_RT                           ""
-#define TIME_SYNC_MOD_REPLAY                       ""
+constexpr const char* TIME_SYNC_MOD_RT                    = "";
+constexpr const char* TIME_SYNC_MOD_REPLAY                = "";
 
 /**********************************************************************************************/
 /*                                     process settings                                       */
 /**********************************************************************************************/
-#define PROCESS_TERMINAL_EMULATOR                  ""
+constexpr const char* PROCESS_TERMINAL_EMULATOR           = "";
 
 /**********************************************************************************************/
 /*                                     ecal internal timings                                  */
 /**********************************************************************************************/
 /* timeout for automatic removing registered topics and memory files in global database in ms */
-#define CMN_REGISTRATION_TO                            (60*1000)
+constexpr unsigned int CMN_REGISTRATION_TO                  = (60U*1000U);
 
 /* time for resend registration info from publisher/subscriber in ms */
-#define CMN_REGISTRATION_REFRESH                       1000
+constexpr unsigned int CMN_REGISTRATION_REFRESH             = 1000U;
 
 /* delta time to check timeout for data readers in ms */
-#define CMN_DATAREADER_TIMEOUT_RESOLUTION_MS           100
+constexpr unsigned int CMN_DATAREADER_TIMEOUT_RESOLUTION_MS = 100U;
 
 /* cylce time udp receive threads in ms */
-#define CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS           1000
+constexpr unsigned int CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS = 1000U;
 
 /**********************************************************************************************/
 /*                                     events                                                 */
 /**********************************************************************************************/
 /* common stop event prefix to shut down a local user process */
-#define EVENT_SHUTDOWN_PROC                        "ecal_shutdown_process"
+constexpr const char* EVENT_SHUTDOWN_PROC                   = "ecal_shutdown_process";
 
 /**********************************************************************************************/
 /*                                     experimental                                           */
 /**********************************************************************************************/
 /* enable distribution of monitoring/registration information via shared memory */
-#define EXP_SHM_MONITORING_ENABLED                  false
+constexpr bool EXP_SHM_MONITORING_ENABLED                   = false;
 /* disable distribution of monitoring/registration information via network (default) */
-#define EXP_NETWORK_MONITORING_DISABLED             false
+constexpr bool EXP_NETWORK_MONITORING_DISABLED              = false;
 /* queue size of monitoring/registration events  */
-#define EXP_SHM_MONITORING_QUEUE_SIZE              1024
+constexpr unsigned int EXP_SHM_MONITORING_QUEUE_SIZE        = 1024U;
 /* domain name for shared memory based monitoring/registration */
-#define EXP_SHM_MONITORING_DOMAIN                  "ecal_monitoring"
+constexpr const char* EXP_SHM_MONITORING_DOMAIN             = "ecal_monitoring";
 /* memory file access timeout */
-#define EXP_MEMFILE_ACCESS_TIMEOUT                 100
+constexpr unsigned int EXP_MEMFILE_ACCESS_TIMEOUT           = 100U;
 
 /* enable dropping of payload messages that arrive out of order */
-#define EXP_DROP_OUT_OF_ORDER_MESSAGES             false
+constexpr bool EXP_DROP_OUT_OF_ORDER_MESSAGES               = false;
