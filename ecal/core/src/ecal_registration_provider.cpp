@@ -452,12 +452,10 @@ namespace eCAL
 
     if(m_use_shm_monitoring)
     {
-      {
-        const std::lock_guard<std::mutex> lock(m_sample_list_sync);
-        m_sample_list.SerializeToString(&m_sample_list_buffer);
-        if(reset_sample_list_)
-          m_sample_list.clear_samples();
-      }
+      const std::lock_guard<std::mutex> lock(m_sample_list_sync);
+      m_sample_list.SerializeToString(&m_sample_list_buffer);
+      if(reset_sample_list_)
+        m_sample_list.clear_samples();
 
       if(!m_sample_list_buffer.empty())
         return_value &=m_memfile_broadcast_writer.Write(m_sample_list_buffer.data(), m_sample_list_buffer.size());
