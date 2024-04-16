@@ -731,7 +731,7 @@ if(UNIX)
     set_property(TARGET ${PROJECT_NAME_PROCESS_STUB} PROPERTY FOLDER core)
 endif(UNIX)
 
-if(ECAL_CORE_BUILD_SAMPLES_PROTOBUF)
+if(ECAL_CORE_HAS_PROTOBUF)
 find_package(Protobuf REQUIRED)
 
 add_library(core_protobuf INTERFACE)
