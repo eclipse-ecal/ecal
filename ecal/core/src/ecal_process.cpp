@@ -82,7 +82,7 @@
 #endif
 
 #ifdef ECAL_CORE_NPCAP_SUPPORT
-#include <udpcap/npcap_helpers.h>
+#include <ecaludp/npcap_helpers.h>
 #endif // ECAL_CORE_NPCAP_SUPPORT
 
 #ifndef NDEBUG
@@ -213,7 +213,7 @@ namespace eCAL
 #endif
 #ifdef ECAL_CORE_NPCAP_SUPPORT
       sstream << "Npcap UDP Reciever       : " << LayerMode(Config::IsNpcapEnabled());
-      if(Config::IsNpcapEnabled() && !Udpcap::Initialize())
+      if(Config::IsNpcapEnabled() && !ecaludp::npcap::is_initialized())
       {
         sstream << " (Init FAILED!)";
       }
