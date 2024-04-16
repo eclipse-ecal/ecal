@@ -43,7 +43,7 @@ target_link_libraries(${PROJECT_NAME}
   spdlog::spdlog
   tclap::tclap
   protobuf::libprotobuf
-  eCAL::core
+  eCAL::core_protobuf
   eCAL::core_pb
   eCAL::app_pb
   eCAL::sys_client_core

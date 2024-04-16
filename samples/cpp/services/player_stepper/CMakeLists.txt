@@ -32,7 +32,13 @@ target_include_directories(${PROJECT_NAME}
 target_compile_definitions(${PROJECT_NAME}
   PRIVATE $<$<BOOL:${MSVC}>:PCRE_STATIC;_UNICODE>)
 
-target_link_libraries(${PROJECT_NAME} eCAL::core eCAL::app_pb tclap::tclap)
+target_link_libraries(${PROJECT_NAME} 
+  PRIVATE
+    eCAL::core_protobuf
+    eCAL::app_pb
+    tclap::tclap
+)
+
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_sample(${PROJECT_NAME})

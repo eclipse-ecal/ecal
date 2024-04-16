@@ -22,7 +22,7 @@
 #include <google/protobuf/message.h>
 #include "signal_tree_model.h"
 
-#include <ecal/protobuf/ecal_proto_visitor.h>
+#include <ecal/msg/protobuf/ecal_proto_visitor.h>
 #include <stack>
 
 class ProtobufTreeBuilder : public eCAL::protobuf::MessageVisitor

@@ -520,8 +520,6 @@ set(ecal_header_msg
     include/ecal/msg/protobuf/client.h
     include/ecal/msg/protobuf/dynamic_publisher.h
     include/ecal/msg/protobuf/dynamic_subscriber.h    
-    include/ecal/msg/protobuf/ecal_proto_dyn.h
-    include/ecal/msg/protobuf/ecal_proto_hlp.h
     include/ecal/msg/protobuf/publisher.h
     include/ecal/msg/protobuf/server.h
     include/ecal/msg/protobuf/subscriber.h
@@ -732,3 +730,22 @@ if(UNIX)
 
     set_property(TARGET ${PROJECT_NAME_PROCESS_STUB} PROPERTY FOLDER core)
 endif(UNIX)
+
+if(ECAL_CORE_HAS_PROTOBUF)
+find_package(Protobuf REQUIRED)
+
+add_library(core_protobuf INTERFACE)
+add_library(eCAL::core_protobuf ALIAS core_protobuf)
+
+target_link_libraries(core_protobuf 
+  INTERFACE
+    eCAL::core
+    eCAL::proto
+)
+
+install(
+  TARGETS core_protobuf
+  EXPORT eCALCoreTargets  
+)
+
+endif()

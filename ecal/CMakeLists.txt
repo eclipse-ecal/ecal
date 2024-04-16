@@ -24,6 +24,7 @@ cmake_minimum_required(VERSION 3.13)
 add_subdirectory(core)
 
 if(ECAL_CORE_HAS_PROTOBUF)
+  add_subdirectory(msg/protobuf)
   add_subdirectory(core_pb)
 endif()
 

@@ -94,7 +94,7 @@ target_link_libraries(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
     protobuf::libprotobuf
-    eCAL::core
+    eCAL::core_protobuf
     eCAL::core_pb
     eCAL::app_pb
   PRIVATE
