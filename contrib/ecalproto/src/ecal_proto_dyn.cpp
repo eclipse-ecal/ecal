@@ -28,13 +28,13 @@
 #include <sstream>
 #include <fstream>
 
-#include "google/protobuf/port_def.inc"
+#include <google/protobuf/stubs/common.h>
 
 namespace eCAL
 {
 namespace protobuf
 {
-#if PROTOBUF_VERSION >= 5026000
+#if GOOGLE_PROTOBUF_VERSION >= 5026000
   class ParserErrorCollector : public google::protobuf::io::ErrorCollector
   {
   public:
