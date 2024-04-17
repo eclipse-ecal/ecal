@@ -1,5 +1,6 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_config.h>
+#include <string>
 
 int main(int argc, char** argv)
 {
