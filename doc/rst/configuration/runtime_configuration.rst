@@ -28,6 +28,8 @@ You can use the ip address like a normal string object. For example:
 Sizes are specified with a minimum (default: 0), step (default: 1) and maximum (default: maximum of int) value.
 In case the assigned value does not fit into the specified limitation, the application will exit with an error message.
 
+You can use the size object like a normal integer.
+
 .. code-block:: c++
 
   eCAL::Config::LimitSize<1024, 512, 8192> size_4mb = 1024 + 6 * 512;
