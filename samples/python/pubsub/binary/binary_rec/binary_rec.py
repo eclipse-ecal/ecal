@@ -1,4 +1,4 @@
-# ========================= eCAL LICENSE =================================
+ # ========================= eCAL LICENSE =================================
 #
 # Copyright (C) 2016 - 2019 Continental Corporation
 #
@@ -26,7 +26,7 @@ def main():
   print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
   
   # initialize eCAL API
-  ecal_core.initialize(sys.argv, "py_byte_rec")
+  ecal_core.initialize(sys.argv, "py_binary_rec")
   
   # set process state
   ecal_core.set_process_state(1, 1, "I feel good")
@@ -38,7 +38,7 @@ def main():
   while ecal_core.ok():
     ret, msg, time = sub.receive(500)
     if ret > 0:
-      print("Received:  {} ms   {}".format(time, msg))
+      print("Received:  {} ms   {}".format(time, bytes.fromhex(msg.decode("utf-8"))))
     else:
       print("Subscriber timeout ..")
   

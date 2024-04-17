@@ -28,20 +28,23 @@ def main():
   print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
   
   # initialize eCAL API
-  ecal_core.initialize(sys.argv, "py_byte_snd")
+  ecal_core.initialize(sys.argv, "py_binary_snd")
   
   # set process state
   ecal_core.set_process_state(1, 1, "I feel good")
 
   # create publisher
   pub = BinaryPublisher("Hello")
-  msg = b"Hello from eCAL"
+  msg_fox = b"4120717569636b2062726f776e20666f7820"
   
   # send messages
-  staticmsg = msg
+  msg_count = 0
   while ecal_core.ok():
+    msg_count += 1
+    hex_ascii = bytes(''.join([hex(ord(digit))[2:] for digit in str(msg_count)]), "utf-8")
+    msg = msg_fox + hex_ascii
     pub.send(msg)
-    msg = staticmsg + random.randbytes(6)
+    print("Sent: ", msg)
     time.sleep(0.01)
   
   # finalize eCAL API

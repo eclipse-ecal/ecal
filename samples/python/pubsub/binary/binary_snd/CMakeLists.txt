@@ -20,7 +20,7 @@ project(binary_snd)
 
 find_package(eCAL REQUIRED)
 
-set(PROJECT_GROUP minimal)
+set(PROJECT_GROUP binary)
 
 if(ECAL_INCLUDE_PY_SAMPLES)
   if(WIN32)

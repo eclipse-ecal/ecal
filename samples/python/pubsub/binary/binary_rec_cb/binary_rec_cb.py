@@ -24,7 +24,7 @@ from ecal.core.subscriber import BinarySubscriber
 
 # eCAL receive callback
 def callback(topic_name, msg, time):
-  print("Received:  {} ms   {}".format(time, msg))
+  print("Received:  {} ms   {}".format(time, bytes.fromhex(msg.decode("utf-8"))))
 
 def main():  
   # print eCAL version and date
