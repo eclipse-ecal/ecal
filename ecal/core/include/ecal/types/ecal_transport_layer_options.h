@@ -55,6 +55,7 @@ namespace eCAL
       IpAddressV4              mask{};
       LimitSize<14000, 10>     port{};
       unsigned int             ttl{};
+      // TODO PG: are these minimum limits correct?
       LimitSize<5242880, 1024> sndbuf{};
       LimitSize<5242880, 1024> recbuf{};
       bool                     join_all_interfaces{};
