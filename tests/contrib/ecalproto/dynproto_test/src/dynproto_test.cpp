@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/protobuf/ecal_proto_dyn.h>
+#include <ecal/msg/protobuf/ecal_proto_dyn.h>
 
 #include <gtest/gtest.h>
 

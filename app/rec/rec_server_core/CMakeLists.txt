@@ -68,7 +68,7 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE
     tinyxml2::tinyxml2
     protobuf::libprotobuf
-    eCAL::core
+    eCAL::core_protobuf
     eCAL::app_pb
     ThreadingUtils
     Threads::Threads

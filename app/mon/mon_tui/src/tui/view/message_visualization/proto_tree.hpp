@@ -21,8 +21,8 @@
 #include <stack>
 
 #include <ecal/ecal.h>
-#include <ecal/protobuf/ecal_proto_visitor.h>
-#include <ecal/protobuf/ecal_proto_decoder.h>
+#include <ecal/msg/protobuf/ecal_proto_visitor.h>
+#include <ecal/msg/protobuf/ecal_proto_decoder.h>
 
 #include <google/protobuf/message.h>
 

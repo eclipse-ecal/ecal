@@ -20,7 +20,22 @@ find_package(Protobuf REQUIRED)
 
 project(proto)
 
-set(ecal_protobuf_src
+ecal_add_library(proto)
+add_library(eCAL::proto ALIAS proto)
+
+target_sources(proto
+  PUBLIC
+    FILE_SET proto_headers
+    TYPE HEADERS
+    BASE_DIRS include
+    FILES
+      include/ecal/msg/protobuf/ecal_proto_decoder.h
+      include/ecal/msg/protobuf/ecal_proto_dyn.h
+      include/ecal/msg/protobuf/ecal_proto_hlp.h
+      include/ecal/msg/protobuf/ecal_proto_maximum_array_dimensions.h
+      include/ecal/msg/protobuf/ecal_proto_message_filter.h
+      include/ecal/msg/protobuf/ecal_proto_visitor.h
+  PRIVATE
     src/ecal_proto_decoder.cpp
     src/ecal_proto_dyn.cpp
     src/ecal_proto_maximum_array_dimensions.cpp
@@ -28,32 +43,16 @@ set(ecal_protobuf_src
     src/ecal_proto_visitor.cpp
 )
 
-set(ecal_protobuf_header
-    include/ecal/protobuf/ecal_proto_decoder.h
-    include/ecal/protobuf/ecal_proto_dyn.h
-    include/ecal/protobuf/ecal_proto_hlp.h
-    include/ecal/protobuf/ecal_proto_maximum_array_dimensions.h
-    include/ecal/protobuf/ecal_proto_message_filter.h
-    include/ecal/protobuf/ecal_proto_visitor.h
-)
+target_link_libraries(proto PUBLIC protobuf::libprotobuf)
 
-ecal_add_library(${PROJECT_NAME} ${ecal_protobuf_src} ${ecal_protobuf_header})
-add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-target_include_directories(${PROJECT_NAME} PUBLIC 
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>
-)
-
-target_link_libraries(${PROJECT_NAME} PUBLIC protobuf::libprotobuf)
-
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
-
-ecal_install_library(${PROJECT_NAME})
+target_compile_features(proto PUBLIC cxx_std_14)
 
 install(
-  FILES ${ecal_protobuf_header}
-  DESTINATION "${INSTALL_INCLUDE_DIR}/ecal/protobuf"
-  COMPONENT sdk
+  TARGETS proto
+  EXPORT eCALCoreTargets  
+  ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
+  LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
+  FILE_SET proto_headers COMPONENT sdk
 )
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER contrib)
+set_property(TARGET proto PROPERTY FOLDER core)

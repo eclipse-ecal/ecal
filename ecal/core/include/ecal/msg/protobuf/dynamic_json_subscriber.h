@@ -41,6 +41,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
+#include <google/protobuf/stubs/common.h>
 #include <google/protobuf/util/json_util.h>
 #include <google/protobuf/util/type_resolver_util.h>
 #include <google/protobuf/util/type_resolver.h>
@@ -244,7 +245,11 @@ namespace eCAL
       {
 
         google::protobuf::util::JsonOptions options;
+#if GOOGLE_PROTOBUF_VERSION >= 5026000
+        options.always_print_fields_with_no_presence = true;
+#else
         options.always_print_primitive_fields = true;
+#endif
 
         std::string binary_input;
         binary_input.assign(static_cast<char*>(data_->buf), static_cast<size_t>(data_->size));

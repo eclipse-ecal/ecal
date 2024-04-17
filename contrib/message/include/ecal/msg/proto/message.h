@@ -28,7 +28,7 @@
 #pragma warning(pop)
 #endif
 
-#include <ecal/protobuf/ecal_proto_hlp.h>
+#include <ecal/msg/protobuf/ecal_proto_hlp.h>
 #include <ecal/msg/message.h>
 
 namespace eCAL
