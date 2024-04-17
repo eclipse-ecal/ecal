@@ -167,7 +167,7 @@ namespace eCAL
 
   void CDescGate::ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
     const std::string& topic_name_,
-    const std::uint64_t& topic_id_,
+    const Util::TopicId& topic_id_,
     const SDataTypeInformation& topic_info_,
     const Util::DescQualityFlags topic_quality_)
   {
@@ -183,7 +183,7 @@ namespace eCAL
     (*topic_info_map_.map)[topic_info_key] = topic_quality_info;
   }
 
-  void CDescGate::RemTopicDescription(SQualityTopicIdMap& topic_info_map_, const std::string& topic_name_, const std::uint64_t& topic_id_)
+  void CDescGate::RemTopicDescription(SQualityTopicIdMap& topic_info_map_, const std::string& topic_name_, const Util::TopicId& topic_id_)
   {
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
     topic_info_map_.map->remove_deprecated();
@@ -193,7 +193,7 @@ namespace eCAL
   void CDescGate::ApplyServiceDescription(SQualityServiceIdMap& service_method_info_map_,
     const std::string& service_name_,
     const std::string& method_name_,
-    const std::uint64_t& service_id_,
+    const Util::ServiceId& service_id_,
     const SDataTypeInformation& request_type_information_,
     const SDataTypeInformation& response_type_information_,
     const Util::DescQualityFlags request_type_quality_,
@@ -213,7 +213,7 @@ namespace eCAL
     (*service_method_info_map_.map)[service_method_info_key] = service_quality_info;
   }
 
-  void CDescGate::RemServiceDescription(SQualityServiceIdMap& service_method_info_map_, const std::string& service_name_, const std::uint64_t& service_id_)
+  void CDescGate::RemServiceDescription(SQualityServiceIdMap& service_method_info_map_, const std::string& service_name_, const Util::ServiceId& service_id_)
   {
     std::list<SServiceIdKey> service_method_infos_to_remove;
 

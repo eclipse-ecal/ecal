@@ -47,18 +47,27 @@ namespace eCAL
       TYPENAME_AVAILABLE        = 0x1 << 1,  //!< Having a type name available
       INFO_COMES_FROM_PRODUCER  = 0x1 << 0   //!< Info is coming from the producer (like a publisher, service)
     };
-    inline DescQualityFlags& operator|= (DescQualityFlags& a, DescQualityFlags b) { return reinterpret_cast<DescQualityFlags&>(reinterpret_cast<std::underlying_type_t<DescQualityFlags>&>(a) |= static_cast<std::underlying_type_t<DescQualityFlags>>(b)); }
 
+    constexpr inline DescQualityFlags  operator~  (DescQualityFlags  a)                     { return static_cast<DescQualityFlags>( ~static_cast<std::underlying_type<DescQualityFlags>::type>(a) ); }
+    constexpr inline DescQualityFlags  operator|  (DescQualityFlags  a, DescQualityFlags b) { return static_cast<DescQualityFlags>( static_cast<std::underlying_type<DescQualityFlags>::type>(a) | static_cast<std::underlying_type<DescQualityFlags>::type>(b) ); }
+    constexpr inline DescQualityFlags  operator&  (DescQualityFlags  a, DescQualityFlags b) { return static_cast<DescQualityFlags>( static_cast<std::underlying_type<DescQualityFlags>::type>(a) & static_cast<std::underlying_type<DescQualityFlags>::type>(b) ); }
+    constexpr inline DescQualityFlags  operator^  (DescQualityFlags  a, DescQualityFlags b) { return static_cast<DescQualityFlags>( static_cast<std::underlying_type<DescQualityFlags>::type>(a) ^ static_cast<std::underlying_type<DescQualityFlags>::type>(b) ); }
+    inline           DescQualityFlags& operator|= (DescQualityFlags& a, DescQualityFlags b) { return reinterpret_cast<DescQualityFlags&>( reinterpret_cast<std::underlying_type<DescQualityFlags>::type&>(a) |= static_cast<std::underlying_type<DescQualityFlags>::type>(b) ); }
+    inline           DescQualityFlags& operator&= (DescQualityFlags& a, DescQualityFlags b) { return reinterpret_cast<DescQualityFlags&>( reinterpret_cast<std::underlying_type<DescQualityFlags>::type&>(a) &= static_cast<std::underlying_type<DescQualityFlags>::type>(b) ); }
+    inline           DescQualityFlags& operator^= (DescQualityFlags& a, DescQualityFlags b) { return reinterpret_cast<DescQualityFlags&>( reinterpret_cast<std::underlying_type<DescQualityFlags>::type&>(a) ^= static_cast<std::underlying_type<DescQualityFlags>::type>(b) ); }
+
+    using TopicId = std::uint64_t;
     struct SQualityTopicInfo
     {
-      std::uint64_t        id;
+      TopicId              id;
       SDataTypeInformation info;
       DescQualityFlags     quality = DescQualityFlags::NO_QUALITY;
     };
 
+    using ServiceId = std::uint64_t;
     struct SQualityServiceInfo
     {
-      std::uint64_t             id;
+      ServiceId                 id;
       SServiceMethodInformation info;
       DescQualityFlags          request_quality  = DescQualityFlags::NO_QUALITY;
       DescQualityFlags          response_quality = DescQualityFlags::NO_QUALITY;

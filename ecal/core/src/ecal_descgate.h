@@ -39,7 +39,7 @@ namespace eCAL
   struct STopicIdKey
   {
     std::string   topic_name;
-    std::uint64_t topic_id;
+    Util::TopicId topic_id;
 
     bool operator<(const STopicIdKey& other) const
     {
@@ -51,9 +51,9 @@ namespace eCAL
 
   struct SServiceIdKey
   {
-    std::string   service_name;
-    std::string   method_name;
-    std::uint64_t service_id;
+    std::string     service_name;
+    std::string     method_name;
+    Util::ServiceId service_id;
 
     bool operator<(const SServiceIdKey& other) const
     {
@@ -126,18 +126,18 @@ namespace eCAL
 
     void ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
                                const std::string& topic_name_,
-                               const std::uint64_t& topic_id_,
+                               const Util::TopicId& topic_id_,
                                const SDataTypeInformation& topic_info_,
                                Util::DescQualityFlags topic_quality_);
 
     void RemTopicDescription(SQualityTopicIdMap& topic_info_map_,
                              const std::string& topic_name_,
-                             const std::uint64_t& topic_id_);
+                             const Util::TopicId& topic_id_);
 
     void ApplyServiceDescription(SQualityServiceIdMap& service_method_info_map_,
                                  const std::string& service_name_,
                                  const std::string& method_name_,
-                                 const std::uint64_t& service_id_,
+                                 const Util::ServiceId& service_id_,
                                  const SDataTypeInformation& request_type_information_,
                                  const SDataTypeInformation& response_type_information_,
                                  Util::DescQualityFlags request_type_quality_,
@@ -145,6 +145,6 @@ namespace eCAL
 
     void RemServiceDescription(SQualityServiceIdMap& service_method_info_map_,
                                const std::string& service_name_,
-                               const std::uint64_t& service_id_);
+                               const Util::ServiceId& service_id_);
   };
 }
