@@ -8,7 +8,7 @@ int main(int argc, char** argv)
   eCAL::Config::eCALConfig custom_config(argc, argv);
 
   // Set the communication layer to network
-  custom_config.transport_layer_options.network_enabled    = true;
+  custom_config.transport_layer_options.network_enabled = true;
 
   // Set a custom udp multicast group, correct IP address necessary
   custom_config.transport_layer_options.mc_options.group = std::string("239.0.1.1");
