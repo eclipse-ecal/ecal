@@ -40,10 +40,10 @@ namespace eCAL
     struct SHMOptions
     {
       std::string           host_group_name{};
-      LimitSize<4096, 4096> memfile_minsize{};
-      LimitSize<50, 1, 100> memfile_reserve{};
+      ConstrainedInteger<4096, 4096> memfile_minsize{};
+      ConstrainedInteger<50, 1, 100> memfile_reserve{};
       int                   memfile_ack_timeout{};
-      LimitSize<0, 1>       memfile_buffer_count{};
+      ConstrainedInteger<0, 1>       memfile_buffer_count{};
       bool                  drop_out_of_order_messages{};
       bool                  memfile_zero_copy{};
     };
@@ -53,11 +53,11 @@ namespace eCAL
       UdpConfigVersion         config_version{};        
       IpAddressV4              group{};
       IpAddressV4              mask{};
-      LimitSize<14000, 10>     port{};
+      ConstrainedInteger<14000, 10>     port{};
       unsigned int             ttl{};
       // TODO PG: are these minimum limits correct?
-      LimitSize<5242880, 1024> sndbuf{};
-      LimitSize<5242880, 1024> recbuf{};
+      ConstrainedInteger<5242880, 1024> sndbuf{};
+      ConstrainedInteger<5242880, 1024> recbuf{};
       bool                     join_all_interfaces{};
 
       int  bandwidth_max_udp{};

@@ -53,7 +53,7 @@ namespace eCAL
     struct MonitoringOptions
     {
       eCAL_MonitoringMode_Filter monitoring_mode{};
-      LimitSize<1000, 1000>      monitoring_timeout{};
+      ConstrainedInteger<1000, 1000>      monitoring_timeout{};
       bool                       network_monitoring{};
       UDPMonitoringOptions       udp_options{};
       SHMMonitoringOptions       shm_options{};

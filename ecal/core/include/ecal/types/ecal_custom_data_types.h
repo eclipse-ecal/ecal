@@ -46,12 +46,14 @@ namespace eCAL
       ECAL_API IpAddressV4();
       ECAL_API IpAddressV4(const std::string& ip_address_); 
       ECAL_API ~IpAddressV4(); 
-                  
-      IpAddressV4(IpAddressV4& other)                  { this->m_ip_address = other; };
-      IpAddressV4& operator=(IpAddressV4& const other) { this->m_ip_address = other; return *this; };
-      IpAddressV4& operator=(const std::string& other) { this->validateIpString(other); return *this; };
-      operator std::string()                           { return m_ip_address; };
-      
+
+      std::string GetIpString() const { return m_ip_address; };
+
+      IpAddressV4(IpAddressV4& other)                      { this->m_ip_address = other; };
+      IpAddressV4& operator=(const IpAddressV4& other)     { this->m_ip_address = other.GetIpString(); return *this; };
+      IpAddressV4& operator=(const std::string& ip_string) { this->validateIpString(ip_string); return *this; };
+      operator std::string()                               { return m_ip_address; };
+
       friend std::ostream& operator<<(std::ostream& os, const IpAddressV4& ipv4) { os << ipv4.m_ip_address; return os; };
 
     private:            
@@ -68,13 +70,13 @@ namespace eCAL
      * @tparam STEP  Optional step size.             Default: 1 
      * @tparam MAX   Optional maximum possible size. Default: std::numeric_limits<int>::max()
      * 
-     * @param size_  Optional size value. If not set, LimitSize::get() will return the MIN value.
+     * @param size_  Optional size value. If not set, ConstrainedInteger::get() will return the MIN value.
     **/
     template<int MIN = 0, int STEP = 1, int MAX = std::numeric_limits<int>::max()>
-    class LimitSize
+    class ConstrainedInteger
     {
     public:
-      LimitSize(int size_ = MIN)
+      ConstrainedInteger(int size_ = MIN)
       {
         if (size_ >= MIN && size_ <= MAX && size_ % STEP == 0)
         {
@@ -82,17 +84,17 @@ namespace eCAL
         }
         else
         {
-          std::cerr << "[LimitSize] Faulty size configuration or assignment. MIN: " << MIN << " MAX: " << MAX << " STEP: " << STEP << " VALUE:" << size_ << "\n";
+          std::cerr << "[ConstrainedInteger] Faulty size configuration or assignment. MIN: " << MIN << " MAX: " << MAX << " STEP: " << STEP << " VALUE:" << size_ << "\n";
           exit(EXIT_FAILURE);
         }
       };
 
-      ~LimitSize() = default;
+      ~ConstrainedInteger() = default;
      
-      LimitSize(const LimitSize& other) { this->m_size = other; };
-      LimitSize& operator=(const LimitSize& other) { this->m_size = other; return *this; };
+      ConstrainedInteger(const ConstrainedInteger& other) { this->m_size = other; };
+      ConstrainedInteger& operator=(const ConstrainedInteger& other) { this->m_size = other; return *this; };
       operator int() const { return m_size; };
-      bool operator==(const LimitSize& other) const { return this->m_size == other; };
+      bool operator==(const ConstrainedInteger& other) const { return this->m_size == other; };
       
     private:
       int m_size{};

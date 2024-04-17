@@ -149,21 +149,21 @@ TEST(ConfigDeathTest, user_config_death_test)
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("0.00.000.0")),
     ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
 
-  // Test the LimitSize class with wrong values. Default are MIN = 5242880, STEP = 1024
+  // Test the ConstrainedInteger class with wrong values. Default are MIN = 5242880, STEP = 1024
   // Value below MIN
   EXPECT_EXIT(
     SetValue(custom_config.transport_layer_options.mc_options.sndbuf, 42),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "LimitSize");
+    ::testing::ExitedWithCode(EXIT_FAILURE), "ConstrainedInteger");
   
   // Wrong step. Default STEP = 1024
   EXPECT_EXIT(
     SetValue(custom_config.transport_layer_options.mc_options.sndbuf, (5242880 + 512)),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "LimitSize");
+    ::testing::ExitedWithCode(EXIT_FAILURE), "ConstrainedInteger");
 
   // Value exceeds MAX. Default MAX = 100
   EXPECT_EXIT(
     SetValue(custom_config.transport_layer_options.shm_options.memfile_reserve, 150),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "LimitSize");
+    ::testing::ExitedWithCode(EXIT_FAILURE), "ConstrainedInteger");
 }
 
 TEST(core_cpp_config, config_custom_datatypes)
@@ -177,8 +177,8 @@ TEST(core_cpp_config, config_custom_datatypes)
   ip2 = ip1;
   EXPECT_EQ(static_cast<std::string>(ip1), static_cast<std::string>(ip2));
 
-  eCAL::Config::LimitSize<0,1,10> s1;
-  eCAL::Config::LimitSize<0,1,10> s2;
+  eCAL::Config::ConstrainedInteger<0,1,10> s1;
+  eCAL::Config::ConstrainedInteger<0,1,10> s2;
   EXPECT_EQ(static_cast<int>(s1), static_cast<int>(s2));
 
   s1 = 5;
