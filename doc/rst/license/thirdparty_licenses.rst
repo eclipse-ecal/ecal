@@ -26,6 +26,13 @@ They may have a different license than eCAL.
      - Copyright
      - Included in...
 
+   * - `ecaludp <https://github.com/eclipse-ecal/ecaludp>`_
+     - :ref:`apache_2_0`
+     - 2024, Continental
+     - - |fa-github| Git submodule ``/tirdparty/ecaludp``
+       - |fa-windows| Binary distributions for Windows
+       - |fa-ubuntu| Binary distributions for Linux
+
    * - `fineFTP Server <https://github.com/eclipse-ecal/fineftp-server>`_
      - :ref:`mit_license`
      - 2020 Continental Corporation

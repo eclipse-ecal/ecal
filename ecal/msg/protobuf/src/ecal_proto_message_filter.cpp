@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/protobuf/ecal_proto_message_filter.h>
+#include <ecal/msg/protobuf/ecal_proto_message_filter.h>
 
 #include <algorithm>
 #include <iterator>
