@@ -1,3 +1,4 @@
+#include <ecal/ecal.h>
 #include <ecal/ecal_config.h>
 
 int main(int argc, char** argv)
@@ -7,9 +8,15 @@ int main(int argc, char** argv)
 
   // Set the communication layer to network
   custom_config.transport_layer_options.network_enabled    = true;
-  
-  // Initialize eCAL with the config
-  eCAL::Initialize(custom_config, "UserConfig", eCAL::Init::Default);
+
+  // Set a custom udp multicast group, correct IP address necessary
+  custom_config.transport_layer_options.mc_options.group = std::string("239.0.1.1");
+
+  // Increase the send buffer, size increase in 1024 bytes steps
+  custom_config.transport_layer_options.mc_options.sndbuf = (5242880 + 10 * 1024);
+
+  // Initialize eCAL with the prepared configuration object
+  eCAL::Initialize(custom_config, "UserConfigExample", eCAL::Init::Default);
 
   // ...
   // Use eCAL for your needs
