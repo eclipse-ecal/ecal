@@ -67,6 +67,7 @@
 #include <sys/select.h>
 #include <limits.h>
 #include <netinet/in.h>
+#include <ecal_utils/ecal_utils.h>
 #endif /* ECAL_OS_LINUX */
 
 #ifdef ECAL_OS_MACOS
