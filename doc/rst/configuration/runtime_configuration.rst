@@ -16,7 +16,7 @@ In order to exclude configuration errors, custom datatypes for IP addresses and 
 
 For assigning an ip address simply assign a string with the desired address. 
 Decimal and hexadecimal format is supported. 
-In case the ip address is not valid, the application will exit with an error message.
+In case the ip address is not valid, the type will throw a std::invalid_argument exception.
 
 You can use the ip address like a normal string object. For example:
 
@@ -26,7 +26,7 @@ You can use the ip address like a normal string object. For example:
   std::cout << ip_address << "\n"; 
 
 Sizes are specified with a minimum (default: 0), step (default: 1) and maximum (default: maximum of int) value.
-In case the assigned value does not fit into the specified limitation, the application will exit with an error message.
+In case the assigned value does not fit into the specified limitation, the type will throw a std::invalid_argument exception.
 
 You can use the size object like a normal integer.
 

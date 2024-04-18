@@ -34,8 +34,8 @@ namespace{
       std::regex("((127|7[fF]).((0|00|000)\\.){2}(1|01|001))"), // 127.0.0.1 
       std::regex("((0|00|000)\\.){3}(0|00|000)")                // 0.0.0.0 
   };
-  const std::regex IPV4_DEC_REGEX                          = std::regex("(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])");
-  const std::regex IPV4_HEX_REGEX                          = std::regex("(([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])\\.){3}([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])");
+  const std::regex IPV4_DEC_REGEX = std::regex("(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])");
+  const std::regex IPV4_HEX_REGEX = std::regex("(([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])\\.){3}([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])");
 }
 
 namespace eCAL
@@ -63,7 +63,7 @@ namespace eCAL
         {
           if (std::regex_match(ip_address_, inv_ip_regex))
           {
-            exitApp(ip_address_);
+            throwException(ip_address_);
             return;
           }
         }
@@ -72,14 +72,13 @@ namespace eCAL
       }
       else
       {
-        exitApp(ip_address_);
+        throwException(ip_address_);
       }
     }
 
-    void IpAddressV4::exitApp(const std::string& ip_address_ /*std::string("")*/)
+    void IpAddressV4::throwException(const std::string& ip_address_ /*std::string("")*/)
     {
-      std::cerr << "[IpAddressV4] No valid IP address: " << ip_address_ << "\n";
-      exit(EXIT_FAILURE);
+      throw std::invalid_argument("[IpAddressV4] No valid IP address: " + ip_address_);
     }
   }
 }

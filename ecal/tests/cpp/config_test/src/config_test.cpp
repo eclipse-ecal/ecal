@@ -22,6 +22,8 @@
 
 #include <gtest/gtest.h>
 
+#include <stdexcept>
+
 template<typename MEMBER, typename VALUE>
 void SetValue(MEMBER& member, VALUE value)
 {
@@ -40,33 +42,41 @@ TEST(core_cpp_config, user_config_passing)
   std::string ip_address = "238.200.100.2";
   const int upd_snd_buff       = (5242880 + 1024);
 
-  custom_config.transport_layer_options.network_enabled   = network_enabled;
-  custom_config.transport_layer_options.mc_options.group  = ip_address;
-  custom_config.transport_layer_options.mc_options.sndbuf = upd_snd_buff;
-  
   // Monitoring options
   const unsigned int        mon_timeout                          = 6000U;
   const std::string         mon_filter_excl                      = "_A.*";
   const eCAL_Logging_Filter mon_log_filter_con                   = log_level_warning;
   const eCAL::Config::eCAL_MonitoringMode_Filter monitoring_mode = eCAL::Config::MonitoringMode::udp_monitoring;
   
-  custom_config.monitoring_options.monitoring_timeout = mon_timeout;
-  custom_config.monitoring_options.filter_excl        = mon_filter_excl;
-  custom_config.monitoring_options.monitoring_mode    = monitoring_mode;
-  custom_config.logging_options.filter_log_con        = mon_log_filter_con;
-
   // Publisher options
   const eCAL::TLayer::eSendMode pub_use_shm = eCAL::TLayer::eSendMode::smode_off;
-
-  custom_config.publisher_options.use_shm = pub_use_shm;
 
   // Registration options
   const unsigned int registration_timeout = 80000U;
   const unsigned int registration_refresh = 2000U;
   const eCAL::Config::RegistrationOptions registration_options = eCAL::Config::RegistrationOptions(registration_timeout, registration_refresh);
 
-  custom_config.registration_options = registration_options;
+  try{
+    custom_config.transport_layer_options.network_enabled   = network_enabled;
+    custom_config.transport_layer_options.mc_options.group  = ip_address;
+    custom_config.transport_layer_options.mc_options.sndbuf = upd_snd_buff;
+    
 
+    custom_config.monitoring_options.monitoring_timeout = mon_timeout;
+    custom_config.monitoring_options.filter_excl        = mon_filter_excl;
+    custom_config.monitoring_options.monitoring_mode    = monitoring_mode;
+    custom_config.logging_options.filter_log_con        = mon_log_filter_con;
+
+
+    custom_config.publisher_options.use_shm = pub_use_shm;
+
+
+    custom_config.registration_options = registration_options;
+  }
+  catch (std::invalid_argument e)
+  {
+    throw std::runtime_error("Error while configuring eCALConfig: " + std::string(e.what()));
+  }
 
   // Initialize ecal api with custom config
   EXPECT_EQ(0, eCAL::Initialize(custom_config, "User Config Passing Test", eCAL::Init::Default));
@@ -108,62 +118,62 @@ TEST(ConfigDeathTest, user_config_death_test)
   eCAL::Config::eCALConfig custom_config(0, nullptr);
 
   // Test the IpAddressV4 class with wrong values
-  EXPECT_EXIT(
+  ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("42")),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+    std::invalid_argument);
 
   // Test the IpAddressV4 class with invalid addresses
-  EXPECT_EXIT(
+  ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("256.0.0.0")),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
-  EXPECT_EXIT(
+    std::invalid_argument);
+  ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("127.0.0.1")),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
-  EXPECT_EXIT(
+    std::invalid_argument);
+  ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("255.255.255.255")),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+    std::invalid_argument);
 
-  EXPECT_EXIT(
+  ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("FFF.FF.FF.FF")),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
-  EXPECT_EXIT(
+    std::invalid_argument);
+  ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("FF.FF.FF.FF")),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
-  EXPECT_EXIT(
+    std::invalid_argument);
+  ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("Ff.fF.ff.Ff")),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
-  EXPECT_EXIT(
+    std::invalid_argument);
+  ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("7f.0.0.1")),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+    std::invalid_argument);
 
-  EXPECT_EXIT(
+  ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("0.0.0.0")),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
-  EXPECT_EXIT(
+    std::invalid_argument);
+  ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("00.00.00.00")),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
-  EXPECT_EXIT(
+    std::invalid_argument);
+  ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("000.000.000.000")),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
-  EXPECT_EXIT(
+    std::invalid_argument);
+  ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.mc_options.group, std::string("0.00.000.0")),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "IpAddressV4");
+    std::invalid_argument);
 
   // Test the ConstrainedInteger class with wrong values. Default are MIN = 5242880, STEP = 1024
   // Value below MIN
-  EXPECT_EXIT(
+  ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.mc_options.sndbuf, 42),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "ConstrainedInteger");
+    std::invalid_argument);
   
   // Wrong step. Default STEP = 1024
-  EXPECT_EXIT(
+  ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.mc_options.sndbuf, (5242880 + 512)),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "ConstrainedInteger");
+    std::invalid_argument);
 
   // Value exceeds MAX. Default MAX = 100
-  EXPECT_EXIT(
+  ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.shm_options.memfile_reserve, 150),
-    ::testing::ExitedWithCode(EXIT_FAILURE), "ConstrainedInteger");
+    std::invalid_argument);
 }
 
 TEST(core_cpp_config, config_custom_datatypes)

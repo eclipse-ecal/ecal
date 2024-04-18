@@ -29,6 +29,7 @@
 #include <string>
 #include <iostream>
 #include <limits>
+#include <stdexcept>
 
 namespace eCAL
 {
@@ -39,6 +40,8 @@ namespace eCAL
      *         Invalid addresses: 255.255.255.255, 127.0.0.1, 0.0.0.0
      *
      * @param ip_address_  The IP address as std::string.
+     * 
+     * @throws std::invalid_argument exception.
     **/
     class IpAddressV4
     {
@@ -58,7 +61,7 @@ namespace eCAL
 
     private:            
       ECAL_API void validateIpString(const std::string& ip_address_); 
-      static void exitApp(const std::string& ip_address_ = std::string("")); 
+      static void throwException(const std::string& ip_address_ = std::string("")); 
 
       std::string m_ip_address;
     };
@@ -70,7 +73,9 @@ namespace eCAL
      * @tparam STEP  Optional step size.             Default: 1 
      * @tparam MAX   Optional maximum possible size. Default: std::numeric_limits<int>::max()
      * 
-     * @param size_  Optional size value. If not set, ConstrainedInteger::get() will return the MIN value.
+     * @param size_  Optional size value. If not set, ConstrainedInteger will return the MIN value.
+     * 
+     * @throws std::invalid_argument exception.
     **/
     template<int MIN = 0, int STEP = 1, int MAX = std::numeric_limits<int>::max()>
     class ConstrainedInteger
@@ -84,8 +89,7 @@ namespace eCAL
         }
         else
         {
-          std::cerr << "[ConstrainedInteger] Faulty size configuration or assignment. MIN: " << MIN << " MAX: " << MAX << " STEP: " << STEP << " VALUE:" << size_ << "\n";
-          exit(EXIT_FAILURE);
+          throw std::invalid_argument("[ConstrainedInteger] Faulty size configuration or assignment. MIN: " + std::to_string(MIN) + " MAX: " + std::to_string(MAX) + " STEP: " + std::to_string(STEP) + " VALUE:" + std::to_string(size_));
         }
       };
 
