@@ -37,6 +37,12 @@ namespace eCAL
       virtual bool AddMultiCastGroup(const char* ipaddr_) = 0;
       virtual bool RemMultiCastGroup(const char* ipaddr_) = 0;
 
+      // prevent copying and moving
+      CSampleReceiverBase(const CSampleReceiverBase&) = delete;
+      CSampleReceiverBase& operator=(const CSampleReceiverBase&) = delete;
+      CSampleReceiverBase(CSampleReceiverBase&&) = delete;
+      CSampleReceiverBase& operator=(CSampleReceiverBase&&) = delete;
+
     protected:
       CSampleReceiverBase(const SReceiverAttr& attr_, const HasSampleCallbackT& has_sample_callback_, const ApplySampleCallbackT& apply_sample_callback_)
         : m_has_sample_callback(has_sample_callback_), m_apply_sample_callback(apply_sample_callback_), m_broadcast(attr_.broadcast)
