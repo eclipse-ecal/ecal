@@ -37,10 +37,10 @@ namespace eCAL
     {
     public:
       CSampleReceiverAsio(const SReceiverAttr& attr_, const HasSampleCallbackT& has_sample_callback_, const ApplySampleCallbackT& apply_sample_callback_);
-      virtual ~CSampleReceiverAsio();
+      ~CSampleReceiverAsio() override;
 
-      bool AddMultiCastGroup(const char* ipaddr_);
-      bool RemMultiCastGroup(const char* ipaddr_);
+      bool AddMultiCastGroup(const char* ipaddr_) override;
+      bool RemMultiCastGroup(const char* ipaddr_) override;
 
       // prevent copying and moving
       CSampleReceiverAsio(const CSampleReceiverAsio&) = delete;
