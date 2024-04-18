@@ -33,7 +33,7 @@ namespace
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type                   = eCAL::bct_reg_publisher;
     reg_sample.topic.tname                = topic_name_;
-    reg_sample.topic.tid                  = topic_id_;
+    reg_sample.topic.tid                  = std::to_string(topic_id_);
     reg_sample.topic.tdatatype.name       = topic_name_ + "-tdatatype.name";
     reg_sample.topic.tdatatype.encoding   = topic_name_ + "-tdatatype.encoding";
     reg_sample.topic.tdatatype.descriptor = topic_name_ + "-tdatatype.descriptor";
@@ -45,7 +45,7 @@ namespace
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type                   = eCAL::bct_reg_subscriber;
     reg_sample.topic.tname                = topic_name_;
-    reg_sample.topic.tid                  = topic_id_;
+    reg_sample.topic.tid                  = std::to_string(topic_id_);
     reg_sample.topic.tdatatype.name       = topic_name_ + "-tdatatype.name";
     reg_sample.topic.tdatatype.encoding   = topic_name_ + "-tdatatype.encoding";
     reg_sample.topic.tdatatype.descriptor = topic_name_ + "-tdatatype.descriptor";
@@ -57,7 +57,7 @@ namespace
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type      = eCAL::bct_reg_service;
     reg_sample.service.sname = service_name_;
-    reg_sample.service.sid   = service_id_;
+    reg_sample.service.sid   = std::to_string(service_id_);
 
     eCAL::Service::Method method;
     method.mname = "method_name";
@@ -70,7 +70,7 @@ namespace
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type     = eCAL::bct_reg_client;
     reg_sample.client.sname = client_name_;
-    reg_sample.client.sid   = service_id_;
+    reg_sample.client.sid   = std::to_string(service_id_);
 
     eCAL::Service::Method method;
     method.mname = "method_name";
