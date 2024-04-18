@@ -107,7 +107,7 @@ namespace eCAL
     void CSampleReceiverAsio::InitializeSocket(const SReceiverAttr& attr_)
     {
       // create socket
-      m_socket = std::make_unique<ecaludp::Socket>(*m_io_context, std::array<char, 4>{'E', 'C', 'A', 'L'});
+      m_socket = std::make_unique<ecaludp::Socket>(*m_io_context, GeteCALDatagramHeader());
 
       // open socket
       const asio::ip::udp::endpoint listen_endpoint(asio::ip::udp::v4(), static_cast<unsigned short>(attr_.port));

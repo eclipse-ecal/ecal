@@ -22,6 +22,7 @@
 **/
 
 #include "ecal_udp_sample_receiver_npcap.h"
+#include "io/udp/ecal_udp_configurations.h"
 
 #include <array>
 #include <iostream>
@@ -79,7 +80,7 @@ namespace eCAL
     void CSampleReceiverNpcap::InitializeSocket(const SReceiverAttr& attr_)
     {
       // create socket
-      m_socket = std::make_unique<ecaludp::SocketNpcap>(std::array<char, 4>{'E', 'C', 'A', 'L'});
+      m_socket = std::make_unique<ecaludp::SocketNpcap>(GeteCALDatagramHeader());
 
       // set receive buffer size (default = 1 MB)
       {

@@ -24,12 +24,16 @@
 #include "ecal_udp_sample_receiver.h"
 #include "io/udp/ecal_udp_configurations.h"
 
+#include "ecal_udp_sample_receiver_asio.h"
+#ifdef ECAL_CORE_NPCAP_SUPPORT
+#include "ecal_udp_sample_receiver_npcap.h"
+#endif
+
 namespace eCAL
 {
   namespace UDP
   {
-    CSampleReceiver::CSampleReceiver(const SReceiverAttr& attr_, const HasSampleCallbackT& has_sample_callback_, const ApplySampleCallbackT& apply_sample_callback_) :
-      CSampleReceiverBase(attr_, has_sample_callback_, apply_sample_callback_)
+    CSampleReceiver::CSampleReceiver(const SReceiverAttr& attr_, const HasSampleCallbackT& has_sample_callback_, const ApplySampleCallbackT& apply_sample_callback_)
     {
 #ifdef ECAL_CORE_NPCAP_SUPPORT
       if (eCAL::UDP::IsNpcapEnabled())

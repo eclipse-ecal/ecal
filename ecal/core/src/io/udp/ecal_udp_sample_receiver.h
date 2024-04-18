@@ -25,24 +25,21 @@
 
 #include "io/udp/ecal_udp_sample_receiver_base.h"
 
-#include "ecal_udp_sample_receiver_asio.h"
-#ifdef ECAL_CORE_NPCAP_SUPPORT
-#include "ecal_udp_sample_receiver_npcap.h"
-#endif
-
 #include <memory>
 
 namespace eCAL
 {
   namespace UDP
   {
-    class CSampleReceiver : public CSampleReceiverBase
+    class CSampleReceiverBase;
+
+    class CSampleReceiver
     {
     public:
       CSampleReceiver(const SReceiverAttr& attr_, const HasSampleCallbackT& has_sample_callback_, const ApplySampleCallbackT& apply_sample_callback_);
 
-      bool AddMultiCastGroup(const char* ipaddr_) override;
-      bool RemMultiCastGroup(const char* ipaddr_) override;
+      bool AddMultiCastGroup(const char* ipaddr_);
+      bool RemMultiCastGroup(const char* ipaddr_);
 
     private:
       std::unique_ptr<CSampleReceiverBase> m_sample_receiver;

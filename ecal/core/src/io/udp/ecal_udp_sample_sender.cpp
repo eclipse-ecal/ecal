@@ -22,6 +22,7 @@
 **/
 
 #include "ecal_udp_sample_sender.h"
+#include "io/udp/ecal_udp_configurations.h"
 
 #include <array>
 #include <iostream>
@@ -54,7 +55,7 @@ namespace eCAL
     void CSampleSender::InitializeSocket(const SSenderAttr& attr_)
     {
       // create socket
-      m_socket = std::make_unique<ecaludp::Socket>(*m_io_context, std::array<char, 4>{'E', 'C', 'A', 'L'});
+      m_socket = std::make_unique<ecaludp::Socket>(*m_io_context, GeteCALDatagramHeader());
 
       // open socket
       {

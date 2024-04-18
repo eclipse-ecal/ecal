@@ -29,7 +29,6 @@
 
 #include "ecal_process_stub.h"
 #include "ecal_utils/command_line.h"
-#include "ecal_utils/ecal_utils.h"
 #include "ecal_utils/str_convert.h"
 
 #include "config/ecal_config_reader_hlp.h"
