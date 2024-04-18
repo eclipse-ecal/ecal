@@ -34,7 +34,7 @@ namespace eCAL
     CSampleSender::CSampleSender(const SSenderAttr& attr_) :
       m_destination_endpoint(asio::ip::make_address(attr_.address), static_cast<unsigned short>(attr_.port))
     {
-      m_io_context = std::make_shared<asio::io_context>();
+      m_io_context = std::make_unique<asio::io_context>();
 
       // create the socket and set all socket options
       InitializeSocket(attr_);
@@ -49,7 +49,7 @@ namespace eCAL
     void CSampleSender::InitializeSocket(const SSenderAttr& attr_)
     {
       // create socket
-      m_socket = std::make_shared<ecaludp::Socket>(*m_io_context, std::array<char, 4>{'E', 'C', 'A', 'L'});
+      m_socket = std::make_unique<ecaludp::Socket>(*m_io_context, std::array<char, 4>{'E', 'C', 'A', 'L'});
 
       // open socket
       {

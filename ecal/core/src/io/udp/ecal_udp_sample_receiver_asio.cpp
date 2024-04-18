@@ -40,8 +40,8 @@ namespace eCAL
       m_broadcast(attr_.broadcast)
     {
       // initialize io context
-      m_io_context = std::make_shared<asio::io_context>();
-      m_work       = std::make_shared<asio::io_context::work>(*m_io_context);
+      m_io_context = std::make_unique<asio::io_context>();
+      m_work       = std::make_unique<asio::io_context::work>(*m_io_context);
 
       // create the socket and set all socket options
       InitializeSocket(attr_);
@@ -73,14 +73,14 @@ namespace eCAL
       {
 #ifdef __linux__
         // TODO: NPCAP - How to implement this ? native_handle() not provided
-        //if (eCAL::UDP::IsUdpMulticastJoinAllIfEnabled())
-        //{
-        //  if (!IO::UDP::set_socket_mcast_group_option(m_socket->native_handle(), ipaddr_, MCAST_JOIN_GROUP))
-        //  {
-        //    return(false);
-        //  }
-        //}
-        //else
+        if (eCAL::UDP::IsUdpMulticastJoinAllIfEnabled())
+        {
+          if (!IO::UDP::set_socket_mcast_group_option(m_socket->native_handle(), ipaddr_, MCAST_JOIN_GROUP))
+          {
+            return(false);
+          }
+        }
+        else
 #endif
         {
           asio::error_code ec;
@@ -126,7 +126,7 @@ namespace eCAL
     void CSampleReceiverAsio::InitializeSocket(const SReceiverAttr& attr_)
     {
       // create socket
-      m_socket = std::make_shared<ecaludp::Socket>(*m_io_context, std::array<char, 4>{'E', 'C', 'A', 'L'});
+      m_socket = std::make_unique<ecaludp::Socket>(*m_io_context, std::array<char, 4>{'E', 'C', 'A', 'L'});
 
       // open socket
       const asio::ip::udp::endpoint listen_endpoint(asio::ip::udp::v4(), static_cast<unsigned short>(attr_.port));

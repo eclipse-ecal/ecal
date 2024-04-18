@@ -45,8 +45,8 @@ namespace eCAL
     private:
       void InitializeSocket(const SSenderAttr& attr_);
 
-      std::shared_ptr<asio::io_context>       m_io_context;
-      std::shared_ptr<ecaludp::Socket>        m_socket;
+      std::unique_ptr<asio::io_context>       m_io_context;
+      std::unique_ptr<ecaludp::Socket>        m_socket;
       asio::ip::udp::endpoint                 m_destination_endpoint;
     };
   }

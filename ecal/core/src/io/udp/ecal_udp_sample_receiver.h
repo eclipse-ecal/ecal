@@ -46,10 +46,10 @@ namespace eCAL
       bool RemMultiCastGroup(const char* ipaddr_);
 
     private:
-      std::shared_ptr<CSampleReceiverAsio>  m_receiver_asio;
+      std::unique_ptr<CSampleReceiverAsio>  m_receiver_asio;
 
 #ifdef ECAL_CORE_NPCAP_SUPPORT
-      std::shared_ptr<CSampleReceiverNpcap> m_receiver_npcap;
+      std::unique_ptr<CSampleReceiverNpcap> m_receiver_npcap;
 #endif
     };
   }

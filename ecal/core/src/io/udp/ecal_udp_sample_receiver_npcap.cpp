@@ -35,8 +35,8 @@ namespace eCAL
       m_broadcast(attr_.broadcast)
     {
       // initialize io context
-      m_io_context = std::make_shared<asio::io_context>();
-      m_work       = std::make_shared<asio::io_context::work>(*m_io_context);
+      m_io_context = std::make_unique<asio::io_context>();
+      m_work       = std::make_unique<asio::io_context::work>(*m_io_context);
 
       // create the socket and set all socket options
       InitializeSocket(attr_);
@@ -88,7 +88,7 @@ namespace eCAL
     void CSampleReceiverNpcap::InitializeSocket(const SReceiverAttr& attr_)
     {
       // create socket
-      m_socket = std::make_shared<ecaludp::SocketNpcap>(std::array<char, 4>{'E', 'C', 'A', 'L'});
+      m_socket = std::make_unique<ecaludp::SocketNpcap>(std::array<char, 4>{'E', 'C', 'A', 'L'});
 
       // set receive buffer size (default = 1 MB)
       {

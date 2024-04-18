@@ -33,12 +33,12 @@ namespace eCAL
 #ifdef ECAL_CORE_NPCAP_SUPPORT
       if (eCAL::UDP::IsNpcapEnabled())
       {
-        m_receiver_npcap = std::make_shared<CSampleReceiverNpcap>(attr_, has_sample_callback_, apply_sample_callback_);
+        m_receiver_npcap = std::make_unique<CSampleReceiverNpcap>(attr_, has_sample_callback_, apply_sample_callback_);
       }
       else
 #endif
       {
-        m_receiver_asio = std::make_shared<CSampleReceiverAsio>(attr_, has_sample_callback_, apply_sample_callback_);
+        m_receiver_asio = std::make_unique<CSampleReceiverAsio>(attr_, has_sample_callback_, apply_sample_callback_);
       }
     }
 
