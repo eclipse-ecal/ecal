@@ -39,6 +39,7 @@ function(ecal_install_ecal_static_library TARGET_NAME)
     ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
     LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
   )
+  ecal_install_pdbs(TARGET ${TARGET_NAME} DESTINATION "${eCAL_install_archive_dir}" COMPONENT runtime)      
 endfunction()
 
 # installing shared libraries is a li
@@ -53,6 +54,7 @@ function(ecal_install_ecal_shared_library TARGET_NAME)
     LIBRARY       DESTINATION "${eCAL_install_lib_dir}"         COMPONENT sdk
     ARCHIVE       DESTINATION "${eCAL_install_archive_dyn_dir}" COMPONENT sdk
   )
+  ecal_install_pdbs(TARGET ${TARGET_NAME} DESTINATION "${eCAL_install_bin_dir}" COMPONENT runtime)      
 endfunction()
 
 function(ecal_install_library TARGET_NAME)
@@ -70,6 +72,7 @@ function(ecal_install_static_library TARGET_NAME)
     ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
     LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
   )
+  ecal_install_pdbs(TARGET ${TARGET_NAME} DESTINATION "${eCAL_install_bin_dir}" COMPONENT runtime)      
 endfunction()
 
 # installing shared libraries is a li
@@ -82,6 +85,7 @@ function(ecal_install_shared_library TARGET_NAME)
     LIBRARY       DESTINATION "${eCAL_install_lib_dir}"         COMPONENT sdk
     ARCHIVE       DESTINATION "${eCAL_install_archive_dyn_dir}" COMPONENT sdk
   )
+  ecal_install_pdbs(TARGET ${TARGET_NAME} DESTINATION "${eCAL_install_bin_dir}" COMPONENT runtime)      
 endfunction()
 
 # These are libraries used by application (e.g. on Unix)
@@ -92,6 +96,7 @@ function(ecal_install_private_shared_library TARGET_NAME)
     RUNTIME DESTINATION "${eCAL_install_bin_dir}" COMPONENT runtime  # applies to windows .dll
     LIBRARY DESTINATION "${eCAL_install_lib_dir}" COMPONENT sdk  # applies to unix .so
   )
+  ecal_install_pdbs(TARGET ${TARGET_NAME} DESTINATION "${eCAL_install_bin_dir}" COMPONENT runtime)      
 endfunction()
 
 # Applications are all APPS that come with the eCAL Installation
@@ -121,12 +126,14 @@ function(ecal_install_app TARGET_NAME)
     INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/appmenu/ecal_${TARGET_NAME}.desktop"
             DESTINATION "${CMAKE_INSTALL_DATADIR}/applications/")
   endif()
+ecal_install_pdbs(TARGET ${TARGET_NAME} DESTINATION "${eCAL_install_app_dir}" COMPONENT app)       
 endfunction()
 
 function(ecal_install_gtest TARGET_NAME)
   install(TARGETS ${TARGET_NAME}
     RUNTIME DESTINATION  "${eCAL_install_tests_dir}" COMPONENT testing
   )
+ecal_install_pdbs(TARGET ${TARGET_NAME} DESTINATION "${eCAL_install_tests_dir}" COMPONENT testing)      
 endfunction()
 
 
@@ -136,6 +143,7 @@ function(ecal_install_sample TARGET_NAME)
   install(TARGETS ${TARGET_NAME}
     RUNTIME DESTINATION  "${eCAL_install_samples_dir}" COMPONENT samples
   )
+ecal_install_pdbs(TARGET ${TARGET_NAME} DESTINATION "${eCAL_install_samples_dir}" COMPONENT samples)       
 endfunction()
 
 # Use this function to install time plugins
@@ -145,6 +153,7 @@ install(TARGETS ${TARGET_NAME}
     RUNTIME DESTINATION  "${eCAL_install_bin_dir}/${ECAL_TIME_PLUGIN_DIR}" COMPONENT app
     LIBRARY DESTINATION  "${eCAL_install_lib_dir}/${ECAL_TIME_PLUGIN_DIR}" COMPONENT app
   )
+ecal_install_pdbs(TARGET ${TARGET_NAME} DESTINATION "${eCAL_install_bin_dir}/${ECAL_TIME_PLUGIN_DIR}" COMPONENT app)   
 endfunction()
 
 # Use this function to install monitor plugins
@@ -155,4 +164,21 @@ install(TARGETS ${TARGET_NAME}
     RUNTIME DESTINATION  "${eCAL_install_bin_dir}/${ECAL_MON_PLUGIN_DIR}" COMPONENT app
     LIBRARY DESTINATION  $<IF:$<BOOL:${WIN32}>,${eCAL_install_bin_dir}/${ECAL_MON_PLUGIN_DIR},${eCAL_install_lib_dir}/${ECAL_MON_PLUGIN_DIR}> COMPONENT app
   )
+ecal_install_pdbs(TARGET ${TARGET_NAME} DESTINATION "${eCAL_install_bin_dir}/${ECAL_MON_PLUGIN_DIR}" COMPONENT app)   
+endfunction()
+
+function(ecal_install_pdbs)
+if (MSVC)
+  set(options        )
+  set(oneValueArgs   TARGET DESTINATION COMPONENT)
+  set(multiValueArgs )
+  cmake_parse_arguments(INPUT "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+  get_target_property(TARGET_TYPE ${INPUT_TARGET} TYPE)
+  if((${TARGET_TYPE} STREQUAL "SHARED_LIBRARY") OR (${TARGET_TYPE} STREQUAL "EXECUTABLE") OR (${TARGET_TYPE} STREQUAL "MODULE_LIBRARY"))
+    install(FILES $<TARGET_PDB_FILE:${INPUT_TARGET}> DESTINATION ${INPUT_DESTINATION} COMPONENT ${INPUT_COMPONENT} OPTIONAL)
+  elseif (${TARGET_TYPE} STREQUAL "STATIC_LIBRARY")    
+    # do nothing for static libraries, as it's not supported by CMake.
+  endif()
+endif()
 endfunction()
