@@ -66,11 +66,12 @@ endif()
 # config
 ######################################
 set(ecal_config_src
+    src/config/ecal_cmd_parser.cpp
+    src/config/ecal_config.cpp
+    src/config/ecal_config_initializer.cpp
     src/config/ecal_config_reader.cpp
     src/config/ecal_config_reader.h
     src/config/ecal_config_reader_hlp.h
-    src/config/ecal_config_initializer.cpp
-    src/config/ecal_cmd_parser.cpp
     src/types/ecal_custom_data_types.cpp
 )
 

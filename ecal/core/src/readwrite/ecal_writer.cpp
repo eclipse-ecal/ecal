@@ -91,13 +91,13 @@ namespace eCAL
   {
     // initialize layer modes with configuration settings
 #if ECAL_CORE_TRANSPORT_UDP
-    m_writer.udp_mc_mode.requested = Config::GetCurrentConfig().publisher_options.use_udp_mc;
+    m_writer.udp_mc_mode.requested = Config::GetPublisherUdpMulticastMode();
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-    m_writer.shm_mode.requested    = Config::GetCurrentConfig().publisher_options.use_shm;
+    m_writer.shm_mode.requested    = Config::GetPublisherShmMode();
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-    m_writer.tcp_mode.requested    = Config::GetCurrentConfig().publisher_options.use_tcp;
+    m_writer.tcp_mode.requested    = Config::GetPublisherTcpMode();
 #endif
   }
 
@@ -116,9 +116,9 @@ namespace eCAL
     m_topic_info             = topic_info_;
     m_id                     = 0;
     m_clock                  = 0;
-    m_buffering_shm          = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_buffer_count;
-    m_zero_copy              = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_zero_copy;
-    m_acknowledge_timeout_ms = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_ack_timeout;
+    m_buffering_shm          = Config::GetMemfileBufferCount();
+    m_zero_copy              = Config::IsMemfileZerocopyEnabled();
+    m_acknowledge_timeout_ms = Config::GetMemfileAckTimeoutMs();
     m_connected              = false;
     m_ext_subscribed         = false;
     m_created                = false;
@@ -129,15 +129,15 @@ namespace eCAL
     m_topic_id = counter.str();
 
     // set registration expiration
-    const std::chrono::milliseconds registration_timeout(g_ecal_config().registration_options.getTimeoutMS());
+    const std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
     m_loc_sub_map.set_expiration(registration_timeout);
     m_ext_sub_map.set_expiration(registration_timeout);
 
     // allow to share topic type
-    m_use_ttype = Config::GetCurrentConfig().registration_options.share_ttype;
+    m_use_ttype = Config::IsTopicTypeSharingEnabled();
 
     // allow to share topic description
-    m_use_tdesc = Config::GetCurrentConfig().registration_options.share_ttype;
+    m_use_tdesc = Config::IsTopicDescriptionSharingEnabled();
 
     // mark as created
     m_created = true;
@@ -192,9 +192,9 @@ namespace eCAL
     // reset defaults
     m_id                     = 0;
     m_clock                  = 0;
-    m_buffering_shm          = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_buffer_count;
-    m_zero_copy              = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_zero_copy;
-    m_acknowledge_timeout_ms = Config::GetCurrentConfig().transport_layer_options.shm_options.memfile_ack_timeout;
+    m_buffering_shm          = Config::GetMemfileBufferCount();
+    m_zero_copy              = Config::IsMemfileZerocopyEnabled();
+    m_acknowledge_timeout_ms = Config::GetMemfileAckTimeoutMs();
     m_connected              = false;
 
     // reset subscriber maps

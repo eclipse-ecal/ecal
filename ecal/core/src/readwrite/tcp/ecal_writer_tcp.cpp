@@ -68,7 +68,7 @@ namespace eCAL
       const std::lock_guard<std::mutex> lock(g_tcp_writer_executor_mtx);
       if (!g_tcp_writer_executor)
       {
-        g_tcp_writer_executor = std::make_shared<tcp_pubsub::Executor>(Config::GetCurrentConfig().transport_layer_options.tcp_options.num_executor_writer, TcpPubsubLogger);
+        g_tcp_writer_executor = std::make_shared<tcp_pubsub::Executor>(Config::GetTcpPubsubWriterThreadpoolSize(), TcpPubsubLogger);
       }
     }
 

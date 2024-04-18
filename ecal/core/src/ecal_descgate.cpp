@@ -72,8 +72,8 @@ namespace
 namespace eCAL
 {
   CDescGate::CDescGate() :
-    m_topic_info_map  (std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout)),
-    m_service_info_map(std::chrono::milliseconds(Config::GetCurrentConfig().monitoring_options.monitoring_timeout))
+    m_topic_info_map(std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
+    m_service_info_map(std::chrono::milliseconds(Config::GetMonitoringTimeoutMs()))
   {
   }
   CDescGate::~CDescGate() = default;

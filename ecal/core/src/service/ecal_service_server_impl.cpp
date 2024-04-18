@@ -114,13 +114,13 @@ namespace eCAL
               };
 
     // start service protocol version 0
-    if (Config::GetCurrentConfig().service_options.protocol_v0)
+    if (Config::IsServiceProtocolV0Enabled())
     {
       m_tcp_server_v0 = server_manager->create_server(0, 0, service_callback, true, event_callback);
     }
 
     // start service protocol version 1
-    if (Config::GetCurrentConfig().service_options.protocol_v1)
+    if (Config::IsServiceProtocolV1Enabled())
     {
       m_tcp_server_v1 = server_manager->create_server(1, 0, service_callback, true, event_callback);
     }
@@ -322,10 +322,10 @@ namespace eCAL
 
     // might be zero in contruction phase
     unsigned short const server_tcp_port_v0(m_tcp_server_v0 ? m_tcp_server_v0->get_port() : 0);
-    if ((Config::GetCurrentConfig().service_options.protocol_v0) && (server_tcp_port_v0 == 0)) return;
+    if ((Config::IsServiceProtocolV0Enabled()) && (server_tcp_port_v0 == 0)) return;
 
     unsigned short const server_tcp_port_v1(m_tcp_server_v1 ? m_tcp_server_v1->get_port() : 0);
-    if ((Config::GetCurrentConfig().service_options.protocol_v1) && (server_tcp_port_v1 == 0)) return;
+    if ((Config::IsServiceProtocolV1Enabled()) && (server_tcp_port_v1 == 0)) return;
 
     // create service registration sample
     Registration::Sample sample;

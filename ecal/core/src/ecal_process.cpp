@@ -25,7 +25,6 @@
 #include <ecal/ecal.h>
 
 #include "ecal_def.h"
-#include "ecal/ecal_config.h"
 #include "ecal_globals.h"
 
 #include "ecal_process_stub.h"
@@ -165,14 +164,14 @@ namespace eCAL
       }
 
       sstream << "------------------------- CONFIGURATION --------------------------" << '\n';
-      sstream << "Default INI              : " << Config::GetCurrentConfig().loaded_ecal_ini_file << '\n';
+      sstream << "Default INI              : " << Config::GetLoadedEcalIniPath() << '\n';
       sstream << '\n';
 
       sstream << "------------------------- NETWORK --------------------------------" << '\n';
       sstream << "Host name                : " << Process::GetHostName() << '\n';
       sstream << "Host group name          : " << Process::GetHostGroupName() << '\n';
 
-      if (Config::GetCurrentConfig().transport_layer_options.network_enabled)
+      if (Config::IsNetworkEnabled())
       {
         sstream << "Network mode             : cloud" << '\n';
       }
@@ -180,22 +179,21 @@ namespace eCAL
       {
         sstream << "Network mode             : local" << '\n';
       }
-      
       sstream << "Network ttl              : " << UDP::GetMulticastTtl() << '\n';
-      sstream << "Network sndbuf           : " << GetBufferStr(Config::GetCurrentConfig().transport_layer_options.mc_options.sndbuf) << '\n';
-      sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetCurrentConfig().transport_layer_options.mc_options.recbuf) << '\n';
-      sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetCurrentConfig().transport_layer_options.mc_options.config_version) << '\n';
-      sstream << "Multicast group          : " << Config::GetCurrentConfig().transport_layer_options.mc_options.group << '\n';
-      sstream << "Multicast mask           : " << Config::GetCurrentConfig().transport_layer_options.mc_options.mask << '\n';
-      const int port = Config::GetCurrentConfig().transport_layer_options.mc_options.port;
+      sstream << "Network sndbuf           : " << GetBufferStr(Config::GetUdpMulticastSndBufSizeBytes()) << '\n';
+      sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetUdpMulticastRcvBufSizeBytes()) << '\n';
+      sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetUdpMulticastConfigVersion()) << '\n';
+      sstream << "Multicast group          : " << Config::GetUdpMulticastGroup() << '\n';
+      sstream << "Multicast mask           : " << Config::GetUdpMulticastMask() << '\n';
+      const int port = Config::GetUdpMulticastPort();
       sstream << "Multicast ports          : " << port << " - " << port + 10 << '\n';
-      sstream << "Multicast join all IFs   : " << (Config::GetCurrentConfig().transport_layer_options.mc_options.join_all_interfaces ? "on" : "off") << '\n';
-
+      sstream << "Multicast join all IFs   : " << (Config::IsUdpMulticastJoinAllIfEnabled() ? "on" : "off") << '\n';
+      sstream << '\n';
 
 #if ECAL_CORE_TIMEPLUGIN
       sstream << "------------------------- TIME -----------------------------------" << '\n';
-      sstream << "Synchronization realtime : " << Config::GetCurrentConfig().timesync_options.timesync_module_rt << '\n';
-      sstream << "Synchronization replay   : " << Config::GetCurrentConfig().timesync_options.timesync_module_replay << '\n';
+      sstream << "Synchronization realtime : " << Config::GetTimesyncModuleName() << '\n';
+      sstream << "Synchronization replay   : " << Config::GetTimesyncModuleReplay() << '\n';
       sstream << "State                    : ";
       if (g_timegate()->IsSynchronized()) sstream << " synchronized " << '\n';
       else                                sstream << " not synchronized " << '\n';
@@ -210,17 +208,17 @@ namespace eCAL
 #endif
 #if ECAL_CORE_SUBSCRIBER
       sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------" << '\n';
-      // TODO PG: This is probably the wrong struct and member. Which one is correct?
-      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::GetCurrentConfig().receiving_options.udp_mc_recv_enabled)  << '\n';
-      sstream << "Drop out-of-order msgs   : " << (Config::GetCurrentConfig().transport_layer_options.drop_out_of_order_messages ? "on" : "off") << '\n';
+      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::IsUdpMulticastRecEnabled()) << '\n';
+      sstream << "Drop out-of-order msgs   : " << (Config::Experimental::GetDropOutOfOrderMessages() ? "on" : "off") << '\n';
 #endif
-#ifdef ECAL_NPCAP_SUPPORT
-      if(Config::GetCurrentConfig().transport_layer_options.mc_options.npcap_enabled && !Udpcap::Initialize())
+#ifdef ECAL_CORE_NPCAP_SUPPORT
+      sstream << "Npcap UDP Reciever       : " << LayerMode(Config::IsNpcapEnabled());
+      if(Config::IsNpcapEnabled() && !Udpcap::Initialize())
       {
         sstream << " (Init FAILED!)";
       }
 #else  // ECAL_CORE_NPCAP_SUPPORT
-      if (Config::GetCurrentConfig().transport_layer_options.mc_options.npcap_enabled)
+      if (Config::IsNpcapEnabled())
       {
         sstream << " (Npcap is enabled, but not configured via CMake!)";
       }
@@ -250,7 +248,7 @@ namespace eCAL
 
     std::string GetHostGroupName()
     {
-      return Config::GetCurrentConfig().transport_layer_options.shm_options.host_group_name.empty() ? GetHostName() : Config::GetCurrentConfig().transport_layer_options.shm_options.host_group_name;
+      return Config::GetHostGroupName().empty() ? GetHostName() : Config::GetHostGroupName();
     }
 
     std::string GetUnitName()
@@ -650,7 +648,7 @@ namespace
 
     // -------------------- terminal_emulator command check --------------------
 
-    const std::string terminal_emulator_command = eCAL::Config::GetCurrentConfig().application_options.startup_options.terminal_emulator;
+    const std::string terminal_emulator_command = eCAL::Config::GetTerminalEmulatorCommand();
     if (!terminal_emulator_command.empty())
     {
       STD_COUT_DEBUG("[PID " << getpid() << "]: " << "ecal.ini terminal emulator command is: " << terminal_emulator_command << std::endl);

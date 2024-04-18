@@ -76,7 +76,8 @@ namespace eCAL
     /////////////////////////////////////
 
     ECAL_API std::string       GetTimesyncModuleName                ();
-
+    ECAL_API std::string       GetTimesyncModuleReplay              ();
+    
     /////////////////////////////////////
     // process
     /////////////////////////////////////
