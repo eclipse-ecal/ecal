@@ -280,7 +280,7 @@ jobs:
     # https://github.com/OrhanKupusoglu/code-sign-action
     - name: Sign the installer
       if: env.IS_GITHUB_SIGNING_ENABLED == 'true'
-      uses: OrhanKupusoglu/code-sign-action@v5.5.1
+      uses: KerstinKeller/code-sign-action@patch-1
       with:
         cert_body: ${{ secrets.CERT_BODY }}
         cert_pswd: ${{ secrets.CERT_PSWD }}
