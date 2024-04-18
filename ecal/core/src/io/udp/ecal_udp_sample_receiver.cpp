@@ -50,13 +50,31 @@ namespace eCAL
 
       // read sample_name size
       const unsigned short sample_name_size = ((unsigned short*)(msg_buffer_.data()))[0];
+
+      // check for damaged data
+      if (sample_name_size > msg_buffer_.size())
+      {
+        std::cerr << "CSampleReceiver: Received damaged data. Wrong sample name size." << '\n';
+        return(0);
+      }
+
       // read sample_name
-      const std::string    sample_name(msg_buffer_.data() + sizeof(sample_name_size));
+      const std::string sample_name(msg_buffer_.data() + sizeof(sample_name_size));
+
+      // calculate payload offset
+      auto payload_offset = sizeof(sample_name_size) + sample_name_size;
+
+      // check for damaged data
+      if (payload_offset > msg_buffer_.size())
+      {
+        std::cerr << "CSampleReceiverAsio: Received damaged data. Wrong payload buffer offset." << '\n';
+        return(0);
+      }
 
       if (m_sample_receiver->m_has_sample_callback(sample_name))
       {
         // read sample
-        if (!m_ecal_sample.ParseFromArray(msg_buffer_.data() + sizeof(sample_name_size) + sample_name_size, static_cast<int>(msg_buffer_.size() - (sizeof(sample_name_size) + sample_name_size)))) return(0);
+        if (!m_ecal_sample.ParseFromArray(msg_buffer_.data() + payload_offset, static_cast<int>(msg_buffer_.size() - (sizeof(sample_name_size) + sample_name_size)))) return(0);
 #ifndef NDEBUG
         // log it
         eCAL::Logging::Log(log_level_debug3, sample_name + "::UDP Sample Completed");
