@@ -30,8 +30,8 @@ namespace eCAL
 {
   namespace UDP
   {
-    CSampleReceiverNpcap::CSampleReceiverNpcap(const SReceiverAttr& attr_) :
-      CSampleReceiverBase(attr_, m_has_sample_callback, m_apply_sample_callback)
+    CSampleReceiverNpcap::CSampleReceiverNpcap(const SReceiverAttr& attr_, const HasSampleCallbackT& has_sample_callback_, const ApplySampleCallbackT& apply_sample_callback_) :
+      CSampleReceiverBase(attr_, has_sample_callback_, apply_sample_callback_)
     {
       // initialize io context
       m_io_context = std::make_unique<asio::io_context>();

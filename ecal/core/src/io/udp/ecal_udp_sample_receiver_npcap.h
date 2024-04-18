@@ -36,7 +36,7 @@ namespace eCAL
     class CSampleReceiverNpcap : public CSampleReceiverBase
     {
     public:
-      CSampleReceiverNpcap(const SReceiverAttr& attr_);
+      CSampleReceiverNpcap(const SReceiverAttr& attr_, const HasSampleCallbackT& has_sample_callback_, const ApplySampleCallbackT& apply_sample_callback_);
       virtual ~CSampleReceiverNpcap();
 
       bool AddMultiCastGroup(const char* ipaddr_);

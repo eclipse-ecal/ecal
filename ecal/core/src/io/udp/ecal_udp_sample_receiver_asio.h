@@ -36,7 +36,7 @@ namespace eCAL
     class CSampleReceiverAsio : public CSampleReceiverBase
     {
     public:
-      CSampleReceiverAsio(const SReceiverAttr& attr_);
+      CSampleReceiverAsio(const SReceiverAttr& attr_, const HasSampleCallbackT& has_sample_callback_, const ApplySampleCallbackT& apply_sample_callback_);
       virtual ~CSampleReceiverAsio();
 
       bool AddMultiCastGroup(const char* ipaddr_);
