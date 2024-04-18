@@ -29,7 +29,6 @@
 
 #include "ecal_process_stub.h"
 #include "ecal_utils/command_line.h"
-#include "ecal_utils/ecal_utils.h"
 #include "ecal_utils/str_convert.h"
 
 #include "config/ecal_config_reader_hlp.h"
@@ -68,6 +67,7 @@
 #include <sys/select.h>
 #include <limits.h>
 #include <netinet/in.h>
+#include <ecal_utils/ecal_utils.h>
 #endif /* ECAL_OS_LINUX */
 
 #ifdef ECAL_OS_MACOS
@@ -82,7 +82,7 @@
 #endif
 
 #ifdef ECAL_CORE_NPCAP_SUPPORT
-#include <udpcap/npcap_helpers.h>
+#include <ecaludp/npcap_helpers.h>
 #endif // ECAL_CORE_NPCAP_SUPPORT
 
 #ifndef NDEBUG
@@ -213,7 +213,7 @@ namespace eCAL
 #endif
 #ifdef ECAL_CORE_NPCAP_SUPPORT
       sstream << "Npcap UDP Reciever       : " << LayerMode(Config::IsNpcapEnabled());
-      if(Config::IsNpcapEnabled() && !Udpcap::Initialize())
+      if(Config::IsNpcapEnabled() && !ecaludp::npcap::is_initialized())
       {
         sstream << " (Init FAILED!)";
       }

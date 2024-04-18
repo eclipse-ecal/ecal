@@ -62,7 +62,7 @@ namespace eCAL
     m_topic_id    = topic_id_;
 
     // set network attributes
-    IO::UDP::SSenderAttr attr;
+    eCAL::UDP::SSenderAttr attr;
     attr.address   = UDP::GetTopicPayloadAddress(topic_name_);
     attr.port      = UDP::GetPayloadPort();
     attr.ttl       = UDP::GetMulticastTtl();

@@ -69,7 +69,7 @@ namespace eCAL
     if (m_use_registration_udp)
     {
       // set network attributes
-      IO::UDP::SSenderAttr attr;
+      eCAL::UDP::SSenderAttr attr;
       attr.address   = UDP::GetRegistrationAddress();
       attr.port      = UDP::GetRegistrationPort();
       attr.ttl       = UDP::GetMulticastTtl();
