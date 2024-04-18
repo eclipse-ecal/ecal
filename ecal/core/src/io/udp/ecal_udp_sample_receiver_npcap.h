@@ -37,7 +37,7 @@ namespace eCAL
     {
     public:
       CSampleReceiverNpcap(const SReceiverAttr& attr_, const HasSampleCallbackT& has_sample_callback_, const ApplySampleCallbackT& apply_sample_callback_);
-      virtual ~CSampleReceiverNpcap() override;
+      ~CSampleReceiverNpcap() override;
 
       bool AddMultiCastGroup(const char* ipaddr_) override;
       bool RemMultiCastGroup(const char* ipaddr_) override;
@@ -50,6 +50,8 @@ namespace eCAL
 
     private:
       void InitializeSocket(const SReceiverAttr& attr_);
+      bool JoinMultiCastGroup(const char* ipaddr_);
+
       void Receive();
 
       std::unique_ptr<asio::io_context>       m_io_context;

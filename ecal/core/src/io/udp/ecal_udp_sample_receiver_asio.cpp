@@ -46,7 +46,7 @@ namespace eCAL
       InitializeSocket(attr_);
 
       // join multicast group
-      AddMultiCastGroup(attr_.address.c_str());
+      JoinMultiCastGroup(attr_.address.c_str());
 
       // run the io context
       m_io_thread = std::thread([this] { m_io_context->run(); });
@@ -73,30 +73,7 @@ namespace eCAL
 
     bool CSampleReceiverAsio::AddMultiCastGroup(const char* ipaddr_)
     {
-      if (!m_broadcast)
-      {
-#ifdef __linux__
-        // TODO: NPCAP - How to implement this ? native_handle() not provided
-        if (eCAL::UDP::IsUdpMulticastJoinAllIfEnabled())
-        {
-          if (!IO::UDP::set_socket_mcast_group_option(m_socket->native_handle(), ipaddr_, MCAST_JOIN_GROUP))
-          {
-            return(false);
-          }
-        }
-        else
-#endif
-        {
-          asio::error_code ec;
-          m_socket->set_option(asio::ip::multicast::join_group(asio::ip::make_address(ipaddr_)), ec); // NOLINT(*-unused-return-value)
-          if (ec)
-          {
-            std::cerr << "CUDPReceiverAsio: Unable to join multicast group: " << ec.message() << '\n';
-            return(false);
-          }
-        }
-      }
-      return(true);
+      return JoinMultiCastGroup(ipaddr_);
     }
 
     bool CSampleReceiverAsio::RemMultiCastGroup(const char* ipaddr_)
@@ -187,6 +164,34 @@ namespace eCAL
           return;
         }
       }
+    }
+
+    bool CSampleReceiverAsio::JoinMultiCastGroup(const char* ipaddr_)
+    {
+      if (!m_broadcast)
+      {
+#ifdef __linux__
+        // TODO: NPCAP - How to implement this ? native_handle() not provided
+        if (eCAL::UDP::IsUdpMulticastJoinAllIfEnabled())
+        {
+          if (!IO::UDP::set_socket_mcast_group_option(m_socket->native_handle(), ipaddr_, MCAST_JOIN_GROUP))
+          {
+            return(false);
+          }
+        }
+        else
+#endif
+        {
+          asio::error_code ec;
+          m_socket->set_option(asio::ip::multicast::join_group(asio::ip::make_address(ipaddr_)), ec); // NOLINT(*-unused-return-value)
+          if (ec)
+          {
+            std::cerr << "CUDPReceiverAsio: Unable to join multicast group: " << ec.message() << '\n';
+            return(false);
+          }
+        }
+      }
+      return(true);
     }
 
     void CSampleReceiverAsio::Receive()

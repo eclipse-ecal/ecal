@@ -41,7 +41,7 @@ namespace eCAL
       InitializeSocket(attr_);
 
       // join multicast group
-      AddMultiCastGroup(attr_.address.c_str());
+      JoinMultiCastGroup(attr_.address.c_str());
 
       // run the io context
       m_io_thread = std::thread([this] { m_io_context->run(); });
@@ -60,15 +60,7 @@ namespace eCAL
 
     bool CSampleReceiverNpcap::AddMultiCastGroup(const char* ipaddr_)
     {
-      if (!m_broadcast)
-      {
-        if (!m_socket->join_multicast_group(asio::ip::make_address_v4(ipaddr_)))
-        {
-          std::cerr << "CSampleReceiverNpcap: Unable to join multicast group." << '\n';
-          return false;
-        }
-      }
-      return true;
+      return JoinMultiCastGroup(ipaddr_);
     }
 
     bool CSampleReceiverNpcap::RemMultiCastGroup(const char* ipaddr_)
@@ -112,6 +104,19 @@ namespace eCAL
       {
         m_socket->set_multicast_loopback_enabled(attr_.loopback);
       }
+    }
+
+    bool CSampleReceiverNpcap::JoinMultiCastGroup(const char* ipaddr_)
+    {
+      if (!m_broadcast)
+      {
+        if (!m_socket->join_multicast_group(asio::ip::make_address_v4(ipaddr_)))
+        {
+          std::cerr << "CSampleReceiverNpcap: Unable to join multicast group." << '\n';
+          return false;
+        }
+      }
+      return true;
     }
 
     void CSampleReceiverNpcap::Receive()

@@ -50,6 +50,8 @@ namespace eCAL
 
     private:
       void InitializeSocket(const SReceiverAttr& attr_);
+      bool JoinMultiCastGroup(const char* ipaddr_);
+
       void Receive();
 
       std::unique_ptr<asio::io_context>       m_io_context;
