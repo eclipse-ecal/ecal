@@ -81,9 +81,9 @@ target_include_directories(${PROJECT_NAME}
 create_targets_protobuf()
 
 target_link_libraries(${PROJECT_NAME}
-  protobuf::libprotobuf
   Threads::Threads
-  eCAL::core eCAL::app_pb
+  eCAL::core_protobuf
+  eCAL::app_pb
   $<$<BOOL:${WIN32}>:Pdh>
   $<$<BOOL:${WIN32}>:wbemuuid.lib>)
 

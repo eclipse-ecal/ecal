@@ -26,7 +26,7 @@
 #include <ecal/msg/string/subscriber.h>
 
 #include <ecal/msg/protobuf/dynamic_subscriber.h>
-#include <ecal/protobuf/ecal_proto_decoder.h>
+#include <ecal/msg/protobuf/ecal_proto_decoder.h>
 
 #include "tui/viewmodel/message_visualization/message_visualization.hpp"
 

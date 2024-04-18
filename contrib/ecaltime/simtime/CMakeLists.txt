@@ -45,7 +45,7 @@ ecal_add_time_plugin(${PROJECT_NAME} SHARED ${ecal_time_simtime_src} ${ecal_time
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE ECAL_TIME_PLUGIN_API_EXPORT)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core)
+target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core_protobuf)
 target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::ecaltime_pb)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)

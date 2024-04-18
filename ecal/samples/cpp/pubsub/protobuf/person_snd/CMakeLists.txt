@@ -38,8 +38,8 @@ ecal_add_sample(${PROJECT_NAME} ${person_snd_src})
 PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${person_snd_proto})
 
 target_link_libraries(${PROJECT_NAME}
-    eCAL::core
-    protobuf::libprotobuf
+  PRIVATE
+    eCAL::core_protobuf
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)

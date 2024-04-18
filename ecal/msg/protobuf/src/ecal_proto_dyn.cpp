@@ -21,30 +21,113 @@
  * dynamic protobuf message decoder
 **/
 
-#include <ecal/protobuf/ecal_proto_dyn.h>
+#include <ecal/msg/protobuf/ecal_proto_dyn.h>
 
 #include <stdio.h>
 #include <iostream>
 #include <sstream>
 #include <fstream>
 
+#include <google/protobuf/stubs/common.h>
+
 namespace eCAL
 {
 namespace protobuf
 {
 
+#if GOOGLE_PROTOBUF_VERSION >= 5026000
   class ParserErrorCollector : public google::protobuf::io::ErrorCollector
   {
   public:
-    ParserErrorCollector() {}
-    ~ParserErrorCollector() {}
+    ParserErrorCollector() = default;
+    ~ParserErrorCollector() override = default;
 
     std::string Get() { return(m_ss.str()); }
 
     // Indicates that there was an error in the input at the given line and
     // column numbers.  The numbers are zero-based, so you may want to add
     // 1 to each before printing them.
-    void AddError(int line_, int column_, const std::string& msg_)
+    void RecordError(int line_,
+      google::protobuf::io::ColumnNumber column_,
+      absl::string_view message_) override
+    {
+      Add(line_, column_, "ERROR", message_);
+    }
+
+    // Indicates that there was a warning in the input at the given line and
+    // column numbers.  The numbers are zero-based, so you may want to add
+    // 1 to each before printing them.
+    void RecordWarning(int line_, 
+      google::protobuf::io::ColumnNumber column_,
+      absl::string_view message_) override
+    {
+      Add(line_, column_, "WARNING: ", message_);
+    }
+
+  private:
+    void Add(int line_, google::protobuf::io::ColumnNumber column_, const std::string& type_, absl::string_view message_)
+    {
+      m_ss << line_ << ":" << column_ << " " << type_ << ": " << message_ << std::endl;
+    }
+
+    std::stringstream m_ss;
+};
+
+  class DescriptorErrorCollector : public google::protobuf::DescriptorPool::ErrorCollector
+  {
+  public:
+    DescriptorErrorCollector() = default;
+    ~DescriptorErrorCollector() override {}
+
+    std::string Get() { return(m_ss.str()); }
+
+    void RecordError(absl::string_view filename,
+      absl::string_view element_name,
+      const google::protobuf::Message* descriptor,
+      ErrorLocation location,
+      absl::string_view message) override
+    {
+      Add(filename, element_name, descriptor, location, "ERROR", message);
+    }
+
+    void RecordWarning(absl::string_view filename,
+      absl::string_view element_name,
+      const google::protobuf::Message* descriptor,
+      ErrorLocation location,
+      absl::string_view message) override
+    {
+      Add(filename, element_name, descriptor, location, "WARNING", message);
+    }
+
+  private:
+    void Add(
+      absl::string_view filename,
+      absl::string_view element_name,
+      const google::protobuf::Message* /*descriptor*/,
+      ErrorLocation location,
+      const std::string& type,
+      absl::string_view message
+    )
+    {
+      m_ss << filename << " " << element_name << " " << location << " " << type  << ": " << message << std::endl;
+    }
+
+    std::stringstream m_ss;
+  };
+
+#else
+  class ParserErrorCollector : public google::protobuf::io::ErrorCollector
+  {
+  public:
+      ParserErrorCollector() = default;
+      ~ParserErrorCollector() override = default;
+
+    std::string Get() { return(m_ss.str()); }
+
+    // Indicates that there was an error in the input at the given line and
+    // column numbers.  The numbers are zero-based, so you may want to add
+    // 1 to each before printing them.
+    void AddError(int line_, int column_, const std::string& msg_) override
     {
       Add(line_, column_, "ERROR: " + msg_);
     }
@@ -52,7 +135,7 @@ namespace protobuf
     // Indicates that there was a warning in the input at the given line and
     // column numbers.  The numbers are zero-based, so you may want to add
     // 1 to each before printing them.
-    void AddWarning(int line_, int column_, const std::string& msg_)
+    void AddWarning(int line_, int column_, const std::string& msg_) override
     {
       Add(line_, column_, "WARNING: " + msg_);
     }
@@ -69,8 +152,8 @@ namespace protobuf
   class DescriptorErrorCollector : public google::protobuf::DescriptorPool::ErrorCollector
   {
   public:
-    DescriptorErrorCollector() {}
-    ~DescriptorErrorCollector() {}
+    DescriptorErrorCollector() = default;
+    ~DescriptorErrorCollector() override = default;
 
     std::string Get() { return(m_ss.str()); }
 
@@ -80,7 +163,7 @@ namespace protobuf
       const google::protobuf::Message* descriptor,    // Descriptor of the erroneous element.
       ErrorLocation location,                         // One of the location constants, above.
       const std::string& message                      // Human-readable error message.
-    )
+    ) override
     {
       Add(filename, element_name, descriptor, location, "ERROR: " + message);
     }
@@ -91,7 +174,7 @@ namespace protobuf
       const google::protobuf::Message* descriptor,    // Descriptor of the erroneous element.
       ErrorLocation location,                         // One of the location constants, above.
       const std::string& message                      // Human-readable error message.
-    )
+    ) override
     {
       Add(filename, element_name, descriptor, location, "WARNING: " + message);
     }
@@ -110,6 +193,7 @@ namespace protobuf
 
     std::stringstream m_ss;
   };
+#endif
 
   google::protobuf::Message* CProtoDynDecoder::GetProtoMessageFromFile(const std::string& proto_filename_, const std::string& msg_type_, std::string& error_s_)
   {
@@ -151,7 +235,7 @@ namespace protobuf
 
     // create message object
     google::protobuf::Message* proto_msg = GetProtoMessageFromDescriptorSet(pset, msg_type_, error_s_);
-    if (!proto_msg)
+    if (proto_msg == nullptr)
     {
       return(nullptr);
     }
@@ -232,10 +316,6 @@ namespace protobuf
 
   bool CProtoDynDecoder::GetFileDescriptorFromFile(const std::string& proto_filename_, google::protobuf::FileDescriptorProto* file_desc_proto_, std::string& error_s_)
   {
-    using namespace google::protobuf;
-    using namespace google::protobuf::io;
-    using namespace google::protobuf::compiler;
-
     std::ifstream fs(proto_filename_);
     if (!fs.is_open())
     {
@@ -279,6 +359,26 @@ namespace protobuf
     }
 
     return(true);
+  }
+
+  bool CProtoDynDecoder::GetServiceMessageDescFromType(const google::protobuf::ServiceDescriptor* service_desc_, const std::string& type_name_, std::string& type_desc_, std::string& error_s_)
+  {
+    const google::protobuf::FileDescriptor* file_desc = service_desc_->file();
+    if (file_desc == nullptr) return false;
+
+    const std::string file_desc_s = file_desc->DebugString();
+    google::protobuf::FileDescriptorProto file_desc_proto;
+    if (!GetFileDescriptorFromString(file_desc_s, &file_desc_proto, error_s_)) return false;
+
+    google::protobuf::FileDescriptorSet pset;
+    google::protobuf::FileDescriptorProto* pdesc = pset.add_file();
+    pdesc->CopyFrom(file_desc_proto);
+
+    const std::shared_ptr<google::protobuf::Message> req_msg(GetProtoMessageFromDescriptorSet(pset, type_name_, error_s_));
+    if (!req_msg) return false;
+
+    type_desc_ = pset.SerializeAsString();
+    return true;
   }
 }
 }

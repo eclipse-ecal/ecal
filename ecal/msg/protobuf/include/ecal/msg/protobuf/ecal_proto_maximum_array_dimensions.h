@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/protobuf/ecal_proto_visitor.h>
+#include <ecal/msg/protobuf/ecal_proto_visitor.h>
 
 #include <map>
 #include <string>

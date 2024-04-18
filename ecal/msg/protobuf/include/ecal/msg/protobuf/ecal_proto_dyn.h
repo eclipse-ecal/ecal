@@ -45,7 +45,7 @@
 #pragma GCC diagnostic pop
 #endif
 
-#include <ecal/protobuf/ecal_proto_hlp.h>
+#include <ecal/msg/protobuf/ecal_proto_hlp.h>
 
 namespace eCAL
 {
@@ -168,6 +168,7 @@ namespace protobuf
     **/
     static bool GetFileDescriptorFromString(const std::string& proto_string_, google::protobuf::FileDescriptorProto* file_desc_proto_, std::string& error_s_);
 
+      bool GetServiceMessageDescFromType(const google::protobuf::ServiceDescriptor* service_desc_, const std::string& type_name_, std::string& type_desc_, std::string& error_s_);
   protected:
     google::protobuf::DescriptorPool         m_descriptor_pool;
     google::protobuf::DynamicMessageFactory  m_message_factory;

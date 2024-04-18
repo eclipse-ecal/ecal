@@ -81,7 +81,8 @@ ENDIF(MSVC)
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 target_link_libraries(${PROJECT_NAME}
-    eCAL::core
+  PRIVATE
+    eCAL::core_protobuf
     eCAL::core_pb
     eCAL::app_pb
     Qt${QT_VERSION_MAJOR}::Core

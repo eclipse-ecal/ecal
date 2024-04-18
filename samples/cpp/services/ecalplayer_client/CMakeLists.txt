@@ -31,7 +31,8 @@ set(ecalplayer_client_src
 ecal_add_sample(${PROJECT_NAME} ${ecalplayer_client_src})
 
 target_link_libraries(${PROJECT_NAME} 
-    eCAL::core
+  PRIVATE
+    eCAL::core_protobuf
     eCAL::app_pb
 )
 
