@@ -18,34 +18,34 @@
 */
 
 /**
- * @brief  UDP sample receiver to receive messages of type eCAL::Sample
+ * @brief  UDP sample receiver base class
 **/
 
 #pragma once
 
-#include "io/udp/ecal_udp_sample_receiver_base.h"
-
-#include "ecal_udp_sample_receiver_asio.h"
-#ifdef ECAL_CORE_NPCAP_SUPPORT
-#include "ecal_udp_sample_receiver_npcap.h"
-#endif
-
-#include <memory>
+#include "io/udp/ecal_udp_receiver_attr.h"
 
 namespace eCAL
 {
   namespace UDP
   {
-    class CSampleReceiver : public CSampleReceiverBase
+    class CSampleReceiverBase
     {
     public:
-      CSampleReceiver(const SReceiverAttr& attr_, const HasSampleCallbackT& has_sample_callback_, const ApplySampleCallbackT& apply_sample_callback_);
+      virtual ~CSampleReceiverBase() = default;
 
-      bool AddMultiCastGroup(const char* ipaddr_) override;
-      bool RemMultiCastGroup(const char* ipaddr_) override;
+      virtual bool AddMultiCastGroup(const char* ipaddr_) = 0;
+      virtual bool RemMultiCastGroup(const char* ipaddr_) = 0;
 
-    private:
-      std::unique_ptr<CSampleReceiverBase> m_sample_receiver;
+    protected:
+      CSampleReceiverBase(const SReceiverAttr& attr_, const HasSampleCallbackT& has_sample_callback_, const ApplySampleCallbackT& apply_sample_callback_)
+        : m_has_sample_callback(has_sample_callback_), m_apply_sample_callback(apply_sample_callback_), m_broadcast(attr_.broadcast)
+      {
+      }
+
+      HasSampleCallbackT   m_has_sample_callback;
+      ApplySampleCallbackT m_apply_sample_callback;
+      bool                 m_broadcast = false;
     };
   }
 }

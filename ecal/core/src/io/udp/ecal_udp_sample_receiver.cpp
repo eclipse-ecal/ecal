@@ -28,39 +28,29 @@ namespace eCAL
 {
   namespace UDP
   {
-    CSampleReceiver::CSampleReceiver(const SReceiverAttr& attr_, const HasSampleCallbackT& has_sample_callback_, const ApplySampleCallbackT& apply_sample_callback_)
+    CSampleReceiver::CSampleReceiver(const SReceiverAttr& attr_, const HasSampleCallbackT& has_sample_callback_, const ApplySampleCallbackT& apply_sample_callback_) :
+      CSampleReceiverBase(attr_, has_sample_callback_, apply_sample_callback_)
     {
 #ifdef ECAL_CORE_NPCAP_SUPPORT
       if (eCAL::UDP::IsNpcapEnabled())
       {
-        m_receiver_npcap = std::make_unique<CSampleReceiverNpcap>(attr_, has_sample_callback_, apply_sample_callback_);
+        m_sample_receiver = std::make_unique<CSampleReceiverNpcap>(attr_);
       }
       else
 #endif
       {
-        m_receiver_asio = std::make_unique<CSampleReceiverAsio>(attr_, has_sample_callback_, apply_sample_callback_);
+        m_sample_receiver = std::make_unique<CSampleReceiverAsio>(attr_);
       }
     }
 
     bool CSampleReceiver::AddMultiCastGroup(const char* ipaddr_)
     {
-      if (m_receiver_asio)  return m_receiver_asio->AddMultiCastGroup(ipaddr_);
-
-#ifdef ECAL_CORE_NPCAP_SUPPORT
-      if (m_receiver_npcap) return m_receiver_npcap->AddMultiCastGroup(ipaddr_);
-#endif
-
-      return false;
+      return m_sample_receiver->AddMultiCastGroup(ipaddr_);
     }
 
     bool CSampleReceiver::RemMultiCastGroup(const char* ipaddr_)
     {
-      if (m_receiver_asio)  return m_receiver_asio->RemMultiCastGroup(ipaddr_);
-
-#ifdef ECAL_CORE_NPCAP_SUPPORT
-      if (m_receiver_npcap) return m_receiver_npcap->RemMultiCastGroup(ipaddr_);
-#endif
-      return false;
+      return m_sample_receiver->RemMultiCastGroup(ipaddr_);
     }
   }
 }

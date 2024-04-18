@@ -43,7 +43,12 @@ namespace eCAL
     CSampleSender::~CSampleSender()
     {
       // close socket
-      m_socket->close();
+      asio::error_code ec;
+      m_socket->close(ec);
+      if (ec)
+      {
+        std::cerr << "CSampleSender: Error closing socket: " << ec.message() << '\n';
+      }
     }
 
     void CSampleSender::InitializeSocket(const SSenderAttr& attr_)
@@ -122,7 +127,7 @@ namespace eCAL
 
       const asio::socket_base::message_flags flags(0);
       asio::error_code ec;
-      size_t sent = m_socket->send_to({ sample_name_size_asio_buffer, sample_name_asio_buffer, serialized_sample_asio_buffer }, m_destination_endpoint, flags, ec);
+      const size_t sent = m_socket->send_to({ sample_name_size_asio_buffer, sample_name_asio_buffer, serialized_sample_asio_buffer }, m_destination_endpoint, flags, ec);
       if (ec)
       {
         std::cout << "CSampleSender::Send failed with: \'" << ec.message() << "\'" << '\n';

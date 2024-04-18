@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "io/udp/ecal_udp_receiver_attr.h"
+#include "io/udp/ecal_udp_sample_receiver_base.h"
 
 #include <ecaludp/socket_npcap.h>
 #include <memory>
@@ -33,11 +33,10 @@ namespace eCAL
 {
   namespace UDP
   {
-    class CSampleReceiverNpcap
+    class CSampleReceiverNpcap : public CSampleReceiverBase
     {
     public:
-
-      CSampleReceiverNpcap(const SReceiverAttr& attr_, const HasSampleCallbackT& has_sample_callback_, const ApplySampleCallbackT& apply_sample_callback_);
+      CSampleReceiverNpcap(const SReceiverAttr& attr_);
       virtual ~CSampleReceiverNpcap();
 
       bool AddMultiCastGroup(const char* ipaddr_);
@@ -52,10 +51,6 @@ namespace eCAL
     private:
       void InitializeSocket(const SReceiverAttr& attr_);
       void Receive();
-
-      HasSampleCallbackT                      m_has_sample_callback;
-      ApplySampleCallbackT                    m_apply_sample_callback;
-      bool                                    m_broadcast = false;
 
       std::unique_ptr<asio::io_context>       m_io_context;
       std::unique_ptr<asio::io_context::work> m_work;

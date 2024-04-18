@@ -153,6 +153,7 @@ set(ecal_io_udp_src
     src/io/udp/ecal_udp_sample_receiver.h
     src/io/udp/ecal_udp_sample_receiver_asio.cpp
     src/io/udp/ecal_udp_sample_receiver_asio.h
+    src/io/udp/ecal_udp_sample_receiver_base.h
     src/io/udp/ecal_udp_sample_sender.cpp
     src/io/udp/ecal_udp_sample_sender.h
     src/io/udp/ecal_udp_sender_attr.h

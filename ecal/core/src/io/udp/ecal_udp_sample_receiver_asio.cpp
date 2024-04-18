@@ -35,9 +35,8 @@ namespace eCAL
 {
   namespace UDP
   {
-    CSampleReceiverAsio::CSampleReceiverAsio(const SReceiverAttr& attr_, const HasSampleCallbackT& has_sample_callback_, const ApplySampleCallbackT& apply_sample_callback_) :
-      m_has_sample_callback(has_sample_callback_), m_apply_sample_callback(apply_sample_callback_),
-      m_broadcast(attr_.broadcast)
+    CSampleReceiverAsio::CSampleReceiverAsio(const SReceiverAttr& attr_) :
+      CSampleReceiverBase(attr_, m_has_sample_callback, m_apply_sample_callback)
     {
       // initialize io context
       m_io_context = std::make_unique<asio::io_context>();
@@ -59,7 +58,12 @@ namespace eCAL
     CSampleReceiverAsio::~CSampleReceiverAsio()
     {
       // cancel async socket operations
-      m_socket->cancel();
+      asio::error_code ec;
+      m_socket->cancel(ec);
+      if (ec)
+      {
+        std::cerr << "CSampleReceiverAsio: Error cancelling socket: " << ec.message() << '\n';
+      }
 
       // stop io context
       m_io_context->stop();
@@ -135,7 +139,7 @@ namespace eCAL
         m_socket->open(listen_endpoint.protocol(), ec); // NOLINT(*-unused-return-value)
         if (ec)
         {
-          std::cerr << "CSampleReceiver: Unable to open socket: " << ec.message() << '\n';
+          std::cerr << "CSampleReceiverAsio: Unable to open socket: " << ec.message() << '\n';
           return;
         }
       }
@@ -146,7 +150,7 @@ namespace eCAL
         m_socket->set_option(asio::ip::udp::socket::reuse_address(true), ec); // NOLINT(*-unused-return-value)
         if (ec)
         {
-          std::cerr << "CSampleReceiver: Unable to set reuse-address option: " << ec.message() << '\n';
+          std::cerr << "CSampleReceiverAsio: Unable to set reuse-address option: " << ec.message() << '\n';
         }
       }
 
@@ -157,7 +161,7 @@ namespace eCAL
         m_socket->set_option(loopback, ec); // NOLINT(*-unused-return-value)
         if (ec)
         {
-          std::cerr << "CSampleReceiver: Unable to enable loopback: " << ec.message() << '\n';
+          std::cerr << "CSampleReceiverAsio: Unable to enable loopback: " << ec.message() << '\n';
         }
       }
 
@@ -170,7 +174,7 @@ namespace eCAL
         m_socket->set_option(recbufsize, ec); // NOLINT(*-unused-return-value)
         if (ec)
         {
-          std::cerr << "CSampleReceiver: Unable to set receive buffer size: " << ec.message() << '\n';
+          std::cerr << "CSampleReceiverAsio: Unable to set receive buffer size: " << ec.message() << '\n';
         }
       }
       // bind socket
@@ -179,7 +183,7 @@ namespace eCAL
         m_socket->bind(listen_endpoint, ec); // NOLINT(*-unused-return-value)
         if (ec)
         {
-          std::cerr << "CSampleReceiver: Unable to bind socket to " << listen_endpoint.address().to_string() << ":" << listen_endpoint.port() << ": " << ec.message() << '\n';
+          std::cerr << "CSampleReceiverAsio: Unable to bind socket to " << listen_endpoint.address().to_string() << ":" << listen_endpoint.port() << ": " << ec.message() << '\n';
           return;
         }
       }
@@ -193,7 +197,13 @@ namespace eCAL
           // triggered by m_socket->cancel in destructor
           if (ec == asio::error::operation_aborted)
           {
-            m_socket->close();
+            asio::error_code ec_close_op;
+            m_socket->close(ec_close_op);
+            if (ec_close_op)
+            {
+              std::cerr << "CSampleReceiverAsio: Error closing socket: " << ec_close_op.message() << '\n';
+            }
+
             return;
           }
 
