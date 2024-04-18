@@ -139,7 +139,7 @@ namespace eCAL
     if(m_filter_mask_udp != 0)
     {
       // set logging send network attributes
-      IO::UDP::SSenderAttr attr;
+      eCAL::UDP::SSenderAttr attr;
       attr.address   = UDP::GetLoggingAddress();
       attr.port      = UDP::GetLoggingPort();
       attr.ttl       = UDP::GetMulticastTtl();
@@ -152,7 +152,7 @@ namespace eCAL
     }
 
     // set logging receive network attributes
-    IO::UDP::SReceiverAttr attr;
+    eCAL::UDP::SReceiverAttr attr;
     attr.address   = UDP::GetLoggingAddress();
     attr.port      = UDP::GetLoggingPort();
     attr.broadcast = UDP::IsBroadcast();

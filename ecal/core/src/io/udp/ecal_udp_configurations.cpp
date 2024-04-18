@@ -30,6 +30,16 @@ namespace eCAL
   namespace UDP
   {
     /**
+     * @brief Create eCAL specific UDP datagram header.
+     *
+     * @return The four magic letters :).
+     */
+    std::array<char, 4> GeteCALDatagramHeader()
+    {
+      return std::array<char, 4>{ 'E', 'C', 'A', 'L' };
+    }
+
+    /**
      * @brief IsBroadcast() retrieves if we communicate via UDP Broadcast or UDP Multicast.
      *
      * @return True if broadcast mode is active.

@@ -56,7 +56,7 @@ namespace eCAL
       m_local_mode = UDP::IsBroadcast();
 
       // set network attributes
-      IO::UDP::SReceiverAttr attr;
+      eCAL::UDP::SReceiverAttr attr;
       attr.address   = UDP::GetPayloadAddress();
       attr.port      = UDP::GetPayloadPort();
       attr.broadcast = UDP::IsBroadcast();

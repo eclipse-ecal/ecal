@@ -18,20 +18,25 @@
 */
 
 /**
- * @brief  eCAL windows includes
+ * @brief  UDP sender attributes
 **/
 
 #pragma once
 
-#if defined(_MSC_VER) && defined(__clang__) && !defined(CINTERFACE)
-#define CINTERFACE
-#endif
+#include <string>
 
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-
-#include <winsock2.h> //NOLINT
-#include <Ws2tcpip.h> //NOLINT
-
-#undef CINTERFACE
+namespace eCAL
+{
+  namespace UDP
+  {
+    struct SSenderAttr
+    {
+      std::string address;
+      int         port      = 0;
+      int         ttl       = 0;
+      bool        broadcast = false;
+      bool        loopback  = true;
+      int         sndbuf    = 1024 * 1024;
+    };
+  }
+}
