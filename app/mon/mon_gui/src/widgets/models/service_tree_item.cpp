@@ -213,7 +213,7 @@ int ServiceTreeItem::type() const
 
 std::string ServiceTreeItem::generateIdentifier(const eCAL::pb::Service& service, const eCAL::pb::Method& method)
 {
-  return std::to_string(service.pid()) + "@" + service.hname() + "@" + method.mname();
+  return std::to_string(service.pid()) + "@" + service.hname() + "@" + service.sname() + "@" + method.mname();
 }
 
 std::string ServiceTreeItem::identifier() const
