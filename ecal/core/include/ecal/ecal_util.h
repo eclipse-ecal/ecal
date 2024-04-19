@@ -59,7 +59,7 @@ namespace eCAL
     using TopicId = std::uint64_t;
     struct SQualityTopicInfo
     {
-      TopicId              id;
+      TopicId              id = 0;
       SDataTypeInformation info;
       DescQualityFlags     quality = DescQualityFlags::NO_QUALITY;
     };
@@ -67,7 +67,7 @@ namespace eCAL
     using ServiceId = std::uint64_t;
     struct SQualityServiceInfo
     {
-      ServiceId                 id;
+      ServiceId                 id = 0;
       SServiceMethodInformation info;
       DescQualityFlags          request_quality  = DescQualityFlags::NO_QUALITY;
       DescQualityFlags          response_quality = DescQualityFlags::NO_QUALITY;

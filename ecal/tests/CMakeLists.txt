@@ -30,13 +30,9 @@ add_subdirectory(cpp/core_test)
 
 add_subdirectory(cpp/descgate_test)
 
-if(ECAL_CORE_REGISTRATION AND ECAL_CORE_PUBLISHER)
+if(ECAL_CORE_REGISTRATION)
   add_subdirectory(cpp/util_test)
 endif()
-
-
-
-
 
 add_subdirectory(cpp/event_test)
 add_subdirectory(cpp/expmap_test)

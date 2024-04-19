@@ -85,7 +85,7 @@ TEST(core_cpp_descgate, PublisherExpiration)
 
   // apply sample 5 times, sample should not expire
   auto runs(5);
-  while (runs--)
+  while ((runs--) != 0)
   {
     desc_gate.ApplySample(CreatePublisher("pub1", 1), eCAL::tl_none);
     std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS / 2));
@@ -174,7 +174,7 @@ TEST(core_cpp_descgate, SubscriberExpiration)
 
   // apply sample 5 times, sample should not expire
   auto runs(5);
-  while (runs--)
+  while ((runs--) != 0)
   {
     desc_gate.ApplySample(CreateSubscriber("sub1", 1), eCAL::tl_none);
     std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS / 2));
@@ -263,7 +263,7 @@ TEST(core_cpp_descgate, ServiceExpiration)
 
   // apply sample 5 times, sample should not expire
   auto runs(5);
-  while (runs--)
+  while ((runs--) != 0)
   {
     desc_gate.ApplySample(CreateService("service1", 1), eCAL::tl_none);
     std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS / 2));
@@ -305,7 +305,7 @@ TEST(core_cpp_descgate, ClientExpiration)
 
   // apply sample 5 times, sample should not expire
   auto runs(5);
-  while (runs--)
+  while ((runs--) != 0)
   {
     desc_gate.ApplySample(CreateClient("client1", 1), eCAL::tl_none);
     std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS / 2));

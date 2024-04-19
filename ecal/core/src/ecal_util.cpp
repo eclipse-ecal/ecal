@@ -484,7 +484,7 @@ namespace eCAL
 
     bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_)
     {
-      std::vector<SQualityServiceInfo> service_method_info_vec = GetQualityServiceInfoVec(service_name_, method_name_, GetServices());
+      const std::vector<SQualityServiceInfo> service_method_info_vec = GetQualityServiceInfoVec(service_name_, method_name_, GetServices());
 
       const SServiceMethodInformation service_method_info = GetHighestQualityServiceMethodInformation(service_method_info_vec);
       req_type_  = service_method_info.request_type.name;
@@ -495,7 +495,7 @@ namespace eCAL
 
     bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_desc_, std::string& resp_desc_)
     {
-      std::vector<SQualityServiceInfo> service_method_info_vec = GetQualityServiceInfoVec(service_name_, method_name_, GetServices());
+      const std::vector<SQualityServiceInfo> service_method_info_vec = GetQualityServiceInfoVec(service_name_, method_name_, GetServices());
 
       const SServiceMethodInformation service_method_info = GetHighestQualityServiceMethodInformation(service_method_info_vec);
       req_desc_  = service_method_info.request_type.descriptor;
@@ -547,7 +547,7 @@ namespace eCAL
 
     bool GetClientTypeNames(const std::string& client_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_)
     {
-      std::vector<SQualityServiceInfo> service_method_info_vec = GetQualityServiceInfoVec(client_name_, method_name_, GetClients());
+      const std::vector<SQualityServiceInfo> service_method_info_vec = GetQualityServiceInfoVec(client_name_, method_name_, GetClients());
 
       const SServiceMethodInformation service_method_info = GetHighestQualityServiceMethodInformation(service_method_info_vec);
       req_type_  = service_method_info.request_type.name;
@@ -558,7 +558,7 @@ namespace eCAL
 
     bool GetClientDescription(const std::string& client_name_, const std::string& method_name_, std::string& req_desc_, std::string& resp_desc_)
     {
-      std::vector<SQualityServiceInfo> service_method_info_vec = GetQualityServiceInfoVec(client_name_, method_name_, GetClients());
+      const std::vector<SQualityServiceInfo> service_method_info_vec = GetQualityServiceInfoVec(client_name_, method_name_, GetClients());
 
       const SServiceMethodInformation service_method_info = GetHighestQualityServiceMethodInformation(service_method_info_vec);
       req_desc_  = service_method_info.request_type.descriptor;

@@ -23,8 +23,8 @@
 #include <gtest/gtest.h>
 
 enum {
-  CMN_MONITORING_TIMEOUT = 5000,
-  CMN_REGISTRATION_REFRESH = 1000
+  CMN_MONITORING_TIMEOUT_MS   = (5000 + 100),
+  CMN_REGISTRATION_REFRESH_MS = (1000 + 100)
 };
 
 TEST(core_cpp_util, ClientExpiration)
@@ -42,7 +42,7 @@ TEST(core_cpp_util, ClientExpiration)
     service_method_info.request_type.descriptor  = "foo::req_desc";
     service_method_info.response_type.name       = "foo::resp_type";
     service_method_info.response_type.descriptor = "foo::resp_desc";
-    eCAL::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
+    const eCAL::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
 
     // get all clients
     eCAL::Util::GetClients(client_info_map);
@@ -61,7 +61,7 @@ TEST(core_cpp_util, ClientExpiration)
     }
 
     // let's wait a monitoring timeout long
-    eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT);
+    eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // get all clients again, client should not be expired
     eCAL::Util::GetClients(client_info_map);
@@ -71,7 +71,7 @@ TEST(core_cpp_util, ClientExpiration)
   }
 
   // let's unregister
-  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
 
   // get all clients again, all clients 
   // should be removed from the map
@@ -139,7 +139,7 @@ TEST(core_cpp_util, ClientEqualQualities)
     EXPECT_EQ(client_info_map.size(), 1);
 
     // let's wait a monitoring timeout long
-    eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT);
+    eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // get all clients again, clients should not be expired
     eCAL::Util::GetClients(client_info_map);
@@ -160,7 +160,7 @@ TEST(core_cpp_util, ClientEqualQualities)
   }
 
   // let's unregister
-  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
 
   // get all clients again, all clients 
   // should be removed from the map
@@ -228,7 +228,7 @@ TEST(core_cpp_util, ClientDifferentQualities)
   }
 
   // let's unregister
-  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
 
   // get all clients again, all clients
   // should be removed from the map

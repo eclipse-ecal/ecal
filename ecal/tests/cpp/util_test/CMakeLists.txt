@@ -21,11 +21,22 @@ project(test_util)
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
+if(ECAL_CORE_PUBLISHER AND ECAL_CORE_SUBSCRIBER)
+  set(util_test_topics_src
+    src/util_gettopics.cpp
+  )
+endif()
+
+if(ECAL_CORE_SERVICE)
+  set(util_test_service_src
+    src/util_getclients.cpp
+    src/util_getservices.cpp
+  )
+endif()
 
 set(util_test_src
-  src/util_getclients.cpp
-  src/util_getservices.cpp
-  src/util_gettopics.cpp
+  ${util_test_topics_src}
+  ${util_test_service_src}
   src/util_test.cpp
 )
 

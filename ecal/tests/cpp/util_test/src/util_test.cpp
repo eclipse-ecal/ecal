@@ -24,7 +24,8 @@
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
   void TestCombinedTopicEncodingAndType(const std::string& encoding, const std::string& type, const std::string& expected_result)
   {
     auto combined = eCAL::Util::CombinedTopicEncodingAndType(encoding, type);

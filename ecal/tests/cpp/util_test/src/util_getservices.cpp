@@ -23,8 +23,8 @@
 #include <gtest/gtest.h>
 
 enum {
-  CMN_MONITORING_TIMEOUT = 5000,
-  CMN_REGISTRATION_REFRESH = 1000
+  CMN_MONITORING_TIMEOUT_MS   = (5000 + 100),
+  CMN_REGISTRATION_REFRESH_MS = (1000 + 100)
 };
 
 TEST(core_cpp_util, ServiceExpiration)
@@ -57,7 +57,7 @@ TEST(core_cpp_util, ServiceExpiration)
     }
 
     // let's wait a monitoring timeout long
-    eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT);
+    eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // get all services again, service should not be expired
     eCAL::Util::GetServices(service_info_map);
@@ -67,7 +67,7 @@ TEST(core_cpp_util, ServiceExpiration)
   }
 
   // let's unregister
-  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
 
   // get all services again, all services
   // should be removed from the map
@@ -127,7 +127,7 @@ TEST(core_cpp_util, ServiceEqualQualities)
     EXPECT_EQ(service_info_map.size(), 1);
 
     // let's wait a monitoring timeout long
-    eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT);
+    eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // get all services again, services should not be expired
     eCAL::Util::GetServices(service_info_map);
@@ -148,7 +148,7 @@ TEST(core_cpp_util, ServiceEqualQualities)
   }
 
   // let's unregister
-  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
 
   // get all services again, all services 
   // should be removed from the map
@@ -208,7 +208,7 @@ TEST(core_cpp_util, ServiceDifferentQualities)
   }
 
   // let's unregister
-  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
 
   // get all services again, all services
   // should be removed from the map
