@@ -3,11 +3,13 @@
 #include <nanobind/operators.h>
 #include <nanobind/stl/string.h>
 #include <nanobind/stl/shared_ptr.h>
+#include <stdint.h>
 #include <chrono>
 #include <memory>
 #include <string>
 #include <cstddef>
 #include <ecal/ecal_types.h>
+#include <ecal/ecal_nb_subscriber.h>
 
 
 NB_MODULE(nanobind_core, m) {
@@ -18,8 +20,9 @@ NB_MODULE(nanobind_core, m) {
         .def_rw("encoding", &eCAL::SDataTypeInformation::encoding)
         .def_rw("descriptor", &eCAL::SDataTypeInformation::descriptor);
 
- //   auto DataReader_cls = nanobind::class_<eCAL::CDataReader>(m, "CDataReader")
-//        .def(nanobind::init<>());
+    auto NBSubscriber_cls = nanobind::class_<eCAL::CNBSubscriber>(m, "NBSubscriber")
+        .def(nanobind::init<const std::string&>())
+        .def("receive", &eCAL::CNBSubscriber::Receive);
 
     // Class and Functions from ecal_subscriber.h
     auto Subscriber_cls = nanobind::class_<eCAL::CSubscriber>(m, "Subscriber")
@@ -49,12 +52,12 @@ NB_MODULE(nanobind_core, m) {
         .def(nanobind::init<>())
         .def(nanobind::init<const std::string&>())
         .def(nanobind::init<const std::string&, const eCAL::SDataTypeInformation&>())
-//        .def(nanobind::self = nanobind::self)
+        //        .def(nanobind::self = nanobind::self)
         .def("create", nanobind::overload_cast<const std::string&>(&eCAL::CPublisher::Create))
         .def("create", nanobind::overload_cast<const std::string&, const eCAL::SDataTypeInformation&>(&eCAL::CPublisher::Create))
-//        .def("send", nanobind::overload_cast<const std::string &, LONG64>(&eCAL::CPublisher::Send))
-//        .def("send", nanobind::overload_cast<eCAL::CPayloadWriter&, long long>(&eCAL::CPublisher::Send))
-//        .def("send", nanobind::overload_cast<const void*, size_t, __int64>(&eCAL::CPublisher::Send))
+        .def("send", nanobind::overload_cast<const void*, size_t, long long>(&eCAL::CPublisher::Send))
+        .def("send", nanobind::overload_cast<eCAL::CPayloadWriter&, long long>(&eCAL::CPublisher::Send))
+        .def("send", nanobind::overload_cast<const std::string&, long long>(&eCAL::CPublisher::Send))
         .def("destroy", &eCAL::CPublisher::Destroy)
         .def("set_attribute", &eCAL::CPublisher::SetAttribute)
         .def("clear_attribute", &eCAL::CPublisher::ClearAttribute)
@@ -76,17 +79,17 @@ NB_MODULE(nanobind_core, m) {
         .def(nanobind::init<const std::string&>())
 //        .def(nanobind::self = nanobind::self)
         .def("create", &eCAL::CServiceClient::Create)
-        .def("sethostname", &eCAL::CServiceClient::SetHostName)
+        .def("set_hostname", &eCAL::CServiceClient::SetHostName)
         .def("destroy", &eCAL::CServiceClient::Destroy)
         .def("call", nanobind::overload_cast<const std::string&, const std::string&, int>(&eCAL::CServiceClient::Call))
         .def("call", nanobind::overload_cast<const std::string&, const std::string&, int, eCAL::ServiceResponseVecT*>(&eCAL::CServiceClient::Call))
-        .def("callasync", &eCAL::CServiceClient::CallAsync)
-        .def("addresponsecallback", &eCAL::CServiceClient::AddResponseCallback)
-        .def("remresponsecallback", &eCAL::CServiceClient::RemResponseCallback)
-        .def("remeventcallback", &eCAL::CServiceClient::RemEventCallback)
-        .def("addeventcallback", &eCAL::CServiceClient::AddEventCallback)
-        .def("isconnected", &eCAL::CServiceClient::IsConnected)
-        .def("getservicename", &eCAL::CServiceClient::GetServiceName);
+        .def("call_async", &eCAL::CServiceClient::CallAsync)
+        .def("add_response_callback", &eCAL::CServiceClient::AddResponseCallback)
+        .def("rem_response_callback", &eCAL::CServiceClient::RemResponseCallback)
+        .def("rem_event_callback", &eCAL::CServiceClient::RemEventCallback)
+        .def("add_event_callback", &eCAL::CServiceClient::AddEventCallback)
+        .def("is_connected", &eCAL::CServiceClient::IsConnected)
+        .def("get_service_name", &eCAL::CServiceClient::GetServiceName);
 
     // Class and Functions from ecal_server.h
     auto ServiceServer_cls = nanobind::class_<eCAL::CServiceServer>(m, "ServiceServer")
@@ -107,7 +110,7 @@ NB_MODULE(nanobind_core, m) {
     m.def("get_version_string", []() { return eCAL::GetVersionString(); });
     m.def("get_version_date", []() { return eCAL::GetVersionDateString(); });
     m.def("set_unitname", [](const char* nb_unit_name) { return eCAL::SetUnitName(nb_unit_name); });
-    m.def("is_initialised", [](unsigned int nb_component_) { return eCAL::IsInitialized(nb_component_); });
+    m.def("is_initialised", []() { return eCAL::IsInitialized(); });
     m.def("finalize", [](unsigned int nb_component_) { return eCAL::Finalize(nb_component_); });
     m.def("ok", []() { return eCAL::Ok(); });
 
@@ -115,8 +118,11 @@ NB_MODULE(nanobind_core, m) {
         { return eCAL::GetVersion(nb_major, nb_minor, nb_patch); });
  //   m.def("initialize", [](int nb_argc_, char *nb_argv_, const char* nb_unit_name_, unsigned int nb_components_)
  //       { return eCAL::Initialize(nb_argc_, nb_argv_, nb_unit_name_, nb_components_); });
-    m.def("initialize", [](std::vector<std::string> nb_args_, const char* nb_unit_name_, unsigned int nb_components_)
-        { return eCAL::Initialize(nb_args_, nb_unit_name_, nb_components_); });
+    m.def("initialize", [](std::vector<std::string> nb_args_, std::string nb_unit_name_)
+        { return eCAL::Initialize(nb_args_, nb_unit_name_.c_str(), eCAL::Init::Default); });
+    m.def("initialize", []()
+        { return eCAL::Initialize(); });
+
 
     // Functions from ecal_util.h
     m.def("enable_loopback", [](bool nb_state_) { return eCAL::Util::EnableLoopback(nb_state_); });

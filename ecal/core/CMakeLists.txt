@@ -628,9 +628,7 @@ set(ECAL_CORE_FEATURES
 foreach(CORE_FEATURE ${ECAL_CORE_FEATURES})
   if(${CORE_FEATURE})
     target_compile_definitions(${PROJECT_NAME}
-      PRIVATE ${CORE_FEATURE})
-    target_compile_definitions(${PROJECT_NAME}_c
-      PRIVATE ${CORE_FEATURE})
+      PUBLIC ${CORE_FEATURE})
   endif()
 endforeach()
 
