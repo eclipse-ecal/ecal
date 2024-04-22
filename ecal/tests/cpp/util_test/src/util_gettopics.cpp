@@ -21,6 +21,10 @@
 
 #include <gtest/gtest.h>
 
+#include <chrono>
+#include <memory>
+#include <thread>
+
 enum {
   CMN_MONITORING_TIMEOUT_MS   = (5000 + 100),
   CMN_REGISTRATION_REFRESH_MS = (1000 + 100)
