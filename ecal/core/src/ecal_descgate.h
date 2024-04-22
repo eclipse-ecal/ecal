@@ -110,13 +110,8 @@ namespace eCAL
       QualityServiceIdExpMap map;
     };
 
-    SQualityTopicIdMap   m_publisher_info_map;
-    SQualityTopicIdMap   m_subscriber_info_map;
-    SQualityServiceIdMap m_service_info_map;
-    SQualityServiceIdMap m_client_info_map;
-
-    QualityTopicIdMap   GetTopics(SQualityTopicIdMap& topic_map_);
-    QualityServiceIdMap GetServices(SQualityServiceIdMap& service_method_info_map_);
+    static QualityTopicIdMap   GetTopics(SQualityTopicIdMap& topic_map_);
+    static QualityServiceIdMap GetServices(SQualityServiceIdMap& service_method_info_map_);
 
     static void ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
                                       const std::string& topic_name_,
@@ -140,5 +135,13 @@ namespace eCAL
     static void RemServiceDescription(SQualityServiceIdMap& service_method_info_map_,
                                       const std::string& service_name_,
                                       const Util::ServiceId& service_id_);
+
+    // internal quality topic info publisher/subscriber maps
+    SQualityTopicIdMap   m_publisher_info_map;
+    SQualityTopicIdMap   m_subscriber_info_map;
+
+    // internal quality service info service/client maps
+    SQualityServiceIdMap m_service_info_map;
+    SQualityServiceIdMap m_client_info_map;
   };
 }

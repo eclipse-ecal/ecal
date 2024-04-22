@@ -19,10 +19,6 @@
 
 #include <ecal/ecal.h>
 
-#include <map>
-#include <thread>
-#include <vector>
-
 #include <gtest/gtest.h>
 
 enum {
@@ -148,7 +144,7 @@ TEST(core_cpp_util, GetTopicsParallel)
 
   auto get_topics_from_ecal = [&]() {
     size_t found_topics = 0;
-    std::vector<std::string> tmp_topic_names;
+    std::set<std::string> tmp_topic_names;
     std::map<std::string, eCAL::SDataTypeInformation> topics;
     do {
       eCAL::Util::GetTopicNames(tmp_topic_names);
@@ -181,7 +177,7 @@ TEST(core_cpp_util, GetTopicsParallel)
     th.join();
   }
 
-  std::vector<std::string> final_topic_names;
+  std::set<std::string> final_topic_names;
   std::map<std::string, eCAL::SDataTypeInformation> final_topics;
   eCAL::Util::GetTopicNames(final_topic_names);
   eCAL::Util::GetTopics(final_topics);

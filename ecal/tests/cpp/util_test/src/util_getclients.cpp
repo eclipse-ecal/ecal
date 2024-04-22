@@ -18,7 +18,6 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_types.h>
 
 #include <gtest/gtest.h>
 
@@ -32,7 +31,7 @@ TEST(core_cpp_util, ClientExpiration)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "core_cpp_util");
 
-  std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation> client_info_map;
+  std::map<eCAL::Util::SServiceMethod, eCAL::SServiceMethodInformation> client_info_map;
 
   // create simple client and let it expire
   {
@@ -51,13 +50,13 @@ TEST(core_cpp_util, ClientExpiration)
     EXPECT_EQ(client_info_map.size(), 1);
 
     // check client/method names
-    std::vector<std::tuple<std::string, std::string>> client_method_names;
+    std::set<eCAL::Util::SServiceMethod> client_method_names;
     eCAL::Util::GetClientMethodNames(client_method_names);
     EXPECT_EQ(client_method_names.size(), 1);
-    for (const auto& method_name : client_method_names)
+    for (const auto& name : client_method_names)
     {
-      EXPECT_EQ(std::get<0>(method_name), "foo::service");
-      EXPECT_EQ(std::get<1>(method_name), "foo::method");
+      EXPECT_EQ(name.service_name, "foo::service");
+      EXPECT_EQ(name.method_name,  "foo::method");
     }
 
     // let's wait a monitoring timeout long
@@ -89,7 +88,7 @@ TEST(core_cpp_util, ClientEqualQualities)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "core_cpp_util");
 
-  std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation> client_info_map;
+  std::map<eCAL::Util::SServiceMethod, eCAL::SServiceMethodInformation> client_info_map;
 
   // create 2 clients with the same quality of data type information
   {
@@ -178,7 +177,7 @@ TEST(core_cpp_util, ClientDifferentQualities)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "core_cpp_util");
 
-  std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation> client_info_map;
+  std::map<eCAL::Util::SServiceMethod, eCAL::SServiceMethodInformation> client_info_map;
 
   // create 2 clients with different qualities of data type information
   {

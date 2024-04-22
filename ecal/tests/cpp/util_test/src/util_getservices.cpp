@@ -18,7 +18,6 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_types.h>
 
 #include <gtest/gtest.h>
 
@@ -32,7 +31,7 @@ TEST(core_cpp_util, ServiceExpiration)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "core_cpp_util");
 
-  std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation> service_info_map;
+  std::map<eCAL::Util::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
 
   // create simple service and let it expire
   {
@@ -47,13 +46,13 @@ TEST(core_cpp_util, ServiceExpiration)
     EXPECT_EQ(service_info_map.size(), 1);
 
     // check service/method names
-    std::vector<std::tuple<std::string, std::string>> service_method_names;
+    std::set<eCAL::Util::SServiceMethod> service_method_names;
     eCAL::Util::GetServiceMethodNames(service_method_names);
     EXPECT_EQ(service_method_names.size(), 1);
-    for (const auto& method_name : service_method_names)
+    for (const auto& name : service_method_names)
     {
-      EXPECT_EQ(std::get<0>(method_name), "foo::service");
-      EXPECT_EQ(std::get<1>(method_name), "foo::method");
+      EXPECT_EQ(name.service_name, "foo::service");
+      EXPECT_EQ(name.method_name,  "foo::method");
     }
 
     // let's wait a monitoring timeout long
@@ -85,7 +84,7 @@ TEST(core_cpp_util, ServiceEqualQualities)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "core_cpp_util");
 
-  std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation> service_info_map;
+  std::map<eCAL::Util::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
 
   // create 2 services with the same quality of data type information
   {
@@ -166,7 +165,7 @@ TEST(core_cpp_util, ServiceDifferentQualities)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "core_cpp_util");
 
-  std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation> service_info_map;
+  std::map<eCAL::Util::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
 
   // create 2 services with different qualities of data type information
   {
