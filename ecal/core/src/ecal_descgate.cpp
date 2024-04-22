@@ -52,12 +52,12 @@ namespace eCAL
   }
   CDescGate::~CDescGate() = default;
 
-  QualityTopicIdMap CDescGate::GetPublisher()
+  QualityTopicIdMap CDescGate::GetPublishers()
   {
     return GetTopics(m_publisher_info_map);
   }
 
-  QualityTopicIdMap CDescGate::GetSubscriber()
+  QualityTopicIdMap CDescGate::GetSubscribers()
   {
     return GetTopics(m_subscriber_info_map);
   }
@@ -72,28 +72,28 @@ namespace eCAL
     return GetServices(m_client_info_map);
   }
 
-  QualityTopicIdMap CDescGate::GetTopics(const SQualityTopicIdMap& topic_map_)
+  QualityTopicIdMap CDescGate::GetTopics(SQualityTopicIdMap& topic_map_)
   {
     QualityTopicIdMap map;
 
     const std::lock_guard<std::mutex> lock(topic_map_.mtx);
-    topic_map_.map->remove_deprecated();
+    topic_map_.map.remove_deprecated();
 
-    for (const auto& topic_map_it : (*topic_map_.map))
+    for (const auto& topic_map_it : topic_map_.map)
     {
       map.emplace(topic_map_it.first, topic_map_it.second);
     }
     return map;
   }
 
-  QualityServiceIdMap CDescGate::GetServices(const SQualityServiceIdMap& service_method_info_map_)
+  QualityServiceIdMap CDescGate::GetServices(SQualityServiceIdMap& service_method_info_map_)
   {
     QualityServiceIdMap map;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-    service_method_info_map_.map->remove_deprecated();
+    service_method_info_map_.map.remove_deprecated();
 
-    for (const auto& service_method_info_map_it : (*service_method_info_map_.map))
+    for (const auto& service_method_info_map_it : service_method_info_map_.map)
     {
       map.emplace(service_method_info_map_it.first, service_method_info_map_it.second);
     }
@@ -179,15 +179,15 @@ namespace eCAL
     topic_quality_info.quality = topic_quality_;
 
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-    topic_info_map_.map->remove_deprecated();
-    (*topic_info_map_.map)[topic_info_key] = topic_quality_info;
+    topic_info_map_.map.remove_deprecated();
+    topic_info_map_.map[topic_info_key] = topic_quality_info;
   }
 
   void CDescGate::RemTopicDescription(SQualityTopicIdMap& topic_info_map_, const std::string& topic_name_, const Util::TopicId& topic_id_)
   {
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-    topic_info_map_.map->remove_deprecated();
-    topic_info_map_.map->erase(STopicIdKey{ topic_name_, topic_id_ });
+    topic_info_map_.map.remove_deprecated();
+    topic_info_map_.map.erase(STopicIdKey{ topic_name_, topic_id_ });
   }
 
   void CDescGate::ApplyServiceDescription(SQualityServiceIdMap& service_method_info_map_,
@@ -209,8 +209,8 @@ namespace eCAL
     service_quality_info.response_quality   = response_type_quality_;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-    service_method_info_map_.map->remove_deprecated();
-    (*service_method_info_map_.map)[service_method_info_key] = service_quality_info;
+    service_method_info_map_.map.remove_deprecated();
+    service_method_info_map_.map[service_method_info_key] = service_quality_info;
   }
 
   void CDescGate::RemServiceDescription(SQualityServiceIdMap& service_method_info_map_, const std::string& service_name_, const Util::ServiceId& service_id_)
@@ -218,9 +218,9 @@ namespace eCAL
     std::list<SServiceIdKey> service_method_infos_to_remove;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-    service_method_info_map_.map->remove_deprecated();
+    service_method_info_map_.map.remove_deprecated();
 
-    for (auto&& service_it : *service_method_info_map_.map)
+    for (auto&& service_it : service_method_info_map_.map)
     {
       const auto service_method_info = service_it.first;
       if ((service_method_info.service_name == service_name_)
@@ -232,7 +232,7 @@ namespace eCAL
 
     for (const auto& service_method_info : service_method_infos_to_remove)
     {
-      (*service_method_info_map_.map).erase(service_method_info);
+      service_method_info_map_.map.erase(service_method_info);
     }
   }
 }

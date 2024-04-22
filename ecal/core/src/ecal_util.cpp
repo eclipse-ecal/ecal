@@ -294,7 +294,7 @@ namespace eCAL
       if (g_descgate() == nullptr) return multi_map;
 
       // insert publisher into target multimap
-      for (const auto& topic : g_descgate()->GetPublisher())
+      for (const auto& topic : g_descgate()->GetPublishers())
       {
         multi_map.insert(std::pair<std::string, SQualityTopicInfo>(topic.first.topic_name, topic.second));
       }
@@ -313,7 +313,7 @@ namespace eCAL
       if (g_descgate() == nullptr) return multi_map;
 
       // insert subscriber into target multimap
-      for (const auto& topic : g_descgate()->GetSubscriber())
+      for (const auto& topic : g_descgate()->GetSubscribers())
       {
         multi_map.insert(std::pair<std::string, SQualityTopicInfo>(topic.first.topic_name, topic.second));
       }
@@ -399,8 +399,8 @@ namespace eCAL
       quality_topic_info_map_.clear();
       if (g_descgate() == nullptr) return;
 
-      QualityTopicIdMap pub_sub_map = g_descgate()->GetPublisher();
-      QualityTopicIdMap sub_map     = g_descgate()->GetSubscriber();
+      QualityTopicIdMap pub_sub_map = g_descgate()->GetPublishers();
+      QualityTopicIdMap sub_map     = g_descgate()->GetSubscribers();
       pub_sub_map.insert(sub_map.begin(), sub_map.end());
 
       // transform into a map with the highest quality data type information

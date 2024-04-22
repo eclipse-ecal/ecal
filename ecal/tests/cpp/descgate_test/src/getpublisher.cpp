@@ -90,14 +90,14 @@ TEST(core_cpp_descgate, PublisherExpiration)
     desc_gate.ApplySample(CreatePublisher("pub1", 1), eCAL::tl_none);
     std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS / 2));
 
-    EXPECT_EQ(1, desc_gate.GetPublisher().size());
+    EXPECT_EQ(1, desc_gate.GetPublishers().size());
   }
 
   // now let the sample expire
   std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
 
   // sample should be expired
-  EXPECT_EQ(0, desc_gate.GetPublisher().size());
+  EXPECT_EQ(0, desc_gate.GetPublishers().size());
 }
 
 TEST(core_cpp_descgate, PublisherQualities)
@@ -111,7 +111,7 @@ TEST(core_cpp_descgate, PublisherQualities)
   desc_gate.ApplySample(CreatePublisher("pub2", 2), eCAL::tl_none);
 
   // check gate size
-  auto sample_map = desc_gate.GetPublisher();
+  auto sample_map = desc_gate.GetPublishers();
   EXPECT_EQ(2, sample_map.size());
 
   // check pub1 quality
@@ -144,7 +144,7 @@ TEST(core_cpp_descgate, PublisherQualities)
   std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
 
   // sample should be expired
-  EXPECT_EQ(0, desc_gate.GetPublisher().size());
+  EXPECT_EQ(0, desc_gate.GetPublishers().size());
 }
 
 TEST(core_cpp_descgate, ManyPublisher)
@@ -159,13 +159,13 @@ TEST(core_cpp_descgate, ManyPublisher)
   }
 
   // map should contain num_pub samples
-  EXPECT_EQ(num_pub, desc_gate.GetPublisher().size());
+  EXPECT_EQ(num_pub, desc_gate.GetPublishers().size());
 
   // now let the samples expire
   std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
 
   // samples should be expired
-  EXPECT_EQ(0, desc_gate.GetPublisher().size());
+  EXPECT_EQ(0, desc_gate.GetPublishers().size());
 }
 
 TEST(core_cpp_descgate, SubscriberExpiration)
@@ -179,14 +179,14 @@ TEST(core_cpp_descgate, SubscriberExpiration)
     desc_gate.ApplySample(CreateSubscriber("sub1", 1), eCAL::tl_none);
     std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS / 2));
 
-    EXPECT_EQ(1, desc_gate.GetSubscriber().size());
+    EXPECT_EQ(1, desc_gate.GetSubscribers().size());
   }
 
   // now let the sample expire
   std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
 
   // sample should be expired
-  EXPECT_EQ(0, desc_gate.GetSubscriber().size());
+  EXPECT_EQ(0, desc_gate.GetSubscribers().size());
 }
 
 TEST(core_cpp_descgate, SubscriberQualities)
@@ -200,7 +200,7 @@ TEST(core_cpp_descgate, SubscriberQualities)
   desc_gate.ApplySample(CreateSubscriber("sub2", 2), eCAL::tl_none);
 
   // check gate size
-  auto sample_map = desc_gate.GetSubscriber();
+  auto sample_map = desc_gate.GetSubscribers();
   EXPECT_EQ(2, sample_map.size());
 
   // check sub1 quality
@@ -233,7 +233,7 @@ TEST(core_cpp_descgate, SubscriberQualities)
   std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
 
   // sample should be expired
-  EXPECT_EQ(0, desc_gate.GetSubscriber().size());
+  EXPECT_EQ(0, desc_gate.GetSubscribers().size());
 }
 
 TEST(core_cpp_descgate, ManySubscriber)
@@ -248,13 +248,13 @@ TEST(core_cpp_descgate, ManySubscriber)
   }
 
   // map should contain num_sub samples
-  EXPECT_EQ(num_sub, desc_gate.GetSubscriber().size());
+  EXPECT_EQ(num_sub, desc_gate.GetSubscribers().size());
 
   // now let the samples expire
   std::this_thread::sleep_for(std::chrono::milliseconds(DESCGATE_EXPIRATION_MS));
 
   // samples should be expired
-  EXPECT_EQ(0, desc_gate.GetSubscriber().size());
+  EXPECT_EQ(0, desc_gate.GetSubscribers().size());
 }
 
 TEST(core_cpp_descgate, ServiceExpiration)

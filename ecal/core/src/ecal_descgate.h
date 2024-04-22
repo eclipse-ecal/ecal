@@ -78,8 +78,8 @@ namespace eCAL
     void ApplySample(const Registration::Sample& sample_, eTLayerType layer_);
 
     // get publisher/subscriber maps
-    QualityTopicIdMap GetPublisher();
-    QualityTopicIdMap GetSubscriber();
+    QualityTopicIdMap GetPublishers();
+    QualityTopicIdMap GetSubscribers();
 
     // get service/clients maps
     QualityServiceIdMap GetServices();
@@ -97,23 +97,17 @@ namespace eCAL
     using QualityTopicIdExpMap = eCAL::Util::CExpMap<STopicIdKey, Util::SQualityTopicInfo>;
     struct SQualityTopicIdMap
     {
-      explicit SQualityTopicIdMap(const std::chrono::milliseconds& timeout_) :
-        map(std::make_unique<QualityTopicIdExpMap>(timeout_))
-      {
-      };
-      mutable std::mutex                    mtx;
-      std::unique_ptr<QualityTopicIdExpMap> map;
+      explicit SQualityTopicIdMap(const std::chrono::milliseconds& timeout_) : map(timeout_) {};
+      mutable std::mutex   mtx;
+      QualityTopicIdExpMap map;
     };
 
     using QualityServiceIdExpMap = eCAL::Util::CExpMap<SServiceIdKey, Util::SQualityServiceInfo>;
     struct SQualityServiceIdMap
     {
-      explicit SQualityServiceIdMap(const std::chrono::milliseconds& timeout_) :
-        map(std::make_unique<QualityServiceIdExpMap>(timeout_))
-      {
-      };
-      mutable std::mutex                      mtx;
-      std::unique_ptr<QualityServiceIdExpMap> map;
+      explicit SQualityServiceIdMap(const std::chrono::milliseconds& timeout_) : map(timeout_) {};
+      mutable std::mutex     mtx;
+      QualityServiceIdExpMap map;
     };
 
     SQualityTopicIdMap   m_publisher_info_map;
@@ -121,30 +115,30 @@ namespace eCAL
     SQualityServiceIdMap m_service_info_map;
     SQualityServiceIdMap m_client_info_map;
 
-    QualityTopicIdMap   GetTopics(const SQualityTopicIdMap& topic_map_);
-    QualityServiceIdMap GetServices(const SQualityServiceIdMap& service_method_info_map_);
+    QualityTopicIdMap   GetTopics(SQualityTopicIdMap& topic_map_);
+    QualityServiceIdMap GetServices(SQualityServiceIdMap& service_method_info_map_);
 
-    void ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
-                               const std::string& topic_name_,
-                               const Util::TopicId& topic_id_,
-                               const SDataTypeInformation& topic_info_,
-                               Util::DescQualityFlags topic_quality_);
+    static void ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
+                                      const std::string& topic_name_,
+                                      const Util::TopicId& topic_id_,
+                                      const SDataTypeInformation& topic_info_,
+                                      Util::DescQualityFlags topic_quality_);
 
-    void RemTopicDescription(SQualityTopicIdMap& topic_info_map_,
-                             const std::string& topic_name_,
-                             const Util::TopicId& topic_id_);
+    static void RemTopicDescription(SQualityTopicIdMap& topic_info_map_,
+                                    const std::string& topic_name_,
+                                    const Util::TopicId& topic_id_);
 
-    void ApplyServiceDescription(SQualityServiceIdMap& service_method_info_map_,
-                                 const std::string& service_name_,
-                                 const std::string& method_name_,
-                                 const Util::ServiceId& service_id_,
-                                 const SDataTypeInformation& request_type_information_,
-                                 const SDataTypeInformation& response_type_information_,
-                                 Util::DescQualityFlags request_type_quality_,
-                                 Util::DescQualityFlags response_type_quality_);
+    static void ApplyServiceDescription(SQualityServiceIdMap& service_method_info_map_,
+                                        const std::string& service_name_,
+                                        const std::string& method_name_,
+                                        const Util::ServiceId& service_id_,
+                                        const SDataTypeInformation& request_type_information_,
+                                        const SDataTypeInformation& response_type_information_,
+                                        Util::DescQualityFlags request_type_quality_,
+                                        Util::DescQualityFlags response_type_quality_);
 
-    void RemServiceDescription(SQualityServiceIdMap& service_method_info_map_,
-                               const std::string& service_name_,
-                               const Util::ServiceId& service_id_);
+    static void RemServiceDescription(SQualityServiceIdMap& service_method_info_map_,
+                                      const std::string& service_name_,
+                                      const Util::ServiceId& service_id_);
   };
 }
