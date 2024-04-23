@@ -102,7 +102,7 @@ namespace eCAL
 #if UDPCAP_VERSION_MAJOR == 1
       // Show a compiler deprecation warning
       // TODO: Remove for eCAL6
-      [[deprecated("Udpcap 1.x is deprecated and prone to data-loss. Please update udpcap to 2.x.")]]
+      {[[deprecated("Udpcap 1.x is deprecated and prone to data-loss. Please update udpcap to 2.x.")]] int udpcap{}; (void)(udpcap);}
 
       bytes_received = m_socket.receiveDatagram(buf_, len_, static_cast<unsigned long>(timeout_), &source_address, &source_port);
 
@@ -131,7 +131,7 @@ namespace eCAL
 #if UDPCAP_VERSION_MAJOR == 1
       // Show a compiler deprecation warning
       // TODO: Remove for eCAL6
-      [[deprecated("Udpcap 1.x is deprecated and prone to data-loss. Please update udpcap to 2.x.")]]
+      {[[deprecated("Udpcap 1.x is deprecated and prone to data-loss. Please update udpcap to 2.x.")]] int udpcap{}; (void)(udpcap);}
 
       bytes_received = m_socket.receiveDatagram(buf_, len_, static_cast<unsigned long>(timeout_));
 #else // Udpcap 2.x
