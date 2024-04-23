@@ -6,7 +6,6 @@ on:
     branches:
       - master
 env:
-  IS_GITHUB_SIGNING_ALLOWED: true
   IS_JENKINS_SIGNING_ALLOWED: true
 
 jobs:
@@ -260,34 +259,6 @@ jobs:
     - name: Pack complete setup
       run: cpack -C Release
       working-directory: ${{ runner.workspace }}/_build/complete
-
-    - name: Detect certificate
-      id: cert
-      if: env.IS_GITHUB_SIGNING_ALLOWED == 'true'
-      run: |
-        if ($Env:CERT_BODY -and $Env:CERT_PSWD -and $Env:CERT_ALGO -and $Env:CERT_HASH) {
-          Write-Output "ATTENTION: a certificate is available"
-          Write-Output "IS_GITHUB_SIGNING_ENABLED=true" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-        } else {
-          Write-Output "WARNING: a certificate is not available"
-        }
-      env:
-        CERT_BODY: ${{ secrets.CERT_BODY }}
-        CERT_PSWD: ${{ secrets.CERT_PSWD }}
-        CERT_ALGO: ${{ secrets.CERT_ALGO }}
-        CERT_HASH: ${{ secrets.CERT_HASH }}
-
-    # https://github.com/OrhanKupusoglu/code-sign-action
-    - name: Sign the installer
-      if: env.IS_GITHUB_SIGNING_ENABLED == 'true'
-      uses: OrhanKupusoglu/code-sign-action@v5.5.1
-      with:
-        cert_body: ${{ secrets.CERT_BODY }}
-        cert_pswd: ${{ secrets.CERT_PSWD }}
-        cert_algo: ${{ secrets.CERT_ALGO }}
-        cert_hash: ${{ secrets.CERT_HASH }}
-        folder: ${{ runner.workspace }}/_build/complete/_deploy
-        debug: false
 
     - name: Upload Windows setup
       uses: actions/upload-artifact@v4
