@@ -11,15 +11,14 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v3
-      with:
-        setup-python: false
-        version: '5.15.2'
-        target: 'desktop'
-
     - name: Install Dependencies
-      run: brew install ninja doxygen graphviz protobuf hdf5@1.10 pkg-config
+      run: brew install ninja doxygen graphviz protobuf hdf5@1.10 pkg-config qt
+
+    - name: Downgrade Python version
+      uses: actions/setup-python@v5
+      id: cp312
+      with:
+        python-version: '3.12'
 
     - name: Install Cap’n Proto
       run: |
