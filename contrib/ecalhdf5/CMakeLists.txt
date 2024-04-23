@@ -19,7 +19,7 @@
 project(hdf5 LANGUAGES C CXX)
 
 if(NOT CMAKE_CROSSCOMPILING)
-  find_package(HDF5 COMPONENTS C CXX REQUIRED)
+  find_package(HDF5 COMPONENTS C REQUIRED)
   find_package(Threads REQUIRED)
 else()
   find_library(hdf5_path NAMES hdf5 REQUIRED PATH_SUFFIXES hdf5/serial)
