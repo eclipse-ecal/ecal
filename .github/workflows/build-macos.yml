@@ -11,12 +11,6 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - name: Downgrade Python version
-      uses: actions/setup-python@v4
-      id: cp39
-      with:
-        python-version: '3.9'
-
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
