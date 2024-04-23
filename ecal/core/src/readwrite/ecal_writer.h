@@ -28,6 +28,7 @@
 #include <cstddef>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_payload_writer.h>
+#include <ecal/ecal_publisher.h>
 #include <ecal/ecal_tlayer.h>
 #include <ecal/ecal_types.h>
 #include <tuple>
@@ -84,27 +85,13 @@ namespace eCAL
       }
     };
 
-    CDataWriter();
+    CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const CPublisher::Config& config_ = {});
     ~CDataWriter();
-
-    bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
-    bool Destroy();
 
     bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
     bool ClearAttribute(const std::string& attr_name_);
-
-    void ShareType(bool state_);
-    void ShareDescription(bool state_);
-
-    bool SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_);
-
-    bool ShmSetBufferCount(size_t buffering_);
-    bool ShmEnableZeroCopy(bool state_);
-
-    bool ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_);
-    long long ShmGetAcknowledgeTimeout() const;
 
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Publisher_Event type_);
@@ -135,6 +122,8 @@ namespace eCAL
     const SDataTypeInformation& GetDataTypeInformation() const { return m_topic_info; }
 
   protected:
+    void Configure(const CPublisher::Config& config_);
+
     bool Register(bool force_);
     bool Unregister();
 
@@ -214,10 +203,8 @@ namespace eCAL
     };
     SWriter                                m_writer;
 
-    bool                                   m_use_ttype;
-    bool                                   m_use_tdesc;
-    int                                    m_share_ttype;
-    int                                    m_share_tdesc;
+    bool                                   m_share_ttype;
+    bool                                   m_share_tdesc;
     std::atomic<bool>                      m_created;
   };
 }

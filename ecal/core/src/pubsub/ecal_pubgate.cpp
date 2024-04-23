@@ -60,10 +60,7 @@ namespace eCAL
 
     // destroy all remaining publisher
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
-    for (auto iter = m_topic_name_datawriter_map.begin(); iter != m_topic_name_datawriter_map.end(); ++iter)
-    {
-      iter->second->Destroy();
-    }
+    m_topic_name_datawriter_map.clear();
 
     m_created = false;
   }

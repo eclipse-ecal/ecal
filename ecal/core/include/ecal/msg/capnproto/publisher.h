@@ -99,9 +99,10 @@ namespace eCAL
       * @brief  Constructor.
       *
       * @param topic_name_  Unique topic name.
+      * @param config_      Optional configuration parameters.
       **/
-      CPublisher(const std::string& topic_name_)
-        : eCAL::CPublisher(topic_name_, GetDataTypeInformation())
+      CPublisher(const std::string& topic_name_, const eCAL::CPublisher::Config& config_ = {})
+        : eCAL::CPublisher(topic_name_, GetDataTypeInformation(), config_)
         , builder(std::make_unique<capnp::MallocMessageBuilder>())
         , root_builder(builder->initRoot<message_type>())
       {
@@ -145,12 +146,13 @@ namespace eCAL
       * @brief  Creates this object.
       *
       * @param topic_name_  Unique topic name.
+      * @param config_      Optional configuration parameters.
       *
       * @return  True if it succeeds, false if it fails.
       **/
-      bool Create(const std::string& topic_name_)
+      bool Create(const std::string& topic_name_, const eCAL::CPublisher::Config& config_ = {})
       {
-        return(eCAL::CPublisher::Create(topic_name_, GetDataTypeInformation()));
+        return(eCAL::CPublisher::Create(topic_name_, GetDataTypeInformation(), config_));
       }
 
       typename message_type::Builder GetBuilder()
@@ -172,11 +174,11 @@ namespace eCAL
       **/
       SDataTypeInformation GetDataTypeInformation() const
       {
-        SDataTypeInformation topic_info;
-        topic_info.encoding   = eCAL::capnproto::EncodingAsString();
-        topic_info.name       = eCAL::capnproto::TypeAsString<message_type>();
-        topic_info.descriptor = eCAL::capnproto::SchemaAsString<message_type>();
-        return topic_info;
+        SDataTypeInformation data_type_info;
+        data_type_info.encoding   = eCAL::capnproto::EncodingAsString();
+        data_type_info.name       = eCAL::capnproto::TypeAsString<message_type>();
+        data_type_info.descriptor = eCAL::capnproto::SchemaAsString<message_type>();
+        return data_type_info;
       }
 
       std::unique_ptr<capnp::MallocMessageBuilder>    builder;

@@ -68,11 +68,13 @@ namespace std
 
 namespace eCAL
 {
-  CDataWriter::CDataWriter() :
+  CDataWriter::CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const CPublisher::Config& config_) :
     m_host_name(Process::GetHostName()),
     m_host_group_name(Process::GetHostGroupName()),
     m_pid(Process::GetProcessID()),
     m_pname(Process::GetProcessName()),
+    m_topic_name(topic_name_),
+    m_topic_info(topic_info_),
     m_topic_size(0),
     m_buffering_shm(PUB_MEMFILE_BUF_COUNT),
     m_zero_copy(PUB_MEMFILE_ZERO_COPY),
@@ -80,48 +82,15 @@ namespace eCAL
     m_connected(false),
     m_id(0),
     m_clock(0),
-    m_frequency_calculator(3.0f),
+    m_frequency_calculator(0.0f),
     m_loc_subscribed(false),
     m_ext_subscribed(false),
-    m_use_ttype(true),
-    m_use_tdesc(true),
-    m_share_ttype(-1),
-    m_share_tdesc(-1),
+    m_share_ttype(true),
+    m_share_tdesc(true),
     m_created(false)
   {
-    // initialize layer modes with configuration settings
-#if ECAL_CORE_TRANSPORT_UDP
-    m_writer.udp_mc_mode.requested = Config::GetPublisherUdpMulticastMode();
-#endif
-#if ECAL_CORE_TRANSPORT_SHM
-    m_writer.shm_mode.requested    = Config::GetPublisherShmMode();
-#endif
-#if ECAL_CORE_TRANSPORT_TCP
-    m_writer.tcp_mode.requested    = Config::GetPublisherTcpMode();
-#endif
-  }
-
-  CDataWriter::~CDataWriter()
-  {
-    Destroy();
-  }
-
-  bool CDataWriter::Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
-  {
-    if (m_created) return(false);
-
-    // set defaults
-    m_topic_name             = topic_name_;
-    m_topic_id.clear();
-    m_topic_info             = topic_info_;
-    m_id                     = 0;
-    m_clock                  = 0;
-    m_buffering_shm          = Config::GetMemfileBufferCount();
-    m_zero_copy              = Config::IsMemfileZerocopyEnabled();
-    m_acknowledge_timeout_ms = Config::GetMemfileAckTimeoutMs();
-    m_connected              = false;
-    m_ext_subscribed         = false;
-    m_created                = false;
+    // configure
+    Configure(config_);
 
     // build topic id
     std::stringstream counter;
@@ -132,12 +101,6 @@ namespace eCAL
     const std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
     m_loc_sub_map.set_expiration(registration_timeout);
     m_ext_sub_map.set_expiration(registration_timeout);
-
-    // allow to share topic type
-    m_use_ttype = Config::IsTopicTypeSharingEnabled();
-
-    // allow to share topic description
-    m_use_tdesc = Config::IsTopicDescriptionSharingEnabled();
 
     // mark as created
     m_created = true;
@@ -156,22 +119,15 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug1, m_topic_name + "::CDataWriter::Created");
+    Logging::Log(log_level_debug1, m_topic_name + "::CDataWriter::Constructor");
 #endif
-
-    // adapt number of used memory file
-    ShmSetBufferCount(m_buffering_shm);
-
-    return(true);
   }
 
-  bool CDataWriter::Destroy()
+  CDataWriter::~CDataWriter()
   {
-    if (!m_created) return(false);
-
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug1, m_topic_name + "::CDataWriter::Destroy");
+    Logging::Log(log_level_debug1, m_topic_name + "::CDataWriter::Destructor");
 #endif
 
     // destroy udp multicast writer
@@ -189,22 +145,14 @@ namespace eCAL
     m_writer.tcp.Destroy();
 #endif
 
-    // reset defaults
-    m_id                     = 0;
-    m_clock                  = 0;
-    m_buffering_shm          = Config::GetMemfileBufferCount();
-    m_zero_copy              = Config::IsMemfileZerocopyEnabled();
-    m_acknowledge_timeout_ms = Config::GetMemfileAckTimeoutMs();
-    m_connected              = false;
-
-    // reset subscriber maps
+    // clear subscriber maps
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
       m_loc_sub_map.clear();
       m_ext_sub_map.clear();
     }
 
-    // reset event callback map
+    // clear event callback map
     {
       const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
       m_event_callback_map.clear();
@@ -215,10 +163,33 @@ namespace eCAL
 
     // and unregister
     Unregister();
-
-    return(true);
   }
 
+  void CDataWriter::Configure(const CPublisher::Config& config_)
+  {
+    // shm config
+#if ECAL_CORE_TRANSPORT_SHM
+    m_writer.shm_mode.requested    = config_.shm.send_mode;
+    m_buffering_shm                = config_.shm.buffer_count;
+    m_zero_copy                    = config_.shm.zero_copy_mode;
+    m_acknowledge_timeout_ms       = config_.shm.acknowledge_timeout_ms;
+#endif
+
+    // udp config
+#if ECAL_CORE_TRANSPORT_UDP
+    m_writer.udp_mc_mode.requested = config_.udp.send_mode;
+#endif
+
+    // tcp config
+#if ECAL_CORE_TRANSPORT_TCP
+    m_writer.tcp_mode.requested    = config_.tcp.send_mode;
+#endif
+
+    // allow to share topic type/description
+    m_share_ttype                  = config_.share_topic_type;
+    m_share_tdesc                  = config_.share_topic_description;
+  }
+    
   bool CDataWriter::SetDataTypeInformation(const SDataTypeInformation& topic_info_)
   {
     // Does it even make sense to register if the info is the same???
@@ -269,101 +240,6 @@ namespace eCAL
     Register(force);
 
     return(true);
-  }
-
-  void CDataWriter::ShareType(bool state_)
-  {
-    if (state_)
-    {
-      m_share_ttype = 1;
-    }
-    else
-    {
-      m_share_ttype = 0;
-    }
-  }
-
-  void CDataWriter::ShareDescription(bool state_)
-  {
-    if (state_)
-    {
-      m_share_tdesc = 1;
-    }
-    else
-    {
-      m_share_tdesc = 0;
-    }
-  }
-
-  bool CDataWriter::SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_)
-  {
-    switch (layer_)
-    {
-    case TLayer::tlayer_udp_mc:
-      SetUseUdpMC(mode_);
-      break;
-    case TLayer::tlayer_shm:
-      SetUseShm(mode_);
-      break;
-    case TLayer::tlayer_tcp:
-      SetUseTcp(mode_);
-      break;
-    case TLayer::tlayer_all:
-      SetUseUdpMC(mode_);
-      SetUseShm(mode_);
-      SetUseTcp(mode_);
-      break;
-    default:
-      break;
-    }
-    return true;
-  }
-
-  bool CDataWriter::ShmSetBufferCount(size_t buffering_)
-  {
-#if ECAL_CORE_TRANSPORT_SHM
-    if (buffering_ < 1)
-    {
-      Logging::Log(log_level_error, m_topic_name + "::CDataWriter::ShmSetBufferCount minimal number of memory files is 1 !");
-      return false;
-    }
-    m_buffering_shm = static_cast<size_t>(buffering_);
-
-    // adapt number of used memory files
-    if (m_created)
-    {
-      m_writer.shm.SetBufferCount(buffering_);
-    }
-
-    return true;
-#else
-    return false;
-#endif
-  }
-
-  bool CDataWriter::ShmEnableZeroCopy(bool state_)
-  {
-#if ECAL_CORE_TRANSPORT_SHM
-    m_zero_copy = state_;
-    return true;
-#else
-    return false;
-#endif
-  }
-
-  bool CDataWriter::ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_)
-  {
-#if ECAL_CORE_TRANSPORT_SHM
-    m_acknowledge_timeout_ms = acknowledge_timeout_ms_;
-    return true;
-#else
-    return false;
-#endif
-  }
-
-  long long CDataWriter::ShmGetAcknowledgeTimeout() const
-  {
-    return m_acknowledge_timeout_ms;
   }
 
   bool CDataWriter::AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_)
@@ -775,19 +651,6 @@ namespace eCAL
     if (!m_created)           return(false);
     if (m_topic_name.empty()) return(false);
 
-    //@Rex: why is the logic different in CDataReader???
-    // check share modes
-    bool share_ttype(m_use_ttype && (g_pubgate() != nullptr) && g_pubgate()->TypeShared());
-    if (m_share_ttype != -1)
-    {
-      share_ttype = m_share_ttype == 1;
-    }
-    bool share_tdesc(m_use_tdesc && (g_pubgate() != nullptr) && g_pubgate()->DescriptionShared());
-    if (m_share_tdesc != -1)
-    {
-      share_tdesc = m_share_tdesc == 1;
-    }
-
     // create command parameter
     Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_reg_publisher;
@@ -800,12 +663,12 @@ namespace eCAL
     // topic_information
     {
       auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.tdatatype;
-      if (share_ttype)
+      if (m_share_ttype)
       {
         ecal_reg_sample_tdatatype.encoding   = m_topic_info.encoding;
         ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       }
-      if (share_tdesc)
+      if (m_share_tdesc)
       {
         ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
       }
@@ -1029,6 +892,10 @@ namespace eCAL
       m_writer.shm.Destroy();
       break;
     }
+
+    // set shm buffer count
+    m_writer.shm.SetBufferCount(m_buffering_shm);
+
 #endif // ECAL_CORE_TRANSPORT_SHM
   }
 

@@ -74,8 +74,8 @@ namespace eCAL
                  m_message_drops(0),
                  m_loc_published(false),
                  m_ext_published(false),
-                 m_use_ttype(true),
-                 m_use_tdesc(true),
+                 m_share_ttype(true),
+                 m_share_tdesc(true),
                  m_use_udp_mc_confirmed(false),
                  m_use_shm_confirmed(false),
                  m_use_tcp_confirmed(false),
@@ -114,10 +114,10 @@ namespace eCAL
     m_ext_pub_map.set_expiration(registration_timeout);
 
     // allow to share topic type
-    m_use_ttype = Config::IsTopicTypeSharingEnabled();
+    m_share_ttype = Config::IsTopicTypeSharingEnabled();
 
     // allow to share topic description
-    m_use_tdesc = Config::IsTopicDescriptionSharingEnabled();
+    m_share_tdesc = Config::IsTopicDescriptionSharingEnabled();
 
     // start transport layers
     SubscribeToLayers();
@@ -246,12 +246,12 @@ namespace eCAL
     // topic_information
     {
       auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.tdatatype;
-      if (m_use_ttype)
+      if (m_share_ttype)
       {
         ecal_reg_sample_tdatatype.encoding = m_topic_info.encoding;
         ecal_reg_sample_tdatatype.name     = m_topic_info.name;
       }
-      if (m_use_tdesc)
+      if (m_share_tdesc)
       {
         ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
       }

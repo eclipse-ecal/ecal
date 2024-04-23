@@ -35,6 +35,23 @@
 
 namespace eCAL
 {
+  CPublisher::Config::Config() :
+    share_topic_type(eCAL::Config::IsTopicTypeSharingEnabled()),
+    share_topic_description(eCAL::Config::IsTopicDescriptionSharingEnabled())
+  {
+    // shm config
+    shm.send_mode              = eCAL::Config::GetPublisherShmMode();
+    shm.buffer_count           = eCAL::Config::GetMemfileBufferCount();
+    shm.zero_copy_mode         = eCAL::Config::IsMemfileZerocopyEnabled();
+    shm.acknowledge_timeout_ms = eCAL::Config::GetMemfileAckTimeoutMs();
+
+    // udp config
+    udp.send_mode              = eCAL::Config::GetPublisherUdpMulticastMode();
+
+    // tcp config
+    tcp.send_mode              = eCAL::Config::GetPublisherTcpMode();
+  }
+
   CPublisher::CPublisher() :
     m_datawriter(nullptr),
     m_id(0),
@@ -43,14 +60,14 @@ namespace eCAL
   {
   }
 
-  CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_)
+  CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Config& config_)
     : CPublisher()
   {
-    CPublisher::Create(topic_name_, data_type_info_);
+    CPublisher::Create(topic_name_, data_type_info_, config_);
   }
 
-  CPublisher::CPublisher(const std::string& topic_name_) 
-    : CPublisher(topic_name_, SDataTypeInformation{})
+  CPublisher::CPublisher(const std::string& topic_name_, const Config& config_)
+    : CPublisher(topic_name_, SDataTypeInformation{}, config_)
   {}
 
   CPublisher::~CPublisher()
@@ -90,7 +107,7 @@ namespace eCAL
     return *this;
   }
 
-  bool CPublisher::Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_)
+  bool CPublisher::Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Config& config_)
   {
     if (m_created)              return(false);
     if (topic_name_.empty())    return(false);
@@ -104,19 +121,8 @@ namespace eCAL
     }
 
     // create data writer
-    m_datawriter = std::make_shared<CDataWriter>();
-    if (!m_datawriter->Create(topic_name_, data_type_info_))
-    {
-#ifndef NDEBUG
-      // log it
-      if (g_log() != nullptr) g_log()->Log(log_level_debug1, topic_name_ + "::CPublisher::Create - FAILED");
-#endif
-      return(false);
-    }
-#ifndef NDEBUG
-    // log it
-    if (g_log() != nullptr) g_log()->Log(log_level_debug1, topic_name_ + "::CPublisher::Create - SUCCESS");
-#endif
+    m_datawriter = std::make_shared<CDataWriter>(topic_name_, data_type_info_, config_);
+
     // register publisher gateway (for publisher memory file and event name)
     g_pubgate()->Register(topic_name_, m_datawriter);
 
@@ -136,9 +142,6 @@ namespace eCAL
     if(!m_created)             return(false);
     if(g_globals() == nullptr) return(false);
 
-    // destroy data writer
-    m_datawriter->Destroy();
-
     // unregister data writer
     if(g_pubgate() != nullptr) g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
 #ifndef NDEBUG
@@ -146,7 +149,7 @@ namespace eCAL
     if (g_log() != nullptr) g_log()->Log(log_level_debug1, std::string(m_datawriter->GetTopicName() + "::CPublisher::Destroy"));
 #endif
 
-    // free datawriter
+    // destroy datawriter
     m_datawriter.reset();
 
     // we made it :-)
@@ -179,20 +182,6 @@ namespace eCAL
   {
     if(m_datawriter == nullptr) return false;
     return m_datawriter->ClearAttribute(attr_name_);
-  }
-
-  bool CPublisher::ShareType(bool state_ /*= true*/)
-  {
-    if (m_datawriter == nullptr) return false;
-    m_datawriter->ShareType(state_);
-    return true;
-  }
-
-  bool CPublisher::ShareDescription(bool state_ /*= true*/)
-  {
-    if (m_datawriter == nullptr) return false;
-    m_datawriter->ShareDescription(state_);
-    return true;
   }
 
   bool CPublisher::SetID(long long id_)

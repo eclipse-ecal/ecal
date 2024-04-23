@@ -60,7 +60,7 @@ namespace eCAL
 
       // call the function via its class because it's a virtual function that is called in constructor/destructor,-
       // where the vtable is not created yet, or it's destructed.
-      explicit CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation())
+      explicit CPublisher(const std::string& topic_name_, const eCAL::CPublisher::Config& config_ = {}) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation(), config_)
       {
       }
 
@@ -88,12 +88,13 @@ namespace eCAL
        * @brief  Creates this object.
        *
        * @param topic_name_  Unique topic name.
+       * @param config_      Optional configuration parameters.
        *
        * @return  True if it succeeds, false if it fails.
       **/
-      bool Create(const std::string& topic_name_)
+      bool Create(const std::string& topic_name_, const eCAL::CPublisher::Config& config_ = {})
       {
-        return(CMsgPublisher<T>::Create(topic_name_, GetDataTypeInformation()));
+        return(CMsgPublisher<T>::Create(topic_name_, GetDataTypeInformation(), config_));
       }
 
     private:
@@ -104,11 +105,11 @@ namespace eCAL
       **/
       SDataTypeInformation GetDataTypeInformation() const override
       {
-        SDataTypeInformation topic_info;
-        topic_info.encoding = "base";
-        topic_info.name     = "std::string";
+        SDataTypeInformation data_type_info;
+        data_type_info.encoding = "base";
+        data_type_info.name     = "std::string";
         // empty descriptor
-        return topic_info;
+        return data_type_info;
       }
       
       /**
@@ -116,7 +117,7 @@ namespace eCAL
        *
        * @param msg_  The message object.
        *
-       * @return  String site.
+       * @return  String size.
       **/
       size_t GetSize(const T& msg_) const override
       {
@@ -143,7 +144,7 @@ namespace eCAL
       }
     };
     /** @example minimal_snd.cpp
-     * This is an example how to use eCAL::CPublisher to send a std::string with eCAL. To receive the strings, see @ref minimal_rec.cpp .
+     * This is an example how to use eCAL::string::CPublisher to send a std::string with eCAL. To receive the strings, see @ref minimal_rec.cpp .
     **/
   }
 }

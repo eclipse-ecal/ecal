@@ -159,8 +159,8 @@ namespace eCAL
     std::atomic<bool>                         m_loc_published;
     std::atomic<bool>                         m_ext_published;
 
-    bool                                      m_use_ttype;
-    bool                                      m_use_tdesc;
+    bool                                      m_share_ttype;
+    bool                                      m_share_tdesc;
 
     bool                                      m_use_udp_mc_confirmed;
     bool                                      m_use_shm_confirmed;

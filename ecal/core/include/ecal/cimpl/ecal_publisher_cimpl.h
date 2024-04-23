@@ -90,26 +90,6 @@ extern "C"
   ECALC_API int eCAL_Pub_ClearAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_);
 
   /**
-   * @brief Share topic type.
-   *
-   * @param handle_ Publisher handle. 
-   * @param state_  Set type share mode (none zero == share type).
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Pub_ShareType(ECAL_HANDLE handle_, int state_);
-
-  /**
-   * @brief Share topic description.
-   *
-   * @param handle_ Publisher handle. 
-   * @param state_  Set description share mode (none zero == share description).
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Pub_ShareDescription(ECAL_HANDLE handle_, int state_);
-
-  /**
    * @brief Set the specific topic id.
    *
    * @param handle_  Publisher handle.
