@@ -8,17 +8,24 @@ on:
 
 jobs:
   build-macos:
-    runs-on: 	macos-13
+    runs-on: macos-latest
 
     steps:
-    - name: Install Dependencies
-      run: brew install ninja doxygen graphviz protobuf hdf5@1.10 pkg-config qt
-
     - name: Downgrade Python version
-      uses: actions/setup-python@v5
-      id: cp312
+      uses: actions/setup-python@v4
+      id: cp12
       with:
         python-version: '3.12'
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        setup-python: false
+        version: '5.15.2'
+        target: 'desktop'
+
+    - name: Install Dependencies
+      run: brew install ninja doxygen graphviz protobuf hdf5@1.10 pkg-config
 
     - name: Install Cap’n Proto
       run: |
@@ -32,7 +39,7 @@ jobs:
         sudo make install
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
       with:
         submodules:  'true'
         fetch-depth: 0
@@ -79,7 +86,6 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_QWT=ON \
         -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_PREFIX_PATH=/usr/local/opt/hdf5@1.10 \
         -DCMAKE_CXX_STANDARD=17 \
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
         -DPython_FIND_STRATEGY=LOCATION \
