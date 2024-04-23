@@ -62,14 +62,25 @@ jobs:
         tar zxf capnproto-c++-1.0.2.tar.gz
         cd capnproto-c++-1.0.2
         ./configure
-        make -j
+        make -j$(nproc) check
         sudo make install
 
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        submodules:  'true'
+        submodules:  'false'
         fetch-depth: 0
+
+    - name: Update Submodules (selected ones)
+      run: |
+        cd $GITHUB_WORKSPACE
+        git submodule init
+        git submodule deinit thirdparty/curl/curl
+        git submodule deinit thirdparty/hdf5/hdf5
+        git submodule deinit thirdparty/libssh2/libssh2
+        git submodule deinit thirdparty/protobuf/protobuf
+        git submodule deinit thirdparty/zlib/zlib
+        git submodule update
 
     - name: Create venv for building docs
       shell: bash
@@ -132,7 +143,7 @@ jobs:
       shell: bash
 
     - name: Build Release
-      run: cmake --build . --config Release -- -k 0
+      run: cmake --build . --parallel --config Release -- -k 0
       working-directory: ${{ runner.workspace }}/_build
 
     - name: Run Tests
@@ -141,7 +152,7 @@ jobs:
 
     - name: Read Project Version from CMakeCache
       run: |
-        cmake_project_version_string=$(cat "${{github.workspace}}/_build/CMakeCache.txt" | grep "^CMAKE_PROJECT_VERSION:")
+        cmake_project_version_string=$(cat "${{ runner.workspace }}/_build/CMakeCache.txt" | grep "^CMAKE_PROJECT_VERSION:")
         arr=(${cmake_project_version_string//=/ })
         cmake_project_version=${arr[1]}
         echo "CMAKE_PROJECT_VERSION=$cmake_project_version"  >> "$GITHUB_ENV"
