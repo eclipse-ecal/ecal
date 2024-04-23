@@ -89,9 +89,7 @@ namespace eCAL
 
       bool operator<(const SServiceMethod& other) const
       {
-        if (service_name != other.service_name)
-          return service_name < other.service_name;
-        return method_name < other.method_name;
+        return std::tie(service_name, method_name) < std::tie(other.service_name, other.method_name);
       }
     };
     using QualityServiceInfoMultimap = std::multimap<SServiceMethod, SQualityServiceInfo>;

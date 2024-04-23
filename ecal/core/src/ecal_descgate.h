@@ -33,6 +33,7 @@
 #include <map>
 #include <mutex>
 #include <string>
+#include <tuple>
 
 namespace eCAL
 {
@@ -43,9 +44,7 @@ namespace eCAL
 
     bool operator<(const STopicIdKey& other) const
     {
-      if (topic_name != other.topic_name)
-        return topic_name < other.topic_name;
-      return topic_id < other.topic_id;
+      return std::tie(topic_name, topic_id) < std::tie(other.topic_name, other.topic_id);
     }
   };
 
@@ -57,11 +56,7 @@ namespace eCAL
 
     bool operator<(const SServiceIdKey& other) const
     {
-      if (service_name != other.service_name)
-        return service_name < other.service_name;
-      if (service_id != other.service_id)
-        return service_id < other.service_id;
-      return method_name < other.method_name;
+      return std::tie(service_name, service_id) < std::tie(other.service_name, other.service_id);
     }
   };
 

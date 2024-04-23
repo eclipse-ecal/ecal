@@ -38,7 +38,7 @@ namespace
    *
    * @return                                   Set of SQualityTopicInfo
   **/
-  std::set<eCAL::Util::SQualityTopicInfo> GetQualityTopicInfoSet(const std::string& topic_name_, const std::multimap<std::string, eCAL::Util::SQualityTopicInfo>& quality_data_type_info_multi_map_)
+  std::set<eCAL::Util::SQualityTopicInfo> GetQualityTopicInfoSet(const std::string& topic_name_, const eCAL::Util::QualityTopicInfoMultiMap& quality_data_type_info_multi_map_)
   {
     std::set<eCAL::Util::SQualityTopicInfo> quality_topic_info_set;
 
@@ -60,7 +60,7 @@ namespace
    *
    * @return                                 Set of SQualityServiceInfo
   **/
-  std::set<eCAL::Util::SQualityServiceInfo> GetQualityServiceInfoSet(const std::string& service_name_, const std::string& method_name_, std::multimap<eCAL::Util::SServiceMethod, eCAL::Util::SQualityServiceInfo> quality_service_info_multi_map_)
+  std::set<eCAL::Util::SQualityServiceInfo> GetQualityServiceInfoSet(const std::string& service_name_, const std::string& method_name_, const eCAL::Util::QualityServiceInfoMultimap& quality_service_info_multi_map_)
   {
     std::set<eCAL::Util::SQualityServiceInfo> quality_service_info_set;
 
