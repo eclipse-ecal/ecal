@@ -208,7 +208,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent. 
     **/
-    ECAL_API size_t Send(const void* buf_, size_t len_, long long time_ = DEFAULT_TIME_ARGUMENT) const;
+    ECAL_API size_t Send(const void* buf_, size_t len_, long long time_ = DEFAULT_TIME_ARGUMENT);
 
     /**
      * @brief Send a message to all subscribers.
@@ -218,7 +218,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    ECAL_API size_t Send(CPayloadWriter& payload_, long long time_ = DEFAULT_TIME_ARGUMENT) const;
+    ECAL_API size_t Send(CPayloadWriter& payload_, long long time_ = DEFAULT_TIME_ARGUMENT);
 
     /**
      * @brief Send a message to all subscribers.
@@ -228,7 +228,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    ECAL_API size_t Send(const std::string& s_, long long time_ = DEFAULT_TIME_ARGUMENT) const;
+    ECAL_API size_t Send(const std::string& s_, long long time_ = DEFAULT_TIME_ARGUMENT);
 
     /**
      * @brief Add callback function for publisher events.

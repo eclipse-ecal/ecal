@@ -3,7 +3,8 @@
 #include <nanobind/operators.h>
 #include <nanobind/stl/string.h>
 #include <nanobind/stl/shared_ptr.h>
-#include <stdint.h>
+#include <nanobind/stl/tuple.h>
+#include <cstdint>
 #include <chrono>
 #include <memory>
 #include <string>
@@ -21,15 +22,10 @@ NB_MODULE(nanobind_core, m) {
         .def_rw("descriptor", &eCAL::SDataTypeInformation::descriptor);
 
     auto NBSubscriber_cls = nanobind::class_<eCAL::CNBSubscriber>(m, "NBSubscriber")
-        .def(nanobind::init<const std::string&>())
-        .def("receive", &eCAL::CNBSubscriber::Receive);
-
-    // Class and Functions from ecal_subscriber.h
-    auto Subscriber_cls = nanobind::class_<eCAL::CSubscriber>(m, "Subscriber")
         .def(nanobind::init<>())
         .def(nanobind::init<const std::string&>())
         .def(nanobind::init<const std::string&, const eCAL::SDataTypeInformation&>())
-//        .def(nanobind::self = nanobind::self)
+        .def("receive", &eCAL::CNBSubscriber::Receive)
         .def("create", nanobind::overload_cast<const std::string&>(&eCAL::CSubscriber::Create))
         .def("create", nanobind::overload_cast<const std::string&, const eCAL::SDataTypeInformation&>(&eCAL::CSubscriber::Create))
         .def("destroy", &eCAL::CSubscriber::Destroy)
@@ -77,7 +73,7 @@ NB_MODULE(nanobind_core, m) {
     auto ServiceClient_cls = nanobind::class_<eCAL::CServiceClient>(m, "ServiceClient")
         .def(nanobind::init<>())
         .def(nanobind::init<const std::string&>())
-//        .def(nanobind::self = nanobind::self)
+        //        .def(nanobind::self = nanobind::self)
         .def("create", &eCAL::CServiceClient::Create)
         .def("set_hostname", &eCAL::CServiceClient::SetHostName)
         .def("destroy", &eCAL::CServiceClient::Destroy)
@@ -95,7 +91,7 @@ NB_MODULE(nanobind_core, m) {
     auto ServiceServer_cls = nanobind::class_<eCAL::CServiceServer>(m, "ServiceServer")
         .def(nanobind::init<>())
         .def(nanobind::init<const std::string&>())
-//        .def(nanobind::self = nanobind::self)
+        //        .def(nanobind::self = nanobind::self)
         .def("create", &eCAL::CServiceServer::Create)
         .def("add_description", &eCAL::CServiceServer::AddDescription)
         .def("destroy", &eCAL::CServiceServer::Destroy)
@@ -109,15 +105,15 @@ NB_MODULE(nanobind_core, m) {
     // Functions from ecal_core.h
     m.def("get_version_string", []() { return eCAL::GetVersionString(); });
     m.def("get_version_date", []() { return eCAL::GetVersionDateString(); });
-    m.def("set_unitname", [](const char* nb_unit_name) { return eCAL::SetUnitName(nb_unit_name); });
+    m.def("set_unitname", [](const std::string& nb_unit_name) { return eCAL::SetUnitName(nb_unit_name.c_str()); });
     m.def("is_initialised", []() { return eCAL::IsInitialized(); });
     m.def("finalize", [](unsigned int nb_component_) { return eCAL::Finalize(nb_component_); });
     m.def("ok", []() { return eCAL::Ok(); });
 
-    m.def("get_version", [](int* nb_major, int* nb_minor, int* nb_patch) 
+    m.def("get_version", [](int* nb_major, int* nb_minor, int* nb_patch)
         { return eCAL::GetVersion(nb_major, nb_minor, nb_patch); });
- //   m.def("initialize", [](int nb_argc_, char *nb_argv_, const char* nb_unit_name_, unsigned int nb_components_)
- //       { return eCAL::Initialize(nb_argc_, nb_argv_, nb_unit_name_, nb_components_); });
+    //   m.def("initialize", [](int nb_argc_, char *nb_argv_, const char* nb_unit_name_, unsigned int nb_components_)
+    //       { return eCAL::Initialize(nb_argc_, nb_argv_, nb_unit_name_, nb_components_); });
     m.def("initialize", [](std::vector<std::string> nb_args_, std::string nb_unit_name_)
         { return eCAL::Initialize(nb_args_, nb_unit_name_.c_str(), eCAL::Init::Default); });
     m.def("initialize", []()
@@ -143,13 +139,19 @@ NB_MODULE(nanobind_core, m) {
 
     m.def("get_topics", [](std::unordered_map<std::string, eCAL::SDataTypeInformation>& nb_topic_info_map_)
         { return eCAL::Util::GetTopics(nb_topic_info_map_); });
+
     m.def("get_topic_names", [](std::vector<std::string>& nb_topic_names_)
         { return eCAL::Util::GetTopicNames(nb_topic_names_); });
-    m.def("get_topic_datatype_info", [](const std::string& nb_topic_name_, eCAL::SDataTypeInformation& nb_topic_info_)
-        { return eCAL::Util::GetTopicDataTypeInformation(nb_topic_name_, nb_topic_info_); });
+    m.def("get_topic_datatype_info", [](const std::string& nb_topic_name_)
+        {
+            eCAL::SDataTypeInformation nb_topic_info_;
+            auto success = eCAL::Util::GetTopicDataTypeInformation(nb_topic_name_, nb_topic_info_);
+            auto return_value = nanobind::make_tuple(success, nb_topic_info_);
+            return return_value;
+        });
 
-//    m.def("getservices", [](std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation>& nb_service_info_map_)
-//        { return eCAL::Util::GetServices(nb_service_info_map_); });
+    //    m.def("getservices", [](std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation>& nb_service_info_map_)
+    //        { return eCAL::Util::GetServices(nb_service_info_map_); });
     m.def("get_service_names", [](std::vector<std::tuple<std::string, std::string>>& nb_service_method_names_)
         { return eCAL::Util::GetServiceNames(nb_service_method_names_); });
     m.def("get_service_type_names", [](const std::string& nb_service_name_, const std::string& nb_method_name_, std::string& nb_req_type_, std::string& nb_resp_type_)

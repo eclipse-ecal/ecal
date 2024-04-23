@@ -6,16 +6,17 @@
 
 namespace eCAL
 {
-    class CNBSubscriber:CSubscriber
+    class CNBSubscriber: public CSubscriber
     {
     public:
+        CNBSubscriber() : CSubscriber() { }
         CNBSubscriber(const std::string& s) : CSubscriber(s) { }
+        CNBSubscriber(const std::string& s, const SDataTypeInformation& datainfo) : CSubscriber(s,datainfo) { }
 
-        std::string Receive()
+        std::string Receive(int nb_timeout)
         {
             std::string Rec_Data = "No Reception";
-            long long rcv_time = 12345;
-            auto success = eCAL::CSubscriber::ReceiveBuffer(Rec_Data, &rcv_time, 500);
+            auto success = eCAL::CSubscriber::ReceiveBuffer(Rec_Data, nullptr, nb_timeout);
             return(Rec_Data);
         }
     };
