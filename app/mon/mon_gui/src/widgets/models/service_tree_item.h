@@ -250,7 +250,7 @@ public:
 
   static std::string generateIdentifier(const T& service, const eCAL::pb::Method& method)
   {
-    return std::to_string(service.pid()) + "@" + service.hname() + "@" + method.mname();
+    return std::to_string(service.pid()) + "@" + service.hname() + "@" + service.sname() + "@" + method.mname();
   }
 
   void update(const T& service, const eCAL::pb::Method& method)
