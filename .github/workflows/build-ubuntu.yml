@@ -171,5 +171,5 @@ jobs:
     - name: Upload Debian
       uses: actions/upload-artifact@v4
       with:
-        name: ubuntu-debian
+        name: '${{ env.PROJECT_NAME }}_${{ env.CMAKE_PROJECT_VERSION }}-${{ env.ubuntu_codename }}_${{ env.cpu_architecture }}'
         path: ${{ runner.workspace }}/_build/_deploy/*.deb
