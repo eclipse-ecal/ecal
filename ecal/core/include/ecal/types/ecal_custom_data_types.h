@@ -50,20 +50,18 @@ namespace eCAL
       ECAL_API IpAddressV4(const std::string& ip_address_); 
       ECAL_API ~IpAddressV4(); 
 
-      std::string GetIpString() const { return m_ip_address; };
+      std::string GetIpString() const;
 
-      IpAddressV4(IpAddressV4& other)                      { this->m_ip_address = other; };
-      IpAddressV4& operator=(const IpAddressV4& other)     { this->m_ip_address = other.GetIpString(); return *this; };
-      IpAddressV4& operator=(const std::string& ip_string) { this->validateIpString(ip_string); return *this; };
-      operator std::string()                               { return m_ip_address; };
-
-      friend std::ostream& operator<<(std::ostream& os, const IpAddressV4& ipv4) { os << ipv4.m_ip_address; return os; };
+      ECAL_API IpAddressV4(IpAddressV4& other);
+      ECAL_API IpAddressV4& operator=(const IpAddressV4& other);
+      ECAL_API IpAddressV4& operator=(const std::string& ip_string);
+      ECAL_API operator std::string();
 
     private:            
       ECAL_API void validateIpString(const std::string& ip_address_); 
-      static void throwException(const std::string& ip_address_ = std::string("")); 
+      ECAL_API static void throwException(const std::string& ip_address_ = std::string("")); 
 
-      std::string m_ip_address;
+      std::string m_ip_address{};
     };
 
     /**
@@ -83,7 +81,7 @@ namespace eCAL
     public:
       ConstrainedInteger(int size_ = MIN)
       {
-        if (size_ >= MIN && size_ <= MAX && size_ % STEP == 0)
+        if (size_ >= MIN && size_ <= MAX && size_ % STEP == 0 && MAX >= MIN)
         {
           m_size = size_;
         }

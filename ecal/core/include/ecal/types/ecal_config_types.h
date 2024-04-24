@@ -33,6 +33,7 @@
 #include "ecal_service_options.h"
 #include "ecal_logging_options.h"
 #include "ecal_transport_layer_options.h"
+#include "user_arg_options.h"
 
 #include "ecal/ecal_os.h"
 #include "ecal/ecal_log_level.h"
@@ -57,13 +58,15 @@ namespace eCAL
         ServiceOptions           service_options{};
         ApplicationOptions       application_options{};
         LoggingOptions           logging_options{};
-        std::string              loaded_ecal_ini_file{};
-        std::vector<std::string> config_keys{};
+        ClArguments              command_line_arguments{};
+        std::string              loaded_ecal_ini_file{};        
         
         ECAL_API eCALConfig(int argc_ , char **argv_);
+        ECAL_API eCALConfig(std::vector<std::string> args_);
 
         private:
-        void InitConfig();
+          ECAL_API void InitConfig();
+          ECAL_API void Init(int argc_ , char **argv_);
     };
 	}
 }

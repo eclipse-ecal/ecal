@@ -39,7 +39,7 @@ namespace eCAL
     virtual ~CConfig();
 
     void OverwriteKeys(const std::vector<std::string>& key_vec_);
-    void AddFile(std::string& ini_file_);
+    bool AddFile(std::string& ini_file_);
 
     bool Validate();
 

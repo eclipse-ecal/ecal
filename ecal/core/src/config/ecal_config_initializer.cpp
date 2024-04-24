@@ -30,6 +30,8 @@
 #include "ecal/ecal_process.h"
 #include "config/ecal_cmd_parser.h"
 
+#include <algorithm>
+
 constexpr const char* COMMON       = "common";
 constexpr const char* MONITORING   = "monitoring";
 constexpr const char* NETWORK      = "network";
@@ -100,14 +102,16 @@ namespace eCAL
     void eCALConfig::InitConfig()
     {
       CConfig iniConfig;
-      iniConfig.OverwriteKeys(config_keys);
-      iniConfig.AddFile(g_default_ini_file);
+      iniConfig.OverwriteKeys(command_line_arguments.config_keys);
+      std::string ini_to_load;
+      if (command_line_arguments.found_config_file.empty())
+        ini_to_load = g_default_ini_file;
+      else
+        ini_to_load = command_line_arguments.found_config_file;
 
-      // g_default_ini_file will be altered in case the loading is successful
-      // otherwise config.loaded_ecal_ini_file will stay empty
-      if (g_default_ini_file != ECAL_DEFAULT_CFG)
+      if (iniConfig.AddFile(ini_to_load))
       {
-        loaded_ecal_ini_file = g_default_ini_file;
+        loaded_ecal_ini_file = ini_to_load;
       }
 
       // transport layer options
@@ -210,19 +214,35 @@ namespace eCAL
 
     eCALConfig::eCALConfig(int argc_ , char **argv_)
     {
-      CmdParser cmd_parser(argc_, argv_);
+      Init(argc_, argv_);
+    }
 
-      config_keys = cmd_parser.getConfigKeys();
+    eCALConfig::eCALConfig(std::vector<std::string> args_)
+    {
+      args_.emplace(args_.begin(), eCAL::Process::GetProcessName());
+      std::vector<const char*> argv(args_.size());
+      std::transform(args_.begin(), args_.end(), argv.begin(), [](std::string& s) {return s.c_str();});
       
+      Init(static_cast<int>(argv.size()), const_cast<char**>(argv.data()));
+    }
+
+    void eCALConfig::Init(int argc_ , char **argv_)
+    {
+      CmdParser parser(argc_, argv_);
+      
+      command_line_arguments.config_keys       = parser.getConfigKeys();
+      command_line_arguments.specified_config  = parser.getUserIni();
+      command_line_arguments.dump_config       = parser.getDumpConfig();
+      command_line_arguments.found_config_file = parser.getValidIni();
+
       InitConfig();
 
-      if (cmd_parser.dumpConfig())
+      if (command_line_arguments.dump_config)
       {
         Process::DumpConfig();
       }
     }
 
-    // after initialization
     eCALConfig& GetCurrentConfig()
     {
       return g_ecal_config();

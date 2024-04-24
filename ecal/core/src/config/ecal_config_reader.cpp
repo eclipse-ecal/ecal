@@ -294,7 +294,7 @@ namespace eCAL
       m_overwrite_keys = key_vec_;
     }
 
-    void AddFile(std::string& file_name_)
+    bool AddFile(std::string& file_name_)
     {
       std::string cfg_fname = file_name_;
       if (!fileexists(cfg_fname))
@@ -340,6 +340,8 @@ namespace eCAL
             std::cout << "Error: Could not overwrite key " << key << " in section " << section << ".";
          }
       }
+
+      return loaded;
     }
   protected:
     std::vector<std::string> m_overwrite_keys;
@@ -379,9 +381,9 @@ namespace eCAL
     m_impl->OverwriteKeys(key_vec_);
   }
 
-  void CConfig::AddFile(std::string& ini_file_)
+  bool CConfig::AddFile(std::string& ini_file_)
   {
-    m_impl->AddFile(ini_file_);
+    return m_impl->AddFile(ini_file_);
   }
 
   bool CConfig::Validate()

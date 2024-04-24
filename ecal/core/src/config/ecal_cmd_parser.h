@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@
  * @brief  Utility class for parsing cmd line arguments into eCAL useful structures.
 **/
 
+#pragma once
+
 #include <vector>
 #include <string>
 
@@ -28,19 +30,37 @@ namespace eCAL
 {
   namespace Config
   {
+    /**
+     * @brief  Class for parsing and storing command line arguments and their values.
+     *         Defaults as empty strings, vectors and false booleans.
+     *
+     * @param argc_ Number of arguments 
+     * @param argv_ Array of arguments
+     * 
+    **/
     class CmdParser
     {    
     public:
       CmdParser(int argc_ , char **argv_);
+      CmdParser();
 
-      bool dumpConfig() const                      { return m_dump_config; };
-      std::vector<std::string>& getConfigKeys()    { return m_config_keys; };
-      std::vector<std::string>& getTaskParameter() { return m_task_parameter; };
+      void                     parseArguments(int argc_, char **argv_);
+      void                     setUserIni(const std::string& ini_);
+
+      bool                      getDumpConfig() const;
+      std::vector<std::string>& getConfigKeys();
+      std::vector<std::string>& getTaskParameter();
+      std::string&              getUserIni();
+      std::string&              getValidIni();
 
     private:
+      std::string              checkForValidConfigFilePath(std::string config_file_);
+
       std::vector<std::string> m_config_keys;
       bool                     m_dump_config;
       std::vector<std::string> m_task_parameter;
+      std::string              m_user_ini;
+      std::string              m_valid_ini;
     };    
   }
 }

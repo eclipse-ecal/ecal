@@ -80,5 +80,13 @@ namespace eCAL
     {
       throw std::invalid_argument("[IpAddressV4] No valid IP address: " + ip_address_);
     }
+
+    std::string IpAddressV4::GetIpString() const                      { return m_ip_address; };
+    IpAddressV4::IpAddressV4(IpAddressV4& other)                      { this->m_ip_address = other; };
+    IpAddressV4& IpAddressV4::operator=(const IpAddressV4& other)     { this->m_ip_address = other.GetIpString(); return *this; };
+    IpAddressV4& IpAddressV4::operator=(const std::string& ip_string) { this->validateIpString(ip_string); return *this; };
+    IpAddressV4::operator std::string()                               { return m_ip_address; };
+    
+    std::ostream& operator<<(std::ostream& os, const IpAddressV4& ipv4) { os << ipv4.GetIpString(); return os; };
   }
 }

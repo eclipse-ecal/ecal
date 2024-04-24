@@ -125,7 +125,7 @@ namespace eCAL
     const int success = g_globals()->Initialize(components_, &cmd_parser.getConfigKeys());
 
     // print out configuration
-    if (cmd_parser.dumpConfig())
+    if (cmd_parser.getDumpConfig())
     {
       Process::DumpConfig();
     }
