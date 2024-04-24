@@ -32,20 +32,6 @@ jobs:
     - name: Uninstall Chocolatey
       run: move "$env:PROGRAMDATA\chocolatey" "$env:PROGRAMDATA\_chocolatey"
 
-#    - name: Install Cap’n Proto
-#      run: |
-#        mkdir "${{ runner.workspace }}/capnp"
-#        cd "${{ runner.workspace }}/capnp"
-#        git clone https://github.com/sandstorm-io/capnproto.git
-#        cd capnproto
-#        git checkout release-0.9.0
-#        cd c++
-#        mkdir _build
-#        cd _build
-#        cmake .. -G "Visual Studio 16 2019" -A x64
-#        cmake --build . --parallel --config Release
-#        cmake --build . --target install --config Release
-
     - name: Checkout
       uses: actions/checkout@v4
       with:
@@ -163,91 +149,6 @@ jobs:
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build/complete
 
-    # Create Python.
-    # The strang-looking double-cmake is an ugly workaround to force CMake to
-    # re-find Python, after we have changed the venv from the outside. The
-    # alternative would be to clean everything, which would cause an unnecessary
-    # rebuild of eCAL and HDF5 for each python Version.
-    - name: Build Python 3.12 Wheel
-      run: |
-        mkdir ".venv_312"
-        py -3.12 -m venv ".venv_312"
-        CALL ".venv_312\Scripts\activate.bat"
-        pip install wheel  setuptools
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
-        cmake --build . --target create_python_wheel --config Release
-      shell: cmd
-      working-directory: ${{ runner.workspace }}/_build/complete
-    
-    - name: Build Python 3.11 Wheel
-      run: |
-        mkdir ".venv_311"
-        py -3.11 -m venv ".venv_311"
-        CALL ".venv_311\Scripts\activate.bat"
-        pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
-        cmake --build . --target create_python_wheel --config Release
-      shell: cmd
-      working-directory: ${{ runner.workspace }}/_build/complete
-
-    - name: Build Python 3.10 Wheel
-      run: |
-        mkdir ".venv_310"
-        py -3.10 -m venv ".venv_310"
-        CALL ".venv_310\Scripts\activate.bat"
-        pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
-        cmake --build . --target create_python_wheel --config Release
-      shell: cmd
-      working-directory: ${{ runner.workspace }}/_build/complete
-
-    - name: Build Python 3.9 Wheel
-      run: |
-        mkdir ".venv_39"
-        py -3.9 -m venv ".venv_39"
-        CALL ".venv_39\Scripts\activate.bat"
-        pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
-        cmake --build . --target create_python_wheel --config Release
-      shell: cmd
-      working-directory: ${{ runner.workspace }}/_build/complete
-
-    - name: Build Python 3.8 Wheel
-      run: |
-        mkdir ".venv_38"
-        py -3.8 -m venv ".venv_38"
-        CALL ".venv_38\Scripts\activate.bat"
-        pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
-        cmake --build . --target create_python_wheel --config Release
-      shell: cmd
-      working-directory: ${{ runner.workspace }}/_build/complete
-
-    - name: Build Python 3.7 Wheel
-      run: |
-        mkdir ".venv_37"
-        py -3.7 -m venv ".venv_37"
-        CALL ".venv_37\Scripts\activate.bat"
-        pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
-        cmake --build . --target create_python_wheel --config Release
-      shell: cmd
-      working-directory: ${{ runner.workspace }}/_build/complete
-
-#    - name: Build Documentation C
-#      run: cmake --build . --target documentation_c
-#      working-directory: ${{ runner.workspace }}/_build
-#
-#    - name: Build Documentation C++
-#      run: cmake --build . --target documentation_cpp
-#      working-directory: ${{ runner.workspace }}/_build
-
     - name: Run Tests
       run: ctest -C Release -V
       working-directory: ${{ runner.workspace }}/_build/complete
@@ -260,17 +161,28 @@ jobs:
       run: cpack -C Release
       working-directory: ${{ runner.workspace }}/_build/complete
 
+    - name: Get Project version from git tag
+      shell: powershell
+      run: |
+        $VERSION = git describe --tags --dirty
+        echo "VERSION=$VERSION" >> "$Env:GITHUB_ENV"
+
+    - name: Set output binary name
+      shell: powershell
+      run: |
+        $BINARY_NAME = "ecal_${{ env.VERSION }}-win64"
+        echo "BINARY_NAME=$BINARY_NAME" >> "$Env:GITHUB_ENV"
+
+    - name: Rename the setup exe
+      shell: powershell
+      run: |
+        Rename-Item -Path *.exe -NewName "${{ env.BINARY_NAME }}.exe"
+
     - name: Upload Windows setup
       uses: actions/upload-artifact@v4
       with:
-        name: windows-setup
+        name: unsigned-setup
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.exe
-
-    - name: Upload Python Wheels
-      uses: actions/upload-artifact@v4
-      with:
-        name: windows-python-wheels
-        path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
 
     # --------------------------------------------------------------------------------------------------
 
@@ -284,7 +196,7 @@ jobs:
     - name: Download Windows setup
       uses: actions/download-artifact@v4
       with:
-        name: windows-setup
+        name: unsigned-setup
         path: ${{ runner.workspace }}/_build/complete/_deploy
 
     - name: Sign the installer on Eclipse CI
@@ -454,9 +366,16 @@ jobs:
         JENKINS_JOB_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_FILE }} 
       working-directory: ${{ runner.workspace }}/_build/complete/_deploy
 
+    - name: Determine name of the installer for zip file
+      shell: powershell
+      run:
+        $INSTALLER_NAME = "${{ env.ASSET_NAME }}"
+        $INSTALLER_NAME_WITHOUT_EXE = $INSTALLER_NAME.Substring(0, $INSTALLER_NAME.Length - 4)
+        echo "ARTIFACT_NAME=$INSTALLER_NAME_WITHOUT_EXE" >> "$Env:GITHUB_ENV"
+
     - name: Upload Windows setup signed on Eclipse CI
       if: env.IS_DOWNLOAD_AVAILABLE == 'true'
       uses: actions/upload-artifact@v4
       with:
-        name: windows-setup-signed
+        name: ${{ env.ARTIFACT_NAME }}
         path: ${{ runner.workspace }}/_build/complete/_deploy/${{ env.ASSET_NAME }}
