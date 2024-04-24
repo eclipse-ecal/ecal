@@ -125,7 +125,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_TINYXML2=ON \
         -DECAL_THIRDPARTY_BUILD_FINEFTP=ON \
         -DECAL_THIRDPARTY_BUILD_CURL=OFF \
-        -DECAL_THIRDPARTY_BUILD_GTEST=ON \
+        -DECAL_THIRDPARTY_BUILD_GTEST=OFF \
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
@@ -150,13 +150,15 @@ jobs:
       run: ctest -V
       working-directory: ${{ runner.workspace }}/_build
 
-    - name: Read Project Version from CMakeCache
-      run: |
-        cmake_project_version_string=$(cat "${{ runner.workspace }}/_build/CMakeCache.txt" | grep "^CMAKE_PROJECT_VERSION:")
-        arr=(${cmake_project_version_string//=/ })
-        cmake_project_version=${arr[1]}
-        echo "CMAKE_PROJECT_VERSION=$cmake_project_version"  >> "$GITHUB_ENV"
+    - name: Get Project version from git tag
       shell: bash
+      run: |
+        echo "PROJECT_VERSION=$(git describe --tags --dirty)" >> "$GITHUB_ENV"
+
+    - name: Set output binary name
+      shell: bash
+      run: |
+        echo "BINARY_NAME=${{ env.PROJECT_NAME }}_${{ env.PROJECT_VERSION }}-${{ env.ubuntu_codename }}_${{ env.cpu_architecture }}" >> "$GITHUB_ENV"
 
     - name: CPack
       run: cpack -G DEB
@@ -164,12 +166,12 @@ jobs:
 
     - name: Rename .deb installer
       run: |
-        mv *.deb '${{ env.PROJECT_NAME }}_${{ env.CMAKE_PROJECT_VERSION }}-${{ env.ubuntu_codename }}_${{ env.cpu_architecture }}.deb'
+        mv *.deb '${{ env.BINARY_NAME }}.deb'
       shell: bash
       working-directory: ${{runner.workspace}}/_build/_deploy/
 
     - name: Upload Debian
       uses: actions/upload-artifact@v4
       with:
-        name: '${{ env.PROJECT_NAME }}_${{ env.CMAKE_PROJECT_VERSION }}-${{ env.ubuntu_codename }}_${{ env.cpu_architecture }}'
+        name: '${{ env.BINARY_NAME }}'
         path: ${{ runner.workspace }}/_build/_deploy/*.deb
