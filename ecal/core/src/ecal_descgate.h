@@ -56,7 +56,7 @@ namespace eCAL
 
     bool operator<(const SServiceIdKey& other) const
     {
-      return std::tie(service_name, service_id) < std::tie(other.service_name, other.service_id);
+      return std::tie(service_name, method_name, service_id) < std::tie(other.service_name, other.method_name, other.service_id);
     }
   };
 
