@@ -62,7 +62,7 @@ jobs:
         tar zxf capnproto-c++-1.0.2.tar.gz
         cd capnproto-c++-1.0.2
         ./configure
-        make -j$(nproc) check
+        make -j check
         sudo make install
 
     - name: Checkout
@@ -143,7 +143,7 @@ jobs:
       shell: bash
 
     - name: Build Release
-      run: cmake --build . --parallel --config Release -- -k 0
+      run: make -j
       working-directory: ${{ runner.workspace }}/_build
 
     - name: Run Tests
@@ -166,7 +166,7 @@ jobs:
       run: |
         mv *.deb '${{ env.PROJECT_NAME }}_${{ env.CMAKE_PROJECT_VERSION }}-${{ env.ubuntu_codename }}_${{ env.cpu_architecture }}.deb'
       shell: bash
-      working-directory: ${{github.workspace}}/_build/_deploy/
+      working-directory: ${{runner.workspace}}/_build/_deploy/
 
     - name: Upload Debian
       uses: actions/upload-artifact@v4
