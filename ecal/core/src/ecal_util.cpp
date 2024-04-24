@@ -301,7 +301,7 @@ namespace eCAL
       return g_descgate()->GetPublishers();
     }
 
-    std::set<SQualityTopicInfo> GetPublishers(const std::string& topic_name_)
+    QualityTopicInfoSet GetPublishers(const std::string& topic_name_)
     {
       return ::GetQualityTopicInfoSet(topic_name_, GetPublishers());
     }
@@ -312,12 +312,12 @@ namespace eCAL
       return g_descgate()->GetSubscribers();
     }
 
-    std::set<SQualityTopicInfo> GetSubscribers(const std::string& topic_name_)
+    QualityTopicInfoSet GetSubscribers(const std::string& topic_name_)
     {
       return ::GetQualityTopicInfoSet(topic_name_, GetSubscribers());
     }
 
-    SDataTypeInformation GetHighestQualityDataTypeInformation(const std::set<SQualityTopicInfo>& quality_topic_info_set_)
+    SDataTypeInformation GetHighestQualityDataTypeInformation(const QualityTopicInfoSet& quality_topic_info_set_)
     {
       SQualityTopicInfo highest_quality_topic_info;
       for (const auto& info : quality_topic_info_set_)
@@ -342,7 +342,7 @@ namespace eCAL
       return g_descgate()->GetClients();
     }
 
-    SServiceMethodInformation GetHighestQualityServiceMethodInformation(const std::set<SQualityServiceInfo>& quality_service_info_set_)
+    SServiceMethodInformation GetHighestQualityServiceMethodInformation(const SQualityServiceInfoSet& quality_service_info_set_)
     {
       SQualityServiceInfo highest_quality_service_info;
       for (const auto& info : quality_service_info_set_)

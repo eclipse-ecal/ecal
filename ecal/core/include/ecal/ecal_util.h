@@ -68,6 +68,7 @@ namespace eCAL
       }
     };
     using QualityTopicInfoMultiMap = std::multimap<std::string, SQualityTopicInfo>;
+    using QualityTopicInfoSet      = std::set<SQualityTopicInfo>;
 
     using ServiceId = std::uint64_t;
     struct SQualityServiceInfo
@@ -93,7 +94,7 @@ namespace eCAL
       }
     };
     using QualityServiceInfoMultimap = std::multimap<SServiceMethod, SQualityServiceInfo>;
-
+    using SQualityServiceInfoSet     = std::set<SQualityServiceInfo>;
     /**
      * @brief Retrieve eCAL configuration path.
      *          This is path is for the global eCAL configuration files
@@ -192,7 +193,7 @@ namespace eCAL
      *
      * @return Set containing the quality datatype information for this publisher.
     **/
-    ECAL_API std::set<SQualityTopicInfo> GetPublishers(const std::string& topic_name_);
+    ECAL_API QualityTopicInfoSet GetPublishers(const std::string& topic_name_);
 
     /**
      * @brief Get complete snapshot of data type information with quality and topic id for all known subscribers.
@@ -208,7 +209,7 @@ namespace eCAL
      *
      * @return Set containing the quality datatype information for this subscriber.
     **/
-    ECAL_API std::set<SQualityTopicInfo> GetSubscribers(const std::string& topic_name_);
+    ECAL_API QualityTopicInfoSet GetSubscribers(const std::string& topic_name_);
 
     /**
      * @brief Get highest quality data type information out of a set of quality data type information.
@@ -217,7 +218,7 @@ namespace eCAL
      *
      * @return Highest quality data type information.
     **/
-    ECAL_API SDataTypeInformation GetHighestQualityDataTypeInformation(const std::set<SQualityTopicInfo>& quality_topic_info_set_);
+    ECAL_API SDataTypeInformation GetHighestQualityDataTypeInformation(const QualityTopicInfoSet& quality_topic_info_set_);
 
     /**
      * @brief Get complete snapshot of service method information with quality and service id for all known services.
@@ -240,7 +241,7 @@ namespace eCAL
      *
      * @return Highest quality service method information.
     **/
-    ECAL_API SServiceMethodInformation GetHighestQualityServiceMethodInformation(const std::set<SQualityServiceInfo>& quality_service_info_set_);
+    ECAL_API SServiceMethodInformation GetHighestQualityServiceMethodInformation(const SQualityServiceInfoSet& quality_service_info_set_);
 
     /**
      * @brief Get complete topic map.
