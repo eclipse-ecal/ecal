@@ -116,7 +116,7 @@ TEST(core_cpp_descgate, PublisherQualities)
 
   // check pub1 quality
   {
-    auto pub_it = sample_map.find({ "pub1", 1 });
+    auto pub_it = sample_map.find("pub1");
     EXPECT_NE(pub_it, sample_map.end());
     if (pub_it != sample_map.end())
     {
@@ -129,7 +129,7 @@ TEST(core_cpp_descgate, PublisherQualities)
 
   // check pub2 quality
   {
-    auto pub_it = sample_map.find({ "pub2", 2 });
+    auto pub_it = sample_map.find("pub2");
     EXPECT_NE(pub_it, sample_map.end());
     if (pub_it != sample_map.end())
     {
@@ -205,7 +205,7 @@ TEST(core_cpp_descgate, SubscriberQualities)
 
   // check sub1 quality
   {
-    auto sub_it = sample_map.find({ "sub1", 1 });
+    auto sub_it = sample_map.find("sub1");
     EXPECT_NE(sub_it, sample_map.end());
     if (sub_it != sample_map.end())
     {
@@ -218,7 +218,7 @@ TEST(core_cpp_descgate, SubscriberQualities)
 
   // check sub2 quality
   {
-    auto sub_it = sample_map.find({ "sub2", 2 });
+    auto sub_it = sample_map.find("sub2");
     EXPECT_NE(sub_it, sample_map.end());
     if (sub_it != sample_map.end())
     {

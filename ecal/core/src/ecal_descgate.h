@@ -73,12 +73,12 @@ namespace eCAL
     void ApplySample(const Registration::Sample& sample_, eTLayerType layer_);
 
     // get publisher/subscriber maps
-    QualityTopicIdMap GetPublishers();
-    QualityTopicIdMap GetSubscribers();
+    Util::QualityTopicInfoMultiMap GetPublishers();
+    Util::QualityTopicInfoMultiMap GetSubscribers();
 
     // get service/clients maps
-    QualityServiceIdMap GetServices();
-    QualityServiceIdMap GetClients();
+    Util::QualityServiceInfoMultimap GetServices();
+    Util::QualityServiceInfoMultimap GetClients();
 
     // delete copy constructor and copy assignment operator
     CDescGate(const CDescGate&) = delete;
@@ -105,8 +105,8 @@ namespace eCAL
       QualityServiceIdExpMap map;
     };
 
-    static QualityTopicIdMap   GetTopics(SQualityTopicIdMap& topic_map_);
-    static QualityServiceIdMap GetServices(SQualityServiceIdMap& service_method_info_map_);
+    static Util::QualityTopicInfoMultiMap   GetTopics  (SQualityTopicIdMap& topic_info_map_);
+    static Util::QualityServiceInfoMultimap GetServices(SQualityServiceIdMap& service_method_info_map_);
 
     static void ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
                                       const std::string& topic_name_,

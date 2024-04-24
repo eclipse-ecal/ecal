@@ -84,7 +84,7 @@ namespace
    *
    * @return             std::map<TopicName, SQualityTopicInfo>
   **/
-  std::map<std::string, eCAL::Util::SQualityTopicInfo> ReduceQualityTopicIdMap(const eCAL::QualityTopicIdMap& source_map_)
+  std::map<std::string, eCAL::Util::SQualityTopicInfo> ReduceQualityTopicIdMap(const eCAL::Util::QualityTopicInfoMultiMap& source_map_)
   {
     std::map<std::string, eCAL::Util::SQualityTopicInfo> target_map;
 
@@ -93,7 +93,7 @@ namespace
       const auto& source_key   = source_pair.first;
       const auto& source_value = source_pair.second;
 
-      auto target_it = target_map.find(source_key.topic_name);
+      auto target_it = target_map.find(source_key);
       if (target_it != target_map.end())
       {
         // key exists in target map
@@ -106,7 +106,7 @@ namespace
       else
       {
         // key does not exist in target map, insert source pair
-        target_map.insert(std::make_pair(source_key.topic_name, source_value));
+        target_map.insert(std::make_pair(source_key, source_value));
       }
     }
 
@@ -121,19 +121,19 @@ namespace
    *
    * @return             std::map<std::tuple<ServiceName, MethodName>, SQualityServiceInfo>
   **/
-  std::map<eCAL::Util::SServiceMethod, eCAL::Util::SQualityServiceInfo> ReduceQualityServiceIdMap(const eCAL::QualityServiceIdMap& source_map_)
+  std::map<eCAL::Util::SServiceMethod, eCAL::Util::SQualityServiceInfo> ReduceQualityServiceIdMap(const eCAL::Util::QualityServiceInfoMultimap& source_map_)
   {
     std::map<eCAL::Util::SServiceMethod, eCAL::Util::SQualityServiceInfo> target_map;
 
     for (const auto& source_pair : source_map_)
     {
-      const auto& source_key  = source_pair.first;
+      const auto& source_key   = source_pair.first;
       const auto& source_value = source_pair.second;
 
-      eCAL::Util::SServiceMethod key;
-      key.service_name = source_key.service_name;
-      key.method_name  = source_key.method_name;
-      auto target_it = target_map.find(key);
+      eCAL::Util::SServiceMethod target_key;
+      target_key.service_name = source_key.service_name;
+      target_key.method_name  = source_key.method_name;
+      auto target_it = target_map.find(target_key);
       if (target_it != target_map.end())
       {
         // key exists in target map
@@ -147,10 +147,7 @@ namespace
       else
       {
         // key does not exist in target map, insert source pair
-        eCAL::Util::SServiceMethod key;
-        key.service_name = source_key.service_name;
-        key.method_name  = source_key.method_name;
-        target_map.insert(std::make_pair(key, source_pair.second));
+        target_map.insert(std::make_pair(target_key, source_pair.second));
       }
     }
 
@@ -300,16 +297,8 @@ namespace eCAL
 
     QualityTopicInfoMultiMap GetPublishers()
     {
-      QualityTopicInfoMultiMap multi_map;
-      if (g_descgate() == nullptr) return multi_map;
-
-      // insert publisher into target multimap
-      for (const auto& topic : g_descgate()->GetPublishers())
-      {
-        multi_map.insert(std::pair<std::string, SQualityTopicInfo>(topic.first.topic_name, topic.second));
-      }
-
-      return multi_map;
+      if (g_descgate() == nullptr) return QualityTopicInfoMultiMap();
+      return g_descgate()->GetPublishers();
     }
 
     std::set<SQualityTopicInfo> GetPublishers(const std::string& topic_name_)
@@ -319,16 +308,8 @@ namespace eCAL
 
     QualityTopicInfoMultiMap GetSubscribers()
     {
-      QualityTopicInfoMultiMap multi_map;
-      if (g_descgate() == nullptr) return multi_map;
-
-      // insert subscriber into target multimap
-      for (const auto& topic : g_descgate()->GetSubscribers())
-      {
-        multi_map.insert(std::pair<std::string, SQualityTopicInfo>(topic.first.topic_name, topic.second));
-      }
-
-      return multi_map;
+      if (g_descgate() == nullptr) return QualityTopicInfoMultiMap();
+      return g_descgate()->GetSubscribers();
     }
 
     std::set<SQualityTopicInfo> GetSubscribers(const std::string& topic_name_)
@@ -351,35 +332,14 @@ namespace eCAL
 
     QualityServiceInfoMultimap GetServices()
     {
-      QualityServiceInfoMultimap multi_map;
-      if (g_descgate() == nullptr) return multi_map;
-
-      // insert services into target multimap
-      for (const auto& service : g_descgate()->GetServices())
-      {
-        SServiceMethod key;
-        key.service_name = service.first.service_name;
-        key.method_name  = service.first.method_name;
-        multi_map.insert(std::pair<SServiceMethod, SQualityServiceInfo>(key, service.second));
-      }
-      return multi_map;
+      if (g_descgate() == nullptr) return QualityServiceInfoMultimap();
+      return g_descgate()->GetServices();
     }
 
     QualityServiceInfoMultimap GetClients()
     {
-      QualityServiceInfoMultimap multi_map;
-      if (g_descgate() == nullptr) return multi_map;
-
-      // insert clients into target multimap
-      for (const auto& client : g_descgate()->GetClients())
-      {
-        SServiceMethod key;
-        key.service_name = client.first.service_name;
-        key.method_name = client.first.method_name;
-        multi_map.insert(std::pair<SServiceMethod, SQualityServiceInfo>(key, client.second));
-      }
-
-      return multi_map;
+      if (g_descgate() == nullptr) return QualityServiceInfoMultimap();
+      return g_descgate()->GetClients();
     }
 
     SServiceMethodInformation GetHighestQualityServiceMethodInformation(const std::set<SQualityServiceInfo>& quality_service_info_set_)
@@ -415,8 +375,8 @@ namespace eCAL
       quality_topic_info_map_.clear();
       if (g_descgate() == nullptr) return;
 
-      QualityTopicIdMap pub_sub_map = g_descgate()->GetPublishers();
-      QualityTopicIdMap sub_map     = g_descgate()->GetSubscribers();
+      QualityTopicInfoMultiMap pub_sub_map = g_descgate()->GetPublishers();
+      QualityTopicInfoMultiMap sub_map     = g_descgate()->GetSubscribers();
       pub_sub_map.insert(sub_map.begin(), sub_map.end());
 
       // transform into a map with the highest quality data type information

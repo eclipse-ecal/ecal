@@ -52,52 +52,56 @@ namespace eCAL
   }
   CDescGate::~CDescGate() = default;
 
-  QualityTopicIdMap CDescGate::GetPublishers()
+  Util::QualityTopicInfoMultiMap CDescGate::GetPublishers()
   {
     return GetTopics(m_publisher_info_map);
   }
 
-  QualityTopicIdMap CDescGate::GetSubscribers()
+  Util::QualityTopicInfoMultiMap CDescGate::GetSubscribers()
   {
     return GetTopics(m_subscriber_info_map);
   }
 
-  QualityServiceIdMap CDescGate::GetServices()
+  Util::QualityServiceInfoMultimap CDescGate::GetServices()
   {
     return GetServices(m_service_info_map);
   }
 
-  QualityServiceIdMap CDescGate::GetClients()
+  Util::QualityServiceInfoMultimap CDescGate::GetClients()
   {
     return GetServices(m_client_info_map);
   }
 
-  QualityTopicIdMap CDescGate::GetTopics(SQualityTopicIdMap& topic_map_)
+  Util::QualityTopicInfoMultiMap CDescGate::GetTopics(SQualityTopicIdMap& topic_info_map_)
   {
-    QualityTopicIdMap map;
+    Util::QualityTopicInfoMultiMap multi_map;
 
-    const std::lock_guard<std::mutex> lock(topic_map_.mtx);
-    topic_map_.map.remove_deprecated();
+    const std::lock_guard<std::mutex> lock(topic_info_map_.mtx);
+    topic_info_map_.map.remove_deprecated();
 
-    for (const auto& topic_map_it : topic_map_.map)
+    for (const auto& topic_map_it : topic_info_map_.map)
     {
-      map.emplace(topic_map_it.first, topic_map_it.second);
+      multi_map.insert(std::pair<std::string, Util::SQualityTopicInfo>(topic_map_it.first.topic_name, topic_map_it.second));
     }
-    return map;
+
+    return multi_map;
   }
 
-  QualityServiceIdMap CDescGate::GetServices(SQualityServiceIdMap& service_method_info_map_)
+  Util::QualityServiceInfoMultimap CDescGate::GetServices(SQualityServiceIdMap& service_method_info_map_)
   {
-    QualityServiceIdMap map;
+    Util::QualityServiceInfoMultimap multi_map;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
     service_method_info_map_.map.remove_deprecated();
 
     for (const auto& service_method_info_map_it : service_method_info_map_.map)
     {
-      map.emplace(service_method_info_map_it.first, service_method_info_map_it.second);
+      Util::SServiceMethod key;
+      key.service_name = service_method_info_map_it.first.service_name;
+      key.method_name  = service_method_info_map_it.first.method_name;
+      multi_map.insert(std::pair<Util::SServiceMethod, Util::SQualityServiceInfo>(key, service_method_info_map_it.second));
     }
-    return map;
+    return multi_map;
   }
 
   void CDescGate::ApplySample(const Registration::Sample& sample_, eTLayerType /*layer_*/)

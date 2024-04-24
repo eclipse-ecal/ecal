@@ -64,7 +64,7 @@ namespace eCAL
 
       bool operator<(const SQualityTopicInfo& other) const
       {
-        return id <= other.id;
+        return std::tie(quality, id) < std::tie(other.quality, other.id);
       }
     };
     using QualityTopicInfoMultiMap = std::multimap<std::string, SQualityTopicInfo>;
@@ -79,7 +79,7 @@ namespace eCAL
 
       bool operator<(const SQualityServiceInfo& other) const
       {
-        return id <= other.id;
+        return std::tie(request_quality, response_quality, id) < std::tie(other.request_quality, other.response_quality, other.id);
       }
     };
     struct SServiceMethod
