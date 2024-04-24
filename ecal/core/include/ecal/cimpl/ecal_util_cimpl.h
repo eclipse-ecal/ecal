@@ -151,6 +151,57 @@ extern "C"
    * @return  Response description buffer length or zero if failed.
   **/
   ECALC_API int eCAL_Util_GetServiceResponseDescription(const char* service_name_, const char* method_name_, void* resp_desc_, int resp_desc_len_);
+
+  /**
+   * @brief Gets client method request type name.
+   *
+   * @param       client_name_   Client name.
+   * @param       method_name_   Method name.
+   * @param [out] req_type_      Pointer to store the request type.
+   * @param       req_type_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
+   *                             eCAL should allocate the buffer for you (see eCAL_FreeMem).
+   *
+   * @return  Type name buffer length or zero if failed.
+  **/
+  ECALC_API int eCAL_Util_GetClientRequestTypeName(const char* client_name_, const char* method_name_, void* req_type_, int req_type_len_);
+
+  /**
+   * @brief Gets client method response type name.
+   *
+   * @param       client_name_   Client name.
+   * @param       method_name_   Method name.
+   * @param [out] resp_type_     Pointer to store the response type.
+   * @param       resp_type_len_ Length of allocated buffer or ECAL_ALLOCATE_4ME if
+   *
+   * @return  Type name buffer length or zero if failed.
+  **/
+  ECALC_API int eCAL_Util_GetClientResponseTypeName(const char* client_name_, const char* method_name_, void* resp_type_, int resp_type_len_);
+
+  /**
+   * @brief Gets client method request description.
+   *
+   * @param       client_name_   Client name.
+   * @param       method_name_   Method name.
+   * @param [out] req_desc_      Pointer to store the request description.
+   * @param       req_desc_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
+   *                             eCAL should allocate the buffer for you (see eCAL_FreeMem).
+   *
+   * @return  Request description buffer length or zero if failed.
+  **/
+  ECALC_API int eCAL_Util_GetClientRequestDescription(const char* client_name_, const char* method_name_, void* req_desc_, int req_desc_len_);
+
+  /**
+   * @brief Gets client method response description.
+   *
+   * @param       client_name_   Client name.
+   * @param       method_name_   Method name.
+   * @param [out] resp_desc_     Pointer to store the response description.
+   * @param       resp_desc_len_ Length of allocated buffer or ECAL_ALLOCATE_4ME if
+   *                             eCAL should allocate the buffer for you (see eCAL_FreeMem).
+   *
+   * @return  Response description buffer length or zero if failed.
+  **/
+  ECALC_API int eCAL_Util_GetClientResponseDescription(const char* client_name_, const char* method_name_, void* resp_desc_, int resp_desc_len_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

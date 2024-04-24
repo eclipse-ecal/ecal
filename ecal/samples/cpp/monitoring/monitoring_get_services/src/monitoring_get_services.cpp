@@ -23,7 +23,7 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include <vector>
+#include <set>
 
 int main(int argc, char **argv)
 {
@@ -38,7 +38,7 @@ int main(int argc, char **argv)
   {
     // GetServices
     {
-      std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation> service_info_map;
+      std::map<eCAL::Util::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
@@ -52,14 +52,14 @@ int main(int argc, char **argv)
       std::cout << std::endl;
     }
 
-    // GetServiceNames
+    // GetServiceMethodNames
     {
-      std::vector<std::tuple<std::string, std::string>> service_method_names;
+      std::set<eCAL::Util::SServiceMethod> service_method_names;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        eCAL::Util::GetServiceNames(service_method_names);
+        eCAL::Util::GetServiceMethodNames(service_method_names);
       }
 
       auto num_services = service_method_names.size();
