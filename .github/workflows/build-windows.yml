@@ -1,4 +1,4 @@
-name: Build Windows Server 2019
+name: Build Windows
 
 on:
   push:
@@ -176,7 +176,10 @@ jobs:
     - name: Rename the setup exe
       shell: powershell
       run: |
-        Rename-Item -Path *.exe -NewName "${{ env.BINARY_NAME }}.exe"
+        $LS_OUT = ls *.exe
+        $SETUP_NAME = "$($LS_OUT.Name)"
+        Rename-Item -Path "$SETUP_NAME" -NewName "${{ env.BINARY_NAME }}.exe"
+      working-directory: ${{ runner.workspace }}/_build/complete/_deploy/
 
     - name: Upload Windows setup
       uses: actions/upload-artifact@v4
