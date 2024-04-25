@@ -18,7 +18,6 @@
 
 project(mon_plugin_protobuf_reflection VERSION 0.1.0)
 
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Legacy Qt5 (pre 5.15) support as suggested by teh Qt Documentation:
 # https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html#supporting-older-qt-5-versions
