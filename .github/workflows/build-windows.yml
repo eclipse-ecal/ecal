@@ -164,7 +164,12 @@ jobs:
     - name: Get Project version from git tag
       shell: powershell
       run: |
+        # Use git describe to get the tag / commit description
         $VERSION = git describe --tags --dirty
+
+        #remove the leading 'v' from the tag, if it exists
+        $VERSION = $VERSION -replace '^v', ''
+        
         echo "VERSION=$VERSION" >> "$Env:GITHUB_ENV"
 
     - name: Set output binary name
@@ -371,7 +376,7 @@ jobs:
 
     - name: Determine name of the installer for zip file
       shell: powershell
-      run:
+      run: |
         $INSTALLER_NAME = "${{ env.ASSET_NAME }}"
         $INSTALLER_NAME_WITHOUT_EXE = $INSTALLER_NAME.Substring(0, $INSTALLER_NAME.Length - 4)
         echo "ARTIFACT_NAME=$INSTALLER_NAME_WITHOUT_EXE" >> "$Env:GITHUB_ENV"

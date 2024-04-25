@@ -157,7 +157,13 @@ jobs:
     - name: Get Project version from git tag
       shell: bash
       run: |
-        echo "PROJECT_VERSION=$(git describe --tags --dirty)" >> "$GITHUB_ENV"
+        # Use git describe to get the tag / commit description
+        VERSION="$(git describe --tags --dirty)"
+
+        # Remove the leading 'v' from the tag
+        VERSION="${VERSION#v}"
+
+        echo "PROJECT_VERSION=$VERSION" >> "$GITHUB_ENV"
 
     - name: Set output binary name
       shell: bash
