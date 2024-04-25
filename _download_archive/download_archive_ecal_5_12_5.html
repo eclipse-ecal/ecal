@@ -840,6 +840,27 @@ document.write(`
 <section id="changelog">
 <h2>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">#</a></h2>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Changelog
+
+## eCAL Core:
+- ecalc mutex protection corrected (#1402)
+- Changed descgate wrong mutex usage (std::shared_timed_mutex to std::mutex) (#1462)
+- Prevent possible data races by adaption of register/unregister logic (#1482)(#1527)(#1532) 
+
+## eCAL Player:
+- Fix crash when playing empty measurements (#1385)
+
+## eCAL Monitor:
+- Added service name to ServiceTreeItem identifier for save service handling on same process with same methods (#1555)
+
+## eCAL Launcher GUI:
+- Exchanged labels with SVGs
+
+## Dependencies:
+- Updated udpcap to 2.0.1 (fixes lost-datagram-issues(2.0) + deadlock fix)(#1396)
+- Added protobuf 3.26 support (#1535)
+
+## Build:
+- Install pdbs with eCAL (#1545)(#1549)
 </pre></div>
 </div>
 </section>
