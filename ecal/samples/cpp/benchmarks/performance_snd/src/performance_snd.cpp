@@ -45,22 +45,25 @@ int main(int argc, char **argv)
   // create payload
   CBinaryPayload binary_payload(payload_size);
 
-  // create publisher
-  eCAL::CPublisher pub("Performance");
- 
+  // create publisher config
+  eCAL::CPublisher::Config pub_config;
+
   // enable zero copy mode
-  //std::cout << "Zero copy mode: " << zero_copy << std::endl;
-  //pub.ShmEnableZeroCopy(zero_copy);  // TODO: NEW PARAMETER API
-
-  // set write buffer count
-  //std::cout << "Number of write buffers: " << buffer_count << std::endl;
-  //pub.ShmSetBufferCount(buffer_count);  // TODO: NEW PARAMETER API
+  std::cout << "Zero copy mode: " << zero_copy << std::endl;
+  pub_config.shm.zero_copy_mode = zero_copy;
   
-  // enable handshake mode
-  //std::cout << "Acknowledge timeout: " << acknowledge_timeout_ms << " ms" << std::endl;
-  //pub.ShmSetAcknowledgeTimeout(acknowledge_timeout_ms);  // TODO: NEW PARAMETER API
-  //std::cout << std::endl;
+  // set write buffer count
+  std::cout << "Number of write buffers: " << buffer_count << std::endl;
+  pub_config.shm.buffer_count = buffer_count;
 
+  // enable handshake mode
+  std::cout << "Acknowledge timeout: " << acknowledge_timeout_ms << " ms" << std::endl;
+  pub_config.shm.acknowledge_timeout_ms = acknowledge_timeout_ms;
+  std::cout << std::endl;
+
+  // create publisher
+  eCAL::CPublisher pub("Performance", pub_config);
+ 
   // counter
   long long msgs (0);
   long long bytes(0);

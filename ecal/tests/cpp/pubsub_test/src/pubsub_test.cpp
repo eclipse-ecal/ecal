@@ -506,7 +506,7 @@ TEST(core_cpp_pubsub, DynamicCreate)
   eCAL::Finalize();
 }
 
-TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
+TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
 {
   // default send string
   std::string send_s;
@@ -517,11 +517,18 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
   // publish / subscribe match in the same process
   eCAL::Util::EnableLoopback(true);
 
-  // create subscriber for topic "foo"
-  eCAL::CSubscriber sub("foo");
+  // create subscriber for topic "A"
+  eCAL::CSubscriber sub("A");
 
-  // create publisher for topic "foo"
-  eCAL::CPublisher pub("foo");
+  // create publisher config
+  eCAL::CPublisher::Config pub_config;
+  // set transport layer
+  pub_config.shm.send_mode = eCAL::TLayer::smode_on;
+  pub_config.udp.send_mode = eCAL::TLayer::smode_off;
+  pub_config.tcp.send_mode = eCAL::TLayer::smode_off;
+
+  // create publisher for topic "A"
+  eCAL::CPublisher pub("A", pub_config);
 
   // add callback
   EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
@@ -540,7 +547,116 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
 
   // check callback receive
   EXPECT_EQ(send_s.size(), g_callback_received_bytes);
-  EXPECT_EQ(2,             g_callback_received_count);
+  EXPECT_EQ(2, g_callback_received_count);
+
+  // destroy subscriber
+  sub.Destroy();
+
+  // destroy publisher
+  pub.Destroy();
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
+{
+  // default send string
+  std::string send_s;
+
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "pubsub_test");
+
+  // publish / subscribe match in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  // create subscriber for topic "A"
+  eCAL::CSubscriber sub("A");
+
+  // create publisher config
+  eCAL::CPublisher::Config pub_config;
+  // set transport layer
+  pub_config.shm.send_mode = eCAL::TLayer::smode_off;
+  pub_config.udp.send_mode = eCAL::TLayer::smode_on;
+  pub_config.tcp.send_mode = eCAL::TLayer::smode_off;
+
+  // create publisher for topic "A"
+  eCAL::CPublisher pub("A", pub_config);
+
+  // add callback
+  EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
+
+  // let's match them
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+
+  g_callback_received_bytes = 0;
+  g_callback_received_count = 0;
+
+  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  // check callback receive
+  EXPECT_EQ(send_s.size(), g_callback_received_bytes);
+  EXPECT_EQ(2, g_callback_received_count);
+
+  // destroy subscriber
+  sub.Destroy();
+
+  // destroy publisher
+  pub.Destroy();
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+TEST(core_cpp_pubsub, MultipleSendsSHM)
+{
+  // default send string
+  std::vector<std::string> send_vector{ "this", "is", "a", "", "testtest" };
+  std::string last_received_msg;
+  long long   last_received_timestamp;
+
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "pubsub_test");
+
+  // publish / subscribe match in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  // create subscriber for topic "A"
+  eCAL::string::CSubscriber<std::string> sub("A");
+
+  // create publisher config
+  eCAL::CPublisher::Config pub_config;
+  // set transport layer
+  pub_config.shm.send_mode = eCAL::TLayer::smode_on;
+  pub_config.udp.send_mode = eCAL::TLayer::smode_off;
+  pub_config.tcp.send_mode = eCAL::TLayer::smode_off;
+
+  // create publisher for topic "A"
+  eCAL::string::CPublisher<std::string> pub("A", pub_config);
+
+  // add callback
+  auto save_data = [&last_received_msg, &last_received_timestamp](const char* /*topic_name_*/, const std::string& msg_, long long time_, long long /*clock_*/, long long /*id_*/)
+    {
+      last_received_msg = msg_;
+      last_received_timestamp = time_;
+    };
+  EXPECT_TRUE(sub.AddReceiveCallback(save_data));
+
+  // let's match them
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  long long timestamp = 1;
+  for (const auto elem : send_vector)
+  {
+    pub.Send(elem, timestamp);
+    eCAL::Process::SleepMS(DATA_FLOW_TIME);
+    EXPECT_EQ(last_received_msg, elem);
+    EXPECT_EQ(last_received_timestamp, timestamp);
+    ++timestamp;
+  }
 
   // destroy subscriber
   sub.Destroy();
@@ -565,24 +681,31 @@ TEST(core_cpp_pubsub, MultipleSendsUDP)
   // publish / subscribe match in the same process
   eCAL::Util::EnableLoopback(true);
 
-  // create subscriber for topic "foo"
-  eCAL::string::CSubscriber<std::string> sub("foo");
+  // create subscriber for topic "A"
+  eCAL::string::CSubscriber<std::string> sub("A");
 
-  // create publisher for topic "foo"
-  eCAL::string::CPublisher<std::string> pub("foo");
+  // create publisher config
+  eCAL::CPublisher::Config pub_config;
+  // set transport layer
+  pub_config.shm.send_mode = eCAL::TLayer::smode_off;
+  pub_config.udp.send_mode = eCAL::TLayer::smode_on;
+  pub_config.tcp.send_mode = eCAL::TLayer::smode_off;
+
+  // create publisher for topic "A"
+  eCAL::string::CPublisher<std::string> pub("A", pub_config);
 
   // add callback
   auto save_data = [&last_received_msg, &last_received_timestamp](const char* /*topic_name_*/, const std::string& msg_, long long time_, long long /*clock_*/, long long /*id_*/)
-  {
-    last_received_msg = msg_;
-    last_received_timestamp = time_;
-  };
+    {
+      last_received_msg = msg_;
+      last_received_timestamp = time_;
+    };
   EXPECT_TRUE(sub.AddReceiveCallback(save_data));
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
   long long timestamp = 1;
-  for (const auto& elem : send_vector)
+  for (const auto elem : send_vector)
   {
     pub.Send(elem, timestamp);
     eCAL::Process::SleepMS(DATA_FLOW_TIME);

@@ -64,8 +64,17 @@ int main(int argc, char **argv)
   // initialize eCAL API
   eCAL::Initialize(argc, argv, "datarate_snd");
 
+  // create publisher config
+  eCAL::CPublisher::Config pub_config;
+  // set zero copy
+  pub_config.shm.zero_copy_mode = zero_copy;
+  // set buffering
+  pub_config.shm.buffer_count = buffer_count;
+  // set handshake acknowledgement timeout [ms]
+  pub_config.shm.acknowledge_timeout_ms = acknowledge_time;
+
   // new publisher
-  eCAL::CPublisher pub(topic_name);
+  eCAL::CPublisher pub(topic_name, pub_config);
 
   // default send string
   size *= 1024 * 1024;
@@ -75,15 +84,6 @@ int main(int argc, char **argv)
     send_s += send_s;
   }
   send_s.resize(size);
-
-  // set zero copy
-  //pub.ShmEnableZeroCopy(zero_copy);  // TODO: NEW PARAMETER API
-  
-  // set buffering
-  //pub.ShmSetBufferCount(buffer_count);  // TODO: NEW PARAMETER API
-
-  // set handshake acknowledgement timeout [ms]
-  //pub.ShmSetAcknowledgeTimeout(acknowledge_time);  // TODO: NEW PARAMETER API
 
   // send updates
   while(eCAL::Ok())

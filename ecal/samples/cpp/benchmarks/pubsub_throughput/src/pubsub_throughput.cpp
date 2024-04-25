@@ -28,19 +28,39 @@
 const auto g_snd_size (8* 1024 * 1024);
 const auto g_snd_loops(1000);
 
-void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer /*layer*/, bool /*zero_copy*/)
+void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer layer, bool zero_copy)
 {
   // create payload
   CBinaryPayload payload(snd_size);
 
-  // create publisher
-  eCAL::CPublisher pub("throughput");
+  // create publisher config
+  eCAL::CPublisher::Config pub_config;
+
   // set transport layer
-  //pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);  // TODO: NEW PARAMETER API
-  //DO: NEW PARAMETER API
-  // set attributes
-  //pub.ShmEnableZeroCopy(zero_copy);  // TODO: NEW PARAMETER API
-  //pub.ShmSetAcknowledgeTimeout(100);  // TODO: NEW PARAMETER API
+  pub_config.shm.send_mode = eCAL::TLayer::smode_off;
+  pub_config.udp.send_mode = eCAL::TLayer::smode_off;
+  pub_config.tcp.send_mode = eCAL::TLayer::smode_off;
+  switch (layer)
+  {
+  case eCAL::TLayer::tlayer_shm:
+    pub_config.shm.send_mode = eCAL::TLayer::smode_on;
+    break;
+  case eCAL::TLayer::tlayer_udp_mc:
+    pub_config.udp.send_mode = eCAL::TLayer::smode_on;
+    break;
+  case eCAL::TLayer::tlayer_tcp:
+    pub_config.tcp.send_mode = eCAL::TLayer::smode_on;
+    break;
+  }
+
+  // enable zero copy mode
+  pub_config.shm.zero_copy_mode = zero_copy;
+
+  // enable handshake mode
+  pub_config.shm.acknowledge_timeout_ms = 100;
+
+  // create publisher
+  eCAL::CPublisher pub("throughput", pub_config);
 
   // create subscriber
   eCAL::CSubscriber sub("throughput");
