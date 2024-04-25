@@ -16,44 +16,30 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(test_util)
+project(test_descgate)
 
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
-if(ECAL_CORE_PUBLISHER AND ECAL_CORE_SUBSCRIBER)
-  set(util_test_topics_src
-    src/util_gettopics.cpp
-  )
-endif()
-
-if(ECAL_CORE_SERVICE)
-  set(util_test_service_src
-    src/util_getclients.cpp
-    src/util_getservices.cpp
-  )
-endif()
-
-set(util_test_src
-  ${util_test_topics_src}
-  ${util_test_service_src}
-  src/util_test.cpp
+set(descgate_test_src
+  src/getpublisher.cpp
+  ../../../core/src/ecal_descgate.cpp
 )
 
-ecal_add_gtest(${PROJECT_NAME} ${util_test_src})
+ecal_add_gtest(${PROJECT_NAME} ${descgate_test_src})
 
 target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE 
-    eCAL::core
-    Threads::Threads)
+    Threads::Threads
+)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_gtest(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/util)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/core)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
     ${${PROJECT_NAME}_src}
