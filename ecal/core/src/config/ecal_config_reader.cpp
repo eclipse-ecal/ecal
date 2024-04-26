@@ -292,6 +292,30 @@ namespace eCAL
     void OverwriteKeys(const std::vector<std::string>& key_vec_)
     {
       m_overwrite_keys = key_vec_;
+      OverwriteKeysNow();
+    }
+
+    void OverwriteKeysNow()
+    {
+      // update command line keys
+      for (const auto& full_key : m_overwrite_keys)
+      {
+         auto sec_pos = full_key.find_last_of('/');
+         if (sec_pos == std::string::npos) continue;
+         const std::string section = full_key.substr(0, sec_pos);
+         std::string key     = full_key.substr(sec_pos+1);
+
+         auto val_pos = key.find_first_of(':');
+         if (val_pos == std::string::npos) continue;
+         const std::string value = key.substr(val_pos+1);
+         key = key.substr(0, val_pos);
+
+         const SI_Error err = SetValue(section.c_str(), key.c_str(), value.c_str());
+         if (err == SI_FAIL)
+         {
+            std::cout << "Error: Could not overwrite key " << key << " in section " << section << ".";
+         }
+      }
     }
 
     bool AddFile(std::string& file_name_)
@@ -321,25 +345,7 @@ namespace eCAL
         file_name_ = cfg_fname;
       }
 
-      // update command line keys
-      for (const auto& full_key : m_overwrite_keys)
-      {
-         auto sec_pos = full_key.find_last_of('/');
-         if (sec_pos == std::string::npos) continue;
-         const std::string section = full_key.substr(0, sec_pos);
-         std::string key     = full_key.substr(sec_pos+1);
-
-         auto val_pos = key.find_first_of(':');
-         if (val_pos == std::string::npos) continue;
-         const std::string value = key.substr(val_pos+1);
-         key = key.substr(0, val_pos);
-
-         const SI_Error err = SetValue(section.c_str(), key.c_str(), value.c_str());
-         if (err == SI_FAIL)
-         {
-            std::cout << "Error: Could not overwrite key " << key << " in section " << section << ".";
-         }
-      }
+      OverwriteKeysNow();
 
       return loaded;
     }

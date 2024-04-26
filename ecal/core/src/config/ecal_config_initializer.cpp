@@ -99,20 +99,16 @@ namespace eCAL
 {
   namespace Config
   {
-    void eCALConfig::InitConfig()
+    void eCALConfig::InitConfig(std::string ini_path_ /*= std::string("")*/)
     {
       CConfig iniConfig;
-      iniConfig.OverwriteKeys(command_line_arguments.config_keys);
-      std::string ini_to_load;
-      if (command_line_arguments.specified_config.empty())
-        ini_to_load = g_default_ini_file;
-      else
-        ini_to_load = command_line_arguments.specified_config;
+      if (!command_line_arguments.config_keys.empty())
+        iniConfig.OverwriteKeys(command_line_arguments.config_keys);
 
-      // Can here go something wrong at all, in case the cmd line ini was used?
-      if (iniConfig.AddFile(ini_to_load))
+      if (!ini_path_.empty())
       {
-        loaded_ecal_ini_file = ini_to_load;
+        iniConfig.AddFile(ini_path_);
+        loaded_ecal_ini_file = ini_path_;
       }
 
       // transport layer options
@@ -235,12 +231,17 @@ namespace eCAL
       command_line_arguments.specified_config  = parser.getUserIni();
       command_line_arguments.dump_config       = parser.getDumpConfig();
 
-      InitConfig();
+      InitConfig(command_line_arguments.specified_config);
 
       if (command_line_arguments.dump_config)
       {
         Process::DumpConfig();
       }
+    }
+
+    void eCALConfig::InitWithDefaultIni()
+    {
+      InitConfig(g_default_ini_file);
     }
 
     eCALConfig& GetCurrentConfig()
