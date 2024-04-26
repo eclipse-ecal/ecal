@@ -18,6 +18,8 @@
 
 project(MonitorTreeView)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 # Legacy Qt5 (pre 5.15) support as suggested by teh Qt Documentation:
 # https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html#supporting-older-qt-5-versions
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets)
