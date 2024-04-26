@@ -8,6 +8,12 @@ int main(int argc, char** argv)
   // Create a configuration object with the command line arguments
   eCAL::Config::eCALConfig custom_config(argc, argv);
 
+  // Use the .ini file of the system ...
+  custom_config.InitConfigWithDefaultIni();
+
+  // .. or specify an own .ini file to use
+  custom_conig.InitConfig("C:\\eCAL_local.ini");
+
   // Set the values in a try/catch block, as wrong configuration leads to exceptions
   try
   {
