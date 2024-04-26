@@ -120,7 +120,7 @@ namespace eCAL
         }
 
     private:
-        void MethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request, std::string& response)
+        int MethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request, std::string& response)
         {
             nanobind::callable fn_callback;
             {
@@ -130,7 +130,12 @@ namespace eCAL
 
             try {
                 nanobind::gil_scoped_acquire g2;
-                fn_callback(method_, req_type_, resp_type_, request, response);
+                auto result = fn_callback(method_, req_type_, resp_type_, request);
+                // do some check if object holds a tuple if (!result.is_type<nanobind::tuple>)
+                nanobind::tuple result_tuple = nanobind::cast<nanobind::tuple>(result);
+                response = nanobind::cast<std::string>(result[1]);
+                int nb_int = nanobind::cast<int>(result[0]);
+                return nb_int;
             }
             catch (const nanobind::python_error& e) {
                 std::cout << e.what();
