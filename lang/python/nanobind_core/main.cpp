@@ -1,4 +1,5 @@
 #include <nanobind/nanobind.h>
+#include <nanobind/operators.h>
 #include <ecal/ecal.h>
 #include <nanobind/operators.h>
 #include <nanobind/stl/string.h>
@@ -10,7 +11,7 @@
 #include <string>
 #include <cstddef>
 #include <ecal/ecal_types.h>
-#include <ecal/ecal_nb_subscriber.h>
+#include <ecal/ecal_nb_wrapper.h>
 
 
 NB_MODULE(nanobind_core, m) {
@@ -21,34 +22,46 @@ NB_MODULE(nanobind_core, m) {
         .def_rw("encoding", &eCAL::SDataTypeInformation::encoding)
         .def_rw("descriptor", &eCAL::SDataTypeInformation::descriptor);
 
-    auto NBSubscriber_cls = nanobind::class_<eCAL::CNBSubscriber>(m, "NBSubscriber")
+    // Struct eCAL::SServiceResponse
+    nanobind::class_<eCAL::SServiceResponse>(m, "ServiceResponse")
+        .def(nanobind::init<>())
+        .def_rw("host_name", &eCAL::SServiceResponse::host_name)
+        .def_rw("service_name", &eCAL::SServiceResponse::service_name)
+        .def_rw("service_id", &eCAL::SServiceResponse::service_id)
+        .def_rw("method_name", &eCAL::SServiceResponse::method_name)
+        .def_rw("error_msg", &eCAL::SServiceResponse::error_msg)
+        .def_rw("ret_state", &eCAL::SServiceResponse::ret_state)
+        .def_rw("call_state", &eCAL::SServiceResponse::call_state)
+        .def_rw("response", &eCAL::SServiceResponse::response);
+
+    auto Subscriber_cls = nanobind::class_<eCAL::CNBSubscriber>(m, "Subscriber")
         .def(nanobind::init<>())
         .def(nanobind::init<const std::string&>())
         .def(nanobind::init<const std::string&, const eCAL::SDataTypeInformation&>())
         .def("receive", &eCAL::CNBSubscriber::Receive)
-        .def("create", nanobind::overload_cast<const std::string&>(&eCAL::CSubscriber::Create))
-        .def("create", nanobind::overload_cast<const std::string&, const eCAL::SDataTypeInformation&>(&eCAL::CSubscriber::Create))
-        .def("destroy", &eCAL::CSubscriber::Destroy)
-        .def("set_attribute", &eCAL::CSubscriber::SetAttribute)
-        .def("clear_attribute", &eCAL::CSubscriber::ClearAttribute)
-        .def("set_id", &eCAL::CSubscriber::SetID)
-        .def("receive_buffer", &eCAL::CSubscriber::ReceiveBuffer)
-        .def("add_receive_callback", &eCAL::CSubscriber::AddReceiveCallback)
-        .def("rem_receive_callback", &eCAL::CSubscriber::RemReceiveCallback)
-        .def("rem_event_callback", &eCAL::CSubscriber::RemEventCallback)
-        .def("add_event_callback", &eCAL::CSubscriber::AddEventCallback)
-        .def("is_created", &eCAL::CSubscriber::IsCreated)
-        .def("get_publisher_count", &eCAL::CSubscriber::GetPublisherCount)
-        .def("get_topic_name", &eCAL::CSubscriber::GetTopicName)
-        .def("get_datatype_information", &eCAL::CSubscriber::GetDataTypeInformation)
-        .def("dump", &eCAL::CSubscriber::Dump);
+        .def("create", nanobind::overload_cast<const std::string&>(&eCAL::CNBSubscriber::Create))
+        .def("create", nanobind::overload_cast<const std::string&, const eCAL::SDataTypeInformation&>(&eCAL::CNBSubscriber::Create))
+        .def("destroy", &eCAL::CNBSubscriber::Destroy)
+        .def("set_attribute", &eCAL::CNBSubscriber::SetAttribute)
+        .def("clear_attribute", &eCAL::CNBSubscriber::ClearAttribute)
+        .def("set_id", &eCAL::CNBSubscriber::SetID)
+        .def("receive_buffer", &eCAL::CNBSubscriber::ReceiveBuffer)
+        .def("add_receive_callback", &eCAL::CNBSubscriber::WrapAddRecCB)
+        .def("rem_receive_callback", &eCAL::CNBSubscriber::RemReceiveCallback)
+        .def("rem_event_callback", &eCAL::CNBSubscriber::RemEventCallback)
+        .def("add_event_callback", &eCAL::CNBSubscriber::AddEventCallback)
+        .def("is_created", &eCAL::CNBSubscriber::IsCreated)
+        .def("get_publisher_count", &eCAL::CNBSubscriber::GetPublisherCount)
+        .def("get_topic_name", &eCAL::CNBSubscriber::GetTopicName)
+        .def("get_datatype_information", &eCAL::CNBSubscriber::GetDataTypeInformation)
+        .def("dump", &eCAL::CNBSubscriber::Dump);
 
     // Class and Functions from ecal_publisher.h
     auto Publisher_cls = nanobind::class_<eCAL::CPublisher>(m, "Publisher")
         .def(nanobind::init<>())
         .def(nanobind::init<const std::string&>())
         .def(nanobind::init<const std::string&, const eCAL::SDataTypeInformation&>())
-        //        .def(nanobind::self = nanobind::self)
+ //       .def(nanobind::self = nanobind::self)
         .def("create", nanobind::overload_cast<const std::string&>(&eCAL::CPublisher::Create))
         .def("create", nanobind::overload_cast<const std::string&, const eCAL::SDataTypeInformation&>(&eCAL::CPublisher::Create))
         .def("send", nanobind::overload_cast<const void*, size_t, long long>(&eCAL::CPublisher::Send))
@@ -69,38 +82,37 @@ NB_MODULE(nanobind_core, m) {
         .def("get_datatype_information", &eCAL::CPublisher::GetDataTypeInformation)
         .def("dump", &eCAL::CPublisher::Dump);
 
-    // Class and Functions from ecal_client.h
-    auto ServiceClient_cls = nanobind::class_<eCAL::CServiceClient>(m, "ServiceClient")
+    auto ServiceClient_cls = nanobind::class_<eCAL::CNBSrvClient>(m, "ServiceClient")
         .def(nanobind::init<>())
         .def(nanobind::init<const std::string&>())
-        //        .def(nanobind::self = nanobind::self)
-        .def("create", &eCAL::CServiceClient::Create)
-        .def("set_hostname", &eCAL::CServiceClient::SetHostName)
-        .def("destroy", &eCAL::CServiceClient::Destroy)
-        .def("call", nanobind::overload_cast<const std::string&, const std::string&, int>(&eCAL::CServiceClient::Call))
-        .def("call", nanobind::overload_cast<const std::string&, const std::string&, int, eCAL::ServiceResponseVecT*>(&eCAL::CServiceClient::Call))
-        .def("call_async", &eCAL::CServiceClient::CallAsync)
-        .def("add_response_callback", &eCAL::CServiceClient::AddResponseCallback)
-        .def("rem_response_callback", &eCAL::CServiceClient::RemResponseCallback)
-        .def("rem_event_callback", &eCAL::CServiceClient::RemEventCallback)
-        .def("add_event_callback", &eCAL::CServiceClient::AddEventCallback)
-        .def("is_connected", &eCAL::CServiceClient::IsConnected)
-        .def("get_service_name", &eCAL::CServiceClient::GetServiceName);
+ //       .def(nanobind::self = nanobind::self)
+        .def("create", &eCAL::CNBSrvClient::Create)
+        .def("set_hostname", &eCAL::CNBSrvClient::SetHostName)
+        .def("destroy", &eCAL::CNBSrvClient::Destroy)
+        .def("call", nanobind::overload_cast<const std::string&, const std::string&, int>(&eCAL::CNBSrvClient::Call))
+        .def("call", nanobind::overload_cast<const std::string&, const std::string&, int, eCAL::ServiceResponseVecT*>(&eCAL::CNBSrvClient::Call))
+        .def("call_async", &eCAL::CNBSrvClient::CallAsync)
+        .def("add_response_callback", &eCAL::CNBSrvClient::WrapAddRespCB)
+        .def("rem_response_callback", &eCAL::CNBSrvClient::RemResponseCallback)
+        .def("rem_event_callback", &eCAL::CNBSrvClient::RemEventCallback)
+        .def("add_event_callback", &eCAL::CNBSrvClient::AddEventCallback)
+        .def("is_connected", &eCAL::CNBSrvClient::IsConnected)
+        .def("get_service_name", &eCAL::CNBSrvClient::GetServiceName);
 
     // Class and Functions from ecal_server.h
-    auto ServiceServer_cls = nanobind::class_<eCAL::CServiceServer>(m, "ServiceServer")
+    auto ServiceServer_cls = nanobind::class_<eCAL::CNBSrvServer>(m, "ServiceServer")
         .def(nanobind::init<>())
         .def(nanobind::init<const std::string&>())
         //        .def(nanobind::self = nanobind::self)
-        .def("create", &eCAL::CServiceServer::Create)
-        .def("add_description", &eCAL::CServiceServer::AddDescription)
-        .def("destroy", &eCAL::CServiceServer::Destroy)
-        .def("add_method_callback", &eCAL::CServiceServer::AddMethodCallback)
-        .def("rem_method_callback", &eCAL::CServiceServer::RemMethodCallback)
-        .def("rem_event_callback", &eCAL::CServiceServer::RemEventCallback)
-        .def("add_event_callback", &eCAL::CServiceServer::AddEventCallback)
-        .def("is_connected", &eCAL::CServiceServer::IsConnected)
-        .def("get_service_name", &eCAL::CServiceServer::GetServiceName);
+        .def("create", &eCAL::CNBSrvServer::Create)
+        .def("add_description", &eCAL::CNBSrvServer::AddDescription)
+        .def("destroy", &eCAL::CNBSrvServer::Destroy)
+        .def("add_method_callback", &eCAL::CNBSrvServer::WrapAddMethodCB)
+        .def("rem_method_callback", &eCAL::CNBSrvServer::RemMethodCallback)
+        .def("rem_event_callback", &eCAL::CNBSrvServer::RemEventCallback)
+        .def("add_event_callback", &eCAL::CNBSrvServer::AddEventCallback)
+        .def("is_connected", &eCAL::CNBSrvServer::IsConnected)
+        .def("get_service_name", &eCAL::CNBSrvServer::GetServiceName);
 
     // Functions from ecal_core.h
     m.def("get_version_string", []() { return eCAL::GetVersionString(); });
