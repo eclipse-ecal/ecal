@@ -73,9 +73,9 @@ if(BUILD_PY_BINDING)
     add_subdirectory(python/pubsub/string/minimal_rec)
     add_subdirectory(python/pubsub/string/minimal_rec_cb)
     add_subdirectory(python/pubsub/string/minimal_snd)
-    add_subdirectory(python/pubsub/string/binary_rec)
-    add_subdirectory(python/pubsub/string/binary_rec_cb)
-    add_subdirectory(python/pubsub/string/binary_snd)
+    add_subdirectory(python/pubsub/binary/binary_rec)
+    add_subdirectory(python/pubsub/binary/binary_rec_cb)
+    add_subdirectory(python/pubsub/binary/binary_snd)
 
     # services
     add_subdirectory(python/services/minimal_service)
