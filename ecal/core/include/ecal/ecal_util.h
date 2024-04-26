@@ -27,6 +27,8 @@
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_types.h>
+
+#include <cstdint>
 #include <map>
 #include <set>
 #include <string>
