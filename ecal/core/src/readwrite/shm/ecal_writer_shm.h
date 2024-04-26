@@ -36,15 +36,9 @@ namespace eCAL
   class CDataWriterSHM : public CDataWriterBase
   {
   public:
-    CDataWriterSHM() = default;
-    ~CDataWriterSHM() override;
+    CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_);
 
     SWriterInfo GetInfo() override;
-
-    bool Create(const std::string& host_name_, const std::string& topic_name_, const std::string & topic_id_) override;
-    // this virtual function is called during construction/destruction,
-    // so, mark it as final to ensure that no derived classes override it.
-    bool Destroy() final;
 
     bool SetBufferCount(size_t buffer_count_);
 

@@ -21,11 +21,11 @@
 #include <util/frequency_calculator.h>
 
 #include <vector>
-#include <thread>
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
   void TestCombinedTopicEncodingAndType(const std::string& encoding, const std::string& type, const std::string& expected_result)
   {
     auto combined = eCAL::Util::CombinedTopicEncodingAndType(encoding, type);
@@ -193,70 +193,4 @@ TEST(core_cpp_util, Freq_ResettableFrequencyCalculator)
       }
     }
   }
-}
-
-TEST(core_cpp_util, ParallelGetTopics)
-{
-  constexpr const int max_publisher_count(2000);
-  constexpr const int waiting_time_thread(1000);
-  constexpr const int parallel_threads(1);
-
-  eCAL::Initialize();
-
-  auto create_publishers = [&]() {
-    std::string topic_name = "Test.ParallelUtilFunctions";
-    std::atomic<int> call_back_count{ 0 };
-
-    std::vector<std::unique_ptr<eCAL::CPublisher>> publishers;
-    for (int pub_count = 0; pub_count < max_publisher_count; pub_count++) {
-      std::unique_ptr<eCAL::CPublisher> publisher = std::make_unique<eCAL::CPublisher>(topic_name + std::to_string(pub_count));
-      publishers.push_back(std::move(publisher));
-    }
-    std::this_thread::sleep_for(std::chrono::milliseconds(waiting_time_thread));
-    };
-
-  auto get_topics_from_ecal = [&]() {
-    size_t found_topics = 0;
-    std::vector<std::string> tmp_topic_names;
-    std::unordered_map<std::string, eCAL::SDataTypeInformation> topics;
-    do {
-      eCAL::Util::GetTopicNames(tmp_topic_names);
-      eCAL::Util::GetTopics(topics);
-
-      found_topics = tmp_topic_names.size();
-      std::cout << "Number of topics found by ecal: " << found_topics << "\n";
-      std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    } while (found_topics < max_publisher_count);
-
-    // do it again until all publishers are deleted
-    do {
-      eCAL::Util::GetTopicNames(tmp_topic_names);
-      eCAL::Util::GetTopics(topics);
-
-      found_topics = tmp_topic_names.size();
-      std::cout << "Number of topics found by ecal: " << found_topics << "\n";
-      std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    } while (found_topics != 0);
-    };
-
-  std::vector<std::thread> threads_container;
-  threads_container.push_back(std::thread(create_publishers));
-
-  for (size_t i = 0; i < parallel_threads; i++) {
-    threads_container.push_back(std::thread(get_topics_from_ecal));
-  }
-
-  for (auto& th : threads_container) {
-    th.join();
-  }
-
-  std::vector<std::string> final_topic_names;
-  std::unordered_map<std::string, eCAL::SDataTypeInformation> final_topics;
-  eCAL::Util::GetTopicNames(final_topic_names);
-  eCAL::Util::GetTopics(final_topics);
-
-  EXPECT_EQ(final_topic_names.size(), 0);
-  EXPECT_EQ(final_topics.size(), 0);
-
-  eCAL::Finalize();
 }

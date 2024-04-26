@@ -27,7 +27,7 @@
 
 #include <gtest/gtest.h>
 
-TEST(core_cpp_util, ExpMap_SetGet)
+TEST(core_cpp_core, ExpMap_SetGet)
 {
   // create the map with 2500 ms expiration
   eCAL::Util::CExpMap<std::string, int> expmap(std::chrono::milliseconds(200));
@@ -86,7 +86,7 @@ TEST(core_cpp_util, ExpMap_SetGet)
   std::this_thread::sleep_for(std::chrono::milliseconds(150));
 }
 
-TEST(core_cpp_util, ExpMap_Insert)
+TEST(core_cpp_core, ExpMap_Insert)
 {
   eCAL::Util::CExpMap<std::string, int> expmap(std::chrono::milliseconds(200));
   auto ret = expmap.insert(std::make_pair("A", 1));
@@ -106,7 +106,7 @@ TEST(core_cpp_util, ExpMap_Insert)
 }
 
 // This tests uses find to find an element
-TEST(core_cpp_util, ExpMap_Find)
+TEST(core_cpp_core, ExpMap_Find)
 {
   eCAL::Util::CExpMap<std::string, int> expmap(std::chrono::milliseconds(200));
 
@@ -125,7 +125,7 @@ TEST(core_cpp_util, ExpMap_Find)
 }
 
 // This test assures that find can be called on a const CExpMap and returns an CExpMap::const_iterator
-TEST(core_cpp_util, ExpMap_FindConst)
+TEST(core_cpp_core, ExpMap_FindConst)
 {
   eCAL::Util::CExpMap<std::string, int> expmap(std::chrono::milliseconds(200));
 
@@ -146,7 +146,7 @@ TEST(core_cpp_util, ExpMap_FindConst)
   EXPECT_EQ(0, expmap.size());
 }
 
-TEST(core_cpp_util, ExpMap_Iterate)
+TEST(core_cpp_core, ExpMap_Iterate)
 {
   // create the map with 2500 ms expiration
   eCAL::Util::CExpMap<std::string, int> expmap(std::chrono::milliseconds(200));
@@ -180,7 +180,7 @@ void ConstRefIterate(const eCAL::Util::CExpMap<std::string, int>& map)
   EXPECT_EQ(1, value);
 }
 
-TEST(core_cpp_util, ExpMap_ConstExpMapIterate)
+TEST(core_cpp_core, ExpMap_ConstExpMapIterate)
 {
   // create the map with 2500 ms expiration
   eCAL::Util::CExpMap<std::string, int> expmap(std::chrono::milliseconds(200));
@@ -189,7 +189,7 @@ TEST(core_cpp_util, ExpMap_ConstExpMapIterate)
   ConstRefIterate(expmap);
 }
 
-TEST(core_cpp_util, ExpMap_Empty)
+TEST(core_cpp_core, ExpMap_Empty)
 {
   eCAL::Util::CExpMap<std::string, int> expmap(std::chrono::milliseconds(200));
   EXPECT_EQ(true, expmap.empty());
@@ -197,7 +197,7 @@ TEST(core_cpp_util, ExpMap_Empty)
   EXPECT_EQ(false, expmap.empty());
 }
 
-TEST(core_cpp_util, ExpMap_Size)
+TEST(core_cpp_core, ExpMap_Size)
 {
   eCAL::Util::CExpMap<std::string, int> expmap(std::chrono::milliseconds(200));
   EXPECT_EQ(0, expmap.size());
@@ -205,7 +205,7 @@ TEST(core_cpp_util, ExpMap_Size)
   EXPECT_EQ(1, expmap.size());
 }
 
-TEST(core_cpp_util, ExpMap_Remove)
+TEST(core_cpp_core, ExpMap_Remove)
 {
   eCAL::Util::CExpMap<std::string, int> expmap(std::chrono::milliseconds(200));
   expmap["A"] = 1;

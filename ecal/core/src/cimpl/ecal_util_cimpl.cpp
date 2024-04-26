@@ -148,4 +148,60 @@ extern "C"
     }
     return 0;
   }
+
+  ECALC_API int eCAL_Util_GetClientRequestTypeName(const char* client_name_, const char* method_name_, void* req_type_, int req_type_len_)
+  {
+    if (client_name_ == nullptr) return(0);
+    if (method_name_ == nullptr) return(0);
+    if (req_type_ == nullptr)    return(0);
+    std::string req_type;
+    std::string resp_type;
+    if (eCAL::Util::GetClientTypeNames(client_name_, method_name_, req_type, resp_type))
+    {
+      return(CopyBuffer(req_type_, req_type_len_, req_type));
+    }
+    return 0;
+  }
+
+  ECALC_API int eCAL_Util_GetClientResponseTypeName(const char* client_name_, const char* method_name_, void* resp_type_, int resp_type_len_)
+  {
+    if (client_name_ == nullptr) return(0);
+    if (method_name_ == nullptr) return(0);
+    if (resp_type_ == nullptr)   return(0);
+    std::string req_type;
+    std::string resp_type;
+    if (eCAL::Util::GetClientTypeNames(client_name_, method_name_, req_type, resp_type))
+    {
+      return(CopyBuffer(resp_type_, resp_type_len_, resp_type));
+    }
+    return 0;
+  }
+
+  ECALC_API int eCAL_Util_GetClientRequestDescription(const char* client_name_, const char* method_name_, void* req_desc_, int req_desc_len_)
+  {
+    if (client_name_ == nullptr) return(0);
+    if (method_name_ == nullptr) return(0);
+    if (req_desc_ == nullptr)    return(0);
+    std::string req_desc;
+    std::string resp_desc;
+    if (eCAL::Util::GetClientDescription(client_name_, method_name_, req_desc, resp_desc))
+    {
+      return(CopyBuffer(req_desc_, req_desc_len_, req_desc));
+    }
+    return 0;
+  }
+
+  ECALC_API int eCAL_Util_GetClientResponseDescription(const char* client_name_, const char* method_name_, void* resp_desc_, int resp_desc_len_)
+  {
+    if (client_name_ == nullptr) return(0);
+    if (method_name_ == nullptr) return(0);
+    if (resp_desc_ == nullptr)   return(0);
+    std::string req_desc;
+    std::string resp_desc;
+    if (eCAL::Util::GetClientDescription(client_name_, method_name_, req_desc, resp_desc))
+    {
+      return(CopyBuffer(resp_desc_, resp_desc_len_, resp_desc));
+    }
+    return 0;
+  }
 }
