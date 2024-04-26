@@ -24,8 +24,7 @@
 
 #pragma once
 
-#include <chrono>
-#include <iostream>
+#include <stdexcept>
 
 namespace eCAL
 {
@@ -44,8 +43,7 @@ namespace eCAL
           }
           else
           {
-            std::cerr << "[RegistrationOptions] Refresh(" << reg_refresh_ << ") >= registration timeout (" << reg_timeout_ << ")." << "\n";
-            exit(EXIT_FAILURE);
+            throw std::invalid_argument("[RegistrationOptions] Refresh(" + std::to_string(reg_refresh_) + ") >= registration timeout (" + std::to_string(reg_timeout_) + ").");
           }
         };
 

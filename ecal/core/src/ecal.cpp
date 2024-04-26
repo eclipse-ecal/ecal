@@ -124,6 +124,7 @@ namespace eCAL
    * @brief Initialize eCAL API.
    *
    * @param config_      User defined configuration object.
+   * @param unit_name_   Defines the name of the eCAL unit.
    * @param components_  Defines which component to initialize.     
    * 
    * @return Zero if succeeded, 1 if already initialized, -1 if failed.
