@@ -104,11 +104,12 @@ namespace eCAL
       CConfig iniConfig;
       iniConfig.OverwriteKeys(command_line_arguments.config_keys);
       std::string ini_to_load;
-      if (command_line_arguments.found_config_file.empty())
+      if (command_line_arguments.specified_config.empty())
         ini_to_load = g_default_ini_file;
       else
-        ini_to_load = command_line_arguments.found_config_file;
+        ini_to_load = command_line_arguments.specified_config;
 
+      // Can here go something wrong at all, in case the cmd line ini was used?
       if (iniConfig.AddFile(ini_to_load))
       {
         loaded_ecal_ini_file = ini_to_load;
@@ -233,7 +234,6 @@ namespace eCAL
       command_line_arguments.config_keys       = parser.getConfigKeys();
       command_line_arguments.specified_config  = parser.getUserIni();
       command_line_arguments.dump_config       = parser.getDumpConfig();
-      command_line_arguments.found_config_file = parser.getValidIni();
 
       InitConfig();
 

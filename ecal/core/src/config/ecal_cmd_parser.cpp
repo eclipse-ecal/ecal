@@ -129,7 +129,6 @@ namespace eCAL
     , m_config_keys{}
     , m_task_parameter{}
     , m_user_ini{} 
-    , m_valid_ini{}
     {}
 
     CmdParser::CmdParser(int argc_ , char **argv_)
@@ -172,8 +171,7 @@ namespace eCAL
         }
         if (default_ini_file_arg.isSet())
         {
-          m_user_ini  = default_ini_file_arg.getValue(); 
-          m_valid_ini = checkForValidConfigFilePath(default_ini_file_arg.getValue());
+          m_user_ini = checkForValidConfigFilePath(default_ini_file_arg.getValue());
         }
         if (set_config_key_arg.isSet())
         {
@@ -193,6 +191,7 @@ namespace eCAL
       // differences to ecal_config_reader implementation are:
       //    1. it does not use the default ini file name, instead uses the specified file
       //    2. it searches relative to the executable path and takes it as highest priority
+      //    3. it throws a runtime error, if it cannot find the specified file
 
       // -----------------------------------------------------------
       // precedence 1: relative path to executable
@@ -221,19 +220,13 @@ namespace eCAL
       if (it != search_directories.end())
         return (*it);
 
-      // If valid path is not encountered, defaults should be used
-      return std::string("");
-    }
-
-    void CmdParser::setUserIni(const std::string& ini_)
-    {
-      m_user_ini = ini_;
+      // If valid path is not encountered, throw error
+      throw std::runtime_error("[CMD Parser] Specified config file: \"" + config_file_ + "\" not found.");
     }
 
     bool CmdParser::getDumpConfig() const                        { return m_dump_config; };
     std::vector<std::string>& CmdParser::getConfigKeys()         { return m_config_keys; };
     std::vector<std::string>& CmdParser::getTaskParameter()      { return m_task_parameter; };
     std::string& CmdParser::getUserIni()                         { return m_user_ini; };
-    std::string& CmdParser::getValidIni()                        { return m_valid_ini; };
   }
 }

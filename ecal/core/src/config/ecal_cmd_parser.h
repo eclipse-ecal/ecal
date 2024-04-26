@@ -44,14 +44,12 @@ namespace eCAL
       CmdParser(int argc_ , char **argv_);
       CmdParser();
 
-      void                     parseArguments(int argc_, char **argv_);
-      void                     setUserIni(const std::string& ini_);
+      void                      parseArguments(int argc_, char **argv_);
 
       bool                      getDumpConfig() const;
       std::vector<std::string>& getConfigKeys();
       std::vector<std::string>& getTaskParameter();
       std::string&              getUserIni();
-      std::string&              getValidIni();
 
     private:
       std::string              checkForValidConfigFilePath(std::string config_file_);
@@ -60,7 +58,6 @@ namespace eCAL
       bool                     m_dump_config;
       std::vector<std::string> m_task_parameter;
       std::string              m_user_ini;
-      std::string              m_valid_ini;
     };    
   }
 }

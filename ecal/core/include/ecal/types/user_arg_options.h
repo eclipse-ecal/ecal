@@ -35,7 +35,6 @@ namespace eCAL
     {
       std::vector<std::string> config_keys{};
       std::string              specified_config{};
-      std::string              found_config_file{};
       bool                     dump_config{};
     };
   }
