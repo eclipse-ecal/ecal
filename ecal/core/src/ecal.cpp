@@ -148,6 +148,10 @@ namespace eCAL
      // (post)initialize single components
     const int success = g_globals()->Initialize(components_, &Config::GetCurrentConfig().command_line_arguments.config_keys);
 
+    if (config_.command_line_arguments.dump_config)
+    {
+      Process::DumpConfig();
+    }
     
     return success;
   }

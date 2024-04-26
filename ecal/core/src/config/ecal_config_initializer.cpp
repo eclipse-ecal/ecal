@@ -232,14 +232,9 @@ namespace eCAL
       command_line_arguments.dump_config       = parser.getDumpConfig();
 
       InitConfig(command_line_arguments.specified_config);
-
-      if (command_line_arguments.dump_config)
-      {
-        Process::DumpConfig();
-      }
     }
 
-    void eCALConfig::InitWithDefaultIni()
+    void eCALConfig::InitConfigWithDefaultIni()
     {
       InitConfig(g_default_ini_file);
     }
