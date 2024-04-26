@@ -874,6 +874,7 @@ namespace eCAL
     case TLayer::eSendMode::smode_auto:
     case TLayer::eSendMode::smode_on:
       m_writer.shm = std::make_unique<CDataWriterSHM>(m_host_name, m_topic_name, m_topic_id);
+      m_writer.shm->SetBufferCount(m_buffering_shm);
 #ifndef NDEBUG
       Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::SHM_WRITER");
 #endif
