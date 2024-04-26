@@ -100,37 +100,9 @@ namespace eCAL
   **/
   int Initialize(int argc_ , char **argv_, const char *unit_name_, unsigned int components_)
   {
-    eCAL::Config::CmdParser cmd_parser(argc_, argv_);
+    eCAL::Config::eCALConfig config(argc_, argv_);
 
-    // in case of first call
-    if (g_globals_ctx == nullptr)
-    {
-      InitGlobals();             
-    }
-
-    if (argc_ > 0 && argv_ != nullptr)
-    {
-      eCAL::Config::eCALConfig config(argc_, argv_);  
-      g_globals()->SetEcalConfig(config);
-    }
-
-    if (unit_name_ != nullptr)
-    {
-      SetGlobalUnitName(unit_name_);
-    }  
-
-    g_globals_ctx_ref_cnt++;
-
-    // (post)initialize single components
-    const int success = g_globals()->Initialize(components_, &cmd_parser.getConfigKeys());
-
-    // print out configuration
-    if (cmd_parser.getDumpConfig())
-    {
-      Process::DumpConfig();
-    }
-
-    return success;
+    return Initialize(config, unit_name_, components_);
   }
 
   /**
@@ -144,10 +116,8 @@ namespace eCAL
   **/
   int Initialize(std::vector<std::string> args_, const char *unit_name_, unsigned int components_) //-V826
   {
-    args_.emplace(args_.begin(), eCAL::Process::GetProcessName());
-    std::vector<const char*> argv(args_.size());
-    std::transform(args_.begin(), args_.end(), argv.begin(), [](std::string& s) {return s.c_str();});
-    return Initialize(static_cast<int>(argv.size()), const_cast<char**>(argv.data()), unit_name_, components_);
+    eCAL::Config::eCALConfig config(args_);
+    return Initialize(config, unit_name_, components_);
   }
 
   /**
@@ -171,8 +141,14 @@ namespace eCAL
     {
       SetGlobalUnitName(unit_name_);
     }
+
+    g_globals_ctx_ref_cnt++;
+
+     // (post)initialize single components
+    const int success = g_globals()->Initialize(components_, &Config::GetCurrentConfig().command_line_arguments.config_keys);
+
     
-    return Initialize(0, nullptr, unit_name_, components_);
+    return success;
   }
 
   /**
