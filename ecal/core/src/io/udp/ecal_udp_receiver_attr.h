@@ -18,21 +18,28 @@
 */
 
 /**
- * @brief  raw message buffer handling
+ * @brief  UDP receiver attributes
 **/
 
-#include <cstddef>
+#pragma once
+
 #include <functional>
 #include <string>
-#include <vector>
 
-namespace IO
+namespace eCAL
 {
   namespace UDP
   {
-    size_t CreateSampleBuffer(const std::string& sample_name_, const std::vector<char>& serialized_sample_, std::vector<char>& payload_);
+    struct SReceiverAttr
+    {
+      std::string address;
+      int         port      = 0;
+      bool        broadcast = false;
+      bool        loopback  = true;
+      int         rcvbuf    = 1024 * 1024;
+    };
 
-    using TransmitCallbackT = std::function<size_t(const void*, const size_t)>;
-    size_t SendFragmentedMessage(char* buf_, size_t buf_len_, const TransmitCallbackT& transmit_cb_);
+    using HasSampleCallbackT   = std::function<bool(const std::string& sample_name_)>;
+    using ApplySampleCallbackT = std::function<void(const char* serialized_sample_data_, size_t serialized_sample_size_)>;
   }
 }

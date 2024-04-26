@@ -22,7 +22,7 @@
 #include <chrono>
 #include <iostream>
 #include <string>
-#include <unordered_map>
+#include <set>
 
 int main(int argc, char **argv)
 {
@@ -37,7 +37,7 @@ int main(int argc, char **argv)
   {
     // GetTopics
     {
-      std::unordered_map<std::string, eCAL::SDataTypeInformation> topic_info_map;
+      std::map<std::string, eCAL::SDataTypeInformation> topic_info_map;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 
     // GetTopicNames
     {
-      std::vector<std::string> topic_names;
+      std::set<std::string> topic_names;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
