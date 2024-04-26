@@ -8,6 +8,7 @@ jobs:
   build-ubuntu:
 
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-22.04, ubuntu-20.04]
 
