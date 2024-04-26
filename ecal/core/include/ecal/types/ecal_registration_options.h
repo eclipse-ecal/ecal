@@ -24,38 +24,41 @@
 
 #pragma once
 
+#include "ecal/ecal_os.h"
+
 #include <stdexcept>
+#include <string>
 
 namespace eCAL
 {
   namespace Config
   {
+    /**
+     * @brief  Struct for storing RegistrationOptions.
+     *         If not specified, registration timeout and refresh times from eCAL predefines will be used.
+     *         When specifying: reg_timeout >= reg_refresh. If not, an invalid_argument exception will be thrown.
+     *         By default, share_ttype and share_tdesc is true based on eCAL predefines.
+     *
+     * @param reg_timeout_ Timeout for topic registration in ms 
+     * @param reg_refresh_ Topic registration refresh cylce in ms
+     * 
+     * @throws std::invalid_argument exception.
+    **/
     struct RegistrationOptions
     {
       public:
-        RegistrationOptions() = default;
-        RegistrationOptions(unsigned int reg_timeout_, unsigned int reg_refresh_)
-        {
-          if (reg_refresh_ < reg_timeout_)
-          {
-            registration_timeout = reg_timeout_;
-            registration_refresh = reg_refresh_;
-          }
-          else
-          {
-            throw std::invalid_argument("[RegistrationOptions] Refresh(" + std::to_string(reg_refresh_) + ") >= registration timeout (" + std::to_string(reg_timeout_) + ").");
-          }
-        };
+        ECAL_API RegistrationOptions();
+        ECAL_API RegistrationOptions(unsigned int reg_timeout_, unsigned int reg_refresh_);
 
-        unsigned int getTimeoutMS() const { return registration_timeout; }
-        unsigned int getRefreshMS() const { return registration_refresh; }
+        ECAL_API unsigned int getTimeoutMS() const;
+        ECAL_API unsigned int getRefreshMS() const;
 
-        bool share_ttype = true;
-        bool share_tdesc = true;
+        bool share_ttype;
+        bool share_tdesc;
 
       private:
-        unsigned int registration_timeout = 60000U;
-        unsigned int registration_refresh = 1000U;
+        unsigned int m_registration_timeout;
+        unsigned int m_registration_refresh;
     };
   }
 }
