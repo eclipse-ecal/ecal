@@ -38,15 +38,9 @@ namespace eCAL
   class CDataWriterTCP : public CDataWriterBase
   {
   public:
-    CDataWriterTCP();
-    ~CDataWriterTCP() override;
+    CDataWriterTCP(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_);
 
     SWriterInfo GetInfo() override;
-
-    bool Create(const std::string& host_name_, const std::string& topic_name_, const std::string & topic_id_) override;
-    // this virtual function is called during construction/destruction,
-    // so, mark it as final to ensure that no derived classes override it.
-    bool Destroy() final;
 
     bool Write(const void* buf_, const SWriterAttr& attr_) override;
 
@@ -59,6 +53,6 @@ namespace eCAL
     static std::shared_ptr<tcp_pubsub::Executor> g_tcp_writer_executor;
 
     std::shared_ptr<tcp_pubsub::Publisher>       m_publisher;
-    uint16_t                                     m_port;
+    uint16_t                                     m_port = 0;
   };
 }

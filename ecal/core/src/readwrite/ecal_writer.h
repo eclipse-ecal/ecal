@@ -48,6 +48,7 @@
 #include "tcp/ecal_writer_tcp.h"
 #endif
 
+#include <memory>
 #include <mutex>
 #include <string>
 #include <atomic>
@@ -198,18 +199,18 @@ namespace eCAL
         bool              confirmed = false;
       };
 
-      SWriterMode                          udp_mc_mode;
+      SWriterMode                          udp_mode;
       SWriterMode                          tcp_mode;
       SWriterMode                          shm_mode;
 
 #if ECAL_CORE_TRANSPORT_UDP
-      CDataWriterUdpMC                     udp_mc;
+      std::unique_ptr<CDataWriterUdpMC>    udp;
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-      CDataWriterSHM                       shm;
+      std::unique_ptr<CDataWriterSHM>      shm;
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-      CDataWriterTCP                       tcp;
+      std::unique_ptr<CDataWriterTCP>      tcp;
 #endif
     };
     SWriter                                m_writer;

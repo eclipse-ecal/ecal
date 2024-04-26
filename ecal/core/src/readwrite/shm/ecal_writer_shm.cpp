@@ -33,33 +33,9 @@ namespace eCAL
 {
   const std::string CDataWriterSHM::m_memfile_base_name = "ecal_";
 
-  CDataWriterSHM::~CDataWriterSHM()
+  CDataWriterSHM::CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_)
   {
-    Destroy();
-  }
-
-  SWriterInfo CDataWriterSHM::GetInfo()
-  {
-    SWriterInfo info_;
-
-    info_.name                 = "shm";
-    info_.description          = "Local shared memory data writer";
-
-    info_.has_mode_local       = true;
-    info_.has_mode_cloud       = false;
-
-    info_.send_size_max        = -1;
-
-    return info_;
-  }
-  
-  bool CDataWriterSHM::Create(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string & /*topic_id_*/)
-  {
-    if (m_created) return true;
     m_topic_name = topic_name_;
-
-    // init write index and create memory files
-    m_write_idx = 0;
 
     // set attributes
     m_memory_file_attr.min_size        = Config::GetMemfileMinsizeBytes();
@@ -68,21 +44,24 @@ namespace eCAL
     m_memory_file_attr.timeout_ack_ms  = Config::GetMemfileAckTimeoutMs();
 
     // initialize memory file buffer
-    m_created = SetBufferCount(m_buffer_count);
-
-    return m_created;
+    SetBufferCount(m_buffer_count /*= 1*/);
   }
 
-  bool CDataWriterSHM::Destroy()
+  SWriterInfo CDataWriterSHM::GetInfo()
   {
-    if (!m_created) return true;
-    m_created = false;
+    SWriterInfo info_;
 
-    m_memory_file_vec.clear();
+    info_.name           = "shm";
+    info_.description    = "Local shared memory data writer";
 
-    return true;
+    info_.has_mode_local = true;
+    info_.has_mode_cloud = false;
+
+    info_.send_size_max  = -1;
+
+    return info_;
   }
-
+  
   bool CDataWriterSHM::SetBufferCount(size_t buffer_count_)
   {
     // no need to adapt anything
@@ -128,8 +107,6 @@ namespace eCAL
 
   bool CDataWriterSHM::PrepareWrite(const SWriterAttr& attr_)
   {
-    if (!m_created) return false;
-
     // false signals no rematching / exchanging of
     // connection parameters needed
     bool ret_state(false);
@@ -155,8 +132,6 @@ namespace eCAL
 
   bool CDataWriterSHM::Write(CPayloadWriter& payload_, const SWriterAttr& attr_)
   {
-    if (!m_created) return false;
-
     // write content
     const bool force_full_write(m_memory_file_vec.size() > 1);
     const bool sent = m_memory_file_vec[m_write_idx]->Write(payload_, attr_, force_full_write);
@@ -170,8 +145,6 @@ namespace eCAL
 
   void CDataWriterSHM::AddLocConnection(const std::string& process_id_, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/)
   {
-    if (!m_created) return;
-
     for (auto& memory_file : m_memory_file_vec)
     {
       memory_file->Connect(process_id_);
