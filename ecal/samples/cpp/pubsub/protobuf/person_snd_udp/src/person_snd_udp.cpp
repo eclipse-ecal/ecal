@@ -32,14 +32,16 @@ int main(int argc, char **argv)
   // set process state
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
+  // create a publisher config
+  eCAL::CPublisher::Config pub_config;
+
+  // switch shm and tcp layer off, udp layer on
+  pub_config.shm.send_mode = eCAL::TLayer::smode_off;
+  pub_config.udp.send_mode = eCAL::TLayer::smode_on;
+  pub_config.tcp.send_mode = eCAL::TLayer::smode_off;
+
   // create a publisher (topic name "person")
-  eCAL::protobuf::CPublisher<pb::People::Person> pub("person");
-
-  // switch all layer off
-  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
-
-  // switch unicast layer on
-  pub.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_on);
+  eCAL::protobuf::CPublisher<pb::People::Person> pub("person", pub_config);
 
   // generate a class instance of Person
   pb::People::Person person;
