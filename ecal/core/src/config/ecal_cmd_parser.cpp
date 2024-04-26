@@ -28,7 +28,7 @@ namespace
   const char path_separator('\\');
 #endif /* ECAL_OS_WINDOWS */
 #ifdef ECAL_OS_LINUX
-  const char path_sep_bla('/');
+  const char path_separator('/');
 #endif /* ECAL_OS_LINUX */
 
   bool SetPathSep(std::string file_path_)
