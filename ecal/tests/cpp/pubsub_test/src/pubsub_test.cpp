@@ -509,7 +509,7 @@ TEST(core_cpp_pubsub, DynamicCreate)
 TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
 {
   // default send string
-  std::string send_s;
+  const std::string send_s;
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
@@ -649,7 +649,7 @@ TEST(core_cpp_pubsub, MultipleSendsSHM)
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
   long long timestamp = 1;
-  for (const auto elem : send_vector)
+  for (const auto& elem : send_vector)
   {
     pub.Send(elem, timestamp);
     eCAL::Process::SleepMS(DATA_FLOW_TIME);
@@ -671,9 +671,9 @@ TEST(core_cpp_pubsub, MultipleSendsSHM)
 TEST(core_cpp_pubsub, MultipleSendsUDP)
 {
   // default send string
-  std::vector<std::string> send_vector{ "this", "is", "a", "", "testtest" };
+  const std::vector<std::string> send_vector{ "this", "is", "a", "", "testtest" };
   std::string last_received_msg;
-  long long   last_received_timestamp;
+  long long   last_received_timestamp(0);
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
@@ -705,7 +705,7 @@ TEST(core_cpp_pubsub, MultipleSendsUDP)
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
   long long timestamp = 1;
-  for (const auto elem : send_vector)
+  for (const auto& elem : send_vector)
   {
     pub.Send(elem, timestamp);
     eCAL::Process::SleepMS(DATA_FLOW_TIME);
