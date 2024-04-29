@@ -17,6 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include "ecal_def.h"
 #include "ecal_globals.h"
 #include "ecal_event.h"
 #include "registration/ecal_registration_receiver.h"

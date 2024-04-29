@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <ecal/ecal_publisher.h>
+
 #include "io/udp/ecal_udp_sample_sender.h"
 #include "readwrite/ecal_writer_base.h"
 
@@ -35,13 +37,15 @@ namespace eCAL
   class CDataWriterUdpMC : public CDataWriterBase
   {
   public:
-    CDataWriterUdpMC(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_);
+    CDataWriterUdpMC(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const CPublisher::UDPConfig& udp_config_);
 
     SWriterInfo GetInfo() override;
 
     bool Write(const void* buf_, const SWriterAttr& attr_) override;
 
   protected:
+    CPublisher::UDPConfig               m_config;
+
     std::vector<char>                   m_sample_buffer;
     std::shared_ptr<UDP::CSampleSender> m_sample_sender_loopback;
     std::shared_ptr<UDP::CSampleSender> m_sample_sender_no_loopback;

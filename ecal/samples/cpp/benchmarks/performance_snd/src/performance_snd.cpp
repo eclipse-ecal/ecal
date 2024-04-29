@@ -54,7 +54,7 @@ int main(int argc, char **argv)
   
   // set write buffer count
   std::cout << "Number of write buffers: " << buffer_count << std::endl;
-  pub_config.shm.buffer_count = buffer_count;
+  pub_config.shm.memfile_buffer_count = buffer_count;
 
   // enable handshake mode
   std::cout << "Acknowledge timeout: " << acknowledge_timeout_ms << " ms" << std::endl;

@@ -82,7 +82,7 @@ std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int
   // set zero copy mode
   pub_config.shm.zero_copy_mode = zero_copy;
   // set number of memory buffer
-  pub_config.shm.buffer_count = buffer_count;
+  pub_config.shm.memfile_buffer_count = buffer_count;
 
   // create publisher for topic "A"
   eCAL::CPublisher pub("A", pub_config);

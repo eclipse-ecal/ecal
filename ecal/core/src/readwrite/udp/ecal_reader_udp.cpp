@@ -21,7 +21,7 @@
  * @brief  udp multicast reader and layer
 **/
 
-#include "ecal_reader_udp_mc.h"
+#include "ecal_reader_udp.h"
 
 #include "ecal_global_accessors.h"
 #include "pubsub/ecal_subgate.h"

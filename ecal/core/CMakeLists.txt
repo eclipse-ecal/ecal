@@ -222,8 +222,8 @@ if(ECAL_CORE_PUBLISHER)
   )
   if(ECAL_CORE_TRANSPORT_UDP)
     list(APPEND ecal_writer_src
-        src/readwrite/udp/ecal_writer_udp_mc.cpp
-        src/readwrite/udp/ecal_writer_udp_mc.h
+        src/readwrite/udp/ecal_writer_udp.cpp
+        src/readwrite/udp/ecal_writer_udp.h
     )
   endif()
   if(ECAL_CORE_TRANSPORT_TCP)
@@ -249,8 +249,8 @@ if(ECAL_CORE_SUBSCRIBER)
   )
   if(ECAL_CORE_TRANSPORT_UDP)
     list(APPEND ecal_reader_src
-        src/readwrite/udp/ecal_reader_udp_mc.cpp
-        src/readwrite/udp/ecal_reader_udp_mc.h
+        src/readwrite/udp/ecal_reader_udp.cpp
+        src/readwrite/udp/ecal_reader_udp.h
     )
   endif()
   if(ECAL_CORE_TRANSPORT_TCP)

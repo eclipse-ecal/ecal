@@ -40,16 +40,20 @@ namespace eCAL
     share_topic_description(eCAL::Config::IsTopicDescriptionSharingEnabled())
   {
     // shm config
-    shm.send_mode              = eCAL::Config::GetPublisherShmMode();
-    shm.buffer_count           = eCAL::Config::GetMemfileBufferCount();
-    shm.zero_copy_mode         = eCAL::Config::IsMemfileZerocopyEnabled();
-    shm.acknowledge_timeout_ms = eCAL::Config::GetMemfileAckTimeoutMs();
+    shm.send_mode               = eCAL::Config::GetPublisherShmMode();
+    shm.zero_copy_mode          = eCAL::Config::IsMemfileZerocopyEnabled();
+    shm.acknowledge_timeout_ms  = eCAL::Config::GetMemfileAckTimeoutMs();
+
+    shm.memfile_min_size_bytes  = eCAL::Config::GetMemfileMinsizeBytes();
+    shm.memfile_reserve_percent = eCAL::Config::GetMemfileOverprovisioningPercentage();
+    shm.memfile_buffer_count    = eCAL::Config::GetMemfileBufferCount();
 
     // udp config
-    udp.send_mode              = eCAL::Config::GetPublisherUdpMulticastMode();
+    udp.send_mode               = eCAL::Config::GetPublisherUdpMulticastMode();
+    udp.sndbuf_size_bytes       = eCAL::Config::GetUdpMulticastSndBufSizeBytes();
 
     // tcp config
-    tcp.send_mode              = eCAL::Config::GetPublisherTcpMode();
+    tcp.send_mode               = eCAL::Config::GetPublisherTcpMode();
   }
 
   CPublisher::CPublisher() :

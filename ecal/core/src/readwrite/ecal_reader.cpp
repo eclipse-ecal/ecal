@@ -37,7 +37,7 @@
 #include "ecal_reader_layer.h"
 
 #if ECAL_CORE_TRANSPORT_UDP
-#include "udp/ecal_reader_udp_mc.h"
+#include "udp/ecal_reader_udp.h"
 #endif
 
 #if ECAL_CORE_TRANSPORT_SHM

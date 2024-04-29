@@ -47,7 +47,7 @@ namespace eCAL
   std::atomic<bool> CRegistrationReceiver::m_created;
 
   CRegistrationReceiver::CRegistrationReceiver() :
-                         m_network(NET_ENABLED),
+                         m_network(Config::IsNetworkEnabled()),
                          m_loopback(false),
                          m_callback_pub(nullptr),
                          m_callback_sub(nullptr),
@@ -68,9 +68,6 @@ namespace eCAL
   void CRegistrationReceiver::Create()
   {
     if(m_created) return;
-
-    // network mode
-    m_network = Config::IsNetworkEnabled();
 
     // receive registration from shared memory and or udp
     m_use_registration_udp = !Config::Experimental::IsNetworkMonitoringDisabled();

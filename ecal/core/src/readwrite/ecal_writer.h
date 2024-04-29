@@ -33,12 +33,11 @@
 #include <ecal/ecal_types.h>
 #include <tuple>
 
-#include "ecal_def.h"
 #include "util/ecal_expmap.h"
 #include <util/frequency_calculator.h>
 
 #if ECAL_CORE_TRANSPORT_UDP
-#include "udp/ecal_writer_udp_mc.h"
+#include "udp/ecal_writer_udp.h"
 #endif
 
 #if ECAL_CORE_TRANSPORT_SHM
@@ -123,8 +122,6 @@ namespace eCAL
     const SDataTypeInformation& GetDataTypeInformation() const { return m_topic_info; }
 
   protected:
-    void Configure(const CPublisher::Config& config_);
-
     bool Register(bool force_);
     bool Unregister();
 
@@ -151,10 +148,7 @@ namespace eCAL
     SDataTypeInformation                   m_topic_info;
     std::map<std::string, std::string>     m_attr;
     size_t                                 m_topic_size;
-
-    size_t                                 m_buffering_shm;
-    bool                                   m_zero_copy;
-    long long                              m_acknowledge_timeout_ms;
+    CPublisher::Config                     m_config;
 
     std::vector<char>                      m_payload_buffer;
 
@@ -204,8 +198,6 @@ namespace eCAL
     };
     SWriter                                m_writer;
 
-    bool                                   m_share_ttype;
-    bool                                   m_share_tdesc;
     std::atomic<bool>                      m_created;
   };
 }

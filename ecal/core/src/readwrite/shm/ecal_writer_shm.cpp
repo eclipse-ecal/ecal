@@ -22,7 +22,6 @@
 **/
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_config.h>
 #include <ecal/ecal_log.h>
 #include <string>
 
@@ -33,18 +32,13 @@ namespace eCAL
 {
   const std::string CDataWriterSHM::m_memfile_base_name = "ecal_";
 
-  CDataWriterSHM::CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_)
+  CDataWriterSHM::CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const CPublisher::SHMConfig& shm_config_) :
+    m_config(shm_config_)
   {
     m_topic_name = topic_name_;
 
-    // set attributes
-    m_memory_file_attr.min_size        = Config::GetMemfileMinsizeBytes();
-    m_memory_file_attr.reserve         = Config::GetMemfileOverprovisioningPercentage();
-    m_memory_file_attr.timeout_open_ms = PUB_MEMFILE_OPEN_TO;
-    m_memory_file_attr.timeout_ack_ms  = Config::GetMemfileAckTimeoutMs();
-
     // initialize memory file buffer
-    SetBufferCount(m_buffer_count /*= 1*/);
+    SetBufferCount(m_config.memfile_buffer_count);
   }
 
   SWriterInfo CDataWriterSHM::GetInfo()
@@ -74,6 +68,13 @@ namespace eCAL
       return false;
     }
 
+    // prepare memfile attributes
+    SSyncMemoryFileAttr memory_file_attr;
+    memory_file_attr.min_size        = m_config.memfile_min_size_bytes;
+    memory_file_attr.reserve         = m_config.memfile_reserve_percent;
+    memory_file_attr.timeout_open_ms = PUB_MEMFILE_OPEN_TO;
+    memory_file_attr.timeout_ack_ms  = m_config.acknowledge_timeout_ms;
+
     // retrieve the memory file size of existing files
     size_t memory_file_size(0);
     if (!m_memory_file_vec.empty())
@@ -82,14 +83,14 @@ namespace eCAL
     }
     else
     {
-      memory_file_size = m_memory_file_attr.min_size;
+      memory_file_size = memory_file_attr.min_size;
     }
 
     // create memory file vector
     m_memory_file_vec.clear();
     while (m_memory_file_vec.size() < buffer_count_)
     {
-      auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, memory_file_size, m_memory_file_attr);
+      auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, memory_file_size, memory_file_attr);
       if (sync_memfile->IsCreated())
       {
         m_memory_file_vec.push_back(sync_memfile);
@@ -112,12 +113,12 @@ namespace eCAL
     bool ret_state(false);
 
     // adapt number of used memory files if needed
-    if (attr_.buffering != m_buffer_count)
+    if (attr_.buffering != m_config.memfile_buffer_count)
     {
       SetBufferCount(attr_.buffering);
 
       // store new buffer count and flag change
-      m_buffer_count = attr_.buffering;
+      m_config.memfile_buffer_count = attr_.buffering;
       ret_state |= true;
     }
 

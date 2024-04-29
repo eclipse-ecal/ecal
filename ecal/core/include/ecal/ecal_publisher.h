@@ -71,25 +71,28 @@ namespace eCAL
   {
   public:
 
-    ECAL_API static constexpr long long DEFAULT_TIME_ARGUMENT = -1;   /*!< Use DEFAULT_TIME_ARGUMENT in the `Send()` function to let eCAL determine the send timestamp */
+    ECAL_API static constexpr long long DEFAULT_TIME_ARGUMENT = -1;     /*!< Use DEFAULT_TIME_ARGUMENT in the `Send()` function to let eCAL determine the send timestamp */
 
     struct ECAL_API SHMConfig
     {
-      TLayer::eSendMode  send_mode              = TLayer::smode_auto; //!<  shm layer send mode (default auto)
-      bool               zero_copy_mode         = false;              //!<  enable zero copy shared memory transport mode
-      long long          acknowledge_timeout_ms = 0;                  /*!<  force connected subscribers to send acknowledge event after processing the message
-                                                                              the publisher send call is blocked on this event with this timeout (0 == no handshake) */
-      long               buffer_count           = 1;                  //!<  maximum number of used buffers (needs to be greater than 1, default = 1)
+      TLayer::eSendMode  send_mode               = TLayer::smode_auto;  //!< shm layer send mode (default auto)
+      bool               zero_copy_mode          = false;               //!< enable zero copy shared memory transport mode
+      int                acknowledge_timeout_ms  = 0;                   /*!< force connected subscribers to send acknowledge event after processing the message
+                                                                            the publisher send call is blocked on this event with this timeout (0 == no handshake) */
+      size_t             memfile_min_size_bytes  = 4096;                //!< default memory file size for new publisher
+      size_t             memfile_reserve_percent = 50;                  //!< dynamic file size reserve before recreating memory file if topic size changes
+      size_t             memfile_buffer_count    = 1;                   //!< maximum number of used buffers (needs to be greater than 1, default = 1)
     };
 
     struct ECAL_API UDPConfig
     {
-      TLayer::eSendMode  send_mode              = TLayer::smode_auto; //!<  udp layer send mode (default auto)
+      TLayer::eSendMode  send_mode               = TLayer::smode_auto;  //!< udp layer send mode (default auto)
+      int                sndbuf_size_bytes       = (5*1024*1024);       //!< udp send buffer size in bytes (default 5MB)
     };
 
     struct ECAL_API TCPConfig
     {
-      TLayer::eSendMode  send_mode              = TLayer::smode_off;  //!<  tcp layer send mode (default off)
+      TLayer::eSendMode  send_mode               = TLayer::smode_off;   //!<  tcp layer send mode (default off)
     };
 
     struct ECAL_API Config

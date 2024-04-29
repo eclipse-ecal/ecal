@@ -29,7 +29,6 @@
 #include <string>
 #include <utility>
 
-#include "ecal_def.h"
 #include "config/ecal_config_reader_hlp.h"
 
 #if ECAL_CORE_REGISTRATION
@@ -76,21 +75,27 @@ namespace eCAL
     m_topic_name(topic_name_),
     m_topic_info(topic_info_),
     m_topic_size(0),
-    m_buffering_shm(PUB_MEMFILE_BUF_COUNT),
-    m_zero_copy(PUB_MEMFILE_ZERO_COPY),
-    m_acknowledge_timeout_ms(PUB_MEMFILE_ACK_TO),
+    m_config(config_),
     m_connected(false),
     m_id(0),
     m_clock(0),
     m_frequency_calculator(0.0f),
     m_loc_subscribed(false),
     m_ext_subscribed(false),
-    m_share_ttype(true),
-    m_share_tdesc(true),
     m_created(false)
   {
-    // configure
-    Configure(config_);
+    // shm config
+#if ECAL_CORE_TRANSPORT_SHM
+    m_writer.shm_mode.requested = config_.shm.send_mode;
+#endif
+    // udp config
+#if ECAL_CORE_TRANSPORT_UDP
+    m_writer.udp_mode.requested = config_.udp.send_mode;
+#endif
+    // tcp config
+#if ECAL_CORE_TRANSPORT_TCP
+    m_writer.tcp_mode.requested = config_.tcp.send_mode;
+#endif
 
     // build topic id
     std::stringstream counter;
@@ -165,31 +170,6 @@ namespace eCAL
     Unregister();
   }
 
-  void CDataWriter::Configure(const CPublisher::Config& config_)
-  {
-    // shm config
-#if ECAL_CORE_TRANSPORT_SHM
-    m_writer.shm_mode.requested    = config_.shm.send_mode;
-    m_buffering_shm                = config_.shm.buffer_count;
-    m_zero_copy                    = config_.shm.zero_copy_mode;
-    m_acknowledge_timeout_ms       = config_.shm.acknowledge_timeout_ms;
-#endif
-
-    // udp config
-#if ECAL_CORE_TRANSPORT_UDP
-    m_writer.udp_mode.requested = config_.udp.send_mode;
-#endif
-
-    // tcp config
-#if ECAL_CORE_TRANSPORT_TCP
-    m_writer.tcp_mode.requested    = config_.tcp.send_mode;
-#endif
-
-    // allow to share topic type/description
-    m_share_ttype                  = config_.share_topic_type;
-    m_share_tdesc                  = config_.share_topic_description;
-  }
-    
   bool CDataWriter::SetDataTypeInformation(const SDataTypeInformation& topic_info_)
   {
     // Does it even make sense to register if the info is the same???
@@ -297,7 +277,7 @@ namespace eCAL
 
     // can we do a zero copy write ?
     const bool allow_zero_copy =
-      m_zero_copy                       // zero copy mode activated by user
+      m_config.shm.zero_copy_mode       // zero copy mode activated by user
    && m_writer.shm_mode.activated       // shm layer active
    && !m_writer.udp_mode.activated
    && !m_writer.tcp_mode.activated;
@@ -336,9 +316,9 @@ namespace eCAL
         wattr.clock                  = m_clock;
         wattr.hash                   = snd_hash;
         wattr.time                   = time_;
-        wattr.buffering              = m_buffering_shm;
-        wattr.zero_copy              = m_zero_copy;
-        wattr.acknowledge_timeout_ms = m_acknowledge_timeout_ms;
+        wattr.buffering              = m_config.shm.memfile_buffer_count;
+        wattr.zero_copy              = m_config.shm.zero_copy_mode;
+        wattr.acknowledge_timeout_ms = m_config.shm.acknowledge_timeout_ms;
 
         // prepare send
         if (m_writer.shm->PrepareWrite(wattr))
@@ -663,12 +643,12 @@ namespace eCAL
     // topic_information
     {
       auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.tdatatype;
-      if (m_share_ttype)
+      if (m_config.share_topic_type)
       {
         ecal_reg_sample_tdatatype.encoding   = m_topic_info.encoding;
         ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       }
-      if (m_share_tdesc)
+      if (m_config.share_topic_description)
       {
         ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
       }
@@ -847,7 +827,7 @@ namespace eCAL
     {
     case TLayer::eSendMode::smode_auto:
     case TLayer::eSendMode::smode_on:
-      m_writer.udp = std::make_unique<CDataWriterUdpMC>(m_host_name, m_topic_name, m_topic_id);
+      m_writer.udp = std::make_unique<CDataWriterUdpMC>(m_host_name, m_topic_name, m_topic_id, m_config.udp);
 #ifndef NDEBUG
       Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::UDP_MC_WRITER");
 #endif
@@ -873,8 +853,8 @@ namespace eCAL
     {
     case TLayer::eSendMode::smode_auto:
     case TLayer::eSendMode::smode_on:
-      m_writer.shm = std::make_unique<CDataWriterSHM>(m_host_name, m_topic_name, m_topic_id);
-      m_writer.shm->SetBufferCount(m_buffering_shm);
+      m_writer.shm = std::make_unique<CDataWriterSHM>(m_host_name, m_topic_name, m_topic_id, m_config.shm);
+      m_writer.shm->SetBufferCount(m_config.shm.memfile_buffer_count);
 #ifndef NDEBUG
       Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::SHM_WRITER");
 #endif
@@ -900,7 +880,7 @@ namespace eCAL
     {
     case TLayer::eSendMode::smode_auto:
     case TLayer::eSendMode::smode_on:
-      m_writer.tcp = std::make_unique<CDataWriterTCP>(m_host_name, m_topic_name, m_topic_id);
+      m_writer.tcp = std::make_unique<CDataWriterTCP>(m_host_name, m_topic_name, m_topic_id, m_config.tcp);
 #ifndef NDEBUG
       Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::TCP_WRITER - SUCCESS");
 #endif
@@ -919,15 +899,15 @@ namespace eCAL
   {
     // if nothing is activated, we use defaults shm = auto, udp = auto
     if ((m_writer.udp_mode.requested == TLayer::smode_off)
-     && (m_writer.shm_mode.requested    == TLayer::smode_off)
-     && (m_writer.tcp_mode.requested    == TLayer::smode_off)
+     && (m_writer.shm_mode.requested == TLayer::smode_off)
+     && (m_writer.tcp_mode.requested == TLayer::smode_off)
       )
     {
 #if ECAL_CORE_TRANSPORT_UDP
       m_writer.udp_mode.requested = TLayer::smode_auto;
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-      m_writer.shm_mode.requested    = TLayer::smode_auto;
+      m_writer.shm_mode.requested = TLayer::smode_auto;
 #endif
     }
 
@@ -970,7 +950,7 @@ namespace eCAL
       }
     }
 
-    if ( (m_writer.tcp_mode.requested    == TLayer::smode_auto)
+    if ( (m_writer.tcp_mode.requested == TLayer::smode_auto)
       && (m_writer.udp_mode.requested == TLayer::smode_auto)
       )
     {

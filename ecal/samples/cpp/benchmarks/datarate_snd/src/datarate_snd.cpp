@@ -69,7 +69,7 @@ int main(int argc, char **argv)
   // set zero copy
   pub_config.shm.zero_copy_mode = zero_copy;
   // set buffering
-  pub_config.shm.buffer_count = buffer_count;
+  pub_config.shm.memfile_buffer_count = buffer_count;
   // set handshake acknowledgement timeout [ms]
   pub_config.shm.acknowledge_timeout_ms = acknowledge_time;
 
