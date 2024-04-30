@@ -21,11 +21,25 @@ project(test_pubsub)
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
+if(ECAL_CORE_TRANSPORT_SHM)
+  set(pubsub_test_src_shm
+    src/pubsub_test_shm.cpp
+  )
+endif()
+
+if(ECAL_CORE_TRANSPORT_UDP)
+  set(pubsub_test_src_udp
+    src/pubsub_test_udp.cpp
+  )
+endif()
+
 set(pubsub_test_src
   src/pubsub_acknowledge.cpp
   src/pubsub_multibuffer.cpp
   src/pubsub_receive_test.cpp
   src/pubsub_test.cpp
+  ${pubsub_test_src_shm}
+  ${pubsub_test_src_udp}
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${pubsub_test_src})

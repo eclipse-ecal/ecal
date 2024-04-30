@@ -118,7 +118,7 @@ std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int
   return received_content;
 }
 
-TEST(PubSub, MultibufferPubSub)
+TEST(core_cpp_pubsub, MultibufferPubSub)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");

@@ -45,7 +45,7 @@ namespace
 }
 
 // This test asserts that a timeouted acknowledge does not break subsequent calls
-TEST(PubSub, TimeoutAcknowledgment)
+TEST(core_cpp_pubsub, TimeoutAcknowledgment)
 {
   // initialize eCAL API
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "TimeoutAcknowledgment", eCAL::Init::All));
