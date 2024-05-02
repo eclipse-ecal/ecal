@@ -63,7 +63,7 @@ namespace eCAL
      * @param data_type_info_  Topic data type information (encoding, type, descriptor).
      * @param config_          Optional configuration parameters.
     **/
-    CMsgPublisher(const std::string& topic_name_, const struct SDataTypeInformation& data_type_info_, const Config& config_ = {}) : CPublisher(topic_name_, data_type_info_, config_)
+    CMsgPublisher(const std::string& topic_name_, const struct SDataTypeInformation& data_type_info_, const PubConfig& config_ = {}) : CPublisher(topic_name_, data_type_info_, config_)
     {
     }
 
@@ -74,7 +74,7 @@ namespace eCAL
      * @param topic_name_  Unique topic name.
      * @param config_      Optional configuration parameters.
     **/
-    explicit CMsgPublisher(const std::string& topic_name_, const Config& config_ = {}) : CMsgPublisher(topic_name_, GetDataTypeInformation(), config_)
+    explicit CMsgPublisher(const std::string& topic_name_, const PubConfig& config_ = {}) : CMsgPublisher(topic_name_, GetDataTypeInformation(), config_)
     {
     }
 
@@ -109,7 +109,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool Create(const std::string& topic_name_, const struct SDataTypeInformation& data_type_info_, const Config& config_ = {})
+    bool Create(const std::string& topic_name_, const struct SDataTypeInformation& data_type_info_, const PubConfig& config_ = {})
     {
       return(CPublisher::Create(topic_name_, data_type_info_, config_));
     }

@@ -54,7 +54,7 @@ TEST(core_cpp_pubsub, TimeoutAcknowledgment)
   eCAL::Util::EnableLoopback(true);
 
   // create publisher config
-  eCAL::CPublisher::Config pub_config;
+  eCAL::PubConfig pub_config;
   pub_config.shm.acknowledge_timeout_ms = 500;
 
   // create publisher

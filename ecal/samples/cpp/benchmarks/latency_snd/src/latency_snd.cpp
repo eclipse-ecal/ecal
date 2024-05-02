@@ -50,7 +50,7 @@ void do_run(const int runs, int snd_size /*kB*/, int mem_buffer, bool zero_copy)
   eCAL::Initialize(0, nullptr, "latency_snd");
 
   // create publisher config
-  eCAL::CPublisher::Config pub_config;
+  eCAL::PubConfig pub_config;
   // set number of publisher memory buffers
   pub_config.shm.memfile_buffer_count   = mem_buffer;
   // enable zero copy mode

@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <ecal/ecal_publisher.h>
+#include <ecal/ecal_publisher_config.h>
 
 #include "readwrite/ecal_writer_base.h"
 #include "io/shm/ecal_memfile_sync.h"
@@ -38,7 +38,7 @@ namespace eCAL
   class CDataWriterSHM : public CDataWriterBase
   {
   public:
-    CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const CPublisher::SHMConfig& shm_config_);
+    CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const SHMPubConfig& shm_config_);
 
     SWriterInfo GetInfo() override;
 
@@ -53,7 +53,7 @@ namespace eCAL
     Registration::ConnectionPar GetConnectionParameter() override;
 
   protected:
-    CPublisher::SHMConfig                         m_config;
+    SHMPubConfig                                  m_config;
 
     size_t                                        m_write_idx = 0;
     std::vector<std::shared_ptr<CSyncMemoryFile>> m_memory_file_vec;

@@ -124,7 +124,7 @@ int main(int argc, char** argv)
   eCAL::Initialize(argc, argv, nodeName);
 
   // create publisher config
-  eCAL::CPublisher::Config pub_config;
+  eCAL::PubConfig pub_config;
 
   // turn zero copy mode on
   pub_config.shm.zero_copy_mode = true;

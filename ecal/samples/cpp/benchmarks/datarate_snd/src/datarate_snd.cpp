@@ -65,7 +65,7 @@ int main(int argc, char **argv)
   eCAL::Initialize(argc, argv, "datarate_snd");
 
   // create publisher config
-  eCAL::CPublisher::Config pub_config;
+  eCAL::PubConfig pub_config;
   // set zero copy
   pub_config.shm.zero_copy_mode = zero_copy;
   // set buffering

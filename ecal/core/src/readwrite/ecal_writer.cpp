@@ -67,7 +67,7 @@ namespace std
 
 namespace eCAL
 {
-  CDataWriter::CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const CPublisher::Config& config_) :
+  CDataWriter::CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const PubConfig& config_) :
     m_host_name(Process::GetHostName()),
     m_host_group_name(Process::GetHostGroupName()),
     m_pid(Process::GetProcessID()),

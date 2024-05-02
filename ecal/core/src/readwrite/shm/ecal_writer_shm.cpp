@@ -32,7 +32,7 @@ namespace eCAL
 {
   const std::string CDataWriterSHM::m_memfile_base_name = "ecal_";
 
-  CDataWriterSHM::CDataWriterSHM(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, const CPublisher::SHMConfig& shm_config_) :
+  CDataWriterSHM::CDataWriterSHM(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, const SHMPubConfig& shm_config_) :
     m_config(shm_config_)
   {
     m_topic_name = topic_name_;

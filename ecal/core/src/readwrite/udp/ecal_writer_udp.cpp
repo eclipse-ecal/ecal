@@ -31,7 +31,7 @@
 
 namespace eCAL
 {
-  CDataWriterUdpMC::CDataWriterUdpMC(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const CPublisher::UDPConfig& udp_config_) :
+  CDataWriterUdpMC::CDataWriterUdpMC(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const UDPPubConfig& udp_config_) :
     m_config(udp_config_)
   {
     m_host_name   = host_name_;

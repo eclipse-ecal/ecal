@@ -35,27 +35,6 @@
 
 namespace eCAL
 {
-  CPublisher::Config::Config() :
-    share_topic_type(eCAL::Config::IsTopicTypeSharingEnabled()),
-    share_topic_description(eCAL::Config::IsTopicDescriptionSharingEnabled())
-  {
-    // shm config
-    shm.send_mode               = eCAL::Config::GetPublisherShmMode();
-    shm.zero_copy_mode          = eCAL::Config::IsMemfileZerocopyEnabled();
-    shm.acknowledge_timeout_ms  = eCAL::Config::GetMemfileAckTimeoutMs();
-
-    shm.memfile_min_size_bytes  = eCAL::Config::GetMemfileMinsizeBytes();
-    shm.memfile_reserve_percent = eCAL::Config::GetMemfileOverprovisioningPercentage();
-    shm.memfile_buffer_count    = eCAL::Config::GetMemfileBufferCount();
-
-    // udp config
-    udp.send_mode               = eCAL::Config::GetPublisherUdpMulticastMode();
-    udp.sndbuf_size_bytes       = eCAL::Config::GetUdpMulticastSndBufSizeBytes();
-
-    // tcp config
-    tcp.send_mode               = eCAL::Config::GetPublisherTcpMode();
-  }
-
   CPublisher::CPublisher() :
     m_datawriter(nullptr),
     m_id(0),
@@ -64,13 +43,13 @@ namespace eCAL
   {
   }
 
-  CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Config& config_)
+  CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubConfig& config_)
     : CPublisher()
   {
     CPublisher::Create(topic_name_, data_type_info_, config_);
   }
 
-  CPublisher::CPublisher(const std::string& topic_name_, const Config& config_)
+  CPublisher::CPublisher(const std::string& topic_name_, const PubConfig& config_)
     : CPublisher(topic_name_, SDataTypeInformation{}, config_)
   {}
 
@@ -111,7 +90,7 @@ namespace eCAL
     return *this;
   }
 
-  bool CPublisher::Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Config& config_)
+  bool CPublisher::Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubConfig& config_)
   {
     if (m_created)              return(false);
     if (topic_name_.empty())    return(false);

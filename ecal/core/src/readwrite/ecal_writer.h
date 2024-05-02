@@ -28,7 +28,7 @@
 #include <cstddef>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_payload_writer.h>
-#include <ecal/ecal_publisher.h>
+#include <ecal/ecal_publisher_config.h>
 #include <ecal/ecal_tlayer.h>
 #include <ecal/ecal_types.h>
 #include <tuple>
@@ -85,7 +85,7 @@ namespace eCAL
       }
     };
 
-    CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const CPublisher::Config& config_ = {});
+    CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const PubConfig& config_ = {});
     ~CDataWriter();
 
     bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
@@ -148,7 +148,7 @@ namespace eCAL
     SDataTypeInformation                   m_topic_info;
     std::map<std::string, std::string>     m_attr;
     size_t                                 m_topic_size;
-    CPublisher::Config                     m_config;
+    PubConfig                              m_config;
 
     std::vector<char>                      m_payload_buffer;
 
