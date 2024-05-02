@@ -40,6 +40,17 @@ namespace eCAL
             auto callback = std::bind(&CNBSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
             return(CSubscriber::AddReceiveCallback(callback));
         }
+        bool WrapAddSubEventCB(eCAL_Subscriber_Event event, nanobind::callable callback_)
+        {
+            assert(IsCreated());
+            RemReceiveCallback();
+            {
+                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
+                m_python_callback = callback_;
+            }
+            auto callback = std::bind(&CNBSubscriber::AddSubEventCB, this, std::placeholders::_1, std::placeholders::_2);
+            return(CSubscriber::AddEventCallback(event, callback));
+        }
 
     private:
         void ReceiveCallback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
@@ -59,6 +70,22 @@ namespace eCAL
             }
         }
 
+        void AddSubEventCB(const char* event_name_, const struct eCAL::SSubEventCallbackData* data_)
+        {
+            nanobind::callable fn_callback;
+            {
+                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
+                fn_callback = m_python_callback;
+            }
+
+            try {
+                nanobind::gil_scoped_acquire g2;
+                fn_callback(event_name_, data_->type, nanobind::int_(data_->time), data_->tid);
+            }
+            catch (const nanobind::python_error& e) {
+                std::cout << e.what();
+            }
+        }
         nanobind::callable m_python_callback;
         std::mutex m_python_callback_mutex;
     };
@@ -79,6 +106,16 @@ namespace eCAL
             auto callback = std::bind(&CNBSrvClient::ResponseCallback, this, std::placeholders::_1);
             return(CServiceClient::AddResponseCallback(callback));
         }
+        bool WrapAddCltEventCB(eCAL_Client_Event type, nanobind::callable callback_)
+        {
+            assert(IsConnected());
+            {
+                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
+                m_python_callback = callback_;
+            }
+            auto callback = std::bind(&CNBSrvClient::AddCltEventCB, this, std::placeholders::_1, std::placeholders::_2);
+            return(CNBSrvClient::AddEventCallback(type, callback));
+        }
 
     private:
         void ResponseCallback(const struct SServiceResponse& data_)
@@ -96,7 +133,23 @@ namespace eCAL
             catch (const nanobind::python_error& e) {
                 std::cout << e.what();
             }
-       }
+        }
+        void AddCltEventCB(const char* client_name_, const struct SClientEventCallbackData* data_)
+        {
+            nanobind::callable fn_callback;
+            {
+                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
+                fn_callback = m_python_callback;
+            }
+
+            try {
+                nanobind::gil_scoped_acquire g2;
+                fn_callback(client_name_, data_->type, nanobind::int_(data_->time), data_->attr.hname);
+            }
+            catch (const nanobind::python_error& e) {
+                std::cout << e.what();
+            }
+        }
 
         nanobind::callable m_python_callback;
         std::mutex m_python_callback_mutex;
@@ -118,6 +171,16 @@ namespace eCAL
             auto Servercallback = std::bind(&CNBSrvServer::MethodCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5);
             return(CNBSrvServer::AddMethodCallback(nb_method, nb_req_type, nb_resp_type, Servercallback));
         }
+        bool WrapAddSrvEventCB(eCAL_Server_Event type, nanobind::callable callback_)
+        {
+            assert(IsConnected());
+            {
+                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
+                m_python_callback = callback_;
+            }
+            auto callback = std::bind(&CNBSrvServer::AddSrvEventCB, this, std::placeholders::_1, std::placeholders::_2);
+            return(CNBSrvServer::AddEventCallback(type, callback));
+        }
 
     private:
         int MethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request, std::string& response)
@@ -136,6 +199,22 @@ namespace eCAL
                 response = nanobind::cast<std::string>(result[1]);
                 int nb_int = nanobind::cast<int>(result[0]);
                 return nb_int;
+            }
+            catch (const nanobind::python_error& e) {
+                std::cout << e.what();
+            }
+        }
+        void AddSrvEventCB(const char* client_name_, const struct SServerEventCallbackData* data_)
+        {
+            nanobind::callable fn_callback;
+            {
+                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
+                fn_callback = m_python_callback;
+            }
+
+            try {
+                nanobind::gil_scoped_acquire g2;
+                fn_callback(client_name_, data_->type, nanobind::int_(data_->time));
             }
             catch (const nanobind::python_error& e) {
                 std::cout << e.what();
