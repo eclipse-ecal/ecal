@@ -26,9 +26,11 @@
 
 #include <gtest/gtest.h>
 
-#define CMN_REGISTRATION_REFRESH   1000
-#define DATA_FLOW_TIME               50
-#define PAYLOAD_SIZE               1024
+enum {
+  CMN_REGISTRATION_REFRESH_MS = 1000,
+  DATA_FLOW_TIME_MS = 50,
+  PAYLOAD_SIZE_BYTE = 1024
+};
 
 // a binary payload object for testing
 // full (WriteFull) and partial (WriteModified) writing
@@ -68,7 +70,7 @@ private:
 std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int publications, int bytes_to_read)
 {
   // create payload
-  CBinaryPayload binary_payload(PAYLOAD_SIZE);
+  CBinaryPayload binary_payload(PAYLOAD_SIZE_BYTE);
 
   // create subscriber for topic "A"
   eCAL::CSubscriber sub("A");
@@ -106,13 +108,13 @@ std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int
   EXPECT_EQ(true, sub.AddReceiveCallback(lambda));
 
   // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // run publications
   for (int i = 0; i < publications; ++i)
   {
-    EXPECT_EQ(PAYLOAD_SIZE, pub.Send(binary_payload));
-    eCAL::Process::SleepMS(DATA_FLOW_TIME);
+    EXPECT_EQ(PAYLOAD_SIZE_BYTE, pub.Send(binary_payload));
+    eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
   }
 
   return received_content;

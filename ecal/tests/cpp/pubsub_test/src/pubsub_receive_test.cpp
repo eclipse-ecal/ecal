@@ -28,7 +28,9 @@
 
 #include <gtest/gtest.h>
 
-#define CMN_REGISTRATION_REFRESH 1000
+enum {
+  CMN_REGISTRATION_REFRESH_MS = 1000
+};
 
 using namespace std::chrono_literals;
 
@@ -76,7 +78,7 @@ TEST(core_cpp_pubsub, TimingSubscriberReceive)
   eCAL::string::CSubscriber<std::string> sub("CLOCK");
 
   // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // Send nothing and make sure the functions return as specified
   std::string received;
@@ -173,7 +175,7 @@ TEST(core_cpp_pubsub, SporadicEmptyReceives)
   eCAL::string::CSubscriber<std::string> sub("CLOCK");
 
   // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // start publishing thread
   std::atomic<bool> pub_stop(false);

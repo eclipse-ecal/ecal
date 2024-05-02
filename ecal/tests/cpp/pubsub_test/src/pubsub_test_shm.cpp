@@ -26,8 +26,10 @@
 
 #include <gtest/gtest.h>
 
-#define CMN_REGISTRATION_REFRESH   1000
-#define DATA_FLOW_TIME               50
+enum {
+  CMN_REGISTRATION_REFRESH_MS = 1000,
+  DATA_FLOW_TIME_MS = 50,
+};
 
 namespace
 {
@@ -69,16 +71,16 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
   EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
 
   // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   g_callback_received_bytes = 0;
   g_callback_received_count = 0;
 
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
-  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+  eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
-  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+  eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive
   EXPECT_EQ(send_s.size(), g_callback_received_bytes);
@@ -97,9 +99,9 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
 TEST(core_cpp_pubsub, MultipleSendsSHM)
 {
   // default send string
-  std::vector<std::string> send_vector{ "this", "is", "a", "", "testtest" };
+  const std::vector<std::string> send_vector{ "this", "is", "a", "", "testtest" };
   std::string last_received_msg;
-  long long   last_received_timestamp;
+  long long   last_received_timestamp(0);
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
@@ -129,12 +131,12 @@ TEST(core_cpp_pubsub, MultipleSendsSHM)
   EXPECT_TRUE(sub.AddReceiveCallback(save_data));
 
   // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
   long long timestamp = 1;
   for (const auto& elem : send_vector)
   {
     pub.Send(elem, timestamp);
-    eCAL::Process::SleepMS(DATA_FLOW_TIME);
+    eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
     EXPECT_EQ(last_received_msg, elem);
     EXPECT_EQ(last_received_timestamp, timestamp);
     ++timestamp;

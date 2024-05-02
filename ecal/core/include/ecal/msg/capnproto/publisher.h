@@ -101,7 +101,7 @@ namespace eCAL
       * @param topic_name_  Unique topic name.
       * @param config_      Optional configuration parameters.
       **/
-      CPublisher(const std::string& topic_name_, const eCAL::CPublisher::Config& config_ = {})
+      CPublisher(const std::string& topic_name_, const eCAL::PubConfig& config_ = {})
         : eCAL::CPublisher(topic_name_, GetDataTypeInformation(), config_)
         , builder(std::make_unique<capnp::MallocMessageBuilder>())
         , root_builder(builder->initRoot<message_type>())
@@ -150,7 +150,7 @@ namespace eCAL
       *
       * @return  True if it succeeds, false if it fails.
       **/
-      bool Create(const std::string& topic_name_, const eCAL::CPublisher::Config& config_ = {})
+      bool Create(const std::string& topic_name_, const eCAL::PubConfig& config_ = {})
       {
         return(eCAL::CPublisher::Create(topic_name_, GetDataTypeInformation(), config_));
       }

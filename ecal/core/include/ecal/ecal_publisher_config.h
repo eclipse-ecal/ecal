@@ -26,6 +26,8 @@
 
 #include <ecal/ecal_tlayer.h>
 
+#include <cstddef>
+
 namespace eCAL
 {
   struct ECAL_API SHMPubConfig

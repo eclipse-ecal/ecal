@@ -464,6 +464,7 @@ set(ecal_header_cmn
     include/ecal/ecal_process.h
     include/ecal/ecal_process_severity.h
     include/ecal/ecal_publisher.h
+    include/ecal/ecal_publisher_config.h
     include/ecal/ecal_server.h
     include/ecal/ecal_service_info.h
     include/ecal/ecal_subscriber.h
