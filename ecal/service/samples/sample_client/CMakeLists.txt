@@ -16,17 +16,24 @@
 #
 # ========================= eCAL LICENSE =================================
 
-# Main library
-add_subdirectory(ecal_service)
+project(service_sample_client)
 
-# Samples
-if(ECAL_CORE_BUILD_SAMPLES)
-  add_subdirectory(samples/sample_client)
-  add_subdirectory(samples/sample_server)
-  add_subdirectory(samples/sample_standalone)
-endif()
+find_package(Threads REQUIRED)
 
-# Tests
-if(ECAL_CORE_BUILD_TESTS)
-  add_subdirectory(test)
-endif()
+set(sources
+  src/main.cpp
+)
+
+add_executable(${PROJECT_NAME} ${sources})
+
+target_link_libraries(${PROJECT_NAME}
+  PRIVATE
+    ecal_service)
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER core/service)
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
+    ${sources}
+)
