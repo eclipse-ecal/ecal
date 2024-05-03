@@ -133,7 +133,7 @@ namespace eCAL
        * 
        * @param io_context        The io_context to use for the session and all callbacks.
        * @param protocol_version  The protocol version to use for the session. When this is 0, the legacy buggy protocol is used.
-       * @param address           The address of the server to connect to. May be an IP or a Hostname, IPv6 is supported.
+       * @param address           The address of the server to connect to. May be an IP or a Hostname, IPv6 is supported. TODO: Update documentation
        * @param port              The port of the server to connect to.
        * @param event_callback    The callback to be called when the session's state changes, i.e. when the session successfully connected to a server or disconnected from it.
        * @param logger            The logger to use for logging.
@@ -141,35 +141,31 @@ namespace eCAL
        * 
        * @return The new ClientSession instance as a shared_ptr.
        */
-      static std::shared_ptr<ClientSession> create(const std::shared_ptr<asio::io_context>& io_context
-                                                  , std::uint8_t                            protocol_version
-                                                  , const std::string&                      address
-                                                  , std::uint16_t                           port
-                                                  , const EventCallbackT&                   event_callback
-                                                  , const LoggerT&                          logger
-                                                  , const DeleteCallbackT&                  delete_callback);
+      static std::shared_ptr<ClientSession> create(const std::shared_ptr<asio::io_context>&                   io_context
+                                                  , std::uint8_t                                              protocol_version
+                                                  , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                  , const EventCallbackT&                                     event_callback
+                                                  , const LoggerT&                                            logger
+                                                  , const DeleteCallbackT&                                    delete_callback);
 
-      static std::shared_ptr<ClientSession> create(const std::shared_ptr<asio::io_context>& io_context
-                                                  , std::uint8_t                            protocol_version
-                                                  , const std::string&                      address
-                                                  , std::uint16_t                           port
-                                                  , const EventCallbackT&                   event_callback
-                                                  , const LoggerT&                          logger = default_logger("Service Client"));
+      static std::shared_ptr<ClientSession> create(const std::shared_ptr<asio::io_context>&                   io_context
+                                                  , std::uint8_t                                              protocol_version
+                                                  , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                  , const EventCallbackT&                                     event_callback
+                                                  , const LoggerT&                                            logger = default_logger("Service Client"));
 
-      static std::shared_ptr<ClientSession> create(const std::shared_ptr<asio::io_context>& io_context
-                                                  , std::uint8_t                            protocol_version
-                                                  , const std::string&                      address
-                                                  , std::uint16_t                           port
-                                                  , const EventCallbackT&                   event_callback
-                                                  , const DeleteCallbackT&                  delete_callback);
+      static std::shared_ptr<ClientSession> create(const std::shared_ptr<asio::io_context>&                   io_context
+                                                  , std::uint8_t                                              protocol_version
+                                                  , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                  , const EventCallbackT&                                     event_callback
+                                                  , const DeleteCallbackT&                                    delete_callback);
 
     protected:
-      ClientSession(const std::shared_ptr<asio::io_context>& io_context
-                    , std::uint8_t                           protocol_version
-                    , const std::string&                     address
-                    , std::uint16_t                          port
-                    , const EventCallbackT&                  event_callback
-                    , const LoggerT&                         logger);
+      ClientSession(const std::shared_ptr<asio::io_context>&                    io_context
+                    , std::uint8_t                                              protocol_version
+                    , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                    , const EventCallbackT&                                     event_callback
+                    , const LoggerT&                                            logger);
 
     public:
       // Delete copy constructor and assignment operator

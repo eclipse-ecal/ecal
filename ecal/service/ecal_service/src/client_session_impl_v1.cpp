@@ -42,27 +42,24 @@ namespace eCAL
     /////////////////////////////////////
     // Constructor, Destructor, Create
     /////////////////////////////////////
-    std::shared_ptr<ClientSessionV1> ClientSessionV1::create(const std::shared_ptr<asio::io_context>& io_context
-                                                            , const std::string&                      address
-                                                            , std::uint16_t                           port
-                                                            , const EventCallbackT&                   event_callback
-                                                            , const LoggerT&                          logger)
+    std::shared_ptr<ClientSessionV1> ClientSessionV1::create(const std::shared_ptr<asio::io_context>&                   io_context
+                                                            , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                            , const EventCallbackT&                                     event_callback
+                                                            , const LoggerT&                                            logger)
     {
-      std::shared_ptr<ClientSessionV1> instance(new ClientSessionV1(io_context, address, port, event_callback, logger));
+      std::shared_ptr<ClientSessionV1> instance(new ClientSessionV1(io_context, server_list, event_callback, logger));
 
-      instance->resolve_endpoint();
+      instance->resolve_endpoint(0);
 
       return instance;
     }
 
-    ClientSessionV1::ClientSessionV1(const std::shared_ptr<asio::io_context>& io_context
-                                    , const std::string&                      address
-                                    , std::uint16_t                           port
-                                    , const EventCallbackT&                   event_callback
-                                    , const LoggerT&                          logger)
+    ClientSessionV1::ClientSessionV1(const std::shared_ptr<asio::io_context>&                   io_context
+                                    , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                    , const EventCallbackT&                                     event_callback
+                                    , const LoggerT&                                            logger)
       : ClientSessionBase(io_context, event_callback)
-      , address_                  (address)
-      , port_                     (port)
+      , server_list_              (server_list)
       , service_call_queue_strand_(*io_context)
       , resolver_                 (*io_context)
       , logger_                   (logger)
@@ -83,21 +80,44 @@ namespace eCAL
     //////////////////////////////////////
     // Connection establishement
     //////////////////////////////////////
-    void ClientSessionV1::resolve_endpoint()
+    void ClientSessionV1::resolve_endpoint(size_t server_list_index)
     {
-      ECAL_SERVICE_LOG_DEBUG(logger_, "Resolving endpoint [" + address_ + ":" + std::to_string(port_) + "]...");
+      ECAL_SERVICE_LOG_DEBUG(logger_, "Resolving endpoint [" + server_list_[server_list_index].first + ":" + std::to_string(server_list_[server_list_index].second) + "]...");
 
-      const asio::ip::tcp::resolver::query query(address_, std::to_string(port_));
+      const asio::ip::tcp::resolver::query query(server_list_[server_list_index].first, std::to_string(server_list_[server_list_index].second));
 
       resolver_.async_resolve(query
-                            , service_call_queue_strand_.wrap([me = enable_shared_from_this<ClientSessionV1>::shared_from_this()]
+                            , service_call_queue_strand_.wrap([me = enable_shared_from_this<ClientSessionV1>::shared_from_this(), server_list_index]
                               (asio::error_code ec, const asio::ip::tcp::resolver::iterator& resolved_endpoints)
                               {
                                 if (ec)
                                 {
-                                  const std::string message = "Failed resolving endpoint [" + me->address_ + ":" + std::to_string(me->port_) + "]: " + ec.message();
-                                  me->logger_(LogLevel::Error, message);
-                                  me->handle_connection_loss_error(message);
+#if ECAL_SERVICE_LOG_DEBUG_ENABLED
+                                  {
+                                    const std::string message = "Failed resolving endpoint [" + me->server_list_[server_list_index].first + ":" + std::to_string(me->server_list_[server_list_index].second) + "]: " + ec.message();
+                                    ECAL_SERVICE_LOG_DEBUG(me->logger_, message);
+                                  } 
+#endif
+
+                                  if (server_list_index + 1 < me->server_list_.size())
+                                  {
+                                    // Try next possible endpoint
+                                    me->resolve_endpoint(server_list_index + 1);
+                                  }
+                                  else
+                                  {
+                                    std::string message = "Failed resolving any endpoint: ";
+                                    for (size_t j = 0; j < me->server_list_.size(); ++j)
+                                    {
+                                      message += me->server_list_[j].first + ":" + std::to_string(me->server_list_[j].second);
+                                      if (j + 1 < me->server_list_.size())
+                                      {
+                                        message += ", ";
+                                      }
+                                    }
+                                    me->logger_(LogLevel::Error, message);
+                                    me->handle_connection_loss_error(message);
+                                  }
                                   return;
                                 }
                                 else
@@ -105,7 +125,7 @@ namespace eCAL
 #if ECAL_SERVICE_LOG_DEBUG_VERBOSE_ENABLED
                                   // Verbose-debug log of all endpoints
                                   {
-                                    std::string endpoints_str = "Resolved endpoints for " + me->address_ + ": ";
+                                    std::string endpoints_str = "Resolved endpoints for " + me->server_list_[server_list_index].first + ": ";
                                     for (auto it = resolved_endpoints; it != asio::ip::tcp::resolver::iterator(); ++it)
                                     {
                                       endpoints_str += endpoint_to_string(*it) + ", ";
@@ -113,12 +133,16 @@ namespace eCAL
                                     ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, endpoints_str);
                                   }
 #endif //ECAL_SERVICE_LOG_DEBUG_VERBOSE_ENABLED
-                                  me->connect_to_endpoint(resolved_endpoints);
+                                  {
+                                    std::lock_guard<std::mutex> chosen_endpoint_lock(me->chosen_endpoint_mutex_);
+                                    me->chosen_endpoint_ = me->server_list_[server_list_index];
+                                  }
+                                  me->connect_to_endpoint(resolved_endpoints, server_list_index);
                                 }
                               }));
     }
 
-    void ClientSessionV1::connect_to_endpoint(const asio::ip::tcp::resolver::iterator& resolved_endpoints)
+    void ClientSessionV1::connect_to_endpoint(const asio::ip::tcp::resolver::iterator& resolved_endpoints, size_t server_list_index)
     {
       // Convert the resolved_endpoints iterator to an endpoint sequence
       // (i.e. a vector of endpoints)
@@ -131,14 +155,36 @@ namespace eCAL
       const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
       asio::async_connect(socket_
                         , *endpoint_sequence
-                        , service_call_queue_strand_.wrap([me = shared_from_this(), endpoint_sequence](asio::error_code ec, const asio::ip::tcp::endpoint& endpoint)
+                        , service_call_queue_strand_.wrap([me = shared_from_this(), endpoint_sequence, server_list_index](asio::error_code ec, const asio::ip::tcp::endpoint& endpoint)
                           {
                             (void)endpoint;
                             if (ec)
                             {
-                              const std::string message = "Failed to connect to endpoint [" + me->address_ + ":" + std::to_string(me->port_) + "]: " + ec.message();
-                              me->logger_(LogLevel::Error, message);
-                              me->handle_connection_loss_error(message);
+                              {
+                                // Log an error
+                                const std::string message = "Failed to connect to endpoint [" + me->chosen_endpoint_.first + ":" + std::to_string(me->chosen_endpoint_.second) + "]: " + ec.message();
+                                me->logger_(LogLevel::Error, message);
+                              }
+
+                              // If there are more servers available, try the next one
+                              if (server_list_index + 1 < me->server_list_.size())
+                              {
+                                me->resolve_endpoint(server_list_index + 1);
+                              }
+                              else
+                              {
+                                std::string message = "Failed to connect to any endpoint: ";
+                                for (size_t j = 0; j < me->server_list_.size(); ++j)
+                                {
+                                  message += me->server_list_[j].first + ":" + std::to_string(me->server_list_[j].second);
+                                  if (j + 1 < me->server_list_.size())
+                                  {
+                                    message += ", ";
+                                  }
+                                }
+                                me->logger_(LogLevel::Error, message);
+                                me->handle_connection_loss_error(message);
+                              }
                               return;
                             }
                             else
@@ -479,12 +525,14 @@ namespace eCAL
     
     std::string ClientSessionV1::get_address() const
     {
-      return address_;
+      std::lock_guard<std::mutex> chosen_endpoint_lock(chosen_endpoint_mutex_);
+      return chosen_endpoint_.first;
     }
 
     std::uint16_t ClientSessionV1::get_port() const
     {
-      return port_;
+      std::lock_guard<std::mutex> chosen_endpoint_lock(chosen_endpoint_mutex_);
+      return chosen_endpoint_.second;
     }
     
     State ClientSessionV1::get_state() const

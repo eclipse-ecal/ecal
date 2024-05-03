@@ -99,7 +99,7 @@ int main(int argc, char** argv)
   auto io_context = std::make_shared<asio::io_context>();
 
   // Create a client manager
-  auto client_manager = eCAL::service::ClientManager::create(io_context, eCAL::service::default_logger("Server", eCAL::service::LogLevel::Info));
+  auto client_manager = eCAL::service::ClientManager::create(io_context, eCAL::service::default_logger("Server", eCAL::service::LogLevel::Debug));
 
   // Create and start an io_context thread.
   // The io_context will be stopped, when the server_manager and client_manager are stopped.
@@ -122,7 +122,7 @@ int main(int argc, char** argv)
 
   // Create client
   // The client will connect to the server on the given port.
-  auto client = client_manager->create_client(protocol_version, server_list[0].first, server_list[0].second, client_event_callback); // TODO: use entire list
+  auto client = client_manager->create_client(protocol_version, server_list, client_event_callback);
 
   // Call the service non-blocking. The response will be passed to the callback.
   int counter = 1;

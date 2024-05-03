@@ -23,10 +23,12 @@
 #include <cstdint>
 #include <map>
 #include <memory>
-
-#include <ecal/service/client_session.h>
 #include <mutex>
 #include <string>
+#include <utility>
+#include <vector>
+
+#include <ecal/service/client_session.h>
 
 namespace eCAL
 {
@@ -141,16 +143,15 @@ namespace eCAL
        * stopped from this central place.
        * 
        * @param protocol_version  The protocol version to use for the client session. If 0, the legacy buggy protocol will be used.
-       * @param address           The address of the server to connect to
+       * @param address           The address of the server to connect to TODO: Update documentation
        * @param port              The port of the server to connect to
        * @param event_callback    The callback, that will be called, when the client has connected to the server or disconnected from it. The callback will be executed in the io_context thread.
        * 
        * @return A shared_ptr to the newly created ClientSession instance
        */
-      std::shared_ptr<ClientSession> create_client(std::uint8_t                          protocol_version
-                                                  , const std::string&                   address
-                                                  , std::uint16_t                        port
-                                                  , const ClientSession::EventCallbackT& event_callback);
+      std::shared_ptr<ClientSession> create_client(std::uint8_t                                               protocol_version
+                                                  , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                  , const ClientSession::EventCallbackT&                      event_callback);
 
       /**
        * @brief Returns the number of managed client sessions
