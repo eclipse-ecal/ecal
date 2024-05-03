@@ -75,6 +75,18 @@ namespace eCAL
     ///////////////////////////////////////////////
     void ServerSessionV0::start()
     {
+      // Call the handle_start with the io_service
+      // It is important to async call handle_start(), as it will call a
+      // user-defined callback. As we have no influence what that callback will
+      // be, we must call it from another thread to make sure to not double-lock
+      // mutexes from the server_impl, if the callback should itself call a
+      // server_impl api function.
+
+      io_context_->post([me = shared_from_this()]() { me->handle_start(); });
+    }
+
+    void ServerSessionV0::handle_start()
+    {
       // Go to handshake state
       state_ = State::CONNECTED;
 
