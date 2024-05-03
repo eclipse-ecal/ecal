@@ -75,6 +75,11 @@ namespace eCAL
       ///////////////////////////////////////////////
     public:
       void start() override;
+
+    private:
+      void handle_start();
+
+    public:
       void stop()  override;
 
       eCAL::service::State get_state() const override;
