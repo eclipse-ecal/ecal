@@ -73,8 +73,7 @@ namespace eCAL
     {
       if (protocol_version == 0)
       {
-        // TODO: Enable V0 protocol again
-        //impl_ = ClientSessionV0::create(io_context, address, port, event_callback, logger);
+        impl_ = ClientSessionV0::create(io_context, server_list, event_callback, logger);
       }
       else
       {
