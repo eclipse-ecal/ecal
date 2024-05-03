@@ -133,10 +133,6 @@ namespace eCAL
                                     ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, endpoints_str);
                                   }
 #endif //ECAL_SERVICE_LOG_DEBUG_VERBOSE_ENABLED
-                                  {
-                                    std::lock_guard<std::mutex> chosen_endpoint_lock(me->chosen_endpoint_mutex_);
-                                    me->chosen_endpoint_ = me->server_list_[server_list_index];
-                                  }
                                   me->connect_to_endpoint(resolved_endpoints, server_list_index);
                                 }
                               }));
@@ -205,6 +201,11 @@ namespace eCAL
                                 {
                                   me->logger_(LogLevel::Warning, "[" + get_connection_info_string(me->socket_) + "] " + "Failed setting tcp::no_delay option: " + socket_option_ec.message());
                                 }                                      
+                              }
+
+                              {
+                                std::lock_guard<std::mutex> chosen_endpoint_lock(me->chosen_endpoint_mutex_);
+                                me->chosen_endpoint_ = me->server_list_[server_list_index];
                               }
 
                               // Start sending the protocol handshake to the server. This will tell us the actual protocol version.

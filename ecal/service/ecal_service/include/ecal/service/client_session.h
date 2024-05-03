@@ -222,7 +222,7 @@ namespace eCAL
        */
       eCAL::service::Error call_service(const std::shared_ptr<const std::string>& request, std::shared_ptr<std::string>& response);
 
-      /**
+      /** TODO: Revise documentation
        * @brief Get the address that this client session has been created with.
        * 
        * This function returns the address that this client session has been
@@ -234,7 +234,7 @@ namespace eCAL
        */
       std::string   get_address()                  const;
 
-      /**
+      /**TODO: Revise documentation
        * @brief Get the port that this client session has been created with.
        * 
        * This function returns the port that this client session has been
