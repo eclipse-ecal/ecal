@@ -18,6 +18,8 @@
 
 @PACKAGE_INIT@
 
+include(CMakeFindDependencyMacro)
+
 # Set some build relevant variables to build samples appropriately
 set(eCAL_install_samples_dir "@eCAL_install_samples_dir@")
 
@@ -30,20 +32,13 @@ set(eCAL_VERSION_STRING @eCAL_VERSION_STRING@)
 set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL Release "")
 set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release "")
 
-find_package(Protobuf REQUIRED)
+# find_dependency forwards the QUIET or REQUIRED arguments eCAL was requested with
+find_dependency(CMakeFunctions)
+find_dependency(Threads)
+find_dependency(Protobuf)
 
 include("@PACKAGE_eCAL_install_cmake_dir@/helper_functions/ecal_add_functions.cmake")
 include("@PACKAGE_eCAL_install_cmake_dir@/helper_functions/ecal_helper_functions.cmake")
 include("@PACKAGE_eCAL_install_cmake_dir@/helper_functions/ecal_install_functions.cmake")
 include("@PACKAGE_eCAL_install_cmake_dir@/eCALTargets.cmake")
 
-# careful, this is a Windows hack to find protobuf etc. with the eCAL installation
-# To be removed if there is a better solution like Conan e.g.
-#if(WIN32)
-#  list(APPEND CMAKE_MODULE_PATH "${PACKAGE_PREFIX_DIR}/../../../../cmake")
-#  list(APPEND CMAKE_PREFIX_PATH "${PACKAGE_PREFIX_DIR}/../../../../cmake")
-#endif()
-
-find_package(CMakeFunctions REQUIRED)
-
-find_package(Threads REQUIRED)
