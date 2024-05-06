@@ -85,7 +85,7 @@ int main(int argc, char** argv)
   auto io_context = std::make_shared<asio::io_context>();
 
   // Create a server manager
-  auto server_manager = eCAL::service::ServerManager::create(io_context, eCAL::service::default_logger("Server", eCAL::service::LogLevel::Info));
+  auto server_manager = eCAL::service::ServerManager::create(io_context, eCAL::service::default_logger("Server", eCAL::service::LogLevel::DebugVerbose));
 
   // Server Service callback
   // 
