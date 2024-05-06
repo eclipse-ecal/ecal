@@ -32,7 +32,6 @@
 #pragma warning(pop)
 #endif
 
-#include <ecal/service/error.h>
 #include <ecal/service/client_session_types.h>
 
 #include <ecal/service/state.h>

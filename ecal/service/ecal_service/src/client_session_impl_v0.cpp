@@ -18,19 +18,27 @@
 */
 
 #include "client_session_impl_v0.h"
+#include "client_session_impl_base.h"
 
 #include "protocol_v0.h"
+#include "protocol_layout.h"
 #include "log_helpers.h"
 #include "log_defs.h"
 
+#include <ecal/service/client_session_types.h>
+#include <ecal/service/error.h>
+#include <ecal/service/logger.h>
+#include <ecal/service/state.h>
+
 #include <cstddef>
 #include <cstdint>
-#include <iostream>
 #include <memory>
 #include <mutex>
 #include <string>
 #include <utility>
 #include <vector>
+
+#include <asio.hpp>
 
 namespace eCAL
 {
@@ -191,7 +199,7 @@ namespace eCAL
                                 asio::error_code socket_option_ec;
                                 {
                                   const std::lock_guard<std::mutex> socket_lock(me->socket_mutex_);
-                                  me->socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec);
+                                  me->socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec); // NOLINT(bugprone-unused-return-value) -> We already get the value from the ec parameter
                                 }
                                 if (socket_option_ec)
                                 {
@@ -201,7 +209,7 @@ namespace eCAL
 
                               {
                                 // Set the chosen endpoint
-                                std::lock_guard<std::mutex> chosen_endpoint_lock(me->chosen_endpoint_mutex_);
+                                const std::lock_guard<std::mutex> chosen_endpoint_lock(me->chosen_endpoint_mutex_);
                                 me->chosen_endpoint_ = me->server_list_[server_list_index];
                               }
 
@@ -405,13 +413,13 @@ namespace eCAL
     
     std::string ClientSessionV0::get_address() const
     {
-      std::lock_guard<std::mutex> chosen_endpoint_lock(chosen_endpoint_mutex_);
+      const std::lock_guard<std::mutex> chosen_endpoint_lock(chosen_endpoint_mutex_);
       return chosen_endpoint_.first;
     }
 
     std::uint16_t ClientSessionV0::get_port() const
     {
-      std::lock_guard<std::mutex> chosen_endpoint_lock(chosen_endpoint_mutex_);
+      const std::lock_guard<std::mutex> chosen_endpoint_lock(chosen_endpoint_mutex_);
       return chosen_endpoint_.second;
     }
 
@@ -531,7 +539,7 @@ namespace eCAL
 
       {
         // Set the stopped_by_user_ flag to true, so that the async operations stop enqueuing new service calls.
-        std::lock_guard<std::mutex> service_state_lock(service_state_mutex_);
+        const std::lock_guard<std::mutex> service_state_lock(service_state_mutex_);
         stopped_by_user_ = true;
       }
 
@@ -551,12 +559,12 @@ namespace eCAL
       {
         {
           asio::error_code ec;
-          socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
+          socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec); // NOLINT(bugprone-unused-return-value) -> we already get the value by the ec parameter
         }
 
         {
           asio::error_code ec;
-          socket_.close(ec);
+          socket_.close(ec); // NOLINT(bugprone-unused-return-value) -> we already get the value by the ec parameter
         }
       }
     }

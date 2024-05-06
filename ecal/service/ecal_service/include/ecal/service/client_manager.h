@@ -28,7 +28,11 @@
 #include <utility>
 #include <vector>
 
-#include <ecal/service/client_session.h>
+#include <asio.hpp>
+
+#include <ecal/service/logger.h>
+
+#include <ecal/service/client_session.h> // IWYU pragma: export
 
 namespace eCAL
 {

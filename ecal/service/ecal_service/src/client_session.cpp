@@ -17,11 +17,21 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <cstdint>
+#include <condition_variable>
 #include <ecal/service/client_session.h>
+
+#include <cstdint>
 #include <memory>
 #include <mutex>
 #include <string>
+#include <utility>
+#include <vector>
+
+#include <asio.hpp>
+
+#include <ecal/service/error.h>
+#include <ecal/service/logger.h>
+#include <ecal/service/state.h>
 
 #include "client_session_impl_v1.h"
 #include "client_session_impl_v0.h"

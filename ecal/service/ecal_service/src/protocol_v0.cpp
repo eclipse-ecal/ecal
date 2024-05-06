@@ -26,6 +26,15 @@
 #include <mutex>
 #include <string>
 
+#include <asio.hpp>
+#include <vector>
+
+#ifdef WIN32
+  #include <Winsock2.h>
+#else
+  #include <netinet/in.h>
+#endif
+
 namespace eCAL
 {
   namespace service

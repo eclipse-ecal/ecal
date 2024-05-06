@@ -20,9 +20,17 @@
 #include <ecal/service/server_manager.h>
 #include <ecal/service/client_manager.h>
 
-#include <iostream>
-#include <thread>
+#include <ecal/service/error.h>
+#include <ecal/service/client_session_types.h>
+#include <ecal/service/server_session_types.h>
+
 #include <chrono>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <thread>
+
+#include <asio.hpp>
 
 int main(int /*argc*/, char** /*argv*/)
 {

@@ -21,8 +21,7 @@
 
 #include "client_session_impl_base.h"
 
-#include <ecal/service/logger.h>
-
+#include <cstddef>
 #include <cstdint>
 #include <deque>
 #include <memory>
@@ -30,6 +29,11 @@
 #include <string>
 #include <utility>
 #include <vector>
+
+#include <asio.hpp>
+
+#include <ecal/service/logger.h>
+#include <ecal/service/state.h>
 
 namespace eCAL
 {

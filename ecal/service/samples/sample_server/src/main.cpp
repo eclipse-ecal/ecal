@@ -17,11 +17,18 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/service/server_manager.h>
-
+#include <cstddef>
+#include <cstdint>
 #include <iostream>
-#include <thread>
-#include <chrono>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include <asio.hpp>
+
+#include <ecal/service/server_manager.h>
+#include <ecal/service/server_session_types.h>
+#include <ecal/service/logger.h>
 
 void print_usage(const std::string& arg0)
 {
@@ -35,9 +42,10 @@ int main(int argc, char** argv)
 
   // convert command line arguments into vector<std::string>
   std::vector<std::string> args;
+  args.reserve(argc);
   for (int i = 0; i < argc; ++i)
   {
-    args.push_back(argv[i]);
+    args.emplace_back(argv[i]);
   }
 
   // parse command line arguments

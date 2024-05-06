@@ -23,18 +23,16 @@
 #include <functional>
 
 #include <mutex>
-#include <sstream>
 
 #ifdef _MSC_VER
-  #pragma warning(push)
-  #pragma warning(disable: 4834)
+#pragma warning(push)
+#pragma warning(disable : 4834)
 #endif
 
 #include <asio.hpp>
-#include <utility>
 
 #ifdef _MSC_VER
-  #pragma warning(pop)
+#pragma warning(pop)
 #endif
 
 #include <ecal/service/server_session_types.h>

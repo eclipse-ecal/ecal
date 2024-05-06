@@ -17,12 +17,18 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <ecal/service/server_manager.h>
+
 #include <cstddef>
 #include <cstdint>
-#include <ecal/service/server_manager.h>
 #include <map>
 #include <memory>
 #include <mutex>
+
+#include <asio.hpp>
+
+#include <ecal/service/server.h>
+#include <ecal/service/logger.h>
 
 namespace eCAL
 {

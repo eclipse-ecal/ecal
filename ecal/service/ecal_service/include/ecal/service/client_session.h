@@ -23,6 +23,8 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <utility>
+#include <vector>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -34,6 +36,7 @@
 #endif
 
 #include <ecal/service/client_session_types.h>
+#include <ecal/service/error.h>
 #include <ecal/service/logger.h>
 #include <ecal/service/state.h>
 
