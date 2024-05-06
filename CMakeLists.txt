@@ -101,22 +101,14 @@ option(ECAL_USE_CLOCKLOCK_MUTEX                "Use native mutex with monotonic 
 # --------------------------------------------------------
 # ecal core configuration
 # --------------------------------------------------------
-set(ECAL_CORE_HAS_PROTOBUF                                                                                         ON)
-set(ECAL_CORE_BUILD_SAMPLES                                                                          ${BUILD_SAMPLES})
-set(ECAL_CORE_BUILD_TESTS                                                                         ${BUILD_ECAL_TESTS})
-set(ECAL_CORE_CONFIG_INIFILE                                                                                       ON)
-set(ECAL_CORE_COMMAND_LINE                                                                                         ON)
-set(ECAL_CORE_REGISTRATION                                                                                         ON)
-set(ECAL_CORE_MONITORING                                                                                           ON)
-set(ECAL_CORE_PUBLISHER                                                                                            ON)
-set(ECAL_CORE_SUBSCRIBER                                                                                           ON)
-set(ECAL_CORE_SERVICE                                                                                              ON)
-set(ECAL_CORE_TIMEPLUGIN                                                                                           ON)
-set(ECAL_CORE_NPCAP_SUPPORT                                                                     ${ECAL_NPCAP_SUPPORT})
-set(ECAL_CORE_REGISTRATION_SHM                                                                                     ON)
-set(ECAL_CORE_TRANSPORT_UDP                                                                                        ON)
-set(ECAL_CORE_TRANSPORT_TCP                                                                                        ON)
-set(ECAL_CORE_TRANSPORT_SHM                                                                                        ON)
+# Override core options
+option(ECAL_CORE_BUILD_SAMPLES "Build the eCAL samples"       ${BUILD_SAMPLES})
+option(ECAL_CORE_BUILD_TESTS   "Build the eCAL google tests"  ${BUILD_ECAL_TESTS})
+option(ECAL_CORE_NPCAP_SUPPORT
+  "Enable the eCAL Npcap Receiver (Win10 performance fix for UDP communication)"
+  ${ECAL_NPCAP_SUPPORT}
+)
+include(ecal/ecal-core-options.cmake)
 
 # This should be ON, unless build ecal hdf5 for Matlab usage
 option(ECAL_LINK_HDF5_SHARED                   "Link shared libs of HDF5"                                          ON)
