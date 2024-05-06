@@ -33,7 +33,7 @@ int main(int argc, char **argv)
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
   // create a publisher config
-  eCAL::PubConfig pub_config;
+  eCAL::Publisher::Configuration pub_config;
   
   // switch shm and udp layer off, tcp layer on
   pub_config.shm.send_mode = eCAL::TLayer::smode_off;

@@ -37,14 +37,14 @@ namespace eCAL
   class CDataWriterUdpMC : public CDataWriterBase
   {
   public:
-    CDataWriterUdpMC(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const UDPPubConfig& udp_config_);
+    CDataWriterUdpMC(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const Publisher::UDP::Configuration& udp_config_);
 
     SWriterInfo GetInfo() override;
 
     bool Write(const void* buf_, const SWriterAttr& attr_) override;
 
   protected:
-    UDPPubConfig                        m_config;
+    Publisher::UDP::Configuration       m_config;
 
     std::vector<char>                   m_sample_buffer;
     std::shared_ptr<UDP::CSampleSender> m_sample_sender_loopback;

@@ -26,24 +26,27 @@
 
 namespace eCAL
 {
-  PubConfig::PubConfig() :
-    share_topic_type(eCAL::Config::IsTopicTypeSharingEnabled()),
-    share_topic_description(eCAL::Config::IsTopicDescriptionSharingEnabled())
+  namespace Publisher
   {
-    // shm config
-    shm.send_mode               = eCAL::Config::GetPublisherShmMode();
-    shm.zero_copy_mode          = eCAL::Config::IsMemfileZerocopyEnabled();
-    shm.acknowledge_timeout_ms  = eCAL::Config::GetMemfileAckTimeoutMs();
+    Configuration::Configuration() :
+      share_topic_type(eCAL::Config::IsTopicTypeSharingEnabled()),
+      share_topic_description(eCAL::Config::IsTopicDescriptionSharingEnabled())
+    {
+      // shm config
+      shm.send_mode               = eCAL::Config::GetPublisherShmMode();
+      shm.zero_copy_mode          = eCAL::Config::IsMemfileZerocopyEnabled();
+      shm.acknowledge_timeout_ms  = eCAL::Config::GetMemfileAckTimeoutMs();
 
-    shm.memfile_min_size_bytes  = eCAL::Config::GetMemfileMinsizeBytes();
-    shm.memfile_reserve_percent = eCAL::Config::GetMemfileOverprovisioningPercentage();
-    shm.memfile_buffer_count    = eCAL::Config::GetMemfileBufferCount();
+      shm.memfile_min_size_bytes  = eCAL::Config::GetMemfileMinsizeBytes();
+      shm.memfile_reserve_percent = eCAL::Config::GetMemfileOverprovisioningPercentage();
+      shm.memfile_buffer_count    = eCAL::Config::GetMemfileBufferCount();
 
-    // udp config
-    udp.send_mode               = eCAL::Config::GetPublisherUdpMulticastMode();
-    udp.sndbuf_size_bytes       = eCAL::Config::GetUdpMulticastSndBufSizeBytes();
+      // udp config
+      udp.send_mode               = eCAL::Config::GetPublisherUdpMulticastMode();
+      udp.sndbuf_size_bytes       = eCAL::Config::GetUdpMulticastSndBufSizeBytes();
 
-    // tcp config
-    tcp.send_mode               = eCAL::Config::GetPublisherTcpMode();
+      // tcp config
+      tcp.send_mode               = eCAL::Config::GetPublisherTcpMode();
+    }
   }
 }

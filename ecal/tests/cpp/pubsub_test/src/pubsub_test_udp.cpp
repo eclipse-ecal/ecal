@@ -58,7 +58,7 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
   eCAL::CSubscriber sub("A");
 
   // create publisher config
-  eCAL::PubConfig pub_config;
+  eCAL::Publisher::Configuration pub_config;
   // set transport layer
   pub_config.shm.send_mode = eCAL::TLayer::smode_off;
   pub_config.udp.send_mode = eCAL::TLayer::smode_on;
@@ -113,7 +113,7 @@ TEST(core_cpp_pubsub, MultipleSendsUDP)
   eCAL::string::CSubscriber<std::string> sub("A");
 
   // create publisher config
-  eCAL::PubConfig pub_config;
+  eCAL::Publisher::Configuration pub_config;
   // set transport layer
   pub_config.shm.send_mode = eCAL::TLayer::smode_off;
   pub_config.udp.send_mode = eCAL::TLayer::smode_on;

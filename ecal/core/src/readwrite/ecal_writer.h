@@ -85,7 +85,7 @@ namespace eCAL
       }
     };
 
-    CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const PubConfig& config_ = {});
+    CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Publisher::Configuration& config_ = {});
     ~CDataWriter();
 
     bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
@@ -148,7 +148,7 @@ namespace eCAL
     SDataTypeInformation                   m_topic_info;
     std::map<std::string, std::string>     m_attr;
     size_t                                 m_topic_size;
-    PubConfig                              m_config;
+    Publisher::Configuration               m_config;
 
     std::vector<char>                      m_payload_buffer;
 

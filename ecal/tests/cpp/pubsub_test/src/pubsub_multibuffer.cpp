@@ -76,7 +76,7 @@ std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int
   eCAL::CSubscriber sub("A");
 
   // create publisher config
-  eCAL::PubConfig pub_config;
+  eCAL::Publisher::Configuration pub_config;
   // set transport layer
   pub_config.shm.send_mode = eCAL::TLayer::smode_on;
   pub_config.udp.send_mode = eCAL::TLayer::smode_off;

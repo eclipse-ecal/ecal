@@ -43,13 +43,13 @@ namespace eCAL
   {
   }
 
-  CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubConfig& config_)
+  CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_)
     : CPublisher()
   {
     CPublisher::Create(topic_name_, data_type_info_, config_);
   }
 
-  CPublisher::CPublisher(const std::string& topic_name_, const PubConfig& config_)
+  CPublisher::CPublisher(const std::string& topic_name_, const Publisher::Configuration& config_)
     : CPublisher(topic_name_, SDataTypeInformation{}, config_)
   {}
 
@@ -90,7 +90,7 @@ namespace eCAL
     return *this;
   }
 
-  bool CPublisher::Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubConfig& config_)
+  bool CPublisher::Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_)
   {
     if (m_created)              return(false);
     if (topic_name_.empty())    return(false);

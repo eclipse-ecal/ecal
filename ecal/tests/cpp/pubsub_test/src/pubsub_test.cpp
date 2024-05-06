@@ -203,7 +203,7 @@ TEST(core_cpp_pubsub, CreateDestroy)
 TEST(core_cpp_pubsub, SimpleMessage1)
 { 
   // default send / receive strings
-  std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
+  const std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
   std::string recv_s;
 
   // initialize eCAL API
@@ -248,7 +248,7 @@ TEST(core_cpp_pubsub, SimpleMessage1)
 TEST(core_cpp_pubsub, SimpleMessage2)
 { 
   // default send / receive strings
-  std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
+  const std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
   std::string recv_s;
 
   // initialize eCAL API
@@ -287,7 +287,7 @@ TEST(core_cpp_pubsub, SimpleMessage2)
 TEST(core_cpp_pubsub, SimpleMessageCB)
 { 
   // default send string
-  std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
+  const std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
@@ -422,7 +422,7 @@ TEST(core_cpp_pubsub, DynamicSizeCB)
 TEST(core_cpp_pubsub, DynamicCreate)
 { 
   // default send string
-  std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
+  const std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");

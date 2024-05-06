@@ -34,7 +34,7 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
   CBinaryPayload payload(snd_size);
 
   // create publisher config
-  eCAL::PubConfig pub_config;
+  eCAL::Publisher::Configuration pub_config;
 
   // set transport layer
   pub_config.shm.send_mode = eCAL::TLayer::smode_off;

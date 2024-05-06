@@ -46,7 +46,7 @@ int main(int argc, char **argv)
   CBinaryPayload binary_payload(payload_size);
 
   // create publisher config
-  eCAL::PubConfig pub_config;
+  eCAL::Publisher::Configuration pub_config;
 
   // enable zero copy mode
   std::cout << "Zero copy mode: " << zero_copy << std::endl;
