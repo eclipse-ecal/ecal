@@ -34,8 +34,8 @@ namespace eCAL
             RemReceiveCallback();
 
             {
-                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
-                m_python_callback = callback_;
+                std::lock_guard<std::mutex> callback_lock(m_python_rec_callback_mutex);
+                m_python_rec_callback = callback_;
             }
             auto callback = std::bind(&CNBSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
             return(CSubscriber::AddReceiveCallback(callback));
@@ -43,10 +43,10 @@ namespace eCAL
         bool WrapAddSubEventCB(eCAL_Subscriber_Event event, nanobind::callable callback_)
         {
             assert(IsCreated());
-            RemReceiveCallback();
+            RemEventCallback(event);
             {
-                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
-                m_python_callback = callback_;
+                std::lock_guard<std::mutex> callback_lock(m_python_event_callback_mutex);
+                m_python_event_callback = callback_;
             }
             auto callback = std::bind(&CNBSubscriber::AddSubEventCB, this, std::placeholders::_1, std::placeholders::_2);
             return(CSubscriber::AddEventCallback(event, callback));
@@ -57,8 +57,8 @@ namespace eCAL
         {
             nanobind::callable fn_callback;
             {
-                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
-                fn_callback = m_python_callback;
+                std::lock_guard<std::mutex> callback_lock(m_python_rec_callback_mutex);
+                fn_callback = m_python_rec_callback;
             }
 
             try {
@@ -74,8 +74,8 @@ namespace eCAL
         {
             nanobind::callable fn_callback;
             {
-                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
-                fn_callback = m_python_callback;
+                std::lock_guard<std::mutex> callback_lock(m_python_event_callback_mutex);
+                fn_callback = m_python_event_callback;
             }
 
             try {
@@ -86,8 +86,52 @@ namespace eCAL
                 std::cout << e.what();
             }
         }
-        nanobind::callable m_python_callback;
-        std::mutex m_python_callback_mutex;
+        nanobind::callable m_python_event_callback;
+        std::mutex m_python_event_callback_mutex;
+
+        nanobind::callable m_python_rec_callback;
+        std::mutex m_python_rec_callback_mutex;
+    };
+
+    class CNBPublisher : public CPublisher
+    {
+    public:
+        CNBPublisher() : CPublisher() { }
+        CNBPublisher(const std::string& s) : CPublisher(s) { }
+        CNBPublisher(const std::string& s, const SDataTypeInformation& datainfo) : CPublisher(s, datainfo) { }
+
+        bool WrapAddPubEventCB(eCAL_Publisher_Event event, nanobind::callable callback_)
+        {
+            assert(IsCreated());
+            RemEventCallback(event);
+            {
+                std::lock_guard<std::mutex> callback_lock(m_python_event_callback_mutex);
+                m_python_event_callback = callback_;
+            }
+            auto callback = std::bind(&CNBPublisher::AddPubEventCB, this, std::placeholders::_1, std::placeholders::_2);
+            return(CPublisher::AddEventCallback(event, callback));
+        }
+
+    private:
+        void AddPubEventCB(const char* event_name_, const struct eCAL::SPubEventCallbackData* data_)
+        {
+            nanobind::callable fn_callback;
+            {
+                std::lock_guard<std::mutex> callback_lock(m_python_event_callback_mutex);
+                fn_callback = m_python_event_callback;
+            }
+
+            try {
+                nanobind::gil_scoped_acquire g2;
+                fn_callback(event_name_, data_->type, nanobind::int_(data_->time), data_->tid);
+            }
+            catch (const nanobind::python_error& e) {
+                std::cout << e.what();
+            }
+        }
+        nanobind::callable m_python_event_callback;
+        std::mutex m_python_event_callback_mutex;
+
     };
 
     class CNBSrvClient : public CServiceClient
@@ -100,8 +144,8 @@ namespace eCAL
         {
             assert(IsConnected());
             {
-                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
-                m_python_callback = callback_;
+                std::lock_guard<std::mutex> callback_lock(m_python_resp_callback_mutex);
+                m_python_resp_callback = callback_;
             }
             auto callback = std::bind(&CNBSrvClient::ResponseCallback, this, std::placeholders::_1);
             return(CServiceClient::AddResponseCallback(callback));
@@ -110,8 +154,8 @@ namespace eCAL
         {
             assert(IsConnected());
             {
-                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
-                m_python_callback = callback_;
+                std::lock_guard<std::mutex> callback_lock(m_python_event_callback_mutex);
+                m_python_event_callback = callback_;
             }
             auto callback = std::bind(&CNBSrvClient::AddCltEventCB, this, std::placeholders::_1, std::placeholders::_2);
             return(CNBSrvClient::AddEventCallback(type, callback));
@@ -122,8 +166,8 @@ namespace eCAL
         {
             nanobind::callable fn_callback;
             {
-                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
-                fn_callback = m_python_callback;
+                std::lock_guard<std::mutex> callback_lock(m_python_resp_callback_mutex);
+                fn_callback = m_python_resp_callback;
             }
 
             try {
@@ -138,8 +182,8 @@ namespace eCAL
         {
             nanobind::callable fn_callback;
             {
-                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
-                fn_callback = m_python_callback;
+                std::lock_guard<std::mutex> callback_lock(m_python_event_callback_mutex);
+                fn_callback = m_python_event_callback;
             }
 
             try {
@@ -151,8 +195,11 @@ namespace eCAL
             }
         }
 
-        nanobind::callable m_python_callback;
-        std::mutex m_python_callback_mutex;
+        nanobind::callable m_python_event_callback;
+        std::mutex m_python_event_callback_mutex;
+
+        nanobind::callable m_python_resp_callback;
+        std::mutex m_python_resp_callback_mutex;
     };
 
     class CNBSrvServer : public CServiceServer
@@ -165,8 +212,8 @@ namespace eCAL
         {
             assert(IsConnected());
             {
-                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
-                m_python_callback = callback_;
+                std::lock_guard<std::mutex> callback_lock(m_python_method_callback_mutex);
+                m_python_method_callback = callback_;
             }
             auto Servercallback = std::bind(&CNBSrvServer::MethodCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5);
             return(CNBSrvServer::AddMethodCallback(nb_method, nb_req_type, nb_resp_type, Servercallback));
@@ -175,8 +222,8 @@ namespace eCAL
         {
             assert(IsConnected());
             {
-                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
-                m_python_callback = callback_;
+                std::lock_guard<std::mutex> callback_lock(m_python_event_callback_mutex);
+                m_python_event_callback = callback_;
             }
             auto callback = std::bind(&CNBSrvServer::AddSrvEventCB, this, std::placeholders::_1, std::placeholders::_2);
             return(CNBSrvServer::AddEventCallback(type, callback));
@@ -187,8 +234,8 @@ namespace eCAL
         {
             nanobind::callable fn_callback;
             {
-                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
-                fn_callback = m_python_callback;
+                std::lock_guard<std::mutex> callback_lock(m_python_method_callback_mutex);
+                fn_callback = m_python_method_callback;
             }
 
             try {
@@ -208,8 +255,8 @@ namespace eCAL
         {
             nanobind::callable fn_callback;
             {
-                std::lock_guard<std::mutex> callback_lock(m_python_callback_mutex);
-                fn_callback = m_python_callback;
+                std::lock_guard<std::mutex> callback_lock(m_python_event_callback_mutex);
+                fn_callback = m_python_event_callback;
             }
 
             try {
@@ -221,7 +268,10 @@ namespace eCAL
             }
         }
 
-        nanobind::callable m_python_callback;
-        std::mutex m_python_callback_mutex;
+        nanobind::callable m_python_event_callback;
+        std::mutex m_python_event_callback_mutex;
+
+        nanobind::callable m_python_method_callback;
+        std::mutex m_python_method_callback_mutex;
     };
 }
