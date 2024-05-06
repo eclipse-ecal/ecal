@@ -562,9 +562,9 @@ add_library(eCAL::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)
 target_link_libraries(${PROJECT_NAME}_c ${PROJECT_NAME})
 
 target_compile_definitions(${PROJECT_NAME}_c
-  INTERFACE ECAL_C_DLL
   PRIVATE
     $<$<BOOL:${ECAL_CORE_BUILD_SHARED}>:eCAL_EXPORTS>
+    ECAL_NO_DEPRECATION_WARNINGS
 )
 
 target_compile_definitions(${PROJECT_NAME}
@@ -579,7 +579,11 @@ target_compile_definitions(${PROJECT_NAME}
     ECAL_NO_DEPRECATION_WARNINGS
 )
 
-if(NOT "${ECAL_CORE_BUILD_SHARED}")
+if("${ECAL_CORE_BUILD_SHARED}")
+  target_compile_definitions(${PROJECT_NAME}_c
+    INTERFACE ECAL_C_DLL
+  )
+else()
   target_compile_definitions(${PROJECT_NAME} PUBLIC
     ECAL_STATIC
   )
