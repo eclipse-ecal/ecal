@@ -27,6 +27,7 @@ set(eCAL_VERSION_MAJOR  @eCAL_VERSION_MAJOR@)
 set(eCAL_VERSION_MINOR  @eCAL_VERSION_MINOR@)
 set(eCAL_VERSION_PATCH  @eCAL_VERSION_PATCH@)
 set(eCAL_VERSION_STRING @eCAL_VERSION_STRING@)
+set(eCAL_IS_SHARED @ECAL_CORE_BUILD_SHARED@)
 
 # eCAL is provided only with Release and Debug Version, thus map the other configs to Release build.
 set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL Release "")
@@ -36,6 +37,12 @@ set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release "")
 find_dependency(CMakeFunctions)
 find_dependency(Threads)
 find_dependency(Protobuf)
+
+# Transitive dependencies for static libraries
+if(NOT eCAL_IS_SHARED)
+  find_dependency(tcp_pubsub)
+  find_dependency(ecaludp)
+endif()
 
 include("@PACKAGE_eCAL_install_cmake_dir@/helper_functions/ecal_add_functions.cmake")
 include("@PACKAGE_eCAL_install_cmake_dir@/helper_functions/ecal_helper_functions.cmake")
