@@ -16,6 +16,9 @@
 #
 # ========================= eCAL LICENSE =================================
 
+cmake_minimum_required(VERSION 3.16)
+project(ecal_service)
+
 # Main library
 add_subdirectory(ecal_service)
 
