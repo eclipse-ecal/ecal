@@ -235,7 +235,7 @@ namespace eCAL
        * 
        * @return The address that this client session has been created with.
        */
-      std::string   get_address()                  const;
+      std::string get_host() const;
 
       /**TODO: Revise documentation
        * @brief Get the port that this client session has been created with.
@@ -247,6 +247,9 @@ namespace eCAL
        * @return The port that this client session has been created with.
        */
       std::uint16_t get_port()                     const;
+
+      // TODO: Document
+      asio::ip::tcp::endpoint get_remote_endpoint() const;
 
       /**
        * @brief Get the state of this client session.

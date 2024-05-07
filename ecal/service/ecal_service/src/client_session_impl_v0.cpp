@@ -411,7 +411,7 @@ namespace eCAL
     // Status API
     //////////////////////////////////////
     
-    std::string ClientSessionV0::get_address() const
+    std::string ClientSessionV0::get_host() const
     {
       const std::lock_guard<std::mutex> chosen_endpoint_lock(chosen_endpoint_mutex_);
       return chosen_endpoint_.first;
@@ -421,6 +421,19 @@ namespace eCAL
     {
       const std::lock_guard<std::mutex> chosen_endpoint_lock(chosen_endpoint_mutex_);
       return chosen_endpoint_.second;
+    }
+
+    asio::ip::tcp::endpoint ClientSessionV0::get_remote_endpoint() const
+    {
+      // form remote endpoint string
+      {
+        asio::error_code ec;
+        const auto endpoint = socket_.remote_endpoint(ec);
+        if (!ec)
+          return endpoint;
+        else
+          return asio::ip::tcp::endpoint();
+      }
     }
 
     State ClientSessionV0::get_state() const

@@ -73,8 +73,9 @@ namespace eCAL
     public:
       virtual bool async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback) = 0;
 
-      virtual std::string   get_address()                   const = 0;
-      virtual std::uint16_t get_port()                      const = 0;
+      virtual std::string             get_host()            const = 0;
+      virtual std::uint16_t           get_port()            const = 0;
+      virtual asio::ip::tcp::endpoint get_remote_endpoint() const = 0; // TODO: Document
 
       virtual State         get_state()                     const = 0;
       virtual std::uint8_t  get_accepted_protocol_version() const = 0;

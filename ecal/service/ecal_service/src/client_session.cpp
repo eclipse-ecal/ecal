@@ -146,11 +146,12 @@ namespace eCAL
       }
     }
 
-    State         ClientSession::get_state()                     const { return impl_->get_state(); }
-    std::uint8_t  ClientSession::get_accepted_protocol_version() const { return impl_->get_accepted_protocol_version(); }
-    int           ClientSession::get_queue_size()                const { return impl_->get_queue_size(); }
-    std::string   ClientSession::get_address()                   const { return impl_->get_address(); }
-    std::uint16_t ClientSession::get_port()                      const { return impl_->get_port(); }
-    void          ClientSession::stop()                                { impl_->stop(); }
+    State                   ClientSession::get_state()                     const { return impl_->get_state(); }
+    std::uint8_t            ClientSession::get_accepted_protocol_version() const { return impl_->get_accepted_protocol_version(); }
+    int                     ClientSession::get_queue_size()                const { return impl_->get_queue_size(); }
+    std::string             ClientSession::get_host()                      const { return impl_->get_host(); }
+    asio::ip::tcp::endpoint ClientSession::get_remote_endpoint()           const { return impl_->get_remote_endpoint(); }
+    std::uint16_t           ClientSession::get_port()                      const { return impl_->get_port(); }
+    void                    ClientSession::stop()                                { impl_->stop(); }
   } // namespace service
 } // namespace eCAL

@@ -99,8 +99,10 @@ namespace eCAL
     // Status API
     //////////////////////////////////////
     public:
-      std::string   get_address()                   const override;
-      std::uint16_t get_port()                      const override;
+      std::string             get_host()            const override;
+      std::uint16_t           get_port()            const override;
+      asio::ip::tcp::endpoint get_remote_endpoint() const override; // TODO: Document
+
       State         get_state()                     const override;
       std::uint8_t  get_accepted_protocol_version() const override;
       int           get_queue_size()                const override;

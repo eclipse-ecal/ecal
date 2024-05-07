@@ -1670,8 +1670,9 @@ TEST(ecal_service, Callback_ApiCallsFromCallbacks) // NOLINT
                   if(client)
                   {
                     // We just test if those functions can be called without crashing
-                    auto address          = client->get_address();
+                    auto address          = client->get_host();
                     auto port             = client->get_port();
+                    auto endpoint         = client->get_remote_endpoint();
                     auto protocol_version = client->get_accepted_protocol_version();
                     auto queue_size       = client->get_queue_size();
                     auto state            = client->get_state();
@@ -1687,8 +1688,9 @@ TEST(ecal_service, Callback_ApiCallsFromCallbacks) // NOLINT
                   if (client)
                   {
                     // We just test if those functions can be called without crashing
-                    auto address          = client->get_address();
+                    auto address          = client->get_host();
                     auto port             = client->get_port();
+                    auto endpoint         = client->get_remote_endpoint();
                     auto protocol_version = client->get_accepted_protocol_version();
                     auto queue_size       = client->get_queue_size();
                     auto state            = client->get_state();
@@ -1813,10 +1815,13 @@ TEST(ecal_service, BackupHost)
     EXPECT_EQ(num_client_event_callback_called,    1);
 
     // Check what host the client is connected to
-    auto connected_host = client->get_address();
+    auto connected_host = client->get_host();
     auto connected_port = client->get_port();
+    auto endpoint       = client->get_remote_endpoint();
     EXPECT_EQ(connected_host, "127.0.0.1");
     EXPECT_EQ(connected_port, server->get_port());
+    EXPECT_EQ(endpoint.port(), server->get_port());
+    EXPECT_EQ(endpoint.address().to_string(), "127.0.0.1");
 
     // Call service and wait for the response
     const eCAL::service::ClientSession::ResponseCallbackT response_callback
