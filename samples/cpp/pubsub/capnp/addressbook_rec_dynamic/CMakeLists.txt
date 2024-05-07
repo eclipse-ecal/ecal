@@ -34,4 +34,4 @@ target_link_options(${PROJECT_NAME} PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/ignore:40
 
 ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/pubsub/capnp/addressbook)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/pubsub/capnproto)

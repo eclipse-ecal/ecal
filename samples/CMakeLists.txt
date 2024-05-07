@@ -33,6 +33,18 @@ add_subdirectory(cpp/measurement/measurement_read)
 add_subdirectory(cpp/measurement/measurement_write)
 endif(HAS_HDF5)
 
+if (HAS_CAPNPROTO)
+add_subdirectory(cpp/pubsub/capnp/addressbook_rec)
+add_subdirectory(cpp/pubsub/capnp/addressbook_rec_cb)
+add_subdirectory(cpp/pubsub/capnp/addressbook_rec_dynamic)
+add_subdirectory(cpp/pubsub/capnp/addressbook_snd)
+endif(HAS_CAPNPROTO)
+
+if (HAS_FLATBUFFERS)
+add_subdirectory(cpp/pubsub/flatbuffer/monster_rec)
+add_subdirectory(cpp/pubsub/flatbuffer/monster_snd)
+endif(HAS_FLATBUFFERS)
+
 # services
 add_subdirectory(cpp/services/ecalplayer_client)
 if(HAS_QT)
