@@ -136,8 +136,7 @@ namespace eCAL
        * 
        * @param io_context        The io_context to use for the session and all callbacks.
        * @param protocol_version  The protocol version to use for the session. When this is 0, the legacy buggy protocol is used.
-       * @param address           The address of the server to connect to. May be an IP or a Hostname, IPv6 is supported. TODO: Update documentation
-       * @param port              The port of the server to connect to.
+       * @param server_list       A list of endpoints to connect to. Must not be empty. The endpoints will be tried in the given order until a working endpoint is found.
        * @param event_callback    The callback to be called when the session's state changes, i.e. when the session successfully connected to a server or disconnected from it.
        * @param logger            The logger to use for logging.
        * @param delete_callback   The callback to be called when the session is deleted. This is useful for the eCAL::service::ClientManager to keep track of the number of active sessions.
@@ -225,30 +224,40 @@ namespace eCAL
        */
       eCAL::service::Error call_service(const std::shared_ptr<const std::string>& request, std::shared_ptr<std::string>& response);
 
-      /** TODO: Revise documentation
-       * @brief Get the address that this client session has been created with.
+      /**
+       * @brief Get the host that this client is connected to.
        * 
-       * This function returns the address that this client session has been
-       * created with. It will not return the address of the server that this
-       * client session is connected to, which would actually be the same
-       * address, but probably resolved to an IP.
+       * Get the host that this client is connected to.
+       * If the client is not connected, this function will return an empty
+       * string. Otherwise, it will return the hostname from the list
+       * server_list that the client is connected to.
        * 
-       * @return The address that this client session has been created with.
+       * The host is not resolved to an IP address. Use get_remote_endpoint()
+       * to get the actual IP address.
+       * 
+       * @return The host that this client is connected to.
        */
       std::string get_host() const;
 
-      /**TODO: Revise documentation
-       * @brief Get the port that this client session has been created with.
+      /**
+       * @brief Get the port that this client session is connected to.
        * 
-       * This function returns the port that this client session has been
-       * created with. It is not said, that the connection has been established
-       * successfully.
+       * Get the port that this client session is connected to. If the client
+       * is not connected, this function will return 0. Otherwise, it will
+       * return the port from the list server_list that the client is connected
+       * to.
        * 
-       * @return The port that this client session has been created with.
+       * @return The port that this client is connected to
        */
       std::uint16_t get_port()                     const;
 
-      // TODO: Document
+      /**
+       * @brief Get the remote endpoint that this client session is connected to.
+       * 
+       * Get the remote endpoint that this client session is connected to. Only
+       * valid, if the client session is actually connected to a server. If a
+       * hostname was given, this function will return the resolved IP address.
+       */
       asio::ip::tcp::endpoint get_remote_endpoint() const;
 
       /**

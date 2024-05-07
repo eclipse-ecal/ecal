@@ -29,6 +29,7 @@
 #include <cstdint>
 #include <memory>
 #include <mutex>
+#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
@@ -62,6 +63,12 @@ namespace eCAL
                                                             , const LoggerT&                                            logger)
     {
       std::shared_ptr<ClientSessionV1> instance(new ClientSessionV1(io_context, server_list, event_callback, logger));
+
+      // Throw exception, if the server list is empty
+      if (server_list.empty())
+      {
+        throw std::invalid_argument("Server list must not be empty");
+      }
 
       instance->resolve_endpoint(0);
 

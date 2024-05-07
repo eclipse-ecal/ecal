@@ -26,6 +26,7 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <stdexcept>
 
 #include <ecal/service/server.h> // Should not be needed, when I use the server manager / client manager
 #include <ecal/service/client_session.h> // Should not be needed, when I use the server manager / client manager
@@ -58,8 +59,6 @@ eCAL::service::LoggerT critical_logger(const std::string& node_name)
 
 constexpr std::uint8_t min_protocol_version = 0;
 constexpr std::uint8_t max_protocol_version = 1;
-
-// TODO: Add test for the new multi-host feature, where the second host is tried if the connection to the first one fails
 
 #if 1
 TEST(ecal_service, RAII_TcpServiceServer) // NOLINT
@@ -1847,6 +1846,27 @@ TEST(ecal_service, BackupHost)
     // join the io_thread
     io_context->stop();
     io_thread.join();
+  }
+}
+#endif
+
+#if 1
+// Test that the client create throws an exception when bein created with an empty server list
+TEST(ecal_service, EmptyServerList)
+{
+  // Regular client
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  {
+    const auto io_context = std::make_shared<asio::io_context>();    
+    EXPECT_THROW(eCAL::service::ClientSession::create(io_context, protocol_version, {}, [](eCAL::service::ClientEventType, const std::string&) -> void {}), std::invalid_argument);
+  }
+
+  // Client manager
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  {
+    const auto io_context = std::make_shared<asio::io_context>();
+    auto client_manager = eCAL::service::ClientManager::create(io_context);
+    EXPECT_THROW(client_manager->create_client(protocol_version, {}, [](eCAL::service::ClientEventType, const std::string&) -> void {}), std::invalid_argument);
   }
 }
 #endif

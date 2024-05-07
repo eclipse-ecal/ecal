@@ -105,7 +105,7 @@ namespace eCAL
     public:
       std::string             get_host()            const override;
       std::uint16_t           get_port()            const override;
-      asio::ip::tcp::endpoint get_remote_endpoint() const override; // TODO: Document
+      asio::ip::tcp::endpoint get_remote_endpoint() const override;
 
       State         get_state()                     const override;
       std::uint8_t  get_accepted_protocol_version() const override;

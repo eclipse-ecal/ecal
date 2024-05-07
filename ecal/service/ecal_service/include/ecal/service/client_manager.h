@@ -147,8 +147,7 @@ namespace eCAL
        * stopped from this central place.
        * 
        * @param protocol_version  The protocol version to use for the client session. If 0, the legacy buggy protocol will be used.
-       * @param address           The address of the server to connect to TODO: Update documentation
-       * @param port              The port of the server to connect to
+       * @param server_list       A list of endpoints to connect to. Must not be empty. The endpoints will be tried in the given order until a working endpoint is found.
        * @param event_callback    The callback, that will be called, when the client has connected to the server or disconnected from it. The callback will be executed in the io_context thread.
        * 
        * @return A shared_ptr to the newly created ClientSession instance

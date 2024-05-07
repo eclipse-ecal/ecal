@@ -34,6 +34,7 @@
 #include <cstdint>
 #include <memory>
 #include <mutex>
+#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
@@ -54,7 +55,13 @@ namespace eCAL
     {
       std::shared_ptr<ClientSessionV0> instance(new ClientSessionV0(io_context, server_list, event_callback, logger));
 
-      instance->resolve_endpoint(0); // TODO: Write a test that checks what happens when the server_list is empty
+      // Throw exception, if the server list is empty
+      if (server_list.empty())
+      {
+        throw std::invalid_argument("Server list must not be empty");
+      }
+
+      instance->resolve_endpoint(0);
 
       return instance;
     }
