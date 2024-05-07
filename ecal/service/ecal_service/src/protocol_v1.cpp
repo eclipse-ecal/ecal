@@ -27,6 +27,14 @@
 #include <string>
 #include <vector>
 
+#include <asio.hpp>
+
+#ifdef WIN32
+  #include <Winsock2.h>
+#else
+  #include <netinet/in.h>
+#endif
+
 namespace eCAL
 {
   namespace service

@@ -20,9 +20,17 @@
 #include <ecal/service/server_manager.h>
 #include <ecal/service/client_manager.h>
 
-#include <iostream>
-#include <thread>
+#include <ecal/service/error.h>
+#include <ecal/service/client_session_types.h>
+#include <ecal/service/server_session_types.h>
+
 #include <chrono>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <thread>
+
+#include <asio.hpp>
 
 int main(int /*argc*/, char** /*argv*/)
 {
@@ -69,7 +77,7 @@ int main(int /*argc*/, char** /*argv*/)
 
   // Create client
   // The client will connect to the server on the given port.
-  auto client = client_manager->create_client(1, "127.0.0.1", server->get_port(), client_event_callback);
+  auto client = client_manager->create_client(1, {{ "127.0.0.1", server->get_port() }}, client_event_callback);
 
   // Call the service non-blocking. The response will be passed to the callback.
   for (int i = 1; i <= 10; i++)

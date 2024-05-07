@@ -23,9 +23,13 @@
 #include <cstdint>
 #include <map>
 #include <memory>
-
-#include <ecal/service/server.h>
 #include <mutex>
+
+#include <asio.hpp>
+
+#include <ecal/service/logger.h>
+
+#include <ecal/service/server.h> // IWYU pragma: export
 
 namespace eCAL
 {

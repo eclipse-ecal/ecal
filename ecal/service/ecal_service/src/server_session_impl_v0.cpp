@@ -18,17 +18,30 @@
 */
 
 #include "server_session_impl_v0.h"
+#include "server_session_impl_base.h"
 
 #include "log_helpers.h"
 #include "log_defs.h"
-
 #include "protocol_layout.h"
+
 #include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <mutex>
 #include <string>
 #include <vector>
+
+#include <asio.hpp>
+
+#include <ecal/service/logger.h>
+#include <ecal/service/server_session_types.h>
+#include <ecal/service/state.h>
+
+#ifdef WIN32
+  #include <Winsock2.h>
+#else
+  #include <netinet/in.h>
+#endif
 
 ///////////////////////////////////////////////
 // Create, Constructor, Destructor
@@ -104,7 +117,7 @@ namespace eCAL
         asio::error_code socket_option_ec;
         {
           const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
-          socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec);
+          socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec); // NOLINT(bugprone-unused-return-value) -> We already get the return value  rom the ec parameter
         }
         if (socket_option_ec)
         {
@@ -131,13 +144,13 @@ namespace eCAL
         {
           // Shutdown the socket
           asio::error_code ec;
-          socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
+          socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec); // NOLINT(bugprone-unused-return-value) -> We already get the return value  rom the ec parameter
         }
 
         {
           // Close the socket
           asio::error_code ec;
-          socket_.close(ec);
+          socket_.close(ec); // NOLINT(bugprone-unused-return-value) -> We already get the return value  rom the ec parameter
         }
       }
     }

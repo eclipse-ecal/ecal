@@ -17,13 +17,21 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <ecal/service/client_manager.h>
+
 #include <cstddef>
 #include <cstdint>
-#include <ecal/service/client_manager.h>
 #include <map>
 #include <memory>
 #include <mutex>
 #include <string>
+
+#include <asio.hpp>
+
+#include <ecal/service/client_session.h>
+#include <ecal/service/logger.h>
+#include <utility>
+#include <vector>
 
 namespace eCAL
 {
@@ -52,10 +60,9 @@ namespace eCAL
     ///////////////////////////////////////////////////////
     // Public API
     ///////////////////////////////////////////////////////
-    std::shared_ptr<ClientSession> ClientManager::create_client(std::uint8_t                          protocol_version
-                                                               , const std::string&                   address
-                                                               , std::uint16_t                        port
-                                                               , const ClientSession::EventCallbackT& event_callback)
+    std::shared_ptr<ClientSession> ClientManager::create_client(std::uint8_t                                               protocol_version
+                                                               , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                               , const ClientSession::EventCallbackT&                      event_callback)
     {
       const std::lock_guard<std::mutex> lock(client_manager_mutex_);
       if (stopped_)
@@ -74,7 +81,7 @@ namespace eCAL
         }
       };
 
-      auto client = ClientSession::create(io_context_, protocol_version, address, port, event_callback, logger_, deleter);
+      auto client = ClientSession::create(io_context_, protocol_version, server_list, event_callback, logger_, deleter);
       sessions_.emplace(client.get(), client);
       return client;
     }
