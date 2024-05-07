@@ -127,7 +127,7 @@ jobs:
         -DBUILD_APPS=ON ^
         -DBUILD_SAMPLES=ON ^
         -DBUILD_TIME=ON ^
-        -DBUILD_PY_BINDING=ON ^
+        -DBUILD_PY_BINDING=OFF ^
         -DBUILD_CSHARP_BINDING=ON ^
         -DBUILD_ECAL_TESTS=ON ^
         -DECAL_INCLUDE_PY_SAMPLES=OFF ^
@@ -163,83 +163,6 @@ jobs:
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build/complete
 
-    # Create Python.
-    # The strang-looking double-cmake is an ugly workaround to force CMake to
-    # re-find Python, after we have changed the venv from the outside. The
-    # alternative would be to clean everything, which would cause an unnecessary
-    # rebuild of eCAL and HDF5 for each python Version.
-    - name: Build Python 3.12 Wheel
-      run: |
-        mkdir ".venv_312"
-        py -3.12 -m venv ".venv_312"
-        CALL ".venv_312\Scripts\activate.bat"
-        pip install wheel  setuptools
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
-        cmake --build . --target create_python_wheel --config Release
-      shell: cmd
-      working-directory: ${{ runner.workspace }}/_build/complete
-    
-    - name: Build Python 3.11 Wheel
-      run: |
-        mkdir ".venv_311"
-        py -3.11 -m venv ".venv_311"
-        CALL ".venv_311\Scripts\activate.bat"
-        pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
-        cmake --build . --target create_python_wheel --config Release
-      shell: cmd
-      working-directory: ${{ runner.workspace }}/_build/complete
-
-    - name: Build Python 3.10 Wheel
-      run: |
-        mkdir ".venv_310"
-        py -3.10 -m venv ".venv_310"
-        CALL ".venv_310\Scripts\activate.bat"
-        pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
-        cmake --build . --target create_python_wheel --config Release
-      shell: cmd
-      working-directory: ${{ runner.workspace }}/_build/complete
-
-    - name: Build Python 3.9 Wheel
-      run: |
-        mkdir ".venv_39"
-        py -3.9 -m venv ".venv_39"
-        CALL ".venv_39\Scripts\activate.bat"
-        pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
-        cmake --build . --target create_python_wheel --config Release
-      shell: cmd
-      working-directory: ${{ runner.workspace }}/_build/complete
-
-    - name: Build Python 3.8 Wheel
-      run: |
-        mkdir ".venv_38"
-        py -3.8 -m venv ".venv_38"
-        CALL ".venv_38\Scripts\activate.bat"
-        pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
-        cmake --build . --target create_python_wheel --config Release
-      shell: cmd
-      working-directory: ${{ runner.workspace }}/_build/complete
-
-    - name: Build Python 3.7 Wheel
-      run: |
-        mkdir ".venv_37"
-        py -3.7 -m venv ".venv_37"
-        CALL ".venv_37\Scripts\activate.bat"
-        pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
-        cmake --build . --target create_python_wheel --config Release
-      shell: cmd
-      working-directory: ${{ runner.workspace }}/_build/complete
-
 #    - name: Build Documentation C
 #      run: cmake --build . --target documentation_c
 #      working-directory: ${{ runner.workspace }}/_build
@@ -265,12 +188,6 @@ jobs:
       with:
         name: windows-setup
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.exe
-
-    - name: Upload Python Wheels
-      uses: actions/upload-artifact@v4
-      with:
-        name: windows-python-wheels
-        path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
 
     # --------------------------------------------------------------------------------------------------
 
