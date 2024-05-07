@@ -69,10 +69,4 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
 
 ecal_install_library(${PROJECT_NAME})
 
-if(BUILD_PY_BINDING)
-  protobuf_generate_python_ext(python_sources ${PYTHON_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${ProtoFiles})
-  target_sources(${PROJECT_NAME} PRIVATE ${python_sources})
-  set_source_files_properties(${python_sources} PROPERTIES HEADER_FILE_ONLY TRUE)
-endif()
-
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER core)

@@ -117,6 +117,51 @@ class ProtoSubscriber(MessageSubscriber):
     self.callback(topic_name, proto_message, time)
 
 
+class BinarySubscriber(MessageSubscriber):
+  """Specialized subscriber that subscribes to binary messages
+  """
+  def __init__(self, name):
+    topic_type = "binary"
+    topic_enc = "base"
+    topic_desc = b""
+    super(BinarySubscriber, self).__init__(name, topic_type, topic_enc, topic_desc)
+    self.callback = None
+
+  def receive(self, timeout=0):
+    """ receive subscriber content with timeout
+    
+    :param timeout: receive timeout in ms
+    
+    """
+    ret, msg, time = self.c_subscriber.receive(timeout)
+    if ret > 0:
+      msg = msg
+    else:
+      msg = b""
+    return ret, msg, time
+  
+  def set_callback(self, callback):
+    """ set callback function for incoming messages
+
+    :param callback: python callback function (f(topic_name, msg, time))
+
+    """
+    self.callback = callback
+    self.c_subscriber.set_callback(self._on_receive)
+
+  def rem_callback(self, callback):
+    """ remove callback function for incoming messages
+
+    :param callback: python callback function (f(topic_name, msg, time))
+
+    """
+    self.c_subscriber.rem_callback(self._on_receive)
+    self.callback = None
+
+  def _on_receive(self, topic_name, msg, time):
+    self.callback(topic_name, msg, time)
+
+
 class StringSubscriber(MessageSubscriber):
   """Spezialized publisher subscribes to plain strings
   """

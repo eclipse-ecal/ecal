@@ -113,7 +113,7 @@ jobs:
         -DBUILD_APPS=ON ^
         -DBUILD_SAMPLES=ON ^
         -DBUILD_TIME=ON ^
-        -DBUILD_PY_BINDING=ON ^
+        -DBUILD_PY_BINDING=OFF ^
         -DBUILD_CSHARP_BINDING=ON ^
         -DBUILD_ECAL_TESTS=ON ^
         -DECAL_INCLUDE_PY_SAMPLES=OFF ^
