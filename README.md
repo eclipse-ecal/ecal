@@ -2,7 +2,7 @@
 # eCAL - enhanced Communication Abstraction Layer
 
 
-[![Build Windows Server 2019](https://github.com/eclipse-ecal/ecal/workflows/Build%20Windows%20Server%202019/badge.svg)](https://github.com/eclipse-ecal/ecal/actions?workflow=Build+Windows+Server+2019) [![Build Ubuntu 20.04](https://github.com/eclipse-ecal/ecal/workflows/Build%20Ubuntu%2020.04/badge.svg)](https://github.com/eclipse-ecal/ecal/actions?workflow=Build+Ubuntu+20.04) [![Build Ubuntu 22.04](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu-22.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu-22.yml) [![Build macOS](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml)
+[![Windows](https://github.com/eclipse-ecal/ecal/actions/workflows/build-windows.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-windows.yml) [![Ubuntu](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu.yml) [![macOS](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml)
 
 [![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE.txt)
 
