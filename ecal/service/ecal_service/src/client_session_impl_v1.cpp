@@ -562,7 +562,7 @@ namespace eCAL
       // form remote endpoint string
       {
         asio::error_code ec;
-        const auto endpoint = socket_.remote_endpoint(ec);
+        auto endpoint = socket_.remote_endpoint(ec);
         if (!ec)
           return endpoint;
         else
