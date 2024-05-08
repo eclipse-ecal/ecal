@@ -59,35 +59,25 @@ namespace eCAL
   ////////////////////////////////////////
   // CDataReader
   ////////////////////////////////////////
-  CDataReader::CDataReader() :
+  CDataReader::CDataReader(const std::string& topic_name_, const SDataTypeInformation& topic_info_) :
                  m_host_name(Process::GetHostName()),
                  m_host_group_name(Process::GetHostGroupName()),
                  m_pid(Process::GetProcessID()),
                  m_pname(Process::GetProcessName()),
-                 m_frequency_calculator(0.0f)
+                 m_topic_name(topic_name_),
+                 m_topic_info(topic_info_),
+                 m_topic_size(0),
+                 m_connected(false),
+                 m_receive_time(0),
+                 m_clock(0),
+                 m_frequency_calculator(0.0f),
+                 m_created(false)
   {
-  }
-
-  CDataReader::~CDataReader()
-  {
-    Destroy();
-  }
-
-  bool CDataReader::Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
-  {
-    if(m_created) return(false);
-
-    // set defaults
-    m_topic_name    = topic_name_;
-    m_topic_id.clear();
-    m_topic_info    = topic_info_;
-    m_clock         = 0;
-    m_message_drops = 0;
-    m_created       = false;
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug1, m_topic_name + "::CDataReader::Create");
+    Logging::Log(log_level_debug1, m_topic_name + "::CDataReader::Constructor");
 #endif
+
     // build topic id
     std::stringstream counter;
     counter << std::chrono::steady_clock::now().time_since_epoch().count();
@@ -111,17 +101,13 @@ namespace eCAL
 
     // register
     Register(false);
-
-    return(true);
   }
 
-  bool CDataReader::Destroy()
+  CDataReader::~CDataReader()
   {
-    if (!m_created) return(false);
-
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug1, m_topic_name + "::CDataReader::Destroy");
+    Logging::Log(log_level_debug1, m_topic_name + "::CDataReader::Destructor");
 #endif
 
     // stop transport layers
@@ -144,14 +130,8 @@ namespace eCAL
 
     // and unregister
     Unregister();
-
-    // reset defaults
-    m_clock             = 0;
-    m_message_drops     = 0;
-
-    return(true);
   }
-    
+
   void CDataReader::InitializeLayers()
   {
     // initialize udp multicast layer

@@ -75,8 +75,15 @@ namespace eCAL
     m_topic_name(topic_name_),
     m_topic_info(topic_info_),
     m_config(config_),
-    m_frequency_calculator(0.0f)
+    m_connected(false),
+    m_frequency_calculator(0.0f),
+    m_created(false)
   {
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug1, m_topic_name + "::CDataWriter::Constructor");
+#endif
+
     // build topic id
     std::stringstream counter;
     counter << std::chrono::steady_clock::now().time_since_epoch().count();
@@ -100,11 +107,6 @@ namespace eCAL
 
     // create tcp layer
     ActivateTcpLayer(config_.tcp.activate);
-
-#ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug1, m_topic_name + "::CDataWriter::Constructor");
-#endif
   }
 
   CDataWriter::~CDataWriter()

@@ -65,10 +65,7 @@ namespace eCAL
 
     // destroy all remaining subscriber
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    for (auto iter = m_topic_name_datareader_map.begin(); iter != m_topic_name_datareader_map.end(); ++iter)
-    {
-      iter->second->Destroy();
-    }
+    m_topic_name_datareader_map.clear();
 
     m_created = false;
   }

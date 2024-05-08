@@ -23,10 +23,6 @@
 
 #pragma once
 
-#include <atomic>
-#include <chrono>
-#include <cstddef>
-#include <deque>
 #include <ecal/ecal.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_types.h>
@@ -34,19 +30,20 @@
 #include "serialization/ecal_serialize_sample_payload.h"
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "util/ecal_expmap.h"
+#include "util/frequency_calculator.h"
 
+#include <atomic>
+#include <chrono>
 #include <condition_variable>
+#include <cstddef>
+#include <deque>
 #include <map>
 #include <mutex>
-#include <atomic>
 #include <set>
+#include <string>
 #include <tuple>
 #include <queue>
-
-#include <string>
 #include <unordered_map>
-
-#include <util/frequency_calculator.h>
 
 namespace eCAL
 {
@@ -73,13 +70,10 @@ namespace eCAL
       }
     };
 
-    CDataReader();
+    CDataReader(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
     ~CDataReader();
 
     static void InitializeLayers();
-
-    bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
-    bool Destroy();
 
     bool Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);
 
@@ -138,15 +132,15 @@ namespace eCAL
 
     std::string                               m_host_name;
     std::string                               m_host_group_name;
-    int                                       m_pid;
+    int                                       m_pid = 0;
     std::string                               m_pname;
     std::string                               m_topic_name;
     std::string                               m_topic_id;
     SDataTypeInformation                      m_topic_info;
     std::map<std::string, std::string>        m_attr;
-    std::atomic<size_t>                       m_topic_size = 0;
+    std::atomic<size_t>                       m_topic_size;
 
-    std::atomic<bool>                         m_connected = false;
+    std::atomic<bool>                         m_connected;
     using PublicationMapT = Util::CExpMap<SPublicationInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
     mutable std::mutex                        m_pub_map_mtx;
     PublicationMapT                           m_pub_map;
@@ -159,7 +153,7 @@ namespace eCAL
 
     std::mutex                                m_receive_callback_mtx;
     ReceiveCallbackT                          m_receive_callback;
-    std::atomic<int>                          m_receive_time = 0;
+    std::atomic<int>                          m_receive_time;
 
     std::deque<size_t>                        m_sample_hash_queue;
 
@@ -167,7 +161,7 @@ namespace eCAL
     std::mutex                                m_event_callback_map_mtx;
     EventCallbackMapT                         m_event_callback_map;
 
-    std::atomic<long long>                    m_clock = 0;
+    std::atomic<long long>                    m_clock;
 
     std::mutex                                m_frequency_calculator_mtx;
     ResettableFrequencyCalculator<std::chrono::steady_clock> m_frequency_calculator;
@@ -182,6 +176,6 @@ namespace eCAL
     bool                                      m_share_tdesc = false;
 
     SLayerStates                              m_confirmed_layers;
-    std::atomic<bool>                         m_created = false;
+    std::atomic<bool>                         m_created;
   };
 }

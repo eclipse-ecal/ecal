@@ -99,20 +99,8 @@ namespace eCAL
     }
 
     // create data reader
-    m_datareader = std::make_shared<CDataReader>();
-    // create it
-    if (!m_datareader->Create(topic_name_, topic_info_))
-    {
-#ifndef NDEBUG
-      // log it
-      if (g_log() != nullptr) g_log()->Log(log_level_debug1, std::string(topic_name_ + "::CSubscriber::Create - FAILED"));
-#endif
-      return(false);
-    }
-#ifndef NDEBUG
-    // log it
-    if (g_log() != nullptr) g_log()->Log(log_level_debug1, std::string(topic_name_ + "::CSubscriber::Create - SUCCESS"));
-#endif
+    m_datareader = std::make_shared<CDataReader>(topic_name_, topic_info_);
+
     // register to subscriber gateway for publisher memory file receive thread
     g_subgate()->Register(topic_name_, m_datareader);
 
@@ -137,12 +125,9 @@ namespace eCAL
     if (g_log() != nullptr) g_log()->Log(log_level_debug1, std::string(m_datareader->GetTopicName() + "::CSubscriber::Destroy"));
 #endif
 
-    // destroy local data reader
-    m_datareader->Destroy();
-
-    // free datareader
+    // destroy data reader
     m_datareader.reset();
-    
+
     // we made it :-)
     m_created = false;
 

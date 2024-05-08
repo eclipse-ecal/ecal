@@ -23,14 +23,10 @@
 
 #pragma once
 
-#include <atomic>
-#include <chrono>
-#include <cstddef>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_publisher_config.h>
 #include <ecal/ecal_types.h>
-#include <tuple>
 
 #include "util/ecal_expmap.h"
 #include <util/frequency_calculator.h>
@@ -47,10 +43,12 @@
 #include "tcp/ecal_writer_tcp.h"
 #endif
 
+#include <atomic>
+#include <chrono>
+#include <cstddef>
 #include <memory>
 #include <mutex>
 #include <string>
-#include <atomic>
 #include <map>
 #include <tuple>
 #include <vector>
@@ -148,7 +146,7 @@ namespace eCAL
 
     std::vector<char>                      m_payload_buffer;
 
-    std::atomic<bool>                      m_connected = false;
+    std::atomic<bool>                      m_connected;
 
     using SSubscriptionMapT = Util::CExpMap<SSubscriptionInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
     mutable std::mutex                     m_sub_map_mtx;
@@ -175,6 +173,6 @@ namespace eCAL
 #endif
 
     SLayerStates                           m_confirmed_layers;
-    std::atomic<bool>                      m_created = false;
+    std::atomic<bool>                      m_created;
   };
 }
