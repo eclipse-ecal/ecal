@@ -16,11 +16,11 @@
 
 NB_MODULE(nanobind_core, m) {
     // Struct eCAL::SDataTypeInformation
-    nanobind::class_<eCAL::SDataTypeInformation>(m, "DataTypeInformation")
+    nanobind::class_<eCAL::CNBDataTypeInformation>(m, "DataTypeInformation")
         .def(nanobind::init<>())
-        .def_rw("name", &eCAL::SDataTypeInformation::name)
-        .def_rw("encoding", &eCAL::SDataTypeInformation::encoding)
-        .def_rw("descriptor", &eCAL::SDataTypeInformation::descriptor);
+        .def_rw("name", &eCAL::CNBDataTypeInformation::name)
+        .def_rw("encoding", &eCAL::CNBDataTypeInformation::encoding)
+        .def_rw("descriptor", &eCAL::CNBDataTypeInformation::descriptor);
 
     // Struct eCAL::SServiceResponse
     nanobind::class_<eCAL::SServiceResponse>(m, "ServiceResponse")
@@ -37,7 +37,7 @@ NB_MODULE(nanobind_core, m) {
     auto Subscriber_cls = nanobind::class_<eCAL::CNBSubscriber>(m, "Subscriber")
         .def(nanobind::init<>())    
         .def(nanobind::init<const std::string&>())
-        .def(nanobind::init<const std::string&, const eCAL::SDataTypeInformation&>())
+        .def(nanobind::init<const std::string&, const eCAL::CNBDataTypeInformation&>())
         .def("receive", &eCAL::CNBSubscriber::Receive)
         .def("create", nanobind::overload_cast<const std::string&>(&eCAL::CNBSubscriber::Create))
         .def("create", nanobind::overload_cast<const std::string&, const eCAL::SDataTypeInformation&>(&eCAL::CNBSubscriber::Create))
@@ -60,7 +60,7 @@ NB_MODULE(nanobind_core, m) {
     auto Publisher_cls = nanobind::class_<eCAL::CNBPublisher>(m, "Publisher")
         .def(nanobind::init<>())
         .def(nanobind::init<const std::string&>())
-        .def(nanobind::init<const std::string&, const eCAL::SDataTypeInformation&>())
+        .def(nanobind::init<const std::string&, const eCAL::CNBDataTypeInformation&>())
  //       .def(nanobind::self = nanobind::self)
         .def("create", nanobind::overload_cast<const std::string&>(&eCAL::CNBPublisher::Create))
         .def("create", nanobind::overload_cast<const std::string&, const eCAL::SDataTypeInformation&>(&eCAL::CNBPublisher::Create))

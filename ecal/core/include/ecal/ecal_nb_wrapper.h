@@ -15,12 +15,28 @@
 
 namespace eCAL
 {
+    class CNBDataTypeInformation
+    {
+    public:
+        std::string name;          
+        std::string encoding;      
+        nanobind::bytes descriptor;
+    };
+
+    inline SDataTypeInformation convert(const CNBDataTypeInformation& nb_info)
+    {
+        SDataTypeInformation info;
+        info.name = nb_info.name;
+        info.encoding = nb_info.encoding;
+        info.descriptor = std::string(nb_info.descriptor.c_str(), nb_info.descriptor.size());
+    }
+    
     class CNBSubscriber: public CSubscriber
     {
     public:
         CNBSubscriber() : CSubscriber() { }
         CNBSubscriber(const std::string& s) : CSubscriber(s) { }
-        CNBSubscriber(const std::string& s, const SDataTypeInformation& datainfo) : CSubscriber(s,datainfo) { }
+        CNBSubscriber(const std::string& s, const CNBDataTypeInformation& datainfo) : CSubscriber(s, convert(datainfo)) { }
 
         std::string Receive(int nb_timeout)
         {
@@ -98,7 +114,7 @@ namespace eCAL
     public:
         CNBPublisher() : CPublisher() { }
         CNBPublisher(const std::string& s) : CPublisher(s) { }
-        CNBPublisher(const std::string& s, const SDataTypeInformation& datainfo) : CPublisher(s, datainfo) { }
+        CNBPublisher(const std::string& s, const CNBDataTypeInformation& datainfo) : CPublisher(s, convert(datainfo)) { }
 
         bool WrapAddPubEventCB(eCAL_Publisher_Event event, nanobind::callable callback_)
         {
