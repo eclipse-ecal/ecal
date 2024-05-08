@@ -122,6 +122,28 @@ namespace eCAL
     subscription_info.process_id                 = ecal_topic.pid;
     const SDataTypeInformation topic_information = ecal_topic.tdatatype;
 
+    CDataWriter::SLayerStates layer_states;
+    for (const auto& layer : ecal_topic.tlayer)
+    {
+      if (layer.confirmed)
+      {
+        switch (layer.type)
+        {
+        case TLayer::tlayer_udp_mc:
+          layer_states.udp = true;
+          break;
+        case TLayer::tlayer_shm:
+          layer_states.shm = true;
+          break;
+        case TLayer::tlayer_tcp:
+          layer_states.tcp = true;
+          break;
+        default:
+          break;
+        }
+      }
+    }
+
     std::string reader_par;
 #if 0
     for (const auto& layer : ecal_sample.tlayer())
@@ -138,7 +160,7 @@ namespace eCAL
     auto res = m_topic_name_datawriter_map.equal_range(topic_name);
     for(TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->ApplySubscription(subscription_info, topic_information, reader_par);
+      iter->second->ApplySubscription(subscription_info, topic_information, layer_states, reader_par);
     }
   }
 

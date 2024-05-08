@@ -40,6 +40,7 @@
 #include <mutex>
 #include <atomic>
 #include <set>
+#include <tuple>
 #include <queue>
 
 #include <string>
@@ -52,6 +53,13 @@ namespace eCAL
   class CDataReader
   {
   public:
+    struct SLayerStates
+    {
+      bool udp = false;
+      bool shm = false;
+      bool tcp = false;
+    };
+
     struct SPublicationInfo
     {
       std::string host_name;
@@ -86,7 +94,7 @@ namespace eCAL
 
     void SetID(const std::set<long long>& id_set_);
 
-    void ApplyPublication(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
+    void ApplyPublication(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& layer_states_);
     void RemovePublication(const SPublicationInfo& publication_info_);
 
     void ApplyLayerParameter(const SPublicationInfo& publication_info_, eTLayerType type_, const Registration::ConnectionPar& parameter_);
@@ -97,13 +105,13 @@ namespace eCAL
 
     bool IsPublished() const
     {
-      std::lock_guard<std::mutex> const lock(m_pub_map_sync);
+      std::lock_guard<std::mutex> const lock(m_pub_map_mtx);
       return(!m_pub_map.empty());
     }
 
     size_t GetPublisherCount() const
     {
-      const std::lock_guard<std::mutex> lock(m_pub_map_sync);
+      const std::lock_guard<std::mutex> lock(m_pub_map_mtx);
       return(m_pub_map.size());
     }
 
@@ -136,47 +144,44 @@ namespace eCAL
     std::string                               m_topic_id;
     SDataTypeInformation                      m_topic_info;
     std::map<std::string, std::string>        m_attr;
-    std::atomic<size_t>                       m_topic_size;
+    std::atomic<size_t>                       m_topic_size = 0;
 
-    std::atomic<bool>                         m_connected;
-    using PublicationMapT = Util::CExpMap<SPublicationInfo, SDataTypeInformation>;
-    mutable std::mutex                        m_pub_map_sync;
+    std::atomic<bool>                         m_connected = false;
+    using PublicationMapT = Util::CExpMap<SPublicationInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
+    mutable std::mutex                        m_pub_map_mtx;
     PublicationMapT                           m_pub_map;
 
-    mutable std::mutex                        m_read_buf_mutex;
+    mutable std::mutex                        m_read_buf_mtx;
     std::condition_variable                   m_read_buf_cv;
-    bool                                      m_read_buf_received;
+    bool                                      m_read_buf_received = false;
     std::string                               m_read_buf;
-    long long                                 m_read_time;
+    long long                                 m_read_time = 0;
 
-    std::mutex                                m_receive_callback_sync;
+    std::mutex                                m_receive_callback_mtx;
     ReceiveCallbackT                          m_receive_callback;
-    std::atomic<int>                          m_receive_time;
+    std::atomic<int>                          m_receive_time = 0;
 
     std::deque<size_t>                        m_sample_hash_queue;
 
     using EventCallbackMapT = std::map<eCAL_Subscriber_Event, SubEventCallbackT>;
-    std::mutex                                m_event_callback_map_sync;
+    std::mutex                                m_event_callback_map_mtx;
     EventCallbackMapT                         m_event_callback_map;
 
-    std::atomic<long long>                    m_clock;
+    std::atomic<long long>                    m_clock = 0;
 
-    std::mutex                                               m_frequency_calculator_mutex;
+    std::mutex                                m_frequency_calculator_mtx;
     ResettableFrequencyCalculator<std::chrono::steady_clock> m_frequency_calculator;
 
     std::set<long long>                       m_id_set;
 
     using WriterCounterMapT = std::unordered_map<std::string, long long>;
     WriterCounterMapT                         m_writer_counter_map;
-    long long                                 m_message_drops;
+    long long                                 m_message_drops = 0;
 
-    bool                                      m_share_ttype;
-    bool                                      m_share_tdesc;
+    bool                                      m_share_ttype = false;
+    bool                                      m_share_tdesc = false;
 
-    bool                                      m_use_udp_confirmed;
-    bool                                      m_use_shm_confirmed;
-    bool                                      m_use_tcp_confirmed;
-
-    std::atomic<bool>                         m_created;
+    SLayerStates                              m_confirmed_layers;
+    std::atomic<bool>                         m_created = false;
   };
 }

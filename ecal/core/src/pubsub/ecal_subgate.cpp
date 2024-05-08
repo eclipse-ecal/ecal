@@ -228,6 +228,28 @@ namespace eCAL
     publication_info.process_id                  = ecal_topic.pid;
     const SDataTypeInformation topic_information = ecal_topic.tdatatype;
 
+    CDataReader::SLayerStates layer_states;
+    for (const auto& layer : ecal_topic.tlayer)
+    {
+      if (layer.confirmed)
+      {
+        switch (layer.type)
+        {
+        case TLayer::tlayer_udp_mc:
+          layer_states.udp = true;
+          break;
+        case TLayer::tlayer_shm:
+          layer_states.shm = true;
+          break;
+        case TLayer::tlayer_tcp:
+          layer_states.tcp = true;
+          break;
+        default:
+          break;
+        }
+      }
+    }
+
     // register publisher
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
     auto res = m_topic_name_datareader_map.equal_range(topic_name);
@@ -239,7 +261,7 @@ namespace eCAL
         iter->second->ApplyLayerParameter(publication_info, tlayer.type, tlayer.par_layer);
       }
       // inform for publisher connection
-      iter->second->ApplyPublication(publication_info, topic_information);
+      iter->second->ApplyPublication(publication_info, topic_information, layer_states);
     }
   }
 
