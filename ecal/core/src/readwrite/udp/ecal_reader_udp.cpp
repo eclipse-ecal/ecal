@@ -111,6 +111,6 @@ namespace eCAL
   bool CUDPReaderLayer::ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_)
   {
     if (g_subgate() == nullptr) return false;
-    return g_subgate()->ApplySample(serialized_sample_data_, serialized_sample_size_, tl_ecal_udp_mc);
+    return g_subgate()->ApplySample(serialized_sample_data_, serialized_sample_size_, tl_ecal_udp);
   }
 }

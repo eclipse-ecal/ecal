@@ -212,22 +212,23 @@ namespace eCAL
     return (applied_size > 0);
   }
 
-  void CSubGate::ApplyLocPubRegistration(const Registration::Sample& ecal_sample_)
+  void CSubGate::ApplyPubRegistration(const Registration::Sample& ecal_sample_)
   {
     if(!m_created) return;
 
-    // check topic name
     const auto&        ecal_topic = ecal_sample_.topic;
     const std::string& topic_name = ecal_topic.tname;
+
+    // check topic name
     if (topic_name.empty()) return;
 
-    // get topic id
-    const std::string& topic_id = ecal_topic.tid;
+    CDataReader::SPublicationInfo publication_info;
+    publication_info.host_name                   = ecal_topic.hname;
+    publication_info.topic_id                    = ecal_topic.tid;
+    publication_info.process_id                  = ecal_topic.pid;
+    const SDataTypeInformation topic_information = ecal_topic.tdatatype;
 
-    // get process id
-    const std::string process_id = std::to_string(ecal_sample_.topic.pid);
-
-    // handle local publisher connection
+    // register publisher
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
     auto res = m_topic_name_datareader_map.equal_range(topic_name);
     for (auto iter = res.first; iter != res.second; ++iter)
@@ -235,74 +236,34 @@ namespace eCAL
       // apply layer specific parameter
       for (const auto& tlayer : ecal_sample_.topic.tlayer)
       {
-        iter->second->ApplyLocLayerParameter(process_id, topic_id, tlayer.type, tlayer.par_layer);
+        iter->second->ApplyLayerParameter(publication_info, tlayer.type, tlayer.par_layer);
       }
-      // inform for local publisher connection
-      iter->second->ApplyLocPublication(process_id, topic_id, ecal_topic.tdatatype);
+      // inform for publisher connection
+      iter->second->ApplyPublication(publication_info, topic_information);
     }
   }
 
-  void CSubGate::ApplyLocPubUnregistration(const Registration::Sample& ecal_sample_)
+  void CSubGate::ApplyPubUnregistration(const Registration::Sample& ecal_sample_)
   {
     if (!m_created) return;
+
+    const auto&        ecal_topic = ecal_sample_.topic;
+    const std::string& topic_name = ecal_topic.tname;
 
     // check topic name
-    const auto&        ecal_topic = ecal_sample_.topic;
-    const std::string& topic_name = ecal_topic.tname;
-    const std::string& topic_id   = ecal_topic.tid;
-    const std::string  process_id = std::to_string(ecal_sample_.topic.pid);
+    if (topic_name.empty()) return;
 
-    // unregister local publisher
+    CDataReader::SPublicationInfo publication_info;
+    publication_info.host_name  = ecal_topic.hname;
+    publication_info.topic_id   = ecal_topic.tid;
+    publication_info.process_id = ecal_topic.pid;
+
+    // unregister publisher
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
     auto res = m_topic_name_datareader_map.equal_range(topic_name);
     for (auto iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->RemoveLocPublication(process_id, topic_id);
-    }
-  }
-
-  void CSubGate::ApplyExtPubRegistration(const Registration::Sample& ecal_sample_)
-  {
-    if(!m_created) return;
-
-    const auto&        ecal_topic = ecal_sample_.topic;
-    const std::string& host_name  = ecal_topic.hname;
-    const std::string& topic_name = ecal_topic.tname;
-    const std::string& topic_id   = ecal_topic.tid;
-    const std::string  process_id = std::to_string(ecal_topic.pid);
-
-    // handle external publisher connection
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    auto res = m_topic_name_datareader_map.equal_range(topic_name);
-    for (auto iter = res.first; iter != res.second; ++iter)
-    {
-      // apply layer specific parameter
-      for (const auto& tlayer : ecal_sample_.topic.tlayer)
-      {
-        iter->second->ApplyExtLayerParameter(host_name, tlayer.type, tlayer.par_layer);
-      }
-
-      // inform for external publisher connection
-      iter->second->ApplyExtPublication(host_name, process_id, topic_id, ecal_topic.tdatatype);
-    }
-  }
-
-  void CSubGate::ApplyExtPubUnregistration(const Registration::Sample& ecal_sample_)
-  {
-    if (!m_created) return;
-
-    const auto& ecal_sample = ecal_sample_.topic;
-    const std::string& host_name  = ecal_sample.hname;
-    const std::string& topic_name = ecal_sample.tname;
-    const std::string& topic_id   = ecal_sample.tid;
-    const std::string  process_id = std::to_string(ecal_sample.pid);
-
-    // unregister local subscriber
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    auto res = m_topic_name_datareader_map.equal_range(topic_name);
-    for (auto iter = res.first; iter != res.second; ++iter)
-    {
-      iter->second->RemoveExtPublication(host_name, process_id, topic_id);
+      iter->second->RemovePublication(publication_info);
     }
   }
 

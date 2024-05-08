@@ -52,6 +52,19 @@ namespace eCAL
   class CDataReader
   {
   public:
+    struct SPublicationInfo
+    {
+      std::string host_name;
+      int32_t     process_id = 0;
+      std::string topic_id;
+
+      friend bool operator<(const SPublicationInfo& l, const SPublicationInfo& r)
+      {
+        return std::tie(l.host_name, l.process_id, l.topic_id)
+          < std::tie(r.host_name, r.process_id, r.topic_id);
+      }
+    };
+
     CDataReader();
     ~CDataReader();
 
@@ -73,27 +86,29 @@ namespace eCAL
 
     void SetID(const std::set<long long>& id_set_);
 
-    void ApplyLocPublication(const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_);
-    void RemoveLocPublication(const std::string& process_id_, const std::string& tid_);
+    void ApplyPublication(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
+    void RemovePublication(const SPublicationInfo& publication_info_);
 
-    void ApplyExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_);
-    void RemoveExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_);
-
-    void ApplyLocLayerParameter(const std::string& process_id_, const std::string& topic_id_, eTLayerType type_, const Registration::ConnectionPar& parameter_);
-    void ApplyExtLayerParameter(const std::string& host_name_, eTLayerType type_, const Registration::ConnectionPar& parameter_);
+    void ApplyLayerParameter(const SPublicationInfo& publication_info_, eTLayerType type_, const Registration::ConnectionPar& parameter_);
 
     std::string Dump(const std::string& indent_ = "");
 
     bool IsCreated() const { return(m_created); }
 
+    bool IsPublished() const
+    {
+      std::lock_guard<std::mutex> const lock(m_pub_map_sync);
+      return(!m_pub_map.empty());
+    }
+
     size_t GetPublisherCount() const
     {
       const std::lock_guard<std::mutex> lock(m_pub_map_sync);
-      return(m_loc_pub_map.size() + m_ext_pub_map.size());
+      return(m_pub_map.size());
     }
 
-    std::string          GetTopicName()        const { return(m_topic_name); }
-    std::string          GetTopicID()          const { return(m_topic_id); }
+    std::string          GetTopicName()           const { return(m_topic_name); }
+    std::string          GetTopicID()             const { return(m_topic_id); }
     SDataTypeInformation GetDataTypeInformation() const { return(m_topic_info); }
 
     void RefreshRegistration();
@@ -124,10 +139,9 @@ namespace eCAL
     std::atomic<size_t>                       m_topic_size;
 
     std::atomic<bool>                         m_connected;
-    using ConnectedMapT = Util::CExpMap<std::string, bool>;
+    using PublicationMapT = Util::CExpMap<SPublicationInfo, SDataTypeInformation>;
     mutable std::mutex                        m_pub_map_sync;
-    ConnectedMapT                             m_loc_pub_map;
-    ConnectedMapT                             m_ext_pub_map;
+    PublicationMapT                           m_pub_map;
 
     mutable std::mutex                        m_read_buf_mutex;
     std::condition_variable                   m_read_buf_cv;
@@ -156,13 +170,10 @@ namespace eCAL
     WriterCounterMapT                         m_writer_counter_map;
     long long                                 m_message_drops;
 
-    std::atomic<bool>                         m_loc_published;
-    std::atomic<bool>                         m_ext_published;
-
     bool                                      m_share_ttype;
     bool                                      m_share_tdesc;
 
-    bool                                      m_use_udp_mc_confirmed;
+    bool                                      m_use_udp_confirmed;
     bool                                      m_use_shm_confirmed;
     bool                                      m_use_tcp_confirmed;
 

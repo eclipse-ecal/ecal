@@ -32,9 +32,10 @@ namespace eCAL
 {
   const std::string CDataWriterSHM::m_memfile_base_name = "ecal_";
 
-  CDataWriterSHM::CDataWriterSHM(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, const Publisher::SHM::Configuration& shm_config_) :
+  CDataWriterSHM::CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& /*topic_id_*/, const Publisher::SHM::Configuration& shm_config_) :
     m_config(shm_config_)
   {
+    m_host_name  = host_name_;
     m_topic_name = topic_name_;
 
     // initialize memory file buffer
@@ -144,13 +145,16 @@ namespace eCAL
     return sent;
   }
 
-  void CDataWriterSHM::AddLocConnection(const std::string& process_id_, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/)
+  void CDataWriterSHM::ApplySubscription(const std::string& host_name_, const int32_t process_id_, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/)
   {
+    // we accept local connections only
+    if (host_name_ != m_host_name) return;
+
     for (auto& memory_file : m_memory_file_vec)
     {
-      memory_file->Connect(process_id_);
+      memory_file->Connect(std::to_string(process_id_));
 #ifndef NDEBUG
-      Logging::Log(log_level_debug1, std::string("CDataWriterSHM::AddLocConnection - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + process_id_);
+      Logging::Log(log_level_debug1, std::string("CDataWriterSHM::ApplySubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
 #endif
     }
   }

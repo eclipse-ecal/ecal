@@ -24,9 +24,9 @@
  * This publisher configuration struct can be used to define the behavior of an eCAL publisher. Additional information on 
  * selected configuration parameters:
  * 
- * ----------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------
  * Zero copy shared memory transport mode (SHM::Configuration::zero_copy_mode)
- * ----------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------
  *
  * By default, the built-in shared memory layer is configured to make two memory copies
  * one on the publisher and one on the subscriber side.
@@ -54,9 +54,9 @@
  * for the initialization and the modification of the memory file content (see CPayloadWriter documentation).
  *
  * 
- * ----------------------------------------------------------------------------------
- * Acknowledgement timeout (SHM::Configuration::acknowledge_timeout_ms)
- * ----------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------
+ * Subscriber receive acknowledgement with timeout (SHM::Configuration::acknowledge_timeout_ms)
+ * --------------------------------------------------------------------------------------------------------------
  *
  * Most applications perform very well with the default behavior. If subscribers are too slow
  * to process incoming messages then the overall software architecture needs to be checked, software components
@@ -71,9 +71,9 @@
  * and will not return until all subscriber have read and processed their content or the timeout has been reached.
  *
  *
- * ----------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------
  * Number of handled memory files (SHM::Configuration::memfile_buffer_count)
- * ----------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------
  *
  * By default, each publisher creates one memory file to distribute its payload to the subscribers. Since eCAL does not 
  * currently support a rw lock synchronisation mechanism for interprocess communication, reading subscribers are blocking
@@ -100,7 +100,7 @@ namespace eCAL
     {
       struct ECAL_API Configuration
       {
-        TLayer::eSendMode  send_mode               = TLayer::smode_auto;  //!< shm layer send mode (default auto)
+        bool               activate                = false;               //!< activate layer
         bool               zero_copy_mode          = false;               //!< enable zero copy shared memory transport mode
         int                acknowledge_timeout_ms  = 0;                   /*!< force connected subscribers to send acknowledge event after processing the message
                                                                                  the publisher send call is blocked on this event with this timeout (0 == no handshake) */
@@ -114,7 +114,7 @@ namespace eCAL
     {
       struct ECAL_API Configuration
       {
-        TLayer::eSendMode  send_mode               = TLayer::smode_auto;  //!< udp layer send mode (default auto)
+        bool               activate                = false;               //!< activate layer
         int                sndbuf_size_bytes       = (5*1024*1024);       //!< udp send buffer size in bytes (default 5MB)
       };
     }
@@ -123,7 +123,7 @@ namespace eCAL
     {
       struct ECAL_API Configuration
       {
-        TLayer::eSendMode  send_mode               = TLayer::smode_off;   //!< tcp layer send mode (default off)
+        bool               activate                = false;               //!< activate layer
       };
     }
 
@@ -131,12 +131,12 @@ namespace eCAL
     {
       Configuration();
 
-      SHM::Configuration shm;
-      UDP::Configuration udp;
-      TCP::Configuration tcp;
+      SHM::Configuration   shm;
+      UDP::Configuration   udp;
+      TCP::Configuration   tcp;
 
-      bool share_topic_type                      = true;                //!< share topic type via registration
-      bool share_topic_description               = true;                //!< share topic description via registration
+      bool                 share_topic_type        = true;                //!< share topic type via registration
+      bool                 share_topic_description = true;                //!< share topic description via registration
     };
   }
 }

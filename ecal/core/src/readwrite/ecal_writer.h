@@ -29,7 +29,6 @@
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_publisher_config.h>
-#include <ecal/ecal_tlayer.h>
 #include <ecal/ecal_types.h>
 #include <tuple>
 
@@ -60,28 +59,16 @@ namespace eCAL
   class CDataWriter
   {
   public:
-    struct SExternalSubscriptionInfo
+    struct SSubscriptionInfo
     {
       std::string host_name;
-      std::string process_id;
+      int32_t     process_id = 0;
       std::string topic_id;
 
-      friend bool operator<(const SExternalSubscriptionInfo& l, const SExternalSubscriptionInfo& r)
+      friend bool operator<(const SSubscriptionInfo& l, const SSubscriptionInfo& r)
       {
         return std::tie(l.host_name, l.process_id, l.topic_id)
           < std::tie(r.host_name, r.process_id, r.topic_id);
-      }
-    };
-
-    struct SLocalSubscriptionInfo
-    {
-      std::string process_id;
-      std::string topic_id;
-
-      friend bool operator<(const SLocalSubscriptionInfo& l, const SLocalSubscriptionInfo& r)
-      {
-        return std::tie(l.process_id, l.topic_id)
-          < std::tie(r.process_id, r.topic_id);
       }
     };
 
@@ -98,11 +85,8 @@ namespace eCAL
 
     size_t Write(CPayloadWriter& payload_, long long time_, long long id_);
 
-    void ApplyLocSubscription(const SLocalSubscriptionInfo& local_info_, const SDataTypeInformation& tinfo_, const std::string& reader_par_);
-    void RemoveLocSubscription(const SLocalSubscriptionInfo& local_info_);
-
-    void ApplyExtSubscription(const SExternalSubscriptionInfo& external_info_, const SDataTypeInformation& tinfo_, const std::string& reader_par_);
-    void RemoveExtSubscription(const SExternalSubscriptionInfo& external_info_);
+    void ApplySubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const std::string& reader_par_);
+    void RemoveSubscription(const SSubscriptionInfo& subscription_info_);
 
     void RefreshRegistration();
     void RefreshSendCounter();
@@ -110,12 +94,17 @@ namespace eCAL
     std::string Dump(const std::string& indent_ = "");
 
     bool IsCreated() const { return(m_created); }
-    bool IsSubscribed() const { return(m_loc_subscribed || m_ext_subscribed); }
-    bool IsExtSubscribed() const { return(m_ext_subscribed); }
+
+    bool IsSubscribed() const 
+    {
+      std::lock_guard<std::mutex> const lock(m_sub_map_sync);
+      return(!m_sub_map.empty());
+    }
+
     size_t GetSubscriberCount() const
     {
       std::lock_guard<std::mutex> const lock(m_sub_map_sync);
-      return(m_loc_sub_map.size() + m_ext_sub_map.size());
+      return(m_sub_map.size());
     }
 
     const std::string& GetTopicName() const { return(m_topic_name); }
@@ -128,14 +117,13 @@ namespace eCAL
     void Connect(const std::string& tid_, const SDataTypeInformation& tinfo_);
     void Disconnect();
 
-    void SetUseUdpMC(TLayer::eSendMode mode_);
-    void SetUseShm(TLayer::eSendMode mode_);
-    void SetUseTcp(TLayer::eSendMode mode_);
+    void ActivateUdpLayer(bool state_);
+    void ActivateShmLayer(bool state_);
+    void ActivateTcpLayer(bool state_);
 
-    bool CheckWriterModes();
     size_t PrepareWrite(long long id_, size_t len_);
     bool IsInternalSubscribedOnly();
-    void LogSendMode(TLayer::eSendMode smode_, const std::string& base_msg_);
+    void LogLayerState(bool state_, const std::string& base_msg_);
 
     int32_t GetFrequency();
 
@@ -154,11 +142,9 @@ namespace eCAL
 
     std::atomic<bool>                      m_connected;
 
-    using LocalConnectedMapT    = Util::CExpMap<SLocalSubscriptionInfo, bool>;
-    using ExternalConnectedMapT = Util::CExpMap<SExternalSubscriptionInfo, bool>;
+    using SSubscriptionMapT = Util::CExpMap<SSubscriptionInfo, SDataTypeInformation>;
     mutable std::mutex                     m_sub_map_sync;
-    LocalConnectedMapT                     m_loc_sub_map;
-    ExternalConnectedMapT                  m_ext_sub_map;
+    SSubscriptionMapT                      m_sub_map;
 
     using EventCallbackMapT = std::map<eCAL_Publisher_Event, PubEventCallbackT>;
     std::mutex                             m_event_callback_map_sync;
@@ -170,16 +156,12 @@ namespace eCAL
     std::mutex                                               m_frequency_calculator_mutex;
     ResettableFrequencyCalculator<std::chrono::steady_clock> m_frequency_calculator;
 
-    std::atomic<bool>                      m_loc_subscribed;
-    std::atomic<bool>                      m_ext_subscribed;
-
     struct SWriter
     {
       struct SWriterMode
       {
-        TLayer::eSendMode requested = TLayer::smode_off;
-        bool              activated = false;
-        bool              confirmed = false;
+        bool activated = false;
+        bool confirmed = false;
       };
 
       SWriterMode                          udp_mode;

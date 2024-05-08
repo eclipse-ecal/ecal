@@ -36,9 +36,9 @@ int main(int argc, char **argv)
   eCAL::Publisher::Configuration pub_config;
   
   // switch shm and udp layer off, tcp layer on
-  pub_config.shm.send_mode = eCAL::TLayer::smode_off;
-  pub_config.udp.send_mode = eCAL::TLayer::smode_off;
-  pub_config.tcp.send_mode = eCAL::TLayer::smode_on;
+  pub_config.shm.activate = false;
+  pub_config.udp.activate = false;
+  pub_config.tcp.activate = true;
 
   // create a publisher (topic name "person")
   eCAL::protobuf::CPublisher<pb::People::Person> pub("person", pub_config);

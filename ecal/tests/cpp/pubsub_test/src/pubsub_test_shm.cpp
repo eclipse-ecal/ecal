@@ -60,9 +60,9 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
   // create publisher config
   eCAL::Publisher::Configuration pub_config;
   // set transport layer
-  pub_config.shm.send_mode = eCAL::TLayer::smode_on;
-  pub_config.udp.send_mode = eCAL::TLayer::smode_off;
-  pub_config.tcp.send_mode = eCAL::TLayer::smode_off;
+  pub_config.shm.activate = true;
+  pub_config.udp.activate = false;
+  pub_config.tcp.activate = false;
 
   // create publisher for topic "A"
   eCAL::CPublisher pub("A", pub_config);
@@ -115,9 +115,9 @@ TEST(core_cpp_pubsub, MultipleSendsSHM)
   // create publisher config
   eCAL::Publisher::Configuration pub_config;
   // set transport layer
-  pub_config.shm.send_mode = eCAL::TLayer::smode_on;
-  pub_config.udp.send_mode = eCAL::TLayer::smode_off;
-  pub_config.tcp.send_mode = eCAL::TLayer::smode_off;
+  pub_config.shm.activate = true;
+  pub_config.udp.activate = false;
+  pub_config.tcp.activate = false;
 
   // create publisher for topic "A"
   eCAL::string::CPublisher<std::string> pub("A", pub_config);

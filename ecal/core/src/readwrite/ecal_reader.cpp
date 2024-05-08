@@ -72,11 +72,9 @@ namespace eCAL
                  m_clock(0),
                  m_frequency_calculator(3.0f),
                  m_message_drops(0),
-                 m_loc_published(false),
-                 m_ext_published(false),
                  m_share_ttype(true),
                  m_share_tdesc(true),
-                 m_use_udp_mc_confirmed(false),
+                 m_use_udp_confirmed(false),
                  m_use_shm_confirmed(false),
                  m_use_tcp_confirmed(false),
                  m_created(false)
@@ -110,8 +108,7 @@ namespace eCAL
 
     // set registration expiration
     const std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
-    m_loc_pub_map.set_expiration(registration_timeout);
-    m_ext_pub_map.set_expiration(registration_timeout);
+    m_pub_map.set_expiration(registration_timeout);
 
     // allow to share topic type
     m_share_ttype = Config::IsTopicTypeSharingEnabled();
@@ -162,12 +159,12 @@ namespace eCAL
     Unregister();
 
     // reset defaults
-    m_clock                   = 0;
-    m_message_drops           = 0;
+    m_clock             = 0;
+    m_message_drops     = 0;
 
-    m_use_udp_mc_confirmed    = false;
-    m_use_shm_confirmed       = false;
-    m_use_tcp_confirmed       = false;
+    m_use_udp_confirmed = false;
+    m_use_shm_confirmed = false;
+    m_use_tcp_confirmed = false;
 
     return(true);
   }
@@ -263,9 +260,9 @@ namespace eCAL
     // udp multicast layer
     {
       Registration::TLayer udp_tlayer;
-      udp_tlayer.type      = tl_ecal_udp_mc;
+      udp_tlayer.type      = tl_ecal_udp;
       udp_tlayer.version   = 1;
-      udp_tlayer.confirmed = m_use_udp_mc_confirmed;
+      udp_tlayer.confirmed = m_use_udp_confirmed;
       ecal_reg_sample_topic.tlayer.push_back(udp_tlayer);
     }
 #endif
@@ -425,9 +422,9 @@ namespace eCAL
     if (!m_created) return(0);
 
     // store receive layer
-    m_use_udp_mc_confirmed |= layer_ == tl_ecal_udp_mc;
-    m_use_shm_confirmed    |= layer_ == tl_ecal_shm;
-    m_use_tcp_confirmed    |= layer_ == tl_ecal_tcp;
+    m_use_udp_confirmed |= layer_ == tl_ecal_udp;
+    m_use_shm_confirmed |= layer_ == tl_ecal_shm;
+    m_use_tcp_confirmed |= layer_ == tl_ecal_tcp;
 
     // number of hash values to track for duplicates
     constexpr int hash_queue_size(64);
@@ -604,71 +601,33 @@ namespace eCAL
     m_id_set = id_set_;
   }
 
-  void CDataReader::ApplyLocPublication(const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_)
+  void CDataReader::ApplyPublication(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
   {
-    Connect(tid_, tinfo_);
+    Connect(publication_info_.topic_id, data_type_info_);
 
-    // add key to local publisher map
-    const std::string topic_key = process_id_ + tid_;
+    // add key to publisher map
     {
       const std::lock_guard<std::mutex> lock(m_pub_map_sync);
-      m_loc_pub_map[topic_key] = true;
-    }
-
-    m_loc_published = true;
-  }
-
-  void CDataReader::RemoveLocPublication(const std::string& process_id_, const std::string& tid_)
-  {
-    // remove key from local publisher map
-    const std::string topic_key = process_id_ + tid_;
-    {
-      const std::lock_guard<std::mutex> lock(m_pub_map_sync);
-      m_loc_pub_map.erase(topic_key);
+      m_pub_map[publication_info_] = data_type_info_;
     }
   }
 
-  void CDataReader::ApplyExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const SDataTypeInformation& tinfo_)
+  void CDataReader::RemovePublication(const SPublicationInfo& publication_info_)
   {
-    Connect(tid_, tinfo_);
-
-    // add key to external publisher map
-    const std::string topic_key = host_name_ + process_id_ + tid_;
+    // remove key from publisher map
     {
       const std::lock_guard<std::mutex> lock(m_pub_map_sync);
-      m_ext_pub_map[topic_key] = true;
-    }
-
-    m_ext_published = true;
-  }
-
-  void CDataReader::RemoveExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_)
-  {
-    // remove key from external publisher map
-    const std::string topic_key = host_name_ + process_id_ + tid_;
-    {
-      const std::lock_guard<std::mutex> lock(m_pub_map_sync);
-      m_ext_pub_map.erase(topic_key);
+      m_pub_map.erase(publication_info_);
     }
   }
-  
-  void CDataReader::ApplyLocLayerParameter(const std::string& process_id_, const std::string& topic_id_, eTLayerType type_, const Registration::ConnectionPar& parameter_)
-  {
-    // process only for shm and tcp layer
-    switch (type_)
-    {
-    case tl_ecal_shm:
-    case tl_ecal_tcp:
-      break;
-    default:
-      return;
-    }
 
+  void CDataReader::ApplyLayerParameter(const SPublicationInfo& publication_info_, eTLayerType type_, const Registration::ConnectionPar& parameter_)
+  {
     SReaderLayerPar par;
-    par.host_name  = m_host_name;
-    par.process_id = process_id_;
+    par.host_name  = publication_info_.host_name;
+    par.process_id = publication_info_.process_id;
     par.topic_name = m_topic_name;
-    par.topic_id   = topic_id_;
+    par.topic_id   = publication_info_.topic_id;
     par.parameter  = parameter_;
 
     switch (type_)
@@ -685,33 +644,6 @@ namespace eCAL
       break;
     default:
       break;
-    }
-  }
-
-  void CDataReader::ApplyExtLayerParameter(const std::string& host_name_, eTLayerType type_, const Registration::ConnectionPar& parameter_)
-  {
-    // process only for tcp layer
-    switch (type_)
-    {
-    case tl_ecal_tcp:
-#if ECAL_CORE_TRANSPORT_TCP
-    {
-        SReaderLayerPar par;
-        par.host_name  = host_name_;
-        par.topic_name = m_topic_name;
-        par.topic_id   = m_topic_id;
-        par.parameter  = parameter_;
-
-        // process only for tcp layer
-        CTCPReaderLayer::Get()->SetConnectionParameter(par);
-      }
-#else
-      (void)host_name_;
-      (void)parameter_;
-#endif
-      break;
-    default:
-      return;
     }
   }
 
@@ -912,19 +844,14 @@ namespace eCAL
     Register(false);
 
     // check connection timeouts
-    const std::shared_ptr<std::list<std::string>> loc_timeouts = std::make_shared<std::list<std::string>>();
     {
       const std::lock_guard<std::mutex> lock(m_pub_map_sync);
-      m_loc_pub_map.remove_deprecated(loc_timeouts.get());
-      m_ext_pub_map.remove_deprecated();
+      m_pub_map.remove_deprecated();
 
-      m_loc_published = !m_loc_pub_map.empty();
-      m_ext_published = !m_ext_pub_map.empty();
-    }
-
-    if (!m_loc_published && !m_ext_published)
-    {
-      Disconnect();
+      if (m_pub_map.empty())
+      {
+        Disconnect();
+      }
     }
   }
 

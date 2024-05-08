@@ -33,7 +33,7 @@ namespace eCAL
       share_topic_description(eCAL::Config::IsTopicDescriptionSharingEnabled())
     {
       // shm config
-      shm.send_mode               = eCAL::Config::GetPublisherShmMode();
+      shm.activate                = eCAL::Config::GetPublisherShmMode() != TLayer::eSendMode::smode_off;
       shm.zero_copy_mode          = eCAL::Config::IsMemfileZerocopyEnabled();
       shm.acknowledge_timeout_ms  = eCAL::Config::GetMemfileAckTimeoutMs();
 
@@ -42,11 +42,11 @@ namespace eCAL
       shm.memfile_buffer_count    = eCAL::Config::GetMemfileBufferCount();
 
       // udp config
-      udp.send_mode               = eCAL::Config::GetPublisherUdpMulticastMode();
+      udp.activate                = eCAL::Config::GetPublisherUdpMulticastMode() != TLayer::eSendMode::smode_off;
       udp.sndbuf_size_bytes       = eCAL::Config::GetUdpMulticastSndBufSizeBytes();
 
       // tcp config
-      tcp.send_mode               = eCAL::Config::GetPublisherTcpMode();
+      tcp.activate                = eCAL::Config::GetPublisherTcpMode() != TLayer::eSendMode::smode_off;
     }
   }
 }

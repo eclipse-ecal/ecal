@@ -269,25 +269,24 @@ namespace eCAL
   void CRegistrationReceiver::ApplySubscriberRegistration(const Registration::Sample& sample_)
   {
 #if ECAL_CORE_PUBLISHER
+    if (g_pubgate() == nullptr) return;
+
     // process registrations from same host group
     if (IsHostGroupMember(sample_))
     {
       // do not register local entities, only if loop back flag is set true
       if (m_loopback || (sample_.topic.pid != Process::GetProcessID()))
       {
-        if (g_pubgate() != nullptr)
+        switch (sample_.cmd_type)
         {
-          switch (sample_.cmd_type)
-          {
-          case bct_reg_subscriber:
-            g_pubgate()->ApplyLocSubRegistration(sample_);
-            break;
-          case bct_unreg_subscriber:
-            g_pubgate()->ApplyLocSubUnregistration(sample_);
-            break;
-          default:
-            break;
-          }
+        case bct_reg_subscriber:
+          g_pubgate()->ApplySubRegistration(sample_);
+          break;
+        case bct_unreg_subscriber:
+          g_pubgate()->ApplySubUnregistration(sample_);
+          break;
+        default:
+          break;
         }
       }
     }
@@ -296,19 +295,16 @@ namespace eCAL
     {
       if (m_network)
       {
-        if (g_pubgate() != nullptr)
+        switch (sample_.cmd_type)
         {
-          switch (sample_.cmd_type)
-          {
-          case bct_reg_subscriber:
-            g_pubgate()->ApplyExtSubRegistration(sample_);
-            break;
-          case bct_unreg_subscriber:
-            g_pubgate()->ApplyExtSubUnregistration(sample_);
-            break;
-          default:
-            break;
-          }
+        case bct_reg_subscriber:
+          g_pubgate()->ApplySubRegistration(sample_);
+          break;
+        case bct_unreg_subscriber:
+          g_pubgate()->ApplySubUnregistration(sample_);
+          break;
+        default:
+          break;
         }
       }
     }
@@ -318,25 +314,24 @@ namespace eCAL
   void CRegistrationReceiver::ApplyPublisherRegistration(const Registration::Sample& sample_)
   {
 #if ECAL_CORE_SUBSCRIBER
+    if (g_subgate() == nullptr) return;
+
     // process registrations from same host group 
     if (IsHostGroupMember(sample_))
     {
       // do not register local entities, only if loop back flag is set true
       if (m_loopback || (sample_.topic.pid != Process::GetProcessID()))
       {
-        if (g_subgate() != nullptr)
+        switch (sample_.cmd_type)
         {
-          switch (sample_.cmd_type)
-          {
-          case bct_reg_publisher:
-            g_subgate()->ApplyLocPubRegistration(sample_);
-            break;
-          case bct_unreg_publisher:
-            g_subgate()->ApplyLocPubUnregistration(sample_);
-            break;
-          default:
-            break;
-          }
+        case bct_reg_publisher:
+          g_subgate()->ApplyPubRegistration(sample_);
+          break;
+        case bct_unreg_publisher:
+          g_subgate()->ApplyPubUnregistration(sample_);
+          break;
+        default:
+          break;
         }
       }
     }
@@ -345,19 +340,16 @@ namespace eCAL
     {
       if (m_network)
       {
-        if (g_subgate() != nullptr)
+        switch (sample_.cmd_type)
         {
-          switch (sample_.cmd_type)
-          {
-          case bct_reg_publisher:
-            g_subgate()->ApplyExtPubRegistration(sample_);
-            break;
-          case bct_unreg_publisher:
-            g_subgate()->ApplyExtPubUnregistration(sample_);
-            break;
-          default:
-            break;
-          }
+        case bct_reg_publisher:
+          g_subgate()->ApplyPubRegistration(sample_);
+          break;
+        case bct_unreg_publisher:
+          g_subgate()->ApplyPubUnregistration(sample_);
+          break;
+        default:
+          break;
         }
       }
     }

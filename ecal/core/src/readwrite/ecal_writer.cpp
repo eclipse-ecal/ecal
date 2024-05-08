@@ -80,21 +80,19 @@ namespace eCAL
     m_id(0),
     m_clock(0),
     m_frequency_calculator(0.0f),
-    m_loc_subscribed(false),
-    m_ext_subscribed(false),
     m_created(false)
   {
     // shm config
 #if ECAL_CORE_TRANSPORT_SHM
-    m_writer.shm_mode.requested = config_.shm.send_mode;
+    m_writer.shm_mode.activated = config_.shm.activate;
 #endif
     // udp config
 #if ECAL_CORE_TRANSPORT_UDP
-    m_writer.udp_mode.requested = config_.udp.send_mode;
+    m_writer.udp_mode.activated = config_.udp.activate;
 #endif
     // tcp config
 #if ECAL_CORE_TRANSPORT_TCP
-    m_writer.tcp_mode.requested = config_.tcp.send_mode;
+    m_writer.tcp_mode.activated = config_.tcp.activate;
 #endif
 
     // build topic id
@@ -104,8 +102,7 @@ namespace eCAL
 
     // set registration expiration
     const std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
-    m_loc_sub_map.set_expiration(registration_timeout);
-    m_ext_sub_map.set_expiration(registration_timeout);
+    m_sub_map.set_expiration(registration_timeout);
 
     // mark as created
     m_created = true;
@@ -114,13 +111,13 @@ namespace eCAL
     Register(false);
 
     // create udp multicast layer
-    SetUseUdpMC(m_writer.udp_mode.requested);
+    ActivateUdpLayer(m_writer.udp_mode.activated);
 
     // create shm layer
-    SetUseShm(m_writer.shm_mode.requested);
+    ActivateShmLayer(m_writer.shm_mode.activated);
 
     // create tcp layer
-    SetUseTcp(m_writer.tcp_mode.requested);
+    ActivateTcpLayer(m_writer.tcp_mode.activated);
 
 #ifndef NDEBUG
     // log it
@@ -153,8 +150,7 @@ namespace eCAL
     // clear subscriber maps
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_loc_sub_map.clear();
-      m_ext_sub_map.clear();
+      m_sub_map.clear();
     }
 
     // clear event callback map
@@ -265,13 +261,6 @@ namespace eCAL
       m_frequency_calculator.addTick(send_time);
     }
 
-    // check writer modes
-    if (!CheckWriterModes())
-    {
-      // incompatible writer configurations
-      return 0;
-    }
-
     // get payload buffer size (one time, to avoid multiple computations)
     const size_t payload_buf_size(payload_.GetSize());
 
@@ -279,8 +268,8 @@ namespace eCAL
     const bool allow_zero_copy =
       m_config.shm.zero_copy_mode       // zero copy mode activated by user
    && m_writer.shm_mode.activated       // shm layer active
-   && !m_writer.udp_mode.activated
-   && !m_writer.tcp_mode.activated;
+   && !m_writer.udp_mode.activated      // udp layer inactive
+   && !m_writer.tcp_mode.activated;     // tcp layer inactive
 
     // create a payload copy for all layer
     if (!allow_zero_copy)
@@ -376,9 +365,9 @@ namespace eCAL
       bool udp_sent(false);
       {
 #if ECAL_CORE_TRANSPORT_SHM
-        // if shared memory layer for local communication is switched off
+        // if shared memory layer for local communication is not activated
         // we activate udp message loopback to communicate with local processes too
-        const bool loopback = m_writer.shm_mode.requested == TLayer::smode_off;
+        const bool loopback = !m_writer.shm_mode.activated;
 #else
         const bool loopback = true;
 #endif
@@ -467,106 +456,55 @@ namespace eCAL
     else         return 0;
   }
 
-  void CDataWriter::ApplyLocSubscription(const SLocalSubscriptionInfo& local_info_, const SDataTypeInformation& tinfo_, const std::string& reader_par_)
+  void CDataWriter::ApplySubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const std::string& reader_par_)
   {
-    Connect(local_info_.topic_id, tinfo_);
+    Connect(subscription_info_.topic_id, data_type_info_);
 
-    // add key to local subscriber map
+    // add key to subscriber map
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_loc_sub_map[local_info_] = true;
+      m_sub_map[subscription_info_] = data_type_info_;
     }
 
-    m_loc_subscribed = true;
-
-    // add a new local subscription
+    // add a new subscription
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_writer.udp) m_writer.udp->AddLocConnection(local_info_.process_id, local_info_.topic_id, reader_par_);
+    if (m_writer.udp) m_writer.udp->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.topic_id, reader_par_);
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-    if (m_writer.shm) m_writer.shm->AddLocConnection(local_info_.process_id, local_info_.topic_id, reader_par_);
+    if (m_writer.shm) m_writer.shm->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.topic_id, reader_par_);
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-    if (m_writer.tcp) m_writer.tcp->AddLocConnection(local_info_.process_id, local_info_.topic_id, reader_par_);
+    if (m_writer.tcp) m_writer.tcp->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.topic_id, reader_par_);
 #endif
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::ApplyLocSubscription");
+    Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::ApplySubscription");
 #endif
   }
 
-  void CDataWriter::RemoveLocSubscription(const SLocalSubscriptionInfo& local_info_)
+  void CDataWriter::RemoveSubscription(const SSubscriptionInfo& subscription_info_)
   {
-    // remove key from local subscriber map
+    // remove key from subscriber map
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_loc_sub_map.erase(local_info_);
+      m_sub_map.erase(subscription_info_);
     }
 
-    // remove a local subscription
+    // remove subscription
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_writer.udp) m_writer.udp->RemLocConnection(local_info_.process_id, local_info_.topic_id);
+    if (m_writer.udp) m_writer.udp->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.topic_id);
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-    if (m_writer.shm) m_writer.shm->RemLocConnection(local_info_.process_id, local_info_.topic_id);
+    if (m_writer.shm) m_writer.shm->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.topic_id);
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-    if (m_writer.tcp) m_writer.tcp->RemLocConnection(local_info_.process_id, local_info_.topic_id);
+    if (m_writer.tcp) m_writer.tcp->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.topic_id);
 #endif
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::RemoveLocSubscription");
-#endif
-  }
-
-  void CDataWriter::ApplyExtSubscription(const SExternalSubscriptionInfo& external_info_, const SDataTypeInformation& tinfo_, const std::string& reader_par_)
-  {
-    Connect(external_info_.topic_id, tinfo_);
-
-    // add key to external subscriber map
-    {
-      const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_ext_sub_map[external_info_] = true;
-    }
-
-    m_ext_subscribed = true;
-
-    // add a new external subscription
-#if ECAL_CORE_TRANSPORT_UDP
-    if (m_writer.udp) m_writer.udp->AddExtConnection(external_info_.host_name, external_info_.process_id, external_info_.topic_id, reader_par_);
-#endif
-#if ECAL_CORE_TRANSPORT_SHM
-    if (m_writer.shm) m_writer.shm->AddExtConnection(external_info_.host_name, external_info_.process_id, external_info_.topic_id, reader_par_);
-#endif
-#if ECAL_CORE_TRANSPORT_TCP
-    if (m_writer.tcp) m_writer.tcp->AddExtConnection(external_info_.host_name, external_info_.process_id, external_info_.topic_id, reader_par_);
-#endif
-
-#ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::ApplyExtSubscription");
-#endif
-  }
-
-  void CDataWriter::RemoveExtSubscription(const SExternalSubscriptionInfo& external_info_)
-  {
-    // remove key from external subscriber map
-    {
-      const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_ext_sub_map.erase(external_info_);
-    }
-
-    // remove external subscription
-#if ECAL_CORE_TRANSPORT_UDP
-    if (m_writer.udp) m_writer.udp->RemExtConnection(external_info_.host_name, external_info_.process_id, external_info_.topic_id);
-#endif
-#if ECAL_CORE_TRANSPORT_SHM
-    if (m_writer.shm) m_writer.shm->RemExtConnection(external_info_.host_name, external_info_.process_id, external_info_.topic_id);
-#endif
-#if ECAL_CORE_TRANSPORT_TCP
-    if (m_writer.tcp) m_writer.tcp->RemExtConnection(external_info_.host_name, external_info_.process_id, external_info_.topic_id);
+    Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::RemoveSubscription");
 #endif
   }
 
@@ -580,16 +518,12 @@ namespace eCAL
     // check connection timeouts
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_loc_sub_map.remove_deprecated();
-      m_ext_sub_map.remove_deprecated();
+      m_sub_map.remove_deprecated();
 
-      m_loc_subscribed = !m_loc_sub_map.empty();
-      m_ext_subscribed = !m_ext_sub_map.empty();
-    }
-
-    if (!m_loc_subscribed && !m_ext_subscribed)
-    {
-      Disconnect();
+      if (m_sub_map.empty())
+      {
+        Disconnect();
+      }
     }
   }
 
@@ -618,8 +552,6 @@ namespace eCAL
     out << indent_ << "m_clock:                  " << m_clock << '\n';
     out << indent_ << "frequency [mHz]:          " << GetFrequency() << '\n';
     out << indent_ << "m_created:                " << m_created << '\n';
-    out << indent_ << "m_loc_subscribed:         " << m_loc_subscribed << '\n';
-    out << indent_ << "m_ext_subscribed:         " << m_ext_subscribed << '\n';
     out << std::endl;
 
     return(out.str());
@@ -661,7 +593,7 @@ namespace eCAL
     if (m_writer.udp)
     {
       eCAL::Registration::TLayer udp_tlayer;
-      udp_tlayer.type                      = tl_ecal_udp_mc;
+      udp_tlayer.type                      = tl_ecal_udp;
       udp_tlayer.version                   = 1;
       udp_tlayer.confirmed                 = m_writer.udp_mode.confirmed;
       udp_tlayer.par_layer.layer_par_udpmc = m_writer.udp->GetConnectionParameter().layer_par_udpmc;
@@ -706,8 +638,14 @@ namespace eCAL
     size_t ext_connections(0);
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      loc_connections = m_loc_sub_map.size();
-      ext_connections = m_ext_sub_map.size();
+      for (const auto& sub : m_sub_map)
+      {
+        if (sub.first.host_name == m_host_name)
+        {
+          loc_connections++;
+        }
+      }
+      ext_connections = m_sub_map.size() - loc_connections;
     }
     ecal_reg_sample_topic.connections_loc = static_cast<int32_t>(loc_connections);
     ecal_reg_sample_topic.connections_ext = static_cast<int32_t>(ext_connections);
@@ -814,187 +752,80 @@ namespace eCAL
     }
   }
 
-  void CDataWriter::SetUseUdpMC(TLayer::eSendMode mode_)
+  void CDataWriter::ActivateUdpLayer(bool state_)
   {
 #if ECAL_CORE_TRANSPORT_UDP
-    m_writer.udp_mode.requested = mode_;
+    m_writer.udp_mode.activated = state_;
     if (!m_created) return;
 
-    // log send mode
-    LogSendMode(mode_, m_topic_name + "::CDataWriter::Create::UDP_MC_SENDMODE::");
+    // log state
+    LogLayerState(state_, "CDataWriter::ActivateUdpLayer::UDP_SENDMODE");
 
-    switch (mode_)
+    if (state_)
     {
-    case TLayer::eSendMode::smode_auto:
-    case TLayer::eSendMode::smode_on:
       m_writer.udp = std::make_unique<CDataWriterUdpMC>(m_host_name, m_topic_name, m_topic_id, m_config.udp);
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::UDP_MC_WRITER");
+      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::ActivateUdpLayer::UDP_WRITER");
 #endif
-      break;
-    case TLayer::eSendMode::smode_none:
-    case TLayer::eSendMode::smode_off:
-      m_writer.udp.reset();
-      break;
     }
+    else
+    {
+      m_writer.udp.reset();
+    }
+#else // ECAL_CORE_TRANSPORT_UDP
+    (void)state_;
 #endif // ECAL_CORE_TRANSPORT_UDP
   }
 
-  void CDataWriter::SetUseShm(TLayer::eSendMode mode_)
+  void CDataWriter::ActivateShmLayer(bool state_)
   {
 #if ECAL_CORE_TRANSPORT_SHM
-    m_writer.shm_mode.requested = mode_;
+    m_writer.shm_mode.activated = state_;
     if (!m_created) return;
 
-    // log send mode
-    LogSendMode(mode_, m_topic_name + "::CDataWriter::Create::SHM_SENDMODE::");
+    // log state
+    LogLayerState(state_, "CDataWriter::ActivateShmLayer::SHM_SENDMODE");
 
-    switch (mode_)
+    if (state_)
     {
-    case TLayer::eSendMode::smode_auto:
-    case TLayer::eSendMode::smode_on:
       m_writer.shm = std::make_unique<CDataWriterSHM>(m_host_name, m_topic_name, m_topic_id, m_config.shm);
       m_writer.shm->SetBufferCount(m_config.shm.memfile_buffer_count);
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::SHM_WRITER");
+      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::ActivateShmLayer::SHM_WRITER");
 #endif
-      break;
-    case TLayer::eSendMode::smode_none:
-    case TLayer::eSendMode::smode_off:
-      m_writer.shm.reset();
-      break;
     }
+    else
+    {
+      m_writer.shm.reset();
+    }
+#else // ECAL_CORE_TRANSPORT_SHM
+    (void)state_;
 #endif // ECAL_CORE_TRANSPORT_SHM
   }
 
-  void CDataWriter::SetUseTcp(TLayer::eSendMode mode_)
+  void CDataWriter::ActivateTcpLayer(bool state_)
   {
 #if ECAL_CORE_TRANSPORT_TCP
-    m_writer.tcp_mode.requested = mode_;
+    m_writer.tcp_mode.activated = state_;
     if (!m_created) return;
 
-    // log send mode
-    LogSendMode(mode_, m_topic_name + "::CDataWriter::Create::TCP_SENDMODE::");
+    // log state
+    LogLayerState(state_, "CDataWriter::ActivateTcpLayer::TCP_SENDMODE");
 
-    switch (mode_)
+    if (state_)
     {
-    case TLayer::eSendMode::smode_auto:
-    case TLayer::eSendMode::smode_on:
       m_writer.tcp = std::make_unique<CDataWriterTCP>(m_host_name, m_topic_name, m_topic_id, m_config.tcp);
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::TCP_WRITER - SUCCESS");
+      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::ActivateTcpLayer::TCP_WRITER - SUCCESS");
 #endif
-      break;
-    case TLayer::eSendMode::smode_none:
-    case TLayer::eSendMode::smode_off:
+    }
+    else
+    {
       m_writer.tcp.reset();
-      break;
     }
 #else // ECAL_CORE_TRANSPORT_TCP
-    (void)mode_;
+    (void)state_;
 #endif // ECAL_CORE_TRANSPORT_TCP
-  }
-
-  bool CDataWriter::CheckWriterModes()
-  {
-    // if nothing is activated, we use defaults shm = auto, udp = auto
-    if ((m_writer.udp_mode.requested == TLayer::smode_off)
-     && (m_writer.shm_mode.requested == TLayer::smode_off)
-     && (m_writer.tcp_mode.requested == TLayer::smode_off)
-      )
-    {
-#if ECAL_CORE_TRANSPORT_UDP
-      m_writer.udp_mode.requested = TLayer::smode_auto;
-#endif
-#if ECAL_CORE_TRANSPORT_SHM
-      m_writer.shm_mode.requested = TLayer::smode_auto;
-#endif
-    }
-
-    // if shm layer is off, we need a local transport layer switch to on
-    // prio 1: udp = on
-    // prio 2: tcp = on
-    if ( (m_writer.shm_mode.requested == TLayer::smode_off)
-      && (m_writer.shm_mode.requested != TLayer::smode_on)
-      && (m_writer.tcp_mode.requested != TLayer::smode_on)
-      )
-    {
-      bool new_local_layer(false);
-#if ECAL_CORE_TRANSPORT_UDP
-      if (m_writer.udp_mode.requested != TLayer::smode_on)
-      {
-        m_writer.udp_mode.requested = TLayer::smode_on;
-        new_local_layer = true;
-      }
-#else
-  #if ECAL_CORE_TRANSPORT_TCP
-      if (m_writer.tcp_mode.requested != TLayer::smode_on)
-      {
-        m_writer.tcp_mode.requested = TLayer::smode_on;
-        new_local_layer = true;
-      }
-#endif
-#endif
-      if (new_local_layer)
-      {
-        if (m_writer.udp_mode.requested == TLayer::smode_on)
-        {
-          Logging::Log(log_level_warning, m_topic_name + "::CDataWriter: Switched to udp for local communication.");
-          SetUseUdpMC(TLayer::smode_on);
-        }
-        if (m_writer.tcp_mode.requested == TLayer::smode_on)
-        {
-          Logging::Log(log_level_warning, m_topic_name + "::CDataWriter: Switched to tcp for local communication.");
-          SetUseTcp(TLayer::smode_on);
-        }
-      }
-    }
-
-    if ( (m_writer.tcp_mode.requested == TLayer::smode_auto)
-      && (m_writer.udp_mode.requested == TLayer::smode_auto)
-      )
-    {
-      Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send: TCP layer and UDP layer are both set to auto mode - Publication failed !");
-      return false;
-    }
-
-#if ECAL_CORE_TRANSPORT_UDP
-    ////////////////////////////////////////////////////////////////////////////
-    // UDP (MC)
-    ////////////////////////////////////////////////////////////////////////////
-    if (((m_writer.udp_mode.requested == TLayer::smode_auto) && m_ext_subscribed)
-      || (m_writer.udp_mode.requested == TLayer::smode_on)
-      )
-    {
-      m_writer.udp_mode.activated = true;
-    }
-#endif
-
-#if ECAL_CORE_TRANSPORT_SHM
-    ////////////////////////////////////////////////////////////////////////////
-    // SHM
-    ////////////////////////////////////////////////////////////////////////////
-    if (((m_writer.shm_mode.requested == TLayer::smode_auto) && m_loc_subscribed)
-      || (m_writer.shm_mode.requested == TLayer::smode_on)
-      )
-    {
-      m_writer.shm_mode.activated = true;
-    }
-#endif
-
-#if ECAL_CORE_TRANSPORT_TCP
-    ////////////////////////////////////////////////////////////////////////////
-    // TCP
-    ////////////////////////////////////////////////////////////////////////////
-    if (((m_writer.tcp_mode.requested == TLayer::smode_auto) && m_ext_subscribed)
-      || (m_writer.tcp_mode.requested == TLayer::smode_on)
-      )
-    {
-      m_writer.tcp_mode.activated = true;
-    }
-#endif
-
-    return true;
   }
 
   size_t CDataWriter::PrepareWrite(long long id_, size_t len_)
@@ -1018,10 +849,10 @@ namespace eCAL
 
   bool CDataWriter::IsInternalSubscribedOnly()
   {
-    const std::string process_id = Process::GetProcessIDAsString();
+    const int32_t process_id = static_cast<int32_t>(Process::GetProcessID());
     bool is_internal_only(true);
     const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-    for (auto sub : m_loc_sub_map)
+    for (auto sub : m_sub_map)
     {
       if (sub.first.process_id != process_id)
       {
@@ -1032,29 +863,23 @@ namespace eCAL
     return is_internal_only;
   }
 
-  void CDataWriter::LogSendMode(TLayer::eSendMode smode_, const std::string& base_msg_)
+  void CDataWriter::LogLayerState(bool state_, const std::string& base_msg_)
   {
 #ifndef NDEBUG
-    switch (smode_)
+    if (state_)
     {
-    case TLayer::eSendMode::smode_none:
-      Logging::Log(log_level_debug4, base_msg_ + "NONE");
-      break;
-    case TLayer::eSendMode::smode_auto:
-      Logging::Log(log_level_debug4, base_msg_ + "AUTO");
-      break;
-    case TLayer::eSendMode::smode_on:
-      Logging::Log(log_level_debug4, base_msg_ + "ON");
-      break;
-    case TLayer::eSendMode::smode_off:
-      Logging::Log(log_level_debug4, base_msg_ + "OFF");
-      break;
+      Logging::Log(log_level_debug4, m_topic_name + "::" + base_msg_ + "::ON");
+    }
+    else
+    {
+      Logging::Log(log_level_debug4, m_topic_name + "::" + base_msg_ + "::OFF");
     }
 #else
-    (void)smode_;
+    (void)state_;
     (void)base_msg_;
 #endif
   }
+
   int32_t CDataWriter::GetFrequency()
   {
     const auto frequency_time = std::chrono::steady_clock::now();

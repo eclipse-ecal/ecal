@@ -44,10 +44,10 @@ namespace eCAL
 
   enum eTLayerType
   {
-    tl_none        = 0,
-    tl_ecal_udp_mc = 1,
-    tl_ecal_shm    = 4,
-    tl_ecal_tcp    = 5,
-    tl_all         = 255,
+    tl_none     = 0,
+    tl_ecal_udp = 1,
+    tl_ecal_shm = 4,
+    tl_ecal_tcp = 5,
+    tl_all      = 255,
   };
 }
