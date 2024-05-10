@@ -45,8 +45,8 @@ namespace eCAL
     CClientGate();
     ~CClientGate();
 
-    void Create();
-    void Destroy();
+    void Start();
+    void Stop();
 
     bool Register  (CServiceClientImpl* client_);
     bool Unregister(CServiceClientImpl* client_);

@@ -81,6 +81,8 @@ namespace eCAL
     CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Publisher::Configuration& config_ = {});
     ~CDataWriter();
 
+    bool Stop();
+
     bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);

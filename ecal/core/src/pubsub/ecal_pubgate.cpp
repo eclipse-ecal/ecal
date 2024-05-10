@@ -58,8 +58,12 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    // destroy all remaining publisher
+    // stop & destroy all remaining publisher
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
+    for (const auto& datawriter : m_topic_name_datawriter_map)
+    {
+      datawriter.second->Stop();
+    }
     m_topic_name_datawriter_map.clear();
 
     m_created = false;

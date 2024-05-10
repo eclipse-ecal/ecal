@@ -66,7 +66,7 @@ namespace eCAL
 
     unsigned int GetComponents() const { return(components); };
 
-    int Finalize(unsigned int components_);
+    int Finalize();
 
     const std::unique_ptr<CConfig>&                                       config()                 { return config_instance; };
     const std::unique_ptr<CLog>&                                          log()                    { return log_instance; };

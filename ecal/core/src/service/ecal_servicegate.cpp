@@ -37,16 +37,16 @@ namespace eCAL
 
   CServiceGate::~CServiceGate()
   {
-    Destroy();
+    Stop();
   }
 
-  void CServiceGate::Create()
+  void CServiceGate::Start()
   {
     if(m_created) return;
     m_created = true;
   }
 
-  void CServiceGate::Destroy()
+  void CServiceGate::Stop()
   {
     if(!m_created) return;
 
@@ -54,7 +54,7 @@ namespace eCAL
     const std::shared_lock<std::shared_timed_mutex> lock(m_service_set_sync);
     for (const auto& service : m_service_set)
     {
-      service->Destroy();
+      service->Stop();
     }
 
     m_created = false;

@@ -280,9 +280,8 @@ namespace eCAL
 
   protected:
     // class members
-    std::shared_ptr<CDataWriter>     m_datawriter;
-    long long                        m_id;
-    bool                             m_created;
-    bool                             m_initialized;
+    std::shared_ptr<CDataWriter> m_datawriter;
+    long long                    m_id;
+    bool                         m_created;
   };
 }

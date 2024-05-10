@@ -48,7 +48,7 @@ namespace eCAL
   std::shared_ptr<CServiceClientImpl> CServiceClientImpl::CreateInstance(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
   {
     auto instance = std::shared_ptr<CServiceClientImpl>(new CServiceClientImpl());
-    instance->Create(service_name_, method_information_map_);
+    instance->Start(service_name_, method_information_map_);
     return instance;
   }
 
@@ -63,10 +63,10 @@ namespace eCAL
 
   CServiceClientImpl::~CServiceClientImpl()
   {
-    Destroy();
+    Stop();
   }
 
-  bool CServiceClientImpl::Create(const std::string& service_name_, const ServiceMethodInformationMapT& methods_information_map_)
+  bool CServiceClientImpl::Start(const std::string& service_name_, const ServiceMethodInformationMapT& methods_information_map_)
   {
     if (m_created) return(false);
 
@@ -94,7 +94,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CServiceClientImpl::Destroy()
+  bool CServiceClientImpl::Stop()
   {
     if (!m_created) return(false);
 

@@ -110,6 +110,17 @@ namespace eCAL
     Logging::Log(log_level_debug1, m_topic_name + "::CDataReader::Destructor");
 #endif
 
+    Stop();
+  }
+
+  bool CDataReader::Stop()
+  {
+    if (!m_created) return false;
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug1, m_topic_name + "::CDataReader::Stop");
+#endif
+
     // stop transport layers
     UnsubscribeFromLayers();
 
@@ -130,6 +141,8 @@ namespace eCAL
 
     // and unregister
     Unregister();
+
+    return true;
   }
 
   void CDataReader::InitializeLayers()

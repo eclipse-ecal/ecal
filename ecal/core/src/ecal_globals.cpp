@@ -42,7 +42,7 @@ namespace eCAL
 
   CGlobals::~CGlobals()
   {
-    Finalize(Init::All);
+    Finalize();
   }
 
   int CGlobals::Initialize(unsigned int components_, std::vector<std::string>* config_keys_ /*= nullptr*/)
@@ -245,14 +245,14 @@ namespace eCAL
     if (memfile_pool_instance)                                            memfile_pool_instance->Create();
 #endif
 #if ECAL_CORE_SUBSCRIBER
-    if (subgate_instance && ((components_ & Init::Subscriber) != 0u))     subgate_instance->Create();
+    if (subgate_instance && ((components_ & Init::Subscriber) != 0u))     subgate_instance->Start();
 #endif
 #if ECAL_CORE_PUBLISHER
     if (pubgate_instance && ((components_ & Init::Publisher) != 0u))      pubgate_instance->Create();
 #endif
 #if ECAL_CORE_SERVICE
-    if (servicegate_instance && ((components_ & Init::Service) != 0u))    servicegate_instance->Create();
-    if (clientgate_instance && ((components_ & Init::Service) != 0u))     clientgate_instance->Create();
+    if (servicegate_instance && ((components_ & Init::Service) != 0u))    servicegate_instance->Start();
+    if (clientgate_instance && ((components_ & Init::Service) != 0u))     clientgate_instance->Start();
 #endif
 #if ECAL_CORE_TIMEPLUGIN
     if (timegate_instance && ((components_ & Init::TimeSync) != 0u))      timegate_instance->Create(CTimeGate::eTimeSyncMode::realtime);
@@ -305,7 +305,7 @@ namespace eCAL
     }
   }
 
-  int CGlobals::Finalize(unsigned int /*components_*/)
+  int CGlobals::Finalize()
   {
     if (!initialized) return(1);
 
@@ -323,14 +323,14 @@ namespace eCAL
     // raw pointers to the gate's functions, so we must make sure that everything
     // has been executed, before we delete the gates.
     eCAL::service::ServiceManager::instance()->stop();
-    if (clientgate_instance)             clientgate_instance->Destroy();
-    if (servicegate_instance)            servicegate_instance->Destroy();
+    if (clientgate_instance)             clientgate_instance->Stop();
+    if (servicegate_instance)            servicegate_instance->Stop();
 #endif
 #if ECAL_CORE_PUBLISHER
     if (pubgate_instance)                pubgate_instance->Destroy();
 #endif
 #if ECAL_CORE_SUBSCRIBER
-    if (subgate_instance)                subgate_instance->Destroy();
+    if (subgate_instance)                subgate_instance->Stop();
 #endif
     if (descgate_instance)
     {

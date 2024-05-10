@@ -46,10 +46,10 @@ namespace eCAL
 
   CSubGate::~CSubGate()
   {
-    Destroy();
+    Stop();
   }
 
-  void CSubGate::Create()
+  void CSubGate::Start()
   {
     if(m_created) return;
 
@@ -59,12 +59,16 @@ namespace eCAL
     m_created = true;
   }
 
-  void CSubGate::Destroy()
+  void CSubGate::Stop()
   {
     if(!m_created) return;
 
-    // destroy all remaining subscriber
+    // stop & destroy all remaining subscriber
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
+    for (const auto& datareader : m_topic_name_datareader_map)
+    {
+      datareader.second->Stop();
+    }
     m_topic_name_datareader_map.clear();
 
     m_created = false;

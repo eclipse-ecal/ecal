@@ -40,16 +40,16 @@ namespace eCAL
 
   CClientGate::~CClientGate()
   {
-    Destroy();
+    Stop();
   }
 
-  void CClientGate::Create()
+  void CClientGate::Start()
   {
     if (m_created) return;
     m_created = true;
   }
 
-  void CClientGate::Destroy()
+  void CClientGate::Stop()
   {
     if (!m_created) return;
 
@@ -57,7 +57,7 @@ namespace eCAL
     const std::shared_lock<std::shared_timed_mutex> lock(m_client_set_sync);
     for (const auto& client : m_client_set)
     {
-      client->Destroy();
+      client->Stop();
     }
 
     m_created = false;

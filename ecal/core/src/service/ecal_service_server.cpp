@@ -74,13 +74,15 @@ namespace eCAL
   {
     if(m_created) return(false);
 
+    // create service
     m_service_server_impl = CServiceServerImpl::CreateInstance(service_name_);
 
-    // register this service
+    // register service
     if (g_servicegate() != nullptr) g_servicegate()->Register(m_service_server_impl.get());
 
+    // we made it :-)
     m_created = true;
-    return(true);
+    return(m_created);
   }
 
   /**
@@ -93,11 +95,12 @@ namespace eCAL
     if(!m_created) return(false);
     m_created = false;
 
-    // unregister this service
+    // unregister service
     if (g_servicegate() != nullptr) g_servicegate()->Unregister(m_service_server_impl.get());
 
-    m_service_server_impl->Destroy();
-    m_service_server_impl = nullptr;
+    // stop & destroy service
+    m_service_server_impl->Stop();
+    m_service_server_impl.reset();
 
     return(true);
   }

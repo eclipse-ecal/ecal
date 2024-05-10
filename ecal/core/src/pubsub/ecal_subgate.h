@@ -40,8 +40,8 @@ namespace eCAL
     CSubGate();
     ~CSubGate();
 
-    void Create();
-    void Destroy();
+    void Start();
+    void Stop();
 
     bool Register(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_);
     bool Unregister(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_);

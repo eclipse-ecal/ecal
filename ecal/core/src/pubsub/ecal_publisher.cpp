@@ -38,8 +38,7 @@ namespace eCAL
   CPublisher::CPublisher() :
     m_datawriter(nullptr),
     m_id(0),
-    m_created(false),
-    m_initialized(false)
+    m_created(false)
   {
   }
 
@@ -64,11 +63,9 @@ namespace eCAL
   CPublisher::CPublisher(CPublisher&& rhs) noexcept :
                 m_datawriter(std::move(rhs.m_datawriter)),
                 m_id(rhs.m_id),
-                m_created(rhs.m_created),
-                m_initialized(rhs.m_initialized)
+                m_created(rhs.m_created)
   {
-    rhs.m_created     = false;
-    rhs.m_initialized = false;
+    rhs.m_created = false;
   }
 
   /**
@@ -79,39 +76,28 @@ namespace eCAL
     // Call destroy, to clean up the current state, then afterwards move all elements
     Destroy();
 
-    m_datawriter      = std::move(rhs.m_datawriter);
-    m_id              = rhs.m_id;
-    m_created         = rhs.m_created;
-    m_initialized     = rhs.m_initialized;
+    m_datawriter  = std::move(rhs.m_datawriter);
+    m_id          = rhs.m_id;
+    m_created     = rhs.m_created;
 
-    rhs.m_created     = false;
-    rhs.m_initialized = false;
+    rhs.m_created = false;
 
     return *this;
   }
 
   bool CPublisher::Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_)
   {
-    if (m_created)              return(false);
-    if (topic_name_.empty())    return(false);
-    if (g_globals() == nullptr) return(false);
+    if (m_created)           return(false);
+    if (topic_name_.empty()) return(false);
 
-    // initialize globals
-    if (g_globals()->IsInitialized(Init::Publisher) == 0)
-    {
-      g_globals()->Initialize(Init::Publisher);
-      m_initialized = true;
-    }
-
-    // create data writer
+    // create datawriter
     m_datawriter = std::make_shared<CDataWriter>(topic_name_, data_type_info_, config_);
 
-    // register publisher gateway (for publisher memory file and event name)
+    // register datawriter
     g_pubgate()->Register(topic_name_, m_datawriter);
 
     // we made it :-)
     m_created = true;
-
     return(m_created);
   }
 
@@ -122,29 +108,21 @@ namespace eCAL
 
   bool CPublisher::Destroy()
   {
-    if(!m_created)             return(false);
-    if(g_globals() == nullptr) return(false);
+    if(!m_created) return(false);
 
-    // unregister data writer
+    // unregister datawriter
     if(g_pubgate() != nullptr) g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
 #ifndef NDEBUG
     // log it
     if (g_log() != nullptr) g_log()->Log(log_level_debug1, std::string(m_datawriter->GetTopicName() + "::CPublisher::Destroy"));
 #endif
 
-    // destroy datawriter
+    // stop & destroy datawriter
+    m_datawriter->Stop();
     m_datawriter.reset();
 
     // we made it :-)
     m_created = false;
-
-    // if we initialize the globals then we finalize 
-    // here to decrease reference counter
-    if (m_initialized)
-    {
-      g_globals()->Finalize(Init::Publisher);
-      m_initialized = false;
-    }
 
     return(true);
   }

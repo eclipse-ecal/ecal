@@ -73,6 +73,8 @@ namespace eCAL
     CDataReader(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
     ~CDataReader();
 
+    bool Stop();
+
     static void InitializeLayers();
 
     bool Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);

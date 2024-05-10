@@ -269,8 +269,7 @@ namespace eCAL
 
   protected:
     // class members
-    std::shared_ptr<CDataReader>     m_datareader;
-    bool                             m_created;
-    bool                             m_initialized;
+    std::shared_ptr<CDataReader> m_datareader;
+    bool                         m_created;
   };
 }

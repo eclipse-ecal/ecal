@@ -116,6 +116,17 @@ namespace eCAL
     Logging::Log(log_level_debug1, m_topic_name + "::CDataWriter::Destructor");
 #endif
 
+    Stop();
+  }
+
+  bool CDataWriter::Stop()
+  {
+    if (!m_created) return false;
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug1, m_topic_name + "::CDataWriter::Stop");
+#endif
+
     // destroy udp multicast writer
 #if ECAL_CORE_TRANSPORT_UDP
     m_writer_udp.reset();
@@ -148,6 +159,8 @@ namespace eCAL
 
     // and unregister
     Unregister();
+
+    return true;
   }
 
   bool CDataWriter::SetDataTypeInformation(const SDataTypeInformation& topic_info_)
