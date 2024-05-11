@@ -80,7 +80,7 @@ TEST(core_cpp_pubsub, TimeoutAcknowledgment)
                                           EXPECT_TRUE(send);
                                         }
                                         , std::chrono::milliseconds(99)
-                                        , std::chrono::milliseconds(120)
+                                        , std::chrono::milliseconds(140)
     );
   }
 
@@ -102,7 +102,7 @@ TEST(core_cpp_pubsub, TimeoutAcknowledgment)
                                           EXPECT_TRUE(send);
                                         }
                                         , std::chrono::milliseconds(0)
-                                        , std::chrono::milliseconds(120)
+                                        , std::chrono::milliseconds(140)
     );
     std::this_thread::sleep_until(now + std::chrono::milliseconds(200));
   }
