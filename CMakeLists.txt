@@ -88,7 +88,6 @@ option(BUILD_APPS                              "Build the eCAL applications"    
 option(BUILD_SAMPLES                           "Build the eCAL samples"                                            ON)
 option(BUILD_TIME                              "Build the eCAL time interfaces"                                    ON)
 option(BUILD_PY_BINDING                        "Build eCAL python binding"                                        OFF)
-option(BUILD_STANDALONE_PY_WHEEL               "Build eCAL python binding as standalone wheel"                    OFF)
 option(BUILD_CSHARP_BINDING                    "Build eCAL C# binding"                                            OFF)
 option(BUILD_ECAL_TESTS                        "Build the eCAL google tests"                                      OFF)
 
@@ -125,7 +124,18 @@ option(CPACK_PACK_WITH_INNOSETUP               "Create Innosetup installer for t
 
 set(ECAL_INSTALL_PYTHON_DIR "bin" CACHE PATH "Location to install the Python extension modules. Might be set by setupdtools install.")
 
-set(ECAL_BUILD_VERSION "0.0.0" CACHE STRING "Inject a build version if not building from a git repository")
+if(DEFINED SKBUILD_PROJECT_VERSION)
+  message(STATUS
+    "Using version from scikit-build-core: ${SKBUILD_PROJECT_VERSION}"
+  )
+  set(ECAL_BUILD_VERSION "${SKBUILD_PROJECT_VERSION}" CACHE STRING
+    "Version provided by scikit-build-core and setuptools-scm" FORCE
+  )
+else()
+  set(ECAL_BUILD_VERSION "0.0.0" CACHE STRING
+    "Inject a build version if not building from a git repository"
+  )
+endif()
 
 set(ECAL_CSHARP_BUILD_SAMPLES  ${BUILD_SAMPLES})
 
@@ -172,10 +182,12 @@ set(eCAL_VERSION_PATCH  ${GIT_REVISION_PATCH})
 set(eCAL_VERSION_STRING ${eCAL_VERSION_MAJOR}.${eCAL_VERSION_MINOR}.${eCAL_VERSION_PATCH})
 set(eCAL_VERSION        ${eCAL_VERSION_STRING})
 
+message(STATUS "eCAL version: ${eCAL_VERSION_STRING}")
+message(DEBUG "eCAL git describe tag: ${GIT_DESCRIBE_TAG}")
+
 include(helper_functions/ecal_add_functions)
 include(helper_functions/ecal_helper_functions)
 include(helper_functions/ecal_install_functions)
-include(helper_functions/ecal_python_functions)
 
 if(MSVC)
   set(eCAL_PLATFORM_TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET})
@@ -465,7 +477,6 @@ message(STATUS "BUILD_APPS                                     : ${BUILD_APPS}")
 message(STATUS "BUILD_SAMPLES                                  : ${BUILD_SAMPLES}")
 message(STATUS "BUILD_TIME                                     : ${BUILD_TIME}")
 message(STATUS "BUILD_PY_BINDING                               : ${BUILD_PY_BINDING}")
-message(STATUS "BUILD_STANDALONE_PY_WHEEL                      : ${BUILD_STANDALONE_PY_WHEEL}")
 message(STATUS "BUILD_CSHARP_BINDING                           : ${BUILD_CSHARP_BINDING}")
 message(STATUS "BUILD_ECAL_TESTS                               : ${BUILD_ECAL_TESTS}")
 message(STATUS "ECAL_INCLUDE_PY_SAMPLES                        : ${ECAL_INCLUDE_PY_SAMPLES}")

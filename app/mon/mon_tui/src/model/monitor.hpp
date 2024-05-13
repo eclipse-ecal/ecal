@@ -204,7 +204,10 @@ class MonitorModel
       topic.type_descriptor = std::move(*t.mutable_tdatatype()->mutable_desc());
       for(auto &tl: t.tlayer())
       {
-        topic.transport_layers.emplace_back(TopicTransportLayer(tl.type()));
+        if (tl.confirmed())
+        {
+          topic.transport_layers.emplace_back(TopicTransportLayer(tl.type()));
+        }
       }
       topic.size = t.tsize();
       topic.local_connections_count = t.connections_loc();

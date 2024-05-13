@@ -7,6 +7,12 @@ Thumbs.db
 /_vs_out*
 /out
 
+# Python building and distribution
+/_python_build/
+/dist/
+/lang/python/core/ecal/_version.py
+/wheelhouse/
+
 # Binary libraries
 /thirdparty/npcap/
 

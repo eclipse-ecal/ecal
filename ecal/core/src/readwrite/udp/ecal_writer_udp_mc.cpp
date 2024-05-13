@@ -21,42 +21,19 @@
  * @brief  udp data writer
 **/
 
-#include <cstddef>
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_log.h>
-#include <memory>
-#include <string>
 
 #include "ecal_writer_udp_mc.h"
 #include "io/udp/ecal_udp_configurations.h"
 #include "serialization/ecal_serialize_sample_payload.h"
 
+#include <cstddef>
+
 namespace eCAL
 {
-  CDataWriterUdpMC::~CDataWriterUdpMC()
+  CDataWriterUdpMC::CDataWriterUdpMC(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_)
   {
-    Destroy();
-  }
-
-  SWriterInfo CDataWriterUdpMC::GetInfo()
-  {
-    SWriterInfo info_;
-
-    info_.name                 = "udp";
-    info_.description          = "udp multicast data writer";
-
-    info_.has_mode_local       = true;
-    info_.has_mode_cloud       = true;
-
-    info_.send_size_max        = -1;
-
-    return info_;
-  }
-
-  bool CDataWriterUdpMC::Create(const std::string & host_name_, const std::string & topic_name_, const std::string & topic_id_)
-  {
-    if (m_created) return true;
-
     m_host_name   = host_name_;
     m_topic_name  = topic_name_;
     m_topic_id    = topic_id_;
@@ -76,26 +53,25 @@ namespace eCAL
     // create udp/sample sender without activated loop-back
     attr.loopback = false;
     m_sample_sender_no_loopback = std::make_shared<UDP::CSampleSender>(attr);
-
-    m_created = true;
-    return true;
   }
 
-  bool CDataWriterUdpMC::Destroy()
+  SWriterInfo CDataWriterUdpMC::GetInfo()
   {
-    if (!m_created) return true;
+    SWriterInfo info_;
 
-    m_sample_sender_loopback.reset();
-    m_sample_sender_no_loopback.reset();
+    info_.name                 = "udp";
+    info_.description          = "udp multicast data writer";
 
-    m_created = false;
-    return true;
+    info_.has_mode_local       = true;
+    info_.has_mode_cloud       = true;
+
+    info_.send_size_max        = -1;
+
+    return info_;
   }
 
   bool CDataWriterUdpMC::Write(const void* const buf_, const SWriterAttr& attr_)
   {
-    if (!m_created) return false;
-
     // create new sample
     Payload::Sample ecal_sample;
     ecal_sample.cmd_type = eCmdType::bct_set_sample;

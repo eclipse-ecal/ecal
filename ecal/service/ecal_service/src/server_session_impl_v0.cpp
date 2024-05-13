@@ -18,17 +18,30 @@
 */
 
 #include "server_session_impl_v0.h"
+#include "server_session_impl_base.h"
 
 #include "log_helpers.h"
 #include "log_defs.h"
-
 #include "protocol_layout.h"
+
 #include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <mutex>
 #include <string>
 #include <vector>
+
+#include <asio.hpp>
+
+#include <ecal/service/logger.h>
+#include <ecal/service/server_session_types.h>
+#include <ecal/service/state.h>
+
+#ifdef WIN32
+  #include <Winsock2.h>
+#else
+  #include <netinet/in.h>
+#endif
 
 ///////////////////////////////////////////////
 // Create, Constructor, Destructor
@@ -75,6 +88,18 @@ namespace eCAL
     ///////////////////////////////////////////////
     void ServerSessionV0::start()
     {
+      // Call the handle_start with the io_service
+      // It is important to async call handle_start(), as it will call a
+      // user-defined callback. As we have no influence what that callback will
+      // be, we must call it from another thread to make sure to not double-lock
+      // mutexes from the server_impl, if the callback should itself call a
+      // server_impl api function.
+
+      io_context_->post([me = shared_from_this()]() { me->handle_start(); });
+    }
+
+    void ServerSessionV0::handle_start()
+    {
       // Go to handshake state
       state_ = State::CONNECTED;
 
@@ -92,7 +117,7 @@ namespace eCAL
         asio::error_code socket_option_ec;
         {
           const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
-          socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec);
+          socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec); // NOLINT(bugprone-unused-return-value) -> We already get the return value  rom the ec parameter
         }
         if (socket_option_ec)
         {
@@ -119,13 +144,13 @@ namespace eCAL
         {
           // Shutdown the socket
           asio::error_code ec;
-          socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
+          socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec); // NOLINT(bugprone-unused-return-value) -> We already get the return value  rom the ec parameter
         }
 
         {
           // Close the socket
           asio::error_code ec;
-          socket_.close(ec);
+          socket_.close(ec); // NOLINT(bugprone-unused-return-value) -> We already get the return value  rom the ec parameter
         }
       }
     }

@@ -17,11 +17,21 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <cstdint>
+#include <condition_variable>
 #include <ecal/service/client_session.h>
+
+#include <cstdint>
 #include <memory>
 #include <mutex>
 #include <string>
+#include <utility>
+#include <vector>
+
+#include <asio.hpp>
+
+#include <ecal/service/error.h>
+#include <ecal/service/logger.h>
+#include <ecal/service/state.h>
 
 #include "client_session_impl_v1.h"
 #include "client_session_impl_v0.h"
@@ -31,13 +41,12 @@ namespace eCAL
 {
   namespace service
   {
-    std::shared_ptr<ClientSession> ClientSession::create(const std::shared_ptr<asio::io_context>& io_context
-                                                       , std::uint8_t                             protocol_version
-                                                       , const std::string&                       address
-                                                       , std::uint16_t                            port
-                                                       , const EventCallbackT&                    event_callback
-                                                       , const LoggerT&                           logger
-                                                       , const DeleteCallbackT&                   delete_callback)
+    std::shared_ptr<ClientSession> ClientSession::create(const std::shared_ptr<asio::io_context>&                  io_context
+                                                       , std::uint8_t                                              protocol_version
+                                                       , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                       , const EventCallbackT&                                     event_callback
+                                                       , const LoggerT&                                            logger
+                                                       , const DeleteCallbackT&                                    delete_callback)
     {
       auto deleter = [delete_callback](ClientSession* session)
       {
@@ -45,43 +54,40 @@ namespace eCAL
         delete session; // NOLINT(cppcoreguidelines-owning-memory)
       };
 
-      return std::shared_ptr<ClientSession>(new ClientSession(io_context, protocol_version, address, port, event_callback, logger), deleter);
+      return std::shared_ptr<ClientSession>(new ClientSession(io_context, protocol_version, server_list, event_callback, logger), deleter);
     }
 
-    std::shared_ptr<ClientSession> ClientSession::create(const std::shared_ptr<asio::io_context>& io_context
-                                                        , std::uint8_t                            protocol_version
-                                                        , const std::string&                      address
-                                                        , std::uint16_t                           port
-                                                        , const EventCallbackT&                   event_callback
-                                                        , const LoggerT&                          logger)
+    std::shared_ptr<ClientSession> ClientSession::create(const std::shared_ptr<asio::io_context>&                   io_context
+                                                        , std::uint8_t                                              protocol_version
+                                                        , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                        , const EventCallbackT&                                     event_callback
+                                                        , const LoggerT&                                            logger)
     {
-      return std::shared_ptr<ClientSession>(new ClientSession(io_context, protocol_version, address, port, event_callback, logger));
+      return std::shared_ptr<ClientSession>(new ClientSession(io_context, protocol_version, server_list, event_callback, logger));
     }
 
-    std::shared_ptr<ClientSession> ClientSession::create(const std::shared_ptr<asio::io_context>& io_context
-                                                       , std::uint8_t                             protocol_version
-                                                       , const std::string&                       address
-                                                       , std::uint16_t                            port
-                                                       , const EventCallbackT&                    event_callback
-                                                       , const DeleteCallbackT&                   delete_callback)
+    std::shared_ptr<ClientSession> ClientSession::create(const std::shared_ptr<asio::io_context>&                  io_context
+                                                       , std::uint8_t                                              protocol_version
+                                                       , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                       , const EventCallbackT&                                     event_callback
+                                                       , const DeleteCallbackT&                                    delete_callback)
     {
-      return ClientSession::create(io_context, protocol_version, address, port, event_callback, default_logger("Service Client"), delete_callback);
+      return ClientSession::create(io_context, protocol_version, server_list, event_callback, default_logger("Service Client"), delete_callback);
     }
 
-    ClientSession::ClientSession(const std::shared_ptr<asio::io_context>& io_context
-                                , std::uint8_t                            protocol_version
-                                , const std::string&                      address
-                                , std::uint16_t                           port
-                                , const EventCallbackT&                   event_callback
-                                , const LoggerT&                          logger)
+    ClientSession::ClientSession(const std::shared_ptr<asio::io_context>&                   io_context
+                                , std::uint8_t                                              protocol_version
+                                , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                , const EventCallbackT&                                     event_callback
+                                , const LoggerT&                                            logger)
     {
       if (protocol_version == 0)
       {
-        impl_ = ClientSessionV0::create(io_context, address, port, event_callback, logger);
+        impl_ = ClientSessionV0::create(io_context, server_list, event_callback, logger);
       }
       else
       {
-        impl_ = ClientSessionV1::create(io_context, address, port, event_callback, logger);
+        impl_ = ClientSessionV1::create(io_context, server_list, event_callback, logger);
       }
     }
 
@@ -140,11 +146,12 @@ namespace eCAL
       }
     }
 
-    State         ClientSession::get_state()                     const { return impl_->get_state(); }
-    std::uint8_t  ClientSession::get_accepted_protocol_version() const { return impl_->get_accepted_protocol_version(); }
-    int           ClientSession::get_queue_size()                const { return impl_->get_queue_size(); }
-    std::string   ClientSession::get_address()                   const { return impl_->get_address(); }
-    std::uint16_t ClientSession::get_port()                      const { return impl_->get_port(); }
-    void          ClientSession::stop()                                { impl_->stop(); }
+    State                   ClientSession::get_state()                     const { return impl_->get_state(); }
+    std::uint8_t            ClientSession::get_accepted_protocol_version() const { return impl_->get_accepted_protocol_version(); }
+    int                     ClientSession::get_queue_size()                const { return impl_->get_queue_size(); }
+    std::string             ClientSession::get_host()                      const { return impl_->get_host(); }
+    asio::ip::tcp::endpoint ClientSession::get_remote_endpoint()           const { return impl_->get_remote_endpoint(); }
+    std::uint16_t           ClientSession::get_port()                      const { return impl_->get_port(); }
+    void                    ClientSession::stop()                                { impl_->stop(); }
   } // namespace service
 } // namespace eCAL

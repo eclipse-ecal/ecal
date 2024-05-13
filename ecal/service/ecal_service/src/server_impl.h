@@ -19,9 +19,7 @@
 
 #pragma once
 
-#include <atomic>
 #include <cstdint>
-#include <functional>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -32,7 +30,6 @@
 #pragma warning(disable: 4834)
 #endif
 #include <asio.hpp>
-#include <utility>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif

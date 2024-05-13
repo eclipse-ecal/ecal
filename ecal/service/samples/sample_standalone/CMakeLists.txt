@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(service_sample)
+project(service_sample_standalone)
 
 find_package(Threads REQUIRED)
 

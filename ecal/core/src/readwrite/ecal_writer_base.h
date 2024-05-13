@@ -38,13 +38,9 @@ namespace eCAL
   class CDataWriterBase
   {
   public:
-    CDataWriterBase() : m_created(false) {};
     virtual ~CDataWriterBase() = default;
 
     virtual SWriterInfo GetInfo() = 0;
-
-    virtual bool Create(const std::string& host_name_, const std::string& topic_name_, const std::string & topic_id_) = 0;
-    virtual bool Destroy() = 0;
 
     virtual void AddLocConnection(const std::string& /*process_id_*/, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/) {};
     virtual void RemLocConnection(const std::string& /*process_id_*/, const std::string& /*topic_id_*/) {};
@@ -62,7 +58,5 @@ namespace eCAL
     std::string        m_host_name;
     std::string        m_topic_name;
     std::string        m_topic_id;
-
-    std::atomic<bool>  m_created;
   };
 }

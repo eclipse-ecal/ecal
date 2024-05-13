@@ -16,12 +16,17 @@
 #
 # ========================= eCAL LICENSE =================================
 
+cmake_minimum_required(VERSION 3.16)
+project(ecal_service)
+
 # Main library
 add_subdirectory(ecal_service)
 
 # Samples
 if(ECAL_CORE_BUILD_SAMPLES)
-  add_subdirectory(sample)
+  add_subdirectory(samples/sample_client)
+  add_subdirectory(samples/sample_server)
+  add_subdirectory(samples/sample_standalone)
 endif()
 
 # Tests

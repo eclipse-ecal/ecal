@@ -62,20 +62,20 @@
       }
     },
     {
-      "name": "wheel",
+      "name": "python",
       "inherits": "core",
-      "displayName": "Python Wheel",
-      "description": "Minimal build for standalone python wheel",
+      "displayName": "Python Extensions",
+      "description": "Minimal build for Python extensions",
       "cacheVariables": {
         "HAS_HDF5": "ON",
         "BUILD_PY_BINDING": "ON",
-        "BUILD_STANDALONE_PY_WHEEL": "ON",
-        "ECAL_THIRDPARTY_BUILD_HDF5": null
+        "BUILD_SHARED": "OFF",
+        "ECAL_THIRDPARTY_BUILD_HDF5": "ON"
       }
     },
     {
       "name": "docs",
-      "inherits": "wheel",
+      "inherits": "python",
       "displayName": "Documentation",
       "description": "Build documentation",
       "cacheVariables": {
@@ -120,16 +120,16 @@
       "configurePreset": "core"
     },
     {
-      "name": "wheel",
-      "description": "Build standalone python wheel",
-      "configurePreset": "wheel",
-      "targets": "create_python_wheel"
+      "name": "python",
+      "description": "Build python extensions",
+      "configurePreset": "python",
+      "targets": "ecal_python"
     },
     {
       "name": "docs",
       "description": "Build sphinx documentation",
       "configurePreset": "docs",
-      "targets": "documentation_sphinx" 
+      "targets": "documentation_sphinx"
     },
     {
       "name": "cli",

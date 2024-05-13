@@ -18,18 +18,28 @@
 */
 
 #include "client_session_impl_v0.h"
+#include "client_session_impl_base.h"
 
 #include "protocol_v0.h"
+#include "protocol_layout.h"
 #include "log_helpers.h"
 #include "log_defs.h"
 
+#include <ecal/service/client_session_types.h>
+#include <ecal/service/error.h>
+#include <ecal/service/logger.h>
+#include <ecal/service/state.h>
+
 #include <cstddef>
 #include <cstdint>
-#include <iostream>
 #include <memory>
 #include <mutex>
+#include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
+
+#include <asio.hpp>
 
 namespace eCAL
 {
@@ -38,27 +48,30 @@ namespace eCAL
     /////////////////////////////////////
     // Constructor, Destructor, Create
     /////////////////////////////////////
-    std::shared_ptr<ClientSessionV0> ClientSessionV0::create(const std::shared_ptr<asio::io_context>& io_context
-                                                            , const std::string&                      address
-                                                            , std::uint16_t                           port
-                                                            , const EventCallbackT&                   event_callback
-                                                            , const LoggerT&                          logger)
+    std::shared_ptr<ClientSessionV0> ClientSessionV0::create(const std::shared_ptr<asio::io_context>&                   io_context
+                                                            , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                            , const EventCallbackT&                                     event_callback
+                                                            , const LoggerT&                                            logger)
     {
-      std::shared_ptr<ClientSessionV0> instance(new ClientSessionV0(io_context, address, port, event_callback, logger));
+      std::shared_ptr<ClientSessionV0> instance(new ClientSessionV0(io_context, server_list, event_callback, logger));
 
-      instance->resolve_endpoint();
+      // Throw exception, if the server list is empty
+      if (server_list.empty())
+      {
+        throw std::invalid_argument("Server list must not be empty");
+      }
+
+      instance->resolve_endpoint(0);
 
       return instance;
     }
 
-    ClientSessionV0::ClientSessionV0(const std::shared_ptr<asio::io_context>& io_context
-                                    , const std::string&                      address
-                                    , std::uint16_t                           port
-                                    , const EventCallbackT&                   event_callback
-                                    , const LoggerT&                          logger)
+    ClientSessionV0::ClientSessionV0(const std::shared_ptr<asio::io_context>&                   io_context
+                                    , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                    , const EventCallbackT&                                     event_callback
+                                    , const LoggerT&                                            logger)
       : ClientSessionBase(io_context, event_callback)
-      , address_                  (address)
-      , port_                     (port)
+      , server_list_              (server_list)
       , service_call_queue_strand_(*io_context)
       , resolver_                 (*io_context)
       , logger_                   (logger)
@@ -78,21 +91,44 @@ namespace eCAL
     //////////////////////////////////////
     // Connection establishement
     //////////////////////////////////////
-    void ClientSessionV0::resolve_endpoint()
+    void ClientSessionV0::resolve_endpoint(size_t server_list_index)
     {
-      ECAL_SERVICE_LOG_DEBUG(logger_, "Resolving endpoint [" + address_ + ":" + std::to_string(port_) + "]...");
+      ECAL_SERVICE_LOG_DEBUG(logger_, "Resolving endpoint [" + server_list_[server_list_index].first + ":" + std::to_string(server_list_[server_list_index].second) + "]...");
 
-      const asio::ip::tcp::resolver::query query(address_, std::to_string(port_));
+      const asio::ip::tcp::resolver::query query(server_list_[server_list_index].first, std::to_string(server_list_[server_list_index].second));
 
       resolver_.async_resolve(query
-                            , service_call_queue_strand_.wrap([me = enable_shared_from_this<ClientSessionV0>::shared_from_this()]
+                            , service_call_queue_strand_.wrap([me = enable_shared_from_this<ClientSessionV0>::shared_from_this(), server_list_index]
                               (asio::error_code ec, const asio::ip::tcp::resolver::iterator& resolved_endpoints)
                               {
                                 if (ec)
                                 {
-                                  const std::string message = "Failed resolving endpoint [" + me->address_ + ":" + std::to_string(me->port_) + "]: " + ec.message();
-                                  me->logger_(LogLevel::Error, message);
-                                  me->handle_connection_loss_error(message);
+#if ECAL_SERVICE_LOG_DEBUG_ENABLED
+                                  {
+                                    const std::string message = "Failed resolving endpoint [" + me->server_list_[server_list_index].first + ":" + std::to_string(me->server_list_[server_list_index].second) + "]: " + ec.message();
+                                    ECAL_SERVICE_LOG_DEBUG(me->logger_, message);
+                                  } 
+#endif
+
+                                  if (server_list_index + 1 < me->server_list_.size())
+                                  {
+                                    // Try next possible endpoint
+                                    me->resolve_endpoint(server_list_index + 1);
+                                  }
+                                  else
+                                  {
+                                    std::string message = "Failed resolving any endpoint: ";
+                                    for (size_t j = 0; j < me->server_list_.size(); ++j)
+                                    {
+                                      message += me->server_list_[j].first + ":" + std::to_string(me->server_list_[j].second);
+                                      if (j + 1 < me->server_list_.size())
+                                      {
+                                        message += ", ";
+                                      }
+                                    }
+                                    me->logger_(LogLevel::Error, message);
+                                    me->handle_connection_loss_error(message);
+                                  }
                                   return;
                                 }
                                 else
@@ -100,7 +136,7 @@ namespace eCAL
 #if ECAL_SERVICE_LOG_DEBUG_VERBOSE_ENABLED
                                   // Verbose-debug log of all endpoints
                                   {
-                                    std::string endpoints_str = "Resolved endpoints for " + me->address_ + ": ";
+                                    std::string endpoints_str = "Resolved endpoints for " + me->server_list_[server_list_index].first + ": ";
                                     for (auto it = resolved_endpoints; it != asio::ip::tcp::resolver::iterator(); ++it)
                                     {
                                       endpoints_str += endpoint_to_string(*it) + ", ";
@@ -108,12 +144,12 @@ namespace eCAL
                                     ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, endpoints_str);
                                   }
 #endif //ECAL_SERVICE_LOG_DEBUG_VERBOSE_ENABLED
-                                  me->connect_to_endpoint(resolved_endpoints);
+                                  me->connect_to_endpoint(resolved_endpoints, server_list_index);
                                 }
                               }));
     }
 
-    void ClientSessionV0::connect_to_endpoint(const asio::ip::tcp::resolver::iterator& resolved_endpoints)
+    void ClientSessionV0::connect_to_endpoint(const asio::ip::tcp::resolver::iterator& resolved_endpoints, size_t server_list_index)
     {
       // Convert the resolved_endpoints iterator to an endpoint sequence
       // (i.e. a vector of endpoints)
@@ -126,14 +162,36 @@ namespace eCAL
       const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
       asio::async_connect(socket_
                         , *endpoint_sequence
-                        , service_call_queue_strand_.wrap([me = shared_from_this(), endpoint_sequence](asio::error_code ec, const asio::ip::tcp::endpoint& endpoint)
+                        , service_call_queue_strand_.wrap([me = shared_from_this(), endpoint_sequence, server_list_index](asio::error_code ec, const asio::ip::tcp::endpoint& endpoint)
                           {
                             (void)endpoint;
                             if (ec)
                             {
-                              const std::string message = "Failed to connect to endpoint [" + me->address_ + ":" + std::to_string(me->port_) + "]: " + ec.message();
-                              me->logger_(LogLevel::Error, message);
-                              me->handle_connection_loss_error(message);
+                              {
+                                // Log an error
+                                const std::string message = "Failed to connect to endpoint [" + me->chosen_endpoint_.first + ":" + std::to_string(me->chosen_endpoint_.second) + "]: " + ec.message();
+                                me->logger_(LogLevel::Error, message);
+                              }
+
+                              // If there are more servers available, try the next one
+                              if (server_list_index + 1 < me->server_list_.size())
+                              {
+                                me->resolve_endpoint(server_list_index + 1);
+                              }
+                              else
+                              {
+                                std::string message = "Failed to connect to any endpoint: ";
+                                for (size_t j = 0; j < me->server_list_.size(); ++j)
+                                {
+                                  message += me->server_list_[j].first + ":" + std::to_string(me->server_list_[j].second);
+                                  if (j + 1 < me->server_list_.size())
+                                  {
+                                    message += ", ";
+                                  }
+                                }
+                                me->logger_(LogLevel::Error, message);
+                                me->handle_connection_loss_error(message);
+                              }
                               return;
                             }
                             else
@@ -148,12 +206,18 @@ namespace eCAL
                                 asio::error_code socket_option_ec;
                                 {
                                   const std::lock_guard<std::mutex> socket_lock(me->socket_mutex_);
-                                  me->socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec);
+                                  me->socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec); // NOLINT(bugprone-unused-return-value) -> We already get the value from the ec parameter
                                 }
                                 if (socket_option_ec)
                                 {
                                   me->logger_(LogLevel::Warning, "[" + get_connection_info_string(me->socket_) + "] " + "Failed setting tcp::no_delay option: " + socket_option_ec.message());
                                 }                                      
+                              }
+
+                              {
+                                // Set the chosen endpoint
+                                const std::lock_guard<std::mutex> chosen_endpoint_lock(me->chosen_endpoint_mutex_);
+                                me->chosen_endpoint_ = me->server_list_[server_list_index];
                               }
 
                               const std::string message = "Connected to server. Using protocol version 0.";
@@ -354,14 +418,29 @@ namespace eCAL
     // Status API
     //////////////////////////////////////
     
-    std::string ClientSessionV0::get_address() const
+    std::string ClientSessionV0::get_host() const
     {
-      return address_;
+      const std::lock_guard<std::mutex> chosen_endpoint_lock(chosen_endpoint_mutex_);
+      return chosen_endpoint_.first;
     }
 
     std::uint16_t ClientSessionV0::get_port() const
     {
-      return port_;
+      const std::lock_guard<std::mutex> chosen_endpoint_lock(chosen_endpoint_mutex_);
+      return chosen_endpoint_.second;
+    }
+
+    asio::ip::tcp::endpoint ClientSessionV0::get_remote_endpoint() const
+    {
+      // form remote endpoint string
+      {
+        asio::error_code ec;
+        auto endpoint = socket_.remote_endpoint(ec);
+        if (!ec)
+          return endpoint;
+        else
+          return asio::ip::tcp::endpoint();
+      }
     }
 
     State ClientSessionV0::get_state() const
@@ -480,7 +559,7 @@ namespace eCAL
 
       {
         // Set the stopped_by_user_ flag to true, so that the async operations stop enqueuing new service calls.
-        std::lock_guard<std::mutex> service_state_lock(service_state_mutex_);
+        const std::lock_guard<std::mutex> service_state_lock(service_state_mutex_);
         stopped_by_user_ = true;
       }
 
@@ -500,12 +579,12 @@ namespace eCAL
       {
         {
           asio::error_code ec;
-          socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
+          socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec); // NOLINT(bugprone-unused-return-value) -> we already get the value by the ec parameter
         }
 
         {
           asio::error_code ec;
-          socket_.close(ec);
+          socket_.close(ec); // NOLINT(bugprone-unused-return-value) -> we already get the value by the ec parameter
         }
       }
     }
