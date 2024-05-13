@@ -100,7 +100,7 @@ namespace eCAL
     {
       struct ECAL_API Configuration
       {
-        bool               activate                = false;               //!< activate layer
+        bool               enable                  = false;               //!< enable layer
         bool               zero_copy_mode          = false;               //!< enable zero copy shared memory transport mode
         int                acknowledge_timeout_ms  = 0;                   /*!< force connected subscribers to send acknowledge event after processing the message
                                                                                  the publisher send call is blocked on this event with this timeout (0 == no handshake) */
@@ -114,7 +114,8 @@ namespace eCAL
     {
       struct ECAL_API Configuration
       {
-        bool               activate                = false;               //!< activate layer
+        bool               enable                  = false;               //!< enable layer
+        bool               loopback                = false;               //!< enable to receive udp messages on the same local machine
         int                sndbuf_size_bytes       = (5*1024*1024);       //!< udp send buffer size in bytes (default 5MB)
       };
     }
@@ -123,7 +124,7 @@ namespace eCAL
     {
       struct ECAL_API Configuration
       {
-        bool               activate                = false;               //!< activate layer
+        bool               enable                  = false;               //!< enable layer
       };
     }
 

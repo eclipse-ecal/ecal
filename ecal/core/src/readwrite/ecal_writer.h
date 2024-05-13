@@ -125,9 +125,9 @@ namespace eCAL
     void Connect(const std::string& tid_, const SDataTypeInformation& tinfo_);
     void Disconnect();
 
-    void ActivateUdpLayer(bool state_);
-    void ActivateShmLayer(bool state_);
-    void ActivateTcpLayer(bool state_);
+    void EnableUdpLayer(bool state_);
+    void EnableShmLayer(bool state_);
+    void EnableTcpLayer(bool state_);
 
     size_t PrepareWrite(long long id_, size_t len_);
     bool IsInternalSubscribedOnly();

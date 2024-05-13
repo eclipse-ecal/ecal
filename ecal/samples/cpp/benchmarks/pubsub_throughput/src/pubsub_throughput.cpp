@@ -37,19 +37,19 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
   eCAL::Publisher::Configuration pub_config;
 
   // set transport layer
-  pub_config.shm.activate = false;
-  pub_config.udp.activate = false;
-  pub_config.tcp.activate = false;
+  pub_config.shm.enable = false;
+  pub_config.udp.enable = false;
+  pub_config.tcp.enable = false;
   switch (layer)
   {
   case eCAL::TLayer::tlayer_shm:
-    pub_config.shm.activate = true;
+    pub_config.shm.enable = true;
     break;
   case eCAL::TLayer::tlayer_udp_mc:
-    pub_config.udp.activate = true;
+    pub_config.udp.enable = true;
     break;
   case eCAL::TLayer::tlayer_tcp:
-    pub_config.tcp.activate = true;
+    pub_config.tcp.enable = true;
     break;
   }
 

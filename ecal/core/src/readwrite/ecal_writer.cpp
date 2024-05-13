@@ -99,14 +99,10 @@ namespace eCAL
     // register
     Register(false);
 
-    // create udp multicast layer
-    ActivateUdpLayer(config_.udp.activate);
-
-    // create shm layer
-    ActivateShmLayer(config_.shm.activate);
-
-    // create tcp layer
-    ActivateTcpLayer(config_.tcp.activate);
+    // enable transport layers
+    EnableUdpLayer(config_.udp.enable);
+    EnableShmLayer(config_.shm.enable);
+    EnableTcpLayer(config_.tcp.enable);
   }
 
   CDataWriter::~CDataWriter()
@@ -264,9 +260,9 @@ namespace eCAL
     // can we do a zero copy write ?
     const bool allow_zero_copy =
       m_config.shm.zero_copy_mode // zero copy mode activated by user
-   && m_config.shm.activate       // shm layer active
-   && !m_config.udp.activate      // udp layer inactive
-   && !m_config.tcp.activate;     // tcp layer inactive
+   && m_config.shm.enable       // shm layer active
+   && !m_config.udp.enable      // udp layer inactive
+   && !m_config.tcp.enable;     // tcp layer inactive
 
     // create a payload copy for all layer
     if (!allow_zero_copy)
@@ -285,7 +281,7 @@ namespace eCAL
     // SHM
     ////////////////////////////////////////////////////////////////////////////
 #if ECAL_CORE_TRANSPORT_SHM
-    if (m_writer_shm && m_config.shm.activate)
+    if (m_writer_shm && m_config.shm.enable)
     {
 #ifndef NDEBUG
       // log it
@@ -351,7 +347,7 @@ namespace eCAL
     // UDP (MC)
     ////////////////////////////////////////////////////////////////////////////
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_writer_udp && m_config.udp.activate)
+    if (m_writer_udp && m_config.udp.enable)
     {
 #ifndef NDEBUG
       // log it
@@ -361,14 +357,6 @@ namespace eCAL
       // send it
       bool udp_sent(false);
       {
-#if ECAL_CORE_TRANSPORT_SHM
-        // if shared memory layer for local communication is not activated
-        // we activate udp message loopback to communicate with local processes too
-        const bool loopback = !m_config.shm.activate;
-#else
-        const bool loopback = true;
-#endif
-
         // fill writer data
         struct SWriterAttr wattr;
         wattr.len       = payload_buf_size;
@@ -376,7 +364,7 @@ namespace eCAL
         wattr.clock     = m_clock;
         wattr.hash      = snd_hash;
         wattr.time      = time_;
-        wattr.loopback  = loopback;
+        wattr.loopback  = m_config.udp.loopback;
 
         // prepare send
         if (m_writer_udp->PrepareWrite(wattr))
@@ -410,7 +398,7 @@ namespace eCAL
     // TCP
     ////////////////////////////////////////////////////////////////////////////
 #if ECAL_CORE_TRANSPORT_TCP
-    if (m_writer_tcp && m_config.tcp.activate)
+    if (m_writer_tcp && m_config.tcp.enable)
     {
 #ifndef NDEBUG
       // log it
@@ -749,10 +737,10 @@ namespace eCAL
     }
   }
 
-  void CDataWriter::ActivateUdpLayer(bool state_)
+  void CDataWriter::EnableUdpLayer(bool state_)
   {
 #if ECAL_CORE_TRANSPORT_UDP
-    m_config.udp.activate = state_;
+    m_config.udp.enable = state_;
     if (!m_created) return;
 
     // log state
@@ -774,10 +762,10 @@ namespace eCAL
 #endif // ECAL_CORE_TRANSPORT_UDP
   }
 
-  void CDataWriter::ActivateShmLayer(bool state_)
+  void CDataWriter::EnableShmLayer(bool state_)
   {
 #if ECAL_CORE_TRANSPORT_SHM
-    m_config.shm.activate = state_;
+    m_config.shm.enable = state_;
     if (!m_created) return;
 
     // log state
@@ -800,10 +788,10 @@ namespace eCAL
 #endif // ECAL_CORE_TRANSPORT_SHM
   }
 
-  void CDataWriter::ActivateTcpLayer(bool state_)
+  void CDataWriter::EnableTcpLayer(bool state_)
   {
 #if ECAL_CORE_TRANSPORT_TCP
-    m_config.tcp.activate = state_;
+    m_config.tcp.enable = state_;
     if (!m_created) return;
 
     // log state
