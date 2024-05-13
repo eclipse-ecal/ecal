@@ -19,9 +19,12 @@ eCAL 5.13
    * - Release
      - Release Date
      - Support Status
+   * - :ref:`eCAL v5.13.1 <download_archive_ecal_v5_13_1>`
+     - 2024-05-13
+     - Supported
    * - :ref:`eCAL v5.13.0 <download_archive_ecal_v5_13_0>`
      - 2024-04-25
-     - Supported
+     - EOL
 
 
 eCAL 5.12
