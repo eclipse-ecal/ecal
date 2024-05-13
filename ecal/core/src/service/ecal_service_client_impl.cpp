@@ -66,13 +66,13 @@ namespace eCAL
     Stop();
   }
 
-  bool CServiceClientImpl::Start(const std::string& service_name_, const ServiceMethodInformationMapT& methods_information_map_)
+  bool CServiceClientImpl::Start(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
   {
     if (m_created) return(false);
 
     // set service name and methods
-    m_service_name = service_name_;
-    m_method_information_map = methods_information_map_;
+    m_service_name           = service_name_;
+    m_method_information_map = method_information_map_;
     
     // initialize call count map
     for (const auto& method_information_pair : m_method_information_map)

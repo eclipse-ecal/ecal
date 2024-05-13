@@ -71,6 +71,8 @@ namespace eCAL
                  m_receive_time(0),
                  m_clock(0),
                  m_frequency_calculator(0.0f),
+                 m_share_ttype(Config::IsTopicTypeSharingEnabled()),
+                 m_share_tdesc(Config::IsTopicDescriptionSharingEnabled()),
                  m_created(false)
   {
 #ifndef NDEBUG
@@ -86,12 +88,6 @@ namespace eCAL
     // set registration expiration
     const std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
     m_pub_map.set_expiration(registration_timeout);
-
-    // allow to share topic type
-    m_share_ttype = Config::IsTopicTypeSharingEnabled();
-
-    // allow to share topic description
-    m_share_tdesc = Config::IsTopicDescriptionSharingEnabled();
 
     // start transport layers
     SubscribeToLayers();
