@@ -244,11 +244,9 @@ namespace eCAL
   /**
    * @brief Finalize eCAL API.
    *
-   * @param components_  deprecated.
-   *
    * @return Zero if succeeded, 1 if already finalized, -1 if failed.
   **/
-  int Finalize(unsigned int /*components_*/)
+  int Finalize()
   {
     if (g_globals_ctx == nullptr) return 1;
     g_globals_ctx_ref_cnt--;
