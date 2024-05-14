@@ -70,7 +70,7 @@ namespace eCAL
                  m_connected(false),
                  m_receive_time(0),
                  m_clock(0),
-                 m_frequency_calculator(0.0f),
+                 m_frequency_calculator(3.0f),
                  m_share_ttype(Config::IsTopicTypeSharingEnabled()),
                  m_share_tdesc(Config::IsTopicDescriptionSharingEnabled()),
                  m_created(false)

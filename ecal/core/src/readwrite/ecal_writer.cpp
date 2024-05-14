@@ -76,7 +76,7 @@ namespace eCAL
     m_topic_info(topic_info_),
     m_config(config_),
     m_connected(false),
-    m_frequency_calculator(0.0f),
+    m_frequency_calculator(3.0f),
     m_created(false)
   {
 #ifndef NDEBUG
@@ -298,7 +298,6 @@ namespace eCAL
         wattr.clock                  = m_clock;
         wattr.hash                   = snd_hash;
         wattr.time                   = time_;
-        wattr.buffering              = m_config.shm.memfile_buffer_count;
         wattr.zero_copy              = m_config.shm.zero_copy_mode;
         wattr.acknowledge_timeout_ms = m_config.shm.acknowledge_timeout_ms;
 

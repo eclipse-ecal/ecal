@@ -113,16 +113,6 @@ namespace eCAL
     // connection parameters needed
     bool ret_state(false);
 
-    // adapt number of used memory files if needed
-    if (attr_.buffering != m_config.memfile_buffer_count)
-    {
-      SetBufferCount(attr_.buffering);
-
-      // store new buffer count and flag change
-      m_config.memfile_buffer_count = attr_.buffering;
-      ret_state |= true;
-    }
-
     // adapt write index if needed
     m_write_idx %= m_memory_file_vec.size();
       
