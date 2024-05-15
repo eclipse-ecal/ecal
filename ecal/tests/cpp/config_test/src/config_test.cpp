@@ -61,19 +61,16 @@ TEST(core_cpp_config, user_config_passing)
     custom_config.transport_layer_options.mc_options.group  = ip_address;
     custom_config.transport_layer_options.mc_options.sndbuf = upd_snd_buff;
     
-
     custom_config.monitoring_options.monitoring_timeout = mon_timeout;
     custom_config.monitoring_options.filter_excl        = mon_filter_excl;
     custom_config.monitoring_options.monitoring_mode    = monitoring_mode;
     custom_config.logging_options.filter_log_con        = mon_log_filter_con;
 
-
     custom_config.publisher_options.use_shm = pub_use_shm;
-
 
     custom_config.registration_options = registration_options;
   }
-  catch (std::invalid_argument e)
+  catch (std::invalid_argument& e)
   {
     throw std::runtime_error("Error while configuring eCALConfig: " + std::string(e.what()));
   }
@@ -174,9 +171,18 @@ TEST(ConfigDeathTest, user_config_death_test)
   ASSERT_THROW(
     SetValue(custom_config.transport_layer_options.shm_options.memfile_reserve, 150),
     std::invalid_argument);
+
+  // Test the registration option limits
+  // Refresh timeout > registration timeout
+  ASSERT_THROW(
+    eCAL::Config::RegistrationOptions(2000U, 3000U), std::invalid_argument);
+
+  // Refresh timeout = registration timeout
+  ASSERT_THROW(
+    eCAL::Config::RegistrationOptions(2000U, 2000U), std::invalid_argument);
 }
 
-TEST(core_cpp_config, config_custom_datatypes)
+TEST(core_cpp_config, config_custom_datatypes_tests)
 {
   // test custom datatype assignment operators
   eCAL::Config::IpAddressV4 ip1;
@@ -204,4 +210,9 @@ TEST(core_cpp_config, config_custom_datatypes)
   config1 = config2ref;
 
   EXPECT_EQ(static_cast<std::string>(config1.transport_layer_options.mc_options.group), testValue);
+}
+
+TEST(core_cpp_config, config_cmd_parser)
+{
+  
 }
