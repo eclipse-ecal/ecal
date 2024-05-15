@@ -66,12 +66,12 @@ bool QMulticolumnSortFilterProxyModel::filterDirectAcceptsRow(int source_row, co
 
   QRegExp const filter_regexp = filterRegExp();
 
-  for (int column : filter_columns_)
+  for (const int column : filter_columns_)
   {
-    QModelIndex index = sourceModel()->index(source_row, column, source_parent);
+    const QModelIndex index = sourceModel()->index(source_row, column, source_parent);
     if (index.isValid())
     {
-      QString data = sourceModel()->data(index, filterRole()).toString();
+      const QString data = sourceModel()->data(index, filterRole()).toString();
       if (data.contains(filter_regexp))
       {
         return true;
@@ -87,12 +87,12 @@ bool QMulticolumnSortFilterProxyModel::filterDirectAcceptsRow(int source_row, co
   if (!filter_regexp.isEmpty())
   {
     // Use QRegExp
-    for (int column : filter_columns_)
+    for (const int column : filter_columns_)
     {
-      QModelIndex index = sourceModel()->index(source_row, column, source_parent);
+      const QModelIndex index = sourceModel()->index(source_row, column, source_parent);
       if (index.isValid())
       {
-        QString data = sourceModel()->data(index, filterRole()).toString();
+        const QString data = sourceModel()->data(index, filterRole()).toString();
         if (data.contains(filter_regexp))
         {
           return true;
@@ -106,12 +106,12 @@ bool QMulticolumnSortFilterProxyModel::filterDirectAcceptsRow(int source_row, co
     // Use QRegularExpression, as QRegExp is empty
     QRegularExpression const filter_regularexpression = filterRegularExpression();
 
-    for (int column : filter_columns_)
+    for (const int column : filter_columns_)
     {
-      QModelIndex index = sourceModel()->index(source_row, column, source_parent);
+      const QModelIndex index = sourceModel()->index(source_row, column, source_parent);
       if (index.isValid())
       {
-        QString data = sourceModel()->data(index, filterRole()).toString();
+        const QString data = sourceModel()->data(index, filterRole()).toString();
         if (data.contains(filter_regularexpression))
         {
           return true;
@@ -124,12 +124,12 @@ bool QMulticolumnSortFilterProxyModel::filterDirectAcceptsRow(int source_row, co
   // For Qt6 we only need to check the QRegularExpression
   QRegularExpression const filter_regularexpression = filterRegularExpression();
 
-  for (int column : filter_columns_)
+  for (const int column : filter_columns_)
   {
-    QModelIndex index = sourceModel()->index(source_row, column, source_parent);
+    const QModelIndex index = sourceModel()->index(source_row, column, source_parent);
     if (index.isValid())
     {
-      QString data = sourceModel()->data(index, filterRole()).toString();
+      const QString data = sourceModel()->data(index, filterRole()).toString();
       if (data.contains(filter_regularexpression))
       {
         return true;
