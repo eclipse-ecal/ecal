@@ -52,11 +52,11 @@ namespace eCAL
 
     struct MonitoringOptions
     {
-      eCAL_MonitoringMode_Filter monitoring_mode{};
-      ConstrainedInteger<1000, 1000>      monitoring_timeout{};
-      bool                       network_monitoring{};
-      UDPMonitoringOptions       udp_options{};
-      SHMMonitoringOptions       shm_options{};
+      eCAL_MonitoringMode_Filter     monitoring_mode{};
+      ConstrainedInteger<1000, 1000> monitoring_timeout{};
+      bool                           network_monitoring{};
+      UDPMonitoringOptions           udp_options{};
+      SHMMonitoringOptions           shm_options{};
 
       std::string         filter_excl{};
       std::string         filter_incl{};

@@ -39,26 +39,26 @@ namespace eCAL
 
     struct SHMOptions
     {
-      std::string           host_group_name{};
+      std::string                    host_group_name{};
       ConstrainedInteger<4096, 4096> memfile_minsize{};
       ConstrainedInteger<50, 1, 100> memfile_reserve{};
-      int                   memfile_ack_timeout{};
+      int                            memfile_ack_timeout{};
       ConstrainedInteger<0, 1>       memfile_buffer_count{};
-      bool                  drop_out_of_order_messages{};
-      bool                  memfile_zero_copy{};
+      bool                           drop_out_of_order_messages{};
+      bool                           memfile_zero_copy{};
     };
 
     struct UdpMulticastOptions
     {
-      UdpConfigVersion         config_version{};        
-      IpAddressV4              group{};
-      IpAddressV4              mask{};
+      UdpConfigVersion                  config_version{};        
+      IpAddressV4                       group{};
+      IpAddressV4                       mask{};
       ConstrainedInteger<14000, 10>     port{};
-      unsigned int             ttl{};
+      unsigned int                      ttl{};
       // TODO PG: are these minimum limits correct?
       ConstrainedInteger<5242880, 1024> sndbuf{};
       ConstrainedInteger<5242880, 1024> recbuf{};
-      bool                     join_all_interfaces{};
+      bool                              join_all_interfaces{};
 
       int  bandwidth_max_udp{};
       bool npcap_enabled{};
