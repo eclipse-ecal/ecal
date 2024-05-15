@@ -40,7 +40,8 @@ message Content                                // topic content
 
 enum eCmdType                                  // command type
 {
-  reserved 7 to 11;
+  // Reserved fields in enums are not supported in protobuf 3.0
+  // reserved 7 to 11;
 
   bct_none             =  0;                   // undefined command
   bct_set_sample       =  1;                   // set sample content
