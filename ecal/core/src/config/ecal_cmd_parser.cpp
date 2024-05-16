@@ -124,6 +124,25 @@ namespace
     else 
       return path_ + path_separator + file_name_;
   }
+
+  void parseConfigKeysToMap(std::vector<std::string> config_keys_, eCAL::Config::ConfigKey2DMap& map_)
+  {
+    // each string has the format "section/key:value"
+    for (const auto& full_key : config_keys_)
+    {
+        auto sec_pos = full_key.find_last_of('/');
+        if (sec_pos == std::string::npos) continue;
+        const std::string section = full_key.substr(0, sec_pos);
+        std::string key     = full_key.substr(sec_pos+1);
+
+        auto val_pos = key.find_first_of(':');
+        if (val_pos == std::string::npos) continue;
+        const std::string value = key.substr(val_pos+1);
+        key = key.substr(0, val_pos);
+
+        map_[section][key] = value;
+    }
+  }
 }
 
 namespace eCAL
@@ -182,6 +201,7 @@ namespace eCAL
         if (set_config_key_arg.isSet())
         {
           m_config_keys = set_config_key_arg.getValue();
+          parseConfigKeysToMap(set_config_key_arg.getValue(), m_config_key_map);
         }
       }
 #endif  
@@ -241,5 +261,6 @@ namespace eCAL
     std::vector<std::string>& CmdParser::getConfigKeys()         { return m_config_keys; };
     std::vector<std::string>& CmdParser::getTaskParameter()      { return m_task_parameter; };
     std::string& CmdParser::getUserIni()                         { return m_user_ini; };
+    ConfigKey2DMap& CmdParser::getConfigKeysMap()                { return m_config_key_map; };  
   }
 }

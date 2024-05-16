@@ -237,8 +237,32 @@ TEST(core_cpp_config, config_cmd_parser)
 
   std::vector<const char*> arguments;
 
+  const std::string set_config_key = "--ecal-set-config-key ";
+  const std::string sep_slash = "/";
+  const std::string sep_col = ":";
+
+  const std::string network = "network";
+  const std::string host_group_name = "host_group_name";
+  const std::string config_test_machine = "ConfigTestMachine";
+  const std::string network_enabled = "network_enabled";
+  const std::string is_network_enabled = "true";
+  
+  const std::string common = "common";
+  const std::string registration_timeout = "registration_timeout";
+  const std::string registration_refresh = "registration_refresh";
+  const std::string reg_to_value = "6000";
+  const std::string reg_rf_value = "1000";
+
   arguments.push_back("test_config_cmd_parser");
   arguments.push_back("--ecal-ini-file customIni.ini");
+  std::string host_group_string = set_config_key + network + sep_slash + host_group_name + sep_col + config_test_machine;
+  arguments.push_back(host_group_string.data());
+  std::string network_enabled_string = set_config_key + network + sep_slash + network_enabled + sep_col + is_network_enabled;
+  arguments.push_back(network_enabled_string.data());
+  std::string registration_to_string = set_config_key + common + sep_slash + registration_timeout + sep_col + reg_to_value;
+  arguments.push_back(registration_to_string.data());
+  std::string registration_rf_string = set_config_key + common + sep_slash + registration_refresh + sep_col + reg_rf_value;
+  arguments.push_back(registration_rf_string.data());
 
   try
   {
@@ -249,7 +273,14 @@ TEST(core_cpp_config, config_cmd_parser)
     std::cerr << e.what() << '\n';
   }
   
+  // Expect a valid ini file
   EXPECT_NE(parser.getUserIni(), std::string(""));
+
+  // Expect a proper key-value map in the config key map
+  EXPECT_EQ(parser.getConfigKeysMap()[network][host_group_name], config_test_machine);
+  EXPECT_EQ(parser.getConfigKeysMap()[network][network_enabled], is_network_enabled);
+  EXPECT_EQ(parser.getConfigKeysMap()[common][registration_timeout], reg_to_value);
+  EXPECT_EQ(parser.getConfigKeysMap()[common][registration_refresh], reg_rf_value);
 }
 
 TEST(CmdParserDeathTest, config_cmd_parser_death_test)

@@ -26,6 +26,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 namespace eCAL
 {
@@ -37,5 +38,8 @@ namespace eCAL
       std::string              specified_config{};
       bool                     dump_config{};
     };
+
+    // Map[Section][Option] = Value
+    using ConfigKey2DMap = std::map<std::string, std::map<std::string, std::string>>;
   }
 }

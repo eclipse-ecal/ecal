@@ -25,6 +25,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 
 namespace eCAL
 {
@@ -41,6 +42,7 @@ namespace eCAL
     class CmdParser
     {    
     public:
+      using ConfigKey2DMap = std::map<std::string, std::map<std::string, std::string>>;
       CmdParser(int argc_ , char **argv_);
       CmdParser();
 
@@ -50,11 +52,13 @@ namespace eCAL
       std::vector<std::string>& getConfigKeys();
       std::vector<std::string>& getTaskParameter();
       std::string&              getUserIni();
+      ConfigKey2DMap&           getConfigKeysMap();
 
     private:
       std::string              checkForValidConfigFilePath(std::string config_file_);
 
       std::vector<std::string> m_config_keys;
+      ConfigKey2DMap           m_config_key_map;
       bool                     m_dump_config;
       std::vector<std::string> m_task_parameter;
       std::string              m_user_ini;
