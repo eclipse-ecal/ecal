@@ -19,10 +19,15 @@
 
 #include <ecal/ecal_core.h>
 #include <ecal/ecal_config.h>
+#include <ini_file.h>
 
 #include <gtest/gtest.h>
 
 #include <stdexcept>
+#include <fstream>
+#include <string>
+
+#include "ecal_cmd_parser.h"
 
 template<typename MEMBER, typename VALUE>
 void SetValue(MEMBER& member, VALUE value)
@@ -214,5 +219,50 @@ TEST(core_cpp_config, config_custom_datatypes_tests)
 
 TEST(core_cpp_config, config_cmd_parser)
 {
+  // create a custom ini file
+  std::ofstream custom_ini_file("customIni.ini");
+
+  if (custom_ini_file.is_open())
+  {
+    custom_ini_file << ini_file_as_string;
+    custom_ini_file.close();
+  }
+  else 
+  {
+    std::cerr << "Error opening file for ini writing" << "\n";
+    return;
+  }
+
+  eCAL::Config::CmdParser parser;
+
+  std::vector<const char*> arguments;
+
+  arguments.push_back("test_config_cmd_parser");
+  arguments.push_back("--ecal-ini-file customIni.ini");
+
+  try
+  {
+    parser.parseArguments(static_cast<int>(arguments.size()), const_cast<char**>(arguments.data()));
+  }
+  catch(const std::runtime_error& e)
+  {
+    std::cerr << e.what() << '\n';
+  }
   
+  EXPECT_NE(parser.getUserIni(), std::string(""));
+}
+
+TEST(CmdParserDeathTest, config_cmd_parser_death_test)
+{
+  eCAL::Config::CmdParser parser;
+
+  std::vector<const char*> arguments;
+
+  arguments.push_back("test_config_cmd_parser_death_test");
+  arguments.push_back("--ecal-ini-file someNotValidFileName.ini");
+
+  ASSERT_THROW(
+    parser.parseArguments(static_cast<int>(arguments.size()), const_cast<char**>(arguments.data())),
+    std::runtime_error
+  );
 }
