@@ -42,8 +42,6 @@ namespace eCAL
 
     SWriterInfo GetInfo() override;
 
-    bool SetBufferCount(size_t buffer_count_);
-
     bool PrepareWrite(const SWriterAttr& attr_) override;
 
     bool Write(CPayloadWriter& payload_, const SWriterAttr& attr_) override;
@@ -53,6 +51,8 @@ namespace eCAL
     Registration::ConnectionPar GetConnectionParameter() override;
 
   protected:
+    bool SetBufferCount(size_t buffer_count_);
+
     Publisher::SHM::Configuration                 m_config;
 
     size_t                                        m_write_idx = 0;

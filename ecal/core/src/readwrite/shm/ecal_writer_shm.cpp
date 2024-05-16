@@ -56,56 +56,6 @@ namespace eCAL
 
     return info_;
   }
-  
-  bool CDataWriterSHM::SetBufferCount(size_t buffer_count_)
-  {
-    // no need to adapt anything
-    if (m_memory_file_vec.size() == buffer_count_) return true;
-
-    // buffer count zero not allowed
-    if (buffer_count_ < 1)
-    {
-      Logging::Log(log_level_error, m_topic_name + "::CDataWriterSHM::SetBufferCount minimal number of memory files is 1 !");
-      return false;
-    }
-
-    // prepare memfile attributes
-    SSyncMemoryFileAttr memory_file_attr = {};
-    memory_file_attr.min_size        = m_config.memfile_min_size_bytes;
-    memory_file_attr.reserve         = m_config.memfile_reserve_percent;
-    memory_file_attr.timeout_open_ms = PUB_MEMFILE_OPEN_TO;
-    memory_file_attr.timeout_ack_ms  = m_config.acknowledge_timeout_ms;
-
-    // retrieve the memory file size of existing files
-    size_t memory_file_size(0);
-    if (!m_memory_file_vec.empty())
-    {
-      memory_file_size = m_memory_file_vec[0]->GetSize();
-    }
-    else
-    {
-      memory_file_size = memory_file_attr.min_size;
-    }
-
-    // create memory file vector
-    m_memory_file_vec.clear();
-    while (m_memory_file_vec.size() < buffer_count_)
-    {
-      auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, memory_file_size, memory_file_attr);
-      if (sync_memfile->IsCreated())
-      {
-        m_memory_file_vec.push_back(sync_memfile);
-      }
-      else
-      {
-        m_memory_file_vec.clear();
-        Logging::Log(log_level_error, "CDataWriterSHM::SetBufferCount - FAILED");
-        return false;
-      }
-    }
-
-    return true;
-  }
 
   bool CDataWriterSHM::PrepareWrite(const SWriterAttr& attr_)
   {
@@ -157,5 +107,55 @@ namespace eCAL
       connection_par.layer_par_shm.memory_file_list.push_back(memory_file->GetName());
     }
     return connection_par;
+  }
+
+  bool CDataWriterSHM::SetBufferCount(size_t buffer_count_)
+  {
+    // no need to adapt anything
+    if (m_memory_file_vec.size() == buffer_count_) return true;
+
+    // buffer count zero not allowed
+    if (buffer_count_ < 1)
+    {
+      Logging::Log(log_level_error, m_topic_name + "::CDataWriterSHM::SetBufferCount minimal number of memory files is 1 !");
+      return false;
+    }
+
+    // prepare memfile attributes
+    SSyncMemoryFileAttr memory_file_attr = {};
+    memory_file_attr.min_size        = m_config.memfile_min_size_bytes;
+    memory_file_attr.reserve         = m_config.memfile_reserve_percent;
+    memory_file_attr.timeout_open_ms = PUB_MEMFILE_OPEN_TO;
+    memory_file_attr.timeout_ack_ms  = m_config.acknowledge_timeout_ms;
+
+    // retrieve the memory file size of existing files
+    size_t memory_file_size(0);
+    if (!m_memory_file_vec.empty())
+    {
+      memory_file_size = m_memory_file_vec[0]->GetSize();
+    }
+    else
+    {
+      memory_file_size = memory_file_attr.min_size;
+    }
+
+    // create memory file vector
+    m_memory_file_vec.clear();
+    while (m_memory_file_vec.size() < buffer_count_)
+    {
+      auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, memory_file_size, memory_file_attr);
+      if (sync_memfile->IsCreated())
+      {
+        m_memory_file_vec.push_back(sync_memfile);
+      }
+      else
+      {
+        m_memory_file_vec.clear();
+        Logging::Log(log_level_error, "CDataWriterSHM::SetBufferCount - FAILED");
+        return false;
+      }
+    }
+
+    return true;
   }
 }

@@ -99,10 +99,8 @@ namespace eCAL
     // register
     Register(false);
 
-    // enable transport layers
-    EnableUdpLayer(config_.udp.enable);
-    EnableShmLayer(config_.shm.enable);
-    EnableTcpLayer(config_.tcp.enable);
+    // start udp, shm, tcp layer
+    StartTransportLayer();
   }
 
   CDataWriter::~CDataWriter()
@@ -123,20 +121,8 @@ namespace eCAL
     Logging::Log(log_level_debug1, m_topic_name + "::CDataWriter::Stop");
 #endif
 
-    // destroy udp multicast writer
-#if ECAL_CORE_TRANSPORT_UDP
-    m_writer_udp.reset();
-#endif
-
-    // destroy memory file writer
-#if ECAL_CORE_TRANSPORT_SHM
-    m_writer_shm.reset();
-#endif
-
-    // destroy tcp writer
-#if ECAL_CORE_TRANSPORT_TCP
-    m_writer_tcp.reset();
-#endif
+    // stop udp, shm, tcp layer
+    StopTransportLayer();
 
     // clear subscriber maps
     {
@@ -259,10 +245,10 @@ namespace eCAL
 
     // can we do a zero copy write ?
     const bool allow_zero_copy =
-      m_config.shm.zero_copy_mode // zero copy mode activated by user
-   && m_config.shm.enable       // shm layer active
-   && !m_config.udp.enable      // udp layer inactive
-   && !m_config.tcp.enable;     // tcp layer inactive
+         m_config.shm.zero_copy_mode // zero copy mode activated by user
+      && m_writer_shm                // shm layer active
+      && !m_writer_udp               // udp layer inactive
+      && !m_writer_tcp;              // tcp layer inactive
 
     // create a payload copy for all layer
     if (!allow_zero_copy)
@@ -281,7 +267,7 @@ namespace eCAL
     // SHM
     ////////////////////////////////////////////////////////////////////////////
 #if ECAL_CORE_TRANSPORT_SHM
-    if (m_writer_shm && m_config.shm.enable)
+    if (m_writer_shm)
     {
 #ifndef NDEBUG
       // log it
@@ -346,7 +332,7 @@ namespace eCAL
     // UDP (MC)
     ////////////////////////////////////////////////////////////////////////////
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_writer_udp && m_config.udp.enable)
+    if (m_writer_udp)
     {
 #ifndef NDEBUG
       // log it
@@ -397,7 +383,7 @@ namespace eCAL
     // TCP
     ////////////////////////////////////////////////////////////////////////////
 #if ECAL_CORE_TRANSPORT_TCP
-    if (m_writer_tcp && m_config.tcp.enable)
+    if (m_writer_tcp)
     {
 #ifndef NDEBUG
       // log it
@@ -736,79 +722,88 @@ namespace eCAL
     }
   }
 
-  void CDataWriter::EnableUdpLayer(bool state_)
+  void CDataWriter::StartTransportLayer()
   {
 #if ECAL_CORE_TRANSPORT_UDP
-    m_config.udp.enable = state_;
-    if (!m_created) return;
-
-    // log state
-    LogLayerState(state_, "CDataWriter::ActivateUdpLayer::UDP_SENDMODE");
-
-    if (state_)
+    if (m_config.udp.enable)
     {
-      m_writer_udp = std::make_unique<CDataWriterUdpMC>(m_host_name, m_topic_name, m_topic_id, m_config.udp);
-#ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::ActivateUdpLayer::UDP_WRITER");
+      ActivateUdpLayer();
+    }
 #endif
-    }
-    else
+#if ECAL_CORE_TRANSPORT_SHM
+    if (m_config.shm.enable)
     {
-      m_writer_udp.reset();
+      ActivateShmLayer();
     }
-#else // ECAL_CORE_TRANSPORT_UDP
-    (void)state_;
+#endif
+#if ECAL_CORE_TRANSPORT_TCP
+    if (m_config.tcp.enable)
+    {
+      ActivateTcpLayer();
+    }
+#endif
+  }
+
+  void CDataWriter::StopTransportLayer()
+  {
+    // destroy udp writer
+#if ECAL_CORE_TRANSPORT_UDP
+    m_writer_udp.reset();
+#endif
+
+    // destroy shm writer
+#if ECAL_CORE_TRANSPORT_SHM
+    m_writer_shm.reset();
+#endif
+
+    // destroy tcp writer
+#if ECAL_CORE_TRANSPORT_TCP
+    m_writer_tcp.reset();
+#endif
+  }
+
+  void CDataWriter::ActivateUdpLayer()
+  {
+#if ECAL_CORE_TRANSPORT_UDP
+    // log state
+    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::ActivateUdpLayer::ACTIVATED");
+
+    // create writer
+    m_writer_udp = std::make_unique<CDataWriterUdpMC>(m_host_name, m_topic_name, m_topic_id, m_config.udp);
+
+#ifndef NDEBUG
+    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::ActivateUdpLayer::WRITER_CREATED");
+#endif
 #endif // ECAL_CORE_TRANSPORT_UDP
   }
 
-  void CDataWriter::EnableShmLayer(bool state_)
+  void CDataWriter::ActivateShmLayer()
   {
 #if ECAL_CORE_TRANSPORT_SHM
-    m_config.shm.enable = state_;
-    if (!m_created) return;
-
     // log state
-    LogLayerState(state_, "CDataWriter::ActivateShmLayer::SHM_SENDMODE");
+    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::ActivateShmLayer::ACTIVATED");
 
-    if (state_)
-    {
-      m_writer_shm = std::make_unique<CDataWriterSHM>(m_host_name, m_topic_name, m_topic_id, m_config.shm);
-      m_writer_shm->SetBufferCount(m_config.shm.memfile_buffer_count);
+    // create writer
+    m_writer_shm = std::make_unique<CDataWriterSHM>(m_host_name, m_topic_name, m_topic_id, m_config.shm);
+
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::ActivateShmLayer::SHM_WRITER");
+    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::ActivateShmLayer::WRITER_CREATED");
 #endif
-    }
-    else
-    {
-      m_writer_shm.reset();
-    }
-#else // ECAL_CORE_TRANSPORT_SHM
-    (void)state_;
 #endif // ECAL_CORE_TRANSPORT_SHM
   }
 
-  void CDataWriter::EnableTcpLayer(bool state_)
+  void CDataWriter::ActivateTcpLayer()
   {
 #if ECAL_CORE_TRANSPORT_TCP
-    m_config.tcp.enable = state_;
-    if (!m_created) return;
-
     // log state
-    LogLayerState(state_, "CDataWriter::ActivateTcpLayer::TCP_SENDMODE");
+    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::ActivateTcpLayer::ACTIVATED");
 
-    if (state_)
-    {
-      m_writer_tcp = std::make_unique<CDataWriterTCP>(m_host_name, m_topic_name, m_topic_id, m_config.tcp);
+    // create writer
+    m_writer_tcp = std::make_unique<CDataWriterTCP>(m_host_name, m_topic_name, m_topic_id, m_config.tcp);
+
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::ActivateTcpLayer::TCP_WRITER - SUCCESS");
+    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::ActivateTcpLayer::WRITER_CREATED");
 #endif
-    }
-    else
-    {
-      m_writer_tcp.reset();
-    }
-#else // ECAL_CORE_TRANSPORT_TCP
-    (void)state_;
 #endif // ECAL_CORE_TRANSPORT_TCP
   }
 
@@ -845,23 +840,6 @@ namespace eCAL
       }
     }
     return is_internal_only;
-  }
-
-  void CDataWriter::LogLayerState(bool state_, const std::string& base_msg_)
-  {
-#ifndef NDEBUG
-    if (state_)
-    {
-      Logging::Log(log_level_debug4, m_topic_name + "::" + base_msg_ + "::ON");
-    }
-    else
-    {
-      Logging::Log(log_level_debug4, m_topic_name + "::" + base_msg_ + "::OFF");
-    }
-#else
-    (void)state_;
-    (void)base_msg_;
-#endif
   }
 
   int32_t CDataWriter::GetFrequency()

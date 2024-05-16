@@ -125,13 +125,15 @@ namespace eCAL
     void Connect(const std::string& tid_, const SDataTypeInformation& tinfo_);
     void Disconnect();
 
-    void EnableUdpLayer(bool state_);
-    void EnableShmLayer(bool state_);
-    void EnableTcpLayer(bool state_);
+    void StartTransportLayer();
+    void StopTransportLayer();
+
+    void ActivateUdpLayer();
+    void ActivateShmLayer();
+    void ActivateTcpLayer();
 
     size_t PrepareWrite(long long id_, size_t len_);
     bool IsInternalSubscribedOnly();
-    void LogLayerState(bool state_, const std::string& base_msg_);
 
     int32_t GetFrequency();
 
