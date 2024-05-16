@@ -58,7 +58,7 @@ namespace eCAL
         ServiceOptions           service_options{};
         ApplicationOptions       application_options{};
         LoggingOptions           logging_options{};
-        ClArguments              command_line_arguments{};
+        CliArguments             command_line_arguments{};
         std::string              loaded_ecal_ini_file{};        
         
         ECAL_API eCALConfig(int argc_ , char **argv_);

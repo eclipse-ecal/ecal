@@ -230,6 +230,7 @@ namespace eCAL
       command_line_arguments.config_keys       = parser.getConfigKeys();
       command_line_arguments.specified_config  = parser.getUserIni();
       command_line_arguments.dump_config       = parser.getDumpConfig();
+      command_line_arguments.config_keys_map   = parser.getConfigKeysMap();
 
       InitConfig(command_line_arguments.specified_config);
     }
