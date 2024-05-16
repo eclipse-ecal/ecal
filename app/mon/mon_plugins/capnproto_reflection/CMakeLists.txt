@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -67,6 +67,8 @@ target_link_libraries (${PROJECT_NAME}
   eCAL::mon_plugin_lib
   MonitorTreeView
 )
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+
 target_link_options(${PROJECT_NAME} PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/ignore:4099>)
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)

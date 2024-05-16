@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -132,7 +132,7 @@ PluginWidget::~PluginWidget()
 
   {
     std::lock_guard<std::mutex> lock(proto_message_mutex_);
-    delete last_proto_message_;
+    last_proto_message_.reset();
   }
 }
 
@@ -256,19 +256,15 @@ void PluginWidget::setVisibleSplitterHandle(bool state)
 ////////////////////////////////////////////////////////////////////////////////
 
 // eCAL Callback
-void PluginWidget::onProtoMessageCallback(const google::protobuf::Message& message, long long send_time_usecs)
+void PluginWidget::onProtoMessageCallback(const std::shared_ptr<google::protobuf::Message>& message, long long send_time_usecs)
 {
 
   {
     // Lock the mutex
     std::lock_guard<std::mutex> lock(proto_message_mutex_);
 
-    // Delete the old message
-    delete last_proto_message_;
-
     // Create a copy of the new message as member variable. We cannot use a reference here, as this may cause a deadlock with the GUI thread
-    last_proto_message_ = message.New();
-    last_proto_message_->CopyFrom(message);
+    last_proto_message_ = message;
 
     last_message_publish_timestamp_ = eCAL::Time::ecal_clock::time_point(std::chrono::duration_cast<eCAL::Time::ecal_clock::duration>(std::chrono::microseconds(send_time_usecs)));
 
