@@ -1568,9 +1568,9 @@ bool IsRecorderBusy(bool print_status)
       std::cout << "Waiting for the following events:" << std::endl;
 
     bool still_busy = false;
-    still_busy = still_busy || IsAnyClientFlushing   (print_status);
-    still_busy = still_busy || IsAnyClientUploading  (print_status);
-    still_busy = still_busy || IsBuiltInFtpServerBusy(print_status);
+    still_busy = IsAnyClientFlushing   (print_status) || still_busy;
+    still_busy = IsAnyClientUploading  (print_status) || still_busy;
+    still_busy = IsBuiltInFtpServerBusy(print_status) || still_busy;
 
     if (print_status && !still_busy)
     {
