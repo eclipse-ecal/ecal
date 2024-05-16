@@ -26,9 +26,11 @@
 
 #include <gtest/gtest.h>
 
-#define CMN_REGISTRATION_REFRESH   1000
-#define DATA_FLOW_TIME               50
-#define PAYLOAD_SIZE               1024
+enum {
+  CMN_REGISTRATION_REFRESH_MS = 1000,
+  DATA_FLOW_TIME_MS = 50,
+  PAYLOAD_SIZE_BYTE = 1024
+};
 
 // a binary payload object for testing
 // full (WriteFull) and partial (WriteModified) writing
@@ -65,204 +67,172 @@ private:
   int    clock = 0;
 };
 
-#if 0  // reactivate this if SetLayerMode, ShmEnableZeroCopy, ShmSetBufferCount API is implemented again
-TEST(PubSub, MultibufferPubSub)
-{ 
+std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int publications, int bytes_to_read)
+{
   // create payload
-  CBinaryPayload binary_payload(PAYLOAD_SIZE);
-
-  // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
+  CBinaryPayload binary_payload(PAYLOAD_SIZE_BYTE);
 
   // create subscriber for topic "A"
   eCAL::CSubscriber sub("A");
 
+  // create publisher config
+  eCAL::Publisher::Configuration pub_config;
+  // set transport layer
+  pub_config.shm.enable = true;
+  pub_config.udp.enable = false;
+  pub_config.tcp.enable = false;
+  // set zero copy mode
+  pub_config.shm.zero_copy_mode = zero_copy;
+  // set number of memory buffer
+  pub_config.shm.memfile_buffer_count = buffer_count;
+
   // create publisher for topic "A"
-  eCAL::CPublisher pub("A");
-  //pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);  // TODO: NEW PARAMETER API
-  //pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);  // TODO: NEW PARAMETER API
+  eCAL::CPublisher pub("A", pub_config);
 
   std::atomic<size_t> received_count{ 0 };
   std::atomic<size_t> received_bytes{ 0 };
   std::vector<char>   received_content;
 
   // add callback
-  auto lambda = [&received_count, &received_bytes, &received_content](const char* /*topic_name_*/, const eCAL::SReceiveCallbackData* data_) {
+  auto lambda = [&](const char* /*topic_name_*/, const eCAL::SReceiveCallbackData* data_) {
     received_bytes += data_->size;
     ++received_count;
-    for (auto i = 0; i < 10; ++i)
+    for (auto i = 0; i < bytes_to_read; ++i)
     {
       const char rec_char(static_cast<const char*>(data_->buf)[i]);
       received_content.push_back(rec_char);
       std::cout << std::setw(2) << std::setfill('0') << static_cast<int>(rec_char) << " ";
     }
     std::cout << std::endl;
-  };
+    };
   EXPECT_EQ(true, sub.AddReceiveCallback(lambda));
 
-  const int iterations(11);
-  int rec_char_sum(0);
-
-  //////////////////////////////////////////////////////////
-  // one buffer, no zero copy / PARTIAL WRITING DISABLED
-  //////////////////////////////////////////////////////////
-  // expected output:
-  // 42 42 42 42 42 42 42 42 42 42    < full initial write
-  // 42 42 42 42 42 42 42 42 42 42    < full write
-  // 42 42 42 42 42 42 42 42 42 42    < ..
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-
-  std::cout << std::endl << "Buffer = 1, Zero Copy Off -> partial writing disabled" << std::endl;
-  binary_payload.ResetClock();
-  received_content.clear();
-  //pub.ShmSetBufferCount(1);  // TODO: NEW PARAMETER API
-  //pub.ShmEnableZeroCopy(false);  // TODO: NEW PARAMETER API
-
   // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
-  // run 11 iterations (11 full writes)
-  for (int i = 0; i < iterations; ++i)
+  // run publications
+  for (int i = 0; i < publications; ++i)
   {
-    EXPECT_EQ(PAYLOAD_SIZE, pub.Send(binary_payload));
-    eCAL::Process::SleepMS(DATA_FLOW_TIME);
+    EXPECT_EQ(PAYLOAD_SIZE_BYTE, pub.Send(binary_payload));
+    eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
+  }
+
+  return received_content;
+}
+
+TEST(core_cpp_pubsub, MultibufferPubSub)
+{
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "pubsub_test");
+
+  // publish / subscribe match in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  // number of iterations
+  const int publications(11);
+  const int bytes_to_read(10);
+
+  {
+    std::cout << std::endl << "Buffer = 1, Zero Copy Off -> partial writing disabled" << std::endl;
+    //////////////////////////////////////////////////////////
+    // one buffer, no zero copy / PARTIAL WRITING DISABLED
+    //////////////////////////////////////////////////////////
+    // expected output:
+    // 42 42 42 42 42 42 42 42 42 42    < full initial write
+    // 42 42 42 42 42 42 42 42 42 42    < full write
+    // 42 42 42 42 42 42 42 42 42 42    < ..
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    auto received_content = multibuffer_pub_sub_test(1, false, publications, bytes_to_read);
+    // check receive content
+    // one buffer, no zero copy
+    // we expect 11 full writes == 11 * 10 * 42 == 4620
+    auto rec_char_sum = std::accumulate(received_content.begin(), received_content.end(), 0);
+    EXPECT_EQ(publications * bytes_to_read * 42, rec_char_sum);
+  }
+
+  {
+    std::cout << std::endl << "Buffer = 2, Zero Copy Off -> partial writing disabled" << std::endl;
+    //////////////////////////////////////////////////////////
+    // two buffer, no zero copy / PARTIAL WRITING DISABLED
+    //////////////////////////////////////////////////////////
+    // expected output:
+    // 42 42 42 42 42 42 42 42 42 42    < full initial write
+    // 42 42 42 42 42 42 42 42 42 42    < full write
+    // 42 42 42 42 42 42 42 42 42 42    < ..
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    auto received_content = multibuffer_pub_sub_test(2, false, publications, bytes_to_read);
+    // check receive content
+    // two buffer, no zero copy
+    // we expect 11 full writes == 11 * 10 * 42 == 4620
+    auto rec_char_sum = std::accumulate(received_content.begin(), received_content.end(), 0);
+    EXPECT_EQ(publications * bytes_to_read * 42, rec_char_sum);
+  }
+
+  {
+    std::cout << std::endl << "Buffer = 2, Zero Copy On -> partial writing disabled" << std::endl;
+    //////////////////////////////////////////////////////////
+    // two buffer, zero copy on / PARTIAL WRITING DISABLED
+    //////////////////////////////////////////////////////////
+    // expected output:
+    // 42 42 42 42 42 42 42 42 42 42    < full initial write
+    // 42 42 42 42 42 42 42 42 42 42    < full write
+    // 42 42 42 42 42 42 42 42 42 42    < ..
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    // 42 42 42 42 42 42 42 42 42 42
+    auto received_content = multibuffer_pub_sub_test(2, true, publications, bytes_to_read);
+    // check receive content
+    // two buffer, zero copy on
+    // we expect 11 full writes == 11 * 10 * 42 == 4620
+    auto rec_char_sum = std::accumulate(received_content.begin(), received_content.end(), 0);
+    EXPECT_EQ(11 * 10 * 42, rec_char_sum);
+  }
+
+  {
+    std::cout << std::endl << "Buffer = 1, Zero Copy On -> partial writing enabled" << std::endl;
+    //////////////////////////////////////////////////////////
+    // one buffer, zero copy on / PARTIAL WRITING ENABLED
+    //////////////////////////////////////////////////////////
+    // expected output:
+    // 42 42 42 42 42 42 42 42 42 42    < full initial write
+    // 00 42 42 42 42 42 42 42 42 42    < 1. partial write
+    // 00 01 42 42 42 42 42 42 42 42    < 2. partial write
+    // 00 01 02 42 42 42 42 42 42 42    < ..
+    // 00 01 02 03 42 42 42 42 42 42
+    // 00 01 02 03 04 42 42 42 42 42
+    // 00 01 02 03 04 05 42 42 42 42
+    // 00 01 02 03 04 05 06 42 42 42
+    // 00 01 02 03 04 05 06 07 42 42
+    // 00 01 02 03 04 05 06 07 08 42
+    // 00 01 02 03 04 05 06 07 08 09
+    auto received_content = multibuffer_pub_sub_test(1, true, publications, bytes_to_read);
+    // check receive content
+    // one buffer, zero copy on
+    // we expect 1 full write + 10 updates == 2475
+    auto rec_char_sum = std::accumulate(received_content.begin(), received_content.end(), 0);
+    EXPECT_EQ(2475, rec_char_sum);
   }
   std::cout << std::endl;
-
-  // check receive content
-  // one buffer, no zero copy
-  // we expect 11 full writes == 11 * 10 * 42 == 4620
-  rec_char_sum = std::accumulate(received_content.begin(), received_content.end(), 0);
-  EXPECT_EQ(11 * 10 * 42, rec_char_sum);
-
-  //////////////////////////////////////////////////////////
-  // two buffer, no zero copy / PARTIAL WRITING DISABLED
-  //////////////////////////////////////////////////////////
-  // expected output:
-  // 42 42 42 42 42 42 42 42 42 42    < full initial write
-  // 42 42 42 42 42 42 42 42 42 42    < full write
-  // 42 42 42 42 42 42 42 42 42 42    < ..
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-
-  std::cout << std::endl << "Buffer = 2, Zero Copy Off -> partial writing disabled" << std::endl;
-  binary_payload.ResetClock();
-  received_content.clear();
-  //pub.ShmSetBufferCount(2);  // TODO: NEW PARAMETER API
-  //pub.ShmEnableZeroCopy(false);  // TODO: NEW PARAMETER API
-
-  // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
-
-  // run 11 iterations (11 full writes)
-  for (int i = 0; i < iterations; ++i)
-  {
-    EXPECT_EQ(PAYLOAD_SIZE, pub.Send(binary_payload));
-    eCAL::Process::SleepMS(DATA_FLOW_TIME);
-  }
-  std::cout << std::endl;
-
-  // check receive content
-  // two buffer, no zero copy
-  // we expect 11 full writes == 11 * 10 * 42 == 4620
-  rec_char_sum = std::accumulate(received_content.begin(), received_content.end(), 0);
-  EXPECT_EQ(11 * 10 * 42, rec_char_sum);
-
-  //////////////////////////////////////////////////////////
-  // two buffer, zero copy on / PARTIAL WRITING DISABLED
-  //////////////////////////////////////////////////////////
-  // expected output:
-  // 42 42 42 42 42 42 42 42 42 42    < full initial write
-  // 42 42 42 42 42 42 42 42 42 42    < full write
-  // 42 42 42 42 42 42 42 42 42 42    < ..
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-  // 42 42 42 42 42 42 42 42 42 42
-
-  std::cout << std::endl << "Buffer = 2, Zero Copy On -> partial writing disabled" << std::endl;
-  binary_payload.ResetClock();
-  received_content.clear();
-  //pub.ShmSetBufferCount(2);  // TODO: NEW PARAMETER API
-  //pub.ShmEnableZeroCopy(true);  // TODO: NEW PARAMETER API
-
-  // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
-
-  // run 11 iterations (11 full writes)
-  for (int i = 0; i < iterations; ++i)
-  {
-    EXPECT_EQ(PAYLOAD_SIZE, pub.Send(binary_payload));
-    eCAL::Process::SleepMS(DATA_FLOW_TIME);
-  }
-  std::cout << std::endl;
-
-  // check receive content
-  // two buffer, zero copy on
-  // we expect 11 full writes == 11 * 10 * 42 == 4620
-  rec_char_sum = std::accumulate(received_content.begin(), received_content.end(), 0);
-  EXPECT_EQ(11 * 10 * 42, rec_char_sum);
-
-  //////////////////////////////////////////////////////////
-  // one buffer, zero copy on / PARTIAL WRITING ENABLED
-  //////////////////////////////////////////////////////////
-  // expected output:
-  // 42 42 42 42 42 42 42 42 42 42    < full initial write
-  // 00 42 42 42 42 42 42 42 42 42    < 1. partial write
-  // 00 01 42 42 42 42 42 42 42 42    < 2. partial write
-  // 00 01 02 42 42 42 42 42 42 42    < ..
-  // 00 01 02 03 42 42 42 42 42 42
-  // 00 01 02 03 04 42 42 42 42 42
-  // 00 01 02 03 04 05 42 42 42 42
-  // 00 01 02 03 04 05 06 42 42 42
-  // 00 01 02 03 04 05 06 07 42 42
-  // 00 01 02 03 04 05 06 07 08 42
-  // 00 01 02 03 04 05 06 07 08 09
-
-  std::cout << std::endl << "Buffer = 1, Zero Copy On -> partial writing enabled" << std::endl;
-  binary_payload.ResetClock();
-  received_content.clear();
-  //pub.ShmSetBufferCount(1);  // TODO: NEW PARAMETER API
-  //pub.ShmEnableZeroCopy(true);  // TODO: NEW PARAMETER API
-
-  // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
-
-  // run 11 iterations (1 full write, 10 updates)
-  for (int i = 0; i < iterations; ++i)
-  {
-    EXPECT_EQ(PAYLOAD_SIZE, pub.Send(binary_payload));
-    eCAL::Process::SleepMS(DATA_FLOW_TIME);
-  }
-  std::cout << std::endl;
-
-  // check receive content
-  // one buffer, zero copy on
-  // we expect 1 full write + 10 updates == 2475
-  rec_char_sum = std::accumulate(received_content.begin(), received_content.end(), 0);
-  EXPECT_EQ(2475, rec_char_sum);
 
   // finalize eCAL API
   eCAL::Finalize();
 }
-#endif

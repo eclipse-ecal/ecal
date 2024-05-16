@@ -85,11 +85,9 @@ namespace eCAL
   /**
    * @brief Finalize eCAL API.
    *
-   * @param components_  Defines which component to finalize (not yet supported).
-   *
    * @return Zero if succeeded, 1 if already finalized, -1 if failed.
   **/
-  ECAL_API int Finalize(unsigned int components_ = Init::Default);
+  ECAL_API int Finalize();
 
   /**
    * @brief Check eCAL initialize state.

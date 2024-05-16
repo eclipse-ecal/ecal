@@ -60,9 +60,8 @@ namespace eCAL
 
     ~CServiceServerImpl();
 
-    bool Create(const std::string& service_name_);
-
-    bool Destroy();
+    bool Start(const std::string& service_name_);
+    bool Stop();
 
     bool AddDescription(const std::string& method_, const SDataTypeInformation& request_type_information_, const SDataTypeInformation& response_type_information_);
       

@@ -202,14 +202,14 @@ namespace eCAL
     const int          process_id = sample_topic.pid;
     const std::string& topic_name = sample_topic.tname;
     const int32_t      topic_size = sample_topic.tsize;
-    bool               topic_tlayer_ecal_udp_mc(false);
+    bool               topic_tlayer_ecal_udp(false);
     bool               topic_tlayer_ecal_shm(false);
     bool               topic_tlayer_ecal_tcp(false);
     for (const auto& layer : sample_topic.tlayer)
     {
-      topic_tlayer_ecal_udp_mc    |= (layer.type == tl_ecal_udp_mc)    && layer.confirmed;
-      topic_tlayer_ecal_shm       |= (layer.type == tl_ecal_shm)       && layer.confirmed;
-      topic_tlayer_ecal_tcp       |= (layer.type == tl_ecal_tcp)       && layer.confirmed;
+      topic_tlayer_ecal_udp |= (layer.type == tl_ecal_udp) && layer.confirmed;
+      topic_tlayer_ecal_shm |= (layer.type == tl_ecal_shm) && layer.confirmed;
+      topic_tlayer_ecal_tcp |= (layer.type == tl_ecal_tcp) && layer.confirmed;
     }
     const int32_t      connections_loc = sample_topic.connections_loc;
     const int32_t      connections_ext = sample_topic.connections_ext;
@@ -306,7 +306,7 @@ namespace eCAL
       {
         eCAL::Monitoring::TLayer tlayer;
         tlayer.type      = eCAL::Monitoring::tl_ecal_udp_mc;
-        tlayer.confirmed = topic_tlayer_ecal_udp_mc;
+        tlayer.confirmed = topic_tlayer_ecal_udp;
         TopicInfo.tlayer.push_back(tlayer);
       }
       // tlayer shm

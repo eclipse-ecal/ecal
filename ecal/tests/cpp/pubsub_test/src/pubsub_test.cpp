@@ -26,28 +26,33 @@
 
 #include <gtest/gtest.h>
 
-#define CMN_REGISTRATION_REFRESH   1000
-#define DATA_FLOW_TIME               50
-#define PAYLOAD_SIZE               1024
+enum {
+  CMN_REGISTRATION_REFRESH_MS = 1000,
+  DATA_FLOW_TIME_MS = 50,
+  PAYLOAD_SIZE_BYTE = 1024
+};
 
-// subscriber callback function
-std::atomic<size_t> g_callback_received_bytes;
-std::atomic<size_t> g_callback_received_count;
-void OnReceive(const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_)
+namespace
 {
-  g_callback_received_bytes += data_->size;
-  g_callback_received_count++;
-}
-
-static std::string CreatePayLoad(size_t payload_size_)
-{
-  std::string s = "Hello World ";
-  while(s.size() < payload_size_)
+  // subscriber callback function
+  std::atomic<size_t> g_callback_received_bytes;
+  std::atomic<size_t> g_callback_received_count;
+  void OnReceive(const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_)
   {
-    s += s;
+    g_callback_received_bytes += data_->size;
+    g_callback_received_count++;
   }
-  s.resize(payload_size_);
-  return(s);
+
+  std::string CreatePayLoad(size_t payload_size_)
+  {
+    std::string s = "Hello World ";
+    while(s.size() < payload_size_)
+    {
+      s += s;
+    }
+    s.resize(payload_size_);
+    return(s);
+  }
 }
 
 TEST(core_cpp_pubsub, LeakedPubSub)
@@ -66,7 +71,7 @@ TEST(core_cpp_pubsub, LeakedPubSub)
   eCAL::CPublisher pub("foo");
 
   // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // start publishing thread
   std::atomic<bool> pub_stop(false);
@@ -198,7 +203,7 @@ TEST(core_cpp_pubsub, CreateDestroy)
 TEST(core_cpp_pubsub, SimpleMessage1)
 { 
   // default send / receive strings
-  std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
+  const std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
   std::string recv_s;
 
   // initialize eCAL API
@@ -214,20 +219,20 @@ TEST(core_cpp_pubsub, SimpleMessage1)
   eCAL::CSubscriber sub("foo");
 
   // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // send content
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
-  // receive content with DATA_FLOW_TIME ms timeout
+  // receive content with DATA_FLOW_TIME_MS timeout
   recv_s.clear();
-  EXPECT_EQ(true, sub.ReceiveBuffer(recv_s, nullptr, DATA_FLOW_TIME));
+  EXPECT_EQ(true, sub.ReceiveBuffer(recv_s, nullptr, DATA_FLOW_TIME_MS));
   EXPECT_EQ(send_s.size(), recv_s.size());
 
-  // receive content with DATA_FLOW_TIME ms timeout
+  // receive content with DATA_FLOW_TIME_MS timeout
   // should return because no new publishing
   recv_s.clear();
-  EXPECT_EQ(false, sub.ReceiveBuffer(recv_s, nullptr, DATA_FLOW_TIME));
+  EXPECT_EQ(false, sub.ReceiveBuffer(recv_s, nullptr, DATA_FLOW_TIME_MS));
   EXPECT_EQ(0, recv_s.size());
 
   // destroy publisher
@@ -243,7 +248,7 @@ TEST(core_cpp_pubsub, SimpleMessage1)
 TEST(core_cpp_pubsub, SimpleMessage2)
 { 
   // default send / receive strings
-  std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
+  const std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
   std::string recv_s;
 
   // initialize eCAL API
@@ -259,14 +264,14 @@ TEST(core_cpp_pubsub, SimpleMessage2)
   eCAL::CPublisher pub("foo");
 
   // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // send content
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
-  // receive content with DATA_FLOW_TIME ms timeout
+  // receive content with DATA_FLOW_TIME_MS timeout
   recv_s.clear();
-  EXPECT_EQ(true, sub.ReceiveBuffer(recv_s, nullptr, DATA_FLOW_TIME));
+  EXPECT_EQ(true, sub.ReceiveBuffer(recv_s, nullptr, DATA_FLOW_TIME_MS));
   EXPECT_EQ(send_s.size(), recv_s.size());
 
   // destroy publisher
@@ -282,7 +287,7 @@ TEST(core_cpp_pubsub, SimpleMessage2)
 TEST(core_cpp_pubsub, SimpleMessageCB)
 { 
   // default send string
-  std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
+  const std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
@@ -300,14 +305,14 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
   EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
 
   // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // send content
   g_callback_received_bytes = 0;
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // let the data flow
-  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+  eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive
   EXPECT_EQ(send_s.size(), g_callback_received_bytes);
@@ -320,7 +325,7 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // let the data flow
-  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+  eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive
   EXPECT_EQ(0, g_callback_received_bytes);
@@ -333,7 +338,7 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // let the data flow
-  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+  eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive
   EXPECT_EQ(send_s.size(), g_callback_received_bytes);
@@ -346,7 +351,7 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // let the data flow
-  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+  eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive
   EXPECT_EQ(0, g_callback_received_bytes);
@@ -361,7 +366,7 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
 TEST(core_cpp_pubsub, DynamicSizeCB)
 { 
   // default send string
-  std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
+  std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
@@ -379,27 +384,27 @@ TEST(core_cpp_pubsub, DynamicSizeCB)
   EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
 
   // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // send content
   g_callback_received_bytes = 0;
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // let the data flow
-  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+  eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive
   EXPECT_EQ(send_s.size(), g_callback_received_bytes);
 
   // increase payload size
-  send_s = CreatePayLoad(PAYLOAD_SIZE*10);
+  send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE*10);
 
   // send content
   g_callback_received_bytes = 0;
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // let the data flow
-  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+  eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive
   EXPECT_EQ(send_s.size(), g_callback_received_bytes);
@@ -417,7 +422,7 @@ TEST(core_cpp_pubsub, DynamicSizeCB)
 TEST(core_cpp_pubsub, DynamicCreate)
 { 
   // default send string
-  std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
+  const std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
@@ -437,14 +442,14 @@ TEST(core_cpp_pubsub, DynamicCreate)
   EXPECT_EQ(true, sub->AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
 
   // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // send content
   g_callback_received_bytes = 0;
   EXPECT_EQ(send_s.size(), pub->Send(send_s));
 
   // let the data flow
-  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+  eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive
   EXPECT_EQ(send_s.size(), g_callback_received_bytes);
@@ -460,14 +465,14 @@ TEST(core_cpp_pubsub, DynamicCreate)
   EXPECT_EQ(true, sub->AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
 
   // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // send content
   g_callback_received_bytes = 0;
   EXPECT_EQ(send_s.size(), pub->Send(send_s));
 
   // let the data flow
-  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+  eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive
   EXPECT_EQ(send_s.size(), g_callback_received_bytes);
@@ -482,14 +487,14 @@ TEST(core_cpp_pubsub, DynamicCreate)
   EXPECT_EQ(true, sub->AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
 
   // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // send content
   g_callback_received_bytes = 0;
   EXPECT_EQ(send_s.size(), pub->Send(send_s));
 
   // let the data flow
-  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+  eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive
   EXPECT_EQ(send_s.size(), g_callback_received_bytes);
@@ -501,101 +506,6 @@ TEST(core_cpp_pubsub, DynamicCreate)
   // destroy subscriber
   delete sub;
   sub = nullptr;
-
-  // finalize eCAL API
-  eCAL::Finalize();
-}
-
-TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
-{
-  // default send string
-  std::string send_s;
-
-  // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
-
-  // create subscriber for topic "foo"
-  eCAL::CSubscriber sub("foo");
-
-  // create publisher for topic "foo"
-  eCAL::CPublisher pub("foo");
-
-  // add callback
-  EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
-
-  // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
-
-  g_callback_received_bytes = 0;
-  g_callback_received_count = 0;
-
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
-  eCAL::Process::SleepMS(DATA_FLOW_TIME);
-
-  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
-  eCAL::Process::SleepMS(DATA_FLOW_TIME);
-
-  // check callback receive
-  EXPECT_EQ(send_s.size(), g_callback_received_bytes);
-  EXPECT_EQ(2,             g_callback_received_count);
-
-  // destroy subscriber
-  sub.Destroy();
-
-  // destroy publisher
-  pub.Destroy();
-
-  // finalize eCAL API
-  eCAL::Finalize();
-}
-
-TEST(core_cpp_pubsub, MultipleSendsUDP)
-{
-  // default send string
-  std::vector<std::string> send_vector{ "this", "is", "a", "", "testtest" };
-  std::string last_received_msg;
-  long long   last_received_timestamp;
-
-  // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
-
-  // create subscriber for topic "foo"
-  eCAL::string::CSubscriber<std::string> sub("foo");
-
-  // create publisher for topic "foo"
-  eCAL::string::CPublisher<std::string> pub("foo");
-
-  // add callback
-  auto save_data = [&last_received_msg, &last_received_timestamp](const char* /*topic_name_*/, const std::string& msg_, long long time_, long long /*clock_*/, long long /*id_*/)
-  {
-    last_received_msg = msg_;
-    last_received_timestamp = time_;
-  };
-  EXPECT_TRUE(sub.AddReceiveCallback(save_data));
-
-  // let's match them
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
-  long long timestamp = 1;
-  for (const auto& elem : send_vector)
-  {
-    pub.Send(elem, timestamp);
-    eCAL::Process::SleepMS(DATA_FLOW_TIME);
-    EXPECT_EQ(last_received_msg, elem);
-    EXPECT_EQ(last_received_timestamp, timestamp);
-    ++timestamp;
-  }
-
-  // destroy subscriber
-  sub.Destroy();
-
-  // destroy publisher
-  pub.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();

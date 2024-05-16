@@ -29,6 +29,7 @@
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_payload_writer.h>
+#include <ecal/ecal_publisher_config.h>
 #include <ecal/ecal_types.h>
 
 #include <chrono>
@@ -69,7 +70,6 @@ namespace eCAL
   class CPublisher
   {
   public:
-
     ECAL_API static constexpr long long DEFAULT_TIME_ARGUMENT = -1;  /*!< Use DEFAULT_TIME_ARGUMENT in the `Send()` function to let eCAL determine the send timestamp */
 
     /**
@@ -80,17 +80,19 @@ namespace eCAL
     /**
      * @brief Constructor.
      *
-     * @param topic_name_   Unique topic name.
-     * @param topic_info_   Topic information (encoding, type, descriptor)
+     * @param topic_name_      Unique topic name.
+     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
+     * @param config_          Optional configuration parameters.
     **/
-    ECAL_API CPublisher(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
+    ECAL_API CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = {});
 
     /**
      * @brief Constructor.
      *
      * @param topic_name_   Unique topic name.
+     * @param config_       Optional configuration parameters.
     **/
-    ECAL_API explicit CPublisher(const std::string& topic_name_);
+    ECAL_API explicit CPublisher(const std::string& topic_name_, const Publisher::Configuration& config_ = {});
 
     /**
      * @brief Destructor. 
@@ -120,12 +122,13 @@ namespace eCAL
     /**
      * @brief Creates this object.
      *
-     * @param topic_name_   Unique topic name.
-     * @param topic_info_   Topic information (encoding, type, descriptor)
+     * @param topic_name_      Unique topic name.
+     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
+     * @param config_          Optional configuration parameters.
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_API bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
+    ECAL_API bool Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = {});
 
     /**
      * @brief Creates this object.
@@ -146,11 +149,11 @@ namespace eCAL
     /**
      * @brief Setup topic information.
      *
-     * @param topic_info_  Topic information attributes.
+     * @param data_type_info_  Topic data type information attributes.
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_API bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
+    ECAL_API bool SetDataTypeInformation(const SDataTypeInformation& data_type_info_);
 
     /**
      * @brief Sets publisher attribute. 
@@ -171,24 +174,6 @@ namespace eCAL
      * @experimental
     **/
     ECAL_API bool ClearAttribute(const std::string& attr_name_);
-
-    /**
-     * @brief Share topic type.
-     *
-     * @param state_  Set type share mode (true == share type).
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    ECAL_API bool ShareType(bool state_ = true);
-
-    /**
-     * @brief Share topic description.
-     *
-     * @param state_  Set description share mode (true == share description).
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    ECAL_API bool ShareDescription(bool state_ = true);
 
     /**
      * @brief Set the specific topic id.
@@ -295,9 +280,8 @@ namespace eCAL
 
   protected:
     // class members
-    std::shared_ptr<CDataWriter>     m_datawriter;
-    long long                        m_id;
-    bool                             m_created;
-    bool                             m_initialized;
+    std::shared_ptr<CDataWriter> m_datawriter;
+    long long                    m_id;
+    bool                         m_created;
   };
 }

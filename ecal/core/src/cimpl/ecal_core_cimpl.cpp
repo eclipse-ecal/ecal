@@ -56,9 +56,9 @@ extern "C"
     return(eCAL::SetUnitName(unit_name_));
   }
 
-  ECALC_API int eCAL_Finalize(unsigned int components_)
+  ECALC_API int eCAL_Finalize()
   {
-    return(eCAL::Finalize(components_));
+    return(eCAL::Finalize());
   }
 
   ECALC_API int eCAL_IsInitialized(unsigned int component_)

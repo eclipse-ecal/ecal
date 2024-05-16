@@ -89,22 +89,6 @@ extern "C"
     return(0);
   }
 
-  ECALC_API int eCAL_Pub_ShareType(ECAL_HANDLE handle_, int state_)
-  {
-    if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::CPublisher*>(handle_);
-    pub->ShareType(state_ != 0);
-    return(1);
-  }
-
-  ECALC_API int eCAL_Pub_ShareDescription(ECAL_HANDLE handle_, int state_)
-  {
-    if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::CPublisher*>(handle_);
-    pub->ShareDescription(state_ != 0);
-    return(1);
-  }
-
   ECALC_API int eCAL_Pub_SetID(ECAL_HANDLE handle_, long long id_)
   {
     if (handle_ == nullptr) return(0);

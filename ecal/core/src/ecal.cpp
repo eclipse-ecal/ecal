@@ -244,16 +244,14 @@ namespace eCAL
   /**
    * @brief Finalize eCAL API.
    *
-   * @param components_  Defines which component to finalize.
-   *
    * @return Zero if succeeded, 1 if already finalized, -1 if failed.
   **/
-  int Finalize(unsigned int components_)
+  int Finalize()
   {
     if (g_globals_ctx == nullptr) return 1;
     g_globals_ctx_ref_cnt--;
     if (g_globals_ctx_ref_cnt > 0) return 0;
-    int const ret = g_globals()->Finalize(components_);
+    int const ret = g_globals()->Finalize();
     delete g_globals_ctx;
     g_globals_ctx = nullptr;
     return(ret);
