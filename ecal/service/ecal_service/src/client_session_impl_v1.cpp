@@ -108,22 +108,22 @@ namespace eCAL
       const asio::ip::tcp::resolver::query query(server_list_[server_list_index].first, std::to_string(server_list_[server_list_index].second));
 
       resolver_.async_resolve(query
-                            , service_call_queue_strand_.wrap([me = enable_shared_from_this<ClientSessionV1>::shared_from_this(), server_list_index]
+                            , service_call_queue_strand_.wrap([me = enable_shared_from_this<ClientSessionV1>::shared_from_this(), server_list_index_copy = server_list_index]
                               (asio::error_code ec, const asio::ip::tcp::resolver::iterator& resolved_endpoints)
                               {
                                 if (ec)
                                 {
 #if ECAL_SERVICE_LOG_DEBUG_ENABLED
                                   {
-                                    const std::string message = "Failed resolving endpoint [" + me->server_list_[server_list_index].first + ":" + std::to_string(me->server_list_[server_list_index].second) + "]: " + ec.message();
+                                    const std::string message = "Failed resolving endpoint [" + me->server_list_[server_list_index_copy].first + ":" + std::to_string(me->server_list_[server_list_index_copy].second) + "]: " + ec.message();
                                     ECAL_SERVICE_LOG_DEBUG(me->logger_, message);
                                   } 
 #endif
 
-                                  if (server_list_index + 1 < me->server_list_.size())
+                                  if (server_list_index_copy + 1 < me->server_list_.size())
                                   {
                                     // Try next possible endpoint
-                                    me->resolve_endpoint(server_list_index + 1);
+                                    me->resolve_endpoint(server_list_index_copy + 1);
                                   }
                                   else
                                   {
@@ -146,7 +146,7 @@ namespace eCAL
 #if ECAL_SERVICE_LOG_DEBUG_VERBOSE_ENABLED
                                   // Verbose-debug log of all endpoints
                                   {
-                                    std::string endpoints_str = "Resolved endpoints for " + me->server_list_[server_list_index].first + ": ";
+                                    std::string endpoints_str = "Resolved endpoints for " + me->server_list_[server_list_index_copy].first + ": ";
                                     for (auto it = resolved_endpoints; it != asio::ip::tcp::resolver::iterator(); ++it)
                                     {
                                       endpoints_str += endpoint_to_string(*it) + ", ";
@@ -154,7 +154,7 @@ namespace eCAL
                                     ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, endpoints_str);
                                   }
 #endif //ECAL_SERVICE_LOG_DEBUG_VERBOSE_ENABLED
-                                  me->connect_to_endpoint(resolved_endpoints, server_list_index);
+                                  me->connect_to_endpoint(resolved_endpoints, server_list_index_copy);
                                 }
                               }));
     }

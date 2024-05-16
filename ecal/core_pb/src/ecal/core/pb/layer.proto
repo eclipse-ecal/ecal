@@ -47,7 +47,8 @@ message ConnnectionPar                          // connection parameter for read
 
 enum eTLayerType                                // transport layer
 {
-  reserved 2, 3, 42;
+  // Reserved fields in enums are not supported in protobuf 3.0
+  // reserved 2, 3, 42;
 
   tl_none                             =   0;    // undefined
   tl_ecal_udp_mc                      =   1;    // ecal udp multicast

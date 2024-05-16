@@ -57,14 +57,21 @@ QVector<int> QMulticolumnSortFilterProxyModel::filterKeyColumns() const
 
 bool QMulticolumnSortFilterProxyModel::filterDirectAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
-  QRegularExpression const filter_regexp = filterRegularExpression();
+  // Qt 5 uses the deprecated QRegExp by default when setting a FilterFixedString. The QRegularExpression is then empty
+  //      QRegularExpression didn't even exist in Qt 5.11 and earlier
+  // Qt 6 sets the QRegularExpression (QRegExp does not exist anymore) when setting a FilterFixedString.
 
-  for (int column : filter_columns_)
+#if QT_VERSION < QT_VERSION_CHECK(5, 12, 0)
+  // For Qt5.11 there only exists the RegExp, so we need to check the QRegExp
+
+  QRegExp const filter_regexp = filterRegExp();
+
+  for (const int column : filter_columns_)
   {
-    QModelIndex index = sourceModel()->index(source_row, column, source_parent);
+    const QModelIndex index = sourceModel()->index(source_row, column, source_parent);
     if (index.isValid())
     {
-      QString data = sourceModel()->data(index, filterRole()).toString();
+      const QString data = sourceModel()->data(index, filterRole()).toString();
       if (data.contains(filter_regexp))
       {
         return true;
@@ -72,6 +79,65 @@ bool QMulticolumnSortFilterProxyModel::filterDirectAcceptsRow(int source_row, co
     }
   }
   return false;
+
+#elif QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+  // For Qt5.12 - 5.15 (i.e. pre-Qt6) we need to check the QRegExp and the QRegularExpression
+  QRegExp const filter_regexp = filterRegExp();
+
+  if (!filter_regexp.isEmpty())
+  {
+    // Use QRegExp
+    for (const int column : filter_columns_)
+    {
+      const QModelIndex index = sourceModel()->index(source_row, column, source_parent);
+      if (index.isValid())
+      {
+        const QString data = sourceModel()->data(index, filterRole()).toString();
+        if (data.contains(filter_regexp))
+        {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  else
+  {
+    // Use QRegularExpression, as QRegExp is empty
+    QRegularExpression const filter_regularexpression = filterRegularExpression();
+
+    for (const int column : filter_columns_)
+    {
+      const QModelIndex index = sourceModel()->index(source_row, column, source_parent);
+      if (index.isValid())
+      {
+        const QString data = sourceModel()->data(index, filterRole()).toString();
+        if (data.contains(filter_regularexpression))
+        {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+#else
+  // For Qt6 we only need to check the QRegularExpression
+  QRegularExpression const filter_regularexpression = filterRegularExpression();
+
+  for (const int column : filter_columns_)
+  {
+    const QModelIndex index = sourceModel()->index(source_row, column, source_parent);
+    if (index.isValid())
+    {
+      const QString data = sourceModel()->data(index, filterRole()).toString();
+      if (data.contains(filter_regularexpression))
+      {
+        return true;
+      }
+    }
+  }
+  return false;
+#endif
 }
 
 ////////////////////////////////////////////
