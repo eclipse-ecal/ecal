@@ -373,10 +373,10 @@ bool WaitForShutdownDialog::updateAllFields()
   auto job_history = QEcalRec::instance()->jobHistory();
 
   bool safe_to_exit = true;
-  safe_to_exit = safe_to_exit && updateWaitForFlushing();
-  safe_to_exit = safe_to_exit && updateBuiltInRecorderUploading(job_history);
-  safe_to_exit = safe_to_exit && updateBuiltInFtpServer();
-  safe_to_exit = safe_to_exit && updateNonUploadedMeasurements();
+  safe_to_exit = updateWaitForFlushing() && safe_to_exit;
+  safe_to_exit = updateBuiltInRecorderUploading(job_history) && safe_to_exit;
+  safe_to_exit = updateBuiltInFtpServer() && safe_to_exit;
+  safe_to_exit = updateNonUploadedMeasurements() && safe_to_exit;
 
   updateItIsSafeToExit(safe_to_exit);
 
