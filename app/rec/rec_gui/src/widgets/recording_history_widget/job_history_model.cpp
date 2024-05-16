@@ -157,18 +157,18 @@ void JobHistoryModel::setRecorderStatuses(const eCAL::rec_server::RecorderStatus
 
       if (hdf5_recorder_item == nullptr) continue;
 
-      bool update_needed = false;
-      update_needed = update_needed || hdf5_recorder_item->updateStillOnline            (recorder_still_online);
-      update_needed = update_needed || hdf5_recorder_item->updatePid                    (pid);
-      update_needed = update_needed || hdf5_recorder_item->updateInfoLastCommandResponse(client_job_status.second.info_last_command_response_);
-      update_needed = update_needed || hdf5_recorder_item->updateLength                 ({ client_job_status.second.job_status_.rec_hdf5_status_.total_length_, client_job_status.second.job_status_.rec_hdf5_status_.total_frame_count_ });
-      update_needed = update_needed || hdf5_recorder_item->updateUnflushedFrameCount    (client_job_status.second.job_status_.rec_hdf5_status_.unflushed_frame_count_);
-      update_needed = update_needed || hdf5_recorder_item->updateState                  (client_job_status.second.job_status_.state_);
-      update_needed = update_needed || hdf5_recorder_item->updateUploadStatus           (client_job_status.second.job_status_.upload_status_);
-      update_needed = update_needed || hdf5_recorder_item->updateInfo                   (client_job_status.second.job_status_.rec_hdf5_status_.info_);
-      update_needed = update_needed || hdf5_recorder_item->updateIsDeleted              (is_deleted);
+      bool update_needed_hdf5_rec = false;
+      update_needed_hdf5_rec = hdf5_recorder_item->updateStillOnline            (recorder_still_online) || update_needed_hdf5_rec;
+      update_needed_hdf5_rec = hdf5_recorder_item->updatePid                    (pid) || update_needed_hdf5_rec;
+      update_needed_hdf5_rec = hdf5_recorder_item->updateInfoLastCommandResponse(client_job_status.second.info_last_command_response_) || update_needed_hdf5_rec;
+      update_needed_hdf5_rec = hdf5_recorder_item->updateLength                 ({ client_job_status.second.job_status_.rec_hdf5_status_.total_length_, client_job_status.second.job_status_.rec_hdf5_status_.total_frame_count_ }) || update_needed_hdf5_rec;
+      update_needed_hdf5_rec = hdf5_recorder_item->updateUnflushedFrameCount    (client_job_status.second.job_status_.rec_hdf5_status_.unflushed_frame_count_) || update_needed_hdf5_rec;
+      update_needed_hdf5_rec = hdf5_recorder_item->updateState                  (client_job_status.second.job_status_.state_) || update_needed_hdf5_rec;
+      update_needed_hdf5_rec = hdf5_recorder_item->updateUploadStatus           (client_job_status.second.job_status_.upload_status_) || update_needed_hdf5_rec;
+      update_needed_hdf5_rec = hdf5_recorder_item->updateInfo                   (client_job_status.second.job_status_.rec_hdf5_status_.info_) || update_needed_hdf5_rec;
+      update_needed_hdf5_rec = hdf5_recorder_item->updateIsDeleted              (is_deleted) || update_needed_hdf5_rec;
 
-      if (update_needed)
+      if (update_needed_hdf5_rec)
       {
         items_to_update.insert(hdf5_recorder_item);
         items_to_update.insert(job_item); // Also update the parent, as it accumulates its information from the children
@@ -215,16 +215,16 @@ void JobHistoryModel::setRecorderStatuses(const eCAL::rec_server::RecorderStatus
                                             }) != recorder_status_it->second.first.addon_statuses_.end();
         }
 
-        bool update_needed = false;
-        update_needed = update_needed || addon_item->updateStillOnline        (addon_still_online);
-        update_needed = update_needed || addon_item->updatePid                (pid);
-        update_needed = update_needed || addon_item->updateLength             ({ std::chrono::steady_clock::duration(0), addon_id_status_pair.second.total_frame_count_ });
-        update_needed = update_needed || addon_item->updateUnflushedFrameCount(addon_id_status_pair.second.unflushed_frame_count_);
-        update_needed = update_needed || addon_item->updateState              (addon_state);
-        update_needed = update_needed || addon_item->updateInfo               (addon_id_status_pair.second.info_);
-        update_needed = update_needed || addon_item->updateIsDeleted          (is_deleted);
+        bool update_needed_addon = false;
+        update_needed_addon = addon_item->updateStillOnline        (addon_still_online) || update_needed_addon;
+        update_needed_addon = addon_item->updatePid                (pid) || update_needed_addon;
+        update_needed_addon = addon_item->updateLength             ({std::chrono::steady_clock::duration(0), addon_id_status_pair.second.total_frame_count_ }) || update_needed_addon;
+        update_needed_addon = addon_item->updateUnflushedFrameCount(addon_id_status_pair.second.unflushed_frame_count_) || update_needed_addon;
+        update_needed_addon = addon_item->updateState              (addon_state) || update_needed_addon;
+        update_needed_addon = addon_item->updateInfo               (addon_id_status_pair.second.info_) || update_needed_addon;
+        update_needed_addon = addon_item->updateIsDeleted          (is_deleted) || update_needed_addon;
 
-        if (update_needed)
+        if (update_needed_addon)
         {
           items_to_update.insert(addon_item);
           items_to_update.insert(job_item); // Also update the parent, as it accumulates its information from the children
