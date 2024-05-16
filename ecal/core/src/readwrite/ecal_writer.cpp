@@ -243,12 +243,19 @@ namespace eCAL
     // get payload buffer size (one time, to avoid multiple computations)
     const size_t payload_buf_size(payload_.GetSize());
 
-    // can we do a zero copy write ?
-    const bool allow_zero_copy =
-         m_config.shm.zero_copy_mode // zero copy mode activated by user
-      && m_writer_shm                // shm layer active
-      && !m_writer_udp               // udp layer inactive
-      && !m_writer_tcp;              // tcp layer inactive
+    // are we allowed to perform zero copy writing?
+    bool allow_zero_copy(false);
+#if ECAL_CORE_TRANSPORT_SHM
+    allow_zero_copy = m_config.shm.zero_copy_mode; // zero copy mode activated by user
+#endif
+#if ECAL_CORE_TRANSPORT_UDP
+    // udp is active -> no zero copy
+    allow_zero_copy &= !m_writer_udp;
+#endif
+#if ECAL_CORE_TRANSPORT_TCP
+    // tcp is active -> no zero copy
+    allow_zero_copy &= !m_writer_tcp;
+#endif
 
     // create a payload copy for all layer
     if (!allow_zero_copy)
