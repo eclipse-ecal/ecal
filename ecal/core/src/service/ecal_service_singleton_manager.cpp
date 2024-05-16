@@ -43,7 +43,7 @@ namespace eCAL
                             eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_debug1, "[" + node_name + "] " + message);
                             break;
                           case LogLevel::Info:
-                            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_info, "[" + node_name + "] " + message);
+                            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_debug1, "[" + node_name + "] " + message);
                             break;
                           case LogLevel::Warning:
                             eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning, "[" + node_name + "] " + message);
