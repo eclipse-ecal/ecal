@@ -26,6 +26,7 @@
 #include <stdexcept>
 #include <fstream>
 #include <string>
+#include <cstdio>
 
 #include "ecal_cmd_parser.h"
 
@@ -220,7 +221,8 @@ TEST(core_cpp_config, config_custom_datatypes_tests)
 TEST(core_cpp_config, config_cmd_parser)
 {
   // create a custom ini file
-  std::ofstream custom_ini_file("customIni.ini");
+  std::string ini_file_name = "customIni.ini";
+  std::ofstream custom_ini_file(ini_file_name);
 
   if (custom_ini_file.is_open())
   {
@@ -281,6 +283,8 @@ TEST(core_cpp_config, config_cmd_parser)
   EXPECT_EQ(parser.getConfigKeysMap()[network][network_enabled], is_network_enabled);
   EXPECT_EQ(parser.getConfigKeysMap()[common][registration_timeout], reg_to_value);
   EXPECT_EQ(parser.getConfigKeysMap()[common][registration_refresh], reg_rf_value);
+
+  remove(ini_file_name.data());
 }
 
 TEST(CmdParserDeathTest, config_cmd_parser_death_test)
