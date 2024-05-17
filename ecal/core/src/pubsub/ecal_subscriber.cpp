@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,14 +40,14 @@ namespace eCAL
   {
   }
 
-  CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
+  CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_)
     : CSubscriber()
   {
-    CSubscriber::Create(topic_name_, topic_info_);
+    CSubscriber::Create(topic_name_, data_type_info_, config_);
   }
 
-  CSubscriber::CSubscriber(const std::string& topic_name_)
-    : CSubscriber(topic_name_, SDataTypeInformation{})
+  CSubscriber::CSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_)
+    : CSubscriber(topic_name_, SDataTypeInformation{}, config_)
   {}
 
   CSubscriber::~CSubscriber()
@@ -75,18 +75,13 @@ namespace eCAL
     return *this;
   }
 
-  bool CSubscriber::Create(const std::string& topic_name_)
-  {
-    return Create(topic_name_, SDataTypeInformation{});
-  }
-
-  bool CSubscriber::Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
+  bool CSubscriber::Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_)
   {
     if (m_created)           return(false);
     if (topic_name_.empty()) return(false);
 
     // create datareader
-    m_datareader = std::make_shared<CDataReader>(topic_name_, topic_info_);
+    m_datareader = std::make_shared<CDataReader>(topic_name_, data_type_info_);
 
     // register datareader
     g_subgate()->Register(topic_name_, m_datareader);
@@ -94,6 +89,11 @@ namespace eCAL
     // we made it :-)
     m_created = true;
     return(m_created);
+  }
+
+  bool CSubscriber::Create(const std::string& topic_name_)
+  {
+    return Create(topic_name_, SDataTypeInformation{});
   }
 
   bool CSubscriber::Destroy()
