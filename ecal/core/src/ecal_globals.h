@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ namespace eCAL
     int Initialize     ( unsigned int components_, std::vector<std::string>* config_keys_ = nullptr);
     bool IsInitialized ( unsigned int component_  );
 
-    void SetEcalConfig(Config::eCALConfig& ecal_config_);
+    void SetEcalConfig(Configuration& ecal_config_);
     
     unsigned int GetComponents() const { return(components); };
 
@@ -73,7 +73,7 @@ namespace eCAL
 
     const std::unique_ptr<CConfig>&                                       config()                 { return config_instance; };
     const std::unique_ptr<CLog>&                                          log()                    { return log_instance; };
-    Config::eCALConfig&                                                   ecal_config()            { return ecal_config_instance; };
+    Configuration&                                                        ecal_config()            { return ecal_config_instance; };
 
 #if ECAL_CORE_MONITORING
     const std::unique_ptr<CMonitoring>&                                   monitoring()             { return monitoring_instance; };
@@ -133,6 +133,6 @@ namespace eCAL
     
 #endif
     std::unique_ptr<CDescGate>                                            descgate_instance;
-    Config::eCALConfig                                                    ecal_config_instance;
+    Configuration                                                         ecal_config_instance;
   };
 }

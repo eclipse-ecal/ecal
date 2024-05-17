@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -156,9 +156,9 @@ namespace eCAL
     // publisher
     /////////////////////////////////////
     
-    ECAL_API TLayer::eSendMode GetPublisherUdpMulticastMode         () { return GetCurrentConfig().publisher_options.use_udp_mc; }
-    ECAL_API TLayer::eSendMode GetPublisherShmMode                  () { return GetCurrentConfig().publisher_options.use_shm; }
-    ECAL_API TLayer::eSendMode GetPublisherTcpMode                  () { return GetCurrentConfig().publisher_options.use_tcp; }
+    ECAL_API bool              GetPublisherUdpMulticastMode         () { return GetCurrentConfig().publisher_options.udp.enable; }
+    ECAL_API bool              GetPublisherShmMode                  () { return GetCurrentConfig().publisher_options.shm.enable; }
+    ECAL_API bool              GetPublisherTcpMode                  () { return GetCurrentConfig().publisher_options.tcp.enable; }
 
     ECAL_API size_t            GetMemfileMinsizeBytes               () { return GetCurrentConfig().transport_layer_options.shm_options.memfile_minsize; }
     ECAL_API size_t            GetMemfileOverprovisioningPercentage () { return GetCurrentConfig().transport_layer_options.shm_options.memfile_reserve; }

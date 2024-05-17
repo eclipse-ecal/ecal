@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ namespace eCAL
    * 
    * @return Zero if succeeded, 1 if already initialized, -1 if failed.
   **/
-  ECAL_API int Initialize(eCAL::Config::eCALConfig& config_, const char *unit_name_ = nullptr, unsigned int components_ = Init::Default);
+  ECAL_API int Initialize(eCAL::Configuration& config_, const char *unit_name_ = nullptr, unsigned int components_ = Init::Default);
 
   /**
    * @brief Finalize eCAL API.

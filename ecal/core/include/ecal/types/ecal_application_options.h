@@ -32,7 +32,7 @@ namespace eCAL
   {
     struct SysOptions
     {
-      std::string filter_excl{};
+      std::string filter_excl{};  // mama
     };
 
     struct StartupOptions

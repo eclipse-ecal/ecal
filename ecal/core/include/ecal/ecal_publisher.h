@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,8 @@
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_payload_writer.h>
-#include <ecal/ecal_publisher_config.h>
+#include <ecal/config/ecal_publisher_config.h>
+#include <ecal/ecal_config.h>
 #include <ecal/ecal_types.h>
 
 #include <chrono>
@@ -84,7 +85,7 @@ namespace eCAL
      * @param data_type_info_  Topic data type information (encoding, type, descriptor).
      * @param config_          Optional configuration parameters.
     **/
-    ECAL_API CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = {});
+    ECAL_API CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = eCAL::GetCurrentConfig().publisher_options);
 
     /**
      * @brief Constructor.
@@ -92,7 +93,7 @@ namespace eCAL
      * @param topic_name_   Unique topic name.
      * @param config_       Optional configuration parameters.
     **/
-    ECAL_API explicit CPublisher(const std::string& topic_name_, const Publisher::Configuration& config_ = {});
+    ECAL_API explicit CPublisher(const std::string& topic_name_, const Publisher::Configuration& config_ = eCAL::GetCurrentConfig().publisher_options);
 
     /**
      * @brief Destructor. 
@@ -128,7 +129,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_API bool Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = {});
+    ECAL_API bool Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = eCAL::GetCurrentConfig().publisher_options);
 
     /**
      * @brief Creates this object.

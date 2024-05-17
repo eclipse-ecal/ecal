@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -107,7 +107,7 @@ namespace eCAL
       // where the vtable is not created yet, or it's destructed.
       // Probably we can handle the Message publishers differently. One message publisher class and then one class for payloads and getting type
       // descriptor information.
-      explicit CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = {}) : eCAL::CPublisher(topic_name_, CPublisher::GetDataTypeInformation(), config_)
+      explicit CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = eCAL::GetCurrentConfig().publisher_options) : eCAL::CPublisher(topic_name_, CPublisher::GetDataTypeInformation(), config_)
       {
       }
 
@@ -144,7 +144,7 @@ namespace eCAL
        *
        * @return  True if it succeeds, false if it fails.
       **/
-      bool Create(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = {})
+      bool Create(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = eCAL::GetCurrentConfig().publisher_options)
       {
         return(eCAL::CPublisher::Create(topic_name_, GetDataTypeInformation(), config_));
       }

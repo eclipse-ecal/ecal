@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +34,8 @@ namespace eCAL
   class  CGlobals;
   class  CConfig;
   class  CLog;
-  namespace Config
-  {
-	  struct eCALConfig;
-  }
+	struct Configuration;
+
 #if ECAL_CORE_MONITORING
   class  CMonitoring;
 #endif
@@ -71,7 +69,7 @@ namespace eCAL
   CGlobals*               g_globals();
   CConfig*                g_config();
   CLog*                   g_log();
-  Config::eCALConfig&	    g_ecal_config();
+  Configuration&	        g_ecal_config();
 #if ECAL_CORE_MONITORING
   CMonitoring*            g_monitoring();
 #endif

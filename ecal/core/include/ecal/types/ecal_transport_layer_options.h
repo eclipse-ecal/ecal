@@ -28,7 +28,7 @@
 
 namespace eCAL
 {
-  namespace Config
+  namespace TransportLayer
   {
     struct TCPubsubOptions
     {
@@ -39,32 +39,32 @@ namespace eCAL
 
     struct SHMOptions
     {
-      std::string                    host_group_name{};
-      ConstrainedInteger<4096, 4096> memfile_minsize{};
-      ConstrainedInteger<50, 1, 100> memfile_reserve{};
-      int                            memfile_ack_timeout{};
-      ConstrainedInteger<0, 1>       memfile_buffer_count{};
-      bool                           drop_out_of_order_messages{};
-      bool                           memfile_zero_copy{};
+      std::string                            host_group_name{};
+      Config::ConstrainedInteger<4096, 4096> memfile_minsize{};
+      Config::ConstrainedInteger<50, 1, 100> memfile_reserve{};
+      int                                    memfile_ack_timeout{};
+      Config::ConstrainedInteger<0, 1>       memfile_buffer_count{};
+      bool                                   drop_out_of_order_messages{};
+      bool                                   memfile_zero_copy{};
     };
 
     struct UdpMulticastOptions
     {
-      UdpConfigVersion                  config_version{};        
-      IpAddressV4                       group{};
-      IpAddressV4                       mask{};
-      ConstrainedInteger<14000, 10>     port{};
-      unsigned int                      ttl{};
+      Config::UdpConfigVersion                  config_version{};        
+      Config::IpAddressV4                       group{};
+      Config::IpAddressV4                       mask{};
+      Config::ConstrainedInteger<14000, 10>     port{};
+      unsigned int                              ttl{};
       // TODO PG: are these minimum limits correct?
-      ConstrainedInteger<5242880, 1024> sndbuf{};
-      ConstrainedInteger<5242880, 1024> recbuf{};
-      bool                              join_all_interfaces{};
+      Config::ConstrainedInteger<5242880, 1024> sndbuf{};
+      Config::ConstrainedInteger<5242880, 1024> recbuf{};
+      bool                                      join_all_interfaces{};
 
       int  bandwidth_max_udp{};
       bool npcap_enabled{};
     }; 
       
-    struct TransportLayerOptions
+    struct Configuration
     {
       bool                network_enabled{};
       bool                drop_out_of_order_messages{};

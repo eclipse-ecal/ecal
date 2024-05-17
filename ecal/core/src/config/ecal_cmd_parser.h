@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include "ecal/types/user_arg_options.h"
+
 #include <vector>
 #include <string>
 #include <map>
@@ -42,7 +44,6 @@ namespace eCAL
     class CmdParser
     {    
     public:
-      using ConfigKey2DMap = std::map<std::string, std::map<std::string, std::string>>;
       CmdParser(int argc_ , char **argv_);
       CmdParser();
 
@@ -52,11 +53,11 @@ namespace eCAL
       std::vector<std::string>& getConfigKeys();
       std::vector<std::string>& getTaskParameter();
       std::string&              getUserIni();
-      ConfigKey2DMap&           getConfigKeysMap();
+      Cli::ConfigKey2DMap&      getConfigKeysMap();
 
     private:
       std::vector<std::string> m_config_keys;
-      ConfigKey2DMap           m_config_key_map;
+      Cli::ConfigKey2DMap      m_config_key_map;
       bool                     m_dump_config;
       std::vector<std::string> m_task_parameter;
       std::string              m_user_ini;

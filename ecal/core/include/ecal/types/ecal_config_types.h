@@ -34,6 +34,7 @@
 #include "ecal_logging_options.h"
 #include "ecal_transport_layer_options.h"
 #include "user_arg_options.h"
+#include "ecal/config/ecal_publisher_config.h"
 
 #include "ecal/ecal_os.h"
 #include "ecal/ecal_log_level.h"
@@ -45,24 +46,22 @@
 
 namespace eCAL
 {
-  namespace Config
-  {        
-    struct eCALConfig
+    struct Configuration
     {
-        TransportLayerOptions    transport_layer_options{};
-        RegistrationOptions      registration_options{};
-        MonitoringOptions        monitoring_options{};
-        ReceivingOptions         receiving_options{};
-        PublisherOptions         publisher_options{};
-        TimesyncOptions          timesync_options{};
-        ServiceOptions           service_options{};
-        ApplicationOptions       application_options{};
-        LoggingOptions           logging_options{};
-        CliArguments             command_line_arguments{};
-        std::string              loaded_ecal_ini_file{};        
+        TransportLayer::Configuration    transport_layer_options{};
+        Config::RegistrationOptions      registration_options{};
+        Config::MonitoringOptions        monitoring_options{};
+        Config::ReceivingOptions         receiving_options{};
+        Publisher::Configuration         publisher_options{};
+        Config::TimesyncOptions          timesync_options{};
+        Config::ServiceOptions           service_options{};
+        Config::ApplicationOptions       application_options{};
+        Config::LoggingOptions           logging_options{};
+        Cli::Configuration               command_line_arguments{};
+        std::string                      loaded_ecal_ini_file{};        
         
-        ECAL_API eCALConfig(int argc_ , char **argv_);
-        ECAL_API eCALConfig(std::vector<std::string> args_);
+        ECAL_API Configuration(int argc_ , char **argv_);
+        ECAL_API Configuration(std::vector<std::string> args_);
 
         ECAL_API void InitConfigWithDefaultIni();
         ECAL_API void InitConfig(std::string ini_path_);
@@ -70,5 +69,4 @@ namespace eCAL
         private:
           ECAL_API void Init(int argc_ , char **argv_);
     };
-	}
 }

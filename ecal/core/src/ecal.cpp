@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ namespace eCAL
   **/
   int Initialize(int argc_ , char **argv_, const char *unit_name_, unsigned int components_)
   {
-    eCAL::Config::eCALConfig config(argc_, argv_);
+    eCAL::Configuration config(argc_, argv_);
 
     return Initialize(config, unit_name_, components_);
   }
@@ -116,7 +116,7 @@ namespace eCAL
   **/
   int Initialize(std::vector<std::string> args_, const char *unit_name_, unsigned int components_) //-V826
   {
-    eCAL::Config::eCALConfig config(args_);
+    eCAL::Configuration config(args_);
     return Initialize(config, unit_name_, components_);
   }
 
@@ -129,7 +129,7 @@ namespace eCAL
    * 
    * @return Zero if succeeded, 1 if already initialized, -1 if failed.
   **/
-  int Initialize(eCAL::Config::eCALConfig& config_, const char *unit_name_ /*= nullptr*/, unsigned int components_ /*= Init::Default*/)
+  int Initialize(eCAL::Configuration& config_, const char *unit_name_ /*= nullptr*/, unsigned int components_ /*= Init::Default*/)
   {
     if (g_globals() == nullptr)
     {
@@ -146,7 +146,7 @@ namespace eCAL
     g_globals_ctx_ref_cnt++;
 
      // (post)initialize single components
-    const int success = g_globals()->Initialize(components_, &Config::GetCurrentConfig().command_line_arguments.config_keys);
+    const int success = g_globals()->Initialize(components_, &GetCurrentConfig().command_line_arguments.config_keys);
 
     if (config_.command_line_arguments.dump_config)
     {

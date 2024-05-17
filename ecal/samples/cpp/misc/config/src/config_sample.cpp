@@ -25,7 +25,7 @@
 int main(int argc, char **argv)
 {
   // creating config object
-  eCAL::Config::eCALConfig my_config(argc, argv);
+  eCAL::Configuration my_config(argc, argv);
 
   // setting configuration
   my_config.monitoring_options.network_monitoring = true;

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,9 +97,7 @@ namespace {
 
 namespace eCAL 
 {
-  namespace Config
-  {
-    void eCALConfig::InitConfig(std::string ini_path_ /*= std::string("")*/)
+    void Configuration::InitConfig(std::string ini_path_ /*= std::string("")*/)
     {
       CConfig iniConfig;
       if (!command_line_arguments.config_keys.empty())
@@ -120,9 +118,9 @@ namespace eCAL
       
       const std::string udp_config_version_string = iniConfig.get(NETWORK, "multicast_config_version", "v1");
       if (udp_config_version_string == "v1")
-        multicastOptions.config_version = UdpConfigVersion::V1;
+        multicastOptions.config_version = Config::UdpConfigVersion::V1;
       if (udp_config_version_string == "v2")
-        multicastOptions.config_version = UdpConfigVersion::V2;
+        multicastOptions.config_version = Config::UdpConfigVersion::V2;
       
       multicastOptions.group               = iniConfig.get(NETWORK, "multicast_group",       NET_UDP_MULTICAST_GROUP);
       multicastOptions.mask                = iniConfig.get(NETWORK, "multicast_mask",        NET_UDP_MULTICAST_MASK);
@@ -151,15 +149,15 @@ namespace eCAL
       // registration options
       auto registrationTimeout        = iniConfig.get(COMMON,    "registration_timeout", CMN_REGISTRATION_TO);
       auto registrationRefresh        = iniConfig.get(COMMON,    "registration_refresh", CMN_REGISTRATION_REFRESH);
-      registration_options            = RegistrationOptions(registrationTimeout, registrationRefresh);
+      registration_options            = Config::RegistrationOptions(registrationTimeout, registrationRefresh);
       auto& registrationOptions       = registration_options;
       registrationOptions.share_tdesc = iniConfig.get(PUBLISHER, "share_tdesc",          PUB_SHARE_TDESC);
       registrationOptions.share_ttype = iniConfig.get(PUBLISHER, "share_ttype",          PUB_SHARE_TTYPE);
 
       // monitoring options
       auto& monitoringOptions = monitoring_options;
-      auto  monitoringMode                          = iniConfig.get(EXPERIMENTAL, "shm_monitoring_enabled",      false) ? MonitoringMode::shm_monitoring : MonitoringMode::none;
-      monitoringOptions.monitoring_mode             = static_cast<eCAL_MonitoringMode_Filter>(monitoringMode);
+      auto  monitoringMode                          = iniConfig.get(EXPERIMENTAL, "shm_monitoring_enabled",      false) ? Config::MonitoringMode::shm_monitoring : Config::MonitoringMode::none;
+      monitoringOptions.monitoring_mode             = static_cast<Config::eCAL_MonitoringMode_Filter>(monitoringMode);
       monitoringOptions.monitoring_timeout          = iniConfig.get(MONITORING,   "timeout", MON_TIMEOUT);;
       monitoringOptions.network_monitoring          = iniConfig.get(EXPERIMENTAL, "network_monitoring", EXP_NETWORK_MONITORING_ENABLED);
       monitoringOptions.filter_excl                 = iniConfig.get(MONITORING,   "filter_excl",                 MON_FILTER_EXCL);
@@ -180,9 +178,9 @@ namespace eCAL
 
       // publisher options
       auto& publisherOptions = publisher_options;
-      publisherOptions.use_shm    = static_cast<TLayer::eSendMode>(iniConfig.get(PUBLISHER, "use_shm",    static_cast<int>(PUB_USE_SHM)));
-      publisherOptions.use_tcp    = static_cast<TLayer::eSendMode>(iniConfig.get(PUBLISHER, "use_tcp",    static_cast<int>(PUB_USE_TCP)));
-      publisherOptions.use_udp_mc = static_cast<TLayer::eSendMode>(iniConfig.get(PUBLISHER, "use_udp_mc", static_cast<int>(PUB_USE_UDP_MC)));
+      publisherOptions.shm.enable    = (iniConfig.get(PUBLISHER, "use_shm",    static_cast<int>(PUB_USE_SHM)) == 0) ? false : true;
+      publisherOptions.tcp.enable    = (iniConfig.get(PUBLISHER, "use_tcp",    static_cast<int>(PUB_USE_TCP)) == 0) ? false : true;
+      publisherOptions.udp.enable    = (iniConfig.get(PUBLISHER, "use_udp_mc", static_cast<int>(PUB_USE_UDP_MC)) == 0) ? false : true;
 
       // timesync options
       auto& timesyncOptions = timesync_options;
@@ -209,12 +207,12 @@ namespace eCAL
       loggingOptions.filter_log_udp              = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_udp",  "info,warning,error,fatal"));
     };
 
-    eCALConfig::eCALConfig(int argc_ , char **argv_)
+    Configuration::Configuration(int argc_ , char **argv_)
     {
       Init(argc_, argv_);
     }
 
-    eCALConfig::eCALConfig(std::vector<std::string> args_)
+    Configuration::Configuration(std::vector<std::string> args_)
     {
       args_.emplace(args_.begin(), eCAL::Process::GetProcessName());
       std::vector<const char*> argv(args_.size());
@@ -223,9 +221,9 @@ namespace eCAL
       Init(static_cast<int>(argv.size()), const_cast<char**>(argv.data()));
     }
 
-    void eCALConfig::Init(int argc_ , char **argv_)
+    void Configuration::Init(int argc_ , char **argv_)
     {
-      CmdParser parser(argc_, argv_);
+      Config::CmdParser parser(argc_, argv_);
       
       command_line_arguments.config_keys       = parser.getConfigKeys();
       command_line_arguments.specified_config  = parser.getUserIni();
@@ -235,14 +233,13 @@ namespace eCAL
       InitConfig(command_line_arguments.specified_config);
     }
 
-    void eCALConfig::InitConfigWithDefaultIni()
+    void Configuration::InitConfigWithDefaultIni()
     {
       InitConfig(g_default_ini_file);
     }
 
-    eCALConfig& GetCurrentConfig()
+    Configuration& GetCurrentConfig()
     {
       return g_ecal_config();
     };
-  }
 }

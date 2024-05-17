@@ -30,12 +30,12 @@
 
 namespace eCAL
 {
-  namespace Config
+  namespace Cli
   {
     // Map[Section][Option] = Value
     using ConfigKey2DMap = std::map<std::string, std::map<std::string, std::string>>;
 
-    struct CliArguments
+    struct Configuration
     {
       std::vector<std::string> config_keys{};
       ConfigKey2DMap           config_keys_map;

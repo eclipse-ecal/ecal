@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ namespace eCAL
        * @param msg_         Protobuf message object.
        * @param config_      Optional configuration parameters.
       **/
-      CDynamicPublisher(const std::string& topic_name_, const std::shared_ptr<google::protobuf::Message>& msg_, const eCAL::Publisher::Configuration& config_ = {})
+      CDynamicPublisher(const std::string& topic_name_, const std::shared_ptr<google::protobuf::Message>& msg_, const eCAL::Publisher::Configuration& config_ = eCAL::GetCurrentConfig().publisher_options)
         : CMsgPublisher<google::protobuf::Message>(topic_name_, GetTopicInformationFromMessage(msg_.get()), config_)
         , m_msg{ msg_ } {}
 

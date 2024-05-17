@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,8 @@
 
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_payload_writer.h>
-#include <ecal/ecal_publisher_config.h>
+#include <ecal/config/ecal_publisher_config.h>
+#include <ecal/ecal_config.h>
 #include <ecal/ecal_types.h>
 
 #include "util/ecal_expmap.h"
@@ -78,7 +79,7 @@ namespace eCAL
       }
     };
 
-    CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Publisher::Configuration& config_ = {});
+    CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Publisher::Configuration& config_ = eCAL::GetCurrentConfig().publisher_options);
     ~CDataWriter();
 
     bool Stop();

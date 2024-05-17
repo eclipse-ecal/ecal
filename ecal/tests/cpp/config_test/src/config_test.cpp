@@ -38,7 +38,7 @@ void SetValue(MEMBER& member, VALUE value)
 
 TEST(core_cpp_config, user_config_passing)
 {
-  eCAL::Config::eCALConfig custom_config(0, nullptr);
+  eCAL::Configuration custom_config(0, nullptr);
 
   // Test value assignments from each category
   // How the user would utilize it
@@ -55,7 +55,7 @@ TEST(core_cpp_config, user_config_passing)
   const eCAL::Config::eCAL_MonitoringMode_Filter monitoring_mode = eCAL::Config::MonitoringMode::udp_monitoring;
   
   // Publisher options
-  const eCAL::TLayer::eSendMode pub_use_shm = eCAL::TLayer::eSendMode::smode_off;
+  const bool pub_use_shm = true;
 
   // Registration options
   const unsigned int registration_timeout = 80000U;
@@ -72,45 +72,45 @@ TEST(core_cpp_config, user_config_passing)
     custom_config.monitoring_options.monitoring_mode    = monitoring_mode;
     custom_config.logging_options.filter_log_con        = mon_log_filter_con;
 
-    custom_config.publisher_options.use_shm = pub_use_shm;
+    custom_config.publisher_options.shm.enable = pub_use_shm;
 
     custom_config.registration_options = registration_options;
   }
   catch (std::invalid_argument& e)
   {
-    throw std::runtime_error("Error while configuring eCALConfig: " + std::string(e.what()));
+    throw std::runtime_error("Error while configuring Configuration: " + std::string(e.what()));
   }
 
   // Initialize ecal api with custom config
   EXPECT_EQ(0, eCAL::Initialize(custom_config, "User Config Passing Test", eCAL::Init::Default));
 
   // Test boolean assignment, default is false
-  EXPECT_EQ(network_enabled, eCAL::Config::GetCurrentConfig().transport_layer_options.network_enabled);
+  EXPECT_EQ(network_enabled, eCAL::GetCurrentConfig().transport_layer_options.network_enabled);
 
   // Test IP address assignment, default is 239.0.0.1
-  EXPECT_EQ(ip_address, static_cast<std::string>(eCAL::Config::GetCurrentConfig().transport_layer_options.mc_options.group));
+  EXPECT_EQ(ip_address, static_cast<std::string>(eCAL::GetCurrentConfig().transport_layer_options.mc_options.group));
 
   // Test UDP send buffer assignment, default is 5242880
-  EXPECT_EQ(upd_snd_buff, static_cast<int>(eCAL::Config::GetCurrentConfig().transport_layer_options.mc_options.sndbuf));
+  EXPECT_EQ(upd_snd_buff, static_cast<int>(eCAL::GetCurrentConfig().transport_layer_options.mc_options.sndbuf));
 
   // Test monitoring timeout assignment, default is 5000U
-  EXPECT_EQ(mon_timeout, eCAL::Config::GetCurrentConfig().monitoring_options.monitoring_timeout);
+  EXPECT_EQ(mon_timeout, eCAL::GetCurrentConfig().monitoring_options.monitoring_timeout);
 
   // Test monitoring filter exclude assignment, default is "_.*"
-  EXPECT_EQ(mon_filter_excl, eCAL::Config::GetCurrentConfig().monitoring_options.filter_excl);
+  EXPECT_EQ(mon_filter_excl, eCAL::GetCurrentConfig().monitoring_options.filter_excl);
 
   // Test monitoring console log assignment, default is (log_level_info | log_level_warning | log_level_error | log_level_fatal)
-  EXPECT_EQ(mon_log_filter_con, eCAL::Config::GetCurrentConfig().logging_options.filter_log_con);
+  EXPECT_EQ(mon_log_filter_con, eCAL::GetCurrentConfig().logging_options.filter_log_con);
 
-  // Test monitoring mode assignment, default iseCAL::Config::MonitoringMode::none
-  EXPECT_EQ(monitoring_mode, eCAL::Config::GetCurrentConfig().monitoring_options.monitoring_mode);
+  // Test monitoring mode assignment, default is eCAL::Config::MonitoringMode::none
+  EXPECT_EQ(monitoring_mode, eCAL::GetCurrentConfig().monitoring_options.monitoring_mode);
 
   // Test publisher sendmode assignment, default is eCAL::TLayer::eSendMode::smode_auto
-  EXPECT_EQ(pub_use_shm, eCAL::Config::GetCurrentConfig().publisher_options.use_shm);
+  EXPECT_EQ(pub_use_shm, eCAL::GetCurrentConfig().publisher_options.shm.enable);
 
   // Test registration option assignment, default timeout is 60000U and default refresh is 1000U
-  EXPECT_EQ(registration_timeout, eCAL::Config::GetCurrentConfig().registration_options.getTimeoutMS());
-  EXPECT_EQ(registration_refresh, eCAL::Config::GetCurrentConfig().registration_options.getRefreshMS());
+  EXPECT_EQ(registration_timeout, eCAL::GetCurrentConfig().registration_options.getTimeoutMS());
+  EXPECT_EQ(registration_refresh, eCAL::GetCurrentConfig().registration_options.getRefreshMS());
 
   // Finalize eCAL API
   EXPECT_EQ(0, eCAL::Finalize());
@@ -118,7 +118,7 @@ TEST(core_cpp_config, user_config_passing)
 
 TEST(ConfigDeathTest, user_config_death_test)
 {
-  eCAL::Config::eCALConfig custom_config(0, nullptr);
+  eCAL::Configuration custom_config(0, nullptr);
 
   // Test the IpAddressV4 class with wrong values
   ASSERT_THROW(
@@ -208,8 +208,8 @@ TEST(core_cpp_config, config_custom_datatypes_tests)
   EXPECT_EQ(static_cast<int>(s1), static_cast<int>(s2));
 
   // test copy method for config structure
-  eCAL::Config::eCALConfig config1(0, nullptr);
-  eCAL::Config::eCALConfig config2(0, nullptr);
+  eCAL::Configuration config1(0, nullptr);
+  eCAL::Configuration config2(0, nullptr);
   std::string testValue = std::string("234.0.3.2");
   config2.transport_layer_options.mc_options.group = testValue;
   auto& config2ref = config2;
@@ -237,7 +237,7 @@ TEST(core_cpp_config, config_cmd_parser)
 
   eCAL::Config::CmdParser parser;
 
-  std::vector<const char*> arguments{};
+  std::vector<const char*> arguments;
 
   const std::string set_config_key = "--ecal-set-config-key ";
   const std::string sep_slash = "/";
@@ -289,9 +289,9 @@ TEST(core_cpp_config, config_cmd_parser)
 
 TEST(CmdParserDeathTest, config_cmd_parser_death_test)
 {
-  eCAL::Config::CmdParser parser{};
+  eCAL::Config::CmdParser parser;
 
-  std::vector<const char*> arguments{};
+  std::vector<const char*> arguments;
 
   arguments.push_back("test_config_cmd_parser_death_test");
   arguments.push_back("--ecal-ini-file someNotValidFileName.ini");

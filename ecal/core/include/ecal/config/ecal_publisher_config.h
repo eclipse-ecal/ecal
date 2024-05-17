@@ -130,7 +130,7 @@ namespace eCAL
 
     struct ECAL_API Configuration
     {
-      Configuration();
+      // Configuration();
 
       SHM::Configuration   shm;
       UDP::Configuration   udp;

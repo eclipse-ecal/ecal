@@ -45,7 +45,7 @@ namespace eCAL
     Finalize();
   }
 
-  void CGlobals::SetEcalConfig(Config::eCALConfig& ecal_config_)
+  void CGlobals::SetEcalConfig(Configuration& ecal_config_)
   {    
     ecal_config_instance = ecal_config_; 
   }

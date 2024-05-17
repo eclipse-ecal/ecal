@@ -112,7 +112,7 @@ namespace
       path_ += path_separator + file_name_;
   }
 
-  void parseConfigKeysToMap(const std::vector<std::string>& config_keys_, eCAL::Config::ConfigKey2DMap& map_)
+  void parseConfigKeysToMap(const std::vector<std::string>& config_keys_, eCAL::Cli::ConfigKey2DMap& map_)
   {
     // each string has the format "section/key:value"
     for (const auto& full_key : config_keys_)
@@ -131,7 +131,7 @@ namespace
     }
   }
 
-  std::string checkForValidConfigFilePath(const std::string config_file_)
+  std::string checkForValidConfigFilePath(const std::string& config_file_)
     {
       // differences to ecal_config_reader implementation are:
       //    1. it does not use the default ini file name, instead uses the specified file
@@ -173,7 +173,7 @@ namespace
       // Check if user specified complete path, in case all other precedence paths exist
       if (isValidConfigFilePath(config_file_))
       {
-        return config_file_;
+        return std::string(config_file_);
       }
 
       // If valid path is not encountered, throw error
@@ -248,6 +248,6 @@ namespace eCAL
     std::vector<std::string>& CmdParser::getConfigKeys()         { return m_config_keys; };
     std::vector<std::string>& CmdParser::getTaskParameter()      { return m_task_parameter; };
     std::string& CmdParser::getUserIni()                         { return m_user_ini; };
-    ConfigKey2DMap& CmdParser::getConfigKeysMap()                { return m_config_key_map; };  
+    Cli::ConfigKey2DMap& CmdParser::getConfigKeysMap()           { return m_config_key_map; };  
   }
 }
