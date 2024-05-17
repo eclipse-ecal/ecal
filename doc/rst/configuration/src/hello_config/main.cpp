@@ -12,7 +12,7 @@ int main(int argc, char** argv)
   custom_config.InitConfigWithDefaultIni();
 
   // .. or specify an own .ini file to use
-  custom_conig.InitConfig("C:\\eCAL_local.ini");
+  custom_config.InitConfig("C:\\eCAL_local.ini");
 
   // Set the values in a try/catch block, as wrong configuration leads to exceptions
   try
@@ -26,7 +26,7 @@ int main(int argc, char** argv)
     // Increase the send buffer, size increase in 1024 bytes steps
     custom_config.transport_layer_options.mc_options.sndbuf = (5242880 + 10 * 1024);
   }
-  catch (std::invalid_argument e)
+  catch (std::invalid_argument& e)
   {
     throw std::runtime_error("Error while configuring eCALConfig: " + std::string(e.what()));
   }

@@ -1,6 +1,6 @@
 #include <string>
 
-std::string ini_file_as_string = 
+static const std::string ini_file_as_string = 
 "; --------------------------------------------------\n"
 "; NETWORK SETTINGS\n"
 "; --------------------------------------------------\n"

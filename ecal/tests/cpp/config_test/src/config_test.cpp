@@ -19,7 +19,7 @@
 
 #include <ecal/ecal_core.h>
 #include <ecal/ecal_config.h>
-#include <ini_file.h>
+#include "ini_file.h"
 
 #include <gtest/gtest.h>
 
@@ -237,7 +237,7 @@ TEST(core_cpp_config, config_cmd_parser)
 
   eCAL::Config::CmdParser parser;
 
-  std::vector<const char*> arguments;
+  std::vector<const char*> arguments{};
 
   const std::string set_config_key = "--ecal-set-config-key ";
   const std::string sep_slash = "/";
@@ -289,9 +289,9 @@ TEST(core_cpp_config, config_cmd_parser)
 
 TEST(CmdParserDeathTest, config_cmd_parser_death_test)
 {
-  eCAL::Config::CmdParser parser;
+  eCAL::Config::CmdParser parser{};
 
-  std::vector<const char*> arguments;
+  std::vector<const char*> arguments{};
 
   arguments.push_back("test_config_cmd_parser_death_test");
   arguments.push_back("--ecal-ini-file someNotValidFileName.ini");

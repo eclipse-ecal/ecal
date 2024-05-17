@@ -54,17 +54,11 @@ namespace
 
   std::string cwdPath()
   {
-    std::string cwd_path = {};
-    char* buffer;
-
-    if ( (buffer = getcwd(NULL, 0)) == NULL )
-      throw std::runtime_error("getcwd() : cannot read current working directory.");
-    else
-    {
-      cwd_path = std::string(buffer);
-      free(buffer);
-    }
+    std::string cwd_path = { getcwd(nullptr, 0) };
     
+    if (cwd_path.empty())
+      throw std::runtime_error("getcwd() : cannot read current working directory.");
+        
     SetPathSep(cwd_path);
     return cwd_path;
   }
@@ -73,8 +67,8 @@ namespace
   {
     std::string cmake_data_path;
 #ifdef ECAL_OS_LINUX
-    std::string ecal_install_config_dir(ECAL_INSTALL_CONFIG_DIR);
-    std::string ecal_install_prefix(ECAL_INSTALL_PREFIX);
+    const std::string ecal_install_config_dir(ECAL_INSTALL_CONFIG_DIR);
+    const std::string ecal_install_prefix(ECAL_INSTALL_PREFIX);
 
     if ((!ecal_install_config_dir.empty() && (ecal_install_config_dir[0] == path_separator))
       || ecal_install_prefix.empty())
@@ -105,27 +99,20 @@ namespace
     return system_data_path;
   }
 
-  bool isValidConfigFilePath(std::string file_path_)
+  bool isValidConfigFilePath(const std::string& file_path_)
   {
     // check existence of user defined file
     const EcalUtils::Filesystem::FileStatus ecal_ini_status(file_path_, EcalUtils::Filesystem::Current);
-    if (ecal_ini_status.IsOk() && (ecal_ini_status.GetType() == EcalUtils::Filesystem::Type::RegularFile))
-    {
-      return true;
-    }
-
-    return false;
+    return ecal_ini_status.IsOk() && (ecal_ini_status.GetType() == EcalUtils::Filesystem::Type::RegularFile);
   }
 
-  std::string appendFileNameToPathIfPathIsValid(std::string path_, std::string file_name_)
+  void appendFileNameToPathIfPathIsValid(std::string& path_, const std::string& file_name_)
   {
-    if (path_.empty()) 
-      return path_;
-    else 
-      return path_ + path_separator + file_name_;
+    if (!path_.empty())
+      path_ += path_separator + file_name_;
   }
 
-  void parseConfigKeysToMap(std::vector<std::string> config_keys_, eCAL::Config::ConfigKey2DMap& map_)
+  void parseConfigKeysToMap(const std::vector<std::string>& config_keys_, eCAL::Config::ConfigKey2DMap& map_)
   {
     // each string has the format "section/key:value"
     for (const auto& full_key : config_keys_)
@@ -143,6 +130,55 @@ namespace
         map_[section][key] = value;
     }
   }
+
+  std::string checkForValidConfigFilePath(const std::string config_file_)
+    {
+      // differences to ecal_config_reader implementation are:
+      //    1. it does not use the default ini file name, instead uses the specified file
+      //    2. it searches relative to the executable path and takes it as highest priority
+      //    3. it throws a runtime error, if it cannot find the specified file
+
+      // -----------------------------------------------------------
+      // precedence 1: relative path to executable
+      // -----------------------------------------------------------
+      std::string cwd_directory_path = cwdPath();
+      appendFileNameToPathIfPathIsValid(cwd_directory_path, config_file_);
+
+      // -----------------------------------------------------------
+      // precedence 2: ECAL_DATA variable (windows and linux)
+      // -----------------------------------------------------------
+      std::string ecal_data_path = eCALDataEnvPath();
+      appendFileNameToPathIfPathIsValid(ecal_data_path, config_file_);
+      
+      // -----------------------------------------------------------
+      // precedence 3:  cmake configured data paths (linux only)
+      // -----------------------------------------------------------
+      std::string cmake_data_path = eCALDataCMakePath();
+      appendFileNameToPathIfPathIsValid(cmake_data_path, config_file_);
+
+      // -----------------------------------------------------------
+      // precedence 4: system data path 
+      // -----------------------------------------------------------
+      std::string system_data_path = eCALDataSystemPath();
+      appendFileNameToPathIfPathIsValid(system_data_path, config_file_);
+
+      // Check for first directory which contains the ini file.
+      std::vector<std::string> search_directories{ cwd_directory_path, ecal_data_path, cmake_data_path, system_data_path };
+
+      auto it = std::find_if(search_directories.begin(), search_directories.end(), isValidConfigFilePath);
+      // We should have encountered a valid path
+      if (it != search_directories.end())
+        return (*it);
+
+      // Check if user specified complete path, in case all other precedence paths exist
+      if (isValidConfigFilePath(config_file_))
+      {
+        return config_file_;
+      }
+
+      // If valid path is not encountered, throw error
+      throw std::runtime_error("[CMD Parser] Specified config file: \"" + config_file_ + "\" not found.");
+    }
 }
 
 namespace eCAL
@@ -151,9 +187,6 @@ namespace eCAL
   {
     CmdParser::CmdParser() 
     : m_dump_config{false}
-    , m_config_keys{}
-    , m_task_parameter{}
-    , m_user_ini{} 
     {}
 
     CmdParser::CmdParser(int argc_ , char **argv_)
@@ -209,52 +242,6 @@ namespace eCAL
       {
         for (size_t i = 0; i < static_cast<size_t>(argc_); ++i) if (argv_[i] != nullptr) m_task_parameter.emplace_back(argv_[i]);
       }
-
-    }
-
-    std::string CmdParser::checkForValidConfigFilePath(std::string config_file_)
-    {
-      // differences to ecal_config_reader implementation are:
-      //    1. it does not use the default ini file name, instead uses the specified file
-      //    2. it searches relative to the executable path and takes it as highest priority
-      //    3. it throws a runtime error, if it cannot find the specified file
-
-      // -----------------------------------------------------------
-      // precedence 1: relative path to executable
-      // -----------------------------------------------------------
-      const std::string cwd_directory_path{ appendFileNameToPathIfPathIsValid(cwdPath(), config_file_) };
-
-      // -----------------------------------------------------------
-      // precedence 2: ECAL_DATA variable (windows and linux)
-      // -----------------------------------------------------------
-      const std::string ecal_data_path{ appendFileNameToPathIfPathIsValid(eCALDataEnvPath(), config_file_) };
-      
-      // -----------------------------------------------------------
-      // precedence 3:  cmake configured data paths (linux only)
-      // -----------------------------------------------------------
-      const std::string cmake_data_path{ appendFileNameToPathIfPathIsValid(eCALDataCMakePath(), config_file_) };
-
-      // -----------------------------------------------------------
-      // precedence 4: system data path 
-      // -----------------------------------------------------------
-      const std::string system_data_path( appendFileNameToPathIfPathIsValid(eCALDataSystemPath(), config_file_) );
-
-      // Check for first directory which contains the ini file.
-      std::vector<std::string> search_directories{ config_file_, cwd_directory_path, ecal_data_path, cmake_data_path, system_data_path };
-
-      auto it = std::find_if(search_directories.begin(), search_directories.end(), isValidConfigFilePath);
-      // We should have encountered a valid path
-      if (it != search_directories.end())
-        return (*it);
-
-      // Check if user specified complete path, in case all other precedence paths exist
-      if (isValidConfigFilePath(config_file_))
-      {
-        return config_file_;
-      }
-
-      // If valid path is not encountered, throw error
-      throw std::runtime_error("[CMD Parser] Specified config file: \"" + config_file_ + "\" not found.");
     }
 
     bool CmdParser::getDumpConfig() const                        { return m_dump_config; };

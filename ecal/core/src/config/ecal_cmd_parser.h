@@ -55,8 +55,6 @@ namespace eCAL
       ConfigKey2DMap&           getConfigKeysMap();
 
     private:
-      std::string              checkForValidConfigFilePath(std::string config_file_);
-
       std::vector<std::string> m_config_keys;
       ConfigKey2DMap           m_config_key_map;
       bool                     m_dump_config;
