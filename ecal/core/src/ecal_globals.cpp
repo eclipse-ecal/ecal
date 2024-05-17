@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -225,13 +225,13 @@ namespace eCAL
     }
 
     /////////////////////
-    // CREATE ALL
+    // START ALL
     /////////////////////
     //if (config_instance)                                                config_instance->Create();
-    if (log_instance && ((components_ & Init::Logging) != 0u))            log_instance->Create();
+    if (log_instance && ((components_ & Init::Logging) != 0u))            log_instance->Start();
 #if ECAL_CORE_REGISTRATION
-    if (registration_provider_instance)                                   registration_provider_instance->Create();
-    if (registration_receiver_instance)                                   registration_receiver_instance->Create();
+    if (registration_provider_instance)                                   registration_provider_instance->Start();
+    if (registration_receiver_instance)                                   registration_receiver_instance->Start();
 #endif
     if (descgate_instance)
     {
@@ -242,23 +242,23 @@ namespace eCAL
 #endif
     }
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
-    if (memfile_pool_instance)                                            memfile_pool_instance->Create();
+    if (memfile_pool_instance)                                            memfile_pool_instance->Start();
 #endif
 #if ECAL_CORE_SUBSCRIBER
     if (subgate_instance && ((components_ & Init::Subscriber) != 0u))     subgate_instance->Start();
 #endif
 #if ECAL_CORE_PUBLISHER
-    if (pubgate_instance && ((components_ & Init::Publisher) != 0u))      pubgate_instance->Create();
+    if (pubgate_instance && ((components_ & Init::Publisher) != 0u))      pubgate_instance->Start();
 #endif
 #if ECAL_CORE_SERVICE
     if (servicegate_instance && ((components_ & Init::Service) != 0u))    servicegate_instance->Start();
     if (clientgate_instance && ((components_ & Init::Service) != 0u))     clientgate_instance->Start();
 #endif
 #if ECAL_CORE_TIMEPLUGIN
-    if (timegate_instance && ((components_ & Init::TimeSync) != 0u))      timegate_instance->Create(CTimeGate::eTimeSyncMode::realtime);
+    if (timegate_instance && ((components_ & Init::TimeSync) != 0u))      timegate_instance->Start(CTimeGate::eTimeSyncMode::realtime);
 #endif
 #if ECAL_CORE_MONITORING
-    if (monitoring_instance && ((components_ & Init::Monitoring) != 0u))  monitoring_instance->Create();
+    if (monitoring_instance && ((components_ & Init::Monitoring) != 0u))  monitoring_instance->Start();
 #endif
     initialized =  true;
     components  |= components_;
@@ -311,10 +311,10 @@ namespace eCAL
 
     // start destruction
 #if ECAL_CORE_MONITORING
-    if (monitoring_instance)             monitoring_instance->Destroy();
+    if (monitoring_instance)             monitoring_instance->Stop();
 #endif
 #if ECAL_CORE_TIMEPLUGIN
-    if (timegate_instance)               timegate_instance->Destroy();
+    if (timegate_instance)               timegate_instance->Stop();
 #endif
 #if ECAL_CORE_SERVICE
     // The order here is EXTREMELY important! First, the actual service
@@ -327,7 +327,7 @@ namespace eCAL
     if (servicegate_instance)            servicegate_instance->Stop();
 #endif
 #if ECAL_CORE_PUBLISHER
-    if (pubgate_instance)                pubgate_instance->Destroy();
+    if (pubgate_instance)                pubgate_instance->Stop();
 #endif
 #if ECAL_CORE_SUBSCRIBER
     if (subgate_instance)                subgate_instance->Stop();
@@ -341,14 +341,14 @@ namespace eCAL
 #endif
     }
 #if ECAL_CORE_REGISTRATION
-    if (registration_receiver_instance)  registration_receiver_instance->Destroy();
-    if (registration_provider_instance)  registration_provider_instance->Destroy();
+    if (registration_receiver_instance)  registration_receiver_instance->Stop();
+    if (registration_provider_instance)  registration_provider_instance->Stop();
 #endif
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
-    if (memfile_pool_instance)           memfile_pool_instance->Destroy();
-    if (memfile_map_instance)            memfile_map_instance->Destroy();
+    if (memfile_pool_instance)           memfile_pool_instance->Stop();
+    if (memfile_map_instance)            memfile_map_instance->Stop();
 #endif
-    if (log_instance)                    log_instance->Destroy();
+    if (log_instance)                    log_instance->Stop();
     //if (config_instance)                 config_instance->Destroy();
 
 #if ECAL_CORE_MONITORING

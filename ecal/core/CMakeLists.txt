@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -204,6 +204,7 @@ endif()
 if(ECAL_CORE_SUBSCRIBER)
   set(ecal_sub_src
       src/pubsub/ecal_subscriber.cpp
+      src/pubsub/ecal_subscriber_config.cpp
       src/pubsub/ecal_subgate.cpp
       src/pubsub/ecal_subgate.h
   )
@@ -468,6 +469,7 @@ set(ecal_header_cmn
     include/ecal/ecal_server.h
     include/ecal/ecal_service_info.h
     include/ecal/ecal_subscriber.h
+    include/ecal/ecal_subscriber_config.h
     include/ecal/ecal_time.h
     include/ecal/ecal_timer.h
     include/ecal/ecal_tlayer.h

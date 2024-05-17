@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,10 +67,10 @@ namespace eCAL
 
   CTimeGate::~CTimeGate()
   {
-    Destroy();
+    Stop();
   }
 
-  void CTimeGate::Create(enum eTimeSyncMode sync_mode_)
+  void CTimeGate::Start(enum eTimeSyncMode sync_mode_)
   {
     if(m_created) return;
 
@@ -109,7 +109,7 @@ namespace eCAL
     m_created = true;
   }
 
-  void CTimeGate::Destroy()
+  void CTimeGate::Stop()
   {
     if(!m_created) return;
     switch (m_sync_mode)
