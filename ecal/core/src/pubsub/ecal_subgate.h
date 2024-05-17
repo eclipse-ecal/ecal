@@ -40,8 +40,8 @@ namespace eCAL
     CSubGate();
     ~CSubGate();
 
-    void Create();
-    void Destroy();
+    void Start();
+    void Stop();
 
     bool Register(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_);
     bool Unregister(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_);
@@ -51,11 +51,8 @@ namespace eCAL
     bool ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_, eTLayerType layer_);
     bool ApplySample(const std::string& topic_name_, const std::string& topic_id_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
 
-    void ApplyLocPubRegistration(const Registration::Sample& ecal_sample_);
-    void ApplyLocPubUnregistration(const Registration::Sample& ecal_sample_);
-
-    void ApplyExtPubRegistration(const Registration::Sample& ecal_sample_);
-    void ApplyExtPubUnregistration(const Registration::Sample& ecal_sample_);
+    void ApplyPubRegistration(const Registration::Sample& ecal_sample_);
+    void ApplyPubUnregistration(const Registration::Sample& ecal_sample_);
 
     void RefreshRegistrations();
 

@@ -60,9 +60,10 @@ namespace eCAL
        *
        * @param topic_name_  Unique topic name.
        * @param msg_         Protobuf message object.
+       * @param config_      Optional configuration parameters.
       **/
-      CDynamicPublisher(const std::string& topic_name_, const std::shared_ptr<google::protobuf::Message>& msg_)
-        : CMsgPublisher<google::protobuf::Message>(topic_name_, GetTopicInformationFromMessage(msg_.get()))
+      CDynamicPublisher(const std::string& topic_name_, const std::shared_ptr<google::protobuf::Message>& msg_, const eCAL::Publisher::Configuration& config_ = {})
+        : CMsgPublisher<google::protobuf::Message>(topic_name_, GetTopicInformationFromMessage(msg_.get()), config_)
         , m_msg{ msg_ } {}
 
       /**
@@ -140,11 +141,11 @@ namespace eCAL
         assert(msg_ptr_);
         if(msg_ptr_ == nullptr) return SDataTypeInformation();
 
-        SDataTypeInformation topic_info;
-        topic_info.encoding = "proto";
-        topic_info.name = msg_ptr_->GetTypeName();
-        topic_info.descriptor = GetDescriptorFromMessage(msg_ptr_);
-        return topic_info;
+        SDataTypeInformation data_type_info;
+        data_type_info.encoding   = "proto";
+        data_type_info.name       = msg_ptr_->GetTypeName();
+        data_type_info.descriptor = GetDescriptorFromMessage(msg_ptr_);
+        return data_type_info;
       }
 
       static std::string GetDescriptorFromMessage(const google::protobuf::Message* msg_ptr_)

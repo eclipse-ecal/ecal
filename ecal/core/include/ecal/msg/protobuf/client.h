@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,7 @@
 
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_client.h>
-#include <ecal/msg/dynamic.h>
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
-
-
 
 // protobuf includes
 #ifdef _MSC_VER

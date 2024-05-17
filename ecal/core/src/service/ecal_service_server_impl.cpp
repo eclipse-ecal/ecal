@@ -46,7 +46,7 @@ namespace eCAL
   std::shared_ptr<CServiceServerImpl> CServiceServerImpl::CreateInstance(const std::string& service_name_)
   {
     auto instance = std::shared_ptr<CServiceServerImpl> (new CServiceServerImpl());
-    instance->Create(service_name_);
+    instance->Start(service_name_);
     return instance;
   }
 
@@ -57,10 +57,10 @@ namespace eCAL
 
   CServiceServerImpl::~CServiceServerImpl()
   {
-    Destroy();
+    Stop();
   }
 
-  bool CServiceServerImpl::Create(const std::string& service_name_)
+  bool CServiceServerImpl::Start(const std::string& service_name_)
   {
     if (m_created) return(false);
 
@@ -134,7 +134,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CServiceServerImpl::Destroy()
+  bool CServiceServerImpl::Stop()
   {
     if (!m_created) return(false);
 

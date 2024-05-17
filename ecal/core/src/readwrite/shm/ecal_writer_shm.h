@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <ecal/ecal_publisher_config.h>
+
 #include "readwrite/ecal_writer_base.h"
 #include "io/shm/ecal_memfile_sync.h"
 
@@ -36,24 +38,24 @@ namespace eCAL
   class CDataWriterSHM : public CDataWriterBase
   {
   public:
-    CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_);
+    CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const Publisher::SHM::Configuration& shm_config_);
 
     SWriterInfo GetInfo() override;
-
-    bool SetBufferCount(size_t buffer_count_);
 
     bool PrepareWrite(const SWriterAttr& attr_) override;
 
     bool Write(CPayloadWriter& payload_, const SWriterAttr& attr_) override;
 
-    void AddLocConnection(const std::string& process_id_, const std::string& topic_id_, const std::string& conn_par_) override;
+    void ApplySubscription(const std::string& host_name_, int32_t process_id_, const std::string& topic_id_, const std::string& conn_par_) override;
 
     Registration::ConnectionPar GetConnectionParameter() override;
 
-  protected:      
-    size_t                                        m_write_idx    = 0;
-    size_t                                        m_buffer_count = 1;
-    SSyncMemoryFileAttr                           m_memory_file_attr = {};
+  protected:
+    bool SetBufferCount(size_t buffer_count_);
+
+    Publisher::SHM::Configuration                 m_config;
+
+    size_t                                        m_write_idx = 0;
     std::vector<std::shared_ptr<CSyncMemoryFile>> m_memory_file_vec;
     static const std::string                      m_memfile_base_name;
   };

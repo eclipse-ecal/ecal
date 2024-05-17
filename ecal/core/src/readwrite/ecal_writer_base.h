@@ -42,11 +42,8 @@ namespace eCAL
 
     virtual SWriterInfo GetInfo() = 0;
 
-    virtual void AddLocConnection(const std::string& /*process_id_*/, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/) {};
-    virtual void RemLocConnection(const std::string& /*process_id_*/, const std::string& /*topic_id_*/) {};
-
-    virtual void AddExtConnection(const std::string& /*host_name_*/, const std::string& /*process_id_*/, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/) {};
-    virtual void RemExtConnection(const std::string& /*host_name_*/, const std::string& /*process_id_*/, const std::string& /*topic_id_*/) {};
+    virtual void ApplySubscription(const std::string& /*host_name_*/, const int32_t /*process_id_*/, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/) {};
+    virtual void RemoveSubscription(const std::string& /*host_name_*/, const int32_t /*process_id_*/, const std::string& /*topic_id_*/) {};
 
     virtual Registration::ConnectionPar GetConnectionParameter() { return {}; };
 

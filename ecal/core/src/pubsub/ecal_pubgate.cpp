@@ -58,12 +58,13 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    // destroy all remaining publisher
+    // stop & destroy all remaining publisher
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
-    for (auto iter = m_topic_name_datawriter_map.begin(); iter != m_topic_name_datawriter_map.end(); ++iter)
+    for (const auto& datawriter : m_topic_name_datawriter_map)
     {
-      iter->second->Destroy();
+      datawriter.second->Stop();
     }
+    m_topic_name_datawriter_map.clear();
 
     m_created = false;
   }
@@ -109,69 +110,43 @@ namespace eCAL
     return(ret_state);
   }
 
-  void CPubGate::ApplyLocSubRegistration(const Registration::Sample& ecal_sample_)
+  void CPubGate::ApplySubRegistration(const Registration::Sample& ecal_sample_)
   {
     if(!m_created) return;
 
     const auto&        ecal_topic = ecal_sample_.topic;
     const std::string& topic_name = ecal_topic.tname;
 
-    CDataWriter::SLocalSubscriptionInfo subscription_info;
-    subscription_info.topic_id                   = ecal_topic.tid;
-    subscription_info.process_id                 = std::to_string(ecal_topic.pid);
-    const SDataTypeInformation topic_information = ecal_topic.tdatatype;
+    // check topic name
+    if (topic_name.empty()) return;
 
-    std::string reader_par;
-#if 0
-    for (const auto& layer : ecal_sample.tlayer())
-    {
-      // layer parameter as protobuf message
-      // this parameter is not used at all currently
-      // for local subscriber registrations
-      reader_par = layer.par_layer().SerializeAsString();
-    }
-#endif
-
-    // register local subscriber
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
-    auto res = m_topic_name_datawriter_map.equal_range(topic_name);
-    for(TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
-    {
-      iter->second->ApplyLocSubscription(subscription_info, topic_information, reader_par);
-    }
-  }
-
-  void CPubGate::ApplyLocSubUnregistration(const Registration::Sample& ecal_sample_)
-  {
-    if (!m_created) return;
-
-    const auto& ecal_sample = ecal_sample_.topic;
-    const std::string& topic_name = ecal_sample.tname;
-    CDataWriter::SLocalSubscriptionInfo subscription_info;
-    subscription_info.topic_id = ecal_sample.tid;
-    subscription_info.process_id = std::to_string(ecal_sample.pid);
-
-    // unregister local subscriber
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
-    auto res = m_topic_name_datawriter_map.equal_range(topic_name);
-    for (TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
-    {
-      iter->second->RemoveLocSubscription(subscription_info);
-    }
-  }
-
-  void CPubGate::ApplyExtSubRegistration(const Registration::Sample& ecal_sample_)
-  {
-    if(!m_created) return;
-
-    const auto&        ecal_topic = ecal_sample_.topic;
-    const std::string& topic_name = ecal_topic.tname;
-
-    CDataWriter::SExternalSubscriptionInfo subscription_info;
+    CDataWriter::SSubscriptionInfo subscription_info;
     subscription_info.host_name                  = ecal_topic.hname;
     subscription_info.topic_id                   = ecal_topic.tid;
-    subscription_info.process_id                 = std::to_string(ecal_topic.pid);
+    subscription_info.process_id                 = ecal_topic.pid;
     const SDataTypeInformation topic_information = ecal_topic.tdatatype;
+
+    CDataWriter::SLayerStates layer_states;
+    for (const auto& layer : ecal_topic.tlayer)
+    {
+      if (layer.confirmed)
+      {
+        switch (layer.type)
+        {
+        case TLayer::tlayer_udp_mc:
+          layer_states.udp = true;
+          break;
+        case TLayer::tlayer_shm:
+          layer_states.shm = true;
+          break;
+        case TLayer::tlayer_tcp:
+          layer_states.tcp = true;
+          break;
+        default:
+          break;
+        }
+      }
+    }
 
     std::string reader_par;
 #if 0
@@ -179,37 +154,41 @@ namespace eCAL
     {
       // layer parameter as protobuf message
       // this parameter is not used at all currently
-      // for external subscriber registrations
+      // for subscriber registrations
       reader_par = layer.par_layer().SerializeAsString();
     }
 #endif
 
-    // register external subscriber
+    // register subscriber
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     auto res = m_topic_name_datawriter_map.equal_range(topic_name);
     for(TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->ApplyExtSubscription(subscription_info, topic_information, reader_par);
+      iter->second->ApplySubscription(subscription_info, topic_information, layer_states, reader_par);
     }
   }
 
-  void CPubGate::ApplyExtSubUnregistration(const Registration::Sample& ecal_sample_)
+  void CPubGate::ApplySubUnregistration(const Registration::Sample& ecal_sample_)
   {
     if (!m_created) return;
 
-    const auto& ecal_sample = ecal_sample_.topic;
-    const std::string& topic_name = ecal_sample.tname;
-    CDataWriter::SExternalSubscriptionInfo subscription_info;
-    subscription_info.host_name = ecal_sample.hname;
-    subscription_info.topic_id = ecal_sample.tid;
-    subscription_info.process_id = std::to_string(ecal_sample.pid);
+    const auto& ecal_topic = ecal_sample_.topic;
+    const std::string& topic_name = ecal_topic.tname;
 
-    // unregister external subscriber
+    // check topic name
+    if (topic_name.empty()) return;
+
+    CDataWriter::SSubscriptionInfo subscription_info;
+    subscription_info.host_name  = ecal_topic.hname;
+    subscription_info.topic_id   = ecal_topic.tid;
+    subscription_info.process_id = ecal_topic.pid;
+
+    // unregister subscriber
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     auto res = m_topic_name_datawriter_map.equal_range(topic_name);
     for (TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->RemoveExtSubscription(subscription_info);
+      iter->second->RemoveSubscription(subscription_info);
     }
   }
 

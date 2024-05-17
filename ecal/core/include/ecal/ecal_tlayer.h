@@ -53,6 +53,7 @@ namespace eCAL
       smode_auto
     };
 
+    // TODO: Do weed need this ?
     /**
      * @brief eCAL transport layer state struct.
     **/

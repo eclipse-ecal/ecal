@@ -49,9 +49,8 @@ namespace eCAL
   public:
     ~CServiceClientImpl();
 
-    bool Create(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
-
-    bool Destroy();
+    bool Start(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
+    bool Stop();
 
     bool SetHostName(const std::string& host_name_);
 

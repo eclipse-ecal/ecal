@@ -199,6 +199,7 @@ endif()
 if(ECAL_CORE_PUBLISHER)
   set(ecal_pub_src
       src/pubsub/ecal_publisher.cpp
+      src/pubsub/ecal_publisher_config.cpp
       src/pubsub/ecal_pubgate.cpp
       src/pubsub/ecal_pubgate.h
   )
@@ -226,8 +227,8 @@ if(ECAL_CORE_PUBLISHER)
   )
   if(ECAL_CORE_TRANSPORT_UDP)
     list(APPEND ecal_writer_src
-        src/readwrite/udp/ecal_writer_udp_mc.cpp
-        src/readwrite/udp/ecal_writer_udp_mc.h
+        src/readwrite/udp/ecal_writer_udp.cpp
+        src/readwrite/udp/ecal_writer_udp.h
     )
   endif()
   if(ECAL_CORE_TRANSPORT_TCP)
@@ -253,8 +254,8 @@ if(ECAL_CORE_SUBSCRIBER)
   )
   if(ECAL_CORE_TRANSPORT_UDP)
     list(APPEND ecal_reader_src
-        src/readwrite/udp/ecal_reader_udp_mc.cpp
-        src/readwrite/udp/ecal_reader_udp_mc.h
+        src/readwrite/udp/ecal_reader_udp.cpp
+        src/readwrite/udp/ecal_reader_udp.h
     )
   endif()
   if(ECAL_CORE_TRANSPORT_TCP)
@@ -466,6 +467,7 @@ set(ecal_header_cmn
     include/ecal/ecal_process.h
     include/ecal/ecal_process_severity.h
     include/ecal/ecal_publisher.h
+    include/ecal/ecal_publisher_config.h
     include/ecal/ecal_server.h
     include/ecal/ecal_service_info.h
     include/ecal/ecal_subscriber.h

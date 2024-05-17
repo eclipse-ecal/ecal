@@ -105,7 +105,7 @@ void dynamicPrintValue(const capnp::DynamicValue::Reader& value)
   }
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   // initialize eCAL API
   eCAL::Initialize(argc, argv, "addressbook subscriber");
@@ -115,8 +115,10 @@ int main(int argc, char **argv)
   // create a subscriber (topic name "addressbook")
   eCAL::capnproto::CDynamicSubscriber sub("addressbook");
 
-  auto callback = std::bind(dynamicPrintValue, std::placeholders::_2);
-  sub.AddReceiveCallback(callback);
+  auto lambda = [](const char* /*topic_name_*/, const capnp::DynamicValue::Reader& msg_, long long /*time_*/, long long /*clock_*/, long long /*id_*/) -> void {
+    dynamicPrintValue(msg_);
+  };
+  sub.AddReceiveCallback(lambda);
 
   // enter main loop
   while (eCAL::Ok())

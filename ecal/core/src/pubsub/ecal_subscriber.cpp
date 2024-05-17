@@ -36,8 +36,7 @@ namespace eCAL
 {
   CSubscriber::CSubscriber() :
     m_datareader(nullptr),
-    m_created(false),
-    m_initialized(false)
+    m_created(false)
   {
   }
 
@@ -58,11 +57,9 @@ namespace eCAL
 
   CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept :
                  m_datareader(std::move(rhs.m_datareader)),
-                 m_created(rhs.m_created),
-                 m_initialized(rhs.m_initialized)
+                 m_created(rhs.m_created)
   {
-    rhs.m_created     = false;
-    rhs.m_initialized = false;
+    rhs.m_created = false;
   }
 
   CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept
@@ -70,12 +67,10 @@ namespace eCAL
     // Call destroy, to clean up the current state, then afterwards move all elements
     Destroy();
 
-    m_datareader      = std::move(rhs.m_datareader);
-    m_created         = rhs.m_created;
-    m_initialized     = rhs.m_initialized;
+    m_datareader  = std::move(rhs.m_datareader);
+    m_created     = rhs.m_created;
 
-    rhs.m_created     = false;
-    rhs.m_initialized = false;
+    rhs.m_created = false;
 
     return *this;
   }
@@ -87,72 +82,41 @@ namespace eCAL
 
   bool CSubscriber::Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
   {
-    if (m_created)              return(false);
-    if (g_globals() == nullptr) return(false);
-    if (topic_name_.empty())    return(false);
+    if (m_created)           return(false);
+    if (topic_name_.empty()) return(false);
 
-    // initialize globals
-    if (g_globals()->IsInitialized(Init::Subscriber) == 0)
-    {
-      g_globals()->Initialize(Init::Subscriber);
-      m_initialized = true;
-    }
+    // create datareader
+    m_datareader = std::make_shared<CDataReader>(topic_name_, topic_info_);
 
-    // create data reader
-    m_datareader = std::make_shared<CDataReader>();
-    // create it
-    if (!m_datareader->Create(topic_name_, topic_info_))
-    {
-#ifndef NDEBUG
-      // log it
-      if (g_log() != nullptr) g_log()->Log(log_level_debug1, std::string(topic_name_ + "::CSubscriber::Create - FAILED"));
-#endif
-      return(false);
-    }
-#ifndef NDEBUG
-    // log it
-    if (g_log() != nullptr) g_log()->Log(log_level_debug1, std::string(topic_name_ + "::CSubscriber::Create - SUCCESS"));
-#endif
-    // register to subscriber gateway for publisher memory file receive thread
+    // register datareader
     g_subgate()->Register(topic_name_, m_datareader);
 
     // we made it :-)
     m_created = true;
-
     return(m_created);
   }
 
   bool CSubscriber::Destroy()
   {
-    if(!m_created)             return(false);
-    if(g_globals() == nullptr) return(false);
+    if(!m_created) return(false);
 
     // remove receive callback
     RemReceiveCallback();
 
-    // first unregister data reader
+    // unregister datareader
     if(g_subgate() != nullptr) g_subgate()->Unregister(m_datareader->GetTopicName(), m_datareader);
+
 #ifndef NDEBUG
     // log it
     if (g_log() != nullptr) g_log()->Log(log_level_debug1, std::string(m_datareader->GetTopicName() + "::CSubscriber::Destroy"));
 #endif
 
-    // destroy local data reader
-    m_datareader->Destroy();
-
-    // free datareader
+    // stop & destroy datareader
+    m_datareader->Stop();
     m_datareader.reset();
-    
+
     // we made it :-)
     m_created = false;
-
-    // if we initialize the globals then we finalize 
-    // here to decrease reference counter
-    if (m_initialized)
-    {
-      g_globals()->Finalize(Init::Subscriber);
-      m_initialized = false;
-    }
 
     return(true);
   }

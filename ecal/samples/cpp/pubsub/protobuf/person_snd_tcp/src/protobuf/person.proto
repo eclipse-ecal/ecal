@@ -17,33 +17,26 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  udp data writer
-**/
+syntax = "proto3";
 
-#pragma once
+import "animal.proto";
+import "house.proto";
 
-#include "io/udp/ecal_udp_sample_sender.h"
-#include "readwrite/ecal_writer_base.h"
+package pb.People;
 
-#include <memory>
-#include <string>
-#include <vector>
-
-namespace eCAL
+message Person
 {
-  class CDataWriterUdpMC : public CDataWriterBase
+  enum SType
   {
-  public:
-    CDataWriterUdpMC(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_);
+    MALE   = 0;
+    FEMALE = 1;
+  }
 
-    SWriterInfo GetInfo() override;
+  int32  id               = 1;
+  string name             = 2;
+  SType  stype            = 3;
+  string email            = 4;
 
-    bool Write(const void* buf_, const SWriterAttr& attr_) override;
-
-  protected:
-    std::vector<char>                   m_sample_buffer;
-    std::shared_ptr<UDP::CSampleSender> m_sample_sender_loopback;
-    std::shared_ptr<UDP::CSampleSender> m_sample_sender_no_loopback;
-  };
+  Animal.Dog        dog   = 5;
+  Environment.House house = 6;
 }

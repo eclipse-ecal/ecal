@@ -199,6 +199,6 @@ namespace eCAL
 
   protected:
     std::shared_ptr<eCAL::CServiceClientImpl> m_service_client_impl;
-    bool                m_created;
+    bool                                      m_created;
   };
 }

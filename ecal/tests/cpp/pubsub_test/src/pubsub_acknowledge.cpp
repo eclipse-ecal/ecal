@@ -17,8 +17,12 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <ecal/ecal.h>
 #include <ecal/msg/string/publisher.h>
+#include <ecal/msg/string/subscriber.h>
+
 #include <thread>
+
 #include <gtest/gtest.h>
 
 namespace
@@ -40,9 +44,8 @@ namespace
   }
 }
 
-#if 0 // reactivate this if ShmSetAcknowledgeTimeout API is implemented again
 // This test asserts that a timeouted acknowledge does not break subsequent calls
-TEST(PubSub, TimeoutAcknowledgment)
+TEST(core_cpp_pubsub, TimeoutAcknowledgment)
 {
   // initialize eCAL API
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "TimeoutAcknowledgment", eCAL::Init::All));
@@ -50,8 +53,12 @@ TEST(PubSub, TimeoutAcknowledgment)
   // enable loop back communication in the same thread
   eCAL::Util::EnableLoopback(true);
 
-  eCAL::string::CPublisher<std::string> pub("topic");
-  //pub.ShmSetAcknowledgeTimeout(500);  // TODO: NEW PARAMETER API
+  // create publisher config
+  eCAL::Publisher::Configuration pub_config;
+  pub_config.shm.acknowledge_timeout_ms = 500;
+
+  // create publisher
+  eCAL::string::CPublisher<std::string> pub("topic", pub_config);
   auto sub1 = std::make_shared< eCAL::string::CSubscriber<std::string>>("topic");
   auto sleeper_variable_time = [](const char* /*topic_name_*/, const std::string& msg_, long long /*time_*/, long long /*clock_*/, long long /*id_*/)
                                 {
@@ -73,7 +80,7 @@ TEST(PubSub, TimeoutAcknowledgment)
                                           EXPECT_TRUE(send);
                                         }
                                         , std::chrono::milliseconds(99)
-                                        , std::chrono::milliseconds(120)
+                                        , std::chrono::milliseconds(140)
     );
   }
 
@@ -95,7 +102,7 @@ TEST(PubSub, TimeoutAcknowledgment)
                                           EXPECT_TRUE(send);
                                         }
                                         , std::chrono::milliseconds(0)
-                                        , std::chrono::milliseconds(120)
+                                        , std::chrono::milliseconds(140)
     );
     std::this_thread::sleep_until(now + std::chrono::milliseconds(200));
   }
@@ -104,4 +111,3 @@ TEST(PubSub, TimeoutAcknowledgment)
   // without destroying any pub / sub
   EXPECT_EQ(0, eCAL::Finalize());
 }
-#endif

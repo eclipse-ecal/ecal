@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ namespace eCAL
    * 
   **/
   template <typename T>
-  class CMsgSubscriber : public CSubscriber
+  class [[deprecated("Please use CMessageSubscriber instead")]] CMsgSubscriber : public CSubscriber
   {
   public:
     /**
@@ -229,4 +229,196 @@ protected:
     std::mutex          m_cb_callback_mutex;
     MsgReceiveCallbackT m_cb_callback;
   };
+
+  /**
+   * @brief  eCAL abstract message subscriber class.
+   *
+   * Abstract subscriber template class for messages.
+   * This class has two template arguments, the actual type and a deserializer class.
+   * The deserializer class is responsible for providing datatype information, and providing a method to convert from `void*` to `T`.
+   * This allows to specify classes with common deserializers, e.g. like a ProtobufMessageSubscriber, StringMessageSubscriber etc.
+   *
+  **/
+  template <typename T, typename Deserializer>
+  class CMessageSubscriber final : public CSubscriber
+  {
+  public:
+    /**
+     * @brief  Constructor.
+    **/
+    CMessageSubscriber() : CSubscriber()
+    {
+    }
+
+    /**
+    * @brief  Constructor.
+    *
+    * @param topic_name_  Unique topic name.
+    **/
+    CMessageSubscriber(const std::string& topic_name_) : CSubscriber()
+      , m_deserializer()
+    {
+      SDataTypeInformation topic_info = m_deserializer.GetDataTypeInformation();
+      CSubscriber::Create(topic_name_, topic_info);
+    }
+
+    ~CMessageSubscriber() noexcept
+    {
+      Destroy();
+    };
+
+    /**
+    * @brief  Copy Constructor is not available.
+    **/
+    CMessageSubscriber(const CMessageSubscriber&) = delete;
+
+    /**
+    * @brief  Copy Constructor is not available.
+    **/
+    CMessageSubscriber& operator=(const CMessageSubscriber&) = delete;
+
+    /**
+    * @brief  Move Constructor
+    **/
+    CMessageSubscriber(CMessageSubscriber&& rhs)
+      : CSubscriber(std::move(rhs))
+      , m_cb_callback(std::move(rhs.m_cb_callback))
+      , m_deserializer(std::move(rhs.m_deserializer))
+    {
+      bool has_callback = (m_cb_callback != nullptr);
+
+      if (has_callback)
+      {
+        // the callback bound to the CSubscriber belongs to rhs, bind to this callback instead
+        CSubscriber::RemReceiveCallback();
+        auto callback = std::bind(&CMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
+        CSubscriber::AddReceiveCallback(callback);
+      }
+    }
+
+    /**
+    * @brief  Move assignment
+    **/
+    CMessageSubscriber& operator=(CMessageSubscriber&& rhs)
+    {
+      Destroy();
+
+      CSubscriber::operator=(std::move(rhs));
+
+      m_cb_callback = std::move(rhs.m_cb_callback);
+      m_deserializer = std::move(rhs.m_deserializer);
+        
+      bool has_callback(m_cb_callback != nullptr);
+
+      if (has_callback)
+      {
+        // the callback bound to the CSubscriber belongs to rhs, bind to this callback instead;
+        CSubscriber::RemReceiveCallback();
+        auto callback = std::bind(&CMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
+        CSubscriber::AddReceiveCallback(callback);
+      }
+
+      return *this;
+    }
+
+    /**
+     * @brief Destroys this object.
+     *
+     * @return  true if it succeeds, false if it fails.
+    **/
+    bool Destroy()
+    {
+      RemReceiveCallback();
+      return(CSubscriber::Destroy());
+    }
+
+    /**
+     * @brief  Receive deserialized message.
+     *
+     * @param [out] msg_    The message object.
+     * @param [out] time_   Optional receive time stamp.
+     * @param rcv_timeout_  Receive timeout in ms.
+     *
+     * @return  True if a message could received, false otherwise.
+    **/
+    bool Receive(T& msg_, long long* time_ = nullptr, int rcv_timeout_ = 0)
+    {
+      std::string rec_buf;
+      bool success = CSubscriber::ReceiveBuffer(rec_buf, time_, rcv_timeout_);
+      if (!success) return(false);
+      // In the future, I would like to get m_datatype_info from the ReceiveBuffer fuunction!
+      return(m_deserializer.Deserialize(msg_, rec_buf.c_str(), rec_buf.size()));
+    }
+
+    /**
+     * @brief eCAL message receive callback function
+     *
+     * @param topic_name_  Topic name of the data source (publisher).
+     * @param msg_         Message content.
+     * @param time_        Message time stamp.
+     * @param clock_       Message writer clock.
+     * @param id_          Message id.
+     **/
+    typedef std::function<void(const char* topic_name_, const T& msg_, long long time_, long long clock_, long long id_)> MsgReceiveCallbackT;
+
+    /**
+     * @brief  Add receive callback for incoming messages.
+     *
+     * @param callback_  The callback function.
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool AddReceiveCallback(MsgReceiveCallbackT callback_)
+    {
+      RemReceiveCallback();
+
+      {
+        std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
+        m_cb_callback = callback_;
+      }
+      auto callback = std::bind(&CMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
+      return(CSubscriber::AddReceiveCallback(callback));
+    }
+
+    /**
+     * @brief  Remove receive callback for incoming messages.
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool RemReceiveCallback()
+    {
+      bool ret = CSubscriber::RemReceiveCallback();
+
+      std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
+      if (m_cb_callback == nullptr) return(false);
+      m_cb_callback = nullptr;
+      return(ret);
+    }
+
+  private:
+    void ReceiveCallback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
+    {
+      MsgReceiveCallbackT fn_callback = nullptr;
+      {
+        std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
+        fn_callback = m_cb_callback;
+      }
+
+      if (fn_callback == nullptr) return;
+
+      T msg;
+      // In the future, I would like to get m_datatype_info from the ReceiveBuffer function!
+      if (m_deserializer.Deserialize(msg, data_->buf, data_->size))
+      {
+        (fn_callback)(topic_name_, msg, data_->time, data_->clock, data_->id);
+      }
+    }
+
+    std::mutex           m_cb_callback_mutex;
+    MsgReceiveCallbackT  m_cb_callback;
+    Deserializer         m_deserializer;
+  };
+
+
+
 }

@@ -30,8 +30,6 @@
 #include <cstddef>
 #include <ecal/ecal.h>
 
-#include "ecal_def.h"
-
 #include "io/udp/ecal_udp_sample_receiver.h"
 #include "serialization/ecal_struct_sample_registration.h"
 

@@ -39,8 +39,8 @@ namespace eCAL
     CServiceGate();
     ~CServiceGate();
 
-    void Create();
-    void Destroy();
+    void Start();
+    void Stop();
 
     bool Register  (CServiceServerImpl* service_);
     bool Unregister(CServiceServerImpl* service_);

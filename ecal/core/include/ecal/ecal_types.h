@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@
 
 #pragma once
 #include <string>
+#include <tuple>
 
 namespace eCAL
 {
@@ -47,6 +48,11 @@ namespace eCAL
     {
       return !(*this == other);
     }
+
+    bool operator<(const SDataTypeInformation& rhs) const
+    {
+        return std::tie(name, encoding, descriptor) < std::tie(rhs.name, rhs.encoding, rhs.descriptor);
+    }
     //!< @endcond
   };
 
@@ -68,6 +74,11 @@ namespace eCAL
     bool operator!=(const SServiceMethodInformation& other) const
     {
       return !(*this == other);
+    }
+
+    bool operator<(const SServiceMethodInformation& rhs) const
+    {
+      return std::tie(request_type, response_type) < std::tie(rhs.request_type, rhs.response_type);
     }
     //!< @endcond
   };
