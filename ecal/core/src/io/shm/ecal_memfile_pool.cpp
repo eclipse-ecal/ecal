@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  * Copyright (C) 2022 Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -315,10 +315,10 @@ namespace eCAL
 
   CMemFileThreadPool::~CMemFileThreadPool()
   {
-    Destroy();
+    Stop();
   }
 
-  void CMemFileThreadPool::Create()
+  void CMemFileThreadPool::Start()
   {
     if(m_created) return;
 
@@ -329,7 +329,7 @@ namespace eCAL
     m_created = true;
   }
 
-  void CMemFileThreadPool::Destroy()
+  void CMemFileThreadPool::Stop()
   {
     if(!m_created) return;
 

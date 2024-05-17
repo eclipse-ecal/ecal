@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_subscriber_config.h>
 #include <ecal/ecal_types.h>
 
 #include <memory>
@@ -92,17 +93,19 @@ namespace eCAL
     /**
      * @brief Constructor.
      *
-     * @param topic_name_   Unique topic name.
-     * @param topic_info_   Topic information (encoding, type, descriptor)
+     * @param topic_name_      Unique topic name.
+     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
+     * @param config_          Optional configuration parameters.
     **/
-    ECAL_API CSubscriber(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
+    ECAL_API CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_ = {});
 
     /**
      * @brief Constructor.
      * 
-     * @param topic_name_   Unique topic name.
+     * @param topic_name_      Unique topic name.
+     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
     **/
-    ECAL_API explicit CSubscriber(const std::string& topic_name_);
+    ECAL_API explicit CSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = {});
 
     /**
      * @brief Destructor. 
@@ -132,21 +135,22 @@ namespace eCAL
     /**
      * @brief Creates this object.
      *
-     * @param topic_name_   Unique topic name.
+     * @param topic_name_      Unique topic name.
+     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
+     * @param config_          Optional configuration parameters.
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_API bool Create(const std::string& topic_name_);
+    ECAL_API bool Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_ = {});
 
     /**
      * @brief Creates this object.
      *
      * @param topic_name_   Unique topic name.
-     * @param topic_info_   Topic information (encoding, type, descriptor)
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_API bool Create(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
+    ECAL_API bool Create(const std::string& topic_name_);
 
     /**
      * @brief Destroys this object. 

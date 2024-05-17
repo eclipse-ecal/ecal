@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ namespace eCAL
     CMemFileMap() = default;
     ~CMemFileMap();
 
-    void Destroy();
+    void Stop();
 
     bool AddFile(const std::string& name_, bool create_, size_t len_, SMemFileInfo& mem_file_info_);
     bool RemoveFile(const std::string& name_, bool remove_);

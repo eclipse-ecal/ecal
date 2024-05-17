@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@
 namespace eCAL
 {
   ////////////////////////////////////////
-  // global database class
+  // global monitoring class
   ////////////////////////////////////////
   class CMonitoringImpl;
   class CMonitoring
@@ -40,8 +40,8 @@ namespace eCAL
     CMonitoring();
     ~CMonitoring();
     
-    void Create();
-    void Destroy();
+    void Start();
+    void Stop();
 
     void SetExclFilter(const std::string& filter_);
     void SetInclFilter(const std::string& filter_);
