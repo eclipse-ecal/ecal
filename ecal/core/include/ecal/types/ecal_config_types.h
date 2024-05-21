@@ -28,13 +28,13 @@
 #include "ecal_custom_data_types.h"
 #include "ecal_monitoring_options.h"
 #include "ecal_publisher_options.h"
-#include "ecal_receiving_options.h"
 #include "ecal_registration_options.h"
 #include "ecal_service_options.h"
 #include "ecal_logging_options.h"
 #include "ecal_transport_layer_options.h"
 #include "user_arg_options.h"
 #include "ecal/config/ecal_publisher_config.h"
+#include "ecal/config/ecal_subscriber_config.h"
 
 #include "ecal/ecal_os.h"
 #include "ecal/ecal_log_level.h"
@@ -51,7 +51,7 @@ namespace eCAL
         TransportLayer::Configuration    transport_layer_options{};
         Config::RegistrationOptions      registration_options{};
         Config::MonitoringOptions        monitoring_options{};
-        Config::ReceivingOptions         receiving_options{};
+        Subscriber::Configuration        subscriber_options{};
         Publisher::Configuration         publisher_options{};
         Config::TimesyncOptions          timesync_options{};
         Config::ServiceOptions           service_options{};

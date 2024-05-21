@@ -28,16 +28,16 @@ namespace eCAL
 {
   namespace Subscriber
   {
-    Configuration::Configuration()
-    {
-      // shm config
-      shm.enable = eCAL::Config::IsShmRecEnabled();
+    // Configuration::Configuration()
+    // {
+    //   // shm config
+    //   shm.enable = eCAL::Config::IsShmRecEnabled();
 
-      // udp config
-      udp.enable = eCAL::Config::IsUdpMulticastRecEnabled();
+    //   // udp config
+    //   udp.enable = eCAL::Config::IsUdpMulticastRecEnabled();
 
-      // tcp config
-      tcp.enable = eCAL::Config::IsTcpRecEnabled();
-    }
+    //   // tcp config
+    //   tcp.enable = eCAL::Config::IsTcpRecEnabled();
+    // }
   }
 }

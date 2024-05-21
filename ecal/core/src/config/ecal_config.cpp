@@ -110,9 +110,9 @@ namespace eCAL
     ECAL_API int               GetUdpMulticastRcvBufSizeBytes       () { return GetCurrentConfig().transport_layer_options.mc_options.recbuf; }
     ECAL_API bool              IsUdpMulticastJoinAllIfEnabled       () { return GetCurrentConfig().transport_layer_options.mc_options.join_all_interfaces; }
 
-    ECAL_API bool              IsUdpMulticastRecEnabled             () { return GetCurrentConfig().receiving_options.udp_mc_recv_enabled; }
-    ECAL_API bool              IsShmRecEnabled                      () { return GetCurrentConfig().receiving_options.shm_recv_enabled; }
-    ECAL_API bool              IsTcpRecEnabled                      () { return GetCurrentConfig().receiving_options.tcp_recv_enabled; }
+    ECAL_API bool              IsUdpMulticastRecEnabled             () { return GetCurrentConfig().subscriber_options.udp.enable; }
+    ECAL_API bool              IsShmRecEnabled                      () { return GetCurrentConfig().subscriber_options.shm.enable; }
+    ECAL_API bool              IsTcpRecEnabled                      () { return GetCurrentConfig().subscriber_options.tcp.enable; }
 
     ECAL_API bool              IsNpcapEnabled                       () { return GetCurrentConfig().transport_layer_options.mc_options.npcap_enabled; }
 

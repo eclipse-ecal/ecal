@@ -171,16 +171,16 @@ namespace eCAL
       shmMonitoringOptions.shm_monitoring_queue_size = iniConfig.get(EXPERIMENTAL, "shm_monitoring_queue_size", EXP_SHM_MONITORING_QUEUE_SIZE);
 
       // receiving options
-      auto& receivingOptions = receiving_options;
-      receivingOptions.shm_recv_enabled    = iniConfig.get(NETWORK, "shm_rec_enabled",    NET_SHM_REC_ENABLED);
-      receivingOptions.tcp_recv_enabled    = iniConfig.get(NETWORK, "tcp_rec_enabled",    NET_TCP_REC_ENABLED);
-      receivingOptions.udp_mc_recv_enabled = iniConfig.get(NETWORK, "udp_mc_rec_enabled", NET_UDP_MC_REC_ENABLED);
+      auto& subscriberOptions = subscriber_options;
+      subscriberOptions.shm.enable = iniConfig.get(NETWORK, "shm_rec_enabled",    NET_SHM_REC_ENABLED) != 0;
+      subscriberOptions.tcp.enable = iniConfig.get(NETWORK, "tcp_rec_enabled",    NET_TCP_REC_ENABLED) != 0;
+      subscriberOptions.udp.enable = iniConfig.get(NETWORK, "udp_mc_rec_enabled", NET_UDP_MC_REC_ENABLED) != 0;
 
       // publisher options
       auto& publisherOptions = publisher_options;
-      publisherOptions.shm.enable    = iniConfig.get(PUBLISHER, "use_shm",    static_cast<int>(PUB_USE_SHM)) != 0;
-      publisherOptions.tcp.enable    = iniConfig.get(PUBLISHER, "use_tcp",    static_cast<int>(PUB_USE_TCP)) != 0;
-      publisherOptions.udp.enable    = iniConfig.get(PUBLISHER, "use_udp_mc", static_cast<int>(PUB_USE_UDP_MC)) != 0;
+      publisherOptions.shm.enable = iniConfig.get(PUBLISHER, "use_shm",    static_cast<int>(PUB_USE_SHM)) != 0;
+      publisherOptions.tcp.enable = iniConfig.get(PUBLISHER, "use_tcp",    static_cast<int>(PUB_USE_TCP)) != 0;
+      publisherOptions.udp.enable = iniConfig.get(PUBLISHER, "use_udp_mc", static_cast<int>(PUB_USE_UDP_MC)) != 0;
 
       // timesync options
       auto& timesyncOptions = timesync_options;
