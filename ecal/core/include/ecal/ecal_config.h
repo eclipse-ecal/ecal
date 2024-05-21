@@ -30,7 +30,7 @@
 //@{ 
 namespace eCAL
 {
-  ECAL_API Configuration& GetCurrentConfig();
+  ECAL_API Configuration& GetConfiguration();
   
   namespace Config
   {

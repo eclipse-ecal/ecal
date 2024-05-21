@@ -238,8 +238,19 @@ namespace eCAL
       InitConfig(g_default_ini_file);
     }
 
-    Configuration& GetCurrentConfig()
+    Configuration::Configuration()
+    : Configuration(0, nullptr)
     {
-      return g_ecal_config();
+      InitConfig();
+    }
+
+    std::string Configuration::GetIniFilePath()
+    {
+      return ecal_ini_file_path;
+    }
+
+    Configuration& GetConfiguration()
+    {
+      return g_ecal_configuration;
     };
 }

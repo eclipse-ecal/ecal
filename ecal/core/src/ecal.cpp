@@ -136,7 +136,7 @@ namespace eCAL
       InitGlobals();
     }
     
-    g_globals()->SetEcalConfig(config_);
+    g_ecal_configuration = config_;
 
     if (unit_name_ != nullptr)
     {
@@ -146,7 +146,7 @@ namespace eCAL
     g_globals_ctx_ref_cnt++;
 
      // (post)initialize single components
-    const int success = g_globals()->Initialize(components_, &GetCurrentConfig().command_line_arguments.config_keys);
+    const int success = g_globals()->Initialize(components_, &GetConfiguration().command_line_arguments.config_keys);
 
     if (config_.command_line_arguments.dump_config)
     {

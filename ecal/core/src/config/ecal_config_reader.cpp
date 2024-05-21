@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -451,25 +451,5 @@ namespace eCAL
   std::string CConfig::get(const std::string& section_, const std::string& key_, const char* default_)
   {
     return m_impl->GetValue(section_.c_str(), key_.c_str(), default_);
-  }
-
-  bool CfgGetBool(const std::string& section_, const std::string& key_, bool default_ /*= false*/)
-  {
-    return g_config()->get(section_, key_, default_);
-  }
-
-  int CfgGetInt(const std::string& section_, const std::string& key_, int default_ /*= 0*/)
-  {
-    return g_config()->get(section_, key_, default_);
-  }
-
-  double CfgGetDouble(const std::string& section_, const std::string& key_, double default_ /*= 0.0*/)
-  {
-    return g_config()->get(section_, key_, default_);
-  }
-
-  std::string CfgGetString(const std::string& section_, const std::string& key_, const char* default_ /*= ""*/)
-  {
-    return g_config()->get(section_, key_, default_);
   }
 }

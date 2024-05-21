@@ -31,10 +31,9 @@
 // Forward declaration of global accessible classes
 namespace eCAL
 {
-  class  CGlobals;
-  class  CConfig;
-  class  CLog;
-	struct Configuration;
+  class   CGlobals;
+  class   CLog;
+  struct  Configuration;
 
 #if ECAL_CORE_MONITORING
   class  CMonitoring;
@@ -67,9 +66,7 @@ namespace eCAL
 
   // Declaration of getter functions for globally accessible variable instances
   CGlobals*               g_globals();
-  CConfig*                g_config();
   CLog*                   g_log();
-  Configuration&	        g_ecal_config();
 #if ECAL_CORE_MONITORING
   CMonitoring*            g_monitoring();
 #endif
@@ -102,6 +99,7 @@ namespace eCAL
   extern std::atomic<int>              g_globals_ctx_ref_cnt;
 
   extern std::string                   g_default_ini_file;
+  extern Configuration                 g_ecal_configuration;
 
   extern std::string                   g_host_name;
   extern std::string                   g_unit_name;

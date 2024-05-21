@@ -36,7 +36,7 @@ namespace eCAL
     {
       struct ECAL_API Configuration
       {
-        bool enable = false;               //!< enable layer
+        bool enable;                                                  //!< enable layer
       };
     }
 
@@ -44,7 +44,7 @@ namespace eCAL
     {
       struct ECAL_API Configuration
       {
-        bool enable = false;               //!< enable layer
+        bool enable;                                                  //!< enable layer
       };
     }
 
@@ -52,13 +52,13 @@ namespace eCAL
     {
       struct ECAL_API Configuration
       {
-        bool enable = false;               //!< enable layer
+        bool enable;                                                  //!< enable layer
       };
     }
 
     struct ECAL_API Configuration
     {
-      // Configuration();
+      Configuration();
 
       SHM::Configuration shm;
       UDP::Configuration udp;

@@ -50,7 +50,6 @@
 #include "service/ecal_clientgate.h"
 #endif
 #include "ecal_descgate.h"
-#include "ecal/types/ecal_config_types.h"
 
 #include <memory>
 
@@ -64,16 +63,12 @@ namespace eCAL
 
     int Initialize     ( unsigned int components_, std::vector<std::string>* config_keys_ = nullptr);
     bool IsInitialized ( unsigned int component_  );
-
-    void SetEcalConfig(Configuration& ecal_config_);
     
     unsigned int GetComponents() const { return(components); };
 
     int Finalize();
 
-    const std::unique_ptr<CConfig>&                                       config()                 { return config_instance; };
     const std::unique_ptr<CLog>&                                          log()                    { return log_instance; };
-    Configuration&                                                        ecal_config()            { return ecal_config_instance; };
 
 #if ECAL_CORE_MONITORING
     const std::unique_ptr<CMonitoring>&                                   monitoring()             { return monitoring_instance; };
@@ -105,7 +100,6 @@ namespace eCAL
   private:
     bool                                                                  initialized;
     unsigned int                                                          components;
-    std::unique_ptr<CConfig>                                              config_instance;
     std::unique_ptr<CLog>                                                 log_instance;
 #if ECAL_CORE_MONITORING
     std::unique_ptr<CMonitoring>                                          monitoring_instance;
@@ -133,6 +127,5 @@ namespace eCAL
     
 #endif
     std::unique_ptr<CDescGate>                                            descgate_instance;
-    Configuration                                                         ecal_config_instance;
   };
 }

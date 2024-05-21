@@ -37,17 +37,12 @@
 
 namespace eCAL
 {
-  CGlobals::CGlobals() : initialized(false), components(0), ecal_config_instance(0, nullptr)
+  CGlobals::CGlobals() : initialized(false), components(0)
   {}
 
   CGlobals::~CGlobals()
   {
     Finalize();
-  }
-
-  void CGlobals::SetEcalConfig(Configuration& ecal_config_)
-  {    
-    ecal_config_instance = ecal_config_; 
   }
 
   int CGlobals::Initialize(unsigned int components_, std::vector<std::string>* config_keys_ /*= nullptr*/)
@@ -352,8 +347,6 @@ namespace eCAL
     memfile_map_instance            = nullptr;
 #endif
     log_instance                    = nullptr;
-    config_instance                 = nullptr;
-
     initialized = false;
 
     return(0);

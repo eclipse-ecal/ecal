@@ -57,15 +57,22 @@ namespace eCAL
         Config::ServiceOptions           service{};
         Config::ApplicationOptions       application{};
         Config::LoggingOptions           logging{};
-        Cli::Configuration               command_line_arguments{};
-        std::string                      ecal_ini_file_path{};        
+        Cli::Configuration               command_line_arguments{};        
         
+        ECAL_API Configuration();
         ECAL_API Configuration(int argc_ , char **argv_);
         ECAL_API Configuration(std::vector<std::string> args_);
 
         ECAL_API void InitConfigWithDefaultIni();
-        ECAL_API void InitConfig(std::string ini_path_);
+        ECAL_API void InitConfig(std::string ini_path_ = std::string(""));
 
+        ECAL_API std::string GetIniFilePath();
+
+        friend class CmdParser;
+
+        protected:
+          std::string                    ecal_ini_file_path{};
+          
         private:
           ECAL_API void Init(int argc_ , char **argv_);
     };

@@ -60,7 +60,7 @@ namespace eCAL
 
       // call the function via its class because it's a virtual function that is called in constructor/destructor,-
       // where the vtable is not created yet, or it's destructed.
-      explicit CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = eCAL::GetCurrentConfig().publisher) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation(), config_)
+      explicit CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = eCAL::GetConfiguration().publisher) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation(), config_)
       {
       }
 
@@ -92,7 +92,7 @@ namespace eCAL
        *
        * @return  True if it succeeds, false if it fails.
       **/
-      bool Create(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = eCAL::GetCurrentConfig().publisher)
+      bool Create(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = eCAL::GetConfiguration().publisher)
       {
         return(CMsgPublisher<T>::Create(topic_name_, GetDataTypeInformation(), config_));
       }

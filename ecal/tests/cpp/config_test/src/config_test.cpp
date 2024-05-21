@@ -85,32 +85,32 @@ TEST(core_cpp_config, user_config_passing)
   EXPECT_EQ(0, eCAL::Initialize(custom_config, "User Config Passing Test", eCAL::Init::Default));
 
   // Test boolean assignment, default is false
-  EXPECT_EQ(network_enabled, eCAL::GetCurrentConfig().transport_layer.network_enabled);
+  EXPECT_EQ(network_enabled, eCAL::GetConfiguration().transport_layer.network_enabled);
 
   // Test IP address assignment, default is 239.0.0.1
-  EXPECT_EQ(ip_address, static_cast<std::string>(eCAL::GetCurrentConfig().transport_layer.mc_options.group));
+  EXPECT_EQ(ip_address, static_cast<std::string>(eCAL::GetConfiguration().transport_layer.mc_options.group));
 
   // Test UDP send buffer assignment, default is 5242880
-  EXPECT_EQ(upd_snd_buff, static_cast<int>(eCAL::GetCurrentConfig().transport_layer.mc_options.sndbuf));
+  EXPECT_EQ(upd_snd_buff, static_cast<int>(eCAL::GetConfiguration().transport_layer.mc_options.sndbuf));
 
   // Test monitoring timeout assignment, default is 5000U
-  EXPECT_EQ(mon_timeout, eCAL::GetCurrentConfig().monitoring.monitoring_timeout);
+  EXPECT_EQ(mon_timeout, eCAL::GetConfiguration().monitoring.monitoring_timeout);
 
   // Test monitoring filter exclude assignment, default is "_.*"
-  EXPECT_EQ(mon_filter_excl, eCAL::GetCurrentConfig().monitoring.filter_excl);
+  EXPECT_EQ(mon_filter_excl, eCAL::GetConfiguration().monitoring.filter_excl);
 
   // Test monitoring console log assignment, default is (log_level_info | log_level_warning | log_level_error | log_level_fatal)
-  EXPECT_EQ(mon_log_filter_con, eCAL::GetCurrentConfig().logging.filter_log_con);
+  EXPECT_EQ(mon_log_filter_con, eCAL::GetConfiguration().logging.filter_log_con);
 
   // Test monitoring mode assignment, default is eCAL::Config::MonitoringMode::none
-  EXPECT_EQ(monitoring_mode, eCAL::GetCurrentConfig().monitoring.monitoring_mode);
+  EXPECT_EQ(monitoring_mode, eCAL::GetConfiguration().monitoring.monitoring_mode);
 
   // Test publisher sendmode assignment, default is eCAL::TLayer::eSendMode::smode_auto
-  EXPECT_EQ(pub_use_shm, eCAL::GetCurrentConfig().publisher.shm.enable);
+  EXPECT_EQ(pub_use_shm, eCAL::GetConfiguration().publisher.shm.enable);
 
   // Test registration option assignment, default timeout is 60000U and default refresh is 1000U
-  EXPECT_EQ(registration_timeout, eCAL::GetCurrentConfig().registration.getTimeoutMS());
-  EXPECT_EQ(registration_refresh, eCAL::GetCurrentConfig().registration.getRefreshMS());
+  EXPECT_EQ(registration_timeout, eCAL::GetConfiguration().registration.getTimeoutMS());
+  EXPECT_EQ(registration_refresh, eCAL::GetConfiguration().registration.getRefreshMS());
 
   // Finalize eCAL API
   EXPECT_EQ(0, eCAL::Finalize());

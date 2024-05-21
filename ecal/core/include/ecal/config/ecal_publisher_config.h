@@ -100,13 +100,13 @@ namespace eCAL
     {
       struct ECAL_API Configuration
       {
-        bool               enable                  = false;               //!< enable layer
-        bool               zero_copy_mode          = false;               //!< enable zero copy shared memory transport mode
-        int                acknowledge_timeout_ms  = 0;                   /*!< force connected subscribers to send acknowledge event after processing the message
+        bool               enable;                                    //!< enable layer
+        bool               zero_copy_mode;                            //!< enable zero copy shared memory transport mode
+        int                acknowledge_timeout_ms;                    /*!< force connected subscribers to send acknowledge event after processing the message
                                                                                  the publisher send call is blocked on this event with this timeout (0 == no handshake) */
-        size_t             memfile_min_size_bytes  = 4096;                //!< default memory file size for new publisher
-        size_t             memfile_reserve_percent = 50;                  //!< dynamic file size reserve before recreating memory file if topic size changes
-        size_t             memfile_buffer_count    = 1;                   //!< maximum number of used buffers (needs to be greater than 1, default = 1)
+        size_t             memfile_min_size_bytes;                    //!< default memory file size for new publisher
+        size_t             memfile_reserve_percent;                   //!< dynamic file size reserve before recreating memory file if topic size changes
+        size_t             memfile_buffer_count;                      //!< maximum number of used buffers (needs to be greater than 1, default = 1)
       };
     }
 
@@ -114,9 +114,9 @@ namespace eCAL
     {
       struct ECAL_API Configuration
       {
-        bool               enable                  = false;               //!< enable layer
-        bool               loopback                = false;               //!< enable to receive udp messages on the same local machine
-        int                sndbuf_size_bytes       = (5*1024*1024);       //!< udp send buffer size in bytes (default 5MB)
+        bool               enable;                                    //!< enable layer
+        bool               loopback;                                  //!< enable to receive udp messages on the same local machine
+        int                sndbuf_size_bytes;                         //!< udp send buffer size in bytes (default 5MB)
       };
     }
 
@@ -124,20 +124,20 @@ namespace eCAL
     {
       struct ECAL_API Configuration
       {
-        bool               enable                  = false;               //!< enable layer
+        bool               enable;                                    //!< enable layer
       };
     }
 
     struct ECAL_API Configuration
     {
-      // Configuration();
+      Configuration();
 
       SHM::Configuration   shm;
       UDP::Configuration   udp;
       TCP::Configuration   tcp;
 
-      bool                 share_topic_type        = true;                //!< share topic type via registration
-      bool                 share_topic_description = true;                //!< share topic description via registration
+      bool                 share_topic_type;                          //!< share topic type via registration
+      bool                 share_topic_description;                   //!< share topic description via registration
     };
   }
 }

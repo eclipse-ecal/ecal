@@ -24,6 +24,7 @@
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
 #include "ecal_globals.h"
+#include "ecal/types/ecal_config_types.h"
 #include <atomic>
 #include <string>
 
@@ -33,6 +34,7 @@ namespace eCAL
   std::atomic<int>              g_globals_ctx_ref_cnt;
 
   std::string                   g_default_ini_file(ECAL_DEFAULT_CFG);
+  Configuration                 g_ecal_configuration{};
 
   std::string                   g_host_name;
   std::string                   g_unit_name;
@@ -88,12 +90,6 @@ namespace eCAL
     return g_globals_ctx;
   }
 
-  CConfig* g_config()
-  {
-    if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->config().get());
-  }
-
   CLog* g_log()
   {
     if (g_globals() == nullptr) return(nullptr);
@@ -102,7 +98,7 @@ namespace eCAL
 
   Configuration& g_ecal_config()
   {
-    return(g_globals()->ecal_config());
+    return(g_ecal_configuration);
   }
 
 #if ECAL_CORE_MONITORING

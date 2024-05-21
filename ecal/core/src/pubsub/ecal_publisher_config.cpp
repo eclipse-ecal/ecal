@@ -28,26 +28,9 @@ namespace eCAL
 {
   namespace Publisher
   {
-    // Configuration::Configuration() :
-    //   share_topic_type(eCAL::Config::IsTopicTypeSharingEnabled()),
-    //   share_topic_description(eCAL::Config::IsTopicDescriptionSharingEnabled())
-    // {
-    //   // shm config
-    //   shm.enable                  = eCAL::Config::GetPublisherShmMode();
-    //   shm.zero_copy_mode          = eCAL::Config::IsMemfileZerocopyEnabled();
-    //   shm.acknowledge_timeout_ms  = eCAL::Config::GetMemfileAckTimeoutMs();
-
-    //   shm.memfile_min_size_bytes  = eCAL::Config::GetMemfileMinsizeBytes();
-    //   shm.memfile_reserve_percent = eCAL::Config::GetMemfileOverprovisioningPercentage();
-    //   shm.memfile_buffer_count    = eCAL::Config::GetMemfileBufferCount();
-
-    //   // udp config
-    //   udp.enable                  = eCAL::Config::GetPublisherUdpMulticastMode();
-    //   udp.loopback                = false;  // TODO: make this configurable
-    //   udp.sndbuf_size_bytes       = eCAL::Config::GetUdpMulticastSndBufSizeBytes();
-
-    //   // tcp config
-    //   tcp.enable                  = eCAL::Config::GetPublisherTcpMode();
-    // }
+    Configuration::Configuration() 
+    {
+      *this = GetConfiguration().publisher;
+    }
   }
 }
