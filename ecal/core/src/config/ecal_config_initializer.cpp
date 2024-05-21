@@ -178,9 +178,9 @@ namespace eCAL
 
       // publisher options
       auto& publisherOptions = publisher_options;
-      publisherOptions.shm.enable    = (iniConfig.get(PUBLISHER, "use_shm",    static_cast<int>(PUB_USE_SHM)) == 0) ? false : true;
-      publisherOptions.tcp.enable    = (iniConfig.get(PUBLISHER, "use_tcp",    static_cast<int>(PUB_USE_TCP)) == 0) ? false : true;
-      publisherOptions.udp.enable    = (iniConfig.get(PUBLISHER, "use_udp_mc", static_cast<int>(PUB_USE_UDP_MC)) == 0) ? false : true;
+      publisherOptions.shm.enable    = iniConfig.get(PUBLISHER, "use_shm",    static_cast<int>(PUB_USE_SHM)) != 0;
+      publisherOptions.tcp.enable    = iniConfig.get(PUBLISHER, "use_tcp",    static_cast<int>(PUB_USE_TCP)) != 0;
+      publisherOptions.udp.enable    = iniConfig.get(PUBLISHER, "use_udp_mc", static_cast<int>(PUB_USE_UDP_MC)) != 0;
 
       // timesync options
       auto& timesyncOptions = timesync_options;
