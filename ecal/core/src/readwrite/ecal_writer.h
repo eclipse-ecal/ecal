@@ -79,7 +79,7 @@ namespace eCAL
       }
     };
 
-    CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Publisher::Configuration& config_ = eCAL::GetCurrentConfig().publisher_options);
+    CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Publisher::Configuration& config_ = eCAL::GetCurrentConfig().publisher);
     ~CDataWriter();
 
     bool Stop();

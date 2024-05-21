@@ -28,7 +28,7 @@ int main(int argc, char **argv)
   eCAL::Configuration my_config(argc, argv);
 
   // setting configuration
-  my_config.monitoring_options.network_monitoring = true;
+  my_config.monitoring.network_monitoring = true;
 
   // initialize eCAL API
   eCAL::Initialize(my_config, "config sample");

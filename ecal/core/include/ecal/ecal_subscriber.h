@@ -28,7 +28,7 @@
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
-#include <ecal/config/ecal_subscriber_config.h>
+#include <ecal/ecal_config.h>
 #include <ecal/ecal_types.h>
 
 #include <memory>
@@ -97,7 +97,7 @@ namespace eCAL
      * @param data_type_info_  Topic data type information (encoding, type, descriptor).
      * @param config_          Optional configuration parameters.
     **/
-    ECAL_API CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_ = eCAL::GetCurrentConfig().subscriber_options);
+    ECAL_API CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_ = eCAL::GetCurrentConfig().subscriber);
 
     /**
      * @brief Constructor.
@@ -105,7 +105,7 @@ namespace eCAL
      * @param topic_name_      Unique topic name.
      * @param data_type_info_  Topic data type information (encoding, type, descriptor).
     **/
-    ECAL_API explicit CSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = eCAL::GetCurrentConfig().subscriber_options);
+    ECAL_API explicit CSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = eCAL::GetCurrentConfig().subscriber);
 
     /**
      * @brief Destructor. 
@@ -141,7 +141,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_API bool Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_ = eCAL::GetCurrentConfig().subscriber_options);
+    ECAL_API bool Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_ = eCAL::GetCurrentConfig().subscriber);
 
     /**
      * @brief Creates this object.

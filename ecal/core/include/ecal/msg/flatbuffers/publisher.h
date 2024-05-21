@@ -53,7 +53,7 @@ namespace eCAL
        * @param topic_name_  Unique topic name.
        * @param config_      Optional configuration parameters.
       **/
-      CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = eCAL::GetCurrentConfig().publisher_options) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation(), config_)
+      CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = eCAL::GetCurrentConfig().publisher) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation(), config_)
       {
       }
 
@@ -85,7 +85,7 @@ namespace eCAL
        *
        * @return  True if it succeeds, false if it fails.
       **/
-      bool Create(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = eCAL::GetCurrentConfig().publisher_options)
+      bool Create(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = eCAL::GetCurrentConfig().publisher)
       {
         return(CMsgPublisher<T>::Create(topic_name_, GetDataTypeInformation(), config_));
       }

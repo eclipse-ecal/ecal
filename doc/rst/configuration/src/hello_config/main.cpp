@@ -18,13 +18,13 @@ int main(int argc, char** argv)
   try
   {
     // Set the communication layer to network
-    custom_config.transport_layer_options.network_enabled = true;
+    custom_config.transport_layer.network_enabled = true;
 
     // Set a custom udp multicast group, correct IP address necessary
-    custom_config.transport_layer_options.mc_options.group = std::string("239.0.1.1");
+    custom_config.transport_layer.mc_options.group = std::string("239.0.1.1");
 
     // Increase the send buffer, size increase in 1024 bytes steps
-    custom_config.transport_layer_options.mc_options.sndbuf = (5242880 + 10 * 1024);
+    custom_config.transport_layer.mc_options.sndbuf = (5242880 + 10 * 1024);
   }
   catch (std::invalid_argument& e)
   {

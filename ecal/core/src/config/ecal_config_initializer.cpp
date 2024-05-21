@@ -106,11 +106,11 @@ namespace eCAL
       if (!ini_path_.empty())
       {
         iniConfig.AddFile(ini_path_);
-        loaded_ecal_ini_file = ini_path_;
+        ecal_ini_file_path = ini_path_;
       }
 
       // transport layer options
-      auto& transportLayerOptions = transport_layer_options;
+      auto& transportLayerOptions = transport_layer;
       transportLayerOptions.network_enabled			       = iniConfig.get(NETWORK,      "network_enabled",            NET_ENABLED);
       transportLayerOptions.drop_out_of_order_messages = iniConfig.get(EXPERIMENTAL, "drop_out_of_order_messages", EXP_DROP_OUT_OF_ORDER_MESSAGES);
 
@@ -149,13 +149,13 @@ namespace eCAL
       // registration options
       auto registrationTimeout        = iniConfig.get(COMMON,    "registration_timeout", CMN_REGISTRATION_TO);
       auto registrationRefresh        = iniConfig.get(COMMON,    "registration_refresh", CMN_REGISTRATION_REFRESH);
-      registration_options            = Config::RegistrationOptions(registrationTimeout, registrationRefresh);
-      auto& registrationOptions       = registration_options;
+      registration            = Config::RegistrationOptions(registrationTimeout, registrationRefresh);
+      auto& registrationOptions       = registration;
       registrationOptions.share_tdesc = iniConfig.get(PUBLISHER, "share_tdesc",          PUB_SHARE_TDESC);
       registrationOptions.share_ttype = iniConfig.get(PUBLISHER, "share_ttype",          PUB_SHARE_TTYPE);
 
       // monitoring options
-      auto& monitoringOptions = monitoring_options;
+      auto& monitoringOptions = monitoring;
       auto  monitoringMode                          = iniConfig.get(EXPERIMENTAL, "shm_monitoring_enabled",      false) ? Config::MonitoringMode::shm_monitoring : Config::MonitoringMode::none;
       monitoringOptions.monitoring_mode             = static_cast<Config::eCAL_MonitoringMode_Filter>(monitoringMode);
       monitoringOptions.monitoring_timeout          = iniConfig.get(MONITORING,   "timeout", MON_TIMEOUT);;
@@ -171,36 +171,36 @@ namespace eCAL
       shmMonitoringOptions.shm_monitoring_queue_size = iniConfig.get(EXPERIMENTAL, "shm_monitoring_queue_size", EXP_SHM_MONITORING_QUEUE_SIZE);
 
       // receiving options
-      auto& subscriberOptions = subscriber_options;
+      auto& subscriberOptions = subscriber;
       subscriberOptions.shm.enable = iniConfig.get(NETWORK, "shm_rec_enabled",    NET_SHM_REC_ENABLED) != 0;
       subscriberOptions.tcp.enable = iniConfig.get(NETWORK, "tcp_rec_enabled",    NET_TCP_REC_ENABLED) != 0;
       subscriberOptions.udp.enable = iniConfig.get(NETWORK, "udp_mc_rec_enabled", NET_UDP_MC_REC_ENABLED) != 0;
 
       // publisher options
-      auto& publisherOptions = publisher_options;
+      auto& publisherOptions = publisher;
       publisherOptions.shm.enable = iniConfig.get(PUBLISHER, "use_shm",    static_cast<int>(PUB_USE_SHM)) != 0;
       publisherOptions.tcp.enable = iniConfig.get(PUBLISHER, "use_tcp",    static_cast<int>(PUB_USE_TCP)) != 0;
       publisherOptions.udp.enable = iniConfig.get(PUBLISHER, "use_udp_mc", static_cast<int>(PUB_USE_UDP_MC)) != 0;
 
       // timesync options
-      auto& timesyncOptions = timesync_options;
+      auto& timesyncOptions = timesync;
       timesyncOptions.timesync_module_rt     = iniConfig.get(TIME, "timesync_module_rt", TIME_SYNC_MODULE);
       timesyncOptions.timesync_module_replay = iniConfig.get(TIME, "timesync_module_replay", TIME_SYNC_MOD_REPLAY);
 
       // service options
-      auto& serviceOptions = service_options;
+      auto& serviceOptions = service;
       serviceOptions.protocol_v0 = iniConfig.get(SERVICE, "protocol_v0", SERVICE_PROTOCOL_V0);
       serviceOptions.protocol_v1 = iniConfig.get(SERVICE, "protocol_v1", SERVICE_PROTOCOL_V1);
 
       // sys options
-      auto& sysOptions = application_options.sys_options;
+      auto& sysOptions = application.sys_options;
       sysOptions.filter_excl = iniConfig.get(SYS, "filter_excl", SYS_FILTER_EXCL);
 
       // process options
-      auto& processOptions = application_options.startup_options;
+      auto& processOptions = application.startup_options;
       processOptions.terminal_emulator = iniConfig.get(PROCESS, "terminal_emulator", PROCESS_TERMINAL_EMULATOR);
 
-      auto& loggingOptions = logging_options;
+      auto& loggingOptions = logging;
       // needs to be adapted when switching from simpleini
       loggingOptions.filter_log_con              = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_con",  "info,warning,error,fatal"));
       loggingOptions.filter_log_file             = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_file", ""));
