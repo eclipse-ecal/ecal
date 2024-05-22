@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -406,13 +406,6 @@ namespace eCAL
 
   size_t CDataWriter::Write(CPayloadWriter& payload_, long long time_, long long id_)
   {
-    {
-      // we should think about if we would like to potentially use the `time_` variable to tick with (but we would need the same base for checking incoming samples then....
-      const auto send_time = std::chrono::steady_clock::now();
-      const std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
-      m_frequency_calculator.addTick(send_time);
-    }
-
     // check writer modes
     if (!CheckWriterModes())
     {
@@ -769,6 +762,14 @@ namespace eCAL
 
     // statistics
     g_process_wclock++;
+
+    // update send frequency
+    {
+      // we should think about if we would like to potentially use the `time_` variable to tick with (but we would need the same base for checking incoming samples then....
+      const auto send_time = std::chrono::steady_clock::now();
+      const std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
+      m_frequency_calculator.addTick(send_time);
+    }
   }
 
   std::string CDataWriter::Dump(const std::string& indent_ /* = "" */)
