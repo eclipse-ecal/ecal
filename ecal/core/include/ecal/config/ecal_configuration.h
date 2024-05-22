@@ -18,23 +18,23 @@
  */
 
 /**
- * @file   ecal_config_types.h
- * @brief  eCAL config interface using structs
+ * @file   ecal_configuration.h
+ * @brief  eCAL configuration interface
 **/
 
 #pragma once
 
-#include "ecal_application_options.h"
-#include "ecal_custom_data_types.h"
-#include "ecal_monitoring_options.h"
-#include "ecal_publisher_options.h"
-#include "ecal_registration_options.h"
-#include "ecal_service_options.h"
-#include "ecal_logging_options.h"
-#include "ecal_transport_layer_options.h"
-#include "user_arg_options.h"
-#include "ecal/config/ecal_publisher_config.h"
-#include "ecal/config/ecal_subscriber_config.h"
+#include <ecal/config/ecal_application_config.h>
+#include <ecal/config/ecal_monitoring_config.h>
+#include <ecal/config/ecal_registration_config.h>
+#include <ecal/config/ecal_service_config.h>
+#include <ecal/config/ecal_logging_config.h>
+#include <ecal/config/ecal_transport_layer_config.h>
+#include <ecal/config/user_arguments.h>
+#include <ecal/config/ecal_publisher_config.h>
+#include <ecal/config/ecal_subscriber_config.h>
+#include <ecal/types/ecal_custom_data_types.h>
+
 
 #include "ecal/ecal_os.h"
 #include "ecal/ecal_log_level.h"
@@ -49,14 +49,14 @@ namespace eCAL
     struct Configuration
     {
         TransportLayer::Configuration    transport_layer{};
-        Config::RegistrationOptions      registration{};
-        Config::MonitoringOptions        monitoring{};
+        Registration::Configuration      registration{};
+        Monitoring::Configuration        monitoring{};
         Subscriber::Configuration        subscriber{};
         Publisher::Configuration         publisher{};
-        Config::TimesyncOptions          timesync{};
-        Config::ServiceOptions           service{};
+        Service::TimesyncOptions         timesync{};
+        Service::Configuration           service{};
         Application::Configuration       application{};
-        Config::LoggingOptions           logging{};
+        Logging::Configuration           logging{};
         Cli::Configuration               command_line_arguments{};        
         
         ECAL_API Configuration();

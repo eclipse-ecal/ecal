@@ -52,7 +52,7 @@ TEST(core_cpp_config, user_config_passing)
   const unsigned int        mon_timeout                          = 6000U;
   const std::string         mon_filter_excl                      = "_A.*";
   const eCAL_Logging_Filter mon_log_filter_con                   = log_level_warning;
-  const eCAL::Config::eCAL_MonitoringMode_Filter monitoring_mode = eCAL::Config::MonitoringMode::udp_monitoring;
+  const eCAL::Monitoring::Types::Mode monitoring_mode            = eCAL::Monitoring::Types::Mode::udp_monitoring;
   
   // Publisher options
   const bool pub_use_shm = true;
@@ -60,7 +60,7 @@ TEST(core_cpp_config, user_config_passing)
   // Registration options
   const unsigned int registration_timeout = 80000U;
   const unsigned int registration_refresh = 2000U;
-  const eCAL::Config::RegistrationOptions registration = eCAL::Config::RegistrationOptions(registration_timeout, registration_refresh);
+  const eCAL::Registration::Configuration registration = eCAL::Registration::Configuration(registration_timeout, registration_refresh);
 
   try{
     custom_config.transport_layer.network_enabled   = network_enabled;
@@ -102,7 +102,7 @@ TEST(core_cpp_config, user_config_passing)
   // Test monitoring console log assignment, default is (log_level_info | log_level_warning | log_level_error | log_level_fatal)
   EXPECT_EQ(mon_log_filter_con, eCAL::GetConfiguration().logging.filter_log_con);
 
-  // Test monitoring mode assignment, default is eCAL::Config::MonitoringMode::none
+  // Test monitoring mode assignment, default is eCAL::Types::MonitoringMode::none
   EXPECT_EQ(monitoring_mode, eCAL::GetConfiguration().monitoring.monitoring_mode);
 
   // Test publisher sendmode assignment, default is eCAL::TLayer::eSendMode::smode_auto
@@ -181,26 +181,26 @@ TEST(ConfigDeathTest, user_config_death_test)
   // Test the registration option limits
   // Refresh timeout > registration timeout
   ASSERT_THROW(
-    eCAL::Config::RegistrationOptions(2000U, 3000U), std::invalid_argument);
+    eCAL::Registration::Configuration(2000U, 3000U), std::invalid_argument);
 
   // Refresh timeout = registration timeout
   ASSERT_THROW(
-    eCAL::Config::RegistrationOptions(2000U, 2000U), std::invalid_argument);
+    eCAL::Registration::Configuration(2000U, 2000U), std::invalid_argument);
 }
 
 TEST(core_cpp_config, config_custom_datatypes_tests)
 {
   // test custom datatype assignment operators
-  eCAL::Config::IpAddressV4 ip1;
-  eCAL::Config::IpAddressV4 ip2;
+  eCAL::Types::IpAddressV4 ip1;
+  eCAL::Types::IpAddressV4 ip2;
   EXPECT_EQ(static_cast<std::string>(ip1), static_cast<std::string>(ip2));
 
   ip1 = "192.168.0.2";
   ip2 = ip1;
   EXPECT_EQ(static_cast<std::string>(ip1), static_cast<std::string>(ip2));
 
-  eCAL::Config::ConstrainedInteger<0,1,10> s1;
-  eCAL::Config::ConstrainedInteger<0,1,10> s2;
+  eCAL::Types::ConstrainedInteger<0,1,10> s1;
+  eCAL::Types::ConstrainedInteger<0,1,10> s2;
   EXPECT_EQ(static_cast<int>(s1), static_cast<int>(s2));
 
   s1 = 5;

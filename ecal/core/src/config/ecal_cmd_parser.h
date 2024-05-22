@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "ecal/types/user_arg_options.h"
+#include <ecal/config/user_arguments.h>
 
 #include <vector>
 #include <string>

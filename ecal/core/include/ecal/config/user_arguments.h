@@ -18,23 +18,29 @@
  */
 
 /**
- * @file   ecal_publisher_options.h
- * @brief  eCAL options for configuration of the publisher
+ * @file   user_arguments.h
+ * @brief  Arguments given by the user via command line
 **/
 
 #pragma once
 
-#include <ecal/ecal_tlayer.h>
+#include <string>
+#include <vector>
+#include <map>
 
 namespace eCAL
 {
-  namespace Config
+  namespace Cli
   {
-    struct PublisherOptions
+    // Map[Section][Option] = Value
+    using ConfigKey2DMap = std::map<std::string, std::map<std::string, std::string>>;
+
+    struct Configuration
     {
-      TLayer::eSendMode use_shm{};
-      TLayer::eSendMode use_tcp{};
-      TLayer::eSendMode use_udp_mc{};
+      std::vector<std::string> config_keys{};
+      ConfigKey2DMap           config_keys_map;
+      std::string              specified_config{};
+      bool                     dump_config{};
     };
   }
 }

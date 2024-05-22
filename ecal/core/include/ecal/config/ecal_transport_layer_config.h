@@ -18,13 +18,14 @@
  */
 
 /**
- * @file   ecal_transport_layer_options.h
- * @brief  eCAL options for configuration of the transport layer
+ * @file   ecal_transport_layer_config.h
+ * @brief  eCAL configuration for the transport layer
 **/
 
+// TODO PG: Deprecated?
 #pragma once
 
-#include "ecal_custom_data_types.h"
+#include <ecal/types/ecal_custom_data_types.h>
 
 namespace eCAL
 {
@@ -40,25 +41,25 @@ namespace eCAL
     struct SHMOptions
     {
       std::string                            host_group_name{};
-      Config::ConstrainedInteger<4096, 4096> memfile_minsize{};
-      Config::ConstrainedInteger<50, 1, 100> memfile_reserve{};
+      Types::ConstrainedInteger<4096, 4096>  memfile_minsize{};
+      Types::ConstrainedInteger<50, 1, 100>  memfile_reserve{};
       int                                    memfile_ack_timeout{};
-      Config::ConstrainedInteger<0, 1>       memfile_buffer_count{};
+      Types::ConstrainedInteger<0, 1>        memfile_buffer_count{};
       bool                                   drop_out_of_order_messages{};
       bool                                   memfile_zero_copy{};
     };
 
     struct UdpMulticastOptions
     {
-      Config::UdpConfigVersion                  config_version{};        
-      Config::IpAddressV4                       group{};
-      Config::IpAddressV4                       mask{};
-      Config::ConstrainedInteger<14000, 10>     port{};
-      unsigned int                              ttl{};
+      Types::UdpConfigVersion                  config_version{};        
+      Types::IpAddressV4                       group{};
+      Types::IpAddressV4                       mask{};
+      Types::ConstrainedInteger<14000, 10>     port{};
+      unsigned int                             ttl{};
       // TODO PG: are these minimum limits correct?
-      Config::ConstrainedInteger<5242880, 1024> sndbuf{};
-      Config::ConstrainedInteger<5242880, 1024> recbuf{};
-      bool                                      join_all_interfaces{};
+      Types::ConstrainedInteger<5242880, 1024> sndbuf{};
+      Types::ConstrainedInteger<5242880, 1024> recbuf{};
+      bool                                     join_all_interfaces{};
 
       int  bandwidth_max_udp{};
       bool npcap_enabled{};

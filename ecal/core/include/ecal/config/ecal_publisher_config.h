@@ -105,9 +105,9 @@ namespace eCAL
         bool               zero_copy_mode;                              //!< enable zero copy shared memory transport mode
         unsigned int       acknowledge_timeout_ms;                      /*!< force connected subscribers to send acknowledge event after processing the message
                                                                              the publisher send call is blocked on this event with this timeout (0 == no handshake) */
-        Config::ConstrainedInteger<4096, 4096> memfile_min_size_bytes;  //!< default memory file size for new publisher
-        Config::ConstrainedInteger<50, 1, 100> memfile_reserve_percent; //!< dynamic file size reserve before recreating memory file if topic size changes
-        Config::ConstrainedInteger<1, 1>       memfile_buffer_count;    //!< maximum number of used buffers (needs to be greater than 1, default = 1)
+        Types::ConstrainedInteger<4096, 4096> memfile_min_size_bytes;  //!< default memory file size for new publisher
+        Types::ConstrainedInteger<50, 1, 100> memfile_reserve_percent; //!< dynamic file size reserve before recreating memory file if topic size changes
+        Types::ConstrainedInteger<1, 1>       memfile_buffer_count;    //!< maximum number of used buffers (needs to be greater than 1, default = 1)
       };
     }
 
@@ -117,7 +117,7 @@ namespace eCAL
       {
         bool                                      enable;               //!< enable layer
         bool                                      loopback;             //!< enable to receive udp messages on the same local machine
-        Config::ConstrainedInteger<5242880, 1024> sndbuf_size_bytes;    //!< udp send buffer size in bytes (default 5MB)
+        Types::ConstrainedInteger<5242880, 1024> sndbuf_size_bytes;    //!< udp send buffer size in bytes (default 5MB)
       };
     }
 

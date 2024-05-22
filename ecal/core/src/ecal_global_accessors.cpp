@@ -24,7 +24,7 @@
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
 #include "ecal_globals.h"
-#include "ecal/types/ecal_config_types.h"
+#include "ecal/config/ecal_configuration.h"
 #include <atomic>
 #include <string>
 

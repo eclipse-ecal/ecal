@@ -18,8 +18,8 @@
  */
 
 /**
- * @file   ecal_registration_options.h
- * @brief  eCAL options for configuration of the registration layer
+ * @file   ecal_registration_config.h
+ * @brief  eCAL configuration for the registration layer
 **/
 
 #pragma once
@@ -31,7 +31,7 @@
 
 namespace eCAL
 {
-  namespace Config
+  namespace Registration
   {
     /**
      * @brief  Struct for storing RegistrationOptions.
@@ -44,11 +44,11 @@ namespace eCAL
      * 
      * @throws std::invalid_argument exception.
     **/
-    struct RegistrationOptions
+    struct Configuration
     {
       public:
-        ECAL_API RegistrationOptions();
-        ECAL_API RegistrationOptions(unsigned int reg_timeout_, unsigned int reg_refresh_);
+        ECAL_API Configuration();
+        ECAL_API Configuration(unsigned int reg_timeout_, unsigned int reg_refresh_);
 
         ECAL_API unsigned int getTimeoutMS() const;
         ECAL_API unsigned int getRefreshMS() const;

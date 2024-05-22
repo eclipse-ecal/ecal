@@ -18,40 +18,23 @@
  */
 
 /**
- * @file   ecal_application_options.h
- * @brief  eCAL options for configuration of applications
+ * @file   ecal_logging_config.h
+ * @brief  eCAL configuration for logging
 **/
 
 #pragma once
 
-#include <string>
-#include <ecal/ecal_os.h>
-#include <cstddef>
+#include <ecal/ecal_log_level.h>
 
 namespace eCAL
 {
-  namespace Application
+  namespace Logging
   {
-    namespace Sys
+    struct Configuration
     {
-      struct Configuration
-      {
-        std::string filter_excl;  // mama
-      };
-    }
-
-    namespace Startup
-    {
-      struct Configuration
-      {
-        std::string terminal_emulator;
-      };
-    }
-
-    struct ECAL_API Configuration
-    {
-      Sys::Configuration     sys;
-      Startup::Configuration startup;
+      eCAL_Logging_Filter filter_log_con{};
+      eCAL_Logging_Filter filter_log_file{};
+      eCAL_Logging_Filter filter_log_udp{};
     };
   }
 }

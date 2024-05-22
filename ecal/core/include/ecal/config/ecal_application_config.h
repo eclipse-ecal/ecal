@@ -18,28 +18,40 @@
  */
 
 /**
- * @file   ecal_service_options.h
- * @brief  eCAL options for configuration of services
+ * @file   ecal_application_config.h
+ * @brief  eCAL configuration for applications
 **/
 
 #pragma once
 
 #include <string>
+#include <ecal/ecal_os.h>
+#include <cstddef>
 
 namespace eCAL
 {
-  namespace Config
+  namespace Application
   {
-    struct ServiceOptions
+    namespace Sys
     {
-      bool protocol_v0{};
-      bool protocol_v1{};
-    };
+      struct Configuration
+      {
+        std::string filter_excl;  // mama
+      };
+    }
 
-    struct TimesyncOptions
+    namespace Startup
     {
-      std::string timesync_module_rt{};
-      std::string timesync_module_replay{};
+      struct Configuration
+      {
+        std::string terminal_emulator;
+      };
+    }
+
+    struct ECAL_API Configuration
+    {
+      Sys::Configuration     sys;
+      Startup::Configuration startup;
     };
   }
 }

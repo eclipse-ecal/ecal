@@ -118,9 +118,9 @@ namespace eCAL
       
       const std::string udp_config_version_string = iniConfig.get(NETWORK, "multicast_config_version", "v1");
       if (udp_config_version_string == "v1")
-        multicastOptions.config_version = Config::UdpConfigVersion::V1;
+        multicastOptions.config_version = Types::UdpConfigVersion::V1;
       if (udp_config_version_string == "v2")
-        multicastOptions.config_version = Config::UdpConfigVersion::V2;
+        multicastOptions.config_version = Types::UdpConfigVersion::V2;
       
       multicastOptions.group               = iniConfig.get(NETWORK, "multicast_group",       NET_UDP_MULTICAST_GROUP);
       multicastOptions.mask                = iniConfig.get(NETWORK, "multicast_mask",        NET_UDP_MULTICAST_MASK);
@@ -149,15 +149,15 @@ namespace eCAL
       // registration options
       auto registrationTimeout        = iniConfig.get(COMMON,    "registration_timeout", CMN_REGISTRATION_TO);
       auto registrationRefresh        = iniConfig.get(COMMON,    "registration_refresh", CMN_REGISTRATION_REFRESH);
-      registration            = Config::RegistrationOptions(registrationTimeout, registrationRefresh);
+      registration            = Registration::Configuration(registrationTimeout, registrationRefresh);
       auto& registrationOptions       = registration;
       registrationOptions.share_tdesc = iniConfig.get(PUBLISHER, "share_tdesc",          PUB_SHARE_TDESC);
       registrationOptions.share_ttype = iniConfig.get(PUBLISHER, "share_ttype",          PUB_SHARE_TTYPE);
 
       // monitoring options
       auto& monitoringOptions = monitoring;
-      auto  monitoringMode                          = iniConfig.get(EXPERIMENTAL, "shm_monitoring_enabled",      false) ? Config::MonitoringMode::shm_monitoring : Config::MonitoringMode::none;
-      monitoringOptions.monitoring_mode             = static_cast<Config::eCAL_MonitoringMode_Filter>(monitoringMode);
+      auto  monitoringMode                          = iniConfig.get(EXPERIMENTAL, "shm_monitoring_enabled",      false) ? Monitoring::Types::Mode::shm_monitoring :  Monitoring::Types::Mode::none;
+      monitoringOptions.monitoring_mode             = static_cast<Monitoring::Types::Mode_Filter>(monitoringMode);
       monitoringOptions.monitoring_timeout          = iniConfig.get(MONITORING,   "timeout", MON_TIMEOUT);;
       monitoringOptions.network_monitoring          = iniConfig.get(EXPERIMENTAL, "network_monitoring", EXP_NETWORK_MONITORING_ENABLED);
       monitoringOptions.filter_excl                 = iniConfig.get(MONITORING,   "filter_excl",                 MON_FILTER_EXCL);

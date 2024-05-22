@@ -35,7 +35,7 @@ The size object can be used like a normal integer.
   eCAL::Config::ConstrainedInteger<1024, 512, 8192> size_4mb = 1024 + 6 * 512;
   std::cout << size_4mb << "\n";
 
-For specifying sizes in the ecal configuration object, refer to the .ini file or "ecal/types/ecal_config_types.h" for the limitations.
+For specifying sizes in the ecal configuration object, refer to the .ini file or "ecal/config/ecal_configuration.h" for the limitations.
 
 Initialization of the configuration
 ===================================

@@ -33,7 +33,7 @@
 
 namespace eCAL
 {
-  namespace Config
+  namespace Types
   {
     /**
      * @brief  Class for evaluation and storing an IPv4/IPv6 address.

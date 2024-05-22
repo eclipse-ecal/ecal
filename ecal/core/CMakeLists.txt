@@ -478,7 +478,7 @@ set(ecal_header_cmn
     include/ecal/ecal_tlayer.h
     include/ecal/ecal_types.h
     include/ecal/ecal_util.h
-    include/ecal/types/ecal_config_types.h
+    include/ecal/config/ecal_configuration.h
 )
 
 set(ecal_header_cimpl

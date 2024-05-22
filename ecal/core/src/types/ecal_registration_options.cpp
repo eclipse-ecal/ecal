@@ -26,16 +26,16 @@
 
 namespace eCAL
 {
-  namespace Config
+  namespace Registration
   {
-    RegistrationOptions::RegistrationOptions()
+    Configuration::Configuration()
     : share_ttype(PUB_SHARE_TTYPE)
     , share_tdesc(PUB_SHARE_TDESC)
     , m_registration_timeout(CMN_REGISTRATION_TO)
     , m_registration_refresh(CMN_REGISTRATION_REFRESH)
     {}
 
-    RegistrationOptions::RegistrationOptions(unsigned int reg_timeout_, unsigned int reg_refresh_)
+    Configuration::Configuration(unsigned int reg_timeout_, unsigned int reg_refresh_)
     : share_ttype(PUB_SHARE_TTYPE)
     , share_tdesc(PUB_SHARE_TDESC)
     {
@@ -50,7 +50,7 @@ namespace eCAL
       }
     }
 
-    unsigned int RegistrationOptions::getTimeoutMS() const { return m_registration_timeout; }
-    unsigned int RegistrationOptions::getRefreshMS() const { return m_registration_refresh; }
+    unsigned int Configuration::getTimeoutMS() const { return m_registration_timeout; }
+    unsigned int Configuration::getRefreshMS() const { return m_registration_refresh; }
   }
 }

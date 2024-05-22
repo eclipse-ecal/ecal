@@ -18,45 +18,53 @@
  */
 
 /**
- * @file   ecal_monitoring_options.h
- * @brief  eCAL options for monitoring configuration
+ * @file   ecal_monitoring_config.h
+ * @brief  eCAL configuration for monitoring
 **/
 
 #pragma once
 
-#include "ecal_custom_data_types.h"
+#include <ecal/types/ecal_custom_data_types.h>
 
 namespace eCAL
 {
-  namespace Config
+  namespace Monitoring
   {
-    enum MonitoringMode
+    namespace Types
     {
-      none = 0,
-      udp_monitoring = 1 << 0,
-      shm_monitoring = 1 << 1
-    };
+      enum Mode
+      {
+        none = 0,
+        udp_monitoring = 1 << 0,
+        shm_monitoring = 1 << 1
+      };
 
-    using eCAL_MonitoringMode_Filter = char;
+      using Mode_Filter = char;
+    }
 
-    struct UDPMonitoringOptions
+    namespace UDP
     {
-      // Here?
-    };
+      struct Configuration
+      {
+      };
+    }
 
-    struct SHMMonitoringOptions
+    namespace SHM
     {
-      std::string shm_monitoring_domain{};
-      size_t      shm_monitoring_queue_size{};  
-    };
+      struct Configuration
+      {
+        std::string shm_monitoring_domain{};
+        size_t      shm_monitoring_queue_size{};  
+      };
+    }
 
-    struct MonitoringOptions
+    struct Configuration
     {
-      eCAL_MonitoringMode_Filter     monitoring_mode{};
-      ConstrainedInteger<1000, 1000> monitoring_timeout{};
-      bool                           network_monitoring{};
-      UDPMonitoringOptions           udp_options{};
-      SHMMonitoringOptions           shm_options{};
+      Types::Mode_Filter                           monitoring_mode{};
+      eCAL::Types::ConstrainedInteger<1000, 1000>  monitoring_timeout{};
+      bool                                         network_monitoring{};
+      UDP::Configuration                           udp_options{};
+      SHM::Configuration                           shm_options{};
 
       std::string         filter_excl{};
       std::string         filter_incl{};

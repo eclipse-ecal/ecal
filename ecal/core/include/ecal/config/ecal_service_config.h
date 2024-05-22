@@ -18,29 +18,28 @@
  */
 
 /**
- * @file   user_arg_options.h
- * @brief  Options specified by the user via command line
+ * @file   ecal_service_config.h
+ * @brief  eCAL configuration for services
 **/
 
 #pragma once
 
 #include <string>
-#include <vector>
-#include <map>
 
 namespace eCAL
 {
-  namespace Cli
+  namespace Service
   {
-    // Map[Section][Option] = Value
-    using ConfigKey2DMap = std::map<std::string, std::map<std::string, std::string>>;
-
     struct Configuration
     {
-      std::vector<std::string> config_keys{};
-      ConfigKey2DMap           config_keys_map;
-      std::string              specified_config{};
-      bool                     dump_config{};
+      bool protocol_v0{};
+      bool protocol_v1{};
+    };
+
+    struct TimesyncOptions
+    {
+      std::string timesync_module_rt{};
+      std::string timesync_module_replay{};
     };
   }
 }

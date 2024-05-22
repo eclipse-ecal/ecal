@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,8 @@
 
 #pragma once
 
-#include <ecal/types/ecal_config_types.h>
+#include <ecal/config/ecal_configuration.h>
+#include <ecal/ecal_tlayer.h>
 #include <ecal/ecal_log_level.h>
 #include <ecal/ecal_os.h>
 
@@ -68,7 +69,7 @@ constexpr const char* SYS_FILTER_EXCL     = "^eCALSysClient$|^eCALSysGUI$|^eCALS
 constexpr bool NET_ENABLED              = false;
 
 /* eCAL udp multicast defines */
-constexpr eCAL::Config::UdpConfigVersion  NET_UDP_MULTICAST_CONFIG_VERSION   = eCAL::Config::UdpConfigVersion::V1;
+constexpr eCAL::Types::UdpConfigVersion  NET_UDP_MULTICAST_CONFIG_VERSION   = eCAL::Types::UdpConfigVersion::V1;
 constexpr const char* NET_UDP_MULTICAST_GROUP                               = "239.0.0.1";
 constexpr const char* NET_UDP_MULTICAST_MASK                                = "0.0.0.15";
 constexpr unsigned int NET_UDP_MULTICAST_PORT                               = 14000U;
@@ -106,9 +107,9 @@ constexpr const char* NET_HOST_GROUP_NAME                 = "";
 /* use shared memory transport layer [auto = 2, on = 1, off = 0] */
 constexpr eCAL::TLayer::eSendMode PUB_USE_SHM             = eCAL::TLayer::eSendMode::smode_auto;
 /* use tcp transport layer           [auto = 2, on = 1, off = 0] */
-constexpr eCAL::TLayer::eSendMode PUB_USE_TCP             =  eCAL::TLayer::eSendMode::smode_off;
+constexpr eCAL::TLayer::eSendMode PUB_USE_TCP             = eCAL::TLayer::eSendMode::smode_off;
 /* use udp multicast transport layer [auto = 2, on = 1, off = 0] */
-constexpr eCAL::TLayer::eSendMode PUB_USE_UDP_MC          =  eCAL::TLayer::eSendMode::smode_auto;
+constexpr eCAL::TLayer::eSendMode PUB_USE_UDP_MC          = eCAL::TLayer::eSendMode::smode_auto;
 
 /* share topic type                  [          on = 1, off = 0] */
 constexpr bool PUB_SHARE_TTYPE                            = true;
@@ -200,4 +201,4 @@ constexpr unsigned int EXP_MEMFILE_ACCESS_TIMEOUT           = 100U;
 /* enable dropping of payload messages that arrive out of order */
 constexpr bool EXP_DROP_OUT_OF_ORDER_MESSAGES               = false;
 
-constexpr eCAL::Config::MonitoringMode EXP_MONITORING_MODE  = eCAL::Config::MonitoringMode::none;
+constexpr eCAL::Monitoring::Types::Mode EXP_MONITORING_MODE  = eCAL::Monitoring::Types::Mode::none;
