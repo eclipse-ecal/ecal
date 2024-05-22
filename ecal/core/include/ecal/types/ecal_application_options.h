@@ -25,25 +25,33 @@
 #pragma once
 
 #include <string>
+#include <ecal/ecal_os.h>
+#include <cstddef>
 
 namespace eCAL
 {
-  namespace Config
+  namespace Application
   {
-    struct SysOptions
+    namespace Sys
     {
-      std::string filter_excl{};  // mama
-    };
+      struct Configuration
+      {
+        std::string filter_excl;  // mama
+      };
+    }
 
-    struct StartupOptions
+    namespace Startup
     {
-      std::string terminal_emulator{};
-    };
+      struct Configuration
+      {
+        std::string terminal_emulator;
+      };
+    }
 
-    struct ApplicationOptions
+    struct ECAL_API Configuration
     {
-      SysOptions     sys_options{};
-      StartupOptions startup_options{};
+      Sys::Configuration     sys;
+      Startup::Configuration startup;
     };
   }
 }

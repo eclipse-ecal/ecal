@@ -170,7 +170,7 @@ namespace eCAL
       shmMonitoringOptions.shm_monitoring_domain     = iniConfig.get(EXPERIMENTAL, "shm_monitoring_domain",     EXP_SHM_MONITORING_DOMAIN);
       shmMonitoringOptions.shm_monitoring_queue_size = iniConfig.get(EXPERIMENTAL, "shm_monitoring_queue_size", EXP_SHM_MONITORING_QUEUE_SIZE);
 
-      // receiving options
+      // subscriber options
       auto& subscriberOptions = subscriber;
       subscriberOptions.shm.enable = iniConfig.get(NETWORK, "shm_rec_enabled",    NET_SHM_REC_ENABLED) != 0;
       subscriberOptions.tcp.enable = iniConfig.get(NETWORK, "tcp_rec_enabled",    NET_TCP_REC_ENABLED) != 0;
@@ -178,9 +178,22 @@ namespace eCAL
 
       // publisher options
       auto& publisherOptions = publisher;
-      publisherOptions.shm.enable = iniConfig.get(PUBLISHER, "use_shm",    static_cast<int>(PUB_USE_SHM)) != 0;
+      publisherOptions.shm.enable                  = iniConfig.get(PUBLISHER, "use_shm",              static_cast<int>(PUB_USE_SHM)) != 0;
+      publisherOptions.shm.zero_copy_mode          = iniConfig.get(PUBLISHER, "memfile_zero_copy",    PUB_MEMFILE_ZERO_COPY);
+      publisherOptions.shm.acknowledge_timeout_ms  = iniConfig.get(PUBLISHER, "memfile_ack_timeout",  PUB_MEMFILE_ACK_TO);
+      publisherOptions.shm.memfile_min_size_bytes  = iniConfig.get(PUBLISHER, "memfile_minsize",      PUB_MEMFILE_MINSIZE);
+      publisherOptions.shm.memfile_reserve_percent = iniConfig.get(PUBLISHER, "memfile_reserve",      PUB_MEMFILE_RESERVE);
+      publisherOptions.shm.memfile_buffer_count    = iniConfig.get(PUBLISHER, "memfile_buffer_count", PUB_MEMFILE_BUF_COUNT);
+      
+      publisherOptions.udp.enable            = iniConfig.get(PUBLISHER, "use_udp_mc",     static_cast<int>(PUB_USE_UDP_MC)) != 0;
+      // TODO PG: Add here when its available in config file
+      publisherOptions.udp.loopback          = false; 
+      publisherOptions.udp.sndbuf_size_bytes = iniConfig.get(NETWORK, "multicast_sndbuf", NET_UDP_MULTICAST_SNDBUF);
+      
+      publisherOptions.share_topic_description = iniConfig.get(PUBLISHER, "share_tdesc", PUB_SHARE_TDESC);
+      publisherOptions.share_topic_type        = iniConfig.get(PUBLISHER, "share_ttype", PUB_SHARE_TTYPE);
+
       publisherOptions.tcp.enable = iniConfig.get(PUBLISHER, "use_tcp",    static_cast<int>(PUB_USE_TCP)) != 0;
-      publisherOptions.udp.enable = iniConfig.get(PUBLISHER, "use_udp_mc", static_cast<int>(PUB_USE_UDP_MC)) != 0;
 
       // timesync options
       auto& timesyncOptions = timesync;
@@ -193,12 +206,12 @@ namespace eCAL
       serviceOptions.protocol_v1 = iniConfig.get(SERVICE, "protocol_v1", SERVICE_PROTOCOL_V1);
 
       // sys options
-      auto& sysOptions = application.sys_options;
-      sysOptions.filter_excl = iniConfig.get(SYS, "filter_excl", SYS_FILTER_EXCL);
+      auto& sysConfig = application.sys;
+      sysConfig.filter_excl = iniConfig.get(SYS, "filter_excl", SYS_FILTER_EXCL);
 
       // process options
-      auto& processOptions = application.startup_options;
-      processOptions.terminal_emulator = iniConfig.get(PROCESS, "terminal_emulator", PROCESS_TERMINAL_EMULATOR);
+      auto& startupConfig = application.startup;
+      startupConfig.terminal_emulator = iniConfig.get(PROCESS, "terminal_emulator", PROCESS_TERMINAL_EMULATOR);
 
       auto& loggingOptions = logging;
       // needs to be adapted when switching from simpleini

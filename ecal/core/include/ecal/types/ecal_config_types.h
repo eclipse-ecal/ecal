@@ -55,7 +55,7 @@ namespace eCAL
         Publisher::Configuration         publisher{};
         Config::TimesyncOptions          timesync{};
         Config::ServiceOptions           service{};
-        Config::ApplicationOptions       application{};
+        Application::Configuration       application{};
         Config::LoggingOptions           logging{};
         Cli::Configuration               command_line_arguments{};        
         

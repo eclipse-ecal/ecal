@@ -133,7 +133,7 @@ namespace eCAL
     // process
     /////////////////////////////////////
     
-    ECAL_API std::string       GetTerminalEmulatorCommand           () { return GetConfiguration().application.startup_options.terminal_emulator; }
+    ECAL_API std::string       GetTerminalEmulatorCommand           () { return GetConfiguration().application.startup.terminal_emulator; }
 
     /////////////////////////////////////
     // monitoring
@@ -150,7 +150,7 @@ namespace eCAL
     // sys
     /////////////////////////////////////
     
-    ECAL_API std::string       GetEcalSysFilterExcludeList          () { return GetConfiguration().application.sys_options.filter_excl; }
+    ECAL_API std::string       GetEcalSysFilterExcludeList          () { return GetConfiguration().application.sys.filter_excl; }
 
     /////////////////////////////////////
     // publisher
