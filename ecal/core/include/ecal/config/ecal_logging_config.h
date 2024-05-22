@@ -32,9 +32,10 @@ namespace eCAL
   {
     struct Configuration
     {
-      eCAL_Logging_Filter filter_log_con{};
-      eCAL_Logging_Filter filter_log_file{};
-      eCAL_Logging_Filter filter_log_udp{};
+      eCAL_Logging_Filter filter_log_con{};         /*!< Log messages logged to console (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
+                                                         (Default: info, warning, error, fatal)*/
+      eCAL_Logging_Filter filter_log_file{};        //!< Log messages to logged into file system (Default: "")
+      eCAL_Logging_Filter filter_log_udp{};         //!< Log messages logged via udp network (Default: info, warning, error, fatal)
     };
   }
 }

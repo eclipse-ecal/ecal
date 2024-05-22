@@ -50,11 +50,11 @@ namespace eCAL
         ECAL_API Configuration();
         ECAL_API Configuration(unsigned int reg_timeout_, unsigned int reg_refresh_);
 
-        ECAL_API unsigned int getTimeoutMS() const;
-        ECAL_API unsigned int getRefreshMS() const;
+        ECAL_API unsigned int getTimeoutMS() const;                                         //!< Timeout for topic registration in ms (internal) (Default: 60000)
+        ECAL_API unsigned int getRefreshMS() const;                                         //!< Topic registration refresh cylce (has to be smaller then registration timeout!) (Default: 1000)
 
-        bool share_ttype;
-        bool share_tdesc;
+        bool share_ttype;                                                                   //!< Share topic type via registration layer (Default: true)
+        bool share_tdesc;                                                                   //!< Share topic description via registration layer (switch off to disable reflection) (Default: true)
 
       private:
         unsigned int m_registration_timeout;

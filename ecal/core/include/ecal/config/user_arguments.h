@@ -32,15 +32,14 @@ namespace eCAL
 {
   namespace Cli
   {
-    // Map[Section][Option] = Value
-    using ConfigKey2DMap = std::map<std::string, std::map<std::string, std::string>>;
+    using ConfigKey2DMap = std::map<std::string, std::map<std::string, std::string>>; //!< Config key storage: Map[Section][Option] = Value
 
     struct Configuration
     {
-      std::vector<std::string> config_keys{};
-      ConfigKey2DMap           config_keys_map;
-      std::string              specified_config{};
-      bool                     dump_config{};
+      std::vector<std::string> config_keys{};       //!< will be deprecated soon
+      ConfigKey2DMap           config_keys_map;     //!< The config keys given via command line and the --config-keys parameter (Default: empty)
+      std::string              specified_config{};  //!< The used eCAL ini file (Default: "")
+      bool                     dump_config{};       //!< If specified, output configuration via standart output (Default: false)
     };
   }
 }

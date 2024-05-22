@@ -53,21 +53,21 @@ namespace eCAL
     {
       struct Configuration
       {
-        std::string shm_monitoring_domain{};
-        size_t      shm_monitoring_queue_size{};  
+        std::string shm_monitoring_domain{};                                  //!< Domain name for shared memory based monitoring/registration (Default: ecal_mon)
+        size_t      shm_monitoring_queue_size{};                              //!< Queue size of monitoring/registration events (Default: 1024)
       };
     }
 
     struct Configuration
     {
-      Types::Mode_Filter                           monitoring_mode{};
-      eCAL::Types::ConstrainedInteger<1000, 1000>  monitoring_timeout{};
-      bool                                         network_monitoring{};
+      Types::Mode_Filter                           monitoring_mode{};         //!< Specify which monitoring is enabled (Default: none)
+      eCAL::Types::ConstrainedInteger<1000, 1000>  monitoring_timeout{};      //!< Timeout for topic monitoring in ms (Default: 5000)
+      bool                                         network_monitoring{};      //!< Enable distribution of monitoring/registration information via network (Default: true)
       UDP::Configuration                           udp_options{};
       SHM::Configuration                           shm_options{};
 
-      std::string         filter_excl{};
-      std::string         filter_incl{};
+      std::string         filter_excl{};                                      //!< Topics blacklist as regular expression (will not be monitored) (Default: "__.*")
+      std::string         filter_incl{};                                      //!< Topics whitelist as regular expression (will be monitored only) (Default: "")
     };
   }
 }

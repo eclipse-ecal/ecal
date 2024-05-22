@@ -36,7 +36,7 @@ namespace eCAL
     {
       struct Configuration
       {
-        std::string filter_excl;  // mama
+        std::string filter_excl;          //!<
       };
     }
 
@@ -44,14 +44,14 @@ namespace eCAL
     {
       struct Configuration
       {
-        std::string terminal_emulator;
+        std::string terminal_emulator;    //!<
       };
     }
 
-    struct ECAL_API Configuration
+    struct Configuration
     {
-      Sys::Configuration     sys;
-      Startup::Configuration startup;
+      Sys::Configuration     sys;         //!<
+      Startup::Configuration startup;     //!<
     };
   }
 }
