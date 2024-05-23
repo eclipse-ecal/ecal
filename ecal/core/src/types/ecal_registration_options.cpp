@@ -21,7 +21,7 @@
  * @brief  Definition of custom data types.
 **/
 
-#include <ecal/config/ecal_registration_config.h>
+#include <ecal/config/registration.h>
 #include "ecal_def.h"
 
 namespace eCAL

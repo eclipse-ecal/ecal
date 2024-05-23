@@ -35,17 +35,5 @@ namespace eCAL
       bool protocol_v0{};                           //!< Support service protocol v0, eCAL 5.11 and older (Default: true)
       bool protocol_v1{};                           //!< Support service protocol v1, eCAL 5.12 and newer (Default: true)
     };
-
-    struct TimesyncOptions
-    {
-      std::string timesync_module_rt{};             /*!< Time synchronisation interface name (dynamic library)
-                                                         The name will be extended with platform suffix (32|64), debug suffix (d) and platform extension (.dll|.so)
-                                                         Available modules are:
-                                                           - ecaltime-localtime    local system time without synchronization        
-                                                           - ecaltime-linuxptp     For PTP / gPTP synchronization over ethernet on Linux
-                                                                                   (device configuration in ecaltime.ini) 
-                                                         (Default: ecaltime-localtime)*/
-      std::string timesync_module_replay{};         //!< (Default: "")
-    };
   }
 }

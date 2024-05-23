@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   ecal_publisher_config.h
+ * @file   publisher.h
  * @brief  eCAL publisher configuration
  * 
  * This publisher configuration struct can be used to define the behavior of an eCAL publisher. Additional information on 

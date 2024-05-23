@@ -22,7 +22,7 @@
  * @brief  eCAL configuration for the transport layer
 **/
 
-// TODO PG: Deprecated?
+// TODO PG: Deprecated when configuration is implemented in all modules?
 #pragma once
 
 #include <ecal/types/ecal_custom_data_types.h>

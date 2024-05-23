@@ -22,7 +22,7 @@
 **/
 
 #include <ecal/ecal_config.h>
-#include <ecal/config/ecal_publisher_config.h>
+#include <ecal/config/publisher.h>
 
 namespace eCAL
 {

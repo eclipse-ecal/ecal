@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <ecal/config/ecal_publisher_config.h>
+#include <ecal/config/publisher.h>
 
 #include "readwrite/ecal_writer_base.h"
 #include "io/shm/ecal_memfile_sync.h"

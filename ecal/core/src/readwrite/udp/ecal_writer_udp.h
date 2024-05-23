@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <ecal/config/ecal_publisher_config.h>
+#include <ecal/config/publisher.h>
 
 #include "io/udp/ecal_udp_sample_sender.h"
 #include "readwrite/ecal_writer_base.h"

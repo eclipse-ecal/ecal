@@ -31,7 +31,7 @@
 #include <utility>
 
 #include <ecal/ecal_os.h>
-#include <ecal/config/ecal_configuration.h>
+#include <ecal/config/configuration.h>
 
 namespace eCAL
 {

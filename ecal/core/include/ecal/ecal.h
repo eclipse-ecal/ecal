@@ -42,4 +42,4 @@
 #include <ecal/ecal_timer.h>
 #include <ecal/ecal_tlayer.h>
 #include <ecal/ecal_util.h>
-#include <ecal/config/ecal_configuration.h>
+#include <ecal/config/configuration.h>

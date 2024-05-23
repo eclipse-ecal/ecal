@@ -29,7 +29,7 @@
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_payload_writer.h>
-#include <ecal/config/ecal_publisher_config.h>
+#include <ecal/config/publisher.h>
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_types.h>
 
