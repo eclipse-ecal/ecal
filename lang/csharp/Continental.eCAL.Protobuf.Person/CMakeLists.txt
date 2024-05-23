@@ -17,25 +17,31 @@
 # ========================= eCAL LICENSE =================================
 
 include(CSharpUtilities)
-project(person_snd_cs LANGUAGES CSharp)
 
-find_package(eCAL REQUIRED)
+# We need this for protoc. It's a bit stupid, because we don't really need a C++ package here
+# let's check if we can do something with nuget instead maybe
 
-set(person_snd_cs_src
-    person_snd.cs
-)
+find_package(Protobuf REQUIRED)
+include(protobuf_csharp_helper.cmake)
 
-ecal_add_sample(${PROJECT_NAME} ${person_snd_cs_src})
+project(Continental.eCAL.Protobuf.Person LANGUAGES CSharp)
 
-target_link_libraries(${PROJECT_NAME} Continental.eCAL.Protobuf person_protobufs_cs)
+add_library(Continental.eCAL.Protobuf.Person SHARED)
+
+PROTOBUF_TARGET_CSHARP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR} 
+  ${CMAKE_CURRENT_SOURCE_DIR}/animal.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/house.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/person.proto)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}
     VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1"
+    VS_DOTNET_REFERENCES "System"
 )
+
 
 set_property(TARGET ${PROJECT_NAME}  PROPERTY
   VS_PACKAGE_REFERENCES "Google.Protobuf_${ECAL_CSHARP_PROTOBUF_VERSION}"
 )
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/csharp/pubsub/protobuf)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/csharp/protobuf)
