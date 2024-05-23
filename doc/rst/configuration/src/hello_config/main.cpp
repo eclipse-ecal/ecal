@@ -6,7 +6,7 @@
 int main(int argc, char** argv)
 {
   // Create a configuration object with the command line arguments
-  eCAL::Config::eCALConfig custom_config(argc, argv);
+  eCAL::Configuration custom_config(argc, argv);
 
   // Use the .ini file of the system ...
   custom_config.InitConfigWithDefaultIni();
@@ -40,4 +40,6 @@ int main(int argc, char** argv)
 
   // Finalize eCAL API
   eCAL::Finalize();
+
+  return 0;
 }

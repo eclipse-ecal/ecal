@@ -22,7 +22,7 @@ The ip address can be used like a normal string object. For example:
 
 .. code-block:: c++
 
-  eCAL::Config::IpAddressV4 ip_address = std::string("192.168.7.1"); // in hex: "C0.A8.7.1"
+  eCAL::Types::IpAddressV4 ip_address = std::string("192.168.7.1"); // in hex: "C0.A8.7.1"
   std::cout << ip_address << "\n"; 
 
 ConstrainedInteger are specified with a minimum (default: 0), step (default: 1) and maximum (default: maximum of int) value.
@@ -32,10 +32,10 @@ The size object can be used like a normal integer.
 
 .. code-block:: c++
 
-  eCAL::Config::ConstrainedInteger<1024, 512, 8192> size_4mb = 1024 + 6 * 512;
+  eCAL::Types::ConstrainedInteger<1024, 512, 8192> size_4mb = 1024 + 6 * 512;
   std::cout << size_4mb << "\n";
 
-For specifying sizes in the ecal configuration object, refer to the .ini file or "ecal/config/ecal_configuration.h" for the limitations.
+For specifying sizes in the ecal configuration object, refer to the .ini file or "ecal/config/configuration.h" for the limitations.
 
 Initialization of the configuration
 ===================================
