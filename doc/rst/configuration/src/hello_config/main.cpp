@@ -8,15 +8,16 @@ int main(int argc, char** argv)
   // Create a configuration object with the command line arguments
   eCAL::Configuration custom_config(argc, argv);
 
-  // Use the .ini file of the system ...
+  // Use the .ini file of the system if available
   custom_config.InitConfigWithDefaultIni();
-
-  // .. or specify an own .ini file to use
-  custom_config.InitConfig("C:\\eCAL_local.ini");
 
   // Set the values in a try/catch block, as wrong configuration leads to exceptions
   try
   {
+      // In case you decided to specify an own .ini file to use
+      // Configuration based on previous ini file will be overwritten
+    custom_config.InitConfig("C:\\eCAL_local.ini");
+
     // Set the communication layer to network
     custom_config.transport_layer.network_enabled = true;
 
