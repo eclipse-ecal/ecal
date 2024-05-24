@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,17 @@
  * @brief  shared memory layer
 **/
 
-#include <ecal/ecal.h>
-#include <functional>
-#include <string>
+#include <ecal/ecal_config.h>
+#include <ecal/ecal_process.h>
 
 #include "ecal_global_accessors.h"
-#include "pubsub/ecal_subgate.h"
-#include "io/shm/ecal_memfile_pool.h"
 #include "ecal_reader_shm.h"
+
+#include "io/shm/ecal_memfile_pool.h"
+#include "pubsub/ecal_subgate.h"
+
+#include <functional>
+#include <string>
 
 namespace eCAL
 {

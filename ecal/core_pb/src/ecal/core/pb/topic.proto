@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,8 @@ message DataTypeInformation
 
 message Topic                                      // eCAL topic
 {
-  reserved 9, 10, 11, 14, 15, 22 to 26, 29;
+  // Reserved fields in enums are not supported in protobuf 3.0
+  // reserved 9, 10, 11, 14, 15, 22 to 26, 29;
 
   int32               rclock                =  1;  // registration clock (heart beat)
   string              hname                 =  2;  // host name

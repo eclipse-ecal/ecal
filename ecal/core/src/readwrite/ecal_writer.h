@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,11 +58,18 @@ namespace eCAL
   class CDataWriter
   {
   public:
+    struct SLayerState
+    {
+      bool read_enabled    = false;   // subscriber side
+      bool write_enabled   = false;   // publisher  side
+      bool write_confirmed = false;   // publisher  side
+    };
+ 
     struct SLayerStates
     {
-      bool udp = false;
-      bool shm = false;
-      bool tcp = false;
+      SLayerState udp;
+      SLayerState shm;
+      SLayerState tcp;
     };
 
     struct SSubscriptionInfo
@@ -83,23 +90,24 @@ namespace eCAL
 
     bool Stop();
 
-    bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
+    size_t Write(CPayloadWriter& payload_, long long time_, long long id_);
 
-    bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
-    bool ClearAttribute(const std::string& attr_name_);
+    bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Publisher_Event type_);
 
-    size_t Write(CPayloadWriter& payload_, long long time_, long long id_);
+    bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
+    bool ClearAttribute(const std::string& attr_name_);
 
-    void ApplySubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& layer_states_, const std::string& reader_par_);
+    void ApplySubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& sub_layer_states_, const std::string& reader_par_);
     void RemoveSubscription(const SSubscriptionInfo& subscription_info_);
+
+    void SetLocalLayerPriority(const std::vector<eTLayerType>& layer_priority_);
+    void SetRemoteLayerPriority(const std::vector<eTLayerType>& layer_priority_);
 
     void RefreshRegistration();
     void RefreshSendCounter();
-
-    std::string Dump(const std::string& indent_ = "");
 
     bool IsCreated() const { return(m_created); }
 
@@ -115,26 +123,29 @@ namespace eCAL
       return(m_sub_map.size());
     }
 
-    const std::string& GetTopicName() const { return(m_topic_name); }
+    const std::string&          GetTopicName()           const { return(m_topic_name); }
     const SDataTypeInformation& GetDataTypeInformation() const { return m_topic_info; }
+
+    std::string Dump(const std::string& indent_ = "");
 
   protected:
     bool Register(bool force_);
     bool Unregister();
 
-    void Connect(const std::string& tid_, const SDataTypeInformation& tinfo_);
-    void Disconnect();
+    bool StartUdpLayer();
+    bool StartShmLayer();
+    bool StartTcpLayer();
 
-    void StartTransportLayer();
-    void StopTransportLayer();
+    void StopAllLayer();
 
-    void ActivateUdpLayer();
-    void ActivateShmLayer();
-    void ActivateTcpLayer();
+    void FireConnectEvent(const std::string& tid_, const SDataTypeInformation& tinfo_);
+    void FireDisconnectEvent();
 
     size_t PrepareWrite(long long id_, size_t len_);
-    bool IsInternalSubscribedOnly();
 
+    bool IsInternalSubscribedOnly();
+    eTLayerType DetermineTransportLayer2Start(const std::vector<eTLayerType>& pub_layer_, const std::vector<eTLayerType>& sub_layer_, bool same_host_);
+    
     int32_t GetFrequency();
 
     std::string                            m_host_name;
@@ -176,7 +187,9 @@ namespace eCAL
     std::unique_ptr<CDataWriterTCP>        m_writer_tcp;
 #endif
 
-    SLayerStates                           m_confirmed_layers;
+    std::vector<eTLayerType>               m_local_layer_priority;
+    std::vector<eTLayerType>               m_remote_layer_priority;
+    SLayerStates                           m_layers;
     std::atomic<bool>                      m_created;
   };
 }

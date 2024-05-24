@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -166,7 +166,7 @@ namespace eCAL
       const auto& ecal_sample_content = ecal_sample.content;
       for (const auto& reader : readers_to_apply)
       {
-        applied_size = reader->AddSample(
+        applied_size = reader->ApplySample(
           ecal_sample.topic.tid,
           payload_addr,
           payload_size,
@@ -207,7 +207,7 @@ namespace eCAL
 
     for (const auto& reader : readers_to_apply)
     {
-      applied_size = reader->AddSample(topic_id_, buf_, len_, id_, clock_, time_, hash_, layer_);
+      applied_size = reader->ApplySample(topic_id_, buf_, len_, id_, clock_, time_, hash_, layer_);
     }
 
     return (applied_size > 0);
@@ -232,18 +232,18 @@ namespace eCAL
     CDataReader::SLayerStates layer_states;
     for (const auto& layer : ecal_topic.tlayer)
     {
-      if (layer.confirmed)
+      if (layer.enabled)
       {
         switch (layer.type)
         {
         case TLayer::tlayer_udp_mc:
-          layer_states.udp = true;
+          layer_states.udp.write_enabled = true;
           break;
         case TLayer::tlayer_shm:
-          layer_states.shm = true;
+          layer_states.shm.write_enabled = true;
           break;
         case TLayer::tlayer_tcp:
-          layer_states.tcp = true;
+          layer_states.tcp.write_enabled = true;
           break;
         default:
           break;

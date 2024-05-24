@@ -103,7 +103,7 @@ namespace eCAL
      * @brief Constructor.
      * 
      * @param topic_name_      Unique topic name.
-     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
+     * @param config_          Optional configuration parameters.
     **/
     ECAL_API explicit CSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = {});
 
