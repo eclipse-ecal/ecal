@@ -56,7 +56,6 @@ TEST(core_cpp_pubsub, TimeoutAcknowledgment)
   // create publisher config
   eCAL::Publisher::Configuration pub_config;
   pub_config.shm.acknowledge_timeout_ms = 500;
-  pub_config.shm.enable = true;
 
   // create publisher
   eCAL::string::CPublisher<std::string> pub("topic", pub_config);
