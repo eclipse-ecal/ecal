@@ -129,7 +129,6 @@ namespace eCAL
       multicastOptions.recbuf              = iniConfig.get(NETWORK, "multicast_rcvbuf",      NET_UDP_MULTICAST_RCVBUF);
       multicastOptions.sndbuf              = iniConfig.get(NETWORK, "multicast_sndbuf",      NET_UDP_MULTICAST_SNDBUF);
       multicastOptions.join_all_interfaces = iniConfig.get(NETWORK, "multicast_join_all_if", NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED);
-      multicastOptions.bandwidth_max_udp   = iniConfig.get(NETWORK, "bandwidth_max_udp",     NET_BANDWIDTH_MAX_UDP);
       multicastOptions.npcap_enabled       = iniConfig.get(NETWORK, "npcap_enabled",         NET_NPCAP_ENABLED);
 
       auto& tcpPubSubOptions = transportLayerOptions.tcp_options;
