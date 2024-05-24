@@ -22,7 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
-#include <wrappers/subscriber.h>
+#include <wrappers/wrapper_subscriber.h>
 
 #include <nanobind/operators.h>
 #include <nanobind/stl/string.h>

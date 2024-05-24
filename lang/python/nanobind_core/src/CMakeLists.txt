@@ -19,16 +19,17 @@ nanobind_add_module(
   # Source code goes here
   modules/module_client.cpp
   modules/module_core.cpp
+  modules/module_datatypeinfo.cpp
   modules/module_publisher.cpp
   modules/module_server.cpp
   modules/module_subscriber.cpp
   modules/module_util.cpp
 
-  wrappers/client.cpp
-  wrappers/datatypeinfo.cpp
-  wrappers/publisher.cpp
-  wrappers/server.cpp
-  wrappers/subscriber.cpp
+  wrappers/wrapper_client.cpp
+  wrappers/wrapper_datatypeinfo.cpp
+  wrappers/wrapper_publisher.cpp
+  wrappers/wrapper_server.cpp
+  wrappers/wrapper_subscriber.cpp
   nanobind_core.cpp
 )
 

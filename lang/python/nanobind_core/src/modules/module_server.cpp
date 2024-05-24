@@ -23,10 +23,22 @@
 
 
 #include <modules/module_server.h>
-#include <wrappers/server.h>
+#include <wrappers/wrapper_server.h>
 
 void AddServerClassToModule(const nanobind::module_& module) 
 {
+    // Struct eCAL::SServiceResponse
+    nanobind::class_<eCAL::SServiceResponse>(module, "ServiceResponse")
+        .def(nanobind::init<>())
+        .def_rw("host_name", &eCAL::SServiceResponse::host_name)
+        .def_rw("service_name", &eCAL::SServiceResponse::service_name)
+        .def_rw("service_id", &eCAL::SServiceResponse::service_id)
+        .def_rw("method_name", &eCAL::SServiceResponse::method_name)
+        .def_rw("error_msg", &eCAL::SServiceResponse::error_msg)
+        .def_rw("ret_state", &eCAL::SServiceResponse::ret_state)
+        .def_rw("call_state", &eCAL::SServiceResponse::call_state)
+        .def_rw("response", &eCAL::SServiceResponse::response);
+
     // Class and Functions from ecal_server.h
     auto ServiceServer_cls = nanobind::class_<eCAL::CNBSrvServer>(module, "ServiceServer")
         .def(nanobind::init<>())

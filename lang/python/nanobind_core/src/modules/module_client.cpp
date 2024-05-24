@@ -23,7 +23,7 @@
 
 
 #include <modules/module_client.h>
-#include <wrappers/client.h>
+#include <wrappers/wrapper_client.h>
 
 void AddClientClassToModule(const nanobind::module_& module) 
 {

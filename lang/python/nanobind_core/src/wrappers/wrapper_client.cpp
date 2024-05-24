@@ -22,13 +22,13 @@
 **/
 
 #include <ecal/ecal.h>
-#include <wrappers/client.h>
+#include <wrappers/wrapper_client.h>
 
 #include <nanobind/operators.h>
 #include <nanobind/stl/string.h>
 #include <nanobind/stl/shared_ptr.h>
 #include <nanobind/stl/tuple.h>
-#include <wrappers/datatypeinfo.h>
+#include <wrappers/wrapper_datatypeinfo.h>
 
 namespace eCAL
 {

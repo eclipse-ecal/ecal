@@ -23,7 +23,7 @@
 
 
 #include <modules/module_subscriber.h>
-#include <wrappers/subscriber.h>
+#include <wrappers/wrapper_subscriber.h>
 
 void AddSubscriberClassToModule(const nanobind::module_& module) 
 {

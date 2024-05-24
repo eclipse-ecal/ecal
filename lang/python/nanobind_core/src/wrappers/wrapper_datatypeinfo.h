@@ -18,40 +18,42 @@
 */
 
 /**
- * @brief  Main Nanobind module which Adds all other needed classes and functions
+ * @file   wrapper_datatypeinfo.h
+ * @brief  Nanobind wrapper SDataTypeInformation struct
 **/
 
-#include <nanobind/nanobind.h>
-#include <nanobind/operators.h>
+#pragma once
+
 #include <ecal/ecal.h>
+#include <stdint.h>
+#include <string>
+#include <functional>
+#include <cstddef>
+#include <mutex>
+#include <ecal/ecal_types.h>
+
+#include <nanobind/nanobind.h>
 #include <nanobind/operators.h>
 #include <nanobind/stl/string.h>
 #include <nanobind/stl/shared_ptr.h>
 #include <nanobind/stl/tuple.h>
-#include <cstdint>
-#include <chrono>
-#include <memory>
-#include <string>
-#include <cstddef>
-#include <ecal/ecal_types.h>
 
-#include <modules/module_client.h>
-#include <modules/module_core.h>
-#include <modules/module_datatypeinfo.cpp>
-#include <modules/module_publisher.h>
-#include <modules/module_server.h>
-#include <modules/module_subscriber.h>
-#include <modules/module_util.h>
+namespace eCAL
+{
+    class CNBDataTypeInformation
+    {
+    public:
+        std::string name;
+        std::string encoding;
+        nanobind::bytes descriptor;
+    };
 
-
-NB_MODULE(nanobind_core, m) {
-
-    AddDataTypeInfoStructToModule(m);
-    AddSubscriberClassToModule(m);
-    AddPublisherClassToModule(m);
-    AddClientClassToModule(m);
-    AddServerClassToModule(m);
-
-    AddCoreFuncToModule(m);
-    AddUtilFuncToModule(m);
+    /**
+     * @brief Convert function for SDataTypeInformation
+     *
+     * @param nb_info      CNBDataTypeInformation struct
+     *
+     * @return  SDataTypeInformation struct after convertion
+    **/
+    SDataTypeInformation convert(const CNBDataTypeInformation& nb_info);
 }

@@ -18,35 +18,29 @@
 */
 
 /**
- * @file   datatypeinfo.h
- * @brief  Nanobind wrapper SDataTypeInformation struct
+ * @file   module_datatypeinfo.h
+ * @brief  Nanobind module for eCAL::SDataTypeInformation struct
 **/
 
 #pragma once
 
-#include <ecal/ecal.h>
-#include <stdint.h>
-#include <string>
-#include <functional>
-#include <cstddef>
-#include <mutex>
-#include <ecal/ecal_types.h>
-
 #include <nanobind/nanobind.h>
+#include <nanobind/operators.h>
+#include <ecal/ecal.h>
 #include <nanobind/operators.h>
 #include <nanobind/stl/string.h>
 #include <nanobind/stl/shared_ptr.h>
 #include <nanobind/stl/tuple.h>
+#include <cstdint>
+#include <chrono>
+#include <memory>
+#include <string>
+#include <cstddef>
+#include <ecal/ecal_types.h>
 
-namespace eCAL
-{
-    class CNBDataTypeInformation
-    {
-    public:
-        std::string name;
-        std::string encoding;
-        nanobind::bytes descriptor;
-    };
-
-    SDataTypeInformation convert(const CNBDataTypeInformation& nb_info);
-}
+/**
+ * @brief  Function to Add Nanobind module
+ *
+ * @param module  The nanobind module variable
+**/
+void AddDataTypeInfoStructToModule(nanobind::module_& module);

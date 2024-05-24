@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   server.h
+ * @file   wrapper_server.h
  * @brief  Nanobind wrapper server interface
 **/
 

@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   client.h
+ * @file   wrapper_client.h
  * @brief  Nanobind wrapper client interface
 **/
 

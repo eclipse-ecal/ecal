@@ -23,7 +23,7 @@
 
 
 #include <modules/module_publisher.h>
-#include <wrappers/publisher.h>
+#include <wrappers/wrapper_publisher.h>
 
 void AddPublisherClassToModule(const nanobind::module_& module) 
 {

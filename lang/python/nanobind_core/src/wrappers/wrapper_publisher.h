@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   publisher.h
+ * @file   wrapper_publisher.h
  * @brief  Nanobind wrapper publisher interface
 **/
 
@@ -33,7 +33,7 @@
 #include <ecal/ecal_types.h>
 
 #include <nanobind/nanobind.h>
-#include <wrappers/datatypeinfo.h>
+#include <wrappers/wrapper_datatypeinfo.h>
 
 namespace eCAL
 {

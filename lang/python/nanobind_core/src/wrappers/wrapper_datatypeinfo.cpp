@@ -11,7 +11,7 @@
 #include <nanobind/stl/string.h>
 #include <nanobind/stl/shared_ptr.h>
 #include <nanobind/stl/tuple.h>
-#include <wrappers/datatypeinfo.h>
+#include <wrappers/wrapper_datatypeinfo.h>
 
 namespace eCAL
 {
