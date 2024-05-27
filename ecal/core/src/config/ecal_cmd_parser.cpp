@@ -14,7 +14,7 @@
 // for cwd
 #ifdef ECAL_OS_WINDOWS
   #include <direct.h>
-  // to get rid of deprecated warning
+  // to remove deprecated warning
   #define getcwd _getcwd
 #endif
 #ifdef ECAL_OS_LINUX
@@ -23,7 +23,7 @@
 
 namespace
 {
-  // things stolen and adapted from ecal_config_reader.cpp
+  // copied and adapted from ecal_config_reader.cpp
 #ifdef ECAL_OS_WINDOWS
   const char path_separator('\\');
 #endif /* ECAL_OS_WINDOWS */
@@ -31,7 +31,7 @@ namespace
   const char path_separator('/');
 #endif /* ECAL_OS_LINUX */
 
-  bool SetPathSep(std::string file_path_)
+  bool setPathSep(std::string file_path_)
   {
     if (!file_path_.empty())
     {
@@ -48,7 +48,7 @@ namespace
   std::string eCALDataEnvPath()
   {
     std::string ecal_data_path = getEnvVar("ECAL_DATA");
-    SetPathSep(ecal_data_path);
+    setPathSep(ecal_data_path);
     return ecal_data_path;
   }
 
@@ -59,7 +59,7 @@ namespace
     if (cwd_path.empty())
       throw std::runtime_error("getcwd() : cannot read current working directory.");
         
-    SetPathSep(cwd_path);
+    setPathSep(cwd_path);
     return cwd_path;
   }
 
@@ -79,7 +79,7 @@ namespace
     {
       cmake_data_path = ecal_install_prefix + path_separator + ecal_install_config_dir;
     }
-    SetPathSep(cmake_data_path);
+    setPathSep(cmake_data_path);
 #endif /* ECAL_OS_LINUX */  
     return cmake_data_path;
   }
@@ -89,21 +89,15 @@ namespace
     std::string system_data_path;
 #ifdef ECAL_OS_WINDOWS
     system_data_path = getEnvVar("ProgramData");
-    if(SetPathSep(system_data_path))
-        system_data_path += path_separator + std::string("eCAL");
+    if(setPathSep(system_data_path))
+        system_data_path += std::string("eCAL");
 #endif /* ECAL_OS_WINDOWS */
 
 #ifdef ECAL_OS_LINUX
     system_data_path = "/etc/ecal";
+    setPathSep(system_data_path)
 #endif /* ECAL_OS_LINUX */
     return system_data_path;
-  }
-
-  bool isValidConfigFilePath(const std::string& file_path_)
-  {
-    // check existence of user defined file
-    const EcalUtils::Filesystem::FileStatus ecal_ini_status(file_path_, EcalUtils::Filesystem::Current);
-    return ecal_ini_status.IsOk() && (ecal_ini_status.GetType() == EcalUtils::Filesystem::Type::RegularFile);
   }
 
   void appendFileNameToPathIfPathIsValid(std::string& path_, const std::string& file_name_)
@@ -131,12 +125,19 @@ namespace
     }
   }
 
-  std::string checkForValidConfigFilePath(const std::string& config_file_)
+  bool isValidConfigFilePath(const std::string& file_path_)
+  {
+    // check existence of user defined file
+    const EcalUtils::Filesystem::FileStatus ecal_ini_status(file_path_, EcalUtils::Filesystem::Current);
+    return ecal_ini_status.IsOk() && (ecal_ini_status.GetType() == EcalUtils::Filesystem::Type::RegularFile);
+  }
+
+  std::string& checkForValidConfigFilePath(const std::string& config_file_)
     {
       // differences to ecal_config_reader implementation are:
-      //    1. it does not use the default ini file name, instead uses the specified file
-      //    2. it searches relative to the executable path and takes it as highest priority
-      //    3. it throws a runtime error, if it cannot find the specified file
+      //    1. does not use the default ini file name, instead uses the specified file
+      //    2. searches relative to the executable path and takes it as highest priority
+      //    3. throws a runtime error, if it cannot find the specified file
 
       // -----------------------------------------------------------
       // precedence 1: relative path to executable
