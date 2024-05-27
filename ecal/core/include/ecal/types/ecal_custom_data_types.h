@@ -48,12 +48,9 @@ namespace eCAL
     public:      
       ECAL_API IpAddressV4();
       ECAL_API IpAddressV4(const std::string& ip_address_); 
-      ECAL_API ~IpAddressV4(); 
 
-      std::string GetIpString() const;
+      std::string Get() const;
 
-      ECAL_API IpAddressV4(IpAddressV4& other);
-      ECAL_API IpAddressV4& operator=(const IpAddressV4& other);
       ECAL_API IpAddressV4& operator=(const std::string& ip_string);
       ECAL_API operator std::string();
 
@@ -91,10 +88,6 @@ namespace eCAL
         }
       };
 
-      ~ConstrainedInteger() = default;
-     
-      ConstrainedInteger(const ConstrainedInteger& other) { this->m_size = other; };
-      ConstrainedInteger& operator=(const ConstrainedInteger& other) { this->m_size = other; return *this; };
       operator int() const { return m_size; };
       bool operator==(const ConstrainedInteger& other) const { return this->m_size == other; };
       
