@@ -26,7 +26,7 @@ target_sources(${PROJECT_NAME}
     test.cs
 )
 
-target_link_libraries(${PROJECT_NAME} Continental.eCAL.Protobuf Continental.eCAL.Protobuf.Person)
+target_link_libraries(${PROJECT_NAME} Continental.eCAL.Protobuf Continental.eCAL.Protobuf.Samples.Datatypes)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
   VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}

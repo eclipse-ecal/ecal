@@ -24,9 +24,9 @@ include(CSharpUtilities)
 find_package(Protobuf REQUIRED)
 include(protobuf_csharp_helper.cmake)
 
-project(Continental.eCAL.Protobuf.Person LANGUAGES CSharp)
+project(Continental.eCAL.Protobuf.Samples.Datatypes LANGUAGES CSharp)
 
-add_library(Continental.eCAL.Protobuf.Person SHARED)
+add_library(${PROJECT_NAME} SHARED)
 
 PROTOBUF_TARGET_CSHARP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR} 
   ${CMAKE_CURRENT_SOURCE_DIR}/animal.proto
@@ -38,7 +38,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1"
     VS_DOTNET_REFERENCES "System"
 )
-
 
 set_property(TARGET ${PROJECT_NAME}  PROPERTY
   VS_PACKAGE_REFERENCES "Google.Protobuf_${ECAL_CSHARP_PROTOBUF_VERSION}"

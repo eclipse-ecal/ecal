@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ project(Continental.eCAL.Core.Samples LANGUAGES CSharp)
 
 find_package(eCAL REQUIRED)
 
-
 macro(ecal_add_csharp_core_sample sample_name)
   ecal_add_sample(${sample_name} ${sample_name}.cs)
   target_link_libraries(${sample_name} Continental.eCAL.Core)
@@ -34,9 +33,3 @@ ecal_add_csharp_core_sample(pubsub_minimal_snd)
 
 ecal_add_csharp_core_sample(service_minimal_client)
 ecal_add_csharp_core_sample(service_minimal_server)
-
-
-
-
-
-
