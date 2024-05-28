@@ -132,7 +132,7 @@ namespace
     return ecal_ini_status.IsOk() && (ecal_ini_status.GetType() == EcalUtils::Filesystem::Type::RegularFile);
   }
 
-  std::string& checkForValidConfigFilePath(const std::string& config_file_)
+  std::string checkForValidConfigFilePath(const std::string& config_file_)
     {
       // differences to ecal_config_reader implementation are:
       //    1. does not use the default ini file name, instead uses the specified file
