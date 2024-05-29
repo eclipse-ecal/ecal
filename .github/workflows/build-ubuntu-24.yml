@@ -1,4 +1,4 @@
-name: Build Ubuntu 22.04
+name: Build Ubuntu 24.04
 
 on:
   push:
