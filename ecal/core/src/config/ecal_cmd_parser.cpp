@@ -31,7 +31,7 @@ namespace
   const char path_separator('/');
 #endif /* ECAL_OS_LINUX */
 
-  bool setPathSep(std::string file_path_)
+  bool setPathSep(std::string& file_path_)
   {
     if (!file_path_.empty())
     {
@@ -90,12 +90,15 @@ namespace
 #ifdef ECAL_OS_WINDOWS
     system_data_path = getEnvVar("ProgramData");
     if(setPathSep(system_data_path))
+    {
         system_data_path += std::string("eCAL");
+        setPathSep(system_data_path);
+    }
 #endif /* ECAL_OS_WINDOWS */
 
 #ifdef ECAL_OS_LINUX
     system_data_path = "/etc/ecal";
-    setPathSep(system_data_path)
+    setPathSep(system_data_path);
 #endif /* ECAL_OS_LINUX */
     return system_data_path;
   }
@@ -103,7 +106,7 @@ namespace
   void appendFileNameToPathIfPathIsValid(std::string& path_, const std::string& file_name_)
   {
     if (!path_.empty())
-      path_ += path_separator + file_name_;
+      path_ += file_name_;
   }
 
   void parseConfigKeysToMap(const std::vector<std::string>& config_keys_, eCAL::Cli::ConfigKey2DMap& map_)
