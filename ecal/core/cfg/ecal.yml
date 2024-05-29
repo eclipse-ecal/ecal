@@ -1,0 +1,80 @@
+publisher:
+  shm:
+    enable: true
+    zero_copy_mode: false
+    acknowlegde_timout_ms: 0
+    memfile_min_size_bytes: 4096
+    memfile_reserve_percent: 50
+    memfile_buffer_count: 1
+  
+  udp:
+    enable: true
+    loopback: false
+    sndbuff_size_bytes: 5242880
+    
+  tcp:
+    enable: true
+
+  share_topic_type: true
+  share_topic_description: true
+
+subscriber:
+  shm:
+    enable: true
+  udp:
+    enable: true
+  tcp:
+    enable: false
+
+registration:
+  registration_timeout: 60000
+  registration_refresh: 1000
+  share_ttype: true
+  share_tdesc: false
+  
+monitoring:
+  mode: ["udp", "shm"]
+  timeout: 1000
+  network: false
+  shm:
+    domain: "ecal_mon"
+    queue_size: 1024
+  udp:
+    placeholder: false
+
+time:
+  rt: "ecaltime-localtime"
+  replay: ""
+
+service:
+  protocol_v0: true
+  protocol_v1: false
+
+application:
+  sys:
+    filter_excl: ""
+  terminal:
+    emulator: ""
+
+logging:
+  filter:
+    console: ""
+    file: ""
+    udp: ""
+
+transport_layer:
+  network_enable: false
+  drop_out_of_order_messages: true
+  udp_mc:
+    config_version: "" 
+    group: ""
+    mask: "" 
+    port: 14000
+    ttl: 0
+    send_buffer: 5242880
+    receive_buffer: 5242880
+    join_all_interfaces: false
+  tcppubsub:
+  shm:
+    host_group_name:
+    
