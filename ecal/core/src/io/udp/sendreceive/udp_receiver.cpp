@@ -86,7 +86,6 @@ namespace IO
     {
       if (!m_socket_impl) return(false);
 
-      const std::lock_guard<std::mutex> lock(m_socket_mtx);
       return(m_socket_impl->AddMultiCastGroup(ipaddr_));
     }
 
@@ -94,7 +93,6 @@ namespace IO
     {
       if (!m_socket_impl) return(false);
 
-      const std::lock_guard<std::mutex> lock(m_socket_mtx);
       return(m_socket_impl->RemMultiCastGroup(ipaddr_));
     }
 
