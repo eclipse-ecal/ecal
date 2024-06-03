@@ -47,7 +47,7 @@ namespace eCAL
         return(CServiceClient::AddResponseCallback(callback));
     }
 
-    bool CNBSrvClient::WrapAddCltEventCB(eCAL_Client_Event type, nanobind::callable callback_)
+    bool CNBSrvClient::WrapAddClientEventCB(eCAL_Client_Event type, nanobind::callable callback_)
     {
         assert(IsConnected());
         {

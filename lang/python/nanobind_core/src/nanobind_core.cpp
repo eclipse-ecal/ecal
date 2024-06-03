@@ -37,7 +37,7 @@
 
 #include <modules/module_client.h>
 #include <modules/module_core.h>
-#include <modules/module_datatypeinfo.cpp>
+#include <modules/module_datatypeinfo.h>
 #include <modules/module_publisher.h>
 #include <modules/module_server.h>
 #include <modules/module_subscriber.h>

@@ -68,7 +68,7 @@ namespace eCAL
          *
          * @return  True if succeeded, false if not.
         **/
-        bool WrapAddCltEventCB(eCAL_Client_Event type, nanobind::callable callback_);
+        bool WrapAddClientEventCB(eCAL_Client_Event type, nanobind::callable callback_);
 
     private:
         /**
