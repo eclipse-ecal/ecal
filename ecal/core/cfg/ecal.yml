@@ -2,7 +2,7 @@ publisher:
   shm:
     enable: true
     zero_copy_mode: false
-    acknowlegde_timout_ms: 0
+    acknowledge_timout_ms: 0
     memfile_min_size_bytes: 4096
     memfile_reserve_percent: 50
     memfile_buffer_count: 1
@@ -17,6 +17,8 @@ publisher:
 
   share_topic_type: true
   share_topic_description: true
+  priority_list_local: ["shm", "udp", "tcp"]
+  priority_list_remote: ["udp", "tcp"]
 
 subscriber:
   shm:
@@ -44,8 +46,8 @@ monitoring:
   udp:
     placeholder: false
   
-  filter_excl: "__.*"           # Topics blacklist as regular expression (will not be monitored) (Default: "__.*")
-  filter_incl: ""               # Topics whitelist as regular expression (will be monitored only) (Default: "")
+  filter_excl: "^__.*$"           # Topics blacklist as regular expression (will not be monitored) (Default: "^__.*$")
+  filter_incl: ""                 # Topics whitelist as regular expression (will be monitored only) (Default: "")
 
 
 time:
