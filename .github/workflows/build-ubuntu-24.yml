@@ -53,8 +53,8 @@ jobs:
       run: |
         source ".venv_build/bin/activate"
         
-        export CC=/usr/bin/gcc-11
-        export CXX=/usr/bin/g++-11
+        export CC=/usr/bin/gcc-13
+        export CXX=/usr/bin/g++-13
         mkdir "${{ runner.workspace }}/_build"
         cd "${{ runner.workspace }}/_build"
         cmake $GITHUB_WORKSPACE -G "Ninja" \
@@ -112,7 +112,7 @@ jobs:
       run: |
         sudo apt-get -y install python3.12-dev python3.12-venv
         mkdir ".venv_312"
-        python3.11 -m venv ".venv_312"
+        python3.12 -m venv ".venv_312"
         source ".venv_312/bin/activate"
         pip install --upgrade pip
         pip install wheel setuptools
