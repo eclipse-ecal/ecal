@@ -44,10 +44,10 @@ namespace eCAL
     class CmdParser
     {    
     public:
-      CmdParser(int argc_ , char **argv_);
+      CmdParser(std::vector<std::string>& arguments_);
       CmdParser();
 
-      void                      parseArguments(int argc_, char **argv_);
+      void                      parseArguments(std::vector<std::string>& arguments_);
 
       bool                      getDumpConfig() const;
       std::vector<std::string>& getConfigKeys();

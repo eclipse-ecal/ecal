@@ -237,7 +237,7 @@ TEST(core_cpp_config, config_cmd_parser)
 
   eCAL::Config::CmdParser parser;
 
-  std::vector<const char*> arguments;
+  std::vector<std::string> arguments;
 
   const std::string set_config_key = "--ecal-set-config-key ";
   const std::string sep_slash = "/";
@@ -257,18 +257,14 @@ TEST(core_cpp_config, config_cmd_parser)
 
   arguments.push_back("test_config_cmd_parser");
   arguments.push_back("--ecal-ini-file customIni.ini");
-  std::string host_group_string = set_config_key + network + sep_slash + host_group_name + sep_col + config_test_machine;
-  arguments.push_back(host_group_string.data());
-  std::string network_enabled_string = set_config_key + network + sep_slash + network_enabled + sep_col + is_network_enabled;
-  arguments.push_back(network_enabled_string.data());
-  std::string registration_to_string = set_config_key + common + sep_slash + registration_timeout + sep_col + reg_to_value;
-  arguments.push_back(registration_to_string.data());
-  std::string registration_rf_string = set_config_key + common + sep_slash + registration_refresh + sep_col + reg_rf_value;
-  arguments.push_back(registration_rf_string.data());
+  arguments.push_back(set_config_key + network + sep_slash + host_group_name + sep_col + config_test_machine);
+  arguments.push_back(set_config_key + network + sep_slash + network_enabled + sep_col + is_network_enabled);
+  arguments.push_back(set_config_key + common + sep_slash + registration_timeout + sep_col + reg_to_value);
+  arguments.push_back(set_config_key + common + sep_slash + registration_refresh + sep_col + reg_rf_value);
 
   try
   {
-    parser.parseArguments(static_cast<int>(arguments.size()), const_cast<char**>(arguments.data()));
+    parser.parseArguments(arguments);
   }
   catch(const std::runtime_error& e)
   {
@@ -291,13 +287,13 @@ TEST(CmdParserDeathTest, config_cmd_parser_death_test)
 {
   eCAL::Config::CmdParser parser;
 
-  std::vector<const char*> arguments;
+  std::vector<std::string> arguments;
 
   arguments.push_back("test_config_cmd_parser_death_test");
   arguments.push_back("--ecal-ini-file someNotValidFileName.ini");
 
   ASSERT_THROW(
-    parser.parseArguments(static_cast<int>(arguments.size()), const_cast<char**>(arguments.data())),
+    parser.parseArguments(arguments),
     std::runtime_error
   );
 }
