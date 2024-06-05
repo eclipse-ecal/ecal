@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -305,11 +305,19 @@ namespace eCAL
       // Maybe pass the iterator instead of the key? or at least only get k once
       void update_timestamp(const Key& k)
       {
-        _key_tracker.erase(_key_to_value.at(k).second);
-        auto new_iterator = _key_tracker.emplace(_key_tracker.end(), std::make_pair(get_curr_time(), k));
-        _key_to_value.at(k).second = new_iterator;
-      }
+        auto it_in_map = _key_to_value.find(k);
+        if (it_in_map != _key_to_value.end())
+        {
+          auto& it_in_list = it_in_map->second.second;
 
+          // move the element to the end of the list
+          _key_tracker.splice(_key_tracker.end(), _key_tracker, it_in_list);
+
+          // update the timestamp
+          it_in_list->first = get_curr_time();
+        }
+      }
+      
       // Record a fresh key-value pair in the cache 
       std::pair<typename key_to_value_type::iterator, bool> insert(const Key& k, const T& v)
       {
