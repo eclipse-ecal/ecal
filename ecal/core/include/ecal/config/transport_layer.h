@@ -46,7 +46,8 @@ namespace eCAL
       struct Configuration
       {
         std::string                            host_group_name{};               /*!< Common host group name that enables interprocess mechanisms across 
-                                                                                    (virtual) host borders (e.g, Docker); by default equivalent to local host name (Default: "")*/
+        
+        // definetly deprecated -> publisher options                                                                           (virtual) host borders (e.g, Docker); by default equivalent to local host name (Default: "")*/
         Types::ConstrainedInteger<4096, 4096>  memfile_minsize{};               //!< Default memory file size for new publisher (Default: 4096)
         Types::ConstrainedInteger<50, 1, 100>  memfile_reserve{};               //!< Dynamic file size reserve before recreating memory file if topic size changes in % (Default: 50)
         unsigned int                           memfile_ack_timeout{};           //!< Publisher timeout for ack event from subscriber that memory file content is processed (Default: 0)
