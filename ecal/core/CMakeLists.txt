@@ -23,6 +23,7 @@ find_package(Threads          REQUIRED)
 find_package(ecaludp          REQUIRED)
 
 if (ECAL_CORE_CONFIG_INIFILE)
+  find_package(yaml-cpp         REQUIRED)
   find_package(simpleini      REQUIRED)
 endif()
 
@@ -64,6 +65,7 @@ endif()
 ######################################
 set(ecal_config_src
     src/config/ecal_cmd_parser.cpp
+    src/config/configuration_reader.cpp
     src/config/ecal_config.cpp
     src/config/ecal_config_initializer.cpp
     src/config/ecal_config_reader.cpp
@@ -615,6 +617,7 @@ if(ECAL_CORE_CONFIG_INIFILE)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
       simpleini::simpleini
+      yaml-cpp::yaml-cpp
   )
 endif()
 
