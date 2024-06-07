@@ -1,29 +1,13 @@
-/* ========================= eCAL LICENSE =================================
- *
- * Copyright (C) 2016 - 2024 Continental Corporation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * ========================= eCAL LICENSE =================================
-*/
+#ifndef CONFIGURATION_TO_YAML_H
+#define CONFIGURATION_TO_YAML_H
 
-/**
- * @brief  Global eCAL configuration interface
-**/
+#include <ecal/config/configuration.h>
 
-#include "configuration_reader.h"
-
+#ifndef YAML_CPP_STATIC_DEFINE 
+#define YAML_CPP_STATIC_DEFINE 
+#endif
 #include <yaml-cpp/yaml.h>
+
 
 namespace YAML
 {
@@ -32,18 +16,17 @@ namespace YAML
   template<>
   struct convert<eCAL::Application::Startup::Configuration>
   {
-    static Node encode(const eCAL::Application::Startup::Configuration&)
+    static Node encode(const eCAL::Application::Startup::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["emulator"] = config_.terminal_emulator;
 
       return node;
     }
 
     static bool decode(const Node& node_, eCAL::Application::Startup::Configuration& config_)
     {
-      config_.terminal_emulator = node_["terminal_emulator"].as<std::string>();
+      config_.terminal_emulator = node_["emulator"].as<std::string>();
       return true;
     }
   };
@@ -51,11 +34,10 @@ namespace YAML
   template<>
   struct convert<eCAL::Application::Sys::Configuration>
   {
-    static Node encode(const eCAL::Application::Sys::Configuration&)
+    static Node encode(const eCAL::Application::Sys::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["filter_excl"] = config_.filter_excl;
 
       return node;
     }
@@ -71,18 +53,17 @@ namespace YAML
   template<>
   struct convert<eCAL::Monitoring::SHM::Configuration>
   {
-    static Node encode(const eCAL::Monitoring::SHM::Configuration&)
+    static Node encode(const eCAL::Monitoring::SHM::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
-
+      node["domain"]     = config_.shm_monitoring_domain;
+      node["queue_size"] = config_.shm_monitoring_queue_size;
       return node;
     }
 
     static bool decode(const Node& node_, eCAL::Monitoring::SHM::Configuration& config_)
     {
-      config_.shm_monitoring_domain = node_["domain"].as<std::string>();
+      config_.shm_monitoring_domain     = node_["domain"].as<std::string>();
       config_.shm_monitoring_queue_size = node_["queue_size"].as<size_t>();
       return true;
     }
@@ -114,8 +95,6 @@ namespace YAML
     {
       Node node;
 
-      // Convert here to yaml node, e.g. to safe configuration
-
       return node;
     }
 
@@ -125,25 +104,22 @@ namespace YAML
       config_ = eCAL::Monitoring::Types::Mode::shm_monitoring;
       return true;
     }
-
-    // TODO PG: just a trial, remove if not necessary anymore
-    static bool decode(const Node&, eCAL::Monitoring::Types::Mode_Filter& config_)
-    {
-      // TODO PG: Change this here after refactoring monitoring mode to a list
-      config_ = static_cast<eCAL::Monitoring::Types::Mode_Filter>(eCAL::Monitoring::Types::Mode::shm_monitoring);
-      return true;
-    }
   };
+
 
   // publisher configuration objects
   template<>
   struct convert<eCAL::Publisher::SHM::Configuration>
   {
-    static Node encode(const eCAL::Publisher::SHM::Configuration&)
+    static Node encode(const eCAL::Publisher::SHM::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["enable"]                  = config_.enable;
+      node["zero_copy_mode"]          = config_.zero_copy_mode;
+      node["acknowledge_timeout_ms"]  = config_.acknowledge_timeout_ms;
+      node["memfile_min_size_bytes"]  = static_cast<int>(config_.memfile_min_size_bytes);
+      node["memfile_reserve_percent"] = static_cast<int>(config_.memfile_reserve_percent);
+      node["memfile_buffer_count"]    = static_cast<int>(config_.memfile_buffer_count);
 
       return node;
     }
@@ -163,11 +139,12 @@ namespace YAML
   template<>
   struct convert<eCAL::Publisher::UDP::Configuration>
   {
-    static Node encode(const eCAL::Publisher::UDP::Configuration&)
+    static Node encode(const eCAL::Publisher::UDP::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["enable"]             = config_.enable;
+      node["loopback"]           = config_.loopback;
+      node["sndbuff_size_bytes"] = static_cast<int>(config_.sndbuf_size_bytes);
 
       return node;
     }
@@ -176,7 +153,7 @@ namespace YAML
     {
       config_.enable            = node_["enable"].as<bool>();
       config_.loopback          = node_["loopback"].as<bool>();
-      config_.sndbuf_size_bytes = node_["sndbuf_size_bytes"].as<unsigned int>();
+      config_.sndbuf_size_bytes = node_["sndbuff_size_bytes"].as<unsigned int>();
       return true;
     }
   };
@@ -184,11 +161,10 @@ namespace YAML
   template<>
   struct convert<eCAL::Publisher::TCP::Configuration>
   {
-    static Node encode(const eCAL::Publisher::TCP::Configuration&)
+    static Node encode(const eCAL::Publisher::TCP::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["enable"] = config_.enable;
 
       return node;
     }
@@ -204,11 +180,10 @@ namespace YAML
   template<>
   struct convert<eCAL::Subscriber::SHM::Configuration>
   {
-    static Node encode(const eCAL::Subscriber::SHM::Configuration&)
+    static Node encode(const eCAL::Subscriber::SHM::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["enable"] = config_.enable;
 
       return node;
     }
@@ -223,11 +198,10 @@ namespace YAML
   template<>
   struct convert<eCAL::Subscriber::UDP::Configuration>
   {
-    static Node encode(const eCAL::Subscriber::UDP::Configuration&)
+    static Node encode(const eCAL::Subscriber::UDP::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["enable"] = config_.enable;
 
       return node;
     }
@@ -242,11 +216,10 @@ namespace YAML
   template<>
   struct convert<eCAL::Subscriber::TCP::Configuration>
   {
-    static Node encode(const eCAL::Subscriber::TCP::Configuration&)
+    static Node encode(const eCAL::Subscriber::TCP::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["enable"] = config_.enable;
 
       return node;
     }
@@ -262,11 +235,12 @@ namespace YAML
   template<>
   struct convert<eCAL::TransportLayer::TCPPubSub::Configuration>
   {
-    static Node encode(const eCAL::TransportLayer::TCPPubSub::Configuration&)
+    static Node encode(const eCAL::TransportLayer::TCPPubSub::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["number_executor_reader"] = config_.num_executor_reader;
+      node["number_executor_writer"] = config_.num_executor_writer;
+      node["max_reconnections"]      = config_.max_reconnections;
 
       return node;
     }
@@ -283,11 +257,10 @@ namespace YAML
   template<>
   struct convert<eCAL::TransportLayer::SHM::Configuration>
   {
-    static Node encode(const eCAL::TransportLayer::SHM::Configuration&)
+    static Node encode(const eCAL::TransportLayer::SHM::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["host_group_name"] = config_.host_group_name;
 
       return node;
     }
@@ -302,11 +275,18 @@ namespace YAML
   template<>
   struct convert<eCAL::TransportLayer::UDPMC::Configuration>
   {
-    static Node encode(const eCAL::TransportLayer::UDPMC::Configuration&)
+    static Node encode(const eCAL::TransportLayer::UDPMC::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["config_version"]      = config_.config_version == eCAL::Types::UdpConfigVersion::V1 ? "v1" : "v2";
+      node["group"]               = config_.group.Get();
+      node["mask"]                = config_.mask.Get();
+      node["port"]                = static_cast<int>(config_.port);
+      node["ttl"]                 = config_.ttl;
+      node["send_buffer"]         = static_cast<int>(config_.sndbuf);
+      node["receive_buffer"]      = static_cast<int>(config_.recbuf);
+      node["join_all_interfaces"] = config_.join_all_interfaces;
+      node["npcap_enabled"]       = config_.npcap_enabled;
 
       return node;
     }
@@ -330,18 +310,18 @@ namespace YAML
   template<>
   struct convert<eCAL::Application::Configuration>
   {
-    static Node encode(const eCAL::Application::Configuration&)
+    static Node encode(const eCAL::Application::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
-
+      node["terminal"] = config_.startup;
+      node["sys"]      = config_.sys;
+      
       return node;
     }
 
     static bool decode(const Node& node_, eCAL::Application::Configuration& config_)
     {
-      config_.startup = node_["startup"].as<eCAL::Application::Startup::Configuration>();
+      config_.startup = node_["terminal"].as<eCAL::Application::Startup::Configuration>();
       config_.sys     = node_["sys"].as<eCAL::Application::Sys::Configuration>();
       return true;
     }
@@ -353,7 +333,7 @@ namespace YAML
     static Node encode(const eCAL::Logging::Configuration&)
     {
       Node node;
-
+      // TODO PG: add proper list read out when "eCAL_Logging_Filter" changed to handling with list
       // Convert here to yaml node, e.g. to safe configuration
 
       return node;
@@ -372,24 +352,32 @@ namespace YAML
   template<>
   struct convert<eCAL::Monitoring::Configuration>
   {
-    static Node encode(const eCAL::Monitoring::Configuration&)
+    static Node encode(const eCAL::Monitoring::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      // TODO PG:
+      //config_.monitoring_mode
+      node["mode"] = std::list<std::string>{};
+      node["timeout"] = static_cast<int>(config_.monitoring_timeout);
+      node["network"] = config_.network_monitoring;
+      node["filter_excl"] = config_.filter_excl;
+      node["filter_incl"] = config_.filter_incl;
+      node["udp"] = config_.udp_options;
+      node["shm"] = config_.shm_options;
 
       return node;
     }
 
     static bool decode(const Node& node_, eCAL::Monitoring::Configuration& config_)
     {
-      config_.monitoring_mode = node_["mode"].as<eCAL::Monitoring::Types::Mode_Filter>();
+      // TODO PG: change here when handling complete
+      config_.monitoring_mode = static_cast<eCAL::Monitoring::Types::Mode_Filter>(eCAL::Monitoring::Types::Mode::shm_monitoring);
       config_.monitoring_timeout = node_["timeout"].as<unsigned int>();
       config_.network_monitoring = node_["network"].as<bool>();
       config_.filter_excl = node_["filter_excl"].as<std::string>();
       config_.filter_incl = node_["filter_incl"].as<std::string>();
       config_.udp_options = node_["udp"].as<eCAL::Monitoring::UDP::Configuration>();
-      config_.shm_options = node_["tcp"].as<eCAL::Monitoring::SHM::Configuration>();
+      config_.shm_options = node_["shm"].as<eCAL::Monitoring::SHM::Configuration>();
       return true;
     }
   };
@@ -397,11 +385,14 @@ namespace YAML
   template<>
   struct convert<eCAL::Publisher::Configuration>
   {
-    static Node encode(const eCAL::Publisher::Configuration&)
+    static Node encode(const eCAL::Publisher::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["share_topic_description"] = config_.share_topic_description;
+      node["share_topic_type"]        = config_.share_topic_type;
+      node["shm"]                     = config_.shm;
+      node["udp"]                     = config_.udp;
+      node["tcp"]                     = config_.tcp;
 
       return node;
     }
@@ -420,11 +411,13 @@ namespace YAML
   template<>
   struct convert<eCAL::Registration::Configuration>
   {
-    static Node encode(const eCAL::Registration::Configuration&)
+    static Node encode(const eCAL::Registration::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["share_ttype"] = config_.share_ttype;
+      node["share_tdesc"] = config_.share_tdesc;
+      node["registration_timeout"] = config_.getTimeoutMS();
+      node["registration_refresh"] = config_.getRefreshMS();
 
       return node;
     }
@@ -444,11 +437,11 @@ namespace YAML
   template<>
   struct convert<eCAL::Service::Configuration>
   {
-    static Node encode(const eCAL::Service::Configuration&)
+    static Node encode(const eCAL::Service::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["protocol_v0"] = config_.protocol_v0;
+      node["protocol_v1"] = config_.protocol_v1;
 
       return node;
     }
@@ -464,11 +457,12 @@ namespace YAML
   template<>
   struct convert<eCAL::Subscriber::Configuration>
   {
-    static Node encode(const eCAL::Subscriber::Configuration&)
+    static Node encode(const eCAL::Subscriber::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["shm"] = config_.shm;
+      node["tcp"] = config_.tcp;
+      node["udp"] = config_.udp;
 
       return node;
     }
@@ -485,11 +479,11 @@ namespace YAML
   template<>
   struct convert<eCAL::Time::Configuration>
   {
-    static Node encode(const eCAL::Time::Configuration&)
+    static Node encode(const eCAL::Time::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["replay"] = config_.timesync_module_replay;
+      node["rt"]     = config_.timesync_module_rt;
 
       return node;
     }
@@ -505,11 +499,14 @@ namespace YAML
   template<>
   struct convert<eCAL::TransportLayer::Configuration>
   {
-    static Node encode(const eCAL::TransportLayer::Configuration&)
+    static Node encode(const eCAL::TransportLayer::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["network_enable"]             = config_.network_enabled;
+      node["drop_out_of_order_messages"] = config_.drop_out_of_order_messages;
+      node["udp_mc"]                     = config_.mc_options;
+      node["tcppubsub"]                  = config_.tcp_options;
+      node["shm"]                        = config_.shm_options;
 
       return node;
     }
@@ -525,38 +522,22 @@ namespace YAML
     }
   };
 
-  template<>
-  struct convert<eCAL::Cli::Configuration>
-  {
-    static Node encode(const eCAL::Cli::Configuration&)
-    {
-      Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
-
-      return node;
-    }
-
-    static bool decode(const Node&, eCAL::Cli::Configuration& config_)
-    {
-      config_.config_keys      = {};
-      config_.config_keys_map  = {};
-      config_.dump_config      = false;
-      config_.specified_config = {};
-      return true;
-    }
-  };
-
-
   // Main configuration object
   template<>
   struct convert<eCAL::Configuration>
   {
-    static Node encode(const eCAL::Configuration&)
+    static Node encode(const eCAL::Configuration& config_)
     {
       Node node;
-
-      // Convert here to yaml node, e.g. to safe configuration
+      node["application"]     = config_.application;
+      node["logging"]         = config_.logging;
+      node["monitoring"]      = config_.monitoring;
+      node["publisher"]       = config_.publisher;
+      node["registration"]    = config_.registration;
+      node["service"]         = config_.service;
+      node["subscriber"]      = config_.subscriber;
+      node["time"]            = config_.timesync;
+      node["transport_layer"] = config_.transport_layer;
 
       return node;
     }
@@ -572,21 +553,9 @@ namespace YAML
       config_.subscriber             = node_["subscriber"].as<eCAL::Subscriber::Configuration>();
       config_.timesync               = node_["time"].as<eCAL::Time::Configuration>();
       config_.transport_layer        = node_["transport_layer"].as<eCAL::TransportLayer::Configuration>();
-      config_.command_line_arguments = node_["user_arguments"].as<eCAL::Cli::Configuration>();
       return true;
     }
   };  
 }
 
-namespace eCAL
-{
-  namespace Config
-  {
-    eCAL::Configuration parseYaml(std::string& filename_)
-    {
-      YAML::Node config = YAML::LoadFile(filename_);
-
-      return config.as<eCAL::Configuration>();
-    }
-  }
-}
+#endif // CONFIGURATION_TO_YAML_H

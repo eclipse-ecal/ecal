@@ -2,7 +2,7 @@ publisher:
   shm:
     enable: true
     zero_copy_mode: false
-    acknowledge_timout_ms: 0
+    acknowledge_timeout_ms: 0
     memfile_min_size_bytes: 4096
     memfile_reserve_percent: 50
     memfile_buffer_count: 1

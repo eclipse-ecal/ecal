@@ -64,8 +64,9 @@ endif()
 # config
 ######################################
 set(ecal_config_src
+    src/config/configuration_reader.h
+    src/config/configuration_to_yaml.h
     src/config/ecal_cmd_parser.cpp
-    src/config/configuration_reader.cpp
     src/config/ecal_config.cpp
     src/config/ecal_config_initializer.cpp
     src/config/ecal_config_reader.cpp

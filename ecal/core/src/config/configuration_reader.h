@@ -25,12 +25,46 @@
 #define ECAL_CONFIGURATION_READER
 
 #include <ecal/config/configuration.h>
+#ifndef YAML_CPP_STATIC_DEFINE 
+#define YAML_CPP_STATIC_DEFINE 
+#endif
+#include <yaml-cpp/yaml.h>
+
+#include "configuration_to_yaml.h"
+
+#include <fstream>
 
 namespace eCAL
 {
   namespace Config
   {
-    eCAL::Configuration parseYaml(const std::string& filename_);
+    eCAL::Configuration ParseYamlFromFile(const std::string& filename_)
+    {
+      YAML::Node config = YAML::LoadFile(filename_);
+
+      return config.as<eCAL::Configuration>();
+    };
+
+    eCAL::Configuration ParseYamlFromString(const std::string& yaml_string_)
+    {
+      YAML::Node config = YAML::Load(yaml_string_);
+
+      return config.as<eCAL::Configuration>();
+    };
+
+    bool WriteConfigurationToYaml(const std::string& file_name_, const eCAL::Configuration& config_ = eCAL::GetConfiguration())
+    {
+      YAML::Node node(config_);
+      std::ofstream file(file_name_);
+      if (file.is_open())
+      {
+        file << node;
+        file.close();
+        return true;
+      }
+      
+      return false;
+    }
   }  
 }
 

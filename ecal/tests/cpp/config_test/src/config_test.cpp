@@ -29,6 +29,7 @@
 #include <cstdio>
 
 #include "ecal_cmd_parser.h"
+#include "configuration_reader.h"
 
 template<typename MEMBER, typename VALUE>
 void SetValue(MEMBER& member, VALUE value)
@@ -226,7 +227,7 @@ TEST(core_cpp_config, config_cmd_parser)
 
   if (custom_ini_file.is_open())
   {
-    custom_ini_file << ini_file_as_string;
+    custom_ini_file << ini_file_as_string_deprecated;
     custom_ini_file.close();
   }
   else 
@@ -300,4 +301,54 @@ TEST(CmdParserDeathTest, config_cmd_parser_death_test)
     parser.parseArguments(static_cast<int>(arguments.size()), const_cast<char**>(arguments.data())),
     std::runtime_error
   );
+}
+
+TEST(YamlConfigReaderTest, read_write_file_test)
+{
+  // create a custom ini file
+  std::string ini_file_name = "customIni.yml";
+  std::ofstream custom_ini_file(ini_file_name);
+
+  if (custom_ini_file.is_open())
+  {
+    custom_ini_file << ini_file_as_string_yaml;
+    custom_ini_file.close();
+  }
+  else 
+  {
+    std::cerr << "Error opening file for ini writing" << "\n";
+    return;
+  }
+
+  eCAL::Configuration config;
+  EXPECT_NO_THROW(config = eCAL::Config::ParseYamlFromFile(ini_file_name));
+
+  EXPECT_EQ(true, eCAL::Config::WriteConfigurationToYaml("myTest.yml", config));
+
+  remove(ini_file_name.data());
+  remove("myTest.yml");
+}
+
+TEST(YamlConfigReaderTest, parse_values_test)
+{
+  eCAL::Configuration config;
+  EXPECT_NO_THROW(config = eCAL::Config::ParseYamlFromString(ini_file_as_string_yaml));
+
+  // Check string 
+  EXPECT_EQ(config.application.startup.terminal_emulator, "myTestTerminal");
+
+  // Check equality of IpAddressV4
+  EXPECT_EQ(static_cast<std::string>(config.transport_layer.mc_options.group), std::string("239.5.0.1"));
+
+  // Check constrained Integer
+  EXPECT_EQ(static_cast<unsigned int>(config.transport_layer.mc_options.port), 14010);
+
+  // Check boolean
+  EXPECT_EQ(config.transport_layer.mc_options.npcap_enabled, true);
+
+  // Check unsigned size_t
+  EXPECT_EQ(config.transport_layer.tcp_options.max_reconnections, 7);
+
+  // Check unsigned int
+  EXPECT_EQ(config.publisher.shm.acknowledge_timeout_ms, 346U);
 }

@@ -49,7 +49,7 @@ namespace eCAL
       ECAL_API IpAddressV4();
       ECAL_API IpAddressV4(const std::string& ip_address_); 
 
-      std::string Get() const;
+      ECAL_API std::string Get() const;
 
       ECAL_API IpAddressV4& operator=(const std::string& ip_string);
       ECAL_API operator std::string();
