@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,13 +63,13 @@ namespace eCAL
 
     int Initialize     ( unsigned int components_, std::vector<std::string>* config_keys_ = nullptr);
     bool IsInitialized ( unsigned int component_  );
-
+    
     unsigned int GetComponents() const { return(components); };
 
     int Finalize();
 
-    const std::unique_ptr<CConfig>&                                       config()                 { return config_instance; };
     const std::unique_ptr<CLog>&                                          log()                    { return log_instance; };
+
 #if ECAL_CORE_MONITORING
     const std::unique_ptr<CMonitoring>&                                   monitoring()             { return monitoring_instance; };
 #endif
@@ -93,13 +93,13 @@ namespace eCAL
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
     const std::unique_ptr<CMemFileThreadPool>&                            memfile_pool()           { return memfile_pool_instance; };
     const std::unique_ptr<CMemFileMap>&                                   memfile_map()            { return memfile_map_instance; };
+    
 #endif
     const std::unique_ptr<CDescGate>&                                     descgate()               { return descgate_instance; };
 
   private:
     bool                                                                  initialized;
     unsigned int                                                          components;
-    std::unique_ptr<CConfig>                                              config_instance;
     std::unique_ptr<CLog>                                                 log_instance;
 #if ECAL_CORE_MONITORING
     std::unique_ptr<CMonitoring>                                          monitoring_instance;
@@ -124,6 +124,7 @@ namespace eCAL
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
     std::unique_ptr<CMemFileThreadPool>                                   memfile_pool_instance;
     std::unique_ptr<CMemFileMap>                                          memfile_map_instance;
+    
 #endif
     std::unique_ptr<CDescGate>                                            descgate_instance;
   };

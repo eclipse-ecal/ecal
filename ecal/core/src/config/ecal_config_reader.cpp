@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -292,9 +292,33 @@ namespace eCAL
     void OverwriteKeys(const std::vector<std::string>& key_vec_)
     {
       m_overwrite_keys = key_vec_;
+      OverwriteKeysNow();
     }
 
-    void AddFile(std::string& file_name_)
+    void OverwriteKeysNow()
+    {
+      // update command line keys
+      for (const auto& full_key : m_overwrite_keys)
+      {
+         auto sec_pos = full_key.find_last_of('/');
+         if (sec_pos == std::string::npos) continue;
+         const std::string section = full_key.substr(0, sec_pos);
+         std::string key     = full_key.substr(sec_pos+1);
+
+         auto val_pos = key.find_first_of(':');
+         if (val_pos == std::string::npos) continue;
+         const std::string value = key.substr(val_pos+1);
+         key = key.substr(0, val_pos);
+
+         const SI_Error err = SetValue(section.c_str(), key.c_str(), value.c_str());
+         if (err == SI_FAIL)
+         {
+            std::cout << "Error: Could not overwrite key " << key << " in section " << section << ".";
+         }
+      }
+    }
+
+    bool AddFile(std::string& file_name_)
     {
       std::string cfg_fname = file_name_;
       if (!fileexists(cfg_fname))
@@ -321,25 +345,9 @@ namespace eCAL
         file_name_ = cfg_fname;
       }
 
-      // update command line keys
-      for (const auto& full_key : m_overwrite_keys)
-      {
-         auto sec_pos = full_key.find_last_of('/');
-         if (sec_pos == std::string::npos) continue;
-         const std::string section = full_key.substr(0, sec_pos);
-         std::string key     = full_key.substr(sec_pos+1);
+      OverwriteKeysNow();
 
-         auto val_pos = key.find_first_of(':');
-         if (val_pos == std::string::npos) continue;
-         const std::string value = key.substr(val_pos+1);
-         key = key.substr(0, val_pos);
-
-         const SI_Error err = SetValue(section.c_str(), key.c_str(), value.c_str());
-         if (err == SI_FAIL)
-         {
-            std::cout << "Error: Could not overwrite key " << key << " in section " << section << ".";
-         }
-      }
+      return loaded;
     }
   protected:
     std::vector<std::string> m_overwrite_keys;
@@ -379,9 +387,9 @@ namespace eCAL
     m_impl->OverwriteKeys(key_vec_);
   }
 
-  void CConfig::AddFile(std::string& ini_file_)
+  bool CConfig::AddFile(std::string& ini_file_)
   {
-    m_impl->AddFile(ini_file_);
+    return m_impl->AddFile(ini_file_);
   }
 
   bool CConfig::Validate()
@@ -443,25 +451,5 @@ namespace eCAL
   std::string CConfig::get(const std::string& section_, const std::string& key_, const char* default_)
   {
     return m_impl->GetValue(section_.c_str(), key_.c_str(), default_);
-  }
-
-  bool CfgGetBool(const std::string& section_, const std::string& key_, bool default_ /*= false*/)
-  {
-    return g_config()->get(section_, key_, default_);
-  }
-
-  int CfgGetInt(const std::string& section_, const std::string& key_, int default_ /*= 0*/)
-  {
-    return g_config()->get(section_, key_, default_);
-  }
-
-  double CfgGetDouble(const std::string& section_, const std::string& key_, double default_ /*= 0.0*/)
-  {
-    return g_config()->get(section_, key_, default_);
-  }
-
-  std::string CfgGetString(const std::string& section_, const std::string& key_, const char* default_ /*= ""*/)
-  {
-    return g_config()->get(section_, key_, default_);
   }
 }

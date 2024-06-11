@@ -17,52 +17,38 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file   ecal_subscriber_config.h
- * @brief  eCAL subscriber configuration
-**/
+#include <ecal/ecal.h>
+#include <ecal/types/ecal_custom_data_types.h>
 
-#pragma once
+#include <iostream>
 
-#include <ecal/ecal_os.h>
-
-#include <cstddef>
-
-namespace eCAL
+int main(int argc, char **argv)
 {
-  namespace Subscriber
+  // creating config object
+  eCAL::Configuration my_config(argc, argv);
+
+  // setting configuration
+  my_config.monitoring.network_monitoring = true;
+
+  // initialize eCAL API
+  eCAL::Initialize(my_config, "config sample");
+
+  unsigned int counter = 0;
+  // enter main loop
+  while(eCAL::Ok())
   {
-    namespace SHM
+    // sleep 500 ms
+    eCAL::Process::SleepMS(500);
+    if (counter >= 10)
     {
-      struct ECAL_API Configuration
-      {
-        bool enable = false;               //!< enable layer
-      };
+      break;
     }
 
-    namespace UDP
-    {
-      struct ECAL_API Configuration
-      {
-        bool enable = false;               //!< enable layer
-      };
-    }
-
-    namespace TCP
-    {
-      struct ECAL_API Configuration
-      {
-        bool enable = false;               //!< enable layer
-      };
-    }
-
-    struct ECAL_API Configuration
-    {
-      Configuration();
-
-      SHM::Configuration shm;
-      UDP::Configuration udp;
-      TCP::Configuration tcp;
-    };
+    std::cout << "Finished loop " << ++counter << "\n";
   }
+
+  // finalize eCAL API
+  eCAL::Finalize();
+
+  return(0);
 }

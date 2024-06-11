@@ -71,6 +71,7 @@ endif()
 # misc
 add_subdirectory(cpp/misc/process)
 add_subdirectory(cpp/misc/time)
+add_subdirectory(cpp/misc/config)
 if(ECAL_CORE_PUBLISHER)
   add_subdirectory(cpp/misc/timer)
 endif()

@@ -22,7 +22,7 @@
 **/
 
 #include <ecal/ecal_config.h>
-#include <ecal/ecal_subscriber_config.h>
+#include <ecal/config/subscriber.h>
 
 namespace eCAL
 {
@@ -30,14 +30,7 @@ namespace eCAL
   {
     Configuration::Configuration()
     {
-      // shm config
-      shm.enable = eCAL::Config::IsShmRecEnabled();
-
-      // udp config
-      udp.enable = eCAL::Config::IsUdpMulticastRecEnabled();
-
-      // tcp config
-      tcp.enable = eCAL::Config::IsTcpRecEnabled();
+      *this = GetConfiguration().subscriber;
     }
   }
 }

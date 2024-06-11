@@ -28,7 +28,7 @@
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
-#include <ecal/ecal_subscriber_config.h>
+#include <ecal/ecal_config.h>
 #include <ecal/ecal_types.h>
 
 #include <memory>

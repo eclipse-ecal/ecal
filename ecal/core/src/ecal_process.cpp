@@ -193,7 +193,7 @@ namespace eCAL
 #if ECAL_CORE_TIMEPLUGIN
       sstream << "------------------------- TIME -----------------------------------" << '\n';
       sstream << "Synchronization realtime : " << Config::GetTimesyncModuleName() << '\n';
-      sstream << "Synchronization replay   : " << eCALPAR(TIME, SYNC_MOD_REPLAY) << '\n';
+      sstream << "Synchronization replay   : " << Config::GetTimesyncModuleReplay() << '\n';
       sstream << "State                    : ";
       if (g_timegate()->IsSynchronized()) sstream << " synchronized " << '\n';
       else                                sstream << " not synchronized " << '\n';

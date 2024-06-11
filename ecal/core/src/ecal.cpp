@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@
 #include "ecal_def.h"
 #include "ecal_event.h"
 #include "ecal_globals.h"
+#include "config/ecal_cmd_parser.h"
 #include <string>
 #include <vector>
 
@@ -99,97 +100,13 @@ namespace eCAL
   **/
   int Initialize(int argc_ , char **argv_, const char *unit_name_, unsigned int components_)
   {
-    bool dump_config(false);
-    std::vector<std::string> config_keys;
+    eCAL::Configuration config(argc_, argv_);
+    
+    // Default behaviour: If not specified, try to use the default ini file
+    if (config.GetIniFilePath().empty())
+      config.InitConfigWithDefaultIni();
 
-#if ECAL_CORE_COMMAND_LINE
-    if ((argc_ > 0) && (argv_ != nullptr))
-    {
-      // define command line object
-      TCLAP::CmdLine cmd("", ' ', ECAL_VERSION);
-
-      // define command line arguments
-      TCLAP::SwitchArg             dump_config_arg     ("", "ecal-dump-config",    "Dump current configuration.", false);
-      TCLAP::ValueArg<std::string> default_ini_file_arg("", "ecal-ini-file",       "Load default configuration from that file.", false, ECAL_DEFAULT_CFG, "string");
-      TCLAP::MultiArg<std::string> set_config_key_arg  ("", "ecal-set-config-key", "Overwrite a specific configuration key (ecal-set-config-key \"section/key:value\".", false, "string");
-
-      TCLAP::UnlabeledMultiArg<std::string> dummy_arg("__dummy__", "Dummy", false, ""); // Dummy arg to eat all unrecognized arguments
-
-      cmd.add(dump_config_arg);
-      cmd.add(default_ini_file_arg);
-      cmd.add(set_config_key_arg);
-      cmd.add(dummy_arg);
-
-      CustomTclap::AdvancedTclapOutput advanced_tclap_output(&std::cout, 75);
-      advanced_tclap_output.setArgumentHidden(&dummy_arg, true);
-      cmd.setOutput(&advanced_tclap_output);
-
-      // parse command line
-      cmd.parse(argc_, argv_);
-
-      // set globals
-      if (dump_config_arg.isSet())
-      {
-        dump_config = true;
-      }
-      if (default_ini_file_arg.isSet())
-      {
-        g_default_ini_file = default_ini_file_arg.getValue();
-      }
-      if (set_config_key_arg.isSet())
-      {
-        config_keys = set_config_key_arg.getValue();
-      }
-    }
-#endif
-
-    // first call
-    if (g_globals_ctx == nullptr)
-    {
-      g_globals_ctx = new CGlobals;
-
-      if(unit_name_ != nullptr) g_unit_name = unit_name_;
-      if (g_unit_name.empty())
-      {
-        g_unit_name = Process::GetProcessName();
-#ifdef ECAL_OS_WINDOWS
-        size_t p = g_unit_name.rfind('\\');
-        if (p != std::string::npos)
-        {
-          g_unit_name = g_unit_name.substr(p+1);
-        }
-        p = g_unit_name.rfind('.');
-        if (p != std::string::npos)
-        {
-          g_unit_name = g_unit_name.substr(0, p);
-        }
-#endif
-#ifdef ECAL_OS_LINUX
-        size_t p = g_unit_name.rfind('/');
-        if (p != std::string::npos)
-        {
-          g_unit_name = g_unit_name.substr(p + 1);
-        }
-#endif
-      }
-
-      if (argv_ != nullptr)
-      {
-        for (size_t i = 0; i < static_cast<size_t>(argc_); ++i) if (argv_[i] != nullptr) g_task_parameter.emplace_back(argv_[i]);
-      }
-    }
-    g_globals_ctx_ref_cnt++;
-
-    // (post)initialize single components
-    const int success = g_globals()->Initialize(components_, &config_keys);
-
-    // print out configuration
-    if (dump_config)
-    {
-      Process::DumpConfig();
-    }
-
-    return success;
+    return Initialize(config, unit_name_, components_);
   }
 
   /**
@@ -203,10 +120,49 @@ namespace eCAL
   **/
   int Initialize(std::vector<std::string> args_, const char *unit_name_, unsigned int components_) //-V826
   {
-    args_.emplace(args_.begin(), eCAL::Process::GetProcessName());
-    std::vector<const char*> argv(args_.size());
-    std::transform(args_.begin(), args_.end(), argv.begin(), [](std::string& s) {return s.c_str();});
-    return Initialize(static_cast<int>(argv.size()), const_cast<char**>(argv.data()), unit_name_, components_);
+    eCAL::Configuration config(args_);
+    
+    // Default behaviour: If not specified, try to use the default ini file
+    if (config.GetIniFilePath().empty())
+      config.InitConfigWithDefaultIni();
+
+    return Initialize(config, unit_name_, components_);
+  }
+
+  /**
+   * @brief Initialize eCAL API.
+   *
+   * @param config_      User defined configuration object.
+   * @param unit_name_   Defines the name of the eCAL unit.
+   * @param components_  Defines which component to initialize.     
+   * 
+   * @return Zero if succeeded, 1 if already initialized, -1 if failed.
+  **/
+  int Initialize(eCAL::Configuration& config_, const char *unit_name_ /*= nullptr*/, unsigned int components_ /*= Init::Default*/)
+  {
+    if (g_globals() == nullptr)
+    {
+      InitGlobals();
+    }
+    
+    g_ecal_configuration = config_;
+
+    if (unit_name_ != nullptr)
+    {
+      SetGlobalUnitName(unit_name_);
+    }
+
+    g_globals_ctx_ref_cnt++;
+
+     // (post)initialize single components
+    const int success = g_globals()->Initialize(components_, &GetConfiguration().command_line_arguments.config_keys);
+
+    if (config_.command_line_arguments.dump_config)
+    {
+      Process::DumpConfig();
+    }
+    
+    return success;
   }
 
   /**
