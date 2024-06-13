@@ -118,7 +118,7 @@ jobs:
         max_attempts: 3
         retry_on: error
         timeout_seconds: 5
-        command: ${{ runner.workspace }}/_build cpack -G DragNDrop
+        command: cd ${{ runner.workspace }}/_build && cpack -G DragNDrop 
 
     - name: Upload DMG
       uses: actions/upload-artifact@v4
