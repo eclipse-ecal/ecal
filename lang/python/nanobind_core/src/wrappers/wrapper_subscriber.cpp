@@ -40,7 +40,7 @@ namespace eCAL
 
     std::string CNBSubscriber::Receive(int nb_timeout)
     {
-        std::string Rec_Data = "No Reception";
+        std::string Rec_Data = "";
         auto success = eCAL::CSubscriber::ReceiveBuffer(Rec_Data, nullptr, nb_timeout);
         return(Rec_Data);
     }
