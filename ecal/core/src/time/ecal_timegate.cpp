@@ -89,7 +89,7 @@ namespace eCAL
       m_successfully_loaded_rt = LoadModule(m_time_sync_modname, m_time_sync_rt);
       break;
     case eTimeSyncMode::replay:
-      m_time_sync_modname = eCALPAR(TIME, SYNC_MOD_REPLAY);
+      m_time_sync_modname = Config::GetTimesyncModuleReplay();
       m_successfully_loaded_replay = LoadModule(m_time_sync_modname, m_time_sync_replay);
       break;
     }

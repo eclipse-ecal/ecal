@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ namespace eCAL
     virtual ~CConfig();
 
     void OverwriteKeys(const std::vector<std::string>& key_vec_);
-    void AddFile(std::string& ini_file_);
+    bool AddFile(std::string& ini_file_);
 
     bool Validate();
 
@@ -54,9 +54,4 @@ namespace eCAL
   private:
     std::unique_ptr<CConfigImpl> m_impl;
   };
-
-  ECAL_API bool        CfgGetBool  (const std::string& section_, const std::string& key_, bool        default_ = false);
-  ECAL_API int         CfgGetInt   (const std::string& section_, const std::string& key_, int         default_ = 0);
-  ECAL_API double      CfgGetDouble(const std::string& section_, const std::string& key_, double      default_ = 0.0);
-  ECAL_API std::string CfgGetString(const std::string& section_, const std::string& key_, const char* default_ = "");
 }

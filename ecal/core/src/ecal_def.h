@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,9 @@
 
 #pragma once
 
+#include <ecal/config/configuration.h>
+#include <ecal/ecal_tlayer.h>
+#include <ecal/ecal_log_level.h>
 #include <ecal/ecal_os.h>
 
 /**********************************************************************************************/
@@ -48,9 +51,9 @@ constexpr const char* MON_FILTER_EXCL     =    "^__.*$";
 constexpr const char* MON_FILTER_INCL     =    "";
 
 /* logging filter settings */
-constexpr const char* MON_LOG_FILTER_CON  = "info,warning,error,fatal";
-constexpr const char* MON_LOG_FILTER_FILE = "";
-constexpr const char* MON_LOG_FILTER_UDP  = "info,warning,error,fatal";
+constexpr eCAL_Logging_Filter MON_LOG_FILTER_CON  = (log_level_info | log_level_warning | log_level_error | log_level_fatal);
+constexpr eCAL_Logging_Filter MON_LOG_FILTER_FILE = log_level_none;
+constexpr eCAL_Logging_Filter MON_LOG_FILTER_UDP  = (log_level_info | log_level_warning | log_level_error | log_level_fatal);
 
 
 /**********************************************************************************************/
@@ -66,17 +69,17 @@ constexpr const char* SYS_FILTER_EXCL     = "^eCALSysClient$|^eCALSysGUI$|^eCALS
 constexpr bool NET_ENABLED              = false;
 
 /* eCAL udp multicast defines */
-constexpr const char* NET_UDP_MULTICAST_CONFIG_VERSION    = "v1";
-constexpr const char* NET_UDP_MULTICAST_GROUP             = "239.0.0.1";
-constexpr const char* NET_UDP_MULTICAST_MASK              = "0.0.0.15";
-constexpr unsigned int NET_UDP_MULTICAST_PORT             = 14000U;
-constexpr unsigned int NET_UDP_MULTICAST_TTL              = 3U;
-constexpr unsigned int NET_UDP_MULTICAST_PORT_REG_OFF     = 0U;
-constexpr unsigned int NET_UDP_MULTICAST_PORT_LOG_OFF     = 1U;
-constexpr unsigned int NET_UDP_MULTICAST_PORT_SAMPLE_OFF  = 2U;
-constexpr unsigned int NET_UDP_MULTICAST_SNDBUF           = (5U*1024U*1024U);  /* 5 MByte */
-constexpr unsigned int NET_UDP_MULTICAST_RCVBUF           = (5U*1024U*1024U);  /* 5 MByte */
-constexpr bool NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED      = false;
+constexpr eCAL::Types::UdpConfigVersion  NET_UDP_MULTICAST_CONFIG_VERSION   = eCAL::Types::UdpConfigVersion::V1;
+constexpr const char* NET_UDP_MULTICAST_GROUP                               = "239.0.0.1";
+constexpr const char* NET_UDP_MULTICAST_MASK                                = "0.0.0.15";
+constexpr unsigned int NET_UDP_MULTICAST_PORT                               = 14000U;
+constexpr unsigned int NET_UDP_MULTICAST_TTL                                = 3U;
+constexpr unsigned int NET_UDP_MULTICAST_PORT_REG_OFF                       = 0U;
+constexpr unsigned int NET_UDP_MULTICAST_PORT_LOG_OFF                       = 1U;
+constexpr unsigned int NET_UDP_MULTICAST_PORT_SAMPLE_OFF                    = 2U;
+constexpr unsigned int NET_UDP_MULTICAST_SNDBUF                             = (5U*1024U*1024U);  /* 5 MByte */
+constexpr unsigned int NET_UDP_MULTICAST_RCVBUF                             = (5U*1024U*1024U);  /* 5 MByte */
+constexpr bool NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED                        = false;
 
 constexpr unsigned int NET_UDP_RECBUFFER_TIMEOUT          = 1000U;  /* ms */
 constexpr unsigned int NET_UDP_RECBUFFER_CLEANUP          = 10U;    /* ms */
@@ -102,16 +105,16 @@ constexpr const char* NET_HOST_GROUP_NAME                 = "";
 /*                                     publisher settings                                     */
 /**********************************************************************************************/
 /* use shared memory transport layer [auto = 2, on = 1, off = 0] */
-constexpr unsigned int PUB_USE_SHM                        = 2U;
+constexpr eCAL::TLayer::eSendMode PUB_USE_SHM             = eCAL::TLayer::eSendMode::smode_auto;
 /* use tcp transport layer           [auto = 2, on = 1, off = 0] */
-constexpr unsigned int PUB_USE_TCP                        = 0U;
+constexpr eCAL::TLayer::eSendMode PUB_USE_TCP             = eCAL::TLayer::eSendMode::smode_off;
 /* use udp multicast transport layer [auto = 2, on = 1, off = 0] */
-constexpr unsigned int PUB_USE_UDP_MC                     = 2U;
+constexpr eCAL::TLayer::eSendMode PUB_USE_UDP_MC          = eCAL::TLayer::eSendMode::smode_auto;
 
 /* share topic type                  [          on = 1, off = 0] */
-constexpr unsigned int PUB_SHARE_TTYPE                    = 1U;
+constexpr bool PUB_SHARE_TTYPE                            = true;
 /* share topic description           [          on = 1, off = 0] */
-constexpr unsigned int PUB_SHARE_TDESC                    = 1U;
+constexpr bool PUB_SHARE_TDESC                            = true;
 
 /* minimum size for created shared memory files */
 constexpr unsigned int PUB_MEMFILE_MINSIZE                = (4U*1024U);
@@ -137,22 +140,23 @@ constexpr unsigned int PUB_MEMFILE_BUF_COUNT              = 1U;
    this memory file is blocked for other readers wihle processed by the user callback function
    this option is fully IPC compatible to all eCAL 5.x versions
 */
-constexpr unsigned int PUB_MEMFILE_ZERO_COPY              = 0U;
+constexpr bool PUB_MEMFILE_ZERO_COPY                      = false;
 
 /**********************************************************************************************/
 /*                                     service settings                                       */
 /**********************************************************************************************/
 /* support service protocol v0, eCAL 5.11 and older (0 = off, 1 = on) */
-constexpr unsigned int SERVICE_PROTOCOL_V0                = 1U;
+constexpr bool SERVICE_PROTOCOL_V0                       = true;
 
 /* support service protocol v1, eCAL 5.12 and newer (0 = off, 1 = on) */
-constexpr unsigned int SERVICE_PROTOCOL_V1                = 1U;
+constexpr bool SERVICE_PROTOCOL_V1                       = true;
 
 /**********************************************************************************************/
 /*                                     time settings                                          */
 /**********************************************************************************************/
 constexpr const char* TIME_SYNC_MOD_RT                    = "";
 constexpr const char* TIME_SYNC_MOD_REPLAY                = "";
+constexpr const char* TIME_SYNC_MODULE                    = "ecaltime-localtime";
 
 /**********************************************************************************************/
 /*                                     process settings                                       */
@@ -185,8 +189,8 @@ constexpr const char* EVENT_SHUTDOWN_PROC                   = "ecal_shutdown_pro
 /**********************************************************************************************/
 /* enable distribution of monitoring/registration information via shared memory */
 constexpr bool EXP_SHM_MONITORING_ENABLED                   = false;
-/* disable distribution of monitoring/registration information via network (default) */
-constexpr bool EXP_NETWORK_MONITORING_DISABLED              = false;
+/* enable distribution of monitoring/registration information via network (default) */
+constexpr bool EXP_NETWORK_MONITORING_ENABLED              = true;
 /* queue size of monitoring/registration events  */
 constexpr unsigned int EXP_SHM_MONITORING_QUEUE_SIZE        = 1024U;
 /* domain name for shared memory based monitoring/registration */
@@ -196,3 +200,5 @@ constexpr unsigned int EXP_MEMFILE_ACCESS_TIMEOUT           = 100U;
 
 /* enable dropping of payload messages that arrive out of order */
 constexpr bool EXP_DROP_OUT_OF_ORDER_MESSAGES               = false;
+
+constexpr eCAL::Monitoring::Types::Mode EXP_MONITORING_MODE  = eCAL::Monitoring::Types::Mode::none;

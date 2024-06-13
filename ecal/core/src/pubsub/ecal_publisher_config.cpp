@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,32 +22,15 @@
 **/
 
 #include <ecal/ecal_config.h>
-#include <ecal/ecal_publisher_config.h>
+#include <ecal/config/publisher.h>
 
 namespace eCAL
 {
   namespace Publisher
   {
-    Configuration::Configuration() :
-      share_topic_type(eCAL::Config::IsTopicTypeSharingEnabled()),
-      share_topic_description(eCAL::Config::IsTopicDescriptionSharingEnabled())
+    Configuration::Configuration() 
     {
-      // shm config
-      shm.enable                  = eCAL::Config::GetPublisherShmMode() != TLayer::eSendMode::smode_off;
-      shm.zero_copy_mode          = eCAL::Config::IsMemfileZerocopyEnabled();
-      shm.acknowledge_timeout_ms  = eCAL::Config::GetMemfileAckTimeoutMs();
-
-      shm.memfile_min_size_bytes  = eCAL::Config::GetMemfileMinsizeBytes();
-      shm.memfile_reserve_percent = eCAL::Config::GetMemfileOverprovisioningPercentage();
-      shm.memfile_buffer_count    = eCAL::Config::GetMemfileBufferCount();
-
-      // udp config
-      udp.enable                  = eCAL::Config::GetPublisherUdpMulticastMode() != TLayer::eSendMode::smode_off;
-      udp.loopback                = false;  // TODO: make this configurable
-      udp.sndbuf_size_bytes       = eCAL::Config::GetUdpMulticastSndBufSizeBytes();
-
-      // tcp config
-      tcp.enable                  = eCAL::Config::GetPublisherTcpMode() != TLayer::eSendMode::smode_off;
+      *this = GetConfiguration().publisher;
     }
   }
 }

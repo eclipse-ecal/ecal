@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,9 @@ int main(int argc, char **argv)
   eCAL::Initialize(argc, argv, "counter_rec_cb");
 
   // create subscriber for topic "Counter"
-  eCAL::CSubscriber sub("Counter", { "", "long long", "" });
+  eCAL::SDataTypeInformation datatype_information;
+  datatype_information.encoding = "long long";
+  eCAL::CSubscriber sub("Counter", datatype_information);
 
   // counter
   long long  g_clock(0);

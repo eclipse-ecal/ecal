@@ -113,8 +113,12 @@ jobs:
 #      working-directory: ${{ runner.workspace }}/_build
 
     - name: Pack
-      run: cpack -G DragNDrop
-      working-directory: ${{ runner.workspace }}/_build
+      uses: nick-fields/retry@v2
+      with:
+        max_attempts: 3
+        retry_on: error
+        timeout_minutes: 3
+        command: cd ${{ runner.workspace }}/_build && cpack -G DragNDrop 
 
     - name: Upload DMG
       uses: actions/upload-artifact@v4

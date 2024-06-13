@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -140,7 +140,7 @@ namespace eCAL
       }
 
       // determine the UDP multicast configuration version
-      if (Config::GetUdpMulticastConfigVersion() == Config::UdpConfigVersion::V1)
+      if (Config::GetUdpMulticastConfigVersion() == Types::UdpConfigVersion::V1)
       {
         // retrieve the corresponding multicast address based on the topic name using v1 implementation
         return UDP::V1::topic2mcast(topic_name, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());

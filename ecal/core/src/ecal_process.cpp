@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -193,7 +193,7 @@ namespace eCAL
 #if ECAL_CORE_TIMEPLUGIN
       sstream << "------------------------- TIME -----------------------------------" << '\n';
       sstream << "Synchronization realtime : " << Config::GetTimesyncModuleName() << '\n';
-      sstream << "Synchronization replay   : " << eCALPAR(TIME, SYNC_MOD_REPLAY) << '\n';
+      sstream << "Synchronization replay   : " << Config::GetTimesyncModuleReplay() << '\n';
       sstream << "State                    : ";
       if (g_timegate()->IsSynchronized()) sstream << " synchronized " << '\n';
       else                                sstream << " not synchronized " << '\n';

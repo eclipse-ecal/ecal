@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,9 @@
 
 const std::string MESSAGE_NAME("person");
 
-void ProtoMsgCallback(const char* topic_name_, const eCAL::SReceiveCallbackData* msg_)
+void ProtoMsgCallback(const char* topic_name_, const std::string& msg_, long long /*time_*/, long long /*clock_*/, long long /*id_*/)
 {
-  std::string content((char*)msg_->buf, msg_->size);
-  std::cout << topic_name_ << " : " << content << std::endl;
+  std::cout << topic_name_ << " : " << msg_ << std::endl;
   std::cout << std::endl;
 }
 

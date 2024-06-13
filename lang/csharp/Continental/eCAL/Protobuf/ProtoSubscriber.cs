@@ -33,8 +33,6 @@ namespace Continental
           }
         };
 
-        private ReceiveCallbackData receivedData;
-
         /**
         * @brief Signature for a data callback.
         **/
@@ -50,7 +48,6 @@ namespace Continental
         {
           T msg = new T();
           binarySubscriber = new Subscriber(topicName, Common.ProtobufHelper.GetProtoMessageTypeName(msg), "proto", Common.ProtobufHelper.GetProtoMessageDescription(msg));
-          receivedData = new ReceiveCallbackData();
         }
 
         /**
@@ -83,6 +80,7 @@ namespace Continental
           byte[] messageBytes = Encoding.Default.GetBytes(data.data);
           MemoryStream msgStream = new MemoryStream(messageBytes);
 
+          var receivedData = new ReceiveCallbackData();
           receivedData.data.MergeFrom(msgStream);
           receivedData.id = data.id;
           receivedData.clock = data.clock;
