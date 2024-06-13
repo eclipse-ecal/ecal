@@ -289,15 +289,8 @@ namespace eCAL
       // Remove all elements from the cache 
       void clear()
       {
-        // Assert method is never called when cache is empty 
-        //assert(!_key_tracker.empty());
-        auto it(_key_tracker.begin());
-
-        while (it != _key_tracker.end())
-        {
-          _key_to_value.erase(it->second); // erase the element from the map 
-          it = _key_tracker.erase(it);     // erase the element from the list
-        }
+        _key_to_value.clear(); // erase all elements from the map 
+        _key_tracker.clear();  // erase all elements from the list
       }
 
     private:
