@@ -529,14 +529,14 @@ namespace YAML
     static Node encode(const eCAL::Configuration& config_)
     {
       Node node;
+      node["publisher"]       = config_.publisher;
+      node["subscriber"]      = config_.subscriber;
+      node["registration"]    = config_.registration;
+      node["monitoring"]      = config_.monitoring;
+      node["time"]            = config_.timesync;
+      node["service"]         = config_.service;
       node["application"]     = config_.application;
       node["logging"]         = config_.logging;
-      node["monitoring"]      = config_.monitoring;
-      node["publisher"]       = config_.publisher;
-      node["registration"]    = config_.registration;
-      node["service"]         = config_.service;
-      node["subscriber"]      = config_.subscriber;
-      node["time"]            = config_.timesync;
       node["transport_layer"] = config_.transport_layer;
 
       return node;
@@ -544,14 +544,14 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Configuration& config_)
     {
+      config_.publisher              = node_["publisher"].as<eCAL::Publisher::Configuration>();
+      config_.subscriber             = node_["subscriber"].as<eCAL::Subscriber::Configuration>();
+      config_.registration           = node_["registration"].as<eCAL::Registration::Configuration>();
+      config_.monitoring             = node_["monitoring"].as<eCAL::Monitoring::Configuration>();
+      config_.timesync               = node_["time"].as<eCAL::Time::Configuration>();
+      config_.service                = node_["service"].as<eCAL::Service::Configuration>();
       config_.application            = node_["application"].as<eCAL::Application::Configuration>();
       config_.logging                = node_["logging"].as<eCAL::Logging::Configuration>();
-      config_.monitoring             = node_["monitoring"].as<eCAL::Monitoring::Configuration>();
-      config_.publisher              = node_["publisher"].as<eCAL::Publisher::Configuration>();
-      config_.registration           = node_["registration"].as<eCAL::Registration::Configuration>();
-      config_.service                = node_["service"].as<eCAL::Service::Configuration>();
-      config_.subscriber             = node_["subscriber"].as<eCAL::Subscriber::Configuration>();
-      config_.timesync               = node_["time"].as<eCAL::Time::Configuration>();
       config_.transport_layer        = node_["transport_layer"].as<eCAL::TransportLayer::Configuration>();
       return true;
     }
