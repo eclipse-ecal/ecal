@@ -23,6 +23,7 @@
 
 #include <modules/module_core.h>
 #include <ecal/ecal_core.h>
+#include <nanobind/stl/tuple.h>
 
 void AddCoreFuncToModule(nanobind::module_& module)
 {
@@ -30,12 +31,18 @@ void AddCoreFuncToModule(nanobind::module_& module)
     module.def("get_version_string", []() { return eCAL::GetVersionString(); });
     module.def("get_version_date", []() { return eCAL::GetVersionDateString(); });
     module.def("set_unitname", [](const std::string& nb_unit_name) { return eCAL::SetUnitName(nb_unit_name.c_str()); });
-    module.def("is_initialised", []() { return eCAL::IsInitialized(); });
+    module.def("is_initialized", []() { return eCAL::IsInitialized(); });
     module.def("finalize", [](unsigned int nb_component_) { return eCAL::Finalize(nb_component_); });
     module.def("ok", []() { return eCAL::Ok(); });
 
-    module.def("get_version", [](int* nb_major, int* nb_minor, int* nb_patch)
-        { return eCAL::GetVersion(nb_major, nb_minor, nb_patch); });
+    module.def("get_version", []()
+        {
+          int nb_major;
+          int nb_minor; 
+          int nb_patch;
+          int status = eCAL::GetVersion(&nb_major, &nb_minor, &nb_patch);
+          return std::make_tuple(status, nb_major, nb_minor, nb_patch);
+        });
     //   m.def("initialize", [](int nb_argc_, char *nb_argv_, const char* nb_unit_name_, unsigned int nb_components_)
     //       { return eCAL::Initialize(nb_argc_, nb_argv_, nb_unit_name_, nb_components_); });
     module.def("initialize", [](std::vector<std::string> nb_args_, std::string nb_unit_name_)

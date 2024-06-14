@@ -27,16 +27,10 @@
 #include <ecal/ecal.h>
 #include <stdint.h>
 #include <string>
-#include <functional>
 #include <cstddef>
-#include <mutex>
-#include <ecal/ecal_types.h>
 
+#include <ecal/ecal_types.h>
 #include <nanobind/nanobind.h>
-#include <nanobind/operators.h>
-#include <nanobind/stl/string.h>
-#include <nanobind/stl/shared_ptr.h>
-#include <nanobind/stl/tuple.h>
 
 namespace eCAL
 {
