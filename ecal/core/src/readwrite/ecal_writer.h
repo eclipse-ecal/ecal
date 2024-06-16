@@ -25,12 +25,12 @@
 
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_payload_writer.h>
-#include <ecal/config/publisher.h>
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_types.h>
+#include <ecal/config/publisher.h>
 
 #include "util/ecal_expmap.h"
-#include <util/frequency_calculator.h>
+#include "util/frequency_calculator.h"
 
 #if ECAL_CORE_TRANSPORT_UDP
 #include "udp/ecal_writer_udp.h"

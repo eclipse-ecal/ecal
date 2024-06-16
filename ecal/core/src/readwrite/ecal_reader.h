@@ -24,8 +24,8 @@
 #pragma once
 
 #include <ecal/ecal_callback.h>
-#include <ecal/ecal_subscriber_config.h>
 #include <ecal/ecal_types.h>
+#include <ecal/config/subscriber.h>
 
 #include "serialization/ecal_serialize_sample_payload.h"
 #include "serialization/ecal_serialize_sample_registration.h"

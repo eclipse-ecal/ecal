@@ -21,10 +21,12 @@
  * @brief  eCAL core functions
 **/
 
+#include "ecal/config/configuration.h"
+
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
 #include "ecal_globals.h"
-#include "ecal/config/configuration.h"
+
 #include <atomic>
 #include <string>
 
