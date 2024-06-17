@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,13 +89,16 @@ TEST(core_cpp_core, ExpMap_SetGet)
 TEST(core_cpp_core, ExpMap_Insert)
 {
   eCAL::Util::CExpMap<std::string, int> expmap(std::chrono::milliseconds(200));
+#if 0
   auto ret = expmap.insert(std::make_pair("A", 1));
 
   auto key = (*ret.first).first;
   auto value = (*ret.first).second;
   EXPECT_EQ(std::string("A"), key);
   EXPECT_EQ(1, value);
-
+#else
+  expmap.insert("A", 1);
+#endif
   int i = expmap["A"];
 
   EXPECT_EQ(i, 1);

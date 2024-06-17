@@ -24,323 +24,411 @@
 #pragma once
 
 #include <chrono>
-#include <functional>
-#include <iterator>
 #include <list>
 #include <map>
-#include <memory>
-#include <utility>
-#include <vector>
 
 namespace eCAL
 {
   namespace Util
   {
     /**
-    * @brief A time expiration map
-    **/
-    template<class Key,
-      class T,
-      class Compare = std::less<Key>,
-      class Alloc   = std::allocator<std::pair<const Key, T> > >
+     * @brief A map that stores key-value pairs with an expiration time.
+     *
+     * @tparam Key The type of the keys.
+     * @tparam Value The type of the values.
+     */
+    template <typename Key, typename Value>
     class CExpMap
     {
     public:
       using clock_type = std::chrono::steady_clock;
+      using duration_type = clock_type::duration;
 
-      // Key access history, most recent at back 
-      using key_tracker_type = std::list<std::pair<clock_type::time_point, Key>>;
+    private:
+      using ExpiryTime     = clock_type::time_point;
+      using ExpiryIterator = typename std::list<std::pair<ExpiryTime, Key>>::iterator;
+      using ValueType      = std::pair<Key, Value>;
 
-      // Key to value and key history iterator 
-      using key_to_value_type = std::map<Key, std::pair<T, typename key_tracker_type::iterator>>;
-
-      using allocator_type  = Alloc;
-      using value_type      = std::pair<const Key, T>;
-      using reference       = typename Alloc::reference;
-      using size_type       = typename Alloc::size_type;
-      using key_type        = Key;
-      using mapped_type     = T;
-
-      class iterator
+      struct MapValue
       {
-        friend class const_iterator;
-
-      public:
-        using iterator_category = std::bidirectional_iterator_tag;
-        using value_type        = std::pair<Key, T>;
-        using difference_type   = std::ptrdiff_t;
-        using pointer           = std::pair<Key, T>*;
-        using reference         = std::pair<Key, T>&;
-
-        explicit iterator(const typename key_to_value_type::iterator _it)
-          : it(_it)
-        {}
-
-        iterator& operator++()
-        {
-          it++;
-          return *this;
-        } //prefix increment
-
-        iterator& operator--()
-        {
-          it--;
-          return *this;
-        } //prefix decrement
-
-        std::pair<Key, T> operator*() const
-        {
-          return std::make_pair(it->first, it->second.first);
-        }
-
-        //friend void swap(iterator& lhs, iterator& rhs); //C++11 I think
-        bool operator==(const iterator& rhs) const { return it == rhs.it; }
-        bool operator!=(const iterator& rhs) const { return it != rhs.it; }
-
-      private:
-        typename key_to_value_type::iterator it;
+        Value          value;
+        ExpiryTime     expiry_time;
+        ExpiryIterator expiry_iter;
       };
 
-      class const_iterator
-      {
-      public:
-        using iterator_category = std::bidirectional_iterator_tag;
-        using value_type        = std::pair<Key, T>;
-        using difference_type   = std::ptrdiff_t;
-        using pointer           = std::pair<Key, T>*;
-        using reference         = std::pair<Key, T>&;
+      duration_type                         expiration_time_;
+      std::map<Key, MapValue>               map_;
+      std::list<std::pair<ExpiryTime, Key>> expiry_list_;
 
-        explicit const_iterator(const iterator& other)
-          : it(other.it)
-        {}
-
-        explicit const_iterator(const typename key_to_value_type::const_iterator _it)
-          : it(_it)
-        {}
-
-        const_iterator& operator++()
-        {
-          it++;
-          return *this;
-        } //prefix increment
-
-        const_iterator& operator--()
-        {
-          it--;
-          return *this;
-        } //prefix decrement
-          //reference operator*() const
-
-        std::pair<Key, T> operator*() const
-        {
-          return std::make_pair(it->first, it->second.first);
-        }
-
-        //friend void swap(iterator& lhs, iterator& rhs); //C++11 I think
-        bool operator==(const const_iterator& rhs) const { return it == rhs.it; }
-        bool operator!=(const const_iterator& rhs) const { return it != rhs.it; }
-
-      private:
-        typename key_to_value_type::const_iterator it;
-      };
-
-
-      // Constructor specifies the timeout of the map
-      CExpMap() : _timeout(std::chrono::milliseconds(5000)) {};
-      explicit CExpMap(clock_type::duration t) : _timeout(t) {};
+    public:
+      /**
+       * @brief Constructs a CExpMap with a default expiration time of 5000 milliseconds.
+       */
+      CExpMap() : expiration_time_(std::chrono::milliseconds(5000)) {}
 
       /**
-      * @brief  set expiration time
-      **/
-      void set_expiration(clock_type::duration t) { _timeout = t; };
+       * @brief Constructs a CExpMap with a specified expiration time.
+       *
+       * @param expiration_time  The expiration time for entries in the map.
+       */
+      explicit CExpMap(duration_type expiration_time) : expiration_time_(expiration_time) {}
 
-      // Iterators:
-      iterator begin() noexcept
+      /**
+       * @brief Sets a new expiration time for the key-value pairs in the map.
+       *
+       * @param expiration_time  The new expiration time.
+       */
+      void set_expiration(duration_type expiration_time)
       {
-        return iterator(_key_to_value.begin());
+        expiration_time_ = expiration_time;
       }
 
-      iterator end() noexcept
+      /**
+       * @brief Inserts a key-value pair into the map with the current expiration time.
+       *
+       * @param key    The key to insert.
+       * @param value  The value to insert.
+       */
+      void insert(const Key& key, const Value& value)
       {
-        return iterator(_key_to_value.end());
+        ExpiryTime expiry_time = clock_type::now() + expiration_time_;
+        auto expiry_iter = expiry_list_.insert(expiry_list_.end(), std::make_pair(expiry_time, key));
+        map_[key] = { value, expiry_time, expiry_iter };
       }
 
-      const_iterator begin() const noexcept
+      /**
+       * @brief Gets the value associated with the given key if it has not expired.
+       *
+       * @param key     The key to get the value for.
+       * @param value   The value associated with the key.
+       *
+       * @return true   If the key exists and has not expired.
+       * @return false  If the key does not exist or has expired, resetting its expiration time.
+       */
+      bool get(const Key& key, Value& value)
       {
-        return const_iterator(_key_to_value.begin());
-      }
-
-      const_iterator end() const noexcept
-      {
-        return const_iterator(_key_to_value.end());
-      }
-
-      // Const begin and end functions
-      const_iterator cbegin() const noexcept {
-        return const_iterator(_key_to_value.cbegin());
-      }
-
-      const_iterator cend() const noexcept {
-        return const_iterator(_key_to_value.cend());
-      }
-
-      // Capacity
-      bool empty() const noexcept
-      {
-        return _key_to_value.empty();
-      }
-
-      size_type size() const noexcept
-      {
-        return _key_to_value.size();
-      }
-
-      size_type max_size() const noexcept
-      {
-        return  _key_to_value.max_size();
-      }
-
-      // Element access
-      // Obtain value of the cached function for k 
-      T& operator[](const Key& k)
-      {
-        // Attempt to find existing record 
-        typename key_to_value_type::iterator it
-          = _key_to_value.find(k);
-
-        if (it == _key_to_value.end())
+        auto it = map_.find(key);
+        if (it != map_.end())
         {
-          // We don't have it: 
-          // Evaluate function and create new record 
-          T v{};
-          auto ret = insert(k, v);
-          it = ret.first;
+          if (clock_type::now() < it->second.expiry_time)
+          {
+            value = it->second.value;
+            reset_expiration(key); // reset expiration time
+            return true;
+          }
+          else
+          {
+            expiry_list_.erase(it->second.expiry_iter);
+            map_.erase(it);
+          }
+        }
+        return false;
+      }
+
+      /**
+       * @brief Accesses the value associated with the given key, resetting its expiration time.
+       *
+       * @param key  The key to access the value for.
+       *
+       * @return     The value associated with the key.
+       */
+      Value& operator[](const Key& key)
+      {
+        auto it = map_.find(key);
+        auto now = clock_type::now();
+        if (it == map_.end() || now >= it->second.expiry_time)
+        {
+          ExpiryTime expiry_time = now + expiration_time_;
+          auto expiry_iter = expiry_list_.insert(expiry_list_.end(), std::make_pair(expiry_time, key));
+          map_[key] = { Value(), expiry_time, expiry_iter };
         }
         else
         {
-          // We do have it: 
-          // Update access record by moving 
-          // accessed key to back of list 
-          update_timestamp(k);
+          reset_expiration(key); // reset expiration time
         }
-
-        // Return the retrieved value 
-        return (*it).second.first;
-      };
-
-      mapped_type& at(const key_type& k)
-      {
-        return _key_to_value.at(k).first;
+        return map_[key].value;
       }
 
-      const mapped_type& at(const key_type& k) const
+      /**
+       * @brief Erases the key-value pair associated with the given key.
+       *
+       * @param key     The key to erase.
+       *
+       * @return true   If the key existed and was erased.
+       * @return false  If the key did not exist.
+       */
+      bool erase(const Key& key)
       {
-        return _key_to_value.at(k).first;
-      }
-
-      // Modifiers
-      std::pair<iterator, bool> insert(const value_type& val)
-      {
-        auto result = insert(val.first, val.second);
-        return std::make_pair(iterator(result.first), result.second);
-      }
-
-      // Operations
-      iterator find(const key_type& k)
-      {
-        return iterator(_key_to_value.find(k));
-      }
-
-      const_iterator find(const Key& k) const
-      {
-        return const_iterator(_key_to_value.find(k));
-      }
-
-      // Purge the timed out elements from the cache 
-      void remove_deprecated(std::list<Key>* key_erased = nullptr) //-V826
-      {
-        // Assert method is never called when cache is empty 
-        //assert(!_key_tracker.empty());
-        clock_type::time_point eviction_limit = get_curr_time() - _timeout;
-
-        auto it(_key_tracker.begin());
-
-        while (it != _key_tracker.end() && it->first < eviction_limit)
+        auto it = map_.find(key);
+        if (it != map_.end())
         {
-          if (key_erased != nullptr) key_erased->push_back(it->second);
-          _key_to_value.erase(it->second); // erase the element from the map 
-          it = _key_tracker.erase(it);     // erase the element from the list
-        }
-      }
-
-      // Remove specific element from the cache
-      bool erase(const Key& k)
-      {
-        auto it = _key_to_value.find(k);
-        if (it != _key_to_value.end())
-        {
-          _key_tracker.erase(it->second.second); // erase the element from the list
-          _key_to_value.erase(k);                // erase the element from the map
+          expiry_list_.erase(it->second.expiry_iter);
+          map_.erase(it);
           return true;
         }
         return false;
       }
 
-      // Remove all elements from the cache 
+      /**
+       * @deprecated (please use erase_expired)
+       */
+      void remove_deprecated()
+      {
+        erase_expired();
+      }
+
+      /**
+       * @brief Erase all expired key-value pairs from the map.
+       */
+      void erase_expired()
+      {
+        auto now = clock_type::now();
+        while (!expiry_list_.empty() && expiry_list_.front().first <= now)
+        {
+          map_.erase(expiry_list_.front().second);
+          expiry_list_.pop_front();
+        }
+      }
+
+      /**
+       * @brief Clears all key-value pairs from the map.
+       */
       void clear()
       {
-        _key_to_value.clear(); // erase all elements from the map 
-        _key_tracker.clear();  // erase all elements from the list
+        map_.clear();
+        expiry_list_.clear();
+      }
+
+      /**
+       * @brief Gets the number of key-value pairs in the map.
+       *
+       * @return  The number of key-value pairs in the map.
+       */
+      size_t size() const
+      {
+        return map_.size();
+      }
+
+      /**
+       * @brief Checks if the map is empty.
+       *
+       * @return true   If the map is empty.
+       * @return false  If the map is not empty.
+       */
+      bool empty() const
+      {
+        return map_.empty();
+      }
+
+      /**
+       * @brief An iterator for the CExpMap class.
+       */
+      class iterator
+      {
+      private:
+        typename std::map<Key, MapValue>::iterator map_iter_;
+        typename std::map<Key, MapValue>::iterator map_end_;
+        ExpiryTime now_;
+
+        void advance_to_valid()
+        {
+          while (map_iter_ != map_end_ && map_iter_->second.expiry_time <= now_)
+          {
+            ++map_iter_;
+          }
+        }
+
+      public:
+        iterator(typename std::map<Key, MapValue>::iterator map_iter,
+          typename std::map<Key, MapValue>::iterator map_end)
+          : map_iter_(map_iter), map_end_(map_end), now_(clock_type::now())
+        {
+          advance_to_valid();
+        }
+
+        iterator& operator++()
+        {
+          ++map_iter_;
+          advance_to_valid();
+          return *this;
+        }
+
+        std::pair<const Key, Value> operator*() const
+        {
+          return { map_iter_->first, map_iter_->second.value };
+        }
+
+        bool operator!=(const iterator& other) const
+        {
+          return map_iter_ != other.map_iter_;
+        }
+
+        bool operator==(const iterator& other) const
+        {
+          return map_iter_ == other.map_iter_;
+        }
+      };
+
+      /**
+       * @brief A const_iterator for the CExpMap class.
+       */
+      class const_iterator
+      {
+      private:
+        typename std::map<Key, MapValue>::const_iterator map_iter_;
+        typename std::map<Key, MapValue>::const_iterator map_end_;
+        ExpiryTime now_;
+
+        void advance_to_valid()
+        {
+          while (map_iter_ != map_end_ && map_iter_->second.expiry_time <= now_)
+          {
+            ++map_iter_;
+          }
+        }
+
+      public:
+        const_iterator(typename std::map<Key, MapValue>::const_iterator map_iter,
+          typename std::map<Key, MapValue>::const_iterator map_end)
+          : map_iter_(map_iter), map_end_(map_end), now_(clock_type::now())
+        {
+          advance_to_valid();
+        }
+
+        const_iterator& operator++()
+        {
+          ++map_iter_;
+          advance_to_valid();
+          return *this;
+        }
+
+        std::pair<const Key, const Value> operator*() const
+        {
+          return { map_iter_->first, map_iter_->second.value };
+        }
+
+        bool operator!=(const const_iterator& other) const
+        {
+          return map_iter_ != other.map_iter_;
+        }
+
+        bool operator==(const const_iterator& other) const
+        {
+          return map_iter_ == other.map_iter_;
+        }
+      };
+
+      /**
+       * @brief Returns an iterator to the beginning of the map.
+       *
+       * @return  An iterator to the beginning of the map.
+       */
+      iterator begin()
+      {
+        return iterator(map_.begin(), map_.end());
+      }
+
+      /**
+       * @brief Returns an iterator to the end of the map.
+       *
+       * @return  An iterator to the end of the map.
+       */
+      iterator end()
+      {
+        return iterator(map_.end(), map_.end());
+      }
+
+      /**
+       * @brief Returns a const_iterator to the beginning of the map.
+       *
+       * @return  A const_iterator to the beginning of the map.
+       */
+      const_iterator cbegin() const
+      {
+        return const_iterator(map_.cbegin(), map_.cend());
+      }
+
+      /**
+       * @brief Returns a const_iterator to the end of the map.
+       *
+       * @return  A const_iterator to the end of the map.
+       */
+      const_iterator cend() const
+      {
+        return const_iterator(map_.cend(), map_.cend());
+      }
+
+      /**
+       * @brief Returns a const_iterator to the beginning of the map.
+       *
+       * @return  A const_iterator to the beginning of the map.
+       */
+      const_iterator begin() const
+      {
+        return cbegin();
+      }
+
+      /**
+       * @brief Returns a const_iterator to the end of the map.
+       *
+       * @return  A const_iterator to the end of the map.
+       */
+      const_iterator end() const
+      {
+        return cend();
+      }
+
+      /**
+       * @brief Finds the iterator to the element with the given key.
+       *
+       * @param key  The key to find.
+       * @return     An iterator to the element if it exists and is not expired, otherwise end().
+       */
+      iterator find(const Key& key)
+      {
+        auto it = map_.find(key);
+        if (it != map_.end() && clock_type::now() < it->second.expiry_time)
+        {
+          return iterator(it, map_.end());
+        }
+        return end();
+      }
+
+      /**
+       * @brief Finds the const_iterator to the element with the given key.
+       *
+       * @param key  The key to find.
+       * @return     A const_iterator to the element if it exists and is not expired, otherwise cend().
+       */
+      const_iterator find(const Key& key) const
+      {
+        auto it = map_.find(key);
+        if (it != map_.end() && clock_type::now() < it->second.expiry_time)
+        {
+          return const_iterator(it, map_.cend());
+        }
+        return cend();
       }
 
     private:
-
-      // Maybe pass the iterator instead of the key? or at least only get k once
-      void update_timestamp(const Key& k)
+      /**
+       * @brief Resets the expiration time of the given key.
+       *
+       * @param key  The key to reset the expiration time for.
+       */
+      void reset_expiration(const Key& key)
       {
-        auto it_in_map = _key_to_value.find(k);
-        if (it_in_map != _key_to_value.end())
+        auto map_iter = map_.find(key);
+        if (map_iter != map_.end())
         {
-          auto& it_in_list = it_in_map->second.second;
-
-          // move the element to the end of the list
-          _key_tracker.splice(_key_tracker.end(), _key_tracker, it_in_list);
-
-          // update the timestamp
-          it_in_list->first = get_curr_time();
+          // update the expiry time in place and move the element to the end of the list
+          ExpiryTime new_expiry_time = clock_type::now() + expiration_time_;
+          map_iter->second.expiry_time = new_expiry_time;
+          expiry_list_.splice(expiry_list_.end(), expiry_list_, map_iter->second.expiry_iter);
+          map_iter->second.expiry_iter = std::prev(expiry_list_.end());
+          map_iter->second.expiry_iter->first = new_expiry_time;
         }
       }
-      
-      // Record a fresh key-value pair in the cache 
-      std::pair<typename key_to_value_type::iterator, bool> insert(const Key& k, const T& v)
-      {
-        // sorted list, containing (pair ( timestamp, K))
-        auto it = _key_tracker.emplace(_key_tracker.end(), std::make_pair(get_curr_time(), k));
-
-        // entry mapping k -> pair (T, iterator(pair(timestamp, K)))
-        auto ret = _key_to_value.emplace(
-          std::make_pair(
-            k,
-            std::make_pair(v, it)
-          )
-        );
-        // return iterator to newly inserted element.
-        return ret;
-      }
-
-      clock_type::time_point get_curr_time()
-      {
-        return clock_type::now();
-      }
-
-      // Key access history 
-      key_tracker_type _key_tracker;
-
-      // Key-to-value lookup 
-      key_to_value_type _key_to_value;
-
-      // Timeout of map
-      clock_type::duration _timeout;
     };
   }
 }
