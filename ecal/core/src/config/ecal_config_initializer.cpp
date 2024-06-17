@@ -221,21 +221,24 @@ namespace eCAL
 
     Configuration::Configuration(int argc_ , char **argv_)
     {
-      Init(argc_, argv_);
+      std::vector<std::string> arguments;
+      if (argc_ > 0 && argv_ != nullptr)
+      {
+        for (size_t i = 0; i < static_cast<size_t>(argc_); ++i) 
+          if (argv_[i] != nullptr) 
+            arguments.emplace_back(argv_[i]);
+      } 
+      Init(arguments);
     }
 
-    Configuration::Configuration(std::vector<std::string> args_)
-    {
-      args_.emplace(args_.begin(), eCAL::Process::GetProcessName());
-      std::vector<const char*> argv(args_.size());
-      std::transform(args_.begin(), args_.end(), argv.begin(), [](std::string& s) {return s.c_str();});
-      
-      Init(static_cast<int>(argv.size()), const_cast<char**>(argv.data()));
+    Configuration::Configuration(std::vector<std::string>& args_)
+    {      
+      Init(args_);
     }
 
-    void Configuration::Init(int argc_ , char **argv_)
+    void Configuration::Init(std::vector<std::string>& arguments_)
     {
-      Config::CmdParser parser(argc_, argv_);
+      Config::CmdParser parser(arguments_);
       
       command_line_arguments.config_keys       = parser.getConfigKeys();
       command_line_arguments.specified_config  = parser.getUserIni();

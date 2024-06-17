@@ -193,16 +193,16 @@ namespace eCAL
     : m_dump_config{false}
     {}
 
-    CmdParser::CmdParser(int argc_ , char **argv_)
+    CmdParser::CmdParser(std::vector<std::string>& arguments_)
     : CmdParser()
     {
-      parseArguments(argc_, argv_);
+      parseArguments(arguments_);
     }
 
-    void CmdParser::parseArguments(int argc_, char **argv_)
+    void CmdParser::parseArguments(std::vector<std::string>& arguments_)
     {
 #if ECAL_CORE_COMMAND_LINE
-      if ((argc_ > 0) && (argv_ != nullptr))
+      if (!arguments_.empty())
       {
         // define command line object
         TCLAP::CmdLine cmd("", ' ', ECAL_VERSION);
@@ -224,7 +224,7 @@ namespace eCAL
         cmd.setOutput(&advanced_tclap_output);
 
         // parse command line
-        cmd.parse(argc_, argv_);
+        cmd.parse(arguments_);
 
         // set globals
         if (dump_config_arg.isSet())
@@ -242,10 +242,7 @@ namespace eCAL
         }
       }
 #endif  
-      if (argv_ != nullptr)
-      {
-        for (size_t i = 0; i < static_cast<size_t>(argc_); ++i) if (argv_[i] != nullptr) m_task_parameter.emplace_back(argv_[i]);
-      }
+      m_task_parameter = arguments_;
     }
 
     bool CmdParser::getDumpConfig() const                        { return m_dump_config; };
