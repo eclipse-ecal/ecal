@@ -24,9 +24,20 @@
 
 #include <modules/module_client.h>
 #include <wrappers/wrapper_client.h>
+#include <ecal/cimpl/ecal_callback_cimpl.h>
 
 void AddClientClassToModule(const nanobind::module_& module) 
 {
+    /**
+    * @brief eCAL service client event callback type.
+    **/
+    nanobind::enum_<eCAL_Client_Event>(module, "eCAL_Client_Event")
+        .value("client_event_none", eCAL_Client_Event::client_event_none)
+        .value("client_event_connected", eCAL_Client_Event::client_event_none)
+        .value("client_event_disconnected", eCAL_Client_Event::client_event_none)
+        .value("client_event_timeout", eCAL_Client_Event::client_event_none)
+        .export_values();
+
     auto ServiceClient_cls = nanobind::class_<eCAL::CNBSrvClient>(module, "ServiceClient")
         .def(nanobind::init<>())
         .def(nanobind::init<const std::string&>())
@@ -39,7 +50,7 @@ void AddClientClassToModule(const nanobind::module_& module)
         .def("add_response_callback", &eCAL::CNBSrvClient::WrapAddRespCB)
         .def("rem_response_callback", &eCAL::CNBSrvClient::RemResponseCallback)
         .def("rem_event_callback", &eCAL::CNBSrvClient::RemEventCallback)
-        .def("add_event_callback", &eCAL::CNBSrvClient::AddEventCallback)
+        .def("add_event_callback", &eCAL::CNBSrvClient::WrapAddClientEventCB)
         .def("is_connected", &eCAL::CNBSrvClient::IsConnected)
         .def("get_service_name", &eCAL::CNBSrvClient::GetServiceName);
 }

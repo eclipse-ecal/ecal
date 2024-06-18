@@ -27,6 +27,15 @@
 
 void AddServerClassToModule(const nanobind::module_& module) 
 {
+    /**
+    * @brief eCAL service server event callback type.
+    **/
+    nanobind::enum_<eCAL_Server_Event>(module, "eCAL_Server_Event")
+        .value("server_event_none", eCAL_Server_Event::server_event_none)
+        .value("server_event_connected", eCAL_Server_Event::server_event_connected)
+        .value("server_event_disconnected", eCAL_Server_Event::server_event_disconnected)
+        .export_values();
+
     // Struct eCAL::SServiceResponse
     nanobind::class_<eCAL::SServiceResponse>(module, "ServiceResponse")
         .def(nanobind::init<>())
@@ -49,7 +58,7 @@ void AddServerClassToModule(const nanobind::module_& module)
         .def("add_method_callback", &eCAL::CNBSrvServer::WrapAddMethodCB)
         .def("rem_method_callback", &eCAL::CNBSrvServer::RemMethodCallback)
         .def("rem_event_callback", &eCAL::CNBSrvServer::RemEventCallback)
-        .def("add_event_callback", &eCAL::CNBSrvServer::AddEventCallback)
+        .def("add_event_callback", &eCAL::CNBSrvServer::WrapAddSrvEventCB)
         .def("is_connected", &eCAL::CNBSrvServer::IsConnected)
         .def("get_service_name", &eCAL::CNBSrvServer::GetServiceName);
 }
