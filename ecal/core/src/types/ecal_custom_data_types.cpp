@@ -79,10 +79,17 @@ namespace eCAL
       throw std::invalid_argument("[IpAddressV4] No valid IP address: " + ip_address_);
     }
 
-    std::string IpAddressV4::Get() const                              { return m_ip_address; };
-    IpAddressV4& IpAddressV4::operator=(const std::string& ip_string) { this->validateIpString(ip_string); return *this; };
-    IpAddressV4::operator std::string()                               { return m_ip_address; };
+    std::string IpAddressV4::Get() const                                { return m_ip_address; };
+    IpAddressV4& IpAddressV4::operator=(const std::string& ip_string_)  { this->validateIpString(ip_string_); return *this; };
+    IpAddressV4& IpAddressV4::operator=(const char* ip_string_)         { this->validateIpString(ip_string_); return *this; };
+    IpAddressV4::operator std::string()                                 { return m_ip_address; };
     
     std::ostream& operator<<(std::ostream& os, const IpAddressV4& ipv4) { os << ipv4.Get(); return os; };
-  }
+
+    bool IpAddressV4::operator==(const eCAL::Types::IpAddressV4 other) const      { return m_ip_address == other.Get(); };
+    bool operator==(eCAL::Types::IpAddressV4 lhs, const char* ip_string_)         { return lhs.Get() == std::string(ip_string_); };
+    bool operator==(const char* ip_string_, eCAL::Types::IpAddressV4 rhs)         { return rhs == ip_string_; };
+    bool operator==(eCAL::Types::IpAddressV4 lhs, const std::string& ip_string_)  { return lhs.Get() == ip_string_; };
+    bool operator==(const std::string& ip_string_, eCAL::Types::IpAddressV4 rhs)  { return rhs == ip_string_; };
+  }  
 }
