@@ -17,8 +17,23 @@ nanobind_add_module(
   STABLE_ABI
 
   # Source code goes here
-  main.cpp
+  modules/module_client.cpp
+  modules/module_core.cpp
+  modules/module_datatypeinfo.cpp
+  modules/module_publisher.cpp
+  modules/module_server.cpp
+  modules/module_subscriber.cpp
+  modules/module_util.cpp
+
+  wrappers/wrapper_client.cpp
+  wrappers/wrapper_datatypeinfo.cpp
+  wrappers/wrapper_publisher.cpp
+  wrappers/wrapper_server.cpp
+  wrappers/wrapper_subscriber.cpp
+  nanobind_core.cpp
 )
+
+target_include_directories(nanobind_core PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(nanobind_core PRIVATE eCAL::core)
 
