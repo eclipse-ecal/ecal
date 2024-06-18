@@ -1,5 +1,8 @@
 set(Protobuf_PROTOC_EXECUTABLE protoc)
 set(Protobuf_VERSION 3.11.4)
+set(Protobuf_VERSION_MAJOR 3)
+set(Protobuf_VERSION_MINOR 11)
+set(Protobuf_VERSION_PATCH 4)
 
 include_guard(GLOBAL)
 
