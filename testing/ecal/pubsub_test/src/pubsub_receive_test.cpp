@@ -226,11 +226,11 @@ TEST(PubSub, TestSubscriberSeen)
   // enable data loopback
   eCAL::Util::EnableLoopback(true);
 
-  std::atomic<bool> subscriber_seen_at_publication_start = false;
-  std::atomic<bool> subscriber_seen_at_publication_end = false;
+  std::atomic<bool> subscriber_seen_at_publication_start(false);
+  std::atomic<bool> subscriber_seen_at_publication_end(false);
 
-  std::atomic<bool> do_start_publication = false;
-  std::atomic<bool> publication_finished = false;
+  std::atomic<bool> do_start_publication(false);
+  std::atomic<bool> publication_finished(false);
 
   // publishing thread
   auto publisher_thread = [&]() {
