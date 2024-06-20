@@ -295,7 +295,7 @@ namespace eCAL
 
         iter->second->ApplyLocLayerParameter(process_id, topic_id, tlayer.type(), writer_par);
       }
-      // we only inform the subscriber when the publisher has already recognized at least on local subscriber
+      // we only inform the subscriber when the publisher has already recognized at least one local subscriber
       // this should avoid to set the "IsPublished" state before the publisher is able to send data
       if (ecal_sample_.topic().connections_loc() > 0)
       {
@@ -349,7 +349,7 @@ namespace eCAL
         const std::string writer_par = tlayer.par_layer().SerializeAsString();
         iter->second->ApplyExtLayerParameter(host_name, tlayer.type(), writer_par);
       }
-      // we only inform the subscriber when the publisher has already recognized at least on external subscriber
+      // we only inform the subscriber when the publisher has already recognized at least one external subscriber
       // this should avoid to set the "IsPublished" state before the publisher is able to send data
       if (ecal_sample_.topic().connections_ext() > 0)
       {
