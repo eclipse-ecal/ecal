@@ -250,11 +250,11 @@ namespace eCAL
     return(m_datareader->RemEventCallback(type_));
   }
 
-  bool CSubscriber::IsPublished() const
-  {
-    if (m_datareader == nullptr) return(false);
-    return(m_datareader->IsPublished());
-  }
+  //bool CSubscriber::IsPublished() const
+  //{
+  //  if (m_datareader == nullptr) return(false);
+  //  return(m_datareader->IsPublished());
+  //}
 
   size_t CSubscriber::GetPublisherCount() const
   {

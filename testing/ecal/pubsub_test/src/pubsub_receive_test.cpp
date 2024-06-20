@@ -268,7 +268,7 @@ TEST(PubSub, TestSubscriberSeen)
     auto max_lines(10);
     auto receive_lambda = [&received, &max_lines](const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_)
       {
-        if (max_lines)
+        if (max_lines != 0)
         {
           // the final log should look like this
           // -----------------------------------
@@ -291,7 +291,8 @@ TEST(PubSub, TestSubscriberSeen)
 
     while (eCAL::Ok() && !publication_finished)
     {
-      if (sub.IsPublished()) do_start_publication = true;
+      //if (sub.IsPublished()) do_start_publication = true;
+      if (sub.GetPublisherCount() > 0) do_start_publication = true;
     }
     };
 
