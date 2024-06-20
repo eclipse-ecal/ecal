@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -281,8 +281,12 @@ namespace eCAL
 
         iter->second->ApplyLocLayerParameter(process_id, topic_id, tlayer.type(), writer_par);
       }
-      // inform for local publisher connection
-      iter->second->ApplyLocPublication(process_id, topic_id, topic_info);
+      // we only inform the subscriber when the publisher has already recognized at least one local subscriber
+      // this should avoid to set the "IsPublished" state before the publisher is able to send data
+      if (ecal_sample_.topic().connections_loc() > 0)
+      {
+        iter->second->ApplyLocPublication(process_id, topic_id, topic_info);
+      }
     }
   }
 
@@ -331,8 +335,12 @@ namespace eCAL
         const std::string writer_par = tlayer.par_layer().SerializeAsString();
         iter->second->ApplyExtLayerParameter(host_name, tlayer.type(), writer_par);
       }
-      // inform for external publisher connection
-      iter->second->ApplyExtPublication(host_name, process_id, topic_id, topic_info);
+      // we only inform the subscriber when the publisher has already recognized at least one external subscriber
+      // this should avoid to set the "IsPublished" state before the publisher is able to send data
+      if (ecal_sample_.topic().connections_ext() > 0)
+      {
+        iter->second->ApplyExtPublication(host_name, process_id, topic_id, topic_info);
+      }
     }
   }
 
