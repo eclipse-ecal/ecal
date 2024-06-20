@@ -23,9 +23,9 @@ find_package(GTest REQUIRED)
 find_package(tclap REQUIRED)
 
 set(cmd_parser_src
-  ${CMAKE_SOURCE_DIR}/ecal/core/src/config/ecal_cmd_parser.cpp
-  ${CMAKE_SOURCE_DIR}/lib/ecal_utils/src/filesystem.cpp
-  ${CMAKE_SOURCE_DIR}/lib/ecal_utils/src/str_convert.cpp
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/config/ecal_cmd_parser.cpp
+  ${ECAL_PROJECT_ROOT}/lib/ecal_utils/src/filesystem.cpp   # Ideally we should reference relatively to ECAL_CORE_PROJECT_ROOT
+  ${ECAL_PROJECT_ROOT}/lib/ecal_utils/src/str_convert.cpp 
 )
 
 set(config_test_src
@@ -38,7 +38,7 @@ ecal_add_gtest(${PROJECT_NAME} ${config_test_src})
 target_include_directories(${PROJECT_NAME} PRIVATE 
   $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>
   ${CMAKE_CURRENT_LIST_DIR}/src
-  ${CMAKE_SOURCE_DIR}/ecal/core/src/config
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/config
 )
 
 target_link_libraries(${PROJECT_NAME}
