@@ -271,7 +271,7 @@ namespace eCAL
       }
 
       // Purge the timed out elements from the cache 
-      void remove_deprecated(std::list<Key>* keys_erased_from_expired_map = nullptr) //-V826
+      void erase_expired(std::list<Key>* keys_erased_from_expired_map = nullptr) //-V826
       {
         // Assert method is never called when cache is empty 
         //assert(!_access_timestamps_list.empty());

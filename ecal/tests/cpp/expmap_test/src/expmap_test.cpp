@@ -81,7 +81,7 @@ TEST(core_cpp_core, ExpMap_SetGet)
 
   // check size
   //content = expmap.clone();
-  expmap.remove_deprecated();
+  expmap.erase_expired();
   EXPECT_EQ(1, expmap.size());
 
   // sleep
@@ -89,7 +89,7 @@ TEST(core_cpp_core, ExpMap_SetGet)
 
   // check size
   //content = expmap.clone();
-  expmap.remove_deprecated();
+  expmap.erase_expired();
   EXPECT_EQ(1, expmap.size());
 
   // sleep
@@ -97,21 +97,21 @@ TEST(core_cpp_core, ExpMap_SetGet)
 
   // check size
   //content = expmap.clone();
-  expmap.remove_deprecated();
+  expmap.erase_expired();
   EXPECT_EQ(0, expmap.size());
 
   expmap["A"] = 1;
   TestingClock::increment_time(std::chrono::milliseconds(150));
   expmap["B"] = 2;
   expmap["C"] = 3;
-  expmap.remove_deprecated();
+  expmap.erase_expired();
   EXPECT_EQ(3, expmap.size());
   TestingClock::increment_time(std::chrono::milliseconds(150));
   expmap["B"] = 4;
-  expmap.remove_deprecated();
+  expmap.erase_expired();
   EXPECT_EQ(2, expmap.size());
   TestingClock::increment_time(std::chrono::milliseconds(150));
-  expmap.remove_deprecated();
+  expmap.erase_expired();
   EXPECT_EQ(1, expmap.size());
   // sleep
   TestingClock::increment_time(std::chrono::milliseconds(150));
@@ -132,7 +132,7 @@ TEST(core_cpp_core, ExpMap_Insert)
   EXPECT_EQ(i, 1);
 
   TestingClock::increment_time(std::chrono::milliseconds(300));
-  expmap.remove_deprecated();
+  expmap.erase_expired();
   EXPECT_EQ(0, expmap.size());
 }
 
@@ -151,7 +151,7 @@ TEST(core_cpp_core, ExpMap_Find)
   EXPECT_EQ(i, 1);
 
   TestingClock::increment_time(std::chrono::milliseconds(300));
-  expmap.remove_deprecated();
+  expmap.erase_expired();
   EXPECT_EQ(0, expmap.size());
 }
 
@@ -173,7 +173,7 @@ TEST(core_cpp_core, ExpMap_FindConst)
   EXPECT_EQ(i, 1);
 
   TestingClock::increment_time(std::chrono::milliseconds(300));
-  expmap.remove_deprecated();
+  expmap.erase_expired();
   EXPECT_EQ(0, expmap.size());
 }
 
