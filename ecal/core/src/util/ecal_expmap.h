@@ -41,15 +41,14 @@ namespace eCAL
     **/
     template<class Key,
       class T,
+      class clock_type = std::chrono::steady_clock,
       class Compare = std::less<Key>,
       class Alloc   = std::allocator<std::pair<const Key, T> > >
     class CExpMap
     {
     public:
-      using clock_type = std::chrono::steady_clock;
-
       // Key access history, most recent at back 
-      using key_tracker_type = std::list<std::pair<clock_type::time_point, Key>>;
+      using key_tracker_type = std::list<std::pair<typename clock_type::time_point, Key>>;
 
       // Key to value and key history iterator 
       using key_to_value_type = std::map<Key, std::pair<T, typename key_tracker_type::iterator>>;
@@ -147,12 +146,12 @@ namespace eCAL
 
       // Constructor specifies the timeout of the map
       CExpMap() : _timeout(std::chrono::milliseconds(5000)) {};
-      explicit CExpMap(clock_type::duration t) : _timeout(t) {};
+      explicit CExpMap(typename clock_type::duration t) : _timeout(t) {};
 
       /**
       * @brief  set expiration time
       **/
-      void set_expiration(clock_type::duration t) { _timeout = t; };
+      void set_expiration(typename clock_type::duration t) { _timeout = t; };
 
       // Iterators:
       iterator begin() noexcept
@@ -261,7 +260,7 @@ namespace eCAL
       {
         // Assert method is never called when cache is empty 
         //assert(!_key_tracker.empty());
-        clock_type::time_point eviction_limit = get_curr_time() - _timeout;
+        typename clock_type::time_point eviction_limit = get_curr_time() - _timeout;
 
         auto it(_key_tracker.begin());
 
@@ -328,7 +327,7 @@ namespace eCAL
         return ret;
       }
 
-      clock_type::time_point get_curr_time()
+      typename clock_type::time_point get_curr_time()
       {
         return clock_type::now();
       }
@@ -340,7 +339,7 @@ namespace eCAL
       key_to_value_type _key_to_value;
 
       // Timeout of map
-      clock_type::duration _timeout;
+      typename clock_type::duration _timeout;
     };
   }
 }
