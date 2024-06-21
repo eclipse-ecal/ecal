@@ -37,16 +37,35 @@ namespace eCAL
   namespace Util
   {
     /**
-    * @brief A time expiration map
-    **/
+     * @brief A map that stores key-value pairs with an expiration time.
+     *
+     * @tparam Key       The type of the keys.
+     * @tparam T         The type of the values.
+     * @tparam ClockType The type of the clock based on which the Map expires its elements
+     * 
+     * This class is *not* threadsafe and needs to be protected by locks / mutexes in multithreaded environments.
+     * 
+     * From the outside / for the user, this class acts as a regular std::map.
+     * However, it provides one additional function (erase_expired) that removes expired elements from this map.
+     * So it's basically a cache that can invalidate itself, based on the current time provided by the clock.
+     * 
+     * Internally, this is realized by storing both a map and a list internally.
+     * The map stores the regular key, and then the actual value and additional an iterator into the timestamp list.
+     * The timestamp list stores together a timestamp and the key which was inserted into the list at that given timestamp.
+     * It is always kept in a sorted order.
+     * 
+     * Whenever a map element is accessed, the responding timestamp is updated and moved to the end of the list.
+     * This happens in constant time.
+     */
     template<class Key,
       class T,
-      class clock_type = std::chrono::steady_clock,
+      class ClockType = std::chrono::steady_clock,
       class Compare = std::less<Key>,
       class Alloc   = std::allocator<std::pair<const Key, T> > >
     class CExpiredMap
     {
     public:
+      // Type declarations necessary to be compliant to a regular map.
       using allocator_type  = Alloc;
       using value_type      = std::pair<const Key, T>;
       using reference       = typename Alloc::reference;
@@ -57,7 +76,7 @@ namespace eCAL
     private:
       struct AccessTimestampListEntry
       {
-        typename clock_type::time_point timestamp;
+        typename ClockType::time_point timestamp;
         Key corresponding_map_key;
       };
 
@@ -161,12 +180,12 @@ namespace eCAL
 
       // Constructor specifies the timeout of the map
       CExpiredMap() : _timeout(std::chrono::milliseconds(5000)) {};
-      explicit CExpiredMap(typename clock_type::duration t) : _timeout(t) {};
+      explicit CExpiredMap(typename ClockType::duration t) : _timeout(t) {};
 
       /**
       * @brief  set expiration time
       **/
-      void set_expiration(typename clock_type::duration t) { _timeout = t; };
+      void set_expiration(typename ClockType::duration t) { _timeout = t; };
 
       // Iterators:
       iterator begin() noexcept
@@ -270,15 +289,18 @@ namespace eCAL
         return const_iterator(_internal_map.find(k));
       }
 
-      // Purge the timed out elements from the cache 
+      /**
+       * @brief Erase all expired key-value pairs from the map.
+       * 
+       * This function erases all expired key-value pairs from the internal map / timestamp list.
+       * The CExpiredMap class does not call this function internally, it has to be called explicitly by the user.
+       */
       void erase_expired(std::list<Key>* keys_erased_from_expired_map = nullptr) //-V826
       {
-        // Assert method is never called when cache is empty 
-        //assert(!_access_timestamps_list.empty());
-        typename clock_type::time_point eviction_limit = get_curr_time() - _timeout;
-
+        // To erase timestamps from the map, the time point of the last access is calculated, all older entries will be erased.
+        // Since the list is sorted, we need to remove everything from the first element until the eviction limit.
+        typename ClockType::time_point eviction_limit = get_curr_time() - _timeout;
         auto it(_access_timestamps_list.begin());
-
         while (it != _access_timestamps_list.end() && it->timestamp < eviction_limit)
         {
           if (keys_erased_from_expired_map != nullptr) keys_erased_from_expired_map->push_back(it->corresponding_map_key);
@@ -325,7 +347,7 @@ namespace eCAL
         }
       }
       
-      // Record a fresh key-value pair in the cache 
+      // Record a fresh key-value pair in the cache
       std::pair<typename InternalMapType::iterator, bool> insert(const Key& k, const T& v)
       {
         // sorted list, containing (pair ( timestamp, K))
@@ -342,9 +364,9 @@ namespace eCAL
         return ret;
       }
 
-      typename clock_type::time_point get_curr_time()
+      typename ClockType::time_point get_curr_time()
       {
-        return clock_type::now();
+        return ClockType::now();
       }
 
       // Key access history 
@@ -354,7 +376,7 @@ namespace eCAL
       InternalMapType _internal_map;
 
       // Timeout of map
-      typename clock_type::duration _timeout;
+      typename ClockType::duration _timeout;
     };
   }
 }

@@ -117,6 +117,13 @@ TEST(core_cpp_core, ExpMap_SetGet)
   TestingClock::increment_time(std::chrono::milliseconds(150));
 }
 
+TEST(core_cpp_core, ExpMap_EraseEmptyMap)
+{
+  eCAL::Util::CExpiredMap<std::string, int, TestingClock> expmap(std::chrono::milliseconds(200));
+  expmap.erase_expired();
+  EXPECT_TRUE(expmap.empty());
+}
+
 TEST(core_cpp_core, ExpMap_Insert)
 {
   eCAL::Util::CExpiredMap<std::string, int, TestingClock> expmap(std::chrono::milliseconds(200));
