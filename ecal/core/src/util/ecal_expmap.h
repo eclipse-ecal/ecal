@@ -71,7 +71,7 @@ namespace eCAL
       };
 
       // Key to value and key history iterator 
-      using InternalMapType = std::map<Key, std::pair<T, typename AccessTimestampListType::iterator>>;
+      using InternalMapType = std::map<Key, InternalMapEntry>;
 
     public:
 
@@ -104,7 +104,7 @@ namespace eCAL
 
         std::pair<Key, T> operator*() const
         {
-          return std::make_pair(it->first, it->second.first);
+          return std::make_pair(it->first, it->second.map_value);
         }
 
         //friend void swap(iterator& lhs, iterator& rhs); //C++11 I think
@@ -147,7 +147,7 @@ namespace eCAL
 
         std::pair<Key, T> operator*() const
         {
-          return std::make_pair(it->first, it->second.first);
+          return std::make_pair(it->first, it->second.map_value);
         }
 
         //friend void swap(iterator& lhs, iterator& rhs); //C++11 I think
@@ -239,7 +239,7 @@ namespace eCAL
         }
 
         // Return the retrieved value 
-        return (*it).second.first;
+        return (*it).second.map_value;
       };
 
       mapped_type& at(const key_type& k)
@@ -293,7 +293,7 @@ namespace eCAL
         auto it = _internal_map.find(k);
         if (it != _internal_map.end())
         {
-          _access_timestamps_list.erase(it->second.second); // erase the element from the list
+          _access_timestamps_list.erase(it->second.timestamp_list_iterator); // erase the element from the list
           _internal_map.erase(k);                // erase the element from the map
           return true;
         }
@@ -315,7 +315,7 @@ namespace eCAL
         auto it_in_map = _internal_map.find(k);
         if (it_in_map != _internal_map.end())
         {
-          auto& it_in_list = it_in_map->second.second;
+          auto& it_in_list = it_in_map->second.timestamp_list_iterator;
 
           // move the element to the end of the list
           _access_timestamps_list.splice(_access_timestamps_list.end(), _access_timestamps_list, it_in_list);
@@ -335,7 +335,7 @@ namespace eCAL
         auto ret = _internal_map.emplace(
           std::make_pair(
             k,
-            std::make_pair(v, it)
+            InternalMapEntry{ v, it }
           )
         );
         // return iterator to newly inserted element.
