@@ -37,7 +37,7 @@ namespace eCAL
   namespace Util
   {
     /**
-     * @brief A map that stores key-value pairs with an expiration time.
+     * @brief A map that stores key-value pairs and the time at which they have last been updated.
      *
      * @tparam Key       The type of the keys.
      * @tparam T         The type of the values.
@@ -47,9 +47,9 @@ namespace eCAL
      * 
      * From the outside / for the user, this class acts as a regular std::map.
      * However, it provides one additional function (erase_expired) that removes expired elements from this map.
-     * So it's basically a cache that can invalidate itself, based on the current time provided by the clock.
+     * Elements are considered to be expired, if they have not been accessed (via `operator[]`) within a given timeout period.
      * 
-     * Internally, this is realized by storing both a map and a list internally.
+     * Internally, this is realized by storing both a map and a list.
      * The map stores the regular key, and then the actual value and additional an iterator into the timestamp list.
      * The timestamp list stores together a timestamp and the key which was inserted into the list at that given timestamp.
      * It is always kept in a sorted order.
@@ -62,7 +62,7 @@ namespace eCAL
       class ClockType = std::chrono::steady_clock,
       class Compare = std::less<Key>,
       class Alloc   = std::allocator<std::pair<const Key, T> > >
-    class CExpiredMap
+    class CExpirationMap
     {
     public:
       // Type declarations necessary to be compliant to a regular map.
@@ -179,8 +179,8 @@ namespace eCAL
 
 
       // Constructor specifies the timeout of the map
-      CExpiredMap() : _timeout(std::chrono::milliseconds(5000)) {};
-      explicit CExpiredMap(typename ClockType::duration t) : _timeout(t) {};
+      CExpirationMap() : _timeout(std::chrono::milliseconds(5000)) {};
+      explicit CExpirationMap(typename ClockType::duration t) : _timeout(t) {};
 
       /**
       * @brief  set expiration time
@@ -233,8 +233,13 @@ namespace eCAL
         return  _internal_map.max_size();
       }
 
-      // Element access
-      // Obtain value of the cached function for k 
+      /**
+       * @brief Accesses the value associated with the given key, resetting its expiration time.
+       *
+       * @param key  The key to access the value for.
+       *
+       * @return     The value associated with the key.
+       */
       T& operator[](const Key& k)
       {
         // Attempt to find existing record 
@@ -293,7 +298,7 @@ namespace eCAL
        * @brief Erase all expired key-value pairs from the map.
        * 
        * This function erases all expired key-value pairs from the internal map / timestamp list.
-       * The CExpiredMap class does not call this function internally, it has to be called explicitly by the user.
+       * The CExpirationMap class does not call this function internally, it has to be called explicitly by the user.
        */
       void erase_expired(std::list<Key>* keys_erased_from_expired_map = nullptr) //-V826
       {

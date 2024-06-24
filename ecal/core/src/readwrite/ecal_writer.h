@@ -153,7 +153,7 @@ namespace eCAL
 
     std::atomic<bool>                      m_connected;
 
-    using SSubscriptionMapT = Util::CExpiredMap<SSubscriptionInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
+    using SSubscriptionMapT = Util::CExpirationMap<SSubscriptionInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
     mutable std::mutex                     m_sub_map_mtx;
     SSubscriptionMapT                      m_sub_map;
 

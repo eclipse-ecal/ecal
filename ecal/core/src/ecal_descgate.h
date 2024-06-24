@@ -89,7 +89,7 @@ namespace eCAL
     CDescGate& operator=(CDescGate&&) = delete;
 
   protected:
-    using QualityTopicIdExpMap = eCAL::Util::CExpiredMap<STopicIdKey, Util::SQualityTopicInfo>;
+    using QualityTopicIdExpMap = eCAL::Util::CExpirationMap<STopicIdKey, Util::SQualityTopicInfo>;
     struct SQualityTopicIdMap
     {
       explicit SQualityTopicIdMap(const std::chrono::milliseconds& timeout_) : map(timeout_) {};
@@ -97,7 +97,7 @@ namespace eCAL
       QualityTopicIdExpMap map;
     };
 
-    using QualityServiceIdExpMap = eCAL::Util::CExpiredMap<SServiceIdKey, Util::SQualityServiceInfo>;
+    using QualityServiceIdExpMap = eCAL::Util::CExpirationMap<SServiceIdKey, Util::SQualityServiceInfo>;
     struct SQualityServiceIdMap
     {
       explicit SQualityServiceIdMap(const std::chrono::milliseconds& timeout_) : map(timeout_) {};

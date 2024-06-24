@@ -64,7 +64,7 @@ namespace eCAL
     std::shared_timed_mutex     m_client_set_sync;
     ServiceNameServiceImplSetT  m_client_set;
 
-    using ConnectedMapT = Util::CExpiredMap<std::string, SServiceAttr>;
+    using ConnectedMapT = Util::CExpirationMap<std::string, SServiceAttr>;
     std::shared_timed_mutex     m_service_register_map_sync;
     ConnectedMapT               m_service_register_map;
   };
