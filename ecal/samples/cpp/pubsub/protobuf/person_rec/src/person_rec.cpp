@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,8 +53,16 @@ int main(int argc, char **argv)
   // set process state
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
+  // create a subscriber config
+  eCAL::Subscriber::Configuration sub_config;
+
+  // activate transport layer
+  sub_config.shm.enable = true;
+  sub_config.udp.enable = true;
+  sub_config.tcp.enable = true;
+
   // create a subscriber (topic name "person")
-  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");
+  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person", sub_config);
 
   // add receive callback function (_1 = topic_name, _2 = msg, _3 = time, _4 = clock, _5 = id)
   auto callback = std::bind(OnPerson, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);

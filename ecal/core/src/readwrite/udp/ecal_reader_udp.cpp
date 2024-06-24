@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,14 @@
  * @brief  udp multicast reader and layer
 **/
 
-#include "ecal_reader_udp.h"
+#include <ecal/ecal_config.h>
 
+#include "ecal_reader_udp.h"
 #include "ecal_global_accessors.h"
-#include "pubsub/ecal_subgate.h"
 
 #include "io/udp/ecal_udp_configurations.h"
+#include "pubsub/ecal_subgate.h"
+
 #include <functional>
 #include <memory>
 #include <string>

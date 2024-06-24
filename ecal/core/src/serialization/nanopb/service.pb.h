@@ -101,7 +101,7 @@ extern "C" {
 #define eCAL_pb_Response_init_default            {false, eCAL_pb_ServiceHeader_init_default, {{NULL}, NULL}, 0}
 #define eCAL_pb_Method_init_default              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}}
 #define eCAL_pb_Service_init_default             {0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0}
-#define eCAL_pb_Client_init_default              {0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, 0}
+#define eCAL_pb_Client_init_default              {0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}}
 #define eCAL_pb_ServiceHeader_init_zero          {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, _eCAL_pb_ServiceHeader_eCallState_MIN, {{NULL}, NULL}}
 #define eCAL_pb_Request_init_zero                {false, eCAL_pb_ServiceHeader_init_zero, {{NULL}, NULL}}
 #define eCAL_pb_Response_init_zero               {false, eCAL_pb_ServiceHeader_init_zero, {{NULL}, NULL}, 0}

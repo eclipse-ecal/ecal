@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,13 @@
  * @brief  tcp reader and layer
 **/
 
-#include "ecal_global_accessors.h"
-
 #include <ecal/ecal_config.h>
 
-#include "pubsub/ecal_subgate.h"
-
+#include "ecal_global_accessors.h"
 #include "ecal_reader_tcp.h"
 #include "ecal_tcp_pubsub_logger.h"
+
+#include "pubsub/ecal_subgate.h"
 
 #include "ecal_utils/portable_endian.h"
 

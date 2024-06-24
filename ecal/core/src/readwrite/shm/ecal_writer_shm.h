@@ -25,8 +25,8 @@
 
 #include <ecal/config/publisher.h>
 
-#include "readwrite/ecal_writer_base.h"
 #include "io/shm/ecal_memfile_sync.h"
+#include "readwrite/ecal_writer_base.h"
 
 #include <cstddef>
 #include <memory>

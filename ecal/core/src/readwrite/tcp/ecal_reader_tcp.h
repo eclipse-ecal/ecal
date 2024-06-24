@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,9 @@
 #include <tcp_pubsub/subscriber.h>
 
 #include "serialization/ecal_struct_sample_payload.h"
+
+#include <mutex>
+#include <unordered_map>
 
 namespace eCAL
 {
