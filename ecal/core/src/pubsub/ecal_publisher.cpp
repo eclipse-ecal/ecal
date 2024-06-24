@@ -151,13 +151,13 @@ namespace eCAL
     return(true);
   }
 
-  size_t CPublisher::Send(const void* const buf_, const size_t len_, const long long time_ /* = DEFAULT_TIME_ARGUMENT */) const
+  size_t CPublisher::Send(const void* const buf_, const size_t len_, const long long time_ /* = DEFAULT_TIME_ARGUMENT */)
   {
     CBufferPayloadWriter payload{ buf_, len_ };
     return Send(payload, time_);
   }
   
-  size_t CPublisher::Send(CPayloadWriter& payload_, long long time_) const
+  size_t CPublisher::Send(CPayloadWriter& payload_, long long time_)
   {
      if (!m_created) return(0);
 
@@ -180,7 +180,7 @@ namespace eCAL
      return written_bytes;
   }
 
-  size_t CPublisher::Send(const std::string& s_, long long time_) const
+  size_t CPublisher::Send(const std::string& s_, long long time_)
   {
     return(Send(s_.data(), s_.size(), time_));
   }
