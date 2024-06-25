@@ -488,7 +488,7 @@ namespace eCAL
     // check connection timeouts
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_mtx);
-      m_sub_map.remove_deprecated();
+      m_sub_map.erase_expired();
 
       if (m_sub_map.empty())
       {

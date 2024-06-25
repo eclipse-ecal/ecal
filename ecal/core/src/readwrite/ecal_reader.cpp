@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -818,7 +818,7 @@ namespace eCAL
     // check connection timeouts
     {
       const std::lock_guard<std::mutex> lock(m_pub_map_mtx);
-      m_pub_map.remove_deprecated();
+      m_pub_map.erase_expired();
 
       if (m_pub_map.empty())
       {

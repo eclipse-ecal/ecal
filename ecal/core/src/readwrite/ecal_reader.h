@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,7 +143,7 @@ namespace eCAL
     std::atomic<size_t>                       m_topic_size;
 
     std::atomic<bool>                         m_connected;
-    using PublicationMapT = Util::CExpMap<SPublicationInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
+    using PublicationMapT = Util::CExpirationMap<SPublicationInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
     mutable std::mutex                        m_pub_map_mtx;
     PublicationMapT                           m_pub_map;
 
