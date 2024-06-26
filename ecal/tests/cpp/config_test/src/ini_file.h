@@ -195,7 +195,7 @@ static const std::string ini_file_as_string_deprecated =
 
 std::string ini_file_as_string_yaml = "publisher:\n"
 "  shm:\n"
-"    enable: true\n"
+"    enable: false\n"
 "    zero_copy_mode: false\n"
 "    acknowledge_timeout_ms: 346\n"
 "    memfile_min_size_bytes: 4096\n"

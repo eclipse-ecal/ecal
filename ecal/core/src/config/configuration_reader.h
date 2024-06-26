@@ -116,6 +116,27 @@ namespace eCAL
         }
       }
     };
+
+    bool MergeYamlIntoConfiguration(const std::string& file_name_ , eCAL::Configuration& config_ = eCAL::GetConfiguration())
+    {
+      YAML::Node config_node(config_);
+      
+      YAML::Node node_to_merge;
+      try
+      {
+        node_to_merge = YAML::LoadFile(file_name_);
+      }
+      catch (std::exception& e)
+      {
+        std::cout << "Error during reading yml file: " << e.what() << "\n";
+        return false;
+      }
+
+      eCAL::Config::MergeYamlNodes(config_node, node_to_merge);
+      config_ = config_node.as<eCAL::Configuration>();
+
+      return true;
+    }
   }  
 }
 

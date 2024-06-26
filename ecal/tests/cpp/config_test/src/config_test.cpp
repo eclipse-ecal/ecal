@@ -353,19 +353,9 @@ TEST(YamlConfigReaderTest, parse_values_test)
   EXPECT_EQ(config.publisher.shm.acknowledge_timeout_ms, 346U);
 } 
 
-namespace YAML
-{
-  bool operator!=(YAML::Node node1, YAML::Node node2)
-  {
-    if (node1.IsScalar() && node2.IsScalar())
-      return node1.as<std::string>() == node2.as<std::string>();
-    else
-      return false;
-  };
-}
-
 TEST(YamlConfigReaderTest, yaml_node_merger)
 {
+
   
   YAML::Node node_1;
   YAML::Node node_2;
@@ -382,6 +372,7 @@ TEST(YamlConfigReaderTest, yaml_node_merger)
   // try also with a sequence
   node_2["firstLayer2"]["secondLayer2"] = YAML::Load("[1, 2, 3]");
 
+  auto test = YAML::LoadFile("SomeNonExistingFile");
 
   eCAL::Config::MergeYamlNodes(node_1, node_2);
 
@@ -389,5 +380,33 @@ TEST(YamlConfigReaderTest, yaml_node_merger)
   EXPECT_EQ(node_1[3], node_2[3]);
   EXPECT_EQ(node_1["3"], node_2["3"]);  
   EXPECT_EQ(node_1["firstLayer1"]["secondLayer1"], node_2["firstLayer1"]["secondLayer1"]);
-  EXPECT_EQ(node_1["firstLayer2"]["secondLayer2"], node_2["firstLayer2"]["secondLayer2"]);
+  EXPECT_EQ(node_1["firstLayer2"]["secondLayer2"], node_2["firstLayer2"]["secondLayer2"]);  
+}
+
+TEST(YamlConfigReaderTest, yaml_to_config_merger)
+{
+  // create a custom ini file
+  std::string ini_file_name = "customIni.yml";
+  std::ofstream custom_ini_file(ini_file_name);
+
+  if (custom_ini_file.is_open())
+  {
+    custom_ini_file << ini_file_as_string_yaml;
+    custom_ini_file.close();
+  }
+  else 
+  {
+    std::cerr << "Error opening file for ini writing" << "\n";
+    return;
+  }
+
+  eCAL::Configuration config;
+
+  EXPECT_TRUE(config.publisher.shm.enable);
+
+  eCAL::Config::MergeYamlIntoConfiguration(ini_file_name, config);
+
+  EXPECT_FALSE(config.publisher.shm.enable);
+
+  remove(ini_file_name.data());
 }
