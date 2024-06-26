@@ -33,6 +33,8 @@
 #include "configuration_to_yaml.h"
 
 #include <fstream>
+#include <stack>
+#include <utility>
 
 namespace eCAL
 {
@@ -64,7 +66,56 @@ namespace eCAL
       }
       
       return false;
-    }
+    };
+
+    void MergeYamlNodes(YAML::Node& base, const YAML::Node& other) 
+    {
+      std::stack<std::pair<YAML::Node, YAML::Node>> nodes;
+      nodes.push(std::make_pair(base, other));
+
+      while (!nodes.empty()) 
+      {
+        std::pair<YAML::Node, YAML::Node> nodePair = nodes.top();
+        nodes.pop();
+
+        YAML::Node baseNode = nodePair.first;
+        YAML::Node otherNode = nodePair.second;
+
+        for (YAML::const_iterator it = otherNode.begin(); it != otherNode.end(); ++it) 
+        {
+          YAML::Node key = it->first;
+          YAML::Node value = it->second;
+          
+          std::string key_as_string = "";
+
+          switch (key.Type())
+          {
+            case YAML::NodeType::Scalar:
+              key_as_string = key.as<std::string>();
+              break;
+            default:
+              continue;
+              break;
+          }
+
+          if (baseNode[key_as_string]) 
+          {
+            if (value.IsMap() && baseNode[key_as_string].IsMap()) 
+            {
+              nodes.push(std::make_pair(baseNode[key_as_string], value)); // Push nested nodes to stack
+            } 
+            else 
+            {
+              baseNode[key_as_string] = value; // Overwrite value for non-map nodes
+            }
+          } 
+          else 
+          {
+            baseNode[key_as_string] = value; // Add new key-value pairs
+          }
+        }
+      }
+    };
   }  
 }
 

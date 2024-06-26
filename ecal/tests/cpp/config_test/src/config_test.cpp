@@ -351,4 +351,43 @@ TEST(YamlConfigReaderTest, parse_values_test)
 
   // Check unsigned int
   EXPECT_EQ(config.publisher.shm.acknowledge_timeout_ms, 346U);
+} 
+
+namespace YAML
+{
+  bool operator!=(YAML::Node node1, YAML::Node node2)
+  {
+    if (node1.IsScalar() && node2.IsScalar())
+      return node1.as<std::string>() == node2.as<std::string>();
+    else
+      return false;
+  };
+}
+
+TEST(YamlConfigReaderTest, yaml_node_merger)
+{
+  
+  YAML::Node node_1;
+  YAML::Node node_2;
+
+  node_1["test"] = 1;
+  node_2["test"] = 2;
+  node_2[3] = "Help, I have an int key!";
+
+  node_1["test2"] = 3;
+  
+  node_1["firstLayer1"]["secondLayer1"] = "192.168.0.2";
+  node_2["firstLayer1"]["secondLayer1"] = "192.168.0.5";
+
+  // try also with a sequence
+  node_2["firstLayer2"]["secondLayer2"] = YAML::Load("[1, 2, 3]");
+
+
+  eCAL::Config::MergeYamlNodes(node_1, node_2);
+
+  EXPECT_EQ(node_1["test"], node_2["test"]);
+  EXPECT_EQ(node_1[3], node_2[3]);
+  EXPECT_EQ(node_1["3"], node_2["3"]);  
+  EXPECT_EQ(node_1["firstLayer1"]["secondLayer1"], node_2["firstLayer1"]["secondLayer1"]);
+  EXPECT_EQ(node_1["firstLayer2"]["secondLayer2"], node_2["firstLayer2"]["secondLayer2"]);
 }
