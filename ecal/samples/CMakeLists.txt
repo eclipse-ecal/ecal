@@ -66,6 +66,7 @@ endif()
 
 if(ECAL_CORE_PUBLISHER AND ECAL_CORE_SUBSCRIBER)
   add_subdirectory(cpp/benchmarks/perftool)
+  add_subdirectory(cpp/benchmarks/massive_pub_sub)
 endif()
 
 # misc
