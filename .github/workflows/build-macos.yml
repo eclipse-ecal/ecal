@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: Downgrade Python version
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       id: cp39
       with:
         python-version: '3.9'
