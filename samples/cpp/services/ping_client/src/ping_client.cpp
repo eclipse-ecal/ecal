@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ int main(int argc, char **argv)
   eCAL::protobuf::CServiceClient<PingService> ping_client("ping service");
 
   // waiting for service
-  while (!ping_client.IsConnected())
+  while (eCAL::Ok() && !ping_client.IsConnected())
   {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     std::cout << "Waiting for the service .." << std::endl;
