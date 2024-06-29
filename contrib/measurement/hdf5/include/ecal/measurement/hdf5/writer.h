@@ -156,7 +156,7 @@ namespace eCAL
            *
            * @return              channel type
           **/
-          void SetChannelDataTypeInformation(const std::string& channel_name, const base::DataTypeInformation& info) override;
+          void SetChannelDataTypeInformation(const eCAL::experimental::measurement::base::Channel& channel, const base::DataTypeInformation& info) override;
 
           /**
            * @brief Set measurement file base name (desired name for the actual hdf5 files that will be created)
@@ -178,7 +178,7 @@ namespace eCAL
            *
            * @return              true if succeeds, false if it fails
           **/
-          bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) override;
+          bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const eCAL::experimental::measurement::base::Channel& channel, long long clock) override;
 
         private:
           std::unique_ptr<eh5::HDF5Meas> measurement;
