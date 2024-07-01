@@ -40,7 +40,7 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH "ON")
 add_subdirectory(core)
 add_dependencies(${PROJECT_NAME} _ecal_core_py)
 
-add_subdirectory(nanobind_core)
+add_subdirectory(nanobind_core/src)
 add_dependencies(${PROJECT_NAME} nanobind_core)
 
 if(HAS_HDF5)
