@@ -29,7 +29,8 @@ namespace eCAL
   namespace Registration
   {
     Configuration::Configuration()
-    : share_ttype(PUB_SHARE_TTYPE)
+    : network_enabled(NET_ENABLED)
+    , share_ttype(PUB_SHARE_TTYPE)
     , share_tdesc(PUB_SHARE_TDESC)
     , m_registration_timeout(CMN_REGISTRATION_TO)
     , m_registration_refresh(CMN_REGISTRATION_REFRESH)

@@ -28,7 +28,7 @@ int main(int argc, char **argv)
   eCAL::Configuration my_config(argc, argv);
 
   // setting a configuration
-  my_config.transport_layer.network_enabled = true;
+  my_config.registration.network_enabled = true;
 
   // initialize eCAL API
   eCAL::Initialize(my_config, "config sample");

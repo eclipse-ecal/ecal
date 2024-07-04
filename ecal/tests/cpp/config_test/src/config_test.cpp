@@ -62,7 +62,7 @@ TEST(core_cpp_config, user_config_passing)
   const eCAL::Registration::Configuration registration = eCAL::Registration::Configuration(registration_timeout, registration_refresh);
 
   try{
-    custom_config.transport_layer.network_enabled   = network_enabled;
+    custom_config.registration.network_enabled      = network_enabled;
     custom_config.transport_layer.mc_options.group  = ip_address;
     custom_config.transport_layer.mc_options.sndbuf = upd_snd_buff;
     
@@ -83,7 +83,7 @@ TEST(core_cpp_config, user_config_passing)
   EXPECT_EQ(0, eCAL::Initialize(custom_config, "User Config Passing Test", eCAL::Init::Default));
 
   // Test boolean assignment, default is false
-  EXPECT_EQ(network_enabled, eCAL::GetConfiguration().transport_layer.network_enabled);
+  EXPECT_EQ(network_enabled, eCAL::GetConfiguration().registration.network_enabled);
 
   // Test IP address assignment, default is 239.0.0.1
   EXPECT_EQ(ip_address, static_cast<std::string>(eCAL::GetConfiguration().transport_layer.mc_options.group));

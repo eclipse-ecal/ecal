@@ -111,7 +111,6 @@ namespace eCAL
 
       // transport layer options
       auto& transportLayerOptions = transport_layer;
-      transportLayerOptions.network_enabled			       = iniConfig.get(NETWORK,      "network_enabled",            NET_ENABLED);
       transportLayerOptions.drop_out_of_order_messages = iniConfig.get(EXPERIMENTAL, "drop_out_of_order_messages", EXP_DROP_OUT_OF_ORDER_MESSAGES);
 
       auto& multicastOptions = transportLayerOptions.mc_options;
@@ -146,12 +145,13 @@ namespace eCAL
       shmOptions.memfile_zero_copy          = iniConfig.get(PUBLISHER,    "memfile_zero_copy",          PUB_MEMFILE_ZERO_COPY);
 
       // registration options
-      auto registrationTimeout        = iniConfig.get(COMMON,    "registration_timeout", CMN_REGISTRATION_TO);
-      auto registrationRefresh        = iniConfig.get(COMMON,    "registration_refresh", CMN_REGISTRATION_REFRESH);
-      registration            = Registration::Configuration(registrationTimeout, registrationRefresh);
-      auto& registrationOptions       = registration;
-      registrationOptions.share_tdesc = iniConfig.get(PUBLISHER, "share_tdesc",          PUB_SHARE_TDESC);
-      registrationOptions.share_ttype = iniConfig.get(PUBLISHER, "share_ttype",          PUB_SHARE_TTYPE);
+      auto registrationTimeout              = iniConfig.get(COMMON,    "registration_timeout", CMN_REGISTRATION_TO);
+      auto registrationRefresh              = iniConfig.get(COMMON,    "registration_refresh", CMN_REGISTRATION_REFRESH);
+      registration = Registration::Configuration(registrationTimeout, registrationRefresh);
+      auto& registrationOptions = registration;
+      registrationOptions.network_enabled   = iniConfig.get(NETWORK,   "network_enabled", NET_ENABLED);
+      registrationOptions.share_tdesc       = iniConfig.get(PUBLISHER, "share_tdesc",     PUB_SHARE_TDESC);
+      registrationOptions.share_ttype       = iniConfig.get(PUBLISHER, "share_ttype",     PUB_SHARE_TTYPE);
 
       // monitoring options
       auto& monitoringOptions = monitoring;
