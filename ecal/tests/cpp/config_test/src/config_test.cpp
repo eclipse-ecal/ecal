@@ -52,7 +52,6 @@ TEST(core_cpp_config, user_config_passing)
   const unsigned int        mon_timeout                          = 6000U;
   const std::string         mon_filter_excl                      = "_A.*";
   const eCAL_Logging_Filter mon_log_filter_con                   = log_level_warning;
-  const eCAL::Monitoring::Types::Mode monitoring_mode            = eCAL::Monitoring::Types::Mode::udp_monitoring;
   
   // Publisher options
   const bool pub_use_shm = true;
@@ -69,7 +68,6 @@ TEST(core_cpp_config, user_config_passing)
     
     custom_config.monitoring.monitoring_timeout = mon_timeout;
     custom_config.monitoring.filter_excl        = mon_filter_excl;
-    custom_config.monitoring.monitoring_mode    = monitoring_mode;
     custom_config.logging.filter_log_con        = mon_log_filter_con;
 
     custom_config.publisher.shm.enable = pub_use_shm;
@@ -101,9 +99,6 @@ TEST(core_cpp_config, user_config_passing)
 
   // Test monitoring console log assignment, default is (log_level_info | log_level_warning | log_level_error | log_level_fatal)
   EXPECT_EQ(mon_log_filter_con, eCAL::GetConfiguration().logging.filter_log_con);
-
-  // Test monitoring mode assignment, default is eCAL::Types::MonitoringMode::none
-  EXPECT_EQ(monitoring_mode, eCAL::GetConfiguration().monitoring.monitoring_mode);
 
   // Test publisher sendmode assignment, default is eCAL::TLayer::eSendMode::smode_auto
   EXPECT_EQ(pub_use_shm, eCAL::GetConfiguration().publisher.shm.enable);
