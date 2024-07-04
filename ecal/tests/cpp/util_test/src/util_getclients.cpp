@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@
 #include <gtest/gtest.h>
 
 enum {
-  CMN_MONITORING_TIMEOUT_MS   = (5000 + 100),
-  CMN_REGISTRATION_REFRESH_MS = (1000 + 100)
+  CMN_MONITORING_TIMEOUT_MS   = (5000),
+  CMN_REGISTRATION_REFRESH_MS = (1000 * 2)
 };
 
 TEST(core_cpp_util, ClientExpiration)
