@@ -31,17 +31,27 @@
 #include "serialization/ecal_struct_sample_registration.h"
 
 
-  namespace eCAL
+namespace eCAL
+{
+  class CRegistrationSender
   {
-    class CRegistrationSender
-    {
-    public:
-      CRegistrationSender();
-      virtual ~CRegistrationSender();
+  public:
+    CRegistrationSender() = default;
+    virtual ~CRegistrationSender() = default;
 
-      bool SendSample(const Registration::Sample& sample_);
-      bool 
+    // Copy constructor
+    CRegistrationSender(const CRegistrationSender& other) = delete;
 
-      void ClearSampleList();
+    // Copy assignment operator
+    CRegistrationSender& operator=(const CRegistrationSender & other) = delete;
 
-  }
+    // Move constructor
+    CRegistrationSender(CRegistrationSender && other) noexcept = delete;
+
+    // Move assignment operator
+    CRegistrationSender& operator=(CRegistrationSender && other) noexcept = delete;
+
+    //virtual bool SendSample(const Registration::Sample& sample_) = 0;
+    virtual bool SendSampleList(const Registration::SampleList& sample_list) = 0;
+  };
+}

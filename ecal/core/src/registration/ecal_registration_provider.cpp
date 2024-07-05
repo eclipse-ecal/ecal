@@ -25,25 +25,25 @@
  * These information will be send cyclic (registration refresh) via UDP to external eCAL processes.
  * 
 **/
-
-#include <atomic>
-#include <ecal/ecal_config.h>
-
-#include "ecal_def.h"
-#include "ecal_globals.h"
 #include "ecal_registration_provider.h"
 
-#include "io/udp/ecal_udp_configurations.h"
-#include "io/udp/ecal_udp_sample_sender.h"
-
-#include <registration/ecal_process_registration.h>
-
+#include <atomic>
 #include <chrono>
 #include <functional>
 #include <iostream>
 #include <memory>
 #include <mutex>
 #include <string>
+
+#include <ecal/ecal_config.h>
+#include <ecal_globals.h>
+#include "ecal_def.h"
+
+#include <registration/ecal_process_registration.h>
+#include <registration/ecal_registration_sender_udp.h>
+#if ECAL_CORE_REGISTRATION_SHM
+#include <registration/ecal_registration_sender_shm.h>
+#endif
 
 namespace eCAL
 {
@@ -68,27 +68,17 @@ namespace eCAL
     m_use_registration_udp = !Config::Experimental::IsNetworkMonitoringDisabled();
     m_use_registration_shm = Config::Experimental::IsShmMonitoringEnabled();
 
-    if (m_use_registration_udp)
-    {
-      // set network attributes
-      eCAL::UDP::SSenderAttr attr;
-      attr.address   = UDP::GetRegistrationAddress();
-      attr.port      = UDP::GetRegistrationPort();
-      attr.ttl       = UDP::GetMulticastTtl();
-      attr.broadcast = UDP::IsBroadcast();
-      attr.loopback  = true;
-      attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
-
-      // create udp registration sender
-      m_reg_sample_snd = std::make_shared<UDP::CSampleSender>(attr);
-    }
-
+   // TODO Create the registration sender
 #if ECAL_CORE_REGISTRATION_SHM
     if (m_use_registration_shm)
     {
-      std::cout << "Shared memory monitoring is enabled (domain: " << Config::Experimental::GetShmMonitoringDomain() << " - queue size: " << Config::Experimental::GetShmMonitoringQueueSize() << ")" << '\n';
-      m_memfile_broadcast.Create(Config::Experimental::GetShmMonitoringDomain(), Config::Experimental::GetShmMonitoringQueueSize());
-      m_memfile_broadcast_writer.Bind(&m_memfile_broadcast);
+      m_reg_sender = std::make_unique<CRegistrationSenderSHM>();
+    }
+    else
+    {
+#endif
+      m_reg_sender = std::make_unique<CRegistrationSenderUDP>();
+#if ECAL_CORE_REGISTRATION_SHM
     }
 #endif
 
@@ -109,26 +99,9 @@ namespace eCAL
     // add process unregistration sample
     AddSample2SampleList(Registration::GetProcessUnregisterSample());
 
-    if (m_use_registration_udp)
-    {
-      // send process unregistration sample over udp
-      SendSampleList2UDP();
+    SendSampleList();
 
-      // destroy udp registration sample sender
-      m_reg_sample_snd.reset();
-    }
-
-#if ECAL_CORE_REGISTRATION_SHM
-    if (m_use_registration_shm)
-    {
-      // broadcast process unregistration sample over shm
-      SendSampleList2SHM();
-
-      // destroy shm registration sample writer
-      m_memfile_broadcast_writer.Unbind();
-      m_memfile_broadcast.Destroy();
-    }
-#endif
+    m_reg_sender.reset();
 
     m_created = false;
   }
@@ -152,12 +125,14 @@ namespace eCAL
     // if registration is forced
     if (force_)
     {
+      SendSampleList();
+
       // send single registration sample over udp
-      SendSample2UDP(sample_);
+      //SendSample2UDP(sample_);
 
 #if ECAL_CORE_REGISTRATION_SHM
       // broadcast (updated) sample list over shm
-      SendSampleList2SHM();
+      //SendSampleList2SHM();
 #endif
     }
 
@@ -186,78 +161,18 @@ namespace eCAL
     m_sample_list.samples.push_back(sample_);
   }
 
-  bool CRegistrationProvider::SendSample2UDP(const Registration::Sample& sample_)
-  {
-    if (!m_created) return(false);
-
-    if (m_use_registration_udp && m_reg_sample_snd)
-    {
-      // lock sample buffer
-      const std::lock_guard<std::mutex> lock(m_sample_buffer_mtx);
-
-      // serialize single sample
-      if (SerializeToBuffer(sample_, m_sample_buffer))
-      {
-        // send single sample over udp
-        return m_reg_sample_snd->Send("reg_sample", m_sample_buffer) != 0;
-      }
-    }
-    return(false);
-  }
-
-  bool CRegistrationProvider::SendSampleList2UDP()
-  {
-    if (!m_created) return(false);
-    bool return_value{ true };
-
-    // lock sample list
-    const std::lock_guard<std::mutex> lock(m_sample_list_mtx);
-
-    // send all (single) samples over udp
-    if (m_use_registration_udp && m_reg_sample_snd)
-    {
-      for (const auto& sample : m_sample_list.samples)
-      {
-        return_value &= SendSample2UDP(sample);
-      }
-    }
-
-    return return_value;
-  }
-
-#if ECAL_CORE_REGISTRATION_SHM
-  bool CRegistrationProvider::SendSampleList2SHM()
-  {
-    if (!m_created) return(false);
-
-    bool return_value{ true };
-
-    // send sample list over shm
-    if (m_use_registration_shm)
-    {
-      // lock sample list
-      const std::lock_guard<std::mutex> lock(m_sample_list_mtx);
-
-      // serialize whole sample list
-      if (SerializeToBuffer(m_sample_list, m_sample_list_buffer))
-      {
-        if (!m_sample_list_buffer.empty())
-        {
-          // broadcast sample list over shm
-          return_value &= m_memfile_broadcast_writer.Write(m_sample_list_buffer.data(), m_sample_list_buffer.size());
-        }
-      }
-    }
-    return return_value;
-  }
-#endif
-
   void CRegistrationProvider::ClearSampleList()
   {
     // lock sample list
     const std::lock_guard<std::mutex> lock(m_sample_list_mtx);
     // clear sample list
     m_sample_list.samples.clear();
+  }
+
+  void CRegistrationProvider::SendSampleList()
+  {
+    std::lock_guard<std::mutex> lock(m_sample_list_mtx);
+    m_reg_sender->SendSampleList(m_sample_list);
   }
 
   void CRegistrationProvider::RegisterSendThread()
@@ -280,13 +195,7 @@ namespace eCAL
     if (g_clientgate() != nullptr) g_clientgate()->RefreshRegistrations();
 #endif
 
-    // send out sample list over udp
-    SendSampleList2UDP();
-
-#if ECAL_CORE_REGISTRATION_SHM
-    // broadcast sample list over shm
-    SendSampleList2SHM();
-#endif
+    SendSampleList();
 
     // clear registration sample list
     ClearSampleList();
