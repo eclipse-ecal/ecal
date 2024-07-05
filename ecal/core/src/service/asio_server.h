@@ -180,7 +180,7 @@ class CAsioServer
 public:
   CAsioServer(asio::io_service& io_service, unsigned short port)
     : io_service_(io_service),
-    acceptor_(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port)),
+    acceptor_(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v6(), port)),
     connect_cnt_(0)
   {
     start_accept();
