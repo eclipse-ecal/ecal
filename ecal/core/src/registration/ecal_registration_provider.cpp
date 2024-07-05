@@ -36,6 +36,8 @@
 #include "io/udp/ecal_udp_configurations.h"
 #include "io/udp/ecal_udp_sample_sender.h"
 
+#include <registration/ecal_process_registration.h>
+
 #include <chrono>
 #include <functional>
 #include <iostream>
@@ -105,7 +107,7 @@ namespace eCAL
     m_reg_sample_snd_thread->stop();
 
     // add process unregistration sample
-    AddSample2SampleList(GetProcessUnregisterSample());
+    AddSample2SampleList(Registration::GetProcessUnregisterSample());
 
     if (m_use_registration_udp)
     {
@@ -290,79 +292,6 @@ namespace eCAL
     ClearSampleList();
 
     // add process registration sample to internal sample list as first sample (for next registration loop)
-    AddSample2SampleList(GetProcessRegisterSample());
-  }
-
-  Registration::Sample CRegistrationProvider::GetProcessRegisterSample()
-  {
-    Registration::Sample process_sample;
-    process_sample.cmd_type                     = bct_reg_process;
-    auto& process_sample_process                = process_sample.process;
-    process_sample_process.hname                = Process::GetHostName();
-    process_sample_process.hgname               = Process::GetHostGroupName();
-    process_sample_process.pid                  = Process::GetProcessID();
-    process_sample_process.pname                = Process::GetProcessName();
-    process_sample_process.uname                = Process::GetUnitName();
-    process_sample_process.pparam               = Process::GetProcessParameter();
-    process_sample_process.state.severity       = static_cast<Registration::eProcessSeverity>(g_process_severity);
-    process_sample_process.state.severity_level = static_cast<Registration::eProcessSeverityLevel>(g_process_severity_level);
-    process_sample_process.state.info           = g_process_info;
-#if ECAL_CORE_TIMEPLUGIN
-    if (g_timegate() == nullptr)
-    {
-      process_sample_process.tsync_state = Registration::eTSyncState::tsync_none;
-    }
-    else
-    {
-      if (!g_timegate()->IsSynchronized())
-      {
-        process_sample_process.tsync_state = Registration::eTSyncState::tsync_none;
-      }
-      else
-      {
-        switch (g_timegate()->GetSyncMode())
-        {
-        case CTimeGate::eTimeSyncMode::realtime:
-          process_sample_process.tsync_state = Registration::eTSyncState::tsync_realtime;
-          break;
-        case CTimeGate::eTimeSyncMode::replay:
-          process_sample_process.tsync_state = Registration::eTSyncState::tsync_replay;
-          break;
-        default:
-          process_sample_process.tsync_state = Registration::eTSyncState::tsync_none;
-          break;
-        }
-      }
-      process_sample_process.tsync_mod_name = g_timegate()->GetName();
-    }
-#endif
-
-    // eCAL initialization state
-    const unsigned int comp_state(g_globals()->GetComponents());
-    process_sample_process.component_init_state = static_cast<int32_t>(comp_state);
-    std::string component_info;
-    if ((comp_state & Init::Publisher)  != 0u) component_info += "|pub";
-    if ((comp_state & Init::Subscriber) != 0u) component_info += "|sub";
-    if ((comp_state & Init::Logging)    != 0u) component_info += "|log";
-    if ((comp_state & Init::TimeSync)   != 0u) component_info += "|time";
-    if (!component_info.empty()) component_info = component_info.substr(1);
-    process_sample_process.component_init_info = component_info;
-
-    process_sample_process.ecal_runtime_version = GetVersionString();
-
-    return process_sample;
-  }
-
-  Registration::Sample CRegistrationProvider::GetProcessUnregisterSample()
-  {
-    Registration::Sample process_sample;
-    process_sample.cmd_type      = bct_unreg_process;
-    auto& process_sample_process = process_sample.process;
-    process_sample_process.hname = Process::GetHostName();
-    process_sample_process.pid   = Process::GetProcessID();
-    process_sample_process.pname = Process::GetProcessName();
-    process_sample_process.uname = Process::GetUnitName();
-
-    return process_sample;
+    AddSample2SampleList(Registration::GetProcessRegisterSample());
   }
 }

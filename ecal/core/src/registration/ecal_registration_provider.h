@@ -74,9 +74,6 @@ namespace eCAL
 
     void RegisterSendThread();
 
-    Registration::Sample GetProcessRegisterSample();
-    Registration::Sample GetProcessUnregisterSample();
-
     static std::atomic<bool>            m_created;
 
     std::shared_ptr<UDP::CSampleSender> m_reg_sample_snd;
