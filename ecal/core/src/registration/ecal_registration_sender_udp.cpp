@@ -35,7 +35,7 @@
 namespace
 {
   using namespace eCAL;
-  eCAL::UDP::SSenderAttr CreateAttributes()
+  UDP::SSenderAttr CreateAttributes()
   {
     eCAL::UDP::SSenderAttr attr;
     attr.address = UDP::GetRegistrationAddress();
@@ -44,6 +44,7 @@ namespace
     attr.broadcast = UDP::IsBroadcast();
     attr.loopback = true;
     attr.sndbuf = Config::GetUdpMulticastSndBufSizeBytes();
+    return attr;
   }
 
 }
