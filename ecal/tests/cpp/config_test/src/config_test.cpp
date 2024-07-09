@@ -371,9 +371,7 @@ TEST(YamlConfigReaderTest, yaml_node_merger)
 
   // try also with a sequence
   node_2["firstLayer2"]["secondLayer2"] = YAML::Load("[1, 2, 3]");
-
-  auto test = YAML::LoadFile("SomeNonExistingFile");
-
+  
   eCAL::Config::MergeYamlNodes(node_1, node_2);
 
   EXPECT_EQ(node_1["test"], node_2["test"]);

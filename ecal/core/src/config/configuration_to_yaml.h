@@ -26,7 +26,8 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Application::Startup::Configuration& config_)
     {
-      config_.terminal_emulator = node_["emulator"].as<std::string>();
+      if (node_["emulator"])
+        config_.terminal_emulator = node_["emulator"].as<std::string>();
       return true;
     }
   };
@@ -44,7 +45,8 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Application::Sys::Configuration& config_)
     {
-      config_.filter_excl = node_["filter_excl"].as<std::string>();
+      if (node_["filter_excl"])
+        config_.filter_excl = node_["filter_excl"].as<std::string>();
       return true;
     }
   };
@@ -63,8 +65,10 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Monitoring::SHM::Configuration& config_)
     {
-      config_.shm_monitoring_domain     = node_["domain"].as<std::string>();
-      config_.shm_monitoring_queue_size = node_["queue_size"].as<size_t>();
+      if (node_["domain"])
+        config_.shm_monitoring_domain     = node_["domain"].as<std::string>();
+      if (node_["queue_size"])
+        config_.shm_monitoring_queue_size = node_["queue_size"].as<size_t>();
       return true;
     }
   };
@@ -126,12 +130,18 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Publisher::SHM::Configuration& config_)
     {
-      config_.enable                  = node_["enable"].as<bool>();
-      config_.zero_copy_mode          = node_["zero_copy_mode"].as<bool>();
-      config_.acknowledge_timeout_ms  = node_["acknowledge_timeout_ms"].as<unsigned int>();
-      config_.memfile_min_size_bytes  = node_["memfile_min_size_bytes"].as<unsigned int>();
-      config_.memfile_reserve_percent = node_["memfile_reserve_percent"].as<unsigned int>();
-      config_.memfile_buffer_count    = node_["memfile_buffer_count"].as<unsigned int>();
+      if (node_["enable"])
+        config_.enable                  = node_["enable"].as<bool>();
+      if (node_["zero_copy_mode"])
+        config_.zero_copy_mode          = node_["zero_copy_mode"].as<bool>();
+      if (node_["acknowledge_timeout_ms"])
+        config_.acknowledge_timeout_ms  = node_["acknowledge_timeout_ms"].as<unsigned int>();
+      if (node_["memfile_min_size_bytes"])
+        config_.memfile_min_size_bytes  = node_["memfile_min_size_bytes"].as<unsigned int>();
+      if (node_["memfile_reserve_percent"])
+        config_.memfile_reserve_percent = node_["memfile_reserve_percent"].as<unsigned int>();
+      if (node_["memfile_buffer_count"])
+        config_.memfile_buffer_count    = node_["memfile_buffer_count"].as<unsigned int>();
       return true;
     }
   };
@@ -151,9 +161,12 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Publisher::UDP::Configuration& config_)
     {
-      config_.enable            = node_["enable"].as<bool>();
-      config_.loopback          = node_["loopback"].as<bool>();
-      config_.sndbuf_size_bytes = node_["sndbuff_size_bytes"].as<unsigned int>();
+      if (node_["enable"])
+        config_.enable            = node_["enable"].as<bool>();
+      if (node_["loopback"])
+        config_.loopback          = node_["loopback"].as<bool>();
+      if (node_["sndbuff_size_bytes"])
+        config_.sndbuf_size_bytes = node_["sndbuff_size_bytes"].as<unsigned int>();
       return true;
     }
   };
@@ -171,7 +184,8 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Publisher::TCP::Configuration& config_)
     {
-      config_.enable = node_["enable"].as<bool>();
+      if (node_["enable"])
+        config_.enable = node_["enable"].as<bool>();
       return true;
     }
   };
@@ -190,7 +204,8 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Subscriber::SHM::Configuration& config_)
     {
-      config_.enable = node_["enable"].as<bool>();
+      if (node_["enable"])
+        config_.enable = node_["enable"].as<bool>();
       return true;
     }
   };
@@ -208,7 +223,8 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Subscriber::UDP::Configuration& config_)
     {
-      config_.enable = node_["enable"].as<bool>();
+      if (node_["enable"])
+        config_.enable = node_["enable"].as<bool>();
       return true;
     }
   };
@@ -226,7 +242,8 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Subscriber::TCP::Configuration& config_)
     {
-      config_.enable = node_["enable"].as<bool>();
+      if (node_["enable"])
+        config_.enable = node_["enable"].as<bool>();
       return true;
     }
   };
@@ -247,9 +264,12 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::TransportLayer::TCPPubSub::Configuration& config_)
     {
-      config_.num_executor_reader = node_["number_executor_reader"].as<size_t>();
-      config_.num_executor_writer = node_["number_executor_writer"].as<size_t>();
-      config_.max_reconnections   = node_["max_reconnections"].as<size_t>();
+      if (node_["number_executor_reader"])
+        config_.num_executor_reader = node_["number_executor_reader"].as<size_t>();
+      if (node_["number_executor_writer"])
+        config_.num_executor_writer = node_["number_executor_writer"].as<size_t>();
+      if (node_["max_reconnections"])
+        config_.max_reconnections   = node_["max_reconnections"].as<size_t>();
       return true;
     }
   };
@@ -267,7 +287,8 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::TransportLayer::SHM::Configuration& config_)
     {
-      config_.host_group_name = node_["host_group_name"].as<std::string>();
+      if (node_["host_group_name"])
+        config_.host_group_name = node_["host_group_name"].as<std::string>();
       return true;
     }
   };
@@ -293,15 +314,24 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::TransportLayer::UDPMC::Configuration& config_)
     {
-      config_.config_version      = node_["config_version"].as<std::string>() == "v1" ? eCAL::Types::UdpConfigVersion::V1 : eCAL::Types::UdpConfigVersion::V2;
-      config_.group               = node_["group"].as<std::string>();
-      config_.mask                = node_["mask"].as<std::string>();
-      config_.port                = node_["port"].as<unsigned int>();
-      config_.ttl                 = node_["ttl"].as<unsigned int>();
-      config_.sndbuf              = node_["send_buffer"].as<unsigned int>();
-      config_.recbuf              = node_["receive_buffer"].as<unsigned int>();
-      config_.join_all_interfaces = node_["join_all_interfaces"].as<bool>();
-      config_.npcap_enabled       = node_["npcap_enabled"].as<bool>();
+      if (node_["config_version"])
+        config_.config_version      = node_["config_version"].as<std::string>() == "v1" ? eCAL::Types::UdpConfigVersion::V1 : eCAL::Types::UdpConfigVersion::V2;
+      if (node_["group"])
+        config_.group               = node_["group"].as<std::string>();
+      if (node_["mask"])
+        config_.mask                = node_["mask"].as<std::string>();
+      if (node_["port"])
+        config_.port                = node_["port"].as<unsigned int>();
+      if (node_["ttl"])
+        config_.ttl                 = node_["ttl"].as<unsigned int>();
+      if (node_["send_buffer"])
+        config_.sndbuf              = node_["send_buffer"].as<unsigned int>();
+      if (node_["receive_buffer"])
+        config_.recbuf              = node_["receive_buffer"].as<unsigned int>();
+      if (node_["join_all_interfaces"])
+        config_.join_all_interfaces = node_["join_all_interfaces"].as<bool>();
+      if (node_["npcap_enabled"])
+        config_.npcap_enabled       = node_["npcap_enabled"].as<bool>();
       return true;
     }
   };
@@ -321,8 +351,10 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Application::Configuration& config_)
     {
-      config_.startup = node_["terminal"].as<eCAL::Application::Startup::Configuration>();
-      config_.sys     = node_["sys"].as<eCAL::Application::Sys::Configuration>();
+      if (node_["terminal"])
+        config_.startup = node_["terminal"].as<eCAL::Application::Startup::Configuration>();
+      if (node_["sys"])
+        config_.sys     = node_["sys"].as<eCAL::Application::Sys::Configuration>();
       return true;
     }
   };
@@ -372,12 +404,18 @@ namespace YAML
     {
       // TODO PG: change here when handling complete
       config_.monitoring_mode = static_cast<eCAL::Monitoring::Types::Mode_Filter>(eCAL::Monitoring::Types::Mode::shm_monitoring);
-      config_.monitoring_timeout = node_["timeout"].as<unsigned int>();
-      config_.network_monitoring = node_["network"].as<bool>();
-      config_.filter_excl = node_["filter_excl"].as<std::string>();
-      config_.filter_incl = node_["filter_incl"].as<std::string>();
-      config_.udp_options = node_["udp"].as<eCAL::Monitoring::UDP::Configuration>();
-      config_.shm_options = node_["shm"].as<eCAL::Monitoring::SHM::Configuration>();
+      if (node_["timeout"])
+        config_.monitoring_timeout = node_["timeout"].as<unsigned int>();
+      if (node_["network"])
+        config_.network_monitoring = node_["network"].as<bool>();
+      if (node_["filter_excl"])
+        config_.filter_excl = node_["filter_excl"].as<std::string>();
+      if (node_["filter_incl"])
+        config_.filter_incl = node_["filter_incl"].as<std::string>();
+      if (node_["udp"])
+        config_.udp_options = node_["udp"].as<eCAL::Monitoring::UDP::Configuration>();
+      if (node_["shm"])
+        config_.shm_options = node_["shm"].as<eCAL::Monitoring::SHM::Configuration>();
       return true;
     }
   };
@@ -399,11 +437,16 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Publisher::Configuration& config_)
     {
-      config_.share_topic_description = node_["share_topic_description"].as<bool>();
-      config_.share_topic_type        = node_["share_topic_type"].as<bool>();
-      config_.shm                     = node_["shm"].as<eCAL::Publisher::SHM::Configuration>();
-      config_.udp                     = node_["udp"].as<eCAL::Publisher::UDP::Configuration>();
-      config_.tcp                     = node_["tcp"].as<eCAL::Publisher::TCP::Configuration>();
+      if (node_["share_topic_description"])
+        config_.share_topic_description = node_["share_topic_description"].as<bool>();
+      if (node_["share_topic_type"])
+        config_.share_topic_type        = node_["share_topic_type"].as<bool>();
+      if (node_["shm"])
+        config_.shm                     = node_["shm"].as<eCAL::Publisher::SHM::Configuration>();
+      if (node_["udp"])
+        config_.udp                     = node_["udp"].as<eCAL::Publisher::UDP::Configuration>();
+      if (node_["tcp"])
+        config_.tcp                     = node_["tcp"].as<eCAL::Publisher::TCP::Configuration>();
       return true;
     }
   };
@@ -424,12 +467,17 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Registration::Configuration& config_)
     {
-      unsigned int reg_timeout = node_["registration_timeout"].as<unsigned int>();
-      unsigned int reg_refresh = node_["registration_refresh"].as<unsigned int>();
-
-      config_             = {reg_timeout, reg_refresh};
-      config_.share_ttype = node_["share_ttype"].as<bool>();
-      config_.share_tdesc = node_["share_tdesc"].as<bool>();
+      if (node_["registration_timeout"] && node_["registration_refresh"])
+      {
+        unsigned int reg_timeout = node_["registration_timeout"].as<unsigned int>();
+        unsigned int reg_refresh = node_["registration_refresh"].as<unsigned int>();
+        config_             = {reg_timeout, reg_refresh};
+      }
+      
+      if (node_["share_ttype"])
+        config_.share_ttype = node_["share_ttype"].as<bool>();
+      if (node_["share_tdesc"])
+        config_.share_tdesc = node_["share_tdesc"].as<bool>();
       return true;
     }
   };
@@ -448,8 +496,10 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Service::Configuration& config_)
     {
-      config_.protocol_v0 = node_["protocol_v0"].as<bool>();
-      config_.protocol_v1 = node_["protocol_v1"].as<bool>();
+      if (node_["protocol_v0"])
+        config_.protocol_v0 = node_["protocol_v0"].as<bool>();
+      if (node_["protocol_v1"])
+        config_.protocol_v1 = node_["protocol_v1"].as<bool>();
       return true;
     }
   };
@@ -469,9 +519,12 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Subscriber::Configuration& config_)
     {
-      config_.shm = node_["shm"].as<eCAL::Subscriber::SHM::Configuration>();
-      config_.tcp = node_["tcp"].as<eCAL::Subscriber::TCP::Configuration>();
-      config_.udp = node_["udp"].as<eCAL::Subscriber::UDP::Configuration>();
+      if (node_["shm"])
+        config_.shm = node_["shm"].as<eCAL::Subscriber::SHM::Configuration>();
+      if (node_["tcp"])
+        config_.tcp = node_["tcp"].as<eCAL::Subscriber::TCP::Configuration>();
+      if (node_["udp"])
+        config_.udp = node_["udp"].as<eCAL::Subscriber::UDP::Configuration>();
       return true;
     }
   };
@@ -490,8 +543,10 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Time::Configuration& config_)
     {
-      config_.timesync_module_replay = node_["replay"].as<std::string>();
-      config_.timesync_module_rt     = node_["rt"].as<std::string>();
+      if (node_["replay"])
+        config_.timesync_module_replay = node_["replay"].as<std::string>();
+      if (node_["rt"])
+        config_.timesync_module_rt     = node_["rt"].as<std::string>();
       return true;
     }
   };
@@ -513,11 +568,16 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::TransportLayer::Configuration& config_)
     {
-      config_.network_enabled            = node_["network_enable"].as<bool>();
-      config_.drop_out_of_order_messages = node_["drop_out_of_order_messages"].as<bool>();
-      config_.mc_options                 = node_["udp_mc"].as<eCAL::TransportLayer::UDPMC::Configuration>();
-      config_.tcp_options                = node_["tcppubsub"].as<eCAL::TransportLayer::TCPPubSub::Configuration>();
-      config_.shm_options                = node_["shm"].as<eCAL::TransportLayer::SHM::Configuration>();
+      if (node_["network_enable"])
+        config_.network_enabled            = node_["network_enable"].as<bool>();
+      if (node_["drop_out_of_order_messages"])
+        config_.drop_out_of_order_messages = node_["drop_out_of_order_messages"].as<bool>();
+      if (node_["udp_mc"])
+        config_.mc_options                 = node_["udp_mc"].as<eCAL::TransportLayer::UDPMC::Configuration>();
+      if (node_["tcppubsub"])
+        config_.tcp_options                = node_["tcppubsub"].as<eCAL::TransportLayer::TCPPubSub::Configuration>();
+      if (node_["shm"])
+        config_.shm_options                = node_["shm"].as<eCAL::TransportLayer::SHM::Configuration>();
       return true;
     }
   };
@@ -544,15 +604,24 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Configuration& config_)
     {
-      config_.publisher              = node_["publisher"].as<eCAL::Publisher::Configuration>();
-      config_.subscriber             = node_["subscriber"].as<eCAL::Subscriber::Configuration>();
-      config_.registration           = node_["registration"].as<eCAL::Registration::Configuration>();
-      config_.monitoring             = node_["monitoring"].as<eCAL::Monitoring::Configuration>();
-      config_.timesync               = node_["time"].as<eCAL::Time::Configuration>();
-      config_.service                = node_["service"].as<eCAL::Service::Configuration>();
-      config_.application            = node_["application"].as<eCAL::Application::Configuration>();
-      config_.logging                = node_["logging"].as<eCAL::Logging::Configuration>();
-      config_.transport_layer        = node_["transport_layer"].as<eCAL::TransportLayer::Configuration>();
+      if (node_["publisher"])
+        config_.publisher              = node_["publisher"].as<eCAL::Publisher::Configuration>();
+      if (node_["subscriber"])
+        config_.subscriber             = node_["subscriber"].as<eCAL::Subscriber::Configuration>();
+      if (node_["registration"])
+        config_.registration           = node_["registration"].as<eCAL::Registration::Configuration>();
+      if (node_["monitoring"])
+        config_.monitoring             = node_["monitoring"].as<eCAL::Monitoring::Configuration>();
+      if (node_["time"])
+        config_.timesync               = node_["time"].as<eCAL::Time::Configuration>();
+      if (node_["service"])
+        config_.service                = node_["service"].as<eCAL::Service::Configuration>();
+      if (node_["application"])
+        config_.application            = node_["application"].as<eCAL::Application::Configuration>();
+      if (node_["logging"])
+        config_.logging                = node_["logging"].as<eCAL::Logging::Configuration>();
+      if (node_["transport_layer"])
+        config_.transport_layer        = node_["transport_layer"].as<eCAL::TransportLayer::Configuration>();
       return true;
     }
   };  
