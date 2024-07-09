@@ -149,9 +149,10 @@ namespace eCAL
       auto registrationRefresh              = iniConfig.get(COMMON,    "registration_refresh", CMN_REGISTRATION_REFRESH);
       registration = Registration::Configuration(registrationTimeout, registrationRefresh);
       auto& registrationOptions = registration;
-      registrationOptions.network_enabled   = iniConfig.get(NETWORK,   "network_enabled", NET_ENABLED);
-      registrationOptions.share_tdesc       = iniConfig.get(PUBLISHER, "share_tdesc",     PUB_SHARE_TDESC);
-      registrationOptions.share_ttype       = iniConfig.get(PUBLISHER, "share_ttype",     PUB_SHARE_TTYPE);
+      registrationOptions.network_enabled          = iniConfig.get(NETWORK,   "network_enabled", NET_ENABLED);
+      registrationOptions.shm_registration_enabled = iniConfig.get(NETWORK,   "shm_registration_enabled", SHM_REGISTRATION_ENABLED);
+      registrationOptions.share_tdesc              = iniConfig.get(PUBLISHER, "share_tdesc",     PUB_SHARE_TDESC);
+      registrationOptions.share_ttype              = iniConfig.get(PUBLISHER, "share_ttype",     PUB_SHARE_TTYPE);
 
       // monitoring options
       auto& monitoringOptions = monitoring;

@@ -63,8 +63,8 @@ namespace eCAL
     if(m_created) return;
 
     // send registration over udp or shared memory
-    m_use_registration_udp = Config::IsNetworkEnabled();
-    m_use_registration_shm = !m_use_registration_udp;
+    m_use_registration_shm = Config::IsShmRegistrationEnabled();
+    m_use_registration_udp = !m_use_registration_shm;
 
     if (m_use_registration_udp)
     {

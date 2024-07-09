@@ -55,6 +55,8 @@ namespace eCAL
 
         bool network_enabled;                                                               /*!< true  = all eCAL components communicate over network boundaries
                                                                                                  false = local host only communication (Default: false) */
+        bool shm_registration_enabled;                                                      /*!< true  = registration layer is based on shm
+                                                                                                 false = registration layer is based on udp (Default: false) */
         bool share_ttype;                                                                   //!< Share topic type via registration layer (Default: true)
         bool share_tdesc;                                                                   //!< Share topic description via registration layer (switch off to disable reflection) (Default: true)
 

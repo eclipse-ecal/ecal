@@ -98,6 +98,7 @@ namespace eCAL
     /////////////////////////////////////
 
     ECAL_API bool              IsNetworkEnabled                     () { return GetConfiguration().registration.network_enabled; }
+    ECAL_API bool              IsShmRegistrationEnabled             () { return GetConfiguration().registration.shm_registration_enabled; }
 
     ECAL_API Types::UdpConfigVersion  GetUdpMulticastConfigVersion  () { return GetConfiguration().transport_layer.mc_options.config_version; }
 

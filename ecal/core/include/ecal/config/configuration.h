@@ -47,34 +47,34 @@
 
 namespace eCAL
 {
-    struct Configuration
-    {
-        TransportLayer::Configuration    transport_layer{};
-        Registration::Configuration      registration{};
-        Monitoring::Configuration        monitoring{};
-        Subscriber::Configuration        subscriber{};
-        Publisher::Configuration         publisher{};
-        Time::Configuration              timesync{};
-        Service::Configuration           service{};
-        Application::Configuration       application{};
-        Logging::Configuration           logging{};
-        Cli::Configuration               command_line_arguments{};        
-        
-        ECAL_API Configuration();
-        ECAL_API Configuration(int argc_ , char **argv_);
-        ECAL_API Configuration(std::vector<std::string>& args_);
+  struct Configuration
+  {
+    Registration::Configuration      registration{};
+    TransportLayer::Configuration    transport_layer{};
+    Monitoring::Configuration        monitoring{};
+    Subscriber::Configuration        subscriber{};
+    Publisher::Configuration         publisher{};
+    Time::Configuration              timesync{};
+    Service::Configuration           service{};
+    Application::Configuration       application{};
+    Logging::Configuration           logging{};
+    Cli::Configuration               command_line_arguments{};
 
-        ECAL_API void InitConfigWithDefaultIni();
-        ECAL_API void InitConfig(std::string ini_path_ = std::string(""));
+    ECAL_API Configuration();
+    ECAL_API Configuration(int argc_, char** argv_);
+    ECAL_API Configuration(std::vector<std::string>& args_);
 
-        ECAL_API std::string GetIniFilePath();
+    ECAL_API void InitConfigWithDefaultIni();
+    ECAL_API void InitConfig(std::string ini_path_ = std::string(""));
 
-        friend class CmdParser;
+    ECAL_API std::string GetIniFilePath();
 
-        protected:
-          std::string                    ecal_ini_file_path{};
-          
-        private:
-          ECAL_API void Init(std::vector<std::string>& args_);
-    };
+    friend class CmdParser;
+
+  protected:
+    std::string                      ecal_ini_file_path{};
+
+  private:
+    ECAL_API void Init(std::vector<std::string>& args_);
+  };
 }

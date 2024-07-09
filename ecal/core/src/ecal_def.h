@@ -67,6 +67,7 @@ constexpr const char* SYS_FILTER_EXCL     = "^eCALSysClient$|^eCALSysGUI$|^eCALS
 /**********************************************************************************************/
 /* network switch */
 constexpr bool NET_ENABLED              = false;
+constexpr bool SHM_REGISTRATION_ENABLED = false;
 
 /* eCAL udp multicast defines */
 constexpr eCAL::Types::UdpConfigVersion  NET_UDP_MULTICAST_CONFIG_VERSION   = eCAL::Types::UdpConfigVersion::V1;
