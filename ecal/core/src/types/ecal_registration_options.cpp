@@ -30,6 +30,7 @@ namespace eCAL
   {
     Configuration::Configuration()
     : network_enabled(NET_ENABLED)
+    , shm_registration_enabled(SHM_REGISTRATION_ENABLED)
     , share_ttype(PUB_SHARE_TTYPE)
     , share_tdesc(PUB_SHARE_TDESC)
     , m_registration_timeout(CMN_REGISTRATION_TO)
@@ -37,7 +38,9 @@ namespace eCAL
     {}
 
     Configuration::Configuration(unsigned int reg_timeout_, unsigned int reg_refresh_)
-    : share_ttype(PUB_SHARE_TTYPE)
+    : network_enabled(NET_ENABLED)
+    , shm_registration_enabled(SHM_REGISTRATION_ENABLED)
+    , share_ttype(PUB_SHARE_TTYPE)
     , share_tdesc(PUB_SHARE_TDESC)
     {
       if (reg_refresh_ < reg_timeout_)
