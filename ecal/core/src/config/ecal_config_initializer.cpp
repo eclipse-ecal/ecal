@@ -111,7 +111,6 @@ namespace eCAL
 
       // transport layer options
       auto& transportLayerOptions = transport_layer;
-      transportLayerOptions.network_enabled			       = iniConfig.get(NETWORK,      "network_enabled",            NET_ENABLED);
       transportLayerOptions.drop_out_of_order_messages = iniConfig.get(EXPERIMENTAL, "drop_out_of_order_messages", EXP_DROP_OUT_OF_ORDER_MESSAGES);
 
       auto& multicastOptions = transportLayerOptions.mc_options;
@@ -146,19 +145,18 @@ namespace eCAL
       shmOptions.memfile_zero_copy          = iniConfig.get(PUBLISHER,    "memfile_zero_copy",          PUB_MEMFILE_ZERO_COPY);
 
       // registration options
-      auto registrationTimeout        = iniConfig.get(COMMON,    "registration_timeout", CMN_REGISTRATION_TO);
-      auto registrationRefresh        = iniConfig.get(COMMON,    "registration_refresh", CMN_REGISTRATION_REFRESH);
-      registration            = Registration::Configuration(registrationTimeout, registrationRefresh);
-      auto& registrationOptions       = registration;
-      registrationOptions.share_tdesc = iniConfig.get(PUBLISHER, "share_tdesc",          PUB_SHARE_TDESC);
-      registrationOptions.share_ttype = iniConfig.get(PUBLISHER, "share_ttype",          PUB_SHARE_TTYPE);
+      auto registrationTimeout              = iniConfig.get(COMMON,    "registration_timeout", CMN_REGISTRATION_TO);
+      auto registrationRefresh              = iniConfig.get(COMMON,    "registration_refresh", CMN_REGISTRATION_REFRESH);
+      registration = Registration::Configuration(registrationTimeout, registrationRefresh);
+      auto& registrationOptions = registration;
+      registrationOptions.network_enabled          = iniConfig.get(NETWORK,   "network_enabled", NET_ENABLED);
+      registrationOptions.shm_registration_enabled = iniConfig.get(NETWORK,   "shm_registration_enabled", SHM_REGISTRATION_ENABLED);
+      registrationOptions.share_tdesc              = iniConfig.get(PUBLISHER, "share_tdesc",     PUB_SHARE_TDESC);
+      registrationOptions.share_ttype              = iniConfig.get(PUBLISHER, "share_ttype",     PUB_SHARE_TTYPE);
 
       // monitoring options
       auto& monitoringOptions = monitoring;
-      auto  monitoringMode                          = iniConfig.get(EXPERIMENTAL, "shm_monitoring_enabled",      false) ? Monitoring::Types::Mode::shm_monitoring :  Monitoring::Types::Mode::none;
-      monitoringOptions.monitoring_mode             = static_cast<Monitoring::Types::Mode_Filter>(monitoringMode);
       monitoringOptions.monitoring_timeout          = iniConfig.get(MONITORING,   "timeout", MON_TIMEOUT);;
-      monitoringOptions.network_monitoring          = iniConfig.get(EXPERIMENTAL, "network_monitoring", EXP_NETWORK_MONITORING_ENABLED);
       monitoringOptions.filter_excl                 = iniConfig.get(MONITORING,   "filter_excl",                 MON_FILTER_EXCL);
       monitoringOptions.filter_incl                 = iniConfig.get(MONITORING,   "filter_incl",                 MON_FILTER_INCL);
 
