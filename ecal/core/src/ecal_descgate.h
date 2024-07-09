@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,7 +89,7 @@ namespace eCAL
     CDescGate& operator=(CDescGate&&) = delete;
 
   protected:
-    using QualityTopicIdExpMap = eCAL::Util::CExpMap<STopicIdKey, Util::SQualityTopicInfo>;
+    using QualityTopicIdExpMap = eCAL::Util::CExpirationMap<STopicIdKey, Util::SQualityTopicInfo>;
     struct SQualityTopicIdMap
     {
       explicit SQualityTopicIdMap(const std::chrono::milliseconds& timeout_) : map(timeout_) {};
@@ -97,7 +97,7 @@ namespace eCAL
       QualityTopicIdExpMap map;
     };
 
-    using QualityServiceIdExpMap = eCAL::Util::CExpMap<SServiceIdKey, Util::SQualityServiceInfo>;
+    using QualityServiceIdExpMap = eCAL::Util::CExpirationMap<SServiceIdKey, Util::SQualityServiceInfo>;
     struct SQualityServiceIdMap
     {
       explicit SQualityServiceIdMap(const std::chrono::milliseconds& timeout_) : map(timeout_) {};

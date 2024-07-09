@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,51 +22,51 @@ find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
 set(nanopb_lib_src
-  ../../../core/src/serialization/nanopb/nanopb/pb.h
-  ../../../core/src/serialization/nanopb/nanopb/pb_common.c
-  ../../../core/src/serialization/nanopb/nanopb/pb_common.h
-  ../../../core/src/serialization/nanopb/nanopb/pb_decode.c
-  ../../../core/src/serialization/nanopb/nanopb/pb_decode.h
-  ../../../core/src/serialization/nanopb/nanopb/pb_encode.c
-  ../../../core/src/serialization/nanopb/nanopb/pb_encode.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/nanopb/pb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/nanopb/pb_common.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/nanopb/pb_common.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/nanopb/pb_decode.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/nanopb/pb_decode.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/nanopb/pb_encode.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/nanopb/pb_encode.h
 )
 
 set(nanopb_generated_src
-  ../../../core/src/serialization/nanopb/ecal.pb.c
-  ../../../core/src/serialization/nanopb/ecal.pb.h
-  ../../../core/src/serialization/nanopb/host.pb.c
-  ../../../core/src/serialization/nanopb/host.pb.h
-  ../../../core/src/serialization/nanopb/layer.pb.c
-  ../../../core/src/serialization/nanopb/layer.pb.h
-  ../../../core/src/serialization/nanopb/logging.pb.c
-  ../../../core/src/serialization/nanopb/logging.pb.h
-  ../../../core/src/serialization/nanopb/monitoring.pb.c
-  ../../../core/src/serialization/nanopb/monitoring.pb.h
-  ../../../core/src/serialization/nanopb/process.pb.c
-  ../../../core/src/serialization/nanopb/process.pb.h
-  ../../../core/src/serialization/nanopb/service.pb.c
-  ../../../core/src/serialization/nanopb/service.pb.h
-  ../../../core/src/serialization/nanopb/topic.pb.c
-  ../../../core/src/serialization/nanopb/topic.pb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal.pb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal.pb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/host.pb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/host.pb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/layer.pb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/layer.pb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/logging.pb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/logging.pb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/monitoring.pb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/monitoring.pb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/process.pb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/process.pb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/service.pb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/service.pb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/topic.pb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/topic.pb.h
 )
 
 set(ecal_serialize_src
-  ../../../core/src/serialization/ecal_serialize_common.cpp
-  ../../../core/src/serialization/ecal_serialize_common.h
-  ../../../core/src/serialization/ecal_serialize_logging.cpp
-  ../../../core/src/serialization/ecal_serialize_logging.h
-  ../../../core/src/serialization/ecal_serialize_monitoring.cpp
-  ../../../core/src/serialization/ecal_serialize_monitoring.h
-  ../../../core/src/serialization/ecal_serialize_sample_payload.cpp
-  ../../../core/src/serialization/ecal_serialize_sample_payload.h
-  ../../../core/src/serialization/ecal_serialize_sample_registration.cpp
-  ../../../core/src/serialization/ecal_serialize_sample_registration.h
-  ../../../core/src/serialization/ecal_serialize_service.cpp
-  ../../../core/src/serialization/ecal_serialize_service.h
-  ../../../core/src/serialization/ecal_struct_sample_common.h
-  ../../../core/src/serialization/ecal_struct_sample_payload.h
-  ../../../core/src/serialization/ecal_struct_sample_registration.h
-  ../../../core/src/serialization/ecal_struct_service.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_serialize_common.cpp
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_serialize_common.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_serialize_logging.cpp
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_serialize_logging.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_serialize_monitoring.cpp
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_serialize_monitoring.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_serialize_sample_payload.cpp
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_serialize_sample_payload.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_serialize_sample_registration.cpp
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_serialize_sample_registration.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_serialize_service.cpp
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_serialize_service.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_struct_sample_common.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_struct_sample_payload.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_struct_sample_registration.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/ecal_struct_service.h
 )
 
 set(unit_test_src
@@ -96,9 +96,7 @@ ecal_add_gtest(${PROJECT_NAME} ${nanopb_lib_src} ${nanopb_generated_src} ${ecal_
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE 
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../core/src/serialization/nanopb/nanopb>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../core/src/serialization/nanopb>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../core/include>
+    $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>
 )
 
 target_link_libraries(${PROJECT_NAME}

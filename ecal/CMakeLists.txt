@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 # ========================= eCAL LICENSE =================================
 
 cmake_minimum_required(VERSION 3.13)
+
+set(ECAL_CORE_PROJECT_ROOT ${CMAKE_CURRENT_LIST_DIR})
 
 # --------------------------------------------------------
 # core

@@ -151,7 +151,7 @@ namespace eCAL
     Subscriber::Configuration                 m_config;
 
     std::atomic<bool>                         m_connected;
-    using PublicationMapT = Util::CExpMap<SPublicationInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
+    using PublicationMapT = Util::CExpirationMap<SPublicationInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
     mutable std::mutex                        m_pub_map_mtx;
     PublicationMapT                           m_pub_map;
 

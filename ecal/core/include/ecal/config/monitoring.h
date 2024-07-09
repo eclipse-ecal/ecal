@@ -30,18 +30,6 @@ namespace eCAL
 {
   namespace Monitoring
   {
-    namespace Types
-    {
-      enum Mode
-      {
-        none = 0,
-        udp_monitoring = 1 << 0,
-        shm_monitoring = 1 << 1
-      };
-
-      using Mode_Filter = char;
-    }
-
     namespace UDP
     {
       struct Configuration
@@ -60,9 +48,7 @@ namespace eCAL
 
     struct Configuration
     {
-      Types::Mode_Filter                           monitoring_mode{};         //!< Specify which monitoring is enabled (Default: none)
       eCAL::Types::ConstrainedInteger<1000, 1000>  monitoring_timeout{};      //!< Timeout for topic monitoring in ms (Default: 5000)
-      bool                                         network_monitoring{};      //!< Enable distribution of monitoring/registration information via network (Default: true)
       UDP::Configuration                           udp_options{};
       SHM::Configuration                           shm_options{};
 

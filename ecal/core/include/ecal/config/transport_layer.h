@@ -83,8 +83,6 @@ namespace eCAL
       
     struct Configuration
     {
-      bool                     network_enabled{};                               /*!< true  = all eCAL components communicate over network boundaries
-                                                                                      false = local host only communication (Default: false) */
       bool                     drop_out_of_order_messages{};                    //!< Enable dropping of payload messages that arrive out of order (Default: false)
       UDPMC::Configuration     mc_options{};
       TCPPubSub::Configuration tcp_options{};

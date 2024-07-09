@@ -242,6 +242,13 @@ namespace eCAL
     ECAL_API bool IsCreated() const {return(m_created);}
 
     /**
+     * @brief Query if the subscriber is published.
+     *
+     * @return  true if published, false if not.
+    **/
+    ECAL_API bool IsPublished() const;
+
+    /**
      * @brief Query the number of publishers.
      *
      * @return  Number of publishers.

@@ -47,6 +47,7 @@ namespace eCAL
     /////////////////////////////////////
 
     ECAL_API bool                     IsNetworkEnabled                     ();
+    ECAL_API bool                     IsShmRegistrationEnabled             ();
     ECAL_API Types::UdpConfigVersion  GetUdpMulticastConfigVersion         ();
     ECAL_API std::string              GetUdpMulticastGroup                 ();
     ECAL_API std::string              GetUdpMulticastMask                  ();

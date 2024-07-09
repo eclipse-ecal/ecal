@@ -363,7 +363,7 @@ namespace eCAL
     // check connection timeouts
     {
       const std::lock_guard<std::mutex> lock(m_pub_map_mtx);
-      m_pub_map.remove_deprecated();
+      m_pub_map.erase_expired();
 
       if (m_pub_map.empty())
       {
