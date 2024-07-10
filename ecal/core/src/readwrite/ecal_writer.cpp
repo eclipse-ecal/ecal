@@ -120,10 +120,6 @@ namespace eCAL
     const std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
     m_sub_map.set_expiration(registration_timeout);
 
-    // set layer priority defaults
-    m_local_layer_priority  = { tl_ecal_shm, tl_ecal_udp, tl_ecal_tcp };
-    m_remote_layer_priority =              { tl_ecal_udp, tl_ecal_tcp };
-
     // mark as created
     m_created = true;
 
@@ -483,7 +479,7 @@ namespace eCAL
     // determine if we need to start a transport layer
     // if a new layer gets activated, we reregister for SHM and TCP to force the exchange of connection parameter
     // without this forced registration we would need one additional registration loop for these two layers to establish the connection
-    const eTLayerType layer2activate = DetermineTransportLayer2Start(pub_layers, sub_layers, m_host_name == subscription_info_.host_name);
+    const TLayer::eTransportLayer layer2activate = DetermineTransportLayer2Start(pub_layers, sub_layers, m_host_name == subscription_info_.host_name);
     switch (layer2activate)
     {
     case tl_ecal_udp:
@@ -550,16 +546,6 @@ namespace eCAL
     // log it
     Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::RemoveSubscription");
 #endif
-  }
-
-  void CDataWriter::SetLocalLayerPriority(const std::vector<eTLayerType>& layer_priority_)
-  {
-    m_local_layer_priority = layer_priority_;
-  }
-
-  void CDataWriter::SetRemoteLayerPriority(const std::vector<eTLayerType>& layer_priority_)
-  {
-    m_remote_layer_priority = layer_priority_;
   }
 
   void CDataWriter::RefreshRegistration()
@@ -954,23 +940,24 @@ return(false);
     return is_internal_only;
   }
 
-  eTLayerType CDataWriter::DetermineTransportLayer2Start(const std::vector<eTLayerType>& pub_layer_, const std::vector<eTLayerType>& sub_layer_, bool same_host_)
+  TLayer::eTransportLayer CDataWriter::DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_)
   {
     // determine the priority list to use
-    const std::vector<eTLayerType>& priorityList = same_host_ ? m_local_layer_priority : m_remote_layer_priority;
+    Publisher::Configuration::LayerPriorityVector& layer_priority_vector = same_host_ ? m_config.layer_priority_local : m_config.layer_priority_remote;
 
     // find the highest priority transport layer that is available in both publisher and subscriber options
-    for (const eTLayerType layer : priorityList)
+    // TODO: we need to fusion the two layer enum types (eTransportLayer) in ecal_tlayer.h and ecal_struct_sample_common.hf
+    for (const TLayer::eTransportLayer layer : layer_priority_vector)
     {
-      if (std::find(pub_layer_.begin(), pub_layer_.end(), layer) != pub_layer_.end()
-       && std::find(sub_layer_.begin(), sub_layer_.end(), layer) != sub_layer_.end())
+      if (std::find(enabled_pub_layer_.begin(), enabled_pub_layer_.end(), layer) != enabled_pub_layer_.end()
+       && std::find(enabled_sub_layer_.begin(), enabled_sub_layer_.end(), layer) != enabled_sub_layer_.end())
       {
         return layer;
       }
     }
 
     // return tl_none if no common transport layer is found
-    return tl_none;
+    return TLayer::eTransportLayer::tlayer_none;
   }
 
   int32_t CDataWriter::GetFrequency()

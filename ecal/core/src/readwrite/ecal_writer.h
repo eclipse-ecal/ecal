@@ -104,9 +104,6 @@ namespace eCAL
     void ApplySubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& sub_layer_states_, const std::string& reader_par_);
     void RemoveSubscription(const SSubscriptionInfo& subscription_info_);
 
-    void SetLocalLayerPriority(const std::vector<eTLayerType>& layer_priority_);
-    void SetRemoteLayerPriority(const std::vector<eTLayerType>& layer_priority_);
-
     void RefreshRegistration();
     void RefreshSendCounter();
 
@@ -145,7 +142,7 @@ namespace eCAL
     size_t PrepareWrite(long long id_, size_t len_);
 
     bool IsInternalSubscribedOnly();
-    eTLayerType DetermineTransportLayer2Start(const std::vector<eTLayerType>& pub_layer_, const std::vector<eTLayerType>& sub_layer_, bool same_host_);
+    TLayer::eTransportLayer DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
     
     int32_t GetFrequency();
 
@@ -188,8 +185,6 @@ namespace eCAL
     std::unique_ptr<CDataWriterTCP>        m_writer_tcp;
 #endif
 
-    std::vector<eTLayerType>               m_local_layer_priority;
-    std::vector<eTLayerType>               m_remote_layer_priority;
     SLayerStates                           m_layers;
     std::atomic<bool>                      m_created;
   };
