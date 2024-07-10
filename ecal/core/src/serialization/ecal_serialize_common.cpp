@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -263,6 +263,7 @@ namespace eCAL
         eCAL_pb_TLayer pb_layer = eCAL_pb_TLayer_init_default;
         pb_layer.type      = static_cast<eCAL_pb_eTLayerType>(layer.type);
         pb_layer.version   = layer.version;
+        pb_layer.enabled   = layer.enabled;
         pb_layer.confirmed = layer.confirmed;
 
         // layer
@@ -315,6 +316,7 @@ namespace eCAL
       // apply layer values
       layer.type      = static_cast<eCAL::eTLayerType>(pb_layer.type);
       layer.version   = pb_layer.version;
+      layer.enabled   = pb_layer.enabled;
       layer.confirmed = pb_layer.confirmed;
 
       // apply tcp layer parameter
