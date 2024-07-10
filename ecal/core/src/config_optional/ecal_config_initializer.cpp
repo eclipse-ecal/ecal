@@ -22,7 +22,7 @@
 **/
 
 #include "ecal/ecal_config.h"
-#include "ecal/config/configuration.h"
+#include "ecal/config_optional/configuration.h"
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
 #include "config/ecal_config_reader.h"
@@ -97,15 +97,12 @@ namespace {
 
 namespace eCAL 
 {
-    void Configuration::InitConfig(std::string ini_path_ /*= std::string("")*/)
+    void ConfigurationSegment::InitConfig(std::string ini_path_ /*= std::string("")*/)
     {
-      CConfig iniConfig;
-      if (!command_line_arguments.config_keys.empty())
-        iniConfig.OverwriteKeys(command_line_arguments.config_keys);
-
       if (!ini_path_.empty())
       {
-        iniConfig.AddFile(ini_path_);
+        // TODO PG: add logic for reading file here
+
         ecal_ini_file_path = ini_path_;
       }
 
@@ -114,7 +111,7 @@ namespace eCAL
       transportLayerOptions.network_enabled			       = iniConfig.get(NETWORK,      "network_enabled",            NET_ENABLED);
       transportLayerOptions.drop_out_of_order_messages = iniConfig.get(EXPERIMENTAL, "drop_out_of_order_messages", EXP_DROP_OUT_OF_ORDER_MESSAGES);
 
-      auto& multicastOptions = transportLayerOptions.mc_options;
+      auto& multicastOptions = transportLayerOptions.value().mc_options;
       
       const std::string udp_config_version_string = iniConfig.get(NETWORK, "multicast_config_version", "v1");
       if (udp_config_version_string == "v1")
@@ -219,7 +216,7 @@ namespace eCAL
       loggingOptions.filter_log_udp              = ParseLogLevel(iniConfig.get(MONITORING, "filter_log_udp",  "info,warning,error,fatal"));
     };
 
-    Configuration::Configuration(int argc_ , char **argv_)
+    ConfigurationSegment::ConfigurationSegment(int argc_ , char **argv_)
     {
       std::vector<std::string> arguments;
       if (argc_ > 0 && argv_ != nullptr)
@@ -231,12 +228,12 @@ namespace eCAL
       Init(arguments);
     }
 
-    Configuration::Configuration(std::vector<std::string>& args_)
+    ConfigurationSegment::ConfigurationSegment(std::vector<std::string>& args_)
     {      
       Init(args_);
     }
 
-    void Configuration::Init(std::vector<std::string>& arguments_)
+    void ConfigurationSegment::Init(std::vector<std::string>& arguments_)
     {
       Config::CmdParser parser(arguments_);
       
@@ -248,24 +245,24 @@ namespace eCAL
       InitConfig(command_line_arguments.specified_config);
     }
 
-    void Configuration::InitConfigWithDefaultIni()
+    void ConfigurationSegment::InitConfigWithDefaultIni()
     {
       InitConfig(g_default_ini_file);
     }
 
-    Configuration::Configuration()
-    : Configuration(0, nullptr)
+    ConfigurationSegment::ConfigurationSegment()
+    : ConfigurationSegment(0, nullptr)
     {
       InitConfig();
     }
 
-    std::string Configuration::GetIniFilePath()
+    std::string ConfigurationSegment::GetIniFilePath()
     {
       return ecal_ini_file_path;
     }
 
-    Configuration& GetConfiguration()
+    ConfigurationSegment& GetConfigurationSegment()
     {
-      return g_ecal_configuration;
+      return eCAL::ConfigurationSegment{};
     };
 }

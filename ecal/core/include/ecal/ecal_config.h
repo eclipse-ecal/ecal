@@ -24,6 +24,7 @@
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_tlayer.h>
 #include "ecal/config/configuration.h"
+#include "ecal/config_optional/configuration.h"
 
 #include <string>
 
@@ -31,6 +32,7 @@
 namespace eCAL
 {
   ECAL_API Configuration& GetConfiguration();
+  ECAL_API ConfigurationSegment& GetConfigurationSegment();
   
   namespace Config
   {
