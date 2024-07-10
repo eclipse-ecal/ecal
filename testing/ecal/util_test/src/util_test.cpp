@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -193,3 +193,55 @@ TEST(Util, ResettableFrequencyCalculator)
   }
 }
 
+
+struct command
+{
+  std::string command_type;
+  long long time_point;
+};
+
+std::vector<command> commands =
+{
+command{"getting frequency", 0 },
+command{"ticking", 500         },
+command{"getting frequency", 1000 },
+command{"ticking", 1500         },
+command{"getting frequency", 2000 },
+command{"ticking", 2500         },
+command{"getting frequency", 3000 },
+command{"ticking", 3998         },
+command{"getting frequency", 4000 },
+command{"ticking", 4002         },
+command{"getting frequency", 5000 },
+command{"ticking", 5998         },
+command{"getting frequency", 6000 },
+};
+
+TEST(Util, ResettableFrequencyCalculatorNoReset)
+{
+  eCAL::ResettableFrequencyCalculator<std::chrono::steady_clock> calculator(3.0f);
+  int i = 0;
+
+  for (const auto& command : commands)
+  {
+    std::chrono::steady_clock::time_point time(std::chrono::milliseconds(command.time_point));
+
+    if (command.command_type == "ticking")
+    {
+      calculator.addTick(time);
+    }
+    else if (command.command_type == "getting frequency")
+    {
+      auto frequency = calculator.getFrequency(time);
+      if (i > 1)
+      {
+        ASSERT_GT(frequency, 0.0) << "Iteration " << i;
+      }
+
+      ++i;
+    }
+    else
+    {
+    }
+  }
+}
