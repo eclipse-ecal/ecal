@@ -943,7 +943,7 @@ return(false);
   TLayer::eTransportLayer CDataWriter::DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_)
   {
     // determine the priority list to use
-    Publisher::Configuration::LayerPriorityVector& layer_priority_vector = same_host_ ? m_config.layer_priority_local : m_config.layer_priority_remote;
+    const Publisher::Configuration::LayerPriorityVector& layer_priority_vector = same_host_ ? m_config.layer_priority_local : m_config.layer_priority_remote;
 
     // find the highest priority transport layer that is available in both publisher and subscriber options
     // TODO: we need to fusion the two layer enum types (eTransportLayer) in ecal_tlayer.h and ecal_struct_sample_common.hf
