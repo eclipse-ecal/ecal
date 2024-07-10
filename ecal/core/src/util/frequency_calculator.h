@@ -52,7 +52,7 @@ namespace eCAL
 
     FrequencyCalculator(const time_point& now_)
       : counted_elements(0)
-      , first_tick(now_)
+      , first_tick_time(now_)
       , last_tick_time(now_)
       , previous_frequency(0.0)
     {
@@ -71,15 +71,15 @@ namespace eCAL
         return previous_frequency;
       }
 
-      previous_frequency = calculateFrequency<T>(first_tick, last_tick_time, counted_elements);
-      first_tick = last_tick_time;
+      previous_frequency = calculateFrequency<T>(first_tick_time, last_tick_time, counted_elements);
+      first_tick_time = last_tick_time;
       counted_elements = 0;
       return previous_frequency;
     }
 
   private:
     long long counted_elements;
-    time_point first_tick;
+    time_point first_tick_time;
     time_point last_tick_time;
     double previous_frequency;
   };
