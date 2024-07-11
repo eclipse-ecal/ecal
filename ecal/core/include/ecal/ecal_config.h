@@ -104,16 +104,6 @@ namespace eCAL
     /////////////////////////////////////
     // publisher
     /////////////////////////////////////
-    ECAL_API bool                     GetPublisherShmMode                  ();
-    ECAL_API bool                     GetPublisherTcpMode                  ();
-    ECAL_API bool                     GetPublisherUdpMulticastMode         ();
-
-    ECAL_API size_t                   GetMemfileMinsizeBytes               ();
-    ECAL_API size_t                   GetMemfileOverprovisioningPercentage ();
-    ECAL_API int                      GetMemfileAckTimeoutMs               ();
-    ECAL_API bool                     IsMemfileZerocopyEnabled             ();
-    ECAL_API size_t                   GetMemfileBufferCount                ();
-
     ECAL_API bool                     IsTopicTypeSharingEnabled            ();
     ECAL_API bool                     IsTopicDescriptionSharingEnabled     ();
 
@@ -128,8 +118,6 @@ namespace eCAL
     /////////////////////////////////////
     namespace Experimental
     {
-      ECAL_API bool                   IsShmMonitoringEnabled             ();
-      ECAL_API bool                   IsNetworkMonitoringDisabled        ();
       ECAL_API size_t                 GetShmMonitoringQueueSize          ();
       ECAL_API std::string            GetShmMonitoringDomain             ();
       ECAL_API bool                   GetDropOutOfOrderMessages          ();
