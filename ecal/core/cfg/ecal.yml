@@ -33,6 +33,8 @@ registration:
   registration_refresh: 1000
   share_ttype: true
   share_tdesc: false
+  network_enabled: false
+  shm_registration_enabled: false
   
 monitoring:
   mode: []
@@ -86,7 +88,6 @@ transport_layer:
     join_all_interfaces: false
     npcap_enabled: false
 
-
   tcppubsub:
     number_executor_reader: 4
     number_executor_writer: 4
@@ -95,7 +96,6 @@ transport_layer:
   shm:
     host_group_name: ""
 
-  network_enable: false
   drop_out_of_order_messages: true
   
 

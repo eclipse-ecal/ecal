@@ -92,25 +92,6 @@ namespace YAML
     }
   };
 
-  template<>
-  struct convert<eCAL::Monitoring::Types::Mode>
-  {
-    static Node encode(const eCAL::Monitoring::Types::Mode&)
-    {
-      Node node;
-
-      return node;
-    }
-
-    static bool decode(const Node&, eCAL::Monitoring::Types::Mode& config_)
-    {
-      // TODO PG: Change this here after refactoring monitoring mode to a list
-      config_ = eCAL::Monitoring::Types::Mode::shm_monitoring;
-      return true;
-    }
-  };
-
-
   // publisher configuration objects
   template<>
   struct convert<eCAL::Publisher::SHM::Configuration>
@@ -391,7 +372,6 @@ namespace YAML
       //config_.monitoring_mode
       node["mode"] = std::list<std::string>{};
       node["timeout"] = static_cast<int>(config_.monitoring_timeout);
-      node["network"] = config_.network_monitoring;
       node["filter_excl"] = config_.filter_excl;
       node["filter_incl"] = config_.filter_incl;
       node["udp"] = config_.udp_options;
@@ -402,12 +382,8 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Monitoring::Configuration& config_)
     {
-      // TODO PG: change here when handling complete
-      config_.monitoring_mode = static_cast<eCAL::Monitoring::Types::Mode_Filter>(eCAL::Monitoring::Types::Mode::shm_monitoring);
       if (node_["timeout"])
         config_.monitoring_timeout = node_["timeout"].as<unsigned int>();
-      if (node_["network"])
-        config_.network_monitoring = node_["network"].as<bool>();
       if (node_["filter_excl"])
         config_.filter_excl = node_["filter_excl"].as<std::string>();
       if (node_["filter_incl"])
@@ -461,6 +437,8 @@ namespace YAML
       node["share_tdesc"] = config_.share_tdesc;
       node["registration_timeout"] = config_.getTimeoutMS();
       node["registration_refresh"] = config_.getRefreshMS();
+      node["network_enabled"] = config_.network_enabled;
+      node["shm_registration_enabled"] = config_.shm_registration_enabled;
 
       return node;
     }
@@ -478,6 +456,10 @@ namespace YAML
         config_.share_ttype = node_["share_ttype"].as<bool>();
       if (node_["share_tdesc"])
         config_.share_tdesc = node_["share_tdesc"].as<bool>();
+      if (node_["network_enabled"])
+        config_.network_enabled = node_["network_enabled"].as<bool>();
+      if (node_["shm_registration_enabled"])
+        config_.shm_registration_enabled = node_["shm_registration_enabled"].as<bool>();
       return true;
     }
   };
@@ -557,7 +539,6 @@ namespace YAML
     static Node encode(const eCAL::TransportLayer::Configuration& config_)
     {
       Node node;
-      node["network_enable"]             = config_.network_enabled;
       node["drop_out_of_order_messages"] = config_.drop_out_of_order_messages;
       node["udp_mc"]                     = config_.mc_options;
       node["tcppubsub"]                  = config_.tcp_options;
@@ -568,8 +549,6 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::TransportLayer::Configuration& config_)
     {
-      if (node_["network_enable"])
-        config_.network_enabled            = node_["network_enable"].as<bool>();
       if (node_["drop_out_of_order_messages"])
         config_.drop_out_of_order_messages = node_["drop_out_of_order_messages"].as<bool>();
       if (node_["udp_mc"])
