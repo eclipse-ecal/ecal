@@ -31,16 +31,6 @@ namespace eCAL
 {
   namespace TransportLayer
   {
-    namespace TCPPubSub
-    {
-      struct Configuration
-      {
-        size_t num_executor_reader{};                                           //!< Tcp_pubsub reader amount of threads that shall execute workload (Default: 4)
-        size_t num_executor_writer{};                                           //!< Tcp_pubsub writer amount of threads that shall execute workload (Default: 4)
-        size_t max_reconnections{};                                             //!< Tcp_pubsub reconnection attemps the session will try to reconnect in (Default: 5)
-      };
-    }
-
     namespace SHM
     {
       struct Configuration
@@ -78,7 +68,6 @@ namespace eCAL
     {
       bool                     drop_out_of_order_messages{};                    //!< Enable dropping of payload messages that arrive out of order (Default: false)
       UDPMC::Configuration     mc_options{};
-      TCPPubSub::Configuration tcp_options{};
       SHM::Configuration       shm_options{};
     };
   }
