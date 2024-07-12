@@ -158,7 +158,7 @@ jobs:
       working-directory: ${{ runner.workspace }}/_build/sdk
 
     - name: List complete setup directory
-      run: dir D:/a/ecal/_build/complete/_CPack_Packages/win64/External/eCAL-6.0.0-win64 /s /b sortorder:N
+      run: dir D:/a/ecal/_build/complete/_CPack_Packages/win64/External/eCAL-6.0.0-win64 /s
       working-directory: ${{ runner.workspace }}/_build/complete
 
     - name: Pack complete setup
