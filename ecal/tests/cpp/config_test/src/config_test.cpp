@@ -39,43 +39,39 @@ void SetValue(MEMBER& member, VALUE value)
 
 TEST(core_cpp_config, user_config_passing)
 {
-  eCAL::Configuration custom_config(0, nullptr);
+  // Registration options
+  const unsigned int        registration_timeout        = 80000U;
+  const unsigned int        registration_refresh        = 2000U;
 
-  // Test value assignments from each category
-  // How the user would utilize it
-  
   // Transport layer options
-  const bool network_enabled   = true;
-  std::string ip_address = "238.200.100.2";
-  const int upd_snd_buff       = (5242880 + 1024);
+  const bool                drop_out_of_order_messages  = true;
+  std::string               ip_address                  = "238.200.100.2";
+  const int                 upd_snd_buff                = (5242880 + 1024);
 
   // Monitoring options
-  const unsigned int        mon_timeout                          = 6000U;
-  const std::string         mon_filter_excl                      = "_A.*";
-  const eCAL_Logging_Filter mon_log_filter_con                   = log_level_warning;
-  const eCAL::Monitoring::Types::Mode monitoring_mode            = eCAL::Monitoring::Types::Mode::udp_monitoring;
+  const unsigned int        mon_timeout                 = 6000U;
+  const std::string         mon_filter_excl             = "_A.*";
+  const eCAL_Logging_Filter mon_log_filter_con          = log_level_warning;
   
   // Publisher options
-  const bool pub_use_shm = true;
+  const bool                pub_use_shm                 = true;
 
-  // Registration options
-  const unsigned int registration_timeout = 80000U;
-  const unsigned int registration_refresh = 2000U;
-  const eCAL::Registration::Configuration registration = eCAL::Registration::Configuration(registration_timeout, registration_refresh);
+  eCAL::Configuration custom_config(0, nullptr);
+  try
+  {
+    const eCAL::Registration::Configuration registration = eCAL::Registration::Configuration(registration_timeout, registration_refresh);
 
-  try{
-    custom_config.transport_layer.network_enabled   = network_enabled;
-    custom_config.transport_layer.mc_options.group  = ip_address;
-    custom_config.transport_layer.mc_options.sndbuf = upd_snd_buff;
+    custom_config.transport_layer.drop_out_of_order_messages  = drop_out_of_order_messages;
+    custom_config.transport_layer.mc_options.group            = ip_address;
+    custom_config.transport_layer.mc_options.sndbuf           = upd_snd_buff;
     
-    custom_config.monitoring.monitoring_timeout = mon_timeout;
-    custom_config.monitoring.filter_excl        = mon_filter_excl;
-    custom_config.monitoring.monitoring_mode    = monitoring_mode;
-    custom_config.logging.filter_log_con        = mon_log_filter_con;
+    custom_config.monitoring.monitoring_timeout               = mon_timeout;
+    custom_config.monitoring.filter_excl                      = mon_filter_excl;
+    custom_config.logging.filter_log_con                      = mon_log_filter_con;
 
-    custom_config.publisher.shm.enable = pub_use_shm;
+    custom_config.publisher.shm.enable                        = pub_use_shm;
 
-    custom_config.registration = registration;
+    custom_config.registration                                = registration;
   }
   catch (std::invalid_argument& e)
   {
@@ -86,7 +82,7 @@ TEST(core_cpp_config, user_config_passing)
   EXPECT_EQ(0, eCAL::Initialize(custom_config, "User Config Passing Test", eCAL::Init::Default));
 
   // Test boolean assignment, default is false
-  EXPECT_EQ(network_enabled, eCAL::GetConfiguration().transport_layer.network_enabled);
+  EXPECT_EQ(drop_out_of_order_messages, eCAL::GetConfiguration().transport_layer.drop_out_of_order_messages);
 
   // Test IP address assignment, default is 239.0.0.1
   EXPECT_EQ(ip_address, eCAL::GetConfiguration().transport_layer.mc_options.group);
@@ -102,9 +98,6 @@ TEST(core_cpp_config, user_config_passing)
 
   // Test monitoring console log assignment, default is (log_level_info | log_level_warning | log_level_error | log_level_fatal)
   EXPECT_EQ(mon_log_filter_con, eCAL::GetConfiguration().logging.filter_log_con);
-
-  // Test monitoring mode assignment, default is eCAL::Types::MonitoringMode::none
-  EXPECT_EQ(monitoring_mode, eCAL::GetConfiguration().monitoring.monitoring_mode);
 
   // Test publisher sendmode assignment, default is eCAL::TLayer::eSendMode::smode_auto
   EXPECT_EQ(pub_use_shm, eCAL::GetConfiguration().publisher.shm.enable);

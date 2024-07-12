@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -261,8 +261,16 @@ namespace eCAL
       {
         iter->second->ApplyLayerParameter(publication_info, tlayer.type, tlayer.par_layer);
       }
-      // inform for publisher connection
-      iter->second->ApplyPublication(publication_info, topic_information, layer_states);
+      // we only inform the subscriber when the publisher has already recognized at least one subscriber
+      // this should avoid to set the "IsPublished" state before the publisher is able to send data
+      const bool local_publication    = publication_info.host_name == Process::GetHostName();
+      const bool external_publication = !local_publication;
+      const bool local_confirmed      = local_publication    && (ecal_sample_.topic.connections_loc > 0);
+      const bool external_confirmed   = external_publication && (ecal_sample_.topic.connections_ext > 0);
+      if(local_confirmed || external_confirmed)
+      {
+        iter->second->ApplyPublication(publication_info, topic_information, layer_states);
+      }
     }
   }
 

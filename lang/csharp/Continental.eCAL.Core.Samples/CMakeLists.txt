@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,25 +17,19 @@
 # ========================= eCAL LICENSE =================================
 
 include(CSharpUtilities)
-project(person_rec_cb_cs LANGUAGES CSharp)
+project(Continental.eCAL.Core.Samples LANGUAGES CSharp)
 
 find_package(eCAL REQUIRED)
 
-set(minimal_rec_cb_cs_src
-    person_rec_cb.cs
-)
+macro(ecal_add_csharp_core_sample sample_name)
+  ecal_add_sample(${sample_name} ${sample_name}.cs)
+  target_link_libraries(${sample_name} Continental.eCAL.Core)
+  set_property(TARGET ${sample_name} PROPERTY FOLDER samples/csharp/core)
+endmacro()
 
-ecal_add_sample(${PROJECT_NAME} ${minimal_rec_cb_cs_src})
+ecal_add_csharp_core_sample(pubsub_minimal_rec)
+ecal_add_csharp_core_sample(pubsub_minimal_rec_cb)
+ecal_add_csharp_core_sample(pubsub_minimal_snd)
 
-target_link_libraries(${PROJECT_NAME} Continental.eCAL.Protobuf person_protobufs_cs)
-
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}
-    VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1"
-)
-
-set_property(TARGET ${PROJECT_NAME}  PROPERTY
-  VS_PACKAGE_REFERENCES "Google.Protobuf_${ECAL_CSHARP_PROTOBUF_VERSION}"
-)
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/csharp/pubsub/protobuf)
+ecal_add_csharp_core_sample(service_minimal_client)
+ecal_add_csharp_core_sample(service_minimal_server)

@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,23 +24,23 @@ find_package(GTest REQUIRED)
 set(memfile_test_src
     src/memfile_test.cpp
     src/memfile_naming_test.cpp
-    ../../../core/src/io/mtx/ecal_named_mutex.cpp
-    ../../../core/src/io/shm/ecal_memfile.cpp
-    ../../../core/src/io/shm/ecal_memfile_db.cpp
-    ../../../core/src/io/shm/ecal_memfile_naming.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/mtx/ecal_named_mutex.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/ecal_memfile.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/ecal_memfile_db.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/ecal_memfile_naming.cpp
 )
 
 if(UNIX)
 set(memfile_test_os_src
-    ../../../core/src/io/mtx/linux/ecal_named_mutex_impl.cpp
-    ../../../core/src/io/shm/linux/ecal_memfile_os.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/mtx/linux/ecal_named_mutex_impl.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/ecal_memfile_os.cpp
 )
 endif()
 
 if(WIN32)
 set(memfile_test_os_src
-    ../../../core/src/io/mtx/win32/ecal_named_mutex_impl.cpp
-    ../../../core/src/io/shm/win32/ecal_memfile_os.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/mtx/win32/ecal_named_mutex_impl.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/win32/ecal_memfile_os.cpp
 )
 endif()
 

@@ -67,6 +67,7 @@ constexpr const char* SYS_FILTER_EXCL     = "^eCALSysClient$|^eCALSysGUI$|^eCALS
 /**********************************************************************************************/
 /* network switch */
 constexpr bool NET_ENABLED              = false;
+constexpr bool SHM_REGISTRATION_ENABLED = false;
 
 /* eCAL udp multicast defines */
 constexpr eCAL::Types::UdpConfigVersion  NET_UDP_MULTICAST_CONFIG_VERSION   = eCAL::Types::UdpConfigVersion::V1;
@@ -187,10 +188,6 @@ constexpr const char* EVENT_SHUTDOWN_PROC                   = "ecal_shutdown_pro
 /**********************************************************************************************/
 /*                                     experimental                                           */
 /**********************************************************************************************/
-/* enable distribution of monitoring/registration information via shared memory */
-constexpr bool EXP_SHM_MONITORING_ENABLED                   = false;
-/* enable distribution of monitoring/registration information via network (default) */
-constexpr bool EXP_NETWORK_MONITORING_ENABLED              = true;
 /* queue size of monitoring/registration events  */
 constexpr unsigned int EXP_SHM_MONITORING_QUEUE_SIZE        = 1024U;
 /* domain name for shared memory based monitoring/registration */
@@ -200,5 +197,3 @@ constexpr unsigned int EXP_MEMFILE_ACCESS_TIMEOUT           = 100U;
 
 /* enable dropping of payload messages that arrive out of order */
 constexpr bool EXP_DROP_OUT_OF_ORDER_MESSAGES               = false;
-
-constexpr eCAL::Monitoring::Types::Mode EXP_MONITORING_MODE  = eCAL::Monitoring::Types::Mode::none;

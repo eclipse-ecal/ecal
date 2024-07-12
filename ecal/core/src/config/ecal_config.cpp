@@ -97,9 +97,10 @@ namespace eCAL
     // network
     /////////////////////////////////////
 
-    ECAL_API bool              IsNetworkEnabled                     () { return GetConfiguration().transport_layer.network_enabled; }
+    ECAL_API bool              IsNetworkEnabled                     () { return GetConfiguration().registration.network_enabled; }
+    ECAL_API bool              IsShmRegistrationEnabled             () { return GetConfiguration().registration.shm_registration_enabled; }
 
-    ECAL_API Types::UdpConfigVersion  GetUdpMulticastConfigVersion         () { return GetConfiguration().transport_layer.mc_options.config_version; }
+    ECAL_API Types::UdpConfigVersion  GetUdpMulticastConfigVersion  () { return GetConfiguration().transport_layer.mc_options.config_version; }
 
     ECAL_API std::string       GetUdpMulticastGroup                 () { return GetConfiguration().transport_layer.mc_options.group; }
     ECAL_API std::string       GetUdpMulticastMask                  () { return GetConfiguration().transport_layer.mc_options.mask; }
@@ -181,8 +182,6 @@ namespace eCAL
 
     namespace Experimental
     {
-      ECAL_API bool              IsShmMonitoringEnabled             () { return (GetConfiguration().monitoring.monitoring_mode & Monitoring::Types::Mode::shm_monitoring) != 0; }
-      ECAL_API bool              IsNetworkMonitoringDisabled        () { return !GetConfiguration().monitoring.network_monitoring; }
       ECAL_API size_t            GetShmMonitoringQueueSize          () { return GetConfiguration().monitoring.shm_options.shm_monitoring_queue_size; }
       ECAL_API std::string       GetShmMonitoringDomain             () { return GetConfiguration().monitoring.shm_options.shm_monitoring_domain;}
       ECAL_API bool              GetDropOutOfOrderMessages          () { return GetConfiguration().transport_layer.drop_out_of_order_messages; }

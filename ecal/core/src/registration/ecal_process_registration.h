@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,38 +17,21 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/ecal.h>
-#include <ecal/types/ecal_custom_data_types.h>
+/**
+ * @brief Functions to generate Process Registration / Unregistration samples.
+ *
+**/
 
-#include <iostream>
+#pragma once
 
-int main(int argc, char **argv)
+#include "serialization/ecal_struct_sample_registration.h"
+
+namespace eCAL
 {
-  // creating config object
-  eCAL::Configuration my_config(argc, argv);
-
-  // setting a configuration
-  my_config.registration.network_enabled = true;
-
-  // initialize eCAL API
-  eCAL::Initialize(my_config, "config sample");
-
-  unsigned int counter = 0;
-  // enter main loop
-  while(eCAL::Ok())
+  namespace Registration
   {
-    // sleep 500 ms
-    eCAL::Process::SleepMS(500);
-    if (counter >= 10)
-    {
-      break;
-    }
+    Sample GetProcessRegisterSample();
 
-    std::cout << "Finished loop " << ++counter << "\n";
+    Sample GetProcessUnregisterSample();
   }
-
-  // finalize eCAL API
-  eCAL::Finalize();
-
-  return(0);
 }

@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,13 +16,26 @@
 #
 # ========================= eCAL LICENSE =================================
 
-include(CSharpUtilities)
-project(minimal_client_cs LANGUAGES CSharp)
+cmake_minimum_required(VERSION 3.10)
+
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
+
+project(massive_pub_sub)
 
 find_package(eCAL REQUIRED)
 
-ecal_add_sample(minimal_client_cs minimal_client.cs)
+set(massive_pub_sub_src
+    src/massive_pub_sub.cpp
+)
 
-target_link_libraries(minimal_client_cs PRIVATE Continental.eCAL.Core)
+ecal_add_sample(${PROJECT_NAME} ${massive_pub_sub_src})
 
-set_property(TARGET minimal_client_cs PROPERTY FOLDER samples/csharp/services/minimal)
+target_link_libraries(${PROJECT_NAME}
+  eCAL::core
+)
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+
+ecal_install_sample(${PROJECT_NAME})
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/benchmarks/massive_pub_sub)
