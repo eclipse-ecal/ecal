@@ -157,8 +157,12 @@ jobs:
       run: cpack -C Debug
       working-directory: ${{ runner.workspace }}/_build/sdk
 
+    - name: List environment
+      run: set
+      working-directory: ${{ runner.workspace }}/_build/complete
+
     - name: List complete setup directory
-      run: dir . /s
+      run: dir /s
       working-directory: ${{ runner.workspace }}/_build/complete
 
     - name: Pack complete setup
