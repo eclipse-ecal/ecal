@@ -156,17 +156,6 @@ namespace eCAL
     /////////////////////////////////////
     // publisher
     /////////////////////////////////////
-    
-    ECAL_API bool              GetPublisherUdpMulticastMode         () { return GetConfiguration().publisher.udp.enable; }
-    ECAL_API bool              GetPublisherShmMode                  () { return GetConfiguration().publisher.shm.enable; }
-    ECAL_API bool              GetPublisherTcpMode                  () { return GetConfiguration().publisher.tcp.enable; }
-
-    ECAL_API size_t            GetMemfileMinsizeBytes               () { return GetConfiguration().transport_layer.shm_options.memfile_minsize; }
-    ECAL_API size_t            GetMemfileOverprovisioningPercentage () { return GetConfiguration().transport_layer.shm_options.memfile_reserve; }
-    ECAL_API int               GetMemfileAckTimeoutMs               () { return GetConfiguration().transport_layer.shm_options.memfile_ack_timeout; }
-    ECAL_API bool              IsMemfileZerocopyEnabled             () { return GetConfiguration().transport_layer.shm_options.memfile_zero_copy; }
-    ECAL_API size_t            GetMemfileBufferCount                () { return GetConfiguration().transport_layer.shm_options.memfile_buffer_count; }
-
     ECAL_API bool              IsTopicTypeSharingEnabled            () { return GetConfiguration().registration.share_ttype; }
     ECAL_API bool              IsTopicDescriptionSharingEnabled     () { return GetConfiguration().registration.share_tdesc; }
 

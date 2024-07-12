@@ -137,12 +137,6 @@ namespace eCAL
 
       auto& shmOptions = transportLayerOptions.shm_options;
       shmOptions.host_group_name            = iniConfig.get(NETWORK,      "host_group_name",            NET_HOST_GROUP_NAME);
-      shmOptions.memfile_minsize            = iniConfig.get(PUBLISHER,    "memfile_minsize",            PUB_MEMFILE_MINSIZE);
-      shmOptions.memfile_reserve            = iniConfig.get(PUBLISHER,    "memfile_reserve",            PUB_MEMFILE_RESERVE);
-      shmOptions.memfile_ack_timeout        = iniConfig.get(PUBLISHER,    "memfile_ack_timeout",        PUB_MEMFILE_ACK_TO);
-      shmOptions.memfile_buffer_count       = iniConfig.get(PUBLISHER,    "memfile_buffer_count",       PUB_MEMFILE_BUF_COUNT);
-      shmOptions.drop_out_of_order_messages = iniConfig.get(EXPERIMENTAL, "drop_out_of_order_messages", EXP_DROP_OUT_OF_ORDER_MESSAGES);
-      shmOptions.memfile_zero_copy          = iniConfig.get(PUBLISHER,    "memfile_zero_copy",          PUB_MEMFILE_ZERO_COPY);
 
       // registration options
       auto registrationTimeout              = iniConfig.get(COMMON,    "registration_timeout", CMN_REGISTRATION_TO);
@@ -176,11 +170,8 @@ namespace eCAL
       // publisher options
       auto& publisherOptions = publisher;
       publisherOptions.shm.enable                  = iniConfig.get(PUBLISHER, "use_shm",              static_cast<int>(PUB_USE_SHM)) != 0;
-      publisherOptions.shm.zero_copy_mode          = iniConfig.get(PUBLISHER, "memfile_zero_copy",    PUB_MEMFILE_ZERO_COPY);
-      publisherOptions.shm.acknowledge_timeout_ms  = iniConfig.get(PUBLISHER, "memfile_ack_timeout",  PUB_MEMFILE_ACK_TO);
       publisherOptions.shm.memfile_min_size_bytes  = iniConfig.get(PUBLISHER, "memfile_minsize",      PUB_MEMFILE_MINSIZE);
       publisherOptions.shm.memfile_reserve_percent = iniConfig.get(PUBLISHER, "memfile_reserve",      PUB_MEMFILE_RESERVE);
-      publisherOptions.shm.memfile_buffer_count    = iniConfig.get(PUBLISHER, "memfile_buffer_count", PUB_MEMFILE_BUF_COUNT);
       
       publisherOptions.udp.enable            = iniConfig.get(PUBLISHER, "use_udp_mc",     static_cast<int>(PUB_USE_UDP_MC)) != 0;
       // TODO PG: Add here when its available in config file
