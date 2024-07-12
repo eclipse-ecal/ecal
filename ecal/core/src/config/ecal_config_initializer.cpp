@@ -22,7 +22,7 @@
 **/
 
 #include "ecal/ecal_config.h"
-#include "ecal/config/configuration.h"
+
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
 #include "config/ecal_config_reader.h"
