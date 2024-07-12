@@ -157,6 +157,10 @@ jobs:
       run: cpack -C Debug
       working-directory: ${{ runner.workspace }}/_build/sdk
 
+    - name: List complete setup directory
+      run: dir D:/a/ecal/_build/complete/_CPack_Packages/win64/External/eCAL-6.0.0-win64 /s /b sortorder:N
+      working-directory: ${{ runner.workspace }}/_build/complete
+
     - name: Pack complete setup
       run: cpack -C Release
       working-directory: ${{ runner.workspace }}/_build/complete
