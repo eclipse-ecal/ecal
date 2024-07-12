@@ -30,7 +30,6 @@
 #include <cstddef>
 #include <ecal/ecal.h>
 
-#include "io/udp/ecal_udp_sample_receiver.h"
 #include "serialization/ecal_struct_sample_registration.h"
 
 #if ECAL_CORE_REGISTRATION_SHM
@@ -47,6 +46,8 @@
 
 namespace eCAL
 {
+  class CRegistrationReceiverUDP;
+
   class CRegistrationReceiver
   {
   public:
@@ -58,7 +59,6 @@ namespace eCAL
 
     void EnableLoopback(bool state_);
 
-    bool HasSample(const std::string& /*sample_name_*/) { return(true); };
     bool ApplySample(const Registration::Sample& sample_);
 
     bool AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_);
@@ -69,8 +69,6 @@ namespace eCAL
     void RemCustomApplySampleCallback(const std::string& customer_);
 
   protected:
-    bool ApplySerializedSample(const char* serialized_sample_data_, size_t serialized_sample_size_);
-
     void ApplySubscriberRegistration(const eCAL::Registration::Sample& sample_);
     void ApplyPublisherRegistration(const eCAL::Registration::Sample& sample_);
 
@@ -85,8 +83,8 @@ namespace eCAL
     RegistrationCallbackT                 m_callback_service;
     RegistrationCallbackT                 m_callback_client;
     RegistrationCallbackT                 m_callback_process;
-                                     
-    std::shared_ptr<UDP::CSampleReceiver> m_registration_receiver;
+
+    std::unique_ptr<CRegistrationReceiverUDP> m_registration_receiver_udp;
 
 #if ECAL_CORE_REGISTRATION_SHM
     CMemoryFileBroadcast                  m_memfile_broadcast;
