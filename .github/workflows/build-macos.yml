@@ -12,6 +12,13 @@ jobs:
     runs-on: macos-13
 
     steps:
+      # XProtect can cause random failures if it decides that the DMG we create
+      # during the packaging phase is malware.
+      # See https://github.com/actions/runner-images/issues/7522 and https://github.com/servo/servo/pull/30779
+    - name: Kill XProtectBehaviorService
+      run: |
+          echo Killing XProtect.; sudo pkill -9 XProtect >/dev/null || true;
+
     - name: Downgrade Python version
       uses: actions/setup-python@v4
       id: cp39
