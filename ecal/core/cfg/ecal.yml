@@ -16,7 +16,7 @@ network: &network
   # eCAL component communicate over network boundaries
   network_enabled: false 
   # Host group name that enables interprocess mechanisms across (virtual)
-  # Host borders (e.g, Docker); by default equivalent to local host name
+  # host borders (e.g, Docker); by default equivalent to local host name
   host_group_name: ""
 
 
@@ -148,12 +148,14 @@ monitoring:
   # Timeout for topic monitoring in ms (Default: 1000), increase in 1000er steps
   timeout: 1000
   
+  # Monitoring shared memory configuration
   shm:
     # Domain name for shared memory based monitoring/registration
     domain: "ecal_mon"
     # Queue size of monitoring/registration events
     queue_size: 1024
   
+  # Monitoring UDP configuration
   udp:
     placeholder: false
   
