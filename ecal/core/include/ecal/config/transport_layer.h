@@ -31,29 +31,12 @@ namespace eCAL
 {
   namespace TransportLayer
   {
-    namespace TCPPubSub
-    {
-      struct Configuration
-      {
-        size_t num_executor_reader{};                                           //!< Tcp_pubsub reader amount of threads that shall execute workload (Default: 4)
-        size_t num_executor_writer{};                                           //!< Tcp_pubsub writer amount of threads that shall execute workload (Default: 4)
-        size_t max_reconnections{};                                             //!< Tcp_pubsub reconnection attemps the session will try to reconnect in (Default: 5)
-      };
-    }
-
     namespace SHM
     {
       struct Configuration
       {
         std::string                            host_group_name{};               /*!< Common host group name that enables interprocess mechanisms across 
-                                                                                    (virtual) host borders (e.g, Docker); by default equivalent to local host name (Default: "")*/
-        Types::ConstrainedInteger<4096, 4096>  memfile_minsize{};               //!< Default memory file size for new publisher (Default: 4096)
-        Types::ConstrainedInteger<50, 1, 100>  memfile_reserve{};               //!< Dynamic file size reserve before recreating memory file if topic size changes in % (Default: 50)
-        unsigned int                           memfile_ack_timeout{};           //!< Publisher timeout for ack event from subscriber that memory file content is processed (Default: 0)
-        Types::ConstrainedInteger<0, 1>        memfile_buffer_count{};          //!< Number of parallel used memory file buffers for 1:n publish/subscribe ipc connections (Default = 1)
-        bool                                   drop_out_of_order_messages{};    //!< (Default: )
-        bool                                   memfile_zero_copy{};             //!< Allow matching subscriber to access memory file without copying its content in advance (Default: false)
-      };
+                                                                                    (virtual) host borders (e.g, Docker); by default equivalent to local host name (Default: "")*/      };
     }
 
     namespace UDPMC
@@ -85,7 +68,6 @@ namespace eCAL
     {
       bool                     drop_out_of_order_messages{};                    //!< Enable dropping of payload messages that arrive out of order (Default: false)
       UDPMC::Configuration     mc_options{};
-      TCPPubSub::Configuration tcp_options{};
       SHM::Configuration       shm_options{};
     };
   }

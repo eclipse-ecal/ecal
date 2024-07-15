@@ -167,11 +167,6 @@ TEST(ConfigDeathTest, user_config_death_test)
     SetValue(custom_config.transport_layer.mc_options.sndbuf, (5242880 + 512)),
     std::invalid_argument);
 
-  // Value exceeds MAX. Default MAX = 100
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.shm_options.memfile_reserve, 150),
-    std::invalid_argument);
-
   // Test the registration option limits
   // Refresh timeout > registration timeout
   ASSERT_THROW(

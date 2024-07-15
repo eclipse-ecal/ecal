@@ -130,19 +130,8 @@ namespace eCAL
       multicastOptions.join_all_interfaces = iniConfig.get(NETWORK, "multicast_join_all_if", NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED);
       multicastOptions.npcap_enabled       = iniConfig.get(NETWORK, "npcap_enabled",         NET_NPCAP_ENABLED);
 
-      auto& tcpPubSubOptions = transportLayerOptions.tcp_options;
-      tcpPubSubOptions.num_executor_reader = iniConfig.get(NETWORK, "tcp_pubsup_num_executor_reader", NET_TCP_PUBSUB_NUM_EXECUTOR_READER);
-      tcpPubSubOptions.num_executor_writer = iniConfig.get(NETWORK, "tcp_pubsup_num_executor_writer", NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER);
-      tcpPubSubOptions.max_reconnections   = iniConfig.get(NETWORK, "tcp_pubsup_max_reconnections",   NET_TCP_PUBSUB_MAX_RECONNECTIONS);
-
       auto& shmOptions = transportLayerOptions.shm_options;
       shmOptions.host_group_name            = iniConfig.get(NETWORK,      "host_group_name",            NET_HOST_GROUP_NAME);
-      shmOptions.memfile_minsize            = iniConfig.get(PUBLISHER,    "memfile_minsize",            PUB_MEMFILE_MINSIZE);
-      shmOptions.memfile_reserve            = iniConfig.get(PUBLISHER,    "memfile_reserve",            PUB_MEMFILE_RESERVE);
-      shmOptions.memfile_ack_timeout        = iniConfig.get(PUBLISHER,    "memfile_ack_timeout",        PUB_MEMFILE_ACK_TO);
-      shmOptions.memfile_buffer_count       = iniConfig.get(PUBLISHER,    "memfile_buffer_count",       PUB_MEMFILE_BUF_COUNT);
-      shmOptions.drop_out_of_order_messages = iniConfig.get(EXPERIMENTAL, "drop_out_of_order_messages", EXP_DROP_OUT_OF_ORDER_MESSAGES);
-      shmOptions.memfile_zero_copy          = iniConfig.get(PUBLISHER,    "memfile_zero_copy",          PUB_MEMFILE_ZERO_COPY);
 
       // registration options
       auto registrationTimeout              = iniConfig.get(COMMON,    "registration_timeout", CMN_REGISTRATION_TO);
@@ -170,17 +159,19 @@ namespace eCAL
       // subscriber options
       auto& subscriberOptions = subscriber;
       subscriberOptions.shm.enable = iniConfig.get(NETWORK, "shm_rec_enabled",    NET_SHM_REC_ENABLED) != 0;
-      subscriberOptions.tcp.enable = iniConfig.get(NETWORK, "tcp_rec_enabled",    NET_TCP_REC_ENABLED) != 0;
+      
+      subscriberOptions.tcp.enable              = iniConfig.get(NETWORK, "tcp_rec_enabled",                NET_TCP_REC_ENABLED) != 0;
+      subscriberOptions.tcp.max_reconnections   = iniConfig.get(NETWORK, "tcp_pubsup_max_reconnections",   NET_TCP_PUBSUB_MAX_RECONNECTIONS);
+      subscriberOptions.tcp.num_executor_reader = iniConfig.get(NETWORK, "tcp_pubsup_num_executor_reader", NET_TCP_PUBSUB_NUM_EXECUTOR_READER);
+      subscriberOptions.tcp.num_executor_writer = iniConfig.get(NETWORK, "tcp_pubsup_num_executor_writer", NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER);
+      
       subscriberOptions.udp.enable = iniConfig.get(NETWORK, "udp_mc_rec_enabled", NET_UDP_MC_REC_ENABLED) != 0;
 
       // publisher options
       auto& publisherOptions = publisher;
       publisherOptions.shm.enable                  = iniConfig.get(PUBLISHER, "use_shm",              static_cast<int>(PUB_USE_SHM)) != 0;
-      publisherOptions.shm.zero_copy_mode          = iniConfig.get(PUBLISHER, "memfile_zero_copy",    PUB_MEMFILE_ZERO_COPY);
-      publisherOptions.shm.acknowledge_timeout_ms  = iniConfig.get(PUBLISHER, "memfile_ack_timeout",  PUB_MEMFILE_ACK_TO);
       publisherOptions.shm.memfile_min_size_bytes  = iniConfig.get(PUBLISHER, "memfile_minsize",      PUB_MEMFILE_MINSIZE);
       publisherOptions.shm.memfile_reserve_percent = iniConfig.get(PUBLISHER, "memfile_reserve",      PUB_MEMFILE_RESERVE);
-      publisherOptions.shm.memfile_buffer_count    = iniConfig.get(PUBLISHER, "memfile_buffer_count", PUB_MEMFILE_BUF_COUNT);
       
       publisherOptions.udp.enable            = iniConfig.get(PUBLISHER, "use_udp_mc",     static_cast<int>(PUB_USE_UDP_MC)) != 0;
       // TODO PG: Add here when its available in config file
@@ -191,6 +182,8 @@ namespace eCAL
       publisherOptions.share_topic_type        = iniConfig.get(PUBLISHER, "share_ttype", PUB_SHARE_TTYPE);
 
       publisherOptions.tcp.enable = iniConfig.get(PUBLISHER, "use_tcp",    static_cast<int>(PUB_USE_TCP)) != 0;
+      publisherOptions.tcp.num_executor_reader = iniConfig.get(NETWORK, "tcp_pubsup_num_executor_reader", NET_TCP_PUBSUB_NUM_EXECUTOR_READER);
+      publisherOptions.tcp.num_executor_writer = iniConfig.get(NETWORK, "tcp_pubsup_num_executor_writer", NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER);
 
       // timesync options
       auto& timesyncOptions = timesync;
