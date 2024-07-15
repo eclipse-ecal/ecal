@@ -1,3 +1,22 @@
+network: &network
+  # is this still a thing?
+  config_version: "v1" 
+  group: "239.0.0.1"
+  mask: "0.0.0.15" 
+  port: 14000
+  ttl: 2
+  send_buffer: 5242880
+  receive_buffer: 5242880
+  join_all_interfaces: false
+  npcap_enabled: false
+  host_group_name: ""
+
+  drop_out_of_order_messages: true
+
+tcp_executor: &tcp_executor
+  number_executor_reader: 4
+  number_executor_writer: 4
+  
 publisher:
   shm:
     enable: true
@@ -11,22 +30,29 @@ publisher:
     enable: true
     loopback: false
     sndbuff_size_bytes: 5242880
+    <<: *network
     
   tcp:
-    enable: true
+    enable: true 
+    <<: *tcp_executor
 
   share_topic_type: true
   share_topic_description: true
   priority_list_local: ["shm", "udp", "tcp"]
   priority_list_remote: ["udp", "tcp"]
 
+
 subscriber:
   shm:
     enable: true
   udp:
     enable: true
+    <<: *network
   tcp:
-    enable: false
+    enable: false 
+    <<: *tcp_executor
+    max_reconnections: 5
+
 
 registration:
   registration_timeout: 60000
@@ -74,29 +100,3 @@ logging:
     console: ["info", "warning", "error", "fatal"]
     file: []
     udp: ["info", "warning", "error", "fatal"]
-
-# deprecated?
-transport_layer:
-  udp_mc:
-    config_version: "v1" 
-    group: "239.0.0.1"
-    mask: "0.0.0.15" 
-    port: 14000
-    ttl: 2
-    send_buffer: 5242880
-    receive_buffer: 5242880
-    join_all_interfaces: false
-    npcap_enabled: false
-
-  tcppubsub:
-    number_executor_reader: 4
-    number_executor_writer: 4
-    max_reconnections: 5
-  
-  shm:
-    host_group_name: ""
-
-  drop_out_of_order_messages: true
-  
-
-    
