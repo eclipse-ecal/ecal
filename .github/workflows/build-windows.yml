@@ -161,7 +161,7 @@ jobs:
     - name: List complete setup directory
       run: dir /s
       shell: cmd
-      working-directory: ${{ runner.workspace }}/_build/complete
+      working-directory: D:\a
 
     - name: Pack complete setup
       run: cpack -C Release
