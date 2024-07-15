@@ -30,20 +30,14 @@
 
 #include "io/udp/ecal_udp_sample_sender.h"
 
-#include "util/ecal_thread.h"
-
-#if ECAL_CORE_REGISTRATION_SHM
-#include "shm/ecal_memfile_broadcast.h"
-#include "shm/ecal_memfile_broadcast_writer.h"
-#endif
-
-#include "serialization/ecal_serialize_sample_registration.h"
-
 #include <atomic>
 #include <memory>
 #include <mutex>
 #include <string>
 #include <vector>
+
+#include <registration/ecal_registration_sender.h>
+#include "util/ecal_thread.h"
 
 namespace eCAL
 {
@@ -64,40 +58,24 @@ namespace eCAL
 
   protected:
     void AddSample2SampleList(const Registration::Sample& sample_);
-    bool SendSample2UDP(const Registration::Sample& sample_);
-
-    bool SendSampleList2UDP();
-#if ECAL_CORE_REGISTRATION_SHM
-    bool SendSampleList2SHM();
-#endif
     void ClearSampleList();
+    void SendSampleList();
 
     void RegisterSendThread();
 
-    Registration::Sample GetProcessRegisterSample();
-    Registration::Sample GetProcessUnregisterSample();
+    static std::atomic<bool>             m_created;
 
-    static std::atomic<bool>            m_created;
+    std::unique_ptr<CRegistrationSender> m_reg_sender;
 
-    std::shared_ptr<UDP::CSampleSender> m_reg_sample_snd;
-    std::shared_ptr<CCallbackThread>    m_reg_sample_snd_thread;
+    std::shared_ptr<CCallbackThread>     m_reg_sample_snd_thread;
 
-    std::mutex                          m_sample_buffer_mtx;
-    std::vector<char>                   m_sample_buffer;
+    std::mutex                           m_sample_list_mtx;
+    Registration::SampleList             m_sample_list;
 
-    std::mutex                          m_sample_list_mtx;
-    Registration::SampleList            m_sample_list;
+    bool                                 m_use_registration_udp;
+    bool                                 m_use_registration_shm;
 
-#if ECAL_CORE_REGISTRATION_SHM
-    std::vector<char>                   m_sample_list_buffer;
-    CMemoryFileBroadcast                m_memfile_broadcast;
-    CMemoryFileBroadcastWriter          m_memfile_broadcast_writer;
-#endif
-
-    bool                                m_use_registration_udp;
-    bool                                m_use_registration_shm;
-
-    std::mutex                            m_callback_custom_apply_sample_map_mtx;
+    std::mutex                                  m_callback_custom_apply_sample_map_mtx;
     std::map<std::string, ApplySampleCallbackT> m_callback_custom_apply_sample_map;
   };
 }
