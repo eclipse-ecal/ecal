@@ -117,9 +117,17 @@ namespace eCAL
 
     ECAL_API bool              IsNpcapEnabled                       () { return GetConfiguration().transport_layer.mc_options.npcap_enabled; }
 
-    ECAL_API int               GetTcpPubsubReaderThreadpoolSize     () { return static_cast<int>(GetConfiguration().transport_layer.tcp_options.num_executor_reader); }
-    ECAL_API int               GetTcpPubsubWriterThreadpoolSize     () { return static_cast<int>(GetConfiguration().transport_layer.tcp_options.num_executor_writer); }
-    ECAL_API int               GetTcpPubsubMaxReconnectionAttemps   () { return static_cast<int>(GetConfiguration().transport_layer.tcp_options.max_reconnections); }
+    ECAL_API int               GetTcpPubReaderThreadpoolSize        () { return static_cast<int>(GetConfiguration().publisher.tcp.num_executor_reader); }
+    ECAL_API int               GetTcpPubWriterThreadpoolSize        () { return static_cast<int>(GetConfiguration().publisher.tcp.num_executor_writer); }
+
+    ECAL_API int               GetTcpSubReaderThreadpoolSize        () { return static_cast<int>(GetConfiguration().subscriber.tcp.num_executor_reader); }
+    ECAL_API int               GetTcpSubWriterThreadpoolSize        () { return static_cast<int>(GetConfiguration().subscriber.tcp.num_executor_writer); }
+    ECAL_API int               GetTcpSubMaxReconnectionAttemps      () { return static_cast<int>(GetConfiguration().subscriber.tcp.max_reconnections); }
+
+    // Keep this until new logic is implemented
+    ECAL_API int               GetTcpPubsubReaderThreadpoolSize     () { return GetTcpSubReaderThreadpoolSize();  };
+    ECAL_API int               GetTcpPubsubWriterThreadpoolSize     () { return GetTcpSubWriterThreadpoolSize();  };
+    ECAL_API int               GetTcpPubsubMaxReconnectionAttemps   () { return GetTcpSubMaxReconnectionAttemps();};
 
     ECAL_API std::string       GetHostGroupName                     () { return GetConfiguration().transport_layer.shm_options.host_group_name; }
     
@@ -156,17 +164,6 @@ namespace eCAL
     /////////////////////////////////////
     // publisher
     /////////////////////////////////////
-    
-    ECAL_API bool              GetPublisherUdpMulticastMode         () { return GetConfiguration().publisher.udp.enable; }
-    ECAL_API bool              GetPublisherShmMode                  () { return GetConfiguration().publisher.shm.enable; }
-    ECAL_API bool              GetPublisherTcpMode                  () { return GetConfiguration().publisher.tcp.enable; }
-
-    ECAL_API size_t            GetMemfileMinsizeBytes               () { return GetConfiguration().transport_layer.shm_options.memfile_minsize; }
-    ECAL_API size_t            GetMemfileOverprovisioningPercentage () { return GetConfiguration().transport_layer.shm_options.memfile_reserve; }
-    ECAL_API int               GetMemfileAckTimeoutMs               () { return GetConfiguration().transport_layer.shm_options.memfile_ack_timeout; }
-    ECAL_API bool              IsMemfileZerocopyEnabled             () { return GetConfiguration().transport_layer.shm_options.memfile_zero_copy; }
-    ECAL_API size_t            GetMemfileBufferCount                () { return GetConfiguration().transport_layer.shm_options.memfile_buffer_count; }
-
     ECAL_API bool              IsTopicTypeSharingEnabled            () { return GetConfiguration().registration.share_ttype; }
     ECAL_API bool              IsTopicDescriptionSharingEnabled     () { return GetConfiguration().registration.share_tdesc; }
 
