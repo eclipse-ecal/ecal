@@ -1,6 +1,6 @@
 ; ========================= eCAL LICENSE =================================
 ;
-; Copyright (C) 2016 - 2019 Continental Corporation
+; Copyright (C) 2016 - 2024 Continental Corporation
 ;
 ; Licensed under the Apache License, Version 2.0 (the "License");
 ; you may not use this file except in compliance with the License.
@@ -75,9 +75,9 @@ Source: "{#ComponentStagingDir}\runtime\*";           DestDir: "{app}";      Fla
 Source: "{#ComponentStagingDir}\Unspecified\*";       DestDir: "{app}";      Flags: ignoreversion recursesubdirs; Components: runtime
 Source: "{#ComponentStagingDir}\libraries\bin\*";     DestDir: "{app}\bin\"; Flags: ignoreversion recursesubdirs; Components: runtime
 
-Source: "{#ComponentStagingDir}\configuration\cfg\ecal.ini";     DestDir: "{commonappdata}\eCAL\"; Tasks: not replaceconf; Flags: ignoreversion confirmoverwrite; Components: runtime
-Source: "{#ComponentStagingDir}\configuration\cfg\ecal.ini";     DestDir: "{commonappdata}\eCAL\"; Tasks: replaceconf;     Flags: ignoreversion;                  Components: runtime
-Source: "{#ComponentStagingDir}\configuration\cfg\ecaltime.ini"; DestDir: "{commonappdata}\eCAL\";                         Flags: ignoreversion;                  Components: runtime
+Source: "{#ComponentStagingDir}\_configuration\cfg\ecal.ini";     DestDir: "{commonappdata}\eCAL\"; Tasks: not replaceconf; Flags: ignoreversion confirmoverwrite; Components: runtime
+Source: "{#ComponentStagingDir}\_configuration\cfg\ecal.ini";     DestDir: "{commonappdata}\eCAL\"; Tasks: replaceconf;     Flags: ignoreversion;                  Components: runtime
+Source: "{#ComponentStagingDir}\_configuration\cfg\ecaltime.ini"; DestDir: "{commonappdata}\eCAL\";                         Flags: ignoreversion;                  Components: runtime
 
 ; applications
 Source: "{#ComponentStagingDir}\app\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: applications
