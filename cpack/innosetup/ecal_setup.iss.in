@@ -118,11 +118,11 @@ Source: "{#DebugSdkStagingDir}\protobuf-export\*";    DestDir: "{app}";         
 ; Source: "{#DebugSdkStagingDir}\protoc\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
 
 ; sdk\hdf5
-Source: "{#ComponentStagingDir}\configinstall\*";     DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
+Source: "{#ComponentStagingDir}\_configinstall\*";    DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
 Source: "{#ComponentStagingDir}\headers\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
 Source: "{#ComponentStagingDir}\libraries\lib\*";     DestDir: "{app}\lib";               Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
 
-Source: "{#DebugSdkStagingDir}\configinstall\*";      DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
+Source: "{#DebugSdkStagingDir}\_configinstall\*";     DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
 Source: "{#DebugSdkStagingDir}\libraries\lib\*";      DestDir: "{app}\lib";               Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
 Source: "{#DebugSdkStagingDir}\libraries\bin\*";      DestDir: "{app}\bin\";              Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
 
