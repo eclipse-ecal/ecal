@@ -32,10 +32,6 @@
 
 #include "serialization/ecal_struct_sample_registration.h"
 
-#if ECAL_CORE_REGISTRATION_SHM
-#include "ecal_registration_receiver_shm.h"
-#endif
-
 #include <atomic>
 #include <functional>
 #include <map>
@@ -47,6 +43,7 @@
 namespace eCAL
 {
   class CRegistrationReceiverUDP;
+  class CRegistrationReceiverSHM;
 
   class CRegistrationReceiver
   {
@@ -85,12 +82,8 @@ namespace eCAL
     RegistrationCallbackT                 m_callback_process;
 
     std::unique_ptr<CRegistrationReceiverUDP> m_registration_receiver_udp;
-
 #if ECAL_CORE_REGISTRATION_SHM
-    CMemoryFileBroadcast                  m_memfile_broadcast;
-    CMemoryFileBroadcastReader            m_memfile_broadcast_reader;
-
-    CMemfileRegistrationReceiver          m_memfile_reg_rcv;
+    std::unique_ptr<CRegistrationReceiverSHM> m_registration_receiver_shm;
 #endif
 
     bool                                  m_use_registration_udp;

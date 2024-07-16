@@ -28,6 +28,9 @@
 #include "registration/ecal_registration_receiver.h"
 
 #include "registration/ecal_registration_receiver_udp.h"
+#if ECAL_CORE_REGISTRATION_SHM
+#include "registration/ecal_registration_receiver_shm.h"
+#endif
 #include "ecal_global_accessors.h"
 
 #include "pubsub/ecal_subgate.h"
@@ -83,11 +86,7 @@ namespace eCAL
 #if ECAL_CORE_REGISTRATION_SHM
     if (m_use_registration_shm)
     {
-      m_memfile_broadcast.Create(Config::Experimental::GetShmMonitoringDomain(), Config::Experimental::GetShmMonitoringQueueSize());
-      m_memfile_broadcast.FlushLocalEventQueue();
-      m_memfile_broadcast_reader.Bind(&m_memfile_broadcast);
-
-      m_memfile_reg_rcv.Create(&m_memfile_broadcast_reader);
+      m_registration_receiver_shm = std::make_unique<CRegistrationReceiverSHM>([this](const Registration::Sample& sample_) {return this->ApplySample(sample_); });
     }
 #endif
 
@@ -107,9 +106,7 @@ namespace eCAL
 #if ECAL_CORE_REGISTRATION_SHM
     if (m_use_registration_shm)
     {
-      // stop memfile registration receive thread and unbind reader
-      m_memfile_broadcast_reader.Unbind();
-      m_memfile_broadcast.Destroy();
+      m_registration_receiver_shm = nullptr;
     }
 #endif
 
