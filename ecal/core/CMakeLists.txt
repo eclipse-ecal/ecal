@@ -69,6 +69,8 @@ set(ecal_config_src
     src/config/ecal_config_reader.cpp
     src/config/ecal_config_reader.h
     src/config/ecal_config_reader_hlp.h
+    src/pubsub/ecal_publisher_config.cpp
+    src/pubsub/ecal_subscriber_config.cpp
     src/types/ecal_custom_data_types.cpp
     src/types/ecal_registration_options.cpp
 )
@@ -199,7 +201,6 @@ endif()
 if(ECAL_CORE_PUBLISHER)
   set(ecal_pub_src
       src/pubsub/ecal_publisher.cpp
-      src/pubsub/ecal_publisher_config.cpp
       src/pubsub/ecal_pubgate.cpp
       src/pubsub/ecal_pubgate.h
   )
@@ -208,7 +209,6 @@ endif()
 if(ECAL_CORE_SUBSCRIBER)
   set(ecal_sub_src
       src/pubsub/ecal_subscriber.cpp
-      src/pubsub/ecal_subscriber_config.cpp
       src/pubsub/ecal_subgate.cpp
       src/pubsub/ecal_subgate.h
   )
@@ -461,6 +461,7 @@ endif()
 set(ecal_header_cmn
     include/ecal/types/logging.h
     include/ecal/types/monitoring.h
+    include/ecal/config/configuration.h
     include/ecal/config/publisher.h
     include/ecal/config/subscriber.h
     include/ecal/ecal.h
@@ -485,7 +486,6 @@ set(ecal_header_cmn
     include/ecal/ecal_tlayer.h
     include/ecal/ecal_types.h
     include/ecal/ecal_util.h
-    include/ecal/config/configuration.h
 )
 
 set(ecal_header_cimpl
