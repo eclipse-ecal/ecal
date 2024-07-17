@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -209,7 +209,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       for (const auto& layer : layer_pb)
       {
         QString this_layer_string;
-        if (layer.confirmed())
+        if (layer.active())
         {
           switch (layer.type())
           {

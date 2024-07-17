@@ -207,9 +207,9 @@ namespace eCAL
     bool               topic_tlayer_ecal_tcp(false);
     for (const auto& layer : sample_topic.tlayer)
     {
-      topic_tlayer_ecal_udp |= (layer.type == tl_ecal_udp) && layer.confirmed;
-      topic_tlayer_ecal_shm |= (layer.type == tl_ecal_shm) && layer.confirmed;
-      topic_tlayer_ecal_tcp |= (layer.type == tl_ecal_tcp) && layer.confirmed;
+      topic_tlayer_ecal_udp |= (layer.type == tl_ecal_udp) && layer.active;
+      topic_tlayer_ecal_shm |= (layer.type == tl_ecal_shm) && layer.active;
+      topic_tlayer_ecal_tcp |= (layer.type == tl_ecal_tcp) && layer.active;
     }
     const int32_t      connections_loc = sample_topic.connections_loc;
     const int32_t      connections_ext = sample_topic.connections_ext;

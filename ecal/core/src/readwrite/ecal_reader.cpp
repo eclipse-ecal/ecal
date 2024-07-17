@@ -422,9 +422,9 @@ namespace eCAL
     }
 
     // store receive layer
-    m_layers.udp.read_confirmed |= layer_ == tl_ecal_udp;
-    m_layers.shm.read_confirmed |= layer_ == tl_ecal_shm;
-    m_layers.tcp.read_confirmed |= layer_ == tl_ecal_tcp;
+    m_layers.udp.active |= layer_ == tl_ecal_udp;
+    m_layers.shm.active |= layer_ == tl_ecal_shm;
+    m_layers.tcp.active |= layer_ == tl_ecal_tcp;
 
     // number of hash values to track for duplicates
     constexpr int hash_queue_size(64);
@@ -591,7 +591,7 @@ namespace eCAL
       udp_tlayer.type      = tl_ecal_udp;
       udp_tlayer.version   = 1;
       udp_tlayer.enabled   = m_layers.udp.read_enabled;
-      udp_tlayer.confirmed = m_layers.udp.read_confirmed;
+      udp_tlayer.active = m_layers.udp.active;
       ecal_reg_sample_topic.tlayer.push_back(udp_tlayer);
     }
 #endif
@@ -603,7 +603,7 @@ namespace eCAL
       shm_tlayer.type      = tl_ecal_shm;
       shm_tlayer.version   = 1;
       shm_tlayer.enabled   = m_layers.shm.read_enabled;
-      shm_tlayer.confirmed = m_layers.shm.read_confirmed;
+      shm_tlayer.active = m_layers.shm.active;
       ecal_reg_sample_topic.tlayer.push_back(shm_tlayer);
     }
 #endif
@@ -615,7 +615,7 @@ namespace eCAL
       tcp_tlayer.type      = tl_ecal_tcp;
       tcp_tlayer.version   = 1;
       tcp_tlayer.enabled   = m_layers.tcp.read_enabled;
-      tcp_tlayer.confirmed = m_layers.tcp.read_confirmed;
+      tcp_tlayer.active = m_layers.tcp.active;
       ecal_reg_sample_topic.tlayer.push_back(tcp_tlayer);
     }
 #endif

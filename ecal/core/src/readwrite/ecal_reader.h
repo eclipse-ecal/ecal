@@ -52,9 +52,9 @@ namespace eCAL
   public:
     struct SLayerState
     {
-      bool write_enabled  = false;   // publisher  side
-      bool read_enabled   = false;   // subscriber side
-      bool read_confirmed = false;   // subscriber side
+      bool write_enabled = false;   // is publisher enabled to write data on this layer?
+      bool read_enabled  = false;   // is this subscriber configured to read data from this layer?
+      bool active        = false;   // data has been received on this layer
     };
  
     struct SLayerStates

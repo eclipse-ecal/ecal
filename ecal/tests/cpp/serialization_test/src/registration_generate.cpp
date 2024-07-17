@@ -96,7 +96,7 @@ namespace eCAL
       layer.type      = static_cast<eTLayerType>(rand() % (tl_all + 1));
       layer.version   = rand() % 100;
       layer.enabled   = rand() % 2 == 1;
-      layer.confirmed = rand() % 2 == 1;
+      layer.active = rand() % 2 == 1;
       return layer;
     }
 

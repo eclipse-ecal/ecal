@@ -149,7 +149,7 @@ namespace eCAL
           return (layer1.type      == layer2.type) &&
                  (layer1.version   == layer2.version) &&
                  (layer1.enabled   == layer2.enabled) &&
-                 (layer1.confirmed == layer2.confirmed) &&
+                 (layer1.active == layer2.active) &&
                  CompareConnectionPar(layer1.par_layer, layer2.par_layer);
         });
     }

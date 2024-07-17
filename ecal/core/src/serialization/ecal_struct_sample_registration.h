@@ -117,7 +117,7 @@ namespace eCAL
       eTLayerType                         type = tl_none;               // transport layer type
       int32_t                             version = 0;                  // transport layer version
       bool                                enabled = false;              // transport layer enabled ?
-      bool                                confirmed = false;            // transport layer usage confirmed ?
+      bool                                active = false;               // transport layer in use ?
       ConnectionPar                       par_layer;                    // transport layer parameter
     };
 

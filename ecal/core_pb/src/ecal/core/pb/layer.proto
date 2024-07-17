@@ -69,6 +69,6 @@ message TLayer
   eTLayerType      type               =   1;    // transport layer type
   int32            version            =   2;    // transport layer version
   bool             enabled            =   6;    // transport layer enabled ?
-  bool             confirmed          =   3;    // transport layer usage confirmed ?
+  bool             active             =   3;    // transport layer in use ?
   ConnnectionPar   par_layer          =   5;    // transport layer parameter
 }

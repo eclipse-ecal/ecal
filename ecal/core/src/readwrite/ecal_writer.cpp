@@ -248,7 +248,7 @@ namespace eCAL
           shm_sent = m_writer_shm->Write(payload_buf, wattr);
         }
 
-        m_layers.shm.write_confirmed = true;
+        m_layers.shm.active = true;
       }
       written |= shm_sent;
 
@@ -299,7 +299,7 @@ namespace eCAL
 
         // write to udp multicast layer
         udp_sent = m_writer_udp->Write(m_payload_buffer.data(), wattr);
-        m_layers.udp.write_confirmed = true;
+        m_layers.udp.active = true;
       }
       written |= udp_sent;
 
@@ -341,7 +341,7 @@ namespace eCAL
 
         // write to tcp layer
         tcp_sent = m_writer_tcp->Write(m_payload_buffer.data(), wattr);
-        m_layers.tcp.write_confirmed = true;
+        m_layers.tcp.active = true;
       }
       written |= tcp_sent;
 
@@ -645,7 +645,7 @@ namespace eCAL
       udp_tlayer.type                      = tl_ecal_udp;
       udp_tlayer.version                   = 1;
       udp_tlayer.enabled                   = m_layers.udp.write_enabled;
-      udp_tlayer.confirmed                 = m_layers.udp.write_confirmed;
+      udp_tlayer.active                 = m_layers.udp.active;
       udp_tlayer.par_layer.layer_par_udpmc = m_writer_udp->GetConnectionParameter().layer_par_udpmc;
       ecal_reg_sample_topic.tlayer.push_back(udp_tlayer);
     }
@@ -659,7 +659,7 @@ namespace eCAL
       shm_tlayer.type                    = tl_ecal_shm;
       shm_tlayer.version                 = 1;
       shm_tlayer.enabled                 = m_layers.shm.write_enabled;
-      shm_tlayer.confirmed               = m_layers.shm.write_confirmed;
+      shm_tlayer.active               = m_layers.shm.active;
       shm_tlayer.par_layer.layer_par_shm = m_writer_shm->GetConnectionParameter().layer_par_shm;
       ecal_reg_sample_topic.tlayer.push_back(shm_tlayer);
     }
@@ -673,7 +673,7 @@ namespace eCAL
       tcp_tlayer.type                    = tl_ecal_tcp;
       tcp_tlayer.version                 = 1;
       tcp_tlayer.enabled                 = m_layers.tcp.write_enabled;
-      tcp_tlayer.confirmed               = m_layers.tcp.write_confirmed;
+      tcp_tlayer.active               = m_layers.tcp.active;
       tcp_tlayer.par_layer.layer_par_tcp = m_writer_tcp->GetConnectionParameter().layer_par_tcp;
       ecal_reg_sample_topic.tlayer.push_back(tcp_tlayer);
     }
