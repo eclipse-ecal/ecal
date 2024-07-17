@@ -193,103 +193,219 @@ static const std::string ini_file_as_string_deprecated =
 "drop_out_of_order_messages         = false\n"
 ;
 
-std::string ini_file_as_string_yaml = "publisher:\n"
-"  shm:\n"
-"    enable: false\n"
-"    zero_copy_mode: false\n"
-"    acknowledge_timeout_ms: 346\n"
-"    memfile_min_size_bytes: 4096\n"
-"    memfile_reserve_percent: 50\n"
-"    memfile_buffer_count: 1\n"
-"  \n"
-"  udp:\n"
-"    enable: true\n"
-"    loopback: false\n"
-"    sndbuff_size_bytes: 5242880\n"
-"    \n"
-"  tcp:\n"
-"    enable: true\n"
-"\n"
-"  share_topic_type: true\n"
-"  share_topic_description: true\n"
-"  priority_list_local: [\"shm\", \"udp\", \"tcp\"]\n"
-"  priority_list_remote: [\"udp\", \"tcp\"]\n"
-"\n"
-"subscriber:\n"
-"  shm:\n"
-"    enable: true\n"
-"  udp:\n"
-"    enable: true\n"
-"  tcp:\n"
-"    enable: false\n"
-"\n"
-"registration:\n"
-"  registration_timeout: 60000\n"
-"  registration_refresh: 1000\n"
-"  share_ttype: true\n"
-"  share_tdesc: false\n"
-"  \n"
-"monitoring:\n"
-"  mode: []\n"
-"  timeout: 1000\n"
-"  network: true\n"
-"  \n"
-"  shm:\n"
-"    domain: \"ecal_mon\"\n"
-"    queue_size: 1024\n"
-"  \n"
-"  udp:\n"
-"    placeholder: false\n"
-"  \n"
-"  filter_excl: \"^__.*$\"           # Topics blacklist as regular expression (will not be monitored) (Default: \"^__.*$\")\n"
-"  filter_incl: \"\"                 # Topics whitelist as regular expression (will be monitored only) (Default: \"\")\n"
-"\n"
-"\n"
-"time:\n"
-"  rt: \"ecaltime-localtime\"\n"
-"  replay: ""\n"
-"\n"
-"\n"
-"service:\n"
-"  protocol_v0: true\n"
-"  protocol_v1: false\n"
-"\n"
-"\n"
-"application:\n"
-"  sys:\n"
-"    filter_excl: \"^eCALSysClient$|^eCALSysGUI$|^eCALSys$*\"\n"
-"  terminal:\n"
-"    emulator: \"myTestTerminal\"\n"
-"\n"
-"\n"
-"logging:\n"
-"  filter:\n"
-"    console: [\"info\", \"warning\", \"error\", \"fatal\"]\n"
-"    file: []\n"
-"    udp: [\"info\", \"warning\", \"error\", \"fatal\"]\n"
-"\n"
-"# deprecated?\n"
-"transport_layer:\n"
-"  udp_mc:\n"
-"    config_version: \"v1\" \n"
-"    group: \"239.5.0.1\"\n"
-"    mask: \"0.0.0.15\" \n"
-"    port: 14010\n"
-"    ttl: 2\n"
-"    send_buffer: 5242880\n"
-"    receive_buffer: 5242880\n"
-"    join_all_interfaces: false\n"
-"    npcap_enabled: true\n"
-"\n"
-"\n"
-"  tcppubsub:\n"
-"    number_executor_reader: 4\n"
-"    number_executor_writer: 4\n"
-"    max_reconnections: 7\n"
-"  \n"
-"  shm:\n"
-"    host_group_name: \"\"\n"
-"\n"
-"  network_enable: false\n"
-"  drop_out_of_order_messages: true\n"
-;
+std::string ini_file_as_string_yaml = R"(#  _____     _ _                                ____    _    _                             
+# | ____|___| (_)_ __  ___  ___            ___ / ___|  / \  | |                            
+# |  _| / __| | | '_ \/ __|/ _ \  _____   / _ \ |     / _ \ | |                            
+# | |__| (__| | | |_) \__ \  __/ |_____| |  __/ |___ / ___ \| |___                         
+# |_____\___|_|_| .__/|___/\___|          \___|\____/_/   \_\_____|                        
+#             |_|                                                                            
+#        _       _           _                    __ _                       _   _             
+#   __ _| | ___ | |__   __ _| |   ___ ___  _ __  / _(_) __ _ _   _ _ __ __ _| |_(_) ___  _ __  
+#  / _` | |/ _ \| '_ \ / _` | |  / __/ _ \| '_ \| |_| |/ _` | | | | '__/ _` | __| |/ _ \| '_ \ 
+# | (_| | | (_) | |_) | (_| | | | (_| (_) | | | |  _| | (_| | |_| | | | (_| | |_| | (_) | | | |
+#  \__, |_|\___/|_.__/ \__,_|_|  \___\___/|_| |_|_| |_|\__, |\__,_|_|  \__,_|\__|_|\___/|_| |_|
+#  |___/                                               |___/                                   
+
+# Common network settings
+network: &network
+  # eCAL component communicate over network boundaries
+  network_enabled: false 
+  # Host group name that enables interprocess mechanisms across (virtual)
+  # host borders (e.g, Docker); by default equivalent to local host name
+  host_group_name: ""
+
+
+# UDP specific settings
+udp_configuration: &udp_config
+  # UDP configuration version (Since eCAL 5.12.)
+  # v1: default behavior
+  # v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups
+  config_version: "v1"
+  # Multicast group base. All registration and logging is sent on this address 
+  group: "239.0.0.1"
+  # v1: Mask maximum number of dynamic multicast group (range 0.0.0.1-0.0.0.255)
+  # v2: Masks are now considered like routes masking (range 255.0.0.0-255.255.255.255)
+  mask: "0.0.0.15" 
+  # Multicast port number, modify in steps of 10 only because multiple ports are used by eCAL
+  port: 14000
+  # TTL (hop limit) is used to determine the amount of routers being traversed towards the destination
+  ttl: 2
+  # Send buffer in bytes
+  send_buffer: 5242880
+  # Receive buffer in bytes
+  receive_buffer: 5242880
+  # Linux specific setting to join all network interfaces independend of their link state.
+  # Enabling ensures that eCAL processes receive data when they are started before the
+  # network devices are up and running.
+  join_all_interfaces: false
+  # Windows specific setting to enable receiving UDP traffic with the Npcap based receiver
+  npcap_enabled: false
+  
+
+# TCP specific settings
+tcp_configuration: &tcp_config
+  # Reader amount of threads that shall execute workload
+  number_executor_reader: 4
+  # Writer amount of threads that shall execute workload
+  number_executor_writer: 4
+  
+
+# Publisher specific base settings
+publisher:
+  # Base configuration for shared memory publisher
+  shm:
+    # Enable layer
+    enable: true
+    # Enable zero copy shared memory transport mode
+    zero_copy_mode: false
+    # Force connected subscribers to send acknowledge event after processing the message.
+    # The publisher send call is blocked on this event with this timeout (0 == no handshake).
+    acknowledge_timeout_ms: 0
+    # Default memory file size for new publisher
+    memfile_min_size_bytes: 4096
+    # Dynamic file size reserve before recreating memory file if topic size changes
+    memfile_reserve_percent: 50
+    # Maximum number of used buffers (needs to be greater than 1, default = 1)
+    memfile_buffer_count: 1
+  
+  # Base configuration for UDP publisher
+  udp:
+    # Enable layer
+    enable: true
+    # Enable to receive udp messages on the same local machine
+    loopback: false
+    # UDP send buffer size in bytes (default 5MB)
+    sndbuff_size_bytes: 5242880
+    # Specific UDP configuration
+    <<: *udp_config
+    
+  # Base configuration for TCP publisher
+  tcp:
+    # Enable layer
+    enable: true 
+    # Specific TCP configuration
+    <<: *tcp_config
+
+  # Share topic type via registration
+  share_topic_type: true
+  # Share topic description via registration
+  share_topic_description: true
+  # Priority list for layer usage in local mode (Default: SHM > UDP > TCP)
+  priority_list_local: ["shm", "udp", "tcp"]
+  # Priority list for layer usage in cloud mode (Default: UDP > TCP)
+  priority_list_remote: ["udp", "tcp"]
+
+
+# Subscriber specific base configuration
+subscriber:
+  # Base configuration for shared memory subscriber
+  shm:
+    # Enable layer
+    enable: true
+
+  # Base configuration for UDP subscriber
+  udp:
+    # Enabler layer
+    enable: true
+    # Specific UDP configuration
+    <<: *udp_config
+  
+  # Base configuration for TCP subscriber
+  tcp:
+    # Enable layer
+    enable: false 
+    # Specific TCP configuration
+    <<: *tcp_config
+    # Reconnection attemps the session will try to reconnect in case of an issue
+    max_reconnections: 5
+  
+  # Enable dropping of payload messages that arrive out of order
+  drop_out_of_order_messages: true
+
+
+# Registration layer configuration
+registration:
+  # Timeout for topic registration in ms (internal, Default: 60000)
+  registration_timeout: 60000
+  # Topic registration refresh cylce (has to be smaller then registration timeout! Default: 1000)
+  registration_refresh: 1000
+  # Share topic type via registration
+  share_topic_type: true
+  # Share topic description via registration
+  share_topic_description: true
+  # Enable to use shared memory for registration layer (Default: false == UDP)
+  shm_registration_enabled: false
+
+
+# Monitoring configuration
+monitoring:
+  mode: []
+  # Timeout for topic monitoring in ms (Default: 1000), increase in 1000er steps
+  timeout: 1000
+  
+  # Monitoring shared memory configuration
+  shm:
+    # Domain name for shared memory based monitoring/registration
+    domain: "ecal_mon"
+    # Queue size of monitoring/registration events
+    queue_size: 1024
+  
+  # Monitoring UDP configuration
+  udp:
+    placeholder: false
+  
+  # Topics blacklist as regular expression (will not be monitored)
+  filter_excl: "^__.*$"
+  # Topics whitelist as regular expression (will be monitored only) (Default: "")
+  filter_incl: ""
+
+
+# Time configuration
+time:
+  # Time synchronisation interface name (dynamic library)
+  # The name will be extended with platform suffix (32|64), debug suffix (d) and platform extension (.dll|.so)
+  # Available modules are:
+  #   - ecaltime-localtime    local system time without synchronization        
+  #   - ecaltime-linuxptp     For PTP / gPTP synchronization over ethernet on Linux
+  #                           (device configuration in ecaltime.ini)
+  rt: "ecaltime-localtime"
+  # Specify the module name for replaying
+  replay: ""
+
+
+# Service configuration
+service:
+  # Support service protocol v0, eCAL 5.11 and older (0 = off, 1 = on)
+  protocol_v0: true
+  # Support service protocol v1, eCAL 5.12 and newer (0 = off, 1 = on)
+  protocol_v1: false
+
+
+# eCAL Application Configuration
+application:
+  # Configuration for eCAL Sys
+  sys:
+    # Apps blacklist to be excluded when importing tasks from cloud
+    filter_excl: "^eCALSysClient$|^eCALSysGUI$|^eCALSys$*"
+  # Process specific configuration
+  terminal:
+    # Linux only command for starting applications with an external terminal emulator. 
+    # e.g. /usr/bin/x-terminal-emulator -e
+    #      /usr/bin/gnome-terminal -x
+    #      /usr/bin/xterm -e
+    # If empty, the command will be ignored.
+    emulator: ""
+
+
+# Logging configuration
+logging:
+  # Filter configuration for different outputs
+  # Available options: all, info, warning, error, fatal, debug1, debug2, debug3, debug4
+  filter:
+    # Log messages logged to console
+    console: ["info", "warning", "error", "fatal"]
+    # Log messages to logged into file system
+    file: []
+    # Log messages logged via udp network
+    udp: ["info", "warning", "error", "fatal"]
+)";

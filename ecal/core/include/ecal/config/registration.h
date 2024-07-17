@@ -57,8 +57,10 @@ namespace eCAL
                                                                                                  false = local host only communication (Default: false) */
         bool shm_registration_enabled;                                                      /*!< true  = registration layer is based on shm
                                                                                                  false = registration layer is based on udp (Default: false) */
-        bool share_ttype;                                                                   //!< Share topic type via registration layer (Default: true)
-        bool share_tdesc;                                                                   //!< Share topic description via registration layer (switch off to disable reflection) (Default: true)
+        bool loopback;                                                                      //!< enable to receive udp messages on the same local machine
+        std::string host_group_name;                                                        /*!< Common host group name that enables interprocess mechanisms across 
+                                                                                                 (virtual) host borders (e.g, Docker); by default equivalent to local host name (Default: "") */
+
 
     private:
         unsigned int m_registration_timeout;

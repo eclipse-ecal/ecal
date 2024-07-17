@@ -61,9 +61,9 @@ TEST(core_cpp_config, user_config_passing)
   {
     const eCAL::Registration::Configuration registration = eCAL::Registration::Configuration(registration_timeout, registration_refresh);
 
-    custom_config.transport_layer.drop_out_of_order_messages  = drop_out_of_order_messages;
-    custom_config.transport_layer.mc_options.group            = ip_address;
-    custom_config.transport_layer.mc_options.sndbuf           = upd_snd_buff;
+    custom_config.subscriber.drop_out_of_order_messages       = drop_out_of_order_messages;
+    custom_config.transport_layer.udp.network.group           = ip_address;
+    custom_config.transport_layer.udp.network.send_buffer     = upd_snd_buff;
     
     custom_config.monitoring.monitoring_timeout               = mon_timeout;
     custom_config.monitoring.filter_excl                      = mon_filter_excl;
@@ -82,13 +82,13 @@ TEST(core_cpp_config, user_config_passing)
   EXPECT_EQ(0, eCAL::Initialize(custom_config, "User Config Passing Test", eCAL::Init::Default));
 
   // Test boolean assignment, default is false
-  EXPECT_EQ(drop_out_of_order_messages, eCAL::GetConfiguration().transport_layer.drop_out_of_order_messages);
+  EXPECT_EQ(drop_out_of_order_messages, eCAL::GetConfiguration().subscriber.drop_out_of_order_messages);
 
   // Test IP address assignment, default is 239.0.0.1
-  EXPECT_EQ(ip_address, eCAL::GetConfiguration().transport_layer.mc_options.group);
+  EXPECT_EQ(ip_address, eCAL::GetConfiguration().transport_layer.udp.network.group);
 
   // Test UDP send buffer assignment, default is 5242880
-  EXPECT_EQ(upd_snd_buff, eCAL::GetConfiguration().transport_layer.mc_options.sndbuf);
+  EXPECT_EQ(upd_snd_buff, eCAL::GetConfiguration().transport_layer.udp.network.send_buffer);
 
   // Test monitoring timeout assignment, default is 5000U
   EXPECT_EQ(mon_timeout, eCAL::GetConfiguration().monitoring.monitoring_timeout);
@@ -116,55 +116,55 @@ TEST(ConfigDeathTest, user_config_death_test)
 
   // Test the IpAddressV4 class with wrong values
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.mc_options.group, "42"),
+    SetValue(custom_config.transport_layer.udp.network.group, "42"),
     std::invalid_argument);
 
   // Test the IpAddressV4 class with invalid addresses
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.mc_options.group, "256.0.0.0"),
+    SetValue(custom_config.transport_layer.udp.network.group, "256.0.0.0"),
     std::invalid_argument);
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.mc_options.group, "127.0.0.1"),
+    SetValue(custom_config.transport_layer.udp.network.group, "127.0.0.1"),
     std::invalid_argument);
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.mc_options.group, "255.255.255.255"),
-    std::invalid_argument);
-
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.mc_options.group, "FFF.FF.FF.FF"),
-    std::invalid_argument);
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.mc_options.group, "FF.FF.FF.FF"),
-    std::invalid_argument);
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.mc_options.group, "Ff.fF.ff.Ff"),
-    std::invalid_argument);
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.mc_options.group, "7f.0.0.1"),
+    SetValue(custom_config.transport_layer.udp.network.group, "255.255.255.255"),
     std::invalid_argument);
 
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.mc_options.group, "0.0.0.0"),
+    SetValue(custom_config.transport_layer.udp.network.group, "FFF.FF.FF.FF"),
     std::invalid_argument);
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.mc_options.group, "00.00.00.00"),
+    SetValue(custom_config.transport_layer.udp.network.group, "FF.FF.FF.FF"),
     std::invalid_argument);
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.mc_options.group, "000.000.000.000"),
+    SetValue(custom_config.transport_layer.udp.network.group, "Ff.fF.ff.Ff"),
     std::invalid_argument);
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.mc_options.group, "0.00.000.0"),
+    SetValue(custom_config.transport_layer.udp.network.group, "7f.0.0.1"),
+    std::invalid_argument);
+
+  ASSERT_THROW(
+    SetValue(custom_config.transport_layer.udp.network.group, "0.0.0.0"),
+    std::invalid_argument);
+  ASSERT_THROW(
+    SetValue(custom_config.transport_layer.udp.network.group, "00.00.00.00"),
+    std::invalid_argument);
+  ASSERT_THROW(
+    SetValue(custom_config.transport_layer.udp.network.group, "000.000.000.000"),
+    std::invalid_argument);
+  ASSERT_THROW(
+    SetValue(custom_config.transport_layer.udp.network.group, "0.00.000.0"),
     std::invalid_argument);
 
   // Test the ConstrainedInteger class with wrong values. Default are MIN = 5242880, STEP = 1024
   // Value below MIN
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.mc_options.sndbuf, 42),
+    SetValue(custom_config.transport_layer.udp.general.send_buffer, 42),
     std::invalid_argument);
   
   // Wrong step. Default STEP = 1024
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.mc_options.sndbuf, (5242880 + 512)),
+    SetValue(custom_config.transport_layer.udp.general.send_buffer, (5242880 + 512)),
     std::invalid_argument);
 
   // Test the registration option limits
@@ -200,11 +200,11 @@ TEST(core_cpp_config, config_custom_datatypes_tests)
   eCAL::Configuration config1(0, nullptr);
   eCAL::Configuration config2(0, nullptr);
   std::string testValue = "234.0.3.2";
-  config2.transport_layer.mc_options.group = testValue;
+  config2.transport_layer.udp.network.group = testValue;
   auto& config2ref = config2;
   config1 = config2ref;
 
-  EXPECT_EQ(config1.transport_layer.mc_options.group, testValue);
+  EXPECT_EQ(config1.transport_layer.udp.network.group, testValue);
 }
 
 TEST(core_cpp_config, config_cmd_parser)
@@ -326,19 +326,19 @@ TEST(YamlConfigReaderTest, parse_values_test)
   EXPECT_EQ(config.application.startup.terminal_emulator, "myTestTerminal");
 
   // Check equality of IpAddressV4
-  EXPECT_EQ(config.transport_layer.mc_options.group, "239.5.0.1");
+  EXPECT_EQ(config.transport_layer.udp.network.group, "239.5.0.1");
 
   // Check constrained Integer
-  EXPECT_EQ(config.transport_layer.mc_options.port, 14010);
+  EXPECT_EQ(config.transport_layer.udp.general.port, 14010);
 
   // Check boolean
-  EXPECT_EQ(config.transport_layer.mc_options.npcap_enabled, true);
+  EXPECT_EQ(config.transport_layer.udp.general.npcap_enabled, true);
 
   // Check unsigned size_t
-  EXPECT_EQ(config.transport_layer.tcp_options.max_reconnections, 7);
+  EXPECT_EQ(config.transport_layer.tcp.max_reconnections, 7);
 
   // Check unsigned int
-  EXPECT_EQ(config.publisher.shm.acknowledge_timeout_ms, 346U);
+  EXPECT_EQ(config.transport_layer.shm.acknowledge_timeout_ms, 346U);
 } 
 
 TEST(YamlConfigReaderTest, yaml_node_merger)

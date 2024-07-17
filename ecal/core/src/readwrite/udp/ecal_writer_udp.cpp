@@ -26,6 +26,7 @@
 #include "ecal_writer_udp.h"
 #include "io/udp/ecal_udp_configurations.h"
 #include "serialization/ecal_serialize_sample_payload.h"
+#include "ecal/ecal_config.h"
 
 #include <cstddef>
 
@@ -44,7 +45,7 @@ namespace eCAL
     attr.port      = UDP::GetPayloadPort();
     attr.ttl       = UDP::GetMulticastTtl();
     attr.broadcast = UDP::IsBroadcast();
-    attr.sndbuf    = m_config.sndbuf_size_bytes;
+    attr.sndbuf    = eCAL::GetConfiguration().transport_layer.udp.general.send_buffer;
 
     // create udp/sample sender with activated loop-back
     attr.loopback = true;

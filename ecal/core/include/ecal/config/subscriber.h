@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/config/transport_layer.h>
 
 #include <cstddef>
 
@@ -42,7 +43,7 @@ namespace eCAL
 
     namespace UDP
     {
-      struct Configuration
+      struct Configuration : eCAL::TransportLayer::UDP::Configuration
       {
         bool enable;                                                  //!< enable layer
       };
@@ -50,14 +51,9 @@ namespace eCAL
 
     namespace TCP
     {
-      struct Configuration
+      struct Configuration : eCAL::TransportLayer::TCP::Configuration
       {
         bool enable;                                                  //!< enable layer
-
-        size_t num_executor_reader{};                                 //!< reader amount of threads that shall execute workload (Default: 4)
-        size_t num_executor_writer{};                                 //!< writer amount of threads that shall execute workload (Default: 4)
-
-        size_t max_reconnections{};                                   //!< reconnection attemps the session will try to reconnect in (Default: 5)
       };
     }
 
@@ -68,6 +64,8 @@ namespace eCAL
       SHM::Configuration shm;
       UDP::Configuration udp;
       TCP::Configuration tcp;
+
+      bool drop_out_of_order_messages{}; 
     };
   }
 }

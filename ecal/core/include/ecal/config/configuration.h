@@ -29,7 +29,6 @@
 #include <ecal/config/registration.h>
 #include <ecal/config/service.h>
 #include <ecal/config/logging.h>
-#include <ecal/config/transport_layer.h>
 #include <ecal/config/user_arguments.h>
 #include <ecal/config/publisher.h>
 #include <ecal/config/subscriber.h>
@@ -49,8 +48,8 @@ namespace eCAL
 {
   struct Configuration
   {
-    Registration::Configuration      registration{};
     TransportLayer::Configuration    transport_layer{};
+    Registration::Configuration      registration{};
     Monitoring::Configuration        monitoring{};
     Subscriber::Configuration        subscriber{};
     Publisher::Configuration         publisher{};

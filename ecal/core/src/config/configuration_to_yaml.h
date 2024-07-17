@@ -2,6 +2,7 @@
 #define CONFIGURATION_TO_YAML_H
 
 #include <ecal/config/configuration.h>
+#include <ecal_def.h>
 
 #ifndef YAML_CPP_STATIC_DEFINE 
 #define YAML_CPP_STATIC_DEFINE 
@@ -9,13 +10,25 @@
 #include <yaml-cpp/yaml.h>
 
 
+namespace 
+{
+  template<typename AS, typename MEM>
+  void AssignValue(MEM& member, const YAML::Node& node_, const char* key)
+  {
+    if (node_[key])
+      member = node_[key].as<AS>();
+  }
+}
+
 namespace YAML
 {
   // 3rd layer configuration objects
   // application objects
   template<>
   struct convert<eCAL::Application::Startup::Configuration>
-  {
+  { 
+    //static constexpr char* emulator_key = "emulator";
+
     static Node encode(const eCAL::Application::Startup::Configuration& config_)
     {
       Node node;
@@ -26,8 +39,8 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Application::Startup::Configuration& config_)
     {
-      if (node_["emulator"])
-        config_.terminal_emulator = node_["emulator"].as<std::string>();
+      AssignValue<std::string>(config_.terminal_emulator, node_, "emulator");
+
       return true;
     }
   };
@@ -100,11 +113,6 @@ namespace YAML
     {
       Node node;
       node["enable"]                  = config_.enable;
-      node["zero_copy_mode"]          = config_.zero_copy_mode;
-      node["acknowledge_timeout_ms"]  = config_.acknowledge_timeout_ms;
-      node["memfile_min_size_bytes"]  = static_cast<int>(config_.memfile_min_size_bytes);
-      node["memfile_reserve_percent"] = static_cast<int>(config_.memfile_reserve_percent);
-      node["memfile_buffer_count"]    = static_cast<int>(config_.memfile_buffer_count);
 
       return node;
     }
@@ -113,16 +121,6 @@ namespace YAML
     {
       if (node_["enable"])
         config_.enable                  = node_["enable"].as<bool>();
-      if (node_["zero_copy_mode"])
-        config_.zero_copy_mode          = node_["zero_copy_mode"].as<bool>();
-      if (node_["acknowledge_timeout_ms"])
-        config_.acknowledge_timeout_ms  = node_["acknowledge_timeout_ms"].as<unsigned int>();
-      if (node_["memfile_min_size_bytes"])
-        config_.memfile_min_size_bytes  = node_["memfile_min_size_bytes"].as<unsigned int>();
-      if (node_["memfile_reserve_percent"])
-        config_.memfile_reserve_percent = node_["memfile_reserve_percent"].as<unsigned int>();
-      if (node_["memfile_buffer_count"])
-        config_.memfile_buffer_count    = node_["memfile_buffer_count"].as<unsigned int>();
       return true;
     }
   };
@@ -134,8 +132,6 @@ namespace YAML
     {
       Node node;
       node["enable"]             = config_.enable;
-      node["loopback"]           = config_.loopback;
-      node["sndbuff_size_bytes"] = static_cast<int>(config_.sndbuf_size_bytes);
 
       return node;
     }
@@ -144,10 +140,6 @@ namespace YAML
     {
       if (node_["enable"])
         config_.enable            = node_["enable"].as<bool>();
-      if (node_["loopback"])
-        config_.loopback          = node_["loopback"].as<bool>();
-      if (node_["sndbuff_size_bytes"])
-        config_.sndbuf_size_bytes = node_["sndbuff_size_bytes"].as<unsigned int>();
       return true;
     }
   };
@@ -217,6 +209,9 @@ namespace YAML
     {
       Node node;
       node["enable"] = config_.enable;
+      node["number_executor_reader"] = config_.num_executor_writer;
+      node["number_executor_reader"] = config_.num_executor_reader;
+      node["max_reconnections"] = config_.max_reconnections;
 
       return node;
     }
@@ -225,99 +220,55 @@ namespace YAML
     {
       if (node_["enable"])
         config_.enable = node_["enable"].as<bool>();
-      return true;
-    }
-  };
-
-  // transport layer configuration objects
-  template<>
-  struct convert<eCAL::TransportLayer::TCPPubSub::Configuration>
-  {
-    static Node encode(const eCAL::TransportLayer::TCPPubSub::Configuration& config_)
-    {
-      Node node;
-      node["number_executor_reader"] = config_.num_executor_reader;
-      node["number_executor_writer"] = config_.num_executor_writer;
-      node["max_reconnections"]      = config_.max_reconnections;
-
-      return node;
-    }
-
-    static bool decode(const Node& node_, eCAL::TransportLayer::TCPPubSub::Configuration& config_)
-    {
       if (node_["number_executor_reader"])
-        config_.num_executor_reader = node_["number_executor_reader"].as<size_t>();
+        config_.num_executor_writer = node_["number_executor_reader"].as<size_t>();
       if (node_["number_executor_writer"])
-        config_.num_executor_writer = node_["number_executor_writer"].as<size_t>();
+        config_.num_executor_reader = node_["number_executor_reader"].as<size_t>();
       if (node_["max_reconnections"])
-        config_.max_reconnections   = node_["max_reconnections"].as<size_t>();
+        config_.max_reconnections = node_["max_reconnections"].as<size_t>();
       return true;
     }
   };
 
   template<>
-  struct convert<eCAL::TransportLayer::SHM::Configuration>
+  struct convert<eCAL::TransportLayer::UDP::Configuration>
   {
-    static Node encode(const eCAL::TransportLayer::SHM::Configuration& config_)
-    {
-      Node node;
-      node["host_group_name"] = config_.host_group_name;
-
-      return node;
-    }
-
-    static bool decode(const Node& node_, eCAL::TransportLayer::SHM::Configuration& config_)
-    {
-      if (node_["host_group_name"])
-        config_.host_group_name = node_["host_group_name"].as<std::string>();
-      return true;
-    }
-  };
-
-  template<>
-  struct convert<eCAL::TransportLayer::UDPMC::Configuration>
-  {
-    static Node encode(const eCAL::TransportLayer::UDPMC::Configuration& config_)
+    static Node encode(const eCAL::TransportLayer::UDP::Configuration& config_)
     {
       Node node;
       node["config_version"]      = config_.config_version == eCAL::Types::UdpConfigVersion::V1 ? "v1" : "v2";
-      node["group"]               = config_.group.Get();
       node["mask"]                = config_.mask.Get();
-      node["port"]                = static_cast<int>(config_.port);
-      node["ttl"]                 = config_.ttl;
-      node["send_buffer"]         = static_cast<int>(config_.sndbuf);
-      node["receive_buffer"]      = static_cast<int>(config_.recbuf);
-      node["join_all_interfaces"] = config_.join_all_interfaces;
-      node["npcap_enabled"]       = config_.npcap_enabled;
 
       return node;
     }
 
-    static bool decode(const Node& node_, eCAL::TransportLayer::UDPMC::Configuration& config_)
+    static bool decode(const Node& node_, eCAL::TransportLayer::UDP::Configuration& config_)
     {
       if (node_["config_version"])
         config_.config_version      = node_["config_version"].as<std::string>() == "v1" ? eCAL::Types::UdpConfigVersion::V1 : eCAL::Types::UdpConfigVersion::V2;
-      if (node_["group"])
-        config_.group               = node_["group"].as<std::string>();
       if (node_["mask"])
         config_.mask                = node_["mask"].as<std::string>();
-      if (node_["port"])
-        config_.port                = node_["port"].as<unsigned int>();
-      if (node_["ttl"])
-        config_.ttl                 = node_["ttl"].as<unsigned int>();
-      if (node_["send_buffer"])
-        config_.sndbuf              = node_["send_buffer"].as<unsigned int>();
-      if (node_["receive_buffer"])
-        config_.recbuf              = node_["receive_buffer"].as<unsigned int>();
-      if (node_["join_all_interfaces"])
-        config_.join_all_interfaces = node_["join_all_interfaces"].as<bool>();
-      if (node_["npcap_enabled"])
-        config_.npcap_enabled       = node_["npcap_enabled"].as<bool>();
       return true;
     }
   };
 
   // 2nd layer configuration objects
+  template<>
+  struct convert<eCAL::TransportLayer::Configuration>
+  {
+    static Node encode(const eCAL::TransportLayer::Configuration& config_)
+    {
+      Node node;
+
+      return node;
+    }
+
+    static bool decode(const Node& node_, eCAL::TransportLayer::Configuration& config_)
+    {
+      return true;
+    }
+  };
+
   template<>
   struct convert<eCAL::Application::Configuration>
   {
@@ -433,8 +384,6 @@ namespace YAML
     static Node encode(const eCAL::Registration::Configuration& config_)
     {
       Node node;
-      node["share_ttype"] = config_.share_ttype;
-      node["share_tdesc"] = config_.share_tdesc;
       node["registration_timeout"] = config_.getTimeoutMS();
       node["registration_refresh"] = config_.getRefreshMS();
       node["network_enabled"] = config_.network_enabled;
@@ -452,10 +401,6 @@ namespace YAML
         config_             = {reg_timeout, reg_refresh};
       }
       
-      if (node_["share_ttype"])
-        config_.share_ttype = node_["share_ttype"].as<bool>();
-      if (node_["share_tdesc"])
-        config_.share_tdesc = node_["share_tdesc"].as<bool>();
       if (node_["network_enabled"])
         config_.network_enabled = node_["network_enabled"].as<bool>();
       if (node_["shm_registration_enabled"])
@@ -533,34 +478,6 @@ namespace YAML
     }
   };
 
-  template<>
-  struct convert<eCAL::TransportLayer::Configuration>
-  {
-    static Node encode(const eCAL::TransportLayer::Configuration& config_)
-    {
-      Node node;
-      node["drop_out_of_order_messages"] = config_.drop_out_of_order_messages;
-      node["udp_mc"]                     = config_.mc_options;
-      node["tcppubsub"]                  = config_.tcp_options;
-      node["shm"]                        = config_.shm_options;
-
-      return node;
-    }
-
-    static bool decode(const Node& node_, eCAL::TransportLayer::Configuration& config_)
-    {
-      if (node_["drop_out_of_order_messages"])
-        config_.drop_out_of_order_messages = node_["drop_out_of_order_messages"].as<bool>();
-      if (node_["udp_mc"])
-        config_.mc_options                 = node_["udp_mc"].as<eCAL::TransportLayer::UDPMC::Configuration>();
-      if (node_["tcppubsub"])
-        config_.tcp_options                = node_["tcppubsub"].as<eCAL::TransportLayer::TCPPubSub::Configuration>();
-      if (node_["shm"])
-        config_.shm_options                = node_["shm"].as<eCAL::TransportLayer::SHM::Configuration>();
-      return true;
-    }
-  };
-
   // Main configuration object
   template<>
   struct convert<eCAL::Configuration>
@@ -576,13 +493,14 @@ namespace YAML
       node["service"]         = config_.service;
       node["application"]     = config_.application;
       node["logging"]         = config_.logging;
-      node["transport_layer"] = config_.transport_layer;
 
       return node;
     }
 
     static bool decode(const Node& node_, eCAL::Configuration& config_)
     {
+      if (node_["network"])
+        config_.transport_layer        = node_["network"].as<eCAL::TransportLayer::Configuration>();
       if (node_["publisher"])
         config_.publisher              = node_["publisher"].as<eCAL::Publisher::Configuration>();
       if (node_["subscriber"])
@@ -599,8 +517,6 @@ namespace YAML
         config_.application            = node_["application"].as<eCAL::Application::Configuration>();
       if (node_["logging"])
         config_.logging                = node_["logging"].as<eCAL::Logging::Configuration>();
-      if (node_["transport_layer"])
-        config_.transport_layer        = node_["transport_layer"].as<eCAL::TransportLayer::Configuration>();
       return true;
     }
   };  
