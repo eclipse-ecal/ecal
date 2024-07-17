@@ -27,9 +27,9 @@
 
 #include "registration/ecal_registration_receiver.h"
 
-#include "registration/ecal_registration_receiver_udp.h"
+#include "registration/udp/ecal_registration_receiver_udp.h"
 #if ECAL_CORE_REGISTRATION_SHM
-#include "registration/ecal_registration_receiver_shm.h"
+#include "registration/shm/ecal_registration_receiver_shm.h"
 #endif
 #include "ecal_global_accessors.h"
 

@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "registration/ecal_registration_receiver_udp.h"
+#include "registration/udp/ecal_registration_receiver_udp.h"
 
 #include "io/udp/ecal_udp_receiver_attr.h"
 #include "io/udp/ecal_udp_sample_receiver.h"

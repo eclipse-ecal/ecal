@@ -27,11 +27,11 @@
 
 #include "ecal_globals.h"
 
-#include "ecal_registration_receiver_shm.h"
+#include "registration/shm/ecal_registration_receiver_shm.h"
 #include "serialization/ecal_serialize_sample_registration.h"
 
-#include "shm/ecal_memfile_broadcast.h"
-#include "shm/ecal_memfile_broadcast_reader.h"
+#include "registration/shm/ecal_memfile_broadcast.h"
+#include "registration/shm/ecal_memfile_broadcast_reader.h"
 #include "util/ecal_thread.h"
 
 namespace eCAL
