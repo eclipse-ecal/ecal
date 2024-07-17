@@ -261,10 +261,10 @@ namespace eCAL
         }
 
         eCAL_pb_TLayer pb_layer = eCAL_pb_TLayer_init_default;
-        pb_layer.type      = static_cast<eCAL_pb_eTLayerType>(layer.type);
-        pb_layer.version   = layer.version;
-        pb_layer.enabled   = layer.enabled;
-        pb_layer.confirmed = layer.active;
+        pb_layer.type    = static_cast<eCAL_pb_eTLayerType>(layer.type);
+        pb_layer.version = layer.version;
+        pb_layer.enabled = layer.enabled;
+        pb_layer.active  = layer.active;
 
         // layer
         pb_layer.has_par_layer = true;
@@ -314,10 +314,10 @@ namespace eCAL
       }
 
       // apply layer values
-      layer.type      = static_cast<eCAL::eTLayerType>(pb_layer.type);
-      layer.version   = pb_layer.version;
-      layer.enabled   = pb_layer.enabled;
-      layer.active = pb_layer.confirmed;
+      layer.type    = static_cast<eCAL::eTLayerType>(pb_layer.type);
+      layer.version = pb_layer.version;
+      layer.enabled = pb_layer.enabled;
+      layer.active  = pb_layer.active;
 
       // apply tcp layer parameter
       layer.par_layer.layer_par_tcp.port = pb_layer.par_layer.layer_par_tcp.port;

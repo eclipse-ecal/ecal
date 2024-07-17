@@ -50,10 +50,10 @@ typedef struct _eCAL_pb_TLayer { /* Reserved fields in enums are not supported i
  reserved 4; */
     eCAL_pb_eTLayerType type; /* transport layer type */
     int32_t version; /* transport layer version */
-    bool confirmed; /* transport layer usage confirmed ? */
+    bool active; /* transport layer in use ? */
     bool has_par_layer;
     eCAL_pb_ConnnectionPar par_layer; /* transport layer parameter */
-    bool enabled; /* transport enabled ? */
+    bool enabled; /* transport layer enabled ? */
 } eCAL_pb_TLayer;
 
 
@@ -93,7 +93,7 @@ extern "C" {
 #define eCAL_pb_ConnnectionPar_layer_par_tcp_tag 4
 #define eCAL_pb_TLayer_type_tag                  1
 #define eCAL_pb_TLayer_version_tag               2
-#define eCAL_pb_TLayer_confirmed_tag             3
+#define eCAL_pb_TLayer_active_tag                3
 #define eCAL_pb_TLayer_par_layer_tag             5
 #define eCAL_pb_TLayer_enabled_tag               6
 
@@ -126,7 +126,7 @@ X(a, STATIC,   OPTIONAL, MESSAGE,  layer_par_tcp,     4)
 #define eCAL_pb_TLayer_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, UENUM,    type,              1) \
 X(a, STATIC,   SINGULAR, INT32,    version,           2) \
-X(a, STATIC,   SINGULAR, BOOL,     confirmed,         3) \
+X(a, STATIC,   SINGULAR, BOOL,     active,            3) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  par_layer,         5) \
 X(a, STATIC,   SINGULAR, BOOL,     enabled,           6)
 #define eCAL_pb_TLayer_CALLBACK NULL

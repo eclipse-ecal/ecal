@@ -79,7 +79,7 @@ namespace
   void logLayerState(const std::string& layerName, const eCAL::CDataWriter::SLayerState& state) {
     std::cout << layerName << " - Read Enabled: "   << boolToString(state.read_enabled)
                            << ", Write Enabled: "   << boolToString(state.write_enabled)
-                           << ", Write Confirmed: " << boolToString(state.write_confirmed) << std::endl;
+                           << ", Write Active : " << boolToString(state.active) << std::endl;
   }
 
   // function to log the states of SLayerStates
