@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,38 +27,37 @@
 
 #pragma once
 
-#include "shm/ecal_memfile_broadcast.h"
-#include "shm/ecal_memfile_broadcast_reader.h"
-
-#include "util/ecal_thread.h"
 #include <memory>
+#include <registration/ecal_registration_types.h>
 
 namespace eCAL
 {
-  class CMemfileRegistrationReceiver
+  class CCallbackThread;
+  class CMemoryFileBroadcast;
+  class CMemoryFileBroadcastReader;
+
+  class CRegistrationReceiverSHM
   {
   public:
-    CMemfileRegistrationReceiver() = default;
-    ~CMemfileRegistrationReceiver();
+    CRegistrationReceiverSHM(RegistrationApplySampleCallbackT apply_sample_callback);
+    ~CRegistrationReceiverSHM();
 
     // default copy constructor
-    CMemfileRegistrationReceiver(const CMemfileRegistrationReceiver& other) = delete;
+    CRegistrationReceiverSHM(const CRegistrationReceiverSHM& other) = delete;
     // default copy assignment operator
-    CMemfileRegistrationReceiver& operator=(const CMemfileRegistrationReceiver& other) = delete;
+    CRegistrationReceiverSHM& operator=(const CRegistrationReceiverSHM& other) = delete;
     // default move constructor
-    CMemfileRegistrationReceiver(CMemfileRegistrationReceiver&& other) noexcept = delete;
+    CRegistrationReceiverSHM(CRegistrationReceiverSHM&& other) noexcept = delete;
     // default move assignment operator
-    CMemfileRegistrationReceiver& operator=(CMemfileRegistrationReceiver&& other) noexcept = delete;
-
-    void Create(CMemoryFileBroadcastReader* memfile_broadcast_reader_);
-    void Destroy();
+    CRegistrationReceiverSHM& operator=(CRegistrationReceiverSHM&& other) noexcept = delete;
 
   private:
     void Receive();
 
-    CMemoryFileBroadcastReader*       m_memfile_broadcast_reader = nullptr;
-    std::shared_ptr<CCallbackThread>  m_memfile_broadcast_reader_thread;
+    std::unique_ptr<CMemoryFileBroadcast>       m_memfile_broadcast;
+    std::unique_ptr<CMemoryFileBroadcastReader> m_memfile_broadcast_reader;
+    std::unique_ptr<CCallbackThread>            m_memfile_broadcast_reader_thread;
 
-    bool m_created = false;
+    RegistrationApplySampleCallbackT m_apply_sample_callback;
   };
 }

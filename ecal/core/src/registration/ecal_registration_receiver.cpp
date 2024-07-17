@@ -25,7 +25,12 @@
  *
 **/
 
-#include "ecal_registration_receiver.h"
+#include "registration/ecal_registration_receiver.h"
+
+#include "registration/udp/ecal_registration_receiver_udp.h"
+#if ECAL_CORE_REGISTRATION_SHM
+#include "registration/shm/ecal_registration_receiver_shm.h"
+#endif
 #include "ecal_global_accessors.h"
 
 #include "pubsub/ecal_subgate.h"
@@ -75,26 +80,13 @@ namespace eCAL
 
     if (m_use_registration_udp)
     {
-      // set network attributes
-      eCAL::UDP::SReceiverAttr attr;
-      attr.address   = UDP::GetRegistrationAddress();
-      attr.port      = UDP::GetRegistrationPort();
-      attr.broadcast = UDP::IsBroadcast();
-      attr.loopback  = true;
-      attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
-
-      // start registration sample receiver
-      m_registration_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CRegistrationReceiver::HasSample, this, std::placeholders::_1), std::bind(&CRegistrationReceiver::ApplySerializedSample, this, std::placeholders::_1, std::placeholders::_2));
+      m_registration_receiver_udp = std::make_unique<CRegistrationReceiverUDP>([this](const Registration::Sample& sample_) {return this->ApplySample(sample_); });
     }
 
 #if ECAL_CORE_REGISTRATION_SHM
     if (m_use_registration_shm)
     {
-      m_memfile_broadcast.Create(Config::Experimental::GetShmMonitoringDomain(), Config::Experimental::GetShmMonitoringQueueSize());
-      m_memfile_broadcast.FlushLocalEventQueue();
-      m_memfile_broadcast_reader.Bind(&m_memfile_broadcast);
-
-      m_memfile_reg_rcv.Create(&m_memfile_broadcast_reader);
+      m_registration_receiver_shm = std::make_unique<CRegistrationReceiverSHM>([this](const Registration::Sample& sample_) {return this->ApplySample(sample_); });
     }
 #endif
 
@@ -106,20 +98,15 @@ namespace eCAL
     if(!m_created) return;
 
     // stop network registration receive thread
-    m_registration_receiver = nullptr;
-
-    // stop network registration receive thread
     if (m_use_registration_udp)
     {
-      m_registration_receiver = nullptr;
+      m_registration_receiver_udp = nullptr;
     }
 
 #if ECAL_CORE_REGISTRATION_SHM
     if (m_use_registration_shm)
     {
-      // stop memfile registration receive thread and unbind reader
-      m_memfile_broadcast_reader.Unbind();
-      m_memfile_broadcast.Destroy();
+      m_registration_receiver_shm = nullptr;
     }
 #endif
 
@@ -137,16 +124,6 @@ namespace eCAL
   void CRegistrationReceiver::EnableLoopback(bool state_)
   {
     m_loopback = state_;
-  }
-
-  bool CRegistrationReceiver::ApplySerializedSample(const char* serialized_sample_data_, size_t serialized_sample_size_)
-  {
-    if(!m_created) return false;
-
-    Registration::Sample sample;
-    if (!DeserializeFromBuffer(serialized_sample_data_, serialized_sample_size_, sample)) return false;
-
-    return ApplySample(sample);
   }
 
   bool CRegistrationReceiver::ApplySample(const Registration::Sample& sample_)

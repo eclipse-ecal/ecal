@@ -30,8 +30,8 @@
 
 #include "registration/ecal_registration_sender.h"
 
-#include "shm/ecal_memfile_broadcast.h"
-#include "shm/ecal_memfile_broadcast_writer.h"
+#include "registration/shm/ecal_memfile_broadcast.h"
+#include "registration/shm/ecal_memfile_broadcast_writer.h"
 
 namespace eCAL
 {

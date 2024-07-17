@@ -285,15 +285,17 @@ if (ECAL_CORE_REGISTRATION)
       src/registration/ecal_registration_receiver.cpp
       src/registration/ecal_registration_receiver.h
       src/registration/ecal_registration_sender.h
-      src/registration/ecal_registration_sender_udp.cpp
-      src/registration/ecal_registration_sender_udp.h
+      src/registration/udp/ecal_registration_receiver_udp.cpp
+      src/registration/udp/ecal_registration_receiver_udp.h
+      src/registration/udp/ecal_registration_sender_udp.cpp
+      src/registration/udp/ecal_registration_sender_udp.h
   )
   if(ECAL_CORE_REGISTRATION_SHM)
     list(APPEND ecal_registration_src
-        src/registration/ecal_registration_receiver_shm.cpp
-        src/registration/ecal_registration_receiver_shm.h
-        src/registration/ecal_registration_sender_shm.cpp
-        src/registration/ecal_registration_sender_shm.h
+        src/registration/shm/ecal_registration_receiver_shm.cpp
+        src/registration/shm/ecal_registration_receiver_shm.h
+        src/registration/shm/ecal_registration_sender_shm.cpp
+        src/registration/shm/ecal_registration_sender_shm.h
         src/registration/shm/ecal_memfile_broadcast.cpp
         src/registration/shm/ecal_memfile_broadcast.h
         src/registration/shm/ecal_memfile_broadcast_reader.cpp
