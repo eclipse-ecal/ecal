@@ -50,7 +50,7 @@ We provide binary installers for Windows and Ubuntu. If you need further help in
 
 ![eCAL Setup](doc/rst/getting_started/img/setup.png)
     
-*We only support 64bit Windows 7 / 10*
+*We support 64bit Windows 7 / 10 / 11*
 
 ### Ubuntu
 
