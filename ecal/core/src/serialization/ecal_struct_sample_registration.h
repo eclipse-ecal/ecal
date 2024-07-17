@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,8 @@ namespace eCAL
     {
       eTLayerType                         type = tl_none;               // transport layer type
       int32_t                             version = 0;                  // transport layer version
-      bool                                confirmed = false;            // transport layer used?
+      bool                                enabled = false;              // transport layer enabled ?
+      bool                                active = false;               // transport layer in use ?
       ConnectionPar                       par_layer;                    // transport layer parameter
     };
 

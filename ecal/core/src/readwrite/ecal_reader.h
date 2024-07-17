@@ -23,9 +23,9 @@
 
 #pragma once
 
-#include <ecal/ecal.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_types.h>
+#include <ecal/config/subscriber.h>
 
 #include "serialization/ecal_serialize_sample_payload.h"
 #include "serialization/ecal_serialize_sample_registration.h"
@@ -39,10 +39,10 @@
 #include <deque>
 #include <map>
 #include <mutex>
+#include <queue>
 #include <set>
 #include <string>
 #include <tuple>
-#include <queue>
 #include <unordered_map>
 
 namespace eCAL
@@ -50,11 +50,18 @@ namespace eCAL
   class CDataReader
   {
   public:
+    struct SLayerState
+    {
+      bool write_enabled = false;   // is publisher enabled to write data on this layer?
+      bool read_enabled  = false;   // is this subscriber configured to read data from this layer?
+      bool active        = false;   // data has been received on this layer
+    };
+ 
     struct SLayerStates
     {
-      bool udp = false;
-      bool shm = false;
-      bool tcp = false;
+      SLayerState udp;
+      SLayerState shm;
+      SLayerState tcp;
     };
 
     struct SPublicationInfo
@@ -70,14 +77,12 @@ namespace eCAL
       }
     };
 
-    CDataReader(const std::string& topic_name_, const SDataTypeInformation& topic_info_);
+    CDataReader(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Subscriber::Configuration& config_ = {});
     ~CDataReader();
 
     bool Stop();
 
-    static void InitializeLayers();
-
-    bool Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);
+    bool Read(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);
 
     bool AddReceiveCallback(ReceiveCallbackT callback_);
     bool RemReceiveCallback();
@@ -95,7 +100,7 @@ namespace eCAL
 
     void ApplyLayerParameter(const SPublicationInfo& publication_info_, eTLayerType type_, const Registration::ConnectionPar& parameter_);
 
-    std::string Dump(const std::string& indent_ = "");
+    void RefreshRegistration();
 
     bool IsCreated() const { return(m_created); }
 
@@ -115,19 +120,21 @@ namespace eCAL
     std::string          GetTopicID()             const { return(m_topic_id); }
     SDataTypeInformation GetDataTypeInformation() const { return(m_topic_info); }
 
-    void RefreshRegistration();
+    static void InitializeLayers();
+    size_t ApplySample(const std::string& tid_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
 
-    size_t AddSample(const std::string& tid_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
+    std::string Dump(const std::string& indent_ = "");
 
   protected:
-    void SubscribeToLayers();
-    void UnsubscribeFromLayers();
-
     bool Register(bool force_);
     bool Unregister();
 
-    void Connect(const std::string& tid_, const SDataTypeInformation& tinfo_);
-    void Disconnect();
+    void StartTransportLayer();
+    void StopTransportLayer();
+
+    void FireConnectEvent(const std::string& tid_, const SDataTypeInformation& tinfo_);
+    void FireDisconnectEvent();
+
     bool CheckMessageClock(const std::string& tid_, long long current_clock_);
 
     int32_t GetFrequency();
@@ -141,6 +148,7 @@ namespace eCAL
     SDataTypeInformation                      m_topic_info;
     std::map<std::string, std::string>        m_attr;
     std::atomic<size_t>                       m_topic_size;
+    Subscriber::Configuration                 m_config;
 
     std::atomic<bool>                         m_connected;
     using PublicationMapT = Util::CExpirationMap<SPublicationInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
@@ -177,7 +185,7 @@ namespace eCAL
     bool                                      m_share_ttype = false;
     bool                                      m_share_tdesc = false;
 
-    SLayerStates                              m_confirmed_layers;
+    SLayerStates                              m_layers;
     std::atomic<bool>                         m_created;
   };
 }

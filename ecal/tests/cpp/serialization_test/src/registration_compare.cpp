@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -148,7 +148,8 @@ namespace eCAL
           // compare TLayer objects for equality
           return (layer1.type      == layer2.type) &&
                  (layer1.version   == layer2.version) &&
-                 (layer1.confirmed == layer2.confirmed) &&
+                 (layer1.enabled   == layer2.enabled) &&
+                 (layer1.active == layer2.active) &&
                  CompareConnectionPar(layer1.par_layer, layer2.par_layer);
         });
     }

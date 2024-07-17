@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,7 +95,8 @@ namespace eCAL
       TLayer layer;
       layer.type      = static_cast<eTLayerType>(rand() % (tl_all + 1));
       layer.version   = rand() % 100;
-      layer.confirmed = rand() % 2 == 1;
+      layer.enabled   = rand() % 2 == 1;
+      layer.active = rand() % 2 == 1;
       return layer;
     }
 
