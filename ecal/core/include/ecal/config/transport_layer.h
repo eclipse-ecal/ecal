@@ -61,10 +61,7 @@ namespace eCAL
     {
       UDP::Configuration        udp;
       TCP::Configuration        tcp;
-      SHM::Configuration        shm;
-      // bool                   network_enabled{};               /*!<eCAL components communicate over network boundaries*/
-
-      // std::string            host_group_name{};               
+      SHM::Configuration        shm;              
     };
   }
 }

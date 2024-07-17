@@ -111,9 +111,9 @@ publisher:
   # Share topic description via registration
   share_topic_description: true
   # Priority list for layer usage in local mode (Default: SHM > UDP > TCP)
-  priority_list_local: ["shm", "udp", "tcp"]
+  priority_local: ["shm", "udp", "tcp"]
   # Priority list for layer usage in cloud mode (Default: UDP > TCP)
-  priority_list_remote: ["udp", "tcp"]
+  priority_network: ["udp", "tcp"]
 
 
 # Subscriber specific base configuration

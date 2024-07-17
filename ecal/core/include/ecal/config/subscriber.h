@@ -43,7 +43,7 @@ namespace eCAL
 
     namespace UDP
     {
-      struct Configuration : eCAL::TransportLayer::UDP::Configuration
+      struct Configuration
       {
         bool enable;                                                  //!< enable layer
       };
@@ -51,7 +51,7 @@ namespace eCAL
 
     namespace TCP
     {
-      struct Configuration : eCAL::TransportLayer::TCP::Configuration
+      struct Configuration
       {
         bool enable;                                                  //!< enable layer
       };

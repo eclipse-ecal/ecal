@@ -104,21 +104,21 @@ namespace eCAL
 
     ECAL_API std::string       GetUdpMulticastGroup                 () { return GetConfiguration().transport_layer.udp.network.group; }
     ECAL_API std::string       GetUdpMulticastMask                  () { return GetConfiguration().transport_layer.udp.mask; }
-    ECAL_API int               GetUdpMulticastPort                  () { return GetConfiguration().transport_layer.udp.general.port; }
+    ECAL_API int               GetUdpMulticastPort                  () { return GetConfiguration().transport_layer.udp.network.port; }
     ECAL_API int               GetUdpMulticastTtl                   () { return GetConfiguration().transport_layer.udp.network.ttl; }
 
-    ECAL_API int               GetUdpMulticastSndBufSizeBytes       () { return GetConfiguration().transport_layer.udp.general.send_buffer; }
-    ECAL_API int               GetUdpMulticastRcvBufSizeBytes       () { return GetConfiguration().transport_layer.udp.general.receive_buffer; }
-    ECAL_API bool              IsUdpMulticastJoinAllIfEnabled       () { return GetConfiguration().transport_layer.udp.general.join_all_interfaces; }
+    ECAL_API int               GetUdpMulticastSndBufSizeBytes       () { return GetConfiguration().transport_layer.udp.network.send_buffer; }
+    ECAL_API int               GetUdpMulticastRcvBufSizeBytes       () { return GetConfiguration().transport_layer.udp.network.receive_buffer; }
+    ECAL_API bool              IsUdpMulticastJoinAllIfEnabled       () { return GetConfiguration().transport_layer.udp.network.join_all_interfaces; }
 
     ECAL_API bool              IsUdpMulticastRecEnabled             () { return GetConfiguration().subscriber.udp.enable; }
     ECAL_API bool              IsShmRecEnabled                      () { return GetConfiguration().subscriber.shm.enable; }
     ECAL_API bool              IsTcpRecEnabled                      () { return GetConfiguration().subscriber.tcp.enable; }
 
-    ECAL_API bool              IsNpcapEnabled                       () { return GetConfiguration().transport_layer.udp.general.npcap_enabled; }
+    ECAL_API bool              IsNpcapEnabled                       () { return GetConfiguration().transport_layer.udp.network.npcap_enabled; }
 
-    ECAL_API size_t            GetTcpPubsubReaderThreadpoolSize     () { return GetConfiguration().transport_layer.tcp.num_executor_reader;};
-    ECAL_API size_t            GetTcpPubsubWriterThreadpoolSize     () { return GetConfiguration().transport_layer.tcp.num_executor_writer;};
+    ECAL_API size_t            GetTcpPubsubReaderThreadpoolSize     () { return GetConfiguration().transport_layer.tcp.number_executor_reader;};
+    ECAL_API size_t            GetTcpPubsubWriterThreadpoolSize     () { return GetConfiguration().transport_layer.tcp.number_executor_writer;};
     ECAL_API size_t            GetTcpPubsubMaxReconnectionAttemps   () { return GetConfiguration().transport_layer.tcp.max_reconnections;};
 
     ECAL_API std::string       GetHostGroupName                     () { return GetConfiguration().registration.host_group_name; }

@@ -70,7 +70,6 @@ namespace eCAL
                                                                                      v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups (Default: v1) */
         MODE                                     mode{};                        /*!< Valid modes: local, network (Default: local)*/                                                  
         
-        General                                  general;
         Local                                    local;
         Network                                  network;
       }; 
@@ -80,8 +79,8 @@ namespace eCAL
     {
       struct Configuration
       {
-        size_t num_executor_reader{};                                           //!< reader amount of threads that shall execute workload (Default: 4)
-        size_t num_executor_writer{};                                           //!< writer amount of threads that shall execute workload (Default: 4)
+        size_t number_executor_reader{};                                        //!< reader amount of threads that shall execute workload (Default: 4)
+        size_t number_executor_writer{};                                        //!< writer amount of threads that shall execute workload (Default: 4)
         size_t max_reconnections{};                                             //!< reconnection attemps the session will try to reconnect in (Default: 5)
       };
     }

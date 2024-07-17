@@ -159,12 +159,12 @@ TEST(ConfigDeathTest, user_config_death_test)
   // Test the ConstrainedInteger class with wrong values. Default are MIN = 5242880, STEP = 1024
   // Value below MIN
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.general.send_buffer, 42),
+    SetValue(custom_config.transport_layer.udp.network.send_buffer, 42),
     std::invalid_argument);
   
   // Wrong step. Default STEP = 1024
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.general.send_buffer, (5242880 + 512)),
+    SetValue(custom_config.transport_layer.udp.network.send_buffer, (5242880 + 512)),
     std::invalid_argument);
 
   // Test the registration option limits
@@ -329,10 +329,10 @@ TEST(YamlConfigReaderTest, parse_values_test)
   EXPECT_EQ(config.transport_layer.udp.network.group, "239.5.0.1");
 
   // Check constrained Integer
-  EXPECT_EQ(config.transport_layer.udp.general.port, 14010);
+  EXPECT_EQ(config.transport_layer.udp.network.port, 14010);
 
   // Check boolean
-  EXPECT_EQ(config.transport_layer.udp.general.npcap_enabled, true);
+  EXPECT_EQ(config.transport_layer.udp.network.npcap_enabled, true);
 
   // Check unsigned size_t
   EXPECT_EQ(config.transport_layer.tcp.max_reconnections, 7);
@@ -343,8 +343,6 @@ TEST(YamlConfigReaderTest, parse_values_test)
 
 TEST(YamlConfigReaderTest, yaml_node_merger)
 {
-
-  
   YAML::Node node_1;
   YAML::Node node_2;
 

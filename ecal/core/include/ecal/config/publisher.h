@@ -135,7 +135,7 @@ namespace eCAL
       bool                 share_topic_description;                     //!< share topic description via registration
 
       std::vector<std::string> priority_local;                          //!< priority list for layer usage in local mode (Default: SHM > UDP > TCP)
-      std::vector<std::string> priority_remote;                         //!< priority list for layer usage in cloud mode (Default: UDP > TCP)
+      std::vector<std::string> priority_network;                        //!< priority list for layer usage in cloud mode (Default: UDP > TCP)
     };
   }
 }
