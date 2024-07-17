@@ -362,7 +362,7 @@ namespace eCAL
     virtual ~CConfigImpl() = default;
 
     void OverwriteKeys(const std::vector<std::string>& /*key_vec_*/) {}
-    void AddFile(std::string& /*file_name_*/) {}
+    bool AddFile(std::string& /*file_name_*/) {return false;}
 
     std::string GetValue(const std::string& /*section_*/, const std::string& /*key_*/, const std::string& default_) { return default_;}
     long GetLongValue(const std::string& /*section_*/, const std::string& /*key_*/, long default_)                  { return default_; }
