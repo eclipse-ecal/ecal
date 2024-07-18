@@ -232,7 +232,9 @@ namespace eCAL
     CDataReader::SLayerStates layer_states;
     for (const auto& layer : ecal_topic.tlayer)
     {
-      if (layer.enabled)
+      // transport layer versions 0 and 1 did not support dynamic layer enable feature
+      // so we set assume layer is enabled if we receive a registration in this case
+      if (layer.enabled || layer.version < 2)
       {
         switch (layer.type)
         {

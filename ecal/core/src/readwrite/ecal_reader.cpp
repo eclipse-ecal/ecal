@@ -32,6 +32,7 @@
 #include "ecal_reader.h"
 #include "ecal_global_accessors.h"
 #include "ecal_reader_layer.h"
+#include "ecal_transport_layer.h"
 
 #if ECAL_CORE_TRANSPORT_UDP
 #include "udp/ecal_reader_udp.h"
@@ -589,9 +590,9 @@ namespace eCAL
     {
       Registration::TLayer udp_tlayer;
       udp_tlayer.type      = tl_ecal_udp;
-      udp_tlayer.version   = 1;
+      udp_tlayer.version   = ecal_transport_layer_version;
       udp_tlayer.enabled   = m_layers.udp.read_enabled;
-      udp_tlayer.active = m_layers.udp.active;
+      udp_tlayer.active    = m_layers.udp.active;
       ecal_reg_sample_topic.tlayer.push_back(udp_tlayer);
     }
 #endif
@@ -601,9 +602,9 @@ namespace eCAL
     {
       Registration::TLayer shm_tlayer;
       shm_tlayer.type      = tl_ecal_shm;
-      shm_tlayer.version   = 1;
+      shm_tlayer.version   = ecal_transport_layer_version;
       shm_tlayer.enabled   = m_layers.shm.read_enabled;
-      shm_tlayer.active = m_layers.shm.active;
+      shm_tlayer.active    = m_layers.shm.active;
       ecal_reg_sample_topic.tlayer.push_back(shm_tlayer);
     }
 #endif
@@ -613,9 +614,9 @@ namespace eCAL
     {
       Registration::TLayer tcp_tlayer;
       tcp_tlayer.type      = tl_ecal_tcp;
-      tcp_tlayer.version   = 1;
+      tcp_tlayer.version   = ecal_transport_layer_version;
       tcp_tlayer.enabled   = m_layers.tcp.read_enabled;
-      tcp_tlayer.active = m_layers.tcp.active;
+      tcp_tlayer.active    = m_layers.tcp.active;
       ecal_reg_sample_topic.tlayer.push_back(tcp_tlayer);
     }
 #endif

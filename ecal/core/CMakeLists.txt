@@ -217,6 +217,10 @@ endif()
 ######################################
 # readwrite
 ######################################
+set(ecal_readwrite_src
+    src/readwrite/ecal_transport_layer.h
+)
+
 if(ECAL_CORE_PUBLISHER)
   set(ecal_writer_src
       src/readwrite/ecal_writer.cpp
@@ -537,6 +541,7 @@ set(ecal_sources
     ${ecal_monitoring_src}
     ${ecal_pub_src}
     ${ecal_sub_src}
+    ${ecal_readwrite_src}
     ${ecal_writer_src}
     ${ecal_reader_src}
     ${ecal_registration_src}
