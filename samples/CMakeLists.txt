@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -48,6 +48,8 @@ add_subdirectory(cpp/benchmarks/latency_rec)
 add_subdirectory(cpp/benchmarks/latency_snd)
 add_subdirectory(cpp/benchmarks/many_connections_rec)
 add_subdirectory(cpp/benchmarks/many_connections_snd)
+add_subdirectory(cpp/benchmarks/massive_pub_sub)
+
 if(HAS_HDF5)
 add_subdirectory(cpp/benchmarks/measurement)
 endif()
