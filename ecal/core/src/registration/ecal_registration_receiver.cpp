@@ -139,17 +139,9 @@ namespace eCAL
       }
     }
 
-    std::string reg_sample;
-    if (m_callback_pub
-      || m_callback_sub
-      || m_callback_service
-      || m_callback_client
-      || m_callback_process
-      )
-    {
-      SerializeToBuffer(sample_, reg_sample);
-    }
-
+    // forward registration to defined gates
+    // and store user registration callback
+    RegistrationCallbackT reg_callback(nullptr);
     switch (sample_.cmd_type)
     {
     case bct_none:
@@ -158,36 +150,41 @@ namespace eCAL
     case bct_reg_process:
     case bct_unreg_process:
       // unregistration event not implemented currently
-      if (m_callback_process) m_callback_process(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
+      reg_callback = m_callback_process;
       break;
-#if ECAL_CORE_SERVICE
     case bct_reg_service:
-      if (g_clientgate() != nullptr) g_clientgate()->ApplyServiceRegistration(sample_);
-      if (m_callback_service) m_callback_service(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
-      break;
     case bct_unreg_service:
-      // current client implementation doesn't need that information
-      if (m_callback_service) m_callback_service(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
+      ApplyServiceRegistration(sample_);
+      reg_callback = m_callback_service;
       break;
-#endif
     case bct_reg_client:
     case bct_unreg_client:
-      // current service implementation doesn't need that information
-      if (m_callback_client) m_callback_client(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
+      // current client implementation doesn't need that information
+      reg_callback = m_callback_client;
       break;
     case bct_reg_subscriber:
     case bct_unreg_subscriber:
       ApplySubscriberRegistration(sample_);
-      if (m_callback_sub) m_callback_sub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
+      reg_callback = m_callback_sub;
       break;
     case bct_reg_publisher:
     case bct_unreg_publisher:
       ApplyPublisherRegistration(sample_);
-      if (m_callback_pub) m_callback_pub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
+      reg_callback = m_callback_pub;
       break;
     default:
       Logging::Log(log_level_debug1, "CRegistrationReceiver::ApplySample : unknown sample type");
       break;
+    }
+
+    // call user registration callback
+    if (reg_callback)
+    {
+      std::string reg_sample;
+      if (SerializeToBuffer(sample_, reg_sample))
+      {
+        reg_callback(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
+      }
     }
 
     return true;
@@ -243,47 +240,42 @@ namespace eCAL
     }
   }
 
+  void CRegistrationReceiver::ApplyServiceRegistration(const eCAL::Registration::Sample& sample_)
+  {
+#if ECAL_CORE_SERVICE
+    if (g_clientgate() == nullptr)           return;
+    if (!ShouldProcessRegistration(sample_)) return;
+
+    switch (sample_.cmd_type)
+    {
+    case bct_reg_service:
+      g_clientgate()->ApplyServiceRegistration(sample_);
+      break;
+    case bct_unreg_service:
+      // current client implementation doesn't need that information
+      break;
+    default:
+      break;
+    }
+#endif
+  }
+
   void CRegistrationReceiver::ApplySubscriberRegistration(const Registration::Sample& sample_)
   {
 #if ECAL_CORE_PUBLISHER
-    if (g_pubgate() == nullptr) return;
+    if (g_pubgate() == nullptr)              return;
+    if (!ShouldProcessRegistration(sample_)) return;
 
-    // process registrations from same host group
-    if (IsHostGroupMember(sample_))
+    switch (sample_.cmd_type)
     {
-      // do not register local entities, only if loop back flag is set true
-      if (m_loopback || (sample_.topic.pid != Process::GetProcessID()))
-      {
-        switch (sample_.cmd_type)
-        {
-        case bct_reg_subscriber:
-          g_pubgate()->ApplySubRegistration(sample_);
-          break;
-        case bct_unreg_subscriber:
-          g_pubgate()->ApplySubUnregistration(sample_);
-          break;
-        default:
-          break;
-        }
-      }
-    }
-    // process external registrations
-    else
-    {
-      if (m_network)
-      {
-        switch (sample_.cmd_type)
-        {
-        case bct_reg_subscriber:
-          g_pubgate()->ApplySubRegistration(sample_);
-          break;
-        case bct_unreg_subscriber:
-          g_pubgate()->ApplySubUnregistration(sample_);
-          break;
-        default:
-          break;
-        }
-      }
+    case bct_reg_subscriber:
+      g_pubgate()->ApplySubRegistration(sample_);
+      break;
+    case bct_unreg_subscriber:
+      g_pubgate()->ApplySubUnregistration(sample_);
+      break;
+    default:
+      break;
     }
 #endif
   }
@@ -291,51 +283,51 @@ namespace eCAL
   void CRegistrationReceiver::ApplyPublisherRegistration(const Registration::Sample& sample_)
   {
 #if ECAL_CORE_SUBSCRIBER
-    if (g_subgate() == nullptr) return;
+    if (g_subgate() == nullptr)              return;
+    if (!ShouldProcessRegistration(sample_)) return;
 
-    // process registrations from same host group 
-    if (IsHostGroupMember(sample_))
+    switch (sample_.cmd_type)
     {
-      // do not register local entities, only if loop back flag is set true
-      if (m_loopback || (sample_.topic.pid != Process::GetProcessID()))
-      {
-        switch (sample_.cmd_type)
-        {
-        case bct_reg_publisher:
-          g_subgate()->ApplyPubRegistration(sample_);
-          break;
-        case bct_unreg_publisher:
-          g_subgate()->ApplyPubUnregistration(sample_);
-          break;
-        default:
-          break;
-        }
-      }
-    }
-    // process external registrations
-    else
-    {
-      if (m_network)
-      {
-        switch (sample_.cmd_type)
-        {
-        case bct_reg_publisher:
-          g_subgate()->ApplyPubRegistration(sample_);
-          break;
-        case bct_unreg_publisher:
-          g_subgate()->ApplyPubUnregistration(sample_);
-          break;
-        default:
-          break;
-        }
-      }
+    case bct_reg_publisher:
+      g_subgate()->ApplyPubRegistration(sample_);
+      break;
+    case bct_unreg_publisher:
+      g_subgate()->ApplyPubUnregistration(sample_);
+      break;
+    default:
+      break;
     }
 #endif
   }
 
   bool CRegistrationReceiver::IsHostGroupMember(const Registration::Sample& sample_)
   {
-    const std::string& sample_host_group_name = sample_.topic.hgname.empty() ? sample_.topic.hname : sample_.topic.hgname;
+    std::string host_group_name;
+    std::string host_name;
+    switch (sample_.cmd_type)
+    {
+    case bct_reg_publisher:
+    case bct_unreg_publisher:
+    case bct_reg_subscriber:
+    case bct_unreg_subscriber:
+      host_group_name = sample_.topic.hgname;
+      host_name = sample_.topic.hname;
+      break;
+    case bct_reg_service:
+    case bct_unreg_service:
+      //host_group_name = sample_.service.hgname;  // TODO: we need to add hgname attribute to services
+      host_name = sample_.service.hname;
+      break;
+    case bct_reg_client:
+    case bct_unreg_client:
+      //host_group_name = sample_.client.hgname;  // TODO: we need to add hgname attribute to clients
+      host_name = sample_.client.hname;
+      break;
+    default:
+      break;
+    }
+
+    const std::string& sample_host_group_name = host_group_name.empty() ? host_name : host_group_name;
 
     if (sample_host_group_name.empty() || m_host_group_name.empty()) 
       return false;
@@ -343,6 +335,25 @@ namespace eCAL
       return false;
 
     return true;
+  }
+
+  bool CRegistrationReceiver::ShouldProcessRegistration(const Registration::Sample& sample_)
+  {
+    // check if the sample is from the same host group
+    if (IsHostGroupMember(sample_))
+    {
+      // register if the sample is from another process
+      // or if loopback mode is enabled
+      return m_loopback || (sample_.topic.pid != Process::GetProcessID());
+    }
+    else
+    {
+      // if the sample is from an external host, register only if network mode is enabled
+      return m_network;
+    }
+
+    // do not process the registration
+    return false;
   }
 
   void CRegistrationReceiver::SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_)

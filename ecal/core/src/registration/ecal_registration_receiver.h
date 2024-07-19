@@ -66,10 +66,13 @@ namespace eCAL
     void RemCustomApplySampleCallback(const std::string& customer_);
 
   protected:
+    void ApplyServiceRegistration(const eCAL::Registration::Sample& sample_);
+
     void ApplySubscriberRegistration(const eCAL::Registration::Sample& sample_);
     void ApplyPublisherRegistration(const eCAL::Registration::Sample& sample_);
 
     bool IsHostGroupMember(const eCAL::Registration::Sample& sample_);
+    bool ShouldProcessRegistration(const Registration::Sample& sample_);
 
     static std::atomic<bool>              m_created;
     bool                                  m_network;
