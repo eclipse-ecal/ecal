@@ -248,11 +248,9 @@ namespace eCAL
 
     switch (sample_.cmd_type)
     {
+    // current service implementation processes registration information only (not the unregistration)
     case bct_reg_service:
       g_clientgate()->ApplyServiceRegistration(sample_);
-      break;
-    case bct_unreg_service:
-      // current client implementation doesn't need that information
       break;
     default:
       break;
