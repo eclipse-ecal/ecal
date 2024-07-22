@@ -28,7 +28,6 @@ namespace YAML
 
   eCAL_Logging_Filter ParseLogLevel(const std::vector<std::string>& filter_)
   {
-    
     // create excluding filter list
     char filter_mask = log_level_none;
     for (auto& it : filter_)

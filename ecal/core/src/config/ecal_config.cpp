@@ -21,64 +21,6 @@
 #include <string>
 #include <vector>
 
-#include "ecal_def.h"
-
-
-namespace
-{
-  void tokenize(const std::string& str, std::vector<std::string>& tokens,
-    const std::string& delimiters = " ", bool trimEmpty = false)
-  {
-    std::string::size_type pos, lastPos = 0;
-
-    for (;;)
-    {
-      pos = str.find_first_of(delimiters, lastPos);
-      if (pos == std::string::npos)
-      {
-        pos = str.length();
-        if (pos != lastPos || !trimEmpty)
-        {
-          tokens.emplace_back(std::string(str.data() + lastPos, pos - lastPos));
-        }
-        break;
-      }
-      else
-      {
-        if (pos != lastPos || !trimEmpty)
-        {
-          tokens.emplace_back(std::string(str.data() + lastPos, pos - lastPos));
-        }
-      }
-      lastPos = pos + 1;
-    }
-  }
-
-
-  eCAL_Logging_Filter ParseLogLevel(const std::string& filter_)
-  {
-    // tokenize it
-    std::vector<std::string> token_filter_;
-    tokenize(filter_, token_filter_, " ,;");
-    // create excluding filter list
-    char filter_mask = log_level_none;
-    for (auto& it : token_filter_)
-    {
-      if (it == "all")     filter_mask |= log_level_all;
-      if (it == "info")    filter_mask |= log_level_info;
-      if (it == "warning") filter_mask |= log_level_warning;
-      if (it == "error")   filter_mask |= log_level_error;
-      if (it == "fatal")   filter_mask |= log_level_fatal;
-      if (it == "debug1")  filter_mask |= log_level_debug1;
-      if (it == "debug2")  filter_mask |= log_level_debug2;
-      if (it == "debug3")  filter_mask |= log_level_debug3;
-      if (it == "debug4")  filter_mask |= log_level_debug4;
-    }
-    return(filter_mask);
-  }
-
-}
-
 
 namespace eCAL
 {
