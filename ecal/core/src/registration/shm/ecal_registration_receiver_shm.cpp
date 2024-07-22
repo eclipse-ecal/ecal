@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,12 @@
 
 #include "ecal_globals.h"
 
-#include "ecal_registration_receiver_shm.h"
+#include "registration/shm/ecal_registration_receiver_shm.h"
 #include "serialization/ecal_serialize_sample_registration.h"
-#include <chrono>
-#include <functional>
-#include <memory>
+
+#include "registration/shm/ecal_memfile_broadcast.h"
+#include "registration/shm/ecal_memfile_broadcast_reader.h"
+#include "util/ecal_thread.h"
 
 namespace eCAL
 {
@@ -39,35 +40,35 @@ namespace eCAL
   // CMemfileRegistrationReceiver
   //////////////////////////////////////////////////////////////////
 
-  CMemfileRegistrationReceiver::~CMemfileRegistrationReceiver()
+  CRegistrationReceiverSHM::CRegistrationReceiverSHM(RegistrationApplySampleCallbackT apply_sample_callback)
+   : m_apply_sample_callback(apply_sample_callback)
   {
-    Destroy();
+    m_memfile_broadcast = std::make_unique<CMemoryFileBroadcast>();
+    m_memfile_broadcast->Create(Config::Experimental::GetShmMonitoringDomain(), Config::Experimental::GetShmMonitoringQueueSize());
+    m_memfile_broadcast->FlushLocalEventQueue();
+
+    m_memfile_broadcast_reader = std::make_unique<CMemoryFileBroadcastReader>();
+    // This is a bit unclean to take the raw adress of the reader here.
+    m_memfile_broadcast_reader->Bind(m_memfile_broadcast.get());
+
+    m_memfile_broadcast_reader_thread = std::make_unique<CCallbackThread>(std::bind(&CRegistrationReceiverSHM::Receive, this));
+    m_memfile_broadcast_reader_thread->start(std::chrono::milliseconds(Config::GetRegistrationRefreshMs() / 2));
   }
 
-  void CMemfileRegistrationReceiver::Create(eCAL::CMemoryFileBroadcastReader* memfile_broadcast_reader_)
+  CRegistrationReceiverSHM::~CRegistrationReceiverSHM()
   {
-    if (m_created) return;
-
-    // start memfile broadcast receive thread
-    m_memfile_broadcast_reader = memfile_broadcast_reader_;
-    m_memfile_broadcast_reader_thread = std::make_shared<CCallbackThread>(std::bind(&CMemfileRegistrationReceiver::Receive, this));
-    m_memfile_broadcast_reader_thread->start(std::chrono::milliseconds(Config::GetRegistrationRefreshMs()/2));
-
-    m_created = true;
-  }
-
-  void CMemfileRegistrationReceiver::Destroy()
-  {
-    if (!m_created) return;
-
-    // stop memfile broadcast receive thread
     m_memfile_broadcast_reader_thread->stop();
+    m_memfile_broadcast_reader_thread = nullptr;
+
+    // stop memfile registration receive thread and unbind reader
+    m_memfile_broadcast_reader->Unbind();
     m_memfile_broadcast_reader = nullptr;
 
-    m_created = false;
+    m_memfile_broadcast->Destroy();
+    m_memfile_broadcast = nullptr;
   }
 
-  void CMemfileRegistrationReceiver::Receive()
+  void CRegistrationReceiverSHM::Receive()
   {
     MemfileBroadcastMessageListT message_list;
     if (m_memfile_broadcast_reader->Read(message_list, 0))
@@ -79,7 +80,7 @@ namespace eCAL
         {
           for (const auto& sample : sample_list.samples)
           {
-            if (g_registration_receiver() != nullptr) g_registration_receiver()->ApplySample(sample);
+            m_apply_sample_callback(sample);
           }
         }
       }

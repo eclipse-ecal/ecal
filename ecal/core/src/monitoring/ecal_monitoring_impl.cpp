@@ -207,9 +207,9 @@ namespace eCAL
     bool               topic_tlayer_ecal_tcp(false);
     for (const auto& layer : sample_topic.tlayer)
     {
-      topic_tlayer_ecal_udp |= (layer.type == tl_ecal_udp) && layer.confirmed;
-      topic_tlayer_ecal_shm |= (layer.type == tl_ecal_shm) && layer.confirmed;
-      topic_tlayer_ecal_tcp |= (layer.type == tl_ecal_tcp) && layer.confirmed;
+      topic_tlayer_ecal_udp |= (layer.type == tl_ecal_udp) && layer.active;
+      topic_tlayer_ecal_shm |= (layer.type == tl_ecal_shm) && layer.active;
+      topic_tlayer_ecal_tcp |= (layer.type == tl_ecal_tcp) && layer.active;
     }
     const int32_t      connections_loc = sample_topic.connections_loc;
     const int32_t      connections_ext = sample_topic.connections_ext;
@@ -305,22 +305,22 @@ namespace eCAL
       // tlayer udp_mc
       {
         eCAL::Monitoring::TLayer tlayer;
-        tlayer.type      = eCAL::Monitoring::tl_ecal_udp_mc;
-        tlayer.confirmed = topic_tlayer_ecal_udp;
+        tlayer.type   = eCAL::Monitoring::tl_ecal_udp_mc;
+        tlayer.active = topic_tlayer_ecal_udp;
         TopicInfo.tlayer.push_back(tlayer);
       }
       // tlayer shm
       {
         eCAL::Monitoring::TLayer tlayer;
-        tlayer.type      = eCAL::Monitoring::tl_ecal_shm;
-        tlayer.confirmed = topic_tlayer_ecal_shm;
+        tlayer.type   = eCAL::Monitoring::tl_ecal_shm;
+        tlayer.active = topic_tlayer_ecal_shm;
         TopicInfo.tlayer.push_back(tlayer);
       }
       // tlayer tcp
       {
         eCAL::Monitoring::TLayer tlayer;
-        tlayer.type      = eCAL::Monitoring::tl_ecal_tcp;
-        tlayer.confirmed = topic_tlayer_ecal_tcp;
+        tlayer.type   = eCAL::Monitoring::tl_ecal_tcp;
+        tlayer.active = topic_tlayer_ecal_tcp;
         TopicInfo.tlayer.push_back(tlayer);
       }
 

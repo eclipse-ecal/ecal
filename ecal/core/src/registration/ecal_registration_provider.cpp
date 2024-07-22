@@ -40,9 +40,9 @@
 #include "ecal_def.h"
 
 #include <registration/ecal_process_registration.h>
-#include <registration/ecal_registration_sender_udp.h>
+#include <registration/udp/ecal_registration_sender_udp.h>
 #if ECAL_CORE_REGISTRATION_SHM
-#include <registration/ecal_registration_sender_shm.h>
+#include <registration/shm/ecal_registration_sender_shm.h>
 #endif
 
 namespace eCAL

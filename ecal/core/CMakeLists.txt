@@ -70,6 +70,8 @@ set(ecal_config_src
     src/config/ecal_config.cpp
     src/config/ecal_config_initializer.cpp
     src/types/ecal_custom_data_types.cpp
+    src/pubsub/ecal_publisher_config.cpp
+    src/pubsub/ecal_subscriber_config.cpp
     src/types/ecal_custom_data_types.cpp
 )
 
@@ -199,7 +201,6 @@ endif()
 if(ECAL_CORE_PUBLISHER)
   set(ecal_pub_src
       src/pubsub/ecal_publisher.cpp
-      src/pubsub/ecal_publisher_config.cpp
       src/pubsub/ecal_pubgate.cpp
       src/pubsub/ecal_pubgate.h
   )
@@ -208,7 +209,6 @@ endif()
 if(ECAL_CORE_SUBSCRIBER)
   set(ecal_sub_src
       src/pubsub/ecal_subscriber.cpp
-      src/pubsub/ecal_subscriber_config.cpp
       src/pubsub/ecal_subgate.cpp
       src/pubsub/ecal_subgate.h
   )
@@ -217,6 +217,10 @@ endif()
 ######################################
 # readwrite
 ######################################
+set(ecal_readwrite_src
+    src/readwrite/ecal_transport_layer.h
+)
+
 if(ECAL_CORE_PUBLISHER)
   set(ecal_writer_src
       src/readwrite/ecal_writer.cpp
@@ -285,15 +289,17 @@ if (ECAL_CORE_REGISTRATION)
       src/registration/ecal_registration_receiver.cpp
       src/registration/ecal_registration_receiver.h
       src/registration/ecal_registration_sender.h
-      src/registration/ecal_registration_sender_udp.cpp
-      src/registration/ecal_registration_sender_udp.h
+      src/registration/udp/ecal_registration_receiver_udp.cpp
+      src/registration/udp/ecal_registration_receiver_udp.h
+      src/registration/udp/ecal_registration_sender_udp.cpp
+      src/registration/udp/ecal_registration_sender_udp.h
   )
   if(ECAL_CORE_REGISTRATION_SHM)
     list(APPEND ecal_registration_src
-        src/registration/ecal_registration_receiver_shm.cpp
-        src/registration/ecal_registration_receiver_shm.h
-        src/registration/ecal_registration_sender_shm.cpp
-        src/registration/ecal_registration_sender_shm.h
+        src/registration/shm/ecal_registration_receiver_shm.cpp
+        src/registration/shm/ecal_registration_receiver_shm.h
+        src/registration/shm/ecal_registration_sender_shm.cpp
+        src/registration/shm/ecal_registration_sender_shm.h
         src/registration/shm/ecal_memfile_broadcast.cpp
         src/registration/shm/ecal_memfile_broadcast.h
         src/registration/shm/ecal_memfile_broadcast_reader.cpp
@@ -461,6 +467,7 @@ endif()
 set(ecal_header_cmn
     include/ecal/types/logging.h
     include/ecal/types/monitoring.h
+    include/ecal/config/configuration.h
     include/ecal/config/publisher.h
     include/ecal/config/subscriber.h
     include/ecal/ecal.h
@@ -485,7 +492,6 @@ set(ecal_header_cmn
     include/ecal/ecal_tlayer.h
     include/ecal/ecal_types.h
     include/ecal/ecal_util.h
-    include/ecal/config/configuration.h
 )
 
 set(ecal_header_cimpl
@@ -535,6 +541,7 @@ set(ecal_sources
     ${ecal_monitoring_src}
     ${ecal_pub_src}
     ${ecal_sub_src}
+    ${ecal_readwrite_src}
     ${ecal_writer_src}
     ${ecal_reader_src}
     ${ecal_registration_src}

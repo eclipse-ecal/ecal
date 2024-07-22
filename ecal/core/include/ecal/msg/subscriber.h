@@ -254,12 +254,13 @@ protected:
     * @brief  Constructor.
     *
     * @param topic_name_  Unique topic name.
+    * @param config_      Optional configuration parameters.
     **/
-    CMessageSubscriber(const std::string& topic_name_) : CSubscriber()
+    CMessageSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = {}) : CSubscriber()
       , m_deserializer()
     {
       SDataTypeInformation topic_info = m_deserializer.GetDataTypeInformation();
-      CSubscriber::Create(topic_name_, topic_info);
+      CSubscriber::Create(topic_name_, topic_info, config_);
     }
 
     ~CMessageSubscriber() noexcept
@@ -418,7 +419,4 @@ protected:
     MsgReceiveCallbackT  m_cb_callback;
     Deserializer         m_deserializer;
   };
-
-
-
 }

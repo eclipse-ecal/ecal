@@ -129,18 +129,20 @@ namespace eCAL
     CDataWriter::SLayerStates layer_states;
     for (const auto& layer : ecal_topic.tlayer)
     {
-      if (layer.confirmed)
+      // transport layer versions 0 and 1 did not support dynamic layer enable feature
+      // so we set assume layer is enabled if we receive a registration in this case
+      if (layer.enabled || (layer.version < 2))
       {
         switch (layer.type)
         {
         case TLayer::tlayer_udp_mc:
-          layer_states.udp = true;
+          layer_states.udp.read_enabled = true;
           break;
         case TLayer::tlayer_shm:
-          layer_states.shm = true;
+          layer_states.shm.read_enabled = true;
           break;
         case TLayer::tlayer_tcp:
-          layer_states.tcp = true;
+          layer_states.tcp.read_enabled = true;
           break;
         default:
           break;

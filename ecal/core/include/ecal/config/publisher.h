@@ -89,10 +89,12 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_tlayer.h>
 #include <ecal/types/ecal_custom_data_types.h>
 #include <ecal/config/transport_layer.h>
 
 #include <cstddef>
+#include <vector>
 #include <vector>
 
 namespace eCAL
@@ -132,15 +134,16 @@ namespace eCAL
     {
       ECAL_API Configuration();
 
-      SHM::Configuration   shm;
-      UDP::Configuration   udp;
-      TCP::Configuration   tcp;
+      SHM::Configuration       shm;
+      UDP::Configuration       udp;
+      TCP::Configuration       tcp;
 
-      bool                 share_topic_type;                            //!< share topic type via registration
-      bool                 share_topic_description;                     //!< share topic description via registration
+      using LayerPriorityVector = std::vector<TLayer::eTransportLayer>;
+      LayerPriorityVector      layer_priority_local  = { TLayer::tlayer_shm, TLayer::tlayer_udp_mc, TLayer::tlayer_tcp };
+      LayerPriorityVector      layer_priority_remote = {                     TLayer::tlayer_udp_mc, TLayer::tlayer_tcp };
 
-      std::vector<std::string> priority_local;                          //!< priority list for layer usage in local mode (Default: SHM > UDP > TCP)
-      std::vector<std::string> priority_network;                        //!< priority list for layer usage in cloud mode (Default: UDP > TCP)
+      bool                     share_topic_type;                        //!< share topic type via registration
+      bool                     share_topic_description;                 //!< share topic description via registration
     };
   }
 }

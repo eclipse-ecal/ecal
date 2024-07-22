@@ -26,7 +26,7 @@
  *
 **/
 
-#include "registration/ecal_registration_sender_udp.h"
+#include "registration/udp/ecal_registration_sender_udp.h"
 
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "io/udp/ecal_udp_configurations.h"

@@ -26,7 +26,7 @@
  *
 **/
 
-#include "registration/ecal_registration_sender_shm.h"
+#include "registration/shm/ecal_registration_sender_shm.h"
 #include "serialization/ecal_serialize_sample_registration.h"
 
 

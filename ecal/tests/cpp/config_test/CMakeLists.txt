@@ -25,7 +25,8 @@ find_package(yaml-cpp REQUIRED)
 
 set(cmd_parser_src
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/ecal_cmd_parser.cpp
-  ${ECAL_PROJECT_ROOT}/lib/ecal_utils/src/filesystem.cpp   # Ideally we should reference relatively to ECAL_CORE_PROJECT_ROOT
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/util/advanced_tclap_output.cpp
+  ${ECAL_PROJECT_ROOT}/lib/ecal_utils/src/filesystem.cpp
   ${ECAL_PROJECT_ROOT}/lib/ecal_utils/src/str_convert.cpp 
 )
 
@@ -52,7 +53,6 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::core 
     Threads::Threads
     tclap::tclap
-    CustomTclap
     yaml-cpp::yaml-cpp
 )
 
