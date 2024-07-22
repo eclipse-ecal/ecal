@@ -288,6 +288,8 @@ if (ECAL_CORE_REGISTRATION)
       src/registration/ecal_registration_provider.h
       src/registration/ecal_registration_receiver.cpp
       src/registration/ecal_registration_receiver.h
+      src/registration/ecal_registration_sample_applier.cpp
+      src/registration/ecal_registration_sample_applier.h
       src/registration/ecal_registration_sender.h
       src/registration/udp/ecal_registration_receiver_udp.cpp
       src/registration/udp/ecal_registration_receiver_udp.h
