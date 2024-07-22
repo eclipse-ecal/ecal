@@ -25,6 +25,7 @@
 
 #include "ecal_def.h"
 #include "ecal_writer_shm.h"
+#include "ecal/ecal_config.h"
 
 #include <string>
 

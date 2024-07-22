@@ -95,7 +95,6 @@
 
 #include <cstddef>
 #include <vector>
-#include <vector>
 
 namespace eCAL
 {

@@ -21,7 +21,8 @@ namespace YAML
 
   // Operator overload for assigning a ConstrainedInteger to a YAML::Node
   template<int MIN, int STEP, int MAX>
-  YAML::Node operator<<(YAML::Node node, const eCAL::Types::ConstrainedInteger<MIN, STEP, MAX>& constrainedInt) {
+  YAML::Node operator<<(YAML::Node node, const eCAL::Types::ConstrainedInteger<MIN, STEP, MAX>& constrainedInt) 
+  {
       node = static_cast<int>(constrainedInt);
       return node;
   }
@@ -42,20 +43,61 @@ namespace YAML
       if (it == "debug3")  filter_mask |= log_level_debug3;
       if (it == "debug4")  filter_mask |= log_level_debug4;
     }
+
     return(filter_mask);
   };
 
-  void LogLevelToVector(eCAL_Logging_Filter filter_mask, std::vector<std::string>& filter_) 
+  std::vector<std::string> LogLevelToVector(eCAL_Logging_Filter filter_mask) 
   {
-    if (filter_mask & log_level_all)    filter_.push_back("all");
-    if (filter_mask & log_level_info)   filter_.push_back("info");
-    if (filter_mask & log_level_warning)filter_.push_back("warning");
-    if (filter_mask & log_level_error)  filter_.push_back("error");
-    if (filter_mask & log_level_fatal)  filter_.push_back("fatal");
-    if (filter_mask & log_level_debug1) filter_.push_back("debug1");
-    if (filter_mask & log_level_debug2) filter_.push_back("debug2");
-    if (filter_mask & log_level_debug3) filter_.push_back("debug3");
-    if (filter_mask & log_level_debug4) filter_.push_back("debug4");
+    std::vector<std::string> filter;
+    if (filter_mask & log_level_all)    filter.push_back("all");
+    if (filter_mask & log_level_info)   filter.push_back("info");
+    if (filter_mask & log_level_warning)filter.push_back("warning");
+    if (filter_mask & log_level_error)  filter.push_back("error");
+    if (filter_mask & log_level_fatal)  filter.push_back("fatal");
+    if (filter_mask & log_level_debug1) filter.push_back("debug1");
+    if (filter_mask & log_level_debug2) filter.push_back("debug2");
+    if (filter_mask & log_level_debug3) filter.push_back("debug3");
+    if (filter_mask & log_level_debug4) filter.push_back("debug4");
+
+    return filter;
+  }
+
+  eCAL::Publisher::Configuration::LayerPriorityVector transformLayerStrToEnum(const std::vector<std::string>& string_vector_)
+  {
+    eCAL::Publisher::Configuration::LayerPriorityVector layer_priority_vector;
+    for (auto& layer_as_string : string_vector_)
+    {
+      if (layer_as_string == "shm") layer_priority_vector.push_back(eCAL::TLayer::tlayer_shm);
+      if (layer_as_string == "udp") layer_priority_vector.push_back(eCAL::TLayer::tlayer_udp_mc);
+      if (layer_as_string == "tcp") layer_priority_vector.push_back(eCAL::TLayer::tlayer_tcp);
+    }
+
+    return layer_priority_vector;
+  }
+
+  std::vector<std::string> transformLayerEnumToStr(const eCAL::Publisher::Configuration::LayerPriorityVector& enum_vector_)
+  {
+    std::vector<std::string> layer_priority_vector;
+    for (auto& layer_as_enum : enum_vector_)
+    {
+      switch (layer_as_enum)
+      {
+        case eCAL::TLayer::tlayer_shm:
+          layer_priority_vector.push_back("shm");
+          break;
+        case eCAL::TLayer::tlayer_udp_mc:
+          layer_priority_vector.push_back("udp");
+          break;
+        case eCAL::TLayer::tlayer_tcp:
+          layer_priority_vector.push_back("tcp");
+          break;
+        default:
+          break;
+      }
+    }
+
+    return layer_priority_vector;
   }
 }
 
@@ -388,8 +430,8 @@ namespace YAML
       node["shm"]                     = config_.shm;
       node["udp"]                     = config_.udp;
       node["tcp"]                     = config_.tcp;
-      node["priority_local"]          = config_.priority_local;
-      node["priority_network"]        = config_.priority_network;
+      node["priority_local"]          = transformLayerEnumToStr(config_.layer_priority_local);
+      node["priority_network"]        = transformLayerEnumToStr(config_.layer_priority_remote);
       return node;
     }
 
@@ -397,8 +439,14 @@ namespace YAML
     {
       AssignValue<bool>(config_.share_topic_description, node_, "share_topic_description");
       AssignValue<bool>(config_.share_topic_type, node_, "share_topic_type");
-      AssignValue<std::vector<std::string>>(config_.priority_local, node_, "priority_local");
-      AssignValue<std::vector<std::string>>(config_.priority_network, node_, "priority_network");
+      
+      std::vector<std::string> tmp;
+      AssignValue<std::vector<std::string>>(tmp, node_, "priority_local");
+      config_.layer_priority_local = transformLayerStrToEnum(tmp);
+      tmp.clear();
+      AssignValue<std::vector<std::string>>(tmp, node_, "priority_network");
+      config_.layer_priority_remote = transformLayerStrToEnum(tmp);
+
       AssignValue<eCAL::Publisher::SHM::Configuration>(config_.shm, node_, "shm");
       AssignValue<eCAL::Publisher::UDP::Configuration>(config_.udp, node_, "udp");
       AssignValue<eCAL::Publisher::TCP::Configuration>(config_.tcp, node_, "tcp");      
@@ -622,10 +670,7 @@ namespace YAML
       Node node;
       node["enable"] = config_.enable;
       node["port"]   = config_.port;
-
-      std::vector<std::string> tmp;
-      LogLevelToVector(config_.filter_log_udp, tmp);
-      node["level"] = tmp;
+      node["level"]  = LogLevelToVector(config_.filter_log_udp);
       return node;
     }
 
@@ -648,10 +693,7 @@ namespace YAML
     {
       Node node;
       node["enable"] = config_.enable;
-
-      std::vector<std::string> tmp;
-      LogLevelToVector(config_.filter_log_con, tmp);
-      node["level"] = tmp;
+      node["level"] = LogLevelToVector(config_.filter_log_con);
       return node;
     }
 
@@ -673,10 +715,7 @@ namespace YAML
       Node node;
       node["enable"] = config_.enable;
       node["path"]   = config_.path;
-
-      std::vector<std::string> tmp;
-      LogLevelToVector(config_.filter_log_file, tmp);
-      node["level"] = tmp;
+      node["level"] = LogLevelToVector(config_.filter_log_file);
       return node;
     }
 
