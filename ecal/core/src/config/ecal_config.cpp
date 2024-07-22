@@ -89,8 +89,8 @@ namespace eCAL
     /////////////////////////////////////
     
     ECAL_API std::string       GetLoadedEcalIniPath                 () { return GetConfiguration().GetYamlFilePath(); }
-    ECAL_API int               GetRegistrationTimeoutMs             () { return GetConfiguration().registration.getTimeoutMS(); }
-    ECAL_API int               GetRegistrationRefreshMs             () { return GetConfiguration().registration.getRefreshMS(); }
+    ECAL_API int               GetRegistrationTimeoutMs             () { return GetConfiguration().registration.registration_timeout; }
+    ECAL_API int               GetRegistrationRefreshMs             () { return GetConfiguration().registration.registration_refresh; }
 
     /////////////////////////////////////
     // network

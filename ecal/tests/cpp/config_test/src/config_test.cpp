@@ -59,8 +59,6 @@ TEST(core_cpp_config, user_config_passing)
   eCAL::Configuration custom_config(0, nullptr);
   try
   {
-    const eCAL::Registration::Configuration registration = eCAL::Registration::Configuration(registration_timeout, registration_refresh);
-
     custom_config.subscriber.drop_out_of_order_messages       = drop_out_of_order_messages;
     custom_config.transport_layer.udp.network.group           = ip_address;
     custom_config.transport_layer.udp.send_buffer             = upd_snd_buff;
@@ -71,7 +69,8 @@ TEST(core_cpp_config, user_config_passing)
 
     custom_config.publisher.shm.enable                        = pub_use_shm;
 
-    custom_config.registration                                = registration;
+    custom_config.registration.registration_refresh           = registration_refresh;
+    custom_config.registration.registration_timeout           = registration_timeout;
   }
   catch (std::invalid_argument& e)
   {
@@ -104,8 +103,8 @@ TEST(core_cpp_config, user_config_passing)
   EXPECT_EQ(pub_use_shm, eCAL::GetConfiguration().publisher.shm.enable);
 
   // Test registration option assignment, default timeout is 60000U and default refresh is 1000U
-  EXPECT_EQ(registration_timeout, eCAL::GetConfiguration().registration.getTimeoutMS());
-  EXPECT_EQ(registration_refresh, eCAL::GetConfiguration().registration.getRefreshMS());
+  EXPECT_EQ(registration_timeout, eCAL::GetConfiguration().registration.registration_timeout);
+  EXPECT_EQ(registration_refresh, eCAL::GetConfiguration().registration.registration_refresh);
 
   // Finalize eCAL API
   EXPECT_EQ(0, eCAL::Finalize());
@@ -168,14 +167,6 @@ TEST(ConfigDeathTest, user_config_death_test)
     SetValue(custom_config.transport_layer.udp.send_buffer, (5242880 + 512)),
     std::invalid_argument);
 
-  // Test the registration option limits
-  // Refresh timeout > registration timeout
-  ASSERT_THROW(
-    eCAL::Registration::Configuration(2000U, 3000U), std::invalid_argument);
-
-  // Refresh timeout = registration timeout
-  ASSERT_THROW(
-    eCAL::Registration::Configuration(2000U, 2000U), std::invalid_argument);
 }
 
 TEST(core_cpp_config, config_custom_datatypes_tests)

@@ -70,9 +70,7 @@ set(ecal_config_src
     src/config/ecal_config.cpp
     src/config/ecal_config_initializer.cpp
     src/types/ecal_custom_data_types.cpp
-    src/types/ecal_registration_options.cpp
     src/types/ecal_custom_data_types.cpp
-    src/types/ecal_registration_options.cpp
 )
 
 ######################################

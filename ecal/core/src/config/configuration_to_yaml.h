@@ -134,8 +134,8 @@ namespace YAML
     static Node encode(const eCAL::Registration::Configuration& config_)
     {
       Node node;
-      node["registration_timeout"] = config_.getTimeoutMS();
-      node["registration_refresh"] = config_.getRefreshMS();
+      node["registration_timeout"] = config_.registration_timeout;
+      node["registration_refresh"] = config_.registration_refresh;
       node["network_enabled"]      = config_.network_enabled;
       node["loopback"]             = config_.loopback;
       node["host_group_name"]      = config_.host_group_name;
@@ -144,12 +144,8 @@ namespace YAML
 
     static bool decode(const Node& node_, eCAL::Registration::Configuration& config_)
     {
-      unsigned int reg_timeout = 60000;
-      unsigned int reg_refresh = 1000;
-      AssignValue<unsigned int>(reg_timeout, node_, "registration_timeout");
-      AssignValue<unsigned int>(reg_refresh, node_, "registration_refresh");
-      
-      config_ = {reg_timeout, reg_refresh};
+      AssignValue<unsigned int>(config_.registration_timeout, node_, "registration_timeout");
+      AssignValue<unsigned int>(config_.registration_refresh, node_, "registration_refresh");
       AssignValue<bool>(config_.network_enabled, node_, "network_enabled");
       AssignValue<bool>(config_.loopback, node_, "loopback");
       AssignValue<std::string>(config_.host_group_name, node_, "host_group_name");
