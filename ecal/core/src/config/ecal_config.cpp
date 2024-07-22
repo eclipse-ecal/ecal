@@ -21,7 +21,6 @@
 #include <string>
 #include <vector>
 
-#include "ecal_config_reader_hlp.h"
 #include "ecal_def.h"
 
 

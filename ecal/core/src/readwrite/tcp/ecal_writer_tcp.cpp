@@ -23,7 +23,6 @@
 
 #include <ecal/ecal_config.h>
 
-#include "config/ecal_config_reader_hlp.h"
 #include "serialization/ecal_serialize_sample_payload.h"
 
 #include "ecal_writer_tcp.h"

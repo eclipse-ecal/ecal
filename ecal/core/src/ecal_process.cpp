@@ -31,7 +31,6 @@
 #include "ecal_utils/command_line.h"
 #include "ecal_utils/str_convert.h"
 
-#include "config/ecal_config_reader_hlp.h"
 #include "io/udp/ecal_udp_configurations.h"
 
 #include <algorithm>

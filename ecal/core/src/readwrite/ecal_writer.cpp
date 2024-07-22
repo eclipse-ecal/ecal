@@ -29,8 +29,6 @@
 #include <string>
 #include <utility>
 
-#include "config/ecal_config_reader_hlp.h"
-
 #if ECAL_CORE_REGISTRATION
 #include "registration/ecal_registration_provider.h"
 #endif
@@ -38,6 +36,7 @@
 #include "ecal_writer.h"
 #include "ecal_writer_base.h"
 #include "ecal_writer_buffer_payload.h"
+#include "ecal_global_accessors.h"
 
 #include "pubsub/ecal_pubgate.h"
 

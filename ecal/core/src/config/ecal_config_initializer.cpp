@@ -25,7 +25,6 @@
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
-#include "config/ecal_config_reader.h"
 #include "default_config.h"
 
 #include "ecal/ecal_process.h"
@@ -45,6 +44,7 @@
 
 #include "ecal_utils/filesystem.h"
 #include "util/getenvvar.h"
+#include "ecal_utils/ecal_utils.h"
 
 #include <algorithm>
 
@@ -133,7 +133,6 @@ namespace
       path_ += file_name_;
   }
 
-
   bool isValidConfigFilePath(const std::string& file_path_)
   {
     // check existence of user defined file
@@ -141,54 +140,71 @@ namespace
     return ecal_ini_status.IsOk() && (ecal_ini_status.GetType() == EcalUtils::Filesystem::Type::RegularFile);
   }
 
-  std::string checkForValidConfigFilePath(const std::string& config_file_)
+  std::string findValidConfigFile(std::vector<std::string> paths_, const std::string& file_name_)
+  {
+    for (auto& path: paths_)
     {
-      // differences to ecal_config_reader implementation are:
-      //    1. does not use the default ini file name, instead uses the specified file
-      //    2. searches relative to the executable path and takes it as highest priority
-
-      // -----------------------------------------------------------
-      // precedence 1: relative path to executable
-      // -----------------------------------------------------------
-      std::string cwd_directory_path = cwdPath();
-      appendFileNameToPathIfPathIsValid(cwd_directory_path, config_file_);
-
-      // -----------------------------------------------------------
-      // precedence 2: ECAL_DATA variable (windows and linux)
-      // -----------------------------------------------------------
-      std::string ecal_data_path = eCALDataEnvPath();
-      appendFileNameToPathIfPathIsValid(ecal_data_path, config_file_);
-      
-      // -----------------------------------------------------------
-      // precedence 3:  cmake configured data paths (linux only)
-      // -----------------------------------------------------------
-      std::string cmake_data_path = eCALDataCMakePath();
-      appendFileNameToPathIfPathIsValid(cmake_data_path, config_file_);
-
-      // -----------------------------------------------------------
-      // precedence 4: system data path 
-      // -----------------------------------------------------------
-      std::string system_data_path = eCALDataSystemPath();
-      appendFileNameToPathIfPathIsValid(system_data_path, config_file_);
-
-      // Check for first directory which contains the ini file.
-      std::vector<std::string> search_directories{ cwd_directory_path, ecal_data_path, cmake_data_path, system_data_path };
-
-      auto it = std::find_if(search_directories.begin(), search_directories.end(), isValidConfigFilePath);
-      // We should have encountered a valid path
-      if (it != search_directories.end())
-        return (*it);
-
-      // Check if user specified complete path, in case all other precedence paths exist
-      if (isValidConfigFilePath(config_file_))
-      {
-        return std::string(config_file_);
-      }
-
-      // If valid path is not encountered, return empty string
-      return std::string("");
+      appendFileNameToPathIfPathIsValid(path, file_name_);
     }
 
+    auto it = std::find_if(paths_.begin(), paths_.end(), isValidConfigFilePath);
+    // We should have encountered a valid path
+    if (it != paths_.end())
+      return (*it);
+
+    // If valid path is not encountered, defaults should be used
+    return std::string("");
+  }
+
+  bool fileexists(const std::string& fname_)
+  {
+    const std::ifstream infile(fname_);
+    return infile.good();
+  }
+
+  bool direxists(const std::string& path_)
+  {
+    const EcalUtils::Filesystem::FileStatus status(path_, EcalUtils::Filesystem::Current);
+    return (status.IsOk() && (status.GetType() == EcalUtils::Filesystem::Type::Dir));
+  }
+
+  void createdir(const std::string& path_)
+  {
+    EcalUtils::Filesystem::MkDir(path_, EcalUtils::Filesystem::Current);
+  }
+
+  std::vector<std::string> getEcalDefaultPaths()
+  {
+    std::vector<std::string> ecal_default_paths;
+      // -----------------------------------------------------------
+      // precedence 1: ECAL_DATA variable (windows and linux)
+      // -----------------------------------------------------------
+      ecal_default_paths.emplace_back(eCALDataEnvPath());
+      
+      // -----------------------------------------------------------
+      // precedence 2:  cmake configured data paths (linux only)
+      // -----------------------------------------------------------
+      ecal_default_paths.emplace_back(eCALDataCMakePath());
+
+      // -----------------------------------------------------------
+      // precedence 3: system data path 
+      // -----------------------------------------------------------
+      ecal_default_paths.emplace_back(eCALDataSystemPath());
+      return ecal_default_paths;
+  }
+
+  std::string checkForValidConfigFilePath(const std::string& config_file_)
+  {
+    // -----------------------------------------------------------
+    // precedence 0: relative path to executable
+    // -----------------------------------------------------------
+    std::string cwd_directory_path = cwdPath();
+
+    std::vector<std::string> ecal_default_paths = getEcalDefaultPaths();
+    ecal_default_paths.emplace(ecal_default_paths.begin(), cwd_directory_path);
+    
+    return findValidConfigFile(ecal_default_paths, config_file_);
+  }
 
 }
 
@@ -268,3 +284,116 @@ namespace eCAL
       return g_ecal_configuration;
     };
 }
+
+
+// Utils definitions from former ecal_config_reader.cpp
+namespace eCAL
+{
+  namespace Util
+  {
+    ECAL_API std::string GeteCALConfigPath()
+    {
+      // Check for first directory which contains the ini file.
+      std::vector<std::string> search_directories = getEcalDefaultPaths();
+
+      return findValidConfigFile(search_directories, ECAL_DEFAULT_CFG);
+    }
+
+    ECAL_API std::string GeteCALHomePath()
+    {
+      std::string home_path;
+
+#ifdef ECAL_OS_WINDOWS
+      // check ECAL_HOME
+      home_path = getEnvVar("ECAL_HOME");
+      if (!home_path.empty())
+      {
+        if (*home_path.rbegin() != path_separator) home_path += path_separator;
+      }
+      if (!std::string(ECAL_HOME_PATH_WINDOWS).empty()) //-V815
+      {
+        home_path += path_separator;
+        home_path += ECAL_HOME_PATH_WINDOWS;
+      }
+#endif /* ECAL_OS_WINDOWS */
+
+#ifdef ECAL_OS_LINUX
+      const char *hdir;
+      if ((hdir = getenv("HOME")) == NULL) {
+        hdir = getpwuid(getuid())->pw_dir;
+      }
+      home_path += hdir;
+      if (!std::string(ECAL_HOME_PATH_LINUX).empty())
+      {
+        home_path += "/";
+        home_path += ECAL_HOME_PATH_LINUX;
+      }
+#endif /* ECAL_OS_LINUX */
+
+      // create if not exists
+      if (!direxists(home_path))
+      {
+        createdir(home_path);
+      }
+
+      home_path += path_separator;
+      return(home_path);
+    }
+
+    ECAL_API std::string GeteCALUserSettingsPath()
+    {
+      std::string settings_path;
+#ifdef ECAL_OS_WINDOWS
+      settings_path = GeteCALConfigPath();
+#endif /* ECAL_OS_WINDOWS */
+
+#ifdef ECAL_OS_LINUX
+      settings_path = GeteCALHomePath();
+#endif /* ECAL_OS_LINUX */
+      settings_path += std::string(ECAL_SETTINGS_PATH);
+
+      if (!direxists(settings_path))
+      {
+        createdir(settings_path);
+      }
+
+      settings_path += path_separator;
+      return(settings_path);
+    }
+
+    ECAL_API std::string GeteCALLogPath()
+    {
+      std::string log_path;
+#ifdef ECAL_OS_WINDOWS
+      log_path = GeteCALConfigPath();
+#endif /* ECAL_OS_WINDOWS */
+
+#ifdef ECAL_OS_LINUX
+      log_path = GeteCALHomePath();
+#endif /* ECAL_OS_LINUX */
+
+      log_path += std::string(ECAL_LOG_PATH);
+
+      if (!direxists(log_path))
+      {
+        createdir(log_path);
+      }
+
+      log_path += path_separator;
+      return(log_path);
+    }
+
+    ECAL_API std::string GeteCALActiveIniFile()
+    {
+      std::string ini_file = GeteCALConfigPath();
+      ini_file += ECAL_DEFAULT_CFG;
+      return ini_file;
+    }
+
+    ECAL_API std::string GeteCALDefaultIniFile()
+    {
+      return GeteCALActiveIniFile();
+    }
+  
+  }
+}  
