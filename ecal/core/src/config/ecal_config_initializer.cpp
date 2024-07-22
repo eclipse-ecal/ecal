@@ -127,50 +127,26 @@ namespace
     return system_data_path;
   }
 
-  void appendFileNameToPathIfPathIsValid(std::string& path_, const std::string& file_name_)
+  bool isValidConfigFilePath(const std::string& path_, const std::string& file_name_)
   {
-    if (!path_.empty())
-      path_ += file_name_;
-  }
-
-  bool isValidConfigFilePath(const std::string& file_path_)
-  {
-    // check existence of user defined file
-    const EcalUtils::Filesystem::FileStatus ecal_ini_status(file_path_, EcalUtils::Filesystem::Current);
+    const std::string file_path = path_ + file_name_;
+    const EcalUtils::Filesystem::FileStatus ecal_ini_status(file_path, EcalUtils::Filesystem::Current);
     return ecal_ini_status.IsOk() && (ecal_ini_status.GetType() == EcalUtils::Filesystem::Type::RegularFile);
   }
 
-  std::string findValidConfigFile(std::vector<std::string> paths_, const std::string& file_name_)
+  std::string findValidConfigPath(std::vector<std::string> paths_, const std::string& file_name_)
   {
-    for (auto& path: paths_)
+    auto it = std::find_if(paths_.begin(), paths_.end(), [&file_name_](const std::string& path_)
     {
-      appendFileNameToPathIfPathIsValid(path, file_name_);
-    }
+      return isValidConfigFilePath(path_, file_name_);
+    });
 
-    auto it = std::find_if(paths_.begin(), paths_.end(), isValidConfigFilePath);
     // We should have encountered a valid path
     if (it != paths_.end())
       return (*it);
 
     // If valid path is not encountered, defaults should be used
     return std::string("");
-  }
-
-  bool fileexists(const std::string& fname_)
-  {
-    const std::ifstream infile(fname_);
-    return infile.good();
-  }
-
-  bool direxists(const std::string& path_)
-  {
-    const EcalUtils::Filesystem::FileStatus status(path_, EcalUtils::Filesystem::Current);
-    return (status.IsOk() && (status.GetType() == EcalUtils::Filesystem::Type::Dir));
-  }
-
-  void createdir(const std::string& path_)
-  {
-    EcalUtils::Filesystem::MkDir(path_, EcalUtils::Filesystem::Current);
   }
 
   std::vector<std::string> getEcalDefaultPaths()
@@ -203,9 +179,16 @@ namespace
     std::vector<std::string> ecal_default_paths = getEcalDefaultPaths();
     ecal_default_paths.emplace(ecal_default_paths.begin(), cwd_directory_path);
     
-    return findValidConfigFile(ecal_default_paths, config_file_);
-  }
+    std::string found_path = findValidConfigPath(ecal_default_paths, config_file_);
 
+    // check in case user provided whole path
+    if (found_path.empty())
+    {
+      return isValidConfigFilePath(config_file_, "") ? config_file_ : found_path;
+    }
+
+    return found_path + config_file_;
+  }
 }
 
 namespace eCAL 
@@ -287,6 +270,27 @@ namespace eCAL
 
 
 // Utils definitions from former ecal_config_reader.cpp
+namespace 
+{
+  bool fileexists(const std::string& fname_)
+  {
+    const std::ifstream infile(fname_);
+    return infile.good();
+  }
+
+  bool direxists(const std::string& path_)
+  {
+    const EcalUtils::Filesystem::FileStatus status(path_, EcalUtils::Filesystem::Current);
+    return (status.IsOk() && (status.GetType() == EcalUtils::Filesystem::Type::Dir));
+  }
+
+  void createdir(const std::string& path_)
+  {
+    EcalUtils::Filesystem::MkDir(path_, EcalUtils::Filesystem::Current);
+  }
+
+}
+
 namespace eCAL
 {
   namespace Util
@@ -296,7 +300,7 @@ namespace eCAL
       // Check for first directory which contains the ini file.
       std::vector<std::string> search_directories = getEcalDefaultPaths();
 
-      return findValidConfigFile(search_directories, ECAL_DEFAULT_CFG);
+      return findValidConfigPath(search_directories, ECAL_DEFAULT_CFG);
     }
 
     ECAL_API std::string GeteCALHomePath()
