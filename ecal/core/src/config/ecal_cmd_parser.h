@@ -50,16 +50,10 @@ namespace eCAL
       void                      parseArguments(std::vector<std::string>& arguments_);
 
       bool                      getDumpConfig() const;
-      std::vector<std::string>& getConfigKeys();
-      std::vector<std::string>& getTaskParameter();
       std::string&              getUserIni();
-      Cli::ConfigKey2DMap&      getConfigKeysMap();
 
     private:
-      std::vector<std::string> m_config_keys;
-      Cli::ConfigKey2DMap      m_config_key_map;
       bool                     m_dump_config;
-      std::vector<std::string> m_task_parameter;
       std::string              m_user_ini;
     };    
   }

@@ -239,7 +239,7 @@ namespace eCAL
     // are we allowed to perform zero copy writing?
     bool allow_zero_copy(false);
 #if ECAL_CORE_TRANSPORT_SHM
-    allow_zero_copy = eCAL::GetConfiguration().transport_layer.shm.zero_copy_mode; // zero copy mode activated by user
+    allow_zero_copy = m_config.shm.zero_copy_mode; // zero copy mode activated by user
 #endif
 #if ECAL_CORE_TRANSPORT_UDP
     // udp is active -> no zero copy
@@ -284,8 +284,8 @@ namespace eCAL
         wattr.clock                  = m_clock;
         wattr.hash                   = snd_hash;
         wattr.time                   = time_;
-        wattr.zero_copy              = eCAL::GetConfiguration().transport_layer.shm.zero_copy_mode;
-        wattr.acknowledge_timeout_ms = eCAL::GetConfiguration().transport_layer.shm.acknowledge_timeout_ms;
+        wattr.zero_copy              = m_config.shm.zero_copy_mode;
+        wattr.acknowledge_timeout_ms = m_config.shm.acknowledge_timeout_ms;
 
         // prepare send
         if (m_writer_shm->PrepareWrite(wattr))

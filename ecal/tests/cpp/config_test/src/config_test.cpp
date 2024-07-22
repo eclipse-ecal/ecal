@@ -63,11 +63,11 @@ TEST(core_cpp_config, user_config_passing)
 
     custom_config.subscriber.drop_out_of_order_messages       = drop_out_of_order_messages;
     custom_config.transport_layer.udp.network.group           = ip_address;
-    custom_config.transport_layer.udp.network.send_buffer     = upd_snd_buff;
+    custom_config.transport_layer.udp.send_buffer             = upd_snd_buff;
     
-    custom_config.monitoring.monitoring_timeout               = mon_timeout;
+    custom_config.monitoring.timeout                          = mon_timeout;
     custom_config.monitoring.filter_excl                      = mon_filter_excl;
-    custom_config.logging.filter_log_con                      = mon_log_filter_con;
+    custom_config.logging.sinks.console.filter_log_con        = mon_log_filter_con;
 
     custom_config.publisher.shm.enable                        = pub_use_shm;
 
@@ -75,7 +75,8 @@ TEST(core_cpp_config, user_config_passing)
   }
   catch (std::invalid_argument& e)
   {
-    throw std::runtime_error("Error while configuring Configuration: " + std::string(e.what()));
+    FAIL() << "Error while configuring Configuration: " << std::string(e.what());
+    return;
   }
 
   // Initialize ecal api with custom config
@@ -88,16 +89,16 @@ TEST(core_cpp_config, user_config_passing)
   EXPECT_EQ(ip_address, eCAL::GetConfiguration().transport_layer.udp.network.group);
 
   // Test UDP send buffer assignment, default is 5242880
-  EXPECT_EQ(upd_snd_buff, eCAL::GetConfiguration().transport_layer.udp.network.send_buffer);
+  EXPECT_EQ(upd_snd_buff, eCAL::GetConfiguration().transport_layer.udp.send_buffer);
 
   // Test monitoring timeout assignment, default is 5000U
-  EXPECT_EQ(mon_timeout, eCAL::GetConfiguration().monitoring.monitoring_timeout);
+  EXPECT_EQ(mon_timeout, eCAL::GetConfiguration().monitoring.timeout);
 
   // Test monitoring filter exclude assignment, default is "_.*"
   EXPECT_EQ(mon_filter_excl, eCAL::GetConfiguration().monitoring.filter_excl);
 
   // Test monitoring console log assignment, default is (log_level_info | log_level_warning | log_level_error | log_level_fatal)
-  EXPECT_EQ(mon_log_filter_con, eCAL::GetConfiguration().logging.filter_log_con);
+  EXPECT_EQ(mon_log_filter_con, eCAL::GetConfiguration().logging.sinks.console.filter_log_con);
 
   // Test publisher sendmode assignment, default is eCAL::TLayer::eSendMode::smode_auto
   EXPECT_EQ(pub_use_shm, eCAL::GetConfiguration().publisher.shm.enable);
@@ -159,12 +160,12 @@ TEST(ConfigDeathTest, user_config_death_test)
   // Test the ConstrainedInteger class with wrong values. Default are MIN = 5242880, STEP = 1024
   // Value below MIN
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.network.send_buffer, 42),
+    SetValue(custom_config.transport_layer.udp.send_buffer, 42),
     std::invalid_argument);
   
   // Wrong step. Default STEP = 1024
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.network.send_buffer, (5242880 + 512)),
+    SetValue(custom_config.transport_layer.udp.send_buffer, (5242880 + 512)),
     std::invalid_argument);
 
   // Test the registration option limits
@@ -207,88 +208,27 @@ TEST(core_cpp_config, config_custom_datatypes_tests)
   EXPECT_EQ(config1.transport_layer.udp.network.group, testValue);
 }
 
-TEST(core_cpp_config, config_cmd_parser)
+TEST(CmdParserTest, config_cmd_parser_test)
 {
-  // create a custom ini file
-  std::string ini_file_name = "customIni.ini";
-  std::ofstream custom_ini_file(ini_file_name);
-
-  if (custom_ini_file.is_open())
-  {
-    custom_ini_file << ini_file_as_string_deprecated;
-    custom_ini_file.close();
-  }
-  else 
-  {
-    std::cerr << "Error opening file for ini writing" << "\n";
-    return;
-  }
+  const std::string some_file_name = "someFileName.yml";
 
   eCAL::Config::CmdParser parser;
 
-  std::vector<std::string> arguments;
-
-  const std::string set_config_key = "--ecal-set-config-key ";
-  const std::string sep_slash = "/";
-  const std::string sep_col = ":";
-
-  const std::string network = "network";
-  const std::string host_group_name = "host_group_name";
-  const std::string config_test_machine = "ConfigTestMachine";
-  const std::string network_enabled = "network_enabled";
-  const std::string is_network_enabled = "true";
-  
-  const std::string common = "common";
-  const std::string registration_timeout = "registration_timeout";
-  const std::string registration_refresh = "registration_refresh";
-  const std::string reg_to_value = "6000";
-  const std::string reg_rf_value = "1000";
-
-  arguments.push_back("test_config_cmd_parser");
-  arguments.push_back("--ecal-ini-file customIni.ini");
-  std::string host_group_string = set_config_key + network + sep_slash + host_group_name + sep_col + config_test_machine;
-  arguments.push_back(host_group_string);
-  std::string network_enabled_string = set_config_key + network + sep_slash + network_enabled + sep_col + is_network_enabled;
-  arguments.push_back(network_enabled_string);
-  std::string registration_to_string = set_config_key + common + sep_slash + registration_timeout + sep_col + reg_to_value;
-  arguments.push_back(registration_to_string);
-  std::string registration_rf_string = set_config_key + common + sep_slash + registration_refresh + sep_col + reg_rf_value;
-  arguments.push_back(registration_rf_string);
-
-  try
-  {
-    parser.parseArguments(arguments);
-  }
-  catch(const std::runtime_error& e)
-  {
-    std::cerr << e.what() << '\n';
-  }
-  
-  // Expect a valid ini file
-  EXPECT_NE(parser.getUserIni(), std::string(""));
-
-  // Expect a proper key-value map in the config key map
-  EXPECT_EQ(parser.getConfigKeysMap()[network][host_group_name], config_test_machine);
-  EXPECT_EQ(parser.getConfigKeysMap()[network][network_enabled], is_network_enabled);
-  EXPECT_EQ(parser.getConfigKeysMap()[common][registration_timeout], reg_to_value);
-  EXPECT_EQ(parser.getConfigKeysMap()[common][registration_refresh], reg_rf_value);
-
-  remove(ini_file_name.data());
-}
-
-TEST(CmdParserDeathTest, config_cmd_parser_death_test)
-{
-  eCAL::Config::CmdParser parser;
+  EXPECT_EQ(parser.getUserIni(), "");
+  EXPECT_EQ(parser.getDumpConfig(), false);
 
   std::vector<std::string> arguments;
 
-  arguments.push_back("test_config_cmd_parser_death_test");
-  arguments.push_back("--ecal-ini-file someNotValidFileName.ini");
+  arguments.push_back("test_config_cmd_parser_test");
+  // set a file name as ini file
+  arguments.push_back("--ecal-ini-file " + some_file_name);
+  // set the dump config flag
+  arguments.push_back("--ecal-dump-config");
 
-  ASSERT_THROW(
-    parser.parseArguments(arguments),
-    std::runtime_error
-  );
+  parser.parseArguments(arguments);
+
+  EXPECT_EQ(parser.getUserIni(), some_file_name);
+  EXPECT_EQ(parser.getDumpConfig(), true);
 }
 
 TEST(YamlConfigReaderTest, read_write_file_test)
@@ -305,13 +245,14 @@ TEST(YamlConfigReaderTest, read_write_file_test)
   else 
   {
     std::cerr << "Error opening file for ini writing" << "\n";
+    FAIL() << "Error opening file for ini writing";
     return;
   }
 
   eCAL::Configuration config;
-  EXPECT_NO_THROW(config = eCAL::Config::ParseYamlFromFile(ini_file_name));
+  EXPECT_NO_THROW(eCAL::Config::YamlFileToConfig(ini_file_name, config));
 
-  EXPECT_EQ(true, eCAL::Config::WriteConfigurationToYaml("myTest.yml", config));
+  EXPECT_EQ(true, eCAL::Config::ConfigToYamlFile("myTest.yml", config));
 
   remove(ini_file_name.data());
   remove("myTest.yml");
@@ -320,7 +261,7 @@ TEST(YamlConfigReaderTest, read_write_file_test)
 TEST(YamlConfigReaderTest, parse_values_test)
 {
   eCAL::Configuration config;
-  EXPECT_NO_THROW(config = eCAL::Config::ParseYamlFromString(ini_file_as_string_yaml));
+  EXPECT_NO_THROW(eCAL::Config::YamlStringToConfig(ini_file_as_string_yaml, config));
 
   // Check string 
   EXPECT_EQ(config.application.startup.terminal_emulator, "myTestTerminal");
@@ -329,16 +270,16 @@ TEST(YamlConfigReaderTest, parse_values_test)
   EXPECT_EQ(config.transport_layer.udp.network.group, "239.5.0.1");
 
   // Check constrained Integer
-  EXPECT_EQ(config.transport_layer.udp.network.port, 14010);
+  EXPECT_EQ(config.transport_layer.udp.port, 14010);
 
   // Check boolean
-  EXPECT_EQ(config.transport_layer.udp.network.npcap_enabled, true);
+  EXPECT_EQ(config.transport_layer.udp.npcap_enabled, true);
 
   // Check unsigned size_t
   EXPECT_EQ(config.transport_layer.tcp.max_reconnections, 7);
 
   // Check unsigned int
-  EXPECT_EQ(config.transport_layer.shm.acknowledge_timeout_ms, 346U);
+  EXPECT_EQ(config.publisher.shm.acknowledge_timeout_ms, 346U);
 } 
 
 TEST(YamlConfigReaderTest, yaml_node_merger)
@@ -348,7 +289,7 @@ TEST(YamlConfigReaderTest, yaml_node_merger)
 
   node_1["test"] = 1;
   node_2["test"] = 2;
-  node_2[3] = "Help, I have an int key!";
+  node_2[3] = "I have an int key!";
 
   node_1["test2"] = 3;
   
@@ -381,6 +322,7 @@ TEST(YamlConfigReaderTest, yaml_to_config_merger)
   else 
   {
     std::cerr << "Error opening file for ini writing" << "\n";
+    FAIL() << "Error opening file for ini writing";
     return;
   }
 

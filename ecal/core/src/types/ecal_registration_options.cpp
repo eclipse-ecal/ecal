@@ -23,21 +23,19 @@
 
 #include <ecal/config/registration.h>
 #include "ecal_def.h"
+#include "ecal/ecal_config.h"
 
 namespace eCAL
 {
   namespace Registration
   {
     Configuration::Configuration()
-    : network_enabled(NET_ENABLED)
-    , shm_registration_enabled(SHM_REGISTRATION_ENABLED)
-    , m_registration_timeout(CMN_REGISTRATION_TO)
-    , m_registration_refresh(CMN_REGISTRATION_REFRESH)
-    {}
+    {
+      *this = GetConfiguration().registration;
+    }
 
     Configuration::Configuration(unsigned int reg_timeout_, unsigned int reg_refresh_)
-    : network_enabled(NET_ENABLED)
-    , shm_registration_enabled(SHM_REGISTRATION_ENABLED)
+    : Configuration()
     {
       if (reg_refresh_ < reg_timeout_)
       {

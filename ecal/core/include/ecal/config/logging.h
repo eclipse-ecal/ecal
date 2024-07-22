@@ -26,16 +26,57 @@
 
 #include <ecal/ecal_log_level.h>
 
+#include <vector>
+#include <string>
+
 namespace eCAL
 {
   namespace Logging
   {
+    namespace Sinks
+    {
+      namespace Console
+      {
+        struct Configuration
+        {
+          bool enable{};                                //!< Enable console logging (Default: false)
+          eCAL_Logging_Filter filter_log_con{};         /*!< Log messages logged to console (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
+                                                         (Default: info, warning, error, fatal)*/
+        };
+      }
+
+      namespace File
+      {
+        struct Configuration
+        {
+          bool enable{};                                //!< Enable file logging (Default: false)
+          std::string path{};                           //!< Path to log file (Default: "")
+          eCAL_Logging_Filter filter_log_file{};        /*!< Log messages logged into file system (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
+                                                         (Default: info, warning, error, fatal)*/
+        };
+      }
+
+      namespace UDP
+      {
+        struct Configuration
+        {
+          bool enable{};                                //!< Enable UDP logging (Default: false)
+          unsigned int port{};                          //!< UDP port number (Default: 14001)
+          eCAL_Logging_Filter filter_log_udp{};         //!< Log messages logged via udp network (Default: info, warning, error, fatal)
+        };
+      }
+
+      struct Configuration
+      {
+        Console::Configuration console;
+        File::Configuration    file;
+        UDP::Configuration     udp;
+      };
+    }
+    
     struct Configuration
     {
-      eCAL_Logging_Filter filter_log_con{};         /*!< Log messages logged to console (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
-                                                         (Default: info, warning, error, fatal)*/
-      eCAL_Logging_Filter filter_log_file{};        //!< Log messages to logged into file system (Default: "")
-      eCAL_Logging_Filter filter_log_udp{};         //!< Log messages logged via udp network (Default: info, warning, error, fatal)
+      Sinks::Configuration sinks;
     };
   }
 }

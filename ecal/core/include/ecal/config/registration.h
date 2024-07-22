@@ -33,6 +33,34 @@ namespace eCAL
 {
   namespace Registration
   {
+    namespace Layer
+    {
+      namespace SHM
+      {
+        struct Configuration
+        {
+          bool        enable;                   /*!< Enable shared memory based registration (Default: false) */
+          std::string domain;                   //!< Domain name for shared memory based registration (Default: ecal_mon)
+          size_t      queue_size;               //!< Queue size of registration events (Default: 1024)
+        };
+      }
+
+      namespace UDP
+      {
+        struct Configuration
+        {
+          bool                             enable;   /*!< Enable UDP based registration (Default: true) */
+          unsigned int                     port;     /*!< UDP multicast port number (Default: 14000) */
+        };
+      }
+
+      struct Configuration
+      {
+        SHM::Configuration shm;                     /*!< Shared memory based registration configuration */
+        UDP::Configuration udp;                     /*!< UDP based registration configuration */
+      };
+    }
+
     /**
      * @brief  Struct for storing RegistrationOptions.
      *         If not specified, registration timeout and refresh times from eCAL predefines will be used.
@@ -55,12 +83,10 @@ namespace eCAL
 
         bool network_enabled;                                                               /*!< true  = all eCAL components communicate over network boundaries
                                                                                                  false = local host only communication (Default: false) */
-        bool shm_registration_enabled;                                                      /*!< true  = registration layer is based on shm
-                                                                                                 false = registration layer is based on udp (Default: false) */
         bool loopback;                                                                      //!< enable to receive udp messages on the same local machine
         std::string host_group_name;                                                        /*!< Common host group name that enables interprocess mechanisms across 
                                                                                                  (virtual) host borders (e.g, Docker); by default equivalent to local host name (Default: "") */
-
+        Layer::Configuration layer;                                                         /*!< Registration layer configuration */
 
     private:
         unsigned int m_registration_timeout;

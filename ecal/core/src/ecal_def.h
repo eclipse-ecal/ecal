@@ -38,7 +38,7 @@ constexpr const char* ECAL_LOG_PATH          = "logs";
 constexpr const char* ECAL_SETTINGS_PATH     = "cfg";
 
 /* ini file name */
-constexpr const char* ECAL_DEFAULT_CFG       = "ecal.ini";
+constexpr const char* ECAL_DEFAULT_CFG       = "ecal.yaml";
 
 /**********************************************************************************************/
 /*                                     monitor settings                                       */

@@ -89,7 +89,7 @@ namespace eCAL
     // common
     /////////////////////////////////////
     
-    ECAL_API std::string       GetLoadedEcalIniPath                 () { return GetConfiguration().GetIniFilePath(); }
+    ECAL_API std::string       GetLoadedEcalIniPath                 () { return GetConfiguration().GetYamlFilePath(); }
     ECAL_API int               GetRegistrationTimeoutMs             () { return GetConfiguration().registration.getTimeoutMS(); }
     ECAL_API int               GetRegistrationRefreshMs             () { return GetConfiguration().registration.getRefreshMS(); }
 
@@ -98,24 +98,24 @@ namespace eCAL
     /////////////////////////////////////
 
     ECAL_API bool              IsNetworkEnabled                     () { return GetConfiguration().registration.network_enabled; }
-    ECAL_API bool              IsShmRegistrationEnabled             () { return GetConfiguration().registration.shm_registration_enabled; }
+    ECAL_API bool              IsShmRegistrationEnabled             () { return GetConfiguration().registration.layer.shm.enable; }
 
     ECAL_API Types::UdpConfigVersion  GetUdpMulticastConfigVersion  () { return GetConfiguration().transport_layer.udp.config_version; }
 
     ECAL_API std::string       GetUdpMulticastGroup                 () { return GetConfiguration().transport_layer.udp.network.group; }
     ECAL_API std::string       GetUdpMulticastMask                  () { return GetConfiguration().transport_layer.udp.mask; }
-    ECAL_API int               GetUdpMulticastPort                  () { return GetConfiguration().transport_layer.udp.network.port; }
+    ECAL_API int               GetUdpMulticastPort                  () { return GetConfiguration().transport_layer.udp.port; }
     ECAL_API int               GetUdpMulticastTtl                   () { return GetConfiguration().transport_layer.udp.network.ttl; }
 
-    ECAL_API int               GetUdpMulticastSndBufSizeBytes       () { return GetConfiguration().transport_layer.udp.network.send_buffer; }
-    ECAL_API int               GetUdpMulticastRcvBufSizeBytes       () { return GetConfiguration().transport_layer.udp.network.receive_buffer; }
-    ECAL_API bool              IsUdpMulticastJoinAllIfEnabled       () { return GetConfiguration().transport_layer.udp.network.join_all_interfaces; }
+    ECAL_API int               GetUdpMulticastSndBufSizeBytes       () { return GetConfiguration().transport_layer.udp.send_buffer; }
+    ECAL_API int               GetUdpMulticastRcvBufSizeBytes       () { return GetConfiguration().transport_layer.udp.receive_buffer; }
+    ECAL_API bool              IsUdpMulticastJoinAllIfEnabled       () { return GetConfiguration().transport_layer.udp.join_all_interfaces; }
 
     ECAL_API bool              IsUdpMulticastRecEnabled             () { return GetConfiguration().subscriber.udp.enable; }
     ECAL_API bool              IsShmRecEnabled                      () { return GetConfiguration().subscriber.shm.enable; }
     ECAL_API bool              IsTcpRecEnabled                      () { return GetConfiguration().subscriber.tcp.enable; }
 
-    ECAL_API bool              IsNpcapEnabled                       () { return GetConfiguration().transport_layer.udp.network.npcap_enabled; }
+    ECAL_API bool              IsNpcapEnabled                       () { return GetConfiguration().transport_layer.udp.npcap_enabled; }
 
     ECAL_API size_t            GetTcpPubsubReaderThreadpoolSize     () { return GetConfiguration().transport_layer.tcp.number_executor_reader;};
     ECAL_API size_t            GetTcpPubsubWriterThreadpoolSize     () { return GetConfiguration().transport_layer.tcp.number_executor_writer;};
@@ -140,12 +140,12 @@ namespace eCAL
     // monitoring
     /////////////////////////////////////
     
-    ECAL_API int                 GetMonitoringTimeoutMs             () { return GetConfiguration().monitoring.monitoring_timeout; }
+    ECAL_API int                 GetMonitoringTimeoutMs             () { return GetConfiguration().monitoring.timeout; }
     ECAL_API std::string         GetMonitoringFilterExcludeList     () { return GetConfiguration().monitoring.filter_excl; }
     ECAL_API std::string         GetMonitoringFilterIncludeList     () { return GetConfiguration().monitoring.filter_incl; }
-    ECAL_API eCAL_Logging_Filter GetConsoleLogFilter                () { return GetConfiguration().logging.filter_log_con; }
-    ECAL_API eCAL_Logging_Filter GetFileLogFilter                   () { return GetConfiguration().logging.filter_log_file; }
-    ECAL_API eCAL_Logging_Filter GetUdpLogFilter                    () { return GetConfiguration().logging.filter_log_udp; }
+    ECAL_API eCAL_Logging_Filter GetConsoleLogFilter                () { return GetConfiguration().logging.sinks.console.filter_log_con; }
+    ECAL_API eCAL_Logging_Filter GetFileLogFilter                   () { return GetConfiguration().logging.sinks.file.filter_log_file; }
+    ECAL_API eCAL_Logging_Filter GetUdpLogFilter                    () { return GetConfiguration().logging.sinks.udp.filter_log_udp; }
 
     /////////////////////////////////////
     // sys
@@ -171,8 +171,8 @@ namespace eCAL
 
     namespace Experimental
     {
-      ECAL_API size_t            GetShmMonitoringQueueSize          () { return GetConfiguration().monitoring.shm_options.shm_monitoring_queue_size; }
-      ECAL_API std::string       GetShmMonitoringDomain             () { return GetConfiguration().monitoring.shm_options.shm_monitoring_domain;}
+      ECAL_API size_t            GetShmMonitoringQueueSize          () { return GetConfiguration().registration.layer.shm.queue_size; }
+      ECAL_API std::string       GetShmMonitoringDomain             () { return GetConfiguration().registration.layer.shm.domain;}
       ECAL_API bool              GetDropOutOfOrderMessages          () { return GetConfiguration().subscriber.drop_out_of_order_messages; }
     }
   }

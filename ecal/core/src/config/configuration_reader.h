@@ -36,25 +36,42 @@
 #include <stack>
 #include <utility>
 
+namespace 
+{
+  void MapConfiguration(const YAML::Node& node_, eCAL::Configuration& config_)
+  {
+    YAML::AssignValue<eCAL::TransportLayer::Configuration>(config_.transport_layer, node_, "transport_layer");
+    YAML::AssignValue<eCAL::Publisher::Configuration>(config_.publisher, node_, "publisher");
+    YAML::AssignValue<eCAL::Subscriber::Configuration>(config_.subscriber, node_, "subscriber");
+    YAML::AssignValue<eCAL::Registration::Configuration>(config_.registration, node_, "registration");
+    YAML::AssignValue<eCAL::Monitoring::Configuration>(config_.monitoring, node_, "monitoring");
+    YAML::AssignValue<eCAL::Time::Configuration>(config_.timesync, node_, "time");
+    YAML::AssignValue<eCAL::Service::Configuration>(config_.service, node_, "service");
+    YAML::AssignValue<eCAL::Application::Configuration>(config_.application, node_, "application");
+    YAML::AssignValue<eCAL::Logging::Configuration>(config_.logging, node_, "logging");
+  }
+}
+
+
 namespace eCAL
 {
   namespace Config
-  {
-    eCAL::Configuration ParseYamlFromFile(const std::string& filename_)
+  {    
+    void YamlFileToConfig(const std::string& filename_, eCAL::Configuration& config_)
     {
-      YAML::Node config = YAML::LoadFile(filename_);
+      YAML::Node yaml = YAML::LoadFile(filename_);
 
-      return config.as<eCAL::Configuration>();
+      MapConfiguration(yaml, config_);
     };
 
-    eCAL::Configuration ParseYamlFromString(const std::string& yaml_string_)
+    void YamlStringToConfig(const std::string& yaml_string_, eCAL::Configuration& config_)
     {
-      YAML::Node config = YAML::Load(yaml_string_);
+      YAML::Node yaml = YAML::Load(yaml_string_);
 
-      return config.as<eCAL::Configuration>();
+      MapConfiguration(yaml, config_);
     };
 
-    bool WriteConfigurationToYaml(const std::string& file_name_, const eCAL::Configuration& config_ = eCAL::GetConfiguration())
+    bool ConfigToYamlFile(const std::string& file_name_, const eCAL::Configuration& config_ = eCAL::GetConfiguration())
     {
       YAML::Node node(config_);
       std::ofstream file(file_name_);
@@ -133,7 +150,7 @@ namespace eCAL
       }
 
       eCAL::Config::MergeYamlNodes(config_node, node_to_merge);
-      config_ = config_node.as<eCAL::Configuration>();
+      MapConfiguration(config_node, config_);
 
       return true;
     }

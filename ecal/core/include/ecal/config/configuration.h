@@ -63,15 +63,16 @@ namespace eCAL
     ECAL_API Configuration(int argc_, char** argv_);
     ECAL_API Configuration(std::vector<std::string>& args_);
 
-    ECAL_API void InitConfigWithDefaultIni();
-    ECAL_API void InitConfig(std::string ini_path_ = std::string(""));
+    ECAL_API void InitConfigWithDefaultYaml();
+    ECAL_API void InitConfigWithDefaults();
+    ECAL_API void InitConfigFromFile(std::string yaml_path_);
 
-    ECAL_API std::string GetIniFilePath();
+    ECAL_API std::string GetYamlFilePath();
 
     friend class CmdParser;
 
   protected:
-    std::string                      ecal_ini_file_path{};
+    std::string                      ecal_yaml_file_path{};
 
   private:
     ECAL_API void Init(std::vector<std::string>& args_);

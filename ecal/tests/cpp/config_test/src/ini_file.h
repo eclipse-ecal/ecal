@@ -207,18 +207,58 @@ std::string ini_file_as_string_yaml = R"(#  _____     _ _                       
 #  |___/                                               |___/                                   
 
 
-# UDP specific settings
-udp_configuration: &udp_config
-  # UDP configuration version (Since eCAL 5.12.)
-  # v1: default behavior
-  # v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups
-  config_version: "v2"
-  # Valid modes: local, network (Default: local)
-  mode: "local"
+# Registration layer configuration
+registration:
+  # Topic registration refresh cylce (has to be smaller then registration timeout! Default: 1000)
+  registration_refresh: 1000   
+  # Timeout for topic registration in ms (internal, Default: 60000)
+  registration_timeout: 60000
+  # Enable to receive registration information on the same local machine
+  loopback: true
+  # Host group name that enables interprocess mechanisms across (virtual)
+  # host borders (e.g, Docker); by default equivalent to local host name
+  host_group_name: ""
+  # true  = all eCAL components communicate over network boundaries
+  # false = local host only communication (Default: false)
+  network_enabled: false
 
-  general: &general_udp_settings
-    # Multicast port number, modify in steps of 10 only because multiple ports are used by eCAL
+  layer:
+    shm:
+      enable: false
+      # Domain name for shared memory based registration
+      domain: "ecal_mon"
+      # Queue size of registration events
+      queue_size: 1024
+
+    udp:
+      enable: true
+      port: 14000
+  
+
+# Monitoring configuration
+monitoring:
+  # Timeout for topic monitoring in ms (Default: 1000), increase in 1000er steps
+  timeout: 1000
+  # Topics blacklist as regular expression (will not be monitored)
+  filter_excl: "^__.*$"
+  # Topics whitelist as regular expression (will be monitored only) (Default: "")
+  filter_incl: ""
+  
+
+# Transport layer configuration
+transport_layer:
+  udp:
+    # UDP configuration version (Since eCAL 5.12.)
+    # v1: default behavior
+    # v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups
+    config_version: "v2"
+    # Valid modes: local, network (Default: local)
+    mode: "local"
+    # Multicast port number
     port: 14010
+    # v1: Mask maximum number of dynamic multicast group (range 0.0.0.1-0.0.0.255)
+    # v2: Masks are now considered like routes masking (range 255.0.0.0-255.255.255.255)
+    mask: "255.255.255.240"
     # Send buffer in bytes
     send_buffer: 5242880
     # Receive buffer in bytes
@@ -228,61 +268,35 @@ udp_configuration: &udp_config
     # network devices are up and running.
     join_all_interfaces: false
     # Windows specific setting to enable receiving UDP traffic with the Npcap based receiver
-    npcap_enabled: true
+    npcap_enabled: true 
     
-  # In local mode multicast group and ttl are set by default and are not adjustable
-  local:
-    <<: *general_udp_settings
-    # Multicast group base. All registration and logging is sent on this address 
-    # group: "127.0.0.1" 
-    # TTL (hop limit) is used to determine the amount of routers being traversed towards the destination
-    # ttl: 0
+    # In local mode multicast group and ttl are set by default and are not adjustable
+    local:
+      # Multicast group base. All registration and logging is sent on this address 
+      # group: "127.0.0.1" 
+      # TTL (hop limit) is used to determine the amount of routers being traversed towards the destination
+      # ttl: 0
 
-  network:
-    <<: *general_udp_settings
-    # Multicast group base. All registration and logging is sent on this address 
-    group: "239.5.0.1" 
-    # TTL (hop limit) is used to determine the amount of routers being traversed towards the destination
-    ttl: 3
+    network:
+      # Multicast group base. All registration and logging is sent on this address 
+      group: "239.5.0.1" 
+      # TTL (hop limit) is used to determine the amount of routers being traversed towards the destination
+      ttl: 3   
+    
+  tcp: 
+    # Reader amount of threads that shall execute workload
+    number_executor_reader: 4
+    # Writer amount of threads that shall execute workload
+    number_executor_writer: 4
+    # Reconnection attemps the session will try to reconnect in case of an issue
+    max_reconnections: 7
 
-
-# TCP specific settings
-tcp_configuration: &tcp_config
-  # Reader amount of threads that shall execute workload
-  number_executor_reader: 4
-  # Writer amount of threads that shall execute workload
-  number_executor_writer: 4
-  # Reconnection attemps the session will try to reconnect in case of an issue
-  max_reconnections: 7
-
-
-# Shared memory specific settings
-shm_configuration: &shm_config
-  # Enable zero copy shared memory transport mode
-  zero_copy_mode: false
-  # Force connected subscribers to send acknowledge event after processing the message.
-  # The publisher send call is blocked on this event with this timeout (0 == no handshake).
-  acknowledge_timeout_ms: 346
-  # Default memory file size for new publisher
-  memfile_min_size_bytes: 4096
-  # Dynamic file size reserve before recreating memory file if topic size changes
-  memfile_reserve_percent: 50
-  # Maximum number of used buffers (needs to be greater than 1, default = 1)
-  memfile_buffer_count: 1
-
-transport_layer:
-  udp:
-    # v1: Mask maximum number of dynamic multicast group (range 0.0.0.1-0.0.0.255)
-    # v2: Masks are now considered like routes masking (range 255.0.0.0-255.255.255.255)
-    mask: "255.255.255.240"
-    <<: *udp_config
-    general:
-      port: 14002
-
-  tcp: *tcp_config
-
-  shm: *shm_config
-
+  shm:     
+    # Default memory file size for new publisher
+    memfile_min_size_bytes: 4096
+    # Dynamic file size reserve before recreating memory file if topic size changes
+    memfile_reserve_percent: 50
+    
 
 # Publisher specific base settings
 publisher:
@@ -290,6 +304,13 @@ publisher:
   shm:
     # Enable layer
     enable: false
+    # Enable zero copy shared memory transport mode
+    zero_copy_mode: false
+    # Force connected subscribers to send acknowledge event after processing the message.
+    # The publisher send call is blocked on this event with this timeout (0 == no handshake).
+    acknowledge_timeout_ms: 346
+    # Maximum number of used buffers (needs to be greater than 1, default = 1)
+    memfile_buffer_count: 1
   
   # Base configuration for UDP publisher
   udp:
@@ -316,7 +337,7 @@ subscriber:
   # Base configuration for shared memory subscriber
   shm:
     # Enable layer
-    enable: true
+    enable: false
 
   # Base configuration for UDP subscriber
   udp:
@@ -330,58 +351,7 @@ subscriber:
   
   # Enable dropping of payload messages that arrive out of order
   drop_out_of_order_messages: true
-
-
-# Registration layer configuration
-registration:
-  layer:
-    shm:
-      enable: false
-      # Domain name for shared memory based monitoring/registration
-      domain: "ecal_mon"
-      # Queue size of monitoring/registration events
-      queue_size: 1024
-
-    udp:
-      enable: true
-      <<: *udp_config
   
-  # Topic registration refresh cylce (has to be smaller then registration timeout! Default: 1000)
-  registration_refresh: 1000   
-  # Timeout for topic registration in ms (internal, Default: 60000)
-  registration_timeout: 60000
-  # Enable to receive registration information on the same local machine
-  loopback: false
-  # Host group name that enables interprocess mechanisms across (virtual)
-  # host borders (e.g, Docker); by default equivalent to local host name
-  host_group_name: ""
-  # true  = all eCAL components communicate over network boundaries
-  # false = local host only communication (Default: false)
-  network_enabled: false
-  
-
-# Monitoring configuration
-monitoring:
-  mode: []
-  # Timeout for topic monitoring in ms (Default: 1000), increase in 1000er steps
-  timeout: 1000
-  
-  # Monitoring shared memory configuration
-  shm:
-    # Domain name for shared memory based monitoring/registration
-    domain: "ecal_mon"
-    # Queue size of monitoring/registration events
-    queue_size: 1024
-  
-  # Monitoring UDP configuration
-  udp:
-    placeholder: false
-  
-  # Topics blacklist as regular expression (will not be monitored)
-  filter_excl: "^__.*$"
-  # Topics whitelist as regular expression (will be monitored only) (Default: "")
-  filter_incl: ""
-
 
 # Time configuration
 time:
@@ -422,14 +392,28 @@ application:
 
 # Logging configuration
 logging:
-  # Filter configuration for different outputs
-  # Available options: all, info, warning, error, fatal, debug1, debug2, debug3, debug4
-  filter:
-    # Log messages logged to console
-    console: ["info", "warning", "error", "fatal"]
-    # Log messages to logged into file system
-    file: []
-    # Log messages logged via udp network
-    udp: ["info", "warning", "error", "fatal"]
+  sinks:
+    # Console logging configuration
+    console:
+      # Enable console logging
+      enable: false
+      # Log level for console output
+      level: ["info", "warning", "error", "fatal"]
+    # File logging configuration
+    file:
+      # Enable file logging
+      enable: false
+      # Log level for file output
+      level: []
+      # Log file path
+      path: "ecal.log"
+    # UDP logging configuration
+    udp:
+      # Enable UDP logging
+      enable: true
+      # Log level for UDP output
+      level:  ["info", "warning", "error", "fatal"]
+      # UDP
+      port: 14001
 
 )";

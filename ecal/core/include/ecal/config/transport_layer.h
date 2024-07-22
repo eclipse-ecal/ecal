@@ -25,7 +25,6 @@
 #pragma once
 
 #include <ecal/types/ecal_custom_data_types.h>
-#include "layer.h"
 
 namespace eCAL
 {
@@ -33,29 +32,62 @@ namespace eCAL
   {
     namespace UDP
     {
-      struct Configuration : eCAL::Layer::UDP::Configuration
+      enum class MODE
       {
+        CLOUD,
+        LOCAL
+      };
+
+      namespace Network
+      {
+        struct Configuration
+        {
+          Types::IpAddressV4                       group{};                       //!< UDP multicast group base (Default: 239.0.0.1)
+          unsigned int                             ttl{};                         /*!< UDP ttl value, also known as hop limit, is used in determining 
+                                                                                      the intermediate routers being traversed towards the destination(Default: 2) */
+        };
+      }
+
+      struct Configuration
+      {
+        Types::UdpConfigVersion                  config_version{};              /*!< UDP configuration version (Since eCAL 5.12.)
+                                                                                     v1: default behavior
+                                                                                     v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups (Default: v1) */
+        unsigned int                             port;                          /*!< UDP multicast port number (Default: 14002) */
+        MODE                                     mode{};                        /*!< Valid modes: local, network (Default: local)*/
         Types::IpAddressV4                       mask{};                        /*!< v1: Mask maximum number of dynamic multicast group (Default: 0.0.0.1-0.0.0.255)
                                                                                      v2: masks are now considered like routes masking (Default: 255.0.0.0-255.255.255.255)*/
-      };
+                    
+        // TODO PG: are these minimum limits correct?
+        Types::ConstrainedInteger<5242880, 1024> send_buffer{};                 //!< UDP send buffer in bytes (Default: 5242880)
+        Types::ConstrainedInteger<5242880, 1024> receive_buffer{};              //!< UDP receive buffer in bytes (Default: 5242880)
+        bool                                     join_all_interfaces{};         /*!< Linux specific setting to enable joining multicast groups on all network interfacs
+                                                                                     independent of their link state. Enabling this makes sure that eCAL processes
+                                                                                     receive data if they are started before network devices are up and running. (Default: false)*/
+        bool                                     npcap_enabled{};               //!< Enable to receive UDP traffic with the Npcap based receiver (Default: false)
+      
+        Network::Configuration                   network;
+      }; 
     }
 
     namespace TCP
     {
-      struct Configuration : eCAL::Layer::TCP::Configuration
+      struct Configuration
       {
-
+        size_t number_executor_reader{};                                        //!< reader amount of threads that shall execute workload (Default: 4)
+        size_t number_executor_writer{};                                        //!< writer amount of threads that shall execute workload (Default: 4)
+        size_t max_reconnections{};                                             //!< reconnection attemps the session will try to reconnect in (Default: 5)
       };
     }
 
     namespace SHM 
     {
-      struct Configuration : eCAL::Layer::SHM::Configuration
+      struct Configuration
       {
-
+        Types::ConstrainedInteger<4096, 4096> memfile_min_size_bytes;   //!< default memory file size for new publisher
+        Types::ConstrainedInteger<50, 1, 100> memfile_reserve_percent;  //!< dynamic file size reserve before recreating memory file if topic size changes
       };
     }
-
 
     struct Configuration
     {
