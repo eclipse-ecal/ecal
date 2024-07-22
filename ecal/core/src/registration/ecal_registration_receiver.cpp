@@ -130,6 +130,12 @@ namespace eCAL
   {
     if (!m_created) return false;
 
+    if (!AcceptRegistrationSample(sample_))
+    {
+      Logging::Log(log_level_debug1, "CRegistrationReceiver::ApplySample : Incoming sample discarded");
+      return false;
+    }
+
     // forward all registration samples to outside "customer" (e.g. monitoring, descgate)
     {
       const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
@@ -244,7 +250,6 @@ namespace eCAL
   {
 #if ECAL_CORE_SERVICE
     if (g_clientgate() == nullptr)           return;
-    if (!ShouldProcessRegistration(sample_)) return;
 
     switch (sample_.cmd_type)
     {
@@ -262,7 +267,6 @@ namespace eCAL
   {
 #if ECAL_CORE_PUBLISHER
     if (g_pubgate() == nullptr)              return;
-    if (!ShouldProcessRegistration(sample_)) return;
 
     switch (sample_.cmd_type)
     {
@@ -282,7 +286,6 @@ namespace eCAL
   {
 #if ECAL_CORE_SUBSCRIBER
     if (g_subgate() == nullptr)              return;
-    if (!ShouldProcessRegistration(sample_)) return;
 
     switch (sample_.cmd_type)
     {
@@ -335,7 +338,7 @@ namespace eCAL
     return true;
   }
 
-  bool CRegistrationReceiver::ShouldProcessRegistration(const Registration::Sample& sample_)
+  bool CRegistrationReceiver::AcceptRegistrationSample(const Registration::Sample& sample_)
   {
     // check if the sample is from the same host group
     if (IsHostGroupMember(sample_))

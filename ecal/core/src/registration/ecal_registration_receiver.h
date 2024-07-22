@@ -72,7 +72,7 @@ namespace eCAL
     void ApplyPublisherRegistration(const eCAL::Registration::Sample& sample_);
 
     bool IsHostGroupMember(const eCAL::Registration::Sample& sample_);
-    bool ShouldProcessRegistration(const Registration::Sample& sample_);
+    bool AcceptRegistrationSample(const Registration::Sample& sample_);
 
     static std::atomic<bool>              m_created;
     bool                                  m_network;
