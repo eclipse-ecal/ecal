@@ -36,7 +36,7 @@ namespace
     attr.port = UDP::GetRegistrationPort();
     attr.broadcast = UDP::IsBroadcast();
     attr.loopback = true;
-    attr.rcvbuf = Config::GetUdpMulticastRcvBufSizeBytes();
+    attr.rcvbuf = UDP::GetReceiveBufferSize();
     return attr;
   }
 

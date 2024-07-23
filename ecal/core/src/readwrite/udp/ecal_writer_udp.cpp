@@ -45,7 +45,7 @@ namespace eCAL
     attr.port      = UDP::GetPayloadPort();
     attr.ttl       = UDP::GetMulticastTtl();
     attr.broadcast = UDP::IsBroadcast();
-    attr.sndbuf    = eCAL::GetConfiguration().transport_layer.udp.send_buffer;
+    attr.sndbuf    = UDP::GetSendBufferSize();
 
     // create udp/sample sender with activated loop-back
     attr.loopback = true;

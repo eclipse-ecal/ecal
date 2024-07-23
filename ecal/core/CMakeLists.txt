@@ -22,7 +22,7 @@ find_package(asio             REQUIRED)
 find_package(Threads          REQUIRED)
 find_package(ecaludp          REQUIRED)
 
-if (ECAL_CORE_CONFIG_INIFILE)
+if (ECAL_CORE_CONFIGURATION)
   find_package(yaml-cpp         REQUIRED)
   find_package(simpleini      REQUIRED)
 endif()
@@ -601,7 +601,7 @@ target_compile_definitions(${PROJECT_NAME}
 )
 
 set(ECAL_CORE_FEATURES
-  ECAL_CORE_CONFIG_INIFILE
+  ECAL_CORE_CONFIGURATION
   ECAL_CORE_COMMAND_LINE
   ECAL_CORE_REGISTRATION
   ECAL_CORE_MONITORING
@@ -625,7 +625,7 @@ foreach(CORE_FEATURE ${ECAL_CORE_FEATURES})
   endif()
 endforeach()
 
-if(ECAL_CORE_CONFIG_INIFILE)
+if(ECAL_CORE_CONFIGURATION)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
       simpleini::simpleini
