@@ -21,7 +21,6 @@
  * @brief  eCAL Sample Applier
  *
  * This class applies incoming samples to everyone who is interested.
- *
 **/
 
 #pragma once

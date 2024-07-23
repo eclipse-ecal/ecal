@@ -17,14 +17,6 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  eCAL registration receiver
- *
- * Receives registration information from external eCAL processes and forwards them to
- * the internal publisher/subscriber, server/clients.
- *
-**/
-
 #include "registration/ecal_registration_sample_applier.h"
 
 namespace eCAL
@@ -118,9 +110,6 @@ namespace eCAL
         // if the sample is from an external host, register only if network mode is enabled
         return m_network;
       }
-
-      // do not process the registration
-      return false;
     }
 
     void CSampleApplier::SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_)

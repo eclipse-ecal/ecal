@@ -32,6 +32,8 @@
 
 #include "serialization/ecal_struct_sample_registration.h"
 #include "registration/ecal_registration_sample_applier.h"
+#include "registration/ecal_registration_sample_applier_gates.h"
+#include "registration/ecal_registration_sample_applier_user.h"
 
 #include <atomic>
 #include <functional>
@@ -45,31 +47,6 @@ namespace eCAL
 {
   class CRegistrationReceiverUDP;
   class CRegistrationReceiverSHM;
-
-  class CGatesApplier
-  {
-  public:
-    void ApplySample(const eCAL::Registration::Sample& sample_);
-  };
-
-  class CRegistrationCallbackApplier
-  {
-  public:
-    bool AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_);
-    bool RemRegistrationCallback(enum eCAL_Registration_Event event_);
-
-    void ApplySample(const eCAL::Registration::Sample& sample_);
-
-  private:
-    // in the future this may be stored in a map? or somehow differently
-    RegistrationCallbackT  m_callback_pub = nullptr;
-    RegistrationCallbackT  m_callback_sub = nullptr;
-    RegistrationCallbackT  m_callback_service = nullptr;
-    RegistrationCallbackT  m_callback_client = nullptr;
-    RegistrationCallbackT  m_callback_process = nullptr;
-
-    // protect by mutexes? very likeley need to!
-  };
 
   class CRegistrationReceiver
   {
@@ -107,9 +84,10 @@ namespace eCAL
     Registration::CSampleApplier  m_sample_applier;
 
     // These classes are interested in being notified about samples
+    // Possibly remove these from this class
     // the pub / sub / ... gates
-    CGatesApplier                 m_gates_applier;
+    Registration::CSampleApplierGates m_gates_applier;
     // The custom user callbacks (who receive serialized samples), e.g. registration events.
-    CRegistrationCallbackApplier  m_custom_sample_applier;
+    Registration::CSampleApplierUser  m_user_applier;
   };
 }
