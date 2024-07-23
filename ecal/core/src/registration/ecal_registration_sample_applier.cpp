@@ -64,6 +64,7 @@ namespace eCAL
           iter.second(sample_);
         }
       }
+      return true;
     }
 
     bool CSampleApplier::IsHostGroupMember(const Registration::Sample& sample_)
