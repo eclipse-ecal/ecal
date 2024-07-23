@@ -11,7 +11,7 @@ Using eCAL in local mode can be benefitial
 * to avoid network congestion if the data is not needed on other machines
 * to make eCAL work in VPN and Firewall scenarios where non-local traffic is blocked
 
-To switch eCAL to local mode, edit your :file:`ecal.ini` and change the following settings:
+To switch eCAL to local mode, edit your :file:`ecal.yaml` and change the following settings:
 
 * |fa-windows| Windows: |ecalini-path-windows|
 * |fa-ubuntu| Ubuntu: |ecalini-path-ubuntu|

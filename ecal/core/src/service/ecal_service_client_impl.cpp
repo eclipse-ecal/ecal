@@ -754,7 +754,7 @@ namespace eCAL
         const std::vector<std::pair<std::string, uint16_t>> endpoint_list
                   {
                     {iter.hname, port_to_use},
-                    {iter.hname + ".local", port_to_use},   // TODO: Make this configurable from the ecal.ini
+                    {iter.hname + ".local", port_to_use},   // TODO: Make this configurable from the ecal.yaml
                   };
         const auto new_client_session = client_manager->create_client(static_cast<uint8_t>(protocol_version), endpoint_list, event_callback);
         if (new_client_session)

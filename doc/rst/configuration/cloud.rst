@@ -6,7 +6,7 @@
 Cloud Configuration
 ===================
 
-To switch eCAL to cloud mode, edit your :file:`ecal.ini` and change the following settings:
+To switch eCAL to cloud mode, edit your :file:`ecal.yaml` and change the following settings:
 
 * |fa-windows| Windows: |ecalini-path-windows|
 * |fa-ubuntu| Ubuntu: |ecalini-path-ubuntu|

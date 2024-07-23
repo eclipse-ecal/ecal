@@ -31,7 +31,7 @@ eCAL can run in two modes, that differ from each other: **local mode** and **clo
        * Uses shared memory to send data to processes on the same host
 
 
-Enable network-mode in :file:`ecal.ini`
+Enable network-mode in :file:`ecal.yaml`
 =======================================
 
 .. note:: 
@@ -42,7 +42,7 @@ Enable network-mode in :file:`ecal.ini`
    So since eCAL 5.10 you will have to enable network-mode first.
 
 By default, eCAL is configured in local mode.
-To switch eCAL to cloud mode, edit your :file:`ecal.ini` and change the following settings:
+To switch eCAL to cloud mode, edit your :file:`ecal.yaml` and change the following settings:
 
 * |fa-windows| Windows: |ecalini-path-windows|
 * |fa-ubuntu| Ubuntu: |ecalini-path-ubuntu|
