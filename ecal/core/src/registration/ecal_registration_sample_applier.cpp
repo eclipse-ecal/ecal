@@ -34,7 +34,7 @@ namespace eCAL
     //////////////////////////////////////////////////////////////////
     // CSampleApplier
     //////////////////////////////////////////////////////////////////
-    CSampleApplier::CSampleApplier(bool network, bool loopback, std::string host_group_name, uint32_t pid)
+    CSampleApplier::CSampleApplier(bool network, bool loopback, const std::string& host_group_name, uint32_t pid)
       :
       m_network(network),
       m_loopback(loopback),

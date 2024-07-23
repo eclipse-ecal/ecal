@@ -57,7 +57,7 @@ namespace eCAL
       break;
 #if ECAL_CORE_SERVICE
     case bct_reg_service:
-      if (g_clientgate()) g_clientgate()->ApplyServiceRegistration(sample_);
+      if (g_clientgate() != nullptr) g_clientgate()->ApplyServiceRegistration(sample_);
       break;
 #endif
     case bct_unreg_service:
@@ -68,18 +68,18 @@ namespace eCAL
       break;
 #if ECAL_CORE_PUBLISHER
     case bct_reg_subscriber:
-      if (g_pubgate()) g_pubgate()->ApplySubRegistration(sample_);
+      if (g_pubgate() != nullptr) g_pubgate()->ApplySubRegistration(sample_);
       break;
     case bct_unreg_subscriber:
-      if (g_pubgate()) g_pubgate()->ApplySubUnregistration(sample_);
+      if (g_pubgate() != nullptr) g_pubgate()->ApplySubUnregistration(sample_);
       break;
 #endif
 #if ECAL_CORE_SUBSCRIBER
     case bct_reg_publisher:
-      if (g_subgate()) g_subgate()->ApplyPubRegistration(sample_);
+      if (g_subgate() != nullptr) g_subgate()->ApplyPubRegistration(sample_);
       break;
     case bct_unreg_publisher:
-      if (g_subgate()) g_subgate()->ApplyPubUnregistration(sample_);
+      if (g_subgate() != nullptr) g_subgate()->ApplyPubUnregistration(sample_);
       break;
 #endif
     default:
@@ -259,8 +259,6 @@ namespace eCAL
   {
     m_sample_applier.EnableLoopback(state_);
   }
-
-
 
   bool CRegistrationReceiver::AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_)
   {

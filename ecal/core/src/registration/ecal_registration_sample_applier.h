@@ -44,7 +44,7 @@ namespace eCAL
     {
     public:
       // to be replaced by config version soon!
-      CSampleApplier(bool network, bool loopback, std::string host_group_name, uint32_t pid);
+      CSampleApplier(bool network, bool loopback, const std::string& host_group_name, uint32_t pid);
 
       // to be removed for eCAL 6, but keep until eCAL 5.14
       void EnableLoopback(bool state_);
