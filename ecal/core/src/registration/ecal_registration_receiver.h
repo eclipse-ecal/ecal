@@ -62,11 +62,11 @@ namespace eCAL
 
   private:
     // in the future this may be stored in a map? or somehow differently
-    RegistrationCallbackT  m_callback_pub;
-    RegistrationCallbackT  m_callback_sub;
-    RegistrationCallbackT  m_callback_service;
-    RegistrationCallbackT  m_callback_client;
-    RegistrationCallbackT  m_callback_process;
+    RegistrationCallbackT  m_callback_pub = nullptr;
+    RegistrationCallbackT  m_callback_sub = nullptr;
+    RegistrationCallbackT  m_callback_service = nullptr;
+    RegistrationCallbackT  m_callback_client = nullptr;
+    RegistrationCallbackT  m_callback_process = nullptr;
 
     // protect by mutexes? very likeley need to!
   };
