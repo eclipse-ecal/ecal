@@ -39,7 +39,10 @@
   #define getcwd _getcwd
 #endif
 #ifdef ECAL_OS_LINUX
+  #include <sys/types.h>
+  #include <sys/stat.h>
   #include <unistd.h>
+  #include <pwd.h>
 #endif
 
 #include "ecal_utils/filesystem.h"
