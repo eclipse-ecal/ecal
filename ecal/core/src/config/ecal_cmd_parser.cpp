@@ -37,13 +37,13 @@ namespace eCAL
     : m_dump_config{false}
     {}
 
-    CmdParser::CmdParser(std::vector<std::string>& arguments_)
+    CmdParser::CmdParser(const std::vector<std::string>& arguments_)
     : CmdParser()
     {
       parseArguments(arguments_);
     }
 
-    void CmdParser::parseArguments(std::vector<std::string>& arguments_)
+    void CmdParser::parseArguments(const std::vector<std::string>& arguments_)
     {
 #if ECAL_CORE_COMMAND_LINE
       if (!arguments_.empty())
@@ -65,8 +65,9 @@ namespace eCAL
         advanced_tclap_output.setArgumentHidden(&dummy_arg, true);
         cmd.setOutput(&advanced_tclap_output);
 
+        std::vector<std::string> arguments = arguments_;
         // parse command line
-        cmd.parse(arguments_);
+        cmd.parse(arguments);
 
         // set globals
         if (dump_config_arg.isSet())

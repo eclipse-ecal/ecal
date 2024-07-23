@@ -196,7 +196,7 @@ namespace
 
 namespace eCAL 
 {
-    void Configuration::InitConfigFromFile(std::string yaml_path_)
+    void Configuration::InitConfigFromFile(const std::string yaml_path_)
     {
       std::string yaml_path = checkForValidConfigFilePath(yaml_path_);
       if (!yaml_path.empty())
@@ -228,12 +228,12 @@ namespace eCAL
       Init(arguments);
     }
 
-    Configuration::Configuration(std::vector<std::string>& args_)
+    Configuration::Configuration(const std::vector<std::string>& args_)
     {      
       Init(args_);
     }
 
-    void Configuration::Init(std::vector<std::string>& arguments_)
+    void Configuration::Init(const std::vector<std::string>& arguments_)
     {
       Config::CmdParser parser(arguments_);
       

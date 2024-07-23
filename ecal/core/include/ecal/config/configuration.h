@@ -61,11 +61,11 @@ namespace eCAL
 
     ECAL_API Configuration();
     ECAL_API Configuration(int argc_, char** argv_);
-    ECAL_API Configuration(std::vector<std::string>& args_);
+    ECAL_API Configuration(const std::vector<std::string>& args_);
 
     ECAL_API void InitConfigWithDefaultYaml();
     ECAL_API void InitConfigWithDefaults();
-    ECAL_API void InitConfigFromFile(std::string yaml_path_);
+    ECAL_API void InitConfigFromFile(const std::string yaml_path_);
 
     ECAL_API std::string GetYamlFilePath();
 
@@ -75,6 +75,6 @@ namespace eCAL
     std::string                      ecal_yaml_file_path{};
 
   private:
-    ECAL_API void Init(std::vector<std::string>& args_);
+    ECAL_API void Init(const std::vector<std::string>& args_);
   };
 }
