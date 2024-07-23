@@ -37,7 +37,7 @@ namespace eCAL
   std::mutex                            CDataWriterTCP::g_tcp_writer_executor_mtx;
   std::shared_ptr<tcp_pubsub::Executor> CDataWriterTCP::g_tcp_writer_executor;
 
-  CDataWriterTCP::CDataWriterTCP(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const Publisher::TCP::Configuration& tcp_config_) :
+  CDataWriterTCP::CDataWriterTCP(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const Publisher::Layer::TCP::Configuration& tcp_config_) :
     m_config(tcp_config_)
   {
     {

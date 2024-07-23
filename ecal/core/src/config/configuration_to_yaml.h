@@ -361,9 +361,9 @@ namespace YAML
     /_/   \_,_/_.__/_/_/___/_//_/\__/_/   
   */
   template<>
-  struct convert<eCAL::Publisher::SHM::Configuration>
+  struct convert<eCAL::Publisher::Layer::SHM::Configuration>
   {
-    static Node encode(const eCAL::Publisher::SHM::Configuration& config_)
+    static Node encode(const eCAL::Publisher::Layer::SHM::Configuration& config_)
     {
       Node node;
       node["enable"]                 = config_.enable;
@@ -373,7 +373,7 @@ namespace YAML
       return node;
     }
 
-    static bool decode(const Node& node_, eCAL::Publisher::SHM::Configuration& config_)
+    static bool decode(const Node& node_, eCAL::Publisher::Layer::SHM::Configuration& config_)
     {
       AssignValue<bool>(config_.enable, node_, "enable");
       AssignValue<bool>(config_.zero_copy_mode, node_, "zero_copy_mode");
@@ -384,9 +384,9 @@ namespace YAML
   };
 
   template<>
-  struct convert<eCAL::Publisher::UDP::Configuration>
+  struct convert<eCAL::Publisher::Layer::UDP::Configuration>
   {
-    static Node encode(const eCAL::Publisher::UDP::Configuration& config_)
+    static Node encode(const eCAL::Publisher::Layer::UDP::Configuration& config_)
     {
       Node node;
       node["enable"] = config_.enable;
@@ -394,7 +394,7 @@ namespace YAML
       return node;
     }
 
-    static bool decode(const Node& node_, eCAL::Publisher::UDP::Configuration& config_)
+    static bool decode(const Node& node_, eCAL::Publisher::Layer::UDP::Configuration& config_)
     {
       AssignValue<bool>(config_.enable, node_, "enable");
       return true;
@@ -402,9 +402,9 @@ namespace YAML
   };
 
   template<>
-  struct convert<eCAL::Publisher::TCP::Configuration>
+  struct convert<eCAL::Publisher::Layer::TCP::Configuration>
   {
-    static Node encode(const eCAL::Publisher::TCP::Configuration& config_)
+    static Node encode(const eCAL::Publisher::Layer::TCP::Configuration& config_)
     {
       Node node;
       node["enable"] = config_.enable;
@@ -412,9 +412,30 @@ namespace YAML
       return node;
     }
 
-    static bool decode(const Node& node_, eCAL::Publisher::TCP::Configuration& config_)
+    static bool decode(const Node& node_, eCAL::Publisher::Layer::TCP::Configuration& config_)
     {
       AssignValue<bool>(config_.enable, node_, "enable");
+      return true;
+    }
+  };
+
+  template<>
+  struct convert<eCAL::Publisher::Layer::Configuration>
+  {
+    static Node encode(const eCAL::Publisher::Layer::Configuration& config_)
+    {
+      Node node;
+      node["shm"] = config_.shm;
+      node["udp"] = config_.udp;
+      node["tcp"] = config_.tcp;
+      return node;
+    }
+
+    static bool decode(const Node& node_, eCAL::Publisher::Layer::Configuration& config_)
+    {
+      AssignValue<eCAL::Publisher::Layer::SHM::Configuration>(config_.shm, node_, "shm");
+      AssignValue<eCAL::Publisher::Layer::UDP::Configuration>(config_.udp, node_, "udp");
+      AssignValue<eCAL::Publisher::Layer::TCP::Configuration>(config_.tcp, node_, "tcp");
       return true;
     }
   };
@@ -427,9 +448,7 @@ namespace YAML
       Node node;
       node["share_topic_description"] = config_.share_topic_description;
       node["share_topic_type"]        = config_.share_topic_type;
-      node["shm"]                     = config_.shm;
-      node["udp"]                     = config_.udp;
-      node["tcp"]                     = config_.tcp;
+      node["layer"]                   = config_.layer;
       node["priority_local"]          = transformLayerEnumToStr(config_.layer_priority_local);
       node["priority_network"]        = transformLayerEnumToStr(config_.layer_priority_remote);
       return node;
@@ -447,9 +466,7 @@ namespace YAML
       AssignValue<std::vector<std::string>>(tmp, node_, "priority_network");
       config_.layer_priority_remote = transformLayerStrToEnum(tmp);
 
-      AssignValue<eCAL::Publisher::SHM::Configuration>(config_.shm, node_, "shm");
-      AssignValue<eCAL::Publisher::UDP::Configuration>(config_.udp, node_, "udp");
-      AssignValue<eCAL::Publisher::TCP::Configuration>(config_.tcp, node_, "tcp");      
+      AssignValue<eCAL::Publisher::Layer::Configuration>(config_.layer, node_, "layer");    
       return true;
     }
   };

@@ -234,7 +234,7 @@ TEST(PubSub, TestSubscriberSeen)
   // publishing thread
   auto publisher_thread = [&]() {
     eCAL::Publisher::Configuration pub_config;
-    pub_config.shm.acknowledge_timeout_ms = 500;
+    pub_config.layer.shm.acknowledge_timeout_ms = 500;
     eCAL::CPublisher pub("blob", pub_config);
 
     int cnt(0);

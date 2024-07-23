@@ -100,32 +100,42 @@ namespace eCAL
 {
   namespace Publisher
   {
-    namespace SHM
+    namespace Layer
     {
+      namespace SHM
+      {
+        struct Configuration
+        {
+          bool         enable;                  //!< enable layer 
+
+          bool         zero_copy_mode;          //!< Enable zero copy shared memory transport mode 
+          unsigned int acknowledge_timeout_ms;  /*!< Force connected subscribers to send acknowledge event after processing the message.
+                                                    The publisher send call is blocked on this event with this timeout (0 == no handshake).*/
+          unsigned int memfile_buffer_count;    /*!< Maximum number of used buffers (needs to be greater than 1, default = 1) */
+        };
+      }
+
+      namespace UDP
+      {
+        struct Configuration
+        {
+          bool enable;               //!< enable layer
+        };
+      }
+
+      namespace TCP
+      {
+        struct Configuration
+        {
+          bool enable;               //!< enable layer
+        };
+      }
+
       struct Configuration
       {
-        bool         enable;                  //!< enable layer 
-
-        bool         zero_copy_mode;          //!< Enable zero copy shared memory transport mode 
-        unsigned int acknowledge_timeout_ms;  /*!< Force connected subscribers to send acknowledge event after processing the message.
-                                                   The publisher send call is blocked on this event with this timeout (0 == no handshake).*/
-        unsigned int memfile_buffer_count;    /*!< Maximum number of used buffers (needs to be greater than 1, default = 1) */
-      };
-    }
-
-    namespace UDP
-    {
-      struct Configuration
-      {
-        bool enable;               //!< enable layer
-      };
-    }
-
-    namespace TCP
-    {
-      struct Configuration
-      {
-        bool enable;               //!< enable layer
+        SHM::Configuration shm;
+        UDP::Configuration udp;
+        TCP::Configuration tcp;
       };
     }
 
@@ -133,9 +143,7 @@ namespace eCAL
     {
       ECAL_API Configuration();
 
-      SHM::Configuration       shm;
-      UDP::Configuration       udp;
-      TCP::Configuration       tcp;
+      Layer::Configuration     layer;                                  //!< Layer configuration
 
       using LayerPriorityVector = std::vector<TLayer::eTransportLayer>;
       LayerPriorityVector      layer_priority_local  = { TLayer::tlayer_shm, TLayer::tlayer_udp_mc, TLayer::tlayer_tcp };

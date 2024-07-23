@@ -67,11 +67,11 @@ int main(int argc, char **argv)
   // create publisher config
   eCAL::Publisher::Configuration pub_config;
   // set zero copy
-  pub_config.shm.zero_copy_mode = zero_copy;
+  pub_config.layer.shm.zero_copy_mode = zero_copy;
   // set buffering
-  pub_config.shm.memfile_buffer_count = buffer_count;
+  pub_config.layer.shm.memfile_buffer_count = buffer_count;
   // set handshake acknowledgement timeout [ms]
-  pub_config.shm.acknowledge_timeout_ms = acknowledge_time;
+  pub_config.layer.shm.acknowledge_timeout_ms = acknowledge_time;
 
   // new publisher
   eCAL::CPublisher pub(topic_name, pub_config);

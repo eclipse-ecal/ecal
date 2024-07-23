@@ -105,27 +105,28 @@ transport_layer:
 
 # Publisher specific base settings
 publisher:
+  layer:
   # Base configuration for shared memory publisher
-  shm:
-    # Enable layer
-    enable: true
-    # Enable zero copy shared memory transport mode
-    zero_copy_mode: false
-    # Force connected subscribers to send acknowledge event after processing the message.
-    # The publisher send call is blocked on this event with this timeout (0 == no handshake).
-    acknowledge_timeout_ms: 0
-    # Maximum number of used buffers (needs to be greater than 1, default = 1)
-    memfile_buffer_count: 1
-  
-  # Base configuration for UDP publisher
-  udp:
-    # Enable layer
-    enable: true
-       
-  # Base configuration for TCP publisher
-  tcp:
-    # Enable layer
-    enable: true 
+    shm:
+      # Enable layer
+      enable: true
+      # Enable zero copy shared memory transport mode
+      zero_copy_mode: false
+      # Force connected subscribers to send acknowledge event after processing the message.
+      # The publisher send call is blocked on this event with this timeout (0 == no handshake).
+      acknowledge_timeout_ms: 0
+      # Maximum number of used buffers (needs to be greater than 1, default = 1)
+      memfile_buffer_count: 1
+    
+    # Base configuration for UDP publisher
+    udp:
+      # Enable layer
+      enable: true
+        
+    # Base configuration for TCP publisher
+    tcp:
+      # Enable layer
+      enable: true 
 
   # Share topic type via registration
   share_topic_type: true

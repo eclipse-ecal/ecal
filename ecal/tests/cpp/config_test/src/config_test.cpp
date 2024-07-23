@@ -54,7 +54,7 @@ TEST(core_cpp_config, user_config_passing)
   const eCAL_Logging_Filter mon_log_filter_con          = log_level_warning;
   
   // Publisher options
-  const bool                pub_use_shm                 = true;
+  const bool                pub_use_shm                 = false;
 
   eCAL::Configuration custom_config(0, nullptr);
   try
@@ -67,7 +67,7 @@ TEST(core_cpp_config, user_config_passing)
     custom_config.monitoring.filter_excl                      = mon_filter_excl;
     custom_config.logging.sinks.console.filter_log_con        = mon_log_filter_con;
 
-    custom_config.publisher.shm.enable                        = pub_use_shm;
+    custom_config.publisher.layer.shm.enable                  = pub_use_shm;
 
     custom_config.registration.registration_refresh           = registration_refresh;
     custom_config.registration.registration_timeout           = registration_timeout;
@@ -100,7 +100,7 @@ TEST(core_cpp_config, user_config_passing)
   EXPECT_EQ(mon_log_filter_con, eCAL::GetConfiguration().logging.sinks.console.filter_log_con);
 
   // Test publisher sendmode assignment, default is eCAL::TLayer::eSendMode::smode_auto
-  EXPECT_EQ(pub_use_shm, eCAL::GetConfiguration().publisher.shm.enable);
+  EXPECT_EQ(pub_use_shm, eCAL::GetConfiguration().publisher.layer.shm.enable);
 
   // Test registration option assignment, default timeout is 60000U and default refresh is 1000U
   EXPECT_EQ(registration_timeout, eCAL::GetConfiguration().registration.registration_timeout);
@@ -270,7 +270,7 @@ TEST(YamlConfigReaderTest, parse_values_test)
   EXPECT_EQ(config.transport_layer.tcp.max_reconnections, 7);
 
   // Check unsigned int
-  EXPECT_EQ(config.publisher.shm.acknowledge_timeout_ms, 346U);
+  EXPECT_EQ(config.publisher.layer.shm.acknowledge_timeout_ms, 346U);
 } 
 
 TEST(YamlConfigReaderTest, yaml_node_merger)
@@ -319,11 +319,11 @@ TEST(YamlConfigReaderTest, yaml_to_config_merger)
 
   eCAL::Configuration config;
 
-  EXPECT_TRUE(config.publisher.shm.enable);
+  EXPECT_TRUE(config.publisher.layer.shm.enable);
 
   eCAL::Config::MergeYamlIntoConfiguration(ini_file_name, config);
 
-  EXPECT_FALSE(config.publisher.shm.enable);
+  EXPECT_FALSE(config.publisher.layer.shm.enable);
 
   remove(ini_file_name.data());
 }
