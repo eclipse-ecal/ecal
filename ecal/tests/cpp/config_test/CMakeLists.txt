@@ -26,6 +26,8 @@ find_package(yaml-cpp REQUIRED)
 set(cmd_parser_src
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/ecal_cmd_parser.cpp
   ${ECAL_CORE_PROJECT_ROOT}/core/src/util/advanced_tclap_output.cpp
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/config/configuration_reader.cpp
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/config/configuration_to_yaml.cpp
   ${ECAL_PROJECT_ROOT}/lib/ecal_utils/src/filesystem.cpp
   ${ECAL_PROJECT_ROOT}/lib/ecal_utils/src/str_convert.cpp 
 )
