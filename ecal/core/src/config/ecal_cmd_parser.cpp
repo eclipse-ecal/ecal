@@ -53,7 +53,7 @@ namespace eCAL
 
         // define command line arguments
         TCLAP::SwitchArg             dump_config_arg     ("", "ecal-dump-config",    "Dump current configuration.", false);
-        TCLAP::ValueArg<std::string> default_ini_file_arg("", "ecal-ini-file",       "Load default configuration from that file.", false, ECAL_DEFAULT_CFG, "string");
+        TCLAP::ValueArg<std::string> default_ini_file_arg("", "ecal-config-file",    "Load default configuration from that file.", false, ECAL_DEFAULT_CFG, "string");
 
         TCLAP::UnlabeledMultiArg<std::string> dummy_arg("__dummy__", "Dummy", false, ""); // Dummy arg to eat all unrecognized arguments
 

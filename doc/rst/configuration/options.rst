@@ -16,7 +16,7 @@ Loading strategy (Priority)
 
 The eCAL configuration file is loaded based on the following priorities, whereever it is found first.
 If you want a specific eCAL Node to run with another ``ecal.yaml`` than the others, you can set the ``ECAL_DATA`` variable before starting the process, e.g. from a batch or shell skript.
-In addition, some eCAL applications support providing a path from the command line option ``--ecal-ini-file``.
+In addition, some eCAL applications support providing a path from the command line option ``--ecal-config-file``.
 
 .. important::
    This loading strategy is valid for eCAL 5.10 and up.

@@ -212,7 +212,7 @@ TEST(CmdParserTest, config_cmd_parser_test)
 
   arguments.push_back("test_config_cmd_parser_test");
   // set a file name as ini file
-  arguments.push_back("--ecal-ini-file " + some_file_name);
+  arguments.push_back("--ecal-config-file " + some_file_name);
   // set the dump config flag
   arguments.push_back("--ecal-dump-config");
 
