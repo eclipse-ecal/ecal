@@ -100,8 +100,7 @@ namespace eCAL
 
     void ApplyLayerParameter(const SPublicationInfo& publication_info_, eTLayerType type_, const Registration::ConnectionPar& parameter_);
 
-    void RefreshRegistration();
-
+    Registration::Sample GetRegistration();
     bool IsCreated() const { return(m_created); }
 
     bool IsPublished() const
@@ -126,8 +125,13 @@ namespace eCAL
     std::string Dump(const std::string& indent_ = "");
 
   protected:
-    bool Register(bool force_);
-    bool Unregister();
+    void Register(bool force_);
+    void Unregister();
+
+    void CheckConnections();
+
+    Registration::Sample GetRegistrationSample();
+    Registration::Sample GetUnregistrationSample();
 
     void StartTransportLayer();
     void StopTransportLayer();

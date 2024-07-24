@@ -29,6 +29,7 @@
 #include <ecal/ecal_types.h>
 #include <ecal/config/publisher.h>
 
+#include "serialization/ecal_serialize_sample_registration.h"
 #include "util/ecal_expmap.h"
 #include "util/frequency_calculator.h"
 
@@ -104,7 +105,7 @@ namespace eCAL
     void ApplySubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& sub_layer_states_, const std::string& reader_par_);
     void RemoveSubscription(const SSubscriptionInfo& subscription_info_);
 
-    void RefreshRegistration();
+    Registration::Sample GetRegistration();
     void RefreshSendCounter();
 
     bool IsCreated() const { return(m_created); }
@@ -127,8 +128,13 @@ namespace eCAL
     std::string Dump(const std::string& indent_ = "");
 
   protected:
-    bool Register(bool force_);
-    bool Unregister();
+    void Register(bool force_);
+    void Unregister();
+
+    void CheckConnections();
+
+    Registration::Sample GetRegistrationSample();
+    Registration::Sample GetUnregistrationSample();
 
     bool StartUdpLayer();
     bool StartShmLayer();

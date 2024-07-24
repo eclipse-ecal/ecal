@@ -56,7 +56,7 @@ namespace eCAL
     void ApplySubRegistration(const Registration::Sample& ecal_sample_);
     void ApplySubUnregistration(const Registration::Sample& ecal_sample_);
 
-    void RefreshRegistrations();
+    void GetRegistrations(Registration::SampleList& reg_sample_list_);
 
   protected:
     static std::atomic<bool>  m_created;

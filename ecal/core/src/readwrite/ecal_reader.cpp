@@ -351,28 +351,6 @@ namespace eCAL
     }
   }
 
-  void CDataReader::RefreshRegistration()
-  {
-    if (!m_created) return;
-
-    // ensure that registration is not called within zero nanoseconds
-    // normally it will be called from registration logic every second
-
-    // register without send
-    Register(false);
-
-    // check connection timeouts
-    {
-      const std::lock_guard<std::mutex> lock(m_pub_map_mtx);
-      m_pub_map.erase_expired();
-
-      if (m_pub_map.empty())
-      {
-        FireDisconnectEvent();
-      }
-    }
-  }
-
   void CDataReader::InitializeLayers()
   {
     // initialize udp layer
@@ -555,15 +533,56 @@ namespace eCAL
     return(out.str());
   }
 
-  bool CDataReader::Register(const bool force_)
+  void CDataReader::Register(bool force_)
   {
 #if ECAL_CORE_REGISTRATION
-    if (!m_created)          return(false);
-    if(m_topic_name.empty()) return(false);
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(GetRegistrationSample(), force_);
 
-    // create command parameter
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug4, m_topic_name + "::CDataReader::Register");
+#endif
+#endif // ECAL_CORE_REGISTRATION
+  }
+
+  void CDataReader::Unregister()
+  {
+#if ECAL_CORE_REGISTRATION
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(GetUnregistrationSample(), false);
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug4, m_topic_name + "::CDataReader::Unregister");
+#endif
+#endif // ECAL_CORE_REGISTRATION
+  }
+
+  void CDataReader::CheckConnections()
+  {
+    const std::lock_guard<std::mutex> lock(m_pub_map_mtx);
+    m_pub_map.erase_expired();
+
+    if (m_pub_map.empty())
+    {
+      FireDisconnectEvent();
+    }
+  }
+
+  Registration::Sample CDataReader::GetRegistration()
+  {
+    // check connection timeouts
+    CheckConnections();
+
+    // return registration
+    return GetRegistrationSample();
+  }
+    
+  Registration::Sample CDataReader::GetRegistrationSample()
+  {
+    // create registration sample
     Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_reg_subscriber;
+
     auto& ecal_reg_sample_topic = ecal_reg_sample.topic;
     ecal_reg_sample_topic.hname  = m_host_name;
     ecal_reg_sample_topic.hgname = m_host_group_name;
@@ -632,28 +651,15 @@ namespace eCAL
     ecal_reg_sample_topic.connections_loc = 0;
     ecal_reg_sample_topic.connections_ext = 0;
 
-    // register subscriber
-    if(g_registration_provider() != nullptr) g_registration_provider()->ApplySample(ecal_reg_sample, force_);
-#ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug4, m_topic_name + "::CDataReader::DoRegister");
-#endif
-
-    return(true);
-#else  // ECAL_CORE_REGISTRATION
-    (void)force_;
-    return(false);
-#endif // ECAL_CORE_REGISTRATION
+    return ecal_reg_sample;
   }
 
-  bool CDataReader::Unregister()
+  Registration::Sample CDataReader::GetUnregistrationSample()
   {
-#if ECAL_CORE_REGISTRATION
-    if (m_topic_name.empty()) return(false);
-
-    // create command parameter
+    // create unregistration sample
     Registration::Sample ecal_unreg_sample;
     ecal_unreg_sample.cmd_type = bct_unreg_subscriber;
+
     auto& ecal_reg_sample_topic = ecal_unreg_sample.topic;
     ecal_reg_sample_topic.hname  = m_host_name;
     ecal_reg_sample_topic.hgname = m_host_group_name;
@@ -663,19 +669,9 @@ namespace eCAL
     ecal_reg_sample_topic.tid    = m_topic_id;
     ecal_reg_sample_topic.uname  = Process::GetUnitName();
 
-    // unregister subscriber
-    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(ecal_unreg_sample, false);
-#ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug4, m_topic_name + "::CDataReader::Unregister");
-#endif
-
-    return(true);
-#else  // ECAL_CORE_REGISTRATION
-    return(false);
-#endif // ECAL_CORE_REGISTRATION
+    return ecal_unreg_sample;
   }
-
+  
   void CDataReader::StartTransportLayer()
   {
 #if ECAL_CORE_TRANSPORT_UDP

@@ -156,16 +156,15 @@ namespace eCAL
     return(ret_vec);
   }
 
-  void CClientGate::RefreshRegistrations()
+  void CClientGate::GetRegistrations(Registration::SampleList& reg_sample_list_)
   {
     if (!m_created) return;
 
-    // refresh client registrations
-    const std::shared_lock<std::shared_timed_mutex> lock(m_client_set_sync);
-    for (auto *iter : m_client_set)
+    // read service registrations
+    std::shared_lock<std::shared_timed_mutex> const lock(m_client_set_sync);
+    for (const auto& service_client_impl : m_client_set)
     {
-      // force client to (re)register itself on registration provider
-      iter->RefreshRegistration();
+      reg_sample_list_.samples.emplace_back(service_client_impl->GetRegistration());
     }
   }
 }
