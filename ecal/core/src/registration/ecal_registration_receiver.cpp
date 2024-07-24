@@ -52,9 +52,9 @@ namespace eCAL
     , m_sample_applier(Config::IsNetworkEnabled(), false, Process::GetHostGroupName(), Process::GetProcessID())
   {
     // Connect User registration callback and gates callback with the sample applier
-    m_sample_applier.SetCustomApplySampleCallback("gates", [this](const eCAL::Registration::Sample& sample_)
+    m_sample_applier.SetCustomApplySampleCallback("gates", [](const eCAL::Registration::Sample& sample_)
       {
-        m_gates_applier.ApplySample(sample_);
+        Registration::CSampleApplierGates::ApplySample(sample_);
       });
     m_sample_applier.SetCustomApplySampleCallback("custom_registration", [this](const eCAL::Registration::Sample& sample_)
       {

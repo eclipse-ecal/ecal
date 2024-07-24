@@ -85,8 +85,6 @@ namespace eCAL
 
     // These classes are interested in being notified about samples
     // Possibly remove these from this class
-    // the pub / sub / ... gates
-    Registration::CSampleApplierGates m_gates_applier;
     // The custom user callbacks (who receive serialized samples), e.g. registration events.
     Registration::CSampleApplierUser  m_user_applier;
   };

@@ -52,6 +52,6 @@ namespace eCAL
       RegistrationCallbackT  m_callback_process = nullptr;
 
       // protect by mutexes? very likeley need to!
-    };;
+    };
   }
 }
