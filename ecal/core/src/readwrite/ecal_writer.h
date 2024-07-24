@@ -29,6 +29,7 @@
 #include <ecal/ecal_types.h>
 #include <ecal/config/publisher.h>
 
+#include "serialization/ecal_serialize_sample_registration.h"
 #include "util/ecal_expmap.h"
 #include "util/frequency_calculator.h"
 

@@ -26,16 +26,16 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
+#include <ecal/service/server.h>
+
+#include "serialization/ecal_serialize_sample_registration.h"
+#include "serialization/ecal_struct_service.h"
 
 #include <atomic>
 #include <map>
 #include <memory>
 #include <mutex>
-
-#include <ecal/service/server.h>
 #include <string>
-
-#include "serialization/ecal_struct_service.h"
 
 namespace eCAL
 {

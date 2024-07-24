@@ -25,8 +25,10 @@
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
-
 #include <ecal/service/client_session.h>
+
+#include "serialization/ecal_serialize_sample_registration.h"
+#include "serialization/ecal_struct_service.h"
 
 #include <map>
 #include <mutex>
@@ -132,7 +134,7 @@ namespace eCAL
     ServiceMethodInformationMapT m_method_information_map;
 
     using MethodCallCountMapT = std::map<std::string, uint64_t>;
-    MethodCallCountMapT  m_method_call_count_map;
+    MethodCallCountMapT   m_method_call_count_map;
 
     std::atomic<bool>     m_created;
   };
