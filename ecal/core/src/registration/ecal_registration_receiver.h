@@ -31,6 +31,9 @@
 #include <ecal/ecal.h>
 
 #include "serialization/ecal_struct_sample_registration.h"
+#include "registration/ecal_registration_sample_applier.h"
+#include "registration/ecal_registration_sample_applier_gates.h"
+#include "registration/ecal_registration_sample_applier_user.h"
 
 #include <atomic>
 #include <functional>
@@ -51,12 +54,12 @@ namespace eCAL
     CRegistrationReceiver();
     ~CRegistrationReceiver();
 
+    //what about the rest of the rule of 5?
+
     void Start();
     void Stop();
 
     void EnableLoopback(bool state_);
-
-    bool ApplySample(const Registration::Sample& sample_);
 
     bool AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_);
     bool RemRegistrationCallback(enum eCAL_Registration_Event event_);
@@ -65,24 +68,9 @@ namespace eCAL
     void SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_);
     void RemCustomApplySampleCallback(const std::string& customer_);
 
-  protected:
-    void ApplyServiceRegistration(const eCAL::Registration::Sample& sample_);
-
-    void ApplySubscriberRegistration(const eCAL::Registration::Sample& sample_);
-    void ApplyPublisherRegistration(const eCAL::Registration::Sample& sample_);
-
-    bool IsHostGroupMember(const eCAL::Registration::Sample& sample_);
-    bool AcceptRegistrationSample(const Registration::Sample& sample_);
-
+  private:
+    // why is this a static variable? can someone explain?
     static std::atomic<bool>              m_created;
-    bool                                  m_network;
-    bool                                  m_loopback;
-                                     
-    RegistrationCallbackT                 m_callback_pub;
-    RegistrationCallbackT                 m_callback_sub;
-    RegistrationCallbackT                 m_callback_service;
-    RegistrationCallbackT                 m_callback_client;
-    RegistrationCallbackT                 m_callback_process;
 
     std::unique_ptr<CRegistrationReceiverUDP> m_registration_receiver_udp;
 #if ECAL_CORE_REGISTRATION_SHM
@@ -92,9 +80,12 @@ namespace eCAL
     bool                                  m_use_registration_udp;
     bool                                  m_use_registration_shm;
 
-    std::mutex                            m_callback_custom_apply_sample_map_mtx;
-    std::map<std::string, ApplySampleCallbackT> m_callback_custom_apply_sample_map;
+    // This class distributes samples to all everyone who is interested in being notified about samples
+    Registration::CSampleApplier  m_sample_applier;
 
-    std::string                           m_host_group_name;
+    // These classes are interested in being notified about samples
+    // Possibly remove these from this class
+    // The custom user callbacks (who receive serialized samples), e.g. registration events.
+    Registration::CSampleApplierUser  m_user_applier;
   };
 }
