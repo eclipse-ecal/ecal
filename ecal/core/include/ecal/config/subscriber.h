@@ -33,32 +33,42 @@ namespace eCAL
 {
   namespace Subscriber
   {
-    namespace SHM
+    namespace Layer
     {
+      namespace SHM
+      {
+        struct Configuration
+        {
+          bool enable;                                                  //!< enable layer
+        };
+      }
+
+      namespace UDP
+      {
+        struct Configuration
+        {
+          bool enable;                                                  //!< enable layer
+        };
+      }
+
+      namespace TCP
+      {
+        struct Configuration
+        {
+          bool enable;                                                  //!< enable layer
+
+          size_t num_executor_reader{};                                 //!< reader amount of threads that shall execute workload (Default: 4)
+          size_t num_executor_writer{};                                 //!< writer amount of threads that shall execute workload (Default: 4)
+
+          size_t max_reconnections{};                                   //!< reconnection attemps the session will try to reconnect in (Default: 5)
+        };
+      }
+
       struct Configuration
       {
-        bool enable;                                                  //!< enable layer
-      };
-    }
-
-    namespace UDP
-    {
-      struct Configuration
-      {
-        bool enable;                                                  //!< enable layer
-      };
-    }
-
-    namespace TCP
-    {
-      struct Configuration
-      {
-        bool enable;                                                  //!< enable layer
-
-        size_t num_executor_reader{};                                 //!< reader amount of threads that shall execute workload (Default: 4)
-        size_t num_executor_writer{};                                 //!< writer amount of threads that shall execute workload (Default: 4)
-
-        size_t max_reconnections{};                                   //!< reconnection attemps the session will try to reconnect in (Default: 5)
+        SHM::Configuration shm;
+        UDP::Configuration udp;
+        TCP::Configuration tcp;
       };
     }
 
@@ -66,9 +76,7 @@ namespace eCAL
     {
       ECAL_API Configuration();
 
-      SHM::Configuration shm;
-      UDP::Configuration udp;
-      TCP::Configuration tcp;
+      Layer::Configuration layer;
 
       bool drop_out_of_order_messages{}; 
     };

@@ -140,21 +140,22 @@ publisher:
 
 # Subscriber specific base configuration
 subscriber:
-  # Base configuration for shared memory subscriber
-  shm:
-    # Enable layer
-    enable: true
+  layer:
+    # Base configuration for shared memory subscriber
+    shm:
+      # Enable layer
+      enable: true
 
-  # Base configuration for UDP subscriber
-  udp:
-    # Enabler layer
-    enable: true
-  
-  # Base configuration for TCP subscriber
-  tcp:
-    # Enable layer
-    enable: false 
-  
+    # Base configuration for UDP subscriber
+    udp:
+      # Enabler layer
+      enable: true
+    
+    # Base configuration for TCP subscriber
+    tcp:
+      # Enable layer
+      enable: false 
+    
   # Enable dropping of payload messages that arrive out of order
   drop_out_of_order_messages: true
   

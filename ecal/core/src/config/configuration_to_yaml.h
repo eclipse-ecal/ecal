@@ -196,27 +196,35 @@ namespace YAML
     /___/\_,_/_.__/___/\__/_/ /_/_.__/\__/_/   
   */
   template<>
-  struct convert<eCAL::Subscriber::SHM::Configuration>
+  struct convert<eCAL::Subscriber::Layer::SHM::Configuration>
   {
-    static Node encode(const eCAL::Subscriber::SHM::Configuration& config_);
+    static Node encode(const eCAL::Subscriber::Layer::SHM::Configuration& config_);
 
-    static bool decode(const Node& node_, eCAL::Subscriber::SHM::Configuration& config_);
+    static bool decode(const Node& node_, eCAL::Subscriber::Layer::SHM::Configuration& config_);
   };
 
   template<>
-  struct convert<eCAL::Subscriber::UDP::Configuration>
+  struct convert<eCAL::Subscriber::Layer::UDP::Configuration>
   {
-    static Node encode(const eCAL::Subscriber::UDP::Configuration& config_);
+    static Node encode(const eCAL::Subscriber::Layer::UDP::Configuration& config_);
 
-    static bool decode(const Node& node_, eCAL::Subscriber::UDP::Configuration& config_);
+    static bool decode(const Node& node_, eCAL::Subscriber::Layer::UDP::Configuration& config_);
   };
 
   template<>
-  struct convert<eCAL::Subscriber::TCP::Configuration>
+  struct convert<eCAL::Subscriber::Layer::TCP::Configuration>
   {
-    static Node encode(const eCAL::Subscriber::TCP::Configuration& config_);
+    static Node encode(const eCAL::Subscriber::Layer::TCP::Configuration& config_);
 
-    static bool decode(const Node& node_, eCAL::Subscriber::TCP::Configuration& config_);
+    static bool decode(const Node& node_, eCAL::Subscriber::Layer::TCP::Configuration& config_);
+  };
+
+  template<>
+  struct convert<eCAL::Subscriber::Layer::Configuration>
+  {
+    static Node encode(const eCAL::Subscriber::Layer::Configuration& config_);
+
+    static bool decode(const Node& node_, eCAL::Subscriber::Layer::Configuration& config_);
   };
 
   template<>

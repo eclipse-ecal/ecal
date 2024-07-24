@@ -57,9 +57,9 @@ int main(int argc, char **argv)
   eCAL::Subscriber::Configuration sub_config;
 
   // activate transport layer
-  sub_config.shm.enable = true;
-  sub_config.udp.enable = true;
-  sub_config.tcp.enable = true;
+  sub_config.layer.shm.enable = true;
+  sub_config.layer.udp.enable = true;
+  sub_config.layer.tcp.enable = true;
 
   // create a subscriber (topic name "person")
   eCAL::protobuf::CSubscriber<pb::People::Person> sub("person", sub_config);
