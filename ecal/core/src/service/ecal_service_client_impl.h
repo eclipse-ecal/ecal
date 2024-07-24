@@ -78,7 +78,7 @@ namespace eCAL
     void RegisterService(const std::string& key_, const SServiceAttr& service_);
 
     // called by eCAL:CClientGate every second to update registration layer
-    Registration::Sample CServiceClientImpl::GetRegistration();
+    Registration::Sample GetRegistration();
 
     std::string GetServiceName() { return m_service_name; };
 
@@ -94,8 +94,8 @@ namespace eCAL
     static void fromSerializedProtobuf(const std::string& response_pb_, eCAL::SServiceResponse& response_);
     static void fromStruct(const Service::Response& response_struct_, eCAL::SServiceResponse& response_);
 
-    Registration::Sample CServiceClientImpl::GetRegistrationSample();
-    Registration::Sample CServiceClientImpl::GetUnregistrationSample();
+    Registration::Sample GetRegistrationSample();
+    Registration::Sample GetUnregistrationSample();
     
     void Register(bool force_);
     void Unregister();
