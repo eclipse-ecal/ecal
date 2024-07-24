@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ namespace eCAL
     void RegisterService(const std::string& key_, const SServiceAttr& service_);
 
     // called by eCAL:CClientGate every second to update registration layer
-    void RefreshRegistration();
+    Registration::Sample CServiceClientImpl::GetRegistration();
 
     std::string GetServiceName() { return m_service_name; };
 
@@ -94,10 +94,14 @@ namespace eCAL
     static void fromSerializedProtobuf(const std::string& response_pb_, eCAL::SServiceResponse& response_);
     static void fromStruct(const Service::Response& response_struct_, eCAL::SServiceResponse& response_);
 
+    Registration::Sample CServiceClientImpl::GetRegistrationSample();
+    Registration::Sample CServiceClientImpl::GetUnregistrationSample();
+    
     void Register(bool force_);
     void Unregister();
 
     void CheckForNewServices();
+    void CheckForDisconnectedServices();
 
     void ErrorCallback(const std::string &method_name_, const std::string &error_message_);
 

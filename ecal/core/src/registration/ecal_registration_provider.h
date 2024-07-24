@@ -58,22 +58,21 @@ namespace eCAL
 
   protected:
     void AddSample2SampleList(const Registration::Sample& sample_);
-    void ClearSampleList();
-    void SendSampleList();
+    void SendSample(const Registration::Sample& sample_);
 
     void RegisterSendThread();
 
-    static std::atomic<bool>             m_created;
+    static std::atomic<bool>                    m_created;
 
-    std::unique_ptr<CRegistrationSender> m_reg_sender;
+    std::unique_ptr<CRegistrationSender>        m_reg_sender;
 
-    std::shared_ptr<CCallbackThread>     m_reg_sample_snd_thread;
+    std::shared_ptr<CCallbackThread>            m_reg_sample_snd_thread;
 
-    std::mutex                           m_sample_list_mtx;
-    Registration::SampleList             m_sample_list;
+    std::mutex                                  m_sample_list_mtx;
+    Registration::SampleList                    m_sample_list;
 
-    bool                                 m_use_registration_udp;
-    bool                                 m_use_registration_shm;
+    bool                                        m_use_registration_udp;
+    bool                                        m_use_registration_shm;
 
     std::mutex                                  m_callback_custom_apply_sample_map_mtx;
     std::map<std::string, ApplySampleCallbackT> m_callback_custom_apply_sample_map;

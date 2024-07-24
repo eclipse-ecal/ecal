@@ -194,16 +194,15 @@ namespace eCAL
     }
   }
 
-  void CPubGate::RefreshRegistrations()
+  void CPubGate::GetRegistrations(Registration::SampleList& reg_sample_list_)
   {
     if (!m_created) return;
 
-    // refresh publisher registrations
+    // read reader registrations
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     for (const auto& iter : m_topic_name_datawriter_map)
     {
-      // force data writer to (re)register itself on registration provider
-      iter.second->RefreshRegistration();
+      reg_sample_list_.samples.emplace_back(iter.second->GetRegistration());
     }
   }
 }

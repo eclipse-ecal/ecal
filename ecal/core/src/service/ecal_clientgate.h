@@ -55,7 +55,7 @@ namespace eCAL
 
     std::vector<SServiceAttr> GetServiceAttr(const std::string& service_name_);
 
-    void RefreshRegistrations();
+    void GetRegistrations(Registration::SampleList& reg_sample_list_);
 
   protected:
     static std::atomic<bool>    m_created;

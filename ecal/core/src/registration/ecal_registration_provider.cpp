@@ -96,10 +96,8 @@ namespace eCAL
     // stop cyclic registration thread
     m_reg_sample_snd_thread->stop();
 
-    // add process unregistration sample
-    AddSample2SampleList(Registration::GetProcessUnregisterSample());
-
-    SendSampleList();
+    // send process unregistration sample
+    SendSample(Registration::GetProcessUnregisterSample());
 
     m_reg_sender.reset();
 
@@ -119,21 +117,15 @@ namespace eCAL
       }
     }
 
-    // update sample list
-    AddSample2SampleList(sample_);
-
-    // if registration is forced
     if (force_)
     {
-      SendSampleList();
-
-      // send single registration sample over udp
-      //SendSample2UDP(sample_);
-
-#if ECAL_CORE_REGISTRATION_SHM
-      // broadcast (updated) sample list over shm
-      //SendSampleList2SHM();
-#endif
+      // send sample
+      SendSample(sample_);
+    }
+    else
+    {
+      // add sample to sample list and send it later
+      AddSample2SampleList(sample_);
     }
 
     return(true);
@@ -161,46 +153,49 @@ namespace eCAL
     m_sample_list.samples.push_back(sample_);
   }
 
-  void CRegistrationProvider::ClearSampleList()
+  void CRegistrationProvider::SendSample(const Registration::Sample& sample_)
   {
-    // lock sample list
-    const std::lock_guard<std::mutex> lock(m_sample_list_mtx);
-    // clear sample list
-    m_sample_list.samples.clear();
-  }
-
-  void CRegistrationProvider::SendSampleList()
-  {
-    std::lock_guard<std::mutex> lock(m_sample_list_mtx);
-    m_reg_sender->SendSampleList(m_sample_list);
+    Registration::SampleList sample_list;
+    sample_list.samples.push_back(sample_);
+    m_reg_sender->SendSampleList(sample_list);
   }
 
   void CRegistrationProvider::RegisterSendThread()
   {
+    // collect all registrations and send them out
+    // the internal list already contain elements here:
+    //   one process registration sample
+    //   one or more registration/unregistration samples added by AddSample2SampleList
+    {
+      // lock sample list
+      std::lock_guard<std::mutex> lock(m_sample_list_mtx);
+
 #if ECAL_CORE_SUBSCRIBER
-    // refresh subscriber registration
-    if (g_subgate() != nullptr) g_subgate()->RefreshRegistrations();
+      // add subscriber registrations
+      if (g_subgate() != nullptr) g_subgate()->GetRegistrations(m_sample_list);
 #endif
 
 #if ECAL_CORE_PUBLISHER
-    // refresh publisher registration
-    if (g_pubgate() != nullptr) g_pubgate()->RefreshRegistrations();
+      // add publisher registrations
+      if (g_pubgate() != nullptr) g_pubgate()->GetRegistrations(m_sample_list);
 #endif
 
 #if ECAL_CORE_SERVICE
-    // refresh server registration
-    if (g_servicegate() != nullptr) g_servicegate()->RefreshRegistrations();
+      // add server registrations
+      if (g_servicegate() != nullptr) g_servicegate()->GetRegistrations(m_sample_list);
 
-    // refresh client registration
-    if (g_clientgate() != nullptr) g_clientgate()->RefreshRegistrations();
+      // add client registrations
+      if (g_clientgate() != nullptr) g_clientgate()->GetRegistrations(m_sample_list);
 #endif
 
-    SendSampleList();
+      // send registration sample list
+      m_reg_sender->SendSampleList(m_sample_list);
 
-    // clear registration sample list
-    ClearSampleList();
+      // clear it
+      m_sample_list.samples.clear();
 
-    // add process registration sample to internal sample list as first sample (for next registration loop)
-    AddSample2SampleList(Registration::GetProcessRegisterSample());
+      // and add process registration sample to internal sample list as first sample (for next registration loop)
+      m_sample_list.samples.push_back(Registration::GetProcessRegisterSample());
+    }
   }
 }
