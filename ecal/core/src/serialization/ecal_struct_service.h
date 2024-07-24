@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <tuple>
 
 namespace eCAL
 {
@@ -50,6 +51,16 @@ namespace eCAL
       std::string          error;           // Error message
       int32_t              id = 0;          // Session id
       eMethodCallState     state = none;    // Method call state
+
+      bool operator==(const ServiceHeader& other) const {
+        return hname == other.hname &&
+          sname == other.sname &&
+          sid == other.sid &&
+          mname == other.mname &&
+          error == other.error &&
+          id == other.id &&
+          state == other.state;
+      }
     };
 
     // Service Request
@@ -57,6 +68,11 @@ namespace eCAL
     {
       ServiceHeader        header;          // Common service header
       std::string          request;         // Request payload
+
+      bool operator==(const Request& other) const {
+        return header == other.header &&
+          request == other.request;
+      }
     };
 
     // Service Response
@@ -65,6 +81,12 @@ namespace eCAL
       ServiceHeader        header;           // Common service header
       std::string          response;         // Response payload
       int64_t              ret_state = 0;    // Callback return state
+
+      bool operator==(const Response& other) const {
+        return header == other.header &&
+          response == other.response &&
+          ret_state == other.ret_state;
+      }
     };
 
     // Service Method
@@ -76,6 +98,15 @@ namespace eCAL
       std::string          resp_type;        // Response type
       std::string          resp_desc;        // Response descriptor
       int64_t              call_count = 0;   // Call counter
+
+      bool operator==(const Method& other) const {
+        return mname == other.mname &&
+          req_type == other.req_type &&
+          req_desc == other.req_desc &&
+          resp_type == other.resp_type &&
+          resp_desc == other.resp_desc &&
+          call_count == other.call_count;
+      }
     };
 
     // Service
@@ -89,6 +120,17 @@ namespace eCAL
       uint32_t             version = 0;      // Service protocol version
       uint32_t             tcp_port_v0 = 0;  // The TCP port used for that service (v0)
       uint32_t             tcp_port_v1 = 0;  // The TCP port used for that service (v1)
+
+      bool operator==(const Service& other) const {
+        return rclock == other.rclock &&
+          pname == other.pname &&
+          uname == other.uname &&
+          sname == other.sname &&
+          methods == other.methods &&
+          version == other.version &&
+          tcp_port_v0 == other.tcp_port_v0 &&
+          tcp_port_v1 == other.tcp_port_v1;
+      }
     };
 
     // Client
@@ -100,6 +142,15 @@ namespace eCAL
       std::string          sname;            // Service name
       std::vector<Method>  methods;          // List of methods
       uint32_t             version = 0;      // Client protocol version
+
+      bool operator==(const Client& other) const {
+        return rclock == other.rclock &&
+          pname == other.pname &&
+          uname == other.uname &&
+          sname == other.sname &&
+          methods == other.methods &&
+          version == other.version;
+      }
     };
   }
 }

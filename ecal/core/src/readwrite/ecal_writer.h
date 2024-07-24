@@ -30,7 +30,6 @@
 #include <ecal/config/publisher.h>
 
 #include "serialization/ecal_serialize_sample_registration.h"
-#include "util/ecal_expmap.h"
 #include "util/frequency_calculator.h"
 
 #if ECAL_CORE_TRANSPORT_UDP
@@ -156,7 +155,7 @@ namespace eCAL
 
     std::atomic<bool>                      m_connected;
 
-    using SSubscriptionMapT = Util::CExpirationMap<SSubscriptionInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
+    using SSubscriptionMapT = std::map<SSubscriptionInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
     mutable std::mutex                     m_sub_map_mtx;
     SSubscriptionMapT                      m_sub_map;
 
