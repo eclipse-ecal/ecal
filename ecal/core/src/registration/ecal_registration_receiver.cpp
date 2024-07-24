@@ -27,12 +27,15 @@
 
 #include "registration/ecal_registration_receiver.h"
 
+#include "registration/ecal_registration_timeout_provider.h"
+#include "util/ecal_thread.h"
+
 #include "registration/udp/ecal_registration_receiver_udp.h"
 #if ECAL_CORE_REGISTRATION_SHM
 #include "registration/shm/ecal_registration_receiver_shm.h"
 #endif
-
 #include "io/udp/ecal_udp_configurations.h"
+#include <ecal/ecal_config.h>
 #include <atomic>
 #include <functional>
 #include <memory>
@@ -47,7 +50,11 @@ namespace eCAL
   std::atomic<bool> CRegistrationReceiver::m_created;
 
   CRegistrationReceiver::CRegistrationReceiver()
-    : m_use_registration_udp(false)
+    : m_timeout_provider(nullptr)
+    , m_timeout_provider_thread(nullptr)
+    , m_registration_receiver_udp(nullptr)
+    , m_registration_receiver_shm(nullptr)
+    , m_use_registration_udp(false)
     , m_use_registration_shm(false)
     , m_sample_applier(Config::IsNetworkEnabled(), false, Process::GetHostGroupName(), Process::GetProcessID())
   {
@@ -74,6 +81,20 @@ namespace eCAL
   void CRegistrationReceiver::Start()
   {
     if(m_created) return;
+
+    m_timeout_provider = std::make_unique<Registration::CTimeoutProvider<std::chrono::steady_clock>>(
+      std::chrono::milliseconds(Config::GetMonitoringTimeoutMs()),
+      [this](const Registration::Sample& sample_)
+      {
+        return m_sample_applier.ApplySample(sample_);
+      }
+      );
+    m_sample_applier.SetCustomApplySampleCallback("timeout", [this](const eCAL::Registration::Sample& sample_)
+      {
+        m_timeout_provider->ApplySample(sample_);
+      });
+    m_timeout_provider_thread = std::make_unique<CCallbackThread>([this]() {m_timeout_provider->CheckForTimeouts(); });
+    m_timeout_provider_thread->start(std::chrono::milliseconds(100));
 
     // receive registration via udp or shared memory
     m_use_registration_shm = Config::IsShmRegistrationEnabled();
@@ -110,6 +131,10 @@ namespace eCAL
       m_registration_receiver_shm = nullptr;
     }
 #endif
+
+    m_timeout_provider_thread = nullptr;
+    m_sample_applier.RemCustomApplySampleCallback("timeout");
+    m_timeout_provider = nullptr;
 
     m_created          = false;
   }

@@ -27,11 +27,11 @@
 #include <ecal/config/monitoring.h>
 
 #include "ecal_def.h"
-#include "util/ecal_expmap.h"
 
 #include "serialization/ecal_serialize_sample_registration.h"
 
 #include <memory>
+#include <map>
 #include <mutex>
 #include <set>
 #include <string>
@@ -82,44 +82,44 @@ namespace eCAL
     bool RegisterTopic(const Registration::Sample& sample_, enum ePubSub pubsub_type_);
     bool UnregisterTopic(const Registration::Sample& sample_, enum ePubSub pubsub_type_);
 
-    using TopicMonMapT = Util::CExpirationMap<std::string, Monitoring::STopicMon>;
+    using TopicMonMapT = std::map<std::string, Monitoring::STopicMon>;
     struct STopicMonMap
     {
-      explicit STopicMonMap(const std::chrono::milliseconds& timeout_) :
-        map(std::make_unique<TopicMonMapT>(timeout_))
+      explicit STopicMonMap() :
+        map(std::make_unique<TopicMonMapT>())
       {
       };
       std::mutex                     sync;
       std::unique_ptr<TopicMonMapT>  map;
     };
 
-    using ProcessMonMapT = Util::CExpirationMap<std::string, Monitoring::SProcessMon>;
+    using ProcessMonMapT = std::map<std::string, Monitoring::SProcessMon>;
     struct SProcessMonMap
     {
-      explicit SProcessMonMap(const std::chrono::milliseconds& timeout_) :
-        map(std::make_unique<ProcessMonMapT>(timeout_))
+      explicit SProcessMonMap() :
+        map(std::make_unique<ProcessMonMapT>())
       {
       };
       std::mutex                       sync;
       std::unique_ptr<ProcessMonMapT>  map;
     };
 
-    using ServerMonMapT = Util::CExpirationMap<std::string, Monitoring::SServerMon>;
+    using ServerMonMapT = std::map<std::string, Monitoring::SServerMon>;
     struct SServerMonMap
     {
-      explicit SServerMonMap(const std::chrono::milliseconds& timeout_) :
-        map(std::make_unique<ServerMonMapT>(timeout_))
+      explicit SServerMonMap() :
+        map(std::make_unique<ServerMonMapT>())
       {
       };
       std::mutex                      sync;
       std::unique_ptr<ServerMonMapT>  map;
     };
 
-    using ClientMonMapT = Util::CExpirationMap<std::string, Monitoring::SClientMon>;
+    using ClientMonMapT = std::map<std::string, Monitoring::SClientMon>;
     struct SClientMonMap
     {
-      explicit SClientMonMap(const std::chrono::milliseconds& timeout_) :
-        map(std::make_unique<ClientMonMapT>(timeout_))
+      explicit SClientMonMap() :
+        map(std::make_unique<ClientMonMapT>())
       {
       };
       std::mutex                      sync;

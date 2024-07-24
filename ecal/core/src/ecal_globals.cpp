@@ -74,7 +74,7 @@ namespace eCAL
     if (descgate_instance == nullptr)
     {
       // create description gate with configured expiration timeout
-      descgate_instance = std::make_unique<CDescGate>(std::chrono::milliseconds(Config::GetMonitoringTimeoutMs()));
+      descgate_instance = std::make_unique<CDescGate>();
       new_initialization = true;
     }
 
