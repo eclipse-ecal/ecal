@@ -23,8 +23,7 @@ find_package(Threads          REQUIRED)
 find_package(ecaludp          REQUIRED)
 
 if (ECAL_CORE_CONFIGURATION)
-  find_package(yaml-cpp         REQUIRED)
-  find_package(simpleini      REQUIRED)
+  find_package(yaml-cpp       REQUIRED)
 endif()
 
 if (ECAL_CORE_COMMAND_LINE)
@@ -628,7 +627,6 @@ endforeach()
 if(ECAL_CORE_CONFIGURATION)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
-      simpleini::simpleini
       yaml-cpp::yaml-cpp
   )
 endif()
