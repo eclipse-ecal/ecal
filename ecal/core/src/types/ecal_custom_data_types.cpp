@@ -86,10 +86,10 @@ namespace eCAL
     
     std::ostream& operator<<(std::ostream& os, const IpAddressV4& ipv4) { os << ipv4.Get(); return os; };
 
-    bool IpAddressV4::operator==(const eCAL::Types::IpAddressV4 other) const      { return m_ip_address == other.Get(); };
-    bool operator==(eCAL::Types::IpAddressV4 lhs, const char* ip_string_)         { return lhs.Get() == std::string(ip_string_); };
-    bool operator==(const char* ip_string_, eCAL::Types::IpAddressV4 rhs)         { return rhs == ip_string_; };
-    bool operator==(eCAL::Types::IpAddressV4 lhs, const std::string& ip_string_)  { return lhs.Get() == ip_string_; };
-    bool operator==(const std::string& ip_string_, eCAL::Types::IpAddressV4 rhs)  { return rhs == ip_string_; };
+    bool IpAddressV4::operator==(const eCAL::Types::IpAddressV4& rhs) const        { return m_ip_address == rhs.Get(); };
+    bool operator==(eCAL::Types::IpAddressV4 lhs, const char* ip_string_)          { return lhs.Get() == std::string(ip_string_); };
+    bool operator==(const char* ip_string_, eCAL::Types::IpAddressV4 rhs)          { return rhs == ip_string_; };
+    bool operator==(eCAL::Types::IpAddressV4 lhs, const std::string& ip_string_)   { return lhs.Get() == ip_string_; };
+    bool operator==(const std::string& ip_string_, eCAL::Types::IpAddressV4 rhs)   { return rhs == ip_string_; };
   }  
 }

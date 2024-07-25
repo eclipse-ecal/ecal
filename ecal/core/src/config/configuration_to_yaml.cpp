@@ -22,7 +22,7 @@ namespace YAML
   {
     // create excluding filter list
     char filter_mask = log_level_none;
-    for (auto& it : filter_)
+    for (const auto& it : filter_)
     {
       if (it == "all")     filter_mask |= log_level_all;
       if (it == "info")    filter_mask |= log_level_info;
@@ -41,15 +41,15 @@ namespace YAML
   std::vector<std::string> LogLevelToVector(eCAL_Logging_Filter filter_mask) 
   {
     std::vector<std::string> filter;
-    if (filter_mask & log_level_all)    filter.push_back("all");
-    if (filter_mask & log_level_info)   filter.push_back("info");
-    if (filter_mask & log_level_warning)filter.push_back("warning");
-    if (filter_mask & log_level_error)  filter.push_back("error");
-    if (filter_mask & log_level_fatal)  filter.push_back("fatal");
-    if (filter_mask & log_level_debug1) filter.push_back("debug1");
-    if (filter_mask & log_level_debug2) filter.push_back("debug2");
-    if (filter_mask & log_level_debug3) filter.push_back("debug3");
-    if (filter_mask & log_level_debug4) filter.push_back("debug4");
+    if ((filter_mask & log_level_all) != 0)     filter.emplace_back("all");
+    if ((filter_mask & log_level_info) != 0)    filter.emplace_back("info");
+    if ((filter_mask & log_level_warning) != 0) filter.emplace_back("warning");
+    if ((filter_mask & log_level_error) != 0)   filter.emplace_back("error");
+    if ((filter_mask & log_level_fatal) != 0)   filter.emplace_back("fatal");
+    if ((filter_mask & log_level_debug1) != 0)  filter.emplace_back("debug1");
+    if ((filter_mask & log_level_debug2) != 0)  filter.emplace_back("debug2");
+    if ((filter_mask & log_level_debug3) != 0)  filter.emplace_back("debug3");
+    if ((filter_mask & log_level_debug4) != 0)  filter.emplace_back("debug4");
 
     return filter;
   }
@@ -57,11 +57,11 @@ namespace YAML
   eCAL::Publisher::Configuration::LayerPriorityVector transformLayerStrToEnum(const std::vector<std::string>& string_vector_)
   {
     eCAL::Publisher::Configuration::LayerPriorityVector layer_priority_vector;
-    for (auto& layer_as_string : string_vector_)
+    for (const auto& layer_as_string : string_vector_)
     {
-      if (layer_as_string == "shm") layer_priority_vector.push_back(eCAL::TLayer::tlayer_shm);
-      if (layer_as_string == "udp") layer_priority_vector.push_back(eCAL::TLayer::tlayer_udp_mc);
-      if (layer_as_string == "tcp") layer_priority_vector.push_back(eCAL::TLayer::tlayer_tcp);
+      if (layer_as_string == "shm") layer_priority_vector.emplace_back(eCAL::TLayer::tlayer_shm);
+      if (layer_as_string == "udp") layer_priority_vector.emplace_back(eCAL::TLayer::tlayer_udp_mc);
+      if (layer_as_string == "tcp") layer_priority_vector.emplace_back(eCAL::TLayer::tlayer_tcp);
     }
 
     return layer_priority_vector;
@@ -70,18 +70,18 @@ namespace YAML
   std::vector<std::string> transformLayerEnumToStr(const eCAL::Publisher::Configuration::LayerPriorityVector& enum_vector_)
   {
     std::vector<std::string> layer_priority_vector;
-    for (auto& layer_as_enum : enum_vector_)
+    for (const auto& layer_as_enum : enum_vector_)
     {
       switch (layer_as_enum)
       {
         case eCAL::TLayer::tlayer_shm:
-          layer_priority_vector.push_back("shm");
+          layer_priority_vector.emplace_back("shm");
           break;
         case eCAL::TLayer::tlayer_udp_mc:
-          layer_priority_vector.push_back("udp");
+          layer_priority_vector.emplace_back("udp");
           break;
         case eCAL::TLayer::tlayer_tcp:
-          layer_priority_vector.push_back("tcp");
+          layer_priority_vector.emplace_back("tcp");
           break;
         default:
           break;

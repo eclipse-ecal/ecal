@@ -177,12 +177,12 @@ namespace
     // -----------------------------------------------------------
     // precedence 0: relative path to executable
     // -----------------------------------------------------------
-    std::string cwd_directory_path = cwdPath();
+    const std::string cwd_directory_path = cwdPath();
 
     std::vector<std::string> ecal_default_paths = getEcalDefaultPaths();
     ecal_default_paths.emplace(ecal_default_paths.begin(), cwd_directory_path);
     
-    std::string found_path = findValidConfigPath(ecal_default_paths, config_file_);
+    const std::string found_path = findValidConfigPath(ecal_default_paths, config_file_);
 
     // check in case user provided whole path
     if (found_path.empty())
@@ -196,9 +196,9 @@ namespace
 
 namespace eCAL 
 {
-    void Configuration::InitConfigFromFile(const std::string yaml_path_)
+    void Configuration::InitConfigFromFile(const std::string& yaml_path_)
     {
-      std::string yaml_path = checkForValidConfigFilePath(yaml_path_);
+      const std::string yaml_path = checkForValidConfigFilePath(yaml_path_);
       if (!yaml_path.empty())
       {
         eCAL::Config::YamlFileToConfig(yaml_path, *this);
@@ -233,9 +233,9 @@ namespace eCAL
       Init(args_);
     }
 
-    void Configuration::Init(const std::vector<std::string>& arguments_)
+    void Configuration::Init(const std::vector<std::string>& args_)
     {
-      Config::CmdParser parser(arguments_);
+      Config::CmdParser parser(args_);
       
       command_line_arguments.user_yaml   = parser.getUserIni();
       command_line_arguments.dump_config = parser.getDumpConfig();
@@ -301,7 +301,7 @@ namespace eCAL
     ECAL_API std::string GeteCALConfigPath()
     {
       // Check for first directory which contains the ini file.
-      std::vector<std::string> search_directories = getEcalDefaultPaths();
+      const std::vector<std::string> search_directories = getEcalDefaultPaths();
 
       return findValidConfigPath(search_directories, ECAL_DEFAULT_CFG);
     }
@@ -325,8 +325,9 @@ namespace eCAL
 #endif /* ECAL_OS_WINDOWS */
 
 #ifdef ECAL_OS_LINUX
-      const char *hdir;
-      if ((hdir = getenv("HOME")) == NULL) {
+      const char *hdir = nullptr;
+      hdir = getenv("HOME");
+      if (hdir == nullptr) {
         hdir = getpwuid(getuid())->pw_dir;
       }
       home_path += hdir;

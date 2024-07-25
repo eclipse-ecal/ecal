@@ -23,21 +23,21 @@ namespace eCAL
   {    
     void YamlFileToConfig(const std::string& filename_, eCAL::Configuration& config_)
     {
-      YAML::Node yaml = YAML::LoadFile(filename_);
+      const YAML::Node yaml = YAML::LoadFile(filename_);
 
       MapConfiguration(yaml, config_);
     };
 
     void YamlStringToConfig(const std::string& yaml_string_, eCAL::Configuration& config_)
     {
-      YAML::Node yaml = YAML::Load(yaml_string_);
+      const YAML::Node yaml = YAML::Load(yaml_string_);
 
       MapConfiguration(yaml, config_);
     };
 
     bool ConfigToYamlFile(const std::string& file_name_, const eCAL::Configuration& config_)
     {
-      YAML::Node node(config_);
+      const YAML::Node node(config_);
       std::ofstream file(file_name_);
       if (file.is_open())
       {
@@ -52,11 +52,11 @@ namespace eCAL
     void MergeYamlNodes(YAML::Node& base, const YAML::Node& other) 
     {
       std::stack<std::pair<YAML::Node, YAML::Node>> nodes;
-      nodes.push(std::make_pair(base, other));
+      nodes.emplace(std::make_pair(base, other));
 
       while (!nodes.empty()) 
       {
-        std::pair<YAML::Node, YAML::Node> nodePair = nodes.top();
+        const std::pair<YAML::Node, YAML::Node> nodePair = nodes.top();
         nodes.pop();
 
         YAML::Node baseNode = nodePair.first;
@@ -64,10 +64,10 @@ namespace eCAL
 
         for (YAML::const_iterator it = otherNode.begin(); it != otherNode.end(); ++it) 
         {
-          YAML::Node key = it->first;
-          YAML::Node value = it->second;
+          const YAML::Node key = it->first;
+          const YAML::Node value = it->second;
           
-          std::string key_as_string = "";
+          std::string key_as_string;
 
           switch (key.Type())
           {
@@ -83,7 +83,7 @@ namespace eCAL
           {
             if (value.IsMap() && baseNode[key_as_string].IsMap()) 
             {
-              nodes.push(std::make_pair(baseNode[key_as_string], value)); // Push nested nodes to stack
+              nodes.emplace(baseNode[key_as_string], value); // Push nested nodes to stack
             } 
             else 
             {
