@@ -52,7 +52,7 @@ namespace eCAL
     void MergeYamlNodes(YAML::Node& base, const YAML::Node& other) 
     {
       std::stack<std::pair<YAML::Node, YAML::Node>> nodes;
-      nodes.emplace(std::make_pair(base, other));
+      nodes.emplace(base, other);
 
       while (!nodes.empty()) 
       {

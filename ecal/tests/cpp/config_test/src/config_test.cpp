@@ -37,7 +37,7 @@ void SetValue(MEMBER& member, VALUE value)
   member = value;
 }
 
-TEST(core_cpp_config, user_config_passing)
+TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
 {
   // Registration options
   const unsigned int        registration_timeout        = 80000U;
@@ -110,7 +110,7 @@ TEST(core_cpp_config, user_config_passing)
   EXPECT_EQ(0, eCAL::Finalize());
 }
 
-TEST(ConfigDeathTest, user_config_death_test)
+TEST(ConfigDeathTest /*unused*/, user_config_death_test /*unused*/)
 {
   eCAL::Configuration custom_config(0, nullptr);
 
@@ -169,7 +169,7 @@ TEST(ConfigDeathTest, user_config_death_test)
 
 }
 
-TEST(core_cpp_config, config_custom_datatypes_tests)
+TEST(core_cpp_config /*unused*/, config_custom_datatypes_tests /*unused*/)
 {
   // test custom datatype assignment operators
   eCAL::Types::IpAddressV4 ip1;
@@ -199,16 +199,16 @@ TEST(core_cpp_config, config_custom_datatypes_tests)
   EXPECT_EQ(config1.transport_layer.udp.network.group, testValue);
 }
 
-TEST(CmdParserTest, config_cmd_parser_test)
+TEST(CmdParserTest /*unused*/, config_cmd_parser_test /*unused*/)
 {
   const std::string some_file_name = "someFileName.yml";
 
-  eCAL::Config::CmdParser parser;
+  eCAL::Config::CmdParser parser{};
 
   EXPECT_EQ(parser.getUserIni(), "");
   EXPECT_EQ(parser.getDumpConfig(), false);
 
-  std::vector<std::string> arguments;
+  std::vector<std::string> arguments{};
 
   arguments.push_back("test_config_cmd_parser_test");
   // set a file name as ini file
@@ -222,7 +222,7 @@ TEST(CmdParserTest, config_cmd_parser_test)
   EXPECT_EQ(parser.getDumpConfig(), true);
 }
 
-TEST(YamlConfigReaderTest, read_write_file_test)
+TEST(YamlConfigReaderTest /*unused*/, read_write_file_test /*unused*/)
 {
   // create a custom ini file
   std::string ini_file_name = "customIni.yml";
@@ -240,7 +240,7 @@ TEST(YamlConfigReaderTest, read_write_file_test)
     return;
   }
 
-  eCAL::Configuration config;
+  eCAL::Configuration config{};
   EXPECT_NO_THROW(eCAL::Config::YamlFileToConfig(ini_file_name, config));
 
   EXPECT_EQ(true, eCAL::Config::ConfigToYamlFile("myTest.yml", config));
@@ -249,9 +249,9 @@ TEST(YamlConfigReaderTest, read_write_file_test)
   remove("myTest.yml");
 }
 
-TEST(YamlConfigReaderTest, parse_values_test)
+TEST(YamlConfigReaderTest /*unused*/, parse_values_test /*unused*/)
 {
-  eCAL::Configuration config;
+  eCAL::Configuration config{};
   EXPECT_NO_THROW(eCAL::Config::YamlStringToConfig(ini_file_as_string_yaml, config));
 
   // Check string 
@@ -273,10 +273,10 @@ TEST(YamlConfigReaderTest, parse_values_test)
   EXPECT_EQ(config.publisher.layer.shm.acknowledge_timeout_ms, 346U);
 } 
 
-TEST(YamlConfigReaderTest, yaml_node_merger)
+TEST(YamlConfigReaderTest /*unused*/, yaml_node_merger /*unused*/)
 {
-  YAML::Node node_1;
-  YAML::Node node_2;
+  YAML::Node node_1{};
+  YAML::Node node_2{};
 
   node_1["test"] = 1;
   node_2["test"] = 2;
@@ -299,7 +299,7 @@ TEST(YamlConfigReaderTest, yaml_node_merger)
   EXPECT_EQ(node_1["firstLayer2"]["secondLayer2"], node_2["firstLayer2"]["secondLayer2"]);  
 }
 
-TEST(YamlConfigReaderTest, yaml_to_config_merger)
+TEST(YamlConfigReaderTest /*unused*/, yaml_to_config_merger /*unused*/)
 {
   // create a custom ini file
   std::string ini_file_name = "customIni.yml";
@@ -317,7 +317,7 @@ TEST(YamlConfigReaderTest, yaml_to_config_merger)
     return;
   }
 
-  eCAL::Configuration config;
+  eCAL::Configuration config{};
 
   EXPECT_TRUE(config.publisher.layer.shm.enable);
 
