@@ -69,6 +69,9 @@ TEST(core_cpp_util, GetTopics)
     // this should trigger a warning but not increase map size
     eCAL::CSubscriber sub12("B1", info_B1_2);
 
+    // let's register
+    eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
+
     // get all topics
     eCAL::Util::GetTopics(topic_info_map);
 
@@ -132,7 +135,7 @@ TEST(core_cpp_util, GetTopics)
 TEST(core_cpp_util, GetTopicsParallel)
 {
   constexpr const int max_publisher_count(2000);
-  constexpr const int waiting_time_thread(1000);
+  constexpr const int waiting_time_thread(4000);
   constexpr const int parallel_threads(1);
 
   // initialize eCAL API
