@@ -31,7 +31,6 @@
 #include "ecal_utils/command_line.h"
 #include "ecal_utils/str_convert.h"
 
-#include "config/ecal_config_reader_hlp.h"
 #include "io/udp/ecal_udp_configurations.h"
 
 #include <algorithm>
@@ -630,7 +629,7 @@ namespace
     // Check whether we are able to use a terminal emulator. The requirements
     // are:
     //   - the DISPLAY variable must be set
-    //   - the terminal_emulator must be set in the ecal.ini
+    //   - the terminal_emulator must be set in the ecal.yaml
     //   - ecal_process_stub bust be available AND print the correct version
 
     // ------------------------ DISPLAY variable check -------------------------
@@ -651,11 +650,11 @@ namespace
     const std::string terminal_emulator_command = eCAL::Config::GetTerminalEmulatorCommand();
     if (!terminal_emulator_command.empty())
     {
-      STD_COUT_DEBUG("[PID " << getpid() << "]: " << "ecal.ini terminal emulator command is: " << terminal_emulator_command << std::endl);
+      STD_COUT_DEBUG("[PID " << getpid() << "]: " << "ecal.yaml terminal emulator command is: " << terminal_emulator_command << std::endl);
     }
     else
     {
-      STD_COUT_DEBUG("[PID " << getpid() << "]: " << "ecal.ini terminal emulator command is not set. Not using terminal emulator." << std::endl);
+      STD_COUT_DEBUG("[PID " << getpid() << "]: " << "ecal.yaml terminal emulator command is not set. Not using terminal emulator." << std::endl);
       return "";
     }
 
@@ -996,7 +995,7 @@ namespace eCAL
       // terminal emulator, when:
       //   - The process_mode_ is not set to hidden
       //   - the DISPLAY variable indicates that we have a display attached
-      //   - the terminal_emulator is set in the ecal.ini
+      //   - the terminal_emulator is set in the ecal.yaml
       //   - ecal_process_stub is available AND prints the correct version
 
       std::string terminal_emulator_command;

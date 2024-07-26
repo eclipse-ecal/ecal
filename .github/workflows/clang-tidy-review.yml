@@ -68,7 +68,7 @@ jobs:
                     -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
                     -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
                     -DECAL_THIRDPARTY_BUILD_QWT=OFF \
-                    -DECAL_THIRDPARTY_BUILD_YAML-CPP=OFF \
+                    -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON \
                     -DCMAKE_BUILD_TYPE=Release \
                     -DCMAKE_INSTALL_SYSCONFDIR=/etc \
                     -DCMAKE_INSTALL_PREFIX=/usr \

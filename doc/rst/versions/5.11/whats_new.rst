@@ -27,7 +27,7 @@ New features
 
 - eCAL Rec can now **record each topic to its own file**
 
-- Added **Shared-Memory-Monitoring-Layer** (experimental, enable via ``ecal.ini``!). This new monitoring layer can locally match publishers and subscribers and distribute monitoring information without the need for UDP Multicast.
+- Added **Shared-Memory-Monitoring-Layer** (experimental, enable via ``ecal.yaml``!). This new monitoring layer can locally match publishers and subscribers and distribute monitoring information without the need for UDP Multicast.
 
 - GUI Apps now start in **dark-mode** by default
 

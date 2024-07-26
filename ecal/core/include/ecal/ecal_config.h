@@ -65,9 +65,9 @@ namespace eCAL
 
     ECAL_API bool                     IsNpcapEnabled                       ();
 
-    ECAL_API int                      GetTcpPubsubReaderThreadpoolSize     ();
-    ECAL_API int                      GetTcpPubsubWriterThreadpoolSize     ();
-    ECAL_API int                      GetTcpPubsubMaxReconnectionAttemps   ();
+    ECAL_API size_t                   GetTcpPubsubReaderThreadpoolSize     ();
+    ECAL_API size_t                   GetTcpPubsubWriterThreadpoolSize     ();
+    ECAL_API size_t                   GetTcpPubsubMaxReconnectionAttemps   ();
 
     ECAL_API int                      GetTcpPubReaderThreadpoolSize     ();
     ECAL_API int                      GetTcpPubWriterThreadpoolSize     ();

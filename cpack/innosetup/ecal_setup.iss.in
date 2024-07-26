@@ -75,8 +75,8 @@ Source: "{#ComponentStagingDir}\runtime\*";           DestDir: "{app}";      Fla
 Source: "{#ComponentStagingDir}\Unspecified\*";       DestDir: "{app}";      Flags: ignoreversion recursesubdirs; Components: runtime
 Source: "{#ComponentStagingDir}\libraries\bin\*";     DestDir: "{app}\bin\"; Flags: ignoreversion recursesubdirs; Components: runtime
 
-Source: "{#ComponentStagingDir}\_configuration\cfg\ecal.ini";     DestDir: "{commonappdata}\eCAL\"; Tasks: not replaceconf; Flags: ignoreversion confirmoverwrite; Components: runtime
-Source: "{#ComponentStagingDir}\_configuration\cfg\ecal.ini";     DestDir: "{commonappdata}\eCAL\"; Tasks: replaceconf;     Flags: ignoreversion;                  Components: runtime
+Source: "{#ComponentStagingDir}\_configuration\cfg\ecal.yaml";     DestDir: "{commonappdata}\eCAL\"; Tasks: not replaceconf; Flags: ignoreversion confirmoverwrite; Components: runtime
+Source: "{#ComponentStagingDir}\_configuration\cfg\ecal.yaml";     DestDir: "{commonappdata}\eCAL\"; Tasks: replaceconf;     Flags: ignoreversion;                  Components: runtime
 Source: "{#ComponentStagingDir}\_configuration\cfg\ecaltime.ini"; DestDir: "{commonappdata}\eCAL\";                         Flags: ignoreversion;                  Components: runtime
 
 ; applications
@@ -132,7 +132,7 @@ Name: "{group}\eCAL Monitor";                         Filename: "{app}\bin\ecal_
 Name: "{group}\eCAL Recorder";                        Filename: "{app}\bin\ecal_rec_gui.exe";                      Components: applications
 Name: "{group}\eCAL Player";                          Filename: "{app}\bin\ecal_play_gui.exe";                     Components: applications
 Name: "{group}\eCAL Sys";                             Filename: "{app}\bin\ecal_sys_gui.exe";                      Components: applications
-Name: "{group}\Configuration\Edit ecal.ini";          Filename: "{commonappdata}\eCAL\ecal.ini";                   Components: runtime
+Name: "{group}\Configuration\Edit ecal.yaml";         Filename: "{commonappdata}\eCAL\ecal.yaml";                  Components: runtime
 
 Name: "{group}\{cm:UninstallProgram,{#AppName}}";     Filename: "{uninstallexe}"
 Name: "{commondesktop}\eCAL Launcher";                Filename: "{app}\bin\ecal_launcher.exe"; Tasks: desktopicon; Components: applications

@@ -193,10 +193,10 @@ Seamless IPC-Communication across host borders
 
 .. important::
    This will work with eCAL 5.12 and higher.
-   Older versions lack the ability to utilize the ``host_group_name`` in the :file:`ecal.ini` file, thus it won't work.
+   Older versions lack the ability to utilize the ``host_group_name`` in the :file:`ecal.yaml` file, thus it won't work.
 
 
-In eCAL, you are able to set host belonging over network borders by utilizing the :file:`ecal.ini` configuration file with the same ``host_group_name`` - in the following steps, you will learn how to set this up.
+In eCAL, you are able to set host belonging over network borders by utilizing the :file:`ecal.yaml` configuration file with the same ``host_group_name`` - in the following steps, you will learn how to set this up.
 
 .. note::
     If we don't set the same ``host_group_name`` on our Host and our Containers, an IPC-Communication across host borders is not available with different host names.
@@ -207,28 +207,28 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
       sudo docker network create --driver=bridge --subnet=10.0.10.0/24 my_network
 
-#. Edit your :file:`ecal.ini` and run your Container within the newly created docker network
+#. Edit your :file:`ecal.yaml` and run your Container within the newly created docker network
 
    * You will use our previously discussed :ref:`ecal-runtime-image<ecal_in_docker>` for the next step.
 
-   * First, open :file:`/etc/ecal/ecal.ini` from your preferred editor.
+   * First, open :file:`/etc/ecal/ecal.yaml` from your preferred editor.
 
    * Search for the line ``network_enabled`` and set it to ``true``.
 
    * Search for the line ``host_group_name`` and write your preferred name.
 
-   * Save and close the :file:`ecal.ini` file.
+   * Save and close the :file:`ecal.yaml` file.
 
-   * Now your :file:`ecal.ini` file is prepared.
-     We want to use it not only for our Host-System but also for our Container, so we don't need to edit the :file:`ecal.ini` in our Container again.
+   * Now your :file:`ecal.yaml` file is prepared.
+     We want to use it not only for our Host-System but also for our Container, so we don't need to edit the :file:`ecal.yaml` in our Container again.
      To achieve that, run following command to start your container:
 
    .. code-block:: bash
 
-      sudo docker run --rm -it --ipc=host --pid=host --network=my_network --name=container1 -h=container1 --ip=10.0.10.10 -v /etc/ecal/ecal.ini:/etc/ecal/ecal.ini ecal-runtime
+      sudo docker run --rm -it --ipc=host --pid=host --network=my_network --name=container1 -h=container1 --ip=10.0.10.10 -v /etc/ecal/ecal.yaml:/etc/ecal/ecal.yaml ecal-runtime
 
    - You should now be inside the root shell of your Container.
-     Check if your :file:`ecal.ini` file is correct.
+     Check if your :file:`ecal.yaml` file is correct.
 
    - Now your Container is prepared and configured correctly, so we are ready to start an eCAL example.
 

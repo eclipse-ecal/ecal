@@ -22,8 +22,8 @@ find_package(asio             REQUIRED)
 find_package(Threads          REQUIRED)
 find_package(ecaludp          REQUIRED)
 
-if (ECAL_CORE_CONFIG_INIFILE)
-  find_package(simpleini      REQUIRED)
+if (ECAL_CORE_CONFIGURATION)
+  find_package(yaml-cpp       REQUIRED)
 endif()
 
 if (ECAL_CORE_COMMAND_LINE)
@@ -63,16 +63,15 @@ endif()
 # config
 ######################################
 set(ecal_config_src
+    src/config/configuration_reader.cpp
+    src/config/configuration_to_yaml.cpp
     src/config/ecal_cmd_parser.cpp
     src/config/ecal_config.cpp
     src/config/ecal_config_initializer.cpp
-    src/config/ecal_config_reader.cpp
-    src/config/ecal_config_reader.h
-    src/config/ecal_config_reader_hlp.h
+    src/types/ecal_custom_data_types.cpp
     src/pubsub/ecal_publisher_config.cpp
     src/pubsub/ecal_subscriber_config.cpp
     src/types/ecal_custom_data_types.cpp
-    src/types/ecal_registration_options.cpp
 )
 
 ######################################
@@ -607,7 +606,7 @@ target_compile_definitions(${PROJECT_NAME}
 )
 
 set(ECAL_CORE_FEATURES
-  ECAL_CORE_CONFIG_INIFILE
+  ECAL_CORE_CONFIGURATION
   ECAL_CORE_COMMAND_LINE
   ECAL_CORE_REGISTRATION
   ECAL_CORE_MONITORING
@@ -631,10 +630,10 @@ foreach(CORE_FEATURE ${ECAL_CORE_FEATURES})
   endif()
 endforeach()
 
-if(ECAL_CORE_CONFIG_INIFILE)
+if(ECAL_CORE_CONFIGURATION)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
-      simpleini::simpleini
+      yaml-cpp::yaml-cpp
   )
 endif()
 

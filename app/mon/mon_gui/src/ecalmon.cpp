@@ -102,21 +102,21 @@ Ecalmon::Ecalmon(QWidget *parent)
 
     if (multicast_ttl <= 0)
     {
-      network_mode_widget_->setToolTip("ERROR: Network enabled but TTL is " + QString::number(multicast_ttl) + ". Change via ecal.ini");
+      network_mode_widget_->setToolTip("ERROR: Network enabled but TTL is " + QString::number(multicast_ttl) + ". Change via ecal.yaml");
       network_mode_widget_->setStyleSheet("background-color: rgb(255, 128, 128); color: black");
       network_mode_warning_icon_->setVisible(true);
     }
     else
     {
       network_mode_widget_->setStyleSheet("background-color: rgb(80, 255, 120); color: black");
-      network_mode_widget_->setToolTip("Change via ecal.ini");
+      network_mode_widget_->setToolTip("Change via ecal.yaml");
     }
   }
   else
   {
     network_mode_label_->setText("Network mode: Local");
     network_mode_widget_->setStyleSheet("background-color: rgb(44, 148, 255); color: black");
-    network_mode_widget_->setToolTip("Change via ecal.ini");
+    network_mode_widget_->setToolTip("Change via ecal.yaml");
   }
 
   error_label_                = new QLabel(this);

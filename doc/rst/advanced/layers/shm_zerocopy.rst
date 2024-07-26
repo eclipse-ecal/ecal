@@ -20,7 +20,7 @@ Enabling eCAL Zero Copy
 
 - **Use zero-copy as system-default:**
 
-  Zero Copy can be enabled as system default from the :file:`ecal.ini` file like follows:
+  Zero Copy can be enabled as system default from the :file:`ecal.yaml` file like follows:
 
   .. code-block:: ini
 

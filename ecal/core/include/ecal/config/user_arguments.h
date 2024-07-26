@@ -36,9 +36,7 @@ namespace eCAL
 
     struct Configuration
     {
-      std::vector<std::string> config_keys{};       //!< will be deprecated soon
-      ConfigKey2DMap           config_keys_map;     //!< The config keys given via command line and the --config-keys parameter (Default: empty)
-      std::string              specified_config{};  //!< The used eCAL ini file (Default: "")
+      std::string              user_yaml{};         //!< The used eCAL yaml file (Default: "")
       bool                     dump_config{};       //!< If specified, output configuration via standart output (Default: false)
     };
   }

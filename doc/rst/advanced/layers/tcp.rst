@@ -63,7 +63,7 @@ You can activate TCP in the following ways:
 
 #. **Use TCP as system default (only recommended for testing):**
 
-   Modify the :file:`ecal.ini` and change the following:
+   Modify the :file:`ecal.yaml` and change the following:
 
    .. code-block:: ini
 

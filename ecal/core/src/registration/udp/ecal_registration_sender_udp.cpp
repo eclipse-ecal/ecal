@@ -43,7 +43,7 @@ namespace
     attr.ttl = UDP::GetMulticastTtl();
     attr.broadcast = UDP::IsBroadcast();
     attr.loopback = true;
-    attr.sndbuf = Config::GetUdpMulticastSndBufSizeBytes();
+    attr.sndbuf = UDP::GetSendBufferSize();
     return attr;
   }
 

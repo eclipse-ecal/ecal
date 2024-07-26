@@ -23,8 +23,6 @@
 
 #include "ecal_globals.h"
 
-#include "config/ecal_config_reader.h"
-
 #include <iostream>
 #include <memory>
 #include <stdexcept>

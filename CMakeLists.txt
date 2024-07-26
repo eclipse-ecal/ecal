@@ -103,7 +103,7 @@ option(ECAL_USE_CLOCKLOCK_MUTEX                "Use native mutex with monotonic 
 set(ECAL_CORE_HAS_PROTOBUF                                                                                         ON)
 set(ECAL_CORE_BUILD_SAMPLES                                                                          ${BUILD_SAMPLES})
 set(ECAL_CORE_BUILD_TESTS                                                                         ${BUILD_ECAL_TESTS})
-set(ECAL_CORE_CONFIG_INIFILE                                                                                       ON)
+set(ECAL_CORE_CONFIGURATION                                                                                        ON)
 set(ECAL_CORE_COMMAND_LINE                                                                                         ON)
 set(ECAL_CORE_REGISTRATION                                                                                         ON)
 set(ECAL_CORE_MONITORING                                                                                           ON)
