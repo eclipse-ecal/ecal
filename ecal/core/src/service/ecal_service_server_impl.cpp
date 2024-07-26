@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -304,33 +304,32 @@ namespace eCAL
   }
 
   // called by the eCAL::CServiceGate to register a client
-  void CServiceServerImpl::RegisterClient(const std::string& /*key_*/, const SClientAttr& /*client_*/) // TODO: This function is empty, why does it exist????
+  void CServiceServerImpl::RegisterClient(const std::string& /*key_*/, const SClientAttr& /*client_*/)
   {
+    // this function is just a placeholder to implement logic if a new client connects
+    // currently there is no need to do so
   }
 
   // called by eCAL:CServiceGate every second to update registration layer
-  void CServiceServerImpl::RefreshRegistration()
+  Registration::Sample CServiceServerImpl::GetRegistration()
   {
-    if (!m_created) return;
-    Register(false);
+    return GetRegistrationSample();
   }
 
-  void CServiceServerImpl::Register(const bool force_)
+  Registration::Sample CServiceServerImpl::GetRegistrationSample()
   {
-    if (!m_created)             return;
-    if (m_service_name.empty()) return;
+    // create registration sample
+    Registration::Sample ecal_reg_sample;
+    ecal_reg_sample.cmd_type = bct_reg_service;
 
     // might be zero in contruction phase
     unsigned short const server_tcp_port_v0(m_tcp_server_v0 ? m_tcp_server_v0->get_port() : 0);
-    if ((Config::IsServiceProtocolV0Enabled()) && (server_tcp_port_v0 == 0)) return;
+    if ((Config::IsServiceProtocolV0Enabled()) && (server_tcp_port_v0 == 0)) return ecal_reg_sample;
 
     unsigned short const server_tcp_port_v1(m_tcp_server_v1 ? m_tcp_server_v1->get_port() : 0);
-    if ((Config::IsServiceProtocolV1Enabled()) && (server_tcp_port_v1 == 0)) return;
+    if ((Config::IsServiceProtocolV1Enabled()) && (server_tcp_port_v1 == 0)) return ecal_reg_sample;
 
-    // create service registration sample
-    Registration::Sample sample;
-    sample.cmd_type     = bct_reg_service;
-    auto& service       = sample.service;
+    auto& service       = ecal_reg_sample.service;
     service.version     = m_server_version;
     service.hname       = Process::GetHostName();
     service.pname       = Process::GetProcessName();
@@ -357,28 +356,49 @@ namespace eCAL
       }
     }
 
-    // register entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, force_);
+    return ecal_reg_sample;
+  }
+
+  Registration::Sample CServiceServerImpl::GetUnregistrationSample()
+  {
+    // create registration sample
+    Registration::Sample ecal_reg_sample;
+    ecal_reg_sample.cmd_type = bct_unreg_service;
+
+    auto& service = ecal_reg_sample.service;
+    service.version = m_server_version;
+    service.hname = Process::GetHostName();
+    service.pname = Process::GetProcessName();
+    service.uname = Process::GetUnitName();
+    service.pid   = Process::GetProcessID();
+    service.sname = m_service_name;
+    service.sid   = m_service_id;
+
+    return ecal_reg_sample;
+  }
+
+  void CServiceServerImpl::Register(bool force_)
+  {
+#if ECAL_CORE_REGISTRATION
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(GetRegistrationSample(), force_);
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug4, m_service_name + "::CServiceServerImpl::Register");
+#endif
+#endif // ECAL_CORE_REGISTRATION
   }
 
   void CServiceServerImpl::Unregister()
   {
-    if (m_service_name.empty()) return;
+#if ECAL_CORE_REGISTRATION
+    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(GetUnregistrationSample(), false);
 
-    // create service registration sample
-    Registration::Sample sample;
-    sample.cmd_type     = bct_unreg_service;
-    auto& service       = sample.service;
-    service.version     = m_server_version;
-    service.hname       = Process::GetHostName();
-    service.pname       = Process::GetProcessName();
-    service.uname       = Process::GetUnitName();
-    service.pid         = Process::GetProcessID();
-    service.sname       = m_service_name;
-    service.sid         = m_service_id;
-
-    // unregister entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, false);
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug4, m_service_name + "::CServiceServerImpl::Unregister");
+#endif
+#endif // ECAL_CORE_REGISTRATION
   }
 
   int CServiceServerImpl::RequestCallback(const std::string& request_pb_, std::string& response_pb_)

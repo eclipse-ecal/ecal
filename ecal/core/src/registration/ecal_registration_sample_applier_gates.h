@@ -18,41 +18,23 @@
 */
 
 /**
- * @brief  eCAL server gateway class
+ * @brief  eCAL Sample Applier Gates
+ *
+ * This class applies incoming samples to the registration gates
 **/
 
 #pragma once
 
-#include "ecal_def.h"
 #include "serialization/ecal_struct_sample_registration.h"
-
-#include <atomic>
-#include <shared_mutex>
-#include <set>
 
 namespace eCAL
 {
-  class CServiceServerImpl;
-
-  class CServiceGate
+  namespace Registration
   {
-  public:
-    CServiceGate();
-    ~CServiceGate();
-
-    void Start();
-    void Stop();
-
-    bool Register  (CServiceServerImpl* service_);
-    bool Unregister(CServiceServerImpl* service_);
-
-    void GetRegistrations(Registration::SampleList& reg_sample_list_);
-
-  protected:
-    static std::atomic<bool> m_created;
-
-    using ServiceNameServiceImplSetT = std::set<CServiceServerImpl *>;
-    std::shared_timed_mutex     m_service_set_sync;
-    ServiceNameServiceImplSetT  m_service_set;
-  };
+    class CSampleApplierGates
+    {
+    public:
+      static void ApplySample(const eCAL::Registration::Sample& sample_);
+    };
+  }
 }
