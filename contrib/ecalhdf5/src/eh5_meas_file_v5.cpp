@@ -41,13 +41,13 @@ namespace eCAL
     HDF5MeasFileV5::~HDF5MeasFileV5()
     = default;
 
-    bool HDF5MeasFileV5::GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const
+    bool HDF5MeasFileV5::GetEntriesInfo(const SChannel& channel, EntryInfoSet& entries) const
     {
       entries.clear();
 
       if (!this->IsOk()) return false;
 
-      auto dataset_id = H5Dopen(file_id_, channel_name.c_str(), H5P_DEFAULT);
+      auto dataset_id = H5Dopen(file_id_, channel.name.c_str(), H5P_DEFAULT);
 
       if (dataset_id < 0) return false;
 
