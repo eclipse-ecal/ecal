@@ -101,6 +101,10 @@ namespace eCAL
       int32_t pid(0);
       switch (sample_.cmd_type)
       {
+      case bct_reg_process:
+      case bct_unreg_process:
+        pid = sample_.process.pid;
+        break;
       case bct_reg_publisher:
       case bct_unreg_publisher:
       case bct_reg_subscriber:
