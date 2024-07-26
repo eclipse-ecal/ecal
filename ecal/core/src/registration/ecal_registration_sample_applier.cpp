@@ -59,7 +59,7 @@ namespace eCAL
       return true;
     }
 
-    bool CSampleApplier::IsHostGroupMember(const Registration::Sample& sample_)
+    bool CSampleApplier::IsHostGroupMember(const Registration::Sample& sample_) const
     {
       std::string host_group_name;
       std::string host_name;
@@ -96,7 +96,7 @@ namespace eCAL
       return true;
     }
 
-    bool CSampleApplier::IsSameProcess(const Registration::Sample& sample_)
+    bool CSampleApplier::IsSameProcess(const Registration::Sample& sample_) const
     {
       int32_t pid(0);
       switch (sample_.cmd_type)

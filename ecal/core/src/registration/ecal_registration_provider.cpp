@@ -158,7 +158,7 @@ namespace eCAL
   void CRegistrationProvider::TriggerRegisterSendThread()
   {
     {
-      std::lock_guard<std::mutex> lock(m_reg_sample_snd_thread_cv_mtx);
+      const std::lock_guard<std::mutex> lock(m_reg_sample_snd_thread_cv_mtx);
       m_reg_sample_snd_thread_trigger = true;
     }
     m_reg_sample_snd_thread_cv.notify_one();
