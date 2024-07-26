@@ -51,7 +51,6 @@ namespace eCAL
     bool SendSampleList(const Registration::SampleList& sample_list) override;
 
   private:
-    std::vector<char>                   m_sample_list_buffer;
     CMemoryFileBroadcast                m_memfile_broadcast;
     CMemoryFileBroadcastWriter          m_memfile_broadcast_writer;
   };

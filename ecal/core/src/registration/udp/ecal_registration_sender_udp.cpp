@@ -61,10 +61,11 @@ namespace eCAL
   bool CRegistrationSenderUDP::SendSample(const Registration::Sample& sample_)
   {
     // serialize single sample
-    if (SerializeToBuffer(sample_, m_sample_buffer))
+    std::vector<char> sample_buffer;
+    if (SerializeToBuffer(sample_, sample_buffer))
     {
       // send single sample over udp
-      return m_reg_sample_snd.Send("reg_sample", m_sample_buffer) != 0;
+      return m_reg_sample_snd.Send("reg_sample", sample_buffer) != 0;
     }
     return false;
   }
