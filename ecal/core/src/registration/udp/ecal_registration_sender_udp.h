@@ -50,6 +50,5 @@ namespace eCAL
     bool SendSample(const Registration::Sample& sample_);
 
     UDP::CSampleSender m_reg_sample_snd;
-    std::vector<char>  m_sample_buffer;
   };
 }
