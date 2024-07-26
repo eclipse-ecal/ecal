@@ -31,6 +31,7 @@
 #include "io/udp/ecal_udp_sample_sender.h"
 
 #include <atomic>
+#include <condition_variable>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -50,26 +51,28 @@ namespace eCAL
     void Start();
     void Stop();
 
-    bool ApplySample(const Registration::Sample& sample_, bool force_);
+    bool RegisterSample(const Registration::Sample& sample_);
+    bool UnregisterSample(const Registration::Sample& sample_);
 
     using ApplySampleCallbackT = std::function<void(const Registration::Sample&)>;
     void SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_);
     void RemCustomApplySampleCallback(const std::string& customer_);
 
   protected:
-    void AddSample2SampleList(const Registration::Sample& sample_);
-    void SendSample(const Registration::Sample& sample_);
+    void ForwardSample(const Registration::Sample& sample_);
+    void ProcessSingleSample(const Registration::Sample& sample_);
 
+    void TriggerRegisterSendThread();
     void RegisterSendThread();
 
     static std::atomic<bool>                    m_created;
 
     std::unique_ptr<CRegistrationSender>        m_reg_sender;
-
     std::shared_ptr<CCallbackThread>            m_reg_sample_snd_thread;
 
-    std::mutex                                  m_sample_list_mtx;
-    Registration::SampleList                    m_sample_list;
+    std::condition_variable                     m_reg_sample_snd_thread_cv;
+    std::mutex                                  m_reg_sample_snd_thread_cv_mtx;
+    bool                                        m_reg_sample_snd_thread_trigger;
 
     bool                                        m_use_registration_udp;
     bool                                        m_use_registration_shm;

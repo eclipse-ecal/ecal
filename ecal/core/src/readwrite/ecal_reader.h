@@ -125,7 +125,7 @@ namespace eCAL
     std::string Dump(const std::string& indent_ = "");
 
   protected:
-    void Register(bool force_);
+    void Register();
     void Unregister();
 
     void CheckConnections();

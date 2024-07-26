@@ -54,6 +54,7 @@ namespace eCAL
       void RemCustomApplySampleCallback(const std::string& customer_);
 
     private:
+      bool IsSameProcess(const Registration::Sample& sample_);
       bool IsHostGroupMember(const eCAL::Registration::Sample& sample_);
       bool AcceptRegistrationSample(const Registration::Sample& sample_);
 

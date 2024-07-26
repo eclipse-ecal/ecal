@@ -89,7 +89,7 @@ namespace eCAL
     m_created = true;
 
     // register this client
-    Register(true);
+    Register();
 
     return(true);
   }
@@ -687,13 +687,13 @@ namespace eCAL
     return ecal_reg_sample;
   }
 
-  void CServiceClientImpl::Register(const bool force_)
+  void CServiceClientImpl::Register()
   {
     if (!m_created)             return;
     if (m_service_name.empty()) return;
 
     // register entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(GetRegistrationSample(), force_);
+    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(GetRegistrationSample());
   }
 
   void CServiceClientImpl::Unregister()
@@ -701,7 +701,7 @@ namespace eCAL
     if (m_service_name.empty()) return;
 
     // unregister entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(GetUnregistrationSample(), false);
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(GetUnregistrationSample());
   }
 
   void CServiceClientImpl::CheckForNewServices()

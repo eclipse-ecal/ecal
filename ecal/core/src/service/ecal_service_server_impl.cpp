@@ -128,9 +128,6 @@ namespace eCAL
     // mark as created
     m_created = true;
 
-    // register this service
-    Register(false);
-
     return(true);
   }
 
@@ -200,9 +197,6 @@ namespace eCAL
       }
     }
 
-    // register this service
-    Register(false);
-
     return true;
   }
 
@@ -237,9 +231,6 @@ namespace eCAL
         m_method_map[method_] = method;
       }
     }
-
-    // register this service
-    Register(false);
 
     return true;
   }
@@ -377,10 +368,10 @@ namespace eCAL
     return ecal_reg_sample;
   }
 
-  void CServiceServerImpl::Register(bool force_)
+  void CServiceServerImpl::Register()
   {
 #if ECAL_CORE_REGISTRATION
-    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(GetRegistrationSample(), force_);
+    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(GetRegistrationSample());
 
 #ifndef NDEBUG
     // log it
@@ -392,7 +383,7 @@ namespace eCAL
   void CServiceServerImpl::Unregister()
   {
 #if ECAL_CORE_REGISTRATION
-    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(GetUnregistrationSample(), false);
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(GetUnregistrationSample());
 
 #ifndef NDEBUG
     // log it

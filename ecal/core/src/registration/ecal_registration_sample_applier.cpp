@@ -96,6 +96,36 @@ namespace eCAL
       return true;
     }
 
+    bool CSampleApplier::IsSameProcess(const Registration::Sample& sample_)
+    {
+      int32_t pid(0);
+      switch (sample_.cmd_type)
+      {
+      case bct_reg_process:
+      case bct_unreg_process:
+        pid = sample_.process.pid;
+        break;
+      case bct_reg_publisher:
+      case bct_unreg_publisher:
+      case bct_reg_subscriber:
+      case bct_unreg_subscriber:
+        pid = sample_.topic.pid;
+        break;
+      case bct_reg_service:
+      case bct_unreg_service:
+        pid = sample_.service.pid;
+        break;
+      case bct_reg_client:
+      case bct_unreg_client:
+        pid = sample_.client.pid;
+        break;
+      default:
+        break;
+      }
+
+      return pid == m_pid;
+    }
+
     bool CSampleApplier::AcceptRegistrationSample(const Registration::Sample& sample_)
     {
       // check if the sample is from the same host group
@@ -103,7 +133,7 @@ namespace eCAL
       {
         // register if the sample is from another process
         // or if loopback mode is enabled
-        return m_loopback || (sample_.topic.pid != m_pid);
+        return !IsSameProcess(sample_) || m_loopback;
       }
       else
       {
