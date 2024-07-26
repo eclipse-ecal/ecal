@@ -100,7 +100,7 @@ namespace eCAL
     /**
      * @brief Retrieve eCAL configuration path.
      *          This is path is for the global eCAL configuration files
-     *          like ecal.ini.
+     *          like ecal.yaml.
      *          This path is read only for standard users.
      *
      * @return  eCAL configuration path.

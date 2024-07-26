@@ -38,7 +38,7 @@ namespace eCAL
   class CDataWriterSHM : public CDataWriterBase
   {
   public:
-    CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const Publisher::SHM::Configuration& shm_config_);
+    CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const Publisher::Layer::SHM::Configuration& shm_config_);
 
     SWriterInfo GetInfo() override;
 
@@ -53,7 +53,7 @@ namespace eCAL
   protected:
     bool SetBufferCount(size_t buffer_count_);
 
-    Publisher::SHM::Configuration                 m_config;
+    Publisher::Layer::SHM::Configuration          m_config;
 
     size_t                                        m_write_idx = 0;
     std::vector<std::shared_ptr<CSyncMemoryFile>> m_memory_file_vec;

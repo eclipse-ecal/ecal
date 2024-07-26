@@ -1,6 +1,8 @@
+#pragma once
+
 #include <string>
 
-const std::string ini_file_as_string_yaml = R"(#  _____     _ _                                ____    _    _                             
+const std::string default_config = R"(#  _____     _ _                                ____    _    _                             
 # | ____|___| (_)_ __  ___  ___            ___ / ___|  / \  | |                            
 # |  _| / __| | | '_ \/ __|/ _ \  _____   / _ \ |     / _ \ | |                            
 # | |__| (__| | | |_) \__ \  __/ |_____| |  __/ |___ / ___ \| |___                         
@@ -62,7 +64,7 @@ transport_layer:
     # Valid modes: local, network (Default: local)
     mode: "local"
     # Multicast port number
-    port: 14010
+    port: 14002
     # v1: Mask maximum number of dynamic multicast group (range 0.0.0.1-0.0.0.255)
     # v2: Masks are now considered like routes masking (range 255.0.0.0-255.255.255.255)
     mask: "255.255.255.240"
@@ -75,7 +77,7 @@ transport_layer:
     # network devices are up and running.
     join_all_interfaces: false
     # Windows specific setting to enable receiving UDP traffic with the Npcap based receiver
-    npcap_enabled: true 
+    npcap_enabled: false 
     
     # In local mode multicast group and ttl are set by default and are not adjustable
     local:
@@ -86,7 +88,7 @@ transport_layer:
 
     network:
       # Multicast group base. All registration and logging is sent on this address 
-      group: "239.5.0.1" 
+      group: "239.0.0.1" 
       # TTL (hop limit) is used to determine the amount of routers being traversed towards the destination
       ttl: 3   
     
@@ -96,7 +98,7 @@ transport_layer:
     # Writer amount of threads that shall execute workload
     number_executor_writer: 4
     # Reconnection attemps the session will try to reconnect in case of an issue
-    max_reconnections: 7
+    max_reconnections: 5
 
   shm:     
     # Default memory file size for new publisher
@@ -108,15 +110,15 @@ transport_layer:
 # Publisher specific base settings
 publisher:
   layer:
-    # Base configuration for shared memory publisher
+  # Base configuration for shared memory publisher
     shm:
       # Enable layer
-      enable: false
+      enable: true
       # Enable zero copy shared memory transport mode
       zero_copy_mode: false
       # Force connected subscribers to send acknowledge event after processing the message.
       # The publisher send call is blocked on this event with this timeout (0 == no handshake).
-      acknowledge_timeout_ms: 346
+      acknowledge_timeout_ms: 0
       # Maximum number of used buffers (needs to be greater than 1, default = 1)
       memfile_buffer_count: 1
     
@@ -145,7 +147,7 @@ subscriber:
   # Base configuration for shared memory subscriber
   shm:
     # Enable layer
-    enable: false
+    enable: true
 
   # Base configuration for UDP subscriber
   udp:
@@ -195,7 +197,7 @@ application:
     #      /usr/bin/gnome-terminal -x
     #      /usr/bin/xterm -e
     # If empty, the command will be ignored.
-    emulator: "myTestTerminal"
+    emulator: ""
 
 
 # Logging configuration

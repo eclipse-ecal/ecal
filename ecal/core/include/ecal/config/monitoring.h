@@ -30,30 +30,11 @@ namespace eCAL
 {
   namespace Monitoring
   {
-    namespace UDP
-    {
-      struct Configuration
-      {
-      };
-    }
-
-    namespace SHM
-    {
-      struct Configuration
-      {
-        std::string shm_monitoring_domain{};                                  //!< Domain name for shared memory based monitoring/registration (Default: ecal_mon)
-        size_t      shm_monitoring_queue_size{};                              //!< Queue size of monitoring/registration events (Default: 1024)
-      };
-    }
-
     struct Configuration
     {
-      eCAL::Types::ConstrainedInteger<1000, 1000>  monitoring_timeout{};      //!< Timeout for topic monitoring in ms (Default: 5000)
-      UDP::Configuration                           udp_options{};
-      SHM::Configuration                           shm_options{};
-
-      std::string         filter_excl{};                                      //!< Topics blacklist as regular expression (will not be monitored) (Default: "__.*")
-      std::string         filter_incl{};                                      //!< Topics whitelist as regular expression (will be monitored only) (Default: "")
+      eCAL::Types::ConstrainedInteger<1000, 1000> timeout{};                 //!< Timeout for topic monitoring in ms (Default: 5000)
+      std::string                                 filter_excl{};             //!< Topics blacklist as regular expression (will not be monitored) (Default: "__.*")
+      std::string                                 filter_incl{};             //!< Topics whitelist as regular expression (will be monitored only) (Default: "")
     };
   }
 }

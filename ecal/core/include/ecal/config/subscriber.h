@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/config/transport_layer.h>
 
 #include <cstddef>
 
@@ -68,6 +69,8 @@ namespace eCAL
       SHM::Configuration shm;
       UDP::Configuration udp;
       TCP::Configuration tcp;
+
+      bool drop_out_of_order_messages{}; 
     };
   }
 }

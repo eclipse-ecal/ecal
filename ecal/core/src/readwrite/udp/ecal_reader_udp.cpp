@@ -63,7 +63,7 @@ namespace eCAL
       attr.port      = UDP::GetPayloadPort();
       attr.broadcast = UDP::IsBroadcast();
       attr.loopback  = true;
-      attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
+      attr.rcvbuf    = UDP::GetReceiveBufferSize();
 
       // start payload sample receiver
       m_payload_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CUDPReaderLayer::HasSample, this, std::placeholders::_1), std::bind(&CUDPReaderLayer::ApplySample, this, std::placeholders::_1, std::placeholders::_2));

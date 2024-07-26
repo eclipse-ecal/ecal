@@ -49,10 +49,16 @@ namespace eCAL
       ECAL_API IpAddressV4();
       ECAL_API IpAddressV4(const std::string& ip_address_); 
 
-      std::string Get() const;
+      ECAL_API std::string Get() const;
 
-      ECAL_API IpAddressV4& operator=(const std::string& ip_string);
+      ECAL_API IpAddressV4& operator=(const std::string& ip_string_);
+      ECAL_API IpAddressV4& operator=(const char* ip_string_);      
       ECAL_API operator std::string();
+      ECAL_API bool operator==(const eCAL::Types::IpAddressV4& rhs) const;  
+      ECAL_API friend bool operator==(eCAL::Types::IpAddressV4 lhs, const char* ip_string_);
+      ECAL_API friend bool operator==(const char* ip_string_, eCAL::Types::IpAddressV4 rhs);
+      ECAL_API friend bool operator==(eCAL::Types::IpAddressV4 lhs, const std::string& ip_string_);
+      ECAL_API friend bool operator==(const std::string& ip_string_, eCAL::Types::IpAddressV4 rhs);
 
     private:            
       ECAL_API void validateIpString(const std::string& ip_address_); 
@@ -89,7 +95,10 @@ namespace eCAL
       };
 
       operator int() const { return m_size; };
-      bool operator==(const ConstrainedInteger& other) const { return this->m_size == other; };
+      bool operator==(const ConstrainedInteger<MIN, STEP, MAX>& other) const { return this->m_size == other; };
+      bool operator==(const unsigned int value) const                        { return this->m_size == static_cast<int>(value); };
+      bool operator==(const int value) const                                 { return this->m_size == value; };
+      
       
     private:
       int m_size{};

@@ -133,7 +133,7 @@ Before continuing to the next section and replaying the measurement, let's quick
 * |fa-file-alt| :file:`doc/description.txt`: Your description and your comment is saved in this file
 * |fa-folder-open| :file:`florian-windows`: Each recorder creates a directory with its hostname for its files. This is important in a distributed measurement scenario, where multiple recorders exist. You will see a directory with your own hostname here.
 
-  * |fa-file-alt| :file:`ecal.ini`: The configuration file at the time when you started the recorder. Useful for finding configuration issues later.
+  * |fa-file-alt| :file:`ecal.yaml`: The configuration file at the time when you started the recorder. Useful for finding configuration issues later.
   * |fa-file| :file:`florian-windows.hdf5`: The actual recorded data. eCAL records data in the standardized `HDF5 format <https://www.hdfgroup.org/solutions/hdf5/>`_
   * |fa-file-alt| :file:`system-information.txt`: The same system information that we have seen in the eCAL Monitor. Useful for finding issues later.
 

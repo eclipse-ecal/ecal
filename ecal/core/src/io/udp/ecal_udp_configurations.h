@@ -147,5 +147,20 @@ namespace eCAL
      * @return The TTL value for UDP multicast communication based on the network configuration.
      */    
     int GetMulticastTtl();
+
+    /**
+     * @brief GetReceiveBufferSize retrieves the receive buffer size for UDP multicast communication.
+     * 
+     * @return The receive buffer size in bytes.
+     */
+    int GetReceiveBufferSize();
+
+    /**
+     * @brief GetSendBufferSize retrieves the send buffer size for UDP multicast communication.
+     * 
+     * @return The send buffer size in bytes.
+     */
+    int GetSendBufferSize();
+
   }
 }

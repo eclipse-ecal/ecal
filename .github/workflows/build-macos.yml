@@ -99,7 +99,7 @@ jobs:
         -DPython_FIND_STRATEGY=LOCATION \
         -DPython_FIND_REGISTRY=NEVER
         sudo mkdir /etc/ecal
-        sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal
+        sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.yaml" /etc/ecal
       shell: bash
 
     - name: Build Release

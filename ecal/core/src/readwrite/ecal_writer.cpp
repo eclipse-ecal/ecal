@@ -26,8 +26,6 @@
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_process.h>
 
-#include "config/ecal_config_reader_hlp.h"
-
 #if ECAL_CORE_REGISTRATION
 #include "registration/ecal_registration_provider.h"
 #endif
@@ -35,6 +33,7 @@
 #include "ecal_writer.h"
 #include "ecal_writer_base.h"
 #include "ecal_writer_buffer_payload.h"
+#include "ecal_global_accessors.h"
 #include "ecal_transport_layer.h"
 
 #include <chrono>
@@ -176,7 +175,7 @@ namespace eCAL
     // are we allowed to perform zero copy writing?
     bool allow_zero_copy(false);
 #if ECAL_CORE_TRANSPORT_SHM
-    allow_zero_copy = m_config.shm.zero_copy_mode; // zero copy mode activated by user
+    allow_zero_copy = m_config.layer.shm.zero_copy_mode; // zero copy mode activated by user
 #endif
 #if ECAL_CORE_TRANSPORT_UDP
     // udp is active -> no zero copy
@@ -221,8 +220,8 @@ namespace eCAL
         wattr.clock                  = m_clock;
         wattr.hash                   = snd_hash;
         wattr.time                   = time_;
-        wattr.zero_copy              = m_config.shm.zero_copy_mode;
-        wattr.acknowledge_timeout_ms = m_config.shm.acknowledge_timeout_ms;
+        wattr.zero_copy              = m_config.layer.shm.zero_copy_mode;
+        wattr.acknowledge_timeout_ms = m_config.layer.shm.acknowledge_timeout_ms;
 
         // prepare send
         if (m_writer_shm->PrepareWrite(wattr))
@@ -286,7 +285,7 @@ namespace eCAL
         wattr.clock     = m_clock;
         wattr.hash      = snd_hash;
         wattr.time      = time_;
-        wattr.loopback  = m_config.udp.loopback;
+        wattr.loopback  = eCAL::GetConfiguration().registration.loopback;
 
         // prepare send
         if (m_writer_udp->PrepareWrite(wattr))
@@ -457,19 +456,19 @@ namespace eCAL
     std::vector<eTLayerType> pub_layers;
     std::vector<eTLayerType> sub_layers;
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_config.udp.enable)                pub_layers.push_back(tl_ecal_udp);
+    if (m_config.layer.udp.enable)                pub_layers.push_back(tl_ecal_udp);
     if (sub_layer_states_.udp.read_enabled) sub_layers.push_back(tl_ecal_udp);
 
     m_layers.udp.read_enabled = sub_layer_states_.udp.read_enabled; // just for debugging/logging
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-    if (m_config.shm.enable)                pub_layers.push_back(tl_ecal_shm);
+    if (m_config.layer.shm.enable)          pub_layers.push_back(tl_ecal_shm);
     if (sub_layer_states_.shm.read_enabled) sub_layers.push_back(tl_ecal_shm);
 
     m_layers.shm.read_enabled = sub_layer_states_.shm.read_enabled; // just for debugging/logging
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-    if (m_config.tcp.enable)                pub_layers.push_back(tl_ecal_tcp);
+    if (m_config.layer.tcp.enable)          pub_layers.push_back(tl_ecal_tcp);
     if (sub_layer_states_.tcp.read_enabled) sub_layers.push_back(tl_ecal_tcp);
 
     m_layers.tcp.read_enabled = sub_layer_states_.tcp.read_enabled; // just for debugging/logging
@@ -815,7 +814,7 @@ namespace eCAL
     Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ActivateUdpLayer::ACTIVATED");
 
     // create writer
-    m_writer_udp = std::make_unique<CDataWriterUdpMC>(m_host_name, m_topic_name, m_topic_id, m_config.udp);
+    m_writer_udp = std::make_unique<CDataWriterUdpMC>(m_host_name, m_topic_name, m_topic_id, m_config.layer.udp);
 
 #ifndef NDEBUG
     Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ActivateUdpLayer::WRITER_CREATED");
@@ -838,7 +837,7 @@ namespace eCAL
     Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ActivateShmLayer::ACTIVATED");
 
     // create writer
-    m_writer_shm = std::make_unique<CDataWriterSHM>(m_host_name, m_topic_name, m_topic_id, m_config.shm);
+    m_writer_shm = std::make_unique<CDataWriterSHM>(m_host_name, m_topic_name, m_topic_id, m_config.layer.shm);
 
 #ifndef NDEBUG
     Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ActivateShmLayer::WRITER_CREATED");
@@ -861,7 +860,7 @@ namespace eCAL
     Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ActivateTcpLayer::ACTIVATED");
 
     // create writer
-    m_writer_tcp = std::make_unique<CDataWriterTCP>(m_host_name, m_topic_name, m_topic_id, m_config.tcp);
+    m_writer_tcp = std::make_unique<CDataWriterTCP>(m_host_name, m_topic_name, m_topic_id, m_config.layer.tcp);
 
 #ifndef NDEBUG
     Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ActivateTcpLayer::WRITER_CREATED");

@@ -54,7 +54,7 @@ Configuration
 The SHM Layer is set to ``auto`` (= 2) by default.
 This means, that it is used automatically for all messages that need to be transmitted inside a single host.
 
-The system-configuration-parameters in the :file:`ecal.ini` are:
+The system-configuration-parameters in the :file:`ecal.yaml` are:
 
 .. code-block:: ini
 
@@ -76,7 +76,7 @@ If subscribers are too slow to process incoming messages then the overall softwa
 There may still be cases where it could make sense to synchronize the transfer of the payload from a publisher to a subscriber by using an additional handshake event.
 This event is signaled by a subscriber back to the sending publisher to confirm the complete payload transmission.
 
-The handshake mechanism can be activated in the :file:`ecal.ini`:
+The handshake mechanism can be activated in the :file:`ecal.yaml`:
 
 .. code-block:: ini
 
@@ -147,7 +147,7 @@ You can activate the feature in the following ways.
 
 - **Use multi-buffering as system-default**:
 
-  Edit your :file:`ecal.ini` and set a buffer count greater than 1:
+  Edit your :file:`ecal.yaml` and set a buffer count greater than 1:
 
   .. code-block:: ini
      

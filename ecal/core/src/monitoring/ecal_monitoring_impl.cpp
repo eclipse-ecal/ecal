@@ -25,8 +25,8 @@
 #include <ecal/ecal_config.h>
 
 #include "io/udp/ecal_udp_configurations.h"
-#include "config/ecal_config_reader_hlp.h"
 #include "ecal_monitoring_impl.h"
+#include "ecal_global_accessors.h"
 
 #include <regex>
 

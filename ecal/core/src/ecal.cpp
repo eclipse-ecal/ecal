@@ -101,10 +101,6 @@ namespace eCAL
   int Initialize(int argc_ , char **argv_, const char *unit_name_, unsigned int components_)
   {
     eCAL::Configuration config(argc_, argv_);
-    
-    // Default behaviour: If not specified, try to use the default ini file
-    if (config.GetIniFilePath().empty())
-      config.InitConfigWithDefaultIni();
 
     return Initialize(config, unit_name_, components_);
   }
@@ -121,10 +117,6 @@ namespace eCAL
   int Initialize(std::vector<std::string> args_, const char *unit_name_, unsigned int components_) //-V826
   {
     eCAL::Configuration config(args_);
-    
-    // Default behaviour: If not specified, try to use the default ini file
-    if (config.GetIniFilePath().empty())
-      config.InitConfigWithDefaultIni();
 
     return Initialize(config, unit_name_, components_);
   }
@@ -155,7 +147,7 @@ namespace eCAL
     g_globals_ctx_ref_cnt++;
 
      // (post)initialize single components
-    const int success = g_globals()->Initialize(components_, &GetConfiguration().command_line_arguments.config_keys);
+    const int success = g_globals()->Initialize(components_);
 
     if (config_.command_line_arguments.dump_config)
     {

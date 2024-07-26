@@ -78,13 +78,13 @@ std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int
   // create publisher config
   eCAL::Publisher::Configuration pub_config;
   // set transport layer
-  pub_config.shm.enable = true;
-  pub_config.udp.enable = false;
-  pub_config.tcp.enable = false;
+  pub_config.layer.shm.enable = true;
+  pub_config.layer.udp.enable = false;
+  pub_config.layer.tcp.enable = false;
   // set zero copy mode
-  pub_config.shm.zero_copy_mode = zero_copy;
+  pub_config.layer.shm.zero_copy_mode = zero_copy;
   // set number of memory buffer
-  pub_config.shm.memfile_buffer_count = buffer_count;
+  pub_config.layer.shm.memfile_buffer_count = buffer_count;
 
   // create publisher for topic "A"
   eCAL::CPublisher pub("A", pub_config);
