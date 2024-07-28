@@ -54,13 +54,9 @@ namespace eCAL
     bool RegisterSample(const Registration::Sample& sample_);
     bool UnregisterSample(const Registration::Sample& sample_);
 
-    using ApplySampleCallbackT = std::function<void(const Registration::Sample&)>;
-    void SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_);
-    void RemCustomApplySampleCallback(const std::string& customer_);
-
   protected:
-    void ForwardSample(const Registration::Sample& sample_);
     void ProcessSingleSample(const Registration::Sample& sample_);
+    void AddSingleSample(const Registration::Sample& sample_);
 
     void TriggerRegisterSendThread();
     void RegisterSendThread();
@@ -74,10 +70,10 @@ namespace eCAL
     std::mutex                                  m_reg_sample_snd_thread_cv_mtx;
     bool                                        m_reg_sample_snd_thread_trigger;
 
+    std::mutex                                  m_applied_sample_list_mtx;
+    Registration::SampleList                    m_applied_sample_list;
+      
     bool                                        m_use_registration_udp;
     bool                                        m_use_registration_shm;
-
-    std::mutex                                  m_callback_custom_apply_sample_map_mtx;
-    std::map<std::string, ApplySampleCallbackT> m_callback_custom_apply_sample_map;
   };
 }

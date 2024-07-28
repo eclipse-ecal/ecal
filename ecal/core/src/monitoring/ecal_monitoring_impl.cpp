@@ -58,8 +58,7 @@ namespace eCAL
     // get name of this host
     m_host_name = Process::GetHostName();
 
-    // utilize registration provider and receiver to enrich monitor information
-    g_registration_provider()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_) {this->ApplySample(sample_, tl_none); });
+    // utilize registration receiver to enrich monitor information
     g_registration_receiver()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
 
     // setup blacklist and whitelist filter strings#
@@ -74,8 +73,7 @@ namespace eCAL
 
   void CMonitoringImpl::Destroy()
   {
-    // stop registration provider and receiver utilization to enrich monitor information
-    g_registration_provider()->RemCustomApplySampleCallback("monitoring");
+    // stop registration receiver utilization to enrich monitor information
     g_registration_receiver()->RemCustomApplySampleCallback("monitoring");
     m_init = false;
   }

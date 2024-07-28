@@ -357,7 +357,10 @@ namespace eCAL
 
     // initialize tcp layer
 #if ECAL_CORE_TRANSPORT_TCP
-    if (Config::IsTcpRecEnabled())
+    // TODO: use configuration here
+    // currently we have a missmatch between global Config::IsTcpRecEnabled() and m_config.tcp.enable
+    //if (Config::IsTcpRecEnabled())
+    if (1)
     {
       CTCPReaderLayer::Get()->Initialize();
     }

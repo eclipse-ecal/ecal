@@ -149,6 +149,9 @@ TEST(core_cpp_util, ServiceEqualQualities)
     // destroy service 1
     service1.Destroy();
 
+    // let's register
+    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
+
     // check attributes, service 1 attributes should be replaced by service 2 attributes now
     eCAL::Util::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
     EXPECT_EQ(req_type,  "foo::req_type2");

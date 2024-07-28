@@ -97,7 +97,7 @@ namespace eCAL
     m_reg_sample_snd_thread->stop();
 
     // send process unregistration sample
-    //m_reg_sender->SendSample(Registration::GetProcessUnregisterSample());
+    ProcessSingleSample(Registration::GetProcessUnregisterSample());
 
     // delete registration sender
     m_reg_sender.reset();
@@ -121,38 +121,19 @@ namespace eCAL
     return(true);
   }
 
-  void CRegistrationProvider::SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_)
-  {
-    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
-    m_callback_custom_apply_sample_map[customer_] = callback_;
-  }
-
-  void CRegistrationProvider::RemCustomApplySampleCallback(const std::string& customer_)
-  {
-    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
-    auto iter = m_callback_custom_apply_sample_map.find(customer_);
-    if (iter != m_callback_custom_apply_sample_map.end())
-    {
-      m_callback_custom_apply_sample_map.erase(iter);
-    }
-  }
-
-  void CRegistrationProvider::ForwardSample(const Registration::Sample& sample_)
-  {
-    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
-    for (const auto& iter : m_callback_custom_apply_sample_map)
-    {
-      iter.second(sample_);
-    }
-  }
-
   void CRegistrationProvider::ProcessSingleSample(const Registration::Sample& sample_)
   {
-    // forward registration sample to outside "customer" (currently monitoring and descgate)
-    ForwardSample(sample_);
+    // add registration sample to registration loop
+    AddSingleSample(sample_);
 
     // force rgistration thread to send
     TriggerRegisterSendThread();
+  }
+
+  void CRegistrationProvider::AddSingleSample(const Registration::Sample& sample_)
+  {
+    const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
+    m_applied_sample_list.samples.push_back(sample_);
   }
 
   void CRegistrationProvider::TriggerRegisterSendThread()
@@ -194,6 +175,13 @@ namespace eCAL
 
       // send registration sample list
       m_reg_sender->SendSampleList(sample_list);
+
+      // send active applied samples at the end of the registration loop
+      {
+        const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
+        m_reg_sender->SendSampleList(m_applied_sample_list);
+        m_applied_sample_list.samples.clear();
+      }
 
       // wait for trigger or registration refresh timeout
       {

@@ -19,7 +19,7 @@ const std::string default_config = R"(#  _____     _ _                          
 # Registration layer configuration
 registration:
   # Topic registration refresh cylce (has to be smaller then registration timeout! Default: 1000)
-  registration_refresh: 1000   
+  registration_refresh: 1000
   # Timeout for topic registration in ms (internal, Default: 60000)
   registration_timeout: 60000
   # Enable to receive registration information on the same local machine
@@ -42,12 +42,12 @@ registration:
     udp:
       enable: true
       port: 14000
-  
+
 
 # Monitoring configuration
 monitoring:
-  # Timeout for topic monitoring in ms (Default: 1000), increase in 1000er steps
-  timeout: 1000
+  # Timeout for topic monitoring in ms (Default: 5000), increase in 1000er steps
+  timeout: 5000
   # Topics blacklist as regular expression (will not be monitored)
   filter_excl: "^__.*$"
   # Topics whitelist as regular expression (will be monitored only) (Default: "")
@@ -78,7 +78,7 @@ transport_layer:
     join_all_interfaces: false
     # Windows specific setting to enable receiving UDP traffic with the Npcap based receiver
     npcap_enabled: false 
-    
+
     # In local mode multicast group and ttl are set by default and are not adjustable
     local:
       # Multicast group base. All registration and logging is sent on this address 
@@ -90,9 +90,9 @@ transport_layer:
       # Multicast group base. All registration and logging is sent on this address 
       group: "239.0.0.1" 
       # TTL (hop limit) is used to determine the amount of routers being traversed towards the destination
-      ttl: 3   
+      ttl: 3
     
-  tcp: 
+  tcp:
     # Reader amount of threads that shall execute workload
     number_executor_reader: 4
     # Writer amount of threads that shall execute workload
@@ -100,12 +100,12 @@ transport_layer:
     # Reconnection attemps the session will try to reconnect in case of an issue
     max_reconnections: 5
 
-  shm:     
+  shm:
     # Default memory file size for new publisher
     memfile_min_size_bytes: 4096
     # Dynamic file size reserve before recreating memory file if topic size changes
     memfile_reserve_percent: 50
-    
+
 
 # Publisher specific base settings
 publisher:
@@ -121,12 +121,12 @@ publisher:
       acknowledge_timeout_ms: 0
       # Maximum number of used buffers (needs to be greater than 1, default = 1)
       memfile_buffer_count: 1
-    
+
     # Base configuration for UDP publisher
     udp:
       # Enable layer
       enable: true
-        
+
     # Base configuration for TCP publisher
     tcp:
       # Enable layer
@@ -161,7 +161,7 @@ subscriber:
   
   # Enable dropping of payload messages that arrive out of order
   drop_out_of_order_messages: true
-  
+
 
 # Time configuration
 time:

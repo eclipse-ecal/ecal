@@ -161,6 +161,9 @@ TEST(core_cpp_util, ClientEqualQualities)
     // destroy client 1
     client1.Destroy();
 
+    // let's register
+    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
+
     // check attributes, client 1 attributes should be replaced by client 2 attributes now
     eCAL::Util::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
     EXPECT_EQ(req_type,  "foo::req_type2");

@@ -102,6 +102,9 @@ TEST(core_cpp_util, GetTopics)
     pub1.Destroy();
     sub1.Destroy();
 
+    // let's register
+    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
+
     // size should be 5 again (because of pub12 and sub12 should have replaced pub1 and sub1 attributes now)
     EXPECT_EQ(topic_info_map.size(), 5);
 
