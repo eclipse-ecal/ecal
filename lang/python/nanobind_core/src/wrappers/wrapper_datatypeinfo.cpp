@@ -37,5 +37,7 @@ namespace eCAL
         info.name = nb_info.name;
         info.encoding = nb_info.encoding;
         info.descriptor = std::string(nb_info.descriptor.c_str(), nb_info.descriptor.size());
+
+        return info;
     }
 }

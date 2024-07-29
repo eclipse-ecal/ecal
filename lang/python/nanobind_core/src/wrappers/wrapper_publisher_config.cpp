@@ -25,9 +25,14 @@
 
 namespace eCAL
 {
-    // TODO @Ariff
-    Publisher::Configuration convert(const CNBPublisherConfigStruct& nb_config)
-    {
-      return Publisher::Configuration{};
+    Publisher::CNBPublisherConfiguration::CNBPublisherConfiguration()
+    { 
+        Publisher::Configuration::Configuration();
     }
+
+    // TODO @Ariff
+ //   Publisher::Configuration convert(const CNBPublisherConfigStruct& nb_config)
+   // {
+     // return Publisher::Configuration{};
+    //}
 }

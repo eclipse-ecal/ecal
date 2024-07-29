@@ -28,23 +28,58 @@
 #include <stdint.h>
 #include <string>
 #include <cstddef>
+#include <ecal/ecal_os.h>
+#include <ecal/types/ecal_custom_data_types.h>
 
 #include <ecal/config/publisher.h>
 #include <nanobind/nanobind.h>
 
 namespace eCAL
 {
-  // TODO @Ariff
-    class CNBPublisherConfigStruct
+    namespace Publisher
     {
-    };
+        namespace SHM
+        {
+            struct CNBSHMConfiguration
+            {
+                bool                                  enable;                   //!< enable layer
+                bool                                  zero_copy_mode;           //!< enable zero copy shared memory transport mode
+                unsigned int                          acknowledge_timeout_ms;   /*!< force connected subscribers to send acknowledge event after processing the message
+                                                                                     the publisher send call is blocked on this event with this timeout (0 == no handshake) */
+                Types::ConstrainedInteger<4096, 4096> memfile_min_size_bytes;   //!< default memory file size for new publisher
+                Types::ConstrainedInteger<50, 1, 100> memfile_reserve_percent;  //!< dynamic file size reserve before recreating memory file if topic size changes
+                Types::ConstrainedInteger<1, 1>       memfile_buffer_count;     //!< maximum number of used buffers (needs to be greater than 1, default = 1)
+            };
+        }
 
-    /**
-     * @brief Convert function for SDataTypeInformation
-     *
-     * @param nb_info      CNBDataTypeInformation struct
-     *
-     * @return  SDataTypeInformation struct after convertion
-    **/
-    Publisher::Configuration convert(const CNBPublisherConfigStruct& nb_config);
+        namespace UDP
+        {
+            struct CNBUDPConfiguration
+            {
+                bool                                      enable;               //!< enable layer
+                bool                                      loopback;             //!< enable to receive udp messages on the same local machine
+                Types::ConstrainedInteger<5242880, 1024>  sndbuf_size_bytes;    //!< udp send buffer size in bytes (default 5MB)
+            };
+        }
+
+        namespace TCP
+        {
+            struct CNBTCPConfiguration
+            {
+                bool               enable;                                      //!< enable layer
+            };
+        }
+
+        struct CNBPublisherConfiguration
+        {
+            CNBPublisherConfiguration();
+
+            SHM::Configuration   shm;
+            UDP::Configuration   udp;
+            TCP::Configuration   tcp;
+
+            bool                 share_topic_type;                            //!< share topic type via registration
+            bool                 share_topic_description;                     //!< share topic description via registration
+        };
+    }
 }

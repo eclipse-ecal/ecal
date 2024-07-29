@@ -27,10 +27,30 @@
 
 void AddPublisherConfigStructToModule(nanobind::module_& module)
 {
-    // Struct eCAL::SDataTypeInformation
-  nanobind::class_<eCAL::CNBPublisherConfigStruct>(module, "PublisherConfiguration");
-     //   .def(nanobind::init<>())
-     //   .def_rw("name", &eCAL::CNBDataTypeInformation::name)
-     //   .def_rw("encoding", &eCAL::CNBDataTypeInformation::encoding)
-     //   .def_rw("descriptor", &eCAL::CNBDataTypeInformation::descriptor);
+    nanobind::class_<eCAL::Publisher::SHM::CNBSHMConfiguration>(module, "SHMConfiguration")
+        .def(nanobind::init<>())
+        .def_rw("enable", &eCAL::Publisher::SHM::CNBSHMConfiguration::enable)
+        .def_rw("zero_copy_mode", &eCAL::Publisher::SHM::CNBSHMConfiguration::zero_copy_mode)
+        .def_rw("acknowledge_timeout_ms", &eCAL::Publisher::SHM::CNBSHMConfiguration::acknowledge_timeout_ms)
+        .def_rw("memfile_min_size_bytes", &eCAL::Publisher::SHM::CNBSHMConfiguration::memfile_min_size_bytes)
+        .def_rw("memfile_reserve_percent", &eCAL::Publisher::SHM::CNBSHMConfiguration::memfile_reserve_percent)
+        .def_rw("memfile_buffer_count", &eCAL::Publisher::SHM::CNBSHMConfiguration::memfile_buffer_count);
+
+    nanobind::class_<eCAL::Publisher::UDP::CNBUDPConfiguration>(module, "UDPConfiguration")
+        .def(nanobind::init<>())
+        .def_rw("enable", &eCAL::Publisher::UDP::CNBUDPConfiguration::enable)
+        .def_rw("loopback", &eCAL::Publisher::UDP::CNBUDPConfiguration::loopback)
+        .def_rw("sndbuf_size_bytes", &eCAL::Publisher::UDP::CNBUDPConfiguration::sndbuf_size_bytes);
+
+    nanobind::class_<eCAL::Publisher::TCP::CNBTCPConfiguration>(module, "TCPConfiguration")
+        .def(nanobind::init<>())
+        .def_rw("enable", &eCAL::Publisher::TCP::CNBTCPConfiguration::enable);
+
+    nanobind::class_<eCAL::Publisher::CNBPublisherConfiguration>(module, "PublisherConfiguration")
+        .def(nanobind::init<>())
+        .def_rw("shm", &eCAL::Publisher::CNBPublisherConfiguration::shm)
+        .def_rw("udp", &eCAL::Publisher::CNBPublisherConfiguration::udp)
+        .def_rw("tcp", &eCAL::Publisher::CNBPublisherConfiguration::tcp)
+        .def_rw("share_topic_type", &eCAL::Publisher::CNBPublisherConfiguration::share_topic_type)
+        .def_rw("share_topic_description", &eCAL::Publisher::CNBPublisherConfiguration::share_topic_description);
 }

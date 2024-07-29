@@ -24,8 +24,7 @@ import nanobind_core as ecal_core
 # define the server method "foo" function
 def foo_req_callback(method_name, req_type, resp_type, request):
     print("'DemoService' method '{}' called with {}".format(method_name, request))
-    #return True #, bytes("thank you for calling foo :-)", "ascii")
-    return 0, "pong"
+    return True, bytes("thank you for calling foo :-)", "ascii")
 
 # define the server method "ping" function
 def ping_req_callback(method_name, req_type, resp_type, request):
@@ -49,8 +48,7 @@ def main():
   server = ecal_core.ServiceServer("DemoService")
 
   # define the server methods and connect them to the callbacks
-  server.add_method_callback("foo",  "string",    "string",    foo_req_callback)
-  server.add_method_callback("ping", "ping_type", "pong_type", ping_req_callback)
+  server.add_method_callback("ping", "ping_type", "pong_type", "ping_req_callback", ping_req_callback)
 
   # idle
   while(ecal_core.ok()):
