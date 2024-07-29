@@ -125,10 +125,13 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  CTCPReaderLayer::CTCPReaderLayer() = default;
+  CTCPReaderLayer::CTCPReaderLayer() : m_initialized(false) {}
 
   void CTCPReaderLayer::Initialize()
   {
+    if (m_initialized) return;
+    m_initialized = true;
+
     const tcp_pubsub::logger::logger_t tcp_pubsub_logger = std::bind(TcpPubsubLogger, std::placeholders::_1, std::placeholders::_2);
     m_executor = std::make_shared<tcp_pubsub::Executor>(Config::GetTcpPubsubReaderThreadpoolSize(), tcp_pubsub_logger);
   }

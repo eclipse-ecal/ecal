@@ -52,10 +52,6 @@ namespace eCAL
   void CSubGate::Start()
   {
     if(m_created) return;
-
-    // initialize data reader layers
-    CDataReader::InitializeLayers();
-
     m_created = true;
   }
 

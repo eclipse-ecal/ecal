@@ -27,8 +27,8 @@
 #include <thread>
 
 enum {
-  CMN_MONITORING_TIMEOUT_MS   = (5000),
-  CMN_REGISTRATION_REFRESH_MS = (1000 * 2)
+  CMN_MONITORING_TIMEOUT_MS   = (5000 + 100),
+  CMN_REGISTRATION_REFRESH_MS = (1000)
 };
 
 TEST(core_cpp_util, GetTopics)
@@ -69,6 +69,9 @@ TEST(core_cpp_util, GetTopics)
     // this should trigger a warning but not increase map size
     eCAL::CSubscriber sub12("B1", info_B1_2);
 
+    // let's register
+    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
+
     // get all topics
     eCAL::Util::GetTopics(topic_info_map);
 
@@ -99,6 +102,9 @@ TEST(core_cpp_util, GetTopics)
     pub1.Destroy();
     sub1.Destroy();
 
+    // let's register
+    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
+
     // size should be 5 again (because of pub12 and sub12 should have replaced pub1 and sub1 attributes now)
     EXPECT_EQ(topic_info_map.size(), 5);
 
@@ -116,7 +122,7 @@ TEST(core_cpp_util, GetTopics)
   }
 
   // let's unregister
-  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // get all topics again, now all topics 
   // should be removed from the map
@@ -132,7 +138,7 @@ TEST(core_cpp_util, GetTopics)
 TEST(core_cpp_util, GetTopicsParallel)
 {
   constexpr const int max_publisher_count(2000);
-  constexpr const int waiting_time_thread(1000);
+  constexpr const int waiting_time_thread(4000);
   constexpr const int parallel_threads(1);
 
   // initialize eCAL API

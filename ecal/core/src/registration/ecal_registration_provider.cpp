@@ -22,7 +22,7 @@
  * 
  * All process internal publisher/subscriber, server/clients register here with all their attributes.
  * 
- * These information will be send cyclic (registration refresh) via UDP to external eCAL processes.
+ * These information will be send cyclic (registration refresh) via UDP or SHM to external eCAL processes.
  * 
 **/
 #include "ecal_registration_provider.h"
@@ -30,7 +30,6 @@
 #include <atomic>
 #include <chrono>
 #include <functional>
-#include <iostream>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -93,109 +92,89 @@ namespace eCAL
   {
     if(!m_created) return;
 
+    // add unregistration sample to registration loop
+    AddSingleSample(Registration::GetProcessUnregisterSample());
+
+    // wake up registration thread the last time
+    m_reg_sample_snd_thread->trigger();
+
     // stop cyclic registration thread
     m_reg_sample_snd_thread->stop();
 
-    // send process unregistration sample
-    SendSample(Registration::GetProcessUnregisterSample());
-
+    // delete registration sender
     m_reg_sender.reset();
 
     m_created = false;
   }
 
-  bool CRegistrationProvider::ApplySample(const Registration::Sample& sample_, const bool force_)
+  // (re)register single sample
+  bool CRegistrationProvider::RegisterSample(const Registration::Sample& sample_)
   {
     if (!m_created) return(false);
 
-    // forward all registration samples to outside "customer" (e.g. monitoring, descgate)
-    {
-      const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
-      for (const auto& iter : m_callback_custom_apply_sample_map)
-      {
-        iter.second(sample_);
-      }
-    }
+    // add registration sample to registration loop
+    AddSingleSample(sample_);
 
-    if (force_)
-    {
-      // send sample
-      SendSample(sample_);
-    }
-    else
-    {
-      // add sample to sample list and send it later
-      AddSample2SampleList(sample_);
-    }
+    // wake up registration thread
+    m_reg_sample_snd_thread->trigger();
 
     return(true);
   }
 
-  void CRegistrationProvider::SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_)
+  // unregister single sample
+  bool CRegistrationProvider::UnregisterSample(const Registration::Sample& sample_)
   {
-    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
-    m_callback_custom_apply_sample_map[customer_] = callback_;
+    if (!m_created) return(false);
+
+    // add registration sample to registration loop, no need to force registration thread to send
+    AddSingleSample(sample_);
+
+    return(true);
   }
 
-  void CRegistrationProvider::RemCustomApplySampleCallback(const std::string& customer_)
+  void CRegistrationProvider::AddSingleSample(const Registration::Sample& sample_)
   {
-    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
-    auto iter = m_callback_custom_apply_sample_map.find(customer_);
-    if (iter != m_callback_custom_apply_sample_map.end())
-    {
-      m_callback_custom_apply_sample_map.erase(iter);
-    }
-  }
-
-  void CRegistrationProvider::AddSample2SampleList(const Registration::Sample& sample_)
-  {
-    const std::lock_guard<std::mutex> lock(m_sample_list_mtx);
-    m_sample_list.samples.push_back(sample_);
-  }
-
-  void CRegistrationProvider::SendSample(const Registration::Sample& sample_)
-  {
-    Registration::SampleList sample_list;
-    sample_list.samples.push_back(sample_);
-    m_reg_sender->SendSampleList(sample_list);
+    const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
+    m_applied_sample_list.samples.push_back(sample_);
   }
 
   void CRegistrationProvider::RegisterSendThread()
   {
-    // collect all registrations and send them out
-    // the internal list already contain elements here:
-    //   one process registration sample
-    //   one or more registration/unregistration samples added by AddSample2SampleList
+    // collect all registrations and send them out cyclic
     {
-      // lock sample list
-      std::lock_guard<std::mutex> lock(m_sample_list_mtx);
+      // create sample list
+      Registration::SampleList sample_list;
+
+      // and add process registration sample
+      sample_list.samples.push_back(Registration::GetProcessRegisterSample());
 
 #if ECAL_CORE_SUBSCRIBER
       // add subscriber registrations
-      if (g_subgate() != nullptr) g_subgate()->GetRegistrations(m_sample_list);
+      if (g_subgate() != nullptr) g_subgate()->GetRegistrations(sample_list);
 #endif
 
 #if ECAL_CORE_PUBLISHER
       // add publisher registrations
-      if (g_pubgate() != nullptr) g_pubgate()->GetRegistrations(m_sample_list);
+      if (g_pubgate() != nullptr) g_pubgate()->GetRegistrations(sample_list);
 #endif
 
 #if ECAL_CORE_SERVICE
       // add server registrations
-      if (g_servicegate() != nullptr) g_servicegate()->GetRegistrations(m_sample_list);
+      if (g_servicegate() != nullptr) g_servicegate()->GetRegistrations(sample_list);
 
       // add client registrations
-      if (g_clientgate() != nullptr) g_clientgate()->GetRegistrations(m_sample_list);
+      if (g_clientgate() != nullptr) g_clientgate()->GetRegistrations(sample_list);
 #endif
 
-      // send registration sample list
-      m_reg_sender->SendSampleList(m_sample_list);
+      // send collected registration sample list
+      m_reg_sender->SendSampleList(sample_list);
 
-      // clear it
-      m_sample_list.samples.clear();
-
-      // and add process registration sample to internal sample list as first sample (for next registration loop)
-      m_sample_list.samples.push_back(Registration::GetProcessRegisterSample());
+      // send asynchronously applied samples at the end of the registration loop
+      {
+        const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
+        m_reg_sender->SendSampleList(m_applied_sample_list);
+        m_applied_sample_list.samples.clear();
+      }
     }
   }
 }

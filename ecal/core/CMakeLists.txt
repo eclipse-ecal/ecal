@@ -22,8 +22,8 @@ find_package(asio             REQUIRED)
 find_package(Threads          REQUIRED)
 find_package(ecaludp          REQUIRED)
 
-if (ECAL_CORE_CONFIG_INIFILE)
-  find_package(simpleini      REQUIRED)
+if (ECAL_CORE_CONFIGURATION)
+  find_package(yaml-cpp       REQUIRED)
 endif()
 
 if (ECAL_CORE_COMMAND_LINE)

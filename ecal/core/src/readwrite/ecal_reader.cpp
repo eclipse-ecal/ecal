@@ -94,13 +94,11 @@ namespace eCAL
     m_pub_map.set_expiration(registration_timeout);
 
     // start transport layers
+    InitializeLayers();
     StartTransportLayer();
 
     // mark as created
     m_created = true;
-
-    // register
-    Register(false);
   }
 
   CDataReader::~CDataReader()
@@ -256,9 +254,6 @@ namespace eCAL
 
   bool CDataReader::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
   {
-    auto current_val = m_attr.find(attr_name_);
-
-    const bool force = current_val == m_attr.end() || current_val->second != attr_value_;
     m_attr[attr_name_] = attr_value_;
 
 #ifndef NDEBUG
@@ -266,25 +261,17 @@ namespace eCAL
     Logging::Log(log_level_debug2, m_topic_name + "::CDataReader::SetAttribute");
 #endif
 
-    // register it
-    Register(force);
-
     return(true);
   }
 
   bool CDataReader::ClearAttribute(const std::string& attr_name_)
   {
-    auto force = m_attr.find(attr_name_) != m_attr.end();
-
     m_attr.erase(attr_name_);
 
 #ifndef NDEBUG
     // log it
     Logging::Log(log_level_debug2, m_topic_name + "::CDataReader::ClearAttribute");
 #endif
-
-    // register it
-    Register(force);
 
     return(true);
   }
@@ -355,7 +342,7 @@ namespace eCAL
   {
     // initialize udp layer
 #if ECAL_CORE_TRANSPORT_UDP
-    if (Config::IsUdpMulticastRecEnabled())
+    if (m_config.udp.enable)
     {
       CUDPReaderLayer::Get()->Initialize();
     }
@@ -363,7 +350,7 @@ namespace eCAL
 
     // initialize shm layer
 #if ECAL_CORE_TRANSPORT_SHM
-    if (Config::IsShmRecEnabled())
+    if (m_config.shm.enable)
     {
       CSHMReaderLayer::Get()->Initialize();
     }
@@ -371,7 +358,7 @@ namespace eCAL
 
     // initialize tcp layer
 #if ECAL_CORE_TRANSPORT_TCP
-    if (Config::IsTcpRecEnabled())
+    if (m_config.tcp.enable)
     {
       CTCPReaderLayer::Get()->Initialize();
     }
@@ -533,10 +520,10 @@ namespace eCAL
     return(out.str());
   }
 
-  void CDataReader::Register(bool force_)
+  void CDataReader::Register()
   {
 #if ECAL_CORE_REGISTRATION
-    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(GetRegistrationSample(), force_);
+    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(GetRegistrationSample());
 
 #ifndef NDEBUG
     // log it
@@ -548,7 +535,7 @@ namespace eCAL
   void CDataReader::Unregister()
   {
 #if ECAL_CORE_REGISTRATION
-    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(GetUnregistrationSample(), false);
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(GetUnregistrationSample());
 
 #ifndef NDEBUG
     // log it

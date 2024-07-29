@@ -30,6 +30,7 @@
 
 #include "serialization/ecal_struct_sample_payload.h"
 
+#include <atomic>
 #include <mutex>
 #include <unordered_map>
 
@@ -73,6 +74,7 @@ namespace eCAL
     void SetConnectionParameter(SReaderLayerPar& /*par_*/) override;
 
   private:
+    std::atomic<bool> m_initialized;
     std::shared_ptr<tcp_pubsub::Executor> m_executor;
 
     using DataReaderTCPMapT = std::unordered_map<std::string, std::shared_ptr<CDataReaderTCP>>;
