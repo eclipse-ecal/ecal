@@ -83,7 +83,7 @@ namespace eCAL
 
     // start cyclic registration thread
     m_reg_sample_snd_thread = std::make_shared<CCallbackThread>(std::bind(&CRegistrationProvider::RegisterSendThread, this));
-    m_reg_sample_snd_thread->start(std::chrono::milliseconds(0));
+    m_reg_sample_snd_thread->start(std::chrono::milliseconds(Config::GetRegistrationRefreshMs()));
 
     m_created = true;
   }
@@ -92,17 +92,14 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    // stop cyclic registration thread
-    m_reg_sample_snd_thread->stop();
-
     // add unregistration sample to registration loop
     AddSingleSample(Registration::GetProcessUnregisterSample());
 
     // wake up registration thread the last time
-    TriggerRegisterSendThread();
+    m_reg_sample_snd_thread->trigger();
 
-    // stop registration thread
-    m_reg_sample_snd_thread.reset();
+    // stop cyclic registration thread
+    m_reg_sample_snd_thread->stop();
 
     // delete registration sender
     m_reg_sender.reset();
@@ -119,7 +116,7 @@ namespace eCAL
     AddSingleSample(sample_);
 
     // wake up registration thread
-    TriggerRegisterSendThread();
+    m_reg_sample_snd_thread->trigger();
 
     return(true);
   }
@@ -139,15 +136,6 @@ namespace eCAL
   {
     const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
     m_applied_sample_list.samples.push_back(sample_);
-  }
-
-  void CRegistrationProvider::TriggerRegisterSendThread()
-  {
-    {
-      const std::lock_guard<std::mutex> lock(m_reg_sample_snd_thread_cv_mtx);
-      m_reg_sample_snd_thread_trigger = true;
-    }
-    m_reg_sample_snd_thread_cv.notify_one();
   }
 
   void CRegistrationProvider::RegisterSendThread()
@@ -186,13 +174,6 @@ namespace eCAL
         const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
         m_reg_sender->SendSampleList(m_applied_sample_list);
         m_applied_sample_list.samples.clear();
-      }
-
-      // wait for external trigger or until registration refresh timeout
-      {
-        std::unique_lock<std::mutex> lock(m_reg_sample_snd_thread_cv_mtx);
-        m_reg_sample_snd_thread_cv.wait_for(lock, std::chrono::milliseconds(Config::GetRegistrationRefreshMs()), [this] { return m_reg_sample_snd_thread_trigger; });
-        m_reg_sample_snd_thread_trigger = false;
       }
     }
   }

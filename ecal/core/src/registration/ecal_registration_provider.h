@@ -28,17 +28,12 @@
 
 #pragma once
 
-#include "io/udp/ecal_udp_sample_sender.h"
 
-#include <atomic>
-#include <condition_variable>
+#include "registration/ecal_registration_sender.h"
+#include "util/ecal_thread.h"
+
 #include <memory>
 #include <mutex>
-#include <string>
-#include <vector>
-
-#include <registration/ecal_registration_sender.h>
-#include "util/ecal_thread.h"
 
 namespace eCAL
 {
@@ -56,22 +51,17 @@ namespace eCAL
 
   protected:
     void AddSingleSample(const Registration::Sample& sample_);
-    void TriggerRegisterSendThread();
     void RegisterSendThread();
 
-    static std::atomic<bool>                    m_created;
+    static std::atomic<bool>             m_created;
 
-    std::unique_ptr<CRegistrationSender>        m_reg_sender;
-    std::shared_ptr<CCallbackThread>            m_reg_sample_snd_thread;
+    std::unique_ptr<CRegistrationSender> m_reg_sender;
+    std::shared_ptr<CCallbackThread>     m_reg_sample_snd_thread;
 
-    std::condition_variable                     m_reg_sample_snd_thread_cv;
-    std::mutex                                  m_reg_sample_snd_thread_cv_mtx;
-    bool                                        m_reg_sample_snd_thread_trigger;
-
-    std::mutex                                  m_applied_sample_list_mtx;
-    Registration::SampleList                    m_applied_sample_list;
+    std::mutex                           m_applied_sample_list_mtx;
+    Registration::SampleList             m_applied_sample_list;
       
-    bool                                        m_use_registration_udp;
-    bool                                        m_use_registration_shm;
+    bool                                 m_use_registration_udp;
+    bool                                 m_use_registration_shm;
   };
 }
