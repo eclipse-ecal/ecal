@@ -132,11 +132,6 @@ constexpr unsigned int                  LOGGING_SINKS_UDP_PORT                  
 /**********************************************************************************************/
 /*                                     config settings                                        */
 /**********************************************************************************************/
-
-
-/**********************************************************************************************/
-/*                                     config settings                                        */
-/**********************************************************************************************/
 /* base data path name */
 constexpr const char* ECAL_HOME_PATH_WINDOWS = "";
 constexpr const char* ECAL_HOME_PATH_LINUX   = ".ecal";
@@ -146,84 +141,16 @@ constexpr const char* ECAL_SETTINGS_PATH     = "cfg";
 /* ini file name */
 constexpr const char* ECAL_DEFAULT_CFG       = "ecal.yaml";
 
-/**********************************************************************************************/
-/*                                     network settings                                       */
-/**********************************************************************************************/
-/* network switch */
-
-constexpr bool SHM_REGISTRATION_ENABLED = false;
-
 /* eCAL udp multicast defines */
-
-
-
-constexpr unsigned int NET_UDP_MULTICAST_PORT                               = 14000U;
-
 constexpr unsigned int NET_UDP_MULTICAST_PORT_REG_OFF                       = 0U;
 constexpr unsigned int NET_UDP_MULTICAST_PORT_LOG_OFF                       = 1U;
 constexpr unsigned int NET_UDP_MULTICAST_PORT_SAMPLE_OFF                    = 2U;
-
-
-
-constexpr unsigned int NET_UDP_RECBUFFER_TIMEOUT          = 1000U;  /* ms */
-constexpr unsigned int NET_UDP_RECBUFFER_CLEANUP          = 10U;    /* ms */
-
-/* overall udp multicast bandwidth limitation in bytes/s, -1 == no limitation*/
-constexpr int NET_BANDWIDTH_MAX_UDP                       = (-1);
-
-constexpr bool NET_TCP_REC_ENABLED                        = true;
-constexpr bool NET_SHM_REC_ENABLED                        = true;
-
-constexpr bool NET_UDP_MC_REC_ENABLED                     = true;
-
-
-
-/**********************************************************************************************/
-/*                                     monitor settings                                       */
-/**********************************************************************************************/
-/* timeout for automatic removing monitoring topics in ms */
-
-
-
-/* logging filter settings */
-constexpr eCAL_Logging_Filter MON_LOG_FILTER_CON  = (log_level_info | log_level_warning | log_level_error | log_level_fatal);
-constexpr eCAL_Logging_Filter MON_LOG_FILTER_FILE = log_level_none;
-constexpr eCAL_Logging_Filter MON_LOG_FILTER_UDP  = (log_level_info | log_level_warning | log_level_error | log_level_fatal);
-
-
-/**********************************************************************************************/
-/*                                     sys settings                                       */
-/**********************************************************************************************/
-/* sys app witch will not be imported from cloud */
-constexpr const char* SYS_FILTER_EXCL     = "^eCALSysClient$|^eCALSysGUI$|^eCALSys$*";
-
-
-/**********************************************************************************************/
-/*                                     publisher settings                                     */
-/**********************************************************************************************/
-/* use shared memory transport layer [auto = 2, on = 1, off = 0] */
-constexpr eCAL::TLayer::eSendMode PUB_USE_SHM             = eCAL::TLayer::eSendMode::smode_auto;
-/* use tcp transport layer           [auto = 2, on = 1, off = 0] */
-constexpr eCAL::TLayer::eSendMode PUB_USE_TCP             = eCAL::TLayer::eSendMode::smode_off;
-/* use udp multicast transport layer [auto = 2, on = 1, off = 0] */
-constexpr eCAL::TLayer::eSendMode PUB_USE_UDP_MC          = eCAL::TLayer::eSendMode::smode_auto;
 
 
 /* timeout for create / open a memory file using mutex lock in ms */
 constexpr unsigned int PUB_MEMFILE_CREATE_TO              = 200U;
 constexpr unsigned int PUB_MEMFILE_OPEN_TO                = 200U;
 
-
-/**********************************************************************************************/
-/*                                     ecal internal timings                                  */
-/**********************************************************************************************/
-
-
-/* delta time to check timeout for data readers in ms */
-constexpr unsigned int CMN_DATAREADER_TIMEOUT_RESOLUTION_MS = 100U;
-
-/* cylce time udp receive threads in ms */
-constexpr unsigned int CMN_UDP_RECEIVE_THREAD_CYCLE_TIME_MS = 1000U;
 
 /**********************************************************************************************/
 /*                                     events                                                 */
