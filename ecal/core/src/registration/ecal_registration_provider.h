@@ -28,16 +28,12 @@
 
 #pragma once
 
-#include "io/udp/ecal_udp_sample_sender.h"
 
-#include <atomic>
+#include "registration/ecal_registration_sender.h"
+#include "util/ecal_thread.h"
+
 #include <memory>
 #include <mutex>
-#include <string>
-#include <vector>
-
-#include <registration/ecal_registration_sender.h>
-#include "util/ecal_thread.h"
 
 namespace eCAL
 {
@@ -50,31 +46,22 @@ namespace eCAL
     void Start();
     void Stop();
 
-    bool ApplySample(const Registration::Sample& sample_, bool force_);
-
-    using ApplySampleCallbackT = std::function<void(const Registration::Sample&)>;
-    void SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_);
-    void RemCustomApplySampleCallback(const std::string& customer_);
+    bool RegisterSample(const Registration::Sample& sample_);
+    bool UnregisterSample(const Registration::Sample& sample_);
 
   protected:
-    void AddSample2SampleList(const Registration::Sample& sample_);
-    void SendSample(const Registration::Sample& sample_);
-
+    void AddSingleSample(const Registration::Sample& sample_);
     void RegisterSendThread();
 
-    static std::atomic<bool>                    m_created;
+    static std::atomic<bool>             m_created;
 
-    std::unique_ptr<CRegistrationSender>        m_reg_sender;
+    std::unique_ptr<CRegistrationSender> m_reg_sender;
+    std::shared_ptr<CCallbackThread>     m_reg_sample_snd_thread;
 
-    std::shared_ptr<CCallbackThread>            m_reg_sample_snd_thread;
-
-    std::mutex                                  m_sample_list_mtx;
-    Registration::SampleList                    m_sample_list;
-
-    bool                                        m_use_registration_udp;
-    bool                                        m_use_registration_shm;
-
-    std::mutex                                  m_callback_custom_apply_sample_map_mtx;
-    std::map<std::string, ApplySampleCallbackT> m_callback_custom_apply_sample_map;
+    std::mutex                           m_applied_sample_list_mtx;
+    Registration::SampleList             m_applied_sample_list;
+      
+    bool                                 m_use_registration_udp;
+    bool                                 m_use_registration_shm;
   };
 }

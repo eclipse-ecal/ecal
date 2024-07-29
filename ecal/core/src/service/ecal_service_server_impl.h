@@ -85,7 +85,7 @@ namespace eCAL
     std::string GetServiceName() { return m_service_name; };
 
   protected:
-    void Register(bool force_);
+    void Register();
     void Unregister();
 
     Registration::Sample GetRegistrationSample();

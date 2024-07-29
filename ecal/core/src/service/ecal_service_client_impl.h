@@ -99,7 +99,7 @@ namespace eCAL
     Registration::Sample GetRegistrationSample();
     Registration::Sample GetUnregistrationSample();
     
-    void Register(bool force_);
+    void Register();
     void Unregister();
 
     void CheckForNewServices();
