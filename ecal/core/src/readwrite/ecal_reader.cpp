@@ -342,7 +342,7 @@ namespace eCAL
   {
     // initialize udp layer
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_config.udp.enable)
+    if (m_config.layer.udp.enable)
     {
       CUDPReaderLayer::Get()->Initialize();
     }
@@ -350,7 +350,7 @@ namespace eCAL
 
     // initialize shm layer
 #if ECAL_CORE_TRANSPORT_SHM
-    if (m_config.shm.enable)
+    if (m_config.layer.shm.enable)
     {
       CSHMReaderLayer::Get()->Initialize();
     }
@@ -358,7 +358,7 @@ namespace eCAL
 
     // initialize tcp layer
 #if ECAL_CORE_TRANSPORT_TCP
-    if (m_config.tcp.enable)
+    if (m_config.layer.tcp.enable)
     {
       CTCPReaderLayer::Get()->Initialize();
     }
