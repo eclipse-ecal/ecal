@@ -211,8 +211,6 @@ namespace eCAL
       }
     };
 
-    #include <sstream>
-    #include <fstream>
     void Configuration::InitConfigWithDefaults()
     {
       auto ss = eCAL::Config::getConfigAsYamlSS();
