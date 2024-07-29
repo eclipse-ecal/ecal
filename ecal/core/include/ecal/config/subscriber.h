@@ -25,7 +25,6 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
-#include <ecal/config/transport_layer.h>
 
 #include <cstddef>
 

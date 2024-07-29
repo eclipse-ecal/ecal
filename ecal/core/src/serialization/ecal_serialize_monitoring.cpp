@@ -894,6 +894,7 @@ namespace
     if (!pb_decode(&pb_istream, eCAL_pb_Monitoring_fields, &pb_mon_message))
     {
       std::cerr << "NanoPb eCAL::Monitoring::SMonitoring decode failed: " << pb_istream.errmsg << '\n';
+      return false;
     }
 
     return true;

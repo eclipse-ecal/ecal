@@ -92,6 +92,5 @@ namespace eCAL
     bool operator==(const char* ip_string_, eCAL::Types::IpAddressV4 rhs)          { return rhs == ip_string_; };
     bool operator==(eCAL::Types::IpAddressV4 lhs, const std::string& ip_string_)   { return lhs.Get() == ip_string_; };
     bool operator==(const std::string& ip_string_, eCAL::Types::IpAddressV4 rhs)   { return rhs == ip_string_; };
-
   }  
 }
