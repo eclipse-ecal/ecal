@@ -22,6 +22,7 @@
 **/
 
 #include "ecal/types/ecal_custom_data_types.h"
+
 #include <array>
 #include <regex>
 #include <algorithm>
@@ -44,7 +45,7 @@ namespace eCAL
   {
 
     // IpAddressV4 definitions
-    IpAddressV4::IpAddressV4() : IpAddressV4(NET_UDP_MULTICAST_GROUP) {};
+    IpAddressV4::IpAddressV4() : IpAddressV4(TRANSPORT_LAYER_UDP_NETWORK_GROUP) {};
 
     IpAddressV4::IpAddressV4(const std::string& ip_address_)
     {
@@ -91,5 +92,6 @@ namespace eCAL
     bool operator==(const char* ip_string_, eCAL::Types::IpAddressV4 rhs)          { return rhs == ip_string_; };
     bool operator==(eCAL::Types::IpAddressV4 lhs, const std::string& ip_string_)   { return lhs.Get() == ip_string_; };
     bool operator==(const std::string& ip_string_, eCAL::Types::IpAddressV4 rhs)   { return rhs == ip_string_; };
+
   }  
 }

@@ -25,7 +25,7 @@
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
-#include "default_config.h"
+#include "default_configuration.h"
 
 #include "ecal/ecal_process.h"
 #include "config/ecal_cmd_parser.h"
@@ -211,9 +211,12 @@ namespace eCAL
       }
     };
 
+    #include <sstream>
+    #include <fstream>
     void Configuration::InitConfigWithDefaults()
     {
-      eCAL::Config::YamlStringToConfig(default_config, *this);
+      auto ss = eCAL::Config::getConfigAsYamlSS();
+      eCAL::Config::YamlStringToConfig(ss.str(), *this);
     }
 
     Configuration::Configuration(int argc_ , char **argv_)

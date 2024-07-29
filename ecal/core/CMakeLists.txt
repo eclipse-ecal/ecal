@@ -63,6 +63,7 @@ endif()
 # config
 ######################################
 set(ecal_config_src
+    src/config/default_configuration.cpp
     src/config/configuration_reader.cpp
     src/config/configuration_to_yaml.cpp
     src/config/ecal_cmd_parser.cpp

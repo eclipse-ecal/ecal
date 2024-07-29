@@ -259,7 +259,7 @@ namespace YAML
   {
     Node node;
     node["config_version"]      = config_.config_version == eCAL::Types::UdpConfigVersion::V1 ? "v1" : "v2";
-    node["mode"]                = config_.mode == eCAL::TransportLayer::UDP::MODE::LOCAL ? "local" : "network";
+    node["mode"]                = config_.mode == eCAL::Types::UDPMode::LOCAL ? "local" : "network";
     node["port"]                = config_.port;
     node["mask"]                = config_.mask.Get();
     node["send_buffer"]        << config_.send_buffer;
@@ -277,7 +277,7 @@ namespace YAML
     config_.config_version = temp_string == "v2" ? eCAL::Types::UdpConfigVersion::V2 : eCAL::Types::UdpConfigVersion::V1;
     temp_string = "local";
     AssignValue<std::string>(temp_string, node_, "mode");
-    config_.mode = temp_string == "local" ? eCAL::TransportLayer::UDP::MODE::LOCAL : eCAL::TransportLayer::UDP::MODE::CLOUD;
+    config_.mode = temp_string == "local" ? eCAL::Types::UDPMode::LOCAL : eCAL::Types::UDPMode::NETWORK;
     AssignValue<unsigned int>(config_.port, node_, "port");
     AssignValue<std::string>(config_.mask, node_, "mask");
     AssignValue<unsigned int>(config_.send_buffer, node_, "send_buffer");

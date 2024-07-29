@@ -30,6 +30,8 @@
 
 #include "ecal_cmd_parser.h"
 #include "configuration_reader.h"
+#include "default_configuration.h"
+#include "ecal_def.h"
 
 template<typename MEMBER, typename VALUE>
 void SetValue(MEMBER& member, VALUE value)
@@ -326,4 +328,14 @@ TEST(YamlConfigReaderTest /*unused*/, yaml_to_config_merger /*unused*/)
   EXPECT_FALSE(config.publisher.layer.shm.enable);
 
   remove(ini_file_name.data());
+}
+
+TEST(YamlGenerationTest /*unused*/, yaml_generation_test /*unused*/)
+{
+  eCAL::Configuration config{};
+
+  std::stringstream ss = eCAL::Config::getConfigAsYamlSS();
+  eCAL::Config::YamlStringToConfig(ss.str(), config);
+
+  EXPECT_EQ(config.registration.registration_timeout, REGISTRATION_REGISTRATION_TIMEOUT);
 }

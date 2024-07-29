@@ -109,5 +109,12 @@ namespace eCAL
       V1 = 1,
       V2 = 2
     };
+
+    enum class UDPMode
+    {
+      NETWORK,
+      LOCAL
+    };
+
   }
 }        

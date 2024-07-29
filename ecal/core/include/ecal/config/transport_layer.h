@@ -31,20 +31,14 @@ namespace eCAL
   namespace TransportLayer
   {
     namespace UDP
-    {
-      enum class MODE
-      {
-        CLOUD,
-        LOCAL
-      };
-
+    {      
       namespace Network
       {
         struct Configuration
         {
-          Types::IpAddressV4                       group{};                       //!< UDP multicast group base (Default: 239.0.0.1)
-          unsigned int                             ttl{};                         /*!< UDP ttl value, also known as hop limit, is used in determining 
-                                                                                      the intermediate routers being traversed towards the destination(Default: 2) */
+          Types::IpAddressV4                     group{};                       //!< UDP multicast group base (Default: 239.0.0.1)
+          unsigned int                           ttl{};                         /*!< UDP ttl value, also known as hop limit, is used in determining 
+                                                                                     the intermediate routers being traversed towards the destination(Default: 2) */
         };
       }
 
@@ -54,7 +48,7 @@ namespace eCAL
                                                                                      v1: default behavior
                                                                                      v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups (Default: v1) */
         unsigned int                             port;                          /*!< UDP multicast port number (Default: 14002) */
-        MODE                                     mode{};                        /*!< Valid modes: local, network (Default: local)*/
+        Types::UDPMode                           mode{};                        /*!< Valid modes: local, network (Default: local)*/
         Types::IpAddressV4                       mask{};                        /*!< v1: Mask maximum number of dynamic multicast group (Default: 0.0.0.1-0.0.0.255)
                                                                                      v2: masks are now considered like routes masking (Default: 255.0.0.0-255.255.255.255)*/
                     

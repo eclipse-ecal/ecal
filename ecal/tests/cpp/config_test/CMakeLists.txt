@@ -40,6 +40,7 @@ set(config_test_src
   src/config_test.cpp
   ${cmd_parser_src}
   ${config_reader_src}
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/config/default_configuration.cpp
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${config_test_src})
