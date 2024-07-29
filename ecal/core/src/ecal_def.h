@@ -39,9 +39,9 @@ constexpr  bool                         REGISTRATION_LOOPBACK                   
 constexpr const char*                   REGISTRATION_HOST_GROUP_NAME                = "";
 constexpr bool                          REGISTRATION_NETWORK_ENABLED                = false;
 constexpr bool                          REGISTRATION_LAYER_SHM_ENABLE               = false;
-constexpr const char*                   REGISTRATION_LAYER_SHM_DOMAIN               = "ecal_monitoring";
+constexpr const char*                   REGISTRATION_LAYER_SHM_DOMAIN               = "ecal_mon";
 constexpr unsigned int                  REGISTRATION_LAYER_SHM_QUEUE_SIZE           = 1024U;
-constexpr bool                          REGISTRATION_LAYER_UDP_ENABLE               = false;
+constexpr bool                          REGISTRATION_LAYER_UDP_ENABLE               = true;
 constexpr unsigned int                  REGISTRATION_LAYER_UDP_PORT                 = 14000U;
 
 /**********************************************************************************************/
@@ -77,7 +77,7 @@ constexpr unsigned int                  TRANSPORT_LAYER_SHM_MEMFILE_RESERVE_PERC
 /*                                  publisher settings                                        */
 /**********************************************************************************************/
 constexpr bool                          PUBLISHER_LAYER_SHM_ENABLE                  = true;
-constexpr bool                          PUBLISHER_LAYER_SHM_ZERO_COPY_MODE          = true;
+constexpr bool                          PUBLISHER_LAYER_SHM_ZERO_COPY_MODE          = false;
 constexpr unsigned int                  PUBLISHER_LAYER_SHM_ACKNOWLEDGE_TIMEOUT_MS  = 0U;
 constexpr unsigned int                  PUBLISHER_LAYER_SHM_MEMFILE_BUFFER_COUNT    = 1U;
 
@@ -110,7 +110,7 @@ constexpr const char*                   TIME_REPLAY                             
 /*                                  service settings                                          */
 /**********************************************************************************************/
 constexpr bool                          SERVICE_PROTOCOL_V0                         = true;
-constexpr bool                          SERVICE_PROTOCOL_V1                         = true;
+constexpr bool                          SERVICE_PROTOCOL_V1                         = false;
 
 /**********************************************************************************************/
 /*                                  application settings                                      */

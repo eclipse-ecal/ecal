@@ -128,7 +128,7 @@ namespace eCAL
       ss << R"(    port: )"                                          << TRANSPORT_LAYER_UDP_PORT                                << "\n";
       ss << R"(    # v1: Mask maximum number of dynamic multicast group (range 0.0.0.1-0.0.0.255))"                             << "\n";
       ss << R"(    # v2: Masks are now considered like routes masking (range 255.0.0.0-255.255.255.255))"                       << "\n";
-      ss << R"(    mask: )"                                          << TRANSPORT_LAYER_UDP_MASK                                << "\n";
+      ss << R"(    mask: )"                                          << quoteString(TRANSPORT_LAYER_UDP_MASK)                   << "\n";
       ss << R"(    # Send buffer in bytes)"                                                                                     << "\n";
       ss << R"(    send_buffer: )"                                   << TRANSPORT_LAYER_UDP_SEND_BUFFER                         << "\n";
       ss << R"(    # Receive buffer in bytes)"                                                                                  << "\n";
