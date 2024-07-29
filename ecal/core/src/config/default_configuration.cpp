@@ -107,7 +107,7 @@ namespace eCAL
       ss << R"()"                                                                                                               << "\n";
       ss << R"(# Monitoring configuration)"                                                                                     << "\n";
       ss << R"(monitoring:)"                                                                                                    << "\n";
-      ss << R"(  # Timeout for topic monitoring in ms (Default: 1000), increase in 1000er steps)"                               << "\n";
+      ss << R"(  # Timeout for topic monitoring in ms (Default: 5000), increase in 1000er steps)"                               << "\n";
       ss << R"(  timeout: )"                                         << MONITORING_TIMEOUT                                      << "\n";
       ss << R"(  # Topics blacklist as regular expression (will not be monitored)"                                              << "\n";
       ss << R"(  filter_excl: )"                                     << quoteString(MONITORING_FILTER_EXCL)                     << "\n";
