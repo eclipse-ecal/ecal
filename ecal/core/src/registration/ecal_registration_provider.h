@@ -55,9 +55,7 @@ namespace eCAL
     bool UnregisterSample(const Registration::Sample& sample_);
 
   protected:
-    void ProcessSingleSample(const Registration::Sample& sample_);
     void AddSingleSample(const Registration::Sample& sample_);
-
     void TriggerRegisterSendThread();
     void RegisterSendThread();
 

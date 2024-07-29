@@ -30,7 +30,6 @@
 #include <atomic>
 #include <chrono>
 #include <functional>
-#include <iostream>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -96,8 +95,14 @@ namespace eCAL
     // stop cyclic registration thread
     m_reg_sample_snd_thread->stop();
 
-    // send process unregistration sample
-    ProcessSingleSample(Registration::GetProcessUnregisterSample());
+    // add unregistration sample to registration loop
+    AddSingleSample(Registration::GetProcessUnregisterSample());
+
+    // wake up registration thread the last time
+    TriggerRegisterSendThread();
+
+    // stop registration thread
+    m_reg_sample_snd_thread.reset();
 
     // delete registration sender
     m_reg_sender.reset();
@@ -105,29 +110,29 @@ namespace eCAL
     m_created = false;
   }
 
-  // register single sample (currently we do not differ between registration/unregistration)
+  // (re)register single sample
   bool CRegistrationProvider::RegisterSample(const Registration::Sample& sample_)
   {
     if (!m_created) return(false);
-    ProcessSingleSample(sample_);
-    return(true);
-  }
 
-  // unregister single sample (currently we do not differ between registration/unregistration)
-  bool CRegistrationProvider::UnregisterSample(const Registration::Sample& sample_)
-  {
-    if (!m_created) return(false);
-    ProcessSingleSample(sample_);
-    return(true);
-  }
-
-  void CRegistrationProvider::ProcessSingleSample(const Registration::Sample& sample_)
-  {
     // add registration sample to registration loop
     AddSingleSample(sample_);
 
-    // force rgistration thread to send
+    // wake up registration thread
     TriggerRegisterSendThread();
+
+    return(true);
+  }
+
+  // unregister single sample
+  bool CRegistrationProvider::UnregisterSample(const Registration::Sample& sample_)
+  {
+    if (!m_created) return(false);
+
+    // add registration sample to registration loop, no need to force registration thread to send
+    AddSingleSample(sample_);
+
+    return(true);
   }
 
   void CRegistrationProvider::AddSingleSample(const Registration::Sample& sample_)
@@ -173,17 +178,17 @@ namespace eCAL
       if (g_clientgate() != nullptr) g_clientgate()->GetRegistrations(sample_list);
 #endif
 
-      // send registration sample list
+      // send collected registration sample list
       m_reg_sender->SendSampleList(sample_list);
 
-      // send active applied samples at the end of the registration loop
+      // send asynchronously applied samples at the end of the registration loop
       {
         const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
         m_reg_sender->SendSampleList(m_applied_sample_list);
         m_applied_sample_list.samples.clear();
       }
 
-      // wait for trigger or registration refresh timeout
+      // wait for external trigger or until registration refresh timeout
       {
         std::unique_lock<std::mutex> lock(m_reg_sample_snd_thread_cv_mtx);
         m_reg_sample_snd_thread_cv.wait_for(lock, std::chrono::milliseconds(Config::GetRegistrationRefreshMs()), [this] { return m_reg_sample_snd_thread_trigger; });

@@ -94,6 +94,7 @@ namespace eCAL
     m_pub_map.set_expiration(registration_timeout);
 
     // start transport layers
+    InitializeLayers();
     StartTransportLayer();
 
     // mark as created
@@ -341,7 +342,7 @@ namespace eCAL
   {
     // initialize udp layer
 #if ECAL_CORE_TRANSPORT_UDP
-    if (Config::IsUdpMulticastRecEnabled())
+    if (m_config.udp.enable)
     {
       CUDPReaderLayer::Get()->Initialize();
     }
@@ -349,7 +350,7 @@ namespace eCAL
 
     // initialize shm layer
 #if ECAL_CORE_TRANSPORT_SHM
-    if (Config::IsShmRecEnabled())
+    if (m_config.shm.enable)
     {
       CSHMReaderLayer::Get()->Initialize();
     }
@@ -357,10 +358,7 @@ namespace eCAL
 
     // initialize tcp layer
 #if ECAL_CORE_TRANSPORT_TCP
-    // TODO: use configuration here
-    // currently we have a missmatch between global Config::IsTcpRecEnabled() and m_config.tcp.enable
-    //if (Config::IsTcpRecEnabled())
-    if (1)
+    if (m_config.tcp.enable)
     {
       CTCPReaderLayer::Get()->Initialize();
     }
