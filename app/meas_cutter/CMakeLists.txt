@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,13 +22,8 @@ find_package(Threads REQUIRED)
 find_package(tclap REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
-#compatibility with yaml-cpp < 0.8.0
-if (NOT TARGET yaml-cpp::yaml-cpp AND TARGET yaml-cpp)
-  # ALIASing a imported non-global library requires CMake 3.18 so we do this
-  add_library(yaml-cpp::yaml-cpp INTERFACE IMPORTED)
-  target_link_libraries(yaml-cpp::yaml-cpp INTERFACE yaml-cpp)
-endif()
-
+include(${ECAL_PROJECT_ROOT}/thirdparty/yaml-cpp/compatibility-yaml-cpp.cmake)
+yaml_cpp_create_compatibility_targets()
 
 set(meas_cutter_src
     src/main.cpp

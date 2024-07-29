@@ -23,6 +23,9 @@ find_package(GTest REQUIRED)
 find_package(tclap REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
+include(${ECAL_PROJECT_ROOT}/thirdparty/yaml-cpp/compatibility-yaml-cpp.cmake)
+yaml_cpp_create_compatibility_targets()
+
 set(cmd_parser_src
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/ecal_cmd_parser.cpp
   ${ECAL_CORE_PROJECT_ROOT}/core/src/util/advanced_tclap_output.cpp
@@ -33,7 +36,7 @@ set(cmd_parser_src
 )
 
 set(config_reader_src
-  ${CMAKE_SOURCE_DIR}/ecal/core/src/config/configuration_reader.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/config/configuration_reader.h
 )
 
 set(config_test_src
