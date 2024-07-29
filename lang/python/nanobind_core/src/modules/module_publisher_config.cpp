@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  Add ServiceClient class to nanobind module
+ * @brief  Add Publisher config structs to nanobind module
 **/
 
 

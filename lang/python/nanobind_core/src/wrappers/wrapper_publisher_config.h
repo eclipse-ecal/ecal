@@ -18,8 +18,8 @@
 */
 
 /**
- * @file   wrapper_datatypeinfo.h
- * @brief  Nanobind wrapper SDataTypeInformation struct
+ * @file   wrapper_publisher_config.h
+ * @brief  Nanobind wrapper for structs of Publisher config
 **/
 
 #pragma once
