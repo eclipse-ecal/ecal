@@ -222,10 +222,15 @@ namespace eCAL
                   {
                     // calculate user payload address
                     data_buf = static_cast<const char*>(buf) + mfile_hdr.hdr_size;
+                    // call user callback function
+                    m_data_callback(topic_name_, topic_id_, data_buf, mfile_hdr.data_size, (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
                   }
                 }
-                // call user callback function
-                m_data_callback(topic_name_, topic_id_, data_buf, mfile_hdr.data_size, (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
+                else
+                {
+                  // call user callback function
+                  m_data_callback(topic_name_, topic_id_, data_buf, mfile_hdr.data_size, (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
+                }
               }
             }
             // -------------------------------------------------------------------------
