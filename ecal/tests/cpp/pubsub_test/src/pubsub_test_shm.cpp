@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,8 +64,13 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
   pub_config.layer.udp.enable = false;
   pub_config.layer.tcp.enable = false;
 
-  // create publisher for topic "A"
-  eCAL::CPublisher pub("A", pub_config);
+  // create publisher for topic "A" (no zero copy)
+  eCAL::CPublisher pub1("A", pub_config);
+
+  // switch on zero copy
+  pub_config.layer.shm.zero_copy_mode = true;
+  eCAL::CPublisher pub2("A", pub_config);
+
 
   // add callback
   EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
@@ -76,21 +81,30 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
   g_callback_received_bytes = 0;
   g_callback_received_count = 0;
 
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  // send without zero copy
+  EXPECT_EQ(send_s.size(), pub1.Send(send_s));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
-  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
+  EXPECT_EQ(send_s.size(), pub1.Send(nullptr, 0));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
+
+  // send with zero copy
+  EXPECT_EQ(send_s.size(), pub2.Send(send_s));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
+
+  EXPECT_EQ(send_s.size(), pub2.Send(nullptr, 0));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive
   EXPECT_EQ(send_s.size(), g_callback_received_bytes);
-  EXPECT_EQ(2, g_callback_received_count);
+  EXPECT_EQ(4, g_callback_received_count);
 
   // destroy subscriber
   sub.Destroy();
 
   // destroy publisher
-  pub.Destroy();
+  pub1.Destroy();
+  pub2.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();
