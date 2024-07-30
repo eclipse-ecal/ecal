@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,12 +46,20 @@ public:
     eCAL::Finalize();
   }
 
-  void SendPerson(eCAL::protobuf::CPublisher<pb::People::Person>& pub)
+  size_t SendPerson(eCAL::protobuf::CPublisher<pb::People::Person>& pub)
   {
-    pb::People::Person p;
     p.set_id(1);
     p.set_name("Max");
-    pub.Send(p);
+    return pub.Send(p);
+  }
+
+  size_t GetPersonSize()
+  {
+#if GOOGLE_PROTOBUF_VERSION >= 3001000
+    return static_cast<size_t>(p.ByteSizeLong());
+#else
+    return static_cast<size_t>(p.ByteSize());
+#endif
   }
 
   void OnPerson(const char*, const pb::People::Person&, long long, long long)
@@ -60,6 +68,9 @@ public:
   }
 
   std::atomic<int> received_callbacks;
+
+private:
+  pb::People::Person p;
 };
 using core_cpp_pubsub_proto_sub = ProtoSubscriberTest;
 
@@ -75,11 +86,11 @@ TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_SendReceive)
 
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
-  SendPerson(person_pub);
+  auto bytes_send = SendPerson(person_pub);
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   // assert that the OnPerson callback has been called once.
   ASSERT_EQ(1, received_callbacks);
-
+  ASSERT_EQ(bytes_send, GetPersonSize());
 }
 
 TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveAssignment)
