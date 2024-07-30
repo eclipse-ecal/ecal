@@ -34,6 +34,7 @@ endif()
 # core config
 # --------------------------------------------------------
 add_subdirectory(core/cfg)
+add_subdirectory(core/cfg/gen)
 
 # --------------------------------------------------------
 # services

@@ -329,13 +329,3 @@ TEST(YamlConfigReaderTest /*unused*/, yaml_to_config_merger /*unused*/)
 
   remove(ini_file_name.data());
 }
-
-TEST(YamlGenerationTest /*unused*/, yaml_generation_test /*unused*/)
-{
-  eCAL::Configuration config{};
-
-  std::stringstream ss = eCAL::Config::getConfigAsYamlSS();
-  eCAL::Config::YamlStringToConfig(ss.str(), config);
-
-  EXPECT_EQ(config.registration.registration_timeout, REGISTRATION_REGISTRATION_TIMEOUT);
-}

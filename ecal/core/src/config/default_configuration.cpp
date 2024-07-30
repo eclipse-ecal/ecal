@@ -10,7 +10,9 @@ namespace {
   std::ostream& operator<<(std::ostream& os, const std::array<T, N>& arr) {
       os << "[";
       for (std::size_t i = 0; i < N; ++i) {
+          os << "\"";
           os << arr[i];
+          os << "\"";
           if (i < N - 1) {
               os << ", ";
           }
@@ -78,11 +80,12 @@ namespace eCAL
       ss << R"(#  \__, |_|\___/|_.__/ \__,_|_|  \___\___/|_| |_|_| |_|\__, |\__,_|_|  \__,_|\__|_|\___/|_| |_|)"                << "\n";
       ss << R"(#  |___/                                               |___/                                   )"                << "\n";
       ss << R"()"                                                                                                               << "\n";
+      ss << R"()"                                                                                                               << "\n";
       ss << R"(# Registration layer configuration)"                                                                             << "\n";
       ss << R"(registration:)"                                                                                                  << "\n";
       ss << R"(  # Topic registration refresh cylce (has to be smaller then registration timeout! Default: 1000))"              << "\n";
       ss << R"(  registration_refresh: )"                            << REGISTRATION_REGISTRATION_REFRESH                       << "\n";
-      ss << R"(  # Timeout for topic registration in ms (internal, Default: 60000)"                                             << "\n";
+      ss << R"(  # Timeout for topic registration in ms (internal, Default: 60000))"                                            << "\n";
       ss << R"(  registration_timeout: )"                            << REGISTRATION_REGISTRATION_TIMEOUT                       << "\n";
       ss << R"(  # Enable to receive registration information on the same local machine)"                                       << "\n";
       ss << R"(  loopback: )"                                        << REGISTRATION_LOOPBACK                                   << "\n";
@@ -105,13 +108,14 @@ namespace eCAL
       ss << R"(      enable: )"                                      << REGISTRATION_LAYER_UDP_ENABLE                           << "\n";
       ss << R"(      port: )"                                        << REGISTRATION_LAYER_UDP_PORT                             << "\n";
       ss << R"()"                                                                                                               << "\n";
+      ss << R"()"                                                                                                               << "\n";
       ss << R"(# Monitoring configuration)"                                                                                     << "\n";
       ss << R"(monitoring:)"                                                                                                    << "\n";
       ss << R"(  # Timeout for topic monitoring in ms (Default: 5000), increase in 1000er steps)"                               << "\n";
       ss << R"(  timeout: )"                                         << MONITORING_TIMEOUT                                      << "\n";
-      ss << R"(  # Topics blacklist as regular expression (will not be monitored)"                                              << "\n";
+      ss << R"(  # Topics blacklist as regular expression (will not be monitored))"                                             << "\n";
       ss << R"(  filter_excl: )"                                     << quoteString(MONITORING_FILTER_EXCL)                     << "\n";
-      ss << R"(  # Topics whitelist as regular expression (will be monitored only) (Default: "")"                               << "\n";
+      ss << R"(  # Topics whitelist as regular expression (will be monitored only) (Default: ""))"                              << "\n";
       ss << R"(  filter_incl: )"                                     << quoteString(MONITORING_FILTER_INCL)                     << "\n";
       ss << R"()"                                                                                                               << "\n";
       ss << R"()"                                                                                                               << "\n";
@@ -122,7 +126,7 @@ namespace eCAL
       ss << R"(    # v1: default behavior)"                                                                                     << "\n";
       ss << R"(    # v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups)"               << "\n";
       ss << R"(    config_version: )"                                << quoteString(TRANSPORT_LAYER_UDP_CONFIG_VERSION)         << "\n";
-      ss << R"(    # Valid modes: local, network (Default: local)"                                                              << "\n";
+      ss << R"(    # Valid modes: local, network (Default: local))"                                                             << "\n";
       ss << R"(    mode: )"                                          << quoteString(TRANSPORT_LAYER_UDP_MODE)                   << "\n";
       ss << R"(    # Multicast port number)"                                                                                    << "\n";
       ss << R"(    port: )"                                          << TRANSPORT_LAYER_UDP_PORT                                << "\n";
@@ -180,7 +184,7 @@ namespace eCAL
       ss << R"(      # Force connected subscribers to send acknowledge event after processing the message.)"                    << "\n";
       ss << R"(      # The publisher send call is blocked on this event with this timeout (0 == no handshake).)"                << "\n";
       ss << R"(      acknowledge_timeout_ms: )"                      << PUBLISHER_LAYER_SHM_ACKNOWLEDGE_TIMEOUT_MS              << "\n";
-      ss << R"(      # Maximum number of used buffers (needs to be greater than 1, default = 1)"                                << "\n";
+      ss << R"(      # Maximum number of used buffers (needs to be greater than 1, default = 1))"                               << "\n";
       ss << R"(      memfile_buffer_count: )"                        << PUBLISHER_LAYER_SHM_MEMFILE_BUFFER_COUNT                << "\n";
       ss << R"()"                                                                                                               << "\n";
       ss << R"(    # Base configuration for UDP publisher)"                                                                     << "\n";
@@ -197,9 +201,9 @@ namespace eCAL
       ss << R"(  share_topic_type: )"                                << PUBLISHER_SHARE_TOPIC_TYPE                              << "\n";
       ss << R"(  # Share topic description via registration)"                                                                   << "\n";
       ss << R"(  share_topic_description: )"                         << PUBLISHER_SHARE_TOPIC_DESCRIPTION                       << "\n";
-      ss << R"(  # Priority list for layer usage in local mode (Default: SHM > UDP > TCP)"                                      << "\n";
+      ss << R"(  # Priority list for layer usage in local mode (Default: SHM > UDP > TCP))"                                     << "\n";
       ss << R"(  priority_local: )"                                  << PUBLISHER_PRIORITY_LOCAL                                << "\n";
-      ss << R"(  # Priority list for layer usage in cloud mode (Default: UDP > TCP)"                                            << "\n";
+      ss << R"(  # Priority list for layer usage in cloud mode (Default: UDP > TCP))"                                           << "\n";
       ss << R"(  priority_network: )"                                << PUBLISHER_PRIORITY_NETWORK                              << "\n";
       ss << R"()"                                                                                                               << "\n";
       ss << R"()"                                                                                                               << "\n";
@@ -227,12 +231,12 @@ namespace eCAL
       ss << R"()"                                                                                                               << "\n";
       ss << R"(# Time configuration)"                                                                                           << "\n";
       ss << R"(time:)"                                                                                                          << "\n";
-      ss << R"(  # Time synchronisation interface name (dynamic library)"                                                       << "\n";
+      ss << R"(  # Time synchronisation interface name (dynamic library))"                                                      << "\n";
       ss << R"(  # The name will be extended with platform suffix (32|64), debug suffix (d) and platform extension (.dll|.so))" << "\n";
       ss << R"(  # Available modules are:)"                                                                                     << "\n";
       ss << R"(  #   - ecaltime-localtime    local system time without synchronization)"                                        << "\n";
       ss << R"(  #   - ecaltime-linuxptp     For PTP / gPTP synchronization over ethernet on Linux)"                            << "\n";
-      ss << R"(  #                           (device configuration in ecaltime.ini)"                                            << "\n";
+      ss << R"(  #                           (device configuration in ecaltime.ini))"                                           << "\n";
       ss << R"(  rt: )"                                               << quoteString(TIME_RT)                                   << "\n";
       ss << R"(  # Specify the module name for replaying)"                                                                      << "\n";
       ss << R"(  replay: )"                                           << quoteString(TIME_REPLAY)                               << "\n";
@@ -246,6 +250,7 @@ namespace eCAL
       ss << R"(  protocol_v1: )"                                      << SERVICE_PROTOCOL_V1                                    << "\n";
       ss << R"()"                                                                                                               << "\n";
       ss << R"()"                                                                                                               << "\n";
+      ss << R"(# eCAL Application Configuration)"                                                                               << "\n";
       ss << R"(application:)"                                                                                                   << "\n";
       ss << R"(  # Configuration for eCAL Sys)"                                                                                 << "\n";
       ss << R"(  sys:)"                                                                                                         << "\n";
