@@ -207,15 +207,8 @@ namespace eCAL
       else
       {
         std::cout << "Specified yaml configuration path not valid: " << "\"" << yaml_path_ << "\"" << " Using default configuration." << "\n";
-        InitConfigWithDefaults();
       }
     };
-
-    void Configuration::InitConfigWithDefaults()
-    {
-      auto ss = eCAL::Config::getConfigAsYamlSS();
-      eCAL::Config::YamlStringToConfig(ss.str(), *this);
-    }
 
     Configuration::Configuration(int argc_ , char **argv_)
     {
@@ -241,11 +234,7 @@ namespace eCAL
       command_line_arguments.user_yaml   = parser.getUserIni();
       command_line_arguments.dump_config = parser.getDumpConfig();
 
-      if (command_line_arguments.user_yaml.empty())
-      {
-        InitConfigWithDefaultYaml();
-      }
-      else
+      if (!command_line_arguments.user_yaml.empty())
       {
         InitConfigFromFile(command_line_arguments.user_yaml);
       }
@@ -257,8 +246,7 @@ namespace eCAL
     }
 
     Configuration::Configuration()
-    {
-      InitConfigWithDefaults();
+    {      
     }
 
     std::string Configuration::GetYamlFilePath()

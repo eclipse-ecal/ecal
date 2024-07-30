@@ -45,7 +45,7 @@ namespace eCAL
   {
 
     // IpAddressV4 definitions
-    IpAddressV4::IpAddressV4() : IpAddressV4(TRANSPORT_LAYER_UDP_NETWORK_GROUP) {};
+    IpAddressV4::IpAddressV4() : IpAddressV4( "192.168.0.1" ) {};
 
     IpAddressV4::IpAddressV4(const std::string& ip_address_)
     {

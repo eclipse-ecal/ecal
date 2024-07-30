@@ -24,7 +24,6 @@
 
 #pragma once
 
-#include <ecal/ecal_os.h>
 #include <ecal/config/transport_layer.h>
 
 #include <cstddef>
@@ -39,7 +38,7 @@ namespace eCAL
       {
         struct Configuration
         {
-          bool enable;                                                  //!< enable layer
+          bool enable { true }; //!< enable layer (Default: true)
         };
       }
 
@@ -47,7 +46,7 @@ namespace eCAL
       {
         struct Configuration
         {
-          bool enable;                                                  //!< enable layer
+          bool enable { true }; //!< enable layer (Default: true)
         };
       }
 
@@ -55,7 +54,7 @@ namespace eCAL
       {
         struct Configuration
         {
-          bool enable;                                                  //!< enable layer
+          bool enable { false }; //!< enable layer (Default: false)
         };
       }
 
@@ -69,11 +68,9 @@ namespace eCAL
 
     struct Configuration
     {
-      ECAL_API Configuration();
-
       Layer::Configuration layer;
 
-      bool drop_out_of_order_messages{}; 
+      bool drop_out_of_order_messages { true }; //!< Enable dropping of payload messages that arrive out of order
     };
   }
 }

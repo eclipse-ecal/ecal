@@ -36,7 +36,7 @@ namespace eCAL
     {
       struct Configuration
       {
-        std::string filter_excl;          //!<
+        std::string filter_excl { "^eCALSysClient$|^eCALSysGUI$|^eCALSys$*" }; //!< Apps blacklist to be excluded when importing tasks from cloud
       };
     }
 
@@ -44,14 +44,14 @@ namespace eCAL
     {
       struct Configuration
       {
-        std::string terminal_emulator;    //!<
+        std::string terminal_emulator { "" };                                  //!< Linux only command for starting applications with an external terminal emulator
       };
     }
 
     struct Configuration
     {
-      Sys::Configuration     sys;         //!<
-      Startup::Configuration startup;     //!<
+      Sys::Configuration     sys;
+      Startup::Configuration startup;
     };
   }
 }

@@ -52,6 +52,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${ECAL_CORE_PROJECT_ROOT}/core/include
 )
 
+target_link_libraries(${PROJECT_NAME} PRIVATE
+  eCAL::core
+)
+
 # Install the generated YAML file if not cross-compiling
 if(ECAL_SHARED_CONFIG AND NOT CMAKE_CROSSCOMPILING)
   install(

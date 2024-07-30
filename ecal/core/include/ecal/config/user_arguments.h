@@ -32,12 +32,10 @@ namespace eCAL
 {
   namespace Cli
   {
-    using ConfigKey2DMap = std::map<std::string, std::map<std::string, std::string>>; //!< Config key storage: Map[Section][Option] = Value
-
     struct Configuration
     {
-      std::string              user_yaml{};         //!< The used eCAL yaml file (Default: "")
-      bool                     dump_config{};       //!< If specified, output configuration via standart output (Default: false)
+      std::string              user_yaml   { "" };    //!< The used eCAL yaml file (Default: "")
+      bool                     dump_config { false }; //!< If specified, output configuration via standart output (Default: false)
     };
   }
 }
