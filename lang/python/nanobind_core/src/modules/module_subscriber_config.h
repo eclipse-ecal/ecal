@@ -18,26 +18,29 @@
 */
 
 /**
- * @brief  common datatype info based on eCAL, adapted for Nanobind
+ * @file   wrapper_subscriber_config.h
+ * @brief  Nanobind wrapper for structs of Subscriber config
 **/
 
+#pragma once
+
+#include <nanobind/nanobind.h>
+#include <nanobind/operators.h>
 #include <ecal/ecal.h>
-#include <stdint.h>
+#include <nanobind/operators.h>
+#include <nanobind/stl/string.h>
+#include <nanobind/stl/shared_ptr.h>
+#include <nanobind/stl/tuple.h>
+#include <cstdint>
+#include <chrono>
+#include <memory>
 #include <string>
 #include <cstddef>
 #include <ecal/ecal_types.h>
 
-#include <wrappers/wrapper_datatypeinfo.h>
-
-namespace eCAL
-{
-    SDataTypeInformation convert(const CNBDataTypeInformation& nb_info)
-    {
-        SDataTypeInformation info;
-        info.name = nb_info.name;
-        info.encoding = nb_info.encoding;
-        info.descriptor = std::string(nb_info.descriptor.c_str(), nb_info.descriptor.size());
-
-        return info;
-    }
-}
+/**
+ * @brief  Function to Add Nanobind module
+ *
+ * @param module  The nanobind module variable
+**/
+void AddSubscriberConfigStructToModule(nanobind::module_& module);

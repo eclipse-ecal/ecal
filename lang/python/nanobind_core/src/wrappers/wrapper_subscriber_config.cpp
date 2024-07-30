@@ -18,26 +18,16 @@
 */
 
 /**
- * @brief  common datatype info based on eCAL, adapted for Nanobind
+ * @brief  publisher configuration, adapted for Nanobind
 **/
 
-#include <ecal/ecal.h>
-#include <stdint.h>
-#include <string>
-#include <cstddef>
-#include <ecal/ecal_types.h>
-
-#include <wrappers/wrapper_datatypeinfo.h>
+#include <wrappers/wrapper_subscriber_config.h>
 
 namespace eCAL
 {
-    SDataTypeInformation convert(const CNBDataTypeInformation& nb_info)
-    {
-        SDataTypeInformation info;
-        info.name = nb_info.name;
-        info.encoding = nb_info.encoding;
-        info.descriptor = std::string(nb_info.descriptor.c_str(), nb_info.descriptor.size());
-
-        return info;
+    Subscriber::CNBSubscriberConfiguration::CNBSubscriberConfiguration()
+    { 
+        Subscriber::Configuration::Configuration();
     }
+
 }

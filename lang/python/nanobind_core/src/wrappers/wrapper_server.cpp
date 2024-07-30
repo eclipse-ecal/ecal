@@ -36,14 +36,14 @@ namespace eCAL
 
     CNBSrvServer::CNBSrvServer(const std::string& service_name) : CServiceServer(service_name) { }
 
-    bool CNBSrvServer::WrapAddMethodCB(const std::string& nb_method, const std::string& nb_req_type, const std::string& nb_resp_type, nanobind::callable callback_)
+    bool CNBSrvServer::WrapAddMethodCB(const std::string& nb_method, const std::string& nb_req_type, const std::string& nb_resp_type, const std::string& nb_request, nanobind::callable callback_)
     {
         assert(IsConnected());
         {
             std::lock_guard<std::mutex> callback_lock(m_python_method_callback_mutex);
             m_python_method_callback = callback_;
         }
-        auto Servercallback = std::bind(&CNBSrvServer::MethodCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5);
+        auto const Servercallback = std::bind(&CNBSrvServer::MethodCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5);
         return(CNBSrvServer::AddMethodCallback(nb_method, nb_req_type, nb_resp_type, Servercallback));
     }
 
@@ -68,11 +68,13 @@ namespace eCAL
 
         try {
             nanobind::gil_scoped_acquire g2;
-            auto result = fn_callback(method_, req_type_, resp_type_, request);
+            nanobind::callable func_call;
+            auto result = fn_callback(method_, req_type_, resp_type_, func_call);
             // do some check if object holds a tuple if (!result.is_type<nanobind::tuple>)
             nanobind::tuple result_tuple = nanobind::cast<nanobind::tuple>(result);
-            response = nanobind::cast<std::string>(result[1]);
-            int nb_int = nanobind::cast<int>(result[0]);
+            response = nanobind::cast<std::string>(result_tuple[1]);
+          //  request = nanobind::cast<std::string>(result_tuple[2]);
+            int nb_int = nanobind::cast<int>(result_tuple[0]);
             return nb_int;
         }
         catch (const nanobind::python_error& e) {

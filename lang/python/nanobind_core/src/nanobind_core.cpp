@@ -39,8 +39,10 @@
 #include <modules/module_core.h>
 #include <modules/module_datatypeinfo.h>
 #include <modules/module_publisher.h>
+#include <modules/module_publisher_config.h>
 #include <modules/module_server.h>
 #include <modules/module_subscriber.h>
+#include <modules/module_subscriber_config.h>
 #include <modules/module_util.h>
 
 
@@ -51,6 +53,8 @@ NB_MODULE(nanobind_core, m) {
     AddPublisherClassToModule(m);
     AddClientClassToModule(m);
     AddServerClassToModule(m);
+    AddPublisherConfigStructToModule(m);
+    AddSubscriberConfigStructToModule(m);
 
     AddCoreFuncToModule(m);
     AddUtilFuncToModule(m);

@@ -31,6 +31,8 @@ nanobind_add_module(
   modules/module_server.h
   modules/module_subscriber.cpp
   modules/module_subscriber.h
+  modules/module_subscriber_config.cpp
+  modules/module_subscriber_config.h
   modules/module_util.cpp
   modules/module_util.h
 
@@ -46,6 +48,8 @@ nanobind_add_module(
   wrappers/wrapper_server.h
   wrappers/wrapper_subscriber.cpp
   wrappers/wrapper_subscriber.h
+  wrappers/wrapper_subscriber_config.cpp
+  wrappers/wrapper_subscriber_config.h
 
   nanobind_core.cpp
 )
