@@ -88,7 +88,7 @@ namespace
   std::string cwdPath()
   {
     std::string cwd_path = { getcwd(nullptr, 0) };
-            
+    
     setPathSep(cwd_path);
     return cwd_path;
   }
@@ -195,6 +195,22 @@ namespace
 
     return found_path + config_file_;
   }
+
+  std::vector<std::string> ConvertArgcArgvToVector(int argc_, char** argv_)
+  {
+    std::vector<std::string> arguments;
+    if (argc_ > 0 && argv_ != nullptr)
+    {
+      for (size_t i = 0; i < static_cast<size_t>(argc_); ++i)
+      {
+        if (argv_[i] != nullptr)
+        {
+          arguments.emplace_back(argv_[i]);
+        }
+      }
+    }
+    return arguments;
+  }
 }
 
 namespace eCAL 
@@ -218,23 +234,11 @@ namespace eCAL
     };
 
     Configuration::Configuration(int argc_ , char **argv_)
+    : Configuration(ConvertArgcArgvToVector(argc_, argv_))
     {
-      std::vector<std::string> arguments;
-      if (argc_ > 0 && argv_ != nullptr)
-      {
-        for (size_t i = 0; i < static_cast<size_t>(argc_); ++i) 
-          if (argv_[i] != nullptr) 
-            arguments.emplace_back(argv_[i]);
-      } 
-      Init(arguments);
     }
 
     Configuration::Configuration(const std::vector<std::string>& args_)
-    {      
-      Init(args_);
-    }
-
-    void Configuration::Init(const std::vector<std::string>& args_)
     {
       Config::CmdParser parser(args_);
       
@@ -257,7 +261,7 @@ namespace eCAL
     }
 
     Configuration::Configuration()
-    {      
+    {
     }
 
     std::string Configuration::GetYamlFilePath()
@@ -273,7 +277,7 @@ namespace eCAL
 
 
 // Utils definitions from former ecal_config_reader.cpp
-namespace 
+namespace
 {
   bool fileexists(const std::string& fname_)
   {

@@ -31,7 +31,7 @@
 
 namespace
 {
-  constexpr eCAL_Logging_Filter log_level_default = log_level_info | log_level_warning | log_level_error | log_level_fatal;
+  static constexpr eCAL_Logging_Filter log_level_default = log_level_info | log_level_warning | log_level_error | log_level_fatal;
 }
 
 namespace eCAL

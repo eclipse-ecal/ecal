@@ -48,16 +48,16 @@ namespace eCAL
 {
   struct Configuration
   {
-    TransportLayer::Configuration transport_layer{};
-    Registration::Configuration   registration{};
-    Monitoring::Configuration     monitoring{};
-    Subscriber::Configuration     subscriber{};
-    Publisher::Configuration      publisher{};
-    Time::Configuration           timesync{};
-    Service::Configuration        service{};
-    Application::Configuration    application{};
-    Logging::Configuration        logging{};
-    Cli::Configuration            command_line_arguments{};
+    TransportLayer::Configuration transport_layer;
+    Registration::Configuration   registration;
+    Monitoring::Configuration     monitoring;
+    Subscriber::Configuration     subscriber;
+    Publisher::Configuration      publisher;
+    Time::Configuration           timesync;
+    Service::Configuration        service;
+    Application::Configuration    application;
+    Logging::Configuration        logging;
+    Cli::Configuration            command_line_arguments;
 
     ECAL_API Configuration();
     ECAL_API Configuration(int argc_, char** argv_);
@@ -70,10 +70,7 @@ namespace eCAL
 
     friend class CmdParser;
 
-  protected:
-    std::string ecal_yaml_file_path{};
-
-  private:
-    ECAL_API void Init(const std::vector<std::string>& args_);
+    protected:
+      std::string ecal_yaml_file_path;
   };
 }

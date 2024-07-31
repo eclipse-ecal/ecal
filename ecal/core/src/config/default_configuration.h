@@ -11,6 +11,6 @@ namespace eCAL
   {
     std::stringstream getConfigAsYamlSS(const eCAL::Configuration& config_ = eCAL::GetConfiguration());
 
-    bool dumpConfigToFile(const eCAL::Configuration& config_, const std::string& file_path_ = ECAL_DEFAULT_CFG);
+    bool dumpConfigToFile(const eCAL::Configuration& config_ = eCAL::GetConfiguration(), const std::string& file_path_ = ECAL_DEFAULT_CFG);
   }
 }

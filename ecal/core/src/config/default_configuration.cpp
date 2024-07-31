@@ -18,15 +18,15 @@ namespace
   std::string logToArray(const eCAL_Logging_Filter& filter_)
   {
     std::string result = "[";
-    if (filter_ & log_level_all)     result += "\"all\", ";
-    if (filter_ & log_level_info)    result += "\"info\", ";
-    if (filter_ & log_level_warning) result += "\"warning\", ";
-    if (filter_ & log_level_error)   result += "\"error\", ";
-    if (filter_ & log_level_fatal)   result += "\"fatal\", ";
-    if (filter_ & log_level_debug1)  result += "\"debug1\", ";
-    if (filter_ & log_level_debug2)  result += "\"debug2\", ";
-    if (filter_ & log_level_debug3)  result += "\"debug3\", ";
-    if (filter_ & log_level_debug4)  result += "\"debug4\", ";
+    if ((filter_ & log_level_all) != 0)     result += "\"all\", ";
+    if ((filter_ & log_level_info) != 0)    result += "\"info\", ";
+    if ((filter_ & log_level_warning) != 0) result += "\"warning\", ";
+    if ((filter_ & log_level_error) != 0)   result += "\"error\", ";
+    if ((filter_ & log_level_fatal) != 0)   result += "\"fatal\", ";
+    if ((filter_ & log_level_debug1) != 0)  result += "\"debug1\", ";
+    if ((filter_ & log_level_debug2) != 0)  result += "\"debug2\", ";
+    if ((filter_ & log_level_debug3) != 0)  result += "\"debug3\", ";
+    if ((filter_ & log_level_debug4) != 0)  result += "\"debug4\", ";
     
     if (result.size() > 1)
     {
@@ -60,7 +60,7 @@ namespace
       }
     }
 
-    if (vector_.size() > 0)
+    if (!vector_.empty())
     {
       // remove the last ", "
       result.pop_back();
