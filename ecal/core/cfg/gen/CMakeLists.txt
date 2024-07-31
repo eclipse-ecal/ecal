@@ -56,6 +56,15 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   eCAL::core
 )
 
+# Select the correct ecal config directory on Linux and Windows
+if(UNIX)
+  set(ECAL_SHARED_CONFIG ${eCAL_install_config_dir})
+elseif(WIN32)
+  set(ECAL_SHARED_CONFIG ${eCAL_install_config_dir})
+else()
+  message(STATUS "Unsupported OS, not installing configs")
+endif()
+
 # Install the generated YAML file if not cross-compiling
 if(ECAL_SHARED_CONFIG AND NOT CMAKE_CROSSCOMPILING)
   install(

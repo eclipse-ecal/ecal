@@ -7,13 +7,9 @@
 int main() {
     std::ofstream outFile(ECAL_DEFAULT_CFG);
     
-    if (outFile.is_open()) {
-        auto config_ss = eCAL::Config::getConfigAsYamlSS();
-        outFile << config_ss.str();
-        outFile.close();
-    }
-    else {
-        std::cerr << "Error: Could not generate file " << ECAL_DEFAULT_CFG << std::endl;
+    if (!eCAL::Config::dumpConfigToFile(eCAL::GetConfiguration()))
+    {
+        std::cerr << "Failed to write configuration to file: " << ECAL_DEFAULT_CFG << std::endl;
         return 1;
     }
 
