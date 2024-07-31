@@ -31,7 +31,8 @@
 
 namespace
 {
-  static constexpr eCAL_Logging_Filter log_level_default = log_level_info | log_level_warning | log_level_error | log_level_fatal;
+  // After switchting to c++17, this can be replaced by an inline constexpr
+  static const eCAL_Logging_Filter log_level_default = log_level_info | log_level_warning | log_level_error | log_level_fatal;
 }
 
 namespace eCAL
@@ -44,9 +45,9 @@ namespace eCAL
       {
         struct Configuration
         {
-          bool                enable         { false };              //!< Enable console logging (Default: false)
-          eCAL_Logging_Filter filter_log_con { log_level_default };  /*!< Log messages logged to console (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
-                                                                          (Default: info, warning, error, fatal)*/
+          bool                enable         { true };                               //!< Enable console logging (Default: true)
+          eCAL_Logging_Filter filter_log_con { log_level_error | log_level_fatal };  /*!< Log messages logged to console (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
+                                                                                          (Default: info, warning, error, fatal)*/
         };
       }
 

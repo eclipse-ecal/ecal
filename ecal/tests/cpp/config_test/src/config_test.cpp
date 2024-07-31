@@ -176,8 +176,8 @@ TEST(ConfigDeathTest /*unused*/, user_config_death_test /*unused*/)
 TEST(core_cpp_config /*unused*/, config_custom_datatypes_tests /*unused*/)
 {
   // test custom datatype assignment operators
-  eCAL::Types::IpAddressV4 ip1;
-  eCAL::Types::IpAddressV4 ip2;
+  eCAL::Types::IpAddressV4 ip1 { "192.168.0.1" };
+  eCAL::Types::IpAddressV4 ip2 { "192.168.0.1" };
   EXPECT_EQ(ip1, ip2);
 
   ip1 = "192.168.0.2";

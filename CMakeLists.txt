@@ -103,7 +103,7 @@ option(ECAL_USE_CLOCKLOCK_MUTEX                "Use native mutex with monotonic 
 set(ECAL_CORE_HAS_PROTOBUF                                                                                         ON)
 set(ECAL_CORE_BUILD_SAMPLES                                                                          ${BUILD_SAMPLES})
 set(ECAL_CORE_BUILD_TESTS                                                                         ${BUILD_ECAL_TESTS})
-option(ECAL_CORE_CONFIGURATION                                                                                     ON)
+set(ECAL_CORE_CONFIGURATION                                                                                        ON)
 set(ECAL_CORE_COMMAND_LINE                                                                                         ON)
 set(ECAL_CORE_REGISTRATION                                                                                         ON)
 set(ECAL_CORE_MONITORING                                                                                           ON)
@@ -116,11 +116,6 @@ set(ECAL_CORE_REGISTRATION_SHM                                                  
 set(ECAL_CORE_TRANSPORT_UDP                                                                                        ON)
 set(ECAL_CORE_TRANSPORT_TCP                                                                                        ON)
 set(ECAL_CORE_TRANSPORT_SHM                                                                                        ON)
-
-# Configuration depends on yaml-cpp
-if(ECAL_CORE_CONFIGURATION)
-  set(ECAL_THIRDPARTY_BUILD_YAML-CPP                                                                               ON)
-endif()
 
 # This should be ON, unless build ecal hdf5 for Matlab usage
 option(ECAL_LINK_HDF5_SHARED                   "Link shared libs of HDF5"                                          ON)

@@ -31,11 +31,11 @@ set(YAML_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/${ECAL_YAML})
 
 # Add a custom command to generate the YAML file
 add_custom_command(
-  OUTPUT  ${YAML_OUTPUT_PATH}       # Specify the output file
-  COMMAND ${PROJECT_NAME}           # Command to run the executable
-  DEPENDS ${PROJECT_NAME}           # Ensure the executable is built before running the command
+  OUTPUT  ${YAML_OUTPUT_PATH}               # Specify the output file
+  COMMAND $<TARGET_FILE:${PROJECT_NAME}>    # Command to run the executable
+  DEPENDS ${PROJECT_NAME}                   # Ensure the executable is built before running the command
   COMMENT "Generating ${YAML_OUTPUT_PATH}"  # Comment to display during the build process
-  VERBATIM                         # Ensure command arguments are passed as-is
+  VERBATIM                                  # Ensure command arguments are passed as-is
 )
 
 # Add a custom target that depends on the generated YAML file
@@ -66,7 +66,7 @@ else()
 endif()
 
 # Install the generated YAML file if not cross-compiling
-if(ECAL_SHARED_CONFIG AND NOT CMAKE_CROSSCOMPILING)
+if(ECAL_SHARED_CONFIG)
   install(
     FILES
       ${YAML_OUTPUT_PATH}           # File to install

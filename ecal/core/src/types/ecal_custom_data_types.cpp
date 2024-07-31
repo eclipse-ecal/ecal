@@ -43,10 +43,6 @@ namespace eCAL
 {
   namespace Types
   {
-
-    // IpAddressV4 definitions
-    IpAddressV4::IpAddressV4() : IpAddressV4( "192.168.0.1" ) {};
-
     IpAddressV4::IpAddressV4(const std::string& ip_address_)
     {
       validateIpString(ip_address_);

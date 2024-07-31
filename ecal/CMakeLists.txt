@@ -34,7 +34,9 @@ endif()
 # core config
 # --------------------------------------------------------
 add_subdirectory(core/cfg)
-add_subdirectory(core/cfg/gen)
+if(NOT CMAKE_CROSSCOMPILING)
+  add_subdirectory(core/cfg/gen)
+endif()
 
 # --------------------------------------------------------
 # services

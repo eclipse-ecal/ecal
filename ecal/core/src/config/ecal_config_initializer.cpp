@@ -50,6 +50,7 @@
 #include "ecal_utils/filesystem.h"
 #include "util/getenvvar.h"
 #include "ecal_utils/ecal_utils.h"
+#include "ecal/ecal_log.h"
 
 #include <algorithm>
 #include <fstream>
@@ -215,7 +216,7 @@ namespace
 
 namespace eCAL 
 {
-    void Configuration::InitConfigFromFile(const std::string& yaml_path_)
+    void Configuration::InitFromFile(const std::string& yaml_path_)
     {
       const std::string yaml_path = checkForValidConfigFilePath(yaml_path_);
       if (!yaml_path.empty())
@@ -224,12 +225,12 @@ namespace eCAL
         eCAL::Config::YamlFileToConfig(yaml_path, *this);
         ecal_yaml_file_path = yaml_path;
 #else
-        std::cout << "Yaml file found at " << yaml_path << " but eCAL core configuration is not enabled." << "\n";
+        eCAL::Logging::Log(log_level_warning, "Yaml file found at \"" + yaml_path + "\" but eCAL core configuration is not enabled.");
 #endif
       }
       else
       {
-        std::cout << "Specified yaml configuration path not valid: " << "\"" << yaml_path_ << "\"" << " Using default configuration." << "\n";
+        eCAL::Logging::Log(log_level_warning, "Specified yaml configuration path not valid:\"" + yaml_path_ + "\". Using default configuration.");
       }
     };
 
@@ -239,6 +240,7 @@ namespace eCAL
     }
 
     Configuration::Configuration(const std::vector<std::string>& args_)
+    : Configuration()
     {
       Config::CmdParser parser(args_);
       
@@ -247,21 +249,22 @@ namespace eCAL
 
       if (!command_line_arguments.user_yaml.empty())
       {
-        InitConfigFromFile(command_line_arguments.user_yaml);
+        InitFromFile(command_line_arguments.user_yaml);
       }
       else
       {
-        InitConfigWithDefaultYaml();
+        InitFromConfig();
       }
     }
 
-    void Configuration::InitConfigWithDefaultYaml()
+    void Configuration::InitFromConfig()
     {
-      InitConfigFromFile(g_default_ini_file);
+      InitFromFile(g_default_ini_file);
     }
 
     Configuration::Configuration()
     {
+      eCAL::InitGlobals();
     }
 
     std::string Configuration::GetYamlFilePath()
