@@ -149,6 +149,7 @@ jobs:
       run: mkdir "%ALLUSERSPROFILE%\eCAL"
            copy ".\ecal\core\cfg\gen\ecal.yaml" "%ALLUSERSPROFILE%\eCAL"
       working-directory: ${{ runner.workspace }}/_build/complete
+      shell: cmd
     
     - name: Run Tests
       run: ctest -C Release -V

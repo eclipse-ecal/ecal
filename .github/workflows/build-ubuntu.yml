@@ -150,7 +150,8 @@ jobs:
     - name: Create config path and copy ecal.yaml
       run: sudo mkdir /etc/ecal
            sudo cp "./ecal/core/cfg/gen/ecal.yaml" /etc/ecal
-      working-directory: ${{ runner.workspace }}/_build/complete
+      working-directory: ${{ runner.workspace }}/_build
+      shell: bash
 
     - name: Run Tests
       run: ctest -V
