@@ -25,12 +25,14 @@
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
-#include "default_configuration.h"
 
 #include "ecal/ecal_process.h"
 #include "config/ecal_cmd_parser.h"
-#include "configuration_to_yaml.h"
-#include "configuration_reader.h"
+
+#ifdef ECAL_CORE_CONFIGURATION
+  #include "configuration_reader.h"
+  #include "configuration_to_yaml.h"
+#endif
 
 // for cwd
 #ifdef ECAL_OS_WINDOWS
@@ -50,6 +52,7 @@
 #include "ecal_utils/ecal_utils.h"
 
 #include <algorithm>
+#include <fstream>
 
 namespace
 {
@@ -201,8 +204,12 @@ namespace eCAL
       const std::string yaml_path = checkForValidConfigFilePath(yaml_path_);
       if (!yaml_path.empty())
       {
+#ifdef ECAL_CORE_CONFIGURATION
         eCAL::Config::YamlFileToConfig(yaml_path, *this);
         ecal_yaml_file_path = yaml_path;
+#else
+        std::cout << "Yaml file found at " << yaml_path << " but eCAL core configuration is not enabled." << "\n";
+#endif
       }
       else
       {
@@ -237,6 +244,10 @@ namespace eCAL
       if (!command_line_arguments.user_yaml.empty())
       {
         InitConfigFromFile(command_line_arguments.user_yaml);
+      }
+      else
+      {
+        InitConfigWithDefaultYaml();
       }
     }
 

@@ -21,27 +21,30 @@ project(test_config)
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 find_package(tclap REQUIRED)
-find_package(yaml-cpp REQUIRED)
+
+if(ECAL_CORE_CONFIGURATION)
+  find_package(yaml-cpp REQUIRED)
+endif()
 
 set(cmd_parser_src
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/ecal_cmd_parser.cpp
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/util/advanced_tclap_output.cpp
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/config/configuration_reader.cpp
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/config/configuration_to_yaml.cpp
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/util/advanced_tclap_output.cpp  
   ${ECAL_PROJECT_ROOT}/lib/ecal_utils/src/filesystem.cpp
   ${ECAL_PROJECT_ROOT}/lib/ecal_utils/src/str_convert.cpp 
-)
-
-set(config_reader_src
-  ${CMAKE_SOURCE_DIR}/ecal/core/src/config/configuration_reader.h
 )
 
 set(config_test_src
   src/config_test.cpp
   ${cmd_parser_src}
-  ${config_reader_src}
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/default_configuration.cpp
 )
+
+if(ECAL_CORE_CONFIGURATION)
+  list(APPEND config_test_src
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/config/configuration_reader.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/config/configuration_to_yaml.cpp
+  )
+endif()
 
 ecal_add_gtest(${PROJECT_NAME} ${config_test_src})
 
@@ -56,8 +59,12 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::core 
     Threads::Threads
     tclap::tclap
-    yaml-cpp::yaml-cpp
 )
+
+if(ECAL_CORE_CONFIGURATION)
+  target_link_libraries(${PROJECT_NAME} PRIVATE yaml-cpp)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE ECAL_CORE_CONFIGURATION)
+endif()
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 

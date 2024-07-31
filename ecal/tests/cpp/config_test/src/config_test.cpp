@@ -29,7 +29,9 @@
 #include <cstdio>
 
 #include "ecal_cmd_parser.h"
-#include "configuration_reader.h"
+#ifdef ECAL_CORE_CONFIGURATION
+  #include "configuration_reader.h"
+#endif
 #include "default_configuration.h"
 #include "ecal_def.h"
 
@@ -224,6 +226,7 @@ TEST(CmdParserTest /*unused*/, config_cmd_parser_test /*unused*/)
   EXPECT_EQ(parser.getDumpConfig(), true);
 }
 
+#ifdef ECAL_CORE_CONFIGURATION
 TEST(YamlConfigReaderTest /*unused*/, read_write_file_test /*unused*/)
 {
   // create a custom ini file
@@ -329,3 +332,4 @@ TEST(YamlConfigReaderTest /*unused*/, yaml_to_config_merger /*unused*/)
 
   remove(ini_file_name.data());
 }
+#endif
