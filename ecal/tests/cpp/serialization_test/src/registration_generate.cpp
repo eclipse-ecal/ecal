@@ -16,9 +16,9 @@
  *
  * ========================= eCAL LICENSE =================================
 */
+#include "registration_generate.h"
 
-#include "../../serialization/ecal_struct_sample_registration.h"
-
+#include <string>
 #include <cstdlib>
 
 namespace eCAL
@@ -126,31 +126,64 @@ namespace eCAL
       return topic;
     }
 
-    // generate Registration Sample
-    Sample GenerateRegistrationSample()
+    Process GenerateProcess()
+    {
+      Process process;
+      process.rclock = rand() % 1000;
+      process.hname = GenerateString(8);
+      process.hgname = GenerateString(6);
+      process.pid = rand() % 100;
+      process.pname = GenerateString(10);
+      process.uname = GenerateString(5);
+      process.pparam = GenerateString(12);
+      process.state.severity = static_cast<eProcessSeverity>(rand() % (proc_sev_failed + 1));
+      process.state.severity_level = static_cast<eProcessSeverityLevel>(rand() % (proc_sev_level5 + 1));
+      process.state.info = GenerateString(10);
+      process.tsync_state = static_cast<eTSyncState>(rand() % (tsync_replay + 1));
+      process.tsync_mod_name = GenerateString(6);
+      process.component_init_state = rand() % 5;
+      process.component_init_info = GenerateString(8);
+      process.ecal_runtime_version = GenerateString(5);
+      return process;
+    }
+
+    Sample GenerateProcessSample()
     {
       Sample sample;
-      sample.cmd_type                     = static_cast<eCmdType>(rand() % (bct_unreg_client + 1));
-      sample.host.hname                   = GenerateString(8);
-      sample.process.rclock               = rand() % 1000;
-      sample.process.hname                = GenerateString(8);
-      sample.process.hgname               = GenerateString(6);
-      sample.process.pid                  = rand() % 100;
-      sample.process.pname                = GenerateString(10);
-      sample.process.uname                = GenerateString(5);
-      sample.process.pparam               = GenerateString(12);
-      sample.process.state.severity       = static_cast<eProcessSeverity>(rand() % (proc_sev_failed + 1));
-      sample.process.state.severity_level = static_cast<eProcessSeverityLevel>(rand() % (proc_sev_level5 + 1));
-      sample.process.state.info           = GenerateString(10);
-      sample.process.tsync_state          = static_cast<eTSyncState>(rand() % (tsync_replay + 1));
-      sample.process.tsync_mod_name       = GenerateString(6);
-      sample.process.component_init_state = rand() % 5;
-      sample.process.component_init_info  = GenerateString(8);
-      sample.process.ecal_runtime_version = GenerateString(5);
-      sample.service                      = GenerateService();
-      sample.client                       = GenerateClient();
-      sample.topic                        = GenerateTopic();
+      sample.cmd_type = bct_reg_process;
+      sample.host.hname = GenerateString(8);
 
+      sample.process = GenerateProcess();
+      return sample;
+    }
+
+    Sample GenerateTopicSample()
+    {
+      Sample sample;
+      sample.cmd_type = bct_reg_publisher;
+      sample.host.hname = GenerateString(8);
+
+      sample.topic = GenerateTopic();
+      return sample;
+    }
+
+    Sample GenerateServiceSample()
+    {
+      Sample sample;
+      sample.cmd_type = bct_reg_service;
+      sample.host.hname = GenerateString(8);
+
+      sample.service = GenerateService();
+      return sample;
+    }
+
+    Sample GenerateClientSample()
+    {
+      Sample sample;
+      sample.cmd_type = bct_reg_client;
+      sample.host.hname = GenerateString(8);
+
+      sample.client = GenerateClient();
       return sample;
     }
   }

@@ -53,145 +53,172 @@ namespace
     // hname
     eCAL::nanopb::encode_string(pb_sample_.host.hname, registration_.host.hname);
 
-    ///////////////////////////////////////////////
-    // process information
-    ///////////////////////////////////////////////
-    pb_sample_.has_process = true;
+    pb_sample_.has_process = false;
+    pb_sample_.has_service = false;
+    pb_sample_.has_client = false;
+    pb_sample_.has_topic = false;
 
-    // rclock
-    pb_sample_.process.rclock = registration_.process.rclock;
-    // hname
-    eCAL::nanopb::encode_string(pb_sample_.process.hname, registration_.process.hname);
-    // hgname
-    eCAL::nanopb::encode_string(pb_sample_.process.hgname, registration_.process.hgname);
-    // pid
-    pb_sample_.process.pid = registration_.process.pid;
-    // pname
-    eCAL::nanopb::encode_string(pb_sample_.process.pname, registration_.process.pname);
-    // uname
-    eCAL::nanopb::encode_string(pb_sample_.process.uname, registration_.process.uname);
-    // pparam
-    eCAL::nanopb::encode_string(pb_sample_.process.pparam, registration_.process.pparam);
-    // state
-    pb_sample_.process.has_state = true;
-    // state.severity
-    pb_sample_.process.state.severity = static_cast<eCAL_pb_eProcessSeverity>(registration_.process.state.severity);
-    // state.severity_level
-    pb_sample_.process.state.severity_level = static_cast<eCAL_pb_eProcessSeverityLevel>(registration_.process.state.severity_level);
-    // state.info
-    eCAL::nanopb::encode_string(pb_sample_.process.state.info, registration_.process.state.info);
-    // process.tsync_state
-    pb_sample_.process.tsync_state = static_cast<eCAL_pb_eTSyncState>(registration_.process.tsync_state);
-    // tsync_mod_name
-    eCAL::nanopb::encode_string(pb_sample_.process.tsync_mod_name, registration_.process.tsync_mod_name);
-    // component_init_state
-    pb_sample_.process.component_init_state = registration_.process.component_init_state;
-    // component_init_info
-    eCAL::nanopb::encode_string(pb_sample_.process.component_init_info, registration_.process.component_init_info);
-    // ecal_runtime_version
-    eCAL::nanopb::encode_string(pb_sample_.process.ecal_runtime_version, registration_.process.ecal_runtime_version);
+    switch (registration_.cmd_type)
+    {
+    case eCAL::bct_reg_process:
+    case eCAL::bct_unreg_process:
 
-    ///////////////////////////////////////////////
-    // service information
-    ///////////////////////////////////////////////
-    pb_sample_.has_service = true;
+      ///////////////////////////////////////////////
+      // process information
+      ///////////////////////////////////////////////
+      pb_sample_.has_process = true;
 
-    // rclock
-    pb_sample_.service.rclock = registration_.service.rclock;
-    // hname
-    eCAL::nanopb::encode_string(pb_sample_.service.hname, registration_.service.hname);
-    // pname
-    eCAL::nanopb::encode_string(pb_sample_.service.pname, registration_.service.pname);
-    // uname
-    eCAL::nanopb::encode_string(pb_sample_.service.uname, registration_.service.uname);
-    // pid
-    pb_sample_.service.pid = registration_.service.pid;
-    // sname
-    eCAL::nanopb::encode_string(pb_sample_.service.sname, registration_.service.sname);
-    // sid
-    eCAL::nanopb::encode_string(pb_sample_.service.sid, registration_.service.sid);
-    // methods
-    eCAL::nanopb::encode_service_methods(pb_sample_.service.methods, registration_.service.methods);
-    // version
-    pb_sample_.service.version = registration_.service.version;
-    // tcp_port_v0
-    pb_sample_.service.tcp_port_v0 = registration_.service.tcp_port_v0;
-    // tcp_port_v1
-    pb_sample_.service.tcp_port_v1 = registration_.service.tcp_port_v1;
+      // rclock
+      pb_sample_.process.rclock = registration_.process.rclock;
+      // hname
+      eCAL::nanopb::encode_string(pb_sample_.process.hname, registration_.process.hname);
+      // hgname
+      eCAL::nanopb::encode_string(pb_sample_.process.hgname, registration_.process.hgname);
+      // pid
+      pb_sample_.process.pid = registration_.process.pid;
+      // pname
+      eCAL::nanopb::encode_string(pb_sample_.process.pname, registration_.process.pname);
+      // uname
+      eCAL::nanopb::encode_string(pb_sample_.process.uname, registration_.process.uname);
+      // pparam
+      eCAL::nanopb::encode_string(pb_sample_.process.pparam, registration_.process.pparam);
+      // state
+      pb_sample_.process.has_state = true;
+      // state.severity
+      pb_sample_.process.state.severity = static_cast<eCAL_pb_eProcessSeverity>(registration_.process.state.severity);
+      // state.severity_level
+      pb_sample_.process.state.severity_level = static_cast<eCAL_pb_eProcessSeverityLevel>(registration_.process.state.severity_level);
+      // state.info
+      eCAL::nanopb::encode_string(pb_sample_.process.state.info, registration_.process.state.info);
+      // process.tsync_state
+      pb_sample_.process.tsync_state = static_cast<eCAL_pb_eTSyncState>(registration_.process.tsync_state);
+      // tsync_mod_name
+      eCAL::nanopb::encode_string(pb_sample_.process.tsync_mod_name, registration_.process.tsync_mod_name);
+      // component_init_state
+      pb_sample_.process.component_init_state = registration_.process.component_init_state;
+      // component_init_info
+      eCAL::nanopb::encode_string(pb_sample_.process.component_init_info, registration_.process.component_init_info);
+      // ecal_runtime_version
+      eCAL::nanopb::encode_string(pb_sample_.process.ecal_runtime_version, registration_.process.ecal_runtime_version);
+      break;
 
-    ///////////////////////////////////////////////
-    // client information
-    ///////////////////////////////////////////////
-    pb_sample_.has_client = true;
+    case eCAL::bct_reg_service:
+    case eCAL::bct_unreg_service:
+      ///////////////////////////////////////////////
+      // service information
+      ///////////////////////////////////////////////
+      pb_sample_.has_service = true;
 
-    // rclock
-    pb_sample_.client.rclock = registration_.client.rclock;
-    // hname
-    eCAL::nanopb::encode_string(pb_sample_.client.hname, registration_.client.hname);
-    // pname
-    eCAL::nanopb::encode_string(pb_sample_.client.pname, registration_.client.pname);
-    // uname
-    eCAL::nanopb::encode_string(pb_sample_.client.uname, registration_.client.uname);
-    // pid
-    pb_sample_.client.pid = registration_.client.pid;
-    // sname
-    eCAL::nanopb::encode_string(pb_sample_.client.sname, registration_.client.sname);
-    // sid
-    eCAL::nanopb::encode_string(pb_sample_.client.sid, registration_.client.sid);
-    // methods
-    eCAL::nanopb::encode_service_methods(pb_sample_.client.methods, registration_.client.methods);
-    // version
-    pb_sample_.client.version = registration_.client.version;
+      // rclock
+      pb_sample_.service.rclock = registration_.service.rclock;
+      // hname
+      eCAL::nanopb::encode_string(pb_sample_.service.hname, registration_.service.hname);
+      // pname
+      eCAL::nanopb::encode_string(pb_sample_.service.pname, registration_.service.pname);
+      // uname
+      eCAL::nanopb::encode_string(pb_sample_.service.uname, registration_.service.uname);
+      // pid
+      pb_sample_.service.pid = registration_.service.pid;
+      // sname
+      eCAL::nanopb::encode_string(pb_sample_.service.sname, registration_.service.sname);
+      // sid
+      eCAL::nanopb::encode_string(pb_sample_.service.sid, registration_.service.sid);
+      // methods
+      eCAL::nanopb::encode_service_methods(pb_sample_.service.methods, registration_.service.methods);
+      // version
+      pb_sample_.service.version = registration_.service.version;
+      // tcp_port_v0
+      pb_sample_.service.tcp_port_v0 = registration_.service.tcp_port_v0;
+      // tcp_port_v1
+      pb_sample_.service.tcp_port_v1 = registration_.service.tcp_port_v1;
+      break;
 
-    ///////////////////////////////////////////////
-    // topic information
-    ///////////////////////////////////////////////
-    pb_sample_.has_topic = true;
+    case eCAL::bct_reg_client:
+    case eCAL::bct_unreg_client:
+      ///////////////////////////////////////////////
+      // client information
+      ///////////////////////////////////////////////
+      pb_sample_.has_client = true;
 
-    // rclock
-    pb_sample_.topic.rclock = registration_.topic.rclock;
-    // hname
-    eCAL::nanopb::encode_string(pb_sample_.topic.hname, registration_.topic.hname);
-    // hgname
-    eCAL::nanopb::encode_string(pb_sample_.topic.hgname, registration_.topic.hgname);
-    // pid
-    pb_sample_.topic.pid = registration_.topic.pid;
-    // pname
-    eCAL::nanopb::encode_string(pb_sample_.topic.pname, registration_.topic.pname);
-    // uname
-    eCAL::nanopb::encode_string(pb_sample_.topic.uname, registration_.topic.uname);
-    // tid
-    eCAL::nanopb::encode_string(pb_sample_.topic.tid, registration_.topic.tid);
-    // tname
-    eCAL::nanopb::encode_string(pb_sample_.topic.tname, registration_.topic.tname);
-    // direction
-    eCAL::nanopb::encode_string(pb_sample_.topic.direction, registration_.topic.direction);
-    // tdatatype
-    pb_sample_.topic.has_tdatatype = true;
-    // tdatatype.name
-    eCAL::nanopb::encode_string(pb_sample_.topic.tdatatype.name, registration_.topic.tdatatype.name);
-    // tdatatype.encoding
-    eCAL::nanopb::encode_string(pb_sample_.topic.tdatatype.encoding, registration_.topic.tdatatype.encoding);
-    // tdatatype.desc
-    eCAL::nanopb::encode_string(pb_sample_.topic.tdatatype.desc, registration_.topic.tdatatype.descriptor);
-    // tsize
-    pb_sample_.topic.tsize = registration_.topic.tsize;
-    // connections_loc
-    pb_sample_.topic.connections_loc = registration_.topic.connections_loc;
-    // connections_ext
-    pb_sample_.topic.connections_ext = registration_.topic.connections_ext;
-    // message_drops
-    pb_sample_.topic.message_drops = registration_.topic.message_drops;
-    // did
-    pb_sample_.topic.did = registration_.topic.did;
-    // dclock
-    pb_sample_.topic.dclock = registration_.topic.dclock;
-    // dfreq
-    pb_sample_.topic.dfreq = registration_.topic.dfreq;
-    // tlayer
-    eCAL::nanopb::encode_registration_layer(pb_sample_.topic.tlayer, registration_.topic.tlayer);
-    // attr
-    eCAL::nanopb::encode_map(pb_sample_.topic.attr, registration_.topic.attr);
+      // rclock
+      pb_sample_.client.rclock = registration_.client.rclock;
+      // hname
+      eCAL::nanopb::encode_string(pb_sample_.client.hname, registration_.client.hname);
+      // pname
+      eCAL::nanopb::encode_string(pb_sample_.client.pname, registration_.client.pname);
+      // uname
+      eCAL::nanopb::encode_string(pb_sample_.client.uname, registration_.client.uname);
+      // pid
+      pb_sample_.client.pid = registration_.client.pid;
+      // sname
+      eCAL::nanopb::encode_string(pb_sample_.client.sname, registration_.client.sname);
+      // sid
+      eCAL::nanopb::encode_string(pb_sample_.client.sid, registration_.client.sid);
+      // methods
+      eCAL::nanopb::encode_service_methods(pb_sample_.client.methods, registration_.client.methods);
+      // version
+      pb_sample_.client.version = registration_.client.version;
+      break;
+
+    case eCAL::bct_reg_publisher:
+    case eCAL::bct_unreg_publisher:
+    case eCAL::bct_reg_subscriber:
+    case eCAL::bct_unreg_subscriber:
+
+      ///////////////////////////////////////////////
+      // topic information
+      ///////////////////////////////////////////////
+      pb_sample_.has_topic = true;
+
+      // rclock
+      pb_sample_.topic.rclock = registration_.topic.rclock;
+      // hname
+      eCAL::nanopb::encode_string(pb_sample_.topic.hname, registration_.topic.hname);
+      // hgname
+      eCAL::nanopb::encode_string(pb_sample_.topic.hgname, registration_.topic.hgname);
+      // pid
+      pb_sample_.topic.pid = registration_.topic.pid;
+      // pname
+      eCAL::nanopb::encode_string(pb_sample_.topic.pname, registration_.topic.pname);
+      // uname
+      eCAL::nanopb::encode_string(pb_sample_.topic.uname, registration_.topic.uname);
+      // tid
+      eCAL::nanopb::encode_string(pb_sample_.topic.tid, registration_.topic.tid);
+      // tname
+      eCAL::nanopb::encode_string(pb_sample_.topic.tname, registration_.topic.tname);
+      // direction
+      eCAL::nanopb::encode_string(pb_sample_.topic.direction, registration_.topic.direction);
+      // tdatatype
+      pb_sample_.topic.has_tdatatype = true;
+      // tdatatype.name
+      eCAL::nanopb::encode_string(pb_sample_.topic.tdatatype.name, registration_.topic.tdatatype.name);
+      // tdatatype.encoding
+      eCAL::nanopb::encode_string(pb_sample_.topic.tdatatype.encoding, registration_.topic.tdatatype.encoding);
+      // tdatatype.desc
+      eCAL::nanopb::encode_string(pb_sample_.topic.tdatatype.desc, registration_.topic.tdatatype.descriptor);
+      // tsize
+      pb_sample_.topic.tsize = registration_.topic.tsize;
+      // connections_loc
+      pb_sample_.topic.connections_loc = registration_.topic.connections_loc;
+      // connections_ext
+      pb_sample_.topic.connections_ext = registration_.topic.connections_ext;
+      // message_drops
+      pb_sample_.topic.message_drops = registration_.topic.message_drops;
+      // did
+      pb_sample_.topic.did = registration_.topic.did;
+      // dclock
+      pb_sample_.topic.dclock = registration_.topic.dclock;
+      // dfreq
+      pb_sample_.topic.dfreq = registration_.topic.dfreq;
+      // tlayer
+      eCAL::nanopb::encode_registration_layer(pb_sample_.topic.tlayer, registration_.topic.tlayer);
+      // attr
+      eCAL::nanopb::encode_map(pb_sample_.topic.attr, registration_.topic.attr);
+      break;
+
+    default:
+      break;
+    }
   }
 
   size_t RegistrationStruct2PbSample(const eCAL::Registration::Sample& registration_, eCAL_pb_Sample& pb_sample_)
