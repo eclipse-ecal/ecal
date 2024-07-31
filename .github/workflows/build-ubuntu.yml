@@ -141,14 +141,16 @@ jobs:
         -DCMAKE_INSTALL_LOCALSTATEDIR=/var \
         -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu \
         -DPython_FIND_VIRTUALENV=ONLY
-        
-        sudo mkdir /etc/ecal
-        sudo cp "./ecal/core/cfg/gen/ecal.yaml" /etc/ecal
       shell: bash
 
     - name: Build Release
       run: cmake --build . --parallel -- -k 0
       working-directory: ${{ runner.workspace }}/_build
+    
+    - name: Create config path and copy ecal.yaml
+      run: sudo mkdir /etc/ecal
+           sudo cp "./ecal/core/cfg/gen/ecal.yaml" /etc/ecal
+      working-directory: ${{ runner.workspace }}/_build/complete
 
     - name: Run Tests
       run: ctest -V
