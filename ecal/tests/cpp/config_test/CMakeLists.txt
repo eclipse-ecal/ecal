@@ -26,6 +26,9 @@ if(ECAL_CORE_CONFIGURATION)
   find_package(yaml-cpp REQUIRED)
 endif()
 
+include(${ECAL_PROJECT_ROOT}/thirdparty/yaml-cpp/compatibility-yaml-cpp.cmake)
+yaml_cpp_create_compatibility_targets()
+
 set(cmd_parser_src
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/ecal_cmd_parser.cpp
   ${ECAL_CORE_PROJECT_ROOT}/core/src/util/advanced_tclap_output.cpp  

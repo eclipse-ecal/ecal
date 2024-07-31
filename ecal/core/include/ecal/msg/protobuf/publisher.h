@@ -160,8 +160,7 @@ namespace eCAL
       size_t Send(const T& msg_, long long time_ = DEFAULT_TIME_ARGUMENT)
       {
         CPayload payload{ msg_ };
-        eCAL::CPublisher::Send(payload, time_);
-        return(0);
+        return eCAL::CPublisher::Send(payload, time_);
       }
 
     private:

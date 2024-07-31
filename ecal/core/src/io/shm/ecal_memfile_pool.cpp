@@ -211,14 +211,26 @@ namespace eCAL
             // -------------------------------------------------------------------------
             if (zero_copy_allowed)
             {
-              // acquire memory file payload pointer (no copying here)
-              const void* buf(nullptr);
-              if (m_memfile.GetReadAddress(buf, mfile_hdr.data_size) > 0)
+              if (m_data_callback)
               {
-                // calculate data buffer offset
-                const char* data_buf = static_cast<const char*>(buf) + mfile_hdr.hdr_size;
-                // add sample to data reader (and call user callback function)
-                if (m_data_callback) m_data_callback(topic_name_, topic_id_, data_buf, mfile_hdr.data_size, (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
+                const char* data_buf = nullptr;
+                if (mfile_hdr.data_size > 0)
+                {
+                  // acquire memory file payload pointer (no copying here)
+                  const void* buf(nullptr);
+                  if (m_memfile.GetReadAddress(buf, mfile_hdr.data_size) > 0)
+                  {
+                    // calculate user payload address
+                    data_buf = static_cast<const char*>(buf) + mfile_hdr.hdr_size;
+                    // call user callback function
+                    m_data_callback(topic_name_, topic_id_, data_buf, mfile_hdr.data_size, (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
+                  }
+                }
+                else
+                {
+                  // call user callback function
+                  m_data_callback(topic_name_, topic_id_, data_buf, mfile_hdr.data_size, (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
+                }
               }
             }
             // -------------------------------------------------------------------------

@@ -24,6 +24,8 @@ find_package(ecaludp          REQUIRED)
 
 if (ECAL_CORE_CONFIGURATION)
   find_package(yaml-cpp       REQUIRED)
+  include(${ECAL_PROJECT_ROOT}/thirdparty/yaml-cpp/compatibility-yaml-cpp.cmake)
+  yaml_cpp_create_compatibility_targets()
 endif()
 
 if (ECAL_CORE_COMMAND_LINE)
