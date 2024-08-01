@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -681,10 +681,16 @@ TEST(IO, ZeroPayloadMessageSHM)
   // create subscriber for topic "A"
   eCAL::CSubscriber sub("A");
 
-  // create publisher for topic "A"
-  eCAL::CPublisher pub("A");
-  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
-  pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);
+  // create publisher for topic "A" (no zero copy)
+  eCAL::CPublisher pub1("A");
+  pub1.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
+  pub1.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);
+
+  // create publisher for topic "A" (zero copy)
+  eCAL::CPublisher pub2("A");
+  pub2.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
+  pub2.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);
+  pub2.ShmEnableZeroCopy(true);
 
   // add callback
   EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
@@ -695,21 +701,30 @@ TEST(IO, ZeroPayloadMessageSHM)
   g_callback_received_bytes = 0;
   g_callback_received_count = 0;
 
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  // send without zero copy
+  EXPECT_EQ(send_s.size(), pub1.Send(send_s));
   eCAL::Process::SleepMS(DATA_FLOW_TIME);
 
-  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
+  EXPECT_EQ(send_s.size(), pub1.Send(nullptr, 0));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  // send with zero copy
+  EXPECT_EQ(send_s.size(), pub2.Send(send_s));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  EXPECT_EQ(send_s.size(), pub2.Send(nullptr, 0));
   eCAL::Process::SleepMS(DATA_FLOW_TIME);
 
   // check callback receive
   EXPECT_EQ(send_s.size(), g_callback_received_bytes);
-  EXPECT_EQ(2,             g_callback_received_count);
+  EXPECT_EQ(4,             g_callback_received_count);
 
   // destroy subscriber
   sub.Destroy();
 
   // destroy publisher
-  pub.Destroy();
+  pub1.Destroy();
+  pub2.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();
