@@ -14,15 +14,15 @@ int main(int argc, char** argv)
   eCAL::Publisher::Configuration pub_config;
 
   // disable all layers except for SHM
-  pub_config.shm.enable = true;
-  pub_config.udp.enable = false;
-  pub_config.tcp.enable = false;
+  pub_config.layer.shm.enable = true;
+  pub_config.layer.udp.enable = false;
+  pub_config.layer.tcp.enable = false;
 
   // create publisher 1
   eCAL::string::CPublisher<std::string> pub_1("topic_1", pub_config);
 
   // enable for the second publisher also tcp
-  pub_config.tcp.enable = true;
+  pub_config.layer.tcp.enable = true;
 
   // create publisher 2
   eCAL::string::CPublisher<std::string> pub_2("topic_2", pub_config);

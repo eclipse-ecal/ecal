@@ -213,9 +213,9 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
    * First, open :file:`/etc/ecal/ecal.yaml` from your preferred editor.
 
-   * Search for the line ``network_enabled`` and set it to ``true``.
+   * Search for the line ``registration->network_enabled`` and set it to ``true``.
 
-   * Search for the line ``host_group_name`` and write your preferred name.
+   * Search for the line ``registration->host_group_name`` and write your preferred name.
 
    * Save and close the :file:`ecal.yaml` file.
 
