@@ -36,7 +36,7 @@ namespace eCAL
     {
       struct Configuration
       {
-        std::string filter_excl { "^eCALSysClient$|^eCALSysGUI$|^eCALSys$*" }; //!< Apps blacklist to be excluded when importing tasks from cloud
+        std::string filter_excl { "^eCALSysClient$|^eCALSysGUI$|^eCALSys$" };  //!< Apps blacklist to be excluded when importing tasks from cloud
       };
     }
 
