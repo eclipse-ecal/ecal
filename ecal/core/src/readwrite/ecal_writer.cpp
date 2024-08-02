@@ -36,6 +36,7 @@
 #include "ecal_global_accessors.h"
 #include "ecal_transport_layer.h"
 
+#include <algorithm>
 #include <chrono>
 #include <functional>
 #include <mutex>
