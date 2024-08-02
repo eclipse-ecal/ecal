@@ -24,7 +24,6 @@
 
 #pragma once
 
-#include <ecal/ecal_os.h>
 #include <ecal/config/transport_layer.h>
 
 #include <cstddef>
@@ -33,44 +32,45 @@ namespace eCAL
 {
   namespace Subscriber
   {
-    namespace SHM
+    namespace Layer
     {
+      namespace SHM
+      {
+        struct Configuration
+        {
+          bool enable { true }; //!< enable layer (Default: true)
+        };
+      }
+
+      namespace UDP
+      {
+        struct Configuration
+        {
+          bool enable { true }; //!< enable layer (Default: true)
+        };
+      }
+
+      namespace TCP
+      {
+        struct Configuration
+        {
+          bool enable { false }; //!< enable layer (Default: false)
+        };
+      }
+
       struct Configuration
       {
-        bool enable;                                                  //!< enable layer
-      };
-    }
-
-    namespace UDP
-    {
-      struct Configuration
-      {
-        bool enable;                                                  //!< enable layer
-      };
-    }
-
-    namespace TCP
-    {
-      struct Configuration
-      {
-        bool enable;                                                  //!< enable layer
-
-        size_t num_executor_reader{};                                 //!< reader amount of threads that shall execute workload (Default: 4)
-        size_t num_executor_writer{};                                 //!< writer amount of threads that shall execute workload (Default: 4)
-
-        size_t max_reconnections{};                                   //!< reconnection attemps the session will try to reconnect in (Default: 5)
+        SHM::Configuration shm;
+        UDP::Configuration udp;
+        TCP::Configuration tcp;
       };
     }
 
     struct Configuration
     {
-      ECAL_API Configuration();
+      Layer::Configuration layer;
 
-      SHM::Configuration shm;
-      UDP::Configuration udp;
-      TCP::Configuration tcp;
-
-      bool drop_out_of_order_messages{}; 
+      bool drop_out_of_order_messages { true }; //!< Enable dropping of payload messages that arrive out of order
     };
   }
 }

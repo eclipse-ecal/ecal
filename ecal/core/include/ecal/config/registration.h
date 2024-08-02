@@ -39,9 +39,9 @@ namespace eCAL
       {
         struct Configuration
         {
-          bool        enable;                       /*!< Enable shared memory based registration (Default: false) */
-          std::string domain;                       //!< Domain name for shared memory based registration (Default: ecal_mon)
-          size_t      queue_size;                   //!< Queue size of registration events (Default: 1024)
+          bool        enable     { false };      /*!< Enable shared memory based registration (Default: false) */
+          std::string domain     { "ecal_mon" }; //!< Domain name for shared memory based registration (Default: ecal_mon)
+          size_t      queue_size { 1024 };       //!< Queue size of registration events (Default: 1024)
         };
       }
 
@@ -49,29 +49,29 @@ namespace eCAL
       {
         struct Configuration
         {
-          bool         enable;                      /*!< Enable UDP based registration (Default: true) */
-          unsigned int port;                        /*!< UDP multicast port number (Default: 14000) */
+          bool         enable { true };          /*!< Enable UDP based registration (Default: true) */
+          unsigned int port   { 14000 };         /*!< UDP multicast port number (Default: 14000) */
         };
       }
 
       struct Configuration
       {
-        SHM::Configuration shm;                     /*!< Shared memory based registration configuration */
-        UDP::Configuration udp;                     /*!< UDP based registration configuration */
+        SHM::Configuration shm;                  /*!< Shared memory based registration configuration */
+        UDP::Configuration udp;                  /*!< UDP based registration configuration */
       };
     }
 
     struct Configuration
     {
-      unsigned int         registration_timeout;    //!< Timeout for topic registration in ms (internal) (Default: 60000)
-      unsigned int         registration_refresh;    //!< Topic registration refresh cylce (has to be smaller then registration timeout!) (Default: 1000)                                   
+      unsigned int         registration_timeout { 60000U }; //!< Timeout for topic registration in ms (internal) (Default: 60000)
+      unsigned int         registration_refresh { 1000U };  //!< Topic registration refresh cylce (has to be smaller then registration timeout!) (Default: 1000)                                   
 
-      bool                 network_enabled;         /*!< true  = all eCAL components communicate over network boundaries
-                                                         false = local host only communication (Default: false) */
-      bool                 loopback;                //!< enable to receive udp messages on the same local machine
-      std::string          host_group_name;         /*!< Common host group name that enables interprocess mechanisms across 
-                                                         (virtual) host borders (e.g, Docker); by default equivalent to local host name (Default: "") */
-      Layer::Configuration layer;                   /*!< Registration layer configuration */
+      bool                 network_enabled      { false };  /*!< true  = all eCAL components communicate over network boundaries
+                                                                 false = local host only communication (Default: false) */
+      bool                 loopback             { true };   //!< enable to receive udp messages on the same local machine (Default: true)
+      std::string          host_group_name      { "" };     /*!< Common host group name that enables interprocess mechanisms across 
+                                                                 (virtual) host borders (e.g, Docker); by default equivalent to local host name (Default: "") */
+      Layer::Configuration layer;
     };
   }
 }

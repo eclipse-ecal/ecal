@@ -88,7 +88,6 @@
 
 #pragma once
 
-#include <ecal/ecal_os.h>
 #include <ecal/ecal_tlayer.h>
 #include <ecal/types/ecal_custom_data_types.h>
 #include <ecal/config/transport_layer.h>
@@ -106,12 +105,12 @@ namespace eCAL
       {
         struct Configuration
         {
-          bool         enable;                  //!< enable layer 
+          bool         enable                 { true };  //!< enable layer 
 
-          bool         zero_copy_mode;          //!< Enable zero copy shared memory transport mode 
-          unsigned int acknowledge_timeout_ms;  /*!< Force connected subscribers to send acknowledge event after processing the message.
-                                                    The publisher send call is blocked on this event with this timeout (0 == no handshake).*/
-          unsigned int memfile_buffer_count;    /*!< Maximum number of used buffers (needs to be greater than 1, default = 1) */
+          bool         zero_copy_mode         { false }; //!< Enable zero copy shared memory transport mode 
+          unsigned int acknowledge_timeout_ms { 0U };    /*!< Force connected subscribers to send acknowledge event after processing the message.
+                                                              The publisher send call is blocked on this event with this timeout (0 == no handshake).*/
+          unsigned int memfile_buffer_count   { 1U };    /*!< Maximum number of used buffers (needs to be greater than 1, default = 1) */
         };
       }
 
@@ -119,7 +118,7 @@ namespace eCAL
       {
         struct Configuration
         {
-          bool enable;               //!< enable layer
+          bool enable { true };                          //!< enable layer
         };
       }
 
@@ -127,7 +126,7 @@ namespace eCAL
       {
         struct Configuration
         {
-          bool enable;               //!< enable layer
+          bool enable { true };                          //!< enable layer
         };
       }
 
@@ -141,16 +140,14 @@ namespace eCAL
 
     struct Configuration
     {
-      ECAL_API Configuration();
-
-      Layer::Configuration     layer;                                  //!< Layer configuration
+      Layer::Configuration layer;                        //!< Layer configuration
 
       using LayerPriorityVector = std::vector<TLayer::eTransportLayer>;
-      LayerPriorityVector      layer_priority_local  = { TLayer::tlayer_shm, TLayer::tlayer_udp_mc, TLayer::tlayer_tcp };
-      LayerPriorityVector      layer_priority_remote = {                     TLayer::tlayer_udp_mc, TLayer::tlayer_tcp };
+      LayerPriorityVector  layer_priority_local    { TLayer::tlayer_shm, TLayer::tlayer_udp_mc, TLayer::tlayer_tcp };
+      LayerPriorityVector  layer_priority_remote   {                     TLayer::tlayer_udp_mc, TLayer::tlayer_tcp };
 
-      bool                     share_topic_type;                        //!< share topic type via registration
-      bool                     share_topic_description;                 //!< share topic description via registration
+      bool                 share_topic_type        { true };      //!< share topic type via registration
+      bool                 share_topic_description { true };      //!< share topic description via registration
     };
   }
 }

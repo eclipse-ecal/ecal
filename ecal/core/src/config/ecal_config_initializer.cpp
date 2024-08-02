@@ -25,12 +25,14 @@
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
-#include "default_config.h"
 
 #include "ecal/ecal_process.h"
 #include "config/ecal_cmd_parser.h"
-#include "configuration_to_yaml.h"
-#include "configuration_reader.h"
+
+#ifdef ECAL_CORE_CONFIGURATION
+  #include "configuration_reader.h"
+  #include "configuration_to_yaml.h"
+#endif
 
 // for cwd
 #ifdef ECAL_OS_WINDOWS
@@ -48,8 +50,10 @@
 #include "ecal_utils/filesystem.h"
 #include "util/getenvvar.h"
 #include "ecal_utils/ecal_utils.h"
+#include "ecal/ecal_log.h"
 
 #include <algorithm>
+#include <fstream>
 
 namespace
 {
@@ -85,7 +89,7 @@ namespace
   std::string cwdPath()
   {
     std::string cwd_path = { getcwd(nullptr, 0) };
-            
+    
     setPathSep(cwd_path);
     return cwd_path;
   }
@@ -192,72 +196,75 @@ namespace
 
     return found_path + config_file_;
   }
+
+  std::vector<std::string> ConvertArgcArgvToVector(int argc_, char** argv_)
+  {
+    std::vector<std::string> arguments;
+    if (argc_ > 0 && argv_ != nullptr)
+    {
+      for (size_t i = 0; i < static_cast<size_t>(argc_); ++i)
+      {
+        if (argv_[i] != nullptr)
+        {
+          arguments.emplace_back(argv_[i]);
+        }
+      }
+    }
+    return arguments;
+  }
 }
 
 namespace eCAL 
 {
-    void Configuration::InitConfigFromFile(const std::string& yaml_path_)
+    void Configuration::InitFromFile(const std::string& yaml_path_)
     {
       const std::string yaml_path = checkForValidConfigFilePath(yaml_path_);
       if (!yaml_path.empty())
       {
+#ifdef ECAL_CORE_CONFIGURATION
         eCAL::Config::YamlFileToConfig(yaml_path, *this);
         ecal_yaml_file_path = yaml_path;
+#else
+        eCAL::Logging::Log(log_level_warning, "Yaml file found at \"" + yaml_path + "\" but eCAL core configuration is not enabled.");
+#endif
       }
       else
       {
-        std::cout << "Specified yaml configuration path not valid: " << "\"" << yaml_path_ << "\"" << " Using default configuration." << "\n";
-        InitConfigWithDefaults();
+        eCAL::Logging::Log(log_level_warning, "Specified yaml configuration path not valid:\"" + yaml_path_ + "\". Using default configuration.");
       }
     };
 
-    void Configuration::InitConfigWithDefaults()
-    {
-      eCAL::Config::YamlStringToConfig(default_config, *this);
-    }
-
     Configuration::Configuration(int argc_ , char **argv_)
+    : Configuration(ConvertArgcArgvToVector(argc_, argv_))
     {
-      std::vector<std::string> arguments;
-      if (argc_ > 0 && argv_ != nullptr)
-      {
-        for (size_t i = 0; i < static_cast<size_t>(argc_); ++i) 
-          if (argv_[i] != nullptr) 
-            arguments.emplace_back(argv_[i]);
-      } 
-      Init(arguments);
     }
 
     Configuration::Configuration(const std::vector<std::string>& args_)
-    {      
-      Init(args_);
-    }
-
-    void Configuration::Init(const std::vector<std::string>& args_)
+    : Configuration()
     {
       Config::CmdParser parser(args_);
       
       command_line_arguments.user_yaml   = parser.getUserIni();
       command_line_arguments.dump_config = parser.getDumpConfig();
 
-      if (command_line_arguments.user_yaml.empty())
+      if (!command_line_arguments.user_yaml.empty())
       {
-        InitConfigWithDefaultYaml();
+        InitFromFile(command_line_arguments.user_yaml);
       }
       else
       {
-        InitConfigFromFile(command_line_arguments.user_yaml);
+        InitFromConfig();
       }
     }
 
-    void Configuration::InitConfigWithDefaultYaml()
+    void Configuration::InitFromConfig()
     {
-      InitConfigFromFile(g_default_ini_file);
+      InitFromFile(g_default_ini_file);
     }
 
     Configuration::Configuration()
     {
-      InitConfigWithDefaults();
+      eCAL::InitGlobals();
     }
 
     std::string Configuration::GetYamlFilePath()
@@ -273,7 +280,7 @@ namespace eCAL
 
 
 // Utils definitions from former ecal_config_reader.cpp
-namespace 
+namespace
 {
   bool fileexists(const std::string& fname_)
   {

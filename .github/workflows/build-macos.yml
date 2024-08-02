@@ -91,19 +91,22 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
         -DECAL_THIRDPARTY_BUILD_QWT=ON \
-        -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_PREFIX_PATH=/usr/local/opt/hdf5@1.10 \
         -DCMAKE_CXX_STANDARD=17 \
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
         -DPython_FIND_STRATEGY=LOCATION \
-        -DPython_FIND_REGISTRY=NEVER
-        sudo mkdir /etc/ecal
-        sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.yaml" /etc/ecal
+        -DPython_FIND_REGISTRY=NEVER        
       shell: bash
 
     - name: Build Release
       run: cmake --build . --config Release
+      working-directory: ${{ runner.workspace }}/_build
+    
+    - name: Create config path and copy ecal.yaml
+      run: | 
+           sudo mkdir /etc/ecal
+           sudo cp "./ecal/core/cfg/gen/ecal.yaml" /etc/ecal
       working-directory: ${{ runner.workspace }}/_build
 
 #    - name: Build Documentation C

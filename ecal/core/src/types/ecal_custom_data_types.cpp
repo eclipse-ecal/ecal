@@ -22,6 +22,7 @@
 **/
 
 #include "ecal/types/ecal_custom_data_types.h"
+
 #include <array>
 #include <regex>
 #include <algorithm>
@@ -42,10 +43,6 @@ namespace eCAL
 {
   namespace Types
   {
-
-    // IpAddressV4 definitions
-    IpAddressV4::IpAddressV4() : IpAddressV4(NET_UDP_MULTICAST_GROUP) {};
-
     IpAddressV4::IpAddressV4(const std::string& ip_address_)
     {
       validateIpString(ip_address_);

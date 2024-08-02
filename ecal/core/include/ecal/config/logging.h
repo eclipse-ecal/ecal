@@ -29,6 +29,12 @@
 #include <vector>
 #include <string>
 
+namespace
+{
+  // After switchting to c++17, this can be replaced by an inline constexpr
+  static const eCAL_Logging_Filter log_level_default = log_level_info | log_level_warning | log_level_error | log_level_fatal;
+}
+
 namespace eCAL
 {
   namespace Logging
@@ -39,9 +45,9 @@ namespace eCAL
       {
         struct Configuration
         {
-          bool enable{};                                //!< Enable console logging (Default: false)
-          eCAL_Logging_Filter filter_log_con{};         /*!< Log messages logged to console (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
-                                                         (Default: info, warning, error, fatal)*/
+          bool                enable         { true };                               //!< Enable console logging (Default: true)
+          eCAL_Logging_Filter filter_log_con { log_level_error | log_level_fatal };  /*!< Log messages logged to console (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
+                                                                                          (Default: info, warning, error, fatal)*/
         };
       }
 
@@ -49,10 +55,10 @@ namespace eCAL
       {
         struct Configuration
         {
-          bool enable{};                                //!< Enable file logging (Default: false)
-          std::string path{};                           //!< Path to log file (Default: "")
-          eCAL_Logging_Filter filter_log_file{};        /*!< Log messages logged into file system (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
-                                                         (Default: info, warning, error, fatal)*/
+          bool                enable          { false };             //!< Enable file logging (Default: false)
+          std::string         path            { "" };                //!< Path to log file (Default: "")
+          eCAL_Logging_Filter filter_log_file { log_level_none };    /*!< Log messages logged into file system (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
+                                                                          (Default: info, warning, error, fatal)*/
         };
       }
 
@@ -60,9 +66,9 @@ namespace eCAL
       {
         struct Configuration
         {
-          bool enable{};                                //!< Enable UDP logging (Default: false)
-          unsigned int port{};                          //!< UDP port number (Default: 14001)
-          eCAL_Logging_Filter filter_log_udp{};         //!< Log messages logged via udp network (Default: info, warning, error, fatal)
+          bool                enable         { true };               //!< Enable UDP logging (Default: false)
+          unsigned int        port           { 14001 };              //!< UDP port number (Default: 14001)
+          eCAL_Logging_Filter filter_log_udp { log_level_default };  //!< Log messages logged via udp network (Default: info, warning, error, fatal)
         };
       }
 

@@ -259,7 +259,7 @@ namespace YAML
   {
     Node node;
     node["config_version"]      = config_.config_version == eCAL::Types::UdpConfigVersion::V1 ? "v1" : "v2";
-    node["mode"]                = config_.mode == eCAL::TransportLayer::UDP::MODE::LOCAL ? "local" : "network";
+    node["mode"]                = config_.mode == eCAL::Types::UDPMode::LOCAL ? "local" : "network";
     node["port"]                = config_.port;
     node["mask"]                = config_.mask.Get();
     node["send_buffer"]        << config_.send_buffer;
@@ -277,7 +277,7 @@ namespace YAML
     config_.config_version = temp_string == "v2" ? eCAL::Types::UdpConfigVersion::V2 : eCAL::Types::UdpConfigVersion::V1;
     temp_string = "local";
     AssignValue<std::string>(temp_string, node_, "mode");
-    config_.mode = temp_string == "local" ? eCAL::TransportLayer::UDP::MODE::LOCAL : eCAL::TransportLayer::UDP::MODE::CLOUD;
+    config_.mode = temp_string == "local" ? eCAL::Types::UDPMode::LOCAL : eCAL::Types::UDPMode::NETWORK;
     AssignValue<unsigned int>(config_.port, node_, "port");
     AssignValue<std::string>(config_.mask, node_, "mask");
     AssignValue<unsigned int>(config_.send_buffer, node_, "send_buffer");
@@ -414,60 +414,73 @@ namespace YAML
     /___/\_,_/_.__/___/\__/_/ /_/_.__/\__/_/   
   */
   
-  Node convert<eCAL::Subscriber::SHM::Configuration>::encode(const eCAL::Subscriber::SHM::Configuration& config_)
+  Node convert<eCAL::Subscriber::Layer::SHM::Configuration>::encode(const eCAL::Subscriber::Layer::SHM::Configuration& config_)
   {
     Node node;
     node["enable"] = config_.enable;
     return node;
   }
 
-  bool convert<eCAL::Subscriber::SHM::Configuration>::decode(const Node& node_, eCAL::Subscriber::SHM::Configuration& config_)
+  bool convert<eCAL::Subscriber::Layer::SHM::Configuration>::decode(const Node& node_, eCAL::Subscriber::Layer::SHM::Configuration& config_)
   {
     AssignValue<bool>(config_.enable, node_, "enable");
     return true;
   }
   
-  Node convert<eCAL::Subscriber::UDP::Configuration>::encode(const eCAL::Subscriber::UDP::Configuration& config_)
+  Node convert<eCAL::Subscriber::Layer::UDP::Configuration>::encode(const eCAL::Subscriber::Layer::UDP::Configuration& config_)
   {
     Node node;
     node["enable"] = config_.enable;
     return node;
   }
 
-  bool convert<eCAL::Subscriber::UDP::Configuration>::decode(const Node& node_, eCAL::Subscriber::UDP::Configuration& config_)
+  bool convert<eCAL::Subscriber::Layer::UDP::Configuration>::decode(const Node& node_, eCAL::Subscriber::Layer::UDP::Configuration& config_)
   {
     AssignValue<bool>(config_.enable, node_, "enable");
     return true;
   }
 
-  Node convert<eCAL::Subscriber::TCP::Configuration>::encode(const eCAL::Subscriber::TCP::Configuration& config_)
+  Node convert<eCAL::Subscriber::Layer::TCP::Configuration>::encode(const eCAL::Subscriber::Layer::TCP::Configuration& config_)
   {
     Node node;
     node["enable"] = config_.enable;
     return node;
   }
 
-  bool convert<eCAL::Subscriber::TCP::Configuration>::decode(const Node& node_, eCAL::Subscriber::TCP::Configuration& config_)
+  bool convert<eCAL::Subscriber::Layer::TCP::Configuration>::decode(const Node& node_, eCAL::Subscriber::Layer::TCP::Configuration& config_)
   {
     AssignValue<bool>(config_.enable, node_, "enable");
+    return true;
+  }
+
+  Node convert<eCAL::Subscriber::Layer::Configuration>::encode(const eCAL::Subscriber::Layer::Configuration& config_)
+  {
+    Node node;
+    node["shm"] = config_.shm;
+    node["udp"] = config_.udp;
+    node["tcp"] = config_.tcp;
+    return node;
+  }
+
+  bool convert<eCAL::Subscriber::Layer::Configuration>::decode(const Node& node_, eCAL::Subscriber::Layer::Configuration& config_)
+  {
+    AssignValue<eCAL::Subscriber::Layer::SHM::Configuration>(config_.shm, node_, "shm");
+    AssignValue<eCAL::Subscriber::Layer::UDP::Configuration>(config_.udp, node_, "udp");
+    AssignValue<eCAL::Subscriber::Layer::TCP::Configuration>(config_.tcp, node_, "tcp");
     return true;
   }
 
   Node convert<eCAL::Subscriber::Configuration>::encode(const eCAL::Subscriber::Configuration& config_)
   {
     Node node;
-    node["shm"] = config_.shm;
-    node["tcp"] = config_.tcp;
-    node["udp"] = config_.udp;
+    node["layer"] = config_.layer;
     node["drop_out_of_order_message"] = config_.drop_out_of_order_messages;
     return node;
   }
 
   bool convert<eCAL::Subscriber::Configuration>::decode(const Node& node_, eCAL::Subscriber::Configuration& config_)
   {
-    AssignValue<eCAL::Subscriber::SHM::Configuration>(config_.shm, node_, "shm");
-    AssignValue<eCAL::Subscriber::TCP::Configuration>(config_.tcp, node_, "tcp");
-    AssignValue<eCAL::Subscriber::UDP::Configuration>(config_.udp, node_, "udp");
+    AssignValue<eCAL::Subscriber::Layer::Configuration>(config_.layer, node_, "layer");
     AssignValue<bool>(config_.drop_out_of_order_messages, node_, "dropt_out_of_order_messages");
     return true;
   }

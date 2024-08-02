@@ -135,21 +135,24 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
         -DECAL_THIRDPARTY_BUILD_QWT=ON \
-        -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_SYSCONFDIR=/etc \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LOCALSTATEDIR=/var \
         -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu \
         -DPython_FIND_VIRTUALENV=ONLY
-        
-        sudo mkdir /etc/ecal
-        sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.yaml" /etc/ecal
       shell: bash
 
     - name: Build Release
       run: cmake --build . --parallel -- -k 0
       working-directory: ${{ runner.workspace }}/_build
+    
+    - name: Create config path and copy ecal.yaml
+      run: |
+           sudo mkdir /etc/ecal
+           sudo cp "./ecal/core/cfg/gen/ecal.yaml" /etc/ecal
+      working-directory: ${{ runner.workspace }}/_build
+      shell: bash
 
     - name: Run Tests
       run: ctest -V

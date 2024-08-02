@@ -132,11 +132,6 @@ namespace eCAL
   **/
   int Initialize(eCAL::Configuration& config_, const char *unit_name_ /*= nullptr*/, unsigned int components_ /*= Init::Default*/)
   {
-    if (g_globals() == nullptr)
-    {
-      InitGlobals();
-    }
-    
     g_ecal_configuration = config_;
 
     if (unit_name_ != nullptr)

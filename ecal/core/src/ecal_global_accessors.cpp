@@ -53,7 +53,8 @@ namespace eCAL
 
   void InitGlobals()
   {
-    g_globals_ctx = new CGlobals;
+    if (g_globals_ctx == nullptr)
+      g_globals_ctx = new CGlobals;
   }
 
   void SetGlobalUnitName(const char *unit_name_)

@@ -90,7 +90,6 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON ^
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON ^
         -DECAL_THIRDPARTY_BUILD_QWT=OFF ^
-        -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON ^
         -DECAL_THIRDPARTY_BUILD_UDPCAP=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
@@ -131,14 +130,11 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON ^
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON ^
         -DECAL_THIRDPARTY_BUILD_QWT=ON ^
-        -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON ^
         -DECAL_THIRDPARTY_BUILD_UDPCAP=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Release ^
-        -DCPACK_PACK_WITH_INNOSETUP=ON
-        mkdir "%ALLUSERSPROFILE%\eCAL"
-        copy "%GITHUB_WORKSPACE%\ecal\core\cfg\ecal.yaml" "%ALLUSERSPROFILE%\eCAL"
+        -DCPACK_PACK_WITH_INNOSETUP=ON        
       shell: cmd
 
     - name: Build SDK
@@ -149,6 +145,13 @@ jobs:
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build/complete
 
+    - name: Create config path and copy ecal.yaml
+      run: |
+           mkdir "%ALLUSERSPROFILE%\eCAL"
+           copy ".\ecal\core\cfg\gen\ecal.yaml" "%ALLUSERSPROFILE%\eCAL"
+      working-directory: ${{ runner.workspace }}/_build/complete
+      shell: cmd
+    
     - name: Run Tests
       run: ctest -C Release -V
       working-directory: ${{ runner.workspace }}/_build/complete

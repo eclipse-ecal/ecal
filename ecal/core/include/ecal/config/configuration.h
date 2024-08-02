@@ -48,33 +48,27 @@ namespace eCAL
 {
   struct Configuration
   {
-    TransportLayer::Configuration    transport_layer{};
-    Registration::Configuration      registration{};
-    Monitoring::Configuration        monitoring{};
-    Subscriber::Configuration        subscriber{};
-    Publisher::Configuration         publisher{};
-    Time::Configuration              timesync{};
-    Service::Configuration           service{};
-    Application::Configuration       application{};
-    Logging::Configuration           logging{};
-    Cli::Configuration               command_line_arguments{};
+    TransportLayer::Configuration transport_layer;
+    Registration::Configuration   registration;
+    Monitoring::Configuration     monitoring;
+    Subscriber::Configuration     subscriber;
+    Publisher::Configuration      publisher;
+    Time::Configuration           timesync;
+    Service::Configuration        service;
+    Application::Configuration    application;
+    Logging::Configuration        logging;
+    Cli::Configuration            command_line_arguments;
 
     ECAL_API Configuration();
     ECAL_API Configuration(int argc_, char** argv_);
     ECAL_API Configuration(const std::vector<std::string>& args_);
 
-    ECAL_API void InitConfigWithDefaultYaml();
-    ECAL_API void InitConfigWithDefaults();
-    ECAL_API void InitConfigFromFile(const std::string& yaml_path_);
+    ECAL_API void InitFromConfig();
+    ECAL_API void InitFromFile(const std::string& yaml_path_);
 
     ECAL_API std::string GetYamlFilePath();
 
-    friend class CmdParser;
-
-  protected:
-    std::string                      ecal_yaml_file_path{};
-
-  private:
-    ECAL_API void Init(const std::vector<std::string>& args_);
+    protected:
+      std::string ecal_yaml_file_path;
   };
 }
