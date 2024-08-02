@@ -46,12 +46,9 @@ namespace eCAL
     {
       Service::Service service;
       service.rclock      = rand() % 1000;
-      service.hname       = GenerateString(8);
       service.pname       = GenerateString(10);
       service.uname       = GenerateString(5);
-      service.pid         = rand() % 100;
       service.sname       = GenerateString(8);
-      service.sid         = GenerateString(7);
       service.methods.push_back(GenerateMethod());
       service.methods.push_back(GenerateMethod());
       service.version     = rand() % 10;
@@ -66,12 +63,9 @@ namespace eCAL
     {
       Service::Client client;
       client.rclock  = rand() % 1000;
-      client.hname   = GenerateString(8);
       client.pname   = GenerateString(10);
       client.uname   = GenerateString(5);
-      client.pid     = rand() % 100;
       client.sname   = GenerateString(8);
-      client.sid     = GenerateString(7);
       client.methods.push_back(GenerateMethod());
       client.methods.push_back(GenerateMethod());
       client.version = rand() % 10;
@@ -105,12 +99,9 @@ namespace eCAL
     {
       Topic topic;
       topic.rclock          = rand() % 1000;
-      topic.hname           = GenerateString(8);
       topic.hgname          = GenerateString(6);
-      topic.pid             = rand() % 100;
       topic.pname           = GenerateString(10);
       topic.uname           = GenerateString(5);
-      topic.tid             = GenerateString(7);
       topic.tname           = GenerateString(8);
       topic.direction       = GenerateString(5);
       topic.tdatatype       = GenerateDataTypeInformation();
@@ -130,9 +121,7 @@ namespace eCAL
     {
       Process process;
       process.rclock = rand() % 1000;
-      process.hname = GenerateString(8);
       process.hgname = GenerateString(6);
-      process.pid = rand() % 100;
       process.pname = GenerateString(10);
       process.uname = GenerateString(5);
       process.pparam = GenerateString(12);
@@ -147,12 +136,23 @@ namespace eCAL
       return process;
     }
 
+    SampleProducer GenerateProducer()
+    {
+      SampleProducer producer;
+      producer.id = GenerateString(7);
+      producer.process_id = rand() % 100;
+      producer.host_name = GenerateString(8);
+      return producer;
+    }
+
     Sample GenerateProcessSample()
     {
       Sample sample;
       sample.cmd_type = bct_reg_process;
       sample.host.hname = GenerateString(8);
-
+      sample.producer = GenerateProducer();
+      // Process samples don't have an id internally, hence it must be 0.
+      sample.producer.id = "";
       sample.process = GenerateProcess();
       return sample;
     }
@@ -162,7 +162,7 @@ namespace eCAL
       Sample sample;
       sample.cmd_type = bct_reg_publisher;
       sample.host.hname = GenerateString(8);
-
+      sample.producer = GenerateProducer();
       sample.topic = GenerateTopic();
       return sample;
     }
@@ -172,7 +172,7 @@ namespace eCAL
       Sample sample;
       sample.cmd_type = bct_reg_service;
       sample.host.hname = GenerateString(8);
-
+      sample.producer = GenerateProducer();
       sample.service = GenerateService();
       return sample;
     }
@@ -182,7 +182,7 @@ namespace eCAL
       Sample sample;
       sample.cmd_type = bct_reg_client;
       sample.host.hname = GenerateString(8);
-
+      sample.producer = GenerateProducer();
       sample.client = GenerateClient();
       return sample;
     }
