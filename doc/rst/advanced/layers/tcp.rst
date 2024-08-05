@@ -65,11 +65,26 @@ You can activate TCP in the following ways:
 
    Modify the :file:`ecal.yaml` and change the following:
 
-   .. code-block:: ini
+   .. code-block:: yaml
 
-      [publisher]
-      use_tcp                   = 2
-      use_udp_mc                = 0
+    # Publisher specific base settings
+    publisher:
+      layer:
+      # Base configuration for shared memory publisher
+        shm:
+          # Enable layer
+          enable: true
+          [..]
+        
+        # Base configuration for UDP publisher
+        udp:
+          # Enable layer
+          enable: false
+            
+        # Base configuration for TCP publisher
+        tcp:
+          # Enable layer
+          enable: true 
    
    This will
 
@@ -88,19 +103,27 @@ You can activate TCP in the following ways:
 
    .. code-block:: cpp
 
-      // Create a publisher (topic name "person")
+      #include <ecal/config/publisher.h>
+
+      ...
+
+      // Create a publisher configuration object
+      eCAL::Publisher::Configuration pub_config;
+
+      // Set enable shm and tcp, disable udp layer
+      pub_config.layer.shm.enable = true;
+      pub_config.layer.udp.enable = false;
+      pub_config.layer.tcp.enable = true;
+
+      // Create a publisher (topic name "person") and pass the configuration object
       eCAL::protobuf::CPublisher<pb::People::Person> pub("person");
 
-      // Switch UDP Multicast layer off
-      pub.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_off);
-
-      // Switch TCP layer on for Network connections (-> smode_uto)
-      pub.SetLayerMode(eCAL::TLayer::tlayer_tcp, eCAL::TLayer::smode_auto);
+      ...
 
 
    .. seealso:: 
 
       Also see the ``person_snd_tcp`` sample:
 
-      https://github.com/eclipse-ecal/ecal/tree/master/samples/cpp/pubsub/protobuf/person_snd_tcp
+      https://github.com/eclipse-ecal/ecal/tree/master/ecal/samples/cpp/pubsub/protobuf/person_snd_tcp
 

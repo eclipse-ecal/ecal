@@ -47,13 +47,27 @@ To switch eCAL to cloud mode, edit your :file:`ecal.yaml` and change the followi
 * |fa-windows| Windows: |ecalini-path-windows|
 * |fa-ubuntu| Ubuntu: |ecalini-path-ubuntu|
 
-.. code-block:: ini
+.. code-block:: yaml
 
-   [network]
-   network_enabled           = true
-   multicast_ttl             = 2
+   # Registration layer configuration
+  registration:
+    [..]
+    # true  = all eCAL components communicate over network boundaries
+    # false = local host only communication (Default: false)
+    network_enabled: true
+    [..]
 
-The ``multicast_ttl`` setting configures the *time to live* of the UDP datagrams, i.e. the number of hops a datagram can take before it is discarded.
+  # Transport layer configuration
+  transport_layer:
+    udp:
+      [..]
+
+      network:
+        [..] 
+        # TTL (hop limit) is used to determine the amount of routers being traversed towards the destination
+        ttl: 2   
+
+The ``transport_layer->udp->network->ttl`` setting configures the *time to live* of the UDP datagrams, i.e. the number of hops a datagram can take before it is discarded.
 Usually, ``2`` is sufficient, but if you have a network with many routers, you may have to increase that number.
 
 .. seealso::
