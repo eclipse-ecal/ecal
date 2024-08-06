@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,12 +141,6 @@ namespace eCAL
   {
     if (!m_created) return(false);
 
-    if (m_tcp_server_v0)
-      m_tcp_server_v0->stop();
-
-    if (m_tcp_server_v1)
-      m_tcp_server_v1->stop();
-
     // reset method callback map
     {
       std::lock_guard<std::mutex> const lock(m_method_map_sync);
@@ -158,6 +152,12 @@ namespace eCAL
       std::lock_guard<std::mutex> const lock(m_event_callback_map_sync);
       m_event_callback_map.clear();
     }
+
+    if (m_tcp_server_v0)
+      m_tcp_server_v0->stop();
+
+    if (m_tcp_server_v1)
+      m_tcp_server_v1->stop();
 
     // mark as no more created (and prevent reregistering)
     m_created = false;
