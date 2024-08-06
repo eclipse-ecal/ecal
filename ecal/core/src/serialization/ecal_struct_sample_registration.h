@@ -162,10 +162,9 @@ namespace eCAL
       std::map<std::string, std::string>  attr;                         // generic topic description
     };
 
-    // With the SampleProducerID, 
-    struct SampleProducer
+    struct SampleIdentifier
     {
-      std::string                        id;                            // unique id within that process
+      std::string                        entity_id;                     // unique id within that process
       int32_t                            process_id = 0;                // process id which produced the sample
       std::string                        host_name;                     // host which produced the sample
     };
@@ -173,7 +172,7 @@ namespace eCAL
     // Registration sample
     struct Sample
     {
-      SampleProducer                      producer;                     // Unique identifier to see who produced the sample (publisher / subscriber / ...)
+      SampleIdentifier                    identifier;                   // Unique identifier to see who produced the sample (publisher / subscriber / ...)
       eCmdType                            cmd_type = bct_none;          // registration command type
       Host                                host;                         // host information
       Process                             process;                      // process information

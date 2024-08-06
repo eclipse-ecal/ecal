@@ -42,16 +42,16 @@ namespace
   ///////////////////////////////////////////////
   void PrepareEncoding(const eCAL::Registration::Sample& registration_, eCAL_pb_Process& pb_process_)
   {
-    const auto& registration_process_ = registration_.process;
-    const auto& registration_producer_ = registration_.producer;
+    const auto& registration_process_    = registration_.process;
+    const auto& registration_identifier_ = registration_.identifier;
     // rclock
     pb_process_.rclock = registration_process_.rclock;
     // hname
-    eCAL::nanopb::encode_string(pb_process_.hname, registration_producer_.host_name);
+    eCAL::nanopb::encode_string(pb_process_.hname, registration_identifier_.host_name);
     // hgname
     eCAL::nanopb::encode_string(pb_process_.hgname, registration_process_.hgname);
     // pid
-    pb_process_.pid = registration_producer_.process_id;
+    pb_process_.pid = registration_identifier_.process_id;
     // pname
     eCAL::nanopb::encode_string(pb_process_.pname, registration_process_.pname);
     // uname
@@ -84,23 +84,23 @@ namespace
   ///////////////////////////////////////////////
   void PrepareEncoding(const eCAL::Registration::Sample& registration_, eCAL_pb_Service& pb_service_)
   {
-    const auto& registration_service_  = registration_.service;
-    const auto& registration_producer_ = registration_.producer;
+    const auto& registration_service_    = registration_.service;
+    const auto& registration_identifier_ = registration_.identifier;
 
     // rclock
     pb_service_.rclock = registration_service_.rclock;
     // hname
-    eCAL::nanopb::encode_string(pb_service_.hname, registration_producer_.host_name);
+    eCAL::nanopb::encode_string(pb_service_.hname, registration_identifier_.host_name);
     // pname
     eCAL::nanopb::encode_string(pb_service_.pname, registration_service_.pname);
     // uname
     eCAL::nanopb::encode_string(pb_service_.uname, registration_service_.uname);
     // pid
-    pb_service_.pid = registration_producer_.process_id;
+    pb_service_.pid = registration_identifier_.process_id;
     // sname
     eCAL::nanopb::encode_string(pb_service_.sname, registration_service_.sname);
     // sid
-    eCAL::nanopb::encode_string(pb_service_.sid, registration_producer_.id);
+    eCAL::nanopb::encode_string(pb_service_.sid, registration_identifier_.entity_id);
     // methods
     eCAL::nanopb::encode_service_methods(pb_service_.methods, registration_service_.methods);
     // version
@@ -117,7 +117,7 @@ namespace
   void PrepareEncoding(const eCAL::Registration::Sample& registration_, eCAL_pb_Client& pb_client_)
   {
     const auto& registration_client_ = registration_.client;
-    const auto& registration_producer_ = registration_.producer;
+    const auto& registration_producer_ = registration_.identifier;
 
     // rclock
     pb_client_.rclock = registration_client_.rclock;
@@ -132,7 +132,7 @@ namespace
     // sname
     eCAL::nanopb::encode_string(pb_client_.sname, registration_client_.sname);
     // sid
-    eCAL::nanopb::encode_string(pb_client_.sid, registration_producer_.id);
+    eCAL::nanopb::encode_string(pb_client_.sid, registration_producer_.entity_id);
     // methods
     eCAL::nanopb::encode_service_methods(pb_client_.methods, registration_client_.methods);
     // version
@@ -144,23 +144,23 @@ namespace
   ///////////////////////////////////////////////
   void PrepareEncoding(const eCAL::Registration::Sample& registration_sample_, eCAL_pb_Topic& pb_topic_)
   {
-    const auto& registration_producer_ = registration_sample_.producer;
-    const auto& registration_topic_ = registration_sample_.topic;
+    const auto& registration_identifier_ = registration_sample_.identifier;
+    const auto& registration_topic_      = registration_sample_.topic;
 
     // rclock
     pb_topic_.rclock = registration_topic_.rclock;
     // hname
-    eCAL::nanopb::encode_string(pb_topic_.hname, registration_producer_.host_name);
+    eCAL::nanopb::encode_string(pb_topic_.hname, registration_identifier_.host_name);
     // hgname
     eCAL::nanopb::encode_string(pb_topic_.hgname, registration_topic_.hgname);
     // pid
-    pb_topic_.pid = registration_producer_.process_id;
+    pb_topic_.pid = registration_identifier_.process_id;
     // pname
     eCAL::nanopb::encode_string(pb_topic_.pname, registration_topic_.pname);
     // uname
     eCAL::nanopb::encode_string(pb_topic_.uname, registration_topic_.uname);
     // tid
-    eCAL::nanopb::encode_string(pb_topic_.tid, registration_producer_.id);
+    eCAL::nanopb::encode_string(pb_topic_.tid, registration_identifier_.entity_id);
     // tname
     eCAL::nanopb::encode_string(pb_topic_.tname, registration_topic_.tname);
     // direction
@@ -312,7 +312,7 @@ namespace
     // process information
     ///////////////////////////////////////////////
     // hname
-    eCAL::nanopb::decode_string(pb_sample_.process.hname, registration_.producer.host_name);
+    eCAL::nanopb::decode_string(pb_sample_.process.hname, registration_.identifier.host_name);
     // hgname
     eCAL::nanopb::decode_string(pb_sample_.process.hgname, registration_.process.hgname);
     // pname
@@ -334,7 +334,7 @@ namespace
     // service information
     ///////////////////////////////////////////////
     // hname
-    eCAL::nanopb::decode_string(pb_sample_.service.hname, registration_.producer.host_name);
+    eCAL::nanopb::decode_string(pb_sample_.service.hname, registration_.identifier.host_name);
     // pname
     eCAL::nanopb::decode_string(pb_sample_.service.pname, registration_.service.pname);
     // uname
@@ -342,7 +342,7 @@ namespace
     // sname
     eCAL::nanopb::decode_string(pb_sample_.service.sname, registration_.service.sname);
     // sid
-    eCAL::nanopb::decode_string(pb_sample_.service.sid, registration_.producer.id);
+    eCAL::nanopb::decode_string(pb_sample_.service.sid, registration_.identifier.entity_id);
     // methods
     eCAL::nanopb::decode_service_methods(pb_sample_.service.methods, registration_.service.methods);
 
@@ -350,7 +350,7 @@ namespace
     // client information
     ///////////////////////////////////////////////
     // hname
-    eCAL::nanopb::decode_string(pb_sample_.client.hname, registration_.producer.host_name);
+    eCAL::nanopb::decode_string(pb_sample_.client.hname, registration_.identifier.host_name);
     // pname
     eCAL::nanopb::decode_string(pb_sample_.client.pname, registration_.client.pname);
     // uname
@@ -358,7 +358,7 @@ namespace
     // sname
     eCAL::nanopb::decode_string(pb_sample_.client.sname, registration_.client.sname);
     // sid
-    eCAL::nanopb::decode_string(pb_sample_.client.sid, registration_.producer.id);
+    eCAL::nanopb::decode_string(pb_sample_.client.sid, registration_.identifier.entity_id);
     // methods
     eCAL::nanopb::decode_service_methods(pb_sample_.client.methods, registration_.client.methods);
 
@@ -366,7 +366,7 @@ namespace
     // topic information
     ///////////////////////////////////////////////
     // hname
-    eCAL::nanopb::decode_string(pb_sample_.topic.hname, registration_.producer.host_name);
+    eCAL::nanopb::decode_string(pb_sample_.topic.hname, registration_.identifier.host_name);
     // hgname
     eCAL::nanopb::decode_string(pb_sample_.topic.hgname, registration_.topic.hgname);
     // pname
@@ -374,7 +374,7 @@ namespace
     // uname
     eCAL::nanopb::decode_string(pb_sample_.topic.uname, registration_.topic.uname);
     // tid
-    eCAL::nanopb::decode_string(pb_sample_.topic.tid, registration_.producer.id);
+    eCAL::nanopb::decode_string(pb_sample_.topic.tid, registration_.identifier.entity_id);
     // tname
     eCAL::nanopb::decode_string(pb_sample_.topic.tname, registration_.topic.tname);
     // direction
@@ -405,7 +405,7 @@ namespace
       // rclock
       registration_.process.rclock = pb_sample_.process.rclock;
       // pid
-      registration_.producer.process_id = pb_sample_.process.pid;
+      registration_.identifier.process_id = pb_sample_.process.pid;
       // state.severity
       registration_.process.state.severity = static_cast<eCAL::Registration::eProcessSeverity>(pb_sample_.process.state.severity);
       // state.severity_level
@@ -420,7 +420,7 @@ namespace
       // rclock
       registration_.service.rclock = pb_sample_.service.rclock;
       // pid
-      registration_.producer.process_id = pb_sample_.service.pid;
+      registration_.identifier.process_id = pb_sample_.service.pid;
       // version
       registration_.service.version = pb_sample_.service.version;
       // tcp_port_v0
@@ -433,7 +433,7 @@ namespace
       // rclock
       registration_.client.rclock = pb_sample_.client.rclock;
       // pid
-      registration_.producer.process_id = pb_sample_.client.pid;
+      registration_.identifier.process_id = pb_sample_.client.pid;
       // version
       registration_.client.version = pb_sample_.client.version;
       break;
@@ -444,7 +444,7 @@ namespace
       // rclock
       registration_.topic.rclock = pb_sample_.topic.rclock;
       // pid
-      registration_.producer.process_id = pb_sample_.topic.pid;
+      registration_.identifier.process_id = pb_sample_.topic.pid;
       // tsize
       registration_.topic.tsize = pb_sample_.topic.tsize;
       // connections_loc

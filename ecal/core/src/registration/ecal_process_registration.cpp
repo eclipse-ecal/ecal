@@ -35,9 +35,9 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   Registration::Sample process_sample;
   process_sample.cmd_type = bct_reg_process;
 
-  auto& process_sample_producer = process_sample.producer;
-  process_sample_producer.host_name = eCAL::Process::GetHostName();
-  process_sample_producer.process_id = eCAL::Process::GetProcessID();
+  auto& process_sample_identifier = process_sample.identifier;
+  process_sample_identifier.host_name  = eCAL::Process::GetHostName();
+  process_sample_identifier.process_id = eCAL::Process::GetProcessID();
 
   auto& process_sample_process = process_sample.process;
   process_sample_process.hgname = eCAL::Process::GetHostGroupName();
@@ -98,9 +98,9 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessUnregisterSample()
   Registration::Sample process_sample;
   process_sample.cmd_type = bct_unreg_process;
 
-  auto& process_sample_producer = process_sample.producer;
-  process_sample_producer.host_name = eCAL::Process::GetHostName();
-  process_sample_producer.process_id = eCAL::Process::GetProcessID();
+  auto& process_sample_identifier = process_sample.identifier;
+  process_sample_identifier.host_name = eCAL::Process::GetHostName();
+  process_sample_identifier.process_id = eCAL::Process::GetProcessID();
 
   auto& process_sample_process = process_sample.process;
   process_sample_process.pname = eCAL::Process::GetProcessName();

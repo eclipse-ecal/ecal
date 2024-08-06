@@ -167,11 +167,11 @@ namespace eCAL
              (topic1.attr            == topic2.attr);
     }
 
-    bool CompareProducer(const SampleProducer& producer1, const SampleProducer& producer2)
+    bool CompareIdentifier(const SampleIdentifier& identifier1, const SampleIdentifier& identifier2)
     {
-      return (producer1.id == producer2.id) &&
-        (producer1.process_id == producer2.process_id) &&
-        (producer1.host_name == producer2.host_name);
+      return (identifier1.entity_id == identifier2.entity_id) &&
+        (identifier1.process_id == identifier2.process_id) &&
+        (identifier1.host_name == identifier2.host_name);
     }
 
     // compare two Registration Sample objects
@@ -179,7 +179,7 @@ namespace eCAL
     {
       return (sample1.cmd_type   == sample2.cmd_type) &&
              (sample1.host.hname == sample2.host.hname) &&
-             CompareProducer(sample1.producer, sample2.producer) &&
+             CompareIdentifier(sample1.identifier, sample2.identifier) &&
              CompareProcess(sample1.process, sample2.process) &&
              CompareService(sample1.service, sample2.service) &&
              CompareClient(sample1.client, sample2.client) &&

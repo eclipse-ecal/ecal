@@ -62,7 +62,7 @@ namespace eCAL
     bool CSampleApplier::IsHostGroupMember(const Registration::Sample& sample_) const
     {
       std::string host_group_name;
-      std::string host_name = sample_.producer.host_name;
+      const std::string host_name = sample_.identifier.host_name;
       switch (sample_.cmd_type)
       {
       case bct_reg_publisher:
@@ -96,7 +96,7 @@ namespace eCAL
     bool CSampleApplier::IsSameProcess(const Registration::Sample& sample_) const
     {
       // is this actually sufficient? should we also check host_name?
-      int32_t pid = sample_.producer.process_id;
+      const int32_t pid = sample_.identifier.process_id;
       return pid == m_pid;
     }
 

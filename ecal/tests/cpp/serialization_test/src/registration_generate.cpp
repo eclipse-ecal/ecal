@@ -136,13 +136,13 @@ namespace eCAL
       return process;
     }
 
-    SampleProducer GenerateProducer()
+    SampleIdentifier GenerateIdentifier()
     {
-      SampleProducer producer;
-      producer.id = GenerateString(7);
-      producer.process_id = rand() % 100;
-      producer.host_name = GenerateString(8);
-      return producer;
+      SampleIdentifier identifier;
+      identifier.entity_id = GenerateString(7);
+      identifier.process_id = rand() % 100;
+      identifier.host_name = GenerateString(8);
+      return identifier;
     }
 
     Sample GenerateProcessSample()
@@ -150,9 +150,9 @@ namespace eCAL
       Sample sample;
       sample.cmd_type = bct_reg_process;
       sample.host.hname = GenerateString(8);
-      sample.producer = GenerateProducer();
+      sample.identifier = GenerateIdentifier();
       // Process samples don't have an id internally, hence it must be 0.
-      sample.producer.id = "";
+      sample.identifier.entity_id = "";
       sample.process = GenerateProcess();
       return sample;
     }
@@ -162,7 +162,7 @@ namespace eCAL
       Sample sample;
       sample.cmd_type = bct_reg_publisher;
       sample.host.hname = GenerateString(8);
-      sample.producer = GenerateProducer();
+      sample.identifier = GenerateIdentifier();
       sample.topic = GenerateTopic();
       return sample;
     }
@@ -172,7 +172,7 @@ namespace eCAL
       Sample sample;
       sample.cmd_type = bct_reg_service;
       sample.host.hname = GenerateString(8);
-      sample.producer = GenerateProducer();
+      sample.identifier = GenerateIdentifier();
       sample.service = GenerateService();
       return sample;
     }
@@ -182,7 +182,7 @@ namespace eCAL
       Sample sample;
       sample.cmd_type = bct_reg_client;
       sample.host.hname = GenerateString(8);
-      sample.producer = GenerateProducer();
+      sample.identifier = GenerateIdentifier();
       sample.client = GenerateClient();
       return sample;
     }

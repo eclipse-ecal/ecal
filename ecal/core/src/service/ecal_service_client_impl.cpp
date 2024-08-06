@@ -639,10 +639,10 @@ namespace eCAL
     Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_reg_client;
 
-    auto& service_producer = ecal_reg_sample.producer;
-    service_producer.id         = m_service_id;
-    service_producer.process_id = Process::GetProcessID();
-    service_producer.host_name  = Process::GetHostName();
+    auto& service_identifier = ecal_reg_sample.identifier;
+    service_identifier.entity_id  = m_service_id;
+    service_identifier.process_id = Process::GetProcessID();
+    service_identifier.host_name  = Process::GetHostName();
 
     auto& service_client = ecal_reg_sample.client;
     service_client.version = m_client_version;
@@ -677,10 +677,10 @@ namespace eCAL
     Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_unreg_client;
 
-    auto& service_producer = ecal_reg_sample.producer;
-    service_producer.id = m_service_id;
-    service_producer.process_id = Process::GetProcessID();
-    service_producer.host_name = Process::GetHostName();
+    auto& service_identifier = ecal_reg_sample.identifier;
+    service_identifier.entity_id  = m_service_id;
+    service_identifier.process_id = Process::GetProcessID();
+    service_identifier.host_name  = Process::GetHostName();
 
     auto& service_client = ecal_reg_sample.client;
     service_client.pname   = Process::GetProcessName();

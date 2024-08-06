@@ -570,10 +570,10 @@ namespace eCAL
     Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_reg_subscriber;
 
-    auto& ecal_reg_sample_producer = ecal_reg_sample.producer;
-    ecal_reg_sample_producer.process_id = m_pid;
-    ecal_reg_sample_producer.id         = m_topic_id;
-    ecal_reg_sample_producer.host_name  = m_host_name;
+    auto& ecal_reg_sample_identifier = ecal_reg_sample.identifier;
+    ecal_reg_sample_identifier.process_id = m_pid;
+    ecal_reg_sample_identifier.entity_id  = m_topic_id;
+    ecal_reg_sample_identifier.host_name  = m_host_name;
 
     auto& ecal_reg_sample_topic = ecal_reg_sample.topic;
     ecal_reg_sample_topic.hgname = m_host_group_name;
@@ -649,10 +649,10 @@ namespace eCAL
     Registration::Sample ecal_unreg_sample;
     ecal_unreg_sample.cmd_type = bct_unreg_subscriber;
 
-    auto& ecal_reg_sample_producer = ecal_unreg_sample.producer;
-    ecal_reg_sample_producer.process_id = m_pid;
-    ecal_reg_sample_producer.id = m_topic_id;
-    ecal_reg_sample_producer.host_name = m_host_name;
+    auto& ecal_reg_sample_identifier = ecal_unreg_sample.identifier;
+    ecal_reg_sample_identifier.process_id = m_pid;
+    ecal_reg_sample_identifier.entity_id = m_topic_id;
+    ecal_reg_sample_identifier.host_name = m_host_name;
 
     auto& ecal_reg_sample_topic = ecal_unreg_sample.topic;
     ecal_reg_sample_topic.hgname = m_host_group_name;

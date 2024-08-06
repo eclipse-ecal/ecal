@@ -101,13 +101,13 @@ namespace eCAL
   {
     SServiceAttr service;
     const auto& ecal_sample_service = ecal_sample_.service;
-    const auto& ecal_sample_producer = ecal_sample_.producer;
-    service.hname = ecal_sample_producer.host_name;
+    const auto& ecal_sample_identifier = ecal_sample_.identifier;
+    service.hname = ecal_sample_identifier.host_name;
     service.pname = ecal_sample_service.pname;
     service.uname = ecal_sample_service.uname;
     service.sname = ecal_sample_service.sname;
-    service.sid   = ecal_sample_producer.id;
-    service.pid   = static_cast<int>(ecal_sample_producer.process_id);
+    service.sid   = ecal_sample_identifier.entity_id;
+    service.pid   = static_cast<int>(ecal_sample_identifier.process_id);
 
     // internal protocol specifics
     service.version     = static_cast<unsigned int>(ecal_sample_service.version);

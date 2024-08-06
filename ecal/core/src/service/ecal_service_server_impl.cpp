@@ -320,10 +320,10 @@ namespace eCAL
     unsigned short const server_tcp_port_v1(m_tcp_server_v1 ? m_tcp_server_v1->get_port() : 0);
     if ((Config::IsServiceProtocolV1Enabled()) && (server_tcp_port_v1 == 0)) return ecal_reg_sample;
 
-    auto& producer      = ecal_reg_sample.producer;
-    producer.id         = m_service_id;
-    producer.process_id = Process::GetProcessID();
-    producer.host_name  = Process::GetHostName();
+    auto& identifier      = ecal_reg_sample.identifier;
+    identifier.entity_id  = m_service_id;
+    identifier.process_id = Process::GetProcessID();
+    identifier.host_name  = Process::GetHostName();
 
     auto& service       = ecal_reg_sample.service;
     service.version     = m_server_version;
@@ -359,16 +359,16 @@ namespace eCAL
     Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_unreg_service;
 
-    auto& producer = ecal_reg_sample.producer;
-    producer.id = m_service_id;
-    producer.process_id = Process::GetProcessID();
-    producer.host_name = Process::GetHostName();
+    auto& identifier = ecal_reg_sample.identifier;
+    identifier.entity_id  = m_service_id;
+    identifier.process_id = Process::GetProcessID();
+    identifier.host_name  = Process::GetHostName();
 
     auto& service = ecal_reg_sample.service;
     service.version = m_server_version;
-    service.pname = Process::GetProcessName();
-    service.uname = Process::GetUnitName();
-    service.sname = m_service_name;
+    service.pname   = Process::GetProcessName();
+    service.uname   = Process::GetUnitName();
+    service.sname   = m_service_name;
 
     return ecal_reg_sample;
   }
