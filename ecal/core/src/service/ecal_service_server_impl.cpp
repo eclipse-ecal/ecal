@@ -135,12 +135,6 @@ namespace eCAL
   {
     if (!m_created) return(false);
 
-    if (m_tcp_server_v0)
-      m_tcp_server_v0->stop();
-
-    if (m_tcp_server_v1)
-      m_tcp_server_v1->stop();
-
     // reset method callback map
     {
       std::lock_guard<std::mutex> const lock(m_method_map_sync);
@@ -152,6 +146,12 @@ namespace eCAL
       std::lock_guard<std::mutex> const lock(m_event_callback_map_sync);
       m_event_callback_map.clear();
     }
+
+    if (m_tcp_server_v0)
+      m_tcp_server_v0->stop();
+
+    if (m_tcp_server_v1)
+      m_tcp_server_v1->stop();
 
     // mark as no more created
     m_created = false;
