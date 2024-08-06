@@ -125,9 +125,7 @@ namespace eCAL
     struct Process
     {
       int32_t                             rclock = 0;                   // registration clock
-      std::string                         hname;                        // host name
       std::string                         hgname;                       // host group name
-      int32_t                             pid = 0;                      // process id
       std::string                         pname;                        // process name
       std::string                         uname;                        // unit name
       std::string                         pparam;                       // process parameter
@@ -143,12 +141,9 @@ namespace eCAL
     struct Topic
     {
       int32_t                             rclock = 0;                   // registration clock (heart beat)
-      std::string                         hname;                        // host name
       std::string                         hgname;                       // host group name
-      int32_t                             pid    = 0;                   // process id
       std::string                         pname;                        // process name
       std::string                         uname;                        // unit name
-      std::string                         tid;                          // topic id
       std::string                         tname;                        // topic name
       std::string                         direction;                    // direction (publisher, subscriber)
       SDataTypeInformation                tdatatype;                    // topic datatype information (encoding & type & description)
@@ -167,9 +162,17 @@ namespace eCAL
       std::map<std::string, std::string>  attr;                         // generic topic description
     };
 
+    struct SampleIdentifier
+    {
+      std::string                        entity_id;                     // unique id within that process
+      int32_t                            process_id = 0;                // process id which produced the sample
+      std::string                        host_name;                     // host which produced the sample
+    };
+
     // Registration sample
     struct Sample
     {
+      SampleIdentifier                    identifier;                   // Unique identifier to see who produced the sample (publisher / subscriber / ...)
       eCmdType                            cmd_type = bct_none;          // registration command type
       Host                                host;                         // host information
       Process                             process;                      // process information

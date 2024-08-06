@@ -125,12 +125,12 @@ namespace eCAL
         response_type.name       = method.resp_type;
         response_type.descriptor = method.resp_desc;
 
-        ApplyServiceDescription(m_service_info_map, sample_.service.sname, method.mname, std::stoull(sample_.service.sid), request_type, response_type, GetDataTypeInfoQuality(request_type, true), GetDataTypeInfoQuality(response_type, true));
+        ApplyServiceDescription(m_service_info_map, sample_.service.sname, method.mname, std::stoull(sample_.identifier.entity_id), request_type, response_type, GetDataTypeInfoQuality(request_type, true), GetDataTypeInfoQuality(response_type, true));
       }
     }
     break;
     case bct_unreg_service:
-      RemServiceDescription(m_service_info_map, sample_.service.sname, std::stoull(sample_.service.sid));
+      RemServiceDescription(m_service_info_map, sample_.service.sname, std::stoull(sample_.identifier.entity_id));
       break;
     case bct_reg_client:
       for (const auto& method : sample_.client.methods)
@@ -143,23 +143,23 @@ namespace eCAL
         response_type.name       = method.resp_type;
         response_type.descriptor = method.resp_desc;
 
-        ApplyServiceDescription(m_client_info_map, sample_.client.sname, method.mname, std::stoull(sample_.client.sid), request_type, response_type, GetDataTypeInfoQuality(request_type, false), GetDataTypeInfoQuality(response_type, false));
+        ApplyServiceDescription(m_client_info_map, sample_.client.sname, method.mname, std::stoull(sample_.identifier.entity_id), request_type, response_type, GetDataTypeInfoQuality(request_type, false), GetDataTypeInfoQuality(response_type, false));
       }
       break;
     case bct_unreg_client:
-      RemServiceDescription(m_client_info_map, sample_.client.sname, std::stoull(sample_.client.sid));
+      RemServiceDescription(m_client_info_map, sample_.client.sname, std::stoull(sample_.identifier.entity_id));
       break;
     case bct_reg_publisher:
-      ApplyTopicDescription(m_publisher_info_map, sample_.topic.tname, std::stoull(sample_.topic.tid), sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, true));
+      ApplyTopicDescription(m_publisher_info_map, sample_.topic.tname, std::stoull(sample_.identifier.entity_id), sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, true));
       break;
     case bct_unreg_publisher:
-      RemTopicDescription(m_publisher_info_map, sample_.topic.tname, std::stoull(sample_.topic.tid));
+      RemTopicDescription(m_publisher_info_map, sample_.topic.tname, std::stoull(sample_.identifier.entity_id));
       break;
     case bct_reg_subscriber:
-      ApplyTopicDescription(m_subscriber_info_map, sample_.topic.tname, std::stoull(sample_.topic.tid), sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, false));
+      ApplyTopicDescription(m_subscriber_info_map, sample_.topic.tname, std::stoull(sample_.identifier.entity_id), sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, false));
       break;
     case bct_unreg_subscriber:
-      RemTopicDescription(m_subscriber_info_map, sample_.topic.tname, std::stoull(sample_.topic.tid));
+      RemTopicDescription(m_subscriber_info_map, sample_.topic.tname, std::stoull(sample_.identifier.entity_id));
       break;
     default:
     {

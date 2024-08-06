@@ -62,7 +62,7 @@ namespace eCAL
     bool CSampleApplier::IsHostGroupMember(const Registration::Sample& sample_) const
     {
       std::string host_group_name;
-      std::string host_name;
+      const std::string host_name = sample_.identifier.host_name;
       switch (sample_.cmd_type)
       {
       case bct_reg_publisher:
@@ -70,17 +70,14 @@ namespace eCAL
       case bct_reg_subscriber:
       case bct_unreg_subscriber:
         host_group_name = sample_.topic.hgname;
-        host_name = sample_.topic.hname;
         break;
       case bct_reg_service:
       case bct_unreg_service:
         //host_group_name = sample_.service.hgname;  // TODO: we need to add hgname attribute to services
-        host_name = sample_.service.hname;
         break;
       case bct_reg_client:
       case bct_unreg_client:
         //host_group_name = sample_.client.hgname;  // TODO: we need to add hgname attribute to clients
-        host_name = sample_.client.hname;
         break;
       default:
         break;
@@ -98,31 +95,8 @@ namespace eCAL
 
     bool CSampleApplier::IsSameProcess(const Registration::Sample& sample_) const
     {
-      int32_t pid(0);
-      switch (sample_.cmd_type)
-      {
-      case bct_reg_process:
-      case bct_unreg_process:
-        pid = sample_.process.pid;
-        break;
-      case bct_reg_publisher:
-      case bct_unreg_publisher:
-      case bct_reg_subscriber:
-      case bct_unreg_subscriber:
-        pid = sample_.topic.pid;
-        break;
-      case bct_reg_service:
-      case bct_unreg_service:
-        pid = sample_.service.pid;
-        break;
-      case bct_reg_client:
-      case bct_unreg_client:
-        pid = sample_.client.pid;
-        break;
-      default:
-        break;
-      }
-
+      // is this actually sufficient? should we also check host_name?
+      const int32_t pid = sample_.identifier.process_id;
       return pid == m_pid;
     }
 

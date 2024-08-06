@@ -37,9 +37,7 @@ namespace eCAL
     bool CompareProcess(const Process& process1, const Process& process2)
     {
       return (process1.rclock               == process2.rclock) &&
-             (process1.hname                == process2.hname) &&
              (process1.hgname               == process2.hgname) &&
-             (process1.pid                  == process2.pid) &&
              (process1.pname                == process2.pname) &&
              (process1.uname                == process2.uname) &&
              (process1.pparam               == process2.pparam) &&
@@ -76,12 +74,9 @@ namespace eCAL
     bool CompareService(const Service::Service& service1, const Service::Service& service2)
     {
       return (service1.rclock      == service2.rclock) &&
-             (service1.hname       == service2.hname) &&
              (service1.pname       == service2.pname) &&
              (service1.uname       == service2.uname) &&
-             (service1.pid         == service2.pid) &&
              (service1.sname       == service2.sname) &&
-             (service1.sid         == service2.sid) &&
              CompareMethods(service1.methods, service2.methods) &&
              (service1.version     == service2.version) &&
              (service1.tcp_port_v0 == service2.tcp_port_v0) &&
@@ -92,12 +87,9 @@ namespace eCAL
     bool CompareClient(const Service::Client& client1, const Service::Client& client2)
     {
       return (client1.rclock  == client2.rclock) &&
-             (client1.hname   == client2.hname) &&
              (client1.pname   == client2.pname) &&
              (client1.uname   == client2.uname) &&
-             (client1.pid     == client2.pid) &&
              (client1.sname   == client2.sname) &&
-             (client1.sid     == client2.sid) &&
              CompareMethods(client1.methods, client2.methods) &&
              (client1.version == client2.version);
     }
@@ -158,12 +150,9 @@ namespace eCAL
     bool CompareTopic(const Topic& topic1, const Topic& topic2)
     {
       return (topic1.rclock          == topic2.rclock) &&
-             (topic1.hname           == topic2.hname) &&
              (topic1.hgname          == topic2.hgname) &&
-             (topic1.pid             == topic2.pid) &&
              (topic1.pname           == topic2.pname) &&
              (topic1.uname           == topic2.uname) &&
-             (topic1.tid             == topic2.tid) &&
              (topic1.tname           == topic2.tname) &&
              (topic1.direction       == topic2.direction) &&
              CompareDataTypeInformation(topic1.tdatatype, topic2.tdatatype) &&
@@ -178,11 +167,19 @@ namespace eCAL
              (topic1.attr            == topic2.attr);
     }
 
+    bool CompareIdentifier(const SampleIdentifier& identifier1, const SampleIdentifier& identifier2)
+    {
+      return (identifier1.entity_id == identifier2.entity_id) &&
+        (identifier1.process_id == identifier2.process_id) &&
+        (identifier1.host_name == identifier2.host_name);
+    }
+
     // compare two Registration Sample objects
     bool CompareRegistrationSamples(const Sample& sample1, const Sample& sample2)
     {
       return (sample1.cmd_type   == sample2.cmd_type) &&
              (sample1.host.hname == sample2.host.hname) &&
+             CompareIdentifier(sample1.identifier, sample2.identifier) &&
              CompareProcess(sample1.process, sample2.process) &&
              CompareService(sample1.service, sample2.service) &&
              CompareClient(sample1.client, sample2.client) &&

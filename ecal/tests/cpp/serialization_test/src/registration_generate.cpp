@@ -16,9 +16,9 @@
  *
  * ========================= eCAL LICENSE =================================
 */
+#include "registration_generate.h"
 
-#include "../../serialization/ecal_struct_sample_registration.h"
-
+#include <string>
 #include <cstdlib>
 
 namespace eCAL
@@ -46,12 +46,9 @@ namespace eCAL
     {
       Service::Service service;
       service.rclock      = rand() % 1000;
-      service.hname       = GenerateString(8);
       service.pname       = GenerateString(10);
       service.uname       = GenerateString(5);
-      service.pid         = rand() % 100;
       service.sname       = GenerateString(8);
-      service.sid         = GenerateString(7);
       service.methods.push_back(GenerateMethod());
       service.methods.push_back(GenerateMethod());
       service.version     = rand() % 10;
@@ -66,12 +63,9 @@ namespace eCAL
     {
       Service::Client client;
       client.rclock  = rand() % 1000;
-      client.hname   = GenerateString(8);
       client.pname   = GenerateString(10);
       client.uname   = GenerateString(5);
-      client.pid     = rand() % 100;
       client.sname   = GenerateString(8);
-      client.sid     = GenerateString(7);
       client.methods.push_back(GenerateMethod());
       client.methods.push_back(GenerateMethod());
       client.version = rand() % 10;
@@ -105,12 +99,9 @@ namespace eCAL
     {
       Topic topic;
       topic.rclock          = rand() % 1000;
-      topic.hname           = GenerateString(8);
       topic.hgname          = GenerateString(6);
-      topic.pid             = rand() % 100;
       topic.pname           = GenerateString(10);
       topic.uname           = GenerateString(5);
-      topic.tid             = GenerateString(7);
       topic.tname           = GenerateString(8);
       topic.direction       = GenerateString(5);
       topic.tdatatype       = GenerateDataTypeInformation();
@@ -126,31 +117,73 @@ namespace eCAL
       return topic;
     }
 
-    // generate Registration Sample
-    Sample GenerateRegistrationSample()
+    Process GenerateProcess()
+    {
+      Process process;
+      process.rclock = rand() % 1000;
+      process.hgname = GenerateString(6);
+      process.pname = GenerateString(10);
+      process.uname = GenerateString(5);
+      process.pparam = GenerateString(12);
+      process.state.severity = static_cast<eProcessSeverity>(rand() % (proc_sev_failed + 1));
+      process.state.severity_level = static_cast<eProcessSeverityLevel>(rand() % (proc_sev_level5 + 1));
+      process.state.info = GenerateString(10);
+      process.tsync_state = static_cast<eTSyncState>(rand() % (tsync_replay + 1));
+      process.tsync_mod_name = GenerateString(6);
+      process.component_init_state = rand() % 5;
+      process.component_init_info = GenerateString(8);
+      process.ecal_runtime_version = GenerateString(5);
+      return process;
+    }
+
+    SampleIdentifier GenerateIdentifier()
+    {
+      SampleIdentifier identifier;
+      identifier.entity_id = GenerateString(7);
+      identifier.process_id = rand() % 100;
+      identifier.host_name = GenerateString(8);
+      return identifier;
+    }
+
+    Sample GenerateProcessSample()
     {
       Sample sample;
-      sample.cmd_type                     = static_cast<eCmdType>(rand() % (bct_unreg_client + 1));
-      sample.host.hname                   = GenerateString(8);
-      sample.process.rclock               = rand() % 1000;
-      sample.process.hname                = GenerateString(8);
-      sample.process.hgname               = GenerateString(6);
-      sample.process.pid                  = rand() % 100;
-      sample.process.pname                = GenerateString(10);
-      sample.process.uname                = GenerateString(5);
-      sample.process.pparam               = GenerateString(12);
-      sample.process.state.severity       = static_cast<eProcessSeverity>(rand() % (proc_sev_failed + 1));
-      sample.process.state.severity_level = static_cast<eProcessSeverityLevel>(rand() % (proc_sev_level5 + 1));
-      sample.process.state.info           = GenerateString(10);
-      sample.process.tsync_state          = static_cast<eTSyncState>(rand() % (tsync_replay + 1));
-      sample.process.tsync_mod_name       = GenerateString(6);
-      sample.process.component_init_state = rand() % 5;
-      sample.process.component_init_info  = GenerateString(8);
-      sample.process.ecal_runtime_version = GenerateString(5);
-      sample.service                      = GenerateService();
-      sample.client                       = GenerateClient();
-      sample.topic                        = GenerateTopic();
+      sample.cmd_type = bct_reg_process;
+      sample.host.hname = GenerateString(8);
+      sample.identifier = GenerateIdentifier();
+      // Process samples don't have an id internally, hence it must be 0.
+      sample.identifier.entity_id = "";
+      sample.process = GenerateProcess();
+      return sample;
+    }
 
+    Sample GenerateTopicSample()
+    {
+      Sample sample;
+      sample.cmd_type = bct_reg_publisher;
+      sample.host.hname = GenerateString(8);
+      sample.identifier = GenerateIdentifier();
+      sample.topic = GenerateTopic();
+      return sample;
+    }
+
+    Sample GenerateServiceSample()
+    {
+      Sample sample;
+      sample.cmd_type = bct_reg_service;
+      sample.host.hname = GenerateString(8);
+      sample.identifier = GenerateIdentifier();
+      sample.service = GenerateService();
+      return sample;
+    }
+
+    Sample GenerateClientSample()
+    {
+      Sample sample;
+      sample.cmd_type = bct_reg_client;
+      sample.host.hname = GenerateString(8);
+      sample.identifier = GenerateIdentifier();
+      sample.client = GenerateClient();
       return sample;
     }
   }

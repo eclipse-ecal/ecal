@@ -639,14 +639,16 @@ namespace eCAL
     Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_reg_client;
 
+    auto& service_identifier = ecal_reg_sample.identifier;
+    service_identifier.entity_id  = m_service_id;
+    service_identifier.process_id = Process::GetProcessID();
+    service_identifier.host_name  = Process::GetHostName();
+
     auto& service_client = ecal_reg_sample.client;
     service_client.version = m_client_version;
-    service_client.hname   = Process::GetHostName();
     service_client.pname   = Process::GetProcessName();
     service_client.uname   = Process::GetUnitName();
-    service_client.pid     = Process::GetProcessID();
     service_client.sname   = m_service_name;
-    service_client.sid     = m_service_id;
 
     {
       const std::lock_guard<std::mutex> lock(m_method_sync);
@@ -675,13 +677,15 @@ namespace eCAL
     Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_unreg_client;
 
+    auto& service_identifier = ecal_reg_sample.identifier;
+    service_identifier.entity_id  = m_service_id;
+    service_identifier.process_id = Process::GetProcessID();
+    service_identifier.host_name  = Process::GetHostName();
+
     auto& service_client = ecal_reg_sample.client;
-    service_client.hname   = Process::GetHostName();
     service_client.pname   = Process::GetProcessName();
     service_client.uname   = Process::GetUnitName();
-    service_client.pid     = Process::GetProcessID();
     service_client.sname   = m_service_name;
-    service_client.sid     = m_service_id;
     service_client.version = m_client_version;
 
     return ecal_reg_sample;
