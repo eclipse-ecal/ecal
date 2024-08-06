@@ -121,10 +121,7 @@ namespace eCAL
     if (topic_name.empty()) return;
 
     // TODO: Substitute ProducerInfo type
-    CDataWriter::SSubscriptionInfo subscription_info;
-    subscription_info.host_name                  = ecal_sample_.identifier.host_name;
-    subscription_info.topic_id                   = ecal_sample_.identifier.entity_id;
-    subscription_info.process_id                 = ecal_sample_.identifier.process_id;
+    const auto& subscription_info = ecal_sample_.identifier;
     const SDataTypeInformation topic_information = ecal_topic.tdatatype;
 
     CDataWriter::SLayerStates layer_states;
@@ -181,11 +178,7 @@ namespace eCAL
     // check topic name
     if (topic_name.empty()) return;
 
-    //TODO: Remove the subscription info type
-    CDataWriter::SSubscriptionInfo subscription_info;
-    subscription_info.host_name  = ecal_sample_.identifier.host_name;
-    subscription_info.topic_id   = ecal_sample_.identifier.entity_id;
-    subscription_info.process_id = ecal_sample_.identifier.process_id;
+    const auto& subscription_info = ecal_sample_.identifier;
 
     // unregister subscriber
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);

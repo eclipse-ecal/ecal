@@ -294,7 +294,7 @@ namespace eCAL
     m_layers.tcp.write_enabled = layer_states_.tcp.write_enabled;
 #endif
 
-    FireConnectEvent(publication_info_.topic_id, data_type_info_);
+    FireConnectEvent(publication_info_.entity_id, data_type_info_);
 
     // add key to publisher map
     {
@@ -318,7 +318,7 @@ namespace eCAL
     par.host_name  = publication_info_.host_name;
     par.process_id = publication_info_.process_id;
     par.topic_name = m_topic_name;
-    par.topic_id   = publication_info_.topic_id;
+    par.topic_id   = publication_info_.entity_id;
     par.parameter  = parameter_;
 
     switch (type_)
