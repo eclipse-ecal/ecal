@@ -55,6 +55,9 @@ namespace eCAL
   {
     if (m_init) return;
 
+    // enable loopback to monitor process internal entities as well
+    eCAL::Util::EnableLoopback(true);
+
     // get name of this host
     m_host_name = Process::GetHostName();
 
