@@ -432,7 +432,7 @@ namespace eCAL
 
   void CDataWriter::ApplySubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& sub_layer_states_, const std::string& reader_par_)
   {
-    FireConnectEvent(subscription_info_.topic_id, data_type_info_);
+    FireConnectEvent(subscription_info_.entity_id, data_type_info_);
 
     // collect layer states
     std::vector<eTLayerType> pub_layers;
@@ -488,13 +488,13 @@ namespace eCAL
 
     // add a new subscription
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_writer_udp) m_writer_udp->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.topic_id, reader_par_);
+    if (m_writer_udp) m_writer_udp->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id, reader_par_);
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-    if (m_writer_shm) m_writer_shm->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.topic_id, reader_par_);
+    if (m_writer_shm) m_writer_shm->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id, reader_par_);
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-    if (m_writer_tcp) m_writer_tcp->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.topic_id, reader_par_);
+    if (m_writer_tcp) m_writer_tcp->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id, reader_par_);
 #endif
 
 #ifndef NDEBUG
@@ -513,13 +513,13 @@ namespace eCAL
 
     // remove subscription
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_writer_udp) m_writer_udp->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.topic_id);
+    if (m_writer_udp) m_writer_udp->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id);
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-    if (m_writer_shm) m_writer_shm->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.topic_id);
+    if (m_writer_shm) m_writer_shm->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id);
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-    if (m_writer_tcp) m_writer_tcp->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.topic_id);
+    if (m_writer_tcp) m_writer_tcp->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id);
 #endif
 
 #ifndef NDEBUG

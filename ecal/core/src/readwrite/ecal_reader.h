@@ -64,19 +64,7 @@ namespace eCAL
       SLayerState tcp;
     };
 
-    struct SPublicationInfo
-    {
-      std::string host_name;
-      int32_t     process_id = 0;
-      std::string topic_id;
-
-      friend bool operator<(const SPublicationInfo& l, const SPublicationInfo& r)
-      {
-        return std::tie(l.host_name, l.process_id, l.topic_id)
-          < std::tie(r.host_name, r.process_id, r.topic_id);
-      }
-    };
-
+    using SPublicationInfo = Registration::SampleIdentifier;
     CDataReader(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Subscriber::Configuration& config_ = {});
     ~CDataReader();
 
