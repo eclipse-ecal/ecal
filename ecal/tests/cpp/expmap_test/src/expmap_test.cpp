@@ -104,18 +104,68 @@ TEST(core_cpp_core, ExpMap_SetGet)
   TestingClock::increment_time(std::chrono::milliseconds(150));
   expmap["B"] = 2;
   expmap["C"] = 3;
-  expmap.erase_expired();
-  EXPECT_EQ(3, expmap.size());
+
+  {
+    auto erased = expmap.erase_expired();
+    EXPECT_EQ(3, expmap.size());
+    EXPECT_EQ(0, erased.size());
+  }
+  
   TestingClock::increment_time(std::chrono::milliseconds(150));
   expmap["B"] = 4;
-  expmap.erase_expired();
-  EXPECT_EQ(2, expmap.size());
+  
+  {
+    auto erased = expmap.erase_expired();
+    EXPECT_EQ(2, expmap.size());
+    EXPECT_EQ(1, erased.size());
+    auto a = erased.find("A");
+    EXPECT_NE(a, erased.end());
+    EXPECT_EQ(a->second, 1);
+  }
+
   TestingClock::increment_time(std::chrono::milliseconds(150));
-  expmap.erase_expired();
-  EXPECT_EQ(1, expmap.size());
+  
+  {
+    auto erased = expmap.erase_expired();
+    EXPECT_EQ(1, expmap.size());
+    EXPECT_EQ(1, erased.size());
+    auto c = erased.find("C");
+    EXPECT_NE(c, erased.end());
+    EXPECT_EQ(c->second, 3);
+  }
+
   // sleep
   TestingClock::increment_time(std::chrono::milliseconds(150));
 }
+
+TEST(core_cpp_core, ExpMap_EraseMultiple)
+{
+  // create the map with 2500 ms expiration
+  eCAL::Util::CExpirationMap<std::string, int, TestingClock> expmap(std::chrono::milliseconds(200));
+
+  expmap["A"] = 1;
+  expmap["B"] = 2;
+  expmap["C"] = 3;
+
+  TestingClock::increment_time(std::chrono::milliseconds(250));
+
+  auto erased = expmap.erase_expired();
+  EXPECT_EQ(0, expmap.size());
+  EXPECT_EQ(3, erased.size());
+
+  auto a = erased.find("A");
+  EXPECT_NE(a, erased.end());
+  EXPECT_EQ(a->second, 1);
+
+  auto b = erased.find("B");
+  EXPECT_NE(b, erased.end());
+  EXPECT_EQ(b->second, 2);
+
+  auto c = erased.find("C");
+  EXPECT_NE(c, erased.end());
+  EXPECT_EQ(c->second, 3);
+}
+
 
 TEST(core_cpp_core, ExpMap_EraseEmptyMap)
 {
