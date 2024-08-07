@@ -286,6 +286,7 @@ if (ECAL_CORE_REGISTRATION)
   set(ecal_registration_src
       src/registration/ecal_process_registration.cpp
       src/registration/ecal_process_registration.h
+      src/registration/ecal_registration.cpp
       src/registration/ecal_registration_provider.cpp
       src/registration/ecal_registration_provider.h
       src/registration/ecal_registration_receiver.cpp
@@ -452,6 +453,7 @@ set(ecal_c_src
     src/cimpl/ecal_monitoring_cimpl.cpp
     src/cimpl/ecal_process_cimpl.cpp
     src/cimpl/ecal_publisher_cimpl.cpp
+    src/cimpl/ecal_registration_cimpl.cpp
     src/cimpl/ecal_server_cimpl.cpp
     src/cimpl/ecal_subscriber_cimpl.cpp
     src/cimpl/ecal_time_cimpl.cpp
@@ -491,6 +493,7 @@ set(ecal_header_cmn
     include/ecal/ecal_monitoring.h
     include/ecal/ecal_process.h
     include/ecal/ecal_process_severity.h
+    include/ecal/ecal_registration.h
     include/ecal/ecal_publisher.h
     include/ecal/ecal_server.h
     include/ecal/ecal_service_info.h
@@ -511,6 +514,7 @@ set(ecal_header_cimpl
     include/ecal/cimpl/ecal_monitoring_cimpl.h
     include/ecal/cimpl/ecal_process_cimpl.h
     include/ecal/cimpl/ecal_publisher_cimpl.h
+    include/ecal/cimpl/ecal_registration_cimpl.h
     include/ecal/cimpl/ecal_server_cimpl.h
     include/ecal/cimpl/ecal_service_info_cimpl.h
     include/ecal/cimpl/ecal_subscriber_cimpl.h

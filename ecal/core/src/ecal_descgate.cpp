@@ -27,16 +27,16 @@
 
 namespace
 {
-  eCAL::Util::DescQualityFlags GetDataTypeInfoQuality(const eCAL::SDataTypeInformation& data_type_info_, bool is_producer_)
+  eCAL::Registration::DescQualityFlags GetDataTypeInfoQuality(const eCAL::SDataTypeInformation& data_type_info_, bool is_producer_)
   {
-    eCAL::Util::DescQualityFlags quality = eCAL::Util::DescQualityFlags::NO_QUALITY;
+    eCAL::Registration::DescQualityFlags quality = eCAL::Registration::DescQualityFlags::NO_QUALITY;
     if (!data_type_info_.name.empty())
-      quality |= eCAL::Util::DescQualityFlags::TYPENAME_AVAILABLE;
+      quality |= eCAL::Registration::DescQualityFlags::TYPENAME_AVAILABLE;
     if (!data_type_info_.encoding.empty())
-      quality |= eCAL::Util::DescQualityFlags::ENCODING_AVAILABLE;
+      quality |= eCAL::Registration::DescQualityFlags::ENCODING_AVAILABLE;
     if (!data_type_info_.descriptor.empty())
-      quality |= eCAL::Util::DescQualityFlags::DESCRIPTION_AVAILABLE;
-    if(is_producer_) quality |= eCAL::Util::DescQualityFlags::INFO_COMES_FROM_PRODUCER;
+      quality |= eCAL::Registration::DescQualityFlags::DESCRIPTION_AVAILABLE;
+    if(is_producer_) quality |= eCAL::Registration::DescQualityFlags::INFO_COMES_FROM_PRODUCER;
     return quality;
   }
 }
@@ -52,54 +52,54 @@ namespace eCAL
   }
   CDescGate::~CDescGate() = default;
 
-  Util::QualityTopicInfoMultiMap CDescGate::GetPublishers()
+  Registration::QualityTopicInfoMultiMap CDescGate::GetPublishers()
   {
     return GetTopics(m_publisher_info_map);
   }
 
-  Util::QualityTopicInfoMultiMap CDescGate::GetSubscribers()
+  Registration::QualityTopicInfoMultiMap CDescGate::GetSubscribers()
   {
     return GetTopics(m_subscriber_info_map);
   }
 
-  Util::QualityServiceInfoMultimap CDescGate::GetServices()
+  Registration::QualityServiceInfoMultimap CDescGate::GetServices()
   {
     return GetServices(m_service_info_map);
   }
 
-  Util::QualityServiceInfoMultimap CDescGate::GetClients()
+  Registration::QualityServiceInfoMultimap CDescGate::GetClients()
   {
     return GetServices(m_client_info_map);
   }
 
-  Util::QualityTopicInfoMultiMap CDescGate::GetTopics(SQualityTopicIdMap& topic_info_map_)
+  Registration::QualityTopicInfoMultiMap CDescGate::GetTopics(SQualityTopicIdMap& topic_info_map_)
   {
-    Util::QualityTopicInfoMultiMap multi_map;
+    Registration::QualityTopicInfoMultiMap multi_map;
 
     const std::lock_guard<std::mutex> lock(topic_info_map_.mtx);
     topic_info_map_.map.erase_expired();
 
     for (const auto& topic_map_it : topic_info_map_.map)
     {
-      multi_map.insert(std::pair<std::string, Util::SQualityTopicInfo>(topic_map_it.first.topic_name, topic_map_it.second));
+      multi_map.insert(std::pair<std::string, Registration::SQualityTopicInfo>(topic_map_it.first.topic_name, topic_map_it.second));
     }
 
     return multi_map;
   }
 
-  Util::QualityServiceInfoMultimap CDescGate::GetServices(SQualityServiceIdMap& service_method_info_map_)
+  Registration::QualityServiceInfoMultimap CDescGate::GetServices(SQualityServiceIdMap& service_method_info_map_)
   {
-    Util::QualityServiceInfoMultimap multi_map;
+    Registration::QualityServiceInfoMultimap multi_map;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
     service_method_info_map_.map.erase_expired();
 
     for (const auto& service_method_info_map_it : service_method_info_map_.map)
     {
-      Util::SServiceMethod key;
+      Registration::SServiceMethod key;
       key.service_name = service_method_info_map_it.first.service_name;
       key.method_name  = service_method_info_map_it.first.method_name;
-      multi_map.insert(std::pair<Util::SServiceMethod, Util::SQualityServiceInfo>(key, service_method_info_map_it.second));
+      multi_map.insert(std::pair<Registration::SServiceMethod, Registration::SQualityServiceInfo>(key, service_method_info_map_it.second));
     }
     return multi_map;
   }
@@ -171,13 +171,13 @@ namespace eCAL
 
   void CDescGate::ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
     const std::string& topic_name_,
-    const Util::TopicId& topic_id_,
+    const Registration::TopicId& topic_id_,
     const SDataTypeInformation& topic_info_,
-    const Util::DescQualityFlags topic_quality_)
+    const Registration::DescQualityFlags topic_quality_)
   {
     const auto topic_info_key = STopicIdKey{ topic_name_, topic_id_ };
 
-    Util::SQualityTopicInfo topic_quality_info;
+    Registration::SQualityTopicInfo topic_quality_info;
     topic_quality_info.id      = topic_id_;
     topic_quality_info.info    = topic_info_;
     topic_quality_info.quality = topic_quality_;
@@ -187,7 +187,7 @@ namespace eCAL
     topic_info_map_.map[topic_info_key] = topic_quality_info;
   }
 
-  void CDescGate::RemTopicDescription(SQualityTopicIdMap& topic_info_map_, const std::string& topic_name_, const Util::TopicId& topic_id_)
+  void CDescGate::RemTopicDescription(SQualityTopicIdMap& topic_info_map_, const std::string& topic_name_, const Registration::TopicId& topic_id_)
   {
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
     topic_info_map_.map.erase_expired();
@@ -197,15 +197,15 @@ namespace eCAL
   void CDescGate::ApplyServiceDescription(SQualityServiceIdMap& service_method_info_map_,
     const std::string& service_name_,
     const std::string& method_name_,
-    const Util::ServiceId& service_id_,
+    const Registration::ServiceId& service_id_,
     const SDataTypeInformation& request_type_information_,
     const SDataTypeInformation& response_type_information_,
-    const Util::DescQualityFlags request_type_quality_,
-    const Util::DescQualityFlags response_type_quality_)
+    const Registration::DescQualityFlags request_type_quality_,
+    const Registration::DescQualityFlags response_type_quality_)
   {
     const auto service_method_info_key = SServiceIdKey{ service_name_, method_name_, service_id_};
 
-    Util::SQualityServiceInfo service_quality_info;
+    Registration::SQualityServiceInfo service_quality_info;
     service_quality_info.id                 = service_id_;
     service_quality_info.info.request_type  = request_type_information_;
     service_quality_info.info.response_type = response_type_information_;
@@ -217,7 +217,7 @@ namespace eCAL
     service_method_info_map_.map[service_method_info_key] = service_quality_info;
   }
 
-  void CDescGate::RemServiceDescription(SQualityServiceIdMap& service_method_info_map_, const std::string& service_name_, const Util::ServiceId& service_id_)
+  void CDescGate::RemServiceDescription(SQualityServiceIdMap& service_method_info_map_, const std::string& service_name_, const Registration::ServiceId& service_id_)
   {
     std::list<SServiceIdKey> service_method_infos_to_remove;
 

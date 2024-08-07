@@ -26,15 +26,15 @@ enum {
   CMN_REGISTRATION_REFRESH_MS = (1000)
 };
 
-TEST(core_cpp_util, ServiceExpiration)
+TEST(core_cpp_registration, ServiceExpiration)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_util");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration");
 
   // enable loop back communication in the same process
   eCAL::Util::EnableLoopback(true);
 
-  std::map<eCAL::Util::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
+  std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
 
   // create simple service and let it expire
   {
@@ -46,14 +46,14 @@ TEST(core_cpp_util, ServiceExpiration)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get all services
-    eCAL::Util::GetServices(service_info_map);
+    eCAL::Registration::GetServices(service_info_map);
 
     // check size
     EXPECT_EQ(service_info_map.size(), 1);
 
     // check service/method names
-    std::set<eCAL::Util::SServiceMethod> service_method_names;
-    eCAL::Util::GetServiceMethodNames(service_method_names);
+    std::set<eCAL::Registration::SServiceMethod> service_method_names;
+    eCAL::Registration::GetServiceMethodNames(service_method_names);
     EXPECT_EQ(service_method_names.size(), 1);
     for (const auto& name : service_method_names)
     {
@@ -65,7 +65,7 @@ TEST(core_cpp_util, ServiceExpiration)
     eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // get all services again, service should not be expired
-    eCAL::Util::GetServices(service_info_map);
+    eCAL::Registration::GetServices(service_info_map);
 
     // check size
     EXPECT_EQ(service_info_map.size(), 1);
@@ -76,7 +76,7 @@ TEST(core_cpp_util, ServiceExpiration)
 
   // get all services again, all services
   // should be removed from the map
-  eCAL::Util::GetServices(service_info_map);
+  eCAL::Registration::GetServices(service_info_map);
 
   // check size
   EXPECT_EQ(service_info_map.size(), 0);
@@ -85,15 +85,15 @@ TEST(core_cpp_util, ServiceExpiration)
   eCAL::Finalize();
 }
 
-TEST(core_cpp_util, ServiceEqualQualities)
+TEST(core_cpp_registration, ServiceEqualQualities)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_util");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration");
 
   // enable loop back communication in the same process
   eCAL::Util::EnableLoopback(true);
 
-  std::map<eCAL::Util::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
+  std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
 
   // create 2 services with the same quality of data type information
   {
@@ -105,7 +105,7 @@ TEST(core_cpp_util, ServiceEqualQualities)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get all services
-    eCAL::Util::GetServices(service_info_map);
+    eCAL::Registration::GetServices(service_info_map);
 
     // check size
     EXPECT_EQ(service_info_map.size(), 1);
@@ -114,10 +114,10 @@ TEST(core_cpp_util, ServiceEqualQualities)
     std::string req_type, resp_type;
     std::string req_desc, resp_desc;
 
-    eCAL::Util::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
+    eCAL::Registration::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
     EXPECT_EQ(req_type,  "foo::req_type1");
     EXPECT_EQ(resp_type, "foo::resp_type1");
-    eCAL::Util::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
+    eCAL::Registration::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
     EXPECT_EQ(req_desc,  "foo::req_desc1");
     EXPECT_EQ(resp_desc, "foo::resp_desc1");
 
@@ -127,10 +127,10 @@ TEST(core_cpp_util, ServiceEqualQualities)
     service2.AddDescription("foo::method", "foo::req_type2", "foo::req_desc2", "foo::resp_type2", "foo::resp_desc2");
 
     // check attributes
-    eCAL::Util::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
+    eCAL::Registration::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
     EXPECT_EQ(req_type,  "foo::req_type1");
     EXPECT_EQ(resp_type, "foo::resp_type1");
-    eCAL::Util::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
+    eCAL::Registration::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
     EXPECT_EQ(req_desc,  "foo::req_desc1");
     EXPECT_EQ(resp_desc, "foo::resp_desc1");
 
@@ -141,7 +141,7 @@ TEST(core_cpp_util, ServiceEqualQualities)
     eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // get all services again, services should not be expired
-    eCAL::Util::GetServices(service_info_map);
+    eCAL::Registration::GetServices(service_info_map);
 
     // check size
     EXPECT_EQ(service_info_map.size(), 1);
@@ -153,10 +153,10 @@ TEST(core_cpp_util, ServiceEqualQualities)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // check attributes, service 1 attributes should be replaced by service 2 attributes now
-    eCAL::Util::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
+    eCAL::Registration::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
     EXPECT_EQ(req_type,  "foo::req_type2");
     EXPECT_EQ(resp_type, "foo::resp_type2");
-    eCAL::Util::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
+    eCAL::Registration::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
     EXPECT_EQ(req_desc,  "foo::req_desc2");
     EXPECT_EQ(resp_desc, "foo::resp_desc2");
   }
@@ -166,7 +166,7 @@ TEST(core_cpp_util, ServiceEqualQualities)
 
   // get all services again, all services 
   // should be removed from the map
-  eCAL::Util::GetServices(service_info_map);
+  eCAL::Registration::GetServices(service_info_map);
 
   // check size
   EXPECT_EQ(service_info_map.size(), 0);
@@ -175,15 +175,15 @@ TEST(core_cpp_util, ServiceEqualQualities)
   eCAL::Finalize();
 }
 
-TEST(core_cpp_util, ServiceDifferentQualities)
+TEST(core_cpp_registration, ServiceDifferentQualities)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_util");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration");
 
   // enable loop back communication in the same process
   eCAL::Util::EnableLoopback(true);
 
-  std::map<eCAL::Util::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
+  std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
 
   // create 2 services with different qualities of data type information
   {
@@ -195,7 +195,7 @@ TEST(core_cpp_util, ServiceDifferentQualities)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get all services
-    eCAL::Util::GetServices(service_info_map);
+    eCAL::Registration::GetServices(service_info_map);
 
     // check size
     EXPECT_EQ(service_info_map.size(), 1);
@@ -204,10 +204,10 @@ TEST(core_cpp_util, ServiceDifferentQualities)
     std::string req_type, resp_type;
     std::string req_desc, resp_desc;
 
-    eCAL::Util::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
+    eCAL::Registration::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
     EXPECT_EQ(req_type,  "foo::req_type1");
     EXPECT_EQ(resp_type, "");
-    eCAL::Util::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
+    eCAL::Registration::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
     EXPECT_EQ(req_desc,  "foo::req_desc1");
     EXPECT_EQ(resp_desc, "");
 
@@ -219,10 +219,10 @@ TEST(core_cpp_util, ServiceDifferentQualities)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // check attributes, we expect attributes from service 2 here
-    eCAL::Util::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
+    eCAL::Registration::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
     EXPECT_EQ(req_type,  "foo::req_type2");
     EXPECT_EQ(resp_type, "foo::resp_type2");
-    eCAL::Util::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
+    eCAL::Registration::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
     EXPECT_EQ(req_desc,  "foo::req_desc2");
     EXPECT_EQ(resp_desc, "foo::resp_desc2");
 
@@ -235,7 +235,7 @@ TEST(core_cpp_util, ServiceDifferentQualities)
 
   // get all services again, all services
   // should be removed from the map
-  eCAL::Util::GetServices(service_info_map);
+  eCAL::Registration::GetServices(service_info_map);
 
   // check size
   EXPECT_EQ(service_info_map.size(), 0);

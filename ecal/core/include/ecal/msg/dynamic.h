@@ -293,7 +293,7 @@ namespace eCAL
       if (!m_datatype_info_received)
       {
         SDataTypeInformation datatype_info_received;
-        auto received_info = eCAL::Util::GetTopicDataTypeInformation(m_topic_name, datatype_info_received);
+        auto received_info = eCAL::Registration::GetTopicDataTypeInformation(m_topic_name, datatype_info_received);
         // empty datatype informations are not valid to do reflection on!
         if (received_info && datatype_info_received != SDataTypeInformation{})
         {

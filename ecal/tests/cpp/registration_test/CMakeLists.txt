@@ -16,16 +16,30 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(test_util)
+project(test_registration)
 
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
-set(util_test_src
-  src/util_test.cpp
+if(ECAL_CORE_PUBLISHER AND ECAL_CORE_SUBSCRIBER)
+  set(registration_test_topics_src
+    src/registration_gettopics.cpp
+  )
+endif()
+
+if(ECAL_CORE_SERVICE)
+  set(registration_test_service_src
+    src/registration_getclients.cpp
+    src/registration_getservices.cpp
+  )
+endif()
+
+set(registration_test_src
+  ${registration_test_topics_src}
+  ${registration_test_service_src}
 )
 
-ecal_add_gtest(${PROJECT_NAME} ${util_test_src})
+ecal_add_gtest(${PROJECT_NAME} ${registration_test_src})
 
 target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
 
@@ -38,7 +52,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_gtest(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/util)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/registration)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
     ${${PROJECT_NAME}_src}
