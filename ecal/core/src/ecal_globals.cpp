@@ -174,7 +174,7 @@ namespace eCAL
     {
       if (monitoring_instance == nullptr)
       {
-        monitoring_instance = std::make_unique<CMonitoring>();
+        monitoring_instance = std::make_unique<CMonitoring>(eCAL::GetConfiguration().monitoring);
         new_initialization = true;
       }
     }
