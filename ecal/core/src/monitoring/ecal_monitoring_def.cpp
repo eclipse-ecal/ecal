@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,6 +74,11 @@ namespace eCAL
     m_monitoring_impl->GetMonitoringStructs(monitoring_, entities_);
   }
 
+  void CMonitoring::GetMonitoringJSON(std::string& monitoring_, unsigned int entities_)
+  {
+    m_monitoring_impl->GetMonitoringJSON(monitoring_, entities_);
+  }
+
   namespace Monitoring
   {
     ////////////////////////////////////////////////////////
@@ -123,6 +128,12 @@ namespace eCAL
         return(static_cast<int>(mon_.process.size() + mon_.publisher.size() + mon_.subscriber.size() + mon_.server.size() + mon_.clients.size()));
       }
       return(0);
+    }
+
+    ECAL_API int GetMonitoringJSON(std::string& mon_, unsigned int entities_)
+    {
+      if (g_monitoring() != nullptr) g_monitoring()->GetMonitoringJSON(mon_, entities_);
+      return((int)mon_.size());
     }
 
     int GetLogging(std::string& log_)

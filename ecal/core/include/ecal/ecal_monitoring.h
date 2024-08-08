@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,6 +92,16 @@ namespace eCAL
     **/
     ECAL_API int GetMonitoring(eCAL::Monitoring::SMonitoring& mon_, unsigned int entities_ = Entity::All);
     
+
+    /**
+     * @brief Get monitoring subset as JSON string.
+     *
+     * @param [out] mon_       String to store the monitoring information.
+     * @param       entities_  Entities to get.
+     *
+     * @return Zero if succeeded.
+    **/
+    ECAL_API int GetMonitoringJSON(std::string& mon_, unsigned int entities_ = Entity::All);
 
     /**
      * @brief Get logging as serialized protobuf string. 

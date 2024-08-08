@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1526,6 +1526,16 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
 }
 
 /****************************************/
+/*      mon_monitoring_json             */
+/****************************************/
+PyObject* mon_monitoring_json(PyObject* /*self*/, PyObject* /*args*/)
+{
+  std::string monitoring_s;
+  eCAL::Monitoring::GetMonitoringJSON(monitoring_s);
+  return(Py_BuildValue("s", ecal_getversion()));
+}
+
+/****************************************/
 /*      mon_logging                     */
 /****************************************/
 PyObject* mon_logging(PyObject* /*self*/, PyObject* /*args*/)
@@ -1679,6 +1689,7 @@ static PyMethodDef _ecal_methods[] =
   {"mon_setfilterstate",            mon_setfilterstate,            METH_VARARGS,  "mon_setfilterstate(state)"},
 
   {"mon_monitoring",                mon_monitoring,                METH_NOARGS,   "mon_monitoring()"},
+  {"mon_monitoring_json",           mon_monitoring_json,           METH_NOARGS,   "mon_monitoring_json()"},
   {"mon_logging",                   mon_logging,                   METH_NOARGS,   "mon_logging()"},
 
   {"mon_pubmonitoring",             mon_pubmonitoring,             METH_VARARGS,  "mon_pubmonitoring(state, name)"},

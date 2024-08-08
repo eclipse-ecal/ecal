@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,20 @@
 
 #include "registration/ecal_registration_receiver.h"
 
+#ifdef _MSC_VER
+#pragma warning(push, 0) // disable proto warnings
+#endif
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
+#include <google/protobuf/util/json_util.h>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
 namespace eCAL
 {
@@ -551,6 +565,18 @@ namespace eCAL
       break;
     }
     return(pHostMap);
+  }
+
+  void CMonitoringImpl::GetMonitoringJSON(std::string& monitoring_, unsigned int entities_)
+  {
+    monitoring_.clear();
+
+    eCAL::pb::Monitoring monitoring_pb;
+    GetMonitoringPb(monitoring_pb, entities_);
+
+    google::protobuf::util::JsonPrintOptions options;
+    options.add_whitespace = true;  // enables pretty printing with whitespace
+    google::protobuf::util::MessageToJsonString(monitoring_pb, &monitoring_, options);
   }
 
   void CMonitoringImpl::GetMonitoringPb(eCAL::pb::Monitoring& monitoring_, unsigned int entities_)
