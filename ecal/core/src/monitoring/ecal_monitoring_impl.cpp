@@ -575,7 +575,12 @@ namespace eCAL
     GetMonitoringPb(monitoring_pb, entities_);
 
     google::protobuf::util::JsonPrintOptions options;
-    options.add_whitespace = true;  // enables pretty printing with whitespace
+    options.add_whitespace                       = true;  // enables pretty printing with whitespace
+#if GOOGLE_PROTOBUF_VERSION >= 5026000
+    options.always_print_fields_with_no_presence = true;  // do not omit primitive fields with default values
+#else
+    options.always_print_primitive_fields        = true;  // do not omit primitive fields with default values
+#endif
     google::protobuf::util::MessageToJsonString(monitoring_pb, &monitoring_, options);
   }
 
