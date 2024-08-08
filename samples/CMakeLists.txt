@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -77,6 +77,7 @@ if(BUILD_PY_BINDING)
 
     # monitoring
     add_subdirectory(python/monitoring/monitoring)
+    add_subdirectory(python/monitoring/monitoring_json)
 
     # pubsub
     add_subdirectory(python/pubsub/protobuf/person_rec)
