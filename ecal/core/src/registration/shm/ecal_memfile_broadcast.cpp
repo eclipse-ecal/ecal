@@ -59,16 +59,14 @@ namespace eCAL
     return reinterpret_cast<void *>(static_cast<char *>(address) + GetMemfileHeader(address)->message_queue_offset);
   }
 
-  CMemoryFileBroadcast::CMemoryFileBroadcast(): m_created(false), m_max_queue_size(0), m_broadcast_memfile(std::make_unique<eCAL::CMemoryFile>()), m_event_queue(), m_last_timestamp(0)
+  CMemoryFileBroadcast::CMemoryFileBroadcast(): m_created(false), m_broadcast_memfile(std::make_unique<eCAL::CMemoryFile>()), m_event_queue(), m_last_timestamp(0)
   {
   }
 
-  bool CMemoryFileBroadcast::Create(const std::string &name, std::size_t max_queue_size)
+  bool CMemoryFileBroadcast::Create(const Registration::Layer::SHM::Configuration& config_)
   {
     if (m_created) return false;
 
-    m_max_queue_size = max_queue_size;
-    m_name = name;
     const auto presumably_memfile_size =
       RelocatableCircularQueue<SMemfileBroadcastEvent>::PresumablyOccupiedMemorySize(m_max_queue_size) +
       sizeof(SMemfileBroadcastHeader);

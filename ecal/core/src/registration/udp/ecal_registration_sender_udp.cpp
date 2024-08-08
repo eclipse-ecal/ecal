@@ -51,7 +51,7 @@ namespace
 
 namespace eCAL
 {
-  CRegistrationSenderUDP::CRegistrationSenderUDP()
+  CRegistrationSenderUDP::CRegistrationSenderUDP(const Registration::Layer::UDP::Configuration& config_ = {})
     : m_reg_sample_snd(CreateAttributes())
   {
   }
