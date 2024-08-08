@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(test_registration)
+project(test_registration_2)
 
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
@@ -52,7 +52,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_gtest(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/registration)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/registration_2)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
     ${${PROJECT_NAME}_src}

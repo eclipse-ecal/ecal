@@ -26,10 +26,10 @@ enum {
   CMN_REGISTRATION_REFRESH_MS = (1000)
 };
 
-TEST(core_cpp_registration, ServiceExpiration)
+TEST(core_cpp_registration_2, ServiceExpiration)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_2");
 
   // enable loop back communication in the same process
   eCAL::Util::EnableLoopback(true);
@@ -85,10 +85,10 @@ TEST(core_cpp_registration, ServiceExpiration)
   eCAL::Finalize();
 }
 
-TEST(core_cpp_registration, ServiceEqualQualities)
+TEST(core_cpp_registration_2, ServiceEqualQualities)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_2");
 
   // enable loop back communication in the same process
   eCAL::Util::EnableLoopback(true);
@@ -175,10 +175,10 @@ TEST(core_cpp_registration, ServiceEqualQualities)
   eCAL::Finalize();
 }
 
-TEST(core_cpp_registration, ServiceDifferentQualities)
+TEST(core_cpp_registration_2, ServiceDifferentQualities)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_2");
 
   // enable loop back communication in the same process
   eCAL::Util::EnableLoopback(true);

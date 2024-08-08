@@ -31,10 +31,10 @@ enum {
   CMN_REGISTRATION_REFRESH_MS = (1000)
 };
 
-TEST(core_cpp_registration, GetTopics)
+TEST(core_cpp_registration_2, GetTopics)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_2");
 
   // enable loop back communication in the same process
   eCAL::Util::EnableLoopback(true);
@@ -135,14 +135,14 @@ TEST(core_cpp_registration, GetTopics)
   eCAL::Finalize();
 }
 
-TEST(core_cpp_registration, GetTopicsParallel)
+TEST(core_cpp_registration_2, GetTopicsParallel)
 {
   constexpr const int max_publisher_count(2000);
   constexpr const int waiting_time_thread(4000);
   constexpr const int parallel_threads(1);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_2");
 
   // enable loop back communication in the same process
   eCAL::Util::EnableLoopback(true);
