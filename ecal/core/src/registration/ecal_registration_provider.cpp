@@ -67,14 +67,17 @@ namespace eCAL
     if (m_config.layer.shm.enable)
     {
       m_reg_sender = std::make_unique<CRegistrationSenderSHM>(m_config.layer.shm);
-    }
-    else if (m_config.layer.udp.enable)
+    } else
+#endif
+    if (m_config.layer.udp.enable)
     {
-#endif
       m_reg_sender = std::make_unique<CRegistrationSenderUDP>(m_config.layer.udp);
-#if ECAL_CORE_REGISTRATION_SHM
     }
-#endif
+    else
+    {
+      eCAL::Logging::Log(log_level_warning, "[CRegistrationProvider] No registration layer enabled.");
+      return;
+    }
 
     // start cyclic registration thread
     m_reg_sample_snd_thread = std::make_shared<CCallbackThread>(std::bind(&CRegistrationProvider::RegisterSendThread, this));
