@@ -31,10 +31,10 @@ enum {
   CMN_REGISTRATION_REFRESH_MS = (1000)
 };
 
-TEST(core_cpp_util, GetTopics)
+TEST(core_cpp_registration_2, GetTopics)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_util");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_2");
 
   // enable loop back communication in the same process
   eCAL::Util::EnableLoopback(true);
@@ -73,7 +73,7 @@ TEST(core_cpp_util, GetTopics)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get all topics
-    eCAL::Util::GetTopics(topic_info_map);
+    eCAL::Registration::GetTopics(topic_info_map);
 
     // check size
     EXPECT_EQ(topic_info_map.size(), 5);
@@ -81,17 +81,17 @@ TEST(core_cpp_util, GetTopics)
     // check types and descriptions
     for (auto& topic_info : topic_info_map)
     {
-      eCAL::SDataTypeInformation utils_topic_info;
-      eCAL::Util::GetTopicDataTypeInformation(topic_info.first, utils_topic_info);
+      eCAL::SDataTypeInformation registration_topic_info;
+      eCAL::Registration::GetTopicDataTypeInformation(topic_info.first, registration_topic_info);
       eCAL::SDataTypeInformation expected_topic_info{ "type" + topic_info.first, "", "desc" + topic_info.first };
-      EXPECT_EQ(utils_topic_info, expected_topic_info);
+      EXPECT_EQ(registration_topic_info, expected_topic_info);
     }
 
     // wait a monitoring timeout long,
     eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // the topics should not be expired
-    eCAL::Util::GetTopics(topic_info_map);
+    eCAL::Registration::GetTopics(topic_info_map);
 
     // check size
     EXPECT_EQ(topic_info_map.size(), 5);
@@ -110,14 +110,14 @@ TEST(core_cpp_util, GetTopics)
 
     // check overwritten attributes
     {
-      eCAL::SDataTypeInformation utils_topic_info;
-      EXPECT_EQ(true, eCAL::Util::GetTopicDataTypeInformation("A1", utils_topic_info));
-      EXPECT_EQ(utils_topic_info, info_A1_2);
+      eCAL::SDataTypeInformation registration_topic_info;
+      EXPECT_EQ(true, eCAL::Registration::GetTopicDataTypeInformation("A1", registration_topic_info));
+      EXPECT_EQ(registration_topic_info, info_A1_2);
     }
     {
-      eCAL::SDataTypeInformation utils_topic_info;
-      EXPECT_EQ(true, eCAL::Util::GetTopicDataTypeInformation("B1", utils_topic_info));
-      EXPECT_EQ(utils_topic_info, info_B1_2);
+      eCAL::SDataTypeInformation registration_topic_info;
+      EXPECT_EQ(true, eCAL::Registration::GetTopicDataTypeInformation("B1", registration_topic_info));
+      EXPECT_EQ(registration_topic_info, info_B1_2);
     }
   }
 
@@ -126,7 +126,7 @@ TEST(core_cpp_util, GetTopics)
 
   // get all topics again, now all topics 
   // should be removed from the map
-  eCAL::Util::GetTopics(topic_info_map);
+  eCAL::Registration::GetTopics(topic_info_map);
 
   // check size
   EXPECT_EQ(topic_info_map.size(), 0);
@@ -135,14 +135,14 @@ TEST(core_cpp_util, GetTopics)
   eCAL::Finalize();
 }
 
-TEST(core_cpp_util, GetTopicsParallel)
+TEST(core_cpp_registration_2, GetTopicsParallel)
 {
   constexpr const int max_publisher_count(2000);
   constexpr const int waiting_time_thread(4000);
   constexpr const int parallel_threads(1);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_util");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_2");
 
   // enable loop back communication in the same process
   eCAL::Util::EnableLoopback(true);
@@ -164,8 +164,8 @@ TEST(core_cpp_util, GetTopicsParallel)
     std::set<std::string> tmp_topic_names;
     std::map<std::string, eCAL::SDataTypeInformation> topics;
     do {
-      eCAL::Util::GetTopicNames(tmp_topic_names);
-      eCAL::Util::GetTopics(topics);
+      eCAL::Registration::GetTopicNames(tmp_topic_names);
+      eCAL::Registration::GetTopics(topics);
 
       found_topics = tmp_topic_names.size();
       std::cout << "Number of topics found by ecal: " << found_topics << "\n";
@@ -174,8 +174,8 @@ TEST(core_cpp_util, GetTopicsParallel)
 
     // do it again until all publishers are deleted
     do {
-      eCAL::Util::GetTopicNames(tmp_topic_names);
-      eCAL::Util::GetTopics(topics);
+      eCAL::Registration::GetTopicNames(tmp_topic_names);
+      eCAL::Registration::GetTopics(topics);
 
       found_topics = tmp_topic_names.size();
       std::cout << "Number of topics found by ecal: " << found_topics << "\n";
@@ -196,8 +196,8 @@ TEST(core_cpp_util, GetTopicsParallel)
 
   std::set<std::string> final_topic_names;
   std::map<std::string, eCAL::SDataTypeInformation> final_topics;
-  eCAL::Util::GetTopicNames(final_topic_names);
-  eCAL::Util::GetTopics(final_topics);
+  eCAL::Registration::GetTopicNames(final_topic_names);
+  eCAL::Registration::GetTopics(final_topics);
 
   EXPECT_EQ(final_topic_names.size(), 0);
   EXPECT_EQ(final_topics.size(), 0);
