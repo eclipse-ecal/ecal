@@ -67,10 +67,12 @@ namespace eCAL
   {
     if (m_created) return false;
 
+    m_config = config_;
+
     const auto presumably_memfile_size =
-      RelocatableCircularQueue<SMemfileBroadcastEvent>::PresumablyOccupiedMemorySize(m_max_queue_size) +
+      RelocatableCircularQueue<SMemfileBroadcastEvent>::PresumablyOccupiedMemorySize(m_config.queue_size) +
       sizeof(SMemfileBroadcastHeader);
-    if (!m_broadcast_memfile->Create(name.c_str(), true, presumably_memfile_size, true))
+    if (!m_broadcast_memfile->Create(m_config.domain.c_str(), true, presumably_memfile_size, true))
     {
 #ifndef NDEBUG
       std::cerr << "Unable to access broadcast memory file." << std::endl;
@@ -134,7 +136,7 @@ namespace eCAL
 
   std::string CMemoryFileBroadcast::GetName() const
   {
-    return m_name;
+    return m_config.domain;
   }
 
   bool CMemoryFileBroadcast::IsMemfileVersionCompatible(const void *memfile_address) const
@@ -148,7 +150,7 @@ namespace eCAL
     auto *header = GetMemfileHeader(memfile_address);
     *header = SMemfileBroadcastHeader();
     m_event_queue.SetBaseAddress(GetEventQueueAddress(memfile_address));
-    m_event_queue.Reset(m_max_queue_size);
+    m_event_queue.Reset(m_config.queue_size);
 #ifndef NDEBUG
     std::cout << "Broadcast memory file has been resetted" << std::endl;
 #endif
@@ -243,7 +245,6 @@ namespace eCAL
       return false;
     }
   }
-
 
   bool CMemoryFileBroadcast::ReceiveEvents(MemfileBroadcastEventListT &event_list, std::int64_t timeout, bool enable_loopback)
   {

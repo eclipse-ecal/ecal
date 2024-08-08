@@ -40,7 +40,7 @@ namespace eCAL
   class CRegistrationSenderSHM : public CRegistrationSender
   {
   public:
-    CRegistrationSenderSHM(const Registration::Layer::SHM::Configuration& config_ = {});
+    CRegistrationSenderSHM(const Registration::Layer::SHM::Configuration& config_);
     ~CRegistrationSenderSHM() override;
 
     // Special member functionss

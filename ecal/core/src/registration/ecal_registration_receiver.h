@@ -34,6 +34,7 @@
 #include "registration/ecal_registration_sample_applier.h"
 #include "registration/ecal_registration_sample_applier_gates.h"
 #include "registration/ecal_registration_sample_applier_user.h"
+#include "ecal/config/registration.h"
 
 #include <atomic>
 #include <functional>
@@ -58,7 +59,7 @@ namespace eCAL
   class CRegistrationReceiver
   {
   public:
-    CRegistrationReceiver();
+    CRegistrationReceiver(const Registration::Configuration& config_);
     ~CRegistrationReceiver();
 
     //what about the rest of the rule of 5?
@@ -88,9 +89,6 @@ namespace eCAL
     std::unique_ptr<CRegistrationReceiverSHM> m_registration_receiver_shm;
 #endif
 
-    bool                                  m_use_registration_udp;
-    bool                                  m_use_registration_shm;
-
     // This class distributes samples to all everyone who is interested in being notified about samples
     Registration::CSampleApplier  m_sample_applier;
 
@@ -98,5 +96,7 @@ namespace eCAL
     // Possibly remove these from this class
     // The custom user callbacks (who receive serialized samples), e.g. registration events.
     Registration::CSampleApplierUser  m_user_applier;
+
+    Registration::Configuration       m_config;
   };
 }
