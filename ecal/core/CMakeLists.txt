@@ -69,6 +69,7 @@ set(ecal_config_src
     src/config/ecal_cmd_parser.cpp
     src/config/ecal_config.cpp
     src/config/ecal_config_initializer.cpp
+    src/config/transport_layer.cpp
     src/types/ecal_custom_data_types.cpp
 )
 if (ECAL_CORE_CONFIGURATION)

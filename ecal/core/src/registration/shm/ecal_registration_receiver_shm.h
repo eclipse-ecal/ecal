@@ -39,7 +39,7 @@ namespace eCAL
   class CRegistrationReceiverSHM
   {
   public:
-    CRegistrationReceiverSHM(RegistrationApplySampleCallbackT apply_sample_callback);
+    CRegistrationReceiverSHM(RegistrationApplySampleCallbackT apply_sample_callback, const Registration::Layer::SHM::Configuration& config_);
     ~CRegistrationReceiverSHM();
 
     // default copy constructor

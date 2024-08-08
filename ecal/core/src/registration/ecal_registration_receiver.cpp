@@ -46,10 +46,9 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   std::atomic<bool> CRegistrationReceiver::m_created;
 
-  CRegistrationReceiver::CRegistrationReceiver()
-    : m_use_registration_udp(false)
-    , m_use_registration_shm(false)
-    , m_sample_applier(Config::IsNetworkEnabled(), false, Process::GetHostGroupName(), Process::GetProcessID())
+  CRegistrationReceiver::CRegistrationReceiver(const Registration::Configuration& config_)
+    : m_config(config_)
+    , m_sample_applier(config_.network_enabled, config_.loopback, config_.host_group_name, Process::GetProcessID())
   {
     // Connect User registration callback and gates callback with the sample applier
     m_sample_applier.SetCustomApplySampleCallback("gates", [](const eCAL::Registration::Sample& sample_)
@@ -75,19 +74,16 @@ namespace eCAL
   {
     if(m_created) return;
 
-    // receive registration via udp or shared memory
-    m_use_registration_shm = Config::IsShmRegistrationEnabled();
-    m_use_registration_udp = !m_use_registration_shm;
-
-    if (m_use_registration_udp)
+    // Why do we have here different behaviour than in the registration provider?
+    if (m_config.layer.udp.enable)
     {
       m_registration_receiver_udp = std::make_unique<CRegistrationReceiverUDP>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_); });
     }
 
 #if ECAL_CORE_REGISTRATION_SHM
-    if (m_use_registration_shm)
+    if (m_config.layer.shm.enable)
     {
-      m_registration_receiver_shm = std::make_unique<CRegistrationReceiverSHM>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_); });
+      m_registration_receiver_shm = std::make_unique<CRegistrationReceiverSHM>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_); }, m_config.layer.shm);
     }
 #endif
 
@@ -99,13 +95,13 @@ namespace eCAL
     if(!m_created) return;
 
     // stop network registration receive thread
-    if (m_use_registration_udp)
+    if (m_config.layer.udp.enable)
     {
       m_registration_receiver_udp = nullptr;
     }
 
 #if ECAL_CORE_REGISTRATION_SHM
-    if (m_use_registration_shm)
+    if (m_config.layer.shm.enable)
     {
       m_registration_receiver_shm = nullptr;
     }

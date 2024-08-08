@@ -37,12 +37,41 @@
 #include <ecal/ecal_config.h>
 #include <ecal_globals.h>
 #include "ecal_def.h"
+#include "io/udp/ecal_udp_sender_attr.h"
 
 #include <registration/ecal_process_registration.h>
 #include <registration/udp/ecal_registration_sender_udp.h>
 #if ECAL_CORE_REGISTRATION_SHM
 #include <registration/shm/ecal_registration_sender_shm.h>
 #endif
+
+namespace
+{
+  using namespace eCAL;
+  UDP::SSenderAttr CreateAttributes(const Registration::Configuration& config_)
+  {
+    UDP::SSenderAttr attr;
+    attr.broadcast = !config_.network_enabled;
+    attr.port      = config_.layer.udp.port;
+
+    auto& config = GetConfiguration();
+    attr.loopback = true;
+    attr.sndbuf   = config.transport_layer.udp.send_buffer;
+
+    if (config.transport_layer.udp.mode == Types::UDPMode::NETWORK)
+    {
+      attr.address = config.transport_layer.udp.network.group;
+      attr.ttl     = config.transport_layer.udp.network.ttl;
+    } else
+    {
+      attr.address = config.transport_layer.udp.local.group;
+      attr.ttl     = config.transport_layer.udp.local.ttl;
+    }
+    
+    return attr;
+  }
+
+}
 
 namespace eCAL
 {
@@ -71,7 +100,7 @@ namespace eCAL
 #endif
     if (m_config.layer.udp.enable)
     {
-      m_reg_sender = std::make_unique<CRegistrationSenderUDP>(m_config.layer.udp);
+      m_reg_sender = std::make_unique<CRegistrationSenderUDP>(CreateAttributes(m_config));
     }
     else
     {
