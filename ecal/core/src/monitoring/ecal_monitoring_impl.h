@@ -48,7 +48,7 @@ namespace eCAL
   class CMonitoringImpl
   {
   public:
-    CMonitoringImpl(const Monitoring::Configuration& = {});
+    CMonitoringImpl(const Monitoring::Configuration& config_);
     ~CMonitoringImpl() = default;
 
     void Create();

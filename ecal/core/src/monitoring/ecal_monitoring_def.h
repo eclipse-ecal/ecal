@@ -38,7 +38,7 @@ namespace eCAL
   class CMonitoring
   {
   public:
-    CMonitoring(const Monitoring::Configuration& = {});
+    CMonitoring(const Monitoring::Configuration& config_);
     ~CMonitoring();
     
     void Start();
