@@ -29,9 +29,9 @@
 
 namespace eCAL
 {
-  CMonitoring::CMonitoring()
+  CMonitoring::CMonitoring(const Monitoring::Configuration& config_)
   {
-    m_monitoring_impl = std::make_unique<CMonitoringImpl>();
+    m_monitoring_impl = std::make_unique<CMonitoringImpl>(config_);
   }
 
   CMonitoring::~CMonitoring()

@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ecal/types/monitoring.h>
+#include <ecal/config/monitoring.h>
 
 #include "ecal_def.h"
 #include "util/ecal_expmap.h"
@@ -47,7 +48,7 @@ namespace eCAL
   class CMonitoringImpl
   {
   public:
-    CMonitoringImpl();
+    CMonitoringImpl(const Monitoring::Configuration& config_);
     ~CMonitoringImpl() = default;
 
     void Create();
@@ -149,14 +150,13 @@ namespace eCAL
     void Tokenize(const std::string& str, StrICaseSetT& tokens, const std::string& delimiters, bool trimEmpty);
 
     bool                                         m_init;
-    std::string                                  m_host_name;
+
+    Monitoring::Configuration                    m_config;
 
     std::mutex                                   m_topic_filter_excl_mtx;
-    std::string                                  m_topic_filter_excl_s;
     StrICaseSetT                                 m_topic_filter_excl;
 
     std::mutex                                   m_topic_filter_incl_mtx;
-    std::string                                  m_topic_filter_incl_s;
     StrICaseSetT                                 m_topic_filter_incl;
 
     // database

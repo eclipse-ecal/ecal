@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ecal/types/monitoring.h>
+#include <ecal/config/monitoring.h>
 
 #include <memory>
 #include <string>
@@ -37,7 +38,7 @@ namespace eCAL
   class CMonitoring
   {
   public:
-    CMonitoring();
+    CMonitoring(const Monitoring::Configuration& config_);
     ~CMonitoring();
     
     void Start();

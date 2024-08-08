@@ -41,13 +41,14 @@ namespace eCAL
   ////////////////////////////////////////
   // Monitoring Implementation
   ////////////////////////////////////////
-  CMonitoringImpl::CMonitoringImpl() :
+  CMonitoringImpl::CMonitoringImpl(const Monitoring::Configuration& config_) :
     m_init(false),
-    m_process_map   (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
-    m_publisher_map (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
-    m_subscriber_map(std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
-    m_server_map    (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
-    m_clients_map   (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs()))
+    m_process_map   (std::chrono::milliseconds(config_.timeout)),
+    m_publisher_map (std::chrono::milliseconds(config_.timeout)),
+    m_subscriber_map(std::chrono::milliseconds(config_.timeout)),
+    m_server_map    (std::chrono::milliseconds(config_.timeout)),
+    m_clients_map   (std::chrono::milliseconds(config_.timeout)),
+    m_config        (config_) 
   {
   }
 
@@ -58,15 +59,8 @@ namespace eCAL
     // enable loopback to monitor process internal entities as well
     eCAL::Util::EnableLoopback(true);
 
-    // get name of this host
-    m_host_name = Process::GetHostName();
-
     // utilize registration receiver to enrich monitor information
-    g_registration_receiver()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
-
-    // setup blacklist and whitelist filter strings#
-    m_topic_filter_excl_s = Config::GetMonitoringFilterExcludeList();
-    m_topic_filter_incl_s = Config::GetMonitoringFilterIncludeList();
+    g_registration_receiver()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});    
 
     // setup filtering on by default
     SetFilterState(true);
@@ -83,12 +77,12 @@ namespace eCAL
 
   void CMonitoringImpl::SetExclFilter(const std::string& filter_)
   {
-    m_topic_filter_excl_s = filter_;
+    m_config.filter_excl = filter_;
   }
 
   void CMonitoringImpl::SetInclFilter(const std::string& filter_)
   {
-    m_topic_filter_incl_s = filter_;
+    m_config.filter_incl = filter_;
   }
 
   void CMonitoringImpl::SetFilterState(bool state_)
@@ -98,13 +92,13 @@ namespace eCAL
       // create excluding filter list
       {
         const std::lock_guard<std::mutex> lock(m_topic_filter_excl_mtx);
-        Tokenize(m_topic_filter_excl_s, m_topic_filter_excl, ",;", true);
+        Tokenize(m_config.filter_excl, m_topic_filter_excl, ",;", true);
       }
 
       // create including filter list
       {
         const std::lock_guard<std::mutex> lock(m_topic_filter_incl_mtx);
-        Tokenize(m_topic_filter_incl_s, m_topic_filter_incl, ",;", true);
+        Tokenize(m_config.filter_incl, m_topic_filter_incl, ",;", true);
       }
     }
     else
