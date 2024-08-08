@@ -48,9 +48,8 @@ namespace eCAL
 {
   std::atomic<bool> CRegistrationProvider::m_created;
 
-  CRegistrationProvider::CRegistrationProvider() :
-                    m_use_registration_udp(false),
-                    m_use_registration_shm(false)
+  CRegistrationProvider::CRegistrationProvider(const Registration::Configuration& config_) :
+                    m_config(config_)
   {
   }
 
@@ -63,20 +62,16 @@ namespace eCAL
   {
     if(m_created) return;
 
-    // send registration over udp or shared memory
-    m_use_registration_shm = Config::IsShmRegistrationEnabled();
-    m_use_registration_udp = !m_use_registration_shm;
-
    // TODO Create the registration sender
 #if ECAL_CORE_REGISTRATION_SHM
-    if (m_use_registration_shm)
+    if (m_config.layer.shm.enable)
     {
-      m_reg_sender = std::make_unique<CRegistrationSenderSHM>();
+      m_reg_sender = std::make_unique<CRegistrationSenderSHM>(m_config.layer.shm);
     }
-    else
+    else if (m_config.layer.udp.enable)
     {
 #endif
-      m_reg_sender = std::make_unique<CRegistrationSenderUDP>();
+      m_reg_sender = std::make_unique<CRegistrationSenderUDP>(m_config.layer.udp);
 #if ECAL_CORE_REGISTRATION_SHM
     }
 #endif
