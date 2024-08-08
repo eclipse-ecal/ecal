@@ -130,7 +130,7 @@ namespace eCAL
       return(0);
     }
 
-    ECAL_API int GetMonitoringJSON(std::string& mon_, unsigned int entities_)
+    int GetMonitoringJSON(std::string& mon_, unsigned int entities_)
     {
       if (g_monitoring() != nullptr) g_monitoring()->GetMonitoringJSON(mon_, entities_);
       return((int)mon_.size());

@@ -91,7 +91,6 @@ namespace eCAL
      * @return Number of struct elements if succeeded.
     **/
     ECAL_API int GetMonitoring(eCAL::Monitoring::SMonitoring& mon_, unsigned int entities_ = Entity::All);
-    
 
     /**
      * @brief Get monitoring subset as JSON string.

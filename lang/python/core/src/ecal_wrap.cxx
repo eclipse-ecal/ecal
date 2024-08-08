@@ -1532,7 +1532,7 @@ PyObject* mon_monitoring_json(PyObject* /*self*/, PyObject* /*args*/)
 {
   std::string monitoring_s;
   eCAL::Monitoring::GetMonitoringJSON(monitoring_s);
-  return(Py_BuildValue("s", ecal_getversion()));
+  return(Py_BuildValue("s", monitoring_s.c_str()));
 }
 
 /****************************************/
