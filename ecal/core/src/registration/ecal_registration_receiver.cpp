@@ -75,7 +75,7 @@ namespace eCAL
 
   CRegistrationReceiver::CRegistrationReceiver(const Registration::Configuration& config_)
     : m_config(config_)
-    , m_sample_applier(config_.network_enabled, config_.loopback, config_.host_group_name, Process::GetProcessID())
+    , m_sample_applier(config_, Process::GetProcessID())
   {
     // Connect User registration callback and gates callback with the sample applier
     m_sample_applier.SetCustomApplySampleCallback("gates", [](const eCAL::Registration::Sample& sample_)
