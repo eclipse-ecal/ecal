@@ -26,6 +26,7 @@
 
 #include <memory>
 #include <registration/ecal_registration_types.h>
+#include "io/udp/ecal_udp_receiver_attr.h"
 
 namespace eCAL
 {
@@ -37,7 +38,7 @@ namespace eCAL
   class CRegistrationReceiverUDP
   {
   public:
-    CRegistrationReceiverUDP(RegistrationApplySampleCallbackT apply_sample_callback);
+    CRegistrationReceiverUDP(RegistrationApplySampleCallbackT apply_sample_callback, UDP::SReceiverAttr& attr_);
     ~CRegistrationReceiverUDP();
 
     // Special member functionss
