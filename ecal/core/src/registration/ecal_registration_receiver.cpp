@@ -50,16 +50,16 @@ namespace
   {
     // set network attributes
     UDP::SReceiverAttr attr;
-    attr.port = config_.layer.udp.port;
+    attr.port      = config_.layer.udp.port;
     attr.broadcast = !config_.network_enabled;
     
-    auto& config = GetConfiguration();
-    attr.rcvbuf  = config.transport_layer.udp.receive_buffer;
+    auto& config  = GetConfiguration();
+    attr.rcvbuf   = config.transport_layer.udp.receive_buffer;
     attr.loopback = true;
 
     if (config.transport_layer.udp.mode == Types::UDPMode::NETWORK)
     {
-      attr.address    = config.transport_layer.udp.network.group;
+      attr.address = config.transport_layer.udp.network.group;
     } else
     {
       attr.address = config.transport_layer.udp.local.group;
@@ -81,7 +81,8 @@ namespace eCAL
     , m_timeout_provider_thread(nullptr)
     , m_registration_receiver_udp(nullptr)
     , m_registration_receiver_shm(nullptr)   
-    , m_sample_applier(config_.network_enabled, config_.loopback, config_.host_group_name, Process::GetProcessID())
+    , m_config(config_)
+    , m_sample_applier(config_, Process::GetProcessID())
   {
     // Connect User registration callback and gates callback with the sample applier
     m_sample_applier.SetCustomApplySampleCallback("gates", [](const eCAL::Registration::Sample& sample_)

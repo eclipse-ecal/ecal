@@ -29,6 +29,7 @@
 #include <ecal/ecal.h>
 
 #include "serialization/ecal_struct_sample_registration.h"
+#include "ecal/config/registration.h"
 
 #include <functional>
 #include <map>
@@ -43,7 +44,7 @@ namespace eCAL
     {
     public:
       // to be replaced by config version soon!
-      CSampleApplier(bool network, bool loopback, const std::string& host_group_name, uint32_t pid);
+      CSampleApplier(const eCAL::Registration::Configuration& config_, uint32_t pid);
 
       // to be removed for eCAL 6, but keep until eCAL 5.14
       void EnableLoopback(bool state_);
@@ -59,9 +60,7 @@ namespace eCAL
 
       bool AcceptRegistrationSample(const Registration::Sample& sample_);
 
-      bool                                  m_network;
-      bool                                  m_loopback;
-      std::string                           m_host_group_name;
+      eCAL::Registration::Configuration     m_config;
       int32_t                               m_pid;
 
       std::mutex                                  m_callback_custom_apply_sample_map_mtx;
