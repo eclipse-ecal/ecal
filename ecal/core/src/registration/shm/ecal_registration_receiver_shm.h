@@ -29,6 +29,7 @@
 
 #include <memory>
 #include <registration/ecal_registration_types.h>
+#include <ecal/config/registration.h>
 
 namespace eCAL
 {

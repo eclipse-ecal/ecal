@@ -48,7 +48,7 @@
 namespace
 {
   using namespace eCAL;
-  UDP::SSenderAttr CreateAttributes(const Registration::Configuration& config_)
+  UDP::SSenderAttr CreateUDPSenderAttr(const Registration::Configuration& config_)
   {
     UDP::SSenderAttr attr;
     attr.broadcast = !config_.network_enabled;
@@ -100,7 +100,7 @@ namespace eCAL
 #endif
     if (m_config.layer.udp.enable)
     {
-      m_reg_sender = std::make_unique<CRegistrationSenderUDP>(CreateAttributes(m_config));
+      m_reg_sender = std::make_unique<CRegistrationSenderUDP>(CreateUDPSenderAttr(m_config));
     }
     else
     {

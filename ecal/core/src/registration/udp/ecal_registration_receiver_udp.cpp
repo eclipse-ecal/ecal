@@ -19,34 +19,16 @@
 
 #include "registration/udp/ecal_registration_receiver_udp.h"
 
-#include "io/udp/ecal_udp_receiver_attr.h"
 #include "io/udp/ecal_udp_sample_receiver.h"
 #include "io/udp/ecal_udp_configurations.h"
 #include "serialization/ecal_serialize_sample_registration.h"
 #include <ecal/ecal_config.h>
 
-namespace
-{
-  using namespace eCAL;
-  UDP::SReceiverAttr CreateAttributes()
-  {
-    // set network attributes
-    eCAL::UDP::SReceiverAttr attr;
-    attr.address = UDP::GetRegistrationAddress();
-    attr.port = UDP::GetRegistrationPort();
-    attr.broadcast = UDP::IsBroadcast();
-    attr.loopback = true;
-    attr.rcvbuf = UDP::GetReceiveBufferSize();
-    return attr;
-  }
-
-}
-
 using namespace eCAL;
 
-eCAL::CRegistrationReceiverUDP::CRegistrationReceiverUDP(RegistrationApplySampleCallbackT apply_sample_callback)
+eCAL::CRegistrationReceiverUDP::CRegistrationReceiverUDP(RegistrationApplySampleCallbackT apply_sample_callback, UDP::SReceiverAttr& attr_)
   : m_registration_receiver(std::make_unique<UDP::CSampleReceiver>(
-    CreateAttributes(),
+    attr_,
     [](const std::string& sample_name_) {return true; },
     [apply_sample_callback](const char* serialized_sample_data_, size_t serialized_sample_size_) {
       Registration::Sample sample;
