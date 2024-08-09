@@ -69,6 +69,7 @@ set(ecal_config_src
     src/config/ecal_cmd_parser.cpp
     src/config/ecal_config.cpp
     src/config/ecal_config_initializer.cpp
+    src/config/transport_layer.cpp
     src/types/ecal_custom_data_types.cpp
 )
 if (ECAL_CORE_CONFIGURATION)
@@ -154,6 +155,7 @@ endif()
 
 # io/udp
 set(ecal_io_udp_src
+    src/io/udp/ecal_udp_attr_builder.cpp
     src/io/udp/ecal_udp_configurations.cpp
     src/io/udp/ecal_udp_configurations.h
     src/io/udp/ecal_udp_receiver_attr.h

@@ -187,7 +187,7 @@ namespace eCAL
     {
       if (log_instance == nullptr)
       {
-        log_instance = std::make_unique<CLog>();
+        log_instance = std::make_unique<CLog>(GetConfiguration().logging);
         new_initialization = true;
       }
     }
