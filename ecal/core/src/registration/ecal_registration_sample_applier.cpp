@@ -26,18 +26,15 @@ namespace eCAL
     //////////////////////////////////////////////////////////////////
     // CSampleApplier
     //////////////////////////////////////////////////////////////////
-    CSampleApplier::CSampleApplier(bool network, bool loopback, const std::string& host_group_name, uint32_t pid)
-      :
-      m_network(network),
-      m_loopback(loopback),
-      m_host_group_name(host_group_name),
-      m_pid(pid)
+    CSampleApplier::CSampleApplier(const eCAL::Registration::Configuration& config_, uint32_t pid)
+      : m_config(config_)
+      , m_pid(pid)
     {
     }
 
     void CSampleApplier::EnableLoopback(bool state_)
     {
-      m_loopback = state_;
+      m_config.loopback = state_;
     }
 
     bool CSampleApplier::ApplySample(const Registration::Sample& sample_)
@@ -85,9 +82,9 @@ namespace eCAL
 
       const std::string& sample_host_group_name = host_group_name.empty() ? host_name : host_group_name;
 
-      if (sample_host_group_name.empty() || m_host_group_name.empty())
+      if (sample_host_group_name.empty() || m_config.host_group_name.empty())
         return false;
-      if (sample_host_group_name != m_host_group_name)
+      if (sample_host_group_name != m_config.host_group_name)
         return false;
 
       return true;
@@ -107,12 +104,12 @@ namespace eCAL
       {
         // register if the sample is from another process
         // or if loopback mode is enabled
-        return !IsSameProcess(sample_) || m_loopback;
+        return !IsSameProcess(sample_) || m_config.loopback;
       }
       else
       {
         // if the sample is from an external host, register only if network mode is enabled
-        return m_network;
+        return m_config.network_enabled;
       }
     }
 

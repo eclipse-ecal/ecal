@@ -37,6 +37,7 @@
 #include <ecal/ecal_config.h>
 #include <ecal_globals.h>
 #include "ecal_def.h"
+#include "io/udp/ecal_udp_sender_attr.h"
 
 #include <registration/ecal_process_registration.h>
 #include <registration/udp/ecal_registration_sender_udp.h>
@@ -44,13 +45,40 @@
 #include <registration/shm/ecal_registration_sender_shm.h>
 #endif
 
+namespace
+{
+  using namespace eCAL;
+  UDP::SSenderAttr CreateUDPSenderAttr(const Registration::Configuration& config_)
+  {
+    UDP::SSenderAttr attr;
+    attr.broadcast = !config_.network_enabled;
+    attr.port      = config_.layer.udp.port;
+
+    auto& config = GetConfiguration();
+    attr.loopback = true;
+    attr.sndbuf   = config.transport_layer.udp.send_buffer;
+
+    if (config.transport_layer.udp.mode == Types::UDPMode::NETWORK)
+    {
+      attr.address = config.transport_layer.udp.network.group;
+      attr.ttl     = config.transport_layer.udp.network.ttl;
+    } else
+    {
+      attr.address = config.transport_layer.udp.local.group;
+      attr.ttl     = config.transport_layer.udp.local.ttl;
+    }
+    
+    return attr;
+  }
+
+}
+
 namespace eCAL
 {
   std::atomic<bool> CRegistrationProvider::m_created;
 
-  CRegistrationProvider::CRegistrationProvider() :
-                    m_use_registration_udp(false),
-                    m_use_registration_shm(false)
+  CRegistrationProvider::CRegistrationProvider(const Registration::Configuration& config_) :
+                    m_config(config_)
   {
   }
 
@@ -63,23 +91,22 @@ namespace eCAL
   {
     if(m_created) return;
 
-    // send registration over udp or shared memory
-    m_use_registration_shm = Config::IsShmRegistrationEnabled();
-    m_use_registration_udp = !m_use_registration_shm;
-
    // TODO Create the registration sender
 #if ECAL_CORE_REGISTRATION_SHM
-    if (m_use_registration_shm)
+    if (m_config.layer.shm.enable)
     {
-      m_reg_sender = std::make_unique<CRegistrationSenderSHM>();
+      m_reg_sender = std::make_unique<CRegistrationSenderSHM>(m_config.layer.shm);
+    } else
+#endif
+    if (m_config.layer.udp.enable)
+    {
+      m_reg_sender = std::make_unique<CRegistrationSenderUDP>(CreateUDPSenderAttr(m_config));
     }
     else
     {
-#endif
-      m_reg_sender = std::make_unique<CRegistrationSenderUDP>();
-#if ECAL_CORE_REGISTRATION_SHM
+      eCAL::Logging::Log(log_level_warning, "[CRegistrationProvider] No registration layer enabled.");
+      return;
     }
-#endif
 
     // start cyclic registration thread
     m_reg_sample_snd_thread = std::make_shared<CCallbackThread>(std::bind(&CRegistrationProvider::RegisterSendThread, this));

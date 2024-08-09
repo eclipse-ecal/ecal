@@ -34,6 +34,7 @@
 #include "io/shm/ecal_memfile.h"
 
 #include <ecal/ecal.h>
+#include <ecal/config/registration.h>
 
 namespace eCAL 
 {
@@ -79,7 +80,7 @@ namespace eCAL
   public:
     CMemoryFileBroadcast();
 
-    bool Create(const std::string& name, std::size_t max_queue_size);
+    bool Create(const Registration::Layer::SHM::Configuration& config_);
     bool Destroy();
 
     std::string GetName() const;
@@ -95,8 +96,7 @@ namespace eCAL
     void ResetMemfile(void * memfile_address);
 
     bool m_created;
-    std::string m_name;
-    std::size_t m_max_queue_size;
+    Registration::Layer::SHM::Configuration m_config;
     std::unique_ptr<CMemoryFile> m_broadcast_memfile;
     std::vector<char> m_broadcast_memfile_local_buffer;
 

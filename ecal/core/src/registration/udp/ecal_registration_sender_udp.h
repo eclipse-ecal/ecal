@@ -29,13 +29,16 @@
 #include "registration/ecal_registration_sender.h"
 
 #include "io/udp/ecal_udp_sample_sender.h"
+#include "io/udp/ecal_udp_sender_attr.h"
+
+#include <ecal/config/registration.h>
 
 namespace eCAL
 {
   class CRegistrationSenderUDP : public CRegistrationSender
   {
   public:
-    CRegistrationSenderUDP();
+    CRegistrationSenderUDP(const eCAL::UDP::SSenderAttr& config_);
     ~CRegistrationSenderUDP() override;
 
     // Special member functionss

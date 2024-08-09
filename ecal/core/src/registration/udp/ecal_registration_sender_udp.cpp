@@ -32,27 +32,11 @@
 #include "io/udp/ecal_udp_configurations.h"
 #include <ecal/ecal_config.h>
 
-namespace
-{
-  using namespace eCAL;
-  UDP::SSenderAttr CreateAttributes()
-  {
-    eCAL::UDP::SSenderAttr attr;
-    attr.address = UDP::GetRegistrationAddress();
-    attr.port = UDP::GetRegistrationPort();
-    attr.ttl = UDP::GetMulticastTtl();
-    attr.broadcast = UDP::IsBroadcast();
-    attr.loopback = true;
-    attr.sndbuf = UDP::GetSendBufferSize();
-    return attr;
-  }
-
-}
 
 namespace eCAL
 {
-  CRegistrationSenderUDP::CRegistrationSenderUDP()
-    : m_reg_sample_snd(CreateAttributes())
+  CRegistrationSenderUDP::CRegistrationSenderUDP(const eCAL::UDP::SSenderAttr& config_)
+    : m_reg_sample_snd(config_)
   {
   }
 
