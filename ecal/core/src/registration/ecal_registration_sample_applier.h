@@ -43,7 +43,6 @@ namespace eCAL
     class CSampleApplier
     {
     public:
-      // to be replaced by config version soon!
       CSampleApplier(const eCAL::Registration::Configuration& config_, uint32_t pid);
 
       // to be removed for eCAL 6, but keep until eCAL 5.14
