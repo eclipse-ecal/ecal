@@ -26,7 +26,7 @@
 
 using namespace eCAL;
 
-eCAL::CRegistrationReceiverUDP::CRegistrationReceiverUDP(RegistrationApplySampleCallbackT apply_sample_callback, UDP::SReceiverAttr& attr_)
+eCAL::CRegistrationReceiverUDP::CRegistrationReceiverUDP(RegistrationApplySampleCallbackT apply_sample_callback, const UDP::SReceiverAttr& attr_)
   : m_registration_receiver(std::make_unique<UDP::CSampleReceiver>(
     attr_,
     [](const std::string& sample_name_) {return true; },

@@ -38,7 +38,7 @@ namespace eCAL
   class CRegistrationReceiverUDP
   {
   public:
-    CRegistrationReceiverUDP(RegistrationApplySampleCallbackT apply_sample_callback, UDP::SReceiverAttr& attr_);
+    CRegistrationReceiverUDP(RegistrationApplySampleCallbackT apply_sample_callback, const UDP::SReceiverAttr& attr_);
     ~CRegistrationReceiverUDP();
 
     // Special member functionss
