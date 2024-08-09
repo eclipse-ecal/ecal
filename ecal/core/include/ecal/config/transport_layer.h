@@ -42,6 +42,16 @@ namespace eCAL
         };
       }
 
+      namespace Local
+      {
+        struct Configuration
+        {
+          Types::IpAddressV4 group { "127.255.255.255" }; //!< UDP multicast group base (Default: 127.255.255.255)
+          unsigned int       ttl   { 1U };                /*!< UDP ttl value, also known as hop limit, is used in determining 
+                                                               the intermediate routers being traversed towards the destination (Default: 1) */
+        };
+      }
+
       struct Configuration
       {
         Types::UdpConfigVersion config_version { Types::UdpConfigVersion::V2 }; /*!< UDP configuration version (Since eCAL 5.12.)
@@ -61,6 +71,9 @@ namespace eCAL
         bool                                     npcap_enabled       { false };   //!< Enable to receive UDP traffic with the Npcap based receiver (Default: false)
       
         Network::Configuration                   network;
+        Local::Configuration                     local;
+
+        ECAL_API Configuration& operator=(const Configuration& other);
       }; 
     }
 

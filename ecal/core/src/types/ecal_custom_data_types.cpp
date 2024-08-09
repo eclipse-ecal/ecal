@@ -80,6 +80,7 @@ namespace eCAL
     IpAddressV4& IpAddressV4::operator=(const std::string& ip_string_)  { this->validateIpString(ip_string_); return *this; };
     IpAddressV4& IpAddressV4::operator=(const char* ip_string_)         { this->validateIpString(ip_string_); return *this; };
     IpAddressV4::operator std::string()                                 { return m_ip_address; };
+    IpAddressV4::operator std::string() const                           { return m_ip_address; };
     
     std::ostream& operator<<(std::ostream& os, const IpAddressV4& ipv4) { os << ipv4.Get(); return os; };
 

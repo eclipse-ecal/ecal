@@ -32,6 +32,7 @@
 
 #include <ecal/ecal_log_level.h>
 #include <ecal/types/logging.h>
+#include <ecal/config/logging.h>
 
 #include "ecal_global_accessors.h"
 
@@ -50,7 +51,7 @@ namespace eCAL
     /**
       * @brief Constructor.
     **/
-    CLog();
+    CLog(const eCAL::Logging::Configuration& config_);
 
     /**
       * @brief Destructor.
@@ -126,8 +127,7 @@ namespace eCAL
     FILE*                                  m_logfile;
 
     eCAL_Logging_eLogLevel                 m_level;
-    eCAL_Logging_Filter                    m_filter_mask_con;
-    eCAL_Logging_Filter                    m_filter_mask_file;
-    eCAL_Logging_Filter                    m_filter_mask_udp;
+
+    eCAL::Logging::Configuration           m_config;
   };
 }

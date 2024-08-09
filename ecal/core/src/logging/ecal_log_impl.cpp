@@ -28,6 +28,7 @@
 #include "ecal_log_impl.h"
 #include "io/udp/ecal_udp_configurations.h"
 #include "serialization/ecal_serialize_logging.h"
+#include "io/udp/ecal_udp_attr_builder.h"
 
 #include <mutex>
 #include <cstdio>
@@ -95,14 +96,12 @@ static std::string get_time_str()
 
 namespace eCAL
 {
-  CLog::CLog() :
+  CLog::CLog(const eCAL::Logging::Configuration& config_) :
           m_created(false),
+          m_config(config_),
           m_pid(0),
           m_logfile(nullptr),
-          m_level(log_level_none),
-          m_filter_mask_con(log_level_info | log_level_warning | log_level_error | log_level_fatal),
-          m_filter_mask_file(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2),
-          m_filter_mask_udp(log_level_info | log_level_warning | log_level_error | log_level_fatal | log_level_debug1 | log_level_debug2)
+          m_level(log_level_none)
   {
   }
 
@@ -118,46 +117,34 @@ namespace eCAL
     m_pname = Process::GetProcessName();
     m_level = log_level_info;
 
-    // parse logging filter strings
-    m_filter_mask_con  = Config::GetConsoleLogFilter();
-    m_filter_mask_file = Config::GetFileLogFilter();
-    m_filter_mask_udp  = Config::GetUdpLogFilter();
-
-    // create log file
-    if(m_filter_mask_file != 0)
+    // create log file if file logging is enabled
+    if(m_config.sinks.file.enable)
     {
-      // check ECAL_DATA
-      const std::string ecal_log_path = Util::GeteCALLogPath();
+      std::string ecal_log_path = m_config.sinks.file.path;
+      if (ecal_log_path.empty())
+      {
+        // check ECAL_DATA
+        // Creates path if not exists
+        ecal_log_path = Util::GeteCALLogPath();        
+      }
       if (!isDirectory(ecal_log_path)) return;
-
       const std::string tstring = get_time_str();
-
+      
       m_logfile_name = ecal_log_path + tstring + "_" + eCAL::Process::GetUnitName() + "_" + std::to_string(m_pid) + ".log";
       m_logfile = fopen(m_logfile_name.c_str(), "w");
     }
 
-    if(m_filter_mask_udp != 0)
+    if(m_config.sinks.udp.enable)
     {
       // set logging send network attributes
-      eCAL::UDP::SSenderAttr attr;
-      attr.address   = UDP::GetLoggingAddress();
-      attr.port      = UDP::GetLoggingPort();
-      attr.ttl       = UDP::GetMulticastTtl();
-      attr.broadcast = UDP::IsBroadcast();
-      attr.loopback  = true;
-      attr.sndbuf    = UDP::GetSendBufferSize();
+      eCAL::UDP::SSenderAttr attr = UDP::CreateUDPSenderAttr(GetConfiguration().registration, GetConfiguration().transport_layer.udp);
 
       // create udp logging sender
       m_udp_logging_sender = std::make_unique<UDP::CSampleSender>(attr);
     }
 
     // set logging receive network attributes
-    eCAL::UDP::SReceiverAttr attr;
-    attr.address   = UDP::GetLoggingAddress();
-    attr.port      = UDP::GetLoggingPort();
-    attr.broadcast = UDP::IsBroadcast();
-    attr.loopback  = true;
-    attr.rcvbuf    = UDP::GetReceiveBufferSize();
+    eCAL::UDP::SReceiverAttr attr = UDP::CreateUDPReceiverAttr(GetConfiguration().registration, GetConfiguration().transport_layer.udp);
 
     // start logging receiver
     m_log_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CLog::HasSample, this, std::placeholders::_1), std::bind(&CLog::ApplySample, this, std::placeholders::_1, std::placeholders::_2));
@@ -198,9 +185,9 @@ namespace eCAL
     if(!m_created) return;
     if(msg_.empty()) return;
 
-    const eCAL_Logging_Filter log_con  = level_ & m_filter_mask_con;
-    const eCAL_Logging_Filter log_file = level_ & m_filter_mask_file;
-    const eCAL_Logging_Filter log_udp  = level_ & m_filter_mask_udp;
+    const eCAL_Logging_Filter log_con  = level_ & m_config.sinks.console.filter_log_con;
+    const eCAL_Logging_Filter log_file = level_ & m_config.sinks.file.filter_log_file;
+    const eCAL_Logging_Filter log_udp  = level_ & m_config.sinks.udp.filter_log_udp;
     if((log_con | log_file | log_udp) == 0) return;
 
     auto log_time = eCAL::Time::ecal_clock::now();
