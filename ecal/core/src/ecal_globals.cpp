@@ -54,7 +54,7 @@ namespace eCAL
     /////////////////////
     if (registration_provider_instance == nullptr)
     {
-      registration_provider_instance = std::make_unique<CRegistrationProvider>(eCAL::GetConfiguration().registration);
+      registration_provider_instance = std::make_unique<CRegistrationProvider>(eCAL::GetRegistrationConfiguration());
       new_initialization = true;
     }
 
@@ -63,7 +63,7 @@ namespace eCAL
     /////////////////////
     if(registration_receiver_instance == nullptr) 
     {
-      registration_receiver_instance = std::make_unique<CRegistrationReceiver>(eCAL::GetConfiguration().registration);
+      registration_receiver_instance = std::make_unique<CRegistrationReceiver>(eCAL::GetRegistrationConfiguration());
       new_initialization = true;
     }
 #endif // ECAL_CORE_REGISTRATION
@@ -174,7 +174,7 @@ namespace eCAL
     {
       if (monitoring_instance == nullptr)
       {
-        monitoring_instance = std::make_unique<CMonitoring>(eCAL::GetConfiguration().monitoring);
+        monitoring_instance = std::make_unique<CMonitoring>(eCAL::GetMonitoringConfiguration());
         new_initialization = true;
       }
     }
