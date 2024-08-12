@@ -82,7 +82,7 @@ namespace eCAL
 #endif  
     }
 
-    bool CmdParser::getDumpConfig() const                        { return m_dump_config; };
-    std::string& CmdParser::getUserIni()                         { return m_user_ini; };
+    bool CmdParser::getDumpConfig() const                        { return m_dump_config; }
+    std::string& CmdParser::getUserIni()                         { return m_user_ini; }
   }
 }
