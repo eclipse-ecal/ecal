@@ -276,6 +276,46 @@ namespace eCAL
     {
       return g_ecal_configuration;
     };
+
+    Registration::Configuration& GetRegistrationConfiguration()
+    {
+      return GetConfiguration().registration;
+    };
+
+    Monitoring::Configuration& GetMonitoringConfiguration()
+    {
+      return GetConfiguration().monitoring;
+    };
+
+    Logging::Configuration& GetLoggingConfiguration()
+    {
+      return GetConfiguration().logging;
+    };
+
+    Subscriber::Configuration& GetSubscriberConfiguration()
+    {
+      return GetConfiguration().subscriber;
+    };
+
+    Publisher::Configuration& GetPublisherConfiguration()
+    {
+      return GetConfiguration().publisher;
+    };
+
+    Time::Configuration& GetTimesyncConfiguration()
+    {
+      return GetConfiguration().timesync;
+    };
+
+    Service::Configuration& GetServiceConfiguration()
+    {
+      return GetConfiguration().service;
+    };
+
+    Application::Configuration& GetApplicationConfiguration()
+    {
+      return GetConfiguration().application;
+    };
 }
 
 
