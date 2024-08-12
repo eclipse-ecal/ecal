@@ -48,6 +48,13 @@ namespace eCAL
   class CRegistrationReceiverUDP;
   class CRegistrationReceiverSHM;
 
+  namespace Registration
+  {
+    template<typename T>
+    class CTimeoutProvider;
+  }
+  class CCallbackThread;
+
   class CRegistrationReceiver
   {
   public:
@@ -71,6 +78,10 @@ namespace eCAL
   private:
     // why is this a static variable? can someone explain?
     static std::atomic<bool>              m_created;
+
+    // this class gets samples and tracks them for timouts
+    std::unique_ptr<Registration::CTimeoutProvider<std::chrono::steady_clock>> m_timeout_provider;
+    std::unique_ptr<CCallbackThread>                                           m_timeout_provider_thread;
 
     std::unique_ptr<CRegistrationReceiverUDP> m_registration_receiver_udp;
 #if ECAL_CORE_REGISTRATION_SHM

@@ -32,7 +32,9 @@ add_subdirectory(cpp/descgate_test)
 
 add_subdirectory(cpp/config_test)
 
+
 if(ECAL_CORE_REGISTRATION)
+  add_subdirectory(cpp/registration_test)
   add_subdirectory(cpp/registration_test_2)
 endif()
 

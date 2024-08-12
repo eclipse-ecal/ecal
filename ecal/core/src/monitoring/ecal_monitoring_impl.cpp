@@ -43,11 +43,6 @@ namespace eCAL
   ////////////////////////////////////////
   CMonitoringImpl::CMonitoringImpl(const Monitoring::Configuration& config_) :
     m_init(false),
-    m_process_map   (std::chrono::milliseconds(config_.timeout)),
-    m_publisher_map (std::chrono::milliseconds(config_.timeout)),
-    m_subscriber_map(std::chrono::milliseconds(config_.timeout)),
-    m_server_map    (std::chrono::milliseconds(config_.timeout)),
-    m_clients_map   (std::chrono::milliseconds(config_.timeout)),
     m_config        (config_) 
   {
   }
@@ -623,7 +618,6 @@ namespace eCAL
       monitoring_.processes.reserve(m_process_map.map->size());
 
       // iterate map
-      m_process_map.map->erase_expired();
       for (const auto& process : (*m_process_map.map))
       {
         monitoring_.processes.emplace_back(process.second);
@@ -641,7 +635,6 @@ namespace eCAL
       monitoring_.publisher.reserve(m_publisher_map.map->size());
 
       // iterate map
-      m_publisher_map.map->erase_expired();
       for (const auto& publisher : (*m_publisher_map.map))
       {
         monitoring_.publisher.emplace_back(publisher.second);
@@ -659,7 +652,6 @@ namespace eCAL
       monitoring_.subscriber.reserve(m_subscriber_map.map->size());
 
       // iterate map
-      m_subscriber_map.map->erase_expired();
       for (const auto& subscriber : (*m_subscriber_map.map))
       {
         monitoring_.subscriber.emplace_back(subscriber.second);
@@ -677,7 +669,6 @@ namespace eCAL
       monitoring_.server.reserve(m_server_map.map->size());
 
       // iterate map
-      m_server_map.map->erase_expired();
       for (const auto& server : (*m_server_map.map))
       {
         monitoring_.server.emplace_back(server.second);
@@ -695,7 +686,6 @@ namespace eCAL
       monitoring_.clients.reserve(m_clients_map.map->size());
 
       // iterate map
-      m_clients_map.map->erase_expired();
       for (const auto& client : (*m_clients_map.map))
       {
         monitoring_.clients.emplace_back(client.second);
@@ -709,7 +699,6 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_process_map.sync);
 
     // iterate map
-    m_process_map.map->erase_expired();
     for (const auto& process : (*m_process_map.map))
     {
       // add process
@@ -723,7 +712,6 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_server_map.sync);
 
     // iterate map
-    m_server_map.map->erase_expired();
     for (const auto& server : (*m_server_map.map))
     {
       // add service
@@ -737,7 +725,6 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_clients_map.sync);
 
     // iterate map
-    m_clients_map.map->erase_expired();
     for (const auto& client : (*m_clients_map.map))
     {
       // add client
@@ -751,7 +738,6 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(map_.sync);
 
     // iterate map
-    map_.map->erase_expired();
     for (const auto& topic : (*map_.map))
     {
       if (direction_ == "publisher")
