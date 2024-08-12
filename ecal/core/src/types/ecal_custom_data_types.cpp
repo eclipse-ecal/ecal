@@ -73,7 +73,7 @@ namespace eCAL
 
     void IpAddressV4::throwException(const std::string& ip_address_ /*std::string("")*/)
     {
-      throw std::invalid_argument("[IpAddressV4] No valid IP address: " + ip_address_)
+      throw std::invalid_argument("[IpAddressV4] No valid IP address: " + ip_address_);
     }
 
     std::string IpAddressV4::Get() const                                { return m_ip_address; }
