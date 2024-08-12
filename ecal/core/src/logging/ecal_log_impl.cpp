@@ -137,14 +137,14 @@ namespace eCAL
     if(m_config.sinks.udp.enable)
     {
       // set logging send network attributes
-      eCAL::UDP::SSenderAttr attr = UDP::CreateUDPSenderAttr(GetConfiguration().registration, GetConfiguration().transport_layer.udp);
+      const eCAL::UDP::SSenderAttr attr = UDP::CreateUDPSenderAttr(GetConfiguration().registration, GetConfiguration().transport_layer.udp);
 
       // create udp logging sender
       m_udp_logging_sender = std::make_unique<UDP::CSampleSender>(attr);
     }
 
     // set logging receive network attributes
-    eCAL::UDP::SReceiverAttr attr = UDP::CreateUDPReceiverAttr(GetConfiguration().registration, GetConfiguration().transport_layer.udp);
+    const eCAL::UDP::SReceiverAttr attr = UDP::CreateUDPReceiverAttr(GetConfiguration().registration, GetConfiguration().transport_layer.udp);
 
     // start logging receiver
     m_log_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CLog::HasSample, this, std::placeholders::_1), std::bind(&CLog::ApplySample, this, std::placeholders::_1, std::placeholders::_2));
