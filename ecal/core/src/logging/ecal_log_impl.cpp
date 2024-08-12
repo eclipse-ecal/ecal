@@ -127,11 +127,14 @@ namespace eCAL
         // Creates path if not exists
         ecal_log_path = Util::GeteCALLogPath();        
       }
-      if (!isDirectory(ecal_log_path)) return;
-      const std::string tstring = get_time_str();
       
-      m_logfile_name = ecal_log_path + tstring + "_" + eCAL::Process::GetUnitName() + "_" + std::to_string(m_pid) + ".log";
-      m_logfile = fopen(m_logfile_name.c_str(), "w");
+      if (isDirectory(ecal_log_path))
+      {
+        const std::string tstring = get_time_str();
+      
+        m_logfile_name = ecal_log_path + tstring + "_" + eCAL::Process::GetUnitName() + "_" + std::to_string(m_pid) + ".log";
+        m_logfile = fopen(m_logfile_name.c_str(), "w");
+      }      
     }
 
     if(m_config.sinks.udp.enable)
@@ -192,61 +195,68 @@ namespace eCAL
 
     auto log_time = eCAL::Time::ecal_clock::now();
 
-    if(log_con != 0)
+    if(m_config.sinks.console.enable && log_con != 0)
     {
       std::cout << msg_ << '\n';
     }
 
-    if((log_file != 0) && (m_logfile != nullptr))
+    if (m_config.sinks.file.enable && log_file != 0)
     {
-      std::stringstream msg_stream;
-      msg_stream << std::chrono::duration_cast<std::chrono::milliseconds>(log_time.time_since_epoch()).count();
-      msg_stream << " ms";
-      msg_stream << " | ";
-      msg_stream << m_hname;
-      msg_stream << " | ";
-      msg_stream << eCAL::Process::GetUnitName();
-      msg_stream << " | ";
-      msg_stream << m_pid;
-      msg_stream << " | ";
-      switch(level_)
+      if(m_logfile != nullptr)
       {
-      case log_level_none:
-      case log_level_all:
-        break;
-      case log_level_info:
-        msg_stream << "info";
-        break;
-      case log_level_warning:
-        msg_stream << "warning";
-        break;
-      case log_level_error:
-        msg_stream << "error";
-        break;
-      case log_level_fatal:
-        msg_stream << "fatal";
-        break;
-      case log_level_debug1:
-        msg_stream << "debug1";
-        break;
-      case log_level_debug2:
-        msg_stream << "debug2";
-        break;
-      case log_level_debug3:
-        msg_stream << "debug3";
-        break;
-      case log_level_debug4:
-        msg_stream << "debug4";
-        break;
-      }
-      msg_stream << " | ";
-      msg_stream << msg_;
+        std::stringstream msg_stream;
+        msg_stream << std::chrono::duration_cast<std::chrono::milliseconds>(log_time.time_since_epoch()).count();
+        msg_stream << " ms";
+        msg_stream << " | ";
+        msg_stream << m_hname;
+        msg_stream << " | ";
+        msg_stream << eCAL::Process::GetUnitName();
+        msg_stream << " | ";
+        msg_stream << m_pid;
+        msg_stream << " | ";
+        switch(level_)
+        {
+        case log_level_none:
+        case log_level_all:
+          break;
+        case log_level_info:
+          msg_stream << "info";
+          break;
+        case log_level_warning:
+          msg_stream << "warning";
+          break;
+        case log_level_error:
+          msg_stream << "error";
+          break;
+        case log_level_fatal:
+          msg_stream << "fatal";
+          break;
+        case log_level_debug1:
+          msg_stream << "debug1";
+          break;
+        case log_level_debug2:
+          msg_stream << "debug2";
+          break;
+        case log_level_debug3:
+          msg_stream << "debug3";
+          break;
+        case log_level_debug4:
+          msg_stream << "debug4";
+          break;
+        }
+        msg_stream << " | ";
+        msg_stream << msg_;
 
-      fprintf(m_logfile, "%s\n", msg_stream.str().c_str());
-      fflush(m_logfile);
+        fprintf(m_logfile, "%s\n", msg_stream.str().c_str());
+        fflush(m_logfile);
+      }
+      else
+      {
+        std::cout << "Warning: Logging for file enabled, but file could not be created." << "\n";
+      }
     }
 
-    if((log_udp != 0) && m_udp_logging_sender)
+    if(m_config.sinks.udp.enable && log_udp != 0 && m_udp_logging_sender)
     {
       // set up log message
       Logging::SLogMessage log_message;
