@@ -218,11 +218,7 @@ namespace eCAL
     topic_quality_info.quality = topic_quality_;
 
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-    auto iter = topic_info_map_.map.find(topic_info_key);
-    if (iter == topic_info_map_.map.end())
-    {
-      topic_info_map_.map[topic_info_key] = topic_quality_info;
-    }
+    topic_info_map_.map[topic_info_key] = topic_quality_info;
   }
 
   void CDescGate::RemTopicDescription(SQualityTopicIdMap& topic_info_map_,
@@ -251,11 +247,7 @@ namespace eCAL
     service_quality_info.response_quality   = response_type_quality_;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-    auto iter = service_method_info_map_.map.find(service_method_info_key);
-    if (iter == service_method_info_map_.map.end())
-    {
-      service_method_info_map_.map[service_method_info_key] = service_quality_info;
-    }
+    service_method_info_map_.map[service_method_info_key] = service_quality_info;
   }
 
   void CDescGate::RemServiceDescription(SQualityServiceIdMap& service_method_info_map_,
