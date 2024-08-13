@@ -214,7 +214,6 @@ namespace eCAL
     const auto topic_info_key = Registration::STopicId{ topic_id_, topic_name_ };
 
     Registration::SQualityTopicInfo topic_quality_info;
-    topic_quality_info.id      = std::stoull(topic_id_.entity_id);
     topic_quality_info.info    = topic_info_;
     topic_quality_info.quality = topic_quality_;
 
@@ -246,7 +245,6 @@ namespace eCAL
     const auto service_method_info_key = Registration::SServiceId{ service_id_, service_name_, method_name_};
 
     Registration::SQualityServiceInfo service_quality_info;
-    service_quality_info.id                 = std::stoull(service_id_.entity_id);
     service_quality_info.info.request_type  = request_type_information_;
     service_quality_info.info.response_type = response_type_information_;
     service_quality_info.request_quality    = request_type_quality_;

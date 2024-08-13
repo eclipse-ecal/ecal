@@ -58,13 +58,12 @@ namespace eCAL
     using TopicId = std::uint64_t;
     struct SQualityTopicInfo
     {
-      TopicId              id = 0;
       SDataTypeInformation info;
       DescQualityFlags     quality = DescQualityFlags::NO_QUALITY;
 
       bool operator<(const SQualityTopicInfo& other) const
       {
-        return std::tie(quality, id) < std::tie(other.quality, other.id);
+        return std::tie(quality) < std::tie(other.quality);
       }
     };
     using QualityTopicInfoMultiMap = std::multimap<std::string, SQualityTopicInfo>;
@@ -73,14 +72,13 @@ namespace eCAL
     using ServiceId = std::uint64_t;
     struct SQualityServiceInfo
     {
-      ServiceId                 id = 0;
       SServiceMethodInformation info;
       DescQualityFlags          request_quality  = DescQualityFlags::NO_QUALITY;
       DescQualityFlags          response_quality = DescQualityFlags::NO_QUALITY;
 
       bool operator<(const SQualityServiceInfo& other) const
       {
-        return std::tie(request_quality, response_quality, id) < std::tie(other.request_quality, other.response_quality, other.id);
+        return std::tie(request_quality, response_quality) < std::tie(other.request_quality, other.response_quality);
       }
     };
     struct SServiceMethod

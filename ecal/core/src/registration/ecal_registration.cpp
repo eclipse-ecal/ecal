@@ -211,7 +211,7 @@ namespace eCAL
 
     QualityTopicInfoMultiMap GetPublishers()
     {
-      std::set<STopicId> id_set = GetPublisherIDs();
+      const std::set<STopicId> id_set = GetPublisherIDs();
 
       Registration::QualityTopicInfoMultiMap multi_map;
       for (const auto& id : id_set)
@@ -232,7 +232,7 @@ namespace eCAL
 
     QualityTopicInfoMultiMap GetSubscribers()
     {
-      std::set<STopicId> id_set = GetSubscriberIDs();
+      const std::set<STopicId> id_set = GetSubscriberIDs();
 
       Registration::QualityTopicInfoMultiMap multi_map;
       for (const auto& id : id_set)
@@ -266,7 +266,7 @@ namespace eCAL
 
     QualityServiceInfoMultimap GetServices()
     {
-      std::set<SServiceId> id_set = GetServiceIDs();
+      const std::set<SServiceId> id_set = GetServiceIDs();
 
       Registration::QualityServiceInfoMultimap multi_map;
       for (const auto& id : id_set)
@@ -282,7 +282,7 @@ namespace eCAL
 
     QualityServiceInfoMultimap GetClients()
     {
-      std::set<SServiceId> id_set = GetClientIDs();
+      const std::set<SServiceId> id_set = GetClientIDs();
 
       Registration::QualityServiceInfoMultimap multi_map;
       for (const auto& id : id_set)
