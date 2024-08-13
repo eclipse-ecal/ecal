@@ -36,7 +36,7 @@ namespace YAML
     }
 
     return(filter_mask);
-  };
+  }
 
   std::vector<std::string> LogLevelToVector(eCAL_Logging_Filter filter_mask) 
   {

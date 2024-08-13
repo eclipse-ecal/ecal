@@ -30,10 +30,12 @@
 
 
 #include "registration/ecal_registration_sender.h"
-#include "util/ecal_thread.h"
 
+#include <atomic>
 #include <memory>
 #include <mutex>
+
+#include "util/ecal_thread.h"
 
 namespace eCAL
 {

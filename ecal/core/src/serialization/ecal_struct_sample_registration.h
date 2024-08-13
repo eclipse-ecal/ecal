@@ -102,7 +102,7 @@ namespace eCAL
     // Transport layer parameters for ecal udp multicast
     struct LayerParUdpMC
     {
-      bool operator==(const LayerParUdpMC& other) const {
+      bool operator==(const LayerParUdpMC& /*other*/) const {
         // Assuming there are no member variables to compare
         return true;
       }
