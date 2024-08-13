@@ -116,14 +116,14 @@ TEST(core_cpp_descgate, PublisherExpiration)
   while ((runs--) != 0)
   {
     desc_gate.ApplySample(CreatePublisher("pub1", 1), eCAL::tl_none);
-    EXPECT_EQ(1, desc_gate.GetPublishers().size());
+    EXPECT_EQ(1, desc_gate.GetPublisherIDs().size());
   }
 
   // now let the sample expire
   desc_gate.ApplySample(DestroyPublisher("pub1", 1), eCAL::tl_none);
 
   // sample should be expired
-  EXPECT_EQ(0, desc_gate.GetPublishers().size());
+  EXPECT_EQ(0, desc_gate.GetPublisherIDs().size());
 }
 
 TEST(core_cpp_descgate, PublisherQualities)
@@ -136,33 +136,24 @@ TEST(core_cpp_descgate, PublisherQualities)
   // create and apply publisher pub2
   desc_gate.ApplySample(CreatePublisher("pub2", 2), eCAL::tl_none);
 
-  // check gate size
-  auto sample_map = desc_gate.GetPublishers();
-  EXPECT_EQ(2, sample_map.size());
+  // check size
+  auto id_set = desc_gate.GetPublisherIDs();
+  EXPECT_EQ(2, id_set.size());
 
-  // check pub1 quality
+  // check publisher qualities
   {
-    auto pub_it = sample_map.find("pub1");
-    EXPECT_NE(pub_it, sample_map.end());
-    if (pub_it != sample_map.end())
+    for (const auto& id : id_set)
     {
-      EXPECT_EQ(1,                           pub_it->second.id);
-      EXPECT_EQ("pub1-tdatatype.name",       pub_it->second.info.name);
-      EXPECT_EQ("pub1-tdatatype.encoding",   pub_it->second.info.encoding);
-      EXPECT_EQ("pub1-tdatatype.descriptor", pub_it->second.info.descriptor);
-    }
-  }
-
-  // check pub2 quality
-  {
-    auto pub_it = sample_map.find("pub2");
-    EXPECT_NE(pub_it, sample_map.end());
-    if (pub_it != sample_map.end())
-    {
-      EXPECT_EQ(2,                           pub_it->second.id);
-      EXPECT_EQ("pub2-tdatatype.name",       pub_it->second.info.name);
-      EXPECT_EQ("pub2-tdatatype.encoding",   pub_it->second.info.encoding);
-      EXPECT_EQ("pub2-tdatatype.descriptor", pub_it->second.info.descriptor);
+      eCAL::Registration::SQualityTopicInfo quality_info;
+      bool found = desc_gate.GetPublisherInfo(id, quality_info);
+      EXPECT_TRUE(found);
+      if (found)
+      {
+        std::string tname = id.topic_name;
+        EXPECT_EQ(tname + "tdatatype.name",       quality_info.info.name);
+        EXPECT_EQ(tname + "tdatatype.encoding",   quality_info.info.encoding);
+        EXPECT_EQ(tname + "tdatatype.descriptor", quality_info.info.descriptor);
+      }
     }
   }
 
@@ -171,7 +162,7 @@ TEST(core_cpp_descgate, PublisherQualities)
   desc_gate.ApplySample(DestroyPublisher("pub2", 2), eCAL::tl_none);
 
   // sample should be expired
-  EXPECT_EQ(0, desc_gate.GetPublishers().size());
+  EXPECT_EQ(0, desc_gate.GetPublisherIDs().size());
 }
 
 TEST(core_cpp_descgate, ManyPublisher)
@@ -186,7 +177,7 @@ TEST(core_cpp_descgate, ManyPublisher)
   }
 
   // map should contain num_pub samples
-  EXPECT_EQ(num_pub, desc_gate.GetPublishers().size());
+  EXPECT_EQ(num_pub, desc_gate.GetPublisherIDs().size());
 
   // now let the samples expire
   for (auto pub = 0; pub < num_pub; ++pub)
@@ -196,7 +187,7 @@ TEST(core_cpp_descgate, ManyPublisher)
   }
 
   // samples should be expired
-  EXPECT_EQ(0, desc_gate.GetPublishers().size());
+  EXPECT_EQ(0, desc_gate.GetPublisherIDs().size());
 }
 
 TEST(core_cpp_descgate, SubscriberExpiration)
@@ -208,14 +199,14 @@ TEST(core_cpp_descgate, SubscriberExpiration)
   while ((runs--) != 0)
   {
     desc_gate.ApplySample(CreateSubscriber("sub1", 1), eCAL::tl_none);
-    EXPECT_EQ(1, desc_gate.GetSubscribers().size());
+    EXPECT_EQ(1, desc_gate.GetSubscriberIDs().size());
   }
 
   // now let the sample expire
   desc_gate.ApplySample(DestroySubscriber("sub1", 1), eCAL::tl_none);
 
   // sample should be expired
-  EXPECT_EQ(0, desc_gate.GetSubscribers().size());
+  EXPECT_EQ(0, desc_gate.GetSubscriberIDs().size());
 }
 
 TEST(core_cpp_descgate, SubscriberQualities)
@@ -228,33 +219,24 @@ TEST(core_cpp_descgate, SubscriberQualities)
   // create and apply subscriber sub2
   desc_gate.ApplySample(CreateSubscriber("sub2", 2), eCAL::tl_none);
 
-  // check gate size
-  auto sample_map = desc_gate.GetSubscribers();
-  EXPECT_EQ(2, sample_map.size());
+  // check size
+  auto id_set = desc_gate.GetPublisherIDs();
+  EXPECT_EQ(2, id_set.size());
 
-  // check sub1 quality
+  // check subscriber qualities
   {
-    auto sub_it = sample_map.find("sub1");
-    EXPECT_NE(sub_it, sample_map.end());
-    if (sub_it != sample_map.end())
+    for (const auto& id : id_set)
     {
-      EXPECT_EQ(1,                           sub_it->second.id);
-      EXPECT_EQ("sub1-tdatatype.name",       sub_it->second.info.name);
-      EXPECT_EQ("sub1-tdatatype.encoding",   sub_it->second.info.encoding);
-      EXPECT_EQ("sub1-tdatatype.descriptor", sub_it->second.info.descriptor);
-    }
-  }
-
-  // check sub2 quality
-  {
-    auto sub_it = sample_map.find("sub2");
-    EXPECT_NE(sub_it, sample_map.end());
-    if (sub_it != sample_map.end())
-    {
-      EXPECT_EQ(2,                           sub_it->second.id);
-      EXPECT_EQ("sub2-tdatatype.name",       sub_it->second.info.name);
-      EXPECT_EQ("sub2-tdatatype.encoding",   sub_it->second.info.encoding);
-      EXPECT_EQ("sub2-tdatatype.descriptor", sub_it->second.info.descriptor);
+      eCAL::Registration::SQualityTopicInfo quality_info;
+      bool found = desc_gate.GetSubscriberInfo(id, quality_info);
+      EXPECT_TRUE(found);
+      if (found)
+      {
+        std::string tname = id.topic_name;
+        EXPECT_EQ(tname + "tdatatype.name",       quality_info.info.name);
+        EXPECT_EQ(tname + "tdatatype.encoding",   quality_info.info.encoding);
+        EXPECT_EQ(tname + "tdatatype.descriptor", quality_info.info.descriptor);
+      }
     }
   }
 
@@ -263,7 +245,7 @@ TEST(core_cpp_descgate, SubscriberQualities)
   desc_gate.ApplySample(DestroySubscriber("sub2", 2), eCAL::tl_none);
 
   // sample should be expired
-  EXPECT_EQ(0, desc_gate.GetSubscribers().size());
+  EXPECT_EQ(0, desc_gate.GetSubscriberIDs().size());
 }
 
 TEST(core_cpp_descgate, ManySubscriber)
@@ -278,7 +260,7 @@ TEST(core_cpp_descgate, ManySubscriber)
   }
 
   // map should contain num_sub samples
-  EXPECT_EQ(num_sub, desc_gate.GetSubscribers().size());
+  EXPECT_EQ(num_sub, desc_gate.GetSubscriberIDs().size());
 
   // now let the samples expire
   for (auto sub = 0; sub < num_sub; ++sub)
@@ -288,7 +270,7 @@ TEST(core_cpp_descgate, ManySubscriber)
   }
 
   // samples should be expired
-  EXPECT_EQ(0, desc_gate.GetSubscribers().size());
+  EXPECT_EQ(0, desc_gate.GetSubscriberIDs().size());
 }
 
 TEST(core_cpp_descgate, ServiceExpiration)
@@ -301,14 +283,14 @@ TEST(core_cpp_descgate, ServiceExpiration)
   {
     desc_gate.ApplySample(CreateService("service1", 1), eCAL::tl_none);
 
-    EXPECT_EQ(1, desc_gate.GetServices().size());
+    EXPECT_EQ(1, desc_gate.GetServiceIDs().size());
   }
 
   // now let the sample expire
   desc_gate.ApplySample(DestroyService("service1", 1), eCAL::tl_none);
 
   // sample should be expired
-  EXPECT_EQ(0, desc_gate.GetServices().size());
+  EXPECT_EQ(0, desc_gate.GetServiceIDs().size());
 }
 
 TEST(core_cpp_descgate, ManyService)
@@ -323,7 +305,7 @@ TEST(core_cpp_descgate, ManyService)
   }
 
   // map should contain num_service samples
-  EXPECT_EQ(num_service, desc_gate.GetServices().size());
+  EXPECT_EQ(num_service, desc_gate.GetServiceIDs().size());
 
   // now let the samples expire
   for (auto service = 0; service < num_service; ++service)
@@ -333,7 +315,7 @@ TEST(core_cpp_descgate, ManyService)
   }
 
   // samples should be expired
-  EXPECT_EQ(0, desc_gate.GetServices().size());
+  EXPECT_EQ(0, desc_gate.GetServiceIDs().size());
 }
 
 TEST(core_cpp_descgate, ClientExpiration)
@@ -345,14 +327,14 @@ TEST(core_cpp_descgate, ClientExpiration)
   while ((runs--) != 0)
   {
     desc_gate.ApplySample(CreateClient("client1", 1), eCAL::tl_none);
-    EXPECT_EQ(1, desc_gate.GetClients().size());
+    EXPECT_EQ(1, desc_gate.GetClientIDs().size());
   }
 
   // now let the sample expire
   desc_gate.ApplySample(DestroyClient("client1", 1), eCAL::tl_none);
 
   // sample should be expired
-  EXPECT_EQ(0, desc_gate.GetClients().size());
+  EXPECT_EQ(0, desc_gate.GetClientIDs().size());
 }
 
 TEST(core_cpp_descgate, ManyClient)
@@ -367,7 +349,7 @@ TEST(core_cpp_descgate, ManyClient)
   }
 
   // map should contain num_client samples
-  EXPECT_EQ(num_client, desc_gate.GetClients().size());
+  EXPECT_EQ(num_client, desc_gate.GetClientIDs().size());
 
   // now let the samples expire
   for (auto client = 0; client < num_client; ++client)
@@ -377,5 +359,5 @@ TEST(core_cpp_descgate, ManyClient)
   }
 
   // samples should be expired
-  EXPECT_EQ(0, desc_gate.GetClients().size());
+  EXPECT_EQ(0, desc_gate.GetClientIDs().size());
 }

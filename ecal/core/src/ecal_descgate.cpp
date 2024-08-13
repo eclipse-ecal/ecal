@@ -46,54 +46,98 @@ namespace eCAL
   CDescGate::CDescGate() = default;
   CDescGate::~CDescGate() = default;
 
-  Registration::QualityTopicInfoMultiMap CDescGate::GetPublishers()
+  std::set<Registration::STopicId> CDescGate::GetPublisherIDs() const
   {
-    return GetTopics(m_publisher_info_map);
+    return GetTopicIDs(m_publisher_info_map);
   }
 
-  Registration::QualityTopicInfoMultiMap CDescGate::GetSubscribers()
+  bool CDescGate::GetPublisherInfo(const Registration::STopicId& id_, Registration::SQualityTopicInfo& topic_info_) const
   {
-    return GetTopics(m_subscriber_info_map);
+    return GetTopic(id_, m_publisher_info_map, topic_info_);
   }
 
-  Registration::QualityServiceInfoMultimap CDescGate::GetServices()
+  std::set<Registration::STopicId> CDescGate::GetSubscriberIDs() const
   {
-    return GetServices(m_service_info_map);
+    return GetTopicIDs(m_subscriber_info_map);
   }
 
-  Registration::QualityServiceInfoMultimap CDescGate::GetClients()
+  bool CDescGate::GetSubscriberInfo(const Registration::STopicId& id_, Registration::SQualityTopicInfo& topic_info_) const
   {
-    return GetServices(m_client_info_map);
+    return GetTopic(id_, m_subscriber_info_map, topic_info_);
   }
 
-  Registration::QualityTopicInfoMultiMap CDescGate::GetTopics(SQualityTopicIdMap& topic_info_map_)
+  std::set<Registration::SServiceId> CDescGate::GetServiceIDs() const
   {
-    Registration::QualityTopicInfoMultiMap multi_map;
+    return GetServiceIDs(m_service_info_map);
+  }
+
+  bool CDescGate::GetServiceInfo(const Registration::SServiceId& id_, Registration::SQualityServiceInfo& service_info_) const
+  {
+    return GetService(id_, m_service_info_map, service_info_);
+  }
+
+  std::set<Registration::SServiceId> CDescGate::GetClientIDs() const
+  {
+    return GetServiceIDs(m_client_info_map);
+  }
+
+  bool CDescGate::GetClientInfo(const Registration::SServiceId& id_, Registration::SQualityServiceInfo& service_info_) const
+  {
+    return GetService(id_, m_client_info_map, service_info_);
+  }
+
+  std::set<Registration::STopicId> CDescGate::GetTopicIDs(const SQualityTopicIdMap& topic_info_map_)
+  {
+    std::set<Registration::STopicId> topic_id_set;
 
     const std::lock_guard<std::mutex> lock(topic_info_map_.mtx);
-
     for (const auto& topic_map_it : topic_info_map_.map)
     {
-      multi_map.insert(std::pair<std::string, Registration::SQualityTopicInfo>(topic_map_it.first.topic_name, topic_map_it.second));
+      topic_id_set.insert(topic_map_it.first);
     }
-
-    return multi_map;
+    return topic_id_set;
   }
 
-  Registration::QualityServiceInfoMultimap CDescGate::GetServices(SQualityServiceIdMap& service_method_info_map_)
+  bool CDescGate::GetTopic(const Registration::STopicId& id_, const SQualityTopicIdMap& topic_info_map_, Registration::SQualityTopicInfo& topic_info_)
   {
-    Registration::QualityServiceInfoMultimap multi_map;
+    const std::lock_guard<std::mutex> lock(topic_info_map_.mtx);
+    auto iter = topic_info_map_.map.find(id_);
+    if (iter == topic_info_map_.map.end())
+    {
+      return false;
+    }
+    else
+    {
+      topic_info_ = iter->second;
+      return true;
+    }
+  }
+
+  std::set<Registration::SServiceId> CDescGate::GetServiceIDs(const SQualityServiceIdMap& service_method_info_map_)
+  {
+    std::set<Registration::SServiceId> service_id_set;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-
     for (const auto& service_method_info_map_it : service_method_info_map_.map)
     {
-      Registration::SServiceMethod key;
-      key.service_name = service_method_info_map_it.first.service_name;
-      key.method_name  = service_method_info_map_it.first.method_name;
-      multi_map.insert(std::pair<Registration::SServiceMethod, Registration::SQualityServiceInfo>(key, service_method_info_map_it.second));
+      service_id_set.insert(service_method_info_map_it.first);
     }
-    return multi_map;
+    return service_id_set;
+  }
+
+  bool CDescGate::GetService(const Registration::SServiceId& id_, const SQualityServiceIdMap& service_method_info_map_, Registration::SQualityServiceInfo& service_method_info_)
+  {
+    const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
+    auto iter = service_method_info_map_.map.find(id_);
+    if (iter == service_method_info_map_.map.end())
+    {
+      return false;
+    }
+    else
+    {
+      service_method_info_ = iter->second;
+      return true;
+    }
   }
 
   void CDescGate::ApplySample(const Registration::Sample& sample_, eTLayerType /*layer_*/)
@@ -117,12 +161,12 @@ namespace eCAL
         response_type.name       = method.resp_type;
         response_type.descriptor = method.resp_desc;
 
-        ApplyServiceDescription(m_service_info_map, sample_.service.sname, method.mname, std::stoull(sample_.identifier.entity_id), request_type, response_type, GetDataTypeInfoQuality(request_type, true), GetDataTypeInfoQuality(response_type, true));
+        ApplyServiceDescription(m_service_info_map, sample_.identifier, sample_.service.sname, method.mname, request_type, response_type, GetDataTypeInfoQuality(request_type, true), GetDataTypeInfoQuality(response_type, true));
       }
     }
     break;
     case bct_unreg_service:
-      RemServiceDescription(m_service_info_map, sample_.service.sname, std::stoull(sample_.identifier.entity_id));
+      RemServiceDescription(m_service_info_map, sample_.identifier, sample_.service.sname);
       break;
     case bct_reg_client:
       for (const auto& method : sample_.client.methods)
@@ -135,23 +179,23 @@ namespace eCAL
         response_type.name       = method.resp_type;
         response_type.descriptor = method.resp_desc;
 
-        ApplyServiceDescription(m_client_info_map, sample_.client.sname, method.mname, std::stoull(sample_.identifier.entity_id), request_type, response_type, GetDataTypeInfoQuality(request_type, false), GetDataTypeInfoQuality(response_type, false));
+        ApplyServiceDescription(m_client_info_map, sample_.identifier, sample_.client.sname, method.mname, request_type, response_type, GetDataTypeInfoQuality(request_type, false), GetDataTypeInfoQuality(response_type, false));
       }
       break;
     case bct_unreg_client:
-      RemServiceDescription(m_client_info_map, sample_.client.sname, std::stoull(sample_.identifier.entity_id));
+      RemServiceDescription(m_client_info_map, sample_.identifier, sample_.client.sname);
       break;
     case bct_reg_publisher:
-      ApplyTopicDescription(m_publisher_info_map, sample_.topic.tname, std::stoull(sample_.identifier.entity_id), sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, true));
+      ApplyTopicDescription(m_publisher_info_map, sample_.identifier, sample_.topic.tname, sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, true));
       break;
     case bct_unreg_publisher:
-      RemTopicDescription(m_publisher_info_map, sample_.topic.tname, std::stoull(sample_.identifier.entity_id));
+      RemTopicDescription(m_publisher_info_map, sample_.identifier, sample_.topic.tname);
       break;
     case bct_reg_subscriber:
-      ApplyTopicDescription(m_subscriber_info_map, sample_.topic.tname, std::stoull(sample_.identifier.entity_id), sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, false));
+      ApplyTopicDescription(m_subscriber_info_map, sample_.identifier, sample_.topic.tname, sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, false));
       break;
     case bct_unreg_subscriber:
-      RemTopicDescription(m_subscriber_info_map, sample_.topic.tname, std::stoull(sample_.identifier.entity_id));
+      RemTopicDescription(m_subscriber_info_map, sample_.identifier, sample_.topic.tname);
       break;
     default:
     {
@@ -162,69 +206,81 @@ namespace eCAL
   }
 
   void CDescGate::ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
-    const std::string& topic_name_,
-    const Registration::TopicId& topic_id_,
-    const SDataTypeInformation& topic_info_,
-    const Registration::DescQualityFlags topic_quality_)
+                                        const Registration::SampleIdentifier& topic_id_,
+                                        const std::string& topic_name_,
+                                        const SDataTypeInformation& topic_info_,
+                                        const Registration::DescQualityFlags topic_quality_)
   {
-    const auto topic_info_key = STopicIdKey{ topic_name_, topic_id_ };
+    const auto topic_info_key = Registration::STopicId{ topic_id_, topic_name_ };
 
     Registration::SQualityTopicInfo topic_quality_info;
-    topic_quality_info.id      = topic_id_;
+    topic_quality_info.id      = std::stoull(topic_id_.entity_id);
     topic_quality_info.info    = topic_info_;
     topic_quality_info.quality = topic_quality_;
 
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-    topic_info_map_.map[topic_info_key] = topic_quality_info;
+    auto iter = topic_info_map_.map.find(topic_info_key);
+    if (iter == topic_info_map_.map.end())
+    {
+      topic_info_map_.map[topic_info_key] = topic_quality_info;
+    }
   }
 
-  void CDescGate::RemTopicDescription(SQualityTopicIdMap& topic_info_map_, const std::string& topic_name_, const Registration::TopicId& topic_id_)
+  void CDescGate::RemTopicDescription(SQualityTopicIdMap& topic_info_map_,
+                                      const Registration::SampleIdentifier& topic_id_,
+                                      const std::string& topic_name_)
   {
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-    topic_info_map_.map.erase(STopicIdKey{ topic_name_, topic_id_ });
+    topic_info_map_.map.erase(Registration::STopicId{ topic_id_ , topic_name_});
   }
 
   void CDescGate::ApplyServiceDescription(SQualityServiceIdMap& service_method_info_map_,
-    const std::string& service_name_,
-    const std::string& method_name_,
-    const Registration::ServiceId& service_id_,
-    const SDataTypeInformation& request_type_information_,
-    const SDataTypeInformation& response_type_information_,
-    const Registration::DescQualityFlags request_type_quality_,
-    const Registration::DescQualityFlags response_type_quality_)
+                                          const Registration::SampleIdentifier& service_id_,
+                                          const std::string& service_name_,
+                                          const std::string& method_name_,
+                                          const SDataTypeInformation& request_type_information_,
+                                          const SDataTypeInformation& response_type_information_,
+                                          const Registration::DescQualityFlags request_type_quality_,
+                                          const Registration::DescQualityFlags response_type_quality_)
   {
-    const auto service_method_info_key = SServiceIdKey{ service_name_, method_name_, service_id_};
+    const auto service_method_info_key = Registration::SServiceId{ service_id_, service_name_, method_name_};
 
     Registration::SQualityServiceInfo service_quality_info;
-    service_quality_info.id                 = service_id_;
+    service_quality_info.id                 = std::stoull(service_id_.entity_id);
     service_quality_info.info.request_type  = request_type_information_;
     service_quality_info.info.response_type = response_type_information_;
     service_quality_info.request_quality    = request_type_quality_;
     service_quality_info.response_quality   = response_type_quality_;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-    service_method_info_map_.map[service_method_info_key] = service_quality_info;
+    auto iter = service_method_info_map_.map.find(service_method_info_key);
+    if (iter == service_method_info_map_.map.end())
+    {
+      service_method_info_map_.map[service_method_info_key] = service_quality_info;
+    }
   }
 
-  void CDescGate::RemServiceDescription(SQualityServiceIdMap& service_method_info_map_, const std::string& service_name_, const Registration::ServiceId& service_id_)
+  void CDescGate::RemServiceDescription(SQualityServiceIdMap& service_method_info_map_,
+                                        const Registration::SampleIdentifier& service_id_,
+                                        const std::string& service_name_)
   {
-    std::list<SServiceIdKey> service_method_infos_to_remove;
+    std::list<Registration::SServiceId> service_method_info_keys_to_remove;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
 
     for (auto&& service_it : service_method_info_map_.map)
     {
-      const auto service_method_info = service_it.first;
-      if ((service_method_info.service_name == service_name_)
-        && (service_method_info.service_id == service_id_))
+      const auto service_method_info_key = service_it.first;
+      if ((service_method_info_key.service_name == service_name_)
+        && (service_method_info_key.service_id == service_id_))
       {
-        service_method_infos_to_remove.push_back(service_method_info);
+        service_method_info_keys_to_remove.push_back(service_method_info_key);
       }
     }
 
-    for (const auto& service_method_info : service_method_infos_to_remove)
+    for (const auto& service_method_info_key : service_method_info_keys_to_remove)
     {
-      service_method_info_map_.map.erase(service_method_info);
+      service_method_info_map_.map.erase(service_method_info_key);
     }
   }
 }

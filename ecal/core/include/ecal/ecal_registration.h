@@ -96,6 +96,22 @@ namespace eCAL
     using QualityServiceInfoMultimap = std::multimap<SServiceMethod, SQualityServiceInfo>;
     using SQualityServiceInfoSet     = std::set<SQualityServiceInfo>;
 
+    // get publisher information
+    ECAL_API std::set<STopicId> GetPublisherIDs();
+    ECAL_API bool GetPublisherInfo(const STopicId& id_, SQualityTopicInfo& topic_info_);
+
+    // get subscriber information
+    ECAL_API std::set<STopicId> GetSubscriberIDs();
+    ECAL_API bool GetSubscriberInfo(const STopicId& id_, SQualityTopicInfo& topic_info_);
+
+    // get service information
+    ECAL_API std::set<SServiceId> GetServiceIDs();
+    ECAL_API bool GetServiceInfo(const SServiceId& id_, SQualityServiceInfo& service_info_);
+
+    // get client information
+    ECAL_API std::set<SServiceId> GetClientIDs();
+    ECAL_API bool GetClientInfo(const SServiceId& id_, SQualityServiceInfo& service_info_);
+
     /**
      * @brief Get complete snapshot of data type information with quality and topic id for all known publisher.
      *

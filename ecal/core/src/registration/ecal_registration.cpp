@@ -161,10 +161,68 @@ namespace eCAL
 {
   namespace Registration
   {
+    std::set<STopicId> GetPublisherIDs()
+    {
+      if (g_descgate() == nullptr) return std::set<STopicId>();
+      return g_descgate()->GetPublisherIDs();
+    }
+
+    bool GetPublisherInfo(const STopicId& id_, SQualityTopicInfo& topic_info_)
+    {
+      if (g_descgate() == nullptr) return false;
+      return g_descgate()->GetPublisherInfo(id_, topic_info_);
+    }
+
+    std::set<STopicId> GetSubscriberIDs()
+    {
+      if (g_descgate() == nullptr) return std::set<STopicId>();
+      return g_descgate()->GetSubscriberIDs();
+    }
+
+    bool GetSubscriberInfo(const STopicId& id_, SQualityTopicInfo& topic_info_)
+    {
+      if (g_descgate() == nullptr) return false;
+      return g_descgate()->GetSubscriberInfo(id_, topic_info_);
+    }
+
+    std::set<SServiceId> GetServiceIDs()
+    {
+      if (g_descgate() == nullptr) return std::set<SServiceId>();
+      return g_descgate()->GetServiceIDs();
+    }
+
+    bool GetServiceInfo(const SServiceId& id_, SQualityServiceInfo& service_info_)
+    {
+      if (g_descgate() == nullptr) return false;
+      return g_descgate()->GetServiceInfo(id_, service_info_);
+    }
+
+    std::set<SServiceId> GetClientIDs()
+    {
+      if (g_descgate() == nullptr) return std::set<SServiceId>();
+      return g_descgate()->GetClientIDs();
+    }
+
+    bool GetClientInfo(const SServiceId& id_, SQualityServiceInfo& service_info_)
+    {
+      if (g_descgate() == nullptr) return false;
+      return g_descgate()->GetClientInfo(id_, service_info_);
+    }
+
     QualityTopicInfoMultiMap GetPublishers()
     {
-      if (g_descgate() == nullptr) return QualityTopicInfoMultiMap();
-      return g_descgate()->GetPublishers();
+      std::set<STopicId> id_set = GetPublisherIDs();
+
+      Registration::QualityTopicInfoMultiMap multi_map;
+      for (const auto& id : id_set)
+      {
+        SQualityTopicInfo quality_info;
+        if (GetPublisherInfo(id, quality_info))
+        {
+          multi_map.insert(std::pair<std::string, Registration::SQualityTopicInfo>(id.topic_name, quality_info));
+        }
+      }
+      return multi_map;
     }
 
     QualityTopicInfoSet GetPublishers(const std::string& topic_name_)
@@ -174,8 +232,18 @@ namespace eCAL
 
     QualityTopicInfoMultiMap GetSubscribers()
     {
-      if (g_descgate() == nullptr) return QualityTopicInfoMultiMap();
-      return g_descgate()->GetSubscribers();
+      std::set<STopicId> id_set = GetSubscriberIDs();
+
+      Registration::QualityTopicInfoMultiMap multi_map;
+      for (const auto& id : id_set)
+      {
+        SQualityTopicInfo quality_info;
+        if (GetSubscriberInfo(id, quality_info))
+        {
+          multi_map.insert(std::pair<std::string, Registration::SQualityTopicInfo>(id.topic_name, quality_info));
+        }
+      }
+      return multi_map;
     }
 
     QualityTopicInfoSet GetSubscribers(const std::string& topic_name_)
@@ -198,14 +266,34 @@ namespace eCAL
 
     QualityServiceInfoMultimap GetServices()
     {
-      if (g_descgate() == nullptr) return QualityServiceInfoMultimap();
-      return g_descgate()->GetServices();
+      std::set<SServiceId> id_set = GetServiceIDs();
+
+      Registration::QualityServiceInfoMultimap multi_map;
+      for (const auto& id : id_set)
+      {
+        SQualityServiceInfo quality_info;
+        if (GetServiceInfo(id, quality_info))
+        {
+          multi_map.insert(std::pair<SServiceMethod, Registration::SQualityServiceInfo>(SServiceMethod{ id.service_name, id.method_name }, quality_info));
+        }
+      }
+      return multi_map;
     }
 
     QualityServiceInfoMultimap GetClients()
     {
-      if (g_descgate() == nullptr) return QualityServiceInfoMultimap();
-      return g_descgate()->GetClients();
+      std::set<SServiceId> id_set = GetClientIDs();
+
+      Registration::QualityServiceInfoMultimap multi_map;
+      for (const auto& id : id_set)
+      {
+        SQualityServiceInfo quality_info;
+        if (GetClientInfo(id, quality_info))
+        {
+          multi_map.insert(std::pair<SServiceMethod, Registration::SQualityServiceInfo>(SServiceMethod{ id.service_name, id.method_name }, quality_info));
+        }
+      }
+      return multi_map;
     }
 
     SServiceMethodInformation GetHighestQualityServiceMethodInformation(const SQualityServiceInfoSet& quality_service_info_set_)
@@ -239,10 +327,9 @@ namespace eCAL
     void GetTopics(std::map<std::string, SQualityTopicInfo>& quality_topic_info_map_)
     {
       quality_topic_info_map_.clear();
-      if (g_descgate() == nullptr) return;
 
-      QualityTopicInfoMultiMap pub_sub_map = g_descgate()->GetPublishers();
-      QualityTopicInfoMultiMap sub_map     = g_descgate()->GetSubscribers();
+      QualityTopicInfoMultiMap pub_sub_map = GetPublishers();
+      QualityTopicInfoMultiMap sub_map     = GetSubscribers();
       pub_sub_map.insert(sub_map.begin(), sub_map.end());
 
       // transform into a map with the highest quality data type information
@@ -296,10 +383,9 @@ namespace eCAL
     void GetServices(std::map<SServiceMethod, SQualityServiceInfo>& quality_service_info_map_)
     {
       quality_service_info_map_.clear();
-      if (g_descgate() == nullptr) return;
 
       // transform into a map with the highest quality service method information
-      quality_service_info_map_ = ReduceQualityServiceIdMap(g_descgate()->GetServices());
+      quality_service_info_map_ = ReduceQualityServiceIdMap(GetServices());
     }
 
     void GetServiceMethodNames(std::set<SServiceMethod>& service_method_names_)
@@ -355,10 +441,9 @@ namespace eCAL
     void GetClients(std::map<SServiceMethod, SQualityServiceInfo>& quality_client_info_map_)
     {
       quality_client_info_map_.clear();
-      if (g_descgate() == nullptr) return;
 
       // transform into a map with the highest quality service method information
-      quality_client_info_map_ = ReduceQualityServiceIdMap(g_descgate()->GetClients());
+      quality_client_info_map_ = ReduceQualityServiceIdMap(GetClients());
     }
 
     void GetClientMethodNames(std::set<SServiceMethod>& client_method_names_)
