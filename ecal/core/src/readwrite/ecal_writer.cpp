@@ -115,10 +115,6 @@ namespace eCAL
     counter << std::chrono::steady_clock::now().time_since_epoch().count();
     m_topic_id = counter.str();
 
-    // set registration expiration
-    const std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
-    m_sub_map.set_expiration(registration_timeout);
-
     // mark as created
     m_created = true;
   }
@@ -594,7 +590,6 @@ namespace eCAL
   void CDataWriter::CheckConnections()
   {
     const std::lock_guard<std::mutex> lock(m_sub_map_mtx);
-    m_sub_map.erase_expired();
 
     if (m_sub_map.empty())
     {

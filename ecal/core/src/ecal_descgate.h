@@ -28,7 +28,6 @@
 #include <ecal/ecal_util.h>
 
 #include "serialization/ecal_struct_sample_registration.h"
-#include "util/ecal_expmap.h"
 
 #include <chrono>
 #include <map>
@@ -67,7 +66,7 @@ namespace eCAL
   class CDescGate
   {
   public:
-    CDescGate(const std::chrono::milliseconds& exp_timeout_);
+    CDescGate();
     ~CDescGate();
 
     // apply samples to description gate
@@ -90,20 +89,18 @@ namespace eCAL
     CDescGate& operator=(CDescGate&&) = delete;
 
   protected:
-    using QualityTopicIdExpMap = eCAL::Util::CExpirationMap<STopicIdKey, Registration::SQualityTopicInfo>;
+    using QualityTopicIdMap = std::map<STopicIdKey, Registration::SQualityTopicInfo>;
     struct SQualityTopicIdMap
     {
-      explicit SQualityTopicIdMap(const std::chrono::milliseconds& timeout_) : map(timeout_) {};
-      mutable std::mutex   mtx;
-      QualityTopicIdExpMap map;
+      mutable std::mutex mtx;
+      QualityTopicIdMap  map;
     };
 
-    using QualityServiceIdExpMap = eCAL::Util::CExpirationMap<SServiceIdKey, Registration::SQualityServiceInfo>;
+    using QualityServiceIdMap = std::map<SServiceIdKey, Registration::SQualityServiceInfo>;
     struct SQualityServiceIdMap
     {
-      explicit SQualityServiceIdMap(const std::chrono::milliseconds& timeout_) : map(timeout_) {};
-      mutable std::mutex     mtx;
-      QualityServiceIdExpMap map;
+      mutable std::mutex  mtx;
+      QualityServiceIdMap map;
     };
 
     static Registration::QualityTopicInfoMultiMap   GetTopics  (SQualityTopicIdMap& topic_info_map_);

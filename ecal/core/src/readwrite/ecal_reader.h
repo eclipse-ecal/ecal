@@ -29,7 +29,6 @@
 
 #include "serialization/ecal_serialize_sample_payload.h"
 #include "serialization/ecal_serialize_sample_registration.h"
-#include "util/ecal_expmap.h"
 #include "util/frequency_calculator.h"
 
 #include <atomic>
@@ -143,7 +142,7 @@ namespace eCAL
     Subscriber::Configuration                 m_config;
 
     std::atomic<bool>                         m_connected;
-    using PublicationMapT = Util::CExpirationMap<SPublicationInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
+    using PublicationMapT = std::map<SPublicationInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
     mutable std::mutex                        m_pub_map_mtx;
     PublicationMapT                           m_pub_map;
 

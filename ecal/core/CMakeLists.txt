@@ -299,6 +299,8 @@ if (ECAL_CORE_REGISTRATION)
       src/registration/ecal_registration_sample_applier_gates.h      
       src/registration/ecal_registration_sample_applier_user.cpp
       src/registration/ecal_registration_sample_applier_user.h
+      src/registration/ecal_registration_timeout_provider.cpp
+      src/registration/ecal_registration_timeout_provider.h
       src/registration/ecal_registration_sender.h
       src/registration/udp/ecal_registration_receiver_udp.cpp
       src/registration/udp/ecal_registration_receiver_udp.h

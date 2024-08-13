@@ -43,13 +43,7 @@ namespace
 
 namespace eCAL
 {
-  CDescGate::CDescGate(const std::chrono::milliseconds& exp_timeout_) :
-    m_publisher_info_map  (exp_timeout_),
-    m_subscriber_info_map (exp_timeout_),
-    m_service_info_map    (exp_timeout_),
-    m_client_info_map     (exp_timeout_)
-  {
-  }
+  CDescGate::CDescGate() = default;
   CDescGate::~CDescGate() = default;
 
   Registration::QualityTopicInfoMultiMap CDescGate::GetPublishers()
@@ -77,7 +71,6 @@ namespace eCAL
     Registration::QualityTopicInfoMultiMap multi_map;
 
     const std::lock_guard<std::mutex> lock(topic_info_map_.mtx);
-    topic_info_map_.map.erase_expired();
 
     for (const auto& topic_map_it : topic_info_map_.map)
     {
@@ -92,7 +85,6 @@ namespace eCAL
     Registration::QualityServiceInfoMultimap multi_map;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-    service_method_info_map_.map.erase_expired();
 
     for (const auto& service_method_info_map_it : service_method_info_map_.map)
     {
@@ -183,14 +175,12 @@ namespace eCAL
     topic_quality_info.quality = topic_quality_;
 
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-    topic_info_map_.map.erase_expired();
     topic_info_map_.map[topic_info_key] = topic_quality_info;
   }
 
   void CDescGate::RemTopicDescription(SQualityTopicIdMap& topic_info_map_, const std::string& topic_name_, const Registration::TopicId& topic_id_)
   {
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-    topic_info_map_.map.erase_expired();
     topic_info_map_.map.erase(STopicIdKey{ topic_name_, topic_id_ });
   }
 
@@ -213,7 +203,6 @@ namespace eCAL
     service_quality_info.response_quality   = response_type_quality_;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-    service_method_info_map_.map.erase_expired();
     service_method_info_map_.map[service_method_info_key] = service_quality_info;
   }
 
@@ -222,7 +211,6 @@ namespace eCAL
     std::list<SServiceIdKey> service_method_infos_to_remove;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-    service_method_info_map_.map.erase_expired();
 
     for (auto&& service_it : service_method_info_map_.map)
     {

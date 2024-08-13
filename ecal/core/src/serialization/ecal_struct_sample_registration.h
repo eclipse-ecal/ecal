@@ -34,6 +34,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <tuple>
 
 namespace eCAL
 {
@@ -69,6 +70,10 @@ namespace eCAL
     struct OSInfo
     {
       std::string                         osname;                       // name
+
+      bool operator==(const OSInfo& other) const {
+        return osname == other.osname;
+      }
     };
 
     // eCAL host
@@ -76,6 +81,10 @@ namespace eCAL
     {
       std::string                         hname;                        // host name
       OSInfo                              os;                           // operating system details
+
+      bool operator==(const Host& other) const {
+        return hname == other.hname && os == other.os;
+      }
     };
 
     // Process severity information
@@ -84,23 +93,40 @@ namespace eCAL
       eProcessSeverity                    severity       = proc_sev_unknown;        // severity
       eProcessSeverityLevel               severity_level = proc_sev_level_unknown;  // severity level
       std::string                         info;                                     // info string
+
+      bool operator==(const ProcessState& other) const {
+        return severity == other.severity && severity_level == other.severity_level && info == other.info;
+      }
     };
 
     // Transport layer parameters for ecal udp multicast
     struct LayerParUdpMC
     {
+      bool operator==(const LayerParUdpMC& other) const {
+        // Assuming there are no member variables to compare
+        return true;
+      }
     };
 
     // Transport layer parameters for ecal tcp
     struct LayerParTcp
     {
       int32_t                             port = 0;                     // tcp writers port number
+
+      bool operator==(const LayerParTcp& other) const {
+        return port == other.port;
+      }
+
     };
 
     // Transport layer parameters for ecal shm
     struct LayerParShm
     {
       std::list<std::string>              memory_file_list;             // list of memory file names
+
+      bool operator==(const LayerParShm& other) const {
+        return memory_file_list == other.memory_file_list;
+      }
     };
 
     // Connection parameter for reader/writer
@@ -109,6 +135,12 @@ namespace eCAL
       LayerParUdpMC                       layer_par_udpmc;              // parameter for ecal udp multicast
       LayerParTcp                         layer_par_tcp;                // parameter for ecal tcp
       LayerParShm                         layer_par_shm;                // parameter for ecal shm
+
+      bool operator==(const ConnectionPar& other) const {
+        return layer_par_udpmc == other.layer_par_udpmc &&
+          layer_par_tcp == other.layer_par_tcp &&
+          layer_par_shm == other.layer_par_shm;
+      }
     };
 
     // Transport layer information
@@ -119,6 +151,14 @@ namespace eCAL
       bool                                enabled = false;              // transport layer enabled ?
       bool                                active = false;               // transport layer in use ?
       ConnectionPar                       par_layer;                    // transport layer parameter
+
+      bool operator==(const TLayer& other) const {
+        return type == other.type &&
+          version == other.version &&
+          enabled == other.enabled &&
+          active == other.active &&
+          par_layer == other.par_layer;
+      }
     };
 
     // Process information
@@ -135,6 +175,20 @@ namespace eCAL
       int32_t                             component_init_state = 0;     // eCAL component initialization state (eCAL::Initialize(..))
       std::string                         component_init_info;          // like comp_init_state as a human-readable string (pub|sub|srv|mon|log|time|proc)
       std::string                         ecal_runtime_version;         // loaded/runtime eCAL version of a component
+
+      bool operator==(const Process& other) const {
+        return rclock == other.rclock &&
+          hgname == other.hgname &&
+          pname == other.pname &&
+          uname == other.uname &&
+          pparam == other.pparam &&
+          state == other.state &&
+          tsync_state == other.tsync_state &&
+          tsync_mod_name == other.tsync_mod_name &&
+          component_init_state == other.component_init_state &&
+          component_init_info == other.component_init_info &&
+          ecal_runtime_version == other.ecal_runtime_version;
+      }
     };
 
     // eCAL topic information
@@ -160,6 +214,25 @@ namespace eCAL
       int32_t                             dfreq  = 0;                   // data frequency (send / receive registrations per second) [mHz]
 
       std::map<std::string, std::string>  attr;                         // generic topic description
+
+      bool operator==(const Topic& other) const {
+        return rclock == other.rclock &&
+          hgname == other.hgname &&
+          pname == other.pname &&
+          uname == other.uname &&
+          tname == other.tname &&
+          direction == other.direction &&
+          tdatatype == other.tdatatype &&
+          tlayer == other.tlayer &&
+          tsize == other.tsize &&
+          connections_loc == other.connections_loc &&
+          connections_ext == other.connections_ext &&
+          message_drops == other.message_drops &&
+          did == other.did &&
+          dclock == other.dclock &&
+          dfreq == other.dfreq &&
+          attr == other.attr;
+      }
     };
 
     struct SampleIdentifier
@@ -168,6 +241,11 @@ namespace eCAL
       int32_t                            process_id = 0;                // process id which produced the sample
       std::string                        host_name;                     // host which produced the sample
 
+      bool operator==(const SampleIdentifier& other) const {
+        return entity_id == other.entity_id &&
+          process_id == other.process_id &&
+          host_name == other.host_name;
+      }
 
       bool operator<(const SampleIdentifier& other) const
       {
@@ -186,6 +264,16 @@ namespace eCAL
       Service::Service                    service;                      // service information
       Service::Client                     client ;                      // client information
       Topic                               topic;                        // topic information
+
+      bool operator==(const Sample& other) const {
+        return identifier == other.identifier &&
+          cmd_type == other.cmd_type &&
+          host == other.host &&
+          process == other.process &&
+          service == other.service &&
+          client == other.client &&
+          topic == other.topic;
+      }
     };
 
     // Registration sample list
