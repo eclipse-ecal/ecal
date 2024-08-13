@@ -150,9 +150,9 @@ TEST(core_cpp_descgate, PublisherQualities)
       if (found)
       {
         std::string tname = id.topic_name;
-        EXPECT_EQ(tname + "tdatatype.name",       quality_info.info.name);
-        EXPECT_EQ(tname + "tdatatype.encoding",   quality_info.info.encoding);
-        EXPECT_EQ(tname + "tdatatype.descriptor", quality_info.info.descriptor);
+        EXPECT_EQ(tname + "-tdatatype.name",       quality_info.info.name);
+        EXPECT_EQ(tname + "-tdatatype.encoding",   quality_info.info.encoding);
+        EXPECT_EQ(tname + "-tdatatype.descriptor", quality_info.info.descriptor);
       }
     }
   }
@@ -220,7 +220,7 @@ TEST(core_cpp_descgate, SubscriberQualities)
   desc_gate.ApplySample(CreateSubscriber("sub2", 2), eCAL::tl_none);
 
   // check size
-  auto id_set = desc_gate.GetPublisherIDs();
+  auto id_set = desc_gate.GetSubscriberIDs();
   EXPECT_EQ(2, id_set.size());
 
   // check subscriber qualities
@@ -233,9 +233,9 @@ TEST(core_cpp_descgate, SubscriberQualities)
       if (found)
       {
         std::string tname = id.topic_name;
-        EXPECT_EQ(tname + "tdatatype.name",       quality_info.info.name);
-        EXPECT_EQ(tname + "tdatatype.encoding",   quality_info.info.encoding);
-        EXPECT_EQ(tname + "tdatatype.descriptor", quality_info.info.descriptor);
+        EXPECT_EQ(tname + "-tdatatype.name",       quality_info.info.name);
+        EXPECT_EQ(tname + "-tdatatype.encoding",   quality_info.info.encoding);
+        EXPECT_EQ(tname + "-tdatatype.descriptor", quality_info.info.descriptor);
       }
     }
   }
