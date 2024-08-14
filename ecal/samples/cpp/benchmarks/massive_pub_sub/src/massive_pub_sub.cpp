@@ -82,7 +82,7 @@ int main(int argc, char** argv)
 
     // calculate the duration
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
-    std::cout << "Time taken for subscriber creation: " << duration << " milliseconds" << std::endl;
+    std::cout << "Time taken for subscriber creation: " << duration << " milliseconds" << std::endl << std::endl;
   }
 
   // sleep for a few seconds
@@ -114,12 +114,65 @@ int main(int argc, char** argv)
 
     // calculate the duration
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
-    std::cout << "Time taken for publisher creation: " << duration << " milliseconds" << std::endl;
+    std::cout << "Time taken for publisher creation: " << duration << " milliseconds" << std::endl << std::endl;
   }
-  std::cout << std::endl;
 
   // sleep for a few seconds
-  std::this_thread::sleep_for(std::chrono::seconds(final_sleep_sec));
+  std::this_thread::sleep_for(std::chrono::seconds(in_between_sleep_sec));
+
+  // wait for full registration
+  std::cout << "Wait for publisher/subscriber registration." << std::endl;
+  {
+    // start time measurement
+    auto start_time = std::chrono::high_resolution_clock::now();
+
+    size_t num_pub(0);
+    size_t num_sub(0);
+    while ((num_pub < publisher_number) || (num_sub < subscriber_number))
+    {
+      num_pub = eCAL::Registration::GetPublisherIDs().size();
+      num_sub = eCAL::Registration::GetSubscriberIDs().size();
+
+      std::cout << "Registered publisher : " << num_pub << std::endl;
+      std::cout << "Registered subscriber: " << num_sub << std::endl;
+
+      // sleep for 1000 milliseconds
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    }
+
+    // stop time measurement
+    auto end_time = std::chrono::high_resolution_clock::now();
+
+    // calculate the duration
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+    std::cout << "Time taken to get all registered: " << duration << " milliseconds" << std::endl << std::endl;
+  }
+
+  // get publisher information
+  std::cout << "Get publisher information. (";
+  size_t num_pub(0);
+  {
+    // start time measurement
+    auto start_time = std::chrono::high_resolution_clock::now();
+
+    const auto pub_ids = eCAL::Registration::GetPublisherIDs();
+    num_pub = pub_ids.size();
+    for (const auto& id : pub_ids)
+    {
+      eCAL::Registration::SQualityTopicInfo topic_info;
+      eCAL::Registration::GetPublisherInfo(id, topic_info);
+    }
+
+    // stop time measurement
+    auto end_time = std::chrono::high_resolution_clock::now();
+
+    // calculate the duration
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+    std::cout << num_pub << ")" << std::endl << "Time taken to get publisher information: " << duration << " milliseconds" << std::endl << std::endl;
+  }
+
+  // sleep for a few seconds
+  //std::this_thread::sleep_for(std::chrono::seconds(final_sleep_sec));
 
   // finalize eCAL API
   eCAL::Finalize();

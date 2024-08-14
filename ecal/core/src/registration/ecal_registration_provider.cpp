@@ -147,34 +147,42 @@ namespace eCAL
 
       // and add process registration sample
       sample_list.samples.push_back(Registration::GetProcessRegisterSample());
+      //std::cout << "CRegistrationProvider::RegisterSendThread sample_list size Process    : " << sample_list.samples.size() << std::endl;
 
 #if ECAL_CORE_SUBSCRIBER
       // add subscriber registrations
       if (g_subgate() != nullptr) g_subgate()->GetRegistrations(sample_list);
+      //std::cout << "CRegistrationProvider::RegisterSendThread sample_list size SubScriber : " << sample_list.samples.size() << std::endl;
 #endif
 
 #if ECAL_CORE_PUBLISHER
       // add publisher registrations
       if (g_pubgate() != nullptr) g_pubgate()->GetRegistrations(sample_list);
+      //std::cout << "CRegistrationProvider::RegisterSendThread sample_list size Publisher  : " << sample_list.samples.size() << std::endl;
 #endif
 
 #if ECAL_CORE_SERVICE
       // add server registrations
       if (g_servicegate() != nullptr) g_servicegate()->GetRegistrations(sample_list);
+      //std::cout << "CRegistrationProvider::RegisterSendThread sample_list size Server     : " << sample_list.samples.size() << std::endl;
 
       // add client registrations
       if (g_clientgate() != nullptr) g_clientgate()->GetRegistrations(sample_list);
+      //std::cout << "CRegistrationProvider::RegisterSendThread sample_list size Clients    : " << sample_list.samples.size() << std::endl;
 #endif
+
+      // append additional applied (un)registration samples
+      {
+        //std::cout << "CRegistrationProvider::RegisterSendThread  AQUIRE MUTEX (m_applied_sample_list_mtx)" << std::endl;
+        const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
+        //std::cout << "CRegistrationProvider::RegisterSendThread  GOT MUTEX    (m_applied_sample_list_mtx)" << std::endl;
+        sample_list.samples.splice(sample_list.samples.end(), m_applied_sample_list.samples);
+        m_applied_sample_list.samples.clear();
+      }
 
       // send collected registration sample list
       m_reg_sender->SendSampleList(sample_list);
-
-      // send asynchronously applied samples at the end of the registration loop
-      {
-        const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
-        m_reg_sender->SendSampleList(m_applied_sample_list);
-        m_applied_sample_list.samples.clear();
-      }
+      std::cout << "CRegistrationProvider::RegisterSendThread  LIST SENT" << std::endl;
     }
   }
 }
