@@ -29,7 +29,7 @@
 #include <ecal/ecal.h>
 
 #include "serialization/ecal_struct_sample_registration.h"
-#include "ecal/config/registration.h"
+#include "attributes/sample_applier_attr.h"
 
 #include <functional>
 #include <map>
@@ -43,7 +43,7 @@ namespace eCAL
     class CSampleApplier
     {
     public:
-      CSampleApplier(const eCAL::Registration::Configuration& config_, uint32_t pid);
+      CSampleApplier(const SampleApplier::SAttr& attr_);
 
       // to be removed for eCAL 6, but keep until eCAL 5.14
       void EnableLoopback(bool state_);
@@ -59,7 +59,7 @@ namespace eCAL
 
       bool AcceptRegistrationSample(const Registration::Sample& sample_);
 
-      eCAL::Registration::Configuration     m_config;
+      SampleApplier::SAttr                  m_attributes;
       int32_t                               m_pid;
 
       std::mutex                                  m_callback_custom_apply_sample_map_mtx;

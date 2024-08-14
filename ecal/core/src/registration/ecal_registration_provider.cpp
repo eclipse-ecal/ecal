@@ -37,7 +37,6 @@
 #include <ecal/ecal_config.h>
 #include <ecal_globals.h>
 #include "ecal_def.h"
-#include "io/udp/ecal_udp_sender_attr.h"
 
 #include <registration/ecal_process_registration.h>
 #include <registration/udp/ecal_registration_sender_udp.h>
@@ -45,40 +44,15 @@
 #include <registration/shm/ecal_registration_sender_shm.h>
 #endif
 
-namespace
-{
-  using namespace eCAL;
-  UDP::SSenderAttr CreateUDPSenderAttr(const Registration::Configuration& config_)
-  {
-    UDP::SSenderAttr attr;
-    attr.broadcast = !config_.network_enabled;
-    attr.port      = config_.layer.udp.port;
+#include "builder/udp_shm_attribute_builder.h"
 
-    auto& config = GetConfiguration();
-    attr.loopback = true;
-    attr.sndbuf   = config.transport_layer.udp.send_buffer;
-
-    if (config.transport_layer.udp.mode == Types::UDPMode::NETWORK)
-    {
-      attr.address = config.transport_layer.udp.network.group;
-      attr.ttl     = config.transport_layer.udp.network.ttl;
-    } else
-    {
-      attr.address = config.transport_layer.udp.local.group;
-      attr.ttl     = config.transport_layer.udp.local.ttl;
-    }
-    
-    return attr;
-  }
-
-}
 
 namespace eCAL
 {
   std::atomic<bool> CRegistrationProvider::m_created;
 
-  CRegistrationProvider::CRegistrationProvider(const Registration::Configuration& config_) :
-                    m_config(config_)
+  CRegistrationProvider::CRegistrationProvider(const Registration::SAttr& attr_) :
+                    m_attributes(attr_)
   {
   }
 
@@ -93,14 +67,14 @@ namespace eCAL
 
    // TODO Create the registration sender
 #if ECAL_CORE_REGISTRATION_SHM
-    if (m_config.layer.shm.enable)
+    if (m_attributes.shm_enabled)
     {
-      m_reg_sender = std::make_unique<CRegistrationSenderSHM>(m_config.layer.shm);
+      m_reg_sender = std::make_unique<CRegistrationSenderSHM>(Registration::BuildSHMMemfileBroadcastAttr(m_attributes));
     } else
 #endif
-    if (m_config.layer.udp.enable)
+    if (m_attributes.udp_enabled)
     {
-      m_reg_sender = std::make_unique<CRegistrationSenderUDP>(CreateUDPSenderAttr(m_config));
+      m_reg_sender = std::make_unique<CRegistrationSenderUDP>(Registration::BuildUDPSenderAttr(m_attributes));
     }
     else
     {
@@ -110,7 +84,7 @@ namespace eCAL
 
     // start cyclic registration thread
     m_reg_sample_snd_thread = std::make_shared<CCallbackThread>(std::bind(&CRegistrationProvider::RegisterSendThread, this));
-    m_reg_sample_snd_thread->start(std::chrono::milliseconds(m_config.registration_refresh));
+    m_reg_sample_snd_thread->start(std::chrono::milliseconds(m_attributes.refresh));
 
     m_created = true;
   }

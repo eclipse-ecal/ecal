@@ -32,9 +32,9 @@
 
 #include "relocatable_circular_queue.h"
 #include "io/shm/ecal_memfile.h"
+#include "attributes/registration_memfile_broadcast_attr.h"
 
 #include <ecal/ecal.h>
-#include <ecal/config/registration.h>
 
 namespace eCAL 
 {
@@ -80,7 +80,7 @@ namespace eCAL
   public:
     CMemoryFileBroadcast();
 
-    bool Create(const Registration::Layer::SHM::Configuration& config_);
+    bool Create(const Registration::SHM::SMemfileBroadcastAttr& attr_);
     bool Destroy();
 
     std::string GetName() const;
@@ -96,7 +96,7 @@ namespace eCAL
     void ResetMemfile(void * memfile_address);
 
     bool m_created;
-    Registration::Layer::SHM::Configuration m_config;
+    Registration::SHM::SMemfileBroadcastAttr m_attributes;
     std::unique_ptr<CMemoryFile> m_broadcast_memfile;
     std::vector<char> m_broadcast_memfile_local_buffer;
 

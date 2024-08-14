@@ -30,10 +30,10 @@
 #include "serialization/ecal_serialize_sample_registration.h"
 
 
-eCAL::CRegistrationSenderSHM::CRegistrationSenderSHM(const Registration::Layer::SHM::Configuration& config_)
+eCAL::CRegistrationSenderSHM::CRegistrationSenderSHM(const Registration::SHM::SMemfileBroadcastAttr& attr_)
 {
-  std::cout << "Shared memory monitoring is enabled (domain: " << config_.domain << " - queue size: " << config_.queue_size << ")" << '\n';
-  m_memfile_broadcast.Create(config_);
+  std::cout << "Shared memory monitoring is enabled (domain: " << attr_.domain << " - queue size: " << attr_.queue_size << ")" << '\n';
+  m_memfile_broadcast.Create(attr_);
   m_memfile_broadcast_writer.Bind(&m_memfile_broadcast);
 }
 

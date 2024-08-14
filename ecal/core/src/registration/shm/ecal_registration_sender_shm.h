@@ -33,14 +33,14 @@
 #include "registration/shm/ecal_memfile_broadcast.h"
 #include "registration/shm/ecal_memfile_broadcast_writer.h"
 
-#include <ecal/config/registration.h>
+#include "attributes/registration_memfile_broadcast_attr.h"
 
 namespace eCAL
 {
   class CRegistrationSenderSHM : public CRegistrationSender
   {
   public:
-    CRegistrationSenderSHM(const Registration::Layer::SHM::Configuration& config_);
+    CRegistrationSenderSHM(const Registration::SHM::SMemfileBroadcastAttr& attr_);
     ~CRegistrationSenderSHM() override;
 
     // Special member functionss

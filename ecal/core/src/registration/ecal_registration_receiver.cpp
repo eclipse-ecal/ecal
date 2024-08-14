@@ -35,7 +35,6 @@
 #include "registration/shm/ecal_registration_receiver_shm.h"
 #endif
 #include "io/udp/ecal_udp_configurations.h"
-#include "io/udp/ecal_udp_receiver_attr.h"
 #include <ecal/ecal_config.h>
 #include <atomic>
 #include <functional>
@@ -43,31 +42,8 @@
 #include <mutex>
 #include <string>
 
-namespace
-{
-  using namespace eCAL;
-  UDP::SReceiverAttr CreateUDPReceiverAttr(const Registration::Configuration& config_)
-  {
-    // set network attributes
-    UDP::SReceiverAttr attr;
-    attr.port      = config_.layer.udp.port;
-    attr.broadcast = !config_.network_enabled;
-    
-    auto& config  = GetConfiguration();
-    attr.rcvbuf   = config.transport_layer.udp.receive_buffer;
-    attr.loopback = true;
-
-    if (config.transport_layer.udp.mode == Types::UDPMode::NETWORK)
-    {
-      attr.address = config.transport_layer.udp.network.group;
-    } else
-    {
-      attr.address = config.transport_layer.udp.local.group;
-    }
-    return attr;
-  }
-
-}
+#include "builder/udp_shm_attribute_builder.h"
+#include "builder/sample_applier_attribute_builder.h"
 
 namespace eCAL
 {
@@ -76,13 +52,13 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   std::atomic<bool> CRegistrationReceiver::m_created;
 
-  CRegistrationReceiver::CRegistrationReceiver(const Registration::Configuration& config_)
+  CRegistrationReceiver::CRegistrationReceiver(const Registration::SAttr& attr_)
     : m_timeout_provider(nullptr)
     , m_timeout_provider_thread(nullptr)
     , m_registration_receiver_udp(nullptr)
     , m_registration_receiver_shm(nullptr)   
-    , m_config(config_)
-    , m_sample_applier(config_, Process::GetProcessID())
+    , m_attributes(attr_)
+    , m_sample_applier(Registration::SampleApplier::BuildSampleApplierAttr(attr_))
   {
     // Connect User registration callback and gates callback with the sample applier
     m_sample_applier.SetCustomApplySampleCallback("gates", [](const eCAL::Registration::Sample& sample_)
@@ -137,15 +113,15 @@ namespace eCAL
     m_timeout_provider_thread->start(std::chrono::milliseconds(100));
 
     // Why do we have here different behaviour than in the registration provider?
-    if (m_config.layer.udp.enable)
+    if (m_attributes.udp_enabled)    
     {
-      m_registration_receiver_udp = std::make_unique<CRegistrationReceiverUDP>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_);}, CreateUDPReceiverAttr(m_config));
+      m_registration_receiver_udp = std::make_unique<CRegistrationReceiverUDP>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_);}, Registration::BuildUDPReceiverAttr(m_attributes));
     }
 
 #if ECAL_CORE_REGISTRATION_SHM
-    if (m_config.layer.shm.enable)
+    if (m_attributes.shm_enabled)
     {
-      m_registration_receiver_shm = std::make_unique<CRegistrationReceiverSHM>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_); }, m_config.layer.shm);
+      m_registration_receiver_shm = std::make_unique<CRegistrationReceiverSHM>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_); }, Registration::BuildSHMMemfileBroadcastAttr(m_attributes));
     }
 #endif
 
@@ -157,13 +133,13 @@ namespace eCAL
     if(!m_created) return;
 
     // stop network registration receive thread
-    if (m_config.layer.udp.enable)
+    if (m_attributes.udp_enabled)
     {
       m_registration_receiver_udp = nullptr;
     }
 
 #if ECAL_CORE_REGISTRATION_SHM
-    if (m_config.layer.shm.enable)
+    if (m_attributes.shm_enabled)
     {
       m_registration_receiver_shm = nullptr;
     }

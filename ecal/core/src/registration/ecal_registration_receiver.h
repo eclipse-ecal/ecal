@@ -34,7 +34,7 @@
 #include "registration/ecal_registration_sample_applier.h"
 #include "registration/ecal_registration_sample_applier_gates.h"
 #include "registration/ecal_registration_sample_applier_user.h"
-#include "ecal/config/registration.h"
+#include "attributes/registration_attr.h"
 
 #include <atomic>
 #include <functional>
@@ -59,7 +59,7 @@ namespace eCAL
   class CRegistrationReceiver
   {
   public:
-    CRegistrationReceiver(const Registration::Configuration& config_);
+    CRegistrationReceiver(const Registration::SAttr& attr_);
     ~CRegistrationReceiver();
 
     //what about the rest of the rule of 5?
@@ -90,13 +90,13 @@ namespace eCAL
 #endif
 
     // This class distributes samples to all everyone who is interested in being notified about samples
-    Registration::CSampleApplier  m_sample_applier;
+    Registration::CSampleApplier     m_sample_applier;
 
     // These classes are interested in being notified about samples
     // Possibly remove these from this class
     // The custom user callbacks (who receive serialized samples), e.g. registration events.
-    Registration::CSampleApplierUser  m_user_applier;
+    Registration::CSampleApplierUser m_user_applier;
 
-    Registration::Configuration       m_config;
+    Registration::SAttr              m_attributes;
   };
 }

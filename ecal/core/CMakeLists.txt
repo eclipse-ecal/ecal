@@ -445,6 +445,16 @@ if (WIN32)
 endif()
 
 ######################################
+# builder
+######################################
+set (ecal_builder_src
+    src/builder/registration_attribute_builder.cpp
+    src/registration/builder/udp_shm_attribute_builder.cpp
+    src/registration/builder/sample_applier_attribute_builder.cpp
+)
+
+
+######################################
 # c interface
 ######################################
 set(ecal_c_src
@@ -565,6 +575,7 @@ set(ecal_sources
     ${ecal_time_src}
     ${ecal_util_src}
     ${ecal_cmn_src}
+    ${ecal_builder_src}
     ${ecal_header_cmn}
     ${ecal_header_msg}
 )

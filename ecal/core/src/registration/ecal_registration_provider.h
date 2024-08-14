@@ -31,7 +31,7 @@
 
 #include "registration/ecal_registration_sender.h"
 #include "util/ecal_thread.h"
-#include <ecal/config/registration.h>
+#include "attributes/registration_attr.h"
 
 #include <memory>
 #include <mutex>
@@ -41,7 +41,7 @@ namespace eCAL
   class CRegistrationProvider
   {
   public:
-    CRegistrationProvider(const Registration::Configuration& config_);
+    CRegistrationProvider(const Registration::SAttr& attr_);
     ~CRegistrationProvider();
 
     void Start();
@@ -62,6 +62,6 @@ namespace eCAL
     std::mutex                           m_applied_sample_list_mtx;
     Registration::SampleList             m_applied_sample_list;
 
-    Registration::Configuration          m_config;
+    Registration::SAttr                  m_attributes;
   };
 }
