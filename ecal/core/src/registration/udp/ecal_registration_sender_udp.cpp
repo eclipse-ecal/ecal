@@ -36,8 +36,8 @@
 
 namespace eCAL
 {
-  CRegistrationSenderUDP::CRegistrationSenderUDP(const eCAL::Registration::UDP::SSenderAttributes& config_)
-    : m_reg_sample_snd(Registration::UDP::ConvertToIOUDPSenderAttributes(config_))
+  CRegistrationSenderUDP::CRegistrationSenderUDP(const eCAL::Registration::UDP::SSenderAttributes& attr_)
+    : m_reg_sample_snd(Registration::UDP::ConvertToIOUDPSenderAttributes(attr_))
   {
   }
 

@@ -36,7 +36,7 @@ namespace eCAL
   class CRegistrationSenderUDP : public CRegistrationSender
   {
   public:
-    CRegistrationSenderUDP(const eCAL::Registration::UDP::SSenderAttributes& config_);
+    CRegistrationSenderUDP(const eCAL::Registration::UDP::SSenderAttributes& attr_);
     ~CRegistrationSenderUDP() override;
 
     // Special member functionss
