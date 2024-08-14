@@ -44,13 +44,15 @@
 #include <registration/shm/ecal_registration_sender_shm.h>
 #endif
 
+#include "builder/udp_shm_attribute_builder.h"
+
+
 namespace eCAL
 {
   std::atomic<bool> CRegistrationProvider::m_created;
 
-  CRegistrationProvider::CRegistrationProvider() :
-                    m_use_registration_udp(false),
-                    m_use_registration_shm(false)
+  CRegistrationProvider::CRegistrationProvider(const Registration::SAttributes& attr_) :
+                    m_attributes(attr_)
   {
   }
 
@@ -63,27 +65,26 @@ namespace eCAL
   {
     if(m_created) return;
 
-    // send registration over udp or shared memory
-    m_use_registration_shm = Config::IsShmRegistrationEnabled();
-    m_use_registration_udp = !m_use_registration_shm;
-
    // TODO Create the registration sender
 #if ECAL_CORE_REGISTRATION_SHM
-    if (m_use_registration_shm)
+    if (m_attributes.shm_enabled)
     {
-      m_reg_sender = std::make_unique<CRegistrationSenderSHM>();
+      m_reg_sender = std::make_unique<CRegistrationSenderSHM>(Registration::BuildSHMAttributes(m_attributes));
+    } else
+#endif
+    if (m_attributes.udp_enabled)
+    {
+      m_reg_sender = std::make_unique<CRegistrationSenderUDP>(Registration::BuildUDPSenderAttributes(m_attributes));
     }
     else
     {
-#endif
-      m_reg_sender = std::make_unique<CRegistrationSenderUDP>();
-#if ECAL_CORE_REGISTRATION_SHM
+      eCAL::Logging::Log(log_level_warning, "[CRegistrationProvider] No registration layer enabled.");
+      return;
     }
-#endif
 
     // start cyclic registration thread
     m_reg_sample_snd_thread = std::make_shared<CCallbackThread>(std::bind(&CRegistrationProvider::RegisterSendThread, this));
-    m_reg_sample_snd_thread->start(std::chrono::milliseconds(Config::GetRegistrationRefreshMs()));
+    m_reg_sample_snd_thread->start(std::chrono::milliseconds(m_attributes.refresh));
 
     m_created = true;
   }
