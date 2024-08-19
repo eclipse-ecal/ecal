@@ -23,6 +23,8 @@
 
 #include "ecal_globals.h"
 
+#include "builder/monitoring_attribute_builder.h"
+
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -174,7 +176,7 @@ namespace eCAL
     {
       if (monitoring_instance == nullptr)
       {
-        monitoring_instance = std::make_unique<CMonitoring>(eCAL::GetConfiguration().monitoring);
+        monitoring_instance = std::make_unique<CMonitoring>(Monitoring::BuildMonitoringAttributes(eCAL::GetConfiguration().monitoring));
         new_initialization = true;
       }
     }
