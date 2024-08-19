@@ -19,7 +19,7 @@ jobs:
           echo Killing XProtect.; sudo pkill -9 XProtect >/dev/null || true;
     
     - name: Install latest Python3 via brew
-      run: brew install python3
+      run: brew install python3 || brew link --overwrite python@3.12
 
     - name: Install Python requirements
       run: |
