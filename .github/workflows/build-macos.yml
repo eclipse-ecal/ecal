@@ -21,6 +21,12 @@ jobs:
     - name: Install latest Python3 via brew
       run: brew install python3 || brew link --overwrite python@3.12
 
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules:  'true'
+        fetch-depth: 0
+
     - name: Install Python requirements
       run: |
         sudo pip3 install -r "$GITHUB_WORKSPACE/doc/requirements.txt" --break-system-packages
@@ -28,18 +34,14 @@ jobs:
     - name: Install Dependencies
       run: brew install qt ninja doxygen graphviz protobuf hdf5@1.10 pkg-config capnp
 
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        submodules:  'true'
-        fetch-depth: 0
+
 
     - name: Display Python version
       run: python -c "import sys; print(sys.version)"
         
-    - name: Install Python requirements
-      run: |
-        sudo pip3 install -r "$GITHUB_WORKSPACE/doc/requirements.txt" --break-system-packages
+    # - name: Install Python requirements
+    #   run: |
+    #     sudo pip3 install -r "$GITHUB_WORKSPACE/doc/requirements.txt" --break-system-packages
 
     - name: CMake
       run: |
