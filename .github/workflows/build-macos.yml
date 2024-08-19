@@ -18,8 +18,14 @@ jobs:
       run: |
           echo Killing XProtect.; sudo pkill -9 XProtect >/dev/null || true;
 
+    - name: Upgrade Python version
+      uses: actions/setup-python@v4
+      id: cp3125
+      with:
+        python-version: '3.12.5'
+
     - name: Install Dependencies
-      run: brew install qt ninja doxygen graphviz protobuf hdf5@1.10 pkg-config capnp || brew link --overwrite python@3.12
+      run: brew install qt ninja doxygen graphviz protobuf hdf5@1.10 pkg-config capnp
 
     - name: Checkout
       uses: actions/checkout@v4
