@@ -18,15 +18,8 @@ jobs:
       run: |
           echo Killing XProtect.; sudo pkill -9 XProtect >/dev/null || true;
 
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v3
-      with:
-        setup-python: false
-        version: '5.15.2'
-        target: 'desktop'
-
     - name: Install Dependencies
-      run: brew install ninja doxygen graphviz protobuf hdf5@1.10 pkg-config capnp || brew link --overwrite python@3.12
+      run: brew install qt ninja doxygen graphviz protobuf hdf5@1.10 pkg-config capnp || brew link --overwrite python@3.12
 
     - name: Checkout
       uses: actions/checkout@v4
