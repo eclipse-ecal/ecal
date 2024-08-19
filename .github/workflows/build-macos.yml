@@ -18,6 +18,12 @@ jobs:
       run: |
           echo Killing XProtect.; sudo pkill -9 XProtect >/dev/null || true;
 
+    - name: Downgrade Python version
+      uses: actions/setup-python@v4
+      id: cp39
+      with:
+        python-version: '3.9'
+
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
@@ -25,11 +31,8 @@ jobs:
         version: '5.15.2'
         target: 'desktop'
 
-    - name: Remove failing Python symlink
-      run: sudo rm /usr/local/bin/2to3
-      
     - name: Install Dependencies
-      run: brew install ninja doxygen graphviz protobuf hdf5@1.10 pkg-config
+      run: brew install ninja doxygen graphviz protobuf hdf5@1.10 pkg-config || brew link --overwrite python@3.12
 
     - name: Install Cap’n Proto
       run: |
