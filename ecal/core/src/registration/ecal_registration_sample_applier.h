@@ -29,6 +29,7 @@
 #include <ecal/ecal.h>
 
 #include "serialization/ecal_struct_sample_registration.h"
+#include "attributes/sample_applier_attributes.h"
 
 #include <functional>
 #include <map>
@@ -42,8 +43,7 @@ namespace eCAL
     class CSampleApplier
     {
     public:
-      // to be replaced by config version soon!
-      CSampleApplier(bool network, bool loopback, const std::string& host_group_name, uint32_t pid);
+      CSampleApplier(const SampleApplier::SAttributes& attr_);
 
       // to be removed for eCAL 6, but keep until eCAL 5.14
       void EnableLoopback(bool state_);
@@ -59,10 +59,7 @@ namespace eCAL
 
       bool AcceptRegistrationSample(const Registration::Sample& sample_);
 
-      bool                                  m_network;
-      bool                                  m_loopback;
-      std::string                           m_host_group_name;
-      int32_t                               m_pid;
+      SampleApplier::SAttributes                  m_attributes;
 
       std::mutex                                  m_callback_custom_apply_sample_map_mtx;
       // We need to check the performance now. Unlike before the pub / subgates also go through the map
