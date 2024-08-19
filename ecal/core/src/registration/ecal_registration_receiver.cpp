@@ -98,20 +98,6 @@ namespace eCAL
     m_timeout_provider_thread = std::make_unique<CCallbackThread>([this]() {m_timeout_provider->CheckForTimeouts(); });
     m_timeout_provider_thread->start(std::chrono::milliseconds(100));
 
-    m_timeout_provider = std::make_unique<Registration::CTimeoutProvider<std::chrono::steady_clock>>(
-      std::chrono::milliseconds(Config::GetMonitoringTimeoutMs()),
-      [this](const Registration::Sample& sample_)
-      {
-        return m_sample_applier.ApplySample(sample_);
-      }
-      );
-    m_sample_applier.SetCustomApplySampleCallback("timeout", [this](const eCAL::Registration::Sample& sample_)
-      {
-        m_timeout_provider->ApplySample(sample_);
-      });
-    m_timeout_provider_thread = std::make_unique<CCallbackThread>([this]() {m_timeout_provider->CheckForTimeouts(); });
-    m_timeout_provider_thread->start(std::chrono::milliseconds(100));
-
     // Why do we have here different behaviour than in the registration provider?
     if (m_attributes.udp_enabled)    
     {
