@@ -144,7 +144,7 @@ TEST(core_cpp_registration_public, GetTopicsParallel)
   constexpr const int waiting_time_thread(4000);
   constexpr const int parallel_threads(1);
 
-  std::atomic<bool> testing_completed = false;
+  std::atomic<bool> testing_completed{ false };
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
