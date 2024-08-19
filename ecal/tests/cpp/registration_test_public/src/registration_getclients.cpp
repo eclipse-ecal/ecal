@@ -25,11 +25,10 @@ enum {
   CMN_MONITORING_TIMEOUT_MS   = (5000 + 100),
   CMN_REGISTRATION_REFRESH_MS = (1000)
 };
-
-TEST(core_cpp_registration, ClientExpiration)
+TEST(core_cpp_registration_public, ClientExpiration)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
 
   // enable loop back communication in the same process
   eCAL::Util::EnableLoopback(true);
@@ -89,10 +88,10 @@ TEST(core_cpp_registration, ClientExpiration)
   eCAL::Finalize();
 }
 
-TEST(core_cpp_registration, ClientEqualQualities)
+TEST(core_cpp_registration_public, ClientEqualQualities)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
 
   // enable loop back communication in the same process
   eCAL::Util::EnableLoopback(true);
@@ -187,10 +186,10 @@ TEST(core_cpp_registration, ClientEqualQualities)
   eCAL::Finalize();
 }
 
-TEST(core_cpp_registration, ClientDifferentQualities)
+TEST(core_cpp_registration_public, ClientDifferentQualities)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
 
   // enable loop back communication in the same process
   eCAL::Util::EnableLoopback(true);
@@ -259,6 +258,44 @@ TEST(core_cpp_registration, ClientDifferentQualities)
 
   // check size
   EXPECT_EQ(client_info_map.size(), 0);
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+TEST(core_cpp_registration_public, GetClientIDs)
+{
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
+
+  // enable loop back communication in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  // create simple client
+  {
+    // create client
+    eCAL::SServiceMethodInformation service_method_info;
+    service_method_info.request_type.name        = "foo::req_type";
+    service_method_info.request_type.descriptor  = "foo::req_desc";
+    service_method_info.response_type.name       = "foo::resp_type";
+    service_method_info.response_type.descriptor = "foo::resp_desc";
+    const eCAL::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
+
+    // let's register
+    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
+
+    // get client
+    auto id_set = eCAL::Registration::GetClientIDs();
+    EXPECT_EQ(1, id_set.size());
+    if (id_set.size() > 0)
+    {
+      eCAL::Registration::SQualityServiceInfo info;
+      EXPECT_TRUE(eCAL::Registration::GetClientInfo(*id_set.begin(), info));
+
+      // check service/method names
+      EXPECT_EQ(service_method_info, info.info);
+    }
+  }
 
   // finalize eCAL API
   eCAL::Finalize();
