@@ -22,7 +22,7 @@ jobs:
       run: brew install python3 || brew link --overwrite python@3.12
 
     - name: Install latest Qt5 via brew
-      run: brew install qt@5 || export LDFLAGS="-L/usr/local/opt/qt@5/lib" || export CPPFLAGS="-I/usr/local/opt/qt@5/include"
+      run: brew install qt@5
 
     - name: Install Dependencies
       run: brew install ninja doxygen graphviz protobuf hdf5@1.10 pkg-config capnp
@@ -74,7 +74,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
         -DECAL_THIRDPARTY_BUILD_QWT=ON \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_PREFIX_PATH=/usr/local/opt/hdf5@1.10 \
+        -DCMAKE_PREFIX_PATH="/usr/local/opt/hdf5@1.10;/usr/local/opt/qt@5" \
         -DCMAKE_CXX_STANDARD=17 \
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
         -DPython_FIND_STRATEGY=LOCATION \
