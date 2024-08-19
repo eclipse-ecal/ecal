@@ -39,6 +39,14 @@ namespace
     if(is_producer_) quality |= eCAL::Registration::DescQualityFlags::INFO_COMES_FROM_PRODUCER;
     return quality;
   }
+
+  eCAL::Registration::SEntityId ConvertToEntityId(const eCAL::Registration::SampleIdentifier& sample_identifier)
+  {
+    eCAL::Registration::SEntityId id{ sample_identifier.entity_id, sample_identifier.process_id, sample_identifier.host_name};
+    return id;
+  }
+
+
 }
 
 namespace eCAL
@@ -211,7 +219,7 @@ namespace eCAL
                                         const SDataTypeInformation& topic_info_,
                                         const Registration::DescQualityFlags topic_quality_)
   {
-    const auto topic_info_key = Registration::STopicId{ topic_id_, topic_name_ };
+    const auto topic_info_key = Registration::STopicId{ ConvertToEntityId(topic_id_), topic_name_ };
 
     Registration::SQualityTopicInfo topic_quality_info;
     topic_quality_info.info    = topic_info_;
@@ -226,7 +234,7 @@ namespace eCAL
                                       const std::string& topic_name_)
   {
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-    topic_info_map_.map.erase(Registration::STopicId{ topic_id_ , topic_name_});
+    topic_info_map_.map.erase(Registration::STopicId{ ConvertToEntityId(topic_id_) , topic_name_});
   }
 
   void CDescGate::ApplyServiceDescription(SQualityServiceIdMap& service_method_info_map_,
@@ -238,7 +246,7 @@ namespace eCAL
                                           const Registration::DescQualityFlags request_type_quality_,
                                           const Registration::DescQualityFlags response_type_quality_)
   {
-    const auto service_method_info_key = Registration::SServiceId{ service_id_, service_name_, method_name_};
+    const auto service_method_info_key = Registration::SServiceId{ ConvertToEntityId(service_id_), service_name_, method_name_};
 
     Registration::SQualityServiceInfo service_quality_info;
     service_quality_info.info.request_type  = request_type_information_;
@@ -262,7 +270,7 @@ namespace eCAL
     {
       const auto service_method_info_key = service_it.first;
       if ((service_method_info_key.service_name == service_name_)
-        && (service_method_info_key.service_id == service_id_))
+        && (service_method_info_key.service_id == ConvertToEntityId(service_id_)))
       {
         service_method_info_keys_to_remove.push_back(service_method_info_key);
       }
