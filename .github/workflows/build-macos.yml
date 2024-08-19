@@ -26,18 +26,7 @@ jobs:
         target: 'desktop'
 
     - name: Install Dependencies
-      run: brew install ninja doxygen graphviz protobuf hdf5@1.10 pkg-config || brew link --overwrite python@3.12
-
-    - name: Install Cap’n Proto
-      run: |
-        mkdir "${{ runner.workspace }}/capnp"
-        cd "${{ runner.workspace }}/capnp"
-        curl -O https://capnproto.org/capnproto-c++-0.9.0.tar.gz
-        tar zxf capnproto-c++-0.9.0.tar.gz
-        cd capnproto-c++-0.9.0
-        ./configure
-        make -j
-        sudo make install
+      run: brew install ninja doxygen graphviz protobuf hdf5@1.10 pkg-config capnp || brew link --overwrite python@3.12
 
     - name: Checkout
       uses: actions/checkout@v4
