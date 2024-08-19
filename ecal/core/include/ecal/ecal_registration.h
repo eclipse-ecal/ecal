@@ -63,7 +63,7 @@ namespace eCAL
 
       bool operator<(const SQualityTopicInfo& other) const
       {
-        return std::tie(quality) < std::tie(other.quality);
+        return std::tie(quality, info) < std::tie(other.quality, info);
       }
     };
     using QualityTopicInfoMultiMap = std::multimap<std::string, SQualityTopicInfo>;
@@ -94,20 +94,60 @@ namespace eCAL
     using QualityServiceInfoMultimap = std::multimap<SServiceMethod, SQualityServiceInfo>;
     using SQualityServiceInfoSet     = std::set<SQualityServiceInfo>;
 
-    // get publisher information
+    /**
+     * @brief Get complete snapshot of all known publisher.
+     *
+     * @return Set of topic id's.
+    **/
     ECAL_API std::set<STopicId> GetPublisherIDs();
+
+    /**
+     * @brief Get data type information with quality for specific publisher.
+     *
+     * @return True if information could be queried.
+    **/
     ECAL_API bool GetPublisherInfo(const STopicId& id_, SQualityTopicInfo& topic_info_);
 
-    // get subscriber information
+    /**
+     * @brief Get complete snapshot of all known subscriber.
+     *
+     * @return Set of topic id's.
+    **/
     ECAL_API std::set<STopicId> GetSubscriberIDs();
+
+    /**
+     * @brief Get data type information with quality for specific subscriber.
+     *
+     * @return True if information could be queried.
+    **/
     ECAL_API bool GetSubscriberInfo(const STopicId& id_, SQualityTopicInfo& topic_info_);
 
-    // get service information
+    /**
+     * @brief Get complete snapshot of all known services.
+     *
+     * @return Set of service id's.
+    **/
     ECAL_API std::set<SServiceId> GetServiceIDs();
+
+    /**
+     * @brief Get service method information with quality for specific service.
+     *
+     * @return True if information could be queried.
+    **/
     ECAL_API bool GetServiceInfo(const SServiceId& id_, SQualityServiceInfo& service_info_);
 
-    // get client information
+    /**
+     * @brief Get complete snapshot of all known clients.
+     *
+     * @return Set of service id's.
+    **/
     ECAL_API std::set<SServiceId> GetClientIDs();
+
+    /**
+     * @brief Get service method information with quality for specific client.
+     *
+     * @return True if information could be queried.
+    **/
     ECAL_API bool GetClientInfo(const SServiceId& id_, SQualityServiceInfo& service_info_);
 
     /**
