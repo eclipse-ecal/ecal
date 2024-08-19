@@ -30,8 +30,16 @@
 //@{ 
 namespace eCAL
 {
-  ECAL_API Configuration& GetConfiguration();
-  
+  ECAL_API Configuration&               GetConfiguration                   ();
+  ECAL_API Registration::Configuration& GetRegistrationConfiguration       ();
+  ECAL_API Monitoring::Configuration&   GetMonitoringConfiguration         ();
+  ECAL_API Logging::Configuration&      GetLoggingConfiguration            ();
+  ECAL_API Subscriber::Configuration&   GetSubscriberConfiguration         ();
+  ECAL_API Publisher::Configuration&    GetPublisherConfiguration          ();
+  ECAL_API Time::Configuration&         GetTimesyncConfiguration           ();
+  ECAL_API Service::Configuration&      GetServiceConfiguration            ();
+  ECAL_API Application::Configuration&  GetApplicationConfiguration        ();
+
   namespace Config
   {
     /////////////////////////////////////
@@ -68,13 +76,6 @@ namespace eCAL
     ECAL_API size_t                   GetTcpPubsubReaderThreadpoolSize     ();
     ECAL_API size_t                   GetTcpPubsubWriterThreadpoolSize     ();
     ECAL_API size_t                   GetTcpPubsubMaxReconnectionAttemps   ();
-
-    ECAL_API int                      GetTcpPubReaderThreadpoolSize     ();
-    ECAL_API int                      GetTcpPubWriterThreadpoolSize     ();
-
-    ECAL_API int                      GetTcpSubReaderThreadpoolSize     ();
-    ECAL_API int                      GetTcpSubWriterThreadpoolSize     ();
-    ECAL_API int                      GetTcpSubMaxReconnectionAttemps   ();
 
     ECAL_API std::string              GetHostGroupName                     ();
 

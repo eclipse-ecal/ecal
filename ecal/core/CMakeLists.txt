@@ -69,6 +69,7 @@ set(ecal_config_src
     src/config/ecal_cmd_parser.cpp
     src/config/ecal_config.cpp
     src/config/ecal_config_initializer.cpp
+    src/config/transport_layer.cpp
     src/types/ecal_custom_data_types.cpp
 )
 if (ECAL_CORE_CONFIGURATION)
@@ -445,6 +446,17 @@ if (WIN32)
 endif()
 
 ######################################
+# builder
+######################################
+set (ecal_builder_src
+    src/builder/registration_attribute_builder.cpp
+    src/registration/builder/udp_shm_attribute_builder.cpp
+    src/registration/builder/sample_applier_attribute_builder.cpp
+    src/registration/udp/builder/udp_attribute_builder.cpp
+)
+
+
+######################################
 # c interface
 ######################################
 set(ecal_c_src
@@ -565,6 +577,7 @@ set(ecal_sources
     ${ecal_time_src}
     ${ecal_util_src}
     ${ecal_cmn_src}
+    ${ecal_builder_src}
     ${ecal_header_cmn}
     ${ecal_header_msg}
 )

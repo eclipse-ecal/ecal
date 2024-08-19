@@ -35,6 +35,8 @@
 #include "service/ecal_service_singleton_manager.h"
 #endif
 
+#include "builder/registration_attribute_builder.h"
+
 namespace eCAL
 {
   CGlobals::CGlobals() : initialized(false), components(0)
@@ -51,12 +53,13 @@ namespace eCAL
     bool new_initialization(false);
 
 #if ECAL_CORE_REGISTRATION
+    const Registration::SAttributes registration_attr = BuildRegistrationAttributes(GetConfiguration().registration, GetConfiguration().transport_layer.udp, eCAL::Process::GetProcessID());
     /////////////////////
     // REGISTRATION PROVIDER
     /////////////////////
     if (registration_provider_instance == nullptr)
     {
-      registration_provider_instance = std::make_unique<CRegistrationProvider>();
+      registration_provider_instance = std::make_unique<CRegistrationProvider>(registration_attr);
       new_initialization = true;
     }
 
@@ -65,7 +68,7 @@ namespace eCAL
     /////////////////////
     if(registration_receiver_instance == nullptr) 
     {
-      registration_receiver_instance = std::make_unique<CRegistrationReceiver>();
+      registration_receiver_instance = std::make_unique<CRegistrationReceiver>(registration_attr);
       new_initialization = true;
     }
 #endif // ECAL_CORE_REGISTRATION
@@ -176,7 +179,7 @@ namespace eCAL
     {
       if (monitoring_instance == nullptr)
       {
-        monitoring_instance = std::make_unique<CMonitoring>(Monitoring::BuildMonitoringAttributes(eCAL::GetConfiguration().monitoring));
+        monitoring_instance = std::make_unique<CMonitoring>(eCAL::GetMonitoringConfiguration());
         new_initialization = true;
       }
     }
