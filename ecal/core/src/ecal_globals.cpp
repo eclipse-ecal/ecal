@@ -51,7 +51,7 @@ namespace eCAL
     bool new_initialization(false);
 
 #if ECAL_CORE_REGISTRATION
-    Registration::SAttributes registration_attr = BuildRegistrationAttributes(GetConfiguration().registration, GetConfiguration().transport_layer.udp, eCAL::Process::GetProcessID());
+    const Registration::SAttributes registration_attr = BuildRegistrationAttributes(GetConfiguration().registration, GetConfiguration().transport_layer.udp, eCAL::Process::GetProcessID());
     /////////////////////
     // REGISTRATION PROVIDER
     /////////////////////

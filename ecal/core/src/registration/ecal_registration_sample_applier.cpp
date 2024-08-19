@@ -93,7 +93,7 @@ namespace eCAL
     {
       // is this actually sufficient? should we also check host_name?
       const int32_t pid = sample_.identifier.process_id;
-      return pid == m_pid;
+      return pid == m_attributes.process_id;
     }
 
     bool CSampleApplier::AcceptRegistrationSample(const Registration::Sample& sample_)

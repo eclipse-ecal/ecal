@@ -60,7 +60,6 @@ namespace eCAL
       bool AcceptRegistrationSample(const Registration::Sample& sample_);
 
       SampleApplier::SAttributes                  m_attributes;
-      int32_t                               m_pid;
 
       std::mutex                                  m_callback_custom_apply_sample_map_mtx;
       // We need to check the performance now. Unlike before the pub / subgates also go through the map

@@ -170,7 +170,7 @@ namespace YAML
 
     // By default the host_group_name is set with the current host name.
     // If the user does not specify the host group name in the yaml, leave it like it is.
-    std::string host_group_name = "";
+    std::string host_group_name;
     AssignValue<std::string>(host_group_name, node_, "host_group_name");
     if (!host_group_name.empty()) config_.host_group_name = host_group_name;
 
