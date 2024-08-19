@@ -20,9 +20,9 @@ jobs:
 
     - name: Downgrade Python version
       uses: actions/setup-python@v4
-      id: cp39
+      id: cp312
       with:
-        python-version: '3.9'
+        python-version: '3.12'
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
