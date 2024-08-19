@@ -235,25 +235,6 @@ namespace eCAL
       }
     };
 
-    struct SampleIdentifier
-    {
-      std::string                        entity_id;                     // unique id within that process
-      int32_t                            process_id = 0;                // process id which produced the sample
-      std::string                        host_name;                     // host which produced the sample
-
-      bool operator==(const SampleIdentifier& other) const {
-        return entity_id == other.entity_id &&
-          process_id == other.process_id &&
-          host_name == other.host_name;
-      }
-
-      bool operator<(const SampleIdentifier& other) const
-      {
-        return std::tie(process_id, entity_id, host_name)
-          < std::tie(other.process_id, other.entity_id, other.host_name);
-      }
-    };
-
     // Registration sample
     struct Sample
     {
