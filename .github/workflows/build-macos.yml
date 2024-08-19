@@ -18,12 +18,6 @@ jobs:
       run: |
           echo Killing XProtect.; sudo pkill -9 XProtect >/dev/null || true;
 
-    - name: Downgrade Python version
-      uses: actions/setup-python@v4
-      id: cp39
-      with:
-        python-version: '3.9'
-
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
