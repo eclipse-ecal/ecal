@@ -25,6 +25,9 @@ jobs:
         version: '5.15.2'
         target: 'desktop'
 
+    - name: Remove failing Python symlink
+      run: sudo rm /usr/local/bin/2to3
+      
     - name: Install Dependencies
       run: brew install ninja doxygen graphviz protobuf hdf5@1.10 pkg-config
 
