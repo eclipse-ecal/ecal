@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1051,6 +1051,9 @@ namespace
       val = Py_BuildValue("s", topic.hname.c_str());
       PyDict_SetItemString(topicDict, "hname", val); Py_DECREF(val);
 
+      val = Py_BuildValue("s", topic.hgname.c_str());
+      PyDict_SetItemString(topicDict, "hgname", val); Py_DECREF(val);
+
       val = Py_BuildValue("i", topic.pid);
       PyDict_SetItemString(topicDict, "pid", val); Py_DECREF(val);
 
@@ -1069,14 +1072,32 @@ namespace
       val = Py_BuildValue("s", topic.direction.c_str());
       PyDict_SetItemString(topicDict, "direction", val); Py_DECREF(val);
 
+      // TODO: SDataTypeInformation tdatatype
+
+      // TODO: std::vector<TLayer> tlayer
+
       val = Py_BuildValue("i", topic.tsize);
       PyDict_SetItemString(topicDict, "tsize", val); Py_DECREF(val);
+
+      val = Py_BuildValue("connections_loc", topic.tsize);
+      PyDict_SetItemString(topicDict, "connections_loc", val); Py_DECREF(val);
+
+      val = Py_BuildValue("connections_ext", topic.tsize);
+      PyDict_SetItemString(topicDict, "connections_ext", val); Py_DECREF(val);
+
+      val = Py_BuildValue("message_drops", topic.tsize);
+      PyDict_SetItemString(topicDict, "message_drops", val); Py_DECREF(val);
+
+      val = Py_BuildValue("i", topic.did);
+      PyDict_SetItemString(topicDict, "did", val); Py_DECREF(val);
 
       val = Py_BuildValue("i", topic.dclock);
       PyDict_SetItemString(topicDict, "dclock", val); Py_DECREF(val);
 
       val = Py_BuildValue("i", topic.dfreq);
       PyDict_SetItemString(topicDict, "dfreq", val); Py_DECREF(val);
+
+      // TODO: std::map<std::string, std::string> attr
     }
   }
 }
@@ -1105,6 +1126,9 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
 
         val = Py_BuildValue("s", process.hname.c_str());
         PyDict_SetItemString(processDict, "hname", val); Py_DECREF(val);
+
+        val = Py_BuildValue("s", process.hgname.c_str());
+        PyDict_SetItemString(processDict, "hgname", val); Py_DECREF(val);
 
         val = Py_BuildValue("i", process.pid);
         PyDict_SetItemString(processDict, "pid", val); Py_DECREF(val);
@@ -1138,6 +1162,9 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
 
         val = Py_BuildValue("s", process.component_init_info.c_str());
         PyDict_SetItemString(processDict, "component_init_info", val); Py_DECREF(val);
+
+        val = Py_BuildValue("s", process.ecal_runtime_version.c_str());
+        PyDict_SetItemString(processDict, "ecal_runtime_version", val); Py_DECREF(val);
       }
     }
 
@@ -1172,6 +1199,15 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", service.sid.c_str());
         PyDict_SetItemString(serviceDict, "sid", val); Py_DECREF(val);
 
+        val = Py_BuildValue("i", service.version);
+        PyDict_SetItemString(serviceDict, "version", val); Py_DECREF(val);
+
+        val = Py_BuildValue("i", service.tcp_port_v0);
+        PyDict_SetItemString(serviceDict, "tcp_port_v0", val); Py_DECREF(val);
+
+        val = Py_BuildValue("i", service.tcp_port_v1);
+        PyDict_SetItemString(serviceDict, "tcp_port_v1", val); Py_DECREF(val);
+
         PyObject* methodsDict = PyDict_New();
         PyDict_SetItemString(serviceDict, "methods", methodsDict); Py_DECREF(methodsDict);
 
@@ -1183,8 +1219,12 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
           val = Py_BuildValue("s", method.req_type.c_str());
           PyDict_SetItemString(methodsDict, "req_type", val); Py_DECREF(val);
 
+          // TODO: std::string req_desc
+
           val = Py_BuildValue("s", method.resp_type.c_str());
           PyDict_SetItemString(methodsDict, "resp_type", val); Py_DECREF(val);
+
+          // TODO: std::string resp_desc
 
           val = Py_BuildValue("i", method.call_count);
           PyDict_SetItemString(methodsDict, "call_count", val); Py_DECREF(val);
@@ -1222,6 +1262,31 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
 
         val = Py_BuildValue("s", client.sid.c_str());
         PyDict_SetItemString(clientDict, "sid", val); Py_DECREF(val);
+
+        PyObject* methodsDict = PyDict_New();
+        PyDict_SetItemString(clientDict, "methods", methodsDict); Py_DECREF(methodsDict);
+
+        for (const auto method : client.methods)
+        {
+          val = Py_BuildValue("s", method.mname.c_str());
+          PyDict_SetItemString(methodsDict, "mname", val); Py_DECREF(val);
+
+          val = Py_BuildValue("s", method.req_type.c_str());
+          PyDict_SetItemString(methodsDict, "req_type", val); Py_DECREF(val);
+
+          // TODO: std::string req_desc
+          
+          val = Py_BuildValue("s", method.resp_type.c_str());
+          PyDict_SetItemString(methodsDict, "resp_type", val); Py_DECREF(val);
+
+          // TODO: std::string resp_desc
+
+          val = Py_BuildValue("i", method.call_count);
+          PyDict_SetItemString(methodsDict, "call_count", val); Py_DECREF(val);
+        }
+
+        val = Py_BuildValue("i", client.version);
+        PyDict_SetItemString(clientDict, "version", val); Py_DECREF(val);
       }
     }
 
