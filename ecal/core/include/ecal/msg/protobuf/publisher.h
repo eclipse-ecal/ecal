@@ -166,8 +166,7 @@ namespace eCAL
       size_t Send(const T& msg_, long long time_, long long acknowledge_timeout_ms_)
       {
         CPayload payload{ msg_ };
-        eCAL::CPublisher::Send(payload, time_, acknowledge_timeout_ms_);
-        return(0);
+        return eCAL::CPublisher::Send(payload, time_, acknowledge_timeout_ms_);
       }
 
 
