@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <string>
 #include <ecal/types/ecal_custom_data_types.h>
 
@@ -50,13 +51,14 @@ namespace eCAL
 
     struct SAttributes
     {
-      bool         network_enabled;
-      bool         loopback;
-      bool         shm_enabled;
-      bool         udp_enabled;
-      unsigned int refresh;
-      std::string  host_group_name;
-      int          process_id;
+      std::chrono::milliseconds timeout;
+      bool                      network_enabled;
+      bool                      loopback;
+      bool                      shm_enabled;
+      bool                      udp_enabled;
+      unsigned int              refresh;
+      std::string               host_group_name;
+      int                       process_id;
 
       SUDPAttributes     udp;
       SSHMAttributes     shm;
