@@ -36,7 +36,7 @@ namespace eCAL
         port                = other.port;
         receive_buffer      = other.receive_buffer;
         send_buffer         = other.send_buffer;
-        
+
         return *this;
       }
     } 
