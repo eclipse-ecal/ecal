@@ -23,8 +23,6 @@
 
 #include "ecal_globals.h"
 
-#include "builder/monitoring_attribute_builder.h"
-
 #include <iostream>
 #include <memory>
 #include <stdexcept>
