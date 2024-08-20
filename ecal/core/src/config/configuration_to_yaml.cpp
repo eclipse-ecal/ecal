@@ -36,7 +36,7 @@ namespace YAML
     }
 
     return(filter_mask);
-  };
+  }
 
   std::vector<std::string> LogLevelToVector(eCAL_Logging_Filter filter_mask) 
   {
@@ -165,9 +165,15 @@ namespace YAML
     AssignValue<unsigned int>(config_.registration_timeout, node_, "registration_timeout");
     AssignValue<unsigned int>(config_.registration_refresh, node_, "registration_refresh");
     AssignValue<bool>(config_.network_enabled, node_, "network_enabled");
-    AssignValue<bool>(config_.loopback, node_, "loopback");
-    AssignValue<std::string>(config_.host_group_name, node_, "host_group_name");
+    AssignValue<bool>(config_.loopback, node_, "loopback");    
     AssignValue<eCAL::Registration::Layer::Configuration>(config_.layer, node_, "layer");
+
+    // By default the host_group_name is set with the current host name.
+    // If the user does not specify the host group name in the yaml, leave it like it is.
+    std::string host_group_name;
+    AssignValue<std::string>(host_group_name, node_, "host_group_name");
+    if (!host_group_name.empty()) config_.host_group_name = host_group_name;
+
     return true;
   }
 

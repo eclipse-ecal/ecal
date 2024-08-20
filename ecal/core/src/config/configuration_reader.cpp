@@ -26,14 +26,14 @@ namespace eCAL
       const YAML::Node yaml = YAML::LoadFile(filename_);
 
       MapConfiguration(yaml, config_);
-    };
+    }
 
     void YamlStringToConfig(const std::string& yaml_string_, eCAL::Configuration& config_)
     {
       const YAML::Node yaml = YAML::Load(yaml_string_);
 
       MapConfiguration(yaml, config_);
-    };
+    }
 
     bool ConfigToYamlFile(const std::string& file_name_, const eCAL::Configuration& config_)
     {
@@ -47,7 +47,7 @@ namespace eCAL
       }
       
       return false;
-    };
+    }
 
     void MergeYamlNodes(YAML::Node& base, const YAML::Node& other) 
     {
@@ -96,7 +96,7 @@ namespace eCAL
           }
         }
       }
-    };
+    }
 
     bool MergeYamlIntoConfiguration(const std::string& file_name_ , eCAL::Configuration& config_)
     {

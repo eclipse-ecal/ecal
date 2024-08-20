@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/types/ecal_custom_data_types.h>
+#include <ecal/ecal_os.h>
 
 namespace eCAL
 {
@@ -71,7 +72,7 @@ namespace eCAL
         bool                                     npcap_enabled       { false };   //!< Enable to receive UDP traffic with the Npcap based receiver (Default: false)
       
         Network::Configuration                   network;
-        Local::Configuration                     local;
+        const Local::Configuration               local;
 
         ECAL_API Configuration& operator=(const Configuration& other);
       }; 

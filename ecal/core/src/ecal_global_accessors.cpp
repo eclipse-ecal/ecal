@@ -86,7 +86,7 @@ namespace eCAL
         }
 #endif
       }
-  };
+  }
 
   CGlobals* g_globals()
   {

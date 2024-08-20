@@ -40,11 +40,11 @@ namespace eCAL
   // CMemfileRegistrationReceiver
   //////////////////////////////////////////////////////////////////
 
-  CRegistrationReceiverSHM::CRegistrationReceiverSHM(RegistrationApplySampleCallbackT apply_sample_callback)
+  CRegistrationReceiverSHM::CRegistrationReceiverSHM(RegistrationApplySampleCallbackT apply_sample_callback, const Registration::SHM::SAttributes& attr_)
    : m_apply_sample_callback(apply_sample_callback)
   {
     m_memfile_broadcast = std::make_unique<CMemoryFileBroadcast>();
-    m_memfile_broadcast->Create(Config::Experimental::GetShmMonitoringDomain(), Config::Experimental::GetShmMonitoringQueueSize());
+    m_memfile_broadcast->Create(attr_);
     m_memfile_broadcast->FlushLocalEventQueue();
 
     m_memfile_broadcast_reader = std::make_unique<CMemoryFileBroadcastReader>();
