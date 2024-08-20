@@ -58,13 +58,12 @@ namespace eCAL
     using TopicId = std::uint64_t;
     struct SQualityTopicInfo
     {
-      TopicId              id = 0;
       SDataTypeInformation info;
       DescQualityFlags     quality = DescQualityFlags::NO_QUALITY;
 
       bool operator<(const SQualityTopicInfo& other) const
       {
-        return std::tie(quality, id) < std::tie(other.quality, other.id);
+        return std::tie(quality, info) < std::tie(other.quality, info);
       }
     };
     using QualityTopicInfoMultiMap = std::multimap<std::string, SQualityTopicInfo>;
@@ -73,14 +72,13 @@ namespace eCAL
     using ServiceId = std::uint64_t;
     struct SQualityServiceInfo
     {
-      ServiceId                 id = 0;
       SServiceMethodInformation info;
       DescQualityFlags          request_quality  = DescQualityFlags::NO_QUALITY;
       DescQualityFlags          response_quality = DescQualityFlags::NO_QUALITY;
 
       bool operator<(const SQualityServiceInfo& other) const
       {
-        return std::tie(request_quality, response_quality, id) < std::tie(other.request_quality, other.response_quality, other.id);
+        return std::tie(request_quality, response_quality) < std::tie(other.request_quality, other.response_quality);
       }
     };
     struct SServiceMethod
@@ -95,6 +93,62 @@ namespace eCAL
     };
     using QualityServiceInfoMultimap = std::multimap<SServiceMethod, SQualityServiceInfo>;
     using SQualityServiceInfoSet     = std::set<SQualityServiceInfo>;
+
+    /**
+     * @brief Get complete snapshot of all known publisher.
+     *
+     * @return Set of topic id's.
+    **/
+    ECAL_API std::set<STopicId> GetPublisherIDs();
+
+    /**
+     * @brief Get data type information with quality for specific publisher.
+     *
+     * @return True if information could be queried.
+    **/
+    ECAL_API bool GetPublisherInfo(const STopicId& id_, SQualityTopicInfo& topic_info_);
+
+    /**
+     * @brief Get complete snapshot of all known subscriber.
+     *
+     * @return Set of topic id's.
+    **/
+    ECAL_API std::set<STopicId> GetSubscriberIDs();
+
+    /**
+     * @brief Get data type information with quality for specific subscriber.
+     *
+     * @return True if information could be queried.
+    **/
+    ECAL_API bool GetSubscriberInfo(const STopicId& id_, SQualityTopicInfo& topic_info_);
+
+    /**
+     * @brief Get complete snapshot of all known services.
+     *
+     * @return Set of service id's.
+    **/
+    ECAL_API std::set<SServiceId> GetServiceIDs();
+
+    /**
+     * @brief Get service method information with quality for specific service.
+     *
+     * @return True if information could be queried.
+    **/
+    ECAL_API bool GetServiceInfo(const SServiceId& id_, SQualityServiceInfo& service_info_);
+
+    /**
+     * @brief Get complete snapshot of all known clients.
+     *
+     * @return Set of service id's.
+    **/
+    ECAL_API std::set<SServiceId> GetClientIDs();
+
+    /**
+     * @brief Get service method information with quality for specific client.
+     *
+     * @return True if information could be queried.
+    **/
+    ECAL_API bool GetClientInfo(const SServiceId& id_, SQualityServiceInfo& service_info_);
 
     /**
      * @brief Get complete snapshot of data type information with quality and topic id for all known publisher.

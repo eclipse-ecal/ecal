@@ -37,32 +37,6 @@
 
 namespace eCAL
 {
-  struct STopicIdKey
-  {
-    std::string           topic_name;
-    Registration::TopicId topic_id;
-
-    bool operator<(const STopicIdKey& other) const
-    {
-      return std::tie(topic_name, topic_id) < std::tie(other.topic_name, other.topic_id);
-    }
-  };
-
-  struct SServiceIdKey
-  {
-    std::string             service_name;
-    std::string             method_name;
-    Registration::ServiceId service_id;
-
-    bool operator<(const SServiceIdKey& other) const
-    {
-      return std::tie(service_name, method_name, service_id) < std::tie(other.service_name, other.method_name, other.service_id);
-    }
-  };
-
-  using QualityTopicIdMap   = std::map<STopicIdKey,   Registration::SQualityTopicInfo>;
-  using QualityServiceIdMap = std::map<SServiceIdKey, Registration::SQualityServiceInfo>;
-
   class CDescGate
   {
   public:
@@ -72,13 +46,21 @@ namespace eCAL
     // apply samples to description gate
     void ApplySample(const Registration::Sample& sample_, eTLayerType layer_);
 
-    // get publisher/subscriber maps
-    Registration::QualityTopicInfoMultiMap GetPublishers();
-    Registration::QualityTopicInfoMultiMap GetSubscribers();
+    // get publisher information
+    std::set<Registration::STopicId> GetPublisherIDs() const;
+    bool GetPublisherInfo(const Registration::STopicId& id_, Registration::SQualityTopicInfo& topic_info_) const;
 
-    // get service/clients maps
-    Registration::QualityServiceInfoMultimap GetServices();
-    Registration::QualityServiceInfoMultimap GetClients();
+    // get subscriber information
+    std::set<Registration::STopicId> GetSubscriberIDs() const;
+    bool GetSubscriberInfo(const Registration::STopicId& id_, Registration::SQualityTopicInfo& topic_info_) const;
+
+    // get service information
+    std::set<Registration::SServiceId> GetServiceIDs() const;
+    bool GetServiceInfo(const Registration::SServiceId& id_, Registration::SQualityServiceInfo& service_info_) const;
+
+    // get client information
+    std::set<Registration::SServiceId> GetClientIDs() const;
+    bool GetClientInfo(const Registration::SServiceId& id_, Registration::SQualityServiceInfo& service_info_) const;
 
     // delete copy constructor and copy assignment operator
     CDescGate(const CDescGate&) = delete;
@@ -89,45 +71,48 @@ namespace eCAL
     CDescGate& operator=(CDescGate&&) = delete;
 
   protected:
-    using QualityTopicIdMap = std::map<STopicIdKey, Registration::SQualityTopicInfo>;
+    using QualityTopicIdMap = std::map<Registration::STopicId, Registration::SQualityTopicInfo>;
     struct SQualityTopicIdMap
     {
       mutable std::mutex mtx;
       QualityTopicIdMap  map;
     };
 
-    using QualityServiceIdMap = std::map<SServiceIdKey, Registration::SQualityServiceInfo>;
+    using QualityServiceIdMap = std::map<Registration::SServiceId, Registration::SQualityServiceInfo>;
     struct SQualityServiceIdMap
     {
       mutable std::mutex  mtx;
       QualityServiceIdMap map;
     };
 
-    static Registration::QualityTopicInfoMultiMap   GetTopics  (SQualityTopicIdMap& topic_info_map_);
-    static Registration::QualityServiceInfoMultimap GetServices(SQualityServiceIdMap& service_method_info_map_);
+    static std::set<Registration::STopicId>   GetTopicIDs(const SQualityTopicIdMap& topic_info_map_);
+    static bool                               GetTopic   (const Registration::STopicId& id_, const SQualityTopicIdMap& topic_info_map_, Registration::SQualityTopicInfo& topic_info_);
+
+    static std::set<Registration::SServiceId> GetServiceIDs(const SQualityServiceIdMap& service_method_info_map_);
+    static bool                               GetService   (const Registration::SServiceId& id_, const SQualityServiceIdMap& service_method_info_map_, Registration::SQualityServiceInfo& service_method_info_);
 
     static void ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
+                                      const Registration::SampleIdentifier& topic_id_,
                                       const std::string& topic_name_,
-                                      const Registration::TopicId& topic_id_,
                                       const SDataTypeInformation& topic_info_,
                                       Registration::DescQualityFlags topic_quality_);
 
     static void RemTopicDescription(SQualityTopicIdMap& topic_info_map_,
-                                    const std::string& topic_name_,
-                                    const Registration::TopicId& topic_id_);
+                                    const Registration::SampleIdentifier& topic_id_,
+                                    const std::string& topic_name_);
 
     static void ApplyServiceDescription(SQualityServiceIdMap& service_method_info_map_,
+                                        const Registration::SampleIdentifier& service_id_,
                                         const std::string& service_name_,
                                         const std::string& method_name_,
-                                        const Registration::ServiceId& service_id_,
                                         const SDataTypeInformation& request_type_information_,
                                         const SDataTypeInformation& response_type_information_,
                                         Registration::DescQualityFlags request_type_quality_,
                                         Registration::DescQualityFlags response_type_quality_);
 
     static void RemServiceDescription(SQualityServiceIdMap& service_method_info_map_,
-                                      const std::string& service_name_,
-                                      const Registration::ServiceId& service_id_);
+                                      const Registration::SampleIdentifier& service_id_,
+                                      const std::string& service_name_);
 
     // internal quality topic info publisher/subscriber maps
     SQualityTopicIdMap   m_publisher_info_map;

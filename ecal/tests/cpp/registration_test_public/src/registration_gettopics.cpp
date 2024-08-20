@@ -31,10 +31,10 @@ enum {
   CMN_REGISTRATION_REFRESH_MS = (1000)
 };
 
-TEST(core_cpp_registration_2, GetTopics)
+TEST(core_cpp_registration_public, GetTopics)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration_2");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
 
   // enable loop back communication in the same process
   eCAL::Util::EnableLoopback(true);
@@ -135,14 +135,14 @@ TEST(core_cpp_registration_2, GetTopics)
   eCAL::Finalize();
 }
 
-TEST(core_cpp_registration_2, GetTopicsParallel)
+TEST(core_cpp_registration_public, GetTopicsParallel)
 {
   constexpr const int max_publisher_count(2000);
   constexpr const int waiting_time_thread(4000);
   constexpr const int parallel_threads(1);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration_2");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
 
   // enable loop back communication in the same process
   eCAL::Util::EnableLoopback(true);
@@ -201,6 +201,72 @@ TEST(core_cpp_registration_2, GetTopicsParallel)
 
   EXPECT_EQ(final_topic_names.size(), 0);
   EXPECT_EQ(final_topics.size(), 0);
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+TEST(core_cpp_registration_public, GetTopicIDs)
+{
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
+
+  // enable loop back communication in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  // create and check a few pub/sub entities
+  {
+    eCAL::SDataTypeInformation info_A1{ "typeA1"  ,"",  "descA1" };
+    eCAL::SDataTypeInformation info_A2{ "typeA2"  ,"",  "descA2" };
+    eCAL::SDataTypeInformation info_A3{ "typeA3"  ,"",  "descA3" };
+
+    eCAL::SDataTypeInformation info_B1{ "typeB1"  ,"",  "descB1" };
+    eCAL::SDataTypeInformation info_B2{ "typeB2"  ,"",  "descB2" };
+
+    // create 3 publisher
+    eCAL::CPublisher pub1("A1", info_A1);
+    eCAL::CPublisher pub2("A2", info_A2);
+    eCAL::CPublisher pub3("A3", info_A3);
+
+    // create 2 subscriber
+    eCAL::CSubscriber sub1("B1", info_B1);
+    eCAL::CSubscriber sub2("B2", info_B2);
+
+    // let's register
+    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
+
+    // get publisher
+    {
+      auto id_set = eCAL::Registration::GetPublisherIDs();
+      EXPECT_EQ(3, id_set.size());
+
+      // check publisher datatype information
+      for (const auto& id : id_set)
+      {
+        eCAL::Registration::SQualityTopicInfo info;
+        EXPECT_TRUE(eCAL::Registration::GetPublisherInfo(id, info));
+        EXPECT_EQ(std::string("type") + id.topic_name, info.info.name);
+        EXPECT_EQ("",                                  info.info.encoding);
+        EXPECT_EQ(std::string("desc") + id.topic_name, info.info.descriptor);
+      }
+    }
+
+    // get subscriber
+    {
+      auto id_set = eCAL::Registration::GetSubscriberIDs();
+      EXPECT_EQ(2, id_set.size());
+
+      // check subscriber datatype information
+      for (const auto& id : id_set)
+      {
+        eCAL::Registration::SQualityTopicInfo info;
+        EXPECT_TRUE(eCAL::Registration::GetSubscriberInfo(id, info));
+        EXPECT_EQ(std::string("type") + id.topic_name, info.info.name);
+        EXPECT_EQ("",                                  info.info.encoding);
+        EXPECT_EQ(std::string("desc") + id.topic_name, info.info.descriptor);
+      }
+    }
+  }
 
   // finalize eCAL API
   eCAL::Finalize();

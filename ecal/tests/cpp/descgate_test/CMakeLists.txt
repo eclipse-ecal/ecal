@@ -22,7 +22,7 @@ find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
 set(descgate_test_src
-  src/getpublisher.cpp
+  src/descgate_getentities.cpp
   ${ECAL_CORE_PROJECT_ROOT}/core/src/ecal_descgate.cpp
 )
 
