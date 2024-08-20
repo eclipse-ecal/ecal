@@ -85,19 +85,19 @@ namespace eCAL
 
   namespace Registration
   {
-    struct SampleIdentifier
+    struct SEntityId
     {
       std::string  entity_id;         // unique id within that process
       int32_t      process_id = 0;    // process id which produced the sample
       std::string  host_name;         // host which produced the sample
 
-      bool operator==(const SampleIdentifier& other) const {
+      bool operator==(const SEntityId& other) const {
         return entity_id  == other.entity_id  &&
                process_id == other.process_id &&
                host_name  == other.host_name;
       }
 
-      bool operator<(const SampleIdentifier& other) const
+      bool operator<(const SEntityId& other) const
       {
         return std::tie(process_id, entity_id, host_name)
           < std::tie(other.process_id, other.entity_id, other.host_name);
@@ -106,8 +106,8 @@ namespace eCAL
 
     struct STopicId
     {
-      Registration::SampleIdentifier topic_id;
-      std::string                    topic_name;
+      SEntityId    topic_id;
+      std::string  topic_name;
 
       bool operator<(const STopicId& other) const
       {
@@ -117,9 +117,9 @@ namespace eCAL
 
     struct SServiceId
     {
-      Registration::SampleIdentifier service_id;
-      std::string                    service_name;
-      std::string                    method_name;
+      SEntityId    service_id;
+      std::string  service_name;
+      std::string  method_name;
 
       bool operator<(const SServiceId& other) const
       {
