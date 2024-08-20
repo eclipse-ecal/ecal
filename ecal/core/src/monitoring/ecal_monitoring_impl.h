@@ -24,9 +24,9 @@
 #pragma once
 
 #include <ecal/types/monitoring.h>
-#include <ecal/config/monitoring.h>
 
 #include "ecal_def.h"
+#include "attributes/monitoring_attributes.h"
 
 #include "serialization/ecal_serialize_sample_registration.h"
 
@@ -48,7 +48,7 @@ namespace eCAL
   class CMonitoringImpl
   {
   public:
-    CMonitoringImpl(const Monitoring::Configuration& config_);
+    CMonitoringImpl(const Monitoring::SAttributes& attr_);
     ~CMonitoringImpl() = default;
 
     void Create();
@@ -151,7 +151,7 @@ namespace eCAL
 
     bool                                         m_init;
 
-    Monitoring::Configuration                    m_config;
+    Monitoring::SAttributes                      m_attributes;
 
     std::mutex                                   m_topic_filter_excl_mtx;
     StrICaseSetT                                 m_topic_filter_excl;

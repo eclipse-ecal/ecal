@@ -41,9 +41,9 @@ namespace eCAL
   ////////////////////////////////////////
   // Monitoring Implementation
   ////////////////////////////////////////
-  CMonitoringImpl::CMonitoringImpl(const Monitoring::Configuration& config_) :
+  CMonitoringImpl::CMonitoringImpl(const Monitoring::SAttributes& attr_) :
     m_init(false),
-    m_config        (config_) 
+    m_attributes(attr_) 
   {
   }
 
@@ -72,12 +72,12 @@ namespace eCAL
 
   void CMonitoringImpl::SetExclFilter(const std::string& filter_)
   {
-    m_config.filter_excl = filter_;
+    m_attributes.filter_excl = filter_;
   }
 
   void CMonitoringImpl::SetInclFilter(const std::string& filter_)
   {
-    m_config.filter_incl = filter_;
+    m_attributes.filter_incl = filter_;
   }
 
   void CMonitoringImpl::SetFilterState(bool state_)
@@ -87,13 +87,13 @@ namespace eCAL
       // create excluding filter list
       {
         const std::lock_guard<std::mutex> lock(m_topic_filter_excl_mtx);
-        Tokenize(m_config.filter_excl, m_topic_filter_excl, ",;", true);
+        Tokenize(m_attributes.filter_excl, m_topic_filter_excl, ",;", true);
       }
 
       // create including filter list
       {
         const std::lock_guard<std::mutex> lock(m_topic_filter_incl_mtx);
-        Tokenize(m_config.filter_incl, m_topic_filter_incl, ",;", true);
+        Tokenize(m_attributes.filter_incl, m_topic_filter_incl, ",;", true);
       }
     }
     else
