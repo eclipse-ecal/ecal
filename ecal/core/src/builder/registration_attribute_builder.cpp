@@ -25,6 +25,7 @@ namespace eCAL
   {
     Registration::SAttributes attr;
     
+    attr.timeout           = std::chrono::milliseconds(reg_config_.registration_timeout);
     attr.refresh           = reg_config_.registration_refresh;
     attr.network_enabled   = reg_config_.network_enabled;
     attr.loopback          = reg_config_.loopback;

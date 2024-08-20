@@ -85,7 +85,7 @@ namespace eCAL
     if(m_created) return;
 
     m_timeout_provider = std::make_unique<Registration::CTimeoutProvider<std::chrono::steady_clock>>(
-      std::chrono::milliseconds(Config::GetMonitoringTimeoutMs()),
+      m_attributes.timeout,
       [this](const Registration::Sample& sample_)
       {
         return m_sample_applier.ApplySample(sample_);

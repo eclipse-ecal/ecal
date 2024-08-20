@@ -81,7 +81,6 @@ namespace eCAL
     // monitoring
     /////////////////////////////////////
     
-    ECAL_API int                 GetMonitoringTimeoutMs             () { return GetConfiguration().monitoring.timeout; }
     ECAL_API std::string         GetMonitoringFilterExcludeList     () { return GetConfiguration().monitoring.filter_excl; }
     ECAL_API std::string         GetMonitoringFilterIncludeList     () { return GetConfiguration().monitoring.filter_incl; }
     ECAL_API eCAL_Logging_Filter GetConsoleLogFilter                () { return GetConfiguration().logging.sinks.console.filter_log_con; }

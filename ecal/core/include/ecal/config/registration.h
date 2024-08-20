@@ -64,7 +64,7 @@ namespace eCAL
 
     struct Configuration
     {
-      unsigned int         registration_timeout { 60000U };                           //!< Timeout for topic registration in ms (internal) (Default: 60000)
+      unsigned int         registration_timeout { 10000U };                           //!< Timeout for topic registration in ms (internal) (Default: 10000)
       unsigned int         registration_refresh { 1000U };                            //!< Topic registration refresh cylce (has to be smaller then registration timeout!) (Default: 1000)                                   
 
       bool                 network_enabled      { false };                            /*!< true  = all eCAL components communicate over network boundaries
