@@ -25,9 +25,9 @@
 #include <thread>
 #include <vector>
 
-const int subscriber_number                    (100);
+const int subscriber_number                    (5000);
 
-const int publisher_number                     (100);
+const int publisher_number                     (5000);
 const int publisher_type_encoding_size_bytes   (10*1024);
 const int publisher_type_descriptor_size_bytes (10*1024);
 
