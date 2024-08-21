@@ -195,13 +195,20 @@ int main(int argc, char** argv)
     std::cout << num_pub << ")" << std::endl << "Time taken to get publisher information: " << duration << " milliseconds" << std::endl << std::endl;
   }
 
-  // check creation / deletion events
-  std::set<eCAL::Registration::STopicId> publisher_ids = eCAL::Registration::GetPublisherIDs();
+  // check creation events
+  const std::set<eCAL::Registration::STopicId> publisher_ids = eCAL::Registration::GetPublisherIDs();
   std::cout << "Number of publisher creation events   " << created_publisher_num << std::endl;
   std::cout << "Size   of publisher creation id set   " << created_publisher_ids.size() << std::endl;
   //std::cout << "Publisher creation id sets are equal  " << (publisher_ids == created_publisher_ids) << std::endl;
   std::cout << std::endl;
+  
+  // delete all publisher
+  std::cout << "Delete all publisher .." << std::endl;
   vector_of_publisher.clear();
+  std::cout << "Deletion done." << std::endl;
+  std::cout << std::endl;
+
+  // check deletion events
   std::this_thread::sleep_for(std::chrono::seconds(5));
   std::cout << "Number of publisher deletion events   " << deleted_publisher_num << std::endl;
   std::cout << "Size   of publisher deletion id set   " << deleted_publisher_ids.size() << std::endl;
