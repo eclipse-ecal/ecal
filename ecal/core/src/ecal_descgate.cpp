@@ -66,18 +66,18 @@ namespace eCAL
 
   Registration::CallbackToken CDescGate::RegisterPublisherEventCallback(const Registration::TopicIDCallbackT& callback_)
   {
-    const std::lock_guard<std::mutex> lock(m_publisher_info_map.mtx);
+    const std::lock_guard<std::mutex> lock(m_publisher_callback_map.mtx);
 
     const Registration::CallbackToken new_token = CreateToken();
-    m_publisher_info_map.cb_map[new_token] = callback_;
+    m_publisher_callback_map.map[new_token] = callback_;
 
     return new_token;
   }
 
   void CDescGate::UnregisterPublisherEventCallback(Registration::CallbackToken token_)
   {
-    const std::lock_guard<std::mutex> lock(m_publisher_info_map.mtx);
-    m_publisher_info_map.cb_map.erase(token_);
+    const std::lock_guard<std::mutex> lock(m_publisher_callback_map.mtx);
+    m_publisher_callback_map.map.erase(token_);
   }
 
   std::set<Registration::STopicId> CDescGate::GetSubscriberIDs() const
@@ -115,7 +115,7 @@ namespace eCAL
     std::set<Registration::STopicId> topic_id_set;
 
     const std::lock_guard<std::mutex> lock(topic_info_map_.mtx);
-    for (const auto& topic_map_it : topic_info_map_.id_map)
+    for (const auto& topic_map_it : topic_info_map_.map)
     {
       topic_id_set.insert(topic_map_it.first);
     }
@@ -125,8 +125,8 @@ namespace eCAL
   bool CDescGate::GetTopic(const Registration::STopicId& id_, const SQualityTopicIdMap& topic_info_map_, Registration::SQualityTopicInfo& topic_info_)
   {
     const std::lock_guard<std::mutex> lock(topic_info_map_.mtx);
-    auto iter = topic_info_map_.id_map.find(id_);
-    if (iter == topic_info_map_.id_map.end())
+    auto iter = topic_info_map_.map.find(id_);
+    if (iter == topic_info_map_.map.end())
     {
       return false;
     }
@@ -210,16 +210,16 @@ namespace eCAL
       RemServiceDescription(m_client_info_map, sample_.identifier, sample_.client.sname);
       break;
     case bct_reg_publisher:
-      ApplyTopicDescription(m_publisher_info_map, sample_.identifier, sample_.topic.tname, sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, true));
+      ApplyTopicDescription(m_publisher_info_map, m_publisher_callback_map, sample_.identifier, sample_.topic.tname, sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, true));
       break;
     case bct_unreg_publisher:
-      RemTopicDescription(m_publisher_info_map, sample_.identifier, sample_.topic.tname);
+      RemTopicDescription(m_publisher_info_map, m_publisher_callback_map, sample_.identifier, sample_.topic.tname);
       break;
     case bct_reg_subscriber:
-      ApplyTopicDescription(m_subscriber_info_map, sample_.identifier, sample_.topic.tname, sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, false));
+      ApplyTopicDescription(m_subscriber_info_map, m_subscriber_callback_map, sample_.identifier, sample_.topic.tname, sample_.topic.tdatatype, GetDataTypeInfoQuality(sample_.topic.tdatatype, false));
       break;
     case bct_unreg_subscriber:
-      RemTopicDescription(m_subscriber_info_map, sample_.identifier, sample_.topic.tname);
+      RemTopicDescription(m_subscriber_info_map, m_subscriber_callback_map, sample_.identifier, sample_.topic.tname);
       break;
     default:
     {
@@ -230,6 +230,7 @@ namespace eCAL
   }
 
   void CDescGate::ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
+                                        const STopicIdCallbackMap& topic_callback_map_,
                                         const Registration::SampleIdentifier& topic_id_,
                                         const std::string& topic_name_,
                                         const SDataTypeInformation& topic_info_,
@@ -241,14 +242,20 @@ namespace eCAL
     topic_quality_info.info    = topic_info_;
     topic_quality_info.quality = topic_quality_;
 
-    const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-    const auto iter = topic_info_map_.id_map.find(topic_info_key);
-    topic_info_map_.id_map[topic_info_key] = topic_quality_info;
-
-    if (iter == topic_info_map_.id_map.end())
+    // update topic info
+    bool new_topic_info(false);
     {
-      // notify publisher / subscriber registration callbacks about new entity
-      for (const auto& callback_iter : topic_info_map_.cb_map)
+      const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
+      const auto iter = topic_info_map_.map.find(topic_info_key);
+      new_topic_info = iter == topic_info_map_.map.end();
+      topic_info_map_.map[topic_info_key] = topic_quality_info;
+    }
+
+    // notify publisher / subscriber registration callbacks about new entity
+    if(new_topic_info)
+    {
+      const std::unique_lock<std::mutex> lock(topic_callback_map_.mtx);
+      for (const auto& callback_iter : topic_callback_map_.map)
       {
         if (callback_iter.second)
         {
@@ -259,16 +266,24 @@ namespace eCAL
   }
 
   void CDescGate::RemTopicDescription(SQualityTopicIdMap& topic_info_map_,
+                                      const STopicIdCallbackMap& topic_callback_map_,
                                       const Registration::SampleIdentifier& topic_id_,
                                       const std::string& topic_name_)
   {
     const auto topic_info_key = Registration::STopicId{ ConvertToEntityId(topic_id_), topic_name_ };
 
-    const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-    if (topic_info_map_.id_map.erase(topic_info_key) > 0)
+    // delete topic info
+    bool deleted_topic_info(false);
     {
-      // notify publisher / subscriber registration callbacks about deleted entity
-      for (const auto& callback_iter : topic_info_map_.cb_map)
+      const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
+      deleted_topic_info = topic_info_map_.map.erase(topic_info_key) > 0;
+    }
+
+    // notify publisher / subscriber registration callbacks about deleted entity
+    if (deleted_topic_info)
+    {
+      const std::unique_lock<std::mutex> lock(topic_callback_map_.mtx);
+      for (const auto& callback_iter : topic_callback_map_.map)
       {
         if (callback_iter.second)
         {

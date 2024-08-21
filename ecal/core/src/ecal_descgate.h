@@ -75,12 +75,17 @@ namespace eCAL
 
   protected:
     using QualityTopicIdMap  = std::map<Registration::STopicId, Registration::SQualityTopicInfo>;
-    using TopicIdCallbackMap = std::map<Registration::CallbackToken, Registration::TopicIDCallbackT>;
     struct SQualityTopicIdMap
     {
       mutable std::mutex mtx;
-      QualityTopicIdMap  id_map;
-      TopicIdCallbackMap cb_map;
+      QualityTopicIdMap  map;
+    };
+
+    using TopicIdCallbackMap = std::map<Registration::CallbackToken, Registration::TopicIDCallbackT>;
+    struct STopicIdCallbackMap
+    {
+      mutable std::mutex mtx;
+      TopicIdCallbackMap map;
     };
 
     using QualityServiceIdMap = std::map<Registration::SServiceId, Registration::SQualityServiceInfo>;
@@ -97,12 +102,14 @@ namespace eCAL
     static bool                               GetService   (const Registration::SServiceId& id_, const SQualityServiceIdMap& service_method_info_map_, Registration::SQualityServiceInfo& service_method_info_);
 
     static void ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
+                                      const STopicIdCallbackMap& topic_callback_map_, 
                                       const Registration::SampleIdentifier& topic_id_,
                                       const std::string& topic_name_,
                                       const SDataTypeInformation& topic_info_,
                                       Registration::DescQualityFlags topic_quality_);
 
     static void RemTopicDescription(SQualityTopicIdMap& topic_info_map_,
+                                    const STopicIdCallbackMap& topic_callback_map_,
                                     const Registration::SampleIdentifier& topic_id_,
                                     const std::string& topic_name_);
 
@@ -123,7 +130,10 @@ namespace eCAL
       
     // internal quality topic info publisher/subscriber maps
     SQualityTopicIdMap   m_publisher_info_map;
+    STopicIdCallbackMap  m_publisher_callback_map;
+
     SQualityTopicIdMap   m_subscriber_info_map;
+    STopicIdCallbackMap  m_subscriber_callback_map;
 
     // internal quality service info service/client maps
     SQualityServiceIdMap m_service_info_map;
