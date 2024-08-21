@@ -32,7 +32,7 @@ const int publisher_type_encoding_size_bytes   (10*1024);
 const int publisher_type_descriptor_size_bytes (10*1024);
 
 const int in_between_sleep_sec                 (5);
-const int final_sleep_sec                      (0);
+const int final_sleep_sec                      (5);
 
 std::string GenerateSizedString(const std::string& name, size_t totalSize)
 {
@@ -62,8 +62,25 @@ int main(int argc, char** argv)
   configuration.registration.layer.udp.enable = false;
   eCAL::Initialize(configuration, "massive_pub_sub");
 
-  eCAL::Util::EnableLoopback(true);
-
+  // publisher regsitration event callback
+  size_t num_created_publisher(0);
+  size_t num_deleted_publisher(0);
+  eCAL::Registration::RegisterPublisherEventCallback(
+    [&](const eCAL::Registration::STopicId& id_, eCAL::Registration::RegistrationEventType event_type_)
+    {
+      switch (event_type_)
+      {
+      case eCAL::Registration::RegistrationEventType::new_entity:
+        num_created_publisher++;
+        //std::cout << "Publisher created" << std::endl;
+        break;
+      case eCAL::Registration::RegistrationEventType::deleted_entity:
+        num_deleted_publisher++;
+        //std::cout << "Publisher deleted" << std::endl;
+        break;
+      }
+    }
+  );
   // create subscriber
   std::vector<eCAL::CSubscriber> vector_of_subscriber;
   std::cout << "Subscriber creation started. (" << subscriber_number << ")" << std::endl;
@@ -173,6 +190,12 @@ int main(int argc, char** argv)
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
     std::cout << num_pub << ")" << std::endl << "Time taken to get publisher information: " << duration << " milliseconds" << std::endl << std::endl;
   }
+
+  // check creation / deletion events
+  std::cout << "Number of publisher creation events " << num_created_publisher << std::endl;
+  vector_of_publisher.clear();
+  std::this_thread::sleep_for(std::chrono::seconds(5));
+  std::cout << "Number of publisher deletion events " << num_deleted_publisher << std::endl;
 
   // sleep for a few seconds
   std::this_thread::sleep_for(std::chrono::seconds(final_sleep_sec));

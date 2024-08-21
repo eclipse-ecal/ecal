@@ -242,11 +242,13 @@ namespace eCAL
     topic_quality_info.quality = topic_quality_;
 
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
+    const auto iter = topic_info_map_.id_map.find(topic_info_key);
     topic_info_map_.id_map[topic_info_key] = topic_quality_info;
 
-    // notify registered callbacks
+    if (iter == topic_info_map_.id_map.end())
     {
-      for (const auto& callback_iter: topic_info_map_.cb_map)
+      // notify publisher / subscriber registration callbacks about new entity
+      for (const auto& callback_iter : topic_info_map_.cb_map)
       {
         if (callback_iter.second)
         {
@@ -260,8 +262,20 @@ namespace eCAL
                                       const Registration::SampleIdentifier& topic_id_,
                                       const std::string& topic_name_)
   {
+    const auto topic_info_key = Registration::STopicId{ ConvertToEntityId(topic_id_), topic_name_ };
+
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-    topic_info_map_.id_map.erase(Registration::STopicId{ ConvertToEntityId(topic_id_) , topic_name_});
+    if (topic_info_map_.id_map.erase(topic_info_key) > 0)
+    {
+      // notify publisher / subscriber registration callbacks about deleted entity
+      for (const auto& callback_iter : topic_info_map_.cb_map)
+      {
+        if (callback_iter.second)
+        {
+          callback_iter.second(topic_info_key, Registration::RegistrationEventType::deleted_entity);
+        }
+      }
+    }
   }
 
   void CDescGate::ApplyServiceDescription(SQualityServiceIdMap& service_method_info_map_,

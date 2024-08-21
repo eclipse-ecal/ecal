@@ -29,6 +29,7 @@
 
 #include "serialization/ecal_struct_sample_registration.h"
 
+#include <atomic>
 #include <chrono>
 #include <map>
 #include <mutex>
