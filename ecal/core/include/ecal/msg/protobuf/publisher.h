@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -167,8 +167,7 @@ namespace eCAL
       size_t Send(const T& msg_, long long time_, long long acknowledge_timeout_ms_)
       {
         CPayload payload{ msg_ };
-        eCAL::CPublisher::Send(payload, time_, acknowledge_timeout_ms_);
-        return(0);
+        return eCAL::CPublisher::Send(payload, time_, acknowledge_timeout_ms_);
       }
 
 
