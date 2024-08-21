@@ -66,9 +66,9 @@ namespace eCAL
 
   Registration::CallbackToken CDescGate::RegisterPublisherEventCallback(const Registration::TopicIDCallbackT& callback_)
   {
-    std::lock_guard<std::mutex> lock(m_publisher_info_map.mtx);
+    const std::lock_guard<std::mutex> lock(m_publisher_info_map.mtx);
 
-    Registration::CallbackToken new_token = CreateToken();
+    const Registration::CallbackToken new_token = CreateToken();
     m_publisher_info_map.cb_map[new_token] = callback_;
 
     return new_token;
@@ -76,7 +76,7 @@ namespace eCAL
 
   void CDescGate::UnregisterPublisherEventCallback(Registration::CallbackToken token_)
   {
-    std::lock_guard<std::mutex> lock(m_publisher_info_map.mtx);
+    const std::lock_guard<std::mutex> lock(m_publisher_info_map.mtx);
     m_publisher_info_map.cb_map.erase(token_);
   }
 
@@ -325,8 +325,8 @@ namespace eCAL
 
   Registration::CallbackToken CDescGate::CreateToken()
   {
-    std::lock_guard<std::mutex> lock(m_callback_token_mtx);
-    Registration::CallbackToken token = ++m_callback_token;
+    const std::lock_guard<std::mutex> lock(m_callback_token_mtx);
+    const Registration::CallbackToken token = ++m_callback_token;
     return token;
   }
 }
