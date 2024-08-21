@@ -49,6 +49,8 @@ namespace eCAL
     // get publisher information
     std::set<Registration::STopicId> GetPublisherIDs() const;
     bool GetPublisherInfo(const Registration::STopicId& id_, Registration::SQualityTopicInfo& topic_info_) const;
+    Registration::CallbackToken RegisterPublisherEventCallback(const Registration::TopicIDCallbackT& callback_);
+    void UnregisterPublisherEventCallback(Registration::CallbackToken token_);
 
     // get subscriber information
     std::set<Registration::STopicId> GetSubscriberIDs() const;
@@ -71,18 +73,20 @@ namespace eCAL
     CDescGate& operator=(CDescGate&&) = delete;
 
   protected:
-    using QualityTopicIdMap = std::map<Registration::STopicId, Registration::SQualityTopicInfo>;
+    using QualityTopicIdMap  = std::map<Registration::STopicId, Registration::SQualityTopicInfo>;
+    using TopicIdCallbackMap = std::map<Registration::CallbackToken, Registration::TopicIDCallbackT>;
     struct SQualityTopicIdMap
     {
       mutable std::mutex mtx;
-      QualityTopicIdMap  map;
+      QualityTopicIdMap  id_map;
+      TopicIdCallbackMap cb_map;
     };
 
     using QualityServiceIdMap = std::map<Registration::SServiceId, Registration::SQualityServiceInfo>;
     struct SQualityServiceIdMap
     {
       mutable std::mutex  mtx;
-      QualityServiceIdMap map;
+      QualityServiceIdMap id_map;
     };
 
     static std::set<Registration::STopicId>   GetTopicIDs(const SQualityTopicIdMap& topic_info_map_);
@@ -114,6 +118,8 @@ namespace eCAL
                                       const Registration::SampleIdentifier& service_id_,
                                       const std::string& service_name_);
 
+    Registration::CallbackToken CreateToken();
+      
     // internal quality topic info publisher/subscriber maps
     SQualityTopicIdMap   m_publisher_info_map;
     SQualityTopicIdMap   m_subscriber_info_map;
@@ -121,5 +127,8 @@ namespace eCAL
     // internal quality service info service/client maps
     SQualityServiceIdMap m_service_info_map;
     SQualityServiceIdMap m_client_info_map;
+
+    mutable std::mutex                       m_callback_token_mtx;
+    std::atomic<Registration::CallbackToken> m_callback_token{ 0 };
   };
 }

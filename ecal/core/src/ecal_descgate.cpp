@@ -64,6 +64,22 @@ namespace eCAL
     return GetTopic(id_, m_publisher_info_map, topic_info_);
   }
 
+  Registration::CallbackToken CDescGate::RegisterPublisherEventCallback(const Registration::TopicIDCallbackT& callback_)
+  {
+    std::lock_guard<std::mutex> lock(m_publisher_info_map.mtx);
+
+    Registration::CallbackToken new_token = CreateToken();
+    m_publisher_info_map.cb_map[new_token] = callback_;
+
+    return new_token;
+  }
+
+  void CDescGate::UnregisterPublisherEventCallback(Registration::CallbackToken token_)
+  {
+    std::lock_guard<std::mutex> lock(m_publisher_info_map.mtx);
+    m_publisher_info_map.cb_map.erase(token_);
+  }
+
   std::set<Registration::STopicId> CDescGate::GetSubscriberIDs() const
   {
     return GetTopicIDs(m_subscriber_info_map);
@@ -99,7 +115,7 @@ namespace eCAL
     std::set<Registration::STopicId> topic_id_set;
 
     const std::lock_guard<std::mutex> lock(topic_info_map_.mtx);
-    for (const auto& topic_map_it : topic_info_map_.map)
+    for (const auto& topic_map_it : topic_info_map_.id_map)
     {
       topic_id_set.insert(topic_map_it.first);
     }
@@ -109,8 +125,8 @@ namespace eCAL
   bool CDescGate::GetTopic(const Registration::STopicId& id_, const SQualityTopicIdMap& topic_info_map_, Registration::SQualityTopicInfo& topic_info_)
   {
     const std::lock_guard<std::mutex> lock(topic_info_map_.mtx);
-    auto iter = topic_info_map_.map.find(id_);
-    if (iter == topic_info_map_.map.end())
+    auto iter = topic_info_map_.id_map.find(id_);
+    if (iter == topic_info_map_.id_map.end())
     {
       return false;
     }
@@ -126,7 +142,7 @@ namespace eCAL
     std::set<Registration::SServiceId> service_id_set;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-    for (const auto& service_method_info_map_it : service_method_info_map_.map)
+    for (const auto& service_method_info_map_it : service_method_info_map_.id_map)
     {
       service_id_set.insert(service_method_info_map_it.first);
     }
@@ -136,8 +152,8 @@ namespace eCAL
   bool CDescGate::GetService(const Registration::SServiceId& id_, const SQualityServiceIdMap& service_method_info_map_, Registration::SQualityServiceInfo& service_method_info_)
   {
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-    auto iter = service_method_info_map_.map.find(id_);
-    if (iter == service_method_info_map_.map.end())
+    auto iter = service_method_info_map_.id_map.find(id_);
+    if (iter == service_method_info_map_.id_map.end())
     {
       return false;
     }
@@ -226,7 +242,18 @@ namespace eCAL
     topic_quality_info.quality = topic_quality_;
 
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-    topic_info_map_.map[topic_info_key] = topic_quality_info;
+    topic_info_map_.id_map[topic_info_key] = topic_quality_info;
+
+    // notify registered callbacks
+    {
+      for (const auto& callback_iter: topic_info_map_.cb_map)
+      {
+        if (callback_iter.second)
+        {
+          callback_iter.second(topic_info_key, Registration::RegistrationEventType::new_entity);
+        }
+      }
+    }
   }
 
   void CDescGate::RemTopicDescription(SQualityTopicIdMap& topic_info_map_,
@@ -234,7 +261,7 @@ namespace eCAL
                                       const std::string& topic_name_)
   {
     const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-    topic_info_map_.map.erase(Registration::STopicId{ ConvertToEntityId(topic_id_) , topic_name_});
+    topic_info_map_.id_map.erase(Registration::STopicId{ ConvertToEntityId(topic_id_) , topic_name_});
   }
 
   void CDescGate::ApplyServiceDescription(SQualityServiceIdMap& service_method_info_map_,
@@ -255,7 +282,7 @@ namespace eCAL
     service_quality_info.response_quality   = response_type_quality_;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-    service_method_info_map_.map[service_method_info_key] = service_quality_info;
+    service_method_info_map_.id_map[service_method_info_key] = service_quality_info;
   }
 
   void CDescGate::RemServiceDescription(SQualityServiceIdMap& service_method_info_map_,
@@ -266,7 +293,7 @@ namespace eCAL
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
 
-    for (auto&& service_it : service_method_info_map_.map)
+    for (auto&& service_it : service_method_info_map_.id_map)
     {
       const auto service_method_info_key = service_it.first;
       if ((service_method_info_key.service_name == service_name_)
@@ -278,7 +305,14 @@ namespace eCAL
 
     for (const auto& service_method_info_key : service_method_info_keys_to_remove)
     {
-      service_method_info_map_.map.erase(service_method_info_key);
+      service_method_info_map_.id_map.erase(service_method_info_key);
     }
+  }
+
+  Registration::CallbackToken CDescGate::CreateToken()
+  {
+    std::lock_guard<std::mutex> lock(m_callback_token_mtx);
+    Registration::CallbackToken token = ++m_callback_token;
+    return token;
   }
 }

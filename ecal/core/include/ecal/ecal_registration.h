@@ -28,6 +28,7 @@
 #include <ecal/ecal_types.h>
 
 #include <cstdint>
+#include <functional>
 #include <map>
 #include <set>
 #include <string>
@@ -94,6 +95,17 @@ namespace eCAL
     using QualityServiceInfoMultimap = std::multimap<SServiceMethod, SQualityServiceInfo>;
     using SQualityServiceInfoSet     = std::set<SQualityServiceInfo>;
 
+    using CallbackToken     = std::size_t;
+
+    enum class RegistrationEventType
+    {
+      new_entity,     //!< Represents a new entity registration
+      deleted_entity  //!< Represents a deletion of an entity
+    };
+
+    using TopicIDCallbackT   = std::function<void(const STopicId&,   RegistrationEventType)>;
+    using ServiceIDCallbackT = std::function<void(const SServiceId&, RegistrationEventType)>;
+
     /**
      * @brief Get complete snapshot of all known publisher.
      *
@@ -107,6 +119,22 @@ namespace eCAL
      * @return True if information could be queried.
     **/
     ECAL_API bool GetPublisherInfo(const STopicId& id_, SQualityTopicInfo& topic_info_);
+
+    /**
+     * @brief Register a callback function to be notified when a new publisher becomes available.
+     *
+     * @param callback_        The callback function to be called with the STopicId of the new publisher.
+     *
+     * @return CallbackToken   A token that can be used to unregister the callback.
+     */
+    ECAL_API CallbackToken RegisterPublisherEventCallback(const TopicIDCallbackT& callback_);
+
+    /**
+     * @brief Unregister the publisher callback using the provided token.
+     *
+     * @param token  The token returned by RegisterPublisherCallback.
+    */
+    ECAL_API void UnregisterPublisherEventCallback(CallbackToken token_);
 
     /**
      * @brief Get complete snapshot of all known subscriber.
