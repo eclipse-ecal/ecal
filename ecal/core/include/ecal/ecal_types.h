@@ -25,6 +25,7 @@
 #pragma once
 #include <string>
 #include <tuple>
+#include <iostream>
 
 namespace eCAL
 {
@@ -87,27 +88,38 @@ namespace eCAL
   {
     struct SEntityId
     {
-      std::string  entity_id;         // unique id within that process
+      std::string  entity_id;         // unique id within that process (it should already be unique within the whole system)
       int32_t      process_id = 0;    // process id which produced the sample
       std::string  host_name;         // host which produced the sample
 
       bool operator==(const SEntityId& other) const {
-        return entity_id  == other.entity_id  &&
-               process_id == other.process_id &&
-               host_name  == other.host_name;
+        return entity_id == other.entity_id;
       }
 
       bool operator<(const SEntityId& other) const
       {
-        return std::tie(process_id, entity_id, host_name)
-          < std::tie(other.process_id, other.entity_id, other.host_name);
+        return entity_id < other.entity_id;
       }
     };
+
+    // Overload the << operator for SEntityId
+    inline std::ostream& operator<<(std::ostream& os, const SEntityId& id)
+    {
+      os << "SEntityId(entity_id: " << id.entity_id
+        << ", process_id: " << id.process_id
+        << ", host_name: " << id.host_name << ")";
+      return os;
+    }
 
     struct STopicId
     {
       SEntityId    topic_id;
       std::string  topic_name;
+
+      bool operator==(const STopicId& other) const
+      {
+        return topic_id == other.topic_id && topic_name == other.topic_name;
+      }
 
       bool operator<(const STopicId& other) const
       {
@@ -115,11 +127,23 @@ namespace eCAL
       }
     };
 
+    inline std::ostream& operator<<(std::ostream& os, const STopicId& id)
+    {
+      os << "STopicId(topic_id: " << id.topic_id
+        << ", topic_name: " << id.topic_name << ")";
+      return os;
+    }
+
     struct SServiceId
     {
       SEntityId    service_id;
       std::string  service_name;
       std::string  method_name;
+
+      bool operator==(const SServiceId& other) const
+      {
+        return service_id == other.service_id && service_name == other.service_name && method_name == other.method_name;
+      }
 
       bool operator<(const SServiceId& other) const
       {

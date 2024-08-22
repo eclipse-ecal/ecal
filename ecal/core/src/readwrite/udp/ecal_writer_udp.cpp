@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal_log.h>
+#include <ecal/ecal_process.h>
 
 #include "ecal_writer_udp.h"
 #include "io/udp/ecal_udp_configurations.h"
@@ -77,10 +78,11 @@ namespace eCAL
     Payload::Sample ecal_sample;
     ecal_sample.cmd_type = eCmdType::bct_set_sample;
 
-    auto& ecal_sample_topic = ecal_sample.topic;
-    ecal_sample_topic.hname = m_host_name;
-    ecal_sample_topic.tname = m_topic_name;
-    ecal_sample_topic.tid   = m_topic_id;
+    // fill sample info
+    auto& ecal_sample_topic_info = ecal_sample.topic_info;
+    ecal_sample_topic_info.hname = m_host_name;
+    ecal_sample_topic_info.tname = m_topic_name;
+    ecal_sample_topic_info.tid   = m_topic_id;
 
     // append content
     auto& ecal_sample_content = ecal_sample.content;
@@ -100,14 +102,14 @@ namespace eCAL
       {
         if (m_sample_sender_loopback)
         {
-          sent = m_sample_sender_loopback->Send(ecal_sample.topic.tname, m_sample_buffer);
+          sent = m_sample_sender_loopback->Send(ecal_sample.topic_info.tname, m_sample_buffer);
         }
       }
       else
       {
         if (m_sample_sender_no_loopback)
         {
-          sent = m_sample_sender_no_loopback->Send(ecal_sample.topic.tname, m_sample_buffer);
+          sent = m_sample_sender_no_loopback->Send(ecal_sample.topic_info.tname, m_sample_buffer);
         }
       }
     }

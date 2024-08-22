@@ -73,11 +73,11 @@ namespace
     // topic information
     pb_sample_.has_topic = true;
     // hname
-    eCAL::nanopb::encode_string(pb_sample_.topic.hname, payload_.topic.hname);
+    eCAL::nanopb::encode_string(pb_sample_.topic.hname, payload_.topic_info.hname);
     // tid
-    eCAL::nanopb::encode_string(pb_sample_.topic.tid, payload_.topic.tid);
+    eCAL::nanopb::encode_string(pb_sample_.topic.tid, payload_.topic_info.tid);
     // tname
-    eCAL::nanopb::encode_string(pb_sample_.topic.tname, payload_.topic.tname);
+    eCAL::nanopb::encode_string(pb_sample_.topic.tname, payload_.topic_info.tname);
 
     // topic content
     pb_sample_.has_content = true;
@@ -148,11 +148,11 @@ namespace
     // assign decoder
     ///////////////////////////////////////////////
     // hname
-    eCAL::nanopb::decode_string(pb_sample.topic.hname, payload_.topic.hname);
+    eCAL::nanopb::decode_string(pb_sample.topic.hname, payload_.topic_info.hname);
     // tid
-    eCAL::nanopb::decode_string(pb_sample.topic.tid, payload_.topic.tid);
+    eCAL::nanopb::decode_string(pb_sample.topic.tid, payload_.topic_info.tid);
     // tname
-    eCAL::nanopb::decode_string(pb_sample.topic.tname, payload_.topic.tname);
+    eCAL::nanopb::decode_string(pb_sample.topic.tname, payload_.topic_info.tname);
     // topic content payload
     payload_.content.payload.type = eCAL::Payload::pl_vec;
     eCAL::nanopb::decode_bytes(pb_sample.content.payload, payload_.content.payload.vec);

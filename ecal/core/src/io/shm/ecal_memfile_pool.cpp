@@ -96,7 +96,7 @@ namespace eCAL
     return true;
   }
 
-  bool CMemFileObserver::Start(const std::string& topic_name_, const std::string& topic_id_, const int timeout_, const MemFileDataCallbackT& callback_)
+  bool CMemFileObserver::Start(const int timeout_, const MemFileDataCallbackT& callback_)
   {
     if (!m_created)     return false;
     if (m_is_observing) return false;
@@ -108,11 +108,11 @@ namespace eCAL
     m_is_observing = true;
 
     // start observer thread
-    m_thread = std::thread(&CMemFileObserver::Observe, this, topic_name_, topic_id_, timeout_);
+    m_thread = std::thread(&CMemFileObserver::Observe, this, timeout_);
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug2, std::string("CMemFileObserver started (" + topic_name_ + ", " + topic_id_ + ")"));
+    Logging::Log(log_level_debug2, std::string("CMemFileObserver started."));
 #endif
 
     return true;
@@ -147,7 +147,7 @@ namespace eCAL
     return true;
   }
 
-  void CMemFileObserver::Observe(const std::string& topic_name_, const std::string& topic_id_, const int timeout_)
+  void CMemFileObserver::Observe(const int timeout_)
   {
     // internal clock sample update checking
     uint64_t last_sample_clock(0);
@@ -223,13 +223,13 @@ namespace eCAL
                     // calculate user payload address
                     data_buf = static_cast<const char*>(buf) + mfile_hdr.hdr_size;
                     // call user callback function
-                    m_data_callback(topic_name_, topic_id_, data_buf, mfile_hdr.data_size, (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
+                    m_data_callback(data_buf, mfile_hdr.data_size, (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
                   }
                 }
                 else
                 {
                   // call user callback function
-                  m_data_callback(topic_name_, topic_id_, data_buf, mfile_hdr.data_size, (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
+                  m_data_callback(data_buf, mfile_hdr.data_size, (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
                 }
               }
             }
@@ -264,7 +264,7 @@ namespace eCAL
             if (post_process_buffer)
             {
               // add sample to data reader (and call user callback function)
-              if (m_data_callback) m_data_callback(topic_name_, topic_id_, receive_buffer.data(), receive_buffer.size(), (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
+              if (m_data_callback) m_data_callback(receive_buffer.data(), receive_buffer.size(), (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
             }
 
             // send acknowledge event
@@ -365,7 +365,7 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CMemFileThreadPool::ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, const std::string& topic_name_, const std::string& topic_id_, int timeout_observation_ms, const MemFileDataCallbackT& callback_)
+  bool CMemFileThreadPool::ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, int timeout_observation_ms, const MemFileDataCallbackT& callback_)
   {
     if(!m_created)            return(false);
     if(memfile_name_.empty()) return(false);
@@ -388,7 +388,7 @@ namespace eCAL
       else
       {
         observer->Stop();
-        observer->Start(topic_name_, topic_id_, timeout_observation_ms, callback_);
+        observer->Start(timeout_observation_ms, callback_);
       }
 
       return(true);
@@ -398,7 +398,7 @@ namespace eCAL
     {
       auto observer = std::make_shared<CMemFileObserver>();
       observer->Create(memfile_name_, memfile_event_);
-      observer->Start(topic_name_, topic_id_, timeout_observation_ms, callback_);
+      observer->Start(timeout_observation_ms, callback_);
       m_observer_pool[memfile_name_] = observer;
 #ifndef NDEBUG
       // log it
