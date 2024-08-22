@@ -50,8 +50,8 @@ namespace eCAL
     // get publisher information
     std::set<Registration::STopicId> GetPublisherIDs() const;
     bool GetPublisherInfo(const Registration::STopicId& id_, Registration::SQualityTopicInfo& topic_info_) const;
-    Registration::CallbackToken RegisterPublisherEventCallback(const Registration::TopicIDCallbackT& callback_);
-    void UnregisterPublisherEventCallback(Registration::CallbackToken token_);
+    Registration::CallbackToken AddPublisherEventCallback(const Registration::TopicIDCallbackT& callback_);
+    void RemPublisherEventCallback(Registration::CallbackToken token_);
 
     // get subscriber information
     std::set<Registration::STopicId> GetSubscriberIDs() const;

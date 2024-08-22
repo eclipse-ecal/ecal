@@ -64,7 +64,7 @@ namespace eCAL
     return GetTopic(id_, m_publisher_info_map, topic_info_);
   }
 
-  Registration::CallbackToken CDescGate::RegisterPublisherEventCallback(const Registration::TopicIDCallbackT& callback_)
+  Registration::CallbackToken CDescGate::AddPublisherEventCallback(const Registration::TopicIDCallbackT& callback_)
   {
     const std::lock_guard<std::mutex> lock(m_publisher_callback_map.mtx);
 
@@ -74,7 +74,7 @@ namespace eCAL
     return new_token;
   }
 
-  void CDescGate::UnregisterPublisherEventCallback(Registration::CallbackToken token_)
+  void CDescGate::RemPublisherEventCallback(Registration::CallbackToken token_)
   {
     const std::lock_guard<std::mutex> lock(m_publisher_callback_map.mtx);
     m_publisher_callback_map.map.erase(token_);
@@ -340,8 +340,9 @@ namespace eCAL
 
   Registration::CallbackToken CDescGate::CreateToken()
   {
-    const std::lock_guard<std::mutex> lock(m_callback_token_mtx);
-    const Registration::CallbackToken token = ++m_callback_token;
-    return token;
+    // Atomically increment m_callback_token using fetch_add to ensure thread safety.
+    // fetch_add returns the value before increment, so we add 1 to get the new token value.
+    // memory_order_relaxed is used to optimize performance without additional synchronization.
+    return m_callback_token.fetch_add(1, std::memory_order_relaxed) + 1;
   }
 }

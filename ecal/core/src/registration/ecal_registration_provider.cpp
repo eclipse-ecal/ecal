@@ -167,15 +167,15 @@ namespace eCAL
       if (g_clientgate() != nullptr) g_clientgate()->GetRegistrations(sample_list);
 #endif
 
-      // send collected registration sample list
-      m_reg_sender->SendSampleList(sample_list);
-
-      // send asynchronously applied samples at the end of the registration loop
+      // append applied samples list to sample list
+      if (!m_applied_sample_list.samples.empty())
       {
         const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
-        m_reg_sender->SendSampleList(m_applied_sample_list);
-        m_applied_sample_list.samples.clear();
+        sample_list.samples.splice(sample_list.samples.end(), m_applied_sample_list.samples);
       }
+
+      // send collected registration sample list
+      m_reg_sender->SendSampleList(sample_list);
     }
   }
 }

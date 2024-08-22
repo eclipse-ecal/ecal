@@ -56,18 +56,21 @@ std::string GenerateSizedString(const std::string& name, size_t totalSize)
 
 int main(int argc, char** argv)
 {
-  // initialize eCAL API with shm monitoring
+  // set eCAL configuration
   eCAL::Configuration configuration;
-  configuration.registration.layer.shm.enable = true;
-  configuration.registration.layer.udp.enable = false;
+  configuration.registration.registration_timeout = 10000;    // registration timeout == 10 sec
+  configuration.registration.layer.shm.enable     = true;     // switch shm registration on and
+  configuration.registration.layer.udp.enable     = false;    // switch udp registration off
+
+  // initialize eCAL API
   eCAL::Initialize(configuration, "massive_pub_sub");
 
-  // publisher regsitration event callback
+  // publisher registration event callback
   size_t created_publisher_num(0);
   size_t deleted_publisher_num(0);
   std::set<eCAL::Registration::STopicId> created_publisher_ids;
   std::set<eCAL::Registration::STopicId> deleted_publisher_ids;
-  eCAL::Registration::RegisterPublisherEventCallback(
+  eCAL::Registration::AddPublisherEventCallback(
     [&](const eCAL::Registration::STopicId& id_, eCAL::Registration::RegistrationEventType event_type_)
     {
       switch (event_type_)
@@ -85,6 +88,7 @@ int main(int argc, char** argv)
       }
     }
   );
+
   // create subscriber
   std::vector<eCAL::CSubscriber> vector_of_subscriber;
   std::cout << "Subscriber creation started. (" << subscriber_number << ")" << std::endl;
@@ -208,13 +212,15 @@ int main(int argc, char** argv)
   std::cout << "Deletion done." << std::endl;
   std::cout << std::endl;
 
+  // sleep for a few seconds
+  std::this_thread::sleep_for(std::chrono::seconds(in_between_sleep_sec));
+
   // check deletion events
-  std::this_thread::sleep_for(std::chrono::seconds(5));
   std::cout << "Number of publisher deletion events   " << deleted_publisher_num << std::endl;
   std::cout << "Size   of publisher deletion id set   " << deleted_publisher_ids.size() << std::endl;
   //std::cout << "Publisher deleteion id sets are equal " << (publisher_ids == deleted_publisher_ids) << std::endl;
 
-  // sleep for a few seconds
+  // sleep final seconds
   std::this_thread::sleep_for(std::chrono::seconds(final_sleep_sec));
 
   // finalize eCAL API

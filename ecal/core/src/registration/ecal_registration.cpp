@@ -173,16 +173,16 @@ namespace eCAL
       return g_descgate()->GetPublisherInfo(id_, topic_info_);
     }
 
-    ECAL_API CallbackToken RegisterPublisherEventCallback(const TopicIDCallbackT& callback_)
+    ECAL_API CallbackToken AddPublisherEventCallback(const TopicIDCallbackT& callback_)
     {
       if (g_descgate() == nullptr) return CallbackToken();
-      return g_descgate()->RegisterPublisherEventCallback(callback_);
+      return g_descgate()->AddPublisherEventCallback(callback_);
     }
 
-    ECAL_API void UnregisterPublisherEventCallback(CallbackToken token_)
+    ECAL_API void RemPublisherEventCallback(CallbackToken token_)
     {
       if (g_descgate() == nullptr) return;
-      return g_descgate()->UnregisterPublisherEventCallback(token_);
+      return g_descgate()->RemPublisherEventCallback(token_);
     }
 
     std::set<STopicId> GetSubscriberIDs()

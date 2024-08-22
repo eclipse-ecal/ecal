@@ -54,13 +54,13 @@ bool eCAL::CRegistrationSenderSHM::SendSampleList(const Registration::SampleList
 {
   bool return_value{true};
   // serialize whole sample list
-  std::vector<char> sample_list_buffer;
-  if (SerializeToBuffer(sample_list, sample_list_buffer))
+  m_sample_list_buffer.clear();
+  if (SerializeToBuffer(sample_list, m_sample_list_buffer))
   {
-    if (!sample_list_buffer.empty())
+    if (!m_sample_list_buffer.empty())
     {
       // broadcast sample list over shm
-      return_value &= m_memfile_broadcast_writer.Write(sample_list_buffer.data(), sample_list_buffer.size());
+      return_value &= m_memfile_broadcast_writer.Write(m_sample_list_buffer.data(), m_sample_list_buffer.size());
     }
   }
   return return_value;
