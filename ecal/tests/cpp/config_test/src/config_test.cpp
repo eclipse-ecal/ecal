@@ -53,7 +53,6 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
   const int                 upd_snd_buff                = (5242880 + 1024);
 
   // Monitoring options
-  const unsigned int        mon_timeout                 = 6000U;
   const std::string         mon_filter_excl             = "_A.*";
   const eCAL_Logging_Filter mon_log_filter_con          = log_level_warning;
   
