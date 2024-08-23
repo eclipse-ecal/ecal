@@ -31,7 +31,6 @@
 #include <sstream>
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_con>
 #include <ecal/msg/protobuf/ecal_proto_hlp.h>
 #include <ecal/msg/publisher.h>
 #include <stdexcept>
