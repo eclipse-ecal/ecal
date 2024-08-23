@@ -256,7 +256,7 @@ protected:
     * @param topic_name_  Unique topic name.
     * @param config_      Optional configuration parameters.
     **/
-    CMessageSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = {}) : CSubscriber()
+    CMessageSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration()) : CSubscriber()
       , m_deserializer()
     {
       SDataTypeInformation topic_info = m_deserializer.GetDataTypeInformation();
