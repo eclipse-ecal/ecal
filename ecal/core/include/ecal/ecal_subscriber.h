@@ -97,7 +97,7 @@ namespace eCAL
      * @param data_type_info_  Topic data type information (encoding, type, descriptor).
      * @param config_          Optional configuration parameters.
     **/
-    ECAL_API CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_ = {});
+    ECAL_API CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
 
     /**
      * @brief Constructor.
@@ -105,7 +105,7 @@ namespace eCAL
      * @param topic_name_      Unique topic name.
      * @param config_          Optional configuration parameters.
     **/
-    ECAL_API explicit CSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = {});
+    ECAL_API explicit CSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
 
     /**
      * @brief Destructor. 
@@ -141,7 +141,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_API bool Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_ = {});
+    ECAL_API bool Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
 
     /**
      * @brief Creates this object.
