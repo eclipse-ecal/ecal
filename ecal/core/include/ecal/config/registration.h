@@ -70,7 +70,7 @@ namespace eCAL
                                                                  false = local host only communication (Default: false) */
       bool                 loopback             { true };   //!< enable to receive udp messages on the same local machine (Default: true)
       std::string          host_group_name      { "" };     /*!< Common host group name that enables interprocess mechanisms across 
-                                                                 (virtual) host borders (e.g, Docker); by default equivalent to local host name (Default: CurrentHostName) */
+                                                                 (virtual) host borders (e.g, Docker); by default equivalent to local host name (Default: "") */
       Layer::Configuration layer;
     };
   }
