@@ -21,22 +21,37 @@
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_log.h>
 #include <ecal/ecal_log_level.h>
+#include <ecal/ecal_process.h>
 
 #include <gtest/gtest.h>
 
 #include <filesystem>
 #include <fstream>
 #include <cstdio>
+#include <thread>
+
+constexpr std::chrono::milliseconds UDP_WAIT_TIME(1);
+
+class CoutRedirect {
+public:
+    CoutRedirect(std::ostream& newStream) : originalBuffer(std::cout.rdbuf(newStream.rdbuf())) {}
+    ~CoutRedirect() { std::cout.rdbuf(originalBuffer); }
+
+private:
+    std::streambuf* originalBuffer;
+};
 
 TEST(logging_sinks /*unused*/, file_logging /*unused*/)
 {
   const std::string logging_path = "./";
-  const std::string unit_name = "logging_test";
-  const std::string log_message = "Logging test for file.";
-  auto& ecal_config = eCAL::GetConfiguration();
+  const std::string unit_name    = "file_logging_test";
+  const std::string log_message  = "Logging test for file.";
+  auto& ecal_config              = eCAL::GetConfiguration();
 
-  ecal_config.logging.sinks.file.enable = true;
-  ecal_config.logging.sinks.file.path = logging_path;
+  ecal_config.logging.sinks.udp.enable           = false;
+  ecal_config.logging.sinks.console.enable       = false;
+  ecal_config.logging.sinks.file.enable          = true;
+  ecal_config.logging.sinks.file.path            = logging_path;
   ecal_config.logging.sinks.file.filter_log_file = log_level_all;
 
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
@@ -70,4 +85,88 @@ TEST(logging_sinks /*unused*/, file_logging /*unused*/)
   logfile.close();
 
   if (!filepath.empty()) std::remove(filepath.c_str());
+}
+
+TEST(logging_sinks /*unused*/, udp_logging /*unused*/)
+{
+  const std::string logging_path = "./";
+  const std::string unit_name    = "udp_logging_test";
+  const std::string log_message  = "Logging test for udp.";
+  auto& ecal_config              = eCAL::GetConfiguration();
+
+  ecal_config.logging.sinks.file.enable        = false;
+  ecal_config.logging.sinks.console.enable     = false;
+  ecal_config.logging.sinks.udp.enable         = true;
+  ecal_config.logging.sinks.udp.filter_log_udp = log_level_all;
+
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+
+  eCAL::Logging::Log(log_message);
+
+  std::this_thread::sleep_for(UDP_WAIT_TIME);
+  
+  eCAL::Logging::SLogging log;
+  eCAL::Logging::GetLogging(log);
+
+  EXPECT_EQ(log.log_messages.size(), 1);
+  EXPECT_EQ(log.log_messages.front().hname, eCAL::Process::GetHostName());
+  EXPECT_EQ(log.log_messages.front().pid,   eCAL::Process::GetProcessID());
+  EXPECT_EQ(log.log_messages.front().uname, unit_name);
+  EXPECT_EQ(log.log_messages.front().level, log_level_info);
+  EXPECT_TRUE(log.log_messages.front().content.find(log_message) != std::string::npos);
+}
+
+TEST(logging_sinks /*unused*/, console_logging /*unused*/)
+{
+  const std::string logging_path = "./";
+  const std::string unit_name    = "udp_logging_test";
+  const std::string log_message  = "Logging test for udp.";
+  auto& ecal_config              = eCAL::GetConfiguration();
+
+  ecal_config.logging.sinks.file.enable            = false;
+  ecal_config.logging.sinks.udp.enable             = false;
+  ecal_config.logging.sinks.console.enable         = true;
+  ecal_config.logging.sinks.console.filter_log_con = log_level_all;
+
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+
+  {
+    std::stringstream ss;
+    CoutRedirect redirect(ss);
+    eCAL::Logging::Log(log_message);
+    std::string console_output = ss.str();
+    EXPECT_TRUE(console_output.find(log_message) != std::string::npos);
+  }
+}
+
+bool checkExpectedLogCount(eCAL::Logging::SLogging& log_, const size_t& expected_count_)
+{
+  std::this_thread::sleep_for(UDP_WAIT_TIME);
+
+  return eCAL::Logging::GetLogging(log_) == expected_count_;
+}
+
+TEST(logging_levels /*unused*/, set_level_test /*unused*/)
+{
+  const std::string logging_path = "./";
+  const std::string unit_name    = "udp_logging_test";
+  const std::string log_message  = "Logging test for udp.";
+  auto& ecal_config              = eCAL::GetConfiguration();
+
+  ecal_config.logging.sinks.file.enable        = false;
+  ecal_config.logging.sinks.console.enable     = false;
+  ecal_config.logging.sinks.udp.enable         = true;
+  ecal_config.logging.sinks.udp.filter_log_udp = log_level_warning;
+
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+
+  eCAL::Logging::SLogging log;
+  
+  // should not log
+  eCAL::Logging::Log(log_level_info, log_message);
+  EXPECT_TRUE(checkExpectedLogCount(log, 0));
+
+  // should log
+  eCAL::Logging::Log(log_level_warning, log_message);
+  EXPECT_TRUE(checkExpectedLogCount(log, 1));
 }
