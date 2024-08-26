@@ -32,8 +32,8 @@
 
 #include <ecal/ecal_log_level.h>
 #include <ecal/types/logging.h>
-#include <ecal/config/logging.h>
 
+#include "attributes/logging_attributes.h"
 #include "ecal_global_accessors.h"
 
 #include <atomic>
@@ -51,7 +51,7 @@ namespace eCAL
     /**
       * @brief Constructor.
     **/
-    CLog(const eCAL::Logging::Configuration& config_);
+    CLog(const Logging::SAttributes& attr_);
 
     /**
       * @brief Destructor.
@@ -128,6 +128,6 @@ namespace eCAL
 
     eCAL_Logging_eLogLevel                 m_level;
 
-    eCAL::Logging::Configuration           m_config;
+    Logging::SAttributes                   m_attributes;
   };
 }

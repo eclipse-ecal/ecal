@@ -96,9 +96,9 @@ static std::string get_time_str()
 
 namespace eCAL
 {
-  CLog::CLog(const eCAL::Logging::Configuration& config_) :
+  CLog::CLog(const Logging::SAttributes& attr_) :
           m_created(false),
-          m_config(config_),
+          m_attributes(attr_),
           m_pid(0),
           m_logfile(nullptr),
           m_level(log_level_none)
@@ -118,9 +118,9 @@ namespace eCAL
     m_level = log_level_info;
 
     // create log file if file logging is enabled
-    if(m_config.sinks.file.enable)
+    if(m_attributes.file.enabled)
     {
-      std::string ecal_log_path = m_config.sinks.file.path;
+      std::string ecal_log_path = m_attributes.file.path;
       if (ecal_log_path.empty())
       {
         // check ECAL_DATA
@@ -137,7 +137,7 @@ namespace eCAL
       }      
     }
 
-    if(m_config.sinks.udp.enable)
+    if(m_attributes.udp.enabled)
     {
       // set logging send network attributes
       const eCAL::UDP::SSenderAttr attr = UDP::CreateUDPSenderAttr(GetConfiguration().registration, GetConfiguration().transport_layer.udp);
@@ -188,19 +188,19 @@ namespace eCAL
     if(!m_created) return;
     if(msg_.empty()) return;
 
-    const eCAL_Logging_Filter log_con  = level_ & m_config.sinks.console.filter_log_con;
-    const eCAL_Logging_Filter log_file = level_ & m_config.sinks.file.filter_log_file;
-    const eCAL_Logging_Filter log_udp  = level_ & m_config.sinks.udp.filter_log_udp;
+    const eCAL_Logging_Filter log_con  = level_ & m_attributes.console.filter_log;
+    const eCAL_Logging_Filter log_file = level_ & m_attributes.file.filter_log;
+    const eCAL_Logging_Filter log_udp  = level_ & m_attributes.udp.filter_log;
     if((log_con | log_file | log_udp) == 0) return;
 
     auto log_time = eCAL::Time::ecal_clock::now();
 
-    if(m_config.sinks.console.enable && log_con != 0)
+    if(m_attributes.console.enabled && log_con != 0)
     {
       std::cout << msg_ << '\n';
     }
 
-    if (m_config.sinks.file.enable && log_file != 0)
+    if (m_attributes.file.enabled && log_file != 0)
     {
       if(m_logfile != nullptr)
       {
@@ -256,7 +256,7 @@ namespace eCAL
       }
     }
 
-    if(m_config.sinks.udp.enable && log_udp != 0 && m_udp_logging_sender)
+    if(m_attributes.udp.enabled && log_udp != 0 && m_udp_logging_sender)
     {
       // set up log message
       Logging::SLogMessage log_message;
