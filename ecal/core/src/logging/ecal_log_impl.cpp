@@ -47,7 +47,7 @@
 
 namespace
 {
-  void logWarningToConsole(const char* msg_)
+  void logWarningToConsole(const std::string& msg_)
   {
     std::cout << "[eCAL][Logging][Warning] " << msg_ << "\n";
   }
@@ -179,7 +179,7 @@ namespace eCAL
       }
       else
       {
-        logWarningToConsole("Logging for file enabled, but path does not exist.");
+        logWarningToConsole("Logging for file enabled, but specified path to log is not valid: " + ecal_log_path);
       }
 
       if (m_logfile == nullptr)
@@ -199,7 +199,7 @@ namespace eCAL
     }
 
     // set logging receive network attributes
-    const eCAL::UDP::SReceiverAttr attr = UDP::CreateUDPReceiverAttr(GetConfiguration().registration, GetConfiguration().transport_layer.udp);
+    const eCAL::UDP::SReceiverAttr attr = UDP::CreateUDPReceiverAttr(GetRegistrationConfiguration(), GetTransportLayerConfiguration().udp);
 
     // start logging receiver
     m_log_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CLog::HasSample, this, std::placeholders::_1), std::bind(&CLog::ApplySample, this, std::placeholders::_1, std::placeholders::_2));
@@ -247,18 +247,21 @@ namespace eCAL
 
     auto log_time = eCAL::Time::ecal_clock::now();
 
-    if ((m_attributes.console.enabled && log_con != 0) || (m_attributes.file.enabled && log_file != 0))
+    bool log_to_console = m_attributes.console.enabled && log_con != 0;
+    bool log_to_file    = m_attributes.file.enabled && log_file != 0;
+
+    if (log_to_console || log_to_file)
     {
       m_log_message_stream.str("");
       createLogHeader(m_log_message_stream, level_, m_attributes, log_time);
       m_log_message_stream << msg_;
     
-      if(m_attributes.console.enabled && log_con != 0)
+      if(log_to_console)
       {
         std::cout << m_log_message_stream.str() << '\n';
       }
 
-      if (m_attributes.file.enabled && log_file != 0 && m_logfile)
+      if (log_to_file)
       {
         fprintf(m_logfile, "%s\n", m_log_message_stream.str().c_str());
         fflush(m_logfile);
