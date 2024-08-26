@@ -47,6 +47,55 @@
 
 namespace
 {
+  void logWarningToConsole(const char* msg_)
+  {
+    std::cout << "[eCAL][Logging][Warning] " << msg_ << "\n";
+  }
+
+  void createLogHeader(std::stringstream& msg_stream, const eCAL_Logging_eLogLevel level_, const eCAL::Logging::SAttributes& attr_, const eCAL::Time::ecal_clock::time_point& log_time_)
+  {
+    msg_stream << std::chrono::duration_cast<std::chrono::milliseconds>(log_time_.time_since_epoch()).count();
+    msg_stream << " ms";
+    msg_stream << " | ";
+    msg_stream << attr_.host_name;
+    msg_stream << " | ";
+    msg_stream << attr_.unit_name;
+    msg_stream << " | ";
+    msg_stream << attr_.process_id;
+    msg_stream << " | ";
+    switch(level_)
+    {
+    case log_level_none:
+    case log_level_all:
+      break;
+    case log_level_info:
+      msg_stream << "info";
+      break;
+    case log_level_warning:
+      msg_stream << "warning";
+      break;
+    case log_level_error:
+      msg_stream << "error";
+      break;
+    case log_level_fatal:
+      msg_stream << "fatal";
+      break;
+    case log_level_debug1:
+      msg_stream << "debug1";
+      break;
+    case log_level_debug2:
+      msg_stream << "debug2";
+      break;
+    case log_level_debug3:
+      msg_stream << "debug3";
+      break;
+    case log_level_debug4:
+      msg_stream << "debug4";
+      break;
+    }
+    msg_stream << " | ";
+  }
+
   bool isDirectory(const std::string& path_)
   {
     if (path_.empty()) return false;
@@ -99,9 +148,7 @@ namespace eCAL
   CLog::CLog(const Logging::SAttributes& attr_) :
           m_created(false),
           m_attributes(attr_),
-          m_pid(0),
-          m_logfile(nullptr),
-          m_level(log_level_none)
+          m_logfile(nullptr)
   {
   }
 
@@ -112,11 +159,6 @@ namespace eCAL
 
   void CLog::Start()
   {
-    m_hname = Process::GetHostName();
-    m_pid   = Process::GetProcessID();
-    m_pname = Process::GetProcessName();
-    m_level = log_level_info;
-
     // create log file if file logging is enabled
     if(m_attributes.file.enabled)
     {
@@ -132,9 +174,19 @@ namespace eCAL
       {
         const std::string tstring = get_time_str();
       
-        m_logfile_name = ecal_log_path + tstring + "_" + eCAL::Process::GetUnitName() + "_" + std::to_string(m_pid) + ".log";
+        m_logfile_name = ecal_log_path + tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
         m_logfile = fopen(m_logfile_name.c_str(), "w");
-      }      
+      }
+      else
+      {
+        logWarningToConsole("Logging for file enabled, but path does not exist.");
+      }
+
+      if (m_logfile == nullptr)
+      {
+        logWarningToConsole("Logging for file enabled, but file could not be created.");
+      }
+      
     }
 
     if(m_attributes.udp.enabled)
@@ -172,13 +224,13 @@ namespace eCAL
   void CLog::SetLogLevel(const eCAL_Logging_eLogLevel level_)
   {
     const std::lock_guard<std::mutex> lock(m_log_mtx);
-    m_level = level_;
+    m_attributes.level = level_;
   }
 
   eCAL_Logging_eLogLevel CLog::GetLogLevel()
   {
     const std::lock_guard<std::mutex> lock(m_log_mtx);
-    return(m_level);
+    return(m_attributes.level);
   }
 
   void CLog::Log(const eCAL_Logging_eLogLevel level_, const std::string& msg_)
@@ -195,89 +247,46 @@ namespace eCAL
 
     auto log_time = eCAL::Time::ecal_clock::now();
 
-    if(m_attributes.console.enabled && log_con != 0)
+    if ((m_attributes.console.enabled && log_con != 0) || (m_attributes.file.enabled && log_file != 0))
     {
-      std::cout << msg_ << '\n';
-    }
-
-    if (m_attributes.file.enabled && log_file != 0)
-    {
-      if(m_logfile != nullptr)
+      m_log_message_stream.str("");
+      createLogHeader(m_log_message_stream, level_, m_attributes, log_time);
+      m_log_message_stream << msg_;
+    
+      if(m_attributes.console.enabled && log_con != 0)
       {
-        std::stringstream msg_stream;
-        msg_stream << std::chrono::duration_cast<std::chrono::milliseconds>(log_time.time_since_epoch()).count();
-        msg_stream << " ms";
-        msg_stream << " | ";
-        msg_stream << m_hname;
-        msg_stream << " | ";
-        msg_stream << eCAL::Process::GetUnitName();
-        msg_stream << " | ";
-        msg_stream << m_pid;
-        msg_stream << " | ";
-        switch(level_)
-        {
-        case log_level_none:
-        case log_level_all:
-          break;
-        case log_level_info:
-          msg_stream << "info";
-          break;
-        case log_level_warning:
-          msg_stream << "warning";
-          break;
-        case log_level_error:
-          msg_stream << "error";
-          break;
-        case log_level_fatal:
-          msg_stream << "fatal";
-          break;
-        case log_level_debug1:
-          msg_stream << "debug1";
-          break;
-        case log_level_debug2:
-          msg_stream << "debug2";
-          break;
-        case log_level_debug3:
-          msg_stream << "debug3";
-          break;
-        case log_level_debug4:
-          msg_stream << "debug4";
-          break;
-        }
-        msg_stream << " | ";
-        msg_stream << msg_;
-
-        fprintf(m_logfile, "%s\n", msg_stream.str().c_str());
-        fflush(m_logfile);
+        std::cout << m_log_message_stream.str() << '\n';
       }
-      else
+
+      if (m_attributes.file.enabled && log_file != 0 && m_logfile)
       {
-        std::cout << "Warning: Logging for file enabled, but file could not be created." << "\n";
+        fprintf(m_logfile, "%s\n", m_log_message_stream.str().c_str());
+        fflush(m_logfile);
       }
     }
 
     if(m_attributes.udp.enabled && log_udp != 0 && m_udp_logging_sender)
     {
-      // set up log message
-      Logging::SLogMessage log_message;
-      log_message.time    = std::chrono::duration_cast<std::chrono::microseconds>(log_time.time_since_epoch()).count();
-      log_message.hname   = m_hname;
-      log_message.pid     = m_pid;
-      log_message.pname   = m_pname;
-      log_message.uname   = eCAL::Process::GetUnitName();
-      log_message.level   = level_;
-      log_message.content = msg_;
+        // set up log message
+        Logging::SLogMessage log_message;
+        log_message.time    = std::chrono::duration_cast<std::chrono::microseconds>(log_time.time_since_epoch()).count();
+        log_message.hname   = m_attributes.host_name;
+        log_message.pid     = m_attributes.process_id;
+        log_message.pname   = m_attributes.process_name;
+        log_message.uname   = m_attributes.unit_name;
+        log_message.level   = level_;
+        log_message.content = msg_;
 
-      // sent it
-      m_log_message_vec.clear();
-      SerializeToBuffer(log_message, m_log_message_vec);
-      m_udp_logging_sender->Send("_log_message_", m_log_message_vec);
+        // sent it
+        m_log_message_vec.clear();
+        SerializeToBuffer(log_message, m_log_message_vec);
+        m_udp_logging_sender->Send("_log_message_", m_log_message_vec);
     }
   }
 
   void CLog::Log(const std::string& msg_)
   {
-    Log(m_level, msg_);
+    Log(m_attributes.level, msg_);
   }
 
   void CLog::GetLogging(std::string& log_msg_list_string_)
@@ -319,7 +328,7 @@ namespace eCAL
     {
       // in "network mode" we accept all log messages
       // in "local mode" we accept log messages from this host only
-      if ((m_hname == log_message.hname) || Config::IsNetworkEnabled())
+      if ((m_attributes.host_name == log_message.hname) || m_attributes.network_enabled)
       {
         const std::lock_guard<std::mutex> lock(m_log_mtx);
         m_log_msglist.log_messages.emplace_back(log_message);

@@ -277,6 +277,11 @@ namespace eCAL
       return g_ecal_configuration;
     }
 
+    TransportLayer::Configuration& GetTransportLayerConfiguration()
+    {
+      return GetConfiguration().transport_layer;
+    }
+
     Registration::Configuration& GetRegistrationConfiguration()
     {
       return GetConfiguration().registration;

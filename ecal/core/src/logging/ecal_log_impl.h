@@ -119,15 +119,10 @@ namespace eCAL
     // udp logging receiver
     std::shared_ptr<UDP::CSampleReceiver>  m_log_receiver;
 
-    std::string                            m_hname;
-    int                                    m_pid;
-    std::string                            m_pname;
-
     std::string                            m_logfile_name;
     FILE*                                  m_logfile;
 
-    eCAL_Logging_eLogLevel                 m_level;
-
     Logging::SAttributes                   m_attributes;
+    std::stringstream                      m_log_message_stream;
   };
 }

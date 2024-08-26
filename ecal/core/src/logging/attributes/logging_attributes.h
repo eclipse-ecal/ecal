@@ -19,7 +19,6 @@
 
 #pragma once
 
-#include <chrono>
 #include <string>
 
 #include <ecal/ecal_log_level.h>
@@ -50,9 +49,16 @@ namespace eCAL
 
     struct SAttributes
     {
-      SUDP     udp;
-      SFile    file;
-      SConsole console;
+      SUDP                   udp;
+      SFile                  file;
+      SConsole               console;
+
+      int                    process_id;
+      bool                   network_enabled;
+      std::string            host_name;
+      std::string            process_name;
+      std::string            unit_name;
+      eCAL_Logging_eLogLevel level;
     };
   }
 }

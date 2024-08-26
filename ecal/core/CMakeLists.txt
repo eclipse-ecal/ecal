@@ -155,7 +155,6 @@ endif()
 
 # io/udp
 set(ecal_io_udp_src
-    src/io/udp/ecal_udp_attr_builder.cpp
     src/io/udp/ecal_udp_configurations.cpp
     src/io/udp/ecal_udp_configurations.h
     src/io/udp/ecal_udp_receiver_attr.h
@@ -423,7 +422,6 @@ endif()
 # common
 ######################################
 set(ecal_cmn_src
-    src/builder/monitoring_attribute_builder.cpp
     src/ecal.cpp
     src/ecal_def.h
     src/ecal_def_ini.h
@@ -450,7 +448,10 @@ endif()
 # builder
 ######################################
 set (ecal_builder_src
+    src/builder/logging_attribute_builder.cpp
+    src/builder/monitoring_attribute_builder.cpp
     src/builder/registration_attribute_builder.cpp
+    src/io/udp/ecal_udp_attr_builder.cpp
     src/registration/builder/udp_shm_attribute_builder.cpp
     src/registration/builder/sample_applier_attribute_builder.cpp
     src/registration/udp/builder/udp_attribute_builder.cpp

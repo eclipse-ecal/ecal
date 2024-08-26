@@ -21,27 +21,12 @@
 
 #include "logging/attributes/logging_attributes.h"
 #include "ecal/config/logging.h"
+#include "ecal/config/registration.h"
 
 namespace eCAL
 {
   namespace Logging
   {
-    SAttributes BuildLoggingAttributes(const Logging::Configuration& config_)
-    {
-      SAttributes attributes;
-
-      attributes.udp.enabled        = config_.sinks.udp.enable;
-      attributes.udp.port           = config_.sinks.udp.port;
-      attributes.udp.filter_log     = config_.sinks.udp.filter_log_udp;
-
-      attributes.file.enabled       = config_.sinks.file.enable;
-      attributes.file.path          = config_.sinks.file.path;
-      attributes.file.filter_log    = config_.sinks.file.filter_log_file;
-
-      attributes.console.enabled    = config_.sinks.console.enable;
-      attributes.console.filter_log = config_.sinks.console.filter_log_con;
-
-      return attributes;
-    }
+    SAttributes BuildLoggingAttributes(const Logging::Configuration& log_config_, const Registration::Configuration& reg_config_);
   }
 }
