@@ -27,7 +27,6 @@ namespace eCAL
     {
       SAttributes attributes;
 
-      attributes.timeout     = config_.timeout;
       attributes.filter_excl = config_.filter_excl;
       attributes.filter_incl = config_.filter_incl;
       

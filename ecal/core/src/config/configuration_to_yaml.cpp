@@ -189,7 +189,6 @@ namespace YAML
   Node convert<eCAL::Monitoring::Configuration>::encode(const eCAL::Monitoring::Configuration& config_)
   {
     Node node;
-    node["timeout"]    << config_.timeout;
     node["filter_excl"] = config_.filter_excl;
     node["filter_incl"] = config_.filter_incl;
 
@@ -198,7 +197,6 @@ namespace YAML
 
   bool convert<eCAL::Monitoring::Configuration>::decode(const Node& node_, eCAL::Monitoring::Configuration& config_)
   {
-    AssignValue<unsigned int>(config_.timeout, node_, "timeout");
     AssignValue<std::string>(config_.filter_excl, node_, "filter_excl");
     AssignValue<std::string>(config_.filter_incl, node_, "filter_incl");
     return true;

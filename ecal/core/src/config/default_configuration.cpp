@@ -7,10 +7,6 @@
 
 namespace 
 {
-  std::string quoteString(const char* str_) {
-    return std::string("\"") + std::string(str_) + std::string("\"");
-  }
-
   std::string quoteString(const std::string& str_) {
     return std::string("\"") + str_ + std::string("\"");
   }
@@ -166,8 +162,6 @@ namespace eCAL
       ss << R"()"                                                                                                                   << "\n";
       ss << R"(# Monitoring configuration)"                                                                                         << "\n";
       ss << R"(monitoring:)"                                                                                                        << "\n";
-      ss << R"(  # Timeout for topic monitoring in ms (Default: 5000), increase in 1000er steps)"                                   << "\n";
-      ss << R"(  timeout: )"                                         << config_.monitoring.timeout                                  << "\n";
       ss << R"(  # Topics blacklist as regular expression (will not be monitored))"                                                 << "\n";
       ss << R"(  filter_excl: )"                                     << quoteString(config_.monitoring.filter_excl)                 << "\n";
       ss << R"(  # Topics whitelist as regular expression (will be monitored only) (Default: ""))"                                  << "\n";

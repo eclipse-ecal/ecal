@@ -25,7 +25,6 @@
 #pragma once
 
 #include "ecal/ecal_os.h"
-#include "ecal/ecal_process.h"
 
 #include <stdexcept>
 #include <string>
@@ -64,14 +63,14 @@ namespace eCAL
 
     struct Configuration
     {
-      unsigned int         registration_timeout { 60000U };                           //!< Timeout for topic registration in ms (internal) (Default: 60000)
-      unsigned int         registration_refresh { 1000U };                            //!< Topic registration refresh cylce (has to be smaller then registration timeout!) (Default: 1000)                                   
+      unsigned int         registration_timeout { 10000U }; //!< Timeout for topic registration in ms (internal) (Default: 10000)
+      unsigned int         registration_refresh { 1000U };  //!< Topic registration refresh cylce (has to be smaller then registration timeout!) (Default: 1000)                                   
 
-      bool                 network_enabled      { false };                            /*!< true  = all eCAL components communicate over network boundaries
-                                                                                           false = local host only communication (Default: false) */
-      bool                 loopback             { true };                             //!< enable to receive udp messages on the same local machine (Default: true)
-      std::string          host_group_name      { eCAL::Process::GetHostName() };     /*!< Common host group name that enables interprocess mechanisms across 
-                                                                                           (virtual) host borders (e.g, Docker); by default equivalent to local host name (Default: CurrentHostName) */
+      bool                 network_enabled      { false };  /*!< true  = all eCAL components communicate over network boundaries
+                                                                 false = local host only communication (Default: false) */
+      bool                 loopback             { true };   //!< enable to receive udp messages on the same local machine (Default: true)
+      std::string          host_group_name      { "" };     /*!< Common host group name that enables interprocess mechanisms across 
+                                                                 (virtual) host borders (e.g, Docker); by default equivalent to local host name (Default: "") */
       Layer::Configuration layer;
     };
   }
