@@ -90,6 +90,22 @@ namespace eCAL
     return GetTopic(id_, m_subscriber_info_map, topic_info_);
   }
 
+  Registration::CallbackToken CDescGate::AddSubscriberEventCallback(const Registration::TopicIDCallbackT& callback_)
+  {
+    const std::lock_guard<std::mutex> lock(m_subscriber_callback_map.mtx);
+
+    const Registration::CallbackToken new_token = CreateToken();
+    m_subscriber_callback_map.map[new_token] = callback_;
+
+    return new_token;
+  }
+
+  void CDescGate::RemSubscriberEventCallback(Registration::CallbackToken token_)
+  {
+    const std::lock_guard<std::mutex> lock(m_subscriber_callback_map.mtx);
+    m_subscriber_callback_map.map.erase(token_);
+  }
+
   std::set<Registration::SServiceId> CDescGate::GetServiceIDs() const
   {
     return GetServiceIDs(m_service_info_map);

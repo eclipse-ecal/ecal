@@ -151,6 +151,22 @@ namespace eCAL
     ECAL_API bool GetSubscriberInfo(const STopicId& id_, SQualityTopicInfo& topic_info_);
 
     /**
+     * @brief Register a callback function to be notified when a new subscriber becomes available.
+     *
+     * @param callback_       The callback function to be called with the STopicId of the new subscriber.
+     *
+     * @return CallbackToken  Token that can be used to unregister the callback.
+     */
+    ECAL_API CallbackToken AddSubscriberEventCallback(const TopicIDCallbackT& callback_);
+
+    /**
+     * @brief Unregister the subscriber callback using the provided token.
+     *
+     * @param token  The token returned by AddSubscriberCallback.
+    */
+    ECAL_API void RemSubscriberEventCallback(CallbackToken token_);
+
+    /**
      * @brief Get complete snapshot of all known services.
      *
      * @return Set of service id's.

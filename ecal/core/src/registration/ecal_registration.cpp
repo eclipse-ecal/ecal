@@ -197,6 +197,18 @@ namespace eCAL
       return g_descgate()->GetSubscriberInfo(id_, topic_info_);
     }
 
+    ECAL_API CallbackToken AddSubscriberEventCallback(const TopicIDCallbackT& callback_)
+    {
+      if (g_descgate() == nullptr) return CallbackToken();
+      return g_descgate()->AddSubscriberEventCallback(callback_);
+    }
+
+    ECAL_API void RemSubscriberEventCallback(CallbackToken token_)
+    {
+      if (g_descgate() == nullptr) return;
+      return g_descgate()->RemSubscriberEventCallback(token_);
+    }
+
     std::set<SServiceId> GetServiceIDs()
     {
       if (g_descgate() == nullptr) return std::set<SServiceId>();

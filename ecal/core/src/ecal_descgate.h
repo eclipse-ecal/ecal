@@ -56,6 +56,8 @@ namespace eCAL
     // get subscriber information
     std::set<Registration::STopicId> GetSubscriberIDs() const;
     bool GetSubscriberInfo(const Registration::STopicId& id_, Registration::SQualityTopicInfo& topic_info_) const;
+    Registration::CallbackToken AddSubscriberEventCallback(const Registration::TopicIDCallbackT& callback_);
+    void RemSubscriberEventCallback(Registration::CallbackToken token_);
 
     // get service information
     std::set<Registration::SServiceId> GetServiceIDs() const;
