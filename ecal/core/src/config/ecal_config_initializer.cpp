@@ -225,12 +225,12 @@ namespace eCAL
         eCAL::Config::YamlFileToConfig(yaml_path, *this);
         ecal_yaml_file_path = yaml_path;
 #else
-        eCAL::Logging::Log(log_level_warning, "Yaml file found at \"" + yaml_path + "\" but eCAL core configuration is not enabled.");
+        std::cout << "Yaml file found at \"" << yaml_path << "\" but eCAL core configuration is not enabled." << "\n";
 #endif
       }
       else
       {
-        eCAL::Logging::Log(log_level_warning, "Specified yaml configuration path not valid:\"" + yaml_path_ + "\". Using default configuration.");
+        std::cout << "Specified yaml configuration path not valid:\"" << yaml_path_ << "\". Using default configuration." << "\n";
       }
     }
 
@@ -240,7 +240,6 @@ namespace eCAL
     }
 
     Configuration::Configuration(const std::vector<std::string>& args_)
-    : Configuration()
     {
       Config::CmdParser parser(args_);
       
@@ -264,7 +263,6 @@ namespace eCAL
 
     Configuration::Configuration()
     {
-      eCAL::InitGlobals();
     }
 
     std::string Configuration::GetYamlFilePath()
