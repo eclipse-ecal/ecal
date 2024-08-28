@@ -47,11 +47,6 @@
 
 namespace
 {
-  void logWarningToConsole(const std::string& msg_)
-  {
-    std::cout << "[eCAL][Logging][Warning] " << msg_ << "\n";
-  }
-
   void createLogHeader(std::stringstream& msg_stream, const eCAL_Logging_eLogLevel level_, const eCAL::Logging::SAttributes& attr_, const eCAL::Time::ecal_clock::time_point& log_time_)
   {
     msg_stream << std::chrono::duration_cast<std::chrono::milliseconds>(log_time_.time_since_epoch()).count();
@@ -143,6 +138,14 @@ static std::string get_time_str()
 }
 #endif
 
+namespace
+{
+  void logWarningToConsole(const std::string& msg_)
+  {
+    std::cout << "[eCAL][Logging][Warning] " << msg_ << "\n";
+  }
+}
+
 namespace eCAL
 {
   CLog::CLog(const Logging::SAttributes& attr_) :
@@ -196,6 +199,11 @@ namespace eCAL
 
       // create udp logging sender
       m_udp_logging_sender = std::make_unique<UDP::CSampleSender>(attr);
+
+      if(m_udp_logging_sender == nullptr)
+      {
+        logWarningToConsole("Logging for UDP enabled, but sender could not be created.");
+      }
     }
 
     // set logging receive network attributes
@@ -203,6 +211,12 @@ namespace eCAL
 
     // start logging receiver
     m_log_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CLog::HasSample, this, std::placeholders::_1), std::bind(&CLog::ApplySample, this, std::placeholders::_1, std::placeholders::_2));
+
+    if(m_log_receiver == nullptr)
+    {
+      logWarningToConsole("Logging receiver could not be created.");
+    }
+
 
     m_created = true;
   }
