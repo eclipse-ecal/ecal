@@ -7,10 +7,6 @@
 
 namespace 
 {
-  std::string quoteString(const char* str_) {
-    return std::string("\"") + std::string(str_) + std::string("\"");
-  }
-
   std::string quoteString(const std::string& str_) {
     return std::string("\"") + str_ + std::string("\"");
   }

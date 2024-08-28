@@ -64,7 +64,7 @@ namespace eCAL
     };
 
     using SPublicationInfo = Registration::SampleIdentifier;
-    CDataReader(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Subscriber::Configuration& config_ = {});
+    CDataReader(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Subscriber::Configuration& config_);
     ~CDataReader();
 
     bool Stop();
