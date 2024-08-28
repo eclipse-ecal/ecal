@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,24 +17,22 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  UDP receiver/sender attributes generator functions
-**/
-
 #pragma once
 
-#include "ecal_udp_sender_attr.h"
-#include "ecal_udp_receiver_attr.h"
 
-#include "ecal/config/registration.h"
-#include "ecal/config/transport_layer.h"
+#include "io/udp/ecal_udp_receiver_attr.h"
+#include "io/udp/ecal_udp_sender_attr.h"
+
+#include "logging/attributes/logging_attributes.h"
 
 namespace eCAL
 {
-  namespace UDP
+  namespace Logging
   {
-    SSenderAttr CreateUDPSenderAttr(const Registration::Configuration& registration_config_, const TransportLayer::UDP::Configuration& udp_config_);
-
-    SReceiverAttr CreateUDPReceiverAttr(const Registration::Configuration& registration_config_, const TransportLayer::UDP::Configuration& udp_config_);
+    namespace UDP
+    {
+      eCAL::UDP::SSenderAttr     ConvertToIOUDPSenderAttributes     (const Logging::SUDPSender& sender_attr_);
+      eCAL::UDP::SReceiverAttr   ConvertToIOUDPReceiverAttributes   (const Logging::SUDPReceiver& receiver_attr_);
+    }
   }
 }

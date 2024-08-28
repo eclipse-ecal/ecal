@@ -452,7 +452,7 @@ set (ecal_builder_src
     src/builder/logging_attribute_builder.cpp
     src/builder/monitoring_attribute_builder.cpp
     src/builder/registration_attribute_builder.cpp
-    src/io/udp/ecal_udp_attr_builder.cpp
+    src/logging/builder/udp_attribute_builder.cpp
     src/registration/builder/udp_shm_attribute_builder.cpp
     src/registration/builder/sample_applier_attribute_builder.cpp
     src/registration/udp/builder/udp_attribute_builder.cpp

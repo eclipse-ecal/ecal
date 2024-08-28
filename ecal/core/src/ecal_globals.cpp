@@ -192,7 +192,7 @@ namespace eCAL
     {
       if (log_instance == nullptr)
       {
-        log_instance = std::make_unique<CLog>(eCAL::Logging::BuildLoggingAttributes(GetLoggingConfiguration(), GetRegistrationConfiguration()));
+        log_instance = std::make_unique<CLog>(eCAL::Logging::BuildLoggingAttributes(GetLoggingConfiguration(), GetRegistrationConfiguration(), GetTransportLayerConfiguration()));
         new_initialization = true;
       }
     }

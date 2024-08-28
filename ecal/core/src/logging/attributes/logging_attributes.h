@@ -47,11 +47,33 @@ namespace eCAL
       eCAL_Logging_Filter filter_log;
     };
 
+    struct SUDPSender
+    {
+      std::string address;
+      int         port;
+      int         ttl;
+      bool        broadcast;
+      bool        loopback;
+      int         sndbuf;
+    };
+
+    struct SUDPReceiver
+    {
+      std::string address;
+      int         port;
+      bool        broadcast;
+      bool        loopback;
+      int         rcvbuf;
+    };
+
     struct SAttributes
     {
       SUDP                   udp;
       SFile                  file;
       SConsole               console;
+
+      SUDPSender             udp_sender;
+      SUDPReceiver           udp_receiver;
 
       int                    process_id;
       bool                   network_enabled;

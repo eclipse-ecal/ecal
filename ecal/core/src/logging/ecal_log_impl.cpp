@@ -26,10 +26,8 @@
 #include <ecal/ecal_config.h>
 
 #include "ecal_log_impl.h"
-#include "io/udp/ecal_udp_configurations.h"
 #include "serialization/ecal_serialize_logging.h"
-#include "io/udp/ecal_udp_attr_builder.h"
-
+#include "builder/udp_attribute_builder.h"
 #include <mutex>
 #include <cstdio>
 
@@ -165,24 +163,16 @@ namespace eCAL
     // create log file if file logging is enabled
     if(m_attributes.file.enabled)
     {
-      std::string ecal_log_path = m_attributes.file.path;
-      if (ecal_log_path.empty())
-      {
-        // check ECAL_DATA
-        // Creates path if not exists
-        ecal_log_path = Util::GeteCALLogPath();        
-      }
-      
-      if (isDirectory(ecal_log_path))
+      if (isDirectory(m_attributes.file.path))
       {
         const std::string tstring = get_time_str();
       
-        m_logfile_name = ecal_log_path + tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
+        m_logfile_name = m_attributes.file.path + tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
         m_logfile = fopen(m_logfile_name.c_str(), "w");
       }
       else
       {
-        logWarningToConsole("Logging for file enabled, but specified path to log is not valid: " + ecal_log_path);
+        logWarningToConsole("Logging for file enabled, but specified path to log is not valid: " + m_attributes.file.path);
       }
 
       if (m_logfile == nullptr)
@@ -195,7 +185,7 @@ namespace eCAL
     if(m_attributes.udp.enabled)
     {
       // set logging send network attributes
-      const eCAL::UDP::SSenderAttr attr = UDP::CreateUDPSenderAttr(GetConfiguration().registration, GetConfiguration().transport_layer.udp);
+      const eCAL::UDP::SSenderAttr attr = Logging::UDP::ConvertToIOUDPSenderAttributes(m_attributes.udp_sender);
 
       // create udp logging sender
       m_udp_logging_sender = std::make_unique<UDP::CSampleSender>(attr);
@@ -207,7 +197,7 @@ namespace eCAL
     }
 
     // set logging receive network attributes
-    const eCAL::UDP::SReceiverAttr attr = UDP::CreateUDPReceiverAttr(GetRegistrationConfiguration(), GetTransportLayerConfiguration().udp);
+    const eCAL::UDP::SReceiverAttr attr = Logging::UDP::ConvertToIOUDPReceiverAttributes(m_attributes.udp_receiver);
 
     // start logging receiver
     m_log_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CLog::HasSample, this, std::placeholders::_1), std::bind(&CLog::ApplySample, this, std::placeholders::_1, std::placeholders::_2));

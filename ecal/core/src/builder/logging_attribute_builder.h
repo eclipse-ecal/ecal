@@ -22,11 +22,12 @@
 #include "logging/attributes/logging_attributes.h"
 #include "ecal/config/logging.h"
 #include "ecal/config/registration.h"
+#include "ecal/config/transport_layer.h"
 
 namespace eCAL
 {
   namespace Logging
   {
-    SAttributes BuildLoggingAttributes(const Logging::Configuration& log_config_, const Registration::Configuration& reg_config_);
+    SAttributes BuildLoggingAttributes(const Logging::Configuration& log_config_, const Registration::Configuration& reg_config_, const TransportLayer::Configuration& tl_config_);
   }
 }
