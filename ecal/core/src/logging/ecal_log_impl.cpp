@@ -46,51 +46,7 @@
 #include <ecal_utils/filesystem.h>
 
 namespace
-{
-  void createLogHeader(std::stringstream& msg_stream, const eCAL_Logging_eLogLevel level_, const eCAL::Logging::SAttributes& attr_, const eCAL::Time::ecal_clock::time_point& log_time_)
-  {
-    msg_stream << std::chrono::duration_cast<std::chrono::milliseconds>(log_time_.time_since_epoch()).count();
-    msg_stream << " ms";
-    msg_stream << " | ";
-    msg_stream << attr_.host_name;
-    msg_stream << " | ";
-    msg_stream << attr_.unit_name;
-    msg_stream << " | ";
-    msg_stream << attr_.process_id;
-    msg_stream << " | ";
-    switch(level_)
-    {
-    case log_level_none:
-    case log_level_all:
-      break;
-    case log_level_info:
-      msg_stream << "info";
-      break;
-    case log_level_warning:
-      msg_stream << "warning";
-      break;
-    case log_level_error:
-      msg_stream << "error";
-      break;
-    case log_level_fatal:
-      msg_stream << "fatal";
-      break;
-    case log_level_debug1:
-      msg_stream << "debug1";
-      break;
-    case log_level_debug2:
-      msg_stream << "debug2";
-      break;
-    case log_level_debug3:
-      msg_stream << "debug3";
-      break;
-    case log_level_debug4:
-      msg_stream << "debug4";
-      break;
-    }
-    msg_stream << " | ";
-  }
-
+{  
   bool isDirectory(const std::string& path_)
   {
     if (path_.empty()) return false;
@@ -143,6 +99,50 @@ namespace
   void logWarningToConsole(const std::string& msg_)
   {
     std::cout << "[eCAL][Logging][Warning] " << msg_ << "\n";
+  }
+
+  void createLogHeader(std::stringstream& msg_stream, const eCAL_Logging_eLogLevel level_, const eCAL::Logging::SAttributes& attr_, const eCAL::Time::ecal_clock::time_point& log_time_)
+  {
+    msg_stream << std::chrono::duration_cast<std::chrono::milliseconds>(log_time_.time_since_epoch()).count();
+    msg_stream << " ms";
+    msg_stream << " | ";
+    msg_stream << attr_.host_name;
+    msg_stream << " | ";
+    msg_stream << attr_.unit_name;
+    msg_stream << " | ";
+    msg_stream << attr_.process_id;
+    msg_stream << " | ";
+    switch(level_)
+    {
+    case log_level_none:
+    case log_level_all:
+      break;
+    case log_level_info:
+      msg_stream << "info";
+      break;
+    case log_level_warning:
+      msg_stream << "warning";
+      break;
+    case log_level_error:
+      msg_stream << "error";
+      break;
+    case log_level_fatal:
+      msg_stream << "fatal";
+      break;
+    case log_level_debug1:
+      msg_stream << "debug1";
+      break;
+    case log_level_debug2:
+      msg_stream << "debug2";
+      break;
+    case log_level_debug3:
+      msg_stream << "debug3";
+      break;
+    case log_level_debug4:
+      msg_stream << "debug4";
+      break;
+    }
+    msg_stream << " | ";
   }
 }
 
