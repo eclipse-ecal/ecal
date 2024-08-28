@@ -23,8 +23,6 @@
 
 #include "ecal_globals.h"
 
-#include "config/ecal_config_reader.h"
-
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -34,6 +32,9 @@
 #if ECAL_CORE_SERVICE
 #include "service/ecal_service_singleton_manager.h"
 #endif
+
+#include "builder/registration_attribute_builder.h"
+#include "builder/monitoring_attribute_builder.h"
 
 namespace eCAL
 {
@@ -51,12 +52,13 @@ namespace eCAL
     bool new_initialization(false);
 
 #if ECAL_CORE_REGISTRATION
+    const Registration::SAttributes registration_attr = BuildRegistrationAttributes(GetConfiguration().registration, GetConfiguration().transport_layer.udp, eCAL::Process::GetProcessID());
     /////////////////////
     // REGISTRATION PROVIDER
     /////////////////////
     if (registration_provider_instance == nullptr)
     {
-      registration_provider_instance = std::make_unique<CRegistrationProvider>();
+      registration_provider_instance = std::make_unique<CRegistrationProvider>(registration_attr);
       new_initialization = true;
     }
 
@@ -65,7 +67,7 @@ namespace eCAL
     /////////////////////
     if(registration_receiver_instance == nullptr) 
     {
-      registration_receiver_instance = std::make_unique<CRegistrationReceiver>();
+      registration_receiver_instance = std::make_unique<CRegistrationReceiver>(registration_attr);
       new_initialization = true;
     }
 #endif // ECAL_CORE_REGISTRATION
@@ -76,7 +78,7 @@ namespace eCAL
     if (descgate_instance == nullptr)
     {
       // create description gate with configured expiration timeout
-      descgate_instance = std::make_unique<CDescGate>(std::chrono::milliseconds(Config::GetMonitoringTimeoutMs()));
+      descgate_instance = std::make_unique<CDescGate>();
       new_initialization = true;
     }
 
@@ -176,7 +178,7 @@ namespace eCAL
     {
       if (monitoring_instance == nullptr)
       {
-        monitoring_instance = std::make_unique<CMonitoring>();
+        monitoring_instance = std::make_unique<CMonitoring>(eCAL::Monitoring::BuildMonitoringAttributes(GetConfiguration().monitoring));
         new_initialization = true;
       }
     }
@@ -206,8 +208,7 @@ namespace eCAL
     if (descgate_instance)
     {
 #if ECAL_CORE_REGISTRATION
-      // utilize registration provider and receiver to get descriptions
-      g_registration_provider()->SetCustomApplySampleCallback("descgate", [](const auto& sample_) {g_descgate()->ApplySample(sample_, tl_none); });
+      // utilize registration receiver to get descriptions
       g_registration_receiver()->SetCustomApplySampleCallback("descgate", [](const auto& sample_) {g_descgate()->ApplySample(sample_, tl_none); });
 #endif
     }
@@ -305,8 +306,7 @@ namespace eCAL
     if (descgate_instance)
     {
 #if ECAL_CORE_REGISTRATION
-      // stop registration provider and receiver utilization to get descriptions
-      g_registration_provider()->RemCustomApplySampleCallback("descgate");
+      // stop registration receiver utilization to get descriptions
       g_registration_receiver()->RemCustomApplySampleCallback("descgate");
 #endif
     }

@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,22 +21,7 @@ project(test_util)
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
-if(ECAL_CORE_PUBLISHER AND ECAL_CORE_SUBSCRIBER)
-  set(util_test_topics_src
-    src/util_gettopics.cpp
-  )
-endif()
-
-if(ECAL_CORE_SERVICE)
-  set(util_test_service_src
-    src/util_getclients.cpp
-    src/util_getservices.cpp
-  )
-endif()
-
 set(util_test_src
-  ${util_test_topics_src}
-  ${util_test_service_src}
   src/util_test.cpp
 )
 

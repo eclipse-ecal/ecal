@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,17 @@
 
 enum {
   CMN_MONITORING_TIMEOUT_MS   = (5000 + 100),
-  CMN_REGISTRATION_REFRESH_MS = (1000 + 100)
+  CMN_REGISTRATION_REFRESH_MS = (1000)
 };
-
-TEST(core_cpp_util, ClientExpiration)
+TEST(core_cpp_registration_public, ClientExpiration)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_util");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
 
-  std::map<eCAL::Util::SServiceMethod, eCAL::SServiceMethodInformation> client_info_map;
+  // enable loop back communication in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> client_info_map;
 
   // create simple client and let it expire
   {
@@ -43,15 +45,18 @@ TEST(core_cpp_util, ClientExpiration)
     service_method_info.response_type.descriptor = "foo::resp_desc";
     const eCAL::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
 
+    // let's register
+    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
+
     // get all clients
-    eCAL::Util::GetClients(client_info_map);
+    eCAL::Registration::GetClients(client_info_map);
 
     // check size
     EXPECT_EQ(client_info_map.size(), 1);
 
     // check client/method names
-    std::set<eCAL::Util::SServiceMethod> client_method_names;
-    eCAL::Util::GetClientMethodNames(client_method_names);
+    std::set<eCAL::Registration::SServiceMethod> client_method_names;
+    eCAL::Registration::GetClientMethodNames(client_method_names);
     EXPECT_EQ(client_method_names.size(), 1);
     for (const auto& name : client_method_names)
     {
@@ -63,18 +68,18 @@ TEST(core_cpp_util, ClientExpiration)
     eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // get all clients again, client should not be expired
-    eCAL::Util::GetClients(client_info_map);
+    eCAL::Registration::GetClients(client_info_map);
 
     // check size
     EXPECT_EQ(client_info_map.size(), 1);
   }
 
   // let's unregister
-  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // get all clients again, all clients 
   // should be removed from the map
-  eCAL::Util::GetClients(client_info_map);
+  eCAL::Registration::GetClients(client_info_map);
 
   // check size
   EXPECT_EQ(client_info_map.size(), 0);
@@ -83,12 +88,15 @@ TEST(core_cpp_util, ClientExpiration)
   eCAL::Finalize();
 }
 
-TEST(core_cpp_util, ClientEqualQualities)
+TEST(core_cpp_registration_public, ClientEqualQualities)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_util");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
 
-  std::map<eCAL::Util::SServiceMethod, eCAL::SServiceMethodInformation> client_info_map;
+  // enable loop back communication in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> client_info_map;
 
   // create 2 clients with the same quality of data type information
   {
@@ -100,8 +108,11 @@ TEST(core_cpp_util, ClientEqualQualities)
     service_method_info1.response_type.descriptor = "foo::resp_desc1";
     eCAL::CServiceClient client1("foo::service", { {"foo::method", service_method_info1} });
 
+    // let's register
+    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
+
     // get all clients
-    eCAL::Util::GetClients(client_info_map);
+    eCAL::Registration::GetClients(client_info_map);
 
     // check size
     EXPECT_EQ(client_info_map.size(), 1);
@@ -110,10 +121,10 @@ TEST(core_cpp_util, ClientEqualQualities)
     std::string req_type, resp_type;
     std::string req_desc, resp_desc;
 
-    eCAL::Util::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
+    eCAL::Registration::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
     EXPECT_EQ(req_type,  "foo::req_type1");
     EXPECT_EQ(resp_type, "foo::resp_type1");
-    eCAL::Util::GetClientDescription("foo::service", "foo::method", req_desc, resp_desc);
+    eCAL::Registration::GetClientDescription("foo::service", "foo::method", req_desc, resp_desc);
     EXPECT_EQ(req_desc,  "foo::req_desc1");
     EXPECT_EQ(resp_desc, "foo::resp_desc1");
 
@@ -127,10 +138,10 @@ TEST(core_cpp_util, ClientEqualQualities)
     eCAL::CServiceClient client2("foo::service", { {"foo::method", service_method_info2} });
 
     // check attributes
-    eCAL::Util::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
+    eCAL::Registration::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
     EXPECT_EQ(req_type,  "foo::req_type1");
     EXPECT_EQ(resp_type, "foo::resp_type1");
-    eCAL::Util::GetClientDescription("foo::service", "foo::method", req_desc, resp_desc);
+    eCAL::Registration::GetClientDescription("foo::service", "foo::method", req_desc, resp_desc);
     EXPECT_EQ(req_desc,  "foo::req_desc1");
     EXPECT_EQ(resp_desc, "foo::resp_desc1");
 
@@ -141,7 +152,7 @@ TEST(core_cpp_util, ClientEqualQualities)
     eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // get all clients again, clients should not be expired
-    eCAL::Util::GetClients(client_info_map);
+    eCAL::Registration::GetClients(client_info_map);
 
     // check size
     EXPECT_EQ(client_info_map.size(), 1);
@@ -149,21 +160,24 @@ TEST(core_cpp_util, ClientEqualQualities)
     // destroy client 1
     client1.Destroy();
 
+    // let's register
+    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
+
     // check attributes, client 1 attributes should be replaced by client 2 attributes now
-    eCAL::Util::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
+    eCAL::Registration::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
     EXPECT_EQ(req_type,  "foo::req_type2");
     EXPECT_EQ(resp_type, "foo::resp_type2");
-    eCAL::Util::GetClientDescription("foo::service", "foo::method", req_desc, resp_desc);
+    eCAL::Registration::GetClientDescription("foo::service", "foo::method", req_desc, resp_desc);
     EXPECT_EQ(req_desc,  "foo::req_desc2");
     EXPECT_EQ(resp_desc, "foo::resp_desc2");
   }
 
   // let's unregister
-  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // get all clients again, all clients 
   // should be removed from the map
-  eCAL::Util::GetClients(client_info_map);
+  eCAL::Registration::GetClients(client_info_map);
 
   // check size
   EXPECT_EQ(client_info_map.size(), 0);
@@ -172,12 +186,15 @@ TEST(core_cpp_util, ClientEqualQualities)
   eCAL::Finalize();
 }
 
-TEST(core_cpp_util, ClientDifferentQualities)
+TEST(core_cpp_registration_public, ClientDifferentQualities)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_util");
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
 
-  std::map<eCAL::Util::SServiceMethod, eCAL::SServiceMethodInformation> client_info_map;
+  // enable loop back communication in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> client_info_map;
 
   // create 2 clients with different qualities of data type information
   {
@@ -189,8 +206,11 @@ TEST(core_cpp_util, ClientDifferentQualities)
     service_method_info1.response_type.descriptor = "";
     eCAL::CServiceClient client1("foo::service", { {"foo::method", service_method_info1} });
 
+    // let's register
+    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
+
     // get all clients
-    eCAL::Util::GetClients(client_info_map);
+    eCAL::Registration::GetClients(client_info_map);
 
     // check size
     EXPECT_EQ(client_info_map.size(), 1);
@@ -199,10 +219,10 @@ TEST(core_cpp_util, ClientDifferentQualities)
     std::string req_type, resp_type;
     std::string req_desc, resp_desc;
 
-    eCAL::Util::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
+    eCAL::Registration::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
     EXPECT_EQ(req_type,  "foo::req_type1");
     EXPECT_EQ(resp_type, "");
-    eCAL::Util::GetClientDescription("foo::service", "foo::method", req_desc, resp_desc);
+    eCAL::Registration::GetClientDescription("foo::service", "foo::method", req_desc, resp_desc);
     EXPECT_EQ(req_desc,  "foo::req_desc1");
     EXPECT_EQ(resp_desc, "");
 
@@ -214,11 +234,14 @@ TEST(core_cpp_util, ClientDifferentQualities)
     service_method_info2.response_type.descriptor = "foo::resp_desc2";
     eCAL::CServiceClient client2("foo::service", { {"foo::method", service_method_info2} });
 
+    // let's register
+    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
+
     // check attributes, we expect attributes from client 2 here
-    eCAL::Util::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
+    eCAL::Registration::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
     EXPECT_EQ(req_type,  "foo::req_type2");
     EXPECT_EQ(resp_type, "foo::resp_type2");
-    eCAL::Util::GetClientDescription("foo::service", "foo::method", req_desc, resp_desc);
+    eCAL::Registration::GetClientDescription("foo::service", "foo::method", req_desc, resp_desc);
     EXPECT_EQ(req_desc,  "foo::req_desc2");
     EXPECT_EQ(resp_desc, "foo::resp_desc2");
 
@@ -227,14 +250,52 @@ TEST(core_cpp_util, ClientDifferentQualities)
   }
 
   // let's unregister
-  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // get all clients again, all clients
   // should be removed from the map
-  eCAL::Util::GetClients(client_info_map);
+  eCAL::Registration::GetClients(client_info_map);
 
   // check size
   EXPECT_EQ(client_info_map.size(), 0);
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+TEST(core_cpp_registration_public, GetClientIDs)
+{
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
+
+  // enable loop back communication in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  // create simple client
+  {
+    // create client
+    eCAL::SServiceMethodInformation service_method_info;
+    service_method_info.request_type.name        = "foo::req_type";
+    service_method_info.request_type.descriptor  = "foo::req_desc";
+    service_method_info.response_type.name       = "foo::resp_type";
+    service_method_info.response_type.descriptor = "foo::resp_desc";
+    const eCAL::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
+
+    // let's register
+    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
+
+    // get client
+    auto id_set = eCAL::Registration::GetClientIDs();
+    EXPECT_EQ(1, id_set.size());
+    if (id_set.size() > 0)
+    {
+      eCAL::Registration::SQualityServiceInfo info;
+      EXPECT_TRUE(eCAL::Registration::GetClientInfo(*id_set.begin(), info));
+
+      // check service/method names
+      EXPECT_EQ(service_method_info, info.info);
+    }
+  }
 
   // finalize eCAL API
   eCAL::Finalize();

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,15 +94,15 @@ namespace eCAL
     return(ret_state);
   }
 
-  void CServiceGate::RefreshRegistrations()
+  void CServiceGate::GetRegistrations(Registration::SampleList& reg_sample_list_)
   {
     if (!m_created) return;
 
-    // refresh service registrations
+    // read service registrations
     std::shared_lock<std::shared_timed_mutex> const lock(m_service_set_sync);
     for (const auto& service_server_impl : m_service_set)
     {
-      service_server_impl->RefreshRegistration();
+      reg_sample_list_.samples.emplace_back(service_server_impl->GetRegistration());
     }
   }
 }

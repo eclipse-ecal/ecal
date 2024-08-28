@@ -40,7 +40,8 @@ typedef struct _eCAL_pb_ProcessState {
     eCAL_pb_eProcessSeverityLevel severity_level; /* severity level */
 } eCAL_pb_ProcessState;
 
-typedef struct _eCAL_pb_Process {
+typedef struct _eCAL_pb_Process { /* Reserved fields in enums are not supported in protobuf 3.0
+ reserved 7 to 11; */
     int32_t rclock; /* registration clock */
     pb_callback_t hname; /* host name */
     int32_t pid; /* process id */

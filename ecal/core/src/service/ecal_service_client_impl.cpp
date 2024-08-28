@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,7 +89,7 @@ namespace eCAL
     m_created = true;
 
     // register this client
-    Register(true);
+    Register();
 
     return(true);
   }
@@ -427,10 +427,15 @@ namespace eCAL
   }
 
   // called by eCAL:CClientGate every second to update registration layer
-  void CServiceClientImpl::RefreshRegistration()
+  Registration::Sample CServiceClientImpl::GetRegistration()
   {
-    if (!m_created) return;
-    Register(false);
+    // refresh connected services map
+    CheckForNewServices();
+
+    // check for disconnected services
+    CheckForDisconnectedServices();
+
+    return GetRegistrationSample();
   }
 
   std::shared_ptr<std::vector<std::pair<bool, eCAL::SServiceResponse>>>
@@ -629,22 +634,21 @@ namespace eCAL
     response_.response = std::string(response_struct_.response.data(), response_struct_.response.size());
   }
 
-  void CServiceClientImpl::Register(const bool force_)
+  Registration::Sample CServiceClientImpl::GetRegistrationSample()
   {
-    if (!m_created)             return;
-    if (m_service_name.empty()) return;
+    Registration::Sample ecal_reg_sample;
+    ecal_reg_sample.cmd_type = bct_reg_client;
 
-    Registration::Sample sample;
-    sample.cmd_type = bct_reg_client;
-    auto& service_client = sample.client;
+    auto& service_identifier = ecal_reg_sample.identifier;
+    service_identifier.entity_id  = m_service_id;
+    service_identifier.process_id = Process::GetProcessID();
+    service_identifier.host_name  = Process::GetHostName();
+
+    auto& service_client = ecal_reg_sample.client;
     service_client.version = m_client_version;
-    service_client.hname   = Process::GetHostName();
     service_client.pname   = Process::GetProcessName();
     service_client.uname   = Process::GetUnitName();
-    service_client.pid     = Process::GetProcessID();
     service_client.sname   = m_service_name;
-    service_client.sid     = m_service_id;
-
 
     {
       const std::lock_guard<std::mutex> lock(m_method_sync);
@@ -655,72 +659,53 @@ namespace eCAL
         const auto& method_information = method_information_pair.second;
 
         Service::Method method;
-        method.mname = method_name;
-        method.req_type = method_information.request_type.name;
-        method.req_desc = method_information.request_type.descriptor;
-        method.resp_type = method_information.response_type.name;
-        method.resp_desc = method_information.response_type.descriptor;
+        method.mname      = method_name;
+        method.req_type   = method_information.request_type.name;
+        method.req_desc   = method_information.request_type.descriptor;
+        method.resp_type  = method_information.response_type.name;
+        method.resp_desc  = method_information.response_type.descriptor;
         method.call_count = m_method_call_count_map.at(method_name);
         service_client.methods.push_back(method);
       }
     }
 
+    return ecal_reg_sample;
+  }
+
+  Registration::Sample CServiceClientImpl::GetUnregistrationSample()
+  {
+    Registration::Sample ecal_reg_sample;
+    ecal_reg_sample.cmd_type = bct_unreg_client;
+
+    auto& service_identifier = ecal_reg_sample.identifier;
+    service_identifier.entity_id  = m_service_id;
+    service_identifier.process_id = Process::GetProcessID();
+    service_identifier.host_name  = Process::GetHostName();
+
+    auto& service_client = ecal_reg_sample.client;
+    service_client.pname   = Process::GetProcessName();
+    service_client.uname   = Process::GetUnitName();
+    service_client.sname   = m_service_name;
+    service_client.version = m_client_version;
+
+    return ecal_reg_sample;
+  }
+
+  void CServiceClientImpl::Register()
+  {
+    if (!m_created)             return;
+    if (m_service_name.empty()) return;
+
     // register entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, force_);
-
-    // refresh connected services map
-    CheckForNewServices();
-
-    // check for disconnected services
-    {
-      std::lock_guard<std::mutex> const lock(m_client_map_sync);
-      for (auto& client : m_client_map)
-      {
-        if (client.second->get_state() == eCAL::service::State::FAILED)
-        {
-          std::string const service_key = client.first;
-
-          // is the service still in the connecting map ?
-          auto iter = m_connected_services_map.find(service_key);
-          if (iter != m_connected_services_map.end())
-          {
-            // call disconnect event
-            std::lock_guard<std::mutex> const lock_cb(m_event_callback_map_sync);
-            auto e_iter = m_event_callback_map.find(client_event_disconnected);
-            if (e_iter != m_event_callback_map.end())
-            {
-              SClientEventCallbackData sdata;
-              sdata.type = client_event_disconnected;
-              sdata.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-              sdata.attr = iter->second;
-              (e_iter->second)(m_service_name.c_str(), &sdata);
-            }
-            // remove service
-            m_connected_services_map.erase(iter);
-          }
-        }
-      }
-    }
+    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(GetRegistrationSample());
   }
 
   void CServiceClientImpl::Unregister()
   {
     if (m_service_name.empty()) return;
 
-    Registration::Sample sample;
-    sample.cmd_type = bct_unreg_client;
-    auto& service_client = sample.client;
-    service_client.hname   = Process::GetHostName();
-    service_client.pname   = Process::GetProcessName();
-    service_client.uname   = Process::GetUnitName();
-    service_client.pid     = Process::GetProcessID();
-    service_client.sname   = m_service_name;
-    service_client.sid     = m_service_id;
-    service_client.version = m_client_version;
-
-
     // unregister entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->ApplySample(sample, false);
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(GetUnregistrationSample());
   }
 
   void CServiceClientImpl::CheckForNewServices()
@@ -754,11 +739,42 @@ namespace eCAL
         const std::vector<std::pair<std::string, uint16_t>> endpoint_list
                   {
                     {iter.hname, port_to_use},
-                    {iter.hname + ".local", port_to_use},   // TODO: Make this configurable from the ecal.ini
+                    {iter.hname + ".local", port_to_use},   // TODO: Make this configurable from the ecal.yaml
                   };
         const auto new_client_session = client_manager->create_client(static_cast<uint8_t>(protocol_version), endpoint_list, event_callback);
         if (new_client_session)
           m_client_map[iter.key] = new_client_session;
+      }
+    }
+  }
+
+  void CServiceClientImpl::CheckForDisconnectedServices()
+  {
+    std::lock_guard<std::mutex> const lock(m_client_map_sync);
+    for (auto& client : m_client_map)
+    {
+      if (client.second->get_state() == eCAL::service::State::FAILED)
+      {
+        std::string const service_key = client.first;
+
+        // is the service still in the connecting map ?
+        auto iter = m_connected_services_map.find(service_key);
+        if (iter != m_connected_services_map.end())
+        {
+          // call disconnect event
+          std::lock_guard<std::mutex> const lock_cb(m_event_callback_map_sync);
+          auto e_iter = m_event_callback_map.find(client_event_disconnected);
+          if (e_iter != m_event_callback_map.end())
+          {
+            SClientEventCallbackData sdata;
+            sdata.type = client_event_disconnected;
+            sdata.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+            sdata.attr = iter->second;
+            (e_iter->second)(m_service_name.c_str(), &sdata);
+          }
+          // remove service
+          m_connected_services_map.erase(iter);
+        }
       }
     }
   }

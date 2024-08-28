@@ -32,8 +32,8 @@ namespace eCAL
   {
     struct Configuration
     {
-      bool protocol_v0{};                           //!< Support service protocol v0, eCAL 5.11 and older (Default: true)
-      bool protocol_v1{};                           //!< Support service protocol v1, eCAL 5.12 and newer (Default: true)
+      bool protocol_v0 { false }; //!< Support service protocol v0, eCAL 5.11 and older (Default: false)
+      bool protocol_v1 { true };  //!< Support service protocol v1, eCAL 5.12 and newer (Default: true)
     };
   }
 }

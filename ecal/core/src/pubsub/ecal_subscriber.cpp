@@ -81,7 +81,7 @@ namespace eCAL
     if (topic_name_.empty()) return(false);
 
     // create datareader
-    m_datareader = std::make_shared<CDataReader>(topic_name_, data_type_info_);
+    m_datareader = std::make_shared<CDataReader>(topic_name_, data_type_info_, config_);
 
     // register datareader
     g_subgate()->Register(topic_name_, m_datareader);
@@ -143,7 +143,7 @@ namespace eCAL
   bool CSubscriber::ReceiveBuffer(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */) const
   {
     if (!m_created) return(false);
-    return(m_datareader->Receive(buf_, time_, rcv_timeout_));
+    return(m_datareader->Read(buf_, time_, rcv_timeout_));
   }
 
   bool CSubscriber::AddReceiveCallback(ReceiveCallbackT callback_)
@@ -170,6 +170,12 @@ namespace eCAL
   {
     if (m_datareader == nullptr) return(false);
     return(m_datareader->RemEventCallback(type_));
+  }
+
+  bool CSubscriber::IsPublished() const
+  {
+    if (m_datareader == nullptr) return(false);
+    return(m_datareader->IsPublished());
   }
 
   size_t CSubscriber::GetPublisherCount() const

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,12 +84,28 @@ namespace eCAL
       }
     }
 
+    /**
+     * @brief Trigger the callback thread to interrupt the current sleep without stopping it.
+     * The callback function will be executed immediately.
+     */
+    void trigger()
+    {
+      {
+        const std::unique_lock<std::mutex> lock(mtx_);
+        // Set the flag to signal the callback thread to trigger
+        triggerThread_ = true;
+        // Notify the callback thread to wake up and check the flag
+        cv_.notify_one();
+      }
+    }
+
   private:
     std::thread callbackThread_;      /**< The callback thread object. */
     std::function<void()> callback_;  /**< The callback function to be executed in the callback thread. */
     std::mutex mtx_;                  /**< Mutex for thread synchronization. */
     std::condition_variable cv_;      /**< Condition variable for signaling between threads. */
-    bool stopThread_{false};          /**< Flag to indicate whether the callback thread should stop. */
+    bool stopThread_{ false };          /**< Flag to indicate whether the callback thread should stop. */
+    bool triggerThread_{ false };       /**< Flag to indicate whether the callback thread should be triggered. */
 
     /**
      * @brief Callback function that runs in the callback thread.
@@ -105,10 +121,17 @@ namespace eCAL
         {
           std::unique_lock<std::mutex> lock(mtx_);
           // Wait for a signal or a timeout
-          if (cv_.wait_for(lock, timeout, [this] { return stopThread_; }))
+          if (cv_.wait_for(lock, timeout, [this] { return stopThread_ || triggerThread_; }))
           {
-            // If the stopThread flag is true, break out of the loop
-            break;
+            if (stopThread_) {
+              // If the stopThread flag is true, break out of the loop
+              break;
+            }
+
+            if (triggerThread_) {
+              // If the triggerThread flag is true, reset it and proceed
+              triggerThread_ = false;
+            }
           }
         }
 

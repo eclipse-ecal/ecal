@@ -17,20 +17,21 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  eCAL subscriber configuration
-**/
+#pragma once
 
-#include <ecal/ecal_config.h>
-#include <ecal/config/subscriber.h>
+#include <string>
 
 namespace eCAL
 {
-  namespace Subscriber
+  namespace Registration
   {
-    Configuration::Configuration()
+    namespace SHM
     {
-      *this = GetConfiguration().subscriber;
+      struct SAttributes
+      {
+        std::string  domain;
+        unsigned int queue_size;
+      };
     }
   }
 }

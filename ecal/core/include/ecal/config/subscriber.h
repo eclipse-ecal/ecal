@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <ecal/ecal_os.h>
+#include <ecal/config/transport_layer.h>
 
 #include <cstddef>
 
@@ -32,37 +32,45 @@ namespace eCAL
 {
   namespace Subscriber
   {
-    namespace SHM
+    namespace Layer
     {
-      struct Configuration
+      namespace SHM
       {
-        bool enable;                                                  //!< enable layer
-      };
-    }
+        struct Configuration
+        {
+          bool enable { true }; //!< enable layer (Default: true)
+        };
+      }
 
-    namespace UDP
-    {
-      struct Configuration
+      namespace UDP
       {
-        bool enable;                                                  //!< enable layer
-      };
-    }
+        struct Configuration
+        {
+          bool enable { true }; //!< enable layer (Default: true)
+        };
+      }
 
-    namespace TCP
-    {
+      namespace TCP
+      {
+        struct Configuration
+        {
+          bool enable { false }; //!< enable layer (Default: false)
+        };
+      }
+
       struct Configuration
       {
-        bool enable;                                                  //!< enable layer
+        SHM::Configuration shm;
+        UDP::Configuration udp;
+        TCP::Configuration tcp;
       };
     }
 
     struct Configuration
     {
-      ECAL_API Configuration();
+      Layer::Configuration layer;
 
-      SHM::Configuration shm;
-      UDP::Configuration udp;
-      TCP::Configuration tcp;
+      bool drop_out_of_order_messages { true }; //!< Enable dropping of payload messages that arrive out of order
     };
   }
 }

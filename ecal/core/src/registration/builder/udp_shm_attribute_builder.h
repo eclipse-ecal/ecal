@@ -17,20 +17,20 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  eCAL publisher configuration
-**/
+#pragma once
 
-#include <ecal/ecal_config.h>
-#include <ecal/config/publisher.h>
+#include "registration/udp/attributes/registration_sender_udp_attributes.h"
+#include "registration/udp/attributes/registration_receiver_udp_attributes.h"
+#include "registration/shm/attributes/registration_shm_attributes.h"
+#include "registration/attributes/registration_attributes.h"
+
 
 namespace eCAL
 {
-  namespace Publisher
+  namespace Registration
   {
-    Configuration::Configuration() 
-    {
-      *this = GetConfiguration().publisher;
-    }
+    UDP::SSenderAttributes   BuildUDPSenderAttributes   (const SAttributes& provider_attr_);
+    UDP::SReceiverAttributes BuildUDPReceiverAttributes (const SAttributes& provider_attr_);
+    SHM::SAttributes         BuildSHMAttributes         (const SAttributes& provider_attr_);
   }
 }

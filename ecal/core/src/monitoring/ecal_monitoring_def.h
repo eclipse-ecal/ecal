@@ -25,6 +25,8 @@
 
 #include <ecal/types/monitoring.h>
 
+#include "attributes/monitoring_attributes.h"
+
 #include <memory>
 #include <string>
 
@@ -37,7 +39,7 @@ namespace eCAL
   class CMonitoring
   {
   public:
-    CMonitoring();
+    CMonitoring(const Monitoring::SAttributes& attr_);
     ~CMonitoring();
     
     void Start();

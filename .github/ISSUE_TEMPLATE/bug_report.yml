@@ -118,7 +118,7 @@ body:
       Platform                 : x64
 
       ------------------------- CONFIGURATION --------------------------
-      Default INI              : C:\ProgramData\eCAL\ecal.ini
+      Default YAML             : C:\ProgramData\eCAL\ecal.yaml
 
       ------------------------- NETWORK --------------------------------
       Host name                : FRLBJRXW

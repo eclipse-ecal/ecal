@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,24 +21,26 @@
  * @brief  memory file data writer
 **/
 
-#include <ecal/ecal.h>
 #include <ecal/ecal_log.h>
-#include <string>
 
 #include "ecal_def.h"
 #include "ecal_writer_shm.h"
+#include "ecal/ecal_config.h"
+
+#include <string>
 
 namespace eCAL
 {
   const std::string CDataWriterSHM::m_memfile_base_name = "ecal_";
 
-  CDataWriterSHM::CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& /*topic_id_*/, const Publisher::SHM::Configuration& shm_config_) :
+  CDataWriterSHM::CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& /*topic_id_*/, const Publisher::Layer::SHM::Configuration& shm_config_) :
     m_config(shm_config_)
   {
     m_host_name  = host_name_;
     m_topic_name = topic_name_;
 
     // initialize memory file buffer
+    if (m_config.memfile_buffer_count < 1) m_config.memfile_buffer_count = 1;
     SetBufferCount(m_config.memfile_buffer_count);
   }
 
@@ -123,8 +125,8 @@ namespace eCAL
 
     // prepare memfile attributes
     SSyncMemoryFileAttr memory_file_attr = {};
-    memory_file_attr.min_size        = m_config.memfile_min_size_bytes;
-    memory_file_attr.reserve         = m_config.memfile_reserve_percent;
+    memory_file_attr.min_size        = GetConfiguration().transport_layer.shm.memfile_min_size_bytes;
+    memory_file_attr.reserve         = GetConfiguration().transport_layer.shm.memfile_reserve_percent;
     memory_file_attr.timeout_open_ms = PUB_MEMFILE_OPEN_TO;
     memory_file_attr.timeout_ack_ms  = m_config.acknowledge_timeout_ms;
 

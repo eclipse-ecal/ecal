@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,12 @@
 */
 
 /**
- * @brief  Global database class helper
+ * @brief  transport layer settings
 **/
 
 #pragma once
 
-#include "ecal_config_reader.h"
-#include "ecal_def_ini.h"
-#include "ecal_global_accessors.h"
-
-// macro to simplify configuration parameter access (internal use only)
-// eCALPAR(GROUP,PAR) -> eCAL::g_config()->get(GROUP_SECTION_S, GROUP_PAR_S, GROUP_PAR)
-#define eCALPAR(x,y) eCAL::g_config()->get(x##_SECTION_S, x##_##y##_S, x##_##y)
+namespace eCAL
+{
+  constexpr int ecal_transport_layer_version = 2;
+}

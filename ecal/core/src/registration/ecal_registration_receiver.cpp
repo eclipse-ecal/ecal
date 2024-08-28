@@ -25,19 +25,25 @@
  *
 **/
 
-#include "ecal_registration_receiver.h"
-#include "ecal_global_accessors.h"
+#include "registration/ecal_registration_receiver.h"
 
-#include "pubsub/ecal_subgate.h"
-#include "pubsub/ecal_pubgate.h"
-#include "service/ecal_clientgate.h"
+#include "registration/ecal_registration_timeout_provider.h"
+#include "util/ecal_thread.h"
 
+#include "registration/udp/ecal_registration_receiver_udp.h"
+#if ECAL_CORE_REGISTRATION_SHM
+#include "registration/shm/ecal_registration_receiver_shm.h"
+#endif
 #include "io/udp/ecal_udp_configurations.h"
+#include <ecal/ecal_config.h>
 #include <atomic>
 #include <functional>
 #include <memory>
 #include <mutex>
 #include <string>
+
+#include "builder/udp_shm_attribute_builder.h"
+#include "builder/sample_applier_attribute_builder.h"
 
 namespace eCAL
 {
@@ -46,55 +52,62 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   std::atomic<bool> CRegistrationReceiver::m_created;
 
-  CRegistrationReceiver::CRegistrationReceiver() :
-                         m_network(Config::IsNetworkEnabled()),
-                         m_loopback(false),
-                         m_callback_pub(nullptr),
-                         m_callback_sub(nullptr),
-                         m_callback_service(nullptr),
-                         m_callback_client(nullptr),
-                         m_callback_process(nullptr),
-                         m_use_registration_udp(false),
-                         m_use_registration_shm(false),
-                         m_host_group_name(Process::GetHostGroupName())
+  CRegistrationReceiver::CRegistrationReceiver(const Registration::SAttributes& attr_)
+    : m_timeout_provider(nullptr)
+    , m_timeout_provider_thread(nullptr)
+    , m_registration_receiver_udp(nullptr)
+    , m_registration_receiver_shm(nullptr)   
+    , m_attributes(attr_)
+    , m_sample_applier(Registration::SampleApplier::BuildSampleApplierAttributes(attr_))
   {
+    // Connect User registration callback and gates callback with the sample applier
+    m_sample_applier.SetCustomApplySampleCallback("gates", [](const eCAL::Registration::Sample& sample_)
+      {
+        Registration::CSampleApplierGates::ApplySample(sample_);
+      });
+    m_sample_applier.SetCustomApplySampleCallback("custom_registration", [this](const eCAL::Registration::Sample& sample_)
+      {
+        m_user_applier.ApplySample(sample_);
+      });
+
   }
 
   CRegistrationReceiver::~CRegistrationReceiver()
   {
     Stop();
+
+    m_sample_applier.RemCustomApplySampleCallback("custom_registration");
+    m_sample_applier.RemCustomApplySampleCallback("gates");
   }
 
   void CRegistrationReceiver::Start()
   {
     if(m_created) return;
 
-    // receive registration from shared memory and or udp
-    m_use_registration_udp = !Config::Experimental::IsNetworkMonitoringDisabled();
-    m_use_registration_shm     = Config::Experimental::IsShmMonitoringEnabled();
+    m_timeout_provider = std::make_unique<Registration::CTimeoutProvider<std::chrono::steady_clock>>(
+      m_attributes.timeout,
+      [this](const Registration::Sample& sample_)
+      {
+        return m_sample_applier.ApplySample(sample_);
+      }
+      );
+    m_sample_applier.SetCustomApplySampleCallback("timeout", [this](const eCAL::Registration::Sample& sample_)
+      {
+        m_timeout_provider->ApplySample(sample_);
+      });
+    m_timeout_provider_thread = std::make_unique<CCallbackThread>([this]() {m_timeout_provider->CheckForTimeouts(); });
+    m_timeout_provider_thread->start(std::chrono::milliseconds(100));
 
-    if (m_use_registration_udp)
+    // Why do we have here different behaviour than in the registration provider?
+    if (m_attributes.udp_enabled)    
     {
-      // set network attributes
-      eCAL::UDP::SReceiverAttr attr;
-      attr.address   = UDP::GetRegistrationAddress();
-      attr.port      = UDP::GetRegistrationPort();
-      attr.broadcast = UDP::IsBroadcast();
-      attr.loopback  = true;
-      attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
-
-      // start registration sample receiver
-      m_registration_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CRegistrationReceiver::HasSample, this, std::placeholders::_1), std::bind(&CRegistrationReceiver::ApplySerializedSample, this, std::placeholders::_1, std::placeholders::_2));
+      m_registration_receiver_udp = std::make_unique<CRegistrationReceiverUDP>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_);}, Registration::BuildUDPReceiverAttributes(m_attributes));
     }
 
 #if ECAL_CORE_REGISTRATION_SHM
-    if (m_use_registration_shm)
+    if (m_attributes.shm_enabled)
     {
-      m_memfile_broadcast.Create(Config::Experimental::GetShmMonitoringDomain(), Config::Experimental::GetShmMonitoringQueueSize());
-      m_memfile_broadcast.FlushLocalEventQueue();
-      m_memfile_broadcast_reader.Bind(&m_memfile_broadcast);
-
-      m_memfile_reg_rcv.Create(&m_memfile_broadcast_reader);
+      m_registration_receiver_shm = std::make_unique<CRegistrationReceiverSHM>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_); }, Registration::BuildSHMAttributes(m_attributes));
     }
 #endif
 
@@ -106,281 +119,48 @@ namespace eCAL
     if(!m_created) return;
 
     // stop network registration receive thread
-    m_registration_receiver = nullptr;
-
-    // stop network registration receive thread
-    if (m_use_registration_udp)
+    if (m_attributes.udp_enabled)
     {
-      m_registration_receiver = nullptr;
+      m_registration_receiver_udp = nullptr;
     }
 
 #if ECAL_CORE_REGISTRATION_SHM
-    if (m_use_registration_shm)
+    if (m_attributes.shm_enabled)
     {
-      // stop memfile registration receive thread and unbind reader
-      m_memfile_broadcast_reader.Unbind();
-      m_memfile_broadcast.Destroy();
+      m_registration_receiver_shm = nullptr;
     }
 #endif
 
-    // reset callbacks
-    m_callback_pub     = nullptr;
-    m_callback_sub     = nullptr;
-    m_callback_service = nullptr;
-    m_callback_client  = nullptr;
-    m_callback_process = nullptr;
+    m_timeout_provider_thread = nullptr;
+    m_sample_applier.RemCustomApplySampleCallback("timeout");
+    m_timeout_provider = nullptr;
 
-    // finished
     m_created          = false;
   }
 
   void CRegistrationReceiver::EnableLoopback(bool state_)
   {
-    m_loopback = state_;
-  }
-
-  bool CRegistrationReceiver::ApplySerializedSample(const char* serialized_sample_data_, size_t serialized_sample_size_)
-  {
-    if(!m_created) return false;
-
-    Registration::Sample sample;
-    if (!DeserializeFromBuffer(serialized_sample_data_, serialized_sample_size_, sample)) return false;
-
-    return ApplySample(sample);
-  }
-
-  bool CRegistrationReceiver::ApplySample(const Registration::Sample& sample_)
-  {
-    if (!m_created) return false;
-
-    // forward all registration samples to outside "customer" (e.g. monitoring, descgate)
-    {
-      const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
-      for (const auto& iter : m_callback_custom_apply_sample_map)
-      {
-        iter.second(sample_);
-      }
-    }
-
-    std::string reg_sample;
-    if (m_callback_pub
-      || m_callback_sub
-      || m_callback_service
-      || m_callback_client
-      || m_callback_process
-      )
-    {
-      SerializeToBuffer(sample_, reg_sample);
-    }
-
-    switch (sample_.cmd_type)
-    {
-    case bct_none:
-    case bct_set_sample:
-      break;
-    case bct_reg_process:
-    case bct_unreg_process:
-      // unregistration event not implemented currently
-      if (m_callback_process) m_callback_process(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
-      break;
-#if ECAL_CORE_SERVICE
-    case bct_reg_service:
-      if (g_clientgate() != nullptr) g_clientgate()->ApplyServiceRegistration(sample_);
-      if (m_callback_service) m_callback_service(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
-      break;
-    case bct_unreg_service:
-      // current client implementation doesn't need that information
-      if (m_callback_service) m_callback_service(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
-      break;
-#endif
-    case bct_reg_client:
-    case bct_unreg_client:
-      // current service implementation doesn't need that information
-      if (m_callback_client) m_callback_client(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
-      break;
-    case bct_reg_subscriber:
-    case bct_unreg_subscriber:
-      ApplySubscriberRegistration(sample_);
-      if (m_callback_sub) m_callback_sub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
-      break;
-    case bct_reg_publisher:
-    case bct_unreg_publisher:
-      ApplyPublisherRegistration(sample_);
-      if (m_callback_pub) m_callback_pub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
-      break;
-    default:
-      Logging::Log(log_level_debug1, "CRegistrationReceiver::ApplySample : unknown sample type");
-      break;
-    }
-
-    return true;
+    m_sample_applier.EnableLoopback(state_);
   }
 
   bool CRegistrationReceiver::AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_)
   {
-    if (!m_created) return false;
-    switch (event_)
-    {
-    case reg_event_publisher:
-      m_callback_pub = callback_;
-      return true;
-    case reg_event_subscriber:
-      m_callback_sub = callback_;
-      return true;
-    case reg_event_service:
-      m_callback_service = callback_;
-      return true;
-    case reg_event_client:
-      m_callback_client = callback_;
-      return true;
-    case reg_event_process:
-      m_callback_process = callback_;
-      return true;
-    default:
-      return false;
-    }
+    return m_user_applier.AddRegistrationCallback(event_, callback_);
   }
 
   bool CRegistrationReceiver::RemRegistrationCallback(enum eCAL_Registration_Event event_)
   {
-    if (!m_created) return false;
-    switch (event_)
-    {
-    case reg_event_publisher:
-      m_callback_pub = nullptr;
-      return true;
-    case reg_event_subscriber:
-      m_callback_sub = nullptr;
-      return true;
-    case reg_event_service:
-      m_callback_service = nullptr;
-      return true;
-    case reg_event_client:
-      m_callback_client = nullptr;
-      return true;
-    case reg_event_process:
-      m_callback_process = nullptr;
-      return true;
-    default:
-      return false;
-    }
-  }
-
-  void CRegistrationReceiver::ApplySubscriberRegistration(const Registration::Sample& sample_)
-  {
-#if ECAL_CORE_PUBLISHER
-    if (g_pubgate() == nullptr) return;
-
-    // process registrations from same host group
-    if (IsHostGroupMember(sample_))
-    {
-      // do not register local entities, only if loop back flag is set true
-      if (m_loopback || (sample_.topic.pid != Process::GetProcessID()))
-      {
-        switch (sample_.cmd_type)
-        {
-        case bct_reg_subscriber:
-          g_pubgate()->ApplySubRegistration(sample_);
-          break;
-        case bct_unreg_subscriber:
-          g_pubgate()->ApplySubUnregistration(sample_);
-          break;
-        default:
-          break;
-        }
-      }
-    }
-    // process external registrations
-    else
-    {
-      if (m_network)
-      {
-        switch (sample_.cmd_type)
-        {
-        case bct_reg_subscriber:
-          g_pubgate()->ApplySubRegistration(sample_);
-          break;
-        case bct_unreg_subscriber:
-          g_pubgate()->ApplySubUnregistration(sample_);
-          break;
-        default:
-          break;
-        }
-      }
-    }
-#endif
-  }
-
-  void CRegistrationReceiver::ApplyPublisherRegistration(const Registration::Sample& sample_)
-  {
-#if ECAL_CORE_SUBSCRIBER
-    if (g_subgate() == nullptr) return;
-
-    // process registrations from same host group 
-    if (IsHostGroupMember(sample_))
-    {
-      // do not register local entities, only if loop back flag is set true
-      if (m_loopback || (sample_.topic.pid != Process::GetProcessID()))
-      {
-        switch (sample_.cmd_type)
-        {
-        case bct_reg_publisher:
-          g_subgate()->ApplyPubRegistration(sample_);
-          break;
-        case bct_unreg_publisher:
-          g_subgate()->ApplyPubUnregistration(sample_);
-          break;
-        default:
-          break;
-        }
-      }
-    }
-    // process external registrations
-    else
-    {
-      if (m_network)
-      {
-        switch (sample_.cmd_type)
-        {
-        case bct_reg_publisher:
-          g_subgate()->ApplyPubRegistration(sample_);
-          break;
-        case bct_unreg_publisher:
-          g_subgate()->ApplyPubUnregistration(sample_);
-          break;
-        default:
-          break;
-        }
-      }
-    }
-#endif
-  }
-
-  bool CRegistrationReceiver::IsHostGroupMember(const Registration::Sample& sample_)
-  {
-    const std::string& sample_host_group_name = sample_.topic.hgname.empty() ? sample_.topic.hname : sample_.topic.hgname;
-
-    if (sample_host_group_name.empty() || m_host_group_name.empty()) 
-      return false;
-    if (sample_host_group_name != m_host_group_name) 
-      return false;
-
-    return true;
+    return m_user_applier.RemRegistrationCallback(event_);
   }
 
   void CRegistrationReceiver::SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_)
   {
-    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
-    m_callback_custom_apply_sample_map[customer_] = callback_;
+    m_sample_applier.SetCustomApplySampleCallback(customer_, callback_);
   }
 
   void CRegistrationReceiver::RemCustomApplySampleCallback(const std::string& customer_)
   {
-    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
-    auto iter = m_callback_custom_apply_sample_map.find(customer_);
-    if(iter != m_callback_custom_apply_sample_map.end())
-    {
-      m_callback_custom_apply_sample_map.erase(iter);
-    }
+    m_sample_applier.RemCustomApplySampleCallback(customer_);
   }
+
 }
