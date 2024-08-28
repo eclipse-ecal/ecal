@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  publisher configuration, adapted for Nanobind
+ * @brief  subscriber configuration, adapted for Nanobind
 **/
 
 #include <wrappers/wrapper_subscriber_config.h>
@@ -29,5 +29,4 @@ namespace eCAL
     { 
         Subscriber::Configuration::Configuration();
     }
-
 }

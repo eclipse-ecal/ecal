@@ -25,13 +25,13 @@
 #pragma once
 
 #include <ecal/ecal.h>
-#include <stdint.h>
-#include <string>
-#include <cstddef>
+#include <ecal/config/subscriber.h>
 #include <ecal/ecal_os.h>
 #include <ecal/types/ecal_custom_data_types.h>
 
-#include <ecal/config/subscriber.h>
+#include <stdint.h>
+#include <string>
+#include <cstddef>
 #include <nanobind/nanobind.h>
 
 namespace eCAL

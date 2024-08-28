@@ -26,8 +26,6 @@
 
 #include <nanobind/nanobind.h>
 #include <nanobind/operators.h>
-#include <ecal/ecal.h>
-#include <nanobind/operators.h>
 #include <nanobind/stl/string.h>
 #include <nanobind/stl/shared_ptr.h>
 #include <nanobind/stl/tuple.h>
@@ -36,6 +34,8 @@
 #include <memory>
 #include <string>
 #include <cstddef>
+
+#include <ecal/ecal.h>
 #include <ecal/ecal_types.h>
 
 /**
