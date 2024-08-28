@@ -240,7 +240,6 @@ namespace eCAL
     }
 
     Configuration::Configuration(const std::vector<std::string>& args_)
-    : Configuration()
     {
       Config::CmdParser parser(args_);
       
@@ -264,7 +263,6 @@ namespace eCAL
 
     Configuration::Configuration()
     {
-      eCAL::InitGlobals();
     }
 
     std::string Configuration::GetYamlFilePath()

@@ -58,6 +58,8 @@ TEST(logging_sinks /*unused*/, file_logging /*unused*/)
 
   eCAL::Logging::Log(log_message);
 
+  eCAL::Finalize();
+
   std::string filepath;
   for (const auto& entry : std::filesystem::directory_iterator(logging_path))
   {
@@ -81,10 +83,10 @@ TEST(logging_sinks /*unused*/, file_logging /*unused*/)
   auto find_message = line.find(log_message);
   EXPECT_NE(find_message, std::string::npos);
     
-  eCAL::Finalize();
+  
   logfile.close();
 
-  if (!filepath.empty()) std::remove(filepath.c_str());
+  // if (!filepath.empty()) std::remove(filepath.c_str());
 }
 
 TEST(logging_sinks /*unused*/, udp_logging /*unused*/)
@@ -99,9 +101,9 @@ TEST(logging_sinks /*unused*/, udp_logging /*unused*/)
   ecal_config.logging.sinks.udp.enable         = true;
   ecal_config.logging.sinks.udp.filter_log_udp = log_level_all;
 
-  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);  
 
-  eCAL::Logging::Log(log_message);
+  eCAL::Logging::Log(log_level_info, log_message);
 
   std::this_thread::sleep_for(UDP_WAIT_TIME);
   
@@ -109,11 +111,17 @@ TEST(logging_sinks /*unused*/, udp_logging /*unused*/)
   eCAL::Logging::GetLogging(log);
 
   EXPECT_EQ(log.log_messages.size(), 1);
-  EXPECT_EQ(log.log_messages.front().hname, eCAL::Process::GetHostName());
-  EXPECT_EQ(log.log_messages.front().pid,   eCAL::Process::GetProcessID());
-  EXPECT_EQ(log.log_messages.front().uname, unit_name);
-  EXPECT_EQ(log.log_messages.front().level, log_level_info);
-  EXPECT_TRUE(log.log_messages.front().content.find(log_message) != std::string::npos);
+  
+  if (log.log_messages.size() > 0)
+  {
+    EXPECT_EQ(log.log_messages.front().hname, eCAL::Process::GetHostName());
+    EXPECT_EQ(log.log_messages.front().pid,   eCAL::Process::GetProcessID());
+    EXPECT_EQ(log.log_messages.front().uname, unit_name);
+    EXPECT_EQ(log.log_messages.front().level, log_level_info);
+    EXPECT_TRUE(log.log_messages.front().content.find(log_message) != std::string::npos);
+  }
+
+  eCAL::Finalize();
 }
 
 TEST(logging_sinks /*unused*/, console_logging /*unused*/)
@@ -137,13 +145,15 @@ TEST(logging_sinks /*unused*/, console_logging /*unused*/)
     std::string console_output = ss.str();
     EXPECT_TRUE(console_output.find(log_message) != std::string::npos);
   }
+
+  eCAL::Finalize();
 }
 
-bool checkExpectedLogCount(eCAL::Logging::SLogging& log_, const size_t& expected_count_)
+int getLogging(eCAL::Logging::SLogging& log_)
 {
   std::this_thread::sleep_for(UDP_WAIT_TIME);
 
-  return eCAL::Logging::GetLogging(log_) == expected_count_;
+  return eCAL::Logging::GetLogging(log_);
 }
 
 TEST(logging_levels /*unused*/, set_level_test /*unused*/)
@@ -164,9 +174,13 @@ TEST(logging_levels /*unused*/, set_level_test /*unused*/)
   
   // should not log
   eCAL::Logging::Log(log_level_info, log_message);
-  EXPECT_TRUE(checkExpectedLogCount(log, 0));
+  EXPECT_EQ(getLogging(log), 0);
 
   // should log
   eCAL::Logging::Log(log_level_warning, log_message);
-  EXPECT_TRUE(checkExpectedLogCount(log, 1));
+  EXPECT_EQ(getLogging(log), 1);
+
+  eCAL::Finalize();
+
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
 }

@@ -76,6 +76,27 @@ namespace eCAL
     void SetLogLevel(eCAL_Logging_eLogLevel level_);
 
     /**
+     * @brief Sets the log filter for file.
+     * 
+     * @param filter_ The filter.
+     */
+    void SetFileLogFilter(eCAL_Logging_Filter filter_);
+
+    /**
+     * @brief Sets the log filter for udp.
+     * 
+     * @param filter_ The filter.
+     */
+    void SetUDPLogFilter(eCAL_Logging_Filter filter_);
+
+    /**
+     * @brief Sets the log filter for console.
+     * 
+     * @param filter_ The filter.
+     */
+    void SetConsoleLogFilter(eCAL_Logging_Filter filter_);
+
+    /**
       * @brief Set the current log level.
       *
       * @return   The current log level.

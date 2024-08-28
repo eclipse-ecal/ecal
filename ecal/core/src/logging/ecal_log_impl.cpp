@@ -227,6 +227,21 @@ namespace eCAL
     m_attributes.level = level_;
   }
 
+  void CLog::SetFileLogFilter(eCAL_Logging_Filter filter_)
+  {
+    m_attributes.file.filter_log = filter_;
+  }
+
+  void CLog::SetUDPLogFilter(eCAL_Logging_Filter filter_)
+  {
+    m_attributes.udp.filter_log = filter_;
+  }
+
+  void CLog::SetConsoleLogFilter(eCAL_Logging_Filter filter_)
+  {
+    m_attributes.console.filter_log = filter_;
+  }
+
   eCAL_Logging_eLogLevel CLog::GetLogLevel()
   {
     const std::lock_guard<std::mutex> lock(m_log_mtx);
