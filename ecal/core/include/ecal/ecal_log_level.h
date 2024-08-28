@@ -24,12 +24,10 @@
 
 #pragma once
 
-#include <cstdint>
-
 /**
  * @brief Values that represent different log level to filter on monitoring. 
 **/
-enum eCAL_Logging_eLogLevel : std::uint8_t
+enum eCAL_Logging_eLogLevel
 {
   log_level_none    =   0,
   log_level_all     = 255,
