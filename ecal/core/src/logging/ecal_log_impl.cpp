@@ -217,7 +217,6 @@ namespace eCAL
       logWarningToConsole("Logging receiver could not be created.");
     }
 
-
     m_created = true;
   }
 
