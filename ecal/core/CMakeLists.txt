@@ -422,6 +422,7 @@ endif()
 # common
 ######################################
 set(ecal_cmn_src
+    src/builder/monitoring_attribute_builder.cpp
     src/ecal.cpp
     src/ecal_def.h
     src/ecal_def_ini.h
