@@ -41,7 +41,7 @@ private:
     std::streambuf* originalBuffer;
 };
 
-TEST(logging_sinks /*unused*/, file_logging /*unused*/)
+TEST(logging_to /*unused*/, file /*unused*/)
 {
   const std::string logging_path = "./";
   const std::string unit_name    = "file_logging_test";
@@ -56,7 +56,7 @@ TEST(logging_sinks /*unused*/, file_logging /*unused*/)
 
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
 
-  eCAL::Logging::Log(log_message);
+  eCAL::Logging::Log(log_level_info, log_message);
 
   eCAL::Finalize();
 
@@ -86,10 +86,10 @@ TEST(logging_sinks /*unused*/, file_logging /*unused*/)
   
   logfile.close();
 
-  // if (!filepath.empty()) std::remove(filepath.c_str());
+  if (!filepath.empty()) std::remove(filepath.c_str());
 }
 
-TEST(logging_sinks /*unused*/, udp_logging /*unused*/)
+TEST(logging_to /*unused*/, udp /*unused*/)
 {
   const std::string logging_path = "./";
   const std::string unit_name    = "udp_logging_test";
@@ -112,6 +112,8 @@ TEST(logging_sinks /*unused*/, udp_logging /*unused*/)
 
   EXPECT_EQ(log.log_messages.size(), 1);
   
+  // check whole log message for information
+  // check before the size -> crashes the test if it's not checked before
   if (log.log_messages.size() > 0)
   {
     EXPECT_EQ(log.log_messages.front().hname, eCAL::Process::GetHostName());
@@ -124,7 +126,7 @@ TEST(logging_sinks /*unused*/, udp_logging /*unused*/)
   eCAL::Finalize();
 }
 
-TEST(logging_sinks /*unused*/, console_logging /*unused*/)
+TEST(logging_to /*unused*/, console /*unused*/)
 {
   const std::string logging_path = "./";
   const std::string unit_name    = "udp_logging_test";
@@ -139,9 +141,10 @@ TEST(logging_sinks /*unused*/, console_logging /*unused*/)
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
 
   {
+    // Redirect the output stream to a stringstream in order to find log messages
     std::stringstream ss;
     CoutRedirect redirect(ss);
-    eCAL::Logging::Log(log_message);
+    eCAL::Logging::Log(log_level_info, log_message);
     std::string console_output = ss.str();
     EXPECT_TRUE(console_output.find(log_message) != std::string::npos);
   }
@@ -156,7 +159,7 @@ int getLogging(eCAL::Logging::SLogging& log_)
   return eCAL::Logging::GetLogging(log_);
 }
 
-TEST(logging_levels /*unused*/, set_level_test /*unused*/)
+TEST(logging_levels /*unused*/, set_level /*unused*/)
 {
   const std::string logging_path = "./";
   const std::string unit_name    = "udp_logging_test";
@@ -172,15 +175,113 @@ TEST(logging_levels /*unused*/, set_level_test /*unused*/)
 
   eCAL::Logging::SLogging log;
   
-  // should not log
+  // logging not expected
   eCAL::Logging::Log(log_level_info, log_message);
   EXPECT_EQ(getLogging(log), 0);
 
-  // should log
+  // logging expected
   eCAL::Logging::Log(log_level_warning, log_message);
   EXPECT_EQ(getLogging(log), 1);
 
+  // change log filter for udp logging
+  eCAL::Logging::SetUDPLogFilter(log_level_info | log_level_debug1);
+
+  // logging not expected
+  eCAL::Logging::Log(log_level_warning, log_message);
+  EXPECT_EQ(getLogging(log), 0);
+
+  // logging expected
+  eCAL::Logging::Log(log_level_info, log_message);
+  EXPECT_EQ(getLogging(log), 1);
+  
+  eCAL::Logging::Log(log_level_debug1, log_message);
+  EXPECT_EQ(getLogging(log), 1);
+
   eCAL::Finalize();
+}
+
+TEST(logging_disable /*unused*/, file /*unused*/)
+{
+  const std::string logging_path = "./";
+  const std::string unit_name    = "file_logging_test";
+  const std::string log_message  = "Logging test for file.";
+  auto& ecal_config              = eCAL::GetConfiguration();
+
+  ecal_config.logging.sinks.udp.enable           = false;
+  ecal_config.logging.sinks.console.enable       = false;
+  ecal_config.logging.sinks.file.enable          = false;
+  ecal_config.logging.sinks.file.path            = logging_path;
+  ecal_config.logging.sinks.file.filter_log_file = log_level_all;
 
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+
+  eCAL::Logging::Log(log_level_info, log_message);
+
+  eCAL::Finalize();
+
+  std::string filepath;
+  for (const auto& entry : std::filesystem::directory_iterator(logging_path))
+  {
+    if (entry.is_regular_file())
+    {
+      if (entry.path().string().find(unit_name) != std::string::npos)
+      {
+        filepath = entry.path().string();
+      }
+    }
+  }
+
+  EXPECT_EQ(filepath, "");
+}
+
+TEST(logging_disable /*unused*/, udp /*unused*/)
+{
+  const std::string logging_path = "./";
+  const std::string unit_name    = "udp_logging_test";
+  const std::string log_message  = "Logging test for udp.";
+  auto& ecal_config              = eCAL::GetConfiguration();
+
+  ecal_config.logging.sinks.file.enable        = false;
+  ecal_config.logging.sinks.console.enable     = false;
+  ecal_config.logging.sinks.udp.enable         = false;
+  ecal_config.logging.sinks.udp.filter_log_udp = log_level_all;
+
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);  
+
+  eCAL::Logging::Log(log_level_info, log_message);
+
+  std::this_thread::sleep_for(UDP_WAIT_TIME);
+  
+  eCAL::Logging::SLogging log;
+  eCAL::Logging::GetLogging(log);
+
+  EXPECT_EQ(log.log_messages.size(), 0);
+  
+  eCAL::Finalize();
+}
+
+TEST(logging_disable /*unused*/, console /*unused*/)
+{
+  const std::string logging_path = "./";
+  const std::string unit_name    = "udp_logging_test";
+  const std::string log_message  = "Logging test for udp.";
+  auto& ecal_config              = eCAL::GetConfiguration();
+
+  ecal_config.logging.sinks.file.enable            = false;
+  ecal_config.logging.sinks.udp.enable             = false;
+  ecal_config.logging.sinks.console.enable         = false;
+  ecal_config.logging.sinks.console.filter_log_con = log_level_all;
+
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+
+  {
+    // Redirect the output stream to a stringstream in order to find log messages
+    std::stringstream ss;
+    CoutRedirect redirect(ss);
+    eCAL::Logging::Log(log_level_info, log_message);
+    std::string console_output = ss.str();
+    EXPECT_TRUE(console_output.find(log_message) == std::string::npos);
+  }
+
+  eCAL::Finalize();
 }
