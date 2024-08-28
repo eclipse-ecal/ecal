@@ -31,7 +31,6 @@ namespace eCAL
     attr.network_enabled   = reg_config_.network_enabled;
     attr.loopback          = reg_config_.loopback;
     
-    // TODO: Check the usage further down of host_group_name -> logic currenty missleading
     if (reg_config_.host_group_name.empty())
     {
       attr.host_group_name = eCAL::Process::GetHostName();

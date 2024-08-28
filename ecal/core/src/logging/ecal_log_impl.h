@@ -33,6 +33,7 @@
 #include <ecal/ecal_log_level.h>
 #include <ecal/types/logging.h>
 
+#include "attributes/logging_attributes.h"
 #include "ecal_global_accessors.h"
 
 #include <atomic>
@@ -50,7 +51,7 @@ namespace eCAL
     /**
       * @brief Constructor.
     **/
-    CLog();
+    CLog(const Logging::SAttributes& attr_);
 
     /**
       * @brief Destructor.
@@ -73,6 +74,27 @@ namespace eCAL
       * @param level_ The level.
     **/
     void SetLogLevel(eCAL_Logging_eLogLevel level_);
+
+    /**
+     * @brief Sets the log filter for file.
+     * 
+     * @param filter_ The filter.
+     */
+    void SetFileLogFilter(eCAL_Logging_Filter filter_);
+
+    /**
+     * @brief Sets the log filter for udp.
+     * 
+     * @param filter_ The filter.
+     */
+    void SetUDPLogFilter(eCAL_Logging_Filter filter_);
+
+    /**
+     * @brief Sets the log filter for console.
+     * 
+     * @param filter_ The filter.
+     */
+    void SetConsoleLogFilter(eCAL_Logging_Filter filter_);
 
     /**
       * @brief Set the current log level.
@@ -118,16 +140,10 @@ namespace eCAL
     // udp logging receiver
     std::shared_ptr<UDP::CSampleReceiver>  m_log_receiver;
 
-    std::string                            m_hname;
-    int                                    m_pid;
-    std::string                            m_pname;
-
     std::string                            m_logfile_name;
     FILE*                                  m_logfile;
 
-    eCAL_Logging_eLogLevel                 m_level;
-    eCAL_Logging_Filter                    m_filter_mask_con;
-    eCAL_Logging_Filter                    m_filter_mask_file;
-    eCAL_Logging_Filter                    m_filter_mask_udp;
+    Logging::SAttributes                   m_attributes;
+    std::stringstream                      m_log_message_stream;
   };
 }

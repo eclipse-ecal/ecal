@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,30 +17,16 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file   ecal_log_level.h
- * @brief  eCAL logging severities
-**/
-
 #pragma once
 
-#include <cstdint>
+#include "logging/attributes/logging_attributes.h"
+#include "ecal/config/logging.h"
+#include "ecal/config/registration.h"
 
-/**
- * @brief Values that represent different log level to filter on monitoring. 
-**/
-enum eCAL_Logging_eLogLevel : std::uint8_t
+namespace eCAL
 {
-  log_level_none    =   0,
-  log_level_all     = 255,
-  log_level_info    =   1,
-  log_level_warning =   2,
-  log_level_error   =   4,
-  log_level_fatal   =   8,
-  log_level_debug1  =  16,
-  log_level_debug2  =  32,
-  log_level_debug3  =  64,
-  log_level_debug4  = 128,
-};
-
-typedef unsigned char eCAL_Logging_Filter;  //!< This type is to be used as a bitmask for the activated logging levels
+  namespace Logging
+  {
+    SAttributes BuildLoggingAttributes(const Logging::Configuration& log_config_, const Registration::Configuration& reg_config_);
+  }
+}

@@ -41,6 +41,36 @@ namespace eCAL
     }
 
     /**
+     * @brief Sets the file log filter.
+     * 
+     * @param filter_ The filter;
+     */
+    void SetFileLogFilter(eCAL_Logging_Filter filter_)
+    {
+      if(g_log() != nullptr) g_log()->SetFileLogFilter(filter_);
+    }
+
+    /**
+     * @brief Sets the udp log filter.
+     * 
+     * @param filter_ The filter;
+     */
+    void SetUDPLogFilter(eCAL_Logging_Filter filter_)
+    {
+      if(g_log() != nullptr) g_log()->SetUDPLogFilter(filter_);
+    }
+
+    /**
+     * @brief Sets the console log filter.
+     * 
+     * @param filter_ The filter;
+     */
+    void SetConsoleLogFilter(eCAL_Logging_Filter filter_)
+    {
+      if(g_log() != nullptr) g_log()->SetConsoleLogFilter(filter_);
+    }
+
+    /**
      * @brief Get the current log level.
      *
      * @return   The current log level.

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,29 +18,23 @@
 */
 
 /**
- * @file   ecal_log_level.h
- * @brief  eCAL logging severities
+ * @brief  UDP receiver/sender attributes generator functions
 **/
 
 #pragma once
 
-#include <cstdint>
+#include "ecal_udp_sender_attr.h"
+#include "ecal_udp_receiver_attr.h"
 
-/**
- * @brief Values that represent different log level to filter on monitoring. 
-**/
-enum eCAL_Logging_eLogLevel : std::uint8_t
+#include "ecal/config/registration.h"
+#include "ecal/config/transport_layer.h"
+
+namespace eCAL
 {
-  log_level_none    =   0,
-  log_level_all     = 255,
-  log_level_info    =   1,
-  log_level_warning =   2,
-  log_level_error   =   4,
-  log_level_fatal   =   8,
-  log_level_debug1  =  16,
-  log_level_debug2  =  32,
-  log_level_debug3  =  64,
-  log_level_debug4  = 128,
-};
+  namespace UDP
+  {
+    SSenderAttr CreateUDPSenderAttr(const Registration::Configuration& registration_config_, const TransportLayer::UDP::Configuration& udp_config_);
 
-typedef unsigned char eCAL_Logging_Filter;  //!< This type is to be used as a bitmask for the activated logging levels
+    SReceiverAttr CreateUDPReceiverAttr(const Registration::Configuration& registration_config_, const TransportLayer::UDP::Configuration& udp_config_);
+  }
+}

@@ -40,6 +40,7 @@ endif()
 
 add_subdirectory(cpp/event_test)
 add_subdirectory(cpp/expmap_test)
+add_subdirectory(cpp/logging_test)
 add_subdirectory(cpp/serialization_test)
 add_subdirectory(cpp/topic2mcast_test)
 add_subdirectory(cpp/util_test)
