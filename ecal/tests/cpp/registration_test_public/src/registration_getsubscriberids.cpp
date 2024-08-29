@@ -150,7 +150,8 @@ INSTANTIATE_TEST_SUITE_P(
     TestParams{ 10, []() {
       // Shared Memory (shm)
       eCAL::Configuration config;
-      config.registration.registration_timeout = 2000;
+      config.registration.registration_refresh = 100;
+      config.registration.registration_timeout = 200;
       config.registration.layer.shm.enable = true;
       config.registration.layer.udp.enable = false;
       return config;
@@ -158,7 +159,8 @@ INSTANTIATE_TEST_SUITE_P(
     TestParams{ 10, []() {
       // UDP
       eCAL::Configuration config;
-      config.registration.registration_timeout = 2000;
+      config.registration.registration_refresh = 100;
+      config.registration.registration_timeout = 200;
       config.registration.layer.shm.enable = false;
       config.registration.layer.udp.enable = true;
       return config;

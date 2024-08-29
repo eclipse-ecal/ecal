@@ -24,10 +24,6 @@
 #include <vector>
 #include <string>
 
-enum {
-  CMN_REGISTRATION_REFRESH_MS = (1000)
-};
-
 // struct to hold the test parameters
 struct TestParams
 {
@@ -158,7 +154,8 @@ INSTANTIATE_TEST_SUITE_P(
     TestParams{ 10, []() {
       // shm
       eCAL::Configuration config;
-      config.registration.registration_timeout = 2000;
+      config.registration.registration_refresh = 100;
+      config.registration.registration_timeout = 200;
       config.registration.layer.shm.enable = true;
       config.registration.layer.udp.enable = false;
       return config;
@@ -166,7 +163,8 @@ INSTANTIATE_TEST_SUITE_P(
     TestParams{ 10, []() {
       // udp
       eCAL::Configuration config;
-      config.registration.registration_timeout = 2000;
+      config.registration.registration_refresh = 100;
+      config.registration.registration_timeout = 200;
       config.registration.layer.shm.enable = false;
       config.registration.layer.udp.enable = true;
       return config;
