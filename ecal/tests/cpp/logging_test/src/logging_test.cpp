@@ -44,8 +44,8 @@ private:
 TEST(logging_to /*unused*/, file /*unused*/)
 {
   const std::string logging_path = "./";
-  const std::string unit_name    = "file_logging_test";
-  const std::string log_message  = "Logging test for file.";
+  const std::string unit_name    = "logging_to_file_test";
+  const std::string log_message  = "Logging to file test.";
   auto& ecal_config              = eCAL::GetConfiguration();
 
   ecal_config.logging.sinks.udp.enable           = false;
@@ -83,7 +83,6 @@ TEST(logging_to /*unused*/, file /*unused*/)
   auto find_message = line.find(log_message);
   EXPECT_NE(find_message, std::string::npos);
     
-  
   logfile.close();
 
   if (!filepath.empty()) std::remove(filepath.c_str());
@@ -92,8 +91,8 @@ TEST(logging_to /*unused*/, file /*unused*/)
 TEST(logging_to /*unused*/, udp /*unused*/)
 {
   const std::string logging_path = "./";
-  const std::string unit_name    = "udp_logging_test";
-  const std::string log_message  = "Logging test for udp.";
+  const std::string unit_name    = "logging_to_udp_test";
+  const std::string log_message  = "Logging to udp test.";
   auto& ecal_config              = eCAL::GetConfiguration();
 
   ecal_config.logging.sinks.file.enable        = false;
@@ -113,7 +112,7 @@ TEST(logging_to /*unused*/, udp /*unused*/)
   EXPECT_EQ(log.log_messages.size(), 1);
   
   // check whole log message for information
-  // check before the size -> crashes the test if it's not checked before
+  // check before the size -> crashes the whole test if it's not checked before
   if (log.log_messages.size() > 0)
   {
     EXPECT_EQ(log.log_messages.front().hname, eCAL::Process::GetHostName());
@@ -129,8 +128,8 @@ TEST(logging_to /*unused*/, udp /*unused*/)
 TEST(logging_to /*unused*/, console /*unused*/)
 {
   const std::string logging_path = "./";
-  const std::string unit_name    = "udp_logging_test";
-  const std::string log_message  = "Logging test for udp.";
+  const std::string unit_name    = "logging_to_console_test";
+  const std::string log_message  = "Logging to console test.";
   auto& ecal_config              = eCAL::GetConfiguration();
 
   ecal_config.logging.sinks.file.enable            = false;
@@ -159,11 +158,54 @@ int getLogging(eCAL::Logging::SLogging& log_)
   return eCAL::Logging::GetLogging(log_);
 }
 
-TEST(logging_levels /*unused*/, set_level /*unused*/)
+TEST(logging_levels /*unused*/, all /*unused*/)
 {
   const std::string logging_path = "./";
-  const std::string unit_name    = "udp_logging_test";
-  const std::string log_message  = "Logging test for udp.";
+  const std::string unit_name    = "logging_levels_all_udp";
+  const std::string log_message  = "Logging level all test for udp.";
+  auto& ecal_config              = eCAL::GetConfiguration();
+
+  ecal_config.logging.sinks.file.enable        = false;
+  ecal_config.logging.sinks.console.enable     = false;
+  ecal_config.logging.sinks.udp.enable         = true;
+  ecal_config.logging.sinks.udp.filter_log_udp = log_level_all;
+
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+
+  eCAL::Logging::SLogging log;
+ 
+  eCAL::Logging::Log(log_level_info, log_message);
+  EXPECT_EQ(getLogging(log), 1);
+
+  eCAL::Logging::Log(log_level_warning, log_message);
+  EXPECT_EQ(getLogging(log), 1);
+
+  eCAL::Logging::Log(log_level_error, log_message);
+  EXPECT_EQ(getLogging(log), 1);
+ 
+  eCAL::Logging::Log(log_level_debug1, log_message);
+  EXPECT_EQ(getLogging(log), 1);
+
+  eCAL::Logging::Log(log_level_debug1, log_message);
+  EXPECT_EQ(getLogging(log), 1);
+
+  eCAL::Logging::Log(log_level_debug2, log_message);
+  EXPECT_EQ(getLogging(log), 1);
+
+  eCAL::Logging::Log(log_level_debug3, log_message);
+  EXPECT_EQ(getLogging(log), 1);
+
+  eCAL::Logging::Log(log_level_debug4, log_message);
+  EXPECT_EQ(getLogging(log), 1);
+
+  eCAL::Finalize();
+}
+
+TEST(logging_levels /*unused*/, various /*unused*/)
+{
+  const std::string logging_path = "./";
+  const std::string unit_name    = "logging_levels_various_udp";
+  const std::string log_message  = "Logging level various test for udp.";
   auto& ecal_config              = eCAL::GetConfiguration();
 
   ecal_config.logging.sinks.file.enable        = false;
@@ -200,11 +242,54 @@ TEST(logging_levels /*unused*/, set_level /*unused*/)
   eCAL::Finalize();
 }
 
+TEST(logging_levels /*unused*/, none /*unused*/)
+{
+  const std::string logging_path = "./";
+  const std::string unit_name    = "logging_levels_various_udp";
+  const std::string log_message  = "Logging level none test for udp.";
+  auto& ecal_config              = eCAL::GetConfiguration();
+
+  ecal_config.logging.sinks.file.enable        = false;
+  ecal_config.logging.sinks.console.enable     = false;
+  ecal_config.logging.sinks.udp.enable         = true;
+  ecal_config.logging.sinks.udp.filter_log_udp = log_level_none;
+
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+
+  eCAL::Logging::SLogging log;
+ 
+  eCAL::Logging::Log(log_level_info, log_message);
+  EXPECT_EQ(getLogging(log), 0);
+
+  eCAL::Logging::Log(log_level_warning, log_message);
+  EXPECT_EQ(getLogging(log), 0);
+
+  eCAL::Logging::Log(log_level_error, log_message);
+  EXPECT_EQ(getLogging(log), 0);
+ 
+  eCAL::Logging::Log(log_level_debug1, log_message);
+  EXPECT_EQ(getLogging(log), 0);
+
+  eCAL::Logging::Log(log_level_debug1, log_message);
+  EXPECT_EQ(getLogging(log), 0);
+
+  eCAL::Logging::Log(log_level_debug2, log_message);
+  EXPECT_EQ(getLogging(log), 0);
+
+  eCAL::Logging::Log(log_level_debug3, log_message);
+  EXPECT_EQ(getLogging(log), 0);
+
+  eCAL::Logging::Log(log_level_debug4, log_message);
+  EXPECT_EQ(getLogging(log), 0);
+
+  eCAL::Finalize();
+}
+
 TEST(logging_disable /*unused*/, file /*unused*/)
 {
   const std::string logging_path = "./";
-  const std::string unit_name    = "file_logging_test";
-  const std::string log_message  = "Logging test for file.";
+  const std::string unit_name    = "logging_disable_file_test";
+  const std::string log_message  = "Disabled logging test for file.";
   auto& ecal_config              = eCAL::GetConfiguration();
 
   ecal_config.logging.sinks.udp.enable           = false;
@@ -236,9 +321,8 @@ TEST(logging_disable /*unused*/, file /*unused*/)
 
 TEST(logging_disable /*unused*/, udp /*unused*/)
 {
-  const std::string logging_path = "./";
-  const std::string unit_name    = "udp_logging_test";
-  const std::string log_message  = "Logging test for udp.";
+  const std::string unit_name    = "logging_dsiable_udp_test";
+  const std::string log_message  = "Disabled logging test for udp.";
   auto& ecal_config              = eCAL::GetConfiguration();
 
   ecal_config.logging.sinks.file.enable        = false;
@@ -262,9 +346,8 @@ TEST(logging_disable /*unused*/, udp /*unused*/)
 
 TEST(logging_disable /*unused*/, console /*unused*/)
 {
-  const std::string logging_path = "./";
-  const std::string unit_name    = "udp_logging_test";
-  const std::string log_message  = "Logging test for udp.";
+  const std::string unit_name    = "logging_disable_console_test";
+  const std::string log_message  = "Disabled logging test for console.";
   auto& ecal_config              = eCAL::GetConfiguration();
 
   ecal_config.logging.sinks.file.enable            = false;
