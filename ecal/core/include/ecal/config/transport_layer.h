@@ -84,7 +84,7 @@ namespace eCAL
       {
         size_t number_executor_reader { 4 }; //!< Reader amount of threads that shall execute workload (Default: 4)
         size_t number_executor_writer { 4 }; //!< Writer amount of threads that shall execute workload (Default: 4)
-        size_t max_reconnections      { 5 }; //!< Reconnection attemps the session will try to reconnect in (Default: 5)
+        int    max_reconnections      { 5 }; //!< Reconnection attemps the session will try to reconnect in (Default: 5)
       };
     }
 
