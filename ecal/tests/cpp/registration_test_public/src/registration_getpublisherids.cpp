@@ -77,13 +77,13 @@ TEST_P(EcalTest, GetPublisherIDsReturnsCorrectNumber)
     ASSERT_EQ(pub_ids1.size(), GetParam().publisher_count);
   }
 
-  // let's timeout
-  eCAL::Process::SleepMS(2 * GetParam().configuration.registration.registration_timeout);
+  // let's finally timeout
+  eCAL::Process::SleepMS(GetParam().configuration.registration.registration_timeout);
 
   // get the list of publisher IDs
   const auto pub_ids2 = eCAL::Registration::GetPublisherIDs();
 
-  // verify the number of publishers still existing
+  // all publisher should be timeouted
   ASSERT_EQ(pub_ids2.size(), 0);
 }
 
@@ -119,8 +119,8 @@ TEST_P(EcalTest, PublisherEventCallbackIsTriggered)
       tname << "topic_" << i;
 
       eCAL::SDataTypeInformation data_type_info;
-      data_type_info.name = tname.str() + "_type_name";
-      data_type_info.encoding = tname.str() + "_type_encoding";
+      data_type_info.name       = tname.str() + "_type_name";
+      data_type_info.encoding   = tname.str() + "_type_encoding";
       data_type_info.descriptor = tname.str() + "_type_descriptor";
 
       publisher_vec.emplace_back(tname.str(), data_type_info);
@@ -156,8 +156,8 @@ INSTANTIATE_TEST_SUITE_P(
       eCAL::Configuration config;
       config.registration.registration_refresh = 100;
       config.registration.registration_timeout = 200;
-      config.registration.layer.shm.enable = true;
-      config.registration.layer.udp.enable = false;
+      config.registration.layer.shm.enable     = true;
+      config.registration.layer.udp.enable     = false;
       return config;
     }() },
     TestParams{ 10, []() {
@@ -165,8 +165,8 @@ INSTANTIATE_TEST_SUITE_P(
       eCAL::Configuration config;
       config.registration.registration_refresh = 100;
       config.registration.registration_timeout = 200;
-      config.registration.layer.shm.enable = false;
-      config.registration.layer.udp.enable = true;
+      config.registration.layer.shm.enable     = false;
+      config.registration.layer.udp.enable     = true;
       return config;
     }() }
   )

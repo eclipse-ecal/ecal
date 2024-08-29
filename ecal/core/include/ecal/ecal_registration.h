@@ -124,6 +124,8 @@ namespace eCAL
      * @brief Register a callback function to be notified when a new publisher becomes available.
      *
      * @param callback_       The callback function to be called with the STopicId of the new publisher.
+     *                        The callback function must not be blocked for a longer period of time, 
+     *                        otherwise timeout mechanisms of the eCAL registration would be triggered.
      *
      * @return CallbackToken  Token that can be used to unregister the callback.
      */
@@ -154,6 +156,8 @@ namespace eCAL
      * @brief Register a callback function to be notified when a new subscriber becomes available.
      *
      * @param callback_       The callback function to be called with the STopicId of the new subscriber.
+     *                        The callback function must not be blocked for a longer period of time, 
+     *                        otherwise timeout mechanisms of the eCAL registration would be triggered.
      *
      * @return CallbackToken  Token that can be used to unregister the callback.
      */

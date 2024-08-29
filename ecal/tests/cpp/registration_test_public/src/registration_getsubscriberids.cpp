@@ -23,34 +23,28 @@
 
 #include <vector>
 #include <string>
-#include <atomic>
-#include <set>
 
-enum {
-  CMN_REGISTRATION_REFRESH_MS = (1000)
-};
-
-// Struct to hold the test parameters
+// struct to hold the test parameters
 struct TestParams
 {
   int subscriber_count = 0;
   eCAL::Configuration configuration;
 };
 
-// Test class that accepts TestParams as a parameter
+// test class that accepts TestParams as a parameter
 class EcalTest : public ::testing::TestWithParam<TestParams>
 {
 protected:
   void SetUp() override
   {
-    // Set configuration from the test parameters
+    // set configuration from the test parameters
     auto params = GetParam();
     eCAL::Initialize(params.configuration, "core_cpp_registration_subscriberids");
   }
 
   void TearDown() override
   {
-    // Clean up
+    // clean up
     eCAL::Finalize();
   }
 };
@@ -58,33 +52,38 @@ protected:
 TEST_P(EcalTest, GetSubscriberIDsReturnsCorrectNumber)
 {
   {
-    // Create subscribers for testing
+    // create subscribers for testing
     std::vector<eCAL::CSubscriber> subscriber_vec;
     for (int i = 0; i < GetParam().subscriber_count; ++i)
     {
       std::stringstream tname;
       tname << "topic_" << i;
 
-      subscriber_vec.emplace_back(tname.str());
+      eCAL::SDataTypeInformation data_type_info;
+      data_type_info.name       = tname.str() + "_type_name";
+      data_type_info.encoding   = tname.str() + "_type_encoding";
+      data_type_info.descriptor = tname.str() + "_type_descriptor";
+
+      subscriber_vec.emplace_back(tname.str(), data_type_info);
     }
 
-    // Register and wait
+    // let's register
     eCAL::Process::SleepMS(2 * GetParam().configuration.registration.registration_refresh);
 
-    // Get the list of subscriber IDs
+    // get the list of subscriber IDs
     const auto sub_ids1 = eCAL::Registration::GetSubscriberIDs();
 
-    // Verify the number of subscribers created
+    // verify the number of subscribers created
     ASSERT_EQ(sub_ids1.size(), GetParam().subscriber_count);
   }
 
-  // Wait for timeout
+  // let's finally timeout
   eCAL::Process::SleepMS(2 * GetParam().configuration.registration.registration_timeout);
 
-  // Get the list of subscriber IDs again
+  // get the list of subscriber IDs
   const auto sub_ids2 = eCAL::Registration::GetSubscriberIDs();
 
-  // Verify the number of subscribers still existing
+  // all subscriber should be timeouted
   ASSERT_EQ(sub_ids2.size(), 0);
 }
 
@@ -95,7 +94,7 @@ TEST_P(EcalTest, SubscriberEventCallbackIsTriggered)
   std::set<eCAL::Registration::STopicId> created_subscriber_ids;
   std::set<eCAL::Registration::STopicId> deleted_subscriber_ids;
 
-  // Register the callback
+  // register the callback
   auto callback_token = eCAL::Registration::AddSubscriberEventCallback(
     [&](const eCAL::Registration::STopicId& id, eCAL::Registration::RegistrationEventType event_type)
     {
@@ -112,57 +111,62 @@ TEST_P(EcalTest, SubscriberEventCallbackIsTriggered)
     });
 
   {
-    // Create subscribers for testing
+    // create subscribers for testing
     std::vector<eCAL::CSubscriber> subscriber_vec;
     for (int i = 0; i < GetParam().subscriber_count; ++i)
     {
       std::stringstream tname;
       tname << "topic_" << i;
 
-      subscriber_vec.emplace_back(tname.str());
+      eCAL::SDataTypeInformation data_type_info;
+      data_type_info.name       = tname.str() + "_type_name";
+      data_type_info.encoding   = tname.str() + "_type_encoding";
+      data_type_info.descriptor = tname.str() + "_type_descriptor";
+
+      subscriber_vec.emplace_back(tname.str(), data_type_info);
     }
 
-    // Register and wait
+    // let's register
     eCAL::Process::SleepMS(2 * GetParam().configuration.registration.registration_refresh);
 
-    // Verify the number of subscribers created through the callback
+    // verify the number of subscribers created through the callback
     ASSERT_EQ(created_subscriber_num.load(), GetParam().subscriber_count);
 
-    // Clear subscribers to trigger deletion events
+    // clear subscribers to trigger deletion events
     subscriber_vec.clear();
 
-    // Register the deletion events and wait
+    // let's register the deletion events
     eCAL::Process::SleepMS(2 * GetParam().configuration.registration.registration_refresh);
 
-    // Verify the number of subscribers deleted through the callback
+    // verify the number of subscribers deleted through the callback
     ASSERT_EQ(deleted_subscriber_num.load(), GetParam().subscriber_count);
   }
 
-  // Unregister the callback
+  // unregister the callback
   eCAL::Registration::RemSubscriberEventCallback(callback_token);
 }
 
-// Instantiate the test suite with different configurations and subscriber counts
+// instantiate the test suite with different configurations and subscriber counts
 INSTANTIATE_TEST_SUITE_P(
-  GetSubscriberIDTests,
+  GetSubscriberIdTests,
   EcalTest,
   ::testing::Values(
     TestParams{ 10, []() {
-      // Shared Memory (shm)
+      // shm
       eCAL::Configuration config;
       config.registration.registration_refresh = 100;
       config.registration.registration_timeout = 200;
-      config.registration.layer.shm.enable = true;
-      config.registration.layer.udp.enable = false;
+      config.registration.layer.shm.enable     = true;
+      config.registration.layer.udp.enable     = false;
       return config;
     }() },
     TestParams{ 10, []() {
-      // UDP
+      // udp
       eCAL::Configuration config;
       config.registration.registration_refresh = 100;
       config.registration.registration_timeout = 200;
-      config.registration.layer.shm.enable = false;
-      config.registration.layer.udp.enable = true;
+      config.registration.layer.shm.enable     = false;
+      config.registration.layer.udp.enable     = true;
       return config;
     }() }
   )
