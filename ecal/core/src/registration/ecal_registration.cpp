@@ -173,6 +173,18 @@ namespace eCAL
       return g_descgate()->GetPublisherInfo(id_, topic_info_);
     }
 
+    ECAL_API CallbackToken AddPublisherEventCallback(const TopicIDCallbackT& callback_)
+    {
+      if (g_descgate() == nullptr) return CallbackToken();
+      return g_descgate()->AddPublisherEventCallback(callback_);
+    }
+
+    ECAL_API void RemPublisherEventCallback(CallbackToken token_)
+    {
+      if (g_descgate() == nullptr) return;
+      return g_descgate()->RemPublisherEventCallback(token_);
+    }
+
     std::set<STopicId> GetSubscriberIDs()
     {
       if (g_descgate() == nullptr) return std::set<STopicId>();
@@ -183,6 +195,18 @@ namespace eCAL
     {
       if (g_descgate() == nullptr) return false;
       return g_descgate()->GetSubscriberInfo(id_, topic_info_);
+    }
+
+    ECAL_API CallbackToken AddSubscriberEventCallback(const TopicIDCallbackT& callback_)
+    {
+      if (g_descgate() == nullptr) return CallbackToken();
+      return g_descgate()->AddSubscriberEventCallback(callback_);
+    }
+
+    ECAL_API void RemSubscriberEventCallback(CallbackToken token_)
+    {
+      if (g_descgate() == nullptr) return;
+      return g_descgate()->RemSubscriberEventCallback(token_);
     }
 
     std::set<SServiceId> GetServiceIDs()

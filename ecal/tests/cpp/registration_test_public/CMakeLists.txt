@@ -23,6 +23,8 @@ find_package(GTest REQUIRED)
 
 if(ECAL_CORE_PUBLISHER AND ECAL_CORE_SUBSCRIBER)
   set(registration_test_topics_src
+    src/registration_getpublisherids.cpp
+    src/registration_getsubscriberids.cpp
     src/registration_gettopics.cpp
   )
 endif()

@@ -25,14 +25,14 @@
 #include <thread>
 #include <vector>
 
-const int subscriber_number                    (10000);
+const int subscriber_number                    (5000);
 
-const int publisher_number                     (10000);
+const int publisher_number                     (5000);
 const int publisher_type_encoding_size_bytes   (10*1024);
 const int publisher_type_descriptor_size_bytes (10*1024);
 
 const int in_between_sleep_sec                 (5);
-const int final_sleep_sec                      (0);
+const int final_sleep_sec                      (5);
 
 std::string GenerateSizedString(const std::string& name, size_t totalSize)
 {
@@ -56,13 +56,38 @@ std::string GenerateSizedString(const std::string& name, size_t totalSize)
 
 int main(int argc, char** argv)
 {
-  // initialize eCAL API with shm monitoring
+  // set eCAL configuration
   eCAL::Configuration configuration;
-  configuration.registration.layer.shm.enable = true;
-  configuration.registration.layer.udp.enable = false;
+  configuration.registration.registration_timeout = 10000;    // registration timeout == 10 sec
+  configuration.registration.layer.shm.enable     = true;     // switch shm registration on and
+  configuration.registration.layer.udp.enable     = false;    // switch udp registration off
+
+  // initialize eCAL API
   eCAL::Initialize(configuration, "massive_pub_sub");
 
-  eCAL::Util::EnableLoopback(true);
+  // publisher registration event callback
+  size_t created_publisher_num(0);
+  size_t deleted_publisher_num(0);
+  std::set<eCAL::Registration::STopicId> created_publisher_ids;
+  std::set<eCAL::Registration::STopicId> deleted_publisher_ids;
+  eCAL::Registration::AddPublisherEventCallback(
+    [&](const eCAL::Registration::STopicId& id_, eCAL::Registration::RegistrationEventType event_type_)
+    {
+      switch (event_type_)
+      {
+      case eCAL::Registration::RegistrationEventType::new_entity:
+        created_publisher_num++;
+        created_publisher_ids.insert(id_);
+        //std::cout << "Publisher created" << std::endl;
+        break;
+      case eCAL::Registration::RegistrationEventType::deleted_entity:
+        deleted_publisher_num++;
+        deleted_publisher_ids.insert(id_);
+        //std::cout << "Publisher deleted" << std::endl;
+        break;
+      }
+    }
+  );
 
   // create subscriber
   std::vector<eCAL::CSubscriber> vector_of_subscriber;
@@ -174,7 +199,28 @@ int main(int argc, char** argv)
     std::cout << num_pub << ")" << std::endl << "Time taken to get publisher information: " << duration << " milliseconds" << std::endl << std::endl;
   }
 
+  // check creation events
+  const std::set<eCAL::Registration::STopicId> publisher_ids = eCAL::Registration::GetPublisherIDs();
+  std::cout << "Number of publisher creation events   " << created_publisher_num << std::endl;
+  std::cout << "Size   of publisher creation id set   " << created_publisher_ids.size() << std::endl;
+  //std::cout << "Publisher creation id sets are equal  " << (publisher_ids == created_publisher_ids) << std::endl;
+  std::cout << std::endl;
+  
+  // delete all publisher
+  std::cout << "Delete all publisher .." << std::endl;
+  vector_of_publisher.clear();
+  std::cout << "Deletion done." << std::endl;
+  std::cout << std::endl;
+
   // sleep for a few seconds
+  std::this_thread::sleep_for(std::chrono::seconds(in_between_sleep_sec));
+
+  // check deletion events
+  std::cout << "Number of publisher deletion events   " << deleted_publisher_num << std::endl;
+  std::cout << "Size   of publisher deletion id set   " << deleted_publisher_ids.size() << std::endl;
+  //std::cout << "Publisher deleteion id sets are equal " << (publisher_ids == deleted_publisher_ids) << std::endl;
+
+  // sleep final seconds
   std::this_thread::sleep_for(std::chrono::seconds(final_sleep_sec));
 
   // finalize eCAL API
