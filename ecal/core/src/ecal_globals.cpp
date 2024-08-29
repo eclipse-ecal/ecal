@@ -350,6 +350,9 @@ namespace eCAL
     log_instance                    = nullptr;
     initialized = false;
 
+    // reset configuration to default values
+    g_ecal_configuration = Configuration();
+
     return(0);
   }
 }
