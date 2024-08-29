@@ -21,8 +21,9 @@
 
 #include <gtest/gtest.h>
 
-#include <vector>
+#include <atomic>
 #include <string>
+#include <vector>
 
 // struct to hold the test parameters
 struct TestParams
