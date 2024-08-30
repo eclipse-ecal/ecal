@@ -60,7 +60,7 @@ namespace eCAL
 
     ECAL_API size_t            GetTcpPubsubReaderThreadpoolSize     () { return GetConfiguration().transport_layer.tcp.number_executor_reader;}
     ECAL_API size_t            GetTcpPubsubWriterThreadpoolSize     () { return GetConfiguration().transport_layer.tcp.number_executor_writer;}
-    ECAL_API size_t            GetTcpPubsubMaxReconnectionAttemps   () { return GetConfiguration().transport_layer.tcp.max_reconnections;}
+    ECAL_API int               GetTcpPubsubMaxReconnectionAttemps   () { return GetConfiguration().transport_layer.tcp.max_reconnections;}
 
     ECAL_API std::string       GetHostGroupName                     () { return GetConfiguration().registration.host_group_name; }
     

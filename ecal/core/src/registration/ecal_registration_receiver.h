@@ -97,6 +97,6 @@ namespace eCAL
     // The custom user callbacks (who receive serialized samples), e.g. registration events.
     Registration::CSampleApplierUser m_user_applier;
 
-    Registration::SAttributes              m_attributes;
+    Registration::SAttributes        m_attributes;
   };
 }
