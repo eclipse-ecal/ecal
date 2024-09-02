@@ -109,7 +109,7 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
   EXPECT_EQ(0, eCAL::Finalize());
 }
 
-TEST(ConfigDeathTest /*unused*/, user_config_death_test /*unused*/)
+TEST(core_cpp_config /*unused*/, user_config_death_test /*unused*/)
 {
   eCAL::Configuration custom_config(0, nullptr);
 
@@ -198,7 +198,7 @@ TEST(core_cpp_config /*unused*/, config_custom_datatypes_tests /*unused*/)
   EXPECT_EQ(config1.transport_layer.udp.network.group, testValue);
 }
 
-TEST(CmdParserTest /*unused*/, config_cmd_parser_test /*unused*/)
+TEST(core_cpp_config /*unused*/, config_cmd_parser_test /*unused*/)
 {
   const std::string some_file_name = "someFileName.yml";
 
@@ -222,7 +222,7 @@ TEST(CmdParserTest /*unused*/, config_cmd_parser_test /*unused*/)
 }
 
 #ifdef ECAL_CORE_CONFIGURATION
-TEST(YamlConfigReaderTest /*unused*/, read_write_file_test /*unused*/)
+TEST(core_cpp_config /*unused*/, read_write_file_test /*unused*/)
 {
   // create a custom ini file
   std::string ini_file_name = "customIni.yml";
@@ -249,7 +249,7 @@ TEST(YamlConfigReaderTest /*unused*/, read_write_file_test /*unused*/)
   remove("myTest.yml");
 }
 
-TEST(YamlConfigReaderTest /*unused*/, parse_values_test /*unused*/)
+TEST(core_cpp_config /*unused*/, parse_values_test /*unused*/)
 {
   eCAL::Configuration config{};
   EXPECT_NO_THROW(eCAL::Config::YamlStringToConfig(ini_file_as_string_yaml, config));
@@ -273,7 +273,7 @@ TEST(YamlConfigReaderTest /*unused*/, parse_values_test /*unused*/)
   EXPECT_EQ(config.publisher.layer.shm.acknowledge_timeout_ms, 346U);
 } 
 
-TEST(YamlConfigReaderTest /*unused*/, yaml_node_merger /*unused*/)
+TEST(core_cpp_config /*unused*/, yaml_node_merger /*unused*/)
 {
   YAML::Node node_1{};
   YAML::Node node_2{};
@@ -299,7 +299,7 @@ TEST(YamlConfigReaderTest /*unused*/, yaml_node_merger /*unused*/)
   EXPECT_EQ(node_1["firstLayer2"]["secondLayer2"], node_2["firstLayer2"]["secondLayer2"]);  
 }
 
-TEST(YamlConfigReaderTest /*unused*/, yaml_to_config_merger /*unused*/)
+TEST(core_cpp_config /*unused*/, yaml_to_config_merger /*unused*/)
 {
   // create a custom ini file
   std::string ini_file_name = "customIni.yml";
