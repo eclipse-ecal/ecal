@@ -264,8 +264,8 @@ namespace eCAL
 
     auto log_time = eCAL::Time::ecal_clock::now();
 
-    bool log_to_console = m_attributes.console.enabled && log_con != 0;
-    bool log_to_file    = m_attributes.file.enabled && log_file != 0;
+    const bool log_to_console = m_attributes.console.enabled && log_con != 0;
+    const bool log_to_file    = m_attributes.file.enabled && log_file != 0;
 
     if (log_to_console || log_to_file)
     {

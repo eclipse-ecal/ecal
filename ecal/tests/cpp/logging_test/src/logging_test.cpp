@@ -37,6 +37,11 @@ public:
     CoutRedirect(std::ostream& newStream) : originalBuffer(std::cout.rdbuf(newStream.rdbuf())) {}
     ~CoutRedirect() { std::cout.rdbuf(originalBuffer); }
 
+    CoutRedirect(const CoutRedirect&) = delete;
+    CoutRedirect& operator=(const CoutRedirect&) = delete;
+    CoutRedirect(CoutRedirect&&) = delete;
+    CoutRedirect& operator=(CoutRedirect&&) = delete;
+
 private:
     std::streambuf* originalBuffer;
 };
@@ -113,7 +118,7 @@ TEST(logging_to /*unused*/, udp /*unused*/)
   
   // check whole log message for information
   // check before the size -> crashes the whole test if it's not checked before
-  if (log.log_messages.size() > 0)
+  if (!log.log_messages.empty())
   {
     EXPECT_EQ(log.log_messages.front().hname, eCAL::Process::GetHostName());
     EXPECT_EQ(log.log_messages.front().pid,   eCAL::Process::GetProcessID());

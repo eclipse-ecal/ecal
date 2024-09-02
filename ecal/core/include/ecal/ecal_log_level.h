@@ -41,4 +41,4 @@ enum eCAL_Logging_eLogLevel
   log_level_debug4  = 128,
 };
 
-using eCAL_Logging_Filter = unsigned char ;  //!< This type is to be used as a bitmask for the activated logging levels
+using eCAL_Logging_Filter = unsigned char;  //!< This type is to be used as a bitmask for the activated logging levels
