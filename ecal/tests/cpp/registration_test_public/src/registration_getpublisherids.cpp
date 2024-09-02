@@ -33,7 +33,7 @@ struct TestParams
 };
 
 // test class that accepts TestParams as a parameter
-class EcalTest : public ::testing::TestWithParam<TestParams>
+class TestFixture : public ::testing::TestWithParam<TestParams>
 {
 protected:
   void SetUp() override
@@ -50,7 +50,7 @@ protected:
   }
 };
 
-TEST_P(EcalTest, GetPublisherIDsReturnsCorrectNumber)
+TEST_P(TestFixture, GetPublisherIDsReturnsCorrectNumber)
 {
   {
     // create publishers for testing
@@ -88,7 +88,7 @@ TEST_P(EcalTest, GetPublisherIDsReturnsCorrectNumber)
   ASSERT_EQ(pub_ids2.size(), 0);
 }
 
-TEST_P(EcalTest, PublisherEventCallbackIsTriggered)
+TEST_P(TestFixture, PublisherEventCallbackIsTriggered)
 {
   std::atomic<size_t> created_publisher_num(0);
   std::atomic<size_t> deleted_publisher_num(0);
@@ -149,8 +149,8 @@ TEST_P(EcalTest, PublisherEventCallbackIsTriggered)
 
 // instantiate the test suite with different configurations and publisher counts
 INSTANTIATE_TEST_SUITE_P(
-  GetPublisherIdTests,
-  EcalTest,
+  core_cpp_registration_public,
+  TestFixture,
   ::testing::Values(
     TestParams{ 10, []() {
       // shm

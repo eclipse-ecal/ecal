@@ -33,7 +33,7 @@ struct TestParams
 };
 
 // test class that accepts TestParams as a parameter
-class EcalTest : public ::testing::TestWithParam<TestParams>
+class TestFixture : public ::testing::TestWithParam<TestParams>
 {
 protected:
   void SetUp() override
@@ -50,7 +50,7 @@ protected:
   }
 };
 
-TEST_P(EcalTest, GetSubscriberIDsReturnsCorrectNumber)
+TEST_P(TestFixture, GetSubscriberIDsReturnsCorrectNumber)
 {
   {
     // create subscribers for testing
@@ -88,7 +88,7 @@ TEST_P(EcalTest, GetSubscriberIDsReturnsCorrectNumber)
   ASSERT_EQ(sub_ids2.size(), 0);
 }
 
-TEST_P(EcalTest, SubscriberEventCallbackIsTriggered)
+TEST_P(TestFixture, SubscriberEventCallbackIsTriggered)
 {
   std::atomic<size_t> created_subscriber_num(0);
   std::atomic<size_t> deleted_subscriber_num(0);
@@ -149,8 +149,8 @@ TEST_P(EcalTest, SubscriberEventCallbackIsTriggered)
 
 // instantiate the test suite with different configurations and subscriber counts
 INSTANTIATE_TEST_SUITE_P(
-  GetSubscriberIdTests,
-  EcalTest,
+  core_cpp_registration_public,
+  TestFixture,
   ::testing::Values(
     TestParams{ 10, []() {
       // shm
