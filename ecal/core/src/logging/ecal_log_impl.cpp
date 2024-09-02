@@ -148,8 +148,7 @@ namespace eCAL
 {
   CLog::CLog(const Logging::SAttributes& attr_) :
           m_created(false),
-          m_attributes(attr_),
-          m_logfile(nullptr)
+          m_attributes(attr_)
   {
   }
 
@@ -163,19 +162,20 @@ namespace eCAL
     // create log file if file logging is enabled
     if(m_attributes.file.enabled)
     {
+      bool file_opened = false;
       if (isDirectory(m_attributes.file.path))
       {
         const std::string tstring = get_time_str();
       
         m_logfile_name = m_attributes.file.path + tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
-        m_logfile = fopen(m_logfile_name.c_str(), "w");
+        file_opened = m_logfile.fopen(m_logfile_name.c_str(), "w");
       }
       else
       {
         logWarningToConsole("Logging for file enabled, but specified path to log is not valid: " + m_attributes.file.path);
       }
 
-      if (m_logfile == nullptr)
+      if (!file_opened)
       {
         logWarningToConsole("Logging for file enabled, but file could not be created.");
       }
@@ -218,8 +218,7 @@ namespace eCAL
 
     m_udp_logging_sender.reset();
 
-    if(m_logfile != nullptr) fclose(m_logfile);
-    m_logfile = nullptr;
+    if(m_logfile.isOpen()) m_logfile.fclose();
 
     m_created = false;
   }
@@ -281,8 +280,8 @@ namespace eCAL
 
       if (log_to_file)
       {
-        fprintf(m_logfile, "%s\n", m_log_message_stream.str().c_str());
-        fflush(m_logfile);
+        m_logfile.fprintf("%s\n", m_log_message_stream.str().c_str());
+        m_logfile.fflush();
       }
     }
 
