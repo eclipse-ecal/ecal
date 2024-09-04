@@ -168,7 +168,7 @@ namespace eCAL
         const std::string tstring = get_time_str();
       
         m_logfile_name = m_attributes.file.path + tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
-        file_opened = m_logfile.fopen(m_logfile_name.c_str(), std::ios::out);
+        file_opened = m_logfile.fopen(m_logfile_name.c_str(), "w");
       }
       else
       {

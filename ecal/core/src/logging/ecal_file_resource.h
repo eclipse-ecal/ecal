@@ -24,18 +24,22 @@
 #pragma once
 
 #include <cstdio>
-#include <fstream>
-#include <string>
+#include <memory>
 
 namespace eCAL
 {
   namespace Logging
   {
+    // Custom deleter for FILE*
+    struct FileDeleter {
+        void operator()(FILE* file) const;
+    };
+
     class FileResource {
     public:
-        FileResource() = default;
+        FileResource();
         
-        bool fopen(const std::string& filename, std::ios::openmode mode);
+        bool fopen(const char* filename, const char* mode);
         bool isOpen() const;
         void fclose();
 
@@ -43,7 +47,7 @@ namespace eCAL
         void fflush();
 
     private:
-        std::fstream m_file;
+        std::unique_ptr<FILE, FileDeleter> m_file;
     };
   }
 }
