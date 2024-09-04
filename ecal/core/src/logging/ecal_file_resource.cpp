@@ -20,57 +20,67 @@
 #include "ecal_file_resource.h"
 
 #include <cstdarg>
+#include <sstream>
+#include <vector>
 
 namespace eCAL
 {
   namespace Logging
   {
-    void FileDeleter::operator()(FILE* file) const 
+    bool FileResource::fopen(const std::string& filename, std::ios::openmode mode)
     {
-      if (file) {
-        fclose(file);
-      }
-    }
+      m_file.open(filename, mode);
 
-    FileResource::FileResource() : m_file(nullptr)
-    {
-    }
-
-    bool FileResource::fopen(const char* filename, const char* mode)
-    {
-      m_file.reset(std::fopen(filename, mode));
-
-      if (m_file == nullptr)
-      {
-        return false;
-      }
-      else
-      {
-        return true;
-      }
+      return m_file.is_open();
     }
 
     void FileResource::fprintf(const char* format, ...) 
     {
+      if (!m_file.is_open())
+      {
+        return;
+      } 
+
       va_list args;
       va_start(args, format);
-      vfprintf(m_file.get(), format, args);
+
+      // Determine the size of the formatted string
+      va_list args_copy;
+      va_copy(args_copy, args);
+      int size = vsnprintf(nullptr, 0, format, args_copy);
+      va_end(args_copy);
+
+      if (size < 0)
+      {
+        va_end(args);
+        return;
+      }
+
+      // Create a buffer and format the string into it
+      std::vector<char> buffer(size + 1);
+      vsnprintf(buffer.data(), buffer.size(), format, args);
       va_end(args);
+
+      // Write the formatted string to the file
+      m_file << buffer.data();
     }
 
     void FileResource::fflush() 
     {
-      std::fflush(m_file.get());
+      if (m_file.is_open())
+      {
+        m_file.flush();
+      }
     }
 
     void FileResource::fclose() 
     {
-      m_file.reset();
+      m_file.close();
     }
 
     bool FileResource::isOpen() const
     {
-      return m_file != nullptr;
+      return m_file.is_open();
     }
   }
 }
