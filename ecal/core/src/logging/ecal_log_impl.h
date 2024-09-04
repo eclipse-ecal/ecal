@@ -35,7 +35,6 @@
 
 #include "attributes/logging_attributes.h"
 #include "ecal_global_accessors.h"
-#include "ecal_file_resource.h"
 
 #include <atomic>
 #include <list>
@@ -43,7 +42,6 @@
 #include <mutex>
 #include <string>
 #include <vector>
-
 
 namespace eCAL
 {
@@ -143,7 +141,7 @@ namespace eCAL
     std::shared_ptr<UDP::CSampleReceiver>  m_log_receiver;
 
     std::string                            m_logfile_name;
-    Logging::FileResource                  m_logfile;
+    FILE*                                  m_logfile;
 
     Logging::SAttributes                   m_attributes;
     std::stringstream                      m_log_message_stream;
