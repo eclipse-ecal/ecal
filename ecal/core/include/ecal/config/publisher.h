@@ -105,12 +105,14 @@ namespace eCAL
       {
         struct Configuration
         {
-          bool         enable                 { true };  //!< enable layer 
+          bool                                  enable                  { true };  //!< enable layer 
 
-          bool         zero_copy_mode         { false }; //!< Enable zero copy shared memory transport mode 
-          unsigned int acknowledge_timeout_ms { 0U };    /*!< Force connected subscribers to send acknowledge event after processing the message.
-                                                              The publisher send call is blocked on this event with this timeout (0 == no handshake).*/
-          unsigned int memfile_buffer_count   { 1U };    /*!< Maximum number of used buffers (needs to be greater than 1, default = 1) */
+          bool                                  zero_copy_mode          { false }; //!< Enable zero copy shared memory transport mode 
+          unsigned int                          acknowledge_timeout_ms  { 0U };    /*!< Force connected subscribers to send acknowledge event after processing the message.
+                                                                                        The publisher send call is blocked on this event with this timeout (0 == no handshake).*/
+          unsigned int                          memfile_buffer_count    { 1U };    /*!< Maximum number of used buffers (needs to be greater than 1, default = 1) */
+          Types::ConstrainedInteger<4096, 4096> memfile_min_size_bytes  { 4096 };  //!< Default memory file size for new publisher (Default: 4096)
+          Types::ConstrainedInteger<50, 1, 100> memfile_reserve_percent { 50 };    //!< Dynamic file size reserve before recreating memory file if topic size changes (Default: 50)
         };
       }
 

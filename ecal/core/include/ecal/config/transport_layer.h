@@ -88,20 +88,10 @@ namespace eCAL
       };
     }
 
-    namespace SHM 
-    {
-      struct Configuration
-      {
-        Types::ConstrainedInteger<4096, 4096> memfile_min_size_bytes  { 4096 }; //!< Default memory file size for new publisher (Default: 4096)
-        Types::ConstrainedInteger<50, 1, 100> memfile_reserve_percent { 50 };   //!< Dynamic file size reserve before recreating memory file if topic size changes (Default: 50)
-      };
-    }
-
     struct Configuration
     {
       UDP::Configuration udp;
       TCP::Configuration tcp;
-      SHM::Configuration shm;
     };
   }
 }
