@@ -8,15 +8,15 @@ int main(int argc, char** argv)
   // Create a configuration object with the command line arguments
   eCAL::Configuration custom_config(argc, argv);
 
-  // Use the .yaml file of the system if available
-  custom_config.InitConfigWithDefaultYaml();
+  // Use the .yaml file of the system or current folder if available
+  custom_config.InitFromConfig();
 
   // Set the values in a try/catch block, as wrong configuration leads to exceptions
   try
   {
       // In case you decided to specify an own .yaml file to use
       // Configuration based on previous ini file will be overwritten
-    custom_config.InitConfigFromFile("C:\\eCAL_local.yaml");
+    custom_config.InitFromFile("C:\\eCAL_local.yaml");
 
     // Set the communication layer to network
     custom_config.registration.network_enabled = true;
