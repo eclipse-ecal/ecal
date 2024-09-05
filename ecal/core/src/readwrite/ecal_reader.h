@@ -41,7 +41,6 @@
 #include <queue>
 #include <set>
 #include <string>
-#include <tuple>
 #include <unordered_map>
 
 namespace eCAL
@@ -82,7 +81,7 @@ namespace eCAL
 
     void SetID(const std::set<long long>& id_set_);
 
-    void ApplyPublication(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& layer_states_);
+    void ApplyPublication(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& pub_layer_states_);
     void RemovePublication(const SPublicationInfo& publication_info_);
 
     void ApplyLayerParameter(const SPublicationInfo& publication_info_, eTLayerType type_, const Registration::ConnectionPar& parameter_);
@@ -90,17 +89,8 @@ namespace eCAL
     Registration::Sample GetRegistration();
     bool IsCreated() const { return(m_created); }
 
-    bool IsPublished() const
-    {
-      std::lock_guard<std::mutex> const lock(m_pub_map_mtx);
-      return(!m_pub_map.empty());
-    }
-
-    size_t GetPublisherCount() const
-    {
-      const std::lock_guard<std::mutex> lock(m_pub_map_mtx);
-      return(m_pub_map.size());
-    }
+    bool IsPublished() const;
+    size_t GetPublisherCount() const;
 
     std::string          GetTopicName()           const { return(m_topic_name); }
     std::string          GetTopicID()             const { return(m_topic_id); }
@@ -115,8 +105,6 @@ namespace eCAL
     void Register();
     void Unregister();
 
-    void CheckConnections();
-
     Registration::Sample GetRegistrationSample();
     Registration::Sample GetUnregistrationSample();
 
@@ -124,6 +112,7 @@ namespace eCAL
     void StopTransportLayer();
 
     void FireConnectEvent(const std::string& tid_, const SDataTypeInformation& tinfo_);
+    void FireUpdateEvent(const std::string& tid_, const SDataTypeInformation& tinfo_);
     void FireDisconnectEvent();
 
     bool CheckMessageClock(const std::string& tid_, long long current_clock_);
@@ -141,10 +130,15 @@ namespace eCAL
     std::atomic<size_t>                       m_topic_size;
     Subscriber::Configuration                 m_config;
 
-    std::atomic<bool>                         m_connected;
-    using PublicationMapT = std::map<SPublicationInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
-    mutable std::mutex                        m_pub_map_mtx;
-    PublicationMapT                           m_pub_map;
+    struct SConnection
+    {
+      SDataTypeInformation data_type_info;
+      SLayerStates         layer_states;
+      bool                 state = false;
+    };
+    using PublicationMapT = std::map<SPublicationInfo, SConnection>;
+    mutable std::mutex                        m_connection_map_mtx;
+    PublicationMapT                           m_connection_map;
 
     mutable std::mutex                        m_read_buf_mtx;
     std::condition_variable                   m_read_buf_cv;

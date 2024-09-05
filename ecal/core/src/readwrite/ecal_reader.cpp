@@ -71,7 +71,6 @@ namespace eCAL
                  m_topic_info(topic_info_),
                  m_topic_size(0),
                  m_config(config_),
-                 m_connected(false),
                  m_receive_time(0),
                  m_clock(0),
                  m_frequency_calculator(3.0f),
@@ -277,35 +276,91 @@ namespace eCAL
     m_id_set = id_set_;
   }
 
-  void CDataReader::ApplyPublication(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& layer_states_)
+  void CDataReader::ApplyPublication(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& pub_layer_states_)
   {
     // flag write enabled from publisher side (information not used yet)
 #if ECAL_CORE_TRANSPORT_UDP
-    m_layers.udp.write_enabled = layer_states_.udp.write_enabled;
+    m_layers.udp.write_enabled = pub_layer_states_.udp.write_enabled;
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-    m_layers.shm.write_enabled = layer_states_.shm.write_enabled;
+    m_layers.shm.write_enabled = pub_layer_states_.shm.write_enabled;
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-    m_layers.tcp.write_enabled = layer_states_.tcp.write_enabled;
+    m_layers.tcp.write_enabled = pub_layer_states_.tcp.write_enabled;
 #endif
 
-    FireConnectEvent(publication_info_.entity_id, data_type_info_);
-
-    // add key to publisher map
+    // add key to connection map, including connection state
+    bool is_new_connection     = false;
+    bool is_updated_connection = false;
     {
-      const std::lock_guard<std::mutex> lock(m_pub_map_mtx);
-      m_pub_map[publication_info_] = std::make_tuple(data_type_info_, layer_states_);
+      const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+      auto publication_info_iter = m_connection_map.find(publication_info_);
+
+      if (publication_info_iter == m_connection_map.end())
+      {
+        // add publisher to connection map, connection state false
+        m_connection_map[publication_info_] = SConnection{ data_type_info_, pub_layer_states_, false };
+      }
+      else
+      {
+        // existing connection, we got the second update now
+        auto& connection = publication_info_iter->second;
+
+        // if this connection was inactive before
+        // activate it now and flag a new connection finally
+        if (!connection.state)
+        {
+          is_new_connection = true;
+        }
+        // the connection was active, so we just update it
+        else
+        {
+          is_updated_connection = true;
+        }
+
+        // update the data type and layer states, even if the connection is not new
+        connection = SConnection{ data_type_info_, pub_layer_states_, true };
+      }
     }
+
+    // handle these events outside the lock
+    if (is_new_connection)
+    {
+      // fire connect event
+      FireConnectEvent(publication_info_.entity_id, data_type_info_);
+    }
+    else if (is_updated_connection)
+    {
+      // fire update event
+      FireUpdateEvent(publication_info_.entity_id, data_type_info_);
+    }
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug3, m_topic_name + "::CDataReader::ApplyPublication");
+#endif
   }
 
   void CDataReader::RemovePublication(const SPublicationInfo& publication_info_)
   {
-    // remove key from publisher map
+    // remove key from connection map
+    bool last_connection_gone(false);
     {
-      const std::lock_guard<std::mutex> lock(m_pub_map_mtx);
-      m_pub_map.erase(publication_info_);
+      const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+      m_connection_map.erase(publication_info_);
+      last_connection_gone = m_connection_map.empty();
     }
+
+    if (last_connection_gone)
+    {
+      // fire disconnect event
+      FireDisconnectEvent();
+    }
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug3, m_topic_name + "::CDataReader::RemovePublication");
+#endif
   }
 
   void CDataReader::ApplyLayerParameter(const SPublicationInfo& publication_info_, eTLayerType type_, const Registration::ConnectionPar& parameter_)
@@ -540,23 +595,37 @@ namespace eCAL
 #endif // ECAL_CORE_REGISTRATION
   }
 
-  void CDataReader::CheckConnections()
-  {
-    const std::lock_guard<std::mutex> lock(m_pub_map_mtx);
-
-    if (m_pub_map.empty())
-    {
-      FireDisconnectEvent();
-    }
-  }
-
   Registration::Sample CDataReader::GetRegistration()
   {
-    // check connection timeouts
-    CheckConnections();
-
     // return registration
     return GetRegistrationSample();
+  }
+
+  bool CDataReader::IsPublished() const
+  {
+    std::lock_guard<std::mutex> const lock(m_connection_map_mtx);
+    for (const auto& sub : m_connection_map)
+    {
+      if (sub.second.state)
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  size_t CDataReader::GetPublisherCount() const
+  {
+    std::lock_guard<std::mutex> const lock(m_connection_map_mtx);
+    size_t count = 0;
+    for (const auto& sub : m_connection_map)
+    {
+      if (sub.second.state)
+      {
+        count++;
+      }
+    }
+    return count;
   }
     
   Registration::Sample CDataReader::GetRegistrationSample()
@@ -732,61 +801,47 @@ namespace eCAL
 
   void CDataReader::FireConnectEvent(const std::string& tid_, const SDataTypeInformation& tinfo_)
   {
-    SSubEventCallbackData data;
-    data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-    data.clock = 0;
-
-    if (!m_connected)
+    const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
+    auto iter = m_event_callback_map.find(sub_event_connected);
+    if (iter != m_event_callback_map.end() && iter->second)
     {
-      m_connected = true;
-
-      // fire sub_event_connected
-      {
-        const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
-        auto iter = m_event_callback_map.find(sub_event_connected);
-        if (iter != m_event_callback_map.end() && iter->second)
-        {
-          data.type      = sub_event_connected;
-          data.tid       = tid_;
-          data.tdatatype = tinfo_;
-          (iter->second)(m_topic_name.c_str(), &data);
-        }
-      }
+      SSubEventCallbackData data;
+      data.type      = sub_event_connected;
+      data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+      data.clock     = 0;
+      data.tid       = tid_;
+      data.tdatatype = tinfo_;
+      (iter->second)(m_topic_name.c_str(), &data);
     }
+  }
 
-    // fire sub_event_update_connection
+  void CDataReader::FireUpdateEvent(const std::string& tid_, const SDataTypeInformation& tinfo_)
+  {
+    const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
+    auto iter = m_event_callback_map.find(sub_event_update_connection);
+    if (iter != m_event_callback_map.end() && iter->second)
     {
-      const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
-      auto iter = m_event_callback_map.find(sub_event_update_connection);
-        if (iter != m_event_callback_map.end() && iter->second)
-      {
-        data.type      = sub_event_update_connection;
-        data.tid       = tid_;
-        data.tdatatype = tinfo_;
-        (iter->second)(m_topic_name.c_str(), &data);
-      }
+      SSubEventCallbackData data;
+      data.type      = sub_event_update_connection;
+      data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+      data.clock     = 0;
+      data.tid       = tid_;
+      data.tdatatype = tinfo_;
+      (iter->second)(m_topic_name.c_str(), &data);
     }
   }
 
   void CDataReader::FireDisconnectEvent()
   {
-    if (m_connected)
+    const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
+    auto iter = m_event_callback_map.find(sub_event_disconnected);
+    if (iter != m_event_callback_map.end() && iter->second)
     {
-      m_connected = false;
-
-      // fire sub_event_disconnected
-      {
-        const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
-        auto iter = m_event_callback_map.find(sub_event_disconnected);
-        if (iter != m_event_callback_map.end() && iter->second)
-        {
-          SSubEventCallbackData data;
-          data.type  = sub_event_disconnected;
-          data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-          data.clock = 0;
-          (iter->second)(m_topic_name.c_str(), &data);
-        }
-      }
+      SSubEventCallbackData data;
+      data.type  = sub_event_disconnected;
+      data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+      data.clock = 0;
+      (iter->second)(m_topic_name.c_str(), &data);
     }
   }
 
