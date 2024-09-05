@@ -35,18 +35,18 @@ The size object can be used like a normal integer.
   eCAL::Types::ConstrainedInteger<1024, 512, 8192> size_4mb = 1024 + 6 * 512;
   std::cout << size_4mb << "\n";
 
-For specifying sizes in the ecal configuration object, refer to the .ini file or "ecal/config/configuration.h" for the limitations.
+For specifying sizes in the ecal configuration object, refer to the .yaml file or "ecal/config/configuration.h" for the limitations.
 
 Global configuration initialization
 ===================================
 
 The configuration will be first initialized with the default values specified by eCAL.
-If you want to use the systems eCAL .ini file, call the ``InitConfigWithDefaultYaml()`` function of the config object.
+If you want to use the systems eCAL .yaml file, call the ``InitFromConfig()`` function of the config object.
 
-In case the .ini to use is specified via command line parameter, this one is chosen instead. 
-The object will throw an error, in case the specified .ini file cannot be found.
+In case the .yaml to use is specified via command line parameter, this one is chosen instead. 
+The object will throw an error, in case the specified .yaml file cannot be found.
 
-It is also possible to specify the .ini by calling the function ``checkForValidConfigFilePath(const std::string yaml_path_)`` of the config object.
+It is also possible to specify the .yaml by calling the function ``InitFromFile(const std::string yaml_path_)`` of the config object.
 
 * |fa-file-alt| :file:`hello_config/main.cpp`:
 
