@@ -321,6 +321,9 @@ namespace eCAL
         // update the data type and layer states, even if the connection is not new
         connection = SConnection{ data_type_info_, pub_layer_states_, true };
       }
+
+      // update connection count
+      m_connection_count = GetConnectionCount();
     }
 
     // handle these events outside the lock
@@ -347,8 +350,12 @@ namespace eCAL
     bool last_connection_gone(false);
     {
       const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+
       m_connection_map.erase(publication_info_);
       last_connection_gone = m_connection_map.empty();
+
+      // update connection count
+      m_connection_count = GetConnectionCount();
     }
 
     if (last_connection_gone)
@@ -603,29 +610,12 @@ namespace eCAL
 
   bool CDataReader::IsPublished() const
   {
-    std::lock_guard<std::mutex> const lock(m_connection_map_mtx);
-    for (const auto& sub : m_connection_map)
-    {
-      if (sub.second.state)
-      {
-        return true;
-      }
-    }
-    return false;
+    return m_connection_count > 0;
   }
 
   size_t CDataReader::GetPublisherCount() const
   {
-    std::lock_guard<std::mutex> const lock(m_connection_map_mtx);
-    size_t count = 0;
-    for (const auto& sub : m_connection_map)
-    {
-      if (sub.second.state)
-      {
-        count++;
-      }
-    }
-    return count;
+    return m_connection_count;
   }
     
   Registration::Sample CDataReader::GetRegistrationSample()
@@ -843,6 +833,20 @@ namespace eCAL
       data.clock = 0;
       (iter->second)(m_topic_name.c_str(), &data);
     }
+  }
+
+  size_t CDataReader::GetConnectionCount()
+  {
+    // no need to lock map here for now, map locked by caller
+    size_t count(0);
+    for (const auto& sub : m_connection_map)
+    {
+      if (sub.second.state)
+      {
+        count++;
+      }
+    }
+    return count;
   }
 
   bool CDataReader::CheckMessageClock(const std::string& tid_, long long current_clock_)

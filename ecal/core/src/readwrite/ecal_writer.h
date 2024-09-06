@@ -122,6 +122,8 @@ namespace eCAL
     void FireUpdateEvent(const std::string& tid_, const SDataTypeInformation& tinfo_);
     void FireDisconnectEvent();
 
+    size_t GetConnectionCount();
+
     size_t PrepareWrite(long long id_, size_t len_);
 
     TLayer::eTransportLayer DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
@@ -150,6 +152,7 @@ namespace eCAL
     using SSubscriptionMapT = std::map<SSubscriptionInfo, SConnection>;
     mutable std::mutex                     m_connection_map_mtx;
     SSubscriptionMapT                      m_connection_map;
+    std::atomic<size_t>                    m_connection_count{ 0 };
 
     using EventCallbackMapT = std::map<eCAL_Publisher_Event, PubEventCallbackT>;
     std::mutex                             m_event_callback_map_mtx;

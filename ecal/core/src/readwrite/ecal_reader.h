@@ -114,6 +114,8 @@ namespace eCAL
     void FireConnectEvent(const std::string& tid_, const SDataTypeInformation& tinfo_);
     void FireUpdateEvent(const std::string& tid_, const SDataTypeInformation& tinfo_);
     void FireDisconnectEvent();
+    
+    size_t GetConnectionCount();
 
     bool CheckMessageClock(const std::string& tid_, long long current_clock_);
 
@@ -139,6 +141,7 @@ namespace eCAL
     using PublicationMapT = std::map<SPublicationInfo, SConnection>;
     mutable std::mutex                        m_connection_map_mtx;
     PublicationMapT                           m_connection_map;
+    std::atomic<size_t>                       m_connection_count{ 0 };
 
     mutable std::mutex                        m_read_buf_mtx;
     std::condition_variable                   m_read_buf_cv;

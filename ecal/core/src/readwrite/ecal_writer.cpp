@@ -516,7 +516,11 @@ namespace eCAL
         // update the data type, the layer states and set the state active
         connection = SConnection{ data_type_info_, sub_layer_states_, true };
       }
+
+      // update connection count
+      m_connection_count = GetConnectionCount();
     }
+
 
     // handle these events outside the lock
     if (is_new_connection)
@@ -553,8 +557,12 @@ namespace eCAL
     bool last_connection_gone(false);
     {
       const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+
       m_connection_map.erase(subscription_info_);
       last_connection_gone = m_connection_map.empty();
+
+      // update connection count
+      m_connection_count = GetConnectionCount();
     }
 
     if (last_connection_gone)
@@ -585,29 +593,12 @@ namespace eCAL
 
   bool CDataWriter::IsSubscribed() const
   {
-    std::lock_guard<std::mutex> const lock(m_connection_map_mtx);
-    for (const auto& sub : m_connection_map)
-    {
-      if (sub.second.state)
-      {
-        return true;
-      }
-    }
-    return false;
+    return m_connection_count > 0;
   }
 
   size_t CDataWriter::GetSubscriberCount() const
   {
-    std::lock_guard<std::mutex> const lock(m_connection_map_mtx);
-    size_t count = 0;
-    for (const auto& sub : m_connection_map)
-    {
-      if (sub.second.state)
-      {
-        count++;
-      }
-    }
-    return count;
+    return m_connection_count;
   }
 
   std::string CDataWriter::Dump(const std::string& indent_ /* = "" */)
@@ -825,6 +816,20 @@ namespace eCAL
       data.clock = 0;
       (iter->second)(m_topic_name.c_str(), &data);
     }
+  }
+
+  size_t CDataWriter::GetConnectionCount()
+  {
+    // no need to lock map here for now, map locked by caller
+    size_t count(0);
+    for (const auto& sub : m_connection_map)
+    {
+      if (sub.second.state)
+      {
+        count++;
+      }
+    }
+    return count;
   }
 
   bool CDataWriter::StartUdpLayer()
