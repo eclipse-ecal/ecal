@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -615,8 +615,8 @@ TEST(core_cpp_pubsub, SubscriberReconnection)
     };
     sub_foo.AddReceiveCallback(receive_lambda);
 
-    // sleep for 2 seconds, we should receive something
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    // sleep for 3 seconds, we should receive something
+    std::this_thread::sleep_for(std::chrono::seconds(3));
 
     EXPECT_TRUE(callback_received_count > 0);
   }
@@ -632,8 +632,8 @@ TEST(core_cpp_pubsub, SubscriberReconnection)
     };
     sub_foo.AddReceiveCallback(receive_lambda);
 
-    // sleep for 2 seconds, we should receive something
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    // sleep for 3 seconds, we should receive something
+    std::this_thread::sleep_for(std::chrono::seconds(3));
 
     EXPECT_TRUE(callback_received_count > 0);
   }

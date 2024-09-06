@@ -51,7 +51,6 @@
 #include <mutex>
 #include <string>
 #include <map>
-#include <tuple>
 #include <vector>
 
 namespace eCAL
@@ -98,17 +97,8 @@ namespace eCAL
 
     bool IsCreated() const { return(m_created); }
 
-    bool IsSubscribed() const 
-    {
-      std::lock_guard<std::mutex> const lock(m_sub_map_mtx);
-      return(!m_sub_map.empty());
-    }
-
-    size_t GetSubscriberCount() const
-    {
-      std::lock_guard<std::mutex> const lock(m_sub_map_mtx);
-      return(m_sub_map.size());
-    }
+    bool IsSubscribed() const;
+    size_t GetSubscriberCount() const;
 
     const std::string&          GetTopicName()           const { return(m_topic_name); }
     const SDataTypeInformation& GetDataTypeInformation() const { return m_topic_info; }
@@ -118,8 +108,6 @@ namespace eCAL
   protected:
     void Register();
     void Unregister();
-
-    void CheckConnections();
 
     Registration::Sample GetRegistrationSample();
     Registration::Sample GetUnregistrationSample();
@@ -131,11 +119,13 @@ namespace eCAL
     void StopAllLayer();
 
     void FireConnectEvent(const std::string& tid_, const SDataTypeInformation& tinfo_);
+    void FireUpdateEvent(const std::string& tid_, const SDataTypeInformation& tinfo_);
     void FireDisconnectEvent();
+
+    size_t GetConnectionCount();
 
     size_t PrepareWrite(long long id_, size_t len_);
 
-    bool IsInternalSubscribedOnly();
     TLayer::eTransportLayer DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
     
     int32_t GetFrequency();
@@ -153,11 +143,16 @@ namespace eCAL
 
     std::vector<char>                      m_payload_buffer;
 
-    std::atomic<bool>                      m_connected;
-
-    using SSubscriptionMapT = std::map<SSubscriptionInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
-    mutable std::mutex                     m_sub_map_mtx;
-    SSubscriptionMapT                      m_sub_map;
+    struct SConnection
+    {
+      SDataTypeInformation data_type_info;
+      SLayerStates         layer_states;
+      bool                 state = false;
+    };
+    using SSubscriptionMapT = std::map<SSubscriptionInfo, SConnection>;
+    mutable std::mutex                     m_connection_map_mtx;
+    SSubscriptionMapT                      m_connection_map;
+    std::atomic<size_t>                    m_connection_count{ 0 };
 
     using EventCallbackMapT = std::map<eCAL_Publisher_Event, PubEventCallbackT>;
     std::mutex                             m_event_callback_map_mtx;
