@@ -254,21 +254,6 @@ Transportlayer settings are listed in the section ``transport_layer``
 
         Reconnection attemps the session will try to reconnect in case of an issue
 
-    .. option:: shm
-
-      .. option:: memfile_min_size_bytes           
-    
-        ``x * 4096 kB`` default ``4096`` 
-        
-        Default memory file size for new publisher
-              
-
-      .. option:: memfile_reserve_percent           
-
-        ``20 .. x`` default ``50``
-        
-        Dynamic file size reserve before recreating memory file if topic size changes
- 
 
 Publisher settings are listed in the section ``publisher``
 ----------------------------------------------------------
@@ -303,6 +288,19 @@ Publisher settings are listed in the section ``publisher``
         ``1 + x`` default ``1``
 
         Maximum number of used buffers (needs to be greater than 0, default = 1)
+
+      .. option:: memfile_min_size_bytes           
+    
+        ``x * 4096 kB`` default ``4096`` 
+        
+        Default memory file size for new publisher
+              
+
+      .. option:: memfile_reserve_percent           
+
+        ``20 .. x`` default ``50``
+        
+        Dynamic file size reserve before recreating memory file if topic size changes
 
     .. option:: udp
       

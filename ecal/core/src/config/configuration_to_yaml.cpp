@@ -210,22 +210,6 @@ namespace YAML
     /_/ /_/  \_,_/_//_/___/ .__/\___/_/  \__/____/\_,_/\_, /\__/_/   
                          /_/                          /___/          
   */
-  
-  Node convert<eCAL::TransportLayer::SHM::Configuration>::encode(const eCAL::TransportLayer::SHM::Configuration& config_)
-  {
-    Node node;
-    node["memfile_min_size_bytes"]  << config_.memfile_min_size_bytes;
-    node["memfile_reserve_percent"] << config_.memfile_reserve_percent;
-    return node;
-  }
-
-  bool convert<eCAL::TransportLayer::SHM::Configuration>::decode(const Node& node_, eCAL::TransportLayer::SHM::Configuration& config_)
-  {
-    AssignValue<unsigned int>(config_.memfile_min_size_bytes, node_, "memfile_min_size_bytes");
-    AssignValue<unsigned int>(config_.memfile_reserve_percent, node_, "memfile_reserve_percent");
-    return true;
-  }
-  
   Node convert<eCAL::TransportLayer::TCP::Configuration>::encode(const eCAL::TransportLayer::TCP::Configuration& config_)
   {
     Node node;
@@ -296,7 +280,6 @@ namespace YAML
   Node convert<eCAL::TransportLayer::Configuration>::encode(const eCAL::TransportLayer::Configuration& config_)
   {
     Node node;
-    node["shm"] = config_.shm;
     node["udp"] = config_.udp;
     node["tcp"] = config_.tcp;
 
@@ -305,7 +288,6 @@ namespace YAML
 
   bool convert<eCAL::TransportLayer::Configuration>::decode(const Node& node_, eCAL::TransportLayer::Configuration& config_)
   {
-    AssignValue<eCAL::TransportLayer::SHM::Configuration>(config_.shm, node_, "shm");
     AssignValue<eCAL::TransportLayer::UDP::Configuration>(config_.udp, node_, "udp");
     AssignValue<eCAL::TransportLayer::TCP::Configuration>(config_.tcp, node_, "tcp");
     return true;
@@ -322,10 +304,12 @@ namespace YAML
   Node convert<eCAL::Publisher::Layer::SHM::Configuration>::encode(const eCAL::Publisher::Layer::SHM::Configuration& config_)
   {
     Node node;
-    node["enable"]                 = config_.enable;
-    node["zero_copy_mode"]         = config_.zero_copy_mode;
-    node["acknowledge_timeout_ms"] = config_.acknowledge_timeout_ms;
-    node["memfile_buffer_count"]   = config_.memfile_buffer_count;
+    node["enable"]                   = config_.enable;
+    node["zero_copy_mode"]           = config_.zero_copy_mode;
+    node["acknowledge_timeout_ms"]   = config_.acknowledge_timeout_ms;
+    node["memfile_buffer_count"]     = config_.memfile_buffer_count;
+    node["memfile_min_size_bytes"]  << config_.memfile_min_size_bytes;
+    node["memfile_reserve_percent"] << config_.memfile_reserve_percent;
     return node;
   }
 
@@ -335,6 +319,8 @@ namespace YAML
     AssignValue<bool>(config_.zero_copy_mode, node_, "zero_copy_mode");
     AssignValue<unsigned int>(config_.acknowledge_timeout_ms, node_, "acknowledge_timeout_ms");
     AssignValue<unsigned int>(config_.memfile_buffer_count, node_, "memfile_buffer_count");
+    AssignValue<unsigned int>(config_.memfile_min_size_bytes, node_, "memfile_min_size_bytes");
+    AssignValue<unsigned int>(config_.memfile_reserve_percent, node_, "memfile_reserve_percent");
     return true;
   }
   
