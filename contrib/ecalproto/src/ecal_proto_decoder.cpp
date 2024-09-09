@@ -270,10 +270,8 @@ namespace protobuf
                 // do not process default messages to avoid infinite recursions.
                 std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
                 msg.GetReflection()->ListFields(msg, &msg_fields);
-                if (msg_fields.size() > 0)
-                {
-                  ProcProtoMsg(msg, name.str(), complete_message_name, true, fnum);
-                }
+                
+                ProcProtoMsg(msg, name.str(), complete_message_name, true, fnum);
               }
             }
           }
@@ -284,10 +282,8 @@ namespace protobuf
             // do not process default messages to avoid infinite recursions.
             std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
             msg.GetReflection()->ListFields(msg, &msg_fields);
-            if (msg_fields.size() > 0)
-            {
-              ProcProtoMsg(msg, field->name(), complete_message_name, false, field->number());
-            }
+            
+            ProcProtoMsg(msg, field->name(), complete_message_name, false, field->number());
           }
         }
         break;
