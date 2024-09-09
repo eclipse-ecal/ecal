@@ -243,10 +243,8 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
               // do not process default messages to avoid infinite recursions.
               std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
               msg.GetReflection()->ListFields(msg, &msg_fields);
-              if (msg_fields.size() > 0)
-              {
-                ProcProtoMsg(msg, prefix);
-              }
+              
+              ProcProtoMsg(msg, prefix);
             }
           }
           else
@@ -258,10 +256,8 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
             // do not process default messages to avoid infinite recursions.
             std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
             msg.GetReflection()->ListFields(msg, &msg_fields);
-            if (msg_fields.size() > 0)
-            {
-              ProcProtoMsg(msg, prefix);
-            }
+
+            ProcProtoMsg(msg, prefix);
           }
         }
         break;
