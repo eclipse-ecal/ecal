@@ -497,6 +497,7 @@ set(ecal_header_cmn
     include/ecal/config/subscriber.h
     include/ecal/ecal.h
     include/ecal/ecal_callback.h
+    include/ecal/ecal_config.h
     include/ecal/ecal_client.h
     include/ecal/ecal_core.h
     include/ecal/ecal_deprecate.h
