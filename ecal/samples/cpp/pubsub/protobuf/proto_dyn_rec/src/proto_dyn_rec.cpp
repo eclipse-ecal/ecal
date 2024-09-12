@@ -244,7 +244,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
               std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
               msg.GetReflection()->ListFields(msg, &msg_fields);
               
-              if (prefix_.find(field->name()) == std::string::npos || msg_fields.size() > 0)
+              if (prefix_.find(field->name()) == std::string::npos || !msg_fields.empty())
                 ProcProtoMsg(msg, prefix);
             }
           }
@@ -258,7 +258,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
             std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
             msg.GetReflection()->ListFields(msg, &msg_fields);
 
-            if (prefix_.find(field->name()) == std::string::npos || msg_fields.size() > 0)
+            if (prefix_.find(field->name()) == std::string::npos || !msg_fields.empty())
               ProcProtoMsg(msg, prefix);
           }
         }
