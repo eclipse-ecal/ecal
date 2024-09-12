@@ -25,14 +25,14 @@
 #include <thread>
 #include <vector>
 
-const int subscriber_number                    (5000);
+const int subscriber_number(5000);
 
-const int publisher_number                     (5000);
-const int publisher_type_encoding_size_bytes   (10*1024);
-const int publisher_type_descriptor_size_bytes (10*1024);
+const int publisher_number(5000);
+const int publisher_type_encoding_size_bytes(10 * 1024);
+const int publisher_type_descriptor_size_bytes(10 * 1024);
 
-const int in_between_sleep_sec                 (5);
-const int final_sleep_sec                      (120);
+const int in_between_sleep_sec(5);
+const int final_sleep_sec(120);
 
 std::string GenerateSizedString(const std::string& name, size_t totalSize)
 {
@@ -96,8 +96,8 @@ int main(int argc, char** argv)
     auto start_time = std::chrono::high_resolution_clock::now();
 
     eCAL::SDataTypeInformation data_type_info;
-    data_type_info.name       = "TOPIC_TYPE_NAME";
-    data_type_info.encoding   = GenerateSizedString("TOPIC_TYPE_ENCODING",   publisher_type_encoding_size_bytes);
+    data_type_info.name = "TOPIC_TYPE_NAME";
+    data_type_info.encoding = GenerateSizedString("TOPIC_TYPE_ENCODING", publisher_type_encoding_size_bytes);
     data_type_info.descriptor = GenerateSizedString("TOPIC_TYPE_DESCRIPTOR", publisher_type_descriptor_size_bytes);
 
     for (int i = 0; i < publisher_number; i++)
@@ -116,7 +116,55 @@ int main(int argc, char** argv)
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
     std::cout << "Time taken for publisher creation: " << duration << " milliseconds" << std::endl;
   }
-  std::cout << std::endl;
+
+  // sleep for a few seconds
+  std::this_thread::sleep_for(std::chrono::seconds(in_between_sleep_sec));
+
+  // wait for full registration
+  std::cout << "Wait for publisher/subscriber registration." << std::endl;
+  {
+    // start time measurement
+    auto start_time = std::chrono::high_resolution_clock::now();
+
+    size_t num_topics(0);
+    while (num_topics < std::max(publisher_number, subscriber_number))
+    {
+      std::vector<std::string> topic_names;
+      eCAL::Util::GetTopicNames(topic_names);
+      num_topics = topic_names.size();
+
+      std::cout << "Registered topics : " << num_topics << std::endl;
+
+      // sleep for 500 milliseconds
+      std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    }
+
+    // stop time measurement
+    auto end_time = std::chrono::high_resolution_clock::now();
+
+    // calculate the duration
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+    std::cout << "Time taken to get all registered: " << duration << " milliseconds" << std::endl;
+  }
+
+  // get topics information
+  std::cout << "Get topics information. (";
+  size_t num_topics(0);
+  {
+    // start time measurement
+    auto start_time = std::chrono::high_resolution_clock::now();
+
+    std::unordered_map<std::string, eCAL::SDataTypeInformation> topic_info_map;
+    eCAL::Util::GetTopics(topic_info_map);
+    num_topics = topic_info_map.size();
+
+    // stop time measurement
+    auto end_time = std::chrono::high_resolution_clock::now();
+
+    // calculate the duration
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+    std::cout << num_topics << ")" << std::endl << "Time taken to get topics information: " << duration << " milliseconds" << std::endl;
+  }
 
   // sleep for a few seconds
   std::this_thread::sleep_for(std::chrono::seconds(final_sleep_sec));
