@@ -26,6 +26,7 @@
 #include <ecal/msg/protobuf/ecal_proto_hlp.h>
 #include <ecal/msg/protobuf/ecal_proto_message_filter.h>
 #include <ecal/msg/protobuf/ecal_proto_visitor.h>
+#include <iostream>
 
 #include <sstream>
 
@@ -271,7 +272,8 @@ namespace protobuf
                 std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
                 msg.GetReflection()->ListFields(msg, &msg_fields);
                 
-                ProcProtoMsg(msg, name.str(), complete_message_name, true, fnum);
+                if (prefix_.find(field->name()) == std::string::npos || msg_fields.size() > 0)
+                  ProcProtoMsg(msg, name.str(), complete_message_name, true, fnum);
               }
             }
           }
@@ -283,7 +285,11 @@ namespace protobuf
             std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
             msg.GetReflection()->ListFields(msg, &msg_fields);
             
-            ProcProtoMsg(msg, field->name(), complete_message_name, false, field->number());
+            auto msg_type = msg.GetTypeName();
+            auto msg__type = msg_.GetTypeName();
+
+            if (prefix_.find(field->name()) == std::string::npos || msg_fields.size() > 0)
+              ProcProtoMsg(msg, field->name(), complete_message_name, false, field->number());
           }
         }
         break;
