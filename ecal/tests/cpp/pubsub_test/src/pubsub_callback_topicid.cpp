@@ -106,16 +106,23 @@ protected:
 
 TEST_P(TestFixture, OnePubSub)
 {
-  eCAL::CPublisher  publisher ("foo");
-  eCAL::CSubscriber subscriber("foo");
+  eCAL::SDataTypeInformation datatype_info;
+  datatype_info.name       = "mytype";
+  datatype_info.encoding   = "test";
+  datatype_info.descriptor = "desc";
+
+  eCAL::CPublisher  publisher ("foo", datatype_info);
+  eCAL::CSubscriber subscriber("foo", datatype_info);
 
   eCAL::Registration::STopicId callback_topic_id;
+  eCAL::SDataTypeInformation   callback_datatype_info;
   int                          callback_count{ 0 };
 
-  subscriber.AddReceiveCallback([&callback_topic_id, &callback_count](const eCAL::Registration::STopicId& topic_id_, const eCAL::SReceiveCallbackData&)
+  subscriber.AddReceiveCallback([&callback_topic_id, &callback_datatype_info, &callback_count](const eCAL::Registration::STopicId& topic_id_, const eCAL::SDataTypeInformation& datatype_info_, const eCAL::SReceiveCallbackData&)
     {
       ++callback_count;
       callback_topic_id = topic_id_;
+      callback_datatype_info = datatype_info_;
     }
   );
   const auto pub_id = publisher.GetId();
@@ -128,6 +135,7 @@ TEST_P(TestFixture, OnePubSub)
   std::this_thread::sleep_for(std::chrono::milliseconds(DATA_FLOW_TIME_MS));
 
   EXPECT_EQ(callback_topic_id, pub_id);
+  EXPECT_EQ(callback_datatype_info, datatype_info);
 }
 
 TEST_P(TestFixture, MultiplePubSub)
@@ -137,17 +145,24 @@ TEST_P(TestFixture, MultiplePubSub)
   std::vector<eCAL::CPublisher> publishers;
   for (int i = 0; i < num_publishers; ++i)
   {
-    publishers.emplace_back("foo");
+    eCAL::SDataTypeInformation datatype_info;
+    datatype_info.name = "mytype";
+    datatype_info.encoding = "test";
+    datatype_info.descriptor = "desc" + std::to_string(i);
+
+    publishers.emplace_back("foo", datatype_info);
   }
   eCAL::CSubscriber subscriber("foo");
 
   eCAL::Registration::STopicId callback_topic_id;
+  eCAL::SDataTypeInformation   callback_datatype_info;
   int                          callback_count{ 0 };
 
-  subscriber.AddReceiveCallback([&callback_topic_id, &callback_count](const eCAL::Registration::STopicId& topic_id_, const eCAL::SReceiveCallbackData&)
+  subscriber.AddReceiveCallback([&callback_topic_id, &callback_datatype_info, &callback_count](const eCAL::Registration::STopicId& topic_id_, const eCAL::SDataTypeInformation& datatype_info_, const eCAL::SReceiveCallbackData&)
     {
       ++callback_count;
       callback_topic_id = topic_id_;
+      callback_datatype_info = datatype_info_;
     }
   );
 
@@ -158,6 +173,7 @@ TEST_P(TestFixture, MultiplePubSub)
   {
     auto& publisher = publishers[i];
     const auto pub_id = publisher.GetId();
+    const auto pub_datatype_info = publisher.GetDataTypeInformation();
 
     // send data
     publisher.Send("abc");
@@ -165,6 +181,7 @@ TEST_P(TestFixture, MultiplePubSub)
     std::this_thread::sleep_for(std::chrono::milliseconds(DATA_FLOW_TIME_MS));
 
     EXPECT_EQ(callback_topic_id, pub_id);
+    EXPECT_EQ(callback_datatype_info, pub_datatype_info);
   }
 }
 

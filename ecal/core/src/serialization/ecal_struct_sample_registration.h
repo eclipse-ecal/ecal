@@ -241,16 +241,14 @@ namespace eCAL
       int32_t                            process_id = 0;                // process id which produced the sample
       std::string                        host_name;                     // host which produced the sample
 
+      // This is a hack that assumes the entity_id is unique within the whole ecal system (which it should be)
       bool operator==(const SampleIdentifier& other) const {
-        return entity_id == other.entity_id &&
-          process_id == other.process_id &&
-          host_name == other.host_name;
+        return entity_id == other.entity_id;
       }
 
       bool operator<(const SampleIdentifier& other) const
       {
-        return std::tie(process_id, entity_id, host_name)
-          < std::tie(other.process_id, other.entity_id, other.host_name);
+        return entity_id < other.entity_id;
       }
     };
 

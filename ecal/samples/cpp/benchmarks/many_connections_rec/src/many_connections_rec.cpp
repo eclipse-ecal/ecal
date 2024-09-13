@@ -39,7 +39,7 @@ public:
       std::ostringstream tname;
       tname << std::setw(5) << std::setfill('0') << i;
       subscribers.emplace_back("Topic" + tname.str(), eCAL::SDataTypeInformation{ ttype, "", tdesc });
-      auto on_receive = [this](const eCAL::Registration::STopicId&, const eCAL::SReceiveCallbackData&)
+      auto on_receive = [this](const eCAL::Registration::STopicId&, const eCAL::SDataTypeInformation&, const eCAL::SReceiveCallbackData&)
       {
         Receive();
       };
