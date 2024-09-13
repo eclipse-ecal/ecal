@@ -532,8 +532,14 @@ namespace eCAL
         topic_id.topic_id.entity_id  = topic_info_.tid;
         topic_id.topic_id.process_id = topic_info_.pid;
 
+        SPublicationInfo pub_info;
+        pub_info.entity_id  = topic_info_.tid;
+        pub_info.host_name  = topic_info_.hname;
+        pub_info.process_id = topic_info_.pid;
+
         // execute it
-        (m_receive_callback)(topic_id, cb_data);
+        std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+        (m_receive_callback)(topic_id, m_connection_map[pub_info].data_type_info, cb_data);
         processed = true;
       }
     }

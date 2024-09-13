@@ -148,9 +148,9 @@ namespace eCAL
       SLayerStates         layer_states;
       bool                 state = false;
     };
-    using PublicationMapT = std::map<SPublicationInfo, SConnection>;
+    using ConnectionMapT = std::map<SPublicationInfo, SConnection>;
     mutable std::mutex                        m_connection_map_mtx;
-    PublicationMapT                           m_connection_map;
+    ConnectionMapT                            m_connection_map;
     std::atomic<size_t>                       m_connection_count{ 0 };
 
     mutable std::mutex                        m_read_buf_mtx;

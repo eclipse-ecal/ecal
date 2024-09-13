@@ -138,7 +138,7 @@ namespace eCAL
    * @param topic_id_    The topic id struct of the received message.
    * @param data_        Data struct containing payload, timestamp and publication clock.
   **/
-  using ReceiveIDCallbackT = std::function<void(const Registration::STopicId&, const SReceiveCallbackData&)>;
+  using ReceiveIDCallbackT = std::function<void(const Registration::STopicId&, const SDataTypeInformation&, const SReceiveCallbackData&)>;
 
   /**
    * @brief Timer callback function type.

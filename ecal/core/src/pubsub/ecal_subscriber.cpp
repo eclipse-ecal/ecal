@@ -148,7 +148,7 @@ namespace eCAL
 
   bool CSubscriber::AddReceiveCallback(ReceiveCallbackT callback_)
   {
-    auto id_callback = [callback_](const Registration::STopicId& topic_id_, const SReceiveCallbackData& data_)
+    auto id_callback = [callback_](const Registration::STopicId& topic_id_, const SDataTypeInformation&, const SReceiveCallbackData& data_)
     {
       callback_(topic_id_.topic_name.c_str(), &data_);
     };
