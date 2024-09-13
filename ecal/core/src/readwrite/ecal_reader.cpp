@@ -179,7 +179,7 @@ namespace eCAL
     return(false);
   }
 
-  bool CDataReader::AddReceiveCallback(ReceiveCallbackT callback_)
+  bool CDataReader::AddReceiveCallback(ReceiveIDCallbackT callback_)
   {
     if (!m_created) return(false);
 
@@ -423,7 +423,7 @@ namespace eCAL
 #endif
   }
 
-  size_t CDataReader::ApplySample(const std::string& tid_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_)
+  size_t CDataReader::ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_)
   {
     // ensure thread safety
     const std::lock_guard<std::mutex> lock(m_receive_callback_mtx);
@@ -481,7 +481,7 @@ namespace eCAL
     //  - a dropped message
     //  - an out-of-order message
     //  - a multiple sent message
-    if (!CheckMessageClock(tid_, clock_))
+    if (!CheckMessageClock(topic_info_.tid, clock_))
     {
       // we will not process that message
       return(0);
@@ -525,8 +525,15 @@ namespace eCAL
         cb_data.id    = id_;
         cb_data.time  = time_;
         cb_data.clock = clock_;
+
+        Registration::STopicId topic_id;
+        topic_id.topic_name          = topic_info_.tname;
+        topic_id.topic_id.host_name  = topic_info_.hname;
+        topic_id.topic_id.entity_id  = topic_info_.tid;
+        topic_id.topic_id.process_id = topic_info_.pid;
+
         // execute it
-        (m_receive_callback)(m_topic_name.c_str(), &cb_data);
+        (m_receive_callback)(topic_id, cb_data);
         processed = true;
       }
     }

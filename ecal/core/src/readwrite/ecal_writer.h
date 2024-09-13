@@ -100,6 +100,16 @@ namespace eCAL
     bool IsSubscribed() const;
     size_t GetSubscriberCount() const;
 
+    Registration::STopicId GetId() const
+    {
+      Registration::STopicId id;
+      id.topic_name          = m_topic_name;
+      id.topic_id.entity_id  = m_topic_id;
+      id.topic_id.host_name  = m_host_name;
+      id.topic_id.process_id = m_pid;
+      return id;
+    }
+
     const std::string&          GetTopicName()           const { return(m_topic_name); }
     const SDataTypeInformation& GetDataTypeInformation() const { return m_topic_info; }
 

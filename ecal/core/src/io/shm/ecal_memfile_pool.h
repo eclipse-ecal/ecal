@@ -42,7 +42,7 @@
 
 namespace eCAL
 {
-  using MemFileDataCallbackT = std::function<size_t (const std::string &, const std::string &, const char *, size_t, long long, long long, long long, size_t)>;
+  using MemFileDataCallbackT = std::function<size_t (const char *, size_t, long long, long long, long long, size_t)>;
 
   ////////////////////////////////////////
   // CMemFileObserver
@@ -61,14 +61,14 @@ namespace eCAL
     bool Create(const std::string& memfile_name_, const std::string& memfile_event_);
     bool Destroy();
 
-    bool Start(const std::string& topic_name_, const std::string& topic_id_, int timeout_, const MemFileDataCallbackT& callback_);
+    bool Start(int timeout_, const MemFileDataCallbackT& callback_);
     bool Stop();
     bool IsObserving() {return(m_is_observing);};
 
     bool ResetTimeout();
 
   protected:
-    void Observe(const std::string& topic_name_, const std::string& topic_id_, int timeout_);
+    void Observe(int timeout_);
     bool ReadFileHeader(SMemFileHeader& memfile_hdr);
 
     std::atomic<bool>       m_created;
@@ -97,7 +97,7 @@ namespace eCAL
     void Start();
     void Stop();
 
-    bool ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, const std::string& topic_name_, const std::string& topic_id_, int timeout_observation_ms, const MemFileDataCallbackT& callback_);
+    bool ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, int timeout_observation_ms, const MemFileDataCallbackT& callback_);
 
   protected:
     void CleanupPoolThread();

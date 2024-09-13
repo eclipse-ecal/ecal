@@ -220,6 +220,12 @@ namespace eCAL
     return(m_datawriter->GetTopicName());
   }
 
+  Registration::STopicId CPublisher::GetId() const
+  {
+    if (m_datawriter == nullptr) return{};
+    return(m_datawriter->GetId());
+  }
+
   SDataTypeInformation CPublisher::GetDataTypeInformation() const
   {
     if (m_datawriter == nullptr) return(SDataTypeInformation{});

@@ -124,7 +124,7 @@ namespace eCAL
       if (layer_ == eTLayerType::tl_none)
       {
         // log it
-        Logging::Log(log_level_error, ecal_sample.topic.tname + " : payload received without layer definition !");
+        Logging::Log(log_level_error, ecal_sample.topic_info.tname + " : payload received without layer definition !");
       }
 #endif
 
@@ -153,7 +153,7 @@ namespace eCAL
       {
         // apply sample to data reader
         const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-        auto res = m_topic_name_datareader_map.equal_range(ecal_sample.topic.tname);
+        auto res = m_topic_name_datareader_map.equal_range(ecal_sample.topic_info.tname);
         std::transform(
           res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
         );
@@ -163,7 +163,7 @@ namespace eCAL
       for (const auto& reader : readers_to_apply)
       {
         applied_size = reader->ApplySample(
-          ecal_sample.topic.tid,
+          ecal_sample.topic_info,
           payload_addr,
           payload_size,
           ecal_sample_content.id,
@@ -182,7 +182,7 @@ namespace eCAL
     return (applied_size > 0);
   }
 
-  bool CSubGate::ApplySample(const std::string& topic_name_, const std::string& topic_id_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_)
+  bool CSubGate::ApplySample(const Payload::TopicInfo& topic_info_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_)
   {
     if (!m_created) return false;
 
@@ -194,7 +194,7 @@ namespace eCAL
     // Apply the samples to the readers afterwards.
     {
       const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-      auto res = m_topic_name_datareader_map.equal_range(topic_name_);
+      auto res = m_topic_name_datareader_map.equal_range(topic_info_.tname);
       std::transform(
         res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
       );
@@ -203,7 +203,7 @@ namespace eCAL
 
     for (const auto& reader : readers_to_apply)
     {
-      applied_size = reader->ApplySample(topic_id_, buf_, len_, id_, clock_, time_, hash_, layer_);
+      applied_size = reader->ApplySample(topic_info_, buf_, len_, id_, clock_, time_, hash_, layer_);
     }
 
     return (applied_size > 0);
