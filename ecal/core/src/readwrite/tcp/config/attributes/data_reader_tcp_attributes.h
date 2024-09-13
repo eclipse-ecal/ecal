@@ -27,7 +27,7 @@ namespace eCAL
     {
       struct SAttributes
       {
-        unsigned int threadpool_size;
+        size_t ecal_magic = (4 * sizeof(char));
       };
     }
   }

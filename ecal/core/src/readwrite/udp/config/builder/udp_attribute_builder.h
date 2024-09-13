@@ -19,7 +19,10 @@
 
 #pragma once
 
-#include "udp_receiver_attribute_builder.h"
+#include "readwrite/udp/config/attributes/reader_udp_attributes.h"
+#include "readwrite/udp/config/attributes/writer_udp_attributes.h"
+#include "src/io/udp/ecal_udp_receiver_attr.h"
+#include "src/io/udp/ecal_udp_sender_attr.h"
 
 namespace eCAL
 {
@@ -27,18 +30,15 @@ namespace eCAL
   {
     namespace UDP
     {
-      eCAL::UDP::SReceiverAttr BuildUDPReceiverAttributes(const eCAL::eCALReader::At& attr_)
-      {
-        eCAL::UDP::SReceiverAttr receiver_attr;      
-        receiver_attr.broadcast = attr_.broadcast;
-        receiver_attr.loopback  = true;
-        
-        receiver_attr.rcvbuf    = attr_.rcvbuf;
-        receiver_attr.port      = attr_.port;
-        receiver_attr.address   = attr_.address;
+      eCAL::UDP::SReceiverAttr ConvertToIOUDPReceiverAttributes(const SAttributes& attr_);
+    }
+  }
 
-        return receiver_attr;
-      }
+  namespace eCALWriter
+  {
+    namespace UDP
+    {
+      eCAL::UDP::SSenderAttr ConvertToIOUDPSenderAttributes(const SAttributes& attr_);
     }
   }
 }

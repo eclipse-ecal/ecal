@@ -24,6 +24,7 @@
 #pragma once
 
 #include "readwrite/ecal_reader_layer.h"
+#include "config/attributes/data_reader_tcp_attributes.h"
 
 #include <tcp_pubsub/executor.h>
 #include <tcp_pubsub/subscriber.h>
@@ -42,7 +43,7 @@ namespace eCAL
   class CDataReaderTCP
   {
   public:
-    CDataReaderTCP();
+    CDataReaderTCP(const eCAL::eCALReader::TCP::SAttributes& attr_);
 
     bool Create(std::shared_ptr<tcp_pubsub::Executor>& executor_);
     bool Destroy();
@@ -56,6 +57,7 @@ namespace eCAL
 
     std::shared_ptr<tcp_pubsub::Subscriber> m_subscriber;
     bool                                    m_callback_active;
+    eCAL::eCALReader::TCP::SAttributes      m_attributes;
   };
 
   ////////////////

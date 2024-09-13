@@ -36,7 +36,10 @@ namespace eCAL
   ////////////////
   // READER
   ////////////////
-  CDataReaderTCP::CDataReaderTCP() : m_callback_active(false) {}
+  CDataReaderTCP::CDataReaderTCP(const eCAL::eCALReader::TCP::SAttributes& attr_) 
+    : m_callback_active(false)
+    , m_attributes(attr_) 
+  {}
 
   bool CDataReaderTCP::Create(std::shared_ptr<tcp_pubsub::Executor>& executor_)
   {
@@ -88,11 +91,9 @@ namespace eCAL
 
   void CDataReaderTCP::OnTcpMessage(const tcp_pubsub::CallbackData& data_)
   {
-    // extract header size
-    const size_t ecal_magic(4 * sizeof(char));
-    //                             ECAL       +  header size field
-    const size_t   header_length = ecal_magic + sizeof(uint16_t);
-    const uint16_t header_size   = le16toh(*reinterpret_cast<uint16_t*>(data_.buffer_->data() + ecal_magic));
+    //                             ECAL                    + header size field
+    const size_t   header_length = m_attributes.ecal_magic + sizeof(uint16_t);
+    const uint16_t header_size   = le16toh(*reinterpret_cast<uint16_t*>(data_.buffer_->data() + m_attributes.ecal_magic));
 
     // extract header
     const char* header_payload = data_.buffer_->data() + header_length;

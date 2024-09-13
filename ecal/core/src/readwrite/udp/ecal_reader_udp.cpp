@@ -28,6 +28,7 @@
 
 #include "io/udp/ecal_udp_configurations.h"
 #include "pubsub/ecal_subgate.h"
+#include "config/builder/udp_attribute_builder.h"
 
 #include <functional>
 #include <memory>
@@ -55,7 +56,11 @@ namespace eCAL
     if (!m_started)
     {      
       // start payload sample receiver
-      m_payload_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CUDPReaderLayer::HasSample, this, std::placeholders::_1), std::bind(&CUDPReaderLayer::ApplySample, this, std::placeholders::_1, std::placeholders::_2));
+      m_payload_receiver = std::make_shared<UDP::CSampleReceiver>(
+        eCALReader::UDP::ConvertToIOUDPReceiverAttributes(m_attributes), 
+        std::bind(&CUDPReaderLayer::HasSample, this, std::placeholders::_1), 
+        std::bind(&CUDPReaderLayer::ApplySample, this, std::placeholders::_1, std::placeholders::_2)
+      );
 
       m_started = true;
     }
