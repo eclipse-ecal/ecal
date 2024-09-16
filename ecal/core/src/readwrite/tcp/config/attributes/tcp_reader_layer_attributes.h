@@ -19,26 +19,17 @@
 
 #pragma once
 
-#include "readwrite/udp/config/attributes/reader_udp_attributes.h"
-#include "readwrite/udp/config/attributes/writer_udp_attributes.h"
-#include "io/udp/ecal_udp_receiver_attr.h"
-#include "io/udp/ecal_udp_sender_attr.h"
-
 namespace eCAL
 {
   namespace eCALReader
   {
-    namespace UDP
+    namespace TCPLayer
     {
-      eCAL::UDP::SReceiverAttr ConvertToIOUDPReceiverAttributes(const SAttributes& attr_);
-    }
-  }
-
-  namespace eCALWriter
-  {
-    namespace UDP
-    {
-      eCAL::UDP::SSenderAttr ConvertToIOUDPSenderAttributes(const SAttributes& attr_);
+      struct SAttributes
+      {
+        size_t thread_pool_size;
+        int    max_reconnection_attempts;
+      };
     }
   }
 }

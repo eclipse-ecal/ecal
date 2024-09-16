@@ -20,36 +20,65 @@
 #pragma once
 
 #include "udp_attribute_builder.h"
+#include "ecal/types/ecal_custom_data_types.h"
 
 namespace eCAL
 {
   namespace eCALReader
   {
-    namespace UDP
+    UDP::SAttributes BuildUDPAttributes(const eCALReader::SAttributes attr_)
     {
-      SAttributes BuildAttributes(const eCALReader::SAttributes attr_)
-      {
-        SAttributes attributes;
+      UDP::SAttributes attributes;
 
-        attributes.enabled = attr_.enable_udp;
-        
-        return attributes;
-      }    
-    }
+      attributes.broadcast = !attr_.network_enabled;
+      attributes.loopback  = true;
+      
+      attributes.rcvbuf    = attr_.udp.receivebuffer;
+      attributes.port      = attr_.udp.port;
+
+      switch (attr_.udp.mode)
+      {
+        case Types::UDPMode::NETWORK:
+          attributes.address = attr_.udp.network.group;
+          break;
+        case Types::UDPMode::LOCAL:
+          attributes.address = attr_.udp.local.group;
+          break;
+        default:
+          break;
+      }
+      
+      return attributes;
+    }    
   }
 
   namespace eCALWriter
   {
-    namespace UDP
+    UDP::SAttributes BuildUDPAttributes(const eCALWriter::SAttributes attr_)
     {
-      SAttributes BuildAttributes(const eCALWriter::SAttributes attr_)
-      {
-        SAttributes attributes;
+      UDP::SAttributes attributes;
 
-        attributes.enabled = attr_.shm.enable;
-        
-        return attributes;
+      attributes.broadcast      = !attr_.network_enabled;
+      attributes.loopback       = attr_.loopback;
+      
+      attributes.sndbuf         = attr_.udp.sendbuffer;
+      attributes.port           = attr_.udp.port;
+      
+      switch (attr_.udp.mode)
+      {
+        case Types::UDPMode::NETWORK:
+          attributes.address = attr_.udp.network.group;
+          attributes.ttl     = attr_.udp.network.ttl;
+          break;
+        case Types::UDPMode::LOCAL:
+          attributes.address = attr_.udp.local.group;
+          attributes.ttl     = attr_.udp.local.ttl;
+          break;
+        default:
+          break;
       }
+
+      return attributes;
     }
   }
 }

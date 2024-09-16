@@ -28,6 +28,8 @@ namespace eCAL
       struct SAttributes
       {
         bool enabled;
+        unsigned int process_id;
+        unsigned int registration_timeout_ms;
       };
     }
   }

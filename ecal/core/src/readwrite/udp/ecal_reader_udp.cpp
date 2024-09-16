@@ -40,15 +40,14 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  CUDPReaderLayer::CUDPReaderLayer(const eCAL::eCALReader::UDP::SAttributes& attr_) : 
-                   m_started(false),
-                   m_attributes(attr_)
+  CUDPReaderLayer::CUDPReaderLayer() : m_started(false)
   {}
 
   CUDPReaderLayer::~CUDPReaderLayer() = default;
 
-  void CUDPReaderLayer::Initialize()
+  void CUDPReaderLayer::Initialize(const eCAL::eCALReader::UDP::SAttributes& attr_)
   {
+     m_attributes = attr_;
   }
 
   void CUDPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)

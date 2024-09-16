@@ -21,11 +21,10 @@
 
 #include "readwrite/config/attributes/reader_attributes.h"
 #include "ecal/config/subscriber.h"
+#include "ecal/config/transport_layer.h"
+#include "ecal/config/registration.h"
 
 namespace eCAL
 {
-  namespace eCALReader
-  {
-    SAttributes BuildReaderAttributes(const Subscriber::Configuration& config_);
-  }
+  eCALReader::SAttributes BuildReaderAttributes(const Subscriber::Configuration& config_, const eCAL::TransportLayer::UDP::Configuration& tl_udp_config_, const eCAL::Registration::Configuration& reg_config_);
 }

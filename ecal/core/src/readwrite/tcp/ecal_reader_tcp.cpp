@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal_config.h>
+#include "config/builder/data_reader_tcp_attribute_builder.h"
 
 #include "ecal_global_accessors.h"
 #include "ecal_reader_tcp.h"
@@ -78,7 +79,7 @@ namespace eCAL
     // add new session and activate callback if we add the first session
     if (new_session)
     {
-      m_subscriber->addSession(host_name_, port_, Config::GetTcpPubsubMaxReconnectionAttemps());
+      m_subscriber->addSession(host_name_, port_, m_attributes.max_reconnection_attempts);
       if (!m_callback_active)
       {
         m_subscriber->setCallback(std::bind(&CDataReaderTCP::OnTcpMessage, this, std::placeholders::_1));
@@ -126,15 +127,18 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  CTCPReaderLayer::CTCPReaderLayer() : m_initialized(false) {}
+  CTCPReaderLayer::CTCPReaderLayer() 
+    : m_initialized(false)
+  {}
 
-  void CTCPReaderLayer::Initialize()
+  void CTCPReaderLayer::Initialize(const eCAL::eCALReader::TCPLayer::SAttributes& attr_)
   {
+    m_attributes = attr_; 
     if (m_initialized) return;
     m_initialized = true;
 
     const tcp_pubsub::logger::logger_t tcp_pubsub_logger = std::bind(TcpPubsubLogger, std::placeholders::_1, std::placeholders::_2);
-    m_executor = std::make_shared<tcp_pubsub::Executor>(Config::GetTcpPubsubReaderThreadpoolSize(), tcp_pubsub_logger);
+    m_executor = std::make_shared<tcp_pubsub::Executor>(m_attributes.thread_pool_size, tcp_pubsub_logger);
   }
 
   void CTCPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
@@ -144,7 +148,7 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
     if (m_datareadertcp_map.find(map_key) != m_datareadertcp_map.end()) return;
 
-    const std::shared_ptr<CDataReaderTCP> reader = std::make_shared<CDataReaderTCP>();
+    const std::shared_ptr<CDataReaderTCP> reader = std::make_shared<CDataReaderTCP>(eCAL::eCALReader::TCP::BuildTCPReaderAttributes(m_attributes));
     reader->Create(m_executor);
 
     m_datareadertcp_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderTCP>>(map_key, reader));

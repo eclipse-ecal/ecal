@@ -19,32 +19,42 @@
 
 #pragma once
 
-#include "writer_attributes.h"
+#include "writer_attribute_builder.h"
 
 namespace eCAL
 {
-  namespace eCALWriter
+  eCALWriter::SAttributes BuildWriterAttributes(const Publisher::Configuration& pub_config_, const eCAL::TransportLayer::UDP::Configuration& tl_udp_config_, const eCAL::Registration::Configuration& reg_config_)
   {
-    SAttributes BuildWriterAttributes(const Publisher::Configuration& config_)
-    {
-      SAttributes attributes;
+    eCALWriter::SAttributes attributes;
 
-      attributes.share_topic_type = config_.share_topic_type;
-      attributes.share_topic_description = config_.share_topic_description;
-      attributes.layer_priority_local = config_.layer_priority_local;
-      attributes.layer_priority_remote = config_.layer_priority_remote;
+    attributes.network_enabled         = reg_config_.network_enabled;
+    attributes.loopback                = reg_config_.loopback;
 
-      attributes.shm.enable = config_.layer.shm.enable;
-      attributes.shm.acknowledge_timeout_ms = config_.layer.shm.acknowledge_timeout_ms;
-      attributes.shm.memfile_buffer_count = config_.layer.shm.memfile_buffer_count;
-      attributes.shm.memfile_min_size_bytes = config_.layer.shm.memfile_min_size_bytes;
-      attributes.shm.memfile_reserve_percent = config_.layer.shm.memfile_reserve_percent;
+    attributes.share_topic_type        = pub_config_.share_topic_type;
+    attributes.share_topic_description = pub_config_.share_topic_description;
+    attributes.layer_priority_local    = pub_config_.layer_priority_local;
+    attributes.layer_priority_remote   = pub_config_.layer_priority_remote;
 
-      attributes.udp.enable = config_.layer.udp.enable;
+    attributes.shm.enable                  = pub_config_.layer.shm.enable;
+    attributes.shm.acknowledge_timeout_ms  = pub_config_.layer.shm.acknowledge_timeout_ms;
+    attributes.shm.memfile_buffer_count    = pub_config_.layer.shm.memfile_buffer_count;
+    attributes.shm.memfile_min_size_bytes  = pub_config_.layer.shm.memfile_min_size_bytes;
+    attributes.shm.memfile_reserve_percent = pub_config_.layer.shm.memfile_reserve_percent;
 
-      attributes.tcp.enable = config_.layer.tcp.enable;
-      
-      return attributes;
-    }
+    attributes.udp.enable        = pub_config_.layer.udp.enable;
+    attributes.udp.port          = tl_udp_config_.port;
+    attributes.udp.sendbuffer    = tl_udp_config_.send_buffer;
+    attributes.udp.receivebuffer = tl_udp_config_.receive_buffer;
+    attributes.udp.mode          = tl_udp_config_.mode;
+
+    attributes.udp.network.group = tl_udp_config_.network.group;
+    attributes.udp.network.ttl   = tl_udp_config_.network.ttl;
+
+    attributes.udp.local.group   = tl_udp_config_.local.group;
+    attributes.udp.local.ttl     = tl_udp_config_.local.ttl;
+
+    attributes.tcp.enable = pub_config_.layer.tcp.enable;
+    
+    return attributes;
   }
 }

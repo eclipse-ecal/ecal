@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "udp/config/attributes/reader_udp_attributes.h"
+#include "readwrite/udp/config/attributes/reader_udp_attributes.h"
 #include "readwrite/config/attributes/reader_attributes.h"
 
 #include "readwrite/udp/config/attributes/writer_udp_attributes.h"
@@ -29,17 +29,11 @@ namespace eCAL
 {
   namespace eCALReader
   {
-    namespace UDP
-    {
-      SAttributes BuildAttributes(const eCALReader::SAttributes attr_);
-    }
+    UDP::SAttributes BuildUDPAttributes(const eCALReader::SAttributes attr_);
   }
 
   namespace eCALWriter
   {
-    namespace UDP
-    {
-      SAttributes BuildAttributes(const eCALWriter::SAttributes attr_);
-    }
+    UDP::SAttributes BuildUDPAttributes(const eCALWriter::SAttributes attr_);
   }
 }

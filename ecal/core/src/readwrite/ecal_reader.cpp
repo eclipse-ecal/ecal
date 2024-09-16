@@ -36,14 +36,17 @@
 
 #if ECAL_CORE_TRANSPORT_UDP
 #include "udp/ecal_reader_udp.h"
+#include "config/builder/udp_attribute_builder.h"
 #endif
 
 #if ECAL_CORE_TRANSPORT_SHM
 #include "shm/ecal_reader_shm.h"
+#include "config/builder/shm_attribute_builder.h"
 #endif
 
 #if ECAL_CORE_TRANSPORT_TCP
 #include "tcp/ecal_reader_tcp.h"
+#include "config/builder/tcp_attribute_builder.h"
 #endif
 
 #include <algorithm>
@@ -62,7 +65,7 @@ namespace eCAL
   ////////////////////////////////////////
   // CDataReader
   ////////////////////////////////////////
-  CDataReader::CDataReader(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Subscriber::Configuration& config_) :
+  CDataReader::CDataReader(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_) :
                  m_host_name(Process::GetHostName()),
                  m_host_group_name(Process::GetHostGroupName()),
                  m_pid(Process::GetProcessID()),
@@ -70,7 +73,7 @@ namespace eCAL
                  m_topic_name(topic_name_),
                  m_topic_info(topic_info_),
                  m_topic_size(0),
-                 m_config(config_),
+                 m_attributes(attr_),
                  m_receive_time(0),
                  m_clock(0),
                  m_frequency_calculator(3.0f),
@@ -400,25 +403,25 @@ namespace eCAL
   {
     // initialize udp layer
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_config.layer.udp.enable)
+    if (m_attributes.enable_udp)
     {
-      CUDPReaderLayer::Get()->Initialize();
+      CUDPReaderLayer::Get()->Initialize(eCAL::eCALReader::BuildUDPAttributes(m_attributes));
     }
 #endif
 
     // initialize shm layer
 #if ECAL_CORE_TRANSPORT_SHM
-    if (m_config.layer.shm.enable)
+    if (m_attributes.enable_shm)
     {
-      CSHMReaderLayer::Get()->Initialize();
+      CSHMReaderLayer::Get()->Initialize(eCAL::eCALReader::BuildSHMAttributes(m_attributes));
     }
 #endif
 
     // initialize tcp layer
 #if ECAL_CORE_TRANSPORT_TCP
-    if (m_config.layer.tcp.enable)
+    if (m_attributes.enable_tcp)
     {
-      CTCPReaderLayer::Get()->Initialize();
+      CTCPReaderLayer::Get()->Initialize(eCAL::eCALReader::BuildTCPLayerAttributes(m_attributes));
     }
 #endif
   }
@@ -433,13 +436,13 @@ namespace eCAL
     switch (layer_)
     {
     case tl_ecal_udp:
-      if (!m_config.layer.udp.enable) return 0;
+      if (!m_attributes.enable_udp) return 0;
       break;
     case tl_ecal_shm:
-      if (!m_config.layer.shm.enable) return 0;
+      if (!m_attributes.enable_shm) return 0;
       break;
     case tl_ecal_tcp:
-      if (!m_config.layer.tcp.enable) return 0;
+      if (!m_attributes.enable_tcp) return 0;
       break;
     default:
       break;
@@ -720,7 +723,7 @@ namespace eCAL
   void CDataReader::StartTransportLayer()
   {
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_config.layer.udp.enable)
+    if (m_attributes.enable_udp)
     {
       // flag enabled
       m_layers.udp.read_enabled = true;
@@ -731,7 +734,7 @@ namespace eCAL
 #endif
 
 #if ECAL_CORE_TRANSPORT_SHM
-    if (m_config.layer.shm.enable)
+    if (m_attributes.enable_shm)
     {
       // flag enabled
       m_layers.shm.read_enabled = true;
@@ -742,7 +745,7 @@ namespace eCAL
 #endif
 
 #if ECAL_CORE_TRANSPORT_TCP
-    if (m_config.layer.tcp.enable)
+    if (m_attributes.enable_tcp)
     {
       // flag enabled
       m_layers.tcp.read_enabled = true;
@@ -756,7 +759,7 @@ namespace eCAL
   void CDataReader::StopTransportLayer()
   {
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_config.layer.udp.enable)
+    if (m_attributes.enable_udp)
     {
       // flag disabled
       m_layers.udp.read_enabled = false;
@@ -767,7 +770,7 @@ namespace eCAL
 #endif
 
 #if ECAL_CORE_TRANSPORT_SHM
-    if (m_config.layer.shm.enable)
+    if (m_attributes.enable_shm)
     {
       // flag disabled
       m_layers.shm.read_enabled = false;
@@ -778,7 +781,7 @@ namespace eCAL
 #endif
 
 #if ECAL_CORE_TRANSPORT_TCP
-    if (m_config.layer.tcp.enable)
+    if (m_attributes.enable_tcp)
     {
       // flag disabled
       m_layers.tcp.read_enabled = false;

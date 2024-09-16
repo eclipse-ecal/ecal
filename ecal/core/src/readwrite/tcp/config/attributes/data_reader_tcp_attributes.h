@@ -28,6 +28,8 @@ namespace eCAL
       struct SAttributes
       {
         size_t ecal_magic = (4 * sizeof(char));
+        int    max_reconnection_attempts;
+        size_t thread_pool_size;
       };
     }
   }

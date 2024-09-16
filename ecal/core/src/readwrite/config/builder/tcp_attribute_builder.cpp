@@ -25,31 +25,26 @@ namespace eCAL
 {
   namespace eCALReader
   {
-    namespace TCP
+    TCPLayer::SAttributes BuildTCPLayerAttributes(const eCALReader::SAttributes attr_)
     {
-      SAttributes BuildAttributes(const eCALReader::SAttributes attr_)
-      {
-        SAttributes attributes;
+      TCPLayer::SAttributes attributes;
 
-        attributes.enabled = attr_.enable_udp;
-        
-        return attributes;
-      }    
+      attributes.max_reconnection_attempts = attr_.max_reconnection_attempts;
+      attributes.thread_pool_size          = attr_.thread_pool_size;
+      
+      return attributes;
     }
   }
 
   namespace eCALWriter
   {
-    namespace TCP
+    TCP::SAttributes BuildTCPAttributes(const eCALWriter::SAttributes attr_)
     {
-      SAttributes BuildAttributes(const eCALWriter::SAttributes attr_)
-      {
-        SAttributes attributes;
+      TCP::SAttributes attributes;
 
-        attributes.enabled = attr_.shm.enable;
-        
-        return attributes;
-      }
+      attributes.enabled = attr_.shm.enable;
+      
+      return attributes;
     }
   }
 }

@@ -29,17 +29,11 @@ namespace eCAL
 {
   namespace eCALReader
   {
-    namespace SHM
-    {
-      SAttributes BuildAttributes(const eCALReader::SAttributes attr_);
-    }
+    SHM::SAttributes BuildSHMAttributes(const eCALReader::SAttributes attr_);
   }
 
   namespace eCALWriter
   {
-    namespace SHM
-    {
-      SAttributes BuildAttributes(const eCALWriter::SAttributes attr_);
-    }
+    SHM::SAttributes BuildSHMAttributes(const eCALWriter::SAttributes attr_);
   }
 }

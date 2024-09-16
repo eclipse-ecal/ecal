@@ -38,6 +38,11 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
+  void CSHMReaderLayer::Initialize(const eCAL::eCALReader::SHM::SAttributes& attr_)
+  {
+    m_attributes = attr_;
+  }
+
   void CSHMReaderLayer::SetConnectionParameter(SReaderLayerPar& par_)
   {
     for (const auto& memfile_name : par_.parameter.layer_par_shm.memory_file_list)

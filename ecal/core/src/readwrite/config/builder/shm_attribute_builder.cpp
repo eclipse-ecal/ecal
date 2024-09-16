@@ -25,36 +25,30 @@ namespace eCAL
 {
   namespace eCALReader
   {
-    namespace SHM
+    SHM::SAttributes BuildSHMAttributes(const eCALReader::SAttributes attr_)
     {
-      SAttributes BuildAttributes(const eCALReader::SAttributes attr_)
-      {
-        SAttributes attributes;
+      SHM::SAttributes attributes;
 
-        attributes.enabled = attr_.enable_shm;
-        
-        return attributes;
-      }    
+      attributes.enabled = attr_.enable_shm;
+      
+      return attributes;
     }
   }
 
   namespace eCALWriter
   {
-    namespace SHM
+    SHM::SAttributes BuildSHMAttributes(const eCALWriter::SAttributes attr_)
     {
-      SAttributes BuildAttributes(const eCALWriter::SAttributes attr_)
-      {
-        SAttributes attributes;
+      SHM::SAttributes attributes;
 
-        attributes.enable                  = attr_.shm.enable;
-        attributes.acknowledge_timeout_ms  = attr_.shm.acknowledge_timeout_ms;
-        attributes.memfile_buffer_count    = attr_.shm.memfile_buffer_count;
-        attributes.memfile_reserve_percent = attr_.shm.memfile_reserve_percent;
-        attributes.memfile_min_size_bytes  = attr_.shm.memfile_min_size_bytes;
-        attributes.zero_copy_mode          = attr_.shm.zero_copy_mode;
-        
-        return attributes;
-      }
+      attributes.enable                  = attr_.shm.enable;
+      attributes.acknowledge_timeout_ms  = attr_.shm.acknowledge_timeout_ms;
+      attributes.memfile_buffer_count    = attr_.shm.memfile_buffer_count;
+      attributes.memfile_reserve_percent = attr_.shm.memfile_reserve_percent;
+      attributes.memfile_min_size_bytes  = attr_.shm.memfile_min_size_bytes;
+      attributes.zero_copy_mode          = attr_.shm.zero_copy_mode;
+      
+      return attributes;
     }
   }
 }

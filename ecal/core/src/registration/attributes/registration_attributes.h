@@ -27,7 +27,7 @@ namespace eCAL
 {
   namespace Registration
   {
-    struct SUDPModeAttrributes
+    struct SUDPModeAttributes
     {
       std::string group;
       int         ttl;
@@ -39,8 +39,8 @@ namespace eCAL
       int            port;
       int            sendbuffer;
       int            receivebuffer;
-      SUDPModeAttrributes   network;
-      SUDPModeAttrributes   local;
+      SUDPModeAttributes   network;
+      SUDPModeAttributes   local;
     };
 
     struct SSHMAttributes

@@ -37,13 +37,13 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  class CUDPReaderLayer : public CReaderLayer<CUDPReaderLayer>
+  class CUDPReaderLayer : public CReaderLayer<CUDPReaderLayer, eCAL::eCALReader::UDP::SAttributes>
   {
   public:
-    CUDPReaderLayer(const eCAL::eCALReader::UDP::SAttributes& attr_);
+    CUDPReaderLayer();
     ~CUDPReaderLayer() override;
 
-    void Initialize() override;
+    void Initialize(const eCAL::eCALReader::UDP::SAttributes& attr_) override;
 
     void AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/) override;
     void RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/) override;

@@ -19,16 +19,41 @@
 
 #pragma once
 
+#include <string>
+#include "ecal/types/ecal_custom_data_types.h"
+
 namespace eCAL
 {
   namespace eCALReader
   {
+    struct SUDPModeAttributes
+    {
+      std::string group;
+      int         ttl;
+    };
+
+    struct SUDPAttributes
+    {
+      Types::UDPMode mode;
+      int            port;
+      int            sendbuffer;
+      int            receivebuffer;
+      SUDPModeAttributes   network;
+      SUDPModeAttributes   local;
+    };
+
     struct SAttributes
     {
-      bool enable_tcp;
-      bool enable_udp;
-      bool enable_shm;
-      bool drop_out_of_order_messages;
+      bool   enable_tcp;
+      bool   enable_udp;
+      bool   enable_shm;
+      bool   network_enabled;
+      bool   drop_out_of_order_messages;
+      bool   loopback;
+      int    max_reconnection_attempts;
+      size_t thread_pool_size;
+
+      SUDPAttributes udp;
     };
   }
 }

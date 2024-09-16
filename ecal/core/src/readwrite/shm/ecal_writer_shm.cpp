@@ -33,15 +33,15 @@ namespace eCAL
 {
   const std::string CDataWriterSHM::m_memfile_base_name = "ecal_";
 
-  CDataWriterSHM::CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& /*topic_id_*/, const Publisher::Layer::SHM::Configuration& shm_config_) :
-    m_config(shm_config_)
+  CDataWriterSHM::CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& /*topic_id_*/, const eCALWriter::SHM::SAttributes& attr_) :
+    m_attributes(attr_)
   {
     m_host_name  = host_name_;
     m_topic_name = topic_name_;
 
     // initialize memory file buffer
-    if (m_config.memfile_buffer_count < 1) m_config.memfile_buffer_count = 1;
-    SetBufferCount(m_config.memfile_buffer_count);
+    if (m_attributes.memfile_buffer_count < 1) m_attributes.memfile_buffer_count = 1;
+    SetBufferCount(m_attributes.memfile_buffer_count);
   }
 
   SWriterInfo CDataWriterSHM::GetInfo()
@@ -125,10 +125,10 @@ namespace eCAL
 
     // prepare memfile attributes
     SSyncMemoryFileAttr memory_file_attr = {};
-    memory_file_attr.min_size        = m_config.memfile_min_size_bytes;
-    memory_file_attr.reserve         = m_config.memfile_reserve_percent;
+    memory_file_attr.min_size        = m_attributes.memfile_min_size_bytes;
+    memory_file_attr.reserve         = m_attributes.memfile_reserve_percent;
     memory_file_attr.timeout_open_ms = PUB_MEMFILE_OPEN_TO;
-    memory_file_attr.timeout_ack_ms  = m_config.acknowledge_timeout_ms;
+    memory_file_attr.timeout_ack_ms  = m_attributes.acknowledge_timeout_ms;
 
     // retrieve the memory file size of existing files
     size_t memory_file_size(0);

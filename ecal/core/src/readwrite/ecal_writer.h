@@ -27,10 +27,10 @@
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_types.h>
-#include <ecal/config/publisher.h>
 
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "util/frequency_calculator.h"
+#include "config/attributes/writer_attributes.h"
 
 #if ECAL_CORE_TRANSPORT_UDP
 #include "udp/ecal_writer_udp.h"
@@ -74,7 +74,7 @@ namespace eCAL
 
     using SSubscriptionInfo = Registration::SampleIdentifier;
 
-    CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Publisher::Configuration& config_);
+    CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& config_);
     ~CDataWriter();
 
     bool Stop();
@@ -139,7 +139,7 @@ namespace eCAL
     SDataTypeInformation                   m_topic_info;
     std::map<std::string, std::string>     m_attr;
     size_t                                 m_topic_size = 0;
-    Publisher::Configuration               m_config;
+    eCAL::eCALWriter::SAttributes          m_attributes;
 
     std::vector<char>                      m_payload_buffer;
 

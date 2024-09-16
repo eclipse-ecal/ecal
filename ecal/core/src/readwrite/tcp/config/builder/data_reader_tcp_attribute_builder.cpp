@@ -19,26 +19,23 @@
 
 #pragma once
 
-#include "readwrite/udp/config/attributes/reader_udp_attributes.h"
-#include "readwrite/udp/config/attributes/writer_udp_attributes.h"
-#include "io/udp/ecal_udp_receiver_attr.h"
-#include "io/udp/ecal_udp_sender_attr.h"
+#include "data_reader_tcp_attribute_builder.h"
 
 namespace eCAL
 {
   namespace eCALReader
   {
-    namespace UDP
+    namespace TCP
     {
-      eCAL::UDP::SReceiverAttr ConvertToIOUDPReceiverAttributes(const SAttributes& attr_);
-    }
-  }
+      TCP::SAttributes BuildTCPReaderAttributes(const TCPLayer::SAttributes& attr_)
+      {
+        TCP::SAttributes attributes;
 
-  namespace eCALWriter
-  {
-    namespace UDP
-    {
-      eCAL::UDP::SSenderAttr ConvertToIOUDPSenderAttributes(const SAttributes& attr_);
+        attributes.thread_pool_size          = attr_.thread_pool_size;
+        attributes.max_reconnection_attempts = attr_.max_reconnection_attempts;
+        
+        return attributes;
+      }
     }
   }
 }

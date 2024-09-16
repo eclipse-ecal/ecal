@@ -19,27 +19,21 @@
 
 #pragma once
 
-#include "readwrite/tcp/config/attributes/reader_tcp_attributes.h"
+#include "readwrite/tcp/config/attributes/tcp_reader_layer_attributes.h"
 #include "readwrite/config/attributes/reader_attributes.h"
 
-#include "readwrite/tcp/config/attributes/writer_tcp_attributes.h"
+#include "readwrite/tcp/config/attributes/data_writer_tcp_attributes.h"
 #include "readwrite/config/attributes/writer_attributes.h"
 
 namespace eCAL
 {
   namespace eCALReader
   {
-    namespace TCP
-    {
-      SAttributes BuildAttributes(const eCALReader::SAttributes attr_);
-    }
+    TCPLayer::SAttributes BuildTCPLayerAttributes(const eCALReader::SAttributes attr_);
   }
 
   namespace eCALWriter
   {
-    namespace TCP
-    {
-      SAttributes BuildAttributes(const eCALWriter::SAttributes attr_);
-    }
+    TCP::SAttributes BuildTCPAttributes(const eCALWriter::SAttributes attr_);
   }
 }

@@ -21,11 +21,9 @@
 
 #include "readwrite/config/attributes/writer_attributes.h"
 #include "ecal/config/publisher.h"
+#include "ecal/config/registration.h"
 
 namespace eCAL
 {
-  namespace eCALWriter
-  {
-    SAttributes BuildWriterAttributes(const Publisher::Configuration& config_);
-  }
+  eCALWriter::SAttributes BuildWriterAttributes(const Publisher::Configuration& config_, const eCAL::TransportLayer::UDP::Configuration& tl_udp_confi_, const eCAL::Registration::Configuration& reg_config_);
 }

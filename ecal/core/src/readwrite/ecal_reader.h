@@ -25,11 +25,11 @@
 
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_types.h>
-#include <ecal/config/subscriber.h>
 
 #include "serialization/ecal_serialize_sample_payload.h"
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "util/frequency_calculator.h"
+#include "config/attributes/reader_attributes.h"
 
 #include <atomic>
 #include <chrono>
@@ -63,7 +63,7 @@ namespace eCAL
     };
 
     using SPublicationInfo = Registration::SampleIdentifier;
-    CDataReader(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Subscriber::Configuration& config_);
+    CDataReader(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_);
     ~CDataReader();
 
     bool Stop();
@@ -130,7 +130,6 @@ namespace eCAL
     SDataTypeInformation                      m_topic_info;
     std::map<std::string, std::string>        m_attr;
     std::atomic<size_t>                       m_topic_size;
-    Subscriber::Configuration                 m_config;
 
     struct SConnection
     {
@@ -175,5 +174,7 @@ namespace eCAL
 
     SLayerStates                              m_layers;
     std::atomic<bool>                         m_created;
+
+    eCAL::eCALReader::SAttributes             m_attributes;
   };
 }

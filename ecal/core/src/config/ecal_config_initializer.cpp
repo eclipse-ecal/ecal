@@ -280,6 +280,11 @@ namespace eCAL
       return GetConfiguration().registration;
     }
 
+    TransportLayer::Configuration& GetTransportLayerConfiguration()
+    {
+      return GetConfiguration().transport_layer;
+    }
+
     Monitoring::Configuration& GetMonitoringConfiguration()
     {
       return GetConfiguration().monitoring;

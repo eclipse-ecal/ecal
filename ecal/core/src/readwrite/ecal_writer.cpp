@@ -36,6 +36,10 @@
 #include "ecal_global_accessors.h"
 #include "ecal_transport_layer.h"
 
+#include "config/builder/shm_attribute_builder.h"
+#include "config/builder/tcp_attribute_builder.h"
+#include "config/builder/udp_attribute_builder.h"
+
 #include <algorithm>
 #include <chrono>
 #include <functional>
@@ -93,14 +97,14 @@ namespace
 
 namespace eCAL
 {
-  CDataWriter::CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Publisher::Configuration& config_) :
+  CDataWriter::CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& attr_) :
     m_host_name(Process::GetHostName()),
     m_host_group_name(Process::GetHostGroupName()),
     m_pid(Process::GetProcessID()),
     m_pname(Process::GetProcessName()),
     m_topic_name(topic_name_),
     m_topic_info(topic_info_),
-    m_config(config_),
+    m_attributes(attr_),
     m_frequency_calculator(3.0f),
     m_created(false)
   {
@@ -168,7 +172,7 @@ namespace eCAL
     // are we allowed to perform zero copy writing?
     bool allow_zero_copy(false);
 #if ECAL_CORE_TRANSPORT_SHM
-    allow_zero_copy = m_config.layer.shm.zero_copy_mode; // zero copy mode activated by user
+    allow_zero_copy = m_attributes.shm.zero_copy_mode; // zero copy mode activated by user
 #endif
 #if ECAL_CORE_TRANSPORT_UDP
     // udp is active -> no zero copy
@@ -213,8 +217,8 @@ namespace eCAL
         wattr.clock                  = m_clock;
         wattr.hash                   = snd_hash;
         wattr.time                   = time_;
-        wattr.zero_copy              = m_config.layer.shm.zero_copy_mode;
-        wattr.acknowledge_timeout_ms = m_config.layer.shm.acknowledge_timeout_ms;
+        wattr.zero_copy              = m_attributes.shm.zero_copy_mode;
+        wattr.acknowledge_timeout_ms = m_attributes.shm.acknowledge_timeout_ms;
 
         // prepare send
         if (m_writer_shm->PrepareWrite(wattr))
@@ -431,19 +435,19 @@ namespace eCAL
     std::vector<eTLayerType> pub_layers;
     std::vector<eTLayerType> sub_layers;
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_config.layer.udp.enable)          pub_layers.push_back(tl_ecal_udp);
+    if (m_attributes.udp.enable)            pub_layers.push_back(tl_ecal_udp);
     if (sub_layer_states_.udp.read_enabled) sub_layers.push_back(tl_ecal_udp);
 
     m_layers.udp.read_enabled = sub_layer_states_.udp.read_enabled; // just for debugging/logging
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-    if (m_config.layer.shm.enable)          pub_layers.push_back(tl_ecal_shm);
+    if (m_attributes.shm.enable)            pub_layers.push_back(tl_ecal_shm);
     if (sub_layer_states_.shm.read_enabled) sub_layers.push_back(tl_ecal_shm);
 
     m_layers.shm.read_enabled = sub_layer_states_.shm.read_enabled; // just for debugging/logging
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-    if (m_config.layer.tcp.enable)          pub_layers.push_back(tl_ecal_tcp);
+    if (m_attributes.tcp.enable)            pub_layers.push_back(tl_ecal_tcp);
     if (sub_layer_states_.tcp.read_enabled) sub_layers.push_back(tl_ecal_tcp);
 
     m_layers.tcp.read_enabled = sub_layer_states_.tcp.read_enabled; // just for debugging/logging
@@ -672,12 +676,12 @@ namespace eCAL
     // topic_information
     {
       auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.tdatatype;
-      if (m_config.share_topic_type)
+      if (m_attributes.share_topic_type)
       {
         ecal_reg_sample_tdatatype.encoding   = m_topic_info.encoding;
         ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       }
-      if (m_config.share_topic_description)
+      if (m_attributes.share_topic_description)
       {
         ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
       }
@@ -844,7 +848,7 @@ namespace eCAL
     Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ActivateUdpLayer::ACTIVATED");
 
     // create writer
-    m_writer_udp = std::make_unique<CDataWriterUdpMC>(m_host_name, m_topic_name, m_topic_id, m_config.layer.udp);
+    m_writer_udp = std::make_unique<CDataWriterUdpMC>(m_host_name, m_topic_name, m_topic_id, eCAL::eCALWriter::BuildUDPAttributes(m_attributes));
 
     // register activated layer
     Register();
@@ -870,7 +874,7 @@ namespace eCAL
     Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ActivateShmLayer::ACTIVATED");
 
     // create writer
-    m_writer_shm = std::make_unique<CDataWriterSHM>(m_host_name, m_topic_name, m_topic_id, m_config.layer.shm);
+    m_writer_shm = std::make_unique<CDataWriterSHM>(m_host_name, m_topic_name, m_topic_id, eCAL::eCALWriter::BuildSHMAttributes(m_attributes));
 
     // register activated layer
     Register();
@@ -896,7 +900,7 @@ namespace eCAL
     Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ActivateTcpLayer::ACTIVATED");
 
     // create writer
-    m_writer_tcp = std::make_unique<CDataWriterTCP>(m_host_name, m_topic_name, m_topic_id, m_config.layer.tcp);
+    m_writer_tcp = std::make_unique<CDataWriterTCP>(m_host_name, m_topic_name, m_topic_id, eCAL::eCALWriter::BuildTCPAttributes(m_attributes));
 
     // register activated layer
     Register();
@@ -959,7 +963,7 @@ namespace eCAL
   TLayer::eTransportLayer CDataWriter::DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_)
   {
     // determine the priority list to use
-    const Publisher::Configuration::LayerPriorityVector& layer_priority_vector = same_host_ ? m_config.layer_priority_local : m_config.layer_priority_remote;
+    const Publisher::Configuration::LayerPriorityVector& layer_priority_vector = same_host_ ? m_attributes.layer_priority_local : m_attributes.layer_priority_remote;
 
     // find the highest priority transport layer that is available in both publisher and subscriber options
     // TODO: we need to fusion the two layer enum types (eTransportLayer) in ecal_tlayer.h and ecal_struct_sample_common.hf
