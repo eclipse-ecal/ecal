@@ -40,7 +40,7 @@ namespace eCAL
   class CDataWriterTCP : public CDataWriterBase
   {
   public:
-    CDataWriterTCP(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const eCAL::eCALWriter::TCP::SAttributes& attr_);
+    CDataWriterTCP(const eCAL::eCALWriter::TCP::SAttributes& attr_);
 
     SWriterInfo GetInfo() override;
 

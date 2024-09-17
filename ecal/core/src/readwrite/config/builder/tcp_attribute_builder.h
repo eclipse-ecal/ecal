@@ -29,11 +29,11 @@ namespace eCAL
 {
   namespace eCALReader
   {
-    TCPLayer::SAttributes BuildTCPLayerAttributes(const eCALReader::SAttributes attr_);
+    TCPLayer::SAttributes BuildTCPLayerAttributes(const eCALReader::SAttributes& attr_);
   }
 
   namespace eCALWriter
   {
-    TCP::SAttributes BuildTCPAttributes(const eCALWriter::SAttributes attr_);
+    TCP::SAttributes BuildTCPAttributes(const std::string& topic_id_, const eCALWriter::SAttributes& attr_);
   }
 }

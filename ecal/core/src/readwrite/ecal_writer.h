@@ -74,7 +74,7 @@ namespace eCAL
 
     using SSubscriptionInfo = Registration::SampleIdentifier;
 
-    CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& config_);
+    CDataWriter(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& config_);
     ~CDataWriter();
 
     bool Stop();
@@ -100,7 +100,7 @@ namespace eCAL
     bool IsSubscribed() const;
     size_t GetSubscriberCount() const;
 
-    const std::string&          GetTopicName()           const { return(m_topic_name); }
+    const std::string&          GetTopicName()           const { return(m_attributes.topic_name); }
     const SDataTypeInformation& GetDataTypeInformation() const { return m_topic_info; }
 
     std::string Dump(const std::string& indent_ = "");
@@ -130,11 +130,6 @@ namespace eCAL
     
     int32_t GetFrequency();
 
-    std::string                            m_host_name;
-    std::string                            m_host_group_name;
-    int                                    m_pid;
-    std::string                            m_pname;
-    std::string                            m_topic_name;
     std::string                            m_topic_id;
     SDataTypeInformation                   m_topic_info;
     std::map<std::string, std::string>     m_attr;

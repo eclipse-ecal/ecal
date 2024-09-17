@@ -39,15 +39,15 @@ namespace eCAL
       bool           enable;
       Types::UDPMode mode;
       int            port;
-      int            sendbuffer;
-      int            receivebuffer;
+      int            send_buffer;
       SUDPModeAttributes   network;
       SUDPModeAttributes   local;
     };
 
     struct STCPAttributes
     {
-      bool enable;
+      bool   enable;
+      size_t thread_pool_size;
     };
 
     struct SSHMAttributes
@@ -72,6 +72,14 @@ namespace eCAL
 
       bool                 network_enabled;
       bool                 loopback;
+
+      std::string          host_name;
+      std::string          host_group_name;
+      int                  process_id;
+      std::string          process_name;
+
+      std::string          unit_name;
+      std::string          topic_name;
 
       SUDPAttributes     udp;
       STCPAttributes     tcp;

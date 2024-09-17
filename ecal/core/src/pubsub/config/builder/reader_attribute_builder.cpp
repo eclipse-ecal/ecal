@@ -20,28 +20,40 @@
 #pragma once
 
 #include "reader_attribute_builder.h"
+#include "ecal/ecal_process.h"
 
 namespace eCAL
 {
-  eCALReader::SAttributes BuildReaderAttributes(const Subscriber::Configuration& config_, const eCAL::TransportLayer::UDP::Configuration& tl_udp_config_, const eCAL::Registration::Configuration& reg_config_)
+  eCALReader::SAttributes BuildReaderAttributes(const std::string& topic_name_, const Subscriber::Configuration& sub_config_, const Publisher::Configuration& pub_config_, const eCAL::TransportLayer::Configuration& tl_config_, const eCAL::Registration::Configuration& reg_config_)
   {
     eCALReader::SAttributes attributes;
 
-    attributes.network_enabled         = reg_config_.network_enabled;
-    attributes.loopback                = reg_config_.loopback;
+    attributes.network_enabled            = reg_config_.network_enabled;
+    attributes.loopback                   = reg_config_.loopback;
+    attributes.drop_out_of_order_messages = sub_config_.drop_out_of_order_messages;
+    attributes.registation_timeout_ms     = reg_config_.registration_timeout;
+    attributes.topic_name                 = topic_name_;
+    attributes.host_name                  = Process::GetHostName();
+    attributes.host_group_name            = Process::GetHostGroupName();
+    attributes.process_id                 = Process::GetProcessID();
+    attributes.process_name               = Process::GetProcessName();
+    attributes.share_topic_type           = pub_config_.share_topic_type;
+    attributes.share_topic_description    = pub_config_.share_topic_description;
 
-    attributes.udp.mode                = tl_udp_config_.mode;
-    attributes.udp.port                = tl_udp_config_.port;
-    attributes.udp.sendbuffer          = tl_udp_config_.send_buffer;
-    attributes.udp.receivebuffer       = tl_udp_config_.receive_buffer;
+    attributes.udp.enable        = sub_config_.layer.udp.enable;
+    attributes.udp.mode          = tl_config_.udp.mode;
+    attributes.udp.port          = tl_config_.udp.port;
+    attributes.udp.receivebuffer = tl_config_.udp.receive_buffer;
 
-    attributes.udp.local.group         = tl_udp_config_.local.group;
-    attributes.udp.local.ttl           = tl_udp_config_.local.ttl;
+    attributes.udp.local.group   = tl_config_.udp.local.group;
 
-    attributes.enable_tcp = config_.layer.tcp.enable;
-    attributes.enable_udp = config_.layer.udp.enable;
-    attributes.enable_shm = config_.layer.shm.enable;
-    attributes.drop_out_of_order_messages = config_.drop_out_of_order_messages;
+    attributes.udp.network.group = tl_config_.udp.network.group;
+
+    attributes.tcp.enable                    = sub_config_.layer.tcp.enable;
+    attributes.tcp.thread_pool_size          = tl_config_.tcp.number_executor_reader;
+    attributes.tcp.max_reconnection_attempts = tl_config_.tcp.max_reconnections;
+    
+    attributes.shm.enable = sub_config_.layer.shm.enable;
     
     return attributes;
   }

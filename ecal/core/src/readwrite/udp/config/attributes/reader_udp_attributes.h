@@ -33,7 +33,7 @@ namespace eCAL
         int         port;
         bool        broadcast;
         bool        loopback;
-        int         rcvbuf;
+        int         receive_buffer;
         std::string multicast_address;
       };
     }

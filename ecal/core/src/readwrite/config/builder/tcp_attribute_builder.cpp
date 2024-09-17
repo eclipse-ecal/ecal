@@ -25,12 +25,12 @@ namespace eCAL
 {
   namespace eCALReader
   {
-    TCPLayer::SAttributes BuildTCPLayerAttributes(const eCALReader::SAttributes attr_)
+    TCPLayer::SAttributes BuildTCPLayerAttributes(const eCALReader::SAttributes& attr_)
     {
       TCPLayer::SAttributes attributes;
 
-      attributes.max_reconnection_attempts = attr_.max_reconnection_attempts;
-      attributes.thread_pool_size          = attr_.thread_pool_size;
+      attributes.max_reconnection_attempts = attr_.tcp.max_reconnection_attempts;
+      attributes.thread_pool_size          = attr_.tcp.thread_pool_size;
       
       return attributes;
     }
@@ -38,11 +38,14 @@ namespace eCAL
 
   namespace eCALWriter
   {
-    TCP::SAttributes BuildTCPAttributes(const eCALWriter::SAttributes attr_)
+    TCP::SAttributes BuildTCPAttributes(const std::string& topic_id_, const eCALWriter::SAttributes& attr_)
     {
       TCP::SAttributes attributes;
 
-      attributes.enabled = attr_.shm.enable;
+      attributes.host_name  = attr_.host_name;
+      attributes.topic_name = attr_.topic_name;
+      attributes.topic_id   = topic_id_;
+      attributes.thread_pool_size = attr_.tcp.thread_pool_size;
       
       return attributes;
     }

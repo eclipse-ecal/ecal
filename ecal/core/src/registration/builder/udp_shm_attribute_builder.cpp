@@ -55,7 +55,7 @@ namespace eCAL
       receiver_attr.broadcast = !provider_attr_.network_enabled;
       receiver_attr.loopback  = true;
       
-      receiver_attr.rcvbuf    = provider_attr_.udp.receivebuffer;
+      receiver_attr.receive_buffer    = provider_attr_.udp.receivebuffer;
       receiver_attr.port      = provider_attr_.udp.port;
 
       switch (provider_attr_.udp.mode)

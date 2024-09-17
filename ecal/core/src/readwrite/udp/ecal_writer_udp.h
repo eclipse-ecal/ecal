@@ -36,7 +36,7 @@ namespace eCAL
   class CDataWriterUdpMC : public CDataWriterBase
   {
   public:
-    CDataWriterUdpMC(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const eCALWriter::UDP::SAttributes& attr_);
+    CDataWriterUdpMC(const eCALWriter::UDP::SAttributes& attr_);
 
     SWriterInfo GetInfo() override;
 

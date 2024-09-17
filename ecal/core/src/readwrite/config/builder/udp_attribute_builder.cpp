@@ -26,15 +26,15 @@ namespace eCAL
 {
   namespace eCALReader
   {
-    UDP::SAttributes BuildUDPAttributes(const eCALReader::SAttributes attr_)
+    UDP::SAttributes BuildUDPAttributes(const eCALReader::SAttributes& attr_)
     {
       UDP::SAttributes attributes;
 
       attributes.broadcast = !attr_.network_enabled;
       attributes.loopback  = true;
       
-      attributes.rcvbuf    = attr_.udp.receivebuffer;
-      attributes.port      = attr_.udp.port;
+      attributes.receive_buffer = attr_.udp.receivebuffer;
+      attributes.port           = attr_.udp.port;
 
       switch (attr_.udp.mode)
       {
@@ -54,14 +54,18 @@ namespace eCAL
 
   namespace eCALWriter
   {
-    UDP::SAttributes BuildUDPAttributes(const eCALWriter::SAttributes attr_)
+    UDP::SAttributes BuildUDPAttributes(const std::string& topic_id_, const eCALWriter::SAttributes& attr_)
     {
       UDP::SAttributes attributes;
 
       attributes.broadcast      = !attr_.network_enabled;
       attributes.loopback       = attr_.loopback;
+
+      attributes.topic_id       = topic_id_;
+      attributes.topic_name     = attr_.topic_name;
+      attributes.host_name      = attr_.host_name;
       
-      attributes.sndbuf         = attr_.udp.sendbuffer;
+      attributes.send_buffer    = attr_.udp.send_buffer;
       attributes.port           = attr_.udp.port;
       
       switch (attr_.udp.mode)

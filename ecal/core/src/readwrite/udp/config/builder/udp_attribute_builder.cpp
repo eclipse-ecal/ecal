@@ -33,7 +33,7 @@ namespace eCAL
         receiver_attr.broadcast = attr_.broadcast;
         receiver_attr.loopback  = attr_.loopback;
         
-        receiver_attr.rcvbuf    = attr_.rcvbuf;
+        receiver_attr.rcvbuf    = attr_.receive_buffer;
         receiver_attr.port      = attr_.port;
         receiver_attr.address   = attr_.address;
 
@@ -52,7 +52,7 @@ namespace eCAL
         sender_attr.broadcast = attr_.broadcast;
         sender_attr.loopback  = attr_.loopback;
         
-        sender_attr.sndbuf    = attr_.sndbuf;
+        sender_attr.sndbuf    = attr_.send_buffer;
         sender_attr.port      = attr_.port;
         sender_attr.address   = attr_.address;
         sender_attr.ttl       = attr_.ttl;

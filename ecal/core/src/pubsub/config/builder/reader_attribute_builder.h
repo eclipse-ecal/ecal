@@ -23,8 +23,9 @@
 #include "ecal/config/subscriber.h"
 #include "ecal/config/transport_layer.h"
 #include "ecal/config/registration.h"
+#include "ecal/config/publisher.h"
 
 namespace eCAL
 {
-  eCALReader::SAttributes BuildReaderAttributes(const Subscriber::Configuration& config_, const eCAL::TransportLayer::UDP::Configuration& tl_udp_config_, const eCAL::Registration::Configuration& reg_config_);
+  eCALReader::SAttributes BuildReaderAttributes(const std::string& topic_name_, const Subscriber::Configuration& sub_config_, const Publisher::Configuration& pub_config_, const eCAL::TransportLayer::Configuration& tl_config_, const eCAL::Registration::Configuration& reg_config_);
 }

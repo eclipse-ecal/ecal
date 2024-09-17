@@ -42,7 +42,7 @@ namespace eCAL
         eCAL::UDP::SReceiverAttr attr;
         attr.broadcast = receiver_attr_.broadcast;
         attr.loopback  = receiver_attr_.loopback;
-        attr.rcvbuf    = receiver_attr_.rcvbuf;
+        attr.rcvbuf    = receiver_attr_.receive_buffer;
         attr.port      = receiver_attr_.port;
         attr.address   = receiver_attr_.address;
         return attr;

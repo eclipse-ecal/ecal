@@ -25,7 +25,6 @@
 
 #include "ecal_def.h"
 #include "ecal_writer_shm.h"
-#include "ecal/ecal_config.h"
 
 #include <string>
 
@@ -33,12 +32,9 @@ namespace eCAL
 {
   const std::string CDataWriterSHM::m_memfile_base_name = "ecal_";
 
-  CDataWriterSHM::CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& /*topic_id_*/, const eCALWriter::SHM::SAttributes& attr_) :
+  CDataWriterSHM::CDataWriterSHM(const eCALWriter::SHM::SAttributes& attr_) :
     m_attributes(attr_)
   {
-    m_host_name  = host_name_;
-    m_topic_name = topic_name_;
-
     // initialize memory file buffer
     if (m_attributes.memfile_buffer_count < 1) m_attributes.memfile_buffer_count = 1;
     SetBufferCount(m_attributes.memfile_buffer_count);
@@ -90,7 +86,7 @@ namespace eCAL
   void CDataWriterSHM::ApplySubscription(const std::string& host_name_, const int32_t process_id_, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/)
   {
     // we accept local connections only
-    if (host_name_ != m_host_name) return;
+    if (host_name_ != m_attributes.host_name) return;
 
     for (auto& memory_file : m_memory_file_vec)
     {
@@ -119,7 +115,7 @@ namespace eCAL
     // buffer count zero not allowed
     if (buffer_count_ < 1)
     {
-      Logging::Log(log_level_error, m_topic_name + "::CDataWriterSHM::SetBufferCount minimal number of memory files is 1 !");
+      Logging::Log(log_level_error, m_attributes.topic_name + "::CDataWriterSHM::SetBufferCount minimal number of memory files is 1 !");
       return false;
     }
 

@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace eCAL
 {
   namespace eCALWriter
@@ -33,6 +35,10 @@ namespace eCAL
         unsigned int memfile_buffer_count;
         unsigned int memfile_min_size_bytes;
         unsigned int memfile_reserve_percent;
+
+        std::string host_name;
+        std::string topic_name;
+        std::string topic_id;
       };
     }
   }

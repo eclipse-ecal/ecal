@@ -29,11 +29,11 @@ namespace eCAL
 {
   namespace eCALReader
   {
-    UDP::SAttributes BuildUDPAttributes(const eCALReader::SAttributes attr_);
+    UDP::SAttributes BuildUDPAttributes(const eCALReader::SAttributes& attr_);
   }
 
   namespace eCALWriter
   {
-    UDP::SAttributes BuildUDPAttributes(const eCALWriter::SAttributes attr_);
+    UDP::SAttributes BuildUDPAttributes(const std::string& topic_id, const eCALWriter::SAttributes& attr_);
   }
 }

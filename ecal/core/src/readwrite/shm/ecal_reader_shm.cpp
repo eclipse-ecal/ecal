@@ -49,8 +49,8 @@ namespace eCAL
     {
       // start memory file receive thread if topic is subscribed in this process
       if (g_memfile_pool() != nullptr)
-      {
-        const std::string process_id    = std::to_string(Process::GetProcessID());
+      { 
+        const std::string process_id = std::to_string(m_attributes.process_id);
         const std::string memfile_event = memfile_name + "_" + process_id;
         const MemFileDataCallbackT memfile_data_callback = std::bind(&CSHMReaderLayer::OnNewShmFileContent, this,
           std::placeholders::_1,
@@ -61,7 +61,7 @@ namespace eCAL
           std::placeholders::_6,
           std::placeholders::_7,
           std::placeholders::_8);
-        g_memfile_pool()->ObserveFile(memfile_name, memfile_event, par_.topic_name, par_.topic_id, Config::GetRegistrationTimeoutMs(), memfile_data_callback);
+        g_memfile_pool()->ObserveFile(memfile_name, memfile_event, par_.topic_name, par_.topic_id, m_attributes.registration_timeout_ms, memfile_data_callback);
       }
     }
   }

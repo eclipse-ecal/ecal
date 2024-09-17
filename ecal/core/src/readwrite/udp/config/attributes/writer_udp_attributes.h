@@ -34,7 +34,11 @@ namespace eCAL
         int         ttl;
         bool        broadcast;
         bool        loopback;
-        int         sndbuf;
+        int         send_buffer;
+
+        std::string host_name;
+        std::string topic_name;
+        std::string topic_id;
       };
     }
   }

@@ -25,11 +25,12 @@ namespace eCAL
 {
   namespace eCALReader
   {
-    SHM::SAttributes BuildSHMAttributes(const eCALReader::SAttributes attr_)
+    SHM::SAttributes BuildSHMAttributes(const eCALReader::SAttributes& attr_)
     {
       SHM::SAttributes attributes;
 
-      attributes.enabled = attr_.enable_shm;
+      attributes.process_id              = attr_.process_id;
+      attributes.registration_timeout_ms = attr_.registation_timeout_ms;
       
       return attributes;
     }
@@ -37,7 +38,7 @@ namespace eCAL
 
   namespace eCALWriter
   {
-    SHM::SAttributes BuildSHMAttributes(const eCALWriter::SAttributes attr_)
+    SHM::SAttributes BuildSHMAttributes(const std::string& topic_id_, const eCALWriter::SAttributes& attr_)
     {
       SHM::SAttributes attributes;
 
@@ -47,6 +48,10 @@ namespace eCAL
       attributes.memfile_reserve_percent = attr_.shm.memfile_reserve_percent;
       attributes.memfile_min_size_bytes  = attr_.shm.memfile_min_size_bytes;
       attributes.zero_copy_mode          = attr_.shm.zero_copy_mode;
+
+      attributes.topic_id   = topic_id_;
+      attributes.topic_name = attr_.topic_name;
+      attributes.host_name  = attr_.host_name;
       
       return attributes;
     }

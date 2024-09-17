@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace eCAL
 {
   namespace eCALWriter
@@ -27,7 +29,11 @@ namespace eCAL
     {
       struct SAttributes
       {
-        bool enabled;
+        std::string host_name;
+        std::string topic_name;
+        std::string topic_id;
+
+        size_t thread_pool_size;
       };
     }
   }

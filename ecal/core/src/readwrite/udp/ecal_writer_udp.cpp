@@ -25,7 +25,6 @@
 
 #include "ecal_writer_udp.h"
 #include "serialization/ecal_serialize_sample_payload.h"
-#include "ecal/ecal_config.h"
 
 #include "config/builder/udp_attribute_builder.h"
 
@@ -33,13 +32,9 @@
 
 namespace eCAL
 {
-  CDataWriterUdpMC::CDataWriterUdpMC(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const eCALWriter::UDP::SAttributes& attr_) :
+  CDataWriterUdpMC::CDataWriterUdpMC(const eCALWriter::UDP::SAttributes& attr_) :
     m_attributes(attr_)
   {
-    m_host_name   = host_name_;
-    m_topic_name  = topic_name_;
-    m_topic_id    = topic_id_;
-
     // create udp/sample sender with activated loop-back
     m_attributes.loopback = true;
     m_sample_sender_loopback = std::make_shared<UDP::CSampleSender>(eCAL::eCALWriter::UDP::ConvertToIOUDPSenderAttributes(m_attributes));
@@ -71,9 +66,9 @@ namespace eCAL
     ecal_sample.cmd_type = eCmdType::bct_set_sample;
 
     auto& ecal_sample_topic = ecal_sample.topic;
-    ecal_sample_topic.hname = m_host_name;
-    ecal_sample_topic.tname = m_topic_name;
-    ecal_sample_topic.tid   = m_topic_id;
+    ecal_sample_topic.hname = m_attributes.host_name;
+    ecal_sample_topic.tname = m_attributes.topic_name;
+    ecal_sample_topic.tid   = m_attributes.topic_id;
 
     // append content
     auto& ecal_sample_content = ecal_sample.content;

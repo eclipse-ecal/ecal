@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace eCAL
 {
   namespace eCALReader
@@ -27,8 +29,7 @@ namespace eCAL
     {
       struct SAttributes
       {
-        bool enabled;
-        unsigned int process_id;
+        int          process_id;
         unsigned int registration_timeout_ms;
       };
     }

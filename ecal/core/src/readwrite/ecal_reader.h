@@ -63,7 +63,7 @@ namespace eCAL
     };
 
     using SPublicationInfo = Registration::SampleIdentifier;
-    CDataReader(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_);
+    CDataReader(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_);
     ~CDataReader();
 
     bool Stop();
@@ -92,7 +92,7 @@ namespace eCAL
     bool IsPublished() const;
     size_t GetPublisherCount() const;
 
-    std::string          GetTopicName()           const { return(m_topic_name); }
+    std::string          GetTopicName()           const { return(m_attributes.topic_name); }
     std::string          GetTopicID()             const { return(m_topic_id); }
     SDataTypeInformation GetDataTypeInformation() const { return(m_topic_info); }
 
@@ -121,11 +121,6 @@ namespace eCAL
 
     int32_t GetFrequency();
 
-    std::string                               m_host_name;
-    std::string                               m_host_group_name;
-    int                                       m_pid = 0;
-    std::string                               m_pname;
-    std::string                               m_topic_name;
     std::string                               m_topic_id;
     SDataTypeInformation                      m_topic_info;
     std::map<std::string, std::string>        m_attr;
@@ -168,9 +163,6 @@ namespace eCAL
     using WriterCounterMapT = std::unordered_map<std::string, long long>;
     WriterCounterMapT                         m_writer_counter_map;
     long long                                 m_message_drops = 0;
-
-    bool                                      m_share_ttype = false;
-    bool                                      m_share_tdesc = false;
 
     SLayerStates                              m_layers;
     std::atomic<bool>                         m_created;

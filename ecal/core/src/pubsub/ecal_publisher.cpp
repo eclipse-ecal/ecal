@@ -94,7 +94,7 @@ namespace eCAL
     if (topic_name_.empty()) return(false);
 
     // create datawriter
-    m_datawriter = std::make_shared<CDataWriter>(topic_name_, data_type_info_, BuildWriterAttributes(config_, GetTransportLayerConfiguration().udp, GetRegistrationConfiguration()));
+    m_datawriter = std::make_shared<CDataWriter>(data_type_info_, BuildWriterAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
 
     // register datawriter
     g_pubgate()->Register(topic_name_, m_datawriter);

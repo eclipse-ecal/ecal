@@ -29,31 +29,49 @@ namespace eCAL
     struct SUDPModeAttributes
     {
       std::string group;
-      int         ttl;
     };
 
     struct SUDPAttributes
     {
+      bool           enable;
       Types::UDPMode mode;
       int            port;
-      int            sendbuffer;
       int            receivebuffer;
       SUDPModeAttributes   network;
       SUDPModeAttributes   local;
     };
 
+    struct STCPAttributes
+    {
+      bool   enable;
+      size_t thread_pool_size;
+      int    max_reconnection_attempts;
+    };
+
+    struct SSHMAttributes
+    {
+      bool enable;
+    };
+
     struct SAttributes
     {
-      bool   enable_tcp;
-      bool   enable_udp;
-      bool   enable_shm;
-      bool   network_enabled;
-      bool   drop_out_of_order_messages;
-      bool   loopback;
-      int    max_reconnection_attempts;
-      size_t thread_pool_size;
+      bool         network_enabled;
+      bool         drop_out_of_order_messages;
+      bool         loopback;
+      unsigned int registation_timeout_ms;
 
       SUDPAttributes udp;
+      STCPAttributes tcp;
+      SSHMAttributes shm;
+
+      std::string topic_name;
+      std::string host_name;
+      std::string host_group_name;
+      int         process_id;
+      std::string process_name;
+      std::string unit_name;
+      bool        share_topic_type;
+      bool        share_topic_description;
     };
   }
 }

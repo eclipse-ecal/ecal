@@ -38,7 +38,7 @@ namespace eCAL
   class CDataWriterSHM : public CDataWriterBase
   {
   public:
-    CDataWriterSHM(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const eCALWriter::SHM::SAttributes& attr_);
+    CDataWriterSHM(const eCALWriter::SHM::SAttributes& attr_);
 
     SWriterInfo GetInfo() override;
 
