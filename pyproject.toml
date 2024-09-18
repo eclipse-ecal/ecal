@@ -29,7 +29,7 @@ write_to = "lang/python/core/ecal/_version.py"
 metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
 # Will be installed from PyPI if system version is too old/missing
 cmake.version = ">=3.18"
-cmake.targets = ["ecal_python"] # Targets to build
+build.targets = ["ecal_python"] # Targets to build
 build-dir = "./_python_build"   # Build directory for unisolated builds
 install.components = ["python"] # CMake component to install
 # Directory structure to copy as Python package, last path component is
@@ -50,19 +50,19 @@ sdist.include = [
   "/cmake/",
   "/contrib/",
   "/cpack/",
-  "/ecal/core/",
-  "/ecal/service/",
-  "/ecal/CMakeLists.txt",
+  "/ecal/",
   "/lib/",
   "/licenses/",
   "lang/python/",
 
   "thirdparty/cmakefunctions/",
+  "thirdparty/ecaludp/",  
   "thirdparty/protobuf/",
   "thirdparty/recycle/",
   "thirdparty/simpleini/",
   "thirdparty/tclap/",
   "thirdparty/tcp_pubsub/",
+  "thirdparty/yaml-cpp/",
 
   "thirdparty/asio/",
   "!thirdparty/asio/asio/asio/src/",
