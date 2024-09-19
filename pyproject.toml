@@ -37,7 +37,6 @@ install.components = ["python"] # CMake component to install
 # wheel.packages = ["lang/python/core/ecal", "lang/python/ecalhdf5/ecal"]
 
 [tool.scikit-build.wheel.packages]
-"ecal" = "lang/python/core/ecal"
 "ecal/core" = "lang/python/core/ecal/core"
 "ecal/proto" = "lang/python/core/ecal/proto"
 "ecal/measurement" = "lang/python/ecalhdf5/measurement"
