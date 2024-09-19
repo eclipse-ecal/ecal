@@ -34,9 +34,10 @@ build-dir = "./_python_build"   # Build directory for unisolated builds
 install.components = ["python"] # CMake component to install
 # Directory structure to copy as Python package, last path component is
 # the package name
-wheel.packages = ["lang/python/core/ecal"]
+# wheel.packages = ["lang/python/core/ecal"]
 
 [tool.scikit-build.wheel.packages]
+"ecal" = "lang/python/core/ecal"
 "ecal/measurement" = "lang/python/ecalhdf5/ecal/measurement",
 
 # Files to include in the source archive to build from
