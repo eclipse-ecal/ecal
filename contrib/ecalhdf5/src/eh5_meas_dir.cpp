@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -364,6 +364,22 @@ bool eCAL::eh5::HDF5MeasDir::AddEntryToFile(const void* data, const unsigned lon
   
   // Use the writer that was either found or created to actually write the data
   return file_writer_it->second->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel_name, id, clock);
+}
+
+bool eCAL::eh5::HDF5MeasDir::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long clock)
+{
+  if ((access_ == RDONLY)
+    || (output_dir_.empty())
+    || (base_name_.empty()))
+  {
+    return false;
+  }
+
+  // Get an existing writer or create a new one
+  auto file_writer_it = GetWriter(channel.name);
+
+  // Use the writer that was either found or created to actually write the data
+  return file_writer_it->second->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel, clock);
 }
 
 void eCAL::eh5::HDF5MeasDir::ConnectPreSplitCallback(CallbackFunction cb)

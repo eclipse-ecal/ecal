@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ namespace eCAL
           //!< @cond
           bool operator==(const Channel& other) const
           {
-            return std::tie(name, id) == std::tie(other.name, other.id);
+            return std::tie(id, name) == std::tie(other.id, other.name);
           }
 
           bool operator!=(const Channel& other) const
@@ -91,7 +91,7 @@ namespace eCAL
 
           bool operator<(const Channel& other) const
           {
-            return std::tie(name, id) < std::tie(other.name, other.id);
+            return std::tie(id, name) < std::tie(other.id, other.name);
           }
           //!< @endcond
         };
@@ -107,10 +107,10 @@ namespace eCAL
         struct EntryInfo
         {
           long long RcvTimestamp;   //!< Receive time stamp
-          long long ID;             //!< Channel ID
+          long long ID;             //!< Data ID - to extract corresponding data
           long long SndClock;       //!< Send clock
           long long SndTimestamp;   //!< Send time stamp
-          long long SndID;          //!< Send ID
+          long long SndID;          //!< Send ID topic ID (v6) / can be set by user (v5)
 
           //!< @cond
           EntryInfo() : RcvTimestamp(0), ID(0), SndClock(0), SndTimestamp(0), SndID(0) {}

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -495,7 +495,13 @@ void eCAL::eh5::HDF5Meas::SetFileBaseName(const std::string& base_name)
 
 bool eCAL::eh5::HDF5Meas::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock)
 {
-  return AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, eCAL::eh5::SChannel{ channel_name, id }, clock);
+  bool ret_val = false;
+  if (hdf_meas_impl_)
+  {
+    return hdf_meas_impl_->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, GetEscapedTopicname(channel_name), id, clock);
+  }
+
+  return ret_val;
 }
 
 bool eCAL::eh5::HDF5Meas::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const eCAL::eh5::SChannel& channel, long long clock)
@@ -503,7 +509,7 @@ bool eCAL::eh5::HDF5Meas::AddEntryToFile(const void* data, const unsigned long l
   bool ret_val = false;
   if (hdf_meas_impl_)
   {
-    return hdf_meas_impl_->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, GetEscapedTopicname(channel.name), channel.id, clock);
+    return hdf_meas_impl_->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, eCAL::eh5::SChannel(GetEscapedTopicname(channel.name), channel.id), clock);
   }
 
   return ret_val;

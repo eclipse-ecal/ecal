@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -213,6 +213,11 @@ void eCAL::eh5::HDF5MeasFileWriterV6::SetFileBaseName(const std::string& base_na
 
 bool eCAL::eh5::HDF5MeasFileWriterV6::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock)
 {
+  return AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, SChannel(channel_name), clock);
+}
+
+bool eCAL::eh5::HDF5MeasFileWriterV6::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long clock)
+{
   if (!IsOk()) file_id_ = Create();
   if (!IsOk())
     return false;
@@ -248,7 +253,7 @@ bool eCAL::eh5::HDF5MeasFileWriterV6::AddEntryToFile(const void* data, const uns
   H5Pclose(dsProperty);
   H5Sclose(dataSpace);
 
-  channels_[channel_name][id].Entries.emplace_back(SEntryInfo(rcv_timestamp, static_cast<long long>(entries_counter_), clock, snd_timestamp, id));
+  channels_[channel.name][channel.id].Entries.emplace_back(SEntryInfo(rcv_timestamp, static_cast<long long>(entries_counter_), clock, snd_timestamp, channel.id));
 
   entries_counter_++;
 
