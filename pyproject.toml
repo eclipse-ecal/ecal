@@ -37,8 +37,8 @@ install.components = ["python"] # CMake component to install
 # wheel.packages = ["lang/python/core/ecal"]
 
 [tool.scikit-build.wheel.packages]
-"ecal" = "lang/python/core/ecal"
-#"ecal/measurement" = "lang/python/ecalhdf5/ecal/measurement"
+#"ecal" = "lang/python/core/ecal"
+"ecal/measurement" = "lang/python/ecalhdf5/ecal/measurement"
 
 # Files to include in the source archive to build from
 sdist.exclude = ["*"]
