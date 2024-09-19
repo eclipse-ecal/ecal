@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -248,6 +248,12 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const void* data, const uns
   entries_counter_++;
 
   return (writeStatus >= 0);
+}
+
+bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long clock)
+{
+  // v5 does not support multiple channels per topic. Thus we will only save the name, and no sender ID.
+  return AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel.name, 0, clock);
 }
 
 void eCAL::eh5::HDF5MeasFileWriterV5::ConnectPreSplitCallback(CallbackFunction cb)
