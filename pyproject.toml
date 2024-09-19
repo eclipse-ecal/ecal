@@ -18,7 +18,7 @@ dynamic = ["version"]
 
 [build-system] # How pip and other frontends should build this project
 # Version 8 of setuptools_scm drops Python 3.7
-requires = ["scikit-build-core==0.10", "setuptools_scm~=7.1"]
+requires = ["scikit-build-core==0.10.0", "setuptools_scm~=7.1"]
 build-backend = "scikit_build_core.build"
 
 [tool.setuptools_scm]
