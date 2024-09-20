@@ -18,7 +18,7 @@ dynamic = ["version"]
 
 [build-system] # How pip and other frontends should build this project
 # Version 8 of setuptools_scm drops Python 3.7
-requires = ["scikit-build-core==0.10.3", "setuptools_scm~=7.1"]
+requires = ["scikit-build-core>=0.10", "setuptools_scm~=7.1"]
 build-backend = "scikit_build_core.build"
 
 [tool.setuptools_scm]
@@ -34,7 +34,7 @@ build-dir = "./_python_build"   # Build directory for unisolated builds
 install.components = ["python"] # CMake component to install
 # Directory structure to copy as Python package, last path component is
 # the package name
-wheel.packages = ["lang/python/core/ecal", "lang/python/ecalhdf5/ecal"]
+wheel.packages = ["lang/python/package/ecal"]
 
 # Files to include in the source archive to build from
 sdist.exclude = ["*"]
