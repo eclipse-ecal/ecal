@@ -32,12 +32,13 @@ jobs:
       - name: Build wheels
         if: runner.os == 'Windows'
         uses: pypa/cibuildwheel@v2.17
+        shell: pwsh
         env:
           CIBW_ARCHS: auto64
           CIBW_BEFORE_ALL: >
-            mkdir ${{ env.PYTHON_PACKAGE_PATH }} &
-            cp -r ${{ env.PYTHON_CORE_PATH }} ${{ env.PYTHON_PACKAGE_PATH }} &
-            cp -r ${{ env.PYTHON_HDF5_PATH }} ${{ env.PYTHON_PACKAGE_PATH }}
+            New-Item -ItemType Directory -Path "${{ env.PYTHON_PACKAGE_PATH}}";
+            Copy-Item -Recurse -Path "${{ env.PYTHON_CORE_PATH }}" -Destination "${{ env.PYTHON_PACKAGE_PATH}}";
+            Copy-Item -Recurse -Path "${{ env.PYTHON_HDF5_PATH }}" -Destination "${{ env.PYTHON_PACKAGE_PATH}}"
 
       - name: Build wheels
         if: runner.os == 'Linux'
