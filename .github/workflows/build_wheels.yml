@@ -11,14 +11,12 @@ on:
     types: [published]
   workflow_dispatch:
 
-env:
-  PYTHON_PACKAGE_PATH: lang/python/package/ecal
-  PYTHON_CORE_PATH: lang/python/core/ecal/*
-  PYTHON_HDF5_PATH: lang/python/ecalhdf5/ecal/*
-
-
 jobs:
   build_wheels:
+    env:
+      PYTHON_PACKAGE_PATH: lang/python/package/ecal
+      PYTHON_CORE_PATH: lang/python/core/ecal/*
+      PYTHON_HDF5_PATH: lang/python/ecalhdf5/ecal/*
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -37,9 +35,9 @@ jobs:
         env:
           CIBW_ARCHS: auto64
           CIBW_BEFORE_ALL: >
-            mkdir "$PYTHON_PACKAGE_PATH" &
-            cp -r "$PYTHON_CORE_PATH $PYTHON_PACKAGE_PATH" &
-            cp -r "$PYTHON_HDF5_PATH $PYTHON_PACKAGE_PATH"
+            mkdir ${{ env.PYTHON_PACKAGE_PATH }} &
+            cp -r ${{ env.PYTHON_CORE_PATH }} ${{ env.PYTHON_PACKAGE_PATH }} &
+            cp -r ${{ env.PYTHON_HDF5_PATH }} ${{ env.PYTHON_PACKAGE_PATH }}
 
       - name: Build wheels
         if: runner.os == 'Linux'
@@ -47,9 +45,9 @@ jobs:
         env:
           CIBW_ARCHS: auto64
           CIBW_BEFORE_ALL: >
-            mkdir -p "$PYTHON_PACKAGE_PATH" &&
-            cp -r "$PYTHON_CORE_PATH $PYTHON_PACKAGE_PATH" &&
-            cp -r "$PYTHON_HDF5_PATH $PYTHON_PACKAGE_PATH"
+            mkdir -p ${{ env.PYTHON_PACKAGE_PATH }} &&
+            cp -r ${{ env.PYTHON_CORE_PATH }} ${{ env.PYTHON_PACKAGE_PATH }} &&
+            cp -r ${{ env.PYTHON_HDF5_PATH }} ${{ env.PYTHON_PACKAGE_PATH }}
 
       - uses: actions/upload-artifact@v4
         with:
