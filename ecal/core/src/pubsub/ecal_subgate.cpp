@@ -220,7 +220,7 @@ namespace eCAL
     if (topic_name.empty()) return;
 
     const auto& publication_info = ecal_sample_.identifier;
-    const SDataTypeInformation topic_information = ecal_topic.tdatatype;
+    const SDataTypeInformation& topic_information = ecal_topic.tdatatype;
 
     CDataReader::SLayerStates layer_states;
     for (const auto& layer : ecal_topic.tlayer)
