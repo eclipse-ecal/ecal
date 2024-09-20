@@ -30,7 +30,7 @@ jobs:
         if: runner.os == 'Windows'
         uses: pypa/cibuildwheel@v2.17
         env:
-          CIBW_ARCHS: AMD64
+          CIBW_ARCHS: auto64
           CIBW_BEFORE_ALL: >
             set PACKAGE_PATH=lang/python/package/ecal &
             mkdir $PACKAGE_PATH &
@@ -41,7 +41,7 @@ jobs:
         if: runner.os == 'Linux'
         uses: pypa/cibuildwheel@v2.17
         env:
-          CIBW_ARCHS: AMD64
+          CIBW_ARCHS: auto64
           CIBW_BEFORE_ALL: >
             export PACKAGE_PATH=lang/python/package/ecal &&
             mkdir $PACKAGE_PATH &&
