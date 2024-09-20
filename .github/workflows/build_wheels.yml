@@ -31,7 +31,7 @@ jobs:
 
       - name: Build wheels
         if: runner.os == 'Windows'
-        uses: pypa/cibuildwheel@v2.17
+        uses: pypa/cibuildwheel@v2.21
         env:
           CIBW_ARCHS: auto64
           CIBW_BEFORE_ALL: >
@@ -41,7 +41,7 @@ jobs:
 
       - name: Build wheels
         if: runner.os == 'Linux'
-        uses: pypa/cibuildwheel@v2.17
+        uses: pypa/cibuildwheel@v2.21
         env:
           CIBW_ARCHS: auto64
           CIBW_BEFORE_ALL: >
