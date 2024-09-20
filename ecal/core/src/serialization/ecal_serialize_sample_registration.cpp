@@ -33,6 +33,7 @@
 #include <iostream>
 #include <list>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace
@@ -505,7 +506,7 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    auto* sample_list = static_cast<std::list<eCAL::Registration::Sample>*>(*arg);
+    auto* sample_list = static_cast<eCAL::Registration::SampleList*>(*arg);
 
     for (const auto& sample : *sample_list)
     {
@@ -535,7 +536,7 @@ namespace
     // prepare sample for encoding
     ///////////////////////////////////////////////
     pb_sample_list_.samples.funcs.encode = &encode_sample_list_field; // NOLINT(*-pro-type-union-access)
-    pb_sample_list_.samples.arg = (void*)(&registration_list_.samples);
+    pb_sample_list_.samples.arg = (void*)(&registration_list_);
 
     ///////////////////////////////////////////////
     // evaluate byte size
@@ -582,10 +583,14 @@ namespace
     if (*arg == nullptr) return false;
 
     eCAL_pb_Sample pb_sample = eCAL_pb_Sample_init_default;
-    eCAL::Registration::Sample sample{};
+
+    // add sample to list
+    auto* sample_list = static_cast<eCAL::Registration::SampleList*>(*arg);
+    // Create a new element directly at the end of the vector
+    auto sample = sample_list->emplace(sample_list->end());
 
     // prepare sample for decoding
-    PrepareDecoding(pb_sample, sample);
+    PrepareDecoding(pb_sample, *sample);
 
     // decode it
     if (!pb_decode(stream, eCAL_pb_Sample_fields, &pb_sample))
@@ -594,11 +599,7 @@ namespace
     }
 
     // apply sample values
-    AssignValues(pb_sample, sample);
-
-    // add sample to list
-    auto* sample_list = static_cast<std::list<eCAL::Registration::Sample>*>(*arg);
-    sample_list->push_back(sample);
+    AssignValues(pb_sample, *sample);
 
     return true;
   }
@@ -615,7 +616,7 @@ namespace
     // prepare sample for decoding
     ///////////////////////////////////////////////
     pb_sample_list.samples.funcs.decode = &decode_sample_list_field; // NOLINT(*-pro-type-union-access)
-    pb_sample_list.samples.arg = &registration_list_.samples;
+    pb_sample_list.samples.arg = &registration_list_;
 
     ///////////////////////////////////////////////
     // decode it

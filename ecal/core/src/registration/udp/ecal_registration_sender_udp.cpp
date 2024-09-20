@@ -58,7 +58,7 @@ namespace eCAL
   bool CRegistrationSenderUDP::SendSampleList(const Registration::SampleList& sample_list)
   {
     bool return_value{ true };
-    for (const auto& sample : sample_list.samples)
+    for (const auto& sample : sample_list)
     {
       return_value &= SendSample(sample);
     }

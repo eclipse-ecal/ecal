@@ -275,9 +275,6 @@ namespace eCAL
     };
 
     // Registration sample list
-    struct SampleList
-    {
-      std::list<Sample>                   samples;                      // list of Samples used currently by SHM registration
-    };
+    using SampleList = std::vector<Sample>;
   }
 }

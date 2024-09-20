@@ -136,7 +136,7 @@ namespace eCAL
   void CRegistrationProvider::AddSingleSample(const Registration::Sample& sample_)
   {
     const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
-    m_applied_sample_list.samples.push_back(sample_);
+    m_applied_sample_list.push_back(sample_);
   }
 
   void CRegistrationProvider::RegisterSendThread()
@@ -147,7 +147,7 @@ namespace eCAL
       Registration::SampleList sample_list;
 
       // and add process registration sample
-      sample_list.samples.push_back(Registration::GetProcessRegisterSample());
+      sample_list.push_back(Registration::GetProcessRegisterSample());
 
 #if ECAL_CORE_SUBSCRIBER
       // add subscriber registrations
@@ -168,10 +168,11 @@ namespace eCAL
 #endif
 
       // append applied samples list to sample list
-      if (!m_applied_sample_list.samples.empty())
+      if (!m_applied_sample_list.empty())
       {
         const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
-        sample_list.samples.splice(sample_list.samples.end(), m_applied_sample_list.samples);
+        sample_list.insert(sample_list.end(), m_applied_sample_list.begin(), m_applied_sample_list.end());
+        m_applied_sample_list.clear();
       }
 
       // send collected registration sample list
