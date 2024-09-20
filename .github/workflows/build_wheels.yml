@@ -13,10 +13,6 @@ on:
 
 jobs:
   build_wheels:
-    env:
-      PYTHON_PACKAGE_PATH: lang/python/package/ecal
-      PYTHON_CORE_PATH: lang/python/core/ecal/*
-      PYTHON_HDF5_PATH: lang/python/ecalhdf5/ecal/*
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -30,24 +26,9 @@ jobs:
           fetch-depth: 0
 
       - name: Build wheels
-        if: runner.os == 'Windows'
         uses: pypa/cibuildwheel@v2.21
         env:
           CIBW_ARCHS: auto64
-          CIBW_BEFORE_ALL: >
-            New-Item -ItemType Directory -Path "${{ env.PYTHON_PACKAGE_PATH}}";
-            Copy-Item -Recurse -Path "${{ env.PYTHON_CORE_PATH }}" -Destination "${{ env.PYTHON_PACKAGE_PATH}}";
-            Copy-Item -Recurse -Path "${{ env.PYTHON_HDF5_PATH }}" -Destination "${{ env.PYTHON_PACKAGE_PATH}}"
-
-      - name: Build wheels
-        if: runner.os == 'Linux'
-        uses: pypa/cibuildwheel@v2.21
-        env:
-          CIBW_ARCHS: auto64
-          CIBW_BEFORE_ALL: >
-            mkdir -p ${{ env.PYTHON_PACKAGE_PATH }} &&
-            cp -r ${{ env.PYTHON_CORE_PATH }} ${{ env.PYTHON_PACKAGE_PATH }} &&
-            cp -r ${{ env.PYTHON_HDF5_PATH }} ${{ env.PYTHON_PACKAGE_PATH }}
 
       - uses: actions/upload-artifact@v4
         with:
