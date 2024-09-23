@@ -148,7 +148,7 @@ namespace eCAL
     // Transport layer parameters for ecal shm
     struct LayerParShm
     {
-      std::list<std::string>              memory_file_list;             // list of memory file names
+      Util::CExpandingVector<std::string> memory_file_list;             // list of memory file names
 
       bool operator==(const LayerParShm& other) const {
         return memory_file_list == other.memory_file_list;
@@ -264,7 +264,7 @@ namespace eCAL
       std::string                         direction;                    // direction (publisher, subscriber)
       SDataTypeInformation                tdatatype;                    // topic datatype information (encoding & type & description)
 
-      std::vector<TLayer>                 tlayer;                       // active topic transport layers and its specific parameter
+      Util::CExpandingVector<TLayer>      tlayer;                       // active topic transport layers and its specific parameter
       int32_t                             tsize = 0;                    // topic size
 
       int32_t                             connections_loc = 0;          // number of local connected entities
