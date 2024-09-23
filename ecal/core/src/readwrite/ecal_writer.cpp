@@ -689,12 +689,13 @@ namespace eCAL
     // udp multicast layer
     if (m_writer_udp)
     {
-      auto& udp_tlayer = ecal_reg_sample_topic.tlayer[eCAL::Layers::UDP];
+      eCAL::Registration::TLayer udp_tlayer;
       udp_tlayer.type                      = tl_ecal_udp;
       udp_tlayer.version                   = ecal_transport_layer_version;
       udp_tlayer.enabled                   = m_layers.udp.write_enabled;
       udp_tlayer.active                    = m_layers.udp.active;
       udp_tlayer.par_layer.layer_par_udpmc = m_writer_udp->GetConnectionParameter().layer_par_udpmc;
+      ecal_reg_sample_topic.tlayer.push_back(udp_tlayer);
     }
 #endif
 
@@ -702,12 +703,13 @@ namespace eCAL
     // shm layer
     if (m_writer_shm)
     {
-      auto& shm_tlayer = ecal_reg_sample_topic.tlayer[eCAL::Layers::SHM];
+      eCAL::Registration::TLayer shm_tlayer;
       shm_tlayer.type                    = tl_ecal_shm;
       shm_tlayer.version                 = ecal_transport_layer_version;
       shm_tlayer.enabled                 = m_layers.shm.write_enabled;
       shm_tlayer.active                  = m_layers.shm.active;
       shm_tlayer.par_layer.layer_par_shm = m_writer_shm->GetConnectionParameter().layer_par_shm;
+      ecal_reg_sample_topic.tlayer.push_back(shm_tlayer);
     }
 #endif
 
@@ -715,12 +717,13 @@ namespace eCAL
     // tcp layer
     if (m_writer_tcp)
     {
-      auto& tcp_tlayer = ecal_reg_sample_topic.tlayer[eCAL::Layers::TCP];
+      eCAL::Registration::TLayer tcp_tlayer;
       tcp_tlayer.type                    = tl_ecal_tcp;
       tcp_tlayer.version                 = ecal_transport_layer_version;
       tcp_tlayer.enabled                 = m_layers.tcp.write_enabled;
       tcp_tlayer.active                  = m_layers.tcp.active;
       tcp_tlayer.par_layer.layer_par_tcp = m_writer_tcp->GetConnectionParameter().layer_par_tcp;
+      ecal_reg_sample_topic.tlayer.push_back(tcp_tlayer);
     }
 #endif
 

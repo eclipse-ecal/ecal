@@ -105,21 +105,8 @@ namespace eCAL
       topic.tname           = GenerateString(8);
       topic.direction       = GenerateString(5);
       topic.tdatatype       = GenerateDataTypeInformation();
-      TLayer tlayer = GenerateTLayer();
-      switch (tlayer.type)
-      {
-      case tl_ecal_udp:
-        topic.tlayer[eCAL::Layers::UDP] = tlayer;
-        break;
-      case tl_ecal_shm:
-        topic.tlayer[eCAL::Layers::SHM] = tlayer;
-        break;
-      case tl_ecal_tcp:
-        topic.tlayer[eCAL::Layers::TCP] = tlayer;
-        break;
-      default:
-        break;
-      }
+      topic.tlayer.push_back(GenerateTLayer());
+      topic.tlayer.push_back(GenerateTLayer());
       topic.tsize           = rand() % 1000;
       topic.connections_loc = rand() % 50;
       topic.connections_ext = rand() % 50;

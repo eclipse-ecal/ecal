@@ -50,12 +50,4 @@ namespace eCAL
     tl_ecal_tcp = 5,
     tl_all      = 255,
   };
-
-  namespace Layers
-  {
-    constexpr int NO_LAYERS = 3;
-    constexpr int UDP = 0;
-    constexpr int SHM = 1;
-    constexpr int TCP = 2;
-  }
 }

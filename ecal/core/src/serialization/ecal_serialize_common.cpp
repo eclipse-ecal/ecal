@@ -251,7 +251,7 @@ namespace eCAL
       if (arg == nullptr)  return false;
       if (*arg == nullptr) return false;
 
-      auto* layer_vec = static_cast<std::array<eCAL::Registration::TLayer, Layers::NO_LAYERS>*>(*arg);
+      auto* layer_vec = static_cast<std::vector<eCAL::Registration::TLayer>*>(*arg);
 
       for (auto layer : *layer_vec)
       {
@@ -290,7 +290,7 @@ namespace eCAL
       return true;
     }
 
-    void encode_registration_layer(pb_callback_t& pb_callback, const std::array<eCAL::Registration::TLayer, Layers::NO_LAYERS>& layer_vec)
+    void encode_registration_layer(pb_callback_t& pb_callback, const std::vector<eCAL::Registration::TLayer>& layer_vec)
     {
       pb_callback.funcs.encode = &encode_registration_layer_field; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = (void*)(&layer_vec);
@@ -323,24 +323,13 @@ namespace eCAL
       layer.par_layer.layer_par_tcp.port = pb_layer.par_layer.layer_par_tcp.port;
 
       // add layer
-      auto* tgt_vector = static_cast<std::array<eCAL::Registration::TLayer, Layers::NO_LAYERS>*>(*arg);
-      switch (layer.type)
-      {
-      case (tl_ecal_udp):
-        (*tgt_vector)[Layers::UDP] = layer;
-        break;
-      case (tl_ecal_shm):
-        (*tgt_vector)[Layers::SHM] = layer;
-        break;
-      case (tl_ecal_tcp):
-        (*tgt_vector)[Layers::TCP] = layer;
-        break;
-      }
+      auto* tgt_vector = static_cast<std::vector<eCAL::Registration::TLayer>*>(*arg);
+      tgt_vector->push_back(layer);
 
       return true;
     }
 
-    void decode_registration_layer(pb_callback_t& pb_callback, std::array<eCAL::Registration::TLayer, Layers::NO_LAYERS>& layer_vec)
+    void decode_registration_layer(pb_callback_t& pb_callback, std::vector<eCAL::Registration::TLayer>& layer_vec)
     {
       pb_callback.funcs.decode = &decode_registration_layer_field; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = &layer_vec;
