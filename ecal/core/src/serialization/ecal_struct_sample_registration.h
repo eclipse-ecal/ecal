@@ -30,6 +30,7 @@
 #include <ecal/ecal_types.h>
 #include "util/expanding_vector.h"
 
+#include <array>
 #include <cstdint>
 #include <list>
 #include <map>
@@ -264,8 +265,8 @@ namespace eCAL
       std::string                         direction;                    // direction (publisher, subscriber)
       SDataTypeInformation                tdatatype;                    // topic datatype information (encoding & type & description)
 
-      std::vector<TLayer>                 tlayer;                       // active topic transport layers and its specific parameter
-      int32_t                             tsize = 0;                    // topic size
+      std::array<TLayer, Layers::NO_LAYERS> tlayer;                       // active topic transport layers and its specific parameter
+      int32_t                               tsize = 0;                    // topic size
 
       int32_t                             connections_loc = 0;          // number of local connected entities
       int32_t                             connections_ext = 0;          // number of external connected entities
@@ -306,7 +307,10 @@ namespace eCAL
         direction.clear();
         tdatatype.clear();
 
-        tlayer.clear();
+        for (auto& layer : tlayer)
+        {
+          layer.clear();
+        }
         tsize = 0;
 
         connections_loc = 0;

@@ -127,7 +127,7 @@ namespace eCAL
     }
 
     // compare two TLayer vector objects
-    bool CompareTLayer(const std::vector<TLayer>& layer1_vec, const std::vector<TLayer>& layer2_vec)
+    bool CompareTLayer(const std::array<TLayer, eCAL::Layers::NO_LAYERS>& layer1_vec, const std::array<TLayer, eCAL::Layers::NO_LAYERS>& layer2_vec)
     {
       // ensure that both vectors have the same size
       if (layer1_vec.size() != layer2_vec.size()) {
