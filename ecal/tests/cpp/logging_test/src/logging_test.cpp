@@ -46,18 +46,43 @@ private:
     std::streambuf* originalBuffer;
 };
 
+eCAL::Configuration GetUDPConfiguration()
+{
+  eCAL::Configuration config;
+  config.logging.sinks.file.enable        = false;
+  config.logging.sinks.console.enable     = false;
+  config.logging.sinks.udp.enable         = true;
+  config.logging.sinks.udp.filter_log_udp = log_level_all;
+  return config;
+}
+
+eCAL::Configuration GetFileConfiguration(const std::string& path_)
+{
+  eCAL::Configuration config;
+  config.logging.sinks.udp.enable           = false;
+  config.logging.sinks.console.enable       = false;
+  config.logging.sinks.file.enable          = true;
+  config.logging.sinks.file.path            = path_;
+  config.logging.sinks.file.filter_log_file = log_level_all;
+  return config;
+}
+
+eCAL::Configuration GetConsoleConfiguration()
+{
+  eCAL::Configuration config;
+  config.logging.sinks.file.enable            = false;
+  config.logging.sinks.udp.enable             = false;
+  config.logging.sinks.console.enable         = true;
+  config.logging.sinks.console.filter_log_con = log_level_all;
+  return config;
+}
+
 TEST(logging_to /*unused*/, file /*unused*/)
 {
   const std::string logging_path = "./";
   const std::string unit_name    = "logging_to_file_test";
   const std::string log_message  = "Logging to file test.";
-  auto& ecal_config              = eCAL::GetConfiguration();
-
-  ecal_config.logging.sinks.udp.enable           = false;
-  ecal_config.logging.sinks.console.enable       = false;
-  ecal_config.logging.sinks.file.enable          = true;
-  ecal_config.logging.sinks.file.path            = logging_path;
-  ecal_config.logging.sinks.file.filter_log_file = log_level_all;
+  auto  ecal_config              = GetFileConfiguration(logging_path);
 
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
 
@@ -95,15 +120,9 @@ TEST(logging_to /*unused*/, file /*unused*/)
 
 TEST(logging_to /*unused*/, udp /*unused*/)
 {
-  const std::string logging_path = "./";
   const std::string unit_name    = "logging_to_udp_test";
   const std::string log_message  = "Logging to udp test.";
-  auto& ecal_config              = eCAL::GetConfiguration();
-
-  ecal_config.logging.sinks.file.enable        = false;
-  ecal_config.logging.sinks.console.enable     = false;
-  ecal_config.logging.sinks.udp.enable         = true;
-  ecal_config.logging.sinks.udp.filter_log_udp = log_level_all;
+  auto  ecal_config              = GetUDPConfiguration();
 
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);  
 
@@ -132,15 +151,9 @@ TEST(logging_to /*unused*/, udp /*unused*/)
 
 TEST(logging_to /*unused*/, console /*unused*/)
 {
-  const std::string logging_path = "./";
   const std::string unit_name    = "logging_to_console_test";
   const std::string log_message  = "Logging to console test.";
-  auto& ecal_config              = eCAL::GetConfiguration();
-
-  ecal_config.logging.sinks.file.enable            = false;
-  ecal_config.logging.sinks.udp.enable             = false;
-  ecal_config.logging.sinks.console.enable         = true;
-  ecal_config.logging.sinks.console.filter_log_con = log_level_all;
+  auto  ecal_config              = GetConsoleConfiguration();
 
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
 
@@ -165,15 +178,9 @@ int getLogging(eCAL::Logging::SLogging& log_)
 
 TEST(logging_levels /*unused*/, all /*unused*/)
 {
-  const std::string logging_path = "./";
   const std::string unit_name    = "logging_levels_all_udp";
   const std::string log_message  = "Logging level all test for udp.";
-  auto& ecal_config              = eCAL::GetConfiguration();
-
-  ecal_config.logging.sinks.file.enable        = false;
-  ecal_config.logging.sinks.console.enable     = false;
-  ecal_config.logging.sinks.udp.enable         = true;
-  ecal_config.logging.sinks.udp.filter_log_udp = log_level_all;
+  auto  ecal_config              = GetUDPConfiguration();
 
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
 
@@ -208,14 +215,10 @@ TEST(logging_levels /*unused*/, all /*unused*/)
 
 TEST(logging_levels /*unused*/, various /*unused*/)
 {
-  const std::string logging_path = "./";
   const std::string unit_name    = "logging_levels_various_udp";
   const std::string log_message  = "Logging level various test for udp.";
-  auto& ecal_config              = eCAL::GetConfiguration();
+  auto  ecal_config              = GetUDPConfiguration();
 
-  ecal_config.logging.sinks.file.enable        = false;
-  ecal_config.logging.sinks.console.enable     = false;
-  ecal_config.logging.sinks.udp.enable         = true;
   ecal_config.logging.sinks.udp.filter_log_udp = log_level_warning;
 
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
@@ -249,15 +252,11 @@ TEST(logging_levels /*unused*/, various /*unused*/)
 
 TEST(logging_levels /*unused*/, none /*unused*/)
 {
-  const std::string logging_path = "./";
   const std::string unit_name    = "logging_levels_various_udp";
   const std::string log_message  = "Logging level none test for udp.";
-  auto& ecal_config              = eCAL::GetConfiguration();
+  auto  ecal_config              = GetUDPConfiguration();
 
-  ecal_config.logging.sinks.file.enable        = false;
-  ecal_config.logging.sinks.console.enable     = false;
-  ecal_config.logging.sinks.udp.enable         = true;
-  ecal_config.logging.sinks.udp.filter_log_udp = log_level_none;
+   ecal_config.logging.sinks.udp.filter_log_udp = log_level_none;
 
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
 
@@ -295,14 +294,9 @@ TEST(logging_disable /*unused*/, file /*unused*/)
   const std::string logging_path = "./";
   const std::string unit_name    = "logging_disable_file_test";
   const std::string log_message  = "Disabled logging test for file.";
-  auto& ecal_config              = eCAL::GetConfiguration();
-
-  ecal_config.logging.sinks.udp.enable           = false;
-  ecal_config.logging.sinks.console.enable       = false;
-  ecal_config.logging.sinks.file.enable          = false;
-  ecal_config.logging.sinks.file.path            = logging_path;
-  ecal_config.logging.sinks.file.filter_log_file = log_level_all;
-
+  auto  ecal_config              = GetFileConfiguration(logging_path);
+  
+  ecal_config.logging.sinks.file.enable = false;
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
 
   eCAL::Logging::Log(log_level_info, log_message);
@@ -328,13 +322,9 @@ TEST(logging_disable /*unused*/, udp /*unused*/)
 {
   const std::string unit_name    = "logging_dsiable_udp_test";
   const std::string log_message  = "Disabled logging test for udp.";
-  auto& ecal_config              = eCAL::GetConfiguration();
+  auto  ecal_config              = GetUDPConfiguration();
 
-  ecal_config.logging.sinks.file.enable        = false;
-  ecal_config.logging.sinks.console.enable     = false;
-  ecal_config.logging.sinks.udp.enable         = false;
-  ecal_config.logging.sinks.udp.filter_log_udp = log_level_all;
-
+  ecal_config.logging.sinks.udp.enable = false;
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);  
 
   eCAL::Logging::Log(log_level_info, log_message);
@@ -353,13 +343,9 @@ TEST(logging_disable /*unused*/, console /*unused*/)
 {
   const std::string unit_name    = "logging_disable_console_test";
   const std::string log_message  = "Disabled logging test for console.";
-  auto& ecal_config              = eCAL::GetConfiguration();
+  auto  ecal_config              = GetConsoleConfiguration();
 
-  ecal_config.logging.sinks.file.enable            = false;
-  ecal_config.logging.sinks.udp.enable             = false;
-  ecal_config.logging.sinks.console.enable         = false;
-  ecal_config.logging.sinks.console.filter_log_con = log_level_all;
-
+  ecal_config.logging.sinks.console.enable = false;
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
 
   {

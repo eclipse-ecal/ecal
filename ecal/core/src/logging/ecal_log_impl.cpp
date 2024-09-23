@@ -270,18 +270,18 @@ namespace eCAL
 
     if (log_to_console || log_to_file)
     {
-      m_log_message_stream.str("");
-      createLogHeader(m_log_message_stream, level_, m_attributes, log_time);
-      m_log_message_stream << msg_;
+      std::stringstream string_stream;
+      createLogHeader(string_stream, level_, m_attributes, log_time);
+      string_stream << msg_;
     
       if(log_to_console)
       {
-        std::cout << m_log_message_stream.str() << '\n';
+        std::cout << string_stream.str() << '\n';
       }
 
       if (log_to_file)
       {
-        fprintf(m_logfile, "%s\n", m_log_message_stream.str().c_str());
+        fprintf(m_logfile, "%s\n", string_stream.str().c_str());
         fflush(m_logfile);
       }
     }

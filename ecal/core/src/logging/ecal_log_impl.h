@@ -144,6 +144,5 @@ namespace eCAL
     FILE*                                  m_logfile;
 
     Logging::SAttributes                   m_attributes;
-    std::stringstream                      m_log_message_stream;
   };
 }
