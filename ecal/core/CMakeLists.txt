@@ -408,6 +408,7 @@ endif()
 set(ecal_util_src
     src/util/ecal_expmap.h
     src/util/ecal_thread.h
+    src/util/expanding_vector.h
     src/util/frequency_calculator.h
     src/util/getenvvar.h
 )

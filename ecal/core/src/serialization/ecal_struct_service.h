@@ -61,6 +61,17 @@ namespace eCAL
           id == other.id &&
           state == other.state;
       }
+
+      void clear()
+      {
+        hname.clear();
+        sname.clear();
+        sid.clear();
+        mname.clear();
+        error.clear();
+        id = 0;
+        state = none;
+      }
     };
 
     // Service Request
@@ -72,6 +83,12 @@ namespace eCAL
       bool operator==(const Request& other) const {
         return header == other.header &&
           request == other.request;
+      }
+
+      void clear()
+      {
+        header.clear();
+        request.clear();
       }
     };
 
@@ -86,6 +103,13 @@ namespace eCAL
         return header == other.header &&
           response == other.response &&
           ret_state == other.ret_state;
+      }
+
+      void clear()
+      {
+        header.clear();
+        response.clear();
+        ret_state = 0;
       }
     };
 
@@ -106,6 +130,16 @@ namespace eCAL
           resp_type == other.resp_type &&
           resp_desc == other.resp_desc &&
           call_count == other.call_count;
+      }
+
+      void clear()
+      {
+        mname.clear();
+        req_type.clear();
+        req_desc.clear();
+        resp_type.clear();
+        resp_desc.clear();
+        call_count = 0;
       }
     };
 
@@ -131,6 +165,18 @@ namespace eCAL
           tcp_port_v0 == other.tcp_port_v0 &&
           tcp_port_v1 == other.tcp_port_v1;
       }
+
+      void clear()
+      {
+        rclock = 0;
+        pname.clear();
+        uname.clear();
+        sname.clear();
+        methods.clear();
+        version = 0;
+        tcp_port_v0 = 0;
+        tcp_port_v1 = 0;
+      }
     };
 
     // Client
@@ -150,6 +196,16 @@ namespace eCAL
           sname == other.sname &&
           methods == other.methods &&
           version == other.version;
+      }
+
+      void clear()
+      {
+        rclock = 0;
+        pname.clear();
+        uname.clear();
+        sname.clear();
+        methods.clear();
+        version = 0;
       }
     };
   }

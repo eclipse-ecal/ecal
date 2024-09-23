@@ -30,6 +30,7 @@
 #include <atomic>
 #include <chrono>
 #include <functional>
+#include <iterator>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -171,7 +172,7 @@ namespace eCAL
       if (!m_applied_sample_list.empty())
       {
         const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
-        sample_list.insert(sample_list.end(), m_applied_sample_list.begin(), m_applied_sample_list.end());
+        std::copy(m_applied_sample_list.begin(), m_applied_sample_list.end(), std::back_inserter(sample_list));
         m_applied_sample_list.clear();
       }
 

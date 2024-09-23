@@ -587,10 +587,11 @@ namespace
     // add sample to list
     auto* sample_list = static_cast<eCAL::Registration::SampleList*>(*arg);
     // Create a new element directly at the end of the vector
-    auto sample = sample_list->emplace(sample_list->end());
+    sample_list->push_back();
+    auto& sample = sample_list->back();
 
     // prepare sample for decoding
-    PrepareDecoding(pb_sample, *sample);
+    PrepareDecoding(pb_sample, sample);
 
     // decode it
     if (!pb_decode(stream, eCAL_pb_Sample_fields, &pb_sample))
@@ -599,7 +600,7 @@ namespace
     }
 
     // apply sample values
-    AssignValues(pb_sample, *sample);
+    AssignValues(pb_sample, sample);
 
     return true;
   }
