@@ -122,7 +122,7 @@ namespace eCAL
 
     // TODO: Substitute ProducerInfo type
     const auto& subscription_info = ecal_sample_.identifier;
-    const SDataTypeInformation topic_information = ecal_topic.tdatatype;
+    const SDataTypeInformation& topic_information = ecal_topic.tdatatype;
 
     CDataWriter::SLayerStates layer_states;
     for (const auto& layer : ecal_topic.tlayer)
