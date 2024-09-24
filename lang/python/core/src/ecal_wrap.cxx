@@ -1079,13 +1079,13 @@ namespace
       val = Py_BuildValue("i", topic.tsize);
       PyDict_SetItemString(topicDict, "tsize", val); Py_DECREF(val);
 
-      val = Py_BuildValue("connections_loc", topic.tsize);
+      val = Py_BuildValue("i", topic.connections_loc);
       PyDict_SetItemString(topicDict, "connections_loc", val); Py_DECREF(val);
 
-      val = Py_BuildValue("connections_ext", topic.tsize);
+      val = Py_BuildValue("i", topic.connections_ext);
       PyDict_SetItemString(topicDict, "connections_ext", val); Py_DECREF(val);
 
-      val = Py_BuildValue("message_drops", topic.tsize);
+      val = Py_BuildValue("i", topic.message_drops);
       PyDict_SetItemString(topicDict, "message_drops", val); Py_DECREF(val);
 
       val = Py_BuildValue("i", topic.did);
