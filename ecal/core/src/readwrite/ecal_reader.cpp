@@ -594,7 +594,9 @@ namespace eCAL
   void CDataReader::Register()
   {
 #if ECAL_CORE_REGISTRATION
-    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(GetRegistrationSample());
+    Registration::Sample sample;
+    GetRegistrationSample(sample);
+    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(sample);
 
 #ifndef NDEBUG
     // log it
@@ -606,7 +608,9 @@ namespace eCAL
   void CDataReader::Unregister()
   {
 #if ECAL_CORE_REGISTRATION
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(GetUnregistrationSample());
+    Registration::Sample sample;
+    GetUnregistrationSample(sample);
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(sample);
 
 #ifndef NDEBUG
     // log it
@@ -615,10 +619,10 @@ namespace eCAL
 #endif // ECAL_CORE_REGISTRATION
   }
 
-  Registration::Sample CDataReader::GetRegistration()
+  void CDataReader::GetRegistration(Registration::Sample& sample)
   {
     // return registration
-    return GetRegistrationSample();
+    return GetRegistrationSample(sample);
   }
 
   bool CDataReader::IsPublished() const
@@ -631,10 +635,8 @@ namespace eCAL
     return m_connection_count;
   }
     
-  Registration::Sample CDataReader::GetRegistrationSample()
+  void CDataReader::GetRegistrationSample(Registration::Sample& ecal_reg_sample)
   {
-    // create registration sample
-    Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_reg_subscriber;
 
     auto& ecal_reg_sample_identifier = ecal_reg_sample.identifier;
@@ -706,14 +708,10 @@ namespace eCAL
     // we do not know the number of connections ..
     ecal_reg_sample_topic.connections_loc = 0;
     ecal_reg_sample_topic.connections_ext = 0;
-
-    return ecal_reg_sample;
   }
 
-  Registration::Sample CDataReader::GetUnregistrationSample()
+  void CDataReader::GetUnregistrationSample(Registration::Sample& ecal_unreg_sample)
   {
-    // create unregistration sample
-    Registration::Sample ecal_unreg_sample;
     ecal_unreg_sample.cmd_type = bct_unreg_subscriber;
 
     auto& ecal_reg_sample_identifier = ecal_unreg_sample.identifier;
@@ -726,8 +724,6 @@ namespace eCAL
     ecal_reg_sample_topic.pname  = m_pname;
     ecal_reg_sample_topic.tname  = m_topic_name;
     ecal_reg_sample_topic.uname  = Process::GetUnitName();
-
-    return ecal_unreg_sample;
   }
   
   void CDataReader::StartTransportLayer()

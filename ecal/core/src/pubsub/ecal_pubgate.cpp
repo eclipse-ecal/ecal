@@ -197,7 +197,8 @@ namespace eCAL
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     for (const auto& iter : m_topic_name_datawriter_map)
     {
-      reg_sample_list_.push_back(iter.second->GetRegistration());
+      reg_sample_list_.push_back();
+      iter.second->GetRegistration(reg_sample_list_.back());
     }
   }
 }
