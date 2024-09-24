@@ -40,9 +40,9 @@ namespace eCAL
      * However, when calling clear(), a regular vector will destroy the elements which are stored in this vector.
      * This class, will instead call the `clear()` functions on all members.
      */
-    #include <iostream>
     #include <vector>
     #include <iterator>
+    #include <stdexcept>
     
     // Templated class CExpandingVector
     template <class T>
@@ -93,12 +93,25 @@ namespace eCAL
             ++internal_size;
         }
 
-        void push_back()
+        // Push back (rvalue reference version for move semantics)
+        void push_back(T&& value) {
+          if (internal_size < data.size()) {
+            data[internal_size] = std::move(value);  // Reuse space
+          }
+          else {
+            data.push_back(std::move(value));  // Move into the vector
+          }
+          ++internal_size;
+        }
+
+        T& push_back()
         {
           if (internal_size == data.size()) {
             data.push_back(T{});  // Expand the vector if needed, else do nothing
           }
           ++internal_size;
+
+          return back();
         }
 
         // Access the first element

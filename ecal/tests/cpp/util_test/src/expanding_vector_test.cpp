@@ -61,6 +61,9 @@ TEST_F(CExpandingVectorTest, ClearElements) {
   EXPECT_EQ(vec[0].value, 0);
   EXPECT_EQ(vec[1].value, 0);
   EXPECT_EQ(vec[2].value, 0);
+
+  EXPECT_EQ(vec.push_back().value, 0);
+  EXPECT_EQ(vec.push_back().value, 0);
 }
 
 // Test resize functionality
