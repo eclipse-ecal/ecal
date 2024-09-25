@@ -303,8 +303,7 @@ namespace eCAL
 
       eCAL_pb_TLayer             pb_layer = eCAL_pb_TLayer_init_default;
       auto* tgt_vector = static_cast<Util::CExpandingVector<eCAL::Registration::TLayer>*>(*arg);
-      tgt_vector->push_back();
-      auto& layer = tgt_vector->back();
+      auto& layer = tgt_vector->push_back();
 
       // decode shm layer parameter
       pb_layer.par_layer.layer_par_shm.memory_file_list.funcs.decode = &decode_string_vector_field; // NOLINT(*-pro-type-union-access)
@@ -341,7 +340,7 @@ namespace eCAL
       if (arg == nullptr)  return false;
       if (*arg == nullptr) return false;
 
-      auto* method_vec = static_cast<std::vector<eCAL::Service::Method>*>(*arg);
+      auto* method_vec = static_cast<eCAL::Util::CExpandingVector<eCAL::Service::Method>*>(*arg);
 
       for (const auto& method : *method_vec)
       {
@@ -367,7 +366,7 @@ namespace eCAL
       return true;
     }
 
-    void encode_service_methods(pb_callback_t& pb_callback, const std::vector<eCAL::Service::Method>& method_vec)
+    void encode_service_methods(pb_callback_t& pb_callback, const eCAL::Util::CExpandingVector<eCAL::Service::Method>& method_vec)
     {
       pb_callback.funcs.encode = &encode_service_methods_field; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = (void*)(&method_vec);
@@ -379,7 +378,8 @@ namespace eCAL
       if (*arg == nullptr) return false;
 
       eCAL_pb_Method pb_method = eCAL_pb_Method_init_default;
-      eCAL::Service::Method method{};
+      auto* method_vec = static_cast<eCAL::Util::CExpandingVector<eCAL::Service::Method>*>(*arg);
+      auto& method = method_vec->push_back();
 
       // decode method parameter
       decode_string(pb_method.mname, method.mname);
@@ -397,14 +397,10 @@ namespace eCAL
       // apply method values
       method.call_count = pb_method.call_count;
 
-      // add method to vector
-      auto* method_vec = static_cast<std::vector<eCAL::Service::Method>*>(*arg);
-      method_vec->emplace_back(method);
-
       return true;
     }
 
-    void decode_service_methods(pb_callback_t& pb_callback, std::vector<eCAL::Service::Method>& method_vec)
+    void decode_service_methods(pb_callback_t& pb_callback, eCAL::Util::CExpandingVector<eCAL::Service::Method>& method_vec)
     {
       pb_callback.funcs.decode = &decode_service_methods_field; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = &method_vec;

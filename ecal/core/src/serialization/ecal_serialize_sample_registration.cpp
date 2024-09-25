@@ -587,8 +587,7 @@ namespace
     // add sample to list
     auto* sample_list = static_cast<eCAL::Registration::SampleList*>(*arg);
     // Create a new element directly at the end of the vector
-    sample_list->push_back();
-    auto& sample = sample_list->back();
+    auto& sample = sample_list->push_back();
 
     // prepare sample for decoding
     PrepareDecoding(pb_sample, sample);

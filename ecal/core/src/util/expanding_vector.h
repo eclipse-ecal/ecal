@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <iterator>
+#include <stdexcept>
 #include <vector>
 
 namespace eCAL
@@ -40,11 +42,8 @@ namespace eCAL
      * However, when calling clear(), a regular vector will destroy the elements which are stored in this vector.
      * This class, will instead call the `clear()` functions on all members.
      */
-    #include <vector>
-    #include <iterator>
-    #include <stdexcept>
-    
-    // Templated class CExpandingVector
+
+     // Templated class CExpandingVector
     template <class T>
     class CExpandingVector {
     public:

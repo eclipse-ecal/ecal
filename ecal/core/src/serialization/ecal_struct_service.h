@@ -29,6 +29,8 @@
 #include <cstdint>
 #include <tuple>
 
+#include <util/expanding_vector.h>
+
 namespace eCAL
 {
   namespace Service
@@ -146,14 +148,14 @@ namespace eCAL
     // Service
     struct Service
     {
-      int32_t              rclock = 0;       // Registration clock
-      std::string          pname;            // Process name
-      std::string          uname;            // Unit name
-      std::string          sname;            // Service name
-      std::vector<Method>  methods;          // List of methods
-      uint32_t             version = 0;      // Service protocol version
-      uint32_t             tcp_port_v0 = 0;  // The TCP port used for that service (v0)
-      uint32_t             tcp_port_v1 = 0;  // The TCP port used for that service (v1)
+      int32_t                         rclock = 0;       // Registration clock
+      std::string                     pname;            // Process name
+      std::string                     uname;            // Unit name
+      std::string                     sname;            // Service name
+      Util::CExpandingVector<Method>  methods;          // List of methods
+      uint32_t                        version = 0;      // Service protocol version
+      uint32_t                        tcp_port_v0 = 0;  // The TCP port used for that service (v0)
+      uint32_t                        tcp_port_v1 = 0;  // The TCP port used for that service (v1)
 
       bool operator==(const Service& other) const {
         return rclock == other.rclock &&
@@ -182,12 +184,12 @@ namespace eCAL
     // Client
     struct Client
     {
-      int32_t              rclock = 0;       // Registration clock
-      std::string          pname;            // Process name
-      std::string          uname;            // Unit name
-      std::string          sname;            // Service name
-      std::vector<Method>  methods;          // List of methods
-      uint32_t             version = 0;      // Client protocol version
+      int32_t                         rclock = 0;       // Registration clock
+      std::string                     pname;            // Process name
+      std::string                     uname;            // Unit name
+      std::string                     sname;            // Service name
+      Util::CExpandingVector<Method>  methods;          // List of methods
+      uint32_t                        version = 0;      // Client protocol version
 
       bool operator==(const Client& other) const {
         return rclock == other.rclock &&

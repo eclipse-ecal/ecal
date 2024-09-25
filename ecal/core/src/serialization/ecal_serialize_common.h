@@ -59,7 +59,7 @@ namespace eCAL
     void encode_registration_layer(pb_callback_t& pb_callback, const Util::CExpandingVector<eCAL::Registration::TLayer>& layer_vec);
     void decode_registration_layer(pb_callback_t& pb_callback, Util::CExpandingVector<eCAL::Registration::TLayer>& layer_vec);
 
-    void encode_service_methods(pb_callback_t& pb_callback, const std::vector<eCAL::Service::Method>& method_vec);
-    void decode_service_methods(pb_callback_t& pb_callback, std::vector<eCAL::Service::Method>& method_vec);
+    void encode_service_methods(pb_callback_t& pb_callback, const Util::CExpandingVector<eCAL::Service::Method>& method_vec);
+    void decode_service_methods(pb_callback_t& pb_callback, Util::CExpandingVector<eCAL::Service::Method>& method_vec);
   }
 }
