@@ -17,19 +17,36 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
+/**
+ * @brief  Filter that checks if a topic / service is to be listed in the monitoring.
+**/
 
+#include <regex>
 #include <string>
+#include <vector>
+
+#include "monitoring/attributes/monitoring_attributes.h"
 
 namespace eCAL
 {
-  namespace Monitoring
+  class CMonitoringFilter
   {
-    struct SAttributes
-    {
-      std::string  filter_excl;
-      std::string  filter_incl;
-    };
+  public:
+    CMonitoringFilter(const Monitoring::SAttributes& attr_);
 
-  }
+    // Sets the filters. The user needs to call activate filter, after setting them.
+    void SetExclFilter(const std::string& filter_);
+    void SetInclFilter(const std::string& filter_);
+
+    // Returns true if topic is accepted by the filter, false otherwise
+    bool AcceptTopic(const std::string& topic_name);
+
+    void ActivateFilter();
+    void DeactivateFilter();
+
+  private:
+    Monitoring::SAttributes m_attributes;
+    std::vector<std::regex> m_include_filters;
+    std::vector<std::regex> m_exclude_filters;
+  };
 }

@@ -193,6 +193,8 @@ if(ECAL_CORE_MONITORING)
 set(ecal_monitoring_src
     src/monitoring/ecal_monitoring_def.cpp
     src/monitoring/ecal_monitoring_def.h
+    src/monitoring/ecal_monitoring_filter.cpp
+    src/monitoring/ecal_monitoring_filter.h
     src/monitoring/ecal_monitoring_impl.cpp
     src/monitoring/ecal_monitoring_impl.h
 )
