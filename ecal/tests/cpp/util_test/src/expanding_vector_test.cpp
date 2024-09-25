@@ -37,8 +37,10 @@ protected:
   }
 };
 
+using core_cpp_util_expanding_vector = CExpandingVectorTest;
+
 // Test push_back and size functionality
-TEST_F(CExpandingVectorTest, PushBackAndSize) {
+TEST_F(core_cpp_util_expanding_vector, PushBackAndSize) {
   EXPECT_EQ(vec.size(), 3);  // Size should be 3 after pushing 3 elements
 
   vec.push_back(MyElement(4));
@@ -51,7 +53,7 @@ TEST_F(CExpandingVectorTest, PushBackAndSize) {
 }
 
 // Test clear functionality
-TEST_F(CExpandingVectorTest, ClearElements) {
+TEST_F(core_cpp_util_expanding_vector, ClearElements) {
   vec.clear();  // Call clear, which should reset individual elements
 
   EXPECT_EQ(vec.size(), 0);  // Internal size should be reset to 0
@@ -67,7 +69,7 @@ TEST_F(CExpandingVectorTest, ClearElements) {
 }
 
 // Test resize functionality
-TEST_F(CExpandingVectorTest, ResizeVector) {
+TEST_F(core_cpp_util_expanding_vector, ResizeVector) {
   vec.resize(5);
   EXPECT_EQ(vec.size(), 5);  // Size should be 5 after resizing
 
@@ -83,7 +85,7 @@ TEST_F(CExpandingVectorTest, ResizeVector) {
 }
 
 // Test operator[] without bounds checking
-TEST_F(CExpandingVectorTest, OperatorAccess) {
+TEST_F(core_cpp_util_expanding_vector, OperatorAccess) {
   EXPECT_NO_THROW(vec[1]);  // Access valid index without throwing exception
   EXPECT_EQ(vec[1].value, 2);  // Element at index 1 should have value 2
 
@@ -95,7 +97,7 @@ TEST_F(CExpandingVectorTest, OperatorAccess) {
 }
 
 // Test at() function with bounds checking
-TEST_F(CExpandingVectorTest, AtFunction) {
+TEST_F(core_cpp_util_expanding_vector, AtFunction) {
   EXPECT_NO_THROW(vec.at(0));
   EXPECT_EQ(vec.at(0).value, 1);
 
@@ -103,7 +105,7 @@ TEST_F(CExpandingVectorTest, AtFunction) {
 }
 
 // Test begin() and end() iterator functions
-TEST_F(CExpandingVectorTest, Iterators) {
+TEST_F(core_cpp_util_expanding_vector, Iterators) {
   auto it = vec.begin();
   EXPECT_EQ(it->value, 1);  // First element should have value 1
   ++it;
@@ -117,7 +119,7 @@ TEST_F(CExpandingVectorTest, Iterators) {
 }
 
 // Test const_iterator functionality
-TEST_F(CExpandingVectorTest, ConstIterator) {
+TEST_F(core_cpp_util_expanding_vector, ConstIterator) {
   const CExpandingVector<MyElement> constVec = vec;
 
   CExpandingVector<MyElement>::const_iterator it = constVec.begin();
@@ -133,7 +135,7 @@ TEST_F(CExpandingVectorTest, ConstIterator) {
 }
 
 // Test empty() function
-TEST_F(CExpandingVectorTest, EmptyFunction) {
+TEST_F(core_cpp_util_expanding_vector, EmptyFunction) {
   EXPECT_FALSE(vec.empty());  // Should not be empty initially
 
   vec.clear();
@@ -141,7 +143,7 @@ TEST_F(CExpandingVectorTest, EmptyFunction) {
 }
 
 // Test capacity and full_size functions
-TEST_F(CExpandingVectorTest, FullSize) {
+TEST_F(core_cpp_util_expanding_vector, FullSize) {
   EXPECT_EQ(vec.full_size(), 3);  // Full size is the size of the underlying vector
 
   vec.push_back(MyElement(4));
@@ -152,7 +154,7 @@ TEST_F(CExpandingVectorTest, FullSize) {
 }
 
 
-TEST_F(CExpandingVectorTest, Front) {
+TEST_F(core_cpp_util_expanding_vector, Front) {
   EXPECT_EQ(vec.front().value, 1);  // The first element should have value 1
 
   vec.front().value = 10;  // Modify the first element
@@ -160,7 +162,7 @@ TEST_F(CExpandingVectorTest, Front) {
 }
 
 // Test back function
-TEST_F(CExpandingVectorTest, Back) {
+TEST_F(core_cpp_util_expanding_vector, Back) {
   EXPECT_EQ(vec.back().value, 3);  // The last element should have value 3
 
   vec.back().value = 20;  // Modify the last element
@@ -172,7 +174,7 @@ TEST_F(CExpandingVectorTest, Back) {
 }
 
 // Test front and back with an empty vector (should throw an exception)
-TEST_F(CExpandingVectorTest, FrontAndBackEmptyVector) {
+TEST_F(core_cpp_util_expanding_vector, FrontAndBackEmptyVector) {
   CExpandingVector<MyElement> emptyVec;
 
   EXPECT_THROW(emptyVec.front(), std::out_of_range);  // Should throw because vector is empty

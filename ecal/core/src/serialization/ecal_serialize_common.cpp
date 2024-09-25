@@ -231,8 +231,7 @@ namespace eCAL
       if (*arg == nullptr) return false;
 
       auto* tgt_list = static_cast<Util::CExpandingVector<std::string>*>(*arg);
-      tgt_list->push_back();
-      auto& tgt_string = tgt_list->back();
+      auto& tgt_string = tgt_list->push_back();
 
       size_t len = stream->bytes_left;
       tgt_string.resize(len);

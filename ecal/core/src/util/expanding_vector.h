@@ -62,12 +62,9 @@ namespace eCAL
 
     private:
         std::vector<T> data;
-        size_t internal_size;  // Track size separately
+        size_t internal_size{ 0 };  // Track size separately
     
     public:
-        // Constructor
-        CExpandingVector() : internal_size(0) {}
-    
         // Access to the internal size
         size_t size() const {
             return internal_size;
