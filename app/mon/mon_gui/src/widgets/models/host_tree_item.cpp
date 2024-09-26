@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -167,8 +167,9 @@ void HostTreeItem::update(const eCAL::pb::Monitoring& monitoring_pb)
   data_received_bytes_ = 0;
 
   // Fill variables with accumulated data
-  for (auto topic : monitoring_pb.topics())
+  for (int i = 0; i <monitoring_pb.topics_size(); ++i)
   {
+    const auto& topic = monitoring_pb.topics(i);
     if (QString(topic.hname().c_str()).compare(host_name_, Qt::CaseSensitivity::CaseInsensitive) == 0)
     {
       QString direction = topic.direction().c_str();

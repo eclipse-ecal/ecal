@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -508,7 +508,7 @@ void EcalmonTreeWidget::loadGuiSettings(const QString& group)
 
       QVector<int> group_by_columns;
       int auto_expand = 0;
-      for (auto column_variant : settings.value("group_by_columns").toList())
+      for (const auto& column_variant : settings.value("group_by_columns").toList())
       {
         int column = column_variant.toInt();
         if ((column >= 0) && (column < group_tree_model_->columnCount()))
