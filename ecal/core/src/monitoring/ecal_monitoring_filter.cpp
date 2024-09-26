@@ -62,7 +62,7 @@ namespace
         pos = str.length();
         if (pos != lastPos || !trimEmpty)
         {
-          tokens.emplace(std::string(str.data() + lastPos, pos - lastPos));
+          tokens.emplace(str.data() + lastPos, pos - lastPos);
         }
         break;
       }
@@ -70,7 +70,7 @@ namespace
       {
         if (pos != lastPos || !trimEmpty)
         {
-          tokens.emplace(std::string(str.data() + lastPos, pos - lastPos));
+          tokens.emplace(str.data() + lastPos, pos - lastPos);
         }
       }
       lastPos = pos + 1;
@@ -84,7 +84,7 @@ namespace
     Tokenize(filter_, compare_set, ",;", true);
     for (const auto& it : compare_set)
     {
-      regex_vector.push_back(std::regex(it, std::regex::icase));
+      regex_vector.emplace_back(it, std::regex::icase);
     }
     return regex_vector;
   }
@@ -127,13 +127,13 @@ bool eCAL::CMonitoringFilter::AcceptTopic(const std::string& topic_name) const
   // b) there exists an include list, and they are not in the include list
   // topics are accepted if they are not rejected.
 
-  bool reject_because_excluded = MatchAnyRegex(topic_name, m_exclude_filters);
+  const bool reject_because_excluded = MatchAnyRegex(topic_name, m_exclude_filters);
   if (reject_because_excluded)
     return false;
 
   if (!m_include_filters.empty())
   {
-    bool topic_is_included = MatchAnyRegex(topic_name, m_include_filters);
+    const bool topic_is_included = MatchAnyRegex(topic_name, m_include_filters);
     if (!topic_is_included)
       return false;
   }

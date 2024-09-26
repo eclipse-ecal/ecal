@@ -26,17 +26,8 @@
 // Unit test class for CExpandingVector
 class CMonitoringFilterTest : public ::testing::Test {
 protected:
-  std::vector<std::string> topic_names;  // Create a vector of MyElement type
-
-  void SetUp() override {
-    // Add some initial values
-    topic_names.push_back("topic_1");
-    topic_names.push_back("topic_2");
-    topic_names.push_back("topic_3");
-    topic_names.push_back("apple");
-    topic_names.push_back("banana");
-    topic_names.push_back("__internal");
-  }
+  const std::vector<std::string> topic_names = { "topic_1", "topic_2", "topic_3" , "apple", "banana", "__internal"};  // Create a vector of MyElement type
+  const std::vector<bool> all_accepted = { true, true, true, true, true, true };  // Create a vector of MyElement type
 };
 
 using core_cpp_monitoring_filter = CMonitoringFilterTest;
@@ -57,10 +48,8 @@ void EvaluateFilter(const eCAL::CMonitoringFilter& filter, const std::vector<std
 // Test push_back and size functionality
 TEST_F(core_cpp_monitoring_filter, DefaultFilter) {
   // A default filter should accept all topics
-  eCAL::CMonitoringFilter filter{ eCAL::Monitoring::SAttributes() };
-  std::vector<bool> expected = { true, true, true, true, true, true };
-
-  EvaluateFilter(filter, topic_names, expected);
+  const eCAL::CMonitoringFilter filter{ eCAL::Monitoring::SAttributes() };
+  EvaluateFilter(filter, topic_names, all_accepted);
 }
 
 TEST_F(core_cpp_monitoring_filter, ExcludeFilter) {
@@ -68,8 +57,8 @@ TEST_F(core_cpp_monitoring_filter, ExcludeFilter) {
   eCAL::Monitoring::SAttributes attr;
   attr.filter_excl = "^__.*$";
   attr.filter_incl = "";
-  eCAL::CMonitoringFilter filter{ attr };
-  std::vector<bool> expected = { true, true, true, true, true, false };
+  const eCAL::CMonitoringFilter filter{ attr };
+  const std::vector<bool> expected = { true, true, true, true, true, false };
   EvaluateFilter(filter, topic_names, expected);
 }
 
@@ -78,8 +67,8 @@ TEST_F(core_cpp_monitoring_filter, IncludeFilter) {
   eCAL::Monitoring::SAttributes attr;
   attr.filter_excl = "";
   attr.filter_incl = "^topic_.*$";
-  eCAL::CMonitoringFilter filter{ attr };
-  std::vector<bool> expected = { true, true, true, false, false, false };
+  const eCAL::CMonitoringFilter filter{ attr };
+  const std::vector<bool> expected = { true, true, true, false, false, false };
   EvaluateFilter(filter, topic_names, expected);
 }
 
@@ -88,7 +77,37 @@ TEST_F(core_cpp_monitoring_filter, IncludeExcludeFilter) {
   eCAL::Monitoring::SAttributes attr;
   attr.filter_excl = "^topic_1$";
   attr.filter_incl = "^topic_.*$";
-  eCAL::CMonitoringFilter filter{ attr };
-  std::vector<bool> expected = { false, true, true, false, false, false };
+  const eCAL::CMonitoringFilter filter{ attr };
+  const std::vector<bool> expected = { false, true, true, false, false, false };
   EvaluateFilter(filter, topic_names, expected);
 }
+
+TEST_F(core_cpp_monitoring_filter, ApplyFilter) {
+  // After deactivating the filter, everything should be accepted.
+  eCAL::Monitoring::SAttributes attr;
+  attr.filter_excl = "^topic_1$";
+  attr.filter_incl = "^topic_.*$";
+  eCAL::CMonitoringFilter filter{ attr };
+  filter.DeactivateFilter();
+  EvaluateFilter(filter, topic_names, all_accepted);
+}
+
+TEST_F(core_cpp_monitoring_filter, SetFilter) {
+  // Try to set the filters afterwards
+  eCAL::Monitoring::SAttributes attr;
+  eCAL::CMonitoringFilter filter{ attr };
+  EvaluateFilter(filter, topic_names, all_accepted);
+
+  filter.SetInclFilter("^topic_.*$");
+  filter.ActivateFilter();
+  const std::vector<bool> include = { true, true, true, false, false, false };
+  EvaluateFilter(filter, topic_names, include);
+
+  filter.SetExclFilter("^topic_1$");
+  filter.ActivateFilter();
+  const std::vector<bool> include_exclude = { false, true, true, false, false, false };
+  EvaluateFilter(filter, topic_names, include_exclude);
+}
+
+
+
