@@ -39,7 +39,7 @@ namespace eCAL
     void SetInclFilter(const std::string& filter_);
 
     // Returns true if topic is accepted by the filter, false otherwise
-    bool AcceptTopic(const std::string& topic_name);
+    bool AcceptTopic(const std::string& topic_name) const;
 
     void ActivateFilter();
     void DeactivateFilter();

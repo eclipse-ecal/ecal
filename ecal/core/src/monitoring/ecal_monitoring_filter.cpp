@@ -120,7 +120,7 @@ void eCAL::CMonitoringFilter::SetInclFilter(const std::string& filter_)
   m_attributes.filter_incl = filter_;
 }
 
-bool eCAL::CMonitoringFilter::AcceptTopic(const std::string& topic_name)
+bool eCAL::CMonitoringFilter::AcceptTopic(const std::string& topic_name) const
 {
   // topics are rejected if:
   // a) they are matched by the exclude list
@@ -131,7 +131,7 @@ bool eCAL::CMonitoringFilter::AcceptTopic(const std::string& topic_name)
   if (reject_because_excluded)
     return false;
 
-  if (!m_exclude_filters.empty())
+  if (!m_include_filters.empty())
   {
     bool topic_is_included = MatchAnyRegex(topic_name, m_include_filters);
     if (!topic_is_included)
