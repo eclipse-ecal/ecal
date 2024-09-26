@@ -35,6 +35,8 @@
 
 #include "attributes/registration_shm_attributes.h"
 
+#include <vector>
+
 namespace eCAL
 {
   class CRegistrationSenderSHM : public CRegistrationSender
@@ -55,5 +57,6 @@ namespace eCAL
   private:
     CMemoryFileBroadcast                m_memfile_broadcast;
     CMemoryFileBroadcastWriter          m_memfile_broadcast_writer;
+    std::vector<char>                   m_sample_list_buffer;
   };
 }

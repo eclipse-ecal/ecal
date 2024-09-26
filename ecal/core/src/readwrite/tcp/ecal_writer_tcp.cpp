@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal_config.h>
+#include <ecal/ecal_process.h>
 
 #include "serialization/ecal_serialize_sample_payload.h"
 
@@ -79,7 +80,7 @@ namespace eCAL
 
     // create new payload sample (header information only, no payload)
     Payload::Sample proto_header;
-    auto& proto_header_topic = proto_header.topic;
+    auto& proto_header_topic = proto_header.topic_info;
     proto_header_topic.tname = m_topic_name;
     proto_header_topic.tid   = m_topic_id;
 

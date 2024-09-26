@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ find_package(GTest REQUIRED)
 if(ECAL_CORE_TRANSPORT_SHM)
   set(pubsub_test_src_shm
     src/pubsub_acknowledge.cpp
+    src/pubsub_connection_test.cpp
     src/pubsub_multibuffer.cpp
     src/pubsub_test_shm.cpp
   )
@@ -36,6 +37,7 @@ if(ECAL_CORE_TRANSPORT_UDP)
 endif()
 
 set(pubsub_test_src
+  src/pubsub_callback_topicid.cpp
   src/pubsub_receive_test.cpp
   src/pubsub_test.cpp
   ${pubsub_test_src_shm}

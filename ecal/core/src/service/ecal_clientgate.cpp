@@ -165,7 +165,7 @@ namespace eCAL
     std::shared_lock<std::shared_timed_mutex> const lock(m_client_set_sync);
     for (const auto& service_client_impl : m_client_set)
     {
-      reg_sample_list_.samples.emplace_back(service_client_impl->GetRegistration());
+      reg_sample_list_.push_back(service_client_impl->GetRegistration());
     }
   }
 }

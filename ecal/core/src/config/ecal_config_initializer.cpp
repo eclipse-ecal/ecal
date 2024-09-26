@@ -325,12 +325,6 @@ namespace eCAL
 // Utils definitions from former ecal_config_reader.cpp
 namespace
 {
-  bool fileexists(const std::string& fname_)
-  {
-    const std::ifstream infile(fname_);
-    return infile.good();
-  }
-
   bool direxists(const std::string& path_)
   {
     const EcalUtils::Filesystem::FileStatus status(path_, EcalUtils::Filesystem::Current);

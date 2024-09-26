@@ -47,7 +47,7 @@ namespace eCAL
     Finalize();
   }
 
-  int CGlobals::Initialize(unsigned int components_, std::vector<std::string>* config_keys_ /*= nullptr*/)
+  int CGlobals::Initialize(unsigned int components_)
   {
     // will be set if any new module was initialized
     bool new_initialization(false);

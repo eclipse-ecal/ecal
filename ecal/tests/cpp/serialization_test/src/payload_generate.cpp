@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,11 @@ namespace eCAL
   namespace Payload
   {
     // generate Topic
-    Topic GenerateTopic()
+    TopicInfo GenerateTopic()
     {
-      Topic topic;
+      TopicInfo topic;
       topic.hname = GenerateString(8);
+      topic.pid   = rand() % 1000;
       topic.tid   = GenerateString(5);
       topic.tname = GenerateString(10);
 
@@ -92,9 +93,9 @@ namespace eCAL
     Sample GeneratePayloadSample(const char* payload_addr, size_t payload_size)
     {
       Sample sample;
-      sample.cmd_type = static_cast<eCmdType>(rand() % 17);  //  command type
-      sample.topic    = GenerateTopic();
-      sample.content  = GenerateContent(payload_addr, payload_size);
+      sample.cmd_type   = static_cast<eCmdType>(rand() % 17);  //  command type
+      sample.topic_info = GenerateTopic();
+      sample.content    = GenerateContent(payload_addr, payload_size);
 
       return sample;
     }
@@ -103,10 +104,10 @@ namespace eCAL
     Sample GeneratePayloadSample(const std::vector<char>& payload_vec)
     {
       Sample sample;
-      sample.cmd_type = static_cast<eCmdType>(rand() % 17);  //  command type
-      sample.topic    = GenerateTopic();
-      sample.content  = GenerateContent(payload_vec);
-      sample.padding  = GenerateRandomVector(8);
+      sample.cmd_type   = static_cast<eCmdType>(rand() % 17);  //  command type
+      sample.topic_info = GenerateTopic();
+      sample.content    = GenerateContent(payload_vec);
+      sample.padding    = GenerateRandomVector(8);
 
       return sample;
     }

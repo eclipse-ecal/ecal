@@ -28,8 +28,6 @@
 #include "ecal_monitoring_impl.h"
 #include "ecal_global_accessors.h"
 
-#include <regex>
-
 #include "registration/ecal_registration_provider.h"
 #include "registration/ecal_registration_receiver.h"
 
@@ -43,7 +41,7 @@ namespace eCAL
   ////////////////////////////////////////
   CMonitoringImpl::CMonitoringImpl(const Monitoring::SAttributes& attr_) :
     m_init(false),
-    m_attributes(attr_) 
+    m_monitoring_filter(attr_)
   {
   }
 
@@ -55,7 +53,7 @@ namespace eCAL
     eCAL::Util::EnableLoopback(true);
 
     // utilize registration receiver to enrich monitor information
-    g_registration_receiver()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});    
+    g_registration_receiver()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
 
     // setup filtering on by default
     SetFilterState(true);
@@ -72,40 +70,26 @@ namespace eCAL
 
   void CMonitoringImpl::SetExclFilter(const std::string& filter_)
   {
-    m_attributes.filter_excl = filter_;
+    const std::lock_guard<std::mutex> lock(m_monitoring_filter_mtx);
+    m_monitoring_filter.SetExclFilter(filter_);
   }
 
   void CMonitoringImpl::SetInclFilter(const std::string& filter_)
   {
-    m_attributes.filter_incl = filter_;
+    const std::lock_guard<std::mutex> lock(m_monitoring_filter_mtx);
+    m_monitoring_filter.SetInclFilter(filter_);
   }
 
   void CMonitoringImpl::SetFilterState(bool state_)
   {
+    const std::lock_guard<std::mutex> lock(m_monitoring_filter_mtx);
     if (state_)
     {
-      // create excluding filter list
-      {
-        const std::lock_guard<std::mutex> lock(m_topic_filter_excl_mtx);
-        Tokenize(m_attributes.filter_excl, m_topic_filter_excl, ",;", true);
-      }
-
-      // create including filter list
-      {
-        const std::lock_guard<std::mutex> lock(m_topic_filter_incl_mtx);
-        Tokenize(m_attributes.filter_incl, m_topic_filter_incl, ",;", true);
-      }
+      m_monitoring_filter.ActivateFilter();
     }
     else
     {
-      {
-        const std::lock_guard<std::mutex> lock(m_topic_filter_excl_mtx);
-        m_topic_filter_excl.clear();
-      }
-      {
-        const std::lock_guard<std::mutex> lock(m_topic_filter_incl_mtx);
-        m_topic_filter_incl.clear();
-      }
+      m_monitoring_filter.DeactivateFilter();
     }
   }
 
@@ -203,37 +187,20 @@ namespace eCAL
     }
     const int32_t      connections_loc = sample_topic.connections_loc;
     const int32_t      connections_ext = sample_topic.connections_ext;
-    const int64_t      did             = sample_topic.did;
-    const int64_t      dclock          = sample_topic.dclock;
-    const int32_t      message_drops   = sample_topic.message_drops;
-    const int32_t      dfreq           = sample_topic.dfreq;
+    const int64_t      did = sample_topic.did;
+    const int64_t      dclock = sample_topic.dclock;
+    const int32_t      message_drops = sample_topic.message_drops;
+    const int32_t      dfreq = sample_topic.dfreq;
 
-    // check blacklist topic filter
+    bool process_topic{false};
     {
-      const std::lock_guard<std::mutex> lock(m_topic_filter_excl_mtx);
-      for (const auto& it : m_topic_filter_excl)
-      {
-        if (std::regex_match(topic_name, std::regex(it, std::regex::icase)))
-          return(false);
-      }
+      const std::lock_guard<std::mutex> lock(m_monitoring_filter_mtx);
+      process_topic = m_monitoring_filter.AcceptTopic(topic_name);
     }
-
-    // check whitelist topic filter
-    bool is_topic_in_filter(false);
+    if (!process_topic)
     {
-      const std::lock_guard<std::mutex> lock(m_topic_filter_incl_mtx);
-      is_topic_in_filter = m_topic_filter_incl.empty();
-      for (const auto& it : m_topic_filter_incl)
-      {
-        if (std::regex_match(topic_name, std::regex(it, std::regex::icase)))
-        {
-          is_topic_in_filter = true;
-          break;
-        }
-      }
+      return false;
     }
-
-    if (!is_topic_in_filter) return (false);
 
     /////////////////////////////////
     // register in topic map
@@ -748,34 +715,6 @@ namespace eCAL
       {
         monitoring_.subscriber.push_back(topic.second);
       }
-    }
-  }
-
-  void CMonitoringImpl::Tokenize(const std::string& str, StrICaseSetT& tokens, const std::string& delimiters, bool trimEmpty)
-  {
-    std::string::size_type pos     = 0;
-    std::string::size_type lastPos = 0;
-
-    for (;;)
-    {
-      pos = str.find_first_of(delimiters, lastPos);
-      if (pos == std::string::npos)
-      {
-        pos = str.length();
-        if (pos != lastPos || !trimEmpty)
-        {
-          tokens.emplace(std::string(str.data() + lastPos, pos - lastPos));
-        }
-        break;
-      }
-      else
-      {
-        if (pos != lastPos || !trimEmpty)
-        {
-          tokens.emplace(std::string(str.data() + lastPos, pos - lastPos));
-        }
-      }
-      lastPos = pos + 1;
     }
   }
 }

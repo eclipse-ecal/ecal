@@ -26,6 +26,7 @@
 #include <ecal/msg/protobuf/ecal_proto_hlp.h>
 #include <ecal/msg/protobuf/ecal_proto_message_filter.h>
 #include <ecal/msg/protobuf/ecal_proto_visitor.h>
+#include <iostream>
 
 #include <sstream>
 
@@ -270,10 +271,9 @@ namespace protobuf
                 // do not process default messages to avoid infinite recursions.
                 std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
                 msg.GetReflection()->ListFields(msg, &msg_fields);
-                if (msg_fields.size() > 0)
-                {
+                
+                if (prefix_.find(field->name()) == std::string::npos || !msg_fields.empty())
                   ProcProtoMsg(msg, name.str(), complete_message_name, true, fnum);
-                }
               }
             }
           }
@@ -284,10 +284,9 @@ namespace protobuf
             // do not process default messages to avoid infinite recursions.
             std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
             msg.GetReflection()->ListFields(msg, &msg_fields);
-            if (msg_fields.size() > 0)
-            {
+
+            if (prefix_.find(field->name()) == std::string::npos || !msg_fields.empty())
               ProcProtoMsg(msg, field->name(), complete_message_name, false, field->number());
-            }
           }
         }
         break;

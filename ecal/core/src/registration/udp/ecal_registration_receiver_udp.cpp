@@ -31,7 +31,7 @@ using namespace eCAL;
 eCAL::CRegistrationReceiverUDP::CRegistrationReceiverUDP(RegistrationApplySampleCallbackT apply_sample_callback, const Registration::UDP::SReceiverAttributes& attr_)
   : m_registration_receiver(std::make_unique<UDP::CSampleReceiver>(
     Registration::UDP::ConvertToIOUDPReceiverAttributes(attr_),
-    [](const std::string& sample_name_) {return true; },
+    [](const std::string& /*sample_name_*/) {return true; },
     [apply_sample_callback](const char* serialized_sample_data_, size_t serialized_sample_size_) {
       Registration::Sample sample;
       if (!DeserializeFromBuffer(serialized_sample_data_, serialized_sample_size_, sample)) return false;

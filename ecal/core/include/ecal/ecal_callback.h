@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -124,12 +124,21 @@ namespace eCAL
   };
 
   /**
-   * @brief Raw data receive callback function type.
+   * @brief Receive callback function type with topic name and data struct.
    *
    * @param topic_name_  The topic name of the received message.
    * @param data_        Data struct containing payload, timestamp and publication clock.
   **/
   using ReceiveCallbackT = std::function<void (const char *, const struct SReceiveCallbackData *)>;
+
+  /**
+   * @brief Receive callback function type with topic id and data struct. The topic id contains the topic name, the process
+   *          name, the host name and a uniques topic identifier.
+   *
+   * @param topic_id_    The topic id struct of the received message.
+   * @param data_        Data struct containing payload, timestamp and publication clock.
+  **/
+  using ReceiveIDCallbackT = std::function<void(const Registration::STopicId&, const SDataTypeInformation&, const SReceiveCallbackData&)>;
 
   /**
    * @brief Timer callback function type.

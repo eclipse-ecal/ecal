@@ -30,7 +30,7 @@ namespace eCAL
       struct SAttributes
       {
         std::string  domain;
-        unsigned int queue_size;
+        size_t       queue_size;
       };
     }
   }

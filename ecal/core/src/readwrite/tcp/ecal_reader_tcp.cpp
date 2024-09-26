@@ -105,12 +105,11 @@ namespace eCAL
       if (g_subgate() != nullptr)
       {
         // use this intermediate variables as optimization
-        const auto& ecal_header_topic   = m_ecal_header.topic;
-        const auto& ecal_header_content = m_ecal_header.content;
-        // apply sample
+        const auto& ecal_header_topic_info = m_ecal_header.topic_info;
+        const auto& ecal_header_content    = m_ecal_header.content;
+
         g_subgate()->ApplySample(
-          ecal_header_topic.tname,
-          ecal_header_topic.tid,
+          ecal_header_topic_info,
           data_payload,
           static_cast<size_t>(ecal_header_content.size),
           ecal_header_content.id,

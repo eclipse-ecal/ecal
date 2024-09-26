@@ -71,7 +71,6 @@ namespace eCAL
                  m_topic_info(topic_info_),
                  m_topic_size(0),
                  m_config(config_),
-                 m_connected(false),
                  m_receive_time(0),
                  m_clock(0),
                  m_frequency_calculator(3.0f),
@@ -180,7 +179,7 @@ namespace eCAL
     return(false);
   }
 
-  bool CDataReader::AddReceiveCallback(ReceiveCallbackT callback_)
+  bool CDataReader::AddReceiveCallback(ReceiveIDCallbackT callback_)
   {
     if (!m_created) return(false);
 
@@ -277,35 +276,98 @@ namespace eCAL
     m_id_set = id_set_;
   }
 
-  void CDataReader::ApplyPublication(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& layer_states_)
+  void CDataReader::ApplyPublication(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& pub_layer_states_)
   {
     // flag write enabled from publisher side (information not used yet)
 #if ECAL_CORE_TRANSPORT_UDP
-    m_layers.udp.write_enabled = layer_states_.udp.write_enabled;
+    m_layers.udp.write_enabled = pub_layer_states_.udp.write_enabled;
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-    m_layers.shm.write_enabled = layer_states_.shm.write_enabled;
+    m_layers.shm.write_enabled = pub_layer_states_.shm.write_enabled;
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-    m_layers.tcp.write_enabled = layer_states_.tcp.write_enabled;
+    m_layers.tcp.write_enabled = pub_layer_states_.tcp.write_enabled;
 #endif
 
-    FireConnectEvent(publication_info_.entity_id, data_type_info_);
-
-    // add key to publisher map
+    // add key to connection map, including connection state
+    bool is_new_connection     = false;
+    bool is_updated_connection = false;
     {
-      const std::lock_guard<std::mutex> lock(m_pub_map_mtx);
-      m_pub_map[publication_info_] = std::make_tuple(data_type_info_, layer_states_);
+      const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+      auto publication_info_iter = m_connection_map.find(publication_info_);
+
+      if (publication_info_iter == m_connection_map.end())
+      {
+        // add publisher to connection map, connection state false
+        m_connection_map[publication_info_] = SConnection{ data_type_info_, pub_layer_states_, false };
+      }
+      else
+      {
+        // existing connection, we got the second update now
+        auto& connection = publication_info_iter->second;
+
+        // if this connection was inactive before
+        // activate it now and flag a new connection finally
+        if (!connection.state)
+        {
+          is_new_connection = true;
+        }
+        // the connection was active, so we just update it
+        else
+        {
+          is_updated_connection = true;
+        }
+
+        // update the data type and layer states, even if the connection is not new
+        connection = SConnection{ data_type_info_, pub_layer_states_, true };
+      }
+
+      // update connection count
+      m_connection_count = GetConnectionCount();
     }
+
+    // handle these events outside the lock
+    if (is_new_connection)
+    {
+      // fire connect event
+      FireConnectEvent(publication_info_.entity_id, data_type_info_);
+    }
+    else if (is_updated_connection)
+    {
+      // fire update event
+      FireUpdateEvent(publication_info_.entity_id, data_type_info_);
+    }
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug3, m_topic_name + "::CDataReader::ApplyPublication");
+#endif
   }
 
   void CDataReader::RemovePublication(const SPublicationInfo& publication_info_)
   {
-    // remove key from publisher map
+    // remove key from connection map
+    bool last_connection_gone(false);
     {
-      const std::lock_guard<std::mutex> lock(m_pub_map_mtx);
-      m_pub_map.erase(publication_info_);
+      const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+
+      m_connection_map.erase(publication_info_);
+      last_connection_gone = m_connection_map.empty();
+
+      // update connection count
+      m_connection_count = GetConnectionCount();
     }
+
+    if (last_connection_gone)
+    {
+      // fire disconnect event
+      FireDisconnectEvent();
+    }
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug3, m_topic_name + "::CDataReader::RemovePublication");
+#endif
   }
 
   void CDataReader::ApplyLayerParameter(const SPublicationInfo& publication_info_, eTLayerType type_, const Registration::ConnectionPar& parameter_)
@@ -361,7 +423,7 @@ namespace eCAL
 #endif
   }
 
-  size_t CDataReader::ApplySample(const std::string& tid_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_)
+  size_t CDataReader::ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_)
   {
     // ensure thread safety
     const std::lock_guard<std::mutex> lock(m_receive_callback_mtx);
@@ -419,7 +481,7 @@ namespace eCAL
     //  - a dropped message
     //  - an out-of-order message
     //  - a multiple sent message
-    if (!CheckMessageClock(tid_, clock_))
+    if (!CheckMessageClock(topic_info_.tid, clock_))
     {
       // we will not process that message
       return(0);
@@ -463,8 +525,21 @@ namespace eCAL
         cb_data.id    = id_;
         cb_data.time  = time_;
         cb_data.clock = clock_;
+
+        Registration::STopicId topic_id;
+        topic_id.topic_name          = topic_info_.tname;
+        topic_id.topic_id.host_name  = topic_info_.hname;
+        topic_id.topic_id.entity_id  = topic_info_.tid;
+        topic_id.topic_id.process_id = topic_info_.pid;
+
+        SPublicationInfo pub_info;
+        pub_info.entity_id  = topic_info_.tid;
+        pub_info.host_name  = topic_info_.hname;
+        pub_info.process_id = topic_info_.pid;
+
         // execute it
-        (m_receive_callback)(m_topic_name.c_str(), &cb_data);
+        std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+        (m_receive_callback)(topic_id, m_connection_map[pub_info].data_type_info, cb_data);
         processed = true;
       }
     }
@@ -519,7 +594,9 @@ namespace eCAL
   void CDataReader::Register()
   {
 #if ECAL_CORE_REGISTRATION
-    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(GetRegistrationSample());
+    Registration::Sample sample;
+    GetRegistrationSample(sample);
+    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(sample);
 
 #ifndef NDEBUG
     // log it
@@ -531,7 +608,9 @@ namespace eCAL
   void CDataReader::Unregister()
   {
 #if ECAL_CORE_REGISTRATION
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(GetUnregistrationSample());
+    Registration::Sample sample;
+    GetUnregistrationSample(sample);
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(sample);
 
 #ifndef NDEBUG
     // log it
@@ -540,29 +619,24 @@ namespace eCAL
 #endif // ECAL_CORE_REGISTRATION
   }
 
-  void CDataReader::CheckConnections()
+  void CDataReader::GetRegistration(Registration::Sample& sample)
   {
-    const std::lock_guard<std::mutex> lock(m_pub_map_mtx);
-
-    if (m_pub_map.empty())
-    {
-      FireDisconnectEvent();
-    }
+    // return registration
+    return GetRegistrationSample(sample);
   }
 
-  Registration::Sample CDataReader::GetRegistration()
+  bool CDataReader::IsPublished() const
   {
-    // check connection timeouts
-    CheckConnections();
+    return m_connection_count > 0;
+  }
 
-    // return registration
-    return GetRegistrationSample();
+  size_t CDataReader::GetPublisherCount() const
+  {
+    return m_connection_count;
   }
     
-  Registration::Sample CDataReader::GetRegistrationSample()
+  void CDataReader::GetRegistrationSample(Registration::Sample& ecal_reg_sample)
   {
-    // create registration sample
-    Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_reg_subscriber;
 
     auto& ecal_reg_sample_identifier = ecal_reg_sample.identifier;
@@ -634,14 +708,10 @@ namespace eCAL
     // we do not know the number of connections ..
     ecal_reg_sample_topic.connections_loc = 0;
     ecal_reg_sample_topic.connections_ext = 0;
-
-    return ecal_reg_sample;
   }
 
-  Registration::Sample CDataReader::GetUnregistrationSample()
+  void CDataReader::GetUnregistrationSample(Registration::Sample& ecal_unreg_sample)
   {
-    // create unregistration sample
-    Registration::Sample ecal_unreg_sample;
     ecal_unreg_sample.cmd_type = bct_unreg_subscriber;
 
     auto& ecal_reg_sample_identifier = ecal_unreg_sample.identifier;
@@ -654,8 +724,6 @@ namespace eCAL
     ecal_reg_sample_topic.pname  = m_pname;
     ecal_reg_sample_topic.tname  = m_topic_name;
     ecal_reg_sample_topic.uname  = Process::GetUnitName();
-
-    return ecal_unreg_sample;
   }
   
   void CDataReader::StartTransportLayer()
@@ -732,62 +800,62 @@ namespace eCAL
 
   void CDataReader::FireConnectEvent(const std::string& tid_, const SDataTypeInformation& tinfo_)
   {
-    SSubEventCallbackData data;
-    data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-    data.clock = 0;
-
-    if (!m_connected)
+    const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
+    auto iter = m_event_callback_map.find(sub_event_connected);
+    if (iter != m_event_callback_map.end() && iter->second)
     {
-      m_connected = true;
-
-      // fire sub_event_connected
-      {
-        const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
-        auto iter = m_event_callback_map.find(sub_event_connected);
-        if (iter != m_event_callback_map.end() && iter->second)
-        {
-          data.type      = sub_event_connected;
-          data.tid       = tid_;
-          data.tdatatype = tinfo_;
-          (iter->second)(m_topic_name.c_str(), &data);
-        }
-      }
+      SSubEventCallbackData data;
+      data.type      = sub_event_connected;
+      data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+      data.clock     = 0;
+      data.tid       = tid_;
+      data.tdatatype = tinfo_;
+      (iter->second)(m_topic_name.c_str(), &data);
     }
+  }
 
-    // fire sub_event_update_connection
+  void CDataReader::FireUpdateEvent(const std::string& tid_, const SDataTypeInformation& tinfo_)
+  {
+    const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
+    auto iter = m_event_callback_map.find(sub_event_update_connection);
+    if (iter != m_event_callback_map.end() && iter->second)
     {
-      const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
-      auto iter = m_event_callback_map.find(sub_event_update_connection);
-        if (iter != m_event_callback_map.end() && iter->second)
-      {
-        data.type      = sub_event_update_connection;
-        data.tid       = tid_;
-        data.tdatatype = tinfo_;
-        (iter->second)(m_topic_name.c_str(), &data);
-      }
+      SSubEventCallbackData data;
+      data.type      = sub_event_update_connection;
+      data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+      data.clock     = 0;
+      data.tid       = tid_;
+      data.tdatatype = tinfo_;
+      (iter->second)(m_topic_name.c_str(), &data);
     }
   }
 
   void CDataReader::FireDisconnectEvent()
   {
-    if (m_connected)
+    const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
+    auto iter = m_event_callback_map.find(sub_event_disconnected);
+    if (iter != m_event_callback_map.end() && iter->second)
     {
-      m_connected = false;
+      SSubEventCallbackData data;
+      data.type  = sub_event_disconnected;
+      data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+      data.clock = 0;
+      (iter->second)(m_topic_name.c_str(), &data);
+    }
+  }
 
-      // fire sub_event_disconnected
+  size_t CDataReader::GetConnectionCount()
+  {
+    // no need to lock map here for now, map locked by caller
+    size_t count(0);
+    for (const auto& sub : m_connection_map)
+    {
+      if (sub.second.state)
       {
-        const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
-        auto iter = m_event_callback_map.find(sub_event_disconnected);
-        if (iter != m_event_callback_map.end() && iter->second)
-        {
-          SSubEventCallbackData data;
-          data.type  = sub_event_disconnected;
-          data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-          data.clock = 0;
-          (iter->second)(m_topic_name.c_str(), &data);
-        }
+        count++;
       }
     }
+    return count;
   }
 
   bool CDataReader::CheckMessageClock(const std::string& tid_, long long current_clock_)

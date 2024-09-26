@@ -57,8 +57,8 @@ namespace eCAL
     , m_timeout_provider_thread(nullptr)
     , m_registration_receiver_udp(nullptr)
     , m_registration_receiver_shm(nullptr)   
-    , m_attributes(attr_)
     , m_sample_applier(Registration::SampleApplier::BuildSampleApplierAttributes(attr_))
+    , m_attributes(attr_)
   {
     // Connect User registration callback and gates callback with the sample applier
     m_sample_applier.SetCustomApplySampleCallback("gates", [](const eCAL::Registration::Sample& sample_)

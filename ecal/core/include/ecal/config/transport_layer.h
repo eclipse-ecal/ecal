@@ -84,16 +84,7 @@ namespace eCAL
       {
         size_t number_executor_reader { 4 }; //!< Reader amount of threads that shall execute workload (Default: 4)
         size_t number_executor_writer { 4 }; //!< Writer amount of threads that shall execute workload (Default: 4)
-        size_t max_reconnections      { 5 }; //!< Reconnection attemps the session will try to reconnect in (Default: 5)
-      };
-    }
-
-    namespace SHM 
-    {
-      struct Configuration
-      {
-        Types::ConstrainedInteger<4096, 4096> memfile_min_size_bytes  { 4096 }; //!< Default memory file size for new publisher (Default: 4096)
-        Types::ConstrainedInteger<50, 1, 100> memfile_reserve_percent { 50 };   //!< Dynamic file size reserve before recreating memory file if topic size changes (Default: 50)
+        int    max_reconnections      { 5 }; //!< Reconnection attemps the session will try to reconnect in (Default: 5)
       };
     }
 
@@ -101,7 +92,6 @@ namespace eCAL
     {
       UDP::Configuration udp;
       TCP::Configuration tcp;
-      SHM::Configuration shm;
     };
   }
 }

@@ -193,6 +193,8 @@ if(ECAL_CORE_MONITORING)
 set(ecal_monitoring_src
     src/monitoring/ecal_monitoring_def.cpp
     src/monitoring/ecal_monitoring_def.h
+    src/monitoring/ecal_monitoring_filter.cpp
+    src/monitoring/ecal_monitoring_filter.h
     src/monitoring/ecal_monitoring_impl.cpp
     src/monitoring/ecal_monitoring_impl.h
 )
@@ -408,6 +410,7 @@ endif()
 set(ecal_util_src
     src/util/ecal_expmap.h
     src/util/ecal_thread.h
+    src/util/expanding_vector.h
     src/util/frequency_calculator.h
     src/util/getenvvar.h
 )
@@ -500,6 +503,7 @@ set(ecal_header_cmn
     include/ecal/config/subscriber.h
     include/ecal/ecal.h
     include/ecal/ecal_callback.h
+    include/ecal/ecal_config.h
     include/ecal/ecal_client.h
     include/ecal/ecal_core.h
     include/ecal/ecal_deprecate.h

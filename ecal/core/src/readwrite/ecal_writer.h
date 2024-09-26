@@ -51,7 +51,6 @@
 #include <mutex>
 #include <string>
 #include <map>
-#include <tuple>
 #include <vector>
 
 namespace eCAL
@@ -93,21 +92,22 @@ namespace eCAL
     void ApplySubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& sub_layer_states_, const std::string& reader_par_);
     void RemoveSubscription(const SSubscriptionInfo& subscription_info_);
 
-    Registration::Sample GetRegistration();
+    void GetRegistration(Registration::Sample& sample);
     void RefreshSendCounter();
 
     bool IsCreated() const { return(m_created); }
 
-    bool IsSubscribed() const 
-    {
-      std::lock_guard<std::mutex> const lock(m_sub_map_mtx);
-      return(!m_sub_map.empty());
-    }
+    bool IsSubscribed() const;
+    size_t GetSubscriberCount() const;
 
-    size_t GetSubscriberCount() const
+    Registration::STopicId GetId() const
     {
-      std::lock_guard<std::mutex> const lock(m_sub_map_mtx);
-      return(m_sub_map.size());
+      Registration::STopicId id;
+      id.topic_name          = m_topic_name;
+      id.topic_id.entity_id  = m_topic_id;
+      id.topic_id.host_name  = m_host_name;
+      id.topic_id.process_id = m_pid;
+      return id;
     }
 
     const std::string&          GetTopicName()           const { return(m_topic_name); }
@@ -119,10 +119,8 @@ namespace eCAL
     void Register();
     void Unregister();
 
-    void CheckConnections();
-
-    Registration::Sample GetRegistrationSample();
-    Registration::Sample GetUnregistrationSample();
+    void GetRegistrationSample(Registration::Sample& sample);
+    void GetUnregistrationSample(Registration::Sample& sample);
 
     bool StartUdpLayer();
     bool StartShmLayer();
@@ -131,11 +129,13 @@ namespace eCAL
     void StopAllLayer();
 
     void FireConnectEvent(const std::string& tid_, const SDataTypeInformation& tinfo_);
+    void FireUpdateEvent(const std::string& tid_, const SDataTypeInformation& tinfo_);
     void FireDisconnectEvent();
+
+    size_t GetConnectionCount();
 
     size_t PrepareWrite(long long id_, size_t len_);
 
-    bool IsInternalSubscribedOnly();
     TLayer::eTransportLayer DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
     
     int32_t GetFrequency();
@@ -153,11 +153,16 @@ namespace eCAL
 
     std::vector<char>                      m_payload_buffer;
 
-    std::atomic<bool>                      m_connected;
-
-    using SSubscriptionMapT = std::map<SSubscriptionInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
-    mutable std::mutex                     m_sub_map_mtx;
-    SSubscriptionMapT                      m_sub_map;
+    struct SConnection
+    {
+      SDataTypeInformation data_type_info;
+      SLayerStates         layer_states;
+      bool                 state = false;
+    };
+    using SSubscriptionMapT = std::map<SSubscriptionInfo, SConnection>;
+    mutable std::mutex                     m_connection_map_mtx;
+    SSubscriptionMapT                      m_connection_map;
+    std::atomic<size_t>                    m_connection_count{ 0 };
 
     using EventCallbackMapT = std::map<eCAL_Publisher_Event, PubEventCallbackT>;
     std::mutex                             m_event_callback_map_mtx;

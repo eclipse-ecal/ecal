@@ -29,6 +29,7 @@
 
 #include "serialization/ecal_struct_sample_registration.h"
 
+#include <atomic>
 #include <chrono>
 #include <map>
 #include <mutex>
@@ -49,10 +50,14 @@ namespace eCAL
     // get publisher information
     std::set<Registration::STopicId> GetPublisherIDs() const;
     bool GetPublisherInfo(const Registration::STopicId& id_, Registration::SQualityTopicInfo& topic_info_) const;
+    Registration::CallbackToken AddPublisherEventCallback(const Registration::TopicIDCallbackT& callback_);
+    void RemPublisherEventCallback(Registration::CallbackToken token_);
 
     // get subscriber information
     std::set<Registration::STopicId> GetSubscriberIDs() const;
     bool GetSubscriberInfo(const Registration::STopicId& id_, Registration::SQualityTopicInfo& topic_info_) const;
+    Registration::CallbackToken AddSubscriberEventCallback(const Registration::TopicIDCallbackT& callback_);
+    void RemSubscriberEventCallback(Registration::CallbackToken token_);
 
     // get service information
     std::set<Registration::SServiceId> GetServiceIDs() const;
@@ -71,18 +76,25 @@ namespace eCAL
     CDescGate& operator=(CDescGate&&) = delete;
 
   protected:
-    using QualityTopicIdMap = std::map<Registration::STopicId, Registration::SQualityTopicInfo>;
+    using QualityTopicIdMap  = std::map<Registration::STopicId, Registration::SQualityTopicInfo>;
     struct SQualityTopicIdMap
     {
       mutable std::mutex mtx;
       QualityTopicIdMap  map;
     };
 
+    using TopicIdCallbackMap = std::map<Registration::CallbackToken, Registration::TopicIDCallbackT>;
+    struct STopicIdCallbackMap
+    {
+      mutable std::mutex mtx;
+      TopicIdCallbackMap map;
+    };
+
     using QualityServiceIdMap = std::map<Registration::SServiceId, Registration::SQualityServiceInfo>;
     struct SQualityServiceIdMap
     {
       mutable std::mutex  mtx;
-      QualityServiceIdMap map;
+      QualityServiceIdMap id_map;
     };
 
     static std::set<Registration::STopicId>   GetTopicIDs(const SQualityTopicIdMap& topic_info_map_);
@@ -92,12 +104,14 @@ namespace eCAL
     static bool                               GetService   (const Registration::SServiceId& id_, const SQualityServiceIdMap& service_method_info_map_, Registration::SQualityServiceInfo& service_method_info_);
 
     static void ApplyTopicDescription(SQualityTopicIdMap& topic_info_map_,
+                                      const STopicIdCallbackMap& topic_callback_map_, 
                                       const Registration::SampleIdentifier& topic_id_,
                                       const std::string& topic_name_,
                                       const SDataTypeInformation& topic_info_,
                                       Registration::DescQualityFlags topic_quality_);
 
     static void RemTopicDescription(SQualityTopicIdMap& topic_info_map_,
+                                    const STopicIdCallbackMap& topic_callback_map_,
                                     const Registration::SampleIdentifier& topic_id_,
                                     const std::string& topic_name_);
 
@@ -114,12 +128,20 @@ namespace eCAL
                                       const Registration::SampleIdentifier& service_id_,
                                       const std::string& service_name_);
 
+    Registration::CallbackToken CreateToken();
+      
     // internal quality topic info publisher/subscriber maps
     SQualityTopicIdMap   m_publisher_info_map;
+    STopicIdCallbackMap  m_publisher_callback_map;
+
     SQualityTopicIdMap   m_subscriber_info_map;
+    STopicIdCallbackMap  m_subscriber_callback_map;
 
     // internal quality service info service/client maps
     SQualityServiceIdMap m_service_info_map;
     SQualityServiceIdMap m_client_info_map;
+
+    mutable std::mutex                       m_callback_token_mtx;
+    std::atomic<Registration::CallbackToken> m_callback_token{ 0 };
   };
 }

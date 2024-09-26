@@ -264,6 +264,13 @@ namespace eCAL
     ECAL_API std::string GetTopicName() const;
 
     /**
+     * @brief Gets a unique ID of this Publisher
+     *
+     * @return  The topic id.
+    **/
+    ECAL_API Registration::STopicId GetId() const;
+
+    /**
      * @brief Gets description of the connected topic.
      *
      * @return  The topic information.

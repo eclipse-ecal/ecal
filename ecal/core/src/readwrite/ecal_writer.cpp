@@ -101,7 +101,6 @@ namespace eCAL
     m_topic_name(topic_name_),
     m_topic_info(topic_info_),
     m_config(config_),
-    m_connected(false),
     m_frequency_calculator(3.0f),
     m_created(false)
   {
@@ -142,8 +141,8 @@ namespace eCAL
 
     // clear subscriber maps
     {
-      const std::lock_guard<std::mutex> lock(m_sub_map_mtx);
-      m_sub_map.clear();
+      const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+      m_connection_map.clear();
     }
 
     // clear event callback map
@@ -428,13 +427,11 @@ namespace eCAL
 
   void CDataWriter::ApplySubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& sub_layer_states_, const std::string& reader_par_)
   {
-    FireConnectEvent(subscription_info_.entity_id, data_type_info_);
-
     // collect layer states
     std::vector<eTLayerType> pub_layers;
     std::vector<eTLayerType> sub_layers;
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_config.layer.udp.enable)                pub_layers.push_back(tl_ecal_udp);
+    if (m_config.layer.udp.enable)          pub_layers.push_back(tl_ecal_udp);
     if (sub_layer_states_.udp.read_enabled) sub_layers.push_back(tl_ecal_udp);
 
     m_layers.udp.read_enabled = sub_layer_states_.udp.read_enabled; // just for debugging/logging
@@ -476,12 +473,6 @@ namespace eCAL
     //logLayerStates(m_layers);
 #endif
 
-    // add key to subscriber map
-    {
-      const std::lock_guard<std::mutex> lock(m_sub_map_mtx);
-      m_sub_map[subscription_info_] = std::make_tuple(data_type_info_, sub_layer_states_);
-    }
-
     // add a new subscription
 #if ECAL_CORE_TRANSPORT_UDP
     if (m_writer_udp) m_writer_udp->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id, reader_par_);
@@ -493,6 +484,56 @@ namespace eCAL
     if (m_writer_tcp) m_writer_tcp->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id, reader_par_);
 #endif
 
+    // add key to connection map, including connection state
+    bool is_new_connection     = false;
+    bool is_updated_connection = false;
+    {
+      const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+      auto subscription_info_iter = m_connection_map.find(subscription_info_);
+
+      if (subscription_info_iter == m_connection_map.end())
+      {
+        // add subscriber to connection map, connection state false
+        m_connection_map[subscription_info_] = SConnection{ data_type_info_, sub_layer_states_, false };
+      }
+      else
+      {
+        // existing connection, we got the second update now
+        auto& connection = subscription_info_iter->second;
+
+        // if this connection was inactive before
+        // activate it now and flag a new connection finally
+        if (!connection.state)
+        {
+          is_new_connection = true;
+        }
+        // the connection was active, so we just update it
+        else
+        {
+          is_updated_connection = true;
+        }
+
+        // update the data type, the layer states and set the state active
+        connection = SConnection{ data_type_info_, sub_layer_states_, true };
+      }
+
+      // update connection count
+      m_connection_count = GetConnectionCount();
+    }
+
+
+    // handle these events outside the lock
+    if (is_new_connection)
+    {
+      // fire connect event
+      FireConnectEvent(subscription_info_.entity_id, data_type_info_);
+    }
+    else if (is_updated_connection)
+    {
+      // fire update event
+      FireUpdateEvent(subscription_info_.entity_id, data_type_info_);
+    }
+
 #ifndef NDEBUG
     // log it
     Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::ApplySubscription");
@@ -501,12 +542,6 @@ namespace eCAL
 
   void CDataWriter::RemoveSubscription(const SSubscriptionInfo& subscription_info_)
   {
-    // remove key from subscriber map
-    {
-      const std::lock_guard<std::mutex> lock(m_sub_map_mtx);
-      m_sub_map.erase(subscription_info_);
-    }
-
     // remove subscription
 #if ECAL_CORE_TRANSPORT_UDP
     if (m_writer_udp) m_writer_udp->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id);
@@ -517,6 +552,24 @@ namespace eCAL
 #if ECAL_CORE_TRANSPORT_TCP
     if (m_writer_tcp) m_writer_tcp->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id);
 #endif
+
+    // remove key from connection map
+    bool last_connection_gone(false);
+    {
+      const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+
+      m_connection_map.erase(subscription_info_);
+      last_connection_gone = m_connection_map.empty();
+
+      // update connection count
+      m_connection_count = GetConnectionCount();
+    }
+
+    if (last_connection_gone)
+    {
+      // fire disconnect event
+      FireDisconnectEvent();
+    }
 
 #ifndef NDEBUG
     // log it
@@ -536,7 +589,16 @@ namespace eCAL
       const std::lock_guard<std::mutex> lock(m_frequency_calculator_mtx);
       m_frequency_calculator.addTick(send_time);
     }
+  }
 
+  bool CDataWriter::IsSubscribed() const
+  {
+    return m_connection_count > 0;
+  }
+
+  size_t CDataWriter::GetSubscriberCount() const
+  {
+    return m_connection_count;
   }
 
   std::string CDataWriter::Dump(const std::string& indent_ /* = "" */)
@@ -566,7 +628,9 @@ namespace eCAL
   void CDataWriter::Register()
   {
 #if ECAL_CORE_REGISTRATION
-    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(GetRegistrationSample());
+    Registration::Sample registration_sample;
+    GetRegistrationSample(registration_sample);
+    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(registration_sample);
 
 #ifndef NDEBUG
     // log it
@@ -578,7 +642,9 @@ namespace eCAL
   void CDataWriter::Unregister()
   {
 #if ECAL_CORE_REGISTRATION
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(GetUnregistrationSample());
+    Registration::Sample unregistration_sample;
+    GetUnregistrationSample(unregistration_sample);
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(unregistration_sample);
 
 #ifndef NDEBUG
     // log it
@@ -587,28 +653,13 @@ namespace eCAL
 #endif // ECAL_CORE_REGISTRATION
   }
 
-  void CDataWriter::CheckConnections()
+  void CDataWriter::GetRegistration(Registration::Sample& sample)
   {
-    const std::lock_guard<std::mutex> lock(m_sub_map_mtx);
-
-    if (m_sub_map.empty())
-    {
-      FireDisconnectEvent();
-    }
+    GetRegistrationSample(sample);
   }
 
-  Registration::Sample CDataWriter::GetRegistration()
+  void CDataWriter::GetRegistrationSample(Registration::Sample& ecal_reg_sample)
   {
-    // check connection timeouts
-    CheckConnections();
-
-    return GetRegistrationSample();
-  }
-
-  Registration::Sample CDataWriter::GetRegistrationSample()
-  {
-    // create registration sample
-    Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_reg_publisher;
 
     auto& ecal_reg_sample_identifier = ecal_reg_sample.identifier;
@@ -687,26 +738,22 @@ namespace eCAL
     size_t loc_connections(0);
     size_t ext_connections(0);
     {
-      const std::lock_guard<std::mutex> lock(m_sub_map_mtx);
-      for (const auto& sub : m_sub_map)
+      const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+      for (const auto& sub : m_connection_map)
       {
         if (sub.first.host_name == m_host_name)
         {
           loc_connections++;
         }
       }
-      ext_connections = m_sub_map.size() - loc_connections;
+      ext_connections = m_connection_map.size() - loc_connections;
     }
     ecal_reg_sample_topic.connections_loc = static_cast<int32_t>(loc_connections);
     ecal_reg_sample_topic.connections_ext = static_cast<int32_t>(ext_connections);
-
-    return ecal_reg_sample;
   }
 
-  Registration::Sample CDataWriter::GetUnregistrationSample()
+  void CDataWriter::GetUnregistrationSample(Registration::Sample& ecal_unreg_sample)
   {
-    // create unregistration sample
-    Registration::Sample ecal_unreg_sample;
     ecal_unreg_sample.cmd_type = bct_unreg_publisher;
 
     auto& ecal_reg_sample_identifier = ecal_unreg_sample.identifier;
@@ -719,68 +766,66 @@ namespace eCAL
     ecal_reg_sample_topic.pname  = m_pname;
     ecal_reg_sample_topic.tname  = m_topic_name;
     ecal_reg_sample_topic.uname  = Process::GetUnitName();
-
-    return ecal_unreg_sample;
   }
 
   void CDataWriter::FireConnectEvent(const std::string& tid_, const SDataTypeInformation& tinfo_)
   {
-    SPubEventCallbackData data;
-    data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-    data.clock = 0;
-
-    if (!m_connected)
+    const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
+    auto iter = m_event_callback_map.find(pub_event_connected);
+    if (iter != m_event_callback_map.end() && iter->second)
     {
-      m_connected = true;
-
-      // fire pub_event_connected
-      {
-        const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
-        auto iter = m_event_callback_map.find(pub_event_connected);
-        if (iter != m_event_callback_map.end() && iter->second)
-        {
-          data.type      = pub_event_connected;
-          data.tid       = tid_;
-          data.tdatatype = tinfo_;
-          (iter->second)(m_topic_name.c_str(), &data);
-        }
-      }
+      SPubEventCallbackData data;
+      data.type      = pub_event_connected;
+      data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+      data.clock     = 0;
+      data.tid       = tid_;
+      data.tdatatype = tinfo_;
+      (iter->second)(m_topic_name.c_str(), &data);
     }
+  }
 
-    // fire pub_event_update_connection
+  void CDataWriter::FireUpdateEvent(const std::string& tid_, const SDataTypeInformation& tinfo_)
+  {
+    const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
+    auto iter = m_event_callback_map.find(pub_event_update_connection);
+    if (iter != m_event_callback_map.end() && iter->second)
     {
-      const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
-      auto iter = m_event_callback_map.find(pub_event_update_connection);
-      if (iter != m_event_callback_map.end() && iter->second)
-      {
-        data.type      = pub_event_update_connection;
-        data.tid       = tid_;
-        data.tdatatype = tinfo_;
-        (iter->second)(m_topic_name.c_str(), &data);
-      }
+      SPubEventCallbackData data;
+      data.type      = pub_event_update_connection;
+      data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+      data.clock     = 0;
+      data.tid       = tid_;
+      data.tdatatype = tinfo_;
+      (iter->second)(m_topic_name.c_str(), &data);
     }
   }
 
   void CDataWriter::FireDisconnectEvent()
   {
-    if (m_connected)
+    const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
+    auto iter = m_event_callback_map.find(pub_event_disconnected);
+    if (iter != m_event_callback_map.end() && iter->second)
     {
-      m_connected = false;
+      SPubEventCallbackData data;
+      data.type  = pub_event_disconnected;
+      data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+      data.clock = 0;
+      (iter->second)(m_topic_name.c_str(), &data);
+    }
+  }
 
-      // fire pub_event_disconnected
+  size_t CDataWriter::GetConnectionCount()
+  {
+    // no need to lock map here for now, map locked by caller
+    size_t count(0);
+    for (const auto& sub : m_connection_map)
+    {
+      if (sub.second.state)
       {
-        const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
-        auto iter = m_event_callback_map.find(pub_event_disconnected);
-        if (iter != m_event_callback_map.end() && iter->second)
-        {
-          SPubEventCallbackData data;
-          data.type  = pub_event_disconnected;
-          data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-          data.clock = 0;
-          (iter->second)(m_topic_name.c_str(), &data);
-        }
+        count++;
       }
     }
+    return count;
   }
 
   bool CDataWriter::StartUdpLayer()
@@ -905,22 +950,6 @@ namespace eCAL
 
     // return the hash for the write action
     return snd_hash;
-  }
-
-  bool CDataWriter::IsInternalSubscribedOnly()
-  {
-    const int32_t process_id = static_cast<int32_t>(Process::GetProcessID());
-    bool is_internal_only(true);
-    const std::lock_guard<std::mutex> lock(m_sub_map_mtx);
-    for (auto sub : m_sub_map)
-    {
-      if (sub.first.process_id != process_id)
-      {
-        is_internal_only = false;
-        break;
-      }
-    }
-    return is_internal_only;
   }
 
   TLayer::eTransportLayer CDataWriter::DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_)

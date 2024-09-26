@@ -148,7 +148,16 @@ namespace eCAL
 
   bool CSubscriber::AddReceiveCallback(ReceiveCallbackT callback_)
   {
-    if(m_datareader == nullptr) return(false);
+    auto id_callback = [callback_](const Registration::STopicId& topic_id_, const SDataTypeInformation&, const SReceiveCallbackData& data_)
+    {
+      callback_(topic_id_.topic_name.c_str(), &data_);
+    };
+    return AddReceiveCallback(id_callback);
+  }
+
+  bool CSubscriber::AddReceiveCallback(ReceiveIDCallbackT callback_)
+  {
+    if (m_datareader == nullptr) return(false);
     RemReceiveCallback();
     return(m_datareader->AddReceiveCallback(std::move(callback_)));
   }
@@ -188,6 +197,12 @@ namespace eCAL
   {
     if(m_datareader == nullptr) return("");
     return(m_datareader->GetTopicName());
+  }
+
+  Registration::STopicId CSubscriber::GetId() const
+  {
+    if (m_datareader == nullptr) return{};
+    return(m_datareader->GetId());
   }
   
   SDataTypeInformation CSubscriber::GetDataTypeInformation() const

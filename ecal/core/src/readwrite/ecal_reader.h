@@ -41,7 +41,6 @@
 #include <queue>
 #include <set>
 #include <string>
-#include <tuple>
 #include <unordered_map>
 
 namespace eCAL
@@ -71,7 +70,7 @@ namespace eCAL
 
     bool Read(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);
 
-    bool AddReceiveCallback(ReceiveCallbackT callback_);
+    bool AddReceiveCallback(ReceiveIDCallbackT callback_);
     bool RemReceiveCallback();
 
     bool AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_);
@@ -82,24 +81,25 @@ namespace eCAL
 
     void SetID(const std::set<long long>& id_set_);
 
-    void ApplyPublication(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& layer_states_);
+    void ApplyPublication(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& pub_layer_states_);
     void RemovePublication(const SPublicationInfo& publication_info_);
 
     void ApplyLayerParameter(const SPublicationInfo& publication_info_, eTLayerType type_, const Registration::ConnectionPar& parameter_);
 
-    Registration::Sample GetRegistration();
+    void GetRegistration(Registration::Sample& sample);
     bool IsCreated() const { return(m_created); }
 
-    bool IsPublished() const
-    {
-      std::lock_guard<std::mutex> const lock(m_pub_map_mtx);
-      return(!m_pub_map.empty());
-    }
+    bool IsPublished() const;
+    size_t GetPublisherCount() const;
 
-    size_t GetPublisherCount() const
+    Registration::STopicId GetId() const
     {
-      const std::lock_guard<std::mutex> lock(m_pub_map_mtx);
-      return(m_pub_map.size());
+      Registration::STopicId id;
+      id.topic_name          = m_topic_name;
+      id.topic_id.entity_id  = m_topic_id;
+      id.topic_id.host_name  = m_host_name;
+      id.topic_id.process_id = m_pid;
+      return id;
     }
 
     std::string          GetTopicName()           const { return(m_topic_name); }
@@ -107,7 +107,7 @@ namespace eCAL
     SDataTypeInformation GetDataTypeInformation() const { return(m_topic_info); }
 
     void InitializeLayers();
-    size_t ApplySample(const std::string& tid_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
+    size_t ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
 
     std::string Dump(const std::string& indent_ = "");
 
@@ -115,16 +115,17 @@ namespace eCAL
     void Register();
     void Unregister();
 
-    void CheckConnections();
-
-    Registration::Sample GetRegistrationSample();
-    Registration::Sample GetUnregistrationSample();
+    void GetRegistrationSample(Registration::Sample& sample);
+    void GetUnregistrationSample(Registration::Sample& sample);
 
     void StartTransportLayer();
     void StopTransportLayer();
 
     void FireConnectEvent(const std::string& tid_, const SDataTypeInformation& tinfo_);
+    void FireUpdateEvent(const std::string& tid_, const SDataTypeInformation& tinfo_);
     void FireDisconnectEvent();
+    
+    size_t GetConnectionCount();
 
     bool CheckMessageClock(const std::string& tid_, long long current_clock_);
 
@@ -141,10 +142,16 @@ namespace eCAL
     std::atomic<size_t>                       m_topic_size;
     Subscriber::Configuration                 m_config;
 
-    std::atomic<bool>                         m_connected;
-    using PublicationMapT = std::map<SPublicationInfo, std::tuple<SDataTypeInformation, SLayerStates>>;
-    mutable std::mutex                        m_pub_map_mtx;
-    PublicationMapT                           m_pub_map;
+    struct SConnection
+    {
+      SDataTypeInformation data_type_info;
+      SLayerStates         layer_states;
+      bool                 state = false;
+    };
+    using ConnectionMapT = std::map<SPublicationInfo, SConnection>;
+    mutable std::mutex                        m_connection_map_mtx;
+    ConnectionMapT                            m_connection_map;
+    std::atomic<size_t>                       m_connection_count{ 0 };
 
     mutable std::mutex                        m_read_buf_mtx;
     std::condition_variable                   m_read_buf_cv;
@@ -153,7 +160,7 @@ namespace eCAL
     long long                                 m_read_time = 0;
 
     std::mutex                                m_receive_callback_mtx;
-    ReceiveCallbackT                          m_receive_callback;
+    ReceiveIDCallbackT                        m_receive_callback;
     std::atomic<int>                          m_receive_time;
 
     std::deque<size_t>                        m_sample_hash_queue;

@@ -125,8 +125,8 @@ namespace eCAL
 
     // prepare memfile attributes
     SSyncMemoryFileAttr memory_file_attr = {};
-    memory_file_attr.min_size        = GetConfiguration().transport_layer.shm.memfile_min_size_bytes;
-    memory_file_attr.reserve         = GetConfiguration().transport_layer.shm.memfile_reserve_percent;
+    memory_file_attr.min_size        = m_config.memfile_min_size_bytes;
+    memory_file_attr.reserve         = m_config.memfile_reserve_percent;
     memory_file_attr.timeout_open_ms = PUB_MEMFILE_OPEN_TO;
     memory_file_attr.timeout_ack_ms  = m_config.acknowledge_timeout_ms;
 
