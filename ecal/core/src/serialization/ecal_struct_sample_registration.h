@@ -28,6 +28,7 @@
 #include "ecal_struct_service.h"
 
 #include <ecal/ecal_types.h>
+#include "util/expanding_vector.h"
 
 #include <cstdint>
 #include <list>
@@ -74,6 +75,11 @@ namespace eCAL
       bool operator==(const OSInfo& other) const {
         return osname == other.osname;
       }
+
+      void clear()
+      {
+        osname.clear();
+      }
     };
 
     // eCAL host
@@ -84,6 +90,12 @@ namespace eCAL
 
       bool operator==(const Host& other) const {
         return hname == other.hname && os == other.os;
+      }
+
+      void clear()
+      {
+        hname.clear();
+        os.clear();
       }
     };
 
@@ -97,6 +109,13 @@ namespace eCAL
       bool operator==(const ProcessState& other) const {
         return severity == other.severity && severity_level == other.severity_level && info == other.info;
       }
+
+      void clear()
+      {
+        severity = proc_sev_unknown;
+        severity_level = proc_sev_level_unknown;
+        info.clear();
+      }
     };
 
     // Transport layer parameters for ecal udp multicast
@@ -106,6 +125,9 @@ namespace eCAL
         // Assuming there are no member variables to compare
         return true;
       }
+
+      void clear()
+      {}
     };
 
     // Transport layer parameters for ecal tcp
@@ -117,15 +139,24 @@ namespace eCAL
         return port == other.port;
       }
 
+      void clear()
+      {
+        port = 0;
+      }
     };
 
     // Transport layer parameters for ecal shm
     struct LayerParShm
     {
-      std::list<std::string>              memory_file_list;             // list of memory file names
+      Util::CExpandingVector<std::string> memory_file_list;             // list of memory file names
 
       bool operator==(const LayerParShm& other) const {
         return memory_file_list == other.memory_file_list;
+      }
+
+      void clear()
+      {
+        memory_file_list.clear();
       }
     };
 
@@ -140,6 +171,13 @@ namespace eCAL
         return layer_par_udpmc == other.layer_par_udpmc &&
           layer_par_tcp == other.layer_par_tcp &&
           layer_par_shm == other.layer_par_shm;
+      }
+
+      void clear()
+      {
+        layer_par_udpmc.clear();
+        layer_par_tcp.clear();
+        layer_par_shm.clear();
       }
     };
 
@@ -158,6 +196,15 @@ namespace eCAL
           enabled == other.enabled &&
           active == other.active &&
           par_layer == other.par_layer;
+      }
+
+      void clear()
+      {
+        type = tl_none;
+        version = 0;
+        enabled = false;
+        active = false;
+        par_layer.clear();
       }
     };
 
@@ -189,6 +236,21 @@ namespace eCAL
           component_init_info == other.component_init_info &&
           ecal_runtime_version == other.ecal_runtime_version;
       }
+
+      void clear()
+      {
+        rclock = 0;
+        hgname.clear();
+        pname.clear();
+        uname.clear();
+        pparam.clear();
+        state.clear();
+        tsync_state = tsync_none;
+        tsync_mod_name.clear();
+        component_init_state = 0;
+        component_init_info.clear();
+        ecal_runtime_version.clear();
+      }
     };
 
     // eCAL topic information
@@ -202,7 +264,7 @@ namespace eCAL
       std::string                         direction;                    // direction (publisher, subscriber)
       SDataTypeInformation                tdatatype;                    // topic datatype information (encoding & type & description)
 
-      std::vector<TLayer>                 tlayer;                       // active topic transport layers and its specific parameter
+      Util::CExpandingVector<TLayer>      tlayer;                       // active topic transport layers and its specific parameter
       int32_t                             tsize = 0;                    // topic size
 
       int32_t                             connections_loc = 0;          // number of local connected entities
@@ -233,6 +295,30 @@ namespace eCAL
           dfreq == other.dfreq &&
           attr == other.attr;
       }
+
+      void clear()
+      {
+        rclock = 0;
+        hgname.clear();
+        pname.clear();
+        uname.clear();
+        tname.clear();
+        direction.clear();
+        tdatatype.clear();
+
+        tlayer.clear();
+        tsize = 0;
+
+        connections_loc = 0;
+        connections_ext = 0;
+        message_drops = 0;
+
+        did = 0;
+        dclock = 0;
+        dfreq = 0;
+
+        attr.clear();
+      }
     };
 
     struct SampleIdentifier
@@ -249,6 +335,13 @@ namespace eCAL
       bool operator<(const SampleIdentifier& other) const
       {
         return entity_id < other.entity_id;
+      }
+
+      void clear()
+      {
+        entity_id.clear();
+        process_id = 0;
+        host_name.clear();
       }
     };
 
@@ -272,12 +365,20 @@ namespace eCAL
           client == other.client &&
           topic == other.topic;
       }
+
+      void clear()
+      {
+        identifier.clear();
+        cmd_type = bct_none;
+        host.clear();
+        process.clear();
+        service.clear();
+        client.clear();
+        topic.clear();
+      }
     };
 
     // Registration sample list
-    struct SampleList
-    {
-      std::list<Sample>                   samples;                      // list of Samples used currently by SHM registration
-    };
+    using SampleList = Util::CExpandingVector<Sample>;
   }
 }

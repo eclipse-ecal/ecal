@@ -77,7 +77,7 @@ namespace eCAL
       SampleList sample_list_in;
       for (const auto& sample_in : samples)
       {
-        sample_list_in.samples.push_back(sample_in);
+        sample_list_in.push_back(sample_in);
       }
 
       std::string sample_buffer;
@@ -86,8 +86,8 @@ namespace eCAL
       SampleList sample_list_out;
       EXPECT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), sample_list_out));
 
-      EXPECT_TRUE(sample_list_in.samples.size() == sample_list_out.samples.size());
-      EXPECT_TRUE(std::equal(sample_list_in.samples.begin(), sample_list_in.samples.end(), sample_list_out.samples.begin(), CompareRegistrationSamples));
+      EXPECT_TRUE(sample_list_in.size() == sample_list_out.size());
+      EXPECT_TRUE(std::equal(sample_list_in.begin(), sample_list_in.end(), sample_list_out.begin(), CompareRegistrationSamples));
     }
 
     TEST_F(core_cpp_registration_serialization, RegistrationList2Vector)
@@ -95,7 +95,7 @@ namespace eCAL
       SampleList sample_list_in;
       for (const auto& sample_in : samples)
       {
-        sample_list_in.samples.push_back(sample_in);
+        sample_list_in.push_back(sample_in);
       }
 
       std::vector<char> sample_buffer;
@@ -104,8 +104,8 @@ namespace eCAL
       SampleList sample_list_out;
       EXPECT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), sample_list_out));
 
-      EXPECT_TRUE(sample_list_in.samples.size() == sample_list_out.samples.size());
-      EXPECT_TRUE(std::equal(sample_list_in.samples.begin(), sample_list_in.samples.end(), sample_list_out.samples.begin(), CompareRegistrationSamples));
+      EXPECT_TRUE(sample_list_in.size() == sample_list_out.size());
+      EXPECT_TRUE(std::equal(sample_list_in.begin(), sample_list_in.end(), sample_list_out.begin(), CompareRegistrationSamples));
     }
   }
 }

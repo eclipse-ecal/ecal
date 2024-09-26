@@ -30,6 +30,7 @@
 #include <atomic>
 #include <chrono>
 #include <functional>
+#include <iterator>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -136,7 +137,7 @@ namespace eCAL
   void CRegistrationProvider::AddSingleSample(const Registration::Sample& sample_)
   {
     const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
-    m_applied_sample_list.samples.push_back(sample_);
+    m_applied_sample_list.push_back(sample_);
   }
 
   void CRegistrationProvider::RegisterSendThread()
@@ -144,38 +145,39 @@ namespace eCAL
     // collect all registrations and send them out cyclic
     {
       // create sample list
-      Registration::SampleList sample_list;
+      m_send_thread_sample_list.clear();
 
       // and add process registration sample
-      sample_list.samples.push_back(Registration::GetProcessRegisterSample());
+      m_send_thread_sample_list.push_back(Registration::GetProcessRegisterSample());
 
 #if ECAL_CORE_SUBSCRIBER
       // add subscriber registrations
-      if (g_subgate() != nullptr) g_subgate()->GetRegistrations(sample_list);
+      if (g_subgate() != nullptr) g_subgate()->GetRegistrations(m_send_thread_sample_list);
 #endif
 
 #if ECAL_CORE_PUBLISHER
       // add publisher registrations
-      if (g_pubgate() != nullptr) g_pubgate()->GetRegistrations(sample_list);
+      if (g_pubgate() != nullptr) g_pubgate()->GetRegistrations(m_send_thread_sample_list);
 #endif
 
 #if ECAL_CORE_SERVICE
       // add server registrations
-      if (g_servicegate() != nullptr) g_servicegate()->GetRegistrations(sample_list);
+      if (g_servicegate() != nullptr) g_servicegate()->GetRegistrations(m_send_thread_sample_list);
 
       // add client registrations
-      if (g_clientgate() != nullptr) g_clientgate()->GetRegistrations(sample_list);
+      if (g_clientgate() != nullptr) g_clientgate()->GetRegistrations(m_send_thread_sample_list);
 #endif
 
       // append applied samples list to sample list
-      if (!m_applied_sample_list.samples.empty())
+      if (!m_applied_sample_list.empty())
       {
         const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
-        sample_list.samples.splice(sample_list.samples.end(), m_applied_sample_list.samples);
+        std::copy(m_applied_sample_list.begin(), m_applied_sample_list.end(), std::back_inserter(m_send_thread_sample_list));
+        m_applied_sample_list.clear();
       }
 
       // send collected registration sample list
-      m_reg_sender->SendSampleList(sample_list);
+      m_reg_sender->SendSampleList(m_send_thread_sample_list);
     }
   }
 }

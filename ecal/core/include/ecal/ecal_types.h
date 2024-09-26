@@ -54,6 +54,13 @@ namespace eCAL
     {
         return std::tie(name, encoding, descriptor) < std::tie(rhs.name, rhs.encoding, rhs.descriptor);
     }
+
+    void clear()
+    {
+      name.clear();
+      encoding.clear();
+      descriptor.clear();
+    }
     //!< @endcond
   };
 

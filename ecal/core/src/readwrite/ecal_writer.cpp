@@ -628,7 +628,9 @@ namespace eCAL
   void CDataWriter::Register()
   {
 #if ECAL_CORE_REGISTRATION
-    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(GetRegistrationSample());
+    Registration::Sample registration_sample;
+    GetRegistrationSample(registration_sample);
+    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(registration_sample);
 
 #ifndef NDEBUG
     // log it
@@ -640,7 +642,9 @@ namespace eCAL
   void CDataWriter::Unregister()
   {
 #if ECAL_CORE_REGISTRATION
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(GetUnregistrationSample());
+    Registration::Sample unregistration_sample;
+    GetUnregistrationSample(unregistration_sample);
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(unregistration_sample);
 
 #ifndef NDEBUG
     // log it
@@ -649,15 +653,13 @@ namespace eCAL
 #endif // ECAL_CORE_REGISTRATION
   }
 
-  Registration::Sample CDataWriter::GetRegistration()
+  void CDataWriter::GetRegistration(Registration::Sample& sample)
   {
-    return GetRegistrationSample();
+    GetRegistrationSample(sample);
   }
 
-  Registration::Sample CDataWriter::GetRegistrationSample()
+  void CDataWriter::GetRegistrationSample(Registration::Sample& ecal_reg_sample)
   {
-    // create registration sample
-    Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_reg_publisher;
 
     auto& ecal_reg_sample_identifier = ecal_reg_sample.identifier;
@@ -748,14 +750,10 @@ namespace eCAL
     }
     ecal_reg_sample_topic.connections_loc = static_cast<int32_t>(loc_connections);
     ecal_reg_sample_topic.connections_ext = static_cast<int32_t>(ext_connections);
-
-    return ecal_reg_sample;
   }
 
-  Registration::Sample CDataWriter::GetUnregistrationSample()
+  void CDataWriter::GetUnregistrationSample(Registration::Sample& ecal_unreg_sample)
   {
-    // create unregistration sample
-    Registration::Sample ecal_unreg_sample;
     ecal_unreg_sample.cmd_type = bct_unreg_publisher;
 
     auto& ecal_reg_sample_identifier = ecal_unreg_sample.identifier;
@@ -768,8 +766,6 @@ namespace eCAL
     ecal_reg_sample_topic.pname  = m_pname;
     ecal_reg_sample_topic.tname  = m_topic_name;
     ecal_reg_sample_topic.uname  = Process::GetUnitName();
-
-    return ecal_unreg_sample;
   }
 
   void CDataWriter::FireConnectEvent(const std::string& tid_, const SDataTypeInformation& tinfo_)
