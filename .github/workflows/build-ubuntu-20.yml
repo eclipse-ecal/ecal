@@ -101,7 +101,7 @@ jobs:
 
     - name: Build Python 3.11 Wheel
       run: |
-        source ".venv_build/bin/activate"
+        source "../.venv_build/bin/activate"
         cmake --build . --target create_python_wheel --config Release
       shell: bash
       working-directory: ${{ runner.workspace }}/_build
