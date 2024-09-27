@@ -19,9 +19,12 @@
 
 #pragma once
 
-#include <vector>
-#include <ecal/ecal_tlayer.h>
 #include <string>
+#include <stddef.h>
+#include <vector>
+
+#include <ecal/ecal_tlayer.h>
+
 #include "ecal/types/ecal_custom_data_types.h"
 
 namespace eCAL

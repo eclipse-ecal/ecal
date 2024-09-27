@@ -20,6 +20,7 @@
 #pragma once
 
 #include <string>
+#include <stddef.h>
 #include "ecal/types/ecal_custom_data_types.h"
 
 namespace eCAL
