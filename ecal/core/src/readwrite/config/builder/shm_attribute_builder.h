@@ -34,6 +34,6 @@ namespace eCAL
 
   namespace eCALWriter
   {
-    SHM::SAttributes BuildSHMAttributes(const std::string& topic_id_, const eCALWriter::SAttributes& attr_);
+    SHM::SAttributes BuildSHMAttributes(const eCALWriter::SAttributes& attr_);
   }
 }

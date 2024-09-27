@@ -34,7 +34,6 @@ namespace eCAL
         bool        broadcast;
         bool        loopback;
         int         receive_buffer;
-        std::string multicast_address;
       };
     }
   }

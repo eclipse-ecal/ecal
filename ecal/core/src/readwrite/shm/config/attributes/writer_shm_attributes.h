@@ -36,7 +36,6 @@ namespace eCAL
 
         std::string host_name;
         std::string topic_name;
-        std::string topic_id;
       };
     }
   }

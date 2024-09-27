@@ -42,7 +42,6 @@ namespace eCAL
     {
       TCP::SAttributes attributes;
 
-      attributes.host_name  = attr_.host_name;
       attributes.topic_name = attr_.topic_name;
       attributes.topic_id   = topic_id_;
       attributes.thread_pool_size = attr_.tcp.thread_pool_size;

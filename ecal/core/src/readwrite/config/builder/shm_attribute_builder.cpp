@@ -38,18 +38,15 @@ namespace eCAL
 
   namespace eCALWriter
   {
-    SHM::SAttributes BuildSHMAttributes(const std::string& topic_id_, const eCALWriter::SAttributes& attr_)
+    SHM::SAttributes BuildSHMAttributes(const eCALWriter::SAttributes& attr_)
     {
       SHM::SAttributes attributes;
 
-      attributes.enable                  = attr_.shm.enable;
       attributes.acknowledge_timeout_ms  = attr_.shm.acknowledge_timeout_ms;
       attributes.memfile_buffer_count    = attr_.shm.memfile_buffer_count;
       attributes.memfile_reserve_percent = attr_.shm.memfile_reserve_percent;
       attributes.memfile_min_size_bytes  = attr_.shm.memfile_min_size_bytes;
-      attributes.zero_copy_mode          = attr_.shm.zero_copy_mode;
 
-      attributes.topic_id   = topic_id_;
       attributes.topic_name = attr_.topic_name;
       attributes.host_name  = attr_.host_name;
       

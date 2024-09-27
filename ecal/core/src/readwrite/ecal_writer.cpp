@@ -865,7 +865,7 @@ namespace eCAL
     Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::ActivateShmLayer::ACTIVATED");
 
     // create writer
-    m_writer_shm = std::make_unique<CDataWriterSHM>(eCAL::eCALWriter::BuildSHMAttributes(m_topic_id, m_attributes));
+    m_writer_shm = std::make_unique<CDataWriterSHM>(eCAL::eCALWriter::BuildSHMAttributes(m_attributes));
 
     // register activated layer
     Register();
