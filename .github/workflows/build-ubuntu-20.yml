@@ -39,7 +39,8 @@ jobs:
         python3.11 -m venv ".venv_build"
         source ".venv_build/bin/activate"
         python3.11 -m pip install --upgrade pip
-        python3.11 -m pip  install wheel setuptools
+        python3.11 -m pip install --upgrade setuptools        
+        python3.11 -m pip install wheel
         python3.11 -m pip install -r "$GITHUB_WORKSPACE/doc/requirements.txt"
 
     - name: CMake
@@ -96,21 +97,11 @@ jobs:
     - name: Build Release
       run: cmake --build . --config Release -- -k 0
       working-directory: ${{ runner.workspace }}/_build
+      shell: bash
 
-    # Create Python Wheels
-    # The strang-looking double-cmake is an ugly workaround to force CMake to
-    # re-find Python, after we have changed the venv from the outside. The
-    # alternative would be to clean everything, which would cause an unnecessary
-    # rebuild of eCAL for each python Version.
     - name: Build Python 3.11 Wheel
       run: |
-        mkdir ".venv_311"
-        python3.11 -m venv ".venv_311"
-        source ".venv_311/bin/activate"
-        python3.11 -m pip install --upgrade pip
-        python3.11 -m pip install wheel setuptools
-        cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=FIRST
-        cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=ONLY
+        source ".venv_build/bin/activate"
         cmake --build . --target create_python_wheel --config Release
       shell: bash
       working-directory: ${{ runner.workspace }}/_build
