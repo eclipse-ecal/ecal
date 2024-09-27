@@ -35,6 +35,7 @@
 
 #include "builder/registration_attribute_builder.h"
 #include "builder/monitoring_attribute_builder.h"
+#include "builder/logging_attribute_builder.h"
 
 namespace eCAL
 {
@@ -52,7 +53,7 @@ namespace eCAL
     bool new_initialization(false);
 
 #if ECAL_CORE_REGISTRATION
-    const Registration::SAttributes registration_attr = BuildRegistrationAttributes(GetConfiguration().registration, GetConfiguration().transport_layer.udp, eCAL::Process::GetProcessID());
+    const Registration::SAttributes registration_attr = BuildRegistrationAttributes(GetRegistrationConfiguration(), GetTransportLayerConfiguration().udp, eCAL::Process::GetProcessID());
     /////////////////////
     // REGISTRATION PROVIDER
     /////////////////////
@@ -178,7 +179,7 @@ namespace eCAL
     {
       if (monitoring_instance == nullptr)
       {
-        monitoring_instance = std::make_unique<CMonitoring>(eCAL::Monitoring::BuildMonitoringAttributes(GetConfiguration().monitoring));
+        monitoring_instance = std::make_unique<CMonitoring>(eCAL::Monitoring::BuildMonitoringAttributes(GetMonitoringConfiguration()));
         new_initialization = true;
       }
     }
@@ -191,7 +192,7 @@ namespace eCAL
     {
       if (log_instance == nullptr)
       {
-        log_instance = std::make_unique<CLog>();
+        log_instance = std::make_unique<CLog>(eCAL::Logging::BuildLoggingAttributes(GetLoggingConfiguration(), GetRegistrationConfiguration(), GetTransportLayerConfiguration()));
         new_initialization = true;
       }
     }
@@ -348,6 +349,9 @@ namespace eCAL
 #endif
     log_instance                    = nullptr;
     initialized = false;
+
+    // reset configuration to default values
+    g_ecal_configuration = Configuration();
 
     return(0);
   }

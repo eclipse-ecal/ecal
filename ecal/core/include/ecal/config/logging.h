@@ -32,7 +32,7 @@
 namespace
 {
   // After switchting to c++17, this can be replaced by an inline constexpr
-  static const eCAL_Logging_Filter log_level_default = log_level_info | log_level_warning | log_level_error | log_level_fatal;
+  static const eCAL_Logging_Filter log_filter_default = log_level_info | log_level_warning | log_level_error | log_level_fatal;
 }
 
 namespace eCAL
@@ -68,7 +68,7 @@ namespace eCAL
         {
           bool                enable         { true };               //!< Enable UDP logging (Default: false)
           unsigned int        port           { 14001 };              //!< UDP port number (Default: 14001)
-          eCAL_Logging_Filter filter_log_udp { log_level_default };  //!< Log messages logged via udp network (Default: info, warning, error, fatal)
+          eCAL_Logging_Filter filter_log_udp { log_filter_default }; //!< Log messages logged via udp network (Default: info, warning, error, fatal)
         };
       }
 
