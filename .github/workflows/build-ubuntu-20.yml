@@ -29,12 +29,15 @@ jobs:
 
     - uses: actions/setup-python@v5
       with:
-        python-version: '3.11' 
+        python-version: '3.11'    
 
     - name: Install Python requirements
       shell: bash
       run: |
         python3.11 --version
+        python3.11 -m pip install --upgrade pip
+        python3.11 -m pip install --upgrade setuptools        
+        python3.11 -m pip install wheel
         mkdir "$GITHUB_WORKSPACE/.venv_build"
         python3.11 -m venv "$GITHUB_WORKSPACE/.venv_build"
         source "$GITHUB_WORKSPACE/.venv_build/bin/activate"
