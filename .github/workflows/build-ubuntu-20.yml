@@ -35,9 +35,9 @@ jobs:
       shell: bash
       run: |
         python3.11 --version
-        mkdir ".venv_build"
-        python3.11 -m venv ".venv_build"
-        source ".venv_build/bin/activate"
+        mkdir "$GITHUB_WORKSPACE/.venv_build"
+        python3.11 -m venv "$GITHUB_WORKSPACE/.venv_build"
+        source "$GITHUB_WORKSPACE/.venv_build/bin/activate"
         python3.11 -m pip install --upgrade pip
         python3.11 -m pip install --upgrade setuptools        
         python3.11 -m pip install wheel
@@ -45,7 +45,7 @@ jobs:
 
     - name: CMake
       run: |
-        source ".venv_build/bin/activate"
+        source "$GITHUB_WORKSPACE/.venv_build/bin/activate"
         
         export CC=/usr/bin/gcc-9
         export CXX=/usr/bin/g++-9
@@ -59,7 +59,7 @@ jobs:
         -DHAS_CURL=ON \
         -DHAS_CAPNPROTO=OFF \
         -DHAS_FTXUI=ON \
-        -DBUILD_DOCS=ON \
+        -DBUILD_DOCS=OFF \
         -DBUILD_APPS=ON \
         -DBUILD_SAMPLES=ON \
         -DBUILD_TIME=ON \
@@ -101,8 +101,9 @@ jobs:
 
     - name: Build Python 3.11 Wheel
       run: |
-        source "./.venv_build/bin/activate"
-        cmake --build $GITHUB_WORKSPACE --target create_python_wheel --config Release
+        source "$GITHUB_WORKSPACE/.venv_build/bin/activate"
+        cmake --build . --target create_python_wheel --config Release
+      working-directory: ${{ runner.workspace }}/_build  
       shell: bash
 
     - name: Run Tests
