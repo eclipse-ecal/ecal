@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <ecal/config/publisher.h>
+#include "config/attributes/data_writer_tcp_attributes.h"
 
 #include "readwrite/ecal_writer_base.h"
 
@@ -40,7 +40,7 @@ namespace eCAL
   class CDataWriterTCP : public CDataWriterBase
   {
   public:
-    CDataWriterTCP(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const Publisher::Layer::TCP::Configuration& tcp_config_);
+    CDataWriterTCP(const eCAL::eCALWriter::TCP::SAttributes& attr_);
 
     SWriterInfo GetInfo() override;
 
@@ -49,7 +49,7 @@ namespace eCAL
     Registration::ConnectionPar GetConnectionParameter() override;
 
   private:
-    Publisher::Layer::TCP::Configuration         m_config;
+    eCAL::eCALWriter::TCP::SAttributes           m_attributes;
 
     std::vector<char>                            m_header_buffer;
 

@@ -25,6 +25,7 @@
 
 #include "ecal_globals.h"
 #include "readwrite/ecal_reader.h"
+#include "config/builder/reader_attribute_builder.h"
 
 #include <iostream>
 #include <set>
@@ -81,7 +82,7 @@ namespace eCAL
     if (topic_name_.empty()) return(false);
 
     // create datareader
-    m_datareader = std::make_shared<CDataReader>(topic_name_, data_type_info_, config_);
+    m_datareader = std::make_shared<CDataReader>(data_type_info_, BuildReaderAttributes(topic_name_, config_, GetPublisherConfiguration(), GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
 
     // register datareader
     g_subgate()->Register(topic_name_, m_datareader);

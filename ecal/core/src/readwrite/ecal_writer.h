@@ -27,10 +27,10 @@
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_types.h>
-#include <ecal/config/publisher.h>
 
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "util/frequency_calculator.h"
+#include "config/attributes/writer_attributes.h"
 
 #if ECAL_CORE_TRANSPORT_UDP
 #include "udp/ecal_writer_udp.h"
@@ -74,7 +74,7 @@ namespace eCAL
 
     using SSubscriptionInfo = Registration::SampleIdentifier;
 
-    CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Publisher::Configuration& config_);
+    CDataWriter(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& config_);
     ~CDataWriter();
 
     bool Stop();
@@ -103,14 +103,14 @@ namespace eCAL
     Registration::STopicId GetId() const
     {
       Registration::STopicId id;
-      id.topic_name          = m_topic_name;
+      id.topic_name          = m_attributes.topic_name;
       id.topic_id.entity_id  = m_topic_id;
-      id.topic_id.host_name  = m_host_name;
-      id.topic_id.process_id = m_pid;
+      id.topic_id.host_name  = m_attributes.host_name;
+      id.topic_id.process_id = m_attributes.process_id;
       return id;
     }
 
-    const std::string&          GetTopicName()           const { return(m_topic_name); }
+    const std::string&          GetTopicName()           const { return(m_attributes.topic_name); }
     const SDataTypeInformation& GetDataTypeInformation() const { return m_topic_info; }
 
     std::string Dump(const std::string& indent_ = "");
@@ -140,16 +140,11 @@ namespace eCAL
     
     int32_t GetFrequency();
 
-    std::string                            m_host_name;
-    std::string                            m_host_group_name;
-    int                                    m_pid;
-    std::string                            m_pname;
-    std::string                            m_topic_name;
     std::string                            m_topic_id;
     SDataTypeInformation                   m_topic_info;
     std::map<std::string, std::string>     m_attr;
     size_t                                 m_topic_size = 0;
-    Publisher::Configuration               m_config;
+    eCAL::eCALWriter::SAttributes          m_attributes;
 
     std::vector<char>                      m_payload_buffer;
 

@@ -36,6 +36,10 @@
 #include "ecal_global_accessors.h"
 #include "ecal_transport_layer.h"
 
+#include "config/builder/shm_attribute_builder.h"
+#include "config/builder/tcp_attribute_builder.h"
+#include "config/builder/udp_attribute_builder.h"
+
 #include <algorithm>
 #include <chrono>
 #include <functional>
@@ -93,20 +97,15 @@ namespace
 
 namespace eCAL
 {
-  CDataWriter::CDataWriter(const std::string& topic_name_, const SDataTypeInformation& topic_info_, const Publisher::Configuration& config_) :
-    m_host_name(Process::GetHostName()),
-    m_host_group_name(Process::GetHostGroupName()),
-    m_pid(Process::GetProcessID()),
-    m_pname(Process::GetProcessName()),
-    m_topic_name(topic_name_),
+  CDataWriter::CDataWriter(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& attr_) :
     m_topic_info(topic_info_),
-    m_config(config_),
+    m_attributes(attr_),
     m_frequency_calculator(3.0f),
     m_created(false)
   {
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug1, m_topic_name + "::CDataWriter::Constructor");
+    Logging::Log(log_level_debug1, m_attributes.topic_name + "::CDataWriter::Constructor");
 #endif
 
     // build topic id
@@ -122,7 +121,7 @@ namespace eCAL
   {
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug1, m_topic_name + "::CDataWriter::Destructor");
+    Logging::Log(log_level_debug1, m_attributes.topic_name + "::CDataWriter::Destructor");
 #endif
 
     Stop();
@@ -133,7 +132,7 @@ namespace eCAL
     if (!m_created) return false;
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug1, m_topic_name + "::CDataWriter::Stop");
+    Logging::Log(log_level_debug1, m_attributes.topic_name + "::CDataWriter::Stop");
 #endif
 
     // stop all transport layer
@@ -168,7 +167,7 @@ namespace eCAL
     // are we allowed to perform zero copy writing?
     bool allow_zero_copy(false);
 #if ECAL_CORE_TRANSPORT_SHM
-    allow_zero_copy = m_config.layer.shm.zero_copy_mode; // zero copy mode activated by user
+    allow_zero_copy = m_attributes.shm.zero_copy_mode; // zero copy mode activated by user
 #endif
 #if ECAL_CORE_TRANSPORT_UDP
     // udp is active -> no zero copy
@@ -200,7 +199,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::SHM");
+      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::Send::SHM");
 #endif
 
       // send it
@@ -213,8 +212,8 @@ namespace eCAL
         wattr.clock                  = m_clock;
         wattr.hash                   = snd_hash;
         wattr.time                   = time_;
-        wattr.zero_copy              = m_config.layer.shm.zero_copy_mode;
-        wattr.acknowledge_timeout_ms = m_config.layer.shm.acknowledge_timeout_ms;
+        wattr.zero_copy              = m_attributes.shm.zero_copy_mode;
+        wattr.acknowledge_timeout_ms = m_attributes.shm.acknowledge_timeout_ms;
 
         // prepare send
         if (m_writer_shm->PrepareWrite(wattr))
@@ -247,11 +246,11 @@ namespace eCAL
       // log it
       if (shm_sent)
       {
-        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::SHM - SUCCESS");
+        Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::Send::SHM - SUCCESS");
       }
       else
       {
-        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send::SHM - FAILED");
+        Logging::Log(log_level_error, m_attributes.topic_name + "::CDataWriter::Send::SHM - FAILED");
       }
 #endif
     }
@@ -265,7 +264,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::udp");
+      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::Send::udp");
 #endif
 
       // send it
@@ -278,7 +277,7 @@ namespace eCAL
         wattr.clock     = m_clock;
         wattr.hash      = snd_hash;
         wattr.time      = time_;
-        wattr.loopback  = eCAL::GetConfiguration().registration.loopback;
+        wattr.loopback  = m_attributes.loopback;
 
         // prepare send
         if (m_writer_udp->PrepareWrite(wattr))
@@ -298,11 +297,11 @@ namespace eCAL
       // log it
       if (udp_sent)
       {
-        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::udp - SUCCESS");
+        Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::Send::udp - SUCCESS");
       }
       else
       {
-        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send::udp - FAILED");
+        Logging::Log(log_level_error, m_attributes.topic_name + "::CDataWriter::Send::udp - FAILED");
       }
 #endif
     }
@@ -316,7 +315,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::TCP");
+      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::Send::TCP");
 #endif
 
       // send it
@@ -340,11 +339,11 @@ namespace eCAL
       // log it
       if (tcp_sent)
       {
-        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::TCP - SUCCESS");
+        Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::Send::TCP - SUCCESS");
       }
       else
       {
-        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send::TCP - FAILED");
+        Logging::Log(log_level_error, m_attributes.topic_name + "::CDataWriter::Send::TCP - FAILED");
       }
 #endif
     }
@@ -361,7 +360,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::SetDescription");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::SetDescription");
 #endif
 
     return(true);
@@ -373,7 +372,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::SetAttribute");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::SetAttribute");
 #endif
 
     return(true);
@@ -385,7 +384,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ClearAttribute");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::ClearAttribute");
 #endif
 
     return(true);
@@ -399,7 +398,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::AddEventCallback");
+      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::AddEventCallback");
 #endif
       const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
       m_event_callback_map[type_] = std::move(callback_);
@@ -416,7 +415,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::RemEventCallback");
+      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::RemEventCallback");
 #endif
       const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
       m_event_callback_map[type_] = nullptr;
@@ -431,19 +430,19 @@ namespace eCAL
     std::vector<eTLayerType> pub_layers;
     std::vector<eTLayerType> sub_layers;
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_config.layer.udp.enable)          pub_layers.push_back(tl_ecal_udp);
+    if (m_attributes.udp.enable)            pub_layers.push_back(tl_ecal_udp);
     if (sub_layer_states_.udp.read_enabled) sub_layers.push_back(tl_ecal_udp);
 
     m_layers.udp.read_enabled = sub_layer_states_.udp.read_enabled; // just for debugging/logging
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-    if (m_config.layer.shm.enable)          pub_layers.push_back(tl_ecal_shm);
+    if (m_attributes.shm.enable)            pub_layers.push_back(tl_ecal_shm);
     if (sub_layer_states_.shm.read_enabled) sub_layers.push_back(tl_ecal_shm);
 
     m_layers.shm.read_enabled = sub_layer_states_.shm.read_enabled; // just for debugging/logging
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-    if (m_config.layer.tcp.enable)          pub_layers.push_back(tl_ecal_tcp);
+    if (m_attributes.tcp.enable)            pub_layers.push_back(tl_ecal_tcp);
     if (sub_layer_states_.tcp.read_enabled) sub_layers.push_back(tl_ecal_tcp);
 
     m_layers.tcp.read_enabled = sub_layer_states_.tcp.read_enabled; // just for debugging/logging
@@ -452,7 +451,7 @@ namespace eCAL
     // determine if we need to start a transport layer
     // if a new layer gets activated, we reregister for SHM and TCP to force the exchange of connection parameter
     // without this forced registration we would need one additional registration loop for these two layers to establish the connection
-    const TLayer::eTransportLayer layer2activate = DetermineTransportLayer2Start(pub_layers, sub_layers, m_host_name == subscription_info_.host_name);
+    const TLayer::eTransportLayer layer2activate = DetermineTransportLayer2Start(pub_layers, sub_layers, m_attributes.host_name == subscription_info_.host_name);
     switch (layer2activate)
     {
     case tl_ecal_udp:
@@ -536,7 +535,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::ApplySubscription");
+    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::ApplySubscription");
 #endif
   }
 
@@ -573,7 +572,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::RemoveSubscription");
+    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::RemoveSubscription");
 #endif
   }
 
@@ -609,9 +608,9 @@ namespace eCAL
     out << indent_ << "--------------------------" << '\n';
     out << indent_ << " class CDataWriter        " << '\n';
     out << indent_ << "--------------------------" << '\n';
-    out << indent_ << "m_host_name:              " << m_host_name << '\n';
-    out << indent_ << "m_host_group_name:        " << m_host_group_name << '\n';
-    out << indent_ << "m_topic_name:             " << m_topic_name << '\n';
+    out << indent_ << "m_host_name:              " << m_attributes.host_name << '\n';
+    out << indent_ << "m_host_group_name:        " << m_attributes.host_group_name << '\n';
+    out << indent_ << "m_topic_name:             " << m_attributes.topic_name << '\n';
     out << indent_ << "m_topic_id:               " << m_topic_id << '\n';
     out << indent_ << "m_topic_info.encoding:    " << m_topic_info.encoding << '\n';
     out << indent_ << "m_topic_info.name:        " << m_topic_info.name << '\n';
@@ -634,7 +633,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Register");
+    Logging::Log(log_level_debug4, m_attributes.topic_name + "::CDataWriter::Register");
 #endif
 #endif // ECAL_CORE_REGISTRATION
   }
@@ -648,7 +647,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Unregister");
+    Logging::Log(log_level_debug4, m_attributes.topic_name + "::CDataWriter::Unregister");
 #endif
 #endif // ECAL_CORE_REGISTRATION
   }
@@ -663,23 +662,23 @@ namespace eCAL
     ecal_reg_sample.cmd_type = bct_reg_publisher;
 
     auto& ecal_reg_sample_identifier = ecal_reg_sample.identifier;
-    ecal_reg_sample_identifier.process_id = m_pid;
+    ecal_reg_sample_identifier.process_id = m_attributes.process_id;
     ecal_reg_sample_identifier.entity_id  = m_topic_id;
-    ecal_reg_sample_identifier.host_name  = m_host_name;
+    ecal_reg_sample_identifier.host_name  = m_attributes.host_name;
 
     auto& ecal_reg_sample_topic = ecal_reg_sample.topic;
-    ecal_reg_sample_topic.hgname = m_host_group_name;
-    ecal_reg_sample_topic.tname  = m_topic_name;
+    ecal_reg_sample_topic.hgname = m_attributes.host_group_name;
+    ecal_reg_sample_topic.tname  = m_attributes.topic_name;
 
     // topic_information
     {
       auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.tdatatype;
-      if (m_config.share_topic_type)
+      if (m_attributes.share_topic_type)
       {
         ecal_reg_sample_tdatatype.encoding   = m_topic_info.encoding;
         ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       }
-      if (m_config.share_topic_description)
+      if (m_attributes.share_topic_description)
       {
         ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
       }
@@ -729,8 +728,8 @@ namespace eCAL
     }
 #endif
 
-    ecal_reg_sample_topic.pname  = m_pname;
-    ecal_reg_sample_topic.uname  = Process::GetUnitName();
+    ecal_reg_sample_topic.pname  = m_attributes.process_name;
+    ecal_reg_sample_topic.uname  = m_attributes.unit_name;
     ecal_reg_sample_topic.did    = m_id;
     ecal_reg_sample_topic.dclock = m_clock;
     ecal_reg_sample_topic.dfreq  = GetFrequency();
@@ -741,7 +740,7 @@ namespace eCAL
       const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
       for (const auto& sub : m_connection_map)
       {
-        if (sub.first.host_name == m_host_name)
+        if (sub.first.host_name == m_attributes.host_name)
         {
           loc_connections++;
         }
@@ -757,15 +756,15 @@ namespace eCAL
     ecal_unreg_sample.cmd_type = bct_unreg_publisher;
 
     auto& ecal_reg_sample_identifier = ecal_unreg_sample.identifier;
-    ecal_reg_sample_identifier.process_id = m_pid;
+    ecal_reg_sample_identifier.process_id = m_attributes.process_id;
     ecal_reg_sample_identifier.entity_id  = m_topic_id;
-    ecal_reg_sample_identifier.host_name  = m_host_name;
+    ecal_reg_sample_identifier.host_name  = m_attributes.host_name;
 
     auto& ecal_reg_sample_topic  = ecal_unreg_sample.topic;
-    ecal_reg_sample_topic.hgname = m_host_group_name;
-    ecal_reg_sample_topic.pname  = m_pname;
-    ecal_reg_sample_topic.tname  = m_topic_name;
-    ecal_reg_sample_topic.uname  = Process::GetUnitName();
+    ecal_reg_sample_topic.hgname = m_attributes.host_group_name;
+    ecal_reg_sample_topic.pname  = m_attributes.process_name;
+    ecal_reg_sample_topic.tname  = m_attributes.topic_name;
+    ecal_reg_sample_topic.uname  = m_attributes.unit_name;
   }
 
   void CDataWriter::FireConnectEvent(const std::string& tid_, const SDataTypeInformation& tinfo_)
@@ -780,7 +779,7 @@ namespace eCAL
       data.clock     = 0;
       data.tid       = tid_;
       data.tdatatype = tinfo_;
-      (iter->second)(m_topic_name.c_str(), &data);
+      (iter->second)(m_attributes.topic_name.c_str(), &data);
     }
   }
 
@@ -796,7 +795,7 @@ namespace eCAL
       data.clock     = 0;
       data.tid       = tid_;
       data.tdatatype = tinfo_;
-      (iter->second)(m_topic_name.c_str(), &data);
+      (iter->second)(m_attributes.topic_name.c_str(), &data);
     }
   }
 
@@ -810,7 +809,7 @@ namespace eCAL
       data.type  = pub_event_disconnected;
       data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
       data.clock = 0;
-      (iter->second)(m_topic_name.c_str(), &data);
+      (iter->second)(m_attributes.topic_name.c_str(), &data);
     }
   }
 
@@ -837,16 +836,16 @@ namespace eCAL
     m_layers.udp.write_enabled = true;
 
     // log state
-    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ActivateUdpLayer::ACTIVATED");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::ActivateUdpLayer::ACTIVATED");
 
     // create writer
-    m_writer_udp = std::make_unique<CDataWriterUdpMC>(m_host_name, m_topic_name, m_topic_id, m_config.layer.udp);
+    m_writer_udp = std::make_unique<CDataWriterUdpMC>(eCAL::eCALWriter::BuildUDPAttributes(m_topic_id, m_attributes));
 
     // register activated layer
     Register();
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ActivateUdpLayer::WRITER_CREATED");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::ActivateUdpLayer::WRITER_CREATED");
 #endif
     return true;
 #else  // ECAL_CORE_TRANSPORT_UDP
@@ -863,16 +862,16 @@ namespace eCAL
     m_layers.shm.write_enabled = true;
 
     // log state
-    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ActivateShmLayer::ACTIVATED");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::ActivateShmLayer::ACTIVATED");
 
     // create writer
-    m_writer_shm = std::make_unique<CDataWriterSHM>(m_host_name, m_topic_name, m_topic_id, m_config.layer.shm);
+    m_writer_shm = std::make_unique<CDataWriterSHM>(eCAL::eCALWriter::BuildSHMAttributes(m_attributes));
 
     // register activated layer
     Register();
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ActivateShmLayer::WRITER_CREATED");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::ActivateShmLayer::WRITER_CREATED");
 #endif
     return true;
 #else  // ECAL_CORE_TRANSPORT_SHM
@@ -889,16 +888,16 @@ namespace eCAL
     m_layers.tcp.write_enabled = true;
 
     // log state
-    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ActivateTcpLayer::ACTIVATED");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::ActivateTcpLayer::ACTIVATED");
 
     // create writer
-    m_writer_tcp = std::make_unique<CDataWriterTCP>(m_host_name, m_topic_name, m_topic_id, m_config.layer.tcp);
+    m_writer_tcp = std::make_unique<CDataWriterTCP>(eCAL::eCALWriter::BuildTCPAttributes(m_topic_id, m_attributes));
 
     // register activated layer
     Register();
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ActivateTcpLayer::WRITER_CREATED");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::ActivateTcpLayer::WRITER_CREATED");
 #endif
     return true;
 #else  // ECAL_CORE_TRANSPORT_TCP
@@ -955,7 +954,7 @@ namespace eCAL
   TLayer::eTransportLayer CDataWriter::DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_)
   {
     // determine the priority list to use
-    const Publisher::Configuration::LayerPriorityVector& layer_priority_vector = same_host_ ? m_config.layer_priority_local : m_config.layer_priority_remote;
+    const Publisher::Configuration::LayerPriorityVector& layer_priority_vector = same_host_ ? m_attributes.layer_priority_local : m_attributes.layer_priority_remote;
 
     // find the highest priority transport layer that is available in both publisher and subscriber options
     // TODO: we need to fusion the two layer enum types (eTransportLayer) in ecal_tlayer.h and ecal_struct_sample_common.hf

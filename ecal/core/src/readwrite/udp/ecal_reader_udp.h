@@ -25,6 +25,7 @@
 
 #include "io/udp/ecal_udp_sample_receiver.h"
 #include "readwrite/ecal_reader_layer.h"
+#include "config/attributes/reader_udp_attributes.h"
 
 #include <cstddef>
 #include <map>
@@ -36,13 +37,13 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  class CUDPReaderLayer : public CReaderLayer<CUDPReaderLayer>
+  class CUDPReaderLayer : public CReaderLayer<CUDPReaderLayer, eCAL::eCALReader::UDP::SAttributes>
   {
   public:
     CUDPReaderLayer();
     ~CUDPReaderLayer() override;
 
-    void Initialize() override;
+    void Initialize(const eCAL::eCALReader::UDP::SAttributes& attr_) override;
 
     void AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/) override;
     void RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/) override;
@@ -54,8 +55,9 @@ namespace eCAL
     bool ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_);
 
     bool                                   m_started;
-    bool                                   m_local_mode;
     std::shared_ptr<UDP::CSampleReceiver>  m_payload_receiver;
     std::map<std::string, int>             m_topic_name_mcast_map;
+
+    eCAL::eCALReader::UDP::SAttributes     m_attributes;
   };
 }

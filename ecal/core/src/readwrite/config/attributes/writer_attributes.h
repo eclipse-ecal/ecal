@@ -19,13 +19,14 @@
 
 #pragma once
 
-#include <chrono>
+#include <vector>
+#include <ecal/ecal_tlayer.h>
 #include <string>
-#include <ecal/types/ecal_custom_data_types.h>
+#include "ecal/types/ecal_custom_data_types.h"
 
 namespace eCAL
 {
-  namespace Registration
+  namespace eCALWriter
   {
     struct SUDPModeAttributes
     {
@@ -35,32 +36,53 @@ namespace eCAL
 
     struct SUDPAttributes
     {
+      bool           enable;
       Types::UDPMode mode;
       int            port;
-      int            sendbuffer;
-      int            receivebuffer;
+      int            send_buffer;
       SUDPModeAttributes   network;
       SUDPModeAttributes   local;
     };
 
-    struct SSHMAttributes
-    {    
-      std::string domain;
-      size_t      queue_size;
+    struct STCPAttributes
+    {
+      bool   enable;
+      size_t thread_pool_size;
     };
+
+    struct SSHMAttributes
+    {
+      bool         enable;
+      bool         zero_copy_mode;
+      unsigned int acknowledge_timeout_ms;
+      unsigned int memfile_buffer_count;
+      unsigned int memfile_min_size_bytes;
+      unsigned int memfile_reserve_percent;
+    };
+
 
     struct SAttributes
     {
-      std::chrono::milliseconds timeout;
-      bool                      network_enabled;
-      bool                      loopback;
-      bool                      shm_enabled;
-      bool                      udp_enabled;
-      unsigned int              refresh;
-      std::string               host_group_name;
-      int                       process_id;
+      using LayerPriorityVector = std::vector<TLayer::eTransportLayer>;
+      LayerPriorityVector  layer_priority_local;
+      LayerPriorityVector  layer_priority_remote;
+      
+      bool                 share_topic_type;
+      bool                 share_topic_description;
+
+      bool                 network_enabled;
+      bool                 loopback;
+
+      std::string          host_name;
+      std::string          host_group_name;
+      int                  process_id;
+      std::string          process_name;
+
+      std::string          unit_name;
+      std::string          topic_name;
 
       SUDPAttributes     udp;
+      STCPAttributes     tcp;
       SSHMAttributes     shm;
     };
   }
