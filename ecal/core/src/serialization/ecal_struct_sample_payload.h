@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,11 +37,12 @@ namespace eCAL
   namespace Payload
   {
     // Topic information
-    struct Topic
+    struct TopicInfo
     {
       std::string                         hname;                        // host name
       std::string                         tid;                          // topic id
       std::string                         tname;                        // topic name
+      int32_t                             pid = 0;                      // process id
     };
 
     // Topic content payload
@@ -75,7 +76,7 @@ namespace eCAL
     struct Sample
     {
       eCmdType                            cmd_type = bct_none;          // payload command type
-      Topic                               topic;                        // topic information
+      TopicInfo                           topic_info;                   // topic information
       Content                             content;                      // topic content
       std::vector<char>                   padding;                      // padding to artificially increase the size of the message. This is a workaround for TCP topics, to get the actual user-payload 8-byte-aligned. REMOVE ME IN ECAL6
     };

@@ -21,24 +21,24 @@
 
 namespace eCAL
 {
-    namespace TransportLayer
+  namespace TransportLayer
+  {
+    namespace UDP
     {
-      namespace UDP
+      Configuration& Configuration::operator=(const Configuration& other)
       {
-        Configuration& Configuration::operator=(const Configuration& other)
-        {
-          config_version      = other.config_version;
-          join_all_interfaces = other.join_all_interfaces;
-          mask                = other.mask;
-          mode                = other.mode;
-          network             = other.network;
-          npcap_enabled       = other.npcap_enabled;
-          port                = other.port;
-          receive_buffer      = other.receive_buffer;
-          send_buffer         = other.send_buffer;
-          
-          return *this;
-        }
-      } 
-    }
+        config_version      = other.config_version;
+        join_all_interfaces = other.join_all_interfaces;
+        mask                = other.mask;
+        mode                = other.mode;
+        network             = other.network;
+        npcap_enabled       = other.npcap_enabled;
+        port                = other.port;
+        receive_buffer      = other.receive_buffer;
+        send_buffer         = other.send_buffer;
+
+        return *this;
+      }
+    } 
+  }
 }

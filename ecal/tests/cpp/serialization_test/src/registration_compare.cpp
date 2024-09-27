@@ -49,27 +49,6 @@ namespace eCAL
              (process1.ecal_runtime_version == process2.ecal_runtime_version);
     }
 
-    // compare two Method vector objects
-    bool CompareMethods(const std::vector<Service::Method>& method1_vec, const std::vector<Service::Method>& method2_vec)
-    {
-      // ensure that both vectors have the same size
-      if (method1_vec.size() != method2_vec.size()) {
-        return false;
-      }
-
-      // compare vectors element-wise
-      return std::equal(method1_vec.begin(), method1_vec.end(), method2_vec.begin(),
-        [](const Service::Method& method1, const Service::Method& method2) {
-          // compare Method objects for equality
-          return (method1.mname      == method2.mname) &&
-                 (method1.req_type   == method2.req_type) &&
-                 (method1.req_desc   == method2.req_desc) &&
-                 (method1.resp_type  == method2.resp_type) &&
-                 (method1.resp_desc  == method2.resp_desc) &&
-                 (method1.call_count == method2.call_count);
-        });
-    }
-
     // compare two Service objects
     bool CompareService(const Service::Service& service1, const Service::Service& service2)
     {
@@ -77,7 +56,7 @@ namespace eCAL
              (service1.pname       == service2.pname) &&
              (service1.uname       == service2.uname) &&
              (service1.sname       == service2.sname) &&
-             CompareMethods(service1.methods, service2.methods) &&
+             (service1.methods     == service2.methods) &&
              (service1.version     == service2.version) &&
              (service1.tcp_port_v0 == service2.tcp_port_v0) &&
              (service1.tcp_port_v1 == service2.tcp_port_v1);
@@ -90,7 +69,7 @@ namespace eCAL
              (client1.pname   == client2.pname) &&
              (client1.uname   == client2.uname) &&
              (client1.sname   == client2.sname) &&
-             CompareMethods(client1.methods, client2.methods) &&
+             (client1.methods == client2.methods) &&
              (client1.version == client2.version);
     }
 
@@ -127,7 +106,7 @@ namespace eCAL
     }
 
     // compare two TLayer vector objects
-    bool CompareTLayer(const std::vector<TLayer>& layer1_vec, const std::vector<TLayer>& layer2_vec)
+    bool CompareTLayer(const Util::CExpandingVector<TLayer>& layer1_vec, const Util::CExpandingVector<TLayer>& layer2_vec)
     {
       // ensure that both vectors have the same size
       if (layer1_vec.size() != layer2_vec.size()) {

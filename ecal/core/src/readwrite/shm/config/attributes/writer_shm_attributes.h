@@ -29,8 +29,6 @@ namespace eCAL
     {
       struct SAttributes
       {
-        bool         enable;
-        bool         zero_copy_mode;
         unsigned int acknowledge_timeout_ms;
         unsigned int memfile_buffer_count;
         unsigned int memfile_min_size_bytes;

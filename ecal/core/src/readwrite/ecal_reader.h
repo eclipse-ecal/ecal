@@ -70,7 +70,7 @@ namespace eCAL
 
     bool Read(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);
 
-    bool AddReceiveCallback(ReceiveCallbackT callback_);
+    bool AddReceiveCallback(ReceiveIDCallbackT callback_);
     bool RemReceiveCallback();
 
     bool AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_);
@@ -86,18 +86,28 @@ namespace eCAL
 
     void ApplyLayerParameter(const SPublicationInfo& publication_info_, eTLayerType type_, const Registration::ConnectionPar& parameter_);
 
-    Registration::Sample GetRegistration();
+    void GetRegistration(Registration::Sample& sample);
     bool IsCreated() const { return(m_created); }
 
     bool IsPublished() const;
     size_t GetPublisherCount() const;
+
+    Registration::STopicId GetId() const
+    {
+      Registration::STopicId id;
+      id.topic_name          = m_attributes.topic_name;
+      id.topic_id.entity_id  = m_topic_id;
+      id.topic_id.host_name  = m_attributes.host_name;
+      id.topic_id.process_id = m_attributes.process_id;
+      return id;
+    }
 
     std::string          GetTopicName()           const { return(m_attributes.topic_name); }
     std::string          GetTopicID()             const { return(m_topic_id); }
     SDataTypeInformation GetDataTypeInformation() const { return(m_topic_info); }
 
     void InitializeLayers();
-    size_t ApplySample(const std::string& tid_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
+    size_t ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
 
     std::string Dump(const std::string& indent_ = "");
 
@@ -105,8 +115,8 @@ namespace eCAL
     void Register();
     void Unregister();
 
-    Registration::Sample GetRegistrationSample();
-    Registration::Sample GetUnregistrationSample();
+    void GetRegistrationSample(Registration::Sample& sample);
+    void GetUnregistrationSample(Registration::Sample& sample);
 
     void StartTransportLayer();
     void StopTransportLayer();
@@ -132,9 +142,9 @@ namespace eCAL
       SLayerStates         layer_states;
       bool                 state = false;
     };
-    using PublicationMapT = std::map<SPublicationInfo, SConnection>;
+    using ConnectionMapT = std::map<SPublicationInfo, SConnection>;
     mutable std::mutex                        m_connection_map_mtx;
-    PublicationMapT                           m_connection_map;
+    ConnectionMapT                            m_connection_map;
     std::atomic<size_t>                       m_connection_count{ 0 };
 
     mutable std::mutex                        m_read_buf_mtx;
@@ -144,7 +154,7 @@ namespace eCAL
     long long                                 m_read_time = 0;
 
     std::mutex                                m_receive_callback_mtx;
-    ReceiveCallbackT                          m_receive_callback;
+    ReceiveIDCallbackT                        m_receive_callback;
     std::atomic<int>                          m_receive_time;
 
     std::deque<size_t>                        m_sample_hash_queue;

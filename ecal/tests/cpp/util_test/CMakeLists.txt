@@ -23,6 +23,7 @@ find_package(GTest REQUIRED)
 
 set(util_test_src
   src/util_test.cpp
+  src/expanding_vector_test.cpp
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${util_test_src})

@@ -65,6 +65,8 @@ namespace eCAL
     std::mutex                           m_applied_sample_list_mtx;
     Registration::SampleList             m_applied_sample_list;
 
+    Registration::SampleList             m_send_thread_sample_list;
+
     Registration::SAttributes                  m_attributes;
   };
 }

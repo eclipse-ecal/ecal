@@ -259,7 +259,7 @@ namespace eCAL
           // We do have it: 
           // Update access record by moving 
           // accessed key to back of list 
-          update_timestamp(k);
+          update_timestamp(it);
         }
 
         // Return the retrieved value 
@@ -341,19 +341,15 @@ namespace eCAL
     private:
 
       // Maybe pass the iterator instead of the key? or at least only get k once
-      void update_timestamp(const Key& k)
+      void update_timestamp(const typename InternalMapType::iterator& it_in_map)
       {
-        auto it_in_map = _internal_map.find(k);
-        if (it_in_map != _internal_map.end())
-        {
-          auto& it_in_list = it_in_map->second.timestamp_list_iterator;
+        auto& it_in_list = it_in_map->second.timestamp_list_iterator;
 
-          // move the element to the end of the list
-          _access_timestamps_list.splice(_access_timestamps_list.end(), _access_timestamps_list, it_in_list);
+        // move the element to the end of the list
+        _access_timestamps_list.splice(_access_timestamps_list.end(), _access_timestamps_list, it_in_list);
 
-          // update the timestamp
-          it_in_list->timestamp = get_curr_time();
-        }
+        // update the timestamp
+        it_in_list->timestamp = get_curr_time();
       }
       
       // Record a fresh key-value pair in the cache

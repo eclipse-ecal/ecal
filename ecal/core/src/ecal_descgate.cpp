@@ -254,17 +254,20 @@ namespace eCAL
   {
     const auto topic_info_key = Registration::STopicId{ ConvertToEntityId(topic_id_), topic_name_ };
 
-    Registration::SQualityTopicInfo topic_quality_info;
-    topic_quality_info.info    = topic_info_;
-    topic_quality_info.quality = topic_quality_;
-
     // update topic info
     bool new_topic_info(false);
     {
       const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-      const auto iter = topic_info_map_.map.find(topic_info_key);
-      new_topic_info = iter == topic_info_map_.map.end();
-      topic_info_map_.map[topic_info_key] = topic_quality_info;
+      QualityTopicIdMap::iterator topic_info_quality_iter = topic_info_map_.map.find(topic_info_key);
+      new_topic_info = topic_info_quality_iter == topic_info_map_.map.end();
+
+      if (new_topic_info)
+      {
+        std::tie(topic_info_quality_iter, std::ignore) = topic_info_map_.map.emplace(topic_info_key, Registration::SQualityTopicInfo{});
+      }
+
+      topic_info_quality_iter->second.info = topic_info_;
+      topic_info_quality_iter->second.quality  = topic_quality_;
     }
 
     // notify publisher / subscriber registration callbacks about new entity

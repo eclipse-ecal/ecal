@@ -275,14 +275,14 @@ namespace eCAL
       return g_ecal_configuration;
     }
 
-    Registration::Configuration& GetRegistrationConfiguration()
-    {
-      return GetConfiguration().registration;
-    }
-
     TransportLayer::Configuration& GetTransportLayerConfiguration()
     {
       return GetConfiguration().transport_layer;
+    }
+
+    Registration::Configuration& GetRegistrationConfiguration()
+    {
+      return GetConfiguration().registration;
     }
 
     Monitoring::Configuration& GetMonitoringConfiguration()

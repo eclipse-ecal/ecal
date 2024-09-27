@@ -175,7 +175,7 @@ namespace eCAL
     return(false);
   }
 
-  bool CDataReader::AddReceiveCallback(ReceiveCallbackT callback_)
+  bool CDataReader::AddReceiveCallback(ReceiveIDCallbackT callback_)
   {
     if (!m_created) return(false);
 
@@ -419,7 +419,7 @@ namespace eCAL
 #endif
   }
 
-  size_t CDataReader::ApplySample(const std::string& tid_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_)
+  size_t CDataReader::ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_)
   {
     // ensure thread safety
     const std::lock_guard<std::mutex> lock(m_receive_callback_mtx);
@@ -477,7 +477,7 @@ namespace eCAL
     //  - a dropped message
     //  - an out-of-order message
     //  - a multiple sent message
-    if (!CheckMessageClock(tid_, clock_))
+    if (!CheckMessageClock(topic_info_.tid, clock_))
     {
       // we will not process that message
       return(0);
@@ -521,8 +521,21 @@ namespace eCAL
         cb_data.id    = id_;
         cb_data.time  = time_;
         cb_data.clock = clock_;
+
+        Registration::STopicId topic_id;
+        topic_id.topic_name          = topic_info_.tname;
+        topic_id.topic_id.host_name  = topic_info_.hname;
+        topic_id.topic_id.entity_id  = topic_info_.tid;
+        topic_id.topic_id.process_id = topic_info_.pid;
+
+        SPublicationInfo pub_info;
+        pub_info.entity_id  = topic_info_.tid;
+        pub_info.host_name  = topic_info_.hname;
+        pub_info.process_id = topic_info_.pid;
+
         // execute it
-        (m_receive_callback)(m_attributes.topic_name.c_str(), &cb_data);
+        std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+        (m_receive_callback)(topic_id, m_connection_map[pub_info].data_type_info, cb_data);
         processed = true;
       }
     }
@@ -577,7 +590,9 @@ namespace eCAL
   void CDataReader::Register()
   {
 #if ECAL_CORE_REGISTRATION
-    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(GetRegistrationSample());
+    Registration::Sample sample;
+    GetRegistrationSample(sample);
+    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(sample);
 
 #ifndef NDEBUG
     // log it
@@ -589,7 +604,9 @@ namespace eCAL
   void CDataReader::Unregister()
   {
 #if ECAL_CORE_REGISTRATION
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(GetUnregistrationSample());
+    Registration::Sample sample;
+    GetUnregistrationSample(sample);
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(sample);
 
 #ifndef NDEBUG
     // log it
@@ -598,10 +615,10 @@ namespace eCAL
 #endif // ECAL_CORE_REGISTRATION
   }
 
-  Registration::Sample CDataReader::GetRegistration()
+  void CDataReader::GetRegistration(Registration::Sample& sample)
   {
     // return registration
-    return GetRegistrationSample();
+    return GetRegistrationSample(sample);
   }
 
   bool CDataReader::IsPublished() const
@@ -614,10 +631,8 @@ namespace eCAL
     return m_connection_count;
   }
     
-  Registration::Sample CDataReader::GetRegistrationSample()
+  void CDataReader::GetRegistrationSample(Registration::Sample& ecal_reg_sample)
   {
-    // create registration sample
-    Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_reg_subscriber;
 
     auto& ecal_reg_sample_identifier = ecal_reg_sample.identifier;
@@ -689,14 +704,10 @@ namespace eCAL
     // we do not know the number of connections ..
     ecal_reg_sample_topic.connections_loc = 0;
     ecal_reg_sample_topic.connections_ext = 0;
-
-    return ecal_reg_sample;
   }
 
-  Registration::Sample CDataReader::GetUnregistrationSample()
+  void CDataReader::GetUnregistrationSample(Registration::Sample& ecal_unreg_sample)
   {
-    // create unregistration sample
-    Registration::Sample ecal_unreg_sample;
     ecal_unreg_sample.cmd_type = bct_unreg_subscriber;
 
     auto& ecal_reg_sample_identifier = ecal_unreg_sample.identifier;
@@ -709,8 +720,6 @@ namespace eCAL
     ecal_reg_sample_topic.pname  = m_attributes.process_name;
     ecal_reg_sample_topic.tname  = m_attributes.topic_name;
     ecal_reg_sample_topic.uname  = m_attributes.unit_name;
-
-    return ecal_unreg_sample;
   }
   
   void CDataReader::StartTransportLayer()

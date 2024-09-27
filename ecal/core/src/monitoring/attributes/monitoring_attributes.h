@@ -27,7 +27,6 @@ namespace eCAL
   {
     struct SAttributes
     {
-      unsigned int timeout;
       std::string  filter_excl;
       std::string  filter_incl;
     };

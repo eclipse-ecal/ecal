@@ -92,13 +92,23 @@ namespace eCAL
     void ApplySubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& sub_layer_states_, const std::string& reader_par_);
     void RemoveSubscription(const SSubscriptionInfo& subscription_info_);
 
-    Registration::Sample GetRegistration();
+    void GetRegistration(Registration::Sample& sample);
     void RefreshSendCounter();
 
     bool IsCreated() const { return(m_created); }
 
     bool IsSubscribed() const;
     size_t GetSubscriberCount() const;
+
+    Registration::STopicId GetId() const
+    {
+      Registration::STopicId id;
+      id.topic_name          = m_attributes.topic_name;
+      id.topic_id.entity_id  = m_topic_id;
+      id.topic_id.host_name  = m_attributes.host_name;
+      id.topic_id.process_id = m_attributes.process_id;
+      return id;
+    }
 
     const std::string&          GetTopicName()           const { return(m_attributes.topic_name); }
     const SDataTypeInformation& GetDataTypeInformation() const { return m_topic_info; }
@@ -109,8 +119,8 @@ namespace eCAL
     void Register();
     void Unregister();
 
-    Registration::Sample GetRegistrationSample();
-    Registration::Sample GetUnregistrationSample();
+    void GetRegistrationSample(Registration::Sample& sample);
+    void GetUnregistrationSample(Registration::Sample& sample);
 
     bool StartUdpLayer();
     bool StartShmLayer();

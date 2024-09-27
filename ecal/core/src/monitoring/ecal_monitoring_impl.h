@@ -26,7 +26,8 @@
 #include <ecal/types/monitoring.h>
 
 #include "ecal_def.h"
-#include "attributes/monitoring_attributes.h"
+#include "monitoring/attributes/monitoring_attributes.h"
+#include "monitoring/ecal_monitoring_filter.h"
 
 #include "serialization/ecal_serialize_sample_registration.h"
 
@@ -35,10 +36,6 @@
 #include <mutex>
 #include <set>
 #include <string>
-
-#ifdef ECAL_OS_LINUX
-#include <strings.h>  // strcasecmp
-#endif
 
 namespace eCAL
 {
@@ -126,20 +123,6 @@ namespace eCAL
       std::unique_ptr<ClientMonMapT>  map;
     };
 
-    struct InsensitiveCompare
-    {
-      bool operator() (const std::string& a, const std::string& b) const
-      {
-#ifdef ECAL_OS_WINDOWS
-        return _stricmp(a.c_str(), b.c_str()) < 0;
-#endif
-#ifdef ECAL_OS_LINUX
-        return strcasecmp(a.c_str(), b.c_str()) < 0;
-#endif
-      }
-    };
-    using StrICaseSetT = std::set<std::string, InsensitiveCompare>;
-
     STopicMonMap* GetMap(enum ePubSub pubsub_type_);
 
     void MonitorProcs(Monitoring::SMonitoring& monitoring_);
@@ -147,17 +130,10 @@ namespace eCAL
     void MonitorClients(Monitoring::SMonitoring& monitoring_);
     void MonitorTopics(STopicMonMap& map_, Monitoring::SMonitoring& monitoring_, const std::string& direction_);
 
-    void Tokenize(const std::string& str, StrICaseSetT& tokens, const std::string& delimiters, bool trimEmpty);
-
     bool                                         m_init;
 
-    Monitoring::SAttributes                      m_attributes;
-
-    std::mutex                                   m_topic_filter_excl_mtx;
-    StrICaseSetT                                 m_topic_filter_excl;
-
-    std::mutex                                   m_topic_filter_incl_mtx;
-    StrICaseSetT                                 m_topic_filter_incl;
+    std::mutex                                   m_monitoring_filter_mtx;
+    CMonitoringFilter                            m_monitoring_filter;
 
     // database
     SProcessMonMap                               m_process_map;

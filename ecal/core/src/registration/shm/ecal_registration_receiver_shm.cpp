@@ -70,15 +70,17 @@ namespace eCAL
 
   void CRegistrationReceiverSHM::Receive()
   {
+    // At the moment this function is called synchronously by a dedicated thread.
+    // If this changes, we need to protect the sample list member variable
     MemfileBroadcastMessageListT message_list;
     if (m_memfile_broadcast_reader->Read(message_list, 0))
     {
-      eCAL::Registration::SampleList sample_list;
+      m_sample_list.clear();
       for (const auto& message : message_list)
       {
-        if (DeserializeFromBuffer(static_cast<const char*>(message.data), message.size, sample_list))
+        if (DeserializeFromBuffer(static_cast<const char*>(message.data), message.size, m_sample_list))
         {
-          for (const auto& sample : sample_list.samples)
+          for (const auto& sample : m_sample_list)
           {
             m_apply_sample_callback(sample);
           }

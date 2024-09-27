@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,10 +56,10 @@ namespace eCAL
     void encode_map(pb_callback_t& pb_callback, const std::map<std::string, std::string>& str_map);
     void decode_map(pb_callback_t& pb_callback, std::map<std::string, std::string>& str_map);
 
-    void encode_registration_layer(pb_callback_t& pb_callback, const std::vector<eCAL::Registration::TLayer>& layer_vec);
-    void decode_registration_layer(pb_callback_t& pb_callback, std::vector<eCAL::Registration::TLayer>& layer_vec);
+    void encode_registration_layer(pb_callback_t& pb_callback, const Util::CExpandingVector<eCAL::Registration::TLayer>& layer_vec);
+    void decode_registration_layer(pb_callback_t& pb_callback, Util::CExpandingVector<eCAL::Registration::TLayer>& layer_vec);
 
-    void encode_service_methods(pb_callback_t& pb_callback, const std::vector<eCAL::Service::Method>& method_vec);
-    void decode_service_methods(pb_callback_t& pb_callback, std::vector<eCAL::Service::Method>& method_vec);
+    void encode_service_methods(pb_callback_t& pb_callback, const Util::CExpandingVector<eCAL::Service::Method>& method_vec);
+    void decode_service_methods(pb_callback_t& pb_callback, Util::CExpandingVector<eCAL::Service::Method>& method_vec);
   }
 }

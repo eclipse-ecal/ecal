@@ -209,6 +209,15 @@ namespace eCAL
     ECAL_API bool AddReceiveCallback(ReceiveCallbackT callback_);
 
     /**
+     * @brief Add callback function for incoming receives.
+     *
+     * @param callback_  The callback function to add.
+      *
+      * @return  True if succeeded, false if not.
+     **/
+    ECAL_API bool AddReceiveCallback(ReceiveIDCallbackT callback_);
+
+    /**
      * @brief Remove callback function for incoming receives. 
      *
      * @return  True if succeeded, false if not. 
@@ -261,6 +270,13 @@ namespace eCAL
      * @return  The topic name. 
     **/
     ECAL_API std::string GetTopicName() const;
+
+    /**
+     * @brief Gets a unique ID of this Subscriber
+     *
+     * @return  The topic id.
+    **/
+    ECAL_API Registration::STopicId GetId() const;
 
     /**
      * @brief Gets description of the connected topic.
