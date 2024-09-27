@@ -21,17 +21,6 @@ jobs:
         sudo apt update
         sudo apt-get install ninja-build doxygen graphviz libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev qt5-default libqwt-qt5-dev libyaml-cpp-dev
 
-    - name: Install Cap'n Proto
-      run: |
-        mkdir "${{ runner.workspace }}/capnp"
-        cd "${{ runner.workspace }}/capnp"
-        curl -O https://capnproto.org/capnproto-c++-0.9.0.tar.gz
-        tar zxf capnproto-c++-0.9.0.tar.gz
-        cd capnproto-c++-0.9.0
-        ./configure
-        make -j
-        sudo make install
-
     - name: Checkout
       uses: actions/checkout@v3
       with:
@@ -46,7 +35,6 @@ jobs:
       shell: bash
       run: |
         python3.11 --version
-        python3.11 -m pip install venv
         mkdir ".venv_build"
         python3.11 -m venv ".venv_build"
         source ".venv_build/bin/activate"
@@ -68,7 +56,7 @@ jobs:
         -DHAS_HDF5=ON \
         -DHAS_QT5=ON \
         -DHAS_CURL=ON \
-        -DHAS_CAPNPROTO=ON \
+        -DHAS_CAPNPROTO=OFF \
         -DHAS_FTXUI=ON \
         -DBUILD_DOCS=ON \
         -DBUILD_APPS=ON \
