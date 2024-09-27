@@ -19,6 +19,7 @@
 
 #include "topic_tree_item.h"
 
+#include <QBrush>
 #include <QColor>
 #include <QFont>
 #include <QString>
@@ -361,6 +362,15 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     return QVariant(); // Invalid QVariant
   }
 
+  else if (role == Qt::ItemDataRole::ForegroundRole)
+  {
+    if (isNewItem())
+    {
+      return QBrush(QColor(6, 179, 90));
+    }
+    return QVariant(); // Invalid QVariant
+  }
+
   return QVariant(); // Invalid QVariant
 }
 
@@ -373,6 +383,7 @@ void TopicTreeItem::update(const eCAL::pb::Topic& topic)
 {
   topic_.Clear();
   topic_.CopyFrom(topic);
+  lifetime++;
 }
 
 eCAL::pb::Topic TopicTreeItem::topicPb()
@@ -397,4 +408,9 @@ QString TopicTreeItem::toFrequencyString(long long freq)
 std::string TopicTreeItem::topicId() const
 {
   return topic_.tid();
+}
+
+bool TopicTreeItem::isNewItem() const
+{
+  return lifetime < 20;
 }

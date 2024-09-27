@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,10 @@ public:
   std::string topicId() const;
 
 private:
+  bool isNewItem() const;
+
   eCAL::pb::Topic topic_;
+  int lifetime = 0;
 
   static QString toFrequencyString(long long freq);
 };
