@@ -1,6 +1,6 @@
 ﻿/* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -221,6 +221,6 @@ void VisualisationWidget::checkForMorePublishersWithSameTopic(const eCAL::pb::Mo
   }
   }
   ui_.textEdit->clear();
-  for (auto publisher : publishers)
+  for (const auto& publisher : publishers)
     ui_.textEdit->append(publisher);
 }
