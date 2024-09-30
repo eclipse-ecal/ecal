@@ -74,7 +74,7 @@ namespace eCAL
 
     using SSubscriptionInfo = Registration::SampleIdentifier;
 
-    CDataWriter(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& config_);
+    CDataWriter(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& attr_);
     ~CDataWriter();
 
     bool Stop();

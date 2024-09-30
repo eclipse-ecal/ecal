@@ -20,7 +20,7 @@
 #pragma once
 
 #include <string>
-#include <stddef.h>
+#include <cstddef>
 
 namespace eCAL
 {

@@ -20,7 +20,7 @@
 #pragma once
 
 #include <string>
-#include <stddef.h>
+#include <cstddef>
 #include <vector>
 
 #include <ecal/ecal_tlayer.h>
