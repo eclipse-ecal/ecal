@@ -17,36 +17,23 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  udp data writer
-**/
-
 #pragma once
 
-#include "io/udp/ecal_udp_sample_sender.h"
-#include "readwrite/ecal_writer_base.h"
-#include "config/attributes/writer_udp_attributes.h"
+#include "readwrite/shm/config/attributes/reader_shm_attributes.h"
+#include "readwrite/config/attributes/reader_attributes.h"
 
-#include <memory>
-#include <string>
-#include <vector>
+#include "readwrite/shm/config/attributes/writer_shm_attributes.h"
+#include "readwrite/config/attributes/writer_attributes.h"
 
 namespace eCAL
 {
-  class CDataWriterUdpMC : public CDataWriterBase
+  namespace eCALReader
   {
-  public:
-    CDataWriterUdpMC(const eCALWriter::UDP::SAttributes& attr_);
+    SHM::SAttributes BuildSHMAttributes(const eCALReader::SAttributes& attr_);
+  }
 
-    SWriterInfo GetInfo() override;
-
-    bool Write(const void* buf_, const SWriterAttr& attr_) override;
-
-  protected:
-    std::vector<char>                   m_sample_buffer;
-    std::shared_ptr<UDP::CSampleSender> m_sample_sender_loopback;
-    std::shared_ptr<UDP::CSampleSender> m_sample_sender_no_loopback;
-
-    eCALWriter::UDP::SAttributes        m_attributes;
-  };
+  namespace eCALWriter
+  {
+    SHM::SAttributes BuildSHMAttributes(const eCALWriter::SAttributes& attr_);
+  }
 }

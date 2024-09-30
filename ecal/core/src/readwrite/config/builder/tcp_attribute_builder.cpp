@@ -17,36 +17,36 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  udp data writer
-**/
-
 #pragma once
 
-#include "io/udp/ecal_udp_sample_sender.h"
-#include "readwrite/ecal_writer_base.h"
-#include "config/attributes/writer_udp_attributes.h"
-
-#include <memory>
-#include <string>
-#include <vector>
+#include "tcp_attribute_builder.h"
 
 namespace eCAL
 {
-  class CDataWriterUdpMC : public CDataWriterBase
+  namespace eCALReader
   {
-  public:
-    CDataWriterUdpMC(const eCALWriter::UDP::SAttributes& attr_);
+    TCPLayer::SAttributes BuildTCPLayerAttributes(const eCALReader::SAttributes& attr_)
+    {
+      TCPLayer::SAttributes attributes;
 
-    SWriterInfo GetInfo() override;
+      attributes.max_reconnection_attempts = attr_.tcp.max_reconnection_attempts;
+      attributes.thread_pool_size          = attr_.tcp.thread_pool_size;
+      
+      return attributes;
+    }
+  }
 
-    bool Write(const void* buf_, const SWriterAttr& attr_) override;
+  namespace eCALWriter
+  {
+    TCP::SAttributes BuildTCPAttributes(const std::string& topic_id_, const eCALWriter::SAttributes& attr_)
+    {
+      TCP::SAttributes attributes;
 
-  protected:
-    std::vector<char>                   m_sample_buffer;
-    std::shared_ptr<UDP::CSampleSender> m_sample_sender_loopback;
-    std::shared_ptr<UDP::CSampleSender> m_sample_sender_no_loopback;
-
-    eCALWriter::UDP::SAttributes        m_attributes;
-  };
+      attributes.topic_name = attr_.topic_name;
+      attributes.topic_id   = topic_id_;
+      attributes.thread_pool_size = attr_.tcp.thread_pool_size;
+      
+      return attributes;
+    }
+  }
 }

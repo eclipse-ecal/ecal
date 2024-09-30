@@ -38,25 +38,20 @@ namespace eCAL
   std::mutex                            CDataWriterTCP::g_tcp_writer_executor_mtx;
   std::shared_ptr<tcp_pubsub::Executor> CDataWriterTCP::g_tcp_writer_executor;
 
-  CDataWriterTCP::CDataWriterTCP(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, const Publisher::Layer::TCP::Configuration& tcp_config_) :
-    m_config(tcp_config_)
+  CDataWriterTCP::CDataWriterTCP(const eCAL::eCALWriter::TCP::SAttributes& attr_) :
+    m_attributes(attr_)
   {
     {
       const std::lock_guard<std::mutex> lock(g_tcp_writer_executor_mtx);
       if (!g_tcp_writer_executor)
       {
-        g_tcp_writer_executor = std::make_shared<tcp_pubsub::Executor>(Config::GetTcpPubsubWriterThreadpoolSize(), TcpPubsubLogger);
+        g_tcp_writer_executor = std::make_shared<tcp_pubsub::Executor>(m_attributes.thread_pool_size, TcpPubsubLogger);
       }
     }
 
     // create publisher
     m_publisher = std::make_shared<tcp_pubsub::Publisher>(g_tcp_writer_executor);
     m_port      = m_publisher->getPort();
-
-    // writer parameter
-    m_host_name  = host_name_;
-    m_topic_name = topic_name_;
-    m_topic_id   = topic_id_;
   }
 
   SWriterInfo CDataWriterTCP::GetInfo()
@@ -81,8 +76,8 @@ namespace eCAL
     // create new payload sample (header information only, no payload)
     Payload::Sample proto_header;
     auto& proto_header_topic = proto_header.topic_info;
-    proto_header_topic.tname = m_topic_name;
-    proto_header_topic.tid   = m_topic_id;
+    proto_header_topic.tname = m_attributes.topic_name;
+    proto_header_topic.tid   = m_attributes.topic_id;
 
     // set payload content (without payload)
     auto& proto_header_content = proto_header.content;

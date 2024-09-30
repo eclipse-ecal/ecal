@@ -17,36 +17,15 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  udp data writer
-**/
-
 #pragma once
 
-#include "io/udp/ecal_udp_sample_sender.h"
-#include "readwrite/ecal_writer_base.h"
-#include "config/attributes/writer_udp_attributes.h"
-
-#include <memory>
-#include <string>
-#include <vector>
+#include "readwrite/config/attributes/reader_attributes.h"
+#include "ecal/config/subscriber.h"
+#include "ecal/config/transport_layer.h"
+#include "ecal/config/registration.h"
+#include "ecal/config/publisher.h"
 
 namespace eCAL
 {
-  class CDataWriterUdpMC : public CDataWriterBase
-  {
-  public:
-    CDataWriterUdpMC(const eCALWriter::UDP::SAttributes& attr_);
-
-    SWriterInfo GetInfo() override;
-
-    bool Write(const void* buf_, const SWriterAttr& attr_) override;
-
-  protected:
-    std::vector<char>                   m_sample_buffer;
-    std::shared_ptr<UDP::CSampleSender> m_sample_sender_loopback;
-    std::shared_ptr<UDP::CSampleSender> m_sample_sender_no_loopback;
-
-    eCALWriter::UDP::SAttributes        m_attributes;
-  };
+  eCALReader::SAttributes BuildReaderAttributes(const std::string& topic_name_, const Subscriber::Configuration& sub_config_, const Publisher::Configuration& pub_config_, const eCAL::TransportLayer::Configuration& tl_config_, const eCAL::Registration::Configuration& reg_config_);
 }

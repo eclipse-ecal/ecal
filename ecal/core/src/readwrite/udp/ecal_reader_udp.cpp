@@ -28,6 +28,7 @@
 
 #include "io/udp/ecal_udp_configurations.h"
 #include "pubsub/ecal_subgate.h"
+#include "config/builder/udp_attribute_builder.h"
 
 #include <functional>
 #include <memory>
@@ -39,40 +40,32 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  CUDPReaderLayer::CUDPReaderLayer() : 
-                   m_started(false),
-                   m_local_mode(false)
+  CUDPReaderLayer::CUDPReaderLayer() : m_started(false)
   {}
 
   CUDPReaderLayer::~CUDPReaderLayer() = default;
 
-  void CUDPReaderLayer::Initialize()
+  void CUDPReaderLayer::Initialize(const eCAL::eCALReader::UDP::SAttributes& attr_)
   {
+     m_attributes = attr_;
   }
 
   void CUDPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
   {
     if (!m_started)
-    {
-      // set local mode
-      m_local_mode = UDP::IsBroadcast();
-
-      // set network attributes
-      eCAL::UDP::SReceiverAttr attr;
-      attr.address   = UDP::GetPayloadAddress();
-      attr.port      = UDP::GetPayloadPort();
-      attr.broadcast = UDP::IsBroadcast();
-      attr.loopback  = true;
-      attr.rcvbuf    = UDP::GetReceiveBufferSize();
-
+    {      
       // start payload sample receiver
-      m_payload_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CUDPReaderLayer::HasSample, this, std::placeholders::_1), std::bind(&CUDPReaderLayer::ApplySample, this, std::placeholders::_1, std::placeholders::_2));
+      m_payload_receiver = std::make_shared<UDP::CSampleReceiver>(
+        eCALReader::UDP::ConvertToIOUDPReceiverAttributes(m_attributes), 
+        std::bind(&CUDPReaderLayer::HasSample, this, std::placeholders::_1), 
+        std::bind(&CUDPReaderLayer::ApplySample, this, std::placeholders::_1, std::placeholders::_2)
+      );
 
       m_started = true;
     }
 
     // we use udp broadcast in local mode
-    if (m_local_mode) return;
+    if (m_attributes.broadcast) return;
 
     // add topic name based multicast address
     const std::string mcast_address = UDP::GetTopicPayloadAddress(topic_name_);
@@ -87,7 +80,7 @@ namespace eCAL
   void CUDPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
   {
     // we use udp broadcast in local mode
-    if (m_local_mode) return;
+    if (m_attributes.broadcast) return;
 
     const std::string mcast_address = UDP::GetTopicPayloadAddress(topic_name_);
     if (m_topic_name_mcast_map.find(mcast_address) == m_topic_name_mcast_map.end())

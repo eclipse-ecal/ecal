@@ -24,6 +24,8 @@
 #pragma once
 
 #include "readwrite/ecal_reader_layer.h"
+#include "config/attributes/data_reader_tcp_attributes.h"
+#include "config/attributes/tcp_reader_layer_attributes.h"
 
 #include <tcp_pubsub/executor.h>
 #include <tcp_pubsub/subscriber.h>
@@ -42,7 +44,7 @@ namespace eCAL
   class CDataReaderTCP
   {
   public:
-    CDataReaderTCP();
+    CDataReaderTCP(const eCAL::eCALReader::TCP::SAttributes& attr_);
 
     bool Create(std::shared_ptr<tcp_pubsub::Executor>& executor_);
     bool Destroy();
@@ -56,17 +58,18 @@ namespace eCAL
 
     std::shared_ptr<tcp_pubsub::Subscriber> m_subscriber;
     bool                                    m_callback_active;
+    eCAL::eCALReader::TCP::SAttributes      m_attributes;
   };
 
   ////////////////
   // LAYER
   ////////////////
-  class CTCPReaderLayer : public CReaderLayer<CTCPReaderLayer>
+  class CTCPReaderLayer : public CReaderLayer<CTCPReaderLayer, eCAL::eCALReader::TCPLayer::SAttributes>
   {
   public:
     CTCPReaderLayer();
 
-    void Initialize() override;
+    void Initialize(const eCAL::eCALReader::TCPLayer::SAttributes& attr_) override;
 
     void AddSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_) override;
     void RemSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_) override;
@@ -80,5 +83,6 @@ namespace eCAL
     using DataReaderTCPMapT = std::unordered_map<std::string, std::shared_ptr<CDataReaderTCP>>;
     std::mutex        m_datareadertcp_sync;
     DataReaderTCPMapT m_datareadertcp_map;
+    eCAL::eCALReader::TCPLayer::SAttributes m_attributes;
   };
 }

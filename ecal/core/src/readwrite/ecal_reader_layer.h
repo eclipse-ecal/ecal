@@ -42,7 +42,7 @@ namespace eCAL
   };
 
   // ecal data layer base class
-  template <typename T>
+  template <typename T, typename U>
   class CReaderLayer
   {
   public:
@@ -52,7 +52,7 @@ namespace eCAL
 
     // initialize layer
     // will be called one time on eCAL initialization
-    virtual void Initialize() = 0;
+    virtual void Initialize(const U& attr_) = 0;
 
     // activate / create a specific subscription
     virtual void AddSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_) = 0;
@@ -72,6 +72,5 @@ namespace eCAL
       }
       return layer;
     }
-
   };
 }
