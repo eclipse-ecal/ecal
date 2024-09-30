@@ -25,5 +25,5 @@
 
 namespace eCAL
 {
-  eCALWriter::SAttributes BuildWriterAttributes(const std::string& topic_name_, const Publisher::Configuration& config_, const eCAL::TransportLayer::Configuration& tl_confi_, const eCAL::Registration::Configuration& reg_config_);
+  eCALWriter::SAttributes BuildWriterAttributes(const std::string& topic_name_, const Publisher::Configuration& config_, const eCAL::TransportLayer::Configuration& tl_config_, const eCAL::Registration::Configuration& reg_config_);
 }
