@@ -25,7 +25,7 @@
 
 #include <ecal/types/monitoring.h>
 
-#include "attributes/monitoring_attributes.h"
+#include "config/attributes/monitoring_attributes.h"
 
 #include <memory>
 #include <string>

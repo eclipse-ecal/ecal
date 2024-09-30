@@ -29,7 +29,7 @@
 #include "registration/ecal_registration_sender.h"
 
 #include "io/udp/ecal_udp_sample_sender.h"
-#include "registration/udp/attributes/registration_sender_udp_attributes.h"
+#include "registration/udp/config/attributes/registration_sender_udp_attributes.h"
 
 namespace eCAL
 {

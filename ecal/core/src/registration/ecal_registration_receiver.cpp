@@ -42,8 +42,8 @@
 #include <mutex>
 #include <string>
 
-#include "builder/udp_shm_attribute_builder.h"
-#include "builder/sample_applier_attribute_builder.h"
+#include "config/builder/udp_shm_attribute_builder.h"
+#include "config/builder/sample_applier_attribute_builder.h"
 
 namespace eCAL
 {

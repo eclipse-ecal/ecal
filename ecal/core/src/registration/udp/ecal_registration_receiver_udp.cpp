@@ -24,7 +24,7 @@
 #include "serialization/ecal_serialize_sample_registration.h"
 #include <ecal/ecal_config.h>
 
-#include "registration/udp/builder/udp_attribute_builder.h"
+#include "registration/udp/config/builder/udp_attribute_builder.h"
 
 using namespace eCAL;
 

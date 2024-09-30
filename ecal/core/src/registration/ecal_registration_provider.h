@@ -31,7 +31,7 @@
 
 #include "registration/ecal_registration_sender.h"
 #include "util/ecal_thread.h"
-#include "attributes/registration_attributes.h"
+#include "config/attributes/registration_attributes.h"
 
 #include <atomic>
 #include <memory>

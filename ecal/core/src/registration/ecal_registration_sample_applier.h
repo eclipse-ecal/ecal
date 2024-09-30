@@ -29,7 +29,7 @@
 #include <ecal/ecal.h>
 
 #include "serialization/ecal_struct_sample_registration.h"
-#include "attributes/sample_applier_attributes.h"
+#include "config/attributes/sample_applier_attributes.h"
 
 #include <functional>
 #include <map>

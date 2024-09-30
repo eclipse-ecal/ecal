@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include "registration/attributes/registration_attributes.h"
-#include "registration/attributes/sample_applier_attributes.h"
+#include "registration/config/attributes/registration_attributes.h"
+#include "registration/config/attributes/sample_applier_attributes.h"
 
 namespace eCAL
 {
