@@ -19,15 +19,18 @@
 
 #pragma once
 
-#include "logging/attributes/logging_attributes.h"
-#include "ecal/config/logging.h"
-#include "ecal/config/registration.h"
-#include "ecal/config/transport_layer.h"
+#include "registration/udp/config/attributes/registration_sender_udp_attributes.h"
+#include "registration/udp/config/attributes/registration_receiver_udp_attributes.h"
+#include "registration/shm/config/attributes/registration_shm_attributes.h"
+#include "registration/config/attributes/registration_attributes.h"
+
 
 namespace eCAL
 {
-  namespace Logging
+  namespace Registration
   {
-    SAttributes BuildLoggingAttributes(const Logging::Configuration& log_config_, const Registration::Configuration& reg_config_, const TransportLayer::Configuration& tl_config_);
+    UDP::SSenderAttributes   BuildUDPSenderAttributes   (const SAttributes& provider_attr_);
+    UDP::SReceiverAttributes BuildUDPReceiverAttributes (const SAttributes& provider_attr_);
+    SHM::SAttributes         BuildSHMAttributes         (const SAttributes& provider_attr_);
   }
 }

@@ -33,9 +33,9 @@
 #include "service/ecal_service_singleton_manager.h"
 #endif
 
-#include "builder/registration_attribute_builder.h"
-#include "builder/monitoring_attribute_builder.h"
-#include "builder/logging_attribute_builder.h"
+#include "config/builder/registration_attribute_builder.h"
+#include "config/builder/monitoring_attribute_builder.h"
+#include "config/builder/logging_attribute_builder.h"
 
 namespace eCAL
 {

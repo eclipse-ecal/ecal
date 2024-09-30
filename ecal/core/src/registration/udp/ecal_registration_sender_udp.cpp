@@ -32,7 +32,7 @@
 #include "io/udp/ecal_udp_configurations.h"
 #include <ecal/ecal_config.h>
 
-#include "registration/udp/builder/udp_attribute_builder.h"
+#include "registration/udp/config/builder/udp_attribute_builder.h"
 
 namespace eCAL
 {

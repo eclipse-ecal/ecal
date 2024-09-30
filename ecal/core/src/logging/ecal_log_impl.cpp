@@ -27,7 +27,7 @@
 
 #include "ecal_log_impl.h"
 #include "serialization/ecal_serialize_logging.h"
-#include "builder/udp_attribute_builder.h"
+#include "config/builder/udp_attribute_builder.h"
 #include <mutex>
 #include <cstdio>
 

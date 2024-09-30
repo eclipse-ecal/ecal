@@ -19,11 +19,21 @@
 
 #pragma once
 
-#include "registration/attributes/registration_attributes.h"
 
-#include <ecal/ecal_config.h>
+#include "io/udp/ecal_udp_receiver_attr.h"
+#include "io/udp/ecal_udp_sender_attr.h"
+
+#include "registration/udp/config/attributes/registration_sender_udp_attributes.h"
+#include "registration/udp/config/attributes/registration_receiver_udp_attributes.h"
 
 namespace eCAL
 {
-  Registration::SAttributes BuildRegistrationAttributes(const eCAL::Registration::Configuration& reg_config_, const eCAL::TransportLayer::UDP::Configuration& tl_udp_confi_, int process_id_);
+  namespace Registration
+  {
+    namespace UDP
+    {
+      eCAL::UDP::SSenderAttr     ConvertToIOUDPSenderAttributes     (const Registration::UDP::SSenderAttributes& sender_attr_);
+      eCAL::UDP::SReceiverAttr   ConvertToIOUDPReceiverAttributes   (const Registration::UDP::SReceiverAttributes& receiver_attr_);
+    }
+  }
 }
