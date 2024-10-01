@@ -22,6 +22,7 @@
 **/
 
 #include "ecal/config/configuration.h"
+#include "util/string_replacer.h"
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
@@ -37,6 +38,8 @@ namespace eCAL
 
   std::string                   g_default_ini_file(ECAL_DEFAULT_CFG);
   Configuration                 g_ecal_configuration{};
+  Util::StringReplacer          g_pub_topic_replacer;
+  Util::StringReplacer          g_sub_topic_replacer;
 
   std::string                   g_host_name;
   std::string                   g_unit_name;

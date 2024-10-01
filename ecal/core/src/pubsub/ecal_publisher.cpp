@@ -90,11 +90,17 @@ namespace eCAL
     if (m_created)           return(false);
     if (topic_name_.empty()) return(false);
 
+    std::string topic_name = topic_name_;
+    if (config_.topic_renaming)
+    {            
+      topic_name = g_globals()->PubReplaceTopic(topic_name_);
+    }
+
     // create datawriter
-    m_datawriter = std::make_shared<CDataWriter>(topic_name_, data_type_info_, config_);
+    m_datawriter = std::make_shared<CDataWriter>(topic_name, data_type_info_, config_);
 
     // register datawriter
-    g_pubgate()->Register(topic_name_, m_datawriter);
+    g_pubgate()->Register(topic_name, m_datawriter);
 
     // we made it :-)
     m_created = true;

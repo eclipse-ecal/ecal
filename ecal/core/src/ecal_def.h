@@ -38,12 +38,14 @@ constexpr const char* ECAL_LOG_PATH          = "logs";
 constexpr const char* ECAL_SETTINGS_PATH     = "cfg";
 
 /* ini file name */
-constexpr const char* ECAL_DEFAULT_CFG       = "ecal.yaml";
+constexpr const char* ECAL_DEFAULT_CFG                   = "ecal.yaml";
+constexpr const char* ECAL_DEFAULT_PUB_TOPIC_MAPPING = "pub_topic_mapping.yaml";
+constexpr const char* ECAL_DEFAULT_SUB_TOPIC_MAPPING = "sub_topic_mapping.yaml";
 
 /* eCAL udp multicast defines */
-constexpr unsigned int NET_UDP_MULTICAST_PORT_REG_OFF                       = 0U; // to delete
-constexpr unsigned int NET_UDP_MULTICAST_PORT_LOG_OFF                       = 1U; // to delete
-constexpr unsigned int NET_UDP_MULTICAST_PORT_SAMPLE_OFF                    = 2U; // to delete
+constexpr unsigned int NET_UDP_MULTICAST_PORT_REG_OFF     = 0U; // to delete
+constexpr unsigned int NET_UDP_MULTICAST_PORT_LOG_OFF     = 1U; // to delete
+constexpr unsigned int NET_UDP_MULTICAST_PORT_SAMPLE_OFF  = 2U; // to delete
 
 /* timeout for create / open a memory file using mutex lock in ms */
 constexpr unsigned int PUB_MEMFILE_CREATE_TO              = 200U;

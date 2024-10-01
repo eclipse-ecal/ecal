@@ -71,6 +71,7 @@ namespace eCAL
       Layer::Configuration layer;
 
       bool drop_out_of_order_messages { true }; //!< Enable dropping of payload messages that arrive out of order
+      bool topic_renaming             { false };     //!< enable topic renaming
     };
   }
 }

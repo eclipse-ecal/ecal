@@ -252,6 +252,8 @@ namespace eCAL
       ss << R"(  priority_local: )"                                  << quoteString(config_.publisher.layer_priority_local)         << "\n";
       ss << R"(  # Priority list for layer usage in cloud mode (Default: UDP > TCP))"                                               << "\n";
       ss << R"(  priority_network: )"                                << quoteString(config_.publisher.layer_priority_remote)        << "\n";
+      ss << R"(  # Enable topic name conversion based on yaml configuration file)"                                                  << "\n";
+      ss << R"(  topic_renaming: )"                                  << config_.publisher.topic_renaming                            << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"(# Subscriber specific base configuration)"                                                                           << "\n";
@@ -274,6 +276,8 @@ namespace eCAL
       ss << R"()"                                                                                                                   << "\n";
       ss << R"(  # Enable dropping of payload messages that arrive out of order)"                                                   << "\n";
       ss << R"(  drop_out_of_order_messages: )"                        << config_.subscriber.drop_out_of_order_messages             << "\n";
+      ss << R"(  # Enable topic name conversion based on yaml configuration file)"                                                  << "\n";
+      ss << R"(  topic_renaming: )"                                    << config_.subscriber.topic_renaming                         << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"(# Time configuration)"                                                                                               << "\n";

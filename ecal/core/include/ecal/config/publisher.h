@@ -150,6 +150,7 @@ namespace eCAL
 
       bool                 share_topic_type        { true };      //!< share topic type via registration
       bool                 share_topic_description { true };      //!< share topic description via registration
+      bool                 topic_renaming          { false };     //!< enable topic renaming
     };
   }
 }

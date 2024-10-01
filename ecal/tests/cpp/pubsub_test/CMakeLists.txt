@@ -40,6 +40,7 @@ set(pubsub_test_src
   src/pubsub_callback_topicid.cpp
   src/pubsub_receive_test.cpp
   src/pubsub_test.cpp
+  src/pubsub_topic_renaming.cpp
   ${pubsub_test_src_shm}
   ${pubsub_test_src_udp}
 )

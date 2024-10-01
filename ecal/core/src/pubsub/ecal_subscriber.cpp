@@ -80,11 +80,17 @@ namespace eCAL
     if (m_created)           return(false);
     if (topic_name_.empty()) return(false);
 
+    std::string topic_name = topic_name_;
+    if (config_.topic_renaming)
+    {
+      topic_name = g_globals()->SubReplaceTopic(topic_name_);
+    }
+
     // create datareader
-    m_datareader = std::make_shared<CDataReader>(topic_name_, data_type_info_, config_);
+    m_datareader = std::make_shared<CDataReader>(topic_name, data_type_info_, config_);
 
     // register datareader
-    g_subgate()->Register(topic_name_, m_datareader);
+    g_subgate()->Register(topic_name, m_datareader);
 
     // we made it :-)
     m_created = true;

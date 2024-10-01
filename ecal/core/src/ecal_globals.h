@@ -68,6 +68,9 @@ namespace eCAL
 
     int Finalize();
 
+    std::string PubReplaceTopic(const std::string& topic_);
+    std::string SubReplaceTopic(const std::string& topic_);
+
     const std::unique_ptr<CLog>&                                          log()                    { return log_instance; };
 
 #if ECAL_CORE_MONITORING

@@ -413,6 +413,10 @@ set(ecal_util_src
     src/util/expanding_vector.h
     src/util/frequency_calculator.h
     src/util/getenvvar.h
+    src/util/string_replacer.h
+    src/util/string_replacer.cpp
+    src/util/yaml_mapper.h
+    src/util/yaml_mapper.cpp
 )
 if (ECAL_CORE_COMMAND_LINE)
   list(APPEND ecal_util_src

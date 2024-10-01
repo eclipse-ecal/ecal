@@ -374,6 +374,7 @@ namespace YAML
     Node node;
     node["share_topic_description"] = config_.share_topic_description;
     node["share_topic_type"]        = config_.share_topic_type;
+    node["topic_renaming"]          = config_.topic_renaming;
     node["layer"]                   = config_.layer;
     node["priority_local"]          = transformLayerEnumToStr(config_.layer_priority_local);
     node["priority_network"]        = transformLayerEnumToStr(config_.layer_priority_remote);
@@ -384,6 +385,7 @@ namespace YAML
   {
     AssignValue<bool>(config_.share_topic_description, node_, "share_topic_description");
     AssignValue<bool>(config_.share_topic_type, node_, "share_topic_type");
+    AssignValue<bool>(config_.topic_renaming, node_, "topic_renaming");
     
     std::vector<std::string> tmp;
     AssignValue<std::vector<std::string>>(tmp, node_, "priority_local");
@@ -463,8 +465,9 @@ namespace YAML
   Node convert<eCAL::Subscriber::Configuration>::encode(const eCAL::Subscriber::Configuration& config_)
   {
     Node node;
-    node["layer"] = config_.layer;
+    node["layer"]                     = config_.layer;
     node["drop_out_of_order_message"] = config_.drop_out_of_order_messages;
+    node["topic_renaming"]            = config_.topic_renaming;
     return node;
   }
 
@@ -472,6 +475,7 @@ namespace YAML
   {
     AssignValue<eCAL::Subscriber::Layer::Configuration>(config_.layer, node_, "layer");
     AssignValue<bool>(config_.drop_out_of_order_messages, node_, "dropt_out_of_order_messages");
+    AssignValue<bool>(config_.topic_renaming, node_, "topic_renaming");
     return true;
   }
 

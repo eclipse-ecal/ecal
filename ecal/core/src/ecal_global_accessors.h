@@ -34,6 +34,10 @@ namespace eCAL
   class   CGlobals;
   class   CLog;
   struct  Configuration;
+  namespace Util
+  {
+    class   StringReplacer;
+  }  
 
 #if ECAL_CORE_MONITORING
   class  CMonitoring;
@@ -67,6 +71,7 @@ namespace eCAL
   // Declaration of getter functions for globally accessible variable instances
   CGlobals*               g_globals();
   CLog*                   g_log();
+
 #if ECAL_CORE_MONITORING
   CMonitoring*            g_monitoring();
 #endif
@@ -100,6 +105,8 @@ namespace eCAL
 
   extern std::string                   g_default_ini_file;
   extern Configuration                 g_ecal_configuration;
+  extern Util::StringReplacer          g_pub_topic_replacer;
+  extern Util::StringReplacer          g_sub_topic_replacer;
 
   extern std::string                   g_host_name;
   extern std::string                   g_unit_name;

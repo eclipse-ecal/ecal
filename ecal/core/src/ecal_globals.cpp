@@ -37,6 +37,9 @@
 #include "builder/monitoring_attribute_builder.h"
 #include "builder/logging_attribute_builder.h"
 
+#include "util/yaml_mapper.h"
+#include "util/string_replacer.h"
+
 namespace eCAL
 {
   CGlobals::CGlobals() : initialized(false), components(0)
@@ -51,6 +54,13 @@ namespace eCAL
   {
     // will be set if any new module was initialized
     bool new_initialization(false);
+
+    // check for topic mappings
+    auto sub_map = Util::YamlMapper::GetMapFromYamlFile(ECAL_DEFAULT_SUB_TOPIC_MAPPING);
+    if (!sub_map.empty()) g_sub_topic_replacer.SetMap(sub_map);
+
+    auto pub_map = Util::YamlMapper::GetMapFromYamlFile(ECAL_DEFAULT_PUB_TOPIC_MAPPING);
+    if (!pub_map.empty()) g_pub_topic_replacer.SetMap(pub_map);
 
 #if ECAL_CORE_REGISTRATION
     const Registration::SAttributes registration_attr = BuildRegistrationAttributes(GetRegistrationConfiguration(), GetTransportLayerConfiguration().udp, eCAL::Process::GetProcessID());
@@ -355,4 +365,7 @@ namespace eCAL
 
     return(0);
   }
+
+  std::string CGlobals::PubReplaceTopic(const std::string& topic_) { return g_pub_topic_replacer.Replace(topic_); };
+  std::string CGlobals::SubReplaceTopic(const std::string& topic_) { return g_sub_topic_replacer.Replace(topic_); };
 }
