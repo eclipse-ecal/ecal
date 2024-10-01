@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -191,8 +191,9 @@ class Measurement(object):
       self._measurement = measurement
       self._iterator = iter(measurement.channel_names)
       self._channel_type =  channel_type
+      
     def __next__(self):
-      return self._channel_type(self._measurement, self._iterator.next())
+      return self._channel_type(self._measurement, self._iterator.__next__())
 
     def next(self):
       return self.__next__()
@@ -212,7 +213,7 @@ class Measurement(object):
     return self._channel_type(self, channel_name)
 
   def __iter__(self):
-    return Measurement.Iterator(self)
+    return Measurement.Iterator(self, self._channel_type)
 
   def __repr__(self):
     return "< Measurement object: path: %s - number of channels: %i >" % (self._path, len(self.channel_names))
