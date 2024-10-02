@@ -271,7 +271,8 @@ namespace protobuf
                 std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
                 msg.GetReflection()->ListFields(msg, &msg_fields);
                 
-                ProcProtoMsg(msg, name.str(), complete_message_name, true, fnum);
+                if (prefix_.find(field->name()) == std::string::npos || !msg_fields.empty())
+                  ProcProtoMsg(msg, name.str(), complete_message_name, true, fnum);
               }
             }
           }
@@ -282,8 +283,9 @@ namespace protobuf
             // do not process default messages to avoid infinite recursions.
             std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
             msg.GetReflection()->ListFields(msg, &msg_fields);
-            
-            ProcProtoMsg(msg, field->name(), complete_message_name, false, field->number());
+
+            if (prefix_.find(field->name()) == std::string::npos || !msg_fields.empty())
+              ProcProtoMsg(msg, field->name(), complete_message_name, false, field->number());
           }
         }
         break;
