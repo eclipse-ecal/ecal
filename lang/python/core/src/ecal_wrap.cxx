@@ -1489,7 +1489,8 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
     }
   }
 
-  return(Py_BuildValue("iO", 0, retDict));
+  auto* retVal = Py_BuildValue("iO", 0, retDict); Py_DECREF(retDict);
+  return(retVal);
 }
 
 /****************************************/
@@ -1533,7 +1534,8 @@ PyObject* mon_logging(PyObject* /*self*/, PyObject* /*args*/)
     }
   }
 
-  return(Py_BuildValue("iO", 0, retList));
+  auto* retVal = Py_BuildValue("iO", 0, retList); Py_DECREF(retList);
+  return(retVal);
 }
 
 /****************************************/
