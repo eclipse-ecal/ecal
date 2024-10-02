@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -132,45 +132,58 @@ std::set<std::string> eCAL::eh5::HDF5MeasFileWriterV5::GetChannelNames() const
   return {};
 }
 
+std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasFileWriterV5::GetChannels() const
+{
+  // UNSUPPORTED FUNCTIONs
+  return std::set<eCAL::eh5::SChannel>();
+}
+
+
 bool eCAL::eh5::HDF5MeasFileWriterV5::HasChannel(const std::string& /*channel_name*/) const
 {
   // UNSUPPORTED FUNCTION
   return false;
 }
 
-
-eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileWriterV5::GetChannelDataTypeInformation(const std::string&  /*channel_name*/) const
-{
-  // UNSUPPORTED FUNCTION
-  return eCAL::eh5::DataTypeInformation{};
-}
-
-void eCAL::eh5::HDF5MeasFileWriterV5::SetChannelDataTypeInformation(const std::string& channel_name, const eCAL::eh5::DataTypeInformation& info)
-{
-  auto type_descriptor = FromInfo(info);
-  channels_[channel_name].Type = type_descriptor.first;
-  channels_[channel_name].Description = type_descriptor.second;
-}
-
-long long eCAL::eh5::HDF5MeasFileWriterV5::GetMinTimestamp(const std::string& /*channel_name*/) const
-{
-  // UNSUPPORTED FUNCTION
-  return -1;
-}
-
-long long eCAL::eh5::HDF5MeasFileWriterV5::GetMaxTimestamp(const std::string& /*channel_name*/) const
-{
-  // UNSUPPORTED FUNCTION
-  return -1;
-}
-
-bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfo(const std::string& /*channel_name*/, EntryInfoSet& /*entries*/) const
+bool eCAL::eh5::HDF5MeasFileWriterV5::HasChannel(const eCAL::eh5::SChannel& channel) const
 {
   // UNSUPPORTED FUNCTION
   return false;
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfoRange(const std::string& /*channel_name*/, long long /*begin*/, long long /*end*/, EntryInfoSet& /*entries*/) const
+
+eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileWriterV5::GetChannelDataTypeInformation(const SChannel& /*channel*/) const
+{
+  // UNSUPPORTED FUNCTION
+  return eCAL::eh5::DataTypeInformation{};
+}
+
+void eCAL::eh5::HDF5MeasFileWriterV5::SetChannelDataTypeInformation(const SChannel& channel, const eCAL::eh5::DataTypeInformation& info)
+{
+  auto type_descriptor = FromInfo(info);
+  channels_[channel.name].Type = type_descriptor.first;
+  channels_[channel.name].Description = type_descriptor.second;
+}
+
+long long eCAL::eh5::HDF5MeasFileWriterV5::GetMinTimestamp(const SChannel& /*channel*/) const
+{
+  // UNSUPPORTED FUNCTION
+  return -1;
+}
+
+long long eCAL::eh5::HDF5MeasFileWriterV5::GetMaxTimestamp(const SChannel& /*channel*/) const
+{
+  // UNSUPPORTED FUNCTION
+  return -1;
+}
+
+bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfo(const SChannel& /*channel*/, EntryInfoSet& /*entries*/) const
+{
+  // UNSUPPORTED FUNCTION
+  return false;
+}
+
+bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfoRange(const SChannel& /*channel*/, long long /*begin*/, long long /*end*/, EntryInfoSet& /*entries*/) const
 {
   // UNSUPPORTED FUNCTION
   return false;
@@ -235,6 +248,12 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const void* data, const uns
   entries_counter_++;
 
   return (writeStatus >= 0);
+}
+
+bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long clock)
+{
+  // v5 does not support multiple channels per topic. Thus we will only save the name, and no sender ID.
+  return AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel.name, 0, clock);
 }
 
 void eCAL::eh5::HDF5MeasFileWriterV5::ConnectPreSplitCallback(CallbackFunction cb)

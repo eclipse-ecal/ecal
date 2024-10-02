@@ -430,7 +430,7 @@ static PyObject* Meas_AddEntryToFile(Meas *self, PyObject *args)
   if (!PyArg_ParseTuple(args, "y#LLs|L", &data, &size, &snd_timestamp, &rcv_timestamp, &channel_name, &counter))
     return nullptr;
 
-  return(Py_BuildValue("i", self->hdf5_meas->AddEntryToFile(data, (int)size, snd_timestamp, rcv_timestamp, channel_name, 0, counter)));
+  return(Py_BuildValue("i", self->hdf5_meas->AddEntryToFile(data, (int)size, snd_timestamp, rcv_timestamp, eCAL::experimental::measurement::base::CreateChannel(channel_name), counter)));
 }
 
 /****************************************/

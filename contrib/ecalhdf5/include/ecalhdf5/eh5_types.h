@@ -38,17 +38,26 @@ namespace eCAL
     const std::string kChnNameAttribTitle ("Channel Name");
     const std::string kChnDescAttrTitle   ("Channel Description");
     const std::string kChnTypeAttrTitle   ("Channel Type");
+    const std::string kChnIdTypename      ("TypeName");
+    const std::string kChnIdEncoding      ("TypeEncoding");
+    const std::string kChnIdDescriptor    ("TypeDescriptor");
+    const std::string kChnIdData          ("DataTable");
     const std::string kFileVerAttrTitle   ("Version");
     const std::string kTimestampAttrTitle ("Timestamps");
     const std::string kChnAttrTitle       ("Channels");
 
     // Remove @eCAL6 -> backwards compatibility with old interface!
+    using SChannel = eCAL::experimental::measurement::base::Channel;
     using SEntryInfo = eCAL::experimental::measurement::base::EntryInfo;
     using EntryInfoSet = eCAL::experimental::measurement::base::EntryInfoSet;
     using EntryInfoVect = eCAL::experimental::measurement::base::EntryInfoVect;
-    using eAccessType = eCAL::experimental::measurement::base::AccessType;
-    using eCAL::experimental::measurement::base::RDONLY;
-    using eCAL::experimental::measurement::base::CREATE;
+
+    enum eAccessType
+    {
+      RDONLY,    //!< ReadOnly - the measurement can only be read
+      CREATE,    //!< Create   - a new measurement will be created
+      CREATE_V5  //!< Create a legacy V5 hdf5 measurement (For testing purpose only!)
+    };
    
     using eCAL::experimental::measurement::base::DataTypeInformation;
     //!< @endcond

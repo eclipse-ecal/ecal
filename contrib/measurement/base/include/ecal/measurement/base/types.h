@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,9 @@
 
 #pragma once 
 
+#include <cstdint>
 #include <set>
+#include <tuple>
 #include <vector>
 
 namespace eCAL
@@ -42,22 +44,62 @@ namespace eCAL
         **/
         struct DataTypeInformation
         {
-          std::string name;          //!< name of the datatype
-          std::string encoding;      //!< encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
-          std::string descriptor;    //!< descriptor information of the datatype (necessary for reflection)
+          std::string name       = "";    //!< name of the datatype
+          std::string encoding   = "";    //!< encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
+          std::string descriptor = "";    //!< descriptor information of the datatype (necessary for reflection)
 
           //!< @cond
           bool operator==(const DataTypeInformation& other) const
           {
-            return name == other.name && encoding == other.encoding && descriptor == other.descriptor;
+            return std::tie(name, encoding, descriptor) == std::tie(other.name, other.encoding, other.descriptor);
           }
 
           bool operator!=(const DataTypeInformation& other) const
           {
             return !(*this == other);
           }
+
+          bool operator<(const DataTypeInformation& other) const
+          {
+            return std::tie(name, encoding, descriptor) < std::tie(other.name, other.encoding, other.descriptor);
+          }
           //!< @endcond
         };
+
+        struct Channel
+        {
+          using id_t = std::int64_t;
+
+          std::string name = "";
+          id_t        id = 0;
+
+          [[deprecated("Please construct a Channel object explicitly.")]]
+          Channel(const std::string name_) : name(name_) {};
+          
+          Channel(const std::string name_, id_t id_) : name(name_), id(id_) {};
+
+          //!< @cond
+          bool operator==(const Channel& other) const
+          {
+            return std::tie(id, name) == std::tie(other.id, other.name);
+          }
+
+          bool operator!=(const Channel& other) const
+          {
+            return !(*this == other);
+          }
+
+          bool operator<(const Channel& other) const
+          {
+            return std::tie(id, name) < std::tie(other.id, other.name);
+          }
+          //!< @endcond
+        };
+
+        inline Channel CreateChannel(const std::string& name)
+        {
+          return Channel{ name, 0 };
+        }
 
         /**
          * @brief Info struct for a single measurement entry
@@ -65,10 +107,10 @@ namespace eCAL
         struct EntryInfo
         {
           long long RcvTimestamp;   //!< Receive time stamp
-          long long ID;             //!< Channel ID
+          long long ID;             //!< Data ID - to extract corresponding data
           long long SndClock;       //!< Send clock
           long long SndTimestamp;   //!< Send time stamp
-          long long SndID;          //!< Send ID
+          long long SndID;          //!< Send ID topic ID (v6) / can be set by user (v5)
 
           //!< @cond
           EntryInfo() : RcvTimestamp(0), ID(0), SndClock(0), SndTimestamp(0), SndID(0) {}
@@ -102,15 +144,6 @@ namespace eCAL
          * @brief eCAL HDF5 entries (as vector container)
         **/
         using EntryInfoVect = std::vector<EntryInfo>;
-
-        /**
-         * @brief eCAL Measurement Access types
-        **/
-        enum AccessType
-        {
-          RDONLY,  //!< ReadOnly - the measurement can only be read
-          CREATE   //!< Create   - a new measurement will be created
-        };
 
       }
     }
