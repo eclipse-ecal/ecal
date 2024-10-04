@@ -1120,7 +1120,9 @@ PyObject* client_call_method(PyObject* /*self*/, PyObject* args)   // (client_ha
   PyArg_ParseTuple(args, "nsy#i", &client_handle, &method_name, &request, &request_len, &timeout);
 
   bool called_method{ false };
-  called_method = client_call_method(client_handle, method_name, request, (int)request_len, timeout);
+  Py_BEGIN_ALLOW_THREADS
+    called_method = client_call_method(client_handle, method_name, request, (int)request_len, timeout);
+  Py_END_ALLOW_THREADS
 
   return(Py_BuildValue("i", called_method));
 }
