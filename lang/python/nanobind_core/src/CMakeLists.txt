@@ -27,6 +27,10 @@ nanobind_add_module(
   modules/module_publisher.h
   modules/module_publisher_config.cpp
   modules/module_publisher_config.h
+  modules/module_application_config.cpp
+  modules/module_application_config.h
+  modules/module_logging_config.cpp
+  modules/module_logging_config.h
   modules/module_server.cpp
   modules/module_server.h
   modules/module_subscriber.cpp
@@ -48,8 +52,12 @@ nanobind_add_module(
   wrappers/wrapper_server.h
   wrappers/wrapper_subscriber.cpp
   wrappers/wrapper_subscriber.h
+  wrappers/wrapper_application_config.cpp
+  wrappers/wrapper_application_config.h
   wrappers/wrapper_subscriber_config.cpp
   wrappers/wrapper_subscriber_config.h
+  wrappers/wrapper_logging_config.cpp
+  wrappers/wrapper_logging_config.h
 
   nanobind_core.cpp
 )
