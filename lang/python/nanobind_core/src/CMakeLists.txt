@@ -25,6 +25,8 @@ nanobind_add_module(
   modules/module_datatypeinfo.h
   modules/module_publisher.cpp
   modules/module_publisher.h
+  modules/module_monitoring_config.cpp
+  modules/module_monitoring_config.h
   modules/module_publisher_config.cpp
   modules/module_publisher_config.h
   modules/module_application_config.cpp
@@ -41,6 +43,8 @@ nanobind_add_module(
   modules/module_subscriber_config.h
   modules/module_time_config.cpp
   modules/module_time_config.h
+  modules/module_user_arguments_config.cpp
+  modules/module_user_arguments_config.h
   modules/module_util.cpp
   modules/module_util.h
 
@@ -64,6 +68,8 @@ nanobind_add_module(
   wrappers/wrapper_subscriber_config.h
   wrappers/wrapper_time_config.cpp
   wrappers/wrapper_time_config.h
+  wrappers/wrapper_user_arguments_config.cpp
+  wrappers/wrapper_user_arguments_config.h
   wrappers/wrapper_logging_config.cpp
   wrappers/wrapper_logging_config.h
 
