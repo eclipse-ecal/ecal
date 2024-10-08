@@ -18,8 +18,11 @@
 */
 
 /**
- * @brief  Main Nanobind module which Adds all other needed classes and functions
+ * @file   module_service_config.h
+ * @brief  Nanobind module for structs of file config/service.h
 **/
+
+#pragma once
 
 #include <nanobind/nanobind.h>
 #include <nanobind/operators.h>
@@ -35,31 +38,9 @@
 #include <cstddef>
 #include <ecal/ecal_types.h>
 
-#include <modules/module_client.h>
-#include <modules/module_core.h>
-#include <modules/module_datatypeinfo.h>
-#include <modules/module_publisher.h>
-#include <modules/module_publisher_config.h>
-#include <modules/module_server.h>
-#include <modules/module_subscriber.h>
-#include <modules/module_logging_config.h>
-#include <modules/module_subscriber_config.h>
-#include <modules/module_util.h>
-
-
-NB_MODULE(nanobind_core, m) {
-
-    AddDataTypeInfoStructToModule(m);
-    AddSubscriberClassToModule(m);
-    AddPublisherClassToModule(m);
-    AddClientClassToModule(m);
-    AddServerClassToModule(m);
-    AddLoggingConfigStructToModule(m);
-    AddServiceConfigStructToModule(m);
-    AddApplicationConfigStructToModule(m);
-    AddPublisherConfigStructToModule(m);
-    AddSubscriberConfigStructToModule(m);
-
-    AddCoreFuncToModule(m);
-    AddUtilFuncToModule(m);
-}
+/**
+ * @brief  Function to Add Nanobind module
+ *
+ * @param module  The nanobind module variable
+**/
+void AddServiceConfigStructToModule(nanobind::module_& m_Service);

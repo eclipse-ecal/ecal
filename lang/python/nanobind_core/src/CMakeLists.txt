@@ -35,8 +35,12 @@ nanobind_add_module(
   modules/module_server.h
   modules/module_subscriber.cpp
   modules/module_subscriber.h
+  modules/module_service_config.cpp
+  modules/module_service_config.h
   modules/module_subscriber_config.cpp
   modules/module_subscriber_config.h
+  modules/module_time_config.cpp
+  modules/module_time_config.h
   modules/module_util.cpp
   modules/module_util.h
 
@@ -54,8 +58,12 @@ nanobind_add_module(
   wrappers/wrapper_subscriber.h
   wrappers/wrapper_application_config.cpp
   wrappers/wrapper_application_config.h
+  wrappers/wrapper_service_config.cpp
+  wrappers/wrapper_service_config.h
   wrappers/wrapper_subscriber_config.cpp
   wrappers/wrapper_subscriber_config.h
+  wrappers/wrapper_time_config.cpp
+  wrappers/wrapper_time_config.h
   wrappers/wrapper_logging_config.cpp
   wrappers/wrapper_logging_config.h
 
