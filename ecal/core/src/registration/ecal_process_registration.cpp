@@ -38,6 +38,9 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   auto& process_sample_identifier = process_sample.identifier;
   process_sample_identifier.host_name  = eCAL::Process::GetHostName();
   process_sample_identifier.process_id = eCAL::Process::GetProcessID();
+  // We need to set the pid as entity_id.
+  // However, we cannot send anything over the wire :(
+  process_sample_identifier.entity_id = std::to_string(process_sample_identifier.process_id);
 
   auto& process_sample_process = process_sample.process;
   process_sample_process.hgname = eCAL::Process::GetHostGroupName();
