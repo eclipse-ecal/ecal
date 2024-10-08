@@ -43,4 +43,4 @@
  *
  * @param module  The nanobind module variable
 **/
-void AddLoggingConfigStructToModule(const nanobind::module_& module);
+void AddLoggingConfigStructToModule(nanobind::module_& module);

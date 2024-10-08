@@ -25,7 +25,7 @@
 #include <modules/module_logging_config.h>
 #include <wrappers/wrapper_logging_config.h>
 
-void AddLoggingConfigStructToModule(const nanobind::module_& module)
+void AddLoggingConfigStructToModule(nanobind::module_& m)
 {
     // Bind the Console::Configuration structure
     nanobind::class_<eCAL::Logging::Sinks::Console::CNBConsoleConfiguration>(m, "ConsoleConfiguration")
@@ -48,11 +48,11 @@ void AddLoggingConfigStructToModule(const nanobind::module_& module)
         .def_rw("filter_log_udp", &eCAL::Logging::Sinks::UDP::CNBUDPConfiguration::filter_log_udp);
 
     // Bind the Sinks::Configuration structure
-    nanobind::class_<eCAL::Logging::Sinks::NBSinksConfiguration>(m, "SinksConfiguration")
+    nanobind::class_<eCAL::Logging::Sinks::CNBSinksConfiguration>(m, "SinksConfiguration")
         .def(nanobind::init<>())  // Constructor binding
-        .def_rw("console", &eCAL::Logging::Sinks::NBSinksConfiguration::console)
-        .def_rw("file", &eCAL::Logging::Sinks::NBSinksConfiguration::file)
-        .def_rw("udp", &eCAL::Logging::Sinks::NBSinksConfiguration::udp);
+        .def_rw("console", &eCAL::Logging::Sinks::CNBSinksConfiguration::console)
+        .def_rw("file", &eCAL::Logging::Sinks::CNBSinksConfiguration::file)
+        .def_rw("udp", &eCAL::Logging::Sinks::CNBSinksConfiguration::udp);
 
     // Bind the Logging::Configuration structure
     nanobind::class_<eCAL::Logging::CNBLoggingConfiguration>(m, "LoggingConfiguration")
