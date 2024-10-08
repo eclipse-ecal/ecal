@@ -407,6 +407,8 @@ namespace
       registration_.process.rclock = pb_sample_.process.rclock;
       // pid
       registration_.identifier.process_id = pb_sample_.process.pid;
+      // tid -> we need to use the PID here, because we don't have a designated field for it
+      registration_.identifier.entity_id = std::to_string(registration_.identifier.process_id);
       // state.severity
       registration_.process.state.severity = static_cast<eCAL::Registration::eProcessSeverity>(pb_sample_.process.state.severity);
       // state.severity_level
