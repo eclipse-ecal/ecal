@@ -43,4 +43,4 @@
  *
  * @param module  The nanobind module variable
 **/
-void AddDataTypeInfoStructToModule(nanobind::module_& module);
+void AddPublisherConfigStructToModule(nanobind::module_& module);

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 */
 
 #include "../../serialization/ecal_serialize_sample_registration.h"
+#include "registration_generate.h"
 
 #include <gtest/gtest.h>
 
@@ -25,67 +26,86 @@ namespace eCAL
 {
   namespace Registration
   {
-    Sample GenerateRegistrationSample();
     bool   CompareRegistrationSamples(const Sample& sample1, const Sample& sample2);
 
-    TEST(core_cpp_serialization, Registration2String)
+    class RegistrationSampleSerializationTest : public ::testing::Test {
+    public:
+
+      RegistrationSampleSerializationTest() {
+        samples.push_back(GenerateProcessSample());
+        samples.push_back(GenerateTopicSample());
+        samples.push_back(GenerateServiceSample());
+        samples.push_back(GenerateClientSample());
+      }
+
+    protected:
+      std::vector<Sample> samples;
+    };
+    using core_cpp_registration_serialization = RegistrationSampleSerializationTest;
+
+
+    TEST_F(core_cpp_registration_serialization, Registration2String)
     {
-      Sample sample_in = GenerateRegistrationSample();
+      for (const auto& sample_in : samples)
+      {
+        std::string sample_buffer;
+        EXPECT_TRUE(SerializeToBuffer(sample_in, sample_buffer));
 
-      std::string sample_buffer;
-      ASSERT_TRUE(SerializeToBuffer(sample_in, sample_buffer));
+        Sample sample_out;
+        EXPECT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), sample_out));
 
-      Sample sample_out;
-      ASSERT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), sample_out));
-
-      ASSERT_TRUE(CompareRegistrationSamples(sample_in, sample_out));
+        EXPECT_TRUE(CompareRegistrationSamples(sample_in, sample_out));
+      }
     }
 
-    TEST(core_cpp_serialization, Registration2Vector)
+    TEST_F(core_cpp_registration_serialization, Registration2Vector)
     {
-      Sample sample_in = GenerateRegistrationSample();
+      for (const auto& sample_in : samples)
+      {
+        std::vector<char> sample_buffer;
+        EXPECT_TRUE(SerializeToBuffer(sample_in, sample_buffer));
 
-      std::vector<char> sample_buffer;
-      ASSERT_TRUE(SerializeToBuffer(sample_in, sample_buffer));
+        Sample sample_out;
+        EXPECT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), sample_out));
 
-      Sample sample_out;
-      ASSERT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), sample_out));
-
-      ASSERT_TRUE(CompareRegistrationSamples(sample_in, sample_out));
+        EXPECT_TRUE(CompareRegistrationSamples(sample_in, sample_out));
+      }
     }
 
-    TEST(core_cpp_serialization, RegistrationList2String)
+    TEST_F(core_cpp_registration_serialization, RegistrationList2String)
     {
       SampleList sample_list_in;
-      sample_list_in.samples.push_back(GenerateRegistrationSample());
-      sample_list_in.samples.push_back(GenerateRegistrationSample());
-      sample_list_in.samples.push_back(GenerateRegistrationSample());
+      for (const auto& sample_in : samples)
+      {
+        sample_list_in.samples.push_back(sample_in);
+      }
 
       std::string sample_buffer;
-      ASSERT_TRUE(SerializeToBuffer(sample_list_in, sample_buffer));
+      EXPECT_TRUE(SerializeToBuffer(sample_list_in, sample_buffer));
 
       SampleList sample_list_out;
-      ASSERT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), sample_list_out));
+      EXPECT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), sample_list_out));
 
-      ASSERT_TRUE(sample_list_in.samples.size() == sample_list_out.samples.size());
-      ASSERT_TRUE(std::equal(sample_list_in.samples.begin(), sample_list_in.samples.end(), sample_list_out.samples.begin(), CompareRegistrationSamples));
+      EXPECT_TRUE(sample_list_in.samples.size() == sample_list_out.samples.size());
+      EXPECT_TRUE(std::equal(sample_list_in.samples.begin(), sample_list_in.samples.end(), sample_list_out.samples.begin(), CompareRegistrationSamples));
     }
 
-    TEST(core_cpp_serialization, RegistrationList2Vector)
+    TEST_F(core_cpp_registration_serialization, RegistrationList2Vector)
     {
       SampleList sample_list_in;
-      sample_list_in.samples.push_back(GenerateRegistrationSample());
-      sample_list_in.samples.push_back(GenerateRegistrationSample());
-      sample_list_in.samples.push_back(GenerateRegistrationSample());
+      for (const auto& sample_in : samples)
+      {
+        sample_list_in.samples.push_back(sample_in);
+      }
 
       std::vector<char> sample_buffer;
-      ASSERT_TRUE(SerializeToBuffer(sample_list_in, sample_buffer));
+      EXPECT_TRUE(SerializeToBuffer(sample_list_in, sample_buffer));
 
       SampleList sample_list_out;
-      ASSERT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), sample_list_out));
+      EXPECT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), sample_list_out));
 
-      ASSERT_TRUE(sample_list_in.samples.size() == sample_list_out.samples.size());
-      ASSERT_TRUE(std::equal(sample_list_in.samples.begin(), sample_list_in.samples.end(), sample_list_out.samples.begin(), CompareRegistrationSamples));
+      EXPECT_TRUE(sample_list_in.samples.size() == sample_list_out.samples.size());
+      EXPECT_TRUE(std::equal(sample_list_in.samples.begin(), sample_list_in.samples.end(), sample_list_out.samples.begin(), CompareRegistrationSamples));
     }
   }
 }

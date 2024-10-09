@@ -100,7 +100,7 @@ We support building on currently supported Ubuntu LTS releases.
 
 .. seealso:: 
 
-   The build described here is a very simple (yet complete and fully functional) build that differs from our "official" binaries, e.g. in regards of the library install directory and the :file:`ecal.ini` location-.
+   The build described here is a very simple (yet complete and fully functional) build that differs from our "official" binaries, e.g. in regards of the library install directory and the :file:`ecal.yaml` location-.
    If your goal is to replicate the official build, you should apply the CMake Options exactly as we do.
    You can grab those from our GitHub Action build scripts:
 

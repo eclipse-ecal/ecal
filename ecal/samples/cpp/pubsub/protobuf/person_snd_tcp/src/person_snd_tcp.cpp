@@ -36,9 +36,9 @@ int main(int argc, char **argv)
   eCAL::Publisher::Configuration pub_config;
   
   // switch shm and udp layer off, tcp layer on
-  pub_config.shm.enable = false;
-  pub_config.udp.enable = false;
-  pub_config.tcp.enable = true;
+  pub_config.layer.shm.enable = false;
+  pub_config.layer.udp.enable = false;
+  pub_config.layer.tcp.enable = true;
 
   // create a publisher (topic name "person")
   eCAL::protobuf::CPublisher<pb::People::Person> pub("person", pub_config);

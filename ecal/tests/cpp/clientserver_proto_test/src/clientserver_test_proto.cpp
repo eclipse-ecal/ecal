@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,6 +70,9 @@ TEST(core_cpp_clientserver_proto, ProtoCallback)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver proto callback test");
+
+  // enable loop back communication in the same thread
+  eCAL::Util::EnableLoopback(true);
 
   // create MathService server
   std::shared_ptr<MathServiceImpl> math_service_impl = std::make_shared<MathServiceImpl>();
@@ -159,6 +162,9 @@ TEST(core_cpp_clientserver_proto, ProtoBlocking)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver proto blocking test");
+
+  // enable loop back communication in the same thread
+  eCAL::Util::EnableLoopback(true);
 
   // create PingService server
   std::shared_ptr<PingServiceImpl> ping_service_impl = std::make_shared<PingServiceImpl>();

@@ -32,14 +32,14 @@ namespace eCAL
   {
     struct Configuration
     {
-      std::string timesync_module_rt{};             /*!< Time synchronisation interface name (dynamic library)
-                                                         The name will be extended with platform suffix (32|64), debug suffix (d) and platform extension (.dll|.so)
-                                                         Available modules are:
-                                                           - ecaltime-localtime    local system time without synchronization        
-                                                           - ecaltime-linuxptp     For PTP / gPTP synchronization over ethernet on Linux
-                                                                                   (device configuration in ecaltime.ini) 
-                                                         (Default: ecaltime-localtime)*/
-      std::string timesync_module_replay{};         //!< (Default: "")
+      std::string timesync_module_rt     { "ecaltime-localtime" }; /*!< Time synchronisation interface name (dynamic library)
+                                                                        The name will be extended with platform suffix (32|64), debug suffix (d) and platform extension (.dll|.so)
+                                                                        Available modules are:
+                                                                          - ecaltime-localtime    local system time without synchronization        
+                                                                          - ecaltime-linuxptp     For PTP / gPTP synchronization over ethernet on Linux
+                                                                                                  (device configuration in ecaltime.ini) 
+                                                                        (Default: ecaltime-localtime)*/
+      std::string timesync_module_replay { "" };                   //!< (Default: "")
     };
   }
 }

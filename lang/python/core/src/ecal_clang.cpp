@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -176,7 +176,7 @@ void ecal_enable_loopback(const int state_)
 bool ecal_get_type_name(const char* topic_name_, const char** topic_type_, int* topic_type_len_)
 {
   eCAL::SDataTypeInformation topic_info;
-  bool ret = eCAL::Util::GetTopicDataTypeInformation(topic_name_, topic_info);
+  bool ret = eCAL::Registration::GetTopicDataTypeInformation(topic_name_, topic_info);
   if(ret)
   {
     std::string topic_type_s = topic_info.name;
@@ -204,7 +204,7 @@ bool ecal_get_type_name(const char* topic_name_, const char** topic_type_, int* 
 bool ecal_get_type_encoding(const char* topic_name_, const char** topic_encoding_, int* topic_encoding_len_)
 {
   eCAL::SDataTypeInformation topic_info;
-  bool ret = eCAL::Util::GetTopicDataTypeInformation(topic_name_, topic_info);
+  bool ret = eCAL::Registration::GetTopicDataTypeInformation(topic_name_, topic_info);
   if (ret)
   {
     std::string topic_encoding_s = topic_info.encoding;
@@ -232,7 +232,7 @@ bool ecal_get_type_encoding(const char* topic_name_, const char** topic_encoding
 bool ecal_get_description(const char* topic_name_, const char** topic_desc_, int* topic_desc_len_)
 {
   eCAL::SDataTypeInformation topic_info;
-  bool ret = eCAL::Util::GetTopicDataTypeInformation(topic_name_, topic_info);
+  bool ret = eCAL::Registration::GetTopicDataTypeInformation(topic_name_, topic_info);
   if(ret)
   {
     std::string topic_desc_s = topic_info.descriptor;

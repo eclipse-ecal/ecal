@@ -50,15 +50,15 @@ int main(int argc, char **argv)
 
   // enable zero copy mode
   std::cout << "Zero copy mode: " << zero_copy << std::endl;
-  pub_config.shm.zero_copy_mode = zero_copy;
+  pub_config.layer.shm.zero_copy_mode = zero_copy;
   
   // set write buffer count
   std::cout << "Number of write buffers: " << buffer_count << std::endl;
-  pub_config.shm.memfile_buffer_count = buffer_count;
+  pub_config.layer.shm.memfile_buffer_count = buffer_count;
 
   // enable handshake mode
   std::cout << "Acknowledge timeout: " << acknowledge_timeout_ms << " ms" << std::endl;
-  pub_config.shm.acknowledge_timeout_ms = acknowledge_timeout_ms;
+  pub_config.layer.shm.acknowledge_timeout_ms = acknowledge_timeout_ms;
   std::cout << std::endl;
 
   // create publisher

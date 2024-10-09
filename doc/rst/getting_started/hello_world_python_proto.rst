@@ -111,7 +111,7 @@ For that, create a file :file:`protobuf_snd.py` next to your :file:`proto_messag
    **Line 14** initializes eCAL.
    The name of the node is "Python Protobuf Publisher".
 
-   By also providing ``sys.argv`` you get the ability to pass command line arguments to eCAL, e.g. for loading an :file:`ecal.ini` configuration file from a non-standard path.
+   By also providing ``sys.argv`` you get the ability to pass command line arguments to eCAL, e.g. for loading an :file:`ecal.yaml` configuration file from a non-standard path.
    In practice this is not often used and you could also pass ``[]`` as arguments.
 
    **Line 20** creates an eCAL Publisher for the topic "hello_world_python_protobuf_topic".

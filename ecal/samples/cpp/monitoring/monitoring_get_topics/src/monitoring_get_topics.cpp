@@ -43,7 +43,7 @@ int main(int argc, char **argv)
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        eCAL::Util::GetTopics(topic_info_map);
+        eCAL::Registration::GetTopics(topic_info_map);
       }
 
       auto num_topics = topic_info_map.size();
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        eCAL::Util::GetTopicNames(topic_names);
+        eCAL::Registration::GetTopicNames(topic_names);
       }
 
       auto num_topics = topic_names.size();

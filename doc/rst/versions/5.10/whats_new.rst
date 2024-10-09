@@ -46,7 +46,7 @@ New features
 Other notable changes
 =====================
 
-- The :file:`ecal.ini` now installs a local configuration by default
+- The :file:`ecal.yaml` now installs a local configuration by default
 
 - Improved eCAL Service API and internals
 

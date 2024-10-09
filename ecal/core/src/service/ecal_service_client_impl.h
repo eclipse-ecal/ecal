@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,10 @@
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
-
 #include <ecal/service/client_session.h>
+
+#include "serialization/ecal_serialize_sample_registration.h"
+#include "serialization/ecal_struct_service.h"
 
 #include <map>
 #include <mutex>
@@ -78,7 +80,7 @@ namespace eCAL
     void RegisterService(const std::string& key_, const SServiceAttr& service_);
 
     // called by eCAL:CClientGate every second to update registration layer
-    void RefreshRegistration();
+    Registration::Sample GetRegistration();
 
     std::string GetServiceName() { return m_service_name; };
 
@@ -94,10 +96,14 @@ namespace eCAL
     static void fromSerializedProtobuf(const std::string& response_pb_, eCAL::SServiceResponse& response_);
     static void fromStruct(const Service::Response& response_struct_, eCAL::SServiceResponse& response_);
 
-    void Register(bool force_);
+    Registration::Sample GetRegistrationSample();
+    Registration::Sample GetUnregistrationSample();
+    
+    void Register();
     void Unregister();
 
     void CheckForNewServices();
+    void CheckForDisconnectedServices();
 
     void ErrorCallback(const std::string &method_name_, const std::string &error_message_);
 
@@ -128,7 +134,7 @@ namespace eCAL
     ServiceMethodInformationMapT m_method_information_map;
 
     using MethodCallCountMapT = std::map<std::string, uint64_t>;
-    MethodCallCountMapT  m_method_call_count_map;
+    MethodCallCountMapT   m_method_call_count_map;
 
     std::atomic<bool>     m_created;
   };

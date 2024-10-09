@@ -86,7 +86,7 @@ Task configuration
     Whether the window of the started task shall be normal, maximized or minimized.
     Only supported on Microsoft Windows.
 
-    When using a terminal emulator on linux (see :ref:`ecal.ini<ecalini_option_terminal_emulator>`), the option *minimized* will prevent opening a terminal emulator and the process will print its output in the ecal_sys_client terminal as usual.
+    When using a terminal emulator on linux (see :ref:`ecal.yaml<ecalini_option_terminal_emulator>`), the option *minimized* will prevent opening a terminal emulator and the process will print its output in the ecal_sys_client terminal as usual.
     
   - **Launch order**:
     Defines the order of tasks that must be started serialized.

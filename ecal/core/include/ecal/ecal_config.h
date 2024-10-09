@@ -30,8 +30,16 @@
 //@{ 
 namespace eCAL
 {
-  ECAL_API Configuration& GetConfiguration();
-  
+  ECAL_API Configuration&               GetConfiguration                   ();
+  ECAL_API Registration::Configuration& GetRegistrationConfiguration       ();
+  ECAL_API Monitoring::Configuration&   GetMonitoringConfiguration         ();
+  ECAL_API Logging::Configuration&      GetLoggingConfiguration            ();
+  ECAL_API Subscriber::Configuration&   GetSubscriberConfiguration         ();
+  ECAL_API Publisher::Configuration&    GetPublisherConfiguration          ();
+  ECAL_API Time::Configuration&         GetTimesyncConfiguration           ();
+  ECAL_API Service::Configuration&      GetServiceConfiguration            ();
+  ECAL_API Application::Configuration&  GetApplicationConfiguration        ();
+
   namespace Config
   {
     /////////////////////////////////////
@@ -47,6 +55,7 @@ namespace eCAL
     /////////////////////////////////////
 
     ECAL_API bool                     IsNetworkEnabled                     ();
+    ECAL_API bool                     IsShmRegistrationEnabled             ();
     ECAL_API Types::UdpConfigVersion  GetUdpMulticastConfigVersion         ();
     ECAL_API std::string              GetUdpMulticastGroup                 ();
     ECAL_API std::string              GetUdpMulticastMask                  ();
@@ -64,9 +73,9 @@ namespace eCAL
 
     ECAL_API bool                     IsNpcapEnabled                       ();
 
-    ECAL_API int                      GetTcpPubsubReaderThreadpoolSize     ();
-    ECAL_API int                      GetTcpPubsubWriterThreadpoolSize     ();
-    ECAL_API int                      GetTcpPubsubMaxReconnectionAttemps   ();
+    ECAL_API size_t                   GetTcpPubsubReaderThreadpoolSize     ();
+    ECAL_API size_t                   GetTcpPubsubWriterThreadpoolSize     ();
+    ECAL_API size_t                   GetTcpPubsubMaxReconnectionAttemps   ();
 
     ECAL_API std::string              GetHostGroupName                     ();
 
@@ -87,7 +96,6 @@ namespace eCAL
     // monitoring
     /////////////////////////////////////
 
-    ECAL_API int                      GetMonitoringTimeoutMs               ();
     ECAL_API std::string              GetMonitoringFilterExcludeList       ();
     ECAL_API std::string              GetMonitoringFilterIncludeList       ();
     ECAL_API eCAL_Logging_Filter      GetConsoleLogFilter                  ();
@@ -103,16 +111,6 @@ namespace eCAL
     /////////////////////////////////////
     // publisher
     /////////////////////////////////////
-    ECAL_API bool                     GetPublisherShmMode                  ();
-    ECAL_API bool                     GetPublisherTcpMode                  ();
-    ECAL_API bool                     GetPublisherUdpMulticastMode         ();
-
-    ECAL_API size_t                   GetMemfileMinsizeBytes               ();
-    ECAL_API size_t                   GetMemfileOverprovisioningPercentage ();
-    ECAL_API int                      GetMemfileAckTimeoutMs               ();
-    ECAL_API bool                     IsMemfileZerocopyEnabled             ();
-    ECAL_API size_t                   GetMemfileBufferCount                ();
-
     ECAL_API bool                     IsTopicTypeSharingEnabled            ();
     ECAL_API bool                     IsTopicDescriptionSharingEnabled     ();
 
@@ -127,8 +125,6 @@ namespace eCAL
     /////////////////////////////////////
     namespace Experimental
     {
-      ECAL_API bool                   IsShmMonitoringEnabled             ();
-      ECAL_API bool                   IsNetworkMonitoringDisabled        ();
       ECAL_API size_t                 GetShmMonitoringQueueSize          ();
       ECAL_API std::string            GetShmMonitoringDomain             ();
       ECAL_API bool                   GetDropOutOfOrderMessages          ();

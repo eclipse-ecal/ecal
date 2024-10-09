@@ -19,6 +19,6 @@
 
    * - Additional notes
      - * On Ubuntu, the official builds changes the lib dirs to the proper multiarch lib dirs.
-       * On Ubuntu the location of :file:`ecal.ini` changed to ``/etc/ecal/ecal.ini``
-       * On Windows, the location of :file:`ecal.ini` changed to ``C:\ProgramData\eCAL\ecal.ini``
+       * On Ubuntu the location of :file:`ecal.yaml` changed to ``/etc/ecal/ecal.yaml``
+       * On Windows, the location of :file:`ecal.yaml` changed to ``C:\ProgramData\eCAL\ecal.yaml``
   

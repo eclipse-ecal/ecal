@@ -37,27 +37,27 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
   eCAL::Publisher::Configuration pub_config;
 
   // set transport layer
-  pub_config.shm.enable = false;
-  pub_config.udp.enable = false;
-  pub_config.tcp.enable = false;
+  pub_config.layer.shm.enable = false;
+  pub_config.layer.udp.enable = false;
+  pub_config.layer.tcp.enable = false;
   switch (layer)
   {
   case eCAL::TLayer::tlayer_shm:
-    pub_config.shm.enable = true;
+    pub_config.layer.shm.enable = true;
     break;
   case eCAL::TLayer::tlayer_udp_mc:
-    pub_config.udp.enable = true;
+    pub_config.layer.udp.enable = true;
     break;
   case eCAL::TLayer::tlayer_tcp:
-    pub_config.tcp.enable = true;
+    pub_config.layer.tcp.enable = true;
     break;
   }
 
   // enable zero copy mode
-  pub_config.shm.zero_copy_mode = zero_copy;
+  pub_config.layer.shm.zero_copy_mode = zero_copy;
 
   // enable handshake mode
-  pub_config.shm.acknowledge_timeout_ms = 100;
+  pub_config.layer.shm.acknowledge_timeout_ms = 100;
 
   // create publisher
   eCAL::CPublisher pub("throughput", pub_config);

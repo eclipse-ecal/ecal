@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,12 +101,13 @@ namespace eCAL
   {
     SServiceAttr service;
     const auto& ecal_sample_service = ecal_sample_.service;
-    service.hname = ecal_sample_service.hname;
+    const auto& ecal_sample_identifier = ecal_sample_.identifier;
+    service.hname = ecal_sample_identifier.host_name;
     service.pname = ecal_sample_service.pname;
     service.uname = ecal_sample_service.uname;
     service.sname = ecal_sample_service.sname;
-    service.sid   = ecal_sample_service.sid;
-    service.pid   = static_cast<int>(ecal_sample_service.pid);
+    service.sid   = ecal_sample_identifier.entity_id;
+    service.pid   = static_cast<int>(ecal_sample_identifier.process_id);
 
     // internal protocol specifics
     service.version     = static_cast<unsigned int>(ecal_sample_service.version);
@@ -124,7 +125,7 @@ namespace eCAL
       m_service_register_map[service.key] = service;
 
       // remove timeouted services
-      m_service_register_map.remove_deprecated();
+      m_service_register_map.erase_expired();
     }
 
     // inform matching clients
@@ -156,16 +157,15 @@ namespace eCAL
     return(ret_vec);
   }
 
-  void CClientGate::RefreshRegistrations()
+  void CClientGate::GetRegistrations(Registration::SampleList& reg_sample_list_)
   {
     if (!m_created) return;
 
-    // refresh client registrations
-    const std::shared_lock<std::shared_timed_mutex> lock(m_client_set_sync);
-    for (auto *iter : m_client_set)
+    // read service registrations
+    std::shared_lock<std::shared_timed_mutex> const lock(m_client_set_sync);
+    for (const auto& service_client_impl : m_client_set)
     {
-      // force client to (re)register itself on registration provider
-      iter->RefreshRegistration();
+      reg_sample_list_.samples.emplace_back(service_client_impl->GetRegistration());
     }
   }
 }

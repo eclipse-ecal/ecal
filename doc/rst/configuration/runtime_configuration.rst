@@ -12,7 +12,7 @@ The corresponding structure reflects the configuration file (:ref:`configuration
 Custom types
 ============
 
-In order to rule out configuration errors, custom datatypes for IP addresses (IpAddressV4) and sizes (constrained integer) are introduced.
+In order to rule out configuration errors, custom datatypes for IP addresses (IpAddressV4) and sizes (ConstrainedInteger) are introduced.
 
 **IpAddressV4:** For assigning an IP address simply assign a string with the desired address. 
 Decimal and hexadecimal format is supported. 
@@ -22,7 +22,7 @@ The IP address can be used like a normal string object. For example:
 
 .. code-block:: c++
 
-  eCAL::Types::IpAddressV4 ip_address = std::string("192.168.7.1"); // in hex: "C0.A8.7.1"
+  eCAL::Types::IpAddressV4 ip_address = "192.168.7.1"; // in hex: "C0.A8.7.1"
   std::cout << ip_address << "\n"; 
 
 **ConstrainedInteger**: ConstrainedInteger are specified with a minimum (default: 0), step (default: 1) and maximum (default: maximum of int) value.
@@ -41,12 +41,12 @@ Global configuration initialization
 ===================================
 
 The configuration will be first initialized with the default values specified by eCAL.
-If you want to use the systems eCAL .ini file, call the ``InitConfigWithDefaultIni()`` function of the config object.
+If you want to use the systems eCAL .ini file, call the ``InitConfigWithDefaultYaml()`` function of the config object.
 
 In case the .ini to use is specified via command line parameter, this one is chosen instead. 
 The object will throw an error, in case the specified .ini file cannot be found.
 
-It is also possible to specify the .ini by calling the function ``InitConfig(std::string _ini_path)`` of the config object.
+It is also possible to specify the .ini by calling the function ``checkForValidConfigFilePath(const std::string yaml_path_)`` of the config object.
 
 * |fa-file-alt| :file:`hello_config/main.cpp`:
 

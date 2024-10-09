@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -168,6 +168,7 @@ namespace
     if (!pb_decode(&pb_istream, eCAL_pb_Sample_fields, &pb_sample))
     {
       std::cerr << "NanoPb eCAL::Payload::Sample decode failed: " << pb_istream.errmsg << '\n';
+      return false;
     }
 
     ///////////////////////////////////////////////

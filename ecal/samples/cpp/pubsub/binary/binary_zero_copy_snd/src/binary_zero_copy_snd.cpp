@@ -127,7 +127,7 @@ int main(int argc, char** argv)
   eCAL::Publisher::Configuration pub_config;
 
   // turn zero copy mode on
-  pub_config.shm.zero_copy_mode = true;
+  pub_config.layer.shm.zero_copy_mode = true;
 
   // create the publisher
   eCAL::CPublisher pub(topicName, { "custom", structTypeName, "" }, pub_config);

@@ -17,7 +17,8 @@ typedef struct _eCAL_pb_DataTypeInformation {
     pb_callback_t desc; /* descriptor information of the datatype (necessary for reflection) */
 } eCAL_pb_DataTypeInformation;
 
-typedef struct _eCAL_pb_Topic {
+typedef struct _eCAL_pb_Topic { /* Reserved fields in enums are not supported in protobuf 3.0
+ reserved 9, 10, 11, 14, 15, 22 to 26, 29; */
     int32_t rclock; /* registration clock (heart beat) */
     pb_callback_t hname; /* host name */
     int32_t pid; /* process id */

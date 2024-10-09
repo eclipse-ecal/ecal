@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,12 +38,12 @@ int main(int argc, char **argv)
   {
     // GetServices
     {
-      std::map<eCAL::Util::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
+      std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        eCAL::Util::GetServices(service_info_map);
+        eCAL::Registration::GetServices(service_info_map);
       }
 
       auto num_services = service_info_map.size();
@@ -54,12 +54,12 @@ int main(int argc, char **argv)
 
     // GetServiceMethodNames
     {
-      std::set<eCAL::Util::SServiceMethod> service_method_names;
+      std::set<eCAL::Registration::SServiceMethod> service_method_names;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        eCAL::Util::GetServiceMethodNames(service_method_names);
+        eCAL::Registration::GetServiceMethodNames(service_method_names);
       }
 
       auto num_services = service_method_names.size();

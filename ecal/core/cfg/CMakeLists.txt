@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,12 +16,14 @@
 #
 # ========================= eCAL LICENSE =================================
 
+set(ECALTIME_INI "ecaltime.ini")
+
 # Merge all ecaltime config files
 # -> The ecaltime.ini will only contain valid settings for the time modules that were actually compiled.
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/ecaltime.ini "")
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${ECALTIME_INI} "")
 foreach(ECALTIME_CONFIG ${ECALTIME_CONFIG_FILES})
   file(READ ${ECALTIME_CONFIG} CONTENTS)
-  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/ecaltime.ini "${CONTENTS}")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/${ECALTIME_INI} "${CONTENTS}")
 endforeach()
 
 # Select the correct ecal config directory on Linux and Windows
@@ -33,24 +35,13 @@ else()
   message(STATUS "Unsupported OS, not installing configs")
 endif()
 
-configure_file(
-  ecal.ini
-  ecal.ini
-)
 
 # Install the configs
 if(ECAL_SHARED_CONFIG AND NOT CMAKE_CROSSCOMPILING)
-  install(
-    FILES
-      ${CMAKE_CURRENT_BINARY_DIR}/ecal.ini
-    DESTINATION
-      ${ECAL_SHARED_CONFIG}
-    COMPONENT configuration
-  )
   if(BUILD_TIME)
     install(
       FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/ecaltime.ini
+        ${CMAKE_CURRENT_BINARY_DIR}/${ECALTIME_INI}
       DESTINATION
         ${ECAL_SHARED_CONFIG}
       COMPONENT configuration        

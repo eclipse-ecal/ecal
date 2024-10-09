@@ -22,34 +22,37 @@
  * 
  * All process internal publisher/subscriber, server/clients register here with all their attributes.
  * 
- * These information will be send cyclic (registration refresh) via UDP to external eCAL processes.
+ * These information will be send cyclic (registration refresh) via UDP or SHM to external eCAL processes.
  * 
 **/
-
-#include <atomic>
-#include <ecal/ecal_config.h>
-
-#include "ecal_def.h"
-#include "ecal_globals.h"
 #include "ecal_registration_provider.h"
 
-#include "io/udp/ecal_udp_configurations.h"
-#include "io/udp/ecal_udp_sample_sender.h"
-
+#include <atomic>
 #include <chrono>
 #include <functional>
-#include <iostream>
 #include <memory>
 #include <mutex>
 #include <string>
+
+#include <ecal/ecal_config.h>
+#include <ecal_globals.h>
+#include "ecal_def.h"
+
+#include <registration/ecal_process_registration.h>
+#include <registration/udp/ecal_registration_sender_udp.h>
+#if ECAL_CORE_REGISTRATION_SHM
+#include <registration/shm/ecal_registration_sender_shm.h>
+#endif
+
+#include "builder/udp_shm_attribute_builder.h"
+
 
 namespace eCAL
 {
   std::atomic<bool> CRegistrationProvider::m_created;
 
-  CRegistrationProvider::CRegistrationProvider() :
-                    m_use_registration_udp(false),
-                    m_use_registration_shm(false)
+  CRegistrationProvider::CRegistrationProvider(const Registration::SAttributes& attr_) :
+                    m_attributes(attr_)
   {
   }
 
@@ -62,37 +65,26 @@ namespace eCAL
   {
     if(m_created) return;
 
-    // send registration to shared memory and to udp
-    m_use_registration_udp = !Config::Experimental::IsNetworkMonitoringDisabled();
-    m_use_registration_shm = Config::Experimental::IsShmMonitoringEnabled();
-
-    if (m_use_registration_udp)
-    {
-      // set network attributes
-      eCAL::UDP::SSenderAttr attr;
-      attr.address   = UDP::GetRegistrationAddress();
-      attr.port      = UDP::GetRegistrationPort();
-      attr.ttl       = UDP::GetMulticastTtl();
-      attr.broadcast = UDP::IsBroadcast();
-      attr.loopback  = true;
-      attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
-
-      // create udp registration sender
-      m_reg_sample_snd = std::make_shared<UDP::CSampleSender>(attr);
-    }
-
+   // TODO Create the registration sender
 #if ECAL_CORE_REGISTRATION_SHM
-    if (m_use_registration_shm)
+    if (m_attributes.shm_enabled)
     {
-      std::cout << "Shared memory monitoring is enabled (domain: " << Config::Experimental::GetShmMonitoringDomain() << " - queue size: " << Config::Experimental::GetShmMonitoringQueueSize() << ")" << '\n';
-      m_memfile_broadcast.Create(Config::Experimental::GetShmMonitoringDomain(), Config::Experimental::GetShmMonitoringQueueSize());
-      m_memfile_broadcast_writer.Bind(&m_memfile_broadcast);
-    }
+      m_reg_sender = std::make_unique<CRegistrationSenderSHM>(Registration::BuildSHMAttributes(m_attributes));
+    } else
 #endif
+    if (m_attributes.udp_enabled)
+    {
+      m_reg_sender = std::make_unique<CRegistrationSenderUDP>(Registration::BuildUDPSenderAttributes(m_attributes));
+    }
+    else
+    {
+      eCAL::Logging::Log(log_level_warning, "[CRegistrationProvider] No registration layer enabled.");
+      return;
+    }
 
     // start cyclic registration thread
     m_reg_sample_snd_thread = std::make_shared<CCallbackThread>(std::bind(&CRegistrationProvider::RegisterSendThread, this));
-    m_reg_sample_snd_thread->start(std::chrono::milliseconds(Config::GetRegistrationRefreshMs()));
+    m_reg_sample_snd_thread->start(std::chrono::milliseconds(m_attributes.refresh));
 
     m_created = true;
   }
@@ -101,268 +93,89 @@ namespace eCAL
   {
     if(!m_created) return;
 
+    // add unregistration sample to registration loop
+    AddSingleSample(Registration::GetProcessUnregisterSample());
+
+    // wake up registration thread the last time
+    m_reg_sample_snd_thread->trigger();
+
     // stop cyclic registration thread
     m_reg_sample_snd_thread->stop();
 
-    // add process unregistration sample
-    AddSample2SampleList(GetProcessUnregisterSample());
-
-    if (m_use_registration_udp)
-    {
-      // send process unregistration sample over udp
-      SendSampleList2UDP();
-
-      // destroy udp registration sample sender
-      m_reg_sample_snd.reset();
-    }
-
-#if ECAL_CORE_REGISTRATION_SHM
-    if (m_use_registration_shm)
-    {
-      // broadcast process unregistration sample over shm
-      SendSampleList2SHM();
-
-      // destroy shm registration sample writer
-      m_memfile_broadcast_writer.Unbind();
-      m_memfile_broadcast.Destroy();
-    }
-#endif
+    // delete registration sender
+    m_reg_sender.reset();
 
     m_created = false;
   }
 
-  bool CRegistrationProvider::ApplySample(const Registration::Sample& sample_, const bool force_)
+  // (re)register single sample
+  bool CRegistrationProvider::RegisterSample(const Registration::Sample& sample_)
   {
     if (!m_created) return(false);
 
-    // forward all registration samples to outside "customer" (e.g. monitoring, descgate)
-    {
-      const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
-      for (const auto& iter : m_callback_custom_apply_sample_map)
-      {
-        iter.second(sample_);
-      }
-    }
+    // add registration sample to registration loop
+    AddSingleSample(sample_);
 
-    // update sample list
-    AddSample2SampleList(sample_);
-
-    // if registration is forced
-    if (force_)
-    {
-      // send single registration sample over udp
-      SendSample2UDP(sample_);
-
-#if ECAL_CORE_REGISTRATION_SHM
-      // broadcast (updated) sample list over shm
-      SendSampleList2SHM();
-#endif
-    }
+    // wake up registration thread
+    m_reg_sample_snd_thread->trigger();
 
     return(true);
   }
 
-  void CRegistrationProvider::SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_)
-  {
-    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
-    m_callback_custom_apply_sample_map[customer_] = callback_;
-  }
-
-  void CRegistrationProvider::RemCustomApplySampleCallback(const std::string& customer_)
-  {
-    const std::lock_guard<std::mutex> lock(m_callback_custom_apply_sample_map_mtx);
-    auto iter = m_callback_custom_apply_sample_map.find(customer_);
-    if (iter != m_callback_custom_apply_sample_map.end())
-    {
-      m_callback_custom_apply_sample_map.erase(iter);
-    }
-  }
-
-  void CRegistrationProvider::AddSample2SampleList(const Registration::Sample& sample_)
-  {
-    const std::lock_guard<std::mutex> lock(m_sample_list_mtx);
-    m_sample_list.samples.push_back(sample_);
-  }
-
-  bool CRegistrationProvider::SendSample2UDP(const Registration::Sample& sample_)
+  // unregister single sample
+  bool CRegistrationProvider::UnregisterSample(const Registration::Sample& sample_)
   {
     if (!m_created) return(false);
 
-    if (m_use_registration_udp && m_reg_sample_snd)
-    {
-      // lock sample buffer
-      const std::lock_guard<std::mutex> lock(m_sample_buffer_mtx);
+    // add registration sample to registration loop, no need to force registration thread to send
+    AddSingleSample(sample_);
 
-      // serialize single sample
-      if (SerializeToBuffer(sample_, m_sample_buffer))
-      {
-        // send single sample over udp
-        return m_reg_sample_snd->Send("reg_sample", m_sample_buffer) != 0;
-      }
-    }
-    return(false);
+    return(true);
   }
 
-  bool CRegistrationProvider::SendSampleList2UDP()
+  void CRegistrationProvider::AddSingleSample(const Registration::Sample& sample_)
   {
-    if (!m_created) return(false);
-    bool return_value{ true };
-
-    // lock sample list
-    const std::lock_guard<std::mutex> lock(m_sample_list_mtx);
-
-    // send all (single) samples over udp
-    if (m_use_registration_udp && m_reg_sample_snd)
-    {
-      for (const auto& sample : m_sample_list.samples)
-      {
-        return_value &= SendSample2UDP(sample);
-      }
-    }
-
-    return return_value;
-  }
-
-#if ECAL_CORE_REGISTRATION_SHM
-  bool CRegistrationProvider::SendSampleList2SHM()
-  {
-    if (!m_created) return(false);
-
-    bool return_value{ true };
-
-    // send sample list over shm
-    if (m_use_registration_shm)
-    {
-      // lock sample list
-      const std::lock_guard<std::mutex> lock(m_sample_list_mtx);
-
-      // serialize whole sample list
-      if (SerializeToBuffer(m_sample_list, m_sample_list_buffer))
-      {
-        if (!m_sample_list_buffer.empty())
-        {
-          // broadcast sample list over shm
-          return_value &= m_memfile_broadcast_writer.Write(m_sample_list_buffer.data(), m_sample_list_buffer.size());
-        }
-      }
-    }
-    return return_value;
-  }
-#endif
-
-  void CRegistrationProvider::ClearSampleList()
-  {
-    // lock sample list
-    const std::lock_guard<std::mutex> lock(m_sample_list_mtx);
-    // clear sample list
-    m_sample_list.samples.clear();
+    const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
+    m_applied_sample_list.samples.push_back(sample_);
   }
 
   void CRegistrationProvider::RegisterSendThread()
   {
+    // collect all registrations and send them out cyclic
+    {
+      // create sample list
+      Registration::SampleList sample_list;
+
+      // and add process registration sample
+      sample_list.samples.push_back(Registration::GetProcessRegisterSample());
+
 #if ECAL_CORE_SUBSCRIBER
-    // refresh subscriber registration
-    if (g_subgate() != nullptr) g_subgate()->RefreshRegistrations();
+      // add subscriber registrations
+      if (g_subgate() != nullptr) g_subgate()->GetRegistrations(sample_list);
 #endif
 
 #if ECAL_CORE_PUBLISHER
-    // refresh publisher registration
-    if (g_pubgate() != nullptr) g_pubgate()->RefreshRegistrations();
+      // add publisher registrations
+      if (g_pubgate() != nullptr) g_pubgate()->GetRegistrations(sample_list);
 #endif
 
 #if ECAL_CORE_SERVICE
-    // refresh server registration
-    if (g_servicegate() != nullptr) g_servicegate()->RefreshRegistrations();
+      // add server registrations
+      if (g_servicegate() != nullptr) g_servicegate()->GetRegistrations(sample_list);
 
-    // refresh client registration
-    if (g_clientgate() != nullptr) g_clientgate()->RefreshRegistrations();
+      // add client registrations
+      if (g_clientgate() != nullptr) g_clientgate()->GetRegistrations(sample_list);
 #endif
 
-    // send out sample list over udp
-    SendSampleList2UDP();
+      // send collected registration sample list
+      m_reg_sender->SendSampleList(sample_list);
 
-#if ECAL_CORE_REGISTRATION_SHM
-    // broadcast sample list over shm
-    SendSampleList2SHM();
-#endif
-
-    // clear registration sample list
-    ClearSampleList();
-
-    // add process registration sample to internal sample list as first sample (for next registration loop)
-    AddSample2SampleList(GetProcessRegisterSample());
-  }
-
-  Registration::Sample CRegistrationProvider::GetProcessRegisterSample()
-  {
-    Registration::Sample process_sample;
-    process_sample.cmd_type                     = bct_reg_process;
-    auto& process_sample_process                = process_sample.process;
-    process_sample_process.hname                = Process::GetHostName();
-    process_sample_process.hgname               = Process::GetHostGroupName();
-    process_sample_process.pid                  = Process::GetProcessID();
-    process_sample_process.pname                = Process::GetProcessName();
-    process_sample_process.uname                = Process::GetUnitName();
-    process_sample_process.pparam               = Process::GetProcessParameter();
-    process_sample_process.state.severity       = static_cast<Registration::eProcessSeverity>(g_process_severity);
-    process_sample_process.state.severity_level = static_cast<Registration::eProcessSeverityLevel>(g_process_severity_level);
-    process_sample_process.state.info           = g_process_info;
-#if ECAL_CORE_TIMEPLUGIN
-    if (g_timegate() == nullptr)
-    {
-      process_sample_process.tsync_state = Registration::eTSyncState::tsync_none;
-    }
-    else
-    {
-      if (!g_timegate()->IsSynchronized())
+      // send asynchronously applied samples at the end of the registration loop
       {
-        process_sample_process.tsync_state = Registration::eTSyncState::tsync_none;
+        const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
+        m_reg_sender->SendSampleList(m_applied_sample_list);
+        m_applied_sample_list.samples.clear();
       }
-      else
-      {
-        switch (g_timegate()->GetSyncMode())
-        {
-        case CTimeGate::eTimeSyncMode::realtime:
-          process_sample_process.tsync_state = Registration::eTSyncState::tsync_realtime;
-          break;
-        case CTimeGate::eTimeSyncMode::replay:
-          process_sample_process.tsync_state = Registration::eTSyncState::tsync_replay;
-          break;
-        default:
-          process_sample_process.tsync_state = Registration::eTSyncState::tsync_none;
-          break;
-        }
-      }
-      process_sample_process.tsync_mod_name = g_timegate()->GetName();
     }
-#endif
-
-    // eCAL initialization state
-    const unsigned int comp_state(g_globals()->GetComponents());
-    process_sample_process.component_init_state = static_cast<int32_t>(comp_state);
-    std::string component_info;
-    if ((comp_state & Init::Publisher)  != 0u) component_info += "|pub";
-    if ((comp_state & Init::Subscriber) != 0u) component_info += "|sub";
-    if ((comp_state & Init::Logging)    != 0u) component_info += "|log";
-    if ((comp_state & Init::TimeSync)   != 0u) component_info += "|time";
-    if (!component_info.empty()) component_info = component_info.substr(1);
-    process_sample_process.component_init_info = component_info;
-
-    process_sample_process.ecal_runtime_version = GetVersionString();
-
-    return process_sample;
-  }
-
-  Registration::Sample CRegistrationProvider::GetProcessUnregisterSample()
-  {
-    Registration::Sample process_sample;
-    process_sample.cmd_type      = bct_unreg_process;
-    auto& process_sample_process = process_sample.process;
-    process_sample_process.hname = Process::GetHostName();
-    process_sample_process.pid   = Process::GetProcessID();
-    process_sample_process.pname = Process::GetProcessName();
-    process_sample_process.uname = Process::GetUnitName();
-
-    return process_sample;
   }
 }

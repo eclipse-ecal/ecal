@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ namespace eCAL
     void ApplyPubRegistration(const Registration::Sample& ecal_sample_);
     void ApplyPubUnregistration(const Registration::Sample& ecal_sample_);
 
-    void RefreshRegistrations();
+    void GetRegistrations(Registration::SampleList& reg_sample_list_);
 
   protected:
     static std::atomic<bool> m_created;

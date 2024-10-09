@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -195,18 +195,18 @@ int main(int argc, char** argv)
           default:
             break;
           }
-          std::cout << "  tlayer.type     : " << layer_type << std::endl;   // transport layers type
-          std::cout << "  tlayer.confirmed: " << layer.confirmed() << std::endl;   // transport layers confirmation
+          std::cout << "  tlayer.type    : " << layer_type << std::endl;             // transport layers type
+          std::cout << "  tlayer.active  : " << layer.active() << std::endl;         // transport layers confirmation
         }
-        std::cout << "tsize           : " << topic.tsize() << std::endl;   // topic size
+        std::cout << "tsize           : " << topic.tsize() << std::endl;             // topic size
 
         std::cout << "connections_loc : " << topic.connections_loc() << std::endl;   // number of local connected entities
         std::cout << "connections_ext : " << topic.connections_ext() << std::endl;   // number of external connected entities
-        std::cout << "message_drops   : " << topic.message_drops() << std::endl;   // dropped messages
+        std::cout << "message_drops   : " << topic.message_drops() << std::endl;     // dropped messages
 
-        std::cout << "did             : " << topic.did() << std::endl;   // data send id (publisher setid)
-        std::cout << "dclock          : " << topic.dclock() << std::endl;   // data clock (send / receive action)
-        std::cout << "dfreq           : " << topic.dfreq() << std::endl;   // data frequency (send / receive samples per second * 1000)
+        std::cout << "did             : " << topic.did() << std::endl;               // data send id (publisher setid)
+        std::cout << "dclock          : " << topic.dclock() << std::endl;            // data clock (send / receive action)
+        std::cout << "dfreq           : " << topic.dfreq() << std::endl;             // data frequency (send / receive samples per second * 1000)
 
         std::cout << std::endl;
       }

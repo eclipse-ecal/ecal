@@ -30,12 +30,11 @@
 #include <cstddef>
 #include <ecal/ecal.h>
 
-#include "io/udp/ecal_udp_sample_receiver.h"
 #include "serialization/ecal_struct_sample_registration.h"
-
-#if ECAL_CORE_REGISTRATION_SHM
-#include "ecal_registration_receiver_shm.h"
-#endif
+#include "registration/ecal_registration_sample_applier.h"
+#include "registration/ecal_registration_sample_applier_gates.h"
+#include "registration/ecal_registration_sample_applier_user.h"
+#include "attributes/registration_attributes.h"
 
 #include <atomic>
 #include <functional>
@@ -47,19 +46,28 @@
 
 namespace eCAL
 {
+  class CRegistrationReceiverUDP;
+  class CRegistrationReceiverSHM;
+
+  namespace Registration
+  {
+    template<typename T>
+    class CTimeoutProvider;
+  }
+  class CCallbackThread;
+
   class CRegistrationReceiver
   {
   public:
-    CRegistrationReceiver();
+    CRegistrationReceiver(const Registration::SAttributes& attr_);
     ~CRegistrationReceiver();
+
+    //what about the rest of the rule of 5?
 
     void Start();
     void Stop();
 
     void EnableLoopback(bool state_);
-
-    bool HasSample(const std::string& /*sample_name_*/) { return(true); };
-    bool ApplySample(const Registration::Sample& sample_);
 
     bool AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_);
     bool RemRegistrationCallback(enum eCAL_Registration_Event event_);
@@ -68,39 +76,27 @@ namespace eCAL
     void SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_);
     void RemCustomApplySampleCallback(const std::string& customer_);
 
-  protected:
-    bool ApplySerializedSample(const char* serialized_sample_data_, size_t serialized_sample_size_);
-
-    void ApplySubscriberRegistration(const eCAL::Registration::Sample& sample_);
-    void ApplyPublisherRegistration(const eCAL::Registration::Sample& sample_);
-
-    bool IsHostGroupMember(const eCAL::Registration::Sample& sample_);
-
+  private:
+    // why is this a static variable? can someone explain?
     static std::atomic<bool>              m_created;
-    bool                                  m_network;
-    bool                                  m_loopback;
-                                     
-    RegistrationCallbackT                 m_callback_pub;
-    RegistrationCallbackT                 m_callback_sub;
-    RegistrationCallbackT                 m_callback_service;
-    RegistrationCallbackT                 m_callback_client;
-    RegistrationCallbackT                 m_callback_process;
-                                     
-    std::shared_ptr<UDP::CSampleReceiver> m_registration_receiver;
 
+    // this class gets samples and tracks them for timouts
+    std::unique_ptr<Registration::CTimeoutProvider<std::chrono::steady_clock>> m_timeout_provider;
+    std::unique_ptr<CCallbackThread>                                           m_timeout_provider_thread;
+
+    std::unique_ptr<CRegistrationReceiverUDP> m_registration_receiver_udp;
 #if ECAL_CORE_REGISTRATION_SHM
-    CMemoryFileBroadcast                  m_memfile_broadcast;
-    CMemoryFileBroadcastReader            m_memfile_broadcast_reader;
-
-    CMemfileRegistrationReceiver          m_memfile_reg_rcv;
+    std::unique_ptr<CRegistrationReceiverSHM> m_registration_receiver_shm;
 #endif
 
-    bool                                  m_use_registration_udp;
-    bool                                  m_use_registration_shm;
+    // This class distributes samples to all everyone who is interested in being notified about samples
+    Registration::CSampleApplier     m_sample_applier;
 
-    std::mutex                            m_callback_custom_apply_sample_map_mtx;
-    std::map<std::string, ApplySampleCallbackT> m_callback_custom_apply_sample_map;
+    // These classes are interested in being notified about samples
+    // Possibly remove these from this class
+    // The custom user callbacks (who receive serialized samples), e.g. registration events.
+    Registration::CSampleApplierUser m_user_applier;
 
-    std::string                           m_host_group_name;
+    Registration::SAttributes              m_attributes;
   };
 }

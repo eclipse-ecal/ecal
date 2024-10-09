@@ -6,7 +6,7 @@
      - * **eCAL UDP**: 100% compatible in default settings
 
          A proper Topic-Name -> UDP-Multicast-Group computation has been added.
-         By default, the old version (``multicast_config_version = v1``) is enabled in the :file:`ecal.ini`, which makes the UDP Layer 100% compatible.
+         By default, the old version (``multicast_config_version = v1``) is enabled in the :file:`ecal.yaml`, which makes the UDP Layer 100% compatible.
          If the new version (``v2``) is enabled, UDP communication between eCAL 5.12 and older versions of eCAL will fail.
   
        * **eCAL TCP**: 100% compatible

@@ -164,7 +164,7 @@ namespace eCAL
           }
         }
 
-        // Copy ecal.ini
+        // Copy ecal.yaml
 #ifdef CopyFile
 #define CopyFile_6376c040f4f54106b205ef6ddbb2090a CopyFile
 #undef CopyFile
@@ -174,28 +174,28 @@ namespace eCAL
 
           if (ecal_ini_original_path.empty())
           {
-            const std::string error_message = "Error copying ecal.ini: The system information does not contain \"Default INI\" identifier."; 
+            const std::string error_message = "Error copying ecal.yaml: The system information does not contain \"Default INI\" identifier."; 
             info_ = { false, error_message };
             EcalRecLogger::Instance()->error(error_message);
           }
 
           if (EcalUtils::Filesystem::IsFile(ecal_ini_original_path))
           {
-            std::string ecal_ini_dest_path = EcalUtils::Filesystem::ToNativeSeperators(hostname_dir + "/ecal.ini");
-            EcalRecLogger::Instance()->info("Copying ecal.ini from \"" + ecal_ini_original_path + "\" to \"" + ecal_ini_dest_path + "\"");
+            std::string ecal_ini_dest_path = EcalUtils::Filesystem::ToNativeSeperators(hostname_dir + "/ecal.yaml");
+            EcalRecLogger::Instance()->info("Copying ecal.yaml from \"" + ecal_ini_original_path + "\" to \"" + ecal_ini_dest_path + "\"");
 
             if (!EcalUtils::Filesystem::CopyFile(ecal_ini_original_path, ecal_ini_dest_path, EcalUtils::Filesystem::OsStyle::Current))
             {
-              const std::string error_message = "Error copying ecal.ini file to \"" + ecal_ini_dest_path + "\""; 
+              const std::string error_message = "Error copying ecal.yaml file to \"" + ecal_ini_dest_path + "\""; 
               info_ = { false, error_message };
               EcalRecLogger::Instance()->error(error_message);
             }
           }
           else
           {
-            const std::string error_message = "Warning: ecal.ini does not exist and will not be copied."; 
+            const std::string error_message = "Warning: ecal.yaml does not exist and will not be copied."; 
             info_ = { false, error_message };
-            EcalRecLogger::Instance()->warn("Warning: ecal.ini does not exist and will not be copied.");
+            EcalRecLogger::Instance()->warn("Warning: ecal.yaml does not exist and will not be copied.");
           }
         }
 #ifdef CopyFile_6376c040f4f54106b205ef6ddbb2090a

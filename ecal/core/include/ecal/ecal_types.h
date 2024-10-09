@@ -82,4 +82,49 @@ namespace eCAL
     }
     //!< @endcond
   };
+
+  namespace Registration
+  {
+    struct SEntityId
+    {
+      std::string  entity_id;         // unique id within that process
+      int32_t      process_id = 0;    // process id which produced the sample
+      std::string  host_name;         // host which produced the sample
+
+      bool operator==(const SEntityId& other) const {
+        return entity_id  == other.entity_id  &&
+               process_id == other.process_id &&
+               host_name  == other.host_name;
+      }
+
+      bool operator<(const SEntityId& other) const
+      {
+        return std::tie(process_id, entity_id, host_name)
+          < std::tie(other.process_id, other.entity_id, other.host_name);
+      }
+    };
+
+    struct STopicId
+    {
+      SEntityId    topic_id;
+      std::string  topic_name;
+
+      bool operator<(const STopicId& other) const
+      {
+        return std::tie(topic_id, topic_name) < std::tie(other.topic_id, other.topic_name);
+      }
+    };
+
+    struct SServiceId
+    {
+      SEntityId    service_id;
+      std::string  service_name;
+      std::string  method_name;
+
+      bool operator<(const SServiceId& other) const
+      {
+        return std::tie(service_id, service_name, method_name) < std::tie(other.service_id, other.service_name, other.method_name);
+      }
+    };
+  }
 }

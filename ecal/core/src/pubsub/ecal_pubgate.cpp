@@ -120,27 +120,27 @@ namespace eCAL
     // check topic name
     if (topic_name.empty()) return;
 
-    CDataWriter::SSubscriptionInfo subscription_info;
-    subscription_info.host_name                  = ecal_topic.hname;
-    subscription_info.topic_id                   = ecal_topic.tid;
-    subscription_info.process_id                 = ecal_topic.pid;
+    // TODO: Substitute ProducerInfo type
+    const auto& subscription_info = ecal_sample_.identifier;
     const SDataTypeInformation topic_information = ecal_topic.tdatatype;
 
     CDataWriter::SLayerStates layer_states;
     for (const auto& layer : ecal_topic.tlayer)
     {
-      if (layer.confirmed)
+      // transport layer versions 0 and 1 did not support dynamic layer enable feature
+      // so we set assume layer is enabled if we receive a registration in this case
+      if (layer.enabled || (layer.version < 2))
       {
         switch (layer.type)
         {
         case TLayer::tlayer_udp_mc:
-          layer_states.udp = true;
+          layer_states.udp.read_enabled = true;
           break;
         case TLayer::tlayer_shm:
-          layer_states.shm = true;
+          layer_states.shm.read_enabled = true;
           break;
         case TLayer::tlayer_tcp:
-          layer_states.tcp = true;
+          layer_states.tcp.read_enabled = true;
           break;
         default:
           break;
@@ -178,10 +178,7 @@ namespace eCAL
     // check topic name
     if (topic_name.empty()) return;
 
-    CDataWriter::SSubscriptionInfo subscription_info;
-    subscription_info.host_name  = ecal_topic.hname;
-    subscription_info.topic_id   = ecal_topic.tid;
-    subscription_info.process_id = ecal_topic.pid;
+    const auto& subscription_info = ecal_sample_.identifier;
 
     // unregister subscriber
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
@@ -192,16 +189,15 @@ namespace eCAL
     }
   }
 
-  void CPubGate::RefreshRegistrations()
+  void CPubGate::GetRegistrations(Registration::SampleList& reg_sample_list_)
   {
     if (!m_created) return;
 
-    // refresh publisher registrations
+    // read reader registrations
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     for (const auto& iter : m_topic_name_datawriter_map)
     {
-      // force data writer to (re)register itself on registration provider
-      iter.second->RefreshRegistration();
+      reg_sample_list_.samples.emplace_back(iter.second->GetRegistration());
     }
   }
 }

@@ -59,20 +59,20 @@ namespace eCAL
     return reinterpret_cast<void *>(static_cast<char *>(address) + GetMemfileHeader(address)->message_queue_offset);
   }
 
-  CMemoryFileBroadcast::CMemoryFileBroadcast(): m_created(false), m_max_queue_size(0), m_broadcast_memfile(std::make_unique<eCAL::CMemoryFile>()), m_event_queue(), m_last_timestamp(0)
+  CMemoryFileBroadcast::CMemoryFileBroadcast(): m_created(false), m_broadcast_memfile(std::make_unique<eCAL::CMemoryFile>()), m_event_queue(), m_last_timestamp(0)
   {
   }
 
-  bool CMemoryFileBroadcast::Create(const std::string &name, std::size_t max_queue_size)
+  bool CMemoryFileBroadcast::Create(const Registration::SHM::SAttributes& attr_)
   {
     if (m_created) return false;
 
-    m_max_queue_size = max_queue_size;
-    m_name = name;
+    m_attributes = attr_;
+
     const auto presumably_memfile_size =
-      RelocatableCircularQueue<SMemfileBroadcastEvent>::PresumablyOccupiedMemorySize(m_max_queue_size) +
+      RelocatableCircularQueue<SMemfileBroadcastEvent>::PresumablyOccupiedMemorySize(m_attributes.queue_size) +
       sizeof(SMemfileBroadcastHeader);
-    if (!m_broadcast_memfile->Create(name.c_str(), true, presumably_memfile_size, true))
+    if (!m_broadcast_memfile->Create(m_attributes.domain.c_str(), true, presumably_memfile_size, true))
     {
 #ifndef NDEBUG
       std::cerr << "Unable to access broadcast memory file." << std::endl;
@@ -136,7 +136,7 @@ namespace eCAL
 
   std::string CMemoryFileBroadcast::GetName() const
   {
-    return m_name;
+    return m_attributes.domain;
   }
 
   bool CMemoryFileBroadcast::IsMemfileVersionCompatible(const void *memfile_address) const
@@ -150,7 +150,7 @@ namespace eCAL
     auto *header = GetMemfileHeader(memfile_address);
     *header = SMemfileBroadcastHeader();
     m_event_queue.SetBaseAddress(GetEventQueueAddress(memfile_address));
-    m_event_queue.Reset(m_max_queue_size);
+    m_event_queue.Reset(m_attributes.queue_size);
 #ifndef NDEBUG
     std::cout << "Broadcast memory file has been resetted" << std::endl;
 #endif
@@ -245,7 +245,6 @@ namespace eCAL
       return false;
     }
   }
-
 
   bool CMemoryFileBroadcast::ReceiveEvents(MemfileBroadcastEventListT &event_list, std::int64_t timeout, bool enable_loopback)
   {

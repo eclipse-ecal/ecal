@@ -51,16 +51,20 @@ To support one to many publisher/subscriber connections, the publisher creates o
 Configuration
 =============
 
-The SHM Layer is set to ``auto`` (= 2) by default.
-This means, that it is used automatically for all messages that need to be transmitted inside a single host.
+The SHM Layer is set to ``enable`` by default.
 
-The system-configuration-parameters in the :file:`ecal.ini` are:
+The system-configuration-parameters in the :file:`ecal.yaml` are:
 
-.. code-block:: ini
+.. code-block:: yaml
 
-   [publisher]
-   use_shm                   = 2
-
+  # Publisher specific base settings
+  publisher:
+    layer:
+    # Base configuration for shared memory publisher
+      shm:
+        # Enable layer
+        enable: true
+        [..]
 
 There are a few options for tweaking the communication.
 Those options are explained below.
@@ -76,13 +80,20 @@ If subscribers are too slow to process incoming messages then the overall softwa
 There may still be cases where it could make sense to synchronize the transfer of the payload from a publisher to a subscriber by using an additional handshake event.
 This event is signaled by a subscriber back to the sending publisher to confirm the complete payload transmission.
 
-The handshake mechanism can be activated in the :file:`ecal.ini`:
+The handshake mechanism can be activated in the :file:`ecal.yaml`:
 
-.. code-block:: ini
+.. code-block:: yaml
 
-   [publisher]
-   ; activate synchronization via memory transfer acknowledge signal with a timeout of 100 milliseconds
-   memfile_ack_timeout = 100
+  # Publisher specific base settings
+  publisher:
+    layer:
+    # Base configuration for shared memory publisher
+      shm:
+        [..]
+        # Force connected subscribers to send acknowledge event after processing the message.
+        # The publisher send call is blocked on this event with this timeout (0 == no handshake).
+        acknowledge_timeout_ms: 5
+        [..]
 
 If the parameter is set to a non-zero timeout, the publisher will create an additional event and inform the subscriber to fire this event when the transmission of the payload is completed.
 
@@ -147,12 +158,18 @@ You can activate the feature in the following ways.
 
 - **Use multi-buffering as system-default**:
 
-  Edit your :file:`ecal.ini` and set a buffer count greater than 1:
+  Edit your :file:`ecal.yaml` and set a buffer count greater than 1:
 
-  .. code-block:: ini
+  .. code-block:: yaml
      
-     [publisher]
-     memfile_buffer_count      = 3
+    # Publisher specific base settings
+    publisher:
+      layer:
+      # Base configuration for shared memory publisher
+        shm:
+          [..]
+          # Maximum number of used buffers (needs to be greater than 0, default = 1)
+          memfile_buffer_count: 3
 
 - **Use multi-buffering for a single publisher (from your code):**
 
@@ -160,11 +177,21 @@ You can activate the feature in the following ways.
 
   .. code-block:: cpp
       
-     // Create a publisher (topic name "person")
-     eCAL::protobuf::CPublisher<pb::People::Person> pub("person");
+     #include <ecal/config/publisher.h>
 
-     // Set multi-buffering to 3, so it will create 3 SHM files
-     pub.ShmSetBufferCount(3);
+    ...
+
+    // Create a publisher configuration object
+    eCAL::Publisher::Configuration pub_config;
+
+    // Set the option for buffer count in layer->shm->memfile_buffer_count to 3, so it will create 3 SHM files
+    pub_config.layer.shm.memfile_buffer_count = 3;
+
+    // Create a publisher (topic name "person") and pass the configuration object
+    eCAL::protobuf::CPublisher<pb::People::Person> pub("person", pub_config);
+
+    ...
+
 
 Combining the zero-copy feature with an increased number of memory buffer files (like 2 or 3) could be a nice setup allowing the subscriber to work on the memory file content without copying its content and nevertheless not blocking the publisher to write new data.
 Using Multibuffering however will force each Send operation to re-write the entire memory file and disable partial updates.

@@ -88,57 +88,66 @@
 
 #pragma once
 
-#include <ecal/ecal_os.h>
+#include <ecal/ecal_tlayer.h>
 #include <ecal/types/ecal_custom_data_types.h>
+#include <ecal/config/transport_layer.h>
 
 #include <cstddef>
+#include <vector>
 
 namespace eCAL
 {
   namespace Publisher
   {
-    namespace SHM
+    namespace Layer
     {
-      struct Configuration
+      namespace SHM
       {
-        bool                                  enable;                   //!< enable layer
-        bool                                  zero_copy_mode;           //!< enable zero copy shared memory transport mode
-        unsigned int                          acknowledge_timeout_ms;   /*!< force connected subscribers to send acknowledge event after processing the message
-                                                                             the publisher send call is blocked on this event with this timeout (0 == no handshake) */
-        Types::ConstrainedInteger<4096, 4096> memfile_min_size_bytes;   //!< default memory file size for new publisher
-        Types::ConstrainedInteger<50, 1, 100> memfile_reserve_percent;  //!< dynamic file size reserve before recreating memory file if topic size changes
-        Types::ConstrainedInteger<1, 1>       memfile_buffer_count;     //!< maximum number of used buffers (needs to be greater than 1, default = 1)
-      };
-    }
+        struct Configuration
+        {
+          bool         enable                 { true };  //!< enable layer 
 
-    namespace UDP
-    {
-      struct Configuration
-      {
-        bool                                      enable;               //!< enable layer
-        bool                                      loopback;             //!< enable to receive udp messages on the same local machine
-        Types::ConstrainedInteger<5242880, 1024>  sndbuf_size_bytes;    //!< udp send buffer size in bytes (default 5MB)
-      };
-    }
+          bool         zero_copy_mode         { false }; //!< Enable zero copy shared memory transport mode 
+          unsigned int acknowledge_timeout_ms { 0U };    /*!< Force connected subscribers to send acknowledge event after processing the message.
+                                                              The publisher send call is blocked on this event with this timeout (0 == no handshake).*/
+          unsigned int memfile_buffer_count   { 1U };    /*!< Maximum number of used buffers (needs to be greater than 1, default = 1) */
+        };
+      }
 
-    namespace TCP
-    {
+      namespace UDP
+      {
+        struct Configuration
+        {
+          bool enable { true };                          //!< enable layer
+        };
+      }
+
+      namespace TCP
+      {
+        struct Configuration
+        {
+          bool enable { true };                          //!< enable layer
+        };
+      }
+
       struct Configuration
       {
-        bool               enable;                                      //!< enable layer
+        SHM::Configuration shm;
+        UDP::Configuration udp;
+        TCP::Configuration tcp;
       };
     }
 
     struct Configuration
     {
-      ECAL_API Configuration();
+      Layer::Configuration layer;                        //!< Layer configuration
 
-      SHM::Configuration   shm;
-      UDP::Configuration   udp;
-      TCP::Configuration   tcp;
+      using LayerPriorityVector = std::vector<TLayer::eTransportLayer>;
+      LayerPriorityVector  layer_priority_local    { TLayer::tlayer_shm, TLayer::tlayer_udp_mc, TLayer::tlayer_tcp };
+      LayerPriorityVector  layer_priority_remote   {                     TLayer::tlayer_udp_mc, TLayer::tlayer_tcp };
 
-      bool                 share_topic_type;                            //!< share topic type via registration
-      bool                 share_topic_description;                     //!< share topic description via registration
+      bool                 share_topic_type        { true };      //!< share topic type via registration
+      bool                 share_topic_description { true };      //!< share topic description via registration
     };
   }
 }

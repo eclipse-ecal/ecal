@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,10 +52,6 @@ namespace eCAL
   void CSubGate::Start()
   {
     if(m_created) return;
-
-    // initialize data reader layers
-    CDataReader::InitializeLayers();
-
     m_created = true;
   }
 
@@ -166,7 +162,7 @@ namespace eCAL
       const auto& ecal_sample_content = ecal_sample.content;
       for (const auto& reader : readers_to_apply)
       {
-        applied_size = reader->AddSample(
+        applied_size = reader->ApplySample(
           ecal_sample.topic.tid,
           payload_addr,
           payload_size,
@@ -207,7 +203,7 @@ namespace eCAL
 
     for (const auto& reader : readers_to_apply)
     {
-      applied_size = reader->AddSample(topic_id_, buf_, len_, id_, clock_, time_, hash_, layer_);
+      applied_size = reader->ApplySample(topic_id_, buf_, len_, id_, clock_, time_, hash_, layer_);
     }
 
     return (applied_size > 0);
@@ -223,27 +219,26 @@ namespace eCAL
     // check topic name
     if (topic_name.empty()) return;
 
-    CDataReader::SPublicationInfo publication_info;
-    publication_info.host_name                   = ecal_topic.hname;
-    publication_info.topic_id                    = ecal_topic.tid;
-    publication_info.process_id                  = ecal_topic.pid;
+    const auto& publication_info = ecal_sample_.identifier;
     const SDataTypeInformation topic_information = ecal_topic.tdatatype;
 
     CDataReader::SLayerStates layer_states;
     for (const auto& layer : ecal_topic.tlayer)
     {
-      if (layer.confirmed)
+      // transport layer versions 0 and 1 did not support dynamic layer enable feature
+      // so we set assume layer is enabled if we receive a registration in this case
+      if (layer.enabled || layer.version < 2)
       {
         switch (layer.type)
         {
         case TLayer::tlayer_udp_mc:
-          layer_states.udp = true;
+          layer_states.udp.write_enabled = true;
           break;
         case TLayer::tlayer_shm:
-          layer_states.shm = true;
+          layer_states.shm.write_enabled = true;
           break;
         case TLayer::tlayer_tcp:
-          layer_states.tcp = true;
+          layer_states.tcp.write_enabled = true;
           break;
         default:
           break;
@@ -261,8 +256,16 @@ namespace eCAL
       {
         iter->second->ApplyLayerParameter(publication_info, tlayer.type, tlayer.par_layer);
       }
-      // inform for publisher connection
-      iter->second->ApplyPublication(publication_info, topic_information, layer_states);
+      // we only inform the subscriber when the publisher has already recognized at least one subscriber
+      // this should avoid to set the "IsPublished" state before the publisher is able to send data
+      const bool local_publication    = publication_info.host_name == Process::GetHostName();
+      const bool external_publication = !local_publication;
+      const bool local_confirmed      = local_publication    && (ecal_sample_.topic.connections_loc > 0);
+      const bool external_confirmed   = external_publication && (ecal_sample_.topic.connections_ext > 0);
+      if(local_confirmed || external_confirmed)
+      {
+        iter->second->ApplyPublication(publication_info, topic_information, layer_states);
+      }
     }
   }
 
@@ -276,10 +279,7 @@ namespace eCAL
     // check topic name
     if (topic_name.empty()) return;
 
-    CDataReader::SPublicationInfo publication_info;
-    publication_info.host_name  = ecal_topic.hname;
-    publication_info.topic_id   = ecal_topic.tid;
-    publication_info.process_id = ecal_topic.pid;
+    const auto& publication_info = ecal_sample_.identifier;
 
     // unregister publisher
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
@@ -290,16 +290,15 @@ namespace eCAL
     }
   }
 
-  void CSubGate::RefreshRegistrations()
+  void CSubGate::GetRegistrations(Registration::SampleList& reg_sample_list_)
   {
     if (!m_created) return;
 
-    // refresh reader registrations
+    // read reader registrations
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
     for (const auto& iter : m_topic_name_datareader_map)
     {
-      // force data reader to (re)register itself on registration provider
-      iter.second->RefreshRegistration();
+      reg_sample_list_.samples.emplace_back(iter.second->GetRegistration());
     }
   }
 }

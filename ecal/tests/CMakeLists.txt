@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,14 +32,17 @@ add_subdirectory(cpp/descgate_test)
 
 add_subdirectory(cpp/config_test)
 
+
 if(ECAL_CORE_REGISTRATION)
-  add_subdirectory(cpp/util_test)
+  add_subdirectory(cpp/registration_test)
+  add_subdirectory(cpp/registration_test_public)
 endif()
 
 add_subdirectory(cpp/event_test)
 add_subdirectory(cpp/expmap_test)
 add_subdirectory(cpp/serialization_test)
 add_subdirectory(cpp/topic2mcast_test)
+add_subdirectory(cpp/util_test)
 
 if(ECAL_CORE_REGISTRATION_SHM OR ECAL_CORE_TRANSPORT_SHM)
   add_subdirectory(cpp/io_memfile_test)

@@ -39,9 +39,14 @@ How to use Npcap
 
 #. Edit |ecalini-path-windows|:
 
-   .. code-block:: ini
+   .. code-block:: yaml
       
-      npcap_enabled = true
+      # Transport layer configuration
+      transport_layer:
+        udp:
+         [..]
+          # Windows specific setting to enable receiving UDP traffic with the Npcap based receiver
+          npcap_enabled: true
     
 #. Check eCAL Mon
 

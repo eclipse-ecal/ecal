@@ -145,7 +145,7 @@ namespace eCAL
       attr.ttl       = UDP::GetMulticastTtl();
       attr.broadcast = UDP::IsBroadcast();
       attr.loopback  = true;
-      attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
+      attr.sndbuf    = UDP::GetSendBufferSize();
 
       // create udp logging sender
       m_udp_logging_sender = std::make_unique<UDP::CSampleSender>(attr);
@@ -157,7 +157,7 @@ namespace eCAL
     attr.port      = UDP::GetLoggingPort();
     attr.broadcast = UDP::IsBroadcast();
     attr.loopback  = true;
-    attr.rcvbuf    = Config::GetUdpMulticastRcvBufSizeBytes();
+    attr.rcvbuf    = UDP::GetReceiveBufferSize();
 
     // start logging receiver
     m_log_receiver = std::make_shared<UDP::CSampleReceiver>(attr, std::bind(&CLog::HasSample, this, std::placeholders::_1), std::bind(&CLog::ApplySample, this, std::placeholders::_1, std::placeholders::_2));

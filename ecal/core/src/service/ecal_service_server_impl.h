@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,16 +26,16 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
+#include <ecal/service/server.h>
+
+#include "serialization/ecal_serialize_sample_registration.h"
+#include "serialization/ecal_struct_service.h"
 
 #include <atomic>
 #include <map>
 #include <memory>
 #include <mutex>
-
-#include <ecal/service/server.h>
 #include <string>
-
-#include "serialization/ecal_struct_service.h"
 
 namespace eCAL
 {
@@ -80,13 +80,16 @@ namespace eCAL
     void RegisterClient(const std::string& key_, const SClientAttr& client_);
 
     // called by eCAL:CServiceGate every second to update registration layer
-    void RefreshRegistration();
+    Registration::Sample GetRegistration();
 
     std::string GetServiceName() { return m_service_name; };
 
   protected:
-    void Register(bool force_);
+    void Register();
     void Unregister();
+
+    Registration::Sample GetRegistrationSample();
+    Registration::Sample GetUnregistrationSample();
 
     /**
      * @brief Calls the request callback based on the request and fills the response

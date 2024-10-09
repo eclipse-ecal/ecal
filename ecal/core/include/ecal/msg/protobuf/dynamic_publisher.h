@@ -62,7 +62,7 @@ namespace eCAL
        * @param msg_         Protobuf message object.
        * @param config_      Optional configuration parameters.
       **/
-      CDynamicPublisher(const std::string& topic_name_, const std::shared_ptr<google::protobuf::Message>& msg_, const eCAL::Publisher::Configuration& config_ = {})
+      CDynamicPublisher(const std::string& topic_name_, const std::shared_ptr<google::protobuf::Message>& msg_, const eCAL::Publisher::Configuration& config_ = eCAL::GetPublisherConfiguration())
         : CMsgPublisher<google::protobuf::Message>(topic_name_, GetTopicInformationFromMessage(msg_.get()), config_)
         , m_msg{ msg_ } {}
 

@@ -11,32 +11,21 @@ jobs:
     runs-on: macos-13
 
     steps:
-    - name: Downgrade Python version
-      uses: actions/setup-python@v4
-      id: cp39
-      with:
-        python-version: '3.9'
+      # XProtect can cause random failures if it decides that the DMG we create
+      # during the packaging phase is malware.
+      # See https://github.com/actions/runner-images/issues/7522 and https://github.com/servo/servo/pull/30779
+    - name: Kill XProtectBehaviorService
+      run: |
+          echo Killing XProtect.; sudo pkill -9 XProtect >/dev/null || true;
+    
+    - name: Install latest Python3 via brew
+      run: brew install python3 || brew link --overwrite python@3.12
 
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v3
-      with:
-        setup-python: false
-        version: '5.15.2'
-        target: 'desktop'
+    - name: Install latest Qt5 via brew
+      run: brew install qt@5
 
     - name: Install Dependencies
-      run: brew install ninja doxygen graphviz protobuf hdf5@1.10 pkg-config
-
-    - name: Install Cap’n Proto
-      run: |
-        mkdir "${{ runner.workspace }}/capnp"
-        cd "${{ runner.workspace }}/capnp"
-        curl -O https://capnproto.org/capnproto-c++-0.9.0.tar.gz
-        tar zxf capnproto-c++-0.9.0.tar.gz
-        cd capnproto-c++-0.9.0
-        ./configure
-        make -j
-        sudo make install
+      run: brew install ninja doxygen graphviz protobuf hdf5@1.10 pkg-config capnp
 
     - name: Checkout
       uses: actions/checkout@v4
@@ -49,7 +38,7 @@ jobs:
         
     - name: Install Python requirements
       run: |
-        sudo pip3 install -r "$GITHUB_WORKSPACE/doc/requirements.txt"
+        sudo pip3 install -r "$GITHUB_WORKSPACE/doc/requirements.txt" --break-system-packages
 
     - name: CMake
       run: |
@@ -84,19 +73,22 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
         -DECAL_THIRDPARTY_BUILD_QWT=ON \
-        -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_PREFIX_PATH=/usr/local/opt/hdf5@1.10 \
+        -DCMAKE_PREFIX_PATH="/usr/local/opt/hdf5@1.10;/usr/local/opt/qt@5" \
         -DCMAKE_CXX_STANDARD=17 \
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
         -DPython_FIND_STRATEGY=LOCATION \
-        -DPython_FIND_REGISTRY=NEVER
-        sudo mkdir /etc/ecal
-        sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal
+        -DPython_FIND_REGISTRY=NEVER        
       shell: bash
 
     - name: Build Release
       run: cmake --build . --config Release
+      working-directory: ${{ runner.workspace }}/_build
+    
+    - name: Create config path and copy ecal.yaml
+      run: | 
+           sudo mkdir /etc/ecal
+           sudo cp "./ecal/core/cfg/gen/ecal.yaml" /etc/ecal
       working-directory: ${{ runner.workspace }}/_build
 
 #    - name: Build Documentation C

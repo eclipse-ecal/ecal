@@ -52,11 +52,11 @@ void do_run(const int runs, int snd_size /*kB*/, int mem_buffer, bool zero_copy)
   // create publisher config
   eCAL::Publisher::Configuration pub_config;
   // set number of publisher memory buffers
-  pub_config.shm.memfile_buffer_count   = mem_buffer;
+  pub_config.layer.shm.memfile_buffer_count   = mem_buffer;
   // enable zero copy mode
-  pub_config.shm.zero_copy_mode = zero_copy;
+  pub_config.layer.shm.zero_copy_mode = zero_copy;
   // set acknowledgement timeout to 100ms
-  pub_config.shm.acknowledge_timeout_ms = 100;
+  pub_config.layer.shm.acknowledge_timeout_ms = 100;
 
   // create publisher
   eCAL::CPublisher pub("ping", pub_config);

@@ -50,13 +50,14 @@ void AddUtilFuncToModule(nanobind::module_& module)
     // TODO Ariff: function changed
     //module.def("get_topic_names", [](std::vector<std::string>& nb_topic_names_)
     //    { return eCAL::Util::GetTopicNames(nb_topic_names_); });
-    module.def("get_topic_datatype_info", [](const std::string& nb_topic_name_)
+ /*   module.def("get_topic_datatype_info", [](const std::string& nb_topic_name_)
         {
             eCAL::SDataTypeInformation nb_topic_info_;
             auto success = eCAL::Util::GetTopicDataTypeInformation(nb_topic_name_, nb_topic_info_);
             auto return_value = nanobind::make_tuple(success, nb_topic_info_);
+            auto return_value = nb_topic_info_;
             return return_value;
-        });
+        });*/
 
     //    m.def("getservices", [](std::map<std::tuple<std::string, std::string>, eCAL::SServiceMethodInformation>& nb_service_info_map_)
     //        { return eCAL::Util::GetServices(nb_service_info_map_); });
@@ -64,10 +65,10 @@ void AddUtilFuncToModule(nanobind::module_& module)
     // TODO Ariff: function changed
     //module.def("get_service_names", [](std::vector<std::tuple<std::string, std::string>>& nb_service_method_names_)
     //    { return eCAL::Util::GetServiceNames(nb_service_method_names_); });
-    module.def("get_service_type_names", [](const std::string& nb_service_name_, const std::string& nb_method_name_, std::string& nb_req_type_, std::string& nb_resp_type_)
-        { return eCAL::Util::GetServiceTypeNames(nb_service_name_, nb_method_name_, nb_req_type_, nb_resp_type_); });
-    module.def("get_service_description", [](const std::string& nb_service_name_, const std::string& nb_method_name_, std::string& nb_req_desc_, std::string& nb_resp_desc_)
-        { return eCAL::Util::GetServiceDescription(nb_service_name_, nb_method_name_, nb_req_desc_, nb_resp_desc_); });
+ //   module.def("get_service_type_names", [](const std::string& nb_service_name_, const std::string& nb_method_name_, std::string& nb_req_type_, std::string& nb_resp_type_)
+ //       { return eCAL::Util::GetServiceTypeNames(nb_service_name_, nb_method_name_, nb_req_type_, nb_resp_type_); });
+ //   module.def("get_service_description", [](const std::string& nb_service_name_, const std::string& nb_method_name_, std::string& nb_req_desc_, std::string& nb_resp_desc_)
+ //       { return eCAL::Util::GetServiceDescription(nb_service_name_, nb_method_name_, nb_req_desc_, nb_resp_desc_); });
 
     module.def("split_combined_topic_type", [](const std::string& nb_combined_topic_type_)
         { return eCAL::Util::SplitCombinedTopicType(nb_combined_topic_type_); });

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         if (!monitor_topic_name.empty())
         {
           eCAL::SDataTypeInformation topic_info;
-          eCAL::Util::GetTopicDataTypeInformation(monitor_topic_name, topic_info);
+          eCAL::Registration::GetTopicDataTypeInformation(monitor_topic_name, topic_info);
           return topic_info.encoding.c_str();
         }
       }
@@ -115,7 +115,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         if (!monitor_topic_name.empty())
         {
           eCAL::SDataTypeInformation topic_info;
-          eCAL::Util::GetTopicDataTypeInformation(monitor_topic_name, topic_info);
+          eCAL::Registration::GetTopicDataTypeInformation(monitor_topic_name, topic_info);
           return topic_info.name.c_str();
         }
       }
@@ -209,7 +209,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       for (const auto& layer : layer_pb)
       {
         QString this_layer_string;
-        if (layer.confirmed())
+        if (layer.active())
         {
           switch (layer.type())
           {

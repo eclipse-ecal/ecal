@@ -192,11 +192,11 @@ void TopicWidget::loadRegExpLists()
   include_string = QString::fromStdString(eCAL::Config::GetMonitoringFilterIncludeList()); //ini.GetValue(MON_SECTION_S, MON_FILTER_INCL_S);
 
 
-  // The ecal.ini defines a very strange regex format: A filter consists of
+  // The ecal.yaml defines a very strange regex format: A filter consists of
   // several regular expressions divided by "," or ";". Thus we have to
   // split the string into 'actual' regular expressions. This will break every
   // regular expression that properly uses a ",". We cannot do anything about
-  // that without changing the ecal.ini specification.
+  // that without changing the ecal.yaml specification.
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
   QList<QString> const exclude_string_list = exclude_string.split(QRegularExpression("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);
   QList<QString> const include_string_list = include_string.split(QRegularExpression("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);

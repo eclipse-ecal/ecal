@@ -22,8 +22,10 @@ find_package(asio             REQUIRED)
 find_package(Threads          REQUIRED)
 find_package(ecaludp          REQUIRED)
 
-if (ECAL_CORE_CONFIG_INIFILE)
-  find_package(simpleini      REQUIRED)
+if (ECAL_CORE_CONFIGURATION)
+  find_package(yaml-cpp       REQUIRED)
+  include(${ECAL_PROJECT_ROOT}/thirdparty/yaml-cpp/compatibility-yaml-cpp.cmake)
+  yaml_cpp_create_compatibility_targets()
 endif()
 
 if (ECAL_CORE_COMMAND_LINE)
@@ -63,16 +65,19 @@ endif()
 # config
 ######################################
 set(ecal_config_src
+    src/config/default_configuration.cpp        
     src/config/ecal_cmd_parser.cpp
     src/config/ecal_config.cpp
     src/config/ecal_config_initializer.cpp
-    src/config/ecal_config_reader.cpp
-    src/config/ecal_config_reader.h
-    src/config/ecal_config_reader_hlp.h
+    src/config/transport_layer.cpp
     src/types/ecal_custom_data_types.cpp
-    src/types/ecal_registration_options.cpp
 )
-
+if (ECAL_CORE_CONFIGURATION)
+  list(APPEND ecal_config_src
+      src/config/configuration_to_yaml.cpp
+      src/config/configuration_reader.cpp
+  )
+endif()
 ######################################
 # io/mtx
 ######################################
@@ -199,7 +204,6 @@ endif()
 if(ECAL_CORE_PUBLISHER)
   set(ecal_pub_src
       src/pubsub/ecal_publisher.cpp
-      src/pubsub/ecal_publisher_config.cpp
       src/pubsub/ecal_pubgate.cpp
       src/pubsub/ecal_pubgate.h
   )
@@ -208,7 +212,6 @@ endif()
 if(ECAL_CORE_SUBSCRIBER)
   set(ecal_sub_src
       src/pubsub/ecal_subscriber.cpp
-      src/pubsub/ecal_subscriber_config.cpp
       src/pubsub/ecal_subgate.cpp
       src/pubsub/ecal_subgate.h
   )
@@ -217,6 +220,10 @@ endif()
 ######################################
 # readwrite
 ######################################
+set(ecal_readwrite_src
+    src/readwrite/ecal_transport_layer.h
+)
+
 if(ECAL_CORE_PUBLISHER)
   set(ecal_writer_src
       src/readwrite/ecal_writer.cpp
@@ -278,15 +285,33 @@ endif()
 ######################################
 if (ECAL_CORE_REGISTRATION)
   set(ecal_registration_src
+      src/registration/ecal_process_registration.cpp
+      src/registration/ecal_process_registration.h
+      src/registration/ecal_registration.cpp
       src/registration/ecal_registration_provider.cpp
       src/registration/ecal_registration_provider.h
       src/registration/ecal_registration_receiver.cpp
       src/registration/ecal_registration_receiver.h
+      src/registration/ecal_registration_sample_applier.cpp
+      src/registration/ecal_registration_sample_applier.h
+      src/registration/ecal_registration_sample_applier_gates.cpp
+      src/registration/ecal_registration_sample_applier_gates.h      
+      src/registration/ecal_registration_sample_applier_user.cpp
+      src/registration/ecal_registration_sample_applier_user.h
+      src/registration/ecal_registration_timeout_provider.cpp
+      src/registration/ecal_registration_timeout_provider.h
+      src/registration/ecal_registration_sender.h
+      src/registration/udp/ecal_registration_receiver_udp.cpp
+      src/registration/udp/ecal_registration_receiver_udp.h
+      src/registration/udp/ecal_registration_sender_udp.cpp
+      src/registration/udp/ecal_registration_sender_udp.h
   )
   if(ECAL_CORE_REGISTRATION_SHM)
     list(APPEND ecal_registration_src
-        src/registration/ecal_registration_receiver_shm.cpp
-        src/registration/ecal_registration_receiver_shm.h
+        src/registration/shm/ecal_registration_receiver_shm.cpp
+        src/registration/shm/ecal_registration_receiver_shm.h
+        src/registration/shm/ecal_registration_sender_shm.cpp
+        src/registration/shm/ecal_registration_sender_shm.h
         src/registration/shm/ecal_memfile_broadcast.cpp
         src/registration/shm/ecal_memfile_broadcast.h
         src/registration/shm/ecal_memfile_broadcast_reader.cpp
@@ -397,6 +422,7 @@ endif()
 # common
 ######################################
 set(ecal_cmn_src
+    src/builder/monitoring_attribute_builder.cpp
     src/ecal.cpp
     src/ecal_def.h
     src/ecal_def_ini.h
@@ -420,6 +446,17 @@ if (WIN32)
 endif()
 
 ######################################
+# builder
+######################################
+set (ecal_builder_src
+    src/builder/registration_attribute_builder.cpp
+    src/registration/builder/udp_shm_attribute_builder.cpp
+    src/registration/builder/sample_applier_attribute_builder.cpp
+    src/registration/udp/builder/udp_attribute_builder.cpp
+)
+
+
+######################################
 # c interface
 ######################################
 set(ecal_c_src
@@ -431,6 +468,7 @@ set(ecal_c_src
     src/cimpl/ecal_monitoring_cimpl.cpp
     src/cimpl/ecal_process_cimpl.cpp
     src/cimpl/ecal_publisher_cimpl.cpp
+    src/cimpl/ecal_registration_cimpl.cpp
     src/cimpl/ecal_server_cimpl.cpp
     src/cimpl/ecal_subscriber_cimpl.cpp
     src/cimpl/ecal_time_cimpl.cpp
@@ -454,6 +492,7 @@ endif()
 set(ecal_header_cmn
     include/ecal/types/logging.h
     include/ecal/types/monitoring.h
+    include/ecal/config/configuration.h
     include/ecal/config/publisher.h
     include/ecal/config/subscriber.h
     include/ecal/ecal.h
@@ -469,6 +508,7 @@ set(ecal_header_cmn
     include/ecal/ecal_monitoring.h
     include/ecal/ecal_process.h
     include/ecal/ecal_process_severity.h
+    include/ecal/ecal_registration.h
     include/ecal/ecal_publisher.h
     include/ecal/ecal_server.h
     include/ecal/ecal_service_info.h
@@ -478,7 +518,6 @@ set(ecal_header_cmn
     include/ecal/ecal_tlayer.h
     include/ecal/ecal_types.h
     include/ecal/ecal_util.h
-    include/ecal/config/configuration.h
 )
 
 set(ecal_header_cimpl
@@ -490,6 +529,7 @@ set(ecal_header_cimpl
     include/ecal/cimpl/ecal_monitoring_cimpl.h
     include/ecal/cimpl/ecal_process_cimpl.h
     include/ecal/cimpl/ecal_publisher_cimpl.h
+    include/ecal/cimpl/ecal_registration_cimpl.h
     include/ecal/cimpl/ecal_server_cimpl.h
     include/ecal/cimpl/ecal_service_info_cimpl.h
     include/ecal/cimpl/ecal_subscriber_cimpl.h
@@ -528,6 +568,7 @@ set(ecal_sources
     ${ecal_monitoring_src}
     ${ecal_pub_src}
     ${ecal_sub_src}
+    ${ecal_readwrite_src}
     ${ecal_writer_src}
     ${ecal_reader_src}
     ${ecal_registration_src}
@@ -536,6 +577,7 @@ set(ecal_sources
     ${ecal_time_src}
     ${ecal_util_src}
     ${ecal_cmn_src}
+    ${ecal_builder_src}
     ${ecal_header_cmn}
     ${ecal_header_msg}
 )
@@ -544,6 +586,10 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_sources}
     ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h
 )
+
+if (ECAL_CORE_CONFIGURATION)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE ECAL_CORE_CONFIGURATION)
+endif()
 
 if(UNIX)
   set_source_files_properties(src/util/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
@@ -587,7 +633,7 @@ target_compile_definitions(${PROJECT_NAME}
 )
 
 set(ECAL_CORE_FEATURES
-  ECAL_CORE_CONFIG_INIFILE
+  ECAL_CORE_CONFIGURATION
   ECAL_CORE_COMMAND_LINE
   ECAL_CORE_REGISTRATION
   ECAL_CORE_MONITORING
@@ -609,10 +655,10 @@ foreach(CORE_FEATURE ${ECAL_CORE_FEATURES})
   endif()
 endforeach()
 
-if(ECAL_CORE_CONFIG_INIFILE)
+if(ECAL_CORE_CONFIGURATION)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
-      simpleini::simpleini
+      yaml-cpp::yaml-cpp
   )
 endif()
 

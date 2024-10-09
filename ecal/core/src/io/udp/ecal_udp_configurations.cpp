@@ -175,5 +175,15 @@ namespace eCAL
       // if network is enabled, return the configured UDP multicast TTL value
       return Config::GetUdpMulticastTtl();
     }
+
+    int GetReceiveBufferSize()
+    {
+      return Config::GetUdpMulticastRcvBufSizeBytes();
+    }
+
+    int GetSendBufferSize()
+    {
+      return Config::GetUdpMulticastSndBufSizeBytes();
+    }
   }
 }
