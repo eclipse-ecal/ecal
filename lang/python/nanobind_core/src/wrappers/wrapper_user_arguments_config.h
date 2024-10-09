@@ -25,7 +25,7 @@
 #pragma once
 
 #include <ecal/ecal.h>
-#include <ecal/config/service.h>
+#include <ecal/config/user_arguments.h>
 #include <ecal/ecal_os.h>
 #include <ecal/types/ecal_custom_data_types.h>
 
