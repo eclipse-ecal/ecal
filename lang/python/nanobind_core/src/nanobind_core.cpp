@@ -42,6 +42,7 @@
 #include <modules/module_application_config.h>
 #include <modules/module_monitoring_config.h>
 #include <modules/module_publisher_config.h>
+#include <modules/module_registration_config.h>
 #include <modules/module_service_config.h>
 #include <modules/module_time_config.h>
 #include <modules/module_user_arguments_config.h>
@@ -61,10 +62,12 @@ NB_MODULE(nanobind_core, m) {
     AddServerClassToModule(m);
     AddLoggingConfigStructToModule(m);
     AddServiceConfigStructToModule(m);
+    AddRegistrationConfigStructToModule(m);
     AddApplicationConfigStructToModule(m);
     AddMonitoringConfigStructToModule(m);
     AddTimeConfigStructToModule(m);
     AddUserArgumentsConfigStructToModule(m);
+    AddPublisherConfigStructToModule(m);
     AddSubscriberConfigStructToModule(m);
 
     AddCoreFuncToModule(m);

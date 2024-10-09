@@ -25,18 +25,20 @@ nanobind_add_module(
   modules/module_datatypeinfo.h
   modules/module_publisher.cpp
   modules/module_publisher.h
+  modules/module_application_config.cpp
+  modules/module_application_config.h
   modules/module_monitoring_config.cpp
   modules/module_monitoring_config.h
   modules/module_publisher_config.cpp
   modules/module_publisher_config.h
-  modules/module_application_config.cpp
-  modules/module_application_config.h
   modules/module_logging_config.cpp
   modules/module_logging_config.h
   modules/module_server.cpp
   modules/module_server.h
   modules/module_subscriber.cpp
   modules/module_subscriber.h
+  modules/module_registration_config.cpp
+  modules/module_registration_config.h
   modules/module_service_config.cpp
   modules/module_service_config.h
   modules/module_subscriber_config.cpp
@@ -62,6 +64,12 @@ nanobind_add_module(
   wrappers/wrapper_subscriber.h
   wrappers/wrapper_application_config.cpp
   wrappers/wrapper_application_config.h
+  wrappers/wrapper_logging_config.cpp
+  wrappers/wrapper_logging_config.h
+  wrappers/wrapper_monitoring_config.cpp
+  wrappers/wrapper_monitoring_config.h
+  wrappers/wrapper_registration_config.cpp
+  wrappers/wrapper_registration_config.h
   wrappers/wrapper_service_config.cpp
   wrappers/wrapper_service_config.h
   wrappers/wrapper_subscriber_config.cpp
@@ -70,8 +78,7 @@ nanobind_add_module(
   wrappers/wrapper_time_config.h
   wrappers/wrapper_user_arguments_config.cpp
   wrappers/wrapper_user_arguments_config.h
-  wrappers/wrapper_logging_config.cpp
-  wrappers/wrapper_logging_config.h
+
 
   nanobind_core.cpp
 )
