@@ -24,7 +24,7 @@
 
 #include "nanopb/pb_encode.h"
 #include "nanopb/pb_decode.h"
-#include "nanopb/ecal.pb.h"
+#include "nanopb/ecal/core/pb/ecal.npb.h"
 
 #include "ecal_serialize_common.h"
 #include "ecal_serialize_service.h"
