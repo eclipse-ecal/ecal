@@ -33,7 +33,7 @@ namespace eCAL
         int         port      = 0;
         bool        broadcast = false;
         bool        loopback  = true;
-        int         rcvbuf    = 1024 * 1024;
+        int         receive_buffer    = 1024 * 1024;
       };
     }
   }

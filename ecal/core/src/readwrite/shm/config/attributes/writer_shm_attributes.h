@@ -17,36 +17,26 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  udp data writer
-**/
-
 #pragma once
 
-#include "io/udp/ecal_udp_sample_sender.h"
-#include "readwrite/ecal_writer_base.h"
-#include "config/attributes/writer_udp_attributes.h"
-
-#include <memory>
 #include <string>
-#include <vector>
 
 namespace eCAL
 {
-  class CDataWriterUdpMC : public CDataWriterBase
+  namespace eCALWriter
   {
-  public:
-    CDataWriterUdpMC(const eCALWriter::UDP::SAttributes& attr_);
+    namespace SHM
+    {
+      struct SAttributes
+      {
+        unsigned int acknowledge_timeout_ms;
+        unsigned int memfile_buffer_count;
+        unsigned int memfile_min_size_bytes;
+        unsigned int memfile_reserve_percent;
 
-    SWriterInfo GetInfo() override;
-
-    bool Write(const void* buf_, const SWriterAttr& attr_) override;
-
-  protected:
-    std::vector<char>                   m_sample_buffer;
-    std::shared_ptr<UDP::CSampleSender> m_sample_sender_loopback;
-    std::shared_ptr<UDP::CSampleSender> m_sample_sender_no_loopback;
-
-    eCALWriter::UDP::SAttributes        m_attributes;
-  };
+        std::string host_name;
+        std::string topic_name;
+      };
+    }
+  }
 }

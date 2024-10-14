@@ -38,14 +38,19 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
+  void CSHMReaderLayer::Initialize(const eCAL::eCALReader::SHM::SAttributes& attr_)
+  {
+    m_attributes = attr_;
+  }
+
   void CSHMReaderLayer::SetConnectionParameter(SReaderLayerPar& par_)
   {
     for (const auto& memfile_name : par_.parameter.layer_par_shm.memory_file_list)
     {
       // start memory file receive thread if topic is subscribed in this process
       if (g_memfile_pool() != nullptr)
-      {
-        const std::string process_id    = std::to_string(Process::GetProcessID());
+      { 
+        const std::string process_id = std::to_string(m_attributes.process_id);
         const std::string memfile_event = memfile_name + "_" + process_id;
 
         Payload::TopicInfo topic_info;
@@ -58,7 +63,7 @@ namespace eCAL
         {
           return OnNewShmFileContent(topic_info, buf_, len_, id_, clock_, time_, hash_);
         };
-        g_memfile_pool()->ObserveFile(memfile_name, memfile_event, Config::GetRegistrationTimeoutMs(), data_callback);
+        g_memfile_pool()->ObserveFile(memfile_name, memfile_event, m_attributes.registration_timeout_ms, data_callback);
       }
     }
   }

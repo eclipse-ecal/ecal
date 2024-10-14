@@ -19,49 +19,60 @@
 
 #pragma once
 
-#include <chrono>
 #include <string>
-#include <ecal/types/ecal_custom_data_types.h>
+#include <cstddef>
+#include "ecal/types/ecal_custom_data_types.h"
 
 namespace eCAL
 {
-  namespace Registration
+  namespace eCALReader
   {
     struct SUDPModeAttributes
     {
       std::string group;
-      int         ttl;
     };
 
     struct SUDPAttributes
     {
+      bool           enable;
       Types::UDPMode mode;
       int            port;
-      int            sendbuffer;
       int            receivebuffer;
       SUDPModeAttributes   network;
       SUDPModeAttributes   local;
     };
 
+    struct STCPAttributes
+    {
+      bool   enable;
+      size_t thread_pool_size;
+      int    max_reconnection_attempts;
+    };
+
     struct SSHMAttributes
-    {    
-      std::string domain;
-      size_t      queue_size;
+    {
+      bool enable;
     };
 
     struct SAttributes
     {
-      std::chrono::milliseconds timeout;
-      bool                      network_enabled;
-      bool                      loopback;
-      bool                      shm_enabled;
-      bool                      udp_enabled;
-      unsigned int              refresh;
-      std::string               host_group_name;
-      int                       process_id;
+      bool         network_enabled;
+      bool         drop_out_of_order_messages;
+      bool         loopback;
+      unsigned int registation_timeout_ms;
 
-      SUDPAttributes     udp;
-      SSHMAttributes     shm;
+      SUDPAttributes udp;
+      STCPAttributes tcp;
+      SSHMAttributes shm;
+
+      std::string topic_name;
+      std::string host_name;
+      std::string host_group_name;
+      int         process_id;
+      std::string process_name;
+      std::string unit_name;
+      bool        share_topic_type;
+      bool        share_topic_description;
     };
   }
 }

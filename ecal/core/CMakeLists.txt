@@ -425,7 +425,6 @@ endif()
 # common
 ######################################
 set(ecal_cmn_src
-    src/config/builder/monitoring_attribute_builder.cpp
     src/ecal.cpp
     src/ecal_def.h
     src/ecal_def_ini.h
@@ -456,6 +455,13 @@ set (ecal_builder_src
     src/config/builder/monitoring_attribute_builder.cpp
     src/config/builder/registration_attribute_builder.cpp
     src/logging/config/builder/udp_attribute_builder.cpp
+    src/pubsub/config/builder/reader_attribute_builder.cpp
+    src/pubsub/config/builder/writer_attribute_builder.cpp
+    src/readwrite/config/builder/shm_attribute_builder.cpp
+    src/readwrite/config/builder/tcp_attribute_builder.cpp
+    src/readwrite/config/builder/udp_attribute_builder.cpp
+    src/readwrite/tcp/config/builder/data_reader_tcp_attribute_builder.cpp
+    src/readwrite/udp/config/builder/udp_attribute_builder.cpp
     src/registration/config/builder/udp_shm_attribute_builder.cpp
     src/registration/config/builder/sample_applier_attribute_builder.cpp
     src/registration/udp/config/builder/udp_attribute_builder.cpp
