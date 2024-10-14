@@ -26,7 +26,7 @@
 
 #include <memory>
 #include <registration/ecal_registration_types.h>
-#include "registration/udp/attributes/registration_receiver_udp_attributes.h"
+#include "registration/udp/config/attributes/registration_receiver_udp_attributes.h"
 
 namespace eCAL
 {

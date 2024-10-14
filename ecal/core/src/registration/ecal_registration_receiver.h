@@ -34,7 +34,7 @@
 #include "registration/ecal_registration_sample_applier.h"
 #include "registration/ecal_registration_sample_applier_gates.h"
 #include "registration/ecal_registration_sample_applier_user.h"
-#include "attributes/registration_attributes.h"
+#include "config/attributes/registration_attributes.h"
 
 #include <atomic>
 #include <functional>

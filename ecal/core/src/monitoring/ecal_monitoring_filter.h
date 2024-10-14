@@ -25,7 +25,7 @@
 #include <string>
 #include <vector>
 
-#include "monitoring/attributes/monitoring_attributes.h"
+#include "monitoring/config/attributes/monitoring_attributes.h"
 
 namespace eCAL
 {

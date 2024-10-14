@@ -22,32 +22,32 @@ find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
 set(nanopb_lib_src
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/nanopb/pb.h
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/nanopb/pb_common.c
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/nanopb/pb_common.h
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/nanopb/pb_decode.c
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/nanopb/pb_decode.h
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/nanopb/pb_encode.c
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/nanopb/pb_encode.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/pb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/pb_common.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/pb_common.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/pb_decode.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/pb_decode.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/pb_encode.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/pb_encode.h
 )
 
 set(nanopb_generated_src
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal.pb.c
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal.pb.h
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/host.pb.c
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/host.pb.h
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/layer.pb.c
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/layer.pb.h
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/logging.pb.c
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/logging.pb.h
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/monitoring.pb.c
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/monitoring.pb.h
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/process.pb.c
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/process.pb.h
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/service.pb.c
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/service.pb.h
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/topic.pb.c
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/topic.pb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/ecal.npb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/ecal.npb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/host.npb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/host.npb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/layer.npb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/layer.npb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/logging.npb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/logging.npb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/monitoring.npb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/monitoring.npb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/process.npb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/process.npb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/service.npb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/service.npb.h
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/topic.npb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/topic.npb.h
 )
 
 set(ecal_serialize_src

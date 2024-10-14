@@ -33,7 +33,7 @@
 #include "registration/shm/ecal_memfile_broadcast.h"
 #include "registration/shm/ecal_memfile_broadcast_writer.h"
 
-#include "attributes/registration_shm_attributes.h"
+#include "config/attributes/registration_shm_attributes.h"
 
 #include <vector>
 

@@ -329,29 +329,29 @@ endif()
 # serialization
 ######################################
 set(ecal_serialization_src
-    src/serialization/nanopb/nanopb/pb.h
-    src/serialization/nanopb/nanopb/pb_common.c
-    src/serialization/nanopb/nanopb/pb_common.h
-    src/serialization/nanopb/nanopb/pb_decode.c
-    src/serialization/nanopb/nanopb/pb_decode.h
-    src/serialization/nanopb/nanopb/pb_encode.c
-    src/serialization/nanopb/nanopb/pb_encode.h      
-    src/serialization/nanopb/ecal.pb.c
-    src/serialization/nanopb/ecal.pb.h
-    src/serialization/nanopb/host.pb.c
-    src/serialization/nanopb/host.pb.h
-    src/serialization/nanopb/layer.pb.c
-    src/serialization/nanopb/layer.pb.h
-    src/serialization/nanopb/logging.pb.c
-    src/serialization/nanopb/logging.pb.h
-    src/serialization/nanopb/monitoring.pb.c
-    src/serialization/nanopb/monitoring.pb.h
-    src/serialization/nanopb/process.pb.c
-    src/serialization/nanopb/process.pb.h
-    src/serialization/nanopb/service.pb.c
-    src/serialization/nanopb/service.pb.h
-    src/serialization/nanopb/topic.pb.c
-    src/serialization/nanopb/topic.pb.h
+    src/serialization/nanopb/pb.h
+    src/serialization/nanopb/pb_common.c
+    src/serialization/nanopb/pb_common.h
+    src/serialization/nanopb/pb_decode.c
+    src/serialization/nanopb/pb_decode.h
+    src/serialization/nanopb/pb_encode.c
+    src/serialization/nanopb/pb_encode.h
+    src/serialization/nanopb/ecal/core/pb/ecal.npb.c
+    src/serialization/nanopb/ecal/core/pb/ecal.npb.h
+    src/serialization/nanopb/ecal/core/pb/host.npb.c
+    src/serialization/nanopb/ecal/core/pb/host.npb.h
+    src/serialization/nanopb/ecal/core/pb/layer.npb.c
+    src/serialization/nanopb/ecal/core/pb/layer.npb.h
+    src/serialization/nanopb/ecal/core/pb/logging.npb.c
+    src/serialization/nanopb/ecal/core/pb/logging.npb.h
+    src/serialization/nanopb/ecal/core/pb/monitoring.npb.c
+    src/serialization/nanopb/ecal/core/pb/monitoring.npb.h
+    src/serialization/nanopb/ecal/core/pb/process.npb.c
+    src/serialization/nanopb/ecal/core/pb/process.npb.h
+    src/serialization/nanopb/ecal/core/pb/service.npb.c
+    src/serialization/nanopb/ecal/core/pb/service.npb.h
+    src/serialization/nanopb/ecal/core/pb/topic.npb.c
+    src/serialization/nanopb/ecal/core/pb/topic.npb.h
     src/serialization/ecal_serialize_common.cpp
     src/serialization/ecal_serialize_common.h
     src/serialization/ecal_serialize_logging.cpp
@@ -451,10 +451,10 @@ endif()
 # builder
 ######################################
 set (ecal_builder_src
-    src/builder/logging_attribute_builder.cpp
-    src/builder/monitoring_attribute_builder.cpp
-    src/builder/registration_attribute_builder.cpp
-    src/logging/builder/udp_attribute_builder.cpp
+    src/config/builder/logging_attribute_builder.cpp
+    src/config/builder/monitoring_attribute_builder.cpp
+    src/config/builder/registration_attribute_builder.cpp
+    src/logging/config/builder/udp_attribute_builder.cpp
     src/pubsub/config/builder/reader_attribute_builder.cpp
     src/pubsub/config/builder/writer_attribute_builder.cpp
     src/readwrite/config/builder/shm_attribute_builder.cpp
@@ -462,9 +462,9 @@ set (ecal_builder_src
     src/readwrite/config/builder/udp_attribute_builder.cpp
     src/readwrite/tcp/config/builder/data_reader_tcp_attribute_builder.cpp
     src/readwrite/udp/config/builder/udp_attribute_builder.cpp
-    src/registration/builder/udp_shm_attribute_builder.cpp
-    src/registration/builder/sample_applier_attribute_builder.cpp
-    src/registration/udp/builder/udp_attribute_builder.cpp
+    src/registration/config/builder/udp_shm_attribute_builder.cpp
+    src/registration/config/builder/sample_applier_attribute_builder.cpp
+    src/registration/udp/config/builder/udp_attribute_builder.cpp
 )
 
 
@@ -706,8 +706,8 @@ target_link_libraries(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME}
   PRIVATE 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/nanopb>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/nanopb/nanopb>
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/>

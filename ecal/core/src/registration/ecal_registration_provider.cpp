@@ -45,7 +45,7 @@
 #include <registration/shm/ecal_registration_sender_shm.h>
 #endif
 
-#include "builder/udp_shm_attribute_builder.h"
+#include "config/builder/udp_shm_attribute_builder.h"
 
 
 namespace eCAL

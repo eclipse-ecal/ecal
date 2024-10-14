@@ -26,7 +26,7 @@
 #include <ecal/types/monitoring.h>
 
 #include "ecal_def.h"
-#include "monitoring/attributes/monitoring_attributes.h"
+#include "monitoring/config/attributes/monitoring_attributes.h"
 #include "monitoring/ecal_monitoring_filter.h"
 
 #include "serialization/ecal_serialize_sample_registration.h"

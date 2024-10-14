@@ -33,7 +33,7 @@
 #include <ecal/ecal_log_level.h>
 #include <ecal/types/logging.h>
 
-#include "attributes/logging_attributes.h"
+#include "config/attributes/logging_attributes.h"
 #include "ecal_global_accessors.h"
 
 #include <atomic>

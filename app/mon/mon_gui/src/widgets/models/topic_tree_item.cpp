@@ -82,43 +82,11 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::TENCODING)
     {
-      // When the monitor didn't tell us the topic encoding, we ask eCAL::Util instead
-      // Why this logic only for type, not descriptor? (and thus encoding?)
-      const std::string monitor_topic_encoding = topic_.tdatatype().encoding();
-      if (!monitor_topic_encoding.empty())
-      {
-        return monitor_topic_encoding.c_str();
-      }
-      else
-      {
-        const std::string monitor_topic_name = topic_.tname();
-        if (!monitor_topic_name.empty())
-        {
-          eCAL::SDataTypeInformation topic_info;
-          eCAL::Registration::GetTopicDataTypeInformation(monitor_topic_name, topic_info);
-          return topic_info.encoding.c_str();
-        }
-      }
+      return topic_.tdatatype().encoding().c_str();
     }
     else if (column == Columns::TTYPE)
     {
-      // When the monitor didn't tell us the topic type, we ask eCAL::Util instead
-      // Why this logic only for type, not descriptor? (and thus encoding?)
-      const std::string monitor_topic_type = topic_.tdatatype().name();
-      if (!monitor_topic_type.empty())
-      {
-        return monitor_topic_type.c_str();
-      }
-      else
-      {
-        const std::string monitor_topic_name = topic_.tname();
-        if (!monitor_topic_name.empty())
-        {
-          eCAL::SDataTypeInformation topic_info;
-          eCAL::Registration::GetTopicDataTypeInformation(monitor_topic_name, topic_info);
-          return topic_info.name.c_str();
-        }
-      }
+      return topic_.tdatatype().name().c_str();
     }
     else if (column == Columns::TDESC)
     {

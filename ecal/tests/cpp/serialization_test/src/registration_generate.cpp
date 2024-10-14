@@ -152,7 +152,7 @@ namespace eCAL
       sample.host.hname = GenerateString(8);
       sample.identifier = GenerateIdentifier();
       // Process samples don't have an id internally, hence it must be 0.
-      sample.identifier.entity_id = "";
+      sample.identifier.entity_id = std::to_string(sample.identifier.process_id);
       sample.process = GenerateProcess();
       return sample;
     }

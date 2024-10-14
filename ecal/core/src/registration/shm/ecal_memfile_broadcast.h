@@ -32,7 +32,7 @@
 
 #include "relocatable_circular_queue.h"
 #include "io/shm/ecal_memfile.h"
-#include "attributes/registration_shm_attributes.h"
+#include "config/attributes/registration_shm_attributes.h"
 
 #include <ecal/ecal.h>
 
