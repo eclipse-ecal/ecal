@@ -64,33 +64,26 @@ endif(HAS_QT)
 if(BUILD_PY_BINDING)
   if(WIN32)
     # benchmarks
-    add_subdirectory(python/benchmarks/latency_rec)
-    add_subdirectory(python/benchmarks/latency_rec_cb)
-    add_subdirectory(python/benchmarks/latency_snd)
-
-    # measurement
-    if(HAS_HDF5)
-      add_subdirectory(python/measurement/ecalhdf5_rw)
-      add_subdirectory(python/measurement/ecalhdf5_protobuf_rw)
-      add_subdirectory(python/measurement/measurement_read)
-    endif(HAS_HDF5)
+    #add_subdirectory(python/benchmarks/latency_rec)
+    #add_subdirectory(python/benchmarks/latency_rec_cb)
+    #add_subdirectory(python/benchmarks/latency_snd)
 
     # monitoring
-    add_subdirectory(python/monitoring/monitoring)
-    add_subdirectory(python/monitoring/monitoring_json)
+    #add_subdirectory(python/monitoring/monitoring)
+    #add_subdirectory(python/monitoring/monitoring_json)
 
     # pubsub
-    add_subdirectory(python/pubsub/protobuf/person_rec)
-    add_subdirectory(python/pubsub/protobuf/person_rec_cb)
-    add_subdirectory(python/pubsub/protobuf/person_snd)
-    add_subdirectory(python/pubsub/string/minimal_rec)
-    add_subdirectory(python/pubsub/string/minimal_rec_cb)
-    add_subdirectory(python/pubsub/string/minimal_snd)
-    add_subdirectory(python/pubsub/binary/binary_rec)
-    add_subdirectory(python/pubsub/binary/binary_rec_cb)
-    add_subdirectory(python/pubsub/binary/binary_snd)
+    #add_subdirectory(python/pubsub/protobuf/person_rec)
+    #add_subdirectory(python/pubsub/protobuf/person_rec_cb)
+    #add_subdirectory(python/pubsub/protobuf/person_snd)
+    #add_subdirectory(python/pubsub/string/minimal_rec)
+    #add_subdirectory(python/pubsub/string/minimal_rec_cb)
+    #add_subdirectory(python/pubsub/string/minimal_snd)
+    #add_subdirectory(python/pubsub/binary/binary_rec)
+    #add_subdirectory(python/pubsub/binary/binary_rec_cb)
+    #add_subdirectory(python/pubsub/binary/binary_snd)
 
     # services
-    add_subdirectory(python/services/minimal_service)
+    #add_subdirectory(python/services/minimal_service)
   endif(WIN32)
 endif(BUILD_PY_BINDING)

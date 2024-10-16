@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,6 +24,86 @@ cmake_minimum_required(VERSION 3.18...3.26)
 project(ecal_python)
 find_package(Python REQUIRED COMPONENTS Development.Module Interpreter)
 
+option(ECAL_PYTHON_BUILD_SAMPLES "Includes the python samples"                  ON)
+option(ECAL_PYTHON_BUILD_TESTS   "Includes the python tests"                    ON)
+option(ECAL_PYTHON_HAS_HDF5      "Enables eCAL application cmd line interfaces" ON)
+
+set(ECAL_PYTHON_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+
+
+function(copy_python_code)
+  set(singleValueArgs TARGET PYTHON_CODE_ROOT)
+  set(multiValueArgs  PYTHON_FILES)
+  cmake_parse_arguments(ARGUMENTS
+      ""
+      "${singleValueArgs}"
+      "${multiValueArgs}" ${ARGN} )
+
+  cmake_path(
+    ABSOLUTE_PATH   ARGUMENTS_PYTHON_CODE_ROOT 
+    OUTPUT_VARIABLE absolute_path_python_code_root
+  )
+    
+  foreach (python_file ${ARGUMENTS_PYTHON_FILES})     
+    cmake_path(
+      ABSOLUTE_PATH python_file 
+      OUTPUT_VARIABLE absolute_path_python_file
+    )
+    
+    cmake_path(
+      RELATIVE_PATH  absolute_path_python_file 
+      BASE_DIRECTORY ${absolute_path_python_code_root}
+      OUTPUT_VARIABLE relative_path)
+    
+     
+    # Now we actually copy the file to the correct directory 
+    set(origin_file ${absolute_path_python_file})
+    set(destination_file ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/python/${relative_path})
+    file(
+      GENERATE 
+        OUTPUT ${destination_file}
+        INPUT ${origin_file}
+    )
+        
+  endforeach()
+endfunction()
+
+function(ecal_python_set_output_directory TARGET_NAME)
+  set_target_properties(${TARGET_NAME} PROPERTIES
+    LIBRARY_OUTPUT_DIRECTORY $<IF:$<BOOL:${WIN32}>,${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/python/ecal,${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/ecal>
+  )  
+endfunction()
+
+function(ecal_python_add_sample)
+  set(singleValueArgs PY_FILE TARGET_NAME)
+  cmake_parse_arguments(ARGUMENTS
+      ""
+      "${singleValueArgs}"
+      "" ${ARGN} )
+           
+  set(ECAL_PYPROJ_FILE              ${ARGUMENTS_PY_FILE})
+  string(UUID ECAL_PYPROJ_GUID NAMESPACE 8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942 NAME ${ARGUMENTS_TARGET_NAME}
+       TYPE MD5)
+  get_target_property(ECAL_PYPROJ_INTERPRETER_DEBUG Python::Interpreter LOCATION)
+  get_target_property(ECAL_PYPROJ_INTERPRETER_RELEASE Python::Interpreter LOCATION)
+  set(ECAL_PYPROJ_NAME              ${ARGUMENTS_TARGET_NAME})  
+  set(ECAL_PYPROJ_PYTHON_VERSION    ${Python_VERSION})
+  set(ECAL_PYPROJ_SEARCH_PATH_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/python)
+  set(ECAL_PYPROJ_SEARCH_PATH_RELEASE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/python)
+  set(ECAL_PYPROJ_SEARCH_PATH_RELWITHDEBINFO ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/RelWithDebInfo/python/ecal)
+  
+  set(generated_pyproj_path ${CMAKE_CURRENT_BINARY_DIR}/${ARGUMENTS_TARGET_NAME}.pyproj)
+  
+  # Generate the .pyproj file from the template
+  configure_file(
+    ${ECAL_PYTHON_DIRECTORY}/sample.pyproj.in
+    ${generated_pyproj_path}
+    @ONLY
+  )
+
+  include_external_msproject(${ARGUMENTS_TARGET_NAME} ${generated_pyproj_path})
+endfunction()
+
 # Convenience target to have all Python targets buildable via one name
 add_custom_target(${PROJECT_NAME})
 
@@ -45,5 +125,30 @@ if(HAS_HDF5)
   add_dependencies(${PROJECT_NAME} _ecal_hdf5_py)
 else()
   message(WARNING "Building Python bindings without HDF5 support")
+endif()
+
+if (ECAL_PYTHON_BUILD_SAMPLES)
+  add_subdirectory(samples)
+endif()
+
+if (WIN32)
+    add_custom_target(copy_ecal_core_dll ALL
+      COMMAND cmake -E copy_if_different "$<TARGET_FILE:eCAL::core>" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/python/ecal"
+      COMMENT "Copy eCAL Core DLL to python directory"
+      DEPENDS eCAL::core
+    )
+    set_property(TARGET copy_ecal_core_dll PROPERTY FOLDER lang/python/core)
+endif()
+
+#This is a really hacky way. Let's do this differently.
+if (WIN32 AND HAS_HDF5)
+    if (TARGET hdf5::hdf5-shared)
+      add_custom_target(copy_hdf5_dll ALL
+        COMMAND cmake -E copy_if_different "$<TARGET_FILE:hdf5::hdf5-shared>" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/python/ecal"
+        COMMENT "Copy eCAL Core DLL to python directory"
+        DEPENDS hdf5::hdf5-shared
+      )
+      set_property(TARGET copy_hdf5_dll PROPERTY FOLDER lang/python/core)
+    endif()
 endif()
 
