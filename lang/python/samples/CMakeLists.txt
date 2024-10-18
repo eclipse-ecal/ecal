@@ -38,6 +38,8 @@ function(add_sample_to_solution python_filenname)
   set_property(TARGET py_${stem} PROPERTY FOLDER samples/python/${subfolder})
 endfunction()
 
+
+if (CMAKE_GENERATOR MATCHES "Visual Studio")
 if(HAS_HDF5)
   foreach(python_sample ${python_samples_measurement})
     add_sample_to_solution(${python_sample})
@@ -47,3 +49,4 @@ endif()
 foreach(python_sample ${python_samples_core})
   add_sample_to_solution(${python_sample})
 endforeach()
+endif()
