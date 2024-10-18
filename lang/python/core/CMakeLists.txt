@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,10 +18,33 @@
 
 project(_ecal_core_py)
 
+######
+# build
+######
 python_add_library(${PROJECT_NAME} MODULE WITH_SOABI
   src/ecal_clang.cpp
   src/ecal_clang.h
   src/ecal_wrap.cxx
+)
+
+set(python_files
+  ecal/__init__.py
+  ecal/core/__init__.py
+  ecal/core/core.py
+  ecal/core/publisher.py
+  ecal/core/service.py
+  ecal/core/subscriber.py
+  ecal/proto/__init__.py
+  ecal/proto/helper.py
+)
+
+target_sources(${PROJECT_NAME}
+  PUBLIC    
+    FILE_SET ecal_core_python_files
+    TYPE HEADERS
+    BASE_DIRS .
+    FILES
+      ${python_files}
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -31,20 +54,28 @@ target_link_libraries(${PROJECT_NAME}
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
-  FOLDER lang/python/core
-)
 
+########
+# installation
+########
 install(TARGETS ${PROJECT_NAME} core
   RUNTIME DESTINATION ecal COMPONENT python EXCLUDE_FROM_ALL
   LIBRARY DESTINATION ecal COMPONENT python EXCLUDE_FROM_ALL NAMELINK_SKIP
 )
 
-if(ECAL_INCLUDE_PY_SAMPLES)
-  if(WIN32)
 
-    include_external_msproject(ecal_core_py ${CMAKE_CURRENT_SOURCE_DIR}/ecal_core_py.pyproj)
-    set_property(TARGET ecal_core_py PROPERTY FOLDER lang/python/core)
+##############
+# IDE appearance
+##############
+set_target_properties(${PROJECT_NAME} PROPERTIES
+  FOLDER lang/python/core
+)
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Python Files" FILES ${python_files})
 
-  endif()
-endif()
+
+##########
+# IDE Debugging / Runtime
+###########
+copy_python_code(TARGET ${PROJECT_NAME} PYTHON_FILES ${python_files} PYTHON_CODE_ROOT .)
+
+ecal_python_set_output_directory(${PROJECT_NAME})

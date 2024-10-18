@@ -44,7 +44,8 @@ sdist.only-include = [
   "/README.md",
   "/app/app_pb/",
   "/app/apps/",            # TODO: Remove this directory
-  "/app/rec/rec_addon_*/", # TODO: Remove this directory
+  "/app/rec/rec_addon_core/", # TODO: Remove this directory
+  "/app/rec/rec_addon_dummy/", # TODO: Remove this directory
   "/cmake/",
   "/contrib/",
   "/cpack/",
