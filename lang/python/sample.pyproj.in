@@ -28,7 +28,7 @@
     <Compile Include="@ECAL_PYPROJ_FILE@" />
   </ItemGroup>
   <ItemGroup>
-    <Interpreter Include="C:/Users/uidv8497/AppData/Local/Programs/Python/Python312">
+    <Interpreter Include="@ECAL_PYPROJ_PYTHON_ROOT@">
       <Id>debugging-env</Id>
       <Version>0.0</Version>
       <Description>eCAL Debugging Environment (Python @ECAL_PYPROJ_PYTHON_VERSION@ )</Description>

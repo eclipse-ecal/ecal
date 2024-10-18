@@ -84,9 +84,11 @@ function(ecal_python_add_sample)
   set(ECAL_PYPROJ_FILE              ${ARGUMENTS_PY_FILE})
   string(UUID ECAL_PYPROJ_GUID NAMESPACE 8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942 NAME ${ARGUMENTS_TARGET_NAME}
        TYPE MD5)
-  get_target_property(ECAL_PYPROJ_INTERPRETER_DEBUG Python::Interpreter LOCATION)
+  get_target_property(ECAL_PYPROJ_INTERPRETER_DEBUG   Python::Interpreter LOCATION)
   get_target_property(ECAL_PYPROJ_INTERPRETER_RELEASE Python::Interpreter LOCATION)
+   
   set(ECAL_PYPROJ_NAME              ${ARGUMENTS_TARGET_NAME})  
+  cmake_path(GET ECAL_PYPROJ_INTERPRETER_RELEASE PARENT_PATH ECAL_PYPROJ_PYTHON_ROOT)
   set(ECAL_PYPROJ_PYTHON_VERSION    ${Python_VERSION})
   set(ECAL_PYPROJ_SEARCH_PATH_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/python)
   set(ECAL_PYPROJ_SEARCH_PATH_RELEASE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/python)
@@ -139,16 +141,3 @@ if (WIN32)
     )
     set_property(TARGET copy_ecal_core_dll PROPERTY FOLDER lang/python/core)
 endif()
-
-#This is a really hacky way. Let's do this differently.
-if (WIN32 AND HAS_HDF5)
-    if (TARGET hdf5::hdf5-shared)
-      add_custom_target(copy_hdf5_dll ALL
-        COMMAND cmake -E copy_if_different "$<TARGET_FILE:hdf5::hdf5-shared>" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/python/ecal"
-        COMMENT "Copy eCAL Core DLL to python directory"
-        DEPENDS hdf5::hdf5-shared
-      )
-      set_property(TARGET copy_hdf5_dll PROPERTY FOLDER lang/python/core)
-    endif()
-endif()
-
