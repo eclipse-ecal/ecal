@@ -30,7 +30,13 @@ option(ECAL_PYTHON_HAS_HDF5      "Enables eCAL application cmd line interfaces" 
 
 set(ECAL_PYTHON_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
-
+# This function takes a list of python files to be copied to the package directory
+# and associates the files with a given python extension target
+# Using this function allows to create the whole python package editable in place
+# Arguments:
+#   TARGET            Python extension target with which to associate the files
+#   PYTHON_CODE_ROOT  Root folder for Python files, to keep folder structure
+#   PYTHON_FILES      Python files associated with target
 function(copy_python_code)
   set(singleValueArgs TARGET PYTHON_CODE_ROOT)
   set(multiValueArgs  PYTHON_FILES)
@@ -68,12 +74,16 @@ function(copy_python_code)
   endforeach()
 endfunction()
 
+# Function to set the correct output directory for the python targets, so that they can be debugged properly
 function(ecal_python_set_output_directory TARGET_NAME)
   set_target_properties(${TARGET_NAME} PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY $<IF:$<BOOL:${WIN32}>,${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/python/ecal,${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/ecal>
   )  
 endfunction()
 
+# Function to add a python file as a sample to a Visual Studio Solution
+# It can then be started / debugged directly from within Visual Studio
+# Other generators are not supported at this time.
 function(ecal_python_add_sample)
   set(singleValueArgs PY_FILE TARGET_NAME)
   cmake_parse_arguments(ARGUMENTS
@@ -133,6 +143,8 @@ if (ECAL_PYTHON_BUILD_SAMPLES)
   add_subdirectory(samples)
 endif()
 
+# This is a custom target to copy the eCAL core dll to the output directory of the Python extensions.
+# Without this copying step, debugging would not be possible.
 if (WIN32)
     add_custom_target(copy_ecal_core_dll ALL
       COMMAND cmake -E copy_if_different "$<TARGET_FILE:eCAL::core>" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/python/ecal"

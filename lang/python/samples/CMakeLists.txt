@@ -10,6 +10,7 @@ set(python_samples_core
   core/benchmark/latency_snd.py
   core/monitoring/monitoring.py
   core/monitoring/monitoring_json.py
+  core/pubsub/binary_rec.py
   core/pubsub/binary_rec_cb.py
   core/pubsub/binary_snd.py
   core/pubsub/protobuf_rec.py
@@ -18,13 +19,6 @@ set(python_samples_core
   core/pubsub/string_rec.py
   core/pubsub/string_rec_cb.py
   core/pubsub/string_snd.py
-  core/pubsub/_protobuf/animal.proto
-  core/pubsub/_protobuf/animal_pb2.py
-  core/pubsub/_protobuf/binary_rec.py
-  core/pubsub/_protobuf/house.proto
-  core/pubsub/_protobuf/house_pb2.py
-  core/pubsub/_protobuf/person.proto
-  core/pubsub/_protobuf/person_pb2.py
   core/service/minimal_service_client.py
   core/service/minimal_service_server.py
 )
