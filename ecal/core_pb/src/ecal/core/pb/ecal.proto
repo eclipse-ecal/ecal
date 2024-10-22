@@ -57,8 +57,25 @@ enum eCmdType                                  // command type
   bct_unreg_process    = 14;                   // unregister process
   bct_unreg_service    = 15;                   // unregister service
   bct_unreg_client     = 16;                   // unregister client
+
+  // The following are registration v2 (eCAL6) commands
+  bct_reg_process_v2      = 20;                   // register process
+  bct_unreg_process_v2    = 21;                   // unregister process
+
+  bct_reg_publisher_v2    = 22;                   // register publisher
+  bct_unreg_publisher_v2  = 23;                   // unregister publisher
+
+  bct_reg_subscriber_v2   = 24;                   // register subscriber
+  bct_unreg_subscriber_v2 = 25;                   // unregister subscriber
+
+  bct_reg_service_v2      = 26;                   // register service
+  bct_unreg_service_v2    = 27;                   // unregister service
+
+  bct_reg_client_v2       = 28;                   // register client
+  bct_unreg_client_v2     = 29;                   // unregister client
 }
 
+// TODO Original Sample, should not be used (use instead ContentSample or RegistrationSample)
 message Sample                                 // a sample is a topic, it's descriptions and it's content
 {
   eCmdType     cmd_type              =  1;     // sample command type
@@ -71,7 +88,50 @@ message Sample                                 // a sample is a topic, it's desc
   bytes        padding               =  8;     // padding to artificially increase the size of the message. This is a workaround for TCP topics, to get the actual user-payload 8-byte-aligned. REMOVE ME IN ECAL6
 }
 
-message SampleList
+// TODO Also deprecated, should not be used anymore
+message RegistrationSampleList
 {
-  repeated Sample samples            =  1;     // list of Samples used currently by SHM registration
+  repeated RegistrationSample samples =  1;     // list of Samples used currently by SHM registration
+}
+
+
+message ContentSample                                 // a sample is a topic, it's descriptions and it's content
+{
+  eCmdType     cmd_type              =  1;     // sample command type
+  Content      content               =  6;     // topic content
+  bytes        padding               =  8;     // padding to artificially increase the size of the message. This is a workaround for TCP topics, to get the actual user-payload 8-byte-aligned. REMOVE ME IN ECAL6
+}
+
+message RegistrationSample
+{
+  eCmdType     cmd_type              =  1;     // sample command type
+  Host         host                  =  2;     // host information
+  Process      process               =  3;     // process information
+  Service      service               =  4;     // service information
+  Client       client                =  7;     // client information
+  Topic        topic                 =  5;     // topic information
+  Content      content               =  6;     // topic content
+  bytes        padding               =  8;     // padding to artificially increase the size of the message. This is a workaround for TCP topics, to get the actual user-payload 8-byte-aligned. REMOVE ME IN ECAL6
+
+  ProcessRegistration      process_registration = 32;
+  ProcessUnRegistration    process_unregistration = 33;
+
+  PublisherRegistration    publisher_registration   = 34;
+  PublisherUnregistration  publisher_unregistration = 35;
+
+  SubscriberRegistration   subscriber_registration = 36;
+  SubscriberUnregistration subscriber_unregistration = 37;
+
+  ServiceRegistration      service_registration = 38;
+  ServiceUnregistration    service_unregistration = 39;
+
+  ClientRegistration       client_registration = 40;
+  ClientUnregistration     client_unregistration = 41;
+
+  bytes        padding_v2            = 125;
+}
+
+message RegistrationSampleList
+{
+  repeated RegistrationSample samples            =  1;     // list of Samples used currently by SHM registration
 }

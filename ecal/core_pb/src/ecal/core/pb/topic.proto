@@ -61,3 +61,66 @@ message Topic                                      // eCAL topic
 
   map<string, string> attr                  = 27;  // generic topic description
 }
+
+
+message PubSubStaticInfo
+{
+  DataTypeInformation tdatatype             = 1;  // topic datatype information (encoding & type & description)
+  map<string, string> attr                  = 2;  // generic topic description
+
+  RegistrationID      process               = 3;
+
+  string              host_group_name       = 4;  // <- should be made available via process? or is this something that we want per publisher for the future?
+  string              uname                 = 5;  // unit name <- we don't need to send this per Subscriber'
+
+}
+
+message TopicStatistics
+{
+  int32               heartbeat             =  1;  // registration clock (heart beat)
+  int64               data_clock            = 20;  // data clock (send / receive action)
+  float               data_freq             = 21;  // data frequency (send / receive samples per second) [mHz]
+  int32               connections_loc       = 16;  // number of local connected entities
+  int32               connections_ext       = 17;  // number of external connected entities
+  int32               message_drops         = 18;  // dropped messages
+  int32               tsize                 = 13;  // topic size
+}
+
+message PublisherConnectionInformation
+{
+  repeated TLayer tlayer = 1;  // active topic transport layers and it's specific parameter
+}
+
+message PublisherRegistration
+{
+  RegistrationID            registration_id       = 1;
+  string                    topic_name            = 2;
+
+  bytes                     topic_info            = 3;  // Fixed Publisher Info
+  bytes                     statistics            = 4;  // Publisher Statistics  - TopicStatistics
+  bytes                     connection_parameters = 5; // Connection Parameters for Subscribers who want to connect
+}
+
+message PublisherUnregistration
+{
+  RegistrationID            registration_id      = 1;
+}
+
+
+message SubscriberRegistration
+{
+  // Reserved fields in enums are not supported in protobuf 3.0
+  // reserved 7 to 11;
+  RegistrationID            registration_id      = 1;
+  string                    topic_name           = 2;
+
+  bytes                     topic_info           = 3; // StaticProcessInfo
+  bytes                     statistics           = 4; // DynamicProcessInfo
+}
+
+message SubscriberUnregistration
+{
+  // Reserved fields in enums are not supported in protobuf 3.0
+  // reserved 7 to 11;
+  RegistrationID            registration_id      = 1;
+}

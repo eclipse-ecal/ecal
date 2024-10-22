@@ -21,6 +21,8 @@ syntax = "proto3";
 
 package eCAL.pb;
 
+import "ecal/core/pb/common.proto";
+
 enum eProcessSeverity                                     // process severity
 {
   proc_sev_unknown  = 0;                                  // condition unknown
@@ -54,7 +56,7 @@ enum eTSyncState                                          // time synchronisatio
   tsync_replay   = 2;                                     // replay time sync mode
 }
 
-message Process                                           // process
+message Process                                           // process (eCAL 5 Protocoll)
 {
   // Reserved fields in enums are not supported in protobuf 3.0
   // reserved 7 to 11;
@@ -74,4 +76,43 @@ message Process                                           // process
   int32                     component_init_state = 15;    // eCAL component initialization state (eCAL::Initialize(..))
   string                    component_init_info  = 16;    // like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc)
   string                    ecal_runtime_version = 17;    // loaded / runtime eCAL version of a component
+}
+
+// Information that will not change
+message StaticProcessRegistrationInfo
+{
+  string                    hgname               = 18;    // host group name
+  string                    pname                =  4;    // process name
+  string                    uname                =  5;    // unit name
+  string                    pparam               =  6;    // process parameter
+  
+  string                    ecal_runtime_version = 17;    // loaded / runtime eCAL version of a component
+}
+
+// Information that might change
+message DynamicProcessRegistrationInfo
+{
+  int32                     clock               =  1;     // registration clock
+  ProcessState              state                = 12;    // process state info
+  eTSyncState               timesync_state       = 13;    // time synchronization state
+  string                    timesync_module_name = 14;    // time synchronization module name
+  // @TODO maybe static info (depends if we allow to reinit)
+  int32                     component_init_state = 15;    // eCAL component initialization state (eCAL::Initialize(..))
+  string                    component_init_info  = 16;    // like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc)
+}
+
+
+message ProcessRegistration                               // process (eCAL6 Protocoll)
+{
+  // Reserved fields in enums are not supported in protobuf 3.0
+  // reserved 7 to 11;
+  RegistrationID            registration_id      = 1;
+
+  StaticProcessInfo         static_info          = 2;
+  DynamicProcessInfo        dynamic_info         = 3;
+}
+
+message ProcessUnRegistration                           // process (eCAL6 Protocoll)
+{
+  RegistrationID            registration_id      = 1;
 }
