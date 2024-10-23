@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -116,6 +116,14 @@ set(ECAL_CORE_REGISTRATION_SHM                                                  
 set(ECAL_CORE_TRANSPORT_UDP                                                                                        ON)
 set(ECAL_CORE_TRANSPORT_TCP                                                                                        ON)
 set(ECAL_CORE_TRANSPORT_SHM                                                                                        ON)
+
+# -----------------------
+# eCAL Python configuration
+# -----------------------
+set(ECAL_PYTHON_BUILD_SAMPLES                                                                        ${BUILD_SAMPLES})
+set(ECAL_PYTHON_BUILD_TESTS                                                                       ${BUILD_ECAL_TESTS})
+set(ECAL_PYTHON_HAS_HDF5                                                                                  ${HAS_HDF5})
+
 
 # This should be ON, unless build ecal hdf5 for Matlab usage
 option(ECAL_LINK_HDF5_SHARED                   "Link shared libs of HDF5"                                          ON)
