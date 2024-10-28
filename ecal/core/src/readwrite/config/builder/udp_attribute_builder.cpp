@@ -17,8 +17,6 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
-
 #include "udp_attribute_builder.h"
 #include "ecal/types/ecal_custom_data_types.h"
 

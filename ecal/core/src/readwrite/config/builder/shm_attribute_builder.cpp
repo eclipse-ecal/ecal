@@ -17,8 +17,6 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
-
 #include "shm_attribute_builder.h"
 
 namespace eCAL

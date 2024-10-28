@@ -17,8 +17,6 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
-
 #include "tcp_attribute_builder.h"
 
 namespace eCAL
