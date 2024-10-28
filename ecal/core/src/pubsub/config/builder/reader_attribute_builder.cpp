@@ -17,8 +17,6 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
-
 #include "reader_attribute_builder.h"
 #include "ecal/ecal_process.h"
 
