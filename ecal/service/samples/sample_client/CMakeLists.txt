@@ -30,7 +30,7 @@ target_link_libraries(${PROJECT_NAME}
   PRIVATE
     ecal_service)
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER core/service)
 

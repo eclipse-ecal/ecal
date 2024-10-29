@@ -49,7 +49,7 @@ target_link_libraries(${PROJECT_NAME}
 	    tclap::tclap
 )
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC include/

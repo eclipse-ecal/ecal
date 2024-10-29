@@ -59,7 +59,7 @@ if(WIN32)
   target_link_libraries(${PROJECT_NAME} PRIVATE wsock32 ws2_32)
 endif()
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
 # Create a source tree that mirrors the filesystem
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"

@@ -44,7 +44,7 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::proto
     protobuf::libprotobuf)
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 ecal_install_gtest(${PROJECT_NAME})
 

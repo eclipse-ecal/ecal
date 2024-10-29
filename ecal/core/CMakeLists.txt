@@ -65,6 +65,7 @@ endif()
 # config
 ######################################
 set(ecal_config_src
+    src/config/application.cpp
     src/config/default_configuration.cpp        
     src/config/ecal_cmd_parser.cpp
     src/config/ecal_config.cpp
@@ -762,7 +763,7 @@ if(UNIX)
         src/ecal_process_stub.h
     )
     
-    target_compile_features(${PROJECT_NAME_PROCESS_STUB} PUBLIC cxx_std_14)
+    target_compile_features(${PROJECT_NAME_PROCESS_STUB} PUBLIC cxx_std_17)
     
     ecal_install_app(${PROJECT_NAME_PROCESS_STUB})
 

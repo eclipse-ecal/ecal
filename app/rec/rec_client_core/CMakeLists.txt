@@ -112,7 +112,7 @@ if(HAS_CURL)
     )
 endif()
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}" FILES ${source_files})
 

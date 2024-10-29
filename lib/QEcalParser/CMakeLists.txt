@@ -90,7 +90,7 @@ target_link_libraries(${PROJECT_NAME}
     EcalParser
 )
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
 if(MSVC)
     # Disable Compiler warning "Conditional expression is constant"

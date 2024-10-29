@@ -165,7 +165,7 @@ if (WIN32 AND (${QT_VERSION_MAJOR} EQUAL 5))
     )
 endif()
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")

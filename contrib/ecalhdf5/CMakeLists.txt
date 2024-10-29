@@ -80,7 +80,7 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::ecal-utils
 )
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC eCAL::measurement_base)
 if (${ECAL_LINK_HDF5_SHARED})

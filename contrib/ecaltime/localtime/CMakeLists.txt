@@ -47,7 +47,7 @@ target_link_libraries(${PROJECT_NAME}
   Threads::Threads
   $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>
   )
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 ecal_install_time_plugin(${PROJECT_NAME})
 

@@ -61,7 +61,7 @@ target_link_libraries (${PROJECT_NAME}
   eCAL::core
   eCAL::mon_plugin_lib
 )
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17) 
 
 if(MSVC)
     set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127 /wd4714")

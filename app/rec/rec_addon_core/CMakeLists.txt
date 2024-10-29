@@ -54,7 +54,7 @@ target_link_libraries(${PROJECT_NAME}
     Threads::Threads
 )
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14) 
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17) 
 
 ecal_install_library(${PROJECT_NAME})
 install(DIRECTORY

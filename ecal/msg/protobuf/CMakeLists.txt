@@ -45,7 +45,7 @@ target_sources(proto
 
 target_link_libraries(proto PUBLIC protobuf::libprotobuf)
 
-target_compile_features(proto PUBLIC cxx_std_14)
+target_compile_features(proto PUBLIC cxx_std_17)
 
 install(
   TARGETS proto

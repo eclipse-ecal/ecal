@@ -76,7 +76,7 @@ target_compile_definitions(${PROJECT_NAME}
         _WIN32_WINNT=0x0601
 )
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
 target_compile_options(${PROJECT_NAME} PRIVATE
                            $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:

@@ -31,7 +31,7 @@ target_compile_definitions(${PROJECT_NAME}
   PRIVATE $<$<BOOL:${MSVC}>:PCRE_STATIC;_UNICODE>)
 
 target_link_libraries(${PROJECT_NAME} eCAL::core)
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 ecal_install_app(${PROJECT_NAME})
 

@@ -54,6 +54,6 @@ add_dependencies(${PROJECT_NAME}
   rec_gui
 )
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/rec/rec_tests/)
