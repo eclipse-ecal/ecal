@@ -17,9 +17,41 @@
  * =========================== LICENSE =================================
  */
 
-/**
- * @file   ecal_application_config.h
- * @brief  eCAL configuration for applications
-**/
-
 #pragma once
+
+#include <optional>
+
+template<typename base>
+struct Invalidated;
+
+template<typename base>
+struct Validated 
+ : base
+ {
+private:
+  Validated() = default;
+  Validated(const base& base_)
+   : base(base_)
+    {};
+
+  friend struct Invalidated<base>;  
+ };
+
+template<typename base>
+struct Invalidated
+ : base
+ {
+
+  std::optional<const Validated<base>> GetValidated()
+  {
+    if (Validate(*this))
+    {
+       return Validated<base>(*this);
+    }
+    else
+    {
+        return std::nullopt;
+    }
+  }
+
+ };

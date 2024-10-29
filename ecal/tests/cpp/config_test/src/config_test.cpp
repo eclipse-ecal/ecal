@@ -35,6 +35,9 @@
 #include "default_configuration.h"
 #include "ecal_def.h"
 
+#include <ecal/config/templates/ecal_setting.h>
+#include <ecal/config/templates/validation_templates.h>
+
 template<typename MEMBER, typename VALUE>
 void SetValue(MEMBER& member, VALUE value)
 {
@@ -328,3 +331,35 @@ TEST(core_cpp_config /*unused*/, yaml_to_config_merger /*unused*/)
   remove(ini_file_name.data());
 }
 #endif
+
+TEST(core_cpp_config /*unused*/, ecal_setting /*unused*/)
+{
+  eCAL::Setting<unsigned int> setting = 100;
+
+  EXPECT_FALSE(setting.isValid());
+  
+  setting.setValidationFunction([&setting]() { return setting > 0; });
+
+  EXPECT_FALSE(setting.isValid());
+  EXPECT_TRUE(setting.validate());
+
+  ASSERT_THROW(setting = 100, std::runtime_error);
+
+}
+
+bool Validate(eCAL::Configuration& config_)
+{
+  return config_.GetYamlFilePath().empty();
+}
+
+TEST(core_cpp_config /*unused*/, validated_invalidated /*unused*/)
+{
+  using InvalidConfiguration = Invalidated<eCAL::Configuration>;
+  using ValidatedConfiguration = Validated<eCAL::Configuration>;
+
+  InvalidConfiguration config;
+
+  auto validConfig = config.GetValidated();
+
+  EXPECT_TRUE(validConfig.has_value());
+}
