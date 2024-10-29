@@ -24,6 +24,7 @@
 #include <sstream>
 #include <thread>
 #include <vector>
+#include <algorithm>
 
 const int subscriber_number(5000);
 
