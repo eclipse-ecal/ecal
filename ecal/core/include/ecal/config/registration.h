@@ -73,5 +73,7 @@ namespace eCAL
                                                                  (virtual) host borders (e.g, Docker); by default equivalent to local host name (Default: "") */
       Layer::Configuration layer;
     };
+
+    bool Validate(Configuration& config_);
   }
 }

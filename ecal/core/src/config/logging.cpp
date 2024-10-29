@@ -17,27 +17,16 @@
  * =========================== LICENSE =================================
  */
 
-/**
- * @file   user_arguments.h
- * @brief  Arguments given by the user via command line
-**/
-
-#pragma once
-
-#include <string>
-#include <vector>
-#include <map>
+#include "ecal/config/logging.h"
 
 namespace eCAL
 {
-  namespace Cli
+  namespace Logging
   {
-    struct Configuration
+    bool Validate(Configuration& /*config_*/)
     {
-      std::string              user_yaml   { "" };    //!< The used eCAL yaml file (Default: "")
-      bool                     dump_config { false }; //!< If specified, output configuration via standart output (Default: false)
-    };
-
-    bool Validate(Configuration& config_);
+      // Port evaluation?
+      return true;
+    }
   }
 }

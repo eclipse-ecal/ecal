@@ -25,8 +25,11 @@
 #pragma once
 
 #include <string>
-#include <ecal/ecal_os.h>
 #include <cstddef>
+
+#include <ecal/ecal_os.h>
+
+#include "templates/validation_templates.h"
 
 namespace eCAL
 {
@@ -53,5 +56,7 @@ namespace eCAL
       Sys::Configuration     sys;
       Startup::Configuration startup;
     };
+
+    bool Validate(Configuration& config_);
   }
 }

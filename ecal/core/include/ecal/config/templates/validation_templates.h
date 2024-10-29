@@ -22,7 +22,7 @@
 #include <optional>
 
 template<typename base>
-struct Invalidated;
+struct Proposed;
 
 template<typename base>
 struct Validated 
@@ -34,11 +34,11 @@ private:
    : base(base_)
     {};
 
-  friend struct Invalidated<base>;  
+  friend struct Proposed<base>;  
  };
 
 template<typename base>
-struct Invalidated
+struct Proposed
  : base
  {
 

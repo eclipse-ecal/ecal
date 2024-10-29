@@ -35,5 +35,7 @@ namespace eCAL
       std::string                                 filter_excl {  "^__.*$" }; //!< Topics blacklist as regular expression (will not be monitored) (Default: "^__.*$")
       std::string                                 filter_incl { "" };        //!< Topics whitelist as regular expression (will be monitored only) (Default: "")
     };
+
+    bool Validate(Configuration& config_);
   }
 }

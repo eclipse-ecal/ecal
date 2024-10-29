@@ -319,6 +319,21 @@ namespace eCAL
     {
       return GetConfiguration().application;
     }
+
+    bool Validate(Configuration& config_)
+    {
+      auto isValid = true;
+      isValid &= Validate(config_.application);
+      isValid &= Validate(config_.monitoring);
+      isValid &= Validate(config_.publisher);
+      isValid &= Validate(config_.registration);
+      isValid &= Validate(config_.service);
+      isValid &= Validate(config_.subscriber);
+      isValid &= Validate(config_.timesync);
+      isValid &= Validate(config_.transport_layer);
+      isValid &= Validate(config_.logging);
+      return isValid;
+    }
 }
 
 

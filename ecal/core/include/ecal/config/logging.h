@@ -84,5 +84,7 @@ namespace eCAL
     {
       Sinks::Configuration sinks;
     };
+
+    bool Validate(Configuration& config_);
   }
 }

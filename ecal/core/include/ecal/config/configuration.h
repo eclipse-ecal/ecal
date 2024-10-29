@@ -35,7 +35,7 @@
 #include <ecal/config/time.h>
 #include <ecal/types/ecal_custom_data_types.h>
 
-
+#include "templates/validation_templates.h"
 #include "ecal/ecal_os.h"
 #include "ecal/ecal_log_level.h"
 
@@ -71,4 +71,9 @@ namespace eCAL
     protected:
       std::string ecal_yaml_file_path;
   };
+
+  using ProposedConfiguration = Proposed<Configuration>;
+  using ValidatedConfiguration = Validated<Configuration>;
+
+  ECAL_API bool Validate(Configuration& config_);
 }

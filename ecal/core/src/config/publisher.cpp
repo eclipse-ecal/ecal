@@ -17,27 +17,18 @@
  * =========================== LICENSE =================================
  */
 
-/**
- * @file   user_arguments.h
- * @brief  Arguments given by the user via command line
-**/
-
-#pragma once
-
-#include <string>
-#include <vector>
-#include <map>
+#include "ecal/config/publisher.h"
 
 namespace eCAL
 {
-  namespace Cli
+  namespace Publisher
   {
-    struct Configuration
+    bool Validate(Configuration& config_)
     {
-      std::string              user_yaml   { "" };    //!< The used eCAL yaml file (Default: "")
-      bool                     dump_config { false }; //!< If specified, output configuration via standart output (Default: false)
-    };
-
-    bool Validate(Configuration& config_);
+      bool isValid = true;
+      isValid &= config_.layer.shm.memfile_min_size_bytes >= 4096 && config_.layer.shm.memfile_min_size_bytes % 4096 == 0;
+      isValid &= config_.layer.shm.memfile_reserve_percent >= 50 && config_.layer.shm.memfile_reserve_percent <= 100;      
+      return isValid;
+    }
   }
 }

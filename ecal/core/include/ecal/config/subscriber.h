@@ -72,5 +72,7 @@ namespace eCAL
 
       bool drop_out_of_order_messages { true }; //!< Enable dropping of payload messages that arrive out of order
     };
+
+    bool Validate(Configuration& config_);
   }
 }

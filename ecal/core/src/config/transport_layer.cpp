@@ -39,6 +39,14 @@ namespace eCAL
 
         return *this;
       }
-    } 
+    }
+
+    bool Validate(Configuration& config_)
+    {
+      bool isValid = true;
+      isValid &= config_.udp.send_buffer % 1024 == 0;
+      isValid &= config_.udp.receive_buffer % 1024 == 0;
+      return isValid;
+    }
   }
 }

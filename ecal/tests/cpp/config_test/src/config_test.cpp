@@ -347,17 +347,12 @@ TEST(core_cpp_config /*unused*/, ecal_setting /*unused*/)
 
 }
 
-bool Validate(eCAL::Configuration& config_)
-{
-  return config_.GetYamlFilePath().empty();
-}
-
 TEST(core_cpp_config /*unused*/, validated_invalidated /*unused*/)
 {
-  using InvalidConfiguration = Invalidated<eCAL::Configuration>;
+  using ProposedConfiguration = Proposed<eCAL::Configuration>;
   using ValidatedConfiguration = Validated<eCAL::Configuration>;
 
-  InvalidConfiguration config;
+  ProposedConfiguration config;
 
   auto validConfig = config.GetValidated();
 

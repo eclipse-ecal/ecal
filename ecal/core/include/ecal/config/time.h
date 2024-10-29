@@ -41,6 +41,8 @@ namespace eCAL
                                                                         (Default: ecaltime-localtime)*/
       std::string timesync_module_replay { "" };                   //!< (Default: "")
     };
+
+    bool Validate(Configuration& config_);
   }
 }
 

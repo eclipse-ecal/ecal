@@ -93,5 +93,7 @@ namespace eCAL
       UDP::Configuration udp;
       TCP::Configuration tcp;
     };
+
+    bool Validate(Configuration& config_);
   }
 }
