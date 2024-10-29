@@ -825,7 +825,22 @@
 <h2>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">#</a></h2>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Changelog
 
-tbd
+## Core
+- Asio server now initialized per default with ipv6 with ipv4 fallback option (#1646)
+- Zero length payload now gets transferred over shm in zero copy mode (#1688)
+- Protobuf Publisher Send now returns the actual send size (#1681)
+
+## Python
+- Fix iterating over measurement (#1748, #1750, #1751)
+- Fixed memory leaks in Python Wrapper (#1754, #1758)
+- Fixed deadlock in call_method function for service calls in same process (#1760)
+
+## Samples
+- Several shutdown conditions fixed (#1641, #1642)
+
+*Full changelog can be found here: https://github.com/eclipse-ecal/ecal/compare/v5.12.6...v5.12.7*
+
+*eCAL 5.12.7 is patch-level equivalent to eCAL 5.13.3*
 </pre></div>
 </div>
 </section>
@@ -837,6 +852,45 @@ tbd
 <col style="width: 80%">
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><i class="fab fa-windows"></i> Windows</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal_5.12.7-win64.exe"><i class="fas fa-download"></i> Download eCAL 5.12.7 installer for Windows (.exe)</a></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal5-5.12.7-cp312-cp312-win_amd64.whl"><i class="fab fa-python"></i> Python 3.12 binding for Windows as .whl</a></p></li>
+<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal5-5.12.7-cp311-cp311-win_amd64.whl"><i class="fab fa-python"></i> Python 3.11 binding for Windows as .whl</a></p></li>
+<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal5-5.12.7-cp310-cp310-win_amd64.whl"><i class="fab fa-python"></i> Python 3.10 binding for Windows as .whl</a></p></li>
+<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal5-5.12.7-cp39-cp39-win_amd64.whl"><i class="fab fa-python"></i> Python 3.9 binding for Windows as .whl</a></p></li>
+<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal5-5.12.7-cp38-cp38-win_amd64.whl"><i class="fab fa-python"></i> Python 3.8 binding for Windows as .whl</a></p></li>
+<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal5-5.12.7-cp37-cp37m-win_amd64.whl"><i class="fab fa-python"></i> Python 3.7 binding for Windows as .whl</a></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 24.04</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal_5.12.7-noble_amd64.deb"><i class="fas fa-download"></i> Download eCAL 5.12.7 installer for Ubuntu 24.04 (.deb)</a></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal5-5.12.7-1noble-cp312-cp312-linux_x86_64.whl"><i class="fab fa-python"></i> Python 3.12 binding for Ubuntu 24.04 as .whl</a></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 22.04</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal_5.12.7-jammy_amd64.deb"><i class="fas fa-download"></i> Download eCAL 5.12.7 installer for Ubuntu 22.04 (.deb)</a></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal5-5.12.7-1jammy-cp311-cp311-linux_x86_64.whl"><i class="fab fa-python"></i> Python 3.11 binding for Ubuntu 22.04 as .whl</a></p></li>
+<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal5-5.12.7-1jammy-cp310-cp310-linux_x86_64.whl"><i class="fab fa-python"></i> Python 3.10 binding for Ubuntu 22.04 as .whl (Default)</a></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 20.04</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal_5.12.7-focal_amd64.deb"><i class="fas fa-download"></i> Download eCAL 5.12.7 installer for Ubuntu 20.04 (.deb)</a></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal5-5.12.7-1focal-cp39-cp39-linux_x86_64.whl"><i class="fab fa-python"></i> Python 3.9 binding for Ubuntu 20.04 as .whl</a></p></li>
+<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal5-5.12.7-1focal-cp38-cp38-linux_x86_64.whl"><i class="fab fa-python"></i> Python 3.8 binding for Ubuntu 20.04 as .whl (Default)</a></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><i class="fa fa-code"></i> Source</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.7/ecal-fat-source.tar.gz"><i class="fas fa-download"></i> ecal-fat-source.tar.gz (Includes git submodules)</a></p>
+</td>
+</tr>
 </tbody>
 </table>
 </div>
