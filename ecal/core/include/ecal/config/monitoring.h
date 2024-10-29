@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <ecal/types/ecal_custom_data_types.h>
+#include <string>
 
 namespace eCAL
 {

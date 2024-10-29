@@ -33,11 +33,9 @@
 #include <ecal/config/publisher.h>
 #include <ecal/config/subscriber.h>
 #include <ecal/config/time.h>
-#include <ecal/types/ecal_custom_data_types.h>
 
 #include "templates/validation_templates.h"
 #include "ecal/ecal_os.h"
-#include "ecal/ecal_log_level.h"
 
 #include <string>
 #include <vector>

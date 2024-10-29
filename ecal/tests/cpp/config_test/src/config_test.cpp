@@ -157,18 +157,6 @@ TEST(core_cpp_config /*unused*/, user_config_death_test /*unused*/)
   ASSERT_THROW(
     SetValue(custom_config.transport_layer.udp.network.group, "0.00.000.0"),
     std::invalid_argument);
-
-  // Test the ConstrainedInteger class with wrong values. Default are MIN = 5242880, STEP = 1024
-  // Value below MIN
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.send_buffer, 42),
-    std::invalid_argument);
-  
-  // Wrong step. Default STEP = 1024
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.send_buffer, (5242880 + 512)),
-    std::invalid_argument);
-
 }
 
 TEST(core_cpp_config /*unused*/, config_custom_datatypes_tests /*unused*/)
@@ -181,14 +169,6 @@ TEST(core_cpp_config /*unused*/, config_custom_datatypes_tests /*unused*/)
   ip1 = "192.168.0.2";
   ip2 = ip1;
   EXPECT_EQ(ip1, ip2);
-
-  eCAL::Types::ConstrainedInteger<0,1,10> s1;
-  eCAL::Types::ConstrainedInteger<0,1,10> s2;
-  EXPECT_EQ(s1, s2);
-
-  s1 = 5;
-  s2 = s1;
-  EXPECT_EQ(s1, s2);
 
   // test copy method for config structure
   eCAL::Configuration config1(0, nullptr);

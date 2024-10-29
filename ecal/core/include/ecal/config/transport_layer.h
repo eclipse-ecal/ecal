@@ -64,15 +64,15 @@ namespace eCAL
                                                                                      v2: masks are now considered like routes masking (Default: 255.0.0.0-255.255.255.255)*/
                     
         // TODO PG: are these minimum limits correct?
-        Types::ConstrainedInteger<5242880, 1024> send_buffer         { 5242880 }; //!< UDP send buffer in bytes (Default: 5242880)
-        Types::ConstrainedInteger<5242880, 1024> receive_buffer      { 5242880 }; //!< UDP receive buffer in bytes (Default: 5242880)
-        bool                                     join_all_interfaces { false };   /*!< Linux specific setting to enable joining multicast groups on all network interfacs
-                                                                                       independent of their link state. Enabling this makes sure that eCAL processes
-                                                                                       receive data if they are started before network devices are up and running. (Default: false)*/
-        bool                                     npcap_enabled       { false };   //!< Enable to receive UDP traffic with the Npcap based receiver (Default: false)
+        unsigned int               send_buffer         { 5242880 }; //!< UDP send buffer in bytes (Default: 5242880)
+        unsigned int               receive_buffer      { 5242880 }; //!< UDP receive buffer in bytes (Default: 5242880)
+        bool                       join_all_interfaces { false };   /*!< Linux specific setting to enable joining multicast groups on all network interfacs
+                                                                         independent of their link state. Enabling this makes sure that eCAL processes
+                                                                         receive data if they are started before network devices are up and running. (Default: false)*/
+        bool                       npcap_enabled       { false };   //!< Enable to receive UDP traffic with the Npcap based receiver (Default: false)
       
-        Network::Configuration                   network;
-        const Local::Configuration               local;
+        Network::Configuration     network;
+        const Local::Configuration local;
 
         ECAL_API Configuration& operator=(const Configuration& other);
       }; 
