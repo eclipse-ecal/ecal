@@ -15,6 +15,7 @@ ubuntu_default_python_version_dict = \
     semantic_version.Version("18.4.0"):  semantic_version.Version("3.6.0"),
     semantic_version.Version("20.4.0"):   semantic_version.Version("3.8.0"),
     semantic_version.Version("22.4.0"):   semantic_version.Version("3.10.0"),
+    semantic_version.Version("24.4.0"):   semantic_version.Version("3.12.0"),
 }
 
 ubuntu_codename_dict = \
