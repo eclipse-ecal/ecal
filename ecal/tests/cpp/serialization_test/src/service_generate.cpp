@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "../../serialization/ecal_struct_service.h"
+#include "service_generate.h"
+#include "common_generate.h"
+#include <serialization/ecal_struct_service.h>
 
 #include <cstdlib>
 
 namespace eCAL
 {
-  std::string GenerateString(size_t length);
-
   namespace Service
   {
     // generate ServiceHeader

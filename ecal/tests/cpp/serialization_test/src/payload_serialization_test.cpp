@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,10 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "../../serialization/ecal_serialize_sample_payload.h"
+#include <serialization/ecal_serialize_sample_payload.h>
+
+#include "payload_generate.h"
+#include "payload_compare.h"
 
 #include <gtest/gtest.h>
 #include <random>
@@ -44,11 +47,6 @@ namespace eCAL
 {
   namespace Payload
   {
-    Sample GeneratePayloadSample(const char* payload_addr, size_t payload_size);
-    Sample GeneratePayloadSample(const std::vector<char>& payload_vec);
-
-    bool   ComparePayloadSamples(const Sample& sample1, const Sample& sample2);
-
     TEST(core_cpp_serialization, RawPayload2String)
     {
       std::vector<char> payload;

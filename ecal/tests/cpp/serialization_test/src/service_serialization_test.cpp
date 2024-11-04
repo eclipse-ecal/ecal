@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,9 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "../../serialization/ecal_serialize_service.h"
+#include <serialization/ecal_serialize_service.h>
+#include "service_compare.h"
+#include "service_generate.h"
 
 #include <gtest/gtest.h>
 
@@ -25,12 +27,6 @@ namespace eCAL
 {
   namespace Service
   {
-    Request GenerateRequest();
-    bool CompareRequests(const Request& request1, const Request& request2);
-
-    Response GenerateResponse();
-    bool CompareResponses(const Response& response1, const Response& response2);
-
     TEST(core_cpp_serialization, Request2String)
     {
       Request sample_in = GenerateRequest();

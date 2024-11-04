@@ -17,22 +17,33 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "logging_compare.h"
+#include <serialization/ecal_struct_sample_payload.h>
+
+#include <cstdlib>
 
 namespace eCAL
 {
-  namespace Logging
+  namespace Payload
   {
-    // compare two LogMessages for equality
-    bool CompareLogMessages(const SLogMessage& message1, const SLogMessage& message2)
-    {
-      return (message1.time    == message2.time &&
-              message1.hname   == message2.hname &&
-              message1.pid     == message2.pid &&
-              message1.pname   == message2.pname &&
-              message1.uname   == message2.uname &&
-              message1.level   == message2.level &&
-              message1.content == message2.content);
-    }
+    // generate Topic
+    TopicInfo GenerateTopic();
+
+    // generate Payload
+    Payload GeneratePayload(const char* payload_addr, size_t payload_size);
+
+    // generate Payload
+    Payload GeneratePayload(const std::vector<char>& payload_vec);
+
+    // generate Content
+    Content GenerateContent(const char* payload_addr, size_t payload_size);
+    
+    // generate Content
+    Content GenerateContent(const std::vector<char>& payload_vec);
+
+    // generate Payload Sample (payload raw pointer + size)
+    Sample GeneratePayloadSample(const char* payload_addr, size_t payload_size);
+
+    // generate Payload Sample (payload vector)
+    Sample GeneratePayloadSample(const std::vector<char>& payload_vec);
   }
 }

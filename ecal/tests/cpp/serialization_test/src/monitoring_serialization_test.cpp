@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,9 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "../../serialization/ecal_serialize_monitoring.h"
+#include <serialization/ecal_serialize_monitoring.h>
+#include "monitoring_generate.h"
+#include "monitoring_compare.h"
 
 #include <gtest/gtest.h>
 
@@ -25,9 +27,6 @@ namespace eCAL
 {
   namespace Monitoring
   {
-    SMonitoring GenerateMonitoring();
-    bool CompareMonitorings(const SMonitoring& monitoring1, const SMonitoring& monitoring2);
-
     TEST(core_cpp_serialization, Monitoring2String)
     {
       SMonitoring message_in = GenerateMonitoring();
