@@ -71,20 +71,30 @@ set(ecal_serialize_src
 
 set(unit_test_src
   src/common_generate.cpp
+  src/common_generate.h
   src/logging_compare.cpp
+  src/logging_compare.h
   src/logging_generate.cpp
+  src/logging_generate.h
   src/logging_serialization_test.cpp
   src/monitoring_compare.cpp
+  src/monitoring_compare.h
   src/monitoring_generate.cpp
+  src/monitoring_generate.h
   src/monitoring_serialization_test.cpp
+  src/parallel_serialization_test.cpp
   src/payload_compare.cpp
+  src/payload_compare.h
   src/payload_generate.cpp
+  src/payload_generate.h
   src/payload_serialization_test.cpp
-  src/registration_compare.cpp
   src/registration_generate.cpp
+  src/registration_generate.h
   src/registration_serialization_test.cpp
   src/service_compare.cpp
+  src/service_compare.h
   src/service_generate.cpp
+  src/service_generate.h
   src/service_serialization_test.cpp
 )
 
