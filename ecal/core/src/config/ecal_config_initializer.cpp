@@ -34,10 +34,10 @@
   #include "configuration_to_yaml.h"
 #endif
 
+#include <climits>
 
 // for cwd
 #ifdef ECAL_OS_WINDOWS
-  #include <limits>
   #include <direct.h>
   // to remove deprecated warning
   #define getcwd _getcwd
@@ -48,7 +48,6 @@
   #include <sys/stat.h>
   #include <unistd.h>
   #include <pwd.h>
-  #include <limits.h>
   constexpr int MAXIMUM_PATH_LENGTH = PATH_MAX;
 #endif
 
