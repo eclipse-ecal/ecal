@@ -53,8 +53,6 @@ namespace eCAL
 
     void ApplyServiceRegistration(const Registration::Sample& ecal_sample_);
 
-    std::vector<SServiceAttr> GetServiceAttr(const std::string& service_name_);
-
     void GetRegistrations(Registration::SampleList& reg_sample_list_);
 
   protected:

@@ -102,15 +102,21 @@ namespace eCAL
     void Register();
     void Unregister();
 
-    void CheckForNewServices();
-    void CheckForDisconnectedServices();
+    void UpdateConnectionStates();
 
     void ErrorCallback(const std::string &method_name_, const std::string &error_message_);
 
     void IncrementMethodCallCount(const std::string& method_name_);
 
-    using ClientMapT = std::map<std::string, std::shared_ptr<eCAL::service::ClientSession>>;
+    struct SClient
+    {
+      SServiceAttr                                  service_attr;
+      std::shared_ptr<eCAL::service::ClientSession> client_session;
+      bool                                          connected = false;
+    };
+
     std::mutex            m_client_map_sync;
+    using ClientMapT = std::map<std::string, SClient>;
     ClientMapT            m_client_map;
 
     std::mutex            m_response_callback_sync;
@@ -120,17 +126,13 @@ namespace eCAL
     using EventCallbackMapT = std::map<eCAL_Client_Event, ClientEventCallbackT>;
     EventCallbackMapT     m_event_callback_map;
 
-    std::mutex            m_connected_services_map_sync;
-    using ServiceAttrMapT = std::map<std::string, SServiceAttr>;
-    ServiceAttrMapT       m_connected_services_map;
-
     static constexpr int  m_client_version = 1;
 
     std::string           m_service_name;
     std::string           m_service_id;
     std::string           m_host_name;
 
-    std::mutex                   m_method_sync;
+    std::mutex                   m_method_information_map_sync;
     ServiceMethodInformationMapT m_method_information_map;
 
     using MethodCallCountMapT = std::map<std::string, uint64_t>;
