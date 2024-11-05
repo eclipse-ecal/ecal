@@ -330,7 +330,7 @@ namespace eCAL
       std::lock_guard<std::mutex> const client_map_lock(m_client_map_sync);
       for (const auto& client : m_client_map)
       {
-        auto& client_data = client.second;
+        const auto& client_data = client.second;
 
         if (m_host_name.empty() || (m_host_name == client_data.service_attr.hname))
         {
@@ -400,7 +400,7 @@ namespace eCAL
   void CServiceClientImpl::RegisterService(const std::string& key_, const SServiceAttr& service_)
   {
     // lock client map
-    std::lock_guard<std::mutex> lock(m_client_map_sync);
+    const std::lock_guard<std::mutex> lock(m_client_map_sync);
 
     // add service if it's a new registration
     if (m_client_map.find(key_) == m_client_map.end())
@@ -493,7 +493,7 @@ namespace eCAL
       std::lock_guard<std::mutex> const client_map_lock(m_client_map_sync);
       for (const auto& client : m_client_map)
       {
-        auto& client_data = client.second;
+        const auto& client_data = client.second;
 
         // Only call service if host name matches
         if (m_host_name.empty() || (m_host_name == client_data.service_attr.hname))
@@ -722,7 +722,6 @@ namespace eCAL
 
     for (auto it = m_client_map.begin(); it != m_client_map.end(); )
     {
-      auto& client_key = it->first;
       auto& client_data = it->second;
 
       // get current state of the client session
@@ -735,8 +734,6 @@ namespace eCAL
 
         // call connect event
         {
-          //std::cout << "Fire CONNECT event for " << client_key << std::endl;
-
           std::lock_guard<std::mutex> const lock_cb(m_event_callback_map_sync);
           auto e_iter = m_event_callback_map.find(client_event_connected);
           if (e_iter != m_event_callback_map.end())
@@ -759,8 +756,6 @@ namespace eCAL
 
         // call disconnect event
         {
-          //std::cout << "Fire DISCONNECT event for " << client_key << std::endl;
-
           std::lock_guard<std::mutex> const lock_cb(m_event_callback_map_sync);
           auto e_iter = m_event_callback_map.find(client_event_disconnected);
           if (e_iter != m_event_callback_map.end())
