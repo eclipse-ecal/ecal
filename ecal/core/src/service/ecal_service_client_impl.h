@@ -43,11 +43,11 @@ namespace eCAL
   class CServiceClientImpl : public std::enable_shared_from_this<CServiceClientImpl>
   {
   public:
-    std::shared_ptr<CServiceClientImpl> CreateInstance(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
+    static std::shared_ptr<CServiceClientImpl> CreateInstance(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
 
   private:
     // private constructor to enforce creation through factory method
-    CServiceClientImpl(const std::string& service_name, const ServiceMethodInformationMapT& method_information_map);
+    CServiceClientImpl(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
 
   public:
     ~CServiceClientImpl();

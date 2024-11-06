@@ -42,11 +42,11 @@ namespace eCAL
   std::shared_ptr<CServiceClientImpl> CServiceClientImpl::CreateInstance(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
   {
     auto instance = std::shared_ptr<CServiceClientImpl>(new CServiceClientImpl(service_name_, method_information_map_));
+    return instance;
+  }
 
-    // set service name and methods
-    m_service_name = service_name_;
-    m_method_information_map = method_information_map_;
-
+  CServiceClientImpl::CServiceClientImpl(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_) : m_service_name(service_name_), m_method_information_map(method_information_map_)
+  {
     // initialize call count map
     for (const auto& method_information_pair : m_method_information_map)
     {
@@ -60,8 +60,6 @@ namespace eCAL
 
     // register this client
     Register();
-
-    return instance;
   }
 
   CServiceClientImpl::~CServiceClientImpl()
