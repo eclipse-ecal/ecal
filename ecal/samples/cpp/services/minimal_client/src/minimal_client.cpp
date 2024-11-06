@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,14 @@ int main(int argc, char **argv)
   // create minimal service client
   eCAL::CServiceClient minimal_client("service1", { {"echo", eCAL::SServiceMethodInformation()} });
   minimal_client.AddResponseCallback(OnServiceResponse);
+
+  while (!minimal_client.IsConnected())
+  {
+    std::cout << "Waiting for a service .." << std::endl;
+
+    // sleep a second
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  }
 
   while(eCAL::Ok())
   {

@@ -141,22 +141,6 @@ namespace eCAL
     }
   }
 
-  std::vector<SServiceAttr> CClientGate::GetServiceAttr(const std::string& service_name_)
-  {
-    std::vector<SServiceAttr> ret_vec;
-    const std::shared_lock<std::shared_timed_mutex> lock(m_service_register_map_sync);
-
-    // look for requested services
-    for (auto service : m_service_register_map)
-    {
-      if (service.second.sname == service_name_)
-      {
-        ret_vec.push_back(service.second);
-      }
-    }
-    return(ret_vec);
-  }
-
   void CClientGate::GetRegistrations(Registration::SampleList& reg_sample_list_)
   {
     if (!m_created) return;
