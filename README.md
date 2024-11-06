@@ -50,7 +50,7 @@ We provide binary installers for Windows and Ubuntu. If you need further help in
 
 ![eCAL Setup](doc/rst/getting_started/img/setup.png)
     
-*We only support 64bit Windows 7 / 10*
+*We only support 64bit Windows 10 / 11*
 
 ### Ubuntu
 
@@ -63,7 +63,7 @@ sudo apt-get install ecal
 ```
 This PPA will always upgrade you to the latest eCAL Release (-> Rolling Release PPA). If you intend to stay on an specific release, check out other PPAs [here](https://eclipse-ecal.github.io/ecal/getting_started/setup.html#fa-ubuntu-automatically-install-ecal-from-a-ppa).
 
-*Ubuntu 18.04, 20.04, 22.04, 23.04, 23.10 for CPU architectures (i386), x64, armhf, arm64 are supported at the time of writing.*
+*Ubuntu 18.04, 20.04, 22.04, 24.04 for CPU architectures amd64, armhf, arm64 are supported at the time of writing. Non-LTS versions of Ubuntu are usually supported, too.*
 
 ## Example
 
