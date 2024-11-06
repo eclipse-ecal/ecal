@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,10 +68,10 @@ namespace eCAL
 
   /**
    * @brief Service response callback function type (low level client interface).
-   *
+   * @param service_id_        Unique service id (entity id, process id, host name, service name, method name)
    * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
   **/
-  using ResponseCallbackT = std::function<void (const struct SServiceResponse &)>;
+  using ResponseCallbackT = std::function<void (const Registration::SEntityId&, const struct SServiceResponse &)>;
 
   using ServiceMethodInformationMapT = std::map<std::string, SServiceMethodInformation>;
 }
