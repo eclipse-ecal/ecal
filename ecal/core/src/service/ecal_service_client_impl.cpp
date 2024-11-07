@@ -37,6 +37,51 @@
 #include <utility>
 #include <vector>
 
+
+namespace
+{
+  void fromStruct(const eCAL::Service::Response& response_struct_, eCAL::SServiceResponse& response_)
+  {
+    const auto& response_header = response_struct_.header;
+    response_.host_name    = response_header.hname;
+    response_.service_name = response_header.sname;
+    response_.service_id   = response_header.sid;
+    response_.method_name  = response_header.mname;
+    response_.error_msg    = response_header.error;
+    response_.ret_state    = static_cast<int>(response_struct_.ret_state);
+    switch (response_header.state)
+    {
+    case eCAL::Service::eMethodCallState::executed:
+      response_.call_state = call_state_executed;
+      break;
+    case eCAL::Service::eMethodCallState::failed:
+      response_.call_state = call_state_failed;
+      break;
+    default:
+      break;
+    }
+    response_.response = std::string(response_struct_.response.data(), response_struct_.response.size());
+  }
+
+  void fromSerializedProtobuf(const std::string& response_pb_, eCAL::SServiceResponse& response_)
+  {
+    eCAL::Service::Response response;
+    // TODO: The next version of the service protocol should omit the double-serialization (i.e. copying the binary data in a protocol buffer and then serializing that again)
+    if (eCAL::DeserializeFromBuffer(response_pb_.c_str(), response_pb_.size(), response))
+    {
+      fromStruct(response, response_);
+    }
+    else
+    {
+      response_.error_msg = "Could not parse server response";
+      response_.ret_state = 0;
+      response_.call_state = eCallState::call_state_failed;
+      response_.response = "";
+    }
+  }
+}
+
+
 namespace eCAL
 {
   std::shared_ptr<CServiceClientImpl> CServiceClientImpl::CreateInstance(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
@@ -150,24 +195,192 @@ namespace eCAL
   // blocking call specific service, response will be returned as pair<bool, SServiceReponse>
   std::pair<bool, SServiceResponse> CServiceClientImpl::CallWithResponse(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, int timeout_ms_)
   {
-    return std::pair<bool, SServiceResponse>(false, {});
+    return CallBlocking(entity_id_, method_name_, request_, std::chrono::milliseconds(timeout_ms_));
   }
 
   // blocking call specific service, using callback
   bool CServiceClientImpl::CallWithCallback(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, int timeout_ms_)
   {
+    auto response = CallBlocking(entity_id_, method_name_, request_, std::chrono::milliseconds(timeout_ms_));
+
+    if (!m_response_callback) return false;
+
+    // call callback (true means currently -> no timeout)
+    if (response.first)
+    {
+      m_response_callback(entity_id_, response.second);
+
+      // succeeded
+      return true;
+    }
+
+    if (timeout_ms_ > 0)
+    {
+      std::lock_guard<std::mutex> const lock_eb(m_event_callback_map_sync);
+      auto callback_it = m_event_callback_map.find(eCAL_Client_Event::client_event_timeout);
+      if (callback_it != m_event_callback_map.end())
+      {
+        SClientEventCallbackData sdata;
+        sdata.type = client_event_timeout;
+        sdata.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+        (callback_it->second)(m_service_name.c_str(), &sdata);
+      }
+    }
+
+    // not succeeded
     return false;
   }
 
-  // asynchronously call specific service, using callback (timeout not supported yet)
-  bool CServiceClientImpl::CallAsyncWithCallback(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_ /*, int timeout_ms_*/)
+  std::pair<bool, SServiceResponse> CServiceClientImpl::CallBlocking(const Registration::SEntityId& entity_id_,
+        const std::string& method_name_
+      , const std::string& request_
+      , std::chrono::nanoseconds timeout_)
   {
-    return false;
+    if (method_name_.empty()) return std::make_pair(false, eCAL::SServiceResponse());
+
+    // get client
+    SClient client;
+    {
+      const std::lock_guard<std::mutex> lock(m_client_session_map_sync);
+      const auto& iter = m_client_session_map.find(entity_id_);
+      if (iter == m_client_session_map.end())  return std::make_pair(false, eCAL::SServiceResponse());
+      client = iter->second;
+    }
+      
+    // Copy raw request in a protocol buffer
+    // TODO: The next version of the service protocol should omit the double-serialization (i.e. copying the binary data in a protocol buffer and then serializing that again)
+    Service::Request request;
+    request.header.mname    = method_name_;
+    request.request         = std::string(request_.data(), request_.size());
+    // serialize request
+    auto request_shared_ptr = std::make_shared<std::string>();
+    SerializeToBuffer(request, *request_shared_ptr);
+
+    // Create a condition variable and a mutex to wait for the response
+    // All variables are in shared pointers, as we need to pass them to the
+    // callback function via the lambda capture. When the user uses the timeout,
+    // this method may finish earlier than the service calls, so we need to make
+    // sure the callbacks can still operate on those variables.
+    const auto  mutex                    = std::make_shared<std::mutex>();
+    const auto  condition_variable       = std::make_shared<std::condition_variable>();
+    const auto  response                 = std::make_shared<std::pair<bool, SServiceResponse>>(); // Pair with [has_returned, response], so we know if a timeout has happened.
+    const auto  block_modifying_response = std::make_shared<bool>(false);
+    const auto  finished_service_call    = std::make_shared<bool>(false);
+
+    // Find the first matching service session and call it.
+    {
+      const std::lock_guard<std::mutex> lock(*mutex);
+
+      response->first               = false;                        // if this stays false, we have a timeout
+      response->second.host_name    = client.service_attr.hname;
+      response->second.service_name = client.service_attr.sname;
+      response->second.service_id   = client.service_attr.key;
+      response->second.method_name  = method_name_;
+      response->second.error_msg    = "Timeout";
+      response->second.ret_state    = 0;
+      response->second.call_state   = eCallState::call_state_failed;
+      response->second.response     = "";
+    }
+
+    // Create a response callback, that will set the response and notify the condition variable
+    eCAL::service::ClientResponseCallbackT response_callback
+      = [mutex, condition_variable, response, block_modifying_response, finished_service_call]
+      (const eCAL::service::Error& response_error, const std::shared_ptr<std::string>& response_)
+      {
+        const std::lock_guard<std::mutex> lock(*mutex);
+
+        if (!(*block_modifying_response))
+        {
+          // This callback has not timed out. This does not tell us anything about the success, though.
+          response->first = true;
+
+          if (response_error)
+          {
+            response->second.error_msg = response_error.ToString();
+            response->second.call_state = eCallState::call_state_failed;
+            response->second.ret_state = 0;
+          }
+          else
+          {
+            fromSerializedProtobuf(*response_, response->second);
+          }
+        }
+
+        *finished_service_call = true;
+        condition_variable->notify_all();
+      };
+
+    // Call service asynchronously
+    const bool call_success = client.client_session->async_call_service(request_shared_ptr, response_callback);
+
+    if (!call_success)
+    {
+      // If the call failed, we know that the callback will never be called.
+      // Thus, we need to set the finished_service_call here.
+      *finished_service_call = true;
+
+      // We also store an error in the response
+      {
+        const std::lock_guard<std::mutex> lock(*mutex);
+
+        response->second.error_msg  = "Stopped by user";
+        response->second.call_state = eCallState::call_state_failed;
+        response->second.ret_state  = 0;
+      }
+    }
+    else
+    {
+      IncrementMethodCallCount(method_name_);
+    }
+
+    // Lock mutex, call service asynchronously and wait for the condition variable to be notified
+    {
+      std::unique_lock<std::mutex> lock(*mutex);
+      if (timeout_ > std::chrono::nanoseconds::zero())
+      {
+        condition_variable->wait_for(lock
+          , timeout_
+          , [&finished_service_call]()
+          {
+            // Wait for the service to return something
+            return *finished_service_call;
+          });
+      }
+      else
+      {
+        condition_variable->wait(lock, [&finished_service_call]()
+          {
+            // Wait for the service to return something
+            return *finished_service_call;
+          });
+      }
+      // Stop the callback from modifying the response. This is important
+      // in a timeout case, as we want to preserve the response from when the timeout
+      // occurred. There is no way to stop the service call from succeeding after
+      // that, but we don't want its value any more.
+      *block_modifying_response = true;
+
+      return *response;
+    }
   }
 
   // check connection state of specific service
   bool CServiceClientImpl::IsConnected(const Registration::SEntityId& entity_id_)
   {
+    const std::lock_guard<std::mutex> lock(m_client_session_map_sync);
+    const auto& iter = m_client_session_map.find(entity_id_);
+    if (iter == m_client_session_map.end()) return false;
+    return iter->second.connected;
+  }
+
+  // check connection state
+  bool CServiceClientImpl::IsConnected()
+  {
+    const std::lock_guard<std::mutex> lock(m_client_session_map_sync);
+    for (const auto& client : m_client_session_map)
+    {
+      if (client.second.connected) return true;
+    }
     return false;
   }
 
@@ -221,6 +434,9 @@ namespace eCAL
   // called by eCAL:CClientGate every second to update registration layer
   Registration::Sample CServiceClientImpl::GetRegistration()
   {
+    // check service connection states 
+    UpdateConnectionStates();
+
     return GetRegistrationSample();
   }
 

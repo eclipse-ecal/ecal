@@ -53,7 +53,6 @@ namespace eCAL
     eCallState   call_state;     //!< call state (see eCallState)
     std::string  response;       //!< service response
   };
-  using ServiceResponseVecT = std::vector<SServiceResponse>; //!< vector of multiple service responses
 
   /**
    * @brief Service method callback function type (low level server interface).
@@ -71,7 +70,7 @@ namespace eCAL
    * @param service_id_        Unique service id (entity id, process id, host name, service name, method name)
    * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
   **/
-  using ResponseCallbackT = std::function<void (const Registration::SEntityId&, const struct SServiceResponse &)>;
+  using ResponseCallbackT = std::function<void (const Registration::SEntityId &, const struct SServiceResponse &)>;
 
   using ServiceMethodInformationMapT = std::map<std::string, SServiceMethodInformation>;
 }

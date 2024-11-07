@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,7 @@ namespace eCAL
    * @brief Constructor.
   **/
   CServiceClient::CServiceClient() :
-                  m_service_client_impl(nullptr),
-                  m_created(false)
+                  m_service_client_impl(nullptr)
   {
   }
 
@@ -45,8 +44,7 @@ namespace eCAL
    * @param service_name_  Service name. 
   **/
   CServiceClient::CServiceClient(const std::string& service_name_) :
-                   m_service_client_impl(nullptr),
-                   m_created(false)
+                   m_service_client_impl(nullptr)
   {
     Create(service_name_);
   }
@@ -58,8 +56,7 @@ namespace eCAL
    * @param method_information_map_  Map of method names and corresponding datatype information.
   **/
   CServiceClient::CServiceClient(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_) :
-    m_service_client_impl(nullptr),
-    m_created(false)
+    m_service_client_impl(nullptr)
   {
     Create(service_name_, method_information_map_);
   }
@@ -94,17 +91,17 @@ namespace eCAL
   **/
   bool CServiceClient::Create(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
   {
-    if (m_created) return(false);
+    if (m_service_client_impl) return(false);
 
     // create client
+    m_service_name = service_name_;
     m_service_client_impl = CServiceClientImpl::CreateInstance(service_name_, method_information_map_);
 
     // register client
-    if (g_clientgate() != nullptr) g_clientgate()->Register(m_service_client_impl.get());
+    if (g_clientgate() != nullptr) g_clientgate()->Register(m_service_name, m_service_client_impl);
 
     // we made it :-)
-    m_created = true;
-    return(m_created);
+    return true;
   }
 
   /**
@@ -114,78 +111,59 @@ namespace eCAL
   **/
   bool CServiceClient::Destroy()
   {
-    if(!m_created) return(false);
-    m_created = false;
+    if(!m_service_client_impl) return(false);
 
     // unregister client
-    if (g_clientgate() != nullptr) g_clientgate()->Unregister(m_service_client_impl.get());
+    if (g_clientgate() != nullptr) g_clientgate()->Unregister(m_service_name, m_service_client_impl);
 
     // stop & destroy client
-    m_service_client_impl->Stop();
     m_service_client_impl.reset();
+    m_service_name = "";
 
-    return(true);
+    return true;
   }
 
   /**
-   * @brief Change the host name filter for that client instance
+   * @brief Get the unique service id's for all matching services
    *
-   * @param host_name_  Host name filter (empty == all hosts)
-   *
-   * @return  True if successful.
+   * @return  Service id's of all matching services
   **/
-  bool CServiceClient::SetHostName(const std::string& host_name_)
+  std::vector<Registration::SEntityId> CServiceClient::GetServiceIDs()
   {
-    if (!m_created) return(false);
-    m_service_client_impl->SetHostName(host_name_);
-    return(true);
+    if (!m_service_client_impl) return std::vector<Registration::SEntityId>();
+    return m_service_client_impl->GetServiceIDs();
   }
 
   /**
-   * @brief Call method of this service, responses will be returned by callback.
+   * @brief Blocking call specific service method, response will be returned as pair<bool, SServiceReponse>
    *
+   * @param       entity_id_    Unique service entity (service id, process id, host name).
+   * @param       method_name_  Method name.
+   * @param       request_      Request string.
+   * @param       timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+   *
+   * @return  success state and service response
+  **/
+  std::pair<bool, SServiceResponse> CServiceClient::CallWithResponse(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, int timeout_)
+  {
+    if (!m_service_client_impl) return std::pair<bool, SServiceResponse>(false, {});
+    return m_service_client_impl->CallWithResponse(entity_id_, method_name_, request_, timeout_);
+  }
+
+  /**
+   * @brief Call a method of this service, responses will be returned by callback.
+   *
+   * @param entity_id_    Unique service entity (service id, process id, host name).
    * @param method_name_  Method name.
    * @param request_      Request string.
    * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
    *
    * @return  True if successful.
   **/
-  bool CServiceClient::Call(const std::string& method_name_, const std::string& request_, int timeout_)
+  bool CServiceClient::CallWithCallback(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, int timeout_)
   {
-    if(!m_created) return(false);
-    return(m_service_client_impl->Call(method_name_, request_, timeout_));
-  }
-
-  /**
-   * @brief Call a method of this service, all responses will be returned in service_response_vec_.
-   *
-   * @param       method_name_           Method name.
-   * @param       request_               Request string.
-   * @param       timeout_               Maximum time before operation returns (in milliseconds, -1 means infinite).
-   * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
-   *
-   * @return  True if successful.
-  **/
-  bool CServiceClient::Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_)
-  {
-    if (!m_created) return(false);
-    return(m_service_client_impl->Call(method_name_, request_, timeout_, service_response_vec_));
-  }
-
-  /**
-   * @brief Call a method of this service asynchronously, responses will be returned by callback.
-   *
-   * @param method_name_  Method name.
-   * @param request_      Request string.
-   * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite) - NOT SUPPORTED YET.
-   *
-   * @return  True if successful.
-  **/
-  bool CServiceClient::CallAsync(const std::string& method_name_, const std::string& request_, int timeout_)
-  {
-    if (!m_created) return(false);
-    (void)timeout_; // will be implemented later
-    return(m_service_client_impl->CallAsync(method_name_, request_ /*, timeout_*/));
+    if (!m_service_client_impl) return false;
+    return m_service_client_impl->CallWithCallback(entity_id_, method_name_, request_, timeout_);
   }
 
   /**
@@ -197,8 +175,8 @@ namespace eCAL
   **/
   bool CServiceClient::AddResponseCallback(const ResponseCallbackT& callback_)
   {
-    if (!m_created) return false;
-    return(m_service_client_impl->AddResponseCallback(callback_));
+    if (!m_service_client_impl) return false;
+    return m_service_client_impl->AddResponseCallback(callback_);
   }
 
   /**
@@ -208,8 +186,8 @@ namespace eCAL
   **/
   bool CServiceClient::RemResponseCallback()
   {
-    if (!m_created) return false;
-    return(m_service_client_impl->RemResponseCallback());
+    if (!m_service_client_impl) return false;
+    return m_service_client_impl->RemoveResponseCallback();
   }
 
   /**
@@ -222,7 +200,7 @@ namespace eCAL
   **/
   bool CServiceClient::AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_)
   {
-    if (!m_created) return false;
+    if (!m_service_client_impl) return false;
     return m_service_client_impl->AddEventCallback(type_, callback_);
   }
 
@@ -235,8 +213,8 @@ namespace eCAL
   **/
   bool CServiceClient::RemEventCallback(eCAL_Client_Event type_)
   {
-    if (!m_created) return false;
-    return m_service_client_impl->RemEventCallback(type_);
+    if (!m_service_client_impl) return false;
+    return m_service_client_impl->RemoveEventCallback(type_);
   }
 
   /**
@@ -246,8 +224,20 @@ namespace eCAL
   **/
   std::string CServiceClient::GetServiceName()
   {
-    if (!m_created) return "";
-    return m_service_client_impl->GetServiceName();
+    return m_service_name;
+  }
+
+  /**
+   * @brief Check connection state of a specific server connection.
+   *
+   * @param entity_id_  Unique service entity (service id, process id, host name).
+   *
+   * @return  True if connected, false if not.
+  **/
+  bool CServiceClient::IsConnected(const Registration::SEntityId& entity_id_)
+  {
+    if (!m_service_client_impl) return false;
+    return m_service_client_impl->IsConnected(entity_id_);
   }
 
   /**
@@ -257,7 +247,7 @@ namespace eCAL
   **/
   bool CServiceClient::IsConnected()
   {
-    if (!m_created) return false;
+    if (!m_service_client_impl) return false;
     return m_service_client_impl->IsConnected();
   }
 }

@@ -69,11 +69,11 @@ namespace eCAL
     // blocking call specific service, using callback
     bool CallWithCallback(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, int timeout_ms_);
 
-    // asynchronously call specific service, using callback (timeout not supported yet)
-    bool CallAsyncWithCallback(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_ /*, int timeout_ms_*/);
-
     // check connection state of specific service
     bool IsConnected(const Registration::SEntityId& entity_id_);
+
+    // check connection
+    bool IsConnected();
 
     // called by the registration receiver to process a service registration
     void RegisterService(const Registration::SEntityId& entity_id_, const SServiceAttr& service_);
@@ -88,6 +88,8 @@ namespace eCAL
     CServiceClientImpl& operator=(CServiceClientImpl&&) = delete;
 
   private:
+    std::pair<bool, SServiceResponse> CServiceClientImpl::CallBlocking(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, std::chrono::nanoseconds timeout_);
+
     Registration::Sample GetRegistrationSample();
     Registration::Sample GetUnregistrationSample();
 
