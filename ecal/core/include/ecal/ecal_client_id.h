@@ -36,25 +36,25 @@
 
 namespace eCAL
 {
-  class CServiceClientImpl;
+  class CServiceClientIDImpl;
 
   /**
    * @brief Service client wrapper class.
   **/
-  class CServiceClient
+  class CServiceClientID
   {
   public:
     /**
      * @brief Constructor. 
     **/
-    ECAL_API CServiceClient();
+    ECAL_API CServiceClientID();
 
     /**
      * @brief Constructor. 
      *
      * @param service_name_  Unique service name.
     **/
-    ECAL_API explicit CServiceClient(const std::string& service_name_);
+    ECAL_API explicit CServiceClientID(const std::string& service_name_);
 
     /**
      * @brief Constructor.
@@ -62,22 +62,22 @@ namespace eCAL
      * @param service_name_  Unique service name.
      * @param method_information_map_  Map of method names and corresponding datatype information.
     **/
-    ECAL_API explicit CServiceClient(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
+    ECAL_API explicit CServiceClientID(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
 
     /**
      * @brief Destructor. 
     **/
-    ECAL_API virtual ~CServiceClient();
+    ECAL_API virtual ~CServiceClientID();
 
     /**
      * @brief CServiceClients are non-copyable
     **/
-    CServiceClient(const CServiceClient&) = delete;
+    CServiceClientID(const CServiceClientID&) = delete;
 
     /**
      * @brief CServiceClients are non-copyable
     **/
-    CServiceClient& operator=(const CServiceClient&) = delete;
+    CServiceClientID& operator=(const CServiceClientID&) = delete;
 
     /**
      * @brief Creates this object. 
@@ -106,47 +106,35 @@ namespace eCAL
     ECAL_API bool Destroy();
 
     /**
-     * @brief Change the host name filter for that client instance
+     * @brief Get the unique service id's for all matching services
      *
-     * @param host_name_  Host name filter (empty == all hosts)
-     *
-     * @return  True if successful.
+     * @return  Service id's of all matching services
     **/
-    ECAL_API bool SetHostName(const std::string& host_name_);
+    ECAL_API std::vector<Registration::SEntityId> GetServiceIDs();
 
     /**
-     * @brief Call a method of this service, responses will be returned by callback. 
+     * @brief Blocking call specific service method, response will be returned as pair<bool, SServiceReponse>
      *
+     * @param       entity_id_    Unique service entity (service id, process id, host name).
+     * @param       method_name_  Method name.
+     * @param       request_      Request string.
+     * @param       timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+     *
+     * @return  success state and service response
+    **/
+    ECAL_API std::pair<bool, SServiceResponse> CallWithResponse(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, int timeout_ = -1);
+
+    /**
+     * @brief Blocking call specific service method, using callback
+     *
+     * @param entity_id_    Unique service entity (service id, process id, host name).
      * @param method_name_  Method name.
      * @param request_      Request string. 
      * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
      *
      * @return  True if successful. 
     **/
-    ECAL_API bool Call(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
-
-    /**
-     * @brief Call a method of this service, all responses will be returned in service_response_vec_. 
-     *
-     * @param       method_name_           Method name.
-     * @param       request_               Request string.
-     * @param       timeout_               Maximum time before operation returns (in milliseconds, -1 means infinite).
-     * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
-     *
-     * @return  True if successful.
-    **/
-    ECAL_API bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_);
-
-    /**
-     * @brief Call a method of this service asynchronously, responses will be returned by callback. 
-     *
-     * @param method_name_  Method name.
-     * @param request_      Request string. 
-     * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite) - NOT SUPPORTED YET.
-     *
-     * @return  True if successful.
-    **/
-    ECAL_API bool CallAsync(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
+    ECAL_API bool CallWithCallback(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, int timeout_ = -1);
 
     /**
      * @brief Add server response callback. 
@@ -155,7 +143,7 @@ namespace eCAL
      *
      * @return  True if successful.
     **/
-    ECAL_API bool AddResponseCallback(const ResponseCallbackT& callback_);
+    ECAL_API bool AddResponseCallback(const ResponseIDCallbackT& callback_);
 
     /**
      * @brief Remove server response callback. 
@@ -191,6 +179,15 @@ namespace eCAL
     ECAL_API std::string GetServiceName();
 
     /**
+     * @brief Check connection state of a specific server connection.
+     *
+     * @param entity_id_  Unique service entity (service id, process id, host name).
+     *
+     * @return  True if connected, false if not.
+    **/
+    ECAL_API bool IsConnected(const Registration::SEntityId& entity_id_);
+
+    /**
      * @brief Check connection state.
      *
      * @return  True if connected, false if not.
@@ -198,7 +195,7 @@ namespace eCAL
     ECAL_API bool IsConnected();
 
   protected:
-    std::shared_ptr<eCAL::CServiceClientImpl> m_service_client_impl;
-    bool                                      m_created;
+    std::shared_ptr<eCAL::CServiceClientIDImpl> m_service_client_impl;
+    std::string                                 m_service_name;
   };
 }

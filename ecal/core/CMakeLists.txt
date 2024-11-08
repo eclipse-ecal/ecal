@@ -382,6 +382,9 @@ if(ECAL_CORE_SERVICE)
       src/service/ecal_service_client.cpp
       src/service/ecal_service_client_impl.cpp
       src/service/ecal_service_client_impl.h
+      src/service/ecal_service_client_id.cpp
+      src/service/ecal_service_client_id_impl.cpp
+      src/service/ecal_service_client_id_impl.h
       src/service/ecal_service_server.cpp
       src/service/ecal_service_server_impl.cpp
       src/service/ecal_service_server_impl.h
@@ -511,6 +514,7 @@ set(ecal_header_cmn
     include/ecal/ecal_callback.h
     include/ecal/ecal_config.h
     include/ecal/ecal_client.h
+    include/ecal/ecal_client_id.h
     include/ecal/ecal_core.h
     include/ecal/ecal_deprecate.h
     include/ecal/ecal_init.h

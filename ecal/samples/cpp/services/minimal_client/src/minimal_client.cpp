@@ -31,12 +31,12 @@ void OnServiceResponse(const eCAL::Registration::SEntityId& entity_id_, const st
     // service successful executed
   case call_state_executed:
   {
-    std::cout << "Received response for method " << service_response_.method_name << " : " << service_response_.response << " from host " << service_response_.host_name << std::endl;
+    std::cout << "Received response for method " << service_response_.method_name << " : " << service_response_.response << " from service id " << entity_id_.entity_id << " from host " << service_response_.host_name << std::endl;
   }
   break;
   // service execution failed
   case call_state_failed:
-    std::cout << "Received error for method " << service_response_.method_name << " : " << service_response_.error_msg << " from host " << service_response_.host_name << std::endl;
+    std::cout << "Received error for method " << service_response_.method_name << " : " << service_response_.error_msg << " from service id " << entity_id_.entity_id << " from host " << service_response_.host_name << std::endl;
     break;
   default:
     break;
@@ -50,9 +50,10 @@ int main(int argc, char **argv)
   eCAL::Initialize(argc, argv, "minimal client");
 
   // create minimal service client
-  eCAL::CServiceClient minimal_client("service1", { {"echo", eCAL::SServiceMethodInformation()} });
+  eCAL::CServiceClientID minimal_client("service1", { {"echo", eCAL::SServiceMethodInformation()} });
   minimal_client.AddResponseCallback(OnServiceResponse);
 
+  // are we connected to at least one service?
   while (!minimal_client.IsConnected())
   {
     std::cout << "Waiting for a service .." << std::endl;
@@ -67,14 +68,12 @@ int main(int argc, char **argv)
     std::string method_name("echo");
     std::string request("Hello");
 
-    auto entity_ids = minimal_client.GetServiceIDs();
-
-    for (const auto& entity_id : entity_ids)
+    // call all existing services
+    for (const auto& entity_id : minimal_client.GetServiceIDs())
     {
       //////////////////////////////////////
       // Service call (blocking)
       //////////////////////////////////////
-
       const auto service_response = minimal_client.CallWithResponse(entity_id, method_name, request, -1);
       if (std::get<0>(service_response))
       {
@@ -84,12 +83,12 @@ int main(int argc, char **argv)
           // service successful executed
         case call_state_executed:
         {
-          std::cout << "Received response : " << service_response.second.response << " from host " << service_info.host_name << std::endl;
+          std::cout << "Received response : " << service_response.second.response << " from service id " << entity_id.entity_id << " from host " << service_info.host_name << std::endl;
         }
         break;
         // service execution failed
         case call_state_failed:
-          std::cout << "Received error : " << service_info.error_msg << " from host " << service_info.host_name << std::endl;
+          std::cout << "Received error : " << service_info.error_msg << " from service id " << entity_id.entity_id << " from host " << service_info.host_name << std::endl;
           break;
         default:
           break;
