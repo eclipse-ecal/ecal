@@ -88,7 +88,7 @@ namespace eCAL
     CServiceClientIDImpl& operator=(CServiceClientIDImpl&&) = delete;
 
   private:
-    std::pair<bool, SServiceResponse> CServiceClientIDImpl::CallBlocking(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, std::chrono::nanoseconds timeout_);
+    std::pair<bool, SServiceResponse> CallBlocking(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, std::chrono::nanoseconds timeout_);
 
     Registration::Sample GetRegistrationSample();
     Registration::Sample GetUnregistrationSample();
