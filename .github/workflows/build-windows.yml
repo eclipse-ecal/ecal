@@ -4,9 +4,9 @@ on:
   push:
   pull_request:
     branches:
-      - master
+      support/v5.13
 env:
-  IS_JENKINS_SIGNING_ALLOWED: true
+  IS_JENKINS_SIGNING_ALLOWED: tru
 
 jobs:
   build-windows:
