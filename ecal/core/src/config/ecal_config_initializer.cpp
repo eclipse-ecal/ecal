@@ -34,17 +34,21 @@
   #include "configuration_to_yaml.h"
 #endif
 
+#include <climits>
+
 // for cwd
 #ifdef ECAL_OS_WINDOWS
   #include <direct.h>
   // to remove deprecated warning
   #define getcwd _getcwd
+  constexpr int MAXIMUM_PATH_LENGTH = _MAX_PATH;
 #endif
 #ifdef ECAL_OS_LINUX
   #include <sys/types.h>
   #include <sys/stat.h>
   #include <unistd.h>
   #include <pwd.h>
+  constexpr int MAXIMUM_PATH_LENGTH = PATH_MAX;
 #endif
 
 #include "ecal_utils/filesystem.h"
@@ -67,16 +71,15 @@ namespace
 
   bool setPathSep(std::string& file_path_)
   {
-    if (!file_path_.empty())
-    {
-      if (file_path_.back() != path_separator)
-      {
-        file_path_ += path_separator;
-      }
-      return true;
-    }
+    if (file_path_.empty())
+      return false;
 
-    return false;
+    if (file_path_.back() != path_separator)
+    {
+      file_path_ += path_separator;
+    }
+    
+    return true;
   }
 
   std::string eCALDataEnvPath()
@@ -88,10 +91,16 @@ namespace
 
   std::string cwdPath()
   {
-    std::string cwd_path = { getcwd(nullptr, 0) };
-    
-    setPathSep(cwd_path);
-    return cwd_path;
+    char temp[MAXIMUM_PATH_LENGTH];  
+
+    if (getcwd(temp, sizeof(temp)) != nullptr)
+    {
+      std::string cwdPath{temp};
+      setPathSep(cwdPath);
+      return cwdPath;
+    }
+
+    return {};
   }
 
   std::string eCALDataCMakePath()
