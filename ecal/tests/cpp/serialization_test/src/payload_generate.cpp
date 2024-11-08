@@ -17,15 +17,14 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "../../serialization/ecal_struct_sample_payload.h"
+#include "payload_generate.h"
+#include "common_generate.h"
+#include <serialization/ecal_struct_sample_payload.h>
 
 #include <cstdlib>
 
 namespace eCAL
 {
-  std::string GenerateString(size_t length);
-  std::vector<char> GenerateRandomVector(size_t length);
-
   namespace Payload
   {
     // generate Topic

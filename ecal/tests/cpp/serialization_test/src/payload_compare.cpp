@@ -17,7 +17,9 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "../../serialization/ecal_struct_sample_payload.h"
+#include "payload_compare.h"
+
+#include <serialization/ecal_struct_sample_payload.h>
 
 namespace eCAL
 {

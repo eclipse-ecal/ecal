@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "../../serialization/ecal_serialize_sample_registration.h"
+#include <serialization/ecal_serialize_sample_registration.h>
 #include "registration_generate.h"
 
 #include <gtest/gtest.h>
@@ -26,8 +26,6 @@ namespace eCAL
 {
   namespace Registration
   {
-    bool   CompareRegistrationSamples(const Sample& sample1, const Sample& sample2);
-
     class RegistrationSampleSerializationTest : public ::testing::Test {
     public:
 
@@ -54,7 +52,7 @@ namespace eCAL
         Sample sample_out;
         EXPECT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), sample_out));
 
-        EXPECT_TRUE(CompareRegistrationSamples(sample_in, sample_out));
+        EXPECT_EQ(sample_in, sample_out);
       }
     }
 
@@ -68,7 +66,7 @@ namespace eCAL
         Sample sample_out;
         EXPECT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), sample_out));
 
-        EXPECT_TRUE(CompareRegistrationSamples(sample_in, sample_out));
+        EXPECT_EQ(sample_in, sample_out);
       }
     }
 
@@ -87,7 +85,7 @@ namespace eCAL
       EXPECT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), sample_list_out));
 
       EXPECT_TRUE(sample_list_in.size() == sample_list_out.size());
-      EXPECT_TRUE(std::equal(sample_list_in.begin(), sample_list_in.end(), sample_list_out.begin(), CompareRegistrationSamples));
+      EXPECT_EQ(sample_list_in, sample_list_out);
     }
 
     TEST_F(core_cpp_registration_serialization, RegistrationList2Vector)
@@ -105,7 +103,7 @@ namespace eCAL
       EXPECT_TRUE(DeserializeFromBuffer(sample_buffer.data(), sample_buffer.size(), sample_list_out));
 
       EXPECT_TRUE(sample_list_in.size() == sample_list_out.size());
-      EXPECT_TRUE(std::equal(sample_list_in.begin(), sample_list_in.end(), sample_list_out.begin(), CompareRegistrationSamples));
+      EXPECT_EQ(sample_list_in, sample_list_out);
     }
   }
 }

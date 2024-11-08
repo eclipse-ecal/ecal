@@ -17,22 +17,30 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "logging_compare.h"
+#pragma once
+
+#include <ecal/types/monitoring.h>
 
 namespace eCAL
 {
-  namespace Logging
+  namespace Monitoring
   {
-    // compare two LogMessages for equality
-    bool CompareLogMessages(const SLogMessage& message1, const SLogMessage& message2)
-    {
-      return (message1.time    == message2.time &&
-              message1.hname   == message2.hname &&
-              message1.pid     == message2.pid &&
-              message1.pname   == message2.pname &&
-              message1.uname   == message2.uname &&
-              message1.level   == message2.level &&
-              message1.content == message2.content);
-    }
+    // generate process
+    SProcessMon GenerateProcess();
+
+    // generate topic
+    STopicMon GenerateTopic(const std::string& direction);
+
+    // generate servicemethod
+    SMethodMon GenerateServiceMethod();
+
+    // generate service
+    SServerMon GenerateService();
+
+    // generate client
+    SClientMon GenerateClient();
+
+    // generate monitoring
+    SMonitoring GenerateMonitoring();
   }
 }

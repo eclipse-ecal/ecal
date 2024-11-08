@@ -16,23 +16,20 @@
  *
  * ========================= eCAL LICENSE =================================
 */
+#pragma once
 
-#include "logging_compare.h"
+#include <serialization/ecal_struct_service.h>
 
 namespace eCAL
 {
-  namespace Logging
+  namespace Service
   {
-    // compare two LogMessages for equality
-    bool CompareLogMessages(const SLogMessage& message1, const SLogMessage& message2)
-    {
-      return (message1.time    == message2.time &&
-              message1.hname   == message2.hname &&
-              message1.pid     == message2.pid &&
-              message1.pname   == message2.pname &&
-              message1.uname   == message2.uname &&
-              message1.level   == message2.level &&
-              message1.content == message2.content);
-    }
+    // compare two ServiceHeaders for equality
+    bool CompareServiceHeaders(const ServiceHeader& header1, const ServiceHeader& header2);
+
+    bool CompareRequests(const Request& request1, const Request& request2);
+
+    // compare two Responses for equality
+    bool CompareResponses(const Response& response1, const Response& response2);
   }
 }
