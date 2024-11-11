@@ -166,9 +166,7 @@ namespace eCAL
       bool IsConnected();
 
   private:
-    ECAL_API_PRIVATE_MEMBER
     std::shared_ptr<CServiceServerImpl> m_service_server_impl;
-    ECAL_API_PRIVATE_MEMBER
     bool                                m_created;
   };
 } 

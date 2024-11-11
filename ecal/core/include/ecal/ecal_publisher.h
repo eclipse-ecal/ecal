@@ -314,11 +314,8 @@ namespace eCAL
 
   protected:
     // class members
-    ECAL_API_PRIVATE_MEMBER
     std::shared_ptr<CDataWriter> m_datawriter;
-    ECAL_API_PRIVATE_MEMBER
     long long                    m_id;
-    ECAL_API_PRIVATE_MEMBER
     bool                         m_created;
   };
 }

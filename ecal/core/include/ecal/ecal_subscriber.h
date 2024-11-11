@@ -321,9 +321,7 @@ namespace eCAL
 
   protected:
     // class members
-    ECAL_API_PRIVATE_MEMBER
     std::shared_ptr<CDataReader> m_datareader;
-    ECAL_API_PRIVATE_MEMBER
     bool                         m_created;
   };
 }
