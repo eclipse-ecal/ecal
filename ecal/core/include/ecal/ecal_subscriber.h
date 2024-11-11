@@ -82,13 +82,14 @@ namespace eCAL
    * @endcode
   **/
 
-  class CSubscriber
+  class ECAL_API_CLASS CSubscriber
   {
   public:
     /**
      * @brief Constructor. 
     **/
-    ECAL_API CSubscriber();
+    ECAL_API_EXPORTED_MEMBER
+      CSubscriber();
 
     /**
      * @brief Constructor.
@@ -97,7 +98,8 @@ namespace eCAL
      * @param data_type_info_  Topic data type information (encoding, type, descriptor).
      * @param config_          Optional configuration parameters.
     **/
-    ECAL_API CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
+    ECAL_API_EXPORTED_MEMBER
+      CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
 
     /**
      * @brief Constructor.
@@ -105,12 +107,14 @@ namespace eCAL
      * @param topic_name_      Unique topic name.
      * @param config_          Optional configuration parameters.
     **/
-    ECAL_API explicit CSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
+    ECAL_API_EXPORTED_MEMBER
+      explicit CSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
 
     /**
      * @brief Destructor. 
     **/
-    ECAL_API virtual ~CSubscriber();
+    ECAL_API_EXPORTED_MEMBER
+      virtual ~CSubscriber();
 
     /**
      * @brief CSubscribers are non-copyable
@@ -125,12 +129,14 @@ namespace eCAL
     /**
      * @brief CSubscribers are move-enabled
     **/
-    ECAL_API CSubscriber(CSubscriber&& rhs) noexcept;
+    ECAL_API_EXPORTED_MEMBER
+      CSubscriber(CSubscriber&& rhs) noexcept;
 
     /**
      * @brief CSubscribers are move-enabled
     **/
-    ECAL_API CSubscriber& operator=(CSubscriber&& rhs) noexcept;
+    ECAL_API_EXPORTED_MEMBER
+      CSubscriber& operator=(CSubscriber&& rhs) noexcept;
 
     /**
      * @brief Creates this object.
@@ -141,7 +147,8 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_API bool Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
+    ECAL_API_EXPORTED_MEMBER
+      bool Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
 
     /**
      * @brief Creates this object.
@@ -150,14 +157,16 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_API bool Create(const std::string& topic_name_);
+    ECAL_API_EXPORTED_MEMBER
+      bool Create(const std::string& topic_name_);
 
     /**
      * @brief Destroys this object. 
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    ECAL_API bool Destroy();
+    ECAL_API_EXPORTED_MEMBER
+      bool Destroy();
 
     /**
      * @brief Set a set of id's to prefiltering topics (see CPublisher::SetID).
@@ -166,7 +175,8 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_API bool SetID(const std::set<long long>& id_set_);
+    ECAL_API_EXPORTED_MEMBER
+      bool SetID(const std::set<long long>& id_set_);
 
     /**
      * @brief Sets subscriber attribute. 
@@ -177,7 +187,8 @@ namespace eCAL
      * @return  True if it succeeds, false if it fails. 
      * @experimental
     **/
-    ECAL_API bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
+    ECAL_API_EXPORTED_MEMBER
+      bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
 
     /**
      * @brief Removes subscriber attribute. 
@@ -186,7 +197,8 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_API bool ClearAttribute(const std::string& attr_name_);
+    ECAL_API_EXPORTED_MEMBER
+      bool ClearAttribute(const std::string& attr_name_);
 
     /**
      * @brief Receive a message from the publisher (able to process zero length buffer).
@@ -197,7 +209,8 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    ECAL_API bool ReceiveBuffer(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
+    ECAL_API_EXPORTED_MEMBER
+      bool ReceiveBuffer(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
 
     /**
      * @brief Add callback function for incoming receives. 
@@ -206,7 +219,8 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not. 
     **/
-    ECAL_API bool AddReceiveCallback(ReceiveCallbackT callback_);
+    ECAL_API_EXPORTED_MEMBER
+      bool AddReceiveCallback(ReceiveCallbackT callback_);
 
     /**
      * @brief Add callback function for incoming receives.
@@ -215,14 +229,16 @@ namespace eCAL
       *
       * @return  True if succeeded, false if not.
      **/
-    ECAL_API bool AddReceiveCallback(ReceiveIDCallbackT callback_);
+    ECAL_API_EXPORTED_MEMBER
+      bool AddReceiveCallback(ReceiveIDCallbackT callback_);
 
     /**
      * @brief Remove callback function for incoming receives. 
      *
      * @return  True if succeeded, false if not. 
     **/
-    ECAL_API bool RemReceiveCallback();
+    ECAL_API_EXPORTED_MEMBER
+      bool RemReceiveCallback();
 
     /**
      * @brief Add callback function for subscriber events.
@@ -232,7 +248,8 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not.
     **/
-    ECAL_API bool AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_);
+    ECAL_API_EXPORTED_MEMBER
+      bool AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_);
 
     /**
      * @brief Remove callback function for subscriber events.
@@ -241,49 +258,56 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not.
     **/
-    ECAL_API bool RemEventCallback(eCAL_Subscriber_Event type_);
+    ECAL_API_EXPORTED_MEMBER
+      bool RemEventCallback(eCAL_Subscriber_Event type_);
 
     /**
      * @brief Query if this object is created. 
      *
      * @return  true if created, false if not. 
     **/
-    ECAL_API bool IsCreated() const {return(m_created);}
+    ECAL_API_EXPORTED_MEMBER
+      bool IsCreated() const {return(m_created);}
 
     /**
      * @brief Query if the subscriber is published.
      *
      * @return  true if published, false if not.
     **/
-    ECAL_API bool IsPublished() const;
+    ECAL_API_EXPORTED_MEMBER
+      bool IsPublished() const;
 
     /**
      * @brief Query the number of publishers.
      *
      * @return  Number of publishers.
     **/
-    ECAL_API size_t GetPublisherCount() const;
+    ECAL_API_EXPORTED_MEMBER
+      size_t GetPublisherCount() const;
 
     /**
      * @brief Gets name of the connected topic. 
      *
      * @return  The topic name. 
     **/
-    ECAL_API std::string GetTopicName() const;
+    ECAL_API_EXPORTED_MEMBER
+      std::string GetTopicName() const;
 
     /**
      * @brief Gets a unique ID of this Subscriber
      *
      * @return  The topic id.
     **/
-    ECAL_API Registration::STopicId GetId() const;
+    ECAL_API_EXPORTED_MEMBER
+      Registration::STopicId GetId() const;
 
     /**
      * @brief Gets description of the connected topic.
      *
      * @return  The topic information.
     **/
-    ECAL_API SDataTypeInformation GetDataTypeInformation() const;
+    ECAL_API_EXPORTED_MEMBER
+      SDataTypeInformation GetDataTypeInformation() const;
 
     /**
      * @brief Dump the whole class state into a string. 
@@ -292,7 +316,8 @@ namespace eCAL
      *
      * @return  The dump sting. 
     **/
-    ECAL_API std::string Dump(const std::string& indent_ = "") const;
+    ECAL_API_EXPORTED_MEMBER
+      std::string Dump(const std::string& indent_ = "") const;
 
   protected:
     // class members

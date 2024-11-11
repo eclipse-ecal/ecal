@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,21 +37,21 @@ extern "C"
    *
    * @return  Get time sync interface name.
   **/
-  ECAL_API int eCAL_Time_GetName(void* name_, int name_len_);
+  ECALC_API int eCAL_Time_GetName(void* name_, int name_len_);
 
   /**
    * @brief  Get current time
    *
    * @return  current time in us.
   **/
-  ECAL_API long long eCAL_Time_GetMicroSeconds();
+  ECALC_API long long eCAL_Time_GetMicroSeconds();
 
   /**
    * @brief  Get current time
    *
    * @return  current time in ns.
   **/
-  ECAL_API long long eCAL_Time_GetNanoSeconds();
+  ECALC_API long long eCAL_Time_GetNanoSeconds();
 
   /**
    * @brief  Set current time in nano seconds if host is time master.
@@ -60,21 +60,21 @@ extern "C"
    *
    * @return  Zero if succeeded non zero otherwise.
   **/
-  ECAL_API int eCAL_Time_SetNanoSeconds(long long time_);
+  ECALC_API int eCAL_Time_SetNanoSeconds(long long time_);
 
   /**
    * @brief  Returns time synchronization state.
    *
    * @return  Non zero if process is time synchronized.
   **/
-  ECAL_API int eCAL_Time_IsTimeSynchronized();
+  ECALC_API int eCAL_Time_IsTimeSynchronized();
 
   /**
    * @brief  Checks whether this host is time master.
    *
    * @return  Non zero if host is time master.
   **/
-  ECAL_API int eCAL_Time_IsTimeMaster();
+  ECALC_API int eCAL_Time_IsTimeMaster();
   
   /**
    * @brief Blocks for the given amount of nanoseconds.
@@ -86,7 +86,7 @@ extern "C"
    *
    * @param duration_nsecs_ the duration in nanoseconds
   **/
-  ECAL_API void eCAL_Time_SleepForNanoseconds(long long duration_nsecs_);
+  ECALC_API void eCAL_Time_SleepForNanoseconds(long long duration_nsecs_);
 
   /**
    * @brief Get the current error code and status message
@@ -104,7 +104,7 @@ extern "C"
    * @param max_len_ [in] The length of the allocated memory for the status_message_, ECAL_ALOCATE_4ME if the function has to allocate memory or -1 if not interested in the message.
    * @return
   **/
-  ECAL_API int eCAL_Time_GetStatus(int* error_, char** status_message_, const int max_len_);
+  ECALC_API int eCAL_Time_GetStatus(int* error_, char** status_message_, const int max_len_);
   
 #ifdef __cplusplus
 }
