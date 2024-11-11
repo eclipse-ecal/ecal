@@ -56,6 +56,10 @@
     #define ECAL_API
   #endif
 
+  #define ECAL_API_CLASS
+  #define ECAL_API_EXPORTED_MEMBER ECAL_API
+  #define ECAL_API_PRIVATE_MEMBER
+
   #ifdef ECAL_CORE_C_EXPORTS
     #define ECALC_API __declspec(dllexport)
     #define ECALC_API_DEPRECATED __declspec(dllexport deprecated)
@@ -66,12 +70,20 @@
     #define ECALC_API
     #define ECALC_API_DEPRECATED __declspec(deprecated)
   #endif
+
+
 #else /* _MSC_VER */
+  #define ECAL_API_CLASS __attribute__((visibility("default")))
   #ifdef ECAL_CORE_EXPORTS 
     #define ECAL_API __attribute__((visibility("default")))
   #else
     #define ECAL_API
   #endif
+
+  #define ECAL_API_CLASS __attribute__((visibility("default")))
+  #define ECAL_API_EXPORTED_MEMBER 
+  #define ECAL_API_PRIVATE_MEMBER __attribute__((visibility("hidden")))
+
   #ifdef ECAL_CORE_C_EXPORTS 
     #define ECALC_API __attribute__((visibility("default")))
   #else
