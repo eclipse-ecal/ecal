@@ -22,6 +22,7 @@
 **/
 
 #include "ecal/ecal_config.h"
+#include "ecal/ecal_util.h"
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
@@ -351,7 +352,7 @@ namespace eCAL
 {
   namespace Util
   {
-    ECAL_API std::string GeteCALConfigPath()
+    std::string GeteCALConfigPath()
     {
       // Check for first directory which contains the ini file.
       const std::vector<std::string> search_directories = getEcalDefaultPaths();
@@ -359,7 +360,7 @@ namespace eCAL
       return findValidConfigPath(search_directories, ECAL_DEFAULT_CFG);
     }
 
-    ECAL_API std::string GeteCALHomePath()
+    std::string GeteCALHomePath()
     {
       std::string home_path;
 
@@ -401,7 +402,7 @@ namespace eCAL
       return(home_path);
     }
 
-    ECAL_API std::string GeteCALUserSettingsPath()
+    std::string GeteCALUserSettingsPath()
     {
       std::string settings_path;
 #ifdef ECAL_OS_WINDOWS
@@ -422,7 +423,7 @@ namespace eCAL
       return(settings_path);
     }
 
-    ECAL_API std::string GeteCALLogPath()
+    std::string GeteCALLogPath()
     {
       std::string log_path;
 #ifdef ECAL_OS_WINDOWS
@@ -444,14 +445,14 @@ namespace eCAL
       return(log_path);
     }
 
-    ECAL_API std::string GeteCALActiveIniFile()
+    std::string GeteCALActiveIniFile()
     {
       std::string ini_file = GeteCALConfigPath();
       ini_file += ECAL_DEFAULT_CFG;
       return ini_file;
     }
 
-    ECAL_API std::string GeteCALDefaultIniFile()
+    std::string GeteCALDefaultIniFile()
     {
       return GeteCALActiveIniFile();
     }
