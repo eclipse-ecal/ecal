@@ -201,6 +201,15 @@ modpath.iss
     - Copy in repository: `/cpack/innosetup/modpath.iss`
     - Binary distributions for Windows (Installer only)
 
+nanopb
+  - License: Zlib License
+  - Project: https://github.com/nanopb/nanopb
+  - Copyright: 2011 Petteri Aimonen \<jpa at nanopb.mail.kapsi.fi\>
+  - Included in:
+    - Copy in repository: `ecal/ecal/core/src/serialization/nanopb/*`
+    - Binary distributions for Windows
+    - Binary distributions for Linux
+
 npcap
   - License: Npcap License
   - Project: https://nmap.org/npcap/
