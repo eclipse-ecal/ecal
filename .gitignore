@@ -54,3 +54,7 @@ log_*.txt
 
 # User CMake Presets
 CMakeUserPresets.json
+
+# Output of the scan-dependencies-with-dash.py script and the dash-licensing tool
+/dependencies.txt
+/summary.txt
