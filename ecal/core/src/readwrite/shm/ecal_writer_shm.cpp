@@ -97,7 +97,7 @@ namespace eCAL
     }
   }
 
-  void CDataWriterSHM::RemoveSubscription(const std::string& host_name_, const int32_t process_id_, const std::string& topic_id_)
+  void CDataWriterSHM::RemoveSubscription(const std::string& host_name_, const int32_t process_id_, const std::string&  /*topic_id_*/)
   {
     // we accept local disconnections only
     if (host_name_ != m_attributes.host_name) return;
