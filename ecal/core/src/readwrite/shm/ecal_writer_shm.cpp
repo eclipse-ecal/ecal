@@ -83,10 +83,17 @@ namespace eCAL
     return sent;
   }
 
-  void CDataWriterSHM::ApplySubscription(const std::string& host_name_, const int32_t process_id_, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/)
+  void CDataWriterSHM::ApplySubscription(const std::string& host_name_, const int32_t process_id_, const std::string& topic_id_, const std::string& /*conn_par_*/)
   {
     // we accept local connections only
     if (host_name_ != m_attributes.host_name) return;
+
+    // add or update the map with process id's and sets of topic ids
+    {
+      const std::lock_guard<std::mutex> lock(m_process_id_topic_id_set_map_sync);
+      auto& topic_set = m_process_id_topic_id_set_map[process_id_];
+      topic_set.insert(topic_id_);
+    }
 
     for (auto& memory_file : m_memory_file_vec)
     {
@@ -97,10 +104,38 @@ namespace eCAL
     }
   }
 
-  void CDataWriterSHM::RemoveSubscription(const std::string& host_name_, const int32_t process_id_, const std::string&  /*topic_id_*/)
+  void CDataWriterSHM::RemoveSubscription(const std::string& host_name_, const int32_t process_id_, const std::string& topic_id_)
   {
     // we accept local disconnections only
     if (host_name_ != m_attributes.host_name) return;
+
+    // remove topic id from the set for the given process id
+    bool memfile_has_subscriptions(true);
+    {
+      const std::lock_guard<std::mutex> lock(m_process_id_topic_id_set_map_sync);
+      auto process_it = m_process_id_topic_id_set_map.find(process_id_);
+
+      // this process id is connected the memory file
+      if (process_it != m_process_id_topic_id_set_map.end())
+      {
+        // this topic id is in the set and will be removed now
+        process_it->second.erase(topic_id_);
+
+        // this was the last connected topic id for this process id
+        // that means this process id has no more connection to this memory file
+        if (process_it->second.empty())
+        {
+          // we can remove the empty topic id set
+          m_process_id_topic_id_set_map.erase(process_it);
+          // memory file has no more subscriptions from process id
+          memfile_has_subscriptions = false;
+        }
+      }
+    }
+
+    // if memory file is still connected to at least one topic id of this process id
+    // we return and do not call Disconnect for this process id
+    if (memfile_has_subscriptions) return;
 
     for (auto& memory_file : m_memory_file_vec)
     {

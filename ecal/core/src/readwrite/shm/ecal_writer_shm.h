@@ -29,7 +29,10 @@
 #include "readwrite/ecal_writer_base.h"
 
 #include <cstddef>
+#include <map>
 #include <memory>
+#include <mutex>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -59,5 +62,9 @@ namespace eCAL
     size_t                                        m_write_idx = 0;
     std::vector<std::shared_ptr<CSyncMemoryFile>> m_memory_file_vec;
     static const std::string                      m_memfile_base_name;
+
+    using ProcessIDTopicIDSetT = std::map<int32_t, std::set<std::string>>;
+    std::mutex                                    m_process_id_topic_id_set_map_sync;
+    ProcessIDTopicIDSetT                          m_process_id_topic_id_set_map;
   };
 }
