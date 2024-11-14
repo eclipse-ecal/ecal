@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,6 +103,9 @@ namespace eCAL
     if (iter != m_event_handle_map.end())
     {
       const SEventHandlePair event_pair = iter->second;
+      // fire acknowledge events, to unlock blocking send function
+      gSetEvent(event_pair.event_ack);
+      // close the snd and ack event
       gCloseEvent(event_pair.event_snd);
       gCloseEvent(event_pair.event_ack);
       m_event_handle_map.erase(iter);
@@ -336,19 +339,26 @@ namespace eCAL
     // fire the publisher events
     // connected subscribers will read the content from the memory file
 
-    const std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
+    // we work on a copy of the event handle map, this is needed to ..
+    // 1. unlock a memory file sync via Disconnect(process_id) (ack event is set by the Disconnect in this case)
+    // 2. be able to add a new memory file sync via Connect(process_id)
+    EventHandleMapT event_handle_map_copy;
+    {
+      const std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
+      event_handle_map_copy = m_event_handle_map;
+    }
 
     // "eat" old acknowledge events :)
     if (m_attr.timeout_ack_ms != 0)
     {
-      for (const auto& event_handle : m_event_handle_map)
+      for (const auto& event_handle : event_handle_map_copy)
       {
         while (gWaitForEvent(event_handle.second.event_ack, 0)) {}
       }
     }
 
     // send sync (memory file update) event
-    for (const auto& event_handle : m_event_handle_map)
+    for (const auto& event_handle : event_handle_map_copy)
     {
       // send sync event
       gSetEvent(event_handle.second.event_snd);
@@ -360,7 +370,7 @@ namespace eCAL
       // take start time for all acknowledge timeouts
       const auto start_time = std::chrono::steady_clock::now();
 
-      for (auto& event_handle : m_event_handle_map)
+      for (auto& event_handle : event_handle_map_copy)
       {
         const auto time_since_start = std::chrono::steady_clock::now() - start_time;
         const auto time_to_wait     = std::chrono::milliseconds(m_attr.timeout_ack_ms)- time_since_start;

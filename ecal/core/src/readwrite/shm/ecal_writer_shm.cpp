@@ -97,6 +97,20 @@ namespace eCAL
     }
   }
 
+  void CDataWriterSHM::RemoveSubscription(const std::string& host_name_, const int32_t process_id_, const std::string& topic_id_)
+  {
+    // we accept local disconnections only
+    if (host_name_ != m_attributes.host_name) return;
+
+    for (auto& memory_file : m_memory_file_vec)
+    {
+      memory_file->Disconnect(std::to_string(process_id_));
+#ifndef NDEBUG
+      Logging::Log(log_level_debug1, std::string("CDataWriterSHM::RemoveSubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
+#endif
+    }
+  }
+
   Registration::ConnectionPar CDataWriterSHM::GetConnectionParameter()
   {
     Registration::ConnectionPar connection_par;

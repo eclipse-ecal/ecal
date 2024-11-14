@@ -47,6 +47,7 @@ namespace eCAL
     bool Write(CPayloadWriter& payload_, const SWriterAttr& attr_) override;
 
     void ApplySubscription(const std::string& host_name_, int32_t process_id_, const std::string& topic_id_, const std::string& conn_par_) override;
+    void RemoveSubscription(const std::string& host_name_, const int32_t process_id_, const std::string& topic_id_) override;
 
     Registration::ConnectionPar GetConnectionParameter() override;
 
