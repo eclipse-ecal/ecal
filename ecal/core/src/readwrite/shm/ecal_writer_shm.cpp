@@ -109,32 +109,31 @@ namespace eCAL
     // we accept local disconnections only
     if (host_name_ != m_attributes.host_name) return;
 
-    // remove topic id from the set for the given process id
+    // remove topic id from the id set for the given process id
     bool memfile_has_subscriptions(true);
     {
       const std::lock_guard<std::mutex> lock(m_process_id_topic_id_set_map_sync);
       auto process_it = m_process_id_topic_id_set_map.find(process_id_);
 
-      // this process id is connected the memory file
+      // this process id is connected to the memory file
       if (process_it != m_process_id_topic_id_set_map.end())
       {
-        // this topic id is in the set and will be removed now
+        // remove it from the id set
         process_it->second.erase(topic_id_);
 
-        // this was the last connected topic id for this process id
-        // that means this process id has no more connection to this memory file
+        // this process id has no more connection to this memory file
         if (process_it->second.empty())
         {
           // we can remove the empty topic id set
           m_process_id_topic_id_set_map.erase(process_it);
-          // memory file has no more subscriptions from process id
+          // and set the subscription state to false for later processing
           memfile_has_subscriptions = false;
         }
       }
     }
 
-    // if memory file is still connected to at least one topic id of this process id
-    // we return and do not call Disconnect for this process id
+    // memory file is still connected to at least one topic id of this process id
+    // no need to Disconnect process id
     if (memfile_has_subscriptions) return;
 
     for (auto& memory_file : m_memory_file_vec)
