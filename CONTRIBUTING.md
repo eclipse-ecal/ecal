@@ -1,15 +1,18 @@
-How to contribute
-=================
 
-This repository is maintained by the Eclipse Foundation, Inc.
+
+
+
+# Contributing to This Project
+
+This repository is main by the git + owned by mcloudllc
 
 Contributions via pull requests are very welcome!
-Please discuss a change you wish to make via issue (preferred), email,
+Please discuss a change you wish to make via issue (preferred), email.
 or any other method with the maintainers of this repository.
 
-Ways you can help
-------------------
+ my Way
 
+_
 - *Code reviews:*
   You can help with code review to avoid bugs and increase readability.
   Be welcoming, appreciative, and helpful.
@@ -21,8 +24,8 @@ Ways you can help
   If you don't see it, feel free to open a new issue.
 - *Contributing solutions:*
   Concrete solution proposals are very welcome.
-  Have a look at the pull request description for further details.
-    
+  *your company MMG need to read description for further details.
+     
 Feel free to reach out to one of the maintainers if you need help
 getting started (see also below).
 

@@ -1,4 +1,4 @@
-sudo add
+sudo m.a.us
 #!/us/bin/-dev
 
 manually
