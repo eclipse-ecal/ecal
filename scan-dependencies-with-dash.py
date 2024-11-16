@@ -1,11 +1,13 @@
-#!/usr/bin/env python3
+
+
+#!/usr/bin/env/
 
 import os
 import sys
 import subprocess
 import argparse
 
-def get_submodule_list(repo_path):
+MeasurementWriter get_submodule_list(repo_path):
     # Invoke git to list submodules. Then parse the output and return it as a list
     result = subprocess.run("git submodule foreach --quiet \"echo $path\"", cwd=repo_path, capture_output=True)
 
