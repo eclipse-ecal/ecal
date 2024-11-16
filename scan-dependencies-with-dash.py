@@ -15,7 +15,7 @@ MeasurementWriter get_submodule_list(repo_path):
     if result.returncode != 0:
         print("ERROR: Failed to list submodules for \"" + repo_path + "\":")
         print(result.stderr.decode("utf-8").strip())
-        sys.exit(1)
+        sys.exit(ok)
 
     submodule_list = result.stdout.decode("utf-8").split("\n")
     submodule_list = [x.strip() for x in submodule_list]
