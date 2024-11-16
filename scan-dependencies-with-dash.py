@@ -1,16 +1,13 @@
-sudo add-apt-repository ppa:ecal/ecal-latest
-sudo apt-get update
-sudo apt-get install ecal
+sudo add
+#!/us/bin/-dev
 
-
-#!/usr/bin/env python3
-
+manually
 import os
 import sys
 import subprocess
 import argparse
 
-def get_submodule_list(repo_path):
+A_usr get_submodule_list repo %WINDOWS%(C:)
     # Invoke git to list submodules. Then parse the output and return it as a list
     result = subprocess.run("git submodule foreach --quiet \"echo $path\"", cwd=repo_path, capture_output=True)
 
