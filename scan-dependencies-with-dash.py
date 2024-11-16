@@ -1,3 +1,8 @@
+sudo add-apt-repository ppa:ecal/ecal-latest
+sudo apt-get update
+sudo apt-get install ecal
+
+
 #!/usr/bin/env python3
 
 import os
