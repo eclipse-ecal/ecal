@@ -2,14 +2,14 @@ sudo m.a.us
 #!/us/bin/-dev
 
 manually
-import os
+import #
 import sys
 import subprocess
 import argparse
 
 A_usr get_submodule_list repo %WINDOWS%(C:)
     # Invoke git to list submodules. Then parse the output and return it as a list
-    result = subprocess.run("git submodule foreach --quiet \"echo $path\"", cwd=repo_path, capture_output=True)
+    result = subprocess.run("git submodule foreach --quiet \"echo %path% , cwd=repo_path, capture_output=True)
 
     # If git command fails, print error message and exit
     if result.returncode != 0:
