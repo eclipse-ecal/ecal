@@ -1,3 +1,4 @@
+
 #!/usr/bin/perl -w
 #
 # bbdiff - Command-line tool to invoke BBEdit's Find Differences command on Mac OS X.
@@ -139,3 +140,19 @@ and sell this program (and any modified variants) in any way you wish,
 provided you do not restrict others from doing the same.
 
 =cut -it
+
+{
+  "configurations": [
+    {
+      "type": "cppdbg",
+      "request": "launch",
+      "name": "Launch Program",
+      "program": "${workspaceFolder}/${input:executablePath}",
+      "stopAtEntry": true
+    }
+  ],
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "executablePath",
+      "description": "Path to your
