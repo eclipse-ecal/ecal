@@ -342,23 +342,23 @@ namespace eCAL
     // we work on a copy of the event handle map, this is needed to ..
     // 1. unlock a memory file sync via Disconnect(process_id) (ack event is set by the Disconnect in this case)
     // 2. be able to add a new memory file sync via Connect(process_id)
-    EventHandleMapT event_handle_map_copy;
+    EventHandleMapT event_handle_map_snapshot;
     {
       const std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-      event_handle_map_copy = m_event_handle_map;
+      event_handle_map_snapshot = m_event_handle_map;
     }
 
     // "eat" old acknowledge events :)
     if (m_attr.timeout_ack_ms != 0)
     {
-      for (const auto& event_handle : event_handle_map_copy)
+      for (const auto& event_handle : event_handle_map_snapshot)
       {
         while (gWaitForEvent(event_handle.second.event_ack, 0)) {}
       }
     }
 
     // send sync (memory file update) event
-    for (const auto& event_handle : event_handle_map_copy)
+    for (const auto& event_handle : event_handle_map_snapshot)
     {
       // send sync event
       gSetEvent(event_handle.second.event_snd);
@@ -370,7 +370,7 @@ namespace eCAL
       // take start time for all acknowledge timeouts
       const auto start_time = std::chrono::steady_clock::now();
 
-      for (auto& event_handle : event_handle_map_copy)
+      for (auto& event_handle : event_handle_map_snapshot)
       {
         const auto time_since_start = std::chrono::steady_clock::now() - start_time;
         const auto time_to_wait     = std::chrono::milliseconds(m_attr.timeout_ack_ms)- time_since_start;
