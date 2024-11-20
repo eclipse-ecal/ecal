@@ -83,16 +83,64 @@ namespace eCAL
     return sent;
   }
 
-  void CDataWriterSHM::ApplySubscription(const std::string& host_name_, const int32_t process_id_, const std::string& /*topic_id_*/, const std::string& /*conn_par_*/)
+  void CDataWriterSHM::ApplySubscription(const std::string& host_name_, const int32_t process_id_, const std::string& topic_id_, const std::string& /*conn_par_*/)
   {
     // we accept local connections only
     if (host_name_ != m_attributes.host_name) return;
+
+    // add or update the map with process id's and sets of topic ids
+    {
+      const std::lock_guard<std::mutex> lock(m_process_id_topic_id_set_map_sync);
+      auto& topic_set = m_process_id_topic_id_set_map[process_id_];
+      topic_set.insert(topic_id_);
+    }
 
     for (auto& memory_file : m_memory_file_vec)
     {
       memory_file->Connect(std::to_string(process_id_));
 #ifndef NDEBUG
       Logging::Log(log_level_debug1, std::string("CDataWriterSHM::ApplySubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
+#endif
+    }
+  }
+
+  void CDataWriterSHM::RemoveSubscription(const std::string& host_name_, const int32_t process_id_, const std::string& topic_id_)
+  {
+    // we accept local disconnections only
+    if (host_name_ != m_attributes.host_name) return;
+
+    // remove topic id from the id set for the given process id
+    bool memfile_has_subscriptions(true);
+    {
+      const std::lock_guard<std::mutex> lock(m_process_id_topic_id_set_map_sync);
+      auto process_it = m_process_id_topic_id_set_map.find(process_id_);
+
+      // this process id is connected to the memory file
+      if (process_it != m_process_id_topic_id_set_map.end())
+      {
+        // remove it from the id set
+        process_it->second.erase(topic_id_);
+
+        // this process id has no more connection to this memory file
+        if (process_it->second.empty())
+        {
+          // we can remove the empty topic id set
+          m_process_id_topic_id_set_map.erase(process_it);
+          // and set the subscription state to false for later processing
+          memfile_has_subscriptions = false;
+        }
+      }
+    }
+
+    // memory file is still connected to at least one topic id of this process id
+    // no need to Disconnect process id
+    if (memfile_has_subscriptions) return;
+
+    for (auto& memory_file : m_memory_file_vec)
+    {
+      memory_file->Disconnect(std::to_string(process_id_));
+#ifndef NDEBUG
+      Logging::Log(log_level_debug1, std::string("CDataWriterSHM::RemoveSubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
 #endif
     }
   }
