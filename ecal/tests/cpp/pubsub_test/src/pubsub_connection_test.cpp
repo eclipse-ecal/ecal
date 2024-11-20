@@ -41,7 +41,7 @@ TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
 
   // publishing thread
   std::atomic<bool> subscriber_seen_at_publication_start(false);
-  auto publisher_thread = [&]() {
+  auto publisher_thread = [&do_start_publication, &publication_finished, &subscriber_seen_at_publication_start]() {
     eCAL::Publisher::Configuration pub_config;
     pub_config.layer.shm.acknowledge_timeout_ms = 500;
     eCAL::CPublisher pub("blob", pub_config);
@@ -72,18 +72,17 @@ TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
   // subscribing thread
   std::atomic<bool> publisher_seen_at_subscription_start(false);
   std::string first_received_sample;
-  auto subscriber_thread = [&]() {
+  auto subscriber_thread = [&do_start_publication, &publication_finished, &publisher_seen_at_subscription_start, &first_received_sample]() {
     eCAL::CSubscriber sub("blob");
     bool received(false);
     const auto max_sub_count(10);
     auto sub_count(0);
-    auto receive_lambda = [&](const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_)
+    auto receive_lambda = [&max_sub_count, &sub_count, &publisher_seen_at_subscription_start, &first_received_sample, &sub](const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_) {
+      if (sub_count == 0)
       {
-        if (sub_count == 0)
-        {
-          publisher_seen_at_subscription_start = sub.IsPublished();
-          first_received_sample = std::string(static_cast<const char*>(data_->buf), data_->size);
-        }
+        publisher_seen_at_subscription_start = sub.IsPublished();
+        first_received_sample = std::string(static_cast<const char*>(data_->buf), data_->size);
+      }
 
         if (sub_count < max_sub_count)
         {
@@ -100,7 +99,7 @@ TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
           //  Receiving 8
           //  Receiving 9
           // -----------------------------------
-          std::cout << "Receiving " << std::string(static_cast<const char*>(data_->buf), data_->size) << std::endl;
+          //std::cout << "Receiving " << std::string(static_cast<const char*>(data_->buf), data_->size) << std::endl;
           sub_count++;
         }
       };
@@ -145,7 +144,7 @@ TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
   std::atomic<bool> publication_finished(false);
 
   // publishing thread
-  auto publisher_thread = [&]() {
+  auto publisher_thread = [&do_start_publication, &publication_finished]() {
     eCAL::Publisher::Configuration pub_config;
     pub_config.layer.shm.acknowledge_timeout_ms = 500;
     eCAL::CPublisher pub("blob", pub_config);
@@ -176,18 +175,17 @@ TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
   // subscribing thread
   std::atomic<bool> publisher_seen_at_subscription_start(false);
   std::string first_received_sample;
-  auto subscriber_thread = [&]() {
+  auto subscriber_thread = [&publication_finished, &publisher_seen_at_subscription_start, &first_received_sample]() {
     eCAL::CSubscriber sub("blob");
     bool received(false);
     const auto max_sub_count(10);
     auto sub_count(0);
-    auto receive_lambda = [&](const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_)
+    auto receive_lambda = [&max_sub_count, &sub_count, &publisher_seen_at_subscription_start, &first_received_sample, &sub](const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_) {
+      if (sub_count == 0)
       {
-        if (sub_count == 0)
-        {
-          publisher_seen_at_subscription_start = sub.IsPublished();
-          first_received_sample = std::string(static_cast<const char*>(data_->buf), data_->size);
-        }
+        publisher_seen_at_subscription_start = sub.IsPublished();
+        first_received_sample = std::string(static_cast<const char*>(data_->buf), data_->size);
+      }
 
         if (sub_count < max_sub_count)
         {
@@ -204,7 +202,7 @@ TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
           //  Receiving 8
           //  Receiving 9
           // -----------------------------------
-          std::cout << "Receiving " << std::string(static_cast<const char*>(data_->buf), data_->size) << std::endl;
+          //std::cout << "Receiving " << std::string(static_cast<const char*>(data_->buf), data_->size) << std::endl;
           sub_count++;
         }
       };
@@ -247,7 +245,7 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
   std::atomic<int> subscriber2_received_count(0);
 
   // Publisher1 in thread 1
-  auto publisher1_thread = [&]() {
+  auto publisher1_thread = [&publisher1_sent_count, &message_count]() {
     eCAL::CPublisher pub1("topic1");
     while (!pub1.IsSubscribed())
     {
@@ -266,7 +264,7 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
 
   // Subscriber1 with callback that triggers Publisher2
   eCAL::CSubscriber sub1("topic1");
-  auto subscriber1_callback = [&](const char* /*topic_name*/, const eCAL::SReceiveCallbackData* data) {
+  auto subscriber1_callback = [&pub2](const char* /*topic_name*/, const eCAL::SReceiveCallbackData* data) {
     // On receiving data from Publisher1, Publisher2 sends the same data
     std::string received_data(static_cast<const char*>(data->buf), data->size);
     pub2.Send(received_data);
@@ -275,10 +273,10 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
 
   // Subscriber2 that receives data from Publisher2
   eCAL::CSubscriber sub2("topic2");
-  auto subscriber2_callback = [&](const char* /*topic_name*/, const eCAL::SReceiveCallbackData* data) {
+  auto subscriber2_callback = [&subscriber2_received_count](const char* /*topic_name*/, const eCAL::SReceiveCallbackData* data) {
     // Count each received message from Publisher2
     subscriber2_received_count++;
-    std::cout << "Subscriber2 Receiving " << std::string(static_cast<const char*>(data->buf), data->size) << std::endl;
+    //std::cout << "Subscriber2 Receiving " << std::string(static_cast<const char*>(data->buf), data->size) << std::endl;
     };
   sub2.AddReceiveCallback(subscriber2_callback);
 
