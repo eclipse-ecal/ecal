@@ -41,7 +41,7 @@ TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
 
   // publishing thread
   std::atomic<bool> subscriber_seen_at_publication_start(false);
-  auto publisher_thread = [&do_start_publication, &publication_finished, &subscriber_seen_at_publication_start]() {
+  auto publisher_function = [&do_start_publication, &publication_finished, &subscriber_seen_at_publication_start]() {
     eCAL::Publisher::Configuration pub_config;
     pub_config.layer.shm.acknowledge_timeout_ms = 500;
     eCAL::CPublisher pub("blob", pub_config);
@@ -72,7 +72,7 @@ TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
   // subscribing thread
   std::atomic<bool> publisher_seen_at_subscription_start(false);
   std::string first_received_sample;
-  auto subscriber_thread = [&do_start_publication, &publication_finished, &publisher_seen_at_subscription_start, &first_received_sample]() {
+  auto subscriber_function = [&do_start_publication, &publication_finished, &publisher_seen_at_subscription_start, &first_received_sample]() {
     eCAL::CSubscriber sub("blob");
     bool received(false);
     const auto max_sub_count(10);
@@ -112,8 +112,8 @@ TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
   };
 
   // create threads for publisher and subscriber
-  std::thread pub_thread(publisher_thread);
-  std::thread sub_thread(subscriber_thread);
+  std::thread pub_thread(publisher_function);
+  std::thread sub_thread(subscriber_function);
 
   // join threads to the main thread
   pub_thread.join();
@@ -144,7 +144,7 @@ TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
   std::atomic<bool> publication_finished(false);
 
   // publishing thread
-  auto publisher_thread = [&do_start_publication, &publication_finished]() {
+  auto publisher_function = [&do_start_publication, &publication_finished]() {
     eCAL::Publisher::Configuration pub_config;
     pub_config.layer.shm.acknowledge_timeout_ms = 500;
     eCAL::CPublisher pub("blob", pub_config);
@@ -175,7 +175,7 @@ TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
   // subscribing thread
   std::atomic<bool> publisher_seen_at_subscription_start(false);
   std::string first_received_sample;
-  auto subscriber_thread = [&publication_finished, &publisher_seen_at_subscription_start, &first_received_sample]() {
+  auto subscriber_function = [&publication_finished, &publisher_seen_at_subscription_start, &first_received_sample]() {
     eCAL::CSubscriber sub("blob");
     bool received(false);
     const auto max_sub_count(10);
@@ -214,8 +214,8 @@ TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
   };
 
   // create threads for publisher and subscriber
-  std::thread pub_thread(publisher_thread);
-  std::thread sub_thread(subscriber_thread);
+  std::thread pub_thread(publisher_function);
+  std::thread sub_thread(subscriber_function);
 
   // join threads to the main thread
   pub_thread.join();
@@ -245,7 +245,7 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
   std::atomic<int> subscriber2_received_count(0);
 
   // Publisher1 in thread 1
-  auto publisher1_thread = [&publisher1_sent_count, &message_count]() {
+  auto publisher1_function = [&publisher1_sent_count, &message_count]() {
     eCAL::CPublisher pub1("topic1");
     while (!pub1.IsSubscribed())
     {
@@ -266,14 +266,14 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
   eCAL::CSubscriber sub1("topic1");
   auto subscriber1_callback = [&pub2](const char* /*topic_name*/, const eCAL::SReceiveCallbackData* data) {
     // On receiving data from Publisher1, Publisher2 sends the same data
-    std::string received_data(static_cast<const char*>(data->buf), data->size);
+    const std::string received_data(static_cast<const char*>(data->buf), data->size);
     pub2.Send(received_data);
     };
   sub1.AddReceiveCallback(subscriber1_callback);
 
   // Subscriber2 that receives data from Publisher2
   eCAL::CSubscriber sub2("topic2");
-  auto subscriber2_callback = [&subscriber2_received_count](const char* /*topic_name*/, const eCAL::SReceiveCallbackData* data) {
+  auto subscriber2_callback = [&subscriber2_received_count](const char* /*topic_name*/, const eCAL::SReceiveCallbackData* /*data*/) {
     // Count each received message from Publisher2
     subscriber2_received_count++;
     //std::cout << "Subscriber2 Receiving " << std::string(static_cast<const char*>(data->buf), data->size) << std::endl;
@@ -281,13 +281,15 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
   sub2.AddReceiveCallback(subscriber2_callback);
 
   // Start publisher1 thread
-  std::thread pub1_thread(publisher1_thread);
+  std::thread pub1_thread(publisher1_function);
 
   // Wait until Publisher1 has sent all messages and Subscriber2 has received them
   pub1_thread.join();
-  while (subscriber2_received_count < message_count)
+  int max_message_loops(100);
+  while ((subscriber2_received_count < message_count) && (max_message_loops-- > 0))
   {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    max_message_loops++;
   }
 
   // Validate that Subscriber2 received all messages sent by Publisher1
