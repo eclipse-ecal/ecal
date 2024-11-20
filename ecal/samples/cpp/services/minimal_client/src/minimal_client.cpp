@@ -69,12 +69,12 @@ int main(int argc, char **argv)
     std::string request("Hello");
 
     // call all existing services
-    for (const auto& entity_id : minimal_client.GetServiceIDs())
+    for (auto& client_instance : minimal_client.GetServiceClientInstances())
     {
       //////////////////////////////////////
       // Service call (blocking)
       //////////////////////////////////////
-      const auto service_response = minimal_client.CallWithResponse(entity_id, method_name, request, -1);
+      const auto service_response = client_instance.CallWithResponse(method_name, request, -1);
       if (std::get<0>(service_response))
       {
         std::cout << std::endl << "Method 'echo' called with message : " << request << std::endl;
@@ -83,12 +83,12 @@ int main(int argc, char **argv)
           // service successful executed
         case call_state_executed:
         {
-          std::cout << "Received response : " << service_response.second.response << " from service id " << entity_id.entity_id << " from host " << service_info.host_name << std::endl;
+          std::cout << "Received response : " << service_response.second.response << " from service id " << client_instance.GetClientID() << " from host " << service_info.host_name << std::endl;
         }
         break;
         // service execution failed
         case call_state_failed:
-          std::cout << "Received error : " << service_info.error_msg << " from service id " << entity_id.entity_id << " from host " << service_info.host_name << std::endl;
+          std::cout << "Received error : " << service_info.error_msg << " from service id " << client_instance.GetClientID() << " from host " << service_info.host_name << std::endl;
           break;
         default:
           break;
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
       //////////////////////////////////////
       // Service call (with callback)
       //////////////////////////////////////
-      if (minimal_client.CallWithCallback(entity_id, method_name, request))
+      if (client_instance.CallWithCallback(method_name, request))
       {
         std::cout << std::endl << "Method 'echo' called with message : " << request << std::endl;
       }

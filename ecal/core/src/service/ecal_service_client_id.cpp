@@ -124,49 +124,6 @@ namespace eCAL
   }
 
   /**
-   * @brief Get the unique service id's for all matching services
-   *
-   * @return  Service id's of all matching services
-  **/
-  std::vector<Registration::SEntityId> CServiceClientID::GetServiceIDs()
-  {
-    if (!m_service_client_impl) return std::vector<Registration::SEntityId>();
-    return m_service_client_impl->GetServiceIDs();
-  }
-
-  /**
-   * @brief Blocking call specific service method, response will be returned as pair<bool, SServiceReponse>
-   *
-   * @param       entity_id_    Unique service entity (service id, process id, host name).
-   * @param       method_name_  Method name.
-   * @param       request_      Request string.
-   * @param       timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
-   *
-   * @return  success state and service response
-  **/
-  std::pair<bool, SServiceResponse> CServiceClientID::CallWithResponse(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, int timeout_)
-  {
-    if (!m_service_client_impl) return std::pair<bool, SServiceResponse>(false, {});
-    return m_service_client_impl->CallWithResponse(entity_id_, method_name_, request_, timeout_);
-  }
-
-  /**
-   * @brief Call a method of this service, responses will be returned by callback.
-   *
-   * @param entity_id_    Unique service entity (service id, process id, host name).
-   * @param method_name_  Method name.
-   * @param request_      Request string.
-   * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
-   *
-   * @return  True if successful.
-  **/
-  bool CServiceClientID::CallWithCallback(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, int timeout_)
-  {
-    if (!m_service_client_impl) return false;
-    return m_service_client_impl->CallWithCallback(entity_id_, method_name_, request_, timeout_);
-  }
-
-  /**
    * @brief Add server response callback.
    *
    * @param callback_  Callback function for server response.
@@ -218,26 +175,47 @@ namespace eCAL
   }
 
   /**
+   * @brief Get the client instances for all matching services
+   *
+   * @return  Vector of client instances
+  **/
+  std::vector<CServiceClientInstance> CServiceClientID::GetServiceClientInstances()
+  {
+    std::vector<CServiceClientInstance> instances;
+    auto entity_ids = m_service_client_impl->GetServiceIDs();
+    for (const auto& entity_id : entity_ids)
+    {
+      instances.emplace_back(entity_id, m_service_client_impl);
+    }
+    return instances;
+  }
+
+  /**
+   * @brief Blocking call specific service method for all existing service instances, using callback
+   *
+   * @param method_name_  Method name.
+   * @param request_      Request string.
+   * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+   *
+   * @return  True if successful.
+  **/
+  void CServiceClientID::CallMethodOnAllInstances(const std::string& method_name_, const std::string& request_, int timeout_)
+  {
+    auto instances = GetServiceClientInstances();
+    for (auto& instance : instances)
+    {
+      instance.CallWithCallback(method_name_, request_, timeout_);
+    }
+  }
+
+  /**
    * @brief Retrieve service name.
    *
    * @return  The service name.
   **/
-  std::string CServiceClientID::GetServiceName()
+  std::string CServiceClientID::GetServiceName() const
   {
     return m_service_name;
-  }
-
-  /**
-   * @brief Check connection state of a specific server connection.
-   *
-   * @param entity_id_  Unique service entity (service id, process id, host name).
-   *
-   * @return  True if connected, false if not.
-  **/
-  bool CServiceClientID::IsConnected(const Registration::SEntityId& entity_id_)
-  {
-    if (!m_service_client_impl) return false;
-    return m_service_client_impl->IsConnected(entity_id_);
   }
 
   /**
@@ -245,7 +223,7 @@ namespace eCAL
    *
    * @return  True if connected, false if not.
   **/
-  bool CServiceClientID::IsConnected()
+  bool CServiceClientID::IsConnected() const
   {
     if (!m_service_client_impl) return false;
     return m_service_client_impl->IsConnected();
