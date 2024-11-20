@@ -41,10 +41,10 @@ namespace eCAL
   class CServiceClientInstance
   {
   public:
-    ECAL_API CServiceClientInstance(const Registration::SEntityId& entity_id, std::shared_ptr<eCAL::CServiceClientIDImpl>& service_client_id_impl);
+    ECAL_API CServiceClientInstance(const Registration::SEntityId& entity_id_, std::shared_ptr<eCAL::CServiceClientIDImpl>& service_client_id_impl_);
 
     /**
-     * @brief Blocking call specific service method, response will be returned as pair<bool, SServiceReponse>
+     * @brief Blocking call of a service method, response will be returned as pair<bool, SServiceReponse>
      *
      * @param       method_name_  Method name.
      * @param       request_      Request string.
@@ -55,15 +55,16 @@ namespace eCAL
     ECAL_API std::pair<bool, SServiceResponse> CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
 
     /**
-     * @brief Blocking call specific service method, using callback
+     * @brief Blocking call of a service method, using callback
      *
-     * @param method_name_  Method name.
-     * @param request_      Request string.
-     * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+     * @param method_name_        Method name.
+     * @param request_            Request string.
+     * @param timeout_            Maximum time before operation returns (in milliseconds, -1 means infinite).
+     * @param response_callback_  Callback function for the service method response.
      *
      * @return  True if successful.
     **/
-    ECAL_API bool CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
+    ECAL_API bool CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& repsonse_callback_);
 
     /**
      * @brief Check connection state.

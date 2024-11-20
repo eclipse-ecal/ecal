@@ -54,10 +54,6 @@ namespace eCAL
   public:
     ~CServiceClientIDImpl();
 
-    // Add and remove callback function for service response
-    bool AddResponseCallback(const ResponseIDCallbackT& callback_);
-    bool RemoveResponseCallback();
-
     // Add and remove callback function for client events
     bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
     bool RemoveEventCallback(eCAL_Client_Event type_);
@@ -73,7 +69,7 @@ namespace eCAL
     // Blocking call to a specific service using callback
     bool CallWithCallback(
       const Registration::SEntityId& entity_id_, const std::string& method_name_,
-      const std::string& request_, int timeout_ms_);
+      const std::string& request_, int timeout_ms_, const ResponseIDCallbackT& repsonse_callback_);
 
     // Check connection state of a specific service
     bool IsConnected(const Registration::SEntityId& entity_id_);
@@ -146,8 +142,8 @@ namespace eCAL
     void UpdateConnectionStates();
 
     // Notify error callback with specific details
-    void ErrorCallback(const Registration::SEntityId& entity_id_, const std::string& method_name_,
-      const std::string& error_message_);
+    //void ErrorCallback(const Registration::SEntityId& entity_id_, const std::string& method_name_,
+    //  const std::string& error_message_);
 
     // Increment method call count for tracking
     void IncrementMethodCallCount(const std::string& method_name_);
@@ -185,10 +181,6 @@ namespace eCAL
     // Method call count map (tracks number of calls for each method)
     using MethodCallCountMapT = std::map<std::string, uint64_t>;
     MethodCallCountMapT m_method_call_count_map;
-
-    // Response callback and synchronization
-    std::mutex m_response_callback_sync;
-    ResponseIDCallbackT m_response_callback;
 
     // Event callback map and synchronization
     std::mutex m_event_callback_map_sync;

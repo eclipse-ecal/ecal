@@ -26,19 +26,19 @@
 
 namespace eCAL
 {
-  CServiceClientInstance::CServiceClientInstance(const Registration::SEntityId& entity_id_, std::shared_ptr<eCAL::CServiceClientIDImpl>& service_client_id_impl)
-    : m_entity_id(entity_id_), m_service_client_impl(service_client_id_impl)
+  CServiceClientInstance::CServiceClientInstance(const Registration::SEntityId& entity_id_, std::shared_ptr<eCAL::CServiceClientIDImpl>& service_client_id_impl_)
+    : m_entity_id(entity_id_), m_service_client_impl(service_client_id_impl_)
   {
   }
 
-  std::pair<bool, SServiceResponse> CServiceClientInstance::CallWithResponse(const std::string& method_name, const std::string& request, int timeout)
+  std::pair<bool, SServiceResponse> CServiceClientInstance::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_)
   {
-    return m_service_client_impl->CallWithResponse(m_entity_id, method_name, request, timeout);
+    return m_service_client_impl->CallWithResponse(m_entity_id, method_name_, request_, timeout_);
   }
 
-  bool CServiceClientInstance::CallWithCallback(const std::string& method_name, const std::string& request, int timeout)
+  bool CServiceClientInstance::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& repsonse_callback_)
   {
-    return m_service_client_impl->CallWithCallback(m_entity_id, method_name, request, timeout);
+    return m_service_client_impl->CallWithCallback(m_entity_id, method_name_, request_, timeout_, repsonse_callback_);
   }
 
   bool CServiceClientInstance::IsConnected() const

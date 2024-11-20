@@ -130,31 +130,11 @@ namespace eCAL
       m_client_session_map.clear();
     }
     {
-      std::lock_guard<std::mutex> lock(m_response_callback_sync);
-      m_response_callback = nullptr;
-    }
-    {
       std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
       m_event_callback_map.clear();
     }
     m_service_name.clear();
     m_client_id.clear();
-  }
-
-  // Adds a callback function for service responses
-  bool CServiceClientIDImpl::AddResponseCallback(const ResponseIDCallbackT& callback_)
-  {
-    std::lock_guard<std::mutex> lock(m_response_callback_sync);
-    m_response_callback = callback_;
-    return true;
-  }
-
-  // Removes the service response callback
-  bool CServiceClientIDImpl::RemoveResponseCallback()
-  {
-    std::lock_guard<std::mutex> lock(m_response_callback_sync);
-    m_response_callback = nullptr;
-    return true;
   }
 
   // Adds a callback function for a specific client event type
@@ -198,22 +178,20 @@ namespace eCAL
   }
 
   // Synchronously calls a service and uses a callback for handling the response
-  bool CServiceClientIDImpl::CallWithCallback(
-      const Registration::SEntityId& entity_id_, const std::string& method_name_,
-      const std::string& request_, int timeout_ms_)
+  bool CServiceClientIDImpl::CallWithCallback(const Registration::SEntityId& entity_id_, const std::string& method_name_,
+    const std::string& request_, int timeout_ms_, const ResponseIDCallbackT& repsonse_callback_)
   {
     auto response = CallBlocking(entity_id_, method_name_, request_, std::chrono::milliseconds(timeout_ms_));
 
-    if (!m_response_callback) return false;
-
-    // Call callback if response is successful
+    // Call the provided callback if the response is successful
     if (response.first)
     {
-      m_response_callback(entity_id_, response.second);
+      repsonse_callback_(entity_id_, response.second);
       return true;
     }
 
-    if ((response.second.call_state == eCallState::call_state_timeouted))
+    // Handle timeout event
+    if (response.second.call_state == eCallState::call_state_timeouted)
     {
       std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
       auto callback_it = m_event_callback_map.find(eCAL_Client_Event::client_event_timeout);
@@ -222,8 +200,9 @@ namespace eCAL
         SClientEventCallbackData sdata;
         sdata.type = client_event_timeout;
         sdata.time = std::chrono::duration_cast<std::chrono::microseconds>(
-            std::chrono::steady_clock::now().time_since_epoch()).count();
-        (callback_it->second)(m_service_name.c_str(), &sdata);
+          std::chrono::steady_clock::now().time_since_epoch())
+          .count();
+        callback_it->second(m_service_name.c_str(), &sdata);
       }
     }
 
@@ -536,19 +515,19 @@ namespace eCAL
     }
   }
 
-  void CServiceClientIDImpl::ErrorCallback(const Registration::SEntityId& entity_id_,
-                                           const std::string& method_name_, const std::string& error_message_)
-  {
-    std::lock_guard<std::mutex> lock(m_response_callback_sync);
-    if (m_response_callback)
-    {
-      SServiceResponse service_response;
-      service_response.call_state  = call_state_failed;
-      service_response.error_msg   = error_message_;
-      service_response.ret_state   = 0;
-      service_response.method_name = method_name_;
-      service_response.response.clear();
-      m_response_callback(entity_id_, service_response);
-    }
-  }
+  //void CServiceClientIDImpl::ErrorCallback(const Registration::SEntityId& entity_id_,
+  //                                         const std::string& method_name_, const std::string& error_message_)
+  //{
+  //  std::lock_guard<std::mutex> lock(m_response_callback_sync);
+  //  if (m_response_callback)
+  //  {
+  //    SServiceResponse service_response;
+  //    service_response.call_state  = call_state_failed;
+  //    service_response.error_msg   = error_message_;
+  //    service_response.ret_state   = 0;
+  //    service_response.method_name = method_name_;
+  //    service_response.response.clear();
+  //    m_response_callback(entity_id_, service_response);
+  //  }
+  //}
 }

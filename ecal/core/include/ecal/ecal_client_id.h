@@ -60,7 +60,7 @@ namespace eCAL
     /**
      * @brief Constructor.
      *
-     * @param service_name_  Unique service name.
+     * @param service_name_            Unique service name.
      * @param method_information_map_  Map of method names and corresponding datatype information.
     **/
     ECAL_API explicit CServiceClientID(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
@@ -92,7 +92,7 @@ namespace eCAL
     /**
      * @brief Creates this object.
      *
-     * @param service_name_  Unique service name.
+     * @param service_name_            Unique service name.
      * @param method_information_map_  Map of method names and corresponding datatype information.
      *
      * @return  True if successful.
@@ -105,22 +105,6 @@ namespace eCAL
      * @return  True if successful. 
     **/
     ECAL_API bool Destroy();
-
-    /**
-     * @brief Add server response callback. 
-     *
-     * @param callback_  Callback function for server response.  
-     *
-     * @return  True if successful.
-    **/
-    ECAL_API bool AddResponseCallback(const ResponseIDCallbackT& callback_);
-
-    /**
-     * @brief Remove server response callback. 
-     *
-     * @return  True if successful.
-    **/
-    ECAL_API bool RemResponseCallback();
 
     /**
      * @brief Add client event callback function.
@@ -149,15 +133,16 @@ namespace eCAL
     ECAL_API std::vector<CServiceClientInstance> GetServiceClientInstances();
 
     /**
-     * @brief Blocking call specific service method for all existing service instances, using callback
+     * @brief Blocking call of a service method for all existing service instances, using callback
      *
-     * @param method_name_  Method name.
-     * @param request_      Request string.
-     * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+     * @param method_name_        Method name.
+     * @param request_            Request string.
+     * @param timeout_            Maximum time before operation returns (in milliseconds, -1 means infinite).
+     * @param response_callback_  Callback function for the service method response.
      *
      * @return  True if successful.
     **/
-    ECAL_API void CallMethodOnAllInstances(const std::string& method_name_, const std::string& request_, int timeout_);
+    ECAL_API void CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& repsonse_callback_);
 
     /**
      * @brief Retrieve service name.

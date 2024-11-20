@@ -124,30 +124,6 @@ namespace eCAL
   }
 
   /**
-   * @brief Add server response callback.
-   *
-   * @param callback_  Callback function for server response.
-   *
-   * @return  True if successful.
-  **/
-  bool CServiceClientID::AddResponseCallback(const ResponseIDCallbackT& callback_)
-  {
-    if (!m_service_client_impl) return false;
-    return m_service_client_impl->AddResponseCallback(callback_);
-  }
-
-  /**
-   * @brief Remove server response callback.
-   *
-   * @return  True if successful.
-  **/
-  bool CServiceClientID::RemResponseCallback()
-  {
-    if (!m_service_client_impl) return false;
-    return m_service_client_impl->RemoveResponseCallback();
-  }
-
-  /**
    * @brief Add client event callback function.
    *
    * @param type_      The event type to react on.
@@ -191,20 +167,21 @@ namespace eCAL
   }
 
   /**
-   * @brief Blocking call specific service method for all existing service instances, using callback
+   * @brief Blocking call of a service method for all existing service instances, using callback
    *
-   * @param method_name_  Method name.
-   * @param request_      Request string.
-   * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+   * @param method_name_        Method name.
+   * @param request_            Request string.
+   * @param timeout_            Maximum time before operation returns (in milliseconds, -1 means infinite).
+   * @param response_callback_  Callback function for the service method response.
    *
    * @return  True if successful.
   **/
-  void CServiceClientID::CallMethodOnAllInstances(const std::string& method_name_, const std::string& request_, int timeout_)
+  void CServiceClientID::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& repsonse_callback_)
   {
     auto instances = GetServiceClientInstances();
     for (auto& instance : instances)
     {
-      instance.CallWithCallback(method_name_, request_, timeout_);
+      instance.CallWithCallback(method_name_, request_, timeout_, repsonse_callback_);
     }
   }
 
