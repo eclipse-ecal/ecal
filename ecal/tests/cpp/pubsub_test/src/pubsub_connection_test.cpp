@@ -289,7 +289,6 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
   while ((subscriber2_received_count < message_count) && (max_message_loops-- > 0))
   {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    max_message_loops++;
   }
 
   // Validate that Subscriber2 received all messages sent by Publisher1
