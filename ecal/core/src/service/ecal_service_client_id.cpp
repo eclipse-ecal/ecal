@@ -32,45 +32,58 @@ namespace eCAL
 {
   /**
    * @brief Constructor.
-  **/
-  CServiceClientID::CServiceClientID() :
-                    m_service_client_impl(nullptr)
-  {
-  }
-
-  /**
-   * @brief Constructor. 
    *
-   * @param service_name_  Service name. 
+   * @param service_name_  Service name.
   **/
-  CServiceClientID::CServiceClientID(const std::string& service_name_) :
-                    m_service_client_impl(nullptr)
+  CServiceClientID::CServiceClientID(const std::string& service_name_)
+    : m_service_name(service_name_)
   {
-    Create(service_name_);
+    // Create client implementation
+    m_service_client_impl = CServiceClientIDImpl::CreateInstance(m_service_name, ServiceMethodInformationMapT());
+
+    // Register client
+    if (g_clientgate() != nullptr)
+    {
+      g_clientgate()->Register(m_service_name, m_service_client_impl);
+    }
   }
 
   /**
    * @brief Constructor.
    *
-   * @param service_name_  Service name.
+   * @param service_name_            Service name.
    * @param method_information_map_  Map of method names and corresponding datatype information.
   **/
-  CServiceClientID::CServiceClientID(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_) :
-    m_service_client_impl(nullptr)
+  CServiceClientID::CServiceClientID(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
+    : m_service_name(service_name_)
   {
-    Create(service_name_, method_information_map_);
+    // Create client implementation
+    m_service_client_impl = CServiceClientIDImpl::CreateInstance(m_service_name, method_information_map_);
+
+    // Register client
+    if (g_clientgate() != nullptr)
+    {
+      g_clientgate()->Register(m_service_name, m_service_client_impl);
+    }
   }
 
   /**
-   * @brief Destructor. 
+   * @brief Destructor.
   **/
   CServiceClientID::~CServiceClientID()
   {
-    Destroy();
+    // Unregister client
+    if (g_clientgate() != nullptr)
+    {
+      g_clientgate()->Unregister(m_service_name, m_service_client_impl);
+    }
+
+    // Reset client implementation
+    m_service_client_impl.reset();
   }
 
   /**
-   * @brief CServiceClients are move-enabled
+   * @brief Move constructor
   **/
   CServiceClientID::CServiceClientID(CServiceClientID&& rhs) noexcept
     : m_service_name(std::move(rhs.m_service_name))
@@ -80,72 +93,25 @@ namespace eCAL
   }
 
   /**
-   * @brief CServiceClients are move-enabled
+   * @brief Move assignment operator
   **/
   CServiceClientID& CServiceClientID::operator=(CServiceClientID&& rhs) noexcept
   {
     if (this != &rhs)
     {
-      m_service_name            = std::move(rhs.m_service_name);
-      m_service_client_impl     = std::move(rhs.m_service_client_impl);
+      // Unregister current client
+      if (g_clientgate() != nullptr && m_service_client_impl)
+      {
+        g_clientgate()->Unregister(m_service_name, m_service_client_impl);
+      }
+
+      // Move data
+      m_service_name = std::move(rhs.m_service_name);
+      m_service_client_impl = std::move(rhs.m_service_client_impl);
+
       rhs.m_service_client_impl = nullptr;
     }
-
     return *this;
-  }
-
-  /**
-   * @brief Creates this object. 
-   *
-   * @param service_name_  Service name. 
-   *
-   * @return  True if successful. 
-  **/
-  bool CServiceClientID::Create(const std::string& service_name_)
-  {
-    return Create(service_name_, ServiceMethodInformationMapT());
-  }
-
-  /**
-   * @brief Creates this object.
-   *
-   * @param service_name_  Service name.
-   * @param method_information_map_  Map of method names and corresponding datatype information.
-   *
-   * @return  True if successful.
-  **/
-  bool CServiceClientID::Create(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
-  {
-    if (m_service_client_impl) return(false);
-
-    // create client
-    m_service_name = service_name_;
-    m_service_client_impl = CServiceClientIDImpl::CreateInstance(service_name_, method_information_map_);
-
-    // register client
-    if (g_clientgate() != nullptr) g_clientgate()->Register(m_service_name, m_service_client_impl);
-
-    // we made it :-)
-    return true;
-  }
-
-  /**
-   * @brief Destroys this object. 
-   *
-   * @return  True if successful. 
-  **/
-  bool CServiceClientID::Destroy()
-  {
-    if(!m_service_client_impl) return(false);
-
-    // unregister client
-    if (g_clientgate() != nullptr) g_clientgate()->Unregister(m_service_name, m_service_client_impl);
-
-    // stop & destroy client
-    m_service_client_impl.reset();
-    m_service_name = "";
-
-    return true;
   }
 
   /**
@@ -153,7 +119,7 @@ namespace eCAL
    *
    * @return  Vector of client instances
   **/
-  std::vector<CServiceClientInstance> CServiceClientID::GetServiceClientInstances()
+  std::vector<CServiceClientInstance> CServiceClientID::GetServiceClientInstances() const
   {
     std::vector<CServiceClientInstance> instances;
     if (!m_service_client_impl) return instances;
@@ -168,22 +134,24 @@ namespace eCAL
   }
 
   /**
-   * @brief Blocking call of a service method for all existing service instances, using callback
+   * @brief Blocking call (with timeout) of a service method for all existing service instances, using callback
    *
    * @param method_name_        Method name.
    * @param request_            Request string.
    * @param timeout_            Maximum time before operation returns (in milliseconds, -1 means infinite).
    * @param response_callback_  Callback function for the service method response.
    *
-   * @return  True if successful.
+   * @return  True if all calls were successful.
   **/
-  void CServiceClientID::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& repsonse_callback_)
+  bool CServiceClientID::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_)
   {
+    bool return_state = true;
     auto instances = GetServiceClientInstances();
     for (auto& instance : instances)
     {
-      instance.CallWithCallback(method_name_, request_, timeout_, repsonse_callback_);
+      return_state &= instance.CallWithCallback(method_name_, request_, timeout_, response_callback_);
     }
+    return return_state;
   }
 
   /**
@@ -197,11 +165,11 @@ namespace eCAL
   }
 
   /**
-   * @brief Check connection state.
+   * @brief Check connection to at least one service.
    *
-   * @return  True if at least one service client instances is connected.
+   * @return  True if at least one service client instance is connected.
   **/
-  bool CServiceClientID::IsConnected()
+  bool CServiceClientID::IsConnected() const
   {
     const auto instances = GetServiceClientInstances();
     for (const auto& instance : instances)

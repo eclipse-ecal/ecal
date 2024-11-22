@@ -24,13 +24,10 @@
 
 #pragma once
 
-#include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_os.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
 #include <ecal/ecal_client_instance.h>
 
-#include <iostream>
 #include <string>
 #include <vector>
 #include <memory>
@@ -46,12 +43,7 @@ namespace eCAL
   {
   public:
     /**
-     * @brief Constructor. 
-    **/
-    ECAL_API CServiceClientID();
-
-    /**
-     * @brief Constructor. 
+     * @brief Constructor.
      *
      * @param service_name_  Unique service name.
     **/
@@ -63,77 +55,39 @@ namespace eCAL
      * @param service_name_            Unique service name.
      * @param method_information_map_  Map of method names and corresponding datatype information.
     **/
-    ECAL_API explicit CServiceClientID(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
+    ECAL_API CServiceClientID(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
 
     /**
-     * @brief Destructor. 
+     * @brief Destructor.
     **/
     ECAL_API virtual ~CServiceClientID();
 
-    /**
-     * @brief CServiceClients are non-copyable
-    **/
+    // Deleted copy constructor and copy assignment operator
     CServiceClientID(const CServiceClientID&) = delete;
-
-    /**
-     * @brief CServiceClients are non-copyable
-    **/
     CServiceClientID& operator=(const CServiceClientID&) = delete;
 
-    /**
-     * @brief CServiceClients are move-enabled
-    **/
+    // Move constructor and move assignment operator
     ECAL_API CServiceClientID(CServiceClientID&& rhs) noexcept;
-
-    /**
-     * @brief CServiceClients are move-enabled
-    **/
     ECAL_API CServiceClientID& operator=(CServiceClientID&& rhs) noexcept;
-
-    /**
-     * @brief Creates this object. 
-     *
-     * @param service_name_  Unique service name.
-     *
-     * @return  True if successful. 
-    **/
-    ECAL_API bool Create(const std::string& service_name_);
-
-    /**
-     * @brief Creates this object.
-     *
-     * @param service_name_            Unique service name.
-     * @param method_information_map_  Map of method names and corresponding datatype information.
-     *
-     * @return  True if successful.
-    **/
-    ECAL_API bool Create(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
-
-    /**
-     * @brief Destroys this object. 
-     *
-     * @return  True if successful. 
-    **/
-    ECAL_API bool Destroy();
 
     /**
      * @brief Get the client instances for all matching services
      *
      * @return  Vector of client instances
     **/
-    ECAL_API std::vector<CServiceClientInstance> GetServiceClientInstances();
+    ECAL_API std::vector<CServiceClientInstance> GetServiceClientInstances() const;
 
     /**
-     * @brief Blocking call of a service method for all existing service instances, using callback
+     * @brief Blocking call (with timeout) of a service method for all existing service instances, using callback
      *
      * @param method_name_        Method name.
      * @param request_            Request string.
      * @param timeout_            Maximum time before operation returns (in milliseconds, -1 means infinite).
      * @param response_callback_  Callback function for the service method response.
      *
-     * @return  True if successful.
+     * @return  True if all calls were successful.
     **/
-    ECAL_API void CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& repsonse_callback_);
+    ECAL_API bool CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_);
 
     /**
      * @brief Retrieve service name.
@@ -143,11 +97,11 @@ namespace eCAL
     ECAL_API std::string GetServiceName() const;
 
     /**
-     * @brief Check connection state.
+     * @brief Check connection to at least one service.
      *
-     * @return  True if at least one service client instances is connected.
+     * @return  True if at least one service client instance is connected.
     **/
-    ECAL_API bool IsConnected();
+    ECAL_API bool IsConnected() const;
 
   private:
     std::string                                 m_service_name;
