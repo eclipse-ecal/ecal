@@ -39,10 +39,14 @@ namespace eCAL
 {
   class CServiceClientIDImpl;
 
-  class CServiceClientInstance
+  class CServiceClientInstance final
   {
   public:
+    // Constructor
     ECAL_API CServiceClientInstance(const Registration::SEntityId& entity_id_, const std::shared_ptr<CServiceClientIDImpl>& service_client_id_impl_);
+
+    // Defaulted destructor
+    ~CServiceClientInstance() = default;
 
     // Deleted copy constructor and copy assignment operator
     CServiceClientInstance(const CServiceClientInstance&) = delete;

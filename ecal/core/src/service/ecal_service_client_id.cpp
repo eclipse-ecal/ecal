@@ -143,7 +143,7 @@ namespace eCAL
    *
    * @return  True if all calls were successful.
   **/
-  bool CServiceClientID::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_)
+  bool CServiceClientID::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_) const
   {
     bool return_state = true;
     auto instances = GetServiceClientInstances();
