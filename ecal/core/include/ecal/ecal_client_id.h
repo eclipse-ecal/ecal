@@ -114,7 +114,7 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not.
     **/
-    ECAL_API bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
+    ECAL_API bool AddEventCallback(eCAL_Client_Event type_, ClientEventIDCallbackT callback_);
 
     /**
      * @brief Remove client event callback function.
@@ -154,7 +154,7 @@ namespace eCAL
     /**
      * @brief Check connection state.
      *
-     * @return  True if connected, false if not.
+     * @return  True if at least one service client instance is connected.
     **/
     ECAL_API bool IsConnected() const;
 

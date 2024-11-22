@@ -131,7 +131,7 @@ namespace eCAL
    *
    * @return  True if succeeded, false if not.
   **/
-  bool CServiceClientID::AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_)
+  bool CServiceClientID::AddEventCallback(eCAL_Client_Event type_, ClientEventIDCallbackT callback_)
   {
     if (!m_service_client_impl) return false;
     return m_service_client_impl->AddEventCallback(type_, callback_);
@@ -158,6 +158,8 @@ namespace eCAL
   std::vector<CServiceClientInstance> CServiceClientID::GetServiceClientInstances()
   {
     std::vector<CServiceClientInstance> instances;
+    if (!m_service_client_impl) return instances;
+
     auto entity_ids = m_service_client_impl->GetServiceIDs();
     for (const auto& entity_id : entity_ids)
     {
@@ -203,6 +205,14 @@ namespace eCAL
   bool CServiceClientID::IsConnected() const
   {
     if (!m_service_client_impl) return false;
-    return m_service_client_impl->IsConnected();
+
+    std::vector<CServiceClientInstance> instances;
+    auto entity_ids = m_service_client_impl->GetServiceIDs();
+    for (const auto& entity_id : entity_ids)
+    {
+      if (m_service_client_impl->IsConnected(entity_id)) return true;
+    }
+
+    return false;
   }
 }

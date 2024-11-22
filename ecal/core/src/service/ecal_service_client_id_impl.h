@@ -55,7 +55,7 @@ namespace eCAL
     ~CServiceClientIDImpl();
 
     // Add and remove callback function for client events
-    bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
+    bool AddEventCallback(eCAL_Client_Event type_, ClientEventIDCallbackT callback_);
     bool RemoveEventCallback(eCAL_Client_Event type_);
 
     // Retrieve service IDs of all matching services
@@ -73,9 +73,6 @@ namespace eCAL
 
     // Check connection state of a specific service
     bool IsConnected(const Registration::SEntityId& entity_id_);
-
-    // Check if any service is connected
-    bool IsConnected();
 
     // Called by the registration receiver to process a service registration
     void RegisterService(const Registration::SEntityId& entity_id_, const SServiceAttr& service_);
@@ -126,8 +123,7 @@ namespace eCAL
     void ResetAllCallbacks();
 
     // Blocking call to a specific service with timeout
-    std::pair<bool, SServiceResponse> CallBlocking(
-      const Registration::SEntityId& entity_id_, const std::string& method_name_,
+    std::pair<bool, SServiceResponse> CallBlocking(SClient& client_, const std::string& method_name_,
       const std::string& request_, std::chrono::nanoseconds timeout_);
 
     // Prepare and retrieve registration and unregistration samples
@@ -149,18 +145,18 @@ namespace eCAL
     void IncrementMethodCallCount(const std::string& method_name_);
 
     // Helper methods for client session handling and request serialization
-    bool TryGetClient(const Registration::SEntityId& entity_id_, SClient& client);
+    bool TryGetClient(const Registration::SEntityId& entity_id_, SClient& client_);
     std::shared_ptr<std::string> SerializeRequest(const std::string& method_name_, const std::string& request_);
-    std::pair<bool, SServiceResponse> WaitForResponse(SClient& client, const std::string& method_name_,
+    std::pair<bool, SServiceResponse> WaitForResponse(SClient& client_, const std::string& method_name_,
       std::chrono::nanoseconds timeout_,
-      std::shared_ptr<std::string> request_shared_ptr);
+      std::shared_ptr<std::string> request_shared_ptr_);
 
-    std::shared_ptr<SResponseData> PrepareInitialResponse(SClient& client, const std::string& method_name_);
-    eCAL::service::ClientResponseCallbackT CreateResponseCallback(std::shared_ptr<SResponseData> response_data);
-    SServiceResponse PrepareErrorResponse(const std::string& error_message);
+    std::shared_ptr<SResponseData> PrepareInitialResponse(SClient& client_, const std::string& method_name_);
+    eCAL::service::ClientResponseCallbackT CreateResponseCallback(std::shared_ptr<SResponseData> response_data_);
+    SServiceResponse PrepareErrorResponse(const std::string& error_message_);
 
     // Notify specific event callback
-    void NotifyEventCallback(eCAL_Client_Event event_type, const SServiceAttr& service_attr);
+    void NotifyEventCallback(eCAL_Client_Event event_type_, const SServiceAttr& service_attr_);
 
     // Client version (incremented for protocol or functionality changes)
     static constexpr int m_client_version = 1;
@@ -171,11 +167,11 @@ namespace eCAL
 
     // Client session map and synchronization
     using ClientSessionsMapT = std::map<Registration::SEntityId, SClient>;
-    std::mutex m_client_session_map_sync;
+    std::mutex         m_client_session_map_sync;
     ClientSessionsMapT m_client_session_map;
 
     // Method information map (tracks method attributes like data type and description)
-    std::mutex m_method_information_map_sync;
+    std::mutex                   m_method_information_map_sync;
     ServiceMethodInformationMapT m_method_information_map;
 
     // Method call count map (tracks number of calls for each method)
@@ -184,7 +180,7 @@ namespace eCAL
 
     // Event callback map and synchronization
     std::mutex m_event_callback_map_sync;
-    using EventCallbackMapT = std::map<eCAL_Client_Event, ClientEventCallbackT>;
+    using EventCallbackMapT = std::map<eCAL_Client_Event, ClientEventIDCallbackT>;
     EventCallbackMapT m_event_callback_map;
   };
 }
