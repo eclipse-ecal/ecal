@@ -204,7 +204,7 @@ namespace eCAL
   bool CServiceClientID::IsConnected()
   {
     const auto instances = GetServiceClientInstances();
-    for (auto& instance : instances)
+    for (const auto& instance : instances)
     {
       if (instance.IsConnected()) return true;
     }

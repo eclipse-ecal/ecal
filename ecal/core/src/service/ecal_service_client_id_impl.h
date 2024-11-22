@@ -147,7 +147,7 @@ namespace eCAL
     // Helper methods for client session handling and request serialization
     bool TryGetClient(const Registration::SEntityId& entity_id_, SClient& client_);
     static std::shared_ptr<std::string> SerializeRequest(const std::string& method_name_, const std::string& request_);
-    std::pair<bool, SServiceResponse> WaitForResponse(SClient& client_, const std::string& method_name_,
+    static std::pair<bool, SServiceResponse> WaitForResponse(SClient& client_, const std::string& method_name_,
       std::chrono::nanoseconds timeout_,
       const std::shared_ptr<std::string>& request_shared_ptr_);
 
