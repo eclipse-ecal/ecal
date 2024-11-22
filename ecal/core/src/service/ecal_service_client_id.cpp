@@ -70,6 +70,31 @@ namespace eCAL
   }
 
   /**
+   * @brief CServiceClients are move-enabled
+  **/
+  CServiceClientID::CServiceClientID(CServiceClientID&& rhs) noexcept
+    : m_service_name(std::move(rhs.m_service_name))
+    , m_service_client_impl(std::move(rhs.m_service_client_impl))
+  {
+    rhs.m_service_client_impl = nullptr;
+  }
+
+  /**
+   * @brief CServiceClients are move-enabled
+  **/
+  CServiceClientID& CServiceClientID::operator=(CServiceClientID&& rhs) noexcept
+  {
+    if (this != &rhs)
+    {
+      m_service_name            = std::move(rhs.m_service_name);
+      m_service_client_impl     = std::move(rhs.m_service_client_impl);
+      rhs.m_service_client_impl = nullptr;
+    }
+
+    return *this;
+  }
+
+  /**
    * @brief Creates this object. 
    *
    * @param service_name_  Service name. 
@@ -134,6 +159,7 @@ namespace eCAL
     if (!m_service_client_impl) return instances;
 
     auto entity_ids = m_service_client_impl->GetServiceIDs();
+    instances.reserve(entity_ids.size());
     for (const auto& entity_id : entity_ids)
     {
       instances.emplace_back(entity_id, m_service_client_impl);
@@ -175,17 +201,13 @@ namespace eCAL
    *
    * @return  True if at least one service client instances is connected.
   **/
-  bool CServiceClientID::IsConnected() const
+  bool CServiceClientID::IsConnected()
   {
-    if (!m_service_client_impl) return false;
-
-    std::vector<CServiceClientInstance> instances;
-    auto entity_ids = m_service_client_impl->GetServiceIDs();
-    for (const auto& entity_id : entity_ids)
+    const auto instances = GetServiceClientInstances();
+    for (auto& instance : instances)
     {
-      if (m_service_client_impl->IsConnected(entity_id)) return true;
+      if (instance.IsConnected()) return true;
     }
-
     return false;
   }
 }

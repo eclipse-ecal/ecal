@@ -81,6 +81,16 @@ namespace eCAL
     CServiceClientID& operator=(const CServiceClientID&) = delete;
 
     /**
+     * @brief CServiceClients are move-enabled
+    **/
+    ECAL_API CServiceClientID(CServiceClientID&& rhs) noexcept;
+
+    /**
+     * @brief CServiceClients are move-enabled
+    **/
+    ECAL_API CServiceClientID& operator=(CServiceClientID&& rhs) noexcept;
+
+    /**
      * @brief Creates this object. 
      *
      * @param service_name_  Unique service name.
@@ -137,7 +147,7 @@ namespace eCAL
      *
      * @return  True if at least one service client instances is connected.
     **/
-    ECAL_API bool IsConnected() const;
+    ECAL_API bool IsConnected();
 
   private:
     std::string                                 m_service_name;

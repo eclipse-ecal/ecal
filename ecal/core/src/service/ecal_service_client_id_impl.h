@@ -146,14 +146,14 @@ namespace eCAL
 
     // Helper methods for client session handling and request serialization
     bool TryGetClient(const Registration::SEntityId& entity_id_, SClient& client_);
-    std::shared_ptr<std::string> SerializeRequest(const std::string& method_name_, const std::string& request_);
+    static std::shared_ptr<std::string> SerializeRequest(const std::string& method_name_, const std::string& request_);
     std::pair<bool, SServiceResponse> WaitForResponse(SClient& client_, const std::string& method_name_,
       std::chrono::nanoseconds timeout_,
-      std::shared_ptr<std::string> request_shared_ptr_);
+      const std::shared_ptr<std::string>& request_shared_ptr_);
 
-    std::shared_ptr<SResponseData> PrepareInitialResponse(SClient& client_, const std::string& method_name_);
-    eCAL::service::ClientResponseCallbackT CreateResponseCallback(std::shared_ptr<SResponseData> response_data_);
-    SServiceResponse PrepareErrorResponse(const std::string& error_message_);
+    static std::shared_ptr<SResponseData> PrepareInitialResponse(SClient& client_, const std::string& method_name_);
+    static eCAL::service::ClientResponseCallbackT CreateResponseCallback(const std::shared_ptr<SResponseData>& response_data_);
+   static  SServiceResponse PrepareErrorResponse(const std::string& error_message_);
 
     // Notify specific event callback
     void NotifyEventCallback(const Registration::SEntityId& entity_id_, eCAL_Client_Event event_type_, const SServiceAttr& service_attr_);

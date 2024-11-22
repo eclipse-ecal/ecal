@@ -126,11 +126,11 @@ namespace eCAL
   void CServiceClientIDImpl::ResetAllCallbacks()
   {
     {
-      std::lock_guard<std::mutex> lock(m_client_session_map_sync);
+      const std::lock_guard<std::mutex> lock(m_client_session_map_sync);
       m_client_session_map.clear();
     }
     {
-      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+      const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
       m_event_callback_map.clear();
     }
     m_service_name.clear();
@@ -140,7 +140,7 @@ namespace eCAL
   // Adds a callback function for a specific client event type
   bool CServiceClientIDImpl::AddEventCallback(const Registration::SEntityId& entity_id_, ClientEventIDCallbackT callback_)
   {
-    std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+    const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
     m_event_callback_map[entity_id_] = std::move(callback_);
     return true;
   }
@@ -148,7 +148,7 @@ namespace eCAL
   // Removes a callback function for a specific client event type
   bool CServiceClientIDImpl::RemoveEventCallback(const Registration::SEntityId& entity_id_)
   {
-    std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+    const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
     m_event_callback_map[entity_id_] = nullptr;
     return true;
   }
@@ -225,7 +225,7 @@ namespace eCAL
   // Attempts to retrieve a client session for a given entity ID
   bool CServiceClientIDImpl::TryGetClient(const Registration::SEntityId& entity_id_, SClient& client_)
   {
-    std::lock_guard<std::mutex> lock(m_client_session_map_sync);
+    const std::lock_guard<std::mutex> lock(m_client_session_map_sync);
     auto iter = m_client_session_map.find(entity_id_);
     if (iter == m_client_session_map.end())
       return false;
@@ -249,7 +249,7 @@ namespace eCAL
   // Waits for the service response with a specified timeout, updating response on success or timeout
   std::pair<bool, SServiceResponse> CServiceClientIDImpl::WaitForResponse(
       SClient& client_, const std::string& method_name_,
-      std::chrono::nanoseconds timeout_, std::shared_ptr<std::string> request_shared_ptr_)
+      std::chrono::nanoseconds timeout_, const std::shared_ptr<std::string>& request_shared_ptr_)
   {
     auto response_data = PrepareInitialResponse(client_, method_name_);
     auto response_callback = CreateResponseCallback(response_data);
@@ -287,11 +287,11 @@ namespace eCAL
     return data;
   }
 
-  eCAL::service::ClientResponseCallbackT CServiceClientIDImpl::CreateResponseCallback(std::shared_ptr<SResponseData> response_data_)
+  eCAL::service::ClientResponseCallbackT CServiceClientIDImpl::CreateResponseCallback(const std::shared_ptr<SResponseData>& response_data_)
   {
     return [response_data_](const eCAL::service::Error& error, const std::shared_ptr<std::string>& response_)
     {
-      std::lock_guard<std::mutex> lock(*response_data_->mutex);
+      const std::lock_guard<std::mutex> lock(*response_data_->mutex);
       if (!*response_data_->block_modifying_response)
       {
         if (error)
@@ -323,21 +323,21 @@ namespace eCAL
 
   void CServiceClientIDImpl::IncrementMethodCallCount(const std::string& method_name_)
   {
-    std::lock_guard<std::mutex> lock(m_method_information_map_sync);
+    const std::lock_guard<std::mutex> lock(m_method_information_map_sync);
     m_method_call_count_map[method_name_]++;
   }
 
   // Check if a specific service is connected
   bool CServiceClientIDImpl::IsConnected(const Registration::SEntityId& entity_id_)
   {
-    std::lock_guard<std::mutex> lock(m_client_session_map_sync);
+    const std::lock_guard<std::mutex> lock(m_client_session_map_sync);
     auto iter = m_client_session_map.find(entity_id_);
     return (iter != m_client_session_map.end() && iter->second.connected);
   }
 
   void CServiceClientIDImpl::RegisterService(const Registration::SEntityId& entity_id_, const SServiceAttr& service_)
   {
-    std::lock_guard<std::mutex> lock(m_client_session_map_sync);
+    const std::lock_guard<std::mutex> lock(m_client_session_map_sync);
 
     if (m_client_session_map.find(entity_id_) == m_client_session_map.end())
     {
@@ -392,7 +392,7 @@ namespace eCAL
     service_client.uname   = Process::GetUnitName();
     service_client.sname   = m_service_name;
 
-    std::lock_guard<std::mutex> lock(m_method_information_map_sync);
+    const std::lock_guard<std::mutex> lock(m_method_information_map_sync);
     for (const auto& method_information_pair : m_method_information_map)
     {
       const auto& method_name = method_information_pair.first;
@@ -456,7 +456,7 @@ namespace eCAL
   // Updates the connection states for the client sessions
   void CServiceClientIDImpl::UpdateConnectionStates()
   {
-    std::lock_guard<std::mutex> lock(m_client_session_map_sync);
+    const std::lock_guard<std::mutex> lock(m_client_session_map_sync);
 
     for (auto it = m_client_session_map.begin(); it != m_client_session_map.end(); )
     {
@@ -490,7 +490,7 @@ namespace eCAL
   // Helper function to notify event callback
   void CServiceClientIDImpl::NotifyEventCallback(const Registration::SEntityId& entity_id_, eCAL_Client_Event event_type_, const SServiceAttr& service_attr_)
   {
-    std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+    const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
     auto callback_it = m_event_callback_map.find(entity_id_);
     if (callback_it != m_event_callback_map.end())
     {
@@ -514,7 +514,7 @@ namespace eCAL
   //void CServiceClientIDImpl::ErrorCallback(const Registration::SEntityId& entity_id_,
   //                                         const std::string& method_name_, const std::string& error_message_)
   //{
-  //  std::lock_guard<std::mutex> lock(m_response_callback_sync);
+  //  const std::lock_guard<std::mutex> lock(m_response_callback_sync);
   //  if (m_response_callback)
   //  {
   //    SServiceResponse service_response;

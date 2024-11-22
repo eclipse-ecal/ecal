@@ -33,7 +33,7 @@ namespace eCAL
 
   bool CServiceClientInstance::AddEventCallback(ClientEventIDCallbackT callback_)
   {
-    return m_service_client_impl->AddEventCallback(m_entity_id, callback_);
+    return m_service_client_impl->AddEventCallback(m_entity_id, std::move(callback_));
   }
 
   bool CServiceClientInstance::RemEventCallback()
