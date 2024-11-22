@@ -31,6 +31,16 @@ namespace eCAL
   {
   }
 
+  bool CServiceClientInstance::AddEventCallback(ClientEventIDCallbackT callback_)
+  {
+    return m_service_client_impl->AddEventCallback(m_entity_id, callback_);
+  }
+
+  bool CServiceClientInstance::RemEventCallback()
+  {
+    return m_service_client_impl->RemoveEventCallback(m_entity_id);
+  }
+
   std::pair<bool, SServiceResponse> CServiceClientInstance::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_)
   {
     return m_service_client_impl->CallWithResponse(m_entity_id, method_name_, request_, timeout_);

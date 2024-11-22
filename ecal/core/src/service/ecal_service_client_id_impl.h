@@ -55,8 +55,8 @@ namespace eCAL
     ~CServiceClientIDImpl();
 
     // Add and remove callback function for client events
-    bool AddEventCallback(eCAL_Client_Event type_, ClientEventIDCallbackT callback_);
-    bool RemoveEventCallback(eCAL_Client_Event type_);
+    bool AddEventCallback(const Registration::SEntityId& entity_id_, ClientEventIDCallbackT callback_);
+    bool RemoveEventCallback(const Registration::SEntityId& entity_id_);
 
     // Retrieve service IDs of all matching services
     std::vector<Registration::SEntityId> GetServiceIDs();
@@ -156,7 +156,7 @@ namespace eCAL
     SServiceResponse PrepareErrorResponse(const std::string& error_message_);
 
     // Notify specific event callback
-    void NotifyEventCallback(eCAL_Client_Event event_type_, const SServiceAttr& service_attr_);
+    void NotifyEventCallback(const Registration::SEntityId& entity_id_, eCAL_Client_Event event_type_, const SServiceAttr& service_attr_);
 
     // Client version (incremented for protocol or functionality changes)
     static constexpr int m_client_version = 1;
@@ -180,7 +180,7 @@ namespace eCAL
 
     // Event callback map and synchronization
     std::mutex m_event_callback_map_sync;
-    using EventCallbackMapT = std::map<eCAL_Client_Event, ClientEventIDCallbackT>;
+    using EventCallbackMapT = std::map<Registration::SEntityId, ClientEventIDCallbackT>;
     EventCallbackMapT m_event_callback_map;
   };
 }

@@ -124,33 +124,6 @@ namespace eCAL
   }
 
   /**
-   * @brief Add client event callback function.
-   *
-   * @param type_      The event type to react on.
-   * @param callback_  The callback function to add.
-   *
-   * @return  True if succeeded, false if not.
-  **/
-  bool CServiceClientID::AddEventCallback(eCAL_Client_Event type_, ClientEventIDCallbackT callback_)
-  {
-    if (!m_service_client_impl) return false;
-    return m_service_client_impl->AddEventCallback(type_, callback_);
-  }
-
-  /**
-   * @brief Remove client event callback function.
-   *
-   * @param type_  The event type to remove.
-   *
-   * @return  True if succeeded, false if not.
-  **/
-  bool CServiceClientID::RemEventCallback(eCAL_Client_Event type_)
-  {
-    if (!m_service_client_impl) return false;
-    return m_service_client_impl->RemoveEventCallback(type_);
-  }
-
-  /**
    * @brief Get the client instances for all matching services
    *
    * @return  Vector of client instances
@@ -200,7 +173,7 @@ namespace eCAL
   /**
    * @brief Check connection state.
    *
-   * @return  True if connected, false if not.
+   * @return  True if at least one service client instances is connected.
   **/
   bool CServiceClientID::IsConnected() const
   {

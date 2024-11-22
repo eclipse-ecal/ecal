@@ -138,18 +138,18 @@ namespace eCAL
   }
 
   // Adds a callback function for a specific client event type
-  bool CServiceClientIDImpl::AddEventCallback(eCAL_Client_Event type_, ClientEventIDCallbackT callback_)
+  bool CServiceClientIDImpl::AddEventCallback(const Registration::SEntityId& entity_id_, ClientEventIDCallbackT callback_)
   {
     std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
-    m_event_callback_map[type_] = std::move(callback_);
+    m_event_callback_map[entity_id_] = std::move(callback_);
     return true;
   }
 
   // Removes a callback function for a specific client event type
-  bool CServiceClientIDImpl::RemoveEventCallback(eCAL_Client_Event type_)
+  bool CServiceClientIDImpl::RemoveEventCallback(const Registration::SEntityId& entity_id_)
   {
     std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
-    m_event_callback_map[type_] = nullptr;
+    m_event_callback_map[entity_id_] = nullptr;
     return true;
   }
 
@@ -201,7 +201,7 @@ namespace eCAL
     // Handle timeout event
     if (response.second.call_state == eCallState::call_state_timeouted)
     {
-      NotifyEventCallback(eCAL_Client_Event::client_event_timeout, client.service_attr);
+      NotifyEventCallback(entity_id_, eCAL_Client_Event::client_event_timeout, client.service_attr);
     }
 
     return false;
@@ -463,16 +463,21 @@ namespace eCAL
       auto& client_data = it->second;
       auto state = client_data.client_session->get_state();
 
+      Registration::SEntityId entity_id;
+      entity_id.entity_id  = client_data.service_attr.sid;
+      entity_id.process_id = client_data.service_attr.pid;
+      entity_id.host_name  = client_data.service_attr.hname;
+
       if (!client_data.connected && state == eCAL::service::State::CONNECTED)
       {
         client_data.connected = true;
-        NotifyEventCallback(client_event_connected, client_data.service_attr);
+        NotifyEventCallback(entity_id, client_event_connected, client_data.service_attr);
         ++it;
       }
       else if (client_data.connected && state == eCAL::service::State::FAILED)
       {
         client_data.connected = false;
-        NotifyEventCallback(client_event_disconnected, client_data.service_attr);
+        NotifyEventCallback(entity_id, client_event_disconnected, client_data.service_attr);
         it = m_client_session_map.erase(it);
       }
       else
@@ -483,10 +488,10 @@ namespace eCAL
   }
 
   // Helper function to notify event callback
-  void CServiceClientIDImpl::NotifyEventCallback(eCAL_Client_Event event_type_, const SServiceAttr& service_attr_)
+  void CServiceClientIDImpl::NotifyEventCallback(const Registration::SEntityId& entity_id_, eCAL_Client_Event event_type_, const SServiceAttr& service_attr_)
   {
     std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
-    auto callback_it = m_event_callback_map.find(event_type_);
+    auto callback_it = m_event_callback_map.find(entity_id_);
     if (callback_it != m_event_callback_map.end())
     {
       SClientEventCallbackData callback_data;

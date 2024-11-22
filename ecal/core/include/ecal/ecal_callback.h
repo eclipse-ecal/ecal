@@ -124,7 +124,7 @@ namespace eCAL
   };
 
   /**
-   * @brief Receive callback function type with topic name and data struct.
+   * @brief Receive callback function type with topic name and data struct. (deprecated)
    *
    * @param topic_name_  The topic name of the received message.
    * @param data_        Data struct containing payload, timestamp and publication clock.
@@ -155,7 +155,7 @@ namespace eCAL
   using RegistrationCallbackT = std::function<void (const char* sample_, int sample_size_)>;
 
   /**
-   * @brief Publisher event callback function type.
+   * @brief Publisher event callback function type. (deprecated)
    *
    * @param topic_name_  The topic name of the publisher that triggered the event.
    * @param data_        Event callback data structure with the event specific information.
@@ -171,7 +171,7 @@ namespace eCAL
   using PubEventIDCallbackT = std::function<void(const Registration::STopicId& topic_id_, const struct SPubEventCallbackData* data_)>;
 
   /**
-   * @brief Subscriber event callback function type.
+   * @brief Subscriber event callback function type. (deprecated)
    *
    * @param topic_name_  The topic name of the subscriber that triggered the event.
    * @param data_        Event callback data structure with the event specific information.
@@ -187,7 +187,7 @@ namespace eCAL
   using SubEventIDCallbackT = std::function<void(const Registration::STopicId& topic_id_, const struct SSubEventCallbackData* data_)>;
 
   /**
-   * @brief Client event callback function type.
+   * @brief Client event callback function type. (deprecated)
    *
    * @param service_name_  The service name of the connection that triggered the event.
    * @param data_          Event callback data structure with the event specific information.
@@ -203,7 +203,7 @@ namespace eCAL
   using ClientEventIDCallbackT = std::function<void(const Registration::SServiceId& service_id_, const struct SClientEventCallbackData* data_)>;
 
   /**
-   * @brief Server event callback function type.
+   * @brief Server event callback function type. (deprecated)
    *
    * @param service_name_  The service name of the connection that triggered the event.
    * @param data_          Event callback data structure with the event specific information.

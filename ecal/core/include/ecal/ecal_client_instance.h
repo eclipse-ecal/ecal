@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <ecal/ecal_callback.h>
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_types.h>
@@ -42,6 +43,22 @@ namespace eCAL
   {
   public:
     ECAL_API CServiceClientInstance(const Registration::SEntityId& entity_id_, std::shared_ptr<eCAL::CServiceClientIDImpl>& service_client_id_impl_);
+
+    /**
+     * @brief Add client event callback function.
+     *
+     * @param callback_  The callback function to add.
+     *
+     * @return  True if succeeded, false if not.
+    **/
+    bool AddEventCallback(ClientEventIDCallbackT callback_);
+
+    /**
+     * @brief Remove client event callback function.
+     *
+     * @return  True if succeeded, false if not.
+    **/
+    bool RemEventCallback();
 
     /**
      * @brief Blocking call of a service method, response will be returned as pair<bool, SServiceReponse>
