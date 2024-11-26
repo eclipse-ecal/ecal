@@ -30,15 +30,8 @@ namespace eCAL
     attr.refresh           = reg_config_.registration_refresh;
     attr.network_enabled   = reg_config_.network_enabled;
     attr.loopback          = reg_config_.loopback;
-    
-    if (reg_config_.host_group_name.empty())
-    {
-      attr.host_group_name = eCAL::Process::GetHostName();
-    }
-    else
-    {
-      attr.host_group_name = reg_config_.host_group_name;
-    }
+    attr.host_name         = eCAL::Process::GetHostName();
+    attr.host_group_name   = reg_config_.host_group_name;
 
     attr.process_id        = process_id_;
 
