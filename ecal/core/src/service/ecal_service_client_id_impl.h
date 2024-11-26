@@ -45,18 +45,14 @@ namespace eCAL
   public:
     // Factory method to create an instance of the client implementation
     static std::shared_ptr<CServiceClientIDImpl> CreateInstance(
-      const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
+      const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_, const ClientEventIDCallbackT& event_callback_);
 
   private:
     // Private constructor to enforce creation through factory method
-    CServiceClientIDImpl(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
+    CServiceClientIDImpl(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_, const ClientEventIDCallbackT& event_callback_);
 
   public:
     ~CServiceClientIDImpl();
-
-    // Add and remove callback function for client events
-    bool AddEventCallback(const Registration::SEntityId& entity_id_, ClientEventIDCallbackT callback_);
-    bool RemoveEventCallback(const Registration::SEntityId& entity_id_);
 
     // Retrieve service IDs of all matching services
     std::vector<Registration::SEntityId> GetServiceIDs();
@@ -119,6 +115,9 @@ namespace eCAL
     // Generates a unique client ID
     void GenerateClientID();
 
+    // Add and remove callback function for client events
+    bool AddEventCallback(ClientEventIDCallbackT callback_);
+
     // Resets all callbacks and clears stored client information
     void ResetAllCallbacks();
 
@@ -179,8 +178,7 @@ namespace eCAL
     MethodCallCountMapT m_method_call_count_map;
 
     // Event callback map and synchronization
-    std::mutex m_event_callback_map_sync;
-    using EventCallbackMapT = std::map<Registration::SEntityId, ClientEventIDCallbackT>;
-    EventCallbackMapT m_event_callback_map;
+    std::mutex m_event_callback_sync;
+    ClientEventIDCallbackT m_event_callback;
   };
 }

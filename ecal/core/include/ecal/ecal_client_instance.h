@@ -57,22 +57,6 @@ namespace eCAL
     ECAL_API CServiceClientInstance& operator=(CServiceClientInstance&& rhs) noexcept = default;
 
     /**
-     * @brief Add client event callback function.
-     *
-     * @param callback_  The callback function to add.
-     *
-     * @return  True if succeeded, false if not.
-    **/
-    bool AddEventCallback(const ClientEventIDCallbackT& callback_);
-
-    /**
-     * @brief Remove client event callback function.
-     *
-     * @return  True if succeeded, false if not.
-    **/
-    bool RemoveEventCallback();
-
-    /**
      * @brief Blocking call of a service method, response will be returned as pair<bool, SServiceReponse>
      *
      * @param       method_name_  Method name.

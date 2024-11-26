@@ -83,18 +83,19 @@ namespace eCAL
 {
   // Factory method to create a new instance of CServiceClientIDImpl
   std::shared_ptr<CServiceClientIDImpl> CServiceClientIDImpl::CreateInstance(
-      const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
+      const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_, const ClientEventIDCallbackT& event_callback_)
   {
-    return std::shared_ptr<CServiceClientIDImpl>(new CServiceClientIDImpl(service_name_, method_information_map_));
+    return std::shared_ptr<CServiceClientIDImpl>(new CServiceClientIDImpl(service_name_, method_information_map_, event_callback_));
   }
 
   // Constructor: Initializes client ID, method call counts, and registers the client
   CServiceClientIDImpl::CServiceClientIDImpl(
-      const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
+      const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_, const ClientEventIDCallbackT& event_callback_)
       : m_service_name(service_name_), m_method_information_map(method_information_map_)
   {
     InitializeMethodCallCounts();
     GenerateClientID();
+    AddEventCallback(event_callback_);
     Register();
   }
 
@@ -122,6 +123,14 @@ namespace eCAL
     m_client_id = counter.str();
   }
 
+  // Adds a callback function for a client events
+  bool CServiceClientIDImpl::AddEventCallback(ClientEventIDCallbackT callback_)
+  {
+    const std::lock_guard<std::mutex> lock(m_event_callback_sync);
+    m_event_callback = std::move(callback_);
+    return true;
+  }
+
   // Resets all callbacks and clears stored client information
   void CServiceClientIDImpl::ResetAllCallbacks()
   {
@@ -130,27 +139,11 @@ namespace eCAL
       m_client_session_map.clear();
     }
     {
-      const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
-      m_event_callback_map.clear();
+      const std::lock_guard<std::mutex> lock(m_event_callback_sync);
+      m_event_callback = nullptr;
     }
     m_service_name.clear();
     m_client_id.clear();
-  }
-
-  // Adds a callback function for a specific client event type
-  bool CServiceClientIDImpl::AddEventCallback(const Registration::SEntityId& entity_id_, ClientEventIDCallbackT callback_)
-  {
-    const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
-    m_event_callback_map[entity_id_] = std::move(callback_);
-    return true;
-  }
-
-  // Removes a callback function for a specific client event type
-  bool CServiceClientIDImpl::RemoveEventCallback(const Registration::SEntityId& entity_id_)
-  {
-    const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
-    m_event_callback_map[entity_id_] = nullptr;
-    return true;
   }
 
   // Retrieve service IDs of all matching services
@@ -490,25 +483,21 @@ namespace eCAL
   // Helper function to notify event callback
   void CServiceClientIDImpl::NotifyEventCallback(const Registration::SEntityId& entity_id_, eCAL_Client_Event event_type_, const SServiceAttr& service_attr_)
   {
-    const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
-    auto callback_it = m_event_callback_map.find(entity_id_);
-    if (callback_it != m_event_callback_map.end())
-    {
-      SClientEventCallbackData callback_data;
-      callback_data.type = event_type_;
-      callback_data.time = std::chrono::duration_cast<std::chrono::microseconds>(
-          std::chrono::steady_clock::now().time_since_epoch()).count();
-      callback_data.attr = service_attr_;
+    const std::lock_guard<std::mutex> lock(m_event_callback_sync);
+    if (m_event_callback == nullptr) return;
 
-      Registration::SServiceId service_id;
-      service_id.service_id.entity_id  = service_attr_.sid;
-      service_id.service_id.process_id = service_attr_.pid;
-      service_id.service_id.host_name  = service_attr_.hname;
-      service_id.service_name          = m_service_name;
-      service_id.method_name           = "";
+    SClientEventCallbackData callback_data;
+    callback_data.type = event_type_;
+    callback_data.time = std::chrono::duration_cast<std::chrono::microseconds>(
+        std::chrono::steady_clock::now().time_since_epoch()).count();
+    callback_data.attr = service_attr_;
 
-      callback_it->second(service_id, &callback_data);
-    }
+    Registration::SServiceId service_id;
+    service_id.service_id = entity_id_;
+    service_id.service_name          = m_service_name;
+    service_id.method_name           = "";
+
+    m_event_callback(service_id, &callback_data);
   }
 
   //void CServiceClientIDImpl::ErrorCallback(const Registration::SEntityId& entity_id_,

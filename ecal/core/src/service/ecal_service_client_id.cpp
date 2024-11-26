@@ -33,32 +33,15 @@ namespace eCAL
   /**
    * @brief Constructor.
    *
-   * @param service_name_  Service name.
-  **/
-  CServiceClientID::CServiceClientID(const std::string& service_name_)
-    : m_service_name(service_name_)
-  {
-    // Create client implementation
-    m_service_client_impl = CServiceClientIDImpl::CreateInstance(m_service_name, ServiceMethodInformationMapT());
-
-    // Register client
-    if (g_clientgate() != nullptr)
-    {
-      g_clientgate()->Register(m_service_name, m_service_client_impl);
-    }
-  }
-
-  /**
-   * @brief Constructor.
-   *
    * @param service_name_            Service name.
    * @param method_information_map_  Map of method names and corresponding datatype information.
+   * @param event_callback_          The client event callback funtion.
   **/
-  CServiceClientID::CServiceClientID(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
+  CServiceClientID::CServiceClientID(const std::string& service_name_, const ServiceMethodInformationMapT method_information_map_, const ClientEventIDCallbackT event_callback_)
     : m_service_name(service_name_)
   {
     // Create client implementation
-    m_service_client_impl = CServiceClientIDImpl::CreateInstance(m_service_name, method_information_map_);
+    m_service_client_impl = CServiceClientIDImpl::CreateInstance(m_service_name, method_information_map_, event_callback_);
 
     // Register client
     if (g_clientgate() != nullptr)
