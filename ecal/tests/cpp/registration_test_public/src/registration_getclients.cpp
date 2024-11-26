@@ -25,14 +25,33 @@ enum {
   CMN_MONITORING_TIMEOUT_MS   = (5000 + 100),
   CMN_REGISTRATION_REFRESH_MS = (1000)
 };
-TEST(core_cpp_registration_public, ClientExpiration)
+
+// struct to hold the test parameters
+struct ClientsTestParams
 {
-  // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
+  eCAL::Configuration configuration;
+};
 
-  // enable loop back communication in the same process
-  eCAL::Util::EnableLoopback(true);
+// test class that accepts TestParams as a parameter
+class ClientsTestFixture : public ::testing::TestWithParam<ClientsTestParams>
+{
+protected:
+  void SetUp() override
+  {
+    // set configuration from the test parameters
+    auto params = GetParam();
+    eCAL::Initialize(params.configuration, "core_cpp_registration_public", eCAL::Init::All);
+    eCAL::Util::EnableLoopback(true);
+  }
 
+  void TearDown() override
+  {
+    // clean up
+    eCAL::Finalize();
+  }
+};
+TEST_P(ClientsTestFixture, ClientExpiration)
+{
   std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> client_info_map;
 
   // create simple client and let it expire
@@ -83,19 +102,10 @@ TEST(core_cpp_registration_public, ClientExpiration)
 
   // check size
   EXPECT_EQ(client_info_map.size(), 0);
-
-  // finalize eCAL API
-  eCAL::Finalize();
 }
 
-TEST(core_cpp_registration_public, ClientEqualQualities)
+TEST_P(ClientsTestFixture, ClientEqualQualities)
 {
-  // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
-
-  // enable loop back communication in the same process
-  eCAL::Util::EnableLoopback(true);
-
   std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> client_info_map;
 
   // create 2 clients with the same quality of data type information
@@ -181,19 +191,10 @@ TEST(core_cpp_registration_public, ClientEqualQualities)
 
   // check size
   EXPECT_EQ(client_info_map.size(), 0);
-
-  // finalize eCAL API
-  eCAL::Finalize();
 }
 
-TEST(core_cpp_registration_public, ClientDifferentQualities)
+TEST_P(ClientsTestFixture, ClientDifferentQualities)
 {
-  // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
-
-  // enable loop back communication in the same process
-  eCAL::Util::EnableLoopback(true);
-
   std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> client_info_map;
 
   // create 2 clients with different qualities of data type information
@@ -258,19 +259,10 @@ TEST(core_cpp_registration_public, ClientDifferentQualities)
 
   // check size
   EXPECT_EQ(client_info_map.size(), 0);
-
-  // finalize eCAL API
-  eCAL::Finalize();
 }
 
-TEST(core_cpp_registration_public, GetClientIDs)
+TEST_P(ClientsTestFixture, GetClientIDs)
 {
-  // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
-
-  // enable loop back communication in the same process
-  eCAL::Util::EnableLoopback(true);
-
   // create simple client
   {
     // create client
@@ -296,7 +288,33 @@ TEST(core_cpp_registration_public, GetClientIDs)
       EXPECT_EQ(service_method_info, info.info);
     }
   }
-
-  // finalize eCAL API
-  eCAL::Finalize();
 }
+
+INSTANTIATE_TEST_SUITE_P(
+  core_cpp_registration_public_clients,
+  ClientsTestFixture,
+  ::testing::Values(
+    ClientsTestParams{ []() {
+      // shm
+      eCAL::Configuration config;
+      config.registration.layer.shm.enable = true;
+      config.registration.layer.udp.enable = false;
+      return config;
+    }() },
+    ClientsTestParams{ []() {
+      // shm + host group name
+      eCAL::Configuration config;
+      config.registration.layer.shm.enable = true;
+      config.registration.layer.udp.enable = false;
+      config.registration.host_group_name = "abc";
+      return config;
+    }() },
+      ClientsTestParams{ []() {
+      // udp
+      eCAL::Configuration config;
+      config.registration.layer.shm.enable = false;
+      config.registration.layer.udp.enable = true;
+      return config;
+    }() }
+      )
+);
