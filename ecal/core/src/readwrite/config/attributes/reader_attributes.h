@@ -59,7 +59,7 @@ namespace eCAL
       bool         network_enabled;
       bool         drop_out_of_order_messages;
       bool         loopback;
-      unsigned int registation_timeout_ms;
+      unsigned int registration_timeout_ms;
 
       SUDPAttributes udp;
       STCPAttributes tcp;

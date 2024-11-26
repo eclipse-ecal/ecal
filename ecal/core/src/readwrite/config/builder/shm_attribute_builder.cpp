@@ -28,7 +28,7 @@ namespace eCAL
       SHM::SAttributes attributes;
 
       attributes.process_id              = attr_.process_id;
-      attributes.registration_timeout_ms = attr_.registation_timeout_ms;
+      attributes.registration_timeout_ms = attr_.registration_timeout_ms;
       
       return attributes;
     }

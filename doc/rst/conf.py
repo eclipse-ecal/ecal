@@ -92,7 +92,7 @@ release = u''
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx_book_theme',
+    #'sphinx_book_theme',
     'sphinx_tabs.tabs',
     'sphinx.ext.githubpages',
     'sphinx.ext.todo',

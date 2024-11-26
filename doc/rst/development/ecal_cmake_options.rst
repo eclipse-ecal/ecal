@@ -71,8 +71,6 @@ All options can be passed on the command line cmake ``-D<option>=<value>`` or in
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_THIRDPARTY_BUILD_SPDLOG``          | ``ON``  | Build spdlog with eCAL                                          |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_THIRDPARTY_BUILD_SIMPLEINI``       | ``ON``  | Build simpleini with eCAL                                       |
-+-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_THIRDPARTY_BUILD_TCLAP``           | ``ON``  | Build tclap library with eCAL                                   |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_THIRDPARTY_BUILD_TCP_PUBSUB``      | ``ON``  | Build tcp_pubsub library with eCAL                              |

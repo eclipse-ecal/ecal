@@ -16,7 +16,6 @@ set(ecal_submodule_dependencies
   Protobuf
   qwt
   recycle
-  simpleini
   spdlog
   tclap
   tcp_pubsub

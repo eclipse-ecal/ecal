@@ -192,13 +192,6 @@ They are used by Eclipse eCAL, but not associated to it in any way.
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
-   * - `SimpleIni <https://github.com/brofield/simpleini>`_
-     - :ref:`mit_license`
-     - 2006-2013 Brodie Thiesfield
-     - - |fa-github| Git submodule ``/tirdparty/simpleini/simpleini``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
-
    * - `spdlog <https://github.com/gabime/spdlog>`_
      - :ref:`mit_license`
      - 2016 Gabi Melman

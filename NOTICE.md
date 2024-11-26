@@ -248,15 +248,6 @@ recycle
     - Binary distributions for Windows
     - Binary distributions for Linux
 
-SimpleIni
-  - License: MIT
-  - Project: https://github.com/brofield/simpleini
-  - Copyright: 2006-2013 Brodie Thiesfield
-  - Included in:
-    - Git submodule `/tirdparty/simpleini/simpleini`
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
 spdlog
   - License: MIT
   - Project: https://github.com/gabime/spdlog

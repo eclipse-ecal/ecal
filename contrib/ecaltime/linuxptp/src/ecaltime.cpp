@@ -20,6 +20,7 @@
 #include <ecaltime.h>
 #include <chrono>
 #include <thread>
+#include <cstring>
 
 #include "ecal_time_linuxptp.h"
 #include "config/config.h"

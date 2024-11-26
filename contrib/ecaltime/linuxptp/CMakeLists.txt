@@ -18,7 +18,7 @@
 
 project(ecaltime-linuxptp)
 
-find_package(simpleini REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 set(ecal_time_linuxptp_src
   src/ecal_time_linuxptp.cpp
@@ -38,7 +38,7 @@ endif()
 
 ecal_add_time_plugin(${PROJECT_NAME} SHARED ${ecal_time_linuxptp_src} ${ecal_time_linuxptp_header})
 
-target_link_libraries(${PROJECT_NAME} eCAL::core simpleini::simpleini)
+target_link_libraries(${PROJECT_NAME} eCAL::core yaml-cpp::yaml-cpp)
 
 target_include_directories(${PROJECT_NAME} 
   PRIVATE
@@ -49,7 +49,7 @@ ecal_install_time_plugin(${PROJECT_NAME})
 
 set(ECALTIME_CONFIG_FILES
   ${ECALTIME_CONFIG_FILES}
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/config/ecaltime.ini
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/config/ecaltime.yaml
   PARENT_SCOPE)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
