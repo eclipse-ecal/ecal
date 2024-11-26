@@ -32,6 +32,7 @@ namespace eCAL
         bool        network_enabled;
         bool        loopback;
         std::string host_group_name;
+        std::string host_name;
         int         process_id;
       };
     }

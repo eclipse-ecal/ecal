@@ -57,15 +57,42 @@ namespace eCAL
 
     bool CSampleApplier::IsHostGroupMember(const Registration::Sample& sample_) const
     {
-      std::string host_group_name;
-      const std::string host_name = sample_.identifier.host_name;
+      // When are we in the same hostgroup?
+      // Either we are on the same host
+      // Or the hgname attribute of the sample are identical
+
+      if (IsSameHost(sample_))
+        return true;
+
+      if (IsSameHostGroup(sample_))
+        return true;
+
+      return false;
+    }
+
+    bool CSampleApplier::IsSameProcess(const Registration::Sample& sample_) const
+    {
+      // is this actually sufficient? should we also check host_name?
+      const int32_t pid = sample_.identifier.process_id;
+      return pid == m_attributes.process_id;
+    }
+
+    bool CSampleApplier::IsSameHost(const Registration::Sample& sample_) const
+    {
+      const std::string& sample_host_name = sample_.identifier.host_name;
+      return (sample_host_name == m_attributes.host_name);
+    }
+
+    bool CSampleApplier::IsSameHostGroup(const Registration::Sample& sample_) const
+    {
+      std::string sample_host_group_name;
       switch (sample_.cmd_type)
       {
       case bct_reg_publisher:
       case bct_unreg_publisher:
       case bct_reg_subscriber:
       case bct_unreg_subscriber:
-        host_group_name = sample_.topic.hgname;
+        sample_host_group_name = sample_.topic.hgname;
         break;
       case bct_reg_service:
       case bct_unreg_service:
@@ -79,25 +106,14 @@ namespace eCAL
         break;
       }
 
-      const std::string& sample_host_group_name = host_group_name.empty() ? host_name : host_group_name;
-
-      if (sample_host_group_name.empty() || m_attributes.host_group_name.empty())
-        return false;
-      if (sample_host_group_name != m_attributes.host_group_name)
-        return false;
-
-      return true;
-    }
-
-    bool CSampleApplier::IsSameProcess(const Registration::Sample& sample_) const
-    {
-      // is this actually sufficient? should we also check host_name?
-      const int32_t pid = sample_.identifier.process_id;
-      return pid == m_attributes.process_id;
+      return (sample_host_group_name == m_attributes.host_group_name);
     }
 
     bool CSampleApplier::AcceptRegistrationSample(const Registration::Sample& sample_)
     {
+      // Under wich circumstances do we apply samples, so we can filter ahead of time
+      // otherwise we could apply them to
+
       // check if the sample is from the same host group
       if (IsHostGroupMember(sample_))
       {

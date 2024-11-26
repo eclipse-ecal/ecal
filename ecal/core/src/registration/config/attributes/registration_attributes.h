@@ -57,6 +57,7 @@ namespace eCAL
       bool                      shm_enabled;
       bool                      udp_enabled;
       unsigned int              refresh;
+      std::string               host_name;
       std::string               host_group_name;
       int                       process_id;
 
