@@ -28,7 +28,7 @@ macro(ecal_add_csharp_protobuf_sample sample_name)
   
   set_target_properties(${sample_name} PROPERTIES
     VS_GLOBAL_ROOTNAMESPACE ${sample_name}
-    VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1"
+    VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.7.1"
   )
 
   set_property(TARGET ${sample_name}  PROPERTY
