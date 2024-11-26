@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run clang-tidy
-        uses: ZedThree/clang-tidy-review@v0.14.0
+        uses: ZedThree/clang-tidy-review@v0.20.1
         id: review
         with:
           build_dir: _build
@@ -75,4 +75,4 @@ jobs:
                     -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu
             cmake --build _build
             
-      - uses: ZedThree/clang-tidy-review/upload@v0.14.0
+      - uses: ZedThree/clang-tidy-review/upload@v0.20.1
