@@ -22,6 +22,7 @@
 #include "monitoring_compare.h"
 
 #include <gtest/gtest.h>
+#include <vector>
 
 namespace eCAL
 {

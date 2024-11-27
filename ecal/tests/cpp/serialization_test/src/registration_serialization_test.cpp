@@ -21,6 +21,8 @@
 #include "registration_generate.h"
 
 #include <gtest/gtest.h>
+#include <string>
+#include <vector>
 
 namespace eCAL
 {

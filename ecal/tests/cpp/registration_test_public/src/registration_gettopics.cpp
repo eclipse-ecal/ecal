@@ -17,13 +17,16 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstddef>
 #include <ecal/ecal.h>
 
 #include <gtest/gtest.h>
 
 #include <atomic>
 #include <chrono>
+#include <map>
 #include <memory>
+#include <string>
 #include <thread>
 
 enum {

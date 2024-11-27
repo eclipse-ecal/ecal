@@ -17,12 +17,17 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <atomic>
+#include <chrono>
 #include <ecal/ecal.h>
 
-#include <cmath>
+#include <functional>
 #include <iostream>
 
 #include <gtest/gtest.h>
+#include <memory>
+#include <string>
+#include <vector>
 
 #include "atomic_signalable.h"
 
