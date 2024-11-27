@@ -17,14 +17,17 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstddef>
 #include <ecal/ecal.h>
 #include <ecal/msg/string/publisher.h>
 #include <ecal/msg/string/subscriber.h>
 
 #include <atomic>
-#include <thread>
+#include <functional>
+#include <string>
 
 #include <gtest/gtest.h>
+#include <vector>
 
 enum {
   CMN_REGISTRATION_REFRESH_MS = 1000,

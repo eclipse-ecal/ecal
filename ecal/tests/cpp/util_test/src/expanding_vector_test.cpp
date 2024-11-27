@@ -1,5 +1,8 @@
-#include <gtest/gtest.h>
 #include "util/expanding_vector.h" // Assuming the class is defined in this header file
+#include <cstddef>
+#include <gtest/gtest.h>
+#include <ostream>
+#include <stdexcept>
 
 using namespace eCAL::Util;
 

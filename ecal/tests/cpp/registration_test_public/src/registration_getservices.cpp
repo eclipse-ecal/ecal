@@ -20,6 +20,9 @@
 #include <ecal/ecal.h>
 
 #include <gtest/gtest.h>
+#include <map>
+#include <set>
+#include <string>
 
 enum {
   CMN_MONITORING_TIMEOUT_MS   = (5000 + 100),

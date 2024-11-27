@@ -22,6 +22,7 @@
 #include "service_generate.h"
 
 #include <gtest/gtest.h>
+#include <string>
 
 namespace eCAL
 {

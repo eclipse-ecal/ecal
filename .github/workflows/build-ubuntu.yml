@@ -83,7 +83,6 @@ jobs:
         git submodule deinit thirdparty/gtest/googletest
         git submodule deinit thirdparty/hdf5/hdf5
         git submodule deinit thirdparty/protobuf/protobuf
-        git submodule deinit thirdparty/zlib/zlib
         git submodule update
 
     - name: Create venv for building docs

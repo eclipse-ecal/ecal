@@ -19,6 +19,7 @@
 
 #include "monitoring_compare.h"
 
+#include <cstddef>
 #include <ecal/types/monitoring.h>
 
 namespace eCAL

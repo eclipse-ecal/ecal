@@ -23,10 +23,12 @@
 
 #include <gtest/gtest.h>
 
-#include <stdexcept>
 #include <fstream>
+#include <iostream>
+#include <stdexcept>
+#include <stdio.h>
 #include <string>
-#include <cstdio>
+#include <vector>
 
 #include "ecal_cmd_parser.h"
 #ifdef ECAL_CORE_CONFIGURATION

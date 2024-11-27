@@ -17,6 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstddef>
 #include <serialization/ecal_serialize_sample_payload.h>
 
 #include "payload_generate.h"
@@ -24,6 +25,8 @@
 
 #include <gtest/gtest.h>
 #include <random>
+#include <string>
+#include <vector>
 
 namespace
 {

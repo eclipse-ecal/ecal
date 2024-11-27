@@ -17,17 +17,22 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/ecal_core.h>
+#include <chrono>
 #include <ecal/ecal_config.h>
+#include <ecal/ecal_core.h>
 #include <ecal/ecal_log.h>
 #include <ecal/ecal_log_level.h>
 #include <ecal/ecal_process.h>
 
 #include <gtest/gtest.h>
 
+#include <cstdio>
 #include <filesystem>
 #include <fstream>
-#include <cstdio>
+#include <iostream>
+#include <ostream>
+#include <streambuf>
+#include <string>
 #include <thread>
 
 constexpr std::chrono::milliseconds UDP_WAIT_TIME(1);

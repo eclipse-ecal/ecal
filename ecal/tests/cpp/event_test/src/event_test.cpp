@@ -20,6 +20,7 @@
 #include "ecal_event.h"
 
 #include <gtest/gtest.h>
+#include <string>
 
 TEST(core_cpp_core, Event_EventSetGet)
 { 

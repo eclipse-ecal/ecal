@@ -17,17 +17,19 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/ecal.h>
 #include "io/shm/ecal_memfile.h"
 #include "io/shm/ecal_memfile_db.h"
+#include <cstddef>
+#include <ecal/ecal.h>
 
-#include <atomic>
 #include <chrono>
-#include <memory>
 #include <iostream>
+#include <memory>
+#include <string>
 #include <thread>
 
 #include <gtest/gtest.h>
+#include <vector>
 
 namespace eCAL
 {
