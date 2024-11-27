@@ -162,6 +162,14 @@ INSTANTIATE_TEST_SUITE_P(
       return config;
     }() },
     TestParams{ 10, []() {
+      // shm + host group name
+      eCAL::Configuration config;
+      config.registration.layer.shm.enable = true;
+      config.registration.layer.udp.enable = false;
+      config.registration.host_group_name = "abc";
+      return config;
+    }() },
+    TestParams{ 10, []() {
       // udp
       eCAL::Configuration config;
       config.registration.registration_refresh = 100;

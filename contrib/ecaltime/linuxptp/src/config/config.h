@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <SimpleIni.h>
+#include <yaml-cpp/yaml.h>
 
 #include <iostream>
 #include <unistd.h>
@@ -32,20 +32,28 @@ namespace LinuxPtpConfig {
    * @brief reads the file ~/.ecal/ecaltime.ini to get the device
    * @return the device value from the linuxptp section
    */
-  std::string getDevice() {
-    CSimpleIniA ini;
-
+  std::string getDevice() {    
     std::string path_to_ini = eCAL::Util::GeteCALConfigPath();
-    path_to_ini += "ecaltime.ini";
+    path_to_ini += "ecaltime.yaml";
 
-    int err = ini.LoadFile(path_to_ini.c_str());
-    if (err != SI_OK){
-      std::cerr << "Error reading ecaltime config file" << std::endl;
+    YAML::Node yaml;
+    try
+    {
+      yaml = YAML::LoadFile(path_to_ini);
+    }
+    catch(const std::exception& e)
+    {
+      std::cerr << "Error reading ecaltime config file: " << e.what() << "\n";
+    }
+    
+    if (yaml["linuxptp"])
+    {
+      if (yaml["linuxptp"]["device"])
+      {
+        return yaml["linuxptp"]["device"].as<std::string>();
+      }
     }
 
-    const char * pVal = ini.GetValue("linuxptp", "device", "/dev/ptp0");
-
-    std::string device(pVal);
-    return device;
+    return std::string("/dev/ptp0");
   }
 }

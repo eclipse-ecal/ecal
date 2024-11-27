@@ -19,22 +19,19 @@
 
 #pragma once
 
-#include <string>
+#include <serialization/ecal_struct_service.h>
 
 namespace eCAL
 {
-  namespace Registration
+  namespace Service
   {
-    namespace SampleApplier
-    {
-      struct SAttributes
-      {
-        bool        network_enabled;
-        bool        loopback;
-        std::string host_group_name;
-        std::string host_name;
-        int         process_id;
-      };
-    }
+    // generate ServiceHeader
+    ServiceHeader GenerateServiceHeader();
+
+    // generate Request
+    Request GenerateRequest();
+
+    // generate Response
+    Response GenerateResponse();
   }
 }

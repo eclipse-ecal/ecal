@@ -20,21 +20,11 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace eCAL
 {
-  namespace Registration
-  {
-    namespace SampleApplier
-    {
-      struct SAttributes
-      {
-        bool        network_enabled;
-        bool        loopback;
-        std::string host_group_name;
-        std::string host_name;
-        int         process_id;
-      };
-    }
-  }
+  // Generate a random string of given length (may contain null character)
+  std::string GenerateString(size_t length);
+  std::vector<char> GenerateRandomVector(size_t length);
 }

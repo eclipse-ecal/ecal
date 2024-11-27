@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -229,7 +229,7 @@ namespace eCAL
                               }
 
                               // Call event callback
-                              me->event_callback_(eCAL::service::ClientEventType::Connected, message);
+                              if(me->event_callback_) me->event_callback_(eCAL::service::ClientEventType::Connected, message);
 
                               // Start sending service requests, if there are any
                               {
@@ -517,7 +517,7 @@ namespace eCAL
         }
       }
 
-      if (call_event_callback)
+      if (call_event_callback && event_callback_)
       {
         event_callback_(eCAL::service::ClientEventType::Disconnected, error_message);
       }

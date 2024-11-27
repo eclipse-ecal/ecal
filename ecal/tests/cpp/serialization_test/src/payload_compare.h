@@ -17,24 +17,13 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
-
-#include <string>
+#include <serialization/ecal_struct_sample_payload.h>
 
 namespace eCAL
 {
-  namespace Registration
+  namespace Payload
   {
-    namespace SampleApplier
-    {
-      struct SAttributes
-      {
-        bool        network_enabled;
-        bool        loopback;
-        std::string host_group_name;
-        std::string host_name;
-        int         process_id;
-      };
-    }
+    // compare two samples for equality
+    bool ComparePayloadSamples(const Sample& sample1, const Sample& sample2);
   }
 }

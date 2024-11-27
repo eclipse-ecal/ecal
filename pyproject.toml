@@ -58,7 +58,6 @@ sdist.only-include = [
   "thirdparty/ecaludp/",  
   "thirdparty/protobuf/",
   "thirdparty/recycle/",
-  "thirdparty/simpleini/",
   "thirdparty/tclap/",
   "thirdparty/tcp_pubsub/",
   "thirdparty/yaml-cpp/",

@@ -55,6 +55,9 @@ namespace eCAL
 
     private:
       bool IsSameProcess(const Registration::Sample& sample_) const;
+      bool IsSameHost(const Registration::Sample& sample_) const;
+      bool IsSameHostGroup(const Registration::Sample& sample_) const;
+
       bool IsHostGroupMember(const eCAL::Registration::Sample& sample_) const;
 
       bool AcceptRegistrationSample(const Registration::Sample& sample_);

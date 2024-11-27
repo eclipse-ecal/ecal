@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,25 +40,28 @@ namespace eCAL
   /**
    * @brief Service Server wrapper class.
   **/
-  class CServiceServer
+  class ECAL_API_CLASS CServiceServer
   {
   public:
     /**
      * @brief Constructor. 
     **/
-    ECAL_API CServiceServer();
+    ECAL_API_EXPORTED_MEMBER
+      CServiceServer();
 
     /**
      * @brief Constructor. 
      *
      * @param service_name_   Unique service name.
     **/
-    ECAL_API explicit CServiceServer(const std::string& service_name_);
+    ECAL_API_EXPORTED_MEMBER
+      explicit CServiceServer(const std::string& service_name_);
 
     /**
      * @brief Destructor. 
     **/
-    ECAL_API virtual ~CServiceServer();
+    ECAL_API_EXPORTED_MEMBER
+      virtual ~CServiceServer();
 
     /**
      * @brief CServiceServers are non-copyable
@@ -77,14 +80,16 @@ namespace eCAL
      *
      * @return  True if successful. 
     **/
-    ECAL_API bool Create(const std::string& service_name_);
+    ECAL_API_EXPORTED_MEMBER
+      bool Create(const std::string& service_name_);
 
     /**
      * @brief Destroys this object. 
      *
      * @return  True if successful. 
     **/
-    ECAL_API bool Destroy();
+    ECAL_API_EXPORTED_MEMBER
+      bool Destroy();
 
     /**
      * @brief Add method type descriptions.
@@ -97,7 +102,8 @@ namespace eCAL
      *
      * @return  True if successful.
     **/
-    ECAL_API bool AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_);
+    ECAL_API_EXPORTED_MEMBER
+      bool AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_);
 
     /**
      * @brief Add method callback.
@@ -109,7 +115,8 @@ namespace eCAL
      *
      * @return  True if successful.
     **/
-    ECAL_API bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
+    ECAL_API_EXPORTED_MEMBER
+      bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
 
     /**
      * @brief Remove method callback.
@@ -118,7 +125,8 @@ namespace eCAL
      *
      * @return  True if successful.
     **/
-    ECAL_API bool RemMethodCallback(const std::string& method_);
+    ECAL_API_EXPORTED_MEMBER
+      bool RemMethodCallback(const std::string& method_);
 
     /**
      * @brief Add server event callback function.
@@ -128,7 +136,8 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not.
     **/
-    ECAL_API bool AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_);
+    ECAL_API_EXPORTED_MEMBER
+      bool AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_);
 
     /**
      * @brief Remove server event callback function.
@@ -137,21 +146,24 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not.
     **/
-    ECAL_API bool RemEventCallback(eCAL_Server_Event type_);
+    ECAL_API_EXPORTED_MEMBER
+      bool RemEventCallback(eCAL_Server_Event type_);
 
     /**
      * @brief Retrieve service name.
      *
      * @return  The service name.
     **/
-    ECAL_API std::string GetServiceName();
+    ECAL_API_EXPORTED_MEMBER
+      std::string GetServiceName();
 
     /**
      * @brief Check connection state.
      *
      * @return  True if connected, false if not.
     **/
-    ECAL_API bool IsConnected();
+    ECAL_API_EXPORTED_MEMBER
+      bool IsConnected();
 
   private:
     std::shared_ptr<CServiceServerImpl> m_service_server_impl;

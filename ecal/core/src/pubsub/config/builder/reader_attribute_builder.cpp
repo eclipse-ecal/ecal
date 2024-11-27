@@ -29,12 +29,13 @@ namespace eCAL
     attributes.network_enabled            = reg_config_.network_enabled;
     attributes.loopback                   = reg_config_.loopback;
     attributes.drop_out_of_order_messages = sub_config_.drop_out_of_order_messages;
-    attributes.registation_timeout_ms     = reg_config_.registration_timeout;
+    attributes.registation_timeout_ms    = reg_config_.registration_timeout;
     attributes.topic_name                 = topic_name_;
     attributes.host_name                  = Process::GetHostName();
     attributes.host_group_name            = Process::GetHostGroupName();
     attributes.process_id                 = Process::GetProcessID();
     attributes.process_name               = Process::GetProcessName();
+    attributes.unit_name                  = Process::GetUnitName();
     attributes.share_topic_type           = pub_config_.share_topic_type;
     attributes.share_topic_description    = pub_config_.share_topic_description;
 

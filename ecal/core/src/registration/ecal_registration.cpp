@@ -173,13 +173,13 @@ namespace eCAL
       return g_descgate()->GetPublisherInfo(id_, topic_info_);
     }
 
-    ECAL_API CallbackToken AddPublisherEventCallback(const TopicIDCallbackT& callback_)
+    CallbackToken AddPublisherEventCallback(const TopicIDCallbackT& callback_)
     {
       if (g_descgate() == nullptr) return CallbackToken();
       return g_descgate()->AddPublisherEventCallback(callback_);
     }
 
-    ECAL_API void RemPublisherEventCallback(CallbackToken token_)
+    void RemPublisherEventCallback(CallbackToken token_)
     {
       if (g_descgate() == nullptr) return;
       return g_descgate()->RemPublisherEventCallback(token_);
@@ -203,7 +203,7 @@ namespace eCAL
       return g_descgate()->AddSubscriberEventCallback(callback_);
     }
 
-    ECAL_API void RemSubscriberEventCallback(CallbackToken token_)
+    void RemSubscriberEventCallback(CallbackToken token_)
     {
       if (g_descgate() == nullptr) return;
       return g_descgate()->RemSubscriberEventCallback(token_);

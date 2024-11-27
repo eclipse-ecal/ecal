@@ -17,24 +17,33 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
+#include <serialization/ecal_struct_sample_payload.h>
 
-#include <string>
+#include <cstdlib>
 
 namespace eCAL
 {
-  namespace Registration
+  namespace Payload
   {
-    namespace SampleApplier
-    {
-      struct SAttributes
-      {
-        bool        network_enabled;
-        bool        loopback;
-        std::string host_group_name;
-        std::string host_name;
-        int         process_id;
-      };
-    }
+    // generate Topic
+    TopicInfo GenerateTopic();
+
+    // generate Payload
+    Payload GeneratePayload(const char* payload_addr, size_t payload_size);
+
+    // generate Payload
+    Payload GeneratePayload(const std::vector<char>& payload_vec);
+
+    // generate Content
+    Content GenerateContent(const char* payload_addr, size_t payload_size);
+    
+    // generate Content
+    Content GenerateContent(const std::vector<char>& payload_vec);
+
+    // generate Payload Sample (payload raw pointer + size)
+    Sample GeneratePayloadSample(const char* payload_addr, size_t payload_size);
+
+    // generate Payload Sample (payload vector)
+    Sample GeneratePayloadSample(const std::vector<char>& payload_vec);
   }
 }

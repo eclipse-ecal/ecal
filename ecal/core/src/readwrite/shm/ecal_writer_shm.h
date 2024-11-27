@@ -29,7 +29,10 @@
 #include "readwrite/ecal_writer_base.h"
 
 #include <cstddef>
+#include <map>
 #include <memory>
+#include <mutex>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -47,6 +50,7 @@ namespace eCAL
     bool Write(CPayloadWriter& payload_, const SWriterAttr& attr_) override;
 
     void ApplySubscription(const std::string& host_name_, int32_t process_id_, const std::string& topic_id_, const std::string& conn_par_) override;
+    void RemoveSubscription(const std::string& host_name_, int32_t process_id_, const std::string& topic_id_) override;
 
     Registration::ConnectionPar GetConnectionParameter() override;
 
@@ -58,5 +62,9 @@ namespace eCAL
     size_t                                        m_write_idx = 0;
     std::vector<std::shared_ptr<CSyncMemoryFile>> m_memory_file_vec;
     static const std::string                      m_memfile_base_name;
+
+    using ProcessIDTopicIDSetT = std::map<int32_t, std::set<std::string>>;
+    std::mutex                                    m_process_id_topic_id_set_map_sync;
+    ProcessIDTopicIDSetT                          m_process_id_topic_id_set_map;
   };
 }

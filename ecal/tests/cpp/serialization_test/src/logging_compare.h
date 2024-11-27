@@ -18,23 +18,13 @@
 */
 
 #pragma once
-
-#include <string>
+#include <ecal/types/logging.h>
 
 namespace eCAL
 {
-  namespace Registration
+  namespace Logging
   {
-    namespace SampleApplier
-    {
-      struct SAttributes
-      {
-        bool        network_enabled;
-        bool        loopback;
-        std::string host_group_name;
-        std::string host_name;
-        int         process_id;
-      };
-    }
+    // compare two LogMessages for equality
+    bool CompareLogMessages(const SLogMessage& message1, const SLogMessage& message2);
   }
 }

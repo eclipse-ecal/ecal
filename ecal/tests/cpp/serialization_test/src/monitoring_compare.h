@@ -19,22 +19,13 @@
 
 #pragma once
 
-#include <string>
+#include <ecal/types/monitoring.h>
 
 namespace eCAL
 {
-  namespace Registration
+  namespace Monitoring
   {
-    namespace SampleApplier
-    {
-      struct SAttributes
-      {
-        bool        network_enabled;
-        bool        loopback;
-        std::string host_group_name;
-        std::string host_name;
-        int         process_id;
-      };
-    }
+    // compare two monitoring structs
+    bool CompareMonitorings(const SMonitoring& monitoring1, const SMonitoring& monitoring2);
   }
 }

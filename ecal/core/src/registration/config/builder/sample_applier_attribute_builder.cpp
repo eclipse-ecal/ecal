@@ -31,6 +31,7 @@ namespace eCAL
         
         sample_applier_attr.network_enabled = attr_.network_enabled;
         sample_applier_attr.loopback        = attr_.loopback;
+        sample_applier_attr.host_name       = attr_.host_name;
         sample_applier_attr.host_group_name = attr_.host_group_name;
         sample_applier_attr.process_id      = attr_.process_id;
         

@@ -16,25 +16,20 @@
  *
  * ========================= eCAL LICENSE =================================
 */
-
 #pragma once
 
-#include <string>
+#include <serialization/ecal_struct_service.h>
 
 namespace eCAL
 {
-  namespace Registration
+  namespace Service
   {
-    namespace SampleApplier
-    {
-      struct SAttributes
-      {
-        bool        network_enabled;
-        bool        loopback;
-        std::string host_group_name;
-        std::string host_name;
-        int         process_id;
-      };
-    }
+    // compare two ServiceHeaders for equality
+    bool CompareServiceHeaders(const ServiceHeader& header1, const ServiceHeader& header2);
+
+    bool CompareRequests(const Request& request1, const Request& request2);
+
+    // compare two Responses for equality
+    bool CompareResponses(const Response& response1, const Response& response2);
   }
 }

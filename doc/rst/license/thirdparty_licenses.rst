@@ -29,28 +29,28 @@ They may have a different license than eCAL.
    * - `ecaludp <https://github.com/eclipse-ecal/ecaludp>`_
      - :ref:`apache_2_0`
      - 2024, Continental
-     - - |fa-github| Git submodule ``/tirdparty/ecaludp``
+     - - |fa-github| Git submodule ``/tirdparty/ecaludp/ecaludp``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
    * - `fineFTP Server <https://github.com/eclipse-ecal/fineftp-server>`_
      - :ref:`mit_license`
      - 2020 Continental Corporation
-     - - |fa-github| Git submodule ``/tirdparty/fineftp-server``
+     - - |fa-github| Git submodule ``/tirdparty/fineftp/fineftp-server``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
    * - `tcp_pubsub <https://github.com/eclipse-ecal/tcp_pubsub>`_
      - :ref:`mit_license`
      - Copyright (c) 2021 Continental
-     - - |fa-github| Git submodule ``/tirdparty/tcp_pubsub``
+     - - |fa-github| Git submodule ``/tirdparty/tcp_pubsub/tcp_pubsub``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
    * - `Udpcap <https://github.com/eclipse-ecal/udpcap>`_
      - :ref:`apache_2_0`
      - 2022, Continental
-     - - |fa-github| Git submodule ``/tirdparty/udpcap``
+     - - |fa-github| Git submodule ``/tirdparty/udpcap/udpcap``
        - |fa-windows| Binary distributions for Windows
 
 Thirdparty components
@@ -71,7 +71,7 @@ They are used by Eclipse eCAL, but not associated to it in any way.
    * - `Asio <https://think-async.com>`_
      - :ref:`boost_1_0`
      - 2003-2018 Christopher M. Kohlhoff
-     - - |fa-github| Git submodule ``/tirdparty/asio``
+     - - |fa-github| Git submodule ``/tirdparty/asio/asio``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
@@ -126,26 +126,26 @@ They are used by Eclipse eCAL, but not associated to it in any way.
    * - `Google Protobuf <https://developers.google.com/protocol-buffers>`_
      - :ref:`bsd_3`
      - Copyright 2008 Google Inc.
-     - - |fa-github| Git submodule ``/tirdparty/protobuf``
+     - - |fa-github| Git submodule ``/tirdparty/protobuf/protobuf``
        - |fa-windows| Binary distributions for Windows
 
    * - `Google Test <https://github.com/google/googletest>`_
      - :ref:`bsd_3`
      - Copyright 2008 Google Inc.
-     - - |fa-github| Git submodule ``/tirdparty/googletest``
+     - - |fa-github| Git submodule ``/tirdparty/gtest/googletest``
 
    * - `HDF5 <https://www.hdfgroup.org/solutions/hdf5>`_
      - :ref:`hdf5_bsd_3`
      - 1998-2006 by The Board of Trustees of the University of Illinois
        
        2006 by The HDF Group
-     - - |fa-github| Git submodule ``/tirdparty/hdf5``
+     - - |fa-github| Git submodule ``/tirdparty/hdf5/hdf5``
        - |fa-windows| Binary distributions for Windows
 
    * - `libcurl <https://curl.se/libcurl/>`_
      - :ref:`mit_license`
      - 1996 - 2021, Daniel Stenberg, daniel@haxx.se, and many contributors, see the THANKS file
-     - - |fa-github| Git submodule ``/tirdparty/curl``
+     - - |fa-github| Git submodule ``/tirdparty/curl/curl``
        - |fa-windows| Binary distributions for Windows
 
    * - `modpath.iss <http://www.legroom.net/software>`_
@@ -153,6 +153,13 @@ They are used by Eclipse eCAL, but not associated to it in any way.
      - Jared Breland
      - - |fa-file-alt| Copy in repository: :file:`/cpack/innosetup/modpath.iss`
        - |fa-windows| Binary distributions for Windows (Installer only)
+
+   * - `nanopb <https://github.com/nanopb/nanopb>`_
+     - :ref:`zlib_license`
+     - 2011 Petteri Aimonen \<jpa at nanopb.mail.kapsi.fi\>
+     - - |fa-file-alt| Copy in repository: :file:`ecal/ecal/core/src/serialization/nanopb/*`
+       - |fa-windows| Binary distributions for Windows
+       - |fa-ubuntu| Binary distributions for Linux
 
    * - `npcap <https://nmap.org/npcap/>`_
      - :ref:`npcap_license`
@@ -181,21 +188,14 @@ They are used by Eclipse eCAL, but not associated to it in any way.
    * - `recycle <https://github.com/steinwurf/recycle>`_
      - :ref:`bsd_3`
      - Copyright (c) 2014, Steinwurf ApS
-     - - |fa-github| Git submodule ``/tirdparty/recycle``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
-
-   * - `SimpleIni <https://github.com/brofield/simpleini>`_
-     - :ref:`mit_license`
-     - 2006-2013 Brodie Thiesfield
-     - - |fa-github| Git submodule ``/tirdparty/simpleini``
+     - - |fa-github| Git submodule ``/tirdparty/recycle/recycle``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
    * - `spdlog <https://github.com/gabime/spdlog>`_
      - :ref:`mit_license`
      - 2016 Gabi Melman
-     - - |fa-github| Git submodule ``/tirdparty/spdlog``
+     - - |fa-github| Git submodule ``/tirdparty/spdlog/spdlog``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
@@ -213,28 +213,28 @@ They are used by Eclipse eCAL, but not associated to it in any way.
        Copyright (c) 2004 Daniel Aarno
 
        Copyright (c) 2017 Google Inc.
-     - - |fa-github| Git submodule ``/tirdparty/tclap``
+     - - |fa-github| Git submodule ``/tirdparty/tclap/tclap``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
    * - `termcolor <https://github.com/ikalnytskyi/termcolor>`_
      - :ref:`bsd_3`
      - 2013, Ihor Kalnytskyi
-     - - |fa-github| Git submodule ``/tirdparty/termcolor``
+     - - |fa-github| Git submodule ``/tirdparty/termcolor/termcolor``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
    * - `TinyXML-2 <https://github.com/leethomason/tinyxml2>`_
      - :ref:`zlib_license`
      - 	Lee Thomason
-     - - |fa-github| Git submodule ``/tirdparty/tinyxml``
+     - - |fa-github| Git submodule ``/tirdparty/tinyxml2/tinyxml2``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
    * - `yaml-cpp <https://github.com/jbeder/yaml-cpp/>`_
      - :ref:`mit_license`
      - 	Copyright (c) 2008-2015 Jesse Beder
-     - - |fa-github| Git submodule ``/thirdparty/yaml-cpp``
+     - - |fa-github| Git submodule ``/thirdparty/yaml-cpp/yaml-cpp``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
