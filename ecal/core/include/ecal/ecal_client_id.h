@@ -92,7 +92,7 @@ namespace eCAL
      *
      * @return  True if all calls were successful.
     **/
-    ECAL_API bool CServiceClientID::CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_) const;
+    ECAL_API bool CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_) const;
       
     /**
      * @brief Retrieve service name.
