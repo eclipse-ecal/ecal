@@ -20,6 +20,8 @@
 #include "common_generate.h"
 
 #include <cstdlib>
+#include <string>
+#include <vector>
 
 namespace eCAL
 {

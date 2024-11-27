@@ -25,6 +25,8 @@
 #include <iostream>
 
 #include <gtest/gtest.h>
+#include <memory>
+#include <string>
 
 #include "math.pb.h"
 #include "ping.pb.h"

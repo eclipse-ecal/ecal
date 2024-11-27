@@ -17,6 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstddef>
 #include <string>
 #include <vector>
 

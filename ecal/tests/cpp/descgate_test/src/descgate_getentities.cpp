@@ -19,9 +19,11 @@
 
 #include "ecal_descgate.h"
 
+#include <cstdint>
 #include <gtest/gtest.h>
 
 #include <chrono>
+#include <string>
 #include <thread>
 
 #define DESCGATE_EXPIRATION_MS 500

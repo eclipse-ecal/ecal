@@ -21,6 +21,7 @@
 #include "common_generate.h"
 
 #include <cstdlib>
+#include <string>
 
 namespace eCAL
 {
