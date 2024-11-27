@@ -7,9 +7,6 @@
 [submodule "thirdparty/tclap"]
 	path = thirdparty/tclap/tclap
 	url = https://github.com/xguerin/tclap.git
-[submodule "thirdparty/simpleini"]
-	path = thirdparty/simpleini/simpleini
-	url = https://github.com/brofield/simpleini.git
 [submodule "thirdparty/spdlog"]
 	path = thirdparty/spdlog/spdlog
 	url = https://github.com/gabime/spdlog.git
