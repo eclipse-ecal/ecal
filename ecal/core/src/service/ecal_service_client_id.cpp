@@ -138,6 +138,26 @@ namespace eCAL
   }
 
   /**
+   * @brief Asynchronous call of a service method for all existing service instances, using callback
+   *
+   * @param method_name_        Method name.
+   * @param request_            Request string.
+   * @param response_callback_  Callback function for the service method response.
+   *
+   * @return  True if all calls were successful.
+  **/
+  bool CServiceClientID::CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_) const
+  {
+    bool return_state = true;
+    auto instances = GetServiceClientInstances();
+    for (auto& instance : instances)
+    {
+      return_state &= instance.CallWithCallbackAsync(method_name_, request_, response_callback_);
+    }
+    return return_state;
+  }
+
+  /**
    * @brief Retrieve service name.
    *
    * @return  The service name.

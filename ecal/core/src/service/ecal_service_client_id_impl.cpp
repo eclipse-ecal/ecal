@@ -176,7 +176,7 @@ namespace eCAL
 
   // Synchronously calls a service and uses a callback for handling the response
   bool CServiceClientIDImpl::CallWithCallback(const Registration::SEntityId& entity_id_, const std::string& method_name_,
-    const std::string& request_, int timeout_ms_, const ResponseIDCallbackT& repsonse_callback_)
+    const std::string& request_, int timeout_ms_, const ResponseIDCallbackT& response_callback_)
   {
     SClient client;
     if (!TryGetClient(entity_id_, client))
@@ -187,7 +187,7 @@ namespace eCAL
     // Call the provided callback if the response is successful
     if (response.first)
     {
-      repsonse_callback_(entity_id_, response.second);
+      response_callback_(entity_id_, response.second);
       return true;
     }
 
@@ -198,6 +198,16 @@ namespace eCAL
     }
 
     return false;
+  }
+
+  // Asynchronous call to a service with a specified timeout
+  bool CServiceClientIDImpl::CallWithCallbackAsync(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_)
+  {
+    SClient client;
+    if (!TryGetClient(entity_id_, client))
+      return false;
+
+    return CallAsync(entity_id_, client, method_name_, request_, response_callback_);
   }
 
   // Blocking call to a service with a specified timeout
@@ -213,6 +223,21 @@ namespace eCAL
     auto response = WaitForResponse(client_, method_name_, timeout_, request_shared_ptr);
     IncrementMethodCallCount(method_name_);
     return response;
+  }
+
+  // Asynchronous call to a service
+  bool CServiceClientIDImpl::CallAsync(
+    const Registration::SEntityId& entity_id_, SClient& client_, const std::string& method_name_,
+    const std::string& request_, const ResponseIDCallbackT& response_callback_)
+  {
+    if (method_name_.empty()) return false;
+
+    auto request_shared_ptr = SerializeRequest(method_name_, request_);
+    if (!request_shared_ptr) return false;
+
+    auto success = WaitForResponseAsync(entity_id_, client_, method_name_, request_shared_ptr, response_callback_);
+    IncrementMethodCallCount(method_name_);
+    return success;
   }
 
   // Attempts to retrieve a client session for a given entity ID
@@ -239,7 +264,7 @@ namespace eCAL
     return request_shared_ptr;
   }
 
-  // Waits for the service response with a specified timeout, updating response on success or timeout
+  // Calls the service and waits for the service response with a specified timeout, updating response on success or timeout
   std::pair<bool, SServiceResponse> CServiceClientIDImpl::WaitForResponse(
       SClient& client_, const std::string& method_name_,
       std::chrono::nanoseconds timeout_, const std::shared_ptr<std::string>& request_shared_ptr_)
@@ -266,6 +291,45 @@ namespace eCAL
     }
 
     return *response_data->response;
+  }
+
+  // Asynchronously calls the service and waits for the service response
+  bool CServiceClientIDImpl::WaitForResponseAsync(
+    const Registration::SEntityId& entity_id_, SClient& client_, const std::string& method_name_,
+    const std::shared_ptr<std::string>& request_shared_ptr_, const ResponseIDCallbackT& response_callback_)
+  {
+    auto response_data = PrepareInitialResponse(client_, method_name_);
+    auto response_callback = CreateResponseCallback(response_data);
+
+    auto response = [response_data, entity_id_, response_callback_](const eCAL::service::Error& error, const std::shared_ptr<std::string>& response_)
+      {
+        const std::lock_guard<std::mutex> lock(*response_data->mutex);
+        if (!*response_data->block_modifying_response)
+        {
+          if (error)
+          {
+            response_data->response->first = false;
+            response_data->response->second.error_msg = error.ToString();
+            response_data->response->second.call_state = eCallState::call_state_failed;
+            response_data->response->second.ret_state = 0;
+          }
+          else
+          {
+            response_data->response->first = true;
+            response_data->response->second = DeserializedResponse(*response_);
+          }
+        }
+        *response_data->finished = true;
+        response_data->condition_variable->notify_all();
+
+        SServiceResponse service_response;
+        response_callback_(entity_id_, response_data->response->second);
+      };
+
+    const bool call_success = client_.client_session->async_call_service(request_shared_ptr_, response);
+    if (!call_success) return false;
+
+    return true;
   }
 
   std::shared_ptr<CServiceClientIDImpl::SResponseData> CServiceClientIDImpl::PrepareInitialResponse(SClient& client_, const std::string& method_name_)

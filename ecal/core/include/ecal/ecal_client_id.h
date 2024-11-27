@@ -84,6 +84,17 @@ namespace eCAL
     ECAL_API bool CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_) const;
 
     /**
+     * @brief Asynchronous call of a service method for all existing service instances, using callback
+     *
+     * @param method_name_        Method name.
+     * @param request_            Request string.
+     * @param response_callback_  Callback function for the service method response.
+     *
+     * @return  True if all calls were successful.
+    **/
+    ECAL_API bool CServiceClientID::CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_) const;
+      
+    /**
      * @brief Retrieve service name.
      *
      * @return  The service name.

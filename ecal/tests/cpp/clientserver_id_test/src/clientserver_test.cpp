@@ -32,8 +32,8 @@
 #define ClientServerBaseCallbackTest              1
 #define ClientServerBaseCallbackTimeoutTest       1
 
-#define ClientServerBaseAsyncCallbackTest         0
-#define ClientServerBaseAsyncTest                 0
+#define ClientServerBaseAsyncCallbackTest         1
+#define ClientServerBaseAsyncTest                 1
 
 #define NestedRPCCallTest                         1
 
@@ -569,12 +569,12 @@ TEST(core_cpp_clientserver_id, ClientServerBaseAsyncCallback)
   for (auto i = 0; i < calls; ++i)
   {
     // call method 1
-    client.CallWithCallback(m1, r1, -1, response_callback);  // TODO: Do we need ASYNC?, What does it mean?
+    client.CallWithCallbackAsync(m1, r1, response_callback);
     eCAL::Process::SleepMS(sleep);
     methods_called++;
 
     // call method 2
-    client.CallWithCallback(m2, r2, -1, response_callback);  // TODO: Do we need ASYNC?, What does it mean?
+    client.CallWithCallbackAsync(m2, r2, response_callback);
     eCAL::Process::SleepMS(sleep);
     methods_called++;
   }
@@ -646,12 +646,12 @@ TEST(core_cpp_clientserver_id, ClientServerBaseAsync)
   for (auto i = 0; i < calls; ++i)
   {
     // call method 1
-    client.CallWithCallback(m1, r1, -1, response_callback);  // TODO: Do we need ASYNC?, What does it mean?
+    client.CallWithCallbackAsync(m1, r1, response_callback);
     eCAL::Process::SleepMS(service_callback_time_ms * 2);
     num_service_calls++;
 
     // call method 2
-    client.CallWithCallback(m2, r2, -1, response_callback);  // TODO: Do we need ASYNC?, What does it mean?
+    client.CallWithCallbackAsync(m2, r2, response_callback);
     eCAL::Process::SleepMS(service_callback_time_ms * 2);
     num_service_calls++;
   }
@@ -673,7 +673,7 @@ TEST(core_cpp_clientserver_id, ClientServerBaseAsync)
   auto start = std::chrono::steady_clock::now();
   for (auto i = 0; i < calls; ++i)
   {
-    client.CallWithCallback(m1, r1, -1, response_callback);  // TODO: Do we need ASYNC?, What does it mean?
+    client.CallWithCallbackAsync(m1, r1, response_callback);
     num_service_calls++;
   }
   auto async_call_end = std::chrono::steady_clock::now();

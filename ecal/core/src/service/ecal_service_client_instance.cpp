@@ -42,6 +42,11 @@ namespace eCAL
     return m_service_client_impl->CallWithCallback(m_entity_id, method_name_, request_, timeout_, response_callback_);
   }
 
+  ECAL_API bool CServiceClientInstance::CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_)
+  {
+    return m_service_client_impl->CallWithCallbackAsync(m_entity_id, method_name_, request_, response_callback_);
+  }
+
   bool CServiceClientInstance::IsConnected() const
   {
     return m_service_client_impl->IsConnected(m_entity_id);

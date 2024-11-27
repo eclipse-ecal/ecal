@@ -65,7 +65,12 @@ namespace eCAL
     // Blocking call to a specific service using callback
     bool CallWithCallback(
       const Registration::SEntityId& entity_id_, const std::string& method_name_,
-      const std::string& request_, int timeout_ms_, const ResponseIDCallbackT& repsonse_callback_);
+      const std::string& request_, int timeout_ms_, const ResponseIDCallbackT& response_callback_);
+
+    // Asynchronous call to a specific service using callback
+    bool CallWithCallbackAsync(
+      const Registration::SEntityId& entity_id_, const std::string& method_name_,
+      const std::string& request_, const ResponseIDCallbackT& response_callback_);
 
     // Check connection state of a specific service
     bool IsConnected(const Registration::SEntityId& entity_id_);
@@ -125,6 +130,11 @@ namespace eCAL
     std::pair<bool, SServiceResponse> CallBlocking(SClient& client_, const std::string& method_name_,
       const std::string& request_, std::chrono::nanoseconds timeout_);
 
+    // Asynchronous call to a service
+    bool CServiceClientIDImpl::CallAsync(
+      const Registration::SEntityId& entity_id_, SClient& client_, const std::string& method_name_,
+      const std::string& request_, const ResponseIDCallbackT& response_callback_);
+
     // Prepare and retrieve registration and unregistration samples
     Registration::Sample GetRegistrationSample();
     Registration::Sample GetUnregistrationSample();
@@ -146,9 +156,13 @@ namespace eCAL
     // Helper methods for client session handling and request serialization
     bool TryGetClient(const Registration::SEntityId& entity_id_, SClient& client_);
     static std::shared_ptr<std::string> SerializeRequest(const std::string& method_name_, const std::string& request_);
+
     static std::pair<bool, SServiceResponse> WaitForResponse(SClient& client_, const std::string& method_name_,
       std::chrono::nanoseconds timeout_,
       const std::shared_ptr<std::string>& request_shared_ptr_);
+
+    bool WaitForResponseAsync(const Registration::SEntityId& entity_id_, SClient& client_, const std::string& method_name_,
+      const std::shared_ptr<std::string>& request_shared_ptr_, const ResponseIDCallbackT& response_callback_);
 
     static std::shared_ptr<SResponseData> PrepareInitialResponse(SClient& client_, const std::string& method_name_);
     static eCAL::service::ClientResponseCallbackT CreateResponseCallback(const std::shared_ptr<SResponseData>& response_data_);
