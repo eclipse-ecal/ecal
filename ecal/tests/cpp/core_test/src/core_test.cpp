@@ -23,6 +23,7 @@
 #include <ecal/ecal_defs.h>
 
 #include <gtest/gtest.h>
+#include <string>
 
 TEST(core_cpp_core, GetVersion)
 {

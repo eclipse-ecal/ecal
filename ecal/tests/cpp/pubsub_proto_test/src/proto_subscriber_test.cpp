@@ -20,6 +20,8 @@
 // std headers
 #include <atomic>
 #include <chrono>
+#include <cstddef>
+#include <functional>
 #include <thread>
 // used libraries
 #include <gtest/gtest.h>
@@ -29,6 +31,7 @@
 #include <ecal/msg/protobuf/subscriber.h>
 
 #include <person.pb.h>
+#include <utility>
 
 class ProtoSubscriberTest : public ::testing::Test {
 public:

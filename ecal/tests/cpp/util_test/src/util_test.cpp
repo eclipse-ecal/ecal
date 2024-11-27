@@ -17,7 +17,9 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <chrono>
 #include <ecal/ecal.h>
+#include <string>
 #include <util/frequency_calculator.h>
 
 #include <vector>

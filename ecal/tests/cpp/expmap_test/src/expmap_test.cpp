@@ -20,9 +20,8 @@
 #include <ecal/ecal.h>
 #include "util/ecal_expmap.h"
 
-#include <string>
 #include <chrono>
-#include <thread>
+#include <string>
 #include <type_traits>
 
 #include <gtest/gtest.h>

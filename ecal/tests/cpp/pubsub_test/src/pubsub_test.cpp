@@ -17,11 +17,17 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <chrono>
+#include <cstddef>
 #include <ecal/ecal.h>
 #include <ecal/msg/string/publisher.h>
 #include <ecal/msg/string/subscriber.h>
 
 #include <atomic>
+#include <functional>
+#include <iostream>
+#include <memory>
+#include <string>
 #include <thread>
 
 #include <gtest/gtest.h>

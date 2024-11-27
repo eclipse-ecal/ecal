@@ -20,6 +20,8 @@
 // std headers
 #include <atomic>
 #include <chrono>
+#include <functional>
+#include <memory>
 #include <thread>
 
 // used libraries

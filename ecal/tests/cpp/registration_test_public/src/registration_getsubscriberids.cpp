@@ -17,11 +17,14 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstddef>
 #include <ecal/ecal.h>
 
 #include <gtest/gtest.h>
 
 #include <atomic>
+#include <set>
+#include <sstream>
 #include <string>
 #include <vector>
 
