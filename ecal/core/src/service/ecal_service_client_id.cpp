@@ -117,6 +117,26 @@ namespace eCAL
   }
 
   /**
+   * @brief Blocking call of a service method for all existing service instances, response will be returned as vector<pair<bool, SServiceReponse>>
+   *
+   * @param       method_name_  Method name.
+   * @param       request_      Request string.
+   * @param       timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+   *
+   * @return  success state and service response
+  **/
+  std::vector<std::pair<bool, SServiceResponse>> CServiceClientID::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_)
+  {
+    std::vector<std::pair<bool, SServiceResponse>> responses;
+    auto instances = GetServiceClientInstances();
+    for (auto& instance : instances)
+    {
+      responses.emplace_back(instance.CallWithResponse(method_name_, request_, timeout_));
+    }
+    return responses;
+  }
+
+  /**
    * @brief Blocking call (with timeout) of a service method for all existing service instances, using callback
    *
    * @param method_name_        Method name.
