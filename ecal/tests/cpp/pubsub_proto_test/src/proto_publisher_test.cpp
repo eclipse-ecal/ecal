@@ -18,7 +18,6 @@
 */
 
 // std headers
-#include <chrono>
 // used libraries
 #include <gtest/gtest.h>
 // own project
@@ -26,6 +25,7 @@
 #include <ecal/msg/protobuf/publisher.h>
 
 #include <person.pb.h>
+#include <utility>
 
 class ProtoPublisherTest : public ::testing::Test {
 public:
