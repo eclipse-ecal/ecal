@@ -131,7 +131,7 @@ namespace eCAL
       const std::string& request_, std::chrono::nanoseconds timeout_);
 
     // Asynchronous call to a service
-    bool CServiceClientIDImpl::CallAsync(
+    bool CallAsync(
       const Registration::SEntityId& entity_id_, SClient& client_, const std::string& method_name_,
       const std::string& request_, const ResponseIDCallbackT& response_callback_);
 
