@@ -25,9 +25,6 @@
 [submodule "thirdparty/zlib"]
 	path = thirdparty/zlib/zlib
 	url = https://github.com/madler/zlib.git
-[submodule "thirdparty/libssh2"]
-	path = thirdparty/libssh2/libssh2
-	url = https://github.com/libssh2/libssh2.git
 [submodule "thirdparty/hdf5"]
 	path = thirdparty/hdf5/hdf5
 	url = https://github.com/HDFGroup/hdf5.git
