@@ -37,6 +37,10 @@
 
 #define NestedRPCCallTest                         1
 
+#define ClientServerBaseBlockingTest              1
+
+#define DO_LOGGING                                0
+
 enum {
   CMN_REGISTRATION_REFRESH_MS = 1000
 };
@@ -46,7 +50,7 @@ namespace
   typedef std::vector<std::shared_ptr<eCAL::CServiceServer>>   ServiceVecT;
   typedef std::vector<std::shared_ptr<eCAL::CServiceClientID>> ClientVecT;
 
-#if 0
+#if DO_LOGGING
   void PrintRequest(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_)
   {
     std::cout << "------ REQUEST -------" << std::endl;
@@ -63,7 +67,7 @@ namespace
   }
 #endif
 
-#if 0
+#if DO_LOGGING
   void PrintResponse(const struct eCAL::SServiceResponse& service_response_)
   {
     std::cout << "------ RESPONSE ------" << std::endl;
@@ -114,11 +118,15 @@ TEST(core_cpp_clientserver_id, ClientConnectEvent)
       switch (data_->type)
       {
       case client_event_connected:
+#if DO_LOGGING
         std::cout << "event connected fired" << std::endl;
+#endif
         event_connected_fired++;
         break;
       case client_event_disconnected:
+#if DO_LOGGING
         std::cout << "event disconnected fired" << std::endl;
+#endif
         event_disconnected_fired++;
         break;
       default:
@@ -181,11 +189,15 @@ TEST(core_cpp_clientserver_id, ServerConnectEvent)
       switch (data_->type)
       {
       case server_event_connected:
+#if DO_LOGGING
         std::cout << "event connected fired" << std::endl;
+#endif
         event_connected_fired++;
         break;
       case server_event_disconnected:
+#if DO_LOGGING
         std::cout << "event disconnected fired" << std::endl;
+#endif
         event_disconnected_fired++;
         break;
       default:
@@ -239,12 +251,11 @@ TEST(core_cpp_clientserver_id, ServerConnectEvent)
 
 #if ClientServerBaseCallbackTest
 
-TEST(core_cpp_clientserver, ClientServerBaseCallback)
+TEST(core_cpp_clientserver_id, ClientServerBaseCallback)
 {
   const int num_services(2);
   const int num_clients(3);
-  const int calls(1);
-  const int sleep(0);
+  const int calls(5);
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver base callback test");
@@ -308,12 +319,10 @@ TEST(core_cpp_clientserver, ClientServerBaseCallback)
     {
       // call method 1
       success &= client->CallWithCallback("foo::method1", "my request for method 1", -1, response_callback);
-      eCAL::Process::SleepMS(sleep);
       methods_called++;
 
       // call method 2
       success &= client->CallWithCallback("foo::method2", "my request for method 2", -1, response_callback);
-      eCAL::Process::SleepMS(sleep);
       methods_called++;
     }
   }
@@ -327,12 +336,10 @@ TEST(core_cpp_clientserver, ClientServerBaseCallback)
     {
       // call method 1
       success &= client->CallWithCallback("foo::method1", "my request for method 1", -1, response_callback);
-      eCAL::Process::SleepMS(sleep);
       methods_called++;
 
       // call method 2
       success &= client->CallWithCallback("foo::method2", "my request for method 2", -1, response_callback);
-      eCAL::Process::SleepMS(sleep);
       methods_called++;
     }
   }
@@ -350,12 +357,11 @@ TEST(core_cpp_clientserver, ClientServerBaseCallback)
 
 #if ClientServerBaseCallbackTimeoutTest
 
-TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
+TEST(core_cpp_clientserver_id, ClientServerBaseCallbackTimeout)
 {
   const int num_services(2);
   const int num_clients(3);
   const int calls(1);
-  const int sleep(0);
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver base callback test with timeout");
@@ -395,7 +401,9 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
     {
       if ((data_ != nullptr) && (data_->type == client_event_timeout))
       {
+#if DO_LOGGING        
         std::cout << "event timeouted fired" << std::endl;
+#endif
         timeout_fired++;
       }
     };
@@ -431,12 +439,10 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
     {
       // call method 1
       success &= client->CallWithCallback("foo::method1", "my request for method 1", -1, response_callback);
-      eCAL::Process::SleepMS(sleep);
       methods_called++;
 
       // call method 2
       success &= client->CallWithCallback("foo::method2", "my request for method 2", -1, response_callback);
-      eCAL::Process::SleepMS(sleep);
       methods_called++;
     }
   }
@@ -462,12 +468,10 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
     {
       // call method 1
       success &= client->CallWithCallback("foo::method1", "my request for method 1", method_process_time * 4, response_callback);
-      eCAL::Process::SleepMS(sleep);
       methods_called++;
 
       // call method 2
       success &= client->CallWithCallback("foo::method2", "my request for method 2", method_process_time * 4, response_callback);
-      eCAL::Process::SleepMS(sleep);
       methods_called++;
     }
   }
@@ -694,6 +698,109 @@ TEST(core_cpp_clientserver_id, ClientServerBaseAsync)
 }
 
 #endif /* ClientServerBaseAsyncTest */
+
+#if ClientServerBaseBlockingTest
+
+TEST(core_cpp_clientserver_id, ClientServerBaseBlocking)
+{
+  const int num_services(2);
+  const int num_clients(3);
+  const int calls(1);
+
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "clientserver base blocking test");
+
+  // enable loop back communication in the same thread
+  eCAL::Util::EnableLoopback(true);
+
+  // create service servers
+  ServiceVecT service_vec;
+  for (auto s = 0; s < num_services; ++s)
+  {
+    service_vec.push_back(std::make_shared<eCAL::CServiceServer>("service"));
+  }
+
+  // method callback function
+  std::atomic<int> methods_executed(0);
+  auto method_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
+    {
+      PrintRequest(method_, req_type_, resp_type_, request_);
+      response_ = "I answer on " + request_;
+      methods_executed++;
+      return 24;
+    };
+
+  // add method callback
+  for (const auto& service : service_vec)
+  {
+    service->AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", method_callback);
+    service->AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", method_callback);
+  }
+
+  // create service clients
+  ClientVecT client_vec;
+  for (auto s = 0; s < num_clients; ++s)
+  {
+    client_vec.push_back(std::make_shared<eCAL::CServiceClientID>("service"));
+  }
+
+  // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
+
+  // call service
+  std::atomic<int> methods_called(0);
+  std::atomic<int> responses_executed(0);
+  eCAL::ServiceResponseVecT service_response_vec;
+  for (auto i = 0; i < calls; ++i)
+  {
+    // call methods
+    for (const auto& client : client_vec)
+    {
+      // call method 1
+      if (client->CallWithResponse("foo::method1", "my request for method 1", -1, service_response_vec))
+      {
+        ASSERT_EQ(2, service_response_vec.size());
+
+        PrintResponse(service_response_vec[0]);
+        responses_executed++;
+
+        PrintResponse(service_response_vec[1]);
+        responses_executed++;
+
+        methods_called++;
+      }
+
+      // call method 2
+      if (client->CallWithResponse("foo::method2", "my request for method 2", -1, service_response_vec))
+      {
+        ASSERT_EQ(2, service_response_vec.size());
+
+        PrintResponse(service_response_vec[0]);
+        responses_executed++;
+
+        PrintResponse(service_response_vec[1]);
+        responses_executed++;
+
+        methods_called++;
+      }
+    }
+  }
+
+  EXPECT_EQ(methods_called * num_services, methods_executed);
+  EXPECT_EQ(methods_called * num_services, responses_executed);
+
+  // remove method callback
+  for (const auto& service : service_vec)
+  {
+    service->RemMethodCallback("foo::method1");
+    service->RemMethodCallback("foo::method2");
+  }
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+#endif /* ClientServerBaseBlockingTest */
 
 #if NestedRPCCallTest
 

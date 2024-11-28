@@ -55,7 +55,7 @@ namespace eCAL
     if (!m_created) return;
 
     // destroy all remaining clients
-    const std::shared_lock<std::shared_timed_mutex> lock(m_service_client_id_map_sync);
+    const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_id_map_sync);
     m_service_client_id_map.clear();
 
     m_created = false;

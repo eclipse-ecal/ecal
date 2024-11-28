@@ -26,33 +26,34 @@
 
 namespace eCAL
 {
-  CServiceClientInstance::CServiceClientInstance(const Registration::SEntityId& entity_id_, const std::shared_ptr<CServiceClientIDImpl>& service_client_id_impl_)
+  CClientInstance::CClientInstance(const Registration::SEntityId& entity_id_, const std::shared_ptr<CServiceClientIDImpl>& service_client_id_impl_)
     : m_entity_id(entity_id_), m_service_client_impl(service_client_id_impl_)
   {
     assert(m_service_client_impl && "service_client_id_impl_ must not be null");
   }
 
-  std::pair<bool, SServiceResponse> CServiceClientInstance::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_)
+  std::pair<bool, SServiceResponse> CClientInstance::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_)
   {
-    return m_service_client_impl->CallWithResponse(m_entity_id, method_name_, request_, timeout_);
+    return m_service_client_impl->CallWithCallback(m_entity_id, method_name_, request_, timeout_);
   }
 
-  bool CServiceClientInstance::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_)
+  bool CClientInstance::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_)
   {
-    return m_service_client_impl->CallWithCallback(m_entity_id, method_name_, request_, timeout_, response_callback_);
+    auto response = m_service_client_impl->CallWithCallback(m_entity_id, method_name_, request_, timeout_, response_callback_);
+    return response.first;
   }
 
-  ECAL_API bool CServiceClientInstance::CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_)
+  ECAL_API bool CClientInstance::CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_)
   {
     return m_service_client_impl->CallWithCallbackAsync(m_entity_id, method_name_, request_, response_callback_);
   }
 
-  bool CServiceClientInstance::IsConnected() const
+  bool CClientInstance::IsConnected() const
   {
     return m_service_client_impl->IsConnected(m_entity_id);
   }
 
-  Registration::SEntityId CServiceClientInstance::GetClientID() const
+  Registration::SEntityId CClientInstance::GetClientID() const
   {
     return m_entity_id;
   }

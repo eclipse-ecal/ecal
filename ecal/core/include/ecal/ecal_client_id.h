@@ -72,7 +72,7 @@ namespace eCAL
      * @return  Vector of client instances
     **/
     ECAL_API_EXPORTED_MEMBER
-      std::vector<CServiceClientInstance> GetServiceClientInstances() const;
+      std::vector<CClientInstance> GetClientInstances() const;
 
     /**
      * @brief Blocking call of a service method for all existing service instances, response will be returned as vector<pair<bool, SServiceReponse>>
@@ -80,11 +80,12 @@ namespace eCAL
      * @param       method_name_  Method name.
      * @param       request_      Request string.
      * @param       timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+     * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
      *
-     * @return  vector of success states and service responses
+     * @return  True if all calls were successful.
     **/
     ECAL_API_EXPORTED_MEMBER
-      std::vector<std::pair<bool, SServiceResponse>> CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
+      bool CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT& service_response_vec_) const;
 
     /**
      * @brief Blocking call (with timeout) of a service method for all existing service instances, using callback

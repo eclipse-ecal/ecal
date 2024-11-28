@@ -39,23 +39,23 @@ namespace eCAL
 {
   class CServiceClientIDImpl;
 
-  class ECAL_API_CLASS CServiceClientInstance final
+  class ECAL_API_CLASS CClientInstance final
   {
   public:
     // Constructor
     ECAL_API_EXPORTED_MEMBER
-      CServiceClientInstance(const Registration::SEntityId& entity_id_, const std::shared_ptr<CServiceClientIDImpl>& service_client_id_impl_);
+      CClientInstance(const Registration::SEntityId& entity_id_, const std::shared_ptr<CServiceClientIDImpl>& service_client_id_impl_);
 
     // Defaulted destructor
-    ~CServiceClientInstance() = default;
+    ~CClientInstance() = default;
 
     // Deleted copy constructor and copy assignment operator
-    CServiceClientInstance(const CServiceClientInstance&) = delete;
-    CServiceClientInstance& operator=(const CServiceClientInstance&) = delete;
+    CClientInstance(const CClientInstance&) = delete;
+    CClientInstance& operator=(const CClientInstance&) = delete;
 
     // Defaulted move constructor and move assignment operator
-    ECAL_API_EXPORTED_MEMBER CServiceClientInstance(CServiceClientInstance&& rhs) noexcept = default;
-    ECAL_API_EXPORTED_MEMBER CServiceClientInstance& operator=(CServiceClientInstance&& rhs) noexcept = default;
+    ECAL_API_EXPORTED_MEMBER CClientInstance(CClientInstance&& rhs) noexcept = default;
+    ECAL_API_EXPORTED_MEMBER CClientInstance& operator=(CClientInstance&& rhs) noexcept = default;
 
     /**
      * @brief Blocking call of a service method, response will be returned as pair<bool, SServiceReponse>

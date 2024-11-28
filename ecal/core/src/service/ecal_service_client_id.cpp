@@ -102,9 +102,9 @@ namespace eCAL
    *
    * @return  Vector of client instances
   **/
-  std::vector<CServiceClientInstance> CServiceClientID::GetServiceClientInstances() const
+  std::vector<CClientInstance> CServiceClientID::GetClientInstances() const
   {
-    std::vector<CServiceClientInstance> instances;
+    std::vector<CClientInstance> instances;
     if (!m_service_client_impl) return instances;
 
     auto entity_ids = m_service_client_impl->GetServiceIDs();
@@ -122,31 +122,20 @@ namespace eCAL
    * @param       method_name_  Method name.
    * @param       request_      Request string.
    * @param       timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+   * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
    *
-   * @return  vector of success states and service responses
+   * @return  True if all calls were successful.
   **/
-  std::vector<std::pair<bool, SServiceResponse>> CServiceClientID::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_)
+  bool CServiceClientID::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT& service_response_vec_) const
   {
-#if 0
-    std::vector<std::pair<bool, SServiceResponse>> responses;
-    auto instances = GetServiceClientInstances();
-    for (auto& instance : instances)
-    {
-      responses.emplace_back(instance.CallWithResponse(method_name_, request_, timeout_));
-    }
-    return responses;
-#else
-    std::vector<std::pair<bool, SServiceResponse>> responses;
-
-    auto instances = GetServiceClientInstances();
+    auto instances = GetClientInstances();
     size_t num_instances = instances.size();
-    responses.reserve(num_instances);
 
-    // vector to hold futures
+    // Vector to hold futures for the return values and responses
     std::vector<std::future<std::pair<bool, SServiceResponse>>> futures;
     futures.reserve(num_instances);
 
-    // launch asynchronous tasks for each instance
+    // Launch asynchronous calls for each instance
     for (auto& instance : instances)
     {
       futures.emplace_back(std::async(std::launch::async,
@@ -156,22 +145,37 @@ namespace eCAL
         }));
     }
 
-    // collect results
+    bool overall_success = true;
+    service_response_vec_.clear(); // Ensure the response vector is empty before populating it
+
+    // Collect responses
     for (auto& future : futures)
     {
       try
       {
-        responses.emplace_back(future.get());
+        // Explicitly unpack the pair
+        std::pair<bool, SServiceResponse> result = future.get();
+        bool success = result.first;
+        SServiceResponse response = result.second;
+
+        // Add response to the vector
+        service_response_vec_.emplace_back(response);
+
+        // Aggregate success states
+        overall_success &= success;
       }
-      catch (const std::exception& /*e*/)
+      catch (const std::exception& e)
       {
-        // handle exceptions
-        responses.emplace_back(std::make_pair(false, SServiceResponse{}));
+        // Handle exceptions and add an error response
+        SServiceResponse error_response;
+        error_response.error_msg = e.what();
+        error_response.call_state = call_state_failed;
+        service_response_vec_.emplace_back(error_response);
+        overall_success = false; // Mark overall success as false if any call fails
       }
     }
 
-    return responses;
-#endif
+    return overall_success; 
   }
 
   /**
@@ -186,16 +190,7 @@ namespace eCAL
   **/
   bool CServiceClientID::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_) const
   {
-#if 0
-    bool return_state = true;
-    auto instances = GetServiceClientInstances();
-    for (auto& instance : instances)
-    {
-      return_state &= instance.CallWithCallback(method_name_, request_, timeout_, response_callback_);
-    }
-    return return_state;
-#else
-    auto instances = GetServiceClientInstances();
+    auto instances = GetClientInstances();
     size_t num_instances = instances.size();
 
     // Vector to hold futures for the return values
@@ -218,7 +213,7 @@ namespace eCAL
       {
         return_state &= future.get();
       }
-      catch (const std::exception& e)
+      catch (const std::exception& /*e*/)
       {
         // Handle exceptions
         return_state = false;
@@ -226,7 +221,6 @@ namespace eCAL
     }
 
     return return_state;
-#endif
   }
 
   /**
@@ -241,7 +235,7 @@ namespace eCAL
   bool CServiceClientID::CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_) const
   {
     bool return_state = true;
-    auto instances = GetServiceClientInstances();
+    auto instances = GetClientInstances();
     for (auto& instance : instances)
     {
       return_state &= instance.CallWithCallbackAsync(method_name_, request_, response_callback_);
@@ -266,7 +260,7 @@ namespace eCAL
   **/
   bool CServiceClientID::IsConnected() const
   {
-    const auto instances = GetServiceClientInstances();
+    const auto instances = GetClientInstances();
     for (const auto& instance : instances)
     {
       if (instance.IsConnected()) return true;

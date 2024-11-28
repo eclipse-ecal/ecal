@@ -67,7 +67,7 @@ int main(int argc, char **argv)
     std::string request("Hello");
 
     // call all existing services
-    for (auto& client_instance : minimal_client.GetServiceClientInstances())
+    for (auto& client_instance : minimal_client.GetClientInstances())
     {
       //////////////////////////////////////
       // Service call (blocking)
