@@ -237,7 +237,7 @@ std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5Meas::GetChannels() const
     auto escaped_channels = hdf_meas_impl_->GetChannels();
     for (const auto& escaped_channel : escaped_channels)
     {
-      ret_val.emplace(eCAL::eh5::SChannel{ GetUnescapedString(escaped_channel.name), escaped_channel.id });
+      ret_val.emplace(GetUnescapedString(escaped_channel.name), escaped_channel.id);
     }
   }
 
@@ -253,7 +253,7 @@ std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5Meas::GetChannels(const std::string
     for (const auto& escaped_channel : escaped_channels)
     {
       if (GetUnescapedString(escaped_channel.name) == channel_name)
-        ret_val.emplace(eCAL::eh5::SChannel{ channel_name, escaped_channel.id });
+        ret_val.emplace(channel_name, escaped_channel.id);
     }
   }
 
@@ -363,11 +363,13 @@ void eCAL::eh5::HDF5Meas::SetChannelDataTypeInformation(const SChannel& channel,
 // deprecated
 long long eCAL::eh5::HDF5Meas::GetMinTimestamp(const std::string& channel_name) const
 {
-  auto channels = GetChannels(channel_name);
-  std::vector<long long> min_timestamps_per_channel;
-  std::transform(channels.begin(), channels.end(), std::back_inserter(min_timestamps_per_channel),
-      [this](const eCAL::eh5::SChannel& channel) { return GetMinTimestamp(channel); });
-  return *std::min_element(min_timestamps_per_channel.begin(), min_timestamps_per_channel.end());
+  long long ret_val = 0;
+  if (hdf_meas_impl_)
+  {
+    ret_val = hdf_meas_impl_->GetMinTimestamp(GetEscapedTopicname(channel_name));
+  }
+
+  return ret_val;
 }
 
 
@@ -387,11 +389,13 @@ long long eCAL::eh5::HDF5Meas::GetMinTimestamp(const SChannel& channel) const
 // deprecated
 long long eCAL::eh5::HDF5Meas::GetMaxTimestamp(const std::string& channel_name) const
 {
-  auto channels = GetChannels(channel_name);
-  std::vector<long long> max_timestamps_per_channel;
-  std::transform(channels.begin(), channels.end(), std::back_inserter(max_timestamps_per_channel),
-    [this](const eCAL::eh5::SChannel& channel) { return GetMaxTimestamp(channel); });
-  return *std::max_element(max_timestamps_per_channel.begin(), max_timestamps_per_channel.end());
+  long long ret_val = 0;
+  if (hdf_meas_impl_)
+  {
+    ret_val = hdf_meas_impl_->GetMaxTimestamp(GetEscapedTopicname(channel_name));
+  }
+
+  return ret_val;
 }
 
 long long eCAL::eh5::HDF5Meas::GetMaxTimestamp(const SChannel& channel) const
@@ -410,15 +414,12 @@ long long eCAL::eh5::HDF5Meas::GetMaxTimestamp(const SChannel& channel) const
 // deprecated
 bool eCAL::eh5::HDF5Meas::GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const
 {
-  entries.clear();
-  bool ret_val = true;
-  auto channels = GetChannels(channel_name);
-  for (const auto& channel : channels)
+  bool ret_val = false;
+  if (hdf_meas_impl_)
   {
-    EntryInfoSet channel_entries;
-    ret_val &= GetEntriesInfo(channel, channel_entries);
-    entries.insert(channel_entries.begin(), channel_entries.end());
+    ret_val = hdf_meas_impl_->GetEntriesInfo(GetEscapedTopicname(channel_name), entries);
   }
+
   return ret_val;
 }
 
@@ -438,15 +439,12 @@ bool eCAL::eh5::HDF5Meas::GetEntriesInfo(const SChannel& channel, EntryInfoSet& 
 // deprecated
 bool eCAL::eh5::HDF5Meas::GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const
 {
-  entries.clear();
-  bool ret_val = true;
-  auto channels = GetChannels(channel_name);
-  for (const auto& channel : channels)
+  bool ret_val = false;
+  if (hdf_meas_impl_ && begin < end)
   {
-    EntryInfoSet channel_entries;
-    ret_val &= GetEntriesInfoRange(channel, begin, end, channel_entries);
-    entries.insert(channel_entries.begin(), channel_entries.end());
+    ret_val = hdf_meas_impl_->GetEntriesInfoRange(GetEscapedTopicname(channel_name), begin, end, entries);
   }
+
   return ret_val;
 }
 

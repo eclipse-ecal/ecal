@@ -152,7 +152,7 @@ bool eCAL::eh5::HDF5MeasFileWriterV6::HasChannel(const std::string& /*channel_na
   return false;
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV6::HasChannel(const eCAL::eh5::SChannel& channel) const
+bool eCAL::eh5::HDF5MeasFileWriterV6::HasChannel(const eCAL::eh5::SChannel& /*channel*/) const
 {
   // UNSUPPORTED FUNCTION
   return false;
@@ -211,9 +211,10 @@ void eCAL::eh5::HDF5MeasFileWriterV6::SetFileBaseName(const std::string& base_na
   base_name_ = base_name;
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV6::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock)
+// V6 Measurements cannot handle ids properly and they should not be used. This function signature should not be used.
+bool eCAL::eh5::HDF5MeasFileWriterV6::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long /*id*/, long long clock)
 {
-  return AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, SChannel(channel_name), clock);
+  return AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, SChannel(channel_name, 0), clock);
 }
 
 bool eCAL::eh5::HDF5MeasFileWriterV6::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long clock)
