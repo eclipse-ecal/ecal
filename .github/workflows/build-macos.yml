@@ -123,18 +123,19 @@ jobs:
 #      run: ctest -V
 #      working-directory: ${{ runner.workspace }}/_build
 
-    - name: Pack
-      run: cpack -G DragNDrop
-      working-directory: ${{ runner.workspace }}/_build
+#    Currently (2024-11-28) packing very often fails under macos
+#    - name: Pack
+#      run: cpack -G DragNDrop
+#      working-directory: ${{ runner.workspace }}/_build
 
-    - name: Upload DMG
-      uses: actions/upload-artifact@v4
-      with:
-        name: macos-dmg
-        path: ${{ runner.workspace }}/_build/_deploy/*.dmg
+#    - name: Upload DMG
+#      uses: actions/upload-artifact@v4
+#      with:
+#        name: macos-dmg
+#        path: ${{ runner.workspace }}/_build/_deploy/*.dmg
 
-    - name: Upload Python Wheel
-      uses: actions/upload-artifact@v4
-      with:
-        name: macos-python-wheel
-        path: ${{ runner.workspace }}/_build/_deploy/*.whl
+#    - name: Upload Python Wheel
+#      uses: actions/upload-artifact@v4
+#      with:
+#        name: macos-python-wheel
+#        path: ${{ runner.workspace }}/_build/_deploy/*.whl
