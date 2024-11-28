@@ -39,11 +39,12 @@ namespace eCAL
 {
   class CServiceClientIDImpl;
 
-  class CServiceClientInstance final
+  class ECAL_API_CLASS CServiceClientInstance final
   {
   public:
     // Constructor
-    ECAL_API CServiceClientInstance(const Registration::SEntityId& entity_id_, const std::shared_ptr<CServiceClientIDImpl>& service_client_id_impl_);
+    ECAL_API_EXPORTED_MEMBER
+      CServiceClientInstance(const Registration::SEntityId& entity_id_, const std::shared_ptr<CServiceClientIDImpl>& service_client_id_impl_);
 
     // Defaulted destructor
     ~CServiceClientInstance() = default;
@@ -53,8 +54,8 @@ namespace eCAL
     CServiceClientInstance& operator=(const CServiceClientInstance&) = delete;
 
     // Defaulted move constructor and move assignment operator
-    ECAL_API CServiceClientInstance(CServiceClientInstance&& rhs) noexcept = default;
-    ECAL_API CServiceClientInstance& operator=(CServiceClientInstance&& rhs) noexcept = default;
+    ECAL_API_EXPORTED_MEMBER CServiceClientInstance(CServiceClientInstance&& rhs) noexcept = default;
+    ECAL_API_EXPORTED_MEMBER CServiceClientInstance& operator=(CServiceClientInstance&& rhs) noexcept = default;
 
     /**
      * @brief Blocking call of a service method, response will be returned as pair<bool, SServiceReponse>
@@ -65,7 +66,8 @@ namespace eCAL
      *
      * @return  success state and service response
     **/
-    ECAL_API std::pair<bool, SServiceResponse> CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
+    ECAL_API_EXPORTED_MEMBER
+      std::pair<bool, SServiceResponse> CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
 
     /**
      * @brief Blocking call of a service method, using callback
@@ -77,7 +79,8 @@ namespace eCAL
      *
      * @return  True if successful.
     **/
-    ECAL_API bool CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_);
+    ECAL_API_EXPORTED_MEMBER
+      bool CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_);
 
     /**
      * @brief Asynchronous call of a service method, using callback
@@ -88,21 +91,24 @@ namespace eCAL
      *
      * @return  True if successful.
     **/
-    ECAL_API bool CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_);
+    ECAL_API_EXPORTED_MEMBER
+      bool CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_);
 
     /**
      * @brief Check connection state.
      *
      * @return  True if connected, false if not.
     **/
-    ECAL_API bool IsConnected() const;
+    ECAL_API_EXPORTED_MEMBER
+      bool IsConnected() const;
 
     /**
-     * @brief Get unique client ide.
+     * @brief Get unique client entity id.
      *
-     * @return  The client id.
+     * @return  The client entity id.
     **/
-    ECAL_API Registration::SEntityId GetClientID() const;
+    ECAL_API_EXPORTED_MEMBER
+      Registration::SEntityId GetClientID() const;
 
   private:
     Registration::SEntityId                           m_entity_id;

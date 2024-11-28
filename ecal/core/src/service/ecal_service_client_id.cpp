@@ -123,10 +123,11 @@ namespace eCAL
    * @param       request_      Request string.
    * @param       timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
    *
-   * @return  success state and service response
+   * @return  vector of success states and service responses
   **/
   std::vector<std::pair<bool, SServiceResponse>> CServiceClientID::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_)
   {
+#if 0
     std::vector<std::pair<bool, SServiceResponse>> responses;
     auto instances = GetServiceClientInstances();
     for (auto& instance : instances)
@@ -134,6 +135,43 @@ namespace eCAL
       responses.emplace_back(instance.CallWithResponse(method_name_, request_, timeout_));
     }
     return responses;
+#else
+    std::vector<std::pair<bool, SServiceResponse>> responses;
+
+    auto instances = GetServiceClientInstances();
+    size_t num_instances = instances.size();
+    responses.reserve(num_instances);
+
+    // vector to hold futures
+    std::vector<std::future<std::pair<bool, SServiceResponse>>> futures;
+    futures.reserve(num_instances);
+
+    // launch asynchronous tasks for each instance
+    for (auto& instance : instances)
+    {
+      futures.emplace_back(std::async(std::launch::async,
+        [&instance, method_name_ = method_name_, request_ = request_, timeout_]()
+        {
+          return instance.CallWithResponse(method_name_, request_, timeout_);
+        }));
+    }
+
+    // collect results
+    for (auto& future : futures)
+    {
+      try
+      {
+        responses.emplace_back(future.get());
+      }
+      catch (const std::exception& /*e*/)
+      {
+        // handle exceptions
+        responses.emplace_back(std::make_pair(false, SServiceResponse{}));
+      }
+    }
+
+    return responses;
+#endif
   }
 
   /**
@@ -148,6 +186,7 @@ namespace eCAL
   **/
   bool CServiceClientID::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_) const
   {
+#if 0
     bool return_state = true;
     auto instances = GetServiceClientInstances();
     for (auto& instance : instances)
@@ -155,6 +194,39 @@ namespace eCAL
       return_state &= instance.CallWithCallback(method_name_, request_, timeout_, response_callback_);
     }
     return return_state;
+#else
+    auto instances = GetServiceClientInstances();
+    size_t num_instances = instances.size();
+
+    // Vector to hold futures for the return values
+    std::vector<std::future<bool>> futures;
+    futures.reserve(num_instances);
+
+    for (auto& instance : instances)
+    {
+      futures.emplace_back(std::async(std::launch::async,
+        [&instance, method_name_ = method_name_, request_ = request_, timeout_, response_callback_]()
+        {
+          return instance.CallWithCallback(method_name_, request_, timeout_, response_callback_);
+        }));
+    }
+
+    bool return_state = true;
+    for (auto& future : futures)
+    {
+      try
+      {
+        return_state &= future.get();
+      }
+      catch (const std::exception& e)
+      {
+        // Handle exceptions
+        return_state = false;
+      }
+    }
+
+    return return_state;
+#endif
   }
 
   /**
