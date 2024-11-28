@@ -210,16 +210,16 @@ namespace
   std::vector<std::string> ConvertArgcArgvToVector(int argc_, char** argv_)
   {
     std::vector<std::string> arguments;
-    if (argc_ > 0 && argv_ != nullptr)
+    if (argv_ == nullptr) return arguments;
+    
+    for (size_t i = 0; i < static_cast<size_t>(argc_); ++i)
     {
-      for (size_t i = 0; i < static_cast<size_t>(argc_); ++i)
+      if (argv_[i] != nullptr)
       {
-        if (argv_[i] != nullptr)
-        {
-          arguments.emplace_back(argv_[i]);
-        }
+        arguments.emplace_back(argv_[i]);
       }
     }
+    
     return arguments;
   }
 }
@@ -271,9 +271,7 @@ namespace eCAL
       InitFromFile(g_default_ini_file);
     }
 
-    Configuration::Configuration()
-    {
-    }
+    Configuration::Configuration() = default;
 
     std::string Configuration::GetYamlFilePath()
     {
