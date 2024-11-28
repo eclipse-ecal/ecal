@@ -44,13 +44,13 @@
 // TODO: Test the one-file-per-channel setting with gtest
 constexpr unsigned int kDefaultMaxFileSizeMB = 1000;
 eCAL::eh5::HDF5MeasDir::HDF5MeasDir()
-  : access_              (RDONLY) // Temporarily set it to RDONLY, so the leading "Close()" from the Open() function will not operate on the uninitialized variable.
+  : access_              (v3::eAccessType::RDONLY) // Temporarily set it to RDONLY, so the leading "Close()" from the Open() function will not operate on the uninitialized variable.
   , one_file_per_channel_(false)
   , max_size_per_file_   (kDefaultMaxFileSizeMB * 1024 * 1024)
   , cb_pre_split_        (nullptr)
 {}
 
-eCAL::eh5::HDF5MeasDir::HDF5MeasDir(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
+eCAL::eh5::HDF5MeasDir::HDF5MeasDir(const std::string& path, v3::eAccessType access /*= eAccessType::RDONLY*/)
   : access_              (access)
   , one_file_per_channel_(false)
   , max_size_per_file_   (kDefaultMaxFileSizeMB * 1024 * 1024)
@@ -68,7 +68,7 @@ eCAL::eh5::HDF5MeasDir::~HDF5MeasDir()
   HDF5MeasDir::Close();
 }
 
-bool eCAL::eh5::HDF5MeasDir::Open(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
+bool eCAL::eh5::HDF5MeasDir::Open(const std::string& path, v3::eAccessType access /*= eAccessType::RDONLY*/)
 {
   // call the function via its class becase it's a virtual function that is called directly/indirectly in constructor/destructor,-
   // where the vtable is not created yet or it's destructed.
@@ -82,11 +82,11 @@ bool eCAL::eh5::HDF5MeasDir::Open(const std::string& path, eAccessType access /*
 
   switch (access)
   {
-  case eCAL::eh5::RDONLY:
+  case eCAL::eh5::v3::eAccessType::RDONLY:
   //case eCAL::eh5::RDWR:
     return OpenRX(path, access);
-  case eCAL::eh5::CREATE:
-  case eCAL::eh5::CREATE_V5:
+  case eCAL::eh5::v3::eAccessType::CREATE:
+  case eCAL::eh5::v3::eAccessType::CREATE_V5:
     output_dir_ = path;
     return true;
   default:
@@ -100,7 +100,7 @@ bool eCAL::eh5::HDF5MeasDir::Close()
 {
   bool successfully_closed{ true };
 
-  if (access_ == eAccessType::CREATE || access_ == eAccessType::CREATE_V5)
+  if (access_ == v3::eAccessType::CREATE || access_ == v3::eAccessType::CREATE_V5)
   {
     // Close all existing file writers
     for (auto& file_writer : file_writers_)
@@ -138,11 +138,11 @@ bool eCAL::eh5::HDF5MeasDir::IsOk() const
 {
   switch (access_)
   {
-  case eCAL::eh5::RDONLY:
+  case eCAL::eh5::v3::eAccessType::RDONLY:
   //case eCAL::eh5::RDWR:
     return !file_readers_.empty() && !entries_by_id_.empty();
-  case eCAL::eh5::CREATE:
-  case eCAL::eh5::CREATE_V5:
+  case eCAL::eh5::v3::eAccessType::CREATE:
+  case eCAL::eh5::v3::eAccessType::CREATE_V5:
     return true;
   default:
     return false;
@@ -186,15 +186,6 @@ void eCAL::eh5::HDF5MeasDir::SetOneFilePerChannelEnabled(bool enabled)
   one_file_per_channel_ = enabled;
 }
 
-std::set<std::string> eCAL::eh5::HDF5MeasDir::GetChannelNames() const
-{
-  std::set<std::string> channels;
-  for (const auto& chn : channels_info_)
-    channels.insert(chn.first);
-
-  return channels;
-}
-
 std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasDir::GetChannels() const
 {
   std::set<eCAL::eh5::SChannel> channels;
@@ -204,11 +195,6 @@ std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasDir::GetChannels() const
       channels.insert({ chn.first, chn_id.first });
 
   return channels;
-}
-
-bool eCAL::eh5::HDF5MeasDir::HasChannel(const std::string& channel_name) const
-{
-  return channels_info_.count(channel_name) != 0;
 }
 
 bool eCAL::eh5::HDF5MeasDir::HasChannel(const eCAL::eh5::SChannel& channel) const
@@ -243,7 +229,7 @@ eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasDir::GetChannelDataTypeInforma
 void eCAL::eh5::HDF5MeasDir::SetChannelDataTypeInformation(const SChannel& channel, const eCAL::eh5::DataTypeInformation& info)
 {
   // Get an existing writer or create a new one
-  auto file_writer_it = GetWriter(channel.name);
+  auto file_writer_it = GetWriter(channel);
   file_writer_it->second->SetChannelDataTypeInformation(channel, info);
 
   // Let's save them in case we need to query them
@@ -350,9 +336,9 @@ void eCAL::eh5::HDF5MeasDir::SetFileBaseName(const std::string& base_name)
   base_name_ = base_name;
 }
 
-bool eCAL::eh5::HDF5MeasDir::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock)
+bool eCAL::eh5::HDF5MeasDir::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long id, long long clock)
 {
-  if ((access_ == RDONLY)
+  if ((access_ == v3::eAccessType::RDONLY)
     || (output_dir_.empty())
     || (base_name_.empty()))
   {
@@ -360,26 +346,10 @@ bool eCAL::eh5::HDF5MeasDir::AddEntryToFile(const void* data, const unsigned lon
   }
 
   // Get an existing writer or create a new one
-  auto file_writer_it = GetWriter(channel_name);
-  
-  // Use the writer that was either found or created to actually write the data
-  return file_writer_it->second->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel_name, id, clock);
-}
-
-bool eCAL::eh5::HDF5MeasDir::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long clock)
-{
-  if ((access_ == RDONLY)
-    || (output_dir_.empty())
-    || (base_name_.empty()))
-  {
-    return false;
-  }
-
-  // Get an existing writer or create a new one
-  auto file_writer_it = GetWriter(channel.name);
+  auto file_writer_it = GetWriter(channel);
 
   // Use the writer that was either found or created to actually write the data
-  return file_writer_it->second->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel, clock);
+  return file_writer_it->second->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel, id, clock);
 }
 
 void eCAL::eh5::HDF5MeasDir::ConnectPreSplitCallback(CallbackFunction cb)
@@ -471,9 +441,9 @@ std::list<std::string> eCAL::eh5::HDF5MeasDir::GetHdfFiles(const std::string& pa
   return paths;
 }
 
-bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
+bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, v3::eAccessType access /*= eAccessType::RDONLY*/)
 {
-  if (access != eAccessType::RDONLY /*&& access != eAccessType::RDWR*/) return false;
+  if (access != v3::eAccessType::RDONLY /*&& access != eAccessType::RDWR*/) return false;
 
   auto files = GetHdfFiles(path);
 
@@ -481,7 +451,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
 
   for (const auto& file_path : files)
   {
-    auto reader = new eCAL::eh5::HDF5Meas(file_path);
+    auto reader = new eCAL::eh5::v3::HDF5Meas(file_path);
 
     if (reader->IsOk())
     {
@@ -531,15 +501,16 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
   return !file_readers_.empty();
 }
 
-::eCAL::eh5::HDF5MeasDir::FileWriterMap::iterator eCAL::eh5::HDF5MeasDir::GetWriter(const std::string& channel_name)
+::eCAL::eh5::HDF5MeasDir::FileWriterMap::iterator eCAL::eh5::HDF5MeasDir::GetWriter(const SChannel& channel)
 {
+  const auto& channel_name{ channel.name };
   // Look for an existing writer. When creating 1 file per channel, the channel
   // name is used as key. Otherwise, emptystring is used as "generic" key and
   // the same writer is used for all channels.
   FileWriterMap::iterator file_writer_it = file_writers_.find(one_file_per_channel_ ? channel_name : "");
   if (file_writer_it == file_writers_.end())
   {
-    if (access_ == eAccessType::CREATE)
+    if (access_ == v3::eAccessType::CREATE)
     {
       // No appropriate file writer was found. Let's create a new one!
       file_writer_it = file_writers_.emplace(one_file_per_channel_ ? channel_name : "", std::make_unique<::eCAL::eh5::HDF5MeasFileWriterV6>()).first;

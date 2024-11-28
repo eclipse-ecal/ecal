@@ -73,9 +73,6 @@ namespace eCAL
           std::string name = "";
           id_t        id = 0;
 
-          [[deprecated("Please construct a Channel object explicitly.")]]
-          Channel(const std::string name_) : name(name_) {};
-          
           Channel(const std::string name_, id_t id_) : name(name_), id(id_) {};
 
           //!< @cond

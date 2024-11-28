@@ -25,6 +25,7 @@
 
 #include "hdf5.h"
 #include <ecal_utils/string.h>
+#include "datatype_helper.h"
 
 #include <iostream>
 
@@ -37,7 +38,7 @@ eCAL::eh5::HDF5MeasFileV1::HDF5MeasFileV1()
 }
 
 
-eCAL::eh5::HDF5MeasFileV1::HDF5MeasFileV1(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
+eCAL::eh5::HDF5MeasFileV1::HDF5MeasFileV1(const std::string& path, v3::eAccessType access /*= eAccessType::RDONLY*/)
   : file_id_(-1)
 {
 #ifndef _DEBUG
@@ -58,7 +59,7 @@ eCAL::eh5::HDF5MeasFileV1::~HDF5MeasFileV1()
 }
 
 
-bool eCAL::eh5::HDF5MeasFileV1::Open(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
+bool eCAL::eh5::HDF5MeasFileV1::Open(const std::string& path, v3::eAccessType access /*= eAccessType::RDONLY*/)
 {
   entries_.clear();
 
@@ -68,7 +69,7 @@ bool eCAL::eh5::HDF5MeasFileV1::Open(const std::string& path, eAccessType access
   if (file_id_ > 0)
     HDF5MeasFileV1::Close();
 
-  if (access != eAccessType::RDONLY)
+  if (access != v3::eAccessType::RDONLY)
   {
     ReportUnsupportedAction();
     return false;
@@ -78,11 +79,11 @@ bool eCAL::eh5::HDF5MeasFileV1::Open(const std::string& path, eAccessType access
 
   if (HDF5MeasFileV1::IsOk())
   {
-    auto channels = HDF5MeasFileV1::GetChannelNames();
+    auto channels = HDF5MeasFileV1::GetChannels();
     if (channels.size() == 1)
     {
-      channel_name_ = *channels.begin();
-      HDF5MeasFileV1::GetEntriesInfo(eCAL::experimental::measurement::base::CreateChannel(channel_name_), entries_);
+      auto channel = *channels.begin();
+      HDF5MeasFileV1::GetEntriesInfo(channel, entries_);
     }
   }
 
@@ -143,42 +144,24 @@ void eCAL::eh5::HDF5MeasFileV1::SetOneFilePerChannelEnabled(bool /*enabled*/)
   ReportUnsupportedAction();
 }
 
-std::set<std::string> eCAL::eh5::HDF5MeasFileV1::GetChannelNames() const
+std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasFileV1::GetChannels() const
 {
-  std::set<std::string> channels;
+  std::set<eCAL::eh5::SChannel> channels;
 
   std::string channel_name;
   GetAttributeValue(file_id_, kChnNameAttribTitle, channel_name);
 
   if (!channel_name.empty())
-    channels.insert(channel_name);
+    channels.insert(eCAL::experimental::measurement::base::CreateChannel(channel_name));
 
   return channels;
-}
-
-std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasFileV1::GetChannels() const
-{
-  auto channel_names = GetChannelNames();
-  std::set<eCAL::eh5::SChannel> channels;
-
-  // Transform the vector of strings into a vector of MyStruct
-  std::transform(channel_names.begin(), channel_names.end(), std::inserter(channels, channels.begin()),
-    [](const std::string& str) { return eCAL::experimental::measurement::base::CreateChannel(str); });
-
-  return channels;
-}
-
-
-bool eCAL::eh5::HDF5MeasFileV1::HasChannel(const std::string& channel_name) const
-{
-  auto channels = GetChannelNames();
-
-  return std::find(channels.cbegin(), channels.cend(), channel_name) != channels.end();
 }
 
 bool eCAL::eh5::HDF5MeasFileV1::HasChannel(const eCAL::eh5::SChannel& channel) const
 {
-    return HasChannel(channel.name);
+  auto channels = GetChannels();
+
+  return std::find(channels.cbegin(), channels.cend(), channel) != channels.end();
 }
 
 eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileV1::GetChannelDataTypeInformation(const SChannel& channel) const
@@ -322,13 +305,7 @@ void eCAL::eh5::HDF5MeasFileV1::SetFileBaseName(const std::string& /*base_name*/
   ReportUnsupportedAction();
 }
 
-bool eCAL::eh5::HDF5MeasFileV1::AddEntryToFile(const void* /*data*/, const unsigned long long& /*size*/, const long long& /*snd_timestamp*/, const long long& /*rcv_timestamp*/, const std::string& /*channel_name*/, long long /*id*/, long long /*clock*/)
-{
-  ReportUnsupportedAction();
-  return false;
-}
-
-bool eCAL::eh5::HDF5MeasFileV1::AddEntryToFile(const void* /*data*/, const unsigned long long& /*size*/, const long long& /*snd_timestamp*/, const long long& /*rcv_timestamp*/, const SChannel& /*channel*/, long long /*clock*/)
+bool eCAL::eh5::HDF5MeasFileV1::AddEntryToFile(const void* /*data*/, const unsigned long long& /*size*/, const long long& /*snd_timestamp*/, const long long& /*rcv_timestamp*/, const SChannel& /*channel*/, long long id, long long /*clock*/)
 {
   ReportUnsupportedAction();
   return false;

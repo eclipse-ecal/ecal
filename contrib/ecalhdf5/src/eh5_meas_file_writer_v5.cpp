@@ -23,6 +23,7 @@
 
 #include "eh5_meas_file_writer_v5.h"
 #include "escape.h"
+#include "datatype_helper.h"
 
 #ifdef WIN32
 #include <windows.h>
@@ -54,7 +55,7 @@ eCAL::eh5::HDF5MeasFileWriterV5::~HDF5MeasFileWriterV5()
   HDF5MeasFileWriterV5::Close();
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::Open(const std::string& output_dir, eAccessType /*access = eAccessType::RDONLY*/)
+bool eCAL::eh5::HDF5MeasFileWriterV5::Open(const std::string& output_dir, v3::eAccessType /*access = eAccessType::RDONLY*/)
 {
   Close();
 
@@ -126,23 +127,10 @@ void eCAL::eh5::HDF5MeasFileWriterV5::SetOneFilePerChannelEnabled(bool /*enabled
 {
 }
 
-std::set<std::string> eCAL::eh5::HDF5MeasFileWriterV5::GetChannelNames() const
-{
-  // UNSUPPORTED FUNCTION
-  return {};
-}
-
 std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasFileWriterV5::GetChannels() const
 {
   // UNSUPPORTED FUNCTIONs
   return std::set<eCAL::eh5::SChannel>();
-}
-
-
-bool eCAL::eh5::HDF5MeasFileWriterV5::HasChannel(const std::string& /*channel_name*/) const
-{
-  // UNSUPPORTED FUNCTION
-  return false;
 }
 
 bool eCAL::eh5::HDF5MeasFileWriterV5::HasChannel(const eCAL::eh5::SChannel& /*channel*/ ) const
@@ -150,7 +138,6 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::HasChannel(const eCAL::eh5::SChannel& /*ch
   // UNSUPPORTED FUNCTION
   return false;
 }
-
 
 eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileWriterV5::GetChannelDataTypeInformation(const SChannel& /*channel*/) const
 {
@@ -206,7 +193,7 @@ void eCAL::eh5::HDF5MeasFileWriterV5::SetFileBaseName(const std::string& base_na
   base_name_ = base_name;
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock)
+bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long id, long long clock)
 {
   if (!IsOk()) file_id_ = Create();
   if (!IsOk())
@@ -243,17 +230,11 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const void* data, const uns
   H5Pclose(dsProperty);
   H5Sclose(dataSpace);
 
-  channels_[channel_name].Entries.emplace_back(SEntryInfo(rcv_timestamp, static_cast<long long>(entries_counter_), clock, snd_timestamp, id));
+  channels_[channel.name].Entries.emplace_back(SEntryInfo(rcv_timestamp, static_cast<long long>(entries_counter_), clock, snd_timestamp, id));
 
   entries_counter_++;
 
   return (writeStatus >= 0);
-}
-
-bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long clock)
-{
-  // v5 does not support multiple channels per topic. Thus we will only save the name, and no sender ID.
-  return AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel.name, 0, clock);
 }
 
 void eCAL::eh5::HDF5MeasFileWriterV5::ConnectPreSplitCallback(CallbackFunction cb)

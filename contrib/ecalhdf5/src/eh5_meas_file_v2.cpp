@@ -31,6 +31,43 @@
 #include <list>
 #include <set>
 
+namespace {
+  eCAL::eh5::DataTypeInformation CreateInfo(const std::string& combined_topic_type_, const std::string& descriptor_)
+  {
+    eCAL::eh5::DataTypeInformation info;
+    auto pos = combined_topic_type_.find(':');
+    if (pos == std::string::npos)
+    {
+      info.name = combined_topic_type_;
+      info.encoding = "";
+    }
+    else
+    {
+      info.name = combined_topic_type_.substr(pos + 1);
+      info.encoding = combined_topic_type_.substr(0, pos);
+    }
+    info.descriptor = descriptor_;
+    return info;
+  }
+
+  std::pair<std::string, std::string> FromInfo(const eCAL::eh5::DataTypeInformation& datatype_info_)
+  {
+    std::string combined_topic_type;
+    if (datatype_info_.encoding.empty())
+    {
+      combined_topic_type = datatype_info_.name;
+    }
+    else
+    {
+      combined_topic_type = datatype_info_.encoding + ":" + datatype_info_.name;
+    }
+
+    return std::make_pair(combined_topic_type, datatype_info_.descriptor);
+  }
+
+}
+
+
 eCAL::eh5::HDF5MeasFileV2::HDF5MeasFileV2()
   : file_id_(-1)
 {
@@ -39,7 +76,7 @@ eCAL::eh5::HDF5MeasFileV2::HDF5MeasFileV2()
 #endif  //  _DEBUG
 }
 
-eCAL::eh5::HDF5MeasFileV2::HDF5MeasFileV2(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
+eCAL::eh5::HDF5MeasFileV2::HDF5MeasFileV2(const std::string& path, v3::eAccessType access /*= eAccessType::RDONLY*/)
   : file_id_(-1)
 {
 #ifndef _DEBUG
@@ -59,11 +96,11 @@ eCAL::eh5::HDF5MeasFileV2::~HDF5MeasFileV2()
 }
 
 
-bool eCAL::eh5::HDF5MeasFileV2::Open(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
+bool eCAL::eh5::HDF5MeasFileV2::Open(const std::string& path, v3::eAccessType access /*= eAccessType::RDONLY*/)
 {
   if (file_id_ > 0) Close();
   if (path.empty()) return false;
-  if (access != eAccessType::RDONLY) return false;
+  if (access != v3::eAccessType::RDONLY) return false;
 
   file_id_ = H5Fopen(path.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
 
@@ -121,46 +158,27 @@ void eCAL::eh5::HDF5MeasFileV2::SetOneFilePerChannelEnabled(bool /*enabled*/)
 {
 }
 
-std::set<std::string> eCAL::eh5::HDF5MeasFileV2::GetChannelNames() const
+std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasFileV2::GetChannels() const
 {
-  std::set<std::string> channels_set;
+  std::set<eCAL::eh5::SChannel> channels_set;
 
-  std::string channel_names;
-  GetAttribute(file_id_, kChnAttrTitle, channel_names);
+  std::string combined_channel_names;
+  GetAttribute(file_id_, kChnAttrTitle, combined_channel_names);
 
-  std::list<std::string> channels;
-  EcalUtils::String::Split(channel_names, ",", channels);
+  std::list<std::string> channel_name_list;
+  EcalUtils::String::Split(combined_channel_names, ",", channel_name_list);
 
-  for (const auto& channel : channels)
-    channels_set.insert(channel);
+  for (const auto& channel_name : channel_name_list)
+    channels_set.insert(eCAL::experimental::measurement::base::CreateChannel(channel_name));
 
   return channels_set;
 }
 
-
-std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasFileV2::GetChannels() const
-{
-  auto channel_names = GetChannelNames();
-  std::set<eCAL::eh5::SChannel> channels;
-
-  // Transform the vector of strings into a vector of MyStruct
-  std::transform(channel_names.begin(), channel_names.end(), std::inserter(channels, channels.begin()),
-    [](const std::string& str) { return eCAL::experimental::measurement::base::CreateChannel(str); });
-
-  return channels;
-}
-
-
-bool eCAL::eh5::HDF5MeasFileV2::HasChannel(const std::string& channel_name) const
-{
-  auto channels = GetChannelNames();
-
-  return std::find(channels.cbegin(), channels.cend(), channel_name) != channels.end();
-}
-
 bool eCAL::eh5::HDF5MeasFileV2::HasChannel(const eCAL::eh5::SChannel& channel) const
 {
-  return HasChannel(channel.name);
+  auto channels = GetChannels();
+
+  return std::find(channels.cbegin(), channels.cend(), channel) != channels.end();
 }
 
 eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileV2::GetChannelDataTypeInformation(const SChannel& channel) const
@@ -312,12 +330,7 @@ void eCAL::eh5::HDF5MeasFileV2::SetFileBaseName(const std::string& /*base_name*/
 
 }
 
-bool eCAL::eh5::HDF5MeasFileV2::AddEntryToFile(const void* /*data*/, const unsigned long long& /*size*/, const long long& /*snd_timestamp*/, const long long& /*rcv_timestamp*/, const std::string& /*channel_name*/, long long /*id*/, long long /*clock*/)
-{
-  return false;
-}
-
-bool eCAL::eh5::HDF5MeasFileV2::AddEntryToFile(const void* /*data*/, const unsigned long long& /*size*/, const long long& /*snd_timestamp*/, const long long& /*rcv_timestamp*/, const SChannel& /*channel*/, long long /*clock*/)
+bool eCAL::eh5::HDF5MeasFileV2::AddEntryToFile(const void* /*data*/, const unsigned long long& /*size*/, const long long& /*snd_timestamp*/, const long long& /*rcv_timestamp*/, const SChannel& /*channel*/, long long /*id*/, long long /*clock*/)
 {
     return false;
 }

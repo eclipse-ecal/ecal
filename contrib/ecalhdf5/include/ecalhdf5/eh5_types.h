@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,13 +52,25 @@ namespace eCAL
     using EntryInfoSet = eCAL::experimental::measurement::base::EntryInfoSet;
     using EntryInfoVect = eCAL::experimental::measurement::base::EntryInfoVect;
 
-    enum eAccessType
+    namespace v2
     {
-      RDONLY,    //!< ReadOnly - the measurement can only be read
-      CREATE,    //!< Create   - a new measurement will be created
-      CREATE_V5  //!< Create a legacy V5 hdf5 measurement (For testing purpose only!)
-    };
-   
+      enum eAccessType
+      {
+        RDONLY,    //!< ReadOnly - the measurement can only be read
+        CREATE,    //!< Create   - a new measurement will be created
+      };
+    }
+
+    namespace v3
+    {
+      enum class eAccessType
+      {
+        RDONLY,    //!< ReadOnly - the measurement can only be read
+        CREATE,    //!< Create   - a new measurement will be created
+        CREATE_V5  //!< Create a legacy V5 hdf5 measurement (For testing purpose only!)
+      };
+    }
+  
     using eCAL::experimental::measurement::base::DataTypeInformation;
     //!< @endcond
   }  // namespace eh5

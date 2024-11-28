@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ namespace eCAL
       *
       * @param path    Input file path
       **/
-      explicit HDF5MeasFileV3(const std::string& path, eAccessType access = eAccessType::RDONLY);
+      explicit HDF5MeasFileV3(const std::string& path, v3::eAccessType access = v3::eAccessType::RDONLY);
 
       /**
       * @brief Destructor

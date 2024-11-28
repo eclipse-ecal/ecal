@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ namespace eCAL
   namespace eh5
   {
 
-    HDF5MeasFileV6::HDF5MeasFileV6(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
+    HDF5MeasFileV6::HDF5MeasFileV6(const std::string& path, v3::eAccessType access /*= eAccessType::RDONLY*/)
       : HDF5MeasFileV2(path, access)
     {
     }
@@ -42,14 +42,18 @@ namespace eCAL
     HDF5MeasFileV6::~HDF5MeasFileV6()
       = default;
 
+    // Channels have to be obtained differently, the names themselves are written in the header
+    // for channel, id, we need to traverse the file format and get them.
     std::set<eCAL::eh5::SChannel> HDF5MeasFileV6::GetChannels() const
     {
       std::set<eCAL::eh5::SChannel> channels;
+      // V2 Channel function will return (channel_name, 0)
+      // so we will take those channel_names
+      const auto channels_v2 = HDF5MeasFileV2::GetChannels();
 
-      const auto channel_names = GetChannelNames();
-
-      for (const auto& channel_name : channel_names)
+      for (const auto& channel_v2 : channels_v2)
       {
+        const auto& channel_name = channel_v2.name;
         auto group_id = H5Gopen(file_id_, channel_name.c_str(), H5P_DEFAULT);
         auto groups = ListSubgroups(group_id);
         H5Gclose(group_id);

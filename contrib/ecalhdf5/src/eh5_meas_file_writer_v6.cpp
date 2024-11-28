@@ -56,7 +56,7 @@ eCAL::eh5::HDF5MeasFileWriterV6::~HDF5MeasFileWriterV6()
   HDF5MeasFileWriterV6::Close();
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV6::Open(const std::string& output_dir, eAccessType /*access = eAccessType::RDONLY*/)
+bool eCAL::eh5::HDF5MeasFileWriterV6::Open(const std::string& output_dir, v3::eAccessType /*access = eAccessType::RDONLY*/)
 {
   Close();
 
@@ -134,22 +134,10 @@ void eCAL::eh5::HDF5MeasFileWriterV6::SetOneFilePerChannelEnabled(bool /*enabled
 {
 }
 
-std::set<std::string> eCAL::eh5::HDF5MeasFileWriterV6::GetChannelNames() const
-{
-  // UNSUPPORTED FUNCTION
-  return {};
-}
-
 std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasFileWriterV6::GetChannels() const
 {
   // UNSUPPORTED FUNCTION
   return std::set<eCAL::eh5::SChannel>();
-}
-
-bool eCAL::eh5::HDF5MeasFileWriterV6::HasChannel(const std::string& /*channel_name*/) const
-{
-  // UNSUPPORTED FUNCTION
-  return false;
 }
 
 bool eCAL::eh5::HDF5MeasFileWriterV6::HasChannel(const eCAL::eh5::SChannel& /*channel*/) const
@@ -211,13 +199,7 @@ void eCAL::eh5::HDF5MeasFileWriterV6::SetFileBaseName(const std::string& base_na
   base_name_ = base_name;
 }
 
-// V6 Measurements cannot handle ids properly and they should not be used. This function signature should not be used.
-bool eCAL::eh5::HDF5MeasFileWriterV6::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long /*id*/, long long clock)
-{
-  return AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, SChannel(channel_name, 0), clock);
-}
-
-bool eCAL::eh5::HDF5MeasFileWriterV6::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long clock)
+bool eCAL::eh5::HDF5MeasFileWriterV6::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long id, long long clock)
 {
   if (!IsOk()) file_id_ = Create();
   if (!IsOk())
@@ -254,7 +236,8 @@ bool eCAL::eh5::HDF5MeasFileWriterV6::AddEntryToFile(const void* data, const uns
   H5Pclose(dsProperty);
   H5Sclose(dataSpace);
 
-  channels_[channel.name][channel.id].Entries.emplace_back(SEntryInfo(rcv_timestamp, static_cast<long long>(entries_counter_), clock, snd_timestamp, channel.id));
+  // TODO: check here about id vs channel.id
+  channels_[channel.name][channel.id].Entries.emplace_back(SEntryInfo(rcv_timestamp, static_cast<long long>(entries_counter_), clock, snd_timestamp, id));
 
   entries_counter_++;
 

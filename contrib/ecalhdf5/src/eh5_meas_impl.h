@@ -29,39 +29,6 @@
 
 #include "ecalhdf5/eh5_types.h"
 
-inline eCAL::eh5::DataTypeInformation CreateInfo(const std::string& combined_topic_type_, const std::string& descriptor_)
-{
-  eCAL::eh5::DataTypeInformation info;
-  auto pos = combined_topic_type_.find(':');
-  if (pos == std::string::npos)
-  {
-    info.name     = combined_topic_type_;
-    info.encoding = "";
-  }
-  else
-  {
-    info.name     = combined_topic_type_.substr(pos + 1);
-    info.encoding = combined_topic_type_.substr(0, pos);
-  }
-  info.descriptor = descriptor_;
-  return info;
-}
-
-inline std::pair<std::string, std::string> FromInfo(const eCAL::eh5::DataTypeInformation& datatype_info_)
-{
-  std::string combined_topic_type;
-  if (datatype_info_.encoding.empty())
-  {
-    combined_topic_type = datatype_info_.name;
-  }
-  else
-  {
-    combined_topic_type = datatype_info_.encoding + ":" + datatype_info_.name;
-  }
-
-  return std::make_pair(combined_topic_type, datatype_info_.descriptor);
-}
-
 namespace eCAL
 {
   namespace eh5
@@ -82,7 +49,7 @@ namespace eCAL
       *
       * @return         true if succeeds, false if it fails
       **/
-      virtual bool Open(const std::string& path, eAccessType access = eAccessType::RDONLY) = 0;
+      virtual bool Open(const std::string& path, v3::eAccessType access = v3::eAccessType::RDONLY) = 0;
 
       /**
       * @brief Close file
@@ -141,29 +108,12 @@ namespace eCAL
       */
       virtual void SetOneFilePerChannelEnabled(bool enabled) = 0;
 
-
-      /**
-      * @brief Get the available channel names of the current opened file / measurement
-      *
-      * @return       channel names
-      **/
-      virtual std::set<std::string> GetChannelNames() const = 0;
-
       /**
        * @brief Get the available channel names of the current opened file / measurement
        *
        * @return       channel names & ids
       **/
       virtual std::set<eCAL::eh5::SChannel> GetChannels() const = 0;
-
-      /**
-      * @brief Check if channel exists in measurement
-      *
-      * @param channel_name   name of the channel
-      *
-      * @return       true if exists, false otherwise
-      **/
-      virtual bool HasChannel(const std::string& channel_name) const = 0;
 
       /**
       * @brief Check if channel exists in measurement
@@ -275,10 +225,7 @@ namespace eCAL
       *
       * @return               true if succeeds, false if it fails
       **/
-      virtual bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) = 0;
-
-      virtual bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long clock) = 0;
-
+      virtual bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long id, long long clock) = 0;
 
       typedef std::function<void(void)> CallbackFunction;
       /**

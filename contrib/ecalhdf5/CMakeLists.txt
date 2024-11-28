@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,7 +29,10 @@ else()
 endif()
 
 set(ecalhdf5_src
-    src/eh5_meas.cpp
+    src/datatype_helper.cpp
+    src/datatype_helper.h
+    src/eh5_meas_api_v2.cpp
+    src/eh5_meas_api_v3.cpp
     src/eh5_meas_dir.cpp
     src/eh5_meas_dir.h
     src/eh5_meas_file_v1.cpp
@@ -58,6 +61,8 @@ set(ecalhdf5_src
 set(ecalhdf5_header_base
     include/ecalhdf5/eh5_defs.h
     include/ecalhdf5/eh5_meas.h
+    include/ecalhdf5/eh5_meas_api_v2.h
+    include/ecalhdf5/eh5_meas_api_v3.h
     include/ecalhdf5/eh5_types.h
 )
 
@@ -73,7 +78,10 @@ target_include_directories(${PROJECT_NAME}
 
 target_compile_definitions(${PROJECT_NAME}
   PRIVATE
-    $<$<BOOL:${MSVC}>:_UNICODE>)
+    $<$<BOOL:${MSVC}>:_UNICODE>
+  PUBLIC
+    ECAL_EH5_API_VERSION=2
+  )
 
 target_compile_options(${PROJECT_NAME}
   PRIVATE

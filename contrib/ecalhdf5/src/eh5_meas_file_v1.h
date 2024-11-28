@@ -43,7 +43,7 @@ namespace eCAL
       *
       * @param path    input file path
       **/
-      explicit HDF5MeasFileV1(const std::string& path, eAccessType access = eAccessType::RDONLY);
+      explicit HDF5MeasFileV1(const std::string& path, v3::eAccessType access = v3::eAccessType::RDONLY);
 
       /**
       * @brief Destructor
@@ -58,7 +58,7 @@ namespace eCAL
       *
       * @return         true if succeeds, false if it fails
       **/
-      bool Open(const std::string& path, eAccessType access = eAccessType::RDONLY) override;
+      bool Open(const std::string& path, v3::eAccessType access = v3::eAccessType::RDONLY) override;
 
       /**
       * @brief Close file
@@ -117,29 +117,12 @@ namespace eCAL
       */
       void SetOneFilePerChannelEnabled(bool enabled) override;
 
-
-      /**
-      * @brief Get the available channel names of the current opened file / measurement
-      *
-      * @return       channel names
-      **/
-      std::set<std::string> GetChannelNames() const override;
-
       /**
        * @brief Get the available channel names of the current opened file / measurement
        *
        * @return       channel names & ids
       **/
       std::set<eCAL::eh5::SChannel> GetChannels() const override;
-
-      /**
-      * @brief Check if channel exists in measurement
-      *
-      * @param channel_name   name of the channel
-      *
-      * @return       true if exists, false otherwise
-      **/
-      bool HasChannel(const std::string& channel_name) const override;
 
       /**
        * @brief Check if channel exists in measurement
@@ -251,9 +234,7 @@ namespace eCAL
       *
       * @return               true if succeeds, false if it fails
       **/
-      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) override;
-
-      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long clock) override;
+      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long id, long long clock) override;
 
       typedef std::function<void(void)> CallbackFunction;
       /**
