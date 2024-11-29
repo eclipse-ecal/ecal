@@ -236,7 +236,7 @@ bool eCAL::eh5::v3::HDF5Meas::HasChannel(const eCAL::eh5::SChannel& channel) con
   bool ret_val = false;
   if (hdf_meas_impl_)
   {
-    ret_val = hdf_meas_impl_->HasChannel(eCAL::eh5::SChannel{ GetEscapedTopicname(channel.name), channel.id });
+    ret_val = hdf_meas_impl_->HasChannel(GetEscapedTopicname(channel));
   }
 
   return ret_val;
@@ -247,9 +247,7 @@ eCAL::eh5::DataTypeInformation eCAL::eh5::v3::HDF5Meas::GetChannelDataTypeInform
   eCAL::eh5::DataTypeInformation ret_val;
   if (hdf_meas_impl_)
   {
-    SChannel escaped_channel = channel;
-    escaped_channel.name = GetEscapedTopicname(channel.name);
-    ret_val = hdf_meas_impl_->GetChannelDataTypeInformation(escaped_channel);
+    ret_val = hdf_meas_impl_->GetChannelDataTypeInformation(GetEscapedTopicname(channel));
   }
 
   return ret_val;
@@ -259,9 +257,7 @@ void eCAL::eh5::v3::HDF5Meas::SetChannelDataTypeInformation(const SChannel& chan
 {
   if (hdf_meas_impl_)
   {
-    SChannel escaped_channel = channel;
-    escaped_channel.name = GetEscapedTopicname(channel.name);
-    hdf_meas_impl_->SetChannelDataTypeInformation(escaped_channel, info);
+    hdf_meas_impl_->SetChannelDataTypeInformation(GetEscapedTopicname(channel), info);
   }
 }
 
@@ -270,9 +266,7 @@ long long eCAL::eh5::v3::HDF5Meas::GetMinTimestamp(const SChannel& channel) cons
   long long ret_val = 0;
   if (hdf_meas_impl_)
   {
-    SChannel escaped_channel = channel;
-    escaped_channel.name = GetEscapedTopicname(channel.name);
-    ret_val = hdf_meas_impl_->GetMinTimestamp(escaped_channel);
+    ret_val = hdf_meas_impl_->GetMinTimestamp(GetEscapedTopicname(channel));
   }
 
   return ret_val;
@@ -283,9 +277,7 @@ long long eCAL::eh5::v3::HDF5Meas::GetMaxTimestamp(const SChannel& channel) cons
   long long ret_val = 0;
   if (hdf_meas_impl_)
   {
-    SChannel escaped_channel = channel;
-    escaped_channel.name = GetEscapedTopicname(channel.name);
-    ret_val = hdf_meas_impl_->GetMaxTimestamp(escaped_channel);
+    ret_val = hdf_meas_impl_->GetMaxTimestamp(GetEscapedTopicname(channel));
   }
 
   return ret_val;
@@ -296,9 +288,7 @@ bool eCAL::eh5::v3::HDF5Meas::GetEntriesInfo(const SChannel& channel, EntryInfoS
   bool ret_val = false;
   if (hdf_meas_impl_)
   {
-    SChannel escaped_channel = channel;
-    escaped_channel.name = GetEscapedTopicname(channel.name);
-    ret_val = hdf_meas_impl_->GetEntriesInfo(escaped_channel, entries);
+    ret_val = hdf_meas_impl_->GetEntriesInfo(GetEscapedTopicname(channel), entries);
   }
 
   return ret_val;
@@ -309,9 +299,7 @@ bool eCAL::eh5::v3::HDF5Meas::GetEntriesInfoRange(const SChannel& channel, long 
   bool ret_val = false;
   if (hdf_meas_impl_ && begin < end)
   {
-    SChannel escaped_channel = channel;
-    escaped_channel.name = GetEscapedTopicname(channel.name);
-    ret_val = hdf_meas_impl_->GetEntriesInfoRange(escaped_channel, begin, end, entries);
+    ret_val = hdf_meas_impl_->GetEntriesInfoRange(GetEscapedTopicname(channel), begin, end, entries);
   }
 
   return ret_val;
@@ -352,7 +340,7 @@ bool eCAL::eh5::v3::HDF5Meas::AddEntryToFile(const void* data, const unsigned lo
   bool ret_val = false;
   if (hdf_meas_impl_)
   {
-    return hdf_meas_impl_->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, eCAL::eh5::SChannel(GetEscapedTopicname(channel.name), channel.id), id, clock);
+    return hdf_meas_impl_->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, GetEscapedTopicname(channel), id, clock);
   }
 
   return ret_val;

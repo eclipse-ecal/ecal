@@ -45,6 +45,21 @@ namespace {
   {
     return SChannel(channel_name, 0);
   }
+
+
+  std::set<SChannel> GetChannelsWithName(const std::unique_ptr<v3::HDF5Meas>& hdf_meas_impl_, const std::string& channel_name)
+  {
+    const auto all_channels = hdf_meas_impl_->GetChannels();
+    std::set<SChannel> named_channels;
+    for (const auto& channel : all_channels)
+    {
+      if (channel.name == channel_name)
+      {
+        named_channels.insert(channel);
+      }
+    }
+    return named_channels;
+  }
 }
 
 using namespace eCAL::eh5::v2;
@@ -113,7 +128,13 @@ std::set<std::string> eCAL::eh5::v2::HDF5Meas::GetChannelNames() const
 
 bool eCAL::eh5::v2::HDF5Meas::HasChannel(const std::string& channel_name) const
 {
-  return hdf_meas_impl_->HasChannel(createChannel(channel_name));
+  auto named_channels = GetChannelsWithName(hdf_meas_impl_, channel_name);
+  bool has_channel = false;
+  for (const auto& channel : named_channels)
+  {
+    has_channel |= hdf_meas_impl_->HasChannel(channel);
+  }
+  return has_channel;
 }
 
 std::string eCAL::eh5::v2::HDF5Meas::GetChannelDescription(const std::string& channel_name) const
@@ -124,9 +145,10 @@ std::string eCAL::eh5::v2::HDF5Meas::GetChannelDescription(const std::string& ch
 
 void eCAL::eh5::v2::HDF5Meas::SetChannelDescription(const std::string& channel_name, const std::string& description)
 {
-  auto current_info = GetChannelDataTypeInformation(channel_name);
+  const auto& channel = createChannel(channel_name);
+  auto current_info = hdf_meas_impl_->GetChannelDataTypeInformation(channel);
   current_info.descriptor = description;
-  SetChannelDataTypeInformation(channel_name, current_info);
+  hdf_meas_impl_->SetChannelDataTypeInformation(channel, current_info);
 }
 
 std::string eCAL::eh5::v2::HDF5Meas::GetChannelType(const std::string& channel_name) const
@@ -139,14 +161,21 @@ std::string eCAL::eh5::v2::HDF5Meas::GetChannelType(const std::string& channel_n
 
 void eCAL::eh5::v2::HDF5Meas::SetChannelType(const std::string& channel_name, const std::string& type)
 {
-  auto current_info = GetChannelDataTypeInformation(channel_name);
+  const auto& channel = createChannel(channel_name);
+  auto current_info = hdf_meas_impl_->GetChannelDataTypeInformation(channel);
   auto new_info = CreateInfo(type, current_info.descriptor);
-  SetChannelDataTypeInformation(channel_name, new_info);
+  hdf_meas_impl_->SetChannelDataTypeInformation(channel, current_info);
 }
 
+// This function "has" to loose information if there are multople channels in the measurement with the same name
 eCAL::eh5::DataTypeInformation eCAL::eh5::v2::HDF5Meas::GetChannelDataTypeInformation(const std::string& channel_name) const
 {
-  return hdf_meas_impl_->GetChannelDataTypeInformation(createChannel(channel_name));
+  auto named_channels = GetChannelsWithName(hdf_meas_impl_, channel_name);
+  if (named_channels.size() > 0)
+  {
+    return hdf_meas_impl_->GetChannelDataTypeInformation(*named_channels.begin());
+  }
+  return DataTypeInformation{};
 }
 
 void eCAL::eh5::v2::HDF5Meas::SetChannelDataTypeInformation(const std::string& channel_name, const eCAL::eh5::DataTypeInformation& info)
@@ -156,12 +185,24 @@ void eCAL::eh5::v2::HDF5Meas::SetChannelDataTypeInformation(const std::string& c
 
 long long eCAL::eh5::v2::HDF5Meas::GetMinTimestamp(const std::string& channel_name) const
 {
-  return hdf_meas_impl_->GetMinTimestamp(createChannel(channel_name));
+  auto named_channels = GetChannelsWithName(hdf_meas_impl_, channel_name);
+  long long min_timestamp = std::numeric_limits<long long>::max();
+  for (const auto& channel : named_channels)
+  {
+    min_timestamp = std::min(min_timestamp, hdf_meas_impl_->GetMinTimestamp(channel));
+  }
+  return min_timestamp;
 }
 
 long long eCAL::eh5::v2::HDF5Meas::GetMaxTimestamp(const std::string& channel_name) const
 {
-  return hdf_meas_impl_->GetMaxTimestamp(createChannel(channel_name));
+  auto named_channels = GetChannelsWithName(hdf_meas_impl_, channel_name);
+  long long max_timestamp = std::numeric_limits<long long>::min();
+  for (const auto& channel : named_channels)
+  {
+    max_timestamp = std::max(max_timestamp, hdf_meas_impl_->GetMaxTimestamp(channel));
+  }
+  return max_timestamp;
 }
 
 bool eCAL::eh5::v2::HDF5Meas::GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const

@@ -107,7 +107,7 @@ namespace eCAL
           long long ID;             //!< Data ID - to extract corresponding data
           long long SndClock;       //!< Send clock
           long long SndTimestamp;   //!< Send time stamp
-          long long SndID;          //!< Send ID topic ID (v6) / can be set by user (v5)
+          long long SndID;          //!< Send ID (!= channel ID!!!!)
 
           //!< @cond
           EntryInfo() : RcvTimestamp(0), ID(0), SndClock(0), SndTimestamp(0), SndID(0) {}

@@ -458,33 +458,22 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, v3::eAccessType acc
       auto channels = reader->GetChannels();
       for (const auto& channel : channels)
       {
-        auto escaped_name = GetEscapedTopicname(channel.name);
+        auto escaped_channel = GetEscapedTopicname(channel);
         // TODO 
-        auto info = reader->GetChannelDataTypeInformation(channel);
+        auto info = reader->GetChannelDataTypeInformation(escaped_channel);
 
-        auto& channel_info = channels_info_[escaped_name][channel.id];
+        auto& channel_info = channels_info_[escaped_channel.name][escaped_channel.id];
         channel_info.info = info;
         channel_info.files.push_back(reader);
 
         EntryInfoSet entries;
-        if (reader->GetEntriesInfo(channel, entries))
+        if (reader->GetEntriesInfo(escaped_channel, entries))
         {
           for (auto entry : entries)
           {
-            long long index;
-            // Account for the fact that previous to V6, has channel will return false for the given id.
-            if (reader->HasChannel(SChannel{ escaped_name, entry.SndID }))
-            {
-              index = entry.SndID;
-            }
-            else
-            {
-              index = 0;
-            }
-
             entries_by_id_[id] = EntryInfo(entry.ID, reader);
             entry.ID = id;
-            entries_by_chn_[escaped_name][index].insert(entry);
+            entries_by_chn_[escaped_channel.name][escaped_channel.id].insert(entry);
             id++;
           }
         }
