@@ -168,7 +168,7 @@ namespace eCAL
    * @param topic_id_  The topic id struct of the received message.
    * @param data_      Event callback data structure with the event specific information.
   **/
-  using PubEventIDCallbackT = std::function<void(const Registration::STopicId& topic_id_, const struct SPubEventCallbackData* data_)>;
+  using PubEventIDCallbackT = std::function<void(const Registration::STopicId& topic_id_, const struct SPubEventCallbackData& data_)>;
 
   /**
    * @brief Subscriber event callback function type. (deprecated)
@@ -184,7 +184,7 @@ namespace eCAL
    * @param topic_id_  The topic id struct of the received message.
    * @param data_      Event callback data structure with the event specific information.
   **/
-  using SubEventIDCallbackT = std::function<void(const Registration::STopicId& topic_id_, const struct SSubEventCallbackData* data_)>;
+  using SubEventIDCallbackT = std::function<void(const Registration::STopicId& topic_id_, const struct SSubEventCallbackData& data_)>;
 
   /**
    * @brief Client event callback function type. (deprecated)
@@ -200,7 +200,7 @@ namespace eCAL
    * @param service_id_  The service id struct of the connection that triggered the event.
    * @param data_        Event callback data structure with the event specific information.
   **/
-  using ClientEventIDCallbackT = std::function<void(const Registration::SServiceId& service_id_, const struct SClientEventCallbackData* data_)>;
+  using ClientEventIDCallbackT = std::function<void(const Registration::SServiceId& service_id_, const struct SClientEventCallbackData& data_)>;
 
   /**
    * @brief Server event callback function type. (deprecated)
@@ -216,5 +216,5 @@ namespace eCAL
    * @param service_id_  The service id struct of the connection that triggered the event.
    * @param data_        Event callback data structure with the event specific information.
   **/
-  using ServerEventIDCallbackT = std::function<void(const Registration::SServiceId& service_id_, const struct SServerEventCallbackData* data_)>;
+  using ServerEventIDCallbackT = std::function<void(const Registration::SServiceId& service_id_, const struct SServerEventCallbackData& data_)>;
 }

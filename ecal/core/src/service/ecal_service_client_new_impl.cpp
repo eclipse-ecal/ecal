@@ -491,7 +491,7 @@ namespace eCAL
     service_id.service_name = m_service_name;
     service_id.method_name = "";
 
-    m_event_callback(service_id, &callback_data);
+    m_event_callback(service_id, callback_data);
   }
 
   std::shared_ptr<CServiceClientImpl::SResponseData> CServiceClientImpl::PrepareInitialResponse(SClient& client_, const std::string& method_name_)
