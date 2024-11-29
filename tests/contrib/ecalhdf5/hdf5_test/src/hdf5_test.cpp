@@ -878,6 +878,11 @@ TEST(HDF5, MergedMeasurements)
 
   {
     LegacyAPI hdf5_reader;
+    EXPECT_TRUE(hdf5_reader.Open(base_dir));
+
+    std::set<std::string> expected_channels{ topic_name_1_2, topic_name_3 };
+    EXPECT_EQ(hdf5_reader.GetChannelNames(), expected_channels);
+
     // Deprecated API
     EXPECT_EQ(hdf5_reader.GetMinTimestamp(topic_name_1_2), 0002);
     EXPECT_EQ(hdf5_reader.GetMinTimestamp(topic_name_3), 1002);
