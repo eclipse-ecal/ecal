@@ -86,6 +86,17 @@ std::string print(const TestingMeasEntry& entry) {
   return s.str();
 }
 
+std::string print(const EntryInfo& info) {
+  std::stringstream s;
+  s << "( rcv: " << info.RcvTimestamp
+    << ", id: " << info.ID
+    << ", clock: " << info.SndClock
+    << ", snd: " << info.SndTimestamp
+    << ", snd_id: " << info.SndID
+    << ")";
+  return s.str();
+}
+
 bool MeasEntryEqualsEntryInfo(const TestingMeasEntry& meas_entry, const EntryInfo entry_info)
 {
   return meas_entry.snd_id == entry_info.SndID
@@ -144,7 +155,11 @@ void ValidateChannelsInMeasurementV5(MeasAPI& hdf5_reader, const std::vector<Tes
 // Return default EntryInfo if it cannot be Found
 EntryInfo FindInSet(const eCAL::eh5::EntryInfoSet& info_set, const TestingMeasEntry& to_find)
 {
-  auto it = std::find_if(info_set.begin(), info_set.end(), [&to_find](const EntryInfo& entry) { return entry.SndClock == to_find.clock && entry.SndID == to_find.snd_id; });
+  auto it = std::find_if(info_set.begin(), info_set.end(), [&to_find](const EntryInfo& entry) { 
+    return entry.SndClock == to_find.clock && 
+           entry.SndID == to_find.snd_id &&
+           entry.SndTimestamp == to_find.snd_timestamp &&
+           entry.RcvTimestamp == to_find.rcv_timestamp; });
 
   if (it != info_set.end()) {
     return *it;
@@ -170,7 +185,7 @@ void ValidateDataInMeasurementGeneric(Reader& hdf5_reader, const TestingMeasEntr
     return;
   }
 
-  EXPECT_TRUE(MeasEntryEqualsEntryInfo(entry, info));
+  EXPECT_TRUE(MeasEntryEqualsEntryInfo(entry, info)) << print(entry) << " != " << print(info);
 
   size_t data_size;
   EXPECT_TRUE(hdf5_reader.GetEntryDataSize(info.ID, data_size));
@@ -205,8 +220,8 @@ void ValidateDataInMeasurement(LegacyAPI& hdf5_reader, const TestingMeasEntry& e
 
 
 TestingMeasEntry m1{
- //{"topic / with / slash", 1},
- {"t1", 1},
+ {"topic / with / slash", 1},
+ //{"t1", 1},
  "Hello World",
  1001LL,
  2001LL,
@@ -215,8 +230,8 @@ TestingMeasEntry m1{
 };
 
 TestingMeasEntry m2{
-  //{"another,topic", 2},
-  {"t2", 2},
+  {"another,topic", 2},
+  //{"t2", 2},
   "",
   1002LL,
   2002LL,
@@ -225,8 +240,8 @@ TestingMeasEntry m2{
 };
 
 TestingMeasEntry m3{
-  //{" ASCII and beyond!\a\b\t\n\v\f\r\"#$%&\'()*+,-./0123456789:,<=>\?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~üöäÜÖÄâÂôÔûÛáàÁÀúÙ", 3},
-  {"t3", 3},
+  {" ASCII and beyond!\a\b\t\n\v\f\r\"#$%&\'()*+,-./0123456789:,<=>\?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~üöäÜÖÄâÂôÔûÛáàÁÀúÙ", 3},
+  //{"t3", 3},
   "o.O",
   1003LL,
   2003LL,

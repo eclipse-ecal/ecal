@@ -227,26 +227,32 @@ void eCAL::eh5::HDF5MeasDir::SetChannelDataTypeInformation(const SChannel& chann
 long long eCAL::eh5::HDF5MeasDir::GetMinTimestamp(const SChannel& channel) const
 {
   long long min_timestamp = std::numeric_limits<long long>::max();
-  for (auto file : file_readers_)
+  const auto& channel_entries = entries_by_chn_.find(channel);
+
+  if (channel_entries != entries_by_chn_.end())
   {
-    if (file->HasChannel(channel))
+    if (!channel_entries->second.empty())
     {
-      min_timestamp = std::min(min_timestamp, file->GetMinTimestamp(channel));
+      min_timestamp = channel_entries->second.begin()->RcvTimestamp;
     }
   }
+
   return min_timestamp;
 }
 
 long long eCAL::eh5::HDF5MeasDir::GetMaxTimestamp(const SChannel& channel) const
 {
   long long max_timestamp = std::numeric_limits<long long>::min();
-  for (auto file : file_readers_)
+  const auto& channel_entries = entries_by_chn_.find(channel);
+
+  if (channel_entries != entries_by_chn_.end())
   {
-    if (file->HasChannel(channel))
+    if (!channel_entries->second.empty())
     {
-      max_timestamp = std::max(max_timestamp, file->GetMaxTimestamp(channel));
+      max_timestamp = channel_entries->second.rbegin()->RcvTimestamp;
     }
   }
+
   return max_timestamp;
 }
 
@@ -435,7 +441,6 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, v3::eAccessType acc
       for (const auto& channel : channels)
       {
         auto escaped_channel = GetEscapedTopicname(channel);
-        // TODO 
         auto info = reader->GetChannelDataTypeInformation(escaped_channel);
 
         auto& channel_info = channels_info_[escaped_channel];
@@ -443,7 +448,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, v3::eAccessType acc
         channel_info.files.push_back(reader);
 
         EntryInfoSet entries;
-        if (reader->GetEntriesInfo(escaped_channel, entries))
+        if (reader->GetEntriesInfo(channel, entries))
         {
           for (auto entry : entries)
           {

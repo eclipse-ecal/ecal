@@ -192,6 +192,8 @@ long long eCAL::eh5::v2::HDF5Meas::GetMinTimestamp(const std::string& channel_na
   {
     min_timestamp = std::min(min_timestamp, hdf_meas_impl_->GetMinTimestamp(channel));
   }
+  if (min_timestamp == std::numeric_limits<long long>::max())
+    return 0; // the old API would return 0 in this case
   return min_timestamp;
 }
 
@@ -203,17 +205,39 @@ long long eCAL::eh5::v2::HDF5Meas::GetMaxTimestamp(const std::string& channel_na
   {
     max_timestamp = std::max(max_timestamp, hdf_meas_impl_->GetMaxTimestamp(channel));
   }
+  if (max_timestamp == std::numeric_limits<long long>::min())
+    return 0; // the old API would return 0 in this case
   return max_timestamp;
 }
 
 bool eCAL::eh5::v2::HDF5Meas::GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const
 {
-  return hdf_meas_impl_->GetEntriesInfo(createChannel(channel_name), entries);
+  // we need to aggregate info from all channels within the measurement with a given name.
+  auto named_channels = GetChannelsWithName(hdf_meas_impl_, channel_name);
+  entries.clear();
+  bool ret_value{ true };
+  for (const auto& channel : named_channels)
+  {
+    EntryInfoSet channel_entries;
+    ret_value &= hdf_meas_impl_->GetEntriesInfo(channel, channel_entries);
+    entries.insert(channel_entries.begin(), channel_entries.end());
+  }
+  return ret_value;
 }
 
 bool eCAL::eh5::v2::HDF5Meas::GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const
 {
-  return hdf_meas_impl_->GetEntriesInfoRange(createChannel(channel_name), begin, end, entries);
+  // we need to aggregate info from all channels within the measurement with a given name.
+  auto named_channels = GetChannelsWithName(hdf_meas_impl_, channel_name);
+  entries.clear();
+  bool ret_value{ true };
+  for (const auto& channel : named_channels)
+  {
+    EntryInfoSet channel_entries;
+    ret_value &= hdf_meas_impl_->GetEntriesInfoRange(channel, begin, end, channel_entries);
+    entries.insert(channel_entries.begin(), channel_entries.end());
+  }
+  return ret_value;
 }
 
 bool eCAL::eh5::v2::HDF5Meas::GetEntryDataSize(long long entry_id, size_t& size) const

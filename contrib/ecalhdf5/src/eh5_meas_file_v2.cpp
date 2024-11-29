@@ -23,6 +23,7 @@
 
 #include "eh5_meas_file_v2.h"
 #include "hdf5_helper.h"
+#include "datatype_helper.h"
 
 #include "hdf5.h"
 #include <ecal_utils/string.h>
@@ -30,43 +31,6 @@
 #include <iostream>
 #include <list>
 #include <set>
-
-namespace {
-  eCAL::eh5::DataTypeInformation CreateInfo(const std::string& combined_topic_type_, const std::string& descriptor_)
-  {
-    eCAL::eh5::DataTypeInformation info;
-    auto pos = combined_topic_type_.find(':');
-    if (pos == std::string::npos)
-    {
-      info.name = combined_topic_type_;
-      info.encoding = "";
-    }
-    else
-    {
-      info.name = combined_topic_type_.substr(pos + 1);
-      info.encoding = combined_topic_type_.substr(0, pos);
-    }
-    info.descriptor = descriptor_;
-    return info;
-  }
-
-  std::pair<std::string, std::string> FromInfo(const eCAL::eh5::DataTypeInformation& datatype_info_)
-  {
-    std::string combined_topic_type;
-    if (datatype_info_.encoding.empty())
-    {
-      combined_topic_type = datatype_info_.name;
-    }
-    else
-    {
-      combined_topic_type = datatype_info_.encoding + ":" + datatype_info_.name;
-    }
-
-    return std::make_pair(combined_topic_type, datatype_info_.descriptor);
-  }
-
-}
-
 
 eCAL::eh5::HDF5MeasFileV2::HDF5MeasFileV2()
   : file_id_(-1)
