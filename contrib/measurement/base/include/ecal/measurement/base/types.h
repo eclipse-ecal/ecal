@@ -146,3 +146,17 @@ namespace eCAL
     }
   }
 }
+
+namespace std {
+  template <>
+  struct hash<eCAL::experimental::measurement::base::Channel> {
+    std::size_t operator()(const eCAL::experimental::measurement::base::Channel& data) const {
+      // Combine the hash of the string and the integer
+      std::size_t h1 = std::hash<std::string>{}(data.name);
+      std::size_t h2 = std::hash<eCAL::experimental::measurement::base::Channel::id_t>{}(data.id);
+
+      // Combine the two hashes (this is a common technique)
+      return h1 ^ (h2 << 1); // XOR and shift
+    }
+  };
+}

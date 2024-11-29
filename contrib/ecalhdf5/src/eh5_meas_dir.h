@@ -287,10 +287,10 @@ namespace eCAL
         {}
       };
 
-      typedef std::list<eCAL::eh5::v3::HDF5Meas*>                                               HDF5Files;
-      typedef std::unordered_map<std::string, std::unordered_map<SChannel::id_t, ChannelInfo>>  ChannelInfoUMap;
-      typedef std::unordered_map<long long, EntryInfo>                                          EntriesByIdUMap;
-      typedef std::unordered_map<std::string, std::unordered_map<SChannel::id_t, EntryInfoSet>> EntriesByChannelUMap;
+      typedef std::list<eCAL::eh5::v3::HDF5Meas*>        HDF5Files;
+      typedef std::unordered_map<SChannel, ChannelInfo>  ChannelInfoUMap;
+      typedef std::unordered_map<long long, EntryInfo>   EntriesByIdUMap;
+      typedef std::unordered_map<SChannel, EntryInfoSet> EntriesByChannelUMap;
 
       HDF5Files              file_readers_;
       ChannelInfoUMap        channels_info_;

@@ -146,7 +146,7 @@ std::string eCAL::eh5::v2::HDF5Meas::GetChannelDescription(const std::string& ch
 void eCAL::eh5::v2::HDF5Meas::SetChannelDescription(const std::string& channel_name, const std::string& description)
 {
   const auto& channel = createChannel(channel_name);
-  auto current_info = hdf_meas_impl_->GetChannelDataTypeInformation(channel);
+  auto& current_info = data_type_info_map[channel_name];
   current_info.descriptor = description;
   hdf_meas_impl_->SetChannelDataTypeInformation(channel, current_info);
 }
@@ -162,8 +162,8 @@ std::string eCAL::eh5::v2::HDF5Meas::GetChannelType(const std::string& channel_n
 void eCAL::eh5::v2::HDF5Meas::SetChannelType(const std::string& channel_name, const std::string& type)
 {
   const auto& channel = createChannel(channel_name);
-  auto current_info = hdf_meas_impl_->GetChannelDataTypeInformation(channel);
-  auto new_info = CreateInfo(type, current_info.descriptor);
+  auto& current_info = data_type_info_map[channel_name];
+  current_info = CreateInfo(type, current_info.descriptor);
   hdf_meas_impl_->SetChannelDataTypeInformation(channel, current_info);
 }
 
@@ -180,6 +180,7 @@ eCAL::eh5::DataTypeInformation eCAL::eh5::v2::HDF5Meas::GetChannelDataTypeInform
 
 void eCAL::eh5::v2::HDF5Meas::SetChannelDataTypeInformation(const std::string& channel_name, const eCAL::eh5::DataTypeInformation& info)
 {
+  data_type_info_map[channel_name] = info;
   return hdf_meas_impl_->SetChannelDataTypeInformation(createChannel(channel_name), info);
 }
 

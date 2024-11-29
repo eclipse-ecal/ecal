@@ -191,41 +191,29 @@ std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasDir::GetChannels() const
   std::set<eCAL::eh5::SChannel> channels;
 
   for (const auto& chn : channels_info_)
-    for (const auto& chn_id : chn.second)
-      channels.insert({ chn.first, chn_id.first });
+    channels.insert(chn.first);
 
   return channels;
 }
 
 bool eCAL::eh5::HDF5MeasDir::HasChannel(const eCAL::eh5::SChannel& channel) const
 {
-  // If any writer has this channel, we have this channel.
-  for (auto file : file_readers_)
-  {
-    if (file->HasChannel(channel))
-    {
-      return true;
-    }
-  }
-  return false;
+  return channels_info_.find(channel) != channels_info_.end();
 }
 
 eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasDir::GetChannelDataTypeInformation(const SChannel& channel) const
 {
   eCAL::eh5::DataTypeInformation ret_val;
 
-  const auto& found = channels_info_.find(channel.name);
+  const auto& found = channels_info_.find(channel);
   if (found != channels_info_.end())
   {
-    const auto& found_id = found->second.find(channel.id);
-    if (found_id != found->second.end())
-    {
-      ret_val = found_id->second.info;
-    }
+    ret_val = found->second.info;
   }
   return ret_val;
 }
 
+// TODO: this seems fishy. Do we need to escape?
 void eCAL::eh5::HDF5MeasDir::SetChannelDataTypeInformation(const SChannel& channel, const eCAL::eh5::DataTypeInformation& info)
 {
   // Get an existing writer or create a new one
@@ -233,7 +221,7 @@ void eCAL::eh5::HDF5MeasDir::SetChannelDataTypeInformation(const SChannel& chann
   file_writer_it->second->SetChannelDataTypeInformation(channel, info);
 
   // Let's save them in case we need to query them
-  channels_info_[channel.name][channel.id] = ChannelInfo(info);
+  channels_info_[channel] = ChannelInfo(info);
 }
 
 long long eCAL::eh5::HDF5MeasDir::GetMinTimestamp(const SChannel& channel) const
@@ -266,19 +254,13 @@ bool eCAL::eh5::HDF5MeasDir::GetEntriesInfo(const SChannel& channel, EntryInfoSe
 {
   entries.clear();
 
-  const auto& channel_name_it = entries_by_chn_.find(channel.name);
-  if (channel_name_it == entries_by_chn_.end())
+  const auto& channel_it = entries_by_chn_.find(channel);
+  if (channel_it == entries_by_chn_.end())
   {
     return false;
   }
 
-  const auto& channel_id_it = channel_name_it->second.find(channel.id);
-  if (channel_id_it == channel_name_it->second.end())
-  {
-    return false;
-  }
-
-  entries = channel_id_it->second;
+  entries = channel_it->second;
 
   return !entries.empty();
 }
@@ -287,14 +269,8 @@ bool eCAL::eh5::HDF5MeasDir::GetEntriesInfoRange(const SChannel& channel, long l
 {
   entries.clear();
 
-  const auto& channel_name_it = entries_by_chn_.find(channel.name);
-  if (channel_name_it == entries_by_chn_.end())
-  {
-    return false;
-  }
-
-  const auto& channel_id_it = channel_name_it->second.find(channel.id);
-  if (channel_id_it == channel_name_it->second.end())
+  const auto& channel_it = entries_by_chn_.find(channel);
+  if (channel_it == entries_by_chn_.end())
   {
     return false;
   }
@@ -302,8 +278,8 @@ bool eCAL::eh5::HDF5MeasDir::GetEntriesInfoRange(const SChannel& channel, long l
   if (begin == 0) begin = entries.begin()->RcvTimestamp;
   if (end == 0) end = entries.rbegin()->RcvTimestamp;
 
-  const auto& lower = channel_id_it->second.lower_bound(SEntryInfo(begin, 0, 0));
-  const auto& upper = channel_id_it->second.upper_bound(SEntryInfo(end, 0, 0));
+  const auto& lower = channel_it->second.lower_bound(SEntryInfo(begin, 0, 0));
+  const auto& upper = channel_it->second.upper_bound(SEntryInfo(end, 0, 0));
 
   entries.insert(lower, upper);
   return true;
@@ -462,7 +438,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, v3::eAccessType acc
         // TODO 
         auto info = reader->GetChannelDataTypeInformation(escaped_channel);
 
-        auto& channel_info = channels_info_[escaped_channel.name][escaped_channel.id];
+        auto& channel_info = channels_info_[escaped_channel];
         channel_info.info = info;
         channel_info.files.push_back(reader);
 
@@ -473,7 +449,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, v3::eAccessType acc
           {
             entries_by_id_[id] = EntryInfo(entry.ID, reader);
             entry.ID = id;
-            entries_by_chn_[escaped_channel.name][escaped_channel.id].insert(entry);
+            entries_by_chn_[escaped_channel].insert(entry);
             id++;
           }
         }

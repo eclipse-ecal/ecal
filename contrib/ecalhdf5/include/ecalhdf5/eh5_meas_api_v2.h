@@ -25,9 +25,10 @@
 #pragma once
 
 #include <functional>
+#include <map>
+#include <memory>
 #include <set>
 #include <string>
-#include <memory>
 
 #include "eh5_types.h"
 
@@ -345,6 +346,9 @@ namespace eCAL
 
      private:
       std::unique_ptr<v3::HDF5Meas> hdf_meas_impl_;
+      // this map saves all datatype infos that have been set, so that the api can still
+      // support setting type and descriptor separately
+      std::map<std::string, DataTypeInformation> data_type_info_map;
     };
     } // namespace v1
   }  // namespace eh5
