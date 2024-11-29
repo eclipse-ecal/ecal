@@ -42,7 +42,7 @@ namespace eCAL
   class CServiceClientImpl;
   // deprecated <<<
 
-  class CServiceClientIDImpl;
+  class CServiceClientImpl;
 
   class CClientGate
   {
@@ -53,13 +53,8 @@ namespace eCAL
     void Start();
     void Stop();
 
-    // deprecated >>>
-    bool Register(const std::string& service_name_,   const std::shared_ptr<CServiceClientImpl>& client_);
+    bool Register  (const std::string& service_name_, const std::shared_ptr<CServiceClientImpl>& client_);
     bool Unregister(const std::string& service_name_, const std::shared_ptr<CServiceClientImpl>& client_);
-    // deprecated <<<
-
-    bool Register  (const std::string& service_name_, const std::shared_ptr<CServiceClientIDImpl>& client_);
-    bool Unregister(const std::string& service_name_, const std::shared_ptr<CServiceClientIDImpl>& client_);
 
     void ApplyServiceRegistration(const Registration::Sample& ecal_sample_);
 
@@ -68,14 +63,8 @@ namespace eCAL
   protected:
     static std::atomic<bool>      m_created;
 
-    // deprecated >>>
-    using ServiceNameClientImplMapT = std::multimap<std::string, std::shared_ptr<CServiceClientImpl>>;
+    using ServiceNameClientIDImplMapT = std::multimap<std::string, std::shared_ptr<CServiceClientImpl>>;
     std::shared_timed_mutex       m_service_client_map_sync;
-    ServiceNameClientImplMapT     m_service_client_map;
-    // deprecated <<<
-
-    using ServiceNameClientIDImplMapT = std::multimap<std::string, std::shared_ptr<CServiceClientIDImpl>>;
-    std::shared_timed_mutex       m_service_client_id_map_sync;
-    ServiceNameClientIDImplMapT   m_service_client_id_map;
+    ServiceNameClientIDImplMapT   m_service_client_map;
   };
 }

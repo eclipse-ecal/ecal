@@ -22,11 +22,11 @@
 **/
 
 #include <ecal/ecal_client_instance.h>
-#include "ecal_service_client_id_impl.h"
+#include "ecal_service_client_impl.h"
 
 namespace eCAL
 {
-  CClientInstance::CClientInstance(const Registration::SEntityId& entity_id_, const std::shared_ptr<CServiceClientIDImpl>& service_client_id_impl_)
+  CClientInstance::CClientInstance(const Registration::SEntityId& entity_id_, const std::shared_ptr<CServiceClientImpl>& service_client_id_impl_)
     : m_entity_id(entity_id_), m_service_client_impl(service_client_id_impl_)
   {
     assert(m_service_client_impl && "service_client_id_impl_ must not be null");

@@ -29,7 +29,6 @@
 #include <ecal/ecal_defs.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_client.h>
-#include <ecal/ecal_client_id.h>
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_core.h>
 #include <ecal/ecal_log.h>

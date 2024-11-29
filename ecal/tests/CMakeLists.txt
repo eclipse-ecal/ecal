@@ -60,7 +60,7 @@ if(ECAL_CORE_REGISTRATION AND ECAL_CORE_PUBLISHER AND ECAL_CORE_SUBSCRIBER)
 endif()
 
 if(ECAL_CORE_SERVICE)
-  add_subdirectory(cpp/clientserver_id_test)
+  add_subdirectory(cpp/clientserver_new_test)
   add_subdirectory(cpp/clientserver_test)
   if(ECAL_CORE_HAS_PROTOBUF)
     add_subdirectory(cpp/clientserver_proto_test)

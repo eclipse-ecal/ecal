@@ -23,7 +23,6 @@
 
 #include "ecal_clientgate.h"
 #include "service/ecal_service_client_impl.h"
-#include "service/ecal_service_client_id_impl.h"
 
 #include <atomic>
 #include <mutex>
@@ -55,14 +54,12 @@ namespace eCAL
     if (!m_created) return;
 
     // destroy all remaining clients
-    const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_id_map_sync);
-    m_service_client_id_map.clear();
+    const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_map_sync);
+    m_service_client_map.clear();
 
     m_created = false;
   }
 
-  ///////////////////////////
-  // DEPRECATED
   bool CClientGate::Register(const std::string& service_name_, const std::shared_ptr<CServiceClientImpl>& client_)
   {
     if (!m_created) return(false);
@@ -73,11 +70,7 @@ namespace eCAL
 
     return(true);
   }
-  // DEPRECATED
-  ///////////////////////////
 
-  ///////////////////////////
-  // DEPRECATED
   bool CClientGate::Unregister(const std::string& service_name_, const std::shared_ptr<CServiceClientImpl>& client_)
   {
     if (!m_created) return(false);
@@ -90,39 +83,6 @@ namespace eCAL
       if (iter->second == client_)
       {
         m_service_client_map.erase(iter);
-        ret_state = true;
-        break;
-      }
-    }
-
-    return(ret_state);
-  }
-  // DEPRECATED
-  ///////////////////////////
-
-  bool CClientGate::Register(const std::string& service_name_, const std::shared_ptr<CServiceClientIDImpl>& client_)
-  {
-    if (!m_created) return(false);
-
-    // register internal client
-    const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_id_map_sync);
-    m_service_client_id_map.emplace(std::pair<std::string, std::shared_ptr<CServiceClientIDImpl>>(service_name_, client_));
-
-    return(true);
-  }
-
-  bool CClientGate::Unregister(const std::string& service_name_, const std::shared_ptr<CServiceClientIDImpl>& client_)
-  {
-    if (!m_created) return(false);
-    bool ret_state = false;
-
-    const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_id_map_sync);
-    auto res = m_service_client_id_map.equal_range(service_name_);
-    for (auto iter = res.first; iter != res.second; ++iter)
-    {
-      if (iter->second == client_)
-      {
-        m_service_client_id_map.erase(iter);
         ret_state = true;
         break;
       }
@@ -148,34 +108,16 @@ namespace eCAL
     service.tcp_port_v0 = static_cast<unsigned short>(ecal_sample_service.tcp_port_v0);
     service.tcp_port_v1 = static_cast<unsigned short>(ecal_sample_service.tcp_port_v1);
 
-    ///////////////////////////
-    // DEPRECATED
+    // inform matching clients
     {
-      service.key = service.sname + ":" + service.sid + "@" + std::to_string(service.pid) + "@" + service.hname;
       const std::shared_lock<std::shared_timed_mutex> lock(m_service_client_map_sync);
       auto res = m_service_client_map.equal_range(service.sname);
-      for (ServiceNameClientImplMapT::const_iterator iter = res.first; iter != res.second; ++iter)
+      for (ServiceNameClientIDImplMapT::const_iterator iter = res.first; iter != res.second; ++iter)
       {
         Registration::SEntityId service_entity;
         service_entity.entity_id  = service.sid;
         service_entity.process_id = service.pid;
         service_entity.host_name  = service.hname;
-        iter->second->RegisterService(service.key, service);
-      }
-    }
-    // DEPRECATED
-    ///////////////////////////
-
-    // inform matching clients
-    {
-      const std::shared_lock<std::shared_timed_mutex> lock(m_service_client_id_map_sync);
-      auto res = m_service_client_id_map.equal_range(service.sname);
-      for (ServiceNameClientIDImplMapT::const_iterator iter = res.first; iter != res.second; ++iter)
-      {
-        Registration::SEntityId service_entity;
-        service_entity.entity_id = service.sid;
-        service_entity.process_id = service.pid;
-        service_entity.host_name = service.hname;
         iter->second->RegisterService(service_entity, service);
       }
     }
@@ -185,22 +127,10 @@ namespace eCAL
   {
     if (!m_created) return;
 
-    ///////////////////////////
-    // DEPRECATED
+    // read client registrations
     {
       const std::shared_lock<std::shared_timed_mutex> lock(m_service_client_map_sync);
       for (const auto& iter : m_service_client_map)
-      {
-        reg_sample_list_.push_back(iter.second->GetRegistration());
-      }
-    }
-    // DEPRECATED
-    ///////////////////////////
-
-    // read client registrations
-    {
-      const std::shared_lock<std::shared_timed_mutex> lock(m_service_client_id_map_sync);
-      for (const auto& iter : m_service_client_id_map)
       {
         reg_sample_list_.push_back(iter.second->GetRegistration());
       }

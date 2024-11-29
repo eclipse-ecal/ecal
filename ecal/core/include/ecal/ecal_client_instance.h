@@ -37,14 +37,14 @@
 
 namespace eCAL
 {
-  class CServiceClientIDImpl;
+  class CServiceClientImpl;
 
   class ECAL_API_CLASS CClientInstance final
   {
   public:
     // Constructor
     ECAL_API_EXPORTED_MEMBER
-      CClientInstance(const Registration::SEntityId& entity_id_, const std::shared_ptr<CServiceClientIDImpl>& service_client_id_impl_);
+      CClientInstance(const Registration::SEntityId& entity_id_, const std::shared_ptr<CServiceClientImpl>& service_client_id_impl_);
 
     // Defaulted destructor
     ~CClientInstance() = default;
@@ -112,6 +112,6 @@ namespace eCAL
 
   private:
     Registration::SEntityId                           m_entity_id;
-    const std::shared_ptr<eCAL::CServiceClientIDImpl> m_service_client_impl;
+    const std::shared_ptr<eCAL::CServiceClientImpl> m_service_client_impl;
   };
 }

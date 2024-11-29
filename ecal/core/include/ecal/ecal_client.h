@@ -24,12 +24,10 @@
 
 #pragma once
 
-#include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_os.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
+#include <ecal/ecal_client_instance.h>
 
-#include <iostream>
 #include <string>
 #include <vector>
 #include <memory>
@@ -41,181 +39,97 @@ namespace eCAL
   /**
    * @brief Service client wrapper class.
   **/
-  class ECAL_API_CLASS CServiceClient
+  class ECAL_API_CLASS CServiceClientNew
   {
   public:
     /**
-     * @brief Constructor. 
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      CServiceClient();
-
-    /**
-     * @brief Constructor. 
-     *
-     * @param service_name_  Unique service name.
-    **/
-    ECAL_API_EXPORTED_MEMBER 
-      explicit CServiceClient(const std::string& service_name_);
-
-    /**
      * @brief Constructor.
      *
-     * @param service_name_  Unique service name.
+     * @param service_name_            Unique service name.
      * @param method_information_map_  Map of method names and corresponding datatype information.
+     * @param event_callback_          The client event callback funtion.
     **/
     ECAL_API_EXPORTED_MEMBER
-      explicit CServiceClient(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
+      CServiceClientNew(const std::string& service_name_, const ServiceMethodInformationMapT method_information_map_ = ServiceMethodInformationMapT(), const ClientEventIDCallbackT event_callback_ = ClientEventIDCallbackT());
 
     /**
-     * @brief Destructor. 
+     * @brief Destructor.
     **/
     ECAL_API_EXPORTED_MEMBER
-      virtual ~CServiceClient();
+      virtual ~CServiceClientNew();
+
+    // Deleted copy constructor and copy assignment operator
+    CServiceClientNew(const CServiceClientNew&) = delete;
+    CServiceClientNew& operator=(const CServiceClientNew&) = delete;
+
+    // Move constructor and move assignment operator
+    ECAL_API_EXPORTED_MEMBER CServiceClientNew(CServiceClientNew&& rhs) noexcept;
+    ECAL_API_EXPORTED_MEMBER CServiceClientNew& operator=(CServiceClientNew&& rhs) noexcept;
 
     /**
-     * @brief CServiceClients are non-copyable
-    **/
-    CServiceClient(const CServiceClient&) = delete;
-
-    /**
-     * @brief CServiceClients are non-copyable
-    **/
-    CServiceClient& operator=(const CServiceClient&) = delete;
-
-    /**
-     * @brief Creates this object. 
+     * @brief Get the client instances for all matching services
      *
-     * @param service_name_  Unique service name.
-     *
-     * @return  True if successful. 
-    **/
-    ECAL_API_EXPORTED_MEMBER 
-      bool Create(const std::string& service_name_);
-
-    /**
-     * @brief Creates this object.
-     *
-     * @param service_name_  Unique service name.
-     * @param method_information_map_  Map of method names and corresponding datatype information.
-     *
-     * @return  True if successful.
+     * @return  Vector of client instances
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool Create(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
+      std::vector<CClientInstance> GetClientInstances() const;
 
     /**
-     * @brief Destroys this object. 
+     * @brief Blocking call of a service method for all existing service instances, response will be returned as vector<pair<bool, SServiceReponse>>
      *
-     * @return  True if successful. 
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool Destroy();
-
-    /**
-     * @brief Change the host name filter for that client instance
-     *
-     * @param host_name_  Host name filter (empty == all hosts)
-     *
-     * @return  True if successful.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool SetHostName(const std::string& host_name_);
-
-    /**
-     * @brief Call a method of this service, responses will be returned by callback. 
-     *
-     * @param method_name_  Method name.
-     * @param request_      Request string. 
-     * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
-     *
-     * @return  True if successful. 
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool Call(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
-
-    /**
-     * @brief Call a method of this service, all responses will be returned in service_response_vec_. 
-     *
-     * @param       method_name_           Method name.
-     * @param       request_               Request string.
-     * @param       timeout_               Maximum time before operation returns (in milliseconds, -1 means infinite).
+     * @param       method_name_  Method name.
+     * @param       request_      Request string.
+     * @param       timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
      * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
      *
-     * @return  True if successful.
+     * @return  True if all calls were successful.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_);
+      bool CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT& service_response_vec_) const;
 
     /**
-     * @brief Call a method of this service asynchronously, responses will be returned by callback. 
+     * @brief Blocking call (with timeout) of a service method for all existing service instances, using callback
      *
-     * @param method_name_  Method name.
-     * @param request_      Request string. 
-     * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite) - NOT SUPPORTED YET.
+     * @param method_name_        Method name.
+     * @param request_            Request string.
+     * @param timeout_            Maximum time before operation returns (in milliseconds, -1 means infinite).
+     * @param response_callback_  Callback function for the service method response.
      *
-     * @return  True if successful.
+     * @return  True if all calls were successful.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool CallAsync(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
+      bool CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_) const;
 
     /**
-     * @brief Add server response callback. 
+     * @brief Asynchronous call of a service method for all existing service instances, using callback
      *
-     * @param callback_  Callback function for server response.  
+     * @param method_name_        Method name.
+     * @param request_            Request string.
+     * @param response_callback_  Callback function for the service method response.
      *
-     * @return  True if successful.
+     * @return  True if all calls were successful.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool AddResponseCallback(const ResponseCallbackT& callback_);
-
-    /**
-     * @brief Remove server response callback. 
-     *
-     * @return  True if successful.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool RemResponseCallback();
-
-    /**
-     * @brief Add client event callback function.
-     *
-     * @param type_      The event type to react on.
-     * @param callback_  The callback function to add.
-     *
-     * @return  True if succeeded, false if not.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
-
-    /**
-     * @brief Remove client event callback function.
-     *
-     * @param type_  The event type to remove.
-     *
-     * @return  True if succeeded, false if not.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool RemEventCallback(eCAL_Client_Event type_);
-
+      bool CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_) const;
+      
     /**
      * @brief Retrieve service name.
      *
      * @return  The service name.
     **/
     ECAL_API_EXPORTED_MEMBER
-      std::string GetServiceName();
+      std::string GetServiceName() const;
 
     /**
-     * @brief Check connection state.
+     * @brief Check connection to at least one service.
      *
-     * @return  True if connected, false if not.
+     * @return  True if at least one service client instance is connected.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool IsConnected();
+      bool IsConnected() const;
 
-  protected:
+  private:
+    std::string                               m_service_name;
     std::shared_ptr<eCAL::CServiceClientImpl> m_service_client_impl;
-    bool                                      m_created;
   };
 }

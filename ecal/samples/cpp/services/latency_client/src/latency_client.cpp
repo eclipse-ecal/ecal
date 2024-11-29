@@ -18,6 +18,7 @@
 */
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_client_deprecated.h>
 
 #include <algorithm>
 #include <iostream>

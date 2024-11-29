@@ -30,7 +30,7 @@ int main(int argc, char **argv)
   eCAL::Initialize(argc, argv, "minimal client");
 
   // create minimal service client
-  const eCAL::CServiceClientID minimal_client("service1", { {"echo", eCAL::SServiceMethodInformation()} });
+  const eCAL::CServiceClientNew minimal_client("service1", { {"echo", eCAL::SServiceMethodInformation()} });
 
   // callback for service response
   auto service_response_callback = [](const eCAL::Registration::SEntityId& entity_id_, const eCAL::SServiceResponse& service_response_) {
