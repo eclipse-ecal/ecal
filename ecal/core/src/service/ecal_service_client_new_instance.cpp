@@ -22,7 +22,7 @@
 **/
 
 #include <ecal/ecal_client_instance.h>
-#include "ecal_service_client_impl.h"
+#include "ecal_service_client_new_impl.h"
 
 namespace eCAL
 {

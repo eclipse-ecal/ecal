@@ -102,7 +102,7 @@ namespace
 
 #if ClientConnectEventTest
 
-TEST(core_cpp_clientserver, ClientConnectEvent)
+TEST(core_cpp_clientserver_new, ClientConnectEvent)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver base connect event callback");
@@ -170,7 +170,7 @@ TEST(core_cpp_clientserver, ClientConnectEvent)
 
 #if ServerConnectEventTest
 
-TEST(core_cpp_clientserver, ServerConnectEvent)
+TEST(core_cpp_clientserver_new, ServerConnectEvent)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver base connect event callback");
@@ -251,7 +251,7 @@ TEST(core_cpp_clientserver, ServerConnectEvent)
 
 #if ClientServerBaseCallbackTest
 
-TEST(core_cpp_clientserver, ClientServerBaseCallback)
+TEST(core_cpp_clientserver_new, ClientServerBaseCallback)
 {
   const int num_services(2);
   const int num_clients(3);
@@ -357,7 +357,7 @@ TEST(core_cpp_clientserver, ClientServerBaseCallback)
 
 #if ClientServerBaseCallbackTimeoutTest
 
-TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
+TEST(core_cpp_clientserver_new, ClientServerBaseCallbackTimeout)
 {
   const int num_services(2);
   const int num_clients(3);
@@ -520,7 +520,7 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
 
 #if ClientServerBaseAsyncCallbackTest
 
-TEST(core_cpp_clientserver, ClientServerBaseAsyncCallback)
+TEST(core_cpp_clientserver_new, ClientServerBaseAsyncCallback)
 {
   const int calls(1);
   const int sleep(100);
@@ -594,7 +594,7 @@ TEST(core_cpp_clientserver, ClientServerBaseAsyncCallback)
 
 #if ClientServerBaseAsyncTest
 
-TEST(core_cpp_clientserver, ClientServerBaseAsync)
+TEST(core_cpp_clientserver_new, ClientServerBaseAsync)
 {
   const int calls(5);
 
@@ -701,7 +701,7 @@ TEST(core_cpp_clientserver, ClientServerBaseAsync)
 
 #if ClientServerBaseBlockingTest
 
-TEST(core_cpp_clientserver, ClientServerBaseBlocking)
+TEST(core_cpp_clientserver_new, ClientServerBaseBlocking)
 {
   const int num_services(2);
   const int num_clients(3);
@@ -804,7 +804,7 @@ TEST(core_cpp_clientserver, ClientServerBaseBlocking)
 
 #if NestedRPCCallTest
 
-TEST(core_cpp_clientserver, NestedRPCCall)
+TEST(core_cpp_clientserver_new, NestedRPCCall)
 {
   const int calls(1);
   const int sleep(0);
