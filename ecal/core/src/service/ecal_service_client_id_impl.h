@@ -34,6 +34,7 @@
 #include <map>
 #include <mutex>
 #include <memory>
+#include <vector>
 
 namespace eCAL
 {
@@ -57,7 +58,8 @@ namespace eCAL
     // Retrieve service IDs of all matching services
     std::vector<Registration::SEntityId> GetServiceIDs();
 
-    // Blocking call to a specific service; calls callback if provided and returns response as pair<bool, SServiceResponse>
+    // Blocking call to a specific service; returns response as pair<bool, SServiceResponse>
+    // if a callback is provided call the callback as well
     std::pair<bool, SServiceResponse> CallWithCallback(
       const Registration::SEntityId& entity_id_, const std::string& method_name_,
       const std::string& request_, int timeout_ms_, const ResponseIDCallbackT& response_callback_ = nullptr);
@@ -73,7 +75,7 @@ namespace eCAL
     // Called by the registration receiver to process a service registration
     void RegisterService(const Registration::SEntityId& entity_id_, const SServiceAttr& service_);
 
-    // Called by the registration layer to get a registration sample
+    // Called by the registration provider to get a registration sample
     Registration::Sample GetRegistration();
 
     // Prevent copy and move operations
@@ -83,6 +85,10 @@ namespace eCAL
     CServiceClientIDImpl& operator=(CServiceClientIDImpl&&) = delete;
 
   private:
+    // Prepare and retrieve registration and unregistration samples
+    Registration::Sample GetRegistrationSample();
+    Registration::Sample GetUnregistrationSample();
+
     // SClient struct representing a client session and its connection state
     struct SClient
     {
@@ -90,6 +96,22 @@ namespace eCAL
       std::shared_ptr<eCAL::service::ClientSession> client_session;
       bool connected = false;
     };
+
+    // Get client for specific entity id
+    bool GetClientByEntity(const Registration::SEntityId& entity_id_, SClient& client_);
+
+    // Blocking call to a specific service method with timeout
+    std::pair<bool, SServiceResponse> CallMethodWithTimeout(const Registration::SEntityId& entity_id_, SClient& client_,
+      const std::string& method_name_, const std::string& request_, std::chrono::nanoseconds timeout_);
+
+    // Update the connection states for client sessions
+    void UpdateConnectionStates();
+
+    // Increment method call count for tracking
+    void IncrementMethodCallCount(const std::string& method_name_);
+
+    // Notify specific event callback
+    void NotifyEventCallback(const Registration::SEntityId& entity_id_, eCAL_Client_Event event_type_, const SServiceAttr& service_attr_);
 
     // SResponseData struct for handling response callbacks
     struct SResponseData
@@ -109,46 +131,11 @@ namespace eCAL
       {}
     };
 
-    // Initializes the method call count map
-    void InitializeMethodCallCounts();
-
-    // Generates a unique client ID
-    void GenerateClientID();
-
-    // Add and remove callback function for client events
-    bool AddEventCallback(ClientEventIDCallbackT callback_);
-
-    // Resets all callbacks and clears stored client information
-    void ResetAllCallbacks();
-
-    // Blocking call to a specific service with timeout
-    std::pair<bool, SServiceResponse> CallBlocking(const Registration::SEntityId& entity_id_, SClient& client_,
-      const std::string& method_name_, const std::string& request_, std::chrono::nanoseconds timeout_);
-
-    // Prepare and retrieve registration and unregistration samples
-    Registration::Sample GetRegistrationSample();
-    Registration::Sample GetUnregistrationSample();
-
-    // Register and unregister client information
-    void Register();
-    void Unregister();
-
-    // Update the connection states for client sessions
-    void UpdateConnectionStates();
-
-    // Increment method call count for tracking
-    void IncrementMethodCallCount(const std::string& method_name_);
-
-    // Helper methods for client session handling and request serialization
-    bool TryGetClient(const Registration::SEntityId& entity_id_, SClient& client_);
     static std::shared_ptr<SResponseData> PrepareInitialResponse(SClient& client_, const std::string& method_name_);
     static eCAL::service::ClientResponseCallbackT CreateResponseCallback(const std::shared_ptr<SResponseData>& response_data_);
 
-    // Notify specific event callback
-    void NotifyEventCallback(const Registration::SEntityId& entity_id_, eCAL_Client_Event event_type_, const SServiceAttr& service_attr_);
-
     // Client version (incremented for protocol or functionality changes)
-    static constexpr int m_client_version = 1;
+    static constexpr int         m_client_version = 1;
 
     // Service attributes
     std::string                  m_service_name;
