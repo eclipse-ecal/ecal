@@ -4,12 +4,34 @@
 using namespace eCAL::experimental::measurement::hdf5;
 using namespace eCAL::experimental::measurement;
 
+namespace eCAL
+{
+  namespace experimental
+  {
+    namespace measurement
+    {
+      namespace hdf5
+      {
+        struct WriterImpl
+        {
+          eCAL::eh5::HDF5Meas measurement;
+
+          WriterImpl() = default;
+          WriterImpl(const std::string& path)
+            : measurement(path, eCAL::eh5::eAccessType::CREATE)
+          {}
+        };
+      }
+    }
+  }
+}
+
 Writer::Writer() 
-  : measurement(std::make_unique<eh5::HDF5Meas>()) 
+  : impl(std::make_unique<WriterImpl>())
 {}
 
 Writer::Writer(const std::string& path) 
-  : measurement(std::make_unique<eh5::HDF5Meas>(path, eCAL::eh5::CREATE))
+  : impl(std::make_unique<WriterImpl>(path))
 {}
 
 Writer::~Writer() = default;
@@ -20,50 +42,50 @@ Writer& Writer::operator=(Writer&&) noexcept = default;
 
 bool Writer::Open(const std::string& path)
 {
-  return measurement->Open(path, eCAL::eh5::CREATE);
+  return impl->measurement.Open(path, eCAL::eh5::eAccessType::CREATE);
 }
 
 bool Writer::Close()
 {
-  return measurement->Close();
+  return impl->measurement.Close();
 }
 
 bool Writer::IsOk() const
 {
-  return measurement->IsOk();
+  return impl->measurement.IsOk();
 }
 
 size_t Writer::GetMaxSizePerFile() const
 {
-  return measurement->GetMaxSizePerFile();
+  return impl->measurement.GetMaxSizePerFile();
 }
 
 void Writer::SetMaxSizePerFile(size_t size)
 {
-  return measurement->SetMaxSizePerFile(size);
+  return impl->measurement.SetMaxSizePerFile(size);
 }
 
 bool Writer::IsOneFilePerChannelEnabled() const
 {
-  return measurement->IsOneFilePerChannelEnabled();
+  return impl->measurement.IsOneFilePerChannelEnabled();
 }
 
 void Writer::SetOneFilePerChannelEnabled(bool enabled)
 {
-  return measurement->SetOneFilePerChannelEnabled(enabled);
+  return impl->measurement.SetOneFilePerChannelEnabled(enabled);
 }
 
 void Writer::SetChannelDataTypeInformation(const base::Channel& channel_name, const base::DataTypeInformation& info)
 {
-  measurement->SetChannelDataTypeInformation(channel_name, info);
+  impl->measurement.SetChannelDataTypeInformation(channel_name, info);
 }
 
 void Writer::SetFileBaseName(const std::string& base_name)
 {
-  return measurement->SetFileBaseName(base_name);
+  return impl->measurement.SetFileBaseName(base_name);
 }
 
-bool Writer::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const eCAL::experimental::measurement::base::Channel& channel, long long clock)
+bool Writer::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const eCAL::experimental::measurement::base::Channel& channel, long long id, long long clock)
 {
-  return measurement->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel, clock);
+  return impl->measurement.AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel, id, clock);
 }

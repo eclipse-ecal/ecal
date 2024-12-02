@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,14 +41,17 @@ int main(int /*argc*/, char** /*argv*/)
   eCAL::measurement::IMeasurement meas(MEASUREMENT_PATH);
 
   // create a channel (topic name "person")
-  eCAL::measurement::IChannel<pb::People::Person> person_channel = meas.Get<pb::People::Person>("person");
-
-  // iterate over the messages
-  for (const auto& person_entry : person_channel)
+  auto person_channels = meas.Channels("person");
+  if (person_channels.size() > 0)
   {
-    std::cout << "Person object at timestamp " << person_entry.send_timestamp << std::endl;
-    print_person(person_entry.message);
-  }
+    eCAL::measurement::IChannel<pb::People::Person> person_channel = meas.Get<pb::People::Person>(*person_channels.begin());
 
+    // iterate over the messages
+    for (const auto& person_entry : person_channel)
+    {
+      std::cout << "Person object at timestamp " << person_entry.send_timestamp << std::endl;
+      print_person(person_entry.message);
+    }
+  }
   return 0;
 }

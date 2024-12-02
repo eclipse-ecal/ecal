@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,14 +24,14 @@
 #include <memory>
 
 #include <ecal/ecal.h>
-#include <ecal/measurement/base/reader.h>
+#include <ecalhdf5/eh5_meas.h>
 
 #include "continuity_report.h"
 
 class MeasurementContainer
 {
 public:
-  MeasurementContainer(std::shared_ptr<eCAL::experimental::measurement::base::Reader> hdf5_meas, const std::string& meas_dir = "", bool use_receive_timestamp = true);
+  MeasurementContainer(std::shared_ptr<eCAL::eh5::v2::HDF5Meas> hdf5_meas, const std::string& meas_dir = "", bool use_receive_timestamp = true);
   ~MeasurementContainer();
 
   void CreatePublishers();
@@ -108,7 +108,7 @@ private:
     PublisherInfo*                     publisher_info_;
   };
 
-  std::shared_ptr<eCAL::experimental::measurement::base::Reader>      hdf5_meas_;
+  std::shared_ptr<eCAL::eh5::v2::HDF5Meas>              hdf5_meas_;
   std::string                                           meas_dir_;
   bool                                                  use_receive_timestamp_;
 

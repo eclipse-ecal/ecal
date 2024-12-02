@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,17 +33,14 @@
 
 namespace eCAL
 {
-  namespace eh5
-  {
-    class HDF5Meas;
-  }
-
   namespace experimental
   {
     namespace measurement
     {
       namespace hdf5
       {
+        class WriterImpl;
+
         /**
          * @brief Hdf5 based Writer implementation
         **/
@@ -178,10 +175,10 @@ namespace eCAL
            *
            * @return              true if succeeds, false if it fails
           **/
-          bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const eCAL::experimental::measurement::base::Channel& channel, long long clock) override;
+          bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const eCAL::experimental::measurement::base::Channel& channel, long long id, long long clock) override;
 
         private:
-          std::unique_ptr<eh5::HDF5Meas> measurement;
+          std::unique_ptr<WriterImpl> impl;
         };
       }  // namespace hdf5
     }  // namespace measurement

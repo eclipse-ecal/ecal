@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,12 +111,12 @@ void MeasPerf(const std::string& file_name, const size_t pkg_size, const size_t 
     // start time
     auto start = std::chrono::high_resolution_clock::now();
 
-    eCAL::eh5::HDF5Meas writer(output_dir, eCAL::eh5::CREATE);
+    eCAL::eh5::v2::HDF5Meas writer(output_dir, eCAL::eh5::v2::CREATE);
     writer.SetFileBaseName(file_name + "_hdf5");
     writer.SetMaxSizePerFile(max_size_per_file);
     for (size_t loop = 0; loop < write_loops; ++loop)
     {
-      writer.AddEntryToFile(static_cast<void*>(data.data()), data.size(), 0, 0, eCAL::experimental::measurement::base::CreateChannel("myChannel"), loop);
+      writer.AddEntryToFile(static_cast<void*>(data.data()), data.size(), 0, 0, "myChannel", 0, loop);
     }
     writer.Close();
 

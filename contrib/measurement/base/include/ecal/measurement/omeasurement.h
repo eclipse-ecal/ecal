@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,36 +34,37 @@ namespace eCAL
     class OBinaryChannel
     {
     public:
-      OBinaryChannel(std::shared_ptr<experimental::measurement::base::Writer> meas_, const std::string& name_)
-        : channel_name(name_)
+      OBinaryChannel(std::shared_ptr<experimental::measurement::base::Writer> meas_, const std::string& name_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info)
+        : channel(name_, 0)
         , meas(meas_)
-        , SenderID(0)
+        , id(0)
         , clock(0)
       {
+        meas->SetChannelDataTypeInformation(channel, datatype_info);
       }
 
       OBinaryChannel& operator<<(const BinaryFrame& entry_)
       {
-        meas->AddEntryToFile((void*)entry_.message.data(), entry_.message.size(), entry_.send_timestamp, entry_.receive_timestamp, eCAL::experimental::measurement::base::Channel{ channel_name, SenderID }, clock);
+        meas->AddEntryToFile((void*)entry_.message.data(), entry_.message.size(), entry_.send_timestamp, entry_.receive_timestamp, channel, id, clock);
         ++clock;
         return *this;
       }
 
       OBinaryChannel& operator<<(const SenderID& id_)
       {
-        SenderID = id_.ID;
+        id = id_.ID;
         return *this;
       }
 
-      bool operator==(const OBinaryChannel& rhs) const { return channel_name == rhs.channel_name && meas == rhs.meas; /*return it == rhs.it; */ };
+      bool operator==(const OBinaryChannel& rhs) const { return channel == rhs.channel && meas == rhs.meas; /*return it == rhs.it; */ };
       bool operator!=(const OBinaryChannel& rhs) const { return !(operator==(rhs)); /*return it == rhs.it; */ };
 
 
     private:
-      const std::string channel_name;
+      const experimental::measurement::base::Channel channel;
       std::shared_ptr<experimental::measurement::base::Writer> meas;
 
-      long long SenderID;
+      long long id;
       long long clock;
     };
 
@@ -72,8 +73,8 @@ namespace eCAL
     class OChannel
     {
     public:
-      OChannel(std::shared_ptr<experimental::measurement::base::Writer> meas_, std::string name_)
-        : binary_channel(meas_, name_)
+      OChannel(std::shared_ptr<experimental::measurement::base::Writer> meas_, std::string name_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info)
+        : binary_channel(meas_, name_, datatype_info)
       {
       }
 
@@ -137,9 +138,8 @@ namespace eCAL
         eCAL::message::GetEncoding(msg),
         eCAL::message::GetDescription(msg)
       };
-      meas->SetChannelDataTypeInformation(channel, datatype_info);
-        // Construct a channel based 
-      return OChannel<T>{meas, channel};
+      // Construct a channel based 
+      return OChannel<T>{meas, channel, datatype_info};
     }
 
     

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,9 @@
 */
 
 #include "measurement_exporter.h"
-#include <ecal/measurement/hdf5/writer.h>
 
 MeasurementExporter::MeasurementExporter():
-  _writer(std::make_unique<eCAL::experimental::measurement::hdf5::Writer>())
+  _writer(std::make_unique<eCAL::eh5::v2::HDF5Meas>())
 {
 }
 
@@ -29,7 +28,7 @@ void MeasurementExporter::setPath(const std::string& path, const std::string& ba
 {
   _root_output_path = EcalUtils::Filesystem::CleanPath(path);
   _output_path = EcalUtils::Filesystem::CleanPath(_root_output_path + EcalUtils::Filesystem::NativeSeparator(EcalUtils::Filesystem::OsStyle::Current) + eCALMeasCutterUtils::kDefaultFolderOutput, EcalUtils::Filesystem::OsStyle::Current);
-  if (!_writer->Open(_output_path))
+  if (!_writer->Open(_output_path, eCAL::eh5::v2::eAccessType::CREATE))
   {
     throw ExporterException("Unable to create HDF5 protobuf output path " + path + ".");
   }
@@ -81,7 +80,7 @@ void MeasurementExporter::setData(eCALMeasCutterUtils::Timestamp timestamp, cons
   iter = meta_data.find(eCALMeasCutterUtils::MetaDatumKey::SENDER_CLOCK);
   const auto sender_clock = (iter != meta_data.end()) ? iter->second.sender_clock : 0;
 
-  if (!_writer->AddEntryToFile(payload.data(), payload.size(), sender_timestamp, timestamp, eCAL::experimental::measurement::base::Channel{ _current_channel_name, sender_id }, sender_clock))
+  if (!_writer->AddEntryToFile(payload.data(), payload.size(), sender_timestamp, timestamp, _current_channel_name, sender_id, sender_clock))
   {
     throw ExporterException("Unable to export protobuf message.");
   }

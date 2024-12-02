@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -148,9 +148,6 @@ namespace eCAL
           **/
           virtual void SetChannelDataTypeInformation(const eCAL::experimental::measurement::base::Channel& channel_name, const DataTypeInformation& info) = 0;
 
-//          [[deprecated]]
-//          virtual void SetChannelDataTypeInformation(const std::string & channel_name, const base::DataTypeInformation & info) = 0;
-
           /**
            * @brief Set measurement file base name (desired name for the actual hdf5 files that will be created)
            *
@@ -171,7 +168,7 @@ namespace eCAL
            *
            * @return              true if succeeds, false if it fails
           **/
-          virtual bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const eCAL::experimental::measurement::base::Channel& channel, long long clock) = 0;
+          virtual bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const eCAL::experimental::measurement::base::Channel& channel, long long id, long long clock) = 0;
 
         };
       }

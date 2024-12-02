@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,20 +27,16 @@
 #include <memory>
 #include <ecal/measurement/base/reader.h>
 
-
 namespace eCAL
 {
-  namespace eh5
-  {
-    class HDF5Meas;
-  }
-
   namespace experimental
   {
     namespace measurement
     {
       namespace hdf5
       {
+        struct ReaderImpl;
+
         /**
          * @brief Hdf5 based Reader Implementation
         **/
@@ -124,7 +120,7 @@ namespace eCAL
            *
            * @return       channel names
           **/
-          std::set<std::string> GetChannelNames() const override;
+          //std::set<std::string> GetChannelNames() const override;
 
           /**
            * @brief Get the available channel names of the current opened file / measurement
@@ -138,7 +134,7 @@ namespace eCAL
            *
            * @return Channels (channel name & id)
           **/
-          std::set<eCAL::experimental::measurement::base::Channel> GetChannels(const std::string& channel_name) const override;
+          //std::set<eCAL::experimental::measurement::base::Channel> GetChannels(const std::string& channel_name) const override;
 
           /**
            * @brief Check if channel exists in measurement
@@ -221,7 +217,7 @@ namespace eCAL
           bool GetEntryData(long long entry_id, void* data) const override;
 
         private:
-          std::unique_ptr<eh5::HDF5Meas> measurement;
+          std::unique_ptr<ReaderImpl> impl;
 
         };
 
