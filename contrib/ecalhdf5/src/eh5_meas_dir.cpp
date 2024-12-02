@@ -31,9 +31,10 @@
 #include <dirent.h>
 #endif //WIN32
 
-#include <string>
-#include <list>
 #include <iostream>
+#include <limits>
+#include <list>
+#include <string>
 
 #include <ecal_utils/filesystem.h>
 #include <ecal_utils/str_convert.h>
