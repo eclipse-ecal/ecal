@@ -78,6 +78,9 @@ namespace eCAL
     // Called by the registration provider to get a registration sample
     Registration::Sample GetRegistration();
 
+    // Retrieves the service name
+    std::string GetServiceName() const;
+
     // Prevent copy and move operations
     CServiceClientImpl(const CServiceClientImpl&) = delete;
     CServiceClientImpl& operator=(const CServiceClientImpl&) = delete;

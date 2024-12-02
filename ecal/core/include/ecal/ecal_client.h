@@ -24,13 +24,15 @@
 
 #pragma once
 
+#include <ecal/ecal_deprecate.h>
+#include <ecal/ecal_os.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
 #include <ecal/ecal_client_instance.h>
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 namespace eCAL
 {
@@ -129,7 +131,6 @@ namespace eCAL
       bool IsConnected() const;
 
   private:
-    std::string                               m_service_name;
     std::shared_ptr<eCAL::CServiceClientImpl> m_service_client_impl;
   };
 }

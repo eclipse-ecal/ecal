@@ -22,7 +22,7 @@
 **/
 
 #include "ecal_clientgate.h"
-#include "service/ecal_service_client_new_impl.h"
+#include "service/ecal_service_client_impl.h"
 
 #include <atomic>
 #include <mutex>

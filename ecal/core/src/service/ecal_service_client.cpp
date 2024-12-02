@@ -22,220 +22,245 @@
 **/
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_client_deprecated.h>
-#include <ecal/ecal_service_info.h>
+#include <string>
+
+#include "ecal_clientgate.h"
+#include "ecal_global_accessors.h"
+#include "ecal_service_client_impl.h"
 
 namespace eCAL
 {
-  CServiceClient::CServiceClient()
-    : m_service_client_impl(nullptr)
-    , m_created(false)
+  /**
+   * @brief Constructor.
+   *
+   * @param service_name_            Service name.
+   * @param method_information_map_  Map of method names and corresponding datatype information.
+   * @param event_callback_          The client event callback funtion.
+  **/
+  CServiceClientNew::CServiceClientNew(const std::string& service_name_, const ServiceMethodInformationMapT method_information_map_, const ClientEventIDCallbackT event_callback_)
   {
-  }
+    // Create client implementation
+    m_service_client_impl = CServiceClientImpl::CreateInstance(service_name_, method_information_map_, event_callback_);
 
-  CServiceClient::CServiceClient(const std::string& service_name_)
-    : m_service_client_impl(nullptr)
-    , m_created(false)
-  {
-    Create(service_name_);
-  }
-
-  CServiceClient::CServiceClient(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
-    : m_service_client_impl(nullptr)
-    , m_created(false)
-  {
-    Create(service_name_, method_information_map_);
-  }
-
-  CServiceClient::~CServiceClient()
-  {
-    Destroy();
-  }
-
-  bool CServiceClient::Create(const std::string& service_name_)
-  {
-    return Create(service_name_, ServiceMethodInformationMapT());
-  }
-
-  bool CServiceClient::Create(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
-  {
-    if (m_created) return false;
-
-    // Define the event callback to pass to CServiceClientNew
-    ClientEventIDCallbackT event_callback = [this](const Registration::SServiceId& service_id_, const struct SClientEventCallbackData& data_)
-      {
-        // Lock the mutex to safely access m_event_callbacks
-        std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
-
-        // Check if there's a callback registered for the event type
-        const auto& callback = m_event_callback_map.find(data_.type);
-        if (callback != m_event_callback_map.end())
-        {
-          // Call the user's callback
-          callback->second(service_id_.service_name.c_str(), &data_);
-        }
-      };
-
-    // Create the new service client implementation with the event callback
-    m_service_client_impl = std::make_shared<eCAL::CServiceClientNew>(
-      service_name_,
-      method_information_map_,
-      event_callback
-    );
-
-    m_created = (m_service_client_impl != nullptr);
-    return m_created;
-  }
-
-  bool CServiceClient::Destroy()
-  {
-    if (!m_created) return false;
-
-    // Reset the service client implementation
-    m_service_client_impl.reset();
-    m_created = false;
-
-    // Clear stored callbacks
-    m_response_callback = nullptr;
-    //m_event_callback = nullptr;
-    m_host_name.clear();
-
-    return true;
-  }
-
-  bool CServiceClient::SetHostName(const std::string& host_name_)
-  {
-    if (!m_created) return false;
-
-    // Store the host name filter
-    m_host_name = host_name_;
-
-    return true;
-  }
-
-  bool CServiceClient::Call(const std::string& method_name_, const std::string& request_, int timeout_)
-  {
-    if (!m_created || !m_response_callback) return false;
-
-    // Wrap the response callback to filter by host name if necessary
-    ResponseIDCallbackT wrapped_callback = [this](const Registration::SEntityId& /*entity_id_*/, const struct SServiceResponse& service_response_)
-      {
-        if (m_host_name.empty() || service_response_.host_name == m_host_name)
-        {
-          // Call the stored response callback
-          m_response_callback(service_response_);
-        }
-      };
-
-    // Call the method using the new API
-    return m_service_client_impl->CallWithCallback(method_name_, request_, timeout_, wrapped_callback);
-  }
-
-  bool CServiceClient::Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_)
-  {
-    if (!m_created || !service_response_vec_) return false;
-
-    // Call the method using the new API
-    ServiceResponseVecT all_responses;
-    bool success = m_service_client_impl->CallWithResponse(method_name_, request_, timeout_, all_responses);
-
-    // Filter responses based on host name if necessary
-    if (!m_host_name.empty())
+    // Register client
+    if (g_clientgate() != nullptr)
     {
-      for (const auto& response : all_responses)
+      g_clientgate()->Register(service_name_, m_service_client_impl);
+    }
+  }
+
+  /**
+   * @brief Destructor.
+  **/
+  CServiceClientNew::~CServiceClientNew()
+  {
+    // Unregister client
+    if (g_clientgate() != nullptr)
+    {
+      g_clientgate()->Unregister(m_service_client_impl->GetServiceName(), m_service_client_impl);
+    }
+
+    // Reset client implementation
+    m_service_client_impl.reset();
+  }
+
+  /**
+   * @brief Move constructor
+  **/
+  CServiceClientNew::CServiceClientNew(CServiceClientNew&& rhs) noexcept
+    : m_service_client_impl(std::move(rhs.m_service_client_impl))
+  {
+    rhs.m_service_client_impl = nullptr;
+  }
+
+  /**
+   * @brief Move assignment operator
+  **/
+  CServiceClientNew& CServiceClientNew::operator=(CServiceClientNew&& rhs) noexcept
+  {
+    if (this != &rhs)
+    {
+      // Unregister current client
+      if (g_clientgate())
       {
-        if (response.host_name == m_host_name)
+        g_clientgate()->Unregister(m_service_client_impl->GetServiceName(), m_service_client_impl);
+      }
+
+      // Move data
+      m_service_client_impl = std::move(rhs.m_service_client_impl);
+
+      rhs.m_service_client_impl = nullptr;
+    }
+    return *this;
+  }
+
+  /**
+   * @brief Get the client instances for all matching services
+   *
+   * @return  Vector of client instances
+  **/
+  std::vector<CClientInstance> CServiceClientNew::GetClientInstances() const
+  {
+    std::vector<CClientInstance> instances;
+
+    auto entity_ids = m_service_client_impl->GetServiceIDs();
+    instances.reserve(entity_ids.size());
+    for (const auto& entity_id : entity_ids)
+    {
+      instances.emplace_back(entity_id, m_service_client_impl);
+    }
+    return instances;
+  }
+
+  /**
+   * @brief Blocking call of a service method for all existing service instances, response will be returned as vector<pair<bool, SServiceReponse>>
+   *
+   * @param       method_name_  Method name.
+   * @param       request_      Request string.
+   * @param       timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+   * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
+   *
+   * @return  True if all calls were successful.
+  **/
+  bool CServiceClientNew::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT& service_response_vec_) const
+  {
+    auto instances = GetClientInstances();
+    size_t num_instances = instances.size();
+
+    // Vector to hold futures for the return values and responses
+    std::vector<std::future<std::pair<bool, SServiceResponse>>> futures;
+    futures.reserve(num_instances);
+
+    // Launch asynchronous calls for each instance
+    for (auto& instance : instances)
+    {
+      futures.emplace_back(std::async(std::launch::async,
+        [&instance, method_name_ = method_name_, request_ = request_, timeout_]()
         {
-          service_response_vec_->push_back(response);
-        }
+          return instance.CallWithResponse(method_name_, request_, timeout_);
+        }));
+    }
+
+    bool overall_success = true;
+    service_response_vec_.clear(); // Ensure the response vector is empty before populating it
+
+    // Collect responses
+    for (auto& future : futures)
+    {
+      try
+      {
+        // Explicitly unpack the pair
+        std::pair<bool, SServiceResponse> result = future.get();
+        bool success = result.first;
+        SServiceResponse response = result.second;
+
+        // Add response to the vector
+        service_response_vec_.emplace_back(response);
+
+        // Aggregate success states
+        overall_success &= success;
+      }
+      catch (const std::exception& e)
+      {
+        // Handle exceptions and add an error response
+        SServiceResponse error_response;
+        error_response.error_msg = e.what();
+        error_response.call_state = call_state_failed;
+        service_response_vec_.emplace_back(error_response);
+        overall_success = false; // Mark overall success as false if any call fails
       }
     }
-    else
-    {
-      *service_response_vec_ = std::move(all_responses);
-    }
 
-    return success;
+    return overall_success; 
   }
 
-  bool CServiceClient::CallAsync(const std::string& method_name_, const std::string& request_, int /*timeout_*/)
+  /**
+   * @brief Blocking call (with timeout) of a service method for all existing service instances, using callback
+   *
+   * @param method_name_        Method name.
+   * @param request_            Request string.
+   * @param timeout_            Maximum time before operation returns (in milliseconds, -1 means infinite).
+   * @param response_callback_  Callback function for the service method response.
+   *
+   * @return  True if all calls were successful.
+  **/
+  bool CServiceClientNew::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_) const
   {
-    if (!m_created || !m_response_callback) return false;
+    auto instances = GetClientInstances();
+    size_t num_instances = instances.size();
 
-    // Wrap the response callback to filter by host name if necessary
-    ResponseIDCallbackT wrapped_callback = [this](const Registration::SEntityId& /*entity_id_*/, const struct SServiceResponse& service_response_)
-      {
-        if (m_host_name.empty() || service_response_.host_name == m_host_name)
+    // Vector to hold futures for the return values
+    std::vector<std::future<bool>> futures;
+    futures.reserve(num_instances);
+
+    for (auto& instance : instances)
+    {
+      futures.emplace_back(std::async(std::launch::async,
+        [&instance, method_name_ = method_name_, request_ = request_, timeout_, response_callback_]()
         {
-          // Call the stored response callback
-          m_response_callback(service_response_);
-        }
-      };
-
-    // Call the method asynchronously using the new API
-    return m_service_client_impl->CallWithCallbackAsync(method_name_, request_, wrapped_callback);
-  }
-
-  bool CServiceClient::AddResponseCallback(const ResponseCallbackT& callback_)
-  {
-    if (!m_created) return false;
-
-    {
-      const std::lock_guard<std::mutex> lock(m_response_callback_mutex);
-      m_response_callback = callback_;
+          return instance.CallWithCallback(method_name_, request_, timeout_, response_callback_);
+        }));
     }
 
-    return true;
-  }
-
-  bool CServiceClient::RemResponseCallback()
-  {
-    if (!m_created) return false;
-
+    bool return_state = true;
+    for (auto& future : futures)
     {
-      const std::lock_guard<std::mutex> lock(m_response_callback_mutex);
-      m_response_callback = nullptr;
-
+      try
+      {
+        return_state &= future.get();
+      }
+      catch (const std::exception& /*e*/)
+      {
+        // Handle exceptions
+        return_state = false;
+      }
     }
 
-    return true;
+    return return_state;
   }
 
-  bool CServiceClient::AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_)
+  /**
+   * @brief Asynchronous call of a service method for all existing service instances, using callback
+   *
+   * @param method_name_        Method name.
+   * @param request_            Request string.
+   * @param response_callback_  Callback function for the service method response.
+   *
+   * @return  True if all calls were successful.
+  **/
+  bool CServiceClientNew::CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_) const
   {
-    if (!m_created) return false;
-
+    bool return_state = true;
+    auto instances = GetClientInstances();
+    for (auto& instance : instances)
     {
-      const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
-      m_event_callback_map[type_] = callback_;
+      return_state &= instance.CallWithCallbackAsync(method_name_, request_, response_callback_);
     }
-
-    return true;
+    return return_state;
   }
 
-  bool CServiceClient::RemEventCallback(eCAL_Client_Event type_)
+  /**
+   * @brief Retrieve service name.
+   *
+   * @return  The service name.
+  **/
+  std::string CServiceClientNew::GetServiceName() const
   {
-    if (!m_created) return false;
-
-    {
-      const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
-      m_event_callback_map.erase(type_);
-    }
-
-    return true;
-  }
-
-  std::string CServiceClient::GetServiceName()
-  {
-    if (!m_created) return "";
-
     return m_service_client_impl->GetServiceName();
   }
 
-  bool CServiceClient::IsConnected()
+  /**
+   * @brief Check connection to at least one service.
+   *
+   * @return  True if at least one service client instance is connected.
+  **/
+  bool CServiceClientNew::IsConnected() const
   {
-    if (!m_created) return false;
-
-    return m_service_client_impl->IsConnected();
+    const auto instances = GetClientInstances();
+    for (const auto& instance : instances)
+    {
+      if (instance.IsConnected()) return true;
+    }
+    return false;
   }
 }

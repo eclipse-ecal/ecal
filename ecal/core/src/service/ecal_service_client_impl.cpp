@@ -23,7 +23,7 @@
 
 #include "ecal_global_accessors.h"
 
-#include "ecal_service_client_new_impl.h"
+#include "ecal_service_client_impl.h"
 #include "ecal_service_singleton_manager.h"
 #include "registration/ecal_registration_provider.h"
 #include "serialization/ecal_serialize_service.h"
@@ -316,6 +316,11 @@ namespace eCAL
   {
     UpdateConnectionStates();
     return GetRegistrationSample();
+  }
+
+  std::string CServiceClientImpl::GetServiceName() const
+  {
+    return m_service_name;
   }
 
   Registration::Sample CServiceClientImpl::GetRegistrationSample()

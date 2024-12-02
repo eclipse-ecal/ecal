@@ -380,10 +380,12 @@ if(ECAL_CORE_SERVICE)
       src/service/ecal_servicegate.cpp
       src/service/ecal_servicegate.h
       src/service/ecal_service_client.cpp
-      src/service/ecal_service_client_new.cpp
-      src/service/ecal_service_client_new_impl.cpp
-      src/service/ecal_service_client_new_impl.h
-      src/service/ecal_service_client_new_instance.cpp
+      src/service/ecal_service_client_impl.cpp
+      src/service/ecal_service_client_impl.h
+      src/service/ecal_service_client_deprecated.cpp
+      src/service/ecal_service_client_deprecated_impl.cpp
+      src/service/ecal_service_client_deprecated_impl.h
+      src/service/ecal_service_client_instance.cpp
       src/service/ecal_service_server.cpp
       src/service/ecal_service_server_impl.cpp
       src/service/ecal_service_server_impl.h
