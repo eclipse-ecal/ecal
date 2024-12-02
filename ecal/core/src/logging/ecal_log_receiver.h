@@ -28,9 +28,10 @@
 
 #include <ecal/types/logging.h>
 
-#include <string>
+#include <atomic>
 #include <mutex>
-#include <memory>
+#include <meSmory>
+#include <string>
 #include <vector>
 
 namespace eCAL
