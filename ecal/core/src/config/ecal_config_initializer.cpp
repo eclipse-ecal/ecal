@@ -59,6 +59,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <cstddef>
 
 namespace
 {
