@@ -22,8 +22,12 @@
 **/
 
 #include <ecalhdf5/eh5_meas_api_v2.h>
+
+#include <limits>
+
 #include <ecalhdf5/eh5_meas_api_v3.h>
 #include "datatype_helper.h"
+
 
 namespace {
   using namespace eCAL::eh5;
