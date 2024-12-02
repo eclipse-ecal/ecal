@@ -36,7 +36,7 @@ namespace eCAL
 {
   namespace eh5
   {
-    namespace v3
+    inline namespace v3
     {
       class HDF5Meas;
     }
@@ -193,7 +193,6 @@ namespace eCAL
        *
        * @return              channel description
       **/
-      [[deprecated("Please use GetChannelDataTypeInformation instead")]]
       std::string GetChannelDescription(const std::string& channel_name) const;
 
       /**
@@ -202,7 +201,6 @@ namespace eCAL
        * @param channel_name    channel name
        * @param description     description of the channel
       **/
-      [[deprecated("Please use SetChannelDataTypeInformation instead")]]
       void SetChannelDescription(const std::string& channel_name, const std::string& description);
 
       /**
@@ -212,7 +210,6 @@ namespace eCAL
        *
        * @return              channel type
       **/
-      [[deprecated("Please use GetChannelDataTypeInformation instead")]]
       std::string GetChannelType(const std::string& channel_name) const;
 
       /**
@@ -221,7 +218,6 @@ namespace eCAL
        * @param channel_name  channel name
        * @param type          type of the channel
       **/
-      [[deprecated("Please use SetChannelDataTypeInformation instead")]]
       void SetChannelType(const std::string& channel_name, const std::string& type);
 
       /**

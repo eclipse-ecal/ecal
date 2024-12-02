@@ -61,7 +61,7 @@ namespace eCAL
       };
     }
 
-    namespace v3
+    inline namespace v3
     {
       enum class eAccessType
       {

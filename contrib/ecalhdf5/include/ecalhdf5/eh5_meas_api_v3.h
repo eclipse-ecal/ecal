@@ -32,11 +32,6 @@
 
 #include "eh5_types.h"
 
-#if defined(ECAL_EH5_NO_DEPRECATION_WARNINGS)
-#define ECAL_EH5_DEPRECATE(__message__)                             //!< Don't print deprecation warnigns
-#else 
-#define ECAL_EH5_DEPRECATE(__message__) [[deprecated(__message__)]] //!< Deprecate the following function 
-#endif
 
 namespace eCAL
 {
@@ -44,7 +39,7 @@ namespace eCAL
   {
     class HDF5MeasImpl;
 
-    namespace v3{
+    inline namespace v3{
       
     /**
      * @brief eCAL HDF5 measurement API

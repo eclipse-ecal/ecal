@@ -40,18 +40,3 @@
 
 #include "eh5_meas_api_v2.h"
 #include "eh5_meas_api_v3.h"
-
-namespace eCAL
-{
-  namespace eh5
-  {
-   
-#if ECAL_EH5_API_VERSION == 2
-    using HDF5Meas = v2::HDF5Meas;
-    using eAccessType = v2::eAccessType;
-#else
-    using HDF5Meas = v3::HDF5Meas;
-    using eAccessType = v3::eAccessType;
-#endif
-  }  // namespace eh5
-}  // namespace eCAL

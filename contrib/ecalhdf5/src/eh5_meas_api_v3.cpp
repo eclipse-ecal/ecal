@@ -21,7 +21,7 @@
  * @brief  eCALHDF5 measurement class <TODO>
 **/
 
-#include <ecalhdf5/eh5_meas_api_v2.h>
+#include <ecalhdf5/eh5_meas_api_v3.h>
 
 #include <ecal_utils/filesystem.h>
 
