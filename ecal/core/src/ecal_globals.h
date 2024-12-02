@@ -31,7 +31,8 @@
 #include "registration/ecal_registration_receiver.h"
 #endif 
 #include "time/ecal_timegate.h"
-#include "logging/ecal_log_impl.h"
+#include "logging/ecal_log_provider.h"
+#include "logging/ecal_log_receiver.h"
 #if ECAL_CORE_MONITORING
 #include "monitoring/ecal_monitoring_def.h"
 #endif
@@ -68,7 +69,8 @@ namespace eCAL
 
     int Finalize();
 
-    const std::unique_ptr<CLog>&                                          log()                    { return log_instance; };
+    const std::unique_ptr<Logging::CLogProvider>&                         log_provider()           { return log_provider_instance; };
+    const std::unique_ptr<Logging::CLogReceiver>&                         log_receiver()           { return log_receiver_instance; };
 
 #if ECAL_CORE_MONITORING
     const std::unique_ptr<CMonitoring>&                                   monitoring()             { return monitoring_instance; };
@@ -100,7 +102,8 @@ namespace eCAL
   private:
     bool                                                                  initialized;
     unsigned int                                                          components;
-    std::unique_ptr<CLog>                                                 log_instance;
+    std::unique_ptr<Logging::CLogProvider>                                log_provider_instance;
+    std::unique_ptr<Logging::CLogReceiver>                                log_receiver_instance;
 #if ECAL_CORE_MONITORING
     std::unique_ptr<CMonitoring>                                          monitoring_instance;
 #endif

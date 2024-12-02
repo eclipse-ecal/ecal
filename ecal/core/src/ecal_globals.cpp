@@ -190,9 +190,15 @@ namespace eCAL
     /////////////////////
     if ((components_ & Init::Logging) != 0u)
     {
-      if (log_instance == nullptr)
+      if (log_provider_instance == nullptr)
       {
-        log_instance = std::make_unique<CLog>(eCAL::Logging::BuildLoggingAttributes(GetLoggingConfiguration(), GetRegistrationConfiguration(), GetTransportLayerConfiguration()));
+        log_provider_instance = std::make_unique<Logging::CLogProvider>(eCAL::Logging::BuildLoggingProviderAttributes(GetLoggingConfiguration(), GetRegistrationConfiguration(), GetTransportLayerConfiguration()));
+        new_initialization = true;
+      }
+
+      if (log_receiver_instance == nullptr)
+      {
+        log_receiver_instance = std::make_unique<Logging::CLogReceiver>(eCAL::Logging::BuildLoggingReceiverAttributes(GetLoggingConfiguration(), GetRegistrationConfiguration(), GetTransportLayerConfiguration()));
         new_initialization = true;
       }
     }
@@ -201,7 +207,8 @@ namespace eCAL
     // START ALL
     /////////////////////
     //if (config_instance)                                                config_instance->Create();
-    if (log_instance && ((components_ & Init::Logging) != 0u))            log_instance->Start();
+    if (log_provider_instance && ((components_ & Init::Logging) != 0u))   log_provider_instance->Start();
+    if (log_receiver_instance && ((components_ & Init::Logging) != 0u))   log_receiver_instance->Start();
 #if ECAL_CORE_REGISTRATION
     if (registration_provider_instance)                                   registration_provider_instance->Start();
     if (registration_receiver_instance)                                   registration_receiver_instance->Start();
@@ -267,7 +274,7 @@ namespace eCAL
       return(monitoring_instance != nullptr);
 #endif
     case Init::Logging:
-      return(log_instance != nullptr);
+      return(log_provider_instance != nullptr && log_receiver_instance != nullptr);
 #if ECAL_CORE_TIMEPLUGIN
     case Init::TimeSync:
       return(timegate_instance != nullptr);
@@ -319,8 +326,8 @@ namespace eCAL
     if (memfile_pool_instance)           memfile_pool_instance->Stop();
     if (memfile_map_instance)            memfile_map_instance->Stop();
 #endif
-    if (log_instance)                    log_instance->Stop();
-    //if (config_instance)                 config_instance->Destroy();
+    if (log_receiver_instance)           log_receiver_instance->Stop();
+    if (log_provider_instance)           log_provider_instance->Stop();
 
 #if ECAL_CORE_MONITORING
     monitoring_instance             = nullptr;
@@ -347,7 +354,9 @@ namespace eCAL
     memfile_pool_instance           = nullptr;
     memfile_map_instance            = nullptr;
 #endif
-    log_instance                    = nullptr;
+    log_provider_instance           = nullptr;
+    log_receiver_instance           = nullptr;
+    
     initialized = false;
 
     // reset configuration to default values

@@ -182,8 +182,8 @@ endif()
 ######################################
 set(ecal_logging_src
     src/logging/ecal_log.cpp
-    src/logging/ecal_log_impl.cpp
-    src/logging/ecal_log_impl.h
+    src/logging/ecal_log_provider.cpp
+    src/logging/ecal_log_receiver.cpp
 )
 
 ######################################

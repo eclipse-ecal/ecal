@@ -19,7 +19,8 @@
 
 #pragma once
 
-#include "logging/config/attributes/logging_attributes.h"
+#include "logging/config/attributes/ecal_log_provider_attributes.h"
+#include "logging/config/attributes/ecal_log_receiver_attributes.h"
 #include "ecal/config/logging.h"
 #include "ecal/config/registration.h"
 #include "ecal/config/transport_layer.h"
@@ -28,6 +29,7 @@ namespace eCAL
 {
   namespace Logging
   {
-    SAttributes BuildLoggingAttributes(const Logging::Configuration& log_config_, const Registration::Configuration& reg_config_, const TransportLayer::Configuration& tl_config_);
+    SProviderAttributes BuildLoggingProviderAttributes(const Logging::Configuration& log_config_, const Registration::Configuration& reg_config_, const TransportLayer::Configuration& tl_config_);
+    SReceiverAttributes BuildLoggingReceiverAttributes(const Logging::Configuration& log_config_, const Registration::Configuration& reg_config_, const TransportLayer::Configuration& tl_config_);
   }
 }

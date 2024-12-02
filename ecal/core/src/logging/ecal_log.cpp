@@ -24,7 +24,9 @@
 #include <ecal/ecal.h>
 #include <string>
 
-#include "ecal_log_impl.h"
+#include "ecal_log_provider.h"
+#include "ecal_log_receiver.h"
+#include "ecal_global_accessors.h"
 
 namespace eCAL
 {
@@ -37,7 +39,7 @@ namespace eCAL
     **/
     void SetLogLevel(const eCAL_Logging_eLogLevel level_)
     {
-      if(g_log() != nullptr) g_log()->SetLogLevel(level_);
+      if(g_log_provider() != nullptr) g_log_provider()->SetLogLevel(level_);
     }
 
     /**
@@ -47,7 +49,7 @@ namespace eCAL
      */
     void SetFileLogFilter(eCAL_Logging_Filter filter_)
     {
-      if(g_log() != nullptr) g_log()->SetFileLogFilter(filter_);
+      if(g_log_provider() != nullptr) g_log_provider()->SetFileLogFilter(filter_);
     }
 
     /**
@@ -57,7 +59,7 @@ namespace eCAL
      */
     void SetUDPLogFilter(eCAL_Logging_Filter filter_)
     {
-      if(g_log() != nullptr) g_log()->SetUDPLogFilter(filter_);
+      if(g_log_provider() != nullptr) g_log_provider()->SetUDPLogFilter(filter_);
     }
 
     /**
@@ -67,7 +69,7 @@ namespace eCAL
      */
     void SetConsoleLogFilter(eCAL_Logging_Filter filter_)
     {
-      if(g_log() != nullptr) g_log()->SetConsoleLogFilter(filter_);
+      if(g_log_provider() != nullptr) g_log_provider()->SetConsoleLogFilter(filter_);
     }
 
     /**
@@ -77,7 +79,7 @@ namespace eCAL
     **/
     eCAL_Logging_eLogLevel GetLogLevel()
     {
-      if(g_log() != nullptr) return(g_log()->GetLogLevel());
+      if(g_log_provider() != nullptr) return(g_log_provider()->GetLogLevel());
       else                   return(log_level_none);
     }
 
@@ -88,7 +90,7 @@ namespace eCAL
     **/
     void Log(const std::string& msg_)
     {
-      if(g_log() != nullptr) g_log()->Log(msg_);
+      if(g_log_provider() != nullptr) g_log_provider()->Log(msg_);
     }
 
     /**
@@ -100,7 +102,7 @@ namespace eCAL
     **/
     int GetLogging(std::string& log_)
     {
-      if (g_log() != nullptr) g_log()->GetLogging(log_);
+      if (g_log_receiver() != nullptr) g_log_receiver()->GetLogging(log_);
       return static_cast<int>(log_.size());
     }
 
@@ -113,7 +115,7 @@ namespace eCAL
     **/
     int GetLogging(Logging::SLogging& log_)
     {
-      if (g_log() != nullptr) g_log()->GetLogging(log_);
+      if (g_log_receiver() != nullptr) g_log_receiver()->GetLogging(log_);
       return static_cast<int>(log_.log_messages.size());
     }
   }
