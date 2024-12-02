@@ -25,7 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_client_deprecated.h>
+#include <ecal/ecal_client_v5.h>
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
 
 // protobuf includes
@@ -50,7 +50,7 @@ namespace eCAL
      * @brief Google Protobuf Client wrapper class.
     **/
     template <typename T>
-    class CServiceClient : public eCAL::CServiceClient
+    class CServiceClient : public eCAL::v5::CServiceClient
     {
     public:
       /**
@@ -195,8 +195,8 @@ namespace eCAL
         return false;
       }
 
-      using eCAL::CServiceClient::Call;
-      using eCAL::CServiceClient::CallAsync;
+      using eCAL::v5::CServiceClient::Call;
+      using eCAL::v5::CServiceClient::CallAsync;
     private:
       ServiceMethodInformationMapT CreateMethodInformationMap()
       {

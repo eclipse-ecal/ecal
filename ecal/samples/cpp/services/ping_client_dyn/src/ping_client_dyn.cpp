@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_client_deprecated.h>
+#include <ecal/ecal_client_v5.h>
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
 
 #include <chrono>
@@ -38,7 +38,7 @@ int main(int argc, char **argv)
   // create ping service client
   const std::string service_name("ping service");
   const std::string method_name ("Ping");
-  eCAL::CServiceClient ping_client(service_name);
+  eCAL::v5::CServiceClient ping_client(service_name);
 
   // waiting for service
   while (eCAL::Ok() && !ping_client.IsConnected())

@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_client_deprecated.h>
+#include <ecal/ecal_client_v5.h>
 
 #include <gtest/gtest.h>
 
@@ -63,7 +63,7 @@ TEST_P(ClientsTestFixture, ClientExpiration)
     service_method_info.request_type.descriptor  = "foo::req_desc";
     service_method_info.response_type.name       = "foo::resp_type";
     service_method_info.response_type.descriptor = "foo::resp_desc";
-    const eCAL::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
+    const eCAL::v5::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -117,7 +117,7 @@ TEST_P(ClientsTestFixture, ClientEqualQualities)
     service_method_info1.request_type.descriptor  = "foo::req_desc1";
     service_method_info1.response_type.name       = "foo::resp_type1";
     service_method_info1.response_type.descriptor = "foo::resp_desc1";
-    eCAL::CServiceClient client1("foo::service", { {"foo::method", service_method_info1} });
+    eCAL::v5::CServiceClient client1("foo::service", { {"foo::method", service_method_info1} });
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -146,7 +146,7 @@ TEST_P(ClientsTestFixture, ClientEqualQualities)
     service_method_info2.request_type.descriptor  = "foo::req_desc2";
     service_method_info2.response_type.name       = "foo::resp_type2";
     service_method_info2.response_type.descriptor = "foo::resp_desc2";
-    eCAL::CServiceClient client2("foo::service", { {"foo::method", service_method_info2} });
+    eCAL::v5::CServiceClient client2("foo::service", { {"foo::method", service_method_info2} });
 
     // check attributes
     eCAL::Registration::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
@@ -206,7 +206,7 @@ TEST_P(ClientsTestFixture, ClientDifferentQualities)
     service_method_info1.request_type.descriptor  = "foo::req_desc1";
     service_method_info1.response_type.name       = "";
     service_method_info1.response_type.descriptor = "";
-    eCAL::CServiceClient client1("foo::service", { {"foo::method", service_method_info1} });
+    eCAL::v5::CServiceClient client1("foo::service", { {"foo::method", service_method_info1} });
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -234,7 +234,7 @@ TEST_P(ClientsTestFixture, ClientDifferentQualities)
     service_method_info2.request_type.descriptor  = "foo::req_desc2";
     service_method_info2.response_type.name       = "foo::resp_type2";
     service_method_info2.response_type.descriptor = "foo::resp_desc2";
-    eCAL::CServiceClient client2("foo::service", { {"foo::method", service_method_info2} });
+    eCAL::v5::CServiceClient client2("foo::service", { {"foo::method", service_method_info2} });
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -272,7 +272,7 @@ TEST_P(ClientsTestFixture, GetClientIDs)
     service_method_info.request_type.descriptor  = "foo::req_desc";
     service_method_info.response_type.name       = "foo::resp_type";
     service_method_info.response_type.descriptor = "foo::resp_desc";
-    const eCAL::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
+    const eCAL::v5::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);

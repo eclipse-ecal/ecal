@@ -41,7 +41,7 @@ namespace eCAL
   /**
    * @brief Service client wrapper class.
   **/
-  class ECAL_API_CLASS CServiceClientNew
+  class ECAL_API_CLASS CServiceClient
   {
   public:
     /**
@@ -52,21 +52,21 @@ namespace eCAL
      * @param event_callback_          The client event callback funtion.
     **/
     ECAL_API_EXPORTED_MEMBER
-      CServiceClientNew(const std::string& service_name_, const ServiceMethodInformationMapT method_information_map_ = ServiceMethodInformationMapT(), const ClientEventIDCallbackT event_callback_ = ClientEventIDCallbackT());
+      CServiceClient(const std::string& service_name_, const ServiceMethodInformationMapT method_information_map_ = ServiceMethodInformationMapT(), const ClientEventIDCallbackT event_callback_ = ClientEventIDCallbackT());
 
     /**
      * @brief Destructor.
     **/
     ECAL_API_EXPORTED_MEMBER
-      virtual ~CServiceClientNew();
+      virtual ~CServiceClient();
 
     // Deleted copy constructor and copy assignment operator
-    CServiceClientNew(const CServiceClientNew&) = delete;
-    CServiceClientNew& operator=(const CServiceClientNew&) = delete;
+    CServiceClient(const CServiceClient&) = delete;
+    CServiceClient& operator=(const CServiceClient&) = delete;
 
     // Move constructor and move assignment operator
-    ECAL_API_EXPORTED_MEMBER CServiceClientNew(CServiceClientNew&& rhs) noexcept;
-    ECAL_API_EXPORTED_MEMBER CServiceClientNew& operator=(CServiceClientNew&& rhs) noexcept;
+    ECAL_API_EXPORTED_MEMBER CServiceClient(CServiceClient&& rhs) noexcept;
+    ECAL_API_EXPORTED_MEMBER CServiceClient& operator=(CServiceClient&& rhs) noexcept;
 
     /**
      * @brief Get the client instances for all matching services

@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_client_deprecated.h>
+#include <ecal/ecal_client_v5.h>
 
 #include <cmath>
 #include <iostream>
@@ -48,8 +48,8 @@ enum {
 
 namespace
 {
-  typedef std::vector<std::shared_ptr<eCAL::CServiceServer>> ServiceVecT;
-  typedef std::vector<std::shared_ptr<eCAL::CServiceClient>> ClientVecT;
+  typedef std::vector<std::shared_ptr<eCAL::CServiceServer>>     ServiceVecT;
+  typedef std::vector<std::shared_ptr<eCAL::v5::CServiceClient>> ClientVecT;
 
 #if DO_LOGGING
   void PrintRequest(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_)
@@ -103,7 +103,7 @@ namespace
 
 #if ClientConnectEventTest
 
-TEST(core_cpp_clientserver_deprecated, ClientConnectEvent)
+TEST(core_cpp_clientserver_v5, ClientConnectEvent)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver base connect event callback");
@@ -112,7 +112,7 @@ TEST(core_cpp_clientserver_deprecated, ClientConnectEvent)
   eCAL::Util::EnableLoopback(true);
 
   // create client
-  eCAL::CServiceClient client("service");
+  eCAL::v5::CServiceClient client("service");
 
   // add client event callback for connect event
   atomic_signalable<int> event_connected_fired   (0);
@@ -179,7 +179,7 @@ TEST(core_cpp_clientserver_deprecated, ClientConnectEvent)
 
 #if ServerConnectEventTest
 
-TEST(core_cpp_clientserver_deprecated, ServerConnectEvent)
+TEST(core_cpp_clientserver_v5, ServerConnectEvent)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver base connect event callback");
@@ -224,13 +224,13 @@ TEST(core_cpp_clientserver_deprecated, ServerConnectEvent)
 
   // create clients
   {
-    eCAL::CServiceClient client1("service");
+    eCAL::v5::CServiceClient client1("service");
 
     event_connected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::seconds(5));
     EXPECT_EQ(1, event_connected_fired.get());
     EXPECT_EQ(0, event_disconnected_fired.get());
 
-    eCAL::CServiceClient client2("service");
+    eCAL::v5::CServiceClient client2("service");
 
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
     EXPECT_EQ(1, event_connected_fired.get());
@@ -254,7 +254,7 @@ TEST(core_cpp_clientserver_deprecated, ServerConnectEvent)
 
 #if ClientServerBaseCallbackTest
 
-TEST(core_cpp_clientserver_deprecated, ClientServerBaseCallback)
+TEST(core_cpp_clientserver_v5, ClientServerBaseCallback)
 {
   const int num_services(2);
   const int num_clients(3);
@@ -296,7 +296,7 @@ TEST(core_cpp_clientserver_deprecated, ClientServerBaseCallback)
   ClientVecT client_vec;
   for (auto s = 0; s < num_clients; ++s)
   {
-    client_vec.push_back(std::make_shared<eCAL::CServiceClient>("service"));
+    client_vec.push_back(std::make_shared<eCAL::v5::CServiceClient>("service"));
   }
 
   // response callback function
@@ -366,7 +366,7 @@ TEST(core_cpp_clientserver_deprecated, ClientServerBaseCallback)
 
 #if ClientServerBaseCallbackTimeoutTest
 
-TEST(core_cpp_clientserver_deprecated, ClientServerBaseCallbackTimeout)
+TEST(core_cpp_clientserver_v5, ClientServerBaseCallbackTimeout)
 {
   const int num_services(2);
   const int num_clients(3);
@@ -408,7 +408,7 @@ TEST(core_cpp_clientserver_deprecated, ClientServerBaseCallbackTimeout)
   ClientVecT client_vec;
   for (auto s = 0; s < num_clients; ++s)
   {
-    client_vec.push_back(std::make_shared<eCAL::CServiceClient>("service"));
+    client_vec.push_back(std::make_shared<eCAL::v5::CServiceClient>("service"));
   }
 
   // response callback function
@@ -534,7 +534,7 @@ TEST(core_cpp_clientserver_deprecated, ClientServerBaseCallbackTimeout)
 
 #if ClientServerBaseAsyncCallbackTest
 
-TEST(core_cpp_clientserver_deprecated, ClientServerBaseAsyncCallback)
+TEST(core_cpp_clientserver_v5, ClientServerBaseAsyncCallback)
 {
   const int calls(1);
   const int sleep(100);
@@ -563,7 +563,7 @@ TEST(core_cpp_clientserver_deprecated, ClientServerBaseAsyncCallback)
   server.AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", method_callback);
 
   // create service client
-  eCAL::CServiceClient client("service");
+  eCAL::v5::CServiceClient client("service");
 
   // response callback function
   std::atomic<int> responses_executed(0);
@@ -611,7 +611,7 @@ TEST(core_cpp_clientserver_deprecated, ClientServerBaseAsyncCallback)
 
 #if ClientServerBaseAsyncTest
 
-TEST(core_cpp_clientserver_deprecated, ClientServerBaseAsync)
+TEST(core_cpp_clientserver_v5, ClientServerBaseAsync)
 {
   const int calls(5);
 
@@ -642,7 +642,7 @@ TEST(core_cpp_clientserver_deprecated, ClientServerBaseAsync)
   server.AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", service_callback);
 
   // create service client
-  eCAL::CServiceClient client("service");
+  eCAL::v5::CServiceClient client("service");
 
   // response callback function
   atomic_signalable<int> num_client_response_callbacks_finished(0);
@@ -721,7 +721,7 @@ TEST(core_cpp_clientserver_deprecated, ClientServerBaseAsync)
 
 #if ClientServerBaseBlockingTest
 
-TEST(core_cpp_clientserver_deprecated, ClientServerBaseBlocking)
+TEST(core_cpp_clientserver_v5, ClientServerBaseBlocking)
 {
   const int num_services(2);
   const int num_clients(3);
@@ -761,7 +761,7 @@ TEST(core_cpp_clientserver_deprecated, ClientServerBaseBlocking)
   ClientVecT client_vec;
   for (auto s = 0; s < num_clients; ++s)
   {
-    client_vec.push_back(std::make_shared<eCAL::CServiceClient>("service"));
+    client_vec.push_back(std::make_shared<eCAL::v5::CServiceClient>("service"));
   }
 
   // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
@@ -824,7 +824,7 @@ TEST(core_cpp_clientserver_deprecated, ClientServerBaseBlocking)
 
 #if NestedRPCCallTest
 
-TEST(core_cpp_clientserver_deprecated, NestedRPCCall)
+TEST(core_cpp_clientserver_v5, NestedRPCCall)
 {
   const int calls(1);
 
@@ -852,8 +852,8 @@ TEST(core_cpp_clientserver_deprecated, NestedRPCCall)
   server.AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", method_callback);
 
   // create service client
-  eCAL::CServiceClient client1("service");
-  eCAL::CServiceClient client2("service");
+  eCAL::v5::CServiceClient client1("service");
+  eCAL::v5::CServiceClient client2("service");
 
   // response callback function
   std::atomic<int> methods_called(0);

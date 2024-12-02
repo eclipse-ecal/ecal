@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(test_clientserver_deprecated)
+project(test_clientserver_v5)
 
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
@@ -25,7 +25,7 @@ create_targets_protobuf()
 
 set(${PROJECT_NAME}_src
   src/atomic_signalable.h
-  src/clientserver_deprecated_test.cpp
+  src/clientserver_v5_test.cpp
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${${PROJECT_NAME}_src})

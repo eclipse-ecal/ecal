@@ -24,7 +24,7 @@
 
 #pragma once
 #include <ecal/ecal.h>
-#include <ecal/ecal_client_deprecated.h>
+#include <ecal/ecal_client_v5.h>
 
 using namespace System;
 using namespace System::Collections::Generic;
@@ -536,7 +536,7 @@ namespace Continental
           List<ServiceClientCallbackData^>^ Call(System::String^ method_name_, array<Byte>^ request, const int rcv_timeout_);
 
       private:
-          ::eCAL::CServiceClient* m_client;
+          ::eCAL::v5::CServiceClient* m_client;
       };
 
 

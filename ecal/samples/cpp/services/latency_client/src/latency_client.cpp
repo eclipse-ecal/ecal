@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_client_deprecated.h>
+#include <ecal/ecal_client_v5.h>
 
 #include <algorithm>
 #include <iostream>
@@ -34,7 +34,7 @@ int main(int argc, char** argv)
   eCAL::Initialize(argc, argv, "latency client");
 
   // create latency client
-  eCAL::CServiceClient latency_client("latency");
+  eCAL::v5::CServiceClient latency_client("latency");
 
   // waiting for service
   while (eCAL::Ok() && !latency_client.IsConnected())

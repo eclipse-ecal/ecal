@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -470,13 +470,13 @@ int ServiceServer::OnMethodCall(const std::string& method_, const std::string& /
 /////////////////////////////////////////////////////////////////////////////
 // ServiceClient
 /////////////////////////////////////////////////////////////////////////////
-ServiceClient::ServiceClient() : m_client(new ::eCAL::CServiceClient())
+ServiceClient::ServiceClient() : m_client(new ::eCAL::v5::CServiceClient())
 {
 }
 
 ServiceClient::ServiceClient(System::String^ service_name_)
 {
-    m_client = new ::eCAL::CServiceClient(StringToStlString(service_name_));
+    m_client = new ::eCAL::v5::CServiceClient(StringToStlString(service_name_));
 }
 
 ServiceClient::~ServiceClient()
