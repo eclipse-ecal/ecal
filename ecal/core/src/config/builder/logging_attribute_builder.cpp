@@ -72,6 +72,7 @@ namespace eCAL
       attributes.udp.enabled        = log_config_.sinks.udp.enable;
       attributes.udp.port           = log_config_.sinks.udp.port;
       attributes.udp.filter_log     = log_config_.sinks.udp.filter_log_udp;
+      attributes.udp.receive        = log_config_.sinks.udp.receive;
 
       attributes.udp_receiver.broadcast = !reg_config_.network_enabled;
       attributes.udp_receiver.loopback  = true;

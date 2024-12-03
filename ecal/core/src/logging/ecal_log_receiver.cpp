@@ -49,7 +49,7 @@ namespace eCAL
 
     void CLogReceiver::Start()
     {
-      if (m_attributes.udp.enabled)
+      if (m_attributes.udp.enabled && m_attributes.udp.receive)
       {
         // set logging receive network attributes
         const eCAL::UDP::SReceiverAttr attr = Logging::UDP::ConvertToIOUDPReceiverAttributes(m_attributes.udp_receiver);

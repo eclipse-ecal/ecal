@@ -32,6 +32,7 @@ namespace eCAL
       bool                enabled;
       unsigned int        port;
       eCAL_Logging_Filter filter_log;
+      bool                receive;
     };
 
     struct SUDPReceiver
