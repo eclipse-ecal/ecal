@@ -591,6 +591,7 @@ namespace YAML
     node["enable"] = config_.enable;
     node["port"]   = config_.port;
     node["level"]  = LogLevelToVector(config_.filter_log_udp);
+    node["receive"] = config_.receive;
     return node;
   }
 
@@ -598,6 +599,7 @@ namespace YAML
   {
     AssignValue<bool>(config_.enable, node_, "enable");
     AssignValue<unsigned int>(config_.port, node_, "port");
+    AssignValue<bool>(config_.receive, node_, "receive");
 
     std::vector<std::string> tmp;
     AssignValue<std::vector<std::string>>(tmp, node_, "level");

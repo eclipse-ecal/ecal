@@ -69,6 +69,7 @@ namespace eCAL
           bool                enable         { true };               //!< Enable UDP logging (Default: false)
           unsigned int        port           { 14001 };              //!< UDP port number (Default: 14001)
           eCAL_Logging_Filter filter_log_udp { log_filter_default }; //!< Log messages logged via udp network (Default: info, warning, error, fatal)
+          bool                receive        { false };              //!< Enable receiving udp log messages (Default: false)
         };
       }
 

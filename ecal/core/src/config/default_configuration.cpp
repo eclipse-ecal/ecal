@@ -335,9 +335,11 @@ namespace eCAL
       ss << R"(      # Enable UDP logging)"                                                                                         << "\n";
       ss << R"(      enable: )"                                       << config_.logging.sinks.udp.enable                           << "\n";
       ss << R"(      # Log level for UDP output)"                                                                                   << "\n";
-      ss << R"(      level:  )"                                       << logToArray(config_.logging.sinks.udp.filter_log_udp)       << "\n";
-      ss << R"(      # UDP)"                                                                                                        << "\n";
+      ss << R"(      level: )"                                        << logToArray(config_.logging.sinks.udp.filter_log_udp)       << "\n";
+      ss << R"(      # UDP Port)"                                                                                                   << "\n";
       ss << R"(      port: )"                                         << config_.logging.sinks.udp.port                             << "\n";
+      ss << R"(      # Enable receiving udp log messages)"                                                                          << "\n";
+      ss << R"(      receive: )"                                      << config_.logging.sinks.udp.port                             << "\n";
       ss << R"()"                                                                                                                   << "\n";
     
       return ss;
