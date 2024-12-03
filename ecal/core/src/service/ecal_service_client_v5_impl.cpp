@@ -195,7 +195,6 @@ namespace eCAL
       {
         const std::lock_guard<std::mutex> lock(m_response_callback_mutex);
         m_response_callback = nullptr;
-
       }
 
       return true;

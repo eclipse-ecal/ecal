@@ -18,8 +18,7 @@
 */
 
 /**
- * @file   ecal_client.h
- * @brief  eCAL client interface
+ * @brief  eCAL service client implementation (deprecated eCAL5 version)
 **/
 
 #pragma once
@@ -38,174 +37,85 @@ namespace eCAL
   namespace v5
   {
     /**
-     * @brief Service client wrapper class.
+     * @brief Service client implementation class.
     **/
     class CServiceClientImpl
     {
     public:
-      /**
-       * @brief Constructor.
-      **/
+      // Default constructor for creating an empty service client instance.
       CServiceClientImpl();
 
-      /**
-       * @brief Constructor.
-       *
-       * @param service_name_  Unique service name.
-      **/
+      // Constructor for creating a service client instance with a specific service name.
       explicit CServiceClientImpl(const std::string& service_name_);
 
-      /**
-       * @brief Constructor.
-       *
-       * @param service_name_  Unique service name.
-       * @param method_information_map_  Map of method names and corresponding datatype information.
-      **/
+      // Constructor for creating a service client instance with a service name and method information map.
       explicit CServiceClientImpl(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
 
-      /**
-       * @brief Destructor.
-      **/
+      // Destructor to clean up resources.
       virtual ~CServiceClientImpl();
 
-      /**
-       * @brief CServiceClients are non-copyable
-      **/
-      CServiceClientImpl(const CServiceClientImpl&) = delete;
-
-      /**
-       * @brief CServiceClients are non-copyable
-      **/
-      CServiceClientImpl& operator=(const CServiceClientImpl&) = delete;
-
-      /**
-       * @brief Creates this object.
-       *
-       * @param service_name_  Unique service name.
-       *
-       * @return  True if successful.
-      **/
+      // Creates a service client with a specific service name.
       bool Create(const std::string& service_name_);
 
-      /**
-       * @brief Creates this object.
-       *
-       * @param service_name_  Unique service name.
-       * @param method_information_map_  Map of method names and corresponding datatype information.
-       *
-       * @return  True if successful.
-      **/
+      // Creates a service client with a specific service name and method information map.
       bool Create(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_);
 
-      /**
-       * @brief Destroys this object.
-       *
-       * @return  True if successful.
-      **/
+      // Destroys the service client instance and releases resources.
       bool Destroy();
 
-      /**
-       * @brief Change the host name filter for that client instance
-       *
-       * @param host_name_  Host name filter (empty == all hosts)
-       *
-       * @return  True if successful.
-      **/
+      // Sets the host name filter for the service client instance.
       bool SetHostName(const std::string& host_name_);
 
-      /**
-       * @brief Call a method of this service, responses will be returned by callback.
-       *
-       * @param method_name_  Method name.
-       * @param request_      Request string.
-       * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
-       *
-       * @return  True if successful.
-      **/
+      // Calls a method of the service and retrieves responses via callback.
       bool Call(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
 
-      /**
-       * @brief Call a method of this service, all responses will be returned in service_response_vec_.
-       *
-       * @param       method_name_           Method name.
-       * @param       request_               Request string.
-       * @param       timeout_               Maximum time before operation returns (in milliseconds, -1 means infinite).
-       * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
-       *
-       * @return  True if successful.
-      **/
+      // Calls a method of the service and retrieves all responses in a vector.
       bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_);
 
-      /**
-       * @brief Call a method of this service asynchronously, responses will be returned by callback.
-       *
-       * @param method_name_  Method name.
-       * @param request_      Request string.
-       * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite) - NOT SUPPORTED YET.
-       *
-       * @return  True if successful.
-      **/
+      // Makes an asynchronous call to a method of the service, responses are received via callback.
       bool CallAsync(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
 
-      /**
-       * @brief Add server response callback.
-       *
-       * @param callback_  Callback function for server response.
-       *
-       * @return  True if successful.
-      **/
+      // Registers a callback function for server responses.
       bool AddResponseCallback(const ResponseCallbackT& callback_);
 
-      /**
-       * @brief Remove server response callback.
-       *
-       * @return  True if successful.
-      **/
+      // Removes the registered server response callback function.
       bool RemResponseCallback();
 
-      /**
-       * @brief Add client event callback function.
-       *
-       * @param type_      The event type to react on.
-       * @param callback_  The callback function to add.
-       *
-       * @return  True if succeeded, false if not.
-      **/
+      // Registers a callback function for a specific client event.
       bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
 
-      /**
-       * @brief Remove client event callback function.
-       *
-       * @param type_  The event type to remove.
-       *
-       * @return  True if succeeded, false if not.
-      **/
+      // Removes the registered callback function for a specific client event.
       bool RemEventCallback(eCAL_Client_Event type_);
 
-      /**
-       * @brief Retrieve service name.
-       *
-       * @return  The service name.
-      **/
+      // Retrieves the name of the associated service.
       std::string GetServiceName();
 
-      /**
-       * @brief Check connection state.
-       *
-       * @return  True if connected, false if not.
-      **/
+      // Checks the connection state of the service client.
       bool IsConnected();
 
-    protected:
-      std::shared_ptr<eCAL::CServiceClient>          m_service_client_impl;
-      bool                                              m_created;
-      std::string                                       m_host_name;
+      // Prevent copy and move operations
+      CServiceClientImpl(const CServiceClientImpl&) = delete;
+      CServiceClientImpl& operator=(const CServiceClientImpl&) = delete;
+      CServiceClientImpl(CServiceClientImpl&&) = delete;
+      CServiceClientImpl& operator=(CServiceClientImpl&&) = delete;
 
-      std::mutex                                        m_event_callback_map_mutex;
+    private:
+      // Pointer to the underlying service client implementation
+      std::shared_ptr<eCAL::CServiceClient> m_service_client_impl;
+
+      // Indicates whether the client has been successfully created
+      bool m_created;
+
+      // Host name filter for the service client
+      std::string m_host_name;
+
+      // Mutex and map for managing event callbacks
+      std::mutex m_event_callback_map_mutex;
       std::map<eCAL_Client_Event, ClientEventCallbackT> m_event_callback_map;
 
-      std::mutex                                        m_response_callback_mutex;
-      ResponseCallbackT                                 m_response_callback;
+      // Mutex and callback for managing server responses
+      std::mutex m_response_callback_mutex;
+      ResponseCallbackT m_response_callback;
     };
   }
 }

@@ -33,8 +33,6 @@
 #include <memory>
 #include <string>
 
-#pragma once
-
 namespace eCAL
 {
   class CServiceClientImpl;
@@ -111,7 +109,7 @@ namespace eCAL
       Registration::SEntityId GetClientID() const;
 
   private:
-    Registration::SEntityId                           m_entity_id;
+    Registration::SEntityId                         m_entity_id;
     const std::shared_ptr<eCAL::CServiceClientImpl> m_service_client_impl;
   };
 }

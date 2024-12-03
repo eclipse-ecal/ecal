@@ -22,21 +22,15 @@
 **/
 
 #include <ecal/ecal.h>
-#include <string>
 
 #include "ecal_clientgate.h"
 #include "ecal_global_accessors.h"
 #include "ecal_service_client_impl.h"
 
+#include <string>
+
 namespace eCAL
 {
-  /**
-   * @brief Constructor.
-   *
-   * @param service_name_            Service name.
-   * @param method_information_map_  Map of method names and corresponding datatype information.
-   * @param event_callback_          The client event callback funtion.
-  **/
   CServiceClient::CServiceClient(const std::string& service_name_, const ServiceMethodInformationMapT method_information_map_, const ClientEventIDCallbackT event_callback_)
   {
     // Create client implementation
@@ -49,9 +43,6 @@ namespace eCAL
     }
   }
 
-  /**
-   * @brief Destructor.
-  **/
   CServiceClient::~CServiceClient()
   {
     // Unregister client
@@ -64,18 +55,12 @@ namespace eCAL
     m_service_client_impl.reset();
   }
 
-  /**
-   * @brief Move constructor
-  **/
   CServiceClient::CServiceClient(CServiceClient&& rhs) noexcept
     : m_service_client_impl(std::move(rhs.m_service_client_impl))
   {
     rhs.m_service_client_impl = nullptr;
   }
 
-  /**
-   * @brief Move assignment operator
-  **/
   CServiceClient& CServiceClient::operator=(CServiceClient&& rhs) noexcept
   {
     if (this != &rhs)
@@ -94,11 +79,6 @@ namespace eCAL
     return *this;
   }
 
-  /**
-   * @brief Get the client instances for all matching services
-   *
-   * @return  Vector of client instances
-  **/
   std::vector<CClientInstance> CServiceClient::GetClientInstances() const
   {
     std::vector<CClientInstance> instances;
@@ -112,16 +92,6 @@ namespace eCAL
     return instances;
   }
 
-  /**
-   * @brief Blocking call of a service method for all existing service instances, response will be returned as vector<pair<bool, SServiceReponse>>
-   *
-   * @param       method_name_  Method name.
-   * @param       request_      Request string.
-   * @param       timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
-   * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
-   *
-   * @return  True if all calls were successful.
-  **/
   bool CServiceClient::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT& service_response_vec_) const
   {
     auto instances = GetClientInstances();
@@ -174,16 +144,6 @@ namespace eCAL
     return overall_success; 
   }
 
-  /**
-   * @brief Blocking call (with timeout) of a service method for all existing service instances, using callback
-   *
-   * @param method_name_        Method name.
-   * @param request_            Request string.
-   * @param timeout_            Maximum time before operation returns (in milliseconds, -1 means infinite).
-   * @param response_callback_  Callback function for the service method response.
-   *
-   * @return  True if all calls were successful.
-  **/
   bool CServiceClient::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_) const
   {
     auto instances = GetClientInstances();
@@ -219,15 +179,6 @@ namespace eCAL
     return return_state;
   }
 
-  /**
-   * @brief Asynchronous call of a service method for all existing service instances, using callback
-   *
-   * @param method_name_        Method name.
-   * @param request_            Request string.
-   * @param response_callback_  Callback function for the service method response.
-   *
-   * @return  True if all calls were successful.
-  **/
   bool CServiceClient::CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_) const
   {
     bool return_state = true;
@@ -239,21 +190,11 @@ namespace eCAL
     return return_state;
   }
 
-  /**
-   * @brief Retrieve service name.
-   *
-   * @return  The service name.
-  **/
   std::string CServiceClient::GetServiceName() const
   {
     return m_service_client_impl->GetServiceName();
   }
 
-  /**
-   * @brief Check connection to at least one service.
-   *
-   * @return  True if at least one service client instance is connected.
-  **/
   bool CServiceClient::IsConnected() const
   {
     const auto instances = GetClientInstances();

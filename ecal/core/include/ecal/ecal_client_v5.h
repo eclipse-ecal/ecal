@@ -18,8 +18,8 @@
 */
 
 /**
- * @file   ecal_client.h
- * @brief  eCAL client interface
+ * @file   ecal_client_v5.h
+ * @brief  eCAL client interface (deprecated eCAL5 version)
 **/
 
 #pragma once
