@@ -305,7 +305,7 @@ void eCAL::eh5::HDF5MeasFileV1::SetFileBaseName(const std::string& /*base_name*/
   ReportUnsupportedAction();
 }
 
-bool eCAL::eh5::HDF5MeasFileV1::AddEntryToFile(const void* /*data*/, const unsigned long long& /*size*/, const long long& /*snd_timestamp*/, const long long& /*rcv_timestamp*/, const SChannel& /*channel*/, long long id, long long /*clock*/)
+bool eCAL::eh5::HDF5MeasFileV1::AddEntryToFile(const SWriteEntry& /*entry*/)
 {
   ReportUnsupportedAction();
   return false;

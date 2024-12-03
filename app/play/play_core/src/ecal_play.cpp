@@ -29,7 +29,6 @@
 #include "ecal_play_logger.h"
 #include "play_thread.h"
 #include <ecalhdf5/eh5_meas.h>
-
 #include <ecal_utils/string.h>
 #include <ecal_utils/filesystem.h>
 #include <ecal_utils/str_convert.h>

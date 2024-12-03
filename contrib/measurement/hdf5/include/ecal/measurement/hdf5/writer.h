@@ -175,7 +175,7 @@ namespace eCAL
            *
            * @return              true if succeeds, false if it fails
           **/
-          bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const eCAL::experimental::measurement::base::Channel& channel, long long id, long long clock) override;
+          bool AddEntryToFile(const base::WriteEntry& entry) override;
 
         private:
           std::unique_ptr<WriterImpl> impl;

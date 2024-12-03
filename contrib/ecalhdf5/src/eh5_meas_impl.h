@@ -225,7 +225,7 @@ namespace eCAL
       *
       * @return               true if succeeds, false if it fails
       **/
-      virtual bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long id, long long clock) = 0;
+      virtual bool AddEntryToFile(const SWriteEntry& entry) = 0;
 
       typedef std::function<void(void)> CallbackFunction;
       /**

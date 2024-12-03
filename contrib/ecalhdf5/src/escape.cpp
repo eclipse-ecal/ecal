@@ -581,6 +581,13 @@ namespace eCAL
         return SChannel(GetEscapedTopicname(input.name), input.id);
     }
 
+    SWriteEntry GetEscapedEntry(const SWriteEntry& input)
+    {
+      SWriteEntry escaped_entry{ input };
+      escaped_entry.channel = GetEscapedTopicname(input.channel);
+      return escaped_entry;
+    }
+
     std::string GetEscapedFilename(const std::string& non_escaped_filename)
     {
       return GetEscapedString(non_escaped_filename, is_reserved_filename_);

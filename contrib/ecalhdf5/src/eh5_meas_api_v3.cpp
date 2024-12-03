@@ -335,12 +335,12 @@ void eCAL::eh5::v3::HDF5Meas::SetFileBaseName(const std::string& base_name)
   }
 }
 
-bool eCAL::eh5::v3::HDF5Meas::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const eCAL::eh5::SChannel& channel, long long id, long long clock)
+bool eCAL::eh5::v3::HDF5Meas::AddEntryToFile(const SWriteEntry& entry)
 {
   bool ret_val = false;
   if (hdf_meas_impl_)
   {
-    return hdf_meas_impl_->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, GetEscapedTopicname(channel), id, clock);
+    return hdf_meas_impl_->AddEntryToFile(GetEscapedEntry(entry));
   }
 
   return ret_val;

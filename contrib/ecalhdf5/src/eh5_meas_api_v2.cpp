@@ -261,7 +261,15 @@ void eCAL::eh5::v2::HDF5Meas::SetFileBaseName(const std::string& base_name)
 
 bool eCAL::eh5::v2::HDF5Meas::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock)
 {
-  return hdf_meas_impl_->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, createChannel(channel_name), id, clock);
+  SWriteEntry entry;
+  entry.channel = createChannel(channel_name);
+  entry.data = data;
+  entry.size = size;
+  entry.snd_timestamp = snd_timestamp;
+  entry.rcv_timestamp = rcv_timestamp;
+  entry.sender_id = id;
+  entry.clock = clock;
+  return hdf_meas_impl_->AddEntryToFile(entry);
 }
 
 void eCAL::eh5::v2::HDF5Meas::ConnectPreSplitCallback(CallbackFunction cb)

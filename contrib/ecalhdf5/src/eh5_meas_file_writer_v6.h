@@ -241,7 +241,7 @@ namespace eCAL
       *
       * @return               true if succeeds, false if it fails
       **/
-      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long id, long long clock) override;
+      bool AddEntryToFile(const SWriteEntry& entry) override;
 
       using CallbackFunction = std::function<void ()>;
       /**

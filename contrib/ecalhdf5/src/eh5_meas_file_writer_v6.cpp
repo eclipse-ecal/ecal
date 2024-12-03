@@ -199,13 +199,13 @@ void eCAL::eh5::HDF5MeasFileWriterV6::SetFileBaseName(const std::string& base_na
   base_name_ = base_name;
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV6::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long id, long long clock)
+bool eCAL::eh5::HDF5MeasFileWriterV6::AddEntryToFile(const SWriteEntry& entry)
 {
   if (!IsOk()) file_id_ = Create();
   if (!IsOk())
     return false;
 
-  hsize_t hsSize = static_cast<hsize_t>(size);
+  hsize_t hsSize = static_cast<hsize_t>(entry.size);
 
   if (!EntryFitsTheFile(hsSize))
   {
@@ -229,7 +229,7 @@ bool eCAL::eh5::HDF5MeasFileWriterV6::AddEntryToFile(const void* data, const uns
   auto dataSet = H5Dcreate(file_id_, std::to_string(entries_counter_).c_str(), H5T_NATIVE_UCHAR, dataSpace, H5P_DEFAULT, dsProperty, H5P_DEFAULT);
 
   //  Write buffer to dataset
-  herr_t writeStatus = H5Dwrite(dataSet, H5T_NATIVE_UCHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+  herr_t writeStatus = H5Dwrite(dataSet, H5T_NATIVE_UCHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, entry.data);
 
   //  Close dataset, data space, and data set property
   H5Dclose(dataSet);
@@ -237,7 +237,7 @@ bool eCAL::eh5::HDF5MeasFileWriterV6::AddEntryToFile(const void* data, const uns
   H5Sclose(dataSpace);
 
   // TODO: check here about id vs channel.id
-  channels_[channel.name][channel.id].Entries.emplace_back(SEntryInfo(rcv_timestamp, static_cast<long long>(entries_counter_), clock, snd_timestamp, id));
+  channels_[entry.channel.name][entry.channel.id].Entries.emplace_back(SEntryInfo(entry.rcv_timestamp, static_cast<long long>(entries_counter_), entry.clock, entry.snd_timestamp, entry.sender_id));
 
   entries_counter_++;
 

@@ -51,6 +51,7 @@ namespace eCAL
     using SEntryInfo = eCAL::experimental::measurement::base::EntryInfo;
     using EntryInfoSet = eCAL::experimental::measurement::base::EntryInfoSet;
     using EntryInfoVect = eCAL::experimental::measurement::base::EntryInfoVect;
+    using SWriteEntry = eCAL::experimental::measurement::base::WriteEntry;
 
     namespace v2
     {

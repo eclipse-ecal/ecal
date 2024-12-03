@@ -85,7 +85,7 @@ void Writer::SetFileBaseName(const std::string& base_name)
   return impl->measurement.SetFileBaseName(base_name);
 }
 
-bool Writer::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const eCAL::experimental::measurement::base::Channel& channel, long long id, long long clock)
+bool Writer::AddEntryToFile(const base::WriteEntry& entry)
 {
-  return impl->measurement.AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel, id, clock);
+  return impl->measurement.AddEntryToFile(entry);
 }

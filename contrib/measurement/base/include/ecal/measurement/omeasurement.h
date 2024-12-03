@@ -45,7 +45,16 @@ namespace eCAL
 
       OBinaryChannel& operator<<(const BinaryFrame& entry_)
       {
-        meas->AddEntryToFile((void*)entry_.message.data(), entry_.message.size(), entry_.send_timestamp, entry_.receive_timestamp, channel, id, clock);
+        eCAL::experimental::measurement::base::WriteEntry entry;
+        entry.channel = channel;
+        entry.data = entry_.message.data();
+        entry.size = entry_.message.size();
+        entry.snd_timestamp = entry_.send_timestamp;
+        entry.rcv_timestamp = entry_.receive_timestamp;
+        entry.sender_id = id;
+        entry.clock = clock;
+
+        meas->AddEntryToFile(entry);
         ++clock;
         return *this;
       }

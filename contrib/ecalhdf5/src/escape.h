@@ -28,6 +28,7 @@ namespace eCAL
   {
     std::string GetEscapedTopicname(const std::string& input);
     SChannel    GetEscapedTopicname(const SChannel& input);
+    SWriteEntry GetEscapedEntry(const SWriteEntry& input);
     std::string GetEscapedFilename(const std::string& input);
     std::string GetUnescapedString(const std::string& input);
   }

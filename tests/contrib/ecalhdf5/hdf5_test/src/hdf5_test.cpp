@@ -105,17 +105,23 @@ bool MeasEntryEqualsEntryInfo(const TestingMeasEntry& meas_entry, const EntryInf
     && meas_entry.clock == entry_info.SndClock;
 }
 
+eCAL::eh5::SWriteEntry Convert(const TestingMeasEntry& entry)
+{
+  eCAL::eh5::SWriteEntry write_entry;
+  write_entry.channel = entry.channel;
+  write_entry.data = entry.data.data();
+  write_entry.size = entry.data.size();
+  write_entry.snd_timestamp = entry.snd_timestamp;
+  write_entry.rcv_timestamp = entry.rcv_timestamp;
+  write_entry.sender_id = entry.snd_id;
+  write_entry.clock = entry.clock;
+  return write_entry;
+}
+
 bool WriteToHDF(MeasAPI& writer, const TestingMeasEntry& entry)
 {
-  return writer.AddEntryToFile(
-    entry.data.data(),   // data
-    entry.data.size(),   // data size
-    entry.snd_timestamp, // snd_timestamp
-    entry.rcv_timestamp, // rcv_timestamp
-    entry.channel,  // channel, id
-    entry.snd_id,
-    entry.clock          // clock
-  );
+  eCAL::eh5::SWriteEntry write_entry = Convert(entry);
+  return writer.AddEntryToFile(write_entry);
 }
 
 bool WriteToHDF(LegacyAPI& writer, const TestingMeasEntry& entry)
@@ -372,7 +378,11 @@ TEST(contrib, HDF5_ReadWrite)
   writer.SetMaxSizePerFile(max_size_per_file);
 
   data.resize(1024);
-  EXPECT_TRUE(writer.AddEntryToFile(static_cast<void*>(data.data()), data.size(), 0, 0, CreateChannel("myChannel"), 0, 0));
+  eCAL::eh5::SWriteEntry entry;
+  entry.channel = CreateChannel("myChannel");
+  entry.data = static_cast<void*>(data.data());
+  entry.size = data.size();
+  EXPECT_TRUE(writer.AddEntryToFile(entry));
 
   EXPECT_TRUE(writer.Close());
 }

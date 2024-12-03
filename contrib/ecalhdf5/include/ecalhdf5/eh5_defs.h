@@ -1,6 +1,6 @@
 ;/* ========================= eCAL LICENSE =================================
 ; *
-; * Copyright (C) 2016 - 2019 Continental Corporation
+; * Copyright (C) 2016 - 2024 Continental Corporation
 ; *
 ; * Licensed under the Apache License, Version 2.0 (the "License");
 ; * you may not use this file except in compliance with the License.
@@ -25,13 +25,13 @@
 #pragma once
 
 ;/* version parsed out into numeric values */
-#define ECAL_HDF5_VERSION_MAJOR              2                   //!< eCAL HDF5 major version
-#define ECAL_HDF5_VERSION_MINOR              1                   //!< eCAL HDF5 minor version
+#define ECAL_HDF5_VERSION_MAJOR              3                   //!< eCAL HDF5 major version
+#define ECAL_HDF5_VERSION_MINOR              0                   //!< eCAL HDF5 minor version
 #define ECAL_HDF5_VERSION_PATCH              0                   //!< eCAL HDF5 patch version
 
 ;/* version as string */
-#define ECAL_HDF5_VERSION                    "v.2.1.0.20180329"  //!< eCAL HDF5 version string
-#define ECAL_HDF5_DATE                       "29.03.2018"        //!< eCAL HDF5 version date
+#define ECAL_HDF5_VERSION                    "v.3.0.0.20241203"  //!< eCAL HDF5 version string
+#define ECAL_HDF5_DATE                       "03.12.2024"        //!< eCAL HDF5 version date
 
 ;/* name as string */
 #define ECAL_HDF5_NAME                       "eCALHDF5"          //!< eCAL HDF5 library name

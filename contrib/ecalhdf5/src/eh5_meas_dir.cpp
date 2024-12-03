@@ -319,7 +319,7 @@ void eCAL::eh5::HDF5MeasDir::SetFileBaseName(const std::string& base_name)
   base_name_ = base_name;
 }
 
-bool eCAL::eh5::HDF5MeasDir::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const SChannel& channel, long long id, long long clock)
+bool eCAL::eh5::HDF5MeasDir::AddEntryToFile(const SWriteEntry& entry)
 {
   if ((access_ == v3::eAccessType::RDONLY)
     || (output_dir_.empty())
@@ -329,10 +329,10 @@ bool eCAL::eh5::HDF5MeasDir::AddEntryToFile(const void* data, const unsigned lon
   }
 
   // Get an existing writer or create a new one
-  auto file_writer_it = GetWriter(channel);
+  auto file_writer_it = GetWriter(entry.channel);
 
   // Use the writer that was either found or created to actually write the data
-  return file_writer_it->second->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel, id, clock);
+  return file_writer_it->second->AddEntryToFile(entry);
 }
 
 void eCAL::eh5::HDF5MeasDir::ConnectPreSplitCallback(CallbackFunction cb)

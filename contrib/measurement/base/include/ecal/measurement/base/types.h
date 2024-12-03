@@ -73,6 +73,7 @@ namespace eCAL
           std::string name = "";
           id_t        id = 0;
 
+          Channel() = default;
           Channel(const std::string name_, id_t id_) : name(name_), id(id_) {};
 
           //!< @cond
@@ -97,6 +98,23 @@ namespace eCAL
         {
           return Channel{ name, 0 };
         }
+        
+        struct WriteEntry
+        {
+          // channel
+          Channel channel;
+
+          // data
+          const void* data = nullptr;
+          unsigned long long size = 0;
+
+          // metadata
+          long long snd_timestamp = 0;
+          long long rcv_timestamp = 0;
+          long long sender_id = 0; // Unique ID which may be set by sender
+          long long clock = 0;
+        };
+
 
         /**
          * @brief Info struct for a single measurement entry
