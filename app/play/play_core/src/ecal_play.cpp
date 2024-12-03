@@ -19,11 +19,12 @@
 
 #include "ecal_play.h"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <clocale>
 #include <chrono>
+#include <clocale>
+#include <fstream>
+#include <iostream>
+#include <memory>
+#include <sstream>
 
 #include "ecal_play_logger.h"
 #include "play_thread.h"

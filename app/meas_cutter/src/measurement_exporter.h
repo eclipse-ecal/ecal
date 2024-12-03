@@ -18,9 +18,12 @@
 */
 
 #pragma once
+
 #include <iostream>
-#include <unordered_map>
 #include <map>
+#include <memory>
+#include <string>
+#include <unordered_map>
 
 #include <ecalhdf5/eh5_meas.h>
 #include <ecal_utils/filesystem.h>

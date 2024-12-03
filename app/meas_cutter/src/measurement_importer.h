@@ -18,11 +18,13 @@
 */
 
 #pragma once
-#include <iostream>
 #include <algorithm>
-#include <regex>
 #include <cctype>
-#include <array>
+#include <iostream>
+#include <memory>
+#include <list>
+#include <regex>
+#include <utility>
 
 #include <ecal_utils/filesystem.h>
 #include <ecalhdf5/eh5_meas.h>
