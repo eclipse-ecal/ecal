@@ -36,10 +36,10 @@
 
 namespace eCAL
 {
+  class CServiceClientImpl;
+
   inline namespace v6
   {
-    class CServiceClientImpl;
-
     /**
      * @brief Service client wrapper class.
     **/
