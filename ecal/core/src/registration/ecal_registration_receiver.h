@@ -67,8 +67,6 @@ namespace eCAL
     void Start();
     void Stop();
 
-    void EnableLoopback(bool state_);
-
     bool AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_);
     bool RemRegistrationCallback(enum eCAL_Registration_Event event_);
 

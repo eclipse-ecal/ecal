@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,9 +32,6 @@ int main(int argc, char **argv)
 
   // set process state
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
-
-  // enable to receive our own messages
-  eCAL::Util::EnableLoopback(true);
 
   // create a publisher (topic name "person")
   eCAL::protobuf::CPublisher<pb::People::Person> pub("person");

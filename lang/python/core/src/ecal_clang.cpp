@@ -163,14 +163,6 @@ void ecal_shutdown_core()
 }
 
 /****************************************/
-/*      ecal_enable_loopback            */
-/****************************************/
-void ecal_enable_loopback(const int state_)
-{
-  eCAL::Util::EnableLoopback(state_ != 0);
-}
-
-/****************************************/
 /*      get_type_name                   */
 /****************************************/
 bool ecal_get_type_name(const char* topic_name_, const char** topic_type_, int* topic_type_len_)

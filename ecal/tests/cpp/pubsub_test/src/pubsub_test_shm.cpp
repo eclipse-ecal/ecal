@@ -54,9 +54,6 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
 
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
-
   // create subscriber for topic "A"
   eCAL::CSubscriber sub("A");
 
@@ -122,9 +119,6 @@ TEST(core_cpp_pubsub, MultipleSendsSHM)
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
 
   // create subscriber for topic "A"
   eCAL::string::CSubscriber<std::string> sub("A");

@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -129,16 +129,6 @@ def shutdown_core():
   """ shutdown ecal core components
   """
   return _ecal.shutdown_core()
-
-
-def enable_loopback(state):
-  """ enable ecal message loopback
-
-  :param state: switch on ecal message loop back (default 0) 
-  :type state: int
-
-  """
-  return _ecal.enable_loopback(state)
 
 
 def log_setlevel(level):

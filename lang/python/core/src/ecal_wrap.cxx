@@ -261,22 +261,6 @@ PyObject* shutdown_core(PyObject* /*self*/, PyObject* /*args*/)
 }
 
 /****************************************/
-/*      enable_loopback                 */
-/****************************************/
-PyObject* enable_loopback(PyObject* /*self*/, PyObject* args)
-{
-  int state = 0;
-
-  if (!PyArg_ParseTuple(args, "i", &state))
-    return nullptr;
-
-  ecal_enable_loopback(state);
-
-  Py_RETURN_NONE;
-}
-
-
-/****************************************/
 /*      log_setlevel                    */
 /****************************************/
 PyObject* log_setlevel(PyObject* /*self*/, PyObject* args)
@@ -1371,7 +1355,6 @@ static PyMethodDef _ecal_methods[] =
   {"shutdown_process_uname",        shutdown_process_uname,        METH_VARARGS,  "shutdown_process_uname(unit_name)"},
   {"shutdown_processes",            shutdown_processes,            METH_NOARGS,   "shutdown_processes()"},
   {"shutdown_core",                 shutdown_core,                 METH_NOARGS,   "shutdown_core()"},
-  {"enable_loopback",               enable_loopback,               METH_VARARGS,  "enable_loopback(state)"},
 
   {"log_setlevel",                  log_setlevel,                  METH_VARARGS,  "log_setlevel(level)"},
   {"log_message",                   log_message,                   METH_VARARGS,  "log_message(message)"},
