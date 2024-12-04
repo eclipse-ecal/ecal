@@ -10,7 +10,6 @@ namespace eCAL
     {
       SProviderAttributes attributes;
 
-      attributes.network_enabled    = reg_config_.network_enabled;
       attributes.host_name          = Process::GetHostName();
       attributes.process_id         = Process::GetProcessID();
       attributes.process_name       = Process::GetProcessName();
@@ -18,7 +17,6 @@ namespace eCAL
       attributes.level              = log_level_info;
 
       attributes.udp.enabled        = log_config_.sinks.udp.enable;
-      attributes.udp.port           = log_config_.sinks.udp.port;
       attributes.udp.filter_log     = log_config_.sinks.udp.filter_log_udp;
 
       attributes.file.enabled       = log_config_.sinks.file.enable;
@@ -64,15 +62,9 @@ namespace eCAL
 
       attributes.network_enabled    = reg_config_.network_enabled;
       attributes.host_name          = Process::GetHostName();
-      attributes.process_id         = Process::GetProcessID();
-      attributes.process_name       = Process::GetProcessName();
-      attributes.unit_name          = Process::GetUnitName();
-      attributes.level              = log_level_info;
 
-      attributes.udp.enabled        = log_config_.sinks.udp.enable;
-      attributes.udp.port           = log_config_.sinks.udp.port;
-      attributes.udp.filter_log     = log_config_.sinks.udp.filter_log_udp;
-      attributes.udp.receive        = log_config_.sinks.udp.receive;
+      attributes.udp_enabled        = log_config_.sinks.udp.enable;
+      attributes.receive_enabled    = log_config_.sinks.udp.receive;
 
       attributes.udp_receiver.broadcast = !reg_config_.network_enabled;
       attributes.udp_receiver.loopback  = true;

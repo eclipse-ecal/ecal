@@ -77,7 +77,7 @@ namespace
 {
   void logWarningToConsole(const std::string& msg_)
   {
-    std::cout << "[eCAL][Logging][Warning] " << msg_ << "\n";
+    std::cout << "[eCAL][Logging-Provider][Warning] " << msg_ << "\n";
   }
 
   void createLogHeader(std::stringstream& msg_stream, const eCAL_Logging_eLogLevel level_, const eCAL::Logging::SProviderAttributes& attr_, const eCAL::Time::ecal_clock::time_point& log_time_)

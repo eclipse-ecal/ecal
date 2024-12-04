@@ -27,14 +27,6 @@ namespace eCAL
 {
   namespace Logging
   {
-    struct SReceiverUDP
-    {
-      bool                enabled;
-      unsigned int        port;
-      eCAL_Logging_Filter filter_log;
-      bool                receive;
-    };
-
     struct SUDPReceiver
     {
       std::string address;
@@ -46,16 +38,12 @@ namespace eCAL
 
     struct SReceiverAttributes
     {
-      SReceiverUDP           udp;
+      SUDPReceiver udp_receiver;
 
-      SUDPReceiver           udp_receiver;
-
-      int                    process_id;
-      bool                   network_enabled;
-      std::string            host_name;
-      std::string            process_name;
-      std::string            unit_name;
-      eCAL_Logging_eLogLevel level;
-    };
+      bool         network_enabled;
+      bool         udp_enabled;
+      bool         receive_enabled;
+      std::string  host_name;
+   };
   }
 }

@@ -30,7 +30,6 @@ namespace eCAL
     struct SProviderUDP
     {
       bool                enabled;
-      unsigned int        port;
       eCAL_Logging_Filter filter_log;
     };
 
@@ -66,7 +65,6 @@ namespace eCAL
       SUDPSender             udp_sender;
 
       int                    process_id;
-      bool                   network_enabled;
       std::string            host_name;
       std::string            process_name;
       std::string            unit_name;

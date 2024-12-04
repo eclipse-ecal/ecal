@@ -121,19 +121,19 @@ namespace eCAL
         bool StartFileLogging();
         bool StartUDPLogging();
 
-        std::mutex                             m_log_mtx;
+        std::mutex                                m_log_mtx;
 
-        std::atomic<bool>                      m_created;
-        std::unique_ptr<UDP::CSampleSender>    m_udp_logging_sender;
+        std::atomic<bool>                         m_created;
+        std::unique_ptr<eCAL::UDP::CSampleSender> m_udp_logging_sender;
 
         // log message list and log message serialization buffer
-        Logging::SLogging                      m_log_msglist;
-        std::vector<char>                      m_log_message_vec;
+        Logging::SLogging                         m_log_msglist;
+        std::vector<char>                         m_log_message_vec;
 
-        std::string                            m_logfile_name;
-        FILE*                                  m_logfile;
+        std::string                               m_logfile_name;
+        FILE*                                     m_logfile;
 
-        SProviderAttributes                    m_attributes;
+        SProviderAttributes                       m_attributes;
       
     };
   }

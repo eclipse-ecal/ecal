@@ -28,7 +28,7 @@ namespace
 {
   void logWarningToConsole(const std::string& msg_)
   {
-    std::cout << "[eCAL][Logging][Warning] " << msg_ << "\n";
+    std::cout << "[eCAL][Logging-Receiver][Warning] " << msg_ << "\n";
   }
 }
 
@@ -49,7 +49,7 @@ namespace eCAL
 
     void CLogReceiver::Start()
     {
-      if (m_attributes.udp.enabled && m_attributes.udp.receive)
+      if (m_attributes.udp_enabled && m_attributes.receive_enabled)
       {
         // set logging receive network attributes
         const eCAL::UDP::SReceiverAttr attr = Logging::UDP::ConvertToIOUDPReceiverAttributes(m_attributes.udp_receiver);
