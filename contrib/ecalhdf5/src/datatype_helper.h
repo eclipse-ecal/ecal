@@ -17,26 +17,18 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file   eh5_meas.h
- * @brief  eCALHDF5 measurement class
-**/
-
 #pragma once
 
-#include <cstdint>
-#include <functional>
-#include <set>
 #include <string>
-#include <memory>
+#include <utility>
+#include <ecalhdf5/eh5_types.h>
 
-#include "eh5_types.h"
 
-#if defined(ECAL_EH5_NO_DEPRECATION_WARNINGS)
-#define ECAL_EH5_DEPRECATE(__message__)                             //!< Don't print deprecation warnigns
-#else 
-#define ECAL_EH5_DEPRECATE(__message__) [[deprecated(__message__)]] //!< Deprecate the following function 
-#endif
-
-#include "eh5_meas_api_v2.h"
-#include "eh5_meas_api_v3.h"
+namespace eCAL
+{
+  namespace eh5
+  {
+    DataTypeInformation CreateInfo(const std::string& combined_topic_type_, const std::string& descriptor_);
+    std::pair<std::string, std::string> FromInfo(const DataTypeInformation& datatype_info_);   
+  }
+}

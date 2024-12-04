@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 #pragma once
 #include <ThreadingUtils/InterruptibleThread.h>
 
-#include <ecal/measurement/base/writer.h>
+#include <ecalhdf5/eh5_meas.h>
 
 #include <mutex>
 #include <deque>
@@ -94,7 +94,7 @@ namespace eCAL
       mutable RecHdf5JobStatus              last_status_;
 
       mutable std::mutex                                    hdf5_writer_mutex_;
-      std::unique_ptr<eCAL::experimental::measurement::base::Writer>      hdf5_writer_;
+      std::unique_ptr<eCAL::eh5::v2::HDF5Meas>              hdf5_writer_;
 
 
       std::atomic<bool> flushing_;

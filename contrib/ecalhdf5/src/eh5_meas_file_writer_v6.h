@@ -18,47 +18,54 @@
 */
 
 /**
- * @brief  eCALHDF5 measurement file version V2
+ * eCALHDF5 file reader single channel
 **/
 
 #pragma once
 
-#include "hdf5.h"
+#include <list>
+#include <map>
+#include <string>
+#include <unordered_map>
+
 #include "eh5_meas_impl.h"
+
+#include "hdf5.h"
 
 namespace eCAL
 {
   namespace eh5
   {
-    class HDF5MeasFileV2 : virtual public HDF5MeasImpl
+    class HDF5MeasFileWriterV6 : virtual public HDF5MeasImpl
     {
     public:
       /**
       * @brief Constructor
       **/
-      HDF5MeasFileV2();
+      HDF5MeasFileWriterV6();
 
-      /**
-      * @brief Constructor
-      *
-      * @param path    input file path
-      **/
-      explicit HDF5MeasFileV2(const std::string& path, v3::eAccessType access = v3::eAccessType::RDONLY);
+      // Copy
+      HDF5MeasFileWriterV6(const HDF5MeasFileWriterV6&)            = delete;
+      HDF5MeasFileWriterV6& operator=(const HDF5MeasFileWriterV6&) = delete;
+
+      // Move
+      HDF5MeasFileWriterV6& operator=(HDF5MeasFileWriterV6&&)      = default;
+      HDF5MeasFileWriterV6(HDF5MeasFileWriterV6&&)                 = default;
 
       /**
       * @brief Destructor
       **/
-      ~HDF5MeasFileV2() override;
+      ~HDF5MeasFileWriterV6() override;
 
       /**
       * @brief Open file
       *
-      * @param path     Input file path / measurement directory path
-      * @param access   Access type
+      * @param output_dir  Input file path / measurement directory path
+      * @param access      Access type (IGNORED, WILL ALWAYS OPEN READ-WRITE!)
       *
-      * @return         true if succeeds, false if it fails
+      * @return            true if succeeds, false if it fails
       **/
-      bool Open(const std::string& path, v3::eAccessType access = v3::eAccessType::RDONLY) override;
+      bool Open(const std::string& output_dir, v3::eAccessType access) override;
 
       /**
       * @brief Close file
@@ -91,9 +98,9 @@ namespace eCAL
       /**
       * @brief Sets maximum allowed size for an individual file
       *
-      * @param size   maximum size in MB
+      * @param max_file_size_mib   maximum size in MB
       **/
-      void SetMaxSizePerFile(size_t size) override;
+      void SetMaxSizePerFile(size_t max_file_size_mib) override;
 
       /**
       * @brief Whether each Channel shall be writte in its own file
@@ -131,7 +138,7 @@ namespace eCAL
        *
        * @return       true if exists, false otherwise
       **/
-      bool HasChannel(const eCAL::eh5::SChannel& channel) const override;
+      bool HasChannel(const eCAL::eh5::SChannel & channel) const override;
 
       /**
        * @brief Get data type information of the given channel
@@ -140,7 +147,7 @@ namespace eCAL
        *
        * @return              channel type
       **/
-      DataTypeInformation GetChannelDataTypeInformation(const SChannel& channel) const override;
+      DataTypeInformation GetChannelDataTypeInformation(const SChannel & channel) const override;
 
       /**
        * @brief Set data type information of the given channel
@@ -150,7 +157,7 @@ namespace eCAL
        *
        * @return              channel type
       **/
-      void SetChannelDataTypeInformation(const SChannel& channel, const DataTypeInformation& info) override;
+      void SetChannelDataTypeInformation(const SChannel& channel, const eCAL::eh5::DataTypeInformation& info) override;
 
       /**
       * @brief Gets minimum timestamp for specified channel
@@ -168,7 +175,7 @@ namespace eCAL
       *
       * @return                maximum timestamp value
       **/
-      long long GetMaxTimestamp(const SChannel& channel) const override;
+      long long GetMaxTimestamp(const SChannel& channele) const override;
 
       /**
       * @brief Gets the header info for all data entries for the given channel
@@ -228,7 +235,7 @@ namespace eCAL
       * @param size           size of the data
       * @param snd_timestamp  send timestamp
       * @param rcv_timestamp  receive timestamp
-      * @param channel_name   channel name
+      * @param channel        channel name
       * @param id             message id
       * @param clock          message clock
       *
@@ -236,8 +243,7 @@ namespace eCAL
       **/
       bool AddEntryToFile(const SWriteEntry& entry) override;
 
-
-      typedef std::function<void(void)> CallbackFunction;
+      using CallbackFunction = std::function<void ()>;
       /**
       * @brief Connect callback for pre file split notification
       *
@@ -251,8 +257,62 @@ namespace eCAL
       void DisconnectPreSplitCallback() override;
 
     protected:
-      hid_t file_id_;
-    };
+      struct Channel
+      {
+        DataTypeInformation Info;
+        EntryInfoVect       Entries;
+      };
 
-  }  // namespace eh5
-}  // namespace eCAL
+      using Channels = std::map<std::string, std::map<std::uint64_t, Channel>>;
+
+      std::string              output_dir_;
+      std::string              base_name_;
+      Channels                 channels_;
+      CallbackFunction         cb_pre_split_;
+      hid_t                    file_id_;
+      int                      file_split_counter_;
+      unsigned long long       entries_counter_;
+      size_t                   max_size_per_file_;
+
+      /**
+      * @brief Creates the actual file
+      *
+      * @return       file ID, file was not created if id is negative
+      **/
+      hid_t Create();
+
+      /**
+      * @brief Checks if current file size + entry size does not exceed the maximum allowed size of the file
+      *
+      * @param size  Size of the entry in bytes
+      *
+      * @return  true if entry can be saved in current file, false if it can not be added to the current file
+      **/
+      bool EntryFitsTheFile(const hsize_t& size) const;
+
+      /**
+      * @brief Gets the size of the file
+      *
+      * @param size  Size of the file in bytes
+      *
+      * @return  true if succeeds, false if it fails
+      **/
+      bool GetFileSize(hsize_t& size) const;
+
+      /**
+      * @brief Creates the entries "table of contents" (timestamp + entry id)
+      *        (Call it just before closing the file)
+      *
+      * @param channelName         name for the dataset
+      * @param channelId           id for the dataset    (unique publisher ID)
+      * @param channelType         type for the dataset
+      * @param channelDescription  description for the dataset
+      * @param entries             entries for given channel
+      *
+      * @return                    true if succeeds, false if it fails
+      **/
+      bool CreateEntriesTableOfContentsFor(const std::string& channelName, std::uint64_t channelId, const DataTypeInformation& channelInfo, const EntryInfoVect& entries) const;
+
+    };
+  }  //  namespace eh5
+}  //  namespace eCAL

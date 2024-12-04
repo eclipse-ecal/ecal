@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,15 @@
 #pragma once
 
 #include <string>
+#include <ecalhdf5/eh5_types.h>
 
 namespace eCAL
 {
   namespace eh5
   {
     std::string GetEscapedTopicname(const std::string& input);
+    SChannel    GetEscapedTopicname(const SChannel& input);
+    SWriteEntry GetEscapedEntry(const SWriteEntry& input);
     std::string GetEscapedFilename(const std::string& input);
     std::string GetUnescapedString(const std::string& input);
   }

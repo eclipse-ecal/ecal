@@ -39,7 +39,7 @@
 typedef struct
 {
   PyObject_HEAD
-  eCAL::eh5::HDF5Meas *hdf5_meas;
+  eCAL::eh5::v2::HDF5Meas *hdf5_meas;
 } Meas;
 
 /****************************************/
@@ -52,7 +52,7 @@ static PyObject* Meas_New(PyTypeObject *type, PyObject* /*args*/, PyObject* /*kw
   self = (Meas *)type->tp_alloc(type, 0);
   if (self != NULL)
   {
-    self->hdf5_meas = new eCAL::eh5::HDF5Meas();
+    self->hdf5_meas = new eCAL::eh5::v2::HDF5Meas();
   }
 
   return (PyObject *)self;
@@ -107,11 +107,11 @@ static PyObject* Meas_Open(Meas *self, PyObject *args)
   switch (access)
   {
   case 0:
-    open_meas = self->hdf5_meas->Open(path, eCAL::experimental::measurement::base::AccessType::RDONLY);
+    open_meas = self->hdf5_meas->Open(path, eCAL::eh5::v2::RDONLY);
     break;
 
   case 1:
-    open_meas = self->hdf5_meas->Open(path, eCAL::experimental::measurement::base::AccessType::CREATE);
+    open_meas = self->hdf5_meas->Open(path, eCAL::eh5::v2::CREATE);
     break;
 
   default:

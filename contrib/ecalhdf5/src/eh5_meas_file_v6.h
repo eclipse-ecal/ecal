@@ -25,41 +25,50 @@
 
 #include <string>
 
-#include "eh5_meas_file_v2.h"
+#include "eh5_meas_file_v5.h"
 
 namespace eCAL
 {
   namespace eh5
   {
-    class HDF5MeasFileV3 : virtual public HDF5MeasFileV2
+    class HDF5MeasFileV6 : virtual public HDF5MeasFileV5
     {
     public:
       /**
       * @brief Constructor
       **/
-      HDF5MeasFileV3();
+      HDF5MeasFileV6();
 
       /**
       * @brief Constructor
       *
       * @param path    Input file path
       **/
-      explicit HDF5MeasFileV3(const std::string& path, v3::eAccessType access = v3::eAccessType::RDONLY);
+      explicit HDF5MeasFileV6(const std::string& path, v3::eAccessType access = v3::eAccessType::RDONLY);
 
       /**
       * @brief Destructor
       **/
-      ~HDF5MeasFileV3() override;
+      ~HDF5MeasFileV6() override;
 
       /**
-      * @brief Gets the header info for all data entries for the given channel
-      *        Header = timestamp + entry id
-      *
-      * @param [in]  channel_name  channel name
-      * @param [out] entries       header info for all data entries
-      *
-      * @return                    true if succeeds, false if it fails
+       * @brief Get the available channel names of the current opened file / measurement
+       *
+       * @return       channel names & ids
       **/
+      std::set<eCAL::eh5::SChannel> GetChannels() const override;
+
+      /**
+       * @brief Check if channel exists in measurement
+       *
+       * @param channel   channel name & id
+       *
+       * @return       true if exists, false otherwise
+      **/
+      bool HasChannel(const eCAL::eh5::SChannel& channel) const override;
+
+      DataTypeInformation GetChannelDataTypeInformation(const SChannel& channel) const override;
+
       bool GetEntriesInfo(const SChannel& channel, EntryInfoSet& entries) const override;
     };
   }  //  namespace eh5
