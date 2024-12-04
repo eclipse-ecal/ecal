@@ -195,7 +195,10 @@ namespace eCAL
         log_provider_instance = std::make_unique<Logging::CLogProvider>(eCAL::Logging::BuildLoggingProviderAttributes(GetLoggingConfiguration(), GetRegistrationConfiguration(), GetTransportLayerConfiguration()));
         new_initialization = true;
       }
+    }
 
+    if ((components_ & Init::UDPLogReceive) != 0u)
+    {
       if (log_udp_receiver_instance == nullptr)
       {
         log_udp_receiver_instance = std::make_unique<Logging::CLogReceiver>(eCAL::Logging::BuildLoggingReceiverAttributes(GetLoggingConfiguration(), GetRegistrationConfiguration(), GetTransportLayerConfiguration()));
@@ -206,11 +209,11 @@ namespace eCAL
     /////////////////////
     // START ALL
     /////////////////////
-    if (log_provider_instance && ((components_ & Init::Logging) != 0u))     log_provider_instance->Start();
-    if (log_udp_receiver_instance && ((components_ & Init::Logging) != 0u)) log_udp_receiver_instance->Start();
+    if (log_provider_instance && ((components_ & Init::Logging) != 0u))           log_provider_instance->Start();
+    if (log_udp_receiver_instance && ((components_ & Init::UDPLogReceive) != 0u)) log_udp_receiver_instance->Start();
 #if ECAL_CORE_REGISTRATION
-    if (registration_provider_instance)                                     registration_provider_instance->Start();
-    if (registration_receiver_instance)                                     registration_receiver_instance->Start();
+    if (registration_provider_instance)                                           registration_provider_instance->Start();
+    if (registration_receiver_instance)                                           registration_receiver_instance->Start();
 #endif
     if (descgate_instance)
     {
@@ -273,7 +276,9 @@ namespace eCAL
       return(monitoring_instance != nullptr);
 #endif
     case Init::Logging:
-      return(log_provider_instance != nullptr && log_udp_receiver_instance != nullptr);
+      return(log_provider_instance != nullptr);
+    case Init::UDPLogReceive:
+      return(log_udp_receiver_instance != nullptr);
 #if ECAL_CORE_TIMEPLUGIN
     case Init::TimeSync:
       return(timegate_instance != nullptr);
