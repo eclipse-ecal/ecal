@@ -71,7 +71,7 @@ namespace eCAL
 
   // Declaration of getter functions for globally accessible variable instances
   CGlobals*               g_globals();
-  Logging::CLogReceiver*  g_log_receiver();
+  Logging::CLogReceiver*  g_log_udp_receiver();
   Logging::CLogProvider*  g_log_provider();
 #if ECAL_CORE_MONITORING
   CMonitoring*            g_monitoring();

@@ -93,10 +93,10 @@ namespace eCAL
     return g_globals_ctx;
   }
 
-  Logging::CLogReceiver* g_log_receiver()
+  Logging::CLogReceiver* g_log_udp_receiver()
   {
     if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->log_receiver().get());
+    return(g_globals()->log_udp_receiver().get());
   }
 
   Logging::CLogProvider* g_log_provider()

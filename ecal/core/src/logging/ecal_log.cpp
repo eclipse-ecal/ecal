@@ -102,7 +102,7 @@ namespace eCAL
     **/
     int GetLogging(std::string& log_)
     {
-      if (g_log_receiver() != nullptr) g_log_receiver()->GetLogging(log_);
+      if (g_log_udp_receiver() != nullptr) g_log_udp_receiver()->GetLogging(log_);
       return static_cast<int>(log_.size());
     }
 
@@ -115,7 +115,7 @@ namespace eCAL
     **/
     int GetLogging(Logging::SLogging& log_)
     {
-      if (g_log_receiver() != nullptr) g_log_receiver()->GetLogging(log_);
+      if (g_log_udp_receiver() != nullptr) g_log_udp_receiver()->GetLogging(log_);
       return static_cast<int>(log_.log_messages.size());
     }
   }

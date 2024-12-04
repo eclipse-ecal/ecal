@@ -70,7 +70,7 @@ namespace eCAL
     int Finalize();
 
     const std::unique_ptr<Logging::CLogProvider>&                         log_provider()           { return log_provider_instance; };
-    const std::unique_ptr<Logging::CLogReceiver>&                         log_receiver()           { return log_receiver_instance; };
+    const std::unique_ptr<Logging::CLogReceiver>&                         log_udp_receiver()       { return log_udp_receiver_instance; };
 
 #if ECAL_CORE_MONITORING
     const std::unique_ptr<CMonitoring>&                                   monitoring()             { return monitoring_instance; };
@@ -103,7 +103,7 @@ namespace eCAL
     bool                                                                  initialized;
     unsigned int                                                          components;
     std::unique_ptr<Logging::CLogProvider>                                log_provider_instance;
-    std::unique_ptr<Logging::CLogReceiver>                                log_receiver_instance;
+    std::unique_ptr<Logging::CLogReceiver>                                log_udp_receiver_instance;
 #if ECAL_CORE_MONITORING
     std::unique_ptr<CMonitoring>                                          monitoring_instance;
 #endif
