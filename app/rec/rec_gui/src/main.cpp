@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
   }
 
   // Just make sure that eCAL is initialized
-  eCAL::Initialize(0, nullptr, "eCALRecGUI", eCAL::Init::Default | eCAL::Init::Service | eCAL::Init::Monitoring);
+  eCAL::Initialize(0, nullptr, "eCALRecGUI", eCAL::Init::Default | eCAL::Init::Service | eCAL::Init::Monitoring | eCAL::Init::UDPLogReceive);
   eCAL::Monitoring::SetFilterState(false);
 
   EcalRecGui* w = new EcalRecGui();
