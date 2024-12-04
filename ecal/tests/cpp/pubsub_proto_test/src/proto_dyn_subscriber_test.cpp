@@ -60,7 +60,7 @@ public:
     pub.Send(p);
   }
 
-  void OnPerson(const char* /*topic_name*/, const std::shared_ptr<google::protobuf::Message>& /*message*/, long long /*time*/)
+  void OnPerson(const std::shared_ptr<google::protobuf::Message>& /*message*/, long long /*time*/)
   {
     received_callbacks++;
   }
@@ -97,7 +97,7 @@ TEST_F(core_cpp_pubsub_proto_dyn, ProtoDynSubscriberTest_SendReceiveCB)
 {
   // Assert that the Subscriber can be move constructed.
   eCAL::protobuf::CDynamicSubscriber person_dyn_rec("ProtoSubscriberTest");
-  auto person_callback = std::bind(&ProtoDynSubscriberTest::OnPerson, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+  auto person_callback = std::bind(&ProtoDynSubscriberTest::OnPerson, this, std::placeholders::_3, std::placeholders::_4);
   person_dyn_rec.AddReceiveCallback(person_callback);
   ASSERT_TRUE(person_dyn_rec.IsCreated());
 
@@ -109,24 +109,4 @@ TEST_F(core_cpp_pubsub_proto_dyn, ProtoDynSubscriberTest_SendReceiveCB)
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   // assert that the OnPerson callback has been called once.
   ASSERT_EQ(1, received_callbacks);
-}
-
-TEST_F(core_cpp_pubsub_proto_dyn, ProtoDynSubscriberTest_SendReceive)
-{
-  // Assert that the Subscriber can be move constructed.
-  eCAL::protobuf::CDynamicSubscriber person_dyn_rec("ProtoSubscriberTest");
-  ASSERT_TRUE(person_dyn_rec.IsCreated());
-
-  eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoSubscriberTest");
-
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-
-  SendPerson(person_pub);
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-  auto received_message = person_dyn_rec.Receive(nullptr, 500);
-  // assert that the OnPerson callback has been called once.
-  ASSERT_TRUE(received_message.has_value()) << "we should have received data that was sent";
-  auto id = extract_id(*received_message.value());
-  ASSERT_EQ(id, 1) << "Extracted ID needs to be 1";
 }

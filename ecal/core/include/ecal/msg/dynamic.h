@@ -142,42 +142,6 @@ namespace eCAL
     }
 
     /**
-     * @brief  Receive deserialized message.
-     *
-     * @param [out] time_   Optional receive time stamp.
-     * @param rcv_timeout_  Receive timeout in ms.
-     *
-     * @return  std::optional which holds the value if a value could be received, and std::nullopt if it couldn't.
-    **/
-    // Do we want to call error callbacks on receive? Probably not! std::expected wouuld be a good thing to return the reason why things went wrong.
-    std::optional<T> Receive(long long* time_ = nullptr, int rcv_timeout_ = 0)
-    {
-      std::string rec_buf;
-      bool success = CSubscriber::ReceiveBuffer(rec_buf, time_, rcv_timeout_);
-      if (!success)
-      {
-        return std::nullopt;
-      }
-      // In the future, I would like to get m_datatype_info from the ReceiveBuffer function!
-
-      PopulateDatatypeInfo();
-      // We can't possibly receive anything if we don't have datatype info available
-      if (!m_datatype_info_received)
-      {
-        return std::nullopt;
-      }
-
-      try
-      {
-        return(m_deserializer.Deserialize(rec_buf.c_str(), rec_buf.size(), m_datatype_info_received.value()));
-      }
-      catch (const DynamicReflectionException& /*e*/)
-      {
-        return std::nullopt;
-      }
-    }
-
-    /**
      * @brief eCAL message receive callback function
      *
      * @param topic_name_  Topic name of the data source (publisher).
@@ -186,7 +150,7 @@ namespace eCAL
      * @param clock_       Message writer clock.
      * @param id_          Message id.
      **/
-    using MsgReceiveCallbackT = std::function<void(const char* topic_name_, const T& msg_, long long time_, long long clock_, long long id_)>;
+    using MsgReceiveCallbackT = std::function<void(const Registration::STopicId& topic_id_, const SDataTypeInformation& topic_info_, const T& msg_, long long time_, long long clock_, long long id_)>;
 
     /**
      * @brief  Add receive callback for incoming messages.
@@ -203,7 +167,7 @@ namespace eCAL
         std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
         m_cb_callback = callback_;
       }
-      auto callback = std::bind(&CDynamicMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
+      auto callback = std::bind(&CDynamicMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
       return(CSubscriber::AddReceiveCallback(callback));
     }
 
@@ -258,7 +222,7 @@ namespace eCAL
     }
 
   private:
-    void ReceiveCallback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
+    void ReceiveCallback(const Registration::STopicId& topic_id_, const SDataTypeInformation& topic_info_, const struct eCAL::SReceiveCallbackData& data_)
     {
       MsgReceiveCallbackT fn_callback = nullptr;
       {
@@ -268,37 +232,14 @@ namespace eCAL
 
       if (fn_callback == nullptr) return;
 
-      PopulateDatatypeInfo();
-
-      if (!m_datatype_info_received)
-      {
-        CallErrorCallback("Dynamic Deserialization: No Prototype available.");
-        return;
-      }
-
       try
       {
-        // In the future, I would like to get m_datatype_info from the ReceiveBuffer function!
-        auto msg = m_deserializer.Deserialize(data_->buf, data_->size, m_datatype_info_received.value());
-        fn_callback(topic_name_, msg, data_->time, data_->clock, data_->id);
+        auto msg = m_deserializer.Deserialize(data_.buf, data_.size, topic_info_);
+        fn_callback(topic_id_, topic_info_, msg, data_.time, data_.clock, data_.id);
       }
       catch (const DynamicReflectionException& e)
       {
         CallErrorCallback(std::string("Dynamic Deserialization: Error deserializing data: ") + e.what() );
-      }
-    }
-
-    void PopulateDatatypeInfo()
-    {
-      if (!m_datatype_info_received)
-      {
-        SDataTypeInformation datatype_info_received;
-        auto received_info = eCAL::Registration::GetTopicDataTypeInformation(m_topic_name, datatype_info_received);
-        // empty datatype informations are not valid to do reflection on!
-        if (received_info && datatype_info_received != SDataTypeInformation{})
-        {
-          m_datatype_info_received = datatype_info_received;
-        }
       }
     }
 
