@@ -41,7 +41,8 @@ namespace eCAL
                                             | Service
                                             | Monitoring
                                             | Logging
-                                            | TimeSync;
+                                            | TimeSync
+                                            | UDPLogReceive;
 
     static const unsigned int Default    =    Publisher
                                             | Subscriber
