@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ public:
     SOURCE_CHANNEL_NAME,
     TARGET_CHANNEL_NAME,
 
+    CHANNEL_ENCODING,
     CHANNEL_TYPE,
     TOTAL_CHANNEL_SIZE,
 
@@ -47,7 +48,7 @@ public:
   };
 
   ChannelTreeItem(const QString& source_name);
-  ChannelTreeItem(const QString& source_name, const QString& channel_type, size_t total_channel_size,
+  ChannelTreeItem(const QString& source_name, const QString& channel_encoding, const QString& channel_type, size_t total_channel_size,
     double min_channel_timestamp, double max_channel_timestamp, long long expected_frames, long long existing_frames, double duration);
 
   ~ChannelTreeItem();
@@ -76,6 +77,7 @@ private:
 
   QString source_name_;
   QString target_name_;
+  QString channel_encoding_;
   QString channel_type_;
 
   size_t total_channel_size_;

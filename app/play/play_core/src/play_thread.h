@@ -157,6 +157,15 @@ public:
   **/
   std::string GetChannelType(const std::string& channel_name);
 
+  /**
+  * @brief Gets the data type of the given channel
+  *
+  * @param channel_name  channel name
+  *
+  * @return channel type
+  **/
+  std::string GetChannelEncoding(const std::string& channel_name);
+
   void CalculateEstimatedSizeForChannels();
 
   /**

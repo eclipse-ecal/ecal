@@ -60,6 +60,7 @@ public:
   double GetMinTimestampOfChannel(const std::string& channel_name) const;
   double GetMaxTimestampOfChannel(const std::string& channel_name) const;
   std::string GetChannelType(const std::string& channel_name) const;
+  std::string GetChannelEncoding(const std::string& channel_name) const;
   size_t GetChannelCumulativeEstimatedSize(const std::string& channel_name) const;
   std::map<std::string, std::string> GetChannelMapping() const;
 
