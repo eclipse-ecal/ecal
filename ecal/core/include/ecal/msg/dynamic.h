@@ -167,7 +167,8 @@ namespace eCAL
         std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
         m_cb_callback = callback_;
       }
-      auto callback = std::bind(&CDynamicMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+
+      ReceiveIDCallbackT callback = std::bind(&CDynamicMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
       return(CSubscriber::AddReceiveCallback(callback));
     }
 
@@ -222,7 +223,7 @@ namespace eCAL
     }
 
   private:
-    void ReceiveCallback(const Registration::STopicId& topic_id_, const SDataTypeInformation& topic_info_, const struct eCAL::SReceiveCallbackData& data_)
+    void ReceiveCallback(const Registration::STopicId& topic_id_, const SDataTypeInformation& topic_info_, const struct SReceiveCallbackData& data_)
     {
       MsgReceiveCallbackT fn_callback = nullptr;
       {
