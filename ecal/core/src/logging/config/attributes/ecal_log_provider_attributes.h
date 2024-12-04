@@ -27,38 +27,38 @@ namespace eCAL
 {
   namespace Logging
   {
-    struct SProviderUDP
-    {
-      bool                enabled;
-      eCAL_Logging_Filter filter_log;
-    };
-
-    struct SFile
-    {
-      bool                enabled;
-      std::string         path;
-      eCAL_Logging_Filter filter_log;
-    };
-
-    struct SConsole
-    {
-      bool                enabled;
-      eCAL_Logging_Filter filter_log;
-    };
-
-    struct SUDPSender
-    {
-      std::string address;
-      int         port;
-      int         ttl;
-      bool        broadcast;
-      bool        loopback;
-      int         sndbuf;
-    };
-
     struct SProviderAttributes
     {
-      SProviderUDP           udp;
+      struct SUDP
+      {
+        bool                enabled;
+        eCAL_Logging_Filter filter_log;
+      };
+
+      struct SFile
+      {
+        bool                enabled;
+        std::string         path;
+        eCAL_Logging_Filter filter_log;
+      };
+
+      struct SConsole
+      {
+        bool                enabled;
+        eCAL_Logging_Filter filter_log;
+      };
+
+      struct SUDPSender
+      {
+        std::string address;
+        int         port;
+        int         ttl;
+        bool        broadcast;
+        bool        loopback;
+        int         sndbuf;
+      };
+
+      SUDP                   udp;
       SFile                  file;
       SConsole               console;
 

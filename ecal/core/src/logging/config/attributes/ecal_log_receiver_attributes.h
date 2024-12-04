@@ -27,17 +27,17 @@ namespace eCAL
 {
   namespace Logging
   {
-    struct SUDPReceiver
-    {
-      std::string address;
-      int         port;
-      bool        broadcast;
-      bool        loopback;
-      int         rcvbuf;
-    };
-
     struct SReceiverAttributes
     {
+      struct SUDPReceiver
+      {
+        std::string address;
+        int         port;
+        bool        broadcast;
+        bool        loopback;
+        int         rcvbuf;
+      };
+      
       SUDPReceiver udp_receiver;
 
       bool         network_enabled;

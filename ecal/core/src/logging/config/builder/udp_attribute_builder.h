@@ -32,8 +32,8 @@ namespace eCAL
   {
     namespace UDP
     {
-      eCAL::UDP::SSenderAttr     ConvertToIOUDPSenderAttributes     (const Logging::SUDPSender& sender_attr_);
-      eCAL::UDP::SReceiverAttr   ConvertToIOUDPReceiverAttributes   (const Logging::SUDPReceiver& receiver_attr_);
+      eCAL::UDP::SSenderAttr     ConvertToIOUDPSenderAttributes     (const Logging::SProviderAttributes::SUDPSender& sender_attr_);
+      eCAL::UDP::SReceiverAttr   ConvertToIOUDPReceiverAttributes   (const Logging::SReceiverAttributes::SUDPReceiver& receiver_attr_);
     }
   }
 }
