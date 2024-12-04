@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -322,14 +322,14 @@ void PluginWidget::onUpdate()
 void PluginWidget::onResume()
 {
   // Add eCAL Callbacks
-  subscriber_.AddReceiveCallback(std::bind(&PluginWidget::onProtoMessageCallback, this, std::placeholders::_2, std::placeholders::_3));
-  //subscriber_.AddErrorCallback(std::bind(&PluginWidget::onProtoErrorCallback, this, std::placeholders::_1));
+  subscriber_.AddReceiveCallback(std::bind(&PluginWidget::onProtoMessageCallback, this, std::placeholders::_3, std::placeholders::_4));
+  subscriber_.AddErrorCallback(std::bind(&PluginWidget::onProtoErrorCallback, this, std::placeholders::_1));
 }
 
 void PluginWidget::onPause()
 {
   subscriber_.RemReceiveCallback();
-  //subscriber_.RemErrorCallback();
+  subscriber_.RemErrorCallback();
 }
 
 QWidget* PluginWidget::getWidget()

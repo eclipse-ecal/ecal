@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ private:
   bool                               new_msg_available_;
   int                                received_message_counter_;
 
-  void ecalMessageReceivedCallback(const struct eCAL::SReceiveCallbackData* callback_data);
+  void ecalMessageReceivedCallback(const eCAL::SReceiveCallbackData& callback_data);
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 9, 0)
   static QString bytesToHex(const QByteArray& byte_array, char separator = '\0');
