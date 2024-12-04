@@ -24,8 +24,9 @@
 #include <ecal/ecal_time.h>
 #include <ecal_utils/filesystem.h>
 
-#include <iostream>
 #include <chrono>
+#include <iostream>
+#include <sstream>
 
 #ifdef ECAL_OS_WINDOWS
 #include "ecal_win_main.h"
@@ -47,29 +48,34 @@ namespace
 #ifdef ECAL_OS_LINUX
 #include <sys/stat.h>
 #include <sys/time.h>
+#include <bits/types/struct_timeval.h>
+#include <ctime>
 
-static bool isDirectory(const std::string& path_)
-{
-  if (path_.empty()) return false;
-
-  struct stat st;
-  if (stat(path_.c_str(), &st) == 0)
-    return S_ISDIR(st.st_mode);
-
-  return false;
-}
-
-static std::string get_time_str()
-{
-  char            fmt[64];
-  struct timeval  tv;
-  struct tm       *tm;
-  gettimeofday(&tv, NULL);
-  if ((tm = localtime(&tv.tv_sec)) != NULL)
+namespace{
+  bool isDirectory(const std::string& path_)
   {
-    strftime(fmt, sizeof fmt, "%Y-%m-%d-%H-%M-%S", tm);
+    if (path_.empty()) return false;
+
+    struct stat st;
+    if (stat(path_.c_str(), &st) == 0)
+      return S_ISDIR(st.st_mode);
+
+    return false;
   }
-  return(std::string(fmt));
+
+  std::string get_time_str()
+  {
+    char            fmt[64];
+    struct timeval  tv;
+    struct tm       *tm = nullptr;
+    gettimeofday(&tv, nullptr);
+    tm = localtime(&tv.tv_sec);
+    if (tm != nullptr)
+    {
+      strftime(fmt, sizeof fmt, "%Y-%m-%d-%H-%M-%S", tm);
+    }
+    return(std::string(fmt));
+  }
 }
 #endif
 
