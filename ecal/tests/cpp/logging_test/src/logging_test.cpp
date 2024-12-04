@@ -130,7 +130,7 @@ TEST(logging_to /*unused*/, udp /*unused*/)
   const std::string log_message  = "Logging to udp test.";
   auto  ecal_config              = GetUDPConfiguration();
 
-  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);  
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging | eCAL::Init::UDPLogReceive);  
 
   eCAL::Logging::Log(log_level_info, log_message);
 
@@ -188,7 +188,7 @@ TEST(logging_levels /*unused*/, all /*unused*/)
   const std::string log_message  = "Logging level all test for udp.";
   auto  ecal_config              = GetUDPConfiguration();
 
-  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging | eCAL::Init::UDPLogReceive);
 
   eCAL::Logging::SLogging log;
  
@@ -227,7 +227,7 @@ TEST(logging_levels /*unused*/, various /*unused*/)
 
   ecal_config.logging.sinks.udp.filter_log_udp = log_level_warning;
 
-  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging | eCAL::Init::UDPLogReceive);
 
   eCAL::Logging::SLogging log;
   
@@ -264,7 +264,7 @@ TEST(logging_levels /*unused*/, none /*unused*/)
 
    ecal_config.logging.sinks.udp.filter_log_udp = log_level_none;
 
-  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging | eCAL::Init::UDPLogReceive);
 
   eCAL::Logging::SLogging log;
  
@@ -331,7 +331,7 @@ TEST(logging_disable /*unused*/, udp /*unused*/)
   auto  ecal_config              = GetUDPConfiguration();
 
   ecal_config.logging.sinks.udp.enable = false;
-  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);  
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging | eCAL::Init::UDPLogReceive);  
 
   eCAL::Logging::Log(log_level_info, log_message);
 
@@ -352,6 +352,27 @@ TEST(logging_disable /*unused*/, udp_receive /*unused*/)
   auto  ecal_config              = GetUDPConfiguration();
 
   ecal_config.logging.sinks.udp.receive = false;
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging | eCAL::Init::UDPLogReceive);  
+
+  eCAL::Logging::Log(log_level_info, log_message);
+
+  std::this_thread::sleep_for(UDP_WAIT_TIME);
+  
+  eCAL::Logging::SLogging log;
+  eCAL::Logging::GetLogging(log);
+
+  EXPECT_EQ(log.log_messages.size(), 0);
+  EXPECT_EQ(eCAL::IsInitialized(eCAL::Init::UDPLogReceive), 1);
+  
+  eCAL::Finalize();
+}
+
+TEST(logging_disable /*unused*/, udp_no_init /*unused*/)
+{
+  const std::string unit_name    = "logging_disable_receive_udp_no_init_test";
+  const std::string log_message  = "Disabled receive logging test for udp via initializing.";
+  auto  ecal_config              = GetUDPConfiguration();
+
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);  
 
   eCAL::Logging::Log(log_level_info, log_message);
@@ -362,6 +383,7 @@ TEST(logging_disable /*unused*/, udp_receive /*unused*/)
   eCAL::Logging::GetLogging(log);
 
   EXPECT_EQ(log.log_messages.size(), 0);
+  EXPECT_EQ(eCAL::IsInitialized(eCAL::Init::UDPLogReceive), 0);
   
   eCAL::Finalize();
 }
