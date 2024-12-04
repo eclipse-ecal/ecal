@@ -44,7 +44,6 @@ protected:
     // set configuration from the test parameters
     auto params = GetParam();
     eCAL::Initialize(params.configuration, "core_cpp_registration_public", eCAL::Init::All);
-    eCAL::Util::EnableLoopback(true);
   }
 
   void TearDown() override

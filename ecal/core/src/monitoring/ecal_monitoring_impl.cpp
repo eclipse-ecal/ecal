@@ -49,9 +49,6 @@ namespace eCAL
   {
     if (m_init) return;
 
-    // enable loopback to monitor process internal entities as well
-    eCAL::Util::EnableLoopback(true);
-
     // utilize registration receiver to enrich monitor information
     g_registration_receiver()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
 

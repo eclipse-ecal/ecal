@@ -31,7 +31,6 @@ public class ProtobufTest
   public void Initialize()
   {
     Util.Initialize("Person Test C#");
-    Util.EnableLoopback(true);
   }
 
   [TestCleanup]

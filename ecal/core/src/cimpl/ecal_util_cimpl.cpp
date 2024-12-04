@@ -51,9 +51,4 @@ extern "C"
     eCAL::Util::ShutdownCore();
   }
 #endif // ECAL_CORE_MONITORING
-
-  ECALC_API void eCAL_Util_EnableLoopback(int state_)
-  {
-    eCAL::Util::EnableLoopback(state_ != 0);
-  }
 }

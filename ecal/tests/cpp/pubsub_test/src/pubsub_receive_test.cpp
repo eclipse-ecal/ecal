@@ -71,9 +71,6 @@ TEST(core_cpp_pubsub, TimingSubscriberReceive)
   // initialize eCAL API
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "subscriber_receive_timing"));
 
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
-
   // create simple string publisher
   eCAL::string::CPublisher<std::string> pub("CLOCK");
   eCAL::string::CSubscriber<std::string> sub("CLOCK");
@@ -167,9 +164,6 @@ TEST(core_cpp_pubsub, SporadicEmptyReceives)
 { 
   // initialize eCAL API
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "sporadic_empty_receives"));
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
 
   // create simple string publisher
   eCAL::string::CPublisher<std::string> pub("CLOCK");

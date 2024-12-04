@@ -45,8 +45,6 @@ namespace eCAL
     public:
       CSampleApplier(const SampleApplier::SAttributes& attr_);
 
-      // to be removed for eCAL 6, but keep until eCAL 5.14
-      void EnableLoopback(bool state_);
       bool ApplySample(const Registration::Sample& sample_);
 
       using ApplySampleCallbackT = std::function<void(const Registration::Sample&)>;

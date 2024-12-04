@@ -54,15 +54,6 @@ extern "C"
    * @brief Send shutdown event to all local core components.
   **/
   ECALC_API void eCAL_Util_ShutdownCore();
-
-  /**
-   * @brief Enable eCAL message loop back,
-   *          that means subscriber will receive messages from
-   *          publishers of the same process (default == false).
-   *
-   * @param state_  Switch on message loop back.. 
-  **/
-  ECALC_API void eCAL_Util_EnableLoopback(int state_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

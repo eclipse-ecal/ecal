@@ -39,9 +39,6 @@ TEST(core_cpp_registration_public, GetTopics)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
 
-  // enable loop back communication in the same process
-  eCAL::Util::EnableLoopback(true);
-
   std::map<std::string, eCAL::SDataTypeInformation> topic_info_map;
 
   // create and check a few pub/sub entities
@@ -151,9 +148,6 @@ TEST(core_cpp_registration_public, GetTopicsParallel)
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
-
-  // enable loop back communication in the same process
-  eCAL::Util::EnableLoopback(true);
 
   auto create_publishers = [&]() {
     std::string topic_name = "Test.ParallelUtilFunctions";

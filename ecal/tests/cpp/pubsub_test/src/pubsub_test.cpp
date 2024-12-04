@@ -66,9 +66,6 @@ TEST(core_cpp_pubsub, LeakedPubSub)
   // initialize eCAL API
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "leaked pub/sub"));
 
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
-
   // create subscriber and register a callback
   eCAL::CSubscriber sub("foo");
   sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2));
@@ -113,9 +110,6 @@ TEST(core_cpp_pubsub, CallbackDestruction)
 {
   // initialize eCAL API
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "callback destruction"));
-
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
 
   // create subscriber and register a callback
   std::shared_ptr<eCAL::CSubscriber> sub;
@@ -215,9 +209,6 @@ TEST(core_cpp_pubsub, SimpleMessage1)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
 
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
-
   // create publisher for topic "foo"
   eCAL::CPublisher pub("foo");
 
@@ -260,9 +251,6 @@ TEST(core_cpp_pubsub, SimpleMessage2)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
 
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
-
   // create subscriber for topic "foo"
   eCAL::CSubscriber sub("foo");
 
@@ -297,9 +285,6 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
 
   // create subscriber for topic "foo"
   eCAL::CSubscriber sub("foo");
@@ -377,9 +362,6 @@ TEST(core_cpp_pubsub, DynamicSizeCB)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
 
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
-
   // create subscriber for topic "foo"
   eCAL::CSubscriber sub("foo");
 
@@ -432,9 +414,6 @@ TEST(core_cpp_pubsub, DynamicCreate)
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
 
   // create subscriber for topic "foo"
   eCAL::CSubscriber* sub;
@@ -529,9 +508,6 @@ TEST(core_cpp_pubsub, DestroyInCallback)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "New Publisher in Callback");
 
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
-
   // start publishing thread
   eCAL::string::CPublisher<std::string> pub_foo("foo");
   eCAL::string::CSubscriber<std::string> sub_foo("foo");
@@ -594,9 +570,6 @@ TEST(core_cpp_pubsub, SubscriberReconnection)
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "SubscriberReconnection");
-
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
 
   // start publishing thread
   std::atomic<bool> stop_publishing(false);
