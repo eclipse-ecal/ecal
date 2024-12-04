@@ -312,10 +312,10 @@ namespace eCALMeasCutterUtils
   {
     Timestamp receiver_timestamp;
     Timestamp sender_timestamp;
-    uint64_t sender_id;
-    uint64_t sender_clock;
+    int64_t sender_id;
+    int64_t sender_clock;
 
-      std::array<char,64> __union_size;
+    std::array<char,64> __union_size;
   };
 
   typedef std::unordered_map<MetaDatumKey, MetaDatumValue, MetaDatumHash> MetaData;

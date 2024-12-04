@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -576,7 +576,7 @@ void PlayThread::LogChannelMapping(const std::map<std::string, std::string>& cha
 //// Measurement                                                            ////
 ////////////////////////////////////////////////////////////////////////////////
 
-void PlayThread::SetMeasurement(const std::shared_ptr<eCAL::experimental::measurement::base::Reader>& measurement, const std::string& path)
+void PlayThread::SetMeasurement(const std::shared_ptr<eCAL::eh5::v2::HDF5Meas>& measurement, const std::string& path)
 {
   std::unique_ptr<MeasurementContainer> new_measurment_container;
 

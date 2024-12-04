@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,14 @@
 */
 
 #pragma once
-#include <iostream>
-#include <unordered_map>
-#include <map>
 
-#include <ecal/measurement/base/writer.h>
+#include <iostream>
+#include <map>
+#include <memory>
+#include <string>
+#include <unordered_map>
+
+#include <ecalhdf5/eh5_meas.h>
 #include <ecal_utils/filesystem.h>
 #include "utils.h"
 
@@ -43,7 +46,7 @@ public:
   std::string getRootOutputPath() const;
 
 private:
-  std::unique_ptr<eCAL::experimental::measurement::base::Writer>      _writer;
+  std::unique_ptr<eCAL::eh5::v2::HDF5Meas>              _writer;
   std::string                                           _current_channel_name;
   std::string                                           _output_path;
   std::string                                           _root_output_path;

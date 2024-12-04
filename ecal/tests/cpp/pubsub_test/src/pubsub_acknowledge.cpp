@@ -54,9 +54,6 @@ TEST(core_cpp_pubsub, TimeoutAcknowledgment)
   // initialize eCAL API
   EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "TimeoutAcknowledgment", eCAL::Init::All));
 
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
-
   // create publisher config
   eCAL::Publisher::Configuration pub_config;
   pub_config.layer.shm.acknowledge_timeout_ms = 500;

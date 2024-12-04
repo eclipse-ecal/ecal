@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,9 +54,6 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
 
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
-
   // create subscriber for topic "A"
   eCAL::CSubscriber sub("A");
 
@@ -108,9 +105,6 @@ TEST(core_cpp_pubsub, MultipleSendsUDP)
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
 
   // create subscriber for topic "A"
   eCAL::string::CSubscriber<std::string> sub("A");

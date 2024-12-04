@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,15 +84,6 @@ namespace Continental
          *
         **/
         static void ShutdownCore();
-
-        /**
-         * @brief Enable eCAL message loop back,
-         *          that means subscriber will receive messages from
-         *          publishers of the same process (default == false).
-         *
-         * @param  state_  Switch on message loop back.
-        **/
-        static void EnableLoopback(bool state_);
       };
 
 

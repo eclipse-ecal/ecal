@@ -93,15 +93,6 @@ namespace eCAL
     ECAL_API void ShutdownCore();
 
     /**
-     * @brief Enable eCAL message loop back,
-     *          that means subscriber will receive messages from
-     *          publishers of the same process (default == false).
-     *
-     * @param state_  Switch on message loop back. 
-    **/
-    ECAL_API void EnableLoopback(bool state_);
-
-    /**
      * @brief Enable process wide eCAL publisher topic type sharing
      *          that is needed for reflection on subscriber side.
      *

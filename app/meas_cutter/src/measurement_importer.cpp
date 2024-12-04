@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,10 @@
 */
 
 #include "measurement_importer.h"
-#include <ecal/measurement/hdf5/reader.h>
+#include <ecalhdf5/eh5_meas.h>
 
 MeasurementImporter::MeasurementImporter() :
-  _reader(std::make_unique<eCAL::experimental::measurement::hdf5::Reader>()),
+  _reader(std::make_unique<eCAL::eh5::v2::HDF5Meas>()),
   _current_opened_channel_data()
 {
 }

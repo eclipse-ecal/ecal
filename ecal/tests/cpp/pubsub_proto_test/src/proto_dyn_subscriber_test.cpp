@@ -43,8 +43,6 @@ public:
   {
     // Initialize eCAL
     eCAL::Initialize();
-    // publish / subscribe match in the same process
-    eCAL::Util::EnableLoopback(true);
   }
 
   ~ProtoDynSubscriberTest() override {
