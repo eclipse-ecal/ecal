@@ -56,7 +56,7 @@ protected:
 
 TEST_P(ServicesTestFixture, ServiceExpiration)
 {
-  std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
+  std::set<eCAL::Registration::SServiceMethodId> id_set;
 
   // create simple service and let it expire
   {
@@ -68,10 +68,10 @@ TEST_P(ServicesTestFixture, ServiceExpiration)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get all services
-    eCAL::Registration::GetServices(service_info_map);
+    id_set = eCAL::Registration::GetServiceIDs();
 
     // check size
-    EXPECT_EQ(service_info_map.size(), 1);
+    EXPECT_EQ(id_set.size(), 1);
 
     // check service/method names
     std::set<eCAL::Registration::SServiceMethod> service_method_names;
@@ -87,10 +87,10 @@ TEST_P(ServicesTestFixture, ServiceExpiration)
     eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // get all services again, service should not be expired
-    eCAL::Registration::GetServices(service_info_map);
+    id_set = eCAL::Registration::GetServiceIDs();
 
     // check size
-    EXPECT_EQ(service_info_map.size(), 1);
+    EXPECT_EQ(id_set.size(), 1);
   }
 
   // let's unregister
@@ -98,151 +98,10 @@ TEST_P(ServicesTestFixture, ServiceExpiration)
 
   // get all services again, all services
   // should be removed from the map
-  eCAL::Registration::GetServices(service_info_map);
+  id_set = eCAL::Registration::GetServiceIDs();
 
   // check size
-  EXPECT_EQ(service_info_map.size(), 0);
-}
-
-TEST_P(ServicesTestFixture, ServiceEqualQualities)
-{
-  std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
-
-  // create 2 services with the same quality of data type information
-  {
-    // create service 1
-    eCAL::CServiceServer service1("foo::service");
-    service1.AddDescription("foo::method", "foo::req_type1", "foo::req_desc1", "foo::resp_type1", "foo::resp_desc1");
-
-    // let's register
-    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
-
-    // get all services
-    eCAL::Registration::GetServices(service_info_map);
-
-    // check size
-    EXPECT_EQ(service_info_map.size(), 1);
-
-    // check attributes
-    std::string req_type, resp_type;
-    std::string req_desc, resp_desc;
-
-    eCAL::Registration::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
-    EXPECT_EQ(req_type,  "foo::req_type1");
-    EXPECT_EQ(resp_type, "foo::resp_type1");
-    eCAL::Registration::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
-    EXPECT_EQ(req_desc,  "foo::req_desc1");
-    EXPECT_EQ(resp_desc, "foo::resp_desc1");
-
-    // create service 2
-    // this will not overwrite the attributes from service 1, because the quality is not higher
-    eCAL::CServiceServer service2("foo::service");
-    service2.AddDescription("foo::method", "foo::req_type2", "foo::req_desc2", "foo::resp_type2", "foo::resp_desc2");
-
-    // check attributes
-    eCAL::Registration::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
-    EXPECT_EQ(req_type,  "foo::req_type1");
-    EXPECT_EQ(resp_type, "foo::resp_type1");
-    eCAL::Registration::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
-    EXPECT_EQ(req_desc,  "foo::req_desc1");
-    EXPECT_EQ(resp_desc, "foo::resp_desc1");
-
-    // check size it's service 1 only
-    EXPECT_EQ(service_info_map.size(), 1);
-
-    // let's wait a monitoring timeout long
-    eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
-
-    // get all services again, services should not be expired
-    eCAL::Registration::GetServices(service_info_map);
-
-    // check size
-    EXPECT_EQ(service_info_map.size(), 1);
-
-    // destroy service 1
-    service1.Destroy();
-
-    // let's register
-    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
-
-    // check attributes, service 1 attributes should be replaced by service 2 attributes now
-    eCAL::Registration::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
-    EXPECT_EQ(req_type,  "foo::req_type2");
-    EXPECT_EQ(resp_type, "foo::resp_type2");
-    eCAL::Registration::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
-    EXPECT_EQ(req_desc,  "foo::req_desc2");
-    EXPECT_EQ(resp_desc, "foo::resp_desc2");
-  }
-
-  // let's unregister
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
-
-  // get all services again, all services 
-  // should be removed from the map
-  eCAL::Registration::GetServices(service_info_map);
-
-  // check size
-  EXPECT_EQ(service_info_map.size(), 0);
-}
-
-TEST_P(ServicesTestFixture, ServiceDifferentQualities)
-{
-  std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
-
-  // create 2 services with different qualities of data type information
-  {
-    // create service 1, response type name and response description are missing
-    eCAL::CServiceServer service1("foo::service");
-    service1.AddDescription("foo::method", "foo::req_type1", "foo::req_desc1", "", "");
-
-    // let's register
-    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
-
-    // get all services
-    eCAL::Registration::GetServices(service_info_map);
-
-    // check size
-    EXPECT_EQ(service_info_map.size(), 1);
-
-    // check attributes
-    std::string req_type, resp_type;
-    std::string req_desc, resp_desc;
-
-    eCAL::Registration::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
-    EXPECT_EQ(req_type,  "foo::req_type1");
-    EXPECT_EQ(resp_type, "");
-    eCAL::Registration::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
-    EXPECT_EQ(req_desc,  "foo::req_desc1");
-    EXPECT_EQ(resp_desc, "");
-
-    // create service 2, with higher quality than service 1
-    eCAL::CServiceServer service2("foo::service");
-    service2.AddDescription("foo::method", "foo::req_type2", "foo::req_desc2", "foo::resp_type2", "foo::resp_desc2");
-
-    // let's register
-    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
-
-    // check attributes, we expect attributes from service 2 here
-    eCAL::Registration::GetServiceTypeNames("foo::service", "foo::method", req_type, resp_type);
-    EXPECT_EQ(req_type,  "foo::req_type2");
-    EXPECT_EQ(resp_type, "foo::resp_type2");
-    eCAL::Registration::GetServiceDescription("foo::service", "foo::method", req_desc, resp_desc);
-    EXPECT_EQ(req_desc,  "foo::req_desc2");
-    EXPECT_EQ(resp_desc, "foo::resp_desc2");
-
-    // check size it's service 2 only
-    EXPECT_EQ(service_info_map.size(), 1);
-  }
-
-  // let's unregister
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
-
-  // get all services again, all services
-  // should be removed from the map
-  eCAL::Registration::GetServices(service_info_map);
-
-  // check size
-  EXPECT_EQ(service_info_map.size(), 0);
+  EXPECT_EQ(id_set.size(), 0);
 }
 
 TEST_P(ServicesTestFixture, GetServiceIDs)
@@ -273,15 +132,14 @@ TEST_P(ServicesTestFixture, GetServiceIDs)
     EXPECT_EQ(1, id_set.size());
     if (id_set.size() > 0)
     {
-      eCAL::Registration::SQualityServiceInfo info;
+      eCAL::SServiceMethodInformation info;
       EXPECT_TRUE(eCAL::Registration::GetServiceInfo(*id_set.begin(), info));
 
       // check service/method names
-      EXPECT_EQ(service_method_info, info.info);
+      EXPECT_EQ(service_method_info, info);
     }
   }
 }
-
 
 INSTANTIATE_TEST_SUITE_P(
   core_cpp_registration_public_services,
