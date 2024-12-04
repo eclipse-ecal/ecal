@@ -48,7 +48,6 @@ namespace
 #ifdef ECAL_OS_LINUX
 #include <sys/stat.h>
 #include <sys/time.h>
-#include <bits/types/struct_timeval.h>
 #include <ctime>
 
 namespace{
