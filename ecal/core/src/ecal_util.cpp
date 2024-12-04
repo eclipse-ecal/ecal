@@ -33,20 +33,6 @@ namespace eCAL
 {
   namespace Util
   {
-    void PubShareType(bool state_)
-    {
-#if ECAL_CORE_PUBLISHER
-      if (g_pubgate() != nullptr) g_pubgate()->ShareType(state_);
-#endif
-    }
-
-    void PubShareDescription(bool state_)
-    {
-#if ECAL_CORE_PUBLISHER
-      if (g_pubgate() != nullptr) g_pubgate()->ShareDescription(state_);
-#endif
-    }
-
 #if ECAL_CORE_MONITORING
     // take monitoring snapshot
     static Monitoring::SMonitoring GetMonitoring()

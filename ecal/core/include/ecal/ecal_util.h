@@ -93,22 +93,6 @@ namespace eCAL
     ECAL_API void ShutdownCore();
 
     /**
-     * @brief Enable process wide eCAL publisher topic type sharing
-     *          that is needed for reflection on subscriber side.
-     *
-     * @param state_  Switch on type sharing
-    **/
-    ECAL_API void PubShareType(bool state_);
-
-    /**
-     * @brief Enable process wide eCAL publisher topic description sharing
-     *          that is needed for reflection on subscriber side.
-     *
-     * @param state_  Switch on description sharing
-    **/
-    ECAL_API void PubShareDescription(bool state_);
-
-    /**
      * @brief Splits the topic type (eCAL < 5.12) into encoding and types (>= eCAL 5.12)
      *
      * @param combined_topic_type_  "Old" typename.

@@ -37,11 +37,7 @@ namespace eCAL
   // CPubGate
   //////////////////////////////////////////////////////////////////
   std::atomic<bool> CPubGate::m_created;
-  CPubGate::CPubGate() :
-    m_share_type(true),
-    m_share_desc(true)
-  {
-  }
+  CPubGate::CPubGate() = default;
 
   CPubGate::~CPubGate()
   {
@@ -67,16 +63,6 @@ namespace eCAL
     m_topic_name_datawriter_map.clear();
 
     m_created = false;
-  }
-
-  void CPubGate::ShareType(bool state_)
-  {
-    m_share_type = state_;
-  }
-
-  void CPubGate::ShareDescription(bool state_)
-  {
-    m_share_desc = state_;
   }
 
   bool CPubGate::Register(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_)
