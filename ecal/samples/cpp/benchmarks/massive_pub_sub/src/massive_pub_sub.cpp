@@ -187,7 +187,7 @@ int main(int argc, char** argv)
     num_pub = pub_ids.size();
     for (const auto& id : pub_ids)
     {
-      eCAL::Registration::SQualityTopicInfo topic_info;
+      eCAL::SDataTypeInformation topic_info;
       eCAL::Registration::GetPublisherInfo(id, topic_info);
     }
 

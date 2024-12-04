@@ -146,15 +146,15 @@ TEST(core_cpp_descgate, PublisherQualities)
   {
     for (const auto& id : id_set)
     {
-      eCAL::Registration::SQualityTopicInfo quality_info;
-      bool found = desc_gate.GetPublisherInfo(id, quality_info);
+      eCAL::SDataTypeInformation topic_info;
+      bool found = desc_gate.GetPublisherInfo(id, topic_info);
       EXPECT_TRUE(found);
       if (found)
       {
         std::string tname = id.topic_name;
-        EXPECT_EQ(tname + "-tdatatype.name",       quality_info.info.name);
-        EXPECT_EQ(tname + "-tdatatype.encoding",   quality_info.info.encoding);
-        EXPECT_EQ(tname + "-tdatatype.descriptor", quality_info.info.descriptor);
+        EXPECT_EQ(tname + "-tdatatype.name",       topic_info.name);
+        EXPECT_EQ(tname + "-tdatatype.encoding",   topic_info.encoding);
+        EXPECT_EQ(tname + "-tdatatype.descriptor", topic_info.descriptor);
       }
     }
   }
@@ -229,15 +229,15 @@ TEST(core_cpp_descgate, SubscriberQualities)
   {
     for (const auto& id : id_set)
     {
-      eCAL::Registration::SQualityTopicInfo quality_info;
-      bool found = desc_gate.GetSubscriberInfo(id, quality_info);
+      eCAL::SDataTypeInformation topic_info;
+      bool found = desc_gate.GetSubscriberInfo(id, topic_info);
       EXPECT_TRUE(found);
       if (found)
       {
         std::string tname = id.topic_name;
-        EXPECT_EQ(tname + "-tdatatype.name",       quality_info.info.name);
-        EXPECT_EQ(tname + "-tdatatype.encoding",   quality_info.info.encoding);
-        EXPECT_EQ(tname + "-tdatatype.descriptor", quality_info.info.descriptor);
+        EXPECT_EQ(tname + "-tdatatype.name",       topic_info.name);
+        EXPECT_EQ(tname + "-tdatatype.encoding",   topic_info.encoding);
+        EXPECT_EQ(tname + "-tdatatype.descriptor", topic_info.descriptor);
       }
     }
   }

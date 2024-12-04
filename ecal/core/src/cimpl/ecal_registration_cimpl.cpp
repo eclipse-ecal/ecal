@@ -22,6 +22,8 @@
  * @brief  eCAL registration c interface
 **/
 
+#if 0 // TODO: We have to rethink this API.
+
 #include <ecal/ecal.h>
 #include <ecal/cimpl/ecal_registration_cimpl.h>
 
@@ -177,3 +179,5 @@ extern "C"
     return 0;
   }
 }
+
+#endif

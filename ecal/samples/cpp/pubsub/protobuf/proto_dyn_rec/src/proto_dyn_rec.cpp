@@ -270,9 +270,9 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
   }
 }
 
-void ProtoMsgCallback(const char* topic_name_, const std::shared_ptr<google::protobuf::Message>& msg_)
+void ProtoMsgCallback(const eCAL::Registration::STopicId& topic_id_, const std::shared_ptr<google::protobuf::Message>& msg_)
 {
-  ProcProtoMsg(*msg_, topic_name_);
+  ProcProtoMsg(*msg_, topic_id_.topic_name);
   std::cout << std::endl;
 }
 
@@ -283,7 +283,7 @@ int main(int argc, char **argv)
 
   // create dynamic subscribers for receiving and decoding messages
   eCAL::protobuf::CDynamicSubscriber sub(MESSAGE_NAME);
-  sub.AddReceiveCallback(std::bind(ProtoMsgCallback, std::placeholders::_1, std::placeholders::_2));
+  sub.AddReceiveCallback(std::bind(ProtoMsgCallback, std::placeholders::_1, std::placeholders::_3));
 
   // enter main loop
   while(eCAL::Ok())

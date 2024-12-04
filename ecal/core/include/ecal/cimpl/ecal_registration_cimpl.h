@@ -28,6 +28,8 @@
 #include <ecal/ecal_os.h>
 #include <ecal/ecalc_types.h>
 
+#if 0 // TODO: We have to rethink this API.
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -174,3 +176,5 @@ extern "C"
 #endif /*__cplusplus*/
 
 #endif /*ecal_registration_cimpl_h_included*/
+
+#endif
