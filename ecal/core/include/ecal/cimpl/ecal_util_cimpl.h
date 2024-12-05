@@ -49,11 +49,6 @@ extern "C"
    * @brief Send shutdown event to all local user processes.
   **/
   ECALC_API void eCAL_Util_ShutdownProcesses();
-
-  /**
-   * @brief Send shutdown event to all local core components.
-  **/
-  ECALC_API void eCAL_Util_ShutdownCore();
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/
