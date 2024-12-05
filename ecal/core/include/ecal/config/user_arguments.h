@@ -35,7 +35,7 @@ namespace eCAL
     struct Configuration
     {
       std::string              user_yaml   { "" };    //!< The used eCAL yaml file (Default: "")
-      bool                     dump_config { false }; //!< If specified, output configuration via standart output (Default: false)
+      bool                     dump_config { false }; //!< If specified, output configuration via standard output (Default: false)
     };
   }
 }
