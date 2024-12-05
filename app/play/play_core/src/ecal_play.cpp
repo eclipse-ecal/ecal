@@ -224,6 +224,11 @@ std::string EcalPlay::GetChannelType(const std::string& channel_name) const
   return play_thread_->GetChannelType(channel_name);
 }
 
+std::string EcalPlay::GetChannelEncoding(const std::string& channel_name) const
+{
+  return play_thread_->GetChannelEncoding(channel_name);
+}
+
 void EcalPlay::CalculateEstimatedSizeForChannels() const
 {
   play_thread_->CalculateEstimatedSizeForChannels();

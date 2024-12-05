@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -297,6 +297,15 @@ public:
    * @return channel type
   **/
   std::string GetChannelType(const std::string& channel_name) const;
+
+  /**
+ * @brief Gets the encoding of the given channel
+ *
+ * @param channel_name  channel name
+ *
+ * @return channel type
+**/
+  std::string GetChannelEncoding(const std::string& channel_name) const;
 
   void CalculateEstimatedSizeForChannels() const;
 

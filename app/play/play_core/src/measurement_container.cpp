@@ -311,9 +311,12 @@ double MeasurementContainer::GetMaxTimestampOfChannel(const std::string& channel
 
 std::string MeasurementContainer::GetChannelType(const std::string& channel_name) const
 {
-  // This function needs to also return the proper datatypes information! To clean up.
-  auto datatype_information = hdf5_meas_->GetChannelDataTypeInformation(channel_name);
-  return eCAL::Util::CombinedTopicEncodingAndType(datatype_information.encoding, datatype_information.name);
+  return hdf5_meas_->GetChannelDataTypeInformation(channel_name).name;
+}
+
+std::string MeasurementContainer::GetChannelEncoding(const std::string& channel_name) const
+{
+  return hdf5_meas_->GetChannelDataTypeInformation(channel_name).encoding;
 }
 
 size_t MeasurementContainer::GetChannelCumulativeEstimatedSize(const std::string& channel_name) const

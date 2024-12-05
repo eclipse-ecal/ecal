@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ public:
   {
     ENABLED,
     CHANNEL_NAME,
+    CHANNEL_ENCODING,
     CHANNEL_TYPE,
     TOTAL_CHANNEL_SIZE,
 
@@ -82,6 +83,7 @@ private:
   { 
     { Columns::ENABLED,               ""} ,
     { Columns::CHANNEL_NAME,          "Channel" } ,
+    { Columns::CHANNEL_ENCODING,      "Channel encoding"},
     { Columns::CHANNEL_TYPE,          "Channel type"},
     { Columns::MESSAGE_COUNTER,       "Published messages" } ,
     { Columns::TOTAL_CHANNEL_SIZE,    "Total estimated channel size" } ,
@@ -98,6 +100,7 @@ private:
   {
     { Columns::ENABLED,               (int)ChannelTreeItem::Columns::ENABLED },
     { Columns::CHANNEL_NAME,          (int)ChannelTreeItem::Columns::SOURCE_CHANNEL_NAME },
+    { Columns::CHANNEL_ENCODING,      (int)ChannelTreeItem::Columns::CHANNEL_ENCODING},
     { Columns::CHANNEL_TYPE,          (int)ChannelTreeItem::Columns::CHANNEL_TYPE},
     { Columns::TOTAL_CHANNEL_SIZE,    (int)ChannelTreeItem::Columns::TOTAL_CHANNEL_SIZE},
     { Columns::MESSAGE_COUNTER,       -1 },
