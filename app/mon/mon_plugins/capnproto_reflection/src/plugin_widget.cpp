@@ -58,7 +58,7 @@ PluginWidget::PluginWidget(const QString& topic_name, const QString& topic_type,
   ui_.publish_timestamp_warning_label->setVisible(false);
 
   // Add eCAL Callbacks
-  subscriber_.AddReceiveCallback(std::bind(&PluginWidget::onProtoMessageCallback, this, std::placeholders::_3, std::placeholders::_4));
+  subscriber_.AddReceiveCallback(std::bind(&PluginWidget::onProtoMessageCallback, this, std::placeholders::_2, std::placeholders::_3));
   subscriber_.AddErrorCallback(std::bind(&PluginWidget::onProtoErrorCallback, this, std::placeholders::_1));
 
   // Button connections
@@ -322,7 +322,7 @@ void PluginWidget::onUpdate()
 void PluginWidget::onResume()
 {
   // Add eCAL Callbacks
-  subscriber_.AddReceiveCallback(std::bind(&PluginWidget::onProtoMessageCallback, this, std::placeholders::_3, std::placeholders::_4));
+  subscriber_.AddReceiveCallback(std::bind(&PluginWidget::onProtoMessageCallback, this, std::placeholders::_2, std::placeholders::_3));
   subscriber_.AddErrorCallback(std::bind(&PluginWidget::onProtoErrorCallback, this, std::placeholders::_1));
 }
 
