@@ -63,7 +63,7 @@ namespace eCAL
       public:
         std::string Deserialize(const void* buffer_, size_t size_, const SDataTypeInformation& datatype_info_)
         {
-          google::protobuf::util::JsonOptions options;
+          google::protobuf::util::JsonPrintOptions options;
 #if GOOGLE_PROTOBUF_VERSION >= 5026000
           options.always_print_fields_with_no_presence = true;
 #else
