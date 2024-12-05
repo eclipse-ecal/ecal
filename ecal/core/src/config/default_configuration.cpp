@@ -339,7 +339,7 @@ namespace eCAL
       ss << R"(      # UDP Port)"                                                                                                   << "\n";
       ss << R"(      port: )"                                         << config_.logging.sinks.udp.port                             << "\n";
       ss << R"(      # Enable receiving udp log messages)"                                                                          << "\n";
-      ss << R"(      receive: )"                                      << config_.logging.sinks.udp.port                             << "\n";
+      ss << R"(      receive: )"                                      << config_.logging.sinks.udp.receive                          << "\n";
       ss << R"()"                                                                                                                   << "\n";
     
       return ss;
