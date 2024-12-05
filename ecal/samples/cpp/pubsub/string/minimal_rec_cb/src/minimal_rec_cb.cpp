@@ -25,7 +25,7 @@
 #include <chrono>
 #include <thread>
 
-int main(int argc, char** argv)
+int main()
 {
   std::cout << "-------------------------------" << std::endl;
   std::cout << " HELLO WORLD RECEIVER"           << std::endl;

@@ -29,7 +29,7 @@
 #include "proto_json_conv.h"
 
 // main entry
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
   eCAL::Initialize("ping client dynamic");

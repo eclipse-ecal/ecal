@@ -31,7 +31,7 @@ void ProtoMsgCallback(const char* topic_name_, const std::string& msg_, long lon
   std::cout << std::endl;
 }
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
   eCAL::Initialize("proto_dyn");

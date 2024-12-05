@@ -60,7 +60,7 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
   // Publisher options
   const bool                pub_use_shm                 = false;
 
-  eCAL::Configuration custom_config(0, nullptr);
+  eCAL::Configuration custom_config;
   try
   {
     custom_config.subscriber.drop_out_of_order_messages       = drop_out_of_order_messages;
@@ -112,7 +112,7 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
 
 TEST(core_cpp_config /*unused*/, user_config_death_test /*unused*/)
 {
-  eCAL::Configuration custom_config(0, nullptr);
+  eCAL::Configuration custom_config;
 
   // Test the IpAddressV4 class with wrong values
   ASSERT_THROW(
@@ -189,8 +189,8 @@ TEST(core_cpp_config /*unused*/, config_custom_datatypes_tests /*unused*/)
   EXPECT_EQ(s1, s2);
 
   // test copy method for config structure
-  eCAL::Configuration config1(0, nullptr);
-  eCAL::Configuration config2(0, nullptr);
+  eCAL::Configuration config1;
+  eCAL::Configuration config2;
   std::string testValue = "234.0.3.2";
   config2.transport_layer.udp.network.group = testValue;
   auto& config2ref = config2;

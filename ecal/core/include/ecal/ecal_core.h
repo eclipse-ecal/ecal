@@ -32,6 +32,7 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/config/configuration.h>
+#include <ecal/ecal_types.h>
 
 namespace eCAL
 {

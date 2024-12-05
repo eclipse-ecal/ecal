@@ -24,7 +24,7 @@
 
 #include "person.pb.h"
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
   eCAL::Initialize("person publisher dynamic");

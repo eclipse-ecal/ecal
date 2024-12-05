@@ -207,7 +207,7 @@ TEST(core_cpp_pubsub, SimpleMessage1)
   std::string recv_s;
 
   // initialize eCAL API
-  eCAL::Initialize0, nullptr, "pubsub_test");
+  eCAL::Initialize("pubsub_test");
 
   // create publisher for topic "foo"
   eCAL::CPublisher pub("foo");
