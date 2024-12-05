@@ -67,7 +67,7 @@ PluginWidget::~PluginWidget()
   subscriber_.RemReceiveCallback();
 }
 
-void PluginWidget::ecalMessageReceivedCallback(const eCAL::SReceiveCallbackData& callback_data)
+void PluginWidget::ecalMessageReceivedCallback(const struct eCAL::SReceiveCallbackData& callback_data)
 {
   std::lock_guard<std::mutex> message_lock(message_mutex_);
   last_message_ = QByteArray(static_cast<char*>(callback_data.buf), callback_data.size);
