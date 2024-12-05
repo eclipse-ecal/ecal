@@ -59,7 +59,12 @@ PluginWidget::PluginWidget(const QString& topic_name, const QString&, QWidget* p
   ui_.content_layout->addWidget(frame);
 
   // Connect the eCAL Subscriber
-  subscriber_.AddReceiveCallback(std::bind(&PluginWidget::ecalMessageReceivedCallback, this, std::placeholders::_1, std::placeholders::_3));
+  subscriber_.AddReceiveCallback([this](const eCAL::Registration::STopicId& /*topic_id*/,
+    const eCAL::SDataTypeInformation& /*data_type_info*/,
+    const eCAL::SReceiveCallbackData& callback_data)
+    {
+      ecalMessageReceivedCallback(callback_data);
+    });
 }
 
 PluginWidget::~PluginWidget()
@@ -67,7 +72,7 @@ PluginWidget::~PluginWidget()
   subscriber_.RemReceiveCallback();
 }
 
-void PluginWidget::ecalMessageReceivedCallback(const eCAL::Registration::STopicId& /*topic_id*/, const eCAL::SReceiveCallbackData& callback_data)
+void PluginWidget::ecalMessageReceivedCallback(const eCAL::SReceiveCallbackData& callback_data)
 {
   std::lock_guard<std::mutex> message_lock(message_mutex_);
   last_message_ = QByteArray(static_cast<char*>(callback_data.buf), callback_data.size);
@@ -128,7 +133,13 @@ void PluginWidget::onUpdate()
 
 void PluginWidget::onResume()
 {
-  subscriber_.AddReceiveCallback(std::bind(&PluginWidget::ecalMessageReceivedCallback, this, std::placeholders::_1, std::placeholders::_3));
+  // (Re)Connect the eCAL Subscriber
+  subscriber_.AddReceiveCallback([this](const eCAL::Registration::STopicId& /*topic_id*/,
+    const eCAL::SDataTypeInformation& /*data_type_info*/,
+    const eCAL::SReceiveCallbackData& callback_data)
+    {
+      ecalMessageReceivedCallback(callback_data);
+    });
 }
 
 void PluginWidget::onPause()

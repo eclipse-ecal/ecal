@@ -63,7 +63,7 @@ private:
   bool                               new_msg_available_;
   int                                received_message_counter_;
 
-  void ecalMessageReceivedCallback(const eCAL::Registration::STopicId& topic_id, const eCAL::SReceiveCallbackData& callback_data);
+  void ecalMessageReceivedCallback(const eCAL::SReceiveCallbackData& callback_data);
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 9, 0)
   static QString bytesToHex(const QByteArray& byte_array, char separator = '\0');
