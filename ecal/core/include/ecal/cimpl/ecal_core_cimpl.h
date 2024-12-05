@@ -90,11 +90,9 @@ extern "C"
   /**
    * @brief Check eCAL initialize state.
    *
-   * @param component_  Check specific component or 0 for general state of eCAL core.
-   *
    * @return None zero if eCAL is initialized.
   **/
-  ECALC_API int eCAL_IsInitialized(unsigned int component_);
+  ECALC_API int eCAL_IsInitialized();
 
   /**
    * @brief Return the eCAL process state.

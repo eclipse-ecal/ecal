@@ -109,10 +109,7 @@ namespace eCAL
     
     g_ecal_configuration = config_;
 
-    if (!unit_name_.empty())
-    {
-      SetGlobalUnitName(unit_name_.c_str());
-    }
+    SetGlobalUnitName(unit_name_.c_str());
 
     g_globals_ctx_ref_cnt++;
 

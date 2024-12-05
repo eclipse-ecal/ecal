@@ -29,12 +29,12 @@ extern "C"
 {
   ECALC_API const char* eCAL_GetVersionString()
   {
-    return eCAL::GetVersionString().c_str();
+    return ECAL_VERSION;
   }
 
   ECALC_API const char* eCAL_GetVersionDateString()
   {
-    return eCAL::GetVersionDateString().c_str();
+    return ECAL_DATE;
   }
 
   ECALC_API eCAL_SVersion eCAL_GetVersion()
@@ -59,9 +59,9 @@ extern "C"
     return(eCAL::Finalize());
   }
 
-  ECALC_API int eCAL_IsInitialized(unsigned int component_)
+  ECALC_API int eCAL_IsInitialized()
   {
-    return(eCAL::IsInitialized(component_));
+    return(eCAL::IsInitialized());
   }
 
   ECALC_API int eCAL_Ok()

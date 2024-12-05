@@ -125,10 +125,6 @@ TEST(core_cpp_core, SetGetUnitName)
   EXPECT_EQ(0, eCAL::SetUnitName("unit name"));
   EXPECT_STREQ("unit name", eCAL::Process::GetUnitName().c_str());
 
-  // set nullptr unit name (should not change the unit name)
-  EXPECT_EQ(-1, eCAL::SetUnitName(nullptr));
-  EXPECT_STREQ("unit name", eCAL::Process::GetUnitName().c_str());
-
   // set empty unit name (should not change the unit name)
   EXPECT_EQ(-1, eCAL::SetUnitName(""));
   EXPECT_STREQ("unit name", eCAL::Process::GetUnitName().c_str());

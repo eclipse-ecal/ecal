@@ -42,13 +42,13 @@ TEST(core_c_core, GetVersion)
 TEST(core_c_core, InitializeFinalize)
 {
   // Is eCAL API initialized ?
-  EXPECT_EQ(0, eCAL_IsInitialized(0));
+  EXPECT_EQ(0, eCAL_IsInitialized());
 
   // initialize eCAL API
   EXPECT_EQ(0, eCAL_Initialize("initialize_test", 0));
 
   // Is eCAL API initialized ?
-  EXPECT_EQ(1, eCAL_IsInitialized(0));
+  EXPECT_EQ(1, eCAL_IsInitialized());
 
   // initialize eCAL API again we expect return value 1 for yet initialized
   EXPECT_EQ(1, eCAL_Initialize("initialize_test", 0));
@@ -57,13 +57,13 @@ TEST(core_c_core, InitializeFinalize)
   EXPECT_EQ(0, eCAL_Finalize());
 
   // Is eCAL API initialized ? yes it' still initialized
-  EXPECT_EQ(1, eCAL_IsInitialized(0));
+  EXPECT_EQ(1, eCAL_IsInitialized());
 
   // finalize eCAL API we expect return value 0 because now it will be finalized
   EXPECT_EQ(0, eCAL_Finalize());
 
   // Is eCAL API initialized ? no
-  EXPECT_EQ(0, eCAL_IsInitialized(0));
+  EXPECT_EQ(0, eCAL_IsInitialized());
 
   // finalize eCAL API we expect return value 1 because it was finalized before
   EXPECT_EQ(1, eCAL_Finalize());
@@ -115,7 +115,7 @@ TEST(core_c_core, SetGetUnitName)
   EXPECT_EQ(0, eCAL_Initialize("", 0));
 
   // Is eCAL API initialized ?
-  EXPECT_EQ(1, eCAL_IsInitialized(0));
+  EXPECT_EQ(1, eCAL_IsInitialized());
 
   // if we call eCAL_Initialize with empty unit name, eCAL will use the process name as unit name
   char process_name[1024] = { 0 };
