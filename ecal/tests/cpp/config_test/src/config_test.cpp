@@ -30,7 +30,6 @@
 #include <string>
 #include <vector>
 
-#include "ecal_cmd_parser.h"
 #ifdef ECAL_CORE_CONFIGURATION
   #include "configuration_reader.h"
 #endif
@@ -200,28 +199,6 @@ TEST(core_cpp_config /*unused*/, config_custom_datatypes_tests /*unused*/)
   EXPECT_EQ(config1.transport_layer.udp.network.group, testValue);
 }
 
-TEST(core_cpp_config /*unused*/, config_cmd_parser_test /*unused*/)
-{
-  const std::string some_file_name = "someFileName.yml";
-
-  eCAL::Config::CmdParser parser{};
-
-  EXPECT_EQ(parser.getUserIni(), "");
-  EXPECT_EQ(parser.getDumpConfig(), false);
-
-  std::vector<std::string> arguments{};
-
-  arguments.push_back("test_config_cmd_parser_test");
-  // set a file name as ini file
-  arguments.push_back("--ecal-config-file " + some_file_name);
-  // set the dump config flag
-  arguments.push_back("--ecal-dump-config");
-
-  parser.parseArguments(arguments);
-
-  EXPECT_EQ(parser.getUserIni(), some_file_name);
-  EXPECT_EQ(parser.getDumpConfig(), true);
-}
 
 #ifdef ECAL_CORE_CONFIGURATION
 TEST(core_cpp_config /*unused*/, read_write_file_test /*unused*/)
