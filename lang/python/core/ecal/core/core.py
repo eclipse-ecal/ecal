@@ -126,9 +126,9 @@ def shutdown_processes():
 
 
 def shutdown_core():
-  """ shutdown ecal core components
+  """ shutdown ecal core components (deprecated)
   """
-  return _ecal.shutdown_core()
+  return _ecal.shutdown_processes()
 
 
 def log_setlevel(level):
