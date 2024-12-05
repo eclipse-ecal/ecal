@@ -46,12 +46,37 @@ int main(int argc, char** argv)
   }
   eCAL::Process::SleepMS(500);
 
-  // shut down local user processes
-  std::cout << "--------------------------------------" << std::endl;
-  std::cout << "Shutdown local eCAL user processes." << std::endl;
-  std::cout << "--------------------------------------" << std::endl;
-  eCAL::Util::ShutdownProcesses();
-  std::cout << std::endl;
+  eCAL::Monitoring::SMonitoring monitoring;
+  eCAL::Monitoring::GetMonitoring(monitoring, eCAL::Monitoring::Entity::Process);
+  const std::string host_name(eCAL::Process::GetHostName());
+
+  for (const auto& process : monitoring.processes)
+  {
+    // filter out eCAL system processes
+    const std::string uname = process.uname;
+    if ( (uname != "eCALConfig")
+      && (uname != "eCALMon")
+      && (uname != "eCALMon CLI")
+      && (uname != "eCALMon TUI")
+      && (uname != "eCALPlay")
+      && (uname != "eCALPlayGUI")
+      && (uname != "eCALRec")
+      && (uname != "eCALRecGUI")
+      && (uname != "eCALRecClient")
+      && (uname != "eCALRec-Remote")
+      && (uname != "eCALRec-Server")
+      && (uname != "eCALSys")
+      && (uname != "eCALSysGUI")
+      && (uname != "eCALSysClient")
+      && (uname != "eCALSys-Remote")
+      && (uname != "eCALStop")
+      && (process.hname == host_name)
+      )
+    {
+      std::cout << "Stopping process " << process.pname << " (" << process.pid << ")" << std::endl;
+      eCAL::Util::ShutdownProcess(process.pid);
+    }
+  }
 
   // finalize eCAL API
   eCAL::Finalize();
