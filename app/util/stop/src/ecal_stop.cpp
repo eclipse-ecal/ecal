@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,13 +51,6 @@ int main(int argc, char** argv)
   std::cout << "Shutdown local eCAL user processes." << std::endl;
   std::cout << "--------------------------------------" << std::endl;
   eCAL::Util::ShutdownProcesses();
-  std::cout << std::endl;
-
-  // shut down local eCAL core
-  std::cout << "--------------------------------------" << std::endl;
-  std::cout << "Shutdown local eCAL core components." << std::endl;
-  std::cout << "--------------------------------------" << std::endl;
-  eCAL::Util::ShutdownCore();
   std::cout << std::endl;
 
   // finalize eCAL API

@@ -155,14 +155,6 @@ void ecal_shutdown_processes()
 }
 
 /****************************************/
-/*      ecal_shutdown_core              */
-/****************************************/
-void ecal_shutdown_core()
-{
-  eCAL::Util::ShutdownCore();
-}
-
-/****************************************/
 /*      get_type_name                   */
 /****************************************/
 bool ecal_get_type_name(const char* topic_name_, const char** topic_type_, int* topic_type_len_)

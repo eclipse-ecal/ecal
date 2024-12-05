@@ -45,10 +45,5 @@ extern "C"
   {
     eCAL::Util::ShutdownProcesses();
   }
-
-  ECALC_API void eCAL_Util_ShutdownCore()
-  {
-    eCAL::Util::ShutdownCore();
-  }
 #endif // ECAL_CORE_MONITORING
 }
