@@ -84,7 +84,6 @@ namespace eCAL
     * @param topic_name_  Unique topic name.
     **/
     CDynamicMessageSubscriber(const std::string& topic_name_) : CSubscriber()
-      , m_topic_name(topic_name_)
       , m_deserializer()
     {
       CSubscriber::Create(topic_name_);
@@ -110,7 +109,6 @@ namespace eCAL
     **/
     CDynamicMessageSubscriber(CDynamicMessageSubscriber&& rhs)
       : CSubscriber(std::move(rhs))
-      , m_topic_name(std::move(rhs.m_topic_name))
       , m_cb_callback(std::move(rhs.m_cb_callback))
       , m_deserializer(std::move(rhs.m_deserializer))
     {
@@ -144,13 +142,13 @@ namespace eCAL
     /**
      * @brief eCAL message receive callback function
      *
-     * @param topic_name_  Topic name of the data source (publisher).
-     * @param msg_         Message content.
-     * @param time_        Message time stamp.
-     * @param clock_       Message writer clock.
-     * @param id_          Message id.
+     * @param topic_id_  Topic id of the data source (publisher).
+     * @param msg_       Message content.
+     * @param time_      Message time stamp.
+     * @param clock_     Message writer clock.
+     * @param id_        Message id.
      **/
-    using MsgReceiveCallbackT = std::function<void(const Registration::STopicId& topic_id_, const SDataTypeInformation& topic_info_, const T& msg_, long long time_, long long clock_, long long id_)>;
+    using MsgReceiveCallbackT = std::function<void(const Registration::STopicId& topic_id_, const T& msg_, long long time_, long long clock_, long long id_)>;
 
     /**
      * @brief  Add receive callback for incoming messages.
@@ -236,7 +234,7 @@ namespace eCAL
       try
       {
         auto msg = m_deserializer.Deserialize(data_.buf, data_.size, topic_info_);
-        fn_callback(topic_id_, topic_info_, msg, data_.time, data_.clock, data_.id);
+        fn_callback(topic_id_, msg, data_.time, data_.clock, data_.id);
       }
       catch (const DynamicReflectionException& e)
       {
@@ -257,13 +255,11 @@ namespace eCAL
       }
     }
 
-    std::string                         m_topic_name;
-    std::mutex                          m_cb_callback_mutex;
-    MsgReceiveCallbackT                 m_cb_callback;
-    std::mutex                          m_error_callback_mutex;
-    ErrorCallbackT                      m_error_callback;
-    DynamicDeserializer                 m_deserializer;
-    std::optional<SDataTypeInformation> m_datatype_info_received = std::nullopt;
+    std::mutex           m_cb_callback_mutex;
+    MsgReceiveCallbackT  m_cb_callback;
+    std::mutex           m_error_callback_mutex;
+    ErrorCallbackT       m_error_callback;
+    DynamicDeserializer  m_deserializer;
   };
 
 }

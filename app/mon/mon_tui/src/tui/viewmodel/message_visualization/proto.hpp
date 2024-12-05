@@ -63,7 +63,7 @@ public:
     : subscriber{topic}
   {
     using namespace std::placeholders;
-    subscriber.AddReceiveCallback(std::bind(&ProtoMessageVisualizationViewModel::OnMessage, this, _3, _4));
+    subscriber.AddReceiveCallback(std::bind(&ProtoMessageVisualizationViewModel::OnMessage, this, _2, _3));
   }
 
   ProtectedMessage message() const

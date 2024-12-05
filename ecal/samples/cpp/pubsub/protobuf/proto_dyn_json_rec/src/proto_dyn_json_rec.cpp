@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 
   // create dynamic subscribers for receiving and decoding messages
   eCAL::protobuf::CDynamicJSONSubscriber sub(MESSAGE_NAME);
-  sub.AddReceiveCallback(std::bind(ProtoMsgCallback, std::placeholders::_1, std::placeholders::_3));
+  sub.AddReceiveCallback(std::bind(ProtoMsgCallback, std::placeholders::_1, std::placeholders::_2));
 
   // enter main loop
   while(eCAL::Ok())
