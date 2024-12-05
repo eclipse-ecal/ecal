@@ -45,13 +45,13 @@ TEST(core_c_core, InitializeFinalize)
   EXPECT_EQ(0, eCAL_IsInitialized(0));
 
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL_Initialize(0, nullptr, "initialize_test", 0));
+  EXPECT_EQ(0, eCAL_Initialize("initialize_test", 0));
 
   // Is eCAL API initialized ?
   EXPECT_EQ(1, eCAL_IsInitialized(0));
 
   // initialize eCAL API again we expect return value 1 for yet initialized
-  EXPECT_EQ(1, eCAL_Initialize(0, nullptr, "initialize_test", 0));
+  EXPECT_EQ(1, eCAL_Initialize("initialize_test", 0));
 
   // finalize eCAL API we expect return value 0 even it will not be really finalized because it's 2 times initialzed and 1 time finalized
   EXPECT_EQ(0, eCAL_Finalize());
@@ -75,7 +75,7 @@ TEST(core_c_core, MultipleInitializeFinalize)
   for (auto i = 0; i < 4; ++i)
   {
     // initialize eCAL API
-    EXPECT_EQ(0, eCAL_Initialize(0, nullptr, "multiple_initialize_finalize_test", 0));
+    EXPECT_EQ(0, eCAL_Initialize("multiple_initialize_finalize_test", 0));
 
     // finalize eCAL API
     EXPECT_EQ(0, eCAL_Finalize());
@@ -112,7 +112,7 @@ namespace
 TEST(core_c_core, SetGetUnitName)
 {
   // initialize eCAL API with empty unit name (eCAL will use process name as unit name)
-  EXPECT_EQ(0, eCAL_Initialize(0, nullptr, "", 0));
+  EXPECT_EQ(0, eCAL_Initialize("", 0));
 
   // Is eCAL API initialized ?
   EXPECT_EQ(1, eCAL_IsInitialized(0));
@@ -153,7 +153,7 @@ TEST(core_c_core, eCAL_Ok)
   EXPECT_EQ(0, eCAL_Ok());
 
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL_Initialize(0, nullptr, "okay_test", 0));
+  EXPECT_EQ(0, eCAL_Initialize("okay_test", 0));
 
   // check initialized eCAL, should be okay
   EXPECT_EQ(1, eCAL_Ok());
