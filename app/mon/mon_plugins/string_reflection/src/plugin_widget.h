@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,12 +56,12 @@ private:
   QTextEdit* text_edit_;
 
   eCAL::string::CSubscriber<std::string>  subscriber_;
-  std::string                           last_message_;
-  eCAL::Time::ecal_clock::time_point    last_message_publish_timestamp_;
-  std::mutex                            message_mutex_;
+  std::string                             last_message_;
+  eCAL::Time::ecal_clock::time_point      last_message_publish_timestamp_;
+  std::mutex                              message_mutex_;
 
-  bool                                  new_msg_available_;
-  int                                   received_message_counter_;
+  bool                                    new_msg_available_;
+  int                                     received_message_counter_;
 
   void ecalMessageReceivedCallback(const std::string& message, long long publish_timestamp_usecs);
 };
