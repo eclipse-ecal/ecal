@@ -52,7 +52,7 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
   const std::string send_s;
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
+  eCAL::Initialize("pubsub_test");
 
   // create subscriber for topic "A"
   eCAL::CSubscriber sub("A");
@@ -104,7 +104,7 @@ TEST(core_cpp_pubsub, MultipleSendsUDP)
   long long   last_received_timestamp(0);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
+  eCAL::Initialize("pubsub_test");
 
   // create subscriber for topic "A"
   eCAL::string::CSubscriber<std::string> sub("A");

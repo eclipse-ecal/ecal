@@ -35,4 +35,14 @@
 **/
 typedef void* ECAL_HANDLE;
 
+/**
+ * @brief eCAL version struct (C variant)
+ **/
+typedef struct
+{
+  int major; //!< major version number
+  int minor; //!< minor version number
+  int patch; //!< patch version number
+} eCAL_SVersion;
+
 #endif /* ecalc_types_h_included */

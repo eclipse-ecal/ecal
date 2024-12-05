@@ -29,31 +29,29 @@ extern "C"
 {
   ECALC_API const char* eCAL_GetVersionString()
   {
-    return(ECAL_VERSION);
+    return eCAL::GetVersionString().c_str();
   }
 
   ECALC_API const char* eCAL_GetVersionDateString()
   {
-    return(ECAL_DATE);
+    return eCAL::GetVersionDateString().c_str();
   }
 
-  ECALC_API int eCAL_GetVersion(int* major_, int* minor_, int* patch_)
+  ECALC_API eCAL_SVersion eCAL_GetVersion()
   {
-    if ((major_ == nullptr) || (minor_ == nullptr) || (patch_ == nullptr)) return(-1);
-    *major_ = ECAL_VERSION_MAJOR;
-    *minor_ = ECAL_VERSION_MINOR;
-    *patch_ = ECAL_VERSION_PATCH;
-    return(0);
+    return eCAL_SVersion{ eCAL::GetVersion().major, eCAL::GetVersion().minor, eCAL::GetVersion().patch };
   }
 
-  ECALC_API int eCAL_Initialize(int argc_, char** argv_, const char* unit_name_, unsigned int components_)
+  ECALC_API int eCAL_Initialize(const char* unit_name_, unsigned int components_)
   {
-    return(eCAL::Initialize(argc_, argv_, unit_name_, components_));
+    const std::string unit_name = (unit_name_ != nullptr) ? std::string(unit_name_) : std::string("");
+    return eCAL::Initialize(unit_name, components_);
   }
 
   ECALC_API int eCAL_SetUnitName(const char* unit_name_)
   {
-    return(eCAL::SetUnitName(unit_name_));
+    const std::string unit_name = (unit_name_ != nullptr) ? std::string(unit_name_) : std::string("");
+    return(eCAL::SetUnitName(unit_name));
   }
 
   ECALC_API int eCAL_Finalize()

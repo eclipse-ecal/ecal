@@ -27,7 +27,7 @@
 int main(int argc, char **argv)
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "person publisher dynamic");
+  eCAL::Initialize("person publisher dynamic");
 
   // set process state
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");

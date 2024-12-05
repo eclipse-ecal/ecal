@@ -34,7 +34,7 @@ void ProtoMsgCallback(const char* topic_name_, const std::string& msg_, long lon
 int main(int argc, char **argv)
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "proto_dyn");
+  eCAL::Initialize("proto_dyn");
 
   // create dynamic subscribers for receiving and decoding messages
   eCAL::protobuf::CDynamicJSONSubscriber sub(MESSAGE_NAME);

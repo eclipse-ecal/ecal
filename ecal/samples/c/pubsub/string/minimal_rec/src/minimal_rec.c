@@ -20,7 +20,7 @@
 #include <ecal/ecalc.h>
 #include <stdio.h>
 
-int main(int argc, char **argv)
+int main()
 {
   ECAL_HANDLE sub         = 0;
   int         success     = 0;
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
   long long   time        = 0;
 
   // initialize eCAL API
-  eCAL_Initialize(argc, argv, "minimalc_rec", eCAL_Init_Default);
+  eCAL_Initialize("minimalc_rec", eCAL_Init_Default);
 
   // create subscriber "Hello"
   sub = eCAL_Sub_New();

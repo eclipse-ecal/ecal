@@ -22,10 +22,10 @@
 
 #include <iostream>
 
-int main(int argc, char **argv)
+int main()
 {
   // creating config object
-  eCAL::Configuration my_config(argc, argv);
+  eCAL::Configuration my_config;
 
   // setting a configuration
   my_config.registration.network_enabled = true;

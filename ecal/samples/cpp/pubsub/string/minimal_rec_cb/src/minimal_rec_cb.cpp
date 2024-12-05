@@ -32,7 +32,7 @@ int main(int argc, char** argv)
   std::cout << "-------------------------------" << std::endl;
 
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "minimal_rec_cb");
+  eCAL::Initialize("minimal_rec_cb");
 
   // subscriber for topic "Hello"
   eCAL::string::CSubscriber<std::string> sub("Hello");

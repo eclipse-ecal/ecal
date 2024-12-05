@@ -24,7 +24,6 @@
 #include "ecal_def.h"
 #include "ecal_event.h"
 #include "ecal_globals.h"
-#include "config/ecal_cmd_parser.h"
 #include <string>
 #include <vector>
 
@@ -55,9 +54,9 @@ namespace eCAL
    *
    * @return  Full eCAL version string. 
   **/
-  const char* GetVersionString()
+  std::string GetVersionString()
   {
-    return(ECAL_VERSION);
+    return ECAL_VERSION;
   }
 
   /**
@@ -65,58 +64,32 @@ namespace eCAL
    *
    * @return  Full eCAL version date string. 
   **/
-  const char* GetVersionDateString()
+  std::string GetVersionDateString()
   {
-    return(ECAL_DATE);
+    return ECAL_DATE;
   }
 
   /**
    * @brief  Get eCAL version as separated integer values. 
    *
-   * @param [out] major_  The eCAL major version number.
-   * @param [out] minor_  The eCAL minor version number.
-   * @param [out] patch_  The eCAL patch version number.
-   *
-   * @return  Zero if succeeded.
+   * @return struct SVersion that contains major, minor and patch value.
   **/
-  int GetVersion(int* major_, int* minor_, int* patch_)
+  SVersion GetVersion()
   {
-    if((major_ == nullptr) || (minor_ == nullptr) || (patch_ == nullptr)) return(-1);
-    *major_ = ECAL_VERSION_MAJOR;
-    *minor_ = ECAL_VERSION_MINOR;
-    *patch_ = ECAL_VERSION_PATCH;
-    return(0);
+    return SVersion{ ECAL_VERSION_MAJOR, ECAL_VERSION_MINOR, ECAL_VERSION_PATCH };
   }
 
   /**
    * @brief Initialize eCAL API.
    *
-   * @param argc_        Number of command line arguments. 
-   * @param argv_        Array of command line arguments. 
-   * @param unit_name_   Defines the name of the eCAL unit. 
-   * @param components_  Defines which component to initialize.
-   *
-   * @return Zero if succeeded, 1 if already initialized, -1 if failed.
-  **/
-  int Initialize(int argc_ , char **argv_, const char *unit_name_, unsigned int components_)
-  {
-    eCAL::Configuration config(argc_, argv_);
-
-    return Initialize(config, unit_name_, components_);
-  }
-
-  /**
-   * @brief Initialize eCAL API.
-   *
-   * @param args_        Vector of config arguments to overwrite (["arg1", "value1", "arg2", "arg3", "value3" ..]).
    * @param unit_name_   Defines the name of the eCAL unit.
    * @param components_  Defines which component to initialize.
    *
    * @return Zero if succeeded, 1 if already initialized, -1 if failed.
   **/
-  int Initialize(std::vector<std::string> args_, const char *unit_name_, unsigned int components_) //-V826
+  int Initialize(const std::string& unit_name_ /*= ""*/, unsigned int components_ /*= Init::Default*/)
   {
-    eCAL::Configuration config(args_);
+    eCAL::Configuration config;
 
     return Initialize(config, unit_name_, components_);
   }
@@ -130,15 +103,15 @@ namespace eCAL
    * 
    * @return Zero if succeeded, 1 if already initialized, -1 if failed.
   **/
-  int Initialize(eCAL::Configuration& config_, const char *unit_name_ /*= nullptr*/, unsigned int components_ /*= Init::Default*/)
+  int Initialize(eCAL::Configuration& config_, const std::string& unit_name_ /*= nullptr*/, unsigned int components_ /*= Init::Default*/)
   {
     InitGlobals();
     
     g_ecal_configuration = config_;
 
-    if (unit_name_ != nullptr)
+    if (!unit_name_.empty())
     {
-      SetGlobalUnitName(unit_name_);
+      SetGlobalUnitName(unit_name_.c_str());
     }
 
     g_globals_ctx_ref_cnt++;
@@ -161,10 +134,24 @@ namespace eCAL
    *
    * @return 1 if eCAL is initialized.
   **/
+  int IsInitialized()
+  {
+    if (g_globals_ctx == nullptr) return(0);
+    if(g_globals()->IsInitialized()) return(1);
+    return(0);
+  }
+
+  /**
+   * @brief Check eCAL initialize state.
+   *
+   * @param component_  Check specific component or 0 for general state of eCAL core.
+   *
+   * @return 1 if eCAL is initialized.
+  **/
   int IsInitialized(unsigned int component_)
   {
     if (g_globals_ctx == nullptr) return(0);
-    if(g_globals()->IsInitialized(component_)) return(1);
+    if (g_globals()->IsInitialized(component_)) return(1);
     return(0);
   }
 
@@ -175,14 +162,10 @@ namespace eCAL
    *
    * @return  Zero if succeeded, -1 if failed.
   **/
-  int SetUnitName(const char *unit_name_)
+  int SetUnitName(const std::string& unit_name_)
   {
-    if (unit_name_ == nullptr) return -1;
-    
-    const std::string uname = unit_name_;
-    if (uname.empty()) return -1;
- 
-    g_unit_name = uname;
+    if (unit_name_.empty()) return -1;
+    g_unit_name = unit_name_;
     return 0;
   }
 

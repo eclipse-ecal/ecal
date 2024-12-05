@@ -20,13 +20,13 @@
 #include <ecal/ecalc.h>
 #include <stdio.h>
 
-int main(int argc, char **argv)
+int main()
 {
   // the client handle
   ECAL_HANDLE hclient = 0;
 
   // initialize eCAL API
-  eCAL_Initialize(argc, argv, "minimal client c", eCAL_Init_Default);
+  eCAL_Initialize("minimal client c", eCAL_Init_Default);
 
   // create client for "service1"
   hclient = eCAL_Client_Create("service1");

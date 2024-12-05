@@ -89,7 +89,7 @@ TEST(logging_to /*unused*/, file /*unused*/)
   const std::string log_message  = "Logging to file test.";
   auto  ecal_config              = GetFileConfiguration(logging_path);
 
-  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+  eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);
 
   eCAL::Logging::Log(log_level_info, log_message);
 
@@ -129,7 +129,7 @@ TEST(logging_to /*unused*/, udp /*unused*/)
   const std::string log_message  = "Logging to udp test.";
   auto  ecal_config              = GetUDPConfiguration();
 
-  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);  
+  eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);  
 
   eCAL::Logging::Log(log_level_info, log_message);
 
@@ -160,7 +160,7 @@ TEST(logging_to /*unused*/, console /*unused*/)
   const std::string log_message  = "Logging to console test.";
   auto  ecal_config              = GetConsoleConfiguration();
 
-  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+  eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);
 
   {
     // Redirect the output stream to a stringstream in order to find log messages
@@ -187,7 +187,7 @@ TEST(logging_levels /*unused*/, all /*unused*/)
   const std::string log_message  = "Logging level all test for udp.";
   auto  ecal_config              = GetUDPConfiguration();
 
-  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+  eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);
 
   eCAL::Logging::SLogging log;
  
@@ -226,7 +226,7 @@ TEST(logging_levels /*unused*/, various /*unused*/)
 
   ecal_config.logging.sinks.udp.filter_log_udp = log_level_warning;
 
-  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+  eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);
 
   eCAL::Logging::SLogging log;
   
@@ -263,7 +263,7 @@ TEST(logging_levels /*unused*/, none /*unused*/)
 
    ecal_config.logging.sinks.udp.filter_log_udp = log_level_none;
 
-  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+  eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);
 
   eCAL::Logging::SLogging log;
  
@@ -302,7 +302,7 @@ TEST(logging_disable /*unused*/, file /*unused*/)
   auto  ecal_config              = GetFileConfiguration(logging_path);
   
   ecal_config.logging.sinks.file.enable = false;
-  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+  eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);
 
   eCAL::Logging::Log(log_level_info, log_message);
 
@@ -330,7 +330,7 @@ TEST(logging_disable /*unused*/, udp /*unused*/)
   auto  ecal_config              = GetUDPConfiguration();
 
   ecal_config.logging.sinks.udp.enable = false;
-  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);  
+  eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);  
 
   eCAL::Logging::Log(log_level_info, log_message);
 
@@ -351,7 +351,7 @@ TEST(logging_disable /*unused*/, console /*unused*/)
   auto  ecal_config              = GetConsoleConfiguration();
 
   ecal_config.logging.sinks.console.enable = false;
-  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
+  eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);
 
   {
     // Redirect the output stream to a stringstream in order to find log messages

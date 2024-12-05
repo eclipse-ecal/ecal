@@ -28,19 +28,15 @@
 TEST(core_cpp_core, GetVersion)
 {
   // get eCAL version string
-  EXPECT_STREQ(ECAL_VERSION, eCAL::GetVersionString());
+  EXPECT_STREQ(ECAL_VERSION, eCAL::GetVersionString().c_str());
 
   // get eCAL version date
-  EXPECT_STREQ(ECAL_DATE, eCAL::GetVersionDateString());
+  EXPECT_STREQ(ECAL_DATE, eCAL::GetVersionDateString().c_str());
 
   // get eCAL version as separated integer values
-  int major = -1;
-  int minor = -1;
-  int patch = -1;
-  eCAL::GetVersion(&major, &minor, &patch);
-  EXPECT_EQ(ECAL_VERSION_MAJOR, major);
-  EXPECT_EQ(ECAL_VERSION_MINOR, minor);
-  EXPECT_EQ(ECAL_VERSION_PATCH, patch);
+  EXPECT_EQ(ECAL_VERSION_MAJOR, eCAL::GetVersion().major);
+  EXPECT_EQ(ECAL_VERSION_MINOR, eCAL::GetVersion().minor);
+  EXPECT_EQ(ECAL_VERSION_PATCH, eCAL::GetVersion().patch);
 }
 
 TEST(core_cpp_core, InitializeFinalize)
@@ -49,13 +45,13 @@ TEST(core_cpp_core, InitializeFinalize)
   EXPECT_EQ(0, eCAL::IsInitialized());
 
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "initialize_test"));
+  EXPECT_EQ(0, eCAL::Initialize("initialize_test"));
 
   // Is eCAL API initialized ?
   EXPECT_EQ(1, eCAL::IsInitialized());
 
   // initialize eCAL API again we expect return value 1 for yet initialized
-  EXPECT_EQ(1, eCAL::Initialize(0, nullptr, "initialize_test"));
+  EXPECT_EQ(1, eCAL::Initialize("initialize_test"));
 
   // finalize eCAL API we expect return value 0 even it will not be really finalized because it's 2 times initialzed and 1 time finalized
   EXPECT_EQ(0, eCAL::Finalize());
@@ -79,7 +75,7 @@ TEST(core_cpp_core, MultipleInitializeFinalize)
   for (auto i = 0; i < 4; ++i)
   {
     // initialize eCAL API
-    EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "multiple_initialize_finalize_test"));
+    EXPECT_EQ(0, eCAL::Initialize("multiple_initialize_finalize_test"));
 
     // finalize eCAL API
     EXPECT_EQ(0, eCAL::Finalize());
@@ -116,7 +112,7 @@ namespace
 TEST(core_cpp_core, SetGetUnitName)
 {
   // initialize eCAL API with empty unit name (eCAL will use process name as unit name)
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, ""));
+  EXPECT_EQ(0, eCAL::Initialize(""));
 
   // Is eCAL API initialized ?
   EXPECT_EQ(1, eCAL::IsInitialized());
@@ -147,7 +143,7 @@ TEST(core_cpp_core, eCAL_Ok)
   EXPECT_EQ(0, eCAL::Ok());
 
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "okay_test"));
+  EXPECT_EQ(0, eCAL::Initialize("okay_test"));
 
   // check initialized eCAL, should be okay
   EXPECT_EQ(1, eCAL::Ok());
@@ -176,7 +172,7 @@ namespace
 TEST(Core, TimerCallback)
 { 
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "timer callback"));
+  EXPECT_EQ(0, eCAL::Initialize("timer callback"));
 
   // Is eCAL API initialized ?
   EXPECT_EQ(1, eCAL::IsInitialized());

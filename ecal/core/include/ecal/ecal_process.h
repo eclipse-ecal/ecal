@@ -70,7 +70,7 @@ namespace eCAL
     ECAL_API std::string GetUnitName();
 
     /**
-     * @brief  Get current process parameter (defined via eCAL::Initialize(argc_, arg_v). 
+     * @brief  Get current process parameter (defined via eCAL::Initialize(argc, argv). 
      *
      * @param sep_  Separator. 
      *

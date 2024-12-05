@@ -56,10 +56,10 @@ void OnEvent(const char* topic_name_, const struct eCAL::SSubEventCallbackData* 
   std::cout << std::endl;
 }
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "person subscriber events");
+  eCAL::Initialize("person subscriber events");
 
   // set process state
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");

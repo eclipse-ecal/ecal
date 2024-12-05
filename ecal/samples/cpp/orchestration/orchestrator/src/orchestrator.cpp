@@ -24,10 +24,10 @@
 
 #include <iostream>
 
-int main(int argc, char** argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "orchestrator");
+  eCAL::Initialize("orchestrator");
 
   eCAL::protobuf::CServiceClient<orchestrator::ComponentService> component1("component1");
   eCAL::protobuf::CServiceClient<orchestrator::ComponentService> component2("component2");

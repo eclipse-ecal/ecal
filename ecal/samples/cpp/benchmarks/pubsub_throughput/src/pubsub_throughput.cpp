@@ -106,10 +106,10 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
 }
 
 // main entry
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "pubsub_throughput");
+  eCAL::Initialize("pubsub_throughput");
 
   std::cout << "---------------------------" << '\n';
   std::cout << "LAYER: SHM"                  << '\n';

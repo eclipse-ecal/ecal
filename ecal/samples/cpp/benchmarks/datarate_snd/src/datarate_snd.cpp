@@ -62,7 +62,7 @@ int main(int argc, char **argv)
   std::cout << "Acknowledgement time = " << acknowledge_time << " ms"    << std::endl;
 
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "datarate_snd");
+  eCAL::Initialize("datarate_snd");
 
   // create publisher config
   eCAL::Publisher::Configuration pub_config;

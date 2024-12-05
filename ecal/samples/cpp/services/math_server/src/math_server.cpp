@@ -85,10 +85,10 @@ void OnServerEvent(const eCAL::SServerEventCallbackData* data_)
 }
 
 // main entry
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "math server");
+  eCAL::Initialize("math server");
 
   // create Math service server
   std::shared_ptr<MathService> math_service = std::make_shared<MathServiceImpl>();

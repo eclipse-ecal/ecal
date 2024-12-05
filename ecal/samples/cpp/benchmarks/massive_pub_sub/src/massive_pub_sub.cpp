@@ -54,7 +54,7 @@ std::string GenerateSizedString(const std::string& name, size_t totalSize)
   return result;
 }
 
-int main(int argc, char** argv)
+int main()
 {
   // set eCAL configuration
   eCAL::Configuration configuration;

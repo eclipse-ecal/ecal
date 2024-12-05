@@ -108,7 +108,7 @@ void dynamicPrintValue(const capnp::DynamicValue::Reader& value)
 int main(int argc, char** argv)
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "addressbook subscriber");
+  eCAL::Initialize("addressbook subscriber");
 
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 

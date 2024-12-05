@@ -28,12 +28,12 @@ void OnReceive(const char* topic_name_, const struct SReceiveCallbackDataC* data
   printf("\"%.*s\"\n", (int)(data_->size), (char*)(data_->buf));
 }
 
-int main(int argc, char **argv)
+int main()
 {
   ECAL_HANDLE sub = 0;
 
   // initialize eCAL API
-  eCAL_Initialize(argc, argv, "minimalc_rec_cb", eCAL_Init_Default);
+  eCAL_Initialize("minimalc_rec_cb", eCAL_Init_Default);
 
   // create subscriber "Hello"
   sub = eCAL_Sub_New();

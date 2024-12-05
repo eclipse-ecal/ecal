@@ -38,7 +38,7 @@ ExternalEcalRecInstance::ExternalEcalRecInstance(bool gui)
 {
   ecal_rec_cli_instance_lock.lock();
 
-  eCAL::Initialize({}, "Ecal Rec Tester");
+  eCAL::Initialize("Ecal Rec Tester");
   
   remote_rec_server_service = std::make_shared<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>();
   remote_rec_server_service->SetHostName(eCAL::Process::GetHostName());

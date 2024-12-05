@@ -66,7 +66,6 @@ endif()
 ######################################
 set(ecal_config_src
     src/config/default_configuration.cpp        
-    src/config/ecal_cmd_parser.cpp
     src/config/ecal_config.cpp
     src/config/ecal_config_initializer.cpp
     src/config/transport_layer.cpp

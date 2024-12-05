@@ -59,7 +59,7 @@ void on_receive(const struct eCAL::SReceiveCallbackData* data_, SCallbackPar* pa
 void do_run(int delay_, std::string& log_file_)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "latency_rec");
+  eCAL::Initialize("latency_rec");
 
   // subscriber
   eCAL::CSubscriber sub("ping");

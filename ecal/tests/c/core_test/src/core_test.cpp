@@ -34,13 +34,9 @@ TEST(core_c_core, GetVersion)
   EXPECT_STREQ(ECAL_DATE, eCAL_GetVersionDateString());
 
   // get eCAL version as separated integer values
-  int major = -1;
-  int minor = -1;
-  int patch = -1;
-  eCAL_GetVersion(&major, &minor, &patch);
-  EXPECT_EQ(ECAL_VERSION_MAJOR, major);
-  EXPECT_EQ(ECAL_VERSION_MINOR, minor);
-  EXPECT_EQ(ECAL_VERSION_PATCH, patch);
+  EXPECT_EQ(ECAL_VERSION_MAJOR, eCAL_GetVersion().major);
+  EXPECT_EQ(ECAL_VERSION_MINOR, eCAL_GetVersion().minor);
+  EXPECT_EQ(ECAL_VERSION_PATCH, eCAL_GetVersion().patch);
 }
 
 TEST(core_c_core, InitializeFinalize)

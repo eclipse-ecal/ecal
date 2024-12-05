@@ -32,7 +32,7 @@
 int main(int argc, char **argv)
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "ping client dynamic");
+  eCAL::Initialize("ping client dynamic");
 
   // create ping service client
   const std::string service_name("ping service");

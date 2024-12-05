@@ -23,14 +23,14 @@
 #include <iostream>
 #include <sstream>
 
-int main(int argc, char **argv)
+int main()
 {
   std::cout << "-------------------------------" << std::endl;
   std::cout << " HELLO WORLD SENDER"             << std::endl;
   std::cout << "-------------------------------" << std::endl;
 
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "minimal_snd");
+  eCAL::Initialize("minimal_snd");
 
   // publisher for topic "Hello"
   eCAL::string::CPublisher<std::string> pub("Hello");
