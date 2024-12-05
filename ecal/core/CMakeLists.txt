@@ -502,11 +502,19 @@ endif()
 # public header
 ######################################
 set(ecal_header_cmn
+    include/ecal/config/application.h
+    include/ecal/config/configuration.h
+    include/ecal/config/logging.h
+    include/ecal/config/monitoring.h
+    include/ecal/config/publisher.h
+    include/ecal/config/registration.h
+    include/ecal/config/service.h
+    include/ecal/config/subscriber.h
+    include/ecal/config/time.h
+    include/ecal/config/transport_layer.h
+    include/ecal/config/user_arguments.h
     include/ecal/types/logging.h
     include/ecal/types/monitoring.h
-    include/ecal/config/configuration.h
-    include/ecal/config/publisher.h
-    include/ecal/config/subscriber.h
     include/ecal/ecal.h
     include/ecal/ecal_callback.h
     include/ecal/ecal_config.h
@@ -555,6 +563,7 @@ set(ecal_header_cimpl
 
 set(ecal_header_msg
     include/ecal/msg/protobuf/client.h
+    include/ecal/msg/protobuf/dynamic_json_subscriber.h
     include/ecal/msg/protobuf/dynamic_publisher.h
     include/ecal/msg/protobuf/dynamic_subscriber.h    
     include/ecal/msg/protobuf/publisher.h

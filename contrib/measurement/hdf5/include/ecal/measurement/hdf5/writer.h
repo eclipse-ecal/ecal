@@ -39,7 +39,7 @@ namespace eCAL
     {
       namespace hdf5
       {
-        class WriterImpl;
+        struct WriterImpl;
 
         /**
          * @brief Hdf5 based Writer implementation
