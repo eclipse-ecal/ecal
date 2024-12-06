@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_deprecate.h>
 
 #include <string>
 #include <utility>
@@ -94,6 +95,7 @@ namespace eCAL
      *
      * @return  std::pair(encoding, typename).
     **/
+    ECAL_DEPRECATE_SINCE_6_0("Please refactor your code to use SDatatypeInformation. This function will be removed with eCAL 7")
     ECAL_API std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& combined_topic_type_);
 
     /**
@@ -104,6 +106,7 @@ namespace eCAL
      *
      * @return "Old" typename. ( encoding:typename ).
     **/
+    ECAL_DEPRECATE_SINCE_6_0("Please refactor your code to use SDatatypeInformation. This function will be removed with eCAL 7")
     ECAL_API std::string CombinedTopicEncodingAndType(const std::string& topic_encoding_, const std::string& topic_type_);
   }
 }
