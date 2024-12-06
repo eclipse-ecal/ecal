@@ -78,12 +78,6 @@ namespace Continental
          * @brief Send shutdown event to all user processes.
         **/
         static void ShutdownProcesses();
-
-        /**
-         * @brief Send shutdown event to all core components.
-         *
-        **/
-        static void ShutdownCore();
       };
 
 

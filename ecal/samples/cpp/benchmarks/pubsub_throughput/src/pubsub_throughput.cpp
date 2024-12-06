@@ -51,6 +51,8 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
   case eCAL::TLayer::tlayer_tcp:
     pub_config.layer.tcp.enable = true;
     break;
+  default:
+    break;
   }
 
   // enable zero copy mode

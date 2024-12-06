@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,12 @@ PluginWidget::PluginWidget(const QString& topic_name, const QString&, QWidget* p
   ui_.content_layout->addWidget(frame);
 
   // Connect the eCAL Subscriber
-  subscriber_.AddReceiveCallback(std::bind(&PluginWidget::ecalMessageReceivedCallback, this, std::placeholders::_2));
+  subscriber_.AddReceiveCallback([this](const eCAL::Registration::STopicId& /*topic_id*/,
+    const eCAL::SDataTypeInformation& /*data_type_info*/,
+    const eCAL::SReceiveCallbackData& callback_data)
+    {
+      ecalMessageReceivedCallback(callback_data);
+    });
 }
 
 PluginWidget::~PluginWidget()
@@ -67,12 +72,12 @@ PluginWidget::~PluginWidget()
   subscriber_.RemReceiveCallback();
 }
 
-void PluginWidget::ecalMessageReceivedCallback(const struct eCAL::SReceiveCallbackData* callback_data)
+void PluginWidget::ecalMessageReceivedCallback(const eCAL::SReceiveCallbackData& callback_data)
 {
   std::lock_guard<std::mutex> message_lock(message_mutex_);
-  last_message_ = QByteArray(static_cast<char*>(callback_data->buf), callback_data->size);
+  last_message_ = QByteArray(static_cast<char*>(callback_data.buf), callback_data.size);
 
-  last_message_publish_timestamp_ = eCAL::Time::ecal_clock::time_point(std::chrono::microseconds(callback_data->time));
+  last_message_publish_timestamp_ = eCAL::Time::ecal_clock::time_point(std::chrono::microseconds(callback_data.time));
 
   received_message_counter_++;
   new_msg_available_ = true;
@@ -128,7 +133,13 @@ void PluginWidget::onUpdate()
 
 void PluginWidget::onResume()
 {
-  subscriber_.AddReceiveCallback(std::bind(&PluginWidget::ecalMessageReceivedCallback, this, std::placeholders::_2));
+  // (Re)Connect the eCAL Subscriber
+  subscriber_.AddReceiveCallback([this](const eCAL::Registration::STopicId& /*topic_id*/,
+    const eCAL::SDataTypeInformation& /*data_type_info*/,
+    const eCAL::SReceiveCallbackData& callback_data)
+    {
+      ecalMessageReceivedCallback(callback_data);
+    });
 }
 
 void PluginWidget::onPause()

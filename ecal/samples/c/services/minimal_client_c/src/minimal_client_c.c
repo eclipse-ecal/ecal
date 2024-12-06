@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ int main(int argc, char **argv)
   eCAL_Client_Destroy(hclient);
 
   // finalize eCAL API
-  eCAL_Finalize(eCAL_Init_All);
+  eCAL_Finalize();
 
   return(0);
 }

@@ -25,9 +25,9 @@
 
 const std::string MESSAGE_NAME("person");
 
-void ProtoMsgCallback(const char* topic_name_, const std::string& msg_, long long /*time_*/, long long /*clock_*/, long long /*id_*/)
+void ProtoMsgCallback(const eCAL::Registration::STopicId& topic_id_, const std::string& msg_)
 {
-  std::cout << topic_name_ << " : " << msg_ << std::endl;
+  std::cout << topic_id_.topic_name << " : " << msg_ << std::endl;
   std::cout << std::endl;
 }
 
@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 
   // create dynamic subscribers for receiving and decoding messages
   eCAL::protobuf::CDynamicJSONSubscriber sub(MESSAGE_NAME);
-  sub.AddReceiveCallback(ProtoMsgCallback);
+  sub.AddReceiveCallback(std::bind(ProtoMsgCallback, std::placeholders::_1, std::placeholders::_2));
 
   // enter main loop
   while(eCAL::Ok())

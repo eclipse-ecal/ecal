@@ -39,7 +39,6 @@
 #include <ecal/cimpl/ecal_monitoring_cimpl.h>
 #include <ecal/cimpl/ecal_process_cimpl.h>
 #include <ecal/cimpl/ecal_publisher_cimpl.h>
-#include <ecal/cimpl/ecal_registration_cimpl.h>
 #include <ecal/cimpl/ecal_server_cimpl.h>
 #include <ecal/cimpl/ecal_subscriber_cimpl.h>
 #include <ecal/cimpl/ecal_time_cimpl.h>
