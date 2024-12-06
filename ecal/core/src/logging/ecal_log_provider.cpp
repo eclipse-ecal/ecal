@@ -167,17 +167,17 @@ namespace eCAL
 
     void CLogProvider::SetFileLogFilter(eCAL_Logging_Filter filter_)
     {
-      m_attributes.file.filter_log = filter_;
+      m_attributes.file_sink.filter_log = filter_;
     }
 
     void CLogProvider::SetUDPLogFilter(eCAL_Logging_Filter filter_)
     {
-      m_attributes.udp.filter_log = filter_;
+      m_attributes.udp_sink.filter_log = filter_;
     }
 
     void CLogProvider::SetConsoleLogFilter(eCAL_Logging_Filter filter_)
     {
-      m_attributes.console.filter_log = filter_;
+      m_attributes.console_sink.filter_log = filter_;
     }
 
     eCAL_Logging_eLogLevel CLogProvider::GetLogLevel()
@@ -189,16 +189,16 @@ namespace eCAL
     void CLogProvider::Start()
     {
       // create log file if file logging is enabled
-      if (m_attributes.file.enabled)
+      if (m_attributes.file_sink.enabled)
       {
         if (!StartFileLogging())
         {
-          logWarningToConsole("Logging for file enabled, but specified path to log is not valid or could not be created: " + m_attributes.file.path);
+          logWarningToConsole("Logging for file enabled, but specified path to log is not valid or could not be created: " + m_attributes.file_config.path);
         }
       }
 
       // create udp logging sender if udp logging is enabled
-      if (m_attributes.udp.enabled)
+      if (m_attributes.udp_sink.enabled)
       {
         // create udp logging sender
         if (!StartUDPLogging())
@@ -212,11 +212,11 @@ namespace eCAL
   
     bool CLogProvider::StartFileLogging()
     {
-      if (!isDirectoryOrCreate(m_attributes.file.path)) return false;
+      if (!isDirectoryOrCreate(m_attributes.file_config.path)) return false;
       
       const std::string tstring = get_time_str();
   
-      m_logfile_name = m_attributes.file.path + tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
+      m_logfile_name = m_attributes.file_config.path + tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
       m_logfile = fopen(m_logfile_name.c_str(), "w");
 
       return m_logfile != nullptr;
@@ -224,7 +224,7 @@ namespace eCAL
 
     bool CLogProvider::StartUDPLogging()
     {
-      const eCAL::UDP::SSenderAttr attr = Logging::UDP::ConvertToIOUDPSenderAttributes(m_attributes.udp_sender);
+      const eCAL::UDP::SSenderAttr attr = Logging::UDP::ConvertToIOUDPSenderAttributes(m_attributes.udp_config);
       m_udp_logging_sender = std::make_unique<eCAL::UDP::CSampleSender>(attr);
 
       return m_udp_logging_sender != nullptr;
@@ -237,15 +237,15 @@ namespace eCAL
       if(!m_created) return;
       if(msg_.empty()) return;
 
-      const eCAL_Logging_Filter log_con  = level_ & m_attributes.console.filter_log;
-      const eCAL_Logging_Filter log_file = level_ & m_attributes.file.filter_log;
-      const eCAL_Logging_Filter log_udp  = level_ & m_attributes.udp.filter_log;
+      const eCAL_Logging_Filter log_con  = level_ & m_attributes.console_sink.filter_log;
+      const eCAL_Logging_Filter log_file = level_ & m_attributes.file_sink.filter_log;
+      const eCAL_Logging_Filter log_udp  = level_ & m_attributes.udp_sink.filter_log;
       if((log_con | log_file | log_udp) == 0) return;
 
       auto log_time = eCAL::Time::ecal_clock::now();
 
-      const bool log_to_console = m_attributes.console.enabled && log_con != 0;
-      const bool log_to_file    = m_attributes.file.enabled && log_file != 0;
+      const bool log_to_console = m_attributes.console_sink.enabled && log_con != 0;
+      const bool log_to_file    = m_attributes.file_sink.enabled && log_file != 0;
 
       if (log_to_console || log_to_file)
       {
@@ -265,7 +265,7 @@ namespace eCAL
         }
       }
 
-      if(m_attributes.udp.enabled && log_udp != 0 && m_udp_logging_sender)
+      if(m_attributes.udp_sink.enabled && log_udp != 0 && m_udp_logging_sender)
       {
           // set up log message
           Logging::SLogMessage log_message;

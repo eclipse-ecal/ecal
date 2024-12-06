@@ -29,26 +29,13 @@ namespace eCAL
   {
     struct SProviderAttributes
     {
+      struct SSink
+      {
+        bool                enabled;
+        eCAL_Logging_Filter filter_log;
+      };
+
       struct SUDP
-      {
-        bool                enabled;
-        eCAL_Logging_Filter filter_log;
-      };
-
-      struct SFile
-      {
-        bool                enabled;
-        std::string         path;
-        eCAL_Logging_Filter filter_log;
-      };
-
-      struct SConsole
-      {
-        bool                enabled;
-        eCAL_Logging_Filter filter_log;
-      };
-
-      struct SUDPSender
       {
         std::string address;
         int         port;
@@ -58,11 +45,17 @@ namespace eCAL
         int         sndbuf;
       };
 
-      SUDP                   udp;
-      SFile                  file;
-      SConsole               console;
+      struct SFile
+      {
+        std::string          path;
+      };
 
-      SUDPSender             udp_sender;
+      SSink                  udp_sink;
+      SSink                  file_sink;
+      SSink                  console_sink;
+
+      SUDP                   udp_config;
+      SFile                  file_config;
 
       int                    process_id;
       std::string            host_name;
