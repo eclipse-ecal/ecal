@@ -41,52 +41,49 @@ namespace eCAL
   {
     namespace Sinks
     {
-      namespace Console
+      struct Sink
       {
-        struct Configuration
-        {
-          bool                enable         { true };                               //!< Enable console logging (Default: true)
-          eCAL_Logging_Filter filter_log_con { log_level_error | log_level_fatal };  /*!< Log messages logged to console (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
-                                                                                          (Default: info, warning, error, fatal)*/
-        };
-      }
+        bool enable;                                    //!< Enable sink
+        eCAL_Logging_Filter filter_log;                 //!< Log messages logged (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
+      };
 
       namespace File
       {
         struct Configuration
         {
-          bool                enable          { false };             //!< Enable file logging (Default: false)
-          std::string         path            { "" };                //!< Path to log file (Default: "")
-          eCAL_Logging_Filter filter_log_file { log_level_none };    /*!< Log messages logged into file system (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
-                                                                          (Default: info, warning, error, fatal)*/
+          std::string path { "" };                      //!< Path to log file (Default: "")
         };
       }
 
       namespace UDP
       {
-        struct Configuration
+        struct ReceiverConfiguration
         {
-          bool                enable         { true };               //!< Enable UDP logging (Default: false)
-          unsigned int        port           { 14001 };              //!< UDP port number (Default: 14001)
-          eCAL_Logging_Filter filter_log_udp { log_filter_default }; //!< Log messages logged via udp network (Default: info, warning, error, fatal)
+          bool         enable { false };                //!< Enable UDP receiver (Default: false)
+          unsigned int port   { 14001 };                //!< UDP port number (Default: 14001)
         };
-      }
 
-      namespace UDPReceiver
-      {
+        struct ProviderConfiguration
+        {
+          unsigned int port { 14001 };                  //!< UDP port number (Default: 14001)
+        };
+
         struct Configuration
         {
-          bool         enable { false }; //!< Enable UDP receiver (Default: false)
-          unsigned int port   { 14001 }; //!< UDP port number (Default: 14001)
+          ReceiverConfiguration receiver;
+          ProviderConfiguration provider;
         };
       }
 
       struct Configuration
       {
-        Console::Configuration     console;
-        File::Configuration        file;
-        UDP::Configuration         udp;
-        UDPReceiver::Configuration udp_receiver;
+        Sink                console { true,  log_level_error | log_level_fatal}; //!< default: true, log_level_error
+        Sink                file    { false, log_level_none };                   //!< default: false, log_level_none
+        Sink                udp     { true,  log_filter_default };               //!< default: true, log_filter_default
+        
+        File::Configuration file_config;
+        UDP::Configuration  udp_config;
+        
       };
     }
     

@@ -34,15 +34,13 @@ namespace eCAL
     static const unsigned int Monitoring    =    0x008;
     static const unsigned int Logging       =    0x010;
     static const unsigned int TimeSync      =    0x020;
-    static const unsigned int UDPLogReceive =    0x040;
 
     static const unsigned int All =           Publisher
                                             | Subscriber
                                             | Service
                                             | Monitoring
                                             | Logging
-                                            | TimeSync
-                                            | UDPLogReceive;
+                                            | TimeSync;
 
     static const unsigned int Default    =    Publisher
                                             | Subscriber

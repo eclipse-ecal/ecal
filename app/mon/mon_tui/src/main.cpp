@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 {
   auto args = ParseArgs(argc, argv);
 
-  auto status = eCAL::Initialize(0, nullptr, "eCALMon TUI", eCAL::Init::Default | eCAL::Init::Monitoring | eCAL::Init::UDPLogReceive);
+  auto status = eCAL::Initialize(0, nullptr, "eCALMon TUI", eCAL::Init::Default | eCAL::Init::Monitoring);
   if (status == -1) std::cerr << "Failed to init" << std::endl;
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
   eCAL::Monitoring::SetFilterState(false);

@@ -71,7 +71,7 @@ Ecalmon::Ecalmon(QWidget *parent)
   , monitor_error_counter_(0)
 {
   // Just make sure that eCAL is initialized
-  eCAL::Initialize(0, nullptr, "eCALMon", eCAL::Init::Default | eCAL::Init::Monitoring | eCAL::Init::UDPLogReceive);
+  eCAL::Initialize(0, nullptr, "eCALMon", eCAL::Init::Default | eCAL::Init::Monitoring);
   eCAL::Monitoring::SetFilterState(false);
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
 

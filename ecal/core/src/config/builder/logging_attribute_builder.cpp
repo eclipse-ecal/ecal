@@ -17,11 +17,11 @@ namespace eCAL
       attributes.level              = log_level_info;
 
       attributes.udp_sink.enabled        = log_config_.sinks.udp.enable;
-      attributes.udp_sink.filter_log     = log_config_.sinks.udp.filter_log_udp;
+      attributes.udp_sink.filter_log     = log_config_.sinks.udp.filter_log;
 
       attributes.file_sink.enabled       = log_config_.sinks.file.enable;
-      attributes.file_sink.filter_log    = log_config_.sinks.file.filter_log_file;
-      attributes.file_config.path        = log_config_.sinks.file.path;
+      attributes.file_sink.filter_log    = log_config_.sinks.file.filter_log;
+      attributes.file_config.path        = log_config_.sinks.file_config.path;
       if (attributes.file_config.path.empty())
       {
         // check ECAL_DATA
@@ -30,14 +30,14 @@ namespace eCAL
       }
 
       attributes.console_sink.enabled    = log_config_.sinks.console.enable;
-      attributes.console_sink.filter_log = log_config_.sinks.console.filter_log_con;
+      attributes.console_sink.filter_log = log_config_.sinks.console.filter_log;
 
       // UDP related configuration part
       attributes.udp_config.broadcast = !reg_config_.network_enabled;
       attributes.udp_config.loopback  = reg_config_.loopback;
       
       attributes.udp_config.sndbuf    = tl_config_.udp.send_buffer;
-      attributes.udp_config.port      = log_config_.sinks.udp.port;
+      attributes.udp_config.port      = log_config_.sinks.udp_config.provider.port;
       
       switch (tl_config_.udp.mode)
       {
@@ -63,13 +63,13 @@ namespace eCAL
       attributes.network_enabled    = reg_config_.network_enabled;
       attributes.host_name          = Process::GetHostName();
 
-      attributes.receive_enabled    = log_config_.sinks.udp_receiver.enable;
+      attributes.receive_enabled    = log_config_.sinks.udp_config.receiver.enable;
 
       attributes.udp_receiver.broadcast = !reg_config_.network_enabled;
       attributes.udp_receiver.loopback  = true;
       
       attributes.udp_receiver.rcvbuf    = tl_config_.udp.receive_buffer;
-      attributes.udp_receiver.port      = log_config_.sinks.udp_receiver.port;
+      attributes.udp_receiver.port      = log_config_.sinks.udp_config.receiver.port;
 
       switch (tl_config_.udp.mode)
       {

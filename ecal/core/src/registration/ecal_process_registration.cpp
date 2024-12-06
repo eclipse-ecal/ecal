@@ -87,7 +87,6 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   if ((comp_state & eCAL::Init::Publisher) != 0u) component_info += "|pub";
   if ((comp_state & eCAL::Init::Subscriber) != 0u) component_info += "|sub";
   if ((comp_state & eCAL::Init::Logging) != 0u) component_info += "|log";
-  if ((comp_state & eCAL::Init::UDPLogReceive) != 0u) component_info += "|logudprecv";
   if ((comp_state & eCAL::Init::TimeSync) != 0u) component_info += "|time";
   if (!component_info.empty()) component_info = component_info.substr(1);
   process_sample_process.component_init_info = component_info;

@@ -298,11 +298,27 @@ namespace YAML
               /___//___/       /___/  
   */
   template<>
-  struct convert<eCAL::Logging::Sinks::UDPReceiver::Configuration>
+  struct convert<eCAL::Logging::Sinks::UDP::ReceiverConfiguration>
   {
-    static Node encode(const eCAL::Logging::Sinks::UDPReceiver::Configuration& config_);
+    static Node encode(const eCAL::Logging::Sinks::UDP::ReceiverConfiguration& config_);
 
-    static bool decode(const Node& node_, eCAL::Logging::Sinks::UDPReceiver::Configuration& config_);
+    static bool decode(const Node& node_, eCAL::Logging::Sinks::UDP::ReceiverConfiguration& config_);
+  };
+
+  template<>
+  struct convert<eCAL::Logging::Sinks::UDP::ProviderConfiguration>
+  {
+    static Node encode(const eCAL::Logging::Sinks::UDP::ProviderConfiguration& config_);
+
+    static bool decode(const Node& node_, eCAL::Logging::Sinks::UDP::ProviderConfiguration& config_);
+  };
+
+  template<>
+  struct convert<eCAL::Logging::Sinks::File::Configuration>
+  {
+    static Node encode(const eCAL::Logging::Sinks::File::Configuration& config_);
+
+    static bool decode(const Node& node_, eCAL::Logging::Sinks::File::Configuration& config_);
   };
 
   template<>
@@ -314,19 +330,11 @@ namespace YAML
   };
 
   template<>
-  struct convert<eCAL::Logging::Sinks::Console::Configuration>
+  struct convert<eCAL::Logging::Sinks::Sink>
   {
-    static Node encode(const eCAL::Logging::Sinks::Console::Configuration& config_);
+    static Node encode(const eCAL::Logging::Sinks::Sink& config_);
 
-    static bool decode(const Node& node_, eCAL::Logging::Sinks::Console::Configuration& config_);
-  };
-
-  template<>
-  struct convert<eCAL::Logging::Sinks::File::Configuration>
-  {
-    static Node encode(const eCAL::Logging::Sinks::File::Configuration& config_);
-
-    static bool decode(const Node& node_, eCAL::Logging::Sinks::File::Configuration& config_);
+    static bool decode(const Node& node_, eCAL::Logging::Sinks::Sink& config_);
   };
 
   template<>
