@@ -27,56 +27,37 @@ namespace eCAL
 {
   namespace Logging
   {
-    struct SUDP
+    struct SProviderAttributes
     {
-      bool                enabled;
-      unsigned int        port;
-      eCAL_Logging_Filter filter_log;
-    };
+      struct SSink
+      {
+        bool                enabled;
+        eCAL_Logging_Filter filter_log;
+      };
 
-    struct SFile
-    {
-      bool                enabled;
-      std::string         path;
-      eCAL_Logging_Filter filter_log;
-    };
+      struct SUDP
+      {
+        std::string address;
+        int         port;
+        int         ttl;
+        bool        broadcast;
+        bool        loopback;
+        int         sndbuf;
+      };
 
-    struct SConsole
-    {
-      bool                enabled;
-      eCAL_Logging_Filter filter_log;
-    };
+      struct SFile
+      {
+        std::string          path;
+      };
 
-    struct SUDPSender
-    {
-      std::string address;
-      int         port;
-      int         ttl;
-      bool        broadcast;
-      bool        loopback;
-      int         sndbuf;
-    };
+      SSink                  udp_sink;
+      SSink                  file_sink;
+      SSink                  console_sink;
 
-    struct SUDPReceiver
-    {
-      std::string address;
-      int         port;
-      bool        broadcast;
-      bool        loopback;
-      int         rcvbuf;
-    };
-
-    struct SAttributes
-    {
-      SUDP                   udp;
-      SFile                  file;
-      SConsole               console;
-
-      SUDPSender             udp_sender;
-      SUDPReceiver           udp_receiver;
+      SUDP                   udp_config;
+      SFile                  file_config;
 
       int                    process_id;
-      bool                   network_enabled;
       std::string            host_name;
       std::string            process_name;
       std::string            unit_name;

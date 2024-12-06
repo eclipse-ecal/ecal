@@ -113,7 +113,7 @@ namespace eCAL
     if(g_pubgate() != nullptr) g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
 #ifndef NDEBUG
     // log it
-    if (g_log() != nullptr) g_log()->Log(log_level_debug1, std::string(m_datawriter->GetTopicName() + "::CPublisher::Destroy"));
+    eCAL::Logging::Log(log_level_debug1, std::string(m_datawriter->GetTopicName() + "::CPublisher::Destroy"));
 #endif
 
     // stop & destroy datawriter
