@@ -219,7 +219,7 @@ bool MeasurementContainer::PublishFrame(long long index)
         {
           timestamp_usecs = std::chrono::duration_cast<std::chrono::microseconds>(frame_table_[index].send_timestamp_.time_since_epoch()).count();
         }
-        frame_table_[index].publisher_info_->publisher_.SetFilterID(frame_table_[index].send_id_);
+        frame_table_[index].publisher_info_->publisher_.SetID(frame_table_[index].send_id_);
         frame_table_[index].publisher_info_->publisher_.Send(send_buffer_, data_size, timestamp_usecs);
         frame_table_[index].publisher_info_->message_counter_++;
         return true;

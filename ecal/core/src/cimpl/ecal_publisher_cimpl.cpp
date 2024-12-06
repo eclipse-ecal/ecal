@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ extern "C"
   {
     if (handle_ == nullptr) return(0);
     auto* pub = static_cast<eCAL::CPublisher*>(handle_);
-    if (pub->SetFilterID(id_)) return(1);
+    if (pub->SetID(id_)) return(1);
     return(0);
   }
 
