@@ -106,10 +106,7 @@ namespace
 TEST(core_cpp_clientserver_v5, ClientConnectEvent)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver base connect event callback");
-
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("clientserver base connect event callback");
 
   // create client
   eCAL::v5::CServiceClient client("service");
@@ -182,10 +179,7 @@ TEST(core_cpp_clientserver_v5, ClientConnectEvent)
 TEST(core_cpp_clientserver_v5, ServerConnectEvent)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver base connect event callback");
-
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("clientserver base connect event callback");
 
   // create server
   eCAL::CServiceServer server("service");
@@ -261,10 +255,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseCallback)
   const int calls(5);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver base callback test");
-
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("clientserver base callback test");
 
   // create service servers
   ServiceVecT service_vec;
@@ -373,10 +364,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseCallbackTimeout)
   const int calls(1);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver base callback test with timeout");
-
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("clientserver base callback test with timeout");
 
   // create service servers
   ServiceVecT service_vec;
@@ -540,10 +528,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseAsyncCallback)
   const int sleep(100);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver base async callback test");
-
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("clientserver base async callback test");
 
   // create service server
   eCAL::CServiceServer server("service");
@@ -616,10 +601,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseAsync)
   const int calls(5);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver base async callback test with timeout");
-
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("clientserver base async callback test with timeout");
 
   // create service server
   eCAL::CServiceServer server("service");
@@ -728,10 +710,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseBlocking)
   const int calls(1);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver base blocking test");
-
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("clientserver base blocking test");
 
   // create service servers
   ServiceVecT service_vec;
@@ -829,10 +808,7 @@ TEST(core_cpp_clientserver_v5, NestedRPCCall)
   const int calls(1);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "nested rpc call test");
-
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("nested rpc call test");
 
   // create service server
   eCAL::CServiceServer server("service");

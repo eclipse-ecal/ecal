@@ -62,7 +62,7 @@ namespace eCAL
       if (m_created) return false;
 
       // Define the event callback to pass to CServiceClientNew
-      ClientEventIDCallbackT event_callback = [this](const Registration::SServiceId& service_id_, const struct SClientEventCallbackData& data_)
+      ClientEventIDCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const struct SClientEventCallbackData& data_)
         {
           // Lock the mutex to safely access m_event_callbacks
           std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);

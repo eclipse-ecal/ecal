@@ -131,6 +131,8 @@ namespace eCAL
         return CallAsync(method_name_, request_.SerializeAsString(), timeout_);
       }
 
+      using eCAL::v5::CServiceClient::Call;
+      using eCAL::v5::CServiceClient::CallAsync;
     private:
       ServiceMethodInformationMapT CreateMethodInformationMap()
       {

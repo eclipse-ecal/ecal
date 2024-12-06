@@ -491,7 +491,7 @@ namespace eCAL
       std::chrono::steady_clock::now().time_since_epoch()).count();
     callback_data.attr = service_attr_;
 
-    Registration::SServiceId service_id;
+    Registration::SServiceMethodId service_id;
     service_id.service_id = entity_id_;
     service_id.service_name = m_service_name;
     service_id.method_name = "";
