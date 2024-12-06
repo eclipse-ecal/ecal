@@ -25,6 +25,7 @@
 #include "modsupport.h"
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_client_v5.h>
 
 #include "ecal_clang.h"
 
@@ -843,7 +844,7 @@ PyObject* client_add_response_callback(PyObject* /*self*/, PyObject* args)   // 
   if (!PyArg_ParseTuple(args, "nO", &client_handle, &cb_func))
     return nullptr;
 
-  eCAL::CServiceClient* client = (eCAL::CServiceClient*)client_handle;
+  eCAL::v5::CServiceClient* client = (eCAL::v5::CServiceClient*)client_handle;
   if (!client)
   {
     return(Py_BuildValue("is", -1, "client invalid"));
@@ -893,7 +894,7 @@ PyObject* client_rem_response_callback(PyObject* /*self*/, PyObject* args)   // 
   if (!PyArg_ParseTuple(args, "n", &client_handle))
     return nullptr;
 
-  eCAL::CServiceClient* client = (eCAL::CServiceClient*)client_handle;
+  eCAL::v5::CServiceClient* client = (eCAL::v5::CServiceClient*)client_handle;
   if (!client)
   {
     return(Py_BuildValue("is", -1, "client invalid"));

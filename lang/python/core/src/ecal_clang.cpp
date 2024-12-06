@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_client_v5.h>
 
 #include "ecal_clang.h"
 
@@ -638,7 +639,7 @@ bool server_rem_method_callback(ECAL_HANDLE handle_, const char* method_name_)
 /****************************************/
 ECAL_HANDLE client_create(const char* service_name_)
 {
-  auto* client = new eCAL::CServiceClient;
+  auto* client = new eCAL::v5::CServiceClient;
   if (!client->Create(service_name_))
   {
     delete client;
@@ -652,7 +653,7 @@ ECAL_HANDLE client_create(const char* service_name_)
 /****************************************/
 bool client_destroy(ECAL_HANDLE handle_)
 {
-  auto* client = static_cast<eCAL::CServiceClient*>(handle_);
+  auto* client = static_cast<eCAL::v5::CServiceClient*>(handle_);
   if (client != nullptr)
   {
     delete client;
@@ -669,7 +670,7 @@ bool client_destroy(ECAL_HANDLE handle_)
 /****************************************/
 bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_)
 {
-  auto* client = static_cast<eCAL::CServiceClient*>(handle_);
+  auto* client = static_cast<eCAL::v5::CServiceClient*>(handle_);
   if (client != nullptr)
   {
     return(client->SetHostName(host_name_));
@@ -685,7 +686,7 @@ bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_)
 /****************************************/
 bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_)
 {
-  auto* client = static_cast<eCAL::CServiceClient*>(handle_);
+  auto* client = static_cast<eCAL::v5::CServiceClient*>(handle_);
   if (client != nullptr)
   {
     std::string request(request_, request_len_);
@@ -702,7 +703,7 @@ bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const cha
 /****************************************/
 bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_)
 {
-  auto* client = static_cast<eCAL::CServiceClient*>(handle_);
+  auto* client = static_cast<eCAL::v5::CServiceClient*>(handle_);
   if (client != nullptr)
   {
     std::string request(request_, request_len_);

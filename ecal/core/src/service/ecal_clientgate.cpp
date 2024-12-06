@@ -54,43 +54,37 @@ namespace eCAL
     if (!m_created) return;
 
     // destroy all remaining clients
-    const std::shared_lock<std::shared_timed_mutex> lock(m_client_set_sync);
-    for (const auto& client : m_client_set)
-    {
-      client->Stop();
-    }
+    const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_map_sync);
+    m_service_client_map.clear();
 
     m_created = false;
   }
 
-  bool CClientGate::Register(CServiceClientImpl* client_)
+  bool CClientGate::Register(const std::string& service_name_, const std::shared_ptr<CServiceClientImpl>& client_)
   {
     if (!m_created) return(false);
 
     // register internal client
-    const std::unique_lock<std::shared_timed_mutex> lock(m_client_set_sync);
-    m_client_set.insert(client_);
+    const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_map_sync);
+    m_service_client_map.emplace(std::pair<std::string, std::shared_ptr<CServiceClientImpl>>(service_name_, client_));
 
     return(true);
   }
 
-  bool CClientGate::Unregister(CServiceClientImpl* client_)
+  bool CClientGate::Unregister(const std::string& service_name_, const std::shared_ptr<CServiceClientImpl>& client_)
   {
     if (!m_created) return(false);
-    bool ret_state(false);
+    bool ret_state = false;
 
-    // unregister internal service
-    const std::unique_lock<std::shared_timed_mutex> lock(m_client_set_sync);
-    for (auto iter = m_client_set.begin(); iter != m_client_set.end();)
+    const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_map_sync);
+    auto res = m_service_client_map.equal_range(service_name_);
+    for (auto iter = res.first; iter != res.second; ++iter)
     {
-      if (*iter == client_)
+      if (iter->second == client_)
       {
-        iter = m_client_set.erase(iter);
+        m_service_client_map.erase(iter);
         ret_state = true;
-      }
-      else
-      {
-        iter++;
+        break;
       }
     }
 
@@ -114,29 +108,17 @@ namespace eCAL
     service.tcp_port_v0 = static_cast<unsigned short>(ecal_sample_service.tcp_port_v0);
     service.tcp_port_v1 = static_cast<unsigned short>(ecal_sample_service.tcp_port_v1);
 
-    // create service key
-    service.key = service.sname + ":" + service.sid + "@" + std::to_string(service.pid) + "@" + service.hname;
-
-    // add or remove (timeouted) services
-    {
-      const std::unique_lock<std::shared_timed_mutex> lock(m_service_register_map_sync);
-
-      // add / update service
-      m_service_register_map[service.key] = service;
-
-      // remove timeouted services
-      m_service_register_map.erase_expired();
-    }
-
     // inform matching clients
     {
-      const std::shared_lock<std::shared_timed_mutex> lock(m_client_set_sync);
-      for (const auto& iter : m_client_set)
+      const std::shared_lock<std::shared_timed_mutex> lock(m_service_client_map_sync);
+      auto res = m_service_client_map.equal_range(service.sname);
+      for (ServiceNameClientIDImplMapT::const_iterator iter = res.first; iter != res.second; ++iter)
       {
-        if (iter->GetServiceName() == service.sname)
-        {
-          iter->RegisterService(service.key, service);
-        }
+        Registration::SEntityId service_entity;
+        service_entity.entity_id  = service.sid;
+        service_entity.process_id = service.pid;
+        service_entity.host_name  = service.hname;
+        iter->second->RegisterService(service_entity, service);
       }
     }
   }
@@ -145,11 +127,13 @@ namespace eCAL
   {
     if (!m_created) return;
 
-    // read service registrations
-    std::shared_lock<std::shared_timed_mutex> const lock(m_client_set_sync);
-    for (const auto& service_client_impl : m_client_set)
+    // read client registrations
     {
-      reg_sample_list_.push_back(service_client_impl->GetRegistration());
+      const std::shared_lock<std::shared_timed_mutex> lock(m_service_client_map_sync);
+      for (const auto& iter : m_service_client_map)
+      {
+        reg_sample_list_.push_back(iter.second->GetRegistration());
+      }
     }
   }
 }

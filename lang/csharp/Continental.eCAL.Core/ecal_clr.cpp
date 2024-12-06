@@ -459,13 +459,13 @@ int ServiceServer::OnMethodCall(const std::string& method_, const std::string& /
 /////////////////////////////////////////////////////////////////////////////
 // ServiceClient
 /////////////////////////////////////////////////////////////////////////////
-ServiceClient::ServiceClient() : m_client(new ::eCAL::CServiceClient())
+ServiceClient::ServiceClient() : m_client(new ::eCAL::v5::CServiceClient())
 {
 }
 
 ServiceClient::ServiceClient(System::String^ service_name_)
 {
-    m_client = new ::eCAL::CServiceClient(StringToStlString(service_name_));
+    m_client = new ::eCAL::v5::CServiceClient(StringToStlString(service_name_));
 }
 
 ServiceClient::~ServiceClient()

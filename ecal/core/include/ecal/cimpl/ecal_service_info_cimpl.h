@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ enum eCallState
 {
   call_state_none = 0,    //!< undefined
   call_state_executed,    //!< executed (successfully)
+  call_state_timeouted,   //!< timeout
   call_state_failed       //!< failed
 };
 
