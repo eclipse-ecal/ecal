@@ -158,11 +158,6 @@ void ecal_shutdown_process_id(int process_id_);
 void ecal_shutdown_processes();
 
 /**
- * @brief Send shutdown event to all local core components.
-**/
-void ecal_shutdown_core();
-
-/**
  * @brief Gets type name of the specified topic.
  *
  * @param       topic_name_      Topic name.

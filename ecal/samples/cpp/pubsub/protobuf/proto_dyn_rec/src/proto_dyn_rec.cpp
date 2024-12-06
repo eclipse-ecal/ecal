@@ -270,9 +270,9 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
   }
 }
 
-void ProtoMsgCallback(const char* topic_name_, const std::shared_ptr<google::protobuf::Message>& msg_)
+void ProtoMsgCallback(const eCAL::Registration::STopicId& topic_id_, const std::shared_ptr<google::protobuf::Message>& msg_)
 {
-  ProcProtoMsg(*msg_, topic_name_);
+  ProcProtoMsg(*msg_, topic_id_.topic_name);
   std::cout << std::endl;
 }
 

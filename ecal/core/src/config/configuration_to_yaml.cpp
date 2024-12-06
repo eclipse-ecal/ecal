@@ -10,14 +10,6 @@ namespace YAML
       member = node_[key].as<AS>();
   }
 
-  // Operator overload for assigning a ConstrainedInteger to a YAML::Node
-  template<int MIN, int STEP, int MAX>
-  YAML::Node operator<<(YAML::Node node, const eCAL::Types::ConstrainedInteger<MIN, STEP, MAX>& constrainedInt) 
-  {
-      node = static_cast<int>(constrainedInt);
-      return node;
-  }
-
   eCAL_Logging_Filter ParseLogLevel(const std::vector<std::string>& filter_)
   {
     // create excluding filter list
@@ -250,8 +242,8 @@ namespace YAML
     node["mode"]                = config_.mode == eCAL::Types::UDPMode::LOCAL ? "local" : "network";
     node["port"]                = config_.port;
     node["mask"]                = config_.mask.Get();
-    node["send_buffer"]        << config_.send_buffer;
-    node["receive_buffer"]     << config_.receive_buffer;
+    node["send_buffer"]         = config_.send_buffer;
+    node["receive_buffer"]      = config_.receive_buffer;
     node["join_all_interfaces"] = config_.join_all_interfaces;
     node["npcap_enabled"]       = config_.npcap_enabled;
     node["network"]             = config_.network;
@@ -308,8 +300,8 @@ namespace YAML
     node["zero_copy_mode"]           = config_.zero_copy_mode;
     node["acknowledge_timeout_ms"]   = config_.acknowledge_timeout_ms;
     node["memfile_buffer_count"]     = config_.memfile_buffer_count;
-    node["memfile_min_size_bytes"]  << config_.memfile_min_size_bytes;
-    node["memfile_reserve_percent"] << config_.memfile_reserve_percent;
+    node["memfile_min_size_bytes"]   = config_.memfile_min_size_bytes;
+    node["memfile_reserve_percent"]  = config_.memfile_reserve_percent;
     return node;
   }
 

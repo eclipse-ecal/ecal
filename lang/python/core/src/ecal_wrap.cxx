@@ -227,16 +227,6 @@ PyObject* shutdown_processes(PyObject* /*self*/, PyObject* /*args*/)
 }
 
 /****************************************/
-/*      shutdown_core                   */
-/****************************************/
-PyObject* shutdown_core(PyObject* /*self*/, PyObject* /*args*/)
-{
-  ecal_shutdown_core();
-
-  Py_RETURN_NONE;
-}
-
-/****************************************/
 /*      log_setlevel                    */
 /****************************************/
 PyObject* log_setlevel(PyObject* /*self*/, PyObject* args)
@@ -1330,7 +1320,6 @@ static PyMethodDef _ecal_methods[] =
   {"ok",                            ok,                            METH_NOARGS,   "ok()"},
   {"shutdown_process_uname",        shutdown_process_uname,        METH_VARARGS,  "shutdown_process_uname(unit_name)"},
   {"shutdown_processes",            shutdown_processes,            METH_NOARGS,   "shutdown_processes()"},
-  {"shutdown_core",                 shutdown_core,                 METH_NOARGS,   "shutdown_core()"},
 
   {"log_setlevel",                  log_setlevel,                  METH_VARARGS,  "log_setlevel(level)"},
   {"log_message",                   log_message,                   METH_VARARGS,  "log_message(message)"},

@@ -30,14 +30,39 @@
 #include <vector>
 #include <functional>
 
-static char* str_malloc(const std::string& buf_s_)
+namespace
 {
-  void* cbuf = malloc(buf_s_.size());
-  if(cbuf != nullptr)
+  char* str_malloc(const std::string& buf_s_)
   {
-    memcpy(cbuf, buf_s_.data(), buf_s_.size());
+    void* cbuf = malloc(buf_s_.size());
+    if (cbuf != nullptr)
+    {
+      memcpy(cbuf, buf_s_.data(), buf_s_.size());
+    }
+    return(static_cast<char*>(cbuf));
   }
-  return(static_cast<char*>(cbuf));
+
+  bool GetTopicDataTypeInformation(const char* topic_name_, eCAL::SDataTypeInformation& topic_info_)
+  {
+    // try to find topic name in publisher set
+    for (const auto& pub_id : eCAL::Registration::GetPublisherIDs())
+    {
+      if (pub_id.topic_name == topic_name_)
+      {
+        return eCAL::Registration::GetPublisherInfo(pub_id, topic_info_);
+      }
+    }
+    // try to find topic name in subscriber set
+    const auto& sub_ids = eCAL::Registration::GetSubscriberIDs();
+    for (const auto& sub_id : sub_ids)
+    {
+      if (sub_id.topic_name == topic_name_)
+      {
+        return eCAL::Registration::GetSubscriberInfo(sub_id, topic_info_);
+      }
+    }
+    return false;
+  }
 }
 
 /****************************************/
@@ -161,20 +186,13 @@ void ecal_shutdown_processes()
 }
 
 /****************************************/
-/*      ecal_shutdown_core              */
-/****************************************/
-void ecal_shutdown_core()
-{
-  eCAL::Util::ShutdownCore();
-}
-
-/****************************************/
 /*      get_type_name                   */
 /****************************************/
 bool ecal_get_type_name(const char* topic_name_, const char** topic_type_, int* topic_type_len_)
 {
   eCAL::SDataTypeInformation topic_info;
-  bool ret = eCAL::Registration::GetTopicDataTypeInformation(topic_name_, topic_info);
+  // get the first matching topic type information for the given topic name found in either the publisher or subscriber id set !
+  bool ret = GetTopicDataTypeInformation(topic_name_, topic_info);
   if(ret)
   {
     std::string topic_type_s = topic_info.name;
@@ -202,7 +220,8 @@ bool ecal_get_type_name(const char* topic_name_, const char** topic_type_, int* 
 bool ecal_get_type_encoding(const char* topic_name_, const char** topic_encoding_, int* topic_encoding_len_)
 {
   eCAL::SDataTypeInformation topic_info;
-  bool ret = eCAL::Registration::GetTopicDataTypeInformation(topic_name_, topic_info);
+  // get the first matching topic type information for the given topic name found in either the publisher or subscriber id set !
+  bool ret = GetTopicDataTypeInformation(topic_name_, topic_info);
   if (ret)
   {
     std::string topic_encoding_s = topic_info.encoding;
@@ -230,7 +249,8 @@ bool ecal_get_type_encoding(const char* topic_name_, const char** topic_encoding
 bool ecal_get_description(const char* topic_name_, const char** topic_desc_, int* topic_desc_len_)
 {
   eCAL::SDataTypeInformation topic_info;
-  bool ret = eCAL::Registration::GetTopicDataTypeInformation(topic_name_, topic_info);
+  // get the first matching topic type information for the given topic name found in either the publisher or subscriber id set !
+  bool ret = GetTopicDataTypeInformation(topic_name_, topic_info);
   if(ret)
   {
     std::string topic_desc_s = topic_info.descriptor;

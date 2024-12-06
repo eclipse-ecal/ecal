@@ -12,7 +12,7 @@ The corresponding structure reflects the configuration file (:ref:`configuration
 Custom types
 ============
 
-In order to rule out configuration errors, custom datatypes for IP addresses (IpAddressV4) and sizes (ConstrainedInteger) are introduced.
+In order to rule out configuration errors, a custom datatype for IP addresses (IpAddressV4) is introduced.
 
 **IpAddressV4:** For assigning an IP address simply assign a string with the desired address. 
 Decimal and hexadecimal format is supported. 
@@ -25,17 +25,6 @@ The IP address can be used like a normal string object. For example:
   eCAL::Types::IpAddressV4 ip_address = "192.168.7.1"; // in hex: "C0.A8.7.1"
   std::cout << ip_address << "\n"; 
 
-**ConstrainedInteger**: ConstrainedInteger are specified with a minimum (default: 0), step (default: 1) and maximum (default: maximum of int) value.
-In case the assigned value does not fit into the specified limitation, the type will throw a std::invalid_argument exception.
-
-The size object can be used like a normal integer.
-
-.. code-block:: c++
-
-  eCAL::Types::ConstrainedInteger<1024, 512, 8192> size_4mb = 1024 + 6 * 512;
-  std::cout << size_4mb << "\n";
-
-For specifying sizes in the ecal configuration object, refer to the .yaml file or "ecal/config/configuration.h" for the limitations.
 
 Global configuration initialization
 ===================================

@@ -71,7 +71,6 @@ TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
   std::string first_received_sample;
   auto subscriber_function = [&do_start_publication, &publication_finished, &publisher_seen_at_subscription_start, &first_received_sample]() {
     eCAL::CSubscriber sub("blob");
-    bool received(false);
     const auto max_sub_count(10);
     auto sub_count(0);
     auto receive_lambda = [&max_sub_count, &sub_count, &publisher_seen_at_subscription_start, &first_received_sample, &sub](const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_) {
@@ -171,7 +170,6 @@ TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
   std::string first_received_sample;
   auto subscriber_function = [&publication_finished, &publisher_seen_at_subscription_start, &first_received_sample]() {
     eCAL::CSubscriber sub("blob");
-    bool received(false);
     const auto max_sub_count(10);
     auto sub_count(0);
     auto receive_lambda = [&max_sub_count, &sub_count, &publisher_seen_at_subscription_start, &first_received_sample, &sub](const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_) {

@@ -151,18 +151,18 @@ namespace eCAL
       return os;
     }
 
-    struct SServiceId
+    struct SServiceMethodId
     {
       SEntityId    service_id;
       std::string  service_name;
       std::string  method_name;
 
-      bool operator==(const SServiceId& other) const
+      bool operator==(const SServiceMethodId& other) const
       {
         return service_id == other.service_id && service_name == other.service_name && method_name == other.method_name;
       }
 
-      bool operator<(const SServiceId& other) const
+      bool operator<(const SServiceMethodId& other) const
       {
         return std::tie(service_id, service_name, method_name) < std::tie(other.service_id, other.service_name, other.method_name);
       }

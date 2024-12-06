@@ -479,7 +479,6 @@ set(ecal_c_src
     src/cimpl/ecal_monitoring_cimpl.cpp
     src/cimpl/ecal_process_cimpl.cpp
     src/cimpl/ecal_publisher_cimpl.cpp
-    src/cimpl/ecal_registration_cimpl.cpp
     src/cimpl/ecal_server_cimpl.cpp
     src/cimpl/ecal_subscriber_cimpl.cpp
     src/cimpl/ecal_time_cimpl.cpp
@@ -501,11 +500,19 @@ endif()
 # public header
 ######################################
 set(ecal_header_cmn
+    include/ecal/config/application.h
+    include/ecal/config/configuration.h
+    include/ecal/config/logging.h
+    include/ecal/config/monitoring.h
+    include/ecal/config/publisher.h
+    include/ecal/config/registration.h
+    include/ecal/config/service.h
+    include/ecal/config/subscriber.h
+    include/ecal/config/time.h
+    include/ecal/config/transport_layer.h
+    include/ecal/config/user_arguments.h
     include/ecal/types/logging.h
     include/ecal/types/monitoring.h
-    include/ecal/config/configuration.h
-    include/ecal/config/publisher.h
-    include/ecal/config/subscriber.h
     include/ecal/ecal.h
     include/ecal/ecal_callback.h
     include/ecal/ecal_config.h
@@ -541,7 +548,6 @@ set(ecal_header_cimpl
     include/ecal/cimpl/ecal_monitoring_cimpl.h
     include/ecal/cimpl/ecal_process_cimpl.h
     include/ecal/cimpl/ecal_publisher_cimpl.h
-    include/ecal/cimpl/ecal_registration_cimpl.h
     include/ecal/cimpl/ecal_server_cimpl.h
     include/ecal/cimpl/ecal_service_info_cimpl.h
     include/ecal/cimpl/ecal_subscriber_cimpl.h
@@ -554,6 +560,7 @@ set(ecal_header_cimpl
 
 set(ecal_header_msg
     include/ecal/msg/protobuf/client.h
+    include/ecal/msg/protobuf/dynamic_json_subscriber.h
     include/ecal/msg/protobuf/dynamic_publisher.h
     include/ecal/msg/protobuf/dynamic_subscriber.h    
     include/ecal/msg/protobuf/publisher.h
