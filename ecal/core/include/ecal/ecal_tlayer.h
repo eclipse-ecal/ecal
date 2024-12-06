@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,28 +40,6 @@ namespace eCAL
       tlayer_shm        = 4,
       tlayer_tcp        = 5,
       tlayer_all        = 255
-    };
-
-    /**
-     * @brief eCAL transport layer modes.
-    **/
-    enum eSendMode
-    {
-      smode_none = -1,
-      smode_off  = 0,
-      smode_on,
-      smode_auto
-    };
-
-    // TODO: Do weed need this ?
-    /**
-     * @brief eCAL transport layer state struct.
-    **/
-    struct ECAL_API STLayer
-    {
-      eSendMode sm_udp_mc{smode_none};  //!< udp multicast
-      eSendMode sm_shm{smode_none};     //!< shared memory
-      eSendMode sm_tcp{smode_none};     //!< tcp
     };
   }
 }

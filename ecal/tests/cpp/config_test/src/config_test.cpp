@@ -100,7 +100,7 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
   // Test monitoring console log assignment, default is (log_level_info | log_level_warning | log_level_error | log_level_fatal)
   EXPECT_EQ(mon_log_filter_con, eCAL::GetConfiguration().logging.sinks.console.filter_log_con);
 
-  // Test publisher sendmode assignment, default is eCAL::TLayer::eSendMode::smode_auto
+  // Test publisher sendmode assignment
   EXPECT_EQ(pub_use_shm, eCAL::GetConfiguration().publisher.layer.shm.enable);
 
   // Test registration option assignment, default timeout is 10000U and default refresh is 1000U
