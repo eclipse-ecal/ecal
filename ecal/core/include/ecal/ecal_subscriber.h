@@ -169,14 +169,14 @@ namespace eCAL
       bool Destroy();
 
     /**
-     * @brief Set a set of id's to prefiltering topics (see CPublisher::SetFilterID).
+     * @brief Set a set of id's to prefiltering topics (see CPublisher::SetID).
      *
-     * @param filter_ids_  Set of id's.
+     * @param filter_ids_  Set of filter id's.
      *
      * @return  True if it succeeds, false if it fails.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool SetFilterIDs(const std::set<long long>& filter_ids_);
+      bool SetID(const std::set<long long>& filter_ids_);
 
     /**
      * @brief Sets subscriber attribute. 
@@ -267,7 +267,7 @@ namespace eCAL
      * @return  true if created, false if not. 
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool IsCreated() const {return(m_datareader != nullptr);}
+      bool IsCreated() const { return(m_datareader != nullptr); }
 
     /**
      * @brief Query if the subscriber is published.

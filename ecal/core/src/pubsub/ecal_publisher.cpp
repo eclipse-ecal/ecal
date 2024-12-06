@@ -142,7 +142,7 @@ namespace eCAL
     return m_datawriter->ClearAttribute(attr_name_);
   }
 
-  bool CPublisher::SetFilterID(long long filter_id_)
+  bool CPublisher::SetID(long long filter_id_)
   {
     m_filter_id = filter_id_;
     return true;

@@ -116,7 +116,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubscriber::SetFilterIDs(const std::set<long long>& filter_ids_)
+  bool CSubscriber::SetID(const std::set<long long>& filter_ids_)
   {
     if (m_datareader == nullptr) return(false);
     m_datareader->SetFilterIDs(filter_ids_);

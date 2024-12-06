@@ -190,14 +190,14 @@ namespace eCAL
       bool ClearAttribute(const std::string& attr_name_);
 
     /**
-     * @brief Set a topic filter id.
+     * @brief Set the specific topic filter id.
      *
      * @param filter_id_  The topic id for subscriber side filtering (0 == no id).
      *
      * @return  True if it succeeds, false if it fails.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool SetFilterID(long long filter_id_);
+      bool SetID(long long filter_id_);
 
     /**
      * @brief Send a message to all subscribers. 
@@ -260,7 +260,7 @@ namespace eCAL
      * @return  True if created, false if not. 
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool IsCreated() const {return(m_datawriter != nullptr);}
+      bool IsCreated() const { return(m_datawriter != nullptr); }
 
     /**
      * @brief Query if the publisher is subscribed. 
