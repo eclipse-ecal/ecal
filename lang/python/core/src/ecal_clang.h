@@ -63,7 +63,7 @@ const char* ecal_getdate();
  *
  * @return Zero if succeeded, 1 if already initialized, -1 if failed.
 **/
-int ecal_initialize(int argc_, char **argv_, const char* unit_name_);
+int ecal_initialize(const char* unit_name_);
 
 /**
  * @brief Finalize eCAL API.

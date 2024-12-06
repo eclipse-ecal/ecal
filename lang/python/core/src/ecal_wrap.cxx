@@ -78,41 +78,17 @@ PyObject* PyAnswerHandle(ECAL_HANDLE handle_)
 /****************************************/
 PyObject* initialize(PyObject* /*self*/, PyObject* args)
 {
-  PyObject* unit_args;               /* python list of command line arguments */
-  char*     unit_name = nullptr;     /* unit name */
-  if (!PyArg_ParseTuple(args, "O!s", &PyList_Type, &unit_args, &unit_name))
+  char* unit_name = nullptr;
+  if (!PyArg_ParseTuple(args, "s", &unit_name))
     return nullptr;
 
-  std::vector<char*> arg_vec_p;
-  int arg_num = (int)(PyList_Size(unit_args));
-  for (int i = 0; i < arg_num; ++i)
-  {
-    /* grab the string object from the next element of the list */
-    PyObject* arg_str = PyList_GetItem(unit_args, i);
-
-    /* make it a string */
-    PyObject* arg_ustr = PyUnicode_AsUTF8String(arg_str);
-    std::string arg = PyBytes_AsString(arg_ustr);
-
-    /* and put it into the <char*> argument vector */
-#ifdef _WIN32
-    arg_vec_p.push_back(_strdup(arg.c_str()));
-#else
-    arg_vec_p.push_back(strdup(arg.c_str()));
-#endif // _WIN32
-  }
-
-  /* pass arguments to the initialize function */
+  /* pass argument to the initialize function */
   int init{ 0 };
   Py_BEGIN_ALLOW_THREADS
-    init = ecal_initialize(int(arg_vec_p.size()), arg_vec_p.data(), unit_name);
+    init = ecal_initialize(unit_name);
   Py_END_ALLOW_THREADS
-  PyObject* ret_obj = Py_BuildValue("i", init);
 
-  /* free <char*> argument vector */
-  for(auto arg : arg_vec_p) free(arg);
-
-  return(ret_obj);
+  return(Py_BuildValue("i", init));
 }
 
 /****************************************/
@@ -1340,7 +1316,7 @@ PyObject* mon_logging(PyObject* /*self*/, PyObject* /*args*/)
 /****************************************/
 static PyMethodDef _ecal_methods[] = 
 {
-  {"initialize",                    initialize,                    METH_VARARGS,  "initialize(argv, unit_name)"},
+  {"initialize",                    initialize,                    METH_VARARGS,  "initialize(unit_name)"},
   {"finalize",                      finalize,                      METH_NOARGS,   "finalize()"},
   {"is_initialized",                is_initialized,                METH_NOARGS,   "is_initialized()"},
   {"set_unit_name",                 set_unit_name,                 METH_VARARGS,  "set_unit_name(unit_name)"},

@@ -25,15 +25,14 @@
 
 import ecal._ecal_core_py as _ecal
 
-def initialize(args, unit_name):
+def initialize(unit_name):
   """ initialize eCAL API
 
-  :param args:      command line argument list (sys.argv)
   :param unit_name: instance unit name
   :type unit_name:  string
 
   """
-  return _ecal.initialize(args, unit_name)
+  return _ecal.initialize(unit_name)
 
 
 def finalize():

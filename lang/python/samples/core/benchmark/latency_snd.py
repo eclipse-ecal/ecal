@@ -80,7 +80,7 @@ def do_run(msg_num, msg_size):
 if __name__ == "__main__":
     
   # initialize eCAL API
-  ecal_core.initialize([], "py_latency_snd")
+  ecal_core.initialize("py_latency_snd")
 
   args = parse_args(sys.argv[1:])
   do_run(msg_num=args.runs, msg_size=args.size)
