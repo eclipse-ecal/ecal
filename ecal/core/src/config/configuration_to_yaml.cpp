@@ -584,6 +584,22 @@ namespace YAML
     /____/\___/\_, /\_, /_/_//_/\_, / 
               /___//___/       /___/  
   */
+
+  Node convert<eCAL::Logging::Sinks::UDPReceiver::Configuration>::encode(const eCAL::Logging::Sinks::UDPReceiver::Configuration& config_)
+  {
+    Node node;
+    node["enable"] = config_.enable;
+    node["port"]   = config_.port;
+    return node;
+  }
+
+  bool convert<eCAL::Logging::Sinks::UDPReceiver::Configuration>::decode(const Node& node_, eCAL::Logging::Sinks::UDPReceiver::Configuration& config_)
+  {
+    AssignValue<bool>(config_.enable, node_, "enable");
+    AssignValue<unsigned int>(config_.port, node_, "port");
+
+    return true;
+  }
   
   Node convert<eCAL::Logging::Sinks::UDP::Configuration>::encode(const eCAL::Logging::Sinks::UDP::Configuration& config_)
   {
@@ -591,7 +607,6 @@ namespace YAML
     node["enable"] = config_.enable;
     node["port"]   = config_.port;
     node["level"]  = LogLevelToVector(config_.filter_log_udp);
-    node["receive"] = config_.receive;
     return node;
   }
 
@@ -599,7 +614,6 @@ namespace YAML
   {
     AssignValue<bool>(config_.enable, node_, "enable");
     AssignValue<unsigned int>(config_.port, node_, "port");
-    AssignValue<bool>(config_.receive, node_, "receive");
 
     std::vector<std::string> tmp;
     AssignValue<std::vector<std::string>>(tmp, node_, "level");

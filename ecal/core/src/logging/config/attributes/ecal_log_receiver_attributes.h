@@ -41,7 +41,6 @@ namespace eCAL
       SUDPReceiver udp_receiver;
 
       bool         network_enabled;
-      bool         udp_enabled;
       bool         receive_enabled;
       std::string  host_name;
    };

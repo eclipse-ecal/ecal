@@ -37,7 +37,7 @@ namespace eCAL
       attributes.udp_config.loopback  = reg_config_.loopback;
       
       attributes.udp_config.sndbuf    = tl_config_.udp.send_buffer;
-      attributes.udp_config.port      = tl_config_.udp.port;
+      attributes.udp_config.port      = log_config_.sinks.udp.port;
       
       switch (tl_config_.udp.mode)
       {
@@ -63,14 +63,13 @@ namespace eCAL
       attributes.network_enabled    = reg_config_.network_enabled;
       attributes.host_name          = Process::GetHostName();
 
-      attributes.udp_enabled        = log_config_.sinks.udp.enable;
-      attributes.receive_enabled    = log_config_.sinks.udp.receive;
+      attributes.receive_enabled    = log_config_.sinks.udp_receiver.enable;
 
       attributes.udp_receiver.broadcast = !reg_config_.network_enabled;
       attributes.udp_receiver.loopback  = true;
       
       attributes.udp_receiver.rcvbuf    = tl_config_.udp.receive_buffer;
-      attributes.udp_receiver.port      = tl_config_.udp.port;
+      attributes.udp_receiver.port      = log_config_.sinks.udp_receiver.port;
 
       switch (tl_config_.udp.mode)
       {

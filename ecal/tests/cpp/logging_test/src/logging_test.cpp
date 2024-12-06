@@ -54,11 +54,11 @@ private:
 eCAL::Configuration GetUDPConfiguration()
 {
   eCAL::Configuration config;
-  config.logging.sinks.file.enable        = false;
-  config.logging.sinks.console.enable     = false;
-  config.logging.sinks.udp.enable         = true;
-  config.logging.sinks.udp.receive        = true;
-  config.logging.sinks.udp.filter_log_udp = log_level_all;
+  config.logging.sinks.file.enable         = false;
+  config.logging.sinks.console.enable      = false;
+  config.logging.sinks.udp.enable          = true;
+  config.logging.sinks.udp_receiver.enable = true;
+  config.logging.sinks.udp.filter_log_udp  = log_level_all;
   return config;
 }
 
@@ -351,7 +351,7 @@ TEST(logging_disable /*unused*/, udp_receive /*unused*/)
   const std::string log_message  = "Disabled receive logging test for udp.";
   auto  ecal_config              = GetUDPConfiguration();
 
-  ecal_config.logging.sinks.udp.receive = false;
+  ecal_config.logging.sinks.udp_receiver.enable = false;
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging | eCAL::Init::UDPLogReceive);  
 
   eCAL::Logging::Log(log_level_info, log_message);
@@ -384,6 +384,30 @@ TEST(logging_disable /*unused*/, udp_no_init /*unused*/)
 
   EXPECT_EQ(log.log_messages.size(), 0);
   EXPECT_EQ(eCAL::IsInitialized(eCAL::Init::UDPLogReceive), 0);
+  
+  eCAL::Finalize();
+}
+
+TEST(logging_disable /*unused*/, udp_different_receive_port /*unused*/)
+{
+  const std::string unit_name    = "no_logging_different_udp_port";
+  const std::string log_message  = "No log receiving possible - different udp port.";
+  auto  ecal_config              = GetUDPConfiguration();
+
+  ecal_config.logging.sinks.udp_receiver.enable = true;
+  ecal_config.logging.sinks.udp_receiver.port   = 14009;
+
+  eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging | eCAL::Init::UDPLogReceive);  
+
+  eCAL::Logging::Log(log_level_info, log_message);
+
+  std::this_thread::sleep_for(UDP_WAIT_TIME);
+  
+  eCAL::Logging::SLogging log;
+  eCAL::Logging::GetLogging(log);
+
+  EXPECT_EQ(log.log_messages.size(), 0);
+  EXPECT_EQ(eCAL::IsInitialized(eCAL::Init::UDPLogReceive), 1);
   
   eCAL::Finalize();
 }

@@ -298,6 +298,14 @@ namespace YAML
               /___//___/       /___/  
   */
   template<>
+  struct convert<eCAL::Logging::Sinks::UDPReceiver::Configuration>
+  {
+    static Node encode(const eCAL::Logging::Sinks::UDPReceiver::Configuration& config_);
+
+    static bool decode(const Node& node_, eCAL::Logging::Sinks::UDPReceiver::Configuration& config_);
+  };
+
+  template<>
   struct convert<eCAL::Logging::Sinks::UDP::Configuration>
   {
     static Node encode(const eCAL::Logging::Sinks::UDP::Configuration& config_);
