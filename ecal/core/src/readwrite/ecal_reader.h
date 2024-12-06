@@ -79,7 +79,7 @@ namespace eCAL
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
     bool ClearAttribute(const std::string& attr_name_);
 
-    void SetID(const std::set<long long>& id_set_);
+    void SetFilterIDs(const std::set<long long>& filter_ids_);
 
     void ApplyPublication(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& pub_layer_states_);
     void RemovePublication(const SPublicationInfo& publication_info_);

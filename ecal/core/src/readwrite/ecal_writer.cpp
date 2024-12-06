@@ -159,7 +159,7 @@ namespace eCAL
     return true;
   }
 
-  size_t CDataWriter::Write(CPayloadWriter& payload_, long long time_, long long id_)
+  size_t CDataWriter::Write(CPayloadWriter& payload_, long long time_, long long filter_id_)
   {
     // get payload buffer size (one time, to avoid multiple computations)
     const size_t payload_buf_size(payload_.GetSize());
@@ -186,7 +186,7 @@ namespace eCAL
     }
 
     // prepare counter and internal states
-    const size_t snd_hash = PrepareWrite(id_, payload_buf_size);
+    const size_t snd_hash = PrepareWrite(filter_id_, payload_buf_size);
 
     // did we write anything
     bool written(false);

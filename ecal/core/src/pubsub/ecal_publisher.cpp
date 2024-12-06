@@ -40,8 +40,7 @@ namespace eCAL
 {
   CPublisher::CPublisher() :
     m_datawriter(nullptr),
-    m_id(0),
-    m_created(false)
+    m_filter_id(0)
   {
   }
 
@@ -65,10 +64,9 @@ namespace eCAL
   **/
   CPublisher::CPublisher(CPublisher&& rhs) noexcept :
                 m_datawriter(std::move(rhs.m_datawriter)),
-                m_id(rhs.m_id),
-                m_created(rhs.m_created)
+                m_filter_id(rhs.m_filter_id)
   {
-    rhs.m_created = false;
+    rhs.m_datawriter = nullptr;
   }
 
   /**
@@ -79,19 +77,18 @@ namespace eCAL
     // Call destroy, to clean up the current state, then afterwards move all elements
     Destroy();
 
-    m_datawriter  = std::move(rhs.m_datawriter);
-    m_id          = rhs.m_id;
-    m_created     = rhs.m_created;
-
-    rhs.m_created = false;
+    m_datawriter = std::move(rhs.m_datawriter);
+    m_filter_id  = rhs.m_filter_id;
+    
+    rhs.m_datawriter = nullptr;
 
     return *this;
   }
 
   bool CPublisher::Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_)
   {
-    if (m_created)           return(false);
-    if (topic_name_.empty()) return(false);
+    if (m_datawriter != nullptr) return(false);
+    if (topic_name_.empty())     return(false);
 
     // create datawriter
     m_datawriter = std::make_shared<CDataWriter>(data_type_info_, BuildWriterAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
@@ -100,8 +97,7 @@ namespace eCAL
     g_pubgate()->Register(topic_name_, m_datawriter);
 
     // we made it :-)
-    m_created = true;
-    return(m_created);
+    return(true);
   }
 
   bool CPublisher::Create(const std::string& topic_name_)
@@ -111,7 +107,7 @@ namespace eCAL
 
   bool CPublisher::Destroy()
   {
-    if(!m_created) return(false);
+    if (m_datawriter == nullptr) return(false);
 
     // unregister datawriter
     if(g_pubgate() != nullptr) g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
@@ -125,8 +121,6 @@ namespace eCAL
     m_datawriter.reset();
 
     // we made it :-)
-    m_created = false;
-
     return(true);
   }
 
@@ -148,10 +142,10 @@ namespace eCAL
     return m_datawriter->ClearAttribute(attr_name_);
   }
 
-  bool CPublisher::SetID(long long id_)
+  bool CPublisher::SetID(long long filter_id_)
   {
-    m_id = id_;
-    return(true);
+    m_filter_id = filter_id_;
+    return true;
   }
 
   size_t CPublisher::Send(const void* const buf_, const size_t len_, const long long time_ /* = DEFAULT_TIME_ARGUMENT */)
@@ -162,7 +156,7 @@ namespace eCAL
   
   size_t CPublisher::Send(CPayloadWriter& payload_, long long time_)
   {
-     if (!m_created) return(0);
+    if (m_datawriter == nullptr) return 0;
 
      // in an optimization case the
      // publisher can send an empty package
@@ -177,7 +171,7 @@ namespace eCAL
 
      // send content via data writer layer
      const long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
-     const size_t written_bytes = m_datawriter->Write(payload_, write_time, m_id);
+     const size_t written_bytes = m_datawriter->Write(payload_, write_time, m_filter_id);
 
      // return number of bytes written
      return written_bytes;
@@ -242,7 +236,6 @@ namespace eCAL
     out << indent_ << "----------------------" << '\n';
     out << indent_ << " class CPublisher"      << '\n';
     out << indent_ << "----------------------" << '\n';
-    out << indent_ << "m_created:            " << m_created << '\n';
     if((m_datawriter != nullptr) && m_datawriter->IsCreated()) out << indent_ << m_datawriter->Dump("    ");
     out << '\n';
 
