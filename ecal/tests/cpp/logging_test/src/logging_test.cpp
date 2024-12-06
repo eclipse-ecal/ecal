@@ -54,32 +54,32 @@ private:
 eCAL::Configuration GetUDPConfiguration()
 {
   eCAL::Configuration config;
-  config.logging.sinks.file.enable                = false;
-  config.logging.sinks.console.enable             = false;
-  config.logging.sinks.udp.enable                 = true;
-  config.logging.sinks.udp_config.receiver.enable = true;
-  config.logging.sinks.udp.filter_log             = log_level_all;
+  config.logging.provider.file.enable     = false;
+  config.logging.provider.console.enable  = false;
+  config.logging.provider.udp.enable      = true;
+  config.logging.receiver.enable          = true;
+  config.logging.provider.udp.filter_log  = log_level_all;
   return config;
 }
 
 eCAL::Configuration GetFileConfiguration(const std::string& path_)
 {
   eCAL::Configuration config;
-  config.logging.sinks.udp.enable       = false;
-  config.logging.sinks.console.enable   = false;
-  config.logging.sinks.file.enable      = true;
-  config.logging.sinks.file_config.path = path_;
-  config.logging.sinks.file.filter_log  = log_level_all;
+  config.logging.provider.udp.enable       = false;
+  config.logging.provider.console.enable   = false;
+  config.logging.provider.file.enable      = true;
+  config.logging.provider.file_config.path = path_;
+  config.logging.provider.file.filter_log  = log_level_all;
   return config;
 }
 
 eCAL::Configuration GetConsoleConfiguration()
 {
   eCAL::Configuration config;
-  config.logging.sinks.file.enable        = false;
-  config.logging.sinks.udp.enable         = false;
-  config.logging.sinks.console.enable     = true;
-  config.logging.sinks.console.filter_log = log_level_all;
+  config.logging.provider.file.enable        = false;
+  config.logging.provider.udp.enable         = false;
+  config.logging.provider.console.enable     = true;
+  config.logging.provider.console.filter_log = log_level_all;
   return config;
 }
 
@@ -225,7 +225,7 @@ TEST(logging_levels /*unused*/, various /*unused*/)
   const std::string log_message  = "Logging level various test for udp.";
   auto  ecal_config              = GetUDPConfiguration();
 
-  ecal_config.logging.sinks.udp.filter_log = log_level_warning;
+  ecal_config.logging.provider.udp.filter_log = log_level_warning;
 
   eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);
 
@@ -262,7 +262,7 @@ TEST(logging_levels /*unused*/, none /*unused*/)
   const std::string log_message  = "Logging level none test for udp.";
   auto  ecal_config              = GetUDPConfiguration();
 
-   ecal_config.logging.sinks.udp.filter_log = log_level_none;
+   ecal_config.logging.provider.udp.filter_log = log_level_none;
 
   eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);
 
@@ -302,7 +302,7 @@ TEST(logging_disable /*unused*/, file /*unused*/)
   const std::string log_message  = "Disabled logging test for file.";
   auto  ecal_config              = GetFileConfiguration(logging_path);
   
-  ecal_config.logging.sinks.file.enable = false;
+  ecal_config.logging.provider.file.enable = false;
   eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);
 
   eCAL::Logging::Log(log_level_info, log_message);
@@ -330,7 +330,7 @@ TEST(logging_disable /*unused*/, udp /*unused*/)
   const std::string log_message  = "Disabled logging test for udp.";
   auto  ecal_config              = GetUDPConfiguration();
 
-  ecal_config.logging.sinks.udp.enable = false;
+  ecal_config.logging.provider.udp.enable = false;
   eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);  
 
   eCAL::Logging::Log(log_level_info, log_message);
@@ -351,7 +351,7 @@ TEST(logging_disable /*unused*/, udp_receive /*unused*/)
   const std::string log_message  = "Disabled receive logging test for udp.";
   auto  ecal_config              = GetUDPConfiguration();
 
-  ecal_config.logging.sinks.udp_config.receiver.enable = false;
+  ecal_config.logging.receiver.enable = false;
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);  
 
   eCAL::Logging::Log(log_level_info, log_message);
@@ -372,8 +372,8 @@ TEST(logging_disable /*unused*/, udp_different_receive_port /*unused*/)
   const std::string log_message  = "No log receiving possible - different udp port.";
   auto  ecal_config              = GetUDPConfiguration();
 
-  ecal_config.logging.sinks.udp_config.receiver.enable = true;
-  ecal_config.logging.sinks.udp_config.receiver.port   = 14009;
+  ecal_config.logging.receiver.enable = true;
+  ecal_config.logging.receiver.udp_config.port   = 14009;
 
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
 
@@ -395,7 +395,7 @@ TEST(logging_disable /*unused*/, console /*unused*/)
   const std::string log_message  = "Disabled logging test for console.";
   auto  ecal_config              = GetConsoleConfiguration();
 
-  ecal_config.logging.sinks.console.enable = false;
+  ecal_config.logging.provider.console.enable = false;
   eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);
 
   {

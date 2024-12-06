@@ -39,7 +39,7 @@ namespace eCAL
 {
   namespace Logging
   {
-    namespace Sinks
+    namespace Provider
     {
       struct Sink
       {
@@ -57,21 +57,9 @@ namespace eCAL
 
       namespace UDP
       {
-        struct ReceiverConfiguration
-        {
-          bool         enable { false };                //!< Enable UDP receiver (Default: false)
-          unsigned int port   { 14001 };                //!< UDP port number (Default: 14001)
-        };
-
-        struct ProviderConfiguration
-        {
-          unsigned int port { 14001 };                  //!< UDP port number (Default: 14001)
-        };
-
         struct Configuration
         {
-          ReceiverConfiguration receiver;
-          ProviderConfiguration provider;
+          unsigned int port { 14001 };                  //!< UDP port number (Default: 14001)
         };
       }
 
@@ -86,10 +74,28 @@ namespace eCAL
         
       };
     }
+
+    namespace Receiver
+    {
+      namespace UDP
+      {
+        struct Configuration
+        {
+          unsigned int port   { 14001 };                //!< UDP port number (Default: 14001)
+        };
+      }
+
+      struct Configuration
+      {
+        bool               enable { false };            //!< Enable UDP receiver (Default: false)
+        UDP::Configuration udp_config;
+      };
+    }
     
     struct Configuration
     {
-      Sinks::Configuration sinks;
+      Provider::Configuration provider;
+      Receiver::Configuration receiver;
     };
   }
 }
