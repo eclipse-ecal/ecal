@@ -60,8 +60,6 @@ namespace eCAL
     Cli::Configuration            command_line_arguments;
 
     ECAL_API Configuration();
-    ECAL_API Configuration(int argc_, char** argv_);
-    ECAL_API Configuration(const std::vector<std::string>& args_);
 
     ECAL_API void InitFromConfig();
     ECAL_API void InitFromFile(const std::string& yaml_path_);

@@ -113,7 +113,7 @@ int main(int argc, char** argv)
     logger->info("eCAL Sys Client was started with " + accept_security_risk_arg.longID() + ". Not displaying security warning.");
   }
 
-  eCAL::Initialize(argc, argv, "eCALSysClient", eCAL::Init::Default | eCAL::Init::Monitoring);
+  eCAL::Initialize("eCALSysClient", eCAL::Init::Default | eCAL::Init::Monitoring);
 
   // Print System information
   std::string config_string;

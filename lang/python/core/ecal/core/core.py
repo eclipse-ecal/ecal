@@ -33,7 +33,17 @@ def initialize(args, unit_name):
   :type unit_name:  string
 
   """
-  return _ecal.initialize(args, unit_name)
+  print("[WARNING] 'initialize(args, unit_name)' is deprecated. Please use 'initialize(argv, unit_name)' instead.")
+  return initialize(unit_name)
+
+def initialize(unit_name):
+  """ initialize eCAL API
+
+  :param unit_name: instance unit name
+  :type unit_name:  string
+
+  """
+  return _ecal.initialize(unit_name)
 
 
 def finalize():

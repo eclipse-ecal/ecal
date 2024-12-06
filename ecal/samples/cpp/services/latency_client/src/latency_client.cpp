@@ -18,6 +18,7 @@
 */
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_client_v5.h>
 
 #include <algorithm>
 #include <iostream>
@@ -27,13 +28,13 @@
 #include <vector>
 
 // main entry
-int main(int argc, char** argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "latency client");
+  eCAL::Initialize("latency client");
 
   // create latency client
-  eCAL::CServiceClient latency_client("latency");
+  eCAL::v5::CServiceClient latency_client("latency");
 
   // waiting for service
   while (eCAL::Ok() && !latency_client.IsConnected())

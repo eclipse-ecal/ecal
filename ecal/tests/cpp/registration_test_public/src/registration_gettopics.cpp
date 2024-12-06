@@ -37,7 +37,7 @@ enum {
 TEST(core_cpp_registration_public, GetTopics)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
+  eCAL::Initialize("core_cpp_registration_public");
 
   std::set<eCAL::Registration::STopicId> topic_id_pub_set;
   std::set<eCAL::Registration::STopicId> topic_id_sub_set;
@@ -145,7 +145,7 @@ TEST(core_cpp_registration_public, GetTopicsParallel)
   std::atomic<bool> testing_completed{ false };
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "core_cpp_registration_public");
+  eCAL::Initialize("core_cpp_registration_public");
 
   auto create_publishers = [&]() {
     std::string topic_name = "Test.ParallelUtilFunctions";

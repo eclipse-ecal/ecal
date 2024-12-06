@@ -34,10 +34,10 @@
 #define MEASURE_VARIANT_STRING 1
 #define MEASURE_VARIANT_STRUCT 1
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL core API
-  eCAL::Initialize(argc, argv, "monitoring performance", eCAL::Init::All);
+  eCAL::Initialize("monitoring performance", eCAL::Init::All);
 
   int                                   runs(100);
   int                                   run(0);

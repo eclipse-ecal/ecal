@@ -124,21 +124,22 @@ namespace eCAL
   };
 
   /**
-   * @brief Receive callback function type with topic name and data struct.
+   * @brief Receive callback function type with topic name and data struct. (deprecated)
    *
    * @param topic_name_  The topic name of the received message.
    * @param data_        Data struct containing payload, timestamp and publication clock.
   **/
-  using ReceiveCallbackT = std::function<void (const char *, const struct SReceiveCallbackData *)>;
+  using ReceiveCallbackT = std::function<void (const char* topic_name_, const struct SReceiveCallbackData* data_)>;
 
   /**
    * @brief Receive callback function type with topic id and data struct. The topic id contains the topic name, the process
    *          name, the host name and a uniques topic identifier.
    *
-   * @param topic_id_    The topic id struct of the received message.
-   * @param data_        Data struct containing payload, timestamp and publication clock.
+   * @param topic_id_        The topic id struct of the received message.
+   * @param data_type_info_  Topic data type information (encoding, type, descriptor).
+   * @param data_            Data struct containing payload, timestamp and publication clock.
   **/
-  using ReceiveIDCallbackT = std::function<void(const Registration::STopicId&, const SDataTypeInformation&, const SReceiveCallbackData&)>;
+  using ReceiveIDCallbackT = std::function<void(const Registration::STopicId& topic_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)>;
 
   /**
    * @brief Timer callback function type.
@@ -151,37 +152,69 @@ namespace eCAL
    * @param sample_       The sample protocol buffer registration payload buffer.
    * @param sample_size_  The payload buffer size.
   **/
-  using RegistrationCallbackT = std::function<void (const char *, int)>;
+  using RegistrationCallbackT = std::function<void (const char* sample_, int sample_size_)>;
 
   /**
-   * @brief Publisher event callback function type.
+   * @brief Publisher event callback function type. (deprecated)
    *
    * @param topic_name_  The topic name of the publisher that triggered the event.
    * @param data_        Event callback data structure with the event specific information.
   **/
-  using PubEventCallbackT = std::function<void (const char *, const struct SPubEventCallbackData *)>;
+  using PubEventCallbackT = std::function<void (const char* topic_name_, const struct SPubEventCallbackData* data_)>;
 
   /**
-   * @brief Subscriber event callback function type.
+   * @brief Publisher event callback function type.
+   *
+   * @param topic_id_  The topic id struct of the received message.
+   * @param data_      Event callback data structure with the event specific information.
+  **/
+  using PubEventIDCallbackT = std::function<void(const Registration::STopicId& topic_id_, const struct SPubEventCallbackData& data_)>;
+
+  /**
+   * @brief Subscriber event callback function type. (deprecated)
    *
    * @param topic_name_  The topic name of the subscriber that triggered the event.
    * @param data_        Event callback data structure with the event specific information.
   **/
-  using SubEventCallbackT = std::function<void (const char *, const struct SSubEventCallbackData *)>;
+  using SubEventCallbackT = std::function<void (const char* topic_name_, const struct SSubEventCallbackData* data_)>;
+
+  /**
+   * @brief Subscriber event callback function type.
+   *
+   * @param topic_id_  The topic id struct of the received message.
+   * @param data_      Event callback data structure with the event specific information.
+  **/
+  using SubEventIDCallbackT = std::function<void(const Registration::STopicId& topic_id_, const struct SSubEventCallbackData& data_)>;
+
+  /**
+   * @brief Client event callback function type. (deprecated)
+   *
+   * @param service_name_  The service name of the connection that triggered the event.
+   * @param data_          Event callback data structure with the event specific information.
+  **/
+  using ClientEventCallbackT = std::function<void (const char* service_name_, const struct SClientEventCallbackData* data_)>;
 
   /**
    * @brief Client event callback function type.
    *
-   * @param name_  The name of the connection that triggered the event.
-   * @param data_  Event callback data structure with the event specific information.
+   * @param service_id_  The service id struct of the connection that triggered the event.
+   * @param data_        Event callback data structure with the event specific information.
   **/
-  using ClientEventCallbackT = std::function<void (const char *, const struct SClientEventCallbackData *)>;
+  using ClientEventIDCallbackT = std::function<void(const Registration::SServiceMethodId& service_id_, const struct SClientEventCallbackData& data_)>;
+
+  /**
+   * @brief Server event callback function type. (deprecated)
+   *
+   * @param service_name_  The service name of the connection that triggered the event.
+   * @param data_          Event callback data structure with the event specific information.
+  **/
+  using ServerEventCallbackT = std::function<void (const char* service_name_, const struct SServerEventCallbackData* data_)>;
 
   /**
    * @brief Server event callback function type.
    *
-   * @param name_  The name of the connection that triggered the event.
-   * @param data_  Event callback data structure with the event specific information.
+   * @param service_id_  The service id struct of the connection that triggered the event.
+   * @param data_        Event callback data structure with the event specific information.
   **/
-  using ServerEventCallbackT = std::function<void (const char *, const struct SServerEventCallbackData *)>;
+  using ServerEventIDCallbackT = std::function<void(const Registration::SServiceMethodId& service_id_, const struct SServerEventCallbackData& data_)>;
 }

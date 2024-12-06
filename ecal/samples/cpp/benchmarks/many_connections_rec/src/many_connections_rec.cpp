@@ -56,10 +56,10 @@ private:
 };
 
 
-int main(int argc, char** argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "many_connections_rec");
+  eCAL::Initialize("many_connections_rec");
 
   // create many subscriber
   const SubscriberCreator subscribers(10000);

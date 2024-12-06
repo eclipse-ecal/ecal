@@ -18,6 +18,7 @@
 */
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_client_v5.h>
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
 
 #include <chrono>
@@ -29,15 +30,15 @@
 #include "proto_json_conv.h"
 
 // main entry
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "ping client dynamic");
+  eCAL::Initialize("ping client dynamic");
 
   // create ping service client
   const std::string service_name("ping service");
   const std::string method_name ("Ping");
-  eCAL::CServiceClient ping_client(service_name);
+  eCAL::v5::CServiceClient ping_client(service_name);
 
   // waiting for service
   while (eCAL::Ok() && !ping_client.IsConnected())

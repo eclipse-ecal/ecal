@@ -25,13 +25,13 @@
 #include <set>
 #include <thread>
 
-int main(int argc, char **argv)
+int main()
 {
   int                                   run(0), runs(10);
   std::chrono::steady_clock::time_point start_time;
 
   // initialize eCAL core API
-  eCAL::Initialize(argc, argv, "monitoring get topics");
+  eCAL::Initialize("monitoring get topics");
 
   // monitor for ever
   while(eCAL::Ok())

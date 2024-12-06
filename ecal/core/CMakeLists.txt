@@ -66,7 +66,6 @@ endif()
 ######################################
 set(ecal_config_src
     src/config/default_configuration.cpp        
-    src/config/ecal_cmd_parser.cpp
     src/config/ecal_config.cpp
     src/config/ecal_config_initializer.cpp
     src/config/transport_layer.cpp
@@ -382,6 +381,10 @@ if(ECAL_CORE_SERVICE)
       src/service/ecal_service_client.cpp
       src/service/ecal_service_client_impl.cpp
       src/service/ecal_service_client_impl.h
+      src/service/ecal_service_client_instance.cpp
+      src/service/ecal_service_client_v5.cpp
+      src/service/ecal_service_client_v5_impl.cpp
+      src/service/ecal_service_client_v5_impl.h
       src/service/ecal_service_server.cpp
       src/service/ecal_service_server_impl.cpp
       src/service/ecal_service_server_impl.h
@@ -516,8 +519,10 @@ set(ecal_header_cmn
     include/ecal/types/monitoring.h
     include/ecal/ecal.h
     include/ecal/ecal_callback.h
-    include/ecal/ecal_config.h
     include/ecal/ecal_client.h
+    include/ecal/ecal_client_instance.h
+    include/ecal/ecal_client_v5.h
+    include/ecal/ecal_config.h
     include/ecal/ecal_core.h
     include/ecal/ecal_deprecate.h
     include/ecal/ecal_init.h

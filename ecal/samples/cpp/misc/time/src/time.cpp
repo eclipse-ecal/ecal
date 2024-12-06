@@ -21,10 +21,10 @@
 #include <iostream>
 #include <chrono>
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "timer");
+  eCAL::Initialize("timer");
 
   std::cout << "eCAL Time Interface       : " << eCAL::Time::GetName()        << std::endl;
   std::cout << "eCAL Time is Synchronized : " << eCAL::Time::IsSynchronized() << std::endl;

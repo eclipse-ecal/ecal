@@ -68,7 +68,7 @@ array<Byte>^ StlStringToByteArray(const std::string& string_)
 /////////////////////////////////////////////////////////////////////////////
 void Util::Initialize(System::String^ task_name_)
 {
-  ::eCAL::Initialize(0, nullptr, StringToStlString(task_name_).c_str());
+  ::eCAL::Initialize(StringToStlString(task_name_));
 }
 
 void Util::Terminate()
@@ -459,13 +459,13 @@ int ServiceServer::OnMethodCall(const std::string& method_, const std::string& /
 /////////////////////////////////////////////////////////////////////////////
 // ServiceClient
 /////////////////////////////////////////////////////////////////////////////
-ServiceClient::ServiceClient() : m_client(new ::eCAL::CServiceClient())
+ServiceClient::ServiceClient() : m_client(new ::eCAL::v5::CServiceClient())
 {
 }
 
 ServiceClient::ServiceClient(System::String^ service_name_)
 {
-    m_client = new ::eCAL::CServiceClient(StringToStlString(service_name_));
+    m_client = new ::eCAL::v5::CServiceClient(StringToStlString(service_name_));
 }
 
 ServiceClient::~ServiceClient()
@@ -513,7 +513,7 @@ List<ServiceClient::ServiceClientCallbackData^>^ ServiceClient::Call(System::Str
 /////////////////////////////////////////////////////////////////////////////
 void Monitoring::Initialize()
 {
-  ::eCAL::Initialize(0, nullptr, "", ::eCAL::Init::Monitoring);
+  ::eCAL::Initialize("", ::eCAL::Init::Monitoring);
 }
 
 void Monitoring::Terminate()

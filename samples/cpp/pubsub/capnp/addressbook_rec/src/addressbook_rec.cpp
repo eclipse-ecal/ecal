@@ -77,7 +77,7 @@ void printAddressBook(const AddressBook::Reader& addressBook)
 int main(int argc, char **argv)
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "addressbook subscriber");
+  eCAL::Initialize("addressbook subscriber");
 
   // set process state
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");

@@ -47,12 +47,12 @@ int OnMethodCallback(const char* method_, const char* req_type_, const char* res
   return 42;
 }
 
-int main(int argc, char **argv)
+int main()
 {
   ECAL_HANDLE hserver = 0;
 
   // initialize eCAL API
-  eCAL_Initialize(argc, argv, "minimal server c", eCAL_Init_Default);
+  eCAL_Initialize("minimal server c", eCAL_Init_Default);
 
   // create server "service1"
   hserver = eCAL_Server_Create("service1");

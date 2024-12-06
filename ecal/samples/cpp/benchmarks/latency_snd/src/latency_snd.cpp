@@ -47,7 +47,7 @@ void do_run(const int runs, int snd_size /*kB*/, int mem_buffer, bool zero_copy)
   }
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "latency_snd");
+  eCAL::Initialize("latency_snd");
 
   // create publisher config
   eCAL::Publisher::Configuration pub_config;

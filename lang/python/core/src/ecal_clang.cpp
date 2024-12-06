@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_client_v5.h>
 
 #include "ecal_clang.h"
 
@@ -78,7 +79,12 @@ const char* ecal_getversion()
 /****************************************/
 int ecal_getversion_components(int* major_, int* minor_, int* patch_)
 {
-  return eCAL::GetVersion(major_, minor_, patch_);
+  if ((major_ == nullptr) || (minor_ == nullptr) || (patch_ == nullptr) )
+      return 0;
+  *major_ = eCAL::GetVersion().major;
+  *minor_ = eCAL::GetVersion().minor;
+  *minor_ = eCAL::GetVersion().patch;
+  return 1;
 }
 
 /****************************************/
@@ -92,9 +98,10 @@ const char* ecal_getdate()
 /****************************************/
 /*      ecal_initialize                 */
 /****************************************/
-int ecal_initialize(int argc_, char **argv_, const char* unit_name_)
+int ecal_initialize(const char* unit_name_)
 {
-  return(eCAL::Initialize(argc_, argv_, unit_name_));
+  std::string unit_name = (unit_name_ != nullptr) ? std::string(unit_name_) : std::string("");
+  return(eCAL::Initialize(unit_name));
 }
 
 /****************************************/
@@ -632,7 +639,7 @@ bool server_rem_method_callback(ECAL_HANDLE handle_, const char* method_name_)
 /****************************************/
 ECAL_HANDLE client_create(const char* service_name_)
 {
-  auto* client = new eCAL::CServiceClient;
+  auto* client = new eCAL::v5::CServiceClient;
   if (!client->Create(service_name_))
   {
     delete client;
@@ -646,7 +653,7 @@ ECAL_HANDLE client_create(const char* service_name_)
 /****************************************/
 bool client_destroy(ECAL_HANDLE handle_)
 {
-  auto* client = static_cast<eCAL::CServiceClient*>(handle_);
+  auto* client = static_cast<eCAL::v5::CServiceClient*>(handle_);
   if (client != nullptr)
   {
     delete client;
@@ -663,7 +670,7 @@ bool client_destroy(ECAL_HANDLE handle_)
 /****************************************/
 bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_)
 {
-  auto* client = static_cast<eCAL::CServiceClient*>(handle_);
+  auto* client = static_cast<eCAL::v5::CServiceClient*>(handle_);
   if (client != nullptr)
   {
     return(client->SetHostName(host_name_));
@@ -679,7 +686,7 @@ bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_)
 /****************************************/
 bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_)
 {
-  auto* client = static_cast<eCAL::CServiceClient*>(handle_);
+  auto* client = static_cast<eCAL::v5::CServiceClient*>(handle_);
   if (client != nullptr)
   {
     std::string request(request_, request_len_);
@@ -696,7 +703,7 @@ bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const cha
 /****************************************/
 bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_)
 {
-  auto* client = static_cast<eCAL::CServiceClient*>(handle_);
+  auto* client = static_cast<eCAL::v5::CServiceClient*>(handle_);
   if (client != nullptr)
   {
     std::string request(request_, request_len_);
@@ -722,7 +729,7 @@ bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, con
 /****************************************/
 int mon_initialize()
 {
-  return(eCAL::Initialize(0, nullptr, "", eCAL::Init::Monitoring));
+  return(eCAL::Initialize("", eCAL::Init::Monitoring));
 }
 
 /****************************************/

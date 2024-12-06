@@ -23,36 +23,35 @@
 #include <chrono>
 #include <thread>
 
-// callback for service response
-void OnServiceResponse(const struct eCAL::SServiceResponse& service_response_)
-{
-  switch (service_response_.call_state)
-  {
-    // service successful executed
-  case call_state_executed:
-  {
-    std::cout << "Received response for method " << service_response_.method_name << " : " << service_response_.response << " from host " << service_response_.host_name << std::endl;
-  }
-  break;
-  // service execution failed
-  case call_state_failed:
-    std::cout << "Received error for method " << service_response_.method_name << " : " << service_response_.error_msg << " from host " << service_response_.host_name << std::endl;
-    break;
-  default:
-    break;
-  }
-}
-
 // main entry
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "minimal client");
+  eCAL::Initialize("minimal client");
 
   // create minimal service client
-  eCAL::CServiceClient minimal_client("service1", { {"echo", eCAL::SServiceMethodInformation()} });
-  minimal_client.AddResponseCallback(OnServiceResponse);
+  const eCAL::CServiceClient minimal_client("service1", { {"echo", eCAL::SServiceMethodInformation()} });
 
+  // callback for service response
+  auto service_response_callback = [](const eCAL::Registration::SEntityId& entity_id_, const eCAL::SServiceResponse& service_response_) {
+    switch (service_response_.call_state)
+    {
+      // service successful executed
+    case call_state_executed:
+    {
+      std::cout << "Received response for method " << service_response_.method_name << " : " << service_response_.response << " from service id " << entity_id_.entity_id << " from host " << service_response_.host_name << std::endl;
+    }
+    break;
+    // service execution failed
+    case call_state_failed:
+      std::cout << "Received error for method " << service_response_.method_name << " : " << service_response_.error_msg << " from service id " << entity_id_.entity_id << " from host " << service_response_.host_name << std::endl;
+      break;
+    default:
+      break;
+    }
+    };
+
+  // are we connected to at least one service?
   while (!minimal_client.IsConnected())
   {
     std::cout << "Waiting for a service .." << std::endl;
@@ -67,48 +66,48 @@ int main(int argc, char **argv)
     std::string method_name("echo");
     std::string request("Hello");
 
-    //////////////////////////////////////
-    // Service call (blocking)
-    //////////////////////////////////////
-    eCAL::ServiceResponseVecT service_response_vec;
-    if (minimal_client.Call(method_name, request, -1, &service_response_vec))
+    // call all existing services
+    for (auto& client_instance : minimal_client.GetClientInstances())
     {
-      for (auto service_response : service_response_vec)
+      //////////////////////////////////////
+      // Service call (blocking)
+      //////////////////////////////////////
+      const auto service_response = client_instance.CallWithResponse(method_name, request, -1);
+      if (std::get<0>(service_response))
       {
-
         std::cout << std::endl << "Method 'echo' called with message : " << request << std::endl;
         switch (service_info.call_state)
         {
           // service successful executed
         case call_state_executed:
         {
-          std::cout << "Received response : " << service_response.response << " from host " << service_info.host_name << std::endl;
+          std::cout << "Received response : " << service_response.second.response << " from service id " << client_instance.GetClientID() << " from host " << service_info.host_name << std::endl;
         }
         break;
         // service execution failed
         case call_state_failed:
-          std::cout << "Received error : " << service_info.error_msg << " from host " << service_info.host_name << std::endl;
+          std::cout << "Received error : " << service_info.error_msg << " from service id " << client_instance.GetClientID() << " from host " << service_info.host_name << std::endl;
           break;
         default:
           break;
         }
       }
-    }
-    else
-    {
-      std::cout << "Method blocking call failed .." << std::endl << std::endl;
-    }
+      else
+      {
+        std::cout << "Method blocking call failed .." << std::endl << std::endl;
+      }
 
-    //////////////////////////////////////
-    // Service call (with callback)
-    //////////////////////////////////////
-    if(minimal_client.Call(method_name, request))
-    {
-      std::cout << std::endl << "Method 'echo' called with message : " << request << std::endl;
-    }
-    else
-    {
-      std::cout << "Method callback call failed .." << std::endl << std::endl;
+      //////////////////////////////////////
+      // Service call (with callback)
+      //////////////////////////////////////
+      if (client_instance.CallWithCallback(method_name, request, -1, service_response_callback))
+      {
+        std::cout << std::endl << "Method 'echo' called with message : " << request << std::endl;
+      }
+      else
+      {
+        std::cout << "Method callback call failed .." << std::endl << std::endl;
+      }
     }
 
     // sleep a second

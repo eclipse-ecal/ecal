@@ -30,6 +30,7 @@
 #include <ecal/ecal_callback.h>
 
 #include <atomic>
+#include <map>
 #include <set>
 #include <shared_mutex>
 #include <string>
@@ -37,6 +38,10 @@
 
 namespace eCAL
 {
+  // deprecated >>>
+  class CServiceClientImpl;
+  // deprecated <<<
+
   class CServiceClientImpl;
 
   class CClientGate
@@ -48,22 +53,18 @@ namespace eCAL
     void Start();
     void Stop();
 
-    bool Register  (CServiceClientImpl* client_);
-    bool Unregister(CServiceClientImpl* client_);
+    bool Register  (const std::string& service_name_, const std::shared_ptr<CServiceClientImpl>& client_);
+    bool Unregister(const std::string& service_name_, const std::shared_ptr<CServiceClientImpl>& client_);
 
     void ApplyServiceRegistration(const Registration::Sample& ecal_sample_);
 
     void GetRegistrations(Registration::SampleList& reg_sample_list_);
 
   protected:
-    static std::atomic<bool>    m_created;
+    static std::atomic<bool>      m_created;
 
-    using ServiceNameServiceImplSetT = std::set<CServiceClientImpl *>;
-    std::shared_timed_mutex     m_client_set_sync;
-    ServiceNameServiceImplSetT  m_client_set;
-
-    using ConnectedMapT = Util::CExpirationMap<std::string, SServiceAttr>;
-    std::shared_timed_mutex     m_service_register_map_sync;
-    ConnectedMapT               m_service_register_map;
+    using ServiceNameClientIDImplMapT = std::multimap<std::string, std::shared_ptr<CServiceClientImpl>>;
+    std::shared_timed_mutex       m_service_client_map_sync;
+    ServiceNameClientIDImplMapT   m_service_client_map;
   };
 }

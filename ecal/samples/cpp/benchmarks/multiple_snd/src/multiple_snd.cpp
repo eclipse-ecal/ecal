@@ -31,10 +31,10 @@
 #define PRINT_LOG            0
 #define PUBLISHER_NUMBER   200
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "multiple_snd");
+  eCAL::Initialize("multiple_snd");
 
   // create publisher
   struct SPubCount

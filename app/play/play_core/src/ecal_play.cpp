@@ -37,7 +37,7 @@ EcalPlay::EcalPlay()
 {
   LogAppNameVersion();
 
-  eCAL::Initialize(0, nullptr, "eCALPlay");
+  eCAL::Initialize("eCALPlay");
 
   play_thread_ = std::make_unique<PlayThread>();
   play_thread_->Start();

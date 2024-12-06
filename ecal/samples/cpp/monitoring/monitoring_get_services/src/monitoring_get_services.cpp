@@ -25,13 +25,13 @@
 #include <map>
 #include <set>
 
-int main(int argc, char **argv)
+int main()
 {
   int                                   run(0), runs(1000);
   std::chrono::steady_clock::time_point start_time;
 
   // initialize eCAL core API
-  eCAL::Initialize(argc, argv, "monitoring get services");
+  eCAL::Initialize("monitoring get services");
 
   // monitor for ever
   while(eCAL::Ok())

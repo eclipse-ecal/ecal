@@ -64,7 +64,7 @@ namespace
 TEST(core_cpp_pubsub, LeakedPubSub)
 {
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "leaked pub/sub"));
+  EXPECT_EQ(0, eCAL::Initialize("leaked pub/sub"));
 
   // create subscriber and register a callback
   eCAL::CSubscriber sub("foo");
@@ -109,7 +109,7 @@ TEST(core_cpp_pubsub, LeakedPubSub)
 TEST(core_cpp_pubsub, CallbackDestruction)
 {
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "callback destruction"));
+  EXPECT_EQ(0, eCAL::Initialize("callback destruction"));
 
   // create subscriber and register a callback
   std::shared_ptr<eCAL::CSubscriber> sub;
@@ -164,7 +164,7 @@ TEST(core_cpp_pubsub, CallbackDestruction)
 TEST(core_cpp_pubsub, CreateDestroy)
 { 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
+  eCAL::Initialize("pubsub_test");
 
   // create publisher for topic "foo"
   eCAL::CPublisher pub;
@@ -207,7 +207,7 @@ TEST(core_cpp_pubsub, SimpleMessage1)
   std::string recv_s;
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
+  eCAL::Initialize("pubsub_test");
 
   // create publisher for topic "foo"
   eCAL::CPublisher pub("foo");
@@ -249,7 +249,7 @@ TEST(core_cpp_pubsub, SimpleMessage2)
   std::string recv_s;
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
+  eCAL::Initialize("pubsub_test");
 
   // create subscriber for topic "foo"
   eCAL::CSubscriber sub("foo");
@@ -284,7 +284,7 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
   const std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
+  eCAL::Initialize("pubsub_test");
 
   // create subscriber for topic "foo"
   eCAL::CSubscriber sub("foo");
@@ -360,7 +360,7 @@ TEST(core_cpp_pubsub, DynamicSizeCB)
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
+  eCAL::Initialize("pubsub_test");
 
   // create subscriber for topic "foo"
   eCAL::CSubscriber sub("foo");
@@ -413,7 +413,7 @@ TEST(core_cpp_pubsub, DynamicCreate)
   const std::string send_s = CreatePayLoad(PAYLOAD_SIZE_BYTE);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
+  eCAL::Initialize("pubsub_test");
 
   // create subscriber for topic "foo"
   eCAL::CSubscriber* sub;
@@ -506,7 +506,7 @@ TEST(core_cpp_pubsub, DestroyInCallback)
   */
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "New Publisher in Callback");
+  eCAL::Initialize("New Publisher in Callback");
 
   // start publishing thread
   eCAL::string::CPublisher<std::string> pub_foo("foo");
@@ -569,7 +569,7 @@ TEST(core_cpp_pubsub, SubscriberReconnection)
   */
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "SubscriberReconnection");
+  eCAL::Initialize("SubscriberReconnection");
 
   // start publishing thread
   std::atomic<bool> stop_publishing(false);

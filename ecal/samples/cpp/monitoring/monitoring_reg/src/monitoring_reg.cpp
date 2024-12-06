@@ -99,10 +99,10 @@ void OnPublisherRegistration(const char* sample_, int sample_size_)
   }
 }
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "monitoring registrations", eCAL::Init::None);
+  eCAL::Initialize("monitoring registrations", eCAL::Init::None);
 
   // set process state
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");

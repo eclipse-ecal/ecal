@@ -13,7 +13,7 @@ void HelloWorldCallback(const std::string& message)
 int main(int argc, char** argv)
 {
   // Initialize eCAL
-  eCAL::Initialize(argc, argv, "Hello World Subscriber");
+  eCAL::Initialize("Hello World Subscriber");
 
   // Create a subscriber that listenes on the "hello_world_topic"
   eCAL::string::CSubscriber<std::string> subscriber("hello_world_topic");

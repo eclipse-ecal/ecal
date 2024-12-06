@@ -39,7 +39,7 @@ bool eCAL::CSimTime::initialize()
 {
   std::unique_lock<std::mutex> lk(initialize_mutex);
   if (!is_initialized) {
-    //eCAL::Initialize(0, NULL, "ecal_sim_time_listener", eCAL::Init::Subscriber);
+    //eCAL::Initialize("ecal_sim_time_listener", eCAL::Init::Subscriber);
     // this has to be done by the parent process
     // needs to be fixed with an improved reference counting
     // in eCAL::Initialize ..

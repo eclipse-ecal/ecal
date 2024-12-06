@@ -31,7 +31,7 @@
 TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
 {
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "subscriber_is_published"));
+  EXPECT_EQ(0, eCAL::Initialize("subscriber_is_published"));
 
   std::atomic<bool> do_start_publication(false);
   std::atomic<bool> publication_finished(false);
@@ -131,7 +131,7 @@ TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
 TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
 {
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "publisher_is_subscribed"));
+  EXPECT_EQ(0, eCAL::Initialize("publisher_is_subscribed"));
 
   std::atomic<bool> do_start_publication(false);
   std::atomic<bool> publication_finished(false);
@@ -226,7 +226,7 @@ TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
 TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
 {
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "chained_publisher_subscriber"));
+  EXPECT_EQ(0, eCAL::Initialize("chained_publisher_subscriber"));
 
   // Set up counters for sent and received messages
   const int message_count = 10;

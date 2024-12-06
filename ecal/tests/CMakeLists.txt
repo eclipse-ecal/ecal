@@ -61,6 +61,7 @@ endif()
 
 if(ECAL_CORE_SERVICE)
   add_subdirectory(cpp/clientserver_test)
+  add_subdirectory(cpp/clientserver_v5_test)
   if(ECAL_CORE_HAS_PROTOBUF)
     add_subdirectory(cpp/clientserver_proto_test)
   endif()
