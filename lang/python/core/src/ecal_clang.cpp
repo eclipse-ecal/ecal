@@ -78,7 +78,12 @@ const char* ecal_getversion()
 /****************************************/
 int ecal_getversion_components(int* major_, int* minor_, int* patch_)
 {
-  return eCAL::GetVersion(major_, minor_, patch_);
+  if ((major_ == nullptr) || (minor_ == nullptr) || (patch_ == nullptr) )
+      return 0;
+  *major_ = eCAL::GetVersion().major;
+  *minor_ = eCAL::GetVersion().minor;
+  *minor_ = eCAL::GetVersion().patch;
+  return 1;
 }
 
 /****************************************/
@@ -92,9 +97,10 @@ const char* ecal_getdate()
 /****************************************/
 /*      ecal_initialize                 */
 /****************************************/
-int ecal_initialize(int argc_, char **argv_, const char* unit_name_)
+int ecal_initialize(const char* unit_name_)
 {
-  return(eCAL::Initialize(argc_, argv_, unit_name_));
+  std::string unit_name = (unit_name_ != nullptr) ? std::string(unit_name_) : std::string("");
+  return(eCAL::Initialize(unit_name));
 }
 
 /****************************************/
@@ -722,7 +728,7 @@ bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, con
 /****************************************/
 int mon_initialize()
 {
-  return(eCAL::Initialize(0, nullptr, "", eCAL::Init::Monitoring));
+  return(eCAL::Initialize("", eCAL::Init::Monitoring));
 }
 
 /****************************************/

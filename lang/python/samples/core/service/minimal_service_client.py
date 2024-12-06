@@ -27,7 +27,7 @@ def main():
   print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
   
   # initialize eCAL API
-  ecal_core.initialize(sys.argv, "py_minimal_service_client")
+  ecal_core.initialize("py_minimal_service_client")
   
   # set process state
   ecal_core.set_process_state(1, 1, "I feel good")

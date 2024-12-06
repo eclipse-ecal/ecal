@@ -28,7 +28,7 @@ EcalrecGuiClient::EcalrecGuiClient(QWidget *parent)
   ui_.setupUi(this);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "RecClientServiceGui");
+  eCAL::Initialize("RecClientServiceGui");
 
   // create player service client
   recorder_service_.AddResponseCallback([this](const struct eCAL::SServiceResponse& service_response) {this->onRecorderResponse(service_response); });

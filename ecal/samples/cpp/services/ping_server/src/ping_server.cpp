@@ -42,10 +42,10 @@ public:
 };
 
 // main entry
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "ping server");
+  eCAL::Initialize("ping server");
 
   // create Ping service server
   std::shared_ptr<PingService> ping_service = std::make_shared<PingServiceImpl>();

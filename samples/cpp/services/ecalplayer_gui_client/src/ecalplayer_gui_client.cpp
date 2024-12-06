@@ -28,7 +28,7 @@ EcalplayGuiClient::EcalplayGuiClient(QWidget *parent)
   ui_.setupUi(this);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "ecalplayer gui client");
+  eCAL::Initialize("ecalplayer gui client");
 
   // create player service client
   player_service_.AddResponseCallback([this](const struct eCAL::SServiceResponse& service_response) {this->onPlayerResponse(service_response); });

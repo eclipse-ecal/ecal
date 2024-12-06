@@ -16,7 +16,7 @@ void HelloWorldCallback(const proto_messages::HelloWorld& hello_world_msg)
 int main(int argc, char** argv)
 {
   // Initialize eCAL and create a protobuf subscriber
-  eCAL::Initialize(argc, argv, "Hello World Protobuf Subscriber");
+  eCAL::Initialize("Hello World Protobuf Subscriber");
   eCAL::protobuf::CSubscriber<proto_messages::HelloWorld> subscriber("hello_world_protobuf");
 
   // Set the Callback

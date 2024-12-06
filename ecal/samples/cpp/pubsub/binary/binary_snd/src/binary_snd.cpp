@@ -22,10 +22,10 @@
 #include <algorithm>
 #include <iostream>
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "binary_snd");
+  eCAL::Initialize("binary_snd");
 
   // publisher for topic "blob"
   eCAL::CPublisher pub("blob");

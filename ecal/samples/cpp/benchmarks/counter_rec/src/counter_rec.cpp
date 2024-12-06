@@ -21,10 +21,10 @@
 
 #include <iostream>
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "counter_rec_cb");
+  eCAL::Initialize("counter_rec_cb");
 
   // create subscriber for topic "Counter"
   eCAL::SDataTypeInformation datatype_information;

@@ -84,10 +84,10 @@ void OnMathResponse(const struct eCAL::SServiceResponse& service_response_)
 }
 
 // main entry
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "math client");
+  eCAL::Initialize("math client");
 
   // create math service client
   eCAL::protobuf::CServiceClient<MathService> math_client;

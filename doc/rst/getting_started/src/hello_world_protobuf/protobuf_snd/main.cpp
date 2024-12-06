@@ -9,7 +9,7 @@
 int main(int argc, char** argv)
 {
   // Initialize eCAL and create a protobuf publisher
-  eCAL::Initialize(argc, argv, "Hello World Protobuf Publisher");
+  eCAL::Initialize("Hello World Protobuf Publisher");
   eCAL::protobuf::CPublisher<proto_messages::HelloWorld> publisher("hello_world_protobuf");
 
   // Ask the user to input his name

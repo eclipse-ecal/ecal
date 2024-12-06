@@ -72,13 +72,13 @@ void OnReceive(const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackD
   std::cout << *static_cast<SSimpleStruct*>(data_->buf) << std::endl;
 }
 
-int main(int argc, char** argv)
+int main()
 {
   const char* nodeName  = "binary_zero_copy_rec";
   const char* topicName = "simple_struct";
 
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, nodeName);
+  eCAL::Initialize(nodeName);
 
   // create the subscriber
   eCAL::CSubscriber sub(topicName);

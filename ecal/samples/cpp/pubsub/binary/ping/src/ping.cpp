@@ -24,10 +24,10 @@
 const int pings             = 10000;
 long long diff_array[pings] = { 0 };
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "ping");
+  eCAL::Initialize("ping");
 
   eCAL::SDataTypeInformation topic_info{ "long long", "",  "" };
   eCAL::CPublisher  pub_pulse("pulse_send", topic_info);

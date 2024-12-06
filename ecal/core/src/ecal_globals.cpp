@@ -248,14 +248,13 @@ namespace eCAL
     else                    return 1;
   }
 
+  bool CGlobals::IsInitialized()
+  {
+    return initialized;
+  }
+
   bool CGlobals::IsInitialized(unsigned int component_)
   {
-    // check common initialization
-    if (component_ == 0)
-    {
-      return(initialized);
-    }
-
     // check single component initialization
     switch (component_)
     {

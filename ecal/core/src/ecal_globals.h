@@ -63,6 +63,7 @@ namespace eCAL
     ~CGlobals();
 
     int Initialize     ( unsigned int components_);
+    bool IsInitialized (); 
     bool IsInitialized ( unsigned int component_  );
     
     unsigned int GetComponents() const { return(components); };

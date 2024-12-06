@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
   //////////////////////////////////////////////////////////////////////////////
 
   // Just make sure that eCAL is initialized
-  eCAL::Initialize(argc, argv, "eCALSysGUI", eCAL::Init::All);
+  eCAL::Initialize("eCALSysGUI", eCAL::Init::All);
 
   //////////////////////////////////////
   // --config
