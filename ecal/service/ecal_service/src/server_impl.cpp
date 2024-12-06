@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@
 
 #include "server_session_impl_base.h"
 #include "server_session_impl_v1.h"
-#include "server_session_impl_v0.h"
 
 #include <ecal/service/logger.h>
 #include <ecal/service/server_session_types.h>
@@ -239,14 +238,8 @@ namespace eCAL
         service_callback_strand = service_callback_common_strand_;
       }
 
-      if (protocol_version == 0)
-      {
-        new_session = eCAL::service::ServerSessionV0::create(io_context_, service_callback_, service_callback_strand, event_callback_, shutdown_callback, logger_);
-      }
-      else
-      {
-        new_session = eCAL::service::ServerSessionV1::create(io_context_, service_callback_, service_callback_strand, event_callback_, shutdown_callback, logger_);
-      }
+      // we support v1 protocol only
+      new_session = eCAL::service::ServerSessionV1::create(io_context_, service_callback_, service_callback_strand, event_callback_, shutdown_callback, logger_);
 
       // Accept new session.
       // By only storing a weak_ptr to this, we assure that the user can still

@@ -102,8 +102,7 @@ namespace eCAL
     int RequestCallback(const std::string& request_pb_, std::string& response_pb_);
     void EventCallback(eCAL_Server_Event event_, const std::string& message_);
 
-    std::shared_ptr<eCAL::service::Server> m_tcp_server_v0;
-    std::shared_ptr<eCAL::service::Server> m_tcp_server_v1;
+    std::shared_ptr<eCAL::service::Server> m_tcp_server;
 
     static constexpr int  m_server_version = 1;
     
@@ -125,8 +124,7 @@ namespace eCAL
     EventCallbackMapT     m_event_callback_map;
     
     mutable std::mutex    m_connected_mutex;          //!< mutex protecting the m_connected_v0 and m_connected_v1 variable, as those are modified by the event callbacks in another thread.
-    bool                  m_connected_v0 = false;
-    bool                  m_connected_v1 = false;
+    bool                  m_connected = false;
 
     std::atomic<bool>     m_created;
   };

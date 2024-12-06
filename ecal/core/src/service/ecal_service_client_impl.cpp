@@ -423,9 +423,9 @@ namespace eCAL
           // I have no idea why, but for some reason the event callbacks of the actual connetions are not even used. The connect / disconnect callbacks are executed whenever a new connection is found, and not when the client has actually connected or disconnected. I am preserving the previous behavior.
         };
 
-      // Only connect via V0 protocol / V0 port, if V1 port is not available
-      const auto protocol_version = (service_.tcp_port_v1 != 0 ? service_.version : 0);
-      const auto port_to_use = (protocol_version == 0 ? service_.tcp_port_v0 : service_.tcp_port_v1);
+      // use protocol version 1
+      const auto protocol_version = 1;
+      const auto port_to_use = service_.tcp_port_v1;
 
       // Create the client and add it to the map
       const std::vector<std::pair<std::string, uint16_t>> endpoint_list

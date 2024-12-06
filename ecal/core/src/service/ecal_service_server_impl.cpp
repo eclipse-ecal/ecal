@@ -21,8 +21,6 @@
  * @brief  eCAL service server implementation
 **/
 
-#include <ecal/ecal_config.h>
-
 #include "registration/ecal_registration_provider.h"
 #include "ecal_global_accessors.h"
 #include "ecal_service_server_impl.h"
@@ -113,17 +111,8 @@ namespace eCAL
                   return -1;
               };
 
-    // start service protocol version 0
-    if (Config::IsServiceProtocolV0Enabled())
-    {
-      m_tcp_server_v0 = server_manager->create_server(0, 0, service_callback, true, event_callback);
-    }
-
     // start service protocol version 1
-    if (Config::IsServiceProtocolV1Enabled())
-    {
-      m_tcp_server_v1 = server_manager->create_server(1, 0, service_callback, true, event_callback);
-    }
+    m_tcp_server = server_manager->create_server(1, 0, service_callback, true, event_callback);
 
     // mark as created
     m_created = true;
@@ -147,11 +136,8 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
-    if (m_tcp_server_v0)
-      m_tcp_server_v0->stop();
-
-    if (m_tcp_server_v1)
-      m_tcp_server_v1->stop();
+    if (m_tcp_server)
+      m_tcp_server->stop();
 
     // mark as no more created
     m_created = false;
@@ -165,8 +151,7 @@ namespace eCAL
 
     {
       const std::lock_guard<std::mutex> connected_lock(m_connected_mutex);
-      m_connected_v0 = false;
-      m_connected_v1 = false;
+      m_connected = false;
     }
 
     return(true);
@@ -290,8 +275,7 @@ namespace eCAL
   {
     if (!m_created) return false;
 
-    return (m_tcp_server_v0 && m_tcp_server_v0->is_connected())
-            || (m_tcp_server_v1 && m_tcp_server_v1->is_connected());
+    return (m_tcp_server && m_tcp_server->is_connected());
   }
 
   // called by the eCAL::CServiceGate to register a client
@@ -314,11 +298,8 @@ namespace eCAL
     ecal_reg_sample.cmd_type = bct_reg_service;
 
     // might be zero in contruction phase
-    unsigned short const server_tcp_port_v0(m_tcp_server_v0 ? m_tcp_server_v0->get_port() : 0);
-    if ((Config::IsServiceProtocolV0Enabled()) && (server_tcp_port_v0 == 0)) return ecal_reg_sample;
-
-    unsigned short const server_tcp_port_v1(m_tcp_server_v1 ? m_tcp_server_v1->get_port() : 0);
-    if ((Config::IsServiceProtocolV1Enabled()) && (server_tcp_port_v1 == 0)) return ecal_reg_sample;
+    unsigned short const server_tcp_port(m_tcp_server ? m_tcp_server->get_port() : 0);
+    if ((Config::IsServiceProtocolV1Enabled()) && (server_tcp_port == 0)) return ecal_reg_sample;
 
     auto& identifier      = ecal_reg_sample.identifier;
     identifier.entity_id  = m_service_id;
@@ -331,8 +312,8 @@ namespace eCAL
     service.uname       = Process::GetUnitName();
     service.sname       = m_service_name;
 
-    service.tcp_port_v0 = server_tcp_port_v0;
-    service.tcp_port_v1 = server_tcp_port_v1;
+    service.tcp_port_v0 = 0;
+    service.tcp_port_v1 = server_tcp_port;
 
     // add methods
     {
@@ -486,42 +467,21 @@ namespace eCAL
     {
       const std::lock_guard<std::mutex> connected_lock(m_connected_mutex);
 
-      // protocol version 0
-      if (m_connected_v0)
+      if (m_connected)
       {
-        if (m_tcp_server_v0 && !m_tcp_server_v0->is_connected())
+        if (m_tcp_server && !m_tcp_server->is_connected())
         {
           mode_changed   = true;
-          m_connected_v0 = false;
-          Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 0 disconnected");
-        }
-      }
-      else
-      {
-        if (m_tcp_server_v0 && m_tcp_server_v0->is_connected())
-        {
-          mode_changed   = true;
-          m_connected_v0 = true;
-          Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 0 connected");
-        }
-      }
-
-      // protocol version 1
-      if (m_connected_v1)
-      {
-        if (m_tcp_server_v1 && !m_tcp_server_v1->is_connected())
-        {
-          mode_changed   = true;
-          m_connected_v1 = false;
+          m_connected = false;
           Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 1 disconnected");
         }
       }
       else
       {
-        if (m_tcp_server_v1 && m_tcp_server_v1->is_connected())
+        if (m_tcp_server && m_tcp_server->is_connected())
         {
           mode_changed   = true;
-          m_connected_v1 = true;
+          m_connected = true;
           Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 1 connected");
         }
       }
