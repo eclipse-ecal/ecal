@@ -267,9 +267,9 @@ namespace eCAL
     return(true);
   }
 
-  void CDataReader::SetID(const std::set<long long>& id_set_)
+  void CDataReader::SetFilterIDs(const std::set<long long>& filter_ids_)
   {
-    m_id_set = id_set_;
+    m_id_set = filter_ids_;
   }
 
   void CDataReader::ApplyPublication(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& pub_layer_states_)

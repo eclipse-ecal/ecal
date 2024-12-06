@@ -79,7 +79,7 @@ namespace eCAL
 
     bool Stop();
 
-    size_t Write(CPayloadWriter& payload_, long long time_, long long id_);
+    size_t Write(CPayloadWriter& payload_, long long time_, long long filter_id_);
 
     bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 

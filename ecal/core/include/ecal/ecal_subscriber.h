@@ -176,7 +176,7 @@ namespace eCAL
      * @return  True if it succeeds, false if it fails.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool SetID(const std::set<long long>& id_set_);
+      bool SetFilterIDs(const std::set<long long>& filter_ids_);
 
     /**
      * @brief Sets subscriber attribute. 
@@ -267,7 +267,7 @@ namespace eCAL
      * @return  true if created, false if not. 
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool IsCreated() const {return(m_created);}
+      bool IsCreated() const {return(m_datareader != nullptr);}
 
     /**
      * @brief Query if the subscriber is published.
@@ -319,9 +319,8 @@ namespace eCAL
     ECAL_API_EXPORTED_MEMBER
       std::string Dump(const std::string& indent_ = "") const;
 
-  protected:
+  private:
     // class members
     std::shared_ptr<CDataReader> m_datareader;
-    bool                         m_created;
   };
 }

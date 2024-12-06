@@ -36,8 +36,7 @@
 namespace eCAL
 {
   CSubscriber::CSubscriber() :
-    m_datareader(nullptr),
-    m_created(false)
+    m_datareader(nullptr)
   {
   }
 
@@ -57,10 +56,9 @@ namespace eCAL
   }
 
   CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept :
-                 m_datareader(std::move(rhs.m_datareader)),
-                 m_created(rhs.m_created)
+                 m_datareader(std::move(rhs.m_datareader))
   {
-    rhs.m_created = false;
+    rhs.m_datareader = nullptr;
   }
 
   CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept
@@ -69,17 +67,16 @@ namespace eCAL
     Destroy();
 
     m_datareader  = std::move(rhs.m_datareader);
-    m_created     = rhs.m_created;
 
-    rhs.m_created = false;
+    rhs.m_datareader = nullptr;
 
     return *this;
   }
 
   bool CSubscriber::Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_)
   {
-    if (m_created)           return(false);
-    if (topic_name_.empty()) return(false);
+    if (m_datareader != nullptr) return(false);
+    if (topic_name_.empty())     return(false);
 
     // create datareader
     m_datareader = std::make_shared<CDataReader>(data_type_info_, BuildReaderAttributes(topic_name_, config_, GetPublisherConfiguration(), GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
@@ -88,8 +85,7 @@ namespace eCAL
     g_subgate()->Register(topic_name_, m_datareader);
 
     // we made it :-)
-    m_created = true;
-    return(m_created);
+    return(true);
   }
 
   bool CSubscriber::Create(const std::string& topic_name_)
@@ -99,7 +95,7 @@ namespace eCAL
 
   bool CSubscriber::Destroy()
   {
-    if(!m_created) return(false);
+    if (m_datareader == nullptr) return(false);
 
     // remove receive callback
     RemReceiveCallback();
@@ -117,15 +113,13 @@ namespace eCAL
     m_datareader.reset();
 
     // we made it :-)
-    m_created = false;
-
     return(true);
   }
 
-  bool CSubscriber::SetID(const std::set<long long>& id_set_)
+  bool CSubscriber::SetFilterIDs(const std::set<long long>& filter_ids_)
   {
     if (m_datareader == nullptr) return(false);
-    m_datareader->SetID(id_set_);
+    m_datareader->SetFilterIDs(filter_ids_);
     return(true);
   }
 
@@ -143,7 +137,7 @@ namespace eCAL
 
   bool CSubscriber::ReceiveBuffer(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */) const
   {
-    if (!m_created) return(false);
+    if (m_datareader == nullptr) return(false);
     return(m_datareader->Read(buf_, time_, rcv_timeout_));
   }
 
@@ -219,7 +213,6 @@ namespace eCAL
     out << indent_ << "----------------------" << '\n';
     out << indent_ << " class CSubscriber    " << '\n';
     out << indent_ << "----------------------" << '\n';
-    out << indent_ << "m_created:            " << m_created << '\n';
     if((m_datareader != nullptr) && m_datareader->IsCreated()) out << indent_ << m_datareader->Dump("    ");
     out << '\n';
 

@@ -93,7 +93,7 @@ extern "C"
   {
     if (handle_ == nullptr) return(0);
     auto* pub = static_cast<eCAL::CPublisher*>(handle_);
-    if (pub->SetID(id_)) return(1);
+    if (pub->SetFilterID(id_)) return(1);
     return(0);
   }
 
