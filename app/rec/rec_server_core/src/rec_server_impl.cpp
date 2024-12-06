@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ namespace eCAL
       settings_.ClearHostFilter(); // There is no global host filter
 
       // Initialize eCAL
-      eCAL::Initialize(0, nullptr, "", eCAL::Init::Default | eCAL::Init::Monitoring | eCAL::Init::UDPLogReceive);
+      eCAL::Initialize(0, nullptr, "eCALRec-Server", eCAL::Init::Default | eCAL::Init::Monitoring | eCAL::Init::UDPLogReceive);
 
       // Start FTP Server
       ftp_server_->start(5);

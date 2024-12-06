@@ -588,7 +588,7 @@ TEST(core_cpp_pubsub, SubscriberReconnection)
     size_t callback_received_count(0);
 
     eCAL::string::CSubscriber<std::string> sub_foo("foo");
-    auto receive_lambda = [&sub_foo, &callback_received_count](const char* /*topic_*/, const std::string& /*msg*/, long long /*time_*/, long long /*clock_*/, long long /*id_*/) {
+    auto receive_lambda = [&callback_received_count](const char* /*topic_*/, const std::string& /*msg*/, long long /*time_*/, long long /*clock_*/, long long /*id_*/) {
       std::cout << "Receiving in scope 1" << std::endl;
       callback_received_count++;
     };
@@ -605,7 +605,7 @@ TEST(core_cpp_pubsub, SubscriberReconnection)
     size_t callback_received_count(0);
 
     eCAL::string::CSubscriber<std::string> sub_foo("foo");
-    auto receive_lambda = [&sub_foo, &callback_received_count](const char* /*topic_*/, const std::string& /*msg*/, long long /*time_*/, long long /*clock_*/, long long /*id_*/) {
+    auto receive_lambda = [&callback_received_count](const char* /*topic_*/, const std::string& /*msg*/, long long /*time_*/, long long /*clock_*/, long long /*id_*/) {
       std::cout << "Receiving in scope 2" << std::endl;
       callback_received_count++;
     };

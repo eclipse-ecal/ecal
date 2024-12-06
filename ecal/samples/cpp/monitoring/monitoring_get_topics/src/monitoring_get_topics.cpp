@@ -38,15 +38,17 @@ int main(int argc, char **argv)
   {
     // GetTopics
     {
-      std::map<std::string, eCAL::SDataTypeInformation> topic_info_map;
+      std::set<eCAL::Registration::STopicId> topic_id_pub_set;
+      std::set<eCAL::Registration::STopicId> topic_id_sub_set;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        eCAL::Registration::GetTopics(topic_info_map);
+        topic_id_pub_set = eCAL::Registration::GetPublisherIDs();
+        topic_id_sub_set = eCAL::Registration::GetSubscriberIDs();
       }
 
-      auto num_topics = topic_info_map.size();
+      auto num_topics = topic_id_pub_set.size() + topic_id_sub_set.size();
       auto diff_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
       std::cout << "GetTopics      : " << static_cast<double>(diff_time.count()) / runs << " ms" << " (" << num_topics << " topics)" << std::endl;
     }

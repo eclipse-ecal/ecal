@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -600,7 +600,7 @@ void ChannelWidget::setInitButtonToDeInit()
 
 void ChannelWidget::autoSizeColumns()
 {
-  ChannelTreeItem* dummy_item = new ChannelTreeItem("CameraSensorMapFusionCAF___", "Dummy_type", 99999999, 99999999.0, 99999999.0, 99999999, 99999999, 99999999);
+  ChannelTreeItem* dummy_item = new ChannelTreeItem("CameraSensorMapFusionCAF___", "proto", "Dummy_type", 99999999, 99999999.0, 99999999.0, 99999999, 99999999, 99999999);
   channel_model_->insertItem(dummy_item);
 
   for (int i = 0; i < channel_model_->columnCount(); i++)

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 #include <iostream>
 #include <ecal_utils/filesystem.h>
 
-#define YAML_CPP_STATIC_DEFINE
+//#define YAML_CPP_STATIC_DEFINE // set by CMake
 #include <yaml-cpp/yaml.h>
 
 #include "utils.h"

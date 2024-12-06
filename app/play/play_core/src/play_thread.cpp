@@ -763,6 +763,19 @@ std::string PlayThread::GetChannelType(const std::string& channel_name)
   }
 }
 
+std::string PlayThread::GetChannelEncoding(const std::string& channel_name)
+{
+  std::shared_lock<std::shared_timed_mutex> measurement_lock(measurement_mutex_);
+  if (measurement_container_)
+  {
+    return measurement_container_->GetChannelEncoding(channel_name);
+  }
+  else
+  {
+    return std::string("");
+  }
+}
+
 void PlayThread::CalculateEstimatedSizeForChannels()
 {
   std::shared_lock<std::shared_timed_mutex> measurement_lock(measurement_mutex_);

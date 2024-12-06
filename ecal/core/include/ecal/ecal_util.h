@@ -88,11 +88,6 @@ namespace eCAL
     ECAL_API void ShutdownProcesses();
 
     /**
-     * @brief Send shutdown event to all local core components.
-    **/
-    ECAL_API void ShutdownCore();
-
-    /**
      * @brief Splits the topic type (eCAL < 5.12) into encoding and types (>= eCAL 5.12)
      *
      * @param combined_topic_type_  "Old" typename.

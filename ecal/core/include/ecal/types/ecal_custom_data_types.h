@@ -66,43 +66,6 @@ namespace eCAL
       std::string m_ip_address{};
     };
 
-    /**
-     * @brief  Template class to specify sizes with a concrete minimum, maximum and step size definition.
-     *
-     * @tparam MIN   Optional minimum possible size. Default: 0
-     * @tparam STEP  Optional step size.             Default: 1 
-     * @tparam MAX   Optional maximum possible size. Default: std::numeric_limits<int>::max()
-     * 
-     * @param size_  Optional size value. If not set, ConstrainedInteger will return the MIN value.
-     * 
-     * @throws std::invalid_argument exception.
-    **/
-    template<int MIN = 0, int STEP = 1, int MAX = std::numeric_limits<int>::max()>
-    class ConstrainedInteger
-    {
-    public:
-      ConstrainedInteger(int size_ = MIN)
-      {
-        if (size_ >= MIN && size_ <= MAX && size_ % STEP == 0 && MAX >= MIN)
-        {
-          m_size = size_;
-        }
-        else
-        {
-          throw std::invalid_argument("[ConstrainedInteger] Faulty size configuration or assignment. MIN: " + std::to_string(MIN) + " MAX: " + std::to_string(MAX) + " STEP: " + std::to_string(STEP) + " VALUE:" + std::to_string(size_));
-        }
-      };
-
-      operator int() const { return m_size; };
-      bool operator==(const ConstrainedInteger<MIN, STEP, MAX>& other) const { return this->m_size == other; };
-      bool operator==(const unsigned int value) const                        { return this->m_size == static_cast<int>(value); };
-      bool operator==(const int value) const                                 { return this->m_size == value; };
-      
-      
-    private:
-      int m_size{};
-    };
-
     enum class UdpConfigVersion
     {
       V1 = 1,

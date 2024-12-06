@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,6 +59,7 @@ public:
   double minTimestampOfChannel(const std::string& channel_name) const;
   double maxTimestampOfChannel(const std::string& channel_name) const;
   std::string channelType(const std::string& channel_name) const;
+  std::string channelEncoding(const std::string& channel_name) const;
   size_t channelCumulativeEstimatedSize(const std::string& channel_name) const;
   std::map<std::string, ContinuityReport> createContinuityReport() const;
   std::map<std::string, long long>   messageCounters() const;
