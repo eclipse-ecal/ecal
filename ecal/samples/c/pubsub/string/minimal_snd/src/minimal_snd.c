@@ -21,14 +21,14 @@
 #include <stdio.h>
 #include <string.h>
 
-int main(int argc, char **argv)
+int main()
 {
   ECAL_HANDLE pub     = 0;
   char        snd_s[] = "HELLO WORLD FROM C";
   int         sent    = 0;
 
   // initialize eCAL API
-  eCAL_Initialize(argc, argv, "minimalc_snd", eCAL_Init_Default);
+  eCAL_Initialize("minimalc_snd", eCAL_Init_Default);
 
   // create publisher "Hello"
   pub = eCAL_Pub_New();

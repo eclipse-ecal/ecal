@@ -21,10 +21,10 @@
 #include <iostream>
 #include <sstream>
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "dynsize_snd");
+  eCAL::Initialize("dynsize_snd");
 
   // publisher for topic "Performance"
   eCAL::CPublisher pub("Performance");

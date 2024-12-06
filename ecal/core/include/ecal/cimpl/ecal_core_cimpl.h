@@ -57,7 +57,7 @@ extern "C"
    *
    * @return  Zero if succeeded.
   **/
-  ECALC_API int eCAL_GetVersion(int* major_, int* minor_, int* patch_);
+  ECALC_API eCAL_SVersion eCAL_GetVersion();
 
   /**
    * @brief Initialize eCAL API.
@@ -69,7 +69,7 @@ extern "C"
    *
    * @return Zero if succeeded, 1 if already initialized, -1 if failed.
   **/
-  ECALC_API int eCAL_Initialize(int argc_, char **argv_, const char *unit_name_, unsigned int components_);
+  ECALC_API int eCAL_Initialize(const char *unit_name_, unsigned int components_);
 
   /**
    * @brief  Set/change the unit name of current module.
@@ -90,11 +90,9 @@ extern "C"
   /**
    * @brief Check eCAL initialize state.
    *
-   * @param component_  Check specific component or 0 for general state of eCAL core.
-   *
    * @return None zero if eCAL is initialized.
   **/
-  ECALC_API int eCAL_IsInitialized(unsigned int component_);
+  ECALC_API int eCAL_IsInitialized();
 
   /**
    * @brief Return the eCAL process state.

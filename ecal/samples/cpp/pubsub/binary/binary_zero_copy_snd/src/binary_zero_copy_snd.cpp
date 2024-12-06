@@ -114,14 +114,14 @@ private:
   uint32_t clock = 0;
 };
 
-int main(int argc, char** argv)
+int main()
 {
   const char* nodeName       = "binary_zero_copy_snd";
   const char* topicName      = "simple_struct";
   const char* structTypeName = "SSimpleStruct";
 
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, nodeName);
+  eCAL::Initialize(nodeName);
 
   // create publisher config
   eCAL::Publisher::Configuration pub_config;

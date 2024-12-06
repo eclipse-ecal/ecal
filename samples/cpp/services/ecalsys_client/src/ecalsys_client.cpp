@@ -60,10 +60,10 @@ void OnSysResponse(const struct eCAL::SServiceResponse& service_response_)
 }
 
 // main entry
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "ecalsys client");
+  eCAL::Initialize("ecalsys client");
 
   // create player service client
   eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service> sys_service;

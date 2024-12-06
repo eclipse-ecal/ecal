@@ -39,7 +39,7 @@ namespace eCAL
     {
       if (IsInitialized(Init::Monitoring) == 0)
       {
-        Initialize(0, nullptr, "", Init::Monitoring);
+        Initialize("", Init::Monitoring);
         Process::SleepMS(1000);
       }
 

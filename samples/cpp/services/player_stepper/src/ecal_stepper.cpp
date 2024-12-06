@@ -99,7 +99,7 @@ int main(int argc, char** argv)
     }
 
     // initialize eCAL API
-    eCAL::Initialize(argc, argv, "ecal stepper", eCAL::Init::Default);
+    eCAL::Initialize("ecal stepper", eCAL::Init::Default);
 
     // create player service client
     eCAL::protobuf::CServiceClient<eCAL::pb::play::EcalPlayService> player_service;

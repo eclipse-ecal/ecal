@@ -40,10 +40,10 @@ void OnReceive(const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackD
   std::cout                                                     << std::endl;
 }
 
-int main(int argc, char** argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "binary_rec");
+  eCAL::Initialize("binary_rec");
 
   // subscriber for topic "blob"
   eCAL::CSubscriber sub("blob");

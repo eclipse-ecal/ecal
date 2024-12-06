@@ -28,10 +28,10 @@ int OnHello(const std::string& /*method_*/, const std::string& /*req_type_*/, co
 }
 
 // main entry
-int main(int argc, char** argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "latency server");
+  eCAL::Initialize("latency server");
 
   // create latency service
   eCAL::CServiceServer latency_service("latency");

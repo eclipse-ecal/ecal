@@ -43,7 +43,7 @@ int main(int argc, char** argv)
   std::cout << "Topic name = " << topic_name << std::endl;
 
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "datarate_rec");
+  eCAL::Initialize("datarate_rec");
 
   // new subscriber
   eCAL::CSubscriber sub(topic_name);

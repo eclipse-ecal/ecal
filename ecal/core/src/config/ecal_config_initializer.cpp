@@ -28,7 +28,6 @@
 #include "ecal_def.h"
 
 #include "ecal/ecal_process.h"
-#include "config/ecal_cmd_parser.h"
 
 #ifdef ECAL_CORE_CONFIGURATION
   #include "configuration_reader.h"
@@ -207,22 +206,6 @@ namespace
 
     return found_path + config_file_;
   }
-
-  std::vector<std::string> ConvertArgcArgvToVector(int argc_, char** argv_)
-  {
-    std::vector<std::string> arguments;
-    if (argv_ == nullptr) return arguments;
-    
-    for (size_t i = 0; i < static_cast<size_t>(argc_); ++i)
-    {
-      if (argv_[i] != nullptr)
-      {
-        arguments.emplace_back(argv_[i]);
-      }
-    }
-    
-    return arguments;
-  }
 }
 
 namespace eCAL 
@@ -242,28 +225,6 @@ namespace eCAL
       else
       {
         std::cout << "Specified yaml configuration path not valid:\"" << yaml_path_ << "\". Using default configuration." << "\n";
-      }
-    }
-
-    Configuration::Configuration(int argc_ , char **argv_)
-    : Configuration(ConvertArgcArgvToVector(argc_, argv_))
-    {
-    }
-
-    Configuration::Configuration(const std::vector<std::string>& args_)
-    {
-      Config::CmdParser parser(args_);
-      
-      command_line_arguments.user_yaml   = parser.getUserIni();
-      command_line_arguments.dump_config = parser.getDumpConfig();
-
-      if (!command_line_arguments.user_yaml.empty())
-      {
-        InitFromFile(command_line_arguments.user_yaml);
-      }
-      else
-      {
-        InitFromConfig();
       }
     }
 

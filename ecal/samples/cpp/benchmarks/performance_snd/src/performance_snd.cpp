@@ -40,7 +40,7 @@ int main(int argc, char **argv)
   if(payload_size < 1) payload_size = 1;
 
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "performance_snd");
+  eCAL::Initialize("performance_snd");
 
   // create payload
   CBinaryPayload binary_payload(payload_size);

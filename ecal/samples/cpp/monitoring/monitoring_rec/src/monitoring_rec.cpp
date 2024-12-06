@@ -42,10 +42,10 @@ namespace
   std::string  g_services_filt_string = "";    // specify service name to monitor ("" == all services)
 }
 
-int main(int argc, char** argv)
+int main()
 {
   // initialize eCAL core API
-  eCAL::Initialize(argc, argv, "monitoring", eCAL::Init::All);
+  eCAL::Initialize("monitoring", eCAL::Init::All);
 
   // monitoring instance to store snapshot
   eCAL::pb::Monitoring monitoring;

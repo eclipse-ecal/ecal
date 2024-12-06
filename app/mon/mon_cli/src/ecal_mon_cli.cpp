@@ -209,7 +209,7 @@ int main(int argc, char** argv)
     }
 
     // initialize eCAL API
-    eCAL::Initialize(0, nullptr, "eCALMon CLI", eCAL::Init::All);
+    eCAL::Initialize("eCALMon CLI", eCAL::Init::All);
 
     // set process state
     eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");

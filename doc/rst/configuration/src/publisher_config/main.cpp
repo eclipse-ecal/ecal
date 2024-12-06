@@ -8,7 +8,7 @@
 int main(int argc, char** argv)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "PublisherConfig", eCAL::Init::All);
+  eCAL::Initialize("PublisherConfig", eCAL::Init::All);
 
   // create publisher config
   eCAL::Publisher::Configuration pub_config;

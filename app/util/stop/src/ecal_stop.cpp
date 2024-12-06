@@ -26,10 +26,10 @@
 
 #include <ecal/ecal.h>
 
-int main(int argc, char** argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "eCALStop", eCAL::Init::All);
+  eCAL::Initialize("eCALStop", eCAL::Init::All);
 
   // set process state
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");

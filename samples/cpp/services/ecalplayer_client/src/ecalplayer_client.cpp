@@ -83,10 +83,10 @@ void OnPlayerResponse(const struct eCAL::SServiceResponse& service_response_)
 }
 
 // main entry
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "ecalplayer client");
+  eCAL::Initialize("ecalplayer client");
 
   // create player service client
   eCAL::protobuf::CServiceClient<eCAL::pb::play::EcalPlayService> player_service;

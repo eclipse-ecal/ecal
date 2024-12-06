@@ -25,10 +25,10 @@
 
 const int timout_ms = 10;
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "person publisher");
+  eCAL::Initialize("person publisher");
   // set process state
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 

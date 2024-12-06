@@ -92,7 +92,7 @@ namespace
 TEST(core_cpp_clientserver, ClientConnectEvent)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver base connect event callback");
+  eCAL::Initialize("clientserver base connect event callback");
 
   // create client
   eCAL::CServiceClient client("service");
@@ -161,7 +161,7 @@ TEST(core_cpp_clientserver, ClientConnectEvent)
 TEST(core_cpp_clientserver, ServerConnectEvent)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver base connect event callback");
+  eCAL::Initialize("clientserver base connect event callback");
 
   // create server
   eCAL::CServiceServer server("service");
@@ -234,7 +234,7 @@ TEST(core_cpp_clientserver, BaseCallback)
   const int sleep(0);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver base callback test");
+  eCAL::Initialize("clientserver base callback test");
 
   // create service servers
   ServiceVecT service_vec;
@@ -348,7 +348,7 @@ TEST(core_cpp_clientserver, BaseCallbackTimeout)
   const int sleep(0);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver base callback test with timeout");
+  eCAL::Initialize("clientserver base callback test with timeout");
 
   // create service servers
   ServiceVecT service_vec;
@@ -516,7 +516,7 @@ TEST(core_cpp_clientserver, BaseAsyncCallback)
   const int sleep(100);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver base async callback test");
+  eCAL::Initialize("clientserver base async callback test");
 
   // create service server
   eCAL::CServiceServer server("service");
@@ -589,7 +589,7 @@ TEST(core_cpp_clientserver, BaseAsync)
   const int calls(5);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver base async callback test with timeout");
+  eCAL::Initialize("clientserver base async callback test with timeout");
 
   // create service server
   eCAL::CServiceServer server("service");
@@ -699,7 +699,7 @@ TEST(core_cpp_clientserver, BaseBlocking)
   const int sleep(0);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver base blocking test");
+  eCAL::Initialize("clientserver base blocking test");
 
   // create service servers
   ServiceVecT service_vec;
@@ -800,7 +800,7 @@ TEST(core_cpp_clientserver, NestedRPCCall)
   const int sleep(0);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "nested rpc call test");
+  eCAL::Initialize("nested rpc call test");
 
   // create service server
   eCAL::CServiceServer server("service");

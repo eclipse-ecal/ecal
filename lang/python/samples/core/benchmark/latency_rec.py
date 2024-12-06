@@ -24,7 +24,7 @@ import ecal.core.core as ecal_core
 def do_run():
 
   # initialize eCAL API
-  ecal_core.initialize(sys.argv, "py_latency_rec")
+  ecal_core.initialize("py_latency_rec")
 
   # create publisher/subscriber
   pub = ecal_core.publisher('pkg_reply')

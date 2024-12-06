@@ -77,7 +77,7 @@ def main():
   print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
   
   # initialize eCAL API
-  ecal_core.initialize(sys.argv, "monitoring")
+  ecal_core.initialize("monitoring")
   
   # initialize eCAL monitoring API
   ecal_core.mon_initialize()

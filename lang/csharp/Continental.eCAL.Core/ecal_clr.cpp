@@ -68,7 +68,7 @@ array<Byte>^ StlStringToByteArray(const std::string& string_)
 /////////////////////////////////////////////////////////////////////////////
 void Util::Initialize(System::String^ task_name_)
 {
-  ::eCAL::Initialize(0, nullptr, StringToStlString(task_name_).c_str());
+  ::eCAL::Initialize(StringToStlString(task_name_));
 }
 
 void Util::Terminate()
@@ -513,7 +513,7 @@ List<ServiceClient::ServiceClientCallbackData^>^ ServiceClient::Call(System::Str
 /////////////////////////////////////////////////////////////////////////////
 void Monitoring::Initialize()
 {
-  ::eCAL::Initialize(0, nullptr, "", ::eCAL::Init::Monitoring);
+  ::eCAL::Initialize("", ::eCAL::Init::Monitoring);
 }
 
 void Monitoring::Terminate()

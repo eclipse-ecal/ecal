@@ -91,10 +91,10 @@ void OnRecorderResponse(const struct eCAL::SServiceResponse& service_response_)
 }
 
 // main entry
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "RecClientServiceCli");
+  eCAL::Initialize("RecClientServiceCli");
 
   // create recorder service client
   eCAL::protobuf::CServiceClient<eCAL::pb::rec_client::EcalRecClientService> recorder_service;

@@ -25,10 +25,10 @@ const char* proc_name = "notepad.exe";
 const char* proc_name = "gedit";
 #endif // ECAL_OS_WINDOWS
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "process", eCAL::Init::None);
+  eCAL::Initialize("process", eCAL::Init::None);
 
   // start process
   eCAL::Process::StartProcess(proc_name, "", "", false, proc_smode_normal, false);

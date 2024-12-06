@@ -30,6 +30,16 @@
 namespace eCAL
 {
   /**
+   * @brief eCAL version struct
+  **/
+  struct SVersion
+  {
+    const int major; //!< major version number
+    const int minor; //!< minor version number
+    const int patch; //!< patch version number
+  };
+
+  /**
    * @brief Optional compile time information associated with a given topic
    *        (necessary for reflection / runtime type checking)
   **/
