@@ -169,9 +169,9 @@ namespace eCAL
       bool Destroy();
 
     /**
-     * @brief Set a set of id's to prefiltering topics (see CPublisher::SetID).
+     * @brief Set a set of id's to prefiltering topics (see CPublisher::SetFilterID).
      *
-     * @param id_set_  Set of id's.
+     * @param filter_ids_  Set of id's.
      *
      * @return  True if it succeeds, false if it fails.
     **/

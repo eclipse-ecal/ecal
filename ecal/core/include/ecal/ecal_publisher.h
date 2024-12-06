@@ -192,7 +192,7 @@ namespace eCAL
     /**
      * @brief Set a topic filter id.
      *
-     * @param id_  The topic id for subscriber side filtering (0 == no id).
+     * @param filter_id_  The topic id for subscriber side filtering (0 == no id).
      *
      * @return  True if it succeeds, false if it fails.
     **/
