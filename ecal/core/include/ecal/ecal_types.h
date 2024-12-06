@@ -34,9 +34,9 @@ namespace eCAL
   **/
   struct SVersion
   {
-    int major; //!< major version number
-    int minor; //!< minor version number
-    int patch; //!< patch version number
+    const int major; //!< major version number
+    const int minor; //!< minor version number
+    const int patch; //!< patch version number
   };
 
   /**
