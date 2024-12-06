@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ eCAL::service::LoggerT critical_logger(const std::string& node_name)
                         };
 }
 
-constexpr std::uint8_t min_protocol_version = 0;
+constexpr std::uint8_t min_protocol_version = 1;
 constexpr std::uint8_t max_protocol_version = 1;
 
 #if 1

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@
 #include <ecal/service/state.h>
 
 #include "client_session_impl_v1.h"
-#include "client_session_impl_v0.h"
 #include "condition_variable_signaler.h"
 
 namespace eCAL
@@ -76,19 +75,13 @@ namespace eCAL
     }
 
     ClientSession::ClientSession(const std::shared_ptr<asio::io_context>&                   io_context
-                                , std::uint8_t                                              protocol_version
+                                , std::uint8_t                                              /*protocol_version*/
                                 , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
                                 , const EventCallbackT&                                     event_callback
                                 , const LoggerT&                                            logger)
     {
-      if (protocol_version == 0)
-      {
-        impl_ = ClientSessionV0::create(io_context, server_list, event_callback, logger);
-      }
-      else
-      {
-        impl_ = ClientSessionV1::create(io_context, server_list, event_callback, logger);
-      }
+      // we support v1 protocol only
+      impl_ = ClientSessionV1::create(io_context, server_list, event_callback, logger);
     }
 
     ClientSession::~ClientSession()

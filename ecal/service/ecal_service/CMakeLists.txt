@@ -29,16 +29,12 @@ set(sources
     src/client_manager.cpp 
     src/client_session.cpp
     src/client_session_impl_base.h
-    src/client_session_impl_v0.cpp
-    src/client_session_impl_v0.h
     src/client_session_impl_v1.cpp
     src/client_session_impl_v1.h
     src/condition_variable_signaler.h
     src/log_defs.h
     src/log_helpers.h
     src/protocol_layout.h
-    src/protocol_v0.cpp
-    src/protocol_v0.h
     src/protocol_v1.cpp
     src/protocol_v1.h
     src/server.cpp
@@ -46,8 +42,6 @@ set(sources
     src/server_impl.h
     src/server_manager.cpp
     src/server_session_impl_base.h
-    src/server_session_impl_v0.cpp
-    src/server_session_impl_v0.h
     src/server_session_impl_v1.cpp
     src/server_session_impl_v1.h
 )

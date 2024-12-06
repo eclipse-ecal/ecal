@@ -294,8 +294,9 @@ namespace eCAL
           // TODO: Replace current connect/disconnect state logic with this client event callback logic
         };
 
-      const auto protocol_version = (service_.tcp_port_v1 != 0 ? service_.version : 0);
-      const auto port_to_use = (protocol_version == 0 ? service_.tcp_port_v0 : service_.tcp_port_v1);
+      // use protocol version 1
+      const auto protocol_version = 1;
+      const auto port_to_use = service_.tcp_port_v1;
 
       const std::vector<std::pair<std::string, uint16_t>> endpoint_list
       {
