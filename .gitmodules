@@ -22,9 +22,6 @@
 [submodule "thirdparty/curl"]
 	path = thirdparty/curl/curl
 	url = https://github.com/curl/curl.git
-[submodule "thirdparty/zlib"]
-	path = thirdparty/zlib/zlib
-	url = https://github.com/madler/zlib.git
 [submodule "thirdparty/libssh2"]
 	path = thirdparty/libssh2/libssh2
 	url = https://github.com/libssh2/libssh2.git

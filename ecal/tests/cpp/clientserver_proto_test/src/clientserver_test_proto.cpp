@@ -25,6 +25,8 @@
 #include <iostream>
 
 #include <gtest/gtest.h>
+#include <memory>
+#include <string>
 
 #include "math.pb.h"
 #include "ping.pb.h"
@@ -69,10 +71,7 @@ public:
 TEST(core_cpp_clientserver_proto, ProtoCallback)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver proto callback test");
-
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("clientserver proto callback test");
 
   // create MathService server
   std::shared_ptr<MathServiceImpl> math_service_impl = std::make_shared<MathServiceImpl>();
@@ -161,10 +160,7 @@ public:
 TEST(core_cpp_clientserver_proto, ProtoBlocking)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "clientserver proto blocking test");
-
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("clientserver proto blocking test");
 
   // create PingService server
   std::shared_ptr<PingServiceImpl> ping_service_impl = std::make_shared<PingServiceImpl>();

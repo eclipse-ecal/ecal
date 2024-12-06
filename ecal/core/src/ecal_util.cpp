@@ -33,34 +33,13 @@ namespace eCAL
 {
   namespace Util
   {
-    void EnableLoopback(bool state_)
-    {
-#if ECAL_CORE_REGISTRATION
-      if (g_registration_receiver() != nullptr) g_registration_receiver()->EnableLoopback(state_);
-#endif
-    }
-
-    void PubShareType(bool state_)
-    {
-#if ECAL_CORE_PUBLISHER
-      if (g_pubgate() != nullptr) g_pubgate()->ShareType(state_);
-#endif
-    }
-
-    void PubShareDescription(bool state_)
-    {
-#if ECAL_CORE_PUBLISHER
-      if (g_pubgate() != nullptr) g_pubgate()->ShareDescription(state_);
-#endif
-    }
-
 #if ECAL_CORE_MONITORING
     // take monitoring snapshot
     static Monitoring::SMonitoring GetMonitoring()
     {
       if (IsInitialized(Init::Monitoring) == 0)
       {
-        Initialize(0, nullptr, "", Init::Monitoring);
+        Initialize("", Init::Monitoring);
         Process::SleepMS(1000);
       }
 
@@ -99,7 +78,7 @@ namespace eCAL
       EventHandleT event;
       if (gOpenNamedEvent(&event, event_name, true))
       {
-        std::cout << "Shutdown local eCAL process " << process_id_ << '\n';
+        //std::cout << "Shutdown local eCAL process " << process_id_ << '\n';
         gSetEvent(event);
         gCloseEvent(event);
       }

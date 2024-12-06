@@ -17,12 +17,15 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <algorithm>
 #include <serialization/ecal_serialize_logging.h>
 
 #include "logging_generate.h"
 #include "logging_compare.h"
 
 #include <gtest/gtest.h>
+#include <string>
+#include <vector>
 
 namespace eCAL
 {

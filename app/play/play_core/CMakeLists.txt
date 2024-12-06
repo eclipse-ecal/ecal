@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   eCAL::core_protobuf
   eCAL::app_pb
   eCAL::ecaltime_pb
-  eCAL::measurement_hdf5
+  eCAL::hdf5
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE

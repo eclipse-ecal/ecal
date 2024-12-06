@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
 
 #include "eh5_meas_file_writer_v5.h"
 #include "escape.h"
+#include "datatype_helper.h"
 
 #ifdef WIN32
 #include <windows.h>
@@ -54,7 +55,7 @@ eCAL::eh5::HDF5MeasFileWriterV5::~HDF5MeasFileWriterV5()
   HDF5MeasFileWriterV5::Close();
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::Open(const std::string& output_dir, eAccessType /*access = eAccessType::RDONLY*/)
+bool eCAL::eh5::HDF5MeasFileWriterV5::Open(const std::string& output_dir, v3::eAccessType /*access = eAccessType::RDONLY*/)
 {
   Close();
 
@@ -126,51 +127,50 @@ void eCAL::eh5::HDF5MeasFileWriterV5::SetOneFilePerChannelEnabled(bool /*enabled
 {
 }
 
-std::set<std::string> eCAL::eh5::HDF5MeasFileWriterV5::GetChannelNames() const
+std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasFileWriterV5::GetChannels() const
 {
-  // UNSUPPORTED FUNCTION
-  return {};
+  // UNSUPPORTED FUNCTIONs
+  return std::set<eCAL::eh5::SChannel>();
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::HasChannel(const std::string& /*channel_name*/) const
+bool eCAL::eh5::HDF5MeasFileWriterV5::HasChannel(const eCAL::eh5::SChannel& /*channel*/ ) const
 {
   // UNSUPPORTED FUNCTION
   return false;
 }
 
-
-eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileWriterV5::GetChannelDataTypeInformation(const std::string&  /*channel_name*/) const
+eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileWriterV5::GetChannelDataTypeInformation(const SChannel& /*channel*/) const
 {
   // UNSUPPORTED FUNCTION
   return eCAL::eh5::DataTypeInformation{};
 }
 
-void eCAL::eh5::HDF5MeasFileWriterV5::SetChannelDataTypeInformation(const std::string& channel_name, const eCAL::eh5::DataTypeInformation& info)
+void eCAL::eh5::HDF5MeasFileWriterV5::SetChannelDataTypeInformation(const SChannel& channel, const eCAL::eh5::DataTypeInformation& info)
 {
   auto type_descriptor = FromInfo(info);
-  channels_[channel_name].Type = type_descriptor.first;
-  channels_[channel_name].Description = type_descriptor.second;
+  channels_[channel.name].Type = type_descriptor.first;
+  channels_[channel.name].Description = type_descriptor.second;
 }
 
-long long eCAL::eh5::HDF5MeasFileWriterV5::GetMinTimestamp(const std::string& /*channel_name*/) const
+long long eCAL::eh5::HDF5MeasFileWriterV5::GetMinTimestamp(const SChannel& /*channel*/) const
 {
   // UNSUPPORTED FUNCTION
   return -1;
 }
 
-long long eCAL::eh5::HDF5MeasFileWriterV5::GetMaxTimestamp(const std::string& /*channel_name*/) const
+long long eCAL::eh5::HDF5MeasFileWriterV5::GetMaxTimestamp(const SChannel& /*channel*/) const
 {
   // UNSUPPORTED FUNCTION
   return -1;
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfo(const std::string& /*channel_name*/, EntryInfoSet& /*entries*/) const
+bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfo(const SChannel& /*channel*/, EntryInfoSet& /*entries*/) const
 {
   // UNSUPPORTED FUNCTION
   return false;
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfoRange(const std::string& /*channel_name*/, long long /*begin*/, long long /*end*/, EntryInfoSet& /*entries*/) const
+bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfoRange(const SChannel& /*channel*/, long long /*begin*/, long long /*end*/, EntryInfoSet& /*entries*/) const
 {
   // UNSUPPORTED FUNCTION
   return false;
@@ -193,13 +193,13 @@ void eCAL::eh5::HDF5MeasFileWriterV5::SetFileBaseName(const std::string& base_na
   base_name_ = base_name;
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock)
+bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const SWriteEntry& entry)
 {
   if (!IsOk()) file_id_ = Create();
   if (!IsOk())
     return false;
 
-  hsize_t hsSize = static_cast<hsize_t>(size);
+  hsize_t hsSize = static_cast<hsize_t>(entry.size);
 
   if (!EntryFitsTheFile(hsSize))
   {
@@ -223,14 +223,14 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const void* data, const uns
   auto dataSet = H5Dcreate(file_id_, std::to_string(entries_counter_).c_str(), H5T_NATIVE_UCHAR, dataSpace, H5P_DEFAULT, dsProperty, H5P_DEFAULT);
 
   //  Write buffer to dataset
-  herr_t writeStatus = H5Dwrite(dataSet, H5T_NATIVE_UCHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+  herr_t writeStatus = H5Dwrite(dataSet, H5T_NATIVE_UCHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, entry.data);
 
   //  Close dataset, data space, and data set property
   H5Dclose(dataSet);
   H5Pclose(dsProperty);
   H5Sclose(dataSpace);
 
-  channels_[channel_name].Entries.emplace_back(SEntryInfo(rcv_timestamp, static_cast<long long>(entries_counter_), clock, snd_timestamp, id));
+  channels_[entry.channel.name].Entries.emplace_back(SEntryInfo(entry.rcv_timestamp, static_cast<long long>(entries_counter_), entry.clock, entry.snd_timestamp, entry.sender_id));
 
   entries_counter_++;
 

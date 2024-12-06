@@ -21,10 +21,10 @@
 
 #include <iostream>
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "pong");
+  eCAL::Initialize("pong");
 
   eCAL::SDataTypeInformation topic_info{ "long long", "", "" };
   eCAL::CSubscriber sub_pulse("pulse_send", topic_info);

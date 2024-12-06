@@ -20,6 +20,7 @@
 #include "payload_compare.h"
 
 #include <serialization/ecal_struct_sample_payload.h>
+#include <vector>
 
 namespace eCAL
 {

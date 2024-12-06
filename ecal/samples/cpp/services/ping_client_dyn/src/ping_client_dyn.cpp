@@ -30,10 +30,10 @@
 #include "proto_json_conv.h"
 
 // main entry
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "ping client dynamic");
+  eCAL::Initialize("ping client dynamic");
 
   // create ping service client
   const std::string service_name("ping service");
@@ -49,18 +49,28 @@ int main(int argc, char **argv)
 
   // get service method type names
   std::string req_type;
-  std::string resp_type;
-  if (!eCAL::Registration::GetServiceTypeNames(service_name, method_name, req_type, resp_type))
-  {
-    throw std::runtime_error("Could not get service type names !");
-  }
-
-  // get service method type descriptions
   std::string req_desc;
+  std::string resp_type;
   std::string resp_desc;
-  if (!eCAL::Registration::GetServiceDescription(service_name, method_name, req_desc, resp_desc))
+  auto service_ids = eCAL::Registration::GetServiceIDs();
+  bool service_info_found(false);
+  for (const auto& service_id : service_ids)
   {
-    throw std::runtime_error("Could not get service type descriptions !");
+    if ((service_id.service_name == service_name) && (service_id.method_name == method_name))
+    {
+      eCAL::SServiceMethodInformation service_method_info;
+      eCAL::Registration::GetServiceInfo(service_id, service_method_info);
+      req_type  = service_method_info.request_type.name;
+      req_desc  = service_method_info.request_type.descriptor;
+      resp_type = service_method_info.response_type.name;
+      resp_desc = service_method_info.response_type.descriptor;
+      service_info_found = true;
+      break;
+    }
+  }
+  if (!service_info_found)
+  {
+    throw std::runtime_error("Could not get service type names and service type descriptions!");
   }
 
   // create dynamic protobuf message decoder to create request and response message objects

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -574,6 +574,18 @@ namespace eCAL
     std::string GetEscapedTopicname(const std::string& non_escaped_topicname)
     {
       return GetEscapedString(non_escaped_topicname, is_reserved_topicname_);
+    }
+
+    SChannel GetEscapedTopicname(const SChannel& input)
+    {
+        return SChannel(GetEscapedTopicname(input.name), input.id);
+    }
+
+    SWriteEntry GetEscapedEntry(const SWriteEntry& input)
+    {
+      SWriteEntry escaped_entry{ input };
+      escaped_entry.channel = GetEscapedTopicname(input.channel);
+      return escaped_entry;
     }
 
     std::string GetEscapedFilename(const std::string& non_escaped_filename)

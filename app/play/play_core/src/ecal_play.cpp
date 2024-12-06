@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,16 @@
 
 #include "ecal_play.h"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <clocale>
 #include <chrono>
+#include <clocale>
+#include <fstream>
+#include <iostream>
+#include <memory>
+#include <sstream>
 
 #include "ecal_play_logger.h"
 #include "play_thread.h"
-#include <ecal/measurement/hdf5/reader.h>
-
+#include <ecalhdf5/eh5_meas.h>
 #include <ecal_utils/string.h>
 #include <ecal_utils/filesystem.h>
 #include <ecal_utils/str_convert.h>
@@ -37,7 +37,7 @@ EcalPlay::EcalPlay()
 {
   LogAppNameVersion();
 
-  eCAL::Initialize(0, nullptr, "eCALPlay");
+  eCAL::Initialize("eCALPlay");
 
   play_thread_ = std::make_unique<PlayThread>();
   play_thread_->Start();
@@ -58,7 +58,7 @@ bool EcalPlay::LoadMeasurement(const std::string& path)
 {
   EcalPlayLogger::Instance()->info("Loading measurement...");
 
-  std::shared_ptr<eCAL::experimental::measurement::base::Reader> measurement(std::make_shared<eCAL::experimental::measurement::hdf5::Reader>());
+  std::shared_ptr<eCAL::eh5::v2::HDF5Meas> measurement(std::make_shared<eCAL::eh5::v2::HDF5Meas>());
 
   std::string meas_dir;               // The directory of the measurement
   std::string path_to_load;           // The actual path we load the measurement from. May be a directory or a .hdf5 file
@@ -129,7 +129,7 @@ bool EcalPlay::LoadMeasurement(const std::string& path)
 void EcalPlay::CloseMeasurement()
 {
   description_ = "";
-  play_thread_->SetMeasurement(std::shared_ptr<eCAL::experimental::measurement::base::Reader>(nullptr));
+  play_thread_->SetMeasurement(std::shared_ptr<eCAL::eh5::v2::HDF5Meas>(nullptr));
   measurement_path_ = "";
   clearScenariosPath();
   channel_mapping_path_ = "";
@@ -222,6 +222,11 @@ double EcalPlay::GetMaxTimestampOfChannel(const std::string& channel_name) const
 std::string EcalPlay::GetChannelType(const std::string& channel_name) const
 {
   return play_thread_->GetChannelType(channel_name);
+}
+
+std::string EcalPlay::GetChannelEncoding(const std::string& channel_name) const
+{
+  return play_thread_->GetChannelEncoding(channel_name);
 }
 
 void EcalPlay::CalculateEstimatedSizeForChannels() const

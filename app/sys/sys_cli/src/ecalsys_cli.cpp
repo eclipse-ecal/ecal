@@ -237,14 +237,14 @@ int main(int argc, char** argv)
   /************************************************************************/
   if (remote_control_arg.isSet()) // Remote-control-mode
   {
-    eCAL::Initialize(0, nullptr, "eCALSys-Remote", eCAL::Init::All);
+    eCAL::Initialize("eCALSys-Remote", eCAL::Init::All);
     eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
 
     remote_ecalsys_service = std::make_shared<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>();
   }
   else                            // Non-remote control mode
   {
-    eCAL::Initialize(0, nullptr, "eCALSys", eCAL::Init::All);
+    eCAL::Initialize("eCALSys", eCAL::Init::All);
     eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
 
     ecalsys_instance = std::make_shared<EcalSys>();

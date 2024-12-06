@@ -21,6 +21,9 @@
 #include <ecal/ecal_client_v5.h>
 
 #include <gtest/gtest.h>
+#include <map>
+#include <set>
+#include <string>
 
 enum {
   CMN_MONITORING_TIMEOUT_MS   = (5000 + 100),
@@ -42,7 +45,6 @@ protected:
     // set configuration from the test parameters
     auto params = GetParam();
     eCAL::Initialize(params.configuration, "core_cpp_registration_public", eCAL::Init::All);
-    eCAL::Util::EnableLoopback(true);
   }
 
   void TearDown() override
@@ -53,7 +55,7 @@ protected:
 };
 TEST_P(ClientsTestFixture, ClientExpiration)
 {
-  std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> client_info_map;
+  std::set<eCAL::Registration::SServiceMethodId> id_set;
 
   // create simple client and let it expire
   {
@@ -69,10 +71,10 @@ TEST_P(ClientsTestFixture, ClientExpiration)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get all clients
-    eCAL::Registration::GetClients(client_info_map);
+    id_set = eCAL::Registration::GetClientIDs();
 
     // check size
-    EXPECT_EQ(client_info_map.size(), 1);
+    EXPECT_EQ(id_set.size(), 1);
 
     // check client/method names
     std::set<eCAL::Registration::SServiceMethod> client_method_names;
@@ -88,10 +90,10 @@ TEST_P(ClientsTestFixture, ClientExpiration)
     eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // get all clients again, client should not be expired
-    eCAL::Registration::GetClients(client_info_map);
+    id_set = eCAL::Registration::GetClientIDs();
 
     // check size
-    EXPECT_EQ(client_info_map.size(), 1);
+    EXPECT_EQ(id_set.size(), 1);
   }
 
   // let's unregister
@@ -99,167 +101,10 @@ TEST_P(ClientsTestFixture, ClientExpiration)
 
   // get all clients again, all clients 
   // should be removed from the map
-  eCAL::Registration::GetClients(client_info_map);
+  id_set = eCAL::Registration::GetClientIDs();
 
   // check size
-  EXPECT_EQ(client_info_map.size(), 0);
-}
-
-TEST_P(ClientsTestFixture, ClientEqualQualities)
-{
-  std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> client_info_map;
-
-  // create 2 clients with the same quality of data type information
-  {
-    // create client 1
-    eCAL::SServiceMethodInformation service_method_info1;
-    service_method_info1.request_type.name        = "foo::req_type1";
-    service_method_info1.request_type.descriptor  = "foo::req_desc1";
-    service_method_info1.response_type.name       = "foo::resp_type1";
-    service_method_info1.response_type.descriptor = "foo::resp_desc1";
-    eCAL::v5::CServiceClient client1("foo::service", { {"foo::method", service_method_info1} });
-
-    // let's register
-    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
-
-    // get all clients
-    eCAL::Registration::GetClients(client_info_map);
-
-    // check size
-    EXPECT_EQ(client_info_map.size(), 1);
-
-    // check attributes
-    std::string req_type, resp_type;
-    std::string req_desc, resp_desc;
-
-    eCAL::Registration::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
-    EXPECT_EQ(req_type,  "foo::req_type1");
-    EXPECT_EQ(resp_type, "foo::resp_type1");
-    eCAL::Registration::GetClientDescription("foo::service", "foo::method", req_desc, resp_desc);
-    EXPECT_EQ(req_desc,  "foo::req_desc1");
-    EXPECT_EQ(resp_desc, "foo::resp_desc1");
-
-    // create client 2
-    // this will not overwrite the attributes from client 1, because the quality is not higher
-    eCAL::SServiceMethodInformation service_method_info2;
-    service_method_info2.request_type.name        = "foo::req_type2";
-    service_method_info2.request_type.descriptor  = "foo::req_desc2";
-    service_method_info2.response_type.name       = "foo::resp_type2";
-    service_method_info2.response_type.descriptor = "foo::resp_desc2";
-    eCAL::v5::CServiceClient client2("foo::service", { {"foo::method", service_method_info2} });
-
-    // check attributes
-    eCAL::Registration::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
-    EXPECT_EQ(req_type,  "foo::req_type1");
-    EXPECT_EQ(resp_type, "foo::resp_type1");
-    eCAL::Registration::GetClientDescription("foo::service", "foo::method", req_desc, resp_desc);
-    EXPECT_EQ(req_desc,  "foo::req_desc1");
-    EXPECT_EQ(resp_desc, "foo::resp_desc1");
-
-    // check size it's client 1 only
-    EXPECT_EQ(client_info_map.size(), 1);
-
-    // let's wait a monitoring timeout long
-    eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
-
-    // get all clients again, clients should not be expired
-    eCAL::Registration::GetClients(client_info_map);
-
-    // check size
-    EXPECT_EQ(client_info_map.size(), 1);
-
-    // destroy client 1
-    client1.Destroy();
-
-    // let's register
-    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
-
-    // check attributes, client 1 attributes should be replaced by client 2 attributes now
-    eCAL::Registration::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
-    EXPECT_EQ(req_type,  "foo::req_type2");
-    EXPECT_EQ(resp_type, "foo::resp_type2");
-    eCAL::Registration::GetClientDescription("foo::service", "foo::method", req_desc, resp_desc);
-    EXPECT_EQ(req_desc,  "foo::req_desc2");
-    EXPECT_EQ(resp_desc, "foo::resp_desc2");
-  }
-
-  // let's unregister
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
-
-  // get all clients again, all clients 
-  // should be removed from the map
-  eCAL::Registration::GetClients(client_info_map);
-
-  // check size
-  EXPECT_EQ(client_info_map.size(), 0);
-}
-
-TEST_P(ClientsTestFixture, ClientDifferentQualities)
-{
-  std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> client_info_map;
-
-  // create 2 clients with different qualities of data type information
-  {
-    // create client 1, response type name and reponse description are missing
-    eCAL::SServiceMethodInformation service_method_info1;
-    service_method_info1.request_type.name        = "foo::req_type1";
-    service_method_info1.request_type.descriptor  = "foo::req_desc1";
-    service_method_info1.response_type.name       = "";
-    service_method_info1.response_type.descriptor = "";
-    eCAL::v5::CServiceClient client1("foo::service", { {"foo::method", service_method_info1} });
-
-    // let's register
-    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
-
-    // get all clients
-    eCAL::Registration::GetClients(client_info_map);
-
-    // check size
-    EXPECT_EQ(client_info_map.size(), 1);
-
-    // check attributes
-    std::string req_type, resp_type;
-    std::string req_desc, resp_desc;
-
-    eCAL::Registration::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
-    EXPECT_EQ(req_type,  "foo::req_type1");
-    EXPECT_EQ(resp_type, "");
-    eCAL::Registration::GetClientDescription("foo::service", "foo::method", req_desc, resp_desc);
-    EXPECT_EQ(req_desc,  "foo::req_desc1");
-    EXPECT_EQ(resp_desc, "");
-
-    // create client 2, with higher quality than client 1
-    eCAL::SServiceMethodInformation service_method_info2;
-    service_method_info2.request_type.name        = "foo::req_type2";
-    service_method_info2.request_type.descriptor  = "foo::req_desc2";
-    service_method_info2.response_type.name       = "foo::resp_type2";
-    service_method_info2.response_type.descriptor = "foo::resp_desc2";
-    eCAL::v5::CServiceClient client2("foo::service", { {"foo::method", service_method_info2} });
-
-    // let's register
-    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
-
-    // check attributes, we expect attributes from client 2 here
-    eCAL::Registration::GetClientTypeNames("foo::service", "foo::method", req_type, resp_type);
-    EXPECT_EQ(req_type,  "foo::req_type2");
-    EXPECT_EQ(resp_type, "foo::resp_type2");
-    eCAL::Registration::GetClientDescription("foo::service", "foo::method", req_desc, resp_desc);
-    EXPECT_EQ(req_desc,  "foo::req_desc2");
-    EXPECT_EQ(resp_desc, "foo::resp_desc2");
-
-    // check size it's client 2 only
-    EXPECT_EQ(client_info_map.size(), 1);
-  }
-
-  // let's unregister
-  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
-
-  // get all clients again, all clients
-  // should be removed from the map
-  eCAL::Registration::GetClients(client_info_map);
-
-  // check size
-  EXPECT_EQ(client_info_map.size(), 0);
+  EXPECT_EQ(id_set.size(), 0);
 }
 
 TEST_P(ClientsTestFixture, GetClientIDs)
@@ -282,11 +127,11 @@ TEST_P(ClientsTestFixture, GetClientIDs)
     EXPECT_EQ(1, id_set.size());
     if (id_set.size() > 0)
     {
-      eCAL::Registration::SQualityServiceInfo info;
+      eCAL::SServiceMethodInformation info;
       EXPECT_TRUE(eCAL::Registration::GetClientInfo(*id_set.begin(), info));
 
       // check service/method names
-      EXPECT_EQ(service_method_info, info.info);
+      EXPECT_EQ(service_method_info, info);
     }
   }
 }

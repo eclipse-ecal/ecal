@@ -33,10 +33,10 @@ int OnMethodCallback(const std::string& method_, const std::string& /*req_type_*
 }
 
 // main entry
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "minimal server");
+  eCAL::Initialize("minimal server");
 
   // create minimal service server
   eCAL::CServiceServer minimal_server("service1");

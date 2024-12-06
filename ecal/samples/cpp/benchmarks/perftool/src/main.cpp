@@ -196,8 +196,7 @@ int main(int argc, char** argv)
     const unsigned long long payload_size_bytes = std::stoull(args[4]);
 
     // Initialize eCAL
-    eCAL::Initialize(argc, argv, "ecal-perftool");
-    eCAL::Util::EnableLoopback(true);
+    eCAL::Initialize("ecal-perftool");
     
     const Publisher publisher(topic_name, frequency_hz, payload_size_bytes, quiet_arg, verbose_print_times);
     
@@ -224,8 +223,7 @@ int main(int argc, char** argv)
 
     
     // Initialize eCAL
-    eCAL::Initialize(argc, argv, "ecal-perftool");
-    eCAL::Util::EnableLoopback(true);
+    eCAL::Initialize("ecal-perftool");
     
     const Subscriber subscriber(topic_name, callback_delay, busy_wait_arg, hickup_arg, hickup_time, hickup_delay, quiet_arg, verbose_print_times);
 

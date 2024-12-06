@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@
 #include "measurement_container.h"
 
 #include <ecal/ecal_util.h>
-#include <ecal/measurement/hdf5/reader.h>
+#include <ecalhdf5/eh5_meas.h>
 
 #include <algorithm>
 #include <math.h>
 #include <stdlib.h>
 
-MeasurementContainer::MeasurementContainer(std::shared_ptr<eCAL::experimental::measurement::base::Reader> hdf5_meas, const std::string& meas_dir, bool use_receive_timestamp)
+MeasurementContainer::MeasurementContainer(std::shared_ptr<eCAL::eh5::v2::HDF5Meas> hdf5_meas, const std::string& meas_dir, bool use_receive_timestamp)
   : hdf5_meas_             (hdf5_meas)
   , meas_dir_              (meas_dir)
   , use_receive_timestamp_ (use_receive_timestamp)
@@ -311,9 +311,12 @@ double MeasurementContainer::GetMaxTimestampOfChannel(const std::string& channel
 
 std::string MeasurementContainer::GetChannelType(const std::string& channel_name) const
 {
-  // This function needs to also return the proper datatypes information! To clean up.
-  auto datatype_information = hdf5_meas_->GetChannelDataTypeInformation(channel_name);
-  return eCAL::Util::CombinedTopicEncodingAndType(datatype_information.encoding, datatype_information.name);
+  return hdf5_meas_->GetChannelDataTypeInformation(channel_name).name;
+}
+
+std::string MeasurementContainer::GetChannelEncoding(const std::string& channel_name) const
+{
+  return hdf5_meas_->GetChannelDataTypeInformation(channel_name).encoding;
 }
 
 size_t MeasurementContainer::GetChannelCumulativeEstimatedSize(const std::string& channel_name) const

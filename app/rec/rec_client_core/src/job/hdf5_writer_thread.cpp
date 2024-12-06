@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 */
 
 #include "hdf5_writer_thread.h"
-#include <ecal/measurement/hdf5/writer.h>
 
 #include "rec_client_core/ecal_rec_logger.h"
 
@@ -42,7 +41,7 @@ namespace eCAL
       , new_topic_info_map_available_(true)
       , flushing_                    (false)
     {
-      hdf5_writer_ = std::make_unique<eCAL::experimental::measurement::hdf5::Writer>();
+      hdf5_writer_ = std::make_unique<eCAL::eh5::v2::HDF5Meas>();
     }
 
     Hdf5WriterThread::~Hdf5WriterThread()
@@ -186,7 +185,7 @@ namespace eCAL
             frame->data_.size(),
             std::chrono::duration_cast<std::chrono::microseconds>(frame->ecal_publish_time_.time_since_epoch()).count(),
             std::chrono::duration_cast<std::chrono::microseconds>(frame->ecal_receive_time_.time_since_epoch()).count(),
-            frame->topic_name_,
+            frame->topic_name_, 
             frame->id_,
             frame->clock_
           ))
@@ -265,7 +264,7 @@ namespace eCAL
 #endif // NDEBUG
       std::unique_lock<decltype(hdf5_writer_mutex_)> hdf5_writer_lock(hdf5_writer_mutex_);
 
-      if (hdf5_writer_->Open(hdf5_dir))
+      if (hdf5_writer_->Open(hdf5_dir, eCAL::eh5::v2::eAccessType::CREATE))
       {
 #ifndef NDEBUG
         EcalRecLogger::Instance()->debug("Hdf5WriterThread::Open(): Successfully opened HDF5-Writer with path \"" + hdf5_dir + "\"");

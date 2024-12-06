@@ -23,6 +23,7 @@
 
 #include <atomic>
 #include <chrono>
+#include <functional>
 #include <string>
 #include <thread>
 
@@ -68,10 +69,7 @@ void measure_execution_within_range(const std::string& description, std::functio
 TEST(core_cpp_pubsub, TimingSubscriberReceive)
 {
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "subscriber_receive_timing"));
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
+  EXPECT_EQ(0, eCAL::Initialize("subscriber_receive_timing"));
 
   // create simple string publisher
   eCAL::string::CPublisher<std::string> pub("CLOCK");
@@ -165,10 +163,7 @@ TEST(core_cpp_pubsub, TimingSubscriberReceive)
 TEST(core_cpp_pubsub, SporadicEmptyReceives)
 { 
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "sporadic_empty_receives"));
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
+  EXPECT_EQ(0, eCAL::Initialize("sporadic_empty_receives"));
 
   // create simple string publisher
   eCAL::string::CPublisher<std::string> pub("CLOCK");

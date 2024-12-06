@@ -24,10 +24,10 @@
 #include <thread>
 
 // main entry
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "minimal client");
+  eCAL::Initialize("minimal client");
 
   // create minimal service client
   const eCAL::CServiceClient minimal_client("service1", { {"echo", eCAL::SServiceMethodInformation()} });

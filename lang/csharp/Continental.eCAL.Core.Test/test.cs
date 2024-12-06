@@ -30,7 +30,6 @@ public class eCALBinaryTest
   public void Initialize()
   {
     Continental.eCAL.Core.Util.Initialize("Binary Test C#");
-    Continental.eCAL.Core.Util.EnableLoopback(true);
   }
 
   [TestCleanup]

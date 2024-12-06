@@ -31,7 +31,7 @@ int main(int argc, char **argv)
   if(payload_size < 1) payload_size = 1;
 
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "counter_snd");
+  eCAL::Initialize("counter_snd");
 
   // create publisher for topic "Counter"
   eCAL::CPublisher pub("Counter", { "", "long long", "" });

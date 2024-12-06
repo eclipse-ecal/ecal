@@ -31,11 +31,6 @@ namespace eCAL
     {
     }
 
-    void CSampleApplier::EnableLoopback(bool state_)
-    {
-      m_attributes.loopback = state_;
-    }
-
     bool CSampleApplier::ApplySample(const Registration::Sample& sample_)
     {
       if (!AcceptRegistrationSample(sample_))

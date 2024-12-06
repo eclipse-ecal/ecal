@@ -79,21 +79,6 @@ namespace Continental
          * @brief Send shutdown event to all user processes.
         **/
         static void ShutdownProcesses();
-
-        /**
-         * @brief Send shutdown event to all core components.
-         *
-        **/
-        static void ShutdownCore();
-
-        /**
-         * @brief Enable eCAL message loop back,
-         *          that means subscriber will receive messages from
-         *          publishers of the same process (default == false).
-         *
-         * @param  state_  Switch on message loop back.
-        **/
-        static void EnableLoopback(bool state_);
       };
 
 

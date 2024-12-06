@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,17 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstddef>
 #include <ecal/ecal.h>
 #include <ecal/msg/string/publisher.h>
 #include <ecal/msg/string/subscriber.h>
 
 #include <atomic>
-#include <thread>
+#include <functional>
+#include <string>
 
 #include <gtest/gtest.h>
+#include <vector>
 
 enum {
   CMN_REGISTRATION_REFRESH_MS = 1000,
@@ -49,10 +52,7 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
   const std::string send_s;
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("pubsub_test");
 
   // create subscriber for topic "A"
   eCAL::CSubscriber sub("A");
@@ -104,10 +104,7 @@ TEST(core_cpp_pubsub, MultipleSendsUDP)
   long long   last_received_timestamp(0);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("pubsub_test");
 
   // create subscriber for topic "A"
   eCAL::string::CSubscriber<std::string> sub("A");

@@ -27,10 +27,10 @@
 #include "ping.pb.h"
 
 // main entry
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "ping client");
+  eCAL::Initialize("ping client");
 
   // create ping service client
   eCAL::protobuf::CServiceClient<PingService> ping_client("ping service");

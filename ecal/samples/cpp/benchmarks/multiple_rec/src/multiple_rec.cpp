@@ -57,10 +57,10 @@ void OnReceive(const char* topic_name_)
   g_overalll_read++;
 }
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "multiple_rec_cb");
+  eCAL::Initialize("multiple_rec_cb");
 
   // create dummy subscriber
   std::cout << "create subscribers .." << std::endl;

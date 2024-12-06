@@ -31,10 +31,7 @@
 TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
 {
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "subscriber_is_published"));
-
-  // enable data loopback
-  eCAL::Util::EnableLoopback(true);
+  EXPECT_EQ(0, eCAL::Initialize("subscriber_is_published"));
 
   std::atomic<bool> do_start_publication(false);
   std::atomic<bool> publication_finished(false);
@@ -74,7 +71,6 @@ TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
   std::string first_received_sample;
   auto subscriber_function = [&do_start_publication, &publication_finished, &publisher_seen_at_subscription_start, &first_received_sample]() {
     eCAL::CSubscriber sub("blob");
-    bool received(false);
     const auto max_sub_count(10);
     auto sub_count(0);
     auto receive_lambda = [&max_sub_count, &sub_count, &publisher_seen_at_subscription_start, &first_received_sample, &sub](const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_) {
@@ -135,10 +131,7 @@ TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
 TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
 {
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "publisher_is_subscribed"));
-
-  // enable data loopback
-  eCAL::Util::EnableLoopback(true);
+  EXPECT_EQ(0, eCAL::Initialize("publisher_is_subscribed"));
 
   std::atomic<bool> do_start_publication(false);
   std::atomic<bool> publication_finished(false);
@@ -177,7 +170,6 @@ TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
   std::string first_received_sample;
   auto subscriber_function = [&publication_finished, &publisher_seen_at_subscription_start, &first_received_sample]() {
     eCAL::CSubscriber sub("blob");
-    bool received(false);
     const auto max_sub_count(10);
     auto sub_count(0);
     auto receive_lambda = [&max_sub_count, &sub_count, &publisher_seen_at_subscription_start, &first_received_sample, &sub](const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_) {
@@ -234,10 +226,7 @@ TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
 TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
 {
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "chained_publisher_subscriber"));
-
-  // enable data loopback
-  eCAL::Util::EnableLoopback(true);
+  EXPECT_EQ(0, eCAL::Initialize("chained_publisher_subscriber"));
 
   // Set up counters for sent and received messages
   const int message_count = 10;

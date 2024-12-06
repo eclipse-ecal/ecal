@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,16 +25,13 @@
 
 #include "person.pb.h"
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "person publisher");
+  eCAL::Initialize("person publisher");
 
   // set process state
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
-
-  // enable to receive our own messages
-  eCAL::Util::EnableLoopback(true);
 
   // create a publisher (topic name "person")
   eCAL::protobuf::CPublisher<pb::People::Person> pub("person");
@@ -43,7 +40,7 @@ int main(int argc, char **argv)
   pb::People::Person person;
 
   eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");
-  auto receive_lambda = [&sub](const char* /*topic_name_*/, const pb::People::Person& person_, const long long /*time_*/, const long long /*clock_*/, const long long /*id_*/){
+  auto receive_lambda = [](const char* /*topic_name_*/, const pb::People::Person& person_, const long long /*time_*/, const long long /*clock_*/, const long long /*id_*/){
     std::cout << "------------------------------------------" << std::endl;
     std::cout << " RECEIVED                                 " << std::endl;
     std::cout << "------------------------------------------" << std::endl;

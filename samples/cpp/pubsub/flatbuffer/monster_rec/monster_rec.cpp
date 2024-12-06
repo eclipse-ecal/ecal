@@ -76,7 +76,7 @@ void OnMonster(const char* topic_name_, const flatbuffers::FlatBufferBuilder& ms
 int main(int argc, char **argv)
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "monster subscriber");
+  eCAL::Initialize("monster subscriber");
 
   // set process state
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");

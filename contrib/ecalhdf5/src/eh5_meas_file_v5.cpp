@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ namespace eCAL
   namespace eh5
   {
 
-    HDF5MeasFileV5::HDF5MeasFileV5(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
+    HDF5MeasFileV5::HDF5MeasFileV5(const std::string& path, v3::eAccessType access /*= eAccessType::RDONLY*/)
       : HDF5MeasFileV2(path, access)
     {
     }
@@ -41,13 +41,13 @@ namespace eCAL
     HDF5MeasFileV5::~HDF5MeasFileV5()
     = default;
 
-    bool HDF5MeasFileV5::GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const
+    bool HDF5MeasFileV5::GetEntriesInfo(const SChannel& channel, EntryInfoSet& entries) const
     {
       entries.clear();
 
       if (!this->IsOk()) return false;
 
-      auto dataset_id = H5Dopen(file_id_, channel_name.c_str(), H5P_DEFAULT);
+      auto dataset_id = H5Dopen(file_id_, channel.name.c_str(), H5P_DEFAULT);
 
       if (dataset_id < 0) return false;
 

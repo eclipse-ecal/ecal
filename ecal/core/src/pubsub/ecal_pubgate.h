@@ -44,12 +44,6 @@ namespace eCAL
     void Start();
     void Stop();
 
-    void ShareType(bool state_);
-    bool TypeShared() const { return m_share_type; };
-
-    void ShareDescription(bool state_);
-    bool DescriptionShared() const { return m_share_desc; };
-
     bool Register(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_);
     bool Unregister(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_);
 
@@ -60,8 +54,6 @@ namespace eCAL
 
   protected:
     static std::atomic<bool>  m_created;
-    bool                      m_share_type;
-    bool                      m_share_desc;
 
     using TopicNameDataWriterMapT = std::multimap<std::string, std::shared_ptr<CDataWriter>>;
     std::shared_timed_mutex   m_topic_name_datawriter_sync;

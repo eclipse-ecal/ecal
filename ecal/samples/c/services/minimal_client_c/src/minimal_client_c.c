@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@
 #include <ecal/ecalc.h>
 #include <stdio.h>
 
-int main(int argc, char **argv)
+int main()
 {
   // the client handle
   ECAL_HANDLE hclient = 0;
 
   // initialize eCAL API
-  eCAL_Initialize(argc, argv, "minimal client c", eCAL_Init_Default);
+  eCAL_Initialize("minimal client c", eCAL_Init_Default);
 
   // create client for "service1"
   hclient = eCAL_Client_Create("service1");
@@ -71,7 +71,7 @@ int main(int argc, char **argv)
   eCAL_Client_Destroy(hclient);
 
   // finalize eCAL API
-  eCAL_Finalize(eCAL_Init_All);
+  eCAL_Finalize();
 
   return(0);
 }

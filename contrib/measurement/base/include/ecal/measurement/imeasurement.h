@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,11 +35,11 @@ namespace eCAL
     class IBinaryChannel
     {
     public:
-      IBinaryChannel(std::shared_ptr<experimental::measurement::base::Reader> meas_, std::string name_)
-        : channel_name(name_)
+      IBinaryChannel(std::shared_ptr<experimental::measurement::base::Reader> meas_, experimental::measurement::base::Channel channel_)
+        : channel(channel_)
         , meas(meas_)
       {
-        meas->GetEntriesInfo(channel_name, entry_infos);
+        meas->GetEntriesInfo(channel, entry_infos);
       }
 
       virtual BinaryFrame operator[](const experimental::measurement::base::EntryInfo& entry)
@@ -53,7 +53,7 @@ namespace eCAL
 
       std::string name()
       {
-        return channel_name;
+        return channel.name;
       }
 
       class iterator /*: public std::iterator<std::forward_iterator_tag, Entry<T>>*/
@@ -100,7 +100,7 @@ namespace eCAL
         mutable std::string m_msg;
       };
 
-      bool operator==(const IBinaryChannel& rhs) const { return channel_name == rhs.channel_name && meas == rhs.meas; /*return it == rhs.it; */ };
+      bool operator==(const IBinaryChannel& rhs) const { return channel == rhs.channel && meas == rhs.meas; /*return it == rhs.it; */ };
       bool operator!=(const IBinaryChannel& rhs) const { return !(operator==(rhs)); /*return it == rhs.it; */ };
 
       iterator begin()
@@ -114,7 +114,7 @@ namespace eCAL
       }
 
     private:
-      const std::string channel_name;
+      const experimental::measurement::base::Channel channel;
       std::shared_ptr<experimental::measurement::base::Reader> meas;
       mutable experimental::measurement::base::EntryInfoSet entry_infos;
       mutable std::string data;
@@ -125,8 +125,8 @@ namespace eCAL
     class IChannel
     {
     public:
-      IChannel(std::shared_ptr<experimental::measurement::base::Reader> meas_, std::string name_)
-        : binary_channel(meas_, name_)
+      IChannel(std::shared_ptr<experimental::measurement::base::Reader> meas_, const experimental::measurement::base::Channel& channel_)
+        : binary_channel(meas_, channel_)
       {
       }
 
@@ -219,10 +219,11 @@ namespace eCAL
     public:
       IMeasurement(const std::string& path);
 
-      ChannelSet ChannelNames() const;
+      ChannelSet Channels() const;
+      ChannelSet Channels(const std::string& channel_name) const;
 
       template<typename T>
-      IChannel<T> Get(const std::string& channel) const;
+      IChannel<T> Get(const experimental::measurement::base::Channel& channel) const;
 
     private:
       std::shared_ptr<experimental::measurement::base::Reader> meas;
@@ -233,9 +234,23 @@ namespace eCAL
     {
     }
 
-    inline ChannelSet IMeasurement::ChannelNames() const
+    inline ChannelSet IMeasurement::Channels() const
     {
-      return meas->GetChannelNames();
+      return meas->GetChannels();
+    }
+
+    // This is probably not very performant. We should check!
+    inline ChannelSet IMeasurement::Channels(const std::string& channel_name) const
+    {
+      ChannelSet channels_filtered_by_name;
+      auto all_channels = meas->GetChannels();
+      for (const auto& channel : all_channels) {
+        if (channel.name == channel_name)
+        {
+          channels_filtered_by_name.insert(channel);
+        }
+      }
+      return channels_filtered_by_name;
     }
 
     // This will return a nullptr if channel name and 
@@ -243,14 +258,14 @@ namespace eCAL
     // a) channel does not exist in the IMeasurement
     // b) the registered type does not match with the descriptor in the chanenel
     template<typename T>
-    inline IChannel<T> IMeasurement::Get(const std::string& channel) const
+    inline IChannel<T> IMeasurement::Get(const experimental::measurement::base::Channel& channel) const
     {
       // Assert that the channel is in the IMeasurement
-      auto channels = ChannelNames();
+      auto channels = Channels();
       if (channels.find(channel) == channels.end())
       {
         // Throw an exception, if channel is not available?
-        throw std::out_of_range("The channel " + channel + " does not exist in this measurement");
+        throw std::out_of_range("The channel {" + channel.name + ", " + std::to_string(channel.id) + "} does not exist in this measurement");
       }
 
       // Assert that the channel type is compatible with the requested type

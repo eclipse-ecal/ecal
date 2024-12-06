@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_deprecate.h>
 
 #include <string>
 #include <utility>
@@ -88,42 +89,13 @@ namespace eCAL
     ECAL_API void ShutdownProcesses();
 
     /**
-     * @brief Send shutdown event to all local core components.
-    **/
-    ECAL_API void ShutdownCore();
-
-    /**
-     * @brief Enable eCAL message loop back,
-     *          that means subscriber will receive messages from
-     *          publishers of the same process (default == false).
-     *
-     * @param state_  Switch on message loop back. 
-    **/
-    ECAL_API void EnableLoopback(bool state_);
-
-    /**
-     * @brief Enable process wide eCAL publisher topic type sharing
-     *          that is needed for reflection on subscriber side.
-     *
-     * @param state_  Switch on type sharing
-    **/
-    ECAL_API void PubShareType(bool state_);
-
-    /**
-     * @brief Enable process wide eCAL publisher topic description sharing
-     *          that is needed for reflection on subscriber side.
-     *
-     * @param state_  Switch on description sharing
-    **/
-    ECAL_API void PubShareDescription(bool state_);
-
-    /**
      * @brief Splits the topic type (eCAL < 5.12) into encoding and types (>= eCAL 5.12)
      *
      * @param combined_topic_type_  "Old" typename.
      *
      * @return  std::pair(encoding, typename).
     **/
+    ECAL_DEPRECATE_SINCE_6_0("Please refactor your code to use SDatatypeInformation. This function will be removed with eCAL 7")
     ECAL_API std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& combined_topic_type_);
 
     /**
@@ -134,6 +106,7 @@ namespace eCAL
      *
      * @return "Old" typename. ( encoding:typename ).
     **/
+    ECAL_DEPRECATE_SINCE_6_0("Please refactor your code to use SDatatypeInformation. This function will be removed with eCAL 7")
     ECAL_API std::string CombinedTopicEncodingAndType(const std::string& topic_encoding_, const std::string& topic_type_);
   }
 }

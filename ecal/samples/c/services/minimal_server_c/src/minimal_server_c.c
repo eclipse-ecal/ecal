@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,12 +47,12 @@ int OnMethodCallback(const char* method_, const char* req_type_, const char* res
   return 42;
 }
 
-int main(int argc, char **argv)
+int main()
 {
   ECAL_HANDLE hserver = 0;
 
   // initialize eCAL API
-  eCAL_Initialize(argc, argv, "minimal server c", eCAL_Init_Default);
+  eCAL_Initialize("minimal server c", eCAL_Init_Default);
 
   // create server "service1"
   hserver = eCAL_Server_Create("service1");
@@ -71,7 +71,7 @@ int main(int argc, char **argv)
   eCAL_Server_Destroy(hserver);
 
   // finalize eCAL API
-  eCAL_Finalize(eCAL_Init_All);
+  eCAL_Finalize();
 
   return(0);
 }

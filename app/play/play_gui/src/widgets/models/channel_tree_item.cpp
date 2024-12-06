@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,12 +40,13 @@ ChannelTreeItem::ChannelTreeItem(const QString& source_name)
   , duration_(0)
 {}
 
-ChannelTreeItem::ChannelTreeItem(const QString& source_name, const QString& channel_type, size_t total_channel_size,
+ChannelTreeItem::ChannelTreeItem(const QString& source_name, const QString& channel_encoding, const QString& channel_type, size_t total_channel_size,
   double min_channel_timestamp, double max_channel_timestamp, long long expected_frames, long long existing_frames, double duration)
   : QAbstractTreeItem()
   , enabled_(true)
   , source_name_(source_name)
   , target_name_(source_name)
+  , channel_encoding_(channel_encoding)
   , channel_type_(channel_type)
   , total_channel_size_(total_channel_size)
   , min_channel_timestamp_(min_channel_timestamp)
@@ -76,6 +77,8 @@ QVariant ChannelTreeItem::data(Columns column, Qt::ItemDataRole role) const
       return source_name_;
     case ChannelTreeItem::Columns::TARGET_CHANNEL_NAME:
       return target_name_;
+    case ChannelTreeItem::Columns::CHANNEL_ENCODING:
+      return channel_encoding_;
     case ChannelTreeItem::Columns::CHANNEL_TYPE:
       return channel_type_;
     case ChannelTreeItem::Columns::TOTAL_CHANNEL_SIZE:

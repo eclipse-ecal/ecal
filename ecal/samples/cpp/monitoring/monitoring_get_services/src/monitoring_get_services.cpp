@@ -25,28 +25,30 @@
 #include <map>
 #include <set>
 
-int main(int argc, char **argv)
+int main()
 {
   int                                   run(0), runs(1000);
   std::chrono::steady_clock::time_point start_time;
 
   // initialize eCAL core API
-  eCAL::Initialize(argc, argv, "monitoring get services");
+  eCAL::Initialize("monitoring get services");
 
   // monitor for ever
   while(eCAL::Ok())
   {
     // GetServices
     {
+      std::set<eCAL::Registration::SServiceMethodId> service_method_id_set;
+
       std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        eCAL::Registration::GetServices(service_info_map);
+        service_method_id_set = eCAL::Registration::GetServiceIDs();
       }
 
-      auto num_services = service_info_map.size();
+      auto num_services = service_method_id_set.size();
       auto diff_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
       std::cout << "GetServices      : " << static_cast<double>(diff_time.count()) / runs << " ms" << " (" << num_services << " services)" << std::endl;
       std::cout << std::endl;

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -237,9 +237,10 @@ void ChannelTreeModel::reload()
     double minTimestamp = QEcalPlay::instance()->minTimestampOfChannel(name);
     double maxTimestamp = QEcalPlay::instance()->maxTimestampOfChannel(name);
     std::string channel_type = QEcalPlay::instance()->channelType(name);
+    std::string channel_encoding = QEcalPlay::instance()->channelEncoding(name);
     size_t total_channel_size = QEcalPlay::instance()->channelCumulativeEstimatedSize(name);
 
-    ChannelTreeItem* channel_item = new ChannelTreeItem(name.c_str(), channel_type.c_str(), total_channel_size,
+    ChannelTreeItem* channel_item = new ChannelTreeItem(name.c_str(), channel_encoding.c_str(), channel_type.c_str(), total_channel_size,
       minTimestamp, maxTimestamp, expected_frames, existing_frames, duration);
     new_channel_list.push_back(channel_item);
   }

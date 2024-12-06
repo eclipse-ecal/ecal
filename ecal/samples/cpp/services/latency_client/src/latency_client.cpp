@@ -28,10 +28,10 @@
 #include <vector>
 
 // main entry
-int main(int argc, char** argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "latency client");
+  eCAL::Initialize("latency client");
 
   // create latency client
   eCAL::v5::CServiceClient latency_client("latency");

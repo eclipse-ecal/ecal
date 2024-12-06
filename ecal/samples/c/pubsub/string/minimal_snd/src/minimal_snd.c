@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,14 @@
 #include <stdio.h>
 #include <string.h>
 
-int main(int argc, char **argv)
+int main()
 {
   ECAL_HANDLE pub     = 0;
   char        snd_s[] = "HELLO WORLD FROM C";
   int         sent    = 0;
 
   // initialize eCAL API
-  eCAL_Initialize(argc, argv, "minimalc_snd", eCAL_Init_Default);
+  eCAL_Initialize("minimalc_snd", eCAL_Init_Default);
 
   // create publisher "Hello"
   pub = eCAL_Pub_New();
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
   }
 
   // finalize eCAL API
-  eCAL_Finalize(eCAL_Init_All);
+  eCAL_Finalize();
 
   return(0);
 }

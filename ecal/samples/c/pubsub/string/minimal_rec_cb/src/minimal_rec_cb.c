@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,12 @@ void OnReceive(const char* topic_name_, const struct SReceiveCallbackDataC* data
   printf("\"%.*s\"\n", (int)(data_->size), (char*)(data_->buf));
 }
 
-int main(int argc, char **argv)
+int main()
 {
   ECAL_HANDLE sub = 0;
 
   // initialize eCAL API
-  eCAL_Initialize(argc, argv, "minimalc_rec_cb", eCAL_Init_Default);
+  eCAL_Initialize("minimalc_rec_cb", eCAL_Init_Default);
 
   // create subscriber "Hello"
   sub = eCAL_Sub_New();
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
   eCAL_Sub_Destroy(sub);
 
   // finalize eCAL API
-  eCAL_Finalize(eCAL_Init_All);
+  eCAL_Finalize();
 
   return(0);
 }

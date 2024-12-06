@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,6 +50,8 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
     break;
   case eCAL::TLayer::tlayer_tcp:
     pub_config.layer.tcp.enable = true;
+    break;
+  default:
     break;
   }
 
@@ -106,13 +108,10 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
 }
 
 // main entry
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "pubsub_throughput");
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("pubsub_throughput");
 
   std::cout << "---------------------------" << '\n';
   std::cout << "LAYER: SHM"                  << '\n';

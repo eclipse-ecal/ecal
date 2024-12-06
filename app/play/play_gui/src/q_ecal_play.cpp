@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,6 +126,11 @@ double QEcalPlay::maxTimestampOfChannel(const std::string& channel_name) const
 std::string QEcalPlay::channelType(const std::string& channel_name) const
 {
   return ecal_play_.GetChannelType(channel_name);
+}
+
+std::string QEcalPlay::channelEncoding(const std::string& channel_name) const
+{
+  return ecal_play_.GetChannelEncoding(channel_name);
 }
 
 size_t QEcalPlay::channelCumulativeEstimatedSize(const std::string& channel_name) const

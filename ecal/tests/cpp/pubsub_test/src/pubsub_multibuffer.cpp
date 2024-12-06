@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,18 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstddef>
+#include <cstring>
 #include <ecal/ecal.h>
 #include <ecal/ecal_payload_writer.h>
 
 #include <atomic>
+#include <iomanip>
 #include <iostream>
 #include <numeric>
 
 #include <gtest/gtest.h>
+#include <vector>
 
 enum {
   CMN_REGISTRATION_REFRESH_MS = 1000,
@@ -123,10 +127,7 @@ std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int
 TEST(core_cpp_pubsub, MultibufferPubSub)
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("pubsub_test");
 
   // number of iterations
   const int publications(11);

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,14 +108,14 @@ void dynamicPrintValue(const capnp::DynamicValue::Reader& value)
 int main(int argc, char** argv)
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "addressbook subscriber");
+  eCAL::Initialize("addressbook subscriber");
 
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
   // create a subscriber (topic name "addressbook")
   eCAL::capnproto::CDynamicSubscriber sub("addressbook");
 
-  auto lambda = [](const char* /*topic_name_*/, const capnp::DynamicValue::Reader& msg_, long long /*time_*/, long long /*clock_*/, long long /*id_*/) -> void {
+  auto lambda = [](const eCAL::Registration::STopicId& /*topic_id_*/, const capnp::DynamicValue::Reader& msg_, long long /*time_*/, long long /*clock_*/, long long /*id_*/) -> void {
     dynamicPrintValue(msg_);
   };
   sub.AddReceiveCallback(lambda);

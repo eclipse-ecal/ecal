@@ -68,7 +68,7 @@ array<Byte>^ StlStringToByteArray(const std::string& string_)
 /////////////////////////////////////////////////////////////////////////////
 void Util::Initialize(System::String^ task_name_)
 {
-  ::eCAL::Initialize(0, nullptr, StringToStlString(task_name_).c_str());
+  ::eCAL::Initialize(StringToStlString(task_name_));
 }
 
 void Util::Terminate()
@@ -99,17 +99,6 @@ void Util::ShutdownProcesses()
 {
   ::eCAL::Util::ShutdownProcesses();
 }
-
-void Util::ShutdownCore()
-{
-  ::eCAL::Util::ShutdownCore();
-}
-
-void Util::EnableLoopback(bool state_)
-{
-  ::eCAL::Util::EnableLoopback(state_);
-}
-
 
 /////////////////////////////////////////////////////////////////////////////
 // Logger
@@ -524,7 +513,7 @@ List<ServiceClient::ServiceClientCallbackData^>^ ServiceClient::Call(System::Str
 /////////////////////////////////////////////////////////////////////////////
 void Monitoring::Initialize()
 {
-  ::eCAL::Initialize(0, nullptr, "", ::eCAL::Init::Monitoring);
+  ::eCAL::Initialize("", ::eCAL::Init::Monitoring);
 }
 
 void Monitoring::Terminate()

@@ -25,14 +25,14 @@
 #include <chrono>
 #include <thread>
 
-int main(int argc, char** argv)
+int main()
 {
   std::cout << "-------------------------------" << std::endl;
   std::cout << " HELLO WORLD RECEIVER"           << std::endl;
   std::cout << "-------------------------------" << std::endl;
 
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "minimal_rec_cb");
+  eCAL::Initialize("minimal_rec_cb");
 
   // subscriber for topic "Hello"
   eCAL::string::CSubscriber<std::string> sub("Hello");

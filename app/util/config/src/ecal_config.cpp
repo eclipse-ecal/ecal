@@ -23,10 +23,10 @@
 
 #include <ecal/ecal.h>
 
-int main(int argc, char** argv)
+int main()
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "eCALConfig");
+  eCAL::Initialize("eCALConfig");
 
   // print config
   eCAL::Process::DumpConfig();

@@ -31,14 +31,39 @@
 #include <vector>
 #include <functional>
 
-static char* str_malloc(const std::string& buf_s_)
+namespace
 {
-  void* cbuf = malloc(buf_s_.size());
-  if(cbuf != nullptr)
+  char* str_malloc(const std::string& buf_s_)
   {
-    memcpy(cbuf, buf_s_.data(), buf_s_.size());
+    void* cbuf = malloc(buf_s_.size());
+    if (cbuf != nullptr)
+    {
+      memcpy(cbuf, buf_s_.data(), buf_s_.size());
+    }
+    return(static_cast<char*>(cbuf));
   }
-  return(static_cast<char*>(cbuf));
+
+  bool GetTopicDataTypeInformation(const char* topic_name_, eCAL::SDataTypeInformation& topic_info_)
+  {
+    // try to find topic name in publisher set
+    for (const auto& pub_id : eCAL::Registration::GetPublisherIDs())
+    {
+      if (pub_id.topic_name == topic_name_)
+      {
+        return eCAL::Registration::GetPublisherInfo(pub_id, topic_info_);
+      }
+    }
+    // try to find topic name in subscriber set
+    const auto& sub_ids = eCAL::Registration::GetSubscriberIDs();
+    for (const auto& sub_id : sub_ids)
+    {
+      if (sub_id.topic_name == topic_name_)
+      {
+        return eCAL::Registration::GetSubscriberInfo(sub_id, topic_info_);
+      }
+    }
+    return false;
+  }
 }
 
 /****************************************/
@@ -54,7 +79,12 @@ const char* ecal_getversion()
 /****************************************/
 int ecal_getversion_components(int* major_, int* minor_, int* patch_)
 {
-  return eCAL::GetVersion(major_, minor_, patch_);
+  if ((major_ == nullptr) || (minor_ == nullptr) || (patch_ == nullptr) )
+      return 0;
+  *major_ = eCAL::GetVersion().major;
+  *minor_ = eCAL::GetVersion().minor;
+  *minor_ = eCAL::GetVersion().patch;
+  return 1;
 }
 
 /****************************************/
@@ -68,9 +98,10 @@ const char* ecal_getdate()
 /****************************************/
 /*      ecal_initialize                 */
 /****************************************/
-int ecal_initialize(int argc_, char **argv_, const char* unit_name_)
+int ecal_initialize(const char* unit_name_)
 {
-  return(eCAL::Initialize(argc_, argv_, unit_name_));
+  std::string unit_name = (unit_name_ != nullptr) ? std::string(unit_name_) : std::string("");
+  return(eCAL::Initialize(unit_name));
 }
 
 /****************************************/
@@ -156,28 +187,13 @@ void ecal_shutdown_processes()
 }
 
 /****************************************/
-/*      ecal_shutdown_core              */
-/****************************************/
-void ecal_shutdown_core()
-{
-  eCAL::Util::ShutdownCore();
-}
-
-/****************************************/
-/*      ecal_enable_loopback            */
-/****************************************/
-void ecal_enable_loopback(const int state_)
-{
-  eCAL::Util::EnableLoopback(state_ != 0);
-}
-
-/****************************************/
 /*      get_type_name                   */
 /****************************************/
 bool ecal_get_type_name(const char* topic_name_, const char** topic_type_, int* topic_type_len_)
 {
   eCAL::SDataTypeInformation topic_info;
-  bool ret = eCAL::Registration::GetTopicDataTypeInformation(topic_name_, topic_info);
+  // get the first matching topic type information for the given topic name found in either the publisher or subscriber id set !
+  bool ret = GetTopicDataTypeInformation(topic_name_, topic_info);
   if(ret)
   {
     std::string topic_type_s = topic_info.name;
@@ -205,7 +221,8 @@ bool ecal_get_type_name(const char* topic_name_, const char** topic_type_, int* 
 bool ecal_get_type_encoding(const char* topic_name_, const char** topic_encoding_, int* topic_encoding_len_)
 {
   eCAL::SDataTypeInformation topic_info;
-  bool ret = eCAL::Registration::GetTopicDataTypeInformation(topic_name_, topic_info);
+  // get the first matching topic type information for the given topic name found in either the publisher or subscriber id set !
+  bool ret = GetTopicDataTypeInformation(topic_name_, topic_info);
   if (ret)
   {
     std::string topic_encoding_s = topic_info.encoding;
@@ -233,7 +250,8 @@ bool ecal_get_type_encoding(const char* topic_name_, const char** topic_encoding
 bool ecal_get_description(const char* topic_name_, const char** topic_desc_, int* topic_desc_len_)
 {
   eCAL::SDataTypeInformation topic_info;
-  bool ret = eCAL::Registration::GetTopicDataTypeInformation(topic_name_, topic_info);
+  // get the first matching topic type information for the given topic name found in either the publisher or subscriber id set !
+  bool ret = GetTopicDataTypeInformation(topic_name_, topic_info);
   if(ret)
   {
     std::string topic_desc_s = topic_info.descriptor;
@@ -711,7 +729,7 @@ bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, con
 /****************************************/
 int mon_initialize()
 {
-  return(eCAL::Initialize(0, nullptr, "", eCAL::Init::Monitoring));
+  return(eCAL::Initialize("", eCAL::Init::Monitoring));
 }
 
 /****************************************/

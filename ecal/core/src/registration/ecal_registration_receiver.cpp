@@ -138,11 +138,6 @@ namespace eCAL
     m_created          = false;
   }
 
-  void CRegistrationReceiver::EnableLoopback(bool state_)
-  {
-    m_sample_applier.EnableLoopback(state_);
-  }
-
   bool CRegistrationReceiver::AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_)
   {
     return m_user_applier.AddRegistrationCallback(event_, callback_);

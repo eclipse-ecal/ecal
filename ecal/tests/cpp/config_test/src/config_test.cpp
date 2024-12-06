@@ -23,12 +23,13 @@
 
 #include <gtest/gtest.h>
 
-#include <stdexcept>
 #include <fstream>
+#include <iostream>
+#include <stdexcept>
+#include <stdio.h>
 #include <string>
-#include <cstdio>
+#include <vector>
 
-#include "ecal_cmd_parser.h"
 #ifdef ECAL_CORE_CONFIGURATION
   #include "configuration_reader.h"
 #endif
@@ -59,7 +60,7 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
   // Publisher options
   const bool                pub_use_shm                 = false;
 
-  eCAL::Configuration custom_config(0, nullptr);
+  eCAL::Configuration custom_config;
   try
   {
     custom_config.subscriber.drop_out_of_order_messages       = drop_out_of_order_messages;
@@ -98,7 +99,7 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
   // Test monitoring console log assignment, default is (log_level_info | log_level_warning | log_level_error | log_level_fatal)
   EXPECT_EQ(mon_log_filter_con, eCAL::GetConfiguration().logging.sinks.console.filter_log_con);
 
-  // Test publisher sendmode assignment, default is eCAL::TLayer::eSendMode::smode_auto
+  // Test publisher sendmode assignment
   EXPECT_EQ(pub_use_shm, eCAL::GetConfiguration().publisher.layer.shm.enable);
 
   // Test registration option assignment, default timeout is 10000U and default refresh is 1000U
@@ -111,7 +112,7 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
 
 TEST(core_cpp_config /*unused*/, user_config_death_test /*unused*/)
 {
-  eCAL::Configuration custom_config(0, nullptr);
+  eCAL::Configuration custom_config;
 
   // Test the IpAddressV4 class with wrong values
   ASSERT_THROW(
@@ -154,18 +155,6 @@ TEST(core_cpp_config /*unused*/, user_config_death_test /*unused*/)
   ASSERT_THROW(
     SetValue(custom_config.transport_layer.udp.network.group, "0.00.000.0"),
     std::invalid_argument);
-
-  // Test the ConstrainedInteger class with wrong values. Default are MIN = 5242880, STEP = 1024
-  // Value below MIN
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.send_buffer, 42),
-    std::invalid_argument);
-  
-  // Wrong step. Default STEP = 1024
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.send_buffer, (5242880 + 512)),
-    std::invalid_argument);
-
 }
 
 TEST(core_cpp_config /*unused*/, config_custom_datatypes_tests /*unused*/)
@@ -179,17 +168,9 @@ TEST(core_cpp_config /*unused*/, config_custom_datatypes_tests /*unused*/)
   ip2 = ip1;
   EXPECT_EQ(ip1, ip2);
 
-  eCAL::Types::ConstrainedInteger<0,1,10> s1;
-  eCAL::Types::ConstrainedInteger<0,1,10> s2;
-  EXPECT_EQ(s1, s2);
-
-  s1 = 5;
-  s2 = s1;
-  EXPECT_EQ(s1, s2);
-
   // test copy method for config structure
-  eCAL::Configuration config1(0, nullptr);
-  eCAL::Configuration config2(0, nullptr);
+  eCAL::Configuration config1;
+  eCAL::Configuration config2;
   std::string testValue = "234.0.3.2";
   config2.transport_layer.udp.network.group = testValue;
   auto& config2ref = config2;
@@ -198,28 +179,6 @@ TEST(core_cpp_config /*unused*/, config_custom_datatypes_tests /*unused*/)
   EXPECT_EQ(config1.transport_layer.udp.network.group, testValue);
 }
 
-TEST(core_cpp_config /*unused*/, config_cmd_parser_test /*unused*/)
-{
-  const std::string some_file_name = "someFileName.yml";
-
-  eCAL::Config::CmdParser parser{};
-
-  EXPECT_EQ(parser.getUserIni(), "");
-  EXPECT_EQ(parser.getDumpConfig(), false);
-
-  std::vector<std::string> arguments{};
-
-  arguments.push_back("test_config_cmd_parser_test");
-  // set a file name as ini file
-  arguments.push_back("--ecal-config-file " + some_file_name);
-  // set the dump config flag
-  arguments.push_back("--ecal-dump-config");
-
-  parser.parseArguments(arguments);
-
-  EXPECT_EQ(parser.getUserIni(), some_file_name);
-  EXPECT_EQ(parser.getDumpConfig(), true);
-}
 
 #ifdef ECAL_CORE_CONFIGURATION
 TEST(core_cpp_config /*unused*/, read_write_file_test /*unused*/)
@@ -259,9 +218,6 @@ TEST(core_cpp_config /*unused*/, parse_values_test /*unused*/)
 
   // Check equality of IpAddressV4
   EXPECT_EQ(config.transport_layer.udp.network.group, "239.5.0.1");
-
-  // Check constrained Integer
-  EXPECT_EQ(config.transport_layer.udp.port, 14010);
 
   // Check boolean
   EXPECT_EQ(config.transport_layer.udp.npcap_enabled, true);

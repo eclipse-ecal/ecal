@@ -17,14 +17,17 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstddef>
 #include <ecal/ecal.h>
 #include <ecal/msg/string/publisher.h>
 #include <ecal/msg/string/subscriber.h>
 
 #include <atomic>
-#include <thread>
+#include <functional>
+#include <string>
 
 #include <gtest/gtest.h>
+#include <vector>
 
 enum {
   CMN_REGISTRATION_REFRESH_MS = 1000,
@@ -49,10 +52,7 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
   const std::string send_s;
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("pubsub_test");
 
   // create subscriber for topic "A"
   eCAL::CSubscriber sub("A");
@@ -118,10 +118,7 @@ TEST(core_cpp_pubsub, MultipleSendsSHM)
   long long   last_received_timestamp(0);
 
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "pubsub_test");
-
-  // publish / subscribe match in the same process
-  eCAL::Util::EnableLoopback(true);
+  eCAL::Initialize("pubsub_test");
 
   // create subscriber for topic "A"
   eCAL::string::CSubscriber<std::string> sub("A");

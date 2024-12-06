@@ -19,11 +19,10 @@
 
 #include "io/shm/ecal_memfile_naming.h"
 
-#include <atomic>
 #include <chrono>
 
 #include <gtest/gtest.h>
-
+#include <string>
 
 TEST(core_cpp_core, MemFile_MemfileNaming)
 {

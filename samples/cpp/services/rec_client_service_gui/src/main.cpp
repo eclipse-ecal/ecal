@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 {
 
   // Just make sure that eCAL is initialized
-  eCAL::Initialize(0, nullptr, "EcalRecGuiClient", eCAL::Init::Default);
+  eCAL::Initialize("EcalRecGuiClient", eCAL::Init::Default);
 
   QApplication a(argc, argv);
 

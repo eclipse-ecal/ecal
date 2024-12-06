@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,7 +33,17 @@ def initialize(args, unit_name):
   :type unit_name:  string
 
   """
-  return _ecal.initialize(args, unit_name)
+  print("[WARNING] 'initialize(args, unit_name)' is deprecated. Please use 'initialize(argv, unit_name)' instead.")
+  return initialize(unit_name)
+
+def initialize(unit_name):
+  """ initialize eCAL API
+
+  :param unit_name: instance unit name
+  :type unit_name:  string
+
+  """
+  return _ecal.initialize(unit_name)
 
 
 def finalize():
@@ -126,19 +136,9 @@ def shutdown_processes():
 
 
 def shutdown_core():
-  """ shutdown ecal core components
+  """ shutdown ecal core components (deprecated)
   """
-  return _ecal.shutdown_core()
-
-
-def enable_loopback(state):
-  """ enable ecal message loopback
-
-  :param state: switch on ecal message loop back (default 0) 
-  :type state: int
-
-  """
-  return _ecal.enable_loopback(state)
+  return _ecal.shutdown_processes()
 
 
 def log_setlevel(level):

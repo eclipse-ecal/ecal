@@ -17,10 +17,14 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <chrono>
 #include <ecal/ecal.h>
 #include <ecal/msg/string/publisher.h>
 #include <ecal/msg/string/subscriber.h>
 
+#include <functional>
+#include <memory>
+#include <string>
 #include <thread>
 
 #include <gtest/gtest.h>
@@ -48,10 +52,7 @@ namespace
 TEST(core_cpp_pubsub, TimeoutAcknowledgment)
 {
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize(0, nullptr, "TimeoutAcknowledgment", eCAL::Init::All));
-
-  // enable loop back communication in the same thread
-  eCAL::Util::EnableLoopback(true);
+  EXPECT_EQ(0, eCAL::Initialize("TimeoutAcknowledgment", eCAL::Init::All));
 
   // create publisher config
   eCAL::Publisher::Configuration pub_config;

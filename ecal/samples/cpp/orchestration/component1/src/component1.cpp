@@ -69,11 +69,11 @@ private:
   eCAL::protobuf::CPublisher<component::vec> publisher_vec;
 };
 
-int main(int argc, char** argv)
+int main()
 {
   // initialize eCAL API
   const std::string component("component1");
-  eCAL::Initialize(argc, argv, component.c_str());
+  eCAL::Initialize(component);
 
   // start the component service
   std::shared_ptr<ComponentServiceImpl> component_service_impl = std::make_shared<ComponentServiceImpl>();
