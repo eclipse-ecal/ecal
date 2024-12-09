@@ -398,13 +398,13 @@ void Subscriber::OnReceiveUnsafe(const char* topic_name_, const ::eCAL::SReceive
 /////////////////////////////////////////////////////////////////////////////
 // ServiceServer
 /////////////////////////////////////////////////////////////////////////////
-ServiceServer::ServiceServer() : m_serv(new ::eCAL::CServiceServer())
+ServiceServer::ServiceServer() : m_serv(new ::eCAL::v5::CServiceServer())
 {
 }
 
 ServiceServer::ServiceServer(System::String^ server_name_)
 {
-  m_serv = new ::eCAL::CServiceServer(StringToStlString(server_name_));
+  m_serv = new ::eCAL::v5::CServiceServer(StringToStlString(server_name_));
 }
 
 ServiceServer::~ServiceServer()

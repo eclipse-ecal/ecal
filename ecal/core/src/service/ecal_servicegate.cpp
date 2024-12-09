@@ -52,10 +52,7 @@ namespace eCAL
 
     // destroy all remaining server
     const std::shared_lock<std::shared_timed_mutex> lock(m_service_set_sync);
-    for (const auto& service : m_service_set)
-    {
-      service->Stop();
-    }
+    m_service_set.clear();
 
     m_created = false;
   }

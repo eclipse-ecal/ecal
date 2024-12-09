@@ -388,6 +388,9 @@ if(ECAL_CORE_SERVICE)
       src/service/ecal_service_server.cpp
       src/service/ecal_service_server_impl.cpp
       src/service/ecal_service_server_impl.h
+      src/service/ecal_service_server_v5.cpp
+      src/service/ecal_service_server_v5_impl.cpp
+      src/service/ecal_service_server_v5_impl.h
       src/service/ecal_service_singleton_manager.cpp
       src/service/ecal_service_singleton_manager.h
   )
@@ -536,6 +539,7 @@ set(ecal_header_cmn
     include/ecal/ecal_registration.h
     include/ecal/ecal_publisher.h
     include/ecal/ecal_server.h
+    include/ecal/ecal_server_v5.h
     include/ecal/ecal_service_info.h
     include/ecal/ecal_subscriber.h
     include/ecal/ecal_time.h

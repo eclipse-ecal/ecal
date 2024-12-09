@@ -18,6 +18,7 @@
 */
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_server_v5.h>
 
 #include <gtest/gtest.h>
 #include <map>
@@ -60,7 +61,7 @@ TEST_P(ServicesTestFixture, ServiceExpiration)
   // create simple service and let it expire
   {
     // create service
-    eCAL::CServiceServer service("foo::service");
+    eCAL::v5::CServiceServer service("foo::service");
     service.AddDescription("foo::method", "foo::req_type", "foo::req_desc", "foo::resp_type", "foo::resp_desc");
 
     // let's register
@@ -108,7 +109,7 @@ TEST_P(ServicesTestFixture, GetServiceIDs)
   // create simple server
   {
     // create server
-    eCAL::CServiceServer service("foo::service");
+    eCAL::v5::CServiceServer service("foo::service");
 
     // add description
     eCAL::SServiceMethodInformation service_method_info;

@@ -25,6 +25,7 @@
 #pragma once
 #include <ecal/ecal.h>
 #include <ecal/ecal_client_v5.h>
+#include <ecal/ecal_server_v5.h>
 
 using namespace System;
 using namespace System::Collections::Generic;
@@ -437,7 +438,7 @@ namespace Continental
         bool RemMethodCallback(String^ methodName, MethodCallback^ callback_);
 
       private:
-        ::eCAL::CServiceServer* m_serv;
+        ::eCAL::v5::CServiceServer* m_serv;
         /**
          * @brief managed callbacks that will get executed during the eCAL method callback
         **/

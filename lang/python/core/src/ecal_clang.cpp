@@ -23,6 +23,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_client_v5.h>
+#include <ecal/ecal_server_v5.h>
 
 #include "ecal_clang.h"
 
@@ -563,7 +564,7 @@ bool sub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type
 /****************************************/
 ECAL_HANDLE server_create(const char* service_name_)
 {
-  auto* server = new eCAL::CServiceServer;
+  auto* server = new eCAL::v5::CServiceServer;
   if (!server->Create(service_name_))
   {
     delete server;
@@ -577,7 +578,7 @@ ECAL_HANDLE server_create(const char* service_name_)
 /****************************************/
 bool server_destroy(ECAL_HANDLE handle_)
 {
-  auto* server = static_cast<eCAL::CServiceServer*>(handle_);
+  auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
   if (server != nullptr)
   {
     delete server;
@@ -605,7 +606,7 @@ static int g_server_method_callback(const std::string& method_, const std::strin
 
 bool server_add_method_callback(ECAL_HANDLE handle_,  const char* method_name_, const char* req_type_, const char* resp_type_, const MethodCallbackCT callback_, void* par_)
 {
-  auto* server = static_cast<eCAL::CServiceServer*>(handle_);
+  auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
   if (server != nullptr)
   {
     auto callback = std::bind(g_server_method_callback, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, callback_, par_);
@@ -622,7 +623,7 @@ bool server_add_method_callback(ECAL_HANDLE handle_,  const char* method_name_, 
 /****************************************/
 bool server_rem_method_callback(ECAL_HANDLE handle_, const char* method_name_)
 {
-  auto* server = static_cast<eCAL::CServiceServer*>(handle_);
+  auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
   if (server != nullptr)
   {
     return(server->RemMethodCallback(method_name_));
