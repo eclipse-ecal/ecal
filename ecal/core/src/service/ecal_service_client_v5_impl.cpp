@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  eCAL service client interface
+ * @brief  eCAL service client implementation (deprecated eCAL5 version)
 **/
 
 #include "ecal_service_client_v5_impl.h"
@@ -29,20 +29,17 @@ namespace eCAL
   {
     CServiceClientImpl::CServiceClientImpl()
       : m_service_client_impl(nullptr)
-      , m_created(false)
     {
     }
 
     CServiceClientImpl::CServiceClientImpl(const std::string& service_name_)
       : m_service_client_impl(nullptr)
-      , m_created(false)
     {
       Create(service_name_);
     }
 
     CServiceClientImpl::CServiceClientImpl(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
       : m_service_client_impl(nullptr)
-      , m_created(false)
     {
       Create(service_name_, method_information_map_);
     }
@@ -59,7 +56,7 @@ namespace eCAL
 
     bool CServiceClientImpl::Create(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
     {
-      if (m_created) return false;
+      if (m_service_client_impl != nullptr) return false;
 
       // Define the event callback to pass to CServiceClientNew
       ClientEventIDCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const struct SClientEventCallbackData& data_)
@@ -83,21 +80,19 @@ namespace eCAL
         event_callback
       );
 
-      m_created = (m_service_client_impl != nullptr);
-      return m_created;
+      return true;
     }
 
     bool CServiceClientImpl::Destroy()
     {
-      if (!m_created) return false;
+      if (m_service_client_impl == nullptr) return false;
 
       // Reset the service client implementation
       m_service_client_impl.reset();
-      m_created = false;
 
       // Clear stored callbacks
       m_response_callback = nullptr;
-      //m_event_callback = nullptr;
+      m_event_callback_map.clear();
       m_host_name.clear();
 
       return true;
@@ -105,7 +100,7 @@ namespace eCAL
 
     bool CServiceClientImpl::SetHostName(const std::string& host_name_)
     {
-      if (!m_created) return false;
+      if (m_service_client_impl == nullptr) return false;
 
       // Store the host name filter
       m_host_name = host_name_;
@@ -115,7 +110,8 @@ namespace eCAL
 
     bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_, int timeout_)
     {
-      if (!m_created || !m_response_callback) return false;
+      if (m_service_client_impl == nullptr) return false;
+      if (!m_response_callback) return false;
 
       // Wrap the response callback to filter by host name if necessary
       ResponseIDCallbackT wrapped_callback = [this](const Registration::SEntityId& /*entity_id_*/, const struct SServiceResponse& service_response_)
@@ -133,7 +129,8 @@ namespace eCAL
 
     bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_)
     {
-      if (!m_created || !service_response_vec_) return false;
+      if (m_service_client_impl == nullptr) return false;
+      if (!service_response_vec_) return false;
 
       // Call the method using the new API
       ServiceResponseVecT all_responses;
@@ -160,7 +157,8 @@ namespace eCAL
 
     bool CServiceClientImpl::CallAsync(const std::string& method_name_, const std::string& request_, int /*timeout_*/)
     {
-      if (!m_created || !m_response_callback) return false;
+      if (m_service_client_impl == nullptr) return false;
+      if (!m_response_callback) return false;
 
       // Wrap the response callback to filter by host name if necessary
       ResponseIDCallbackT wrapped_callback = [this](const Registration::SEntityId& /*entity_id_*/, const struct SServiceResponse& service_response_)
@@ -178,7 +176,7 @@ namespace eCAL
 
     bool CServiceClientImpl::AddResponseCallback(const ResponseCallbackT& callback_)
     {
-      if (!m_created) return false;
+      if (m_service_client_impl == nullptr) return false;
 
       {
         const std::lock_guard<std::mutex> lock(m_response_callback_mutex);
@@ -190,7 +188,7 @@ namespace eCAL
 
     bool CServiceClientImpl::RemResponseCallback()
     {
-      if (!m_created) return false;
+      if (m_service_client_impl == nullptr) return false;
 
       {
         const std::lock_guard<std::mutex> lock(m_response_callback_mutex);
@@ -202,7 +200,7 @@ namespace eCAL
 
     bool CServiceClientImpl::AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_)
     {
-      if (!m_created) return false;
+      if (m_service_client_impl == nullptr) return false;
 
       {
         const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
@@ -214,7 +212,7 @@ namespace eCAL
 
     bool CServiceClientImpl::RemEventCallback(eCAL_Client_Event type_)
     {
-      if (!m_created) return false;
+      if (m_service_client_impl == nullptr) return false;
 
       {
         const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
@@ -226,14 +224,14 @@ namespace eCAL
 
     std::string CServiceClientImpl::GetServiceName()
     {
-      if (!m_created) return "";
+      if (m_service_client_impl == nullptr) return "";
 
       return m_service_client_impl->GetServiceName();
     }
 
     bool CServiceClientImpl::IsConnected()
     {
-      if (!m_created) return false;
+      if (m_service_client_impl == nullptr) return false;
 
       return m_service_client_impl->IsConnected();
     }

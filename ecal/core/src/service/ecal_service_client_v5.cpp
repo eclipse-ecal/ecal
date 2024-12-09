@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  eCAL service client interface
+ * @brief  eCAL service client interface (deprecated eCAL5 version)
 **/
 
 #include <ecal/ecal.h>
