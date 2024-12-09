@@ -32,8 +32,13 @@
 namespace eCAL
 {
   class   CGlobals;
-  class   CLog;
   struct  Configuration;
+
+  namespace Logging
+  {
+    class CLogProvider;
+    class CLogReceiver;
+  }
 
 #if ECAL_CORE_MONITORING
   class  CMonitoring;
@@ -66,7 +71,8 @@ namespace eCAL
 
   // Declaration of getter functions for globally accessible variable instances
   CGlobals*               g_globals();
-  CLog*                   g_log();
+  Logging::CLogReceiver*  g_log_udp_receiver();
+  Logging::CLogProvider*  g_log_provider();
 #if ECAL_CORE_MONITORING
   CMonitoring*            g_monitoring();
 #endif

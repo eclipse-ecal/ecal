@@ -83,9 +83,9 @@ namespace eCAL
     
     std::string         GetMonitoringFilterExcludeList     () { return GetConfiguration().monitoring.filter_excl; }
     std::string         GetMonitoringFilterIncludeList     () { return GetConfiguration().monitoring.filter_incl; }
-    eCAL_Logging_Filter GetConsoleLogFilter                () { return GetConfiguration().logging.sinks.console.filter_log_con; }
-    eCAL_Logging_Filter GetFileLogFilter                   () { return GetConfiguration().logging.sinks.file.filter_log_file; }
-    eCAL_Logging_Filter GetUdpLogFilter                    () { return GetConfiguration().logging.sinks.udp.filter_log_udp; }
+    eCAL_Logging_Filter GetConsoleLogFilter                () { return GetConfiguration().logging.provider.console.filter_log; }
+    eCAL_Logging_Filter GetFileLogFilter                   () { return GetConfiguration().logging.provider.file.filter_log; }
+    eCAL_Logging_Filter GetUdpLogFilter                    () { return GetConfiguration().logging.provider.udp.filter_log; }
 
     /////////////////////////////////////
     // sys

@@ -190,9 +190,15 @@ namespace eCAL
     /////////////////////
     if ((components_ & Init::Logging) != 0u)
     {
-      if (log_instance == nullptr)
+      if (log_provider_instance == nullptr)
       {
-        log_instance = std::make_unique<CLog>(eCAL::Logging::BuildLoggingAttributes(GetLoggingConfiguration(), GetRegistrationConfiguration(), GetTransportLayerConfiguration()));
+        log_provider_instance = std::make_unique<Logging::CLogProvider>(eCAL::Logging::BuildLoggingProviderAttributes(GetLoggingConfiguration(), GetRegistrationConfiguration(), GetTransportLayerConfiguration()));
+        new_initialization = true;
+      }
+
+      if (log_udp_receiver_instance == nullptr)
+      {
+        log_udp_receiver_instance = std::make_unique<Logging::CLogReceiver>(eCAL::Logging::BuildLoggingReceiverAttributes(GetLoggingConfiguration(), GetRegistrationConfiguration(), GetTransportLayerConfiguration()));
         new_initialization = true;
       }
     }
@@ -200,11 +206,14 @@ namespace eCAL
     /////////////////////
     // START ALL
     /////////////////////
-    //if (config_instance)                                                config_instance->Create();
-    if (log_instance && ((components_ & Init::Logging) != 0u))            log_instance->Start();
+    if (log_provider_instance && ((components_ & Init::Logging) != 0u))
+    {
+      log_provider_instance->Start();
+      log_udp_receiver_instance->Start();
+    }
 #if ECAL_CORE_REGISTRATION
-    if (registration_provider_instance)                                   registration_provider_instance->Start();
-    if (registration_receiver_instance)                                   registration_receiver_instance->Start();
+    if (registration_provider_instance)                                           registration_provider_instance->Start();
+    if (registration_receiver_instance)                                           registration_receiver_instance->Start();
 #endif
     if (descgate_instance)
     {
@@ -214,23 +223,23 @@ namespace eCAL
 #endif
     }
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
-    if (memfile_pool_instance)                                            memfile_pool_instance->Start();
+    if (memfile_pool_instance)                                              memfile_pool_instance->Start();
 #endif
 #if ECAL_CORE_SUBSCRIBER
-    if (subgate_instance && ((components_ & Init::Subscriber) != 0u))     subgate_instance->Start();
+    if (subgate_instance && ((components_ & Init::Subscriber) != 0u))       subgate_instance->Start();
 #endif
 #if ECAL_CORE_PUBLISHER
-    if (pubgate_instance && ((components_ & Init::Publisher) != 0u))      pubgate_instance->Start();
+    if (pubgate_instance && ((components_ & Init::Publisher) != 0u))        pubgate_instance->Start();
 #endif
 #if ECAL_CORE_SERVICE
-    if (servicegate_instance && ((components_ & Init::Service) != 0u))    servicegate_instance->Start();
-    if (clientgate_instance && ((components_ & Init::Service) != 0u))     clientgate_instance->Start();
+    if (servicegate_instance && ((components_ & Init::Service) != 0u))      servicegate_instance->Start();
+    if (clientgate_instance && ((components_ & Init::Service) != 0u))       clientgate_instance->Start();
 #endif
 #if ECAL_CORE_TIMEPLUGIN
-    if (timegate_instance && ((components_ & Init::TimeSync) != 0u))      timegate_instance->Start(CTimeGate::eTimeSyncMode::realtime);
+    if (timegate_instance && ((components_ & Init::TimeSync) != 0u))        timegate_instance->Start(CTimeGate::eTimeSyncMode::realtime);
 #endif
 #if ECAL_CORE_MONITORING
-    if (monitoring_instance && ((components_ & Init::Monitoring) != 0u))  monitoring_instance->Start();
+    if (monitoring_instance && ((components_ & Init::Monitoring) != 0u))    monitoring_instance->Start();
 #endif
     initialized =  true;
     components  |= components_;
@@ -266,7 +275,7 @@ namespace eCAL
       return(monitoring_instance != nullptr);
 #endif
     case Init::Logging:
-      return(log_instance != nullptr);
+      return(log_provider_instance != nullptr);
 #if ECAL_CORE_TIMEPLUGIN
     case Init::TimeSync:
       return(timegate_instance != nullptr);
@@ -318,8 +327,8 @@ namespace eCAL
     if (memfile_pool_instance)           memfile_pool_instance->Stop();
     if (memfile_map_instance)            memfile_map_instance->Stop();
 #endif
-    if (log_instance)                    log_instance->Stop();
-    //if (config_instance)                 config_instance->Destroy();
+    if (log_udp_receiver_instance)       log_udp_receiver_instance->Stop();
+    if (log_provider_instance)           log_provider_instance->Stop();
 
 #if ECAL_CORE_MONITORING
     monitoring_instance             = nullptr;
@@ -346,7 +355,9 @@ namespace eCAL
     memfile_pool_instance           = nullptr;
     memfile_map_instance            = nullptr;
 #endif
-    log_instance                    = nullptr;
+    log_provider_instance           = nullptr;
+    log_udp_receiver_instance       = nullptr;
+    
     initialized = false;
 
     // reset configuration to default values

@@ -19,17 +19,30 @@
 
 #pragma once
 
-#include "logging/config/attributes/ecal_log_provider_attributes.h"
-#include "logging/config/attributes/ecal_log_receiver_attributes.h"
-#include "ecal/config/logging.h"
-#include "ecal/config/registration.h"
-#include "ecal/config/transport_layer.h"
+#include <string>
+
+#include <ecal/ecal_log_level.h>
 
 namespace eCAL
 {
   namespace Logging
   {
-    SProviderAttributes BuildLoggingProviderAttributes(const Logging::Configuration& log_config_, const Registration::Configuration& reg_config_, const TransportLayer::Configuration& tl_config_);
-    SReceiverAttributes BuildLoggingReceiverAttributes(const Logging::Configuration& log_config_, const Registration::Configuration& reg_config_, const TransportLayer::Configuration& tl_config_);
+    struct SReceiverAttributes
+    {
+      struct SUDPReceiver
+      {
+        std::string address;
+        int         port;
+        bool        broadcast;
+        bool        loopback;
+        int         rcvbuf;
+      };
+      
+      SUDPReceiver udp_receiver;
+
+      bool         network_enabled;
+      bool         receive_enabled;
+      std::string  host_name;
+   };
   }
 }
