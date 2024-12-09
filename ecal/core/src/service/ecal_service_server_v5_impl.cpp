@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  eCAL service server implementation
+ * @brief  eCAL service server implementation (deprecated eCAL5 version)
 **/
 
 #include "ecal_service_server_v5_impl.h"

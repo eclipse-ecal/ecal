@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  eCAL service server interface
+ * @brief  eCAL service server interface (deprecated eCAL5 version)
 **/
 
 #include <ecal/ecal.h>
@@ -95,7 +95,7 @@ namespace eCAL
 
     std::string CServiceServer::GetServiceName()
     {
-      if (m_service_server_impl == nullptr) return false;
+      if (m_service_server_impl == nullptr) return "";
       return m_service_server_impl->GetServiceName();
     }
 

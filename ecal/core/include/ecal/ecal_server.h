@@ -49,7 +49,7 @@ namespace eCAL
      * @param service_name_   Unique service name.
     **/
     ECAL_API_EXPORTED_MEMBER
-      explicit CServiceServer(const std::string& service_name_, const ServerEventIDCallbackT callback_ = ServerEventIDCallbackT());
+      explicit CServiceServer(const std::string& service_name_, const ServerEventIDCallbackT event_callback_ = ServerEventIDCallbackT());
 
     /**
      * @brief Destructor.

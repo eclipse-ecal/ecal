@@ -18,114 +18,73 @@
 */
 
 /**
- * @brief  eCAL service server interface
+ * @brief  eCAL service server implementation
 **/
 
 #pragma once
 
-#include <ecal/ecal.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
-#include <ecal/service/server.h>
 
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "serialization/ecal_struct_service.h"
 
-#include <atomic>
-#include <map>
 #include <memory>
 #include <mutex>
 #include <string>
+#include <map>
+#include <functional>
 
 namespace eCAL
 {
   /**
-   * @brief Service server implementation class.
-  **/
+   * @brief Implementation class for eCAL service server.
+   */
   class CServiceServerImpl : public std::enable_shared_from_this<CServiceServerImpl>
   {
   public:
-    static std::shared_ptr<CServiceServerImpl> CreateInstance();
-    static std::shared_ptr<CServiceServerImpl> CreateInstance(const std::string& service_name_);
+    // Factory method to create an instance of the client implementation
+    static std::shared_ptr<CServiceServerImpl> CreateInstance(
+      const std::string& service_name_, const ServerEventIDCallbackT& event_callback_);
 
   private:
-    CServiceServerImpl();
+    // Private constructor to enforce creation through factory method
+    CServiceServerImpl(const std::string& service_name_, const ServerEventIDCallbackT& event_callback_);
 
   public:
-    // Delete copy and move constructors and assign operators. Necessary, as the class uses the this pointer, that would be dangling / pointing to a wrong object otherwise.
-    CServiceServerImpl(const CServiceServerImpl&) = delete;  // Copy construct
-    CServiceServerImpl(CServiceServerImpl&&) = delete;  // Move construct
-    CServiceServerImpl& operator=(const CServiceServerImpl&) = delete;  // Copy assign
-    CServiceServerImpl& operator=(CServiceServerImpl&&) = delete;  // Move assign
-
     ~CServiceServerImpl();
 
-    bool Start(const std::string& service_name_);
-    bool Stop();
-
-    bool AddDescription(const std::string& method_, const SDataTypeInformation& request_type_information_, const SDataTypeInformation& response_type_information_);
-
-    // add and remove callback function for server method calls
-    bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
+    bool AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_);
     bool RemMethodCallback(const std::string& method_);
 
-    // add and remove callback function for server events
-    bool AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_);
-    bool RemEventCallback(eCAL_Server_Event type_);
+    // Check connection state of a specific service
+    bool IsConnected() const;
 
-    // check connection state
-    bool IsConnected();
-
-    // called by the eCAL::CServiceGate to register a client
+    // Called by the registration receiver to process a service registration
     void RegisterClient(const std::string& key_, const SClientAttr& client_);
 
-    // called by eCAL:CServiceGate every second to update registration layer
+    // Called by the registration provider to get a registration sample
     Registration::Sample GetRegistration();
 
-    std::string GetServiceName() { return m_service_name; };
+    // Retrieves the service name
+    std::string GetServiceName() const;
 
-  protected:
-    void Register();
-    void Unregister();
+    // Prevent copy and move operations
+    CServiceServerImpl(const CServiceServerImpl&) = delete;
+    CServiceServerImpl& operator=(const CServiceServerImpl&) = delete;
+    CServiceServerImpl(CServiceServerImpl&&) = delete;
+    CServiceServerImpl& operator=(CServiceServerImpl&&) = delete;
 
+  private:
+    // Prepare and retrieve registration and unregistration samples
     Registration::Sample GetRegistrationSample();
     Registration::Sample GetUnregistrationSample();
 
-    /**
-     * @brief Calls the request callback based on the request and fills the response
-     *
-     * @param[in]  request_   The service request in serialized protobuf form
-     * @param[out] response_  A serialized protobuf response. My not be set at all.
-     *
-     * @return  0 if succeeded, -1 if not.
-     */
-    int RequestCallback(const std::string& request_pb_, std::string& response_pb_);
-    void EventCallback(eCAL_Server_Event event_, const std::string& message_);
+    // Service attributes
+    std::string m_service_name;
 
-    std::shared_ptr<eCAL::service::Server> m_tcp_server;
-
-    static constexpr int  m_server_version = 1;
-
-    std::string           m_service_name;
-    std::string           m_service_id;
-
-    struct SMethod
-    {
-      Service::Method method;
-      MethodCallbackT callback;
-    };
-
-    using MethodMapT = std::map<std::string, SMethod>;
-    std::mutex            m_method_map_sync;
-    MethodMapT            m_method_map;
-
-    using EventCallbackMapT = std::map<eCAL_Server_Event, ServerEventCallbackT>;
-    std::mutex            m_event_callback_map_sync;
-    EventCallbackMapT     m_event_callback_map;
-
-    mutable std::mutex    m_connected_mutex;          //!< mutex protecting the m_connected_v0 and m_connected_v1 variable, as those are modified by the event callbacks in another thread.
-    bool                  m_connected = false;
-
-    std::atomic<bool>     m_created;
+    // Event callback map and synchronization
+    mutable std::mutex m_event_callback_mutex;
+    ServerEventIDCallbackT m_event_callback;
   };
 }

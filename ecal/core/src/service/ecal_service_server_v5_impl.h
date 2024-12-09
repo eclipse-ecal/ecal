@@ -18,14 +18,14 @@
 */
 
 /**
- * @brief  eCAL service server interface
+ * @brief  eCAL service server implementation (deprecated eCAL5 version)
 **/
 
 #pragma once
 
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
-#include <ecal/ecal_server_v5.h>
+#include <ecal/ecal_server.h>
 
 #include <string>
 
@@ -62,7 +62,7 @@ namespace eCAL
       CServiceServerImpl& operator=(CServiceServerImpl&&) = delete;
 
     private:
-      std::shared_ptr<eCAL::v5::CServiceServer> m_service_server_impl;
+      std::shared_ptr<eCAL::CServiceServer> m_service_server_impl;
     };
   }
 }

@@ -22,7 +22,6 @@
 **/
 
 #include <ecal/ecal.h>
-#include <string>
 
 #include "ecal_servicegate.h"
 #include "ecal_global_accessors.h"
@@ -30,32 +29,87 @@
 
 namespace eCAL
 {
-  CServiceServer::CServiceServer(const std::string& service_name_, const ServerEventIDCallbackT callback_) :
-    m_service_server_impl(nullptr)
+  CServiceServer::CServiceServer(const std::string& service_name_, const ServerEventIDCallbackT event_callback_)
+    : m_service_server_impl(nullptr)
   {
+    // Create server implementation
+    m_service_server_impl = CServiceServerImpl::CreateInstance(service_name_, event_callback_);
+
+    // Register server
+    if (g_servicegate() != nullptr)
+    {
+      //g_servicegate()->Register(m_service_server_impl);
+    }
   }
 
   CServiceServer::~CServiceServer()
   {
+    // Unregister server
+    if (g_servicegate() != nullptr)
+    {
+      //g_servicegate()->Unregister(m_service_server_impl->GetServiceName(), m_service_server_impl);
+    }
+
+    // Reset server implementation
+    m_service_server_impl.reset();
+  }
+
+  CServiceServer::CServiceServer(CServiceServer&& rhs) noexcept
+    : m_service_server_impl(std::move(rhs.m_service_server_impl))
+  {
+  }
+
+  CServiceServer& CServiceServer::operator=(CServiceServer&& rhs) noexcept
+  {
+    if (this != &rhs)
+    {
+      // Unregister server
+      if (g_servicegate() != nullptr)
+      {
+        //g_servicegate()->Unregister(m_service_server_impl->GetServiceName(), m_service_server_impl);
+      }
+
+      // Move data
+      m_service_server_impl = std::move(rhs.m_service_server_impl);
+
+      rhs.m_service_server_impl = nullptr;
+    }
+    return *this;
   }
 
   bool CServiceServer::AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_)
   {
+    if (m_service_server_impl)
+    {
+      return m_service_server_impl->AddMethodCallback(method_, method_info_, callback_);
+    }
     return false;
   }
 
   bool CServiceServer::RemMethodCallback(const std::string& method_)
   {
+    if (m_service_server_impl)
+    {
+      return m_service_server_impl->RemMethodCallback(method_);
+    }
     return false;
   }
 
   std::string CServiceServer::GetServiceName()
   {
+    if (m_service_server_impl)
+    {
+      return m_service_server_impl->GetServiceName();
+    }
     return "";
   }
 
   bool CServiceServer::IsConnected()
   {
+    if (m_service_server_impl)
+    {
+      return m_service_server_impl->IsConnected();
+    }
     return false;
   }
 }
