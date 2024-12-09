@@ -30,7 +30,7 @@
 
 namespace eCAL
 {
-  CServiceServer::CServiceServer(const std::string& service_name_, const ServerEventCallbackT callback_) :
+  CServiceServer::CServiceServer(const std::string& service_name_, const ServerEventIDCallbackT callback_) :
     m_service_server_impl(nullptr)
   {
   }
@@ -52,12 +52,10 @@ namespace eCAL
   std::string CServiceServer::GetServiceName()
   {
     return "";
-    //return m_service_server_impl->GetServiceName();
   }
 
   bool CServiceServer::IsConnected()
   {
     return false;
-    //return m_service_server_impl->IsConnected();
   }
 }

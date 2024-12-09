@@ -169,7 +169,6 @@ namespace eCAL
 
     private:
       std::shared_ptr<CServiceServerImpl> m_service_server_impl;
-      bool                                m_created;
     };
   }
 } 

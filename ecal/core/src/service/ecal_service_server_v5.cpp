@@ -33,15 +33,13 @@ namespace eCAL
 {
   namespace v5
   {
-    CServiceServer::CServiceServer() :
-                    m_service_server_impl(nullptr),
-                    m_created(false)
+    CServiceServer::CServiceServer()
+      : m_service_server_impl(nullptr)
     {
     }
 
-    CServiceServer::CServiceServer(const std::string& service_name_) :
-                    m_service_server_impl(nullptr),
-                    m_created(false)
+    CServiceServer::CServiceServer(const std::string& service_name_)
+      : m_service_server_impl(nullptr)
     {
       Create(service_name_);
     }
@@ -53,82 +51,57 @@ namespace eCAL
 
     bool CServiceServer::Create(const std::string& service_name_)
     {
-      if(m_created) return(false);
-
-      // create service
-      m_service_server_impl = CServiceServerImpl::CreateInstance(service_name_);
-
-      // register service
-      //if (g_servicegate() != nullptr) g_servicegate()->Register(m_service_server_impl.get());
-
-      // we made it :-)
-      m_created = true;
-      return(m_created);
+      if (m_service_server_impl != nullptr) return false;
+      m_service_server_impl = std::make_shared<CServiceServerImpl>(service_name_);
+      return m_service_server_impl != nullptr;
     }
 
     bool CServiceServer::Destroy()
     {
-      if(!m_created) return(false);
-      m_created = false;
-
-      // unregister service
-      //if (g_servicegate() != nullptr) g_servicegate()->Unregister(m_service_server_impl.get());
-
-      // stop & destroy service
-      m_service_server_impl->Stop();
+      if (m_service_server_impl == nullptr) return false;
       m_service_server_impl.reset();
-
-      return(true);
+      return true;
     }
 
     bool CServiceServer::AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_)
     {
-      if (!m_created) return false;
-
-      SDataTypeInformation request_type_information;
-      request_type_information.name       = req_type_;
-      request_type_information.descriptor = req_desc_;
-
-      SDataTypeInformation response_type_information;
-      response_type_information.name       = resp_type_;
-      response_type_information.descriptor = resp_desc_;
-
-      return m_service_server_impl->AddDescription(method_, request_type_information, response_type_information);
+      if (m_service_server_impl == nullptr) return false;
+      return m_service_server_impl->AddDescription(method_, req_type_, req_desc_, resp_type_, resp_desc_);
     }
 
     bool CServiceServer::AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_)
     {
-      if (!m_created) return false;
+      if (m_service_server_impl == nullptr) return false;
       return m_service_server_impl->AddMethodCallback(method_, req_type_, resp_type_, callback_);
     }
 
     bool CServiceServer::RemMethodCallback(const std::string& method_)
     {
-      if (!m_created) return false;
+      if (m_service_server_impl == nullptr) return false;
       return m_service_server_impl->RemMethodCallback(method_);
     }
 
     bool CServiceServer::AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_)
     {
-      if (!m_created) return false;
+      if (m_service_server_impl == nullptr) return false;
       return m_service_server_impl->AddEventCallback(type_, callback_);
     }
 
     bool CServiceServer::RemEventCallback(eCAL_Server_Event type_)
     {
-      if (!m_created) return false;
+      if (m_service_server_impl == nullptr) return false;
       return m_service_server_impl->RemEventCallback(type_);
     }
 
     std::string CServiceServer::GetServiceName()
     {
-      if (!m_created) return "";
+      if (m_service_server_impl == nullptr) return false;
       return m_service_server_impl->GetServiceName();
     }
 
     bool CServiceServer::IsConnected()
     {
-      if (!m_created) return false;
+      if (m_service_server_impl == nullptr) return false;
       return m_service_server_impl->IsConnected();
     }
   }
