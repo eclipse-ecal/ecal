@@ -49,8 +49,8 @@ namespace eCAL
     attr.udp.network.group = tl_udp_confi_.network.group;
     attr.udp.network.ttl   = tl_udp_confi_.network.ttl;
 
-    attr.udp.local.group   = tl_udp_confi_.local.group;
-    attr.udp.local.ttl     = tl_udp_confi_.local.ttl;
+    attr.udp.local.group   = tl_udp_confi_.local().group;
+    attr.udp.local.ttl     = tl_udp_confi_.local().ttl;
     
     return attr;
   }

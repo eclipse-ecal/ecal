@@ -33,25 +33,12 @@ namespace eCAL
   {
     namespace UDP
     {      
-      namespace Network
+      struct MulticastConfiguration
       {
-        struct Configuration
-        {
-          Types::IpAddressV4 group { "239.0.0.1" }; //!< UDP multicast group base (Default: 239.0.0.1)
-          unsigned int       ttl   { 3U };          /*!< UDP ttl value, also known as hop limit, is used in determining 
-                                                         the intermediate routers being traversed towards the destination (Default: 3) */
-        };
-      }
-
-      namespace Local
-      {
-        struct Configuration
-        {
-          Types::IpAddressV4 group { "127.255.255.255" }; //!< UDP multicast group base (Default: 127.255.255.255)
-          unsigned int       ttl   { 1U };                /*!< UDP ttl value, also known as hop limit, is used in determining 
-                                                               the intermediate routers being traversed towards the destination (Default: 1) */
-        };
-      }
+        Types::IpAddressV4 group{"239.0.0.1"}; //!< UDP multicast group base
+        unsigned int       ttl;                /*!< UDP ttl value, also known as hop limit, is used in determining 
+                                                    the intermediate routers being traversed towards the destination */
+      };
 
       struct Configuration
       {
@@ -70,10 +57,13 @@ namespace eCAL
                                                                          receive data if they are started before network devices are up and running. (Default: false)*/
         bool                       npcap_enabled       { false };   //!< Enable to receive UDP traffic with the Npcap based receiver (Default: false)
       
-        Network::Configuration     network;
-        const Local::Configuration local;
-
-        ECAL_API Configuration& operator=(const Configuration& other);
+        MulticastConfiguration              network { "239.0.0.1", 3U };      //!< default: "239.0.0.1", 3U
+        
+        static const MulticastConfiguration& local()
+        {
+          static const MulticastConfiguration local { "127.255.255.255", 1U}; //!< default: "127.255.255.255", 1U
+          return local;
+        }
       }; 
     }
 
