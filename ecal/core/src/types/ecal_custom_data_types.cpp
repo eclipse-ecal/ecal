@@ -30,11 +30,6 @@
 #include <ecal_def.h>
 
 namespace{
-  const std::array<const std::regex, 3> INVALID_IPV4_ADDRESSES = {
-      std::regex("^(((255)|([fF]{2}))\\.){3}((255)|([fF]{2}))$"), // 255.255.255.255
-      std::regex("((127|7[fF]).((0|00|000)\\.){2}(1|01|001))"),   // 127.0.0.1 
-      std::regex("((0|00|000)\\.){3}(0|00|000)")                  // 0.0.0.0 
-  };
   const std::regex IPV4_DEC_REGEX = std::regex("^((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$");
   const std::regex IPV4_HEX_REGEX = std::regex("^([0-9a-fA-F]{1,2}\\.){3}[0-9a-fA-F]{1,2}$");
 }
@@ -58,27 +53,13 @@ namespace eCAL
       if (  std::regex_match(ip_address_, IPV4_DEC_REGEX)
          || std::regex_match(ip_address_, IPV4_HEX_REGEX)
       )
-      {
-        for (const auto& inv_ip_regex : INVALID_IPV4_ADDRESSES)
-        {
-          if (std::regex_match(ip_address_, inv_ip_regex))
-          {
-            throwException(ip_address_);
-            return;
-          }
-        }
-
+      {        
         m_ip_address = ip_address_;
       }
       else
       {
-        throwException(ip_address_);
+        throw std::invalid_argument("[IpAddressV4] No valid IP address: " + ip_address_);
       }
-    }
-
-    void IpAddressV4::throwException(const std::string& ip_address_ /*std::string("")*/)
-    {
-      throw std::invalid_argument("[IpAddressV4] No valid IP address: " + ip_address_);
     }
 
     std::string IpAddressV4::Get() const                                { return m_ip_address; }

@@ -123,37 +123,9 @@ TEST(core_cpp_config /*unused*/, user_config_death_test /*unused*/)
   ASSERT_THROW(
     SetValue(custom_config.transport_layer.udp.network.group, "256.0.0.0"),
     std::invalid_argument);
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.network.group, "127.0.0.1"),
-    std::invalid_argument);
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.network.group, "255.255.255.255"),
-    std::invalid_argument);
-
+  
   ASSERT_THROW(
     SetValue(custom_config.transport_layer.udp.network.group, "FFF.FF.FF.FF"),
-    std::invalid_argument);
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.network.group, "FF.FF.FF.FF"),
-    std::invalid_argument);
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.network.group, "Ff.fF.ff.Ff"),
-    std::invalid_argument);
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.network.group, "7f.0.0.1"),
-    std::invalid_argument);
-
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.network.group, "0.0.0.0"),
-    std::invalid_argument);
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.network.group, "00.00.00.00"),
-    std::invalid_argument);
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.network.group, "000.000.000.000"),
-    std::invalid_argument);
-  ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.network.group, "0.00.000.0"),
     std::invalid_argument);
 }
 
