@@ -110,11 +110,11 @@ namespace YAML
   };
 
   template<>
-  struct convert<eCAL::TransportLayer::UDP::MulticastConfiguration>
+  struct convert<eCAL::TransportLayer::UDP::Network::Configuration>
   {
-    static Node encode(const eCAL::TransportLayer::UDP::MulticastConfiguration& config_);
+    static Node encode(const eCAL::TransportLayer::UDP::Network::Configuration& config_);
 
-    static bool decode(const Node& node_, eCAL::TransportLayer::UDP::MulticastConfiguration& config_);
+    static bool decode(const Node& node_, eCAL::TransportLayer::UDP::Network::Configuration& config_);
   };
 
   template<>

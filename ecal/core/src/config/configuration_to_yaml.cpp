@@ -220,7 +220,7 @@ namespace YAML
     return true;
   }
 
-  Node convert<eCAL::TransportLayer::UDP::MulticastConfiguration>::encode(const eCAL::TransportLayer::UDP::MulticastConfiguration& config_)
+  Node convert<eCAL::TransportLayer::UDP::Network::Configuration>::encode(const eCAL::TransportLayer::UDP::Network::Configuration& config_)
   {
     Node node;
     node["group"] = config_.group.Get();
@@ -228,7 +228,7 @@ namespace YAML
     return node;
   }
 
-  bool convert<eCAL::TransportLayer::UDP::MulticastConfiguration>::decode(const Node& node_, eCAL::TransportLayer::UDP::MulticastConfiguration& config_)
+  bool convert<eCAL::TransportLayer::UDP::Network::Configuration>::decode(const Node& node_, eCAL::TransportLayer::UDP::Network::Configuration& config_)
   {
     AssignValue<std::string>(config_.group, node_, "group");
     AssignValue<unsigned int>(config_.ttl, node_, "ttl");
@@ -265,7 +265,7 @@ namespace YAML
     AssignValue<bool>(config_.join_all_interfaces, node_, "join_all_interfaces");
     AssignValue<bool>(config_.npcap_enabled, node_, "npcap_enabled");
 
-    AssignValue<eCAL::TransportLayer::UDP::MulticastConfiguration>(config_.network, node_, "network");
+    AssignValue<eCAL::TransportLayer::UDP::Network::Configuration>(config_.network, node_, "network");
     return true;
   }
   
