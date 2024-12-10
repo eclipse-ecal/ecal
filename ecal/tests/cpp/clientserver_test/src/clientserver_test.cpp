@@ -213,31 +213,23 @@ TEST(core_cpp_clientserver, ServerConnectEvent)
   {
     eCAL::CServiceClient client1("service");
 
+    // one client connected, no client disconnected
     event_connected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
     EXPECT_EQ(1, event_connected_fired.get());
     EXPECT_EQ(0, event_disconnected_fired.get());
 
     eCAL::CServiceClient client2("service");
 
-    // TODO: Service API should trigger connect event with every new connection (client side is acting this way!)
-    //event_disconnected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
-    //EXPECT_EQ(2, event_connected_fired.get());
-    //EXPECT_EQ(0, event_disconnected_fired.get());
-
-    eCAL::Process::SleepMS(2000);                       
-    EXPECT_EQ(1, event_connected_fired.get());
+    // two clients connected, no client disconnected
+    event_disconnected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
+    EXPECT_EQ(2, event_connected_fired.get());
     EXPECT_EQ(0, event_disconnected_fired.get());
   }
 
-  // TODO: Service API should trigger disconnect event with every single disconnection (client side is acting this way!)
-  //event_disconnected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
-  //EXPECT_EQ(2, event_connected_fired.get());
-  //EXPECT_EQ(2, event_disconnected_fired.get());
-
-  // wait for disconnection
-  event_disconnected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
-  EXPECT_EQ(1, event_connected_fired.get());
-  EXPECT_EQ(1, event_disconnected_fired.get());
+  // two clients connected, two clients disconnected
+  event_disconnected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
+  EXPECT_EQ(2, event_connected_fired.get());
+  EXPECT_EQ(2, event_disconnected_fired.get());
 
   // finalize eCAL API
   eCAL::Finalize();

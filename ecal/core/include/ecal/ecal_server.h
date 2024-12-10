@@ -68,10 +68,9 @@ namespace eCAL
     /**
      * @brief Add method callback.
      *
-     * @param method_     Service method name.
-     * @param req_type_   Service method request type.
-     * @param resp_type_  Service method response type.
-     * @param callback_   Callback function for client request.
+     * @param method_       Service method name.
+     * @param method_info_  Service method information (request & response types).
+     * @param callback_     Callback function for client request.
      *
      * @return  True if successful.
     **/

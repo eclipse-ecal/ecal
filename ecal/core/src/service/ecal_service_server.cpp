@@ -38,7 +38,7 @@ namespace eCAL
     // Register server
     if (g_servicegate() != nullptr)
     {
-      //g_servicegate()->Register(m_service_server_impl);
+      g_servicegate()->Register(service_name_, m_service_server_impl);
     }
   }
 
@@ -47,7 +47,7 @@ namespace eCAL
     // Unregister server
     if (g_servicegate() != nullptr)
     {
-      //g_servicegate()->Unregister(m_service_server_impl->GetServiceName(), m_service_server_impl);
+      g_servicegate()->Unregister(m_service_server_impl->GetServiceName(), m_service_server_impl);
     }
 
     // Reset server implementation

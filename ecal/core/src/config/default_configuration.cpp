@@ -289,14 +289,6 @@ namespace eCAL
       ss << R"(  replay: )"                                           << quoteString(config_.timesync.timesync_module_replay)       << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"()"                                                                                                                   << "\n";
-      ss << R"(# Service configuration)"                                                                                            << "\n";
-      ss << R"(service:)"                                                                                                           << "\n";
-      ss << R"(  # Support service protocol v0, eCAL 5.11 and older)"                                                               << "\n";
-      ss << R"(  protocol_v0: )"                                      << config_.service.protocol_v0                                << "\n";
-      ss << R"(  # Support service protocol v1, eCAL 5.12 and newer)"                                                               << "\n";
-      ss << R"(  protocol_v1: )"                                      << config_.service.protocol_v1                                << "\n";
-      ss << R"()"                                                                                                                   << "\n";
-      ss << R"()"                                                                                                                   << "\n";
       ss << R"(# eCAL Application Configuration)"                                                                                   << "\n";
       ss << R"(application:)"                                                                                                       << "\n";
       ss << R"(  # Configuration for eCAL Sys)"                                                                                     << "\n";

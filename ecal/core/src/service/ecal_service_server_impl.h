@@ -25,15 +25,16 @@
 
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
+#include <ecal/service/server.h>
 
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "serialization/ecal_struct_service.h"
 
+#include <functional>
+#include <map>
 #include <memory>
 #include <mutex>
 #include <string>
-#include <map>
-#include <functional>
 
 namespace eCAL
 {
@@ -60,7 +61,7 @@ namespace eCAL
     // Check connection state of a specific service
     bool IsConnected() const;
 
-    // Called by the registration receiver to process a service registration
+    // Called by the registration receiver to process a client registration
     void RegisterClient(const std::string& key_, const SClientAttr& client_);
 
     // Called by the registration provider to get a registration sample
@@ -76,15 +77,46 @@ namespace eCAL
     CServiceServerImpl& operator=(CServiceServerImpl&&) = delete;
 
   private:
+    // Start/Stop server
+    void Start();
+    void Stop();
+
     // Prepare and retrieve registration and unregistration samples
     Registration::Sample GetRegistrationSample();
     Registration::Sample GetUnregistrationSample();
 
-    // Service attributes
-    std::string m_service_name;
+    // Request and event callback methods
+    int RequestCallback(const std::string& request_pb_, std::string& response_pb_);
+    void NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eCAL_Server_Event event_type_, const std::string& message_);
 
-    // Event callback map and synchronization
-    mutable std::mutex m_event_callback_mutex;
-    ServerEventIDCallbackT m_event_callback;
+    // Server version (incremented for protocol or functionality changes)
+    static constexpr int                   m_server_version = 1;
+
+    // Server attributes
+    std::string                            m_service_name;
+    std::string                            m_service_id;
+
+    // Server connection state and synchronization
+    mutable std::mutex                     m_connected_mutex; // mutex protecting m_connected (modified by the event callbacks in another thread)
+    bool                                   m_connected = false;
+    std::atomic<bool>                      m_created;
+
+    // Server method map and synchronization
+    struct SMethod
+    {
+      Service::Method method;
+      MethodCallbackT callback;
+    };
+
+    using MethodMapT = std::map<std::string, SMethod>;
+    std::mutex                             m_method_map_sync;
+    MethodMapT                             m_method_map;
+
+    // Event callback and synchronization
+    std::mutex                             m_event_callback_sync;
+    ServerEventIDCallbackT                 m_event_callback;
+
+    // Server interface
+    std::shared_ptr<eCAL::service::Server> m_tcp_server;
   };
 }

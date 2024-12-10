@@ -38,7 +38,6 @@ namespace eCAL
   ECAL_API Subscriber::Configuration&     GetSubscriberConfiguration       ();
   ECAL_API Publisher::Configuration&      GetPublisherConfiguration        ();
   ECAL_API Time::Configuration&           GetTimesyncConfiguration         ();
-  ECAL_API Service::Configuration&        GetServiceConfiguration          ();
   ECAL_API Application::Configuration&    GetApplicationConfiguration      ();
 
   namespace Config
@@ -114,12 +113,6 @@ namespace eCAL
     /////////////////////////////////////
     ECAL_API bool                     IsTopicTypeSharingEnabled            ();
     ECAL_API bool                     IsTopicDescriptionSharingEnabled     ();
-
-    /////////////////////////////////////
-    // service
-    /////////////////////////////////////
-    ECAL_API bool                     IsServiceProtocolV0Enabled           ();
-    ECAL_API bool                     IsServiceProtocolV1Enabled           ();
 
     /////////////////////////////////////
     // experimental

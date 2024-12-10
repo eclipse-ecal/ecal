@@ -43,16 +43,16 @@ namespace eCAL
     void Start();
     void Stop();
 
-    bool Register  (CServiceServerImpl* service_);
-    bool Unregister(CServiceServerImpl* service_);
+    bool Register  (const std::string& service_name_, const std::shared_ptr<CServiceServerImpl>& server_);
+    bool Unregister(const std::string& service_name_, const std::shared_ptr<CServiceServerImpl>& server_);
 
     void GetRegistrations(Registration::SampleList& reg_sample_list_);
 
   protected:
-    static std::atomic<bool> m_created;
+    static std::atomic<bool>      m_created;
 
-    using ServiceNameServiceImplSetT = std::set<CServiceServerImpl *>;
-    std::shared_timed_mutex     m_service_set_sync;
-    ServiceNameServiceImplSetT  m_service_set;
+    using ServiceNameServiceImplMapT = std::multimap<std::string, std::shared_ptr<CServiceServerImpl>>;
+    std::shared_timed_mutex       m_service_server_map_sync;
+    ServiceNameServiceImplMapT    m_service_server_map;
   };
 }
