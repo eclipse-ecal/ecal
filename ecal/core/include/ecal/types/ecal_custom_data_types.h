@@ -47,6 +47,7 @@ namespace eCAL
     {
     public:      
       ECAL_API IpAddressV4(const std::string& ip_address_); 
+      ECAL_API IpAddressV4(const char* ip_address_);
 
       ECAL_API std::string Get() const;
 
@@ -61,7 +62,6 @@ namespace eCAL
 
     private:            
       ECAL_API void validateIpString(const std::string& ip_address_); 
-      ECAL_API static void throwException(const std::string& ip_address_ = std::string("")); 
 
       std::string m_ip_address{};
     };
