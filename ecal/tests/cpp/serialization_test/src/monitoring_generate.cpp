@@ -53,26 +53,26 @@ namespace eCAL
     // generate topic
     STopicMon GenerateTopic(const std::string& direction)
     {
-      STopicMon publisher;
-      publisher.rclock               = rand() % 1000;
-      publisher.hname                = GenerateString(10);
-      publisher.hgname               = GenerateString(8);
-      publisher.pid                  = rand() % 1000;
-      publisher.pname                = GenerateString(8);
-      publisher.uname                = GenerateString(6);
-      publisher.tid                  = GenerateString(8);
-      publisher.tname                = GenerateString(10);
-      publisher.direction            = direction;
-      publisher.tdatatype            = eCAL::Registration::GenerateDataTypeInformation();
-      publisher.tlayer.push_back({ tl_ecal_shm, 1, true });
-      publisher.tsize                = rand() % 5000;
-      publisher.connections_loc      = rand() % 10;
-      publisher.connections_ext      = rand() % 10;
-      publisher.message_drops        = rand() % 100;
-      publisher.did                  = rand() % 10000;
-      publisher.dclock               = rand() % 10000;
-      publisher.dfreq                = rand() % 100;
-      return publisher;
+      STopicMon topic;
+      topic.rclock               = rand() % 1000;
+      topic.hname                = GenerateString(10);
+      topic.hgname               = GenerateString(8);
+      topic.pid                  = rand() % 1000;
+      topic.pname                = GenerateString(8);
+      topic.uname                = GenerateString(6);
+      topic.tid                  = GenerateString(8);
+      topic.tname                = GenerateString(10);
+      topic.direction            = direction;
+      topic.tdatatype            = eCAL::Registration::GenerateDataTypeInformation();
+      topic.tlayer.push_back({ tl_ecal_shm, 1, true });
+      topic.tsize                = rand() % 5000;
+      topic.connections_loc      = rand() % 10;
+      topic.connections_ext      = rand() % 10;
+      topic.message_drops        = rand() % 100;
+      topic.did                  = rand() % 10000;
+      topic.dclock               = rand() % 10000;
+      topic.dfreq                = rand() % 100;
+      return topic;
     }
 
     // generate servicemethod

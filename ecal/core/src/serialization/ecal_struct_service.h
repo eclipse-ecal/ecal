@@ -137,6 +137,8 @@ namespace eCAL
           req_desc == other.req_desc &&
           resp_type == other.resp_type &&
           resp_desc == other.resp_desc &&
+          req_datatype == other.req_datatype &&
+          resp_datatype == other.resp_datatype &&
           call_count == other.call_count;
       }
 
