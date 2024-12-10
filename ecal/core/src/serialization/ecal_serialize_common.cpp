@@ -354,6 +354,9 @@ namespace eCAL
         encode_string(pb_method.resp_type, method.resp_type);
         encode_string(pb_method.req_desc, method.req_desc);
         encode_string(pb_method.resp_desc, method.resp_desc);
+        encode_string(pb_method.req_datatype.name, method.req_datatype.name);
+        encode_string(pb_method.req_datatype.encoding, method.req_datatype.encoding);
+        encode_string(pb_method.req_datatype.desc, method.req_datatype.descriptor);
         pb_method.call_count = method.call_count;
 
         if (!pb_encode_submessage(stream, eCAL_pb_Method_fields, &pb_method))

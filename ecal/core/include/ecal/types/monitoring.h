@@ -133,12 +133,17 @@ namespace eCAL
 
     struct SMethodMon                                           //<! eCAL Server Method struct
     {
-      std::string  mname;                                       //<! method name
-      std::string  req_type;                                    //<! request type
-      std::string  req_desc;                                    //<! request descriptor
-      std::string  resp_type;                                   //<! response type
-      std::string  resp_desc;                                   //<! response descriptor
-      long long    call_count{0};                               //<! call counter
+      std::string           mname;                              //<! method name
+
+      std::string           req_type;                           //<! request  type       (deprecated use req_datatype)
+      std::string           req_desc;                           //<! request  descriptor (deprecated use req_datatype)
+      std::string           resp_type;                          //<! response type       (deprecated use resp_datatype)
+      std::string           resp_desc;                          //<! response descriptor (deprecated use resp_datatype)
+
+      SDataTypeInformation  req_datatype;                       //<! request  datatype information (encoding & type & description)
+      SDataTypeInformation  resp_datatype;                      //<! response datatype information (encoding & type & description)
+
+      long long             call_count{0};                      //<! call counter
     };
 
     struct SServerMon                                           //<! eCAL Server struct

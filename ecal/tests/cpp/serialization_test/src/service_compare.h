@@ -16,6 +16,7 @@
  *
  * ========================= eCAL LICENSE =================================
 */
+
 #pragma once
 
 #include <serialization/ecal_struct_service.h>

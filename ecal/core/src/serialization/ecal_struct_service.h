@@ -29,6 +29,7 @@
 #include <cstdint>
 #include <tuple>
 
+#include <ecal/ecal_types.h>
 #include <util/expanding_vector.h>
 
 namespace eCAL
@@ -119,10 +120,15 @@ namespace eCAL
     struct Method
     {
       std::string          mname;            // Method name
-      std::string          req_type;         // Request type
-      std::string          req_desc;         // Request descriptor
-      std::string          resp_type;        // Response type
-      std::string          resp_desc;        // Response descriptor
+
+      std::string          req_type;         // Request  type       (deprecated use req_datatype)
+      std::string          req_desc;         // Request  descriptor (deprecated use req_datatype)
+      std::string          resp_type;        // Response type       (deprecated use resp_datatype)
+      std::string          resp_desc;        // Response descriptor (deprecated use resp_datatype)
+
+      SDataTypeInformation req_datatype;     // Request  datatype information (encoding & type & description)
+      SDataTypeInformation resp_datatype;    // Response datatype information (encoding & type & description)
+
       int64_t              call_count = 0;   // Call counter
 
       bool operator==(const Method& other) const {

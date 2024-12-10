@@ -18,6 +18,7 @@
 */
 
 #include "monitoring_generate.h"
+#include "registration_generate.h"
 #include "common_generate.h"
 
 #include <cstdlib>
@@ -62,9 +63,7 @@ namespace eCAL
       publisher.tid                  = GenerateString(8);
       publisher.tname                = GenerateString(10);
       publisher.direction            = direction;
-      publisher.tdatatype.name       = GenerateString(8);
-      publisher.tdatatype.encoding   = GenerateString(8);
-      publisher.tdatatype.descriptor = GenerateString(10);
+      publisher.tdatatype            = eCAL::Registration::GenerateDataTypeInformation();
       publisher.tlayer.push_back({ tl_ecal_shm, 1, true });
       publisher.tsize                = rand() % 5000;
       publisher.connections_loc      = rand() % 10;
@@ -81,10 +80,15 @@ namespace eCAL
     {
       SMethodMon method;
       method.mname      = GenerateString(8);
-      method.req_type   = GenerateString(8);
-      method.req_desc   = GenerateString(10);
-      method.resp_type  = GenerateString(8);
-      method.resp_desc  = GenerateString(10);
+
+      method.req_type   = GenerateString(8);  // deprecated
+      method.req_desc   = GenerateString(10); // deprecated
+      method.resp_type  = GenerateString(8);  // deprecated
+      method.resp_desc  = GenerateString(10); // deprecated
+
+      method.req_datatype  = eCAL::Registration::GenerateDataTypeInformation();
+      method.resp_datatype = eCAL::Registration::GenerateDataTypeInformation();
+
       method.call_count = rand() % 10000;
       return method;
     }

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@
 
 syntax = "proto3";
 
+import "ecal/core/pb/datatype.proto";
+
 package eCAL.pb;
 
 message ServiceHeader
@@ -30,66 +32,71 @@ message ServiceHeader
     failed   = 2;
   }
 
-  string           hname       =  1;  // host name
-  string           sname       =  2;  // service name
-  string           sid         =  7;  // service id
-  string           mname       =  3;  // method name
-  string           error       =  4;  // error message
-  int32            id          =  5;  // session id
-  eCallState       state       =  6;  // method call state
+  string               hname          =  1;  // host name
+  string               sname          =  2;  // service name
+  string               sid            =  7;  // service id
+  string               mname          =  3;  // method name
+  string               error          =  4;  // error message
+  int32                id             =  5;  // session id
+  eCallState           state          =  6;  // method call state
 }
 
-message Request                       // client request
+message Request                              // client request
 {
-  ServiceHeader    header      =  1;  // common service header
-  bytes            request     =  2;  // request payload
+  ServiceHeader        header         =  1;  // common service header
+  bytes                request        =  2;  // request payload
 }
 
-message Response                      // server response
+message Response                             // server response
 {
-  ServiceHeader    header      =  1;  // common service header
-  bytes            response    =  2;  // response payload
-  int64            ret_state   =  3;  // callback return state
+  ServiceHeader        header         =  1;  // common service header
+  bytes                response       =  2;  // response payload
+  int64                ret_state      =  3;  // callback return state
 }
 
-message Method                        // method
+message Method                               // method
 {
-  string           mname       =  1;  // method name
-  string           req_type    =  2;  // request type
-  bytes            req_desc    =  5;  // request descriptor
-  string           resp_type   =  3;  // response type
-  bytes            resp_desc   =  6;  // response descriptor
-  int64            call_count  =  4;  // call counter
+  string               mname          =  1;  // method name
+
+  string               req_type       =  2;  // request  type        (deprecated use req_datatype)
+  bytes                req_desc       =  5;  // request  descriptor  (deprecated use req_datatype)
+  string               resp_type      =  3;  // response type        (deprecated use resp_datatype)
+  bytes                resp_desc      =  6;  // response descriptor  (deprecated use resp_datatype)
+
+  DataTypeInformation  req_datatype   =  7;  // request  datatype information  (encoding & type & description)
+  DataTypeInformation  resp_datatype  =  8;  // response datatype information  (encoding & type & description)
+
+  int64                call_count     =  4;  // call counter
 }
 
-message Service                       // service
+message Service                              // service
 {
-  int32            rclock      =  1;  // registration clock
-  string           hname       =  2;  // host name
-  string           pname       =  3;  // process name
-  string           uname       =  4;  // unit name
-  int32            pid         =  5;  // process id
-  string           sname       =  6;  // service name
-  string           sid         =  9;  // service id
-  repeated Method  methods     =  8;  // list of methods
+  int32                rclock         =  1;  // registration clock
+  string               hname          =  2;  // host name
+  string               pname          =  3;  // process name
+  string               uname          =  4;  // unit name
+  int32                pid            =  5;  // process id
+  string               sname          =  6;  // service name
+  string               sid            =  9;  // service id
+  repeated Method      methods        =  8;  // list of methods
 
   // transport specific parameter (for internal use)
-  uint32           version     = 10;  // service protocol version
-  uint32           tcp_port_v0 =  7;  // the tcp port used for that service
-  uint32           tcp_port_v1 = 11;  // the tcp port used for that service
+  uint32               version        = 10;  // service protocol version
+  uint32               tcp_port_v0    =  7;  // the tcp port used for that service  (deprecated)
+  uint32               tcp_port_v1    = 11;  // the tcp port used for that service
 }
 
-message Client                        // client
+message Client                               // client
 {
-  int32            rclock      =  1;  // registration clock
-  string           hname       =  2;  // host name
-  string           pname       =  3;  // process name
-  string           uname       =  4;  // unit name
-  int32            pid         =  5;  // process id
-  string           sname       =  6;  // service name
-  string           sid         =  7;  // service id
-  repeated Method  methods     =  9;  // list of methods
+  int32                rclock         =  1;  // registration clock
+  string               hname          =  2;  // host name
+  string               pname          =  3;  // process name
+  string               uname          =  4;  // unit name
+  int32                pid            =  5;  // process id
+  string               sname          =  6;  // service name
+  string               sid            =  7;  // service id
+  repeated Method      methods        =  9;  // list of methods
 
   // transport specific parameter (for internal use)
-  uint32           version     =  8;  // client protocol version
+  uint32               version        =  8;  // client protocol version
 }
