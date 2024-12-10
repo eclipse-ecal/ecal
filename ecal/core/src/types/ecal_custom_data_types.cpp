@@ -31,12 +31,12 @@
 
 namespace{
   const std::array<const std::regex, 3> INVALID_IPV4_ADDRESSES = {
-      std::regex("((255|[fF][fF])\\.){3}(255|[fF][fF])"),       // 255.255.255.255
-      std::regex("((127|7[fF]).((0|00|000)\\.){2}(1|01|001))"), // 127.0.0.1 
-      std::regex("((0|00|000)\\.){3}(0|00|000)")                // 0.0.0.0 
+      std::regex("^(((255)|([fF]{2}))\\.){3}((255)|([fF]{2}))$"), // 255.255.255.255
+      std::regex("((127|7[fF]).((0|00|000)\\.){2}(1|01|001))"),   // 127.0.0.1 
+      std::regex("((0|00|000)\\.){3}(0|00|000)")                  // 0.0.0.0 
   };
-  const std::regex IPV4_DEC_REGEX = std::regex("(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])");
-  const std::regex IPV4_HEX_REGEX = std::regex("(([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])\\.){3}([0-9a-fA-F]|[0-9a-fA-F][0-9a-fA-F])");
+  const std::regex IPV4_DEC_REGEX = std::regex("^((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$");
+  const std::regex IPV4_HEX_REGEX = std::regex("^([0-9a-fA-F]{1,2}\\.){3}[0-9a-fA-F]{1,2}$");
 }
 
 namespace eCAL
@@ -44,6 +44,11 @@ namespace eCAL
   namespace Types
   {
     IpAddressV4::IpAddressV4(const std::string& ip_address_)
+    {
+      validateIpString(ip_address_);
+    } 
+
+    IpAddressV4::IpAddressV4(const char* ip_address_)
     {
       validateIpString(ip_address_);
     } 
