@@ -44,7 +44,7 @@ namespace eCAL
     attributes.udp.port          = tl_config_.udp.port;
     attributes.udp.receivebuffer = tl_config_.udp.receive_buffer;
 
-    attributes.udp.local.group   = tl_config_.udp.local().group;
+    attributes.udp.local.group   = tl_config_.udp.local.group;
 
     attributes.udp.network.group = tl_config_.udp.network.group;
 

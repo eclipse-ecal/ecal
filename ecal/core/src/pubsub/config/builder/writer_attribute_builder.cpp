@@ -57,8 +57,8 @@ namespace eCAL
     attributes.udp.network.group = tl_config_.udp.network.group;
     attributes.udp.network.ttl   = tl_config_.udp.network.ttl;
 
-    attributes.udp.local.group   = tl_config_.udp.local().group;
-    attributes.udp.local.ttl     = tl_config_.udp.local().ttl;
+    attributes.udp.local.group   = tl_config_.udp.local.group;
+    attributes.udp.local.ttl     = tl_config_.udp.local.ttl;
 
     attributes.tcp.enable           = pub_config_.layer.tcp.enable;
     attributes.tcp.thread_pool_size = tl_config_.tcp.number_executor_writer;

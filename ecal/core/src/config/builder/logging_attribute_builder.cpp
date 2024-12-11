@@ -46,8 +46,8 @@ namespace eCAL
           attributes.udp_config.ttl     = tl_config_.udp.network.ttl;
           break;
         case Types::UDPMode::LOCAL:
-          attributes.udp_config.address = tl_config_.udp.local().group;
-          attributes.udp_config.ttl     = tl_config_.udp.local().ttl;
+          attributes.udp_config.address = tl_config_.udp.local.group;
+          attributes.udp_config.ttl     = tl_config_.udp.local.ttl;
           break;
         default:
           break;
@@ -77,7 +77,7 @@ namespace eCAL
           attributes.udp_receiver.address = tl_config_.udp.network.group;
           break;
         case Types::UDPMode::LOCAL:
-          attributes.udp_receiver.address = tl_config_.udp.local().group;
+          attributes.udp_receiver.address = tl_config_.udp.local.group;
           break;
         default:
           break;

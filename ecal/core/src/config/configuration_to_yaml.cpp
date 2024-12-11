@@ -247,6 +247,7 @@ namespace YAML
     node["join_all_interfaces"] = config_.join_all_interfaces;
     node["npcap_enabled"]       = config_.npcap_enabled;
     node["network"]             = config_.network;
+    node["local"]               = config_.local;
     return node;
   }
 
@@ -266,6 +267,7 @@ namespace YAML
     AssignValue<bool>(config_.npcap_enabled, node_, "npcap_enabled");
 
     AssignValue<eCAL::TransportLayer::UDP::MulticastConfiguration>(config_.network, node_, "network");
+    AssignValue<eCAL::TransportLayer::UDP::MulticastConfiguration>(config_.local, node_, "local");
     return true;
   }
   
