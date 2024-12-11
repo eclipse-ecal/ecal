@@ -28,7 +28,7 @@
 #include "readwrite/ecal_writer_buffer_payload.h"
 
 #include "config/builder/writer_attribute_builder.h"
-#include "ecal/ecal_config.h"
+#include "ecal_config_internal.h"
 
 #include <iostream>
 #include <memory>
