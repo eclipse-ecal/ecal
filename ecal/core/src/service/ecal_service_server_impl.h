@@ -109,11 +109,11 @@ namespace eCAL
     };
 
     using MethodMapT = std::map<std::string, SMethod>;
-    std::mutex                             m_method_map_sync;
+    std::mutex                             m_method_map_mutex;
     MethodMapT                             m_method_map;
 
     // Event callback and synchronization
-    std::mutex                             m_event_callback_sync;
+    std::mutex                             m_event_callback_mutex;
     ServerEventIDCallbackT                 m_event_callback;
 
     // Server interface

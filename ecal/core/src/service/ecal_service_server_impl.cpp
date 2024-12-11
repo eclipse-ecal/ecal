@@ -60,7 +60,7 @@ namespace eCAL
   bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_)
   {
     Logging::Log(log_level_debug1, "CServiceServerImpl: Adding method callback for method: " + method_);
-    std::lock_guard<std::mutex> const lock(m_method_map_sync);
+    std::lock_guard<std::mutex> const lock(m_method_map_mutex);
 
     auto iter = m_method_map.find(method_);
     if (iter != m_method_map.end())
@@ -91,7 +91,7 @@ namespace eCAL
   bool CServiceServerImpl::RemoveMethodCallback(const std::string& method_)
   {
     Logging::Log(log_level_debug1, "CServiceServerImpl: Removing method callback for method: " + method_);
-    std::lock_guard<std::mutex> const lock(m_method_map_sync);
+    std::lock_guard<std::mutex> const lock(m_method_map_mutex);
 
     auto iter = m_method_map.find(method_);
     if (iter != m_method_map.end())
@@ -209,14 +209,14 @@ namespace eCAL
 
     // Reset method callbacks
     {
-      std::lock_guard<std::mutex> const lock(m_method_map_sync);
+      std::lock_guard<std::mutex> const lock(m_method_map_mutex);
       m_method_map.clear();
       Logging::Log(log_level_debug2, "CServiceServerImpl: Cleared all method callbacks for: " + m_service_name);
     }
 
     // Reset event callback
     {
-      std::lock_guard<std::mutex> const lock(m_event_callback_sync);
+      std::lock_guard<std::mutex> const lock(m_event_callback_mutex);
       m_event_callback = nullptr;
       Logging::Log(log_level_debug2, "CServiceServerImpl: Cleared event callback for: " + m_service_name);
     }
@@ -261,7 +261,7 @@ namespace eCAL
     service.tcp_port_v1 = server_tcp_port;
 
     {
-      std::lock_guard<std::mutex> const lock(m_method_map_sync);
+      std::lock_guard<std::mutex> const lock(m_method_map_mutex);
       for (const auto& iter : m_method_map)
       {
         Service::Method method;
@@ -326,7 +326,7 @@ namespace eCAL
     const auto& request_header = request.header;
     response_header.mname = request_header.mname;
     {
-      std::lock_guard<std::mutex> const lock(m_method_map_sync);
+      std::lock_guard<std::mutex> const lock(m_method_map_mutex);
       auto requested_method_iterator = m_method_map.find(request_header.mname);
       if (requested_method_iterator == m_method_map.end())
       {
@@ -361,7 +361,7 @@ namespace eCAL
   {
     Logging::Log(log_level_debug1, "CServiceServerImpl: Notifying event callback for: " + m_service_name + " Event Type: " + std::to_string(event_type_));
 
-    std::lock_guard<std::mutex> const lock_cb(m_event_callback_sync);
+    std::lock_guard<std::mutex> const lock_cb(m_event_callback_mutex);
     if (m_event_callback)
     {
       SServerEventCallbackData callback_data;

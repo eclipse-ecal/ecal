@@ -29,8 +29,8 @@
 #include <ecal/ecal_callback.h>
 
 #include <atomic>
-#include <functional>
 #include <map>
+#include <memory>
 #include <shared_mutex>
 #include <string>
 
@@ -58,7 +58,7 @@ namespace eCAL
     static std::atomic<bool>      m_created;
 
     using ServiceNameClientIDImplMapT = std::multimap<std::string, std::shared_ptr<CServiceClientImpl>>;
-    std::shared_timed_mutex       m_service_client_map_sync;
+    std::shared_timed_mutex       m_service_client_map_mutex;
     ServiceNameClientIDImplMapT   m_service_client_map;
   };
 }

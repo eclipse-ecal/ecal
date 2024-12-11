@@ -56,7 +56,7 @@ namespace eCAL
         return false;
       }
 
-      // Define the event callback to pass to CServiceClientNew
+      // Define the event callback to pass to CServiceClient
       ServerEventIDCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const struct SServerEventCallbackData& data_)
         {
           // Lock the mutex to safely access m_event_callbacks

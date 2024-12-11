@@ -27,8 +27,8 @@
 #include "serialization/ecal_struct_sample_registration.h"
 
 #include <atomic>
-#include <functional>
 #include <map>
+#include <memory>
 #include <shared_mutex>
 #include <string>
 
@@ -54,7 +54,7 @@ namespace eCAL
     static std::atomic<bool>      m_created;
 
     using ServiceNameServiceImplMapT = std::multimap<std::string, std::shared_ptr<CServiceServerImpl>>;
-    std::shared_timed_mutex       m_service_server_map_sync;
+    std::shared_timed_mutex       m_service_server_map_mutex;
     ServiceNameServiceImplMapT    m_service_server_map;
   };
 }
