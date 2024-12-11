@@ -193,22 +193,12 @@ bool ecal_get_type_encoding(const char* topic_name_, const char** topic_encoding
 **/
 bool ecal_get_description(const char* topic_name_, const char** topic_desc_, int* topic_desc_len_);
 
-/*************************************************************************/
-/*  logging                                                              */
-/*************************************************************************/
-/**
- * @brief Sets the log level.
- *
- * @param level_  The level.
-**/
-void log_setlevel(int level_);
-
 /**
  * @brief Log a message (with current log level).
  *
  * @param message_  The log message string.
 **/
-void log_message(const char* message_);
+void log_message(int level_, const char* message_);
 
 /*************************************************************************/
 /*  publisher                                                            */

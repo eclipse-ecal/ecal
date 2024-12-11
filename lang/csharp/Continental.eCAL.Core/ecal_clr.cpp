@@ -124,7 +124,7 @@ void Logger::SetLogLevel(LogLevel level_)
 
 void Logger::Log(System::String^ message_)
 {
-  ::eCAL::Logging::Log(StringToStlString(message_));
+  ::eCAL::Logging::Log(log_level_info, StringToStlString(message_));
 }
 
 

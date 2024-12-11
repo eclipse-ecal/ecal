@@ -228,21 +228,6 @@ PyObject* shutdown_processes(PyObject* /*self*/, PyObject* /*args*/)
 }
 
 /****************************************/
-/*      log_setlevel                    */
-/****************************************/
-PyObject* log_setlevel(PyObject* /*self*/, PyObject* args)
-{
-  int level = 0;
-
-  if (!PyArg_ParseTuple(args, "i", &level)) 
-    return nullptr;
-
-  log_setlevel(level);
-
-  Py_RETURN_NONE;
-}
-
-/****************************************/
 /*      log_message                     */
 /****************************************/
 PyObject* log_message(PyObject* /*self*/, PyObject* args)
@@ -252,11 +237,10 @@ PyObject* log_message(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "s", &message)) 
     return nullptr;
 
-  log_message(message);
+  log_message(255, message);
 
   Py_RETURN_NONE;
 }
-
 
 /****************************************/
 /*      pub_create                      */
@@ -1322,7 +1306,6 @@ static PyMethodDef _ecal_methods[] =
   {"shutdown_process_uname",        shutdown_process_uname,        METH_VARARGS,  "shutdown_process_uname(unit_name)"},
   {"shutdown_processes",            shutdown_processes,            METH_NOARGS,   "shutdown_processes()"},
 
-  {"log_setlevel",                  log_setlevel,                  METH_VARARGS,  "log_setlevel(level)"},
   {"log_message",                   log_message,                   METH_VARARGS,  "log_message(message)"},
 
   {"pub_create",                    pub_create,                    METH_VARARGS,  "pub_create(topic_name, topic_type, topic_encoding, topic_desc)"},
