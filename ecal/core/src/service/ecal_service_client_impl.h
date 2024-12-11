@@ -146,11 +146,11 @@ namespace eCAL
 
     // Client session map and synchronization
     using ClientSessionsMapT = std::map<Registration::SEntityId, SClient>;
-    std::mutex                   m_client_session_map_sync;
+    std::mutex                   m_client_session_map_mutex;
     ClientSessionsMapT           m_client_session_map;
 
     // Method information map (tracks method attributes like data type and description)
-    std::mutex                   m_method_information_map_sync;
+    std::mutex                   m_method_information_map_mutex;
     ServiceMethodInformationMapT m_method_information_map;
 
     // Method call count map (tracks number of calls for each method)
@@ -158,7 +158,7 @@ namespace eCAL
     MethodCallCountMapT          m_method_call_count_map;
 
     // Event callback map and synchronization
-    std::mutex                   m_event_callback_sync;
+    std::mutex                   m_event_callback_mutex;
     ClientEventIDCallbackT       m_event_callback;
   };
 }

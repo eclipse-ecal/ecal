@@ -134,7 +134,7 @@ namespace eCAL
 
     // add event callback
     {
-      const std::lock_guard<std::mutex> lock(m_event_callback_sync);
+      const std::lock_guard<std::mutex> lock(m_event_callback_mutex);
       m_event_callback = event_callback_;
     }
 
@@ -150,13 +150,13 @@ namespace eCAL
   {
     // reset client map
     {
-      const std::lock_guard<std::mutex> lock(m_client_session_map_sync);
+      const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
       m_client_session_map.clear();
     }
 
     // reset event callback
     {
-      const std::lock_guard<std::mutex> lock(m_event_callback_sync);
+      const std::lock_guard<std::mutex> lock(m_event_callback_mutex);
       m_event_callback = nullptr;
     }
 
@@ -173,7 +173,7 @@ namespace eCAL
     std::vector<Registration::SEntityId> entity_vector;
 
     // lock client map
-    const std::lock_guard<std::mutex> lock(m_client_session_map_sync);
+    const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
     // copy session entities into return vector
     for (const auto& client_session : m_client_session_map)
     {
@@ -272,14 +272,14 @@ namespace eCAL
   // Check if a specific service is connected
   bool CServiceClientImpl::IsConnected(const Registration::SEntityId& entity_id_)
   {
-    const std::lock_guard<std::mutex> lock(m_client_session_map_sync);
+    const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
     auto iter = m_client_session_map.find(entity_id_);
     return (iter != m_client_session_map.end() && iter->second.connected);
   }
 
   void CServiceClientImpl::RegisterService(const Registration::SEntityId& entity_id_, const SServiceAttr& service_)
   {
-    const std::lock_guard<std::mutex> lock(m_client_session_map_sync);
+    const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
 
     if (m_client_session_map.find(entity_id_) == m_client_session_map.end())
     {
@@ -340,7 +340,7 @@ namespace eCAL
     service_client.uname   = Process::GetUnitName();
     service_client.sname   = m_service_name;
 
-    const std::lock_guard<std::mutex> lock(m_method_information_map_sync);
+    const std::lock_guard<std::mutex> lock(m_method_information_map_mutex);
     for (const auto& method_information_pair : m_method_information_map)
     {
       const auto& method_name = method_information_pair.first;
@@ -386,7 +386,7 @@ namespace eCAL
   // Attempts to retrieve a client session for a given entity ID
   bool CServiceClientImpl::GetClientByEntity(const Registration::SEntityId& entity_id_, SClient& client_)
   {
-    const std::lock_guard<std::mutex> lock(m_client_session_map_sync);
+    const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
     auto iter = m_client_session_map.find(entity_id_);
     if (iter == m_client_session_map.end())
       return false;
@@ -442,7 +442,7 @@ namespace eCAL
   // Updates the connection states for the client sessions
   void CServiceClientImpl::UpdateConnectionStates()
   {
-    const std::lock_guard<std::mutex> lock(m_client_session_map_sync);
+    const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
 
     for (auto it = m_client_session_map.begin(); it != m_client_session_map.end(); )
     {
@@ -475,7 +475,7 @@ namespace eCAL
 
   void CServiceClientImpl::IncrementMethodCallCount(const std::string& method_name_)
   {
-    const std::lock_guard<std::mutex> lock(m_method_information_map_sync);
+    const std::lock_guard<std::mutex> lock(m_method_information_map_mutex);
     m_method_call_count_map[method_name_]++;
   }
 
@@ -483,7 +483,7 @@ namespace eCAL
   // Helper function to notify event callback
   void CServiceClientImpl::NotifyEventCallback(const Registration::SEntityId& entity_id_, eCAL_Client_Event event_type_, const SServiceAttr& service_attr_)
   {
-    const std::lock_guard<std::mutex> lock(m_event_callback_sync);
+    const std::lock_guard<std::mutex> lock(m_event_callback_mutex);
     if (m_event_callback == nullptr) return;
 
     SClientEventCallbackData callback_data;

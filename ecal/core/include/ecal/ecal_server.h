@@ -19,7 +19,7 @@
 
 /**
  * @file   ecal_server.h
- * @brief  eCAL service interface
+ * @brief  eCAL server interface
 **/
 
 #pragma once
@@ -29,9 +29,9 @@
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 namespace eCAL
 {
@@ -44,79 +44,39 @@ namespace eCAL
   {
   public:
     /**
-     * @brief Constructor. 
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      CServiceServer();
-
-    /**
-     * @brief Constructor. 
+     * @brief Constructor.
      *
      * @param service_name_   Unique service name.
+     * @param event_callback_ Callback function for server events.
     **/
     ECAL_API_EXPORTED_MEMBER
-      explicit CServiceServer(const std::string& service_name_);
+      explicit CServiceServer(const std::string& service_name_, const ServerEventIDCallbackT event_callback_ = ServerEventIDCallbackT());
 
     /**
-     * @brief Destructor. 
+     * @brief Destructor.
     **/
     ECAL_API_EXPORTED_MEMBER
       virtual ~CServiceServer();
 
-    /**
-     * @brief CServiceServers are non-copyable
-    **/
+    // Deleted copy constructor and copy assignment operator
     CServiceServer(const CServiceServer&) = delete;
-
-    /**
-     * @brief CServiceServers are non-copyable
-    **/
     CServiceServer& operator=(const CServiceServer&) = delete;
 
-    /**
-     * @brief Creates this object. 
-     *
-     * @param service_name_   Unique service name.
-     *
-     * @return  True if successful. 
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool Create(const std::string& service_name_);
-
-    /**
-     * @brief Destroys this object. 
-     *
-     * @return  True if successful. 
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool Destroy();
-
-    /**
-     * @brief Add method type descriptions.
-     *
-     * @param method_     Service method name.
-     * @param req_type_   Service method request type.
-     * @param req_desc_   Service method request description.
-     * @param resp_type_  Service method response type.
-     * @param resp_desc_  Service method response description.
-     *
-     * @return  True if successful.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_);
+    // Move constructor and move assignment operator
+    ECAL_API_EXPORTED_MEMBER CServiceServer(CServiceServer&& rhs) noexcept;
+    ECAL_API_EXPORTED_MEMBER CServiceServer& operator=(CServiceServer&& rhs) noexcept;
 
     /**
      * @brief Add method callback.
      *
-     * @param method_     Service method name.
-     * @param req_type_   Service method request type.
-     * @param resp_type_  Service method response type.
-     * @param callback_   Callback function for client request.
+     * @param method_       Service method name.
+     * @param method_info_  Service method information (request & response types).
+     * @param callback_     Callback function for client request.
      *
      * @return  True if successful.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
+      bool AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_);
 
     /**
      * @brief Remove method callback.
@@ -126,28 +86,7 @@ namespace eCAL
      * @return  True if successful.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool RemMethodCallback(const std::string& method_);
-
-    /**
-     * @brief Add server event callback function.
-     *
-     * @param type_      The event type to react on.
-     * @param callback_  The callback function to add.
-     *
-     * @return  True if succeeded, false if not.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_);
-
-    /**
-     * @brief Remove server event callback function.
-     *
-     * @param type_  The event type to remove.
-     *
-     * @return  True if succeeded, false if not.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool RemEventCallback(eCAL_Server_Event type_);
+      bool RemoveMethodCallback(const std::string& method_);
 
     /**
      * @brief Retrieve service name.
@@ -167,6 +106,5 @@ namespace eCAL
 
   private:
     std::shared_ptr<CServiceServerImpl> m_service_server_impl;
-    bool                                m_created;
   };
 } 

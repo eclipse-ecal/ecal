@@ -27,7 +27,6 @@
 #include <ecal/config/application.h>
 #include <ecal/config/monitoring.h>
 #include <ecal/config/registration.h>
-#include <ecal/config/service.h>
 #include <ecal/config/logging.h>
 #include <ecal/config/user_arguments.h>
 #include <ecal/config/publisher.h>
@@ -54,7 +53,6 @@ namespace eCAL
     Subscriber::Configuration     subscriber;
     Publisher::Configuration      publisher;
     Time::Configuration           timesync;
-    Service::Configuration        service;
     Application::Configuration    application;
     Logging::Configuration        logging;
     Cli::Configuration            command_line_arguments;

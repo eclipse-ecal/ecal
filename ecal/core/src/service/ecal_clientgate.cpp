@@ -54,7 +54,7 @@ namespace eCAL
     if (!m_created) return;
 
     // destroy all remaining clients
-    const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_map_sync);
+    const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_map_mutex);
     m_service_client_map.clear();
 
     m_created = false;
@@ -65,7 +65,7 @@ namespace eCAL
     if (!m_created) return(false);
 
     // register internal client
-    const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_map_sync);
+    const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_map_mutex);
     m_service_client_map.emplace(std::pair<std::string, std::shared_ptr<CServiceClientImpl>>(service_name_, client_));
 
     return(true);
@@ -76,7 +76,7 @@ namespace eCAL
     if (!m_created) return(false);
     bool ret_state = false;
 
-    const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_map_sync);
+    const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_map_mutex);
     auto res = m_service_client_map.equal_range(service_name_);
     for (auto iter = res.first; iter != res.second; ++iter)
     {
@@ -110,7 +110,7 @@ namespace eCAL
 
     // inform matching clients
     {
-      const std::shared_lock<std::shared_timed_mutex> lock(m_service_client_map_sync);
+      const std::shared_lock<std::shared_timed_mutex> lock(m_service_client_map_mutex);
       auto res = m_service_client_map.equal_range(service.sname);
       for (ServiceNameClientIDImplMapT::const_iterator iter = res.first; iter != res.second; ++iter)
       {
@@ -129,7 +129,7 @@ namespace eCAL
 
     // read client registrations
     {
-      const std::shared_lock<std::shared_timed_mutex> lock(m_service_client_map_sync);
+      const std::shared_lock<std::shared_timed_mutex> lock(m_service_client_map_mutex);
       for (const auto& iter : m_service_client_map)
       {
         reg_sample_list_.push_back(iter.second->GetRegistration());

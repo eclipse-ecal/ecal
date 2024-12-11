@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_server_v5.h>
 #include <ecal/cimpl/ecal_server_cimpl.h>
 
 #include "ecal_common_cimpl.h"
@@ -62,14 +63,14 @@ extern "C"
   ECALC_API ECAL_HANDLE eCAL_Server_Create(const char* service_name_)
   {
     if (service_name_ == nullptr) return(nullptr);
-    auto* server = new eCAL::CServiceServer(service_name_);
+    auto* server = new eCAL::v5::CServiceServer(service_name_);
     return(server);
   }
 
   ECALC_API int eCAL_Server_Destroy(ECAL_HANDLE handle_)
   {
     if (handle_ == nullptr) return(0);
-    auto* server = static_cast<eCAL::CServiceServer*>(handle_);
+    auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
     delete server; // NOLINT(*-owning-memory)
     return(1);
   }
@@ -77,7 +78,7 @@ extern "C"
   ECALC_API int eCAL_Server_AddMethodCallback(ECAL_HANDLE handle_, const char* method_, const char* req_type_, const char* resp_type_, MethodCallbackCT callback_, void* par_)
   {
     if (handle_ == nullptr) return(0);
-    auto* server = static_cast<eCAL::CServiceServer*>(handle_);
+    auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
     auto callback = std::bind(g_method_callback, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, callback_, par_);
     return static_cast<int>(server->AddMethodCallback(method_, req_type_, resp_type_, callback));
   }
@@ -85,14 +86,14 @@ extern "C"
   ECALC_API int eCAL_Server_RemMethodCallback(ECAL_HANDLE handle_, const char* method_)
   {
     if (handle_ == nullptr) return(0);
-    auto* server = static_cast<eCAL::CServiceServer*>(handle_);
+    auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
     return static_cast<int>(server->RemMethodCallback(method_));
   }
 
   ECALC_API int eCAL_Server_AddEventCallback(ECAL_HANDLE handle_, enum eCAL_Server_Event type_, ServerEventCallbackCT callback_, void* par_)
   {
     if (handle_ == nullptr) return(0);
-    auto* server = static_cast<eCAL::CServiceServer*>(handle_);
+    auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
     auto callback = std::bind(g_server_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
     if (server->AddEventCallback(type_, callback)) return(1);
     return(0);
@@ -101,7 +102,7 @@ extern "C"
   ECALC_API int eCAL_Server_RemEventCallback(ECAL_HANDLE handle_, enum eCAL_Server_Event type_)
   {
     if (handle_ == nullptr) return(0);
-    auto* server = static_cast<eCAL::CServiceServer*>(handle_);
+    auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
     if (server->RemEventCallback(type_)) return(1);
     return(0);
   }
@@ -109,7 +110,7 @@ extern "C"
   ECALC_API int eCAL_Server_GetServiceName(ECAL_HANDLE handle_, void* buf_, int buf_len_)
   {
     if (handle_ == nullptr) return(0);
-    auto* server = static_cast<eCAL::CServiceServer*>(handle_);
+    auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
     const std::string service_name = server->GetServiceName();
     const int buffer_len = CopyBuffer(buf_, buf_len_, service_name);
     if (buffer_len != static_cast<int>(service_name.size()))

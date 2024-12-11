@@ -26,6 +26,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_client_v5.h>
+#include <ecal/ecal_server_v5.h>
 
 #include "ecal_clang.h"
 
@@ -568,7 +569,7 @@ static int c_server_method_callback(const std::string& method_name_, const std::
   PyTuple_SetItem(args, 2, resp_type);
   PyTuple_SetItem(args, 3, request);
 
-  eCAL::CServiceServer* server = (eCAL::CServiceServer*)handle_;
+  eCAL::v5::CServiceServer* server = (eCAL::v5::CServiceServer*)handle_;
   std::string server_method = server->GetServiceName();
   server_method = method_name_ + "@" + server_method;
 
@@ -611,7 +612,7 @@ PyObject* server_add_method_callback(PyObject* /*self*/, PyObject* args)   // (s
   if (!PyArg_ParseTuple(args, "nsssO", &server_handle, &method_name, &req_type, &resp_type, &cb_func))
     return nullptr;
 
-  eCAL::CServiceServer* server = (eCAL::CServiceServer*)server_handle;
+  eCAL::v5::CServiceServer* server = (eCAL::v5::CServiceServer*)server_handle;
   if (!server)
   {
     return(Py_BuildValue("is", -1, "server invalid"));
@@ -665,7 +666,7 @@ PyObject* server_rem_method_callback(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "ns", &server_handle, &method_name))
     return nullptr;
 
-  eCAL::CServiceServer* server = (eCAL::CServiceServer*)server_handle;
+  eCAL::v5::CServiceServer* server = (eCAL::v5::CServiceServer*)server_handle;
   if (!server)
   {
     return(Py_BuildValue("is", -1, "server invalid"));
