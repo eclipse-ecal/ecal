@@ -29,9 +29,9 @@
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 namespace eCAL
 {

@@ -18,8 +18,8 @@
 */
 
 /**
- * @file   ecal_server_v5.h
- * @brief  eCAL server interface (deprecated eCAL5 version)
+ * @file   ecal_server.h
+ * @brief  eCAL server interface
 **/
 
 #pragma once
@@ -29,9 +29,9 @@
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 namespace eCAL
 {
@@ -47,6 +47,7 @@ namespace eCAL
      * @brief Constructor.
      *
      * @param service_name_   Unique service name.
+     * @param event_callback_ Callback function for server events.
     **/
     ECAL_API_EXPORTED_MEMBER
       explicit CServiceServer(const std::string& service_name_, const ServerEventIDCallbackT event_callback_ = ServerEventIDCallbackT());
