@@ -29,19 +29,9 @@
 
 extern "C"
 {
-  ECALC_API void eCAL_Logging_SetLogLevel(enum eCAL_Logging_eLogLevel level_)
+  ECALC_API void eCAL_Logging_Log(enum eCAL_Logging_eLogLevel level_, const char* const msg_)
   {
-    eCAL::Logging::SetLogLevel(level_);
-  }
-
-  ECALC_API enum eCAL_Logging_eLogLevel eCAL_Logging_GetLogLevel()
-  {
-    return(eCAL::Logging::GetLogLevel());
-  }
-
-  ECALC_API void eCAL_Logging_Log(const char* const msg_)
-  {
-    eCAL::Logging::Log(msg_);
+    eCAL::Logging::Log(level_, msg_);
   }
 
   ECALC_API int eCAL_Logging_GetLogging(void* buf_, int buf_len_)

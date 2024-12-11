@@ -159,33 +159,6 @@ namespace eCAL
       Stop();
     }
 
-    void CLogProvider::SetLogLevel(const eCAL_Logging_eLogLevel level_)
-    {
-      const std::lock_guard<std::mutex> lock(m_log_mtx);
-      m_attributes.level = level_;
-    }
-
-    void CLogProvider::SetFileLogFilter(eCAL_Logging_Filter filter_)
-    {
-      m_attributes.file_sink.filter_log = filter_;
-    }
-
-    void CLogProvider::SetUDPLogFilter(eCAL_Logging_Filter filter_)
-    {
-      m_attributes.udp_sink.filter_log = filter_;
-    }
-
-    void CLogProvider::SetConsoleLogFilter(eCAL_Logging_Filter filter_)
-    {
-      m_attributes.console_sink.filter_log = filter_;
-    }
-
-    eCAL_Logging_eLogLevel CLogProvider::GetLogLevel()
-    {
-      const std::lock_guard<std::mutex> lock(m_log_mtx);
-      return(m_attributes.level);
-    }
-
     void CLogProvider::Start()
     {
       // create log file if file logging is enabled
@@ -282,11 +255,6 @@ namespace eCAL
           SerializeToBuffer(log_message, m_log_message_vec);
           m_udp_logging_sender->Send("_log_message_", m_log_message_vec);
       }
-    }
-
-    void CLogProvider::Log(const std::string& msg_)
-    {
-      Log(m_attributes.level, msg_);
     }
 
     void CLogProvider::Stop()

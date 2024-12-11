@@ -64,54 +64,12 @@ namespace eCAL
         void Stop();
 
         /**
-         * @brief Sets the log level.
-         *
-         * @param level_ The level.
-        **/
-        void SetLogLevel(eCAL_Logging_eLogLevel level_);
-
-        /**
-         * @brief Sets the log filter for file.
-         * 
-         * @param filter_ The filter.
-         */
-        void SetFileLogFilter(eCAL_Logging_Filter filter_);
-
-        /**
-         * @brief Sets the log filter for udp.
-         * 
-         * @param filter_ The filter.
-         */
-        void SetUDPLogFilter(eCAL_Logging_Filter filter_);
-
-        /**
-         * @brief Sets the log filter for console.
-         * 
-         * @param filter_ The filter.
-         */
-        void SetConsoleLogFilter(eCAL_Logging_Filter filter_);
-
-         /**
-          * @brief Set the current log level.
-          *
-          * @return   The current log level.
-        **/
-        eCAL_Logging_eLogLevel GetLogLevel();
-
-        /**
           * @brief Log a message.
           *
           * @param level_  The level.
           * @param msg_    The message.
         **/
         void Log(eCAL_Logging_eLogLevel level_, const std::string& msg_);
-
-        /**
-          * @brief Log a message (with the current log level).
-          *
-          * @param msg_   The message.
-        **/
-        void Log(const std::string& msg_);
 
       private:
 

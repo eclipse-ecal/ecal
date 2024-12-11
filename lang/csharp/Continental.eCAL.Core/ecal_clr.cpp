@@ -103,28 +103,10 @@ void Util::ShutdownProcesses()
 /////////////////////////////////////////////////////////////////////////////
 // Logger
 /////////////////////////////////////////////////////////////////////////////
-void Logger::SetLogLevel(LogLevel level_)
-{
-  switch(level_)
-  {
-  case info:
-    ::eCAL::Logging::SetLogLevel(log_level_info);
-    break;
-  case warning:
-    ::eCAL::Logging::SetLogLevel(log_level_warning);
-    break;
-  case error:
-    ::eCAL::Logging::SetLogLevel(log_level_error);
-    break;
-  case fatal:
-    ::eCAL::Logging::SetLogLevel(log_level_fatal);
-    break;
-  }
-}
 
 void Logger::Log(System::String^ message_)
 {
-  ::eCAL::Logging::Log(StringToStlString(message_));
+  ::eCAL::Logging::Log(log_level_all, StringToStlString(message_));
 }
 
 
