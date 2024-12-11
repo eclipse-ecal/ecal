@@ -93,9 +93,6 @@ namespace eCAL
 
     ECAL_API std::string              GetMonitoringFilterExcludeList       ();
     ECAL_API std::string              GetMonitoringFilterIncludeList       ();
-    ECAL_API eCAL_Logging_Filter      GetConsoleLogFilter                  ();
-    ECAL_API eCAL_Logging_Filter      GetFileLogFilter                     ();
-    ECAL_API eCAL_Logging_Filter      GetUdpLogFilter                      ();
 
     /////////////////////////////////////
     // sys
