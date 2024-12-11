@@ -354,6 +354,17 @@ namespace eCAL
         encode_string(pb_method.resp_type, method.resp_type);
         encode_string(pb_method.req_desc, method.req_desc);
         encode_string(pb_method.resp_desc, method.resp_desc);
+
+        pb_method.has_req_datatype = true;
+        encode_string(pb_method.req_datatype.name, method.req_datatype.name);
+        encode_string(pb_method.req_datatype.encoding, method.req_datatype.encoding);
+        encode_string(pb_method.req_datatype.desc, method.req_datatype.descriptor);
+
+        pb_method.has_resp_datatype = true;
+        encode_string(pb_method.resp_datatype.name, method.resp_datatype.name);
+        encode_string(pb_method.resp_datatype.encoding, method.resp_datatype.encoding);
+        encode_string(pb_method.resp_datatype.desc, method.resp_datatype.descriptor);
+
         pb_method.call_count = method.call_count;
 
         if (!pb_encode_submessage(stream, eCAL_pb_Method_fields, &pb_method))
@@ -386,6 +397,14 @@ namespace eCAL
       decode_string(pb_method.req_desc, method.req_desc);
       decode_string(pb_method.resp_type, method.resp_type);
       decode_string(pb_method.resp_desc, method.resp_desc);
+
+      decode_string(pb_method.req_datatype.name, method.req_datatype.name);
+      decode_string(pb_method.req_datatype.encoding, method.req_datatype.encoding);
+      decode_string(pb_method.req_datatype.desc, method.req_datatype.descriptor);
+
+      decode_string(pb_method.resp_datatype.name, method.resp_datatype.name);
+      decode_string(pb_method.resp_datatype.encoding, method.resp_datatype.encoding);
+      decode_string(pb_method.resp_datatype.desc, method.resp_datatype.descriptor);
 
       // decode it
       if (!pb_decode(stream, eCAL_pb_Method_fields, &pb_method))

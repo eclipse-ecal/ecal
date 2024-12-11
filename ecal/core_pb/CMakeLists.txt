@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ project(core_pb)
 find_package(Protobuf REQUIRED)
 
 set(ProtoFiles
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/datatype.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/ecal.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/host.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/layer.proto

@@ -19,13 +19,30 @@
 
 #pragma once
 
-#include <serialization/ecal_struct_sample_payload.h>
+#include <string>
+
+#include <ecal/ecal_log_level.h>
 
 namespace eCAL
 {
-  namespace Payload
+  namespace Logging
   {
-    // compare two samples for equality
-    bool ComparePayloadSamples(const Sample& sample1, const Sample& sample2);
+    struct SReceiverAttributes
+    {
+      struct SUDPReceiver
+      {
+        std::string address;
+        int         port;
+        bool        broadcast;
+        bool        loopback;
+        int         rcvbuf;
+      };
+      
+      SUDPReceiver udp_receiver;
+
+      bool         network_enabled;
+      bool         receive_enabled;
+      std::string  host_name;
+   };
   }
 }

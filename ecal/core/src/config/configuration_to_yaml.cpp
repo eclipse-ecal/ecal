@@ -552,91 +552,111 @@ namespace YAML
     /____/\___/\_, /\_, /_/_//_/\_, / 
               /___//___/       /___/  
   */
-  
-  Node convert<eCAL::Logging::Sinks::UDP::Configuration>::encode(const eCAL::Logging::Sinks::UDP::Configuration& config_)
+
+  Node convert<eCAL::Logging::Receiver::UDP::Configuration>::encode(const eCAL::Logging::Receiver::UDP::Configuration& config_)
   {
     Node node;
-    node["enable"] = config_.enable;
     node["port"]   = config_.port;
-    node["level"]  = LogLevelToVector(config_.filter_log_udp);
     return node;
   }
 
-  bool convert<eCAL::Logging::Sinks::UDP::Configuration>::decode(const Node& node_, eCAL::Logging::Sinks::UDP::Configuration& config_)
+  bool convert<eCAL::Logging::Receiver::UDP::Configuration>::decode(const Node& node_, eCAL::Logging::Receiver::UDP::Configuration& config_)
+  {
+    AssignValue<unsigned int>(config_.port, node_, "port");
+    return true;
+  }
+
+  Node convert<eCAL::Logging::Receiver::Configuration>::encode(const eCAL::Logging::Receiver::Configuration& config_)
+  {
+    Node node;
+    node["enable"]     = config_.enable;
+    node["udp_config"] = config_.udp_config;
+    return node;
+  }
+
+  bool convert<eCAL::Logging::Receiver::Configuration>::decode(const Node& node_, eCAL::Logging::Receiver::Configuration& config_)
   {
     AssignValue<bool>(config_.enable, node_, "enable");
-    AssignValue<unsigned int>(config_.port, node_, "port");
-
-    std::vector<std::string> tmp;
-    AssignValue<std::vector<std::string>>(tmp, node_, "level");
-    config_.filter_log_udp = ParseLogLevel(tmp);
+    AssignValue<eCAL::Logging::Receiver::UDP::Configuration>(config_.udp_config, node_, "udp_config");
     return true;
   }
   
-  Node convert<eCAL::Logging::Sinks::Console::Configuration>::encode(const eCAL::Logging::Sinks::Console::Configuration& config_)
+  Node convert<eCAL::Logging::Provider::UDP::Configuration>::encode(const eCAL::Logging::Provider::UDP::Configuration& config_)
   {
     Node node;
-    node["enable"] = config_.enable;
-    node["level"] = LogLevelToVector(config_.filter_log_con);
+    node["port"] = config_.port;
     return node;
   }
 
-  bool convert<eCAL::Logging::Sinks::Console::Configuration>::decode(const Node& node_, eCAL::Logging::Sinks::Console::Configuration& config_)
+  bool convert<eCAL::Logging::Provider::UDP::Configuration>::decode(const Node& node_, eCAL::Logging::Provider::UDP::Configuration& config_)
+  {
+    AssignValue<unsigned int>(config_.port, node_, "port");
+    return true;
+  }
+  
+  Node convert<eCAL::Logging::Provider::Sink>::encode(const eCAL::Logging::Provider::Sink& config_)
+  {
+    Node node;
+    node["enable"] = config_.enable;
+    node["level"]  = LogLevelToVector(config_.filter_log);
+    return node;
+  }
+
+  bool convert<eCAL::Logging::Provider::Sink>::decode(const Node& node_, eCAL::Logging::Provider::Sink& config_)
   {
     AssignValue<bool>(config_.enable, node_, "enable");
     std::vector<std::string> tmp;
     AssignValue<std::vector<std::string>>(tmp, node_, "level");
-    config_.filter_log_con = ParseLogLevel(tmp);
+    config_.filter_log = ParseLogLevel(tmp);
     return true;
   }
  
-  Node convert<eCAL::Logging::Sinks::File::Configuration>::encode(const eCAL::Logging::Sinks::File::Configuration& config_)
+  Node convert<eCAL::Logging::Provider::File::Configuration>::encode(const eCAL::Logging::Provider::File::Configuration& config_)
   {
     Node node;
-    node["enable"] = config_.enable;
     node["path"]   = config_.path;
-    node["level"] = LogLevelToVector(config_.filter_log_file);
     return node;
   }
 
-  bool convert<eCAL::Logging::Sinks::File::Configuration>::decode(const Node& node_, eCAL::Logging::Sinks::File::Configuration& config_)
+  bool convert<eCAL::Logging::Provider::File::Configuration>::decode(const Node& node_, eCAL::Logging::Provider::File::Configuration& config_)
   {
-    AssignValue<bool>(config_.enable, node_, "enable");
     AssignValue<std::string>(config_.path, node_, "path");
-    
-    std::vector<std::string> tmp;
-    AssignValue<std::vector<std::string>>(tmp, node_, "level");
-    config_.filter_log_file = ParseLogLevel(tmp);
     return true;
   }
   
-  Node convert<eCAL::Logging::Sinks::Configuration>::encode(const eCAL::Logging::Sinks::Configuration& config_)
+  Node convert<eCAL::Logging::Provider::Configuration>::encode(const eCAL::Logging::Provider::Configuration& config_)
   {
     Node node;
-    node["console"] = config_.console;
-    node["file"]    = config_.file;
-    node["udp"]     = config_.udp;
+    node["console"]     = config_.console;
+    node["file"]        = config_.file;
+    node["udp"]         = config_.udp;
+    node["file_config"] = config_.file_config;
+    node["udp_config"]  = config_.udp_config;
     return node;
   }
 
-  bool convert<eCAL::Logging::Sinks::Configuration>::decode(const Node& node_, eCAL::Logging::Sinks::Configuration& config_)
+  bool convert<eCAL::Logging::Provider::Configuration>::decode(const Node& node_, eCAL::Logging::Provider::Configuration& config_)
   {
-    AssignValue<eCAL::Logging::Sinks::Console::Configuration>(config_.console, node_, "console");
-    AssignValue<eCAL::Logging::Sinks::File::Configuration>(config_.file, node_, "file");
-    AssignValue<eCAL::Logging::Sinks::UDP::Configuration>(config_.udp, node_, "udp");
+    AssignValue<eCAL::Logging::Provider::Sink>(config_.console, node_, "console");
+    AssignValue<eCAL::Logging::Provider::Sink>(config_.file, node_, "file");
+    AssignValue<eCAL::Logging::Provider::Sink>(config_.udp, node_, "udp");
+    AssignValue<eCAL::Logging::Provider::UDP::Configuration>(config_.udp_config, node_, "udp_config");
+    AssignValue<eCAL::Logging::Provider::File::Configuration>(config_.file_config, node_, "file_config");
     return true;
   }
 
   Node convert<eCAL::Logging::Configuration>::encode(const eCAL::Logging::Configuration& config_)
   {
     Node node;
-    node["sinks"] = config_.sinks;
+    node["provider"] = config_.provider;
+    node["receiver"] = config_.receiver;
     return node;
   }
 
   bool convert<eCAL::Logging::Configuration>::decode(const Node& node_, eCAL::Logging::Configuration& config_)
   {
-    AssignValue<eCAL::Logging::Sinks::Configuration>(config_.sinks, node_, "sinks");
+    AssignValue<eCAL::Logging::Provider::Configuration>(config_.provider, node_, "provider");
+    AssignValue<eCAL::Logging::Receiver::Configuration>(config_.receiver, node_, "receiver");
     return true;
   }
 

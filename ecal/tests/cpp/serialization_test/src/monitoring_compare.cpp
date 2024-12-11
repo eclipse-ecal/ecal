@@ -74,9 +74,7 @@ namespace eCAL
           monitoring1.publisher[i].tid != monitoring2.publisher[i].tid ||
           monitoring1.publisher[i].tname != monitoring2.publisher[i].tname ||
           monitoring1.publisher[i].direction != monitoring2.publisher[i].direction ||
-          monitoring1.publisher[i].tdatatype.name != monitoring2.publisher[i].tdatatype.name ||
-          monitoring1.publisher[i].tdatatype.encoding != monitoring2.publisher[i].tdatatype.encoding ||
-          monitoring1.publisher[i].tdatatype.descriptor != monitoring2.publisher[i].tdatatype.descriptor ||
+          monitoring1.publisher[i].tdatatype != monitoring2.publisher[i].tdatatype ||
           monitoring1.publisher[i].tlayer.size() != monitoring2.publisher[i].tlayer.size() ||
           monitoring1.publisher[i].tsize != monitoring2.publisher[i].tsize ||
           monitoring1.publisher[i].connections_loc != monitoring2.publisher[i].connections_loc ||
@@ -108,9 +106,7 @@ namespace eCAL
           monitoring1.subscriber[i].tid != monitoring2.subscriber[i].tid ||
           monitoring1.subscriber[i].tname != monitoring2.subscriber[i].tname ||
           monitoring1.subscriber[i].direction != monitoring2.subscriber[i].direction ||
-          monitoring1.subscriber[i].tdatatype.name != monitoring2.subscriber[i].tdatatype.name ||
-          monitoring1.subscriber[i].tdatatype.encoding != monitoring2.subscriber[i].tdatatype.encoding ||
-          monitoring1.subscriber[i].tdatatype.descriptor != monitoring2.subscriber[i].tdatatype.descriptor ||
+          monitoring1.subscriber[i].tdatatype != monitoring2.subscriber[i].tdatatype ||
           monitoring1.subscriber[i].tlayer.size() != monitoring2.subscriber[i].tlayer.size() ||
           monitoring1.subscriber[i].tsize != monitoring2.subscriber[i].tsize ||
           monitoring1.subscriber[i].connections_loc != monitoring2.subscriber[i].connections_loc ||
@@ -155,6 +151,8 @@ namespace eCAL
             monitoring1.server[i].methods[j].req_desc != monitoring2.server[i].methods[j].req_desc ||
             monitoring1.server[i].methods[j].resp_type != monitoring2.server[i].methods[j].resp_type ||
             monitoring1.server[i].methods[j].resp_desc != monitoring2.server[i].methods[j].resp_desc ||
+            monitoring1.server[i].methods[j].req_datatype != monitoring2.server[i].methods[j].req_datatype ||
+            monitoring1.server[i].methods[j].resp_datatype != monitoring2.server[i].methods[j].resp_datatype ||
             monitoring1.server[i].methods[j].call_count != monitoring2.server[i].methods[j].call_count)
           {
             return false;
@@ -190,6 +188,8 @@ namespace eCAL
             monitoring1.clients[i].methods[j].req_desc != monitoring2.clients[i].methods[j].req_desc ||
             monitoring1.clients[i].methods[j].resp_type != monitoring2.clients[i].methods[j].resp_type ||
             monitoring1.clients[i].methods[j].resp_desc != monitoring2.clients[i].methods[j].resp_desc ||
+            monitoring1.clients[i].methods[j].req_datatype != monitoring2.clients[i].methods[j].req_datatype ||
+            monitoring1.clients[i].methods[j].resp_datatype != monitoring2.clients[i].methods[j].resp_datatype ||
             monitoring1.clients[i].methods[j].call_count != monitoring2.clients[i].methods[j].call_count)
           {
             return false;

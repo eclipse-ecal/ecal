@@ -283,35 +283,51 @@ namespace YAML
               /___//___/       /___/  
   */
   template<>
-  struct convert<eCAL::Logging::Sinks::UDP::Configuration>
+  struct convert<eCAL::Logging::Receiver::UDP::Configuration>
   {
-    static Node encode(const eCAL::Logging::Sinks::UDP::Configuration& config_);
+    static Node encode(const eCAL::Logging::Receiver::UDP::Configuration& config_);
 
-    static bool decode(const Node& node_, eCAL::Logging::Sinks::UDP::Configuration& config_);
+    static bool decode(const Node& node_, eCAL::Logging::Receiver::UDP::Configuration& config_);
   };
 
   template<>
-  struct convert<eCAL::Logging::Sinks::Console::Configuration>
+  struct convert<eCAL::Logging::Receiver::Configuration>
   {
-    static Node encode(const eCAL::Logging::Sinks::Console::Configuration& config_);
+    static Node encode(const eCAL::Logging::Receiver::Configuration& config_);
 
-    static bool decode(const Node& node_, eCAL::Logging::Sinks::Console::Configuration& config_);
+    static bool decode(const Node& node_, eCAL::Logging::Receiver::Configuration& config_);
   };
 
   template<>
-  struct convert<eCAL::Logging::Sinks::File::Configuration>
+  struct convert<eCAL::Logging::Provider::File::Configuration>
   {
-    static Node encode(const eCAL::Logging::Sinks::File::Configuration& config_);
+    static Node encode(const eCAL::Logging::Provider::File::Configuration& config_);
 
-    static bool decode(const Node& node_, eCAL::Logging::Sinks::File::Configuration& config_);
+    static bool decode(const Node& node_, eCAL::Logging::Provider::File::Configuration& config_);
   };
 
   template<>
-  struct convert<eCAL::Logging::Sinks::Configuration>
+  struct convert<eCAL::Logging::Provider::UDP::Configuration>
   {
-    static Node encode(const eCAL::Logging::Sinks::Configuration& config_);
+    static Node encode(const eCAL::Logging::Provider::UDP::Configuration& config_);
 
-    static bool decode(const Node& node_, eCAL::Logging::Sinks::Configuration& config_);
+    static bool decode(const Node& node_, eCAL::Logging::Provider::UDP::Configuration& config_);
+  };
+
+  template<>
+  struct convert<eCAL::Logging::Provider::Sink>
+  {
+    static Node encode(const eCAL::Logging::Provider::Sink& config_);
+
+    static bool decode(const Node& node_, eCAL::Logging::Provider::Sink& config_);
+  };
+
+  template<>
+  struct convert<eCAL::Logging::Provider::Configuration>
+  {
+    static Node encode(const eCAL::Logging::Provider::Configuration& config_);
+
+    static bool decode(const Node& node_, eCAL::Logging::Provider::Configuration& config_);
   };
 
   template<>

@@ -16,15 +16,19 @@
  *
  * ========================= eCAL LICENSE =================================
 */
+
+#pragma once
+
 #include "serialization/ecal_struct_sample_registration.h"
 
 namespace eCAL
 {
   namespace Registration
   {
+    SDataTypeInformation GenerateDataTypeInformation();
     Sample GenerateProcessSample();
     Sample GenerateTopicSample();
     Sample GenerateServiceSample();
-    Sample GenerateClientSample();    
+    Sample GenerateClientSample();
   }
 }
