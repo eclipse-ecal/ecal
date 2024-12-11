@@ -5,18 +5,13 @@
 #define PB_ECAL_PB_TOPIC_NPB_H_INCLUDED
 #include <pb.h>
 #include "ecal/core/pb/layer.npb.h"
+#include "ecal/core/pb/datatype.npb.h"
 
 #if PB_PROTO_HEADER_VERSION != 40
 #error Regenerate this file with the current version of nanopb generator.
 #endif
 
 /* Struct definitions */
-typedef struct _eCAL_pb_DataTypeInformation {
-    pb_callback_t name; /* name of the datatype */
-    pb_callback_t encoding; /* encoding of the datatype (e.g. protobuf, flatbuffers, capnproto) */
-    pb_callback_t desc; /* descriptor information of the datatype (necessary for reflection) */
-} eCAL_pb_DataTypeInformation;
-
 typedef struct _eCAL_pb_Topic { /* Reserved fields in enums are not supported in protobuf 3.0
  reserved 9, 10, 11, 14, 15, 22 to 26, 29; */
     int32_t rclock; /* registration clock (heart beat) */
@@ -54,17 +49,12 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define eCAL_pb_DataTypeInformation_init_default {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define eCAL_pb_Topic_init_default               {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_DataTypeInformation_init_default}
 #define eCAL_pb_Topic_AttrEntry_init_default     {{{NULL}, NULL}, {{NULL}, NULL}}
-#define eCAL_pb_DataTypeInformation_init_zero    {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define eCAL_pb_Topic_init_zero                  {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_DataTypeInformation_init_zero}
 #define eCAL_pb_Topic_AttrEntry_init_zero        {{{NULL}, NULL}, {{NULL}, NULL}}
 
 /* Field tags (for use in manual encoding/decoding) */
-#define eCAL_pb_DataTypeInformation_name_tag     1
-#define eCAL_pb_DataTypeInformation_encoding_tag 2
-#define eCAL_pb_DataTypeInformation_desc_tag     3
 #define eCAL_pb_Topic_rclock_tag                 1
 #define eCAL_pb_Topic_hname_tag                  2
 #define eCAL_pb_Topic_pid_tag                    3
@@ -88,13 +78,6 @@ extern "C" {
 #define eCAL_pb_Topic_AttrEntry_value_tag        2
 
 /* Struct field encoding specification for nanopb */
-#define eCAL_pb_DataTypeInformation_FIELDLIST(X, a) \
-X(a, CALLBACK, SINGULAR, STRING,   name,              1) \
-X(a, CALLBACK, SINGULAR, STRING,   encoding,          2) \
-X(a, CALLBACK, SINGULAR, BYTES,    desc,              3)
-#define eCAL_pb_DataTypeInformation_CALLBACK pb_default_field_callback
-#define eCAL_pb_DataTypeInformation_DEFAULT NULL
-
 #define eCAL_pb_Topic_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, INT32,    rclock,            1) \
 X(a, CALLBACK, SINGULAR, STRING,   hname,             2) \
@@ -127,17 +110,14 @@ X(a, CALLBACK, SINGULAR, STRING,   value,             2)
 #define eCAL_pb_Topic_AttrEntry_CALLBACK pb_default_field_callback
 #define eCAL_pb_Topic_AttrEntry_DEFAULT NULL
 
-extern const pb_msgdesc_t eCAL_pb_DataTypeInformation_msg;
 extern const pb_msgdesc_t eCAL_pb_Topic_msg;
 extern const pb_msgdesc_t eCAL_pb_Topic_AttrEntry_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
-#define eCAL_pb_DataTypeInformation_fields &eCAL_pb_DataTypeInformation_msg
 #define eCAL_pb_Topic_fields &eCAL_pb_Topic_msg
 #define eCAL_pb_Topic_AttrEntry_fields &eCAL_pb_Topic_AttrEntry_msg
 
 /* Maximum encoded size of messages (where known) */
-/* eCAL_pb_DataTypeInformation_size depends on runtime parameters */
 /* eCAL_pb_Topic_size depends on runtime parameters */
 /* eCAL_pb_Topic_AttrEntry_size depends on runtime parameters */
 

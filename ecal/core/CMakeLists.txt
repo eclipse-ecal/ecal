@@ -335,6 +335,8 @@ set(ecal_serialization_src
     src/serialization/nanopb/pb_decode.h
     src/serialization/nanopb/pb_encode.c
     src/serialization/nanopb/pb_encode.h
+    src/serialization/nanopb/ecal/core/pb/datatype.npb.c
+    src/serialization/nanopb/ecal/core/pb/datatype.npb.h
     src/serialization/nanopb/ecal/core/pb/ecal.npb.c
     src/serialization/nanopb/ecal/core/pb/ecal.npb.h
     src/serialization/nanopb/ecal/core/pb/host.npb.c

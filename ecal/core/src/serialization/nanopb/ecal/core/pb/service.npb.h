@@ -4,6 +4,7 @@
 #ifndef PB_ECAL_PB_SERVICE_NPB_H_INCLUDED
 #define PB_ECAL_PB_SERVICE_NPB_H_INCLUDED
 #include <pb.h>
+#include "ecal/core/pb/datatype.npb.h"
 
 #if PB_PROTO_HEADER_VERSION != 40
 #error Regenerate this file with the current version of nanopb generator.
@@ -42,11 +43,15 @@ typedef struct _eCAL_pb_Response {
 
 typedef struct _eCAL_pb_Method {
     pb_callback_t mname; /* method name */
-    pb_callback_t req_type; /* request type */
-    pb_callback_t resp_type; /* response type */
+    pb_callback_t req_type; /* request  type        (deprecated use req_datatype) */
+    pb_callback_t resp_type; /* response type        (deprecated use resp_datatype) */
     int64_t call_count; /* call counter */
-    pb_callback_t req_desc; /* request descriptor */
-    pb_callback_t resp_desc; /* response descriptor */
+    pb_callback_t req_desc; /* request  descriptor  (deprecated use req_datatype) */
+    pb_callback_t resp_desc; /* response descriptor  (deprecated use resp_datatype) */
+    bool has_req_datatype;
+    eCAL_pb_DataTypeInformation req_datatype; /* request  datatype information  (encoding & type & description) */
+    bool has_resp_datatype;
+    eCAL_pb_DataTypeInformation resp_datatype; /* response datatype information  (encoding & type & description) */
 } eCAL_pb_Method;
 
 typedef struct _eCAL_pb_Service {
@@ -56,7 +61,7 @@ typedef struct _eCAL_pb_Service {
     pb_callback_t uname; /* unit name */
     int32_t pid; /* process id */
     pb_callback_t sname; /* service name */
-    uint32_t tcp_port_v0; /* the tcp port used for that service */
+    uint32_t tcp_port_v0; /* the tcp port used for that service  (deprecated) */
     pb_callback_t methods; /* list of methods */
     pb_callback_t sid; /* service id */
     /* transport specific parameter (for internal use) */
@@ -99,13 +104,13 @@ extern "C" {
 #define eCAL_pb_ServiceHeader_init_default       {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, _eCAL_pb_ServiceHeader_eCallState_MIN, {{NULL}, NULL}}
 #define eCAL_pb_Request_init_default             {false, eCAL_pb_ServiceHeader_init_default, {{NULL}, NULL}}
 #define eCAL_pb_Response_init_default            {false, eCAL_pb_ServiceHeader_init_default, {{NULL}, NULL}, 0}
-#define eCAL_pb_Method_init_default              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}}
+#define eCAL_pb_Method_init_default              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_DataTypeInformation_init_default, false, eCAL_pb_DataTypeInformation_init_default}
 #define eCAL_pb_Service_init_default             {0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0}
 #define eCAL_pb_Client_init_default              {0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}}
 #define eCAL_pb_ServiceHeader_init_zero          {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, _eCAL_pb_ServiceHeader_eCallState_MIN, {{NULL}, NULL}}
 #define eCAL_pb_Request_init_zero                {false, eCAL_pb_ServiceHeader_init_zero, {{NULL}, NULL}}
 #define eCAL_pb_Response_init_zero               {false, eCAL_pb_ServiceHeader_init_zero, {{NULL}, NULL}, 0}
-#define eCAL_pb_Method_init_zero                 {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}}
+#define eCAL_pb_Method_init_zero                 {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_DataTypeInformation_init_zero, false, eCAL_pb_DataTypeInformation_init_zero}
 #define eCAL_pb_Service_init_zero                {0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0}
 #define eCAL_pb_Client_init_zero                 {0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}}
 
@@ -128,6 +133,8 @@ extern "C" {
 #define eCAL_pb_Method_call_count_tag            4
 #define eCAL_pb_Method_req_desc_tag              5
 #define eCAL_pb_Method_resp_desc_tag             6
+#define eCAL_pb_Method_req_datatype_tag          7
+#define eCAL_pb_Method_resp_datatype_tag         8
 #define eCAL_pb_Service_rclock_tag               1
 #define eCAL_pb_Service_hname_tag                2
 #define eCAL_pb_Service_pname_tag                3
@@ -182,9 +189,13 @@ X(a, CALLBACK, SINGULAR, STRING,   req_type,          2) \
 X(a, CALLBACK, SINGULAR, STRING,   resp_type,         3) \
 X(a, STATIC,   SINGULAR, INT64,    call_count,        4) \
 X(a, CALLBACK, SINGULAR, BYTES,    req_desc,          5) \
-X(a, CALLBACK, SINGULAR, BYTES,    resp_desc,         6)
+X(a, CALLBACK, SINGULAR, BYTES,    resp_desc,         6) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  req_datatype,      7) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  resp_datatype,     8)
 #define eCAL_pb_Method_CALLBACK pb_default_field_callback
 #define eCAL_pb_Method_DEFAULT NULL
+#define eCAL_pb_Method_req_datatype_MSGTYPE eCAL_pb_DataTypeInformation
+#define eCAL_pb_Method_resp_datatype_MSGTYPE eCAL_pb_DataTypeInformation
 
 #define eCAL_pb_Service_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, INT32,    rclock,            1) \
