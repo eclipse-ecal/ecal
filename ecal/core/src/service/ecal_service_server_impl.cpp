@@ -37,7 +37,7 @@ namespace eCAL
   std::shared_ptr<CServiceServerImpl> CServiceServerImpl::CreateInstance(
     const std::string& service_name_, const ServerEventIDCallbackT& event_callback_)
   {
-    Logging::Log(log_level_debug1, "Creating instance of CServiceServerImpl for service: " + service_name_);
+    Logging::Log(log_level_debug1, "CServiceServerImpl::CreateInstance: Creating instance of CServiceServerImpl for service: " + service_name_);
     auto instance = std::shared_ptr<CServiceServerImpl>(new CServiceServerImpl(service_name_, event_callback_));
     instance->Start();
     return instance;
@@ -47,25 +47,25 @@ namespace eCAL
   CServiceServerImpl::CServiceServerImpl(const std::string& service_name_, const ServerEventIDCallbackT& event_callback_)
     : m_created(false), m_service_name(service_name_), m_event_callback(event_callback_)
   {
-    Logging::Log(log_level_debug1, "Initializing service server for: " + m_service_name);
+    Logging::Log(log_level_debug1, "CServiceServerImpl: Initializing service server for: " + m_service_name);
   }
 
   // Destructor
   CServiceServerImpl::~CServiceServerImpl()
   {
-    Logging::Log(log_level_debug1, "Destroying service server for: " + m_service_name);
+    Logging::Log(log_level_debug1, "CServiceServerImpl: Destroying service server for: " + m_service_name);
     Stop();
   }
 
   bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_)
   {
-    Logging::Log(log_level_debug1, "Adding method callback for method: " + method_);
+    Logging::Log(log_level_debug1, "CServiceServerImpl: Adding method callback for method: " + method_);
     std::lock_guard<std::mutex> const lock(m_method_map_sync);
 
     auto iter = m_method_map.find(method_);
     if (iter != m_method_map.end())
     {
-      Logging::Log(log_level_warning, "Method already exists, updating callback: " + method_);
+      Logging::Log(log_level_warning, "CServiceServerImpl: Method already exists, updating callback: " + method_);
       iter->second.method.req_type  = method_info_.request_type.name;
       iter->second.method.req_desc  = method_info_.request_type.descriptor;
       iter->second.method.resp_type = method_info_.response_type.name;
@@ -74,7 +74,7 @@ namespace eCAL
     }
     else
     {
-      Logging::Log(log_level_debug1, "Registering new method: " + method_);
+      Logging::Log(log_level_debug1, "CServiceServerImpl: Registering new method: " + method_);
       SMethod method;
       method.method.mname     = method_;
       method.method.req_type  = method_info_.request_type.name;
@@ -90,18 +90,18 @@ namespace eCAL
 
   bool CServiceServerImpl::RemoveMethodCallback(const std::string& method_)
   {
-    Logging::Log(log_level_debug1, "Removing method callback for method: " + method_);
+    Logging::Log(log_level_debug1, "CServiceServerImpl: Removing method callback for method: " + method_);
     std::lock_guard<std::mutex> const lock(m_method_map_sync);
 
     auto iter = m_method_map.find(method_);
     if (iter != m_method_map.end())
     {
       m_method_map.erase(iter);
-      Logging::Log(log_level_debug1, "Successfully removed method callback: " + method_);
+      Logging::Log(log_level_debug1, "CServiceServerImpl: Successfully removed method callback: " + method_);
       return true;
     }
 
-    Logging::Log(log_level_warning, "Attempt to remove non-existent method callback: " + method_);
+    Logging::Log(log_level_warning, "CServiceServerImpl: Attempt to remove non-existent method callback: " + method_);
     return false;
   }
 
@@ -109,23 +109,23 @@ namespace eCAL
   {
     if (!m_created)
     {
-      Logging::Log(log_level_warning, "Service is not created; cannot check connection state for: " + m_service_name);
+      Logging::Log(log_level_warning, "CServiceServerImpl: Service is not created; cannot check connection state for: " + m_service_name);
       return false;
     }
 
     bool connected = m_tcp_server && m_tcp_server->is_connected();
-    Logging::Log(log_level_debug2, "Connection state for service " + m_service_name + ": " + (connected ? "connected" : "disconnected"));
+    Logging::Log(log_level_debug2, "CServiceServerImpl: Connection state for service " + m_service_name + ": " + (connected ? "connected" : "disconnected"));
     return connected;
   }
 
   void CServiceServerImpl::RegisterClient(const std::string& /*key_*/, const SClientAttr& /*client_*/)
   {
-    Logging::Log(log_level_debug2, "Client registration logic is not implemented for: " + m_service_name);
+    Logging::Log(log_level_debug2, "CServiceServerImpl: Client registration logic is not implemented for: " + m_service_name);
   }
 
   Registration::Sample CServiceServerImpl::GetRegistration()
   {
-    Logging::Log(log_level_debug2, "Generating registration sample for: " + m_service_name);
+    Logging::Log(log_level_debug2, "CServiceServerImpl: Generating registration sample for: " + m_service_name);
     return GetRegistrationSample();
   }
 
@@ -138,11 +138,11 @@ namespace eCAL
   {
     if (m_created)
     {
-      Logging::Log(log_level_warning, "Service is already started: " + m_service_name);
+      Logging::Log(log_level_warning, "CServiceServerImpl: Service is already started: " + m_service_name);
       return;
     }
 
-    Logging::Log(log_level_debug1, "Starting service server for: " + m_service_name);
+    Logging::Log(log_level_debug1, "CServiceServerImpl: Starting service server for: " + m_service_name);
 
     // Create service ID
     std::stringstream counter;
@@ -153,7 +153,7 @@ namespace eCAL
     auto server_manager = eCAL::service::ServiceManager::instance()->get_server_manager();
     if (!server_manager || server_manager->is_stopped())
     {
-      Logging::Log(log_level_error, "Failed to start service: Global server manager is unavailable or stopped for: " + m_service_name);
+      Logging::Log(log_level_error, "CServiceServerImpl: Failed to start service: Global server manager is unavailable or stopped for: " + m_service_name);
       return;
     }
 
@@ -185,7 +185,7 @@ namespace eCAL
 
     if (!m_tcp_server)
     {
-      Logging::Log(log_level_error, "Failed to create TCP server for service: " + m_service_name);
+      Logging::Log(log_level_error, "CServiceServerImpl: Failed to create TCP server for service: " + m_service_name);
       return;
     }
 
@@ -194,38 +194,38 @@ namespace eCAL
       g_registration_provider()->RegisterSample(GetRegistrationSample());
 
     m_created = true;
-    Logging::Log(log_level_debug1, "Service started successfully: " + m_service_name);
+    Logging::Log(log_level_debug1, "CServiceServerImpl: Service started successfully: " + m_service_name);
   }
 
   void CServiceServerImpl::Stop()
   {
     if (!m_created)
     {
-      Logging::Log(log_level_warning, "Service is not running; cannot stop: " + m_service_name);
+      Logging::Log(log_level_warning, "CServiceServerImpl: Service is not running; cannot stop: " + m_service_name);
       return;
     }
 
-    Logging::Log(log_level_debug1, "Stopping service server for: " + m_service_name);
+    Logging::Log(log_level_debug1, "CServiceServerImpl: Stopping service server for: " + m_service_name);
 
     // Reset method callbacks
     {
       std::lock_guard<std::mutex> const lock(m_method_map_sync);
       m_method_map.clear();
-      Logging::Log(log_level_debug2, "Cleared all method callbacks for: " + m_service_name);
+      Logging::Log(log_level_debug2, "CServiceServerImpl: Cleared all method callbacks for: " + m_service_name);
     }
 
     // Reset event callback
     {
       std::lock_guard<std::mutex> const lock(m_event_callback_sync);
       m_event_callback = nullptr;
-      Logging::Log(log_level_debug2, "Cleared event callback for: " + m_service_name);
+      Logging::Log(log_level_debug2, "CServiceServerImpl: Cleared event callback for: " + m_service_name);
     }
 
     // Stop TCP server
     if (m_tcp_server)
     {
       m_tcp_server->stop();
-      Logging::Log(log_level_debug1, "TCP server stopped for: " + m_service_name);
+      Logging::Log(log_level_debug1, "CServiceServerImpl: TCP server stopped for: " + m_service_name);
     }
 
     // Unregister service
@@ -233,12 +233,12 @@ namespace eCAL
       g_registration_provider()->UnregisterSample(GetUnregistrationSample());
 
     m_created = false;
-    Logging::Log(log_level_debug1, "Service stopped successfully: " + m_service_name);
+    Logging::Log(log_level_debug1, "CServiceServerImpl: Service stopped successfully: " + m_service_name);
   }
 
   Registration::Sample CServiceServerImpl::GetRegistrationSample()
   {
-    Logging::Log(log_level_debug2, "Preparing registration sample for: " + m_service_name);
+    Logging::Log(log_level_debug2, "CServiceServerImpl: Preparing registration sample for: " + m_service_name);
 
     Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_reg_service;
@@ -280,7 +280,7 @@ namespace eCAL
 
   Registration::Sample CServiceServerImpl::GetUnregistrationSample()
   {
-    Logging::Log(log_level_debug2, "Preparing unregistration sample for: " + m_service_name);
+    Logging::Log(log_level_debug2, "CServiceServerImpl: Preparing unregistration sample for: " + m_service_name);
 
     Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_unreg_service;
@@ -301,7 +301,7 @@ namespace eCAL
 
   int CServiceServerImpl::RequestCallback(const std::string& request_pb_, std::string& response_pb_)
   {
-    Logging::Log(log_level_debug2, "Processing request callback for: " + m_service_name);
+    Logging::Log(log_level_debug2, "CServiceServerImpl: Processing request callback for: " + m_service_name);
 
     Service::Response response;
     auto& response_header = response.header;
@@ -331,7 +331,7 @@ namespace eCAL
       if (requested_method_iterator == m_method_map.end())
       {
         response_header.state = Service::eMethodCallState::failed;
-        std::string const emsg = "Service '" + m_service_name + "' has no method named '" + request_header.mname + "'";
+        std::string const emsg = "CServiceServerImpl: Service '" + m_service_name + "' has no method named '" + request_header.mname + "'";
         response_header.error = emsg;
 
         SerializeToBuffer(response, response_pb_);
@@ -359,7 +359,7 @@ namespace eCAL
 
   void CServiceServerImpl::NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eCAL_Server_Event event_type_, const std::string& /*message_*/)
   {
-    Logging::Log(log_level_debug1, "Notifying event callback for: " + m_service_name + " Event Type: " + std::to_string(event_type_));
+    Logging::Log(log_level_debug1, "CServiceServerImpl: Notifying event callback for: " + m_service_name + " Event Type: " + std::to_string(event_type_));
 
     std::lock_guard<std::mutex> const lock_cb(m_event_callback_sync);
     if (m_event_callback)
