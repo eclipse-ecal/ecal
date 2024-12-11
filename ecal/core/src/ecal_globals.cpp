@@ -33,6 +33,7 @@
 #include "service/ecal_service_singleton_manager.h"
 #endif
 
+#include "ecal_config_internal.h"
 #include "config/builder/registration_attribute_builder.h"
 #include "config/builder/monitoring_attribute_builder.h"
 #include "config/builder/logging_attribute_builder.h"

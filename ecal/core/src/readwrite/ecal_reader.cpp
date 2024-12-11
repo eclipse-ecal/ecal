@@ -939,7 +939,7 @@ namespace eCAL
         // -----------------------------------
         // drop messages in the wrong order
         // -----------------------------------
-        if (Config::Experimental::GetDropOutOfOrderMessages())
+        if (Config::GetDropOutOfOrderMessages())
         {
           // do not update the internal clock counter
 

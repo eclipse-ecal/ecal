@@ -26,6 +26,7 @@
 #include "ecal_globals.h"
 #include "readwrite/ecal_reader.h"
 #include "config/builder/reader_attribute_builder.h"
+#include "ecal_config_internal.h"
 
 #include <iostream>
 #include <set>

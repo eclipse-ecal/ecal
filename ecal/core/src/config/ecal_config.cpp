@@ -83,9 +83,6 @@ namespace eCAL
     
     std::string         GetMonitoringFilterExcludeList     () { return GetConfiguration().monitoring.filter_excl; }
     std::string         GetMonitoringFilterIncludeList     () { return GetConfiguration().monitoring.filter_incl; }
-    eCAL_Logging_Filter GetConsoleLogFilter                () { return GetConfiguration().logging.provider.console.filter_log; }
-    eCAL_Logging_Filter GetFileLogFilter                   () { return GetConfiguration().logging.provider.file.filter_log; }
-    eCAL_Logging_Filter GetUdpLogFilter                    () { return GetConfiguration().logging.provider.udp.filter_log; }
 
     /////////////////////////////////////
     // sys
@@ -96,24 +93,29 @@ namespace eCAL
     /////////////////////////////////////
     // publisher
     /////////////////////////////////////
+    
     bool              IsTopicTypeSharingEnabled            () { return GetConfiguration().publisher.share_topic_type; }
     bool              IsTopicDescriptionSharingEnabled     () { return GetConfiguration().publisher.share_topic_description; }
 
     /////////////////////////////////////
     // service
     /////////////////////////////////////
+    
     bool              IsServiceProtocolV0Enabled           () { return GetConfiguration().service.protocol_v0; }
     bool              IsServiceProtocolV1Enabled           () { return GetConfiguration().service.protocol_v1; }
 
     /////////////////////////////////////
-    // experimemtal
+    // subscriber
     /////////////////////////////////////
+    
+    bool              GetDropOutOfOrderMessages          () { return GetConfiguration().subscriber.drop_out_of_order_messages; }
 
-    namespace Experimental
-    {
-      size_t            GetShmMonitoringQueueSize          () { return GetConfiguration().registration.layer.shm.queue_size; }
-      std::string       GetShmMonitoringDomain             () { return GetConfiguration().registration.layer.shm.domain;}
-      bool              GetDropOutOfOrderMessages          () { return GetConfiguration().subscriber.drop_out_of_order_messages; }
-    }
+    /////////////////////////////////////
+    // registration
+    /////////////////////////////////////
+    
+    size_t            GetShmMonitoringQueueSize          () { return GetConfiguration().registration.layer.shm.queue_size; }
+    std::string       GetShmMonitoringDomain             () { return GetConfiguration().registration.layer.shm.domain;}
+
   }
 }
