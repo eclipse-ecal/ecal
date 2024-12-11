@@ -32,6 +32,8 @@ set(nanopb_lib_src
 )
 
 set(nanopb_generated_src
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/datatype.npb.c
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/datatype.npb.h
   ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/ecal.npb.c
   ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/ecal.npb.h
   ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/nanopb/ecal/core/pb/host.npb.c

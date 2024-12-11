@@ -31,12 +31,17 @@ namespace eCAL
     Service::Method GenerateMethod()
     {
       Service::Method method;
-      method.mname      = GenerateString(6);
-      method.req_type   = GenerateString(8);
-      method.req_desc   = GenerateString(10);
-      method.resp_type  = GenerateString(8);
-      method.resp_desc  = GenerateString(10);
-      method.call_count = rand() % 100;
+      method.mname      = GenerateString(8);
+
+      method.req_type   = GenerateString(8);  // deprecated
+      method.req_desc   = GenerateString(10); // deprecated
+      method.resp_type  = GenerateString(8);  // deprecated
+      method.resp_desc  = GenerateString(10); // deprecated
+
+      method.req_datatype  = GenerateDataTypeInformation();
+      method.resp_datatype = GenerateDataTypeInformation();
+
+      method.call_count = rand() % 10000;
 
       return method;
     }

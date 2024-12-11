@@ -17,15 +17,13 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
+syntax = "proto3";
 
-#include <serialization/ecal_struct_sample_payload.h>
+package eCAL.pb;
 
-namespace eCAL
+message DataTypeInformation
 {
-  namespace Payload
-  {
-    // compare two samples for equality
-    bool ComparePayloadSamples(const Sample& sample1, const Sample& sample2);
-  }
+  string name      = 1;  // name of the datatype
+  string encoding  = 2;  // encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
+  bytes  desc      = 3;  // descriptor information of the datatype (necessary for reflection)
 }

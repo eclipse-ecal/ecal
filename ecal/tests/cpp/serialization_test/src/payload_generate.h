@@ -17,6 +17,8 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#pragma once
+
 #include <serialization/ecal_struct_sample_payload.h>
 
 #include <cstdlib>

@@ -18,6 +18,7 @@
 */
 
 #pragma once
+
 #include <ecal/types/logging.h>
 
 namespace eCAL
