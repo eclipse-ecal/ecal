@@ -45,14 +45,14 @@ namespace eCAL
     **/
     class IpAddressV4
     {
-    public:      
-      ECAL_API IpAddressV4(const std::string& ip_address_); 
+    public:
+      ECAL_API IpAddressV4(const std::string& ip_address_);
       ECAL_API IpAddressV4(const char* ip_address_);
 
       ECAL_API std::string Get() const;
 
       ECAL_API IpAddressV4& operator=(const std::string& ip_string_);
-      ECAL_API IpAddressV4& operator=(const char* ip_string_);      
+      ECAL_API IpAddressV4& operator=(const char* ip_string_);
       ECAL_API operator std::string() const;
       ECAL_API bool operator==(const eCAL::Types::IpAddressV4& rhs) const;  
       ECAL_API friend bool operator==(eCAL::Types::IpAddressV4 lhs, const char* ip_string_);
@@ -61,7 +61,7 @@ namespace eCAL
       ECAL_API friend bool operator==(const std::string& ip_string_, eCAL::Types::IpAddressV4 rhs);
 
     private:            
-      ECAL_API void validateIpString(const std::string& ip_address_); 
+      ECAL_API void validateIpString(const std::string& ip_address_);
 
       std::string m_ip_address{};
     };
@@ -79,4 +79,4 @@ namespace eCAL
     };
 
   }
-}        
+} 
