@@ -41,7 +41,7 @@ namespace eCAL
      * @param level_  The level.
      * @param msg_    The log message string.
     **/
-    inline void Log(eCAL_Logging_eLogLevel level_, const std::string& msg_);
+    ECAL_API void Log(eCAL_Logging_eLogLevel level_, const std::string& msg_);
 
     /**
      * @brief Get logging as serialized protobuf string.
