@@ -151,10 +151,14 @@ namespace
     return ecal_ini_status.IsOk() && (ecal_ini_status.GetType() == EcalUtils::Filesystem::Type::RegularFile);
   }
 
+  // Returns path, where the specified ini file is found, or empty string if not found
   std::string findValidConfigPath(std::vector<std::string> paths_, const std::string& file_name_)
   {
     auto it = std::find_if(paths_.begin(), paths_.end(), [&file_name_](const std::string& path_)
     {
+      if (path_.empty())
+        return false;
+      
       return isValidConfigFilePath(path_, file_name_);
     });
 
@@ -166,6 +170,11 @@ namespace
     return std::string("");
   }
 
+  // Returns the default paths for possible ecal configurations
+  // Order:
+  // 1. ECAL_DATA environment varible path if set
+  // 2. cmake configured data paths (linux only)
+  // 3. system data path
   std::vector<std::string> getEcalDefaultPaths()
   {
     std::vector<std::string> ecal_default_paths;
@@ -186,6 +195,11 @@ namespace
       return ecal_default_paths;
   }
 
+  // Check the following paths if the specified config file exists and return the first valid complete path
+  // 1. current working directory
+  // 2. ECAL_DATA environment variable path
+  // 3. cmake configured data paths (linux only)
+  // 4. system data path
   std::string checkForValidConfigFilePath(const std::string& config_file_)
   {
     // -----------------------------------------------------------
@@ -314,9 +328,10 @@ namespace eCAL
   {
     std::string GeteCALConfigPath()
     {
-      // Check for first directory which contains the ini file.
+      // Return the possible default paths that could contain the yaml file
       const std::vector<std::string> search_directories = getEcalDefaultPaths();
-
+      
+      // Check for first directory which contains the ini file.
       return findValidConfigPath(search_directories, ECAL_DEFAULT_CFG);
     }
 
@@ -385,6 +400,11 @@ namespace eCAL
 
     std::string GeteCALLogPath()
     {
+      if (!eCAL::GetConfiguration().logging.provider.file_config.path.empty())
+      {
+        return eCAL::GetConfiguration().logging.provider.file_config.path;
+      }
+      
       std::string log_path;
 #ifdef ECAL_OS_WINDOWS
       log_path = GeteCALConfigPath();
@@ -407,15 +427,7 @@ namespace eCAL
 
     std::string GeteCALActiveIniFile()
     {
-      std::string ini_file = GeteCALConfigPath();
-      ini_file += ECAL_DEFAULT_CFG;
-      return ini_file;
+      return eCAL::GetConfiguration().GetYamlFilePath();
     }
-
-    std::string GeteCALDefaultIniFile()
-    {
-      return GeteCALActiveIniFile();
-    }
-  
   }
 }  

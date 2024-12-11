@@ -36,7 +36,7 @@ namespace eCAL
   {
     /**
      * @brief Retrieve eCAL configuration path.
-     *          This is path is for the global eCAL configuration files
+     *          This path is for the global eCAL configuration files
      *          like ecal.yaml.
      *          This path is read only for standard users.
      *
@@ -64,6 +64,7 @@ namespace eCAL
 
     /**
      * @brief Retrieve full path to active eCAL ini file.
+     *          Returns an empty string if no active ini file is found.
      *
      * @return  eCAL active ini file name.
     **/
