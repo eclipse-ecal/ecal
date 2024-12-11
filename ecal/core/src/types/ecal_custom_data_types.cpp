@@ -48,11 +48,6 @@ namespace eCAL
       validateIpString(ip_address_);
     }
 
-    IpAddressV4::IpAddressV4(const char* ip_address_)
-    {
-      validateIpString(ip_address_);
-    } 
-
     void IpAddressV4::validateIpString(const std::string& ip_address_)
     {
       if (  std::regex_match(ip_address_, IPV4_DEC_REGEX)
