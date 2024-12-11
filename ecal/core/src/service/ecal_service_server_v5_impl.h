@@ -27,15 +27,13 @@
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_server.h>
 
+#include <mutex>
 #include <string>
 
 namespace eCAL
 {
   namespace v5
   {
-    /**
-     * @brief Service server implementation class.
-    **/
     class CServiceServerImpl
     {
     public:
@@ -47,8 +45,10 @@ namespace eCAL
       bool Destroy();
 
       bool AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_);
+
       bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
       bool RemMethodCallback(const std::string& method_);
+
       bool AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_);
       bool RemEventCallback(eCAL_Server_Event type_);
 
@@ -62,7 +62,12 @@ namespace eCAL
       CServiceServerImpl& operator=(CServiceServerImpl&&) = delete;
 
     private:
+      // Pointer to the underlying service server implementation
       std::shared_ptr<eCAL::CServiceServer> m_service_server_impl;
+
+      // Mutex and map for managing event callbacks
+      std::mutex m_event_callback_map_mutex;
+      std::map<eCAL_Server_Event, ServerEventCallbackT> m_event_callback_map;
     };
   }
 }

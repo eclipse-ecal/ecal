@@ -205,7 +205,7 @@ TEST(core_cpp_clientserver, ServerConnectEvent)
   eCAL::CServiceServer server("service", event_callback);
 
   // check events
-  eCAL::Process::SleepMS(1000);
+  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
   EXPECT_EQ(0, event_connected_fired.get());
   EXPECT_EQ(0, event_disconnected_fired.get());
 
@@ -492,7 +492,7 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
       methods_called++;
     }
   }
-  eCAL::Process::SleepMS(1000);
+  eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
 
   EXPECT_EQ(false, success);
   EXPECT_EQ(0, responses_executed);

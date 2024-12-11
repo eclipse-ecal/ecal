@@ -21,6 +21,8 @@
  * @brief  eCAL service server implementation (deprecated eCAL5 version)
 **/
 
+#include <ecal/ecal_log.h>
+
 #include "ecal_service_server_v5_impl.h"
 
 namespace eCAL
@@ -30,61 +32,166 @@ namespace eCAL
     CServiceServerImpl::CServiceServerImpl()
       : m_service_server_impl(nullptr)
     {
+      Logging::Log(log_level_debug2, "Initializing default service server implementation.");
     }
 
     CServiceServerImpl::CServiceServerImpl(const std::string& service_name_)
       : m_service_server_impl(nullptr)
     {
+      Logging::Log(log_level_debug2, "Initializing service server with name: " + service_name_);
+      Create(service_name_);
     }
 
     CServiceServerImpl::~CServiceServerImpl()
     {
+      Logging::Log(log_level_debug2, "Destroying service server implementation.");
+      Destroy();
     }
 
     bool CServiceServerImpl::Create(const std::string& service_name_)
     {
-      return false;
+      if (m_service_server_impl)
+      {
+        Logging::Log(log_level_warning, "Service server already created: " + service_name_);
+        return false;
+      }
+
+      // Define the event callback to pass to CServiceClientNew
+      ServerEventIDCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const struct SServerEventCallbackData& data_)
+        {
+          // Lock the mutex to safely access m_event_callbacks
+          std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
+
+          // Check if there's a callback registered for the event type
+          const auto& callback = m_event_callback_map.find(data_.type);
+          if (callback != m_event_callback_map.end())
+          {
+            // Call the user's callback
+            callback->second(service_id_.service_name.c_str(), &data_);
+          }
+        };
+
+      m_service_server_impl = std::make_shared<eCAL::CServiceServer>(service_name_, event_callback);
+      Logging::Log(log_level_debug1, "Service server created with name: " + service_name_);
+      return true;
     }
 
     bool CServiceServerImpl::Destroy()
     {
-      return false;
+      if (!m_service_server_impl)
+      {
+        Logging::Log(log_level_warning, "Service server not initialized, cannot destroy.");
+        return false;
+      }
+
+      m_service_server_impl.reset();
+      Logging::Log(log_level_debug2, "Service server destroyed.");
+      return true;
     }
 
     bool CServiceServerImpl::AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_)
     {
-      return false;
+      Logging::Log(log_level_debug1, "Adding description for method: " + method_);
+
+      if (!m_service_server_impl)
+      {
+        Logging::Log(log_level_error, "Service server not initialized, cannot add description.");
+        return false;
+      }
+
+      SServiceMethodInformation method_info;
+      method_info.request_type.name        = req_type_;
+      method_info.request_type.descriptor  = req_desc_;
+      method_info.response_type.name       = resp_type_;
+      method_info.response_type.descriptor = resp_desc_;
+
+      return m_service_server_impl->AddMethodCallback(method_, method_info, nullptr);
     }
 
     bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_)
     {
-      return false;
+      Logging::Log(log_level_debug2, "Adding method callback for method: " + method_);
+
+      if (!m_service_server_impl)
+      {
+        Logging::Log(log_level_error, "Service server not initialized, cannot add method callback.");
+        return false;
+      }
+
+      SServiceMethodInformation method_info;
+      method_info.request_type.name  = req_type_;
+      method_info.response_type.name = resp_type_;
+
+      return m_service_server_impl->AddMethodCallback(method_, method_info, callback_);
     }
 
     bool CServiceServerImpl::RemMethodCallback(const std::string& method_)
     {
-      return false;
+      Logging::Log(log_level_debug2, "Removing method callback for method: " + method_);
+
+      if (!m_service_server_impl)
+      {
+        Logging::Log(log_level_error, "Service server not initialized, cannot remove method callback.");
+        return false;
+      }
+
+      return m_service_server_impl->RemoveMethodCallback(method_);
     }
 
     bool CServiceServerImpl::AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_)
     {
-      return false;
+      if (!m_service_server_impl)
+      {
+        Logging::Log(log_level_error, "Service server not initialized, cannot add event callback.");
+        return false;
+      }
+      Logging::Log(log_level_debug2, "Adding event callback for event type: " + std::to_string(type_));
+
+      {
+        const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
+        m_event_callback_map[type_] = callback_;
+      }
+
+      return true;
     }
 
     bool CServiceServerImpl::RemEventCallback(eCAL_Server_Event type_)
     {
+      if (!m_service_server_impl)
+      {
+        Logging::Log(log_level_error, "Service server not initialized, cannot remove event callback.");
+        return false;
+      }
+      Logging::Log(log_level_debug2, "Removing event callback for event type: " + std::to_string(type_));
+
+      {
+        const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
+        m_event_callback_map.erase(type_);
+      }
+
       return false;
     }
 
-
     std::string CServiceServerImpl::GetServiceName()
     {
-      return "";
+      if (!m_service_server_impl)
+      {
+        Logging::Log(log_level_error, "Service server not initialized, cannot get service name.");
+        return "";
+      }
+
+      return m_service_server_impl->GetServiceName();
     }
 
     bool CServiceServerImpl::IsConnected()
     {
-      return false;
+      if (!m_service_server_impl)
+      {
+        Logging::Log(log_level_error, "Service server not initialized, cannot check connection status.");
+        return false;
+      }
+
+      return m_service_server_impl->IsConnected();
     }
   }
 }

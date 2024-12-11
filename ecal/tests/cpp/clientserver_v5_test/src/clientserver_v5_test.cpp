@@ -149,23 +149,18 @@ TEST(core_cpp_clientserver_v5, ClientConnectEvent)
   {
     eCAL::v5::CServiceServer server1("service");
 
-    event_connected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::seconds(5));
+    event_connected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
     EXPECT_EQ(1, event_connected_fired.get());
     EXPECT_EQ(0, event_disconnected_fired.get());
 
     eCAL::v5::CServiceServer server2("service");
 
-    event_connected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::seconds(5));
+    event_connected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
     EXPECT_EQ(2, event_connected_fired.get());
     EXPECT_EQ(0, event_disconnected_fired.get());
   }
 
-   // eCAL doesn't use the service callback, which would detect the disconnection
-   // instantly. Instead, eCAL waits for an entire monitoring loop, then tries
-   // to reconnect and then fires the disconnect callback itself, once that
-   // reconnection failes. That takes a lot of time, so we need to wait for a
-   // long time here.
-  event_disconnected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::seconds(20));
+  event_disconnected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
   EXPECT_EQ(2, event_connected_fired.get());
   EXPECT_EQ(2, event_disconnected_fired.get());
 
@@ -221,25 +216,20 @@ TEST(core_cpp_clientserver_v5, ServerConnectEvent)
   {
     eCAL::v5::CServiceClient client1("service");
 
-    event_connected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::seconds(5));
+    event_connected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
     EXPECT_EQ(1, event_connected_fired.get());
     EXPECT_EQ(0, event_disconnected_fired.get());
 
     eCAL::v5::CServiceClient client2("service");
 
-    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
-    EXPECT_EQ(1, event_connected_fired.get());
+    event_disconnected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
+    EXPECT_EQ(2, event_connected_fired.get());
     EXPECT_EQ(0, event_disconnected_fired.get());
   }
 
-  // eCAL doesn't use the service callback, which would detect the disconnection
-  // instantly. Instead, eCAL waits for an entire monitoring loop, then tries
-  // to reconnect and then fires the disconnect callback itself, once that
-  // reconnection failes. That takes a lot of time, so we need to wait for a
-  // long time here.
-  event_disconnected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::seconds(10));
-  EXPECT_EQ(1, event_connected_fired.get());
-  EXPECT_EQ(1, event_disconnected_fired.get());
+  event_disconnected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
+  EXPECT_EQ(2, event_connected_fired.get());
+  EXPECT_EQ(2, event_disconnected_fired.get());
 
   // finalize eCAL API
   eCAL::Finalize();
