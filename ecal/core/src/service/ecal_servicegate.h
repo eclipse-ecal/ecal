@@ -27,8 +27,10 @@
 #include "serialization/ecal_struct_sample_registration.h"
 
 #include <atomic>
+#include <functional>
+#include <map>
 #include <shared_mutex>
-#include <set>
+#include <string>
 
 namespace eCAL
 {

@@ -25,23 +25,17 @@
 
 #include "ecal_def.h"
 #include "serialization/ecal_struct_sample_registration.h"
-#include "util/ecal_expmap.h"
 
 #include <ecal/ecal_callback.h>
 
 #include <atomic>
+#include <functional>
 #include <map>
-#include <set>
 #include <shared_mutex>
 #include <string>
-#include <vector>
 
 namespace eCAL
 {
-  // deprecated >>>
-  class CServiceClientImpl;
-  // deprecated <<<
-
   class CServiceClientImpl;
 
   class CClientGate
