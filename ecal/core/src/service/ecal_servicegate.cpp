@@ -51,7 +51,7 @@ namespace eCAL
     if(!m_created) return;
 
     // destroy all remaining server
-    const std::shared_lock<std::shared_timed_mutex> lock(m_service_server_map_sync);
+    const std::unique_lock<std::shared_timed_mutex> lock(m_service_server_map_sync);
     m_service_server_map.clear();
 
     m_created = false;

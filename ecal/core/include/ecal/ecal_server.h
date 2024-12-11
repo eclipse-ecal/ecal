@@ -85,7 +85,7 @@ namespace eCAL
      * @return  True if successful.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool RemMethodCallback(const std::string& method_);
+      bool RemoveMethodCallback(const std::string& method_);
 
     /**
      * @brief Retrieve service name.

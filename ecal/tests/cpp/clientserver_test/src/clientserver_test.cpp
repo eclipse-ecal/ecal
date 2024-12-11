@@ -775,8 +775,8 @@ TEST(core_cpp_clientserver, ClientServerBaseBlocking)
   // remove method callback
   for (const auto& service : service_vec)
   {
-    service->RemMethodCallback("foo::method1");
-    service->RemMethodCallback("foo::method2");
+    service->RemoveMethodCallback("foo::method1");
+    service->RemoveMethodCallback("foo::method2");
   }
 
   // finalize eCAL API
@@ -852,8 +852,8 @@ TEST(core_cpp_clientserver, NestedRPCCall)
   EXPECT_EQ(methods_called, responses_executed);
 
   // remove method callback
-  server.RemMethodCallback("foo::method1");
-  server.RemMethodCallback("foo::method2");
+  server.RemoveMethodCallback("foo::method1");
+  server.RemoveMethodCallback("foo::method2");
 
   // finalize eCAL API
   eCAL::Finalize();

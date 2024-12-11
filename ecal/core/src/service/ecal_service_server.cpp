@@ -86,11 +86,11 @@ namespace eCAL
     return false;
   }
 
-  bool CServiceServer::RemMethodCallback(const std::string& method_)
+  bool CServiceServer::RemoveMethodCallback(const std::string& method_)
   {
     if (m_service_server_impl)
     {
-      return m_service_server_impl->RemMethodCallback(method_);
+      return m_service_server_impl->RemoveMethodCallback(method_);
     }
     return false;
   }

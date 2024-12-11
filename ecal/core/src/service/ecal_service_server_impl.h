@@ -56,7 +56,7 @@ namespace eCAL
     ~CServiceServerImpl();
 
     bool AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_);
-    bool RemMethodCallback(const std::string& method_);
+    bool RemoveMethodCallback(const std::string& method_);
 
     // Check connection state of a specific service
     bool IsConnected() const;
