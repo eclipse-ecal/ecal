@@ -189,7 +189,7 @@ namespace eCAL
       return;
     }
 
-    // Register service
+    // Send registration sample
     if (g_registration_provider())
       g_registration_provider()->RegisterSample(GetRegistrationSample());
 
@@ -207,6 +207,14 @@ namespace eCAL
 
     Logging::Log(log_level_debug1, "CServiceServerImpl: Stopping service server for: " + m_service_name);
 
+    // Stop TCP server
+    if (m_tcp_server)
+    {
+      m_tcp_server->stop();
+      Logging::Log(log_level_debug1, "CServiceServerImpl: TCP server stopped for: " + m_service_name);
+    }
+    m_tcp_server.reset();
+
     // Reset method callbacks
     {
       std::lock_guard<std::mutex> const lock(m_method_map_mutex);
@@ -221,14 +229,7 @@ namespace eCAL
       Logging::Log(log_level_debug2, "CServiceServerImpl: Cleared event callback for: " + m_service_name);
     }
 
-    // Stop TCP server
-    if (m_tcp_server)
-    {
-      m_tcp_server->stop();
-      Logging::Log(log_level_debug1, "CServiceServerImpl: TCP server stopped for: " + m_service_name);
-    }
-
-    // Unregister service
+    // Send unregistration sample
     if (g_registration_provider())
       g_registration_provider()->UnregisterSample(GetUnregistrationSample());
 
@@ -303,12 +304,14 @@ namespace eCAL
   {
     Logging::Log(log_level_debug2, "CServiceServerImpl: Processing request callback for: " + m_service_name);
 
+    // prepare response
     Service::Response response;
     auto& response_header = response.header;
     response_header.hname = Process::GetHostName();
     response_header.sname = m_service_name;
     response_header.sid   = m_service_id;
 
+    // try to parse request
     Service::Request request;
     if (!DeserializeFromBuffer(request_pb_.c_str(), request_pb_.size(), request))
     {
@@ -318,10 +321,16 @@ namespace eCAL
       std::string const emsg = "Service '" + m_service_name + "' request message could not be parsed.";
       response_header.error = emsg;
 
+      // TODO: The next version of the service protocol should omit the double-serialization (i.e. copying the binary data in a protocol buffer and then serializing that again)
+      // serialize response and return "request message could not be parsed"
       SerializeToBuffer(response, response_pb_);
+
+      // Return Failed (error_code = -1), as parsing the request failed. The
+      // return value is not propagated to the remote caller.
       return -1;
     }
 
+    // get method
     SMethod method;
     const auto& request_header = request.header;
     response_header.mname = request_header.mname;
@@ -330,11 +339,18 @@ namespace eCAL
       auto requested_method_iterator = m_method_map.find(request_header.mname);
       if (requested_method_iterator == m_method_map.end())
       {
+        // set method call state 'failed'
         response_header.state = Service::eMethodCallState::failed;
+        // set error message
         std::string const emsg = "CServiceServerImpl: Service '" + m_service_name + "' has no method named '" + request_header.mname + "'";
         response_header.error = emsg;
 
+        // TODO: The next version of the service protocol should omit the double-serialization (i.e. copying the binary data in a protocol buffer and then serializing that again)
+        // serialize response and return "method not found"
         SerializeToBuffer(response, response_pb_);
+
+        // Return Success (error_code = 0), as parsing the request worked. The
+        // return value is not propagated to the remote caller.
         return 0;
       }
       else
@@ -345,15 +361,22 @@ namespace eCAL
       }
     }
 
+    // execute method (outside lock guard)
     const std::string& request_s = request.request;
     std::string response_s;
     int const service_return_state = method.callback(method.method.mname, method.method.req_type, method.method.resp_type, request_s, response_s);
 
+    // set method call state 'executed'
     response_header.state = Service::eMethodCallState::executed;
+    // set method response and return state
     response.response = response_s;
     response.ret_state = service_return_state;
 
+    // TODO: The next version of the service protocol should omit the double-serialization (i.e. copying the binary data in a protocol buffer and then serializing that again)
+    // serialize response and return "method not found"
     SerializeToBuffer(response, response_pb_);
+
+    // return success (error code 0)
     return 0;
   }
 

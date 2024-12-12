@@ -138,7 +138,7 @@ namespace eCAL
       m_event_callback = event_callback_;
     }
 
-    // register client
+    // Send registration sample
     if (!m_service_name.empty() && g_registration_provider() != nullptr)
     {
       g_registration_provider()->RegisterSample(GetRegistrationSample());
@@ -160,7 +160,7 @@ namespace eCAL
       m_event_callback = nullptr;
     }
 
-    // unregister client
+    // Send unregistration sample
     if (g_registration_provider() != nullptr)
     {
       g_registration_provider()->UnregisterSample(GetUnregistrationSample());

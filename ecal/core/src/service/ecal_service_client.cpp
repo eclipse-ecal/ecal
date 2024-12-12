@@ -58,23 +58,13 @@ namespace eCAL
   CServiceClient::CServiceClient(CServiceClient&& rhs) noexcept
     : m_service_client_impl(std::move(rhs.m_service_client_impl))
   {
-    rhs.m_service_client_impl = nullptr;
   }
 
   CServiceClient& CServiceClient::operator=(CServiceClient&& rhs) noexcept
   {
     if (this != &rhs)
     {
-      // Unregister current client
-      if (g_clientgate())
-      {
-        g_clientgate()->Unregister(m_service_client_impl->GetServiceName(), m_service_client_impl);
-      }
-
-      // Move data
       m_service_client_impl = std::move(rhs.m_service_client_impl);
-
-      rhs.m_service_client_impl = nullptr;
     }
     return *this;
   }

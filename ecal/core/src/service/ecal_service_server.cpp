@@ -63,16 +63,7 @@ namespace eCAL
   {
     if (this != &rhs)
     {
-      // Unregister server
-      if (g_servicegate() != nullptr)
-      {
-        //g_servicegate()->Unregister(m_service_server_impl->GetServiceName(), m_service_server_impl);
-      }
-
-      // Move data
       m_service_server_impl = std::move(rhs.m_service_server_impl);
-
-      rhs.m_service_server_impl = nullptr;
     }
     return *this;
   }
