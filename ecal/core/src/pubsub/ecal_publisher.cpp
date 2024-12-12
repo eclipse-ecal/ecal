@@ -40,43 +40,34 @@ namespace eCAL
 {
   CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_)
   {
-    if (topic_name_.empty()) return;
-
-    // create publisher
+    // create publisher implementation
     m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
 
     // register publisher
-    g_pubgate()->Register(topic_name_, m_publisher_impl);
+    if(g_pubgate() != nullptr) g_pubgate()->Register(topic_name_, m_publisher_impl);
   }
 
   CPublisher::~CPublisher()
   {
-    if (m_publisher_impl == nullptr) return;
-
     // unregister publisher
     if (g_pubgate() != nullptr) g_pubgate()->Unregister(m_publisher_impl->GetTopicName(), m_publisher_impl);
+
 #ifndef NDEBUG
-    // log it
     eCAL::Logging::Log(log_level_debug1, std::string(m_publisher_impl->GetTopicName() + "::CPublisher::Destroy"));
 #endif
   }
 
-  /**
-   * @brief CPublisher are move-enabled
-  **/
   CPublisher::CPublisher(CPublisher&& rhs) noexcept :
-                m_publisher_impl(std::move(rhs.m_publisher_impl))
+    m_publisher_impl(std::move(rhs.m_publisher_impl))
   {
-    rhs.m_publisher_impl = nullptr;
   }
 
-  /**
-   * @brief CPublisher are move-enabled
-  **/
   CPublisher& CPublisher::operator=(CPublisher&& rhs) noexcept
   {
-    m_publisher_impl = std::move(rhs.m_publisher_impl);
-    rhs.m_publisher_impl = nullptr;
+    if (this != &rhs)
+    {
+      m_publisher_impl = std::move(rhs.m_publisher_impl);
+    }
     return *this;
   }
 
