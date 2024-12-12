@@ -54,7 +54,7 @@ namespace eCAL
      *
     **/
     template <typename T>
-    class CPublisher : public eCAL::CPublisher
+    class CPublisher : public eCAL::v5::CPublisher
     {
       class CPayload : public eCAL::CPayloadWriter
       {
@@ -92,7 +92,7 @@ namespace eCAL
       /**
        * @brief  Constructor.
       **/
-      CPublisher() : eCAL::CPublisher()
+      CPublisher() : eCAL::v5::CPublisher()
       {
       }
 
@@ -107,7 +107,7 @@ namespace eCAL
       // where the vtable is not created yet, or it's destructed.
       // Probably we can handle the Message publishers differently. One message publisher class and then one class for payloads and getting type
       // descriptor information.
-      explicit CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : eCAL::CPublisher(topic_name_, CPublisher::GetDataTypeInformation(), config_)
+      explicit CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : eCAL::v5::CPublisher(topic_name_, CPublisher::GetDataTypeInformation(), config_)
       {
       }
 
@@ -146,7 +146,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration())
       {
-        return(eCAL::CPublisher::Create(topic_name_, GetDataTypeInformation(), config_));
+        return(eCAL::v5::CPublisher::Create(topic_name_, GetDataTypeInformation(), config_));
       }
 
       /**
@@ -160,7 +160,7 @@ namespace eCAL
       size_t Send(const T& msg_, long long time_ = DEFAULT_TIME_ARGUMENT)
       {
         CPayload payload{ msg_ };
-        return eCAL::CPublisher::Send(payload, time_);
+        return eCAL::v5::CPublisher::Send(payload, time_);
       }
 
     private:

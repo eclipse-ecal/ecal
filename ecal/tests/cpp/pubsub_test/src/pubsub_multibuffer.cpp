@@ -91,7 +91,7 @@ std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int
   pub_config.layer.shm.memfile_buffer_count = buffer_count;
 
   // create publisher for topic "A"
-  eCAL::CPublisher pub("A", pub_config);
+  eCAL::CPublisher pub("A", eCAL::SDataTypeInformation(), pub_config);
 
   std::atomic<size_t> received_count{ 0 };
   std::atomic<size_t> received_bytes{ 0 };

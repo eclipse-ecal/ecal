@@ -25,7 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_publisher.h>
+#include <ecal/ecal_publisher_v5.h>
 #include <ecal/ecal_util.h>
 
 #include <string>
@@ -43,7 +43,7 @@ namespace eCAL
    * 
   **/
   template <typename T>
-  class CMsgPublisher : public CPublisher
+  class CMsgPublisher : public v5::CPublisher
   {
   public:
     /**

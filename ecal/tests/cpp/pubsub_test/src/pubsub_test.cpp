@@ -71,7 +71,7 @@ TEST(core_cpp_pubsub, LeakedPubSub)
   sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2));
 
   // create publisher
-  eCAL::CPublisher pub("foo");
+  eCAL::CPublisher pub("foo", eCAL::SDataTypeInformation());
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -115,7 +115,7 @@ TEST(core_cpp_pubsub, CallbackDestruction)
   std::shared_ptr<eCAL::CSubscriber> sub;
 
   // create publisher
-  eCAL::CPublisher pub("foo");
+  eCAL::CPublisher pub("foo", eCAL::SDataTypeInformation());
 
   // start publishing thread
   std::atomic<bool> pub_stop(false);
@@ -161,45 +161,6 @@ TEST(core_cpp_pubsub, CallbackDestruction)
   EXPECT_EQ(0, eCAL::Finalize());
 }
 
-TEST(core_cpp_pubsub, CreateDestroy)
-{ 
-  // initialize eCAL API
-  eCAL::Initialize("pubsub_test");
-
-  // create publisher for topic "foo"
-  eCAL::CPublisher pub;
-
-  // check state
-  EXPECT_EQ(false, pub.IsCreated());
-
-  // create
-  EXPECT_EQ(true, pub.Create("foo"));
-
-  // check state
-  EXPECT_EQ(true, pub.IsCreated());
-
-  // create subscriber for topic "foo"
-  eCAL::CSubscriber sub;
-
-  // check state
-  EXPECT_EQ(false, sub.IsCreated());
-
-  // create
-  EXPECT_EQ(true, sub.Create("foo"));
-
-  // check state
-  EXPECT_EQ(true, sub.IsCreated());
-
-  // destroy publisher
-  EXPECT_EQ(true, pub.Destroy());
-
-  // destroy subscriber
-  EXPECT_EQ(true, sub.Destroy());
-
-  // finalize eCAL API
-  eCAL::Finalize();
-}
-
 TEST(core_cpp_pubsub, SimpleMessage1)
 { 
   // default send / receive strings
@@ -210,7 +171,7 @@ TEST(core_cpp_pubsub, SimpleMessage1)
   eCAL::Initialize("pubsub_test");
 
   // create publisher for topic "foo"
-  eCAL::CPublisher pub("foo");
+  eCAL::CPublisher pub("foo", eCAL::SDataTypeInformation());
 
   // create subscriber for topic "foo"
   eCAL::CSubscriber sub("foo");
@@ -232,9 +193,6 @@ TEST(core_cpp_pubsub, SimpleMessage1)
   EXPECT_EQ(false, sub.ReceiveBuffer(recv_s, nullptr, DATA_FLOW_TIME_MS));
   EXPECT_EQ(0, recv_s.size());
 
-  // destroy publisher
-  pub.Destroy();
-
   // destroy subscriber
   sub.Destroy();
 
@@ -255,7 +213,7 @@ TEST(core_cpp_pubsub, SimpleMessage2)
   eCAL::CSubscriber sub("foo");
 
   // create publisher for topic "foo"
-  eCAL::CPublisher pub("foo");
+  eCAL::CPublisher pub("foo", eCAL::SDataTypeInformation());
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -267,9 +225,6 @@ TEST(core_cpp_pubsub, SimpleMessage2)
   recv_s.clear();
   EXPECT_EQ(true, sub.ReceiveBuffer(recv_s, nullptr, DATA_FLOW_TIME_MS));
   EXPECT_EQ(send_s.size(), recv_s.size());
-
-  // destroy publisher
-  pub.Destroy();
 
   // destroy subscriber
   sub.Destroy();
@@ -290,7 +245,7 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
   eCAL::CSubscriber sub("foo");
 
   // create publisher for topic "foo"
-  eCAL::CPublisher pub("foo");
+  eCAL::CPublisher pub("foo", eCAL::SDataTypeInformation());
 
   // add callback
   EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
@@ -347,9 +302,6 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
   // check callback receive
   EXPECT_EQ(0, g_callback_received_bytes);
 
-  // destroy publisher
-  pub.Destroy();
-
   // finalize eCAL API
   eCAL::Finalize();
 }
@@ -366,7 +318,7 @@ TEST(core_cpp_pubsub, DynamicSizeCB)
   eCAL::CSubscriber sub("foo");
 
   // create publisher for topic "foo"
-  eCAL::CPublisher pub("foo");
+  eCAL::CPublisher pub("foo", eCAL::SDataTypeInformation());
 
   // add callback
   EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
@@ -397,9 +349,6 @@ TEST(core_cpp_pubsub, DynamicSizeCB)
   // check callback receive
   EXPECT_EQ(send_s.size(), g_callback_received_bytes);
 
-  // destroy publisher
-  pub.Destroy();
-
   // destroy subscriber
   sub.Destroy();
 
@@ -421,7 +370,7 @@ TEST(core_cpp_pubsub, DynamicCreate)
 
   // create publisher for topic "foo"
   eCAL::CPublisher* pub;
-  pub = new eCAL::CPublisher("foo");
+  pub = new eCAL::CPublisher("foo", eCAL::SDataTypeInformation());
 
   // add callback
   EXPECT_EQ(true, sub->AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));

@@ -62,7 +62,7 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
   pub_config.layer.shm.acknowledge_timeout_ms = 100;
 
   // create publisher
-  eCAL::CPublisher pub("throughput", pub_config);
+  eCAL::CPublisher pub("throughput", eCAL::SDataTypeInformation(), pub_config);
 
   // create subscriber
   eCAL::CSubscriber sub("throughput");

@@ -27,7 +27,7 @@ int main()
   eCAL::Initialize("dynsize_snd");
 
   // publisher for topic "Performance"
-  eCAL::CPublisher pub("Performance");
+  eCAL::CPublisher pub("Performance", eCAL::SDataTypeInformation());
 
   // prepare snd_buf
   const int MAX_BUFSIZE(10*1024*1024);

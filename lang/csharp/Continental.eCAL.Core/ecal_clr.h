@@ -25,6 +25,7 @@
 #pragma once
 #include <ecal/ecal.h>
 #include <ecal/ecal_client_v5.h>
+#include <ecal/ecal_publisher_v5.h>
 
 using namespace System;
 using namespace System::Collections::Generic;
@@ -215,7 +216,7 @@ namespace Continental
         System::String^ Dump();
 
       private:
-        ::eCAL::CPublisher* m_pub;
+        ::eCAL::v5::CPublisher* m_pub;
       };
 
 

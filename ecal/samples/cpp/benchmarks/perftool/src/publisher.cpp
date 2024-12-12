@@ -41,7 +41,7 @@
 #endif // WIN32
 
 Publisher::Publisher(const std::string& topic_name, double frequency, std::size_t payload_size, bool quiet, bool log_print_verbose_times)
-  : ecal_pub                (topic_name)
+  : ecal_pub                (topic_name, eCAL::SDataTypeInformation())
   , frequency_              (frequency)
   , payload_                (payload_size)
   , period_                 (std::chrono::nanoseconds(static_cast<long long>(1e9 / frequency)))

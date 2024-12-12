@@ -65,11 +65,11 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
   pub_config.layer.tcp.enable = false;
 
   // create publisher for topic "A" (no zero copy)
-  eCAL::CPublisher pub1("A", pub_config);
+  eCAL::CPublisher pub1("A", eCAL::SDataTypeInformation(), pub_config);
 
   // switch on zero copy
   pub_config.layer.shm.zero_copy_mode = true;
-  eCAL::CPublisher pub2("A", pub_config);
+  eCAL::CPublisher pub2("A", eCAL::SDataTypeInformation(), pub_config);
 
 
   // add callback
@@ -101,10 +101,6 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
 
   // destroy subscriber
   sub.Destroy();
-
-  // destroy publisher
-  pub1.Destroy();
-  pub2.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();

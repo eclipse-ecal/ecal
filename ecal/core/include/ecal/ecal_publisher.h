@@ -75,12 +75,6 @@ namespace eCAL
       static constexpr long long DEFAULT_TIME_ARGUMENT = -1;  /*!< Use DEFAULT_TIME_ARGUMENT in the `Send()` function to let eCAL determine the send timestamp */
 
     /**
-     * @brief Constructor. 
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      CPublisher();
-
-    /**
      * @brief Constructor.
      *
      * @param topic_name_      Unique topic name.
@@ -89,15 +83,6 @@ namespace eCAL
     **/
     ECAL_API_EXPORTED_MEMBER
       CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = GetPublisherConfiguration());
-
-    /**
-     * @brief Constructor.
-     *
-     * @param topic_name_   Unique topic name.
-     * @param config_       Optional configuration parameters.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      explicit CPublisher(const std::string& topic_name_, const Publisher::Configuration& config_ = GetPublisherConfiguration());
 
     /**
      * @brief Destructor. 
@@ -126,78 +111,6 @@ namespace eCAL
     **/
     ECAL_API_EXPORTED_MEMBER
       CPublisher& operator=(CPublisher&& rhs) noexcept;
-
-    /**
-     * @brief Creates this object.
-     *
-     * @param topic_name_      Unique topic name.
-     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
-     * @param config_          Optional configuration parameters.
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = GetPublisherConfiguration());
-
-    /**
-     * @brief Creates this object.
-     *
-     * @param topic_name_   Unique topic name.
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool Create(const std::string& topic_name_);
-
-    /**
-     * @brief Destroys this object. 
-     *
-     * @return  True if it succeeds, false if it fails. 
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool Destroy();
-
-    /**
-     * @brief Setup topic information.
-     *
-     * @param data_type_info_  Topic data type information attributes.
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool SetDataTypeInformation(const SDataTypeInformation& data_type_info_);
-
-    /**
-     * @brief Sets publisher attribute. 
-     *
-     * @param attr_name_   Attribute name. 
-     * @param attr_value_  Attribute value. 
-     *
-     * @return  True if it succeeds, false if it fails. 
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
-
-    /**
-     * @brief Removes publisher attribute. 
-     *
-     * @param attr_name_   Attribute name. 
-     *
-     * @return  True if it succeeds, false if it fails.
-     * @experimental
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool ClearAttribute(const std::string& attr_name_);
-
-    /**
-     * @brief Set the specific topic filter id.
-     *
-     * @param filter_id_  The topic id for subscriber side filtering (0 == no id).
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool SetID(long long filter_id_);
 
     /**
      * @brief Send a message to all subscribers. 
@@ -242,7 +155,7 @@ namespace eCAL
      * @return  True if succeeded, false if not.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
+      bool AddEventCallback(eCAL_Publisher_Event type_, const PubEventCallbackT& callback_);
 
     /**
      * @brief Remove callback function for publisher events.
@@ -253,14 +166,6 @@ namespace eCAL
     **/
     ECAL_API_EXPORTED_MEMBER
       bool RemEventCallback(eCAL_Publisher_Event type_);
-
-    /**
-     * @brief Query if the publisher is created. 
-     *
-     * @return  True if created, false if not. 
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool IsCreated() const { return(m_datawriter != nullptr); }
 
     /**
      * @brief Query if the publisher is subscribed. 
@@ -289,10 +194,10 @@ namespace eCAL
     /**
      * @brief Gets a unique ID of this Publisher
      *
-     * @return  The topic id.
+     * @return  The publisher id.
     **/
     ECAL_API_EXPORTED_MEMBER
-      Registration::STopicId GetId() const;
+      Registration::STopicId GetPublisherId() const;
 
     /**
      * @brief Gets description of the connected topic.
@@ -302,19 +207,7 @@ namespace eCAL
     ECAL_API_EXPORTED_MEMBER
       SDataTypeInformation GetDataTypeInformation() const;
 
-    /**
-     * @brief Dump the whole class state into a string. 
-     *
-     * @param indent_  Indentation used for dump. 
-     *
-     * @return  The dump string. 
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      std::string Dump(const std::string& indent_ = "") const;
-
   private:
-    // class members
     std::shared_ptr<CDataWriter> m_datawriter;
-    long long                    m_filter_id;
   };
 }

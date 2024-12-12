@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ int main()
   eCAL::Initialize("binary_snd");
 
   // publisher for topic "blob"
-  eCAL::CPublisher pub("blob");
+  eCAL::CPublisher pub("blob", eCAL::SDataTypeInformation());
 
   // create binary buffer
   std::vector<unsigned char> bin_buffer(1024);
