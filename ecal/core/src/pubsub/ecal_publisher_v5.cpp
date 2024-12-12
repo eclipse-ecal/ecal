@@ -25,7 +25,7 @@
 #include <ecal/ecal_publisher_v5.h>
 
 #include "ecal_globals.h"
-#include "readwrite/ecal_writer.h"
+#include "ecal_publisher_impl.h"
 #include "readwrite/ecal_writer_buffer_payload.h"
 
 #include "config/builder/writer_attribute_builder.h"

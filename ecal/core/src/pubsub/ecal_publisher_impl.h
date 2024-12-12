@@ -30,18 +30,18 @@
 
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "util/frequency_calculator.h"
-#include "config/attributes/writer_attributes.h"
+#include "readwrite/config/attributes/writer_attributes.h"
 
 #if ECAL_CORE_TRANSPORT_UDP
-#include "udp/ecal_writer_udp.h"
+#include "readwrite/udp/ecal_writer_udp.h"
 #endif
 
 #if ECAL_CORE_TRANSPORT_SHM
-#include "shm/ecal_writer_shm.h"
+#include "readwrite/shm/ecal_writer_shm.h"
 #endif
 
 #if ECAL_CORE_TRANSPORT_TCP
-#include "tcp/ecal_writer_tcp.h"
+#include "readwrite/tcp/ecal_writer_tcp.h"
 #endif
 
 #include <atomic>

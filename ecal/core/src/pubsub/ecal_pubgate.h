@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "readwrite/ecal_writer.h"
+#include "ecal_publisher_impl.h"
 #include "serialization/ecal_struct_sample_registration.h"
 
 #include <atomic>

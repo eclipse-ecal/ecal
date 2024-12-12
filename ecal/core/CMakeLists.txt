@@ -205,6 +205,8 @@ endif()
 if(ECAL_CORE_PUBLISHER)
   set(ecal_pub_src
       src/pubsub/ecal_publisher.cpp
+      src/pubsub/ecal_publisher_impl.cpp
+      src/pubsub/ecal_publisher_impl.h
       src/pubsub/ecal_publisher_v5.cpp
       src/pubsub/ecal_pubgate.cpp
       src/pubsub/ecal_pubgate.h
@@ -228,8 +230,6 @@ set(ecal_readwrite_src
 
 if(ECAL_CORE_PUBLISHER)
   set(ecal_writer_src
-      src/readwrite/ecal_writer.cpp
-      src/readwrite/ecal_writer.h
       src/readwrite/ecal_writer_base.h
       src/readwrite/ecal_writer_buffer_payload.h
       src/readwrite/ecal_writer_data.h

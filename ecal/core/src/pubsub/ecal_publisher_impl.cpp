@@ -30,15 +30,16 @@
 #include "registration/ecal_registration_provider.h"
 #endif
 
-#include "ecal_writer.h"
-#include "ecal_writer_base.h"
-#include "ecal_writer_buffer_payload.h"
+#include "ecal_publisher_impl.h"
 #include "ecal_global_accessors.h"
-#include "ecal_transport_layer.h"
 
-#include "config/builder/shm_attribute_builder.h"
-#include "config/builder/tcp_attribute_builder.h"
-#include "config/builder/udp_attribute_builder.h"
+#include "readwrite/ecal_writer_base.h"
+#include "readwrite/ecal_writer_buffer_payload.h"
+#include "readwrite/ecal_transport_layer.h"
+
+#include "readwrite/config/builder/shm_attribute_builder.h"
+#include "readwrite/config/builder/tcp_attribute_builder.h"
+#include "readwrite/config/builder/udp_attribute_builder.h"
 
 #include <algorithm>
 #include <chrono>
