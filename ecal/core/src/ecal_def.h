@@ -40,6 +40,10 @@ constexpr const char* ECAL_SETTINGS_PATH     = "cfg";
 /* ini file name */
 constexpr const char* ECAL_DEFAULT_CFG       = "ecal.yaml";
 
+/* environment variables */
+constexpr const char* ECAL_HOME_VAR          = "ECAL_HOME";
+constexpr const char* ECAL_DATA_VAR          = "ECAL_DATA";
+
 /* eCAL udp multicast defines */
 constexpr unsigned int NET_UDP_MULTICAST_PORT_REG_OFF                       = 0U; // to delete
 constexpr unsigned int NET_UDP_MULTICAST_PORT_LOG_OFF                       = 1U; // to delete
