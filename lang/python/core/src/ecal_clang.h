@@ -198,7 +198,7 @@ bool ecal_get_description(const char* topic_name_, const char** topic_desc_, int
  *
  * @param message_  The log message string.
 **/
-void log_message(int level_, const char* message_);
+void log_message(const eCAL_Logging_eLogLevel& level_, const char* message_);
 
 /*************************************************************************/
 /*  publisher                                                            */

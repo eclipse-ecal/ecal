@@ -148,8 +148,7 @@ def log_setlevel(level):
   :type level: int
 
   """
-  print("[WARNING] 'log_setlevel(int)' is deprecated. All logs will have the log level 'all' until the new API is introduced.")
-  return None
+  return _ecal.log_setlevel(level)
 
 
 def log_setcoretime(time):

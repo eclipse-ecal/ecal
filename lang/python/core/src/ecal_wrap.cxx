@@ -64,6 +64,8 @@ PySubscriberCallbackMapT    g_subscriber_pycallback_map;
 PyServerMethodCallbackMapT  g_server_method_pycallback_map;
 PyClientCallbackMapT        g_client_pycallback_map;
 
+eCAL_Logging_eLogLevel      g_python_log_level = log_level_info;
+
 
 /****************************************/
 /*      help                            */
@@ -228,6 +230,21 @@ PyObject* shutdown_processes(PyObject* /*self*/, PyObject* /*args*/)
 }
 
 /****************************************/
+/*      log_setlevel                    */
+/****************************************/
+PyObject* log_setlevel(PyObject* /*self*/, PyObject* args)
+{
+  int level = 0;
+
+  if (!PyArg_ParseTuple(args, "i", &level)) 
+    return nullptr;
+
+  g_python_log_level = eCAL_Logging_eLogLevel(level);
+
+  Py_RETURN_NONE;
+}
+
+/****************************************/
 /*      log_message                     */
 /****************************************/
 PyObject* log_message(PyObject* /*self*/, PyObject* args)
@@ -237,7 +254,7 @@ PyObject* log_message(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "s", &message)) 
     return nullptr;
 
-  log_message(255, message);
+  log_message(g_python_log_level, message);
 
   Py_RETURN_NONE;
 }
@@ -1306,6 +1323,7 @@ static PyMethodDef _ecal_methods[] =
   {"shutdown_process_uname",        shutdown_process_uname,        METH_VARARGS,  "shutdown_process_uname(unit_name)"},
   {"shutdown_processes",            shutdown_processes,            METH_NOARGS,   "shutdown_processes()"},
 
+  {"log_setlevel",                  log_setlevel,                  METH_VARARGS,  "log_setlevel(level)"},
   {"log_message",                   log_message,                   METH_VARARGS,  "log_message(message)"},
 
   {"pub_create",                    pub_create,                    METH_VARARGS,  "pub_create(topic_name, topic_type, topic_encoding, topic_desc)"},
