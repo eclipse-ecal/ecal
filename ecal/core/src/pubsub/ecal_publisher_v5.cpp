@@ -26,10 +26,10 @@
 
 #include "ecal_globals.h"
 #include "ecal_publisher_impl.h"
-#include "readwrite/ecal_writer_buffer_payload.h"
+#include "ecal_config_internal.h"
 
 #include "config/builder/writer_attribute_builder.h"
-#include "ecal/ecal_config.h"
+#include "readwrite/ecal_writer_buffer_payload.h"
 
 #include <iostream>
 #include <memory>
@@ -94,7 +94,7 @@ namespace eCAL
       if (topic_name_.empty())     return(false);
 
       // create publisher
-      m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
+      m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config_, eCAL::GetTransportLayerConfiguration(), eCAL::GetRegistrationConfiguration()));
 
       // register publisher
       g_pubgate()->Register(topic_name_, m_publisher_impl);
