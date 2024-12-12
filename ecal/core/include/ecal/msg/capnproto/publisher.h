@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <ecal/msg/publisher.h>
+#include <ecal/ecal_publisher_v5.h>
 #include <ecal/msg/capnproto/helper.h>
 
 // capnp includes
@@ -50,7 +50,7 @@ namespace eCAL
     *
     **/
     template <typename message_type>
-    class CPublisher : public eCAL::CPublisher
+    class CPublisher : public eCAL::v5::CPublisher
     {
       class CPayload : public eCAL::CPayloadWriter
       {
@@ -89,7 +89,7 @@ namespace eCAL
       * @brief  Constructor.
       **/
       CPublisher()
-        : eCAL::CPublisher()
+        : eCAL::v5::CPublisher()
         , builder(std::make_unique<capnp::MallocMessageBuilder>())
         , root_builder(builder->initRoot<message_type>())
       {
@@ -102,7 +102,7 @@ namespace eCAL
       * @param config_      Optional configuration parameters.
       **/
       CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = {})
-        : eCAL::CPublisher(topic_name_, GetDataTypeInformation(), config_)
+        : eCAL::v5::CPublisher(topic_name_, GetDataTypeInformation(), config_)
         , builder(std::make_unique<capnp::MallocMessageBuilder>())
         , root_builder(builder->initRoot<message_type>())
       {
@@ -152,7 +152,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = {})
       {
-        return(eCAL::CPublisher::Create(topic_name_, GetDataTypeInformation(), config_));
+        return(eCAL::v5::CPublisher::Create(topic_name_, GetDataTypeInformation(), config_));
       }
 
       typename message_type::Builder GetBuilder()
@@ -163,7 +163,7 @@ namespace eCAL
       void Send()
       {
         CPayload payload{ *builder };
-        eCAL::CPublisher::Send(payload);
+        eCAL::v5::CPublisher::Send(payload);
       }
 
     private:

@@ -27,7 +27,7 @@
 #include <cstddef>
 #include <ecal/ecal_deprecate.h>
 #include <ecal/msg/protobuf/ecal_proto_hlp.h>
-#include <ecal/msg/publisher.h>
+#include <ecal/ecal_publisher_v5.h>
 
 // protobuf includes
 #ifdef _MSC_VER
