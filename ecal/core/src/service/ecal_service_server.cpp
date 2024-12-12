@@ -32,26 +32,17 @@ namespace eCAL
   CServiceServer::CServiceServer(const std::string& service_name_, const ServerEventIDCallbackT event_callback_)
     : m_service_server_impl(nullptr)
   {
-    // Create server implementation
+    // create server implementation
     m_service_server_impl = CServiceServerImpl::CreateInstance(service_name_, event_callback_);
 
-    // Register server
-    if (g_servicegate() != nullptr)
-    {
-      g_servicegate()->Register(service_name_, m_service_server_impl);
-    }
+    // register server
+    if (g_servicegate() != nullptr) g_servicegate()->Register(service_name_, m_service_server_impl);
   }
 
   CServiceServer::~CServiceServer()
   {
-    // Unregister server
-    if (g_servicegate() != nullptr)
-    {
-      g_servicegate()->Unregister(m_service_server_impl->GetServiceName(), m_service_server_impl);
-    }
-
-    // Reset server implementation
-    m_service_server_impl.reset();
+    // unregister server
+    if (g_servicegate() != nullptr) g_servicegate()->Unregister(m_service_server_impl->GetServiceName(), m_service_server_impl);
   }
 
   CServiceServer::CServiceServer(CServiceServer&& rhs) noexcept
@@ -70,37 +61,21 @@ namespace eCAL
 
   bool CServiceServer::AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_)
   {
-    if (m_service_server_impl)
-    {
-      return m_service_server_impl->AddMethodCallback(method_, method_info_, callback_);
-    }
-    return false;
+    return m_service_server_impl->AddMethodCallback(method_, method_info_, callback_);
   }
 
   bool CServiceServer::RemoveMethodCallback(const std::string& method_)
   {
-    if (m_service_server_impl)
-    {
-      return m_service_server_impl->RemoveMethodCallback(method_);
-    }
-    return false;
+    return m_service_server_impl->RemoveMethodCallback(method_);
   }
 
   std::string CServiceServer::GetServiceName()
   {
-    if (m_service_server_impl)
-    {
-      return m_service_server_impl->GetServiceName();
-    }
-    return "";
+    return m_service_server_impl->GetServiceName();
   }
 
   bool CServiceServer::IsConnected()
   {
-    if (m_service_server_impl)
-    {
-      return m_service_server_impl->IsConnected();
-    }
-    return false;
+    return m_service_server_impl->IsConnected();
   }
 }

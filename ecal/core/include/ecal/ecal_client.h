@@ -26,9 +26,10 @@
 
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
+
 #include <ecal/ecal_callback.h>
-#include <ecal/ecal_service_info.h>
 #include <ecal/ecal_client_instance.h>
+#include <ecal/ecal_service_info.h>
 
 #include <memory>
 #include <string>
@@ -62,13 +63,27 @@ namespace eCAL
       ECAL_API_EXPORTED_MEMBER
         virtual ~CServiceClient();
 
-      // Deleted copy constructor and copy assignment operator
+      /**
+       * @brief CServiceClient are non-copyable
+      **/
       CServiceClient(const CServiceClient&) = delete;
+      
+      /**
+       * @brief CServiceClient are non-copyable
+      **/
       CServiceClient& operator=(const CServiceClient&) = delete;
 
-      // Move constructor and move assignment operator
-      ECAL_API_EXPORTED_MEMBER CServiceClient(CServiceClient&& rhs) noexcept;
-      ECAL_API_EXPORTED_MEMBER CServiceClient& operator=(CServiceClient&& rhs) noexcept;
+      /**
+       * @brief CServiceClient are move-enabled
+      **/
+      ECAL_API_EXPORTED_MEMBER
+        CServiceClient(CServiceClient&& rhs) noexcept;
+
+      /**
+       * @brief CServiceClient are move-enabled
+      **/
+      ECAL_API_EXPORTED_MEMBER
+        CServiceClient& operator=(CServiceClient&& rhs) noexcept;
 
       /**
        * @brief Get the client instances for all matching services

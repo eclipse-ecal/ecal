@@ -26,6 +26,7 @@
 
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
+
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
 
@@ -37,74 +38,89 @@ namespace eCAL
 {
   class CServiceServerImpl;
 
-  /**
-   * @brief Service Server wrapper class.
-  **/
-  class ECAL_API_CLASS CServiceServer
+  inline namespace v6
   {
-  public:
     /**
-     * @brief Constructor.
-     *
-     * @param service_name_   Unique service name.
-     * @param event_callback_ Callback function for server events.
+     * @brief Service Server wrapper class.
     **/
-    ECAL_API_EXPORTED_MEMBER
-      explicit CServiceServer(const std::string& service_name_, const ServerEventIDCallbackT event_callback_ = ServerEventIDCallbackT());
+    class ECAL_API_CLASS CServiceServer
+    {
+    public:
+      /**
+       * @brief Constructor.
+       *
+       * @param service_name_   Unique service name.
+       * @param event_callback_ Callback function for server events.
+      **/
+      ECAL_API_EXPORTED_MEMBER
+        explicit CServiceServer(const std::string& service_name_, const ServerEventIDCallbackT event_callback_ = ServerEventIDCallbackT());
 
-    /**
-     * @brief Destructor.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      virtual ~CServiceServer();
+      /**
+       * @brief Destructor.
+      **/
+      ECAL_API_EXPORTED_MEMBER
+        virtual ~CServiceServer();
 
-    // Deleted copy constructor and copy assignment operator
-    CServiceServer(const CServiceServer&) = delete;
-    CServiceServer& operator=(const CServiceServer&) = delete;
+      /**
+       * @brief CServiceServer are non-copyable
+      **/
+      CServiceServer(const CServiceServer&) = delete;
 
-    // Move constructor and move assignment operator
-    ECAL_API_EXPORTED_MEMBER CServiceServer(CServiceServer&& rhs) noexcept;
-    ECAL_API_EXPORTED_MEMBER CServiceServer& operator=(CServiceServer&& rhs) noexcept;
+      /**
+       * @brief CServiceServer are non-copyable
+      **/
+      CServiceServer& operator=(const CServiceServer&) = delete;
 
-    /**
-     * @brief Add method callback.
-     *
-     * @param method_       Service method name.
-     * @param method_info_  Service method information (request & response types).
-     * @param callback_     Callback function for client request.
-     *
-     * @return  True if successful.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_);
+      /**
+       * @brief CServiceServer are move-enabled
+      **/
+      ECAL_API_EXPORTED_MEMBER CServiceServer(CServiceServer&& rhs) noexcept;
 
-    /**
-     * @brief Remove method callback.
-     *
-     * @param method_  Service method name.
-     *
-     * @return  True if successful.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool RemoveMethodCallback(const std::string& method_);
+      /**
+       * @brief CServiceServer are move-enabled
+      **/
+      ECAL_API_EXPORTED_MEMBER CServiceServer& operator=(CServiceServer&& rhs) noexcept;
 
-    /**
-     * @brief Retrieve service name.
-     *
-     * @return  The service name.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      std::string GetServiceName();
+      /**
+       * @brief Add method callback.
+       *
+       * @param method_       Service method name.
+       * @param method_info_  Service method information (request & response types).
+       * @param callback_     Callback function for client request.
+       *
+       * @return  True if successful.
+      **/
+      ECAL_API_EXPORTED_MEMBER
+        bool AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_);
 
-    /**
-     * @brief Check connection state.
-     *
-     * @return  True if connected, false if not.
-    **/
-    ECAL_API_EXPORTED_MEMBER
-      bool IsConnected();
+      /**
+       * @brief Remove method callback.
+       *
+       * @param method_  Service method name.
+       *
+       * @return  True if successful.
+      **/
+      ECAL_API_EXPORTED_MEMBER
+        bool RemoveMethodCallback(const std::string& method_);
 
-  private:
-    std::shared_ptr<CServiceServerImpl> m_service_server_impl;
-  };
+      /**
+       * @brief Retrieve service name.
+       *
+       * @return  The service name.
+      **/
+      ECAL_API_EXPORTED_MEMBER
+        std::string GetServiceName();
+
+      /**
+       * @brief Check connection state.
+       *
+       * @return  True if connected, false if not.
+      **/
+      ECAL_API_EXPORTED_MEMBER
+        bool IsConnected();
+
+    private:
+      std::shared_ptr<CServiceServerImpl> m_service_server_impl;
+    };
+  }
 } 
