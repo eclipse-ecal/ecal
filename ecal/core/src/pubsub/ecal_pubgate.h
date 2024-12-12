@@ -44,8 +44,8 @@ namespace eCAL
     void Start();
     void Stop();
 
-    bool Register(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_);
-    bool Unregister(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_);
+    bool Register(const std::string& topic_name_, const std::shared_ptr<CPublisherImpl>& publisher_);
+    bool Unregister(const std::string& topic_name_, const std::shared_ptr<CPublisherImpl>& publisher_);
 
     void ApplySubRegistration(const Registration::Sample& ecal_sample_);
     void ApplySubUnregistration(const Registration::Sample& ecal_sample_);
@@ -55,8 +55,8 @@ namespace eCAL
   protected:
     static std::atomic<bool>  m_created;
 
-    using TopicNameDataWriterMapT = std::multimap<std::string, std::shared_ptr<CDataWriter>>;
-    std::shared_timed_mutex   m_topic_name_datawriter_sync;
-    TopicNameDataWriterMapT   m_topic_name_datawriter_map;
+    using TopicNamePublisherMapT = std::multimap<std::string, std::shared_ptr<CPublisherImpl>>;
+    std::shared_timed_mutex  m_topic_name_publisher_sync;
+    TopicNamePublisherMapT   m_topic_name_publisher_map;
   };
 }

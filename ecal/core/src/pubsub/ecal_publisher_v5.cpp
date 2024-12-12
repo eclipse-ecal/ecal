@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  common data publisher based on eCAL
+ * @brief  eCAL publisher interface (deprecated eCAL5 version)
 **/
 
 #include <ecal/ecal.h>
@@ -42,7 +42,7 @@ namespace eCAL
   namespace v5
   {
     CPublisher::CPublisher() :
-      m_datawriter(nullptr),
+      m_publisher_impl(nullptr),
       m_filter_id(0)
     {
     }
@@ -66,10 +66,10 @@ namespace eCAL
      * @brief CPublisher are move-enabled
     **/
     CPublisher::CPublisher(CPublisher&& rhs) noexcept :
-                  m_datawriter(std::move(rhs.m_datawriter)),
+                  m_publisher_impl(std::move(rhs.m_publisher_impl)),
                   m_filter_id(rhs.m_filter_id)
     {
-      rhs.m_datawriter = nullptr;
+      rhs.m_publisher_impl = nullptr;
     }
 
     /**
@@ -80,24 +80,24 @@ namespace eCAL
       // Call destroy, to clean up the current state, then afterwards move all elements
       Destroy();
 
-      m_datawriter = std::move(rhs.m_datawriter);
+      m_publisher_impl = std::move(rhs.m_publisher_impl);
       m_filter_id  = rhs.m_filter_id;
       
-      rhs.m_datawriter = nullptr;
+      rhs.m_publisher_impl = nullptr;
 
       return *this;
     }
 
     bool CPublisher::Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_)
     {
-      if (m_datawriter != nullptr) return(false);
+      if (m_publisher_impl != nullptr) return(false);
       if (topic_name_.empty())     return(false);
 
-      // create datawriter
-      m_datawriter = std::make_shared<CDataWriter>(data_type_info_, BuildWriterAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
+      // create publisher
+      m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
 
-      // register datawriter
-      g_pubgate()->Register(topic_name_, m_datawriter);
+      // register publisher
+      g_pubgate()->Register(topic_name_, m_publisher_impl);
 
       // we made it :-)
       return(true);
@@ -110,18 +110,18 @@ namespace eCAL
 
     bool CPublisher::Destroy()
     {
-      if (m_datawriter == nullptr) return(false);
+      if (m_publisher_impl == nullptr) return(false);
 
-      // unregister datawriter
-      if(g_pubgate() != nullptr) g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
+      // unregister publisher
+      if(g_pubgate() != nullptr) g_pubgate()->Unregister(m_publisher_impl->GetTopicName(), m_publisher_impl);
   #ifndef NDEBUG
       // log it
-      eCAL::Logging::Log(log_level_debug1, std::string(m_datawriter->GetTopicName() + "::CPublisher::Destroy"));
+      eCAL::Logging::Log(log_level_debug1, std::string(m_publisher_impl->GetTopicName() + "::CPublisher::Destroy"));
   #endif
 
-      // stop & destroy datawriter
-      m_datawriter->Stop();
-      m_datawriter.reset();
+      // stop & destroy publisher
+      m_publisher_impl->Stop();
+      m_publisher_impl.reset();
 
       // we made it :-)
       return(true);
@@ -129,20 +129,20 @@ namespace eCAL
 
     bool CPublisher::SetDataTypeInformation(const SDataTypeInformation& data_type_info_)
     {
-      if (m_datawriter == nullptr) return false;
-      return m_datawriter->SetDataTypeInformation(data_type_info_);
+      if (m_publisher_impl == nullptr) return false;
+      return m_publisher_impl->SetDataTypeInformation(data_type_info_);
     }
 
     bool CPublisher::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
     {
-      if(m_datawriter == nullptr) return false;
-      return m_datawriter->SetAttribute(attr_name_, attr_value_);
+      if(m_publisher_impl == nullptr) return false;
+      return m_publisher_impl->SetAttribute(attr_name_, attr_value_);
     }
 
     bool CPublisher::ClearAttribute(const std::string& attr_name_)
     {
-      if(m_datawriter == nullptr) return false;
-      return m_datawriter->ClearAttribute(attr_name_);
+      if(m_publisher_impl == nullptr) return false;
+      return m_publisher_impl->ClearAttribute(attr_name_);
     }
 
     bool CPublisher::SetID(long long filter_id_)
@@ -159,7 +159,7 @@ namespace eCAL
     
     size_t CPublisher::Send(CPayloadWriter& payload_, long long time_)
     {
-      if (m_datawriter == nullptr) return 0;
+      if (m_publisher_impl == nullptr) return 0;
 
        // in an optimization case the
        // publisher can send an empty package
@@ -168,13 +168,13 @@ namespace eCAL
        // for the monitoring layer and return
        if (!IsSubscribed())
        {
-         m_datawriter->RefreshSendCounter();
+         m_publisher_impl->RefreshSendCounter();
          return(payload_.GetSize());
        }
 
        // send content via data writer layer
        const long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
-       const size_t written_bytes = m_datawriter->Write(payload_, write_time, m_filter_id);
+       const size_t written_bytes = m_publisher_impl->Write(payload_, write_time, m_filter_id);
 
        // return number of bytes written
        return written_bytes;
@@ -187,22 +187,22 @@ namespace eCAL
 
     bool CPublisher::AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_)
     {
-      if (m_datawriter == nullptr) return(false);
+      if (m_publisher_impl == nullptr) return(false);
       RemEventCallback(type_);
-      return(m_datawriter->AddEventCallback(type_, std::move(callback_)));
+      return(m_publisher_impl->AddEventCallback(type_, std::move(callback_)));
     }
 
     bool CPublisher::RemEventCallback(eCAL_Publisher_Event type_)
     {
-      if (m_datawriter == nullptr) return(false);
-      return(m_datawriter->RemEventCallback(type_));
+      if (m_publisher_impl == nullptr) return(false);
+      return(m_publisher_impl->RemEventCallback(type_));
     }
 
     bool CPublisher::IsSubscribed() const
     {
   #if ECAL_CORE_REGISTRATION
-      if(m_datawriter == nullptr) return(false);
-      return(m_datawriter->IsSubscribed());
+      if(m_publisher_impl == nullptr) return(false);
+      return(m_publisher_impl->IsSubscribed());
   #else  // ECAL_CORE_REGISTRATION
       return(true);
   #endif // ECAL_CORE_REGISTRATION
@@ -210,26 +210,26 @@ namespace eCAL
 
     size_t CPublisher::GetSubscriberCount() const
     {
-      if (m_datawriter == nullptr) return(0);
-      return(m_datawriter->GetSubscriberCount());
+      if (m_publisher_impl == nullptr) return(0);
+      return(m_publisher_impl->GetSubscriberCount());
     }
 
     std::string CPublisher::GetTopicName() const
     {
-      if(m_datawriter == nullptr) return("");
-      return(m_datawriter->GetTopicName());
+      if(m_publisher_impl == nullptr) return("");
+      return(m_publisher_impl->GetTopicName());
     }
 
     Registration::STopicId CPublisher::GetId() const
     {
-      if (m_datawriter == nullptr) return{};
-      return(m_datawriter->GetId());
+      if (m_publisher_impl == nullptr) return{};
+      return(m_publisher_impl->GetId());
     }
 
     SDataTypeInformation CPublisher::GetDataTypeInformation() const
     {
-      if (m_datawriter == nullptr) return(SDataTypeInformation{});
-      return(m_datawriter->GetDataTypeInformation());
+      if (m_publisher_impl == nullptr) return(SDataTypeInformation{});
+      return(m_publisher_impl->GetDataTypeInformation());
     }
 
     std::string CPublisher::Dump(const std::string& indent_ /* = "" */) const
@@ -239,7 +239,7 @@ namespace eCAL
       out << indent_ << "----------------------" << '\n';
       out << indent_ << " class CPublisher"      << '\n';
       out << indent_ << "----------------------" << '\n';
-      if((m_datawriter != nullptr) && m_datawriter->IsCreated()) out << indent_ << m_datawriter->Dump("    ");
+      if((m_publisher_impl != nullptr) && m_publisher_impl->IsCreated()) out << indent_ << m_publisher_impl->Dump("    ");
       out << '\n';
 
       return(out.str());

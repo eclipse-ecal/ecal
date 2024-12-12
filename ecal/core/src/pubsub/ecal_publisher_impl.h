@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  common eCAL data writer
+ * @brief  eCAL publisher implementation
 **/
 
 #pragma once
@@ -55,7 +55,7 @@
 
 namespace eCAL
 {
-  class CDataWriter
+  class CPublisherImpl
   {
   public:
     struct SLayerState
@@ -74,8 +74,8 @@ namespace eCAL
 
     using SSubscriptionInfo = Registration::SampleIdentifier;
 
-    CDataWriter(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& attr_);
-    ~CDataWriter();
+    CPublisherImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& attr_);
+    ~CPublisherImpl();
 
     bool Stop();
 

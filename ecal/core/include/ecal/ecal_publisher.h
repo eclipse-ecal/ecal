@@ -39,7 +39,7 @@
 
 namespace eCAL
 {
-  class CDataWriter;
+  class CPublisherImpl;
 
   /**
    * @brief eCAL publisher class.
@@ -208,6 +208,6 @@ namespace eCAL
       SDataTypeInformation GetDataTypeInformation() const;
 
   private:
-    std::shared_ptr<CDataWriter> m_datawriter;
+    std::shared_ptr<CPublisherImpl> m_publisher_impl;
   };
 }

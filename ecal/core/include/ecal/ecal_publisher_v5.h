@@ -39,7 +39,7 @@
 
 namespace eCAL
 {
-  class CDataWriter;
+  class CPublisherImpl;
 
   namespace v5
   {
@@ -262,7 +262,7 @@ namespace eCAL
        * @return  True if created, false if not. 
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool IsCreated() const { return(m_datawriter != nullptr); }
+        bool IsCreated() const { return(m_publisher_impl != nullptr); }
 
       /**
        * @brief Query if the publisher is subscribed. 
@@ -316,8 +316,8 @@ namespace eCAL
 
     private:
       // class members
-      std::shared_ptr<CDataWriter> m_datawriter;
-      long long                    m_filter_id;
+      std::shared_ptr<CPublisherImpl> m_publisher_impl;
+      long long                       m_filter_id;
     };
   }
 }
