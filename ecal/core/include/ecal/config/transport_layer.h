@@ -33,47 +33,32 @@ namespace eCAL
   {
     namespace UDP
     {      
-      namespace Network
+      struct MulticastConfiguration
       {
-        struct Configuration
-        {
-          Types::IpAddressV4 group { "239.0.0.1" }; //!< UDP multicast group base (Default: 239.0.0.1)
-          unsigned int       ttl   { 3U };          /*!< UDP ttl value, also known as hop limit, is used in determining 
-                                                         the intermediate routers being traversed towards the destination (Default: 3) */
-        };
-      }
-
-      namespace Local
-      {
-        struct Configuration
-        {
-          Types::IpAddressV4 group { "127.255.255.255" }; //!< UDP multicast group base (Default: 127.255.255.255)
-          unsigned int       ttl   { 1U };                /*!< UDP ttl value, also known as hop limit, is used in determining 
-                                                               the intermediate routers being traversed towards the destination (Default: 1) */
-        };
-      }
+        Types::IpAddressV4 group{"239.0.0.1"}; //!< UDP multicast group base
+        unsigned int       ttl;                /*!< UDP ttl value, also known as hop limit, is used in determining 
+                                                    the intermediate routers being traversed towards the destination */
+      };
 
       struct Configuration
       {
-        Types::UdpConfigVersion     config_version     { Types::UdpConfigVersion::V2 }; /*!< UDP configuration version (Since eCAL 5.12.)
+        Types::UdpConfigVersion config_version      { Types::UdpConfigVersion::V2 }; /*!< UDP configuration version (Since eCAL 5.12.)
                                                                                              v1: default behavior
                                                                                              v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups (Default: v2) */
-        unsigned int                port               { 14002 };                       /*!< UDP multicast port number (Default: 14002) */
-        Types::UDPMode              mode               { Types::UDPMode::LOCAL };       /*!< Valid modes: local, network (Default: local)*/
-        Types::IpAddressV4          mask               { "255.255.255.240" };           /*!< v1: Mask maximum number of dynamic multicast group (Default: 0.0.0.1-0.0.0.255)
+        unsigned int            port                { 14002 };                       /*!< UDP multicast port number (Default: 14002) */
+        Types::UDPMode          mode                { Types::UDPMode::LOCAL };       /*!< Valid modes: local, network (Default: local)*/
+        Types::IpAddressV4      mask                { "255.255.255.240" };           /*!< v1: Mask maximum number of dynamic multicast group (Default: 0.0.0.1-0.0.0.255)
                                                                                              v2: masks are now considered like routes masking (Default: 255.0.0.0-255.255.255.255)*/
                   
-        unsigned int               send_buffer         { 5242880 }; //!< UDP send buffer in bytes (Default: 5242880)
-        unsigned int               receive_buffer      { 5242880 }; //!< UDP receive buffer in bytes (Default: 5242880)
-        bool                       join_all_interfaces { false };   /*!< Linux specific setting to enable joining multicast groups on all network interfacs
+        unsigned int            send_buffer         { 5242880 }; //!< UDP send buffer in bytes (Default: 5242880)
+        unsigned int            receive_buffer      { 5242880 }; //!< UDP receive buffer in bytes (Default: 5242880)
+        bool                    join_all_interfaces { false };   /*!< Linux specific setting to enable joining multicast groups on all network interfacs
                                                                          independent of their link state. Enabling this makes sure that eCAL processes
                                                                          receive data if they are started before network devices are up and running. (Default: false)*/
-        bool                       npcap_enabled       { false };   //!< Enable to receive UDP traffic with the Npcap based receiver (Default: false)
+        bool                    npcap_enabled       { false };   //!< Enable to receive UDP traffic with the Npcap based receiver (Default: false)
       
-        Network::Configuration     network;
-        const Local::Configuration local;
-
-        ECAL_API Configuration& operator=(const Configuration& other);
+        MulticastConfiguration  network             { "239.0.0.1", 3U };      //!< default: "239.0.0.1", 3U
+        MulticastConfiguration  local               { "127.255.255.255", 1U}; //!< default: "127.255.255.255", 1U
       }; 
     }
 

@@ -41,12 +41,12 @@ namespace eCAL
     IpAddressV4::IpAddressV4(const std::string& ip_address_)
     {
       validateIpString(ip_address_);
-    } 
+    }
 
     IpAddressV4::IpAddressV4(const char* ip_address_)
     {
       validateIpString(ip_address_);
-    } 
+    }
 
     void IpAddressV4::validateIpString(const std::string& ip_address_)
     {
