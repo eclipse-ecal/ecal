@@ -78,7 +78,7 @@ int main(int argc, char **argv)
         msgs  = 0;
         bytes = 0;
 
-        eCAL::Logging::Log(out.str());
+        eCAL::Logging::Log(log_level_info, out.str());
       }
     }
   }

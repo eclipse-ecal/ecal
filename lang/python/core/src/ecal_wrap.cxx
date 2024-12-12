@@ -64,6 +64,8 @@ PySubscriberCallbackMapT    g_subscriber_pycallback_map;
 PyServerMethodCallbackMapT  g_server_method_pycallback_map;
 PyClientCallbackMapT        g_client_pycallback_map;
 
+eCAL_Logging_eLogLevel      g_python_log_level = log_level_info;
+
 
 /****************************************/
 /*      help                            */
@@ -237,7 +239,7 @@ PyObject* log_setlevel(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "i", &level)) 
     return nullptr;
 
-  log_setlevel(level);
+  g_python_log_level = eCAL_Logging_eLogLevel(level);
 
   Py_RETURN_NONE;
 }
@@ -252,11 +254,10 @@ PyObject* log_message(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "s", &message)) 
     return nullptr;
 
-  log_message(message);
+  log_message(g_python_log_level, message);
 
   Py_RETURN_NONE;
 }
-
 
 /****************************************/
 /*      pub_create                      */
