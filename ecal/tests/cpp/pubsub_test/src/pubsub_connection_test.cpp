@@ -235,7 +235,7 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
 
   // Publisher1 in thread 1
   auto publisher1_function = [&publisher1_sent_count, &message_count]() {
-    eCAL::CPublisher pub1("topic1", eCAL::SDataTypeInformation());
+    eCAL::CPublisher pub1("topic1");
     while (!pub1.IsSubscribed())
     {
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -249,7 +249,7 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
     };
 
   // Publisher2
-  eCAL::CPublisher pub2("topic2", eCAL::SDataTypeInformation());
+  eCAL::CPublisher pub2("topic2");
 
   // Subscriber1 with callback that triggers Publisher2
   eCAL::CSubscriber sub1("topic1");

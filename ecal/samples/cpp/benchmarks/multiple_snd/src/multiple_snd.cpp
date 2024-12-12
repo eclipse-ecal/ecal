@@ -64,7 +64,7 @@ int main()
     tname << "PUB_" << i;
 
     // publisher topic name
-    std::shared_ptr<eCAL::CPublisher> pub = std::make_shared<eCAL::CPublisher>(tname.str(), eCAL::SDataTypeInformation());
+    std::shared_ptr<eCAL::CPublisher> pub = std::make_shared<eCAL::CPublisher>(tname.str());
     struct SPubCount pub_count;
     pub_count.pub = std::move(pub);
     pub_vec[i] = pub_count;

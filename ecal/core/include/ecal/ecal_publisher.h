@@ -82,7 +82,7 @@ namespace eCAL
      * @param config_          Optional configuration parameters.
     **/
     ECAL_API_EXPORTED_MEMBER
-      CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = GetPublisherConfiguration());
+      CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_ = SDataTypeInformation(), const Publisher::Configuration& config_ = GetPublisherConfiguration());
 
     /**
      * @brief Destructor. 
@@ -127,7 +127,7 @@ namespace eCAL
     /**
      * @brief Send a message to all subscribers.
      *
-     * @param payload_  Payload.
+     * @param payload_  Payload writer.
      * @param time_     Send time (-1 = use eCAL system time in us, default = -1).
      *
      * @return  Number of bytes sent.
@@ -138,13 +138,13 @@ namespace eCAL
     /**
      * @brief Send a message to all subscribers.
      *
-     * @param s_      String that contains content to send.
-     * @param time_   Send time (-1 = use eCAL system time in us, default = -1).
+     * @param payload_  Payload string.
+     * @param time_     Send time (-1 = use eCAL system time in us, default = -1).
      *
      * @return  Number of bytes sent.
     **/
     ECAL_API_EXPORTED_MEMBER
-      size_t Send(const std::string& s_, long long time_ = DEFAULT_TIME_ARGUMENT);
+      size_t Send(const std::string& payload_, long long time_ = DEFAULT_TIME_ARGUMENT);
 
     /**
      * @brief Add callback function for publisher events.

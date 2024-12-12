@@ -28,7 +28,7 @@ int main()
   eCAL::Initialize("binary_snd");
 
   // publisher for topic "blob"
-  eCAL::CPublisher pub("blob", eCAL::SDataTypeInformation());
+  eCAL::CPublisher pub("blob");
 
   // create binary buffer
   std::vector<unsigned char> bin_buffer(1024);

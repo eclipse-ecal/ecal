@@ -153,7 +153,7 @@ TEST(core_cpp_registration_public, GetTopicsParallel)
     {
       std::vector<std::unique_ptr<eCAL::CPublisher>> publishers;
       for (int pub_count = 0; pub_count < max_publisher_count; pub_count++) {
-        std::unique_ptr<eCAL::CPublisher> publisher = std::make_unique<eCAL::CPublisher>(topic_name + std::to_string(pub_count), eCAL::SDataTypeInformation());
+        std::unique_ptr<eCAL::CPublisher> publisher = std::make_unique<eCAL::CPublisher>(topic_name + std::to_string(pub_count));
         publishers.push_back(std::move(publisher));
       }
       std::this_thread::sleep_for(std::chrono::milliseconds(waiting_time_thread));

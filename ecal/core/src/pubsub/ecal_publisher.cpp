@@ -109,9 +109,9 @@ namespace eCAL
      return written_bytes;
   }
 
-  size_t CPublisher::Send(const std::string& s_, long long time_)
+  size_t CPublisher::Send(const std::string& payload_, long long time_)
   {
-    return(Send(s_.data(), s_.size(), time_));
+    return(Send(payload_.data(), payload_.size(), time_));
   }
 
   bool CPublisher::AddEventCallback(eCAL_Publisher_Event type_, const PubEventCallbackT& callback_)

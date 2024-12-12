@@ -71,7 +71,7 @@ TEST(core_cpp_pubsub, LeakedPubSub)
   sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2));
 
   // create publisher
-  eCAL::CPublisher pub("foo", eCAL::SDataTypeInformation());
+  eCAL::CPublisher pub("foo");
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -115,7 +115,7 @@ TEST(core_cpp_pubsub, CallbackDestruction)
   std::shared_ptr<eCAL::CSubscriber> sub;
 
   // create publisher
-  eCAL::CPublisher pub("foo", eCAL::SDataTypeInformation());
+  eCAL::CPublisher pub("foo");
 
   // start publishing thread
   std::atomic<bool> pub_stop(false);
@@ -171,7 +171,7 @@ TEST(core_cpp_pubsub, SimpleMessage1)
   eCAL::Initialize("pubsub_test");
 
   // create publisher for topic "foo"
-  eCAL::CPublisher pub("foo", eCAL::SDataTypeInformation());
+  eCAL::CPublisher pub("foo");
 
   // create subscriber for topic "foo"
   eCAL::CSubscriber sub("foo");
@@ -213,7 +213,7 @@ TEST(core_cpp_pubsub, SimpleMessage2)
   eCAL::CSubscriber sub("foo");
 
   // create publisher for topic "foo"
-  eCAL::CPublisher pub("foo", eCAL::SDataTypeInformation());
+  eCAL::CPublisher pub("foo");
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -245,7 +245,7 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
   eCAL::CSubscriber sub("foo");
 
   // create publisher for topic "foo"
-  eCAL::CPublisher pub("foo", eCAL::SDataTypeInformation());
+  eCAL::CPublisher pub("foo");
 
   // add callback
   EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
@@ -318,7 +318,7 @@ TEST(core_cpp_pubsub, DynamicSizeCB)
   eCAL::CSubscriber sub("foo");
 
   // create publisher for topic "foo"
-  eCAL::CPublisher pub("foo", eCAL::SDataTypeInformation());
+  eCAL::CPublisher pub("foo");
 
   // add callback
   EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
@@ -370,7 +370,7 @@ TEST(core_cpp_pubsub, DynamicCreate)
 
   // create publisher for topic "foo"
   eCAL::CPublisher* pub;
-  pub = new eCAL::CPublisher("foo", eCAL::SDataTypeInformation());
+  pub = new eCAL::CPublisher("foo");
 
   // add callback
   EXPECT_EQ(true, sub->AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
