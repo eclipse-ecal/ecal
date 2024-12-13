@@ -103,6 +103,7 @@ namespace
   void ResponseError(const eCAL::Registration::SEntityId& entity_id_, const std::string& service_name_, const std::string& method_name_,
     const std::string& error_message_, const eCAL::ResponseIDCallbackT& response_callback_)
   {
+    eCAL::Logging::Log(log_level_error, "CServiceClientImpl: Response error for service: " + service_name_ + ", method: " + method_name_ + ", error: " + error_message_);
     response_callback_(entity_id_, CreateErrorResponse(entity_id_, service_name_, method_name_, error_message_));
   }
 }
@@ -113,6 +114,9 @@ namespace eCAL
   std::shared_ptr<CServiceClientImpl> CServiceClientImpl::CreateInstance(
       const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_, const ClientEventIDCallbackT& event_callback_)
   {
+#ifndef NDEBUG
+    eCAL::Logging::Log(log_level_debug2, "CServiceClientImpl::CreateInstance: Creating instance of CServiceClientImpl for service: " + service_name_);
+#endif
     return std::shared_ptr<CServiceClientImpl>(new CServiceClientImpl(service_name_, method_information_map_, event_callback_));
   }
 
@@ -121,6 +125,10 @@ namespace eCAL
       const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_, const ClientEventIDCallbackT& event_callback_)
       : m_service_name(service_name_), m_method_information_map(method_information_map_)
   {
+#ifndef NDEBUG
+    eCAL::Logging::Log(log_level_debug2, "CServiceClientImpl::CServiceClientImpl: Initializing service client for: " + service_name_);
+#endif
+
     // initialize method call counts
     for (const auto& method_information_pair : m_method_information_map)
     {
@@ -142,12 +150,19 @@ namespace eCAL
     if (!m_service_name.empty() && g_registration_provider() != nullptr)
     {
       g_registration_provider()->RegisterSample(GetRegistrationSample());
+#ifndef NDEBUG
+      eCAL::Logging::Log(log_level_debug2, "CServiceClientImpl::CServiceClientImpl: Registered client with service name: " + m_service_name);
+#endif
     }
   }
 
   // Destructor: Resets callbacks, unregisters the client, and clears data
   CServiceClientImpl::~CServiceClientImpl()
   {
+#ifndef NDEBUG
+    eCAL::Logging::Log(log_level_debug2, "CServiceClientImpl::~CServiceClientImpl: Destroying service client for: " + m_service_name);
+#endif
+
     // reset client map
     {
       const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
@@ -164,6 +179,9 @@ namespace eCAL
     if (g_registration_provider() != nullptr)
     {
       g_registration_provider()->UnregisterSample(GetUnregistrationSample());
+#ifndef NDEBUG
+      eCAL::Logging::Log(log_level_debug2, "CServiceClientImpl::~CServiceClientImpl: Unregistered client for service name: " + m_service_name);
+#endif
     }
   }
 
@@ -188,9 +206,16 @@ namespace eCAL
       const Registration::SEntityId& entity_id_, const std::string& method_name_,
       const std::string& request_, int timeout_ms_, const ResponseIDCallbackT& response_callback_)
   {
+#ifndef NDEBUG
+    eCAL::Logging::Log(log_level_debug1, "CServiceClientImpl::CallWithCallback: Performing synchronous call for service: " + m_service_name + ", method: " + method_name_);
+#endif
+
     SClient client;
     if (!GetClientByEntity(entity_id_, client))
+    {
+      eCAL::Logging::Log(log_level_warning, "CServiceClientImpl::CallWithCallback: Failed to find client for entity ID: " + entity_id_.entity_id);
       return { false, SServiceResponse() };
+    }
 
     auto response = CallMethodWithTimeout(entity_id_, client, method_name_, request_, std::chrono::milliseconds(timeout_ms_));
 
@@ -204,6 +229,9 @@ namespace eCAL
     if (!response.first && response.second.call_state == eCallState::call_state_timeouted)
     {
       NotifyEventCallback(entity_id_, eCAL_Client_Event::client_event_timeout, client.service_attr);
+#ifndef NDEBUG
+      eCAL::Logging::Log(log_level_debug1, "CServiceClientImpl::CallWithCallback: Synchronous call for service: " + m_service_name + ", method: " + method_name_ + " timed out.");
+#endif
     }
 
     return response;
@@ -212,22 +240,32 @@ namespace eCAL
   // Asynchronous call to a service with a specified timeout
   bool CServiceClientImpl::CallWithCallbackAsync(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_)
   {
+#ifndef NDEBUG
+    eCAL::Logging::Log(log_level_debug2, "CServiceClientImpl::CallWithCallbackAsync: Performing asynchronous call for service: " + m_service_name + ", method: " + method_name_);
+#endif
+
     // Retrieve the client
     SClient client;
     if (!GetClientByEntity(entity_id_, client))
+    {
+      eCAL::Logging::Log(log_level_warning, "CServiceClientImpl::CallWithCallbackAsync: Failed to find client for entity ID: " + entity_id_.entity_id);
       return false;
+    }
 
     // Validate service and method names
     if (m_service_name.empty() || method_name_.empty())
     {
-      ResponseError(entity_id_, m_service_name, method_name_, "Invalid service or method name.", response_callback_);
+      ResponseError(entity_id_, m_service_name, method_name_, "CServiceClientImpl::CallWithCallbackAsync: Invalid service or method name.", response_callback_);
       return false;
     }
 
     // Serialize the request
     auto request_shared_ptr = SerializeRequest(method_name_, request_);
     if (!request_shared_ptr)
+    {
+      eCAL::Logging::Log(log_level_error, "CServiceClientImpl::CallWithCallbackAsync: Request serialization failed.");
       return false;
+    }
 
     // Prepare response data
     auto response_data = PrepareInitialResponse(client, method_name_);
@@ -240,6 +278,7 @@ namespace eCAL
         {
           if (error)
           {
+            eCAL::Logging::Log(log_level_error, "CServiceClientImpl::CallWithCallbackAsync: Asynchronous call returned an error: " + error.ToString());
             response_data->response->first = false;
             response_data->response->second.error_msg = error.ToString();
             response_data->response->second.call_state = eCallState::call_state_failed;
@@ -247,6 +286,9 @@ namespace eCAL
           }
           else
           {
+#ifndef NDEBUG
+            eCAL::Logging::Log(log_level_debug1, "CServiceClientImpl::CallWithCallbackAsync: Asynchronous call succeded");
+#endif
             response_data->response->first = true;
             response_data->response->second = DeserializedResponse(*response_);
           }
@@ -274,7 +316,11 @@ namespace eCAL
   {
     const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
     auto iter = m_client_session_map.find(entity_id_);
-    return (iter != m_client_session_map.end() && iter->second.connected);
+    bool state((iter != m_client_session_map.end() && iter->second.connected));
+#ifndef NDEBUG
+    eCAL::Logging::Log(log_level_debug2, "CServiceClientImpl::IsConnected: Returned: " + std::to_string(state));
+#endif
+    return state;
   }
 
   void CServiceClientImpl::RegisterService(const Registration::SEntityId& entity_id_, const SServiceAttr& service_)
@@ -315,6 +361,9 @@ namespace eCAL
   // Retrieves registration information for the client
   Registration::Sample CServiceClientImpl::GetRegistration()
   {
+#ifndef NDEBUG
+    Logging::Log(log_level_debug2, "CServiceClientImpl:::GetRegistration: Generating registration sample for: " + m_service_name);
+#endif
     UpdateConnectionStates();
     return GetRegistrationSample();
   }
