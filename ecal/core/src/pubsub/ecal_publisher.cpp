@@ -82,8 +82,6 @@ namespace eCAL
   
   size_t CPublisher::Send(CPayloadWriter& payload_, long long time_)
   {
-    if (m_publisher_impl == nullptr) return 0;
-
      // in an optimization case the
      // publisher can send an empty package
      // or we do not have any subscription at all
@@ -110,21 +108,18 @@ namespace eCAL
 
   bool CPublisher::AddEventCallback(eCAL_Publisher_Event type_, const PubEventCallbackT& callback_)
   {
-    if (m_publisher_impl == nullptr) return(false);
     RemEventCallback(type_);
     return(m_publisher_impl->AddEventCallback(type_, callback_));
   }
 
   bool CPublisher::RemEventCallback(eCAL_Publisher_Event type_)
   {
-    if (m_publisher_impl == nullptr) return(false);
     return(m_publisher_impl->RemEventCallback(type_));
   }
 
   bool CPublisher::IsSubscribed() const
   {
 #if ECAL_CORE_REGISTRATION
-    if(m_publisher_impl == nullptr) return(false);
     return(m_publisher_impl->IsSubscribed());
 #else  // ECAL_CORE_REGISTRATION
     return(true);
@@ -133,25 +128,21 @@ namespace eCAL
 
   size_t CPublisher::GetSubscriberCount() const
   {
-    if (m_publisher_impl == nullptr) return(0);
     return(m_publisher_impl->GetSubscriberCount());
   }
 
   std::string CPublisher::GetTopicName() const
   {
-    if(m_publisher_impl == nullptr) return("");
     return(m_publisher_impl->GetTopicName());
   }
 
   Registration::STopicId CPublisher::GetPublisherId() const
   {
-    if (m_publisher_impl == nullptr) return{};
     return(m_publisher_impl->GetId());
   }
 
   SDataTypeInformation CPublisher::GetDataTypeInformation() const
   {
-    if (m_publisher_impl == nullptr) return(SDataTypeInformation{});
     return(m_publisher_impl->GetDataTypeInformation());
   }
 }
