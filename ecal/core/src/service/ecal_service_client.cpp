@@ -33,48 +33,32 @@ namespace eCAL
 {
   CServiceClient::CServiceClient(const std::string& service_name_, const ServiceMethodInformationMapT method_information_map_, const ClientEventIDCallbackT event_callback_)
   {
-    // Create client implementation
+    // create client implementation
     m_service_client_impl = CServiceClientImpl::CreateInstance(service_name_, method_information_map_, event_callback_);
 
-    // Register client
-    if (g_clientgate() != nullptr)
-    {
-      g_clientgate()->Register(service_name_, m_service_client_impl);
-    }
+    // register client
+    if (g_clientgate() != nullptr) g_clientgate()->Register(service_name_, m_service_client_impl);
   }
 
   CServiceClient::~CServiceClient()
   {
-    // Unregister client
-    if (g_clientgate() != nullptr)
-    {
-      g_clientgate()->Unregister(m_service_client_impl->GetServiceName(), m_service_client_impl);
-    }
+    // could be already destroyed by move
+    if (m_service_client_impl == nullptr) return;
 
-    // Reset client implementation
-    m_service_client_impl.reset();
+    // unregister client
+    if (g_clientgate() != nullptr) g_clientgate()->Unregister(m_service_client_impl->GetServiceName(), m_service_client_impl);
   }
 
   CServiceClient::CServiceClient(CServiceClient&& rhs) noexcept
     : m_service_client_impl(std::move(rhs.m_service_client_impl))
   {
-    rhs.m_service_client_impl = nullptr;
   }
 
   CServiceClient& CServiceClient::operator=(CServiceClient&& rhs) noexcept
   {
     if (this != &rhs)
     {
-      // Unregister current client
-      if (g_clientgate())
-      {
-        g_clientgate()->Unregister(m_service_client_impl->GetServiceName(), m_service_client_impl);
-      }
-
-      // Move data
       m_service_client_impl = std::move(rhs.m_service_client_impl);
-
-      rhs.m_service_client_impl = nullptr;
     }
     return *this;
   }
@@ -82,6 +66,7 @@ namespace eCAL
   std::vector<CClientInstance> CServiceClient::GetClientInstances() const
   {
     std::vector<CClientInstance> instances;
+    if (m_service_client_impl == nullptr) return instances;
 
     auto entity_ids = m_service_client_impl->GetServiceIDs();
     instances.reserve(entity_ids.size());
@@ -97,11 +82,11 @@ namespace eCAL
     auto instances = GetClientInstances();
     size_t num_instances = instances.size();
 
-    // Vector to hold futures for the return values and responses
+    // vector to hold futures for the return values and responses
     std::vector<std::future<std::pair<bool, SServiceResponse>>> futures;
     futures.reserve(num_instances);
 
-    // Launch asynchronous calls for each instance
+    // launch asynchronous calls for each instance
     for (auto& instance : instances)
     {
       futures.emplace_back(std::async(std::launch::async,
@@ -112,32 +97,35 @@ namespace eCAL
     }
 
     bool overall_success = true;
-    service_response_vec_.clear(); // Ensure the response vector is empty before populating it
+    // ensure the response vector is empty before populating it
+    service_response_vec_.clear();
 
-    // Collect responses
+    // collect responses
     for (auto& future : futures)
     {
       try
       {
-        // Explicitly unpack the pair
+        // explicitly unpack the pair
         std::pair<bool, SServiceResponse> result = future.get();
         bool success = result.first;
         SServiceResponse response = result.second;
 
-        // Add response to the vector
+        // add response to the vector
         service_response_vec_.emplace_back(response);
 
-        // Aggregate success states
+        // aggregate success states
         overall_success &= success;
       }
       catch (const std::exception& e)
       {
-        // Handle exceptions and add an error response
+        // handle exceptions and add an error response
         SServiceResponse error_response;
         error_response.error_msg = e.what();
         error_response.call_state = call_state_failed;
         service_response_vec_.emplace_back(error_response);
-        overall_success = false; // Mark overall success as false if any call fails
+
+        // mark overall success as false if any call fails
+        overall_success = false;
       }
     }
 
@@ -149,7 +137,7 @@ namespace eCAL
     auto instances = GetClientInstances();
     size_t num_instances = instances.size();
 
-    // Vector to hold futures for the return values
+    // vector to hold futures for the return values
     std::vector<std::future<bool>> futures;
     futures.reserve(num_instances);
 
@@ -171,7 +159,7 @@ namespace eCAL
       }
       catch (const std::exception& /*e*/)
       {
-        // Handle exceptions
+        // handle exceptions
         return_state = false;
       }
     }
@@ -192,7 +180,14 @@ namespace eCAL
 
   std::string CServiceClient::GetServiceName() const
   {
+    if (m_service_client_impl == nullptr) return "";
     return m_service_client_impl->GetServiceName();
+  }
+
+  Registration::SServiceMethodId CServiceClient::GetServiceId() const
+  {
+    // TODO: Implement this
+    return Registration::SServiceMethodId();
   }
 
   bool CServiceClient::IsConnected() const

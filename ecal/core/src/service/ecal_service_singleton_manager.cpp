@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ namespace eCAL
     }
 
     ServiceManager::ServiceManager()
-      : stopped(false)
+      : m_stopped(false)
     {}
 
     ServiceManager::~ServiceManager()
@@ -90,34 +90,34 @@ namespace eCAL
       // Quickly check the atomic stopped boolean before actually locking the
       // mutex. It can theoretically change before we got mutex access, so we
       // will have to check it again.
-      if (stopped)
+      if (m_stopped)
         return nullptr;
 
       // Lock the mutex to actually make it thread safe
-      const std::lock_guard<std::mutex> singleton_lock(singleton_mutex);
-      if (!stopped)
+      const std::lock_guard<std::mutex> singleton_lock(m_singleton_mutex);
+      if (!m_stopped)
       {
         // Create io_context, if it didn't exist, yet
-        if (!io_context)
-          io_context = std::make_unique<asio::io_context>();
+        if (!m_io_context)
+          m_io_context = std::make_unique<asio::io_context>();
 
         // Create the client manager, if it didn't exist, yet
-        if (!client_manager)
-          client_manager = eCAL::service::ClientManager::create(io_context, ecal_logger("Service Client"));
+        if (!m_client_manager)
+          m_client_manager = eCAL::service::ClientManager::create(m_io_context, ecal_logger("Service Client"));
 
         // Start io threads, if necessary
-        if (io_threads.empty())
+        if (m_io_threads.empty())
         {
           for (size_t i = 0; i < num_io_threads; i++)
           {
-            io_threads.emplace_back(std::make_unique<std::thread>([this]() { io_context->run(); }));
+            m_io_threads.emplace_back(std::make_unique<std::thread>([this]() { m_io_context->run(); }));
           }
         }
         
         // Return the client manager. The client manager has its own dummy work
         // object, so it will keep the io_context alive, until the
         // client_manager is stopped.
-        return client_manager;
+        return m_client_manager;
       }
       return nullptr;
     }
@@ -127,63 +127,63 @@ namespace eCAL
       // Quickly check the atomic stopped boolean before actually locking the
       // mutex. It can theoretically change before we got mutex access, so we
       // will have to check it again.
-      if (stopped)
+      if (m_stopped)
         return nullptr;
 
       // Lock the mutex to actually make it thread safe
-      const std::lock_guard<std::mutex> singleton_lock(singleton_mutex);
-      if (!stopped)
+      const std::lock_guard<std::mutex> singleton_lock(m_singleton_mutex);
+      if (!m_stopped)
       {
         // Create io_context, if it didn't exist, yet
-        if (!io_context)
-          io_context = std::make_unique<asio::io_context>();
+        if (!m_io_context)
+          m_io_context = std::make_unique<asio::io_context>();
 
         // Create the server manager, if it didn't exit, yet
-        if (!server_manager)
-          server_manager = eCAL::service::ServerManager::create(io_context, ecal_logger("Service Server"));
+        if (!m_server_manager)
+          m_server_manager = eCAL::service::ServerManager::create(m_io_context, ecal_logger("Service Server"));
 
         // Start io threads, if necessary
-        if (io_threads.empty())
+        if (m_io_threads.empty())
         {
           for (size_t i = 0; i < num_io_threads; i++)
           {
-            io_threads.emplace_back(std::make_unique<std::thread>([this]() { io_context->run(); }));
+            m_io_threads.emplace_back(std::make_unique<std::thread>([this]() { m_io_context->run(); }));
           }
         }
         
         // Return the server manager. The server manager has its own dummy work
         // object, so it will keep the io_context alive, until the
         // client_manager is stopped.
-        return server_manager;
+        return m_server_manager;
       }
       return nullptr;
     }
 
     void ServiceManager::stop()
     {
-      const std::lock_guard<std::mutex> singleton_lock(singleton_mutex);
+      const std::lock_guard<std::mutex> singleton_lock(m_singleton_mutex);
 
-      stopped = true;
+      m_stopped = true;
 
-      if (server_manager)
-        server_manager->stop();
+      if (m_server_manager)
+        m_server_manager->stop();
 
-      if (client_manager)
-        client_manager->stop();
+      if (m_client_manager)
+        m_client_manager->stop();
 
-      for (const auto& thread : io_threads)
+      for (const auto& thread : m_io_threads)
         thread->join();
 
-      server_manager.reset();
-      client_manager.reset();
-      io_threads.clear();
-      io_context.reset();
+      m_server_manager.reset();
+      m_client_manager.reset();
+      m_io_threads.clear();
+      m_io_context.reset();
     }
 
     void ServiceManager::reset()
     {
-      const std::lock_guard<std::mutex> singleton_lock(singleton_mutex);
-      stopped = false;
+      const std::lock_guard<std::mutex> singleton_lock(m_singleton_mutex);
+      m_stopped = false;
     }
 
   } // namespace service

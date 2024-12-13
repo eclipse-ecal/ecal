@@ -18,7 +18,6 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_client_v5.h>
 
 #include <algorithm>
 #include <iostream>
@@ -34,7 +33,7 @@ int main()
   eCAL::Initialize("latency client");
 
   // create latency client
-  eCAL::v5::CServiceClient latency_client("latency");
+  eCAL::CServiceClient latency_client("latency");
 
   // waiting for service
   while (eCAL::Ok() && !latency_client.IsConnected())
@@ -60,7 +59,7 @@ int main()
     // call service method "hello" subcalls times (for better time accuracy)
     for (auto i = 0; i < subcalls; ++i)
     {
-      latency_client.Call("hello", "");
+      latency_client.CallWithCallback("hello", "", -1, eCAL::ResponseIDCallbackT());
     }
     
     // take return time and store it into the latency array

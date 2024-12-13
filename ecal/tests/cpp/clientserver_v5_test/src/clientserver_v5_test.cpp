@@ -19,6 +19,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_client_v5.h>
+#include <ecal/ecal_server_v5.h>
 
 #include <cmath>
 #include <iostream>
@@ -48,7 +49,7 @@ enum {
 
 namespace
 {
-  typedef std::vector<std::shared_ptr<eCAL::CServiceServer>>     ServiceVecT;
+  typedef std::vector<std::shared_ptr<eCAL::v5::CServiceServer>> ServiceVecT;
   typedef std::vector<std::shared_ptr<eCAL::v5::CServiceClient>> ClientVecT;
 
 #if DO_LOGGING
@@ -146,25 +147,20 @@ TEST(core_cpp_clientserver_v5, ClientConnectEvent)
 
   // create server
   {
-    eCAL::CServiceServer server1("service");
+    eCAL::v5::CServiceServer server1("service");
 
-    event_connected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::seconds(5));
+    event_connected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
     EXPECT_EQ(1, event_connected_fired.get());
     EXPECT_EQ(0, event_disconnected_fired.get());
 
-    eCAL::CServiceServer server2("service");
+    eCAL::v5::CServiceServer server2("service");
 
-    event_connected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::seconds(5));
+    event_connected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
     EXPECT_EQ(2, event_connected_fired.get());
     EXPECT_EQ(0, event_disconnected_fired.get());
   }
 
-   // eCAL doesn't use the service callback, which would detect the disconnection
-   // instantly. Instead, eCAL waits for an entire monitoring loop, then tries
-   // to reconnect and then fires the disconnect callback itself, once that
-   // reconnection failes. That takes a lot of time, so we need to wait for a
-   // long time here.
-  event_disconnected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::seconds(20));
+  event_disconnected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
   EXPECT_EQ(2, event_connected_fired.get());
   EXPECT_EQ(2, event_disconnected_fired.get());
 
@@ -182,7 +178,7 @@ TEST(core_cpp_clientserver_v5, ServerConnectEvent)
   eCAL::Initialize("clientserver base connect event callback");
 
   // create server
-  eCAL::CServiceServer server("service");
+  eCAL::v5::CServiceServer server("service");
 
   // add server event callback for connect event
   atomic_signalable<int> event_connected_fired   (0);
@@ -220,25 +216,20 @@ TEST(core_cpp_clientserver_v5, ServerConnectEvent)
   {
     eCAL::v5::CServiceClient client1("service");
 
-    event_connected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::seconds(5));
+    event_connected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
     EXPECT_EQ(1, event_connected_fired.get());
     EXPECT_EQ(0, event_disconnected_fired.get());
 
     eCAL::v5::CServiceClient client2("service");
 
-    eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
-    EXPECT_EQ(1, event_connected_fired.get());
+    event_disconnected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
+    EXPECT_EQ(2, event_connected_fired.get());
     EXPECT_EQ(0, event_disconnected_fired.get());
   }
 
-  // eCAL doesn't use the service callback, which would detect the disconnection
-  // instantly. Instead, eCAL waits for an entire monitoring loop, then tries
-  // to reconnect and then fires the disconnect callback itself, once that
-  // reconnection failes. That takes a lot of time, so we need to wait for a
-  // long time here.
-  event_disconnected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::seconds(10));
-  EXPECT_EQ(1, event_connected_fired.get());
-  EXPECT_EQ(1, event_disconnected_fired.get());
+  event_disconnected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
+  EXPECT_EQ(2, event_connected_fired.get());
+  EXPECT_EQ(2, event_disconnected_fired.get());
 
   // finalize eCAL API
   eCAL::Finalize();
@@ -261,7 +252,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseCallback)
   ServiceVecT service_vec;
   for (auto s = 0; s < num_services; ++s)
   {
-    service_vec.push_back(std::make_shared<eCAL::CServiceServer>("service"));
+    service_vec.push_back(std::make_shared<eCAL::v5::CServiceServer>("service"));
   }
 
   // method callback function
@@ -370,7 +361,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseCallbackTimeout)
   ServiceVecT service_vec;
   for (auto s = 0; s < num_services; ++s)
   {
-    service_vec.push_back(std::make_shared<eCAL::CServiceServer>("service"));
+    service_vec.push_back(std::make_shared<eCAL::v5::CServiceServer>("service"));
   }
 
   // method callback function
@@ -531,7 +522,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseAsyncCallback)
   eCAL::Initialize("clientserver base async callback test");
 
   // create service server
-  eCAL::CServiceServer server("service");
+  eCAL::v5::CServiceServer server("service");
 
   // method callback function
   std::atomic<int> methods_executed(0);
@@ -604,7 +595,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseAsync)
   eCAL::Initialize("clientserver base async callback test with timeout");
 
   // create service server
-  eCAL::CServiceServer server("service");
+  eCAL::v5::CServiceServer server("service");
 
   // method callback function
   atomic_signalable<int> num_service_callbacks_finished(0);
@@ -716,7 +707,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseBlocking)
   ServiceVecT service_vec;
   for (auto s = 0; s < num_services; ++s)
   {
-    service_vec.push_back(std::make_shared<eCAL::CServiceServer>("service"));
+    service_vec.push_back(std::make_shared<eCAL::v5::CServiceServer>("service"));
   }
 
   // method callback function
@@ -811,7 +802,7 @@ TEST(core_cpp_clientserver_v5, NestedRPCCall)
   eCAL::Initialize("nested rpc call test");
 
   // create service server
-  eCAL::CServiceServer server("service");
+  eCAL::v5::CServiceServer server("service");
 
   // request callback function
   std::atomic<int> methods_executed(0);
