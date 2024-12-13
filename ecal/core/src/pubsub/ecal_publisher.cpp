@@ -94,7 +94,9 @@ namespace eCAL
   
   bool CPublisher::Send(CPayloadWriter& payload_, long long time_)
   {
-     // in an optimization case the
+    if (m_publisher_impl == nullptr) return false;
+    
+    // in an optimization case the
      // publisher can send an empty package
      // or we do not have any subscription at all
      // then the data writer will only do some statistics
@@ -121,21 +123,25 @@ namespace eCAL
 
   size_t CPublisher::GetSubscriberCount() const
   {
+    if (m_publisher_impl == nullptr) return 0;
     return(m_publisher_impl->GetSubscriberCount());
   }
 
   std::string CPublisher::GetTopicName() const
   {
+    if (m_publisher_impl == nullptr) return "";
     return(m_publisher_impl->GetTopicName());
   }
 
   Registration::STopicId CPublisher::GetTopicId() const
   {
+    if (m_publisher_impl == nullptr) return Registration::STopicId();
     return(m_publisher_impl->GetId());
   }
 
   SDataTypeInformation CPublisher::GetDataTypeInformation() const
   {
+    if (m_publisher_impl == nullptr) return SDataTypeInformation();
     return(m_publisher_impl->GetDataTypeInformation());
   }
 }
