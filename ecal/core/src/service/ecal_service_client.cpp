@@ -42,6 +42,9 @@ namespace eCAL
 
   CServiceClient::~CServiceClient()
   {
+    // could be already destroyed by move
+    if (m_service_client_impl == nullptr) return;
+
     // unregister client
     if (g_clientgate() != nullptr) g_clientgate()->Unregister(m_service_client_impl->GetServiceName(), m_service_client_impl);
   }

@@ -41,6 +41,9 @@ namespace eCAL
 
   CServiceServer::~CServiceServer()
   {
+    // could be already destroyed by move
+    if (m_service_server_impl == nullptr) return;
+
     // unregister server
     if (g_servicegate() != nullptr) g_servicegate()->Unregister(m_service_server_impl->GetServiceName(), m_service_server_impl);
   }
