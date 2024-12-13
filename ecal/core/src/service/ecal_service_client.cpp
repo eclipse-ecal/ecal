@@ -182,6 +182,12 @@ namespace eCAL
     return m_service_client_impl->GetServiceName();
   }
 
+  Registration::SServiceMethodId CServiceClient::GetServiceId() const
+  {
+    // TODO: Implement this
+    return Registration::SServiceMethodId();
+  }
+
   bool CServiceClient::IsConnected() const
   {
     const auto instances = GetClientInstances();

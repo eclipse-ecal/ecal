@@ -77,6 +77,12 @@ namespace eCAL
     return m_service_server_impl->GetServiceName();
   }
 
+  Registration::SServiceMethodId CServiceServer::GetServiceId() const
+  {
+    // TODO: Implement this
+    return Registration::SServiceMethodId();
+  }
+
   bool CServiceServer::IsConnected()
   {
     return m_service_server_impl->IsConnected();
