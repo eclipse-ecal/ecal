@@ -79,39 +79,55 @@ namespace eCAL
     ////////////////////////////////////////////////////////
     // static library interface
     ////////////////////////////////////////////////////////
-    int SetExclFilter(const std::string& filter_)
+    bool SetExclFilter(const std::string& filter_)
     {
-      if (g_monitoring() != nullptr) g_monitoring()->SetExclFilter(filter_);
-      return(0);
+      if (g_monitoring() != nullptr)
+      {
+        g_monitoring()->SetExclFilter(filter_);
+        return true;
+      }
+      return false;
     }
 
-    int SetInclFilter(const std::string& filter_)
+    bool SetInclFilter(const std::string& filter_)
     {
-      if (g_monitoring() != nullptr) g_monitoring()->SetInclFilter(filter_);
-      return(0);
+      if (g_monitoring() != nullptr)
+      {
+        g_monitoring()->SetInclFilter(filter_);
+        return true;
+      }
+      return false;
     }
 
-    int SetFilterState(const bool state_)
+    bool SetFilterState(const bool state_)
     {
-      if (g_monitoring() != nullptr) g_monitoring()->SetFilterState(state_);
-      return(0);
+      if (g_monitoring() != nullptr)
+      {
+        g_monitoring()->SetFilterState(state_);
+        return true;
+      }
+      return false;
     }
 
-    int GetMonitoring(std::string& mon_, unsigned int entities_)
+    bool GetMonitoring(std::string& mon_, unsigned int entities_)
     {
-      mon_.clear();
-      if (g_monitoring() != nullptr) g_monitoring()->GetMonitoring(mon_, entities_);
-      return((int)mon_.size());
+      if (g_monitoring() != nullptr)
+      {
+        mon_.clear();
+        g_monitoring()->GetMonitoring(mon_, entities_);
+        return true;
+      }
+      return false;
     }
 
-    int GetMonitoring(SMonitoring& mon_, unsigned int entities_)
+    bool GetMonitoring(SMonitoring& mon_, unsigned int entities_)
     {
       if (g_monitoring() != nullptr)
       {
         g_monitoring()->GetMonitoring(mon_, entities_);
-        return(static_cast<int>(mon_.processes.size() + mon_.publisher.size() + mon_.subscriber.size() + mon_.server.size() + mon_.clients.size()));
+        return true;
       }
-      return(0);
+      return false;
     }
   }
 }
