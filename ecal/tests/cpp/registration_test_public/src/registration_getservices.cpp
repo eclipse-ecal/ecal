@@ -61,7 +61,7 @@ TEST_P(ServicesTestFixture, ServiceExpiration)
   {
     // create service
     eCAL::CServiceServer service("foo::service");
-    service.AddMethodCallback("method", { { "foo::req_type", "foo::req_desc" }, { "foo::resp_type", "foo::resp_desc" } }, eCAL::MethodCallbackT());
+    service.AddMethodCallback("foo::method", { { "foo::req_type", "foo::req_desc" }, { "foo::resp_type", "foo::resp_desc" } }, eCAL::MethodCallbackT());
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);

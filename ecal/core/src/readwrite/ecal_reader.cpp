@@ -534,7 +534,7 @@ namespace eCAL
         pub_info.process_id = topic_info_.pid;
 
         // execute it
-        std::lock_guard<std::mutex> exec_lock(m_connection_map_mtx);
+        const std::lock_guard<std::mutex> exec_lock(m_connection_map_mtx);
         (m_receive_callback)(topic_id, m_connection_map[pub_info].data_type_info, cb_data);
         processed = true;
       }
