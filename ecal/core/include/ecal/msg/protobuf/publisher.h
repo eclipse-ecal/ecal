@@ -155,12 +155,12 @@ namespace eCAL
        * @param msg_                     The message object.
        * @param time_                    Time stamp.
        *
-       * @return  Number of bytes sent.
+       * @return  True if succeeded, false if not.
       **/
-      size_t Send(const T& msg_, long long time_ = DEFAULT_TIME_ARGUMENT)
+      bool Send(const T& msg_, long long time_ = DEFAULT_TIME_ARGUMENT)
       {
         CPayload payload{ msg_ };
-        return eCAL::v5::CPublisher::Send(payload, time_);
+        return (eCAL::v5::CPublisher::Send(payload, time_) > 0);
       }
 
     private:

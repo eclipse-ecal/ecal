@@ -168,7 +168,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool RemEventCallback(eCAL_Publisher_Event type_);
+        bool RemoveEventCallback(eCAL_Publisher_Event type_);
 
       /**
        * @brief Query if the publisher is subscribed.

@@ -86,9 +86,9 @@ namespace eCAL
        *
        * @param time_  Optional time stamp.
        *
-       * @return  Number of bytes sent.
+       * @return  True if succeeded, false if not.
       **/
-      size_t Send(long long time_ = -1)
+      bool Send(long long time_ = -1)
       {
         return CMsgPublisher::Send(*m_msg, time_);
       }

@@ -109,11 +109,11 @@ namespace eCAL
 
   bool CPublisher::AddEventCallback(eCAL_Publisher_Event type_, const PubEventCallbackT& callback_)
   {
-    RemEventCallback(type_);
+    RemoveEventCallback(type_);
     return(m_publisher_impl->AddEventCallback(type_, callback_));
   }
 
-  bool CPublisher::RemEventCallback(eCAL_Publisher_Event type_)
+  bool CPublisher::RemoveEventCallback(eCAL_Publisher_Event type_)
   {
     return(m_publisher_impl->RemEventCallback(type_));
   }

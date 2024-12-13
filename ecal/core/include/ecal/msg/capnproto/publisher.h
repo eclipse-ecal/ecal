@@ -160,10 +160,10 @@ namespace eCAL
         return root_builder;
       }
 
-      void Send()
+      bool Send()
       {
         CPayload payload{ *builder };
-        eCAL::v5::CPublisher::Send(payload);
+        return eCAL::v5::CPublisher::Send(payload);
       }
 
     private:
