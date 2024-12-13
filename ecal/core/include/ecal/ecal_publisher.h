@@ -46,30 +46,6 @@ namespace eCAL
   {
     /**
      * @brief eCAL publisher class.
-     *
-     * The CPublisher class is used to send topics to matching eCAL subscribers. The topic is created automatically by the constructor
-     * or by the Create member function.
-     * <br>
-     * <br>
-     * For sending the topic payload the publisher class provides an overloaded Send method. The first one is sending the payload as
-     * a std::string. The second needs a preallocated buffer described by a buffer address and a buffer length. The publisher is not
-     * taking the ownership for the allocated memory buffer.
-     * <br>
-     * <br>
-     * An optional time stamp can be attached to the topic payload.
-     *
-    **/
-    /**
-     * @code
-     *            // create publisher, topic name "A"
-     *            eCAL::CPublisher pub("A");
-     *
-     *            // send string
-     *            std::string send_s = "Hello World ";
-     *
-     *            // send content
-     *            size_t snd_len = pub.Send(send_s);
-     * @endcode
     **/
     class ECAL_API_CLASS CPublisher
     {
@@ -86,6 +62,17 @@ namespace eCAL
       **/
       ECAL_API_EXPORTED_MEMBER
         CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_ = SDataTypeInformation(), const Publisher::Configuration& config_ = GetPublisherConfiguration());
+
+      /**
+       * @brief Constructor.
+       *
+       * @param topic_name_      Unique topic name.
+       * @param data_type_info_  Topic data type information (encoding, type, descriptor).
+       * @param event_callback_  The publisher event callback funtion.
+       * @param config_          Optional configuration parameters.
+      **/
+      ECAL_API_EXPORTED_MEMBER
+        CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventIDCallbackT event_callback_, const Publisher::Configuration& config_ = GetPublisherConfiguration());
 
       /**
        * @brief Destructor.
@@ -150,35 +137,6 @@ namespace eCAL
         bool Send(const std::string& payload_, long long time_ = DEFAULT_TIME_ARGUMENT);
 
       /**
-       * @brief Add callback function for publisher events.
-       *
-       * @param type_      The event type to react on.
-       * @param callback_  The callback function to add.
-       *
-       * @return  True if succeeded, false if not.
-      **/
-      ECAL_API_EXPORTED_MEMBER
-        bool AddEventCallback(eCAL_Publisher_Event type_, const PubEventCallbackT& callback_);
-
-      /**
-       * @brief Remove callback function for publisher events.
-       *
-       * @param type_  The event type to remove.
-       *
-       * @return  True if succeeded, false if not.
-      **/
-      ECAL_API_EXPORTED_MEMBER
-        bool RemoveEventCallback(eCAL_Publisher_Event type_);
-
-      /**
-       * @brief Query if the publisher is subscribed.
-       *
-       * @return  true if subscribed, false if not.
-      **/
-      ECAL_API_EXPORTED_MEMBER
-        bool IsSubscribed() const;
-
-      /**
        * @brief Query the number of subscribers.
        *
        * @return  Number of subscribers.
@@ -187,7 +145,7 @@ namespace eCAL
         size_t GetSubscriberCount() const;
 
       /**
-       * @brief Gets name of the connected topic.
+       * @brief Retrieve the topic name.
        *
        * @return  The topic name.
       **/
@@ -195,12 +153,12 @@ namespace eCAL
         std::string GetTopicName() const;
 
       /**
-       * @brief Gets a unique ID of this Publisher
+       * @brief Retrieve the topic id.
        *
-       * @return  The publisher id.
+       * @return  The topic id.
       **/
       ECAL_API_EXPORTED_MEMBER
-        Registration::STopicId GetPublisherId() const;
+        Registration::STopicId GetTopicId() const;
 
       /**
        * @brief Gets description of the connected topic.

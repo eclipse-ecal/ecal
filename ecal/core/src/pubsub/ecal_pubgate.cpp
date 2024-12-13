@@ -161,13 +161,14 @@ namespace eCAL
     if (topic_name.empty()) return;
 
     const auto& subscription_info = ecal_sample_.identifier;
+    const SDataTypeInformation& topic_information = ecal_topic.tdatatype;
 
     // unregister subscriber
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_sync);
     auto res = m_topic_name_publisher_map.equal_range(topic_name);
     for (TopicNamePublisherMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->RemoveSubscription(subscription_info);
+      iter->second->RemoveSubscription(subscription_info, topic_information);
     }
   }
 

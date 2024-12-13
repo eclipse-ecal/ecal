@@ -141,13 +141,13 @@ namespace eCAL
 
     // clear subscriber maps
     {
-      const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+      const std::lock_guard<std::mutex> lock(m_connection_map_mutex);
       m_connection_map.clear();
     }
 
     // clear event callback map
     {
-      const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
+      const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
       m_event_callback_map.clear();
     }
 
@@ -391,7 +391,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CPublisherImpl::AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_)
+  bool CPublisherImpl::AddEventCallback(eCAL_Publisher_Event type_, const PubEventCallbackT callback_)
   {
     if (!m_created) return(false);
 
@@ -401,7 +401,7 @@ namespace eCAL
       // log it
       Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::AddEventCallback");
 #endif
-      const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
+      const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
       m_event_callback_map[type_] = std::move(callback_);
     }
 
@@ -418,11 +418,27 @@ namespace eCAL
       // log it
       Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::RemEventCallback");
 #endif
-      const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
+      const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
       m_event_callback_map[type_] = nullptr;
     }
 
     return(true);
+  }
+
+  bool CPublisherImpl::AddEventIDCallback(const PubEventIDCallbackT callback_)
+  {
+    if (!m_created) return false;
+    const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
+    m_event_id_callback = callback_;
+    return true;
+  }
+
+  bool CPublisherImpl::RemEventIDCallback()
+  {
+    if (!m_created) return false;
+    const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
+    m_event_id_callback = nullptr;
+    return true;
   }
 
   void CPublisherImpl::ApplySubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& sub_layer_states_, const std::string& reader_par_)
@@ -488,7 +504,7 @@ namespace eCAL
     bool is_new_connection     = false;
     bool is_updated_connection = false;
     {
-      const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+      const std::lock_guard<std::mutex> lock(m_connection_map_mutex);
       auto subscription_info_iter = m_connection_map.find(subscription_info_);
 
       if (subscription_info_iter == m_connection_map.end())
@@ -526,12 +542,12 @@ namespace eCAL
     if (is_new_connection)
     {
       // fire connect event
-      FireConnectEvent(subscription_info_.entity_id, data_type_info_);
+      FireConnectEvent(subscription_info_, data_type_info_);
     }
     else if (is_updated_connection)
     {
       // fire update event
-      FireUpdateEvent(subscription_info_.entity_id, data_type_info_);
+      FireUpdateEvent(subscription_info_, data_type_info_);
     }
 
 #ifndef NDEBUG
@@ -540,7 +556,7 @@ namespace eCAL
 #endif
   }
 
-  void CPublisherImpl::RemoveSubscription(const SSubscriptionInfo& subscription_info_)
+  void CPublisherImpl::RemoveSubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
     // remove subscription
 #if ECAL_CORE_TRANSPORT_UDP
@@ -553,23 +569,18 @@ namespace eCAL
     if (m_writer_tcp) m_writer_tcp->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id);
 #endif
 
-    // remove key from connection map
-    bool last_connection_gone(false);
     {
-      const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+      const std::lock_guard<std::mutex> lock(m_connection_map_mutex);
 
+      // remove key from connection map
       m_connection_map.erase(subscription_info_);
-      last_connection_gone = m_connection_map.empty();
 
       // update connection count
       m_connection_count = GetConnectionCount();
     }
 
-    if (last_connection_gone)
-    {
-      // fire disconnect event
-      FireDisconnectEvent();
-    }
+    // fire disconnect event
+    FireDisconnectEvent(subscription_info_, data_type_info_);
 
 #ifndef NDEBUG
     // log it
@@ -586,7 +597,7 @@ namespace eCAL
     {
       // we should think about if we would like to potentially use the `time_` variable to tick with (but we would need the same base for checking incoming samples then....
       const auto send_time = std::chrono::steady_clock::now();
-      const std::lock_guard<std::mutex> lock(m_frequency_calculator_mtx);
+      const std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
       m_frequency_calculator.addTick(send_time);
     }
   }
@@ -738,7 +749,7 @@ namespace eCAL
     size_t loc_connections(0);
     size_t ext_connections(0);
     {
-      const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
+      const std::lock_guard<std::mutex> lock(m_connection_map_mutex);
       for (const auto& sub : m_connection_map)
       {
         if (sub.first.host_name == m_attributes.host_name)
@@ -768,50 +779,53 @@ namespace eCAL
     ecal_reg_sample_topic.uname  = m_attributes.unit_name;
   }
 
-  void CPublisherImpl::FireConnectEvent(const std::string& tid_, const SDataTypeInformation& tinfo_)
+  void CPublisherImpl::FireEvent(const eCAL_Publisher_Event type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_)
   {
-    const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
-    auto iter = m_event_callback_map.find(pub_event_connected);
-    if (iter != m_event_callback_map.end() && iter->second)
+    SPubEventCallbackData data;
+    data.type = type_;
+    data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+    data.clock = 0;
+    data.tid = subscription_info_.entity_id;
+    data.tdatatype = tinfo_;
+
+    // new event handling with topic id
     {
-      SPubEventCallbackData data;
-      data.type      = pub_event_connected;
-      data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-      data.clock     = 0;
-      data.tid       = tid_;
-      data.tdatatype = tinfo_;
-      (iter->second)(m_attributes.topic_name.c_str(), &data);
+      Registration::STopicId topic_id;
+      topic_id.topic_id.entity_id = subscription_info_.entity_id;
+      topic_id.topic_id.process_id = subscription_info_.process_id;
+      topic_id.topic_id.host_name = subscription_info_.host_name;
+      topic_id.topic_name = m_attributes.topic_name;
+      const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
+      if (m_event_id_callback)
+      {
+        m_event_id_callback(topic_id, data);
+      }
+    }
+
+    // deprecated event handling with topic name
+    {
+      const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
+      auto iter = m_event_callback_map.find(type_);
+      if (iter != m_event_callback_map.end() && iter->second)
+      {
+        (iter->second)(m_attributes.topic_name.c_str(), &data);
+      }
     }
   }
 
-  void CPublisherImpl::FireUpdateEvent(const std::string& tid_, const SDataTypeInformation& tinfo_)
+  void CPublisherImpl::FireConnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_)
   {
-    const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
-    auto iter = m_event_callback_map.find(pub_event_update_connection);
-    if (iter != m_event_callback_map.end() && iter->second)
-    {
-      SPubEventCallbackData data;
-      data.type      = pub_event_update_connection;
-      data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-      data.clock     = 0;
-      data.tid       = tid_;
-      data.tdatatype = tinfo_;
-      (iter->second)(m_attributes.topic_name.c_str(), &data);
-    }
+    FireEvent(pub_event_connected, subscription_info_, tinfo_);
   }
 
-  void CPublisherImpl::FireDisconnectEvent()
+  void CPublisherImpl::FireUpdateEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_)
   {
-    const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
-    auto iter = m_event_callback_map.find(pub_event_disconnected);
-    if (iter != m_event_callback_map.end() && iter->second)
-    {
-      SPubEventCallbackData data;
-      data.type  = pub_event_disconnected;
-      data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-      data.clock = 0;
-      (iter->second)(m_attributes.topic_name.c_str(), &data);
-    }
+    FireEvent(pub_event_update_connection, subscription_info_, tinfo_);
+  }
+
+  void CPublisherImpl::FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_)
+  {
+    FireEvent(pub_event_disconnected, subscription_info_, tinfo_);
   }
 
   size_t CPublisherImpl::GetConnectionCount()
@@ -975,7 +989,7 @@ namespace eCAL
   int32_t CPublisherImpl::GetFrequency()
   {
     const auto frequency_time = std::chrono::steady_clock::now();
-    const std::lock_guard<std::mutex> lock(m_frequency_calculator_mtx);
+    const std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
     return static_cast<int32_t>(m_frequency_calculator.getFrequency(frequency_time) * 1000);
   }
 }

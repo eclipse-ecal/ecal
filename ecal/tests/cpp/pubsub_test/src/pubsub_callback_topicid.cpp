@@ -128,7 +128,7 @@ TEST_P(TestFixture, OnePubSub)
       callback_datatype_info = datatype_info_;
     }
   );
-  const auto pub_id = publisher.GetPublisherId();
+  const auto pub_id = publisher.GetTopicId();
 
   // let them match
   eCAL::Process::SleepMS(2 * config.registration.registration_refresh);
@@ -175,7 +175,7 @@ TEST_P(TestFixture, MultiplePubSub)
   for (int i = 0; i < num_publishers; ++i)
   {
     auto& publisher = publishers[i];
-    const auto pub_id = publisher.GetPublisherId();
+    const auto pub_id = publisher.GetTopicId();
     const auto pub_datatype_info = publisher.GetDataTypeInformation();
 
     // send data

@@ -47,6 +47,18 @@ namespace eCAL
     if(g_pubgate() != nullptr) g_pubgate()->Register(topic_name_, m_publisher_impl);
   }
 
+  CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventIDCallbackT event_callback_, const Publisher::Configuration& config_)
+  {
+    // create publisher implementation
+    m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
+    
+    // register publisher
+    if (g_pubgate() != nullptr) g_pubgate()->Register(topic_name_, m_publisher_impl);
+    
+    // add event callback for all current event types
+    m_publisher_impl->AddEventIDCallback(event_callback_);
+  }
+
   CPublisher::~CPublisher()
   {
     // could be already destroyed by move
@@ -87,7 +99,7 @@ namespace eCAL
      // or we do not have any subscription at all
      // then the data writer will only do some statistics
      // for the monitoring layer and return
-     if (!IsSubscribed())
+     if (GetSubscriberCount() == 0)
      {
        m_publisher_impl->RefreshSendCounter();
        return(payload_.GetSize());
@@ -107,26 +119,6 @@ namespace eCAL
     return(Send(payload_.data(), payload_.size(), time_));
   }
 
-  bool CPublisher::AddEventCallback(eCAL_Publisher_Event type_, const PubEventCallbackT& callback_)
-  {
-    RemoveEventCallback(type_);
-    return(m_publisher_impl->AddEventCallback(type_, callback_));
-  }
-
-  bool CPublisher::RemoveEventCallback(eCAL_Publisher_Event type_)
-  {
-    return(m_publisher_impl->RemEventCallback(type_));
-  }
-
-  bool CPublisher::IsSubscribed() const
-  {
-#if ECAL_CORE_REGISTRATION
-    return(m_publisher_impl->IsSubscribed());
-#else  // ECAL_CORE_REGISTRATION
-    return(true);
-#endif // ECAL_CORE_REGISTRATION
-  }
-
   size_t CPublisher::GetSubscriberCount() const
   {
     return(m_publisher_impl->GetSubscriberCount());
@@ -137,7 +129,7 @@ namespace eCAL
     return(m_publisher_impl->GetTopicName());
   }
 
-  Registration::STopicId CPublisher::GetPublisherId() const
+  Registration::STopicId CPublisher::GetTopicId() const
   {
     return(m_publisher_impl->GetId());
   }
