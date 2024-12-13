@@ -18,7 +18,6 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_server_v5.h>
 
 #include <iostream>
 #include <chrono>
@@ -40,10 +39,10 @@ int main()
   eCAL::Initialize("minimal server");
 
   // create minimal service server
-  eCAL::v5::CServiceServer minimal_server("service1");
+  eCAL::CServiceServer minimal_server("service1");
 
   // add method callback
-  minimal_server.AddMethodCallback("echo", "", "", OnMethodCallback);
+  minimal_server.AddMethodCallback("echo", eCAL::SServiceMethodInformation(), OnMethodCallback);
 
   // idle
   while(eCAL::Ok())

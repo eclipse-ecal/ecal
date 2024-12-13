@@ -18,7 +18,6 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_server_v5.h>
 
 #include <chrono>
 #include <thread>
@@ -35,10 +34,10 @@ int main()
   eCAL::Initialize("latency server");
 
   // create latency service
-  eCAL::v5::CServiceServer latency_service("latency");
+  eCAL::CServiceServer latency_service("latency");
 
   // add hello method callback
-  latency_service.AddMethodCallback("hello", "", "", OnHello);
+  latency_service.AddMethodCallback("hello", eCAL::SServiceMethodInformation(), OnHello);
 
   // idle main thread
   while (eCAL::Ok()) std::this_thread::sleep_for(std::chrono::milliseconds(100));

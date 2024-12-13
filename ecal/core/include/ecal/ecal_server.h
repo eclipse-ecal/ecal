@@ -75,12 +75,14 @@ namespace eCAL
       /**
        * @brief CServiceServer are move-enabled
       **/
-      ECAL_API_EXPORTED_MEMBER CServiceServer(CServiceServer&& rhs) noexcept;
+      ECAL_API_EXPORTED_MEMBER
+        CServiceServer(CServiceServer&& rhs) noexcept;
 
       /**
        * @brief CServiceServer are move-enabled
       **/
-      ECAL_API_EXPORTED_MEMBER CServiceServer& operator=(CServiceServer&& rhs) noexcept;
+      ECAL_API_EXPORTED_MEMBER
+        CServiceServer& operator=(CServiceServer&& rhs) noexcept;
 
       /**
        * @brief Add method callback.
@@ -91,6 +93,9 @@ namespace eCAL
        *
        * @return  True if successful.
       **/
+
+      // TODO: Provide new MethodCallbackT type using SServiceMethodInformation instead "MethodCallbackT = std::function<int(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_)>"
+
       ECAL_API_EXPORTED_MEMBER
         bool AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_);
 
@@ -117,6 +122,9 @@ namespace eCAL
        *
        * @return  The service id.
       **/
+
+      // TODO: Implement this
+
       ECAL_API_EXPORTED_MEMBER
         Registration::SServiceMethodId GetServiceId() const;
 

@@ -18,7 +18,6 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_server_v5.h>
 
 #include <gtest/gtest.h>
 #include <map>
@@ -61,8 +60,8 @@ TEST_P(ServicesTestFixture, ServiceExpiration)
   // create simple service and let it expire
   {
     // create service
-    eCAL::v5::CServiceServer service("foo::service");
-    service.AddDescription("foo::method", "foo::req_type", "foo::req_desc", "foo::resp_type", "foo::resp_desc");
+    eCAL::CServiceServer service("foo::service");
+    service.AddMethodCallback("method", { { "foo::req_type", "foo::req_desc" }, { "foo::resp_type", "foo::resp_desc" } }, eCAL::MethodCallbackT());
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -109,20 +108,15 @@ TEST_P(ServicesTestFixture, GetServiceIDs)
   // create simple server
   {
     // create server
-    eCAL::v5::CServiceServer service("foo::service");
+    eCAL::CServiceServer service("foo::service");
 
-    // add description
+    // add method
     eCAL::SServiceMethodInformation service_method_info;
     service_method_info.request_type.name        = "foo::req_type";
     service_method_info.request_type.descriptor  = "foo::req_desc";
     service_method_info.response_type.name       = "foo::resp_type";
     service_method_info.response_type.descriptor = "foo::resp_desc";
-
-    service.AddDescription("foo::method",
-      service_method_info.request_type.name,
-      service_method_info.request_type.descriptor,
-      service_method_info.response_type.name,
-      service_method_info.response_type.descriptor);
+    service.AddMethodCallback("method", service_method_info, eCAL::MethodCallbackT());
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);

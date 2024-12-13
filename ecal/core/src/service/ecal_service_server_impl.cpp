@@ -71,7 +71,7 @@ namespace eCAL
 #ifndef NDEBUG
     Logging::Log(log_level_debug1, "CServiceServerImpl::AddMethodCallback: Adding method callback for method: " + method_);
 #endif
-    std::lock_guard<std::mutex> const lock(m_method_map_mutex);
+    const std::lock_guard<std::mutex> lock(m_method_map_mutex);
 
     auto iter = m_method_map.find(method_);
     if (iter != m_method_map.end())
@@ -248,13 +248,13 @@ namespace eCAL
 
     // Reset method callbacks
     {
-      std::lock_guard<std::mutex> const lock(m_method_map_mutex);
+      const std::lock_guard<std::mutex> lock(m_method_map_mutex);
       m_method_map.clear();
     }
 
     // Reset event callback
     {
-      std::lock_guard<std::mutex> const lock(m_event_callback_mutex);
+      const std::lock_guard<std::mutex> lock(m_event_callback_mutex);
       m_event_callback = nullptr;
     }
 
@@ -291,7 +291,7 @@ namespace eCAL
     service.tcp_port_v1 = server_tcp_port;
 
     {
-      std::lock_guard<std::mutex> const lock(m_method_map_mutex);
+      const std::lock_guard<std::mutex> lock(m_method_map_mutex);
       for (const auto& iter : m_method_map)
       {
         Service::Method method;
@@ -347,7 +347,7 @@ namespace eCAL
       Logging::Log(log_level_error, m_service_name + "::CServiceServerImpl::RequestCallback: Failed to parse request message");
 
       response_header.state = Service::eMethodCallState::failed;
-      std::string const emsg = "Service '" + m_service_name + "' request message could not be parsed.";
+      const std::string emsg = "Service '" + m_service_name + "' request message could not be parsed.";
       response_header.error = emsg;
 
       // TODO: The next version of the service protocol should omit the double-serialization (i.e. copying the binary data in a protocol buffer and then serializing that again)
@@ -364,14 +364,14 @@ namespace eCAL
     const auto& request_header = request.header;
     response_header.mname = request_header.mname;
     {
-      std::lock_guard<std::mutex> const lock(m_method_map_mutex);
+      const std::lock_guard<std::mutex> lock(m_method_map_mutex);
       auto requested_method_iterator = m_method_map.find(request_header.mname);
       if (requested_method_iterator == m_method_map.end())
       {
         // set method call state 'failed'
         response_header.state = Service::eMethodCallState::failed;
         // set error message
-        std::string const emsg = "CServiceServerImpl: Service '" + m_service_name + "' has no method named '" + request_header.mname + "'";
+        const std::string emsg = "CServiceServerImpl: Service '" + m_service_name + "' has no method named '" + request_header.mname + "'";
         response_header.error = emsg;
 
         // TODO: The next version of the service protocol should omit the double-serialization (i.e. copying the binary data in a protocol buffer and then serializing that again)
@@ -392,7 +392,7 @@ namespace eCAL
     // execute method (outside lock guard)
     const std::string& request_s = request.request;
     std::string response_s;
-    int const service_return_state = method.callback(method.method.mname, method.method.req_type, method.method.resp_type, request_s, response_s);
+    const int service_return_state = method.callback(method.method.mname, method.method.req_type, method.method.resp_type, request_s, response_s);
 
     // set method call state 'executed'
     response_header.state = Service::eMethodCallState::executed;
@@ -414,7 +414,7 @@ namespace eCAL
     Logging::Log(log_level_debug1, "CServiceServerImpl::NotifyEventCallback: Notifying event callback for: " + m_service_name + " Event Type: " + std::to_string(event_type_));
 #endif
 
-    std::lock_guard<std::mutex> const lock_cb(m_event_callback_mutex);
+    const std::lock_guard<std::mutex> lock_cb(m_event_callback_mutex);
     if (m_event_callback)
     {
       SServerEventCallbackData callback_data;
