@@ -49,6 +49,9 @@ namespace eCAL
 
   CPublisher::~CPublisher()
   {
+    // could be already destroyed by move
+    if (m_publisher_impl == nullptr) return;
+    
     // unregister publisher
     if (g_pubgate() != nullptr) g_pubgate()->Unregister(m_publisher_impl->GetTopicName(), m_publisher_impl);
 
