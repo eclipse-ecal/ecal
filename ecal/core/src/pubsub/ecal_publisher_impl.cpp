@@ -106,7 +106,7 @@ namespace eCAL
   {
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug1, m_attributes.topic_name + "::CDataWriter::Constructor");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::Constructor");
 #endif
 
     // build topic id

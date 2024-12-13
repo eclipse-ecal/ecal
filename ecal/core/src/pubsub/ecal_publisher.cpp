@@ -74,13 +74,13 @@ namespace eCAL
     return *this;
   }
 
-  size_t CPublisher::Send(const void* const buf_, const size_t len_, const long long time_ /* = DEFAULT_TIME_ARGUMENT */)
+  bool CPublisher::Send(const void* const buf_, const size_t len_, const long long time_ /* = DEFAULT_TIME_ARGUMENT */)
   {
     CBufferPayloadWriter payload{ buf_, len_ };
     return Send(payload, time_);
   }
   
-  size_t CPublisher::Send(CPayloadWriter& payload_, long long time_)
+  bool CPublisher::Send(CPayloadWriter& payload_, long long time_)
   {
      // in an optimization case the
      // publisher can send an empty package
@@ -97,11 +97,12 @@ namespace eCAL
      const long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
      const size_t written_bytes = m_publisher_impl->Write(payload_, write_time, 0);
 
-     // return number of bytes written
-     return written_bytes;
+     // TODO: change CPublisherImpl::Write to return a bool
+     // return true if we have written something
+     return written_bytes > 0;
   }
 
-  size_t CPublisher::Send(const std::string& payload_, long long time_)
+  bool CPublisher::Send(const std::string& payload_, long long time_)
   {
     return(Send(payload_.data(), payload_.size(), time_));
   }

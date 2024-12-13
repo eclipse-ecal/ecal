@@ -122,10 +122,10 @@ namespace eCAL
        * @param len_    Length of buffer.
        * @param time_   Send time (-1 = use eCAL system time in us, default = -1).
        *
-       * @return  Number of bytes sent.
+       * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        size_t Send(const void* buf_, size_t len_, long long time_ = DEFAULT_TIME_ARGUMENT);
+        bool Send(const void* buf_, size_t len_, long long time_ = DEFAULT_TIME_ARGUMENT);
 
       /**
        * @brief Send a message to all subscribers.
@@ -133,10 +133,10 @@ namespace eCAL
        * @param payload_  Payload writer.
        * @param time_     Send time (-1 = use eCAL system time in us, default = -1).
        *
-       * @return  Number of bytes sent.
+       * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        size_t Send(CPayloadWriter& payload_, long long time_ = DEFAULT_TIME_ARGUMENT);
+        bool Send(CPayloadWriter& payload_, long long time_ = DEFAULT_TIME_ARGUMENT);
 
       /**
        * @brief Send a message to all subscribers.
@@ -144,10 +144,10 @@ namespace eCAL
        * @param payload_  Payload string.
        * @param time_     Send time (-1 = use eCAL system time in us, default = -1).
        *
-       * @return  Number of bytes sent.
+       * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        size_t Send(const std::string& payload_, long long time_ = DEFAULT_TIME_ARGUMENT);
+        bool Send(const std::string& payload_, long long time_ = DEFAULT_TIME_ARGUMENT);
 
       /**
        * @brief Add callback function for publisher events.
