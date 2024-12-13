@@ -193,12 +193,12 @@ namespace eCAL
       ss << R"(    # Windows specific setting to enable receiving UDP traffic with the Npcap based receiver)"                       << "\n";
       ss << R"(    npcap_enabled: )"                                 << config_.transport_layer.udp.npcap_enabled                   << "\n";
       ss << R"()"                                                                                                                   << "\n";
-      ss << R"(    # In local mode multicast group and ttl are set by default and are not adjustable)"                              << "\n";
+      ss << R"(    # Local mode multicast group and ttl)"                                                                           << "\n";
       ss << R"(    local:)"                                                                                                         << "\n";
       ss << R"(      # Multicast group base. All registration and logging is sent on this address)"                                 << "\n";
-      ss << R"(      # group: "127.0.0.1")"                                                                                         << "\n";
+      ss << R"(      group: )"                                       << quoteString(config_.transport_layer.udp.local.group)        << "\n";
       ss << R"(      # TTL (hop limit) is used to determine the amount of routers being traversed towards the destination)"         << "\n";
-      ss << R"(      # ttl: 0)"                                                                                                     << "\n";
+      ss << R"(      ttl: )"                                         << config_.transport_layer.udp.local.ttl                       << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"(    network:)"                                                                                                       << "\n";
       ss << R"(      # Multicast group base. All registration and logging is sent on this address)"                                 << "\n";

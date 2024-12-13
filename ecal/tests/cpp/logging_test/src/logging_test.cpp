@@ -219,10 +219,10 @@ TEST(logging_levels /*unused*/, all /*unused*/)
   eCAL::Finalize();
 }
 
-TEST(logging_levels /*unused*/, various /*unused*/)
+TEST(logging_levels /*unused*/, log_warning_vs_info /*unused*/)
 {
-  const std::string unit_name    = "logging_levels_various_udp";
-  const std::string log_message  = "Logging level various test for udp.";
+  const std::string unit_name    = "logging_levels_warning_vs_info_udp";
+  const std::string log_message  = "Logging level warning vs info test for udp.";
   auto  ecal_config              = GetUDPConfiguration();
 
   ecal_config.logging.provider.udp.filter_log = log_level_warning;
@@ -237,20 +237,6 @@ TEST(logging_levels /*unused*/, various /*unused*/)
 
   // logging expected
   eCAL::Logging::Log(log_level_warning, log_message);
-  EXPECT_EQ(getLogging(log), 1);
-
-  // change log filter for udp logging
-  eCAL::Logging::SetUDPLogFilter(log_level_info | log_level_debug1);
-
-  // logging not expected
-  eCAL::Logging::Log(log_level_warning, log_message);
-  EXPECT_EQ(getLogging(log), 0);
-
-  // logging expected
-  eCAL::Logging::Log(log_level_info, log_message);
-  EXPECT_EQ(getLogging(log), 1);
-  
-  eCAL::Logging::Log(log_level_debug1, log_message);
   EXPECT_EQ(getLogging(log), 1);
 
   eCAL::Finalize();

@@ -31,14 +31,8 @@
 namespace eCAL
 {
   ECAL_API Configuration&                 GetConfiguration                 ();
-  ECAL_API TransportLayer::Configuration& GetTransportLayerConfiguration   ();
-  ECAL_API Registration::Configuration&   GetRegistrationConfiguration     ();
-  ECAL_API Monitoring::Configuration&     GetMonitoringConfiguration       ();
-  ECAL_API Logging::Configuration&        GetLoggingConfiguration          ();
   ECAL_API Subscriber::Configuration&     GetSubscriberConfiguration       ();
   ECAL_API Publisher::Configuration&      GetPublisherConfiguration        ();
-  ECAL_API Time::Configuration&           GetTimesyncConfiguration         ();
-  ECAL_API Application::Configuration&    GetApplicationConfiguration      ();
 
   namespace Config
   {
@@ -98,9 +92,6 @@ namespace eCAL
 
     ECAL_API std::string              GetMonitoringFilterExcludeList       ();
     ECAL_API std::string              GetMonitoringFilterIncludeList       ();
-    ECAL_API eCAL_Logging_Filter      GetConsoleLogFilter                  ();
-    ECAL_API eCAL_Logging_Filter      GetFileLogFilter                     ();
-    ECAL_API eCAL_Logging_Filter      GetUdpLogFilter                      ();
 
     /////////////////////////////////////
     // sys
@@ -111,18 +102,22 @@ namespace eCAL
     /////////////////////////////////////
     // publisher
     /////////////////////////////////////
+    
     ECAL_API bool                     IsTopicTypeSharingEnabled            ();
     ECAL_API bool                     IsTopicDescriptionSharingEnabled     ();
+    
+    /////////////////////////////////////
+    // subscriber
+    /////////////////////////////////////
+    
+    ECAL_API bool                     GetDropOutOfOrderMessages            ();
 
     /////////////////////////////////////
-    // experimental
+    // registration
     /////////////////////////////////////
-    namespace Experimental
-    {
-      ECAL_API size_t                 GetShmMonitoringQueueSize          ();
-      ECAL_API std::string            GetShmMonitoringDomain             ();
-      ECAL_API bool                   GetDropOutOfOrderMessages          ();
-    }
+    
+    ECAL_API size_t                   GetShmMonitoringQueueSize            ();
+    ECAL_API std::string              GetShmMonitoringDomain               ();
   }
 }
 //@}

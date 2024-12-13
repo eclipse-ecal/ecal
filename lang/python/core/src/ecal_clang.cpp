@@ -275,19 +275,11 @@ bool ecal_get_description(const char* topic_name_, const char** topic_desc_, int
 }
 
 /****************************************/
-/*      log_setlevel                    */
-/****************************************/
-void log_setlevel(const int level_)
-{
-  eCAL::Logging::SetLogLevel(eCAL_Logging_eLogLevel(level_));
-}
-
-/****************************************/
 /*      log_message                     */
 /****************************************/
-void log_message(const char* message_)
+void log_message(const eCAL_Logging_eLogLevel& log_level_, const char* message_)
 {
-  eCAL::Logging::Log(message_);
+  eCAL::Logging::Log(log_level_, message_);
 }
 
 

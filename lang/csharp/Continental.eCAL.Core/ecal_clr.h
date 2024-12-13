@@ -101,13 +101,6 @@ namespace Continental
       {
       public:
         /**
-         * @brief Sets the log level.
-         *
-         * @param level_ The level.
-        **/
-        static void SetLogLevel(const LogLevel level_);
-
-        /**
          * @brief Log a message.
          *
          * @param message_ The message string to log.

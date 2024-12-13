@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,30 +17,22 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file   ecal_log_cimpl.cpp
- * @brief  eCAL logging c interface
-**/
+#pragma once
 
-#include <ecal/ecal.h>
-#include <ecal/cimpl/ecal_log_cimpl.h>
+#include <cstddef>
+#include <ecal/ecal_log_level.h>
+#include <ecal/ecal_os.h>
+#include <ecal/ecal_tlayer.h>
+#include "ecal/config/configuration.h"
 
-#include "ecal_common_cimpl.h"
+#include <string>
 
-extern "C"
+namespace eCAL
 {
-  ECALC_API void eCAL_Logging_Log(enum eCAL_Logging_eLogLevel level_, const char* const msg_)
-  {
-    eCAL::Logging::Log(level_, msg_);
-  }
-
-  ECALC_API int eCAL_Logging_GetLogging(void* buf_, int buf_len_)
-  {
-    std::string buf;
-    if (eCAL::Logging::GetLogging(buf) != 0)
-    {
-      return(CopyBuffer(buf_, buf_len_, buf));
-    }
-    return(0);
-  }
+  ECAL_API TransportLayer::Configuration& GetTransportLayerConfiguration ();
+  ECAL_API Registration::Configuration&   GetRegistrationConfiguration   ();
+  ECAL_API Monitoring::Configuration&     GetMonitoringConfiguration     ();
+  ECAL_API Logging::Configuration&        GetLoggingConfiguration        ();
+  ECAL_API Time::Configuration&           GetTimesyncConfiguration       ();
+  ECAL_API Application::Configuration&    GetApplicationConfiguration    ();
 }
