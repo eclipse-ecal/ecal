@@ -180,7 +180,7 @@ TEST(core_cpp_pubsub, SimpleMessage1)
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // send content
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  EXPECT_EQ(true, pub.Send(send_s));
 
   // receive content with DATA_FLOW_TIME_MS timeout
   recv_s.clear();
@@ -219,7 +219,7 @@ TEST(core_cpp_pubsub, SimpleMessage2)
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // send content
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  EXPECT_EQ(true, pub.Send(send_s));
 
   // receive content with DATA_FLOW_TIME_MS timeout
   recv_s.clear();
@@ -255,7 +255,7 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
 
   // send content
   g_callback_received_bytes = 0;
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  EXPECT_EQ(true, pub.Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
@@ -268,7 +268,7 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
 
   // send content
   g_callback_received_bytes = 0;
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  EXPECT_EQ(true, pub.Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
@@ -281,7 +281,7 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
 
   // send content
   g_callback_received_bytes = 0;
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  EXPECT_EQ(true, pub.Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
@@ -294,7 +294,7 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
 
   // send content
   g_callback_received_bytes = 0;
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  EXPECT_EQ(true, pub.Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
@@ -328,7 +328,7 @@ TEST(core_cpp_pubsub, DynamicSizeCB)
 
   // send content
   g_callback_received_bytes = 0;
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  EXPECT_EQ(true, pub.Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
@@ -341,7 +341,7 @@ TEST(core_cpp_pubsub, DynamicSizeCB)
 
   // send content
   g_callback_received_bytes = 0;
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  EXPECT_EQ(true, pub.Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
@@ -380,7 +380,7 @@ TEST(core_cpp_pubsub, DynamicCreate)
 
   // send content
   g_callback_received_bytes = 0;
-  EXPECT_EQ(send_s.size(), pub->Send(send_s));
+  EXPECT_EQ(true, pub->Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
@@ -403,7 +403,7 @@ TEST(core_cpp_pubsub, DynamicCreate)
 
   // send content
   g_callback_received_bytes = 0;
-  EXPECT_EQ(send_s.size(), pub->Send(send_s));
+  EXPECT_EQ(true, pub->Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
@@ -425,7 +425,7 @@ TEST(core_cpp_pubsub, DynamicCreate)
 
   // send content
   g_callback_received_bytes = 0;
-  EXPECT_EQ(send_s.size(), pub->Send(send_s));
+  EXPECT_EQ(true, pub->Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
