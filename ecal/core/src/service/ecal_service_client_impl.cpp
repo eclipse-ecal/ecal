@@ -255,7 +255,7 @@ namespace eCAL
     // Validate service and method names
     if (m_service_name.empty() || method_name_.empty())
     {
-      ResponseError(entity_id_, m_service_name, method_name_, "CServiceClientImpl::CallWithCallbackAsync: Invalid service or method name.", response_callback_);
+      ResponseError(entity_id_, m_service_name, method_name_, "Invalid service or method name.", response_callback_);
       return false;
     }
 

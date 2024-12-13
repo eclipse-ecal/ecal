@@ -41,7 +41,10 @@ namespace eCAL
     Logging::Log(log_level_debug2, "CServiceServerImpl::CreateInstance: Creating instance of CServiceServerImpl for service: " + service_name_);
 #endif
     auto instance = std::shared_ptr<CServiceServerImpl>(new CServiceServerImpl(service_name_, event_callback_));
-    instance->Start();
+    if (instance != nullptr)
+    {
+      instance->Start();
+    }
     return instance;
   }
 
@@ -103,7 +106,7 @@ namespace eCAL
 #ifndef NDEBUG
     Logging::Log(log_level_debug1, "CServiceServerImpl::RemoveMethodCallback: Removing method callback for method: " + method_);
 #endif
-    std::lock_guard<std::mutex> const lock(m_method_map_mutex);
+    const std::lock_guard<std::mutex> lock(m_method_map_mutex);
 
     auto iter = m_method_map.find(method_);
     if (iter != m_method_map.end())
@@ -381,8 +384,7 @@ namespace eCAL
       }
       else
       {
-        auto call_count = requested_method_iterator->second.method.call_count;
-        requested_method_iterator->second.method.call_count = ++call_count;
+        requested_method_iterator->second.method.call_count++;
         method = requested_method_iterator->second;
       }
     }
