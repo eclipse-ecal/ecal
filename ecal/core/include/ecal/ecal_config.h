@@ -33,7 +33,6 @@ namespace eCAL
   ECAL_API Configuration&                 GetConfiguration                 ();
   ECAL_API Subscriber::Configuration&     GetSubscriberConfiguration       ();
   ECAL_API Publisher::Configuration&      GetPublisherConfiguration        ();
-  ECAL_API Service::Configuration&        GetServiceConfiguration          ();
 
   namespace Config
   {
@@ -103,18 +102,14 @@ namespace eCAL
     /////////////////////////////////////
     // publisher
     /////////////////////////////////////
+    
     ECAL_API bool                     IsTopicTypeSharingEnabled            ();
     ECAL_API bool                     IsTopicDescriptionSharingEnabled     ();
-
-    /////////////////////////////////////
-    // service
-    /////////////////////////////////////
-    ECAL_API bool                     IsServiceProtocolV0Enabled           ();
-    ECAL_API bool                     IsServiceProtocolV1Enabled           ();
     
     /////////////////////////////////////
     // subscriber
     /////////////////////////////////////
+    
     ECAL_API bool                     GetDropOutOfOrderMessages            ();
 
     /////////////////////////////////////

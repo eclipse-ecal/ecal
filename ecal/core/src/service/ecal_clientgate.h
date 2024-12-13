@@ -25,23 +25,17 @@
 
 #include "ecal_def.h"
 #include "serialization/ecal_struct_sample_registration.h"
-#include "util/ecal_expmap.h"
 
 #include <ecal/ecal_callback.h>
 
 #include <atomic>
 #include <map>
-#include <set>
+#include <memory>
 #include <shared_mutex>
 #include <string>
-#include <vector>
 
 namespace eCAL
 {
-  // deprecated >>>
-  class CServiceClientImpl;
-  // deprecated <<<
-
   class CServiceClientImpl;
 
   class CClientGate
@@ -64,7 +58,7 @@ namespace eCAL
     static std::atomic<bool>      m_created;
 
     using ServiceNameClientIDImplMapT = std::multimap<std::string, std::shared_ptr<CServiceClientImpl>>;
-    std::shared_timed_mutex       m_service_client_map_sync;
+    std::shared_timed_mutex       m_service_client_map_mutex;
     ServiceNameClientIDImplMapT   m_service_client_map;
   };
 }

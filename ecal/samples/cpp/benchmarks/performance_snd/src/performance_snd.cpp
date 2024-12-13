@@ -98,7 +98,7 @@ int main(int argc, char **argv)
         out << "Messages/s:            " << (unsigned int)(msgs  /                            diff_time.count()) << std::endl;
         out << "Latency (us):          " << (diff_time.count() * 1e6) / (double)msgs                             << std::endl;
         std::cout << out.str() << std::endl;
-        eCAL::Logging::Log(out.str());
+        eCAL::Logging::Log(log_level_info, out.str());
 
         // reset counter
         msgs  = 0;

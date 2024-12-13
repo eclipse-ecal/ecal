@@ -98,13 +98,6 @@ namespace eCAL
     bool              IsTopicDescriptionSharingEnabled     () { return GetConfiguration().publisher.share_topic_description; }
 
     /////////////////////////////////////
-    // service
-    /////////////////////////////////////
-    
-    bool              IsServiceProtocolV0Enabled           () { return GetConfiguration().service.protocol_v0; }
-    bool              IsServiceProtocolV1Enabled           () { return GetConfiguration().service.protocol_v1; }
-
-    /////////////////////////////////////
     // subscriber
     /////////////////////////////////////
     

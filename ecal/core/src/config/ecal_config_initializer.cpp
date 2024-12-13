@@ -281,11 +281,6 @@ namespace eCAL
       return GetConfiguration().timesync;
     }
 
-    Service::Configuration& GetServiceConfiguration()
-    {
-      return GetConfiguration().service;
-    }
-
     Application::Configuration& GetApplicationConfiguration()
     {
       return GetConfiguration().application;

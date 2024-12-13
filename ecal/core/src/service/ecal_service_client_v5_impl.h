@@ -103,9 +103,6 @@ namespace eCAL
       // Pointer to the underlying service client implementation
       std::shared_ptr<eCAL::CServiceClient> m_service_client_impl;
 
-      // Indicates whether the client has been successfully created
-      bool m_created;
-
       // Host name filter for the service client
       std::string m_host_name;
 

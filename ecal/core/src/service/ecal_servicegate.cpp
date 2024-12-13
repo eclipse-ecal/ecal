@@ -51,43 +51,37 @@ namespace eCAL
     if(!m_created) return;
 
     // destroy all remaining server
-    const std::shared_lock<std::shared_timed_mutex> lock(m_service_set_sync);
-    for (const auto& service : m_service_set)
-    {
-      service->Stop();
-    }
+    const std::unique_lock<std::shared_timed_mutex> lock(m_service_server_map_mutex);
+    m_service_server_map.clear();
 
     m_created = false;
   }
 
-  bool CServiceGate::Register(CServiceServerImpl* service_)
+  bool CServiceGate::Register(const std::string& service_name_, const std::shared_ptr<CServiceServerImpl>& server_)
   {
     if(!m_created) return(false);
 
     // register internal service
-    const std::unique_lock<std::shared_timed_mutex> lock(m_service_set_sync);
-    m_service_set.insert(service_);
+    const std::unique_lock<std::shared_timed_mutex> lock(m_service_server_map_mutex);
+    m_service_server_map.emplace(std::pair<std::string, std::shared_ptr<CServiceServerImpl>>(service_name_, server_));
 
     return(true);
   }
 
-  bool CServiceGate::Unregister(CServiceServerImpl* service_)
+  bool CServiceGate::Unregister(const std::string& service_name_, const std::shared_ptr<CServiceServerImpl>& server_)
   {
-    if(!m_created) return(false);
-    bool ret_state(false);
+    if (!m_created) return(false);
+    bool ret_state = false;
 
-    // unregister internal service
-    const std::unique_lock<std::shared_timed_mutex> lock(m_service_set_sync);
-    for (auto iter = m_service_set.begin(); iter != m_service_set.end();)
+    const std::unique_lock<std::shared_timed_mutex> lock(m_service_server_map_mutex);
+    auto res = m_service_server_map.equal_range(service_name_);
+    for (auto iter = res.first; iter != res.second; ++iter)
     {
-      if (*iter == service_)
+      if (iter->second == server_)
       {
-        iter = m_service_set.erase(iter);
+        m_service_server_map.erase(iter);
         ret_state = true;
-      }
-      else
-      {
-        iter++;
+        break;
       }
     }
 
@@ -98,11 +92,13 @@ namespace eCAL
   {
     if (!m_created) return;
 
-    // read service registrations
-    std::shared_lock<std::shared_timed_mutex> const lock(m_service_set_sync);
-    for (const auto& service_server_impl : m_service_set)
+    // read server registrations
     {
-      reg_sample_list_.push_back(service_server_impl->GetRegistration());
+      const std::shared_lock<std::shared_timed_mutex> lock(m_service_server_map_mutex);
+      for (const auto& iter : m_service_server_map)
+      {
+        reg_sample_list_.push_back(iter.second->GetRegistration());
+      }
     }
   }
 }

@@ -25,8 +25,8 @@
 #pragma once
 #include <ecal/ecal.h>
 #include <ecal/ecal_client_v5.h>
+#include <ecal/ecal_server_v5.h>
 #include <ecal/ecal_publisher_v5.h>
-
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace System::Runtime::InteropServices;
@@ -100,13 +100,6 @@ namespace Continental
       public ref class Logger
       {
       public:
-        /**
-         * @brief Sets the log level.
-         *
-         * @param level_ The level.
-        **/
-        static void SetLogLevel(const LogLevel level_);
-
         /**
          * @brief Log a message.
          *
@@ -438,7 +431,7 @@ namespace Continental
         bool RemMethodCallback(String^ methodName, MethodCallback^ callback_);
 
       private:
-        ::eCAL::CServiceServer* m_serv;
+        ::eCAL::v5::CServiceServer* m_serv;
         /**
          * @brief managed callbacks that will get executed during the eCAL method callback
         **/

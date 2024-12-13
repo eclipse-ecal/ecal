@@ -214,7 +214,7 @@ namespace eCAL
       ECAL_API_EXPORTED_MEMBER
         bool IsConnected();
 
-    protected:
+    private:
       std::shared_ptr<CServiceClientImpl> m_service_client_impl;
     };
   }

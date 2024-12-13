@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,64 +33,13 @@ namespace eCAL
   namespace Logging
   {
     /**
-     * @brief Sets the log level.
-     *
-     * @param level_ The level.
-    **/
-    void SetLogLevel(const eCAL_Logging_eLogLevel level_)
-    {
-      if(g_log_provider() != nullptr) g_log_provider()->SetLogLevel(level_);
-    }
-
-    /**
-     * @brief Sets the file log filter.
-     * 
-     * @param filter_ The filter;
-     */
-    void SetFileLogFilter(eCAL_Logging_Filter filter_)
-    {
-      if(g_log_provider() != nullptr) g_log_provider()->SetFileLogFilter(filter_);
-    }
-
-    /**
-     * @brief Sets the udp log filter.
-     * 
-     * @param filter_ The filter;
-     */
-    void SetUDPLogFilter(eCAL_Logging_Filter filter_)
-    {
-      if(g_log_provider() != nullptr) g_log_provider()->SetUDPLogFilter(filter_);
-    }
-
-    /**
-     * @brief Sets the console log filter.
-     * 
-     * @param filter_ The filter;
-     */
-    void SetConsoleLogFilter(eCAL_Logging_Filter filter_)
-    {
-      if(g_log_provider() != nullptr) g_log_provider()->SetConsoleLogFilter(filter_);
-    }
-
-    /**
-     * @brief Get the current log level.
-     *
-     * @return   The current log level.
-    **/
-    eCAL_Logging_eLogLevel GetLogLevel()
-    {
-      if(g_log_provider() != nullptr) return(g_log_provider()->GetLogLevel());
-      else                   return(log_level_none);
-    }
-
-    /**
      * @brief Log a message.
      *
      * @param msg_   The log message string.
     **/
-    void Log(const std::string& msg_)
+    void Log(eCAL_Logging_eLogLevel level_, const std::string& msg_)
     {
-      if(g_log_provider() != nullptr) g_log_provider()->Log(msg_);
+      if(g_log_provider() != nullptr) g_log_provider()->Log(level_, msg_);
     }
 
     /**

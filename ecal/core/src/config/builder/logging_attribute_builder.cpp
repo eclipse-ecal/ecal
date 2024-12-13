@@ -14,7 +14,6 @@ namespace eCAL
       attributes.process_id         = Process::GetProcessID();
       attributes.process_name       = Process::GetProcessName();
       attributes.unit_name          = Process::GetUnitName();
-      attributes.level              = log_level_info;
 
       attributes.udp_sink.enabled        = log_config_.provider.udp.enable;
       attributes.udp_sink.filter_log     = log_config_.provider.udp.filter_log;
