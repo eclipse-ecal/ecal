@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,12 +47,12 @@ int              g_overalll_read = 0;
 std::chrono::steady_clock::time_point start_time(std::chrono::nanoseconds(0));
 
 // global subscriber callback
-void OnReceive(const char* topic_name_)
+void OnReceive(const eCAL::Registration::STopicId& topic_id_)
 {
   // statistics
   {
     std::lock_guard<std::mutex> lock(g_sub_map_sync);
-    g_sub_map[topic_name_].read++;
+    g_sub_map[topic_id_.topic_name].read++;
   }
   g_overalll_read++;
 }
@@ -123,10 +123,6 @@ int main()
   std::cout << "start destruction sequence .." << std::endl;
   {
     std::lock_guard<std::mutex> lock(g_sub_map_sync);
-    for(SubMapT::iterator iter = g_sub_map.begin(); iter != g_sub_map.end(); ++iter)
-    {
-      iter->second.sub->Destroy();
-    }
     for(SubMapT::iterator iter = g_sub_map.begin(); iter != g_sub_map.end(); ++iter)
     {
       delete iter->second.sub;

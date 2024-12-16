@@ -59,10 +59,10 @@ namespace eCAL
 #endif
 #if ECAL_CORE_SUBSCRIBER
       case bct_reg_publisher:
-        if (g_subgate() != nullptr) g_subgate()->ApplyPubRegistration(sample_);
+        if (g_subgate() != nullptr) g_subgate()->ApplyPublisherRegistration(sample_);
         break;
       case bct_unreg_publisher:
-        if (g_subgate() != nullptr) g_subgate()->ApplyPubUnregistration(sample_);
+        if (g_subgate() != nullptr) g_subgate()->ApplyPublisherUnregistration(sample_);
         break;
 #endif
       default:

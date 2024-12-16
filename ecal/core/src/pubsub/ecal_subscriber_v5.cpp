@@ -41,7 +41,7 @@ namespace eCAL
   namespace v5
   {
     CSubscriber::CSubscriber() :
-      m_datareader(nullptr)
+      m_subscriber_impl(nullptr)
     {
     }
 
@@ -62,9 +62,9 @@ namespace eCAL
     }
 
     CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept :
-      m_datareader(std::move(rhs.m_datareader))
+      m_subscriber_impl(std::move(rhs.m_subscriber_impl))
     {
-      rhs.m_datareader = nullptr;
+      rhs.m_subscriber_impl = nullptr;
     }
 
     CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept
@@ -72,23 +72,23 @@ namespace eCAL
       // Call destroy, to clean up the current state, then afterwards move all elements
       Destroy();
 
-      m_datareader = std::move(rhs.m_datareader);
+      m_subscriber_impl = std::move(rhs.m_subscriber_impl);
 
-      rhs.m_datareader = nullptr;
+      rhs.m_subscriber_impl = nullptr;
 
       return *this;
     }
 
     bool CSubscriber::Create(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_)
     {
-      if (m_datareader != nullptr) return(false);
+      if (m_subscriber_impl != nullptr) return(false);
       if (topic_name_.empty())     return(false);
 
       // create datareader
-      m_datareader = std::make_shared<CDataReader>(data_type_info_, BuildReaderAttributes(topic_name_, config_, GetPublisherConfiguration(), GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
+      m_subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config_, GetPublisherConfiguration(), GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
 
       // register datareader
-      g_subgate()->Register(topic_name_, m_datareader);
+      g_subgate()->Register(topic_name_, m_subscriber_impl);
 
       // we made it :-)
       return(true);
@@ -101,22 +101,21 @@ namespace eCAL
 
     bool CSubscriber::Destroy()
     {
-      if (m_datareader == nullptr) return(false);
+      if (m_subscriber_impl == nullptr) return(false);
 
       // remove receive callback
       RemReceiveCallback();
 
       // unregister datareader
-      if (g_subgate() != nullptr) g_subgate()->Unregister(m_datareader->GetTopicName(), m_datareader);
+      if (g_subgate() != nullptr) g_subgate()->Unregister(m_subscriber_impl->GetTopicName(), m_subscriber_impl);
 
 #ifndef NDEBUG
       // log it
-      eCAL::Logging::Log(log_level_debug1, std::string(m_datareader->GetTopicName() + "::CSubscriber::Destroy"));
+      eCAL::Logging::Log(log_level_debug1, std::string(m_subscriber_impl->GetTopicName() + "::CSubscriber::Destroy"));
 #endif
 
-      // stop & destroy datareader
-      m_datareader->Stop();
-      m_datareader.reset();
+      // destroy datareader
+      m_subscriber_impl.reset();
 
       // we made it :-)
       return(true);
@@ -124,27 +123,27 @@ namespace eCAL
 
     bool CSubscriber::SetID(const std::set<long long>& filter_ids_)
     {
-      if (m_datareader == nullptr) return(false);
-      m_datareader->SetFilterIDs(filter_ids_);
+      if (m_subscriber_impl == nullptr) return(false);
+      m_subscriber_impl->SetFilterIDs(filter_ids_);
       return(true);
     }
 
     bool CSubscriber::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
     {
-      if (m_datareader == nullptr) return false;
-      return m_datareader->SetAttribute(attr_name_, attr_value_);
+      if (m_subscriber_impl == nullptr) return false;
+      return m_subscriber_impl->SetAttribute(attr_name_, attr_value_);
     }
 
     bool CSubscriber::ClearAttribute(const std::string& attr_name_)
     {
-      if (m_datareader == nullptr) return false;
-      return m_datareader->ClearAttribute(attr_name_);
+      if (m_subscriber_impl == nullptr) return false;
+      return m_subscriber_impl->ClearAttribute(attr_name_);
     }
 
     bool CSubscriber::ReceiveBuffer(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */) const
     {
-      if (m_datareader == nullptr) return(false);
-      return(m_datareader->Read(buf_, time_, rcv_timeout_));
+      if (m_subscriber_impl == nullptr) return(false);
+      return(m_subscriber_impl->Read(buf_, time_, rcv_timeout_));
     }
 
     bool CSubscriber::AddReceiveCallback(ReceiveCallbackT callback_)
@@ -158,58 +157,58 @@ namespace eCAL
 
     bool CSubscriber::AddReceiveCallback(ReceiveIDCallbackT callback_)
     {
-      if (m_datareader == nullptr) return(false);
+      if (m_subscriber_impl == nullptr) return(false);
       RemReceiveCallback();
-      return(m_datareader->AddReceiveCallback(std::move(callback_)));
+      return(m_subscriber_impl->AddReceiveCallback(std::move(callback_)));
     }
 
     bool CSubscriber::RemReceiveCallback()
     {
-      if (m_datareader == nullptr) return(false);
-      return(m_datareader->RemReceiveCallback());
+      if (m_subscriber_impl == nullptr) return(false);
+      return(m_subscriber_impl->RemReceiveCallback());
     }
 
     bool CSubscriber::AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_)
     {
-      if (m_datareader == nullptr) return(false);
+      if (m_subscriber_impl == nullptr) return(false);
       RemEventCallback(type_);
-      return(m_datareader->AddEventCallback(type_, callback_));
+      return(m_subscriber_impl->AddEventCallback(type_, callback_));
     }
 
     bool CSubscriber::RemEventCallback(eCAL_Subscriber_Event type_)
     {
-      if (m_datareader == nullptr) return(false);
-      return(m_datareader->RemEventCallback(type_));
+      if (m_subscriber_impl == nullptr) return(false);
+      return(m_subscriber_impl->RemEventCallback(type_));
     }
 
     bool CSubscriber::IsPublished() const
     {
-      if (m_datareader == nullptr) return(false);
-      return(m_datareader->IsPublished());
+      if (m_subscriber_impl == nullptr) return(false);
+      return(m_subscriber_impl->IsPublished());
     }
 
     size_t CSubscriber::GetPublisherCount() const
     {
-      if (m_datareader == nullptr) return(0);
-      return(m_datareader->GetPublisherCount());
+      if (m_subscriber_impl == nullptr) return(0);
+      return(m_subscriber_impl->GetPublisherCount());
     }
 
     std::string CSubscriber::GetTopicName() const
     {
-      if (m_datareader == nullptr) return("");
-      return(m_datareader->GetTopicName());
+      if (m_subscriber_impl == nullptr) return("");
+      return(m_subscriber_impl->GetTopicName());
     }
 
     Registration::STopicId CSubscriber::GetId() const
     {
-      if (m_datareader == nullptr) return{};
-      return(m_datareader->GetId());
+      if (m_subscriber_impl == nullptr) return{};
+      return(m_subscriber_impl->GetId());
     }
 
     SDataTypeInformation CSubscriber::GetDataTypeInformation() const
     {
-      if (m_datareader == nullptr) return(SDataTypeInformation{});
-      return(m_datareader->GetDataTypeInformation());
+      if (m_subscriber_impl == nullptr) return(SDataTypeInformation{});
+      return(m_subscriber_impl->GetDataTypeInformation());
     }
 
     std::string CSubscriber::Dump(const std::string& indent_ /* = "" */) const

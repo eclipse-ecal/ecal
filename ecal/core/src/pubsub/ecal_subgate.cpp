@@ -60,39 +60,35 @@ namespace eCAL
     if(!m_created) return;
 
     // stop & destroy all remaining subscriber
-    const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    for (const auto& datareader : m_topic_name_datareader_map)
-    {
-      datareader.second->Stop();
-    }
-    m_topic_name_datareader_map.clear();
+    const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
+    m_topic_name_subscriber_map.clear();
 
     m_created = false;
   }
 
-  bool CSubGate::Register(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_)
+  bool CSubGate::Register(const std::string& topic_name_, const std::shared_ptr<CSubscriberImpl>& datareader_)
   {
     if(!m_created) return(false);
 
     // register reader
-    const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    m_topic_name_datareader_map.emplace(std::pair<std::string, std::shared_ptr<CDataReader>>(topic_name_, datareader_));
+    const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
+    m_topic_name_subscriber_map.emplace(std::pair<std::string, std::shared_ptr<CSubscriberImpl>>(topic_name_, datareader_));
 
     return(true);
   }
 
-  bool CSubGate::Unregister(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_)
+  bool CSubGate::Unregister(const std::string& topic_name_, const std::shared_ptr<CSubscriberImpl>& datareader_)
   {
     if(!m_created) return(false);
     bool ret_state = false;
 
-    const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    auto res = m_topic_name_datareader_map.equal_range(topic_name_);
+    const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
+    auto res = m_topic_name_subscriber_map.equal_range(topic_name_);
     for(auto iter = res.first; iter != res.second; ++iter)
     {
       if(iter->second == datareader_)
       {
-        m_topic_name_datareader_map.erase(iter);
+        m_topic_name_subscriber_map.erase(iter);
         ret_state = true;
         break;
       }
@@ -103,8 +99,8 @@ namespace eCAL
 
   bool CSubGate::HasSample(const std::string& sample_name_)
   {
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    return(m_topic_name_datareader_map.find(sample_name_) != m_topic_name_datareader_map.end());
+    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
+    return(m_topic_name_subscriber_map.find(sample_name_) != m_topic_name_subscriber_map.end());
   }
 
   bool CSubGate::ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_, eTLayerType layer_)
@@ -146,14 +142,14 @@ namespace eCAL
       }
 
       // apply sample to data reader
-      std::vector<std::shared_ptr<CDataReader>> readers_to_apply;
+      std::vector<std::shared_ptr<CSubscriberImpl>> readers_to_apply;
         
       // Lock the sync map only while extracting the relevant shared pointers to the Datareaders.
       // Apply the samples to the readers afterward.
       {
         // apply sample to data reader
-        const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-        auto res = m_topic_name_datareader_map.equal_range(ecal_sample.topic_info.tname);
+        const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
+        auto res = m_topic_name_subscriber_map.equal_range(ecal_sample.topic_info.tname);
         std::transform(
           res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
         );
@@ -188,13 +184,13 @@ namespace eCAL
 
     // apply sample to data reader
     size_t applied_size(0);
-    std::vector<std::shared_ptr<CDataReader>> readers_to_apply;
+    std::vector<std::shared_ptr<CSubscriberImpl>> readers_to_apply;
 
     // Lock the sync map only while extracting the relevant shared pointers to the Datareaders.
     // Apply the samples to the readers afterwards.
     {
-      const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-      auto res = m_topic_name_datareader_map.equal_range(topic_info_.tname);
+      const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
+      auto res = m_topic_name_subscriber_map.equal_range(topic_info_.tname);
       std::transform(
         res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
       );
@@ -209,7 +205,7 @@ namespace eCAL
     return (applied_size > 0);
   }
 
-  void CSubGate::ApplyPubRegistration(const Registration::Sample& ecal_sample_)
+  void CSubGate::ApplyPublisherRegistration(const Registration::Sample& ecal_sample_)
   {
     if(!m_created) return;
 
@@ -222,7 +218,7 @@ namespace eCAL
     const auto& publication_info = ecal_sample_.identifier;
     const SDataTypeInformation& topic_information = ecal_topic.tdatatype;
 
-    CDataReader::SLayerStates layer_states;
+    CSubscriberImpl::SLayerStates layer_states;
     for (const auto& layer : ecal_topic.tlayer)
     {
       // transport layer versions 0 and 1 did not support dynamic layer enable feature
@@ -247,8 +243,8 @@ namespace eCAL
     }
 
     // register publisher
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    auto res = m_topic_name_datareader_map.equal_range(topic_name);
+    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
+    auto res = m_topic_name_subscriber_map.equal_range(topic_name);
     for (auto iter = res.first; iter != res.second; ++iter)
     {
       // apply layer specific parameter
@@ -256,11 +252,11 @@ namespace eCAL
       {
         iter->second->ApplyLayerParameter(publication_info, tlayer.type, tlayer.par_layer);
       }
-      iter->second->ApplyPublication(publication_info, topic_information, layer_states);
+      iter->second->ApplyPublisherRegistration(publication_info, topic_information, layer_states);
     }
   }
 
-  void CSubGate::ApplyPubUnregistration(const Registration::Sample& ecal_sample_)
+  void CSubGate::ApplyPublisherUnregistration(const Registration::Sample& ecal_sample_)
   {
     if (!m_created) return;
 
@@ -273,11 +269,11 @@ namespace eCAL
     const auto& publication_info = ecal_sample_.identifier;
 
     // unregister publisher
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    auto res = m_topic_name_datareader_map.equal_range(topic_name);
+    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
+    auto res = m_topic_name_subscriber_map.equal_range(topic_name);
     for (auto iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->RemovePublication(publication_info);
+      iter->second->ApplyPublisherUnregistration(publication_info);
     }
   }
 
@@ -286,8 +282,8 @@ namespace eCAL
     if (!m_created) return;
 
     // read reader registrations
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    for (const auto& iter : m_topic_name_datareader_map)
+    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
+    for (const auto& iter : m_topic_name_subscriber_map)
     {
       iter.second->GetRegistration(reg_sample_list_.push_back());
     }

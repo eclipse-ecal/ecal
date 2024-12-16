@@ -67,7 +67,7 @@ namespace eCAL
        * @param config_          Optional configuration parameters.
       **/
       ECAL_API_EXPORTED_MEMBER
-        CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_ = SDataTypeInformation(), const SubEventCallbackT event_callback_ = SubEventCallbackT(), const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
+        CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventIDCallbackT event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
 
       /**
        * @brief Destructor.
@@ -105,7 +105,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool AddReceiveCallback(ReceiveCallbackT callback_);
+        bool AddReceiveCallback(ReceiveIDCallbackT callback_);
 
       /**
        * @brief Remove callback function for incoming receives.

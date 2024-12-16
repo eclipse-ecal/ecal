@@ -29,7 +29,7 @@
 #include <mutex>
 #include <string>
 
-#include <ecal/ecal_subscriber.h>
+#include <ecal/ecal_subscriber_v5.h>
 #include <ecal/ecal_util.h>
 
 namespace eCAL
@@ -68,13 +68,13 @@ namespace eCAL
 
 
   template <typename T, typename DynamicDeserializer>
-  class CDynamicMessageSubscriber final : public CSubscriber
+  class CDynamicMessageSubscriber final : public v5::CSubscriber
   {
   public:
     /**
      * @brief  Constructor.
     **/
-    CDynamicMessageSubscriber() : CSubscriber()
+    CDynamicMessageSubscriber() : v5::CSubscriber()
     {
     }
 
@@ -83,10 +83,10 @@ namespace eCAL
     *
     * @param topic_name_  Unique topic name.
     **/
-    CDynamicMessageSubscriber(const std::string& topic_name_) : CSubscriber()
+    CDynamicMessageSubscriber(const std::string& topic_name_) : v5::CSubscriber()
       , m_deserializer()
     {
-      CSubscriber::Create(topic_name_);
+      v5::CSubscriber::Create(topic_name_);
     }
 
     ~CDynamicMessageSubscriber() noexcept
@@ -108,7 +108,7 @@ namespace eCAL
     * @brief  Move Constructor
     **/
     CDynamicMessageSubscriber(CDynamicMessageSubscriber&& rhs)
-      : CSubscriber(std::move(rhs))
+      : v5::CSubscriber(std::move(rhs))
       , m_cb_callback(std::move(rhs.m_cb_callback))
       , m_deserializer(std::move(rhs.m_deserializer))
     {
@@ -117,9 +117,9 @@ namespace eCAL
       if (has_callback)
       {
         // the callback bound to the CSubscriber belongs to rhs, bind to this callback instead
-        CSubscriber::RemReceiveCallback();
+        v5::CSubscriber::RemReceiveCallback();
         auto callback = std::bind(&CDynamicMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
-        CSubscriber::AddReceiveCallback(callback);
+        v5::CSubscriber::AddReceiveCallback(callback);
       }
     }
 
@@ -136,7 +136,7 @@ namespace eCAL
     bool Destroy()
     {
       RemReceiveCallback();
-      return(CSubscriber::Destroy());
+      return(v5::CSubscriber::Destroy());
     }
 
     /**
@@ -167,7 +167,7 @@ namespace eCAL
       }
 
       ReceiveIDCallbackT callback = std::bind(&CDynamicMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-      return(CSubscriber::AddReceiveCallback(callback));
+      return(v5::CSubscriber::AddReceiveCallback(callback));
     }
 
     /**
@@ -177,7 +177,7 @@ namespace eCAL
     **/
     bool RemReceiveCallback()
     {
-      bool ret = CSubscriber::RemReceiveCallback();
+      bool ret = v5::CSubscriber::RemReceiveCallback();
 
       std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
       if (m_cb_callback == nullptr) return(false);

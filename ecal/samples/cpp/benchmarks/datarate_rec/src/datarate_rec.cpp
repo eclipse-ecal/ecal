@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,12 +50,12 @@ int main(int argc, char** argv)
 
   // add callback
   std::vector<char> rec_buffer;
-  auto on_receive = [&](const struct eCAL::SReceiveCallbackData* data_) {
+  auto on_receive = [&](const struct eCAL::SReceiveCallbackData& data_) {
     // make a memory copy to emulate user action
-    rec_buffer.reserve(data_->size);
-    std::memcpy(rec_buffer.data(), data_->buf, data_->size);
+    rec_buffer.reserve(data_.size);
+    std::memcpy(rec_buffer.data(), data_.buf, data_.size);
   };
-  sub.AddReceiveCallback(std::bind(on_receive, std::placeholders::_2));
+  sub.AddReceiveCallback(std::bind(on_receive, std::placeholders::_3));
 
   // idle main thread
   while (eCAL::Ok())
@@ -63,9 +63,6 @@ int main(int argc, char** argv)
     // sleep 100 ms
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
-
-  // destroy publisher
-  sub.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();

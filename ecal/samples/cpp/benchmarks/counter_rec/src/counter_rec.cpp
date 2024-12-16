@@ -36,8 +36,8 @@ int main()
   long long  g_first_clock(-1);
 
   // add callback
-  auto on_receive = [&](const struct eCAL::SReceiveCallbackData* data_) {
-    long long const clock = reinterpret_cast<long long*>(data_->buf)[0];
+  auto on_receive = [&](const struct eCAL::SReceiveCallbackData& data_) {
+    long long const clock = reinterpret_cast<long long*>(data_.buf)[0];
     if(g_first_clock < 0)
     {
       g_first_clock = clock;
@@ -54,7 +54,7 @@ int main()
       g_clock++;
     }
   };
-  sub.AddReceiveCallback(std::bind(on_receive, std::placeholders::_2));
+  sub.AddReceiveCallback(std::bind(on_receive, std::placeholders::_3));
 
   // idle main thread
   while(eCAL::Ok())
@@ -62,9 +62,6 @@ int main()
     // sleep 100 ms
     eCAL::Process::SleepMS(100);
   }
-
-  // destroy subscriber
-  sub.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();

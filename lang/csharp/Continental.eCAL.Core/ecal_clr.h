@@ -26,6 +26,7 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_client_v5.h>
 #include <ecal/ecal_server_v5.h>
+#include <ecal/ecal_subscriber_v5.h>
 
 using namespace System;
 using namespace System::Collections::Generic;
@@ -347,7 +348,7 @@ namespace Continental
         System::String^ Dump();
 
       private:
-        ::eCAL::CSubscriber* m_sub;
+        ::eCAL::v5::CSubscriber* m_sub;
         /**
          * @brief managed callbacks that will get executed on during the eCAL topic callback
         **/

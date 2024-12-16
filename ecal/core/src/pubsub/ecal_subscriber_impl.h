@@ -45,7 +45,7 @@
 
 namespace eCAL
 {
-  class CDataReader
+  class CSubscriberImpl
   {
   public:
     struct SLayerState
@@ -63,26 +63,29 @@ namespace eCAL
     };
 
     using SPublicationInfo = Registration::SampleIdentifier;
-    CDataReader(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_);
-    ~CDataReader();
-
-    bool Stop();
+    CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_);
+    ~CSubscriberImpl();
 
     bool Read(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);
 
     bool AddReceiveCallback(ReceiveIDCallbackT callback_);
     bool RemReceiveCallback();
 
+    // deprecated event callback interface
     bool AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Subscriber_Event type_);
+
+    // future event callback interface
+    bool AddEventIDCallback(const SubEventIDCallbackT callback_);
+    bool RemEventIDCallback();
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
     bool ClearAttribute(const std::string& attr_name_);
 
     void SetFilterIDs(const std::set<long long>& filter_ids_);
 
-    void ApplyPublication(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& pub_layer_states_);
-    void RemovePublication(const SPublicationInfo& publication_info_);
+    void ApplyPublisherRegistration(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& pub_layer_states_);
+    void ApplyPublisherUnregistration(const SPublicationInfo& publication_info_);
 
     void ApplyLayerParameter(const SPublicationInfo& publication_info_, eTLayerType type_, const Registration::ConnectionPar& parameter_);
 

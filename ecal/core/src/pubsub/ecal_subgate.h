@@ -43,25 +43,24 @@ namespace eCAL
     void Start();
     void Stop();
 
-    bool Register(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_);
-    bool Unregister(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_);
+    bool Register(const std::string& topic_name_, const std::shared_ptr<CSubscriberImpl>& datareader_);
+    bool Unregister(const std::string& topic_name_, const std::shared_ptr<CSubscriberImpl>& datareader_);
 
     bool HasSample(const std::string& sample_name_);
 
     bool ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_, eTLayerType layer_);
     bool ApplySample(const Payload::TopicInfo& topic_info_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
 
-    void ApplyPubRegistration(const Registration::Sample& ecal_sample_);
-    void ApplyPubUnregistration(const Registration::Sample& ecal_sample_);
+    void ApplyPublisherRegistration(const Registration::Sample& ecal_sample_);
+    void ApplyPublisherUnregistration(const Registration::Sample& ecal_sample_);
 
     void GetRegistrations(Registration::SampleList& reg_sample_list_);
 
   protected:
     static std::atomic<bool> m_created;
 
-    // database data reader
-    using TopicNameDataReaderMapT = std::unordered_multimap<std::string, std::shared_ptr<CDataReader>>;
-    std::shared_timed_mutex  m_topic_name_datareader_sync;
-    TopicNameDataReaderMapT  m_topic_name_datareader_map;
+    using TopicNameSubscriberMapT = std::unordered_multimap<std::string, std::shared_ptr<CSubscriberImpl>>;
+    std::shared_timed_mutex  m_topic_name_subscriber_mutex;
+    TopicNameSubscriberMapT  m_topic_name_subscriber_map;
   };
 }

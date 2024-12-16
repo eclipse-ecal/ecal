@@ -37,7 +37,7 @@
 
 namespace eCAL
 {
-  class CDataReader;
+  class CSubscriberImpl;
 
   namespace v5
   {
@@ -230,7 +230,7 @@ namespace eCAL
        * @return  true if created, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool IsCreated() const { return(m_datareader != nullptr); }
+        bool IsCreated() const { return(m_subscriber_impl != nullptr); }
 
       /**
        * @brief Query if the subscriber is published.
@@ -284,7 +284,7 @@ namespace eCAL
 
     private:
       // class members
-      std::shared_ptr<CDataReader> m_datareader;
+      std::shared_ptr<CSubscriberImpl> m_subscriber_impl;
     };
   }
 }

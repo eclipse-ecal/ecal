@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,14 +26,14 @@
 #include <thread>
 
 // print performance results
-void PrintStatistic(const std::string& topic_name_, const std::chrono::duration<double>& diff_time_, const size_t size_, long long& bytes_, long long& msgs_, const struct eCAL::SReceiveCallbackData* data_)
+void PrintStatistic(const std::string& topic_name_, const std::chrono::duration<double>& diff_time_, const size_t size_, long long& bytes_, long long& msgs_, const struct eCAL::SReceiveCallbackData& data_)
 {
     std::stringstream out;
     out << "Topic Name:            " << topic_name_                                                      << std::endl;
-    if (data_->size > 15)
+    if (data_.size > 15)
     {
       out << "Message [0 - 15]:      ";
-      for (auto i = 0; i < 16; ++i) out << (static_cast<char*>(data_->buf))[i] << " ";
+      for (auto i = 0; i < 16; ++i) out << (static_cast<char*>(data_.buf))[i] << " ";
       out << std::endl;
     }
     out << "Message size (kByte):  " << (unsigned int)(size_  / 1024.0)                                        << std::endl;
@@ -62,8 +62,8 @@ int main()
   long long bytes(0);
 
   // add callback
-  auto on_receive = [&](const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_) {
-    auto size = data_->size;
+    auto on_receive = [&](const eCAL::Registration::STopicId& topic_id_, const eCAL::SReceiveCallbackData & data_) {
+    auto size = data_.size;
 
     msgs++;
     bytes += size;
@@ -72,11 +72,11 @@ int main()
     const std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
     if (diff_time >= std::chrono::seconds(1))
     {
-      PrintStatistic(topic_name_, diff_time, size, bytes, msgs, data_);
+      PrintStatistic(topic_id_.topic_name, diff_time, size, bytes, msgs, data_);
       start_time = std::chrono::steady_clock::now();
     }
   };
-  sub.AddReceiveCallback(std::bind(on_receive, std::placeholders::_1, std::placeholders::_2));
+  sub.AddReceiveCallback(std::bind(on_receive, std::placeholders::_1, std::placeholders::_3));
 
   // idle main thread
   while(eCAL::Ok())
@@ -84,9 +84,6 @@ int main()
     // sleep 100 ms
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
-
-  // destroy subscriber
-  sub.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();

@@ -211,6 +211,7 @@ endif()
 
 if(ECAL_CORE_SUBSCRIBER)
   set(ecal_sub_src
+      src/pubsub/ecal_subscriber.cpp
       src/pubsub/ecal_subscriber_impl.cpp
       src/pubsub/ecal_subscriber_impl.h
       src/pubsub/ecal_subscriber_v5.cpp

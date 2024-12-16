@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,13 +44,13 @@ std::string pauseName;   // receiving on this channel should pause playback
 std::string triggerName; // receiving on this channel should start playback
 bool received = false;
 
-void callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* /*data_*/)
+void callback(const eCAL::Registration::STopicId& topic_id_)
 {
-    std::string topicName = topic_name_;
+    std::string topicName = topic_id_.topic_name;
     if (topicName == triggerName || topicName == pauseName)
     {
         std::lock_guard<std::mutex> lk(m);
-        lastCallbackTopic = topic_name_;
+        lastCallbackTopic = topicName;
         received = true;
         cv.notify_all();
     }
@@ -109,7 +109,7 @@ int main(int argc, char** argv)
 
     eCAL::CSubscriber triggerSubscriber(triggerName);
     triggerSubscriber.AddReceiveCallback(
-        std::bind(callback, std::placeholders::_1, std::placeholders::_2));
+        std::bind(callback, std::placeholders::_1));
     eCAL::CSubscriber pauseSubscriber(pauseName);
 
     eCAL::pb::play::CommandRequest command_request;
@@ -117,7 +117,7 @@ int main(int argc, char** argv)
     if(resimPauseMode)
     {
         pauseSubscriber.AddReceiveCallback(
-            std::bind(callback, std::placeholders::_1, std::placeholders::_2));
+            std::bind(callback, std::placeholders::_1));
     }
 
     while (eCAL::Ok())

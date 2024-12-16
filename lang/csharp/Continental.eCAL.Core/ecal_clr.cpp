@@ -196,7 +196,7 @@ System::String^ Publisher::Dump()
 /////////////////////////////////////////////////////////////////////////////
 // Subscriber
 /////////////////////////////////////////////////////////////////////////////
-Subscriber::Subscriber() : m_sub(new ::eCAL::CSubscriber())
+Subscriber::Subscriber() : m_sub(new ::eCAL::v5::CSubscriber())
 {
 }
 
@@ -206,7 +206,7 @@ Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_,
   topic_info.name       = StringToStlString(topic_type_);
   topic_info.encoding   = StringToStlString(topic_encoding_);
   topic_info.descriptor = StringToStlString(topic_desc_);
-  m_sub = new ::eCAL::CSubscriber(StringToStlString(topic_name_), topic_info);
+  m_sub = new ::eCAL::v5::CSubscriber(StringToStlString(topic_name_), topic_info);
 }
 
 Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, array<Byte>^ topic_desc_)
@@ -215,7 +215,7 @@ Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_,
   topic_info.name       = StringToStlString(topic_type_);
   topic_info.encoding   = StringToStlString(topic_encoding_);
   topic_info.descriptor = ByteArrayToStlString(topic_desc_);
-  m_sub = new ::eCAL::CSubscriber(StringToStlString(topic_name_), topic_info);
+  m_sub = new ::eCAL::v5::CSubscriber(StringToStlString(topic_name_), topic_info);
 }
 
 Subscriber::~Subscriber()

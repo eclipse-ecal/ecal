@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,15 +41,15 @@ struct SCallbackPar
 };
 
 // message receive callback
-void on_receive(const struct eCAL::SReceiveCallbackData* data_, SCallbackPar* par_, int delay_)
+void on_receive(const struct eCAL::SReceiveCallbackData& data_, SCallbackPar* par_, int delay_)
 {
   // get receive time stamp
   auto rec_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
   // update latency, size and msg number
   const std::lock_guard<std::mutex> lock(par_->mtx);
-  par_->latency_array.push_back(rec_time - data_->time);
-  par_->rec_size = data_->size;
+  par_->latency_array.push_back(rec_time - data_.time);
+  par_->rec_size = data_.size;
   par_->msg_num++;
   // delay callback
   if(delay_ > 0) std::this_thread::sleep_for(std::chrono::milliseconds(delay_));
@@ -66,7 +66,7 @@ void do_run(int delay_, std::string& log_file_)
 
   // apply subscriber callback function
   SCallbackPar cb_par;
-  auto callback = std::bind(on_receive, std::placeholders::_2, &cb_par, delay_);
+  auto callback = std::bind(on_receive, std::placeholders::_3, &cb_par, delay_);
   sub.AddReceiveCallback(callback);
 
   size_t msg_last(0);
