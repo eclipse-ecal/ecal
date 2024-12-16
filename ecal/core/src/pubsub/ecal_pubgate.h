@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "readwrite/ecal_writer.h"
+#include "ecal_publisher_impl.h"
 #include "serialization/ecal_struct_sample_registration.h"
 
 #include <atomic>
@@ -44,19 +44,19 @@ namespace eCAL
     void Start();
     void Stop();
 
-    bool Register(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_);
-    bool Unregister(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_);
+    bool Register(const std::string& topic_name_, const std::shared_ptr<CPublisherImpl>& publisher_);
+    bool Unregister(const std::string& topic_name_, const std::shared_ptr<CPublisherImpl>& publisher_);
 
-    void ApplySubRegistration(const Registration::Sample& ecal_sample_);
-    void ApplySubUnregistration(const Registration::Sample& ecal_sample_);
+    void ApplySubscriberRegistration(const Registration::Sample& ecal_sample_);
+    void ApplySubscriberUnregistration(const Registration::Sample& ecal_sample_);
 
     void GetRegistrations(Registration::SampleList& reg_sample_list_);
 
   protected:
     static std::atomic<bool>  m_created;
 
-    using TopicNameDataWriterMapT = std::multimap<std::string, std::shared_ptr<CDataWriter>>;
-    std::shared_timed_mutex   m_topic_name_datawriter_sync;
-    TopicNameDataWriterMapT   m_topic_name_datawriter_map;
+    using TopicNamePublisherMapT = std::multimap<std::string, std::shared_ptr<CPublisherImpl>>;
+    std::shared_timed_mutex  m_topic_name_publisher_mutex;
+    TopicNamePublisherMapT   m_topic_name_publisher_map;
   };
 }

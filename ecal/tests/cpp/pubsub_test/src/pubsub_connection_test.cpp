@@ -41,7 +41,7 @@ TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
   auto publisher_function = [&do_start_publication, &publication_finished, &subscriber_seen_at_publication_start]() {
     eCAL::Publisher::Configuration pub_config;
     pub_config.layer.shm.acknowledge_timeout_ms = 500;
-    eCAL::CPublisher pub("blob", pub_config);
+    eCAL::CPublisher pub("blob", eCAL::SDataTypeInformation(), pub_config);
 
     int pub_count(0);
     const auto max_pub_count(1000);
@@ -51,7 +51,7 @@ TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
       {
         if (pub_count == 0)
         {
-          subscriber_seen_at_publication_start = pub.IsSubscribed();
+          subscriber_seen_at_publication_start = pub.GetSubscriberCount() > 0;
         }
 
         pub.Send(std::to_string(pub_count));
@@ -140,13 +140,13 @@ TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
   auto publisher_function = [&do_start_publication, &publication_finished]() {
     eCAL::Publisher::Configuration pub_config;
     pub_config.layer.shm.acknowledge_timeout_ms = 500;
-    eCAL::CPublisher pub("blob", pub_config);
+    eCAL::CPublisher pub("blob", eCAL::SDataTypeInformation(), pub_config);
 
     int cnt(0);
     const auto max_runs(1000);
     while (eCAL::Ok())
     {
-      if (pub.IsSubscribed())
+      if (pub.GetSubscriberCount() > 0)
       {
         do_start_publication = true;
       }
@@ -236,7 +236,7 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
   // Publisher1 in thread 1
   auto publisher1_function = [&publisher1_sent_count, &message_count]() {
     eCAL::CPublisher pub1("topic1");
-    while (!pub1.IsSubscribed())
+    while (pub1.GetSubscriberCount() == 0)
     {
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }

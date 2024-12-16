@@ -65,7 +65,7 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
   pub_config.layer.tcp.enable = false;
 
   // create publisher for topic "A"
-  eCAL::CPublisher pub("A", pub_config);
+  eCAL::CPublisher pub("A", eCAL::SDataTypeInformation(), pub_config);
 
   // add callback
   EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
@@ -76,21 +76,15 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
   g_callback_received_bytes = 0;
   g_callback_received_count = 0;
 
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  EXPECT_TRUE(pub.Send(send_s));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
-  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
+  EXPECT_TRUE(pub.Send(nullptr, 0));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive
   EXPECT_EQ(send_s.size(), g_callback_received_bytes);
   EXPECT_EQ(2, g_callback_received_count);
-
-  // destroy subscriber
-  sub.Destroy();
-
-  // destroy publisher
-  pub.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();
@@ -138,12 +132,6 @@ TEST(core_cpp_pubsub, MultipleSendsUDP)
     EXPECT_EQ(last_received_timestamp, timestamp);
     ++timestamp;
   }
-
-  // destroy subscriber
-  sub.Destroy();
-
-  // destroy publisher
-  pub.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();

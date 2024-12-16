@@ -25,7 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_publisher.h>
+#include <ecal/ecal_publisher_v5.h>
 #include <ecal/ecal_util.h>
 
 #include <string>
@@ -43,7 +43,7 @@ namespace eCAL
    * 
   **/
   template <typename T>
-  class CMsgPublisher : public CPublisher
+  class CMsgPublisher : public v5::CPublisher
   {
   public:
     /**
@@ -130,9 +130,9 @@ namespace eCAL
      * @param msg_   The message object. 
      * @param time_  Optional time stamp. 
      *
-     * @return  Number of bytes sent. 
+     * @return  True if succeeded, false if not.
     **/
-    size_t Send(const T& msg_, long long time_ = DEFAULT_TIME_ARGUMENT)
+    bool Send(const T& msg_, long long time_ = DEFAULT_TIME_ARGUMENT)
     {
       // this is an optimization ...
       // if there is no subscription we do not waste time for
@@ -141,7 +141,7 @@ namespace eCAL
         // counting and frequency calculation for the monitoring layer
       if (!IsSubscribed())
       {
-        return(CPublisher::Send(nullptr, 0, time_));
+        return(eCAL::v5::CPublisher::Send(nullptr, 0, time_) > 0);
       }
 
       // if we have a subscription allocate memory for the
@@ -153,13 +153,13 @@ namespace eCAL
         m_buffer.resize(size);
         if (Serialize(msg_, m_buffer.data(), m_buffer.size()))
         {
-          return(CPublisher::Send(m_buffer.data(), size, time_));
+          return(eCAL::v5::CPublisher::Send(m_buffer.data(), size, time_) > 0);
         }
       }
       else
       {
         // send a zero payload length message to trigger the subscriber side
-        return(CPublisher::Send(nullptr, 0, time_));
+        return(eCAL::v5::CPublisher::Send(nullptr, 0, time_) > 0);
       }
       return(0);
     }

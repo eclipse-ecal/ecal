@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,9 +64,7 @@ int main()
     tname << "PUB_" << i;
 
     // publisher topic name
-    std::shared_ptr<eCAL::CPublisher> pub = std::make_shared<eCAL::CPublisher>();
-
-    pub->Create(tname.str());
+    std::shared_ptr<eCAL::CPublisher> pub = std::make_shared<eCAL::CPublisher>(tname.str());
     struct SPubCount pub_count;
     pub_count.pub = std::move(pub);
     pub_vec[i] = pub_count;

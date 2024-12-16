@@ -113,7 +113,7 @@ void Logger::Log(System::String^ message_)
 /////////////////////////////////////////////////////////////////////////////
 // Publisher
 /////////////////////////////////////////////////////////////////////////////
-Publisher::Publisher() : m_pub(new ::eCAL::CPublisher())
+Publisher::Publisher() : m_pub(new ::eCAL::v5::CPublisher())
 {
 }
 
@@ -123,7 +123,7 @@ Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, S
   topic_info.name       = StringToStlString(topic_type_);
   topic_info.encoding   = StringToStlString(topic_encoding_);
   topic_info.descriptor = StringToStlString(topic_desc_);
-  m_pub = new ::eCAL::CPublisher(StringToStlString(topic_name_), topic_info);
+  m_pub = new ::eCAL::v5::CPublisher(StringToStlString(topic_name_), topic_info);
 }
 
 Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, array<Byte>^ topic_desc_)
@@ -132,7 +132,7 @@ Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, S
   topic_info.name       = StringToStlString(topic_type_);
   topic_info.encoding   = StringToStlString(topic_encoding_);
   topic_info.descriptor = ByteArrayToStlString(topic_desc_);
-  m_pub = new ::eCAL::CPublisher(StringToStlString(topic_name_), topic_info);
+  m_pub = new ::eCAL::v5::CPublisher(StringToStlString(topic_name_), topic_info);
 }
 
 Publisher::~Publisher()
