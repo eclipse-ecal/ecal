@@ -61,10 +61,6 @@ namespace eCAL
     
     // unregister publisher
     if (g_pubgate() != nullptr) g_pubgate()->Unregister(m_publisher_impl->GetTopicName(), m_publisher_impl);
-
-#ifndef NDEBUG
-    eCAL::Logging::Log(log_level_debug1, std::string(m_publisher_impl->GetTopicName() + "::CPublisher::Destructor"));
-#endif
   }
 
   CPublisher::CPublisher(CPublisher&& rhs) noexcept :

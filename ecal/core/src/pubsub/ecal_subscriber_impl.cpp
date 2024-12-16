@@ -64,7 +64,7 @@
 namespace eCAL
 {
   ////////////////////////////////////////
-  // CDataReader
+  // CSubscriberImpl
   ////////////////////////////////////////
   CSubscriberImpl::CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_) :
                  m_topic_info(topic_info_),
@@ -77,7 +77,7 @@ namespace eCAL
   {
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug1, m_attributes.topic_name + "::CDataReader::Constructor");
+    Logging::Log(log_level_debug1, m_attributes.topic_name + "::CSubscriberImpl::Constructor");
 #endif
 
     // build topic id
@@ -97,7 +97,7 @@ namespace eCAL
   {
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug1, m_attributes.topic_name + "::CDataReader::Destructor");
+    Logging::Log(log_level_debug1, m_attributes.topic_name + "::CSubscriberImpl::Destructor");
 #endif
 
     if (!m_created) return;
@@ -148,7 +148,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataReader::Receive");
+      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::Receive");
 #endif
       // copy content to target string
       buf_.clear();
@@ -174,7 +174,7 @@ namespace eCAL
       const std::lock_guard<std::mutex> lock(m_receive_callback_mtx);
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataReader::AddReceiveCallback");
+      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::AddReceiveCallback");
 #endif
       m_receive_callback = std::move(callback_);
     }
@@ -191,7 +191,7 @@ namespace eCAL
       const std::lock_guard<std::mutex> lock(m_receive_callback_mtx);
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataReader::RemReceiveCallback");
+      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemReceiveCallback");
 #endif
       m_receive_callback = nullptr;
     }
@@ -207,7 +207,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataReader::AddEventCallback");
+      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::AddEventCallback");
 #endif
       const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
       m_event_callback_map[type_] = std::move(callback_);
@@ -224,7 +224,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataReader::RemEventCallback");
+      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemEventCallback");
 #endif
       const std::lock_guard<std::mutex> lock(m_event_callback_map_mtx);
       m_event_callback_map[type_] = nullptr;
@@ -251,7 +251,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataReader::SetAttribute");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetAttribute");
 #endif
 
     return(true);
@@ -263,7 +263,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataReader::ClearAttribute");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::ClearAttribute");
 #endif
 
     return(true);
@@ -338,7 +338,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataReader::ApplyPublication");
+    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplyPublication");
 #endif
   }
 
@@ -364,7 +364,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataReader::RemovePublication");
+    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::RemovePublication");
 #endif
   }
 
@@ -458,7 +458,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataReader::AddSample discard sample because of multiple receive");
+      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::AddSample discard sample because of multiple receive");
 #endif
       return(size_);
     }
@@ -487,7 +487,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataReader::AddSample");
+    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::AddSample");
 #endif
 
     // increase read clock
@@ -514,7 +514,7 @@ namespace eCAL
       {
 #ifndef NDEBUG
         // log it
-        Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataReader::AddSample::ReceiveCallback");
+        Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::AddSample::ReceiveCallback");
 #endif
         // prepare data struct
         SReceiveCallbackData cb_data;
@@ -556,7 +556,7 @@ namespace eCAL
       m_read_buf_cv.notify_one();
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataReader::AddSample::Receive::Buffered");
+      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::AddSample::Receive::Buffered");
 #endif
     }
 
@@ -569,7 +569,7 @@ namespace eCAL
 
     out << '\n';
     out << indent_ << "------------------------------------" << '\n';
-    out << indent_ << " class CDataReader " << '\n';
+    out << indent_ << " class CSubscriberImpl " << '\n';
     out << indent_ << "------------------------------------" << '\n';
     out << indent_ << "m_host_name:                        " << m_attributes.host_name << '\n';
     out << indent_ << "m_host_group_name:                  " << m_attributes.host_group_name << '\n';
@@ -598,7 +598,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug4, m_attributes.topic_name + "::CDataReader::Register");
+    Logging::Log(log_level_debug4, m_attributes.topic_name + "::CSubscriberImpl::Register");
 #endif
 #endif // ECAL_CORE_REGISTRATION
   }
@@ -612,7 +612,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug4, m_attributes.topic_name + "::CDataReader::Unregister");
+    Logging::Log(log_level_debug4, m_attributes.topic_name + "::CSubscriberImpl::Unregister");
 #endif
 #endif // ECAL_CORE_REGISTRATION
   }

@@ -54,10 +54,6 @@ namespace eCAL
 
     // unregister subscriber
     if (g_subgate() != nullptr) g_subgate()->Unregister(m_subscriber_impl->GetTopicName(), m_subscriber_impl);
-
-#ifndef NDEBUG
-    eCAL::Logging::Log(log_level_debug1, std::string(m_subscriber_impl->GetTopicName() + "::CSubscriber::Destructor"));
-#endif
   }
 
   CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept :
