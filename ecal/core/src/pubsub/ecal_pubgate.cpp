@@ -55,7 +55,7 @@ namespace eCAL
     if(!m_created) return;
 
     // stop & destroy all remaining publisher
-    const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_sync);
+    const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_mutex);
     m_topic_name_publisher_map.clear();
 
     m_created = false;
@@ -66,7 +66,7 @@ namespace eCAL
     if(!m_created) return(false);
 
     // register writer and multicast group
-    const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_sync);
+    const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_mutex);
     m_topic_name_publisher_map.emplace(std::pair<std::string, std::shared_ptr<CPublisherImpl>>(topic_name_, publisher_));
 
     return(true);
@@ -77,7 +77,7 @@ namespace eCAL
     if(!m_created) return(false);
     bool ret_state = false;
 
-    const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_sync);
+    const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_mutex);
     auto res = m_topic_name_publisher_map.equal_range(topic_name_);
     for(auto iter = res.first; iter != res.second; ++iter)
     {
@@ -142,7 +142,7 @@ namespace eCAL
 #endif
 
     // register subscriber
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_sync);
+    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_mutex);
     auto res = m_topic_name_publisher_map.equal_range(topic_name);
     for(TopicNamePublisherMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
@@ -164,7 +164,7 @@ namespace eCAL
     const SDataTypeInformation& topic_information = ecal_topic.tdatatype;
 
     // unregister subscriber
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_sync);
+    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_mutex);
     auto res = m_topic_name_publisher_map.equal_range(topic_name);
     for (TopicNamePublisherMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
@@ -177,7 +177,7 @@ namespace eCAL
     if (!m_created) return;
 
     // read reader registrations
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_sync);
+    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_mutex);
     for (const auto& iter : m_topic_name_publisher_map)
     {
       iter.second->GetRegistration(reg_sample_list_.push_back());
