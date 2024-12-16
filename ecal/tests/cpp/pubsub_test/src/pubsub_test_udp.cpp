@@ -76,10 +76,10 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
   g_callback_received_bytes = 0;
   g_callback_received_count = 0;
 
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  EXPECT_TRUE(pub.Send(send_s));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
-  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
+  EXPECT_TRUE(pub.Send(nullptr, 0));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive

@@ -47,8 +47,8 @@ namespace eCAL
     bool Register(const std::string& topic_name_, const std::shared_ptr<CPublisherImpl>& publisher_);
     bool Unregister(const std::string& topic_name_, const std::shared_ptr<CPublisherImpl>& publisher_);
 
-    void ApplySubRegistration(const Registration::Sample& ecal_sample_);
-    void ApplySubUnregistration(const Registration::Sample& ecal_sample_);
+    void ApplySubscriberRegistration(const Registration::Sample& ecal_sample_);
+    void ApplySubscriberUnregistration(const Registration::Sample& ecal_sample_);
 
     void GetRegistrations(Registration::SampleList& reg_sample_list_);
 

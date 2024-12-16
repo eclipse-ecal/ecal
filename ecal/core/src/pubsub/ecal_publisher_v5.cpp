@@ -119,8 +119,7 @@ namespace eCAL
       eCAL::Logging::Log(log_level_debug1, std::string(m_publisher_impl->GetTopicName() + "::CPublisher::Destroy"));
   #endif
 
-      // stop & destroy publisher
-      m_publisher_impl->Stop();
+      // destroy publisher
       m_publisher_impl.reset();
 
       // we made it :-)
@@ -239,7 +238,8 @@ namespace eCAL
       out << indent_ << "----------------------" << '\n';
       out << indent_ << " class CPublisher"      << '\n';
       out << indent_ << "----------------------" << '\n';
-      if((m_publisher_impl != nullptr) && m_publisher_impl->IsCreated()) out << indent_ << m_publisher_impl->Dump("    ");
+      out << indent_ << "DUMP NOT SUPPORTED ANYMORE" << '\n';
+      out << indent_ << "----------------------" << '\n';
       out << '\n';
 
       return(out.str());

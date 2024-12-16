@@ -92,7 +92,7 @@ namespace eCAL
     return(ret_state);
   }
 
-  void CPubGate::ApplySubRegistration(const Registration::Sample& ecal_sample_)
+  void CPubGate::ApplySubscriberRegistration(const Registration::Sample& ecal_sample_)
   {
     if(!m_created) return;
 
@@ -146,11 +146,11 @@ namespace eCAL
     auto res = m_topic_name_publisher_map.equal_range(topic_name);
     for(TopicNamePublisherMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->ApplySubscription(subscription_info, topic_information, layer_states, reader_par);
+      iter->second->ApplySubscriberRegistration(subscription_info, topic_information, layer_states, reader_par);
     }
   }
 
-  void CPubGate::ApplySubUnregistration(const Registration::Sample& ecal_sample_)
+  void CPubGate::ApplySubscriberUnregistration(const Registration::Sample& ecal_sample_)
   {
     if (!m_created) return;
 
@@ -168,7 +168,7 @@ namespace eCAL
     auto res = m_topic_name_publisher_map.equal_range(topic_name);
     for (TopicNamePublisherMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->RemoveSubscription(subscription_info, topic_information);
+      iter->second->ApplySubscriberUnregistration(subscription_info, topic_information);
     }
   }
 

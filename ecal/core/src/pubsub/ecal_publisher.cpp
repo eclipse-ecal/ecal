@@ -104,16 +104,13 @@ namespace eCAL
      if (GetSubscriberCount() == 0)
      {
        m_publisher_impl->RefreshSendCounter();
-       return(payload_.GetSize());
+       // we return false here to indicate that we did not really send something
+       return false;
      }
 
      // send content via data writer layer
      const long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
-     const size_t written_bytes = m_publisher_impl->Write(payload_, write_time, 0);
-
-     // TODO: change CPublisherImpl::Write to return a bool
-     // return true if we have written something
-     return written_bytes > 0;
+     return m_publisher_impl->Write(payload_, write_time, 0);
   }
 
   bool CPublisher::Send(const std::string& payload_, long long time_)

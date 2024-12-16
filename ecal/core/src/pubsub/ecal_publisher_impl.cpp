@@ -125,16 +125,7 @@ namespace eCAL
     Logging::Log(log_level_debug1, m_attributes.topic_name + "::CDataWriter::Destructor");
 #endif
 
-    Stop();
-  }
-
-  bool CPublisherImpl::Stop()
-  {
-    if (!m_created) return false;
-#ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug1, m_attributes.topic_name + "::CDataWriter::Stop");
-#endif
+    if (!m_created) return;
 
     // stop all transport layer
     StopAllLayer();
@@ -156,11 +147,9 @@ namespace eCAL
 
     // and unregister
     Unregister();
-
-    return true;
   }
 
-  size_t CPublisherImpl::Write(CPayloadWriter& payload_, long long time_, long long filter_id_)
+  bool CPublisherImpl::Write(CPayloadWriter& payload_, long long time_, long long filter_id_)
   {
     // get payload buffer size (one time, to avoid multiple computations)
     const size_t payload_buf_size(payload_.GetSize());
@@ -351,8 +340,7 @@ namespace eCAL
 #endif // ECAL_CORE_TRANSPORT_TCP
 
     // return success
-    if (written) return payload_buf_size;
-    else         return 0;
+    return written;
   }
 
   bool CPublisherImpl::SetDataTypeInformation(const SDataTypeInformation& topic_info_)
@@ -441,7 +429,7 @@ namespace eCAL
     return true;
   }
 
-  void CPublisherImpl::ApplySubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& sub_layer_states_, const std::string& reader_par_)
+  void CPublisherImpl::ApplySubscriberRegistration(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& sub_layer_states_, const std::string& reader_par_)
   {
     // collect layer states
     std::vector<eTLayerType> pub_layers;
@@ -466,8 +454,6 @@ namespace eCAL
 #endif
     
     // determine if we need to start a transport layer
-    // if a new layer gets activated, we reregister for SHM and TCP to force the exchange of connection parameter
-    // without this forced registration we would need one additional registration loop for these two layers to establish the connection
     const TLayer::eTransportLayer layer2activate = DetermineTransportLayer2Start(pub_layers, sub_layers, m_attributes.host_name == subscription_info_.host_name);
     switch (layer2activate)
     {
@@ -556,7 +542,7 @@ namespace eCAL
 #endif
   }
 
-  void CPublisherImpl::RemoveSubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
+  void CPublisherImpl::ApplySubscriberUnregistration(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
     // remove subscription
 #if ECAL_CORE_TRANSPORT_UDP
@@ -610,30 +596,6 @@ namespace eCAL
   size_t CPublisherImpl::GetSubscriberCount() const
   {
     return m_connection_count;
-  }
-
-  std::string CPublisherImpl::Dump(const std::string& indent_ /* = "" */)
-  {
-    std::stringstream out;
-
-    out << '\n';
-    out << indent_ << "--------------------------" << '\n';
-    out << indent_ << " class CDataWriter        " << '\n';
-    out << indent_ << "--------------------------" << '\n';
-    out << indent_ << "m_host_name:              " << m_attributes.host_name << '\n';
-    out << indent_ << "m_host_group_name:        " << m_attributes.host_group_name << '\n';
-    out << indent_ << "m_topic_name:             " << m_attributes.topic_name << '\n';
-    out << indent_ << "m_topic_id:               " << m_topic_id << '\n';
-    out << indent_ << "m_topic_info.encoding:    " << m_topic_info.encoding << '\n';
-    out << indent_ << "m_topic_info.name:        " << m_topic_info.name << '\n';
-    out << indent_ << "m_topic_info.desc:        " << m_topic_info.descriptor << '\n';
-    out << indent_ << "m_id:                     " << m_id << '\n';
-    out << indent_ << "m_clock:                  " << m_clock << '\n';
-    out << indent_ << "frequency [mHz]:          " << GetFrequency() << '\n';
-    out << indent_ << "m_created:                " << m_created << '\n';
-    out << std::endl;
-
-    return(out.str());
   }
 
   void CPublisherImpl::Register()

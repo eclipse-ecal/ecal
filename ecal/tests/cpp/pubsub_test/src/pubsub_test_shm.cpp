@@ -82,17 +82,17 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
   g_callback_received_count = 0;
 
   // send without zero copy
-  EXPECT_EQ(send_s.size(), pub1.Send(send_s));
+  EXPECT_TRUE(pub1.Send(send_s));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
-  EXPECT_EQ(send_s.size(), pub1.Send(nullptr, 0));
+  EXPECT_TRUE(pub1.Send(nullptr, 0));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // send with zero copy
-  EXPECT_EQ(send_s.size(), pub2.Send(send_s));
+  EXPECT_TRUE(pub2.Send(send_s));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
-  EXPECT_EQ(send_s.size(), pub2.Send(nullptr, 0));
+  EXPECT_TRUE(pub2.Send(nullptr, 0));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive

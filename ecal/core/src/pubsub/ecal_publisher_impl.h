@@ -77,9 +77,7 @@ namespace eCAL
     CPublisherImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& attr_);
     ~CPublisherImpl();
 
-    bool Stop();
-
-    size_t Write(CPayloadWriter& payload_, long long time_, long long filter_id_);
+    bool Write(CPayloadWriter& payload_, long long time_, long long filter_id_);
 
     bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
@@ -94,8 +92,8 @@ namespace eCAL
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
     bool ClearAttribute(const std::string& attr_name_);
 
-    void ApplySubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& sub_layer_states_, const std::string& reader_par_);
-    void RemoveSubscription(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
+    void ApplySubscriberRegistration(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& sub_layer_states_, const std::string& reader_par_);
+    void ApplySubscriberUnregistration(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
     void GetRegistration(Registration::Sample& sample);
     void RefreshSendCounter();
@@ -117,8 +115,6 @@ namespace eCAL
 
     const std::string&          GetTopicName()           const { return(m_attributes.topic_name); }
     const SDataTypeInformation& GetDataTypeInformation() const { return m_topic_info; }
-
-    std::string Dump(const std::string& indent_ = "");
 
   protected:
     void Register();
