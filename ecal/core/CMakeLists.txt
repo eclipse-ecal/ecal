@@ -542,6 +542,7 @@ set(ecal_header_cmn
     include/ecal/ecal_server_v5.h
     include/ecal/ecal_service_info.h
     include/ecal/ecal_subscriber.h
+    include/ecal/ecal_subscriber_v5.h
     include/ecal/ecal_time.h
     include/ecal/ecal_timer.h
     include/ecal/ecal_tlayer.h
