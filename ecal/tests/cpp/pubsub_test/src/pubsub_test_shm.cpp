@@ -65,11 +65,11 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
   pub_config.layer.tcp.enable = false;
 
   // create publisher for topic "A" (no zero copy)
-  eCAL::CPublisher pub1("A", pub_config);
+  eCAL::CPublisher pub1("A", eCAL::SDataTypeInformation(), pub_config);
 
   // switch on zero copy
   pub_config.layer.shm.zero_copy_mode = true;
-  eCAL::CPublisher pub2("A", pub_config);
+  eCAL::CPublisher pub2("A", eCAL::SDataTypeInformation(), pub_config);
 
 
   // add callback
@@ -82,17 +82,17 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
   g_callback_received_count = 0;
 
   // send without zero copy
-  EXPECT_EQ(send_s.size(), pub1.Send(send_s));
+  EXPECT_TRUE(pub1.Send(send_s));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
-  EXPECT_EQ(send_s.size(), pub1.Send(nullptr, 0));
+  EXPECT_TRUE(pub1.Send(nullptr, 0));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // send with zero copy
-  EXPECT_EQ(send_s.size(), pub2.Send(send_s));
+  EXPECT_TRUE(pub2.Send(send_s));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
-  EXPECT_EQ(send_s.size(), pub2.Send(nullptr, 0));
+  EXPECT_TRUE(pub2.Send(nullptr, 0));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive
@@ -101,10 +101,6 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
 
   // destroy subscriber
   sub.Destroy();
-
-  // destroy publisher
-  pub1.Destroy();
-  pub2.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();

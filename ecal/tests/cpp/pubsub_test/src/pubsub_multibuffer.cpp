@@ -91,7 +91,7 @@ std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int
   pub_config.layer.shm.memfile_buffer_count = buffer_count;
 
   // create publisher for topic "A"
-  eCAL::CPublisher pub("A", pub_config);
+  eCAL::CPublisher pub("A", eCAL::SDataTypeInformation(), pub_config);
 
   std::atomic<size_t> received_count{ 0 };
   std::atomic<size_t> received_bytes{ 0 };
@@ -117,7 +117,7 @@ std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int
   // run publications
   for (int i = 0; i < publications; ++i)
   {
-    EXPECT_EQ(PAYLOAD_SIZE_BYTE, pub.Send(binary_payload));
+    EXPECT_EQ(true, pub.Send(binary_payload));
     eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
   }
 

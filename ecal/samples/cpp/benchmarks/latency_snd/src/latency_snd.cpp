@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ void do_run(const int runs, int snd_size /*kB*/, int mem_buffer, bool zero_copy)
   pub_config.layer.shm.acknowledge_timeout_ms = 100;
 
   // create publisher
-  eCAL::CPublisher pub("ping", pub_config);
+  eCAL::CPublisher pub("ping", eCAL::SDataTypeInformation(), pub_config);
 
   // prepare send buffer
   CBinaryPayload payload(snd_size * 1024);

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
   pub_config.layer.shm.acknowledge_timeout_ms = acknowledge_time;
 
   // new publisher
-  eCAL::CPublisher pub(topic_name, pub_config);
+  eCAL::CPublisher pub(topic_name, eCAL::SDataTypeInformation(), pub_config);
 
   // default send string
   size *= 1024 * 1024;
@@ -93,9 +93,6 @@ int main(int argc, char **argv)
     // sleep
     if(sleep > 0) std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
   }
-
-  // destroy publisher
-  pub.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();

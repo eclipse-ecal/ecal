@@ -24,6 +24,7 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_client_v5.h>
 #include <ecal/ecal_server_v5.h>
+#include <ecal/ecal_publisher_v5.h>
 #include <ecal/ecal_subscriber_v5.h>
 
 #include "ecal_clang.h"
@@ -294,7 +295,7 @@ ECAL_HANDLE pub_create(const char* topic_name_, const char* topic_type_, const c
   topic_info.encoding   = topic_enc_;
   topic_info.descriptor = std::string(topic_desc_, static_cast<size_t>(topic_desc_length_));
 
-  auto* pub = new eCAL::CPublisher;
+  auto* pub = new eCAL::v5::CPublisher;
   if (!pub->Create(topic_name_, topic_info))
   {
     delete pub;
@@ -308,7 +309,7 @@ ECAL_HANDLE pub_create(const char* topic_name_, const char* topic_type_, const c
 /****************************************/
 bool pub_destroy(ECAL_HANDLE handle_)
 {
-  auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+  auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
   if(pub != nullptr)
   {
     delete pub;
@@ -325,7 +326,7 @@ bool pub_destroy(ECAL_HANDLE handle_)
 /****************************************/
 int pub_send(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_)
 {
-  auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+  auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
   if(pub != nullptr)
   {
     const size_t ret = pub->Send(payload_, static_cast<size_t>(length_), time_);
@@ -357,7 +358,7 @@ static void g_pub_event_callback(const char* topic_name_, const struct eCAL::SPu
 
 bool pub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, const PubEventCallbackCT callback_, void* par_)
 {
-  auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+  auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
 
   auto callback = std::bind(g_pub_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
   return(pub->AddEventCallback(type_, callback));
@@ -368,7 +369,7 @@ bool pub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_
 /****************************************/
 bool pub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_)
 {
-  auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+  auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
 
   return(pub->RemEventCallback(type_));
 }
