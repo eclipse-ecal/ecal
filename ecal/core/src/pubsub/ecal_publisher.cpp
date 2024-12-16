@@ -128,7 +128,7 @@ namespace eCAL
   Registration::STopicId CPublisher::GetTopicId() const
   {
     if (m_publisher_impl == nullptr) return Registration::STopicId();
-    return(m_publisher_impl->GetId());
+    return(m_publisher_impl->GetTopicId());
   }
 
   SDataTypeInformation CPublisher::GetDataTypeInformation() const

@@ -83,7 +83,7 @@ namespace eCAL
 
     // deprecated event callback interface
     bool AddEventCallback(eCAL_Publisher_Event type_, const PubEventCallbackT callback_);
-    bool RemEventCallback(eCAL_Publisher_Event type_);
+    bool RemoveEventCallback(eCAL_Publisher_Event type_);
 
     // future event callback interface
     bool AddEventIDCallback(const PubEventIDCallbackT callback_);
@@ -103,7 +103,7 @@ namespace eCAL
     bool IsSubscribed() const;
     size_t GetSubscriberCount() const;
 
-    Registration::STopicId GetId() const
+    Registration::STopicId GetTopicId() const
     {
       Registration::STopicId id;
       id.topic_name          = m_attributes.topic_name;

@@ -194,7 +194,7 @@ namespace eCAL
     bool CPublisher::RemEventCallback(eCAL_Publisher_Event type_)
     {
       if (m_publisher_impl == nullptr) return(false);
-      return(m_publisher_impl->RemEventCallback(type_));
+      return(m_publisher_impl->RemoveEventCallback(type_));
     }
 
     bool CPublisher::IsSubscribed() const
@@ -222,7 +222,7 @@ namespace eCAL
     Registration::STopicId CPublisher::GetId() const
     {
       if (m_publisher_impl == nullptr) return{};
-      return(m_publisher_impl->GetId());
+      return(m_publisher_impl->GetTopicId());
     }
 
     SDataTypeInformation CPublisher::GetDataTypeInformation() const

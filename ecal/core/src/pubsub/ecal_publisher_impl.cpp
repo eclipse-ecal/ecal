@@ -390,13 +390,13 @@ namespace eCAL
       Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::AddEventCallback");
 #endif
       const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
-      m_event_callback_map[type_] = std::move(callback_);
+      m_event_callback_map[type_] = callback_;
     }
 
     return(true);
   }
 
-  bool CPublisherImpl::RemEventCallback(eCAL_Publisher_Event type_)
+  bool CPublisherImpl::RemoveEventCallback(eCAL_Publisher_Event type_)
   {
     if (!m_created) return(false);
 
@@ -751,6 +751,7 @@ namespace eCAL
     data.tdatatype = tinfo_;
 
     // new event handling with topic id
+    if(m_event_id_callback)
     {
       Registration::STopicId topic_id;
       topic_id.topic_id.entity_id = subscription_info_.entity_id;
@@ -758,10 +759,8 @@ namespace eCAL
       topic_id.topic_id.host_name = subscription_info_.host_name;
       topic_id.topic_name = m_attributes.topic_name;
       const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
-      if (m_event_id_callback)
-      {
-        m_event_id_callback(topic_id, data);
-      }
+      // call event callback
+      m_event_id_callback(topic_id, data);
     }
 
     // deprecated event handling with topic name
