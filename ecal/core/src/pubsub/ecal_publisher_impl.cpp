@@ -815,7 +815,7 @@ namespace eCAL
     Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::ActivateUdpLayer::ACTIVATED");
 
     // create writer
-    m_writer_udp = std::make_unique<CPublisherImplUdpMC>(eCAL::eCALWriter::BuildUDPAttributes(m_topic_id, m_attributes));
+    m_writer_udp = std::make_unique<CDataWriterUdpMC>(eCAL::eCALWriter::BuildUDPAttributes(m_topic_id, m_attributes));
 
     // register activated layer
     Register();
@@ -841,7 +841,7 @@ namespace eCAL
     Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::ActivateShmLayer::ACTIVATED");
 
     // create writer
-    m_writer_shm = std::make_unique<CPublisherImplSHM>(eCAL::eCALWriter::BuildSHMAttributes(m_attributes));
+    m_writer_shm = std::make_unique<CDataWriterSHM>(eCAL::eCALWriter::BuildSHMAttributes(m_attributes));
 
     // register activated layer
     Register();
@@ -867,7 +867,7 @@ namespace eCAL
     Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::ActivateTcpLayer::ACTIVATED");
 
     // create writer
-    m_writer_tcp = std::make_unique<CPublisherImplTCP>(eCAL::eCALWriter::BuildTCPAttributes(m_topic_id, m_attributes));
+    m_writer_tcp = std::make_unique<CDataWriterTCP>(eCAL::eCALWriter::BuildTCPAttributes(m_topic_id, m_attributes));
 
     // register activated layer
     Register();

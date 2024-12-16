@@ -73,15 +73,13 @@ namespace eCAL
   bool CSubscriber::AddReceiveCallback(ReceiveIDCallbackT callback_)
   {
     if (m_subscriber_impl == nullptr) return false;
-    m_subscriber_impl->AddReceiveCallback(std::move(callback_));
-    return false;
+    return m_subscriber_impl->AddReceiveCallback(std::move(callback_));
   }
 
   bool CSubscriber::RemReceiveCallback()
   {
     if (m_subscriber_impl == nullptr) return false;
-    m_subscriber_impl->RemReceiveCallback();
-    return false;
+    return m_subscriber_impl->RemReceiveCallback();
   }
 
   size_t CSubscriber::GetPublisherCount() const

@@ -39,9 +39,9 @@ namespace
   // subscriber callback function
   std::atomic<size_t> g_callback_received_bytes;
   std::atomic<size_t> g_callback_received_count;
-  void OnReceive(const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_)
+  void OnReceive(const eCAL::SReceiveCallbackData& data_)
   {
-    g_callback_received_bytes += data_->size;
+    g_callback_received_bytes += data_.size;
     g_callback_received_count++;
   }
 }
@@ -68,7 +68,7 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
   eCAL::CPublisher pub("A", eCAL::SDataTypeInformation(), pub_config);
 
   // add callback
-  EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
+  EXPECT_TRUE(sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_3)));
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
