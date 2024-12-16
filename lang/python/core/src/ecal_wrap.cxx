@@ -951,7 +951,7 @@ PyObject* mon_setexclfilter(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "s", &filter)) 
     return nullptr;
 
-  return Py_BuildValue("O", eCAL::Monitoring::SetExclFilter(filter) ? Py_True : Py_False );
+  return(Py_BuildValue("i", static_cast<int>(!eCAL::Monitoring::SetExclFilter(filter))));
 }
 
 /****************************************/
@@ -964,7 +964,7 @@ PyObject* mon_setinclfilter(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "s", &filter)) 
     return nullptr;
 
-  return Py_BuildValue("O", eCAL::Monitoring::SetInclFilter(filter) ? Py_True : Py_False);
+  return(Py_BuildValue("i", static_cast<int>(!eCAL::Monitoring::SetInclFilter(filter))));
 }
 
 /****************************************/
@@ -977,7 +977,7 @@ PyObject* mon_setfilterstate(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "i", &state)) 
     return nullptr;
 
-  return Py_BuildValue("O", eCAL::Monitoring::SetFilterState(state != 0) ? Py_True : Py_False);
+  return(Py_BuildValue("i", static_cast<int>(!eCAL::Monitoring::SetFilterState(state != 0))));
 }
 
 /****************************************/
