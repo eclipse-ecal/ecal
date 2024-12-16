@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "readwrite/ecal_reader.h"
+#include "pubsub/ecal_subscriber_impl.h"
 
 #include <atomic>
 #include <cstddef>

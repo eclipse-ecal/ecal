@@ -211,7 +211,9 @@ endif()
 
 if(ECAL_CORE_SUBSCRIBER)
   set(ecal_sub_src
-      src/pubsub/ecal_subscriber.cpp
+      src/pubsub/ecal_subscriber_impl.cpp
+      src/pubsub/ecal_subscriber_impl.h
+      src/pubsub/ecal_subscriber_v5.cpp
       src/pubsub/ecal_subgate.cpp
       src/pubsub/ecal_subgate.h
   )
@@ -256,8 +258,6 @@ endif()
 
 if(ECAL_CORE_SUBSCRIBER)
   set(ecal_reader_src
-      src/readwrite/ecal_reader.cpp
-      src/readwrite/ecal_reader.h
       src/readwrite/ecal_reader_layer.h
   )
   if(ECAL_CORE_TRANSPORT_UDP)

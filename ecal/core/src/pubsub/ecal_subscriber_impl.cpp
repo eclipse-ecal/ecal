@@ -29,24 +29,25 @@
 #include "registration/ecal_registration_provider.h"
 #endif
 
-#include "ecal_reader.h"
+#include "ecal_subscriber_impl.h"
 #include "ecal_global_accessors.h"
-#include "ecal_reader_layer.h"
-#include "ecal_transport_layer.h"
+
+#include "readwrite/ecal_reader_layer.h"
+#include "readwrite/ecal_transport_layer.h"
 
 #if ECAL_CORE_TRANSPORT_UDP
-#include "udp/ecal_reader_udp.h"
-#include "config/builder/udp_attribute_builder.h"
+#include "readwrite/udp/ecal_reader_udp.h"
+#include "readwrite/config/builder/udp_attribute_builder.h"
 #endif
 
 #if ECAL_CORE_TRANSPORT_SHM
-#include "shm/ecal_reader_shm.h"
-#include "config/builder/shm_attribute_builder.h"
+#include "readwrite/shm/ecal_reader_shm.h"
+#include "readwrite/config/builder/shm_attribute_builder.h"
 #endif
 
 #if ECAL_CORE_TRANSPORT_TCP
-#include "tcp/ecal_reader_tcp.h"
-#include "config/builder/tcp_attribute_builder.h"
+#include "readwrite/tcp/ecal_reader_tcp.h"
+#include "readwrite/config/builder/tcp_attribute_builder.h"
 #endif
 
 #include <algorithm>

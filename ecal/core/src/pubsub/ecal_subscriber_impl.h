@@ -29,7 +29,7 @@
 #include "serialization/ecal_serialize_sample_payload.h"
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "util/frequency_calculator.h"
-#include "config/attributes/reader_attributes.h"
+#include "readwrite/config/attributes/reader_attributes.h"
 
 #include <atomic>
 #include <chrono>
