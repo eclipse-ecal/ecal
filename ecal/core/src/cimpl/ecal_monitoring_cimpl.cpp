@@ -32,17 +32,17 @@ extern "C"
 {
   ECALC_API int eCAL_Monitoring_SetExclFilter(const char* filter_)
   {
-    return(!eCAL::Monitoring::SetExclFilter(std::string(filter_)));
+    return(static_cast<int>(!eCAL::Monitoring::SetExclFilter(std::string(filter_))));
   }
 
   ECALC_API int eCAL_Monitoring_SetInclFilter(const char* filter_)
   {
-    return(!eCAL::Monitoring::SetInclFilter(std::string(filter_)));
+    return(static_cast<int>(!eCAL::Monitoring::SetInclFilter(std::string(filter_))));
   }
 
   ECALC_API int eCAL_Monitoring_SetFilterState(int state_)
   {
-    return(!eCAL::Monitoring::SetFilterState(state_ != 0));
+    return(static_cast<int>(!eCAL::Monitoring::SetFilterState(state_ != 0)));
   }
 
   ECALC_API int eCAL_Monitoring_GetMonitoring(void* buf_, int buf_len_)
