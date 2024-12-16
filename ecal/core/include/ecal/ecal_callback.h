@@ -147,14 +147,6 @@ namespace eCAL
   using TimerCallbackT = std::function<void ()>;
 
   /**
-   * @brief Registration callback type.
-   *
-   * @param sample_       The sample protocol buffer registration payload buffer.
-   * @param sample_size_  The payload buffer size.
-  **/
-  using RegistrationCallbackT = std::function<void (const char* sample_, int sample_size_)>;
-
-  /**
    * @brief Publisher event callback function type. (deprecated)
    *
    * @param topic_name_  The topic name of the publisher that triggered the event.

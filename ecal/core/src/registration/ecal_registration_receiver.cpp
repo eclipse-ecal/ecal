@@ -65,11 +65,6 @@ namespace eCAL
       {
         Registration::CSampleApplierGates::ApplySample(sample_);
       });
-    m_sample_applier.SetCustomApplySampleCallback("custom_registration", [this](const eCAL::Registration::Sample& sample_)
-      {
-        m_user_applier.ApplySample(sample_);
-      });
-
   }
 
   CRegistrationReceiver::~CRegistrationReceiver()
@@ -136,16 +131,6 @@ namespace eCAL
     m_timeout_provider = nullptr;
 
     m_created          = false;
-  }
-
-  bool CRegistrationReceiver::AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_)
-  {
-    return m_user_applier.AddRegistrationCallback(event_, callback_);
-  }
-
-  bool CRegistrationReceiver::RemRegistrationCallback(enum eCAL_Registration_Event event_)
-  {
-    return m_user_applier.RemRegistrationCallback(event_);
   }
 
   void CRegistrationReceiver::SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_)

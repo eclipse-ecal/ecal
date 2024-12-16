@@ -33,7 +33,6 @@
 #include "serialization/ecal_struct_sample_registration.h"
 #include "registration/ecal_registration_sample_applier.h"
 #include "registration/ecal_registration_sample_applier_gates.h"
-#include "registration/ecal_registration_sample_applier_user.h"
 #include "config/attributes/registration_attributes.h"
 
 #include <atomic>
@@ -67,9 +66,6 @@ namespace eCAL
     void Start();
     void Stop();
 
-    bool AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_);
-    bool RemRegistrationCallback(enum eCAL_Registration_Event event_);
-
     using ApplySampleCallbackT = std::function<void(const Registration::Sample&)>;
     void SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_);
     void RemCustomApplySampleCallback(const std::string& customer_);
@@ -89,11 +85,6 @@ namespace eCAL
 
     // This class distributes samples to all everyone who is interested in being notified about samples
     Registration::CSampleApplier     m_sample_applier;
-
-    // These classes are interested in being notified about samples
-    // Possibly remove these from this class
-    // The custom user callbacks (who receive serialized samples), e.g. registration events.
-    Registration::CSampleApplierUser m_user_applier;
 
     Registration::SAttributes        m_attributes;
   };
