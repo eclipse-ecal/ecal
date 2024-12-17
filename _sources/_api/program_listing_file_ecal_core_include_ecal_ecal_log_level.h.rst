@@ -45,4 +45,4 @@ Program Listing for File ecal_log_level.h
      log_level_debug4  = 128,
    };
    
-   typedef char eCAL_Logging_Filter;  //!< This type is to be used as a bitmask for the activated logging levels
+   typedef char eCAL_Logging_Filter;  

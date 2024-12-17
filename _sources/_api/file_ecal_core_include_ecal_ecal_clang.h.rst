@@ -71,9 +71,9 @@ Functions
 
 - :ref:`exhale_function_ecal__clang_8h_1a223cd64b3c0fe18b5a7f4084fb3e56cc`
 
-- :ref:`exhale_function_ecal__clang_8h_1ad2b025124cfe6b21dfa19a1d85cf9bb7`
+- :ref:`exhale_function_ecal__clang_8h_1ad45de2cbdc16c0429e301e2412ee0b4c`
 
-- :ref:`exhale_function_ecal__clang_8h_1a85b5ba3548d6163d0719f0cef2cd33e6`
+- :ref:`exhale_function_ecal__clang_8h_1a62aae40ad5c6e7dbf7f5997ec6d1063f`
 
 - :ref:`exhale_function_ecal__clang_8h_1a796502f49ee481c4c6cb99bcb19db6d9`
 
