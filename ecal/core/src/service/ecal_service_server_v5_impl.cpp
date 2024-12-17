@@ -105,7 +105,7 @@ namespace eCAL
       method_info.response_type.name       = resp_type_;
       method_info.response_type.descriptor = resp_desc_;
 
-      return m_service_server_impl->AddMethodCallback(method_, method_info, nullptr);
+      return m_service_server_impl->SetMethodCallback(method_, method_info, nullptr);
     }
 
     bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_)
@@ -122,7 +122,7 @@ namespace eCAL
       method_info.request_type.name  = req_type_;
       method_info.response_type.name = resp_type_;
 
-      return m_service_server_impl->AddMethodCallback(method_, method_info, callback_);
+      return m_service_server_impl->SetMethodCallback(method_, method_info, callback_);
     }
 
     bool CServiceServerImpl::RemMethodCallback(const std::string& method_)
