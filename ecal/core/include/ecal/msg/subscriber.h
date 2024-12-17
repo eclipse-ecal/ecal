@@ -50,7 +50,7 @@ namespace eCAL
     /**
      * @brief  Constructor.
     **/
-    CMsgSubscriber() : v5::CSubscriber() = default;
+    CMsgSubscriber() = default;
 
     /**
      * @brief  Constructor.
