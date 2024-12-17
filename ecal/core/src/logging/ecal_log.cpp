@@ -47,12 +47,14 @@ namespace eCAL
      *
      * @param [out] log_  String to store the logging information.
      *
-     * @return  Logging buffer length or zero if failed.
+     * @return True if succeeded.
     **/
-    int GetLogging(std::string& log_)
+    bool GetLogging(std::string& log_)
     {
-      if (g_log_udp_receiver() != nullptr) g_log_udp_receiver()->GetLogging(log_);
-      return static_cast<int>(log_.size());
+      if (g_log_udp_receiver() == nullptr)
+        return false;
+      g_log_udp_receiver()->GetLogging(log_);
+      return true;
     }
 
     /**
@@ -60,12 +62,14 @@ namespace eCAL
      *
      * @param [out] log_  Target struct to store the logging information.
      *
-     * @return Number of struct elements if succeeded.
+     * @return True if succeeded.
     **/
-    int GetLogging(Logging::SLogging& log_)
+    bool GetLogging(Logging::SLogging& log_)
     {
-      if (g_log_udp_receiver() != nullptr) g_log_udp_receiver()->GetLogging(log_);
-      return static_cast<int>(log_.log_messages.size());
+      if (g_log_udp_receiver() == nullptr)
+        return false;
+      g_log_udp_receiver()->GetLogging(log_);
+      return true;
     }
   }
 }

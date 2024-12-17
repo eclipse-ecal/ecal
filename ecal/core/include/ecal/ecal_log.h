@@ -48,17 +48,17 @@ namespace eCAL
      *
      * @param [out] log_  String to store the logging information.
      *
-     * @return  Logging buffer length or zero if failed.
+     * @return True if succeeded.
     **/
-    ECAL_API int GetLogging(std::string& log_);
+    ECAL_API bool GetLogging(std::string& log_);
 
     /**
      * @brief Get logging as struct.
      *
      * @param [out] log_  Target struct to store the logging information.
      *
-     * @return Number of log messages.
+     * @return True if succeeded.
     **/
-    ECAL_API int GetLogging(Logging::SLogging& log_);
+    ECAL_API bool GetLogging(Logging::SLogging& log_);
   }
 }

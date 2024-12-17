@@ -710,15 +710,6 @@ bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, con
 }
 
 /****************************************/
-/*      client_add_response_callback    */
-/****************************************/
-
-/****************************************/
-/*      client_rem_response_callback    */
-/****************************************/
-
-
-/****************************************/
 /*      mon_initialize                  */
 /****************************************/
 int mon_initialize()
@@ -732,36 +723,4 @@ int mon_initialize()
 int mon_finalize()
 {
   return(ecal_finalize());
-}
-
-/****************************************/
-/*      mon_get_logging                 */
-/****************************************/
-int mon_get_logging(const char** log_buf_, int* log_buf_len_)
-{
-  std::string log_s;
-  const int size = eCAL::Logging::GetLogging(log_s);
-  if(size > 0)
-  {
-    // this has to be freed by caller (ecal_free_mem)
-    char* cbuf = str_malloc(log_s);
-    if(cbuf == nullptr) return(0);
-
-    if (log_buf_ != nullptr) {
-      *log_buf_ = cbuf;
-      if (log_buf_len_ != nullptr) *log_buf_len_ = static_cast<int>(log_s.size());
-    }
-    else {
-      // free allocated memory:
-      ecal_free_mem(cbuf);
-      if (log_buf_len_ != nullptr) *log_buf_len_ = 0;
-      // operation couldn't be completed successfullly.
-      return(0);
-    }
-    return(static_cast<int>(log_s.size()));
-  }
-  else
-  {
-    return(0);
-  }
 }

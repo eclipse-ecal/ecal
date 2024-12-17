@@ -1261,7 +1261,7 @@ PyObject* mon_logging(PyObject* /*self*/, PyObject* /*args*/)
   PyObject* retList = PyList_New(0);
 
   eCAL::Logging::SLogging logging;
-  if (eCAL::Logging::GetLogging(logging) != 0)
+  if (eCAL::Logging::GetLogging(logging))
   {
     for (const auto& log : logging.log_messages)
     {
