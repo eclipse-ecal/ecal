@@ -132,13 +132,13 @@ TEST(core_c_core, SetGetUnitName)
   EXPECT_STREQ("unit name", unit_name);
 
   // set nullptr unit name (should not change the unit name)
-  EXPECT_EQ(-1, eCAL_SetUnitName(nullptr));
+  EXPECT_EQ(1, eCAL_SetUnitName(nullptr));
   memset(unit_name, 0, sizeof(unit_name));
   eCAL_Process_GetUnitName(unit_name, sizeof(unit_name));
   EXPECT_STREQ("unit name", unit_name);
 
   // set empty unit name (should not change the unit name)
-  EXPECT_EQ(-1, eCAL_SetUnitName(""));
+  EXPECT_EQ(1, eCAL_SetUnitName(""));
   memset(unit_name, 0, sizeof(unit_name));
   eCAL_Process_GetUnitName(unit_name, sizeof(unit_name));
   EXPECT_STREQ("unit name", unit_name);

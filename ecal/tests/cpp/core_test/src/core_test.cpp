@@ -42,31 +42,31 @@ TEST(core_cpp_core, GetVersion)
 TEST(core_cpp_core, InitializeFinalize)
 {
   // Is eCAL API initialized ?
-  EXPECT_EQ(0, eCAL::IsInitialized());
+  EXPECT_EQ(false, eCAL::IsInitialized());
 
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize("initialize_test"));
+  EXPECT_EQ(true, eCAL::Initialize("initialize_test"));
 
   // Is eCAL API initialized ?
-  EXPECT_EQ(1, eCAL::IsInitialized());
+  EXPECT_EQ(true, eCAL::IsInitialized());
 
   // initialize eCAL API again we expect return value 1 for yet initialized
-  EXPECT_EQ(1, eCAL::Initialize("initialize_test"));
+  EXPECT_EQ(false, eCAL::Initialize("initialize_test"));
 
   // finalize eCAL API we expect return value 0 even it will not be really finalized because it's 2 times initialzed and 1 time finalized
-  EXPECT_EQ(0, eCAL::Finalize());
+  EXPECT_EQ(true, eCAL::Finalize());
 
   // Is eCAL API initialized ? yes it' still initialized
-  EXPECT_EQ(1, eCAL::IsInitialized());
+  EXPECT_EQ(true, eCAL::IsInitialized());
 
   // finalize eCAL API we expect return value 0 because now it will be finalized
-  EXPECT_EQ(0, eCAL::Finalize());
+  EXPECT_EQ(true, eCAL::Finalize());
 
   // Is eCAL API initialized ? no
-  EXPECT_EQ(0, eCAL::IsInitialized());
+  EXPECT_EQ(false, eCAL::IsInitialized());
 
   // finalize eCAL API we expect return value 1 because it was finalized before
-  EXPECT_EQ(1, eCAL::Finalize());
+  EXPECT_EQ(false, eCAL::Finalize());
 }
 
 TEST(core_cpp_core, MultipleInitializeFinalize)
@@ -75,10 +75,10 @@ TEST(core_cpp_core, MultipleInitializeFinalize)
   for (auto i = 0; i < 4; ++i)
   {
     // initialize eCAL API
-    EXPECT_EQ(0, eCAL::Initialize("multiple_initialize_finalize_test"));
+    EXPECT_EQ(true, eCAL::Initialize("multiple_initialize_finalize_test"));
 
     // finalize eCAL API
-    EXPECT_EQ(0, eCAL::Finalize());
+    EXPECT_EQ(true, eCAL::Finalize());
   }
 }
 
@@ -112,43 +112,43 @@ namespace
 TEST(core_cpp_core, SetGetUnitName)
 {
   // initialize eCAL API with empty unit name (eCAL will use process name as unit name)
-  EXPECT_EQ(0, eCAL::Initialize(""));
+  EXPECT_EQ(true, eCAL::Initialize(""));
 
   // Is eCAL API initialized ?
-  EXPECT_EQ(1, eCAL::IsInitialized());
+  EXPECT_EQ(true, eCAL::IsInitialized());
 
   // if we call eCAL_Initialize with empty unit name, eCAL will use the process name as unit name
   std::string process_name = extractProcessName(eCAL::Process::GetProcessName());
   EXPECT_STREQ(process_name.c_str(), eCAL::Process::GetUnitName().c_str());
 
   // set unit name (should change the name to 'unit name')
-  EXPECT_EQ(0, eCAL::SetUnitName("unit name"));
+  EXPECT_EQ(true, eCAL::SetUnitName("unit name"));
   EXPECT_STREQ("unit name", eCAL::Process::GetUnitName().c_str());
 
   // set empty unit name (should not change the unit name)
-  EXPECT_EQ(-1, eCAL::SetUnitName(""));
+  EXPECT_EQ(false, eCAL::SetUnitName(""));
   EXPECT_STREQ("unit name", eCAL::Process::GetUnitName().c_str());
 
   // finalize eCAL API we expect return value 0 because it will be finalized
-  EXPECT_EQ(0, eCAL::Finalize());
+  EXPECT_EQ(true, eCAL::Finalize());
 }
 
 TEST(core_cpp_core, eCAL_Ok)
 {
   // check uninitialized eCAL, should not be okay
-  EXPECT_EQ(0, eCAL::Ok());
+  EXPECT_EQ(false, eCAL::Ok());
 
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize("okay_test"));
+  EXPECT_EQ(true, eCAL::Initialize("okay_test"));
 
   // check initialized eCAL, should be okay
-  EXPECT_EQ(1, eCAL::Ok());
+  EXPECT_EQ(true, eCAL::Ok());
 
   // finalize eCAL API we expect return value 0 because it will be finalized
-  EXPECT_EQ(0, eCAL::Finalize());
+  EXPECT_EQ(true, eCAL::Finalize());
 
   // check finalized eCAL, should not be okay
-  EXPECT_EQ(0, eCAL::Ok());
+  EXPECT_EQ(false, eCAL::Ok());
 }
 
 /* excluded for now, system timer jitter too high */

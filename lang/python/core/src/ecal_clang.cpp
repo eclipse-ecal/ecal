@@ -103,7 +103,7 @@ const char* ecal_getdate()
 int ecal_initialize(const char* unit_name_)
 {
   std::string unit_name = (unit_name_ != nullptr) ? std::string(unit_name_) : std::string("");
-  return(eCAL::Initialize(unit_name));
+  return static_cast<int>(!eCAL::Initialize(unit_name));
 }
 
 /****************************************/
@@ -111,8 +111,8 @@ int ecal_initialize(const char* unit_name_)
 /****************************************/
 int ecal_finalize()
 {
-  //* @return Zero if succeeded, 1 if still initialized, -1 if failed.
-  return(eCAL::Finalize());
+  //* @return Zero if succeeded
+  return static_cast<int>(!eCAL::Finalize());
 }
 
 /****************************************/
@@ -121,7 +121,7 @@ int ecal_finalize()
 int ecal_is_initialized()
 {
   //* @return 1 if eCAL is initialized.
-  return(eCAL::IsInitialized());
+  return static_cast<int>(eCAL::IsInitialized());
 }
 
 /****************************************/
@@ -129,7 +129,7 @@ int ecal_is_initialized()
 /****************************************/
 int ecal_set_unit_name(const char* unit_name_)
 {
-  return(eCAL::SetUnitName(unit_name_));
+  return static_cast<int>(eCAL::SetUnitName(unit_name_));
 }
 
 /****************************************/

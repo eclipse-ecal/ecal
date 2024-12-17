@@ -61,14 +61,14 @@ const char* ecal_getdate();
  * @param argv_        Array of command line arguments.
  * @param unit_name_   Defines the name of the eCAL unit.
  *
- * @return Zero if succeeded, 1 if already initialized, -1 if failed.
+ * @return Zero if succeeded.
 **/
 int ecal_initialize(const char* unit_name_);
 
 /**
  * @brief Finalize eCAL API.
  *
- * @return Zero if succeeded, 1 if already initialized, -1 if failed.
+ * @return Zero if succeeded.
 **/
 int ecal_finalize();
 
@@ -84,7 +84,7 @@ int ecal_is_initialized();
  *
  * @param unit_name_  Defines the name of the eCAL unit.
  *
- * @return  Zero if succeeded.
+ * @return Zero if succeeded.
 **/
 int ecal_set_unit_name(const char *unit_name_);
 

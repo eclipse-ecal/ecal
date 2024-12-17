@@ -85,9 +85,9 @@ namespace eCAL
    * @param unit_name_   Defines the name of the eCAL unit.
    * @param components_  Defines which component to initialize.
    *
-   * @return Zero if succeeded, 1 if already initialized, -1 if failed.
+   * @return True if succeeded.
   **/
-  int Initialize(const std::string& unit_name_ /*= ""*/, unsigned int components_ /*= Init::Default*/)
+  bool Initialize(const std::string& unit_name_ /*= ""*/, unsigned int components_ /*= Init::Default*/)
   {
     eCAL::Configuration config;
 
@@ -101,9 +101,9 @@ namespace eCAL
    * @param unit_name_   Defines the name of the eCAL unit.
    * @param components_  Defines which component to initialize.     
    * 
-   * @return Zero if succeeded, 1 if already initialized, -1 if failed.
+   * @return True if succeeded
   **/
-  int Initialize(eCAL::Configuration& config_, const std::string& unit_name_ /*= nullptr*/, unsigned int components_ /*= Init::Default*/)
+  bool Initialize(eCAL::Configuration& config_, const std::string& unit_name_ /*= nullptr*/, unsigned int components_ /*= Init::Default*/)
   {
     InitGlobals();
     
@@ -114,7 +114,7 @@ namespace eCAL
     g_globals_ctx_ref_cnt++;
 
      // (post)initialize single components
-    const int success = g_globals()->Initialize(components_);
+    const auto success = g_globals()->Initialize(components_);
 
     if (config_.command_line_arguments.dump_config)
     {
@@ -129,13 +129,14 @@ namespace eCAL
    *
    * @param component_  Check specific component or 0 for general state of eCAL core.
    *
-   * @return 1 if eCAL is initialized.
+   * @return True if eCAL is initialized.
   **/
-  int IsInitialized()
+  bool IsInitialized()
   {
-    if (g_globals_ctx == nullptr) return(0);
-    if(g_globals()->IsInitialized()) return(1);
-    return(0);
+    if (g_globals_ctx == nullptr)
+      return false;
+
+    return g_globals()->IsInitialized();
   }
 
   /**
@@ -143,13 +144,14 @@ namespace eCAL
    *
    * @param component_  Check specific component or 0 for general state of eCAL core.
    *
-   * @return 1 if eCAL is initialized.
+   * @return True if component is initialized.
   **/
-  int IsInitialized(unsigned int component_)
+  bool IsInitialized(unsigned int component_)
   {
-    if (g_globals_ctx == nullptr) return(0);
-    if (g_globals()->IsInitialized(component_)) return(1);
-    return(0);
+    if (g_globals_ctx == nullptr)
+      return false;
+
+    return g_globals()->IsInitialized(component_);
   }
 
   /**
@@ -157,29 +159,32 @@ namespace eCAL
    *
    * @param unit_name_  Defines the name of the eCAL unit. 
    *
-   * @return  Zero if succeeded, -1 if failed.
+   * @return True if succeeded.
   **/
-  int SetUnitName(const std::string& unit_name_)
+  bool SetUnitName(const std::string& unit_name_)
   {
-    if (unit_name_.empty()) return -1;
+    if (unit_name_.empty())
+      return false;
     g_unit_name = unit_name_;
-    return 0;
+    return true;
   }
 
   /**
    * @brief Finalize eCAL API.
    *
-   * @return Zero if succeeded, 1 if already finalized, -1 if failed.
+   * @return True if succeeded.
   **/
-  int Finalize()
+  bool Finalize()
   {
-    if (g_globals_ctx == nullptr) return 1;
+    if (g_globals_ctx == nullptr)
+      return false;
     g_globals_ctx_ref_cnt--;
-    if (g_globals_ctx_ref_cnt > 0) return 0;
-    int const ret = g_globals()->Finalize();
+    if (g_globals_ctx_ref_cnt > 0)
+      return true;
+    const auto ret = g_globals()->Finalize();
     delete g_globals_ctx;
     g_globals_ctx = nullptr;
-    return(ret);
+    return ret;
   }
 
   /**
