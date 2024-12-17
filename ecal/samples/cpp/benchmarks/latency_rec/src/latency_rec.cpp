@@ -67,7 +67,7 @@ void do_run(int delay_, std::string& log_file_)
   // apply subscriber callback function
   SCallbackPar cb_par;
   auto callback = std::bind(on_receive, std::placeholders::_3, &cb_par, delay_);
-  sub.AddReceiveCallback(callback);
+  sub.SetReceiveCallback(callback);
 
   size_t msg_last(0);
   while (eCAL::Ok())
@@ -83,7 +83,7 @@ void do_run(int delay_, std::string& log_file_)
   }
 
   // detach callback
-  sub.RemReceiveCallback();
+  sub.RemoveReceiveCallback();
 
   // evaluate all
   evaluate(cb_par.latency_array, cb_par.rec_size, warmups, log_file_);

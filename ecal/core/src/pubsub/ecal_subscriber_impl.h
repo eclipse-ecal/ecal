@@ -69,16 +69,16 @@ namespace eCAL
 
     bool Read(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);
 
-    bool AddReceiveCallback(ReceiveIDCallbackT callback_);
-    bool RemReceiveCallback();
+    bool SetReceiveCallback(ReceiveIDCallbackT callback_);
+    bool RemoveReceiveCallback();
 
     // deprecated event callback interface
-    bool AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_);
-    bool RemEventCallback(eCAL_Subscriber_Event type_);
+    bool SetEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_);
+    bool RemoveEventCallback(eCAL_Subscriber_Event type_);
 
     // future event callback interface
-    bool AddEventIDCallback(const SubEventIDCallbackT callback_);
-    bool RemEventIDCallback();
+    bool SetEventIDCallback(const SubEventIDCallbackT callback_);
+    bool RemoveEventIDCallback();
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
     bool ClearAttribute(const std::string& attr_name_);
@@ -112,8 +112,6 @@ namespace eCAL
 
     void InitializeLayers();
     size_t ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
-
-    std::string Dump(const std::string& indent_ = "");
 
   protected:
     void Register();

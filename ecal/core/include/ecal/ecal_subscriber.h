@@ -98,14 +98,14 @@ namespace eCAL
         CSubscriber& operator=(CSubscriber&& rhs) noexcept;
 
       /**
-       * @brief Add callback function for incoming receives.
+       * @brief Set/overwrite callback function for incoming receives.
        *
-       * @param callback_  The callback function to add.
+       * @param callback_  The callback function to set.
        *
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool AddReceiveCallback(ReceiveIDCallbackT callback_);
+        bool SetReceiveCallback(ReceiveIDCallbackT callback_);
 
       /**
        * @brief Remove callback function for incoming receives.
@@ -113,7 +113,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool RemReceiveCallback();
+        bool RemoveReceiveCallback();
 
       /**
        * @brief Query the number of connected publishers.

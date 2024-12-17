@@ -99,7 +99,7 @@ TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
           sub_count++;
         }
       };
-    sub.AddReceiveCallback(receive_lambda);
+    sub.SetReceiveCallback(receive_lambda);
 
     while (eCAL::Ok() && !publication_finished)
     {
@@ -198,7 +198,7 @@ TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
           sub_count++;
         }
       };
-    sub.AddReceiveCallback(receive_lambda);
+    sub.SetReceiveCallback(receive_lambda);
 
     while (eCAL::Ok() && !publication_finished)
     {
@@ -258,7 +258,7 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
     const std::string received_data(static_cast<const char*>(data_.buf), data_.size);
     pub2.Send(received_data);
     };
-  sub1.AddReceiveCallback(subscriber1_callback);
+  sub1.SetReceiveCallback(subscriber1_callback);
 
   // Subscriber2 that receives data from Publisher2
   eCAL::CSubscriber sub2("topic2");
@@ -267,7 +267,7 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
     subscriber2_received_count++;
     //std::cout << "Subscriber2 Receiving " << std::string(static_cast<const char*>(data_.buf), data_.size) << std::endl;
     };
-  sub2.AddReceiveCallback(subscriber2_callback);
+  sub2.SetReceiveCallback(subscriber2_callback);
 
   // Start publisher1 thread
   std::thread pub1_thread(publisher1_function);

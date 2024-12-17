@@ -148,7 +148,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::Receive");
+      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::Read");
 #endif
       // copy content to target string
       buf_.clear();
@@ -165,50 +165,50 @@ namespace eCAL
     return(false);
   }
 
-  bool CSubscriberImpl::AddReceiveCallback(ReceiveIDCallbackT callback_)
+  bool CSubscriberImpl::SetReceiveCallback(ReceiveIDCallbackT callback_)
   {
     if (!m_created) return(false);
 
-    // store receive callback
+#ifndef NDEBUG
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetReceiveCallback");
+#endif
+
+    // set receive callback
     {
       const std::lock_guard<std::mutex> lock(m_receive_callback_mutex);
-#ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::AddReceiveCallback");
-#endif
       m_receive_callback = std::move(callback_);
     }
 
     return(true);
   }
 
-  bool CSubscriberImpl::RemReceiveCallback()
+  bool CSubscriberImpl::RemoveReceiveCallback()
   {
     if (!m_created) return(false);
 
-    // reset receive callback
+#ifndef NDEBUG
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveReceiveCallback");
+#endif
+
+    // remove receive callback
     {
       const std::lock_guard<std::mutex> lock(m_receive_callback_mutex);
-#ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemReceiveCallback");
-#endif
       m_receive_callback = nullptr;
     }
 
     return(true);
   }
 
-  bool CSubscriberImpl::AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_)
+  bool CSubscriberImpl::SetEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_)
   {
     if (!m_created) return(false);
 
-    // store event callback
-    {
 #ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::AddEventCallback");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetEventCallback");
 #endif
+
+    // set event callback
+    {
       const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
       m_event_callback_map[type_] = std::move(callback_);
     }
@@ -216,16 +216,16 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubscriberImpl::RemEventCallback(eCAL_Subscriber_Event type_)
+  bool CSubscriberImpl::RemoveEventCallback(eCAL_Subscriber_Event type_)
   {
     if (!m_created) return(false);
 
-    // reset event callback
-    {
 #ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemEventCallback");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveEventCallback");
 #endif
+
+    // remove event callback
+    {
       const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
       m_event_callback_map[type_] = nullptr;
     }
@@ -233,48 +233,66 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubscriberImpl::AddEventIDCallback(const SubEventIDCallbackT callback_)
+  bool CSubscriberImpl::SetEventIDCallback(const SubEventIDCallbackT callback_)
   {
     if (!m_created) return false;
-    const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
-    m_event_id_callback = callback_;
+
+#ifndef NDEBUG
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetEventIDCallback");
+#endif
+
+    // set event id callback
+    {
+      const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
+      m_event_id_callback = callback_;
+    }
     return true;
   }
 
-  bool CSubscriberImpl::RemEventIDCallback()
+  bool CSubscriberImpl::RemoveEventIDCallback()
   {
     if (!m_created) return false;
-    const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
-    m_event_id_callback = nullptr;
+
+#ifndef NDEBUG
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveEventIDCallback");
+#endif
+
+    // remove event id callback
+    {
+      const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
+      m_event_id_callback = nullptr;
+    }
     return true;
   }
 
   bool CSubscriberImpl::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
   {
-    m_attr[attr_name_] = attr_value_;
-
 #ifndef NDEBUG
-    // log it
     Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetAttribute");
 #endif
+
+    m_attr[attr_name_] = attr_value_;
 
     return(true);
   }
 
   bool CSubscriberImpl::ClearAttribute(const std::string& attr_name_)
   {
-    m_attr.erase(attr_name_);
-
 #ifndef NDEBUG
-    // log it
     Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::ClearAttribute");
 #endif
+
+    m_attr.erase(attr_name_);
 
     return(true);
   }
 
   void CSubscriberImpl::SetFilterIDs(const std::set<long long>& filter_ids_)
   {
+#ifndef NDEBUG
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetFilterIDs");
+#endif
+
     m_id_set = filter_ids_;
   }
 
@@ -341,8 +359,7 @@ namespace eCAL
     }
 
 #ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplyPublication");
+    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplyPublisherRegistration");
 #endif
   }
 
@@ -367,8 +384,7 @@ namespace eCAL
     }
 
 #ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::RemovePublication");
+    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplyPublisherUnregistration");
 #endif
   }
 
@@ -491,7 +507,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::AddSample");
+    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample");
 #endif
 
     // increase read clock
@@ -518,7 +534,7 @@ namespace eCAL
       {
 #ifndef NDEBUG
         // log it
-        Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::AddSample::ReceiveCallback");
+        Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample::ReceiveCallback");
 #endif
         // prepare data struct
         SReceiveCallbackData cb_data;
@@ -560,37 +576,11 @@ namespace eCAL
       m_read_buf_cv.notify_one();
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::AddSample::Receive::Buffered");
+      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample::Receive::Buffered");
 #endif
     }
 
     return(size_);
-  }
-
-  std::string CSubscriberImpl::Dump(const std::string& indent_ /* = "" */)
-  {
-    std::stringstream out;
-
-    out << '\n';
-    out << indent_ << "------------------------------------" << '\n';
-    out << indent_ << " class CSubscriberImpl " << '\n';
-    out << indent_ << "------------------------------------" << '\n';
-    out << indent_ << "m_host_name:                        " << m_attributes.host_name << '\n';
-    out << indent_ << "m_host_group_name:                  " << m_attributes.host_group_name << '\n';
-    out << indent_ << "m_topic_name:                       " << m_attributes.topic_name << '\n';
-    out << indent_ << "m_topic_id:                         " << m_topic_id << '\n';
-    out << indent_ << "m_topic_info.encoding:              " << m_topic_info.encoding << '\n';
-    out << indent_ << "m_topic_info.name:                  " << m_topic_info.name << '\n';
-    out << indent_ << "m_topic_info.desc:                  " << m_topic_info.descriptor << '\n';
-    out << indent_ << "m_topic_size:                       " << m_topic_size << '\n';
-    out << indent_ << "m_read_buf.size():                  " << m_read_buf.size() << '\n';
-    out << indent_ << "m_read_time:                        " << m_read_time << '\n';
-    out << indent_ << "m_clock:                            " << m_clock << '\n';
-    out << indent_ << "frequency [mHz]:                    " << GetFrequency() << '\n';
-    out << indent_ << "m_created:                          " << m_created << '\n';
-    out << '\n';
-
-    return(out.str());
   }
 
   void CSubscriberImpl::Register()

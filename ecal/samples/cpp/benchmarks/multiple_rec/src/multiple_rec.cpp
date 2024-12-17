@@ -83,7 +83,7 @@ int main()
 
     // setup receive callback
     auto callback = std::bind(OnReceive, std::placeholders::_1);
-    sub->AddReceiveCallback(callback);
+    sub->SetReceiveCallback(callback);
   }
 
   // safe the start time

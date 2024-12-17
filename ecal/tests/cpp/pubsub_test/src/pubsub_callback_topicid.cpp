@@ -121,7 +121,7 @@ TEST_P(TestFixture, OnePubSub)
   eCAL::SDataTypeInformation   callback_datatype_info;
   int                          callback_count{ 0 };
 
-  subscriber.AddReceiveCallback([&callback_topic_id, &callback_datatype_info, &callback_count](const eCAL::Registration::STopicId& topic_id_, const eCAL::SDataTypeInformation& datatype_info_, const eCAL::SReceiveCallbackData&)
+  subscriber.SetReceiveCallback([&callback_topic_id, &callback_datatype_info, &callback_count](const eCAL::Registration::STopicId& topic_id_, const eCAL::SDataTypeInformation& datatype_info_, const eCAL::SReceiveCallbackData&)
     {
       ++callback_count;
       callback_topic_id = topic_id_;
@@ -161,7 +161,7 @@ TEST_P(TestFixture, MultiplePubSub)
   eCAL::SDataTypeInformation   callback_datatype_info;
   int                          callback_count{ 0 };
 
-  subscriber.AddReceiveCallback([&callback_topic_id, &callback_datatype_info, &callback_count](const eCAL::Registration::STopicId& topic_id_, const eCAL::SDataTypeInformation& datatype_info_, const eCAL::SReceiveCallbackData&)
+  subscriber.SetReceiveCallback([&callback_topic_id, &callback_datatype_info, &callback_count](const eCAL::Registration::STopicId& topic_id_, const eCAL::SDataTypeInformation& datatype_info_, const eCAL::SReceiveCallbackData&)
     {
       ++callback_count;
       callback_topic_id = topic_id_;

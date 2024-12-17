@@ -84,7 +84,7 @@ int main()
   eCAL::CSubscriber sub(topicName);
 
   // assign callback
-  sub.AddReceiveCallback(OnReceive);
+  sub.SetReceiveCallback(OnReceive);
 
   // idle main loop
   while (eCAL::Ok()) std::this_thread::sleep_for(std::chrono::milliseconds(500));

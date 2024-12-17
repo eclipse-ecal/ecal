@@ -49,7 +49,7 @@ int main()
   eCAL::CSubscriber sub("blob");
 
   // assign callback
-  sub.AddReceiveCallback(OnReceive);
+  sub.SetReceiveCallback(OnReceive);
 
   // idle main loop
   while (eCAL::Ok()) std::this_thread::sleep_for(std::chrono::milliseconds(500));

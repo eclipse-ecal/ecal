@@ -71,7 +71,7 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
   auto on_receive = [&](const struct eCAL::SReceiveCallbackData& data_) {
     received_bytes += data_.size;
   };
-  sub.AddReceiveCallback(std::bind(on_receive, std::placeholders::_3));
+  sub.SetReceiveCallback(std::bind(on_receive, std::placeholders::_3));
 
   // let's match them
   eCAL::Process::SleepMS(2000);

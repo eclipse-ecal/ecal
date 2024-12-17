@@ -76,7 +76,7 @@ int main()
       start_time = std::chrono::steady_clock::now();
     }
   };
-  sub.AddReceiveCallback(std::bind(on_receive, std::placeholders::_1, std::placeholders::_3));
+  sub.SetReceiveCallback(std::bind(on_receive, std::placeholders::_1, std::placeholders::_3));
 
   // idle main thread
   while(eCAL::Ok())

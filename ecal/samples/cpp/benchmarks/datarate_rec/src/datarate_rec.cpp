@@ -55,7 +55,7 @@ int main(int argc, char** argv)
     rec_buffer.reserve(data_.size);
     std::memcpy(rec_buffer.data(), data_.buf, data_.size);
   };
-  sub.AddReceiveCallback(std::bind(on_receive, std::placeholders::_3));
+  sub.SetReceiveCallback(std::bind(on_receive, std::placeholders::_3));
 
   // idle main thread
   while (eCAL::Ok())

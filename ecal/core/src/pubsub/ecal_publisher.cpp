@@ -51,7 +51,7 @@ namespace eCAL
     CPublisher(topic_name_, data_type_info_, config_)
   {
     // add event callback for all current event types
-    m_publisher_impl->AddEventIDCallback(event_callback_);
+    m_publisher_impl->SetEventIDCallback(event_callback_);
   }
 
   CPublisher::~CPublisher()

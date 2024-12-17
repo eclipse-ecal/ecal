@@ -159,26 +159,26 @@ namespace eCAL
     {
       if (m_subscriber_impl == nullptr) return(false);
       RemReceiveCallback();
-      return(m_subscriber_impl->AddReceiveCallback(std::move(callback_)));
+      return(m_subscriber_impl->SetReceiveCallback(std::move(callback_)));
     }
 
     bool CSubscriber::RemReceiveCallback()
     {
       if (m_subscriber_impl == nullptr) return(false);
-      return(m_subscriber_impl->RemReceiveCallback());
+      return(m_subscriber_impl->RemoveReceiveCallback());
     }
 
     bool CSubscriber::AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_)
     {
       if (m_subscriber_impl == nullptr) return(false);
       RemEventCallback(type_);
-      return(m_subscriber_impl->AddEventCallback(type_, callback_));
+      return(m_subscriber_impl->SetEventCallback(type_, callback_));
     }
 
     bool CSubscriber::RemEventCallback(eCAL_Subscriber_Event type_)
     {
       if (m_subscriber_impl == nullptr) return(false);
-      return(m_subscriber_impl->RemEventCallback(type_));
+      return(m_subscriber_impl->RemoveEventCallback(type_));
     }
 
     bool CSubscriber::IsPublished() const

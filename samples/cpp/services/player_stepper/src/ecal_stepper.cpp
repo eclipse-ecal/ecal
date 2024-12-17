@@ -108,7 +108,7 @@ int main(int argc, char** argv)
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     eCAL::CSubscriber triggerSubscriber(triggerName);
-    triggerSubscriber.AddReceiveCallback(
+    triggerSubscriber.SetReceiveCallback(
         std::bind(callback, std::placeholders::_1));
     eCAL::CSubscriber pauseSubscriber(pauseName);
 
@@ -116,7 +116,7 @@ int main(int argc, char** argv)
 
     if(resimPauseMode)
     {
-        pauseSubscriber.AddReceiveCallback(
+        pauseSubscriber.SetReceiveCallback(
             std::bind(callback, std::placeholders::_1));
     }
 

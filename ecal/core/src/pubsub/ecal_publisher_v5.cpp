@@ -188,7 +188,7 @@ namespace eCAL
     {
       if (m_publisher_impl == nullptr) return(false);
       RemEventCallback(type_);
-      return(m_publisher_impl->AddEventCallback(type_, std::move(callback_)));
+      return(m_publisher_impl->SetEventCallback(type_, std::move(callback_)));
     }
 
     bool CPublisher::RemEventCallback(eCAL_Publisher_Event type_)

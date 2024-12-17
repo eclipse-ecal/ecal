@@ -52,7 +52,7 @@ public:
     : subscriber{topic}
   {
     using namespace std::placeholders;
-    subscriber.AddReceiveCallback(std::bind(&RawMessageVisualizationViewModel::OnMessage, this, _3));
+    subscriber.SetReceiveCallback(std::bind(&RawMessageVisualizationViewModel::OnMessage, this, _3));
   }
 
   std::string message() const

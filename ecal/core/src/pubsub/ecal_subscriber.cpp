@@ -44,7 +44,7 @@ namespace eCAL
     CSubscriber(topic_name_, data_type_info_, config_)
   {
     // add event callback for all current event types
-    m_subscriber_impl->AddEventIDCallback(event_callback_);
+    m_subscriber_impl->SetEventIDCallback(event_callback_);
   }
 
   CSubscriber::~CSubscriber()
@@ -70,16 +70,16 @@ namespace eCAL
     return *this;
   }
 
-  bool CSubscriber::AddReceiveCallback(ReceiveIDCallbackT callback_)
+  bool CSubscriber::SetReceiveCallback(ReceiveIDCallbackT callback_)
   {
     if (m_subscriber_impl == nullptr) return false;
-    return m_subscriber_impl->AddReceiveCallback(std::move(callback_));
+    return m_subscriber_impl->SetReceiveCallback(std::move(callback_));
   }
 
-  bool CSubscriber::RemReceiveCallback()
+  bool CSubscriber::RemoveReceiveCallback()
   {
     if (m_subscriber_impl == nullptr) return false;
-    return m_subscriber_impl->RemReceiveCallback();
+    return m_subscriber_impl->RemoveReceiveCallback();
   }
 
   size_t CSubscriber::GetPublisherCount() const

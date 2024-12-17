@@ -109,7 +109,7 @@ std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int
     }
     std::cout << std::endl;
     };
-  EXPECT_TRUE(sub.AddReceiveCallback(lambda));
+  EXPECT_TRUE(sub.SetReceiveCallback(lambda));
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);

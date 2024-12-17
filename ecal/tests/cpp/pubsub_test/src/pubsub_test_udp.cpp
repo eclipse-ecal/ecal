@@ -68,7 +68,7 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
   eCAL::CPublisher pub("A", eCAL::SDataTypeInformation(), pub_config);
 
   // add callback
-  EXPECT_TRUE(sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_3)));
+  EXPECT_TRUE(sub.SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3)));
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);

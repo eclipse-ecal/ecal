@@ -54,7 +54,7 @@ int main()
       g_clock++;
     }
   };
-  sub.AddReceiveCallback(std::bind(on_receive, std::placeholders::_3));
+  sub.SetReceiveCallback(std::bind(on_receive, std::placeholders::_3));
 
   // idle main thread
   while(eCAL::Ok())
