@@ -298,24 +298,6 @@ namespace eCAL
         g_process_info = info_;
       }
     }
-
-    int AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_)
-    {
-#if ECAL_CORE_REGISTRATION
-      if (g_registration_receiver() == nullptr) return -1;
-      if (g_registration_receiver()->AddRegistrationCallback(event_, callback_)) return 0;
-#endif
-      return -1;
-    }
-
-    int RemRegistrationCallback(enum eCAL_Registration_Event event_)
-    {
-#if ECAL_CORE_REGISTRATION
-      if (g_registration_receiver() == nullptr) return -1;
-      if (g_registration_receiver()->RemRegistrationCallback(event_)) return 0;
-#endif
-      return -1;
-    }
   }
 }
 

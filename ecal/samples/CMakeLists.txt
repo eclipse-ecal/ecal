@@ -84,7 +84,6 @@ if(ECAL_CORE_MONITORING)
   add_subdirectory(cpp/monitoring/monitoring_performance)
   if(ECAL_CORE_HAS_PROTOBUF)
     add_subdirectory(cpp/monitoring/monitoring_rec)
-    add_subdirectory(cpp/monitoring/monitoring_reg)
   endif()
 endif()
 

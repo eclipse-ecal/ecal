@@ -1056,7 +1056,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
   PyObject* retDict = PyDict_New();
 
   eCAL::Monitoring::SMonitoring monitoring;
-  if (eCAL::Monitoring::GetMonitoring(monitoring) != 0)
+  if (eCAL::Monitoring::GetMonitoring(monitoring))
   {
     PyObject* val;
 

@@ -522,60 +522,6 @@ int mon_initialize();
 int mon_finalize();
 
 /**
- * @brief Set topics filter blacklist regular expression.
- *
- * @param filter_  Topic filter as regular expression.
- *
- * @return Zero if succeeded.
-**/
-int mon_set_excl_filter(const char* filter_);
-
-/**
- * @brief Set topics filter whitelist regular expression.
- *
- * @param filter_  Topic filter as regular expression.
- *
- * @return Zero if succeeded.
-**/
-int mon_set_incl_filter(const char* filter_);
-
-/**
- * @brief Switch topics filter using regular expression on/off.
- *
- * @param state_  Filter on / off state.
- *
- * @return Zero if succeeded.
-**/
-int mon_set_filter_state(bool state_);
-
-/**
- * @brief Get monitoring protobuf string.
- *
- * @param [out] mon_buf_      Pointer to store the monitoring information.
- * @param [out] mon_buf_len_  Length of allocated buffer,
- *                            eCAL is allocating the buffer for you, use ecal_free_mem to free the buffer finally.
- *
- * @return  Monitoring buffer length or zero if failed.
-**/
-/**
- * @code
- *            // let eCAL allocate memory for the monitoring buffer and return the pointer to 'buf'
- *            const char* mon_buf_     = NULL;
- *            int         mon_buf_len_ = 0;
- *            mon_get_monitoring(subscriber_handle, &mon_buf_, &mon_buf_len_);
- *            if(mon_buf_len_ > 0)
- *            {
- *              ...
- *              // PROCESS THE BUFFER CONTENT HERE
- *              ...
- *              // finally free the allocated memory
- *              ecal_free_mem(((void*)rcv_buf););
- *            }
- * @endcode
-**/
-int mon_get_monitoring(const char** mon_buf_, int* mon_buf_len_);
-
-/**
  * @brief Get logging string.
  *
  * @param [out] log_buf_      Pointer to store the monitoring information.

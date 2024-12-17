@@ -736,63 +736,6 @@ int mon_finalize()
 }
 
 /****************************************/
-/*      mon_set_excl_filter             */
-/****************************************/
-int mon_set_excl_filter(const char* filter_)
-{
-  return(eCAL::Monitoring::SetExclFilter(filter_));
-}
-
-/****************************************/
-/*      mon_set_incl_filter             */
-/****************************************/
-int mon_set_incl_filter(const char* filter_)
-{
-  return(eCAL::Monitoring::SetInclFilter(filter_));
-}
-
-/****************************************/
-/*      mon_set_filter_state            */
-/****************************************/
-int mon_set_filter_state(const bool state_)
-{
-  return(eCAL::Monitoring::SetFilterState(state_));
-}
-
-/****************************************/
-/*      mon_get_monitoring              */
-/****************************************/
-int mon_get_monitoring(const char** mon_buf_, int* mon_buf_len_)
-{
-  std::string mon_s;
-  const int size = eCAL::Monitoring::GetMonitoring(mon_s);
-  if(size > 0)
-  {
-    // this has to be freed by caller (ecal_free_mem)
-    char* cbuf = str_malloc(mon_s);
-    if(cbuf == nullptr) return(0);
-
-    if (mon_buf_ != nullptr) {
-      *mon_buf_ = cbuf;
-      if (mon_buf_len_ != nullptr) *mon_buf_len_ = static_cast<int>(mon_s.size());
-    }
-    else
-    {
-      // free allocated memory:
-      ecal_free_mem(cbuf);
-      if (mon_buf_len_ != nullptr) *mon_buf_len_ = 0;
-      // operation could't be completed successfully
-      return(0);
-    }
-    return(static_cast<int>(mon_s.size()));
-  }
-  else
-  {
-    return(0);
-  }
-}
-
-/****************************************/
 /*      mon_get_logging                 */
 /****************************************/
 int mon_get_logging(const char** log_buf_, int* log_buf_len_)
