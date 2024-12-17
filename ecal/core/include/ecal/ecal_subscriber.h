@@ -31,9 +31,7 @@
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_types.h>
 
-#include <cstddef>
 #include <memory>
-#include <set>
 #include <string>
 
 namespace eCAL
@@ -63,8 +61,8 @@ namespace eCAL
        *
        * @param topic_name_      Unique topic name.
        * @param data_type_info_  Topic data type information (encoding, type, descriptor).
-       * @param event_callback_  Optional callback for subscriber events.
-       * @param config_          Optional configuration parameters.
+       * @param event_callback_  Callback for subscriber events.
+       * @param config_          Configuration parameters.
       **/
       ECAL_API_EXPORTED_MEMBER
         CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventIDCallbackT event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
