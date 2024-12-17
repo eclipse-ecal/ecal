@@ -74,7 +74,7 @@ namespace eCAL
     /**
      * @brief  Constructor.
     **/
-    CDynamicMessageSubscriber() : v5::CSubscriber() = default;
+    CDynamicMessageSubscriber() = default;
 
     /**
     * @brief  Constructor.

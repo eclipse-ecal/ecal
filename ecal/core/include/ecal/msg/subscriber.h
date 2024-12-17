@@ -244,7 +244,7 @@ protected:
     /**
      * @brief  Constructor.
     **/
-    CMessageSubscriber() : v5::CSubscriber() = default;
+    CMessageSubscriber() = default;
 
     /**
     * @brief  Constructor.
