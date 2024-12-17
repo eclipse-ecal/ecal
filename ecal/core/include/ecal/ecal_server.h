@@ -33,7 +33,6 @@
 
 #include <memory>
 #include <string>
-#include <vector>
 
 namespace eCAL
 {
@@ -85,26 +84,26 @@ namespace eCAL
         CServiceServer& operator=(CServiceServer&& rhs) noexcept;
 
       /**
-       * @brief Add method callback.
+       * @brief Set/overwrite method callback.
        *
        * @param method_       Service method name.
        * @param method_info_  Service method information (request & response types).
        * @param callback_     Callback function for client request.
        *
-       * @return  True if successful.
+       * @return  True if succeeded, false if not.
       **/
 
       // TODO: Provide new MethodCallbackT type using SServiceMethodInformation instead "MethodCallbackT = std::function<int(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_)>"
 
       ECAL_API_EXPORTED_MEMBER
-        bool AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_);
+        bool SetMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_);
 
       /**
        * @brief Remove method callback.
        *
        * @param method_  Service method name.
        *
-       * @return  True if successful.
+       * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
         bool RemoveMethodCallback(const std::string& method_);
@@ -131,7 +130,7 @@ namespace eCAL
       /**
        * @brief Check connection state.
        *
-       * @return  True if connected, false if not.
+       * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
         bool IsConnected();

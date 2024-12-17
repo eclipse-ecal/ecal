@@ -63,7 +63,7 @@ public:
 /// Implementation
 //////////////////////////////////////
 private:
-  void callback(const char* topic_name_, const eCAL::SReceiveCallbackData* data_);
+  void callback(const eCAL::SReceiveCallbackData& data_);
 
   void statisticsLoop();
 

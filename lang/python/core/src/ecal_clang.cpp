@@ -25,6 +25,7 @@
 #include <ecal/ecal_client_v5.h>
 #include <ecal/ecal_server_v5.h>
 #include <ecal/ecal_publisher_v5.h>
+#include <ecal/ecal_subscriber_v5.h>
 
 #include "ecal_clang.h"
 
@@ -384,7 +385,7 @@ ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_, const c
   topic_info.encoding   = topic_enc_;
   topic_info.descriptor = std::string(topic_desc_, static_cast<size_t>(topic_desc_length_));
 
-  auto* sub = new eCAL::CSubscriber;
+  auto* sub = new eCAL::v5::CSubscriber;
   if (!sub->Create(topic_name_, topic_info))
   {
     delete sub;
@@ -398,7 +399,7 @@ ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_, const c
 /****************************************/
 bool sub_destroy(ECAL_HANDLE handle_)
 {
-  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
   if(sub != nullptr)
   {
     delete sub;
@@ -412,7 +413,7 @@ bool sub_destroy(ECAL_HANDLE handle_)
 /****************************************/
 int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_)
 {
-  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
   if(sub != nullptr)
   {
     std::string rcv_buf;
@@ -450,7 +451,7 @@ int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, l
 /****************************************/
 bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_)
 {
-  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
   if (sub != nullptr)
   {
     std::string rcv_buf;
@@ -499,7 +500,7 @@ static void g_sub_receive_callback(const char* topic_name_, const struct eCAL::S
 
 bool sub_add_receive_callback(ECAL_HANDLE handle_, const ReceiveCallbackCT callback_, void* par_)
 {
-  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
 
   auto callback = std::bind(g_sub_receive_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
   return(sub->AddReceiveCallback(callback));
@@ -510,7 +511,7 @@ bool sub_add_receive_callback(ECAL_HANDLE handle_, const ReceiveCallbackCT callb
 /****************************************/
 bool sub_rem_receive_callback(ECAL_HANDLE handle_)
 {
-  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
 
   return(sub->RemReceiveCallback());
 }
@@ -535,7 +536,7 @@ static void g_sub_event_callback(const char* topic_name_, const struct eCAL::SSu
 
 bool sub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_, const SubEventCallbackCT callback_, void* par_)
 {
-  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
 
   auto callback = std::bind(g_sub_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
   return(sub->AddEventCallback(type_, callback));
@@ -546,7 +547,7 @@ bool sub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type
 /****************************************/
 bool sub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_)
 {
-  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
 
   return(sub->RemEventCallback(type_));
 }

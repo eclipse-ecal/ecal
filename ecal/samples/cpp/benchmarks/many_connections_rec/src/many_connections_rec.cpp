@@ -43,7 +43,7 @@ public:
       {
         Receive();
       };
-      subscribers.at(i).AddReceiveCallback(on_receive);
+      subscribers.at(i).SetReceiveCallback(on_receive);
     }
   }
 

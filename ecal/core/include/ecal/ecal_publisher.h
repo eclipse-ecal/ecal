@@ -31,10 +31,7 @@
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_types.h>
-#include <ecal/config/publisher.h>
 
-#include <chrono>
-#include <cstddef>
 #include <memory>
 #include <string>
 
