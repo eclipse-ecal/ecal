@@ -267,13 +267,14 @@ namespace eCAL
     if (topic_name.empty()) return;
 
     const auto& publication_info = ecal_sample_.identifier;
+    const SDataTypeInformation& topic_information = ecal_topic.tdatatype;
 
     // unregister publisher
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
     auto res = m_topic_name_subscriber_map.equal_range(topic_name);
     for (auto iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->ApplyPublisherUnregistration(publication_info);
+      iter->second->ApplyPublisherUnregistration(publication_info, topic_information);
     }
   }
 

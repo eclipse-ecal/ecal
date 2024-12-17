@@ -129,11 +129,11 @@ namespace eCAL
 
     void StopAllLayer();
 
-    void FireEvent(const eCAL_Publisher_Event type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_);
+    void FireEvent(const eCAL_Publisher_Event type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
-    void FireConnectEvent   (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_);
-    void FireUpdateEvent    (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_);
-    void FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_);
+    void FireConnectEvent   (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
+    void FireUpdateEvent    (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
+    void FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
     size_t GetConnectionCount();
 

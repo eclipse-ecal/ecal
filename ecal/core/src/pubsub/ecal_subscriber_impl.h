@@ -63,6 +63,7 @@ namespace eCAL
     };
 
     using SPublicationInfo = Registration::SampleIdentifier;
+
     CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_);
     ~CSubscriberImpl();
 
@@ -85,7 +86,7 @@ namespace eCAL
     void SetFilterIDs(const std::set<long long>& filter_ids_);
 
     void ApplyPublisherRegistration(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& pub_layer_states_);
-    void ApplyPublisherUnregistration(const SPublicationInfo& publication_info_);
+    void ApplyPublisherUnregistration(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
 
     void ApplyLayerParameter(const SPublicationInfo& publication_info_, eTLayerType type_, const Registration::ConnectionPar& parameter_);
 
@@ -124,9 +125,11 @@ namespace eCAL
     void StartTransportLayer();
     void StopTransportLayer();
 
-    void FireConnectEvent(const std::string& tid_, const SDataTypeInformation& tinfo_);
-    void FireUpdateEvent(const std::string& tid_, const SDataTypeInformation& tinfo_);
-    void FireDisconnectEvent();
+    void FireEvent(const eCAL_Subscriber_Event type_, const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
+
+    void FireConnectEvent   (const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
+    void FireUpdateEvent    (const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
+    void FireDisconnectEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
     
     size_t GetConnectionCount();
 
@@ -150,25 +153,28 @@ namespace eCAL
     ConnectionMapT                            m_connection_map;
     std::atomic<size_t>                       m_connection_count{ 0 };
 
-    mutable std::mutex                        m_read_buf_mtx;
+    mutable std::mutex                        m_read_buf_mutex;
     std::condition_variable                   m_read_buf_cv;
     bool                                      m_read_buf_received = false;
     std::string                               m_read_buf;
     long long                                 m_read_time = 0;
 
-    std::mutex                                m_receive_callback_mtx;
+    std::mutex                                m_receive_callback_mutex;
     ReceiveIDCallbackT                        m_receive_callback;
     std::atomic<int>                          m_receive_time;
 
     std::deque<size_t>                        m_sample_hash_queue;
 
     using EventCallbackMapT = std::map<eCAL_Subscriber_Event, SubEventCallbackT>;
-    std::mutex                                m_event_callback_map_mtx;
+    std::mutex                                m_event_callback_map_mutex;
     EventCallbackMapT                         m_event_callback_map;
+
+    std::mutex                                m_event_id_callback_mutex;
+    SubEventIDCallbackT                       m_event_id_callback;
 
     std::atomic<long long>                    m_clock;
 
-    std::mutex                                m_frequency_calculator_mtx;
+    std::mutex                                m_frequency_calculator_mutex;
     ResettableFrequencyCalculator<std::chrono::steady_clock> m_frequency_calculator;
 
     std::set<long long>                       m_id_set;

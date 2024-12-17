@@ -741,23 +741,23 @@ namespace eCAL
     ecal_reg_sample_topic.uname  = m_attributes.unit_name;
   }
 
-  void CPublisherImpl::FireEvent(const eCAL_Publisher_Event type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_)
+  void CPublisherImpl::FireEvent(const eCAL_Publisher_Event type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
     SPubEventCallbackData data;
-    data.type = type_;
-    data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-    data.clock = 0;
-    data.tid = subscription_info_.entity_id;
-    data.tdatatype = tinfo_;
+    data.type      = type_;
+    data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+    data.clock     = 0;
+    data.tid       = subscription_info_.entity_id;
+    data.tdatatype = data_type_info_;
 
     // new event handling with topic id
     if(m_event_id_callback)
     {
       Registration::STopicId topic_id;
-      topic_id.topic_id.entity_id = subscription_info_.entity_id;
+      topic_id.topic_id.entity_id  = subscription_info_.entity_id;
       topic_id.topic_id.process_id = subscription_info_.process_id;
-      topic_id.topic_id.host_name = subscription_info_.host_name;
-      topic_id.topic_name = m_attributes.topic_name;
+      topic_id.topic_id.host_name  = subscription_info_.host_name;
+      topic_id.topic_name          = m_attributes.topic_name;
       const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
       // call event callback
       m_event_id_callback(topic_id, data);
@@ -774,19 +774,19 @@ namespace eCAL
     }
   }
 
-  void CPublisherImpl::FireConnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_)
+  void CPublisherImpl::FireConnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(pub_event_connected, subscription_info_, tinfo_);
+    FireEvent(pub_event_connected, subscription_info_, data_type_info_);
   }
 
-  void CPublisherImpl::FireUpdateEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_)
+  void CPublisherImpl::FireUpdateEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(pub_event_update_connection, subscription_info_, tinfo_);
+    FireEvent(pub_event_update_connection, subscription_info_, data_type_info_);
   }
 
-  void CPublisherImpl::FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_)
+  void CPublisherImpl::FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(pub_event_disconnected, subscription_info_, tinfo_);
+    FireEvent(pub_event_disconnected, subscription_info_, data_type_info_);
   }
 
   size_t CPublisherImpl::GetConnectionCount()
