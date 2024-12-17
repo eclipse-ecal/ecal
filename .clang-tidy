@@ -37,6 +37,7 @@ Checks: "-*,
   misc-*,
   -misc-non-private-member-variables-in-classes,
   -misc-no-recursion,
+  -misc-include-cleaner,
   
   modernize-*,
   -modernize-pass-by-value,
@@ -58,6 +59,7 @@ Checks: "-*,
   -readability-redundant-access-specifiers,
   -readability-uppercase-literal-suffix,
   -readability-use-anyofallof,
+  -readability-avoid-const-params-in-decls,
 "
 WarningsAsErrors: ''
 HeaderFilterRegex: '^((?!/thirdparty/|/_deps/).)*$'
