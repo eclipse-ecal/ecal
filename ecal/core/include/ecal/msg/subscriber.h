@@ -50,9 +50,7 @@ namespace eCAL
     /**
      * @brief  Constructor.
     **/
-    CMsgSubscriber() : v5::CSubscriber()
-    {
-    }
+    CMsgSubscriber() : v5::CSubscriber() = default;
 
     /**
      * @brief  Constructor.
@@ -246,9 +244,7 @@ protected:
     /**
      * @brief  Constructor.
     **/
-    CMessageSubscriber() : v5::CSubscriber()
-    {
-    }
+    CMessageSubscriber() : v5::CSubscriber() = default;
 
     /**
     * @brief  Constructor.

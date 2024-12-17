@@ -74,9 +74,7 @@ namespace eCAL
     /**
      * @brief  Constructor.
     **/
-    CDynamicMessageSubscriber() : v5::CSubscriber()
-    {
-    }
+    CDynamicMessageSubscriber() : v5::CSubscriber() = default;
 
     /**
     * @brief  Constructor.
@@ -84,6 +82,8 @@ namespace eCAL
     * @param topic_name_  Unique topic name.
     **/
     CDynamicMessageSubscriber(const std::string& topic_name_) : v5::CSubscriber()
+      , m_cb_callback(nullptr)
+      , m_error_callback(nullptr)
       , m_deserializer()
     {
       v5::CSubscriber::Create(topic_name_);
