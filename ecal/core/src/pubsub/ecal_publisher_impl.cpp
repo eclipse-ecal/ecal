@@ -105,8 +105,7 @@ namespace eCAL
     m_created(false)
   {
 #ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::Constructor");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::Constructor");
 #endif
 
     // build topic id
@@ -121,8 +120,7 @@ namespace eCAL
   CPublisherImpl::~CPublisherImpl()
   {
 #ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug1, m_attributes.topic_name + "::CDataWriter::Destructor");
+    Logging::Log(log_level_debug1, m_attributes.topic_name + "::CPublisherImpl::Destructor");
 #endif
 
     if (!m_created) return;
@@ -188,8 +186,7 @@ namespace eCAL
     if (m_writer_shm)
     {
 #ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::Send::SHM");
+      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Write::SHM");
 #endif
 
       // send it
@@ -233,14 +230,13 @@ namespace eCAL
       written |= shm_sent;
 
 #ifndef NDEBUG
-      // log it
       if (shm_sent)
       {
-        Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::Send::SHM - SUCCESS");
+        Logging::Log(log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Write::SHM - SUCCESS");
       }
       else
       {
-        Logging::Log(log_level_error, m_attributes.topic_name + "::CDataWriter::Send::SHM - FAILED");
+        Logging::Log(log_level_error, m_attributes.topic_name + "::CPublisherImpl::Write::SHM - FAILED");
       }
 #endif
     }
@@ -253,8 +249,7 @@ namespace eCAL
     if (m_writer_udp)
     {
 #ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::Send::udp");
+      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Write::udp");
 #endif
 
       // send it
@@ -284,14 +279,13 @@ namespace eCAL
       written |= udp_sent;
 
 #ifndef NDEBUG
-      // log it
       if (udp_sent)
       {
-        Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::Send::udp - SUCCESS");
+        Logging::Log(log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Write::udp - SUCCESS");
       }
       else
       {
-        Logging::Log(log_level_error, m_attributes.topic_name + "::CDataWriter::Send::udp - FAILED");
+        Logging::Log(log_level_error, m_attributes.topic_name + "::CPublisherImpl::Write::udp - FAILED");
       }
 #endif
     }
@@ -304,8 +298,7 @@ namespace eCAL
     if (m_writer_tcp)
     {
 #ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::Send::TCP");
+      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Send::TCP");
 #endif
 
       // send it
@@ -326,14 +319,13 @@ namespace eCAL
       written |= tcp_sent;
 
 #ifndef NDEBUG
-      // log it
       if (tcp_sent)
       {
-        Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::Send::TCP - SUCCESS");
+        Logging::Log(log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Write::TCP - SUCCESS");
       }
       else
       {
-        Logging::Log(log_level_error, m_attributes.topic_name + "::CDataWriter::Send::TCP - FAILED");
+        Logging::Log(log_level_error, m_attributes.topic_name + "::CPublisherImpl::Write::TCP - FAILED");
       }
 #endif
     }
@@ -348,8 +340,7 @@ namespace eCAL
     m_topic_info = topic_info_;
 
 #ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::SetDescription");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::SetDataTypeInformation");
 #endif
 
     return(true);
@@ -360,8 +351,7 @@ namespace eCAL
     m_attr[attr_name_] = attr_value_;
 
 #ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::SetAttribute");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::SetAttribute");
 #endif
 
     return(true);
@@ -372,23 +362,22 @@ namespace eCAL
     m_attr.erase(attr_name_);
 
 #ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::ClearAttribute");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::ClearAttribute");
 #endif
 
     return(true);
   }
 
-  bool CPublisherImpl::AddEventCallback(eCAL_Publisher_Event type_, const PubEventCallbackT callback_)
+  bool CPublisherImpl::SetEventCallback(eCAL_Publisher_Event type_, const PubEventCallbackT callback_)
   {
     if (!m_created) return(false);
 
-    // store event callback
-    {
 #ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::AddEventCallback");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::SetEventCallback");
 #endif
+
+    // set event callback
+    {
       const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
       m_event_callback_map[type_] = callback_;
     }
@@ -400,12 +389,12 @@ namespace eCAL
   {
     if (!m_created) return(false);
 
-    // reset event callback
-    {
 #ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::RemEventCallback");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::RemoveEventCallback");
 #endif
+
+    // remove event callback
+    {
       const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
       m_event_callback_map[type_] = nullptr;
     }
@@ -413,19 +402,35 @@ namespace eCAL
     return(true);
   }
 
-  bool CPublisherImpl::AddEventIDCallback(const PubEventIDCallbackT callback_)
+  bool CPublisherImpl::SetEventIDCallback(const PubEventIDCallbackT callback_)
   {
     if (!m_created) return false;
-    const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
-    m_event_id_callback = callback_;
+
+#ifndef NDEBUG
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::SetEventIDCallback");
+#endif
+
+    // set event id callback
+    {
+      const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
+      m_event_id_callback = callback_;
+    }
     return true;
   }
 
-  bool CPublisherImpl::RemEventIDCallback()
+  bool CPublisherImpl::RemoveEventIDCallback()
   {
     if (!m_created) return false;
-    const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
-    m_event_id_callback = nullptr;
+
+#ifndef NDEBUG
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::RemoveEventIDCallback");
+#endif
+
+    // remove event id callback
+    {
+      const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
+      m_event_id_callback = nullptr;
+    }
     return true;
   }
 
@@ -471,7 +476,6 @@ namespace eCAL
     }
 
 #ifndef NDEBUG
-    // log it
     //logLayerStates(m_layers);
 #endif
 
@@ -537,8 +541,7 @@ namespace eCAL
     }
 
 #ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::ApplySubscription");
+    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::ApplySubscriberRegistration");
 #endif
   }
 
@@ -569,8 +572,7 @@ namespace eCAL
     FireDisconnectEvent(subscription_info_, data_type_info_);
 
 #ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CDataWriter::RemoveSubscription");
+    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::ApplySubscriberUnregistration");
 #endif
   }
 
@@ -606,8 +608,7 @@ namespace eCAL
     if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(registration_sample);
 
 #ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug4, m_attributes.topic_name + "::CDataWriter::Register");
+    Logging::Log(log_level_debug4, m_attributes.topic_name + "::CPublisherImpl::Register");
 #endif
 #endif // ECAL_CORE_REGISTRATION
   }
@@ -620,8 +621,7 @@ namespace eCAL
     if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(unregistration_sample);
 
 #ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug4, m_attributes.topic_name + "::CDataWriter::Unregister");
+    Logging::Log(log_level_debug4, m_attributes.topic_name + "::CPublisherImpl::Unregister");
 #endif
 #endif // ECAL_CORE_REGISTRATION
   }
@@ -741,23 +741,23 @@ namespace eCAL
     ecal_reg_sample_topic.uname  = m_attributes.unit_name;
   }
 
-  void CPublisherImpl::FireEvent(const eCAL_Publisher_Event type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_)
+  void CPublisherImpl::FireEvent(const eCAL_Publisher_Event type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
     SPubEventCallbackData data;
-    data.type = type_;
-    data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-    data.clock = 0;
-    data.tid = subscription_info_.entity_id;
-    data.tdatatype = tinfo_;
+    data.type      = type_;
+    data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+    data.clock     = 0;
+    data.tid       = subscription_info_.entity_id;
+    data.tdatatype = data_type_info_;
 
     // new event handling with topic id
     if(m_event_id_callback)
     {
       Registration::STopicId topic_id;
-      topic_id.topic_id.entity_id = subscription_info_.entity_id;
+      topic_id.topic_id.entity_id  = subscription_info_.entity_id;
       topic_id.topic_id.process_id = subscription_info_.process_id;
-      topic_id.topic_id.host_name = subscription_info_.host_name;
-      topic_id.topic_name = m_attributes.topic_name;
+      topic_id.topic_id.host_name  = subscription_info_.host_name;
+      topic_id.topic_name          = m_attributes.topic_name;
       const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
       // call event callback
       m_event_id_callback(topic_id, data);
@@ -774,19 +774,19 @@ namespace eCAL
     }
   }
 
-  void CPublisherImpl::FireConnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_)
+  void CPublisherImpl::FireConnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(pub_event_connected, subscription_info_, tinfo_);
+    FireEvent(pub_event_connected, subscription_info_, data_type_info_);
   }
 
-  void CPublisherImpl::FireUpdateEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_)
+  void CPublisherImpl::FireUpdateEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(pub_event_update_connection, subscription_info_, tinfo_);
+    FireEvent(pub_event_update_connection, subscription_info_, data_type_info_);
   }
 
-  void CPublisherImpl::FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_)
+  void CPublisherImpl::FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(pub_event_disconnected, subscription_info_, tinfo_);
+    FireEvent(pub_event_disconnected, subscription_info_, data_type_info_);
   }
 
   size_t CPublisherImpl::GetConnectionCount()
@@ -812,7 +812,7 @@ namespace eCAL
     m_layers.udp.write_enabled = true;
 
     // log state
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::ActivateUdpLayer::ACTIVATED");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::StartUdpLayer::ACTIVATED");
 
     // create writer
     m_writer_udp = std::make_unique<CDataWriterUdpMC>(eCAL::eCALWriter::BuildUDPAttributes(m_topic_id, m_attributes));
@@ -821,7 +821,7 @@ namespace eCAL
     Register();
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::ActivateUdpLayer::WRITER_CREATED");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::StartUdpLayer::WRITER_CREATED");
 #endif
     return true;
 #else  // ECAL_CORE_TRANSPORT_UDP
@@ -838,7 +838,7 @@ namespace eCAL
     m_layers.shm.write_enabled = true;
 
     // log state
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::ActivateShmLayer::ACTIVATED");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::StartShmLayer::ACTIVATED");
 
     // create writer
     m_writer_shm = std::make_unique<CDataWriterSHM>(eCAL::eCALWriter::BuildSHMAttributes(m_attributes));
@@ -847,7 +847,7 @@ namespace eCAL
     Register();
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::ActivateShmLayer::WRITER_CREATED");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::StartShmLayer::WRITER_CREATED");
 #endif
     return true;
 #else  // ECAL_CORE_TRANSPORT_SHM
@@ -864,7 +864,7 @@ namespace eCAL
     m_layers.tcp.write_enabled = true;
 
     // log state
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::ActivateTcpLayer::ACTIVATED");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::StartTcpLayer::ACTIVATED");
 
     // create writer
     m_writer_tcp = std::make_unique<CDataWriterTCP>(eCAL::eCALWriter::BuildTCPAttributes(m_topic_id, m_attributes));
@@ -873,7 +873,7 @@ namespace eCAL
     Register();
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CDataWriter::ActivateTcpLayer::WRITER_CREATED");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::StartTcpLayer::WRITER_CREATED");
 #endif
     return true;
 #else  // ECAL_CORE_TRANSPORT_TCP

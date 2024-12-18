@@ -10,7 +10,6 @@ set(ENABLE_MANUAL  OFF CACHE BOOL "Disable built-in manual" FORCE)
 ecal_disable_all_warnings()
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/curl thirdparty/curl EXCLUDE_FROM_ALL SYSTEM)
 ecal_restore_warning_level()
-set_property(TARGET libcurl PROPERTY FOLDER thirdparty/curl)
 
 if (NOT TARGET CURL::libcurl)
   add_library(CURL::libcurl ALIAS libcurl)

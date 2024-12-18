@@ -19,8 +19,8 @@
 
 #include <chrono>
 #include <ecal/ecal.h>
-#include <ecal/msg/string/publisher.h>
-#include <ecal/msg/string/subscriber.h>
+#include <ecal/ecal_publisher_v5.h>
+#include <ecal/ecal_subscriber_v5.h>
 
 #include <gtest/gtest.h>
 #include <ostream>
@@ -114,21 +114,21 @@ TEST_P(TestFixture, OnePubSub)
   datatype_info.encoding   = "test";
   datatype_info.descriptor = "desc";
 
-  eCAL::CPublisher  publisher ("foo", datatype_info);
-  eCAL::CSubscriber subscriber("foo", datatype_info);
+  eCAL::v5::CPublisher  publisher ("foo", datatype_info);
+  eCAL::v5::CSubscriber subscriber("foo", datatype_info);
 
   eCAL::Registration::STopicId callback_topic_id;
   eCAL::SDataTypeInformation   callback_datatype_info;
   int                          callback_count{ 0 };
 
-  subscriber.SetReceiveCallback([&callback_topic_id, &callback_datatype_info, &callback_count](const eCAL::Registration::STopicId& topic_id_, const eCAL::SDataTypeInformation& datatype_info_, const eCAL::SReceiveCallbackData&)
+  subscriber.AddReceiveCallback([&callback_topic_id, &callback_datatype_info, &callback_count](const eCAL::Registration::STopicId& topic_id_, const eCAL::SDataTypeInformation& datatype_info_, const eCAL::SReceiveCallbackData&)
     {
       ++callback_count;
       callback_topic_id = topic_id_;
       callback_datatype_info = datatype_info_;
     }
   );
-  const auto pub_id = publisher.GetTopicId();
+  const auto pub_id = publisher.GetId();
 
   // let them match
   eCAL::Process::SleepMS(2 * config.registration.registration_refresh);
@@ -145,7 +145,7 @@ TEST_P(TestFixture, MultiplePubSub)
 {
   const int num_publishers = 4;
 
-  std::vector<eCAL::CPublisher> publishers;
+  std::vector<eCAL::v5::CPublisher> publishers;
   for (int i = 0; i < num_publishers; ++i)
   {
     eCAL::SDataTypeInformation datatype_info;
@@ -155,13 +155,13 @@ TEST_P(TestFixture, MultiplePubSub)
 
     publishers.emplace_back("foo", datatype_info);
   }
-  eCAL::CSubscriber subscriber("foo");
+  eCAL::v5::CSubscriber subscriber("foo");
 
   eCAL::Registration::STopicId callback_topic_id;
   eCAL::SDataTypeInformation   callback_datatype_info;
   int                          callback_count{ 0 };
 
-  subscriber.SetReceiveCallback([&callback_topic_id, &callback_datatype_info, &callback_count](const eCAL::Registration::STopicId& topic_id_, const eCAL::SDataTypeInformation& datatype_info_, const eCAL::SReceiveCallbackData&)
+  subscriber.AddReceiveCallback([&callback_topic_id, &callback_datatype_info, &callback_count](const eCAL::Registration::STopicId& topic_id_, const eCAL::SDataTypeInformation& datatype_info_, const eCAL::SReceiveCallbackData&)
     {
       ++callback_count;
       callback_topic_id = topic_id_;
@@ -175,7 +175,7 @@ TEST_P(TestFixture, MultiplePubSub)
   for (int i = 0; i < num_publishers; ++i)
   {
     auto& publisher = publishers[i];
-    const auto pub_id = publisher.GetTopicId();
+    const auto pub_id = publisher.GetId();
     const auto pub_datatype_info = publisher.GetDataTypeInformation();
 
     // send data
@@ -190,7 +190,7 @@ TEST_P(TestFixture, MultiplePubSub)
 
 // Define the test parameters
 INSTANTIATE_TEST_SUITE_P(
-  core_cpp_pubsub_callback_topid_id,
+  core_cpp_pubsub_callback_topid_id_v5,
   TestFixture,
   ::testing::Values(
     EnableSHM(GetTestingConfig()),

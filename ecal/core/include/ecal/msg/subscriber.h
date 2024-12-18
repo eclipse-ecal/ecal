@@ -25,7 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_subscriber.h>
+#include <ecal/ecal_subscriber_v5.h>
 #include <ecal/ecal_util.h>
 
 #include <cassert>
@@ -44,15 +44,13 @@ namespace eCAL
    * 
   **/
   template <typename T>
-  class [[deprecated("Please use CMessageSubscriber instead")]] CMsgSubscriber : public CSubscriber
+  class [[deprecated("Please use CMessageSubscriber instead")]] CMsgSubscriber : public v5::CSubscriber
   {
   public:
     /**
      * @brief  Constructor.
     **/
-    CMsgSubscriber() : CSubscriber()
-    {
-    }
+    CMsgSubscriber() = default;
 
     /**
      * @brief  Constructor.
@@ -60,7 +58,7 @@ namespace eCAL
      * @param topic_name_  Unique topic name.
      * @param topic_info_  Topic type information (encoding, type, descriptor).
     **/
-    CMsgSubscriber(const std::string& topic_name_, const struct SDataTypeInformation& topic_info_) : CSubscriber(topic_name_, topic_info_)
+    CMsgSubscriber(const std::string& topic_name_, const struct SDataTypeInformation& topic_info_) : v5::CSubscriber(topic_name_, topic_info_)
     {
     }
 
@@ -80,7 +78,7 @@ namespace eCAL
     * @brief  Move Constructor
     **/
     CMsgSubscriber(CMsgSubscriber&& rhs) noexcept
-      : CSubscriber(std::move(rhs))
+      : v5::CSubscriber(std::move(rhs))
       , m_cb_callback(std::move(rhs.m_cb_callback))
     {
       bool has_callback = (m_cb_callback != nullptr);
@@ -88,9 +86,9 @@ namespace eCAL
       if (has_callback)
       {
         // the callback bound to the CSubscriber belongs to rhs, bind to this callback instead
-        CSubscriber::RemReceiveCallback();
+        v5::CSubscriber::RemReceiveCallback();
         auto callback = std::bind(&CMsgSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
-        CSubscriber::AddReceiveCallback(callback);
+        v5::CSubscriber::AddReceiveCallback(callback);
       }
     }
 
@@ -99,7 +97,7 @@ namespace eCAL
     **/
     CMsgSubscriber& operator=(CMsgSubscriber&& rhs) noexcept
     {
-      CSubscriber::operator=(std::move(rhs));
+      v5::CSubscriber::operator=(std::move(rhs));
 
       m_cb_callback = std::move(rhs.m_cb_callback);
       bool has_callback(m_cb_callback != nullptr);
@@ -107,9 +105,9 @@ namespace eCAL
       if (has_callback)
       {
         // the callback bound to the CSubscriber belongs to rhs, bind to this callback instead;
-        CSubscriber::RemReceiveCallback();
+        v5::CSubscriber::RemReceiveCallback();
         auto callback = std::bind(&CMsgSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
-        CSubscriber::AddReceiveCallback(callback);
+        v5::CSubscriber::AddReceiveCallback(callback);
       }
 
       return *this;
@@ -125,7 +123,7 @@ namespace eCAL
     **/
     bool Create(const std::string& topic_name_, const struct SDataTypeInformation& topic_info_)
     {
-      return(CSubscriber::Create(topic_name_, topic_info_));
+      return(v5::CSubscriber::Create(topic_name_, topic_info_));
     }
 
     /**
@@ -136,7 +134,7 @@ namespace eCAL
     bool Destroy()
     {
       RemReceiveCallback();
-      return(CSubscriber::Destroy());
+      return(v5::CSubscriber::Destroy());
     }
 
     /**
@@ -152,7 +150,7 @@ namespace eCAL
     {
       assert(IsCreated());
       std::string rec_buf;
-      bool success = CSubscriber::ReceiveBuffer(rec_buf, time_, rcv_timeout_);
+      bool success = v5::CSubscriber::ReceiveBuffer(rec_buf, time_, rcv_timeout_);
       if (!success) return(false);
       return(Deserialize(msg_, rec_buf.c_str(), rec_buf.size()));
     }
@@ -185,7 +183,7 @@ namespace eCAL
         m_cb_callback = callback_;
       }
 	  auto callback = std::bind(&CMsgSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
-      return(CSubscriber::AddReceiveCallback(callback));
+      return(v5::CSubscriber::AddReceiveCallback(callback));
     }
 
     /**
@@ -195,7 +193,7 @@ namespace eCAL
     **/
     bool RemReceiveCallback()
     {
-      bool ret = CSubscriber::RemReceiveCallback();
+      bool ret = v5::CSubscriber::RemReceiveCallback();
 
       std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
       if (m_cb_callback == nullptr) return(false);
@@ -240,15 +238,13 @@ protected:
    *
   **/
   template <typename T, typename Deserializer>
-  class CMessageSubscriber final : public CSubscriber
+  class CMessageSubscriber final : public v5::CSubscriber
   {
   public:
     /**
      * @brief  Constructor.
     **/
-    CMessageSubscriber() : CSubscriber()
-    {
-    }
+    CMessageSubscriber() = default;
 
     /**
     * @brief  Constructor.
@@ -256,11 +252,11 @@ protected:
     * @param topic_name_  Unique topic name.
     * @param config_      Optional configuration parameters.
     **/
-    CMessageSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration()) : CSubscriber()
+    CMessageSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration()) : v5::CSubscriber()
       , m_deserializer()
     {
       SDataTypeInformation topic_info = m_deserializer.GetDataTypeInformation();
-      CSubscriber::Create(topic_name_, topic_info, config_);
+      v5::CSubscriber::Create(topic_name_, topic_info, config_);
     }
 
     ~CMessageSubscriber() noexcept
@@ -282,7 +278,7 @@ protected:
     * @brief  Move Constructor
     **/
     CMessageSubscriber(CMessageSubscriber&& rhs)
-      : CSubscriber(std::move(rhs))
+      : v5::CSubscriber(std::move(rhs))
       , m_cb_callback(std::move(rhs.m_cb_callback))
       , m_deserializer(std::move(rhs.m_deserializer))
     {
@@ -291,9 +287,9 @@ protected:
       if (has_callback)
       {
         // the callback bound to the CSubscriber belongs to rhs, bind to this callback instead
-        CSubscriber::RemReceiveCallback();
+        v5::CSubscriber::RemReceiveCallback();
         auto callback = std::bind(&CMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
-        CSubscriber::AddReceiveCallback(callback);
+        v5::CSubscriber::AddReceiveCallback(callback);
       }
     }
 
@@ -304,7 +300,7 @@ protected:
     {
       Destroy();
 
-      CSubscriber::operator=(std::move(rhs));
+      v5::CSubscriber::operator=(std::move(rhs));
 
       m_cb_callback = std::move(rhs.m_cb_callback);
       m_deserializer = std::move(rhs.m_deserializer);
@@ -314,9 +310,9 @@ protected:
       if (has_callback)
       {
         // the callback bound to the CSubscriber belongs to rhs, bind to this callback instead;
-        CSubscriber::RemReceiveCallback();
+        v5::CSubscriber::RemReceiveCallback();
         auto callback = std::bind(&CMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
-        CSubscriber::AddReceiveCallback(callback);
+        v5::CSubscriber::AddReceiveCallback(callback);
       }
 
       return *this;
@@ -330,7 +326,7 @@ protected:
     bool Destroy()
     {
       RemReceiveCallback();
-      return(CSubscriber::Destroy());
+      return(v5::CSubscriber::Destroy());
     }
 
     /**
@@ -345,7 +341,7 @@ protected:
     bool Receive(T& msg_, long long* time_ = nullptr, int rcv_timeout_ = 0)
     {
       std::string rec_buf;
-      bool success = CSubscriber::ReceiveBuffer(rec_buf, time_, rcv_timeout_);
+      bool success = v5::CSubscriber::ReceiveBuffer(rec_buf, time_, rcv_timeout_);
       if (!success) return(false);
       // In the future, I would like to get m_datatype_info from the ReceiveBuffer fuunction!
       return(m_deserializer.Deserialize(msg_, rec_buf.c_str(), rec_buf.size()));
@@ -378,7 +374,7 @@ protected:
         m_cb_callback = callback_;
       }
       auto callback = std::bind(&CMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
-      return(CSubscriber::AddReceiveCallback(callback));
+      return(v5::CSubscriber::AddReceiveCallback(callback));
     }
 
     /**
@@ -388,7 +384,7 @@ protected:
     **/
     bool RemReceiveCallback()
     {
-      bool ret = CSubscriber::RemReceiveCallback();
+      bool ret = v5::CSubscriber::RemReceiveCallback();
 
       std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
       if (m_cb_callback == nullptr) return(false);

@@ -27,6 +27,7 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_client_v5.h>
 #include <ecal/ecal_server_v5.h>
+#include <ecal/ecal_subscriber_v5.h>
 
 #include "ecal_clang.h"
 
@@ -422,7 +423,7 @@ PyObject* sub_set_callback(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "nO", &topic_handle, &cb_func))
     return nullptr;
 
-  eCAL::CSubscriber* sub = (eCAL::CSubscriber*)topic_handle;
+  eCAL::v5::CSubscriber* sub = (eCAL::v5::CSubscriber*)topic_handle;
   if (!sub)
   {
     return(Py_BuildValue("is", -1, "subscriber invalid"));
@@ -475,7 +476,7 @@ PyObject* sub_rem_callback(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "nO", &topic_handle, &cb_func))
     return nullptr;
 
-  eCAL::CSubscriber* sub = (eCAL::CSubscriber*)topic_handle;
+  eCAL::v5::CSubscriber* sub = (eCAL::v5::CSubscriber*)topic_handle;
   if (!sub)
   {
     return(Py_BuildValue("is", -1, "subscriber invalid"));

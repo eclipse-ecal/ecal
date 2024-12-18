@@ -16,19 +16,23 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(test_clientserver_v5)
+project(test_pubsub_v5)
 
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
-create_targets_protobuf()
+if(ECAL_CORE_TRANSPORT_SHM)
+  set(pubsub_test_src_shm
+    src/pubsub_connection_test.cpp
+  )
+endif()
 
-set(${PROJECT_NAME}_src
-  src/atomic_signalable.h
-  src/clientserver_test.cpp
+set(pubsub_test_src
+  src/pubsub_callback_topicid.cpp
+  ${pubsub_test_src_shm}
 )
 
-ecal_add_gtest(${PROJECT_NAME} ${${PROJECT_NAME}_src})
+ecal_add_gtest(${PROJECT_NAME} ${pubsub_test_src})
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
@@ -39,7 +43,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_gtest(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/service)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/pubsub)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
     ${${PROJECT_NAME}_src}

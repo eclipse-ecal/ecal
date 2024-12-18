@@ -42,7 +42,7 @@ int main()
   eCAL::CServiceServer minimal_server("service1");
 
   // add method callback
-  minimal_server.AddMethodCallback("echo", eCAL::SServiceMethodInformation(), OnMethodCallback);
+  minimal_server.SetMethodCallback("echo", eCAL::SServiceMethodInformation(), OnMethodCallback);
 
   // idle
   while(eCAL::Ok())

@@ -37,7 +37,7 @@ int main()
   eCAL::CServiceServer latency_service("latency");
 
   // add hello method callback
-  latency_service.AddMethodCallback("hello", eCAL::SServiceMethodInformation(), OnHello);
+  latency_service.SetMethodCallback("hello", eCAL::SServiceMethodInformation(), OnHello);
 
   // idle main thread
   while (eCAL::Ok()) std::this_thread::sleep_for(std::chrono::milliseconds(100));

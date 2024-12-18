@@ -82,12 +82,12 @@ namespace eCAL
     bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
     // deprecated event callback interface
-    bool AddEventCallback(eCAL_Publisher_Event type_, const PubEventCallbackT callback_);
+    bool SetEventCallback(eCAL_Publisher_Event type_, const PubEventCallbackT callback_);
     bool RemoveEventCallback(eCAL_Publisher_Event type_);
 
     // future event callback interface
-    bool AddEventIDCallback(const PubEventIDCallbackT callback_);
-    bool RemEventIDCallback();
+    bool SetEventIDCallback(const PubEventIDCallbackT callback_);
+    bool RemoveEventIDCallback();
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
     bool ClearAttribute(const std::string& attr_name_);
@@ -129,11 +129,11 @@ namespace eCAL
 
     void StopAllLayer();
 
-    void FireEvent(const eCAL_Publisher_Event type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_);
+    void FireEvent(const eCAL_Publisher_Event type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
-    void FireConnectEvent   (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_);
-    void FireUpdateEvent    (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_);
-    void FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& tinfo_);
+    void FireConnectEvent   (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
+    void FireUpdateEvent    (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
+    void FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
     size_t GetConnectionCount();
 
