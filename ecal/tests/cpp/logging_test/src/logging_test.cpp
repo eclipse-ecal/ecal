@@ -179,7 +179,8 @@ int getLogging(eCAL::Logging::SLogging& log_)
 {
   std::this_thread::sleep_for(UDP_WAIT_TIME);
 
-  return eCAL::Logging::GetLogging(log_);
+  eCAL::Logging::GetLogging(log_);
+  return static_cast<int>(log_.log_messages.size());
 }
 
 TEST(logging_levels /*unused*/, all /*unused*/)
@@ -193,6 +194,7 @@ TEST(logging_levels /*unused*/, all /*unused*/)
   eCAL::Logging::SLogging log;
  
   eCAL::Logging::Log(log_level_info, log_message);
+  
   EXPECT_EQ(getLogging(log), 1);
 
   eCAL::Logging::Log(log_level_warning, log_message);

@@ -64,7 +64,7 @@ namespace
 TEST(core_cpp_pubsub, LeakedPubSub)
 {
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize("leaked pub/sub"));
+  EXPECT_EQ(true, eCAL::Initialize("leaked pub/sub"));
 
   // create subscriber and register a callback
   eCAL::CSubscriber sub("foo");
@@ -100,7 +100,7 @@ TEST(core_cpp_pubsub, LeakedPubSub)
 
   // finalize eCAL API
   // without destroying any pub / sub
-  EXPECT_EQ(0, eCAL::Finalize());
+  EXPECT_EQ(true, eCAL::Finalize());
 
   // stop publishing thread
   pub_stop = true; pub_t.join();
@@ -109,7 +109,7 @@ TEST(core_cpp_pubsub, LeakedPubSub)
 TEST(core_cpp_pubsub, CallbackDestruction)
 {
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize("callback destruction"));
+  EXPECT_EQ(true, eCAL::Initialize("callback destruction"));
 
   // create subscriber and register a callback
   std::shared_ptr<eCAL::CSubscriber> sub;
@@ -158,7 +158,7 @@ TEST(core_cpp_pubsub, CallbackDestruction)
 
   // finalize eCAL API
   // without destroying any pub / sub
-  EXPECT_EQ(0, eCAL::Finalize());
+  EXPECT_EQ(true, eCAL::Finalize());
 }
 
 TEST(core_cpp_pubsub, SimpleMessageCB)

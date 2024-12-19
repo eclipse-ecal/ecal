@@ -104,7 +104,7 @@ const char* ecal_getdate()
 int ecal_initialize(const char* unit_name_)
 {
   std::string unit_name = (unit_name_ != nullptr) ? std::string(unit_name_) : std::string("");
-  return(eCAL::Initialize(unit_name));
+  return static_cast<int>(!eCAL::Initialize(unit_name));
 }
 
 /****************************************/
@@ -112,8 +112,8 @@ int ecal_initialize(const char* unit_name_)
 /****************************************/
 int ecal_finalize()
 {
-  //* @return Zero if succeeded, 1 if still initialized, -1 if failed.
-  return(eCAL::Finalize());
+  //* @return Zero if succeeded
+  return static_cast<int>(!eCAL::Finalize());
 }
 
 /****************************************/
@@ -122,7 +122,7 @@ int ecal_finalize()
 int ecal_is_initialized()
 {
   //* @return 1 if eCAL is initialized.
-  return(eCAL::IsInitialized());
+  return static_cast<int>(eCAL::IsInitialized());
 }
 
 /****************************************/
@@ -130,7 +130,7 @@ int ecal_is_initialized()
 /****************************************/
 int ecal_set_unit_name(const char* unit_name_)
 {
-  return(eCAL::SetUnitName(unit_name_));
+  return static_cast<int>(eCAL::SetUnitName(unit_name_));
 }
 
 /****************************************/
@@ -711,15 +711,6 @@ bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, con
 }
 
 /****************************************/
-/*      client_add_response_callback    */
-/****************************************/
-
-/****************************************/
-/*      client_rem_response_callback    */
-/****************************************/
-
-
-/****************************************/
 /*      mon_initialize                  */
 /****************************************/
 int mon_initialize()
@@ -733,36 +724,4 @@ int mon_initialize()
 int mon_finalize()
 {
   return(ecal_finalize());
-}
-
-/****************************************/
-/*      mon_get_logging                 */
-/****************************************/
-int mon_get_logging(const char** log_buf_, int* log_buf_len_)
-{
-  std::string log_s;
-  const int size = eCAL::Logging::GetLogging(log_s);
-  if(size > 0)
-  {
-    // this has to be freed by caller (ecal_free_mem)
-    char* cbuf = str_malloc(log_s);
-    if(cbuf == nullptr) return(0);
-
-    if (log_buf_ != nullptr) {
-      *log_buf_ = cbuf;
-      if (log_buf_len_ != nullptr) *log_buf_len_ = static_cast<int>(log_s.size());
-    }
-    else {
-      // free allocated memory:
-      ecal_free_mem(cbuf);
-      if (log_buf_len_ != nullptr) *log_buf_len_ = 0;
-      // operation couldn't be completed successfullly.
-      return(0);
-    }
-    return(static_cast<int>(log_s.size()));
-  }
-  else
-  {
-    return(0);
-  }
 }

@@ -37,7 +37,7 @@ extern "C"
   ECALC_API int eCAL_Logging_GetLogging(void* buf_, int buf_len_)
   {
     std::string buf;
-    if (eCAL::Logging::GetLogging(buf) != 0)
+    if (eCAL::Logging::GetLogging(buf))
     {
       return(CopyBuffer(buf_, buf_len_, buf));
     }

@@ -62,13 +62,13 @@ namespace eCAL
     CGlobals();
     ~CGlobals();
 
-    int Initialize     ( unsigned int components_);
+    bool Initialize    ( unsigned int components_);
     bool IsInitialized (); 
     bool IsInitialized ( unsigned int component_  );
     
     unsigned int GetComponents() const { return(components); };
 
-    int Finalize();
+    bool Finalize();
 
     const std::unique_ptr<Logging::CLogProvider>&                         log_provider()           { return log_provider_instance; };
     const std::unique_ptr<Logging::CLogReceiver>&                         log_udp_receiver()       { return log_udp_receiver_instance; };

@@ -61,14 +61,14 @@ const char* ecal_getdate();
  * @param argv_        Array of command line arguments.
  * @param unit_name_   Defines the name of the eCAL unit.
  *
- * @return Zero if succeeded, 1 if already initialized, -1 if failed.
+ * @return Zero if succeeded.
 **/
 int ecal_initialize(const char* unit_name_);
 
 /**
  * @brief Finalize eCAL API.
  *
- * @return Zero if succeeded, 1 if already initialized, -1 if failed.
+ * @return Zero if succeeded.
 **/
 int ecal_finalize();
 
@@ -84,7 +84,7 @@ int ecal_is_initialized();
  *
  * @param unit_name_  Defines the name of the eCAL unit.
  *
- * @return  Zero if succeeded.
+ * @return Zero if succeeded.
 **/
 int ecal_set_unit_name(const char *unit_name_);
 
@@ -499,11 +499,6 @@ bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const cha
 **/
 bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_);
 
-/* TODO: not implemented and not used for now */
-//client_add_response_callback
-//client_rem_response_callback
-
-
 /*************************************************************************/
 /*  monitoring                                                           */
 /*************************************************************************/
@@ -520,14 +515,3 @@ int mon_initialize();
  * @return Zero if succeeded, 1 if already initialized, -1 if failed.
 **/
 int mon_finalize();
-
-/**
- * @brief Get logging string.
- *
- * @param [out] log_buf_      Pointer to store the monitoring information.
- * @param [out] log_buf_len_  Length of allocated buffer,
- *                            eCAL is allocating the buffer for you, use ecal_free_mem to free the buffer finally.
- *
- * @return  Logging buffer length or zero if failed.
-**/
-int mon_get_logging(const char** log_buf_, int* log_buf_len_);

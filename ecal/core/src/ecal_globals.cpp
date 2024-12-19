@@ -48,7 +48,7 @@ namespace eCAL
     Finalize();
   }
 
-  int CGlobals::Initialize(unsigned int components_)
+  bool CGlobals::Initialize(unsigned int components_)
   {
     // will be set if any new module was initialized
     bool new_initialization(false);
@@ -245,8 +245,7 @@ namespace eCAL
     initialized =  true;
     components  |= components_;
 
-    if (new_initialization) return 0;
-    else                    return 1;
+    return new_initialization;
   }
 
   bool CGlobals::IsInitialized()
@@ -286,9 +285,9 @@ namespace eCAL
     }
   }
 
-  int CGlobals::Finalize()
+  bool CGlobals::Finalize()
   {
-    if (!initialized) return(1);
+    if (!initialized) return false;
 
     // start destruction
 #if ECAL_CORE_MONITORING
@@ -364,6 +363,6 @@ namespace eCAL
     // reset configuration to default values
     g_ecal_configuration = Configuration();
 
-    return(0);
+    return true;
   }
 }
