@@ -36,7 +36,7 @@ namespace eCAL
 {
     void Configuration::InitFromFile(const std::string& yaml_path_)
     {
-      const std::string yaml_path = eCAL::Path::checkForValidConfigFilePath(yaml_path_);
+      const std::string yaml_path = eCAL::Config::checkForValidConfigFilePath(yaml_path_);
       if (!yaml_path.empty())
       {
 #ifdef ECAL_CORE_CONFIGURATION

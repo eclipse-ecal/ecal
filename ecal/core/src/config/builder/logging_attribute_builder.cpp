@@ -24,7 +24,7 @@ namespace eCAL
       attributes.file_config.path        = log_config_.provider.file_config.path;
       if (attributes.file_config.path.empty())
       {
-        // check ECAL_DATA
+        // check ECAL_CONFIG
         // Creates path if not exists
         attributes.file_config.path = Util::GeteCALLogPath();        
       }

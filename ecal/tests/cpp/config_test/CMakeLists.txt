@@ -28,15 +28,8 @@ if(ECAL_CORE_CONFIGURATION)
   yaml_cpp_create_compatibility_targets()
 endif()
 
-set(cmd_parser_src
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/util/advanced_tclap_output.cpp  
-  ${ECAL_PROJECT_ROOT}/lib/ecal_utils/src/filesystem.cpp
-  ${ECAL_PROJECT_ROOT}/lib/ecal_utils/src/str_convert.cpp 
-)
-
 set(config_test_src
   src/config_test.cpp
-  ${cmd_parser_src}
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/default_configuration.cpp
 )
 
@@ -57,7 +50,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE 
-    eCAL::core 
+    eCAL::core
+    eCAL::ecal-utils
     Threads::Threads
     tclap::tclap
 )

@@ -36,9 +36,8 @@ namespace eCAL
   {
     /**
      * @brief Retrieve eCAL configuration path.
-     *          This path is for the global eCAL configuration files
+     *          This path is for the local eCAL configuration files
      *          like ecal.yaml.
-     *          This path is read only for standard users.
      *
      * @return  eCAL configuration path.
     **/
