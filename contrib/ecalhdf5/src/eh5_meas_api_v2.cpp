@@ -23,6 +23,7 @@
 
 #include <ecalhdf5/eh5_meas_api_v2.h>
 
+#include <algorithm>
 #include <limits>
 
 #include <ecalhdf5/eh5_meas_api_v3.h>
