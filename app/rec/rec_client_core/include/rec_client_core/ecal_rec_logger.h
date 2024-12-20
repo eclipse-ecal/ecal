@@ -52,7 +52,7 @@ namespace eCAL
         static const int MAXIMUM_ROTATING_FILES = 5;
         static const int FIVE_MEGABYTES = 5 * 1024 * 1024;
 
-        auto ecal_data_path = eCAL::Util::GeteCALLogPath();
+        auto ecal_data_path = eCAL::Util::GeteCALLogDir();
         std::string log_filename = ecal_data_path + ECAL_REC_NAME + ".log";
 
         // create console logger and rotating file logger with maximum size 5MB and maximum 5 rotating files

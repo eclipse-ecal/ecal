@@ -923,7 +923,7 @@ void ImportFromCloudWidget::import()
 
 void ImportFromCloudWidget::loadExcludeTasksFilter()
 {
-  std::string default_cfg_file_path = eCAL::Util::GeteCALActiveIniFile();
+  std::string default_cfg_file_path = eCAL::GetConfiguration().GetYamlFilePath();
   QFile default_cfg_file(default_cfg_file_path.c_str());
   if (default_cfg_file.exists())
   {

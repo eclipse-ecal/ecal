@@ -36,21 +36,16 @@ namespace eCAL
   {
     /**
      * @brief Retrieve eCAL configuration path.
-     *          This path is for the local eCAL configuration files
-     *          like ecal.yaml.
      *
-     * @return  eCAL configuration path.
-    **/
-    ECAL_API std::string GeteCALConfigPath();
-
-    /**
-     * @brief Retrieve eCAL user configuration path.
-     *          This is path is for the eCAL application settings files.
-     *          This path has read/write permissions for standard users.
+     *        Checks for a valid default configuration file (ecal.yaml) in the following paths:
+     *        1. ECAL_CONFIG_DIR environment variable path
+     *        2. Local user path (win: Appdata/Local, unix: ~/.ecal)
+     *        3. System paths like /etc/ecal, ProgramData/eCAL
      *
-     * @return  eCAL data path.
+     * @return  First path that contains a valid config file.
+     *          Returns empty string if no valid config file is found.
     **/
-    ECAL_API std::string GeteCALUserSettingsPath();
+    ECAL_API std::string GeteCALConfigDir(); // ECAL_DATA PATH?
 
     /**
      * @brief Retrieve eCAL standard logging path.
@@ -59,15 +54,7 @@ namespace eCAL
      *
      * @return  eCAL data path.
     **/
-    ECAL_API std::string GeteCALLogPath();
-
-    /**
-     * @brief Retrieve full path to active eCAL ini file.
-     *          Returns an empty string if no active ini file is found.
-     *
-     * @return  eCAL active ini file name.
-    **/
-    ECAL_API std::string GeteCALActiveIniFile();
+    ECAL_API std::string GeteCALLogDir();
 
     /**
      * @brief Send shutdown event to specified local user process using it's unit name.

@@ -31,26 +31,29 @@
 /**********************************************************************************************/
 /*                                     config settings                                        */
 /**********************************************************************************************/
-/* base data path name */
+/* base folder names */
 constexpr const char* ECAL_FOLDER_NAME_WINDOWS      = "eCAL";
 constexpr const char* ECAL_FOLDER_NAME_LINUX        = "ecal";
 constexpr const char* ECAL_FOLDER_NAME_HOME_LINUX   = ".ecal";
 constexpr const char* ECAL_FOLDER_NAME_LOG          = "logs";
 constexpr const char* ECAL_FOLDER_NAME_CFG          = "cfg";
+constexpr const char* ECAL_FOLDER_NAME_TMP_WINDOWS  = "Temp";
 
 /* ini file name */
 constexpr const char* ECAL_DEFAULT_CFG              = "ecal.yaml";
 
 /* environment variables */
-constexpr const char* ECAL_HOME_VAR                 = "ECAL_HOME";
-constexpr const char* ECAL_CONFIG_VAR               = "ECAL_CONFIG";
-constexpr const char* ECAL_LOG_VAR                  = "ECAL_LOG";
+constexpr const char* ECAL_CONFIG_VAR               = "ECAL_CONFIG_DIR";
+constexpr const char* ECAL_LOG_VAR                  = "ECAL_LOG_DIR";
 constexpr const char* ECAL_LINUX_HOME_VAR           = "HOME";
 constexpr const char* ECAL_LINUX_TMP_VAR            = "TMPDIR";
 
 /* system paths */
 constexpr const char* ECAL_LINUX_SYSTEM_PATH        = "/etc";
-constexpr const char* ECAL_LINUX_INSTALL_PATH       = "/usr/bin";
+constexpr const char* ECAL_LINUX_TMP_DIR            = "/var/tmp";
+constexpr const char* ECAL_FALLBACK_TMP_DIR         = "/ecal_tmp";
+
+/* back*/
 
 /* eCAL udp multicast defines */
 constexpr unsigned int NET_UDP_MULTICAST_PORT_REG_OFF     = 0U; // to delete

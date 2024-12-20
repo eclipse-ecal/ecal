@@ -60,22 +60,42 @@ namespace
     return EcalUtils::Filesystem::MkDir(path_, EcalUtils::Filesystem::Current);
   }
 
-  bool isValidConfigFilePath(const std::string& path_, const std::string& file_name_)
+  bool dirExistsOrCreate(const std::string& path_)
   {
-    const std::string file_path = EcalUtils::String::Join(path_separator, std::vector<std::string>{path_, file_name_});
-    const EcalUtils::Filesystem::FileStatus ecal_ini_status(file_path, EcalUtils::Filesystem::Current);
-    return ecal_ini_status.IsOk() && (ecal_ini_status.GetType() == EcalUtils::Filesystem::Type::RegularFile);
+    if (path_.empty())    return false;
+    if (direxists(path_)) return true;
+    if (createdir(path_)) return true;
+    return false;
+  }
+
+  std::string buildPath(const std::string& str1_, const std::string& str2_)
+  {
+    return EcalUtils::String::Join(path_separator, std::vector<std::string>{str1_, str2_});
+  }
+
+  // checks if the specified file is a proper file
+  bool isValidFile(const std::string& full_file_path_)
+  {
+    const EcalUtils::Filesystem::FileStatus file_status(full_file_path_, EcalUtils::Filesystem::Current);
+    return file_status.IsOk() && (file_status.GetType() == EcalUtils::Filesystem::Type::RegularFile);
+  }
+
+  // combines path and file and checks with isValidFile
+  bool isValidFilePath(const std::string& path_, const std::string& file_name_)
+  {
+    const std::string file_path = buildPath(path_, file_name_);
+    return isValidFile(file_path);
   }
 
   // Returns path, where the specified ini file is found, or empty string if not found
-  std::string findValidConfigPath(std::vector<std::string> paths_, const std::string& file_name_)
+  std::string findValidFilePath(std::vector<std::string> paths_, const std::string& file_name_)
   {
     auto it = std::find_if(paths_.begin(), paths_.end(), [&file_name_](const std::string& path_)
     {
       if (path_.empty())
         return false;
       
-      return isValidConfigFilePath(path_, file_name_);
+      return isValidFilePath(path_, file_name_);
     });
 
     // We should have encountered a valid path
@@ -102,12 +122,12 @@ namespace
     // -----------------------------------------------------------
     // precedence 2: local user path 
     // -----------------------------------------------------------
-    ecal_default_paths.emplace_back(eCAL::Config::eCALLocalUserPath());
+    ecal_default_paths.emplace_back(eCAL::Config::eCALLocalUserDir());
 
     // -----------------------------------------------------------
     // precedence 3: eCAL data system path 
     // -----------------------------------------------------------
-    ecal_default_paths.emplace_back(eCAL::Config::eCALDataSystemPath());
+    ecal_default_paths.emplace_back(eCAL::Config::eCALDataSystemDir());
     return ecal_default_paths;
   }
 
@@ -152,54 +172,71 @@ namespace
   // returns empty string if not found
   std::string getLocalUserPath()
   {
-    std::string userspace_path;
   #ifdef ECAL_OS_WINDOWS
     
-    userspace_path = getKnownFolderPath(FOLDERID_LocalAppData);
+    return getKnownFolderPath(FOLDERID_LocalAppData);
   
   #elif defined(ECAL_OS_LINUX)
     
-    std::string hdir = getEnvVar(ECAL_LINUX_HOME_VAR);
+    return getEnvVar(ECAL_LINUX_HOME_VAR);
 
   #endif /* ECAL_OS_LINUX */
-    return userspace_path;
+
+    return {};
   }
 
-  std::string getSystemPath()
+  std::string getSystemDir()
   {
-    std::string system_path;
   #ifdef ECAL_OS_WINDOWS
 
-    system_path = getKnownFolderPath(FOLDERID_ProgramData);
+    return getKnownFolderPath(FOLDERID_ProgramData);
   
   #elif defined(ECAL_OS_LINUX)
   
-    system_path = ECAL_LINUX_DATA_SYSTEM_PATH;
+    // TODO PG: Check if we really want to give that back here
+    if (direxists(ECAL_LINUX_SYSTEM_PATH)) 
+      return ECAL_LINUX_SYSTEM_PATH;
   
   #endif /* ECAL_OS_LINUX */
-    return system_path;
+    return {};
   }
 
-  std::string getTempPath()
+  // returns temp dir, e.g. /tmp in linux or C:\Users\username\AppData\Local\Temp in windows
+  // never returns an empty string, if there is no valid temp dir found, fallback /ecal_tmp is returned
+  std::string getTempDir()
   {
-    std::string temp_path;
-
   #ifdef ECAL_OS_WINDOWS
       
       char temp_path_buffer[MAX_PATH];
       DWORD path_length = GetTempPathA(MAX_PATH, temp_path_buffer);
       if (path_length > 0 && path_length < MAX_PATH)
       {
-        temp_path = std::string(temp_path_buffer, path_length);
+        return std::string(temp_path_buffer, path_length);
+      }
+      else
+      {
+        std::string appdata_path = getKnownFolderPath(FOLDERID_LocalAppData);
+        if (!appdata_path.empty())
+        {
+          std::string apdata_tmp_path = buildPath(appdata_path, ECAL_FOLDER_NAME_TMP_WINDOWS);
+          if (direxists(apdata_tmp_path))
+          {
+            return apdata_tmp_path;
+          }
+        }
       }
       
   #elif defined(ECAL_OS_LINUX)
 
-      temp_path = getEnvVar(ECAL_LINUX_TMP_VAR);
+      std::string env_tmp_dir = getEnvVar(ECAL_LINUX_TMP_VAR);
+      if (!env_tmp_dir.empty() && direxists(env_tmp_dir))
+      {
+        return environ_tmp_dir;
+      }
 
-  #endif /* ECAL_OS_LINUX */    
+  #endif /* ECAL_OS_LINUX */
 
-    return temp_path;
+    return ECAL_FALLBACK_TMP_DIR;
   }
 }
 
@@ -207,7 +244,7 @@ namespace eCAL
 {
   namespace Config
   {
-    std::string eCALLocalUserPath()
+    std::string eCALLocalUserDir()
     {
       std::string userspace_path = getLocalUserPath();
 
@@ -215,11 +252,11 @@ namespace eCAL
       {
     #ifdef ECAL_OS_WINDOWS
         
-        return EcalUtils::String::Join(path_separator, std::vector<std::string>{userspace_path, ECAL_FOLDER_NAME_WINDOWS});
+        return buildPath(userspace_path, ECAL_FOLDER_NAME_WINDOWS);
         
     #elif defined(ECAL_OS_LINUX)
         
-        return EcalUtils::String::Join(path_separator, std::vector<std::string>{userspace_path, ECAL_FOLDER_NAME_HOME_LINUX});
+        return buildPath(userspace_path, ECAL_FOLDER_NAME_HOME_LINUX);
         
     #endif
       }
@@ -232,38 +269,39 @@ namespace eCAL
       return getEnvVar(ECAL_CONFIG_VAR);
     }
 
-    std::string eCALConfigLogPath()
+    std::string eCALConfigLogDir()
     {
       // check first if the ECAL_LOG environment variable is set
       std::string env_path = getEnvVar(ECAL_LOG_VAR);
-      if (!env_path.empty())
-      {
-        return env_path;
-      }
+      if (!env_path.empty()) return env_path;
 
-      // if no environment variable is set, check the local user path
-      std::string local_user_path = eCALLocalUserPath();
-      if (!local_user_path.empty())
-      {
-        return EcalUtils::String::Join(path_separator, std::vector<std::string>{local_user_path, ECAL_FOLDER_NAME_LOG});
-      }
+      // check the provided log path and try to create it
+      const auto& config_log_file_path = eCAL::GetConfiguration().logging.provider.file_config.path;
+      if (!config_log_file_path.empty()) return config_log_file_path;
+
+      // check the local user path
+      std::string local_user_path = eCALLocalUserDir();
+      if (!local_user_path.empty()) return buildPath(local_user_path, ECAL_FOLDER_NAME_LOG);
+    
 
     #ifdef ECAL_OS_WINDOWS
       // only works on windows, as ProgramData is writable for the normal user
       // check the system_data_path if available
-      std::string system_data_path = getSystemPath();
+      std::string system_data_path = getSystemDir();
       if (!system_data_path.empty())
       {
         return EcalUtils::String::Join(path_separator, std::vector<std::string>{system_data_path, ECAL_FOLDER_NAME_WINDOWS, ECAL_FOLDER_NAME_LOG});
       }
     #endif
 
-      return {};
+      // check now for a tmp directory
+      std::string temp_path = getTempDir();
+      return buildPath(temp_path, ECAL_FOLDER_NAME_LOG);
     }
 
-    std::string eCALDataSystemPath()
+    std::string eCALDataSystemDir()
     {
-      std::string system_path = getSystemPath();
+      std::string system_path = getSystemDir();
       std::string return_path;
 
       if (!system_path.empty())
@@ -271,12 +309,12 @@ namespace eCAL
     #ifdef ECAL_OS_WINDOWS
       
         // system path = "ProgramData" if available      
-        return_path = EcalUtils::String::Join(path_separator, std::vector<std::string>{system_path, ECAL_FOLDER_NAME_WINDOWS});
+        return_path = buildPath(system_path, ECAL_FOLDER_NAME_WINDOWS);
     
     #elif defined(ECAL_OS_LINUX)
       
         // system path = "/etc" if available
-        return_path = EcalUtils::String::Join(path_separator, std::vector<std::string>{system_path, ECAL_FOLDER_NAME_HOME_LINUX});
+        return_path = buildPath(system_path, ECAL_FOLDER_NAME_LINUX);
       
     #endif 
       }
@@ -286,159 +324,49 @@ namespace eCAL
 
     std::string checkForValidConfigFilePath(const std::string& config_file_)
     {
-      // -----------------------------------------------------------
-      // precedence 0: relative path to executable
-      // -----------------------------------------------------------
       const std::string cwd_directory_path = EcalUtils::Filesystem::CurrentWorkingDir();
 
       std::vector<std::string> ecal_default_paths = getEcalDefaultPaths();
       
-      // insert cwd on 2nd position, so that ECAL_CONFIG dir has precedence
+      // insert cwd on 2nd position, so that ECAL_CONFIG_DIR dir has precedence
       ecal_default_paths.insert(ecal_default_paths.begin() + 1, cwd_directory_path);
       
-      const std::string found_path = findValidConfigPath(ecal_default_paths, config_file_);
+      const std::string found_path = findValidFilePath(ecal_default_paths, config_file_);
 
       // check in case user provided whole path
       if (found_path.empty())
       {
-        return isValidConfigFilePath(config_file_, "") ? config_file_ : found_path;
+        return isValidFile(config_file_) ? config_file_ : found_path;
       }
 
-      return found_path + config_file_;
+      return buildPath(found_path, config_file_);
     }
   } // namespace Config
   
   namespace Util
   {
-    std::string GeteCALConfigPath()
+    // Check for the existence of a valid ecal.yaml file by checking the following paths:
+    // 1. ECAL_CONFIG environment varible path if set
+    // 2. local user path
+    // 3. system path like /etc, ProgramData
+    std::string GeteCALConfigDir()
     {
       // Return the possible default paths that could contain the yaml file
       const std::vector<std::string> search_directories = getEcalDefaultPaths();
       
-      // Check for first directory which contains the ini file.
-      return findValidConfigPath(search_directories, ECAL_DEFAULT_CFG);
+      // Check for first directory which contains the yaml file.
+      return findValidFilePath(search_directories, ECAL_DEFAULT_CFG);
     }
 
-    // Returns the path to the eCAL installation directory
-    std::string GeteCALHomePath()
-    {
-      std::string home_path;
-    #ifdef ECAL_OS_WINDOWS
+    std::string GeteCALLogDir()
+    {      
+      // get possible log paths in order Environment, Configuration, ecal config dir, temp dir
+      std::string log_path = eCAL::Config::eCALConfigLogDir();
       
-      // check ECAL_HOME
-      home_path = getEnvVar(ECAL_HOME_VAR);
-      
-      // TODO PG: Check, why there is a ECAL_FOLDER_NAME_WINDOWS - What is the expected behaviour?
-      if (!std::string(ECAL_FOLDER_NAME_WINDOWS).empty()) //-V815
-      {
-        home_path = EcalUtils::String::Join(path_separator, std::vector<std::string>{home_path, ECAL_FOLDER_NAME_WINDOWS});
-      }
+      if (dirExistsOrCreate(log_path)) return log_path;
 
-    #elif defined(ECAL_OS_LINUX)
-      
-      const char *hdir = nullptr;
-      home_path = getEnvVar(ECAL_LINUX_HOME_VAR);
-      if (hdir == nullptr) {
-        hdir = getpwuid(getuid())->pw_dir;
-      }
-      home_path += hdir;
-      if (!std::string(ECAL_FOLDER_NAME_HOME_LINUX).empty())
-      {
-        home_path = EcalUtils::String::Join(path_separator, std::vector<std::string>{home_path, ECAL_FOLDER_NAME_WINDOWS});
-      }
-
-    #endif /* ECAL_OS_LINUX */
-
-      // create if not exists
-      if (!direxists(home_path))
-      {
-        return {};
-      }
-
-      return(home_path);
-    }
-
-    std::string GeteCALUserSettingsPath()
-    {
-      std::string config_path;
-    #ifdef ECAL_OS_WINDOWS
-
-      config_path = GeteCALConfigPath();
-
-    #elif defined(ECAL_OS_LINUX)
-      
-      config_path = GeteCALHomePath();
-
-    #endif /* ECAL_OS_LINUX */
-      
-      if (config_path.empty())
-      {
-        return {};
-      }
-
-      std::string settings_path = EcalUtils::String::Join(path_separator, std::vector<std::string>{config_path, ECAL_FOLDER_NAME_CFG});
-
-      if (!direxists(settings_path))
-      {
-        if (!createdir(settings_path))
-        {
-          return {};
-        }
-      }
-
-      return(settings_path);
-    }
-
-    std::string GeteCALLogPath()
-    {
-      const auto& config_log_file_path = eCAL::GetConfiguration().logging.provider.file_config.path;
-      if (!config_log_file_path.empty() && direxists(config_log_file_path))
-      {  
-        return config_log_file_path;        
-      }
-      else if (!config_log_file_path.empty())
-      {
-        if (createdir(config_log_file_path))
-          return config_log_file_path;
-      }
-      
-
-      {
-        if (direxists(config_log_file_path))
-        {
-          return config_log_file_path;
-        }
-      }
-      {
-        if (direxists)
-        return eCAL::GetConfiguration().logging.provider.file_config.path;
-      }
-      
-      std::string log_path;
-    #ifdef ECAL_OS_WINDOWS
-
-      log_path = GeteCALConfigPath();
-
-    #elif defined(ECAL_OS_LINUX)
-
-      log_path = GeteCALConfigPath();
-      
-    #endif /* ECAL_OS_LINUX */
-
-      log_path += std::string(ECAL_FOLDER_NAME_LOG);
-
-      if (!direxists(log_path))
-      {
-        createdir(log_path);
-      }
-
-      log_path += path_separator;
-      return(log_path);
-    }
-
-    std::string GeteCALActiveIniFile()
-    {
-      return eCAL::GetConfiguration().GetYamlFilePath();
+      // if user has no write access at all, return empty string
+      return {};
     }
   } // namespace Util
 } // namespace eCAL

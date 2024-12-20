@@ -26,7 +26,7 @@ namespace eCAL
       {
         // check ECAL_CONFIG
         // Creates path if not exists
-        attributes.file_config.path = Util::GeteCALLogPath();        
+        attributes.file_config.path = Util::GeteCALLogDir();        
       }
 
       attributes.console_sink.enabled    = log_config_.provider.console.enable;
