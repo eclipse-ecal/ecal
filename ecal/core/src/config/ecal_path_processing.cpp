@@ -230,7 +230,7 @@ namespace
       std::string env_tmp_dir = getEnvVar(ECAL_LINUX_TMP_VAR);
       if (!env_tmp_dir.empty() && direxists(env_tmp_dir))
       {
-        return environ_tmp_dir;
+        return env_tmp_dir;
       }
 
   #endif /* ECAL_OS_LINUX */
