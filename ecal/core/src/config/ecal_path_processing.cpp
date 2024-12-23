@@ -41,7 +41,6 @@
   #include <sys/types.h>
   #include <sys/stat.h>
   #include <unistd.h>
-  #include <.h>
 #endif
 
 namespace
@@ -238,6 +237,43 @@ namespace
 
     return ECAL_FALLBACK_TMP_DIR;
   }
+
+  // return a unique temporary folder name
+  // the folder is created and the name is returned
+  // returns an empty string if the folder could not be created
+  std::string createUniqueTmpFolderName()
+  {
+    std::string tmp_dir = getTempDir();
+  #ifdef ECAL_OS_WINDOWS
+    
+    char unique_path[MAX_PATH];
+    if (!GetTempFileNameA(tmp_dir.c_str(), "ecal", 0, unique_path) != 0)
+    {
+      // failed to generate the path
+      return {};
+    }
+
+    // Delete the temporary file and use the name as a directory
+    DeleteFileA(unique_path);
+    if (!CreateDirectoryA(unique_path, nullptr)) {
+       return {};
+    }
+
+    return std::string(unique_path);
+  
+  #elif defined(ECAL_OS_LINUX)
+
+    std::string path_template = buildPath(tmp_dir, "ecal-XXXXXX"); // 'X's will be replaced
+    char* dir = mkdtemp(path_template.data());
+
+    if (dir == nullptr) {
+      return {};
+    }
+
+    return std::string(dir);
+
+  #endif
+  }
 }
 
 namespace eCAL
@@ -294,9 +330,8 @@ namespace eCAL
       }
     #endif
 
-      // check now for a tmp directory
-      std::string temp_path = getTempDir();
-      return buildPath(temp_path, ECAL_FOLDER_NAME_LOG);
+      // check now for a tmp directory and return
+      return createUniqueTmpFolderName();
     }
 
     std::string eCALDataSystemDir()

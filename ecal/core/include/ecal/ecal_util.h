@@ -51,8 +51,14 @@ namespace eCAL
      * @brief Retrieve eCAL standard logging path.
      *          This is path is for the eCAL logging files.
      *          This path has read/write permissions for standard users.
+     * 
+     *        1. ECAL_LOG_DIR environment variable path
+     *        2. eCAL configuration path
+     *        3. eCAL default configuration path
+     *        4. System temporary directory
+     *        5. Fallback path /ecal_tmp
      *
-     * @return  eCAL data path.
+     * @return  eCAL logging path.
     **/
     ECAL_API std::string GeteCALLogDir();
 

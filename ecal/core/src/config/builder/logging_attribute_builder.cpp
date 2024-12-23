@@ -22,12 +22,12 @@ namespace eCAL
       attributes.file_sink.enabled       = log_config_.provider.file.enable;
       attributes.file_sink.filter_log    = log_config_.provider.file.filter_log;
       attributes.file_config.path        = log_config_.provider.file_config.path;
-      if (attributes.file_config.path.empty())
-      {
-        // check ECAL_CONFIG
-        // Creates path if not exists
-        attributes.file_config.path = Util::GeteCALLogDir();        
-      }
+
+      // check ECAL_CONFIG
+      // Creates path if not exists
+      // Could also return empty path
+      attributes.file_config.path = Util::GeteCALLogDir();
+
 
       attributes.console_sink.enabled    = log_config_.provider.console.enable;
       attributes.console_sink.filter_log = log_config_.provider.console.filter_log;
