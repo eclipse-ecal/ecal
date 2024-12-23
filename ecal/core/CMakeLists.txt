@@ -76,6 +76,7 @@ if (ECAL_CORE_CONFIGURATION)
   list(APPEND ecal_config_src
       src/config/configuration_to_yaml.cpp
       src/config/configuration_reader.cpp
+      src/config/configuration_writer.cpp
   )
 endif()
 ######################################

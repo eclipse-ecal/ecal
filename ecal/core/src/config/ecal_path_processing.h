@@ -86,5 +86,15 @@ namespace eCAL
      *          Returns empty string if no path could be found or created.
      */
     std::string eCALConfigLogDir();
+
+
+    /**
+     * @brief Creates in the specified directory the logs subdirectory.
+     * 
+     * @param path_ The eCAL config/logs directory
+     * 
+     * @returns True if the directory structure could be created successfully.
+     */
+    bool createEcalDirStructure(const std::string& path_);
   }
 }

@@ -264,7 +264,7 @@ namespace
   #elif defined(ECAL_OS_LINUX)
 
     std::string path_template = buildPath(tmp_dir, "ecal-XXXXXX"); // 'X's will be replaced
-    char* dir = mkdtemp(path_template.data());
+    char* dir = mkdtemp(&path_template[0]);
 
     if (dir == nullptr) {
       return {};
@@ -375,6 +375,17 @@ namespace eCAL
       }
 
       return buildPath(found_path, config_file_);
+    }
+
+    bool createEcalDirStructure(const std::string& path_)
+    {
+        if (!dirExistsOrCreate(path_)) return false;
+
+        // create also logs directory
+        std::string log_path = buildPath(path_, ECAL_FOLDER_NAME_LOG);
+        if (!dirExistsOrCreate(log_path)) return false;
+    
+        return true;
     }
   } // namespace Config
   
