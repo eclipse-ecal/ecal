@@ -82,7 +82,6 @@ jobs:
         git submodule deinit thirdparty/curl/curl
         git submodule deinit thirdparty/gtest/googletest
         git submodule deinit thirdparty/hdf5/hdf5
-        git submodule deinit thirdparty/libssh2/libssh2
         git submodule deinit thirdparty/protobuf/protobuf
         git submodule update
 

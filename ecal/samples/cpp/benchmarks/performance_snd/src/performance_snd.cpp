@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ int main(int argc, char **argv)
   std::cout << std::endl;
 
   // create publisher
-  eCAL::CPublisher pub("Performance", pub_config);
+  eCAL::CPublisher pub("Performance", eCAL::SDataTypeInformation(), pub_config);
  
   // counter
   long long msgs (0);
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
         out << "Messages/s:            " << (unsigned int)(msgs  /                            diff_time.count()) << std::endl;
         out << "Latency (us):          " << (diff_time.count() * 1e6) / (double)msgs                             << std::endl;
         std::cout << out.str() << std::endl;
-        eCAL::Logging::Log(out.str());
+        eCAL::Logging::Log(log_level_info, out.str());
 
         // reset counter
         msgs  = 0;
@@ -109,9 +109,6 @@ int main(int argc, char **argv)
       }
     }
   }
-
-  // destroy publisher
-  pub.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();

@@ -18,7 +18,6 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_client_v5.h>
 
 #include <gtest/gtest.h>
 #include <map>
@@ -65,7 +64,7 @@ TEST_P(ClientsTestFixture, ClientExpiration)
     service_method_info.request_type.descriptor  = "foo::req_desc";
     service_method_info.response_type.name       = "foo::resp_type";
     service_method_info.response_type.descriptor = "foo::resp_desc";
-    const eCAL::v5::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
+    const eCAL::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -117,7 +116,7 @@ TEST_P(ClientsTestFixture, GetClientIDs)
     service_method_info.request_type.descriptor  = "foo::req_desc";
     service_method_info.response_type.name       = "foo::resp_type";
     service_method_info.response_type.descriptor = "foo::resp_desc";
-    const eCAL::v5::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
+    const eCAL::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);

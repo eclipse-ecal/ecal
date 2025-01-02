@@ -23,6 +23,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_publisher_v5.h>
 #include <ecal/cimpl/ecal_publisher_cimpl.h>
 
 #include "ecal_common_cimpl.h"
@@ -52,14 +53,14 @@ extern "C"
 {
   ECALC_API ECAL_HANDLE eCAL_Pub_New()
   {
-    auto* pub = new eCAL::CPublisher; // NOLINT(*-owning-memory)
+    auto* pub = new eCAL::v5::CPublisher; // NOLINT(*-owning-memory)
     return(pub);
   }
 
   ECALC_API int eCAL_Pub_Create(ECAL_HANDLE handle_, const char* topic_name_, const char* topic_type_name_, const char* topic_type_encoding_, const char* topic_desc_, int topic_desc_len_)
   {
     if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
     const eCAL::SDataTypeInformation topic_info = { topic_type_name_, topic_type_encoding_, std::string(topic_desc_, static_cast<size_t>(topic_desc_len_)) };
     if (!pub->Create(topic_name_, topic_info)) return(0);
     return(1);
@@ -68,7 +69,7 @@ extern "C"
   ECALC_API int eCAL_Pub_Destroy(ECAL_HANDLE handle_)
   {
     if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
     delete pub; // NOLINT(*-owning-memory)
     return(1);
   }
@@ -76,7 +77,7 @@ extern "C"
   ECALC_API int eCAL_Pub_SetAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_, const char* attr_value_, int attr_value_len_)
   {
     if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
     if (pub->SetAttribute(std::string(attr_name_, static_cast<size_t>(attr_name_len_)), std::string(attr_value_, static_cast<size_t>(attr_value_len_)))) return(1);
     return(0);
   }
@@ -84,7 +85,7 @@ extern "C"
   ECALC_API int eCAL_Pub_ClearAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_)
   {
     if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
     if (pub->ClearAttribute(std::string(attr_name_, static_cast<size_t>(attr_name_len_)))) return(1);
     return(0);
   }
@@ -92,7 +93,7 @@ extern "C"
   ECALC_API int eCAL_Pub_SetID(ECAL_HANDLE handle_, long long id_)
   {
     if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
     if (pub->SetID(id_)) return(1);
     return(0);
   }
@@ -100,7 +101,7 @@ extern "C"
   ECALC_API int eCAL_Pub_IsSubscribed(ECAL_HANDLE handle_)
   {
     if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
     if (pub->IsSubscribed()) return(1);
     return(0);
   }
@@ -108,7 +109,7 @@ extern "C"
   ECALC_API int eCAL_Pub_Send(ECAL_HANDLE handle_, const void* const buf_, int buf_len_, long long time_)
   {
     if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
     const size_t ret = pub->Send(buf_, static_cast<size_t>(buf_len_), time_);
     if (static_cast<int>(ret) == buf_len_)
     {
@@ -120,7 +121,7 @@ extern "C"
   ECALC_API int eCAL_Pub_AddEventCallback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, PubEventCallbackCT callback_, void* par_)
   {
     if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
     auto callback = std::bind(g_pub_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
     if (pub->AddEventCallback(type_, callback)) return(1);
     return(0);
@@ -129,7 +130,7 @@ extern "C"
   ECALC_API int eCAL_Pub_RemEventCallback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_)
   {
     if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
     if (pub->RemEventCallback(type_)) return(1);
     return(0);
   }
@@ -137,7 +138,7 @@ extern "C"
   ECALC_API int eCAL_Pub_Dump(ECAL_HANDLE handle_, void* buf_, int buf_len_)
   {
     if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
     const std::string dump = pub->Dump();
     if (!dump.empty())
     {

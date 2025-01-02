@@ -39,9 +39,9 @@ namespace
   // subscriber callback function
   std::atomic<size_t> g_callback_received_bytes;
   std::atomic<size_t> g_callback_received_count;
-  void OnReceive(const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_)
+  void OnReceive(const eCAL::SReceiveCallbackData& data_)
   {
-    g_callback_received_bytes += data_->size;
+    g_callback_received_bytes += data_.size;
     g_callback_received_count++;
   }
 }
@@ -65,10 +65,10 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
   pub_config.layer.tcp.enable = false;
 
   // create publisher for topic "A"
-  eCAL::CPublisher pub("A", pub_config);
+  eCAL::CPublisher pub("A", eCAL::SDataTypeInformation(), pub_config);
 
   // add callback
-  EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
+  EXPECT_TRUE(sub.SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3)));
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -76,21 +76,15 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
   g_callback_received_bytes = 0;
   g_callback_received_count = 0;
 
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  EXPECT_TRUE(pub.Send(send_s));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
-  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
+  EXPECT_TRUE(pub.Send(nullptr, 0));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive
   EXPECT_EQ(send_s.size(), g_callback_received_bytes);
   EXPECT_EQ(2, g_callback_received_count);
-
-  // destroy subscriber
-  sub.Destroy();
-
-  // destroy publisher
-  pub.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();
@@ -138,12 +132,6 @@ TEST(core_cpp_pubsub, MultipleSendsUDP)
     EXPECT_EQ(last_received_timestamp, timestamp);
     ++timestamp;
   }
-
-  // destroy subscriber
-  sub.Destroy();
-
-  // destroy publisher
-  pub.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();

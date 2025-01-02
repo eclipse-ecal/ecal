@@ -155,25 +155,6 @@ namespace eCAL
     ECAL_API void SetState(eCAL_Process_eSeverity severity_, eCAL_Process_eSeverity_Level level_, const char* info_);
 
     /**
-     * @brief  Add registration callback.
-     *
-     * @param event_          The type of registration.
-     * @param callback_       The callback.
-     *
-     * @return  Zero if succeeded.
-    **/
-    ECAL_API int AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_);
-
-    /**
-     * @brief  Remove registration callback.
-     *
-     * @param event_          The type of registration.
-     *
-     * @return  Zero if succeeded.
-    **/
-    ECAL_API int RemRegistrationCallback(enum eCAL_Registration_Event event_);
-
-    /**
      * @brief  Start specified process (windows only). 
      *
      * @param proc_name_       Process name. 

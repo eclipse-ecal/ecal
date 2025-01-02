@@ -45,23 +45,23 @@ extern "C"
   ECALC_API int eCAL_Initialize(const char* unit_name_, unsigned int components_)
   {
     const std::string unit_name = (unit_name_ != nullptr) ? std::string(unit_name_) : std::string("");
-    return eCAL::Initialize(unit_name, components_);
+    return static_cast<int>(!eCAL::Initialize(unit_name, components_));
   }
 
   ECALC_API int eCAL_SetUnitName(const char* unit_name_)
   {
     const std::string unit_name = (unit_name_ != nullptr) ? std::string(unit_name_) : std::string("");
-    return(eCAL::SetUnitName(unit_name));
+    return static_cast<int>(!eCAL::SetUnitName(unit_name));
   }
 
   ECALC_API int eCAL_Finalize()
   {
-    return(eCAL::Finalize());
+    return static_cast<int>(!eCAL::Finalize());
   }
 
   ECALC_API int eCAL_IsInitialized()
   {
-    return(eCAL::IsInitialized());
+    return static_cast<int>(eCAL::IsInitialized());
   }
 
   ECALC_API int eCAL_Ok()

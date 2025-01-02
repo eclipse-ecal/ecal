@@ -52,13 +52,13 @@ TEST(core_cpp_registration_public, GetTopics)
     eCAL::SDataTypeInformation info_B2  { "typeB2"  ,"",  "descB2"   };
 
     // create 3 publisher
-    eCAL::CPublisher pub1("A1", info_A1);
-    eCAL::CPublisher pub2("A2", info_A2);
-    eCAL::CPublisher pub3("A3", info_A3);
+    auto pub1 = std::make_shared<eCAL::CPublisher>("A1", info_A1);
+    auto pub2 = std::make_shared<eCAL::CPublisher>("A2", info_A2);
+    auto pub3 = std::make_shared<eCAL::CPublisher>("A3", info_A3);
 
     // create 2 subscriber
-    eCAL::CSubscriber sub1("B1", info_B1);
-    eCAL::CSubscriber sub2("B2", info_B2);
+    auto sub1 = std::make_shared<eCAL::CSubscriber>("B1", info_B1);
+    auto sub2 = std::make_shared<eCAL::CSubscriber>("B2", info_B2);
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -103,8 +103,8 @@ TEST(core_cpp_registration_public, GetTopics)
     // now destroy publisher pub1 and subscriber sub1
     // the entities pub12 and sub12 should replace them
     // by overwriting their type names and descriptions
-    pub1.Destroy();
-    sub1.Destroy();
+    pub1.reset();
+    sub1.reset();
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -133,7 +133,7 @@ TEST(core_cpp_registration_public, GetTopics)
   eCAL::Finalize();
 }
 
-// This test creates a reall big number of publishers.
+// This test creates a real big number of publishers.
 // It then checks, if they have all been seen using GetTopics()
 // And the count is back to 0 upon completion.
 TEST(core_cpp_registration_public, GetTopicsParallel)

@@ -10,7 +10,6 @@ namespace
     YAML::AssignValue<eCAL::Registration::Configuration>(config_.registration, node_, "registration");
     YAML::AssignValue<eCAL::Monitoring::Configuration>(config_.monitoring, node_, "monitoring");
     YAML::AssignValue<eCAL::Time::Configuration>(config_.timesync, node_, "time");
-    YAML::AssignValue<eCAL::Service::Configuration>(config_.service, node_, "service");
     YAML::AssignValue<eCAL::Application::Configuration>(config_.application, node_, "application");
     YAML::AssignValue<eCAL::Logging::Configuration>(config_.logging, node_, "logging");
   }

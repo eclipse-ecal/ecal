@@ -220,7 +220,7 @@ namespace YAML
     return true;
   }
 
-  Node convert<eCAL::TransportLayer::UDP::Network::Configuration>::encode(const eCAL::TransportLayer::UDP::Network::Configuration& config_)
+  Node convert<eCAL::TransportLayer::UDP::MulticastConfiguration>::encode(const eCAL::TransportLayer::UDP::MulticastConfiguration& config_)
   {
     Node node;
     node["group"] = config_.group.Get();
@@ -228,7 +228,7 @@ namespace YAML
     return node;
   }
 
-  bool convert<eCAL::TransportLayer::UDP::Network::Configuration>::decode(const Node& node_, eCAL::TransportLayer::UDP::Network::Configuration& config_)
+  bool convert<eCAL::TransportLayer::UDP::MulticastConfiguration>::decode(const Node& node_, eCAL::TransportLayer::UDP::MulticastConfiguration& config_)
   {
     AssignValue<std::string>(config_.group, node_, "group");
     AssignValue<unsigned int>(config_.ttl, node_, "ttl");
@@ -247,6 +247,7 @@ namespace YAML
     node["join_all_interfaces"] = config_.join_all_interfaces;
     node["npcap_enabled"]       = config_.npcap_enabled;
     node["network"]             = config_.network;
+    node["local"]               = config_.local;
     return node;
   }
 
@@ -265,7 +266,8 @@ namespace YAML
     AssignValue<bool>(config_.join_all_interfaces, node_, "join_all_interfaces");
     AssignValue<bool>(config_.npcap_enabled, node_, "npcap_enabled");
 
-    AssignValue<eCAL::TransportLayer::UDP::Network::Configuration>(config_.network, node_, "network");
+    AssignValue<eCAL::TransportLayer::UDP::MulticastConfiguration>(config_.network, node_, "network");
+    AssignValue<eCAL::TransportLayer::UDP::MulticastConfiguration>(config_.local, node_, "local");
     return true;
   }
   
@@ -493,30 +495,6 @@ namespace YAML
 
 
   /*
-       ____             _        
-      / __/__ _____  __(_)______ 
-     _\ \/ -_) __/ |/ / / __/ -_)
-    /___/\__/_/  |___/_/\__/\__/                             
-  */
-  
-  Node convert<eCAL::Service::Configuration>::encode(const eCAL::Service::Configuration& config_)
-  {
-    Node node;
-    node["protocol_v0"] = config_.protocol_v0;
-    node["protocol_v1"] = config_.protocol_v1;
-
-    return node;
-  }
-
-  bool convert<eCAL::Service::Configuration>::decode(const Node& node_, eCAL::Service::Configuration& config_)
-  {
-    AssignValue<bool>(config_.protocol_v0, node_, "protocol_v0");
-    AssignValue<bool>(config_.protocol_v1, node_, "protocol_v1");
-    return true;
-  }
-
-
-  /*
        ___             ___          __  _         
       / _ | ___  ___  / (_)______ _/ /_(_)__  ___ 
      / __ |/ _ \/ _ \/ / / __/ _ `/ __/ / _ \/ _ \
@@ -701,7 +679,6 @@ namespace YAML
     node["registration"] = config_.registration;
     node["monitoring"]   = config_.monitoring;
     node["time"]         = config_.timesync;
-    node["service"]      = config_.service;
     node["application"]  = config_.application;
     node["logging"]      = config_.logging;
     return node;
@@ -715,7 +692,6 @@ namespace YAML
     AssignValue<eCAL::Registration::Configuration>(config_.registration, node_, "registration");
     AssignValue<eCAL::Monitoring::Configuration>(config_.monitoring, node_, "monitoring");
     AssignValue<eCAL::Time::Configuration>(config_.timesync, node_, "time");
-    AssignValue<eCAL::Service::Configuration>(config_.service, node_, "service");
     AssignValue<eCAL::Application::Configuration>(config_.application, node_, "application");
     AssignValue<eCAL::Logging::Configuration>(config_.logging, node_, "logging");
     return true;

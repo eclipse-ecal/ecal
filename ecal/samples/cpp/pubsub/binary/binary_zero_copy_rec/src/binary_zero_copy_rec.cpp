@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,22 +54,22 @@ std::ostream& operator<<(std::ostream& os, const SSimpleStruct& s)
 }
 
 // subscriber callback function
-void OnReceive(const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_)
+void OnReceive(const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_)
 {
-  if (data_->size < 1) return;
+  if (data_.size < 1) return;
 
   std::cout << "------------------------------------"   << std::endl;
   std::cout << "Binary buffer header :"                 << std::endl;
   std::cout << "------------------------------------"   << std::endl;
-  std::cout << " Size   : " << data_->size              << std::endl;
-  std::cout << " Id     : " << data_->id                << std::endl;
-  std::cout << " Time   : " << data_->time              << std::endl;
-  std::cout << " Clock  : " << data_->clock             << std::endl;
+  std::cout << " Size   : " << data_.size              << std::endl;
+  std::cout << " Id     : " << data_.id                << std::endl;
+  std::cout << " Time   : " << data_.time              << std::endl;
+  std::cout << " Clock  : " << data_.clock             << std::endl;
   std::cout                                             << std::endl;
   std::cout << "------------------------------------"   << std::endl;
   std::cout << "SSimpleStruct :"                        << std::endl;
   std::cout << "------------------------------------"   << std::endl;
-  std::cout << *static_cast<SSimpleStruct*>(data_->buf) << std::endl;
+  std::cout << *static_cast<SSimpleStruct*>(data_.buf) << std::endl;
 }
 
 int main()
@@ -84,7 +84,7 @@ int main()
   eCAL::CSubscriber sub(topicName);
 
   // assign callback
-  sub.AddReceiveCallback(OnReceive);
+  sub.SetReceiveCallback(OnReceive);
 
   // idle main loop
   while (eCAL::Ok()) std::this_thread::sleep_for(std::chrono::milliseconds(500));

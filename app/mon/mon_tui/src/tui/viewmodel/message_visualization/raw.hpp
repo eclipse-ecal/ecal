@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,12 +36,12 @@ class RawMessageVisualizationViewModel : public MessageVisualizationViewModel
   mutable std::mutex message_mtx;
   std::string latest_message;
 
-  void OnMessage(const struct eCAL::SReceiveCallbackData* callback_data)
+  void OnMessage(const struct eCAL::SReceiveCallbackData& callback_data)
   {
     {
       std::lock_guard<std::mutex> lock{message_mtx};
-      latest_message = std::string(static_cast<char *>(callback_data->buf), callback_data->size);
-      message_timestamp = callback_data->time;
+      latest_message = std::string(static_cast<char *>(callback_data.buf), callback_data.size);
+      message_timestamp = callback_data.time;
     }
 
     NotifyDataUpdated();
@@ -52,7 +52,7 @@ public:
     : subscriber{topic}
   {
     using namespace std::placeholders;
-    subscriber.AddReceiveCallback(std::bind(&RawMessageVisualizationViewModel::OnMessage, this, _2));
+    subscriber.SetReceiveCallback(std::bind(&RawMessageVisualizationViewModel::OnMessage, this, _3));
   }
 
   std::string message() const

@@ -52,7 +52,7 @@ namespace
 TEST(core_cpp_pubsub, TimeoutAcknowledgment)
 {
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize("TimeoutAcknowledgment", eCAL::Init::All));
+  EXPECT_EQ(true, eCAL::Initialize("TimeoutAcknowledgment", eCAL::Init::All));
 
   // create publisher config
   eCAL::Publisher::Configuration pub_config;
@@ -110,5 +110,5 @@ TEST(core_cpp_pubsub, TimeoutAcknowledgment)
 
   // finalize eCAL API
   // without destroying any pub / sub
-  EXPECT_EQ(0, eCAL::Finalize());
+  EXPECT_EQ(true, eCAL::Finalize());
 }

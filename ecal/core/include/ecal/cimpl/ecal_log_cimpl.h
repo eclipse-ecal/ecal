@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,25 +34,11 @@ extern "C"
 {
 #endif /*__cplusplus*/
   /**
-   * @brief Sets the log level. 
-   *
-   * @param level_  The level. 
-  **/
-  ECALC_API void eCAL_Logging_SetLogLevel(enum eCAL_Logging_eLogLevel level_);
-
-  /**
-   * @brief Get the current log level.
-   *
-   * @return   The current log level.
-  **/
-  ECALC_API enum eCAL_Logging_eLogLevel eCAL_Logging_GetLogLevel();
-
-  /**
    * @brief Log a message (with current log level). 
    *
    * @param msg_  The log message string.
   **/
-  ECALC_API void eCAL_Logging_Log(const char* const msg_);
+  ECALC_API void eCAL_Logging_Log(enum eCAL_Logging_eLogLevel level_, const char* const msg_);
 
   /**
    * @brief Get logging string.

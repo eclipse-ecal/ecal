@@ -54,7 +54,7 @@ Subscriber::Subscriber(const std::string&                   topic_name
   if (!quiet)
     statistics_thread_ = std::make_unique<std::thread>([this](){ this->statisticsLoop(); });
 
-  ecal_sub.AddReceiveCallback([this](const char* topic_name_, const eCAL::SReceiveCallbackData* data_) { callback(topic_name_, data_); });
+  ecal_sub.SetReceiveCallback([this](const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) { callback(data_); });
 }
 
 // Destructor
@@ -72,7 +72,7 @@ Subscriber::~Subscriber()
     statistics_thread_->join();
 }
 
-void Subscriber::callback(const char* /*topic_name_*/, const eCAL::SReceiveCallbackData* data_)
+void Subscriber::callback(const eCAL::SReceiveCallbackData& data_)
 {
   // Initialize callback timepoint, if necessary
   if (hickup_ && hickup_time_ == std::chrono::steady_clock::time_point::max())
@@ -81,9 +81,9 @@ void Subscriber::callback(const char* /*topic_name_*/, const eCAL::SReceiveCallb
   SubscribedMessage message_info;
   message_info.local_receive_time = std::chrono::steady_clock::now();
   message_info.ecal_receive_time  = eCAL::Time::ecal_clock::now();
-  message_info.ecal_send_time     = eCAL::Time::ecal_clock::time_point(std::chrono::microseconds(data_->time));
-  message_info.ecal_counter       = data_->clock;
-  message_info.size_bytes         = data_->size;
+  message_info.ecal_send_time     = eCAL::Time::ecal_clock::time_point(std::chrono::microseconds(data_.time));
+  message_info.ecal_counter       = data_.clock;
+  message_info.size_bytes         = data_.size;
 
   std::chrono::steady_clock::duration time_to_waste_this_iteration(time_to_waste_);
 

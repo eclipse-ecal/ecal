@@ -23,6 +23,9 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_client_v5.h>
+#include <ecal/ecal_server_v5.h>
+#include <ecal/ecal_publisher_v5.h>
+#include <ecal/ecal_subscriber_v5.h>
 
 #include "ecal_clang.h"
 
@@ -101,7 +104,7 @@ const char* ecal_getdate()
 int ecal_initialize(const char* unit_name_)
 {
   std::string unit_name = (unit_name_ != nullptr) ? std::string(unit_name_) : std::string("");
-  return(eCAL::Initialize(unit_name));
+  return static_cast<int>(!eCAL::Initialize(unit_name));
 }
 
 /****************************************/
@@ -109,8 +112,8 @@ int ecal_initialize(const char* unit_name_)
 /****************************************/
 int ecal_finalize()
 {
-  //* @return Zero if succeeded, 1 if still initialized, -1 if failed.
-  return(eCAL::Finalize());
+  //* @return Zero if succeeded
+  return static_cast<int>(!eCAL::Finalize());
 }
 
 /****************************************/
@@ -119,7 +122,7 @@ int ecal_finalize()
 int ecal_is_initialized()
 {
   //* @return 1 if eCAL is initialized.
-  return(eCAL::IsInitialized());
+  return static_cast<int>(eCAL::IsInitialized());
 }
 
 /****************************************/
@@ -127,7 +130,7 @@ int ecal_is_initialized()
 /****************************************/
 int ecal_set_unit_name(const char* unit_name_)
 {
-  return(eCAL::SetUnitName(unit_name_));
+  return static_cast<int>(eCAL::SetUnitName(unit_name_));
 }
 
 /****************************************/
@@ -274,19 +277,11 @@ bool ecal_get_description(const char* topic_name_, const char** topic_desc_, int
 }
 
 /****************************************/
-/*      log_setlevel                    */
-/****************************************/
-void log_setlevel(const int level_)
-{
-  eCAL::Logging::SetLogLevel(eCAL_Logging_eLogLevel(level_));
-}
-
-/****************************************/
 /*      log_message                     */
 /****************************************/
-void log_message(const char* message_)
+void log_message(const eCAL_Logging_eLogLevel& log_level_, const char* message_)
 {
-  eCAL::Logging::Log(message_);
+  eCAL::Logging::Log(log_level_, message_);
 }
 
 
@@ -300,7 +295,7 @@ ECAL_HANDLE pub_create(const char* topic_name_, const char* topic_type_, const c
   topic_info.encoding   = topic_enc_;
   topic_info.descriptor = std::string(topic_desc_, static_cast<size_t>(topic_desc_length_));
 
-  auto* pub = new eCAL::CPublisher;
+  auto* pub = new eCAL::v5::CPublisher;
   if (!pub->Create(topic_name_, topic_info))
   {
     delete pub;
@@ -314,7 +309,7 @@ ECAL_HANDLE pub_create(const char* topic_name_, const char* topic_type_, const c
 /****************************************/
 bool pub_destroy(ECAL_HANDLE handle_)
 {
-  auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+  auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
   if(pub != nullptr)
   {
     delete pub;
@@ -331,7 +326,7 @@ bool pub_destroy(ECAL_HANDLE handle_)
 /****************************************/
 int pub_send(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_)
 {
-  auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+  auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
   if(pub != nullptr)
   {
     const size_t ret = pub->Send(payload_, static_cast<size_t>(length_), time_);
@@ -363,7 +358,7 @@ static void g_pub_event_callback(const char* topic_name_, const struct eCAL::SPu
 
 bool pub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, const PubEventCallbackCT callback_, void* par_)
 {
-  auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+  auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
 
   auto callback = std::bind(g_pub_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
   return(pub->AddEventCallback(type_, callback));
@@ -374,7 +369,7 @@ bool pub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_
 /****************************************/
 bool pub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_)
 {
-  auto* pub = static_cast<eCAL::CPublisher*>(handle_);
+  auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
 
   return(pub->RemEventCallback(type_));
 }
@@ -390,7 +385,7 @@ ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_, const c
   topic_info.encoding   = topic_enc_;
   topic_info.descriptor = std::string(topic_desc_, static_cast<size_t>(topic_desc_length_));
 
-  auto* sub = new eCAL::CSubscriber;
+  auto* sub = new eCAL::v5::CSubscriber;
   if (!sub->Create(topic_name_, topic_info))
   {
     delete sub;
@@ -404,7 +399,7 @@ ECAL_HANDLE sub_create(const char* topic_name_, const char* topic_type_, const c
 /****************************************/
 bool sub_destroy(ECAL_HANDLE handle_)
 {
-  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
   if(sub != nullptr)
   {
     delete sub;
@@ -418,7 +413,7 @@ bool sub_destroy(ECAL_HANDLE handle_)
 /****************************************/
 int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_)
 {
-  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
   if(sub != nullptr)
   {
     std::string rcv_buf;
@@ -456,7 +451,7 @@ int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, l
 /****************************************/
 bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_)
 {
-  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
   if (sub != nullptr)
   {
     std::string rcv_buf;
@@ -505,7 +500,7 @@ static void g_sub_receive_callback(const char* topic_name_, const struct eCAL::S
 
 bool sub_add_receive_callback(ECAL_HANDLE handle_, const ReceiveCallbackCT callback_, void* par_)
 {
-  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
 
   auto callback = std::bind(g_sub_receive_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
   return(sub->AddReceiveCallback(callback));
@@ -516,7 +511,7 @@ bool sub_add_receive_callback(ECAL_HANDLE handle_, const ReceiveCallbackCT callb
 /****************************************/
 bool sub_rem_receive_callback(ECAL_HANDLE handle_)
 {
-  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
 
   return(sub->RemReceiveCallback());
 }
@@ -541,7 +536,7 @@ static void g_sub_event_callback(const char* topic_name_, const struct eCAL::SSu
 
 bool sub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_, const SubEventCallbackCT callback_, void* par_)
 {
-  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
 
   auto callback = std::bind(g_sub_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
   return(sub->AddEventCallback(type_, callback));
@@ -552,7 +547,7 @@ bool sub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type
 /****************************************/
 bool sub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_)
 {
-  auto* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
 
   return(sub->RemEventCallback(type_));
 }
@@ -563,7 +558,7 @@ bool sub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type
 /****************************************/
 ECAL_HANDLE server_create(const char* service_name_)
 {
-  auto* server = new eCAL::CServiceServer;
+  auto* server = new eCAL::v5::CServiceServer;
   if (!server->Create(service_name_))
   {
     delete server;
@@ -577,7 +572,7 @@ ECAL_HANDLE server_create(const char* service_name_)
 /****************************************/
 bool server_destroy(ECAL_HANDLE handle_)
 {
-  auto* server = static_cast<eCAL::CServiceServer*>(handle_);
+  auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
   if (server != nullptr)
   {
     delete server;
@@ -605,7 +600,7 @@ static int g_server_method_callback(const std::string& method_, const std::strin
 
 bool server_add_method_callback(ECAL_HANDLE handle_,  const char* method_name_, const char* req_type_, const char* resp_type_, const MethodCallbackCT callback_, void* par_)
 {
-  auto* server = static_cast<eCAL::CServiceServer*>(handle_);
+  auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
   if (server != nullptr)
   {
     auto callback = std::bind(g_server_method_callback, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, callback_, par_);
@@ -622,7 +617,7 @@ bool server_add_method_callback(ECAL_HANDLE handle_,  const char* method_name_, 
 /****************************************/
 bool server_rem_method_callback(ECAL_HANDLE handle_, const char* method_name_)
 {
-  auto* server = static_cast<eCAL::CServiceServer*>(handle_);
+  auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
   if (server != nullptr)
   {
     return(server->RemMethodCallback(method_name_));
@@ -716,15 +711,6 @@ bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, con
 }
 
 /****************************************/
-/*      client_add_response_callback    */
-/****************************************/
-
-/****************************************/
-/*      client_rem_response_callback    */
-/****************************************/
-
-
-/****************************************/
 /*      mon_initialize                  */
 /****************************************/
 int mon_initialize()
@@ -738,93 +724,4 @@ int mon_initialize()
 int mon_finalize()
 {
   return(ecal_finalize());
-}
-
-/****************************************/
-/*      mon_set_excl_filter             */
-/****************************************/
-int mon_set_excl_filter(const char* filter_)
-{
-  return(eCAL::Monitoring::SetExclFilter(filter_));
-}
-
-/****************************************/
-/*      mon_set_incl_filter             */
-/****************************************/
-int mon_set_incl_filter(const char* filter_)
-{
-  return(eCAL::Monitoring::SetInclFilter(filter_));
-}
-
-/****************************************/
-/*      mon_set_filter_state            */
-/****************************************/
-int mon_set_filter_state(const bool state_)
-{
-  return(eCAL::Monitoring::SetFilterState(state_));
-}
-
-/****************************************/
-/*      mon_get_monitoring              */
-/****************************************/
-int mon_get_monitoring(const char** mon_buf_, int* mon_buf_len_)
-{
-  std::string mon_s;
-  const int size = eCAL::Monitoring::GetMonitoring(mon_s);
-  if(size > 0)
-  {
-    // this has to be freed by caller (ecal_free_mem)
-    char* cbuf = str_malloc(mon_s);
-    if(cbuf == nullptr) return(0);
-
-    if (mon_buf_ != nullptr) {
-      *mon_buf_ = cbuf;
-      if (mon_buf_len_ != nullptr) *mon_buf_len_ = static_cast<int>(mon_s.size());
-    }
-    else
-    {
-      // free allocated memory:
-      ecal_free_mem(cbuf);
-      if (mon_buf_len_ != nullptr) *mon_buf_len_ = 0;
-      // operation could't be completed successfully
-      return(0);
-    }
-    return(static_cast<int>(mon_s.size()));
-  }
-  else
-  {
-    return(0);
-  }
-}
-
-/****************************************/
-/*      mon_get_logging                 */
-/****************************************/
-int mon_get_logging(const char** log_buf_, int* log_buf_len_)
-{
-  std::string log_s;
-  const int size = eCAL::Logging::GetLogging(log_s);
-  if(size > 0)
-  {
-    // this has to be freed by caller (ecal_free_mem)
-    char* cbuf = str_malloc(log_s);
-    if(cbuf == nullptr) return(0);
-
-    if (log_buf_ != nullptr) {
-      *log_buf_ = cbuf;
-      if (log_buf_len_ != nullptr) *log_buf_len_ = static_cast<int>(log_s.size());
-    }
-    else {
-      // free allocated memory:
-      ecal_free_mem(cbuf);
-      if (log_buf_len_ != nullptr) *log_buf_len_ = 0;
-      // operation couldn't be completed successfullly.
-      return(0);
-    }
-    return(static_cast<int>(log_s.size()));
-  }
-  else
-  {
-    return(0);
-  }
 }

@@ -37,27 +37,27 @@ namespace eCAL
      *
      * @param filter_  Topic filter as regular expression. 
      *
-     * @return Zero if succeeded.
+     * @return True if succeeded.
     **/
-    ECAL_API int SetExclFilter(const std::string& filter_);
+    ECAL_API bool SetExclFilter(const std::string& filter_);
 
     /**
      * @brief Set topics filter whitelist regular expression.
      *
      * @param filter_  Topic filter as regular expression. 
      *
-     * @return Zero if succeeded.
+     * @return True if succeeded.
     **/
-    ECAL_API int SetInclFilter(const std::string& filter_);
+    ECAL_API bool SetInclFilter(const std::string& filter_);
 
     /**
      * @brief Switch topics filter using regular expression on/off.
      *
      * @param state_  Filter on / off state. 
      *
-     * @return Zero if succeeded.
+     * @return True if succeeded.
     **/
-    ECAL_API int SetFilterState(bool state_);
+    ECAL_API bool SetFilterState(bool state_);
 
     /**
      * @brief Get monitoring subset as serialized protobuf string.
@@ -65,9 +65,9 @@ namespace eCAL
      * @param [out] mon_       Target string to store the monitoring information. 
      * @param       entities_  Entities to get.
      *
-     * @return  Monitoring buffer length or zero if failed.
+     * @return True if succeeded.
     **/
-    ECAL_API int GetMonitoring(std::string& mon_, unsigned int entities_ = Entity::All);
+    ECAL_API bool GetMonitoring(std::string& mon_, unsigned int entities_ = Entity::All);
     
     /**
      * @brief Get monitoring as a struct.
@@ -75,9 +75,9 @@ namespace eCAL
      * @param [out] mon_       Target struct to store the monitoring information.
      * @param       entities_  Entities definition.
      *
-     * @return Number of struct elements.
+     * @return True if succeeded.
     **/
-    ECAL_API int GetMonitoring(SMonitoring& mon_, unsigned int entities_ = Entity::All);
+    ECAL_API bool GetMonitoring(SMonitoring& mon_, unsigned int entities_ = Entity::All);
   }
   /** @example monitoring_rec.cpp
   * This is an example how the eCAL Monitoring API may be utilized to print monitoring information.

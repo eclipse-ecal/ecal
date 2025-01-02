@@ -91,25 +91,25 @@ std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int
   pub_config.layer.shm.memfile_buffer_count = buffer_count;
 
   // create publisher for topic "A"
-  eCAL::CPublisher pub("A", pub_config);
+  eCAL::CPublisher pub("A", eCAL::SDataTypeInformation(), pub_config);
 
   std::atomic<size_t> received_count{ 0 };
   std::atomic<size_t> received_bytes{ 0 };
   std::vector<char>   received_content;
 
   // add callback
-  auto lambda = [&](const char* /*topic_name_*/, const eCAL::SReceiveCallbackData* data_) {
-    received_bytes += data_->size;
+  auto lambda = [&](const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) {
+    received_bytes += data_.size;
     ++received_count;
     for (auto i = 0; i < bytes_to_read; ++i)
     {
-      const char rec_char(static_cast<const char*>(data_->buf)[i]);
+      const char rec_char(static_cast<const char*>(data_.buf)[i]);
       received_content.push_back(rec_char);
       std::cout << std::setw(2) << std::setfill('0') << static_cast<int>(rec_char) << " ";
     }
     std::cout << std::endl;
     };
-  EXPECT_EQ(true, sub.AddReceiveCallback(lambda));
+  EXPECT_TRUE(sub.SetReceiveCallback(lambda));
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -117,7 +117,7 @@ std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int
   // run publications
   for (int i = 0; i < publications; ++i)
   {
-    EXPECT_EQ(PAYLOAD_SIZE_BYTE, pub.Send(binary_payload));
+    EXPECT_TRUE(pub.Send(binary_payload));
     eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
   }
 
