@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@
 #include <cstddef>
 #include <ecal/msg/protobuf/ecal_proto_hlp.h>
 #include <ecal/msg/subscriber.h>
+#include <ecal/msg/protobuf/serializer.h>
 
 // protobuf includes
 #ifdef _MSC_VER
@@ -44,37 +45,8 @@
 
 namespace eCAL
 {
-  namespace internal
-  {
-    template <typename T>
-    class ProtobufDeserializer
-    {
-    public:
-      static SDataTypeInformation GetDataTypeInformation()
-      {
-        SDataTypeInformation topic_info;
-        static T msg{};
-        topic_info.encoding = "proto";
-        topic_info.name = msg.GetTypeName();
-        topic_info.descriptor = protobuf::GetProtoMessageDescription(msg);
-        return topic_info;
-      }
-
-      static bool Deserialize(T& msg_, const void* buffer_, size_t size_)
-      {
-        // we try to parse the message from the received buffer
-        if (msg_.ParseFromArray(buffer_, static_cast<int>(size_)))
-        {
-          return(true);
-        }
-        return(false);
-      }
-    };
-  }
-
   namespace protobuf
   {
-
     /**
      * @brief  eCAL google::protobuf subscriber class.
      *
@@ -82,7 +54,7 @@ namespace eCAL
      *
     **/
     template <typename T>
-    using CSubscriber = CMessageSubscriber<T, internal::ProtobufDeserializer<T>>;
+    using CSubscriber = CMessageSubscriber<T, internal::Serializer<T>>;
 
     /** @example person_rec.cpp
     * This is an example how to use eCAL::CSubscriber to receive google::protobuf data with eCAL. To send the data, see @ref person_snd.cpp .

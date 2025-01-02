@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -568,11 +568,13 @@ set(ecal_header_msg
     include/ecal/msg/protobuf/client.h
     include/ecal/msg/protobuf/dynamic_json_subscriber.h
     include/ecal/msg/protobuf/dynamic_publisher.h
-    include/ecal/msg/protobuf/dynamic_subscriber.h    
+    include/ecal/msg/protobuf/dynamic_subscriber.h
     include/ecal/msg/protobuf/publisher.h
+    include/ecal/msg/protobuf/serializer.h
     include/ecal/msg/protobuf/server.h
     include/ecal/msg/protobuf/subscriber.h
     include/ecal/msg/string/publisher.h
+    include/ecal/msg/string/serializer.h
     include/ecal/msg/string/subscriber.h
     include/ecal/msg/dynamic.h
     include/ecal/msg/publisher.h
