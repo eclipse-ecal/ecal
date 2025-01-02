@@ -46,7 +46,7 @@ namespace eCAL
     
     bool dumpConfigToFile(const eCAL::Configuration& config_, const std::string& file_path_)
     {
-      std::stringstream stream = getConfigAsYamlSS(config_);
+      const std::stringstream stream = getConfigAsYamlSS(config_);
 
       return dumpToFile(stream, file_path_);
     }

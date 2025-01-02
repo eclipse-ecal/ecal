@@ -46,7 +46,7 @@
 namespace
 {
   // get the path separator from the current OS (win: "\\", unix: "/")
-  static const std::string path_separator(1, EcalUtils::Filesystem::NativeSeparator());
+  const std::string path_separator(1, EcalUtils::Filesystem::NativeSeparator());
 
   bool direxists(const std::string& path_)
   {
@@ -243,7 +243,7 @@ namespace
   // returns an empty string if the folder could not be created
   std::string createUniqueTmpFolderName()
   {
-    std::string tmp_dir = getTempDir();
+    const std::string tmp_dir = getTempDir();
   #ifdef ECAL_OS_WINDOWS
     
     char unique_path[MAX_PATH];
@@ -282,7 +282,7 @@ namespace eCAL
   {
     std::string eCALLocalUserDir()
     {
-      std::string userspace_path = getLocalUserPath();
+      const std::string userspace_path = getLocalUserPath();
 
       if (!userspace_path.empty())
       {
@@ -308,7 +308,7 @@ namespace eCAL
     std::string eCALConfigLogDir()
     {
       // check first if the ECAL_LOG environment variable is set
-      std::string env_path = getEnvVar(ECAL_LOG_VAR);
+      const std::string env_path = getEnvVar(ECAL_LOG_VAR);
       if (!env_path.empty()) return env_path;
 
       // check the provided log path and try to create it
@@ -316,7 +316,7 @@ namespace eCAL
       if (!config_log_file_path.empty()) return config_log_file_path;
 
       // check the local user path
-      std::string local_user_path = eCALLocalUserDir();
+      const std::string local_user_path = eCALLocalUserDir();
       if (!local_user_path.empty()) return buildPath(local_user_path, ECAL_FOLDER_NAME_LOG);
     
 
@@ -336,7 +336,7 @@ namespace eCAL
 
     std::string eCALDataSystemDir()
     {
-      std::string system_path = getSystemDir();
+      const std::string system_path = getSystemDir();
       std::string return_path;
 
       if (!system_path.empty())
@@ -382,10 +382,8 @@ namespace eCAL
         if (!dirExistsOrCreate(path_)) return false;
 
         // create also logs directory
-        std::string log_path = buildPath(path_, ECAL_FOLDER_NAME_LOG);
-        if (!dirExistsOrCreate(log_path)) return false;
-    
-        return true;
+        const std::string log_path = buildPath(path_, ECAL_FOLDER_NAME_LOG);
+        return dirExistsOrCreate(log_path);
     }
   } // namespace Config
   

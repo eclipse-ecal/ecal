@@ -9,14 +9,14 @@ int main(int argc, char* argv[]) {
 
   for (int i = 1; i < argc; i++)
   {
-    std::string arg = argv[i];
+    const std::string arg = argv[i];
     if (arg == "--dump" || arg == "-d")
     {
       dump = true;
     }
     else
     {
-      std::cerr << "Unknown argument: " << arg << std::endl;
+      std::cerr << "Unknown argument: " << arg << "\n";
       return 1;
     }
   }
@@ -26,14 +26,14 @@ int main(int argc, char* argv[]) {
   {
     if(!eCAL::Config::dumpConfigToFile())
     {
-      std::cerr << "Failed to write default configuration to file." << std::endl;
+      std::cerr << "Failed to write default configuration to file." << "\n";
       return 1;
     }
 
-    return !eCAL::Config::dumpToFile(eCAL::Config::getTimeConfigAsYamlSS(), "time.yaml");
+    return static_cast<int>(!eCAL::Config::dumpToFile(eCAL::Config::getTimeConfigAsYamlSS(), "time.yaml"));
   }
   
-  std::vector<std::string> dir_paths = 
+  const std::vector<std::string> dir_paths = 
   {
     eCAL::Config::eCALConfigEnvPath(),
     eCAL::Config::eCALLocalUserDir(),
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
     {
       created = true;
       created_path = path;
-      std::cout << "Created eCAL directory structure in: " << path << std::endl;
+      std::cout << "Created eCAL directory structure in: " << path << "\n";
       break;
     }
   }
@@ -58,18 +58,18 @@ int main(int argc, char* argv[]) {
   // dump config to file
   if (!created_path.empty())
   {
-    eCAL::Configuration default_config{};
+    const eCAL::Configuration default_config{};
     if (!eCAL::Config::dumpDefaultConfig(created_path))
     {
-      std::cerr << "Failed to write default configuration to file." << std::endl;
+      std::cerr << "Failed to write default configuration to file." << "\n";
       return 1;
     }
-    return !eCAL::Config::dumpToFile(eCAL::Config::getTimeConfigAsYamlSS(), created_path + "/time.yaml");
+    return static_cast<int>(!eCAL::Config::dumpToFile(eCAL::Config::getTimeConfigAsYamlSS(), created_path + "/time.yaml"));
   }
 
   if (!created)
   {
-    std::cerr << "Failed to create eCAL directory structure." << std::endl;
+    std::cerr << "Failed to create eCAL directory structure." << "\n";
     return 1;
   }
 }
