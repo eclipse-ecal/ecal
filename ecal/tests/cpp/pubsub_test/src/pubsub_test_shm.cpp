@@ -39,9 +39,9 @@ namespace
   // subscriber callback function
   std::atomic<size_t> g_callback_received_bytes;
   std::atomic<size_t> g_callback_received_count;
-  void OnReceive(const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_)
+  void OnReceive(const struct eCAL::SReceiveCallbackData& data_)
   {
-    g_callback_received_bytes += data_->size;
+    g_callback_received_bytes += data_.size;
     g_callback_received_count++;
   }
 }
@@ -65,15 +65,15 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
   pub_config.layer.tcp.enable = false;
 
   // create publisher for topic "A" (no zero copy)
-  eCAL::CPublisher pub1("A", pub_config);
+  eCAL::CPublisher pub1("A", eCAL::SDataTypeInformation(), pub_config);
 
   // switch on zero copy
   pub_config.layer.shm.zero_copy_mode = true;
-  eCAL::CPublisher pub2("A", pub_config);
+  eCAL::CPublisher pub2("A", eCAL::SDataTypeInformation(), pub_config);
 
 
   // add callback
-  EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
+  EXPECT_TRUE(sub.SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3)));
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -82,29 +82,22 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageSHM)
   g_callback_received_count = 0;
 
   // send without zero copy
-  EXPECT_EQ(send_s.size(), pub1.Send(send_s));
+  EXPECT_TRUE(pub1.Send(send_s));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
-  EXPECT_EQ(send_s.size(), pub1.Send(nullptr, 0));
+  EXPECT_TRUE(pub1.Send(nullptr, 0));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // send with zero copy
-  EXPECT_EQ(send_s.size(), pub2.Send(send_s));
+  EXPECT_TRUE(pub2.Send(send_s));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
-  EXPECT_EQ(send_s.size(), pub2.Send(nullptr, 0));
+  EXPECT_TRUE(pub2.Send(nullptr, 0));
   eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
 
   // check callback receive
   EXPECT_EQ(send_s.size(), g_callback_received_bytes);
   EXPECT_EQ(4, g_callback_received_count);
-
-  // destroy subscriber
-  sub.Destroy();
-
-  // destroy publisher
-  pub1.Destroy();
-  pub2.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();

@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ create_targets_protobuf()
 
 set(${PROJECT_NAME}_src
   src/atomic_signalable.h
-  src/clientserver_v5_test.cpp
+  src/clientserver_test.cpp
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${${PROJECT_NAME}_src})

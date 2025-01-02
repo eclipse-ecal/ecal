@@ -63,9 +63,9 @@ namespace eCAL
    * @param unit_name_   Defines the name of the eCAL unit.
    * @param components_  Defines which component to initialize.
    *
-   * @return Zero if succeeded, 1 if already initialized, -1 if failed.
+   * @return True.
   **/
-  ECAL_API int Initialize(const std::string& unit_name_ = "", unsigned int components_ = Init::Default);
+  ECAL_API bool Initialize(const std::string& unit_name_ = "", unsigned int components_ = Init::Default);
 
   /**
    * @brief Initialize eCAL API.
@@ -74,32 +74,32 @@ namespace eCAL
    * @param unit_name_   Defines the name of the eCAL unit.
    * @param components_  Defines which component to initialize.     
    * 
-   * @return Zero if succeeded, 1 if already initialized, -1 if failed.
+   * @return True if succeeded.
   **/
-  ECAL_API int Initialize(eCAL::Configuration& config_, const std::string& unit_name_ = "", unsigned int components_ = Init::Default);
+  ECAL_API bool Initialize(eCAL::Configuration& config_, const std::string& unit_name_ = "", unsigned int components_ = Init::Default);
 
   /**
    * @brief Finalize eCAL API.
    *
-   * @return Zero if succeeded, 1 if already finalized, -1 if failed.
+   * @return True if succeeded.
   **/
-  ECAL_API int Finalize();
+  ECAL_API bool Finalize();
 
   /**
    * @brief Check eCAL initialize state.
    *
-   * @return 1 if eCAL is initialized.
+   * @return True if eCAL is initialized.
   **/
-  ECAL_API int IsInitialized();
+  ECAL_API bool IsInitialized();
 
   /**
    * @brief Check initialization state for a specific component.
    *
    * @param component_  Specific component to check
    *
-   * @return 1 if eCAL component is initialized.
+   * @return True if eCAL component is initialized.
   **/
-  ECAL_API int IsInitialized(unsigned int component_);
+  ECAL_API bool IsInitialized(unsigned int component_);
 
 
   /**
@@ -107,9 +107,9 @@ namespace eCAL
    *
    * @param unit_name_  Defines the name of the eCAL unit. 
    *
-   * @return  Zero if succeeded.
+   * @return True if succeeded.
   **/
-  ECAL_API int SetUnitName(const std::string& unit_name_);
+  ECAL_API bool SetUnitName(const std::string& unit_name_);
 
   /**
    * @brief Return the eCAL process state.

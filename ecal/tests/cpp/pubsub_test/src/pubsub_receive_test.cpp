@@ -69,7 +69,7 @@ void measure_execution_within_range(const std::string& description, std::functio
 TEST(core_cpp_pubsub, TimingSubscriberReceive)
 {
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize("subscriber_receive_timing"));
+  EXPECT_EQ(true, eCAL::Initialize("subscriber_receive_timing"));
 
   // create simple string publisher
   eCAL::string::CPublisher<std::string> pub("CLOCK");
@@ -156,14 +156,14 @@ TEST(core_cpp_pubsub, TimingSubscriberReceive)
   );
   
   // finalize eCAL API
-  EXPECT_EQ(0, eCAL::Finalize());
+  EXPECT_EQ(true, eCAL::Finalize());
 }
 
 // This tests test for sporadically received empty messages which were a problem.
 TEST(core_cpp_pubsub, SporadicEmptyReceives)
 { 
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL::Initialize("sporadic_empty_receives"));
+  EXPECT_EQ(true, eCAL::Initialize("sporadic_empty_receives"));
 
   // create simple string publisher
   eCAL::string::CPublisher<std::string> pub("CLOCK");
@@ -209,5 +209,5 @@ TEST(core_cpp_pubsub, SporadicEmptyReceives)
   sub_t.join();
 
   // finalize eCAL API
-  EXPECT_EQ(0, eCAL::Finalize());
+  EXPECT_EQ(true, eCAL::Finalize());
 }

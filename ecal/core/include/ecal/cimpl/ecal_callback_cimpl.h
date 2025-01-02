@@ -71,19 +71,6 @@ enum eCAL_Server_Event
   server_event_disconnected = 2,
 };
 
-/**
- * @brief eCAL common registration event type.
-**/
-enum eCAL_Registration_Event
-{
-  reg_event_none            = 0,
-  reg_event_publisher       = 1,
-  reg_event_subscriber      = 2,
-  reg_event_service         = 3,
-  reg_event_client          = 5,
-  reg_event_process         = 4,
-};
-
 #ifdef _MSC_VER
 #pragma pack(push, 8)
 #endif

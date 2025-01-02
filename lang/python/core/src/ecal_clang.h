@@ -61,14 +61,14 @@ const char* ecal_getdate();
  * @param argv_        Array of command line arguments.
  * @param unit_name_   Defines the name of the eCAL unit.
  *
- * @return Zero if succeeded, 1 if already initialized, -1 if failed.
+ * @return Zero if succeeded.
 **/
 int ecal_initialize(const char* unit_name_);
 
 /**
  * @brief Finalize eCAL API.
  *
- * @return Zero if succeeded, 1 if already initialized, -1 if failed.
+ * @return Zero if succeeded.
 **/
 int ecal_finalize();
 
@@ -84,7 +84,7 @@ int ecal_is_initialized();
  *
  * @param unit_name_  Defines the name of the eCAL unit.
  *
- * @return  Zero if succeeded.
+ * @return Zero if succeeded.
 **/
 int ecal_set_unit_name(const char *unit_name_);
 
@@ -193,22 +193,12 @@ bool ecal_get_type_encoding(const char* topic_name_, const char** topic_encoding
 **/
 bool ecal_get_description(const char* topic_name_, const char** topic_desc_, int* topic_desc_len_);
 
-/*************************************************************************/
-/*  logging                                                              */
-/*************************************************************************/
-/**
- * @brief Sets the log level.
- *
- * @param level_  The level.
-**/
-void log_setlevel(int level_);
-
 /**
  * @brief Log a message (with current log level).
  *
  * @param message_  The log message string.
 **/
-void log_message(const char* message_);
+void log_message(const eCAL_Logging_eLogLevel& level_, const char* message_);
 
 /*************************************************************************/
 /*  publisher                                                            */
@@ -509,11 +499,6 @@ bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const cha
 **/
 bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_);
 
-/* TODO: not implemented and not used for now */
-//client_add_response_callback
-//client_rem_response_callback
-
-
 /*************************************************************************/
 /*  monitoring                                                           */
 /*************************************************************************/
@@ -530,68 +515,3 @@ int mon_initialize();
  * @return Zero if succeeded, 1 if already initialized, -1 if failed.
 **/
 int mon_finalize();
-
-/**
- * @brief Set topics filter blacklist regular expression.
- *
- * @param filter_  Topic filter as regular expression.
- *
- * @return Zero if succeeded.
-**/
-int mon_set_excl_filter(const char* filter_);
-
-/**
- * @brief Set topics filter whitelist regular expression.
- *
- * @param filter_  Topic filter as regular expression.
- *
- * @return Zero if succeeded.
-**/
-int mon_set_incl_filter(const char* filter_);
-
-/**
- * @brief Switch topics filter using regular expression on/off.
- *
- * @param state_  Filter on / off state.
- *
- * @return Zero if succeeded.
-**/
-int mon_set_filter_state(bool state_);
-
-/**
- * @brief Get monitoring protobuf string.
- *
- * @param [out] mon_buf_      Pointer to store the monitoring information.
- * @param [out] mon_buf_len_  Length of allocated buffer,
- *                            eCAL is allocating the buffer for you, use ecal_free_mem to free the buffer finally.
- *
- * @return  Monitoring buffer length or zero if failed.
-**/
-/**
- * @code
- *            // let eCAL allocate memory for the monitoring buffer and return the pointer to 'buf'
- *            const char* mon_buf_     = NULL;
- *            int         mon_buf_len_ = 0;
- *            mon_get_monitoring(subscriber_handle, &mon_buf_, &mon_buf_len_);
- *            if(mon_buf_len_ > 0)
- *            {
- *              ...
- *              // PROCESS THE BUFFER CONTENT HERE
- *              ...
- *              // finally free the allocated memory
- *              ecal_free_mem(((void*)rcv_buf););
- *            }
- * @endcode
-**/
-int mon_get_monitoring(const char** mon_buf_, int* mon_buf_len_);
-
-/**
- * @brief Get logging string.
- *
- * @param [out] log_buf_      Pointer to store the monitoring information.
- * @param [out] log_buf_len_  Length of allocated buffer,
- *                            eCAL is allocating the buffer for you, use ecal_free_mem to free the buffer finally.
- *
- * @return  Logging buffer length or zero if failed.
-**/
-int mon_get_logging(const char** log_buf_, int* log_buf_len_);

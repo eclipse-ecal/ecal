@@ -26,6 +26,8 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_client_v5.h>
+#include <ecal/ecal_server_v5.h>
+#include <ecal/ecal_subscriber_v5.h>
 
 #include "ecal_clang.h"
 
@@ -63,6 +65,8 @@ typedef std::unordered_map<ECAL_HANDLE, PyObject*> PyClientCallbackMapT;
 PySubscriberCallbackMapT    g_subscriber_pycallback_map;
 PyServerMethodCallbackMapT  g_server_method_pycallback_map;
 PyClientCallbackMapT        g_client_pycallback_map;
+
+eCAL_Logging_eLogLevel      g_python_log_level = log_level_info;
 
 
 /****************************************/
@@ -237,7 +241,7 @@ PyObject* log_setlevel(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "i", &level)) 
     return nullptr;
 
-  log_setlevel(level);
+  g_python_log_level = eCAL_Logging_eLogLevel(level);
 
   Py_RETURN_NONE;
 }
@@ -252,11 +256,10 @@ PyObject* log_message(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "s", &message)) 
     return nullptr;
 
-  log_message(message);
+  log_message(g_python_log_level, message);
 
   Py_RETURN_NONE;
 }
-
 
 /****************************************/
 /*      pub_create                      */
@@ -420,7 +423,7 @@ PyObject* sub_set_callback(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "nO", &topic_handle, &cb_func))
     return nullptr;
 
-  eCAL::CSubscriber* sub = (eCAL::CSubscriber*)topic_handle;
+  eCAL::v5::CSubscriber* sub = (eCAL::v5::CSubscriber*)topic_handle;
   if (!sub)
   {
     return(Py_BuildValue("is", -1, "subscriber invalid"));
@@ -473,7 +476,7 @@ PyObject* sub_rem_callback(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "nO", &topic_handle, &cb_func))
     return nullptr;
 
-  eCAL::CSubscriber* sub = (eCAL::CSubscriber*)topic_handle;
+  eCAL::v5::CSubscriber* sub = (eCAL::v5::CSubscriber*)topic_handle;
   if (!sub)
   {
     return(Py_BuildValue("is", -1, "subscriber invalid"));
@@ -568,7 +571,7 @@ static int c_server_method_callback(const std::string& method_name_, const std::
   PyTuple_SetItem(args, 2, resp_type);
   PyTuple_SetItem(args, 3, request);
 
-  eCAL::CServiceServer* server = (eCAL::CServiceServer*)handle_;
+  eCAL::v5::CServiceServer* server = (eCAL::v5::CServiceServer*)handle_;
   std::string server_method = server->GetServiceName();
   server_method = method_name_ + "@" + server_method;
 
@@ -611,7 +614,7 @@ PyObject* server_add_method_callback(PyObject* /*self*/, PyObject* args)   // (s
   if (!PyArg_ParseTuple(args, "nsssO", &server_handle, &method_name, &req_type, &resp_type, &cb_func))
     return nullptr;
 
-  eCAL::CServiceServer* server = (eCAL::CServiceServer*)server_handle;
+  eCAL::v5::CServiceServer* server = (eCAL::v5::CServiceServer*)server_handle;
   if (!server)
   {
     return(Py_BuildValue("is", -1, "server invalid"));
@@ -665,7 +668,7 @@ PyObject* server_rem_method_callback(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "ns", &server_handle, &method_name))
     return nullptr;
 
-  eCAL::CServiceServer* server = (eCAL::CServiceServer*)server_handle;
+  eCAL::v5::CServiceServer* server = (eCAL::v5::CServiceServer*)server_handle;
   if (!server)
   {
     return(Py_BuildValue("is", -1, "server invalid"));
@@ -950,7 +953,7 @@ PyObject* mon_setexclfilter(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "s", &filter)) 
     return nullptr;
 
-  return(Py_BuildValue("i", eCAL::Monitoring::SetExclFilter(filter)));
+  return(Py_BuildValue("i", static_cast<int>(!eCAL::Monitoring::SetExclFilter(filter))));
 }
 
 /****************************************/
@@ -963,7 +966,7 @@ PyObject* mon_setinclfilter(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "s", &filter)) 
     return nullptr;
 
-  return(Py_BuildValue("i", eCAL::Monitoring::SetInclFilter(filter)));
+  return(Py_BuildValue("i", static_cast<int>(!eCAL::Monitoring::SetInclFilter(filter))));
 }
 
 /****************************************/
@@ -976,14 +979,7 @@ PyObject* mon_setfilterstate(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "i", &state)) 
     return nullptr;
 
-  if (state != 0)
-  {
-    return(Py_BuildValue("i", eCAL::Monitoring::SetFilterState(true)));
-  }
-  else
-  {
-    return(Py_BuildValue("i", eCAL::Monitoring::SetFilterState(false)));
-  }
+  return(Py_BuildValue("i", static_cast<int>(!eCAL::Monitoring::SetFilterState(state != 0))));
 }
 
 /****************************************/
@@ -1060,7 +1056,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
   PyObject* retDict = PyDict_New();
 
   eCAL::Monitoring::SMonitoring monitoring;
-  if (eCAL::Monitoring::GetMonitoring(monitoring) != 0)
+  if (eCAL::Monitoring::GetMonitoring(monitoring))
   {
     PyObject* val;
 
@@ -1266,7 +1262,7 @@ PyObject* mon_logging(PyObject* /*self*/, PyObject* /*args*/)
   PyObject* retList = PyList_New(0);
 
   eCAL::Logging::SLogging logging;
-  if (eCAL::Logging::GetLogging(logging) != 0)
+  if (eCAL::Logging::GetLogging(logging))
   {
     for (const auto& log : logging.log_messages)
     {

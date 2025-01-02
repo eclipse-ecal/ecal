@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,53 +33,53 @@ namespace eCAL
 {
   namespace service
   {
-	class ServiceManager
-	{
-	////////////////////////////////////////////////////////////
-	// Singleton interface, Constructor, destructor
-	////////////////////////////////////////////////////////////
-	public:
-	  static ServiceManager* instance();
+    class ServiceManager
+    {
+      ////////////////////////////////////////////////////////////
+      // Singleton interface, Constructor, destructor
+      ////////////////////////////////////////////////////////////
+    public:
+      static ServiceManager* instance();
 
-  private:
-	  ServiceManager();
+    private:
+      ServiceManager();
 
-	public:
-	  ~ServiceManager();
+    public:
+      ~ServiceManager();
 
-    // Delete copy constructor and assignment operator
-    ServiceManager(const ServiceManager&)            = delete;
-    ServiceManager& operator=(const ServiceManager&) = delete;
+      // Delete copy constructor and assignment operator
+      ServiceManager(const ServiceManager&) = delete;
+      ServiceManager& operator=(const ServiceManager&) = delete;
 
-    // Delete move constructor and assignment operator
-    ServiceManager(ServiceManager&&)            = delete;
-    ServiceManager& operator=(ServiceManager&&) = delete;
+      // Delete move constructor and assignment operator
+      ServiceManager(ServiceManager&&) = delete;
+      ServiceManager& operator=(ServiceManager&&) = delete;
 
-	////////////////////////////////////////////////////////////
-	// Public API
-	////////////////////////////////////////////////////////////
-	public:
-	  std::shared_ptr<eCAL::service::ClientManager> get_client_manager();
-	  std::shared_ptr<eCAL::service::ServerManager> get_server_manager();
+      ////////////////////////////////////////////////////////////
+      // Public API
+      ////////////////////////////////////////////////////////////
+    public:
+      std::shared_ptr<eCAL::service::ClientManager> get_client_manager();
+      std::shared_ptr<eCAL::service::ServerManager> get_server_manager();
 
-	  void stop();
-	  void reset();
+      void stop();
+      void reset();
 
-	////////////////////////////////////////////////////////////
-	// Member variables
-	////////////////////////////////////////////////////////////
-	private:
-	  static constexpr size_t num_io_threads = 4;
+      ////////////////////////////////////////////////////////////
+      // Member variables
+      ////////////////////////////////////////////////////////////
+    private:
+      static constexpr size_t num_io_threads = 4;
 
-	  std::mutex                                    singleton_mutex;
+      std::mutex                                    m_singleton_mutex;
 
-      std::atomic<bool>                             stopped;
-      std::shared_ptr<asio::io_context>             io_context;
-      std::vector<std::unique_ptr<std::thread>>     io_threads;
+      std::atomic<bool>                             m_stopped;
+      std::shared_ptr<asio::io_context>             m_io_context;
+      std::vector<std::unique_ptr<std::thread>>     m_io_threads;
 
-	  std::shared_ptr<eCAL::service::ClientManager> client_manager;
-      std::shared_ptr<eCAL::service::ServerManager> server_manager;
-	};
+      std::shared_ptr<eCAL::service::ClientManager> m_client_manager;
+      std::shared_ptr<eCAL::service::ServerManager> m_server_manager;
+    };
 
   }
 }

@@ -69,7 +69,6 @@ set(ecal_config_src
     src/config/ecal_config.cpp
     src/config/ecal_config_initializer.cpp
     src/config/ecal_path_processing.cpp
-    src/config/transport_layer.cpp
     src/types/ecal_custom_data_types.cpp
 )
 if (ECAL_CORE_CONFIGURATION)
@@ -207,6 +206,9 @@ endif()
 if(ECAL_CORE_PUBLISHER)
   set(ecal_pub_src
       src/pubsub/ecal_publisher.cpp
+      src/pubsub/ecal_publisher_impl.cpp
+      src/pubsub/ecal_publisher_impl.h
+      src/pubsub/ecal_publisher_v5.cpp
       src/pubsub/ecal_pubgate.cpp
       src/pubsub/ecal_pubgate.h
   )
@@ -215,6 +217,9 @@ endif()
 if(ECAL_CORE_SUBSCRIBER)
   set(ecal_sub_src
       src/pubsub/ecal_subscriber.cpp
+      src/pubsub/ecal_subscriber_impl.cpp
+      src/pubsub/ecal_subscriber_impl.h
+      src/pubsub/ecal_subscriber_v5.cpp
       src/pubsub/ecal_subgate.cpp
       src/pubsub/ecal_subgate.h
   )
@@ -229,8 +234,6 @@ set(ecal_readwrite_src
 
 if(ECAL_CORE_PUBLISHER)
   set(ecal_writer_src
-      src/readwrite/ecal_writer.cpp
-      src/readwrite/ecal_writer.h
       src/readwrite/ecal_writer_base.h
       src/readwrite/ecal_writer_buffer_payload.h
       src/readwrite/ecal_writer_data.h
@@ -259,8 +262,6 @@ endif()
 
 if(ECAL_CORE_SUBSCRIBER)
   set(ecal_reader_src
-      src/readwrite/ecal_reader.cpp
-      src/readwrite/ecal_reader.h
       src/readwrite/ecal_reader_layer.h
   )
   if(ECAL_CORE_TRANSPORT_UDP)
@@ -298,9 +299,7 @@ if (ECAL_CORE_REGISTRATION)
       src/registration/ecal_registration_sample_applier.cpp
       src/registration/ecal_registration_sample_applier.h
       src/registration/ecal_registration_sample_applier_gates.cpp
-      src/registration/ecal_registration_sample_applier_gates.h      
-      src/registration/ecal_registration_sample_applier_user.cpp
-      src/registration/ecal_registration_sample_applier_user.h
+      src/registration/ecal_registration_sample_applier_gates.h
       src/registration/ecal_registration_timeout_provider.cpp
       src/registration/ecal_registration_timeout_provider.h
       src/registration/ecal_registration_sender.h
@@ -392,6 +391,9 @@ if(ECAL_CORE_SERVICE)
       src/service/ecal_service_server.cpp
       src/service/ecal_service_server_impl.cpp
       src/service/ecal_service_server_impl.h
+      src/service/ecal_service_server_v5.cpp
+      src/service/ecal_service_server_v5_impl.cpp
+      src/service/ecal_service_server_v5_impl.h
       src/service/ecal_service_singleton_manager.cpp
       src/service/ecal_service_singleton_manager.h
   )
@@ -514,7 +516,6 @@ set(ecal_header_cmn
     include/ecal/config/monitoring.h
     include/ecal/config/publisher.h
     include/ecal/config/registration.h
-    include/ecal/config/service.h
     include/ecal/config/subscriber.h
     include/ecal/config/time.h
     include/ecal/config/transport_layer.h
@@ -539,9 +540,12 @@ set(ecal_header_cmn
     include/ecal/ecal_process_severity.h
     include/ecal/ecal_registration.h
     include/ecal/ecal_publisher.h
+    include/ecal/ecal_publisher_v5.h
     include/ecal/ecal_server.h
+    include/ecal/ecal_server_v5.h
     include/ecal/ecal_service_info.h
     include/ecal/ecal_subscriber.h
+    include/ecal/ecal_subscriber_v5.h
     include/ecal/ecal_time.h
     include/ecal/ecal_timer.h
     include/ecal/ecal_tlayer.h

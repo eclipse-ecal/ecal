@@ -59,7 +59,7 @@ PluginWidget::PluginWidget(const QString& topic_name, const QString&, QWidget* p
   ui_.content_layout->addWidget(frame);
 
   // Connect the eCAL Subscriber
-  subscriber_.AddReceiveCallback([this](const eCAL::Registration::STopicId& /*topic_id*/,
+  subscriber_.SetReceiveCallback([this](const eCAL::Registration::STopicId& /*topic_id*/,
     const eCAL::SDataTypeInformation& /*data_type_info*/,
     const eCAL::SReceiveCallbackData& callback_data)
     {
@@ -69,7 +69,7 @@ PluginWidget::PluginWidget(const QString& topic_name, const QString&, QWidget* p
 
 PluginWidget::~PluginWidget()
 {
-  subscriber_.RemReceiveCallback();
+  subscriber_.RemoveReceiveCallback();
 }
 
 void PluginWidget::ecalMessageReceivedCallback(const eCAL::SReceiveCallbackData& callback_data)
@@ -134,7 +134,7 @@ void PluginWidget::onUpdate()
 void PluginWidget::onResume()
 {
   // (Re)Connect the eCAL Subscriber
-  subscriber_.AddReceiveCallback([this](const eCAL::Registration::STopicId& /*topic_id*/,
+  subscriber_.SetReceiveCallback([this](const eCAL::Registration::STopicId& /*topic_id*/,
     const eCAL::SDataTypeInformation& /*data_type_info*/,
     const eCAL::SReceiveCallbackData& callback_data)
     {
@@ -144,7 +144,7 @@ void PluginWidget::onResume()
 
 void PluginWidget::onPause()
 {
-  subscriber_.RemReceiveCallback();
+  subscriber_.RemoveReceiveCallback();
 }
 
 void PluginWidget::updateRawMessageView()

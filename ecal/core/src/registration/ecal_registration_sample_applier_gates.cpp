@@ -51,18 +51,18 @@ namespace eCAL
         break;
 #if ECAL_CORE_PUBLISHER
       case bct_reg_subscriber:
-        if (g_pubgate() != nullptr) g_pubgate()->ApplySubRegistration(sample_);
+        if (g_pubgate() != nullptr) g_pubgate()->ApplySubscriberRegistration(sample_);
         break;
       case bct_unreg_subscriber:
-        if (g_pubgate() != nullptr) g_pubgate()->ApplySubUnregistration(sample_);
+        if (g_pubgate() != nullptr) g_pubgate()->ApplySubscriberUnregistration(sample_);
         break;
 #endif
 #if ECAL_CORE_SUBSCRIBER
       case bct_reg_publisher:
-        if (g_subgate() != nullptr) g_subgate()->ApplyPubRegistration(sample_);
+        if (g_subgate() != nullptr) g_subgate()->ApplyPublisherRegistration(sample_);
         break;
       case bct_unreg_publisher:
-        if (g_subgate() != nullptr) g_subgate()->ApplyPubUnregistration(sample_);
+        if (g_subgate() != nullptr) g_subgate()->ApplyPublisherUnregistration(sample_);
         break;
 #endif
       default:

@@ -82,7 +82,7 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
   }
 
   // Initialize ecal api with custom config
-  EXPECT_EQ(0, eCAL::Initialize(custom_config, "User Config Passing Test", eCAL::Init::Default));
+  EXPECT_EQ(true, eCAL::Initialize(custom_config, "User Config Passing Test", eCAL::Init::Default));
 
   // Test boolean assignment, default is false
   EXPECT_EQ(drop_out_of_order_messages, eCAL::GetConfiguration().subscriber.drop_out_of_order_messages);
@@ -107,7 +107,7 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
   EXPECT_EQ(registration_refresh, eCAL::GetConfiguration().registration.registration_refresh);
 
   // Finalize eCAL API
-  EXPECT_EQ(0, eCAL::Finalize());
+  EXPECT_EQ(true, eCAL::Finalize());
 }
 
 TEST(core_cpp_config /*unused*/, user_config_death_test /*unused*/)

@@ -103,35 +103,17 @@ void Util::ShutdownProcesses()
 /////////////////////////////////////////////////////////////////////////////
 // Logger
 /////////////////////////////////////////////////////////////////////////////
-void Logger::SetLogLevel(LogLevel level_)
-{
-  switch(level_)
-  {
-  case info:
-    ::eCAL::Logging::SetLogLevel(log_level_info);
-    break;
-  case warning:
-    ::eCAL::Logging::SetLogLevel(log_level_warning);
-    break;
-  case error:
-    ::eCAL::Logging::SetLogLevel(log_level_error);
-    break;
-  case fatal:
-    ::eCAL::Logging::SetLogLevel(log_level_fatal);
-    break;
-  }
-}
 
 void Logger::Log(System::String^ message_)
 {
-  ::eCAL::Logging::Log(StringToStlString(message_));
+  ::eCAL::Logging::Log(log_level_all, StringToStlString(message_));
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
 // Publisher
 /////////////////////////////////////////////////////////////////////////////
-Publisher::Publisher() : m_pub(new ::eCAL::CPublisher())
+Publisher::Publisher() : m_pub(new ::eCAL::v5::CPublisher())
 {
 }
 
@@ -141,7 +123,7 @@ Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, S
   topic_info.name       = StringToStlString(topic_type_);
   topic_info.encoding   = StringToStlString(topic_encoding_);
   topic_info.descriptor = StringToStlString(topic_desc_);
-  m_pub = new ::eCAL::CPublisher(StringToStlString(topic_name_), topic_info);
+  m_pub = new ::eCAL::v5::CPublisher(StringToStlString(topic_name_), topic_info);
 }
 
 Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, array<Byte>^ topic_desc_)
@@ -150,7 +132,7 @@ Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, S
   topic_info.name       = StringToStlString(topic_type_);
   topic_info.encoding   = StringToStlString(topic_encoding_);
   topic_info.descriptor = ByteArrayToStlString(topic_desc_);
-  m_pub = new ::eCAL::CPublisher(StringToStlString(topic_name_), topic_info);
+  m_pub = new ::eCAL::v5::CPublisher(StringToStlString(topic_name_), topic_info);
 }
 
 Publisher::~Publisher()
@@ -214,7 +196,7 @@ System::String^ Publisher::Dump()
 /////////////////////////////////////////////////////////////////////////////
 // Subscriber
 /////////////////////////////////////////////////////////////////////////////
-Subscriber::Subscriber() : m_sub(new ::eCAL::CSubscriber())
+Subscriber::Subscriber() : m_sub(new ::eCAL::v5::CSubscriber())
 {
 }
 
@@ -224,7 +206,7 @@ Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_,
   topic_info.name       = StringToStlString(topic_type_);
   topic_info.encoding   = StringToStlString(topic_encoding_);
   topic_info.descriptor = StringToStlString(topic_desc_);
-  m_sub = new ::eCAL::CSubscriber(StringToStlString(topic_name_), topic_info);
+  m_sub = new ::eCAL::v5::CSubscriber(StringToStlString(topic_name_), topic_info);
 }
 
 Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_encoding_, array<Byte>^ topic_desc_)
@@ -233,7 +215,7 @@ Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_,
   topic_info.name       = StringToStlString(topic_type_);
   topic_info.encoding   = StringToStlString(topic_encoding_);
   topic_info.descriptor = ByteArrayToStlString(topic_desc_);
-  m_sub = new ::eCAL::CSubscriber(StringToStlString(topic_name_), topic_info);
+  m_sub = new ::eCAL::v5::CSubscriber(StringToStlString(topic_name_), topic_info);
 }
 
 Subscriber::~Subscriber()
@@ -398,13 +380,13 @@ void Subscriber::OnReceiveUnsafe(const char* topic_name_, const ::eCAL::SReceive
 /////////////////////////////////////////////////////////////////////////////
 // ServiceServer
 /////////////////////////////////////////////////////////////////////////////
-ServiceServer::ServiceServer() : m_serv(new ::eCAL::CServiceServer())
+ServiceServer::ServiceServer() : m_serv(new ::eCAL::v5::CServiceServer())
 {
 }
 
 ServiceServer::ServiceServer(System::String^ server_name_)
 {
-  m_serv = new ::eCAL::CServiceServer(StringToStlString(server_name_));
+  m_serv = new ::eCAL::v5::CServiceServer(StringToStlString(server_name_));
 }
 
 ServiceServer::~ServiceServer()

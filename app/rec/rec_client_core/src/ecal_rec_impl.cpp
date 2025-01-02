@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -695,12 +695,12 @@ namespace eCAL
       return subscribed_topics;
     }
 
-    void EcalRecImpl::EcalMessageReceived(const char* topic_name, const eCAL::SReceiveCallbackData* callback_data)
+    void EcalRecImpl::EcalMessageReceived(const eCAL::Registration::STopicId& topic_id_, const eCAL::SReceiveCallbackData& data_)
     {
       auto ecal_receive_time   = eCAL::Time::ecal_clock::now();
       auto system_receive_time = std::chrono::steady_clock::now();
 
-      std::shared_ptr<Frame> frame = std::make_shared<Frame>(callback_data, topic_name, ecal_receive_time, system_receive_time);
+      std::shared_ptr<Frame> frame = std::make_shared<Frame>(&data_, topic_id_.topic_name, ecal_receive_time, system_receive_time);
 
       pre_buffer_.push_back(frame);
 
@@ -821,14 +821,14 @@ namespace eCAL
         if (subscriber_map_.find(topic) == subscriber_map_.end())
         {
           EcalRecLogger::Instance()->info("Subscribing to " + topic);
-          std::unique_ptr<eCAL::CSubscriber> subscriber = std::make_unique<eCAL::CSubscriber>();
-          if (!subscriber->Create(topic))
+          std::unique_ptr<eCAL::CSubscriber> subscriber = std::make_unique<eCAL::CSubscriber>(topic);
+          if (!subscriber)
           {
             EcalRecLogger::Instance()->error("Error creating subscriber for topic " + topic);
             info_ = { false, "Error creating eCAL subsribers" };
             continue;
           }
-          if (!subscriber->AddReceiveCallback(std::bind(&EcalRecImpl::EcalMessageReceived, this, std::placeholders::_1, std::placeholders::_2)))
+          if (!subscriber->SetReceiveCallback(std::bind(&EcalRecImpl::EcalMessageReceived, this, std::placeholders::_1, std::placeholders::_3)))
           {
             EcalRecLogger::Instance()->error("Error adding callback for subscriber on topic " + topic);
             info_ = { false, "Error creating eCAL subsribers" };
@@ -848,7 +848,6 @@ namespace eCAL
         {
           EcalRecLogger::Instance()->info("Unsubscribing from " + subscriber_it->first);
 
-          subscriber_it->second->Destroy();
           subscriber_it = subscriber_map_.erase(subscriber_it);
         }
         else

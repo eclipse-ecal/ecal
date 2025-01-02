@@ -61,7 +61,6 @@ namespace eCAL
       std::string            host_name;
       std::string            process_name;
       std::string            unit_name;
-      eCAL_Logging_eLogLevel level;
     };
   }
 }

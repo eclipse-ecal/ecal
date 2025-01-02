@@ -67,7 +67,7 @@ extern "C"
    * @param unit_name_   Defines the name of the eCAL unit. 
    * @param components_  Defines which component to initialize.
    *
-   * @return Zero if succeeded, 1 if already initialized, -1 if failed.
+   * @return Zero if succeeded.
   **/
   ECALC_API int eCAL_Initialize(const char *unit_name_, unsigned int components_);
 
@@ -83,21 +83,21 @@ extern "C"
   /**
    * @brief Finalize eCAL API.
    *
-   * @return Zero if succeeded, 1 if already finalized, -1 if failed.
+   * @return Zero if succeeded.
   **/
   ECALC_API int eCAL_Finalize();
 
   /**
    * @brief Check eCAL initialize state.
    *
-   * @return None zero if eCAL is initialized.
+   * @return Non-zero if eCAL is initialized.
   **/
   ECALC_API int eCAL_IsInitialized();
 
   /**
    * @brief Return the eCAL process state.
    *
-   * @return  None zero if eCAL is in proper state. 
+   * @return Non-zero if eCAL is in proper state. 
   **/
   ECALC_API int eCAL_Ok();
 

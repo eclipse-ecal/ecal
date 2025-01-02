@@ -47,7 +47,7 @@ public:
     eCAL::Finalize();
   }
 
-  size_t SendPerson(eCAL::protobuf::CPublisher<pb::People::Person>& pub)
+  bool SendPerson(eCAL::protobuf::CPublisher<pb::People::Person>& pub)
   {
     p.set_id(1);
     p.set_name("Max");
@@ -87,11 +87,10 @@ TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_SendReceive)
 
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
-  auto bytes_send = SendPerson(person_pub);
+  ASSERT_TRUE(SendPerson(person_pub));
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   // assert that the OnPerson callback has been called once.
   ASSERT_EQ(1, received_callbacks);
-  ASSERT_EQ(bytes_send, GetPersonSize());
 }
 
 TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveAssignment)
@@ -119,7 +118,7 @@ TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveAssignment)
 
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
-  SendPerson(person_pub);
+  ASSERT_TRUE(SendPerson(person_pub));
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   // assert that the OnPerson callback has been called once.
   ASSERT_EQ(1, received_callbacks);
@@ -145,7 +144,7 @@ TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveConstruction)
 
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
-  SendPerson(person_pub);
+  ASSERT_TRUE(SendPerson(person_pub));
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   // assert that the OnPerson callback has been called once.
   ASSERT_EQ(1, received_callbacks);

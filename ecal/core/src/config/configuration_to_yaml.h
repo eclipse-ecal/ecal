@@ -110,11 +110,11 @@ namespace YAML
   };
 
   template<>
-  struct convert<eCAL::TransportLayer::UDP::Network::Configuration>
+  struct convert<eCAL::TransportLayer::UDP::MulticastConfiguration>
   {
-    static Node encode(const eCAL::TransportLayer::UDP::Network::Configuration& config_);
+    static Node encode(const eCAL::TransportLayer::UDP::MulticastConfiguration& config_);
 
-    static bool decode(const Node& node_, eCAL::TransportLayer::UDP::Network::Configuration& config_);
+    static bool decode(const Node& node_, eCAL::TransportLayer::UDP::MulticastConfiguration& config_);
   };
 
   template<>
@@ -240,21 +240,6 @@ namespace YAML
     static Node encode(const eCAL::Time::Configuration& config_);
 
     static bool decode(const Node& node_, eCAL::Time::Configuration& config_);
-  };
-
-
-  /*
-       ____             _        
-      / __/__ _____  __(_)______ 
-     _\ \/ -_) __/ |/ / / __/ -_)
-    /___/\__/_/  |___/_/\__/\__/                             
-  */
-  template<>
-  struct convert<eCAL::Service::Configuration>
-  {
-    static Node encode(const eCAL::Service::Configuration& config_);
-
-    static bool decode(const Node& node_, eCAL::Service::Configuration& config_);
   };
 
 

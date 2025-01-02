@@ -62,16 +62,16 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
   pub_config.layer.shm.acknowledge_timeout_ms = 100;
 
   // create publisher
-  eCAL::CPublisher pub("throughput", pub_config);
+  eCAL::CPublisher pub("throughput", eCAL::SDataTypeInformation(), pub_config);
 
   // create subscriber
   eCAL::CSubscriber sub("throughput");
   // add callback
   std::atomic<size_t> received_bytes;
-  auto on_receive = [&](const struct eCAL::SReceiveCallbackData* data_) {
-    received_bytes += data_->size;
+  auto on_receive = [&](const struct eCAL::SReceiveCallbackData& data_) {
+    received_bytes += data_.size;
   };
-  sub.AddReceiveCallback(std::bind(on_receive, std::placeholders::_2));
+  sub.SetReceiveCallback(std::bind(on_receive, std::placeholders::_3));
 
   // let's match them
   eCAL::Process::SleepMS(2000);

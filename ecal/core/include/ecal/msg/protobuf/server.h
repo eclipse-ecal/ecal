@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <ecal/ecal_server.h>
+#include <ecal/ecal_server_v5.h>
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
 #include <functional>
 
@@ -51,7 +51,7 @@ namespace eCAL
      * @brief Google Protobuf Server wrapper class.
     **/
     template <typename T>
-    class CServiceServer : public eCAL::CServiceServer
+    class CServiceServer : public eCAL::v5::CServiceServer
     {
     public:
       /**
@@ -179,7 +179,7 @@ namespace eCAL
         return true;
       }
 
-      using eCAL::CServiceServer::Create;
+      using eCAL::v5::CServiceServer::Create;
 
     protected:
       int RequestCallback(const std::string& method_, const std::string& /*req_type_*/, const std::string& /*resp_type_*/, const std::string& request_, std::string& response_)
@@ -217,9 +217,9 @@ namespace eCAL
       std::map<std::string, const google::protobuf::MethodDescriptor*>  m_methods;
 
       private:
-        using eCAL::CServiceServer::AddMethodCallback;
-        using eCAL::CServiceServer::RemMethodCallback;
-        using eCAL::CServiceServer::GetServiceName;
+        using eCAL::v5::CServiceServer::AddMethodCallback;
+        using eCAL::v5::CServiceServer::RemMethodCallback;
+        using eCAL::v5::CServiceServer::GetServiceName;
     };
   }
 }

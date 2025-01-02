@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,29 +16,35 @@
 #
 # ========================= eCAL LICENSE =================================
 
-cmake_minimum_required(VERSION 3.10)
+project(test_pubsub_v5)
 
-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
+find_package(Threads REQUIRED)
+find_package(GTest REQUIRED)
 
-project(monitoring_reg)
+if(ECAL_CORE_TRANSPORT_SHM)
+  set(pubsub_test_src_shm
+    src/pubsub_connection_test.cpp
+  )
+endif()
 
-find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
-
-set(monitoring_reg_src
-    src/monitoring_reg.cpp
+set(pubsub_test_src
+  src/pubsub_callback_topicid.cpp
+  ${pubsub_test_src_shm}
 )
 
-ecal_add_sample(${PROJECT_NAME} ${monitoring_reg_src})
+ecal_add_gtest(${PROJECT_NAME} ${pubsub_test_src})
 
 target_link_libraries(${PROJECT_NAME}
+  PRIVATE
     eCAL::core
-    eCAL::core_pb
-    protobuf::libprotobuf
-)
+    Threads::Threads)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
-ecal_install_sample(${PROJECT_NAME})
+ecal_install_gtest(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/monitoring)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/pubsub)
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
+    ${${PROJECT_NAME}_src}
+)
