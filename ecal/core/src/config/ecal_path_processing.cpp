@@ -308,7 +308,7 @@ namespace eCAL
     std::string eCALConfigLogDir()
     {
       // check first if the ECAL_LOG environment variable is set
-      const std::string env_path = getEnvVar(ECAL_LOG_VAR);
+      std::string env_path = getEnvVar(ECAL_LOG_VAR);
       if (!env_path.empty()) return env_path;
 
       // check the provided log path and try to create it
