@@ -48,13 +48,13 @@ namespace
   // get the path separator from the current OS (win: "\\", unix: "/")
   const std::string path_separator(1, EcalUtils::Filesystem::NativeSeparator());
 
-  bool direxists(const std::string& path_)
+  bool dirExists(const std::string& path_)
   {
     const EcalUtils::Filesystem::FileStatus status(path_, EcalUtils::Filesystem::Current);
     return (status.IsOk() && (status.GetType() == EcalUtils::Filesystem::Type::Dir));
   }
 
-  bool createdir(const std::string& path_)
+  bool createDir(const std::string& path_)
   {
     return EcalUtils::Filesystem::MkDir(path_, EcalUtils::Filesystem::Current);
   }
@@ -62,8 +62,8 @@ namespace
   bool dirExistsOrCreate(const std::string& path_)
   {
     if (path_.empty())    return false;
-    if (direxists(path_)) return true;
-    if (createdir(path_)) return true;
+    if (dirExists(path_)) return true;
+    if (createDir(path_)) return true;
     return false;
   }
 
@@ -193,7 +193,7 @@ namespace
   #elif defined(ECAL_OS_LINUX)
   
     // TODO PG: Check if we really want to give that back here
-    if (direxists(ECAL_LINUX_SYSTEM_PATH)) 
+    if (dirExists(ECAL_LINUX_SYSTEM_PATH)) 
       return ECAL_LINUX_SYSTEM_PATH;
   
   #endif /* ECAL_OS_LINUX */
@@ -218,7 +218,7 @@ namespace
         if (!appdata_path.empty())
         {
           std::string apdata_tmp_path = buildPath(appdata_path, ECAL_FOLDER_NAME_TMP_WINDOWS);
-          if (direxists(apdata_tmp_path))
+          if (dirExists(apdata_tmp_path))
           {
             return apdata_tmp_path;
           }
@@ -228,7 +228,7 @@ namespace
   #elif defined(ECAL_OS_LINUX)
 
       std::string env_tmp_dir = getEnvVar(ECAL_LINUX_TMP_VAR);
-      if (!env_tmp_dir.empty() && direxists(env_tmp_dir))
+      if (!env_tmp_dir.empty() && dirExists(env_tmp_dir))
       {
         return env_tmp_dir;
       }
@@ -253,7 +253,7 @@ namespace
       return {};
     }
 
-    // Delete the temporary file and use the name as a directory
+    // delete the temporary file and use the name as a directory
     DeleteFileA(unique_path);
     if (!CreateDirectoryA(unique_path, nullptr)) {
        return {};
@@ -389,10 +389,6 @@ namespace eCAL
   
   namespace Util
   {
-    // Check for the existence of a valid ecal.yaml file by checking the following paths:
-    // 1. ECAL_CONFIG environment varible path if set
-    // 2. local user path
-    // 3. system path like /etc, ProgramData
     std::string GeteCALConfigDir()
     {
       // Return the possible default paths that could contain the yaml file
@@ -404,10 +400,10 @@ namespace eCAL
 
     std::string GeteCALLogDir()
     {      
-      // get possible log paths in order Environment, Configuration, ecal config dir, temp dir
+      // get possible log path in order Environment, Configuration, ecal config dir, temp dir
       std::string log_path = eCAL::Config::eCALConfigLogDir();
       
-      if (dirExistsOrCreate(log_path)) return log_path;
+      if (dirExists(log_path)) return log_path;
 
       // if user has no write access at all, return empty string
       return {};
