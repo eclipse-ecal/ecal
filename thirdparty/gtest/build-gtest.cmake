@@ -3,7 +3,6 @@ include_guard(GLOBAL)
 # Googletest automatically forces MT instead of MD if we do not set this option.
 if(MSVC)
   set(gtest_force_shared_crt ON CACHE BOOL "My option" FORCE)
-  set(BUILD_GMOCK OFF CACHE BOOL "My option" FORCE)
   set(INSTALL_GTEST OFF CACHE BOOL "My option" FORCE)
 endif()
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/googletest thirdparty/googletest EXCLUDE_FROM_ALL SYSTEM)
