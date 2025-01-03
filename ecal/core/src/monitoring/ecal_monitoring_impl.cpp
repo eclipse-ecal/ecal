@@ -213,7 +213,7 @@ namespace eCAL
       const std::string& host_group_name = sample_topic.hgname;
       const std::string& process_name    = sample_topic.pname;
       const std::string& unit_name       = sample_topic.uname;
-      const std::string& topic_id        = sample_.identifier.entity_id;
+      const auto&        topic_id        = sample_.identifier.entity_id;
       std::string        direction;
       switch (pubsub_type_)
       {
@@ -232,7 +232,7 @@ namespace eCAL
       auto        attr                    = sample_topic.attr;
 
       // try to get topic info
-      const std::string& topic_map_key  = topic_id;
+      const auto& topic_map_key  = topic_id;
       Monitoring::STopicMon& TopicInfo = (*pTopicMap->map)[topic_map_key];
 
       // set static content
@@ -292,7 +292,7 @@ namespace eCAL
 
   bool CMonitoringImpl::UnregisterTopic(const Registration::Sample& sample_, enum ePubSub pubsub_type_)
   {
-    const std::string& topic_map_key = sample_.identifier.entity_id;
+    const auto& topic_map_key = sample_.identifier.entity_id;
 
     // unregister from topic map
     STopicMonMap* pTopicMap = GetMap(pubsub_type_);
@@ -328,13 +328,13 @@ namespace eCAL
     const std::string&    ecal_runtime_version         = sample_process.ecal_runtime_version;
 
     // create map key
-    const std::string process_name_id = process_name + std::to_string(process_id);
+    const auto& process_map_key = sample_.identifier.entity_id;
 
     // acquire access
     const std::lock_guard<std::mutex> lock(m_process_map.sync);
 
     // try to get process info
-    Monitoring::SProcessMon& ProcessInfo = (*m_process_map.map)[process_name_id];
+    Monitoring::SProcessMon& ProcessInfo = (*m_process_map.map)[process_map_key];
 
     // set static content
     ProcessInfo.hname  = host_name;
@@ -360,18 +360,13 @@ namespace eCAL
 
   bool CMonitoringImpl::UnregisterProcess(const Registration::Sample& sample_)
   {
-    const auto& sample_process = sample_.process;
-    const std::string& process_name = sample_process.pname;
-    const int          process_id   = sample_.identifier.process_id;
-
-    // create map key
-    const std::string process_name_id = process_name + std::to_string(process_id);
+    const auto& process_map_key = sample_.identifier.entity_id;
 
     // acquire access
     const std::lock_guard<std::mutex> lock(m_process_map.sync);
 
     // remove process info
-    m_process_map.map->erase(process_name_id);
+    m_process_map.map->erase(process_map_key);
 
     return(true);
   }
@@ -379,7 +374,7 @@ namespace eCAL
   bool CMonitoringImpl::RegisterServer(const Registration::Sample& sample_)
   {
     const auto& sample_identifier = sample_.identifier;
-    const std::string& service_id = sample_identifier.entity_id;
+    const auto&        service_id = sample_.identifier.entity_id;
     const int32_t      process_id = sample_identifier.process_id;
     const std::string& host_name  = sample_identifier.host_name;
 
@@ -392,7 +387,7 @@ namespace eCAL
     const uint32_t     tcp_port_v1  = sample_service.tcp_port_v1;
 
     // create map key
-    const std::string& service_map_key = service_id;
+    const auto& service_map_key = service_id;
 
     // acquire access
     const std::lock_guard<std::mutex> lock(m_server_map.sync);
@@ -431,7 +426,7 @@ namespace eCAL
   bool CMonitoringImpl::UnregisterServer(const Registration::Sample& sample_)
   {
     // create map key
-    const std::string& service_map_key = sample_.identifier.entity_id;
+    const auto& service_map_key = sample_.identifier.entity_id;
 
     // acquire access
     const std::lock_guard<std::mutex> lock(m_server_map.sync);
@@ -445,7 +440,7 @@ namespace eCAL
   bool CMonitoringImpl::RegisterClient(const Registration::Sample& sample_)
   {
     const auto& sample_identifier = sample_.identifier;
-    const std::string& service_id = sample_identifier.entity_id;
+    const auto&        service_id = sample_identifier.entity_id;
     const int32_t      process_id = sample_identifier.process_id;
     const std::string& host_name  = sample_identifier.host_name;
 
@@ -455,7 +450,7 @@ namespace eCAL
     const std::string& unit_name    = sample_client.uname;
 
     // create map key
-    const std::string& client_map_key = service_id;
+    const auto& client_map_key = service_id;
 
     // acquire access
     const std::lock_guard<std::mutex> lock(m_clients_map.sync);
@@ -492,7 +487,7 @@ namespace eCAL
   bool CMonitoringImpl::UnregisterClient(const Registration::Sample& sample_)
   {
     // create map key
-    const std::string& client_map_key = sample_.identifier.entity_id;
+    const auto& client_map_key = sample_.identifier.entity_id;
 
     // acquire access
     const std::lock_guard<std::mutex> lock(m_clients_map.sync);
