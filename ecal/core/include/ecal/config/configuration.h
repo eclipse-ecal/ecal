@@ -28,7 +28,6 @@
 #include <ecal/config/monitoring.h>
 #include <ecal/config/registration.h>
 #include <ecal/config/logging.h>
-#include <ecal/config/user_arguments.h>
 #include <ecal/config/publisher.h>
 #include <ecal/config/subscriber.h>
 #include <ecal/config/time.h>
@@ -55,7 +54,6 @@ namespace eCAL
     Time::Configuration           timesync;
     Application::Configuration    application;
     Logging::Configuration        logging;
-    Cli::Configuration            command_line_arguments;
 
     ECAL_API Configuration();
 
