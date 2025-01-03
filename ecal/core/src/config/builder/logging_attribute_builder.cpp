@@ -21,7 +21,7 @@ namespace eCAL
       attributes.file_sink.enabled       = log_config_.provider.file.enable;
       attributes.file_sink.filter_log    = log_config_.provider.file.filter_log;
       
-      attributes.file_config.path        = log_config_.provider.file_config.path.empty() ? Util::GeteCALLogDir() : log_config_.provider.file_config.path;
+      attributes.file_config.path        = Util::GeteCALLogDir();
 
       attributes.console_sink.enabled    = log_config_.provider.console.enable;
       attributes.console_sink.filter_log = log_config_.provider.console.filter_log;

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,10 @@
  * @brief  eCAL config path processing function collection
 **/
 
+#pragma once
+
 #include <string>
+#include <vector>
 
 namespace eCAL
 {
@@ -41,7 +44,6 @@ namespace eCAL
    *                     Returns empty string if non could be found.
    */
     std::string checkForValidConfigFilePath(const std::string& config_file_);
-
 
     /**
      * @brief The path to the local user settings directory if it exists.
@@ -64,29 +66,30 @@ namespace eCAL
     std::string eCALDataSystemDir();
 
     /**
-     * @brief The path to the eCAL directory specified by the environment variable ECAL_CONFIG.
+     * @brief The path to the eCAL directory specified by the environment variable ECAL_DATA.
      * 
-     * @returns The path to the eCAL config directory.
+     * @returns The path to the eCAL data directory.
      *          Returns empty string if the path does not exist.
      */
-    std::string eCALConfigEnvPath();
+    std::string eCALDataEnvPath();
 
     /**
-     * @brief Returns the path to the eCAL log directory by the following order:
+     * @brief Returns the path to the eCAL log directory based on the ecal data directories in following order:
      * 
-     *        1. Environment variable ECAL_LOG
-     *        2. The path provided from the configuration
-     *        3. The path to the eCAL config directory (specified by GeteCALConfigDir())
-     *        4. The temporary directory (e.g. /tmp [unix], Appdata/local/Temp [win])
+     *        1. Environment variable ECAL_LOG_DIR
+     *        2. Environment variable ECAL_DATA
+     *        3. The path provided from the configuration
+     *        4. The path to the local eCAL data directory
+     *        5. For windows: the system data path if available (ProgramData/eCAL)
+     *        6. The temporary directory (e.g. /tmp [unix], Appdata/local/Temp [win])
+     *        7. Fallback path /ecal_tmp
+     * 
+     *        In case of 6/7, a unique temporary folder will be created.
      *        
-     *        In case the subpath "logs" does not exist yet, the function tries to create it.
-     *        (e.g. Appdata/eCAL/logs [win], ~/.ecal/logs [unix])
-     * 
-     * @returns The path to the eCAL log directory.
-     *          Returns empty string if no path could be found or created.
+     * @returns The path to the eCAL log directory. The subdirectory logs might not exist yet.
+     *          Returns empty string if no root path could be found.
      */
-    std::string eCALConfigLogDir();
-
+    std::string eCALLogDir();
 
     /**
      * @brief Creates in the specified directory the logs subdirectory.
@@ -95,6 +98,18 @@ namespace eCAL
      * 
      * @returns True if the directory structure could be created successfully.
      */
+  } // namespace Config
+  
+  namespace Util
+  {
     bool createEcalDirStructure(const std::string& path_);
-  }
+
+    std::vector<std::string> getEcalDefaultPaths();
+
+    bool dirExists(const std::string& path_);
+
+    bool createDir(const std::string& path_);
+
+    bool dirExistsOrCreate(const std::string& path_);
+  } // namespace Util
 }

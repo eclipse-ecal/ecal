@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,9 @@ endif()
 
 set(config_test_src
   src/config_test.cpp
+  src/path_processing_test.cpp
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/default_configuration.cpp
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/config/ecal_path_processing.cpp
 )
 
 if(ECAL_CORE_CONFIGURATION)
@@ -54,6 +56,7 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::ecal-utils
     Threads::Threads
     tclap::tclap
+    GTest::gmock_main
 )
 
 if(ECAL_CORE_CONFIGURATION)

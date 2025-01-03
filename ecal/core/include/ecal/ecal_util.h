@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,17 +35,17 @@ namespace eCAL
   namespace Util
   {
     /**
-     * @brief Retrieve eCAL configuration path.
+     * @brief Retrieve eCAL data path.
      *
-     *        Checks for a valid default configuration file (ecal.yaml) in the following paths:
-     *        1. ECAL_CONFIG_DIR environment variable path
+     *        Checks if a valid eCAL data path is available in the following order:
+     *        1. ECAL_DATA environment variable path
      *        2. Local user path (win: Appdata/Local, unix: ~/.ecal)
      *        3. System paths like /etc/ecal, ProgramData/eCAL
      *
-     * @return  First path that contains a valid config file.
-     *          Returns empty string if no valid config file is found.
+     * @return  First directory that is not empty.
+     *          Returns empty string if no valid directory is found.
     **/
-    ECAL_API std::string GeteCALConfigDir(); // ECAL_DATA PATH?
+    ECAL_API std::string GeteCALDataDir();
 
     /**
      * @brief Retrieve eCAL standard logging path.
@@ -53,12 +53,15 @@ namespace eCAL
      *          This path has read/write permissions for standard users.
      * 
      *        1. ECAL_LOG_DIR environment variable path
-     *        2. eCAL configuration path
-     *        3. eCAL default configuration path
-     *        4. System temporary directory
-     *        5. Fallback path /ecal_tmp
+     *        2. ECAL_DATA environment variable path
+     *        3. Path provided by eCAL configuration
+     *        4. Path to local eCAL directory
+     *        5. For windows: ProgramData/eCAL if available
+     *        6. System temp path if available
+     *        7. Fallback path /ecal_tmp
      *
-     * @return  eCAL logging path.
+     * @return  eCAL logging path if exists.
+     *          Returns empty string if no valid path is found.
     **/
     ECAL_API std::string GeteCALLogDir();
 
