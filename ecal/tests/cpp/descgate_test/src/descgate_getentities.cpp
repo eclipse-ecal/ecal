@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ namespace
   {
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type                   = eCAL::bct_reg_publisher;
-    reg_sample.identifier.entity_id       = std::to_string(topic_id_);
+    reg_sample.identifier.entity_id       = topic_id_;
     reg_sample.topic.tname                = topic_name_;
     reg_sample.topic.tdatatype.name       = topic_name_ + "-tdatatype.name";
     reg_sample.topic.tdatatype.encoding   = topic_name_ + "-tdatatype.encoding";
@@ -53,7 +53,7 @@ namespace
   {
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type                   = eCAL::bct_reg_subscriber;
-    reg_sample.identifier.entity_id       = std::to_string(topic_id_);
+    reg_sample.identifier.entity_id       = topic_id_;
     reg_sample.topic.tname                = topic_name_;
     reg_sample.topic.tdatatype.name       = topic_name_ + "-tdatatype.name";
     reg_sample.topic.tdatatype.encoding   = topic_name_ + "-tdatatype.encoding";
@@ -73,7 +73,7 @@ namespace
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type             = eCAL::bct_reg_service;
     reg_sample.service.sname        = service_name_;
-    reg_sample.identifier.entity_id = std::to_string(service_id_);
+    reg_sample.identifier.entity_id = service_id_;
 
     eCAL::Service::Method method;
     method.mname = "method_name";
@@ -93,7 +93,7 @@ namespace
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type               = eCAL::bct_reg_client;
     reg_sample.client.sname           = client_name_;
-    reg_sample.identifier.entity_id   = std::to_string(service_id_);
+    reg_sample.identifier.entity_id   = service_id_;
 
     eCAL::Service::Method method;
     method.mname = "method_name";

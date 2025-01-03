@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ namespace eCAL
     bool RegisterTopic(const Registration::Sample& sample_, enum ePubSub pubsub_type_);
     bool UnregisterTopic(const Registration::Sample& sample_, enum ePubSub pubsub_type_);
 
-    using TopicMonMapT = std::map<std::string, Monitoring::STopicMon>;
+    using TopicMonMapT = std::map<Registration::EntityIdT, Monitoring::STopicMon>;
     struct STopicMonMap
     {
       explicit STopicMonMap() :
@@ -90,7 +90,7 @@ namespace eCAL
       std::unique_ptr<TopicMonMapT>  map;
     };
 
-    using ProcessMonMapT = std::map<std::string, Monitoring::SProcessMon>;
+    using ProcessMonMapT = std::map<Registration::EntityIdT, Monitoring::SProcessMon>;
     struct SProcessMonMap
     {
       explicit SProcessMonMap() :
@@ -101,7 +101,7 @@ namespace eCAL
       std::unique_ptr<ProcessMonMapT>  map;
     };
 
-    using ServerMonMapT = std::map<std::string, Monitoring::SServerMon>;
+    using ServerMonMapT = std::map<Registration::EntityIdT, Monitoring::SServerMon>;
     struct SServerMonMap
     {
       explicit SServerMonMap() :
@@ -112,7 +112,7 @@ namespace eCAL
       std::unique_ptr<ServerMonMapT>  map;
     };
 
-    using ClientMonMapT = std::map<std::string, Monitoring::SClientMon>;
+    using ClientMonMapT = std::map<Registration::EntityIdT, Monitoring::SClientMon>;
     struct SClientMonMap
     {
       explicit SClientMonMap() :

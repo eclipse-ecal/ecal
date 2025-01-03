@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1898,7 +1898,7 @@ TEST(ecal_service, ErrorCallback_ErrorCallbackNoServer) // NOLINT
               };
 
 
-    EXPECT_EQ(num_client_response_callback_called, 0);
+    EXPECT_EQ(num_client_response_callback_called.get(), 0);
 
     auto client_v1 = eCAL::service::ClientSession::create(io_context, protocol_version, {{ "NonExistingEndpoint", 12345 }}, client_event_callback);
 
@@ -1913,8 +1913,8 @@ TEST(ecal_service, ErrorCallback_ErrorCallbackNoServer) // NOLINT
     
     num_client_response_callback_called.wait_for([](int v) { return v >= 1;} , std::chrono::milliseconds(5000));
 
-    EXPECT_EQ(num_client_response_callback_called, 1);
-    EXPECT_EQ(num_client_event_callback_called,    0);
+    EXPECT_EQ(num_client_response_callback_called.get(), 1);
+    EXPECT_EQ(num_client_event_callback_called.load(),    0);
 
     // join the io_thread
     io_context->stop();

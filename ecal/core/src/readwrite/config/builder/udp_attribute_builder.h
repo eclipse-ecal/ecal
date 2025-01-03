@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include "readwrite/udp/config/attributes/reader_udp_attributes.h"
 #include "readwrite/config/attributes/reader_attributes.h"
 
@@ -34,6 +36,6 @@ namespace eCAL
 
   namespace eCALWriter
   {
-    UDP::SAttributes BuildUDPAttributes(const std::string& topic_id, const eCALWriter::SAttributes& attr_);
+    UDP::SAttributes BuildUDPAttributes(const uint64_t& topic_id, const eCALWriter::SAttributes& attr_);
   }
 }

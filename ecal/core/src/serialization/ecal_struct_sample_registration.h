@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -323,7 +323,7 @@ namespace eCAL
 
     struct SampleIdentifier
     {
-      std::string                        entity_id;                     // unique id within that process
+      uint64_t                           entity_id = 0;                 // unique id within that process
       int32_t                            process_id = 0;                // process id which produced the sample
       std::string                        host_name;                     // host which produced the sample
 
@@ -339,7 +339,7 @@ namespace eCAL
 
       void clear()
       {
-        entity_id.clear();
+        entity_id = 0;
         process_id = 0;
         host_name.clear();
       }

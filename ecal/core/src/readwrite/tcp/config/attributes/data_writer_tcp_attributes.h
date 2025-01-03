@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,9 @@
 
 #pragma once
 
-#include <string>
 #include <cstddef>
+#include <cstdint>
+#include <string>
 
 namespace eCAL
 {
@@ -31,7 +32,7 @@ namespace eCAL
       struct SAttributes
       {
         std::string topic_name;
-        std::string topic_id;
+        uint64_t    topic_id;
 
         size_t thread_pool_size;
       };

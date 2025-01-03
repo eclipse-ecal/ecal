@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,9 @@ namespace eCAL
 
     void encode_string(pb_callback_t& pb_callback, const std::string& str);
     void decode_string(pb_callback_t& pb_callback, std::string& str);
+
+    void encode_int_to_string(pb_callback_t& pb_callback, const uint64_t& int_argument);
+    void decode_int_from_string(pb_callback_t& pb_callback, uint64_t& int_argument);
 
     void encode_bytes(pb_callback_t& pb_callback, const SNanoBytes& nano_bytes);
     void encode_bytes(pb_callback_t& pb_callback, const std::vector<char>& vec);

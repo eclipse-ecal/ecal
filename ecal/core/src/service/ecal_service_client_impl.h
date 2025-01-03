@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -142,7 +142,7 @@ namespace eCAL
 
     // Service attributes
     std::string                  m_service_name;
-    std::string                  m_client_id;
+    Registration::EntityIdT      m_client_id;
 
     // Client session map and synchronization
     using ClientSessionsMapT = std::map<Registration::SEntityId, SClient>;

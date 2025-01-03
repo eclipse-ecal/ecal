@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -107,7 +107,6 @@ namespace eCAL
     }
 
     std::string          GetTopicName()           const { return(m_attributes.topic_name); }
-    std::string          GetTopicID()             const { return(m_topic_id); }
     SDataTypeInformation GetDataTypeInformation() const { return(m_topic_info); }
 
     void InitializeLayers();
@@ -131,11 +130,11 @@ namespace eCAL
     
     size_t GetConnectionCount();
 
-    bool CheckMessageClock(const std::string& tid_, long long current_clock_);
+    bool CheckMessageClock(const Registration::EntityIdT& tid_, long long current_clock_);
 
     int32_t GetFrequency();
 
-    std::string                               m_topic_id;
+    Registration::EntityIdT                   m_topic_id;
     SDataTypeInformation                      m_topic_info;
     std::map<std::string, std::string>        m_attr;
     std::atomic<size_t>                       m_topic_size;
@@ -177,7 +176,7 @@ namespace eCAL
 
     std::set<long long>                       m_id_set;
 
-    using WriterCounterMapT = std::unordered_map<std::string, long long>;
+    using WriterCounterMapT = std::unordered_map<Registration::EntityIdT, long long>;
     WriterCounterMapT                         m_writer_counter_map;
     long long                                 m_message_drops = 0;
 
