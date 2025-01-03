@@ -23,9 +23,10 @@
 **/
 
 #pragma once
+#include <cstdint>
+#include <iostream>
 #include <string>
 #include <tuple>
-#include <iostream>
 
 namespace eCAL
 {
