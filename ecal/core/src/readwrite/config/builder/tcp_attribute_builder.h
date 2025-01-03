@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include "readwrite/tcp/config/attributes/tcp_reader_layer_attributes.h"
 #include "readwrite/config/attributes/reader_attributes.h"
 

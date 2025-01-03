@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include "readwrite/udp/config/attributes/reader_udp_attributes.h"
 #include "readwrite/config/attributes/reader_attributes.h"
 

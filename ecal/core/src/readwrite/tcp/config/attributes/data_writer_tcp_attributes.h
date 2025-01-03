@@ -19,8 +19,9 @@
 
 #pragma once
 
-#include <string>
 #include <cstddef>
+#include <cstdint>
+#include <string>
 
 namespace eCAL
 {
