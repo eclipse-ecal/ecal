@@ -23,7 +23,9 @@ set(ECAL_YAML "ecal.yaml")
 
 add_executable(${PROJECT_NAME} 
   ${ECAL_CORE_PROJECT_ROOT}/core/cfg/gen/generate_configuration_yaml.cpp
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/config/configuration_writer.cpp
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/default_configuration.cpp
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/config/ecal_path_processing.cpp
 )
 
 # Set the output path for the generated YAML file
@@ -31,11 +33,11 @@ set(YAML_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/${ECAL_YAML})
 
 # Add a custom command to generate the YAML file
 add_custom_command(
-  OUTPUT  ${YAML_OUTPUT_PATH}               # Specify the output file
-  COMMAND $<TARGET_FILE:${PROJECT_NAME}>    # Command to run the executable
-  DEPENDS ${PROJECT_NAME}                   # Ensure the executable is built before running the command
-  COMMENT "Generating ${YAML_OUTPUT_PATH}"  # Comment to display during the build process
-  VERBATIM                                  # Ensure command arguments are passed as-is
+  OUTPUT  ${YAML_OUTPUT_PATH}                      # Specify the output file
+  COMMAND $<TARGET_FILE:${PROJECT_NAME}> --dump    # Command to run the executable
+  DEPENDS ${PROJECT_NAME}                          # Ensure the executable is built before running the command
+  COMMENT "Generating ${YAML_OUTPUT_PATH}"         # Comment to display during the build process
+  VERBATIM                                         # Ensure command arguments are passed as-is
 )
 
 # Add a custom target that depends on the generated YAML file
@@ -54,6 +56,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   eCAL::core
+  eCAL::ecal-utils
 )
 
 # Select the correct ecal config directory on Linux and Windows

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@
 #include "ecal_event.h"
 #include "registration/ecal_registration_receiver.h"
 #include "pubsub/ecal_pubgate.h"
+#include "config/ecal_path_processing.h"
 
 #include <map>
 #include <set>
@@ -33,6 +34,26 @@ namespace eCAL
 {
   namespace Util
   {
+    std::string GeteCALDataDir()
+    {
+      // Return the possible default paths that could contain the yaml file
+      const std::vector<std::string> search_directories = Util::getEcalDefaultPaths();
+      
+      // return the first non empty path that also exists
+      for (const auto& path : search_directories)
+      {
+        if (!path.empty() && Util::dirExists(path)) return path;
+      }
+
+      return {};
+    }
+
+    std::string GeteCALLogDir()
+    {      
+      // get possible log path in order Environment, Configuration, ecal config dir, temp dir
+      return eCAL::Config::eCALLogDir();
+    }
+
 #if ECAL_CORE_MONITORING
     // take monitoring snapshot
     static Monitoring::SMonitoring GetMonitoring()

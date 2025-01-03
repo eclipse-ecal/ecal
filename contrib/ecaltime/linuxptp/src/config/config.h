@@ -33,7 +33,7 @@ namespace LinuxPtpConfig {
    * @return the device value from the linuxptp section
    */
   std::string getDevice() {    
-    std::string path_to_ini = eCAL::Util::GeteCALConfigPath();
+    std::string path_to_ini = eCAL::Util::GeteCALConfigDir();
     path_to_ini += "ecaltime.yaml";
 
     YAML::Node yaml;
