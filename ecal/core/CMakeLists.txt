@@ -517,7 +517,6 @@ set(ecal_header_cmn
     include/ecal/config/subscriber.h
     include/ecal/config/time.h
     include/ecal/config/transport_layer.h
-    include/ecal/config/user_arguments.h
     include/ecal/types/logging.h
     include/ecal/types/monitoring.h
     include/ecal/ecal.h
