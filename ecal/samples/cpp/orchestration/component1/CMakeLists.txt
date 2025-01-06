@@ -38,7 +38,7 @@ PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${c
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
-    eCAL::core_protobuf
+    eCAL::protobuf_core
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
