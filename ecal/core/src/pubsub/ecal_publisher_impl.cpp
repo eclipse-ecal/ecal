@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,9 +51,9 @@
 
 struct SSndHash
 {
-  SSndHash(std::string t, long long c) : topic_id(t), snd_clock(c) {}
-  std::string topic_id;
-  long long   snd_clock;
+  SSndHash(const eCAL::Registration::EntityIdT& t, long long c) : topic_id(t), snd_clock(c) {}
+  eCAL::Registration::EntityIdT topic_id;
+  long long                     snd_clock;
 };
 
 namespace std
@@ -63,7 +63,7 @@ namespace std
   public:
     size_t operator()(const SSndHash& h) const
     {
-      const size_t h1 = std::hash<std::string>()(h.topic_id);
+      const size_t h1 = std::hash<eCAL::Registration::EntityIdT>()(h.topic_id);
       const size_t h2 = std::hash<long long>()(h.snd_clock);
       return h1 ^ (h2 << 1);
     }
@@ -109,9 +109,7 @@ namespace eCAL
 #endif
 
     // build topic id
-    std::stringstream counter;
-    counter << std::chrono::steady_clock::now().time_since_epoch().count();
-    m_topic_id = counter.str();
+    m_topic_id = std::chrono::steady_clock::now().time_since_epoch().count();
 
     // mark as created
     m_created = true;

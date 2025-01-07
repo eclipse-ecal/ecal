@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ namespace eCAL
       topic.pid                  = rand() % 1000;
       topic.pname                = GenerateString(8);
       topic.uname                = GenerateString(6);
-      topic.tid                  = GenerateString(8);
+      topic.tid                  = rand();
       topic.tname                = GenerateString(10);
       topic.direction            = direction;
       topic.tdatatype            = eCAL::Registration::GenerateDataTypeInformation();
@@ -103,7 +103,7 @@ namespace eCAL
       server.uname       = GenerateString(6);
       server.pid         = rand() % 1000;
       server.sname       = GenerateString(10);
-      server.sid         = GenerateString(8);
+      server.sid         = rand();
       server.version     = rand() % 100;
       server.tcp_port_v0 = rand() % 65536;
       server.tcp_port_v1 = rand() % 65536;
@@ -124,7 +124,7 @@ namespace eCAL
       client.uname   = GenerateString(6);
       client.pid     = rand() % 1000;
       client.sname   = GenerateString(10);
-      client.sid     = GenerateString(8);
+      client.sid     = rand();
       client.methods.push_back(GenerateServiceMethod());
       client.methods.push_back(GenerateServiceMethod());
       client.methods.push_back(GenerateServiceMethod());
