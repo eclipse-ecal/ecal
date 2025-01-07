@@ -294,6 +294,15 @@ namespace eCAL
       ecal_default_paths.emplace_back(eCAL::Config::eCALDataSystemDir());
       return ecal_default_paths;
     }
+
+    bool createEcalDirStructure(const std::string& path_)
+    {
+        if (!Util::dirExistsOrCreate(path_)) return false;
+
+        // create also logs directory
+        const std::string log_path = buildPath(path_, ECAL_FOLDER_NAME_LOG);
+        return Util::dirExistsOrCreate(log_path);
+    }
   } // namespace Util
 
   namespace Config
@@ -379,15 +388,6 @@ namespace eCAL
       }
 
       return buildPath(found_path, config_file_);
-    }
-
-    bool createEcalDirStructure(const std::string& path_)
-    {
-        if (!Util::dirExistsOrCreate(path_)) return false;
-
-        // create also logs directory
-        const std::string log_path = buildPath(path_, ECAL_FOLDER_NAME_LOG);
-        return Util::dirExistsOrCreate(log_path);
     }
   } // namespace Config
   

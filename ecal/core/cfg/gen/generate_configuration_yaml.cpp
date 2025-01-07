@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
   // create the ecal paths
   for (const std::string& path : dir_paths)
   {
-    if (!path.empty() && eCAL::Config::createEcalDirStructure(path))
+    if (!path.empty() && eCAL::Util::createEcalDirStructure(path))
     {
       created_path = path;
       std::cout << "Created eCAL directory structure in: " << path << "\n";
