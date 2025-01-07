@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@
 
 #include <chrono>
 #include <ecal/ecal.h>
-#include <ecal/msg/string/publisher.h>
-#include <ecal/msg/string/subscriber.h>
+#include <ecal/ecal_publisher.h>
+#include <ecal/ecal_subscriber.h>
 
 #include <functional>
 #include <memory>
@@ -59,15 +59,16 @@ TEST(core_cpp_pubsub, TimeoutAcknowledgment)
   pub_config.layer.shm.acknowledge_timeout_ms = 500;
 
   // create publisher
-  eCAL::string::CPublisher<std::string> pub("topic", pub_config);
-  auto sub1 = std::make_shared< eCAL::string::CSubscriber<std::string>>("topic");
-  auto sleeper_variable_time = [](const char* /*topic_name_*/, const std::string& msg_, long long /*time_*/, long long /*clock_*/, long long /*id_*/)
+  eCAL::CPublisher pub("topic", {}, pub_config);
+  auto sub1 = std::make_shared< eCAL::CSubscriber>("topic");
+  auto sleeper_variable_time = [](const eCAL::Registration::STopicId& topic_id_, const eCAL::SDataTypeInformation& data_type_info_, const eCAL::SReceiveCallbackData& data_)
                                 {
-                                  int sleep = std::stoi(msg_);
+                                  std::string sleep_time((const char*)data_.buf, data_.size);
+                                  int sleep = std::stoi(sleep_time);
                                   std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
                                 };
 
-  sub1->AddReceiveCallback(sleeper_variable_time);
+  sub1->SetReceiveCallback(sleeper_variable_time);
 
   // Registration activities
   std::this_thread::sleep_for(std::chrono::seconds(2));

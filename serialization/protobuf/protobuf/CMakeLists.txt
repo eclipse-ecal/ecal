@@ -60,17 +60,17 @@ set_property(TARGET protobuf_base PROPERTY FOLDER core)
 ##########################
 # Protobuf core communication extension
 ##########################
-ecal_add_library(protobuf_core)
+add_library(protobuf_core INTERFACE)
 add_library(eCAL::protobuf_core ALIAS protobuf_core)
 
 target_link_libraries(protobuf_core 
-  PUBLIC 
+  INTERFACE 
     eCAL::protobuf_base
     eCAL::core
 )
 
 target_sources(protobuf_core
-  PUBLIC
+  INTERFACE
     FILE_SET proto_headers
     TYPE HEADERS
     BASE_DIRS include
@@ -81,10 +81,10 @@ target_sources(protobuf_core
       include/ecal/msg/protobuf/dynamic_subscriber.h
       include/ecal/msg/protobuf/publisher.h
       include/ecal/msg/protobuf/server.h
-      include/ecal/msg/protobuf/subscriber.h      
+      include/ecal/msg/protobuf/subscriber.h
 )
 
-target_compile_features(protobuf_core PUBLIC cxx_std_14)
+target_compile_features(protobuf_core INTERFACE cxx_std_14)
 
 install(
   TARGETS protobuf_core

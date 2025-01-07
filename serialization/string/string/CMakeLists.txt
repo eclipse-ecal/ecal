@@ -18,6 +18,34 @@
 
 
 ##########################
+# String base functionality
+##########################
+
+# std::string core communication extension
+##########################
+add_library(string_base INTERFACE)
+add_library(eCAL::string_base ALIAS string_base)
+
+target_sources(string_base
+  INTERFACE
+    FILE_SET string_base_headers
+    TYPE HEADERS
+    BASE_DIRS include
+    FILES
+      include/ecal/msg/string/message.h   
+)
+
+target_compile_features(string_base INTERFACE cxx_std_14)
+
+install(
+  TARGETS string_base
+  EXPORT eCALCoreTargets  
+  ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
+  LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
+  FILE_SET string_base_headers COMPONENT sdk
+)
+
+##########################
 # std::string core communication extension
 ##########################
 add_library(string_core INTERFACE)
@@ -26,6 +54,7 @@ add_library(eCAL::string_core ALIAS string_core)
 target_link_libraries(string_core 
   INTERFACE 
     eCAL::core
+    eCAL::string_base
 )
 
 target_sources(string_core
@@ -34,12 +63,11 @@ target_sources(string_core
     TYPE HEADERS
     BASE_DIRS include
     FILES
-      include/ecal/msg/string/message.h
       include/ecal/msg/string/publisher.h
       include/ecal/msg/string/subscriber.h      
 )
 
-target_compile_features(string_core INTERFACE cxx_std_17)
+target_compile_features(string_core INTERFACE cxx_std_14)
 
 install(
   TARGETS string_core

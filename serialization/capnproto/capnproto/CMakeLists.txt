@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,17 +21,17 @@ find_package(CapnProto REQUIRED)
 ##########################
 # Capnproto core communication extension
 ##########################
-add_library(capnproto_core)
+add_library(capnproto_core INTERFACE)
 add_library(eCAL::capnproto_core ALIAS capnproto_core)
 
 target_link_libraries(capnproto_core 
-  PUBLIC 
+  INTERFACE 
     CapnProto::capnp
     eCAL::core
 )
 
 target_sources(capnproto_core
-  PUBLIC
+  INTERFACE
     FILE_SET capnproto_core_headers
     TYPE HEADERS
     BASE_DIRS include
@@ -42,7 +42,7 @@ target_sources(capnproto_core
       include/ecal/msg/capnproto/subscriber.h      
 )
 
-target_compile_features(capnproto_core PUBLIC cxx_std_17)
+target_compile_features(capnproto_core INTERFACE cxx_std_17)
 
 install(
   TARGETS capnproto_core

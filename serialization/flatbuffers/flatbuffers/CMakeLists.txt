@@ -21,17 +21,17 @@ find_package(FlatBuffers REQUIRED)
 ##########################
 # FlatBuffers core communication extension
 ##########################
-add_library(flatbuffers_core)
+add_library(flatbuffers_core INTERFACE)
 add_library(eCAL::flatbuffers_core ALIAS flatbuffers_core)
 
 target_link_libraries(flatbuffers_core 
-  PUBLIC 
+  INTERFACE 
     flatbuffers::flatbuffers
     eCAL::core
 )
 
 target_sources(flatbuffers_core
-  PUBLIC
+  INTERFACE
     FILE_SET flatbuffers_core_header
     TYPE HEADERS
     BASE_DIRS include
@@ -40,7 +40,7 @@ target_sources(flatbuffers_core
       include/ecal/msg/flatbuffers/subscriber.h  
 )
 
-target_compile_features(flatbuffers_core PUBLIC cxx_std_17)
+target_compile_features(flatbuffers_core INTERFACE cxx_std_17)
 
 install(
   TARGETS flatbuffers_core

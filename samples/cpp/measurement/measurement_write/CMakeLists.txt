@@ -46,6 +46,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE MEASUREMENT_PATH="${SAMPLE_PE
 target_link_libraries(${PROJECT_NAME} 
   PRIVATE 
     eCAL::measurement_hdf5 
+    eCAL::string_base
     eCAL::protobuf_base
     protobuf::libprotobuf
 )
