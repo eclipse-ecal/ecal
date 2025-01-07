@@ -122,7 +122,18 @@ namespace eCAL
       method_info.request_type.name  = req_type_;
       method_info.response_type.name = resp_type_;
 
-      return m_service_server_impl->SetMethodCallback(method_, method_info, callback_);
+      MethodInfoCallbackT callback =
+        [req_type_, resp_type_, callback_](
+          const std::string&          method,
+          const SDataTypeInformation& req_type_info,
+          const SDataTypeInformation& resp_type_info,
+          const std::string&          request,
+          std::string&                response) -> int
+        {
+          return callback_(method, req_type_info.name, resp_type_info.name, request, response);
+        };
+
+      return m_service_server_impl->SetMethodCallback(method_, method_info, callback);
     }
 
     bool CServiceServerImpl::RemMethodCallback(const std::string& method_)

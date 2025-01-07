@@ -55,7 +55,7 @@ namespace eCAL
   public:
     ~CServiceServerImpl();
 
-    bool AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_);
+    bool AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_);
     bool RemoveMethodCallback(const std::string& method_);
 
     // Check connection state of a specific service
@@ -104,8 +104,8 @@ namespace eCAL
     // Server method map and synchronization
     struct SMethod
     {
-      Service::Method method;
-      MethodCallbackT callback;
+      Service::Method     method;
+      MethodInfoCallbackT callback;
     };
 
     using MethodMapT = std::map<std::string, SMethod>;

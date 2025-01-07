@@ -66,7 +66,7 @@ namespace eCAL
     Stop();
   }
 
-  bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_)
+  bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_)
   {
 #ifndef NDEBUG
     Logging::Log(log_level_debug1, "CServiceServerImpl::AddMethodCallback: Adding method callback for method: " + method_);
@@ -416,7 +416,7 @@ namespace eCAL
     // execute method (outside lock guard)
     const std::string& request_s = request.request;
     std::string response_s;
-    const int service_return_state = method.callback(method.method.mname, method.method.req_type, method.method.resp_type, request_s, response_s);
+    const int service_return_state = method.callback(method.method.mname, method.method.req_datatype, method.method.resp_datatype, request_s, response_s);
 
     // set method call state 'executed'
     response_header.state = Service::eMethodCallState::executed;

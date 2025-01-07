@@ -24,7 +24,7 @@
 #include <thread>
 
 // method callback
-int OnMethodCallback(const std::string& method_, const std::string& /*req_type_*/, const std::string& /*resp_type_*/, const std::string& request_, std::string& response_)
+int OnMethodCallback(const std::string& method_, const eCAL::SDataTypeInformation& /*req_type_*/, const eCAL::SDataTypeInformation& /*resp_type_*/, const std::string& request_, std::string& response_)
 {
   std::cout << "Method called : " << method_    << std::endl;
   std::cout << "Request       : " << request_   << std::endl << std::endl;
