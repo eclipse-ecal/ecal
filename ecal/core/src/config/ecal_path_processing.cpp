@@ -149,7 +149,7 @@ namespace
   #elif defined(ECAL_OS_LINUX)
   
     // TODO PG: Check if we really want to give that back here
-    if (dirExists(ECAL_LINUX_SYSTEM_PATH)) 
+    if (Util::dirExists(ECAL_LINUX_SYSTEM_PATH)) 
       return ECAL_LINUX_SYSTEM_PATH;
   
   #endif /* ECAL_OS_LINUX */
