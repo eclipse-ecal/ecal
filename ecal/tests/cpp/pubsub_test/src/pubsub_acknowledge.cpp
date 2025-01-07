@@ -64,7 +64,7 @@ TEST(core_cpp_pubsub, TimeoutAcknowledgment)
   auto sleeper_variable_time = [](const eCAL::Registration::STopicId& topic_id_, const eCAL::SDataTypeInformation&  /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_)
                                 {
                                   std::string const sleep_time((const char*)data_.buf, data_.size);
-                                  int sleep = std::stoi(sleep_time);
+                                  int const sleep = std::stoi(sleep_time);
                                   std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
                                 };
 
