@@ -59,7 +59,7 @@ TEST(core_cpp_path_processing /*unused*/, ecal_data_log_env_vars /*unused*/)
   {
     // All paths for data, config and log are the same when ECAL_DATA is set
     ScopedEnvVar env_var(ECAL_DATA_VAR, env_ecal_conf_value);
-    EXPECT_EQ(eCAL::Config::eCALDataEnvPath(), env_ecal_conf_value);    
+    EXPECT_EQ(eCAL::Config::eCALDataEnvPath(), env_ecal_conf_value);
   }
 
   {

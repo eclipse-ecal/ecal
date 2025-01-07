@@ -56,7 +56,7 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::ecal-utils
     Threads::Threads
     tclap::tclap
-    GTest::gmock_main
+    $<$<TARGET_EXISTS:GTest::gmock_main>:GTest::gmock_main>
 )
 
 if(ECAL_CORE_CONFIGURATION)

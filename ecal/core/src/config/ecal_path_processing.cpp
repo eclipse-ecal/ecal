@@ -317,7 +317,7 @@ namespace eCAL
 
     std::string eCALLogDir()
     {
-      const std::vector<const std::string> log_paths = {
+      const std::vector<std::string> log_paths = {
         getEnvVar(ECAL_LOG_VAR),
         eCALDataEnvPath(),
         eCAL::GetConfiguration().logging.provider.file_config.path,
