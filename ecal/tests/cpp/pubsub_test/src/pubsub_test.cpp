@@ -375,7 +375,7 @@ TEST(core_cpp_pubsub, DynamicCreate)
 
 // ATM, this test does no longer make sense, as V6 subscribers / publishers do not have a destroy function
 // maybe this test needs to be rewritten to test the same by using pointers.
-TEST(core_cpp_pubsub, DISABLED_DestroyInCallback)
+TEST(core_cpp_pubsub /*unused*/, DISABLED_DestroyInCallback /*unused*/)
 {
   /* Test setup :
    * 2 pair of pub_sub connections ("foo" and "destroy")
