@@ -80,9 +80,9 @@ namespace eCAL
     return m_service_server_impl->GetServiceName();
   }
 
-  Registration::SServiceMethodId CServiceServer::GetServiceId() const
+  Registration::SServiceId CServiceServer::GetServiceId() const
   {
-    if (m_service_server_impl == nullptr) return Registration::SServiceMethodId();
+    if (m_service_server_impl == nullptr) return Registration::SServiceId();
     return m_service_server_impl->GetServiceId();
   }
 

@@ -152,16 +152,14 @@ namespace eCAL
     return GetRegistrationSample();
   }
 
-  Registration::SServiceMethodId CServiceServerImpl::GetServiceId() const
+  Registration::SServiceId CServiceServerImpl::GetServiceId() const
   {
-    Registration::SServiceMethodId service_id;
+    Registration::SServiceId service_id;
 
     service_id.service_id.entity_id  = m_service_id;
     service_id.service_id.process_id = Process::GetProcessID();
     service_id.service_id.host_name  = Process::GetHostName();
-
-    service_id.service_name = m_service_name;
-    service_id.method_name  = "";
+    service_id.service_name          = m_service_name;
 
     return service_id;
   }
