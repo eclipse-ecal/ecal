@@ -1,6 +1,6 @@
 ﻿/* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -241,7 +241,9 @@ void LogModel::insertLogs(const eCAL::pb::LogMessageList& logging_pb)
   // Add new elements to the bottom
   size_before = logs_.size();
   int size_after = (size_before + inserted_row_count < max_entries_ ? size_before + inserted_row_count : max_entries_);
-  beginInsertRows(QModelIndex(), size_before, size_after - 1);
+  bool insert_row = size_before <= size_after - 1;
+  if (insert_row)
+    beginInsertRows(QModelIndex(), size_before, size_after - 1);
 
   int counter = inserted_row_count;
   for (auto& log_message_pb : logging_pb.log_messages())
@@ -263,7 +265,8 @@ void LogModel::insertLogs(const eCAL::pb::LogMessageList& logging_pb)
     counter--;
   }
 
-  endInsertRows();
+  if (insert_row)
+    endInsertRows();
 }
 
 void LogModel::clear()
