@@ -156,9 +156,9 @@ namespace eCAL
   {
     Registration::SServiceMethodId service_id;
 
-    service_id.service_id.entity_id = m_service_id;
-    service_id.service_id.entity_id = Process::GetProcessID();
-    service_id.service_id.host_name = Process::GetHostName();
+    service_id.service_id.entity_id  = m_service_id;
+    service_id.service_id.process_id = Process::GetProcessID();
+    service_id.service_id.host_name  = Process::GetHostName();
 
     service_id.service_name = m_service_name;
     service_id.method_name  = "";
