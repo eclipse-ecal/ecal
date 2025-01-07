@@ -42,7 +42,6 @@ QVariant TopicTreeItem::data(int column, Qt::ItemDataRole role) const
 
 QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 {
-  //qDebug() << "DDAATTTAA";
 
   if (role == (Qt::ItemDataRole)ItemDataRoles::RawDataRole) //-V1016 //-V547
   {
@@ -308,32 +307,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     return itemfont;
   }
 
-  /*/NEU
-  else if (role == Qt::ItemDataRole::BackgroundRole)
-    if (column == Columns::STATUS)
-    {
-      {
-        const long long raw_data = data(Columns::DFREQ, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toLongLong();
-        QString freq = toFrequencyString(raw_data);
-        if (isNewItem())
-        {
-          return QBrush(color_rgb[Gruen]);  // Grün für neue Publisher/Subscriber
-        }
-        if (freq == "0")
-        {
-          if (std::string(topic_.direction()) == "subscriber")
-          {
-            return QBrush(color_rgb[Gelb]);  // Gelb für subscriber die nix empfangen
-          }
-          if (std::string(topic_.direction()) == "publisher")
-          {
-            return QBrush(color_rgb[Orange]); // rot für publisher die nix senden
-          }
-        }
-        return QVariant(); // Invalid QVariant
-      }
-    }
-  return QVariant(); // Invalid QVariant*/
+  return QVariant(); // Invalid QVariant
 }
 
 bool TopicTreeItem::setFont(const QFont& font)
@@ -341,15 +315,6 @@ bool TopicTreeItem::setFont(const QFont& font)
   itemfont = font;
   return false;
 }
-/*TEST
-bool TopicTreeItem::setFont(const QFont& font)
-{
-  if (role == Qt::ItemDataRole::ForegroundRole)
-  {
-    itemfont = font;
-    return false;
-  }
-}*/
 
 int TopicTreeItem::type() const
 {
@@ -360,9 +325,6 @@ void TopicTreeItem::update(const eCAL::pb::Topic& topic)
 {
   topic_.Clear();
   topic_.CopyFrom(topic);
-  lifetime++;
-  //qDebug() << "UPPPPPDDATTEEE";
-
 }
 
 eCAL::pb::Topic TopicTreeItem::topicPb()
@@ -387,9 +349,4 @@ QString TopicTreeItem::toFrequencyString(long long freq)
 std::string TopicTreeItem::topicId() const
 {
   return topic_.tid();
-}
-
-bool TopicTreeItem::isNewItem() const
-{
-  return lifetime < 15;
 }

@@ -84,9 +84,6 @@ public:
   QVector<QPair<int, QVariant>> getTreeItemColumnNameMapping() const;
 
   void monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb) override;
-  //QVariant monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb) const override;
-  //virtual QVariant monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb) const;
-
 
 protected:
   int mapColumnToItem(int model_column, int tree_item_type) const override;
@@ -94,7 +91,7 @@ protected:
 
 private:
   QFileIconProvider icon_provider;
-  std::map<Columns, QVariant/*QString*/> columnLabels 
+  std::map<Columns, QVariant> columnLabels 
   {
     { Columns::GROUP,                  "Group" },
     { Columns::HEARTBEAT,              "Heartbeat" },

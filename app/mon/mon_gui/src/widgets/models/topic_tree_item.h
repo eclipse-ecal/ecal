@@ -20,7 +20,6 @@
 #pragma once
 
 #include "CustomQt/QAbstractTreeItem.h"
-#include <QColor>
 #include <QFont>
 
 #ifdef _MSC_VER
@@ -81,18 +80,7 @@ public:
   std::string topicId() const;
 
 private:
-  bool isNewItem() const;
-
   eCAL::pb::Topic topic_;
-  int lifetime = 0;
-  enum colors
-  { 
-    Gruen,
-    Gelb,
-    Orange
-    
-  };
-  QColor color_rgb[3] = {QColor(78,201,176), QColor(220,220,170), QColor(206,145,120)}; // red, yellow, orange
   QFont itemfont;
   static QString toFrequencyString(long long freq);
 };

@@ -76,89 +76,6 @@ int TopicTreeModel::groupColumn() const
   return (int)(Columns::GROUP);
 }
 
-/* Funktionierender Zustand
-void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
-{
-  // Create a list of all topics to check if we have to remove them
-  std::map<std::string, bool> topic_still_existing;
-  for(const auto& topic : topic_tree_item_map_)
-  {
-    topic_still_existing[topic.first] = false;
-  }
-
-  for (const auto& topic : monitoring_pb.topics())
-  {
-    std::string topic_id = topic.tid();
-
-    if (topic_tree_item_map_.find(topic_id) == topic_tree_item_map_.end())
-    {
-      qDebug() << "NEU";
-      TopicTreeItem* topic_tree_item = new TopicTreeItem(topic);
-      insertItemIntoGroups(topic_tree_item);
-      STopicTreeEntry tree_entry;
-      tree_entry.tree_item = topic_tree_item;
-      topic_tree_item_map_[topic_id] = tree_entry;
-
-      //Schriftart ändern bei neuen
-      //auto fontrole = topic_tree_item->data(1, Qt::ItemDataRole::FontRole);
-      //auto font = qvariant_cast<QFont>(fontrole);
-      //font.setBold(true);
-      //topic_tree_item->setFont(font); 
-    }
-    else
-    {
-      auto& tree_entry = topic_tree_item_map_.at(topic_id);
-      auto topic_tree_item = tree_entry.tree_item;
-      if (tree_entry.tree_item_counter < 20)
-      {
-        tree_entry.tree_item_counter++;
-        auto fontrole = topic_tree_item->data(1, Qt::ItemDataRole::FontRole);
-        auto font = qvariant_cast<QFont>(fontrole);
-        font.setBold(true);
-        topic_tree_item->setFont(font);
-        qDebug() << tree_entry.tree_item_counter;
-      }
-      else
-      {
-        auto fontrole = topic_tree_item->data(1, Qt::ItemDataRole::FontRole);
-        auto font = qvariant_cast<QFont>(fontrole);
-        font.setBold(false);
-        topic_tree_item->setFont(font);
-        qDebug() << tree_entry.tree_item_counter;
-      }
-       // Update an existing topic
-      topic_tree_item->update(topic);
-      topic_still_existing[topic_id] = true; 
-    }
-  }
-  // Remove obsolete items
-  for (const auto& topic : topic_still_existing)
-  {
-    if (!topic.second)
-    {
-        auto& tree_entry = topic_tree_item_map_.at(topic.first);
-        TopicTreeItem* topic_tree_item = tree_entry.tree_item;
-
-        if (tree_entry.tree_item_delete_counter < 20)
-        {
-            tree_entry.tree_item_delete_counter++; 
-            auto fontrole = topic_tree_item->data(1, Qt::ItemDataRole::FontRole);
-            auto font = qvariant_cast<QFont>(fontrole);
-            font.setStrikeOut(true);
-            topic_tree_item->setFont(font);
-            qDebug() << "delete_counter:" << tree_entry.tree_item_delete_counter;
-        }
-        else
-        {
-            qDebug() << "DELETE";
-            removeItemFromGroups(topic_tree_item);
-            topic_tree_item_map_.erase(topic.first);
-        }
-    }
-  }
-
-  updateAll();
-}*/
 void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
 {
   // Create a list of all topics to check if we have to remove them
@@ -175,13 +92,11 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
     if (topic_tree_item_map_.find(topic_id) == topic_tree_item_map_.end())
     {
       // Got a new topic
-      qDebug() << "NEU";
       TopicTreeItem* topic_tree_item = new TopicTreeItem(topic);
       insertItemIntoGroups(topic_tree_item);
       STopicTreeEntry tree_entry;
       tree_entry.tree_item = topic_tree_item;
       topic_tree_item_map_[topic_id] = tree_entry;
-
       auto fontrole = topic_tree_item->data(1, Qt::ItemDataRole::FontRole);
       auto font = qvariant_cast<QFont>(fontrole);
       font.setBold(true);
@@ -206,8 +121,6 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
           tree_entry.default_font = true;
         }
       }
-      qDebug() << tree_entry.tree_item_counter;
-
       // Update an existing topic
       topic_tree_item->update(topic);
       topic_still_existing[topic_id] = true;
@@ -225,7 +138,6 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
       if (tree_entry.tree_item_counter > 0)
       {
         tree_entry.tree_item_counter--;
-        qDebug() << tree_entry.striked_out;
         if (!tree_entry.striked_out)
         {
           auto fontrole = topic_tree_item->data(1, Qt::ItemDataRole::FontRole);
@@ -234,11 +146,9 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
           topic_tree_item->setFont(font);
           tree_entry.striked_out = true;
         }
-        qDebug() << tree_entry.tree_item_counter;
       }
       else
       {
-        qDebug() << "DELETE";
         removeItemFromGroups(topic_tree_item);
         topic_tree_item_map_.erase(topic.first);
       }
