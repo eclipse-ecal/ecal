@@ -22,6 +22,7 @@
 
 #include "ecal_path_processing.h"
 #include "ecal_utils/filesystem.h"
+#include "util/getenvvar.h"
 
 #include <ecal/ecal_os.h>
 #include <ecal_def.h>
@@ -29,59 +30,38 @@
 
 #include <cstdlib>
 
-class ScopedEnvVar {
-public:
-    ScopedEnvVar(const std::string& key, const std::string& value) : key_(key) {
-#ifdef ECAL_OS_WINDOWS
-        _putenv_s(key.c_str(), value.c_str());
-#elif defined(ECAL_OS_LINUX)
-        setenv(key.c_str(), value.c_str(), 1);
-#endif
-    }
+class MockEnvVar
+{
+  public:
+    MOCK_METHOD(std::string, eCALDataEnvPath, (), ());
+};
 
-    ~ScopedEnvVar() {
-#ifdef ECAL_OS_WINDOWS
-        _putenv_s(key_.c_str(), "");
-#elif defined(ECAL_OS_LINUX)
-        unsetenv(key_.c_str());
-#endif
-    }
-
-private:
-    std::string key_;
+class MockFileSystem
+{
+  public:
+    MOCK_METHOD(bool, dirExists, (const std::string& path), (const));
 };
 
 TEST(core_cpp_path_processing /*unused*/, ecal_data_log_env_vars /*unused*/)
 {
-  const std::string env_ecal_conf_value = "/pathtoconf";
-  const std::string env_ecal_log_value = "/pathtolog";
+  
+  const std::string env_ecal_conf_value = "/path/to/conf";
+  const std::string env_ecal_log_value = "/path/to/log";
 
-  EXPECT_EQ(env_ecal_conf_value, env_ecal_conf_value);
+  { // Check for config path
+    MockEnvVar mock_env_var;
+    EXPECT_CALL(mock_env_var, eCALDataEnvPath()).WillOnce(::testing::Return(env_ecal_conf_value));
 
-  // Needs rework - mocking
-  // {
-  //   // All paths for data, config and log are the same when ECAL_DATA is set
-  //   ScopedEnvVar env_var(ECAL_DATA_VAR, env_ecal_conf_value);
-  //   EXPECT_EQ(eCAL::Config::eCALDataEnvPath(), env_ecal_conf_value);
-  // }
+    auto data_env_dir = eCAL::Config::eCALDataEnvPath();
+    EXPECT_EQ(data_env_dir, env_ecal_conf_value);
+    // EXPECT_EQ(eCAL::Config::eCALDataEnvPath(), env_ecal_conf_value);
+    
+    // EXPECT_CALL(mock_env_var, getEnvVar(::testing::_, "")).WillOnce(::testing::Return(env_ecal_log_value));
+    // auto log_dir = eCAL::Config::eCALLogDir();
+    // // NE because log dir is not created
+    // EXPECT_NE(log_dir, env_ecal_log_value);
+    // // not empty, because it should return a temp dir
+    // EXPECT_NE(log_dir, "");
+  }
 
-  // {
-  //   ScopedEnvVar env_var(ECAL_LOG_VAR, env_ecal_log_value);
-  //   EXPECT_TRUE(EcalUtils::Filesystem::MkDir(env_ecal_log_value));
-  //   EXPECT_EQ(eCAL::Config::eCALLogDir(), env_ecal_log_value);
-
-  //   EcalUtils::Filesystem::DeleteDir(env_ecal_log_value);
-
-  //   // at least a temporary folder would need to be created, so it should not be empty
-  //   const std::string tmp_log_dir = eCAL::Config::eCALLogDir();
-  //   EXPECT_NE(tmp_log_dir, env_ecal_log_value);
-
-  //   // delete tmp folder again
-  //   EcalUtils::Filesystem::DeleteDir(tmp_log_dir);
-  // }
-
-  // EXPECT_EQ(eCAL::Config::eCALDataEnvPath(), "");
-
-  // // at least a temporary folder would need to be created, so it should not be empty
-  // EXPECT_NE(eCAL::Config::eCALLogDir(), "");
 }

@@ -324,10 +324,15 @@ namespace eCAL
       return getEnvVar(ECAL_DATA_VAR);
     }
 
+    std::string eCALLogEnvPath()
+    {
+      return getEnvVar(ECAL_LOG_VAR);
+    }
+
     std::string eCALLogDir()
     {
       const std::vector<std::string> log_paths = {
-        getEnvVar(ECAL_LOG_VAR),
+        eCALLogEnvPath(),
         eCALDataEnvPath(),
         eCAL::GetConfiguration().logging.provider.file_config.path,
         eCALLocalUserDir(),
