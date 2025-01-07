@@ -186,8 +186,8 @@ namespace eCAL
 
   Registration::SServiceMethodId CServiceClient::GetServiceId() const
   {
-    // TODO: Implement this
-    return Registration::SServiceMethodId();
+    if (m_service_client_impl == nullptr) return Registration::SServiceMethodId();
+    return m_service_client_impl->GetServiceId();
   }
 
   bool CServiceClient::IsConnected() const
