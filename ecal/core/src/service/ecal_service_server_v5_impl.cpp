@@ -122,7 +122,7 @@ namespace eCAL
       method_info.request_type.name  = req_type_;
       method_info.response_type.name = resp_type_;
 
-      MethodInfoCallbackT callback =
+      const MethodInfoCallbackT callback =
         [req_type_, resp_type_, callback_](
           const std::string&          method,
           const SDataTypeInformation& req_type_info,
