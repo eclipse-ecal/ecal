@@ -37,6 +37,10 @@
 #include <QVector>
 #include <QPair>
 
+#include <QIcon>
+#include <QFileIconProvider>
+
+
 class TopicTreeModel : public GroupTreeModel
 {
   Q_OBJECT
@@ -48,6 +52,7 @@ public:
     GROUP,
     TOPIC_ID,
     TOPIC_NAME,
+    STATUS,
     DIRECTION,
     UNIT_NAME,
     HOST_NAME,
@@ -76,16 +81,20 @@ public:
 
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-  QVector<QPair<int, QString>> getTreeItemColumnNameMapping() const;
+  QVector<QPair<int, QVariant>> getTreeItemColumnNameMapping() const;
 
   void monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb) override;
+  //QVariant monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb) const override;
+  //virtual QVariant monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb) const;
+
 
 protected:
   int mapColumnToItem(int model_column, int tree_item_type) const override;
   int groupColumn() const override;
 
 private:
-  std::map<Columns, QString> columnLabels =
+  QFileIconProvider icon_provider;
+  std::map<Columns, QVariant/*QString*/> columnLabels 
   {
     { Columns::GROUP,                  "Group" },
     { Columns::HEARTBEAT,              "Heartbeat" },
@@ -96,6 +105,7 @@ private:
     { Columns::UNIT_NAME,              "Process" },
     { Columns::TOPIC_ID,               "Topic ID" },
     { Columns::TOPIC_NAME,             "Topic" },
+    { Columns::STATUS,                 QIcon(icon_provider.icon(QFileIconProvider::Network)) }, //or Drive
     { Columns::DIRECTION,              "Direction" },
     { Columns::TOPIC_ENCODING,         "Encoding" },
     { Columns::TOPIC_TYPE,             "Topic Type" },
@@ -120,6 +130,7 @@ private:
     { Columns::UNIT_NAME,              (int)TopicTreeItem::Columns::UNAME },
     { Columns::TOPIC_ID,               (int)TopicTreeItem::Columns::TID },
     { Columns::TOPIC_NAME,             (int)TopicTreeItem::Columns::TNAME },
+    { Columns::STATUS,                 (int)TopicTreeItem::Columns::STATUS },
     { Columns::DIRECTION,              (int)TopicTreeItem::Columns::DIRECTION },
     { Columns::TOPIC_ENCODING,         (int)TopicTreeItem::Columns::TENCODING },
     { Columns::TOPIC_TYPE,             (int)TopicTreeItem::Columns::TTYPE },
@@ -133,5 +144,12 @@ private:
     { Columns::DATA_FREQUENCY,         (int)TopicTreeItem::Columns::DFREQ },
   };
 
-  std::map<std::string, TopicTreeItem*> topic_tree_item_map_;
+  struct STopicTreeEntry
+  {
+    TopicTreeItem*  tree_item = nullptr;
+    int             tree_item_counter = 0;
+    bool            default_font = false;
+    bool            striked_out = false;
+  };
+  std::map<std::string, STopicTreeEntry> topic_tree_item_map_;
 };

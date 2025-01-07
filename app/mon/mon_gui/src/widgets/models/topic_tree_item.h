@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
 #pragma once
 
 #include "CustomQt/QAbstractTreeItem.h"
+#include <QColor>
+#include <QFont>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -45,6 +47,7 @@ public:
     UNAME,
     TID,
     TNAME,
+    STATUS,
     DIRECTION,
     TENCODING,
     TTYPE,
@@ -67,6 +70,8 @@ public:
 
   QVariant data(Columns column, Qt::ItemDataRole role = Qt::ItemDataRole::DisplayRole) const;
 
+  bool setFont(const QFont& font);
+
   int type() const;
 
   void update(const eCAL::pb::Topic& topic);
@@ -76,8 +81,18 @@ public:
   std::string topicId() const;
 
 private:
-  eCAL::pb::Topic topic_;
+  bool isNewItem() const;
 
+  eCAL::pb::Topic topic_;
+  int lifetime = 0;
+  enum colors
+  { 
+    Gruen,
+    Gelb,
+    Orange
+    
+  };
+  QColor color_rgb[3] = {QColor(78,201,176), QColor(220,220,170), QColor(206,145,120)}; // red, yellow, orange
+  QFont itemfont;
   static QString toFrequencyString(long long freq);
 };
-

@@ -19,7 +19,7 @@
 
 #include "topic_tree_item.h"
 
-#include <QColor>
+#include <QBrush>
 #include <QFont>
 #include <QString>
 #include <QByteArray>
@@ -42,6 +42,8 @@ QVariant TopicTreeItem::data(int column, Qt::ItemDataRole role) const
 
 QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 {
+  //qDebug() << "DDAATTTAA";
+
   if (role == (Qt::ItemDataRole)ItemDataRoles::RawDataRole) //-V1016 //-V547
   {
     if (column == Columns::RCLOCK)
@@ -125,6 +127,11 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     else if (column == Columns::DFREQ)
     {
       return topic_.dfreq();
+    }
+    //neu
+    else if (column == Columns::STATUS)
+    {
+      return QVariant();
     }
     else
     {
@@ -262,6 +269,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::MESSAGE_DROPS)
       || (column == Columns::DCLOCK)
       || (column == Columns::DFREQ)
+      || (column == Columns::STATUS)
       )
     {
       return Qt::AlignmentFlag::AlignRight;
@@ -297,40 +305,51 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
   else if (role == Qt::ItemDataRole::FontRole)
   {
-
-    if ((column == Columns::HNAME)
-      || (column == Columns::HGNAME)
-      || (column == Columns::PNAME)
-      || (column == Columns::UNAME)
-      || (column == Columns::TNAME)
-      || (column == Columns::DIRECTION)
-      || (column == Columns::TENCODING)
-      || (column == Columns::TTYPE))
-    {
-      const QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
-      if (raw_data.isEmpty())
-      {
-        QFont font;
-        font.setItalic(true);
-        return font;
-      }
-    }
-    else if (column == Columns::TDESC)
-    {
-      const std::string& raw_data = topic_.tdatatype().desc();
-      if (raw_data.empty())
-      {
-        QFont font;
-        font.setItalic(true);
-        return font;
-      }
-    }
-
-    return QVariant(); // Invalid QVariant
+    return itemfont;
   }
 
-  return QVariant(); // Invalid QVariant
+  /*/NEU
+  else if (role == Qt::ItemDataRole::BackgroundRole)
+    if (column == Columns::STATUS)
+    {
+      {
+        const long long raw_data = data(Columns::DFREQ, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toLongLong();
+        QString freq = toFrequencyString(raw_data);
+        if (isNewItem())
+        {
+          return QBrush(color_rgb[Gruen]);  // Grün für neue Publisher/Subscriber
+        }
+        if (freq == "0")
+        {
+          if (std::string(topic_.direction()) == "subscriber")
+          {
+            return QBrush(color_rgb[Gelb]);  // Gelb für subscriber die nix empfangen
+          }
+          if (std::string(topic_.direction()) == "publisher")
+          {
+            return QBrush(color_rgb[Orange]); // rot für publisher die nix senden
+          }
+        }
+        return QVariant(); // Invalid QVariant
+      }
+    }
+  return QVariant(); // Invalid QVariant*/
 }
+
+bool TopicTreeItem::setFont(const QFont& font)
+{
+  itemfont = font;
+  return false;
+}
+/*TEST
+bool TopicTreeItem::setFont(const QFont& font)
+{
+  if (role == Qt::ItemDataRole::ForegroundRole)
+  {
+    itemfont = font;
+    return false;
+  }
+}*/
 
 int TopicTreeItem::type() const
 {
@@ -341,6 +360,9 @@ void TopicTreeItem::update(const eCAL::pb::Topic& topic)
 {
   topic_.Clear();
   topic_.CopyFrom(topic);
+  lifetime++;
+  //qDebug() << "UPPPPPDDATTEEE";
+
 }
 
 eCAL::pb::Topic TopicTreeItem::topicPb()
@@ -365,4 +387,9 @@ QString TopicTreeItem::toFrequencyString(long long freq)
 std::string TopicTreeItem::topicId() const
 {
   return topic_.tid();
+}
+
+bool TopicTreeItem::isNewItem() const
+{
+  return lifetime < 15;
 }
