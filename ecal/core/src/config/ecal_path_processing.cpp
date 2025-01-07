@@ -149,7 +149,7 @@ namespace
   #elif defined(ECAL_OS_LINUX)
   
     // TODO PG: Check if we really want to give that back here
-    if (Util::dirExists(ECAL_LINUX_SYSTEM_PATH)) 
+    if (eCAL::Util::dirExists(ECAL_LINUX_SYSTEM_PATH)) 
       return ECAL_LINUX_SYSTEM_PATH;
   
   #endif /* ECAL_OS_LINUX */
@@ -297,11 +297,11 @@ namespace eCAL
 
     bool createEcalDirStructure(const std::string& path_)
     {
-        if (!Util::dirExistsOrCreate(path_)) return false;
+        if (!eCAL::Util::dirExistsOrCreate(path_)) return false;
 
         // create also logs directory
         const std::string log_path = buildPath(path_, ECAL_FOLDER_NAME_LOG);
-        return Util::dirExistsOrCreate(log_path);
+        return eCAL::Util::dirExistsOrCreate(log_path);
     }
   } // namespace Util
 
@@ -342,7 +342,7 @@ namespace eCAL
       {
         if (!path.empty())
         {
-          if (Util::dirExists(path))
+          if (eCAL::Util::dirExists(path))
           {
             return path;
           }
@@ -374,7 +374,7 @@ namespace eCAL
     {
       const std::string cwd_directory_path = EcalUtils::Filesystem::CurrentWorkingDir();
 
-      std::vector<std::string> ecal_default_paths = Util::getEcalDefaultPaths();
+      std::vector<std::string> ecal_default_paths = eCAL::Util::getEcalDefaultPaths();
       
       // insert cwd on 2nd position, so that ECAL_CONFIG_DIR dir has precedence
       ecal_default_paths.insert(ecal_default_paths.begin() + 1, cwd_directory_path);
