@@ -396,11 +396,18 @@ namespace eCAL
       const auto& method_information = method_information_pair.second;
 
       Service::Method method;
-      method.mname      = method_name;
+      method.mname = method_name;
+
+      // old type and descriptor fields
       method.req_type   = method_information.request_type.name;
       method.req_desc   = method_information.request_type.descriptor;
       method.resp_type  = method_information.response_type.name;
       method.resp_desc  = method_information.response_type.descriptor;
+
+      // new type and descriptor fields
+      method.req_datatype  = method_information.request_type;
+      method.resp_datatype = method_information.response_type;
+
       {
         const auto& call_count_iter = m_method_call_count_map.find(method_name);
         if (call_count_iter != m_method_call_count_map.end())

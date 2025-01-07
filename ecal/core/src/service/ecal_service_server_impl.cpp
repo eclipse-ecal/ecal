@@ -77,10 +77,18 @@ namespace eCAL
     if (iter != m_method_map.end())
     {
       Logging::Log(log_level_warning, "CServiceServerImpl::AddMethodCallback: Method already exists, updating callback: " + method_);
+      
+      // old type and descriptor fields
       iter->second.method.req_type  = method_info_.request_type.name;
       iter->second.method.req_desc  = method_info_.request_type.descriptor;
       iter->second.method.resp_type = method_info_.response_type.name;
       iter->second.method.resp_desc = method_info_.response_type.descriptor;
+      
+      // new type and descriptor fields
+      iter->second.method.req_datatype  = method_info_.request_type;
+      iter->second.method.resp_datatype = method_info_.response_type;
+
+      // callback
       iter->second.callback = callback_;
     }
     else
@@ -89,12 +97,21 @@ namespace eCAL
       Logging::Log(log_level_debug1, "CServiceServerImpl::AddMethodCallback: Registering new method: " + method_);
 #endif
       SMethod method;
-      method.method.mname     = method_;
+      // method name
+      method.method.mname = method_;
+      
+      // old type and descriptor fields
       method.method.req_type  = method_info_.request_type.name;
       method.method.req_desc  = method_info_.request_type.descriptor;
       method.method.resp_type = method_info_.response_type.name;
       method.method.resp_desc = method_info_.response_type.descriptor;
-      method.callback         = callback_;
+
+      // new type and descriptor fields
+      method.method.req_datatype  = method_info_.request_type;
+      method.method.resp_datatype = method_info_.response_type;
+      
+      // callback
+      method.callback = callback_;
       m_method_map[method_] = method;
     }
 
@@ -295,11 +312,18 @@ namespace eCAL
       for (const auto& iter : m_method_map)
       {
         Service::Method method;
-        method.mname      = iter.first;
+        method.mname = iter.first;
+
+        // old type and descriptor fields
         method.req_type   = iter.second.method.req_type;
         method.req_desc   = iter.second.method.req_desc;
         method.resp_type  = iter.second.method.resp_type;
         method.resp_desc  = iter.second.method.resp_desc;
+
+        // new type and descriptor fields
+        method.req_datatype  = iter.second.method.req_datatype;
+        method.resp_datatype = iter.second.method.resp_datatype;
+
         method.call_count = iter.second.method.call_count;
         service.methods.push_back(method);
       }
