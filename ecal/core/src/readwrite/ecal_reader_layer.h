@@ -37,7 +37,7 @@ namespace eCAL
     std::string                 host_name;
     int32_t                     process_id = 0;
     std::string                 topic_name;
-    uint64_t                    topic_id = 0;
+    Registration::EntityIdT     topic_id = 0;
     Registration::ConnectionPar parameter;
   };
 
