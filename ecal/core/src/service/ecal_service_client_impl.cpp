@@ -47,56 +47,18 @@ namespace
     return request_shared_ptr;
   }
 
-  // DeSerializes the response string into a service response
-  eCAL::SServiceResponse DeserializedResponse(const std::string& response_pb_)
+  eCAL::SServiceIDResponse CreateErrorResponse(const eCAL::Registration::SEntityId& entity_id_, const std::string& service_name_, const std::string& method_name_, const std::string& error_message_)
   {
-    eCAL::SServiceResponse service_reponse;
-    eCAL::Service::Response response;
-    if (eCAL::DeserializeFromBuffer(response_pb_.c_str(), response_pb_.size(), response))
-    {
-      const auto& response_header = response.header;
-      service_reponse.host_name    = response_header.hname;
-      service_reponse.service_name = response_header.sname;
-      service_reponse.service_id   = response_header.sid;
-      service_reponse.method_name  = response_header.mname;
-      service_reponse.error_msg    = response_header.error;
-      service_reponse.ret_state    = static_cast<int>(response.ret_state);
+    eCAL::SServiceIDResponse error_response;
+    // service/method id
+    error_response.service_method_id.service_id   = entity_id_;
+    error_response.service_method_id.service_name = service_name_;
+    error_response.service_method_id.method_name  = method_name_;
 
-      switch (response_header.state)
-      {
-      case eCAL::Service::eMethodCallState::executed:
-        service_reponse.call_state = call_state_executed;
-        break;
-      case eCAL::Service::eMethodCallState::failed:
-        service_reponse.call_state = call_state_failed;
-        break;
-      default:
-        break;
-      }
-
-      service_reponse.response = std::string(response.response.data(), response.response.size());
-    }
-    else
-    {
-      service_reponse.error_msg  = "Could not parse server response";
-      service_reponse.ret_state  = 0;
-      service_reponse.call_state = eCallState::call_state_failed;
-      service_reponse.response   = "";
-    }
-
-    return service_reponse;
-  }
-
-  eCAL::SServiceResponse CreateErrorResponse(const eCAL::Registration::SEntityId& entity_id_, const std::string& service_name_, const std::string& method_name_, const std::string& error_message_)
-  {
-    eCAL::SServiceResponse error_response;
-    error_response.host_name    = entity_id_.host_name;
-    error_response.service_name = service_name_;
-    error_response.service_id   = entity_id_.entity_id;
-    error_response.method_name  = method_name_;
-    error_response.error_msg    = error_message_;
-    error_response.ret_state    = 0;
-    error_response.call_state   = call_state_failed;
+    // error message, return state and call state
+    error_response.error_msg                      = error_message_;
+    error_response.ret_state                      = 0;
+    error_response.call_state                     = call_state_failed;
     return error_response;
   }
 
@@ -200,7 +162,7 @@ namespace eCAL
   }
 
   // Calls a service method synchronously, blocking until a response is received or timeout occurs
-  std::pair<bool, SServiceResponse> CServiceClientImpl::CallWithCallback(
+  std::pair<bool, SServiceIDResponse> CServiceClientImpl::CallWithCallback(
       const Registration::SEntityId& entity_id_, const std::string& method_name_,
       const std::string& request_, int timeout_ms_, const ResponseIDCallbackT& response_callback_)
   {
@@ -212,7 +174,7 @@ namespace eCAL
     if (!GetClientByEntity(entity_id_, client))
     {
       eCAL::Logging::Log(log_level_warning, "CServiceClientImpl::CallWithCallback: Failed to find client for entity ID: " + entity_id_.entity_id);
-      return { false, SServiceResponse() };
+      return { false, SServiceIDResponse() };
     }
 
     auto response = CallMethodWithTimeout(entity_id_, client, method_name_, request_, std::chrono::milliseconds(timeout_ms_));
@@ -269,7 +231,7 @@ namespace eCAL
     auto response_data = PrepareInitialResponse(client, method_name_);
 
     // Create the response callback
-    auto response = [response_data, entity_id_, response_callback_](const eCAL::service::Error& error, const std::shared_ptr<std::string>& response_)
+    auto response = [client, response_data, entity_id_, response_callback_](const eCAL::service::Error& error, const std::shared_ptr<std::string>& response_)
       {
         const std::lock_guard<std::mutex> lock(*response_data->mutex);
         if (!*response_data->block_modifying_response)
@@ -288,7 +250,7 @@ namespace eCAL
             eCAL::Logging::Log(log_level_debug1, "CServiceClientImpl::CallWithCallbackAsync: Asynchronous call succeded");
 #endif
             response_data->response->first = true;
-            response_data->response->second = DeserializedResponse(*response_);
+            response_data->response->second = DeserializedResponse(client, *response_);
           }
         }
         *response_data->finished = true;
@@ -443,21 +405,21 @@ namespace eCAL
   }
 
   // Blocking call to a service with a specified timeout
-  std::pair<bool, SServiceResponse> CServiceClientImpl::CallMethodWithTimeout(
+  std::pair<bool, SServiceIDResponse> CServiceClientImpl::CallMethodWithTimeout(
     const Registration::SEntityId& entity_id_, SClient& client_, const std::string& method_name_,
     const std::string& request_, std::chrono::nanoseconds timeout_)
   {
     if (method_name_.empty())
-      return { false, SServiceResponse() };
+      return { false, SServiceIDResponse() };
 
     // Serialize the request
     auto request_shared_ptr = SerializeRequest(method_name_, request_);
     if (!request_shared_ptr)
-      return { false, SServiceResponse() };
+      return { false, SServiceIDResponse() };
 
     // Prepare response data
-    auto response_data = PrepareInitialResponse(client_, method_name_);
-    auto response_callback = CreateResponseCallback(response_data);
+    auto response_data     = PrepareInitialResponse(client_, method_name_);
+    auto response_callback = CreateResponseCallback(client_, response_data);
 
     // Send the service call
     const bool call_success = client_.client_session->async_call_service(request_shared_ptr, response_callback);
@@ -547,21 +509,25 @@ namespace eCAL
     m_event_callback(service_id, callback_data);
   }
 
-  std::shared_ptr<CServiceClientImpl::SResponseData> CServiceClientImpl::PrepareInitialResponse(SClient& client_, const std::string& method_name_)
+  std::shared_ptr<CServiceClientImpl::SResponseData> CServiceClientImpl::PrepareInitialResponse(const SClient& client_, const std::string& method_name_)
   {
     auto data = std::make_shared<SResponseData>();
     data->response->first = false;
-    data->response->second.host_name    = client_.service_attr.hname;
-    data->response->second.service_name = client_.service_attr.sname;
-    data->response->second.service_id   = client_.service_attr.key;
-    data->response->second.method_name  = method_name_;
-    data->response->second.call_state   = eCallState::call_state_none;
+
+    data->response->second.service_method_id.service_id.entity_id  = client_.service_attr.sid;
+    data->response->second.service_method_id.service_id.process_id = client_.service_attr.pid;
+    data->response->second.service_method_id.service_id.host_name  = client_.service_attr.hname;
+
+    data->response->second.service_method_id.service_name          = client_.service_attr.sname;
+    data->response->second.service_method_id.method_name           = method_name_;
+
+    data->response->second.call_state = eCallState::call_state_none;
     return data;
   }
 
-  eCAL::service::ClientResponseCallbackT CServiceClientImpl::CreateResponseCallback(const std::shared_ptr<SResponseData>& response_data_)
+  eCAL::service::ClientResponseCallbackT CServiceClientImpl::CreateResponseCallback(const SClient& client_, const std::shared_ptr<SResponseData>& response_data_)
   {
-    return [response_data_](const eCAL::service::Error& error, const std::shared_ptr<std::string>& response_)
+    return [client_, response_data_](const eCAL::service::Error& error, const std::shared_ptr<std::string>& response_)
     {
       const std::lock_guard<std::mutex> lock(*response_data_->mutex);
       if (!*response_data_->block_modifying_response)
@@ -576,11 +542,57 @@ namespace eCAL
         else
         {
           response_data_->response->first  = true;
-          response_data_->response->second = DeserializedResponse(*response_);
+          response_data_->response->second = DeserializedResponse(client_, *response_);
         }
       }
       *response_data_->finished = true;
       response_data_->condition_variable->notify_all();
     };
+  }
+
+  // DeSerializes the response string into a service response
+  eCAL::SServiceIDResponse CServiceClientImpl::DeserializedResponse(const SClient& client_, const std::string& response_pb_)
+  {
+    eCAL::SServiceIDResponse service_reponse;
+    eCAL::Service::Response response;
+    if (eCAL::DeserializeFromBuffer(response_pb_.c_str(), response_pb_.size(), response))
+    {
+      const auto& response_header = response.header;
+      // service/method id
+      service_reponse.service_method_id.service_id.entity_id  = client_.service_attr.sid;
+      service_reponse.service_method_id.service_id.process_id = client_.service_attr.pid;
+      service_reponse.service_method_id.service_id.host_name  = response_header.hname;
+
+      // service and method name
+      service_reponse.service_method_id.service_name = response_header.sname;
+      service_reponse.service_method_id.method_name  = response_header.mname;
+
+      // error message and return state
+      service_reponse.error_msg = response_header.error;
+      service_reponse.ret_state = static_cast<int>(response.ret_state);
+
+      switch (response_header.state)
+      {
+      case eCAL::Service::eMethodCallState::executed:
+        service_reponse.call_state = call_state_executed;
+        break;
+      case eCAL::Service::eMethodCallState::failed:
+        service_reponse.call_state = call_state_failed;
+        break;
+      default:
+        break;
+      }
+
+      service_reponse.response = std::string(response.response.data(), response.response.size());
+    }
+    else
+    {
+      service_reponse.error_msg = "Could not parse server response";
+      service_reponse.ret_state = 0;
+      service_reponse.call_state = eCallState::call_state_failed;
+      service_reponse.response = "";
+    }
+
+    return service_reponse;
   }
 }

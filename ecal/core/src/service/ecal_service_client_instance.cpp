@@ -32,7 +32,7 @@ namespace eCAL
     assert(m_service_client_impl && "service_client_id_impl_ must not be null");
   }
 
-  std::pair<bool, SServiceResponse> CClientInstance::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_)
+  std::pair<bool, SServiceIDResponse> CClientInstance::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_)
   {
     return m_service_client_impl->CallWithCallback(m_entity_id, method_name_, request_, timeout_);
   }

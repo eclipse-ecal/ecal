@@ -58,9 +58,9 @@ namespace eCAL
     // Retrieve service IDs of all matching services
     std::vector<Registration::SEntityId> GetServiceIDs();
 
-    // Blocking call to a specific service; returns response as pair<bool, SServiceResponse>
+    // Blocking call to a specific service; returns response as pair<bool, SServiceIDResponse>
     // if a callback is provided call the callback as well
-    std::pair<bool, SServiceResponse> CallWithCallback(
+    std::pair<bool, SServiceIDResponse> CallWithCallback(
       const Registration::SEntityId& entity_id_, const std::string& method_name_,
       const std::string& request_, int timeout_ms_, const ResponseIDCallbackT& response_callback_ = nullptr);
 
@@ -104,7 +104,7 @@ namespace eCAL
     bool GetClientByEntity(const Registration::SEntityId& entity_id_, SClient& client_);
 
     // Blocking call to a specific service method with timeout
-    std::pair<bool, SServiceResponse> CallMethodWithTimeout(const Registration::SEntityId& entity_id_, SClient& client_,
+    std::pair<bool, SServiceIDResponse> CallMethodWithTimeout(const Registration::SEntityId& entity_id_, SClient& client_,
       const std::string& method_name_, const std::string& request_, std::chrono::nanoseconds timeout_);
 
     // Update the connection states for client sessions
@@ -119,23 +119,25 @@ namespace eCAL
     // SResponseData struct for handling response callbacks
     struct SResponseData
     {
-      std::shared_ptr<std::mutex>                        mutex;
-      std::shared_ptr<std::condition_variable>           condition_variable;
-      std::shared_ptr<std::pair<bool, SServiceResponse>> response;
-      std::shared_ptr<bool>                              block_modifying_response;
-      std::shared_ptr<bool>                              finished;
+      std::shared_ptr<std::mutex>                          mutex;
+      std::shared_ptr<std::condition_variable>             condition_variable;
+      std::shared_ptr<std::pair<bool, SServiceIDResponse>> response;
+      std::shared_ptr<bool>                                block_modifying_response;
+      std::shared_ptr<bool>                                finished;
 
       SResponseData() :
         mutex(std::make_shared<std::mutex>()),
         condition_variable(std::make_shared<std::condition_variable>()),
-        response(std::make_shared<std::pair<bool, SServiceResponse>>(false, SServiceResponse())),
+        response(std::make_shared<std::pair<bool, SServiceIDResponse>>(false, SServiceIDResponse())),
         block_modifying_response(std::make_shared<bool>(false)),
         finished(std::make_shared<bool>(false))
       {}
     };
 
-    static std::shared_ptr<SResponseData> PrepareInitialResponse(SClient& client_, const std::string& method_name_);
-    static eCAL::service::ClientResponseCallbackT CreateResponseCallback(const std::shared_ptr<SResponseData>& response_data_);
+    static std::shared_ptr<SResponseData> PrepareInitialResponse(const SClient& client_, const std::string& method_name_);
+    static eCAL::service::ClientResponseCallbackT CreateResponseCallback(const SClient& client_, const std::shared_ptr<SResponseData>& response_data_);
+
+    static SServiceIDResponse DeserializedResponse(const SClient& client_, const std::string& response_pb_);
 
     // Client version (incremented for protocol or functionality changes)
     static constexpr int         m_client_version = 1;
