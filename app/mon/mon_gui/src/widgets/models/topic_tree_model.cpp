@@ -48,6 +48,7 @@ QVariant TopicTreeModel::headerData(int section, Qt::Orientation orientation, in
       return columnLabels.at((Columns)section);
     }
   }
+  return QAbstractTreeModel::headerData(section, orientation, role);
 }
 
 int TopicTreeModel::mapColumnToItem(int model_column, int tree_item_type) const
