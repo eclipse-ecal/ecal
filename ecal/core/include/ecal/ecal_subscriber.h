@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,51 @@ namespace eCAL
     class ECAL_API_CLASS CSubscriber
     {
     public:
+      class Arguments
+      {
+      public:
+
+        SDataTypeInformation data_type_info;
+        SubEventIDCallbackT event_callback = nullptr;
+        Subscriber::Configuration config = GetSubscriberConfiguration();
+
+        template <typename... Args>
+        explicit Arguments(std::string topic_name_, Args&&... args)
+          : topic_name_(std::move(topic_name_))
+        {
+          // Parse the variadic arguments
+          parseArgs(std::forward<Args>(args)...);
+        }
+
+      private:
+        void setArg(const SDataTypeInformation& data_type_info_)
+        {
+          data_type_info = data_type_info_;
+        }
+
+        void setArg(const SubEventIDCallbackT& event_callback_)
+        {
+          event_callback = event_callback_;
+        }
+
+        void setArg(const Subscriber::Configuration& config_)
+        {
+          config = config_;
+        }
+
+        // Base case: no args
+        void parseArgs() { }
+
+        // Recursive case: parse one argument at a time
+        template <typename T, typename... Rest>
+        void parseArgs(T&& arg, Rest&&... rest)
+        {
+          setArg(std::forward<T>(arg));
+          parseArgs(std::forward<Rest>(rest)...);
+        }
+      };
+
+
       /**
        * @brief Constructor.
        *
@@ -54,18 +99,7 @@ namespace eCAL
        * @param config_          Optional configuration parameters.
       **/
       ECAL_API_EXPORTED_MEMBER
-        CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_ = SDataTypeInformation(), const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
-
-      /**
-       * @brief Constructor with event callback registration.
-       *
-       * @param topic_name_      Unique topic name.
-       * @param data_type_info_  Topic data type information (encoding, type, descriptor).
-       * @param event_callback_  Callback for subscriber events.
-       * @param config_          Configuration parameters.
-      **/
-      ECAL_API_EXPORTED_MEMBER
-        CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventIDCallbackT event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
+        CSubscriber(const Arguments& arguments);
 
       /**
        * @brief Destructor.
