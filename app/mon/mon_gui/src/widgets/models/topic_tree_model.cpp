@@ -118,6 +118,7 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
     }
   }
 
+
   // Remove obsolete items
   for (const auto& topic : topic_still_existing)
   {
