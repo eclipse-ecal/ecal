@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,8 +53,7 @@ namespace eCAL
     {
       if (g_log_udp_receiver() == nullptr)
         return false;
-      g_log_udp_receiver()->GetLogging(log_);
-      return true;
+      return g_log_udp_receiver()->GetLogging(log_);
     }
 
     /**
