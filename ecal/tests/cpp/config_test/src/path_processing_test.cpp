@@ -30,38 +30,34 @@
 
 #include <cstdlib>
 
-class MockEnvVar
+class MockEnvProvider  : public eCAL::Util::IEnvProvider
 {
-  public:
-    MOCK_METHOD(std::string, eCALDataEnvPath, (), ());
+  public: 
+    MOCK_METHOD(std::string, eCALEnvVar, (const std::string& var_), (const, override));
 };
 
-class MockFileSystem
+class MockDirManager : public eCAL::Util::IDirManager
 {
   public:
-    MOCK_METHOD(bool, dirExists, (const std::string& path), (const));
+    MOCK_METHOD(bool, dirExists, (const std::string& path_), (const, override));
+    MOCK_METHOD(bool, dirExistsOrCreate, (const std::string& path_), (const, override));
+    MOCK_METHOD(bool, createDir, (const std::string& path_), (const, override));
+    MOCK_METHOD(bool, createEcalDirStructure, (const std::string& path_), (const, override));
 };
 
 TEST(core_cpp_path_processing /*unused*/, ecal_data_log_env_vars /*unused*/)
 {
-  
   const std::string env_ecal_conf_value = "/path/to/conf";
   const std::string env_ecal_log_value = "/path/to/log";
 
-  { // Check for config path
-    MockEnvVar mock_env_var;
-    EXPECT_CALL(mock_env_var, eCALDataEnvPath()).WillOnce(::testing::Return(env_ecal_conf_value));
+  MockEnvProvider mock_env_provider;
 
-    auto data_env_dir = eCAL::Config::eCALDataEnvPath();
-    EXPECT_EQ(data_env_dir, env_ecal_conf_value);
-    // EXPECT_EQ(eCAL::Config::eCALDataEnvPath(), env_ecal_conf_value);
-    
-    // EXPECT_CALL(mock_env_var, getEnvVar(::testing::_, "")).WillOnce(::testing::Return(env_ecal_log_value));
-    // auto log_dir = eCAL::Config::eCALLogDir();
-    // // NE because log dir is not created
-    // EXPECT_NE(log_dir, env_ecal_log_value);
-    // // not empty, because it should return a temp dir
-    // EXPECT_NE(log_dir, "");
-  }
+  EXPECT_CALL(mock_env_provider, eCALEnvVar(ECAL_DATA_VAR)).WillOnce(testing::Return(env_ecal_conf_value));
 
+  MockDirManager mock_dir_manager;
+
+  EXPECT_CALL(mock_dir_manager, dirExists(env_ecal_conf_value)).WillOnce(testing::Return(true));
+
+  std::string ecal_data_dir = eCAL::Util::GeteCALDataDir();
+  EXPECT_EQ(ecal_data_dir, env_ecal_conf_value);
 }

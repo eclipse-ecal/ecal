@@ -28,6 +28,45 @@
 
 namespace eCAL
 {
+  namespace Util
+  {
+    class IEnvProvider 
+    {
+      public:
+        virtual ~IEnvProvider() = default;
+
+        virtual std::string eCALEnvVar(const std::string& var_) const = 0;
+    };
+
+    class EnvProvider : public IEnvProvider
+    {
+      public:
+        std::string eCALEnvVar(const std::string& var_) const override;
+    };
+
+    class IDirManager
+    {
+      public:
+        virtual ~IDirManager() = default;
+
+        virtual bool dirExists(const std::string& path_) const = 0;
+        virtual bool createDir(const std::string& path_) const = 0;
+        virtual bool dirExistsOrCreate(const std::string& path_) const = 0;
+        virtual bool createEcalDirStructure(const std::string& path_) const = 0;
+    };
+
+    class DirManager : public IDirManager
+    {
+      public:
+        bool dirExists(const std::string& path_) const override;
+        bool createDir(const std::string& path_) const override;
+        bool dirExistsOrCreate(const std::string& path_) const override;
+        bool createEcalDirStructure(const std::string& path_) const override;
+    };
+
+    std::vector<std::string> getEcalDefaultPaths(const IEnvProvider& env_provider_ = EnvProvider());
+  } // namespace Util
+
   namespace Config
   {
    /**
@@ -66,14 +105,6 @@ namespace eCAL
     std::string eCALDataSystemDir();
 
     /**
-     * @brief The path to the eCAL directory specified by the environment variable ECAL_DATA.
-     * 
-     * @returns The path to the eCAL data directory.
-     *          Returns empty string if the path does not exist.
-     */
-    std::string eCALDataEnvPath();
-
-    /**
      * @brief Returns the path to the eCAL log directory based on the ecal data directories in following order:
      * 
      *        1. Environment variable ECAL_LOG_DIR
@@ -89,7 +120,7 @@ namespace eCAL
      * @returns The path to the eCAL log directory. The subdirectory logs might not exist yet.
      *          Returns empty string if no root path could be found.
      */
-    std::string eCALLogDir();
+    std::string eCALLogDir(const Util::IEnvProvider& env_provider_ = Util::EnvProvider(), const Util::IDirManager& dir_manager_ = Util::DirManager());
 
     /**
      * @brief Creates in the specified directory the logs subdirectory.
@@ -99,17 +130,4 @@ namespace eCAL
      * @returns True if the directory structure could be created successfully.
      */
   } // namespace Config
-  
-  namespace Util
-  {
-    bool createEcalDirStructure(const std::string& path_);
-
-    std::vector<std::string> getEcalDefaultPaths();
-
-    bool dirExists(const std::string& path_);
-
-    bool createDir(const std::string& path_);
-
-    bool dirExistsOrCreate(const std::string& path_);
-  } // namespace Util
 }

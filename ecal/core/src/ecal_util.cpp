@@ -34,7 +34,7 @@ namespace eCAL
 {
   namespace Util
   {
-    std::string GeteCALDataDir()
+    std::string GeteCALDataDir(const IDirManager& dir_manager_ = DirManager())
     {
       // Return the possible default paths that could contain the yaml file
       const std::vector<std::string> search_directories = Util::getEcalDefaultPaths();
@@ -42,7 +42,7 @@ namespace eCAL
       // return the first non empty path that also exists
       for (const auto& path : search_directories)
       {
-        if (!path.empty() && Util::dirExists(path)) return path;
+        if (!path.empty() && dir_manager_.dirExists(path)) return path;
       }
 
       return {};
