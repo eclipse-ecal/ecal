@@ -217,6 +217,8 @@ Qt::ItemFlags LogModel::flags(const QModelIndex &index) const
 void LogModel::insertLogs(const eCAL::pb::LogMessageList& logging_pb)
 {
   int inserted_row_count = logging_pb.log_messages().size();
+  if (inserted_row_count <= 0) return;
+  
   int size_before = logs_.size();
 
   // Remove entries from the top
@@ -241,9 +243,7 @@ void LogModel::insertLogs(const eCAL::pb::LogMessageList& logging_pb)
   // Add new elements to the bottom
   size_before = logs_.size();
   int size_after = (size_before + inserted_row_count < max_entries_ ? size_before + inserted_row_count : max_entries_);
-  bool insert_row = size_before <= size_after - 1;
-  if (insert_row)
-    beginInsertRows(QModelIndex(), size_before, size_after - 1);
+  beginInsertRows(QModelIndex(), size_before, size_after - 1);
 
   int counter = inserted_row_count;
   for (auto& log_message_pb : logging_pb.log_messages())
@@ -265,8 +265,7 @@ void LogModel::insertLogs(const eCAL::pb::LogMessageList& logging_pb)
     counter--;
   }
 
-  if (insert_row)
-    endInsertRows();
+  endInsertRows();
 }
 
 void LogModel::clear()
