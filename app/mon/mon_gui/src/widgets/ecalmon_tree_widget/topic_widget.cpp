@@ -148,7 +148,6 @@ TopicWidget::TopicWidget(QWidget *parent)
   QVector<int> default_visible_columns
   {
     (int)TopicTreeModel::Columns::TOPIC_NAME,
-    (int)TopicTreeModel::Columns::STATUS,
     (int)TopicTreeModel::Columns::DIRECTION,
     (int)TopicTreeModel::Columns::UNIT_NAME,
     (int)TopicTreeModel::Columns::HOST_NAME,
@@ -277,8 +276,6 @@ void TopicWidget::autoSizeColumns()
   {
     ui_.tree_view->resizeColumnToContents(column);
   }
-  ui_.tree_view->setColumnWidth(3, 1);
-
 
   topic_tree_model_->removeItem(example_topic_item);
   topic_tree_model_->removeItem(example_group_item);

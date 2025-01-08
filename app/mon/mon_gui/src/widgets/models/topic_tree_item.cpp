@@ -19,7 +19,6 @@
 
 #include "topic_tree_item.h"
 
-#include <QBrush>
 #include <QFont>
 #include <QString>
 #include <QByteArray>
@@ -126,11 +125,6 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     else if (column == Columns::DFREQ)
     {
       return topic_.dfreq();
-    }
-    //neu
-    else if (column == Columns::STATUS)
-    {
-      return QVariant();
     }
     else
     {
@@ -268,7 +262,6 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::MESSAGE_DROPS)
       || (column == Columns::DCLOCK)
       || (column == Columns::DFREQ)
-      || (column == Columns::STATUS)
       )
     {
       return Qt::AlignmentFlag::AlignRight;

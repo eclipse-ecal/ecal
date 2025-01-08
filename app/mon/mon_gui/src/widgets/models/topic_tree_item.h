@@ -46,7 +46,6 @@ public:
     UNAME,
     TID,
     TNAME,
-    STATUS,
     DIRECTION,
     TENCODING,
     TTYPE,

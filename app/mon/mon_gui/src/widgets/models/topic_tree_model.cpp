@@ -48,16 +48,6 @@ QVariant TopicTreeModel::headerData(int section, Qt::Orientation orientation, in
       return columnLabels.at((Columns)section);
     }
   }
-  //neu
-  if (role == Qt::DecorationRole)
-  {
-    auto it = columnLabels.find(static_cast<Columns>(section));
-    if (it != columnLabels.end()) 
-    {
-      return it->second;
-    }
-  }
-  return QAbstractTreeModel::headerData(section, orientation, role);
 }
 
 int TopicTreeModel::mapColumnToItem(int model_column, int tree_item_type) const
@@ -132,26 +122,8 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
   {
     if (!topic.second)
     {
-      auto& tree_entry = topic_tree_item_map_.at(topic.first);
-      TopicTreeItem* topic_tree_item = tree_entry.tree_item;
-
-      if (tree_entry.tree_item_counter > 0)
-      {
-        tree_entry.tree_item_counter--;
-        if (!tree_entry.striked_out)
-        {
-          auto fontrole = topic_tree_item->data(1, Qt::ItemDataRole::FontRole);
-          auto font = qvariant_cast<QFont>(fontrole);
-          font.setStrikeOut(true);
-          topic_tree_item->setFont(font);
-          tree_entry.striked_out = true;
-        }
-      }
-      else
-      {
-        removeItemFromGroups(topic_tree_item);
-        topic_tree_item_map_.erase(topic.first);
-      }
+      removeItemFromGroups(topic_tree_item_map_.at(topic.first).tree_item);
+      topic_tree_item_map_.erase(topic.first);
     }
   }
 
