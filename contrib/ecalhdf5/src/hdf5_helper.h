@@ -73,7 +73,7 @@ inline std::string printHex(eCAL::experimental::measurement::base::Channel::id_t
 
 inline eCAL::experimental::measurement::base::Channel::id_t parseHexID(std::string string_id)
 {
-  return std::stoull(string_id, 0, 16);
+  return std::stoull(string_id, nullptr, 16);
 }
 
 namespace v6
