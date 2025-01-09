@@ -95,7 +95,7 @@ int main()
     if (!ping_request.empty())
     {
       // call Ping service method
-      eCAL::ServiceResponseVecT service_response_vec;
+      eCAL::ServiceIDResponseVecT service_response_vec;
       if (ping_client.CallWithResponse("Ping", ping_request, -1, service_response_vec))
       {
         std::cout << '\n' << "PingService::Ping method called with message (JSON) : " << req_json << '\n';
@@ -108,12 +108,12 @@ int main()
           case call_state_executed:
           {
             const std::string resp_json = GetJSONFromSerialzedMessage(resp_msg.get(), service_response.response);
-            std::cout << "Received response PingService / Ping         (JSON) : " << resp_json << " from host " << service_response.host_name << '\n';
+            std::cout << "Received response PingService / Ping         (JSON) : " << resp_json << " from host " << service_response.service_method_id.service_id.host_name << '\n';
           }
           break;
           // service execution failed
           case call_state_failed:
-            std::cout << "Received error PingService / Ping           : " << service_response.error_msg << " from host " << service_response.host_name << '\n';
+            std::cout << "Received error PingService / Ping           : " << service_response.error_msg << " from host " << service_response.service_method_id.service_id.host_name << '\n';
             break;
           default:
             break;
