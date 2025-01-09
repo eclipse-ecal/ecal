@@ -54,8 +54,7 @@ inline std::string printHex(eCAL::experimental::measurement::base::Channel::id_t
 
 inline eCAL::experimental::measurement::base::Channel::id_t parseHexID(std::string string_id)
 {
-  auto unsigned_value = std::stoull(string_id, 0, 16);
-  return static_cast<eCAL::experimental::measurement::base::Channel::id_t>(unsigned_value);
+  return std::stoull(string_id, 0, 16);
 }
 
 namespace v6
