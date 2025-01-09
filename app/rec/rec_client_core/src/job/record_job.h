@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,12 +64,12 @@ namespace eCAL
     ///////////////////////////////////////////////
     public:
       bool InitializeMeasurementDirectory();
-      bool StartRecording(const std::map<std::string, TopicInfo>& initial_topic_info_map, const std::deque<std::shared_ptr<Frame>>& initial_frame_buffer);
+      bool StartRecording(const TopicInfoMap& initial_topic_info_map, const std::deque<std::shared_ptr<Frame>>& initial_frame_buffer);
       bool StopRecording ();
-      bool SaveBuffer    (const std::map<std::string, TopicInfo>& topic_info_map,         const std::deque<std::shared_ptr<Frame>>& frame_buffer);
+      bool SaveBuffer    (const TopicInfoMap& topic_info_map,         const std::deque<std::shared_ptr<Frame>>& frame_buffer);
 
       bool AddFrame(const std::shared_ptr<Frame>& frame);
-      void SetTopicInfo(const std::map<std::string, TopicInfo>& topic_info_map);
+      void SetTopicInfo(const TopicInfoMap& topic_info_map);
 
       eCAL::rec::Error Upload(const UploadConfig& upload_config);
 
