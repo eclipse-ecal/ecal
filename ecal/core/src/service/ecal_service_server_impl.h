@@ -55,7 +55,7 @@ namespace eCAL
   public:
     ~CServiceServerImpl();
 
-    bool AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_);
+    bool SetMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_);
     bool RemoveMethodCallback(const std::string& method_);
 
     // Check connection state of a specific service

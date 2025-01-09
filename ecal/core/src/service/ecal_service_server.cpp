@@ -65,7 +65,7 @@ namespace eCAL
   bool CServiceServer::SetMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_)
   {
     if (m_service_server_impl == nullptr) return false;
-    return m_service_server_impl->AddMethodCallback(method_, method_info_, callback_);
+    return m_service_server_impl->SetMethodCallback(method_, method_info_, callback_);
   }
 
   bool CServiceServer::RemoveMethodCallback(const std::string& method_)

@@ -66,17 +66,17 @@ namespace eCAL
     Stop();
   }
 
-  bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_)
+  bool CServiceServerImpl::SetMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_)
   {
 #ifndef NDEBUG
-    Logging::Log(log_level_debug1, "CServiceServerImpl::AddMethodCallback: Adding method callback for method: " + method_);
+    Logging::Log(log_level_debug1, "CServiceServerImpl::SetMethodCallback: Adding method callback for method: " + method_);
 #endif
     const std::lock_guard<std::mutex> lock(m_method_map_mutex);
 
     auto iter = m_method_map.find(method_);
     if (iter != m_method_map.end())
     {
-      Logging::Log(log_level_warning, "CServiceServerImpl::AddMethodCallback: Method already exists, updating callback: " + method_);
+      Logging::Log(log_level_warning, "CServiceServerImpl::SetMethodCallback: Method already exists, updating callback: " + method_);
       
       // old type and descriptor fields
       iter->second.method.req_type  = method_info_.request_type.name;
@@ -94,7 +94,7 @@ namespace eCAL
     else
     {
 #ifndef NDEBUG
-      Logging::Log(log_level_debug1, "CServiceServerImpl::AddMethodCallback: Registering new method: " + method_);
+      Logging::Log(log_level_debug1, "CServiceServerImpl::SetMethodCallback: Registering new method: " + method_);
 #endif
       SMethod method;
       // method name
