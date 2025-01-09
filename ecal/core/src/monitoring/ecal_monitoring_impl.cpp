@@ -421,11 +421,6 @@ namespace eCAL
       struct Monitoring::SMethodMon method;
       method.mname         = sample_service_method.mname;
 
-      method.req_type      = sample_service_method.req_type;
-      method.req_desc      = sample_service_method.req_desc;
-      method.resp_type     = sample_service_method.resp_type;
-      method.resp_desc     = sample_service_method.resp_desc;
-
       method.req_datatype  = sample_service_method.req_datatype;
       method.resp_datatype = sample_service_method.resp_datatype;
 
@@ -493,10 +488,8 @@ namespace eCAL
     {
       struct Monitoring::SMethodMon method;
       method.mname = sample_client_method.mname;
-      method.req_type = sample_client_method.req_type;
-      method.req_desc = sample_client_method.req_desc;
-      method.resp_type = sample_client_method.resp_type;
-      method.resp_desc = sample_client_method.resp_desc;
+      method.req_datatype = sample_client_method.req_datatype;
+      method.resp_datatype = sample_client_method.resp_datatype;
       method.call_count = sample_client_method.call_count;
       ClientInfo.methods.push_back(method);
     }
