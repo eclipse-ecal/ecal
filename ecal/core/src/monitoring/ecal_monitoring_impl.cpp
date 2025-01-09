@@ -419,12 +419,17 @@ namespace eCAL
     for (const auto& sample_service_method : sample_.service.methods)
     {
       struct Monitoring::SMethodMon method;
-      method.mname      = sample_service_method.mname;
-      method.req_type   = sample_service_method.req_type;
-      method.req_desc   = sample_service_method.req_desc;
-      method.resp_type  = sample_service_method.resp_type;
-      method.resp_desc  = sample_service_method.resp_desc;
-      method.call_count = sample_service_method.call_count;
+      method.mname         = sample_service_method.mname;
+
+      method.req_type      = sample_service_method.req_type;
+      method.req_desc      = sample_service_method.req_desc;
+      method.resp_type     = sample_service_method.resp_type;
+      method.resp_desc     = sample_service_method.resp_desc;
+
+      method.req_datatype  = sample_service_method.req_datatype;
+      method.resp_datatype = sample_service_method.resp_datatype;
+
+      method.call_count    = sample_service_method.call_count;
       ServerInfo.methods.push_back(method);
     }
 
