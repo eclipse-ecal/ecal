@@ -57,8 +57,7 @@ namespace eCAL
       deleted_entity  //!< Represents a deletion of an entity
     };
 
-    using TopicIDCallbackT   = std::function<void(const STopicId&,   RegistrationEventType)>;
-    using ServiceIDCallbackT = std::function<void(const SServiceMethodId&, RegistrationEventType)>;
+    using TopicIDCallbackT = std::function<void(const STopicId&, RegistrationEventType)>;
 
     /**
      * @brief Get complete snapshot of all known publisher.

@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ create_targets_protobuf()
 
 target_link_libraries(${PROJECT_NAME}
   Threads::Threads
-  eCAL::core_protobuf
+  eCAL::protobuf_core
   eCAL::app_pb
   $<$<BOOL:${WIN32}>:Pdh>
   $<$<BOOL:${WIN32}>:wbemuuid.lib>)

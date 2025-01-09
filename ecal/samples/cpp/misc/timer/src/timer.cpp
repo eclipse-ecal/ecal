@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/msg/string/publisher.h>
+#include <ecal/ecal_publisher.h>
 
 #include <iostream>
 #include <functional>
@@ -32,7 +32,7 @@ int main()
   // set process state
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
-  eCAL::string::CPublisher<std::string> pub("hello");
+  eCAL::CPublisher pub("hello");
   eCAL::CTimer timer;
 
   timer.Start(timout_ms, [&pub](){

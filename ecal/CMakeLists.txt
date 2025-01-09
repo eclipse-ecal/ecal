@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ set(ECAL_CORE_PROJECT_ROOT ${CMAKE_CURRENT_LIST_DIR})
 add_subdirectory(core)
 
 if(ECAL_CORE_HAS_PROTOBUF)
-  add_subdirectory(msg/protobuf)
   add_subdirectory(core_pb)
 endif()
 

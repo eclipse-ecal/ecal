@@ -154,6 +154,22 @@ namespace eCAL
       return os;
     }
 
+    struct SServiceId
+    {
+      SEntityId    service_id;
+      std::string  service_name;
+
+      bool operator==(const SServiceId& other) const
+      {
+        return service_id == other.service_id && service_name == other.service_name;
+      }
+
+      bool operator<(const SServiceId& other) const
+      {
+        return std::tie(service_id, service_name) < std::tie(other.service_id, other.service_name);
+      }
+    };
+
     struct SServiceMethodId
     {
       SEntityId    service_id;

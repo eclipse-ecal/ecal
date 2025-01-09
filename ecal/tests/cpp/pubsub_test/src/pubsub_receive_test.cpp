@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/msg/string/publisher.h>
-#include <ecal/msg/string/subscriber.h>
+#include <ecal/ecal_publisher_v5.h>
+#include <ecal/ecal_subscriber_v5.h>
 
 #include <atomic>
 #include <chrono>
@@ -72,8 +72,8 @@ TEST(core_cpp_pubsub, TimingSubscriberReceive)
   EXPECT_EQ(true, eCAL::Initialize("subscriber_receive_timing"));
 
   // create simple string publisher
-  eCAL::string::CPublisher<std::string> pub("CLOCK");
-  eCAL::string::CSubscriber<std::string> sub("CLOCK");
+  eCAL::v5::CPublisher pub("CLOCK");
+  eCAL::v5::CSubscriber sub("CLOCK");
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -83,7 +83,7 @@ TEST(core_cpp_pubsub, TimingSubscriberReceive)
   // return with immediately
   measure_execution_within_range(
     "ReturnImmediate",
-    [&sub, &received]() {sub.Receive(received); },
+    [&sub, &received]() {sub.ReceiveBuffer(received); },
     0ms,
     10ms
   );
@@ -93,7 +93,7 @@ TEST(core_cpp_pubsub, TimingSubscriberReceive)
   measure_execution_within_range(
     "Return500ms",
     [&sub, &received]() {
-      auto res = sub.Receive(received, nullptr, 500); 
+      auto res = sub.ReceiveBuffer(received, nullptr, 500);
       EXPECT_FALSE(res);
     },
     500ms,
@@ -106,7 +106,7 @@ TEST(core_cpp_pubsub, TimingSubscriberReceive)
   measure_execution_within_range(
     "ReceiveImmediate",
     [&sub, &received]() {
-      auto res = sub.Receive(received); 
+      auto res = sub.ReceiveBuffer(received);
       EXPECT_TRUE(res);
     },
     0ms,
@@ -116,7 +116,7 @@ TEST(core_cpp_pubsub, TimingSubscriberReceive)
   measure_execution_within_range(
     "Return500ms_2",
     [&sub, &received]() {
-      auto res = sub.Receive(received, nullptr, 500);
+      auto res = sub.ReceiveBuffer(received, nullptr, 500);
       EXPECT_FALSE(res);
     },
     500ms,
@@ -127,7 +127,7 @@ TEST(core_cpp_pubsub, TimingSubscriberReceive)
   measure_execution_within_range(
     "ReceiveImmediateInfinite",
     [&sub, &received]() {
-      auto res = sub.Receive(received, nullptr, -1); 
+      auto res = sub.ReceiveBuffer(received, nullptr, -1);
       EXPECT_TRUE(res);
     },
     0ms,
@@ -137,7 +137,7 @@ TEST(core_cpp_pubsub, TimingSubscriberReceive)
   measure_execution_within_range(
     "Return500ms_3",
     [&sub, &received]() {
-      auto res = sub.Receive(received, nullptr, 500);
+      auto res = sub.ReceiveBuffer(received, nullptr, 500);
       EXPECT_FALSE(res);
     },
     500ms,
@@ -148,7 +148,7 @@ TEST(core_cpp_pubsub, TimingSubscriberReceive)
   measure_execution_within_range(
     "ReceiveImmediate500ms",
     [&sub, &received]() {
-      auto res = sub.Receive(received, nullptr, 500);
+      auto res = sub.ReceiveBuffer(received, nullptr, 500);
       EXPECT_TRUE(res);
     },
     0ms,
@@ -166,8 +166,8 @@ TEST(core_cpp_pubsub, SporadicEmptyReceives)
   EXPECT_EQ(true, eCAL::Initialize("sporadic_empty_receives"));
 
   // create simple string publisher
-  eCAL::string::CPublisher<std::string> pub("CLOCK");
-  eCAL::string::CSubscriber<std::string> sub("CLOCK");
+  eCAL::v5::CPublisher pub("CLOCK");
+  eCAL::v5::CSubscriber sub("CLOCK");
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -189,7 +189,7 @@ TEST(core_cpp_pubsub, SporadicEmptyReceives)
     while (!sub_stop)
     {
       // we define a maximum timeout of 10 sec to not get locked forever here in worst case
-      const bool got_data = sub.Receive(received, nullptr, 10*1000);
+      const bool got_data = sub.ReceiveBuffer(received, nullptr, 10*1000);
       if (got_data && received.empty())
       {
         FAIL() << "received empty string";

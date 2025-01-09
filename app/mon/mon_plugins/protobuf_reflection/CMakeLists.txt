@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ create_targets_protobuf()
 target_link_libraries (${PROJECT_NAME}
   Qt${QT_VERSION_MAJOR}::Core
   Qt${QT_VERSION_MAJOR}::Widgets
-  eCAL::core_protobuf
+  eCAL::protobuf_core
   eCAL::app_pb
   protobuf::libprotobuf
   MonitorTreeView

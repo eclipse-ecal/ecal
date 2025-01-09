@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@
 
 #include <cstddef>
 #include <ecal/ecal.h>
-#include <ecal/msg/string/publisher.h>
-#include <ecal/msg/string/subscriber.h>
+#include <ecal/ecal_publisher.h>
+#include <ecal/ecal_subscriber.h>
 
 #include <atomic>
 #include <functional>
@@ -114,7 +114,7 @@ TEST(core_cpp_pubsub, MultipleSendsSHM)
   eCAL::Initialize("pubsub_test");
 
   // create subscriber for topic "A"
-  eCAL::string::CSubscriber<std::string> sub("A");
+  eCAL::CSubscriber sub("A");
 
   // create publisher config
   eCAL::Publisher::Configuration pub_config;
@@ -124,15 +124,15 @@ TEST(core_cpp_pubsub, MultipleSendsSHM)
   pub_config.layer.tcp.enable = false;
 
   // create publisher for topic "A"
-  eCAL::string::CPublisher<std::string> pub("A", pub_config);
+  eCAL::CPublisher pub("A", {}, pub_config);
 
   // add callback
-  auto save_data = [&last_received_msg, &last_received_timestamp](const char* /*topic_name_*/, const std::string& msg_, long long time_, long long /*clock_*/, long long /*id_*/)
-    {
-      last_received_msg = msg_;
-      last_received_timestamp = time_;
-    };
-  EXPECT_TRUE(sub.AddReceiveCallback(save_data));
+  auto save_data = [&last_received_msg, &last_received_timestamp](const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_)
+  {
+    last_received_msg = std::string{ (const char*)data_.buf, (size_t)data_.size};
+    last_received_timestamp = data_.time;
+  };
+  EXPECT_TRUE(sub.SetReceiveCallback(save_data));
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -145,12 +145,6 @@ TEST(core_cpp_pubsub, MultipleSendsSHM)
     EXPECT_EQ(last_received_timestamp, timestamp);
     ++timestamp;
   }
-
-  // destroy subscriber
-  sub.Destroy();
-
-  // destroy publisher
-  pub.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();

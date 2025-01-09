@@ -67,6 +67,9 @@ namespace eCAL
     // Called by the registration provider to get a registration sample
     Registration::Sample GetRegistration();
 
+    // Retrieves the service id
+    Registration::SServiceId GetServiceId() const;
+
     // Retrieves the service name
     std::string GetServiceName() const;
 
