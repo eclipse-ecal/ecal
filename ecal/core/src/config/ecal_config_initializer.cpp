@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,13 +46,14 @@ namespace eCAL
 #ifdef ECAL_CORE_CONFIGURATION
         eCAL::Config::YamlFileToConfig(yaml_path, *this);
         ecal_yaml_file_path = yaml_path;
+        std::cout << "[eCAL][Config] Yaml configuration loaded from \"" << yaml_path << "\"." << "\n";
 #else
-        std::cout << "Yaml file found at \"" << yaml_path << "\" but eCAL core configuration is not enabled." << "\n";
+        std::cout << "[eCAL][Config] Yaml file found at \"" << yaml_path << "\" but eCAL core configuration is not enabled." << "\n";
 #endif
       }
       else
       {
-        std::cout << "Specified yaml configuration path not valid:\"" << yaml_path_ << "\". Using default configuration." << "\n";
+        std::cout << "[eCAL][Config] Specified yaml configuration path not valid:\"" << yaml_path_ << "\". Using default configuration." << "\n";
       }
     }
 

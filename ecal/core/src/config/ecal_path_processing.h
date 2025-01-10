@@ -26,33 +26,21 @@
 #include <string>
 #include <vector>
 
+#include <ecal/ecal_config.h>
+
 namespace eCAL
 {
   namespace Util
   {
-    class IEnvProvider 
-    {
-      public:
-        virtual ~IEnvProvider() = default;
-
-        virtual std::string eCALEnvVar(const std::string& var_) const = 0;
-    };
-
-    class EnvProvider : public IEnvProvider
-    {
-      public:
-        std::string eCALEnvVar(const std::string& var_) const override;
-    };
-
     class IDirManager
     {
       public:
-        virtual ~IDirManager() = default;
-
         virtual bool dirExists(const std::string& path_) const = 0;
         virtual bool createDir(const std::string& path_) const = 0;
         virtual bool dirExistsOrCreate(const std::string& path_) const = 0;
         virtual bool createEcalDirStructure(const std::string& path_) const = 0;
+
+        virtual std::string findFileInPaths(const std::vector<std::string>& paths_, const std::string& file_name_) const = 0;
     };
 
     class DirManager : public IDirManager
@@ -62,9 +50,60 @@ namespace eCAL
         bool createDir(const std::string& path_) const override;
         bool dirExistsOrCreate(const std::string& path_) const override;
         bool createEcalDirStructure(const std::string& path_) const override;
+
+        std::string findFileInPaths(const std::vector<std::string>& paths_, const std::string& file_name_) const override;
     };
 
-    std::vector<std::string> getEcalDefaultPaths(const IEnvProvider& env_provider_ = EnvProvider());
+    class IDirProvider 
+    {
+      public:
+        virtual std::string eCALEnvVar(const std::string& var_) const = 0;
+        virtual std::string eCALLocalUserDir() const = 0;
+        virtual std::string eCALDataSystemDir(const eCAL::Util::IDirManager& dir_manager_) const = 0;
+        virtual std::string uniqueTmpDir(const eCAL::Util::IDirManager& dir_manager_) const = 0;
+    };
+
+    class DirProvider : public IDirProvider
+    {
+      public:
+        /**
+         * @brief Get the value of the specified environment variable.
+         * 
+         * @param var_ The name of the environment variable.
+         * 
+         * @return The value of the environment variable.
+         */
+        std::string eCALEnvVar(const std::string& var_) const override;
+        
+        /**
+         * @brief The path to the local user settings directory if it exists.
+         * 
+         *        E.g. AppData/Local/eCAL [win], ~/.ecal [unix]
+         * 
+         * @return The path to the local user settings directory.
+         *         Returns empty string if the path does not exist.
+         */
+        std::string eCALLocalUserDir() const override;
+
+        /**
+         * @brief The default path to the eCAL data system directory if it exists.
+         * 
+         *        E.g. ProgramData/eCAL [win], /etc/ecal [unix]
+         * 
+         * @returns The path to the eCAL data system directory.
+         *          Returns empty string if the path does not exist.
+         */
+        std::string eCALDataSystemDir(const Util::IDirManager& dir_manager_) const override;
+
+        /**
+         * @brief Returns a unique temporary folder name.
+         * 
+         *        The folder will be created and returned.
+         * 
+         * @returns The unique temporary folder name.
+         */
+        std::string uniqueTmpDir(const eCAL::Util::IDirManager& dir_manager_) const override;
+    };
   } // namespace Util
 
   namespace Config
@@ -73,40 +112,21 @@ namespace eCAL
    * @brief Check the following paths if the specified config file exists and return the first valid complete path
    * 
    *          The function checks the following paths in order:
-   *          1. ECAL_CONFIG_DIR environment variable path
+   *          1. ECAL_DATA environment variable path
    *          2. Current working directory
    *          3. Local user path
    *          4. Global system path
    * 
    * @param config_file_ The name of the configuration file to check.
+   * 
    * @return std::string The first valid complete path to the configuration file.
    *                     Returns empty string if non could be found.
    */
-    std::string checkForValidConfigFilePath(const std::string& config_file_);
+    std::string checkForValidConfigFilePath(const std::string& config_file_, const Util::DirProvider& dir_provider_ = Util::DirProvider(), const Util::DirManager& dir_manager_ = Util::DirManager());  
 
     /**
-     * @brief The path to the local user settings directory if it exists.
-     * 
-     *        E.g. AppData/Local/eCAL [win], ~/.ecal [unix]
-     * 
-     * @return The path to the local user settings directory.
-     *         Returns empty string if the path does not exist.
-     */
-    std::string eCALLocalUserDir();
-
-    /**
-     * @brief The default path to the eCAL data system directory if it exists.
-     * 
-     *        E.g. ProgramData/eCAL [win], /etc/ecal [unix]
-     * 
-     * @returns The path to the eCAL data system directory.
-     *          Returns empty string if the path does not exist.
-     */
-    std::string eCALDataSystemDir();
-
-    /**
-     * @brief Returns the path to the eCAL log directory based on the ecal data directories in following order:
-     * 
+     * @brief Returns the path to the eCAL log directory. Searches in following order:
+     *
      *        1. Environment variable ECAL_LOG_DIR
      *        2. Environment variable ECAL_DATA
      *        3. The path provided from the configuration
@@ -120,14 +140,29 @@ namespace eCAL
      * @returns The path to the eCAL log directory. The subdirectory logs might not exist yet.
      *          Returns empty string if no root path could be found.
      */
-    std::string eCALLogDir(const Util::IEnvProvider& env_provider_ = Util::EnvProvider(), const Util::IDirManager& dir_manager_ = Util::DirManager());
+    std::string GeteCALLogDirImpl(const Util::IDirProvider& dir_provider_ = Util::DirProvider(), const Util::IDirManager& dir_manager_ = Util::DirManager(), const eCAL::Configuration& config_ = eCAL::GetConfiguration());
 
     /**
-     * @brief Creates in the specified directory the logs subdirectory.
+     * @brief Returns the path to the eCAL data directory. Searches in following order:
+     *
+     *       1. Environment variable ECAL_DATA
+     *       2. Local user path
+     *       3. System path like /etc/ecal, ProgramData/eCAL
      * 
-     * @param path_ The eCAL config/logs directory
-     * 
-     * @returns True if the directory structure could be created successfully.
+     * @returns The path to the eCAL data directory.
+     *          Returns empty string no valid path was or the path does not exist yet.
      */
+    std::string GeteCALDataDirImpl(const Util::IDirProvider& dir_provider_ = Util::DirProvider(), const Util::IDirManager& dir_manager_  = Util::DirManager());
+
+    /**
+     * @brief Returns the default paths for possible ecal configurations in following order:
+     *
+     *        1. ECAL_DATA environment varible path if set
+     *        2. local user path
+     *        3. system path like etc, ProgramData
+     * 
+     * @returns std::vector<std::string> The default paths for possible ecal configurations.
+     */
+    std::vector<std::string> getEcalDefaultPaths(const Util::IDirProvider& dir_provider_, const Util::IDirManager& dir_manager_ );
   } // namespace Config
 }

@@ -17,6 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include "ecal/ecal_util.h"
 #include "ecal_def.h"
 #include "ecal_globals.h"
 #include "ecal_event.h"
@@ -34,24 +35,15 @@ namespace eCAL
 {
   namespace Util
   {
-    std::string GeteCALDataDir(const IDirManager& dir_manager_ = DirManager())
+    std::string GeteCALDataDir()
     {
-      // Return the possible default paths that could contain the yaml file
-      const std::vector<std::string> search_directories = Util::getEcalDefaultPaths();
-      
-      // return the first non empty path that also exists
-      for (const auto& path : search_directories)
-      {
-        if (!path.empty() && dir_manager_.dirExists(path)) return path;
-      }
-
-      return {};
+      return eCAL::Config::GeteCALDataDirImpl();
     }
 
     std::string GeteCALLogDir()
     {      
       // get possible log path in order Environment, Configuration, ecal config dir, temp dir
-      return eCAL::Config::eCALLogDir();
+      return eCAL::Config::GeteCALLogDirImpl();
     }
 
 #if ECAL_CORE_MONITORING
