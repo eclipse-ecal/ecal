@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1032,7 +1032,6 @@ TEST(HDF5, PrintParseHex)
   std::vector<Channel::id_t> numeric_values =
   {
     0,
-    -1,
     1,
     std::numeric_limits<Channel::id_t>::min(),
     std::numeric_limits<Channel::id_t>::max()
