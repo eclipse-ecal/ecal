@@ -434,7 +434,6 @@ endif()
 set(ecal_cmn_src
     src/ecal.cpp
     src/ecal_def.h
-    src/ecal_def_ini.h
     src/ecal_descgate.cpp
     src/ecal_descgate.h
     src/ecal_event.cpp 
