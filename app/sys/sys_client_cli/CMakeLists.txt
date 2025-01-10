@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2020 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ target_link_libraries(${PROJECT_NAME}
   spdlog::spdlog
   tclap::tclap
   protobuf::libprotobuf
-  eCAL::core_protobuf
+  eCAL::protobuf_core
   eCAL::core_pb
   eCAL::app_pb
   eCAL::sys_client_core

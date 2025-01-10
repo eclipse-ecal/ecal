@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,10 @@
 **/
 
 #pragma once
+#include <cstdint>
+#include <iostream>
 #include <string>
 #include <tuple>
-#include <iostream>
 
 namespace eCAL
 {
@@ -103,9 +104,11 @@ namespace eCAL
 
   namespace Registration
   {
+    using EntityIdT = uint64_t;
+
     struct SEntityId
     {
-      std::string  entity_id;         // unique id within that process (it should already be unique within the whole system)
+      EntityIdT    entity_id  = 0;    // unique id within that process (it should already be unique within the whole system)
       int32_t      process_id = 0;    // process id which produced the sample
       std::string  host_name;         // host which produced the sample
 
@@ -150,6 +153,22 @@ namespace eCAL
         << ", topic_name: " << id.topic_name << ")";
       return os;
     }
+
+    struct SServiceId
+    {
+      SEntityId    service_id;
+      std::string  service_name;
+
+      bool operator==(const SServiceId& other) const
+      {
+        return service_id == other.service_id && service_name == other.service_name;
+      }
+
+      bool operator<(const SServiceId& other) const
+      {
+        return std::tie(service_id, service_name) < std::tie(other.service_id, other.service_name);
+      }
+    };
 
     struct SServiceMethodId
     {

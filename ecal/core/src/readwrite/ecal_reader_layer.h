@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ namespace eCAL
     std::string                 host_name;
     int32_t                     process_id = 0;
     std::string                 topic_name;
-    std::string                 topic_id;
+    Registration::EntityIdT     topic_id = 0;
     Registration::ConnectionPar parameter;
   };
 
@@ -55,10 +55,10 @@ namespace eCAL
     virtual void Initialize(const U& attr_) = 0;
 
     // activate / create a specific subscription
-    virtual void AddSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_) = 0;
+    virtual void AddSubscription(const std::string& host_name_, const std::string& topic_name_, const Registration::EntityIdT& topic_id_) = 0;
 
     // deactivate / destroy a specific subscription
-    virtual void RemSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_) = 0;
+    virtual void RemSubscription(const std::string& host_name_, const std::string& topic_name_, const Registration::EntityIdT& topic_id_) = 0;
 
     // connection parameter from writer side
     virtual void SetConnectionParameter(SReaderLayerPar& par_) = 0;

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -215,6 +215,18 @@ namespace eCAL
     return GetRegistrationSample();
   }
 
+  Registration::SServiceId CServiceServerImpl::GetServiceId() const
+  {
+    Registration::SServiceId service_id;
+
+    service_id.service_id.entity_id  = m_service_id;
+    service_id.service_id.process_id = Process::GetProcessID();
+    service_id.service_id.host_name  = Process::GetHostName();
+    service_id.service_name          = m_service_name;
+
+    return service_id;
+  }
+
   std::string CServiceServerImpl::GetServiceName() const
   {
     return m_service_name;
@@ -233,9 +245,7 @@ namespace eCAL
 #endif
 
     // Create service ID
-    std::stringstream counter;
-    counter << std::chrono::steady_clock::now().time_since_epoch().count();
-    m_service_id = counter.str();
+    m_service_id = std::chrono::steady_clock::now().time_since_epoch().count();
 
     // Get global server manager
     auto server_manager = eCAL::service::ServiceManager::instance()->get_server_manager();
@@ -408,7 +418,7 @@ namespace eCAL
     auto& response_header = response.header;
     response_header.hname = Process::GetHostName();
     response_header.sname = m_service_name;
-    response_header.sid   = m_service_id;
+    response_header.sid   = std::to_string(m_service_id); // TODO: Service ID currently defined as string, should be integer as well
 
     // try to parse request
     Service::Request request;

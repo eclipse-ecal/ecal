@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,10 +37,10 @@ eCAL::Registration::Sample sub_foo_process_b_register_1;
 eCAL::Registration::Sample sub_foo_process_b_register_2;
 
 // make sure we create unique topic IDs for our testcases
-std::string getUniqueId()
+uint64_t getUniqueId()
 {
-  static int topic_id = 1;
-  return std::to_string(topic_id++);
+  static uint64_t topic_id = 1;
+  return topic_id++;
 }
 
 eCAL::Registration::Sample UpdateTopicSample(const eCAL::Registration::Sample& input_)

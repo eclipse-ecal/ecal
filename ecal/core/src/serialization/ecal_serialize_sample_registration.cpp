@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,7 +101,7 @@ namespace
     // sname
     eCAL::nanopb::encode_string(pb_service_.sname, registration_service_.sname);
     // sid
-    eCAL::nanopb::encode_string(pb_service_.sid, registration_identifier_.entity_id);
+    eCAL::nanopb::encode_int_to_string(pb_service_.sid, registration_identifier_.entity_id);
     // methods
     eCAL::nanopb::encode_service_methods(pb_service_.methods, registration_service_.methods);
     // version
@@ -133,7 +133,7 @@ namespace
     // sname
     eCAL::nanopb::encode_string(pb_client_.sname, registration_client_.sname);
     // sid
-    eCAL::nanopb::encode_string(pb_client_.sid, registration_producer_.entity_id);
+    eCAL::nanopb::encode_int_to_string(pb_client_.sid, registration_producer_.entity_id);
     // methods
     eCAL::nanopb::encode_service_methods(pb_client_.methods, registration_client_.methods);
     // version
@@ -161,7 +161,7 @@ namespace
     // uname
     eCAL::nanopb::encode_string(pb_topic_.uname, registration_topic_.uname);
     // tid
-    eCAL::nanopb::encode_string(pb_topic_.tid, registration_identifier_.entity_id);
+    eCAL::nanopb::encode_int_to_string(pb_topic_.tid, registration_identifier_.entity_id);
     // tname
     eCAL::nanopb::encode_string(pb_topic_.tname, registration_topic_.tname);
     // direction
@@ -343,7 +343,7 @@ namespace
     // sname
     eCAL::nanopb::decode_string(pb_sample_.service.sname, registration_.service.sname);
     // sid
-    eCAL::nanopb::decode_string(pb_sample_.service.sid, registration_.identifier.entity_id);
+    eCAL::nanopb::decode_int_from_string(pb_sample_.service.sid, registration_.identifier.entity_id);
     // methods
     eCAL::nanopb::decode_service_methods(pb_sample_.service.methods, registration_.service.methods);
 
@@ -359,7 +359,7 @@ namespace
     // sname
     eCAL::nanopb::decode_string(pb_sample_.client.sname, registration_.client.sname);
     // sid
-    eCAL::nanopb::decode_string(pb_sample_.client.sid, registration_.identifier.entity_id);
+    eCAL::nanopb::decode_int_from_string(pb_sample_.client.sid, registration_.identifier.entity_id);
     // methods
     eCAL::nanopb::decode_service_methods(pb_sample_.client.methods, registration_.client.methods);
 
@@ -375,7 +375,7 @@ namespace
     // uname
     eCAL::nanopb::decode_string(pb_sample_.topic.uname, registration_.topic.uname);
     // tid
-    eCAL::nanopb::decode_string(pb_sample_.topic.tid, registration_.identifier.entity_id);
+    eCAL::nanopb::decode_int_from_string(pb_sample_.topic.tid, registration_.identifier.entity_id);
     // tname
     eCAL::nanopb::decode_string(pb_sample_.topic.tname, registration_.topic.tname);
     // direction
@@ -408,7 +408,7 @@ namespace
       // pid
       registration_.identifier.process_id = pb_sample_.process.pid;
       // tid -> we need to use the PID here, because we don't have a designated field for it
-      registration_.identifier.entity_id = std::to_string(registration_.identifier.process_id);
+      registration_.identifier.entity_id = registration_.identifier.process_id;
       // state.severity
       registration_.process.state.severity = static_cast<eCAL::Registration::eProcessSeverity>(pb_sample_.process.state.severity);
       // state.severity_level

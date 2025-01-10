@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   process_sample_identifier.process_id = eCAL::Process::GetProcessID();
   // We need to set the pid as entity_id.
   // However, we cannot send anything over the wire :(
-  process_sample_identifier.entity_id = std::to_string(process_sample_identifier.process_id);
+  process_sample_identifier.entity_id = process_sample_identifier.process_id;
 
   auto& process_sample_process = process_sample.process;
   process_sample_process.hgname = eCAL::Process::GetHostGroupName();

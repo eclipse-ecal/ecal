@@ -35,7 +35,7 @@
 namespace eCAL
 {
   /**
-   * @brief Service response struct containing the (responding) server informations and the response itself.
+   * @brief Service response struct containing the (responding) server informations and the response itself. (deprecated)
   **/
   struct SServiceResponse
   {
@@ -54,6 +54,19 @@ namespace eCAL
     std::string  response;       //!< service response
   };
   using ServiceResponseVecT = std::vector<SServiceResponse>; //!< vector of multiple service responses (deprecated)
+
+  /**
+   * @brief Service response struct containing the (responding) server informations and the response itself.
+  **/
+  struct SServiceIDResponse
+  {
+    Registration::SServiceMethodId service_method_id;            //!< service method information (service id (entity id, process id, host name), service name, method name)
+    std::string                    error_msg;                    //!< human readable error message
+    int                            ret_state  = 0;               //!< return state of the called service method
+    eCallState                     call_state = call_state_none; //!< call state (see eCallState)
+    std::string                    response;                     //!< service response
+  };
+  using ServiceIDResponseVecT = std::vector<SServiceIDResponse>; //!< vector of multiple service responses
 
   /**
    * @brief Service method callback function type (low level server interface). (deprecated)
@@ -90,7 +103,7 @@ namespace eCAL
    * @param entity_id_         Unique service id (entity id, process id, host name, service name, method name)
    * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
   **/
-  using ResponseIDCallbackT = std::function<void (const Registration::SEntityId& entity_id_, const struct SServiceResponse& service_response_)>;
+  using ResponseIDCallbackT = std::function<void (const Registration::SEntityId& entity_id_, const struct SServiceIDResponse& service_response_)>;
 
   /**
    * @brief Map of <method name, method information (like request type, reponse type)>.

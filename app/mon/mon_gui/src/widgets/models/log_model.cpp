@@ -1,6 +1,6 @@
 ﻿/* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -217,6 +217,8 @@ Qt::ItemFlags LogModel::flags(const QModelIndex &index) const
 void LogModel::insertLogs(const eCAL::pb::LogMessageList& logging_pb)
 {
   int inserted_row_count = logging_pb.log_messages().size();
+  if (inserted_row_count <= 0) return;
+  
   int size_before = logs_.size();
 
   // Remove entries from the top

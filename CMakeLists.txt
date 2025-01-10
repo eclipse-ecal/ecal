@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -79,9 +79,12 @@ endif()
 option(HAS_QT                                  "Platform supports Qt 5 / 6 library."                               ON)
 
 option(HAS_CURL                                "Build with CURL (i.e. upload support in the recorder app)"         ON)
+option(HAS_FTXUI                               "Platform supports FTXUI library. Requires C++17 and up."           ON)
+
+# Serialization format support
 option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                            OFF)
 option(HAS_FLATBUFFERS                         "Platform supports flatbuffers library"                            OFF)
-option(HAS_FTXUI                               "Platform supports FTXUI library. Requires C++17 and up."           ON)
+option(HAS_MESSAGEPACK                         "Platform supports messagepack library"                            OFF)
 
 option(BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
 option(BUILD_APPS                              "Build the eCAL applications"                                       ON)
@@ -307,7 +310,6 @@ endif()
 if(HAS_HDF5)
   add_subdirectory(contrib/measurement/hdf5)
   add_subdirectory(contrib/ecalhdf5)
-  add_subdirectory(contrib/message)
 endif()
 add_subdirectory(contrib/measurement/base)
 
@@ -390,6 +392,43 @@ if(BUILD_SAMPLES)
   add_subdirectory(samples)
 endif()
 
+
+# --------------------------------------------------------
+# Serialization extensions
+# --------------------------------------------------------
+# Capnroto
+if (HAS_CAPNPROTO)
+set(ECAL_CAPNPROTO_BUILD_SAMPLES                                                                     ${BUILD_SAMPLES})
+set(ECAL_CAPNPROTO_BUILD_TESTS                                                                    ${BUILD_ECAL_TESTS})
+add_subdirectory(serialization/capnproto)
+endif ()
+
+# Flatbuffers
+if (HAS_FLATBUFFERS)
+set(ECAL_FLATBUFFERS_BUILD_SAMPLES                                                                   ${BUILD_SAMPLES})
+set(ECAL_FLATBUFFERS_BUILD_TESTS                                                                  ${BUILD_ECAL_TESTS})
+add_subdirectory(serialization/flatbuffers)
+endif()
+
+# Messagepack
+#if (HAS_MESSAGEPACK)
+#set(ECAL_MESSAGEPACK_BUILD_SAMPLES                                                                   ${BUILD_SAMPLES})
+#set(ECAL_MESSAGEPACK_BUILD_TESTS                                                                  ${BUILD_ECAL_TESTS})
+#add_subdirectory(serialization/messagepack)
+#endif()
+
+# Protobuf
+set(ECAL_PROTOBUF_BUILD_SAMPLES                                                                      ${BUILD_SAMPLES})
+set(ECAL_PROTOBUF_BUILD_TESTS                                                                     ${BUILD_ECAL_TESTS})
+add_subdirectory(serialization/protobuf)
+
+# String
+set(ECAL_STRING_BUILD_SAMPLES                                                                        ${BUILD_SAMPLES})
+set(ECAL_STRING_BUILD_TESTS                                                                       ${BUILD_ECAL_TESTS})
+add_subdirectory(serialization/string)
+
+
+
 # --------------------------------------------------------
 # unit tests
 # --------------------------------------------------------
@@ -402,8 +441,6 @@ if(BUILD_ECAL_TESTS)
   if(HAS_HDF5)
     add_subdirectory(tests/contrib/ecalhdf5/hdf5_test)
   endif()
-  add_subdirectory(tests/contrib/ecalproto/dynproto_test)
-  add_subdirectory(tests/contrib/ecalproto/ecal_proto_test)
 
   # ------------------------------------------------------
   # test apps
