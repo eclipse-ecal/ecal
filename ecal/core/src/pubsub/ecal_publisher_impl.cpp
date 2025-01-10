@@ -645,15 +645,9 @@ namespace eCAL
     // topic_information
     {
       auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.tdatatype;
-      if (m_attributes.share_topic_type)
-      {
-        ecal_reg_sample_tdatatype.encoding   = m_topic_info.encoding;
-        ecal_reg_sample_tdatatype.name       = m_topic_info.name;
-      }
-      if (m_attributes.share_topic_description)
-      {
-        ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
-      }
+      ecal_reg_sample_tdatatype.encoding   = m_topic_info.encoding;
+      ecal_reg_sample_tdatatype.name       = m_topic_info.name;
+      ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
     }
     ecal_reg_sample_topic.attr  = m_attr;
     ecal_reg_sample_topic.tsize = static_cast<int32_t>(m_topic_size);

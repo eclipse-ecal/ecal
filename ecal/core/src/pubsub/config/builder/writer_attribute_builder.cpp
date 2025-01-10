@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,6 @@ namespace eCAL
     attributes.network_enabled         = reg_config_.network_enabled;
     attributes.loopback                = reg_config_.loopback;
 
-    attributes.share_topic_type        = pub_config_.share_topic_type;
-    attributes.share_topic_description = pub_config_.share_topic_description;
     attributes.layer_priority_local    = pub_config_.layer_priority_local;
     attributes.layer_priority_remote   = pub_config_.layer_priority_remote;
 

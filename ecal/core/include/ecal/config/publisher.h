@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,9 +147,6 @@ namespace eCAL
       using LayerPriorityVector = std::vector<TLayer::eTransportLayer>;
       LayerPriorityVector  layer_priority_local    { TLayer::tlayer_shm, TLayer::tlayer_udp_mc, TLayer::tlayer_tcp };
       LayerPriorityVector  layer_priority_remote   {                     TLayer::tlayer_udp_mc, TLayer::tlayer_tcp };
-
-      bool                 share_topic_type        { true };      //!< share topic type via registration
-      bool                 share_topic_description { true };      //!< share topic description via registration
     };
   }
 }

@@ -366,8 +366,6 @@ namespace YAML
   Node convert<eCAL::Publisher::Configuration>::encode(const eCAL::Publisher::Configuration& config_)
   {
     Node node;
-    node["share_topic_description"] = config_.share_topic_description;
-    node["share_topic_type"]        = config_.share_topic_type;
     node["layer"]                   = config_.layer;
     node["priority_local"]          = transformLayerEnumToStr(config_.layer_priority_local);
     node["priority_network"]        = transformLayerEnumToStr(config_.layer_priority_remote);
@@ -376,9 +374,6 @@ namespace YAML
 
   bool convert<eCAL::Publisher::Configuration>::decode(const Node& node_, eCAL::Publisher::Configuration& config_)
   {
-    AssignValue<bool>(config_.share_topic_description, node_, "share_topic_description");
-    AssignValue<bool>(config_.share_topic_type, node_, "share_topic_type");
-    
     std::vector<std::string> tmp;
     AssignValue<std::vector<std::string>>(tmp, node_, "priority_local");
     config_.layer_priority_local = transformLayerStrToEnum(tmp);
