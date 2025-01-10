@@ -264,10 +264,6 @@ namespace
 
       eCAL_pb_Method pb_method = eCAL_pb_Method_init_default;
       eCAL::nanopb::encode_string(pb_method.mname, method.mname);
-      eCAL::nanopb::encode_string(pb_method.req_type, method.req_type);
-      eCAL::nanopb::encode_string(pb_method.req_desc, method.req_desc);
-      eCAL::nanopb::encode_string(pb_method.resp_type, method.resp_type);
-      eCAL::nanopb::encode_string(pb_method.resp_desc, method.resp_desc);
 
       pb_method.has_req_datatype = true;
       eCAL::nanopb::encode_string(pb_method.req_datatype.name, method.req_datatype.name);
@@ -704,11 +700,6 @@ namespace
 
     // decode method parameter
     eCAL::nanopb::decode_string(pb_method.mname, method.mname);
-
-    eCAL::nanopb::decode_string(pb_method.req_type, method.req_type);
-    eCAL::nanopb::decode_string(pb_method.req_desc, method.req_desc);
-    eCAL::nanopb::decode_string(pb_method.resp_type, method.resp_type);
-    eCAL::nanopb::decode_string(pb_method.resp_desc, method.resp_desc);
 
     eCAL::nanopb::decode_string(pb_method.req_datatype.name, method.req_datatype.name);
     eCAL::nanopb::decode_string(pb_method.req_datatype.encoding, method.req_datatype.encoding);

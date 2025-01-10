@@ -178,15 +178,34 @@ namespace eCAL
     {
       for (const auto& method : sample_.service.methods)
       {
-        SDataTypeInformation request_type{};
-        request_type.name       = method.req_type;
-        request_type.descriptor = method.req_desc;
+        SDataTypeInformation request_datatype{};
+        SDataTypeInformation response_datatype{};
 
-        SDataTypeInformation response_type{};
-        response_type.name       = method.resp_type;
-        response_type.descriptor = method.resp_desc;
+        // if the new req_datatype field is set, use it
+        if (!method.req_datatype.name.empty())
+        {
+          request_datatype = method.req_datatype;
+        }
+        // otherwise use the old req_type and req_desc fields
+        else
+        {
+          request_datatype.name       = method.req_type;
+          request_datatype.descriptor = method.req_desc;
+        }
 
-        ApplyServiceDescription(m_service_info_map, sample_.identifier, sample_.service.sname, method.mname, request_type, response_type);
+        // if the new resp_datatype field is set, use it
+        if (!method.resp_datatype.name.empty())
+        {
+          response_datatype = method.resp_datatype;
+        }
+        // otherwise use the old resp_type and resp_desc fields
+        else
+        {
+          response_datatype.name       = method.resp_type;
+          response_datatype.descriptor = method.resp_desc;
+        }
+
+        ApplyServiceDescription(m_service_info_map, sample_.identifier, sample_.service.sname, method.mname, request_datatype, response_datatype);
       }
     }
     break;
@@ -196,16 +215,35 @@ namespace eCAL
     case bct_reg_client:
       for (const auto& method : sample_.client.methods)
       {
-        SDataTypeInformation request_type;
-        request_type.name       = method.req_type;
-        request_type.descriptor = method.req_desc;
+        SDataTypeInformation request_datatype{};
+        SDataTypeInformation response_datatype{};
 
-        SDataTypeInformation response_type{};
-        response_type.name       = method.resp_type;
-        response_type.descriptor = method.resp_desc;
+        // if the new req_datatype field is set, use it
+        if (!method.req_datatype.name.empty())
+        {
+          request_datatype = method.req_datatype;
+        }
+        // otherwise use the old req_type and req_desc fields
+        else
+        {
+          request_datatype.name       = method.req_type;
+          request_datatype.descriptor = method.req_desc;
+        }
 
-        ApplyServiceDescription(m_client_info_map, sample_.identifier, sample_.client.sname, method.mname, request_type, response_type);
-      }
+        // if the new resp_datatype field is set, use it
+        if (!method.resp_datatype.name.empty())
+        {
+          response_datatype = method.resp_datatype;
+        }
+        // otherwise use the old resp_type and resp_desc fields
+        else
+        {
+          response_datatype.name       = method.resp_type;
+          response_datatype.descriptor = method.resp_desc;
+        }
+
+        ApplyServiceDescription(m_client_info_map, sample_.identifier, sample_.client.sname, method.mname, request_datatype, response_datatype);
+     }
       break;
     case bct_unreg_client:
       RemServiceDescription(m_client_info_map, sample_.identifier, sample_.client.sname);

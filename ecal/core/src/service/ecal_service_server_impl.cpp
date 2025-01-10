@@ -66,35 +66,98 @@ namespace eCAL
     Stop();
   }
 
-  bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_)
+  bool CServiceServerImpl::SetMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_)
   {
 #ifndef NDEBUG
-    Logging::Log(log_level_debug1, "CServiceServerImpl::AddMethodCallback: Adding method callback for method: " + method_);
+    Logging::Log(log_level_debug1, "CServiceServerImpl::SetMethodCallback: Adding method callback for method: " + method_);
 #endif
     const std::lock_guard<std::mutex> lock(m_method_map_mutex);
 
     auto iter = m_method_map.find(method_);
     if (iter != m_method_map.end())
     {
-      Logging::Log(log_level_warning, "CServiceServerImpl::AddMethodCallback: Method already exists, updating callback: " + method_);
+      Logging::Log(log_level_warning, "CServiceServerImpl::SetMethodCallback: Method already exists, updating attributes and callback: " + method_);
+
+#if 0 // this is how it should look like if we do not use the old type and descriptor fields
+      // update data type and callback
+      iter->second.method.req_datatype  = method_info_.request_type;
+      iter->second.method.resp_datatype = method_info_.response_type;
+      iter->second.callback             = callback_;
+#else
+      /////////////////////////////////////////////
+      // old types and descriptors
+      /////////////////////////////////////////////
       iter->second.method.req_type  = method_info_.request_type.name;
-      iter->second.method.req_desc  = method_info_.request_type.descriptor;
       iter->second.method.resp_type = method_info_.response_type.name;
-      iter->second.method.resp_desc = method_info_.response_type.descriptor;
-      iter->second.callback = callback_;
+
+      // we need to check these fields, because the v5 implementation is using SetMethodCallback with partially filled fields
+      if (!method_info_.request_type.descriptor.empty())  iter->second.method.req_desc = method_info_.request_type.descriptor;
+      if (!method_info_.response_type.descriptor.empty()) iter->second.method.resp_desc = method_info_.response_type.descriptor;
+
+      /////////////////////////////////////////////
+      // new types, encodings and descriptors
+      /////////////////////////////////////////////
+      iter->second.method.req_datatype.name  = method_info_.request_type.name;
+      iter->second.method.resp_datatype.name = method_info_.response_type.name;
+
+      // we need to check these fields, because the v5 implementation is using SetMethodCallback with partially filled fields
+      if (!method_info_.request_type.encoding.empty())    iter->second.method.req_datatype.encoding = method_info_.request_type.encoding;
+      if (!method_info_.response_type.encoding.empty())   iter->second.method.resp_datatype.encoding = method_info_.response_type.encoding;
+      if (!method_info_.request_type.descriptor.empty())  iter->second.method.req_datatype.descriptor = method_info_.request_type.descriptor;
+      if (!method_info_.response_type.descriptor.empty()) iter->second.method.resp_datatype.descriptor = method_info_.response_type.descriptor;
+
+      // we need to do this ugly hack here, because the v5 implementation is using SetMethodCallback with nullptr to update descriptions (AddDescription)
+      if (callback_ != nullptr)
+      {
+        iter->second.callback = callback_;
+      }
+#endif
     }
     else
     {
 #ifndef NDEBUG
-      Logging::Log(log_level_debug1, "CServiceServerImpl::AddMethodCallback: Registering new method: " + method_);
+      Logging::Log(log_level_debug1, "CServiceServerImpl::SetMethodCallback: Registering new method: " + method_);
 #endif
       SMethod method;
-      method.method.mname     = method_;
+      // method name
+      method.method.mname = method_;
+
+#if 0 // this is how it should look like if we do not use the old type and descriptor fields
+      // set data type and callback
+      method.method.req_datatype  = method_info_.request_type;
+      method.method.resp_datatype = method_info_.response_type;
+      method.callback             = callback_;
+#else
+#endif
+      /////////////////////////////////////////////
+      // old types and descriptors
+      /////////////////////////////////////////////
       method.method.req_type  = method_info_.request_type.name;
-      method.method.req_desc  = method_info_.request_type.descriptor;
       method.method.resp_type = method_info_.response_type.name;
-      method.method.resp_desc = method_info_.response_type.descriptor;
-      method.callback         = callback_;
+
+      // we need to check these fields, because the v5 implementation is using SetMethodCallback with partially filled fields
+      if (!method_info_.request_type.descriptor.empty())  method.method.req_desc = method_info_.request_type.descriptor;
+      if (!method_info_.response_type.descriptor.empty()) method.method.resp_desc = method_info_.response_type.descriptor;
+
+      /////////////////////////////////////////////
+      // new types, encodings and descriptors
+      /////////////////////////////////////////////
+      method.method.req_datatype.name  = method_info_.request_type.name;
+      method.method.resp_datatype.name = method_info_.response_type.name;
+
+      // we need to check these fields, because the v5 implementation is using SetMethodCallback with partially filled fields
+      if (!method_info_.request_type.encoding.empty())    method.method.req_datatype.encoding = method_info_.request_type.encoding;
+      if (!method_info_.response_type.encoding.empty())   method.method.resp_datatype.encoding = method_info_.response_type.encoding;
+      if (!method_info_.request_type.descriptor.empty())  method.method.req_datatype.descriptor = method_info_.request_type.descriptor;
+      if (!method_info_.response_type.descriptor.empty()) method.method.resp_datatype.descriptor = method_info_.response_type.descriptor;
+
+      // we need to do this ugly hack here, because the v5 implementation is using SetMethodCallback with nullptr to update descriptions (AddDescription)
+      if (callback_ != nullptr)
+      {
+        method.callback = callback_;
+      }
+
+      // apply new method
       m_method_map[method_] = method;
     }
 
@@ -305,11 +368,18 @@ namespace eCAL
       for (const auto& iter : m_method_map)
       {
         Service::Method method;
-        method.mname      = iter.first;
+        method.mname = iter.first;
+
+        // old type and descriptor fields
         method.req_type   = iter.second.method.req_type;
         method.req_desc   = iter.second.method.req_desc;
         method.resp_type  = iter.second.method.resp_type;
         method.resp_desc  = iter.second.method.resp_desc;
+
+        // new type and descriptor fields
+        method.req_datatype  = iter.second.method.req_datatype;
+        method.resp_datatype = iter.second.method.resp_datatype;
+
         method.call_count = iter.second.method.call_count;
         service.methods.push_back(method);
       }
@@ -402,7 +472,7 @@ namespace eCAL
     // execute method (outside lock guard)
     const std::string& request_s = request.request;
     std::string response_s;
-    const int service_return_state = method.callback(method.method.mname, method.method.req_type, method.method.resp_type, request_s, response_s);
+    const int service_return_state = method.callback(method.method.mname, method.method.req_datatype, method.method.resp_datatype, request_s, response_s);
 
     // set method call state 'executed'
     response_header.state = Service::eMethodCallState::executed;

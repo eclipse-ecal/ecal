@@ -79,12 +79,7 @@ namespace eCAL
     SMethodMon GenerateServiceMethod()
     {
       SMethodMon method;
-      method.mname      = GenerateString(8);
-
-      method.req_type   = GenerateString(8);  // deprecated
-      method.req_desc   = GenerateString(10); // deprecated
-      method.resp_type  = GenerateString(8);  // deprecated
-      method.resp_desc  = GenerateString(10); // deprecated
+      method.mname = GenerateString(8);
 
       method.req_datatype  = eCAL::Registration::GenerateDataTypeInformation();
       method.resp_datatype = eCAL::Registration::GenerateDataTypeInformation();

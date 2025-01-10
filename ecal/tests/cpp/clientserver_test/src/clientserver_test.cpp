@@ -56,18 +56,19 @@ namespace
   typedef std::vector<std::shared_ptr<eCAL::CServiceClient>> ClientVecT;
 
 #if DO_LOGGING
-  void PrintRequest(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_)
+  void PrintRequest(const std::string& method_, const eCAL::SDataTypeInformation& req_type_, const eCAL::SDataTypeInformation& resp_type_, const std::string& request_)
   {
     std::cout << "------ REQUEST -------" << std::endl;
-    std::cout << "Method name           : " << method_    << std::endl;
-    std::cout << "Method request type   : " << req_type_  << std::endl;
-    std::cout << "Method response type  : " << resp_type_ << std::endl;
-    std::cout << "Method request type   : " << resp_type_ << std::endl;
-    std::cout << "Method request        : " << request_   << std::endl;
+    std::cout << "Method name                   : " << method_             << std::endl;
+    std::cout << "Method request type name      : " << req_type_.name      << std::endl;
+    std::cout << "Method request type encoding  : " << req_type_.encoding  << std::endl;
+    std::cout << "Method response type name     : " << resp_type_.name     << std::endl;
+    std::cout << "Method response type encoding : " << resp_type_.encoding << std::endl;
+    std::cout << "Method request                : " << request_            << std::endl;
     std::cout << std::endl;
   }
 #else
-  void PrintRequest(const std::string& /*method_*/, const std::string& /*req_type_*/, const std::string& /*resp_type_*/, const std::string& /*request_*/)
+  void PrintRequest(const std::string& /*method_*/, const eCAL::SDataTypeInformation& /*req_type_*/, const eCAL::SDataTypeInformation& /*resp_type_*/, const std::string& /*request_*/)
   {
   }
 #endif
@@ -258,7 +259,7 @@ TEST(core_cpp_clientserver, ClientServerBaseCallback)
   // method callback function
   std::atomic<int> methods_executed(0);
   std::atomic<int> method_process_time(0);
-  auto method_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
+  auto method_callback = [&](const std::string& method_, const eCAL::SDataTypeInformation& req_type_, const eCAL::SDataTypeInformation& resp_type_, const std::string& request_, std::string& response_) -> int
     {
       eCAL::Process::SleepMS(method_process_time);
       PrintRequest(method_, req_type_, resp_type_, request_);
@@ -363,7 +364,7 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
   // method callback function
   std::atomic<int> methods_executed(0);
   std::atomic<int> method_process_time(0);
-  auto method_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
+  auto method_callback = [&](const std::string& method_, const eCAL::SDataTypeInformation& req_type_, const eCAL::SDataTypeInformation& resp_type_, const std::string& request_, std::string& response_) -> int
     {
       eCAL::Process::SleepMS(method_process_time);
       PrintRequest(method_, req_type_, resp_type_, request_);
@@ -519,7 +520,7 @@ TEST(core_cpp_clientserver, ClientServerBaseAsyncCallback)
 
   // method callback function
   std::atomic<int> methods_executed(0);
-  auto method_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
+  auto method_callback = [&](const std::string& method_, const eCAL::SDataTypeInformation& req_type_, const eCAL::SDataTypeInformation& resp_type_, const std::string& request_, std::string& response_) -> int
     {
       PrintRequest(method_, req_type_, resp_type_, request_);
       response_ = "I answered on " + request_;
@@ -593,7 +594,7 @@ TEST(core_cpp_clientserver, ClientServerBaseAsync)
   atomic_signalable<int> num_service_callbacks_finished(0);
   int service_callback_time_ms(0);
 
-  auto method_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
+  auto method_callback = [&](const std::string& method_, const eCAL::SDataTypeInformation& req_type_, const eCAL::SDataTypeInformation& resp_type_, const std::string& request_, std::string& response_) -> int
     {
       eCAL::Process::SleepMS(service_callback_time_ms);
       PrintRequest(method_, req_type_, resp_type_, request_);
@@ -703,7 +704,7 @@ TEST(core_cpp_clientserver, ClientServerBaseBlocking)
 
   // method callback function
   std::atomic<int> methods_executed(0);
-  auto method_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
+  auto method_callback = [&](const std::string& method_, const eCAL::SDataTypeInformation& req_type_, const eCAL::SDataTypeInformation& resp_type_, const std::string& request_, std::string& response_) -> int
     {
       PrintRequest(method_, req_type_, resp_type_, request_);
       response_ = "I answer on " + request_;
@@ -800,7 +801,7 @@ TEST(core_cpp_clientserver, NestedRPCCall)
 
   // request callback function
   std::atomic<int> methods_executed(0);
-  auto method_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
+  auto method_callback = [&](const std::string& method_, const eCAL::SDataTypeInformation& req_type_, const eCAL::SDataTypeInformation& resp_type_, const std::string& request_, std::string& response_) -> int
     {
       PrintRequest(method_, req_type_, resp_type_, request_);
       response_ = "I answer on " + request_;

@@ -69,7 +69,7 @@ namespace eCAL
   using ServiceIDResponseVecT = std::vector<SServiceIDResponse>; //!< vector of multiple service responses
 
   /**
-   * @brief Service method callback function type (low level server interface).
+   * @brief Service method callback function type (low level server interface). (deprecated)
    *
    * @param method_     The method name.
    * @param req_type_   The type of the method request.
@@ -78,6 +78,17 @@ namespace eCAL
    * @param response_   The response returned from the method call.
   **/
   using MethodCallbackT = std::function<int(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_)>;
+
+  /**
+   * @brief Service method callback function type (low level server interface).
+   *
+   * @param method_     The method name.
+   * @param req_type_   The type of the method request.
+   * @param resp_type_  The type of the method response.
+   * @param request_    The request.
+   * @param response_   The response returned from the method call.
+  **/
+  using MethodInfoCallbackT = std::function<int(const std::string& method_, const SDataTypeInformation& req_type_, const SDataTypeInformation& resp_type_, const std::string& request_, std::string& response_)>;
 
   /**
    * @brief Service response callback function type (low level client interface). (deprecated)
