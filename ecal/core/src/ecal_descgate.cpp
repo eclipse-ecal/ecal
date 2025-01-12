@@ -178,32 +178,8 @@ namespace eCAL
     {
       for (const auto& method : sample_.service.methods)
       {
-        SDataTypeInformation request_datatype{};
-        SDataTypeInformation response_datatype{};
-
-        // if the new req_datatype field is set, use it
-        if (!method.req_datatype.name.empty())
-        {
-          request_datatype = method.req_datatype;
-        }
-        // otherwise use the old req_type and req_desc fields
-        else
-        {
-          request_datatype.name       = method.req_type;
-          request_datatype.descriptor = method.req_desc;
-        }
-
-        // if the new resp_datatype field is set, use it
-        if (!method.resp_datatype.name.empty())
-        {
-          response_datatype = method.resp_datatype;
-        }
-        // otherwise use the old resp_type and resp_desc fields
-        else
-        {
-          response_datatype.name       = method.resp_type;
-          response_datatype.descriptor = method.resp_desc;
-        }
+        SDataTypeInformation request_datatype  = GetDataTypeInformation(method.req_datatype, method.req_type, method.req_desc);
+        SDataTypeInformation response_datatype = GetDataTypeInformation(method.resp_datatype, method.resp_type, method.resp_desc);
 
         ApplyServiceDescription(m_service_info_map, sample_.identifier, sample_.service.sname, method.mname, request_datatype, response_datatype);
       }
@@ -215,32 +191,8 @@ namespace eCAL
     case bct_reg_client:
       for (const auto& method : sample_.client.methods)
       {
-        SDataTypeInformation request_datatype{};
-        SDataTypeInformation response_datatype{};
-
-        // if the new req_datatype field is set, use it
-        if (!method.req_datatype.name.empty())
-        {
-          request_datatype = method.req_datatype;
-        }
-        // otherwise use the old req_type and req_desc fields
-        else
-        {
-          request_datatype.name       = method.req_type;
-          request_datatype.descriptor = method.req_desc;
-        }
-
-        // if the new resp_datatype field is set, use it
-        if (!method.resp_datatype.name.empty())
-        {
-          response_datatype = method.resp_datatype;
-        }
-        // otherwise use the old resp_type and resp_desc fields
-        else
-        {
-          response_datatype.name       = method.resp_type;
-          response_datatype.descriptor = method.resp_desc;
-        }
+        SDataTypeInformation request_datatype  = GetDataTypeInformation(method.req_datatype, method.req_type, method.req_desc);
+        SDataTypeInformation response_datatype = GetDataTypeInformation(method.resp_datatype, method.resp_type, method.resp_desc);
 
         ApplyServiceDescription(m_client_info_map, sample_.identifier, sample_.client.sname, method.mname, request_datatype, response_datatype);
      }
@@ -372,6 +324,25 @@ namespace eCAL
     {
       service_method_info_map_.id_map.erase(service_method_info_key);
     }
+  }
+
+  SDataTypeInformation CDescGate::GetDataTypeInformation(const SDataTypeInformation& datatype_info_, const std::string& legacy_type_, const std::string& legacy_desc_) const
+  {
+    SDataTypeInformation datatype_info;
+
+    // if the new datatype_info field is set, use it
+    if (!datatype_info_.name.empty())
+    {
+      datatype_info = datatype_info_;
+    }
+    // otherwise use the old type and desc fields
+    else
+    {
+      datatype_info.name       = legacy_type_;
+      datatype_info.descriptor = legacy_desc_;
+    }
+
+    return datatype_info;
   }
 
   Registration::CallbackToken CDescGate::CreateToken()
