@@ -178,8 +178,8 @@ namespace eCAL
     {
       for (const auto& method : sample_.service.methods)
       {
-        SDataTypeInformation request_datatype  = GetDataTypeInformation(method.req_datatype, method.req_type, method.req_desc);
-        SDataTypeInformation response_datatype = GetDataTypeInformation(method.resp_datatype, method.resp_type, method.resp_desc);
+        const SDataTypeInformation request_datatype  = GetDataTypeInformation(method.req_datatype, method.req_type, method.req_desc);
+        const SDataTypeInformation response_datatype = GetDataTypeInformation(method.resp_datatype, method.resp_type, method.resp_desc);
 
         ApplyServiceDescription(m_service_info_map, sample_.identifier, sample_.service.sname, method.mname, request_datatype, response_datatype);
       }
@@ -191,8 +191,8 @@ namespace eCAL
     case bct_reg_client:
       for (const auto& method : sample_.client.methods)
       {
-        SDataTypeInformation request_datatype  = GetDataTypeInformation(method.req_datatype, method.req_type, method.req_desc);
-        SDataTypeInformation response_datatype = GetDataTypeInformation(method.resp_datatype, method.resp_type, method.resp_desc);
+        const SDataTypeInformation request_datatype  = GetDataTypeInformation(method.req_datatype, method.req_type, method.req_desc);
+        const SDataTypeInformation response_datatype = GetDataTypeInformation(method.resp_datatype, method.resp_type, method.resp_desc);
 
         ApplyServiceDescription(m_client_info_map, sample_.identifier, sample_.client.sname, method.mname, request_datatype, response_datatype);
      }
@@ -326,7 +326,7 @@ namespace eCAL
     }
   }
 
-  SDataTypeInformation CDescGate::GetDataTypeInformation(const SDataTypeInformation& datatype_info_, const std::string& legacy_type_, const std::string& legacy_desc_) const
+  SDataTypeInformation CDescGate::GetDataTypeInformation(const SDataTypeInformation& datatype_info_, const std::string& legacy_type_, const std::string& legacy_desc_)
   {
     SDataTypeInformation datatype_info;
 

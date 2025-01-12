@@ -472,7 +472,7 @@ namespace eCAL
     // execute method (outside lock guard)
     const std::string& request_s = request.request;
     std::string response_s;
-    SMethodInfo method_info{
+    const SMethodInfo method_info{
       method.method.mname,
       method.method.req_datatype,
       method.method.resp_datatype

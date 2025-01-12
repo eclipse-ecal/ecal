@@ -255,7 +255,7 @@ namespace eCAL
         };
 
       // Call the method asynchronously using the new API
-      bool success = m_service_client_impl->CallWithCallbackAsync(method_name_, request_, callback);
+      const bool success = m_service_client_impl->CallWithCallbackAsync(method_name_, request_, callback);
       Logging::Log(log_level_debug1, "v5::CServiceClientImpl: Async call to method: " + method_name_ + " completed with success: " + std::to_string(success));
       return success;
     }

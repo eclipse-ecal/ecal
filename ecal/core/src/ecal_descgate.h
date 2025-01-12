@@ -125,7 +125,7 @@ namespace eCAL
                                       const Registration::SampleIdentifier& service_id_,
                                       const std::string& service_name_);
 
-    SDataTypeInformation GetDataTypeInformation(const SDataTypeInformation& datatype_info_, const std::string& legacy_type_, const std::string& legacy_desc_) const;
+    static SDataTypeInformation GetDataTypeInformation(const SDataTypeInformation& datatype_info_, const std::string& legacy_type_, const std::string& legacy_desc_);
     Registration::CallbackToken CreateToken();
       
     // internal quality topic info publisher/subscriber maps
