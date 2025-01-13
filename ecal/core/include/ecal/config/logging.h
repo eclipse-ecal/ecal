@@ -29,11 +29,6 @@
 #include <vector>
 #include <string>
 
-namespace
-{
-  // After switchting to c++17, this can be replaced by an inline constexpr
-  static const eCAL_Logging_Filter log_filter_default = log_level_info | log_level_warning | log_level_error | log_level_fatal;
-}
 
 namespace eCAL
 {
@@ -65,9 +60,9 @@ namespace eCAL
 
       struct Configuration
       {
-        Sink                console { true,  log_level_error | log_level_fatal}; //!< default: true, log_level_error
-        Sink                file    { false, log_level_none };                   //!< default: false, log_level_none
-        Sink                udp     { true,  log_filter_default };               //!< default: true, log_filter_default
+        Sink                console { true,  log_level_warning | log_level_error | log_level_fatal };                   //!< default: true, log_level_warning | log_level_error | log_level_fatal
+        Sink                file    { false, log_level_none };                                                          //!< default: false, log_level_none
+        Sink                udp     { true,  log_level_info | log_level_warning | log_level_error | log_level_fatal };  //!< default: true, log_level_info | log_level_warning | log_level_error | log_level_fatal
         
         File::Configuration file_config;
         UDP::Configuration  udp_config;

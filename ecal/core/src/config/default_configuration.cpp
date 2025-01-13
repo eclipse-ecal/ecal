@@ -3,7 +3,6 @@
 #include "ecal/ecal_config.h"
 
 #include <string>
-#include <fstream>
 
 namespace 
 {
@@ -344,17 +343,25 @@ namespace eCAL
       return ss;
     }
 
-    bool dumpConfigToFile(const eCAL::Configuration& config_, const std::string& file_path_)
+    std::stringstream getTimeConfigAsYamlSS()
     {
-      std::ofstream file(file_path_);
-      if (!file.is_open())
-      {
-        return false;
-      }
+      std::stringstream ss;
+      ss << std::boolalpha;
+      ss << R"(# ---------------------------------------------)"                                                                                    << "\n";
+      ss << R"(# ecaltime-linuxptp Settings)"                                                                                                       << "\n";
+      ss << R"(# ---------------------------------------------)"                                                                                    << "\n";
+      ss << R"(#)"                                                                                                                                  << "\n";
+      ss << R"(# device = /dev/ptp0                                 The device can be any ptp clock.)"                                              << "\n";
+      ss << R"(#                                                    Alternatively, you can use:)"                                                   << "\n";
+      ss << R"(#                                                      - CLOCK_MONOTONIC    (a steady clock with undefined epoche))"                 << "\n";
+      ss << R"(#                                                      - CLOCK_REALTIME     (the current system time))"                              << "\n";
+      ss << R"(#                                                      - CLOCK_TAI          (Like CLOCK_REALTIME but in International Atomic Time))" << "\n";
+      ss << R"(#)"                                                                                                                                  << "\n";
+      ss << R"(# ---------------------------------------------)"                                                                                    << "\n";
+      ss << R"(linuxptp:)"                                                                                                                          << "\n";
+      ss << R"(  device: "/dev/ptp0")"                                                                                                              << "\n";
 
-      file << getConfigAsYamlSS(config_).str();
-      file.close();
-      return true;
+      return ss;
     }
   }
 }
