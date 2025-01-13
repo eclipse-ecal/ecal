@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@
 **/
 
 #pragma once
+
+#include <ecal/config/configuration.h>
 
 namespace eCAL
 {
@@ -49,5 +51,12 @@ namespace eCAL
                                             | TimeSync;
 
     static const unsigned int None       =    0x000;
+  
+    inline eCAL::Configuration Configuration()
+    {
+      eCAL::Configuration config;
+      config.InitFromConfig();
+      return config;
+    } 
   }
 }

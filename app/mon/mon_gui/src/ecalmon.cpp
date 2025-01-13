@@ -71,8 +71,7 @@ Ecalmon::Ecalmon(QWidget *parent)
   , monitor_error_counter_(0)
 {
   // Just make sure that eCAL is initialized
-  auto config = eCAL::GetConfiguration();
-  config.InitFromConfig();
+  auto config = eCAL::Init::Configuration();
   config.logging.receiver.enable = true;
   eCAL::Initialize(config, "eCALMon", eCAL::Init::Default | eCAL::Init::Monitoring);
   eCAL::Monitoring::SetFilterState(false);

@@ -32,8 +32,7 @@ int main(int argc, char** argv)
 {
   auto args = ParseArgs(argc, argv);
 
-  auto config = eCAL::GetConfiguration();
-  config.InitFromConfig();
+  auto config = eCAL::Init::Configuration();
   config.logging.receiver.enable = true;
   
   auto status = eCAL::Initialize(config, "eCALMon TUI", eCAL::Init::Default | eCAL::Init::Monitoring);

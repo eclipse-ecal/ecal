@@ -209,8 +209,7 @@ int main(int argc, char** argv)
     }
 
     // initialize eCAL API
-    auto config = eCAL::GetConfiguration();
-    config.InitFromConfig();
+    auto config = eCAL::Init::Configuration();
     config.logging.receiver.enable = true;
     eCAL::Initialize(config, "eCALMon CLI", eCAL::Init::All);
 
