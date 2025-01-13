@@ -15,7 +15,7 @@ Loading strategy (Priority)
 ===========================
 
 The eCAL configuration file is loaded based on the following priorities, whereever it is found first.
-If you want a specific eCAL Node to run with another ``ecal.yaml`` than the others, you can set the ``ECAL_CONFIG`` variable before starting the process, e.g. from a batch or shell skript.
+If you want a specific eCAL Node to run with another ``ecal.yaml`` than the others, you can set the ``ECAL_DATA`` variable before starting the process, e.g. from a batch or shell skript.
 In addition, some eCAL applications support providing a path from the command line option ``--ecal-config-file``.
 
 .. important::
@@ -23,12 +23,12 @@ In addition, some eCAL applications support providing a path from the command li
 
 - |fa-windows| Windows:
 
-  1. ``%ECAL_CONFIG%/ecal.yaml``
+  1. ``%ECAL_DATA%/ecal.yaml``
   2. ``%ProgramData%/ecal/ecal.yaml``
 
 - |fa-ubuntu| Ubuntu:
 
-  1. ``$ECAL_CONFIG/ecal.yaml``
+  1. ``$ECAL_DATA/ecal.yaml``
   2. ``/etc/ecal/ecal.yaml`` (from ``CMAKE_INSTALL_SYSCONFDIR``)
   3. ``/etc/ecal/ecal.yaml`` (fallback)
       
