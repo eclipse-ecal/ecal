@@ -46,11 +46,55 @@ namespace eCAL
     class DirManager : public IDirManager
     {
       public:
+        /**
+         * @brief Check if the specified directory exists.
+         *        Wrapper function for eCAL Utils Filesystem functionality.
+         * 
+         * @param path_ The path to the directory.
+         * 
+         * @return true if the directory exists, false otherwise.
+         */
         bool dirExists(const std::string& path_) const override;
+
+        /**
+         * @brief Create the specified directory.
+         *        Wrapper function for eCAL Utils Filesystem functionality.
+         * 
+         * @param path_ The path to the directory.
+         * 
+         * @return true if the directory was created, false otherwise.
+         */
         bool createDir(const std::string& path_) const override;
+
+        /**
+         * @brief Check if the specified directory exists or create it.
+         * 
+         * @param path_ The path to the directory.
+         * 
+         * @return true if the directory exists or was created, false otherwise and when path_ is empty.
+         */
         bool dirExistsOrCreate(const std::string& path_) const override;
+
+        /**
+         * @brief Create the eCAL directory structure.
+         * 
+         *        The function creates the specified directory and the logs subdirectory.
+         * 
+         * @param path_ The path to the eCAL directory.
+         * 
+         * @return true if the directory structure was created, false otherwise.
+         */
         bool createEcalDirStructure(const std::string& path_) const override;
 
+        /**
+         * @brief Find the specified file in the provided paths.
+         * 
+         * @param paths_     The paths to search in.
+         * @param file_name_ The name of the file to find.
+         * 
+         * @return std::string The first valid complete path to the file.
+         *         Returns empty string if no valid path could be found.
+         */
         std::string findFileInPaths(const std::vector<std::string>& paths_, const std::string& file_name_) const override;
     };
 
@@ -96,11 +140,11 @@ namespace eCAL
         std::string eCALDataSystemDir(const Util::IDirManager& dir_manager_) const override;
 
         /**
-         * @brief Returns a unique temporary folder name.
+         * @brief Returns a unique temporary folder.
          * 
          *        The folder will be created and returned.
          * 
-         * @returns The unique temporary folder name.
+         * @returns The unique temporary folder directory.
          */
         std::string uniqueTmpDir(const eCAL::Util::IDirManager& dir_manager_) const override;
     };

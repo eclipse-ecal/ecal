@@ -208,7 +208,6 @@ namespace eCAL
       return dirExistsOrCreate(log_path);
     }
 
-    // Returns path, where the specified ini file is found, or empty string if not found
     std::string DirManager::findFileInPaths(const std::vector<std::string>& paths_, const std::string& file_name_) const
     {
       auto it = std::find_if(paths_.begin(), paths_.end(), [&file_name_](const std::string& path_)
