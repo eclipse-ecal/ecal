@@ -1,6 +1,6 @@
 /* =========================== LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ namespace eCAL
     ECAL_API void InitFromConfig();
     ECAL_API void InitFromFile(const std::string& yaml_path_);
 
-    ECAL_API std::string GetYamlFilePath();
+    ECAL_API std::string GetYamlFilePath() const;
 
     protected:
       std::string ecal_yaml_file_path;

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -236,52 +236,52 @@ namespace eCAL
 
     Configuration::Configuration() = default;
 
-    std::string Configuration::GetYamlFilePath()
+    std::string Configuration::GetYamlFilePath() const
     {
       return ecal_yaml_file_path;
     }
 
-    Configuration& GetConfiguration()
+    const Configuration& GetConfiguration()
     {
       return g_ecal_configuration;
     }
 
-    TransportLayer::Configuration& GetTransportLayerConfiguration()
+    const TransportLayer::Configuration& GetTransportLayerConfiguration()
     {
       return GetConfiguration().transport_layer;
     }
 
-    Registration::Configuration& GetRegistrationConfiguration()
+    const Registration::Configuration& GetRegistrationConfiguration()
     {
       return GetConfiguration().registration;
     }
 
-    Monitoring::Configuration& GetMonitoringConfiguration()
+    const Monitoring::Configuration& GetMonitoringConfiguration()
     {
       return GetConfiguration().monitoring;
     }
 
-    Logging::Configuration& GetLoggingConfiguration()
+    const Logging::Configuration& GetLoggingConfiguration()
     {
       return GetConfiguration().logging;
     }
 
-    Subscriber::Configuration& GetSubscriberConfiguration()
+    const Subscriber::Configuration& GetSubscriberConfiguration()
     {
       return GetConfiguration().subscriber;
     }
 
-    Publisher::Configuration& GetPublisherConfiguration()
+    const Publisher::Configuration& GetPublisherConfiguration()
     {
       return GetConfiguration().publisher;
     }
 
-    Time::Configuration& GetTimesyncConfiguration()
+    const Time::Configuration& GetTimesyncConfiguration()
     {
       return GetConfiguration().timesync;
     }
 
-    Application::Configuration& GetApplicationConfiguration()
+    const Application::Configuration& GetApplicationConfiguration()
     {
       return GetConfiguration().application;
     }
