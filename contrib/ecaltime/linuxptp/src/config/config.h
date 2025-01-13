@@ -34,7 +34,7 @@ namespace LinuxPtpConfig {
    */
   std::string getDevice() {    
     std::string path_to_ini = eCAL::Util::GeteCALDataDir();
-    path_to_ini += "ecaltime.yaml";
+    path_to_ini += "/ecaltime.yaml";
 
     YAML::Node yaml;
     try
