@@ -315,9 +315,6 @@ endif()
 # --------------------------------------------------------
 # offer the user the choice of overriding the installation directories
 # --------------------------------------------------------
-set(INSTALL_INCLUDE_DIR include CACHE PATH
-  "Installation directory for header files")
-
 include(GNUInstallDirs)
 set(eCAL_install_app_dir           ${CMAKE_INSTALL_BINDIR})
 set(eCAL_install_archive_dir       ${CMAKE_INSTALL_LIBDIR})

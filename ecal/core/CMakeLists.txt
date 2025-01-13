@@ -750,12 +750,12 @@ add_ecal_core_library(${PROJECT_NAME})
 ## Iinstall header files only once...
 ## 
 install(DIRECTORY
-   "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
+   "include/" DESTINATION "${eCAL_install_include_dir}" COMPONENT sdk
     FILES_MATCHING PATTERN "*.h")
 
 # install generated defs.h file    
 install(DIRECTORY
-   "${CMAKE_CURRENT_BINARY_DIR}/include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
+   "${CMAKE_CURRENT_BINARY_DIR}/include/" DESTINATION "${eCAL_install_include_dir}" COMPONENT sdk
     FILES_MATCHING PATTERN "*.h")
 
 # eCAL process stub

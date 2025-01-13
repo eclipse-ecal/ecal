@@ -45,7 +45,7 @@ install(TARGETS ${PROJECT_NAME}
     EXPORT eCALTargets
     RUNTIME DESTINATION "${eCAL_install_bin_dir}" COMPONENT runtime
     LIBRARY DESTINATION "${eCAL_install_lib_dir}" COMPONENT sdk
-    PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/ecal" COMPONENT sdk
+    PUBLIC_HEADER DESTINATION "${eCAL_install_include_dir}/ecal" COMPONENT sdk
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/csharp)
