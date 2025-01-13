@@ -261,58 +261,106 @@ TEST(core_cpp_path_processing /*unused*/, ecal_log_order_test /*unused*/)
   MockDirProvider mock_dir_provider;
   NiceMock<MockDirManager> mock_dir_manager;
 
-  // mock the environment variables to be empty
+  ::testing::Sequence seq_env_log, seq_env_data, seq_local_user, seq_data_system;
+
   EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_LOG_VAR))
-    .Times(1)
-    .WillRepeatedly(testing::Return(ecal_log_env_var));
-  EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_DATA_VAR))
     .Times(2)
-    .WillRepeatedly(testing::Return(ecal_data_env_var));
-  // log is the third one
-  EXPECT_CALL(mock_dir_provider, eCALLocalUserDir())
+    .InSequence(seq_env_log)
+    .WillRepeatedly(testing::Return(ecal_log_env_var));
+  EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_LOG_VAR))
+    .Times(9)
+    .InSequence(seq_env_log)
+    .WillRepeatedly(testing::Return(""));
+
+  EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_DATA_VAR))
     .Times(4)
+    .InSequence(seq_env_data)
+    .WillRepeatedly(testing::Return(ecal_data_env_var));
+
+  EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_DATA_VAR))
+    .Times(7)
+    .InSequence(seq_env_data)
+    .WillRepeatedly(testing::Return(""));
+
+  // log is the third one
+
+  EXPECT_CALL(mock_dir_provider, eCALLocalUserDir())
+    .Times(8)
+    .InSequence(seq_local_user)
     .WillRepeatedly(testing::Return(ecal_local_user_dir));
+
+  EXPECT_CALL(mock_dir_provider, eCALLocalUserDir())
+    .Times(3)
+    .InSequence(seq_local_user)
+    .WillRepeatedly(testing::Return(""));
+  
   EXPECT_CALL(mock_dir_provider, eCALDataSystemDir(::testing::Ref(mock_dir_manager)))
-    .Times(5)
+    .Times(10)
+    .InSequence(seq_data_system)
     .WillRepeatedly(testing::Return(ecal_data_system_dir));
 
-  EXPECT_CALL(mock_dir_provider, uniqueTmpDir(::testing::Ref(mock_dir_manager)))
+  EXPECT_CALL(mock_dir_provider, eCALDataSystemDir(::testing::Ref(mock_dir_manager)))
     .Times(1)
-    .WillOnce(testing::Return(unique_tmp_dir));
+    .InSequence(seq_data_system)
+    .WillRepeatedly(testing::Return(""));
+
+  EXPECT_CALL(mock_dir_provider, uniqueTmpDir(::testing::Ref(mock_dir_manager)))
+    .Times(2)
+    .WillRepeatedly(testing::Return(unique_tmp_dir));
 
   auto config = eCAL::GetConfiguration();
   config.logging.provider.file_config.path = ecal_config_logging_dir;
+  
   // let's assume all directories exist
-  ON_CALL(mock_dir_manager, dirExists(testing::_)).WillByDefault(testing::Return(true));
+  ON_CALL(mock_dir_manager, dirExists(testing::_)).WillByDefault(testing::Return(false));
+
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_log_env_var))
+    .Times(2)
+    .WillOnce(testing::Return(true))
+    .WillRepeatedly(testing::Return(false));
+  
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_data_env_var))
+    .Times(3)
+    .WillOnce(testing::Return(true))
+    .WillOnce(testing::Return(true))
+    .WillRepeatedly(testing::Return(false));
+
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_config_logging_dir))
+    .Times(3)
+    .WillOnce(testing::Return(true))
+    .WillOnce(testing::Return(true))
+    .WillRepeatedly(testing::Return(false));
+  
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_local_user_log_dir))
+    .Times(3)
+    .WillOnce(testing::Return(true))
+    .WillOnce(testing::Return(true))
+    .WillRepeatedly(testing::Return(false));
+
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_data_system_log_dir))
+    .Times(3)
+    .WillOnce(testing::Return(true))
+    .WillOnce(testing::Return(true))
+    .WillRepeatedly(testing::Return(false));
+
   
   // Testing with eCALData and eCALLog -DirImpl
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config),  ecal_log_env_var);
-  
-  EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_LOG_VAR))
-    .Times(5)
-    .WillRepeatedly(testing::Return(""));
+  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config),  ecal_data_env_var);
   
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_data_env_var);
-
-  EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_DATA_VAR))
-    .Times(4)
-    .WillRepeatedly(testing::Return(""));
+  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_config_logging_dir);
 
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_config_logging_dir);
+  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_local_user_log_dir);
 
   config.logging.provider.file_config.path = "";
 
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_local_user_log_dir);
-
-  EXPECT_CALL(mock_dir_provider, eCALLocalUserDir())
-    .Times(2)
-    .WillRepeatedly(testing::Return(""));
+  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_data_system_log_dir);
 
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_data_system_log_dir);
-  
-  EXPECT_CALL(mock_dir_provider, eCALDataSystemDir(::testing::Ref(mock_dir_manager)))
-    .Times(1)
-    .WillRepeatedly(testing::Return(""));
+  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), unique_tmp_dir);
 
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), unique_tmp_dir);
 }
