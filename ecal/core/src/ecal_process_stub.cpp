@@ -18,6 +18,7 @@
 */
 
 #include <errno.h>
+#include <fcntl.h>
 #include <string>
 #include <sys/file.h>
 #include <sys/stat.h>
