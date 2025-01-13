@@ -188,7 +188,10 @@ namespace eCAL
     // Handle timeout event
     if (!response.first && response.second.call_state == eCallState::call_state_timeouted)
     {
-      NotifyEventCallback(entity_id_, eCAL_Client_Event::client_event_timeout, client.service_attr);
+      Registration::SServiceMethodId service_id;
+      service_id.service_name = m_service_name;
+      service_id.service_id   = entity_id_;
+      NotifyEventCallback(service_id, eCAL_Client_Event::client_event_timeout);
 #ifndef NDEBUG
       eCAL::Logging::Log(log_level_debug1, "CServiceClientImpl::CallWithCallback: Synchronous call for service: " + m_service_name + ", method: " + method_name_ + " timed out.");
 #endif
@@ -283,7 +286,7 @@ namespace eCAL
     return state;
   }
 
-  void CServiceClientImpl::RegisterService(const Registration::SEntityId& entity_id_, const SServiceAttr& service_)
+  void CServiceClientImpl::RegisterService(const Registration::SEntityId& entity_id_, const v5::SServiceAttr& service_)
   {
     const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
 
@@ -478,20 +481,24 @@ namespace eCAL
       auto state = client_data.client_session->get_state();
 
       Registration::SEntityId entity_id;
-      entity_id.entity_id = client_data.service_attr.sid;
+      entity_id.entity_id  = client_data.service_attr.sid;
       entity_id.process_id = client_data.service_attr.pid;
-      entity_id.host_name = client_data.service_attr.hname;
+      entity_id.host_name  = client_data.service_attr.hname;
+
+      Registration::SServiceMethodId service_id;
+      service_id.service_name = m_service_name;
+      service_id.service_id   = entity_id;
 
       if (!client_data.connected && state == eCAL::service::State::CONNECTED)
       {
         client_data.connected = true;
-        NotifyEventCallback(entity_id, client_event_connected, client_data.service_attr);
+        NotifyEventCallback(service_id, client_event_connected);
         ++it;
       }
       else if (client_data.connected && state == eCAL::service::State::FAILED)
       {
         client_data.connected = false;
-        NotifyEventCallback(entity_id, client_event_disconnected, client_data.service_attr);
+        NotifyEventCallback(service_id, client_event_disconnected);
         it = m_client_session_map.erase(it);
       }
       else
@@ -508,24 +515,19 @@ namespace eCAL
   }
 
 
-  // Helper function to notify event callback
-  void CServiceClientImpl::NotifyEventCallback(const Registration::SEntityId& entity_id_, eCAL_Client_Event event_type_, const SServiceAttr& service_attr_)
+  void CServiceClientImpl::NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eCAL_Client_Event event_type_)
   {
+#ifndef NDEBUG
+    Logging::Log(log_level_debug1, "CServiceClientImpl::NotifyEventCallback: Notifying event callback for: " + m_service_name + " Event Type: " + std::to_string(event_type_));
+#endif
+
     const std::lock_guard<std::mutex> lock(m_event_callback_mutex);
     if (m_event_callback == nullptr) return;
 
-    SClientEventCallbackData callback_data;
+    SClientEventIDCallbackData callback_data;
     callback_data.type = event_type_;
-    callback_data.time = std::chrono::duration_cast<std::chrono::microseconds>(
-      std::chrono::steady_clock::now().time_since_epoch()).count();
-    callback_data.attr = service_attr_;
-
-    Registration::SServiceMethodId service_id;
-    service_id.service_id = entity_id_;
-    service_id.service_name = m_service_name;
-    service_id.method_name = "";
-
-    m_event_callback(service_id, callback_data);
+    callback_data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+    m_event_callback(service_id_, callback_data);
   }
 
   std::shared_ptr<CServiceClientImpl::SResponseData> CServiceClientImpl::PrepareInitialResponse(const SClient& client_, const std::string& method_name_)

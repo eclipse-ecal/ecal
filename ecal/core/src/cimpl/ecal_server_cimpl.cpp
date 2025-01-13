@@ -48,7 +48,7 @@ namespace
   }
 
   std::recursive_mutex g_server_event_callback_mtx; // NOLINT(*-avoid-non-const-global-variables)
-  void g_server_event_callback(const char* name_, const struct eCAL::SServerEventCallbackData* data_, const ServerEventCallbackCT callback_, void* par_)
+  void g_server_event_callback(const char* name_, const struct eCAL::v5::SServerEventCallbackData* data_, const ServerEventCallbackCT callback_, void* par_)
   {
     const std::lock_guard<std::recursive_mutex> lock(g_server_event_callback_mtx);
     SServerEventCallbackDataC data{};

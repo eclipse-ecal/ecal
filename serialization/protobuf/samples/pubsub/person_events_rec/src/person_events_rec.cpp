@@ -24,7 +24,7 @@
 
 #include "person.pb.h"
 
-void OnEvent(const char* topic_name_, const struct eCAL::SSubEventCallbackData* data_)
+void OnEvent(const char* topic_name_, const struct eCAL::v5::SSubEventCallbackData* data_)
 {
   std::cout << "topic name       : " << topic_name_ << std::endl;
   switch (data_->type)

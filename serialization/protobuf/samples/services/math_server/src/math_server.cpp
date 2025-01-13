@@ -62,7 +62,7 @@ public:
 };
 
 // server state callback
-void OnServerEvent(const eCAL::SServerEventCallbackData* data_)
+void OnServerEvent(const eCAL::v5::SServerEventCallbackData* data_)
 {
   assert(data_);
 

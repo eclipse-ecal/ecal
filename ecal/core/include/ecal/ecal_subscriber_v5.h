@@ -26,6 +26,7 @@
 
 #include <cstddef>
 #include <ecal/ecal_callback.h>
+#include <ecal/ecal_callback_v5.h>
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_config.h>

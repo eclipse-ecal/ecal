@@ -93,7 +93,7 @@ namespace eCAL
 
   void CClientGate::ApplyServiceRegistration(const Registration::Sample& ecal_sample_)
   {
-    SServiceAttr service;
+    v5::SServiceAttr service;
     const auto& ecal_sample_service = ecal_sample_.service;
     const auto& ecal_sample_identifier = ecal_sample_.identifier;
     service.hname = ecal_sample_identifier.host_name;

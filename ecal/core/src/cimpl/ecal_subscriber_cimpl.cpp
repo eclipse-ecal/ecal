@@ -47,7 +47,7 @@ namespace
   }
 
   std::recursive_mutex g_sub_event_callback_mtx; // NOLINT(*-avoid-non-const-global-variables)
-  void g_sub_event_callback(const char* topic_name_, const struct eCAL::SSubEventCallbackData* data_, const SubEventCallbackCT callback_, void* par_)
+  void g_sub_event_callback(const char* topic_name_, const struct eCAL::v5::SSubEventCallbackData* data_, const SubEventCallbackCT callback_, void* par_)
   {
     const std::lock_guard<std::recursive_mutex> lock(g_sub_event_callback_mtx);
     SSubEventCallbackDataC data{};
