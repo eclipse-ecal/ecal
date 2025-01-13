@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <errno.h>
+#include <fcntl.h>
+#include <string>
 #include <sys/file.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <errno.h>
 
 #include <string.h>
 #include <iostream>
