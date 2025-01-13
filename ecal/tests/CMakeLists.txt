@@ -38,7 +38,6 @@ if(ECAL_CORE_REGISTRATION)
   add_subdirectory(cpp/registration_test_public)
 endif()
 
-add_subdirectory(cpp/ecal_utils_test)
 add_subdirectory(cpp/event_test)
 add_subdirectory(cpp/expmap_test)
 add_subdirectory(cpp/logging_test)

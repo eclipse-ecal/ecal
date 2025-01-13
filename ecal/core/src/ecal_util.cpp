@@ -42,7 +42,6 @@ namespace eCAL
 
     std::string GeteCALLogDir()
     {      
-      // get possible log path in order Environment, Configuration, ecal config dir, temp dir
       return eCAL::Config::GeteCALLogDirImpl();
     }
 
