@@ -1,5 +1,6 @@
 include_guard(GLOBAL)
 
+include(GNUInstallDirs)
 add_library(asio INTERFACE EXCLUDE_FROM_ALL)
 target_include_directories(asio INTERFACE 
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/asio/asio/include>
@@ -20,7 +21,7 @@ install(
 install(
   EXPORT asioTargets 
   FILE asioTargets.cmake 
-  DESTINATION lib/CMake
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake"
   NAMESPACE asio::
   COMPONENT asio_dev
 )
