@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1012,7 +1012,7 @@ namespace
       val = Py_BuildValue("s", topic.uname.c_str());
       PyDict_SetItemString(topicDict, "uname", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", topic.tid.c_str());
+      val = Py_BuildValue("s", std::to_string(topic.tid).c_str());
       PyDict_SetItemString(topicDict, "tid", val); Py_DECREF(val);
 
       val = Py_BuildValue("s", topic.tname.c_str());
@@ -1021,7 +1021,14 @@ namespace
       val = Py_BuildValue("s", topic.direction.c_str());
       PyDict_SetItemString(topicDict, "direction", val); Py_DECREF(val);
 
-      // TODO: SDataTypeInformation tdatatype
+      val = Py_BuildValue("s", topic.tdatatype.name.c_str());
+      PyDict_SetItemString(topicDict, "tdatatype_name", val); Py_DECREF(val);
+
+      val = Py_BuildValue("s", topic.tdatatype.encoding.c_str());
+      PyDict_SetItemString(topicDict, "tdatatype_encoding", val); Py_DECREF(val);
+
+      val = Py_BuildValue("y#", topic.tdatatype.descriptor.c_str(), topic.tdatatype.descriptor.length());
+      PyDict_SetItemString(topicDict, "tdatatype_descriptor", val); Py_DECREF(val);
 
       // TODO: std::vector<TLayer> tlayer
 
@@ -1145,7 +1152,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", service.sname.c_str());
         PyDict_SetItemString(serviceDict, "sname", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", service.sid.c_str());
+        val = Py_BuildValue("s", std::to_string(service.sid).c_str());
         PyDict_SetItemString(serviceDict, "sid", val); Py_DECREF(val);
 
         val = Py_BuildValue("i", service.version);
@@ -1165,15 +1172,23 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
           val = Py_BuildValue("s", method.mname.c_str());
           PyDict_SetItemString(methodsDict, "mname", val); Py_DECREF(val);
 
-          val = Py_BuildValue("s", method.req_type.c_str());
+          val = Py_BuildValue("s", method.req_datatype.name.c_str());
           PyDict_SetItemString(methodsDict, "req_type", val); Py_DECREF(val);
 
-          // TODO: std::string req_desc
+          val = Py_BuildValue("s", method.req_datatype.encoding.c_str());
+          PyDict_SetItemString(methodsDict, "req_encoding", val); Py_DECREF(val);
 
-          val = Py_BuildValue("s", method.resp_type.c_str());
+          val = Py_BuildValue("y#", method.req_datatype.descriptor.c_str(), method.req_datatype.descriptor.length());
+          PyDict_SetItemString(methodsDict, "req_descriptor", val); Py_DECREF(val);
+
+          val = Py_BuildValue("s", method.resp_datatype.name.c_str());
           PyDict_SetItemString(methodsDict, "resp_type", val); Py_DECREF(val);
 
-          // TODO: std::string resp_desc
+          val = Py_BuildValue("s", method.resp_datatype.encoding.c_str());
+          PyDict_SetItemString(methodsDict, "resp_encoding", val); Py_DECREF(val);
+
+          val = Py_BuildValue("y#", method.resp_datatype.descriptor.c_str(), method.resp_datatype.descriptor.length());
+          PyDict_SetItemString(methodsDict, "resp_descriptor", val); Py_DECREF(val);
 
           val = Py_BuildValue("i", method.call_count);
           PyDict_SetItemString(methodsDict, "call_count", val); Py_DECREF(val);
@@ -1209,7 +1224,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", client.sname.c_str());
         PyDict_SetItemString(clientDict, "sname", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", client.sid.c_str());
+        val = Py_BuildValue("s", std::to_string(client.sid).c_str());
         PyDict_SetItemString(clientDict, "sid", val); Py_DECREF(val);
 
         PyObject* methodsDict = PyDict_New();
@@ -1220,15 +1235,23 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
           val = Py_BuildValue("s", method.mname.c_str());
           PyDict_SetItemString(methodsDict, "mname", val); Py_DECREF(val);
 
-          val = Py_BuildValue("s", method.req_type.c_str());
+          val = Py_BuildValue("s", method.req_datatype.name.c_str());
           PyDict_SetItemString(methodsDict, "req_type", val); Py_DECREF(val);
 
-          // TODO: std::string req_desc
-          
-          val = Py_BuildValue("s", method.resp_type.c_str());
+          val = Py_BuildValue("s", method.req_datatype.encoding.c_str());
+          PyDict_SetItemString(methodsDict, "req_encoding", val); Py_DECREF(val);
+
+          val = Py_BuildValue("y#", method.req_datatype.descriptor.c_str(), method.req_datatype.descriptor.length());
+          PyDict_SetItemString(methodsDict, "req_descriptor", val); Py_DECREF(val);
+
+          val = Py_BuildValue("s", method.resp_datatype.name.c_str());
           PyDict_SetItemString(methodsDict, "resp_type", val); Py_DECREF(val);
 
-          // TODO: std::string resp_desc
+          val = Py_BuildValue("s", method.resp_datatype.encoding.c_str());
+          PyDict_SetItemString(methodsDict, "resp_encoding", val); Py_DECREF(val);
+
+          val = Py_BuildValue("y#", method.resp_datatype.descriptor.c_str(), method.resp_datatype.descriptor.length());
+          PyDict_SetItemString(methodsDict, "resp_descriptor", val); Py_DECREF(val);
 
           val = Py_BuildValue("i", method.call_count);
           PyDict_SetItemString(methodsDict, "call_count", val); Py_DECREF(val);

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,13 +77,13 @@ namespace eCAL
     return instances;
   }
 
-  bool CServiceClient::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT& service_response_vec_) const
+  bool CServiceClient::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_, ServiceIDResponseVecT& service_response_vec_) const
   {
     auto instances = GetClientInstances();
     size_t num_instances = instances.size();
 
     // vector to hold futures for the return values and responses
-    std::vector<std::future<std::pair<bool, SServiceResponse>>> futures;
+    std::vector<std::future<std::pair<bool, SServiceIDResponse>>> futures;
     futures.reserve(num_instances);
 
     // launch asynchronous calls for each instance
@@ -106,9 +106,9 @@ namespace eCAL
       try
       {
         // explicitly unpack the pair
-        std::pair<bool, SServiceResponse> result = future.get();
+        std::pair<bool, SServiceIDResponse> result = future.get();
         bool success = result.first;
-        SServiceResponse response = result.second;
+        SServiceIDResponse response = result.second;
 
         // add response to the vector
         service_response_vec_.emplace_back(response);
@@ -119,7 +119,7 @@ namespace eCAL
       catch (const std::exception& e)
       {
         // handle exceptions and add an error response
-        SServiceResponse error_response;
+        SServiceIDResponse error_response;
         error_response.error_msg = e.what();
         error_response.call_state = call_state_failed;
         service_response_vec_.emplace_back(error_response);
@@ -184,10 +184,10 @@ namespace eCAL
     return m_service_client_impl->GetServiceName();
   }
 
-  Registration::SServiceMethodId CServiceClient::GetServiceId() const
+  Registration::SServiceId CServiceClient::GetServiceId() const
   {
-    // TODO: Implement this
-    return Registration::SServiceMethodId();
+    if (m_service_client_impl == nullptr) return Registration::SServiceId();
+    return m_service_client_impl->GetServiceId();
   }
 
   bool CServiceClient::IsConnected() const

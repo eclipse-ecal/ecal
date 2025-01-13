@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ namespace eCAL
   public:
     ~CServiceServerImpl();
 
-    bool AddMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_);
+    bool SetMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_);
     bool RemoveMethodCallback(const std::string& method_);
 
     // Check connection state of a specific service
@@ -66,6 +66,9 @@ namespace eCAL
 
     // Called by the registration provider to get a registration sample
     Registration::Sample GetRegistration();
+
+    // Retrieves the service id
+    Registration::SServiceId GetServiceId() const;
 
     // Retrieves the service name
     std::string GetServiceName() const;
@@ -94,7 +97,7 @@ namespace eCAL
 
     // Server attributes
     std::string                            m_service_name;
-    std::string                            m_service_id;
+    Registration::EntityIdT                m_service_id;
 
     // Server connection state and synchronization
     mutable std::mutex                     m_connected_mutex; // mutex protecting m_connected (modified by the event callbacks in another thread)
@@ -104,8 +107,8 @@ namespace eCAL
     // Server method map and synchronization
     struct SMethod
     {
-      Service::Method method;
-      MethodCallbackT callback;
+      Service::Method     method;
+      MethodInfoCallbackT callback;
     };
 
     using MethodMapT = std::map<std::string, SMethod>;

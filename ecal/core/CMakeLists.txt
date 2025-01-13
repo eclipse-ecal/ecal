@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -436,7 +436,6 @@ endif()
 set(ecal_cmn_src
     src/ecal.cpp
     src/ecal_def.h
-    src/ecal_def_ini.h
     src/ecal_descgate.cpp
     src/ecal_descgate.h
     src/ecal_event.cpp 
@@ -519,7 +518,6 @@ set(ecal_header_cmn
     include/ecal/config/subscriber.h
     include/ecal/config/time.h
     include/ecal/config/transport_layer.h
-    include/ecal/config/user_arguments.h
     include/ecal/types/logging.h
     include/ecal/types/monitoring.h
     include/ecal/ecal.h
@@ -573,15 +571,6 @@ set(ecal_header_cimpl
 )
 
 set(ecal_header_msg
-    include/ecal/msg/protobuf/client.h
-    include/ecal/msg/protobuf/dynamic_json_subscriber.h
-    include/ecal/msg/protobuf/dynamic_publisher.h
-    include/ecal/msg/protobuf/dynamic_subscriber.h    
-    include/ecal/msg/protobuf/publisher.h
-    include/ecal/msg/protobuf/server.h
-    include/ecal/msg/protobuf/subscriber.h
-    include/ecal/msg/string/publisher.h
-    include/ecal/msg/string/subscriber.h
     include/ecal/msg/dynamic.h
     include/ecal/msg/publisher.h
     include/ecal/msg/subscriber.h
@@ -807,22 +796,3 @@ if(UNIX)
 
     set_property(TARGET ${PROJECT_NAME_PROCESS_STUB} PROPERTY FOLDER core)
 endif(UNIX)
-
-if(ECAL_CORE_HAS_PROTOBUF)
-find_package(Protobuf REQUIRED)
-
-add_library(core_protobuf INTERFACE)
-add_library(eCAL::core_protobuf ALIAS core_protobuf)
-
-target_link_libraries(core_protobuf 
-  INTERFACE
-    eCAL::core
-    eCAL::proto
-)
-
-install(
-  TARGETS core_protobuf
-  EXPORT eCALCoreTargets  
-)
-
-endif()

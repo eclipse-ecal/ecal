@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,10 +62,10 @@ namespace eCAL
     return *this;
   }
 
-  bool CServiceServer::SetMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_)
+  bool CServiceServer::SetMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_)
   {
     if (m_service_server_impl == nullptr) return false;
-    return m_service_server_impl->AddMethodCallback(method_, method_info_, callback_);
+    return m_service_server_impl->SetMethodCallback(method_, method_info_, callback_);
   }
 
   bool CServiceServer::RemoveMethodCallback(const std::string& method_)
@@ -80,10 +80,10 @@ namespace eCAL
     return m_service_server_impl->GetServiceName();
   }
 
-  Registration::SServiceMethodId CServiceServer::GetServiceId() const
+  Registration::SServiceId CServiceServer::GetServiceId() const
   {
-    // TODO: Implement this
-    return Registration::SServiceMethodId();
+    if (m_service_server_impl == nullptr) return Registration::SServiceId();
+    return m_service_server_impl->GetServiceId();
   }
 
   bool CServiceServer::IsConnected()

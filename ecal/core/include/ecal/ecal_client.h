@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,7 +105,7 @@ namespace eCAL
        * @return  True if all calls were successful.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT& service_response_vec_) const;
+        bool CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_, ServiceIDResponseVecT& service_response_vec_) const;
 
       /**
        * @brief Blocking call (with timeout) of a service method for all existing service instances, using callback
@@ -145,11 +145,8 @@ namespace eCAL
        *
        * @return  The service id.
       **/
-
-      // TODO: Implement this
-
       ECAL_API_EXPORTED_MEMBER
-        Registration::SServiceMethodId GetServiceId() const;
+        Registration::SServiceId GetServiceId() const;
 
       /**
        * @brief Check connection to at least one service.

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ namespace eCAL
      * @return  success state and service response
     **/
     ECAL_API_EXPORTED_MEMBER
-      std::pair<bool, SServiceResponse> CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
+      std::pair<bool, SServiceIDResponse> CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
 
     /**
      * @brief Blocking call of a service method, using callback

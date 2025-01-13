@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -158,7 +158,7 @@ namespace
     // uname
     eCAL::nanopb::encode_string(pb_topic_.uname, topic_.uname);
     // tid
-    eCAL::nanopb::encode_string(pb_topic_.tid, topic_.tid);
+    eCAL::nanopb::encode_int_to_string(pb_topic_.tid, topic_.tid);
     // tname
     eCAL::nanopb::encode_string(pb_topic_.tname, topic_.tname);
     // direction
@@ -264,10 +264,6 @@ namespace
 
       eCAL_pb_Method pb_method = eCAL_pb_Method_init_default;
       eCAL::nanopb::encode_string(pb_method.mname, method.mname);
-      eCAL::nanopb::encode_string(pb_method.req_type, method.req_type);
-      eCAL::nanopb::encode_string(pb_method.req_desc, method.req_desc);
-      eCAL::nanopb::encode_string(pb_method.resp_type, method.resp_type);
-      eCAL::nanopb::encode_string(pb_method.resp_desc, method.resp_desc);
 
       pb_method.has_req_datatype = true;
       eCAL::nanopb::encode_string(pb_method.req_datatype.name, method.req_datatype.name);
@@ -314,7 +310,7 @@ namespace
     // sname
     eCAL::nanopb::encode_string(pb_service_.sname, service_.sname);
     // sid
-    eCAL::nanopb::encode_string(pb_service_.sid, service_.sid);
+    eCAL::nanopb::encode_int_to_string(pb_service_.sid, service_.sid);
     // methods
     encode_mon_service_methods(pb_service_.methods, service_.methods);
     // version
@@ -375,7 +371,7 @@ namespace
     // sname
     eCAL::nanopb::encode_string(pb_client_.sname, client_.sname);
     // sid
-    eCAL::nanopb::encode_string(pb_client_.sid, client_.sid);
+    eCAL::nanopb::encode_int_to_string(pb_client_.sid, client_.sid);
     // methods
     encode_mon_service_methods(pb_client_.methods, client_.methods);
     // version
@@ -615,7 +611,7 @@ namespace
     // uname
     eCAL::nanopb::decode_string(pb_topic_.uname, topic_.uname);
     // tid
-    eCAL::nanopb::decode_string(pb_topic_.tid, topic_.tid);
+    eCAL::nanopb::decode_int_from_string(pb_topic_.tid, topic_.tid);
     // tname
     eCAL::nanopb::decode_string(pb_topic_.tname, topic_.tname);
     // direction
@@ -705,11 +701,6 @@ namespace
     // decode method parameter
     eCAL::nanopb::decode_string(pb_method.mname, method.mname);
 
-    eCAL::nanopb::decode_string(pb_method.req_type, method.req_type);
-    eCAL::nanopb::decode_string(pb_method.req_desc, method.req_desc);
-    eCAL::nanopb::decode_string(pb_method.resp_type, method.resp_type);
-    eCAL::nanopb::decode_string(pb_method.resp_desc, method.resp_desc);
-
     eCAL::nanopb::decode_string(pb_method.req_datatype.name, method.req_datatype.name);
     eCAL::nanopb::decode_string(pb_method.req_datatype.encoding, method.req_datatype.encoding);
     eCAL::nanopb::decode_string(pb_method.req_datatype.desc, method.req_datatype.descriptor);
@@ -757,7 +748,7 @@ namespace
     // sname
     eCAL::nanopb::decode_string(pb_service_.sname, service_.sname);
     // sid
-    eCAL::nanopb::decode_string(pb_service_.sid, service_.sid);
+    eCAL::nanopb::decode_int_from_string(pb_service_.sid, service_.sid);
     // methods
     decode_mon_service_methods(pb_service_.methods, service_.methods);
   }
@@ -826,7 +817,7 @@ namespace
     // sname
     eCAL::nanopb::decode_string(pb_client_.sname, client_.sname);
     // sid
-    eCAL::nanopb::decode_string(pb_client_.sid, client_.sid);
+    eCAL::nanopb::decode_int_from_string(pb_client_.sid, client_.sid);
     // methods
     decode_mon_service_methods(pb_client_.methods, client_.methods);
   }

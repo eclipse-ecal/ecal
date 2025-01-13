@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -144,7 +144,7 @@ namespace eCAL
     SampleIdentifier GenerateIdentifier()
     {
       SampleIdentifier identifier;
-      identifier.entity_id = GenerateString(7);
+      identifier.entity_id = rand();
       identifier.process_id = rand() % 100;
       identifier.host_name = GenerateString(8);
       return identifier;
@@ -157,7 +157,7 @@ namespace eCAL
       sample.host.hname = GenerateString(8);
       sample.identifier = GenerateIdentifier();
       // Process samples don't have an id internally, hence it must be 0.
-      sample.identifier.entity_id = std::to_string(sample.identifier.process_id);
+      sample.identifier.entity_id = sample.identifier.process_id;
       sample.process = GenerateProcess();
       return sample;
     }

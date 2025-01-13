@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,13 +74,13 @@ namespace eCAL
   **/
   struct SServiceAttr
   {
-    std::string    key;              //!< unique service key (internal)
-    std::string    hname;            //!< host name
-    std::string    pname;            //!< process name
-    std::string    uname;            //!< process unit name
-    std::string    sname;            //!< service name
-    std::string    sid;              //!< service id
-    int            pid         = 0;  //!< process id
+    std::string             key;              //!< unique service key (internal)
+    std::string             hname;            //!< host name
+    std::string             pname;            //!< process name
+    std::string             uname;            //!< process unit name
+    std::string             sname;            //!< service name
+    Registration::EntityIdT sid         = 0;  //!< service id
+    int                     pid         = 0;  //!< process id
 
     // internal protocol specifics
     unsigned int   version     = 0;  //!< service protocol version

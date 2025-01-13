@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ ecal_add_time_plugin(${PROJECT_NAME} SHARED ${ecal_time_simtime_src} ${ecal_time
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE ECAL_TIME_PLUGIN_API_EXPORT)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core_protobuf)
+target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::protobuf_core)
 target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::ecaltime_pb)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)

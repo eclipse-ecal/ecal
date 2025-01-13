@@ -1,6 +1,6 @@
 /* =========================== LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@
 #include <ecal/config/monitoring.h>
 #include <ecal/config/registration.h>
 #include <ecal/config/logging.h>
-#include <ecal/config/user_arguments.h>
 #include <ecal/config/publisher.h>
 #include <ecal/config/subscriber.h>
 #include <ecal/config/time.h>
@@ -55,7 +54,6 @@ namespace eCAL
     Time::Configuration           timesync;
     Application::Configuration    application;
     Logging::Configuration        logging;
-    Cli::Configuration            command_line_arguments;
 
     ECAL_API Configuration();
 

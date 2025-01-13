@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ namespace eCAL
     assert(m_service_client_impl && "service_client_id_impl_ must not be null");
   }
 
-  std::pair<bool, SServiceResponse> CClientInstance::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_)
+  std::pair<bool, SServiceIDResponse> CClientInstance::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_)
   {
     return m_service_client_impl->CallWithCallback(m_entity_id, method_name_, request_, timeout_);
   }

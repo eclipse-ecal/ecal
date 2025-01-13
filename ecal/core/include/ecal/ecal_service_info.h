@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@
 namespace eCAL
 {
   /**
-   * @brief Service response struct containing the (responding) server informations and the response itself.
+   * @brief Service response struct containing the (responding) server informations and the response itself. (deprecated)
   **/
   struct SServiceResponse
   {
@@ -56,7 +56,20 @@ namespace eCAL
   using ServiceResponseVecT = std::vector<SServiceResponse>; //!< vector of multiple service responses (deprecated)
 
   /**
-   * @brief Service method callback function type (low level server interface).
+   * @brief Service response struct containing the (responding) server informations and the response itself.
+  **/
+  struct SServiceIDResponse
+  {
+    Registration::SServiceMethodId service_method_id;            //!< service method information (service id (entity id, process id, host name), service name, method name)
+    std::string                    error_msg;                    //!< human readable error message
+    int                            ret_state  = 0;               //!< return state of the called service method
+    eCallState                     call_state = call_state_none; //!< call state (see eCallState)
+    std::string                    response;                     //!< service response
+  };
+  using ServiceIDResponseVecT = std::vector<SServiceIDResponse>; //!< vector of multiple service responses
+
+  /**
+   * @brief Service method callback function type (low level server interface). (deprecated)
    *
    * @param method_     The method name.
    * @param req_type_   The type of the method request.
@@ -65,6 +78,17 @@ namespace eCAL
    * @param response_   The response returned from the method call.
   **/
   using MethodCallbackT = std::function<int(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_)>;
+
+  /**
+   * @brief Service method callback function type (low level server interface).
+   *
+   * @param method_     The method name.
+   * @param req_type_   The type of the method request.
+   * @param resp_type_  The type of the method response.
+   * @param request_    The request.
+   * @param response_   The response returned from the method call.
+  **/
+  using MethodInfoCallbackT = std::function<int(const std::string& method_, const SDataTypeInformation& req_type_, const SDataTypeInformation& resp_type_, const std::string& request_, std::string& response_)>;
 
   /**
    * @brief Service response callback function type (low level client interface). (deprecated)
@@ -79,7 +103,7 @@ namespace eCAL
    * @param entity_id_         Unique service id (entity id, process id, host name, service name, method name)
    * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
   **/
-  using ResponseIDCallbackT = std::function<void (const Registration::SEntityId& entity_id_, const struct SServiceResponse& service_response_)>;
+  using ResponseIDCallbackT = std::function<void (const Registration::SEntityId& entity_id_, const struct SServiceIDResponse& service_response_)>;
 
   /**
    * @brief Map of <method name, method information (like request type, reponse type)>.

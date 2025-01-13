@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,9 @@ Ecalmon::Ecalmon(QWidget *parent)
   , monitor_error_counter_(0)
 {
   // Just make sure that eCAL is initialized
-  eCAL::Initialize("eCALMon", eCAL::Init::Default | eCAL::Init::Monitoring);
+  auto config = eCAL::GetConfiguration();
+  config.logging.receiver.enable = true;
+  eCAL::Initialize(config, "eCALMon", eCAL::Init::Default | eCAL::Init::Monitoring);
   eCAL::Monitoring::SetFilterState(false);
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
 

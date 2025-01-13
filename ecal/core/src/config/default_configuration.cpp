@@ -243,10 +243,6 @@ namespace eCAL
       ss << R"(      # Enable layer)"                                                                                               << "\n";
       ss << R"(      enable: )"                                      << config_.publisher.layer.shm.enable                          << "\n";
       ss << R"()"                                                                                                                   << "\n";
-      ss << R"(  # Share topic type via registration)"                                                                              << "\n";
-      ss << R"(  share_topic_type: )"                                << config_.publisher.share_topic_type                          << "\n";
-      ss << R"(  # Share topic description via registration)"                                                                       << "\n";
-      ss << R"(  share_topic_description: )"                         << config_.publisher.share_topic_description                   << "\n";
       ss << R"(  # Priority list for layer usage in local mode (Default: SHM > UDP > TCP))"                                         << "\n";
       ss << R"(  priority_local: )"                                  << quoteString(config_.publisher.layer_priority_local)         << "\n";
       ss << R"(  # Priority list for layer usage in cloud mode (Default: UDP > TCP))"                                               << "\n";

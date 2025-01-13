@@ -1,3 +1,22 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2024 - 2025 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
 #pragma once
 
 #include <string>
@@ -54,8 +73,7 @@ inline std::string printHex(eCAL::experimental::measurement::base::Channel::id_t
 
 inline eCAL::experimental::measurement::base::Channel::id_t parseHexID(std::string string_id)
 {
-  auto unsigned_value = std::stoull(string_id, 0, 16);
-  return static_cast<eCAL::experimental::measurement::base::Channel::id_t>(unsigned_value);
+  return std::stoull(string_id, nullptr, 16);
 }
 
 namespace v6

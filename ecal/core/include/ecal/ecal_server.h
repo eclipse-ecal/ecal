@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,11 +92,8 @@ namespace eCAL
        *
        * @return  True if succeeded, false if not.
       **/
-
-      // TODO: Provide new MethodCallbackT type using SServiceMethodInformation instead "MethodCallbackT = std::function<int(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_)>"
-
       ECAL_API_EXPORTED_MEMBER
-        bool SetMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodCallbackT& callback_);
+        bool SetMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_);
 
       /**
        * @brief Remove method callback.
@@ -121,11 +118,8 @@ namespace eCAL
        *
        * @return  The service id.
       **/
-
-      // TODO: Implement this
-
       ECAL_API_EXPORTED_MEMBER
-        Registration::SServiceMethodId GetServiceId() const;
+        Registration::SServiceId GetServiceId() const;
 
       /**
        * @brief Check connection state.

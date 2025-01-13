@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,8 +75,9 @@ namespace eCAL
       m_created = false;
     }
 
-    void CLogReceiver::GetLogging(std::string& log_msg_list_string_)
+    bool CLogReceiver::GetLogging(std::string& log_msg_list_string_)
     {
+      if (!m_attributes.receive_enabled) return false;
       // clear target list string
       log_msg_list_string_.clear();
 
@@ -88,6 +89,8 @@ namespace eCAL
         // clear message list
         m_log_msglist.log_messages.clear();
       }
+
+      return true;
     }
 
     void CLogReceiver::GetLogging(Logging::SLogging& log_)
