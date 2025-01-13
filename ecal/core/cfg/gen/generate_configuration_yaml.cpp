@@ -31,55 +31,53 @@
 #include "config/ecal_path_processing.h"
 
 #include <iostream>
+#include <string>
+
+
+void exitWithMessage(const std::string& message, int exitCode) {
+  if (!message.empty()) {
+    if (exitCode == 0) {
+      std::cout << message << "\n";
+    } else {
+      std::cerr << message << "\n";
+    }
+  }
+  std::cout << "Press Enter to continue...";
+  std::cin.get();
+  exit(exitCode);
+}
 
 int main(int argc, char* argv[]) {
   bool dump = false;
 
-  for (int i = 1; i < argc; i++)
-  {
+  for (int i = 1; i < argc; i++) {
     const std::string arg = argv[i];
-    if (arg == "--dump" || arg == "-d")
-    {
+    if (arg == "--dump" || arg == "-d") {
       dump = true;
-    }
-    else
-    {
-      std::cerr << "Unknown argument: " << arg << "\n";
-      return 1;
+    } else {
+      exitWithMessage("Unknown argument: " + arg, 1);
     }
   }
-  
-  if (dump)
-  {
-    if(!eCAL::Config::dumpConfigToFile())
-    {
-      std::cerr << "Failed to write default configuration to file." << "\n";
-      return 1;
+
+  if (dump) {
+    if (!eCAL::Config::dumpConfigToFile()) {
+      exitWithMessage("Failed to write default configuration to file.", 1);
     }
 
-    if(!eCAL::Config::dumpToFile(eCAL::Config::getTimeConfigAsYamlSS(), "time.yaml"))
-    {
-      std::cerr << "Failed to write time configuration to file." << "\n";
-      return 1;
+    if (!eCAL::Config::dumpToFile(eCAL::Config::getTimeConfigAsYamlSS(), "time.yaml")) {
+      exitWithMessage("Failed to write time configuration to file.", 1);
     }
 
-    return 0;
+    exitWithMessage("", 0);
   }
-  
-  const std::vector<std::string> dir_paths = 
-  {
-    eCAL::Config::eCALDataEnvPath(),
-    eCAL::Config::eCALLocalUserDir(),
-    eCAL::Config::eCALDataSystemDir() 
-  };
 
   std::string created_path;
+  auto dir_manager = eCAL::Util::DirManager();
+  const std::vector<std::string> dir_paths = eCAL::Config::getEcalDefaultPaths(eCAL::Util::DirProvider(), dir_manager);
 
   // create the ecal paths
-  for (const std::string& path : dir_paths)
-  {
-    if (!path.empty() && eCAL::Util::createEcalDirStructure(path))
-    {
+  for (const std::string& path : dir_paths) {
+    if (!path.empty() && dir_manager.createEcalDirStructure(path)) {
       created_path = path;
       std::cout << "Created eCAL directory structure in: " << path << "\n";
       break;
@@ -87,26 +85,16 @@ int main(int argc, char* argv[]) {
   }
 
   // dump config to file
-  if (!created_path.empty())
-  {
-    if (!eCAL::Config::dumpDefaultConfig(created_path))
-    {
-      std::cerr << "Failed to write default configuration to file." << "\n";
-      return 1;
+  if (!created_path.empty()) {
+    if (!eCAL::Config::dumpDefaultConfig(created_path)) {
+      exitWithMessage("Failed to write default configuration to file.", 1);
     }
-    if(!eCAL::Config::dumpToFile(eCAL::Config::getTimeConfigAsYamlSS(), created_path + "/time.yaml"))
-    {
-      std::cerr << "Failed to write time configuration to file." << "\n";
-      return 1;
+    if (!eCAL::Config::dumpToFile(eCAL::Config::getTimeConfigAsYamlSS(), created_path + "/time.yaml")) {
+      exitWithMessage("Failed to write time configuration to file.", 1);
     }
 
-    std::cout << "Created eCAL configuration files in: " << created_path << "\n";
-
-    return 0;
-  } 
-  else
-  {
-    std::cerr << "Failed to create eCAL directory structure." << "\n";
-    return 1;
+    exitWithMessage("Created eCAL configuration files in: " + created_path, 0);
+  } else {
+    exitWithMessage("Failed to create eCAL directory structure.", 1);
   }
 }
