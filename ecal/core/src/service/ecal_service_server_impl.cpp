@@ -472,7 +472,12 @@ namespace eCAL
     // execute method (outside lock guard)
     const std::string& request_s = request.request;
     std::string response_s;
-    const int service_return_state = method.callback(method.method.mname, method.method.req_datatype, method.method.resp_datatype, request_s, response_s);
+    const SMethodInfo method_info{
+      method.method.mname,
+      method.method.req_datatype,
+      method.method.resp_datatype
+    };
+    const int service_return_state = method.callback(method_info, request_s, response_s);
 
     // set method call state 'executed'
     response_header.state = Service::eMethodCallState::executed;

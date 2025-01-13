@@ -124,13 +124,11 @@ namespace eCAL
 
       const MethodInfoCallbackT callback =
         [req_type_, resp_type_, callback_](
-          const std::string&          method,
-          const SDataTypeInformation& req_type_info,
-          const SDataTypeInformation& resp_type_info,
-          const std::string&          request,
-          std::string&                response) -> int
+          const SMethodInfo& method_info,
+          const std::string& request,
+          std::string&       response) -> int
         {
-          return callback_(method, req_type_info.name, resp_type_info.name, request, response);
+          return callback_(method_info.method_name, method_info.req_type.name, method_info.resp_type.name, request, response);
         };
 
       return m_service_server_impl->SetMethodCallback(method_, method_info, callback);
