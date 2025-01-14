@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,7 +101,7 @@ namespace eCAL
     static bool                               GetTopic   (const Registration::STopicId& id_, const STopicIdInfoMap& topic_info_map_, SDataTypeInformation& topic_info_);
 
     static std::set<Registration::SServiceMethodId> GetServiceIDs(const SServiceIdInfoMap& service_method_info_map_);
-    static bool                               GetService   (const Registration::SServiceMethodId& id_, const SServiceIdInfoMap& service_method_info_map_, SServiceMethodInformation& service_method_info_);
+    static bool                                     GetService   (const Registration::SServiceMethodId& id_, const SServiceIdInfoMap& service_method_info_map_, SServiceMethodInformation& service_method_info_);
 
     static void ApplyTopicDescription(STopicIdInfoMap& topic_info_map_,
                                       const STopicIdCallbackMap& topic_callback_map_, 
@@ -125,6 +125,7 @@ namespace eCAL
                                       const Registration::SampleIdentifier& service_id_,
                                       const std::string& service_name_);
 
+    static SDataTypeInformation GetDataTypeInformation(const SDataTypeInformation& datatype_info_, const std::string& legacy_type_, const std::string& legacy_desc_);
     Registration::CallbackToken CreateToken();
       
     // internal quality topic info publisher/subscriber maps

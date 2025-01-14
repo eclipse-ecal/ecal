@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -209,7 +209,9 @@ int main(int argc, char** argv)
     }
 
     // initialize eCAL API
-    eCAL::Initialize("eCALMon CLI", eCAL::Init::All);
+    auto config = eCAL::Init::Configuration();
+    config.logging.receiver.enable = true;
+    eCAL::Initialize(config, "eCALMon CLI", eCAL::Init::All);
 
     // set process state
     eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");

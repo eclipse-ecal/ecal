@@ -79,13 +79,6 @@ namespace eCAL
     std::string       GetTerminalEmulatorCommand           () { return GetConfiguration().application.startup.terminal_emulator; }
 
     /////////////////////////////////////
-    // monitoring
-    /////////////////////////////////////
-    
-    std::string         GetMonitoringFilterExcludeList     () { return GetConfiguration().monitoring.filter_excl; }
-    std::string         GetMonitoringFilterIncludeList     () { return GetConfiguration().monitoring.filter_incl; }
-
-    /////////////////////////////////////
     // sys
     /////////////////////////////////////
     

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,22 +75,6 @@ namespace YAML
     static Node encode(const eCAL::Registration::Configuration& config_);
 
     static bool decode(const Node& node_, eCAL::Registration::Configuration& config_);
-  };
-
-
-  /*
-       __  ___          _ __           _          
-      /  |/  /__  ___  (_) /____  ____(_)__  ___ _
-     / /|_/ / _ \/ _ \/ / __/ _ \/ __/ / _ \/ _ `/
-    /_/  /_/\___/_//_/_/\__/\___/_/ /_/_//_/\_, / 
-                                           /___/  
-  */
-  template<>
-  struct convert<eCAL::Monitoring::Configuration>
-  {
-    static Node encode(const eCAL::Monitoring::Configuration& config_);
-
-    static bool decode(const Node& node_, eCAL::Monitoring::Configuration& config_);
   };
 
 

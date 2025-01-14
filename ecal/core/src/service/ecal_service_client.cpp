@@ -106,9 +106,9 @@ namespace eCAL
       try
       {
         // explicitly unpack the pair
-        std::pair<bool, SServiceIDResponse> result = future.get();
+        const std::pair<bool, SServiceIDResponse> result = future.get();
         bool success = result.first;
-        SServiceIDResponse response = result.second;
+        const SServiceIDResponse response = result.second;
 
         // add response to the vector
         service_response_vec_.emplace_back(response);

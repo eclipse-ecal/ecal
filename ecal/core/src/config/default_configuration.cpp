@@ -159,14 +159,6 @@ namespace eCAL
       ss << R"(      port: )"                                        << config_.registration.layer.udp.port                         << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"()"                                                                                                                   << "\n";
-      ss << R"(# Monitoring configuration)"                                                                                         << "\n";
-      ss << R"(monitoring:)"                                                                                                        << "\n";
-      ss << R"(  # Topics blacklist as regular expression (will not be monitored))"                                                 << "\n";
-      ss << R"(  filter_excl: )"                                     << quoteString(config_.monitoring.filter_excl)                 << "\n";
-      ss << R"(  # Topics whitelist as regular expression (will be monitored only) (Default: ""))"                                  << "\n";
-      ss << R"(  filter_incl: )"                                     << quoteString(config_.monitoring.filter_incl)                 << "\n";
-      ss << R"()"                                                                                                                   << "\n";
-      ss << R"()"                                                                                                                   << "\n";
       ss << R"(# Transport layer configuration)"                                                                                    << "\n";
       ss << R"(transport_layer:)"                                                                                                   << "\n";
       ss << R"(  udp:)"                                                                                                             << "\n";

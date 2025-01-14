@@ -57,8 +57,10 @@ namespace eCAL
       }
 
       // Define the event callback to pass to CServiceClient
-      ServerEventIDCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const struct SServerEventCallbackData& data_)
+      ServerEventIDCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const struct SServerEventIDCallbackData& data_)
         {
+          Logging::Log(log_level_debug2, "v5::CServiceServerImpl: Event callback triggered for event type: " + std::to_string(data_.type));
+
           // Lock the mutex to safely access m_event_callbacks
           std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
 
@@ -66,8 +68,12 @@ namespace eCAL
           const auto& callback = m_event_callback_map.find(data_.type);
           if (callback != m_event_callback_map.end())
           {
+            Logging::Log(log_level_debug2, "v5::CServiceServerImpl: Executing event callback for event type: " + std::to_string(data_.type));
             // Call the user's callback
-            callback->second(service_id_.service_name.c_str(), &data_);
+            SServerEventCallbackData event_data;
+            event_data.type = data_.type;
+            event_data.time = data_.time;
+            callback->second(service_id_.service_name.c_str(), &event_data);
           }
         };
 
@@ -124,13 +130,11 @@ namespace eCAL
 
       const MethodInfoCallbackT callback =
         [req_type_, resp_type_, callback_](
-          const std::string&          method,
-          const SDataTypeInformation& req_type_info,
-          const SDataTypeInformation& resp_type_info,
-          const std::string&          request,
-          std::string&                response) -> int
+          const SMethodInfo& method_info,
+          const std::string& request,
+          std::string&       response) -> int
         {
-          return callback_(method, req_type_info.name, resp_type_info.name, request, response);
+          return callback_(method_info.method_name, method_info.req_type.name, method_info.resp_type.name, request, response);
         };
 
       return m_service_server_impl->SetMethodCallback(method_, method_info, callback);

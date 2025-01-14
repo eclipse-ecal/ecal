@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,12 @@ int main(int argc, char** argv)
 {
   auto args = ParseArgs(argc, argv);
 
-  auto status = eCAL::Initialize("eCALMon TUI", eCAL::Init::Default | eCAL::Init::Monitoring);
+  auto config = eCAL::Init::Configuration();
+  config.logging.receiver.enable = true;
+  
+  auto status = eCAL::Initialize(config, "eCALMon TUI", eCAL::Init::Default | eCAL::Init::Monitoring);
   if (status == -1) std::cerr << "Failed to init" << std::endl;
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
-  eCAL::Monitoring::SetFilterState(false);
 
   TUI::Start(args);
 

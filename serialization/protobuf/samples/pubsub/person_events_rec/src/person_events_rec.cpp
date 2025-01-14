@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 
 #include "person.pb.h"
 
-void OnEvent(const char* topic_name_, const struct eCAL::SSubEventCallbackData* data_)
+void OnEvent(const char* topic_name_, const struct eCAL::v5::SSubEventCallbackData* data_)
 {
   std::cout << "topic name       : " << topic_name_ << std::endl;
   switch (data_->type)

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ namespace
   }
 
   std::recursive_mutex g_sub_event_callback_mtx; // NOLINT(*-avoid-non-const-global-variables)
-  void g_sub_event_callback(const char* topic_name_, const struct eCAL::SSubEventCallbackData* data_, const SubEventCallbackCT callback_, void* par_)
+  void g_sub_event_callback(const char* topic_name_, const struct eCAL::v5::SSubEventCallbackData* data_, const SubEventCallbackCT callback_, void* par_)
   {
     const std::lock_guard<std::recursive_mutex> lock(g_sub_event_callback_mtx);
     SSubEventCallbackDataC data{};

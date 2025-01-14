@@ -94,7 +94,7 @@ namespace eCAL
       Logging::Log(log_level_debug1, "v5::CServiceClientImpl: Creating service client with name: " + service_name_);
 
       // Define the event callback to pass to CServiceClient
-      ClientEventIDCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const struct SClientEventCallbackData& data_)
+      ClientEventIDCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const struct SClientEventIDCallbackData& data_)
         {
           Logging::Log(log_level_debug2, "v5::CServiceClientImpl: Event callback triggered for event type: " + std::to_string(data_.type));
 
@@ -107,7 +107,14 @@ namespace eCAL
           {
             Logging::Log(log_level_debug2, "v5::CServiceClientImpl: Executing event callback for event type: " + std::to_string(data_.type));
             // Call the user's callback
-            callback->second(service_id_.service_name.c_str(), &data_);
+            SClientEventCallbackData event_data;
+            event_data.type = data_.type;
+            event_data.time = data_.time;
+            event_data.attr.hname = service_id_.service_id.host_name;
+            event_data.attr.sname = service_id_.service_name;
+            event_data.attr.pid   = service_id_.service_id.process_id;
+            event_data.attr.sid   = service_id_.service_id.entity_id;
+            callback->second(service_id_.service_name.c_str(), &event_data);
           }
         };
 
@@ -176,14 +183,14 @@ namespace eCAL
       Logging::Log(log_level_debug1, "v5::CServiceClientImpl: Making a synchronous call to method: " + method_name_);
 
       // Wrap the response callback to filter by host name if necessary
-      ResponseIDCallbackT callback = [this](const Registration::SEntityId& /*entity_id_*/, const struct SServiceIDResponse& service_response_)
+      const ResponseIDCallbackT callback = [this](const Registration::SEntityId& /*entity_id_*/, const struct SServiceIDResponse& service_response_)
         {
           if (m_host_name.empty() || service_response_.service_method_id.service_id.host_name == m_host_name)
           {
             Logging::Log(log_level_debug2, "v5::CServiceClientImpl: Response received for method call.");
             
             // Convert SServiceResponse to SServiceIDResponse
-            SServiceResponse service_response = ConvertToServiceResponse(service_response_);
+            const SServiceResponse service_response = ConvertToServiceResponse(service_response_);
 
             // Call the stored response callback
             m_response_callback(service_response);
@@ -211,7 +218,7 @@ namespace eCAL
 
       // Call the method using the new API
       ServiceIDResponseVecT service_id_responses;
-      bool success = m_service_client_impl->CallWithResponse(method_name_, request_, timeout_, service_id_responses);
+      const bool success = m_service_client_impl->CallWithResponse(method_name_, request_, timeout_, service_id_responses);
 
       // Convert the responses to the old format
       service_response_vec_->clear();
@@ -244,7 +251,7 @@ namespace eCAL
       Logging::Log(log_level_debug1, "v5::CServiceClientImpl: Making an asynchronous call to method: " + method_name_);
 
       // Wrap the response callback to filter by host name if necessary
-      ResponseIDCallbackT wrapped_callback = [this](const Registration::SEntityId& /*entity_id_*/, const struct SServiceIDResponse& service_response_)
+      const ResponseIDCallbackT callback = [this](const Registration::SEntityId& /*entity_id_*/, const struct SServiceIDResponse& service_response_)
         {
           if (m_host_name.empty() || service_response_.service_method_id.service_id.host_name == m_host_name)
           {
@@ -255,7 +262,7 @@ namespace eCAL
         };
 
       // Call the method asynchronously using the new API
-      bool success = m_service_client_impl->CallWithCallbackAsync(method_name_, request_, wrapped_callback);
+      const bool success = m_service_client_impl->CallWithCallbackAsync(method_name_, request_, callback);
       Logging::Log(log_level_debug1, "v5::CServiceClientImpl: Async call to method: " + method_name_ + " completed with success: " + std::to_string(success));
       return success;
     }

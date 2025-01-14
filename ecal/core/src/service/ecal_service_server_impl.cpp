@@ -202,7 +202,7 @@ namespace eCAL
     return connected;
   }
 
-  void CServiceServerImpl::RegisterClient(const std::string& /*key_*/, const SClientAttr& /*client_*/)
+  void CServiceServerImpl::RegisterClient(const std::string& /*key_*/, const v5::SClientAttr& /*client_*/)
   {
     // client registration logic is not implemented, as it is not required for service servers
   }
@@ -472,7 +472,12 @@ namespace eCAL
     // execute method (outside lock guard)
     const std::string& request_s = request.request;
     std::string response_s;
-    const int service_return_state = method.callback(method.method.mname, method.method.req_datatype, method.method.resp_datatype, request_s, response_s);
+    const SMethodInfo method_info{
+      method.method.mname,
+      method.method.req_datatype,
+      method.method.resp_datatype
+    };
+    const int service_return_state = method.callback(method_info, request_s, response_s);
 
     // set method call state 'executed'
     response_header.state = Service::eMethodCallState::executed;
@@ -495,12 +500,11 @@ namespace eCAL
 #endif
 
     const std::lock_guard<std::mutex> lock_cb(m_event_callback_mutex);
-    if (m_event_callback)
-    {
-      SServerEventCallbackData callback_data;
-      callback_data.type = event_type_;
-      callback_data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-      m_event_callback(service_id_, callback_data);
-    }
+    if (m_event_callback == nullptr) return;
+
+    SServerEventIDCallbackData callback_data;
+    callback_data.type = event_type_;
+    callback_data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+    m_event_callback(service_id_, callback_data);
   }
 }

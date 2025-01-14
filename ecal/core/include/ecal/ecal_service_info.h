@@ -35,6 +35,16 @@
 namespace eCAL
 {
   /**
+   * @brief Service method information struct containing the request and response type information.
+  **/
+  struct SMethodInfo
+  {
+    std::string              method_name; //!< The name of the method.
+    SDataTypeInformation     req_type;    //!< The type of the method request.
+    SDataTypeInformation     resp_type;   //!< The type of the method response.
+  };
+
+  /**
    * @brief Service response struct containing the (responding) server informations and the response itself. (deprecated)
   **/
   struct SServiceResponse
@@ -82,13 +92,11 @@ namespace eCAL
   /**
    * @brief Service method callback function type (low level server interface).
    *
-   * @param method_     The method name.
-   * @param req_type_   The type of the method request.
-   * @param resp_type_  The type of the method response.
+   * @param method_info The method information struct containing the request and response type information.
    * @param request_    The request.
    * @param response_   The response returned from the method call.
   **/
-  using MethodInfoCallbackT = std::function<int(const std::string& method_, const SDataTypeInformation& req_type_, const SDataTypeInformation& resp_type_, const std::string& request_, std::string& response_)>;
+  using MethodInfoCallbackT = std::function<int(const SMethodInfo& method_info_, const std::string& request_, std::string& response_)>;
 
   /**
    * @brief Service response callback function type (low level client interface). (deprecated)

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,33 +31,6 @@
 extern "C"
 {
 #endif /*__cplusplus*/
-  /**
-   * @brief Set topics filter blacklist regular expression.
-   *
-   * @param filter_  Topic filter as regular expression. 
-   *
-   * @return Zero if succeeded.
-  **/
-  ECALC_API int eCAL_Monitoring_SetExclFilter(const char* filter_);
-
-  /**
-   * @brief Set topics filter whitelist regular expression.
-   *
-   * @param filter_  Topic filter as regular expression. 
-   *
-   * @return Zero if succeeded.
-  **/
-  ECALC_API int eCAL_Monitoring_SetInclFilter(const char* filter_);
-
-  /**
-   * @brief Switch topics filter using regular expression on/off.
-   *
-   * @param state_  Filter on / off state. 
-   *
-   * @return Zero if succeeded.
-  **/
-  ECALC_API int eCAL_Monitoring_SetFilterState(int state_);
-
   /**
    * @brief Get monitoring protobuf string. 
    *

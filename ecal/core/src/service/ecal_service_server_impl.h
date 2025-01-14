@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ecal/ecal_callback.h>
+#include <ecal/ecal_callback_v5.h>
 #include <ecal/ecal_service_info.h>
 #include <ecal/service/server.h>
 
@@ -62,7 +63,7 @@ namespace eCAL
     bool IsConnected() const;
 
     // Called by the registration receiver to process a client registration
-    void RegisterClient(const std::string& key_, const SClientAttr& client_);
+    void RegisterClient(const std::string& key_, const v5::SClientAttr& client_);
 
     // Called by the registration provider to get a registration sample
     Registration::Sample GetRegistration();

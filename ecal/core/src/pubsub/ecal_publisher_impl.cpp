@@ -366,7 +366,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CPublisherImpl::SetEventCallback(eCAL_Publisher_Event type_, const PubEventCallbackT callback_)
+  bool CPublisherImpl::SetEventCallback(eCAL_Publisher_Event type_, const v5::PubEventCallbackT callback_)
   {
     if (!m_created) return(false);
 
@@ -735,22 +735,22 @@ namespace eCAL
 
   void CPublisherImpl::FireEvent(const eCAL_Publisher_Event type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
-    SPubEventCallbackData data;
-    data.type      = type_;
-    data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-    data.clock     = 0;
-    data.tid       = subscription_info_.entity_id;
-    data.tdatatype = data_type_info_;
-
     // new event handling with topic id
     if(m_event_id_callback)
     {
+      SPubEventIDCallbackData data;
+      data.type      = type_;
+      data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+      data.clock     = 0;
+      data.tdatatype = data_type_info_;
+
       Registration::STopicId topic_id;
       topic_id.topic_id.entity_id  = subscription_info_.entity_id;
       topic_id.topic_id.process_id = subscription_info_.process_id;
       topic_id.topic_id.host_name  = subscription_info_.host_name;
       topic_id.topic_name          = m_attributes.topic_name;
       const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
+
       // call event callback
       m_event_id_callback(topic_id, data);
     }
@@ -761,7 +761,15 @@ namespace eCAL
       auto iter = m_event_callback_map.find(type_);
       if (iter != m_event_callback_map.end() && iter->second)
       {
-        (iter->second)(m_attributes.topic_name.c_str(), &data);
+        v5::SPubEventCallbackData event_data;
+        event_data.type      = type_;
+        event_data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+        event_data.clock     = 0;
+        event_data.tid       = std::to_string(subscription_info_.entity_id);
+        event_data.tdatatype = data_type_info_;
+
+        // call event callback
+        (iter->second)(m_attributes.topic_name.c_str(), &event_data);
       }
     }
   }

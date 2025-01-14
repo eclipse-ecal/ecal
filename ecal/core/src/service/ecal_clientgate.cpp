@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ namespace eCAL
 
   void CClientGate::ApplyServiceRegistration(const Registration::Sample& ecal_sample_)
   {
-    SServiceAttr service;
+    v5::SServiceAttr service;
     const auto& ecal_sample_service = ecal_sample_.service;
     const auto& ecal_sample_identifier = ecal_sample_.identifier;
     service.hname = ecal_sample_identifier.host_name;

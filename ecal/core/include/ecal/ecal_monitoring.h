@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,33 +32,6 @@ namespace eCAL
 {
   namespace Monitoring
   {
-    /**
-     * @brief Set topics filter blacklist regular expression.
-     *
-     * @param filter_  Topic filter as regular expression. 
-     *
-     * @return True if succeeded.
-    **/
-    ECAL_API bool SetExclFilter(const std::string& filter_);
-
-    /**
-     * @brief Set topics filter whitelist regular expression.
-     *
-     * @param filter_  Topic filter as regular expression. 
-     *
-     * @return True if succeeded.
-    **/
-    ECAL_API bool SetInclFilter(const std::string& filter_);
-
-    /**
-     * @brief Switch topics filter using regular expression on/off.
-     *
-     * @param state_  Filter on / off state. 
-     *
-     * @return True if succeeded.
-    **/
-    ECAL_API bool SetFilterState(bool state_);
-
     /**
      * @brief Get monitoring subset as serialized protobuf string.
      *

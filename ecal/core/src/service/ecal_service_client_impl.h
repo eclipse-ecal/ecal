@@ -24,6 +24,7 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_callback.h>
+#include <ecal/ecal_callback_v5.h>
 #include <ecal/ecal_service_info.h>
 #include <ecal/ecal_types.h>
 #include <ecal/service/client_session.h>
@@ -73,7 +74,7 @@ namespace eCAL
     bool IsConnected(const Registration::SEntityId& entity_id_);
 
     // Called by the registration receiver to process a service registration
-    void RegisterService(const Registration::SEntityId& entity_id_, const SServiceAttr& service_);
+    void RegisterService(const Registration::SEntityId& entity_id_, const v5::SServiceAttr& service_);
 
     // Called by the registration provider to get a registration sample
     Registration::Sample GetRegistration();
@@ -98,7 +99,7 @@ namespace eCAL
     // SClient struct representing a client session and its connection state
     struct SClient
     {
-      SServiceAttr service_attr;
+      v5::SServiceAttr service_attr;
       std::shared_ptr<eCAL::service::ClientSession> client_session;
       bool connected = false;
     };
@@ -117,7 +118,7 @@ namespace eCAL
     void IncrementMethodCallCount(const std::string& method_name_);
 
     // Notify specific event callback
-    void NotifyEventCallback(const Registration::SEntityId& entity_id_, eCAL_Client_Event event_type_, const SServiceAttr& service_attr_);
+    void NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eCAL_Client_Event event_type_);
 
     // SResponseData struct for handling response callbacks
     struct SResponseData

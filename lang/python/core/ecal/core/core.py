@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -385,35 +385,6 @@ def mon_finalize():
   """ finalize eCAL monitoring API
   """
   return _ecal.mon_finalize()
-
-
-def mon_setexclfilter(filter_):
-  """ Set topics filter blacklist regular expression
-
-  :param filter_: filter string as regular expression
-  :type filter_: string
-
-  """
-  return _ecal.mon_setexclfilter(filter_)
-
-
-def mon_setinclfilter(filter_):
-  """ Set topics filter whitelist regular expression
-
-  :param filter_: filter string as regular expression
-  :type filter_: string
-  
-  """
-  return _ecal.mon_setinclfilter(filter_)
-
-
-def mon_setfilterstate(state_):
-  """ Switch eCAL monitoring filter on/off
-
-  :param state_: filter state on / off
-
-  """
-  return _ecal.mon_setfilterstate(state_)
 
 
 def mon_monitoring():

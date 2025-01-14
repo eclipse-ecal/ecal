@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,21 +30,6 @@
 #if ECAL_CORE_MONITORING
 extern "C"
 {
-  ECALC_API int eCAL_Monitoring_SetExclFilter(const char* filter_)
-  {
-    return(static_cast<int>(!eCAL::Monitoring::SetExclFilter(std::string(filter_))));
-  }
-
-  ECALC_API int eCAL_Monitoring_SetInclFilter(const char* filter_)
-  {
-    return(static_cast<int>(!eCAL::Monitoring::SetInclFilter(std::string(filter_))));
-  }
-
-  ECALC_API int eCAL_Monitoring_SetFilterState(int state_)
-  {
-    return(static_cast<int>(!eCAL::Monitoring::SetFilterState(state_ != 0)));
-  }
-
   ECALC_API int eCAL_Monitoring_GetMonitoring(void* buf_, int buf_len_)
   {
     std::string buf;
