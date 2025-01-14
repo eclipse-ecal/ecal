@@ -23,9 +23,7 @@
 
 #include "ecal/ecal_config.h"
 
-#include "ecal_config_internal.h"
 #include "ecal/ecal_util.h"
-
 
 #include "ecal_path_processing.h"
 #include "ecal_global_accessors.h"
@@ -72,45 +70,5 @@ namespace eCAL
     Configuration& GetConfiguration()
     {
       return g_ecal_configuration;
-    }
-
-    TransportLayer::Configuration& GetTransportLayerConfiguration()
-    {
-      return GetConfiguration().transport_layer;
-    }
-
-    Registration::Configuration& GetRegistrationConfiguration()
-    {
-      return GetConfiguration().registration;
-    }
-
-    Monitoring::Configuration& GetMonitoringConfiguration()
-    {
-      return GetConfiguration().monitoring;
-    }
-
-    Logging::Configuration& GetLoggingConfiguration()
-    {
-      return GetConfiguration().logging;
-    }
-
-    Subscriber::Configuration& GetSubscriberConfiguration()
-    {
-      return GetConfiguration().subscriber;
-    }
-
-    Publisher::Configuration& GetPublisherConfiguration()
-    {
-      return GetConfiguration().publisher;
-    }
-
-    Time::Configuration& GetTimesyncConfiguration()
-    {
-      return GetConfiguration().timesync;
-    }
-
-    Application::Configuration& GetApplicationConfiguration()
-    {
-      return GetConfiguration().application;
     }
 }

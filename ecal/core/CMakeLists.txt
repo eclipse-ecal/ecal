@@ -67,7 +67,7 @@ endif()
 set(ecal_config_src
     src/config/default_configuration.cpp        
     src/config/ecal_config.cpp
-    src/config/ecal_config_initializer.cpp
+    src/config/configuration.cpp
     src/config/ecal_path_processing.cpp
     src/types/ecal_custom_data_types.cpp
 )

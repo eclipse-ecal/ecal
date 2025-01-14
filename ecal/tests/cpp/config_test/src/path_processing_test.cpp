@@ -249,6 +249,15 @@ TEST(core_cpp_path_processing /*unused*/, ecal_config_log_dir /*unused*/)
 
 TEST(core_cpp_path_processing /*unused*/, ecal_log_order_test /*unused*/)
 {
+  // This test checks multiple scenarios for retrieving the log directory.
+  // Every variable will be set from the beginning to a value. Now, compared to the other tests,
+  // the return value of "dirExists" can also return false.
+  // So the first call will return first value. Value is set and direxists.
+  // The second call will return the second value, even if the variable is still set, because dirExists will return false.
+  // Then the first call of the expected 2nd value follows: First value unset, 2nd value set and direxists = 2nd Value.
+  // This continues until the last: UniqueTmpDir call
+  // Alltogether the eCALLogDirImpl function will be called 11 times.
+
   const std::string ecal_data_env_var = "/ecal/data/env";
   const std::string ecal_log_env_var = "/ecal/log/env";
   const std::string ecal_data_system_dir = "/data/system/dir";
