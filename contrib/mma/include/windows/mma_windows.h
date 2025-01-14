@@ -78,6 +78,8 @@ class MMAWindows : public MMAImpl
   QueryManager                          query_manager_;
   std::shared_ptr<Processor>            processor_;
   std::shared_ptr<Memory>               memory_;
+  std::shared_ptr<Disk>                 disk_;
+  std::shared_ptr<Network>              network_;
   std::shared_ptr<Processes>            processes_;
 
   std::list<std::shared_ptr<Resource>>  total_network_cards_;
