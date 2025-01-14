@@ -34,7 +34,7 @@
 #include <string>
 
 
-void exitWithMessage(const std::string& message, int exitCode) {
+void exitWithMessage(const std::string& message, int exitCode, bool wait_for_it = true) {
   if (!message.empty()) {
     if (exitCode == 0) {
       std::cout << message << "\n";
@@ -42,8 +42,13 @@ void exitWithMessage(const std::string& message, int exitCode) {
       std::cerr << message << "\n";
     }
   }
-  std::cout << "Press Enter to continue...";
-  std::cin.get();
+  
+  if (wait_for_it)
+  {
+    std::cout << "Press Enter to continue...";
+    std::cin.get();
+  }
+
   exit(exitCode);
 }
 
@@ -61,14 +66,14 @@ int main(int argc, char* argv[]) {
 
   if (dump) {
     if (!eCAL::Config::dumpConfigToFile()) {
-      exitWithMessage("Failed to write default configuration to file.", 1);
+      exitWithMessage("Failed to write default configuration to file.", 1, false);
     }
 
     if (!eCAL::Config::dumpToFile(eCAL::Config::getTimeConfigAsYamlSS(), "time.yaml")) {
-      exitWithMessage("Failed to write time configuration to file.", 1);
+      exitWithMessage("Failed to write time configuration to file.", 1, false);
     }
 
-    exitWithMessage("", 0);
+    exitWithMessage("", 0, false);
   }
 
   std::string created_path;

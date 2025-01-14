@@ -99,42 +99,37 @@ namespace eCAL
 
   }
 
-  TransportLayer::Configuration& GetTransportLayerConfiguration()
+  const TransportLayer::Configuration& GetTransportLayerConfiguration()
   {
     return GetConfiguration().transport_layer;
   }
 
-  Registration::Configuration& GetRegistrationConfiguration()
+  const Registration::Configuration& GetRegistrationConfiguration()
   {
     return GetConfiguration().registration;
   }
 
-  Monitoring::Configuration& GetMonitoringConfiguration()
-  {
-    return GetConfiguration().monitoring;
-  }
-
-  Logging::Configuration& GetLoggingConfiguration()
+  const Logging::Configuration& GetLoggingConfiguration()
   {
     return GetConfiguration().logging;
   }
 
-  Subscriber::Configuration& GetSubscriberConfiguration()
+  const Subscriber::Configuration& GetSubscriberConfiguration()
   {
     return GetConfiguration().subscriber;
   }
 
-  Publisher::Configuration& GetPublisherConfiguration()
+  const Publisher::Configuration& GetPublisherConfiguration()
   {
     return GetConfiguration().publisher;
   }
 
-  Time::Configuration& GetTimesyncConfiguration()
+  const Time::Configuration& GetTimesyncConfiguration()
   {
     return GetConfiguration().timesync;
   }
 
-  Application::Configuration& GetApplicationConfiguration()
+  const Application::Configuration& GetApplicationConfiguration()
   {
     return GetConfiguration().application;
   }
