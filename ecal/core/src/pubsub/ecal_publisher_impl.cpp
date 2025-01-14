@@ -366,7 +366,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CPublisherImpl::SetEventCallback(eCAL_Publisher_Event type_, const v5::PubEventCallbackT callback_)
+  bool CPublisherImpl::SetEventCallback(Publisher_Event type_, const v5::PubEventCallbackT callback_)
   {
     if (!m_created) return(false);
 
@@ -383,7 +383,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CPublisherImpl::RemoveEventCallback(eCAL_Publisher_Event type_)
+  bool CPublisherImpl::RemoveEventCallback(Publisher_Event type_)
   {
     if (!m_created) return(false);
 
@@ -733,7 +733,7 @@ namespace eCAL
     ecal_reg_sample_topic.uname  = m_attributes.unit_name;
   }
 
-  void CPublisherImpl::FireEvent(const eCAL_Publisher_Event type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
+  void CPublisherImpl::FireEvent(const Publisher_Event type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
     // new event handling with topic id
     if(m_event_id_callback)
@@ -776,17 +776,17 @@ namespace eCAL
 
   void CPublisherImpl::FireConnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(pub_event_connected, subscription_info_, data_type_info_);
+    FireEvent(Publisher_Event::pub_event_connected, subscription_info_, data_type_info_);
   }
 
   void CPublisherImpl::FireUpdateEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(pub_event_update_connection, subscription_info_, data_type_info_);
+    FireEvent(Publisher_Event::pub_event_update_connection, subscription_info_, data_type_info_);
   }
 
   void CPublisherImpl::FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(pub_event_disconnected, subscription_info_, data_type_info_);
+    FireEvent(Publisher_Event::pub_event_disconnected, subscription_info_, data_type_info_);
   }
 
   size_t CPublisherImpl::GetConnectionCount()

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -204,7 +204,7 @@ void EcalplayGuiClient::onPlayerResponse(const struct eCAL::SServiceResponse& se
   switch (service_response_.call_state)
   {
     // service successful executed
-  case call_state_executed:
+  case eCAL::eCallState::call_state_executed:
   {
     if (service_response_.method_name == "GetConfig")
     {
@@ -226,7 +226,7 @@ void EcalplayGuiClient::onPlayerResponse(const struct eCAL::SServiceResponse& se
     break;
   }
   // service execution failed
-  case call_state_failed:
+  case eCAL::eCallState::call_state_failed:
   {
     eCAL::pb::play::Response response;
     response.ParseFromString(service_response_.response);

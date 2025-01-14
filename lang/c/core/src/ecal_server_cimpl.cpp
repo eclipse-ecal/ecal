@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,30 @@
 #if ECAL_CORE_SERVICE
 namespace
 {
+  eCAL_Server_Event enum_class_to_enum(eCAL::Server_Event cpp_event_)
+  {
+    switch (cpp_event_)
+    {
+    case eCAL::Server_Event::server_event_none:         return server_event_none;
+    case eCAL::Server_Event::server_event_connected:    return server_event_connected;
+    case eCAL::Server_Event::server_event_disconnected: return server_event_disconnected;
+    default:                                            return server_event_none;
+    }
+  }
+
+  eCAL::Server_Event enum_to_enum_class(eCAL_Server_Event c_event)
+  {
+    switch (c_event)
+    {
+    case server_event_none:         return eCAL::Server_Event::server_event_none;
+    case server_event_connected:    return eCAL::Server_Event::server_event_connected;
+    case server_event_disconnected: return eCAL::Server_Event::server_event_disconnected;
+    default:                        return eCAL::Server_Event::server_event_none;
+    }
+  }
+
+
+
   std::recursive_mutex g_method_callback_mtx; // NOLINT(*-avoid-non-const-global-variables)
   int g_method_callback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_, MethodCallbackCT callback_, void* par_)
   {
@@ -53,7 +77,7 @@ namespace
     const std::lock_guard<std::recursive_mutex> lock(g_server_event_callback_mtx);
     SServerEventCallbackDataC data{};
     data.time = data_->time;
-    data.type = data_->type;
+    data.type = enum_class_to_enum(data_->type);
     callback_(name_, &data, par_);
   }
 }
@@ -95,7 +119,7 @@ extern "C"
     if (handle_ == nullptr) return(0);
     auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
     auto callback = std::bind(g_server_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
-    if (server->AddEventCallback(type_, callback)) return(1);
+    if (server->AddEventCallback(enum_to_enum_class(type_), callback)) return(1);
     return(0);
   }
 
@@ -103,7 +127,7 @@ extern "C"
   {
     if (handle_ == nullptr) return(0);
     auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
-    if (server->RemEventCallback(type_)) return(1);
+    if (server->RemEventCallback(enum_to_enum_class(type_))) return(1);
     return(0);
   }
 

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,12 +33,35 @@
 #if ECAL_CORE_PUBLISHER
 namespace
 {
+  eCAL_Publisher_Event enum_class_to_enum(eCAL::Publisher_Event event_) {
+    switch (event_) {
+    case eCAL::Publisher_Event::pub_event_none:                   return pub_event_none;
+    case eCAL::Publisher_Event::pub_event_connected:              return pub_event_connected;
+    case eCAL::Publisher_Event::pub_event_disconnected:           return pub_event_disconnected;
+    case eCAL::Publisher_Event::pub_event_dropped:                return pub_event_dropped;
+    case eCAL::Publisher_Event::pub_event_update_connection:      return pub_event_update_connection;
+    default:                                                      return pub_event_none;
+    }
+  }
+
+  eCAL::Publisher_Event enum_to_enum_class(eCAL_Publisher_Event event_) {
+    switch (event_) {
+    case pub_event_none:                   return eCAL::Publisher_Event::pub_event_none;
+    case pub_event_connected:              return eCAL::Publisher_Event::pub_event_connected;
+    case pub_event_disconnected:           return eCAL::Publisher_Event::pub_event_disconnected;
+    case pub_event_dropped:                return eCAL::Publisher_Event::pub_event_dropped;
+    case pub_event_update_connection:      return eCAL::Publisher_Event::pub_event_update_connection;
+    default:                               return eCAL::Publisher_Event::pub_event_none;
+    }
+  }
+
+
   std::recursive_mutex g_pub_event_callback_mtx; // NOLINT(*-avoid-non-const-global-variables)
   void g_pub_event_callback(const char* topic_name_, const struct eCAL::v5::SPubEventCallbackData* data_, const PubEventCallbackCT callback_, void* par_)
   {
     const std::lock_guard<std::recursive_mutex> lock(g_pub_event_callback_mtx);
     SPubEventCallbackDataC data{};
-    data.type      = data_->type;
+    data.type      = enum_class_to_enum(data_->type);
     data.time      = data_->time;
     data.clock     = data_->clock;
     data.tid       = data_->tid.c_str();
@@ -123,7 +146,7 @@ extern "C"
     if (handle_ == nullptr) return(0);
     auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
     auto callback = std::bind(g_pub_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
-    if (pub->AddEventCallback(type_, callback)) return(1);
+    if (pub->AddEventCallback(enum_to_enum_class(type_), callback)) return(1);
     return(0);
   }
 
@@ -131,7 +154,7 @@ extern "C"
   {
     if (handle_ == nullptr) return(0);
     auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
-    if (pub->RemEventCallback(type_)) return(1);
+    if (pub->RemEventCallback(enum_to_enum_class(type_))) return(1);
     return(0);
   }
 

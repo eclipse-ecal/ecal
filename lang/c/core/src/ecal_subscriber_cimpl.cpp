@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,30 @@
 #if ECAL_CORE_SUBSCRIBER
 namespace
 {
+  eCAL_Subscriber_Event enum_class_to_enum(eCAL::Subscriber_Event cpp_event_) {
+    switch (cpp_event_) {
+    case eCAL::Subscriber_Event::sub_event_none:                   return sub_event_none;
+    case eCAL::Subscriber_Event::sub_event_connected:              return sub_event_connected;
+    case eCAL::Subscriber_Event::sub_event_disconnected:           return sub_event_disconnected;
+    case eCAL::Subscriber_Event::sub_event_dropped:                return sub_event_dropped;
+    case eCAL::Subscriber_Event::sub_event_corrupted:              return sub_event_corrupted;
+    case eCAL::Subscriber_Event::sub_event_update_connection:      return sub_event_update_connection;
+    default:            return sub_event_none;
+    }
+  }
+
+  eCAL::Subscriber_Event enum_to_enum_class(eCAL_Subscriber_Event c_event_) {
+    switch (c_event_) {
+    case sub_event_none:                   return eCAL::Subscriber_Event::sub_event_none;
+    case sub_event_connected:              return eCAL::Subscriber_Event::sub_event_connected;
+    case sub_event_disconnected:           return eCAL::Subscriber_Event::sub_event_disconnected;
+    case sub_event_dropped:                return eCAL::Subscriber_Event::sub_event_dropped;
+    case sub_event_corrupted:              return eCAL::Subscriber_Event::sub_event_corrupted;
+    case sub_event_update_connection:      return eCAL::Subscriber_Event::sub_event_update_connection;
+    default:                               return eCAL::Subscriber_Event::sub_event_none;
+    }
+  }
+
   std::recursive_mutex g_sub_receive_callback_mtx; // NOLINT(*-avoid-non-const-global-variables)
   void g_sub_receive_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, const ReceiveCallbackCT callback_, void* par_)
   {
@@ -51,7 +75,7 @@ namespace
   {
     const std::lock_guard<std::recursive_mutex> lock(g_sub_event_callback_mtx);
     SSubEventCallbackDataC data{};
-    data.type      = data_->type;
+    data.type      = enum_class_to_enum(data_->type);
     data.time      = data_->time;
     data.clock     = data_->clock;
     data.tid       = data_->tid.c_str();
@@ -182,7 +206,7 @@ extern "C"
     if (handle_ == nullptr) return(0);
     auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
     auto callback = std::bind(g_sub_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
-    if (sub->AddEventCallback(type_, callback)) return(1);
+    if (sub->AddEventCallback(enum_to_enum_class(type_), callback)) return(1);
     return(0);
   }
 
@@ -190,7 +214,7 @@ extern "C"
   {
     if (handle_ == nullptr) return(0);
     auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
-    if (sub->RemEventCallback(type_)) return(1);
+    if (sub->RemEventCallback(enum_to_enum_class(type_))) return(1);
     return(0);
   }
 

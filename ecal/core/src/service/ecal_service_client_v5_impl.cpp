@@ -96,7 +96,7 @@ namespace eCAL
       // Define the event callback to pass to CServiceClient
       v6::ClientEventCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const v6::SClientEventCallbackData& data_)
         {
-          Logging::Log(log_level_debug2, "v5::CServiceClientImpl: Event callback triggered for event type: " + std::to_string(data_.type));
+          Logging::Log(log_level_debug2, "v5::CServiceClientImpl: Event callback triggered for event type: " + to_string(data_.type));
 
           // Lock the mutex to safely access m_event_callbacks
           std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
@@ -105,7 +105,7 @@ namespace eCAL
           const auto& callback = m_event_callback_map.find(data_.type);
           if (callback != m_event_callback_map.end())
           {
-            Logging::Log(log_level_debug2, "v5::CServiceClientImpl: Executing event callback for event type: " + std::to_string(data_.type));
+            Logging::Log(log_level_debug2, "v5::CServiceClientImpl: Executing event callback for event type: " + to_string(data_.type));
             // Call the user's callback
             SClientEventCallbackData event_data;
             event_data.type = data_.type;
@@ -303,7 +303,7 @@ namespace eCAL
       return true;
     }
 
-    bool CServiceClientImpl::AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_)
+    bool CServiceClientImpl::AddEventCallback(Client_Event type_, ClientEventCallbackT callback_)
     {
       if (m_service_client_impl == nullptr)
       {
@@ -311,7 +311,7 @@ namespace eCAL
         return false;
       }
 
-      Logging::Log(log_level_debug1, "v5::CServiceClientImpl: Adding event callback for event type: " + std::to_string(type_));
+      Logging::Log(log_level_debug1, "v5::CServiceClientImpl: Adding event callback for event type: " + to_string(type_));
 
       {
         const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
@@ -321,7 +321,7 @@ namespace eCAL
       return true;
     }
 
-    bool CServiceClientImpl::RemEventCallback(eCAL_Client_Event type_)
+    bool CServiceClientImpl::RemEventCallback(Client_Event type_)
     {
       if (m_service_client_impl == nullptr)
       {
@@ -329,7 +329,7 @@ namespace eCAL
         return false;
       }
 
-      Logging::Log(log_level_debug1, "v5::CServiceClientImpl: Removing event callback for event type: " + std::to_string(type_));
+      Logging::Log(log_level_debug1, "v5::CServiceClientImpl: Removing event callback for event type: " + to_string(type_));
 
       {
         const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);

@@ -25,7 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_deprecate.h>
-#include <ecal/cimpl/ecal_callback_cimpl.h>
+#include <ecal/ecal_callback.h>
 #include <ecal/ecal_types.h>
 
 #include <functional>
@@ -40,7 +40,7 @@ namespace eCAL
   **/
     struct SPubEventCallbackData
     {
-      eCAL_Publisher_Event type{ pub_event_none };  //!< publisher event type
+      Publisher_Event      type = Publisher_Event::pub_event_none;  //!< publisher event type
       long long            time{ 0 };               //!< publisher event time in µs
       long long            clock{ 0 };              //!< publisher event clock
       std::string          tid;                     //!< topic id of the of the connected subscriber                 (for pub_event_update_connection only)
@@ -52,7 +52,7 @@ namespace eCAL
     **/
     struct SSubEventCallbackData
     {
-      eCAL_Subscriber_Event type{ sub_event_none }; //!< subscriber event type
+      Subscriber_Event      type = Subscriber_Event::sub_event_none; //!< subscriber event type
       long long             time{ 0 };              //!< subscriber event time in µs
       long long             clock{ 0 };             //!< subscriber event clock
       std::string           tid;                  //!< topic id of the of the connected publisher              (for sub_event_update_connection only)
@@ -83,7 +83,7 @@ namespace eCAL
     **/
     struct SClientEventCallbackData
     {
-      eCAL_Client_Event type = client_event_none;  //!< event type
+      Client_Event      type = Client_Event::client_event_none;  //!< event type
       long long         time = 0;                  //!< event time in µs
       SServiceAttr      attr;                      //!< event related service attributes
     };
@@ -109,7 +109,7 @@ namespace eCAL
     **/
     struct SServerEventCallbackData
     {
-      eCAL_Server_Event type = server_event_none;  //!< event type
+      Server_Event      type = Server_Event::server_event_none;  //!< event type
       long long         time = 0;                  //!< event time in µs
     };
 

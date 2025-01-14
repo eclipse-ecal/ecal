@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,12 +68,12 @@ void OnServerEvent(const eCAL::v5::SServerEventCallbackData* data_)
 
   switch (data_->type)
   {
-  case server_event_connected:
+  case eCAL::Server_Event::server_event_connected:
     std::cout << "-----------------------------------" << std::endl;
     std::cout << "Server connected                   " << std::endl;
     std::cout << "-----------------------------------" << std::endl;
     break;
-  case server_event_disconnected:
+  case eCAL::Server_Event::server_event_disconnected:
     std::cout << "-----------------------------------" << std::endl;
     std::cout << "Server disconnected                " << std::endl;
     std::cout << "-----------------------------------" << std::endl;
@@ -95,8 +95,8 @@ int main()
   eCAL::protobuf::CServiceServer<MathService> math_server(math_service);
   
   // register event callbacks
-  math_server.AddEventCallback(server_event_connected,    std::bind(OnServerEvent, std::placeholders::_2));
-  math_server.AddEventCallback(server_event_disconnected, std::bind(OnServerEvent, std::placeholders::_2));
+  math_server.AddEventCallback(eCAL::Server_Event::server_event_connected,    std::bind(OnServerEvent, std::placeholders::_2));
+  math_server.AddEventCallback(eCAL::Server_Event::server_event_disconnected, std::bind(OnServerEvent, std::placeholders::_2));
 
   while(eCAL::Ok())
   {

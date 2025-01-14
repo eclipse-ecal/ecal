@@ -168,14 +168,14 @@ namespace eCAL
       return(m_subscriber_impl->RemoveReceiveCallback());
     }
 
-    bool CSubscriber::AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_)
+    bool CSubscriber::AddEventCallback(Subscriber_Event type_, SubEventCallbackT callback_)
     {
       if (m_subscriber_impl == nullptr) return(false);
       RemEventCallback(type_);
       return(m_subscriber_impl->SetEventCallback(type_, callback_));
     }
 
-    bool CSubscriber::RemEventCallback(eCAL_Subscriber_Event type_)
+    bool CSubscriber::RemEventCallback(Subscriber_Event type_)
     {
       if (m_subscriber_impl == nullptr) return(false);
       return(m_subscriber_impl->RemoveEventCallback(type_));

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,6 +66,58 @@ namespace
       }
     }
     return false;
+  }
+
+  /**********************************************************************/
+  /* This is duplicated code from ecal_core_c                           */
+  /* We need to use the C API here instead of reimplementing everything */
+  /* But will be obsolete once we move to nanobind                      */
+  /**********************************************************************/
+
+  eCAL_Publisher_Event enum_class_to_enum(eCAL::Publisher_Event event_) {
+    switch (event_) {
+    case eCAL::Publisher_Event::pub_event_none:                   return pub_event_none;
+    case eCAL::Publisher_Event::pub_event_connected:              return pub_event_connected;
+    case eCAL::Publisher_Event::pub_event_disconnected:           return pub_event_disconnected;
+    case eCAL::Publisher_Event::pub_event_dropped:                return pub_event_dropped;
+    case eCAL::Publisher_Event::pub_event_update_connection:      return pub_event_update_connection;
+    default:                                                      return pub_event_none;
+    }
+  }
+
+  eCAL::Publisher_Event enum_to_enum_class(eCAL_Publisher_Event event_) {
+    switch (event_) {
+    case pub_event_none:                   return eCAL::Publisher_Event::pub_event_none;
+    case pub_event_connected:              return eCAL::Publisher_Event::pub_event_connected;
+    case pub_event_disconnected:           return eCAL::Publisher_Event::pub_event_disconnected;
+    case pub_event_dropped:                return eCAL::Publisher_Event::pub_event_dropped;
+    case pub_event_update_connection:      return eCAL::Publisher_Event::pub_event_update_connection;
+    default:                               return eCAL::Publisher_Event::pub_event_none;
+    }
+  }
+
+  eCAL_Subscriber_Event enum_class_to_enum(eCAL::Subscriber_Event cpp_event_) {
+    switch (cpp_event_) {
+    case eCAL::Subscriber_Event::sub_event_none:                   return sub_event_none;
+    case eCAL::Subscriber_Event::sub_event_connected:              return sub_event_connected;
+    case eCAL::Subscriber_Event::sub_event_disconnected:           return sub_event_disconnected;
+    case eCAL::Subscriber_Event::sub_event_dropped:                return sub_event_dropped;
+    case eCAL::Subscriber_Event::sub_event_corrupted:              return sub_event_corrupted;
+    case eCAL::Subscriber_Event::sub_event_update_connection:      return sub_event_update_connection;
+    default:            return sub_event_none;
+    }
+  }
+
+  eCAL::Subscriber_Event enum_to_enum_class(eCAL_Subscriber_Event c_event_) {
+    switch (c_event_) {
+    case sub_event_none:                   return eCAL::Subscriber_Event::sub_event_none;
+    case sub_event_connected:              return eCAL::Subscriber_Event::sub_event_connected;
+    case sub_event_disconnected:           return eCAL::Subscriber_Event::sub_event_disconnected;
+    case sub_event_dropped:                return eCAL::Subscriber_Event::sub_event_dropped;
+    case sub_event_corrupted:              return eCAL::Subscriber_Event::sub_event_corrupted;
+    case sub_event_update_connection:      return eCAL::Subscriber_Event::sub_event_update_connection;
+    default:                               return eCAL::Subscriber_Event::sub_event_none;
+    }
   }
 }
 
@@ -346,7 +398,7 @@ static void g_pub_event_callback(const char* topic_name_, const struct eCAL::v5:
 {
   const std::lock_guard<std::mutex> lock(g_pub_event_callback_mtx);
   SPubEventCallbackDataC data{};
-  data.type      = data_->type;
+  data.type      = enum_class_to_enum(data_->type);
   data.time      = data_->time;
   data.clock     = data_->clock;
   data.tid       = data_->tid.c_str();
@@ -361,7 +413,7 @@ bool pub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_
   auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
 
   auto callback = std::bind(g_pub_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
-  return(pub->AddEventCallback(type_, callback));
+  return(pub->AddEventCallback(enum_to_enum_class(type_), callback));
 }
 
 /****************************************/
@@ -371,7 +423,7 @@ bool pub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_
 {
   auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
 
-  return(pub->RemEventCallback(type_));
+  return(pub->RemEventCallback(enum_to_enum_class(type_)));
 }
 
 
@@ -524,7 +576,7 @@ static void g_sub_event_callback(const char* topic_name_, const struct eCAL::v5:
 {
   const std::lock_guard<std::mutex> lock(g_sub_event_callback_mtx);
   SSubEventCallbackDataC data{};
-  data.type      = data_->type;
+  data.type      = enum_class_to_enum(data_->type);
   data.time      = data_->time;
   data.clock     = data_->clock;
   data.tid       = data_->tid.c_str();
@@ -539,7 +591,7 @@ bool sub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type
   auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
 
   auto callback = std::bind(g_sub_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
-  return(sub->AddEventCallback(type_, callback));
+  return(sub->AddEventCallback(enum_to_enum_class(type_), callback));
 }
 
 /****************************************/
@@ -549,7 +601,7 @@ bool sub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type
 {
   auto* sub = static_cast<eCAL::v5::CSubscriber*>(handle_);
 
-  return(sub->RemEventCallback(type_));
+  return(sub->RemEventCallback(enum_to_enum_class(type_)));
 }
 
 

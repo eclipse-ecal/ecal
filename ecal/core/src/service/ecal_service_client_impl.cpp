@@ -58,7 +58,7 @@ namespace
     // error message, return state and call state
     error_response.error_msg                      = error_message_;
     error_response.ret_state                      = 0;
-    error_response.call_state                     = call_state_failed;
+    error_response.call_state                     = eCAL::eCallState::call_state_failed;
     return error_response;
   }
 
@@ -191,7 +191,7 @@ namespace eCAL
       Registration::SServiceMethodId service_id;
       service_id.service_name = m_service_name;
       service_id.service_id   = entity_id_;
-      NotifyEventCallback(service_id, eCAL_Client_Event::client_event_timeout);
+      NotifyEventCallback(service_id, Client_Event::client_event_timeout);
 #ifndef NDEBUG
       eCAL::Logging::Log(log_level_debug1, "CServiceClientImpl::CallWithCallback: Synchronous call for service: " + m_service_name + ", method: " + method_name_ + " timed out.");
 #endif
@@ -492,13 +492,13 @@ namespace eCAL
       if (!client_data.connected && state == eCAL::service::State::CONNECTED)
       {
         client_data.connected = true;
-        NotifyEventCallback(service_id, client_event_connected);
+        NotifyEventCallback(service_id, Client_Event::client_event_connected);
         ++it;
       }
       else if (client_data.connected && state == eCAL::service::State::FAILED)
       {
         client_data.connected = false;
-        NotifyEventCallback(service_id, client_event_disconnected);
+        NotifyEventCallback(service_id, Client_Event::client_event_disconnected);
         it = m_client_session_map.erase(it);
       }
       else
@@ -515,10 +515,10 @@ namespace eCAL
   }
 
 
-  void CServiceClientImpl::NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eCAL_Client_Event event_type_)
+  void CServiceClientImpl::NotifyEventCallback(const Registration::SServiceMethodId& service_id_, Client_Event event_type_)
   {
 #ifndef NDEBUG
-    Logging::Log(log_level_debug1, "CServiceClientImpl::NotifyEventCallback: Notifying event callback for: " + m_service_name + " Event Type: " + std::to_string(event_type_));
+    Logging::Log(log_level_debug1, "CServiceClientImpl::NotifyEventCallback: Notifying event callback for: " + m_service_name + " Event Type: " + to_string(event_type_));
 #endif
 
     const std::lock_guard<std::mutex> lock(m_event_callback_mutex);
@@ -595,10 +595,10 @@ namespace eCAL
       switch (response_header.state)
       {
       case eCAL::Service::eMethodCallState::executed:
-        service_reponse.call_state = call_state_executed;
+        service_reponse.call_state = eCallState::call_state_executed;
         break;
       case eCAL::Service::eMethodCallState::failed:
-        service_reponse.call_state = call_state_failed;
+        service_reponse.call_state = eCallState::call_state_failed;
         break;
       default:
         break;

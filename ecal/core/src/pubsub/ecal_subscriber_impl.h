@@ -74,8 +74,8 @@ namespace eCAL
     bool RemoveReceiveCallback();
 
     // deprecated event callback interface
-    bool SetEventCallback(eCAL_Subscriber_Event type_, v5::SubEventCallbackT callback_);
-    bool RemoveEventCallback(eCAL_Subscriber_Event type_);
+    bool SetEventCallback(Subscriber_Event type_, v5::SubEventCallbackT callback_);
+    bool RemoveEventCallback(Subscriber_Event type_);
 
     // future event callback interface
     bool SetEventIDCallback(const SubEventCallbackT callback_);
@@ -123,7 +123,7 @@ namespace eCAL
     void StartTransportLayer();
     void StopTransportLayer();
 
-    void FireEvent(const eCAL_Subscriber_Event type_, const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
+    void FireEvent(const Subscriber_Event type_, const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
 
     void FireConnectEvent   (const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
     void FireUpdateEvent    (const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
@@ -163,7 +163,7 @@ namespace eCAL
 
     std::deque<size_t>                        m_sample_hash_queue;
 
-    using EventCallbackMapT = std::map<eCAL_Subscriber_Event, v5::SubEventCallbackT>;
+    using EventCallbackMapT = std::map<Subscriber_Event, v5::SubEventCallbackT>;
     std::mutex                                m_event_callback_map_mutex;
     EventCallbackMapT                         m_event_callback_map;
 

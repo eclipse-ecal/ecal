@@ -18,25 +18,6 @@
 cmake_minimum_required(VERSION 3.10)
 
 # --------------------------------------------------------
-# c samples
-# --------------------------------------------------------
-# pubsub
-if(ECAL_CORE_PUBLISHER)
-  add_subdirectory(c/pubsub/string/minimal_snd)
-endif()
-
-if(ECAL_CORE_SUBSCRIBER)
-  add_subdirectory(c/pubsub/string/minimal_rec)
-  add_subdirectory(c/pubsub/string/minimal_rec_cb)
-endif()
-
-# services
-if(ECAL_CORE_SERVICE)
-  add_subdirectory(c/services/minimal_client_c)
-  add_subdirectory(c/services/minimal_server_c)
-endif()
-
-# --------------------------------------------------------
 # cpp samples
 # --------------------------------------------------------
 # benchmarks

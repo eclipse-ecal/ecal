@@ -118,7 +118,7 @@ namespace eCAL
     void IncrementMethodCallCount(const std::string& method_name_);
 
     // Notify specific event callback
-    void NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eCAL_Client_Event event_type_);
+    void NotifyEventCallback(const Registration::SServiceMethodId& service_id_, Client_Event event_type_);
 
     // SResponseData struct for handling response callbacks
     struct SResponseData

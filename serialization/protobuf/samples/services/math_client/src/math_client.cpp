@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,17 +33,17 @@ void OnClientState(const eCAL::v5::SClientEventCallbackData* data_)
 
   switch (data_->type)
   {
-  case client_event_connected:
+  case eCAL::Client_Event::client_event_connected:
     std::cout << "---------------------------------" << std::endl;
     std::cout << "Client connected to service      " << std::endl;
     std::cout << "---------------------------------" << std::endl;
     break;
-  case client_event_disconnected:
+  case eCAL::Client_Event::client_event_disconnected:
     std::cout << "---------------------------------" << std::endl;
     std::cout << "Client disconnected from service " << std::endl;
     std::cout << "---------------------------------" << std::endl;
     break;
-  case client_event_timeout:
+  case eCAL::Client_Event::client_event_timeout:
     std::cout << "---------------------------------" << std::endl;
     std::cout << "Client request timeouted         " << std::endl;
     std::cout << "---------------------------------" << std::endl;
@@ -67,7 +67,7 @@ void OnMathResponse(const struct eCAL::SServiceResponse& service_response_)
   switch(service_response_.call_state)
   {
   // service successful executed
-  case call_state_executed:
+  case eCAL::eCallState::call_state_executed:
     {
       SFloat response;
       response.ParseFromString(service_response_.response);
@@ -75,7 +75,7 @@ void OnMathResponse(const struct eCAL::SServiceResponse& service_response_)
     }
     break;
   // service execution failed
-  case call_state_failed:
+  case eCAL::eCallState::call_state_failed:
     std::cout << "Received error MathService / " << service_response_.method_name << " : " << service_response_.error_msg << " from host " << service_response_.host_name << std::endl;
     break;
   default:
@@ -96,9 +96,9 @@ int main()
   math_client.AddResponseCallback(OnMathResponse);
 
   // add event callbacks
-  math_client.AddEventCallback(client_event_connected,    std::bind(OnClientState, std::placeholders::_2));
-  math_client.AddEventCallback(client_event_disconnected, std::bind(OnClientState, std::placeholders::_2));
-  math_client.AddEventCallback(client_event_timeout,      std::bind(OnClientState, std::placeholders::_2));
+  math_client.AddEventCallback(eCAL::Client_Event::client_event_connected,    std::bind(OnClientState, std::placeholders::_2));
+  math_client.AddEventCallback(eCAL::Client_Event::client_event_disconnected, std::bind(OnClientState, std::placeholders::_2));
+  math_client.AddEventCallback(eCAL::Client_Event::client_event_timeout,      std::bind(OnClientState, std::placeholders::_2));
 
   // loop variables
   int inp1(0);

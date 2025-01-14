@@ -121,7 +121,7 @@ namespace eCAL
         // handle exceptions and add an error response
         SServiceIDResponse error_response;
         error_response.error_msg = e.what();
-        error_response.call_state = call_state_failed;
+        error_response.call_state = eCallState::call_state_failed;
         service_response_vec_.emplace_back(error_response);
 
         // mark overall success as false if any call fails

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,13 +120,13 @@ TEST(core_cpp_clientserver_v5, ClientConnectEvent)
                         {
                           switch (data_->type)
                           {
-                          case client_event_connected:
+                          case eCAL::Client_Event::client_event_connected:
 #if DO_LOGGING
                             std::cout << "event connected fired" << std::endl;
 #endif
                             event_connected_fired++;
                             break;
-                          case client_event_disconnected:
+                          case eCAL::Client_Event::client_event_disconnected:
 #if DO_LOGGING
                             std::cout << "event disconnected fired" << std::endl;
 #endif
@@ -137,8 +137,8 @@ TEST(core_cpp_clientserver_v5, ClientConnectEvent)
                           }
                         };
   // attach event
-  client.AddEventCallback(client_event_connected,    std::bind(event_callback, std::placeholders::_2));
-  client.AddEventCallback(client_event_disconnected, std::bind(event_callback, std::placeholders::_2));
+  client.AddEventCallback(eCAL::Client_Event::client_event_connected,    std::bind(event_callback, std::placeholders::_2));
+  client.AddEventCallback(eCAL::Client_Event::client_event_disconnected, std::bind(event_callback, std::placeholders::_2));
 
   // check events
   eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
@@ -187,13 +187,13 @@ TEST(core_cpp_clientserver_v5, ServerConnectEvent)
   {
     switch (data_->type)
     {
-    case server_event_connected:
+    case eCAL::Server_Event::server_event_connected:
 #if DO_LOGGING
       std::cout << "event connected fired" << std::endl;
 #endif
       event_connected_fired++;
       break;
-    case server_event_disconnected:
+    case eCAL::Server_Event::server_event_disconnected:
 #if DO_LOGGING
       std::cout << "event disconnected fired" << std::endl;
 #endif
@@ -204,8 +204,8 @@ TEST(core_cpp_clientserver_v5, ServerConnectEvent)
     }
   };
   // attach event
-  server.AddEventCallback(server_event_connected,    std::bind(event_callback, std::placeholders::_2));
-  server.AddEventCallback(server_event_disconnected, std::bind(event_callback, std::placeholders::_2));
+  server.AddEventCallback(eCAL::Server_Event::server_event_connected,    std::bind(event_callback, std::placeholders::_2));
+  server.AddEventCallback(eCAL::Server_Event::server_event_disconnected, std::bind(event_callback, std::placeholders::_2));
 
   // check events
   eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
@@ -413,7 +413,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseCallbackTimeout)
   for (const auto& client : client_vec)
   {
     // catch events
-    client->AddEventCallback(client_event_timeout, std::bind(event_callback, std::placeholders::_2));
+    client->AddEventCallback(eCAL::Client_Event::client_event_timeout, std::bind(event_callback, std::placeholders::_2));
   }
 
   // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)

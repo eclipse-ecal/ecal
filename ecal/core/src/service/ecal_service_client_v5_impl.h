@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,10 +83,10 @@ namespace eCAL
       bool RemResponseCallback();
 
       // Registers a callback function for a specific client event.
-      bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
+      bool AddEventCallback(Client_Event type_, ClientEventCallbackT callback_);
 
       // Removes the registered callback function for a specific client event.
-      bool RemEventCallback(eCAL_Client_Event type_);
+      bool RemEventCallback(Client_Event type_);
 
       // Retrieves the name of the associated service.
       std::string GetServiceName();
@@ -109,7 +109,7 @@ namespace eCAL
 
       // Mutex and map for managing event callbacks
       std::mutex m_event_callback_map_mutex;
-      std::map<eCAL_Client_Event, ClientEventCallbackT> m_event_callback_map;
+      std::map<Client_Event, ClientEventCallbackT> m_event_callback_map;
 
       // Mutex and callback for managing server responses
       std::mutex m_response_callback_mutex;

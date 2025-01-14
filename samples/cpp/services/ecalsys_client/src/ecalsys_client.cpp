@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ void OnSysResponse(const struct eCAL::SServiceResponse& service_response_)
   switch (service_response_.call_state)
   {
   // service successful executed
-  case call_state_executed:
+  case eCAL::eCallState::call_state_executed:
     {
       eCAL::pb::sys::Response response;
       response.ParseFromString(service_response_.response);
@@ -47,7 +47,7 @@ void OnSysResponse(const struct eCAL::SServiceResponse& service_response_)
     }
     break;
   // service execution failed
-  case call_state_failed:
+  case eCAL::eCallState::call_state_failed:
     {
       eCAL::pb::sys::Response response;
       response.ParseFromString(service_response_.response);

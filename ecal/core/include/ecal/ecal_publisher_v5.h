@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -244,7 +244,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
+        bool AddEventCallback(Publisher_Event type_, PubEventCallbackT callback_);
 
       /**
        * @brief Remove callback function for publisher events.
@@ -254,7 +254,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool RemEventCallback(eCAL_Publisher_Event type_);
+        bool RemEventCallback(Publisher_Event type_);
 
       /**
        * @brief Query if the publisher is created. 

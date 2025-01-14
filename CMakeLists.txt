@@ -148,7 +148,7 @@ else()
   )
 endif()
 
-set(ECAL_CSHARP_BUILD_SAMPLES  ${BUILD_SAMPLES})
+
 
 
 # there is a CMake issue with testing threading availibility via TEST_RUN
@@ -324,8 +324,14 @@ endif()
 # ecal core csharp binding
 # --------------------------------------------------------
 if(BUILD_CSHARP_BINDING AND WIN32)
+  set(ECAL_CSHARP_BUILD_SAMPLES     ${BUILD_SAMPLES})
+  set(ECAL_CSHARP_BUILD_TESTS    ${BUILD_ECAL_TESTS})
   add_subdirectory(lang/csharp)
 endif()
+
+set(ECAL_C_BUILD_SAMPLES     ${BUILD_SAMPLES})
+set(ECAL_C_BUILD_TESTS    ${BUILD_ECAL_TESTS})
+add_subdirectory(lang/c)
 
 # --------------------------------------------------------
 # console applications

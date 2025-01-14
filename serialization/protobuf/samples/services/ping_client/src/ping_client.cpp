@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ int main()
           switch (service_response.call_state)
           {
             // service successful executed
-          case call_state_executed:
+          case eCAL::eCallState::call_state_executed:
           {
             PingResponse ping_response;
             ping_response.ParseFromString(service_response.response);
@@ -69,7 +69,7 @@ int main()
           }
           break;
           // service execution failed
-          case call_state_failed:
+          case eCAL::eCallState::call_state_failed:
             std::cout << "Received error PingService / Ping : " << service_response.error_msg << " from host " << service_response.host_name << std::endl;
             break;
           default:

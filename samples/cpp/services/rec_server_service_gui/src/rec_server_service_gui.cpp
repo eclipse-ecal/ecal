@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2018 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -239,7 +239,7 @@ void RecServerServiceGui::onRecorderResponse(const struct eCAL::SServiceResponse
   {
 
   // service successful executed
-  case call_state_executed:
+  case eCAL::eCallState::call_state_executed:
   {
     if ((service_response_.method_name == "StartRecording")
       || (service_response_.method_name == "SaveBuffer"))
@@ -281,7 +281,7 @@ void RecServerServiceGui::onRecorderResponse(const struct eCAL::SServiceResponse
   }
 
   // service execution failed
-  case call_state_failed:
+  case eCAL::eCallState::call_state_failed:
   {
     //eCAL::pb::Response response;
     //response.ParseFromString(response_);

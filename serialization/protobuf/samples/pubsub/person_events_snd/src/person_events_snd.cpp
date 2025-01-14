@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,17 +29,17 @@ void OnEvent(const char* topic_name_, const struct eCAL::v5::SPubEventCallbackDa
   std::cout << "topic name       : " << topic_name_ << std::endl;
   switch (data_->type)
   {
-  case pub_event_connected:
+  case eCAL::Publisher_Event::pub_event_connected:
     std::cout << "event            : " << "pub_event_connected" << std::endl;
     break;
-  case pub_event_disconnected:
+  case eCAL::Publisher_Event::pub_event_disconnected:
     std::cout << "event            : " << "pub_event_disconnected" << std::endl;
     break;
   // not implemented yet
-  case pub_event_dropped:
+  case eCAL::Publisher_Event::pub_event_dropped:
     std::cout << "event            : " << "pub_event_dropped" << std::endl;
     break;
-  case pub_event_update_connection:
+  case eCAL::Publisher_Event::pub_event_update_connection:
     std::cout << "event            : " << "pub_event_update_connection" << std::endl;
     std::cout << "  topic_id       : " << data_->tid << std::endl;
     std::cout << "  topic_encoding : " << data_->tdatatype.encoding << std::endl;
@@ -66,9 +66,9 @@ int main()
 
   // add event callback function (_1 = topic_name, _2 = event data struct)
   auto evt_callback = std::bind(OnEvent, std::placeholders::_1, std::placeholders::_2);
-  pub.AddEventCallback(pub_event_connected,         evt_callback);
-  pub.AddEventCallback(pub_event_disconnected,      evt_callback);
-  pub.AddEventCallback(pub_event_update_connection, evt_callback);
+  pub.AddEventCallback(eCAL::Publisher_Event::pub_event_connected,         evt_callback);
+  pub.AddEventCallback(eCAL::Publisher_Event::pub_event_disconnected,      evt_callback);
+  pub.AddEventCallback(eCAL::Publisher_Event::pub_event_update_connection, evt_callback);
 
   // generate a class instance of Person
   pb::People::Person person;
