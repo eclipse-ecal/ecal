@@ -35,6 +35,14 @@ namespace eCAL
     class IDirManager
     {
       public:
+        virtual ~IDirManager() = default;
+
+        IDirManager() = default;
+        IDirManager(const IDirManager&) = default;
+        IDirManager(IDirManager&&) = default;
+        IDirManager& operator=(const IDirManager&) = default;
+        IDirManager& operator=(IDirManager&&) = default;
+
         virtual bool dirExists(const std::string& path_) const = 0;
         virtual bool createDir(const std::string& path_) const = 0;
         virtual bool dirExistsOrCreate(const std::string& path_) const = 0;
@@ -101,6 +109,14 @@ namespace eCAL
     class IDirProvider 
     {
       public:
+        virtual ~IDirProvider() = default;
+
+        IDirProvider() = default;
+        IDirProvider(const IDirProvider&) = default;
+        IDirProvider(IDirProvider&&) = default;
+        IDirProvider& operator=(const IDirProvider&) = default;
+        IDirProvider& operator=(IDirProvider&&) = default;
+
         virtual std::string eCALEnvVar(const std::string& var_) const = 0;
         virtual std::string eCALLocalUserDir() const = 0;
         virtual std::string eCALDataSystemDir(const eCAL::Util::IDirManager& dir_manager_) const = 0;

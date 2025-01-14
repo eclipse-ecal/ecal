@@ -331,7 +331,7 @@ namespace eCAL
           }
           else
           {
-            std::cout << "[eCAL] Log path does not exist: " << path << std::endl;
+            std::cout << "[eCAL] Log path does not exist: " << path << "\n";
           }
         }
       }
@@ -381,10 +381,10 @@ namespace eCAL
       return ecal_default_paths;
     }
 
-    std::string GeteCALDataDirImpl(const Util::IDirProvider& env_provider /* = DirProvider() */, const Util::IDirManager& dir_manager_ /* = DirManager() */)
+    std::string GeteCALDataDirImpl(const Util::IDirProvider& dir_provider /* = DirProvider() */, const Util::IDirManager& dir_manager_ /* = DirManager() */)
     {
       // Return the possible default paths that could contain the yaml file
-      const std::vector<std::string> search_directories = getEcalDefaultPaths(env_provider, dir_manager_);
+      const std::vector<std::string> search_directories = getEcalDefaultPaths(dir_provider, dir_manager_);
       
       // return the first non empty path that also exists
       for (const auto& path : search_directories)

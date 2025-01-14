@@ -70,8 +70,8 @@ TEST(core_cpp_path_processing /*unused*/, ecal_data_log_env_vars /*unused*/)
   const int expected_call_count = 5;
   const int expected_call_count_log_var = 3;
 
-  MockDirProvider mock_dir_provider;
-  NiceMock<MockDirManager> mock_dir_manager;
+  const MockDirProvider mock_dir_provider;
+  const NiceMock<MockDirManager> mock_dir_manager;
 
   // Disable all other calls right now, as we just want to test the env vars
   EXPECT_CALL(mock_dir_provider, eCALDataSystemDir(::testing::Ref(mock_dir_manager)))
@@ -120,8 +120,8 @@ TEST(core_cpp_path_processing /*unused*/, ecal_local_user_dir /*unused*/)
   const int expected_call_count = 4;
   const int expected_call_count_log_var = 2;
 
-  MockDirProvider mock_dir_provider;
-  NiceMock<MockDirManager> mock_dir_manager;
+  const MockDirProvider mock_dir_provider;
+  const NiceMock<MockDirManager> mock_dir_manager;
 
   // mock the environment variables to be empty
   EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_DATA_VAR))
@@ -166,8 +166,8 @@ TEST(core_cpp_path_processing /*unused*/, ecal_data_system_dir /*unused*/)
   const int expected_call_count = 4;
   const int expected_call_count_log_var = 2;
 
-  MockDirProvider mock_dir_provider;
-  NiceMock<MockDirManager> mock_dir_manager;
+  const MockDirProvider mock_dir_provider;
+  const NiceMock<MockDirManager> mock_dir_manager;
 
   // mock the environment variables to be empty
   EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_DATA_VAR))
@@ -210,8 +210,8 @@ TEST(core_cpp_path_processing /*unused*/, ecal_config_log_dir /*unused*/)
   const std::string unique_tmp_dir = "/tmp/unique";
   const int expected_call_count = 2;
 
-  MockDirProvider mock_dir_provider;
-  NiceMock<MockDirManager> mock_dir_manager;
+  const MockDirProvider mock_dir_provider;
+  const NiceMock<MockDirManager> mock_dir_manager;
 
   // mock the environment variables to be empty
   EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_DATA_VAR))
@@ -258,8 +258,8 @@ TEST(core_cpp_path_processing /*unused*/, ecal_log_order_test /*unused*/)
   const std::string ecal_local_user_log_dir = ecal_local_user_dir + path_separator + ECAL_FOLDER_NAME_LOG;
   const std::string ecal_data_system_log_dir = ecal_data_system_dir + path_separator + ECAL_FOLDER_NAME_LOG;
 
-  MockDirProvider mock_dir_provider;
-  NiceMock<MockDirManager> mock_dir_manager;
+  const MockDirProvider mock_dir_provider;
+  const NiceMock<MockDirManager> mock_dir_manager;
 
   ::testing::Sequence seq_env_log, seq_env_data, seq_local_user, seq_data_system;
 
