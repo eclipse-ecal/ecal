@@ -39,9 +39,8 @@ namespace eCAL
   ////////////////////////////////////////
   // Monitoring Implementation
   ////////////////////////////////////////
-  CMonitoringImpl::CMonitoringImpl(const Monitoring::SAttributes& attr_) :
-    m_init(false),
-    m_monitoring_filter(attr_)
+  CMonitoringImpl::CMonitoringImpl() :
+    m_init(false)
   {
   }
 
@@ -51,10 +50,6 @@ namespace eCAL
 
     // utilize registration receiver to enrich monitor information
     g_registration_receiver()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
-
-    // setup filtering on by default
-    SetFilterState(true);
-
     m_init = true;
   }
 
@@ -63,31 +58,6 @@ namespace eCAL
     // stop registration receiver utilization to enrich monitor information
     g_registration_receiver()->RemCustomApplySampleCallback("monitoring");
     m_init = false;
-  }
-
-  void CMonitoringImpl::SetExclFilter(const std::string& filter_)
-  {
-    const std::lock_guard<std::mutex> lock(m_monitoring_filter_mtx);
-    m_monitoring_filter.SetExclFilter(filter_);
-  }
-
-  void CMonitoringImpl::SetInclFilter(const std::string& filter_)
-  {
-    const std::lock_guard<std::mutex> lock(m_monitoring_filter_mtx);
-    m_monitoring_filter.SetInclFilter(filter_);
-  }
-
-  void CMonitoringImpl::SetFilterState(bool state_)
-  {
-    const std::lock_guard<std::mutex> lock(m_monitoring_filter_mtx);
-    if (state_)
-    {
-      m_monitoring_filter.ActivateFilter();
-    }
-    else
-    {
-      m_monitoring_filter.DeactivateFilter();
-    }
   }
 
   bool CMonitoringImpl::ApplySample(const Registration::Sample& sample_, eTLayerType /*layer_*/)
@@ -188,16 +158,6 @@ namespace eCAL
     const int64_t      dclock = sample_topic.dclock;
     const int32_t      message_drops = sample_topic.message_drops;
     const int32_t      dfreq = sample_topic.dfreq;
-
-    bool process_topic{false};
-    {
-      const std::lock_guard<std::mutex> lock(m_monitoring_filter_mtx);
-      process_topic = m_monitoring_filter.AcceptTopic(topic_name);
-    }
-    if (!process_topic)
-    {
-      return false;
-    }
 
     /////////////////////////////////
     // register in topic map

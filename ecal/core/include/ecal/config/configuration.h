@@ -25,7 +25,6 @@
 #pragma once
 
 #include <ecal/config/application.h>
-#include <ecal/config/monitoring.h>
 #include <ecal/config/registration.h>
 #include <ecal/config/logging.h>
 #include <ecal/config/publisher.h>
@@ -48,7 +47,6 @@ namespace eCAL
   {
     TransportLayer::Configuration transport_layer;
     Registration::Configuration   registration;
-    Monitoring::Configuration     monitoring;
     Subscriber::Configuration     subscriber;
     Publisher::Configuration      publisher;
     Time::Configuration           timesync;

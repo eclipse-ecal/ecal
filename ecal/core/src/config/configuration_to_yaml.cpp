@@ -171,31 +171,6 @@ namespace YAML
 
 
   /*
-       __  ___          _ __           _          
-      /  |/  /__  ___  (_) /____  ____(_)__  ___ _
-     / /|_/ / _ \/ _ \/ / __/ _ \/ __/ / _ \/ _ `/
-    /_/  /_/\___/_//_/_/\__/\___/_/ /_/_//_/\_, / 
-                                           /___/  
-  */
-  
-  Node convert<eCAL::Monitoring::Configuration>::encode(const eCAL::Monitoring::Configuration& config_)
-  {
-    Node node;
-    node["filter_excl"] = config_.filter_excl;
-    node["filter_incl"] = config_.filter_incl;
-
-    return node;
-  }
-
-  bool convert<eCAL::Monitoring::Configuration>::decode(const Node& node_, eCAL::Monitoring::Configuration& config_)
-  {
-    AssignValue<std::string>(config_.filter_excl, node_, "filter_excl");
-    AssignValue<std::string>(config_.filter_incl, node_, "filter_incl");
-    return true;
-  }
-
-
-  /*
      ______                                __  __                    
     /_  __/______ ____  ___ ___  ___  ____/ /_/ /  ___ ___ _____ ____
      / / / __/ _ `/ _ \(_-</ _ \/ _ \/ __/ __/ /__/ _ `/ // / -_) __/
@@ -672,7 +647,6 @@ namespace YAML
     node["publisher"]    = config_.publisher;
     node["subscriber"]   = config_.subscriber;
     node["registration"] = config_.registration;
-    node["monitoring"]   = config_.monitoring;
     node["time"]         = config_.timesync;
     node["application"]  = config_.application;
     node["logging"]      = config_.logging;
@@ -685,7 +659,6 @@ namespace YAML
     AssignValue<eCAL::Publisher::Configuration>(config_.publisher, node_, "publisher");
     AssignValue<eCAL::Subscriber::Configuration>(config_.subscriber, node_, "subscriber");
     AssignValue<eCAL::Registration::Configuration>(config_.registration, node_, "registration");
-    AssignValue<eCAL::Monitoring::Configuration>(config_.monitoring, node_, "monitoring");
     AssignValue<eCAL::Time::Configuration>(config_.timesync, node_, "time");
     AssignValue<eCAL::Application::Configuration>(config_.application, node_, "application");
     AssignValue<eCAL::Logging::Configuration>(config_.logging, node_, "logging");

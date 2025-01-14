@@ -87,13 +87,6 @@ namespace eCAL
     ECAL_API std::string              GetTerminalEmulatorCommand           ();
 
     /////////////////////////////////////
-    // monitoring
-    /////////////////////////////////////
-
-    ECAL_API std::string              GetMonitoringFilterExcludeList       ();
-    ECAL_API std::string              GetMonitoringFilterIncludeList       ();
-
-    /////////////////////////////////////
     // sys
     /////////////////////////////////////
 

@@ -256,11 +256,6 @@ namespace eCAL
       return GetConfiguration().registration;
     }
 
-    const Monitoring::Configuration& GetMonitoringConfiguration()
-    {
-      return GetConfiguration().monitoring;
-    }
-
     const Logging::Configuration& GetLoggingConfiguration()
     {
       return GetConfiguration().logging;

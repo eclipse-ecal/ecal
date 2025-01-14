@@ -35,7 +35,6 @@
 
 #include "ecal_config_internal.h"
 #include "config/builder/registration_attribute_builder.h"
-#include "config/builder/monitoring_attribute_builder.h"
 #include "config/builder/logging_attribute_builder.h"
 
 namespace eCAL
@@ -180,7 +179,7 @@ namespace eCAL
     {
       if (monitoring_instance == nullptr)
       {
-        monitoring_instance = std::make_unique<CMonitoring>(eCAL::Monitoring::BuildMonitoringAttributes(GetMonitoringConfiguration()));
+        monitoring_instance = std::make_unique<CMonitoring>();
         new_initialization = true;
       }
     }

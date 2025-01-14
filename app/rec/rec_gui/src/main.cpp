@@ -137,7 +137,6 @@ int main(int argc, char *argv[])
 
   // Just make sure that eCAL is initialized
   eCAL::Initialize("eCALRecGUI", eCAL::Init::Default | eCAL::Init::Service | eCAL::Init::Monitoring);
-  eCAL::Monitoring::SetFilterState(false);
 
   EcalRecGui* w = new EcalRecGui();
   w->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose);

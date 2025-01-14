@@ -26,8 +26,6 @@
 #include <ecal/types/monitoring.h>
 
 #include "ecal_def.h"
-#include "monitoring/config/attributes/monitoring_attributes.h"
-#include "monitoring/ecal_monitoring_filter.h"
 
 #include "serialization/ecal_serialize_sample_registration.h"
 
@@ -45,15 +43,11 @@ namespace eCAL
   class CMonitoringImpl
   {
   public:
-    CMonitoringImpl(const Monitoring::SAttributes& attr_);
+    CMonitoringImpl();
     ~CMonitoringImpl() = default;
 
     void Create();
     void Destroy();
-
-    void SetExclFilter(const std::string& filter_);
-    void SetInclFilter(const std::string& filter_);
-    void SetFilterState(bool state_);
 
     void GetMonitoring(std::string& monitoring_, unsigned int entities_);
     void GetMonitoring(Monitoring::SMonitoring& monitoring_, unsigned int entities_);
@@ -131,9 +125,6 @@ namespace eCAL
     void MonitorTopics(STopicMonMap& map_, Monitoring::SMonitoring& monitoring_, const std::string& direction_);
 
     bool                                         m_init;
-
-    std::mutex                                   m_monitoring_filter_mtx;
-    CMonitoringFilter                            m_monitoring_filter;
 
     // database
     SProcessMonMap                               m_process_map;

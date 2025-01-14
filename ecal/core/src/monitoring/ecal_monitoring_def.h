@@ -25,8 +25,6 @@
 
 #include <ecal/types/monitoring.h>
 
-#include "config/attributes/monitoring_attributes.h"
-
 #include <memory>
 #include <string>
 
@@ -39,15 +37,11 @@ namespace eCAL
   class CMonitoring
   {
   public:
-    CMonitoring(const Monitoring::SAttributes& attr_);
+    CMonitoring();
     ~CMonitoring();
     
     void Start();
     void Stop();
-
-    void SetExclFilter(const std::string& filter_);
-    void SetInclFilter(const std::string& filter_);
-    void SetFilterState(bool state_);
 
     void GetMonitoring(std::string& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
     void GetMonitoring(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);

@@ -31,7 +31,6 @@ namespace eCAL
 {
   ECAL_API const TransportLayer::Configuration& GetTransportLayerConfiguration ();
   ECAL_API const Registration::Configuration&   GetRegistrationConfiguration   ();
-  ECAL_API const Monitoring::Configuration&     GetMonitoringConfiguration     ();
   ECAL_API const Logging::Configuration&        GetLoggingConfiguration        ();
   ECAL_API const Time::Configuration&           GetTimesyncConfiguration       ();
   ECAL_API const Application::Configuration&    GetApplicationConfiguration    ();
