@@ -34,7 +34,7 @@
 namespace
 {
   std::recursive_mutex g_pub_event_callback_mtx; // NOLINT(*-avoid-non-const-global-variables)
-  void g_pub_event_callback(const char* topic_name_, const struct eCAL::SPubEventCallbackData* data_, const PubEventCallbackCT callback_, void* par_)
+  void g_pub_event_callback(const char* topic_name_, const struct eCAL::v5::SPubEventCallbackData* data_, const PubEventCallbackCT callback_, void* par_)
   {
     const std::lock_guard<std::recursive_mutex> lock(g_pub_event_callback_mtx);
     SPubEventCallbackDataC data{};

@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ecal/ecal_callback.h>
+#include <ecal/ecal_callback_v5.h>
 #include <ecal/ecal_types.h>
 
 #include "serialization/ecal_serialize_sample_payload.h"
@@ -73,7 +74,7 @@ namespace eCAL
     bool RemoveReceiveCallback();
 
     // deprecated event callback interface
-    bool SetEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_);
+    bool SetEventCallback(eCAL_Subscriber_Event type_, v5::SubEventCallbackT callback_);
     bool RemoveEventCallback(eCAL_Subscriber_Event type_);
 
     // future event callback interface
@@ -162,7 +163,7 @@ namespace eCAL
 
     std::deque<size_t>                        m_sample_hash_queue;
 
-    using EventCallbackMapT = std::map<eCAL_Subscriber_Event, SubEventCallbackT>;
+    using EventCallbackMapT = std::map<eCAL_Subscriber_Event, v5::SubEventCallbackT>;
     std::mutex                                m_event_callback_map_mutex;
     EventCallbackMapT                         m_event_callback_map;
 

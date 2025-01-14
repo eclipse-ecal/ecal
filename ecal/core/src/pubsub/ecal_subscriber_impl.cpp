@@ -197,7 +197,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubscriberImpl::SetEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_)
+  bool CSubscriberImpl::SetEventCallback(eCAL_Subscriber_Event type_, v5::SubEventCallbackT callback_)
   {
     if (!m_created) return(false);
 
@@ -784,22 +784,22 @@ namespace eCAL
 
   void CSubscriberImpl::FireEvent(const eCAL_Subscriber_Event type_, const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
   {
-    SSubEventCallbackData data;
-    data.type      = type_;
-    data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-    data.clock     = 0;
-    data.tid       = publication_info_.entity_id;
-    data.tdatatype = data_type_info_;
-
     // new event handling with topic id
     if (m_event_id_callback)
     {
+      SSubEventIDCallbackData data;
+      data.type  = type_;
+      data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+      data.clock = 0;
+      data.tdatatype = data_type_info_;
+
       Registration::STopicId topic_id;
       topic_id.topic_id.entity_id  = publication_info_.entity_id;
       topic_id.topic_id.process_id = publication_info_.process_id;
       topic_id.topic_id.host_name  = publication_info_.host_name;
       topic_id.topic_name          = m_attributes.topic_name;
       const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
+
       // call event callback
       m_event_id_callback(topic_id, data);
     }
@@ -810,6 +810,14 @@ namespace eCAL
       auto iter = m_event_callback_map.find(type_);
       if (iter != m_event_callback_map.end() && iter->second)
       {
+        v5::SSubEventCallbackData data;
+        data.type      = type_;
+        data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+        data.clock     = 0;
+        data.tid       = std::to_string(publication_info_.entity_id);
+        data.tdatatype = data_type_info_;
+
+        // call event callback
         (iter->second)(m_attributes.topic_name.c_str(), &data);
       }
     }
@@ -898,16 +906,34 @@ namespace eCAL
         msg += "\')";
         Logging::Log(log_level_warning, msg);
 #endif
-        // we fire the message drop event
+        // new event handling with topic id
+        if (m_event_id_callback)
+        {
+          SSubEventIDCallbackData data;
+          data.type  = sub_event_dropped;
+          data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+          data.clock = current_clock_;
+
+          Registration::STopicId topic_id;
+          topic_id.topic_name = m_attributes.topic_name;
+          const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
+
+          // call event callback
+          m_event_id_callback(topic_id, data);
+        }
+
+        // deprecated event handling with topic name
         {
           const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
           auto citer = m_event_callback_map.find(sub_event_dropped);
           if (citer != m_event_callback_map.end() && citer->second)
           {
-            SSubEventCallbackData data;
+            v5::SSubEventCallbackData data;
             data.type  = sub_event_dropped;
             data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
             data.clock = current_clock_;
+
+            // call event callback
             (citer->second)(m_attributes.topic_name.c_str(), &data);
           }
         }

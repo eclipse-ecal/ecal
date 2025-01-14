@@ -520,6 +520,7 @@ set(ecal_header_cmn
     include/ecal/types/monitoring.h
     include/ecal/ecal.h
     include/ecal/ecal_callback.h
+    include/ecal/ecal_callback_v5.h
     include/ecal/ecal_client.h
     include/ecal/ecal_client_instance.h
     include/ecal/ecal_client_v5.h

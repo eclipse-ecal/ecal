@@ -342,7 +342,7 @@ int pub_send(ECAL_HANDLE handle_, const char* payload_, const int length_, const
 /*      pub_add_event_callback          */
 /****************************************/
 static std::mutex g_pub_event_callback_mtx;
-static void g_pub_event_callback(const char* topic_name_, const struct eCAL::SPubEventCallbackData* data_, const PubEventCallbackCT callback_, void* par_)
+static void g_pub_event_callback(const char* topic_name_, const struct eCAL::v5::SPubEventCallbackData* data_, const PubEventCallbackCT callback_, void* par_)
 {
   const std::lock_guard<std::mutex> lock(g_pub_event_callback_mtx);
   SPubEventCallbackDataC data{};
@@ -520,7 +520,7 @@ bool sub_rem_receive_callback(ECAL_HANDLE handle_)
 /*      sub_add_event_callback          */
 /****************************************/
 static std::mutex g_sub_event_callback_mtx;
-static void g_sub_event_callback(const char* topic_name_, const struct eCAL::SSubEventCallbackData* data_, const SubEventCallbackCT callback_, void* par_)
+static void g_sub_event_callback(const char* topic_name_, const struct eCAL::v5::SSubEventCallbackData* data_, const SubEventCallbackCT callback_, void* par_)
 {
   const std::lock_guard<std::mutex> lock(g_sub_event_callback_mtx);
   SSubEventCallbackDataC data{};

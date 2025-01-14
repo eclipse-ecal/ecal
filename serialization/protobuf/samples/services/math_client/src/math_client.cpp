@@ -27,7 +27,7 @@
 #include "math.pb.h"
 
 // client state callback
-void OnClientState(const eCAL::SClientEventCallbackData* data_)
+void OnClientState(const eCAL::v5::SClientEventCallbackData* data_)
 {
   assert(data_);
 

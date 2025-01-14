@@ -94,7 +94,7 @@ namespace eCAL
       Logging::Log(log_level_debug1, "v5::CServiceClientImpl: Creating service client with name: " + service_name_);
 
       // Define the event callback to pass to CServiceClient
-      ClientEventIDCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const struct SClientEventCallbackData& data_)
+      ClientEventIDCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const struct SClientEventIDCallbackData& data_)
         {
           Logging::Log(log_level_debug2, "v5::CServiceClientImpl: Event callback triggered for event type: " + std::to_string(data_.type));
 
@@ -107,7 +107,14 @@ namespace eCAL
           {
             Logging::Log(log_level_debug2, "v5::CServiceClientImpl: Executing event callback for event type: " + std::to_string(data_.type));
             // Call the user's callback
-            callback->second(service_id_.service_name.c_str(), &data_);
+            SClientEventCallbackData event_data;
+            event_data.type = data_.type;
+            event_data.time = data_.time;
+            event_data.attr.hname = service_id_.service_id.host_name;
+            event_data.attr.sname = service_id_.service_name;
+            event_data.attr.pid   = service_id_.service_id.process_id;
+            event_data.attr.sid   = service_id_.service_id.entity_id;
+            callback->second(service_id_.service_name.c_str(), &event_data);
           }
         };
 

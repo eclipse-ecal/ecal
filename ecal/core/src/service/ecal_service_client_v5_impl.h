@@ -26,6 +26,7 @@
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_client.h>
+#include <ecal/ecal_callback_v5.h>
 
 #include <map>
 #include <mutex>

@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ecal/ecal_callback.h>
+#include <ecal/ecal_callback_v5.h>
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_types.h>
@@ -82,7 +83,7 @@ namespace eCAL
     bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
     // deprecated event callback interface
-    bool SetEventCallback(eCAL_Publisher_Event type_, const PubEventCallbackT callback_);
+    bool SetEventCallback(eCAL_Publisher_Event type_, const v5::PubEventCallbackT callback_);
     bool RemoveEventCallback(eCAL_Publisher_Event type_);
 
     // future event callback interface
@@ -162,7 +163,7 @@ namespace eCAL
     SSubscriptionMapT                      m_connection_map;
     std::atomic<size_t>                    m_connection_count{ 0 };
 
-    using EventCallbackMapT = std::map<eCAL_Publisher_Event, PubEventCallbackT>;
+    using EventCallbackMapT = std::map<eCAL_Publisher_Event, v5::PubEventCallbackT>;
     std::mutex                             m_event_callback_map_mutex;
     EventCallbackMapT                      m_event_callback_map;
 
