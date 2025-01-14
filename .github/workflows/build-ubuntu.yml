@@ -80,7 +80,6 @@ jobs:
         cd $GITHUB_WORKSPACE
         git submodule init
         git submodule deinit thirdparty/curl/curl
-        git submodule deinit thirdparty/gtest/googletest
         git submodule deinit thirdparty/hdf5/hdf5
         git submodule deinit thirdparty/protobuf/protobuf
         git submodule update
@@ -128,7 +127,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_TINYXML2=ON \
         -DECAL_THIRDPARTY_BUILD_FINEFTP=ON \
         -DECAL_THIRDPARTY_BUILD_CURL=OFF \
-        -DECAL_THIRDPARTY_BUILD_GTEST=OFF \
+        -DECAL_THIRDPARTY_BUILD_GTEST=ON \
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \

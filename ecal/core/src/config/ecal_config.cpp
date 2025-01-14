@@ -18,6 +18,7 @@
 */
 
 #include <ecal/ecal_config.h>
+#include "ecal_config_internal.h"
 #include <string>
 #include <vector>
 
@@ -96,5 +97,40 @@ namespace eCAL
     size_t            GetShmMonitoringQueueSize          () { return GetConfiguration().registration.layer.shm.queue_size; }
     std::string       GetShmMonitoringDomain             () { return GetConfiguration().registration.layer.shm.domain;}
 
+  }
+
+  const TransportLayer::Configuration& GetTransportLayerConfiguration()
+  {
+    return GetConfiguration().transport_layer;
+  }
+
+  const Registration::Configuration& GetRegistrationConfiguration()
+  {
+    return GetConfiguration().registration;
+  }
+
+  const Logging::Configuration& GetLoggingConfiguration()
+  {
+    return GetConfiguration().logging;
+  }
+
+  const Subscriber::Configuration& GetSubscriberConfiguration()
+  {
+    return GetConfiguration().subscriber;
+  }
+
+  const Publisher::Configuration& GetPublisherConfiguration()
+  {
+    return GetConfiguration().publisher;
+  }
+
+  const Time::Configuration& GetTimesyncConfiguration()
+  {
+    return GetConfiguration().timesync;
+  }
+
+  const Application::Configuration& GetApplicationConfiguration()
+  {
+    return GetConfiguration().application;
   }
 }

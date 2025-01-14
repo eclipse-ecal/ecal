@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -192,7 +192,13 @@ namespace eCAL
       m_logfile_name = m_attributes.file_config.path + tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
       m_logfile = fopen(m_logfile_name.c_str(), "w");
 
-      return m_logfile != nullptr;
+      if (m_logfile != nullptr)
+      {
+        std::cout << "[eCAL][Logging-Provider] Logfile created: " << m_logfile_name << "\n";
+        return true;
+      }
+
+      return false;
     }
 
     bool CLogProvider::StartUDPLogging()

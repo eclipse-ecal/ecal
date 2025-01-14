@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,8 @@ namespace LinuxPtpConfig {
    * @return the device value from the linuxptp section
    */
   std::string getDevice() {    
-    std::string path_to_ini = eCAL::Util::GeteCALConfigPath();
-    path_to_ini += "ecaltime.yaml";
+    std::string path_to_ini = eCAL::Util::GeteCALDataDir();
+    path_to_ini += "/ecaltime.yaml";
 
     YAML::Node yaml;
     try
