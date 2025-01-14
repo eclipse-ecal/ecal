@@ -40,7 +40,7 @@ namespace eCAL
     if (g_subgate() != nullptr) g_subgate()->Register(topic_name_, m_subscriber_impl);
   }
 
-  CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventIDCallbackT event_callback_, const Subscriber::Configuration& config_) :
+  CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventCallbackT event_callback_, const Subscriber::Configuration& config_) :
     CSubscriber(topic_name_, data_type_info_, config_)
   {
     // add event callback for all current event types

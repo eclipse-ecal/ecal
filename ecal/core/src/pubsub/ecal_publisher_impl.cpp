@@ -416,12 +416,12 @@ namespace eCAL
     return true;
   }
 
-  bool CPublisherImpl::RemoveEventIDCallback()
+  bool CPublisherImpl::RemoveEventCallback()
   {
     if (!m_created) return false;
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::RemoveEventIDCallback");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::RemoveEventCallback");
 #endif
 
     // remove event id callback

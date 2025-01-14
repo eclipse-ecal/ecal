@@ -152,7 +152,14 @@ namespace eCAL
         {
           callback_(topic_id_.topic_name.c_str(), &data_);
         };
-      return(m_subscriber_impl->SetReceiveCallback(std::move(v6_callback)));
+      return AddReceiveCallback(v6_callback);
+    }
+
+    bool CSubscriber::AddReceiveCallback(v6::ReceiveCallbackT callback_)
+    {
+      if (m_subscriber_impl == nullptr) return(false);
+      RemReceiveCallback();
+      return(m_subscriber_impl->SetReceiveCallback(std::move(callback_)));
     }
 
     bool CSubscriber::RemReceiveCallback()

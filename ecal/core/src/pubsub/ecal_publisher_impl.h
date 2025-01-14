@@ -88,7 +88,7 @@ namespace eCAL
 
     // future event callback interface
     bool SetEventCallback(const PubEventCallbackT callback_);
-    bool RemoveEventIDCallback();
+    bool RemoveEventCallback();
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
     bool ClearAttribute(const std::string& attr_name_);

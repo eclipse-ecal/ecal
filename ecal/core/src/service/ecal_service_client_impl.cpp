@@ -74,7 +74,7 @@ namespace eCAL
 {
   // Factory method to create a new instance of CServiceClientImpl
   std::shared_ptr<CServiceClientImpl> CServiceClientImpl::CreateInstance(
-      const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_, const ClientEventIDCallbackT& event_callback_)
+      const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_, const ClientEventCallbackT& event_callback_)
   {
 #ifndef NDEBUG
     eCAL::Logging::Log(log_level_debug2, "CServiceClientImpl::CreateInstance: Creating instance of CServiceClientImpl for service: " + service_name_);
@@ -84,7 +84,7 @@ namespace eCAL
 
   // Constructor: Initializes client ID, method call counts, and registers the client
   CServiceClientImpl::CServiceClientImpl(
-      const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_, const ClientEventIDCallbackT& event_callback_)
+      const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_, const ClientEventCallbackT& event_callback_)
       : m_service_name(service_name_), m_method_information_map(method_information_map_)
   {
 #ifndef NDEBUG
@@ -524,7 +524,7 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_event_callback_mutex);
     if (m_event_callback == nullptr) return;
 
-    SClientEventIDCallbackData callback_data;
+    SClientEventCallbackData callback_data;
     callback_data.type = event_type_;
     callback_data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
     m_event_callback(service_id_, callback_data);

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ TEST(core_cpp_clientserver, ClientConnectEvent)
   // client event callback for connect events
   atomic_signalable<int> event_connected_fired   (0);
   atomic_signalable<int> event_disconnected_fired(0);
-  auto event_callback = [&](const eCAL::Registration::SServiceMethodId& /*service_id_*/, const struct eCAL::SClientEventIDCallbackData& data_)
+  auto event_callback = [&](const eCAL::Registration::SServiceMethodId& /*service_id_*/, const struct eCAL::SClientEventCallbackData& data_)
     {
       switch (data_.type)
       {
@@ -181,7 +181,7 @@ TEST(core_cpp_clientserver, ServerConnectEvent)
   // server event callback for connect events
   atomic_signalable<int> event_connected_fired   (0);
   atomic_signalable<int> event_disconnected_fired(0);
-  auto event_callback = [&](const eCAL::Registration::SServiceMethodId& /*service_id_*/, const struct eCAL::SServerEventIDCallbackData& data_) -> void
+  auto event_callback = [&](const eCAL::Registration::SServiceMethodId& /*service_id_*/, const struct eCAL::SServerEventCallbackData& data_) -> void
     {
       switch (data_.type)
       {
@@ -384,7 +384,7 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
 
   // event callback for timeout event
   std::atomic<int> timeout_fired(0);
-  auto event_callback = [&](const eCAL::Registration::SServiceMethodId& /*service_id_*/, const struct eCAL::SClientEventIDCallbackData& data_) -> void
+  auto event_callback = [&](const eCAL::Registration::SServiceMethodId& /*service_id_*/, const struct eCAL::SClientEventCallbackData& data_) -> void
     {
       if (data_.type == client_event_timeout)
       {

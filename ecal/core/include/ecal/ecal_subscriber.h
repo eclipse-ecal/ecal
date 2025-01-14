@@ -65,7 +65,7 @@ namespace eCAL
        * @param config_          Configuration parameters.
       **/
       ECAL_API_EXPORTED_MEMBER
-        CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventIDCallbackT event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
+        CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventCallbackT event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
 
       /**
        * @brief Destructor.

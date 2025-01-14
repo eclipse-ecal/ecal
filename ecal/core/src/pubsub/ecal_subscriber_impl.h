@@ -78,8 +78,8 @@ namespace eCAL
     bool RemoveEventCallback(eCAL_Subscriber_Event type_);
 
     // future event callback interface
-    bool SetEventIDCallback(const SubEventIDCallbackT callback_);
-    bool RemoveEventIDCallback();
+    bool SetEventIDCallback(const SubEventCallbackT callback_);
+    bool RemoveEventCallback();
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
     bool ClearAttribute(const std::string& attr_name_);
@@ -168,7 +168,7 @@ namespace eCAL
     EventCallbackMapT                         m_event_callback_map;
 
     std::mutex                                m_event_id_callback_mutex;
-    SubEventIDCallbackT                       m_event_id_callback;
+    SubEventCallbackT                       m_event_id_callback;
 
     std::atomic<long long>                    m_clock;
 

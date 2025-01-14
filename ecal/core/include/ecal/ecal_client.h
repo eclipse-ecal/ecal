@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ namespace eCAL
        * @param event_callback_          The client event callback funtion.
       **/
       ECAL_API_EXPORTED_MEMBER
-        CServiceClient(const std::string& service_name_, const ServiceMethodInformationMapT method_information_map_ = ServiceMethodInformationMapT(), const ClientEventIDCallbackT event_callback_ = ClientEventIDCallbackT());
+        CServiceClient(const std::string& service_name_, const ServiceMethodInformationMapT method_information_map_ = ServiceMethodInformationMapT(), const ClientEventCallbackT event_callback_ = ClientEventCallbackT());
 
       /**
        * @brief Destructor.

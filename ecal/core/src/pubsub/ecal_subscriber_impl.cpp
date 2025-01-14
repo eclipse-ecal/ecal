@@ -231,7 +231,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubscriberImpl::SetEventIDCallback(const SubEventIDCallbackT callback_)
+  bool CSubscriberImpl::SetEventIDCallback(const SubEventCallbackT callback_)
   {
     if (!m_created) return false;
 
@@ -247,12 +247,12 @@ namespace eCAL
     return true;
   }
 
-  bool CSubscriberImpl::RemoveEventIDCallback()
+  bool CSubscriberImpl::RemoveEventCallback()
   {
     if (!m_created) return false;
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveEventIDCallback");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveEventCallback");
 #endif
 
     // remove event id callback
@@ -787,7 +787,7 @@ namespace eCAL
     // new event handling with topic id
     if (m_event_id_callback)
     {
-      SSubEventIDCallbackData data;
+      SSubEventCallbackData data;
       data.type  = type_;
       data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
       data.clock = 0;
@@ -909,7 +909,7 @@ namespace eCAL
         // new event handling with topic id
         if (m_event_id_callback)
         {
-          SSubEventIDCallbackData data;
+          SSubEventCallbackData data;
           data.type  = sub_event_dropped;
           data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
           data.clock = current_clock_;
