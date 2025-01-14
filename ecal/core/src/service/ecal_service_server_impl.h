@@ -47,11 +47,11 @@ namespace eCAL
   public:
     // Factory method to create an instance of the client implementation
     static std::shared_ptr<CServiceServerImpl> CreateInstance(
-      const std::string& service_name_, const ServerEventIDCallbackT& event_callback_);
+      const std::string& service_name_, const ServerEventCallbackT& event_callback_);
 
   private:
     // Private constructor to enforce creation through factory method
-    CServiceServerImpl(const std::string& service_name_, const ServerEventIDCallbackT& event_callback_);
+    CServiceServerImpl(const std::string& service_name_, const ServerEventCallbackT& event_callback_);
 
   public:
     ~CServiceServerImpl();
@@ -118,7 +118,7 @@ namespace eCAL
 
     // Event callback and synchronization
     std::mutex                             m_event_callback_mutex;
-    ServerEventIDCallbackT                 m_event_callback;
+    ServerEventCallbackT                 m_event_callback;
 
     // Server interface
     std::shared_ptr<eCAL::service::Server> m_tcp_server;

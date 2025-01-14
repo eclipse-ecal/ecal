@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@
 
 namespace eCAL
 {
-  CServiceClient::CServiceClient(const std::string& service_name_, const ServiceMethodInformationMapT method_information_map_, const ClientEventIDCallbackT event_callback_)
+  CServiceClient::CServiceClient(const std::string& service_name_, const ServiceMethodInformationMapT method_information_map_, const ClientEventCallbackT event_callback_)
   {
     // create client implementation
     m_service_client_impl = CServiceClientImpl::CreateInstance(service_name_, method_information_map_, event_callback_);

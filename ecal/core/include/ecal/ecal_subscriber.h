@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ namespace eCAL
        * @param config_          Configuration parameters.
       **/
       ECAL_API_EXPORTED_MEMBER
-        CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventIDCallbackT event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
+        CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventCallbackT event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
 
       /**
        * @brief Destructor.
@@ -103,7 +103,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool SetReceiveCallback(ReceiveIDCallbackT callback_);
+        bool SetReceiveCallback(ReceiveCallbackT callback_);
 
       /**
        * @brief Remove callback function for incoming receives.

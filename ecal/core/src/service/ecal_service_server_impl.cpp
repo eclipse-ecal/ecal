@@ -35,7 +35,7 @@ namespace eCAL
 {
   // Factory method to create a new instance of CServiceServerImpl
   std::shared_ptr<CServiceServerImpl> CServiceServerImpl::CreateInstance(
-    const std::string& service_name_, const ServerEventIDCallbackT& event_callback_)
+    const std::string& service_name_, const ServerEventCallbackT& event_callback_)
   {
 #ifndef NDEBUG
     Logging::Log(log_level_debug2, "CServiceServerImpl::CreateInstance: Creating instance of CServiceServerImpl for service: " + service_name_);
@@ -49,7 +49,7 @@ namespace eCAL
   }
 
   // Constructor
-  CServiceServerImpl::CServiceServerImpl(const std::string& service_name_, const ServerEventIDCallbackT& event_callback_)
+  CServiceServerImpl::CServiceServerImpl(const std::string& service_name_, const ServerEventCallbackT& event_callback_)
     : m_created(false), m_service_name(service_name_), m_event_callback(event_callback_)
   {
 #ifndef NDEBUG
@@ -502,7 +502,7 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock_cb(m_event_callback_mutex);
     if (m_event_callback == nullptr) return;
 
-    SServerEventIDCallbackData callback_data;
+    SServerEventCallbackData callback_data;
     callback_data.type = event_type_;
     callback_data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
     m_event_callback(service_id_, callback_data);

@@ -148,14 +148,14 @@ namespace eCAL
 
     bool CSubscriber::AddReceiveCallback(ReceiveCallbackT callback_)
     {
-      auto id_callback = [callback_](const Registration::STopicId& topic_id_, const SDataTypeInformation&, const SReceiveCallbackData& data_)
+      auto v6_callback = [callback_](const Registration::STopicId& topic_id_, const SDataTypeInformation&, const eCAL::SReceiveCallbackData& data_)
         {
           callback_(topic_id_.topic_name.c_str(), &data_);
         };
-      return AddReceiveCallback(id_callback);
+      return AddReceiveCallback(v6_callback);
     }
 
-    bool CSubscriber::AddReceiveCallback(ReceiveIDCallbackT callback_)
+    bool CSubscriber::AddReceiveCallback(v6::ReceiveCallbackT callback_)
     {
       if (m_subscriber_impl == nullptr) return(false);
       RemReceiveCallback();

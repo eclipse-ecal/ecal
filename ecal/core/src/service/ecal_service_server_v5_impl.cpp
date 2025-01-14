@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ namespace eCAL
       }
 
       // Define the event callback to pass to CServiceClient
-      ServerEventIDCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const struct SServerEventIDCallbackData& data_)
+      v6::ServerEventCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const v6::SServerEventCallbackData& data_)
         {
           Logging::Log(log_level_debug2, "v5::CServiceServerImpl: Event callback triggered for event type: " + std::to_string(data_.type));
 

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ namespace eCAL
        * @param event_callback_ Callback function for server events.
       **/
       ECAL_API_EXPORTED_MEMBER
-        explicit CServiceServer(const std::string& service_name_, const ServerEventIDCallbackT event_callback_ = ServerEventIDCallbackT());
+        explicit CServiceServer(const std::string& service_name_, const ServerEventCallbackT event_callback_ = ServerEventCallbackT());
 
       /**
        * @brief Destructor.
