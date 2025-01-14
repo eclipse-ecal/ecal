@@ -48,10 +48,10 @@ jobs:
           echo "ubuntu_codename=noble"        >> "$GITHUB_ENV"
           echo "python_version=3"             >> "$GITHUB_ENV"   # => default python 3 version
         elif [ "${{ matrix.os }}" == "ubuntu-22.04" ]; then
-          echo "ubuntu_codename=focal"        >> "$GITHUB_ENV"
+          echo "ubuntu_codename=jammy"        >> "$GITHUB_ENV"
           echo "python_version=3"             >> "$GITHUB_ENV"   # => default python 3 version
         elif [ "${{ matrix.os }}" == "ubuntu-20.04" ]; then
-          echo "ubuntu_codename=jammy"        >> "$GITHUB_ENV"
+          echo "ubuntu_codename=focal"        >> "$GITHUB_ENV"
           echo "python_version=3.9"           >> "$GITHUB_ENV"
         fi
 
