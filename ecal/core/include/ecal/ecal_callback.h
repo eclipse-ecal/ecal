@@ -60,12 +60,12 @@ namespace eCAL
      * @param data_type_info_  Topic data type information (encoding, type, descriptor).
      * @param data_            Data struct containing payload, timestamp and publication clock.
     **/
-    using ReceiveIDCallbackT = std::function<void(const Registration::STopicId& topic_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)>;
+    using ReceiveCallbackT = std::function<void(const Registration::STopicId& topic_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)>;
 
     /**
      * @brief eCAL publisher event callback struct.
     **/
-    struct SPubEventIDCallbackData
+    struct SPubEventCallbackData
     {
       eCAL_Publisher_Event type{ pub_event_none };  //!< publisher event type
       long long            time{ 0 };               //!< publisher event time in µs
@@ -79,7 +79,7 @@ namespace eCAL
      * @param topic_id_  The topic id struct of the received message.
      * @param data_      Event callback data structure with the event specific information.
     **/
-    using PubEventIDCallbackT = std::function<void(const Registration::STopicId& topic_id_, const struct SPubEventIDCallbackData& data_)>;
+    using PubEventCallbackT = std::function<void(const Registration::STopicId& topic_id_, const struct SPubEventCallbackData& data_)>;
 
     /**
      * @brief eCAL subscriber event callback struct.

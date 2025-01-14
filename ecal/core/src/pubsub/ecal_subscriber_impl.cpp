@@ -163,7 +163,7 @@ namespace eCAL
     return(false);
   }
 
-  bool CSubscriberImpl::SetReceiveCallback(ReceiveIDCallbackT callback_)
+  bool CSubscriberImpl::SetReceiveCallback(ReceiveCallbackT callback_)
   {
     if (!m_created) return(false);
 

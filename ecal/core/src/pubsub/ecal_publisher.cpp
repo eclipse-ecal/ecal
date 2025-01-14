@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,11 +47,11 @@ namespace eCAL
     if(g_pubgate() != nullptr) g_pubgate()->Register(topic_name_, m_publisher_impl);
   }
 
-  CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventIDCallbackT event_callback_, const Publisher::Configuration& config_) :
+  CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventCallbackT event_callback_, const Publisher::Configuration& config_) :
     CPublisher(topic_name_, data_type_info_, config_)
   {
     // add event callback for all current event types
-    m_publisher_impl->SetEventIDCallback(event_callback_);
+    m_publisher_impl->SetEventCallback(event_callback_);
   }
 
   CPublisher::~CPublisher()

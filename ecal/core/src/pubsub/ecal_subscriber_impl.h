@@ -70,7 +70,7 @@ namespace eCAL
 
     bool Read(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);
 
-    bool SetReceiveCallback(ReceiveIDCallbackT callback_);
+    bool SetReceiveCallback(ReceiveCallbackT callback_);
     bool RemoveReceiveCallback();
 
     // deprecated event callback interface
@@ -158,7 +158,7 @@ namespace eCAL
     long long                                 m_read_time = 0;
 
     std::mutex                                m_receive_callback_mutex;
-    ReceiveIDCallbackT                        m_receive_callback;
+    ReceiveCallbackT                        m_receive_callback;
     std::atomic<int>                          m_receive_time;
 
     std::deque<size_t>                        m_sample_hash_queue;

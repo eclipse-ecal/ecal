@@ -400,12 +400,12 @@ namespace eCAL
     return(true);
   }
 
-  bool CPublisherImpl::SetEventIDCallback(const PubEventIDCallbackT callback_)
+  bool CPublisherImpl::SetEventCallback(const PubEventCallbackT callback_)
   {
     if (!m_created) return false;
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::SetEventIDCallback");
+    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::SetEventCallback");
 #endif
 
     // set event id callback
@@ -738,7 +738,7 @@ namespace eCAL
     // new event handling with topic id
     if(m_event_id_callback)
     {
-      SPubEventIDCallbackData data;
+      SPubEventCallbackData data;
       data.type      = type_;
       data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
       data.clock     = 0;

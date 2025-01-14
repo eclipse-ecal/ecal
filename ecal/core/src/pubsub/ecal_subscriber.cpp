@@ -70,7 +70,7 @@ namespace eCAL
     return *this;
   }
 
-  bool CSubscriber::SetReceiveCallback(ReceiveIDCallbackT callback_)
+  bool CSubscriber::SetReceiveCallback(ReceiveCallbackT callback_)
   {
     if (m_subscriber_impl == nullptr) return false;
     return m_subscriber_impl->SetReceiveCallback(std::move(callback_));
