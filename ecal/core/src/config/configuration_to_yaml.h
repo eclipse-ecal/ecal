@@ -79,22 +79,6 @@ namespace YAML
 
 
   /*
-       __  ___          _ __           _          
-      /  |/  /__  ___  (_) /____  ____(_)__  ___ _
-     / /|_/ / _ \/ _ \/ / __/ _ \/ __/ / _ \/ _ `/
-    /_/  /_/\___/_//_/_/\__/\___/_/ /_/_//_/\_, / 
-                                           /___/  
-  */
-  template<>
-  struct convert<eCAL::Monitoring::Configuration>
-  {
-    static Node encode(const eCAL::Monitoring::Configuration& config_);
-
-    static bool decode(const Node& node_, eCAL::Monitoring::Configuration& config_);
-  };
-
-
-  /*
      ______                                __  __                    
     /_  __/______ ____  ___ ___  ___  ____/ /_/ /  ___ ___ _____ ____
      / / / __/ _ `/ _ \(_-</ _ \/ _ \/ __/ __/ /__/ _ `/ // / -_) __/

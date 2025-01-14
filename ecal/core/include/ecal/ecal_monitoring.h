@@ -33,33 +33,6 @@ namespace eCAL
   namespace Monitoring
   {
     /**
-     * @brief Set topics filter blacklist regular expression.
-     *
-     * @param filter_  Topic filter as regular expression. 
-     *
-     * @return True if succeeded.
-    **/
-    ECAL_API bool SetExclFilter(const std::string& filter_);
-
-    /**
-     * @brief Set topics filter whitelist regular expression.
-     *
-     * @param filter_  Topic filter as regular expression. 
-     *
-     * @return True if succeeded.
-    **/
-    ECAL_API bool SetInclFilter(const std::string& filter_);
-
-    /**
-     * @brief Switch topics filter using regular expression on/off.
-     *
-     * @param state_  Filter on / off state. 
-     *
-     * @return True if succeeded.
-    **/
-    ECAL_API bool SetFilterState(bool state_);
-
-    /**
      * @brief Get monitoring subset as serialized protobuf string.
      *
      * @param [out] mon_       Target string to store the monitoring information. 

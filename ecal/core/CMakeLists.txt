@@ -191,8 +191,6 @@ if(ECAL_CORE_MONITORING)
 set(ecal_monitoring_src
     src/monitoring/ecal_monitoring_def.cpp
     src/monitoring/ecal_monitoring_def.h
-    src/monitoring/ecal_monitoring_filter.cpp
-    src/monitoring/ecal_monitoring_filter.h
     src/monitoring/ecal_monitoring_impl.cpp
     src/monitoring/ecal_monitoring_impl.h
 )
@@ -458,7 +456,6 @@ endif()
 ######################################
 set (ecal_builder_src
     src/config/builder/logging_attribute_builder.cpp
-    src/config/builder/monitoring_attribute_builder.cpp
     src/config/builder/registration_attribute_builder.cpp
     src/logging/config/builder/udp_attribute_builder.cpp
     src/pubsub/config/builder/reader_attribute_builder.cpp
@@ -510,7 +507,6 @@ set(ecal_header_cmn
     include/ecal/config/application.h
     include/ecal/config/configuration.h
     include/ecal/config/logging.h
-    include/ecal/config/monitoring.h
     include/ecal/config/publisher.h
     include/ecal/config/registration.h
     include/ecal/config/subscriber.h

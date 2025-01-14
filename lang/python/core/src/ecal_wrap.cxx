@@ -944,45 +944,6 @@ PyObject* mon_finalize(PyObject* /*self*/, PyObject* /*args*/)
 }
 
 /****************************************/
-/*      mon_setexclfilter               */
-/****************************************/
-PyObject* mon_setexclfilter(PyObject* /*self*/, PyObject* args)
-{
-  char* filter = nullptr;
-
-  if (!PyArg_ParseTuple(args, "s", &filter)) 
-    return nullptr;
-
-  return(Py_BuildValue("i", static_cast<int>(!eCAL::Monitoring::SetExclFilter(filter))));
-}
-
-/****************************************/
-/*      mon_setinclfilter               */
-/****************************************/
-PyObject* mon_setinclfilter(PyObject* /*self*/, PyObject* args)
-{
-  char* filter = nullptr;
-
-  if (!PyArg_ParseTuple(args, "s", &filter)) 
-    return nullptr;
-
-  return(Py_BuildValue("i", static_cast<int>(!eCAL::Monitoring::SetInclFilter(filter))));
-}
-
-/****************************************/
-/*      mon_setfilterstate              */
-/****************************************/
-PyObject* mon_setfilterstate(PyObject* /*self*/, PyObject* args)
-{
-  int state = 0;
-
-  if (!PyArg_ParseTuple(args, "i", &state)) 
-    return nullptr;
-
-  return(Py_BuildValue("i", static_cast<int>(!eCAL::Monitoring::SetFilterState(state != 0))));
-}
-
-/****************************************/
 /*      mon_monitoring                  */
 /****************************************/
 namespace
@@ -1374,9 +1335,6 @@ static PyMethodDef _ecal_methods[] =
   
   {"mon_initialize",                mon_initialize,                METH_NOARGS,   "mon_initialize()"},
   {"mon_finalize",                  mon_finalize,                  METH_NOARGS,   "mon_finalize()"},
-  {"mon_setexclfilter",             mon_setexclfilter,             METH_VARARGS,  "mon_setexclfilter(filter)"},
-  {"mon_setinclfilter",             mon_setinclfilter,             METH_VARARGS,  "mon_setinclfilter(filter)"},
-  {"mon_setfilterstate",            mon_setfilterstate,            METH_VARARGS,  "mon_setfilterstate(state)"},
 
   {"mon_monitoring",                mon_monitoring,                METH_NOARGS,   "mon_monitoring()"},
   {"mon_logging",                   mon_logging,                   METH_NOARGS,   "mon_logging()"},

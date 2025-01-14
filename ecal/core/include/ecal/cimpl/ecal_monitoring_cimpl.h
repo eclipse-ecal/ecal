@@ -32,33 +32,6 @@ extern "C"
 {
 #endif /*__cplusplus*/
   /**
-   * @brief Set topics filter blacklist regular expression.
-   *
-   * @param filter_  Topic filter as regular expression. 
-   *
-   * @return Zero if succeeded.
-  **/
-  ECALC_API int eCAL_Monitoring_SetExclFilter(const char* filter_);
-
-  /**
-   * @brief Set topics filter whitelist regular expression.
-   *
-   * @param filter_  Topic filter as regular expression. 
-   *
-   * @return Zero if succeeded.
-  **/
-  ECALC_API int eCAL_Monitoring_SetInclFilter(const char* filter_);
-
-  /**
-   * @brief Switch topics filter using regular expression on/off.
-   *
-   * @param state_  Filter on / off state. 
-   *
-   * @return Zero if succeeded.
-  **/
-  ECALC_API int eCAL_Monitoring_SetFilterState(int state_);
-
-  /**
    * @brief Get monitoring protobuf string. 
    *
    * @param [out] buf_      Pointer to store the monitoring information. 
