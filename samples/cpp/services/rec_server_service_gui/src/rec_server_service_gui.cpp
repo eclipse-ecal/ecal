@@ -239,7 +239,7 @@ void RecServerServiceGui::onRecorderResponse(const struct eCAL::SServiceResponse
   {
 
   // service successful executed
-  case eCAL::eCallState::call_state_executed:
+  case eCAL::eCallState::executed:
   {
     if ((service_response_.method_name == "StartRecording")
       || (service_response_.method_name == "SaveBuffer"))
@@ -281,7 +281,7 @@ void RecServerServiceGui::onRecorderResponse(const struct eCAL::SServiceResponse
   }
 
   // service execution failed
-  case eCAL::eCallState::call_state_failed:
+  case eCAL::eCallState::failed:
   {
     //eCAL::pb::Response response;
     //response.ParseFromString(response_);

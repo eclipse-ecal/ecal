@@ -88,7 +88,7 @@ TEST(core_cpp_clientserver_proto, ProtoCallback)
     switch (service_response_.call_state)
     {
     // service successful executed
-    case eCAL::eCallState::call_state_executed:
+    case eCAL::eCallState::executed:
     {
       SFloat response;
       response.ParseFromString(service_response_.response);
@@ -97,7 +97,7 @@ TEST(core_cpp_clientserver_proto, ProtoCallback)
     }
     break;
     // service execution failed
-    case eCAL::eCallState::call_state_failed:
+    case eCAL::eCallState::failed:
       std::cout << "Received error MathService / " << service_response_.method_name << " : " << service_response_.error_msg << " from host " << service_response_.host_name << std::endl;
       break;
     default:
@@ -180,11 +180,11 @@ TEST(core_cpp_clientserver_proto, ProtoBlocking)
   std::cout << std::endl << "Ping method called with message : " << ping_request.message() << std::endl;
   for (const auto& service_response : service_response_vec)
   {
-    EXPECT_EQ(eCAL::eCallState::call_state_executed, service_response.call_state);
+    EXPECT_EQ(eCAL::eCallState::executed, service_response.call_state);
     switch (service_response.call_state)
     {
       // service successful executed
-    case eCAL::eCallState::call_state_executed:
+    case eCAL::eCallState::executed:
     {
       PingResponse response;
       response.ParseFromString(service_response.response);
@@ -193,7 +193,7 @@ TEST(core_cpp_clientserver_proto, ProtoBlocking)
     }
     break;
     // service execution failed
-    case eCAL::eCallState::call_state_failed:
+    case eCAL::eCallState::failed:
       std::cout << "Received error PingService / Ping : " << service_response.error_msg << " from host " << service_response.host_name << std::endl;
       break;
     default:

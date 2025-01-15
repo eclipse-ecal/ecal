@@ -67,7 +67,7 @@ void OnMathResponse(const struct eCAL::SServiceResponse& service_response_)
   switch(service_response_.call_state)
   {
   // service successful executed
-  case eCAL::eCallState::call_state_executed:
+  case eCAL::eCallState::executed:
     {
       SFloat response;
       response.ParseFromString(service_response_.response);
@@ -75,7 +75,7 @@ void OnMathResponse(const struct eCAL::SServiceResponse& service_response_)
     }
     break;
   // service execution failed
-  case eCAL::eCallState::call_state_failed:
+  case eCAL::eCallState::failed:
     std::cout << "Received error MathService / " << service_response_.method_name << " : " << service_response_.error_msg << " from host " << service_response_.host_name << std::endl;
     break;
   default:

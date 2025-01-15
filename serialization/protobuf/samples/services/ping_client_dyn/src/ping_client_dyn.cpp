@@ -105,14 +105,14 @@ int main()
           switch (service_response.call_state)
           {
           // service successful executed
-          case eCAL::eCallState::call_state_executed:
+          case eCAL::eCallState::executed:
           {
             const std::string resp_json = GetJSONFromSerialzedMessage(resp_msg.get(), service_response.response);
             std::cout << "Received response PingService / Ping         (JSON) : " << resp_json << " from host " << service_response.service_method_id.service_id.host_name << '\n';
           }
           break;
           // service execution failed
-          case eCAL::eCallState::call_state_failed:
+          case eCAL::eCallState::failed:
             std::cout << "Received error PingService / Ping           : " << service_response.error_msg << " from host " << service_response.service_method_id.service_id.host_name << '\n';
             break;
           default:

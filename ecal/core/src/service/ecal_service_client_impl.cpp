@@ -58,7 +58,7 @@ namespace
     // error message, return state and call state
     error_response.error_msg                      = error_message_;
     error_response.ret_state                      = 0;
-    error_response.call_state                     = eCAL::eCallState::call_state_failed;
+    error_response.call_state                     = eCAL::eCallState::failed;
     return error_response;
   }
 
@@ -186,7 +186,7 @@ namespace eCAL
     }
 
     // Handle timeout event
-    if (!response.first && response.second.call_state == eCallState::call_state_timeouted)
+    if (!response.first && response.second.call_state == eCallState::timeouted)
     {
       Registration::SServiceMethodId service_id;
       service_id.service_name = m_service_name;
@@ -244,7 +244,7 @@ namespace eCAL
             eCAL::Logging::Log(eCAL::Logging::log_level_error, "CServiceClientImpl::CallWithCallbackAsync: Asynchronous call returned an error: " + error.ToString());
             response_data->response->first = false;
             response_data->response->second.error_msg = error.ToString();
-            response_data->response->second.call_state = eCallState::call_state_failed;
+            response_data->response->second.call_state = eCallState::failed;
             response_data->response->second.ret_state = 0;
           }
           else
@@ -456,7 +456,7 @@ namespace eCAL
       {
         response_data->response->first = false;
         response_data->response->second.error_msg = "Timeout";
-        response_data->response->second.call_state = eCallState::call_state_timeouted;
+        response_data->response->second.call_state = eCallState::timeouted;
       }
     }
     else
@@ -542,7 +542,7 @@ namespace eCAL
     data->response->second.service_method_id.service_name          = client_.service_attr.sname;
     data->response->second.service_method_id.method_name           = method_name_;
 
-    data->response->second.call_state = eCallState::call_state_none;
+    data->response->second.call_state = eCallState::none;
     return data;
   }
 
@@ -557,7 +557,7 @@ namespace eCAL
         {
           response_data_->response->first = false;
           response_data_->response->second.error_msg  = error.ToString();
-          response_data_->response->second.call_state = eCallState::call_state_failed;
+          response_data_->response->second.call_state = eCallState::failed;
           response_data_->response->second.ret_state  = 0;
         }
         else
@@ -595,10 +595,10 @@ namespace eCAL
       switch (response_header.state)
       {
       case eCAL::Service::eMethodCallState::executed:
-        service_reponse.call_state = eCallState::call_state_executed;
+        service_reponse.call_state = eCallState::executed;
         break;
       case eCAL::Service::eMethodCallState::failed:
-        service_reponse.call_state = eCallState::call_state_failed;
+        service_reponse.call_state = eCallState::failed;
         break;
       default:
         break;
@@ -610,7 +610,7 @@ namespace eCAL
     {
       service_reponse.error_msg = "Could not parse server response";
       service_reponse.ret_state = 0;
-      service_reponse.call_state = eCallState::call_state_failed;
+      service_reponse.call_state = eCallState::failed;
       service_reponse.response = "";
     }
 

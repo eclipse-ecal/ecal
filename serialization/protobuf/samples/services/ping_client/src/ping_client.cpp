@@ -61,7 +61,7 @@ int main()
           switch (service_response.call_state)
           {
             // service successful executed
-          case eCAL::eCallState::call_state_executed:
+          case eCAL::eCallState::executed:
           {
             PingResponse ping_response;
             ping_response.ParseFromString(service_response.response);
@@ -69,7 +69,7 @@ int main()
           }
           break;
           // service execution failed
-          case eCAL::eCallState::call_state_failed:
+          case eCAL::eCallState::failed:
             std::cout << "Received error PingService / Ping : " << service_response.error_msg << " from host " << service_response.host_name << std::endl;
             break;
           default:

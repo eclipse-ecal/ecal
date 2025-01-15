@@ -38,10 +38,10 @@ namespace
   {
     switch (cpp_call_state_)
     {
-    case eCAL::eCallState::call_state_none:      return call_state_none;
-    case eCAL::eCallState::call_state_executed:  return call_state_executed;
-    case eCAL::eCallState::call_state_timeouted: return call_state_timeouted;
-    case eCAL::eCallState::call_state_failed:    return call_state_failed;
+    case eCAL::eCallState::none:      return call_state_none;
+    case eCAL::eCallState::executed:  return call_state_executed;
+    case eCAL::eCallState::timeouted: return call_state_timeouted;
+    case eCAL::eCallState::failed:    return call_state_failed;
     default: return call_state_none;
     }
   }

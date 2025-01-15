@@ -38,10 +38,10 @@ namespace eCAL
   **/
   enum class eCallState
   {
-    call_state_none = 0,    //!< undefined
-    call_state_executed,    //!< executed (successfully)
-    call_state_timeouted,   //!< timeout
-    call_state_failed       //!< failed
+    none = 0,    //!< undefined
+    executed,    //!< executed (successfully)
+    timeouted,   //!< timeout
+    failed       //!< failed
   };
 
   /**
@@ -62,7 +62,7 @@ namespace eCAL
     SServiceResponse()
     {
       ret_state  = 0;
-      call_state = eCallState::call_state_none;
+      call_state = eCallState::none;
     };
     std::string  host_name;      //!< service host name
     std::string  service_name;   //!< name of the service
@@ -83,7 +83,7 @@ namespace eCAL
     Registration::SServiceMethodId service_method_id;            //!< service method information (service id (entity id, process id, host name), service name, method name)
     std::string                    error_msg;                    //!< human readable error message
     int                            ret_state  = 0;               //!< return state of the called service method
-    eCallState                     call_state = eCallState::call_state_none; //!< call state (see eCallState)
+    eCallState                     call_state = eCallState::none; //!< call state (see eCallState)
     std::string                    response;                     //!< service response
   };
   using ServiceIDResponseVecT = std::vector<SServiceIDResponse>; //!< vector of multiple service responses

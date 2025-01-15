@@ -84,13 +84,13 @@ namespace
     std::cout << "Execution state       : ";
     switch (service_response_.call_state)
     {
-    case call_state_none:
+    case none:
       std::cout << "call_state_none";
       break;
-    case call_state_executed:
+    case executed:
       std::cout << "call_state_executed";
       break;
-    case call_state_failed:
+    case failed:
       std::cout << "call_state_failed";
       break;
     }

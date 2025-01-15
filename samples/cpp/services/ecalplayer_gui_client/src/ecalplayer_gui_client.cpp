@@ -204,7 +204,7 @@ void EcalplayGuiClient::onPlayerResponse(const struct eCAL::SServiceResponse& se
   switch (service_response_.call_state)
   {
     // service successful executed
-  case eCAL::eCallState::call_state_executed:
+  case eCAL::eCallState::executed:
   {
     if (service_response_.method_name == "GetConfig")
     {
@@ -226,7 +226,7 @@ void EcalplayGuiClient::onPlayerResponse(const struct eCAL::SServiceResponse& se
     break;
   }
   // service execution failed
-  case eCAL::eCallState::call_state_failed:
+  case eCAL::eCallState::failed:
   {
     eCAL::pb::play::Response response;
     response.ParseFromString(service_response_.response);

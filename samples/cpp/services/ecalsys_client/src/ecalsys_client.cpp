@@ -39,7 +39,7 @@ void OnSysResponse(const struct eCAL::SServiceResponse& service_response_)
   switch (service_response_.call_state)
   {
   // service successful executed
-  case eCAL::eCallState::call_state_executed:
+  case eCAL::eCallState::executed:
     {
       eCAL::pb::sys::Response response;
       response.ParseFromString(service_response_.response);
@@ -47,7 +47,7 @@ void OnSysResponse(const struct eCAL::SServiceResponse& service_response_)
     }
     break;
   // service execution failed
-  case eCAL::eCallState::call_state_failed:
+  case eCAL::eCallState::failed:
     {
       eCAL::pb::sys::Response response;
       response.ParseFromString(service_response_.response);

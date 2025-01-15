@@ -39,7 +39,7 @@ void OnRecorderResponse(const struct eCAL::SServiceResponse& service_response_)
   switch (service_response_.call_state)
   {
   // service successful executed
-  case eCAL::eCallState::call_state_executed:
+  case eCAL::eCallState::executed:
   {
     if (service_response_.method_name == "GetConfig")
     {
@@ -58,7 +58,7 @@ void OnRecorderResponse(const struct eCAL::SServiceResponse& service_response_)
   }
   break;
   // service execution failed
-  case eCAL::eCallState::call_state_failed:
+  case eCAL::eCallState::failed:
   {
     if (service_response_.method_name == "GetConfig")
     {
