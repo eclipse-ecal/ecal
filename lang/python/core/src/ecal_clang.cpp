@@ -96,27 +96,27 @@ namespace
     }
   }
 
-  eCAL_Subscriber_Event enum_class_to_enum(eCAL::Subscriber_Event cpp_event_) {
+  eCAL_Subscriber_Event enum_class_to_enum(eCAL::eSubscriberEvent cpp_event_) {
     switch (cpp_event_) {
-    case eCAL::Subscriber_Event::sub_event_none:                   return sub_event_none;
-    case eCAL::Subscriber_Event::sub_event_connected:              return sub_event_connected;
-    case eCAL::Subscriber_Event::sub_event_disconnected:           return sub_event_disconnected;
-    case eCAL::Subscriber_Event::sub_event_dropped:                return sub_event_dropped;
-    case eCAL::Subscriber_Event::sub_event_corrupted:              return sub_event_corrupted;
-    case eCAL::Subscriber_Event::sub_event_update_connection:      return sub_event_update_connection;
+    case eCAL::eSubscriberEvent::sub_event_none:                   return sub_event_none;
+    case eCAL::eSubscriberEvent::sub_event_connected:              return sub_event_connected;
+    case eCAL::eSubscriberEvent::sub_event_disconnected:           return sub_event_disconnected;
+    case eCAL::eSubscriberEvent::sub_event_dropped:                return sub_event_dropped;
+    case eCAL::eSubscriberEvent::sub_event_corrupted:              return sub_event_corrupted;
+    case eCAL::eSubscriberEvent::sub_event_update_connection:      return sub_event_update_connection;
     default:            return sub_event_none;
     }
   }
 
-  eCAL::Subscriber_Event enum_to_enum_class(eCAL_Subscriber_Event c_event_) {
+  eCAL::eSubscriberEvent enum_to_enum_class(eCAL_Subscriber_Event c_event_) {
     switch (c_event_) {
-    case sub_event_none:                   return eCAL::Subscriber_Event::sub_event_none;
-    case sub_event_connected:              return eCAL::Subscriber_Event::sub_event_connected;
-    case sub_event_disconnected:           return eCAL::Subscriber_Event::sub_event_disconnected;
-    case sub_event_dropped:                return eCAL::Subscriber_Event::sub_event_dropped;
-    case sub_event_corrupted:              return eCAL::Subscriber_Event::sub_event_corrupted;
-    case sub_event_update_connection:      return eCAL::Subscriber_Event::sub_event_update_connection;
-    default:                               return eCAL::Subscriber_Event::sub_event_none;
+    case sub_event_none:                   return eCAL::eSubscriberEvent::sub_event_none;
+    case sub_event_connected:              return eCAL::eSubscriberEvent::sub_event_connected;
+    case sub_event_disconnected:           return eCAL::eSubscriberEvent::sub_event_disconnected;
+    case sub_event_dropped:                return eCAL::eSubscriberEvent::sub_event_dropped;
+    case sub_event_corrupted:              return eCAL::eSubscriberEvent::sub_event_corrupted;
+    case sub_event_update_connection:      return eCAL::eSubscriberEvent::sub_event_update_connection;
+    default:                               return eCAL::eSubscriberEvent::sub_event_none;
     }
   }
 }

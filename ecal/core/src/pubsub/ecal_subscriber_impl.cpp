@@ -197,7 +197,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubscriberImpl::SetEventCallback(Subscriber_Event type_, v5::SubEventCallbackT callback_)
+  bool CSubscriberImpl::SetEventCallback(eSubscriberEvent type_, v5::SubEventCallbackT callback_)
   {
     if (!m_created) return(false);
 
@@ -214,7 +214,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubscriberImpl::RemoveEventCallback(Subscriber_Event type_)
+  bool CSubscriberImpl::RemoveEventCallback(eSubscriberEvent type_)
   {
     if (!m_created) return(false);
 
@@ -782,7 +782,7 @@ namespace eCAL
 #endif
   }
 
-  void CSubscriberImpl::FireEvent(const Subscriber_Event type_, const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
+  void CSubscriberImpl::FireEvent(const eSubscriberEvent type_, const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
   {
     // new event handling with topic id
     if (m_event_id_callback)
@@ -825,17 +825,17 @@ namespace eCAL
 
   void CSubscriberImpl::FireConnectEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(Subscriber_Event::sub_event_connected, publication_info_, data_type_info_);
+    FireEvent(eSubscriberEvent::sub_event_connected, publication_info_, data_type_info_);
   }
 
   void CSubscriberImpl::FireUpdateEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(Subscriber_Event::sub_event_update_connection, publication_info_, data_type_info_);
+    FireEvent(eSubscriberEvent::sub_event_update_connection, publication_info_, data_type_info_);
   }
 
   void CSubscriberImpl::FireDisconnectEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(Subscriber_Event::sub_event_disconnected, publication_info_, data_type_info_);
+    FireEvent(eSubscriberEvent::sub_event_disconnected, publication_info_, data_type_info_);
   }
 
   size_t CSubscriberImpl::GetConnectionCount()
@@ -910,7 +910,7 @@ namespace eCAL
         if (m_event_id_callback)
         {
           SSubEventCallbackData data;
-          data.type  = Subscriber_Event::sub_event_dropped;
+          data.type  = eSubscriberEvent::sub_event_dropped;
           data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
           data.clock = current_clock_;
 
@@ -925,11 +925,11 @@ namespace eCAL
         // deprecated event handling with topic name
         {
           const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
-          auto citer = m_event_callback_map.find(Subscriber_Event::sub_event_dropped);
+          auto citer = m_event_callback_map.find(eSubscriberEvent::sub_event_dropped);
           if (citer != m_event_callback_map.end() && citer->second)
           {
             v5::SSubEventCallbackData data;
-            data.type  = Subscriber_Event::sub_event_dropped;
+            data.type  = eSubscriberEvent::sub_event_dropped;
             data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
             data.clock = current_clock_;
 

@@ -47,7 +47,7 @@ namespace eCAL
   /**
  * @brief eCAL subscriber event callback type.
 **/
-  enum class Subscriber_Event
+  enum class eSubscriberEvent
   {
     sub_event_none = 0,
     sub_event_connected = 1,
@@ -57,14 +57,14 @@ namespace eCAL
     sub_event_update_connection = 6,
   };
 
-  inline std::string to_string(Subscriber_Event event_) {
+  inline std::string to_string(eSubscriberEvent event_) {
     switch (event_) {
-    case Subscriber_Event::sub_event_none:                   return "NONE";
-    case Subscriber_Event::sub_event_connected:              return "CONNECTED";
-    case Subscriber_Event::sub_event_disconnected:           return "DISCONNECTED";
-    case Subscriber_Event::sub_event_dropped :               return "DROPPED";
-    case Subscriber_Event::sub_event_corrupted:              return "CORRUPTED";
-    case Subscriber_Event::sub_event_update_connection :     return "UPDATED_CONNECTION";
+    case eSubscriberEvent::sub_event_none:                   return "NONE";
+    case eSubscriberEvent::sub_event_connected:              return "CONNECTED";
+    case eSubscriberEvent::sub_event_disconnected:           return "DISCONNECTED";
+    case eSubscriberEvent::sub_event_dropped :               return "DROPPED";
+    case eSubscriberEvent::sub_event_corrupted:              return "CORRUPTED";
+    case eSubscriberEvent::sub_event_update_connection :     return "UPDATED_CONNECTION";
     default:            return "Unknown";
     }
   }
@@ -172,7 +172,7 @@ namespace eCAL
     **/
     struct SSubEventCallbackData
     {
-      Subscriber_Event      type{ Subscriber_Event::sub_event_none }; //!< subscriber event type
+      eSubscriberEvent      type{ eSubscriberEvent::sub_event_none }; //!< subscriber event type
       long long             time{ 0 };              //!< subscriber event time in µs
       long long             clock{ 0 };             //!< subscriber event clock
       SDataTypeInformation  tdatatype;              //!< topic information of the connected subscriber           (for sub_event_update_connection only)

@@ -52,7 +52,7 @@ namespace eCAL
     **/
     struct SSubEventCallbackData
     {
-      Subscriber_Event      type = Subscriber_Event::sub_event_none; //!< subscriber event type
+      eSubscriberEvent      type = eSubscriberEvent::sub_event_none; //!< subscriber event type
       long long             time{ 0 };              //!< subscriber event time in µs
       long long             clock{ 0 };             //!< subscriber event clock
       std::string           tid;                  //!< topic id of the of the connected publisher              (for sub_event_update_connection only)
