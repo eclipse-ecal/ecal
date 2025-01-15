@@ -62,7 +62,7 @@ int main()
   eCAL::Initialize("person subscriber events");
 
   // set process state
-  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::proc_sev_healthy, eCAL::Process::eSeverity_Level::proc_sev_level1, "I feel good !");
 
   // create a subscriber (topic name "person")
   eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");

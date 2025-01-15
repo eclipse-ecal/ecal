@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,6 @@ namespace eCAL
 {
   namespace rec_server
   {
-    std::pair<eCAL_Process_eSeverity, std::string> GetProcessSeverity(const eCAL::rec_server::RecServerStatus& rec_server_status, const std::map<std::string, ClientConfig>& rec_server_config);
+    std::pair<eCAL::Process::eSeverity, std::string> GetProcessSeverity(const eCAL::rec_server::RecServerStatus& rec_server_status, const std::map<std::string, ClientConfig>& rec_server_config);
   }
 }

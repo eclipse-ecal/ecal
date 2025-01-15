@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -157,12 +157,12 @@ bool GroupStateMinTaskStateTreeItem::setData(int column, const QVariant& data, Q
   {
     if (column == (int)Columns::SEVERITY)
     {
-      min_task_state_.second.severity = (eCAL_Process_eSeverity)(data.toInt());
+      min_task_state_.second.severity = (eCAL::Process::eSeverity)(data.toInt());
       return true;
     }
     else if (column == (int)Columns::SEVERITY_LEVEL)
     {
-      min_task_state_.second.severity_level = (eCAL_Process_eSeverity_Level)(data.toInt());
+      min_task_state_.second.severity_level = (eCAL::Process::eSeverity_Level)(data.toInt());
       return true;
     }
   }

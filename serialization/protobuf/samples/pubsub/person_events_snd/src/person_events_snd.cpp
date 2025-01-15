@@ -59,7 +59,7 @@ int main()
   eCAL::Initialize("person publisher events");
 
   // set process state
-  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::proc_sev_healthy, eCAL::Process::eSeverity_Level::proc_sev_level1, "I feel good !");
 
   // create a publisher (topic name "person")
   eCAL::protobuf::CPublisher<pb::People::Person> pub("person");

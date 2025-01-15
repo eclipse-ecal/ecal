@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -238,14 +238,14 @@ int main(int argc, char** argv)
   if (remote_control_arg.isSet()) // Remote-control-mode
   {
     eCAL::Initialize("eCALSys-Remote", eCAL::Init::All);
-    eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
+    eCAL::Process::SetState(eCAL::Process::eSeverity::proc_sev_healthy, eCAL::Process::eSeverity_Level::proc_sev_level1, "Running");
 
     remote_ecalsys_service = std::make_shared<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>();
   }
   else                            // Non-remote control mode
   {
     eCAL::Initialize("eCALSys", eCAL::Init::All);
-    eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
+    eCAL::Process::SetState(eCAL::Process::eSeverity::proc_sev_healthy, eCAL::Process::eSeverity_Level::proc_sev_level1, "Running");
 
     ecalsys_instance = std::make_shared<EcalSys>();
 

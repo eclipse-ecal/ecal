@@ -74,7 +74,7 @@ Ecalmon::Ecalmon(QWidget *parent)
   auto config = eCAL::Init::Configuration();
   config.logging.receiver.enable = true;
   eCAL::Initialize(config, "eCALMon", eCAL::Init::Default | eCAL::Init::Monitoring);
-  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::proc_sev_healthy, eCAL::Process::eSeverity_Level::proc_sev_level1, "Running");
 
   ui_.setupUi(this);
 

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ Date: $HOST{TIME %F %R}
             auto status = this->status();
             auto config = this->enabledRecClients();
             auto ecalstate = eCAL::rec_server::GetProcessSeverity(status, config);
-            eCAL::Process::SetState(ecalstate.first, eCAL_Process_eSeverity_Level::proc_sev_level1, ecalstate.second.c_str());
+            eCAL::Process::SetState(ecalstate.first, eCAL::Process::eSeverity_Level::proc_sev_level1, ecalstate.second.c_str());
           });
 
   ecal_state_update_timer_->start(ecal_state_update_time_ms_);
