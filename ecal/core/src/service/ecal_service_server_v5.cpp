@@ -81,13 +81,13 @@ namespace eCAL
       return m_service_server_impl->RemMethodCallback(method_);
     }
 
-    bool CServiceServer::AddEventCallback(Server_Event type_, ServerEventCallbackT callback_)
+    bool CServiceServer::AddEventCallback(eServerEvent type_, ServerEventCallbackT callback_)
     {
       if (m_service_server_impl == nullptr) return false;
       return m_service_server_impl->AddEventCallback(type_, callback_);
     }
 
-    bool CServiceServer::RemEventCallback(Server_Event type_)
+    bool CServiceServer::RemEventCallback(eServerEvent type_)
     {
       if (m_service_server_impl == nullptr) return false;
       return m_service_server_impl->RemEventCallback(type_);

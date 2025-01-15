@@ -186,7 +186,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool AddEventCallback(Client_Event type_, ClientEventCallbackT callback_);
+        bool AddEventCallback(eClientEvent type_, ClientEventCallbackT callback_);
 
       /**
        * @brief Remove client event callback function.
@@ -196,7 +196,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool RemEventCallback(Client_Event type_);
+        bool RemEventCallback(eClientEvent type_);
 
       /**
        * @brief Retrieve service name.

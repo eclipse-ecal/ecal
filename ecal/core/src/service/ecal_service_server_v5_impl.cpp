@@ -153,7 +153,7 @@ namespace eCAL
       return m_service_server_impl->RemoveMethodCallback(method_);
     }
 
-    bool CServiceServerImpl::AddEventCallback(Server_Event type_, ServerEventCallbackT callback_)
+    bool CServiceServerImpl::AddEventCallback(eServerEvent type_, ServerEventCallbackT callback_)
     {
       if (!m_service_server_impl)
       {
@@ -170,7 +170,7 @@ namespace eCAL
       return true;
     }
 
-    bool CServiceServerImpl::RemEventCallback(Server_Event type_)
+    bool CServiceServerImpl::RemEventCallback(eServerEvent type_)
     {
       if (!m_service_server_impl)
       {

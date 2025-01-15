@@ -46,27 +46,27 @@ namespace
     }
   }
 
-  eCAL_Client_Event enum_class_to_enum(eCAL::Client_Event cpp_event_)
+  eCAL_Client_Event enum_class_to_enum(eCAL::eClientEvent cpp_event_)
   {
     switch (cpp_event_)
     {
-    case eCAL::Client_Event::client_event_none:         return client_event_none;
-    case eCAL::Client_Event::client_event_connected:    return client_event_connected;
-    case eCAL::Client_Event::client_event_disconnected: return client_event_disconnected;
-    case eCAL::Client_Event::client_event_timeout:      return client_event_timeout;
+    case eCAL::eClientEvent::client_event_none:         return client_event_none;
+    case eCAL::eClientEvent::client_event_connected:    return client_event_connected;
+    case eCAL::eClientEvent::client_event_disconnected: return client_event_disconnected;
+    case eCAL::eClientEvent::client_event_timeout:      return client_event_timeout;
     default:                                            return client_event_none;
     }
   }
 
-  eCAL::Client_Event enum_to_enum_class(eCAL_Client_Event c_event)
+  eCAL::eClientEvent enum_to_enum_class(eCAL_Client_Event c_event)
   {
     switch (c_event)
     {
-    case client_event_none:         return eCAL::Client_Event::client_event_none;
-    case client_event_connected:    return eCAL::Client_Event::client_event_connected;
-    case client_event_disconnected: return eCAL::Client_Event::client_event_disconnected;
-    case client_event_timeout:      return eCAL::Client_Event::client_event_timeout;
-    default:                        return eCAL::Client_Event::client_event_none;
+    case client_event_none:         return eCAL::eClientEvent::client_event_none;
+    case client_event_connected:    return eCAL::eClientEvent::client_event_connected;
+    case client_event_disconnected: return eCAL::eClientEvent::client_event_disconnected;
+    case client_event_timeout:      return eCAL::eClientEvent::client_event_timeout;
+    default:                        return eCAL::eClientEvent::client_event_none;
     }
   }
 

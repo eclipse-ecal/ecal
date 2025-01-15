@@ -33,25 +33,25 @@
 #if ECAL_CORE_SERVICE
 namespace
 {
-  eCAL_Server_Event enum_class_to_enum(eCAL::Server_Event cpp_event_)
+  eCAL_Server_Event enum_class_to_enum(eCAL::eServerEvent cpp_event_)
   {
     switch (cpp_event_)
     {
-    case eCAL::Server_Event::server_event_none:         return server_event_none;
-    case eCAL::Server_Event::server_event_connected:    return server_event_connected;
-    case eCAL::Server_Event::server_event_disconnected: return server_event_disconnected;
+    case eCAL::eServerEvent::server_event_none:         return server_event_none;
+    case eCAL::eServerEvent::server_event_connected:    return server_event_connected;
+    case eCAL::eServerEvent::server_event_disconnected: return server_event_disconnected;
     default:                                            return server_event_none;
     }
   }
 
-  eCAL::Server_Event enum_to_enum_class(eCAL_Server_Event c_event)
+  eCAL::eServerEvent enum_to_enum_class(eCAL_Server_Event c_event)
   {
     switch (c_event)
     {
-    case server_event_none:         return eCAL::Server_Event::server_event_none;
-    case server_event_connected:    return eCAL::Server_Event::server_event_connected;
-    case server_event_disconnected: return eCAL::Server_Event::server_event_disconnected;
-    default:                        return eCAL::Server_Event::server_event_none;
+    case server_event_none:         return eCAL::eServerEvent::server_event_none;
+    case server_event_connected:    return eCAL::eServerEvent::server_event_connected;
+    case server_event_disconnected: return eCAL::eServerEvent::server_event_disconnected;
+    default:                        return eCAL::eServerEvent::server_event_none;
     }
   }
 

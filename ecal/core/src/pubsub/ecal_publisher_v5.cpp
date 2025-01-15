@@ -184,14 +184,14 @@ namespace eCAL
       return(Send(s_.data(), s_.size(), time_));
     }
 
-    bool CPublisher::AddEventCallback(Publisher_Event type_, PubEventCallbackT callback_)
+    bool CPublisher::AddEventCallback(ePublisherEvent type_, PubEventCallbackT callback_)
     {
       if (m_publisher_impl == nullptr) return(false);
       RemEventCallback(type_);
       return(m_publisher_impl->SetEventCallback(type_, std::move(callback_)));
     }
 
-    bool CPublisher::RemEventCallback(Publisher_Event type_)
+    bool CPublisher::RemEventCallback(ePublisherEvent type_)
     {
       if (m_publisher_impl == nullptr) return(false);
       return(m_publisher_impl->RemoveEventCallback(type_));

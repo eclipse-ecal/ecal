@@ -303,7 +303,7 @@ namespace eCAL
       return true;
     }
 
-    bool CServiceClientImpl::AddEventCallback(Client_Event type_, ClientEventCallbackT callback_)
+    bool CServiceClientImpl::AddEventCallback(eClientEvent type_, ClientEventCallbackT callback_)
     {
       if (m_service_client_impl == nullptr)
       {
@@ -321,7 +321,7 @@ namespace eCAL
       return true;
     }
 
-    bool CServiceClientImpl::RemEventCallback(Client_Event type_)
+    bool CServiceClientImpl::RemEventCallback(eClientEvent type_)
     {
       if (m_service_client_impl == nullptr)
       {

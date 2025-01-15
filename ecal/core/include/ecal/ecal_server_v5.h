@@ -139,7 +139,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool AddEventCallback(Server_Event type_, ServerEventCallbackT callback_);
+        bool AddEventCallback(eServerEvent type_, ServerEventCallbackT callback_);
 
       /**
        * @brief Remove server event callback function.
@@ -149,7 +149,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool RemEventCallback(Server_Event type_);
+        bool RemEventCallback(eServerEvent type_);
 
       /**
        * @brief Retrieve service name.

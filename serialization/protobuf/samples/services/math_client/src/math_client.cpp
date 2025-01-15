@@ -33,17 +33,17 @@ void OnClientState(const eCAL::v5::SClientEventCallbackData* data_)
 
   switch (data_->type)
   {
-  case eCAL::Client_Event::client_event_connected:
+  case eCAL::eClientEvent::client_event_connected:
     std::cout << "---------------------------------" << std::endl;
     std::cout << "Client connected to service      " << std::endl;
     std::cout << "---------------------------------" << std::endl;
     break;
-  case eCAL::Client_Event::client_event_disconnected:
+  case eCAL::eClientEvent::client_event_disconnected:
     std::cout << "---------------------------------" << std::endl;
     std::cout << "Client disconnected from service " << std::endl;
     std::cout << "---------------------------------" << std::endl;
     break;
-  case eCAL::Client_Event::client_event_timeout:
+  case eCAL::eClientEvent::client_event_timeout:
     std::cout << "---------------------------------" << std::endl;
     std::cout << "Client request timeouted         " << std::endl;
     std::cout << "---------------------------------" << std::endl;
@@ -96,9 +96,9 @@ int main()
   math_client.AddResponseCallback(OnMathResponse);
 
   // add event callbacks
-  math_client.AddEventCallback(eCAL::Client_Event::client_event_connected,    std::bind(OnClientState, std::placeholders::_2));
-  math_client.AddEventCallback(eCAL::Client_Event::client_event_disconnected, std::bind(OnClientState, std::placeholders::_2));
-  math_client.AddEventCallback(eCAL::Client_Event::client_event_timeout,      std::bind(OnClientState, std::placeholders::_2));
+  math_client.AddEventCallback(eCAL::eClientEvent::client_event_connected,    std::bind(OnClientState, std::placeholders::_2));
+  math_client.AddEventCallback(eCAL::eClientEvent::client_event_disconnected, std::bind(OnClientState, std::placeholders::_2));
+  math_client.AddEventCallback(eCAL::eClientEvent::client_event_timeout,      std::bind(OnClientState, std::placeholders::_2));
 
   // loop variables
   int inp1(0);

@@ -265,8 +265,8 @@ namespace eCAL
           service_id.service_name         = me->m_service_name;
           service_id.service_id.entity_id = me->m_service_id;
           me->NotifyEventCallback(service_id, event == eCAL::service::ServerEventType::Connected
-            ? Server_Event::server_event_connected
-            : Server_Event::server_event_disconnected, message);
+            ? eServerEvent::server_event_connected
+            : eServerEvent::server_event_disconnected, message);
         }
       };
 
@@ -493,7 +493,7 @@ namespace eCAL
     return 0;
   }
 
-  void CServiceServerImpl::NotifyEventCallback(const Registration::SServiceMethodId& service_id_, Server_Event event_type_, const std::string& /*message_*/)
+  void CServiceServerImpl::NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eServerEvent event_type_, const std::string& /*message_*/)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug1, "CServiceServerImpl::NotifyEventCallback: Notifying event callback for: " + m_service_name + " Event Type: " + to_string(event_type_));

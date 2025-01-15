@@ -108,13 +108,13 @@ namespace eCAL
       return m_service_client_impl->RemResponseCallback();
     }
 
-    bool CServiceClient::AddEventCallback(Client_Event type_, ClientEventCallbackT callback_)
+    bool CServiceClient::AddEventCallback(eClientEvent type_, ClientEventCallbackT callback_)
     {
       if (m_service_client_impl == nullptr) return false;
       return m_service_client_impl->AddEventCallback(type_, callback_);
     }
 
-    bool CServiceClient::RemEventCallback(Client_Event type_)
+    bool CServiceClient::RemEventCallback(eClientEvent type_)
     {
       if (m_service_client_impl == nullptr) return false;
       return m_service_client_impl->RemEventCallback(type_);

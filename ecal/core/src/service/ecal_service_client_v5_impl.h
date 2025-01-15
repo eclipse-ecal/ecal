@@ -83,10 +83,10 @@ namespace eCAL
       bool RemResponseCallback();
 
       // Registers a callback function for a specific client event.
-      bool AddEventCallback(Client_Event type_, ClientEventCallbackT callback_);
+      bool AddEventCallback(eClientEvent type_, ClientEventCallbackT callback_);
 
       // Removes the registered callback function for a specific client event.
-      bool RemEventCallback(Client_Event type_);
+      bool RemEventCallback(eClientEvent type_);
 
       // Retrieves the name of the associated service.
       std::string GetServiceName();
@@ -109,7 +109,7 @@ namespace eCAL
 
       // Mutex and map for managing event callbacks
       std::mutex m_event_callback_map_mutex;
-      std::map<Client_Event, ClientEventCallbackT> m_event_callback_map;
+      std::map<eClientEvent, ClientEventCallbackT> m_event_callback_map;
 
       // Mutex and callback for managing server responses
       std::mutex m_response_callback_mutex;

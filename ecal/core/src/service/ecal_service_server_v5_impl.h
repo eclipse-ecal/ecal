@@ -50,8 +50,8 @@ namespace eCAL
       bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
       bool RemMethodCallback(const std::string& method_);
 
-      bool AddEventCallback(Server_Event type_, ServerEventCallbackT callback_);
-      bool RemEventCallback(Server_Event type_);
+      bool AddEventCallback(eServerEvent type_, ServerEventCallbackT callback_);
+      bool RemEventCallback(eServerEvent type_);
 
       std::string GetServiceName();
       bool IsConnected();
@@ -68,7 +68,7 @@ namespace eCAL
 
       // Mutex and map for managing event callbacks
       std::mutex m_event_callback_map_mutex;
-      std::map<Server_Event, ServerEventCallbackT> m_event_callback_map;
+      std::map<eServerEvent, ServerEventCallbackT> m_event_callback_map;
     };
   }
 }

@@ -191,7 +191,7 @@ namespace eCAL
       Registration::SServiceMethodId service_id;
       service_id.service_name = m_service_name;
       service_id.service_id   = entity_id_;
-      NotifyEventCallback(service_id, Client_Event::client_event_timeout);
+      NotifyEventCallback(service_id, eClientEvent::client_event_timeout);
 #ifndef NDEBUG
       eCAL::Logging::Log(eCAL::Logging::log_level_debug1, "CServiceClientImpl::CallWithCallback: Synchronous call for service: " + m_service_name + ", method: " + method_name_ + " timed out.");
 #endif
@@ -492,13 +492,13 @@ namespace eCAL
       if (!client_data.connected && state == eCAL::service::State::CONNECTED)
       {
         client_data.connected = true;
-        NotifyEventCallback(service_id, Client_Event::client_event_connected);
+        NotifyEventCallback(service_id, eClientEvent::client_event_connected);
         ++it;
       }
       else if (client_data.connected && state == eCAL::service::State::FAILED)
       {
         client_data.connected = false;
-        NotifyEventCallback(service_id, Client_Event::client_event_disconnected);
+        NotifyEventCallback(service_id, eClientEvent::client_event_disconnected);
         it = m_client_session_map.erase(it);
       }
       else
@@ -515,7 +515,7 @@ namespace eCAL
   }
 
 
-  void CServiceClientImpl::NotifyEventCallback(const Registration::SServiceMethodId& service_id_, Client_Event event_type_)
+  void CServiceClientImpl::NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eClientEvent event_type_)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug1, "CServiceClientImpl::NotifyEventCallback: Notifying event callback for: " + m_service_name + " Event Type: " + to_string(event_type_));

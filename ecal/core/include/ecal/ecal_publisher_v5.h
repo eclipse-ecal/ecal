@@ -244,7 +244,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool AddEventCallback(Publisher_Event type_, PubEventCallbackT callback_);
+        bool AddEventCallback(ePublisherEvent type_, PubEventCallbackT callback_);
 
       /**
        * @brief Remove callback function for publisher events.
@@ -254,7 +254,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool RemEventCallback(Publisher_Event type_);
+        bool RemEventCallback(ePublisherEvent type_);
 
       /**
        * @brief Query if the publisher is created. 

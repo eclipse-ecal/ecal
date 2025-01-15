@@ -74,25 +74,25 @@ namespace
   /* But will be obsolete once we move to nanobind                      */
   /**********************************************************************/
 
-  eCAL_Publisher_Event enum_class_to_enum(eCAL::Publisher_Event event_) {
+  eCAL_Publisher_Event enum_class_to_enum(eCAL::ePublisherEvent event_) {
     switch (event_) {
-    case eCAL::Publisher_Event::pub_event_none:                   return pub_event_none;
-    case eCAL::Publisher_Event::pub_event_connected:              return pub_event_connected;
-    case eCAL::Publisher_Event::pub_event_disconnected:           return pub_event_disconnected;
-    case eCAL::Publisher_Event::pub_event_dropped:                return pub_event_dropped;
-    case eCAL::Publisher_Event::pub_event_update_connection:      return pub_event_update_connection;
+    case eCAL::ePublisherEvent::pub_event_none:                   return pub_event_none;
+    case eCAL::ePublisherEvent::pub_event_connected:              return pub_event_connected;
+    case eCAL::ePublisherEvent::pub_event_disconnected:           return pub_event_disconnected;
+    case eCAL::ePublisherEvent::pub_event_dropped:                return pub_event_dropped;
+    case eCAL::ePublisherEvent::pub_event_update_connection:      return pub_event_update_connection;
     default:                                                      return pub_event_none;
     }
   }
 
-  eCAL::Publisher_Event enum_to_enum_class(eCAL_Publisher_Event event_) {
+  eCAL::ePublisherEvent enum_to_enum_class(eCAL_Publisher_Event event_) {
     switch (event_) {
-    case pub_event_none:                   return eCAL::Publisher_Event::pub_event_none;
-    case pub_event_connected:              return eCAL::Publisher_Event::pub_event_connected;
-    case pub_event_disconnected:           return eCAL::Publisher_Event::pub_event_disconnected;
-    case pub_event_dropped:                return eCAL::Publisher_Event::pub_event_dropped;
-    case pub_event_update_connection:      return eCAL::Publisher_Event::pub_event_update_connection;
-    default:                               return eCAL::Publisher_Event::pub_event_none;
+    case pub_event_none:                   return eCAL::ePublisherEvent::pub_event_none;
+    case pub_event_connected:              return eCAL::ePublisherEvent::pub_event_connected;
+    case pub_event_disconnected:           return eCAL::ePublisherEvent::pub_event_disconnected;
+    case pub_event_dropped:                return eCAL::ePublisherEvent::pub_event_dropped;
+    case pub_event_update_connection:      return eCAL::ePublisherEvent::pub_event_update_connection;
+    default:                               return eCAL::ePublisherEvent::pub_event_none;
     }
   }
 
