@@ -79,7 +79,7 @@ int main(int argc, char **argv)
   eCAL::Initialize("monster subscriber");
 
   // set process state
-  eCAL::Process::SetState(eCAL::Process::eSeverity::proc_sev_healthy, eCAL::Process::eSeverity_Level::proc_sev_level1, "I feel good !");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   // create a subscriber (topic name "monster")
   eCAL::flatbuffers::CSubscriber<flatbuffers::FlatBufferBuilder> sub("monster");

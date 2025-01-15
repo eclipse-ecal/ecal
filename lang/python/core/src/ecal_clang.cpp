@@ -190,7 +190,7 @@ int ecal_set_unit_name(const char* unit_name_)
 /****************************************/
 void ecal_set_process_state(const int severity_, const int level_, const char* info_)
 {
-  return(eCAL::Process::SetState(eCAL::Process::eSeverity(severity_), eCAL::Process::eSeverity_Level(level_), info_));
+  return(eCAL::Process::SetState(eCAL::Process::eSeverity(severity_), eCAL::Process::eSeverityLevel(level_), info_));
 }
 
 /****************************************/

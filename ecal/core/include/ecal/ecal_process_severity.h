@@ -34,11 +34,11 @@ namespace eCAL
     **/
     enum class eSeverity
     {
-      proc_sev_unknown  = 0,  /*!<  0 == condition unknown     */
-      proc_sev_healthy  = 1,  /*!<  1 == process healthy       */
-      proc_sev_warning  = 2,  /*!<  2 == process warning level */
-      proc_sev_critical = 3,  /*!<  3 == process critical      */
-      proc_sev_failed   = 4,  /*!<  4 == process failed        */
+      unknown  = 0,  /*!<  0 == condition unknown     */
+      healthy  = 1,  /*!<  1 == process healthy       */
+      warning  = 2,  /*!<  2 == process warning level */
+      critical = 3,  /*!<  3 == process critical      */
+      failed   = 4,  /*!<  4 == process failed        */
     };
 
 
@@ -48,13 +48,13 @@ namespace eCAL
      * enumerations for ECAL_API::SetState functionality
      * where the lowest process severity is generally proc_sev_level1
     **/
-    enum class eSeverity_Level
+    enum class eSeverityLevel
     {
-      proc_sev_level1 = 1,  /*!<  default severity level 1 */
-      proc_sev_level2 = 2,  /*!<  severity level 2         */
-      proc_sev_level3 = 3,  /*!<  severity level 3         */
-      proc_sev_level4 = 4,  /*!<  severity level 4         */
-      proc_sev_level5 = 5,  /*!<  severity level 5         */
+      level1 = 1,  /*!<  default severity level 1 */
+      level2 = 2,  /*!<  severity level 2         */
+      level3 = 3,  /*!<  severity level 3         */
+      level4 = 4,  /*!<  severity level 4         */
+      level5 = 5,  /*!<  severity level 5         */
     };
   }
 }

@@ -89,11 +89,11 @@ QVariant TaskTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       switch (task_->GetVisibility())
       {
-      case eCAL::Process::eStartMode::proc_smode_hidden:
+      case eCAL::Process::eStartMode::hidden:
         return "Hidden";
-      case eCAL::Process::eStartMode::proc_smode_maximized:
+      case eCAL::Process::eStartMode::maximized:
         return "Maximized";
-      case eCAL::Process::eStartMode::proc_smode_minimized:
+      case eCAL::Process::eStartMode::minimized:
         return "Minimized";
       default:
         return "Normal";
@@ -121,7 +121,7 @@ QVariant TaskTreeItem::data(Columns column, Qt::ItemDataRole role) const
       TaskState restart_at_severity = task_->GetRestartAtSeverity();
       restart_at_severity.ToString(state, level);
       return QString(state.c_str()) +
-        (restart_at_severity.severity != eCAL::Process::eSeverity::proc_sev_unknown ?
+        (restart_at_severity.severity != eCAL::Process::eSeverity::unknown ?
           " (Lv " + QString::number(static_cast<int>(restart_at_severity.severity_level)) + ")" :
           "");
     }
@@ -144,7 +144,7 @@ QVariant TaskTreeItem::data(Columns column, Qt::ItemDataRole role) const
       std::string state, level;
       task_->GetMonitoringTaskState().ToString(state, level);
       return QString(state.c_str()) +
-        (task_->GetMonitoringTaskState().severity != eCAL::Process::eSeverity::proc_sev_unknown ?
+        (task_->GetMonitoringTaskState().severity != eCAL::Process::eSeverity::unknown ?
           " (Lv " + QString::number(static_cast<int>(task_->GetMonitoringTaskState().severity_level)) + ")" :
           "");
     }
@@ -201,13 +201,13 @@ QVariant TaskTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
       switch (state.severity)
       {
-      case eCAL::Process::eSeverity::proc_sev_healthy:
+      case eCAL::Process::eSeverity::healthy:
         return QColor(80, 225, 120);
-      case eCAL::Process::eSeverity::proc_sev_warning:
+      case eCAL::Process::eSeverity::warning:
         return QColor(240, 240, 50);
-      case eCAL::Process::eSeverity::proc_sev_critical:
+      case eCAL::Process::eSeverity::critical:
         return QColor(250, 130, 0);
-      case eCAL::Process::eSeverity::proc_sev_failed:
+      case eCAL::Process::eSeverity::failed:
         return QColor(240, 20, 20);
       default:
         return QVariant(); // Invalid QVariant

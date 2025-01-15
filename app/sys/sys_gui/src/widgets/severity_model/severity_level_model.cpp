@@ -22,11 +22,11 @@
 SeverityLevelModel::SeverityLevelModel(QObject *parent)
   : QAbstractListModel(parent)
 {
-  rows.push_back(std::make_pair(QString("Level 1"), eCAL::Process::eSeverity_Level::proc_sev_level1));
-  rows.push_back(std::make_pair(QString("Level 2"), eCAL::Process::eSeverity_Level::proc_sev_level2));
-  rows.push_back(std::make_pair(QString("Level 3"), eCAL::Process::eSeverity_Level::proc_sev_level3));
-  rows.push_back(std::make_pair(QString("Level 4"), eCAL::Process::eSeverity_Level::proc_sev_level4));
-  rows.push_back(std::make_pair(QString("Level 5"), eCAL::Process::eSeverity_Level::proc_sev_level5));
+  rows.push_back(std::make_pair(QString("Level 1"), eCAL::Process::eSeverityLevel::level1));
+  rows.push_back(std::make_pair(QString("Level 2"), eCAL::Process::eSeverityLevel::level2));
+  rows.push_back(std::make_pair(QString("Level 3"), eCAL::Process::eSeverityLevel::level3));
+  rows.push_back(std::make_pair(QString("Level 4"), eCAL::Process::eSeverityLevel::level4));
+  rows.push_back(std::make_pair(QString("Level 5"), eCAL::Process::eSeverityLevel::level5));
 }
 
 SeverityLevelModel::~SeverityLevelModel()
@@ -51,12 +51,12 @@ QString SeverityLevelModel::getString(int row) const
   return rows[row].first;
 }
 
-eCAL::Process::eSeverity_Level SeverityLevelModel::getSeverityLevel(int row) const
+eCAL::Process::eSeverityLevel SeverityLevelModel::getSeverityLevel(int row) const
 {
   return rows[row].second;
 }
 
-int SeverityLevelModel::getRow(eCAL::Process::eSeverity_Level level) const
+int SeverityLevelModel::getRow(eCAL::Process::eSeverityLevel level) const
 {
   for (int i = 0; i < (int)rows.size(); i++)
   {

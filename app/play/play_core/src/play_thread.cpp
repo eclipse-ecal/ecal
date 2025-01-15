@@ -273,7 +273,7 @@ void PlayThread::Run()
       if (!command.playing_)
       {
         EcalPlayLogger::Instance()->info("Playback finished");
-        eCAL::Process::SetState(eCAL::Process::eSeverity::proc_sev_healthy, eCAL::Process::eSeverity_Level::proc_sev_level1, "Playback finished");
+        eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Playback finished");
       }
     }
   }
@@ -355,7 +355,7 @@ void PlayThread::SetPlaying_Private(bool playing)
     command_.sim_time_local_timestamp_ = now;
 
     EcalPlayLogger::Instance()->info("Playback pause");
-    eCAL::Process::SetState(eCAL::Process::eSeverity::proc_sev_healthy, eCAL::Process::eSeverity_Level::proc_sev_level1, "Paused");
+    eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Paused");
   }
   else if (!command_.playing_ && playing)
   {
@@ -365,7 +365,7 @@ void PlayThread::SetPlaying_Private(bool playing)
     command_.sim_time_local_timestamp_ = std::chrono::steady_clock::now();
 
     EcalPlayLogger::Instance()->info("Playback start");
-    eCAL::Process::SetState(eCAL::Process::eSeverity::proc_sev_healthy, eCAL::Process::eSeverity_Level::proc_sev_level1, "Playing");
+    eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Playing");
   }
 
   command_.playing_ = playing;

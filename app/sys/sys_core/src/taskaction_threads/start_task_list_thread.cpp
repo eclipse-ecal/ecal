@@ -71,8 +71,8 @@ void StartTaskListThread::Run()
 
       TaskState task_state;
       task_state.info           = "";
-      task_state.severity       = eCAL::Process::eSeverity::proc_sev_unknown;
-      task_state.severity_level = eCAL::Process::eSeverity_Level::proc_sev_level1;
+      task_state.severity       = eCAL::Process::eSeverity::unknown;
+      task_state.severity_level = eCAL::Process::eSeverityLevel::level1;
       task->SetMonitoringTaskState(task_state);
       task->ResetConfigModifiedSinceStart();
 

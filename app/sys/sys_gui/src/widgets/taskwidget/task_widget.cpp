@@ -269,14 +269,14 @@ void TaskWidget::autoSizeColumns()
   std::shared_ptr<EcalSysRunner> example_runner(new EcalSysRunner());
   example_runner->SetName                      ("RunTask (new)___");
   example_task->SetRunner                      (example_runner);
-  example_task->SetVisibility                  (eCAL::Process::eStartMode::proc_smode_maximized);
+  example_task->SetVisibility                  (eCAL::Process::eStartMode::maximized);
   example_task->SetTimeoutAfterStart           (std::chrono::milliseconds(99999));
   example_task->SetMonitoringEnabled           (false);
   example_task->SetRestartBySeverityEnabled    (false);
-  example_task->SetRestartAtSeverity           (TaskState(eCAL::Process::eSeverity::proc_sev_warning, eCAL::Process::eSeverity_Level::proc_sev_level5));
+  example_task->SetRestartAtSeverity           (TaskState(eCAL::Process::eSeverity::warning, eCAL::Process::eSeverityLevel::level5));
   example_task->SetPids                        (std::vector<int>{9999999});
   example_task->SetHostStartedOn               ("CARPC00___");
-  example_task->SetMonitoringTaskState         (TaskState(eCAL::Process::eSeverity::proc_sev_warning, eCAL::Process::eSeverity_Level::proc_sev_level5));
+  example_task->SetMonitoringTaskState         (TaskState(eCAL::Process::eSeverity::warning, eCAL::Process::eSeverityLevel::level5));
 
   // We don't want to resize all Columns, as e.g. for the Algo Path we really can't know how much text will be in there.
   static const std::vector<TaskTreeModel::Columns> columns_to_resize =
@@ -747,8 +747,8 @@ void TaskWidget::addTask()
   new_task->SetTarget(eCAL::Process::GetHostName());
 
   TaskState min_acceptable_severity;
-  min_acceptable_severity.severity       = eCAL::Process::eSeverity::proc_sev_failed;
-  min_acceptable_severity.severity_level = eCAL::Process::eSeverity_Level::proc_sev_level1;
+  min_acceptable_severity.severity       = eCAL::Process::eSeverity::failed;
+  min_acceptable_severity.severity_level = eCAL::Process::eSeverityLevel::level1;
   new_task->SetRestartAtSeverity(min_acceptable_severity);
 
   // Add Task to the actual model
@@ -1399,16 +1399,16 @@ void TaskWidget::updateEditAreaVisibility(std::vector<std::shared_ptr<EcalSysTas
       QString visibility_string;
       switch (task_list[0]->GetVisibility())
       {
-      case eCAL::Process::eStartMode::proc_smode_hidden:
+      case eCAL::Process::eStartMode::hidden:
         visibility_string = "Hidden";
         break;
-      case eCAL::Process::eStartMode::proc_smode_normal:
+      case eCAL::Process::eStartMode::normal:
         visibility_string = "Normal";
         break;
-      case eCAL::Process::eStartMode::proc_smode_minimized:
+      case eCAL::Process::eStartMode::minimized:
         visibility_string = "Minimized";
         break;
-      case eCAL::Process::eStartMode::proc_smode_maximized:
+      case eCAL::Process::eStartMode::maximized:
         visibility_string = "Maximized";
         break;
       default:
@@ -1531,7 +1531,7 @@ void TaskWidget::updateEditAreaRestartAtSeverity(std::vector<std::shared_ptr<Eca
   ui_.restart_by_severity_combobox->blockSignals(true);
   if (task_list.size() == 0)
   {
-    ui_.restart_by_severity_combobox->setCurrentIndex(severity_model_->getRow(eCAL::Process::eSeverity::proc_sev_failed));
+    ui_.restart_by_severity_combobox->setCurrentIndex(severity_model_->getRow(eCAL::Process::eSeverity::failed));
   }
   else
   {
@@ -1553,7 +1553,7 @@ void TaskWidget::updateEditAreaRestartAtSeverityLevel(std::vector<std::shared_pt
   ui_.restart_by_severity_level_combobox->blockSignals(true);
   if (task_list.size() == 0)
   {
-    ui_.restart_by_severity_level_combobox->setCurrentIndex(severity_level_model_->getRow(eCAL::Process::eSeverity_Level::proc_sev_level1));
+    ui_.restart_by_severity_level_combobox->setCurrentIndex(severity_level_model_->getRow(eCAL::Process::eSeverityLevel::level1));
   }
   else
   {
@@ -2106,22 +2106,22 @@ void TaskWidget::visibilityTextChanged()
   if (selected_tasks.size() != 0)
   {
     std::string text = ui_.visibility_combobox->currentText().toStdString();
-    eCAL::Process::eStartMode visibility = eCAL::Process::eStartMode::proc_smode_normal;
+    eCAL::Process::eStartMode visibility = eCAL::Process::eStartMode::normal;
     if (text == "Normal")
     {
-      visibility = eCAL::Process::eStartMode::proc_smode_normal;
+      visibility = eCAL::Process::eStartMode::normal;
     }
     else if (text == "Maximized")
     {
-      visibility = eCAL::Process::eStartMode::proc_smode_maximized;
+      visibility = eCAL::Process::eStartMode::maximized;
     }
     else if (text == "Minimized")
     {
-      visibility = eCAL::Process::eStartMode::proc_smode_minimized;
+      visibility = eCAL::Process::eStartMode::minimized;
     }
     else if (text == "Hidden")
     {
-      visibility = eCAL::Process::eStartMode::proc_smode_hidden;
+      visibility = eCAL::Process::eStartMode::hidden;
     }
 
     std::vector<std::shared_ptr<EcalSysTask>> modified_tasks;
@@ -2302,7 +2302,7 @@ void TaskWidget::restartBySeverityLevelIndexChanged(int index)
   auto selected_tasks = getSelectedTasks();
   if (selected_tasks.size() != 0)
   {
-    eCAL::Process::eSeverity_Level selected_severity_level = severity_level_model_->getSeverityLevel(index);
+    eCAL::Process::eSeverityLevel selected_severity_level = severity_level_model_->getSeverityLevel(index);
 
     std::vector<std::shared_ptr<EcalSysTask>> modified_tasks;
     for (auto& task : selected_tasks)

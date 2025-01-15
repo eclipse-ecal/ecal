@@ -78,7 +78,7 @@ Date: $HOST{TIME %F %R}
             auto status = this->status();
             auto config = this->enabledRecClients();
             auto ecalstate = eCAL::rec_server::GetProcessSeverity(status, config);
-            eCAL::Process::SetState(ecalstate.first, eCAL::Process::eSeverity_Level::proc_sev_level1, ecalstate.second.c_str());
+            eCAL::Process::SetState(ecalstate.first, eCAL::Process::eSeverityLevel::level1, ecalstate.second.c_str());
           });
 
   ecal_state_update_timer_->start(ecal_state_update_time_ms_);

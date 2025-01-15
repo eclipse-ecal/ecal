@@ -71,7 +71,7 @@ void SeverityPickerDelegate::setEditorData(QWidget *editor, const QModelIndex &i
   }
   else if (index.column() == (int)GroupStateMinTaskStateTreeModel::Columns::SEVERITY_LEVEL)
   {
-    eCAL::Process::eSeverity_Level severity_level = (eCAL::Process::eSeverity_Level)(current_int);
+    eCAL::Process::eSeverityLevel severity_level = (eCAL::Process::eSeverityLevel)(current_int);
     SeverityLevelModel* severity_level_model = static_cast<SeverityLevelModel*>(combobox->model());
     combobox->setCurrentIndex(severity_level_model->getRow(severity_level));
   }
@@ -92,7 +92,7 @@ void SeverityPickerDelegate::setModelData(QWidget *editor, QAbstractItemModel *m
   else if (index.column() == (int)GroupStateMinTaskStateTreeModel::Columns::SEVERITY_LEVEL)
   {
     SeverityLevelModel* severity_level_model = static_cast<SeverityLevelModel*>(combobox->model());
-    eCAL::Process::eSeverity_Level severity_level = severity_level_model->getSeverityLevel(combobox->currentIndex());
+    eCAL::Process::eSeverityLevel severity_level = severity_level_model->getSeverityLevel(combobox->currentIndex());
     model->setData(index, (int)severity_level, Qt::EditRole);
   }
 }

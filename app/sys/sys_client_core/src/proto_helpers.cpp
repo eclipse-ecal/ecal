@@ -137,13 +137,13 @@ namespace eCAL
         switch (window_mode_pb)
         {
         case eCAL::pb::sys_client::WindowMode::hidden:
-          return eCAL::Process::eStartMode::proc_smode_hidden;
+          return eCAL::Process::eStartMode::hidden;
         case eCAL::pb::sys_client::WindowMode::minimized:
-          return eCAL::Process::eStartMode::proc_smode_minimized;
+          return eCAL::Process::eStartMode::minimized;
         case eCAL::pb::sys_client::WindowMode::maximized:
-          return eCAL::Process::eStartMode::proc_smode_maximized;
+          return eCAL::Process::eStartMode::maximized;
         default:
-          return eCAL::Process::eStartMode::proc_smode_normal;
+          return eCAL::Process::eStartMode::normal;
         }
       }
 
@@ -302,11 +302,11 @@ namespace eCAL
       {
         switch (window_mode)
         {
-        case eCAL::Process::eStartMode::proc_smode_hidden:
+        case eCAL::Process::eStartMode::hidden:
           return eCAL::pb::sys_client::WindowMode::hidden;
-        case eCAL::Process::eStartMode::proc_smode_minimized:
+        case eCAL::Process::eStartMode::minimized:
           return eCAL::pb::sys_client::WindowMode::minimized;
-        case eCAL::Process::eStartMode::proc_smode_maximized:
+        case eCAL::Process::eStartMode::maximized:
           return eCAL::pb::sys_client::WindowMode::maximized;
         default:
           return eCAL::pb::sys_client::WindowMode::normal;

@@ -118,5 +118,5 @@ namespace eCAL
   extern std::string                   g_process_info;
 
   extern eCAL::Process::eSeverity        g_process_severity;
-  extern eCAL::Process::eSeverity_Level  g_process_severity_level;
+  extern eCAL::Process::eSeverityLevel  g_process_severity_level;
 }

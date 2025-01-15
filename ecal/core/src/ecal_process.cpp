@@ -289,7 +289,7 @@ namespace eCAL
       #endif
     }
 
-    void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverity_Level level_, const char* info_)
+    void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const char* info_)
     {
       g_process_severity = severity_;
       g_process_severity_level = level_;
@@ -981,7 +981,7 @@ namespace eCAL
       //   - ecal_process_stub is available AND prints the correct version
 
       std::string terminal_emulator_command;
-      if (process_mode_ != eCAL::Process::eStartMode::proc_smode_hidden)
+      if (process_mode_ != eCAL::Process::eStartMode::hidden)
       {
         STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Checking requirements for using a terminal emulator... " << std::endl);
         terminal_emulator_command = getTerminalEmulatorCommand();

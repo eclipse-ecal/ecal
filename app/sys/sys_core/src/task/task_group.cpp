@@ -114,7 +114,7 @@ bool TaskGroup::GroupState::Evaluate()
   {
     // If current state is worse than the minimal state
     TaskState current_state = minimal_state.first->GetMonitoringTaskState();
-    if (current_state.severity == eCAL::Process::eSeverity::proc_sev_unknown || current_state > minimal_state.second)
+    if (current_state.severity == eCAL::Process::eSeverity::unknown || current_state > minimal_state.second)
     {
       return false;
     }

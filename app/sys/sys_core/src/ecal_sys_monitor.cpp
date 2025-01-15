@@ -133,8 +133,8 @@ void EcalSysMonitor::UpdateTaskStates(const std::list<std::shared_ptr<EcalSysTas
     std::lock_guard<std::recursive_mutex> lock(m_monitoring_mutex);
 
     TaskState task_state;
-    task_state.severity = eCAL::Process::eSeverity::proc_sev_unknown;
-    task_state.severity_level = eCAL::Process::eSeverity_Level::proc_sev_level1;
+    task_state.severity = eCAL::Process::eSeverity::unknown;
+    task_state.severity_level = eCAL::Process::eSeverityLevel::level1;
     bool task_mapping_found = false;
 
     if (!(task->IsMonitoringEnabled()))
@@ -176,8 +176,8 @@ void EcalSysMonitor::UpdateTaskStates(const std::list<std::shared_ptr<EcalSysTas
         if (task->IsMonitoringEnabled() && task->FoundInMonitorOnce() && !is_starting_or_stopping)
         {
           task_state.info = "Externally closed";
-          task_state.severity = eCAL::Process::eSeverity::proc_sev_failed;
-          task_state.severity_level = eCAL::Process::eSeverity_Level::proc_sev_level5;
+          task_state.severity = eCAL::Process::eSeverity::failed;
+          task_state.severity_level = eCAL::Process::eSeverityLevel::level5;
         }
         else
         {
@@ -187,8 +187,8 @@ void EcalSysMonitor::UpdateTaskStates(const std::list<std::shared_ptr<EcalSysTas
       else if (task_start_stop_state == EcalSysTask::StartStopState::Started_Failed)
       {
         task_state.info = "Start failed";
-        task_state.severity = eCAL::Process::eSeverity::proc_sev_failed;
-        task_state.severity_level = eCAL::Process::eSeverity_Level::proc_sev_level5;
+        task_state.severity = eCAL::Process::eSeverity::failed;
+        task_state.severity_level = eCAL::Process::eSeverityLevel::level5;
       }
       else if (task_start_stop_state == EcalSysTask::StartStopState::Stopped)
       {
@@ -223,7 +223,7 @@ void EcalSysMonitor::RestartBySeverity()
       TaskState current_state = task->GetMonitoringTaskState();
       TaskState restart_state = task->GetRestartAtSeverity();
 
-      if (current_state.severity != eCAL::Process::eSeverity::proc_sev_unknown
+      if (current_state.severity != eCAL::Process::eSeverity::unknown
         && current_state >= restart_state)
       {
         if (!is_starting_or_stopping)

@@ -97,7 +97,7 @@ extern "C"
   ECALC_API void eCAL_Process_SetState(enum eCAL_Process_eSeverity severity_, enum eCAL_Process_eSeverity_Level level_, const char* info_)
   {
     // This is potentially dangerous, need to keep enums in sync.
-    eCAL::Process::SetState(static_cast<eCAL::Process::eSeverity>(severity_), static_cast<eCAL::Process::eSeverity_Level>(level_), info_);
+    eCAL::Process::SetState(static_cast<eCAL::Process::eSeverity>(severity_), static_cast<eCAL::Process::eSeverityLevel>(level_), info_);
   }
 
   ECALC_API int eCAL_Process_StartProcess(const char* proc_name_, const char* proc_args_, const char* working_dir_, int create_console_, enum eCAL_Process_eStartMode process_mode_, int block_)

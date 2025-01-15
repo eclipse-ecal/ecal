@@ -31,7 +31,7 @@ int main()
   eCAL::Initialize("process", eCAL::Init::None);
 
   // start process
-  eCAL::Process::StartProcess(proc_name, "", "", false, eCAL::Process::eStartMode::proc_smode_normal, false);
+  eCAL::Process::StartProcess(proc_name, "", "", false, eCAL::Process::eStartMode::normal, false);
 
   // sleep 2 seconds
   eCAL::Process::SleepMS(2000);
@@ -43,7 +43,7 @@ int main()
   eCAL::Process::SleepMS(2000);
 
   // start process
-  int pid = eCAL::Process::StartProcess(proc_name, "", "", false, eCAL::Process::eStartMode::proc_smode_normal, false);
+  int pid = eCAL::Process::StartProcess(proc_name, "", "", false, eCAL::Process::eStartMode::normal, false);
 
   // sleep 2 seconds
   eCAL::Process::SleepMS(2000);

@@ -51,7 +51,7 @@ int main()
   eCAL::Initialize("person subscriber");
 
   // set process state
-  eCAL::Process::SetState(eCAL::Process::eSeverity::proc_sev_healthy, eCAL::Process::eSeverity_Level::proc_sev_level1, "I feel good !");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   // create a subscriber config
   eCAL::Subscriber::Configuration sub_config;

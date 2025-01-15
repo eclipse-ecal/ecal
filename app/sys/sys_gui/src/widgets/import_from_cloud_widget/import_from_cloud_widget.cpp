@@ -224,8 +224,8 @@ void ImportFromCloudWidget::reload()
   for (auto& task : task_list_)
   {
     TaskState restart_at_severity;
-    restart_at_severity.severity = eCAL::Process::eSeverity::proc_sev_failed;
-    restart_at_severity.severity_level = eCAL::Process::eSeverity_Level::proc_sev_level1;
+    restart_at_severity.severity = eCAL::Process::eSeverity::failed;
+    restart_at_severity.severity_level = eCAL::Process::eSeverityLevel::level1;
     task->SetRestartAtSeverity(restart_at_severity);
   }
 

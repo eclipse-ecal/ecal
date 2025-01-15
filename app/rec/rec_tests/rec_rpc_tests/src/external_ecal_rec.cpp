@@ -46,12 +46,12 @@ ExternalEcalRecInstance::ExternalEcalRecInstance(bool gui)
   if (gui)
   {
     std::cout << "Starting " << "\"" << ECAL_REC_GUI_PATH << "\"" << std::endl;
-    pid = eCAL::Process::StartProcess(ECAL_REC_GUI_PATH, "", "", false, eCAL::Process::eStartMode::proc_smode_minimized, false);
+    pid = eCAL::Process::StartProcess(ECAL_REC_GUI_PATH, "", "", false, eCAL::Process::eStartMode::minimized, false);
   }
   else
   {
     std::cout << "Starting " << "\"" << ECAL_REC_CLI_PATH << "\"" << std::endl;
-    pid = eCAL::Process::StartProcess(ECAL_REC_CLI_PATH, "--interactive-dont-exit --no-default", "", false, eCAL::Process::eStartMode::proc_smode_hidden, false);
+    pid = eCAL::Process::StartProcess(ECAL_REC_CLI_PATH, "--interactive-dont-exit --no-default", "", false, eCAL::Process::eStartMode::hidden, false);
   }
 
   if (pid != 0)

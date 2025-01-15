@@ -37,10 +37,10 @@ public:
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
   QString getString(int row) const;
-  eCAL::Process::eSeverity_Level getSeverityLevel(int row) const;
+  eCAL::Process::eSeverityLevel getSeverityLevel(int row) const;
 
-  int getRow(eCAL::Process::eSeverity_Level level) const;
+  int getRow(eCAL::Process::eSeverityLevel level) const;
 
 private:
-  std::vector<std::pair<QString, eCAL::Process::eSeverity_Level>> rows;
+  std::vector<std::pair<QString, eCAL::Process::eSeverityLevel>> rows;
 };

@@ -427,7 +427,7 @@ void UpdateEcalState()
 
   if (!rec_status.initialized_)
   {
-    eCAL::Process::SetState(eCAL::Process::eSeverity::proc_sev_warning, eCAL::Process::eSeverity_Level::proc_sev_level1
+    eCAL::Process::SetState(eCAL::Process::eSeverity::warning, eCAL::Process::eSeverityLevel::level1
       , "Not initialized");
   }
   else
@@ -467,13 +467,13 @@ void UpdateEcalState()
       }
     }
 
-    eCAL::Process::eSeverity severity(eCAL::Process::eSeverity::proc_sev_healthy);
+    eCAL::Process::eSeverity severity(eCAL::Process::eSeverity::healthy);
     std::string state_string;
 
     // General error
     if (!rec_status.info_.first)
     {
-      severity = eCAL::Process::eSeverity::proc_sev_critical;
+      severity = eCAL::Process::eSeverity::critical;
       state_string = "[" + rec_status.info_.second + "] ";
     }
 
@@ -488,7 +488,7 @@ void UpdateEcalState()
     }
 
     if (rec_status.subscribed_topics_.empty())
-      severity = std::max(severity, eCAL::Process::eSeverity::proc_sev_warning);
+      severity = std::max(severity, eCAL::Process::eSeverity::warning);
 
     state_string += "(" + std::to_string(rec_status.subscribed_topics_.size()) + " Topics) ";
 
@@ -504,7 +504,7 @@ void UpdateEcalState()
       state_string += ", " + std::to_string(flushing_jobs_.size()) + " job" + (flushing_jobs_.size() > 1 ? "s" : "") + " uploading";
     }
 
-    eCAL::Process::SetState(severity, eCAL::Process::eSeverity_Level::proc_sev_level1, state_string.c_str());
+    eCAL::Process::SetState(severity, eCAL::Process::eSeverityLevel::level1, state_string.c_str());
   }
 }
 

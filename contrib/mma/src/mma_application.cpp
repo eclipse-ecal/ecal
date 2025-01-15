@@ -147,7 +147,7 @@ int main(int argc, char** argv)
     Logger::getLogger()->ResumeLogging();
   }
 
-  eCAL::Process::SetState(eCAL::Process::eSeverity::proc_sev_healthy, eCAL::Process::eSeverity_Level::proc_sev_level1, "Running");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
   // create mma agent
   std::cout << std::endl << "Initializing machine monitoring agent ..." << std::endl;

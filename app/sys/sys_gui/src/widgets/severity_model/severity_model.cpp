@@ -24,12 +24,12 @@ SeverityModel::SeverityModel(QObject *parent, bool include_unknown_severity)
 {
   if (include_unknown_severity)
   {
-    rows.push_back(std::make_pair(QString("Unknown"), eCAL::Process::eSeverity::proc_sev_unknown));
+    rows.push_back(std::make_pair(QString("Unknown"), eCAL::Process::eSeverity::unknown));
   }
-  rows.push_back(std::make_pair(QString("Healthy"), eCAL::Process::eSeverity::proc_sev_healthy));
-  rows.push_back(std::make_pair(QString("Warning"), eCAL::Process::eSeverity::proc_sev_warning));
-  rows.push_back(std::make_pair(QString("Critical"), eCAL::Process::eSeverity::proc_sev_critical));
-  rows.push_back(std::make_pair(QString("Failed"), eCAL::Process::eSeverity::proc_sev_failed));
+  rows.push_back(std::make_pair(QString("Healthy"), eCAL::Process::eSeverity::healthy));
+  rows.push_back(std::make_pair(QString("Warning"), eCAL::Process::eSeverity::warning));
+  rows.push_back(std::make_pair(QString("Critical"), eCAL::Process::eSeverity::critical));
+  rows.push_back(std::make_pair(QString("Failed"), eCAL::Process::eSeverity::failed));
 }
 
 SeverityModel::~SeverityModel()

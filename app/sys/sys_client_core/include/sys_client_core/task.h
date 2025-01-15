@@ -42,7 +42,7 @@ namespace eCAL
     struct StartTaskParameters
     {
       StartTaskParameters()
-        : window_mode   (eCAL::Process::eStartMode::proc_smode_normal)
+        : window_mode   (eCAL::Process::eStartMode::normal)
         , create_console(false)
       {}
 

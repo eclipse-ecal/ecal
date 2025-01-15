@@ -162,7 +162,7 @@ bool GroupStateMinTaskStateTreeItem::setData(int column, const QVariant& data, Q
     }
     else if (column == (int)Columns::SEVERITY_LEVEL)
     {
-      min_task_state_.second.severity_level = (eCAL::Process::eSeverity_Level)(data.toInt());
+      min_task_state_.second.severity_level = (eCAL::Process::eSeverityLevel)(data.toInt());
       return true;
     }
   }

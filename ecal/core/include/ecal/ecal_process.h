@@ -152,7 +152,7 @@ namespace eCAL
      * @param info_      Info message.
      *
     **/
-    ECAL_API void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverity_Level level_, const char* info_);
+    ECAL_API void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const char* info_);
 
     /**
      * @brief  Start specified process (windows only). 

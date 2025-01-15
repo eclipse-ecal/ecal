@@ -48,8 +48,8 @@ namespace eCAL
   std::string                   g_process_id_s;
   std::string                   g_process_info;
 
-  eCAL::Process::eSeverity        g_process_severity(eCAL::Process::eSeverity::proc_sev_unknown);
-  eCAL::Process::eSeverity_Level  g_process_severity_level(eCAL::Process::eSeverity_Level::proc_sev_level1);
+  eCAL::Process::eSeverity        g_process_severity(eCAL::Process::eSeverity::unknown);
+  eCAL::Process::eSeverityLevel  g_process_severity_level(eCAL::Process::eSeverityLevel::level1);
 
   void InitGlobals()
   {

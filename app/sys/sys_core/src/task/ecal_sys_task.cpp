@@ -31,7 +31,7 @@ EcalSysTask::EcalSysTask()
   , m_working_directory          ("")
   , m_launch_order               (0)
   , m_timeout_after_start        (std::chrono::nanoseconds(0))
-  , m_visibility                 (eCAL::Process::eStartMode::proc_smode_normal)
+  , m_visibility                 (eCAL::Process::eStartMode::normal)
 
   , m_monitoring_enabled         (true)
   , m_restart_by_severity_enabled(false)

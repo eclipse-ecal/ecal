@@ -32,7 +32,7 @@ int main()
   eCAL::Initialize("eCALStop", eCAL::Init::All);
 
   // set process state
-  eCAL::Process::SetState(eCAL::Process::eSeverity::proc_sev_healthy, eCAL::Process::eSeverity_Level::proc_sev_level1, "Running");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
   // some nice info show while collection
   std::cout << "Collecting local process informations." << std::endl;
