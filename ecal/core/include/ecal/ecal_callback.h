@@ -49,22 +49,22 @@ namespace eCAL
 **/
   enum class eSubscriberEvent
   {
-    sub_event_none = 0,
-    sub_event_connected = 1,
-    sub_event_disconnected = 2,
-    sub_event_dropped = 3,
-    sub_event_corrupted = 5,
-    sub_event_update_connection = 6,
+    none = 0,
+    connected = 1,
+    disconnected = 2,
+    dropped = 3,
+    corrupted = 5,
+    update_connection = 6,
   };
 
   inline std::string to_string(eSubscriberEvent event_) {
     switch (event_) {
-    case eSubscriberEvent::sub_event_none:                   return "NONE";
-    case eSubscriberEvent::sub_event_connected:              return "CONNECTED";
-    case eSubscriberEvent::sub_event_disconnected:           return "DISCONNECTED";
-    case eSubscriberEvent::sub_event_dropped :               return "DROPPED";
-    case eSubscriberEvent::sub_event_corrupted:              return "CORRUPTED";
-    case eSubscriberEvent::sub_event_update_connection :     return "UPDATED_CONNECTION";
+    case eSubscriberEvent::none:                   return "NONE";
+    case eSubscriberEvent::connected:              return "CONNECTED";
+    case eSubscriberEvent::disconnected:           return "DISCONNECTED";
+    case eSubscriberEvent::dropped :               return "DROPPED";
+    case eSubscriberEvent::corrupted:              return "CORRUPTED";
+    case eSubscriberEvent::update_connection :     return "UPDATED_CONNECTION";
     default:            return "Unknown";
     }
   }
@@ -74,20 +74,20 @@ namespace eCAL
   **/
   enum class ePublisherEvent
   {
-    pub_event_none = 0,
-    pub_event_connected = 1,
-    pub_event_disconnected = 2,
-    pub_event_dropped = 3,
-    pub_event_update_connection = 4,
+    none = 0,
+    connected = 1,
+    disconnected = 2,
+    dropped = 3,
+    update_connection = 4,
   };
 
   inline std::string to_string(ePublisherEvent event_) {
     switch (event_) {
-    case ePublisherEvent::pub_event_none:                   return "NONE";
-    case ePublisherEvent::pub_event_connected:              return "CONNECTED";
-    case ePublisherEvent::pub_event_disconnected:           return "DISCONNECTED";
-    case ePublisherEvent::pub_event_dropped:                return "DROPPED";
-    case ePublisherEvent::pub_event_update_connection:      return "UPDATED_CONNECTION";
+    case ePublisherEvent::none:                   return "NONE";
+    case ePublisherEvent::connected:              return "CONNECTED";
+    case ePublisherEvent::disconnected:           return "DISCONNECTED";
+    case ePublisherEvent::dropped:                return "DROPPED";
+    case ePublisherEvent::update_connection:      return "UPDATED_CONNECTION";
     default:            return "Unknown";
     }
   }
@@ -97,17 +97,17 @@ namespace eCAL
   **/
   enum class eClientEvent
   {
-    client_event_none = 0,
-    client_event_connected = 1,
-    client_event_disconnected = 2,
-    client_event_timeout = 3,
+    none = 0,
+    connected = 1,
+    disconnected = 2,
+    timeout = 3,
   };
 
   inline std::string to_string(eClientEvent event_) {
     switch (event_) {
-    case eClientEvent::client_event_none:                   return "NONE";
-    case eClientEvent::client_event_connected:              return "CONNECTED";
-    case eClientEvent::client_event_disconnected:           return "DISCONNECTED";
+    case eClientEvent::none:                   return "NONE";
+    case eClientEvent::connected:              return "CONNECTED";
+    case eClientEvent::disconnected:           return "DISCONNECTED";
     default:            return "Unknown";
     }
   }
@@ -117,16 +117,16 @@ namespace eCAL
   **/
   enum class eServerEvent
   {
-    server_event_none = 0,
-    server_event_connected = 1,
-    server_event_disconnected = 2,
+    none = 0,
+    connected = 1,
+    disconnected = 2,
   };
 
   inline std::string to_string(eServerEvent event_) {
     switch (event_) {
-    case eServerEvent::server_event_none:                   return "NONE";
-    case eServerEvent::server_event_connected:              return "CONNECTED";
-    case eServerEvent::server_event_disconnected:           return "DISCONNECTED";
+    case eServerEvent::none:                   return "NONE";
+    case eServerEvent::connected:              return "CONNECTED";
+    case eServerEvent::disconnected:           return "DISCONNECTED";
     default:            return "Unknown";
     }
   }
@@ -153,7 +153,7 @@ namespace eCAL
     **/
     struct SPubEventCallbackData
     {
-      ePublisherEvent      type{ ePublisherEvent::pub_event_none };  //!< publisher event type
+      ePublisherEvent      type{ ePublisherEvent::none };  //!< publisher event type
       long long            time{ 0 };               //!< publisher event time in µs
       long long            clock{ 0 };              //!< publisher event clock
       SDataTypeInformation tdatatype;               //!< datatype description of the connected subscriber            (for pub_event_update_connection only)
@@ -172,7 +172,7 @@ namespace eCAL
     **/
     struct SSubEventCallbackData
     {
-      eSubscriberEvent      type{ eSubscriberEvent::sub_event_none }; //!< subscriber event type
+      eSubscriberEvent      type{ eSubscriberEvent::none }; //!< subscriber event type
       long long             time{ 0 };              //!< subscriber event time in µs
       long long             clock{ 0 };             //!< subscriber event clock
       SDataTypeInformation  tdatatype;              //!< topic information of the connected subscriber           (for sub_event_update_connection only)
@@ -191,7 +191,7 @@ namespace eCAL
     **/
     struct SClientEventCallbackData
     {
-      eClientEvent      type{ eClientEvent::client_event_none };  //!< event type
+      eClientEvent      type{ eClientEvent::none };  //!< event type
       long long         time = 0;                  //!< event time in µs
     };
 
@@ -208,7 +208,7 @@ namespace eCAL
     **/
     struct SServerEventCallbackData
     {
-      eServerEvent      type{ eServerEvent::server_event_none };  //!< event type
+      eServerEvent      type{ eServerEvent::none };  //!< event type
       long long         time = 0;                  //!< event time in µs
     };
 

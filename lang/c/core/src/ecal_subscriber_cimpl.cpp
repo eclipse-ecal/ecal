@@ -35,25 +35,25 @@ namespace
 {
   eCAL_Subscriber_Event enum_class_to_enum(eCAL::eSubscriberEvent cpp_event_) {
     switch (cpp_event_) {
-    case eCAL::eSubscriberEvent::sub_event_none:                   return sub_event_none;
-    case eCAL::eSubscriberEvent::sub_event_connected:              return sub_event_connected;
-    case eCAL::eSubscriberEvent::sub_event_disconnected:           return sub_event_disconnected;
-    case eCAL::eSubscriberEvent::sub_event_dropped:                return sub_event_dropped;
-    case eCAL::eSubscriberEvent::sub_event_corrupted:              return sub_event_corrupted;
-    case eCAL::eSubscriberEvent::sub_event_update_connection:      return sub_event_update_connection;
+    case eCAL::eSubscriberEvent::none:                   return sub_event_none;
+    case eCAL::eSubscriberEvent::connected:              return sub_event_connected;
+    case eCAL::eSubscriberEvent::disconnected:           return sub_event_disconnected;
+    case eCAL::eSubscriberEvent::dropped:                return sub_event_dropped;
+    case eCAL::eSubscriberEvent::corrupted:              return sub_event_corrupted;
+    case eCAL::eSubscriberEvent::update_connection:      return sub_event_update_connection;
     default:            return sub_event_none;
     }
   }
 
   eCAL::eSubscriberEvent enum_to_enum_class(eCAL_Subscriber_Event c_event_) {
     switch (c_event_) {
-    case sub_event_none:                   return eCAL::eSubscriberEvent::sub_event_none;
-    case sub_event_connected:              return eCAL::eSubscriberEvent::sub_event_connected;
-    case sub_event_disconnected:           return eCAL::eSubscriberEvent::sub_event_disconnected;
-    case sub_event_dropped:                return eCAL::eSubscriberEvent::sub_event_dropped;
-    case sub_event_corrupted:              return eCAL::eSubscriberEvent::sub_event_corrupted;
-    case sub_event_update_connection:      return eCAL::eSubscriberEvent::sub_event_update_connection;
-    default:                               return eCAL::eSubscriberEvent::sub_event_none;
+    case sub_event_none:                   return eCAL::eSubscriberEvent::none;
+    case sub_event_connected:              return eCAL::eSubscriberEvent::connected;
+    case sub_event_disconnected:           return eCAL::eSubscriberEvent::disconnected;
+    case sub_event_dropped:                return eCAL::eSubscriberEvent::dropped;
+    case sub_event_corrupted:              return eCAL::eSubscriberEvent::corrupted;
+    case sub_event_update_connection:      return eCAL::eSubscriberEvent::update_connection;
+    default:                               return eCAL::eSubscriberEvent::none;
     }
   }
 

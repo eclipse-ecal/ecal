@@ -120,13 +120,13 @@ TEST(core_cpp_clientserver, ClientConnectEvent)
     {
       switch (data_.type)
       {
-      case eCAL::eClientEvent::client_event_connected:
+      case eCAL::eClientEvent::connected:
 #if DO_LOGGING
         std::cout << "event connected fired" << std::endl;
 #endif
         event_connected_fired++;
         break;
-      case eCAL::eClientEvent::client_event_disconnected:
+      case eCAL::eClientEvent::disconnected:
 #if DO_LOGGING
         std::cout << "event disconnected fired" << std::endl;
 #endif
@@ -185,13 +185,13 @@ TEST(core_cpp_clientserver, ServerConnectEvent)
     {
       switch (data_.type)
       {
-      case eCAL::eServerEvent::server_event_connected:
+      case eCAL::eServerEvent::connected:
 #if DO_LOGGING
         std::cout << "event connected fired" << std::endl;
 #endif
         event_connected_fired++;
         break;
-      case eCAL::eServerEvent::server_event_disconnected:
+      case eCAL::eServerEvent::disconnected:
 #if DO_LOGGING
         std::cout << "event disconnected fired" << std::endl;
 #endif
@@ -386,7 +386,7 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
   std::atomic<int> timeout_fired(0);
   auto event_callback = [&](const eCAL::Registration::SServiceMethodId& /*service_id_*/, const struct eCAL::SClientEventCallbackData& data_) -> void
     {
-      if (data_.type == eCAL::eClientEvent::client_event_timeout)
+      if (data_.type == eCAL::eClientEvent::timeout)
       {
 #if DO_LOGGING        
         std::cout << "event timeouted fired" << std::endl;

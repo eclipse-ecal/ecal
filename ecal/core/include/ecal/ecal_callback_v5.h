@@ -40,7 +40,7 @@ namespace eCAL
   **/
     struct SPubEventCallbackData
     {
-      ePublisherEvent      type = ePublisherEvent::pub_event_none;  //!< publisher event type
+      ePublisherEvent      type = ePublisherEvent::none;  //!< publisher event type
       long long            time{ 0 };               //!< publisher event time in µs
       long long            clock{ 0 };              //!< publisher event clock
       std::string          tid;                     //!< topic id of the of the connected subscriber                 (for pub_event_update_connection only)
@@ -52,7 +52,7 @@ namespace eCAL
     **/
     struct SSubEventCallbackData
     {
-      eSubscriberEvent      type = eSubscriberEvent::sub_event_none; //!< subscriber event type
+      eSubscriberEvent      type = eSubscriberEvent::none; //!< subscriber event type
       long long             time{ 0 };              //!< subscriber event time in µs
       long long             clock{ 0 };             //!< subscriber event clock
       std::string           tid;                  //!< topic id of the of the connected publisher              (for sub_event_update_connection only)
@@ -83,7 +83,7 @@ namespace eCAL
     **/
     struct SClientEventCallbackData
     {
-      eClientEvent      type = eClientEvent::client_event_none;  //!< event type
+      eClientEvent      type = eClientEvent::none;  //!< event type
       long long         time = 0;                  //!< event time in µs
       SServiceAttr      attr;                      //!< event related service attributes
     };
@@ -109,7 +109,7 @@ namespace eCAL
     **/
     struct SServerEventCallbackData
     {
-      eServerEvent      type = eServerEvent::server_event_none;  //!< event type
+      eServerEvent      type = eServerEvent::none;  //!< event type
       long long         time = 0;                  //!< event time in µs
     };
 

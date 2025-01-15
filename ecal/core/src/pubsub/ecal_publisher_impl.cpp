@@ -776,17 +776,17 @@ namespace eCAL
 
   void CPublisherImpl::FireConnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(ePublisherEvent::pub_event_connected, subscription_info_, data_type_info_);
+    FireEvent(ePublisherEvent::connected, subscription_info_, data_type_info_);
   }
 
   void CPublisherImpl::FireUpdateEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(ePublisherEvent::pub_event_update_connection, subscription_info_, data_type_info_);
+    FireEvent(ePublisherEvent::update_connection, subscription_info_, data_type_info_);
   }
 
   void CPublisherImpl::FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(ePublisherEvent::pub_event_disconnected, subscription_info_, data_type_info_);
+    FireEvent(ePublisherEvent::disconnected, subscription_info_, data_type_info_);
   }
 
   size_t CPublisherImpl::GetConnectionCount()

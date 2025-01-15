@@ -29,18 +29,18 @@ void OnEvent(const char* topic_name_, const struct eCAL::v5::SPubEventCallbackDa
   std::cout << "topic name       : " << topic_name_ << std::endl;
   switch (data_->type)
   {
-  case eCAL::ePublisherEvent::pub_event_connected:
-    std::cout << "event            : " << "pub_event_connected" << std::endl;
+  case eCAL::ePublisherEvent::connected:
+    std::cout << "event            : " << "connected" << std::endl;
     break;
-  case eCAL::ePublisherEvent::pub_event_disconnected:
-    std::cout << "event            : " << "pub_event_disconnected" << std::endl;
+  case eCAL::ePublisherEvent::disconnected:
+    std::cout << "event            : " << "disconnected" << std::endl;
     break;
   // not implemented yet
-  case eCAL::ePublisherEvent::pub_event_dropped:
-    std::cout << "event            : " << "pub_event_dropped" << std::endl;
+  case eCAL::ePublisherEvent::dropped:
+    std::cout << "event            : " << "dropped" << std::endl;
     break;
-  case eCAL::ePublisherEvent::pub_event_update_connection:
-    std::cout << "event            : " << "pub_event_update_connection" << std::endl;
+  case eCAL::ePublisherEvent::update_connection:
+    std::cout << "event            : " << "update_connection" << std::endl;
     std::cout << "  topic_id       : " << data_->tid << std::endl;
     std::cout << "  topic_encoding : " << data_->tdatatype.encoding << std::endl;
     std::cout << "  topic_type     : " << data_->tdatatype.name << std::endl;
@@ -66,9 +66,9 @@ int main()
 
   // add event callback function (_1 = topic_name, _2 = event data struct)
   auto evt_callback = std::bind(OnEvent, std::placeholders::_1, std::placeholders::_2);
-  pub.AddEventCallback(eCAL::ePublisherEvent::pub_event_connected,         evt_callback);
-  pub.AddEventCallback(eCAL::ePublisherEvent::pub_event_disconnected,      evt_callback);
-  pub.AddEventCallback(eCAL::ePublisherEvent::pub_event_update_connection, evt_callback);
+  pub.AddEventCallback(eCAL::ePublisherEvent::connected,         evt_callback);
+  pub.AddEventCallback(eCAL::ePublisherEvent::disconnected,      evt_callback);
+  pub.AddEventCallback(eCAL::ePublisherEvent::update_connection, evt_callback);
 
   // generate a class instance of Person
   pb::People::Person person;

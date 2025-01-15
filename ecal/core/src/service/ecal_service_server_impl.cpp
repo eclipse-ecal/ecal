@@ -265,8 +265,8 @@ namespace eCAL
           service_id.service_name         = me->m_service_name;
           service_id.service_id.entity_id = me->m_service_id;
           me->NotifyEventCallback(service_id, event == eCAL::service::ServerEventType::Connected
-            ? eServerEvent::server_event_connected
-            : eServerEvent::server_event_disconnected, message);
+            ? eServerEvent::connected
+            : eServerEvent::disconnected, message);
         }
       };
 

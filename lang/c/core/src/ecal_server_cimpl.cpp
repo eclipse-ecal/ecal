@@ -37,9 +37,9 @@ namespace
   {
     switch (cpp_event_)
     {
-    case eCAL::eServerEvent::server_event_none:         return server_event_none;
-    case eCAL::eServerEvent::server_event_connected:    return server_event_connected;
-    case eCAL::eServerEvent::server_event_disconnected: return server_event_disconnected;
+    case eCAL::eServerEvent::none:         return server_event_none;
+    case eCAL::eServerEvent::connected:    return server_event_connected;
+    case eCAL::eServerEvent::disconnected: return server_event_disconnected;
     default:                                            return server_event_none;
     }
   }
@@ -48,10 +48,10 @@ namespace
   {
     switch (c_event)
     {
-    case server_event_none:         return eCAL::eServerEvent::server_event_none;
-    case server_event_connected:    return eCAL::eServerEvent::server_event_connected;
-    case server_event_disconnected: return eCAL::eServerEvent::server_event_disconnected;
-    default:                        return eCAL::eServerEvent::server_event_none;
+    case server_event_none:         return eCAL::eServerEvent::none;
+    case server_event_connected:    return eCAL::eServerEvent::connected;
+    case server_event_disconnected: return eCAL::eServerEvent::disconnected;
+    default:                        return eCAL::eServerEvent::none;
     }
   }
 

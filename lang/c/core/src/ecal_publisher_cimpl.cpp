@@ -35,23 +35,23 @@ namespace
 {
   eCAL_Publisher_Event enum_class_to_enum(eCAL::ePublisherEvent event_) {
     switch (event_) {
-    case eCAL::ePublisherEvent::pub_event_none:                   return pub_event_none;
-    case eCAL::ePublisherEvent::pub_event_connected:              return pub_event_connected;
-    case eCAL::ePublisherEvent::pub_event_disconnected:           return pub_event_disconnected;
-    case eCAL::ePublisherEvent::pub_event_dropped:                return pub_event_dropped;
-    case eCAL::ePublisherEvent::pub_event_update_connection:      return pub_event_update_connection;
+    case eCAL::ePublisherEvent::none:                   return pub_event_none;
+    case eCAL::ePublisherEvent::connected:              return pub_event_connected;
+    case eCAL::ePublisherEvent::disconnected:           return pub_event_disconnected;
+    case eCAL::ePublisherEvent::dropped:                return pub_event_dropped;
+    case eCAL::ePublisherEvent::update_connection:      return pub_event_update_connection;
     default:                                                      return pub_event_none;
     }
   }
 
   eCAL::ePublisherEvent enum_to_enum_class(eCAL_Publisher_Event event_) {
     switch (event_) {
-    case pub_event_none:                   return eCAL::ePublisherEvent::pub_event_none;
-    case pub_event_connected:              return eCAL::ePublisherEvent::pub_event_connected;
-    case pub_event_disconnected:           return eCAL::ePublisherEvent::pub_event_disconnected;
-    case pub_event_dropped:                return eCAL::ePublisherEvent::pub_event_dropped;
-    case pub_event_update_connection:      return eCAL::ePublisherEvent::pub_event_update_connection;
-    default:                               return eCAL::ePublisherEvent::pub_event_none;
+    case pub_event_none:                   return eCAL::ePublisherEvent::none;
+    case pub_event_connected:              return eCAL::ePublisherEvent::connected;
+    case pub_event_disconnected:           return eCAL::ePublisherEvent::disconnected;
+    case pub_event_dropped:                return eCAL::ePublisherEvent::dropped;
+    case pub_event_update_connection:      return eCAL::ePublisherEvent::update_connection;
+    default:                               return eCAL::ePublisherEvent::none;
     }
   }
 

@@ -50,10 +50,10 @@ namespace
   {
     switch (cpp_event_)
     {
-    case eCAL::eClientEvent::client_event_none:         return client_event_none;
-    case eCAL::eClientEvent::client_event_connected:    return client_event_connected;
-    case eCAL::eClientEvent::client_event_disconnected: return client_event_disconnected;
-    case eCAL::eClientEvent::client_event_timeout:      return client_event_timeout;
+    case eCAL::eClientEvent::none:         return client_event_none;
+    case eCAL::eClientEvent::connected:    return client_event_connected;
+    case eCAL::eClientEvent::disconnected: return client_event_disconnected;
+    case eCAL::eClientEvent::timeout:      return client_event_timeout;
     default:                                            return client_event_none;
     }
   }
@@ -62,11 +62,11 @@ namespace
   {
     switch (c_event)
     {
-    case client_event_none:         return eCAL::eClientEvent::client_event_none;
-    case client_event_connected:    return eCAL::eClientEvent::client_event_connected;
-    case client_event_disconnected: return eCAL::eClientEvent::client_event_disconnected;
-    case client_event_timeout:      return eCAL::eClientEvent::client_event_timeout;
-    default:                        return eCAL::eClientEvent::client_event_none;
+    case client_event_none:         return eCAL::eClientEvent::none;
+    case client_event_connected:    return eCAL::eClientEvent::connected;
+    case client_event_disconnected: return eCAL::eClientEvent::disconnected;
+    case client_event_timeout:      return eCAL::eClientEvent::timeout;
+    default:                        return eCAL::eClientEvent::none;
     }
   }
 

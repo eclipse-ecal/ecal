@@ -68,12 +68,12 @@ void OnServerEvent(const eCAL::v5::SServerEventCallbackData* data_)
 
   switch (data_->type)
   {
-  case eCAL::eServerEvent::server_event_connected:
+  case eCAL::eServerEvent::connected:
     std::cout << "-----------------------------------" << std::endl;
     std::cout << "Server connected                   " << std::endl;
     std::cout << "-----------------------------------" << std::endl;
     break;
-  case eCAL::eServerEvent::server_event_disconnected:
+  case eCAL::eServerEvent::disconnected:
     std::cout << "-----------------------------------" << std::endl;
     std::cout << "Server disconnected                " << std::endl;
     std::cout << "-----------------------------------" << std::endl;
@@ -95,8 +95,8 @@ int main()
   eCAL::protobuf::CServiceServer<MathService> math_server(math_service);
   
   // register event callbacks
-  math_server.AddEventCallback(eCAL::eServerEvent::server_event_connected,    std::bind(OnServerEvent, std::placeholders::_2));
-  math_server.AddEventCallback(eCAL::eServerEvent::server_event_disconnected, std::bind(OnServerEvent, std::placeholders::_2));
+  math_server.AddEventCallback(eCAL::eServerEvent::connected,    std::bind(OnServerEvent, std::placeholders::_2));
+  math_server.AddEventCallback(eCAL::eServerEvent::disconnected, std::bind(OnServerEvent, std::placeholders::_2));
 
   while(eCAL::Ok())
   {
