@@ -38,7 +38,7 @@ int main(int argc, char** argv)
   }
   else if ((argc == 2) && (std::string(argv[1]) == "--version"))
   {
-    // POSIX wants us to provide some output when launching with --version. We also use this to determine the correctnis of this application from other applications.
+    // POSIX wants us to provide some output when launching with --version. We also use this to determine the correctness of this application from other applications.
     std::cout << ECAL_PROCESS_STUB_VERSION_STRING << std::endl;
     return EXIT_SUCCESS;
   }
