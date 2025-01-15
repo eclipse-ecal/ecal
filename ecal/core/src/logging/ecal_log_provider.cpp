@@ -85,7 +85,7 @@ namespace
     std::cout << "[eCAL][Logging-Provider][Warning] " << msg_ << "\n";
   }
 
-  void createLogHeader(std::stringstream& msg_stream, const eCAL_Logging_eLogLevel level_, const eCAL::Logging::SProviderAttributes& attr_, const eCAL::Time::ecal_clock::time_point& log_time_)
+  void createLogHeader(std::stringstream& msg_stream, const eCAL::Logging::eLogLevel level_, const eCAL::Logging::SProviderAttributes& attr_, const eCAL::Time::ecal_clock::time_point& log_time_)
   {
     msg_stream << std::chrono::duration_cast<std::chrono::milliseconds>(log_time_.time_since_epoch()).count();
     msg_stream << " ms";
@@ -98,31 +98,31 @@ namespace
     msg_stream << " | ";
     switch(level_)
     {
-    case log_level_none:
-    case log_level_all:
+    case eCAL::Logging::log_level_none:
+    case eCAL::Logging::log_level_all:
       break;
-    case log_level_info:
+    case eCAL::Logging::log_level_info:
       msg_stream << "info";
       break;
-    case log_level_warning:
+    case eCAL::Logging::log_level_warning:
       msg_stream << "warning";
       break;
-    case log_level_error:
+    case eCAL::Logging::log_level_error:
       msg_stream << "error";
       break;
-    case log_level_fatal:
+    case eCAL::Logging::log_level_fatal:
       msg_stream << "fatal";
       break;
-    case log_level_debug1:
+    case eCAL::Logging::log_level_debug1:
       msg_stream << "debug1";
       break;
-    case log_level_debug2:
+    case eCAL::Logging::log_level_debug2:
       msg_stream << "debug2";
       break;
-    case log_level_debug3:
+    case eCAL::Logging::log_level_debug3:
       msg_stream << "debug3";
       break;
-    case log_level_debug4:
+    case eCAL::Logging::log_level_debug4:
       msg_stream << "debug4";
       break;
     }
@@ -209,16 +209,16 @@ namespace eCAL
       return m_udp_logging_sender != nullptr;
     }
 
-    void CLogProvider::Log(const eCAL_Logging_eLogLevel level_, const std::string& msg_)
+    void CLogProvider::Log(const eLogLevel level_, const std::string& msg_)
     {
       const std::lock_guard<std::mutex> lock(m_log_mtx);
 
       if(!m_created) return;
       if(msg_.empty()) return;
 
-      const eCAL_Logging_Filter log_con  = level_ & m_attributes.console_sink.filter_log;
-      const eCAL_Logging_Filter log_file = level_ & m_attributes.file_sink.filter_log;
-      const eCAL_Logging_Filter log_udp  = level_ & m_attributes.udp_sink.filter_log;
+      const Filter log_con  = level_ & m_attributes.console_sink.filter_log;
+      const Filter log_file = level_ & m_attributes.file_sink.filter_log;
+      const Filter log_udp  = level_ & m_attributes.udp_sink.filter_log;
       if((log_con | log_file | log_udp) == 0) return;
 
       auto log_time = eCAL::Time::ecal_clock::now();

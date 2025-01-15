@@ -32,19 +32,19 @@ namespace eCAL
     CServiceServerImpl::CServiceServerImpl()
       : m_service_server_impl(nullptr)
     {
-      Logging::Log(log_level_debug2, "v5::CServiceServerImpl: Initializing default service server implementation.");
+      Logging::Log(Logging::log_level_debug2, "v5::CServiceServerImpl: Initializing default service server implementation.");
     }
 
     CServiceServerImpl::CServiceServerImpl(const std::string& service_name_)
       : m_service_server_impl(nullptr)
     {
-      Logging::Log(log_level_debug2, "v5::CServiceServerImpl: Initializing service server with name: " + service_name_);
+      Logging::Log(Logging::log_level_debug2, "v5::CServiceServerImpl: Initializing service server with name: " + service_name_);
       Create(service_name_);
     }
 
     CServiceServerImpl::~CServiceServerImpl()
     {
-      Logging::Log(log_level_debug2, "v5::CServiceServerImpl: Destroying service server implementation.");
+      Logging::Log(Logging::log_level_debug2, "v5::CServiceServerImpl: Destroying service server implementation.");
       Destroy();
     }
 
@@ -52,14 +52,14 @@ namespace eCAL
     {
       if (m_service_server_impl)
       {
-        Logging::Log(log_level_warning, "v5::CServiceServerImpl: Service server already created: " + service_name_);
+        Logging::Log(Logging::log_level_warning, "v5::CServiceServerImpl: Service server already created: " + service_name_);
         return false;
       }
 
       // Define the event callback to pass to CServiceClient
       v6::ServerEventCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const v6::SServerEventCallbackData& data_)
         {
-          Logging::Log(log_level_debug2, "v5::CServiceServerImpl: Event callback triggered for event type: " + to_string(data_.type));
+          Logging::Log(Logging::log_level_debug2, "v5::CServiceServerImpl: Event callback triggered for event type: " + to_string(data_.type));
 
           // Lock the mutex to safely access m_event_callbacks
           std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
@@ -68,7 +68,7 @@ namespace eCAL
           const auto& callback = m_event_callback_map.find(data_.type);
           if (callback != m_event_callback_map.end())
           {
-            Logging::Log(log_level_debug2, "v5::CServiceServerImpl: Executing event callback for event type: " + to_string(data_.type));
+            Logging::Log(Logging::log_level_debug2, "v5::CServiceServerImpl: Executing event callback for event type: " + to_string(data_.type));
             // Call the user's callback
             SServerEventCallbackData event_data;
             event_data.type = data_.type;
@@ -78,7 +78,7 @@ namespace eCAL
         };
 
       m_service_server_impl = std::make_shared<eCAL::CServiceServer>(service_name_, event_callback);
-      Logging::Log(log_level_debug1, "v5::CServiceServerImpl: Service server created with name: " + service_name_);
+      Logging::Log(Logging::log_level_debug1, "v5::CServiceServerImpl: Service server created with name: " + service_name_);
       return true;
     }
 
@@ -86,22 +86,22 @@ namespace eCAL
     {
       if (!m_service_server_impl)
       {
-        Logging::Log(log_level_warning, "v5::CServiceServerImpl: Service server not initialized, cannot destroy.");
+        Logging::Log(Logging::log_level_warning, "v5::CServiceServerImpl: Service server not initialized, cannot destroy.");
         return false;
       }
 
       m_service_server_impl.reset();
-      Logging::Log(log_level_debug2, "v5::CServiceServerImpl: Service server destroyed.");
+      Logging::Log(Logging::log_level_debug2, "v5::CServiceServerImpl: Service server destroyed.");
       return true;
     }
 
     bool CServiceServerImpl::AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_)
     {
-      Logging::Log(log_level_debug1, "v5::CServiceServerImpl: Adding description for method: " + method_);
+      Logging::Log(Logging::log_level_debug1, "v5::CServiceServerImpl: Adding description for method: " + method_);
 
       if (!m_service_server_impl)
       {
-        Logging::Log(log_level_error, "v5::CServiceServerImpl: Service server not initialized, cannot add description.");
+        Logging::Log(Logging::log_level_error, "v5::CServiceServerImpl: Service server not initialized, cannot add description.");
         return false;
       }
 
@@ -116,11 +116,11 @@ namespace eCAL
 
     bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_)
     {
-      Logging::Log(log_level_debug2, "v5::CServiceServerImpl: Adding method callback for method: " + method_);
+      Logging::Log(Logging::log_level_debug2, "v5::CServiceServerImpl: Adding method callback for method: " + method_);
 
       if (!m_service_server_impl)
       {
-        Logging::Log(log_level_error, "v5::CServiceServerImpl: Service server not initialized, cannot add method callback.");
+        Logging::Log(Logging::log_level_error, "v5::CServiceServerImpl: Service server not initialized, cannot add method callback.");
         return false;
       }
 
@@ -142,11 +142,11 @@ namespace eCAL
 
     bool CServiceServerImpl::RemMethodCallback(const std::string& method_)
     {
-      Logging::Log(log_level_debug2, "v5::CServiceServerImpl: Removing method callback for method: " + method_);
+      Logging::Log(Logging::log_level_debug2, "v5::CServiceServerImpl: Removing method callback for method: " + method_);
 
       if (!m_service_server_impl)
       {
-        Logging::Log(log_level_error, "v5::CServiceServerImpl: Service server not initialized, cannot remove method callback.");
+        Logging::Log(Logging::log_level_error, "v5::CServiceServerImpl: Service server not initialized, cannot remove method callback.");
         return false;
       }
 
@@ -157,10 +157,10 @@ namespace eCAL
     {
       if (!m_service_server_impl)
       {
-        Logging::Log(log_level_error, "v5::CServiceServerImpl: Service server not initialized, cannot add event callback.");
+        Logging::Log(Logging::log_level_error, "v5::CServiceServerImpl: Service server not initialized, cannot add event callback.");
         return false;
       }
-      Logging::Log(log_level_debug2, "v5::CServiceServerImpl: Adding event callback for event type: " + to_string(type_));
+      Logging::Log(Logging::log_level_debug2, "v5::CServiceServerImpl: Adding event callback for event type: " + to_string(type_));
 
       {
         const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
@@ -174,10 +174,10 @@ namespace eCAL
     {
       if (!m_service_server_impl)
       {
-        Logging::Log(log_level_error, "v5::CServiceServerImpl: Service server not initialized, cannot remove event callback.");
+        Logging::Log(Logging::log_level_error, "v5::CServiceServerImpl: Service server not initialized, cannot remove event callback.");
         return false;
       }
-      Logging::Log(log_level_debug2, "v5::CServiceServerImpl: Removing event callback for event type: " + to_string(type_));
+      Logging::Log(Logging::log_level_debug2, "v5::CServiceServerImpl: Removing event callback for event type: " + to_string(type_));
 
       {
         const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
@@ -191,7 +191,7 @@ namespace eCAL
     {
       if (!m_service_server_impl)
       {
-        Logging::Log(log_level_error, "v5::CServiceServerImpl: Service server not initialized, cannot get service name.");
+        Logging::Log(Logging::log_level_error, "v5::CServiceServerImpl: Service server not initialized, cannot get service name.");
         return "";
       }
 
@@ -202,7 +202,7 @@ namespace eCAL
     {
       if (!m_service_server_impl)
       {
-        Logging::Log(log_level_error, "v5::CServiceServerImpl: Service server not initialized, cannot check connection status.");
+        Logging::Log(Logging::log_level_error, "v5::CServiceServerImpl: Service server not initialized, cannot check connection status.");
         return false;
       }
 

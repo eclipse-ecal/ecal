@@ -333,7 +333,8 @@ bool ecal_get_description(const char* topic_name_, const char** topic_desc_, int
 /****************************************/
 void log_message(const eCAL_Logging_eLogLevel& log_level_, const char* message_)
 {
-  eCAL::Logging::Log(log_level_, message_);
+  // this is potentially dangerous, but we will hopefully remove this soon anyways
+  eCAL::Logging::Log(static_cast<eCAL::Logging::eLogLevel>(log_level_), message_);
 }
 
 

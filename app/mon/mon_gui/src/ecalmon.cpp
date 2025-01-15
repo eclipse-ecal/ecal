@@ -372,7 +372,7 @@ void Ecalmon::updateMonitor()
 #ifndef NDEBUG
     qDebug().nospace() << "[" << metaObject()->className() << "Error getting Monitoring Information";
 #endif // NDEBUG
-    eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_error, "Error getting eCAL Monitoring information");
+    eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_error, "Error getting eCAL Monitoring information");
   }
 }
 

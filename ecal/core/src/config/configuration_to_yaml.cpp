@@ -10,38 +10,38 @@ namespace YAML
       member = node_[key].as<AS>();
   }
 
-  eCAL_Logging_Filter ParseLogLevel(const std::vector<std::string>& filter_)
+  eCAL::Logging::Filter ParseLogLevel(const std::vector<std::string>& filter_)
   {
     // create excluding filter list
-    char filter_mask = log_level_none;
+    char filter_mask = eCAL::Logging::log_level_none;
     for (const auto& it : filter_)
     {
-      if (it == "all")     filter_mask |= log_level_all;
-      if (it == "info")    filter_mask |= log_level_info;
-      if (it == "warning") filter_mask |= log_level_warning;
-      if (it == "error")   filter_mask |= log_level_error;
-      if (it == "fatal")   filter_mask |= log_level_fatal;
-      if (it == "debug1")  filter_mask |= log_level_debug1;
-      if (it == "debug2")  filter_mask |= log_level_debug2;
-      if (it == "debug3")  filter_mask |= log_level_debug3;
-      if (it == "debug4")  filter_mask |= log_level_debug4;
+      if (it == "all")     filter_mask |= eCAL::Logging::log_level_all;
+      if (it == "info")    filter_mask |= eCAL::Logging::log_level_info;
+      if (it == "warning") filter_mask |= eCAL::Logging::log_level_warning;
+      if (it == "error")   filter_mask |= eCAL::Logging::log_level_error;
+      if (it == "fatal")   filter_mask |= eCAL::Logging::log_level_fatal;
+      if (it == "debug1")  filter_mask |= eCAL::Logging::log_level_debug1;
+      if (it == "debug2")  filter_mask |= eCAL::Logging::log_level_debug2;
+      if (it == "debug3")  filter_mask |= eCAL::Logging::log_level_debug3;
+      if (it == "debug4")  filter_mask |= eCAL::Logging::log_level_debug4;
     }
 
     return(filter_mask);
   }
 
-  std::vector<std::string> LogLevelToVector(eCAL_Logging_Filter filter_mask) 
+  std::vector<std::string> LogLevelToVector(eCAL::Logging::Filter filter_mask)
   {
     std::vector<std::string> filter;
-    if ((filter_mask & log_level_all) != 0)     filter.emplace_back("all");
-    if ((filter_mask & log_level_info) != 0)    filter.emplace_back("info");
-    if ((filter_mask & log_level_warning) != 0) filter.emplace_back("warning");
-    if ((filter_mask & log_level_error) != 0)   filter.emplace_back("error");
-    if ((filter_mask & log_level_fatal) != 0)   filter.emplace_back("fatal");
-    if ((filter_mask & log_level_debug1) != 0)  filter.emplace_back("debug1");
-    if ((filter_mask & log_level_debug2) != 0)  filter.emplace_back("debug2");
-    if ((filter_mask & log_level_debug3) != 0)  filter.emplace_back("debug3");
-    if ((filter_mask & log_level_debug4) != 0)  filter.emplace_back("debug4");
+    if ((filter_mask & eCAL::Logging::log_level_all) != 0)     filter.emplace_back("all");
+    if ((filter_mask & eCAL::Logging::log_level_info) != 0)    filter.emplace_back("info");
+    if ((filter_mask & eCAL::Logging::log_level_warning) != 0) filter.emplace_back("warning");
+    if ((filter_mask & eCAL::Logging::log_level_error) != 0)   filter.emplace_back("error");
+    if ((filter_mask & eCAL::Logging::log_level_fatal) != 0)   filter.emplace_back("fatal");
+    if ((filter_mask & eCAL::Logging::log_level_debug1) != 0)  filter.emplace_back("debug1");
+    if ((filter_mask & eCAL::Logging::log_level_debug2) != 0)  filter.emplace_back("debug2");
+    if ((filter_mask & eCAL::Logging::log_level_debug3) != 0)  filter.emplace_back("debug3");
+    if ((filter_mask & eCAL::Logging::log_level_debug4) != 0)  filter.emplace_back("debug4");
 
     return filter;
   }

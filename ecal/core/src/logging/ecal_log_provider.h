@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ namespace eCAL
           * @param level_  The level.
           * @param msg_    The message.
         **/
-        void Log(eCAL_Logging_eLogLevel level_, const std::string& msg_);
+        void Log(eLogLevel level_, const std::string& msg_);
 
       private:
 

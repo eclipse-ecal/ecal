@@ -69,6 +69,7 @@ set(ecal_header_cimpl
     include/ecal/cimpl/ecal_timer_cimpl.h
     include/ecal/cimpl/ecal_util_cimpl.h
     include/ecal/ecalc.h
+    include/ecal/ecalc_export.h
     include/ecal/ecalc_types.h
 )
 
@@ -91,7 +92,7 @@ target_include_directories(${PROJECT_NAME}
     $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(${PROJECT_NAME} eCAL::core)
+target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core)
 
 target_compile_definitions(${PROJECT_NAME}
   INTERFACE 

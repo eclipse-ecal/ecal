@@ -1,6 +1,6 @@
 ﻿/* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -211,30 +211,30 @@ void LogWidget::getEcalLogs()
 
 void LogWidget::updateLogLevelFilter()
 {
-  int log_level_filter = eCAL_Logging_eLogLevel::log_level_none;
+  int log_level_filter = eCAL::Logging::eLogLevel::log_level_none;
   
   if (ui_.debug_checkbox->isChecked())
   {
-    log_level_filter |= (eCAL_Logging_eLogLevel::log_level_debug1 | eCAL_Logging_eLogLevel::log_level_debug2 | eCAL_Logging_eLogLevel::log_level_debug3 | eCAL_Logging_eLogLevel::log_level_debug4);
+    log_level_filter |= (eCAL::Logging::eLogLevel::log_level_debug1 | eCAL::Logging::eLogLevel::log_level_debug2 | eCAL::Logging::eLogLevel::log_level_debug3 | eCAL::Logging::eLogLevel::log_level_debug4);
   }
   if (ui_.info_checkbox->isChecked())
   {
-    log_level_filter |= eCAL_Logging_eLogLevel::log_level_info;
+    log_level_filter |= eCAL::Logging::eLogLevel::log_level_info;
   }
   if (ui_.warning_checkbox->isChecked())
   {
-    log_level_filter |= eCAL_Logging_eLogLevel::log_level_warning;
+    log_level_filter |= eCAL::Logging::eLogLevel::log_level_warning;
   }
   if (ui_.error_checkbox->isChecked())
   {
-    log_level_filter |= eCAL_Logging_eLogLevel::log_level_error;
+    log_level_filter |= eCAL::Logging::eLogLevel::log_level_error;
   }
   if (ui_.fatal_checkbox->isChecked())
   {
-    log_level_filter |= eCAL_Logging_eLogLevel::log_level_fatal;
+    log_level_filter |= eCAL::Logging::eLogLevel::log_level_fatal;
   }
 
-  log_proxy_model_->setLogLevelFilter((eCAL_Logging_eLogLevel)log_level_filter);
+  log_proxy_model_->setLogLevelFilter((eCAL::Logging::eLogLevel)log_level_filter);
 }
 
 void LogWidget::setPaused(bool paused)
@@ -402,11 +402,11 @@ void LogWidget::setLogLevelFilter(int log_level)
   ui_.error_checkbox  ->blockSignals(true);
   ui_.fatal_checkbox  ->blockSignals(true);
 
-  ui_.debug_checkbox  ->setChecked(log_level & (eCAL_Logging_eLogLevel::log_level_debug1 | eCAL_Logging_eLogLevel::log_level_debug2 | eCAL_Logging_eLogLevel::log_level_debug3 | eCAL_Logging_eLogLevel::log_level_debug4));
-  ui_.info_checkbox   ->setChecked(log_level & eCAL_Logging_eLogLevel::log_level_info);
-  ui_.warning_checkbox->setChecked(log_level & eCAL_Logging_eLogLevel::log_level_warning);
-  ui_.error_checkbox  ->setChecked(log_level & eCAL_Logging_eLogLevel::log_level_error);
-  ui_.fatal_checkbox  ->setChecked(log_level & eCAL_Logging_eLogLevel::log_level_fatal);
+  ui_.debug_checkbox  ->setChecked(log_level & (eCAL::Logging::eLogLevel::log_level_debug1 | eCAL::Logging::eLogLevel::log_level_debug2 | eCAL::Logging::eLogLevel::log_level_debug3 | eCAL::Logging::eLogLevel::log_level_debug4));
+  ui_.info_checkbox   ->setChecked(log_level & eCAL::Logging::eLogLevel::log_level_info);
+  ui_.warning_checkbox->setChecked(log_level & eCAL::Logging::eLogLevel::log_level_warning);
+  ui_.error_checkbox  ->setChecked(log_level & eCAL::Logging::eLogLevel::log_level_error);
+  ui_.fatal_checkbox  ->setChecked(log_level & eCAL::Logging::eLogLevel::log_level_fatal);
 
   updateLogLevelFilter();
 

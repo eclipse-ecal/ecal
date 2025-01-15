@@ -1,6 +1,6 @@
 /* =========================== LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ namespace eCAL
       struct Sink
       {
         bool enable;                                    //!< Enable sink
-        eCAL_Logging_Filter filter_log;                 //!< Log messages logged (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
+        Filter filter_log;                              //!< Log messages logged (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
       };
 
       namespace File

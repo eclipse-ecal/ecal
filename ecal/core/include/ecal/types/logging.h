@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ namespace eCAL
       int32_t                pid   = 0;               // process id
       std::string            pname;                   // process name
       std::string            uname;                   // unit name
-      eCAL_Logging_eLogLevel level = log_level_none;  // message level
+      eLogLevel              level = log_level_none;  // message level
       std::string            content;                 // message content
     };
 

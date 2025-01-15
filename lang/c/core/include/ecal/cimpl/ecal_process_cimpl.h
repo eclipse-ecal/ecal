@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,11 @@
 #ifndef ecal_process_cimpl_h_included
 #define ecal_process_cimpl_h_included
 
+
+#include <ecal/ecalc_export.h>
+
 #include <ecal/ecal_process_mode.h>
 #include <ecal/ecal_process_severity.h>
-
-#include <ecal/ecal_os.h>
 
 #ifdef __cplusplus
 extern "C"

@@ -111,7 +111,7 @@ namespace eCAL
 
 #ifndef NDEBUG
       // log it
-      eCAL::Logging::Log(log_level_debug1, std::string(m_subscriber_impl->GetTopicName() + "::CSubscriber::Destroy"));
+      eCAL::Logging::Log(Logging::log_level_debug1, std::string(m_subscriber_impl->GetTopicName() + "::CSubscriber::Destroy"));
 #endif
 
       // destroy datareader

@@ -37,7 +37,7 @@ namespace eCAL
      *
      * @param msg_   The log message string.
     **/
-    void Log(eCAL_Logging_eLogLevel level_, const std::string& msg_)
+    void Log(eLogLevel level_, const std::string& msg_)
     {
       if(g_log_provider() != nullptr) g_log_provider()->Log(level_, msg_);
     }

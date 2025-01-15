@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
 #ifndef ecal_publisher_cimpl_h_included
 #define ecal_publisher_cimpl_h_included
 
-#include <ecal/ecal_os.h>
+#include <ecal/ecalc_export.h>
 #include <ecal/ecalc_types.h>
 
 #include <ecal/cimpl/ecal_callback_cimpl.h>
