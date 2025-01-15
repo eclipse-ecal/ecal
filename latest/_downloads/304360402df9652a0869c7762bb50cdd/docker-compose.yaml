@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+    subscriber:
+        build: ./sub_container
+        image: ecal-subscriber:1.0.0
+        container_name: ecal-subscriber
+        network_mode: host
+        ipc: host
+        pid: host
+    publisher:
+        build: ./pub_container
+        image: ecal-publisher:1.0.0
+        container_name: ecal-publisher
+        network_mode: host
+        ipc: host
+        pid: host

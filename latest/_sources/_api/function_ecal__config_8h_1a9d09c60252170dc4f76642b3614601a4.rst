@@ -1,0 +1,14 @@
+.. _exhale_function_ecal__config_8h_1a9d09c60252170dc4f76642b3614601a4:
+
+Function eCAL::GetPublisherConfiguration
+========================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_config.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::GetPublisherConfiguration()
+   :project: eCAL

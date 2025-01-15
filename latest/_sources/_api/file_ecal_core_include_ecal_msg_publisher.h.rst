@@ -1,0 +1,61 @@
+
+.. _file_ecal_core_include_ecal_msg_publisher.h:
+
+File publisher.h
+================
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``ecal/core/include/ecal/msg/publisher.h``)
+-------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_ecal_core_include_ecal_msg_publisher.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``cassert``
+
+- ``cstring``
+
+- ``ecal/ecal_deprecate.h`` (:ref:`file_ecal_core_include_ecal_ecal_deprecate.h`)
+
+- ``ecal/ecal_publisher_v5.h`` (:ref:`file_ecal_core_include_ecal_ecal_publisher_v5.h`)
+
+- ``ecal/ecal_util.h`` (:ref:`file_ecal_core_include_ecal_ecal_util.h`)
+
+- ``functional``
+
+- ``string``
+
+- ``vector``
+
+
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_eCAL`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classeCAL_1_1CMsgPublisher`
+
