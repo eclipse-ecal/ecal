@@ -10,7 +10,7 @@ on:
   #     - deleted
 
 jobs:
-  documentation:
+  documentation-build:
     runs-on: ubuntu-latest
 
     steps:
