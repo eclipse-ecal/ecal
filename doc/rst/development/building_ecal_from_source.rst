@@ -87,7 +87,7 @@ First check out the eCAL repository and all of the submodules:
    rem Replace with your Qt installation path:
    set "CMAKE_PREFIX_PATH=C:/Qt/5.15.2/msvc2019_64"
 
-   cmake ../.. -A x64 -DCMAKE_INSTALL_PREFIX=_install -DBUILD_SHARED_LIBS=OFF
+   cmake ../.. -A x64 -DCMAKE_INSTALL_PREFIX=_install -DBUILD_SHARED_LIBS=OFF -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake
    cmake --build . --parallel --config Release
 
 This will create a :file:`_build\\complete\\` directory in your eCAL root folder and build eCAL there.
