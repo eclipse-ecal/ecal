@@ -1,0 +1,19 @@
+[
+    {
+        "name": "development",
+        "version": "v999.0",
+        "url": "https://eclipse-ecal.github.io/ecal/latest/"
+    },
+    {
+        "name": "v5.13 (stable)",
+        "version": "v5.13",
+        "url": "https://eclipse-ecal.github.io/ecal/stable/",
+        "preferred": true
+    },
+    {
+        "name": "v5.12",
+        "version": "v5.12",
+        "url": "https://eclipse-ecal.github.io/ecal/v5.12/"
+    }
+]
+
