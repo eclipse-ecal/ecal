@@ -77,10 +77,16 @@ copyright = u'2023, Continental'
 #author = u'Continental'
 
 # The short X.Y version
-version = u''
+# version = u''
 # The full version, including alpha/beta/rc tags
-release = u''
 
+# Get release version from ECAL_DOC_VERSION environment variable
+ecal_doc_version = os.getenv("ECAL_DOC_VERSION")
+
+if not ecal_doc_version:
+    ecal_doc_version = ""
+
+release = ecal_doc_version # The release variable is important for the version-banner
 
 # -- General configuration ---------------------------------------------------
 
@@ -210,6 +216,23 @@ html_theme_options = {
     "extra_navbar": "", # => Remove the default text
     "footer_start": ["footer.html"],
     "extra_footer": '',
+
+    # Add version switcher to choose between different versions of the documentation
+    "switcher": {
+        "json_url": "https://eclipse-ecal.github.io/ecal/switcher.json",
+        "version_match": ecal_doc_version,
+    },
+
+     # Set to check_switcher false to allow offline builds
+    "check_switcher": False,
+
+    # Enable a banner telling the user that they look at an outdated version of the documentation
+    "show_version_warning_banner": True,
+}
+
+html_sidebars = {
+    # Add the version switchter to the sidebar
+    "**": ["navbar-logo", "icon-links", "version-switcher", "search-field", "sbt-sidebar-nav.html"]
 }
 
 # -- Options for HTMLHelp output ---------------------------------------------

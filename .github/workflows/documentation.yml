@@ -2,19 +2,37 @@ name: Documentation build
 
 on:  
   push:
-    branches:
-      - support/v5.13
-  release:
-    types:
-      - released
-      - unpublished
-      - deleted
+
+  # release:
+  #   types:
+  #     - released
+  #     - unpublished
+  #     - deleted
 
 jobs:
-  documentation-build:
+  documentation:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Get current branch name
+      id: branch
+      run: |
+        # Get the branch name
+        branch=$(echo ${GITHUB_REF#refs/heads/})
+
+        # if the branch is a support/ branch, then set the doc_version
+        if [[ $branch == support/* ]]; then
+          echo "doc_version=$(echo ${branch#support/})" >> $GITHUB_ENV
+          echo "publish_dir=$(echo ${branch#support/})" >> $GITHUB_ENV
+          echo "publish_doc=true" >> $GITHUB_ENV
+        elif [[ $branch == master ]]; then
+          echo "doc_version=v999.0" >> $GITHUB_ENV
+          echo "publish_dir=latest" >> $GITHUB_ENV
+          echo "publish_doc=true" >> $GITHUB_ENV
+        else
+          echo "publish_doc=false" >> $GITHUB_ENV
+        fi
+
     - name: Install Dependencies
       run: |
         sudo apt update
@@ -23,10 +41,19 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        submodules:  'true'
+        submodules:  'false'
         fetch-depth: 0
-        ref: 'support/v5.13'
-        
+
+    - name: Update / download Submodules (selected ones)
+      run: |
+        cd $GITHUB_WORKSPACE
+        git submodule init
+        git submodule deinit thirdparty/curl/curl
+        git submodule deinit thirdparty/gtest/googletest
+        git submodule deinit thirdparty/hdf5/hdf5
+        git submodule deinit thirdparty/protobuf/protobuf
+        git submodule update
+    
     - name: Install Python requirements
       shell: bash
       run: |
@@ -84,8 +111,20 @@ jobs:
     - name: Build Documentation
       env:
         ECAL_GH_API_KEY: ${{ secrets.GITHUB_TOKEN }}
+        ECAL_DOC_VERSION: ${{ env.doc_version }}
       run: cmake --build . --parallel --config Release --target documentation_sphinx
       working-directory: ${{ runner.workspace }}/_build
+
+    - name: Zip Documentation
+      run: |
+        cd ${{ runner.workspace }}/_build/doc/html
+        zip -r ${{ runner.workspace }}/_build/doc/html.zip .
+
+    - name: Upload Documentation as Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: documentation
+        path: ${{ runner.workspace }}/_build/doc/html.zip
 
     - name: Deploy Documentation
       uses: peaceiris/actions-gh-pages@v3
@@ -93,3 +132,5 @@ jobs:
         publish_branch: gh-pages
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ${{ runner.workspace }}/_build/doc/html
+        destination_dir: ${{ env.publish_dir }}
+      if: env.publish_doc == 'true'
