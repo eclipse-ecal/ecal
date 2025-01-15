@@ -1,0 +1,14 @@
+.. _exhale_function_ecal__clang_8h_1a8734995133d0e2808ff66274ff7d7512:
+
+Function log_setlevel
+=====================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_clang.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: log_setlevel(const int)
+   :project: eCAL

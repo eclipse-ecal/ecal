@@ -1,0 +1,14 @@
+.. _exhale_typedef_ecal__callback_8h_1acfa9950c8768a6a9a4445c8bb0f6cccf:
+
+Typedef eCAL::SubEventCallbackT
+===============================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_callback.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: eCAL::SubEventCallbackT
+   :project: eCAL

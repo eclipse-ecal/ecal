@@ -1,0 +1,14 @@
+.. _exhale_function_ecal__clang_8h_1ac165329dc942cd7404144c1347254466:
+
+Function mon_finalize
+=====================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_clang.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: mon_finalize()
+   :project: eCAL

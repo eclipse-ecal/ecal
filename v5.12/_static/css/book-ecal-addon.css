@@ -1,0 +1,13 @@
+:root {
+    --pst-color-link: 255, 165, 0;
+}
+
+@media (min-width:1200px) {
+    .container,
+    .container-lg,
+    .container-md,
+    .container-sm,
+    .container-xl {
+        max-width: 1500px
+    }
+}

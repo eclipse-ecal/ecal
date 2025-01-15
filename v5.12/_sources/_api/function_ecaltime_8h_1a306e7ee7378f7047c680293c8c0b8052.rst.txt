@@ -1,0 +1,14 @@
+.. _exhale_function_ecaltime_8h_1a306e7ee7378f7047c680293c8c0b8052:
+
+Function etime_get_status
+=========================
+
+- Defined in :ref:`file_contrib_ecaltime_include_ecaltime.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: etime_get_status(int *, char *, int)
+   :project: eCAL

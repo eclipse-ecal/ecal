@@ -1,0 +1,14 @@
+.. _exhale_function_ecal__clang_8h_1a231586e73852b9f617c11156a617bf63:
+
+Function mon_set_excl_filter
+============================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_clang.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: mon_set_excl_filter(const char *)
+   :project: eCAL

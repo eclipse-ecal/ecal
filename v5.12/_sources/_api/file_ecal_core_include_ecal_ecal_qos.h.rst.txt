@@ -1,0 +1,75 @@
+
+.. _file_ecal_core_include_ecal_ecal_qos.h:
+
+File ecal_qos.h
+===============
+
+
+eCAL quality of service settings 
+
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``ecal/core/include/ecal/ecal_qos.h``)
+--------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_ecal_core_include_ecal_ecal_qos.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_ecal_core_include_ecal_ecal.h`
+
+- :ref:`file_ecal_core_include_ecal_ecal_publisher.h`
+
+- :ref:`file_ecal_core_include_ecal_ecal_subscriber.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_eCAL`
+
+- :ref:`namespace_eCAL__QOS`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structeCAL_1_1QOS_1_1SReaderQOS`
+
+- :ref:`exhale_struct_structeCAL_1_1QOS_1_1SWriterQOS`
+
+
+Enums
+-----
+
+
+- :ref:`exhale_enum_ecal__qos_8h_1a0da8b6f992aeac2e25089144fd27da24`
+
+- :ref:`exhale_enum_ecal__qos_8h_1afc19a9113f5036d91321f5ba6b4e4803`
+
