@@ -18,47 +18,14 @@
 */
 
 /**
- * @file   ecal_os.h
- * @brief  eCAL os interface
+ * @file   ecalc_export.h
+ * @brief  eCAL dll / so export commands
 **/
 
-#pragma once
-
-#if defined(_WIN32)
-#define ECAL_OS_WINDOWS
-#endif
-
-#if defined(__linux__)
-#define ECAL_OS_LINUX
-#endif
-
-#if defined(__APPLE__)
-#define ECAL_OS_LINUX // macOS does not differ that much from linux
-#define ECAL_OS_MACOS
-#endif
-
-#if defined(__QNXNTO__)
-#define ECAL_OS_LINUX
-#define ECAL_OS_QNX
-#endif
-
-#if defined(__FreeBSD__)
-#define ECAL_OS_LINUX
-#define ECAL_OS_FREEBSD
-#endif
+#ifndef ecalc_export_h_included
+#define ecalc_export_h_included
 
 #ifdef _MSC_VER
-  #ifdef ECAL_CORE_EXPORTS
-    #define ECAL_API __declspec(dllexport)
-  #elif defined(ECAL_CORE_IMPORTS)
-    #define ECAL_API __declspec(dllimport)
-  #else 
-    #define ECAL_API
-  #endif
-
-  #define ECAL_API_CLASS
-  #define ECAL_API_EXPORTED_MEMBER ECAL_API
-
   #ifdef ECAL_CORE_C_EXPORTS
     #define ECALC_API __declspec(dllexport)
     #define ECALC_API_DEPRECATED __declspec(dllexport deprecated)
@@ -69,23 +36,13 @@
     #define ECALC_API
     #define ECALC_API_DEPRECATED __declspec(deprecated)
   #endif
-
-
 #else /* _MSC_VER */
-  #define ECAL_API_CLASS __attribute__((visibility("default")))
-  #ifdef ECAL_CORE_EXPORTS 
-    #define ECAL_API __attribute__((visibility("default")))
-  #else
-    #define ECAL_API
-  #endif
-
-  #define ECAL_API_CLASS __attribute__((visibility("default")))
-  #define ECAL_API_EXPORTED_MEMBER 
-
   #ifdef ECAL_CORE_C_EXPORTS 
     #define ECALC_API __attribute__((visibility("default")))
   #else
     #define ECALC_API
   #endif
   #define ECALC_API_DEPRECATED __attribute__((deprecated)) ECALC_API 
+#endif
+
 #endif
