@@ -1,0 +1,168 @@
+
+.. _file_ecal_core_include_ecal_ecal_config.h:
+
+File ecal_config.h
+==================
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``ecal/core/include/ecal/ecal_config.h``)
+-----------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_ecal_core_include_ecal_ecal_config.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``cstddef``
+
+- ``ecal/ecal_log_level.h`` (:ref:`file_ecal_core_include_ecal_ecal_log_level.h`)
+
+- ``ecal/ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
+
+- ``ecal/ecal_tlayer.h`` (:ref:`file_ecal_core_include_ecal_ecal_tlayer.h`)
+
+- ``string``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_ecal_core_include_ecal_ecal.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_eCAL`
+
+- :ref:`namespace_eCAL__Config`
+
+- :ref:`namespace_eCAL__Config__Experimental`
+
+
+Enums
+-----
+
+
+- :ref:`exhale_enum_ecal__config_8h_1ad5d30f75fb2c2de1253f805e812ab3b0`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_ecal__config_8h_1af8e917b3c4963762f5d75c5f7326444a`
+
+- :ref:`exhale_function_ecal__config_8h_1a04d9c3b9b98ca0505968a01f87bc3425`
+
+- :ref:`exhale_function_ecal__config_8h_1a2916e95b188d7b7fceb5335056c43b90`
+
+- :ref:`exhale_function_ecal__config_8h_1a224c3732eff426573ec505524d031bfd`
+
+- :ref:`exhale_function_ecal__config_8h_1a233c9d0a10260e01b243b8ee3264ecb5`
+
+- :ref:`exhale_function_ecal__config_8h_1a5192f32d6157255d0d5d9295f38e02cb`
+
+- :ref:`exhale_function_ecal__config_8h_1a2021665a60dc38ea96ec53dfeeabb2ac`
+
+- :ref:`exhale_function_ecal__config_8h_1acfc8c09605825c36ae84ed2c38216112`
+
+- :ref:`exhale_function_ecal__config_8h_1ae1578488d4562a7096c389bc0d3acc56`
+
+- :ref:`exhale_function_ecal__config_8h_1a0e61706ed81e23d251be210649974bba`
+
+- :ref:`exhale_function_ecal__config_8h_1a0e2293d2d291224c6715ed8441242970`
+
+- :ref:`exhale_function_ecal__config_8h_1a587f04c8d34bcff1de60110e9c620509`
+
+- :ref:`exhale_function_ecal__config_8h_1a1bf3ad9215f2024d6466864e3aa35798`
+
+- :ref:`exhale_function_ecal__config_8h_1a97a61c0d4557c82db8a4dd926cf228dd`
+
+- :ref:`exhale_function_ecal__config_8h_1acb1fa98d1fa7cd20a141c900b6cbb9ee`
+
+- :ref:`exhale_function_ecal__config_8h_1aae50703f55499562d9e78c2f23fe781a`
+
+- :ref:`exhale_function_ecal__config_8h_1a15cbfc38f2be568d32f8e227751254f1`
+
+- :ref:`exhale_function_ecal__config_8h_1a1f51f220b4b541f92e55c07386659c45`
+
+- :ref:`exhale_function_ecal__config_8h_1a84de65e00d3c504f8a86962708302523`
+
+- :ref:`exhale_function_ecal__config_8h_1a9bb9908f7068ebdc8ab68e65632cfd07`
+
+- :ref:`exhale_function_ecal__config_8h_1a0670b3cc479851b5321f8784befe887c`
+
+- :ref:`exhale_function_ecal__config_8h_1a908deeb83f898d5d14eaeddad4570e97`
+
+- :ref:`exhale_function_ecal__config_8h_1ae2fa1793150cbce526ab0b81e1773f7b`
+
+- :ref:`exhale_function_ecal__config_8h_1a313807e5364233c84ae52d3a2ab10211`
+
+- :ref:`exhale_function_ecal__config_8h_1a9e6cb0ba42fa6e1e34e206db76ed3a7c`
+
+- :ref:`exhale_function_ecal__config_8h_1a00f7511944c4663914c9a7d0bb0795f8`
+
+- :ref:`exhale_function_ecal__config_8h_1a6583d43cc85866c54ad0756834e02ffc`
+
+- :ref:`exhale_function_ecal__config_8h_1a606731c2e14b2a298b15abc1cdb19a50`
+
+- :ref:`exhale_function_ecal__config_8h_1a633d1b1b9214f6b1ce56c919bcd43eaa`
+
+- :ref:`exhale_function_ecal__config_8h_1a785f3d90dc6b68ea1700f63d4f236f62`
+
+- :ref:`exhale_function_ecal__config_8h_1ac5df2eda843892fe59f8162c49c9ee99`
+
+- :ref:`exhale_function_ecal__config_8h_1a1c69db24e82f221aefb2995f47d48d59`
+
+- :ref:`exhale_function_ecal__config_8h_1ae7f51eb8b589364ad50e01d4002f2159`
+
+- :ref:`exhale_function_ecal__config_8h_1a150fae520c5ad7d7ba814fde8527946f`
+
+- :ref:`exhale_function_ecal__config_8h_1aefc58fe7084b3912745ab0e9d77a3f91`
+
+- :ref:`exhale_function_ecal__config_8h_1aa30495547ba254caba3e6ed57a164fde`
+
+- :ref:`exhale_function_ecal__config_8h_1aed3e5a8a68ac9c231951b80aabdbedf7`
+
+- :ref:`exhale_function_ecal__config_8h_1a5b9112fc006799ecd3e47607a9a6124d`
+
+- :ref:`exhale_function_ecal__config_8h_1a3856030282d0af6627fe6764c1239589`
+
+- :ref:`exhale_function_ecal__config_8h_1a082ee8766ff051566a4fc4eeb0ca4a70`
+
+- :ref:`exhale_function_ecal__config_8h_1af4eb2b0687288b44e2e363ab8b15a80b`
+
+- :ref:`exhale_function_ecal__config_8h_1a762bb5e7e8a645b38253789a6ffc98be`
+
+- :ref:`exhale_function_ecal__config_8h_1a2535368afdc3131762fe973a2469a836`
+
+- :ref:`exhale_function_ecal__config_8h_1a22e6a81fbd3e1a5bb0c32e5f0bfa69aa`
+
+- :ref:`exhale_function_ecal__config_8h_1a5163d960ca5891f6cca4303709565265`
+
+- :ref:`exhale_function_ecal__config_8h_1ad37f5a6bde4bb5e92e3711a8255efe3a`
+
+- :ref:`exhale_function_ecal__config_8h_1a52d7c8d986007ec10687d7fae7e3e4fe`
+
+- :ref:`exhale_function_ecal__config_8h_1abda92e1cc50e7f3c3b65acf8765e344d`
+
+- :ref:`exhale_function_ecal__config_8h_1a159d41c9cf64a883becf2b2c5a8a099e`
+
