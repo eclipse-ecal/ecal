@@ -87,7 +87,7 @@ First check out the eCAL repository and all of the submodules:
    rem Replace with your Qt installation path:
    set "CMAKE_PREFIX_PATH=C:/Qt/5.15.2/msvc2019_64"
 
-   cmake ../.. -A x64 -DCMAKE_INSTALL_PREFIX=_install -DBUILD_SHARED_LIBS=OFF
+   cmake ../.. -A x64 -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake -DCMAKE_INSTALL_PREFIX=_install -DBUILD_SHARED_LIBS=OFF
    cmake --build . --parallel --config Release
 
 This will create a :file:`_build\\complete\\` directory in your eCAL root folder and build eCAL there.
@@ -151,7 +151,7 @@ We support building on currently supported Ubuntu LTS releases.
 
       mkdir _build
       cd _build
-      cmake .. -DCMAKE_BUILD_TYPE=Release -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DECAL_THIRDPARTY_BUILD_HDF5=OFF -DECAL_THIRDPARTY_BUILD_QWT=OFF
+      cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DECAL_THIRDPARTY_BUILD_HDF5=OFF -DECAL_THIRDPARTY_BUILD_QWT=OFF
       make -j4
 
 #. Create a debian package and install it:
