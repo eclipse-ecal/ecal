@@ -19,15 +19,17 @@ include_guard(GLOBAL)
   #we will need threads
   find_package(Threads REQUIRED)
 
-  set(HDF5_GENERATE_HEADERS  OFF CACHE BOOL "Do not re-generate auto-generated files" FORCE)
-  set(ONLY_SHARED_LIBS       ON CACHE BOOL  "Only Build Shared Libraries" FORCE)
-  set(HDF5_ENABLE_THREADSAFE ON  CACHE BOOL "Enable thread-safety" FORCE)
-  set(BUILD_TESTING          OFF CACHE BOOL "Do not build HDF5 Unit Testing" FORCE)
-  set(HDF5_BUILD_UTILS       OFF CACHE BOOL "Do not build HDF5 Utils" FORCE)
-  set(HDF5_BUILD_TOOLS       OFF CACHE BOOL "Do not build HDF5 Tools" FORCE)
-  set(HDF5_BUILD_EXAMPLES    OFF CACHE BOOL "Do not build HDF5 Library Examples" FORCE)
-  set(HDF5_BUILD_CPP_LIB     OFF CACHE BOOL "Do not build C++ lib" FORCE)
-  set(HDF5_BUILD_HL_LIB      OFF CACHE BOOL "Do not build hdf5-hl" FORCE)
+  set(HDF5_GENERATE_HEADERS     OFF CACHE BOOL "Do not re-generate auto-generated files" FORCE)
+  set(ONLY_SHARED_LIBS          ON CACHE BOOL  "Only Build Shared Libraries" FORCE)
+  set(HDF5_ENABLE_THREADSAFE    ON  CACHE BOOL "Enable thread-safety" FORCE)
+  set(HDF5_ENABLE_SZIP_SUPPORT  OFF  CACHE BOOL "Disable szip support" FORCE) 
+  set(HDF5_ENABLE_Z_LIB_SUPPORT OFF  CACHE BOOL "Disable zlib support" FORCE)   
+  set(BUILD_TESTING             OFF CACHE BOOL "Do not build HDF5 Unit Testing" FORCE)
+  set(HDF5_BUILD_UTILS          OFF CACHE BOOL "Do not build HDF5 Utils" FORCE)
+  set(HDF5_BUILD_TOOLS          OFF CACHE BOOL "Do not build HDF5 Tools" FORCE)
+  set(HDF5_BUILD_EXAMPLES       OFF CACHE BOOL "Do not build HDF5 Library Examples" FORCE)
+  set(HDF5_BUILD_CPP_LIB        OFF CACHE BOOL "Do not build C++ lib" FORCE)
+  set(HDF5_BUILD_HL_LIB         OFF CACHE BOOL "Do not build hdf5-hl" FORCE)
   
   # TODO: Let HDF5 use its own targets.
   # Adding the HDF5 targets to the eCALCoreTargets is a hack that we have had
