@@ -122,7 +122,7 @@ set(ECAL_CORE_TRANSPORT_SHM                                                     
 # -----------------------
 # eCAL Python configuration
 # -----------------------
-set(ECAL_PYTHON_BUILD_SAMPLES                                                                        ${BUILD_SAMPLES})
+#set(ECAL_PYTHON_BUILD_SAMPLES                                                                        ${BUILD_SAMPLES})
 set(ECAL_PYTHON_BUILD_TESTS                                                                       ${BUILD_ECAL_TESTS})
 set(ECAL_PYTHON_HAS_HDF5                                                                                  ${HAS_HDF5})
 
