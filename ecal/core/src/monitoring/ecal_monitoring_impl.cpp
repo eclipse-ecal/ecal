@@ -286,6 +286,7 @@ namespace eCAL
     const int             component_init_state         = sample_process.component_init_state;
     const std::string&    component_init_info          = sample_process.component_init_info;
     const std::string&    ecal_runtime_version         = sample_process.ecal_runtime_version;
+    const std::string&    config_file_path             = sample_process.config_file_path;
 
     // create map key
     const auto& process_map_key = sample_.identifier.entity_id;
@@ -314,6 +315,7 @@ namespace eCAL
     ProcessInfo.component_init_state = component_init_state;
     ProcessInfo.component_init_info  = component_init_info;
     ProcessInfo.ecal_runtime_version = ecal_runtime_version;
+    ProcessInfo.config_file_path     = config_file_path;
 
     return(true);
   }
