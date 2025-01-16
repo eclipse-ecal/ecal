@@ -12,7 +12,7 @@ Program Listing for File ecal_process_mode.h
 
    /* ========================= eCAL LICENSE =================================
     *
-    * Copyright (C) 2016 - 2019 Continental Corporation
+    * Copyright (C) 2016 - 2025 Continental Corporation
     *
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
@@ -31,10 +31,16 @@ Program Listing for File ecal_process_mode.h
    
    #pragma once
    
-   enum eCAL_Process_eStartMode
+   namespace eCAL
    {
-     proc_smode_normal     =  0,  
-     proc_smode_hidden     =  1,  
-     proc_smode_minimized  =  2,  
-     proc_smode_maximized  =  3,  
-   };
+     namespace Process
+     {
+       enum class eStartMode
+       {
+         normal = 0,     
+         hidden = 1,     
+         minimized = 2,  
+         maximized = 3,  
+       };
+     }
+   }

@@ -5,7 +5,7 @@ File ecal_server_v5.h
 =====================
 
 
-eCAL server interface (deprecated eCAL5 version) 
+:ref:`namespace_eCAL` server interface (deprecated eCAL5 version) 
 
 
 

@@ -5,7 +5,7 @@ File ecal_deprecate.h
 =====================
 
 
-eCAL function / variable deprecation macros 
+:ref:`namespace_eCAL` function / variable deprecation macros 
 
 
 

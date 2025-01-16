@@ -5,7 +5,7 @@ File ecal_tlayer.h
 ==================
 
 
-eCAL transport layer 
+:ref:`namespace_eCAL` transport layer 
 
 
 

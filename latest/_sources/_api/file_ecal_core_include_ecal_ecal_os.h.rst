@@ -5,7 +5,7 @@ File ecal_os.h
 ==============
 
 
-eCAL os interface 
+:ref:`namespace_eCAL` os interface 
 
 
 
@@ -72,8 +72,6 @@ Included By
 
 - :ref:`file_ecal_core_include_ecal_ecal_util.h`
 
-- :ref:`file_ecal_core_include_ecal_ecalc.h`
-
 
 
 
@@ -88,8 +86,4 @@ Defines
 - :ref:`exhale_define_ecal__os_8h_1afc0d02175308ccac5bdfb04fa38fe7b7`
 
 - :ref:`exhale_define_ecal__os_8h_1a546b32f89f9cf15da312d39f6252f29e`
-
-- :ref:`exhale_define_ecal__os_8h_1a6debe968e7507b0d497436c312288015`
-
-- :ref:`exhale_define_ecal__os_8h_1a31a75b97ee96d0d709a6c833d3954fb2`
 

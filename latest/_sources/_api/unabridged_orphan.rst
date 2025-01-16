@@ -240,16 +240,6 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_ecal_core_include_ecal_ecalc.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_ecal_core_include_ecal_ecalc_types.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
    file_contrib_ecaltime_include_ecaltime.h.rst
 
 .. toctree::

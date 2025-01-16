@@ -5,7 +5,7 @@ File ecal_log.h
 ===============
 
 
-eCAL logging interface 
+:ref:`namespace_eCAL` logging interface 
 
 
 
@@ -68,5 +68,5 @@ Functions
 
 - :ref:`exhale_function_ecal__log_8h_1a29c44b3b7bd43c2bf19db99d21e91887`
 
-- :ref:`exhale_function_ecal__log_8h_1af5aa7f76fbf6183ddec91fb97a27cb3e`
+- :ref:`exhale_function_ecal__log_8h_1ac41d3c193623d4ad374f71172adf8333`
 

@@ -5,7 +5,7 @@ File ecal_subscriber.h
 ======================
 
 
-eCAL subscriber interface 
+:ref:`namespace_eCAL` subscriber interface 
 
 
 
@@ -27,9 +27,9 @@ Definition (``ecal/core/include/ecal/ecal_subscriber.h``)
 Detailed Description
 --------------------
 
-eCAL message subscriber interface
+:ref:`namespace_eCAL` message subscriber interface
 
-eCAL subscriber interface (deprecated eCAL5 version)
+:ref:`namespace_eCAL` subscriber interface (deprecated eCAL5 version)
 
 
 

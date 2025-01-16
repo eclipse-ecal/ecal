@@ -5,7 +5,7 @@ File ecal_publisher_v5.h
 ========================
 
 
-eCAL publisher interface (deprecated eCAL5 version) 
+:ref:`namespace_eCAL` publisher interface (deprecated eCAL5 version) 
 
 
 

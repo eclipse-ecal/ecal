@@ -12,7 +12,7 @@ Program Listing for File ecal_log.h
 
    /* ========================= eCAL LICENSE =================================
     *
-    * Copyright (C) 2016 - 2024 Continental Corporation
+    * Copyright (C) 2016 - 2025 Continental Corporation
     *
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ Program Listing for File ecal_log.h
    {  
      namespace Logging
      {
-       ECAL_API void Log(eCAL_Logging_eLogLevel level_, const std::string& msg_);
+       ECAL_API void Log(eLogLevel level_, const std::string& msg_);
    
        ECAL_API bool GetLogging(std::string& log_);
    

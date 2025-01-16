@@ -5,7 +5,7 @@ File ecal_util.h
 ================
 
 
-eCAL utility interface 
+:ref:`namespace_eCAL` utility interface 
 
 
 

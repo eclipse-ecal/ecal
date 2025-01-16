@@ -5,7 +5,7 @@ File ecal_payload_writer.h
 ==========================
 
 
-eCAL payload writer base class 
+:ref:`namespace_eCAL` payload writer base class 
 
 
 

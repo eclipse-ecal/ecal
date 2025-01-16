@@ -5,7 +5,7 @@ File ecal_publisher.h
 =====================
 
 
-eCAL publisher interface 
+:ref:`namespace_eCAL` publisher interface 
 
 
 
@@ -27,7 +27,7 @@ Definition (``ecal/core/include/ecal/ecal_publisher.h``)
 Detailed Description
 --------------------
 
-eCAL message publisher interface
+:ref:`namespace_eCAL` message publisher interface
 
 
 

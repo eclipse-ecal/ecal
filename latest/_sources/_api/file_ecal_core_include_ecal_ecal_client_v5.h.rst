@@ -5,7 +5,7 @@ File ecal_client_v5.h
 =====================
 
 
-eCAL client interface (deprecated eCAL5 version) 
+:ref:`namespace_eCAL` client interface (deprecated eCAL5 version) 
 
 
 

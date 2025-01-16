@@ -12,7 +12,7 @@ Program Listing for File ecal_process_severity.h
 
    /* ========================= eCAL LICENSE =================================
     *
-    * Copyright (C) 2016 - 2019 Continental Corporation
+    * Copyright (C) 2016 - 2025 Continental Corporation
     *
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
@@ -31,21 +31,28 @@ Program Listing for File ecal_process_severity.h
    
    #pragma once
    
-   enum eCAL_Process_eSeverity
+   namespace eCAL
    {
-     proc_sev_unknown   =  0,  
-     proc_sev_healthy   =  1,  
-     proc_sev_warning   =  2,  
-     proc_sev_critical  =  3,  
-     proc_sev_failed    =  4,  
-   };
+     namespace Process
+     {
+   
+       enum class eSeverity
+       {
+         unknown  = 0,  
+         healthy  = 1,  
+         warning  = 2,  
+         critical = 3,  
+         failed   = 4,  
+       };
    
    
-   enum eCAL_Process_eSeverity_Level
-   {
-     proc_sev_level1 = 1,  
-     proc_sev_level2 = 2,  
-     proc_sev_level3 = 3,  
-     proc_sev_level4 = 4,  
-     proc_sev_level5 = 5,  
-   };
+       enum class eSeverityLevel
+       {
+         level1 = 1,  
+         level2 = 2,  
+         level3 = 3,  
+         level4 = 4,  
+         level5 = 5,  
+       };
+     }
+   }

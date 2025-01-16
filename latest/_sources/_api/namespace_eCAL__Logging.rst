@@ -13,6 +13,13 @@ Namespace eCAL::Logging
 
 
 
+Enums
+-----
+
+
+- :ref:`exhale_enum_ecal__log__level_8h_1a26836a3eb06b0d47712353cc3afa320e`
+
+
 Functions
 ---------
 
@@ -21,4 +28,11 @@ Functions
 
 - :ref:`exhale_function_ecal__log_8h_1a29c44b3b7bd43c2bf19db99d21e91887`
 
-- :ref:`exhale_function_ecal__log_8h_1af5aa7f76fbf6183ddec91fb97a27cb3e`
+- :ref:`exhale_function_ecal__log_8h_1ac41d3c193623d4ad374f71172adf8333`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_ecal__log__level_8h_1a6c687d0056bbcffcc8adc3ca3ad803da`

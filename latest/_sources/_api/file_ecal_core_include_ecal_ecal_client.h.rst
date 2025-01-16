@@ -5,7 +5,7 @@ File ecal_client.h
 ==================
 
 
-eCAL client interface 
+:ref:`namespace_eCAL` client interface 
 
 
 

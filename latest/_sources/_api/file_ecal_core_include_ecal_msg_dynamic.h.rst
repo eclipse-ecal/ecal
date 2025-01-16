@@ -5,7 +5,7 @@ File dynamic.h
 ==============
 
 
-eCAL dynamic reflection exception 
+:ref:`namespace_eCAL` dynamic reflection exception 
 
 
 

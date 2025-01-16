@@ -12,7 +12,7 @@ Program Listing for File ecal_client_v5.h
 
    /* ========================= eCAL LICENSE =================================
     *
-    * Copyright (C) 2016 - 2024 Continental Corporation
+    * Copyright (C) 2016 - 2025 Continental Corporation
     *
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
@@ -92,10 +92,10 @@ Program Listing for File ecal_client_v5.h
            bool RemResponseCallback();
    
          ECAL_API_EXPORTED_MEMBER
-           bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
+           bool AddEventCallback(eClientEvent type_, ClientEventCallbackT callback_);
    
          ECAL_API_EXPORTED_MEMBER
-           bool RemEventCallback(eCAL_Client_Event type_);
+           bool RemEventCallback(eClientEvent type_);
    
          ECAL_API_EXPORTED_MEMBER
            std::string GetServiceName();

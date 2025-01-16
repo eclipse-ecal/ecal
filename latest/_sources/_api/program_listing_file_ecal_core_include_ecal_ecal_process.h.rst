@@ -12,7 +12,7 @@ Program Listing for File ecal_process.h
 
    /* ========================= eCAL LICENSE =================================
     *
-    * Copyright (C) 2016 - 2019 Continental Corporation
+    * Copyright (C) 2016 - 2025 Continental Corporation
     *
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
@@ -74,9 +74,9 @@ Program Listing for File ecal_process.h
    
        ECAL_API std::string GetProcessParameter();
    
-       ECAL_API void SetState(eCAL_Process_eSeverity severity_, eCAL_Process_eSeverity_Level level_, const char* info_);
+       ECAL_API void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const char* info_);
    
-       ECAL_API int StartProcess(const char* proc_name_, const char* proc_args_, const char* working_dir_, bool create_console_, eCAL_Process_eStartMode process_mode_, bool block_);
+       ECAL_API int StartProcess(const char* proc_name_, const char* proc_args_, const char* working_dir_, bool create_console_, eCAL::Process::eStartMode process_mode_, bool block_);
    
        ECAL_API bool StopProcess(const char* proc_name_);
    

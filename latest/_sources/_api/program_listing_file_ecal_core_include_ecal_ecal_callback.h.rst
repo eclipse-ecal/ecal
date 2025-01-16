@@ -32,7 +32,6 @@ Program Listing for File ecal_callback.h
    #pragma once
    
    #include <ecal/ecal_deprecate.h>
-   #include <ecal/cimpl/ecal_callback_cimpl.h>
    #include <ecal/ecal_types.h>
    
    #include <functional>
@@ -49,6 +48,81 @@ Program Listing for File ecal_callback.h
        long long clock = 0;        
      };
    
+     enum class eSubscriberEvent
+     {
+       none = 0,
+       connected = 1,
+       disconnected = 2,
+       dropped = 3,
+       corrupted = 5,
+       update_connection = 6,
+     };
+   
+     inline std::string to_string(eSubscriberEvent event_) {
+       switch (event_) {
+       case eSubscriberEvent::none:                   return "NONE";
+       case eSubscriberEvent::connected:              return "CONNECTED";
+       case eSubscriberEvent::disconnected:           return "DISCONNECTED";
+       case eSubscriberEvent::dropped :               return "DROPPED";
+       case eSubscriberEvent::corrupted:              return "CORRUPTED";
+       case eSubscriberEvent::update_connection :     return "UPDATED_CONNECTION";
+       default:            return "Unknown";
+       }
+     }
+   
+     enum class ePublisherEvent
+     {
+       none = 0,
+       connected = 1,
+       disconnected = 2,
+       dropped = 3,
+       update_connection = 4,
+     };
+   
+     inline std::string to_string(ePublisherEvent event_) {
+       switch (event_) {
+       case ePublisherEvent::none:                   return "NONE";
+       case ePublisherEvent::connected:              return "CONNECTED";
+       case ePublisherEvent::disconnected:           return "DISCONNECTED";
+       case ePublisherEvent::dropped:                return "DROPPED";
+       case ePublisherEvent::update_connection:      return "UPDATED_CONNECTION";
+       default:            return "Unknown";
+       }
+     }
+   
+     enum class eClientEvent
+     {
+       none = 0,
+       connected = 1,
+       disconnected = 2,
+       timeout = 3,
+     };
+   
+     inline std::string to_string(eClientEvent event_) {
+       switch (event_) {
+       case eClientEvent::none:                   return "NONE";
+       case eClientEvent::connected:              return "CONNECTED";
+       case eClientEvent::disconnected:           return "DISCONNECTED";
+       default:            return "Unknown";
+       }
+     }
+   
+     enum class eServerEvent
+     {
+       none = 0,
+       connected = 1,
+       disconnected = 2,
+     };
+   
+     inline std::string to_string(eServerEvent event_) {
+       switch (event_) {
+       case eServerEvent::none:                   return "NONE";
+       case eServerEvent::connected:              return "CONNECTED";
+       case eServerEvent::disconnected:           return "DISCONNECTED";
+       default:            return "Unknown";
+       }
+     }
+   
      using TimerCallbackT = std::function<void()>;
    
      inline namespace v6
@@ -57,7 +131,7 @@ Program Listing for File ecal_callback.h
    
        struct SPubEventCallbackData
        {
-         eCAL_Publisher_Event type{ pub_event_none };  
+         ePublisherEvent      type{ ePublisherEvent::none };  
          long long            time{ 0 };               
          long long            clock{ 0 };              
          SDataTypeInformation tdatatype;               
@@ -67,7 +141,7 @@ Program Listing for File ecal_callback.h
    
        struct SSubEventCallbackData
        {
-         eCAL_Subscriber_Event type{ sub_event_none }; 
+         eSubscriberEvent      type{ eSubscriberEvent::none }; 
          long long             time{ 0 };              
          long long             clock{ 0 };             
          SDataTypeInformation  tdatatype;              
@@ -77,7 +151,7 @@ Program Listing for File ecal_callback.h
    
        struct SClientEventCallbackData
        {
-         eCAL_Client_Event type = client_event_none;  
+         eClientEvent      type{ eClientEvent::none };  
          long long         time = 0;                  
        };
    
@@ -85,7 +159,7 @@ Program Listing for File ecal_callback.h
    
        struct SServerEventCallbackData
        {
-         eCAL_Server_Event type = server_event_none;  
+         eServerEvent      type{ eServerEvent::none };  
          long long         time = 0;                  
        };
    

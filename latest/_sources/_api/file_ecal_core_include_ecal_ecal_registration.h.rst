@@ -5,7 +5,7 @@ File ecal_registration.h
 ========================
 
 
-eCAL registration interface 
+:ref:`namespace_eCAL` registration interface 
 
 
 

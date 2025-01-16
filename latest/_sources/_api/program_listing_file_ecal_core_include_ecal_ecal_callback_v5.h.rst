@@ -32,7 +32,7 @@ Program Listing for File ecal_callback_v5.h
    #pragma once
    
    #include <ecal/ecal_deprecate.h>
-   #include <ecal/cimpl/ecal_callback_cimpl.h>
+   #include <ecal/ecal_callback.h>
    #include <ecal/ecal_types.h>
    
    #include <functional>
@@ -44,7 +44,7 @@ Program Listing for File ecal_callback_v5.h
      {
        struct SPubEventCallbackData
        {
-         eCAL_Publisher_Event type{ pub_event_none };  
+         ePublisherEvent      type = ePublisherEvent::none;  
          long long            time{ 0 };               
          long long            clock{ 0 };              
          std::string          tid;                     
@@ -53,7 +53,7 @@ Program Listing for File ecal_callback_v5.h
    
        struct SSubEventCallbackData
        {
-         eCAL_Subscriber_Event type{ sub_event_none }; 
+         eSubscriberEvent      type = eSubscriberEvent::none; 
          long long             time{ 0 };              
          long long             clock{ 0 };             
          std::string           tid;                  
@@ -78,7 +78,7 @@ Program Listing for File ecal_callback_v5.h
    
        struct SClientEventCallbackData
        {
-         eCAL_Client_Event type = client_event_none;  
+         eClientEvent      type = eClientEvent::none;  
          long long         time = 0;                  
          SServiceAttr      attr;                      
        };
@@ -98,7 +98,7 @@ Program Listing for File ecal_callback_v5.h
    
        struct SServerEventCallbackData
        {
-         eCAL_Server_Event type = server_event_none;  
+         eServerEvent      type = eServerEvent::none;  
          long long         time = 0;                  
        };
    

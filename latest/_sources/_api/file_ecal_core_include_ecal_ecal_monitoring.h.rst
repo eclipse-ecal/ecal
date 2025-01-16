@@ -5,7 +5,7 @@ File ecal_monitoring.h
 ======================
 
 
-eCAL monitoring interface 
+:ref:`namespace_eCAL` monitoring interface 
 
 
 

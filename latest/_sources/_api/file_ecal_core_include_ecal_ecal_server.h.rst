@@ -5,7 +5,7 @@ File ecal_server.h
 ==================
 
 
-eCAL server interface 
+:ref:`namespace_eCAL` server interface 
 
 
 

@@ -12,7 +12,7 @@ Program Listing for File ecal_publisher_v5.h
 
    /* ========================= eCAL LICENSE =================================
     *
-    * Copyright (C) 2016 - 2024 Continental Corporation
+    * Copyright (C) 2016 - 2025 Continental Corporation
     *
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
@@ -108,10 +108,10 @@ Program Listing for File ecal_publisher_v5.h
            size_t Send(const std::string& s_, long long time_ = DEFAULT_TIME_ARGUMENT);
    
          ECAL_API_EXPORTED_MEMBER
-           bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
+           bool AddEventCallback(ePublisherEvent type_, PubEventCallbackT callback_);
    
          ECAL_API_EXPORTED_MEMBER
-           bool RemEventCallback(eCAL_Publisher_Event type_);
+           bool RemEventCallback(ePublisherEvent type_);
    
          ECAL_API_EXPORTED_MEMBER
            bool IsCreated() const { return(m_publisher_impl != nullptr); }

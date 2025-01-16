@@ -129,9 +129,3 @@ Functions
 
 - :ref:`exhale_function_ecal__config_8h_1a159d41c9cf64a883becf2b2c5a8a099e`
 
-- :ref:`exhale_function_ecal__config_8h_1a169429eab7f48217f42788539dcefc50`
-
-- :ref:`exhale_function_ecal__config_8h_1a9d09c60252170dc4f76642b3614601a4`
-
-- :ref:`exhale_function_ecal__config_8h_1a10ea0c3e7fa5782486a856c4dca4fac8`
-

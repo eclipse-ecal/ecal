@@ -5,7 +5,7 @@ File ecal_process_mode.h
 ========================
 
 
-eCAL process start mode 
+:ref:`namespace_eCAL` process start mode 
 
 
 
@@ -37,9 +37,18 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_eCAL`
+
+- :ref:`namespace_eCAL__Process`
+
+
 Enums
 -----
 
 
-- :ref:`exhale_enum_ecal__process__mode_8h_1ac07aba7e64cb7795b08212f4072658b8`
+- :ref:`exhale_enum_ecal__process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6`
 

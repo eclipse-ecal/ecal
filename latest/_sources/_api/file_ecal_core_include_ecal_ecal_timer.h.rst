@@ -5,7 +5,7 @@ File ecal_timer.h
 =================
 
 
-eCAL timer interface 
+:ref:`namespace_eCAL` timer interface 
 
 
 

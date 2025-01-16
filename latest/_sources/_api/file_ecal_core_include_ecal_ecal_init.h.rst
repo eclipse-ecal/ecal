@@ -5,7 +5,7 @@ File ecal_init.h
 ================
 
 
-eCAL initialize components 
+:ref:`namespace_eCAL` initialize components 
 
 
 

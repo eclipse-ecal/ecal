@@ -5,7 +5,7 @@ File ecal_process_severity.h
 ============================
 
 
-eCAL process severity 
+:ref:`namespace_eCAL` process severity 
 
 
 
@@ -37,11 +37,20 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_eCAL`
+
+- :ref:`namespace_eCAL__Process`
+
+
 Enums
 -----
 
 
-- :ref:`exhale_enum_ecal__process__severity_8h_1af54a320816f7e73015680c0cef91ca17`
+- :ref:`exhale_enum_ecal__process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0`
 
-- :ref:`exhale_enum_ecal__process__severity_8h_1a2555c88c6ad7b7279f700f0357a8312a`
+- :ref:`exhale_enum_ecal__process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685`
 

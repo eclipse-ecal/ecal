@@ -12,7 +12,7 @@ Program Listing for File ecal_os.h
 
    /* ========================= eCAL LICENSE =================================
     *
-    * Copyright (C) 2016 - 2024 Continental Corporation
+    * Copyright (C) 2016 - 2025 Continental Corporation
     *
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
@@ -65,19 +65,6 @@ Program Listing for File ecal_os.h
    
      #define ECAL_API_CLASS
      #define ECAL_API_EXPORTED_MEMBER ECAL_API
-   
-     #ifdef ECAL_CORE_C_EXPORTS
-       #define ECALC_API __declspec(dllexport)
-       #define ECALC_API_DEPRECATED __declspec(dllexport deprecated)
-     #elif defined(ECAL_CORE_C_IMPORTS)
-       #define ECALC_API __declspec(dllimport)
-       #define ECALC_API_DEPRECATED __declspec(dllimport deprecated)
-     #else 
-       #define ECALC_API
-       #define ECALC_API_DEPRECATED __declspec(deprecated)
-     #endif
-   
-   
    #else /* _MSC_VER */
      #define ECAL_API_CLASS __attribute__((visibility("default")))
      #ifdef ECAL_CORE_EXPORTS 
@@ -88,11 +75,4 @@ Program Listing for File ecal_os.h
    
      #define ECAL_API_CLASS __attribute__((visibility("default")))
      #define ECAL_API_EXPORTED_MEMBER 
-   
-     #ifdef ECAL_CORE_C_EXPORTS 
-       #define ECALC_API __attribute__((visibility("default")))
-     #else
-       #define ECALC_API
-     #endif
-     #define ECALC_API_DEPRECATED __attribute__((deprecated)) ECALC_API 
    #endif

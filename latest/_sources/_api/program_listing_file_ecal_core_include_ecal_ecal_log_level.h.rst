@@ -12,7 +12,7 @@ Program Listing for File ecal_log_level.h
 
    /* ========================= eCAL LICENSE =================================
     *
-    * Copyright (C) 2016 - 2019 Continental Corporation
+    * Copyright (C) 2016 - 2025 Continental Corporation
     *
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
@@ -31,18 +31,27 @@ Program Listing for File ecal_log_level.h
    
    #pragma once
    
-   enum eCAL_Logging_eLogLevel
+   namespace eCAL
    {
-     log_level_none    =   0,
-     log_level_all     = 255,
-     log_level_info    =   1,
-     log_level_warning =   2,
-     log_level_error   =   4,
-     log_level_fatal   =   8,
-     log_level_debug1  =  16,
-     log_level_debug2  =  32,
-     log_level_debug3  =  64,
-     log_level_debug4  = 128,
-   };
+     namespace Logging
+     {
    
-   typedef unsigned char eCAL_Logging_Filter;  
+       // We're currently not making this an enum class, because this will not allow the bitmasking anymore.
+       // Need to come up with a different solution in that case.
+       enum eLogLevel
+       {
+         log_level_none = 0,
+         log_level_all = 255,
+         log_level_info = 1,
+         log_level_warning = 2,
+         log_level_error = 4,
+         log_level_fatal = 8,
+         log_level_debug1 = 16,
+         log_level_debug2 = 32,
+         log_level_debug3 = 64,
+         log_level_debug4 = 128,
+       };
+   
+       typedef unsigned char Filter;  
+     }
+   }

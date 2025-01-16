@@ -5,7 +5,7 @@ File ecal.h
 ===========
 
 
-eCAL main header file 
+:ref:`namespace_eCAL` main header file 
 
 
 

@@ -12,7 +12,7 @@ Program Listing for File ecal_service_info.h
 
    /* ========================= eCAL LICENSE =================================
     *
-    * Copyright (C) 2016 - 2024 Continental Corporation
+    * Copyright (C) 2016 - 2025 Continental Corporation
     *
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ Program Listing for File ecal_service_info.h
    
    #pragma once
    
-   #include <ecal/cimpl/ecal_service_info_cimpl.h>
    #include <ecal/ecal_types.h>
    
    #include <functional>
@@ -41,6 +40,14 @@ Program Listing for File ecal_service_info.h
    
    namespace eCAL
    {
+     enum class eCallState
+     {
+       none = 0,    
+       executed,    
+       timeouted,   
+       failed       
+     };
+   
      struct SMethodInfo
      {
        std::string              method_name; 
@@ -53,7 +60,7 @@ Program Listing for File ecal_service_info.h
        SServiceResponse()
        {
          ret_state  = 0;
-         call_state = call_state_none;
+         call_state = eCallState::none;
        };
        std::string  host_name;      
        std::string  service_name;   
@@ -71,7 +78,7 @@ Program Listing for File ecal_service_info.h
        Registration::SServiceMethodId service_method_id;            
        std::string                    error_msg;                    
        int                            ret_state  = 0;               
-       eCallState                     call_state = call_state_none; 
+       eCallState                     call_state = eCallState::none; 
        std::string                    response;                     
      };
      using ServiceIDResponseVecT = std::vector<SServiceIDResponse>; 

@@ -105,10 +105,10 @@ Program Listing for File ecal_subscriber_v5.h
            bool RemReceiveCallback();
    
          ECAL_API_EXPORTED_MEMBER
-           bool AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_);
+           bool AddEventCallback(eSubscriberEvent type_, SubEventCallbackT callback_);
    
          ECAL_API_EXPORTED_MEMBER
-           bool RemEventCallback(eCAL_Subscriber_Event type_);
+           bool RemEventCallback(eSubscriberEvent type_);
    
          ECAL_API_EXPORTED_MEMBER
            bool IsCreated() const { return(m_subscriber_impl != nullptr); }

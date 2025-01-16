@@ -5,7 +5,7 @@ File ecal_time.h
 ================
 
 
-eCAL time interface 
+:ref:`namespace_eCAL` time interface 
 
 
 

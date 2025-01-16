@@ -261,7 +261,6 @@
 <li class="toctree-l3"><a class="reference internal" href="_api/structeCAL_1_1v6_1_1SPubEventCallbackData.html">Struct SPubEventCallbackData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/structeCAL_1_1v6_1_1SServerEventCallbackData.html">Struct SServerEventCallbackData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/structeCAL_1_1v6_1_1SSubEventCallbackData.html">Struct SSubEventCallbackData</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/structeCAL__SVersion.html">Struct eCAL_SVersion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/classCDynamicSleeper.html">Class CDynamicSleeper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/classeCAL_1_1CClientInstance.html">Class CClientInstance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/classeCAL_1_1CDynamicMessageSubscriber.html">Template Class CDynamicMessageSubscriber</a></li>
@@ -285,12 +284,17 @@
 <li class="toctree-l3"><a class="reference internal" href="_api/classeCAL_1_1v6_1_1CServiceClient.html">Class CServiceClient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/classeCAL_1_1v6_1_1CServiceServer.html">Class CServiceServer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/classeCAL_1_1v6_1_1CSubscriber.html">Class CSubscriber</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/enum_namespaceeCAL_1a8625101735917809b723685082df8838.html">Enum eCallState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/enum_namespaceeCAL_1a720c8d356cce7726b3bb79a162df84f6.html">Enum eClientEvent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/enum_namespaceeCAL_1a2d9b998ee59cee251e5eb725742ffa30.html">Enum ePublisherEvent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/enum_namespaceeCAL_1ae4e92393e1b5d42322c8138c71bb73ae.html">Enum eServerEvent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/enum_namespaceeCAL_1adad6307937b50d6905c282bde807c400.html">Enum eSubscriberEvent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/enum_ecal__log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html">Enum eLogLevel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/enum_ecal__process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html">Enum eSeverity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/enum_ecal__process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html">Enum eSeverityLevel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/enum_ecal__process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html">Enum eStartMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/enum_ecal__registration_8h_1ab47a7f2404314ea349d4c14d261c969c.html">Enum RegistrationEventType</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/enum_ecal__tlayer_8h_1a65b651c8133a86e4850afa99db69a59a.html">Enum eTransportLayer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/enum_ecal__log__level_8h_1a7ac86e3048a80a58673fdab06c1a2310.html">Enum eCAL_Logging_eLogLevel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/enum_ecal__process__severity_8h_1af54a320816f7e73015680c0cef91ca17.html">Enum eCAL_Process_eSeverity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/enum_ecal__process__severity_8h_1a2555c88c6ad7b7279f700f0357a8312a.html">Enum eCAL_Process_eSeverity_Level</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/enum_ecal__process__mode_8h_1ac07aba7e64cb7795b08212f4072658b8.html">Enum eCAL_Process_eStartMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__config_8h_1ab602f6c8307b53fe6826d7618ac9f465.html">Function eCAL::Config::GetDropOutOfOrderMessages</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__config_8h_1a2021665a60dc38ea96ec53dfeeabb2ac.html">Function eCAL::Config::GetEcalSysFilterExcludeList</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__config_8h_1ae1578488d4562a7096c389bc0d3acc56.html">Function eCAL::Config::GetHostGroupName</a></li>
@@ -321,24 +325,24 @@
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__config_8h_1a52d7c8d986007ec10687d7fae7e3e4fe.html">Function eCAL::Config::IsTopicTypeSharingEnabled</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__config_8h_1abda92e1cc50e7f3c3b65acf8765e344d.html">Function eCAL::Config::IsUdpMulticastJoinAllIfEnabled</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__config_8h_1a159d41c9cf64a883becf2b2c5a8a099e.html">Function eCAL::Config::IsUdpMulticastRecEnabled</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__core_8h_1a6342e514137136747e6339844b25e432.html">Function eCAL::Finalize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__config_8h_1a169429eab7f48217f42788539dcefc50.html">Function eCAL::GetConfiguration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__config_8h_1a9d09c60252170dc4f76642b3614601a4.html">Function eCAL::GetPublisherConfiguration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__config_8h_1a10ea0c3e7fa5782486a856c4dca4fac8.html">Function eCAL::GetSubscriberConfiguration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__core_8h_1a023307ac7027db8288093a3fc11d15e9.html">Function eCAL::GetVersion</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__core_8h_1a3ba629552c97fe1a7fe08846a2941f6e.html">Function eCAL::GetVersionDateString</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__core_8h_1a0b257fe51d5220b61b3e6db582804412.html">Function eCAL::GetVersionString</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1a6342e514137136747e6339844b25e432.html">Function eCAL::Finalize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1a169429eab7f48217f42788539dcefc50.html">Function eCAL::GetConfiguration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1a9d09c60252170dc4f76642b3614601a4.html">Function eCAL::GetPublisherConfiguration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1a10ea0c3e7fa5782486a856c4dca4fac8.html">Function eCAL::GetSubscriberConfiguration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1a023307ac7027db8288093a3fc11d15e9.html">Function eCAL::GetVersion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1a3ba629552c97fe1a7fe08846a2941f6e.html">Function eCAL::GetVersionDateString</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1a0b257fe51d5220b61b3e6db582804412.html">Function eCAL::GetVersionString</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__init_8h_1ad66464b016b00e2a1f42854b02128185.html">Function eCAL::Init::Configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__core_8h_1af8f14107926964a1ab750dab13634b39.html">Function eCAL::Initialize(const std::string&amp;, unsigned int)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__core_8h_1a30834f2dd3dbab8e0734c79b2aaf9bb4.html">Function eCAL::Initialize(eCAL::Configuration&amp;, const std::string&amp;, unsigned int)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__core_8h_1a439b87d67679bce153704bc95d4b30de.html">Function eCAL::IsInitialized()</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__core_8h_1a043fea4cd0b2793a63c1de5830bf382c.html">Function eCAL::IsInitialized(unsigned int)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1af8f14107926964a1ab750dab13634b39.html">Function eCAL::Initialize(const std::string&amp;, unsigned int)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1a30834f2dd3dbab8e0734c79b2aaf9bb4.html">Function eCAL::Initialize(eCAL::Configuration&amp;, const std::string&amp;, unsigned int)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1a439b87d67679bce153704bc95d4b30de.html">Function eCAL::IsInitialized()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1a043fea4cd0b2793a63c1de5830bf382c.html">Function eCAL::IsInitialized(unsigned int)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__log_8h_1a29c44b3b7bd43c2bf19db99d21e91887.html">Function eCAL::Logging::GetLogging(std::string&amp;)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__log_8h_1a4933524c4a46c77a8a3a6c19a005897b.html">Function eCAL::Logging::GetLogging(Logging::SLogging&amp;)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__log_8h_1af5aa7f76fbf6183ddec91fb97a27cb3e.html">Function eCAL::Logging::Log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__log_8h_1ac41d3c193623d4ad374f71172adf8333.html">Function eCAL::Logging::Log</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__monitoring_8h_1a8fc01a83c0f83d744ed293860ecf618c.html">Function eCAL::Monitoring::GetMonitoring(std::string&amp;, unsigned int)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__monitoring_8h_1ae47a3d85663687e7089d60c5b57e4816.html">Function eCAL::Monitoring::GetMonitoring(SMonitoring&amp;, unsigned int)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__core_8h_1a600033b0736069b66b026b5bc39cab35.html">Function eCAL::Ok</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1a600033b0736069b66b026b5bc39cab35.html">Function eCAL::Ok</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__process_8h_1a024a270c580d40fe8e59455226ddbf75.html">Function eCAL::Process::DumpConfig()</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__process_8h_1a6ea34958542106657a76e88ce57f02a3.html">Function eCAL::Process::DumpConfig(std::string&amp;)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__process_8h_1af29c2673d6aec8d9120b3072b5444a26.html">Function eCAL::Process::GetHostGroupName</a></li>
@@ -349,11 +353,11 @@
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__process_8h_1a0468b912c32313f944f1425272cfd53d.html">Function eCAL::Process::GetProcessParameter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__process_8h_1aafcbbada35b8c548ab7a0b58d46b6f4b.html">Function eCAL::Process::GetTaskParameter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__process_8h_1a9316c16239592058aa92936910c0fff1.html">Function eCAL::Process::GetUnitName</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__process_8h_1a28e02d2f857c01052de373bb3e46e717.html">Function eCAL::Process::SetState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__process_8h_1a49286e24c0e73289030ac25fc9cc0d18.html">Function eCAL::Process::SetState</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__process_8h_1ab768762f3d5bc844ce0b025ad19c4c4a.html">Template Function eCAL::Process::SleepFor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__process_8h_1aaca4e4230ea147783192e7f2aa9dddfd.html">Function eCAL::Process::SleepMS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__process_8h_1a9db72d7191ea478d8b0e87e3169af959.html">Function eCAL::Process::SleepNS</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__process_8h_1a206bdbeb55b08d727e370d422d732a8f.html">Function eCAL::Process::StartProcess</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__process_8h_1ab7cede90a9849704a5eeb78a55996409.html">Function eCAL::Process::StartProcess</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__process_8h_1ae10fb357ad61ec8a60e43ff60d62f385.html">Function eCAL::Process::StopProcess(const char *)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__process_8h_1a4a018d810e332159ef33990e9203fc6b.html">Function eCAL::Process::StopProcess(int)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__registration_8h_1a43fbfc7032a866837fc59170a8251bf7.html">Function eCAL::Registration::AddPublisherEventCallback</a></li>
@@ -373,7 +377,7 @@
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__types_8h_1a6c1751b46d366790d9efd875cc985c9f.html">Function eCAL::Registration::operator&lt;&lt;(std::ostream&amp;, const STopicId&amp;)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__registration_8h_1a32d0524e5d48924312037910dcf646c9.html">Function eCAL::Registration::RemPublisherEventCallback</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__registration_8h_1ae1ae721b779dbc76a0a6f3ce7e3a9f80.html">Function eCAL::Registration::RemSubscriberEventCallback</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__core_8h_1a198ffb431748b7238f128aeabcc126f8.html">Function eCAL::SetUnitName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1a198ffb431748b7238f128aeabcc126f8.html">Function eCAL::SetUnitName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__time_8h_1ab6d9d1b4bef72c120b3dc9935047ffda.html">Function eCAL::Time::GetMicroSeconds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__time_8h_1a7fd36c3df5f4fe573f250eea2eafebde.html">Function eCAL::Time::GetName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__time_8h_1a58d1b5790d3a79c5cc664449af9569c8.html">Function eCAL::Time::GetNanoSeconds</a></li>
@@ -383,6 +387,10 @@
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__time_8h_1a9757b9a8a143a99d9e23fb1a9728ab84.html">Function eCAL::Time::SetNanoSeconds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__time_8h_1a189586f0e0772f9562da20e7e449a898.html">Template Function eCAL::Time::sleep_for</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__time_8h_1ada92c9fde160e167be93706d38dc39ef.html">Function eCAL::Time::SleepForNanoseconds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1aad76de7400fd55c21092e48c1155cd2f.html">Function eCAL::to_string(eSubscriberEvent)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1a095cc5b46ef63315491e98d6df4de3bf.html">Function eCAL::to_string(ePublisherEvent)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1ae35faedd64ab8f87619df58fb60f37e4.html">Function eCAL::to_string(eClientEvent)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1a0229a4b13e78e4626d8ad28c6cf379dc.html">Function eCAL::to_string(eServerEvent)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__util_8h_1ac9378c61f24c4ecc9b9b6bb9407bcc73.html">Function eCAL::Util::CombinedTopicEncodingAndType</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__util_8h_1aabef4cb2047f923399ec627c608b67d9.html">Function eCAL::Util::GeteCALDataDir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__util_8h_1a9b7923317d18713517480ecda7955a04.html">Function eCAL::Util::GeteCALLogDir</a></li>
@@ -407,7 +415,6 @@
 <li class="toctree-l3"><a class="reference internal" href="_api/variable_ecal__init_8h_1a9b44961cef266f679dee2331899a6f83.html">Variable eCAL::Init::Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/variable_ecal__init_8h_1ad5f6f7138a1c19b5c5176fe6e77ddd73.html">Variable eCAL::Init::Subscriber</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/variable_ecal__init_8h_1a6ff1105112b06ca8e533846703cb51fe.html">Variable eCAL::Init::TimeSync</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/define_ecalc__types_8h_1af9bcc49cdd10d31d24e62dbdf1449be7.html">Define ECAL_ALLOCATE_4ME</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/define_ecal__os_8h_1af6e423394b69677025cd7997c3566d77.html">Define ECAL_API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/define_ecal__os_8h_1afc0d02175308ccac5bdfb04fa38fe7b7.html">Define ECAL_API_CLASS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/define_ecal__os_8h_1afc0d02175308ccac5bdfb04fa38fe7b7.html">Define ECAL_API_CLASS</a></li>
@@ -420,32 +427,29 @@
 <li class="toctree-l3"><a class="reference internal" href="_api/define_eh5__defs_8h_1a1e3b049958f67461359ecf9d9876e461.html">Define ECAL_HDF5_VERSION_MAJOR</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/define_eh5__defs_8h_1a578e5b65d53b5a537f7d90b9d64c0106.html">Define ECAL_HDF5_VERSION_MINOR</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/define_eh5__defs_8h_1a2b1361eb83e2597c992f296441ac20e2.html">Define ECAL_HDF5_VERSION_PATCH</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/define_ecal__os_8h_1a6debe968e7507b0d497436c312288015.html">Define ECALC_API</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/define_ecal__os_8h_1a31a75b97ee96d0d709a6c833d3954fb2.html">Define ECALC_API_DEPRECATED</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/define_ecaltime_8h_1a7fbc67f7baf03488d730190a9b7df7e5.html">Define ECALTIME_API</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__callback_8h_1a8a06d847376fa24c9eaf04a66acae8e4.html">Typedef eCAL::ClientEventCallbackT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__service__info_8h_1a085ef39b12d7ec954557c0543afb87c8.html">Typedef eCAL::MethodCallbackT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__service__info_8h_1a5543d583fc59b89461527e3b7ee29fbe.html">Typedef eCAL::MethodInfoCallbackT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__callback_8h_1a0cd1e14ca08cb1fcdec4a0ab31695d67.html">Typedef eCAL::PubEventCallbackT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__callback_8h_1abece559e5bf59ace373635779a6927bb.html">Typedef eCAL::ReceiveCallbackT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/typedef_namespaceeCAL_1a8a06d847376fa24c9eaf04a66acae8e4.html">Typedef eCAL::ClientEventCallbackT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__log__level_8h_1a6c687d0056bbcffcc8adc3ca3ad803da.html">Typedef eCAL::Logging::Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/typedef_namespaceeCAL_1a085ef39b12d7ec954557c0543afb87c8.html">Typedef eCAL::MethodCallbackT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/typedef_namespaceeCAL_1a5543d583fc59b89461527e3b7ee29fbe.html">Typedef eCAL::MethodInfoCallbackT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/typedef_namespaceeCAL_1a0cd1e14ca08cb1fcdec4a0ab31695d67.html">Typedef eCAL::PubEventCallbackT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/typedef_namespaceeCAL_1abece559e5bf59ace373635779a6927bb.html">Typedef eCAL::ReceiveCallbackT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__registration_8h_1a31559467ff34c4fda47503952f0bf8c6.html">Typedef eCAL::Registration::CallbackToken</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__types_8h_1a52a7ccff0f1e754f5a13675483e40db6.html">Typedef eCAL::Registration::EntityIdT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__registration_8h_1a65bdd2b266015f132cd46822ea1fb4ae.html">Typedef eCAL::Registration::TopicIDCallbackT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__service__info_8h_1a2921beb7f71b3be1f5674f5b78d5caaf.html">Typedef eCAL::ResponseCallbackT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__service__info_8h_1ab5212bddb4f96210ad5abf44c4f40df4.html">Typedef eCAL::ResponseIDCallbackT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__callback_8h_1aca88f4a6ccb53165401ecc441a17126d.html">Typedef eCAL::ServerEventCallbackT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__service__info_8h_1a669318bd1e0a2c764971d4783a2ce236.html">Typedef eCAL::ServiceIDResponseVecT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__service__info_8h_1adcabd235781e8cb9b62e4e21df9206f0.html">Typedef eCAL::ServiceMethodInformationMapT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__service__info_8h_1a46b797741012d9431f54330dfbfd71f3.html">Typedef eCAL::ServiceResponseVecT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__callback_8h_1acb0046fb94c3b95fd72bbd6a46efd255.html">Typedef eCAL::SubEventCallbackT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__callback_8h_1ada8fc20e2ddd0f5bc55f137861092851.html">Typedef eCAL::TimerCallbackT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/typedef_namespaceeCAL_1a2921beb7f71b3be1f5674f5b78d5caaf.html">Typedef eCAL::ResponseCallbackT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/typedef_namespaceeCAL_1ab5212bddb4f96210ad5abf44c4f40df4.html">Typedef eCAL::ResponseIDCallbackT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/typedef_namespaceeCAL_1aca88f4a6ccb53165401ecc441a17126d.html">Typedef eCAL::ServerEventCallbackT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/typedef_namespaceeCAL_1a669318bd1e0a2c764971d4783a2ce236.html">Typedef eCAL::ServiceIDResponseVecT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/typedef_namespaceeCAL_1adcabd235781e8cb9b62e4e21df9206f0.html">Typedef eCAL::ServiceMethodInformationMapT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/typedef_namespaceeCAL_1a46b797741012d9431f54330dfbfd71f3.html">Typedef eCAL::ServiceResponseVecT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/typedef_namespaceeCAL_1acb0046fb94c3b95fd72bbd6a46efd255.html">Typedef eCAL::SubEventCallbackT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/typedef_namespaceeCAL_1ada8fc20e2ddd0f5bc55f137861092851.html">Typedef eCAL::TimerCallbackT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__callback__v5_8h_1a0de7f27a9c0feb2c4ca89f2c28517a4b.html">Typedef eCAL::v5::ClientEventCallbackT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__callback__v5_8h_1ad1f09d1adaece3cbc2ff9d8e2a167ddb.html">Typedef eCAL::v5::PubEventCallbackT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__callback__v5_8h_1a88c4160472ff30fe06ff7e994a1b3a53.html">Typedef eCAL::v5::ReceiveCallbackT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__callback__v5_8h_1ad0ffd62808bacb87a476093ecf979b45.html">Typedef eCAL::v5::ServerEventCallbackT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__callback__v5_8h_1abc56d579b8c71029ff91a336108e8fed.html">Typedef eCAL::v5::SubEventCallbackT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecalc__types_8h_1a6801786d75d8af7f213d45239018884b.html">Typedef ECAL_HANDLE</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/typedef_ecal__log__level_8h_1a61e75e834dec40b49c63b7f61c97d009.html">Typedef eCAL_Logging_Filter</a></li>
 </ul>
 </details></li>
 </ul>
@@ -943,7 +947,7 @@
 </li>
       <li><a href="_api/classeCAL_1_1CDynamicMessageSubscriber.html#_CPPv4N4eCAL25CDynamicMessageSubscriberD0Ev">eCAL::CDynamicMessageSubscriber::~CDynamicMessageSubscriber (C++ function)</a>
 </li>
-      <li><a href="_api/typedef_ecal__callback_8h_1a8a06d847376fa24c9eaf04a66acae8e4.html#_CPPv4N4eCAL20ClientEventCallbackTE">eCAL::ClientEventCallbackT (C++ type)</a>
+      <li><a href="_api/typedef_namespaceeCAL_1a8a06d847376fa24c9eaf04a66acae8e4.html#_CPPv4N4eCAL20ClientEventCallbackTE">eCAL::ClientEventCallbackT (C++ type)</a>
 </li>
       <li><a href="_api/classeCAL_1_1CMessageSubscriber.html#_CPPv4I00EN4eCAL18CMessageSubscriberE">eCAL::CMessageSubscriber (C++ class)</a>
 </li>
@@ -1083,6 +1087,26 @@
 </li>
       <li><a href="_api/classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimerD0Ev">eCAL::CTimer::~CTimer (C++ function)</a>
 </li>
+      <li><a href="_api/enum_namespaceeCAL_1a8625101735917809b723685082df8838.html#_CPPv4N4eCAL10eCallStateE">eCAL::eCallState (C++ enum)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1a8625101735917809b723685082df8838.html#_CPPv4N4eCAL10eCallState8executedE">eCAL::eCallState::executed (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1a8625101735917809b723685082df8838.html#_CPPv4N4eCAL10eCallState6failedE">eCAL::eCallState::failed (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1a8625101735917809b723685082df8838.html#_CPPv4N4eCAL10eCallState4noneE">eCAL::eCallState::none (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1a8625101735917809b723685082df8838.html#_CPPv4N4eCAL10eCallState9timeoutedE">eCAL::eCallState::timeouted (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1a720c8d356cce7726b3bb79a162df84f6.html#_CPPv4N4eCAL12eClientEventE">eCAL::eClientEvent (C++ enum)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1a720c8d356cce7726b3bb79a162df84f6.html#_CPPv4N4eCAL12eClientEvent9connectedE">eCAL::eClientEvent::connected (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1a720c8d356cce7726b3bb79a162df84f6.html#_CPPv4N4eCAL12eClientEvent12disconnectedE">eCAL::eClientEvent::disconnected (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1a720c8d356cce7726b3bb79a162df84f6.html#_CPPv4N4eCAL12eClientEvent4noneE">eCAL::eClientEvent::none (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1a720c8d356cce7726b3bb79a162df84f6.html#_CPPv4N4eCAL12eClientEvent7timeoutE">eCAL::eClientEvent::timeout (C++ enumerator)</a>
+</li>
       <li><a href="_api/classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5MeasE">eCAL::eh5::v2::HDF5Meas (C++ class)</a>
 </li>
       <li><a href="_api/classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas14AddEntryToFileEPKvRKyRKxRKxRKNSt6stringExx">eCAL::eh5::v2::HDF5Meas::AddEntryToFile (C++ function)</a>
@@ -1199,19 +1223,53 @@
 </li>
       <li><a href="_api/classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasD0Ev">eCAL::eh5::v3::HDF5Meas::~HDF5Meas (C++ function)</a>
 </li>
-      <li><a href="_api/function_ecal__core_8h_1a6342e514137136747e6339844b25e432.html#_CPPv4N4eCAL8FinalizeEv">eCAL::Finalize (C++ function)</a>
+      <li><a href="_api/enum_namespaceeCAL_1a2d9b998ee59cee251e5eb725742ffa30.html#_CPPv4N4eCAL15ePublisherEventE">eCAL::ePublisherEvent (C++ enum)</a>
 </li>
-      <li><a href="_api/function_ecal__config_8h_1a169429eab7f48217f42788539dcefc50.html#_CPPv4N4eCAL16GetConfigurationEv">eCAL::GetConfiguration (C++ function)</a>
+      <li><a href="_api/enum_namespaceeCAL_1a2d9b998ee59cee251e5eb725742ffa30.html#_CPPv4N4eCAL15ePublisherEvent9connectedE">eCAL::ePublisherEvent::connected (C++ enumerator)</a>
 </li>
-      <li><a href="_api/function_ecal__config_8h_1a9d09c60252170dc4f76642b3614601a4.html#_CPPv4N4eCAL25GetPublisherConfigurationEv">eCAL::GetPublisherConfiguration (C++ function)</a>
+      <li><a href="_api/enum_namespaceeCAL_1a2d9b998ee59cee251e5eb725742ffa30.html#_CPPv4N4eCAL15ePublisherEvent12disconnectedE">eCAL::ePublisherEvent::disconnected (C++ enumerator)</a>
 </li>
-      <li><a href="_api/function_ecal__config_8h_1a10ea0c3e7fa5782486a856c4dca4fac8.html#_CPPv4N4eCAL26GetSubscriberConfigurationEv">eCAL::GetSubscriberConfiguration (C++ function)</a>
+      <li><a href="_api/enum_namespaceeCAL_1a2d9b998ee59cee251e5eb725742ffa30.html#_CPPv4N4eCAL15ePublisherEvent7droppedE">eCAL::ePublisherEvent::dropped (C++ enumerator)</a>
 </li>
-      <li><a href="_api/function_ecal__core_8h_1a023307ac7027db8288093a3fc11d15e9.html#_CPPv4N4eCAL10GetVersionEv">eCAL::GetVersion (C++ function)</a>
+      <li><a href="_api/enum_namespaceeCAL_1a2d9b998ee59cee251e5eb725742ffa30.html#_CPPv4N4eCAL15ePublisherEvent4noneE">eCAL::ePublisherEvent::none (C++ enumerator)</a>
 </li>
-      <li><a href="_api/function_ecal__core_8h_1a3ba629552c97fe1a7fe08846a2941f6e.html#_CPPv4N4eCAL20GetVersionDateStringEv">eCAL::GetVersionDateString (C++ function)</a>
+      <li><a href="_api/enum_namespaceeCAL_1a2d9b998ee59cee251e5eb725742ffa30.html#_CPPv4N4eCAL15ePublisherEvent17update_connectionE">eCAL::ePublisherEvent::update_connection (C++ enumerator)</a>
 </li>
-      <li><a href="_api/function_ecal__core_8h_1a0b257fe51d5220b61b3e6db582804412.html#_CPPv4N4eCAL16GetVersionStringEv">eCAL::GetVersionString (C++ function)</a>
+      <li><a href="_api/enum_namespaceeCAL_1ae4e92393e1b5d42322c8138c71bb73ae.html#_CPPv4N4eCAL12eServerEventE">eCAL::eServerEvent (C++ enum)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1ae4e92393e1b5d42322c8138c71bb73ae.html#_CPPv4N4eCAL12eServerEvent9connectedE">eCAL::eServerEvent::connected (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1ae4e92393e1b5d42322c8138c71bb73ae.html#_CPPv4N4eCAL12eServerEvent12disconnectedE">eCAL::eServerEvent::disconnected (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1ae4e92393e1b5d42322c8138c71bb73ae.html#_CPPv4N4eCAL12eServerEvent4noneE">eCAL::eServerEvent::none (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1adad6307937b50d6905c282bde807c400.html#_CPPv4N4eCAL16eSubscriberEventE">eCAL::eSubscriberEvent (C++ enum)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1adad6307937b50d6905c282bde807c400.html#_CPPv4N4eCAL16eSubscriberEvent9connectedE">eCAL::eSubscriberEvent::connected (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1adad6307937b50d6905c282bde807c400.html#_CPPv4N4eCAL16eSubscriberEvent9corruptedE">eCAL::eSubscriberEvent::corrupted (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1adad6307937b50d6905c282bde807c400.html#_CPPv4N4eCAL16eSubscriberEvent12disconnectedE">eCAL::eSubscriberEvent::disconnected (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1adad6307937b50d6905c282bde807c400.html#_CPPv4N4eCAL16eSubscriberEvent7droppedE">eCAL::eSubscriberEvent::dropped (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1adad6307937b50d6905c282bde807c400.html#_CPPv4N4eCAL16eSubscriberEvent4noneE">eCAL::eSubscriberEvent::none (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_namespaceeCAL_1adad6307937b50d6905c282bde807c400.html#_CPPv4N4eCAL16eSubscriberEvent17update_connectionE">eCAL::eSubscriberEvent::update_connection (C++ enumerator)</a>
+</li>
+      <li><a href="_api/function_namespaceeCAL_1a6342e514137136747e6339844b25e432.html#_CPPv4N4eCAL8FinalizeEv">eCAL::Finalize (C++ function)</a>
+</li>
+      <li><a href="_api/function_namespaceeCAL_1a169429eab7f48217f42788539dcefc50.html#_CPPv4N4eCAL16GetConfigurationEv">eCAL::GetConfiguration (C++ function)</a>
+</li>
+      <li><a href="_api/function_namespaceeCAL_1a9d09c60252170dc4f76642b3614601a4.html#_CPPv4N4eCAL25GetPublisherConfigurationEv">eCAL::GetPublisherConfiguration (C++ function)</a>
+</li>
+      <li><a href="_api/function_namespaceeCAL_1a10ea0c3e7fa5782486a856c4dca4fac8.html#_CPPv4N4eCAL26GetSubscriberConfigurationEv">eCAL::GetSubscriberConfiguration (C++ function)</a>
+</li>
+      <li><a href="_api/function_namespaceeCAL_1a023307ac7027db8288093a3fc11d15e9.html#_CPPv4N4eCAL10GetVersionEv">eCAL::GetVersion (C++ function)</a>
+</li>
+      <li><a href="_api/function_namespaceeCAL_1a3ba629552c97fe1a7fe08846a2941f6e.html#_CPPv4N4eCAL20GetVersionDateStringEv">eCAL::GetVersionDateString (C++ function)</a>
+</li>
+      <li><a href="_api/function_namespaceeCAL_1a0b257fe51d5220b61b3e6db582804412.html#_CPPv4N4eCAL16GetVersionStringEv">eCAL::GetVersionString (C++ function)</a>
 </li>
       <li><a href="_api/variable_ecal__init_8h_1a5dfdf37b132f8995de0992d5c30c2e39.html#_CPPv4N4eCAL4Init3AllE">eCAL::Init::All (C++ member)</a>
 </li>
@@ -1233,23 +1291,81 @@
 </li>
       <li><a href="_api/variable_ecal__init_8h_1a6ff1105112b06ca8e533846703cb51fe.html#_CPPv4N4eCAL4Init8TimeSyncE">eCAL::Init::TimeSync (C++ member)</a>
 </li>
-      <li><a href="_api/function_ecal__core_8h_1a30834f2dd3dbab8e0734c79b2aaf9bb4.html#_CPPv4N4eCAL10InitializeERN4eCAL13ConfigurationERKNSt6stringEj">eCAL::Initialize (C++ function)</a>, <a href="_api/function_ecal__core_8h_1af8f14107926964a1ab750dab13634b39.html#_CPPv4N4eCAL10InitializeERKNSt6stringEj">[1]</a>
+      <li><a href="_api/function_namespaceeCAL_1a30834f2dd3dbab8e0734c79b2aaf9bb4.html#_CPPv4N4eCAL10InitializeERN4eCAL13ConfigurationERKNSt6stringEj">eCAL::Initialize (C++ function)</a>, <a href="_api/function_namespaceeCAL_1af8f14107926964a1ab750dab13634b39.html#_CPPv4N4eCAL10InitializeERKNSt6stringEj">[1]</a>
 </li>
-      <li><a href="_api/function_ecal__core_8h_1a043fea4cd0b2793a63c1de5830bf382c.html#_CPPv4N4eCAL13IsInitializedEj">eCAL::IsInitialized (C++ function)</a>, <a href="_api/function_ecal__core_8h_1a439b87d67679bce153704bc95d4b30de.html#_CPPv4N4eCAL13IsInitializedEv">[1]</a>
+      <li><a href="_api/function_namespaceeCAL_1a043fea4cd0b2793a63c1de5830bf382c.html#_CPPv4N4eCAL13IsInitializedEj">eCAL::IsInitialized (C++ function)</a>, <a href="_api/function_namespaceeCAL_1a439b87d67679bce153704bc95d4b30de.html#_CPPv4N4eCAL13IsInitializedEv">[1]</a>
+</li>
+      <li><a href="_api/enum_ecal__log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevelE">eCAL::Logging::eLogLevel (C++ enum)</a>
+</li>
+      <li><a href="_api/enum_ecal__log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel13log_level_allE">eCAL::Logging::eLogLevel::log_level_all (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel16log_level_debug1E">eCAL::Logging::eLogLevel::log_level_debug1 (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel16log_level_debug2E">eCAL::Logging::eLogLevel::log_level_debug2 (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel16log_level_debug3E">eCAL::Logging::eLogLevel::log_level_debug3 (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel16log_level_debug4E">eCAL::Logging::eLogLevel::log_level_debug4 (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel15log_level_errorE">eCAL::Logging::eLogLevel::log_level_error (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel15log_level_fatalE">eCAL::Logging::eLogLevel::log_level_fatal (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel14log_level_infoE">eCAL::Logging::eLogLevel::log_level_info (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel14log_level_noneE">eCAL::Logging::eLogLevel::log_level_none (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel17log_level_warningE">eCAL::Logging::eLogLevel::log_level_warning (C++ enumerator)</a>
+</li>
+      <li><a href="_api/typedef_ecal__log__level_8h_1a6c687d0056bbcffcc8adc3ca3ad803da.html#_CPPv4N4eCAL7Logging6FilterE">eCAL::Logging::Filter (C++ type)</a>
 </li>
       <li><a href="_api/function_ecal__log_8h_1a29c44b3b7bd43c2bf19db99d21e91887.html#_CPPv4N4eCAL7Logging10GetLoggingERNSt6stringE">eCAL::Logging::GetLogging (C++ function)</a>, <a href="_api/function_ecal__log_8h_1a4933524c4a46c77a8a3a6c19a005897b.html#_CPPv4N4eCAL7Logging10GetLoggingERN7Logging8SLoggingE">[1]</a>
 </li>
-      <li><a href="_api/function_ecal__log_8h_1af5aa7f76fbf6183ddec91fb97a27cb3e.html#_CPPv4N4eCAL7Logging3LogE22eCAL_Logging_eLogLevelRKNSt6stringE">eCAL::Logging::Log (C++ function)</a>
+      <li><a href="_api/function_ecal__log_8h_1ac41d3c193623d4ad374f71172adf8333.html#_CPPv4N4eCAL7Logging3LogE9eLogLevelRKNSt6stringE">eCAL::Logging::Log (C++ function)</a>
 </li>
-      <li><a href="_api/typedef_ecal__service__info_8h_1a085ef39b12d7ec954557c0543afb87c8.html#_CPPv4N4eCAL15MethodCallbackTE">eCAL::MethodCallbackT (C++ type)</a>
+      <li><a href="_api/typedef_namespaceeCAL_1a085ef39b12d7ec954557c0543afb87c8.html#_CPPv4N4eCAL15MethodCallbackTE">eCAL::MethodCallbackT (C++ type)</a>
 </li>
-      <li><a href="_api/typedef_ecal__service__info_8h_1a5543d583fc59b89461527e3b7ee29fbe.html#_CPPv4N4eCAL19MethodInfoCallbackTE">eCAL::MethodInfoCallbackT (C++ type)</a>
+      <li><a href="_api/typedef_namespaceeCAL_1a5543d583fc59b89461527e3b7ee29fbe.html#_CPPv4N4eCAL19MethodInfoCallbackTE">eCAL::MethodInfoCallbackT (C++ type)</a>
 </li>
       <li><a href="_api/function_ecal__monitoring_8h_1a8fc01a83c0f83d744ed293860ecf618c.html#_CPPv4N4eCAL10Monitoring13GetMonitoringERNSt6stringEj">eCAL::Monitoring::GetMonitoring (C++ function)</a>, <a href="_api/function_ecal__monitoring_8h_1ae47a3d85663687e7089d60c5b57e4816.html#_CPPv4N4eCAL10Monitoring13GetMonitoringER11SMonitoringj">[1]</a>
 </li>
-      <li><a href="_api/function_ecal__core_8h_1a600033b0736069b66b026b5bc39cab35.html#_CPPv4N4eCAL2OkEv">eCAL::Ok (C++ function)</a>
+      <li><a href="_api/function_namespaceeCAL_1a600033b0736069b66b026b5bc39cab35.html#_CPPv4N4eCAL2OkEv">eCAL::Ok (C++ function)</a>
 </li>
       <li><a href="_api/function_ecal__process_8h_1a024a270c580d40fe8e59455226ddbf75.html#_CPPv4N4eCAL7Process10DumpConfigEv">eCAL::Process::DumpConfig (C++ function)</a>, <a href="_api/function_ecal__process_8h_1a6ea34958542106657a76e88ce57f02a3.html#_CPPv4N4eCAL7Process10DumpConfigERNSt6stringE">[1]</a>
+</li>
+      <li><a href="_api/enum_ecal__process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverityE">eCAL::Process::eSeverity (C++ enum)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverity8criticalE">eCAL::Process::eSeverity::critical (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverity6failedE">eCAL::Process::eSeverity::failed (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverity7healthyE">eCAL::Process::eSeverity::healthy (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverity7unknownE">eCAL::Process::eSeverity::unknown (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverity7warningE">eCAL::Process::eSeverity::warning (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevelE">eCAL::Process::eSeverityLevel (C++ enum)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevel6level1E">eCAL::Process::eSeverityLevel::level1 (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevel6level2E">eCAL::Process::eSeverityLevel::level2 (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevel6level3E">eCAL::Process::eSeverityLevel::level3 (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevel6level4E">eCAL::Process::eSeverityLevel::level4 (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevel6level5E">eCAL::Process::eSeverityLevel::level5 (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartModeE">eCAL::Process::eStartMode (C++ enum)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartMode6hiddenE">eCAL::Process::eStartMode::hidden (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartMode9maximizedE">eCAL::Process::eStartMode::maximized (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartMode9minimizedE">eCAL::Process::eStartMode::minimized (C++ enumerator)</a>
+</li>
+      <li><a href="_api/enum_ecal__process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartMode6normalE">eCAL::Process::eStartMode::normal (C++ enumerator)</a>
 </li>
       <li><a href="_api/function_ecal__process_8h_1af29c2673d6aec8d9120b3072b5444a26.html#_CPPv4N4eCAL7Process16GetHostGroupNameEv">eCAL::Process::GetHostGroupName (C++ function)</a>
 </li>
@@ -1267,21 +1383,23 @@
 </li>
       <li><a href="_api/function_ecal__process_8h_1a9316c16239592058aa92936910c0fff1.html#_CPPv4N4eCAL7Process11GetUnitNameEv">eCAL::Process::GetUnitName (C++ function)</a>
 </li>
-      <li><a href="_api/function_ecal__process_8h_1a28e02d2f857c01052de373bb3e46e717.html#_CPPv4N4eCAL7Process8SetStateE22eCAL_Process_eSeverity28eCAL_Process_eSeverity_LevelPKc">eCAL::Process::SetState (C++ function)</a>
+      <li><a href="_api/function_ecal__process_8h_1a49286e24c0e73289030ac25fc9cc0d18.html#_CPPv4N4eCAL7Process8SetStateEN4eCAL7Process9eSeverityEN4eCAL7Process14eSeverityLevelEPKc">eCAL::Process::SetState (C++ function)</a>
 </li>
       <li><a href="_api/function_ecal__process_8h_1ab768762f3d5bc844ce0b025ad19c4c4a.html#_CPPv4I00EN4eCAL7Process8SleepForEvNSt6chrono8durationI3Rep6PeriodEE">eCAL::Process::SleepFor (C++ function)</a>
 </li>
       <li><a href="_api/function_ecal__process_8h_1aaca4e4230ea147783192e7f2aa9dddfd.html#_CPPv4N4eCAL7Process7SleepMSEl">eCAL::Process::SleepMS (C++ function)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/function_ecal__process_8h_1a9db72d7191ea478d8b0e87e3169af959.html#_CPPv4N4eCAL7Process7SleepNSEx">eCAL::Process::SleepNS (C++ function)</a>
 </li>
-      <li><a href="_api/function_ecal__process_8h_1a206bdbeb55b08d727e370d422d732a8f.html#_CPPv4N4eCAL7Process12StartProcessEPKcPKcPKcb23eCAL_Process_eStartModeb">eCAL::Process::StartProcess (C++ function)</a>
+      <li><a href="_api/function_ecal__process_8h_1ab7cede90a9849704a5eeb78a55996409.html#_CPPv4N4eCAL7Process12StartProcessEPKcPKcPKcbN4eCAL7Process10eStartModeEb">eCAL::Process::StartProcess (C++ function)</a>
 </li>
       <li><a href="_api/function_ecal__process_8h_1a4a018d810e332159ef33990e9203fc6b.html#_CPPv4N4eCAL7Process11StopProcessEi">eCAL::Process::StopProcess (C++ function)</a>, <a href="_api/function_ecal__process_8h_1ae10fb357ad61ec8a60e43ff60d62f385.html#_CPPv4N4eCAL7Process11StopProcessEPKc">[1]</a>
 </li>
-      <li><a href="_api/typedef_ecal__callback_8h_1a0cd1e14ca08cb1fcdec4a0ab31695d67.html#_CPPv4N4eCAL17PubEventCallbackTE">eCAL::PubEventCallbackT (C++ type)</a>
+      <li><a href="_api/typedef_namespaceeCAL_1a0cd1e14ca08cb1fcdec4a0ab31695d67.html#_CPPv4N4eCAL17PubEventCallbackTE">eCAL::PubEventCallbackT (C++ type)</a>
 </li>
-      <li><a href="_api/typedef_ecal__callback_8h_1abece559e5bf59ace373635779a6927bb.html#_CPPv4N4eCAL16ReceiveCallbackTE">eCAL::ReceiveCallbackT (C++ type)</a>
+      <li><a href="_api/typedef_namespaceeCAL_1abece559e5bf59ace373635779a6927bb.html#_CPPv4N4eCAL16ReceiveCallbackTE">eCAL::ReceiveCallbackT (C++ type)</a>
 </li>
       <li><a href="_api/function_ecal__registration_8h_1a43fbfc7032a866837fc59170a8251bf7.html#_CPPv4N4eCAL12Registration25AddPublisherEventCallbackERK16TopicIDCallbackT">eCAL::Registration::AddPublisherEventCallback (C++ function)</a>
 </li>
@@ -1365,8 +1483,6 @@
 </li>
       <li><a href="_api/structeCAL_1_1Registration_1_1SServiceMethodId.html#_CPPv4N4eCAL12Registration16SServiceMethodId10service_idE">eCAL::Registration::SServiceMethodId::service_id (C++ member)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/structeCAL_1_1Registration_1_1SServiceMethodId.html#_CPPv4N4eCAL12Registration16SServiceMethodId12service_nameE">eCAL::Registration::SServiceMethodId::service_name (C++ member)</a>
 </li>
       <li><a href="_api/structeCAL_1_1Registration_1_1STopicId.html#_CPPv4N4eCAL12Registration8STopicIdE">eCAL::Registration::STopicId (C++ struct)</a>
@@ -1381,9 +1497,9 @@
 </li>
       <li><a href="_api/typedef_ecal__registration_8h_1a65bdd2b266015f132cd46822ea1fb4ae.html#_CPPv4N4eCAL12Registration16TopicIDCallbackTE">eCAL::Registration::TopicIDCallbackT (C++ type)</a>
 </li>
-      <li><a href="_api/typedef_ecal__service__info_8h_1a2921beb7f71b3be1f5674f5b78d5caaf.html#_CPPv4N4eCAL17ResponseCallbackTE">eCAL::ResponseCallbackT (C++ type)</a>
+      <li><a href="_api/typedef_namespaceeCAL_1a2921beb7f71b3be1f5674f5b78d5caaf.html#_CPPv4N4eCAL17ResponseCallbackTE">eCAL::ResponseCallbackT (C++ type)</a>
 </li>
-      <li><a href="_api/typedef_ecal__service__info_8h_1ab5212bddb4f96210ad5abf44c4f40df4.html#_CPPv4N4eCAL19ResponseIDCallbackTE">eCAL::ResponseIDCallbackT (C++ type)</a>
+      <li><a href="_api/typedef_namespaceeCAL_1ab5212bddb4f96210ad5abf44c4f40df4.html#_CPPv4N4eCAL19ResponseIDCallbackTE">eCAL::ResponseIDCallbackT (C++ type)</a>
 </li>
       <li><a href="_api/structeCAL_1_1SDataTypeInformation.html#_CPPv4N4eCAL20SDataTypeInformationE">eCAL::SDataTypeInformation (C++ struct)</a>
 </li>
@@ -1393,15 +1509,15 @@
 </li>
       <li><a href="_api/structeCAL_1_1SDataTypeInformation.html#_CPPv4N4eCAL20SDataTypeInformation4nameE">eCAL::SDataTypeInformation::name (C++ member)</a>
 </li>
-      <li><a href="_api/typedef_ecal__callback_8h_1aca88f4a6ccb53165401ecc441a17126d.html#_CPPv4N4eCAL20ServerEventCallbackTE">eCAL::ServerEventCallbackT (C++ type)</a>
+      <li><a href="_api/typedef_namespaceeCAL_1aca88f4a6ccb53165401ecc441a17126d.html#_CPPv4N4eCAL20ServerEventCallbackTE">eCAL::ServerEventCallbackT (C++ type)</a>
 </li>
-      <li><a href="_api/typedef_ecal__service__info_8h_1a669318bd1e0a2c764971d4783a2ce236.html#_CPPv4N4eCAL21ServiceIDResponseVecTE">eCAL::ServiceIDResponseVecT (C++ type)</a>
+      <li><a href="_api/typedef_namespaceeCAL_1a669318bd1e0a2c764971d4783a2ce236.html#_CPPv4N4eCAL21ServiceIDResponseVecTE">eCAL::ServiceIDResponseVecT (C++ type)</a>
 </li>
-      <li><a href="_api/typedef_ecal__service__info_8h_1adcabd235781e8cb9b62e4e21df9206f0.html#_CPPv4N4eCAL28ServiceMethodInformationMapTE">eCAL::ServiceMethodInformationMapT (C++ type)</a>
+      <li><a href="_api/typedef_namespaceeCAL_1adcabd235781e8cb9b62e4e21df9206f0.html#_CPPv4N4eCAL28ServiceMethodInformationMapTE">eCAL::ServiceMethodInformationMapT (C++ type)</a>
 </li>
-      <li><a href="_api/typedef_ecal__service__info_8h_1a46b797741012d9431f54330dfbfd71f3.html#_CPPv4N4eCAL19ServiceResponseVecTE">eCAL::ServiceResponseVecT (C++ type)</a>
+      <li><a href="_api/typedef_namespaceeCAL_1a46b797741012d9431f54330dfbfd71f3.html#_CPPv4N4eCAL19ServiceResponseVecTE">eCAL::ServiceResponseVecT (C++ type)</a>
 </li>
-      <li><a href="_api/function_ecal__core_8h_1a198ffb431748b7238f128aeabcc126f8.html#_CPPv4N4eCAL11SetUnitNameERKNSt6stringE">eCAL::SetUnitName (C++ function)</a>
+      <li><a href="_api/function_namespaceeCAL_1a198ffb431748b7238f128aeabcc126f8.html#_CPPv4N4eCAL11SetUnitNameERKNSt6stringE">eCAL::SetUnitName (C++ function)</a>
 </li>
       <li><a href="_api/structeCAL_1_1SMethodInfo.html#_CPPv4N4eCAL11SMethodInfoE">eCAL::SMethodInfo (C++ struct)</a>
 </li>
@@ -1461,7 +1577,7 @@
 </li>
       <li><a href="_api/structeCAL_1_1SServiceResponse.html#_CPPv4N4eCAL16SServiceResponse16SServiceResponseEv">eCAL::SServiceResponse::SServiceResponse (C++ function)</a>
 </li>
-      <li><a href="_api/typedef_ecal__callback_8h_1acb0046fb94c3b95fd72bbd6a46efd255.html#_CPPv4N4eCAL17SubEventCallbackTE">eCAL::SubEventCallbackT (C++ type)</a>
+      <li><a href="_api/typedef_namespaceeCAL_1acb0046fb94c3b95fd72bbd6a46efd255.html#_CPPv4N4eCAL17SubEventCallbackTE">eCAL::SubEventCallbackT (C++ type)</a>
 </li>
       <li><a href="_api/structeCAL_1_1SVersion.html#_CPPv4N4eCAL8SVersionE">eCAL::SVersion (C++ struct)</a>
 </li>
@@ -1489,7 +1605,7 @@
 </li>
       <li><a href="_api/function_ecal__time_8h_1ada92c9fde160e167be93706d38dc39ef.html#_CPPv4N4eCAL4Time19SleepForNanosecondsEx">eCAL::Time::SleepForNanoseconds (C++ function)</a>
 </li>
-      <li><a href="_api/typedef_ecal__callback_8h_1ada8fc20e2ddd0f5bc55f137861092851.html#_CPPv4N4eCAL14TimerCallbackTE">eCAL::TimerCallbackT (C++ type)</a>
+      <li><a href="_api/typedef_namespaceeCAL_1ada8fc20e2ddd0f5bc55f137861092851.html#_CPPv4N4eCAL14TimerCallbackTE">eCAL::TimerCallbackT (C++ type)</a>
 </li>
       <li><a href="_api/enum_ecal__tlayer_8h_1a65b651c8133a86e4850afa99db69a59a.html#_CPPv4N4eCAL6TLayer15eTransportLayerE">eCAL::TLayer::eTransportLayer (C++ enum)</a>
 </li>
@@ -1502,6 +1618,8 @@
       <li><a href="_api/enum_ecal__tlayer_8h_1a65b651c8133a86e4850afa99db69a59a.html#_CPPv4N4eCAL6TLayer15eTransportLayer10tlayer_tcpE">eCAL::TLayer::eTransportLayer::tlayer_tcp (C++ enumerator)</a>
 </li>
       <li><a href="_api/enum_ecal__tlayer_8h_1a65b651c8133a86e4850afa99db69a59a.html#_CPPv4N4eCAL6TLayer15eTransportLayer13tlayer_udp_mcE">eCAL::TLayer::eTransportLayer::tlayer_udp_mc (C++ enumerator)</a>
+</li>
+      <li><a href="_api/function_namespaceeCAL_1a0229a4b13e78e4626d8ad28c6cf379dc.html#_CPPv4N4eCAL9to_stringE12eServerEvent">eCAL::to_string (C++ function)</a>, <a href="_api/function_namespaceeCAL_1a095cc5b46ef63315491e98d6df4de3bf.html#_CPPv4N4eCAL9to_stringE15ePublisherEvent">[1]</a>, <a href="_api/function_namespaceeCAL_1aad76de7400fd55c21092e48c1155cd2f.html#_CPPv4N4eCAL9to_stringE16eSubscriberEvent">[2]</a>, <a href="_api/function_namespaceeCAL_1ae35faedd64ab8f87619df58fb60f37e4.html#_CPPv4N4eCAL9to_stringE12eClientEvent">[3]</a>
 </li>
       <li><a href="_api/function_ecal__util_8h_1ac9378c61f24c4ecc9b9b6bb9407bcc73.html#_CPPv4N4eCAL4Util28CombinedTopicEncodingAndTypeERKNSt6stringERKNSt6stringE">eCAL::Util::CombinedTopicEncodingAndType (C++ function)</a>
 </li>
@@ -1699,8 +1817,6 @@
 </li>
       <li><a href="_api/structeCAL_1_1v6_1_1SSubEventCallbackData.html#_CPPv4N4eCAL2v621SSubEventCallbackData4typeE">eCAL::v6::SSubEventCallbackData::type (C++ member)</a>
 </li>
-      <li><a href="_api/define_ecalc__types_8h_1af9bcc49cdd10d31d24e62dbdf1449be7.html#c.ECAL_ALLOCATE_4ME">ECAL_ALLOCATE_4ME (C macro)</a>
-</li>
       <li><a href="_api/define_ecal__os_8h_1af6e423394b69677025cd7997c3566d77.html#c.ECAL_API">ECAL_API (C macro)</a>
 </li>
       <li><a href="_api/define_ecal__os_8h_1afc0d02175308ccac5bdfb04fa38fe7b7.html#c.ECAL_API_CLASS">ECAL_API_CLASS (C macro)</a>
@@ -1710,8 +1826,6 @@
       <li><a href="_api/define_ecal__deprecate_8h_1ad0fce642e420a9f9d32b34cb1814ea2a.html#c.ECAL_DEPRECATE_SINCE_6_0">ECAL_DEPRECATE_SINCE_6_0 (C macro)</a>
 </li>
       <li><a href="_api/define_eh5__meas_8h_1ae803c5567ff361b9f9ac4c52ddb59869.html#c.ECAL_EH5_DEPRECATE">ECAL_EH5_DEPRECATE (C macro)</a>
-</li>
-      <li><a href="_api/typedef_ecalc__types_8h_1a6801786d75d8af7f213d45239018884b.html#_CPPv411ECAL_HANDLE">ECAL_HANDLE (C++ type)</a>
 </li>
       <li><a href="_api/define_eh5__defs_8h_1accb613e2b9b76ded6bf8ca42b2824c5b.html#c.ECAL_HDF5_DATE">ECAL_HDF5_DATE (C macro)</a>
 </li>
@@ -1724,76 +1838,6 @@
       <li><a href="_api/define_eh5__defs_8h_1a578e5b65d53b5a537f7d90b9d64c0106.html#c.ECAL_HDF5_VERSION_MINOR">ECAL_HDF5_VERSION_MINOR (C macro)</a>
 </li>
       <li><a href="_api/define_eh5__defs_8h_1a2b1361eb83e2597c992f296441ac20e2.html#c.ECAL_HDF5_VERSION_PATCH">ECAL_HDF5_VERSION_PATCH (C macro)</a>
-</li>
-      <li><a href="_api/enum_ecal__log__level_8h_1a7ac86e3048a80a58673fdab06c1a2310.html#_CPPv422eCAL_Logging_eLogLevel">eCAL_Logging_eLogLevel (C++ enum)</a>
-</li>
-      <li><a href="_api/enum_ecal__log__level_8h_1a7ac86e3048a80a58673fdab06c1a2310.html#_CPPv4N22eCAL_Logging_eLogLevel13log_level_allE">eCAL_Logging_eLogLevel::log_level_all (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__log__level_8h_1a7ac86e3048a80a58673fdab06c1a2310.html#_CPPv4N22eCAL_Logging_eLogLevel16log_level_debug1E">eCAL_Logging_eLogLevel::log_level_debug1 (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__log__level_8h_1a7ac86e3048a80a58673fdab06c1a2310.html#_CPPv4N22eCAL_Logging_eLogLevel16log_level_debug2E">eCAL_Logging_eLogLevel::log_level_debug2 (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__log__level_8h_1a7ac86e3048a80a58673fdab06c1a2310.html#_CPPv4N22eCAL_Logging_eLogLevel16log_level_debug3E">eCAL_Logging_eLogLevel::log_level_debug3 (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__log__level_8h_1a7ac86e3048a80a58673fdab06c1a2310.html#_CPPv4N22eCAL_Logging_eLogLevel16log_level_debug4E">eCAL_Logging_eLogLevel::log_level_debug4 (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__log__level_8h_1a7ac86e3048a80a58673fdab06c1a2310.html#_CPPv4N22eCAL_Logging_eLogLevel15log_level_errorE">eCAL_Logging_eLogLevel::log_level_error (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__log__level_8h_1a7ac86e3048a80a58673fdab06c1a2310.html#_CPPv4N22eCAL_Logging_eLogLevel15log_level_fatalE">eCAL_Logging_eLogLevel::log_level_fatal (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__log__level_8h_1a7ac86e3048a80a58673fdab06c1a2310.html#_CPPv4N22eCAL_Logging_eLogLevel14log_level_infoE">eCAL_Logging_eLogLevel::log_level_info (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__log__level_8h_1a7ac86e3048a80a58673fdab06c1a2310.html#_CPPv4N22eCAL_Logging_eLogLevel14log_level_noneE">eCAL_Logging_eLogLevel::log_level_none (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__log__level_8h_1a7ac86e3048a80a58673fdab06c1a2310.html#_CPPv4N22eCAL_Logging_eLogLevel17log_level_warningE">eCAL_Logging_eLogLevel::log_level_warning (C++ enumerator)</a>
-</li>
-      <li><a href="_api/typedef_ecal__log__level_8h_1a61e75e834dec40b49c63b7f61c97d009.html#_CPPv419eCAL_Logging_Filter">eCAL_Logging_Filter (C++ type)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__severity_8h_1af54a320816f7e73015680c0cef91ca17.html#_CPPv422eCAL_Process_eSeverity">eCAL_Process_eSeverity (C++ enum)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__severity_8h_1af54a320816f7e73015680c0cef91ca17.html#_CPPv4N22eCAL_Process_eSeverity17proc_sev_criticalE">eCAL_Process_eSeverity::proc_sev_critical (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__severity_8h_1af54a320816f7e73015680c0cef91ca17.html#_CPPv4N22eCAL_Process_eSeverity15proc_sev_failedE">eCAL_Process_eSeverity::proc_sev_failed (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__severity_8h_1af54a320816f7e73015680c0cef91ca17.html#_CPPv4N22eCAL_Process_eSeverity16proc_sev_healthyE">eCAL_Process_eSeverity::proc_sev_healthy (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__severity_8h_1af54a320816f7e73015680c0cef91ca17.html#_CPPv4N22eCAL_Process_eSeverity16proc_sev_unknownE">eCAL_Process_eSeverity::proc_sev_unknown (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__severity_8h_1af54a320816f7e73015680c0cef91ca17.html#_CPPv4N22eCAL_Process_eSeverity16proc_sev_warningE">eCAL_Process_eSeverity::proc_sev_warning (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__severity_8h_1a2555c88c6ad7b7279f700f0357a8312a.html#_CPPv428eCAL_Process_eSeverity_Level">eCAL_Process_eSeverity_Level (C++ enum)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__severity_8h_1a2555c88c6ad7b7279f700f0357a8312a.html#_CPPv4N28eCAL_Process_eSeverity_Level15proc_sev_level1E">eCAL_Process_eSeverity_Level::proc_sev_level1 (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__severity_8h_1a2555c88c6ad7b7279f700f0357a8312a.html#_CPPv4N28eCAL_Process_eSeverity_Level15proc_sev_level2E">eCAL_Process_eSeverity_Level::proc_sev_level2 (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__severity_8h_1a2555c88c6ad7b7279f700f0357a8312a.html#_CPPv4N28eCAL_Process_eSeverity_Level15proc_sev_level3E">eCAL_Process_eSeverity_Level::proc_sev_level3 (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__severity_8h_1a2555c88c6ad7b7279f700f0357a8312a.html#_CPPv4N28eCAL_Process_eSeverity_Level15proc_sev_level4E">eCAL_Process_eSeverity_Level::proc_sev_level4 (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__severity_8h_1a2555c88c6ad7b7279f700f0357a8312a.html#_CPPv4N28eCAL_Process_eSeverity_Level15proc_sev_level5E">eCAL_Process_eSeverity_Level::proc_sev_level5 (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__mode_8h_1ac07aba7e64cb7795b08212f4072658b8.html#_CPPv423eCAL_Process_eStartMode">eCAL_Process_eStartMode (C++ enum)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__mode_8h_1ac07aba7e64cb7795b08212f4072658b8.html#_CPPv4N23eCAL_Process_eStartMode17proc_smode_hiddenE">eCAL_Process_eStartMode::proc_smode_hidden (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__mode_8h_1ac07aba7e64cb7795b08212f4072658b8.html#_CPPv4N23eCAL_Process_eStartMode20proc_smode_maximizedE">eCAL_Process_eStartMode::proc_smode_maximized (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__mode_8h_1ac07aba7e64cb7795b08212f4072658b8.html#_CPPv4N23eCAL_Process_eStartMode20proc_smode_minimizedE">eCAL_Process_eStartMode::proc_smode_minimized (C++ enumerator)</a>
-</li>
-      <li><a href="_api/enum_ecal__process__mode_8h_1ac07aba7e64cb7795b08212f4072658b8.html#_CPPv4N23eCAL_Process_eStartMode17proc_smode_normalE">eCAL_Process_eStartMode::proc_smode_normal (C++ enumerator)</a>
-</li>
-      <li><a href="_api/structeCAL__SVersion.html#_CPPv413eCAL_SVersion">eCAL_SVersion (C++ struct)</a>
-</li>
-      <li><a href="_api/structeCAL__SVersion.html#_CPPv4N13eCAL_SVersion5majorE">eCAL_SVersion::major (C++ member)</a>
-</li>
-      <li><a href="_api/structeCAL__SVersion.html#_CPPv4N13eCAL_SVersion5minorE">eCAL_SVersion::minor (C++ member)</a>
-</li>
-      <li><a href="_api/structeCAL__SVersion.html#_CPPv4N13eCAL_SVersion5patchE">eCAL_SVersion::patch (C++ member)</a>
-</li>
-      <li><a href="_api/define_ecal__os_8h_1a6debe968e7507b0d497436c312288015.html#c.ECALC_API">ECALC_API (C macro)</a>
-</li>
-      <li><a href="_api/define_ecal__os_8h_1a31a75b97ee96d0d709a6c833d3954fb2.html#c.ECALC_API_DEPRECATED">ECALC_API_DEPRECATED (C macro)</a>
 </li>
       <li><a href="_api/define_ecaltime_8h_1a7fbc67f7baf03488d730190a9b7df7e5.html#c.ECALTIME_API">ECALTIME_API (C macro)</a>
 </li>
