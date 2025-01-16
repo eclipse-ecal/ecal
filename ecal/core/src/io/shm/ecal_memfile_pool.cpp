@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  * Copyright (C) 2022 Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,7 +69,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug2, std::string("CMemFileObserver " + m_memfile.Name() + " created"));
+    Logging::Log(Logging::log_level_debug2, std::string("CMemFileObserver " + m_memfile.Name() + " created"));
 #endif
 
     return true;
@@ -90,7 +90,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug2, std::string("CMemFileObserver " + m_memfile.Name() + " destroyed"));
+    Logging::Log(Logging::log_level_debug2, std::string("CMemFileObserver " + m_memfile.Name() + " destroyed"));
 #endif
 
     return true;
@@ -112,7 +112,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug2, std::string("CMemFileObserver started."));
+    Logging::Log(Logging::log_level_debug2, std::string("CMemFileObserver started."));
 #endif
 
     return true;
@@ -281,11 +281,11 @@ namespace eCAL
     // log it
     if(m_do_stop)
     {
-      Logging::Log(log_level_debug2, std::string("CMemFileObserver " + m_memfile.Name() + " stopped"));
+      Logging::Log(Logging::log_level_debug2, std::string("CMemFileObserver " + m_memfile.Name() + " stopped"));
     }
     else
     {
-      Logging::Log(log_level_debug2, std::string("CMemFileObserver " + m_memfile.Name() + " timeout"));
+      Logging::Log(Logging::log_level_debug2, std::string("CMemFileObserver " + m_memfile.Name() + " timeout"));
     }
 #endif
 
@@ -402,7 +402,7 @@ namespace eCAL
       m_observer_pool[memfile_name_] = observer;
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug2, std::string("CMemFileThreadPool::ObserveFile " + memfile_name_ + " added"));
+      Logging::Log(Logging::log_level_debug2, std::string("CMemFileThreadPool::ObserveFile " + memfile_name_ + " added"));
 #endif
       return(true);
     }
@@ -439,7 +439,7 @@ namespace eCAL
       {
 #ifndef NDEBUG
         // log it
-        Logging::Log(log_level_debug2, std::string("CMemFileThreadPool::ObserveFile " + observer->first + " removed"));
+        Logging::Log(eCAL::Logging::log_level_debug2, std::string("CMemFileThreadPool::ObserveFile " + observer->first + " removed"));
 #endif
         observer = m_observer_pool.erase(observer);
       }

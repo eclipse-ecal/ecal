@@ -214,7 +214,7 @@ int main(int argc, char** argv)
     eCAL::Initialize(config, "eCALMon CLI", eCAL::Init::All);
 
     // set process state
-    eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
+    eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
     switch (cmd_option)
     {

@@ -213,7 +213,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_);
+        bool AddEventCallback(eSubscriberEvent type_, SubEventCallbackT callback_);
 
       /**
        * @brief Remove callback function for subscriber events.
@@ -223,7 +223,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool RemEventCallback(eCAL_Subscriber_Event type_);
+        bool RemEventCallback(eSubscriberEvent type_);
 
       /**
        * @brief Query if this object is created.

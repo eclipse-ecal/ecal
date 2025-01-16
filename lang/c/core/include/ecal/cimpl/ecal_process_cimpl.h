@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,15 +25,49 @@
 #ifndef ecal_process_cimpl_h_included
 #define ecal_process_cimpl_h_included
 
-#include <ecal/ecal_process_mode.h>
-#include <ecal/ecal_process_severity.h>
-
-#include <ecal/ecal_os.h>
+#include <ecal/ecalc_export.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /*__cplusplus*/
+
+  enum eCAL_Process_eStartMode
+  {
+    proc_smode_normal = 0,  /*!<  0 == start mode normal     */
+    proc_smode_hidden = 1,  /*!<  1 == start mode hidden     */
+    proc_smode_minimized = 2,  /*!<  2 == start mode minimized  */
+    proc_smode_maximized = 3,  /*!<  3 == start mode maximized  */
+  };
+
+  /**
+ * @brief  Process severity
+**/
+  enum eCAL_Process_eSeverity
+  {
+    proc_sev_unknown = 0,  /*!<  0 == condition unknown     */
+    proc_sev_healthy = 1,  /*!<  1 == process healthy       */
+    proc_sev_warning = 2,  /*!<  2 == process warning level */
+    proc_sev_critical = 3,  /*!<  3 == process critical      */
+    proc_sev_failed = 4,  /*!<  4 == process failed        */
+  };
+
+  /**
+   * @brief Process Severity Level
+   *
+   * enumerations for ECAL_API::SetState functionality
+   * where the lowest process severity is generally proc_sev_level1
+  **/
+  enum eCAL_Process_eSeverity_Level
+  {
+    proc_sev_level1 = 1,  /*!<  default severity level 1 */
+    proc_sev_level2 = 2,  /*!<  severity level 2         */
+    proc_sev_level3 = 3,  /*!<  severity level 3         */
+    proc_sev_level4 = 4,  /*!<  severity level 4         */
+    proc_sev_level5 = 5,  /*!<  severity level 5         */
+  };
+
+
   /**
    * @brief  Dump configuration to console. 
   **/

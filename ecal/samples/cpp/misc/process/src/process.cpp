@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ int main()
   eCAL::Initialize("process", eCAL::Init::None);
 
   // start process
-  eCAL::Process::StartProcess(proc_name, "", "", false, proc_smode_normal, false);
+  eCAL::Process::StartProcess(proc_name, "", "", false, eCAL::Process::eStartMode::normal, false);
 
   // sleep 2 seconds
   eCAL::Process::SleepMS(2000);
@@ -43,7 +43,7 @@ int main()
   eCAL::Process::SleepMS(2000);
 
   // start process
-  int pid = eCAL::Process::StartProcess(proc_name, "", "", false, proc_smode_normal, false);
+  int pid = eCAL::Process::StartProcess(proc_name, "", "", false, eCAL::Process::eStartMode::normal, false);
 
   // sleep 2 seconds
   eCAL::Process::SleepMS(2000);

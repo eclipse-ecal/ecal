@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ namespace eCAL
       if(g_pubgate() != nullptr) g_pubgate()->Unregister(m_publisher_impl->GetTopicName(), m_publisher_impl);
   #ifndef NDEBUG
       // log it
-      eCAL::Logging::Log(log_level_debug1, std::string(m_publisher_impl->GetTopicName() + "::CPublisher::Destroy"));
+      eCAL::Logging::Log(Logging::log_level_debug1, std::string(m_publisher_impl->GetTopicName() + "::CPublisher::Destroy"));
   #endif
 
       // destroy publisher
@@ -184,14 +184,14 @@ namespace eCAL
       return(Send(s_.data(), s_.size(), time_));
     }
 
-    bool CPublisher::AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_)
+    bool CPublisher::AddEventCallback(ePublisherEvent type_, PubEventCallbackT callback_)
     {
       if (m_publisher_impl == nullptr) return(false);
       RemEventCallback(type_);
       return(m_publisher_impl->SetEventCallback(type_, std::move(callback_)));
     }
 
-    bool CPublisher::RemEventCallback(eCAL_Publisher_Event type_)
+    bool CPublisher::RemEventCallback(ePublisherEvent type_)
     {
       if (m_publisher_impl == nullptr) return(false);
       return(m_publisher_impl->RemoveEventCallback(type_));

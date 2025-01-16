@@ -111,7 +111,7 @@ namespace eCAL
 
 #ifndef NDEBUG
       // log it
-      eCAL::Logging::Log(log_level_debug1, std::string(m_subscriber_impl->GetTopicName() + "::CSubscriber::Destroy"));
+      eCAL::Logging::Log(Logging::log_level_debug1, std::string(m_subscriber_impl->GetTopicName() + "::CSubscriber::Destroy"));
 #endif
 
       // destroy datareader
@@ -168,14 +168,14 @@ namespace eCAL
       return(m_subscriber_impl->RemoveReceiveCallback());
     }
 
-    bool CSubscriber::AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_)
+    bool CSubscriber::AddEventCallback(eSubscriberEvent type_, SubEventCallbackT callback_)
     {
       if (m_subscriber_impl == nullptr) return(false);
       RemEventCallback(type_);
       return(m_subscriber_impl->SetEventCallback(type_, callback_));
     }
 
-    bool CSubscriber::RemEventCallback(eCAL_Subscriber_Event type_)
+    bool CSubscriber::RemEventCallback(eSubscriberEvent type_)
     {
       if (m_subscriber_impl == nullptr) return(false);
       return(m_subscriber_impl->RemoveEventCallback(type_));

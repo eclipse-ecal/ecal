@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,13 +65,13 @@ void SeverityPickerDelegate::setEditorData(QWidget *editor, const QModelIndex &i
 
   if (index.column() == (int)GroupStateMinTaskStateTreeModel::Columns::SEVERITY)
   {
-    eCAL_Process_eSeverity severity = (eCAL_Process_eSeverity)(current_int);
+    eCAL::Process::eSeverity severity = (eCAL::Process::eSeverity)(current_int);
     SeverityModel* severity_model = static_cast<SeverityModel*>(combobox->model());
     combobox->setCurrentIndex(severity_model->getRow(severity));
   }
   else if (index.column() == (int)GroupStateMinTaskStateTreeModel::Columns::SEVERITY_LEVEL)
   {
-    eCAL_Process_eSeverity_Level severity_level = (eCAL_Process_eSeverity_Level)(current_int);
+    eCAL::Process::eSeverityLevel severity_level = (eCAL::Process::eSeverityLevel)(current_int);
     SeverityLevelModel* severity_level_model = static_cast<SeverityLevelModel*>(combobox->model());
     combobox->setCurrentIndex(severity_level_model->getRow(severity_level));
   }
@@ -86,13 +86,13 @@ void SeverityPickerDelegate::setModelData(QWidget *editor, QAbstractItemModel *m
   if (index.column() == (int)GroupStateMinTaskStateTreeModel::Columns::SEVERITY)
   {
     SeverityModel* severity_model = static_cast<SeverityModel*>(combobox->model());
-    eCAL_Process_eSeverity severity = severity_model->getSeverity(combobox->currentIndex());
+    eCAL::Process::eSeverity severity = severity_model->getSeverity(combobox->currentIndex());
     model->setData(index, (int)severity, Qt::EditRole);
   }
   else if (index.column() == (int)GroupStateMinTaskStateTreeModel::Columns::SEVERITY_LEVEL)
   {
     SeverityLevelModel* severity_level_model = static_cast<SeverityLevelModel*>(combobox->model());
-    eCAL_Process_eSeverity_Level severity_level = severity_level_model->getSeverityLevel(combobox->currentIndex());
+    eCAL::Process::eSeverityLevel severity_level = severity_level_model->getSeverityLevel(combobox->currentIndex());
     model->setData(index, (int)severity_level, Qt::EditRole);
   }
 }

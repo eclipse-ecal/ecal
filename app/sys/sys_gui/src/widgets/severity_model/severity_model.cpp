@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,12 @@ SeverityModel::SeverityModel(QObject *parent, bool include_unknown_severity)
 {
   if (include_unknown_severity)
   {
-    rows.push_back(std::make_pair(QString("Unknown"), eCAL_Process_eSeverity::proc_sev_unknown));
+    rows.push_back(std::make_pair(QString("Unknown"), eCAL::Process::eSeverity::unknown));
   }
-  rows.push_back(std::make_pair(QString("Healthy"), eCAL_Process_eSeverity::proc_sev_healthy));
-  rows.push_back(std::make_pair(QString("Warning"), eCAL_Process_eSeverity::proc_sev_warning));
-  rows.push_back(std::make_pair(QString("Critical"), eCAL_Process_eSeverity::proc_sev_critical));
-  rows.push_back(std::make_pair(QString("Failed"), eCAL_Process_eSeverity::proc_sev_failed));
+  rows.push_back(std::make_pair(QString("Healthy"), eCAL::Process::eSeverity::healthy));
+  rows.push_back(std::make_pair(QString("Warning"), eCAL::Process::eSeverity::warning));
+  rows.push_back(std::make_pair(QString("Critical"), eCAL::Process::eSeverity::critical));
+  rows.push_back(std::make_pair(QString("Failed"), eCAL::Process::eSeverity::failed));
 }
 
 SeverityModel::~SeverityModel()
@@ -54,12 +54,12 @@ QString SeverityModel::getString(int row) const
   return rows[row].first;
 }
 
-eCAL_Process_eSeverity SeverityModel::getSeverity(int row) const
+eCAL::Process::eSeverity SeverityModel::getSeverity(int row) const
 {
   return rows[row].second;
 }
 
-int SeverityModel::getRow(eCAL_Process_eSeverity severity) const
+int SeverityModel::getRow(eCAL::Process::eSeverity severity) const
 {
   for (int i = 0; i < (int)rows.size(); i++)
   {

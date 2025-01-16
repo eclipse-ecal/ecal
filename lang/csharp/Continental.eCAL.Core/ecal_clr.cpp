@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ void Util::ShutdownProcesses()
 
 void Logger::Log(System::String^ message_)
 {
-  ::eCAL::Logging::Log(log_level_all, StringToStlString(message_));
+  ::eCAL::Logging::Log(::eCAL::Logging::log_level_all, StringToStlString(message_));
 }
 
 

@@ -83,8 +83,8 @@ namespace eCAL
     bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
     // deprecated event callback interface
-    bool SetEventCallback(eCAL_Publisher_Event type_, const v5::PubEventCallbackT callback_);
-    bool RemoveEventCallback(eCAL_Publisher_Event type_);
+    bool SetEventCallback(ePublisherEvent type_, const v5::PubEventCallbackT callback_);
+    bool RemoveEventCallback(ePublisherEvent type_);
 
     // future event callback interface
     bool SetEventCallback(const PubEventCallbackT callback_);
@@ -130,7 +130,7 @@ namespace eCAL
 
     void StopAllLayer();
 
-    void FireEvent(const eCAL_Publisher_Event type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
+    void FireEvent(const ePublisherEvent type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
     void FireConnectEvent   (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
     void FireUpdateEvent    (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
@@ -163,7 +163,7 @@ namespace eCAL
     SSubscriptionMapT                      m_connection_map;
     std::atomic<size_t>                    m_connection_count{ 0 };
 
-    using EventCallbackMapT = std::map<eCAL_Publisher_Event, v5::PubEventCallbackT>;
+    using EventCallbackMapT = std::map<ePublisherEvent, v5::PubEventCallbackT>;
     std::mutex                             m_event_callback_map_mutex;
     EventCallbackMapT                      m_event_callback_map;
 

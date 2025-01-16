@@ -129,7 +129,7 @@ namespace eCAL
     break;
     default:
     {
-      Logging::Log(log_level_debug1, "CMonitoringImpl::ApplySample : unknown sample type");  
+      Logging::Log(Logging::log_level_debug1, "CMonitoringImpl::ApplySample : unknown sample type");
     }
     break;
     }

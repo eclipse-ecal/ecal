@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,8 +48,8 @@ namespace eCAL
   std::string                   g_process_id_s;
   std::string                   g_process_info;
 
-  eCAL_Process_eSeverity        g_process_severity(eCAL_Process_eSeverity::proc_sev_unknown);
-  eCAL_Process_eSeverity_Level  g_process_severity_level(eCAL_Process_eSeverity_Level::proc_sev_level1);
+  eCAL::Process::eSeverity        g_process_severity(eCAL::Process::eSeverity::unknown);
+  eCAL::Process::eSeverityLevel  g_process_severity_level(eCAL::Process::eSeverityLevel::level1);
 
   void InitGlobals()
   {

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ namespace eCAL
         runner.default_task_dir = runner_pb.default_task_dir();
       }
 
-      void FromProtobuf(const eCAL::pb::sys_client::WindowMode&          window_mode_pb,       eCAL_Process_eStartMode&           window_mode)
+      void FromProtobuf(const eCAL::pb::sys_client::WindowMode&          window_mode_pb,       eCAL::Process::eStartMode&           window_mode)
       {
         window_mode = FromProtobuf(window_mode_pb);
       }
@@ -132,18 +132,18 @@ namespace eCAL
         return runner;
       }
 
-      eCAL_Process_eStartMode           FromProtobuf(const eCAL::pb::sys_client::WindowMode&          window_mode_pb)
+      eCAL::Process::eStartMode           FromProtobuf(const eCAL::pb::sys_client::WindowMode&          window_mode_pb)
       {
         switch (window_mode_pb)
         {
         case eCAL::pb::sys_client::WindowMode::hidden:
-          return eCAL_Process_eStartMode::proc_smode_hidden;
+          return eCAL::Process::eStartMode::hidden;
         case eCAL::pb::sys_client::WindowMode::minimized:
-          return eCAL_Process_eStartMode::proc_smode_minimized;
+          return eCAL::Process::eStartMode::minimized;
         case eCAL::pb::sys_client::WindowMode::maximized:
-          return eCAL_Process_eStartMode::proc_smode_maximized;
+          return eCAL::Process::eStartMode::maximized;
         default:
-          return eCAL_Process_eStartMode::proc_smode_normal;
+          return eCAL::Process::eStartMode::normal;
         }
       }
 
@@ -216,7 +216,7 @@ namespace eCAL
         runner_pb.set_default_task_dir(runner.default_task_dir);
       }
 
-      void ToProtobuf(eCAL::pb::sys_client::WindowMode&          window_mode_pb,       const eCAL_Process_eStartMode           window_mode)
+      void ToProtobuf(eCAL::pb::sys_client::WindowMode&          window_mode_pb,       const eCAL::Process::eStartMode           window_mode)
       {
         window_mode_pb = ToProtobuf(window_mode);
       }
@@ -298,15 +298,15 @@ namespace eCAL
         return output;
       }
 
-      eCAL::pb::sys_client::WindowMode    ToProtobuf(const eCAL_Process_eStartMode                window_mode)
+      eCAL::pb::sys_client::WindowMode    ToProtobuf(const eCAL::Process::eStartMode                window_mode)
       {
         switch (window_mode)
         {
-        case eCAL_Process_eStartMode::proc_smode_hidden:
+        case eCAL::Process::eStartMode::hidden:
           return eCAL::pb::sys_client::WindowMode::hidden;
-        case eCAL_Process_eStartMode::proc_smode_minimized:
+        case eCAL::Process::eStartMode::minimized:
           return eCAL::pb::sys_client::WindowMode::minimized;
-        case eCAL_Process_eStartMode::proc_smode_maximized:
+        case eCAL::Process::eStartMode::maximized:
           return eCAL::pb::sys_client::WindowMode::maximized;
         default:
           return eCAL::pb::sys_client::WindowMode::normal;

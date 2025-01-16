@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_client_v5.h>
 #include <ecal/cimpl/ecal_client_cimpl.h>
+#include <ecal/ecal_service_info.h>
 
 #include "ecal_common_cimpl.h"
 
@@ -33,6 +34,43 @@
 #if ECAL_CORE_SERVICE
 namespace
 {
+  eCallState enum_class_to_enum(eCAL::eCallState cpp_call_state_)
+  {
+    switch (cpp_call_state_)
+    {
+    case eCAL::eCallState::none:      return call_state_none;
+    case eCAL::eCallState::executed:  return call_state_executed;
+    case eCAL::eCallState::timeouted: return call_state_timeouted;
+    case eCAL::eCallState::failed:    return call_state_failed;
+    default: return call_state_none;
+    }
+  }
+
+  eCAL_Client_Event enum_class_to_enum(eCAL::eClientEvent cpp_event_)
+  {
+    switch (cpp_event_)
+    {
+    case eCAL::eClientEvent::none:         return client_event_none;
+    case eCAL::eClientEvent::connected:    return client_event_connected;
+    case eCAL::eClientEvent::disconnected: return client_event_disconnected;
+    case eCAL::eClientEvent::timeout:      return client_event_timeout;
+    default:                                            return client_event_none;
+    }
+  }
+
+  eCAL::eClientEvent enum_to_enum_class(eCAL_Client_Event c_event)
+  {
+    switch (c_event)
+    {
+    case client_event_none:         return eCAL::eClientEvent::none;
+    case client_event_connected:    return eCAL::eClientEvent::connected;
+    case client_event_disconnected: return eCAL::eClientEvent::disconnected;
+    case client_event_timeout:      return eCAL::eClientEvent::timeout;
+    default:                        return eCAL::eClientEvent::none;
+    }
+  }
+
+
   std::recursive_mutex g_response_callback_mtx; // NOLINT(*-avoid-non-const-global-variables)
   void g_response_callback(const struct eCAL::SServiceResponse& service_response_, const ResponseCallbackCT callback_, void* par_)
   {
@@ -44,7 +82,7 @@ namespace
     service_response.method_name  = service_response_.method_name.c_str();
     service_response.error_msg    = service_response_.error_msg.c_str();
     service_response.ret_state    = service_response_.ret_state;
-    service_response.call_state   = service_response_.call_state;
+    service_response.call_state   = enum_class_to_enum(service_response_.call_state);
     service_response.response     = service_response_.response.c_str();
     service_response.response_len = static_cast<int>(service_response_.response.size());
     callback_(&service_response, par_);
@@ -56,7 +94,7 @@ namespace
     const std::lock_guard<std::recursive_mutex> lock(g_client_event_callback_mtx);
     SClientEventCallbackDataC data{};
     data.time = data_->time;
-    data.type = data_->type;
+    data.type = enum_class_to_enum(data_->type);
     callback_(name_, &data, par_);
   }
 }
@@ -110,7 +148,7 @@ extern "C"
         service_response_->method_name  = nullptr;
         service_response_->error_msg    = nullptr;
         service_response_->ret_state    = service_response_vec[0].ret_state;
-        service_response_->call_state   = service_response_vec[0].call_state;
+        service_response_->call_state   = enum_class_to_enum(service_response_vec[0].call_state);
         service_response_->response     = nullptr;
         service_response_->response_len = 0;
         return(CopyBuffer(response_, response_len_, service_response_vec[0].response));
@@ -148,7 +186,7 @@ ECALC_API int eCAL_Client_AddEventCallback(ECAL_HANDLE handle_, enum eCAL_Client
   if (handle_ == nullptr) return(0);
   auto* client = static_cast<eCAL::v5::CServiceClient*>(handle_);
   auto callback = std::bind(g_client_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
-  if (client->AddEventCallback(type_, callback)) return(1);
+  if (client->AddEventCallback(enum_to_enum_class(type_), callback)) return(1);
   return(0);
 }
 
@@ -156,7 +194,7 @@ ECALC_API int eCAL_Client_RemEventCallback(ECAL_HANDLE handle_, enum eCAL_Client
 {
   if (handle_ == nullptr) return(0);
   auto* client = static_cast<eCAL::v5::CServiceClient*>(handle_);
-  if (client->RemEventCallback(type_)) return(1);
+  if (client->RemEventCallback(enum_to_enum_class(type_))) return(1);
   return(0);
 }
 

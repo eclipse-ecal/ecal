@@ -52,6 +52,7 @@ sdist.only-include = [
   "/ecal/",
   "/lib/",
   "/licenses/",
+  "lang/c/",
   "lang/python/",
 
   "thirdparty/cmakefunctions/",

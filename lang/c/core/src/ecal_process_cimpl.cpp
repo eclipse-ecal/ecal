@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,12 +96,13 @@ extern "C"
 
   ECALC_API void eCAL_Process_SetState(enum eCAL_Process_eSeverity severity_, enum eCAL_Process_eSeverity_Level level_, const char* info_)
   {
-    eCAL::Process::SetState(severity_, level_, info_);
+    // This is potentially dangerous, need to keep enums in sync.
+    eCAL::Process::SetState(static_cast<eCAL::Process::eSeverity>(severity_), static_cast<eCAL::Process::eSeverityLevel>(level_), info_);
   }
 
   ECALC_API int eCAL_Process_StartProcess(const char* proc_name_, const char* proc_args_, const char* working_dir_, int create_console_, enum eCAL_Process_eStartMode process_mode_, int block_)
   {
-    return(eCAL::Process::StartProcess(proc_name_, proc_args_, working_dir_, create_console_ != 0, process_mode_, block_ != 0));
+    return(eCAL::Process::StartProcess(proc_name_, proc_args_, working_dir_, create_console_ != 0, static_cast<eCAL::Process::eStartMode>(process_mode_), block_ != 0));
   }
 
   ECALC_API int eCAL_Process_StopProcessName(const char* proc_name_)

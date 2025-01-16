@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,14 @@ namespace eCAL
 {
   namespace rec_server
   {
-    std::pair<eCAL_Process_eSeverity, std::string> GetProcessSeverity(const eCAL::rec_server::RecServerStatus& rec_server_status, const std::map<std::string, ClientConfig>& enabled_rec_clients)
+    std::pair<eCAL::Process::eSeverity, std::string> GetProcessSeverity(const eCAL::rec_server::RecServerStatus& rec_server_status, const std::map<std::string, ClientConfig>& enabled_rec_clients)
     {
-      eCAL_Process_eSeverity severity(eCAL_Process_eSeverity::proc_sev_healthy);
+      eCAL::Process::eSeverity severity(eCAL::Process::eSeverity::healthy);
       std::string            state_string;
 
       if(!rec_server_status.activated_)
       {
-        severity     = std::max(severity, eCAL_Process_eSeverity::proc_sev_warning);
+        severity     = std::max(severity, eCAL::Process::eSeverity::warning);
         state_string = "Not activated";
       }
       else
@@ -77,7 +77,7 @@ namespace eCAL
 
         if ((not_connected_hosts > 0) || (not_connected_addons > 0))
         {
-          severity = std::max(severity, eCAL_Process_eSeverity::proc_sev_critical);
+          severity = std::max(severity, eCAL::Process::eSeverity::critical);
           state_string += ", Failed connecting to ";
           if (not_connected_hosts > 0)
           {
@@ -92,7 +92,7 @@ namespace eCAL
         }
         else if (connected_hosts == 0)
         {
-          severity = std::max(severity, eCAL_Process_eSeverity::proc_sev_warning);
+          severity = std::max(severity, eCAL::Process::eSeverity::warning);
           state_string += ", No clients";
         }
         else

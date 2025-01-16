@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ EcalSysTask::EcalSysTask()
   , m_working_directory          ("")
   , m_launch_order               (0)
   , m_timeout_after_start        (std::chrono::nanoseconds(0))
-  , m_visibility                 (eCAL_Process_eStartMode::proc_smode_normal)
+  , m_visibility                 (eCAL::Process::eStartMode::normal)
 
   , m_monitoring_enabled         (true)
   , m_restart_by_severity_enabled(false)
@@ -105,7 +105,7 @@ std::chrono::nanoseconds EcalSysTask::GetTimeoutAfterStart()
   return m_timeout_after_start;
 }
 
-eCAL_Process_eStartMode EcalSysTask::GetVisibility()
+eCAL::Process::eStartMode EcalSysTask::GetVisibility()
 {
   std::lock_guard<std::recursive_mutex> task_lock(mutex);
   return m_visibility;
@@ -190,7 +190,7 @@ void EcalSysTask::SetTimeoutAfterStart(std::chrono::nanoseconds timeout)
   m_config_modified_since_start = true;
 }
 
-void EcalSysTask::SetVisibility(eCAL_Process_eStartMode visibility)
+void EcalSysTask::SetVisibility(eCAL::Process::eStartMode visibility)
 {
   std::lock_guard<std::recursive_mutex> task_lock(mutex);
   m_visibility = visibility;

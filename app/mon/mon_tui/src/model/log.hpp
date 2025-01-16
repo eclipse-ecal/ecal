@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,21 +73,21 @@ class LogModel
   {
     switch (val)
     {
-    case eCAL_Logging_eLogLevel::log_level_debug1:
+    case eCAL::Logging::eLogLevel::log_level_debug1:
       return LogEntry::Level::DEBUG1;
-    case eCAL_Logging_eLogLevel::log_level_debug2:
+    case eCAL::Logging::eLogLevel::log_level_debug2:
       return LogEntry::Level::DEBUG2;
-    case eCAL_Logging_eLogLevel::log_level_debug3:
+    case eCAL::Logging::eLogLevel::log_level_debug3:
       return LogEntry::Level::DEBUG3;
-    case eCAL_Logging_eLogLevel::log_level_debug4:
+    case eCAL::Logging::eLogLevel::log_level_debug4:
       return LogEntry::Level::DEBUG4;
-    case eCAL_Logging_eLogLevel::log_level_warning:
+    case eCAL::Logging::eLogLevel::log_level_warning:
       return LogEntry::Level::WARNING;
-    case eCAL_Logging_eLogLevel::log_level_error:
+    case eCAL::Logging::eLogLevel::log_level_error:
       return LogEntry::Level::ERROR;
-    case eCAL_Logging_eLogLevel::log_level_fatal:
+    case eCAL::Logging::eLogLevel::log_level_fatal:
       return LogEntry::Level::FATAL;
-    case eCAL_Logging_eLogLevel::log_level_info:
+    case eCAL::Logging::eLogLevel::log_level_info:
     default:
       return LogEntry::Level::INFO;
     }

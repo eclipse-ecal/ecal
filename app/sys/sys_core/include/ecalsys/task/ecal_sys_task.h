@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ public:
   std::chrono::nanoseconds       GetTimeoutAfterStart();
 
   /** @return The configured startup-visibility when starting this Task on a Windows host.*/
-  eCAL_Process_eStartMode        GetVisibility();
+  eCAL::Process::eStartMode        GetVisibility();
 
   /** @return The configured arguments that will be given to the task when being started.*/
   std::string                    GetCommandLineArguments();
@@ -125,7 +125,7 @@ public:
   void SetTimeoutAfterStart          (std::chrono::nanoseconds timeout);
 
   /** @brief Sets the visibility when starting the task on a Windows machine. */
-  void SetVisibility                 (eCAL_Process_eStartMode visibility);
+  void SetVisibility                 (eCAL::Process::eStartMode visibility);
 
   /** @brief Sets the arguments that will be given to the task when being started. */
   void SetCommandLineArguments       (std::string command_line_args);
@@ -290,7 +290,7 @@ private:
   std::string                           m_working_directory;                    /**< The working directory when starting the process */
   unsigned int                          m_launch_order;                         /**< The order in which tasks will start when started simultaneously. */
   std::chrono::nanoseconds              m_timeout_after_start;                  /**< After being started, the task may wait a certain amount of time and thus delay the start of other tasks that are started at the same time but have a higher launch order number.*/
-  eCAL_Process_eStartMode               m_visibility;                           /**< The visibility when starting this task on a Windows system */
+  eCAL::Process::eStartMode               m_visibility;                           /**< The visibility when starting this task on a Windows system */
 
   bool                                  m_monitoring_enabled;                   /**< When true, this task will be monitored by the monitoring thread and the task state will be set accordingly. This is a requirement for the restart-by-severity functionality.*/
   bool                                  m_restart_by_severity_enabled;          /**< When true, the task will be killed and restarted if it's severity reaches a certain state. */

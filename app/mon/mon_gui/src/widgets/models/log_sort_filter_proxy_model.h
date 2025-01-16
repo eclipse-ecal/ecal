@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,12 +29,12 @@ public:
   LogSortFilterProxyModel(QObject* parent = 0);
   ~LogSortFilterProxyModel();
 
-  void setLogLevelFilter(eCAL_Logging_eLogLevel log_levels);
+  void setLogLevelFilter(eCAL::Logging::eLogLevel log_levels);
 
-  eCAL_Logging_eLogLevel logLevelFilter() const;
+  eCAL::Logging::eLogLevel logLevelFilter() const;
 
 private:
-  eCAL_Logging_eLogLevel log_level_filter_;
+  eCAL::Logging::eLogLevel log_level_filter_;
 
   bool filterDirectAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 };

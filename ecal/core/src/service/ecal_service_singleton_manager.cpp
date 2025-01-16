@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,22 +37,22 @@ namespace eCAL
                           switch (log_level)
                           {
                           case LogLevel::DebugVerbose:
-                            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_debug4, "[" + node_name + "] " + message);
+                            eCAL::Logging::Log(eCAL::Logging::log_level_debug4, "[" + node_name + "] " + message);
                             break;
                           case LogLevel::Debug:
-                            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_debug1, "[" + node_name + "] " + message);
+                            eCAL::Logging::Log(eCAL::Logging::log_level_debug1, "[" + node_name + "] " + message);
                             break;
                           case LogLevel::Info:
-                            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_debug1, "[" + node_name + "] " + message);
+                            eCAL::Logging::Log(eCAL::Logging::log_level_debug1, "[" + node_name + "] " + message);
                             break;
                           case LogLevel::Warning:
-                            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning, "[" + node_name + "] " + message);
+                            eCAL::Logging::Log(eCAL::Logging::log_level_warning, "[" + node_name + "] " + message);
                             break;
                           case LogLevel::Error:
-                            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_error, "[" + node_name + "] " + message);
+                            eCAL::Logging::Log(eCAL::Logging::log_level_error, "[" + node_name + "] " + message);
                             break;
                           case LogLevel::Fatal:
-                            eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_fatal, "[" + node_name + "] " + message);
+                            eCAL::Logging::Log(eCAL::Logging::log_level_fatal, "[" + node_name + "] " + message);
                             break;
                           default:
                             break;

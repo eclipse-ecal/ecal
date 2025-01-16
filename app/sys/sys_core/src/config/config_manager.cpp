@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,15 +101,15 @@ bool ConfigManager::LoadConfig(EcalSys& ecalsys, const std::string& path, bool a
       restart_at_severity.FromInt(restart_below_severity.ToInt() + 1);
 
       // parse the start visibility
-      eCAL_Process_eStartMode visibility = eCAL_Process_eStartMode::proc_smode_normal;
+      eCAL::Process::eStartMode visibility = eCAL::Process::eStartMode::normal;
       if (EcalUtils::String::Icompare(task_config.start_stop_.visibility_, "Normal")    == true)
-        visibility = proc_smode_normal;
+        visibility = eCAL::Process::eStartMode::normal;
       if (EcalUtils::String::Icompare(task_config.start_stop_.visibility_, "Hidden")    == true)
-        visibility = proc_smode_hidden;
+        visibility = eCAL::Process::eStartMode::hidden;
       if (EcalUtils::String::Icompare(task_config.start_stop_.visibility_, "Minimized") == true)
-        visibility = proc_smode_minimized;
+        visibility = eCAL::Process::eStartMode::minimized;
       if (EcalUtils::String::Icompare(task_config.start_stop_.visibility_, "Maximized") == true)
-        visibility = proc_smode_maximized;
+        visibility = eCAL::Process::eStartMode::maximized;
 
       // Find the correct runner (if the runner was the EXE / BAT runner that we removed earlier we will get a nullpointer, which is exactly what we want, here)
       std::shared_ptr<EcalSysRunner> runner(nullptr);
@@ -339,16 +339,16 @@ bool ConfigManager::SaveConfig(EcalSys& ecalsys, const std::string& path, Config
       std::string visibility_string;
       switch (task->GetVisibility())
       {
-      case proc_smode_normal:
+      case eCAL::Process::eStartMode::normal:
         visibility_string = "normal";
         break;
-      case proc_smode_hidden:
+      case eCAL::Process::eStartMode::hidden:
         visibility_string = "hidden";
         break;
-      case proc_smode_minimized:
+      case eCAL::Process::eStartMode::minimized:
         visibility_string = "minimized";
         break;
-      case proc_smode_maximized:
+      case eCAL::Process::eStartMode::maximized:
         visibility_string = "maximized";
         break;
       default:

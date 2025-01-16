@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,13 +37,13 @@ int main()
     switch (service_response_.call_state)
     {
       // service successful executed
-    case call_state_executed:
+    case eCAL::eCallState::executed:
     {
       std::cout << "Received response for method " << service_response_.service_method_id.method_name << " : " << service_response_.response << " from service id " << entity_id_.entity_id << " from host " << service_response_.service_method_id.service_id.host_name << std::endl;
     }
     break;
     // service execution failed
-    case call_state_failed:
+    case eCAL::eCallState::failed:
       std::cout << "Received error for method " << service_response_.service_method_id.method_name << " : " << service_response_.error_msg << " from service id " << entity_id_.entity_id << " from host " << service_response_.service_method_id.service_id.host_name << std::endl;
       break;
     default:
@@ -79,13 +79,13 @@ int main()
         switch (service_info.call_state)
         {
           // service successful executed
-        case call_state_executed:
+        case eCAL::eCallState::executed:
         {
           std::cout << "Received response : " << service_response.second.response << " from service id " << client_instance.GetClientID() << " from host " << service_info.host_name << std::endl;
         }
         break;
         // service execution failed
-        case call_state_failed:
+        case eCAL::eCallState::failed:
           std::cout << "Received error : " << service_info.error_msg << " from service id " << client_instance.GetClientID() << " from host " << service_info.host_name << std::endl;
           break;
         default:

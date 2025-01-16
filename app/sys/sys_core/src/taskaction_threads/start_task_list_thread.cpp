@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,8 +71,8 @@ void StartTaskListThread::Run()
 
       TaskState task_state;
       task_state.info           = "";
-      task_state.severity       = eCAL_Process_eSeverity::proc_sev_unknown;
-      task_state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level1;
+      task_state.severity       = eCAL::Process::eSeverity::unknown;
+      task_state.severity_level = eCAL::Process::eSeverityLevel::level1;
       task->SetMonitoringTaskState(task_state);
       task->ResetConfigModifiedSinceStart();
 

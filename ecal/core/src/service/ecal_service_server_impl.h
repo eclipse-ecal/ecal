@@ -91,7 +91,7 @@ namespace eCAL
 
     // Request and event callback methods
     int RequestCallback(const std::string& request_pb_, std::string& response_pb_);
-    void NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eCAL_Server_Event event_type_, const std::string& message_);
+    void NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eServerEvent event_type_, const std::string& message_);
 
     // Server version (incremented for protocol or functionality changes)
     static constexpr int                   m_server_version = 1;
