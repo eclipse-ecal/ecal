@@ -1,0 +1,137 @@
+.. include:: /include.txt
+
+.. _download_archive:
+
+=====================
+eCAL Download Archive
+=====================
+
+Here you can find a list of all eCAL Versions ever released on GitHub.
+
+eCAL 5.10
+============
+
+.. toctree::
+   :maxdepth: 0
+   :titlesonly:
+
+   download_archive_ecal_5_10_3.rst
+   download_archive_ecal_5_10_2.rst
+   download_archive_ecal_5_10_1.rst
+   download_archive_ecal_5_10_0.rst
+
+
+eCAL 5.9
+============
+
+.. toctree::
+   :maxdepth: 0
+   :titlesonly:
+
+   download_archive_ecal_5_9_11.rst
+   download_archive_ecal_5_9_10.rst
+   download_archive_ecal_5_9_8.rst
+   download_archive_ecal_5_9_7.rst
+   download_archive_ecal_5_9_6.rst
+   download_archive_ecal_5_9_5.rst
+   download_archive_ecal_5_9_4.rst
+   download_archive_ecal_5_9_2.rst
+   download_archive_ecal_5_9_1.rst
+   download_archive_ecal_5_9_0.rst
+
+
+eCAL 5.8
+============
+
+.. toctree::
+   :maxdepth: 0
+   :titlesonly:
+
+   download_archive_ecal_5_8_20.rst
+   download_archive_ecal_5_8_19.rst
+   download_archive_ecal_5_8_18.rst
+   download_archive_ecal_5_8_17.rst
+   download_archive_ecal_5_8_15.rst
+   download_archive_ecal_5_8_14.rst
+   download_archive_ecal_5_8_13.rst
+   download_archive_ecal_5_8_12.rst
+   download_archive_ecal_5_8_10.rst
+   download_archive_ecal_5_8_9.rst
+   download_archive_ecal_5_8_8.rst
+   download_archive_ecal_5_8_7.rst
+   download_archive_ecal_5_8_5.rst
+   download_archive_ecal_5_8_4.rst
+   download_archive_ecal_5_8_3.rst
+   download_archive_ecal_5_8_2.rst
+   download_archive_ecal_5_8_1.rst
+   download_archive_ecal_5_8_0.rst
+
+
+eCAL 5.7
+============
+
+.. toctree::
+   :maxdepth: 0
+   :titlesonly:
+
+   download_archive_ecal_5_7_15.rst
+   download_archive_ecal_5_7_14.rst
+   download_archive_ecal_5_7_13.rst
+   download_archive_ecal_5_7_12.rst
+   download_archive_ecal_5_7_11.rst
+   download_archive_ecal_5_7_9.rst
+   download_archive_ecal_5_7_8.rst
+   download_archive_ecal_5_7_6.rst
+   download_archive_ecal_5_7_5.rst
+   download_archive_ecal_5_7_4.rst
+   download_archive_ecal_5_7_3.rst
+   download_archive_ecal_5_7_1.rst
+
+
+eCAL 5.6
+============
+
+.. toctree::
+   :maxdepth: 0
+   :titlesonly:
+
+   download_archive_ecal_5_6_0.rst
+
+
+eCAL 5.5
+============
+
+.. toctree::
+   :maxdepth: 0
+   :titlesonly:
+
+   download_archive_ecal_5_5_5.rst
+   download_archive_ecal_5_5_4.rst
+   download_archive_ecal_5_5_3.rst
+   download_archive_ecal_5_5_2.rst
+   download_archive_ecal_5_5_1.rst
+   download_archive_ecal_5_5_0.rst
+
+
+eCAL 5.4
+============
+
+.. toctree::
+   :maxdepth: 0
+   :titlesonly:
+
+   download_archive_ecal_5_4_0.rst
+
+
+eCAL 5.3
+============
+
+.. toctree::
+   :maxdepth: 0
+   :titlesonly:
+
+   download_archive_ecal_5_3_5.rst
+   download_archive_ecal_5_3_4_3.rst
+   download_archive_ecal_5_3_4_4.rst
+
+

@@ -1,0 +1,13 @@
+.. _exhale_function_ecal__clang_8h_1a2150a5a2615529a3cde5c7d9d224b678:
+
+Function ecal_getdate
+=====================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_clang.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: ecal_getdate()

@@ -1,0 +1,14 @@
+.. _exhale_typedef_ecalc__types_8h_1a6801786d75d8af7f213d45239018884b:
+
+Typedef ECAL_HANDLE
+===================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecalc_types.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: ECAL_HANDLE
+   :project: eCAL

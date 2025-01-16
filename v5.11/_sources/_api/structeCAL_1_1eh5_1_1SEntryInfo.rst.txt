@@ -1,0 +1,17 @@
+.. _exhale_struct_structeCAL_1_1eh5_1_1SEntryInfo:
+
+Struct SEntryInfo
+=================
+
+- Defined in :ref:`file_contrib_ecalhdf5_include_ecalhdf5_eh5_types.h`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: eCAL::eh5::SEntryInfo
+   :project: eCAL
+   :members:
+   :protected-members:
+   :undoc-members:

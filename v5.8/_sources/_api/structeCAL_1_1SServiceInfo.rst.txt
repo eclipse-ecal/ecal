@@ -1,0 +1,16 @@
+.. _exhale_struct_structeCAL_1_1SServiceInfo:
+
+Struct SServiceInfo
+===================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_service_info.h`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: eCAL::SServiceInfo
+   :members:
+   :protected-members:
+   :undoc-members:

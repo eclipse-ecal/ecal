@@ -1,0 +1,14 @@
+.. _exhale_typedef_ecal__callback_8h_1a24e137588a5d25b62798efa64dfc8835:
+
+Typedef eCAL::ReceiveCallbackT
+==============================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_callback.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: eCAL::ReceiveCallbackT
+   :project: eCAL

@@ -1,0 +1,165 @@
+
+.. _file_ecal_core_include_ecal_ecal_clang.h:
+
+File ecal_clang.h
+=================
+
+
+eCAL C language interface (to wrap ecal into other languages easily) 
+
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``ecal/core/include/ecal/ecal_clang.h``)
+----------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_ecal_core_include_ecal_ecal_clang.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``ecal/ecalc.h`` (:ref:`file_ecal_core_include_ecal_ecalc.h`)
+
+
+
+
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_ecal__clang_8h_1a8f33dfb4c563e82391cb4a0e3d1b0089`
+
+- :ref:`exhale_function_ecal__clang_8h_1a7b5e4e316b89e78eef3da213d4f9dd8d`
+
+- :ref:`exhale_function_ecal__clang_8h_1a10bdcde88fbe9b6c7491b2b3ba794e4e`
+
+- :ref:`exhale_function_ecal__clang_8h_1a7acefeb93d842698df5ade150870d107`
+
+- :ref:`exhale_function_ecal__clang_8h_1ade6b59f214874534a6518be2f186eaa0`
+
+- :ref:`exhale_function_ecal__clang_8h_1ada98267a58dec836697704b3c495d580`
+
+- :ref:`exhale_function_ecal__clang_8h_1a829d5fbcae1f370afe411a44065fbcd3`
+
+- :ref:`exhale_function_ecal__clang_8h_1a0aed2c922b11b65e57b28055de17c421`
+
+- :ref:`exhale_function_ecal__clang_8h_1ad5563ed5725905ab6cb5266f3000813f`
+
+- :ref:`exhale_function_ecal__clang_8h_1a1c45cf4b32d38e7a2e3c0b3de00e5899`
+
+- :ref:`exhale_function_ecal__clang_8h_1a1103d7dc1a86fa60c4ac72b2a7ee3ffc`
+
+- :ref:`exhale_function_ecal__clang_8h_1ac7d866e489425b4d01e83a353a2fd6e9`
+
+- :ref:`exhale_function_ecal__clang_8h_1a3e88be288c916c094abc717579f4f85c`
+
+- :ref:`exhale_function_ecal__clang_8h_1a223cd64b3c0fe18b5a7f4084fb3e56cc`
+
+- :ref:`exhale_function_ecal__clang_8h_1ad2b025124cfe6b21dfa19a1d85cf9bb7`
+
+- :ref:`exhale_function_ecal__clang_8h_1a85b5ba3548d6163d0719f0cef2cd33e6`
+
+- :ref:`exhale_function_ecal__clang_8h_1a29db94388ec381748e074a9df967909f`
+
+- :ref:`exhale_function_ecal__clang_8h_1a95ed939a2965efd4ce0fca6f392586c3`
+
+- :ref:`exhale_function_ecal__clang_8h_1a739ac14ab29959f162491b39ef6d9e39`
+
+- :ref:`exhale_function_ecal__clang_8h_1aff7c0bddb1be0ad0c19de1a4b3ee91d1`
+
+- :ref:`exhale_function_ecal__clang_8h_1afbffe71ef65e928d4c5bee30f62f24c6`
+
+- :ref:`exhale_function_ecal__clang_8h_1aa10fa2d4385f260a23c368dab4f3c1bc`
+
+- :ref:`exhale_function_ecal__clang_8h_1a45a4c94273c3b9e13cc40790da10c828`
+
+- :ref:`exhale_function_ecal__clang_8h_1a389240832a5d9030be12d6d9c3b5535a`
+
+- :ref:`exhale_function_ecal__clang_8h_1aecd889bfd46bf7ce7549b249c405fb15`
+
+- :ref:`exhale_function_ecal__clang_8h_1ad6ab32ac524e11ecff49c04e50ee418d`
+
+- :ref:`exhale_function_ecal__clang_8h_1a8734995133d0e2808ff66274ff7d7512`
+
+- :ref:`exhale_function_ecal__clang_8h_1ac165329dc942cd7404144c1347254466`
+
+- :ref:`exhale_function_ecal__clang_8h_1a98af3629ed3891b91b34d62071e68f53`
+
+- :ref:`exhale_function_ecal__clang_8h_1a9a8ce626e7c7ceb6f4c5ce5b44512212`
+
+- :ref:`exhale_function_ecal__clang_8h_1ad7fb789b30d8884c876eee8c0bfdb6b7`
+
+- :ref:`exhale_function_ecal__clang_8h_1a231586e73852b9f617c11156a617bf63`
+
+- :ref:`exhale_function_ecal__clang_8h_1ae4866992ca07ca8bdc77c458c7c0d6a1`
+
+- :ref:`exhale_function_ecal__clang_8h_1ab79620db2c3a73f17c5e91fe766b62a8`
+
+- :ref:`exhale_function_ecal__clang_8h_1a826c12557d26a778aeca0900e0026dd6`
+
+- :ref:`exhale_function_ecal__clang_8h_1ab77da4eb0646292a113b9025a2dd38c7`
+
+- :ref:`exhale_function_ecal__clang_8h_1a02d6437f4a1da37f22bfd7d9efbf3f15`
+
+- :ref:`exhale_function_ecal__clang_8h_1a29c50810681e482f364404cf93366e58`
+
+- :ref:`exhale_function_ecal__clang_8h_1a3c4548baa30604c6f790adb4cc2c3438`
+
+- :ref:`exhale_function_ecal__clang_8h_1a0e2c1a29a1336083f2d19db5a1a2d4d1`
+
+- :ref:`exhale_function_ecal__clang_8h_1a771d86ab58f9ccfe0152329f93238da7`
+
+- :ref:`exhale_function_ecal__clang_8h_1aaacbcd254d94c68c9a61fae235101c5c`
+
+- :ref:`exhale_function_ecal__clang_8h_1a8cb6f20f940c0e54231c78e47c5bc920`
+
+- :ref:`exhale_function_ecal__clang_8h_1ad7cad459dd949ef83ec948ce20d8da1d`
+
+- :ref:`exhale_function_ecal__clang_8h_1a81bf79f82c3f19bc7c0de5e9f90c9f20`
+
+- :ref:`exhale_function_ecal__clang_8h_1addc7cfbd8c81984c68af33dbf437ff01`
+
+- :ref:`exhale_function_ecal__clang_8h_1ae6d216f6f783783ef482782995a7ebcb`
+
+- :ref:`exhale_function_ecal__clang_8h_1a877acafc2048df1d6e9e197e5ce85caf`
+
+- :ref:`exhale_function_ecal__clang_8h_1a06eaa7aa946da64ff339bc07bdf1f635`
+
+- :ref:`exhale_function_ecal__clang_8h_1a0a877a4b626654a13403022e8f2d7447`
+
+- :ref:`exhale_function_ecal__clang_8h_1aa157db0be5fa32d82450030b094cf0bd`
+
+- :ref:`exhale_function_ecal__clang_8h_1a67be84fdf2f94a25f18d4bcb58f66551`
+
+- :ref:`exhale_function_ecal__clang_8h_1a1831f04989002bff9548bfc18f35bcc0`
+
+- :ref:`exhale_function_ecal__clang_8h_1afe3c3a74ccfa61f0d811befc8d40f60a`
+
+- :ref:`exhale_function_ecal__clang_8h_1abc58eef47fc5fa983d5d8a72af212a14`
+
+- :ref:`exhale_function_ecal__clang_8h_1a1ec1f718a0335eb6844c47e3f58c2398`
+
+- :ref:`exhale_function_ecal__clang_8h_1ac6cdc9785b833cd571c373aab28794d2`
+
+- :ref:`exhale_function_ecal__clang_8h_1a326dd7ba23bbd7df7c28038a5914928d`
+
+- :ref:`exhale_function_ecal__clang_8h_1a5423009de750bc100d6fd3ff088f20f1`
+
+- :ref:`exhale_function_ecal__clang_8h_1abc7e3b35431d935887d7484a390362d7`
+
+- :ref:`exhale_function_ecal__clang_8h_1aeb563351d862ff01fb009e307d76292d`
+

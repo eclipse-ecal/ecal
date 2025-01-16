@@ -1,0 +1,14 @@
+.. _exhale_typedef_ecal__callback_8h_1a5fa5b41873ca4d69095ec3bdfd84e8d9:
+
+Typedef eCAL::ClientEventCallbackT
+==================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_callback.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: eCAL::ClientEventCallbackT
+   :project: eCAL

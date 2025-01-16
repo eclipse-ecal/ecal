@@ -1,0 +1,110 @@
+<eCALSys>
+    <version>1.0</version>
+    <import/>
+    <targets/>
+    <runners>
+        <runner id="1" name="exe">
+            <path></path>
+            <default_algo_dir></default_algo_dir>
+            <load_cmd_argument></load_cmd_argument>
+        </runner>
+    </runners>
+    <tasks>
+        <task id="1" name="Person Rec">
+            <start_stop>
+                <target>florian-win10</target>
+                <runner_id>1</runner_id>
+                <algo>C:\eCAL\samples\bin\ecal_sample_person_rec.exe</algo>
+                <working_dir></working_dir>
+                <launch_order>0</launch_order>
+                <timeout>0</timeout>
+                <visibility>normal</visibility>
+                <additional_cmd_line_args></additional_cmd_line_args>
+                <do_monitor>1</do_monitor>
+            </start_stop>
+            <monitoring>
+                <restart_by_beaconing>0</restart_by_beaconing>
+                <max_beacon_response_time>0</max_beacon_response_time>
+                <restart_by_severity>0</restart_by_severity>
+                <restart_below_severity>Critical</restart_below_severity>
+                <restart_below_severity_level>Level5</restart_below_severity_level>
+            </monitoring>
+        </task>
+        <task id="2" name="Person Snd">
+            <start_stop>
+                <target>florian-ubuntu20</target>
+                <runner_id>1</runner_id>
+                <algo>ecal_sample_person_snd</algo>
+                <working_dir></working_dir>
+                <launch_order>0</launch_order>
+                <timeout>0</timeout>
+                <visibility>normal</visibility>
+                <additional_cmd_line_args></additional_cmd_line_args>
+                <do_monitor>1</do_monitor>
+            </start_stop>
+            <monitoring>
+                <restart_by_beaconing>0</restart_by_beaconing>
+                <max_beacon_response_time>0</max_beacon_response_time>
+                <restart_by_severity>0</restart_by_severity>
+                <restart_below_severity>Critical</restart_below_severity>
+                <restart_below_severity_level>Level5</restart_below_severity_level>
+            </monitoring>
+        </task>
+        <task id="3" name="Rec GUI">
+            <start_stop>
+                <target>florian-win10</target>
+                <runner_id>1</runner_id>
+                <algo>C:\eCAL\bin\ecal_rec_gui.exe</algo>
+                <working_dir></working_dir>
+                <launch_order>0</launch_order>
+                <timeout>0</timeout>
+                <visibility>normal</visibility>
+                <additional_cmd_line_args></additional_cmd_line_args>
+                <do_monitor>1</do_monitor>
+            </start_stop>
+            <monitoring>
+                <restart_by_beaconing>0</restart_by_beaconing>
+                <max_beacon_response_time>0</max_beacon_response_time>
+                <restart_by_severity>0</restart_by_severity>
+                <restart_below_severity>Critical</restart_below_severity>
+                <restart_below_severity_level>Level5</restart_below_severity_level>
+            </monitoring>
+        </task>
+    </tasks>
+    <functions>
+        <function name="My First group">
+            <tasks>
+                <task id="1"/>
+                <task id="2"/>
+                <task id="3"/>
+            </tasks>
+            <state name="All Tasks OK" prio="0" colour="rgb(9, 200, 15)">
+                <task id="1" severity="Healthy" severity_level="Level1"/>
+                <task id="2" severity="Healthy" severity_level="Level1"/>
+                <task id="3" severity="Healthy" severity_level="Level1"/>
+            </state>
+            <state name="Some Warning" prio="1" colour="rgb(250, 208, 80)">
+                <task id="1" severity="Warning" severity_level="Level1"/>
+                <task id="2" severity="Warning" severity_level="Level1"/>
+                <task id="3" severity="Warning" severity_level="Level1"/>
+            </state>
+            <state name="FAIL" prio="2" colour="rgb(255, 0, 0)"/>
+        </function>
+    </functions>
+    <options>
+        <all_targets_reachable>1</all_targets_reachable>
+        <only_local_host>0</only_local_host>
+        <all_on_this_host>0</all_on_this_host>
+        <stop_all_on_close>0</stop_all_on_close>
+    </options>
+    <window_size>
+        <height>0</height>
+        <width>0</width>
+    </window_size>
+    <window_position>
+        <x>0</x>
+        <y>0</y>
+    </window_position>
+    <window_maximized>0</window_maximized>
+    <layout></layout>
+</eCALSys>

@@ -1,0 +1,7 @@
+ecal.pb.play.service\_pb2 module
+================================
+
+.. automodule:: ecal.pb.play.service_pb2
+   :members:
+   :undoc-members:
+   :show-inheritance:

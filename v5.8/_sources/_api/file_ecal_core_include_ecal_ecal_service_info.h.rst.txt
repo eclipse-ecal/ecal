@@ -1,0 +1,75 @@
+
+.. _file_ecal_core_include_ecal_ecal_service_info.h:
+
+File ecal_service_info.h
+========================
+
+
+eCAL service info 
+
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``ecal/core/include/ecal/ecal_service_info.h``)
+-----------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_ecal_core_include_ecal_ecal_service_info.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``ecal/cimpl/ecal_service_info_cimpl.h``
+
+- ``functional``
+
+- ``string``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_ecal_core_include_ecal_ecal.h`
+
+- :ref:`file_ecal_core_include_ecal_ecal_client.h`
+
+- :ref:`file_ecal_core_include_ecal_ecal_server.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_eCAL`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structeCAL_1_1SServiceInfo`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_ecal__service__info_8h_1ae0436af7a525f2b5fcc30025def57c30`
+
+- :ref:`exhale_typedef_ecal__service__info_8h_1a35d0d500d3f8aed326e36ab5ddd3c535`
+

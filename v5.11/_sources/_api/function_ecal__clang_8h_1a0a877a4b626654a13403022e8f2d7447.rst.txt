@@ -1,0 +1,14 @@
+.. _exhale_function_ecal__clang_8h_1a0a877a4b626654a13403022e8f2d7447:
+
+Function server_rem_method_callback
+===================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_clang.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: server_rem_method_callback(ECAL_HANDLE, const char *)
+   :project: eCAL

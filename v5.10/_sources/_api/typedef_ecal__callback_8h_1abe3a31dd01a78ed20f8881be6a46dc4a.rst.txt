@@ -1,0 +1,14 @@
+.. _exhale_typedef_ecal__callback_8h_1abe3a31dd01a78ed20f8881be6a46dc4a:
+
+Typedef eCAL::PubEventCallbackT
+===============================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_callback.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: eCAL::PubEventCallbackT
+   :project: eCAL

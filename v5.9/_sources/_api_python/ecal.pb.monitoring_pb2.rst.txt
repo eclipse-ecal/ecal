@@ -1,0 +1,7 @@
+ecal.pb.monitoring\_pb2 module
+==============================
+
+.. automodule:: ecal.pb.monitoring_pb2
+   :members:
+   :undoc-members:
+   :show-inheritance:

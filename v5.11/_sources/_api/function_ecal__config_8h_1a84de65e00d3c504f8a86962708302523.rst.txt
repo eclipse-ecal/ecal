@@ -1,0 +1,14 @@
+.. _exhale_function_ecal__config_8h_1a84de65e00d3c504f8a86962708302523:
+
+Function eCAL::Config::GetPublisherInprocMode
+=============================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_config.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::Config::GetPublisherInprocMode()
+   :project: eCAL

@@ -1,0 +1,14 @@
+.. _exhale_enum_ecal__qos_8h_1afc19a9113f5036d91321f5ba6b4e4803:
+
+Enum eQOSPolicy_Reliability
+===========================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_qos.h`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: eCAL::QOS::eQOSPolicy_Reliability
+   :project: eCAL

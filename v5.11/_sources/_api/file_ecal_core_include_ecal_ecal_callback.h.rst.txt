@@ -1,0 +1,103 @@
+
+.. _file_ecal_core_include_ecal_ecal_callback.h:
+
+File ecal_callback.h
+====================
+
+
+eCAL subscriber callback interface 
+
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``ecal/core/include/ecal/ecal_callback.h``)
+-------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_ecal_core_include_ecal_ecal_callback.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``ecal/cimpl/ecal_callback_cimpl.h``
+
+- ``functional``
+
+- ``string``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_ecal_core_include_ecal_ecal.h`
+
+- :ref:`file_ecal_core_include_ecal_ecal_client.h`
+
+- :ref:`file_ecal_core_include_ecal_ecal_process.h`
+
+- :ref:`file_ecal_core_include_ecal_ecal_publisher.h`
+
+- :ref:`file_ecal_core_include_ecal_ecal_server.h`
+
+- :ref:`file_ecal_core_include_ecal_ecal_subscriber.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_eCAL`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structeCAL_1_1SClientAttr`
+
+- :ref:`exhale_struct_structeCAL_1_1SClientEventCallbackData`
+
+- :ref:`exhale_struct_structeCAL_1_1SPubEventCallbackData`
+
+- :ref:`exhale_struct_structeCAL_1_1SReceiveCallbackData`
+
+- :ref:`exhale_struct_structeCAL_1_1SServerEventCallbackData`
+
+- :ref:`exhale_struct_structeCAL_1_1SServiceAttr`
+
+- :ref:`exhale_struct_structeCAL_1_1SSubEventCallbackData`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_ecal__callback_8h_1a5fa5b41873ca4d69095ec3bdfd84e8d9`
+
+- :ref:`exhale_typedef_ecal__callback_8h_1abe3a31dd01a78ed20f8881be6a46dc4a`
+
+- :ref:`exhale_typedef_ecal__callback_8h_1a24e137588a5d25b62798efa64dfc8835`
+
+- :ref:`exhale_typedef_ecal__callback_8h_1a6029e274ff176ebb67d94d03a8577b31`
+
+- :ref:`exhale_typedef_ecal__callback_8h_1a4421750eb800d4ae997ed45622bece4b`
+
+- :ref:`exhale_typedef_ecal__callback_8h_1acfa9950c8768a6a9a4445c8bb0f6cccf`
+
+- :ref:`exhale_typedef_ecal__callback_8h_1afa9b0ed5fa82263c5b5a0cb7fe96613d`
+

@@ -1,0 +1,14 @@
+.. _exhale_function_ecal__config_8h_1a0e2293d2d291224c6715ed8441242970:
+
+Function eCAL::Config::GetMaxUdpBandwidthBytesPerSecond
+=======================================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_config.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::Config::GetMaxUdpBandwidthBytesPerSecond()
+   :project: eCAL

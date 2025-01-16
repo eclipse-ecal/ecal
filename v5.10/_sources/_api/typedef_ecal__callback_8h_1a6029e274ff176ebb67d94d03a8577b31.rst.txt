@@ -1,0 +1,14 @@
+.. _exhale_typedef_ecal__callback_8h_1a6029e274ff176ebb67d94d03a8577b31:
+
+Typedef eCAL::RegistrationCallbackT
+===================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_callback.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: eCAL::RegistrationCallbackT
+   :project: eCAL

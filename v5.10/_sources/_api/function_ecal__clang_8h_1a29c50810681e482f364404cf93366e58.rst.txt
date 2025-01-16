@@ -1,0 +1,14 @@
+.. _exhale_function_ecal__clang_8h_1a29c50810681e482f364404cf93366e58:
+
+Function pub_get_qos
+====================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_clang.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: pub_get_qos(ECAL_HANDLE, struct SWriterQOSC *)
+   :project: eCAL
