@@ -49,8 +49,6 @@ All options can be passed on the command line cmake ``-D<option>=<value>`` or in
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``BUILD_ECAL_TESTS``                      | ``OFF`` | Build the eCAL google tests                                     |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_INCLUDE_PY_SAMPLES``               | ``OFF`` | Include python language sample projects into CMake              |
-+-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_INSTALL_SAMPLE_SOURCES``           | ``ON``  | Install the sources of eCAL samples                             |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_NPCAP_SUPPORT``                    | ``OFF`` | Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix) |
