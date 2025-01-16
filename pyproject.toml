@@ -6,7 +6,7 @@ license = { "file" = "LICENSE.txt" }
 authors = [
   { "name" = "Kerstin Keller", "email" = "kerstin.keller@continental.com" },
 ]
-keywords = ["DDS", "Middlware"]
+keywords = ["IPC", "Middleware"]
 classifiers = ["Topic :: Scientific/Engineering"]
 dependencies = ["protobuf >= 3.8, == 3.*"]
 # setuptools-scm will grab the version from the latest git tag
@@ -52,7 +52,11 @@ sdist.only-include = [
   "/ecal/",
   "/lib/",
   "/licenses/",
+  "lang/c/",
   "lang/python/",
+
+  "serialization/protobuf", 
+  "serialization/string", 
 
   "thirdparty/cmakefunctions/",
   "thirdparty/ecaludp/",  
@@ -74,7 +78,6 @@ sdist.only-include = [
   "!/thirdparty/hdf5/hdf5/doxygen/",
   "!/thirdparty/hdf5/hdf5/java/",
   "!/thirdparty/hdf5/hdf5/fortran/",
-
 ]
 
 [tool.scikit-build]

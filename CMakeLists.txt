@@ -94,7 +94,6 @@ option(BUILD_PY_BINDING                        "Build eCAL python binding"      
 option(BUILD_CSHARP_BINDING                    "Build eCAL C# binding"                                            OFF)
 option(BUILD_ECAL_TESTS                        "Build the eCAL google tests"                                      OFF)
 
-option(ECAL_INCLUDE_PY_SAMPLES                 "Include python language sample projects into CMake"               OFF)
 option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samples"                               ON)
 
 option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
@@ -123,7 +122,7 @@ set(ECAL_CORE_TRANSPORT_SHM                                                     
 # -----------------------
 # eCAL Python configuration
 # -----------------------
-set(ECAL_PYTHON_BUILD_SAMPLES                                                                        ${BUILD_SAMPLES})
+#set(ECAL_PYTHON_BUILD_SAMPLES                                                                        ${BUILD_SAMPLES})
 set(ECAL_PYTHON_BUILD_TESTS                                                                       ${BUILD_ECAL_TESTS})
 set(ECAL_PYTHON_HAS_HDF5                                                                                  ${HAS_HDF5})
 
@@ -148,7 +147,7 @@ else()
   )
 endif()
 
-set(ECAL_CSHARP_BUILD_SAMPLES  ${BUILD_SAMPLES})
+
 
 
 # there is a CMake issue with testing threading availibility via TEST_RUN
@@ -324,8 +323,14 @@ endif()
 # ecal core csharp binding
 # --------------------------------------------------------
 if(BUILD_CSHARP_BINDING AND WIN32)
+  set(ECAL_CSHARP_BUILD_SAMPLES     ${BUILD_SAMPLES})
+  set(ECAL_CSHARP_BUILD_TESTS    ${BUILD_ECAL_TESTS})
   add_subdirectory(lang/csharp)
 endif()
+
+set(ECAL_C_BUILD_SAMPLES     ${BUILD_SAMPLES})
+set(ECAL_C_BUILD_TESTS    ${BUILD_ECAL_TESTS})
+add_subdirectory(lang/c)
 
 # --------------------------------------------------------
 # console applications
@@ -524,7 +529,6 @@ message(STATUS "BUILD_TIME                                     : ${BUILD_TIME}")
 message(STATUS "BUILD_PY_BINDING                               : ${BUILD_PY_BINDING}")
 message(STATUS "BUILD_CSHARP_BINDING                           : ${BUILD_CSHARP_BINDING}")
 message(STATUS "BUILD_ECAL_TESTS                               : ${BUILD_ECAL_TESTS}")
-message(STATUS "ECAL_INCLUDE_PY_SAMPLES                        : ${ECAL_INCLUDE_PY_SAMPLES}")
 message(STATUS "ECAL_INSTALL_SAMPLE_SOURCES                    : ${ECAL_INSTALL_SAMPLE_SOURCES}")
 message(STATUS "ECAL_NPCAP_SUPPORT                             : ${ECAL_NPCAP_SUPPORT}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_ASIO                     : ${ECAL_THIRDPARTY_BUILD_ASIO}")

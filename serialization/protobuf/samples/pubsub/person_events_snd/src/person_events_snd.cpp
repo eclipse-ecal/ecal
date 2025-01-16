@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,18 +29,18 @@ void OnEvent(const char* topic_name_, const struct eCAL::v5::SPubEventCallbackDa
   std::cout << "topic name       : " << topic_name_ << std::endl;
   switch (data_->type)
   {
-  case pub_event_connected:
-    std::cout << "event            : " << "pub_event_connected" << std::endl;
+  case eCAL::ePublisherEvent::connected:
+    std::cout << "event            : " << "connected" << std::endl;
     break;
-  case pub_event_disconnected:
-    std::cout << "event            : " << "pub_event_disconnected" << std::endl;
+  case eCAL::ePublisherEvent::disconnected:
+    std::cout << "event            : " << "disconnected" << std::endl;
     break;
   // not implemented yet
-  case pub_event_dropped:
-    std::cout << "event            : " << "pub_event_dropped" << std::endl;
+  case eCAL::ePublisherEvent::dropped:
+    std::cout << "event            : " << "dropped" << std::endl;
     break;
-  case pub_event_update_connection:
-    std::cout << "event            : " << "pub_event_update_connection" << std::endl;
+  case eCAL::ePublisherEvent::update_connection:
+    std::cout << "event            : " << "update_connection" << std::endl;
     std::cout << "  topic_id       : " << data_->tid << std::endl;
     std::cout << "  topic_encoding : " << data_->tdatatype.encoding << std::endl;
     std::cout << "  topic_type     : " << data_->tdatatype.name << std::endl;
@@ -59,16 +59,16 @@ int main()
   eCAL::Initialize("person publisher events");
 
   // set process state
-  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   // create a publisher (topic name "person")
   eCAL::protobuf::CPublisher<pb::People::Person> pub("person");
 
   // add event callback function (_1 = topic_name, _2 = event data struct)
   auto evt_callback = std::bind(OnEvent, std::placeholders::_1, std::placeholders::_2);
-  pub.AddEventCallback(pub_event_connected,         evt_callback);
-  pub.AddEventCallback(pub_event_disconnected,      evt_callback);
-  pub.AddEventCallback(pub_event_update_connection, evt_callback);
+  pub.AddEventCallback(eCAL::ePublisherEvent::connected,         evt_callback);
+  pub.AddEventCallback(eCAL::ePublisherEvent::disconnected,      evt_callback);
+  pub.AddEventCallback(eCAL::ePublisherEvent::update_connection, evt_callback);
 
   // generate a class instance of Person
   pb::People::Person person;

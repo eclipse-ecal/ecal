@@ -74,7 +74,7 @@ Ecalmon::Ecalmon(QWidget *parent)
   auto config = eCAL::Init::Configuration();
   config.logging.receiver.enable = true;
   eCAL::Initialize(config, "eCALMon", eCAL::Init::Default | eCAL::Init::Monitoring);
-  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
   ui_.setupUi(this);
 
@@ -372,7 +372,7 @@ void Ecalmon::updateMonitor()
 #ifndef NDEBUG
     qDebug().nospace() << "[" << metaObject()->className() << "Error getting Monitoring Information";
 #endif // NDEBUG
-    eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_error, "Error getting eCAL Monitoring information");
+    eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_error, "Error getting eCAL Monitoring information");
   }
 }
 

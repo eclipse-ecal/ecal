@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ EcalPlay::EcalPlay()
   play_thread_ = std::make_unique<PlayThread>();
   play_thread_->Start();
 
-  eCAL::Process::SetState(eCAL_Process_eSeverity::proc_sev_warning, eCAL_Process_eSeverity_Level::proc_sev_level1, "No measurement loaded");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::warning, eCAL::Process::eSeverityLevel::level1, "No measurement loaded");
 }
 
 EcalPlay::~EcalPlay()
@@ -114,14 +114,14 @@ bool EcalPlay::LoadMeasurement(const std::string& path)
     LoadScenarios(meas_dir + "/doc", meas_dir + "/doc/scenario.txt");
 
     LogMeasurementSummary();
-    eCAL::Process::SetState(eCAL_Process_eSeverity::proc_sev_healthy, eCAL_Process_eSeverity_Level::proc_sev_level1, "Measurement loaded");
+    eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Measurement loaded");
 
     return true;
   }
   else
   {
     EcalPlayLogger::Instance()->error("Failed loading measurement from: " + meas_dir);
-    eCAL::Process::SetState(eCAL_Process_eSeverity::proc_sev_warning, eCAL_Process_eSeverity_Level::proc_sev_level1, "Failed loading measurement");
+    eCAL::Process::SetState(eCAL::Process::eSeverity::warning, eCAL::Process::eSeverityLevel::level1, "Failed loading measurement");
     return false;
   }
 }

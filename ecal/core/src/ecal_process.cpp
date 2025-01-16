@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -289,7 +289,7 @@ namespace eCAL
       #endif
     }
 
-    void SetState(eCAL_Process_eSeverity severity_, eCAL_Process_eSeverity_Level level_, const char* info_)
+    void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const char* info_)
     {
       g_process_severity = severity_;
       g_process_severity_level = level_;
@@ -352,7 +352,7 @@ namespace eCAL
       return(g_process_par);
     }
 
-    int StartProcess(const char* proc_name_, const char* proc_args_, const char* working_dir_, const bool create_console_, const eCAL_Process_eStartMode process_mode_, const bool block_)
+    int StartProcess(const char* proc_name_, const char* proc_args_, const char* working_dir_, const bool create_console_, const eCAL::Process::eStartMode process_mode_, const bool block_)
     {
       int ret_pid = 0;
 
@@ -970,7 +970,7 @@ namespace eCAL
       const char* proc_args_,
       const char* working_dir_,
       const bool /* create_console_ */,
-      const eCAL_Process_eStartMode  process_mode_,
+      const eCAL::Process::eStartMode  process_mode_,
       const bool  block_)
     {
       // Evaluate whether we want to use a terminal emulator. We only use a
@@ -981,7 +981,7 @@ namespace eCAL
       //   - ecal_process_stub is available AND prints the correct version
 
       std::string terminal_emulator_command;
-      if (process_mode_ != eCAL_Process_eStartMode::proc_smode_hidden)
+      if (process_mode_ != eCAL::Process::eStartMode::hidden)
       {
         STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Checking requirements for using a terminal emulator... " << std::endl);
         terminal_emulator_command = getTerminalEmulatorCommand();

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
   const int                 upd_snd_buff                = (5242880 + 1024);
 
   // Monitoring options
-  const eCAL_Logging_Filter mon_log_filter_con          = log_level_warning;
+  const eCAL::Logging::Filter mon_log_filter_con = eCAL::Logging::log_level_warning;
   
   // Publisher options
   const bool                pub_use_shm                 = false;

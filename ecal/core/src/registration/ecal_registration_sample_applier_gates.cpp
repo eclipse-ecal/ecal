@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ namespace eCAL
         break;
 #endif
       default:
-        Logging::Log(log_level_debug1, "CGatesApplier::ApplySample : unknown sample type");
+        Logging::Log(Logging::log_level_debug1, "CGatesApplier::ApplySample : unknown sample type");
         break;
       }
     }

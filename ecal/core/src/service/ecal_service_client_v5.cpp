@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,13 +108,13 @@ namespace eCAL
       return m_service_client_impl->RemResponseCallback();
     }
 
-    bool CServiceClient::AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_)
+    bool CServiceClient::AddEventCallback(eClientEvent type_, ClientEventCallbackT callback_)
     {
       if (m_service_client_impl == nullptr) return false;
       return m_service_client_impl->AddEventCallback(type_, callback_);
     }
 
-    bool CServiceClient::RemEventCallback(eCAL_Client_Event type_)
+    bool CServiceClient::RemEventCallback(eClientEvent type_)
     {
       if (m_service_client_impl == nullptr) return false;
       return m_service_client_impl->RemEventCallback(type_);

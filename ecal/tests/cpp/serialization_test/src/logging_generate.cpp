@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ namespace eCAL
       logMessage.pid     = rand() % 1000;
       logMessage.pname   = GenerateString(8);
       logMessage.uname   = GenerateString(6);
-      logMessage.level   = static_cast<eCAL_Logging_eLogLevel>(rand() % 2);
+      logMessage.level   = static_cast<eLogLevel>(rand() % 2);
       logMessage.content = GenerateString(50);
 
       return logMessage;

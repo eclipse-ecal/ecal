@@ -58,14 +58,14 @@ namespace
     // error message, return state and call state
     error_response.error_msg                      = error_message_;
     error_response.ret_state                      = 0;
-    error_response.call_state                     = call_state_failed;
+    error_response.call_state                     = eCAL::eCallState::failed;
     return error_response;
   }
 
   void ResponseError(const eCAL::Registration::SEntityId& entity_id_, const std::string& service_name_, const std::string& method_name_,
     const std::string& error_message_, const eCAL::ResponseIDCallbackT& response_callback_)
   {
-    eCAL::Logging::Log(log_level_error, "CServiceClientImpl: Response error for service: " + service_name_ + ", method: " + method_name_ + ", error: " + error_message_);
+    eCAL::Logging::Log(eCAL::Logging::log_level_error, "CServiceClientImpl: Response error for service: " + service_name_ + ", method: " + method_name_ + ", error: " + error_message_);
     response_callback_(entity_id_, CreateErrorResponse(entity_id_, service_name_, method_name_, error_message_));
   }
 }
@@ -77,7 +77,7 @@ namespace eCAL
       const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_, const ClientEventCallbackT& event_callback_)
   {
 #ifndef NDEBUG
-    eCAL::Logging::Log(log_level_debug2, "CServiceClientImpl::CreateInstance: Creating instance of CServiceClientImpl for service: " + service_name_);
+    eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CreateInstance: Creating instance of CServiceClientImpl for service: " + service_name_);
 #endif
     return std::shared_ptr<CServiceClientImpl>(new CServiceClientImpl(service_name_, method_information_map_, event_callback_));
   }
@@ -88,7 +88,7 @@ namespace eCAL
       : m_service_name(service_name_), m_method_information_map(method_information_map_)
   {
 #ifndef NDEBUG
-    eCAL::Logging::Log(log_level_debug2, "CServiceClientImpl::CServiceClientImpl: Initializing service client for: " + service_name_);
+    eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CServiceClientImpl: Initializing service client for: " + service_name_);
 #endif
 
     // initialize method call counts
@@ -111,7 +111,7 @@ namespace eCAL
     {
       g_registration_provider()->RegisterSample(GetRegistrationSample());
 #ifndef NDEBUG
-      eCAL::Logging::Log(log_level_debug2, "CServiceClientImpl::CServiceClientImpl: Registered client with service name: " + m_service_name);
+      eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CServiceClientImpl: Registered client with service name: " + m_service_name);
 #endif
     }
   }
@@ -120,7 +120,7 @@ namespace eCAL
   CServiceClientImpl::~CServiceClientImpl()
   {
 #ifndef NDEBUG
-    eCAL::Logging::Log(log_level_debug2, "CServiceClientImpl::~CServiceClientImpl: Destroying service client for: " + m_service_name);
+    eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::~CServiceClientImpl: Destroying service client for: " + m_service_name);
 #endif
 
     // reset client map
@@ -140,7 +140,7 @@ namespace eCAL
     {
       g_registration_provider()->UnregisterSample(GetUnregistrationSample());
 #ifndef NDEBUG
-      eCAL::Logging::Log(log_level_debug2, "CServiceClientImpl::~CServiceClientImpl: Unregistered client for service name: " + m_service_name);
+      eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::~CServiceClientImpl: Unregistered client for service name: " + m_service_name);
 #endif
     }
   }
@@ -167,13 +167,13 @@ namespace eCAL
       const std::string& request_, int timeout_ms_, const ResponseIDCallbackT& response_callback_)
   {
 #ifndef NDEBUG
-    eCAL::Logging::Log(log_level_debug1, "CServiceClientImpl::CallWithCallback: Performing synchronous call for service: " + m_service_name + ", method: " + method_name_);
+    eCAL::Logging::Log(eCAL::Logging::log_level_debug1, "CServiceClientImpl::CallWithCallback: Performing synchronous call for service: " + m_service_name + ", method: " + method_name_);
 #endif
 
     SClient client;
     if (!GetClientByEntity(entity_id_, client))
     {
-      eCAL::Logging::Log(log_level_warning, "CServiceClientImpl::CallWithCallback: Failed to find client for entity ID: " + entity_id_.entity_id);
+      eCAL::Logging::Log(Logging::log_level_warning, "CServiceClientImpl::CallWithCallback: Failed to find client for entity ID: " + entity_id_.entity_id);
       return { false, SServiceIDResponse() };
     }
 
@@ -186,14 +186,14 @@ namespace eCAL
     }
 
     // Handle timeout event
-    if (!response.first && response.second.call_state == eCallState::call_state_timeouted)
+    if (!response.first && response.second.call_state == eCallState::timeouted)
     {
       Registration::SServiceMethodId service_id;
       service_id.service_name = m_service_name;
       service_id.service_id   = entity_id_;
-      NotifyEventCallback(service_id, eCAL_Client_Event::client_event_timeout);
+      NotifyEventCallback(service_id, eClientEvent::timeout);
 #ifndef NDEBUG
-      eCAL::Logging::Log(log_level_debug1, "CServiceClientImpl::CallWithCallback: Synchronous call for service: " + m_service_name + ", method: " + method_name_ + " timed out.");
+      eCAL::Logging::Log(eCAL::Logging::log_level_debug1, "CServiceClientImpl::CallWithCallback: Synchronous call for service: " + m_service_name + ", method: " + method_name_ + " timed out.");
 #endif
     }
 
@@ -204,14 +204,14 @@ namespace eCAL
   bool CServiceClientImpl::CallWithCallbackAsync(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_)
   {
 #ifndef NDEBUG
-    eCAL::Logging::Log(log_level_debug2, "CServiceClientImpl::CallWithCallbackAsync: Performing asynchronous call for service: " + m_service_name + ", method: " + method_name_);
+    eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CallWithCallbackAsync: Performing asynchronous call for service: " + m_service_name + ", method: " + method_name_);
 #endif
 
     // Retrieve the client
     SClient client;
     if (!GetClientByEntity(entity_id_, client))
     {
-      eCAL::Logging::Log(log_level_warning, "CServiceClientImpl::CallWithCallbackAsync: Failed to find client for entity ID: " + entity_id_.entity_id);
+      eCAL::Logging::Log(Logging::log_level_warning, "CServiceClientImpl::CallWithCallbackAsync: Failed to find client for entity ID: " + entity_id_.entity_id);
       return false;
     }
 
@@ -226,7 +226,7 @@ namespace eCAL
     auto request_shared_ptr = SerializeRequest(method_name_, request_);
     if (!request_shared_ptr)
     {
-      eCAL::Logging::Log(log_level_error, "CServiceClientImpl::CallWithCallbackAsync: Request serialization failed.");
+      eCAL::Logging::Log(eCAL::Logging::log_level_error, "CServiceClientImpl::CallWithCallbackAsync: Request serialization failed.");
       return false;
     }
 
@@ -241,16 +241,16 @@ namespace eCAL
         {
           if (error)
           {
-            eCAL::Logging::Log(log_level_error, "CServiceClientImpl::CallWithCallbackAsync: Asynchronous call returned an error: " + error.ToString());
+            eCAL::Logging::Log(eCAL::Logging::log_level_error, "CServiceClientImpl::CallWithCallbackAsync: Asynchronous call returned an error: " + error.ToString());
             response_data->response->first = false;
             response_data->response->second.error_msg = error.ToString();
-            response_data->response->second.call_state = eCallState::call_state_failed;
+            response_data->response->second.call_state = eCallState::failed;
             response_data->response->second.ret_state = 0;
           }
           else
           {
 #ifndef NDEBUG
-            eCAL::Logging::Log(log_level_debug1, "CServiceClientImpl::CallWithCallbackAsync: Asynchronous call succeded");
+            eCAL::Logging::Log(eCAL::Logging::log_level_debug1, "CServiceClientImpl::CallWithCallbackAsync: Asynchronous call succeded");
 #endif
             response_data->response->first = true;
             response_data->response->second = DeserializedResponse(client, *response_);
@@ -281,7 +281,7 @@ namespace eCAL
     auto iter = m_client_session_map.find(entity_id_);
     bool state((iter != m_client_session_map.end() && iter->second.connected));
 #ifndef NDEBUG
-    eCAL::Logging::Log(log_level_debug2, "CServiceClientImpl::IsConnected: Returned: " + std::to_string(state));
+    eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::IsConnected: Returned: " + std::to_string(state));
 #endif
     return state;
   }
@@ -325,7 +325,7 @@ namespace eCAL
   Registration::Sample CServiceClientImpl::GetRegistration()
   {
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, "CServiceClientImpl:::GetRegistration: Generating registration sample for: " + m_service_name);
+    Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl:::GetRegistration: Generating registration sample for: " + m_service_name);
 #endif
     UpdateConnectionStates();
     return GetRegistrationSample();
@@ -456,7 +456,7 @@ namespace eCAL
       {
         response_data->response->first = false;
         response_data->response->second.error_msg = "Timeout";
-        response_data->response->second.call_state = eCallState::call_state_timeouted;
+        response_data->response->second.call_state = eCallState::timeouted;
       }
     }
     else
@@ -492,13 +492,13 @@ namespace eCAL
       if (!client_data.connected && state == eCAL::service::State::CONNECTED)
       {
         client_data.connected = true;
-        NotifyEventCallback(service_id, client_event_connected);
+        NotifyEventCallback(service_id, eClientEvent::connected);
         ++it;
       }
       else if (client_data.connected && state == eCAL::service::State::FAILED)
       {
         client_data.connected = false;
-        NotifyEventCallback(service_id, client_event_disconnected);
+        NotifyEventCallback(service_id, eClientEvent::disconnected);
         it = m_client_session_map.erase(it);
       }
       else
@@ -515,10 +515,10 @@ namespace eCAL
   }
 
 
-  void CServiceClientImpl::NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eCAL_Client_Event event_type_)
+  void CServiceClientImpl::NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eClientEvent event_type_)
   {
 #ifndef NDEBUG
-    Logging::Log(log_level_debug1, "CServiceClientImpl::NotifyEventCallback: Notifying event callback for: " + m_service_name + " Event Type: " + std::to_string(event_type_));
+    Logging::Log(Logging::log_level_debug1, "CServiceClientImpl::NotifyEventCallback: Notifying event callback for: " + m_service_name + " Event Type: " + to_string(event_type_));
 #endif
 
     const std::lock_guard<std::mutex> lock(m_event_callback_mutex);
@@ -542,7 +542,7 @@ namespace eCAL
     data->response->second.service_method_id.service_name          = client_.service_attr.sname;
     data->response->second.service_method_id.method_name           = method_name_;
 
-    data->response->second.call_state = eCallState::call_state_none;
+    data->response->second.call_state = eCallState::none;
     return data;
   }
 
@@ -557,7 +557,7 @@ namespace eCAL
         {
           response_data_->response->first = false;
           response_data_->response->second.error_msg  = error.ToString();
-          response_data_->response->second.call_state = eCallState::call_state_failed;
+          response_data_->response->second.call_state = eCallState::failed;
           response_data_->response->second.ret_state  = 0;
         }
         else
@@ -595,10 +595,10 @@ namespace eCAL
       switch (response_header.state)
       {
       case eCAL::Service::eMethodCallState::executed:
-        service_reponse.call_state = call_state_executed;
+        service_reponse.call_state = eCallState::executed;
         break;
       case eCAL::Service::eMethodCallState::failed:
-        service_reponse.call_state = call_state_failed;
+        service_reponse.call_state = eCallState::failed;
         break;
       default:
         break;
@@ -610,7 +610,7 @@ namespace eCAL
     {
       service_reponse.error_msg = "Could not parse server response";
       service_reponse.ret_state = 0;
-      service_reponse.call_state = eCallState::call_state_failed;
+      service_reponse.call_state = eCallState::failed;
       service_reponse.response = "";
     }
 

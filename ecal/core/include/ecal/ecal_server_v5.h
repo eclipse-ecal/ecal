@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -139,7 +139,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_);
+        bool AddEventCallback(eServerEvent type_, ServerEventCallbackT callback_);
 
       /**
        * @brief Remove server event callback function.
@@ -149,7 +149,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool RemEventCallback(eCAL_Server_Event type_);
+        bool RemEventCallback(eServerEvent type_);
 
       /**
        * @brief Retrieve service name.

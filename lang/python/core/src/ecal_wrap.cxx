@@ -806,13 +806,13 @@ static void c_client_callback(const struct eCAL::SServiceResponse& service_respo
   std::string call_state_s;
   switch (service_response_.call_state)
   {
-  case call_state_none:
+  case eCAL::eCallState::none:
     call_state_s = "call_state_none";
     break;
-  case call_state_executed:
+  case eCAL::eCallState::executed:
     call_state_s = "call_state_executed";
     break;
-  case call_state_failed:
+  case eCAL::eCallState::failed:
     call_state_s = "call_state_failed";
     break;
   default:

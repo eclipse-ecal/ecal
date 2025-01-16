@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,8 @@ extern "C"
 {
   ECALC_API void eCAL_Logging_Log(enum eCAL_Logging_eLogLevel level_, const char* const msg_)
   {
-    eCAL::Logging::Log(level_, msg_);
+    // This is dangerous. We need to make sure to keep both enum types in synch.
+    eCAL::Logging::Log(static_cast<eCAL::Logging::eLogLevel>(level_), msg_);
   }
 
   ECALC_API int eCAL_Logging_GetLogging(void* buf_, int buf_len_)

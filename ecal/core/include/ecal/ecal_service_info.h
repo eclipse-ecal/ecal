@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@
 
 #pragma once
 
-#include <ecal/cimpl/ecal_service_info_cimpl.h>
 #include <ecal/ecal_types.h>
 
 #include <functional>
@@ -34,6 +33,17 @@
 
 namespace eCAL
 {
+  /**
+   * @brief  Service call state.
+  **/
+  enum class eCallState
+  {
+    none = 0,    //!< undefined
+    executed,    //!< executed (successfully)
+    timeouted,   //!< timeout
+    failed       //!< failed
+  };
+
   /**
    * @brief Service method information struct containing the request and response type information.
   **/
@@ -52,7 +62,7 @@ namespace eCAL
     SServiceResponse()
     {
       ret_state  = 0;
-      call_state = call_state_none;
+      call_state = eCallState::none;
     };
     std::string  host_name;      //!< service host name
     std::string  service_name;   //!< name of the service
@@ -73,7 +83,7 @@ namespace eCAL
     Registration::SServiceMethodId service_method_id;            //!< service method information (service id (entity id, process id, host name), service name, method name)
     std::string                    error_msg;                    //!< human readable error message
     int                            ret_state  = 0;               //!< return state of the called service method
-    eCallState                     call_state = call_state_none; //!< call state (see eCallState)
+    eCallState                     call_state = eCallState::none; //!< call state (see eCallState)
     std::string                    response;                     //!< service response
   };
   using ServiceIDResponseVecT = std::vector<SServiceIDResponse>; //!< vector of multiple service responses

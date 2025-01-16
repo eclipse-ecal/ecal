@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -323,7 +323,7 @@ void PluginWidget::updateTree()
 
 void PluginWidget::showErrorMessage()
 {
-    eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_error, "Error when receiving data on topic \"" + topic_name_.toStdString() + "\": " + last_error_string_.toStdString());
+    eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_error, "Error when receiving data on topic \"" + topic_name_.toStdString() + "\": " + last_error_string_.toStdString());
 
     tree_model_->removeAllChildren();
     tree_view_->setVisible(false);

@@ -24,7 +24,7 @@ cmake_minimum_required(VERSION 3.18...3.26)
 project(ecal_python)
 find_package(Python REQUIRED COMPONENTS Development.Module Interpreter)
 
-option(ECAL_PYTHON_BUILD_SAMPLES "Includes the python samples"                  ON)
+option(ECAL_PYTHON_BUILD_SAMPLES "Includes the python samples"                  OFF)
 option(ECAL_PYTHON_BUILD_TESTS   "Includes the python tests"                    ON)
 option(ECAL_PYTHON_HAS_HDF5      "Enables eCAL application cmd line interfaces" ON)
 

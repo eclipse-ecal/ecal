@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,16 @@
 /**
  * @brief  Process start mode (StartProcess) 
 **/
-enum eCAL_Process_eStartMode
+namespace eCAL
 {
-  proc_smode_normal     =  0,  /*!<  0 == start mode normal     */
-  proc_smode_hidden     =  1,  /*!<  1 == start mode hidden     */
-  proc_smode_minimized  =  2,  /*!<  2 == start mode minimized  */
-  proc_smode_maximized  =  3,  /*!<  3 == start mode maximized  */
-};
+  namespace Process
+  {
+    enum class eStartMode
+    {
+      normal = 0,     /*!<  0 == start mode normal     */
+      hidden = 1,     /*!<  1 == start mode hidden     */
+      minimized = 2,  /*!<  2 == start mode minimized  */
+      maximized = 3,  /*!<  3 == start mode maximized  */
+    };
+  }
+}

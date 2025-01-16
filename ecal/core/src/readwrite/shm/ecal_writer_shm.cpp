@@ -99,7 +99,7 @@ namespace eCAL
     {
       memory_file->Connect(std::to_string(process_id_));
 #ifndef NDEBUG
-      Logging::Log(log_level_debug1, std::string("CDataWriterSHM::ApplySubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
+      Logging::Log(Logging::log_level_debug1, std::string("CDataWriterSHM::ApplySubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
 #endif
     }
   }
@@ -140,7 +140,7 @@ namespace eCAL
     {
       memory_file->Disconnect(std::to_string(process_id_));
 #ifndef NDEBUG
-      Logging::Log(log_level_debug1, std::string("CDataWriterSHM::RemoveSubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
+      Logging::Log(Logging::log_level_debug1, std::string("CDataWriterSHM::RemoveSubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
 #endif
     }
   }
@@ -163,7 +163,7 @@ namespace eCAL
     // buffer count zero not allowed
     if (buffer_count_ < 1)
     {
-      Logging::Log(log_level_error, m_attributes.topic_name + "::CDataWriterSHM::SetBufferCount minimal number of memory files is 1 !");
+      Logging::Log(Logging::log_level_error, m_attributes.topic_name + "::CDataWriterSHM::SetBufferCount minimal number of memory files is 1 !");
       return false;
     }
 
@@ -197,7 +197,7 @@ namespace eCAL
       else
       {
         m_memory_file_vec.clear();
-        Logging::Log(log_level_error, "CDataWriterSHM::SetBufferCount - FAILED");
+        Logging::Log(Logging::log_level_error, "CDataWriterSHM::SetBufferCount - FAILED");
         return false;
       }
     }

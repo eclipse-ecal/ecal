@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -419,7 +419,7 @@ namespace eCAL
 
       if (interface_.module_handle == nullptr)
       {
-        eCAL::Logging::Log(log_level_error, "Could not load eCAL time sync module " + module_name);
+        eCAL::Logging::Log(Logging::log_level_error, "Could not load eCAL time sync module " + module_name);
         return false;
       }
       else
@@ -457,7 +457,7 @@ namespace eCAL
            || (interface_.etime_get_status_ptr            == nullptr)
           )
         {
-          eCAL::Logging::Log(log_level_error, "Could not load eCAL time sync module " + module_name);
+          eCAL::Logging::Log(Logging::log_level_error, "Could not load eCAL time sync module " + module_name);
           return false;
         }
       }

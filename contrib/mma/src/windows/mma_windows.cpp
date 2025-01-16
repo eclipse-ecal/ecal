@@ -87,22 +87,28 @@ bool MMAWindows::init()
     pdhStatus = PdhOpenQuery(nullptr, 0, &h_query_);
     CheckPDH("PdhOpenQuery", pdhStatus);
 
+    // PROCESSOR
     processor_ = std::make_shared<Processor>();
     processor_->RefreshData(h_query_, pdhStatus);
 
+    // MEMORY
     memory_ = std::make_shared<Memory>();
 
-    Disk disk_resource;
-    total_disks_ = disk_resource.GetResourceInfo(h_query_, pdhStatus, query_manager_);
+    // DISK
+    disk_ = std::make_shared<Disk>();
+    total_disks_ = disk_->GetResourceInfo(h_query_, pdhStatus, query_manager_);
 
-    Network network_resource;
-    total_network_cards_ = network_resource.GetResourceInfo(h_query_, pdhStatus, query_manager_);
+    // NETWORK
+    network_ = std::make_shared<Network>();
+    total_network_cards_ = network_->GetResourceInfo(h_query_, pdhStatus, query_manager_);
 
     pdhStatus = PdhCollectQueryData(h_query_);
 
     CheckPDH("PdhCollectQueryData", pdhStatus);
 
+    // PROCESSES
     processes_ = std::make_shared<Processes>();
+
     nr_of_cpu_cores = processor_->GetNumbersOfCpuCores(); // the nr. of cores is static show we need to call once this function
     lpBuffer = new char[4026];
     _In_  UINT   uSize = 0;
@@ -147,12 +153,10 @@ bool MMAWindows::Get(eCAL::pb::mma::State& state)
       state.clear_disks();
       state.clear_networks();
 
-      Disk disk;
-      auto disks = disk.GetResourceInfo(h_query_, pdhStatus, query_manager_);
+      auto disks = disk_->GetResourceInfo(h_query_, pdhStatus, query_manager_);
       RefreshResource(total_disks_, disks);
 
-      Network network;
-      auto networks = network.GetResourceInfo(h_query_, pdhStatus, query_manager_);
+      auto networks = network_->GetResourceInfo(h_query_, pdhStatus, query_manager_);
       RefreshResource(total_network_cards_, networks);
 
       memory_->RefreshData();

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,7 +110,7 @@ int main(int argc, char** argv)
   // initialize eCAL API
   eCAL::Initialize("addressbook subscriber");
 
-  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   // create a subscriber (topic name "addressbook")
   eCAL::capnproto::CDynamicSubscriber sub("addressbook");

@@ -67,13 +67,15 @@ endif()
 set(ecal_config_src
     src/config/default_configuration.cpp        
     src/config/ecal_config.cpp
-    src/config/ecal_config_initializer.cpp
+    src/config/configuration.cpp
+    src/config/ecal_path_processing.cpp
     src/types/ecal_custom_data_types.cpp
 )
 if (ECAL_CORE_CONFIGURATION)
   list(APPEND ecal_config_src
       src/config/configuration_to_yaml.cpp
       src/config/configuration_reader.cpp
+      src/config/configuration_writer.cpp
   )
 endif()
 ######################################
@@ -470,36 +472,6 @@ set (ecal_builder_src
     src/registration/udp/config/builder/udp_attribute_builder.cpp
 )
 
-
-######################################
-# c interface
-######################################
-set(ecal_c_src
-    src/cimpl/ecal_client_cimpl.cpp
-    src/cimpl/ecal_common_cimpl.cpp
-    src/cimpl/ecal_common_cimpl.h
-    src/cimpl/ecal_core_cimpl.cpp
-    src/cimpl/ecal_log_cimpl.cpp
-    src/cimpl/ecal_monitoring_cimpl.cpp
-    src/cimpl/ecal_process_cimpl.cpp
-    src/cimpl/ecal_publisher_cimpl.cpp
-    src/cimpl/ecal_server_cimpl.cpp
-    src/cimpl/ecal_subscriber_cimpl.cpp
-    src/cimpl/ecal_time_cimpl.cpp
-    src/cimpl/ecal_timer_cimpl.cpp
-    src/cimpl/ecal_util_cimpl.cpp    
-)
-
-######################################
-# windows dll
-######################################
-if(WIN32)
-  set(ecal_c_win_src
-      src/win32/dll/dllmain.cpp
-      src/win32/dll/ecal.rc
-  )
-endif()
-
 ######################################
 # public header
 ######################################
@@ -544,25 +516,6 @@ set(ecal_header_cmn
     include/ecal/ecal_tlayer.h
     include/ecal/ecal_types.h
     include/ecal/ecal_util.h
-)
-
-set(ecal_header_cimpl
-    include/ecal/cimpl/ecal_callback_cimpl.h
-    include/ecal/cimpl/ecal_client_cimpl.h
-    include/ecal/cimpl/ecal_core_cimpl.h
-    include/ecal/cimpl/ecal_init_cimpl.h
-    include/ecal/cimpl/ecal_log_cimpl.h
-    include/ecal/cimpl/ecal_monitoring_cimpl.h
-    include/ecal/cimpl/ecal_process_cimpl.h
-    include/ecal/cimpl/ecal_publisher_cimpl.h
-    include/ecal/cimpl/ecal_server_cimpl.h
-    include/ecal/cimpl/ecal_service_info_cimpl.h
-    include/ecal/cimpl/ecal_subscriber_cimpl.h
-    include/ecal/cimpl/ecal_time_cimpl.h
-    include/ecal/cimpl/ecal_timer_cimpl.h
-    include/ecal/cimpl/ecal_util_cimpl.h
-    include/ecal/ecalc.h
-    include/ecal/ecalc_types.h
 )
 
 set(ecal_header_msg
@@ -612,32 +565,7 @@ if(UNIX)
   set_source_files_properties(src/util/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
-set(ecal_c_sources
-    ${ecal_c_src}
-    ${ecal_c_win_src}
-    ${ecal_header_cimpl}
-)
-
-ecal_add_ecal_shared_library(${PROJECT_NAME}_c 
-    ${ecal_c_sources}
-)
-
 add_library(eCAL::${PROJECT_NAME}   ALIAS ${PROJECT_NAME})
-add_library(eCAL::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)
-
-target_link_libraries(${PROJECT_NAME}_c ${PROJECT_NAME})
-
-target_compile_definitions(${PROJECT_NAME}_c
-  INTERFACE 
-    ECAL_C_DLL # This is deprecated
-    ECAL_CORE_C_IMPORTS
-  PUBLIC
-    ASIO_STANDALONE
-    ASIO_DISABLE_VISIBILITY
-  PRIVATE 
-    ECAL_CORE_C_EXPORTS
-    ECAL_NO_DEPRECATION_WARNINGS
-)
 
 target_compile_definitions(${PROJECT_NAME}
   PUBLIC
@@ -653,20 +581,12 @@ target_compile_definitions(${PROJECT_NAME}
     ECAL_CORE_IMPORTS
 )
 
-set_target_properties(${PROJECT_NAME}_c
-  PROPERTIES 
-    CXX_VISIBILITY_PRESET hidden
-    C_VISIBILITY_PRESET hidden
-    VISIBILITY_INLINES_HIDDEN ON
-)
-
 set_target_properties(${PROJECT_NAME}
   PROPERTIES 
     CXX_VISIBILITY_PRESET hidden
     C_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN ON
 )
-
 
 set(ECAL_CORE_FEATURES
   ECAL_CORE_CONFIGURATION
@@ -687,9 +607,7 @@ set(ECAL_CORE_FEATURES
 foreach(CORE_FEATURE ${ECAL_CORE_FEATURES})
   if(${CORE_FEATURE})
     target_compile_definitions(${PROJECT_NAME}
-      PRIVATE ${CORE_FEATURE})
-    target_compile_definitions(${PROJECT_NAME}_c
-      PRIVATE ${CORE_FEATURE})
+      PUBLIC ${CORE_FEATURE})
   endif()
 endforeach()
 
@@ -755,9 +673,7 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER core)
-set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER core)
 
-ecal_install_ecal_shared_library(${PROJECT_NAME}_c)
 ecal_install_ecal_shared_library(${PROJECT_NAME})
 
 install(DIRECTORY
@@ -772,7 +688,6 @@ install(DIRECTORY
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
     ${ecal_sources}
-    ${ecal_c_sources}
   )
 endif()
 

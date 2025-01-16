@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 #include "item_data_roles.h"
 
 LogSortFilterProxyModel::LogSortFilterProxyModel(QObject* parent)
-  : QMulticolumnSortFilterProxyModel(parent), log_level_filter_(log_level_none)
+  : QMulticolumnSortFilterProxyModel(parent), log_level_filter_(eCAL::Logging::eLogLevel::log_level_none)
 {
   setRecursiveFilteringEnabled(true);
 }
@@ -44,13 +44,13 @@ bool LogSortFilterProxyModel::filterDirectAcceptsRow(int source_row, const QMode
   return false;
 }
 
-void LogSortFilterProxyModel::setLogLevelFilter(eCAL_Logging_eLogLevel log_levels)
+void LogSortFilterProxyModel::setLogLevelFilter(eCAL::Logging::eLogLevel log_levels)
 {
   log_level_filter_ = log_levels;
   invalidateFilter();
 }
 
-eCAL_Logging_eLogLevel LogSortFilterProxyModel::logLevelFilter() const
+eCAL::Logging::eLogLevel LogSortFilterProxyModel::logLevelFilter() const
 {
   return log_level_filter_;
 }

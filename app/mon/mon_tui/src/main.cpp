@@ -37,7 +37,7 @@ int main(int argc, char** argv)
   
   auto status = eCAL::Initialize(config, "eCALMon TUI", eCAL::Init::Default | eCAL::Init::Monitoring);
   if (status == -1) std::cerr << "Failed to init" << std::endl;
-  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
   TUI::Start(args);
 

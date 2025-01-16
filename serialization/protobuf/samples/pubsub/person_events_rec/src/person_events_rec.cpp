@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,21 +29,21 @@ void OnEvent(const char* topic_name_, const struct eCAL::v5::SSubEventCallbackDa
   std::cout << "topic name       : " << topic_name_ << std::endl;
   switch (data_->type)
   {
-  case sub_event_connected:
-    std::cout << "event            : " << "sub_event_connected" << std::endl;
+  case eCAL::eSubscriberEvent::connected:
+    std::cout << "event            : " << "connected" << std::endl;
     break;
-  case sub_event_disconnected:
-    std::cout << "event            : " << "sub_event_disconnected" << std::endl;
+  case eCAL::eSubscriberEvent::disconnected:
+    std::cout << "event            : " << "disconnected" << std::endl;
     break;
-  case sub_event_dropped:
-    std::cout << "event            : " << "sub_event_dropped (" << data_->clock << " messages)" << std::endl;
+  case eCAL::eSubscriberEvent::dropped:
+    std::cout << "event            : " << "dropped (" << data_->clock << " messages)" << std::endl;
     break;
   // not implemented yet
-  case sub_event_corrupted:
-    std::cout << "event            : " << "sub_event_corrupted" << std::endl;
+  case eCAL::eSubscriberEvent::corrupted:
+    std::cout << "event            : " << "corrupted" << std::endl;
     break;
-  case sub_event_update_connection:
-    std::cout << "event            : " << "sub_event_update_connection" << std::endl;
+  case eCAL::eSubscriberEvent::update_connection:
+    std::cout << "event            : " << "update_connection" << std::endl;
     std::cout << "  topic_id       : " << data_->tid << std::endl;
     std::cout << "  topic_encoding : " << data_->tdatatype.encoding << std::endl;
     std::cout << "  topic_type     : " << data_->tdatatype.name << std::endl;
@@ -62,18 +62,18 @@ int main()
   eCAL::Initialize("person subscriber events");
 
   // set process state
-  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   // create a subscriber (topic name "person")
   eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");
 
   // add event callback function (_1 = topic_name, _2 = event data struct)
   auto evt_callback = std::bind(OnEvent, std::placeholders::_1, std::placeholders::_2);
-  sub.AddEventCallback(sub_event_connected,         evt_callback);
-  sub.AddEventCallback(sub_event_disconnected,      evt_callback);
-  sub.AddEventCallback(sub_event_dropped,           evt_callback);
-  sub.AddEventCallback(sub_event_corrupted,         evt_callback);
-  sub.AddEventCallback(sub_event_update_connection, evt_callback);
+  sub.AddEventCallback(eCAL::eSubscriberEvent::connected,         evt_callback);
+  sub.AddEventCallback(eCAL::eSubscriberEvent::disconnected,      evt_callback);
+  sub.AddEventCallback(eCAL::eSubscriberEvent::dropped,           evt_callback);
+  sub.AddEventCallback(eCAL::eSubscriberEvent::corrupted,         evt_callback);
+  sub.AddEventCallback(eCAL::eSubscriberEvent::update_connection, evt_callback);
 
   // start application and wait for events
   std::cout << "Please start 'person_snd_events sample." << std::endl << std::endl;

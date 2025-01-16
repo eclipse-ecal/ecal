@@ -30,7 +30,7 @@ int main()
   // initialize eCAL API
   eCAL::Initialize("person publisher");
   // set process state
-  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   eCAL::CPublisher pub("hello");
   eCAL::CTimer timer;

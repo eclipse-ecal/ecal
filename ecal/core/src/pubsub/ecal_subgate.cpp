@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,7 +120,7 @@ namespace eCAL
       if (layer_ == eTLayerType::tl_none)
       {
         // log it
-        Logging::Log(log_level_error, ecal_sample.topic_info.tname + " : payload received without layer definition !");
+        Logging::Log(Logging::log_level_error, ecal_sample.topic_info.tname + " : payload received without layer definition !");
       }
 #endif
 
