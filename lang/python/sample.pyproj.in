@@ -16,12 +16,27 @@
     <DebugSymbols>true</DebugSymbols>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'RelWithDebInfo' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>true</DebugSymbols>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="@ECAL_PYPROJ_FILE@" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="@ECAL_PYPROJ_PYTHON_ROOT@">
+      <Id>debugging-env</Id>
+      <Version>0.0</Version>
+      <Description>eCAL Debugging Environment (Python @ECAL_PYPROJ_PYTHON_VERSION@ )</Description>
+      <InterpreterPath>@ECAL_PYPROJ_INTERPRETER_RELEASE@</InterpreterPath>
+      <WindowsInterpreterPath>@ECAL_PYPROJ_INTERPRETER_RELEASE@</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <Target Name="CoreCompile">
