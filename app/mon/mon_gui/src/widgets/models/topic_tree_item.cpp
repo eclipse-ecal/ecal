@@ -19,7 +19,6 @@
 
 #include "topic_tree_item.h"
 
-#include <QColor>
 #include <QFont>
 #include <QString>
 #include <QByteArray>
@@ -42,6 +41,7 @@ QVariant TopicTreeItem::data(int column, Qt::ItemDataRole role) const
 
 QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 {
+
   if (role == (Qt::ItemDataRole)ItemDataRoles::RawDataRole) //-V1016 //-V547
   {
     if (column == Columns::RCLOCK)
@@ -297,39 +297,16 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
   else if (role == Qt::ItemDataRole::FontRole)
   {
-
-    if ((column == Columns::HNAME)
-      || (column == Columns::HGNAME)
-      || (column == Columns::PNAME)
-      || (column == Columns::UNAME)
-      || (column == Columns::TNAME)
-      || (column == Columns::DIRECTION)
-      || (column == Columns::TENCODING)
-      || (column == Columns::TTYPE))
-    {
-      const QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
-      if (raw_data.isEmpty())
-      {
-        QFont font;
-        font.setItalic(true);
-        return font;
-      }
-    }
-    else if (column == Columns::TDESC)
-    {
-      const std::string& raw_data = topic_.tdatatype().desc();
-      if (raw_data.empty())
-      {
-        QFont font;
-        font.setItalic(true);
-        return font;
-      }
-    }
-
-    return QVariant(); // Invalid QVariant
+    return itemfont;
   }
 
   return QVariant(); // Invalid QVariant
+}
+
+bool TopicTreeItem::setFont(const QFont& font)
+{
+  itemfont = font;
+  return false;
 }
 
 int TopicTreeItem::type() const

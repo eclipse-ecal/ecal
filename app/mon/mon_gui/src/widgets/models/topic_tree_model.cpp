@@ -17,6 +17,8 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <QFont>
+
 #include "topic_tree_model.h"
 #include "tree_item_type.h"
 #include "item_data_roles.h"
@@ -49,7 +51,6 @@ QVariant TopicTreeModel::headerData(int section, Qt::Orientation orientation, in
   return QAbstractTreeModel::headerData(section, orientation, role);
 }
 
-
 int TopicTreeModel::mapColumnToItem(int model_column, int tree_item_type) const
 {
   switch ((TreeItemType)tree_item_type)
@@ -70,7 +71,7 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
 {
   // Create a list of all topics to check if we have to remove them
   std::map<std::string, bool> topic_still_existing;
-  for(const auto& topic : topic_tree_item_map_)
+  for (const auto& topic : topic_tree_item_map_)
   {
     topic_still_existing[topic.first] = false;
   }
@@ -84,22 +85,46 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
       // Got a new topic
       TopicTreeItem* topic_tree_item = new TopicTreeItem(topic);
       insertItemIntoGroups(topic_tree_item);
-      topic_tree_item_map_[topic_id] = topic_tree_item;
+      STopicTreeEntry tree_entry;
+      tree_entry.tree_item = topic_tree_item;
+      topic_tree_item_map_[topic_id] = tree_entry;
+      auto fontrole = topic_tree_item->data(1, Qt::ItemDataRole::FontRole);
+      auto font = qvariant_cast<QFont>(fontrole);
+      font.setBold(true);
+      topic_tree_item->setFont(font);
     }
     else
     {
+      auto& tree_entry = topic_tree_item_map_.at(topic_id);
+      auto topic_tree_item = tree_entry.tree_item;
+      if (tree_entry.tree_item_counter < 20)
+      {
+        tree_entry.tree_item_counter++;
+      }
+      else
+      {
+        if (!tree_entry.default_font)
+        {
+          auto fontrole = topic_tree_item->data(1, Qt::ItemDataRole::FontRole);
+          auto font = qvariant_cast<QFont>(fontrole);
+          font.setBold(false);
+          topic_tree_item->setFont(font);
+          tree_entry.default_font = true;
+        }
+      }
       // Update an existing topic
-      topic_tree_item_map_.at(topic_id)->update(topic);
+      topic_tree_item->update(topic);
       topic_still_existing[topic_id] = true;
     }
   }
+
 
   // Remove obsolete items
   for (const auto& topic : topic_still_existing)
   {
     if (!topic.second)
     {
-      removeItemFromGroups(topic_tree_item_map_.at(topic.first));
+      removeItemFromGroups(topic_tree_item_map_.at(topic.first).tree_item);
       topic_tree_item_map_.erase(topic.first);
     }
   }
@@ -107,17 +132,18 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
   updateAll();
 }
 
-QVector<QPair<int, QString>> TopicTreeModel::getTreeItemColumnNameMapping() const
+
+QVector<QPair<int, QVariant>> TopicTreeModel::getTreeItemColumnNameMapping() const
 {
-  QVector<QPair<int, QString>> column_name_mapping;
+  QVector<QPair<int, QVariant>> column_name_mapping;
 
   for (int i = 0; i < columnCount(); i++)
   {
     int column = mapColumnToItem(i, (int)TreeItemType::Topic);
     if (column >= 0)
     {
-      QString name = headerData(i, Qt::Orientation::Horizontal, Qt::ItemDataRole::DisplayRole).toString();
-      column_name_mapping.push_back(QPair<int, QString>(column, name));
+      QVariant name = headerData(i, Qt::Orientation::Horizontal, Qt::ItemDataRole::DisplayRole);
+      column_name_mapping.push_back(QPair<int, QVariant>(column, name));
     }
   }
 
