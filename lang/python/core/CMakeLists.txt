@@ -50,7 +50,13 @@ target_sources(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
     eCAL::core
-    eCAL::core_c
+)
+
+# we're using only definitions from eCAL::core_c but no functionality.
+# This is a bit hacky, however, we will hopefully switch to nanobind soon.
+target_include_directories(${PROJECT_NAME}
+  PRIVATE
+    $<TARGET_PROPERTY:eCAL::core_c,INCLUDE_DIRECTORIES>
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
