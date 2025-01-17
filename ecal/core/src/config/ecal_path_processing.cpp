@@ -339,7 +339,7 @@ namespace eCAL
   {
     std::string GeteCALLogDirImpl(const Util::IDirProvider& dir_provider_ /* = Util::DirProvider() */, const Util::IDirManager& dir_manager_ /* = Util::DirManager() */, const eCAL::Configuration& config_ /* = eCAL::GetConfiguration() */)
     {
-      std::string config_file_dir = dir_manager_.getDirectoryPath(eCAL::GetConfiguration().GetYamlFilePath());
+      std::string config_file_dir = dir_manager_.getDirectoryPath(eCAL::GetConfiguration().GetConfigurationFilePath());
       
       const std::vector<std::string> log_paths = {
         dir_provider_.eCALEnvVar(ECAL_LOG_VAR),
