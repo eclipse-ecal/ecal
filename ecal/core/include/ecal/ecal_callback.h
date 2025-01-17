@@ -194,9 +194,9 @@ namespace eCAL
     struct SClientEventCallbackData
     {
       // TODO: shouldn't this be a SServiceId? No methods involved?
-      Registration::SServiceMethodId  client_id;                   //!< ID of the client triggering the event
-      eClientEvent                    type{ eClientEvent::none };  //!< event type
-      long long                       time = 0;                    //!< event time in µs
+      Registration::SServiceId  client_id;                   //!< ID of the client triggering the event
+      eClientEvent              type{ eClientEvent::none };  //!< event type
+      long long                 time = 0;                    //!< event time in µs
     };
 
     /**
@@ -213,9 +213,9 @@ namespace eCAL
     struct SServerEventCallbackData
     {
       // TODO: shouldn't this be a SServiceId? No methods involved?
-      Registration::SServiceMethodId  server_id;                   //!< ID of the server triggering the event
-      eServerEvent                    type{ eServerEvent::none };  //!< event type
-      long long                       time = 0;                    //!< event time in µs
+      Registration::SServiceId  server_id;                   //!< ID of the server triggering the event
+      eServerEvent              type{ eServerEvent::none };  //!< event type
+      long long                 time = 0;                    //!< event time in µs
     };
 
     /**

@@ -188,7 +188,7 @@ namespace eCAL
     // Handle timeout event
     if (!response.first && response.second.call_state == eCallState::timeouted)
     {
-      Registration::SServiceMethodId service_id;
+      Registration::SServiceId service_id;
       service_id.service_name = m_service_name;
       service_id.service_id   = entity_id_;
       NotifyEventCallback(service_id, eClientEvent::timeout);
@@ -485,7 +485,7 @@ namespace eCAL
       entity_id.process_id = client_data.service_attr.pid;
       entity_id.host_name  = client_data.service_attr.hname;
 
-      Registration::SServiceMethodId service_id;
+      Registration::SServiceId service_id;
       service_id.service_name = m_service_name;
       service_id.service_id   = entity_id;
 
@@ -515,7 +515,7 @@ namespace eCAL
   }
 
 
-  void CServiceClientImpl::NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eClientEvent event_type_)
+  void CServiceClientImpl::NotifyEventCallback(const Registration::SServiceId& service_id_, eClientEvent event_type_)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug1, "CServiceClientImpl::NotifyEventCallback: Notifying event callback for: " + m_service_name + " Event Type: " + to_string(event_type_));
