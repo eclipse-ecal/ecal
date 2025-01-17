@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,13 +50,13 @@ namespace eCAL
     // get publisher information
     std::set<Registration::STopicId> GetPublisherIDs() const;
     bool GetPublisherInfo(const Registration::STopicId& id_, SDataTypeInformation& topic_info_) const;
-    Registration::CallbackToken AddPublisherEventCallback(const Registration::TopicIDCallbackT& callback_);
+    Registration::CallbackToken AddPublisherEventCallback(const Registration::TopicEventCallbackT& callback_);
     void RemPublisherEventCallback(Registration::CallbackToken token_);
 
     // get subscriber information
     std::set<Registration::STopicId> GetSubscriberIDs() const;
     bool GetSubscriberInfo(const Registration::STopicId& id_, SDataTypeInformation& topic_info_) const;
-    Registration::CallbackToken AddSubscriberEventCallback(const Registration::TopicIDCallbackT& callback_);
+    Registration::CallbackToken AddSubscriberEventCallback(const Registration::TopicEventCallbackT& callback_);
     void RemSubscriberEventCallback(Registration::CallbackToken token_);
 
     // get service information
@@ -83,11 +83,11 @@ namespace eCAL
       TopicIdInfoMap  map;
     };
 
-    using TopicIdCallbackMap = std::map<Registration::CallbackToken, Registration::TopicIDCallbackT>;
-    struct STopicIdCallbackMap
+    using TopicEventCallbackMap = std::map<Registration::CallbackToken, Registration::TopicEventCallbackT>;
+    struct STopicEventCallbackMap
     {
       mutable std::mutex mtx;
-      TopicIdCallbackMap map;
+      TopicEventCallbackMap map;
     };
 
     using ServiceIdInfoMap = std::map<Registration::SServiceMethodId, SServiceMethodInformation>;
@@ -104,13 +104,13 @@ namespace eCAL
     static bool                                     GetService   (const Registration::SServiceMethodId& id_, const SServiceIdInfoMap& service_method_info_map_, SServiceMethodInformation& service_method_info_);
 
     static void ApplyTopicDescription(STopicIdInfoMap& topic_info_map_,
-                                      const STopicIdCallbackMap& topic_callback_map_, 
+                                      const STopicEventCallbackMap& topic_callback_map_, 
                                       const Registration::SampleIdentifier& topic_id_,
                                       const std::string& topic_name_,
                                       const SDataTypeInformation& topic_info_);
 
     static void RemTopicDescription(STopicIdInfoMap& topic_info_map_,
-                                    const STopicIdCallbackMap& topic_callback_map_,
+                                    const STopicEventCallbackMap& topic_callback_map_,
                                     const Registration::SampleIdentifier& topic_id_,
                                     const std::string& topic_name_);
 
@@ -130,10 +130,10 @@ namespace eCAL
       
     // internal quality topic info publisher/subscriber maps
     STopicIdInfoMap                          m_publisher_info_map;
-    STopicIdCallbackMap                      m_publisher_callback_map;
+    STopicEventCallbackMap                   m_publisher_callback_map;
 
     STopicIdInfoMap                          m_subscriber_info_map;
-    STopicIdCallbackMap                      m_subscriber_callback_map;
+    STopicEventCallbackMap                   m_subscriber_callback_map;
 
     // internal quality service info service/client maps
     SServiceIdInfoMap                        m_service_info_map;
