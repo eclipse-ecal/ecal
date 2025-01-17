@@ -47,6 +47,8 @@ namespace eCAL
         virtual bool createDir(const std::string& path_) const = 0;
         virtual bool dirExistsOrCreate(const std::string& path_) const = 0;
         virtual bool createEcalDirStructure(const std::string& path_) const = 0;
+        virtual bool canWriteToDirectory(const std::string& path_) const = 0;
+        virtual std::string getDirectoryPath(const std::string& filePath) const = 0;
 
         virtual std::string findFileInPaths(const std::vector<std::string>& paths_, const std::string& file_name_) const = 0;
     };
@@ -104,6 +106,24 @@ namespace eCAL
          *         Returns empty string if no valid path could be found.
          */
         std::string findFileInPaths(const std::vector<std::string>& paths_, const std::string& file_name_) const override;
+
+        /**
+         * @brief Check if the specified directory is writable.
+         * 
+         * @param path_ The path to the directory.
+         * 
+         * @return true if the directory is writable, false otherwise.
+         */
+        bool canWriteToDirectory(const std::string& path_) const override;
+
+        /**
+         * @brief Get the directory path of the specified file.
+         * 
+         * @param filePath The path to the file.
+         * 
+         * @return std::string The directory path of the file.
+         */
+        std::string getDirectoryPath(const std::string& file_path_) const override;
     };
 
     class IDirProvider 
