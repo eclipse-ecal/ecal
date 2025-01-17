@@ -35,7 +35,11 @@ namespace YAML
 {
   // Utility function to be used also in other files
   template<typename AS, typename MEM>
-  void AssignValue(MEM& member, const YAML::Node& node_, const char* key);
+  inline void AssignValue(MEM& member, const YAML::Node& node_, const char* key)
+  {
+    if (node_[key])
+      member = node_[key].as<AS>();
+  }
 
 
   /*
