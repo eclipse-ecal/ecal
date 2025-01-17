@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,8 @@ namespace eCAL
       deleted_entity  //!< Represents a deletion of an entity
     };
 
-    using TopicIDCallbackT = std::function<void(const STopicId&, RegistrationEventType)>;
+    /* @brief Event callback, when a topic related entity (publisher / subscriber) has been created or deleted */
+    using TopicEventCallbackT = std::function<void(const STopicId&, RegistrationEventType)>;
 
     /**
      * @brief Get complete snapshot of all known publisher.
@@ -82,7 +83,7 @@ namespace eCAL
      *
      * @return CallbackToken  Token that can be used to unregister the callback.
      */
-    ECAL_API CallbackToken AddPublisherEventCallback(const TopicIDCallbackT& callback_);
+    ECAL_API CallbackToken AddPublisherEventCallback(const TopicEventCallbackT& callback_);
 
     /**
      * @brief Unregister the publisher callback using the provided token.
@@ -114,7 +115,7 @@ namespace eCAL
      *
      * @return CallbackToken  Token that can be used to unregister the callback.
      */
-    ECAL_API CallbackToken AddSubscriberEventCallback(const TopicIDCallbackT& callback_);
+    ECAL_API CallbackToken AddSubscriberEventCallback(const TopicEventCallbackT& callback_);
 
     /**
      * @brief Unregister the subscriber callback using the provided token.

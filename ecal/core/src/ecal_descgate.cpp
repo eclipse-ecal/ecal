@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ namespace eCAL
     return GetTopic(id_, m_publisher_info_map, topic_info_);
   }
 
-  Registration::CallbackToken CDescGate::AddPublisherEventCallback(const Registration::TopicIDCallbackT& callback_)
+  Registration::CallbackToken CDescGate::AddPublisherEventCallback(const Registration::TopicEventCallbackT& callback_)
   {
     const std::lock_guard<std::mutex> lock(m_publisher_callback_map.mtx);
 
@@ -75,7 +75,7 @@ namespace eCAL
     return GetTopic(id_, m_subscriber_info_map, topic_info_);
   }
 
-  Registration::CallbackToken CDescGate::AddSubscriberEventCallback(const Registration::TopicIDCallbackT& callback_)
+  Registration::CallbackToken CDescGate::AddSubscriberEventCallback(const Registration::TopicEventCallbackT& callback_)
   {
     const std::lock_guard<std::mutex> lock(m_subscriber_callback_map.mtx);
 
@@ -221,7 +221,7 @@ namespace eCAL
   }
 
   void CDescGate::ApplyTopicDescription(STopicIdInfoMap& topic_info_map_,
-                                        const STopicIdCallbackMap& topic_callback_map_,
+                                        const STopicEventCallbackMap& topic_callback_map_,
                                         const Registration::SampleIdentifier& topic_id_,
                                         const std::string& topic_name_,
                                         const SDataTypeInformation& topic_info_)
@@ -258,7 +258,7 @@ namespace eCAL
   }
 
   void CDescGate::RemTopicDescription(STopicIdInfoMap& topic_info_map_,
-                                      const STopicIdCallbackMap& topic_callback_map_,
+                                      const STopicEventCallbackMap& topic_callback_map_,
                                       const Registration::SampleIdentifier& topic_id_,
                                       const std::string& topic_name_)
   {
