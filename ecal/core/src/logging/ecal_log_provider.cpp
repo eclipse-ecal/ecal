@@ -189,10 +189,14 @@ namespace eCAL
       if (!isDirectoryOrCreate(m_attributes.file_config.path)) return false;
       
       const std::string tstring = get_time_str();
+      
+      std::string log_path = m_attributes.file_config.path;
+      if (EcalUtils::Filesystem::ToUnixSeperators(log_path).back() == '/')
+        log_path.pop_back();
 
-      std::string log_path = EcalUtils::Filesystem::CleanPath(m_attributes.file_config.path);
-      std::string file_name = tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
+      const std::string file_name = tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
       std::vector<std::string> file_path_components = { log_path, file_name };
+      
       m_logfile_name = EcalUtils::String::Join(std::string(1, EcalUtils::Filesystem::NativeSeparator()), file_path_components);
       m_logfile = fopen(m_logfile_name.c_str(), "w");
 
