@@ -25,6 +25,7 @@
 #include <atomic>
 #include <functional>
 #include <string>
+#include <thread>
 
 #include <gtest/gtest.h>
 #include <vector>
@@ -147,5 +148,123 @@ TEST(core_cpp_pubsub, MultipleSendsSHM)
   }
 
   // finalize eCAL API
+  eCAL::Finalize();
+}
+
+TEST(core_cpp_pubsub, SubscriberReconnectionSHM) {
+  /* Test setup :
+   * publishers runs permanently in a thread
+   * subscriber A start reading topic A
+   * subscriber A gets out of scope (destruction)
+   * subscriber B start reading topic B
+   * subscriber B gets out of scope (destruction)
+   * subscriber A starts again in a new scope
+   * Test ensures that subscriber is reconnecting and all sync mechanism are
+   * working properly again. Previously the test suite was not catching a case
+   * where a delay between the destruction of the topic A subscriber and its
+   * recreation would create a subscriber that was not receiving messages.
+   */
+
+  // Prepare config
+  auto config = eCAL::Init::Configuration();
+  config.publisher.layer.shm.enable = true;
+  config.publisher.layer.tcp.enable = false;
+  config.publisher.layer.udp.enable = false;
+  config.subscriber.layer.shm.enable = true;
+  config.subscriber.layer.tcp.enable = false;
+  config.subscriber.layer.udp.enable = false;
+
+  // initialize eCAL API
+  eCAL::Initialize(config, "SubscriberReconnectionSHM");
+
+  constexpr auto RECEIVE_TIMEOUT = std::chrono::seconds(5);
+  constexpr auto TOPIC_A = "shm_reconnect_test_A";
+  constexpr auto TOPIC_B = "shm_reconnect_test_B";
+
+  // start publishing thread
+  std::atomic<bool> stop_publishing(false);
+  const auto publish_messages = [&stop_publishing](eCAL::CPublisher &pub) {
+    while (!stop_publishing) {
+      pub.Send("Hello World");
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    std::cout << "Stopped publishing" << std::endl;
+  };
+
+  eCAL::CPublisher pub_foo(TOPIC_A);
+  std::thread pub_foo_t(publish_messages, std::ref(pub_foo));
+
+  eCAL::CPublisher pub_bar(TOPIC_B);
+  std::thread pub_bar_t(publish_messages, std::ref(pub_bar));
+
+  std::condition_variable cv;
+  std::mutex cv_m;
+  bool data_received(false);
+
+  const auto receive_lambda =
+      [&cv_m, &cv,
+       &data_received](const eCAL::Registration::STopicId & /*topic_id_*/,
+                       const eCAL::SDataTypeInformation & /*data_type_info_*/,
+                       const eCAL::SReceiveCallbackData & /*data_*/) {
+        {
+          std::cout << "Callback received message" << std::endl;
+          std::lock_guard<std::mutex> lk(cv_m);
+          data_received = true;
+        }
+        cv.notify_all();
+      };
+  std::unique_lock<std::mutex> cv_lk(cv_m);
+
+  // 1 - Subscribe to topic A and receive a message
+  {
+    eCAL::CSubscriber sub_foo(TOPIC_A);
+    sub_foo.SetReceiveCallback(receive_lambda);
+
+    // We should receive something within the timeout period
+    cv.wait_for(cv_lk, RECEIVE_TIMEOUT,
+                [&data_received]() { return data_received; });
+
+    EXPECT_TRUE(data_received);
+    std::cout << "Closing first subscriber scope (A)" << std::endl;
+  }
+
+  data_received = false; // Reset for next scope
+
+  // 2 - Subscribe to topic B and receive a message
+  {
+    eCAL::CSubscriber sub_foo(TOPIC_B);
+    sub_foo.SetReceiveCallback(receive_lambda);
+
+    // We should receive something within the timeout period
+    cv.wait_for(cv_lk, RECEIVE_TIMEOUT,
+                [&data_received]() { return data_received; });
+
+    EXPECT_TRUE(data_received);
+    std::cout << "Closing second subscriber scope (B)" << std::endl;
+  }
+
+  data_received = false; // Reset for next scope
+
+  // 3 - Subscribe to topic A again and receive a message
+  // TODO: Figure out why this now fails
+  {
+    eCAL::CSubscriber sub_foo(TOPIC_A);
+    sub_foo.SetReceiveCallback(receive_lambda);
+
+    // We should receive something within the timeout period
+    cv.wait_for(cv_lk, RECEIVE_TIMEOUT,
+                [&data_received]() { return data_received; });
+
+    EXPECT_TRUE(data_received);
+    std::cout << "Closing third subscriber scope (A again)" << std::endl;
+  }
+
+  // stop publishing and join thread
+  stop_publishing = true;
+  pub_foo_t.join();
+  pub_bar_t.join();
+
+  // finalize eCAL API
+  // without destroying any pub / sub
   eCAL::Finalize();
 }
