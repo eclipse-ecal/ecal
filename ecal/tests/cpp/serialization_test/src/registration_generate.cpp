@@ -138,6 +138,7 @@ namespace eCAL
       process.component_init_state = rand() % 5;
       process.component_init_info = GenerateString(8);
       process.ecal_runtime_version = GenerateString(5);
+      process.config_file_path = GenerateString(20);
       return process;
     }
 

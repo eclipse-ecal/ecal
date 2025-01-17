@@ -78,6 +78,8 @@ namespace
     eCAL::nanopb::encode_string(pb_process_.component_init_info, registration_process_.component_init_info);
     // ecal_runtime_version
     eCAL::nanopb::encode_string(pb_process_.ecal_runtime_version, registration_process_.ecal_runtime_version);
+    // configuration path
+    eCAL::nanopb::encode_string(pb_process_.config_file_path, registration_process_.config_file_path);
   }
 
   ///////////////////////////////////////////////
@@ -330,6 +332,8 @@ namespace
     eCAL::nanopb::decode_string(pb_sample_.process.component_init_info, registration_.process.component_init_info);
     // ecal_runtime_version
     eCAL::nanopb::decode_string(pb_sample_.process.ecal_runtime_version, registration_.process.ecal_runtime_version);
+    // config_file_path
+    eCAL::nanopb::decode_string(pb_sample_.process.config_file_path, registration_.process.config_file_path);
 
     ///////////////////////////////////////////////
     // service information

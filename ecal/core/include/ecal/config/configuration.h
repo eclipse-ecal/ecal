@@ -61,6 +61,6 @@ namespace eCAL
     ECAL_API std::string GetYamlFilePath() const;
 
     protected:
-      std::string ecal_yaml_file_path;
+      std::string ecal_yaml_file_path = "abc";
   };
 }

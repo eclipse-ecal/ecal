@@ -129,6 +129,7 @@ namespace eCAL
       std::string    component_init_info;                       //!< like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc)
 
       std::string    ecal_runtime_version;                      //!< loaded / runtime eCAL version of a component
+      std::string    config_file_path;                          //!< Filepath of the configuration filepath that was loaded
     };
 
     struct SMethodMon                                           //<! eCAL Server Method struct

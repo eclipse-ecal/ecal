@@ -75,6 +75,8 @@ namespace
     eCAL::nanopb::encode_string(pb_process_.component_init_info, process_.component_init_info);
     // ecal_runtime_version
     eCAL::nanopb::encode_string(pb_process_.ecal_runtime_version, process_.ecal_runtime_version);
+    // config_file_path
+    eCAL::nanopb::encode_string(pb_process_.config_file_path, process_.config_file_path);
   }
 
   bool encode_mon_message_processes_field(pb_ostream_t* stream, const pb_field_iter_t* field, void* const* arg)
@@ -512,6 +514,8 @@ namespace
     eCAL::nanopb::decode_string(pb_process_.component_init_info, process_.component_init_info);
     // ecal_runtime_version
     eCAL::nanopb::decode_string(pb_process_.ecal_runtime_version, process_.ecal_runtime_version);
+    // ecal_config_path
+    eCAL::nanopb::decode_string(pb_process_.config_file_path, process_.config_file_path);
   }
 
   void AssignValues(const eCAL_pb_Process& pb_process_, eCAL::Monitoring::SProcessMon& process_)
