@@ -92,7 +92,7 @@ Source: "{#ComponentStagingDir}\app\*";               DestDir: "{app}";         
 Source: "{#ComponentStagingDir}\samples\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: samples
 
 ; doc
-Source: "{#ComponentStagingDir}\doc\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: doc
+Source: "{#ComponentStagingDir}\doc\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs skipifsourcedoesntexist;     Components: doc
 
 ; sdk\ecal
 Source: "{#ComponentStagingDir}\headers\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
