@@ -505,6 +505,9 @@ namespace eCAL
     SServerEventCallbackData callback_data;
     callback_data.type = event_type_;
     callback_data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-    m_event_callback(service_id_, callback_data);
+
+    // TODO: we should try to avoid a copy here
+    callback_data.server_id = service_id_;
+    m_event_callback(callback_data);
   }
 }

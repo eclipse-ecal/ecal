@@ -744,7 +744,7 @@ namespace eCAL
       data.clock     = 0;
       data.tdatatype = data_type_info_;
 
-      Registration::STopicId topic_id;
+      Registration::STopicId& topic_id = data.publisher_id;
       topic_id.topic_id.entity_id  = subscription_info_.entity_id;
       topic_id.topic_id.process_id = subscription_info_.process_id;
       topic_id.topic_id.host_name  = subscription_info_.host_name;
@@ -752,7 +752,7 @@ namespace eCAL
       const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
 
       // call event callback
-      m_event_id_callback(topic_id, data);
+      m_event_id_callback(data);
     }
 
     // deprecated event handling with topic name

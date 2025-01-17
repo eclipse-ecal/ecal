@@ -526,8 +526,12 @@ namespace eCAL
 
     SClientEventCallbackData callback_data;
     callback_data.type = event_type_;
+    // TODO: is it correct to use the system time here? do we not need some kind of eCAL time???
     callback_data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-    m_event_callback(service_id_, callback_data);
+
+    // TODO: We would like to avoid copying here!
+    callback_data.client_id = service_id_;
+    m_event_callback(callback_data);
   }
 
   std::shared_ptr<CServiceClientImpl::SResponseData> CServiceClientImpl::PrepareInitialResponse(const SClient& client_, const std::string& method_name_)

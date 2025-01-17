@@ -94,7 +94,7 @@ namespace eCAL
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Creating service client with name: " + service_name_);
 
       // Define the event callback to pass to CServiceClient
-      v6::ClientEventCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const v6::SClientEventCallbackData& data_)
+      v6::ClientEventCallbackT event_callback = [this](const v6::SClientEventCallbackData& data_)
         {
           Logging::Log(Logging::log_level_debug2, "v5::CServiceClientImpl: Event callback triggered for event type: " + to_string(data_.type));
 
@@ -110,11 +110,11 @@ namespace eCAL
             SClientEventCallbackData event_data;
             event_data.type = data_.type;
             event_data.time = data_.time;
-            event_data.attr.hname = service_id_.service_id.host_name;
-            event_data.attr.sname = service_id_.service_name;
-            event_data.attr.pid   = service_id_.service_id.process_id;
-            event_data.attr.sid   = service_id_.service_id.entity_id;
-            callback->second(service_id_.service_name.c_str(), &event_data);
+            event_data.attr.hname = data_.client_id.service_id.host_name;
+            event_data.attr.sname = data_.client_id.service_name;
+            event_data.attr.pid   = data_.client_id.service_id.process_id;
+            event_data.attr.sid   = data_.client_id.service_id.entity_id;
+            callback->second(data_.client_id.service_name.c_str(), &event_data);
           }
         };
 

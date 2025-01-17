@@ -153,10 +153,11 @@ namespace eCAL
     **/
     struct SPubEventCallbackData
     {
-      ePublisherEvent      type{ ePublisherEvent::none };  //!< publisher event type
-      long long            time{ 0 };               //!< publisher event time in µs
-      long long            clock{ 0 };              //!< publisher event clock
-      SDataTypeInformation tdatatype;               //!< datatype description of the connected subscriber            (for pub_event_update_connection only)
+      Registration::STopicId publisher_id;                   //!< ID of the publisher triggering the event
+      ePublisherEvent        type{ ePublisherEvent::none };  //!< publisher event type
+      long long              time{ 0 };                      //!< publisher event time in µs
+      long long              clock{ 0 };                     //!< publisher event clock
+      SDataTypeInformation   tdatatype;                      //!< datatype description of the connected subscriber         (for pub_event_update_connection only)
     };
 
     /**
@@ -165,17 +166,18 @@ namespace eCAL
      * @param topic_id_  The topic id struct of the received message.
      * @param data_      Event callback data structure with the event specific information.
     **/
-    using PubEventCallbackT = std::function<void(const Registration::STopicId& topic_id_, const SPubEventCallbackData& data_)>;
+    using PubEventCallbackT = std::function<void(const SPubEventCallbackData& data_)>;
 
     /**
      * @brief eCAL subscriber event callback struct.
     **/
     struct SSubEventCallbackData
     {
-      eSubscriberEvent      type{ eSubscriberEvent::none }; //!< subscriber event type
-      long long             time{ 0 };              //!< subscriber event time in µs
-      long long             clock{ 0 };             //!< subscriber event clock
-      SDataTypeInformation  tdatatype;              //!< topic information of the connected subscriber           (for sub_event_update_connection only)
+      Registration::STopicId subscriber_id;                  //!< ID of the publisher triggering the event
+      eSubscriberEvent       type{ eSubscriberEvent::none }; //!< subscriber event type
+      long long              time{ 0 };                      //!< subscriber event time in µs
+      long long              clock{ 0 };                     //!< subscriber event clock
+      SDataTypeInformation   tdatatype;                      //!< topic information of the connected subscriber           (for sub_event_update_connection only)
     };
 
     /**
@@ -184,15 +186,17 @@ namespace eCAL
      * @param topic_id_  The topic id struct of the received message.
      * @param data_      Event callback data structure with the event specific information.
     **/
-    using SubEventCallbackT = std::function<void(const Registration::STopicId& topic_id_, const SSubEventCallbackData& data_)>;
+    using SubEventCallbackT = std::function<void(const SSubEventCallbackData& data_)>;
 
     /**
      * @brief eCAL client event callback struct.
     **/
     struct SClientEventCallbackData
     {
-      eClientEvent      type{ eClientEvent::none };  //!< event type
-      long long         time = 0;                  //!< event time in µs
+      // TODO: shouldn't this be a SServiceId? No methods involved?
+      Registration::SServiceMethodId  client_id;                   //!< ID of the client triggering the event
+      eClientEvent                    type{ eClientEvent::none };  //!< event type
+      long long                       time = 0;                    //!< event time in µs
     };
 
     /**
@@ -201,15 +205,17 @@ namespace eCAL
      * @param service_id_  The service id struct of the connection that triggered the event.
      * @param data_        Event callback data structure with the event specific information.
     **/
-    using ClientEventCallbackT = std::function<void(const Registration::SServiceMethodId& service_id_, const SClientEventCallbackData& data_)>;
+    using ClientEventCallbackT = std::function<void(const SClientEventCallbackData& data_)>;
 
     /**
      * @brief eCAL server event callback struct.
     **/
     struct SServerEventCallbackData
     {
-      eServerEvent      type{ eServerEvent::none };  //!< event type
-      long long         time = 0;                  //!< event time in µs
+      // TODO: shouldn't this be a SServiceId? No methods involved?
+      Registration::SServiceMethodId  server_id;                   //!< ID of the server triggering the event
+      eServerEvent                    type{ eServerEvent::none };  //!< event type
+      long long                       time = 0;                    //!< event time in µs
     };
 
     /**
@@ -218,6 +224,6 @@ namespace eCAL
      * @param service_id_  The service id struct of the connection that triggered the event.
      * @param data_        Event callback data structure with the event specific information.
     **/
-    using ServerEventCallbackT = std::function<void(const Registration::SServiceMethodId& service_id_, const struct SServerEventCallbackData& data_)>;
+    using ServerEventCallbackT = std::function<void(const struct SServerEventCallbackData& data_)>;
   }
 }

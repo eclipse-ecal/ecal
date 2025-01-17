@@ -57,7 +57,7 @@ namespace eCAL
       }
 
       // Define the event callback to pass to CServiceClient
-      v6::ServerEventCallbackT event_callback = [this](const Registration::SServiceMethodId& service_id_, const v6::SServerEventCallbackData& data_)
+      v6::ServerEventCallbackT event_callback = [this](const v6::SServerEventCallbackData& data_)
         {
           Logging::Log(Logging::log_level_debug2, "v5::CServiceServerImpl: Event callback triggered for event type: " + to_string(data_.type));
 
@@ -73,7 +73,7 @@ namespace eCAL
             SServerEventCallbackData event_data;
             event_data.type = data_.type;
             event_data.time = data_.time;
-            callback->second(service_id_.service_name.c_str(), &event_data);
+            callback->second(data_.server_id.service_name.c_str(), &event_data);
           }
         };
 
