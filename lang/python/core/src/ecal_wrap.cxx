@@ -1020,6 +1020,7 @@ namespace
         val = Py_BuildValue("O", layer.active ? Py_True : Py_False);
         PyDict_SetItemString(layerDict, "active", val); Py_DECREF(val);
       }
+      PyDict_SetItemString(topicDict, "layer", layerList); Py_DECREF(layerList);
 
       val = Py_BuildValue("i", topic.tsize);
       PyDict_SetItemString(topicDict, "tsize", val); Py_DECREF(val);
