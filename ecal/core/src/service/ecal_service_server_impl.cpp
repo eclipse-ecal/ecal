@@ -261,9 +261,10 @@ namespace eCAL
       {
         if (auto me = weak_me.lock())
         {
-          Registration::SServiceMethodId service_id;
+          Registration::SServiceId service_id;
           service_id.service_name         = me->m_service_name;
           service_id.service_id.entity_id = me->m_service_id;
+          // TODO: Also fill process ID and hostname?
           me->NotifyEventCallback(service_id, event == eCAL::service::ServerEventType::Connected
             ? eServerEvent::connected
             : eServerEvent::disconnected, message);
@@ -493,7 +494,7 @@ namespace eCAL
     return 0;
   }
 
-  void CServiceServerImpl::NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eServerEvent event_type_, const std::string& /*message_*/)
+  void CServiceServerImpl::NotifyEventCallback(const Registration::SServiceId& service_id_, eServerEvent event_type_, const std::string& /*message_*/)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug1, "CServiceServerImpl::NotifyEventCallback: Notifying event callback for: " + m_service_name + " Event Type: " + to_string(event_type_));
