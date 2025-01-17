@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -50,6 +50,15 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+
+# filesystem.cpp uses fts on Linux, some distibutions (i.e: Alpine) have fts as a
+# separate library
+if(LINUX)
+  find_library(libfts NAMES fts)
+  if(NOT "${libfts}" STREQUAL "libfts-NOTFOUND")
+    target_link_libraries(${PROJECT_NAME} PRIVATE "${libfts}")
+  endif()
+endif()
 
 # Create a source tree that mirrors the filesystem
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
