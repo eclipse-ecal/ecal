@@ -3,13 +3,6 @@
 // utility functions for yaml node handling
 namespace YAML
 {
-  template<typename AS, typename MEM>
-  void AssignValue(MEM& member, const YAML::Node& node_, const char* key)
-  {
-    if (node_[key])
-      member = node_[key].as<AS>();
-  }
-
   eCAL::Logging::Filter ParseLogLevel(const std::vector<std::string>& filter_)
   {
     // create excluding filter list
