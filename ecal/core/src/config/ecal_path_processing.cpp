@@ -162,10 +162,12 @@ namespace
 
   #ifdef ECAL_OS_WINDOWS
         
+    (void)linux_folder_name_; // suppress unused warning
     return buildPath(path_, win_folder_name_);
         
   #elif defined(ECAL_OS_LINUX)
         
+    (void)win_folder_name_; // suppress unused warning
     return buildPath(path_, linux_folder_name_);
         
   #else
@@ -291,12 +293,13 @@ namespace eCAL
       std::string system_dir;
     #ifdef ECAL_OS_WINDOWS
 
+      (void)dir_manager_; // suppress unused warning
       system_dir = getKnownFolderPath(FOLDERID_ProgramData);
     
     #elif defined(ECAL_OS_LINUX)
     
       // TODO PG: Check if we really want to give that back here
-      if (dir_manager_.dirExists(ECAL_LINUX_SYSTEM_PATH)) 
+      if (dir_manager_.dirExists(ECAL_LINUX_SYSTEM_PATH))
         system_dir = ECAL_LINUX_SYSTEM_PATH;
     
     #endif /* ECAL_OS_LINUX */
