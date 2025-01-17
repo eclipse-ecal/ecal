@@ -170,7 +170,7 @@ Typedefs
 --------
 
 
-- :ref:`exhale_typedef_namespaceeCAL_1a8a06d847376fa24c9eaf04a66acae8e4`
+- :ref:`exhale_typedef_namespaceeCAL_1a0be87babd22c6f03b5f3aba6831b6c74`
 
 - :ref:`exhale_typedef_namespaceeCAL_1a085ef39b12d7ec954557c0543afb87c8`
 
@@ -184,7 +184,7 @@ Typedefs
 
 - :ref:`exhale_typedef_namespaceeCAL_1ab5212bddb4f96210ad5abf44c4f40df4`
 
-- :ref:`exhale_typedef_namespaceeCAL_1aca88f4a6ccb53165401ecc441a17126d`
+- :ref:`exhale_typedef_namespaceeCAL_1a2326d3c84970c2f1d642a316ad347f92`
 
 - :ref:`exhale_typedef_namespaceeCAL_1a669318bd1e0a2c764971d4783a2ce236`
 

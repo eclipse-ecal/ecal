@@ -155,7 +155,7 @@ Program Listing for File ecal_callback.h
          long long         time = 0;                  
        };
    
-       using ClientEventCallbackT = std::function<void(const Registration::SServiceMethodId& service_id_, const SClientEventCallbackData& data_)>;
+       using ClientEventCallbackT = std::function<void(const Registration::SServiceId& service_id_, const SClientEventCallbackData& data_)>;
    
        struct SServerEventCallbackData
        {
@@ -163,6 +163,6 @@ Program Listing for File ecal_callback.h
          long long         time = 0;                  
        };
    
-       using ServerEventCallbackT = std::function<void(const Registration::SServiceMethodId& service_id_, const struct SServerEventCallbackData& data_)>;
+       using ServerEventCallbackT = std::function<void(const Registration::SServiceId& service_id_, const struct SServerEventCallbackData& data_)>;
      }
    }
