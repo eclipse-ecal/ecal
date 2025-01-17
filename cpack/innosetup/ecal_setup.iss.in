@@ -49,7 +49,7 @@ ChangesAssociations=yes
 ; PrivilegesRequired=admin
 ; Only available in Version 6 and above:
 PrivilegesRequiredOverridesAllowed=dialog
-ArchitecturesInstallIn64BitMode=x64
+ArchitecturesInstallIn64BitMode=x64compatible
 ChangesEnvironment=true
 VersionInfoVersion={#AppVersion}
 LicenseFile={#LicenseFile}
@@ -92,7 +92,7 @@ Source: "{#ComponentStagingDir}\app\*";               DestDir: "{app}";         
 Source: "{#ComponentStagingDir}\samples\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: samples
 
 ; doc
-Source: "{#ComponentStagingDir}\doc\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs skipifsourcedoesntexist;     Components: doc
+Source: "{#ComponentStagingDir}\doc\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: doc
 
 ; sdk\ecal
 Source: "{#ComponentStagingDir}\headers\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
