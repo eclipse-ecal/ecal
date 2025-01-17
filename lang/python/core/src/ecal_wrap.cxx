@@ -544,7 +544,7 @@ PyObject* server_destroy(PyObject* /*self*/, PyObject* args)
 /****************************************/
 /*      server_add_method_callback      */
 /****************************************/
-static int c_server_method_callback(const std::string& method_name_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_, ECAL_HANDLE handle_)
+static int c_server_method_callback(const std::string& method_name_, const std::string& request_type_, const std::string& response_type_, const std::string& request_, std::string& response_, ECAL_HANDLE handle_)
 {
   int ret_state = 0;
 
@@ -561,14 +561,14 @@ static int c_server_method_callback(const std::string& method_name_, const std::
   PyObject* method_name = Py_BuildValue("s", method_name_.c_str());
 
   const std::string fmt("y#");
-  PyObject* req_type  = Py_BuildValue(fmt.data(), req_type_.data(),  (Py_ssize_t)req_type_.size());
-  PyObject* resp_type = Py_BuildValue(fmt.data(), resp_type_.data(), (Py_ssize_t)resp_type_.size());
-  PyObject* request   = Py_BuildValue(fmt.data(), request_.data(),   (Py_ssize_t)request_.size());
+  PyObject* request_type  = Py_BuildValue(fmt.data(), request_type_.data(),  (Py_ssize_t)request_type_.size());
+  PyObject* response_type = Py_BuildValue(fmt.data(), response_type_.data(), (Py_ssize_t)response_type_.size());
+  PyObject* request       = Py_BuildValue(fmt.data(), request_.data(),   (Py_ssize_t)request_.size());
 
   PyObject* args = PyTuple_New(4);
   PyTuple_SetItem(args, 0, method_name);
-  PyTuple_SetItem(args, 1, req_type);
-  PyTuple_SetItem(args, 2, resp_type);
+  PyTuple_SetItem(args, 1, request_type);
+  PyTuple_SetItem(args, 2, response_type);
   PyTuple_SetItem(args, 3, request);
 
   eCAL::v5::CServiceServer* server = (eCAL::v5::CServiceServer*)handle_;
@@ -603,15 +603,15 @@ static int c_server_method_callback(const std::string& method_name_, const std::
   return ret_state;
 }
 
-PyObject* server_add_method_callback(PyObject* /*self*/, PyObject* args)   // (server_handle, method_name, req_type, resp_type, callback)
+PyObject* server_add_method_callback(PyObject* /*self*/, PyObject* args)   // (server_handle, method_name, request_type, response_type, callback)
 {
-  ECAL_HANDLE server_handle = nullptr;
-  char*       method_name   = nullptr;
-  char*       req_type      = nullptr;
-  char*       resp_type     = nullptr;
-  PyObject*   cb_func       = nullptr;
+  ECAL_HANDLE server_handle     = nullptr;
+  char*       method_name       = nullptr;
+  char*       request_type      = nullptr;
+  char*       response_type     = nullptr;
+  PyObject*   cb_func           = nullptr;
 
-  if (!PyArg_ParseTuple(args, "nsssO", &server_handle, &method_name, &req_type, &resp_type, &cb_func))
+  if (!PyArg_ParseTuple(args, "nsssO", &server_handle, &method_name, &request_type, &response_type, &cb_func))
     return nullptr;
 
   eCAL::v5::CServiceServer* server = (eCAL::v5::CServiceServer*)server_handle;
@@ -645,7 +645,7 @@ PyObject* server_add_method_callback(PyObject* /*self*/, PyObject* args)   // (s
 
     bool added_callback{ false };
     Py_BEGIN_ALLOW_THREADS
-      added_callback = server->AddMethodCallback(method_name, req_type, resp_type, std::bind(c_server_method_callback, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, server));
+      added_callback = server->AddMethodCallback(method_name, request_type, response_type, std::bind(c_server_method_callback, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, server));
     Py_END_ALLOW_THREADS
     
     if (added_callback)
@@ -1163,22 +1163,22 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
           PyDict_SetItemString(methodsDict, "mname", val); Py_DECREF(val);
 
           val = Py_BuildValue("s", method.req_datatype.name.c_str());
-          PyDict_SetItemString(methodsDict, "req_datatype_name", val); Py_DECREF(val);
+          PyDict_SetItemString(methodsDict, "request_datatype_name", val); Py_DECREF(val);
 
           val = Py_BuildValue("s", method.req_datatype.encoding.c_str());
-          PyDict_SetItemString(methodsDict, "req_datatype_encoding", val); Py_DECREF(val);
+          PyDict_SetItemString(methodsDict, "request_datatype_encoding", val); Py_DECREF(val);
 
           val = Py_BuildValue("y#", method.req_datatype.descriptor.c_str(), method.req_datatype.descriptor.length());
-          PyDict_SetItemString(methodsDict, "req_datatype_descriptor", val); Py_DECREF(val);
+          PyDict_SetItemString(methodsDict, "request_datatype_descriptor", val); Py_DECREF(val);
 
           val = Py_BuildValue("s", method.resp_datatype.name.c_str());
-          PyDict_SetItemString(methodsDict, "resp_datatype_name", val); Py_DECREF(val);
+          PyDict_SetItemString(methodsDict, "response_datatype_name", val); Py_DECREF(val);
 
           val = Py_BuildValue("s", method.resp_datatype.encoding.c_str());
-          PyDict_SetItemString(methodsDict, "resp_datatype_encoding", val); Py_DECREF(val);
+          PyDict_SetItemString(methodsDict, "response_datatype_encoding", val); Py_DECREF(val);
 
           val = Py_BuildValue("y#", method.resp_datatype.descriptor.c_str(), method.resp_datatype.descriptor.length());
-          PyDict_SetItemString(methodsDict, "resp_datatype_descriptor", val); Py_DECREF(val);
+          PyDict_SetItemString(methodsDict, "response_datatype_descriptor", val); Py_DECREF(val);
 
           val = Py_BuildValue("i", method.call_count);
           PyDict_SetItemString(methodsDict, "call_count", val); Py_DECREF(val);
@@ -1226,22 +1226,22 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
           PyDict_SetItemString(methodsDict, "mname", val); Py_DECREF(val);
 
           val = Py_BuildValue("s", method.req_datatype.name.c_str());
-          PyDict_SetItemString(methodsDict, "req_datatype_type", val); Py_DECREF(val);
+          PyDict_SetItemString(methodsDict, "request_datatype_type", val); Py_DECREF(val);
 
           val = Py_BuildValue("s", method.req_datatype.encoding.c_str());
-          PyDict_SetItemString(methodsDict, "req_datatype_encoding", val); Py_DECREF(val);
+          PyDict_SetItemString(methodsDict, "request_datatype_encoding", val); Py_DECREF(val);
 
           val = Py_BuildValue("y#", method.req_datatype.descriptor.c_str(), method.req_datatype.descriptor.length());
-          PyDict_SetItemString(methodsDict, "req_datatype_descriptor", val); Py_DECREF(val);
+          PyDict_SetItemString(methodsDict, "request_datatype_descriptor", val); Py_DECREF(val);
 
           val = Py_BuildValue("s", method.resp_datatype.name.c_str());
-          PyDict_SetItemString(methodsDict, "resp_datatype_name", val); Py_DECREF(val);
+          PyDict_SetItemString(methodsDict, "response_datatype_name", val); Py_DECREF(val);
 
           val = Py_BuildValue("s", method.resp_datatype.encoding.c_str());
-          PyDict_SetItemString(methodsDict, "resp_datatype_encoding", val); Py_DECREF(val);
+          PyDict_SetItemString(methodsDict, "response_datatype_encoding", val); Py_DECREF(val);
 
           val = Py_BuildValue("y#", method.resp_datatype.descriptor.c_str(), method.resp_datatype.descriptor.length());
-          PyDict_SetItemString(methodsDict, "resp_datatype_descriptor", val); Py_DECREF(val);
+          PyDict_SetItemString(methodsDict, "response_datatype_descriptor", val); Py_DECREF(val);
 
           val = Py_BuildValue("i", method.call_count);
           PyDict_SetItemString(methodsDict, "call_count", val); Py_DECREF(val);
@@ -1350,7 +1350,7 @@ static PyMethodDef _ecal_methods[] =
   {"server_create",                 server_create,                 METH_VARARGS,  "server_create(service_name)" },
   {"server_destroy",                server_destroy,                METH_VARARGS,  "server_destroy(server_handle)" },
 
-  {"server_add_method_callback",    server_add_method_callback,    METH_VARARGS,  "server_add_method_callback(server_handle, method_name, req_type_name, resp_type_name, callback)" },
+  {"server_add_method_callback",    server_add_method_callback,    METH_VARARGS,  "server_add_method_callback(server_handle, method_name, request_type_name, response_type_name, callback)" },
   {"server_rem_method_callback",    server_rem_method_callback,    METH_VARARGS,  "server_rem_method_callback(server_handle, method_name)" },
 
   {"client_create",                 client_create,                 METH_VARARGS,  "client_create(service_name)" },
