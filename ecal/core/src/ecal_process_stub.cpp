@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <cstdlib>
-#include <cerrno>
+#include <errno.h>
 #include <fcntl.h>
 #include <string>
 #include <sys/file.h>
@@ -39,7 +38,7 @@ int main(int argc, char** argv)
   }
   else if ((argc == 2) && (std::string(argv[1]) == "--version"))
   {
-    // POSIX wants us to provide some output when launching with --version. We also use this to determine the correctnis of this application from other applications.
+    // POSIX wants us to provide some output when launching with --version. We also use this to determine the correctness of this application from other applications.
     std::cout << ECAL_PROCESS_STUB_VERSION_STRING << std::endl;
     return EXIT_SUCCESS;
   }
