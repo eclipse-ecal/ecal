@@ -79,7 +79,7 @@ sdist.only-include = [
 
 [tool.scikit-build]
 # Will be installed from PyPI if system version is too old/missing
-cmake.version = ">=3.18"
+cmake.version = ">=3.24" # For SET_DEPENDENCY_PROVIDER
 build.targets = ["ecal_python"] # Targets to build
 build-dir = "./_python_build"   # Build directory for unisolated builds
 install.components = ["python"] # CMake component to install
