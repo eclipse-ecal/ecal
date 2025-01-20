@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,6 +104,10 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     else if (column == Columns::ECAL_RUNTIME_VERSION)
     {
       return process_.ecal_runtime_version().c_str();
+    }
+    else if (column == Columns::CONFIG_FILE_PATH)
+    {
+      return process_.config_file_path().c_str();
     }
     else
     {

@@ -222,6 +222,7 @@ namespace eCAL
       int32_t                             component_init_state = 0;     // eCAL component initialization state (eCAL::Initialize(..))
       std::string                         component_init_info;          // like comp_init_state as a human-readable string (pub|sub|srv|mon|log|time|proc)
       std::string                         ecal_runtime_version;         // loaded/runtime eCAL version of a component
+      std::string                         config_file_path;             // Path from where the eCAL configuration for this process was loadedloaded/runtime eCAL version of a component
 
       bool operator==(const Process& other) const {
         return rclock == other.rclock &&
@@ -234,7 +235,8 @@ namespace eCAL
           tsync_mod_name == other.tsync_mod_name &&
           component_init_state == other.component_init_state &&
           component_init_info == other.component_init_info &&
-          ecal_runtime_version == other.ecal_runtime_version;
+          ecal_runtime_version == other.ecal_runtime_version &&
+          config_file_path == other.config_file_path;
       }
 
       void clear()
@@ -250,6 +252,7 @@ namespace eCAL
         component_init_state = 0;
         component_init_info.clear();
         ecal_runtime_version.clear();
+        config_file_path.clear();
       }
     };
 

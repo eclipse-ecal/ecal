@@ -201,7 +201,7 @@ namespace eCAL
      * @param service_id_  The service id struct of the connection that triggered the event.
      * @param data_        Event callback data structure with the event specific information.
     **/
-    using ClientEventCallbackT = std::function<void(const Registration::SServiceMethodId& service_id_, const SClientEventCallbackData& data_)>;
+    using ClientEventCallbackT = std::function<void(const Registration::SServiceId& service_id_, const SClientEventCallbackData& data_)>;
 
     /**
      * @brief eCAL server event callback struct.
@@ -218,6 +218,6 @@ namespace eCAL
      * @param service_id_  The service id struct of the connection that triggered the event.
      * @param data_        Event callback data structure with the event specific information.
     **/
-    using ServerEventCallbackT = std::function<void(const Registration::SServiceMethodId& service_id_, const struct SServerEventCallbackData& data_)>;
+    using ServerEventCallbackT = std::function<void(const Registration::SServiceId& service_id_, const struct SServerEventCallbackData& data_)>;
   }
 }

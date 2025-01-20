@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,9 @@ namespace eCAL
           monitoring1.processes[i].tsync_mod_name != monitoring2.processes[i].tsync_mod_name ||
           monitoring1.processes[i].component_init_state != monitoring2.processes[i].component_init_state ||
           monitoring1.processes[i].component_init_info != monitoring2.processes[i].component_init_info ||
-          monitoring1.processes[i].ecal_runtime_version != monitoring2.processes[i].ecal_runtime_version)
+          monitoring1.processes[i].ecal_runtime_version != monitoring2.processes[i].ecal_runtime_version ||
+          monitoring1.processes[i].config_file_path != monitoring2.processes[i].config_file_path
+          )
         {
           return false;
         }
