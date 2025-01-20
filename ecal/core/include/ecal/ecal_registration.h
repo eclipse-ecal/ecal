@@ -125,14 +125,14 @@ namespace eCAL
     ECAL_API void RemSubscriberEventCallback(CallbackToken token_);
 
     /**
-     * @brief Get complete snapshot of all known services.
+     * @brief Get complete snapshot of all known servers.
      *
      * @return Set of service id's.
     **/
     ECAL_API std::set<SServiceMethodId> GetServerIDs();
 
     /**
-     * @brief Get service method information with quality for specific service.
+     * @brief Get service method information with quality for a specific server.
      *
      * @return True if information could be queried.
     **/
@@ -146,7 +146,7 @@ namespace eCAL
     ECAL_API std::set<SServiceMethodId> GetClientIDs();
 
     /**
-     * @brief Get service method information with quality for specific client.
+     * @brief Get service method information with quality for a specific client.
      *
      * @return True if information could be queried.
     **/
