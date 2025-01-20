@@ -1,4 +1,4 @@
-.. _exhale_function_ecal__registration_8h_1a43fbfc7032a866837fc59170a8251bf7:
+.. _exhale_function_ecal__registration_8h_1a52830559ad50e4300339e50e837e9111:
 
 Function eCAL::Registration::AddPublisherEventCallback
 ======================================================
@@ -10,5 +10,5 @@ Function Documentation
 ----------------------
 
 
-.. doxygenfunction:: eCAL::Registration::AddPublisherEventCallback(const TopicIDCallbackT&)
+.. doxygenfunction:: eCAL::Registration::AddPublisherEventCallback(const TopicEventCallbackT&)
    :project: eCAL

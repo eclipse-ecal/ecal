@@ -39,9 +39,9 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_ecal__registration_8h_1a43fbfc7032a866837fc59170a8251bf7`
+- :ref:`exhale_function_ecal__registration_8h_1a52830559ad50e4300339e50e837e9111`
 
-- :ref:`exhale_function_ecal__registration_8h_1a142a2f1601017cabce92f772a7d2d479`
+- :ref:`exhale_function_ecal__registration_8h_1a4deeeb38b0b23b0180fda68eb7c631ee`
 
 - :ref:`exhale_function_ecal__registration_8h_1a3a54bd4c6d14728f3f7edeb8d9fba0fd`
 
@@ -65,9 +65,9 @@ Functions
 
 - :ref:`exhale_function_ecal__registration_8h_1a0aa936468b700d266a2c1c137d9b3b63`
 
-- :ref:`exhale_function_ecal__types_8h_1a2f6a5aebcd468f4b8ea81bd56624d085`
-
 - :ref:`exhale_function_ecal__types_8h_1a6c1751b46d366790d9efd875cc985c9f`
+
+- :ref:`exhale_function_ecal__types_8h_1a2f6a5aebcd468f4b8ea81bd56624d085`
 
 - :ref:`exhale_function_ecal__registration_8h_1a32d0524e5d48924312037910dcf646c9`
 
@@ -82,4 +82,4 @@ Typedefs
 
 - :ref:`exhale_typedef_ecal__types_8h_1a52a7ccff0f1e754f5a13675483e40db6`
 
-- :ref:`exhale_typedef_ecal__registration_8h_1a65bdd2b266015f132cd46822ea1fb4ae`
+- :ref:`exhale_typedef_ecal__registration_8h_1a409078e35c152905f1e2300b8a0e6b20`

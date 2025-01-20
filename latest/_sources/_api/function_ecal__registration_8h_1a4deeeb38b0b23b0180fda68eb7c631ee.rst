@@ -1,4 +1,4 @@
-.. _exhale_function_ecal__registration_8h_1a142a2f1601017cabce92f772a7d2d479:
+.. _exhale_function_ecal__registration_8h_1a4deeeb38b0b23b0180fda68eb7c631ee:
 
 Function eCAL::Registration::AddSubscriberEventCallback
 =======================================================
@@ -10,5 +10,5 @@ Function Documentation
 ----------------------
 
 
-.. doxygenfunction:: eCAL::Registration::AddSubscriberEventCallback(const TopicIDCallbackT&)
+.. doxygenfunction:: eCAL::Registration::AddSubscriberEventCallback(const TopicEventCallbackT&)
    :project: eCAL

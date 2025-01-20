@@ -12,7 +12,7 @@ Program Listing for File ecal_registration.h
 
    /* ========================= eCAL LICENSE =================================
     *
-    * Copyright (C) 2016 - 2024 Continental Corporation
+    * Copyright (C) 2016 - 2025 Continental Corporation
     *
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
@@ -64,13 +64,14 @@ Program Listing for File ecal_registration.h
          deleted_entity  
        };
    
-       using TopicIDCallbackT = std::function<void(const STopicId&, RegistrationEventType)>;
+       /* @brief Event callback, when a topic related entity (publisher / subscriber) has been created or deleted */
+       using TopicEventCallbackT = std::function<void(const STopicId&, RegistrationEventType)>;
    
        ECAL_API std::set<STopicId> GetPublisherIDs();
    
        ECAL_API bool GetPublisherInfo(const STopicId& id_, SDataTypeInformation& topic_info_);
    
-       ECAL_API CallbackToken AddPublisherEventCallback(const TopicIDCallbackT& callback_);
+       ECAL_API CallbackToken AddPublisherEventCallback(const TopicEventCallbackT& callback_);
    
        ECAL_API void RemPublisherEventCallback(CallbackToken token_);
    
@@ -78,7 +79,7 @@ Program Listing for File ecal_registration.h
    
        ECAL_API bool GetSubscriberInfo(const STopicId& id_, SDataTypeInformation& topic_info_);
    
-       ECAL_API CallbackToken AddSubscriberEventCallback(const TopicIDCallbackT& callback_);
+       ECAL_API CallbackToken AddSubscriberEventCallback(const TopicEventCallbackT& callback_);
    
        ECAL_API void RemSubscriberEventCallback(CallbackToken token_);
    
