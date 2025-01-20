@@ -80,7 +80,7 @@ set(ecal_c_sources
     ${ecal_header_cimpl}
 )
 
-ecal_add_ecal_shared_library(${PROJECT_NAME}
+ecal_add_shared_library(${PROJECT_NAME}
     ${ecal_c_sources}
 )
 

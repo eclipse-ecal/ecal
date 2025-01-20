@@ -552,7 +552,7 @@ set(ecal_sources
     ${ecal_header_msg}
 )
 
-ecal_add_ecal_shared_library(${PROJECT_NAME}
+ecal_add_shared_library(${PROJECT_NAME}
     ${ecal_sources}
     ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h
 )
