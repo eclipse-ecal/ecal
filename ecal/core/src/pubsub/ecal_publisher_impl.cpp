@@ -25,6 +25,7 @@
 #include <ecal/ecal_log.h>
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_process.h>
+#include <ecal/ecal_time.h>
 
 #if ECAL_CORE_REGISTRATION
 #include "registration/ecal_registration_provider.h"
@@ -489,8 +490,7 @@ namespace eCAL
 #endif
 
     // add key to connection map, including connection state
-    bool is_new_connection     = false;
-    bool is_updated_connection = false;
+    bool is_new_connection = false;
     {
       const std::lock_guard<std::mutex> lock(m_connection_map_mutex);
       auto subscription_info_iter = m_connection_map.find(subscription_info_);
@@ -511,11 +511,6 @@ namespace eCAL
         {
           is_new_connection = true;
         }
-        // the connection was active, so we just update it
-        else
-        {
-          is_updated_connection = true;
-        }
 
         // update the data type, the layer states and set the state active
         connection = SConnection{ data_type_info_, sub_layer_states_, true };
@@ -531,11 +526,6 @@ namespace eCAL
     {
       // fire connect event
       FireConnectEvent(subscription_info_, data_type_info_);
-    }
-    else if (is_updated_connection)
-    {
-      // fire update event
-      FireUpdateEvent(subscription_info_, data_type_info_);
     }
 
 #ifndef NDEBUG
@@ -739,10 +729,9 @@ namespace eCAL
     if(m_event_id_callback)
     {
       SPubEventCallbackData data;
-      data.type      = type_;
-      data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-      data.clock     = 0;
-      data.tdatatype = data_type_info_;
+      data.event_type          = type_;
+      data.event_time          = eCAL::Time::GetMicroSeconds();
+      data.subscriber_datatype = data_type_info_;
 
       Registration::STopicId topic_id;
       topic_id.topic_id.entity_id  = subscription_info_.entity_id;
@@ -763,7 +752,7 @@ namespace eCAL
       {
         v5::SPubEventCallbackData event_data;
         event_data.type      = type_;
-        event_data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+        event_data.time      = eCAL::Time::GetMicroSeconds();
         event_data.clock     = 0;
         event_data.tid       = std::to_string(subscription_info_.entity_id);
         event_data.tdatatype = data_type_info_;
@@ -777,11 +766,6 @@ namespace eCAL
   void CPublisherImpl::FireConnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
     FireEvent(ePublisherEvent::connected, subscription_info_, data_type_info_);
-  }
-
-  void CPublisherImpl::FireUpdateEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
-  {
-    FireEvent(ePublisherEvent::update_connection, subscription_info_, data_type_info_);
   }
 
   void CPublisherImpl::FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)

@@ -52,20 +52,16 @@ namespace eCAL
     none = 0,
     connected = 1,
     disconnected = 2,
-    dropped = 3,
-    corrupted = 5,
-    update_connection = 6,
+    dropped = 3
   };
 
   inline std::string to_string(eSubscriberEvent event_) {
     switch (event_) {
-    case eSubscriberEvent::none:                   return "NONE";
-    case eSubscriberEvent::connected:              return "CONNECTED";
-    case eSubscriberEvent::disconnected:           return "DISCONNECTED";
-    case eSubscriberEvent::dropped :               return "DROPPED";
-    case eSubscriberEvent::corrupted:              return "CORRUPTED";
-    case eSubscriberEvent::update_connection :     return "UPDATED_CONNECTION";
-    default:            return "Unknown";
+    case eSubscriberEvent::none:         return "NONE";
+    case eSubscriberEvent::connected:    return "CONNECTED";
+    case eSubscriberEvent::disconnected: return "DISCONNECTED";
+    case eSubscriberEvent::dropped :     return "DROPPED";
+    default:                             return "Unknown";
     }
   }
 
@@ -77,18 +73,16 @@ namespace eCAL
     none = 0,
     connected = 1,
     disconnected = 2,
-    dropped = 3,
-    update_connection = 4,
+    dropped = 3
   };
 
   inline std::string to_string(ePublisherEvent event_) {
     switch (event_) {
-    case ePublisherEvent::none:                   return "NONE";
-    case ePublisherEvent::connected:              return "CONNECTED";
-    case ePublisherEvent::disconnected:           return "DISCONNECTED";
-    case ePublisherEvent::dropped:                return "DROPPED";
-    case ePublisherEvent::update_connection:      return "UPDATED_CONNECTION";
-    default:            return "Unknown";
+    case ePublisherEvent::none:         return "NONE";
+    case ePublisherEvent::connected:    return "CONNECTED";
+    case ePublisherEvent::disconnected: return "DISCONNECTED";
+    case ePublisherEvent::dropped:      return "DROPPED";
+    default:                            return "Unknown";
     }
   }
 
@@ -153,10 +147,9 @@ namespace eCAL
     **/
     struct SPubEventCallbackData
     {
-      ePublisherEvent      type{ ePublisherEvent::none };  //!< publisher event type
-      long long            time{ 0 };               //!< publisher event time in µs
-      long long            clock{ 0 };              //!< publisher event clock
-      SDataTypeInformation tdatatype;               //!< datatype description of the connected subscriber            (for pub_event_update_connection only)
+      ePublisherEvent      event_type{ ePublisherEvent::none };  //!< publisher event type
+      long long            event_time{ 0 };                      //!< publisher event time in µs (eCAL time)
+      SDataTypeInformation subscriber_datatype;                  //!< datatype description of the connected subscriber
     };
 
     /**
@@ -172,10 +165,9 @@ namespace eCAL
     **/
     struct SSubEventCallbackData
     {
-      eSubscriberEvent      type{ eSubscriberEvent::none }; //!< subscriber event type
-      long long             time{ 0 };              //!< subscriber event time in µs
-      long long             clock{ 0 };             //!< subscriber event clock
-      SDataTypeInformation  tdatatype;              //!< topic information of the connected subscriber           (for sub_event_update_connection only)
+      eSubscriberEvent      event_type{ eSubscriberEvent::none }; //!< subscriber event type
+      long long             event_time{ 0 };                      //!< subscriber event time in µs (eCAL time)
+      SDataTypeInformation  publisher_datatype;                   //!< topic information of the connected publisher
     };
 
     /**

@@ -35,19 +35,9 @@ void OnEvent(const char* topic_name_, const struct eCAL::v5::SSubEventCallbackDa
   case eCAL::eSubscriberEvent::disconnected:
     std::cout << "event            : " << "disconnected" << std::endl;
     break;
+  // not implemented yet
   case eCAL::eSubscriberEvent::dropped:
     std::cout << "event            : " << "dropped (" << data_->clock << " messages)" << std::endl;
-    break;
-  // not implemented yet
-  case eCAL::eSubscriberEvent::corrupted:
-    std::cout << "event            : " << "corrupted" << std::endl;
-    break;
-  case eCAL::eSubscriberEvent::update_connection:
-    std::cout << "event            : " << "update_connection" << std::endl;
-    std::cout << "  topic_id       : " << data_->tid << std::endl;
-    std::cout << "  topic_encoding : " << data_->tdatatype.encoding << std::endl;
-    std::cout << "  topic_type     : " << data_->tdatatype.name << std::endl;
-    //std::cout << "  topic_desc : " << data_->tdesc << std::endl;
     break;
   default:
     std::cout << "event            : " << "unknown" << std::endl;
@@ -72,8 +62,6 @@ int main()
   sub.AddEventCallback(eCAL::eSubscriberEvent::connected,         evt_callback);
   sub.AddEventCallback(eCAL::eSubscriberEvent::disconnected,      evt_callback);
   sub.AddEventCallback(eCAL::eSubscriberEvent::dropped,           evt_callback);
-  sub.AddEventCallback(eCAL::eSubscriberEvent::corrupted,         evt_callback);
-  sub.AddEventCallback(eCAL::eSubscriberEvent::update_connection, evt_callback);
 
   // start application and wait for events
   std::cout << "Please start 'person_snd_events sample." << std::endl << std::endl;

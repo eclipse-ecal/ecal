@@ -39,9 +39,7 @@ namespace
     case eCAL::eSubscriberEvent::connected:              return sub_event_connected;
     case eCAL::eSubscriberEvent::disconnected:           return sub_event_disconnected;
     case eCAL::eSubscriberEvent::dropped:                return sub_event_dropped;
-    case eCAL::eSubscriberEvent::corrupted:              return sub_event_corrupted;
-    case eCAL::eSubscriberEvent::update_connection:      return sub_event_update_connection;
-    default:            return sub_event_none;
+    default:                                             return sub_event_none;
     }
   }
 
@@ -51,8 +49,6 @@ namespace
     case sub_event_connected:              return eCAL::eSubscriberEvent::connected;
     case sub_event_disconnected:           return eCAL::eSubscriberEvent::disconnected;
     case sub_event_dropped:                return eCAL::eSubscriberEvent::dropped;
-    case sub_event_corrupted:              return eCAL::eSubscriberEvent::corrupted;
-    case sub_event_update_connection:      return eCAL::eSubscriberEvent::update_connection;
     default:                               return eCAL::eSubscriberEvent::none;
     }
   }
