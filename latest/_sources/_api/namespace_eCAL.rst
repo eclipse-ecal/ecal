@@ -157,13 +157,13 @@ Functions
 
 - :ref:`exhale_function_namespaceeCAL_1a198ffb431748b7238f128aeabcc126f8`
 
+- :ref:`exhale_function_namespaceeCAL_1a0229a4b13e78e4626d8ad28c6cf379dc`
+
 - :ref:`exhale_function_namespaceeCAL_1aad76de7400fd55c21092e48c1155cd2f`
 
 - :ref:`exhale_function_namespaceeCAL_1a095cc5b46ef63315491e98d6df4de3bf`
 
 - :ref:`exhale_function_namespaceeCAL_1ae35faedd64ab8f87619df58fb60f37e4`
-
-- :ref:`exhale_function_namespaceeCAL_1a0229a4b13e78e4626d8ad28c6cf379dc`
 
 
 Typedefs

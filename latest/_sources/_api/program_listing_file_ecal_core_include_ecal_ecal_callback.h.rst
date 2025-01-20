@@ -53,20 +53,16 @@ Program Listing for File ecal_callback.h
        none = 0,
        connected = 1,
        disconnected = 2,
-       dropped = 3,
-       corrupted = 5,
-       update_connection = 6,
+       dropped = 3
      };
    
      inline std::string to_string(eSubscriberEvent event_) {
        switch (event_) {
-       case eSubscriberEvent::none:                   return "NONE";
-       case eSubscriberEvent::connected:              return "CONNECTED";
-       case eSubscriberEvent::disconnected:           return "DISCONNECTED";
-       case eSubscriberEvent::dropped :               return "DROPPED";
-       case eSubscriberEvent::corrupted:              return "CORRUPTED";
-       case eSubscriberEvent::update_connection :     return "UPDATED_CONNECTION";
-       default:            return "Unknown";
+       case eSubscriberEvent::none:         return "NONE";
+       case eSubscriberEvent::connected:    return "CONNECTED";
+       case eSubscriberEvent::disconnected: return "DISCONNECTED";
+       case eSubscriberEvent::dropped :     return "DROPPED";
+       default:                             return "Unknown";
        }
      }
    
@@ -75,18 +71,16 @@ Program Listing for File ecal_callback.h
        none = 0,
        connected = 1,
        disconnected = 2,
-       dropped = 3,
-       update_connection = 4,
+       dropped = 3
      };
    
      inline std::string to_string(ePublisherEvent event_) {
        switch (event_) {
-       case ePublisherEvent::none:                   return "NONE";
-       case ePublisherEvent::connected:              return "CONNECTED";
-       case ePublisherEvent::disconnected:           return "DISCONNECTED";
-       case ePublisherEvent::dropped:                return "DROPPED";
-       case ePublisherEvent::update_connection:      return "UPDATED_CONNECTION";
-       default:            return "Unknown";
+       case ePublisherEvent::none:         return "NONE";
+       case ePublisherEvent::connected:    return "CONNECTED";
+       case ePublisherEvent::disconnected: return "DISCONNECTED";
+       case ePublisherEvent::dropped:      return "DROPPED";
+       default:                            return "Unknown";
        }
      }
    
@@ -131,20 +125,18 @@ Program Listing for File ecal_callback.h
    
        struct SPubEventCallbackData
        {
-         ePublisherEvent      type{ ePublisherEvent::none };  
-         long long            time{ 0 };               
-         long long            clock{ 0 };              
-         SDataTypeInformation tdatatype;               
+         ePublisherEvent      event_type{ ePublisherEvent::none };  
+         long long            event_time{ 0 };                      
+         SDataTypeInformation subscriber_datatype;                  
        };
    
        using PubEventCallbackT = std::function<void(const Registration::STopicId& topic_id_, const SPubEventCallbackData& data_)>;
    
        struct SSubEventCallbackData
        {
-         eSubscriberEvent      type{ eSubscriberEvent::none }; 
-         long long             time{ 0 };              
-         long long             clock{ 0 };             
-         SDataTypeInformation  tdatatype;              
+         eSubscriberEvent      event_type{ eSubscriberEvent::none }; 
+         long long             event_time{ 0 };                      
+         SDataTypeInformation  publisher_datatype;                   
        };
    
        using SubEventCallbackT = std::function<void(const Registration::STopicId& topic_id_, const SSubEventCallbackData& data_)>;
