@@ -674,7 +674,7 @@ target_link_libraries(${PROJECT_NAME}
 
 set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER core)
 
-ecal_install_ecal_shared_library(${PROJECT_NAME})
+ecal_install_shared_library(${PROJECT_NAME})
 
 install(DIRECTORY
    "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk

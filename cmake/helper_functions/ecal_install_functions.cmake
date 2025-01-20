@@ -21,42 +21,6 @@
 #  Each target will have to install it by themselves (e.g. install(DIRECTORY ...))
 ######################
 
-# this appends the 64 / 32 suffix (required for the eCAL Core libraries)
-function(ecal_install_ecal_library TARGET_NAME)
-  if(BUILD_SHARED_LIBS)
-    ecal_install_ecal_shared_library(${TARGET_NAME})
-  else()
-    ecal_install_ecal_static_library(${TARGET_NAME})
-  endif()
-endfunction()
-
-# this appends the 64 / 32 suffix (required for the eCAL Core libraries)
-function(ecal_install_ecal_static_library TARGET_NAME)
-
-  install(TARGETS ${TARGET_NAME}
-  # IMPORTANT: Add the library to the "export-set"
-    EXPORT eCALCoreTargets
-    ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
-    LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
-  )
-  ecal_install_pdbs(TARGET ${TARGET_NAME} DESTINATION "${eCAL_install_archive_dir}" COMPONENT runtime)      
-endfunction()
-
-# installing shared libraries is a li
-# this appends the 64 / 32 suffix (required for the eCAL Core libraries)
-function(ecal_install_ecal_shared_library TARGET_NAME)
-
-# Windows, RUNTIME -> .dll, ARCHIVE -> .lib, Unix: LIBRARY -> .so
-  install(TARGETS ${TARGET_NAME}
-  # IMPORTANT: Add the library to the "export-set"
-    EXPORT eCALCoreTargets
-    RUNTIME       DESTINATION "${eCAL_install_bin_dir}"         COMPONENT runtime
-    LIBRARY       DESTINATION "${eCAL_install_lib_dir}"         COMPONENT sdk
-    ARCHIVE       DESTINATION "${eCAL_install_archive_dyn_dir}" COMPONENT sdk
-  )
-  ecal_install_pdbs(TARGET ${TARGET_NAME} DESTINATION "${eCAL_install_bin_dir}" COMPONENT runtime)      
-endfunction()
-
 function(ecal_install_library TARGET_NAME)
   if(BUILD_SHARED_LIBS)
     ecal_install_shared_library(${TARGET_NAME})
