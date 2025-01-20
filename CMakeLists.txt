@@ -88,6 +88,7 @@ option(HAS_MESSAGEPACK                         "Platform supports messagepack li
 
 option(BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
 option(BUILD_APPS                              "Build the eCAL applications"                                       ON)
+option(BUILD_APP_REC_ADDON_SDK                 "Build eCAL rec addon SDK"                               ${BUILD_APPS})
 option(BUILD_SAMPLES                           "Build the eCAL samples"                                            ON)
 option(BUILD_TIME                              "Build the eCAL time interfaces"                                    ON)
 option(BUILD_PY_BINDING                        "Build eCAL python binding"                                        OFF)
@@ -283,15 +284,17 @@ endif()
 # --------------------------------------------------------
 # ecal mon plugin sdk
 # --------------------------------------------------------
-if(HAS_QT)
+if(HAS_QT AND BUILD_APPS)
   add_subdirectory(app/mon/mon_plugin_lib)
 endif()
 
 # --------------------------------------------------------
 # ecal rec addon sdk
 # --------------------------------------------------------
-add_subdirectory(app/rec/rec_addon_core)
-add_subdirectory(app/rec/rec_addon_dummy)
+if(BUILD_APP_REC_ADDON_SDK)
+  add_subdirectory(app/rec/rec_addon_core)
+  add_subdirectory(app/rec/rec_addon_dummy)
+endif()
 
 # --------------------------------------------------------
 # ecal time
@@ -335,8 +338,8 @@ add_subdirectory(lang/c)
 # --------------------------------------------------------
 # console applications
 # --------------------------------------------------------
-add_subdirectory(app/apps)
 if(BUILD_APPS)
+  add_subdirectory(app/apps)
   if (HAS_FTXUI)
     add_subdirectory(app/mon/mon_tui)
   endif()
