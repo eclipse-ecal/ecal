@@ -91,19 +91,19 @@ namespace eCAL
     m_subscriber_callback_map.map.erase(token_);
   }
 
-  std::set<Registration::SServiceMethodId> CDescGate::GetServiceIDs() const
+  std::set<Registration::SServiceMethodId> CDescGate::GetServerIDs() const
   {
-    return GetServiceIDs(m_service_info_map);
+    return GetServerIDs(m_service_info_map);
   }
 
-  bool CDescGate::GetServiceInfo(const Registration::SServiceMethodId& id_, SServiceMethodInformation& service_info_) const
+  bool CDescGate::GetServerInfo(const Registration::SServiceMethodId& id_, SServiceMethodInformation& service_info_) const
   {
     return GetService(id_, m_service_info_map, service_info_);
   }
 
   std::set<Registration::SServiceMethodId> CDescGate::GetClientIDs() const
   {
-    return GetServiceIDs(m_client_info_map);
+    return GetServerIDs(m_client_info_map);
   }
 
   bool CDescGate::GetClientInfo(const Registration::SServiceMethodId& id_, SServiceMethodInformation& service_info_) const
@@ -138,7 +138,7 @@ namespace eCAL
     }
   }
 
-  std::set<Registration::SServiceMethodId> CDescGate::GetServiceIDs(const SServiceIdInfoMap& service_method_info_map_)
+  std::set<Registration::SServiceMethodId> CDescGate::GetServerIDs(const SServiceIdInfoMap& service_method_info_map_)
   {
     std::set<Registration::SServiceMethodId> service_id_set;
 
