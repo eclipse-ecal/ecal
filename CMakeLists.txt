@@ -338,8 +338,8 @@ add_subdirectory(lang/c)
 # --------------------------------------------------------
 # console applications
 # --------------------------------------------------------
-add_subdirectory(app/apps)
 if(BUILD_APPS)
+  add_subdirectory(app/apps)
   if (HAS_FTXUI)
     add_subdirectory(app/mon/mon_tui)
   endif()

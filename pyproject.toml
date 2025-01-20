@@ -43,9 +43,6 @@ sdist.only-include = [
   "/NOTICE.txt",
   "/README.md",
   "/app/app_pb/",
-  "/app/apps/",            # TODO: Remove this directory
-  "/app/rec/rec_addon_core/", # TODO: Remove this directory
-  "/app/rec/rec_addon_dummy/", # TODO: Remove this directory
   "/cmake/",
   "/contrib/",
   "/cpack/",
@@ -55,11 +52,11 @@ sdist.only-include = [
   "lang/c/",
   "lang/python/",
 
-  "serialization/protobuf", 
-  "serialization/string", 
+  "serialization/protobuf",
+  "serialization/string",
 
   "thirdparty/cmakefunctions/",
-  "thirdparty/ecaludp/",  
+  "thirdparty/ecaludp/",
   "thirdparty/protobuf/",
   "thirdparty/recycle/",
   "thirdparty/tclap/",
