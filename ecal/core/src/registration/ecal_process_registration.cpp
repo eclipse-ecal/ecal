@@ -92,7 +92,7 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   process_sample_process.component_init_info = component_info;
 
   process_sample_process.ecal_runtime_version = eCAL::GetVersionString();
-  process_sample_process.config_file_path = eCAL::GetConfiguration().GetYamlFilePath();
+  process_sample_process.config_file_path = eCAL::GetConfiguration().GetConfigurationFilePath();
 
   return process_sample;
 }
