@@ -53,9 +53,9 @@ Functions
 
 - :ref:`exhale_function_ecal__registration_8h_1a17035589529f59e0d6fdc17186b6fc26`
 
-- :ref:`exhale_function_ecal__registration_8h_1ae7a4aae8984417c336424d46a93a92fa`
+- :ref:`exhale_function_ecal__registration_8h_1a812056d30256ba3be552809032bea1bc`
 
-- :ref:`exhale_function_ecal__registration_8h_1ae849477d74f50ba9cf0346987f795c18`
+- :ref:`exhale_function_ecal__registration_8h_1a653302548bc5b1c637be973288a4e58d`
 
 - :ref:`exhale_function_ecal__registration_8h_1a91f98d23e8570af25c0537a6b17905bb`
 

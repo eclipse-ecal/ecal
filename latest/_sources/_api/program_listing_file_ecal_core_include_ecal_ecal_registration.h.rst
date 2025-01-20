@@ -83,9 +83,9 @@ Program Listing for File ecal_registration.h
    
        ECAL_API void RemSubscriberEventCallback(CallbackToken token_);
    
-       ECAL_API std::set<SServiceMethodId> GetServiceIDs();
+       ECAL_API std::set<SServiceMethodId> GetServerIDs();
    
-       ECAL_API bool GetServiceInfo(const SServiceMethodId& id_, SServiceMethodInformation& service_method_info_);
+       ECAL_API bool GetServerInfo(const SServiceMethodId& id_, SServiceMethodInformation& service_method_info_);
    
        ECAL_API std::set<SServiceMethodId> GetClientIDs();
    
