@@ -48,7 +48,7 @@ namespace eCAL
         virtual bool dirExistsOrCreate(const std::string& path_) const = 0;
         virtual bool createEcalDirStructure(const std::string& path_) const = 0;
         virtual bool canWriteToDirectory(const std::string& path_) const = 0;
-        virtual std::string getDirectoryPath(const std::string& filePath) const = 0;
+        virtual std::string getDirectoryPath(const std::string& file_path_) const = 0;
 
         virtual std::string findFileInPaths(const std::vector<std::string>& paths_, const std::string& file_name_) const = 0;
     };

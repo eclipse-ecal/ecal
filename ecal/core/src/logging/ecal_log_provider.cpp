@@ -195,7 +195,7 @@ namespace eCAL
         log_path.pop_back();
 
       const std::string file_name = tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
-      std::vector<std::string> file_path_components = { log_path, file_name };
+      const std::vector<std::string> file_path_components = { log_path, file_name };
       
       m_logfile_name = EcalUtils::String::Join(std::string(1, EcalUtils::Filesystem::NativeSeparator()), file_path_components);
       m_logfile = fopen(m_logfile_name.c_str(), "w");

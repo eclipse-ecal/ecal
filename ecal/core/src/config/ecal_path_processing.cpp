@@ -231,9 +231,9 @@ namespace eCAL
       return {};
     }
 
-    bool DirManager::canWriteToDirectory(const std::string& dirPath) const 
+    bool DirManager::canWriteToDirectory(const std::string& path_) const 
     {
-      std::string testFilePath = dirPath + "/test_file.txt";
+      const std::string testFilePath = path_ + "/test_file.txt";
       std::ofstream testFile(testFilePath);
       
       if (testFile)
@@ -251,7 +251,7 @@ namespace eCAL
     // returns the directory path of the specified file
     std::string DirManager::getDirectoryPath(const std::string& file_path_) const
     {
-      size_t pos = file_path_.find_last_of("/\\");
+      const size_t pos = file_path_.find_last_of("/\\");
       return (std::string::npos == pos) ? "" : file_path_.substr(0, pos);
     }
 
@@ -339,7 +339,7 @@ namespace eCAL
   {
     std::string GeteCALLogDirImpl(const Util::IDirProvider& dir_provider_ /* = Util::DirProvider() */, const Util::IDirManager& dir_manager_ /* = Util::DirManager() */, const eCAL::Configuration& config_ /* = eCAL::GetConfiguration() */)
     {
-      std::string config_file_dir = dir_manager_.getDirectoryPath(eCAL::GetConfiguration().GetConfigurationFilePath());
+      const std::string config_file_dir = dir_manager_.getDirectoryPath(eCAL::GetConfiguration().GetConfigurationFilePath());
       
       const std::vector<std::string> log_paths = {
         dir_provider_.eCALEnvVar(ECAL_LOG_VAR),
