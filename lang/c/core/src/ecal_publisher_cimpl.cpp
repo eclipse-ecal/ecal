@@ -39,8 +39,7 @@ namespace
     case eCAL::ePublisherEvent::connected:              return pub_event_connected;
     case eCAL::ePublisherEvent::disconnected:           return pub_event_disconnected;
     case eCAL::ePublisherEvent::dropped:                return pub_event_dropped;
-    case eCAL::ePublisherEvent::update_connection:      return pub_event_update_connection;
-    default:                                                      return pub_event_none;
+    default:                                            return pub_event_none;
     }
   }
 
@@ -50,7 +49,6 @@ namespace
     case pub_event_connected:              return eCAL::ePublisherEvent::connected;
     case pub_event_disconnected:           return eCAL::ePublisherEvent::disconnected;
     case pub_event_dropped:                return eCAL::ePublisherEvent::dropped;
-    case pub_event_update_connection:      return eCAL::ePublisherEvent::update_connection;
     default:                               return eCAL::ePublisherEvent::none;
     }
   }

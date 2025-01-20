@@ -80,8 +80,7 @@ namespace
     case eCAL::ePublisherEvent::connected:              return pub_event_connected;
     case eCAL::ePublisherEvent::disconnected:           return pub_event_disconnected;
     case eCAL::ePublisherEvent::dropped:                return pub_event_dropped;
-    case eCAL::ePublisherEvent::update_connection:      return pub_event_update_connection;
-    default:                                                      return pub_event_none;
+    default:                                            return pub_event_none;
     }
   }
 
@@ -91,7 +90,6 @@ namespace
     case pub_event_connected:              return eCAL::ePublisherEvent::connected;
     case pub_event_disconnected:           return eCAL::ePublisherEvent::disconnected;
     case pub_event_dropped:                return eCAL::ePublisherEvent::dropped;
-    case pub_event_update_connection:      return eCAL::ePublisherEvent::update_connection;
     default:                               return eCAL::ePublisherEvent::none;
     }
   }
@@ -102,9 +100,7 @@ namespace
     case eCAL::eSubscriberEvent::connected:              return sub_event_connected;
     case eCAL::eSubscriberEvent::disconnected:           return sub_event_disconnected;
     case eCAL::eSubscriberEvent::dropped:                return sub_event_dropped;
-    case eCAL::eSubscriberEvent::corrupted:              return sub_event_corrupted;
-    case eCAL::eSubscriberEvent::update_connection:      return sub_event_update_connection;
-    default:            return sub_event_none;
+    default:                                             return sub_event_none;
     }
   }
 
@@ -114,8 +110,6 @@ namespace
     case sub_event_connected:              return eCAL::eSubscriberEvent::connected;
     case sub_event_disconnected:           return eCAL::eSubscriberEvent::disconnected;
     case sub_event_dropped:                return eCAL::eSubscriberEvent::dropped;
-    case sub_event_corrupted:              return eCAL::eSubscriberEvent::corrupted;
-    case sub_event_update_connection:      return eCAL::eSubscriberEvent::update_connection;
     default:                               return eCAL::eSubscriberEvent::none;
     }
   }

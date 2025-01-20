@@ -133,7 +133,6 @@ namespace eCAL
     void FireEvent(const ePublisherEvent type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
     void FireConnectEvent   (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
-    void FireUpdateEvent    (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
     void FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
     size_t GetConnectionCount();
@@ -168,7 +167,7 @@ namespace eCAL
     EventCallbackMapT                      m_event_callback_map;
 
     std::mutex                             m_event_id_callback_mutex;
-    PubEventCallbackT                    m_event_id_callback;
+    PubEventCallbackT                      m_event_id_callback;
 
     long long                              m_id = 0;
     long long                              m_clock = 0;

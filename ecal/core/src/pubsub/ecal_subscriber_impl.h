@@ -126,12 +126,12 @@ namespace eCAL
     void FireEvent(const eSubscriberEvent type_, const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
 
     void FireConnectEvent   (const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
-    void FireUpdateEvent    (const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
     void FireDisconnectEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
-    
+    void FireDroppedEvent   (const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
+
     size_t GetConnectionCount();
 
-    bool CheckMessageClock(const Registration::EntityIdT& tid_, long long current_clock_);
+    bool CheckMessageClock(const SPublicationInfo& publication_info_, long long current_clock_);
 
     int32_t GetFrequency();
 

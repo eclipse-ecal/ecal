@@ -24,6 +24,7 @@
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_log.h>
 #include <ecal/ecal_process.h>
+#include <ecal/ecal_time.h>
 
 #if ECAL_CORE_REGISTRATION
 #include "registration/ecal_registration_provider.h"
@@ -308,8 +309,7 @@ namespace eCAL
 #endif
 
     // add key to connection map, including connection state
-    bool is_new_connection     = false;
-    bool is_updated_connection = false;
+    bool is_new_connection = false;
     {
       const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
       auto publication_info_iter = m_connection_map.find(publication_info_);
@@ -330,11 +330,6 @@ namespace eCAL
         {
           is_new_connection = true;
         }
-        // the connection was active, so we just update it
-        else
-        {
-          is_updated_connection = true;
-        }
 
         // update the data type and layer states, even if the connection is not new
         connection = SConnection{ data_type_info_, pub_layer_states_, true };
@@ -349,11 +344,6 @@ namespace eCAL
     {
       // fire connect event
       FireConnectEvent(publication_info_, data_type_info_);
-    }
-    else if (is_updated_connection)
-    {
-      // fire update event
-      FireUpdateEvent(publication_info_, data_type_info_);
     }
 
 #ifndef NDEBUG
@@ -497,7 +487,11 @@ namespace eCAL
     //  - a dropped message
     //  - an out-of-order message
     //  - a multiple sent message
-    if (!CheckMessageClock(topic_info_.tid, clock_))
+    SPublicationInfo publication_info;
+    publication_info.entity_id  = topic_info_.tid;
+    publication_info.host_name  = topic_info_.hname;
+    publication_info.process_id = topic_info_.pid;
+    if (!CheckMessageClock(publication_info, clock_))
     {
       // we will not process that message
       return(0);
@@ -788,10 +782,9 @@ namespace eCAL
     if (m_event_id_callback)
     {
       SSubEventCallbackData data;
-      data.type  = type_;
-      data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-      data.clock = 0;
-      data.tdatatype = data_type_info_;
+      data.event_type         = type_;
+      data.event_time         = eCAL::Time::GetMicroSeconds();
+      data.publisher_datatype = data_type_info_;
 
       Registration::STopicId topic_id;
       topic_id.topic_id.entity_id  = publication_info_.entity_id;
@@ -812,7 +805,7 @@ namespace eCAL
       {
         v5::SSubEventCallbackData data;
         data.type      = type_;
-        data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+        data.time      = eCAL::Time::GetMicroSeconds();
         data.clock     = 0;
         data.tid       = std::to_string(publication_info_.entity_id);
         data.tdatatype = data_type_info_;
@@ -828,14 +821,14 @@ namespace eCAL
     FireEvent(eSubscriberEvent::connected, publication_info_, data_type_info_);
   }
 
-  void CSubscriberImpl::FireUpdateEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
-  {
-    FireEvent(eSubscriberEvent::update_connection, publication_info_, data_type_info_);
-  }
-
   void CSubscriberImpl::FireDisconnectEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
   {
     FireEvent(eSubscriberEvent::disconnected, publication_info_, data_type_info_);
+  }
+
+  void CSubscriberImpl::FireDroppedEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
+  {
+    FireEvent(eSubscriberEvent::dropped, publication_info_, data_type_info_);
   }
 
   size_t CSubscriberImpl::GetConnectionCount()
@@ -852,14 +845,14 @@ namespace eCAL
     return count;
   }
 
-  bool CSubscriberImpl::CheckMessageClock(const Registration::EntityIdT& tid_, long long current_clock_)
+  bool CSubscriberImpl::CheckMessageClock(const SPublicationInfo& publication_info_, long long current_clock_)
   {
-    auto iter = m_writer_counter_map.find(tid_);
+    auto iter = m_writer_counter_map.find(publication_info_.entity_id);
     
     // initial entry
     if (iter == m_writer_counter_map.end())
     {
-      m_writer_counter_map[tid_] = current_clock_;
+      m_writer_counter_map[publication_info_.entity_id] = current_clock_;
       return true;
     }
     // clock entry exists
@@ -906,37 +899,11 @@ namespace eCAL
         msg += "\')";
         Logging::Log(log_level_warning, msg);
 #endif
-        // new event handling with topic id
-        if (m_event_id_callback)
-        {
-          SSubEventCallbackData data;
-          data.type  = eSubscriberEvent::dropped;
-          data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-          data.clock = current_clock_;
 
-          Registration::STopicId topic_id;
-          topic_id.topic_name = m_attributes.topic_name;
-          const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
-
-          // call event callback
-          m_event_id_callback(topic_id, data);
-        }
-
-        // deprecated event handling with topic name
-        {
-          const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
-          auto citer = m_event_callback_map.find(eSubscriberEvent::dropped);
-          if (citer != m_event_callback_map.end() && citer->second)
-          {
-            v5::SSubEventCallbackData data;
-            data.type  = eSubscriberEvent::dropped;
-            data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-            data.clock = current_clock_;
-
-            // call event callback
-            (citer->second)(m_attributes.topic_name.c_str(), &data);
-          }
-        }
+        // fire dropped event
+        // we do not know the data type of the dropped message here
+        // so we use an empty data type information
+        FireDroppedEvent(publication_info_, SDataTypeInformation());
 
         // increase the drop counter
         m_message_drops += clock_difference;
