@@ -552,7 +552,7 @@ set(ecal_sources
     ${ecal_header_msg}
 )
 
-ecal_add_ecal_shared_library(${PROJECT_NAME}
+ecal_add_shared_library(${PROJECT_NAME}
     ${ecal_sources}
     ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h
 )
@@ -674,7 +674,7 @@ target_link_libraries(${PROJECT_NAME}
 
 set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER core)
 
-ecal_install_ecal_shared_library(${PROJECT_NAME})
+ecal_install_shared_library(${PROJECT_NAME})
 
 install(DIRECTORY
    "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk

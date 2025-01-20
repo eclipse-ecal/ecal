@@ -116,34 +116,6 @@ function(ecal_add_time_plugin TARGET_NAME)
   )
 endfunction()
 
-# this appends the 64 / 32 suffix (required for the eCAL Core libraries)
-function(ecal_add_ecal_shared_library TARGET_NAME)
-  add_library(${TARGET_NAME} SHARED ${ARGN})
-  set_target_properties(${TARGET_NAME} PROPERTIES
-    VERSION ${eCAL_VERSION_STRING}
-    SOVERSION ${eCAL_VERSION_MAJOR}
-    OUTPUT_NAME ecal_${TARGET_NAME})
-endfunction()
-
-# this appends the 64 / 32 suffix (required for the eCAL Core libraries)
-function(ecal_add_ecal_static_library TARGET_NAME)
-  add_library(${TARGET_NAME} STATIC ${ARGN})
-  set_target_properties(${TARGET_NAME} PROPERTIES
-    VERSION ${eCAL_VERSION_STRING}
-    SOVERSION ${eCAL_VERSION_MAJOR}
-    OUTPUT_NAME ecal_${TARGET_NAME}
-    POSITION_INDEPENDENT_CODE ON)
-endfunction()
-
-# this appends the 64 / 32 suffix (required for the eCAL Core libraries)
-function(ecal_add_ecal_library TARGET_NAME)
-  if(BUILD_SHARED_LIBS)
-    ecal_add_ecal_shared_library(${TARGET_NAME} ${ARGN})
-  else()
-    ecal_add_ecal_static_library(${TARGET_NAME} ${ARGN})
-  endif()
-endfunction()
-
 function(ecal_add_shared_library TARGET_NAME)
   add_library(${TARGET_NAME} SHARED ${ARGN})
   set_target_properties(${TARGET_NAME} PROPERTIES
@@ -154,11 +126,12 @@ endfunction()
 
 function(ecal_add_static_library TARGET_NAME)
   add_library(${TARGET_NAME} STATIC ${ARGN})
-  set_property(TARGET ${TARGET_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
   set_target_properties(${TARGET_NAME} PROPERTIES 
     VERSION ${eCAL_VERSION_STRING}
     SOVERSION ${eCAL_VERSION_MAJOR}
-    OUTPUT_NAME ecal_${TARGET_NAME})
+    OUTPUT_NAME ecal_${TARGET_NAME}
+    POSITION_INDEPENDENT_CODE ON
+  )
 endfunction()
 
 function(ecal_add_interface_library TARGET_NAME)
