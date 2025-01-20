@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ namespace eCAL
       return g_descgate()->GetPublisherInfo(id_, topic_info_);
     }
 
-    CallbackToken AddPublisherEventCallback(const TopicIDCallbackT& callback_)
+    CallbackToken AddPublisherEventCallback(const TopicEventCallbackT& callback_)
     {
       if (g_descgate() == nullptr) return CallbackToken();
       return g_descgate()->AddPublisherEventCallback(callback_);
@@ -70,7 +70,7 @@ namespace eCAL
       return g_descgate()->GetSubscriberInfo(id_, topic_info_);
     }
 
-    ECAL_API CallbackToken AddSubscriberEventCallback(const TopicIDCallbackT& callback_)
+    ECAL_API CallbackToken AddSubscriberEventCallback(const TopicEventCallbackT& callback_)
     {
       if (g_descgate() == nullptr) return CallbackToken();
       return g_descgate()->AddSubscriberEventCallback(callback_);
