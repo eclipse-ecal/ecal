@@ -285,14 +285,14 @@ TEST(core_cpp_descgate, ServiceExpiration)
   {
     desc_gate.ApplySample(CreateService("service1", 1), eCAL::tl_none);
 
-    EXPECT_EQ(1, desc_gate.GetServiceIDs().size());
+    EXPECT_EQ(1, desc_gate.GetServerIDs().size());
   }
 
   // now let the sample expire
   desc_gate.ApplySample(DestroyService("service1", 1), eCAL::tl_none);
 
   // sample should be expired
-  EXPECT_EQ(0, desc_gate.GetServiceIDs().size());
+  EXPECT_EQ(0, desc_gate.GetServerIDs().size());
 }
 
 TEST(core_cpp_descgate, ManyService)
@@ -307,7 +307,7 @@ TEST(core_cpp_descgate, ManyService)
   }
 
   // map should contain num_service samples
-  EXPECT_EQ(num_service, desc_gate.GetServiceIDs().size());
+  EXPECT_EQ(num_service, desc_gate.GetServerIDs().size());
 
   // now let the samples expire
   for (auto service = 0; service < num_service; ++service)
@@ -317,7 +317,7 @@ TEST(core_cpp_descgate, ManyService)
   }
 
   // samples should be expired
-  EXPECT_EQ(0, desc_gate.GetServiceIDs().size());
+  EXPECT_EQ(0, desc_gate.GetServerIDs().size());
 }
 
 TEST(core_cpp_descgate, ClientExpiration)

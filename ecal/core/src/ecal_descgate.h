@@ -60,8 +60,8 @@ namespace eCAL
     void RemSubscriberEventCallback(Registration::CallbackToken token_);
 
     // get service information
-    std::set<Registration::SServiceMethodId> GetServiceIDs() const;
-    bool GetServiceInfo(const Registration::SServiceMethodId& id_, SServiceMethodInformation& service_info_) const;
+    std::set<Registration::SServiceMethodId> GetServerIDs() const;
+    bool GetServerInfo(const Registration::SServiceMethodId& id_, SServiceMethodInformation& service_info_) const;
 
     // get client information
     std::set<Registration::SServiceMethodId> GetClientIDs() const;
@@ -100,7 +100,7 @@ namespace eCAL
     static std::set<Registration::STopicId>   GetTopicIDs(const STopicIdInfoMap& topic_info_map_);
     static bool                               GetTopic   (const Registration::STopicId& id_, const STopicIdInfoMap& topic_info_map_, SDataTypeInformation& topic_info_);
 
-    static std::set<Registration::SServiceMethodId> GetServiceIDs(const SServiceIdInfoMap& service_method_info_map_);
+    static std::set<Registration::SServiceMethodId> GetServerIDs(const SServiceIdInfoMap& service_method_info_map_);
     static bool                                     GetService   (const Registration::SServiceMethodId& id_, const SServiceIdInfoMap& service_method_info_map_, SServiceMethodInformation& service_method_info_);
 
     static void ApplyTopicDescription(STopicIdInfoMap& topic_info_map_,

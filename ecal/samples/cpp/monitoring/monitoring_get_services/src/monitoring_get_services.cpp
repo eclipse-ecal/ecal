@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ int main()
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        service_method_id_set = eCAL::Registration::GetServiceIDs();
+        service_method_id_set = eCAL::Registration::GetServerIDs();
       }
 
       auto num_services = service_method_id_set.size();

@@ -82,16 +82,16 @@ namespace eCAL
       return g_descgate()->RemSubscriberEventCallback(token_);
     }
 
-    std::set<SServiceMethodId> GetServiceIDs()
+    std::set<SServiceMethodId> GetServerIDs()
     {
       if (g_descgate() == nullptr) return std::set<SServiceMethodId>();
-      return g_descgate()->GetServiceIDs();
+      return g_descgate()->GetServerIDs();
     }
 
-    bool GetServiceInfo(const SServiceMethodId& id_, SServiceMethodInformation& service_info_)
+    bool GetServerInfo(const SServiceMethodId& id_, SServiceMethodInformation& service_info_)
     {
       if (g_descgate() == nullptr) return false;
-      return g_descgate()->GetServiceInfo(id_, service_info_);
+      return g_descgate()->GetServerInfo(id_, service_info_);
     }
 
     std::set<SServiceMethodId> GetClientIDs()
@@ -128,7 +128,7 @@ namespace eCAL
       service_method_names_.clear();
 
       // get services id set and insert names into the service_method_names set
-      const std::set<SServiceMethodId> service_id_set = GetServiceIDs();
+      const std::set<SServiceMethodId> service_id_set = GetServerIDs();
       for (const auto& service_id : service_id_set)
       {
         service_method_names_.insert({ service_id.service_name, service_id.method_name });

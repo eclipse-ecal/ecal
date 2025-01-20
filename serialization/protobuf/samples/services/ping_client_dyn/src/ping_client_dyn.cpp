@@ -51,14 +51,14 @@ int main()
   std::string req_desc;
   std::string resp_type;
   std::string resp_desc;
-  auto service_ids = eCAL::Registration::GetServiceIDs();
+  auto service_ids = eCAL::Registration::GetServerIDs();
   bool service_info_found(false);
   for (const auto& service_id : service_ids)
   {
     if ((service_id.service_name == service_name) && (service_id.method_name == method_name))
     {
       eCAL::SServiceMethodInformation service_method_info;
-      eCAL::Registration::GetServiceInfo(service_id, service_method_info);
+      eCAL::Registration::GetServerInfo(service_id, service_method_info);
       req_type  = service_method_info.request_type.name;
       req_desc  = service_method_info.request_type.descriptor;
       resp_type = service_method_info.response_type.name;

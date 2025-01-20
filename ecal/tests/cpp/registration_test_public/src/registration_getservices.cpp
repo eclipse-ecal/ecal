@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ TEST_P(ServicesTestFixture, ServiceExpiration)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get all services
-    id_set = eCAL::Registration::GetServiceIDs();
+    id_set = eCAL::Registration::GetServerIDs();
 
     // check size
     EXPECT_EQ(id_set.size(), 1);
@@ -86,7 +86,7 @@ TEST_P(ServicesTestFixture, ServiceExpiration)
     eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // get all services again, service should not be expired
-    id_set = eCAL::Registration::GetServiceIDs();
+    id_set = eCAL::Registration::GetServerIDs();
 
     // check size
     EXPECT_EQ(id_set.size(), 1);
@@ -97,7 +97,7 @@ TEST_P(ServicesTestFixture, ServiceExpiration)
 
   // get all services again, all services
   // should be removed from the map
-  id_set = eCAL::Registration::GetServiceIDs();
+  id_set = eCAL::Registration::GetServerIDs();
 
   // check size
   EXPECT_EQ(id_set.size(), 0);
@@ -122,12 +122,12 @@ TEST_P(ServicesTestFixture, GetServiceIDs)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get server
-    auto id_set = eCAL::Registration::GetServiceIDs();
+    auto id_set = eCAL::Registration::GetServerIDs();
     EXPECT_EQ(1, id_set.size());
     if (id_set.size() > 0)
     {
       eCAL::SServiceMethodInformation info;
-      EXPECT_TRUE(eCAL::Registration::GetServiceInfo(*id_set.begin(), info));
+      EXPECT_TRUE(eCAL::Registration::GetServerInfo(*id_set.begin(), info));
 
       // check service/method names
       EXPECT_EQ(service_method_info, info);

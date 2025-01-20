@@ -129,14 +129,14 @@ namespace eCAL
      *
      * @return Set of service id's.
     **/
-    ECAL_API std::set<SServiceMethodId> GetServiceIDs();
+    ECAL_API std::set<SServiceMethodId> GetServerIDs();
 
     /**
      * @brief Get service method information with quality for specific service.
      *
      * @return True if information could be queried.
     **/
-    ECAL_API bool GetServiceInfo(const SServiceMethodId& id_, SServiceMethodInformation& service_method_info_);
+    ECAL_API bool GetServerInfo(const SServiceMethodId& id_, SServiceMethodInformation& service_method_info_);
 
     /**
      * @brief Get complete snapshot of all known clients.
