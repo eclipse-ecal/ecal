@@ -31,7 +31,7 @@ namespace eCAL
     // common
     /////////////////////////////////////
     
-    std::string       GetLoadedEcalIniPath                 () { return GetConfiguration().GetYamlFilePath(); }
+    std::string       GetLoadedEcalIniPath                 () { return GetConfiguration().GetConfigurationFilePath(); }
     int               GetRegistrationTimeoutMs             () { return GetConfiguration().registration.registration_timeout; }
     int               GetRegistrationRefreshMs             () { return GetConfiguration().registration.registration_refresh; }
 

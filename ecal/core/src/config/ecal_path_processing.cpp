@@ -30,6 +30,7 @@
 #include "ecal/ecal_util.h"
 #include "util/getenvvar.h"
 
+#include <fstream>
 #include <vector>
 
 // for cwd
@@ -230,6 +231,30 @@ namespace eCAL
       return {};
     }
 
+    bool DirManager::canWriteToDirectory(const std::string& path_) const 
+    {
+      const std::string testFilePath = path_ + "/test_file.txt";
+      std::ofstream testFile(testFilePath);
+      
+      if (testFile)
+      {
+        testFile.close();
+        std::remove(testFilePath.c_str());
+        return true;
+      } 
+      else 
+      {
+        return false;
+      }
+    }
+
+    // returns the directory path of the specified file
+    std::string DirManager::getDirectoryPath(const std::string& file_path_) const
+    {
+      const size_t pos = file_path_.find_last_of("/\\");
+      return (std::string::npos == pos) ? "" : file_path_.substr(0, pos);
+    }
+
     // return a unique temporary folder name
     // the folder is created and the name is returned
     // returns an empty string if the folder could not be created
@@ -314,28 +339,20 @@ namespace eCAL
   {
     std::string GeteCALLogDirImpl(const Util::IDirProvider& dir_provider_ /* = Util::DirProvider() */, const Util::IDirManager& dir_manager_ /* = Util::DirManager() */, const eCAL::Configuration& config_ /* = eCAL::GetConfiguration() */)
     {
-      const std::string local_user_dir = dir_provider_.eCALLocalUserDir();
-      const std::string data_system_path = dir_provider_.eCALDataSystemDir(dir_manager_);
+      const std::string config_file_dir = dir_manager_.getDirectoryPath(eCAL::GetConfiguration().GetConfigurationFilePath());
+      
       const std::vector<std::string> log_paths = {
         dir_provider_.eCALEnvVar(ECAL_LOG_VAR),
         dir_provider_.eCALEnvVar(ECAL_DATA_VAR),
         config_.logging.provider.file_config.path,
-        buildPath(local_user_dir, ECAL_FOLDER_NAME_LOG),
-        buildPath(data_system_path, ECAL_FOLDER_NAME_LOG)
+        config_file_dir
       };
 
       for (const auto& path : log_paths)
       {
-        if (!path.empty())
+        if (!path.empty() && dir_manager_.dirExists(path) && dir_manager_.canWriteToDirectory(path))
         {
-          if (dir_manager_.dirExists(path))
-          {
-            return path;
-          }
-          else
-          {
-            std::cout << "[eCAL] Log path does not exist: " << path << "\n";
-          }
+          return path;
         }
       }
       
