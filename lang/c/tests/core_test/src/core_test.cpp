@@ -22,6 +22,8 @@
 #include <ecal/ecal_defs.h>
 #include <ecal/ecal_os.h>
 
+#include <ecal_utils/filesystem.h>
+
 #include <cstring>
 
 #include <gtest/gtest.h>
@@ -83,33 +85,6 @@ TEST(core_c_core, MultipleInitializeFinalize)
   }
 }
 
-namespace
-{
-  std::string extractProcessName(const std::string& full_path_)
-  {
-    // initialize process name with full path
-    std::string processName = full_path_;
-
-    // extract the substring after the last separator
-    size_t lastSeparatorPos = full_path_.find_last_of("\\/");
-    if (lastSeparatorPos != std::string::npos)
-    {
-      processName = full_path_.substr(lastSeparatorPos + 1);
-    }
-
-#ifdef ECAL_OS_WINDOWS
-    // remove the file extension if found
-    size_t lastDotPos = processName.find_last_of('.');
-    if (lastDotPos != std::string::npos)
-    {
-      processName = processName.substr(0, lastDotPos);
-    }
-#endif // ECAL_OS_WINDOWS
-
-    return processName;
-  }
-}
-
 TEST(core_c_core, GetUnitName)
 {
   // initialize eCAL API with empty unit name (eCAL will use process name as unit name)
@@ -121,7 +96,7 @@ TEST(core_c_core, GetUnitName)
   // if we call eCAL_Initialize with empty unit name, eCAL will use the process name as unit name
   char process_name[1024] = { 0 };
   eCAL_Process_GetProcessName(process_name, sizeof(process_name));
-  std::string process_name_s = extractProcessName(process_name);
+  std::string process_name_s = EcalUtils::Filesystem::BaseName(process_name);
   char unit_name[1024] = { 0 };
   eCAL_Process_GetUnitName(unit_name, sizeof(unit_name));
   EXPECT_STREQ(process_name_s.c_str(), unit_name);
