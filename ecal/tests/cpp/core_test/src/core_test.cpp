@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,14 +120,6 @@ TEST(core_cpp_core, SetGetUnitName)
   // if we call eCAL_Initialize with empty unit name, eCAL will use the process name as unit name
   std::string process_name = extractProcessName(eCAL::Process::GetProcessName());
   EXPECT_STREQ(process_name.c_str(), eCAL::Process::GetUnitName().c_str());
-
-  // set unit name (should change the name to 'unit name')
-  EXPECT_EQ(true, eCAL::SetUnitName("unit name"));
-  EXPECT_STREQ("unit name", eCAL::Process::GetUnitName().c_str());
-
-  // set empty unit name (should not change the unit name)
-  EXPECT_EQ(false, eCAL::SetUnitName(""));
-  EXPECT_STREQ("unit name", eCAL::Process::GetUnitName().c_str());
 
   // finalize eCAL API we expect return value 0 because it will be finalized
   EXPECT_EQ(true, eCAL::Finalize());

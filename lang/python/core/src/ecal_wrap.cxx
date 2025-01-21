@@ -117,19 +117,6 @@ PyObject* is_initialized(PyObject* /*self*/, PyObject* /*args*/)
 }
 
 /****************************************/
-/*      set_unit_name                   */
-/****************************************/
-PyObject* set_unit_name(PyObject* /*self*/, PyObject* args)
-{
-  char* unit_name = nullptr;
-
-  if (!PyArg_ParseTuple(args, "s", &unit_name))
-    return nullptr;
-
-  return(Py_BuildValue("i", ecal_set_unit_name(unit_name)));
-}
-
-/****************************************/
 /*      getversion                      */
 /****************************************/
 PyObject* getversion(PyObject* /*self*/, PyObject* /*args*/)
@@ -1290,7 +1277,6 @@ static PyMethodDef _ecal_methods[] =
   {"initialize",                    initialize,                    METH_VARARGS,  "initialize(unit_name)"},
   {"finalize",                      finalize,                      METH_NOARGS,   "finalize()"},
   {"is_initialized",                is_initialized,                METH_NOARGS,   "is_initialized()"},
-  {"set_unit_name",                 set_unit_name,                 METH_VARARGS,  "set_unit_name(unit_name)"},
 
   {"getversion",                    getversion,                    METH_NOARGS,   "getversion()"},
   {"getversion_components",         getversion_components,         METH_NOARGS,   "getversion_components()"},

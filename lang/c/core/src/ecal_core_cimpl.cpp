@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,12 +46,6 @@ extern "C"
   {
     const std::string unit_name = (unit_name_ != nullptr) ? std::string(unit_name_) : std::string("");
     return static_cast<int>(!eCAL::Initialize(unit_name, components_));
-  }
-
-  ECALC_API int eCAL_SetUnitName(const char* unit_name_)
-  {
-    const std::string unit_name = (unit_name_ != nullptr) ? std::string(unit_name_) : std::string("");
-    return static_cast<int>(!eCAL::SetUnitName(unit_name));
   }
 
   ECALC_API int eCAL_Finalize()

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,7 +110,7 @@ namespace
   }
 }
 
-TEST(core_c_core, SetGetUnitName)
+TEST(core_c_core, GetUnitName)
 {
   // initialize eCAL API with empty unit name (eCAL will use process name as unit name)
   EXPECT_EQ(0, eCAL_Initialize("", 0));
@@ -125,24 +125,6 @@ TEST(core_c_core, SetGetUnitName)
   char unit_name[1024] = { 0 };
   eCAL_Process_GetUnitName(unit_name, sizeof(unit_name));
   EXPECT_STREQ(process_name_s.c_str(), unit_name);
-
-  // set unit name (should change the name to 'unit name')
-  EXPECT_EQ(0, eCAL_SetUnitName("unit name"));
-  memset(unit_name, 0, sizeof(unit_name));
-  eCAL_Process_GetUnitName(unit_name, sizeof(unit_name));
-  EXPECT_STREQ("unit name", unit_name);
-
-  // set nullptr unit name (should not change the unit name)
-  EXPECT_EQ(1, eCAL_SetUnitName(nullptr));
-  memset(unit_name, 0, sizeof(unit_name));
-  eCAL_Process_GetUnitName(unit_name, sizeof(unit_name));
-  EXPECT_STREQ("unit name", unit_name);
-
-  // set empty unit name (should not change the unit name)
-  EXPECT_EQ(1, eCAL_SetUnitName(""));
-  memset(unit_name, 0, sizeof(unit_name));
-  eCAL_Process_GetUnitName(unit_name, sizeof(unit_name));
-  EXPECT_STREQ("unit name", unit_name);
 
   // finalize eCAL API we expect return value 0 because it will be finalized
   EXPECT_EQ(0, eCAL_Finalize());
