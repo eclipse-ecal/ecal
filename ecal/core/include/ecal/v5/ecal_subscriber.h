@@ -24,9 +24,11 @@
 
 #pragma once
 
+#include <ecal/ecal_namespace.h>
+
 #include <cstddef>
 #include <ecal/ecal_callback.h>
-#include <ecal/ecal_callback_v5.h>
+#include <ecal/v5/ecal_callback.h>
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_config.h>
@@ -40,7 +42,7 @@ namespace eCAL
 {
   class CSubscriberImpl;
 
-  namespace v5
+  ECAL_CORE_NAMESPACE_V5
   {
     /**
      * @brief eCAL subscriber class.

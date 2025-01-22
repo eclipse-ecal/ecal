@@ -401,7 +401,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CPublisherImpl::SetEventCallback(const PubEventCallbackT callback_)
+  bool CPublisherImpl::SetEventCallback(const v6::PubEventCallbackT callback_)
   {
     if (!m_created) return false;
 
@@ -728,7 +728,7 @@ namespace eCAL
     // new event handling with topic id
     if(m_event_id_callback)
     {
-      SPubEventCallbackData data;
+      v6::SPubEventCallbackData data;
       data.event_type          = type_;
       data.event_time          = eCAL::Time::GetMicroSeconds();
       data.subscriber_datatype = data_type_info_;

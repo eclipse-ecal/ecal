@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_deprecate.h>
+#include <ecal/ecal_namespace.h>
 #include <ecal/ecal_types.h>
 
 #include <functional>
@@ -130,7 +131,7 @@ namespace eCAL
   **/
   using TimerCallbackT = std::function<void()>;
 
-  inline namespace v6
+  ECAL_CORE_NAMESPACE_V6
   {
     /**
      * @brief Receive callback function type with topic id and data struct. The topic id contains the topic name, the process

@@ -24,6 +24,8 @@
 
 #pragma once
 
+#include <ecal/ecal_namespace.h>
+
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_types.h>
@@ -33,7 +35,7 @@
 
 namespace eCAL
 {
-  namespace v5
+  ECAL_CORE_NAMESPACE_V5
   {
     /**
    * @brief eCAL publisher event callback struct.

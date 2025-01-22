@@ -33,20 +33,22 @@
 
 namespace eCAL
 {
-  // Factory method to create a new instance of CServiceServerImpl
-  std::shared_ptr<CServiceServerImpl> CServiceServerImpl::CreateInstance(
-    const std::string& service_name_, const ServerEventCallbackT& event_callback_)
+  ECAL_CORE_NAMESPACE_V6
   {
-#ifndef NDEBUG
-    Logging::Log(Logging::log_level_debug2, "CServiceServerImpl::CreateInstance: Creating instance of CServiceServerImpl for service: " + service_name_);
-#endif
-    auto instance = std::shared_ptr<CServiceServerImpl>(new CServiceServerImpl(service_name_, event_callback_));
-    if (instance != nullptr)
+    // Factory method to create a new instance of CServiceServerImpl
+    std::shared_ptr<CServiceServerImpl> CServiceServerImpl::CreateInstance(
+      const std::string & service_name_, const ServerEventCallbackT & event_callback_)
     {
-      instance->Start();
+  #ifndef NDEBUG
+      Logging::Log(Logging::log_level_debug2, "CServiceServerImpl::CreateInstance: Creating instance of CServiceServerImpl for service: " + service_name_);
+  #endif
+      auto instance = std::shared_ptr<CServiceServerImpl>(new CServiceServerImpl(service_name_, event_callback_));
+      if (instance != nullptr)
+      {
+        instance->Start();
+      }
+      return instance;
     }
-    return instance;
-  }
 
   // Constructor
   CServiceServerImpl::CServiceServerImpl(const std::string& service_name_, const ServerEventCallbackT& event_callback_)
@@ -66,7 +68,7 @@ namespace eCAL
     Stop();
   }
 
-  bool CServiceServerImpl::SetMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_)
+  bool CServiceServerImpl::SetMethodCallback(const std::string & method_, const SServiceMethodInformation & method_info_, const MethodInfoCallbackT & callback_)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug1, "CServiceServerImpl::SetMethodCallback: Adding method callback for method: " + method_);
@@ -80,14 +82,14 @@ namespace eCAL
 
 #if 0 // this is how it should look like if we do not use the old type and descriptor fields
       // update data type and callback
-      iter->second.method.req_datatype  = method_info_.request_type;
+      iter->second.method.req_datatype = method_info_.request_type;
       iter->second.method.resp_datatype = method_info_.response_type;
-      iter->second.callback             = callback_;
+      iter->second.callback = callback_;
 #else
       /////////////////////////////////////////////
       // old types and descriptors
       /////////////////////////////////////////////
-      iter->second.method.req_type  = method_info_.request_type.name;
+      iter->second.method.req_type = method_info_.request_type.name;
       iter->second.method.resp_type = method_info_.response_type.name;
 
       // we need to check these fields, because the v5 implementation is using SetMethodCallback with partially filled fields
@@ -97,7 +99,7 @@ namespace eCAL
       /////////////////////////////////////////////
       // new types, encodings and descriptors
       /////////////////////////////////////////////
-      iter->second.method.req_datatype.name  = method_info_.request_type.name;
+      iter->second.method.req_datatype.name = method_info_.request_type.name;
       iter->second.method.resp_datatype.name = method_info_.response_type.name;
 
       // we need to check these fields, because the v5 implementation is using SetMethodCallback with partially filled fields
@@ -124,15 +126,15 @@ namespace eCAL
 
 #if 0 // this is how it should look like if we do not use the old type and descriptor fields
       // set data type and callback
-      method.method.req_datatype  = method_info_.request_type;
+      method.method.req_datatype = method_info_.request_type;
       method.method.resp_datatype = method_info_.response_type;
-      method.callback             = callback_;
+      method.callback = callback_;
 #else
 #endif
       /////////////////////////////////////////////
       // old types and descriptors
       /////////////////////////////////////////////
-      method.method.req_type  = method_info_.request_type.name;
+      method.method.req_type = method_info_.request_type.name;
       method.method.resp_type = method_info_.response_type.name;
 
       // we need to check these fields, because the v5 implementation is using SetMethodCallback with partially filled fields
@@ -142,7 +144,7 @@ namespace eCAL
       /////////////////////////////////////////////
       // new types, encodings and descriptors
       /////////////////////////////////////////////
-      method.method.req_datatype.name  = method_info_.request_type.name;
+      method.method.req_datatype.name = method_info_.request_type.name;
       method.method.resp_datatype.name = method_info_.response_type.name;
 
       // we need to check these fields, because the v5 implementation is using SetMethodCallback with partially filled fields
@@ -164,7 +166,7 @@ namespace eCAL
     return true;
   }
 
-  bool CServiceServerImpl::RemoveMethodCallback(const std::string& method_)
+  bool CServiceServerImpl::RemoveMethodCallback(const std::string & method_)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug1, "CServiceServerImpl::RemoveMethodCallback: Removing method callback for method: " + method_);
@@ -219,10 +221,10 @@ namespace eCAL
   {
     Registration::SServiceId service_id;
 
-    service_id.service_id.entity_id  = m_service_id;
+    service_id.service_id.entity_id = m_service_id;
     service_id.service_id.process_id = Process::GetProcessID();
-    service_id.service_id.host_name  = Process::GetHostName();
-    service_id.service_name          = m_service_name;
+    service_id.service_id.host_name = Process::GetHostName();
+    service_id.service_name = m_service_name;
 
     return service_id;
   }
@@ -262,7 +264,7 @@ namespace eCAL
         if (auto me = weak_me.lock())
         {
           Registration::SServiceId service_id;
-          service_id.service_name         = me->m_service_name;
+          service_id.service_name = me->m_service_name;
           service_id.service_id.entity_id = me->m_service_id;
           // TODO: Also fill process ID and hostname?
           me->NotifyEventCallback(service_id, event == eCAL::service::ServerEventType::Connected
@@ -352,15 +354,15 @@ namespace eCAL
     if (server_tcp_port == 0) return ecal_reg_sample;
 
     auto& identifier = ecal_reg_sample.identifier;
-    identifier.entity_id  = m_service_id;
+    identifier.entity_id = m_service_id;
     identifier.process_id = Process::GetProcessID();
-    identifier.host_name  = Process::GetHostName();
+    identifier.host_name = Process::GetHostName();
 
     auto& service = ecal_reg_sample.service;
-    service.version     = m_server_version;
-    service.pname       = Process::GetProcessName();
-    service.uname       = Process::GetUnitName();
-    service.sname       = m_service_name;
+    service.version = m_server_version;
+    service.pname = Process::GetProcessName();
+    service.uname = Process::GetUnitName();
+    service.sname = m_service_name;
     service.tcp_port_v0 = 0;
     service.tcp_port_v1 = server_tcp_port;
 
@@ -372,13 +374,13 @@ namespace eCAL
         method.mname = iter.first;
 
         // old type and descriptor fields
-        method.req_type   = iter.second.method.req_type;
-        method.req_desc   = iter.second.method.req_desc;
-        method.resp_type  = iter.second.method.resp_type;
-        method.resp_desc  = iter.second.method.resp_desc;
+        method.req_type = iter.second.method.req_type;
+        method.req_desc = iter.second.method.req_desc;
+        method.resp_type = iter.second.method.resp_type;
+        method.resp_desc = iter.second.method.resp_desc;
 
         // new type and descriptor fields
-        method.req_datatype  = iter.second.method.req_datatype;
+        method.req_datatype = iter.second.method.req_datatype;
         method.resp_datatype = iter.second.method.resp_datatype;
 
         method.call_count = iter.second.method.call_count;
@@ -395,20 +397,20 @@ namespace eCAL
     ecal_reg_sample.cmd_type = bct_unreg_service;
 
     auto& identifier = ecal_reg_sample.identifier;
-    identifier.entity_id  = m_service_id;
+    identifier.entity_id = m_service_id;
     identifier.process_id = Process::GetProcessID();
-    identifier.host_name  = Process::GetHostName();
+    identifier.host_name = Process::GetHostName();
 
     auto& service = ecal_reg_sample.service;
     service.version = m_server_version;
-    service.pname   = Process::GetProcessName();
-    service.uname   = Process::GetUnitName();
-    service.sname   = m_service_name;
+    service.pname = Process::GetProcessName();
+    service.uname = Process::GetUnitName();
+    service.sname = m_service_name;
 
     return ecal_reg_sample;
   }
 
-  int CServiceServerImpl::RequestCallback(const std::string& request_pb_, std::string& response_pb_)
+  int CServiceServerImpl::RequestCallback(const std::string & request_pb_, std::string & response_pb_)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, "CServiceServerImpl::RequestCallback: Processing request callback for: " + m_service_name);
@@ -419,7 +421,7 @@ namespace eCAL
     auto& response_header = response.header;
     response_header.hname = Process::GetHostName();
     response_header.sname = m_service_name;
-    response_header.sid   = std::to_string(m_service_id); // TODO: Service ID currently defined as string, should be integer as well
+    response_header.sid = std::to_string(m_service_id); // TODO: Service ID currently defined as string, should be integer as well
 
     // try to parse request
     Service::Request request;
@@ -494,7 +496,7 @@ namespace eCAL
     return 0;
   }
 
-  void CServiceServerImpl::NotifyEventCallback(const Registration::SServiceId& service_id_, eServerEvent event_type_, const std::string& /*message_*/)
+  void CServiceServerImpl::NotifyEventCallback(const Registration::SServiceId & service_id_, eServerEvent event_type_, const std::string& /*message_*/)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug1, "CServiceServerImpl::NotifyEventCallback: Notifying event callback for: " + m_service_name + " Event Type: " + to_string(event_type_));
@@ -507,5 +509,6 @@ namespace eCAL
     callback_data.type = event_type_;
     callback_data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
     m_event_callback(service_id_, callback_data);
+  }
   }
 }

@@ -29,7 +29,7 @@
 #include <mutex>
 #include <string>
 
-#include <ecal/ecal_subscriber_v5.h>
+#include <ecal/v5/ecal_subscriber.h>
 #include <ecal/ecal_util.h>
 
 namespace eCAL

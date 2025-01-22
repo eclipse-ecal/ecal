@@ -27,7 +27,7 @@
 
 namespace eCAL
 {
-  namespace v5
+  ECAL_CORE_NAMESPACE_V5
   {
     CServiceServerImpl::CServiceServerImpl()
       : m_service_server_impl(nullptr)
@@ -77,7 +77,7 @@ namespace eCAL
           }
         };
 
-      m_service_server_impl = std::make_shared<eCAL::CServiceServer>(service_name_, event_callback);
+      m_service_server_impl = std::make_shared<eCAL::v6::CServiceServer>(service_name_, event_callback);
       Logging::Log(Logging::log_level_debug1, "v5::CServiceServerImpl: Service server created with name: " + service_name_);
       return true;
     }

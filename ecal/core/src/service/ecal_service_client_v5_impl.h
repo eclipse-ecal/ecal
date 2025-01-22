@@ -24,9 +24,10 @@
 #pragma once
 
 #include <ecal/ecal_deprecate.h>
+#include <ecal/ecal_namespace.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_client.h>
-#include <ecal/ecal_callback_v5.h>
+#include <ecal/v5/ecal_callback.h>
 
 #include <map>
 #include <mutex>
@@ -35,7 +36,7 @@
 
 namespace eCAL
 {
-  namespace v5
+  ECAL_CORE_NAMESPACE_V5
   {
     /**
      * @brief Service client implementation class.
@@ -102,7 +103,7 @@ namespace eCAL
 
     private:
       // Pointer to the underlying service client implementation
-      std::shared_ptr<eCAL::CServiceClient> m_service_client_impl;
+      std::shared_ptr<eCAL::v6::CServiceClient> m_service_client_impl;
 
       // Host name filter for the service client
       std::string m_host_name;

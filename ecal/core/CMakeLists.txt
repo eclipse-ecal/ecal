@@ -61,6 +61,7 @@ if(UNIX)
   endif()
 endif()
 
+macro(add_ecal_core_library TARGET_NAME)
 ######################################
 # config
 ######################################
@@ -213,9 +214,9 @@ if(ECAL_CORE_PUBLISHER)
       src/pubsub/ecal_publisher.cpp
       src/pubsub/ecal_publisher_impl.cpp
       src/pubsub/ecal_publisher_impl.h
-      src/pubsub/ecal_publisher_v5.cpp
       src/pubsub/ecal_pubgate.cpp
       src/pubsub/ecal_pubgate.h
+      src/v5/pubsub/ecal_publisher.cpp
   )
 endif()
 
@@ -224,9 +225,9 @@ if(ECAL_CORE_SUBSCRIBER)
       src/pubsub/ecal_subscriber.cpp
       src/pubsub/ecal_subscriber_impl.cpp
       src/pubsub/ecal_subscriber_impl.h
-      src/pubsub/ecal_subscriber_v5.cpp
       src/pubsub/ecal_subgate.cpp
       src/pubsub/ecal_subgate.h
+      src/v5/pubsub/ecal_subscriber.cpp
   )
 endif()
 
@@ -533,10 +534,10 @@ set(ecal_header_cmn
     include/ecal/types/monitoring.h
     include/ecal/ecal.h
     include/ecal/ecal_callback.h
-    include/ecal/ecal_callback_v5.h
+    include/ecal/v5/ecal_callback.h
     include/ecal/ecal_client.h
     include/ecal/ecal_client_instance.h
-    include/ecal/ecal_client_v5.h
+    include/ecal/v5/ecal_client.h
     include/ecal/ecal_config.h
     include/ecal/ecal_core.h
     include/ecal/ecal_deprecate.h
@@ -546,16 +547,17 @@ set(ecal_header_cmn
     include/ecal/ecal_os.h
     include/ecal/ecal_payload_writer.h
     include/ecal/ecal_monitoring.h
+    include/ecal/ecal_namespace.h
     include/ecal/ecal_process.h
     include/ecal/ecal_process_severity.h
     include/ecal/ecal_registration.h
     include/ecal/ecal_publisher.h
-    include/ecal/ecal_publisher_v5.h
+    include/ecal/v5/ecal_publisher.h
     include/ecal/ecal_server.h
-    include/ecal/ecal_server_v5.h
+    include/ecal/v5/ecal_server.h
     include/ecal/ecal_service_info.h
     include/ecal/ecal_subscriber.h
-    include/ecal/ecal_subscriber_v5.h
+    include/ecal/v5/ecal_subscriber.h
     include/ecal/ecal_time.h
     include/ecal/ecal_timer.h
     include/ecal/ecal_tlayer.h
@@ -597,22 +599,22 @@ set(ecal_sources
     ${ecal_header_msg}
 )
 
-ecal_add_shared_library(${PROJECT_NAME}
+ecal_add_shared_library(${TARGET_NAME}
     ${ecal_sources}
     ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h
 )
 
 if (ECAL_CORE_CONFIGURATION)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE ECAL_CORE_CONFIGURATION)
+  target_compile_definitions(${TARGET_NAME} PRIVATE ECAL_CORE_CONFIGURATION)
 endif()
 
 if(UNIX)
   set_source_files_properties(src/util/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
-add_library(eCAL::${PROJECT_NAME}   ALIAS ${PROJECT_NAME})
+add_library(eCAL::${TARGET_NAME}   ALIAS ${TARGET_NAME})
 
-target_compile_definitions(${PROJECT_NAME}
+target_compile_definitions(${TARGET_NAME}
   PUBLIC
     ASIO_STANDALONE
     ASIO_DISABLE_VISIBILITY
@@ -626,7 +628,7 @@ target_compile_definitions(${PROJECT_NAME}
     ECAL_CORE_IMPORTS
 )
 
-set_target_properties(${PROJECT_NAME}
+set_target_properties(${TARGET_NAME}
   PROPERTIES 
     CXX_VISIBILITY_PRESET hidden
     C_VISIBILITY_PRESET hidden
@@ -651,45 +653,45 @@ set(ECAL_CORE_FEATURES
 
 foreach(CORE_FEATURE ${ECAL_CORE_FEATURES})
   if(${CORE_FEATURE})
-    target_compile_definitions(${PROJECT_NAME}
+    target_compile_definitions(${TARGET_NAME}
       PUBLIC ${CORE_FEATURE})
   endif()
 endforeach()
 
 if(ECAL_CORE_CONFIGURATION)
-  target_link_libraries(${PROJECT_NAME}
+  target_link_libraries(${TARGET_NAME}
     PRIVATE
       yaml-cpp::yaml-cpp
   )
 endif()
 
 if(ECAL_CORE_COMMAND_LINE)
-  target_link_libraries(${PROJECT_NAME}
+  target_link_libraries(${TARGET_NAME}
     PRIVATE
       tclap::tclap
   )
 endif()
 
 if(ECAL_CORE_SERVICE)
-  target_link_libraries(${PROJECT_NAME}
+  target_link_libraries(${TARGET_NAME}
     PRIVATE
       ecal_service
   )
 endif()
 
 if(ECAL_CORE_TRANSPORT_TCP)
-  target_link_libraries(${PROJECT_NAME}
+  target_link_libraries(${TARGET_NAME}
     PRIVATE
       tcp_pubsub::tcp_pubsub
   )
 endif()
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${TARGET_NAME}
   PRIVATE
     ecaludp::ecaludp
 )
 
-target_include_directories(${PROJECT_NAME}
+target_include_directories(${TARGET_NAME}
   PRIVATE 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/>
@@ -700,7 +702,7 @@ target_include_directories(${PROJECT_NAME}
     $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(${PROJECT_NAME} 
+target_link_libraries(${TARGET_NAME} 
   PRIVATE
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>
@@ -717,10 +719,40 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::ecal-utils
 )
 
-set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER core)
+set_property(TARGET ${TARGET_NAME}   PROPERTY FOLDER core)
 
-ecal_install_shared_library(${PROJECT_NAME})
+ecal_install_shared_library(${TARGET_NAME})
 
+if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
+  source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
+    ${ecal_sources}
+  )
+endif()
+
+endmacro()
+
+#######################################
+# We now create two libraries
+# One of them is a compatibility version that should facilitate easier migration.
+# ecal_core, ecal_core_v5.
+#######################################
+
+add_ecal_core_library(${PROJECT_NAME})
+target_compile_definitions(${PROJECT_NAME}
+  PUBLIC 
+    ECAL_CORE_V5_FUNCTIONALTIY=1
+)
+
+add_ecal_core_library(core_v5)
+target_compile_definitions(core_v5 
+  PUBLIC
+    ECAL_CORE_NAMESPACE_V5_INLINE=1
+    ECAL_CORE_V5_FUNCTIONALTIY=1
+)
+
+###
+## Iinstall header files only once...
+## 
 install(DIRECTORY
    "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
     FILES_MATCHING PATTERN "*.h")
@@ -729,12 +761,6 @@ install(DIRECTORY
 install(DIRECTORY
    "${CMAKE_CURRENT_BINARY_DIR}/include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
     FILES_MATCHING PATTERN "*.h")
-
-if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
-  source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
-    ${ecal_sources}
-  )
-endif()
 
 # eCAL process stub
 if(UNIX)
