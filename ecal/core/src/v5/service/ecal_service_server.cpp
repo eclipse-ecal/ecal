@@ -21,17 +21,17 @@
  * @brief  eCAL service server interface (deprecated eCAL5 version)
 **/
 
+#include <ecal/v5/ecal_server.h>
 #include <ecal/ecal.h>
-#include <ecal/ecal_server_v5.h>
 #include <string>
 
-#include "ecal_servicegate.h"
+#include "service/ecal_servicegate.h"
 #include "ecal_global_accessors.h"
-#include "ecal_service_server_v5_impl.h"
+#include "ecal_service_server_impl.h"
 
 namespace eCAL
 {
-  namespace v5
+  ECAL_CORE_NAMESPACE_V5
   {
     CServiceServer::CServiceServer()
       : m_service_server_impl(nullptr)

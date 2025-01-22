@@ -21,6 +21,7 @@
  * @brief  common eCAL data reader
 **/
 
+#include "ecal_subscriber_impl.h"
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_log.h>
 #include <ecal/ecal_process.h>
@@ -164,7 +165,7 @@ namespace eCAL
     return(false);
   }
 
-  bool CSubscriberImpl::SetReceiveCallback(ReceiveCallbackT callback_)
+  bool CSubscriberImpl::SetReceiveCallback(v6::ReceiveCallbackT callback_)
   {
     if (!m_created) return(false);
 
@@ -232,7 +233,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubscriberImpl::SetEventIDCallback(const SubEventCallbackT callback_)
+  bool CSubscriberImpl::SetEventIDCallback(const v6::SubEventCallbackT callback_)
   {
     if (!m_created) return false;
 
@@ -781,7 +782,7 @@ namespace eCAL
     // new event handling with topic id
     if (m_event_id_callback)
     {
-      SSubEventCallbackData data;
+      v6::SSubEventCallbackData data;
       data.event_type         = type_;
       data.event_time         = eCAL::Time::GetMicroSeconds();
       data.publisher_datatype = data_type_info_;

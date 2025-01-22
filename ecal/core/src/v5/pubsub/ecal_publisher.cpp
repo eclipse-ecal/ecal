@@ -22,13 +22,13 @@
 **/
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_publisher_v5.h>
+#include <ecal/v5/ecal_publisher.h>
 
 #include "ecal_globals.h"
-#include "ecal_publisher_impl.h"
+#include <pubsub/ecal_publisher_impl.h>
 #include "ecal_config_internal.h"
 
-#include "config/builder/writer_attribute_builder.h"
+#include <pubsub/config/builder/writer_attribute_builder.h>
 #include "readwrite/ecal_writer_buffer_payload.h"
 
 #include <iostream>
@@ -39,7 +39,7 @@
 
 namespace eCAL
 {
-  namespace v5
+  ECAL_CORE_NAMESPACE_V5
   {
     CPublisher::CPublisher() :
       m_publisher_impl(nullptr),

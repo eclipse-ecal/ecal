@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_deprecate.h>
+#include <ecal/ecal_namespace.h>
 #include <ecal/ecal_os.h>
 
 #include <ecal/ecal_callback.h>
@@ -40,7 +41,7 @@ namespace eCAL
 {
   class CServiceClientImpl;
 
-  inline namespace v6
+  ECAL_CORE_NAMESPACE_V6
   {
     /**
      * @brief Service client wrapper class.
@@ -157,7 +158,7 @@ namespace eCAL
         bool IsConnected() const;
 
     private:
-      std::shared_ptr<eCAL::CServiceClientImpl> m_service_client_impl;
+      std::shared_ptr<eCAL::v6::CServiceClientImpl> m_service_client_impl;
     };
   }
 }

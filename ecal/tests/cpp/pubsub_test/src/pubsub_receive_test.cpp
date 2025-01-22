@@ -18,8 +18,8 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_publisher_v5.h>
-#include <ecal/ecal_subscriber_v5.h>
+#include <ecal/v5/ecal_publisher.h>
+#include <ecal/v5/ecal_subscriber.h>
 
 #include <atomic>
 #include <chrono>

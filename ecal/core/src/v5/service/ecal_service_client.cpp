@@ -21,15 +21,17 @@
  * @brief  eCAL service client interface (deprecated eCAL5 version)
 **/
 
-#include <ecal/ecal.h>
-#include <ecal/ecal_client_v5.h>
-#include <ecal/ecal_service_info.h>
+#include "ecal_service_client_impl.h"
 
-#include "ecal_service_client_v5_impl.h"
+#include <ecal/ecal_namespace.h>
+
+#include <ecal/ecal.h>
+#include <ecal/v5/ecal_client.h>
+#include <ecal/ecal_service_info.h>
 
 namespace eCAL
 {
-  namespace v5
+  ECAL_CORE_NAMESPACE_V5
   {
     CServiceClient::CServiceClient()
       : m_service_client_impl(nullptr)

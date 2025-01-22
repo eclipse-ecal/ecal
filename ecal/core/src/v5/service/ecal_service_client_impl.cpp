@@ -21,7 +21,8 @@
  * @brief  eCAL service client implementation (deprecated eCAL5 version)
 **/
 
-#include "ecal_service_client_v5_impl.h"
+#include "ecal_service_client_impl.h"
+#include <ecal/ecal_namespace.h>
 #include <ecal/ecal_log.h>
 
 namespace
@@ -50,7 +51,7 @@ namespace
 
 namespace eCAL
 {
-  namespace v5
+  ECAL_CORE_NAMESPACE_V5
   {
     CServiceClientImpl::CServiceClientImpl()
       : m_service_client_impl(nullptr)
@@ -119,7 +120,7 @@ namespace eCAL
         };
 
       // Create the new service client implementation with the event callback
-      m_service_client_impl = std::make_shared<eCAL::CServiceClient>(
+      m_service_client_impl = std::make_shared<eCAL::v6::CServiceClient>(
         service_name_,
         method_information_map_,
         event_callback

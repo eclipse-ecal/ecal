@@ -18,15 +18,17 @@
 */
 
 /**
- * @file   ecal_server_v5.h
+ * @file   ecal_server.h
  * @brief  eCAL server interface (deprecated eCAL5 version)
 **/
 
 #pragma once
 
+#include <ecal/ecal_namespace.h>
+
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
-#include <ecal/ecal_callback_v5.h>
+#include <ecal/v5/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
 
 #include <memory>
@@ -35,7 +37,7 @@
 
 namespace eCAL
 {
-  namespace v5
+  ECAL_CORE_NAMESPACE_V5
   {
     class CServiceServerImpl;
 

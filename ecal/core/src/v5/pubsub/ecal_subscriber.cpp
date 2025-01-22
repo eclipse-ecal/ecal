@@ -21,13 +21,15 @@
  * @brief  common data subscriber for eCAL
 **/
 
+#include <ecal/ecal_namespace.h>
+
 #include <ecal/ecal.h>
-#include <ecal/ecal_subscriber_v5.h>
+#include <ecal/v5/ecal_subscriber.h>
 
 #include "ecal_globals.h"
-#include "ecal_subscriber_impl.h"
+#include <pubsub/ecal_subscriber_impl.h>
 
-#include "config/builder/reader_attribute_builder.h"
+#include <pubsub/config/builder/reader_attribute_builder.h>
 #include "ecal_config_internal.h"
 
 #include <iostream>
@@ -38,7 +40,7 @@
 
 namespace eCAL
 {
-  namespace v5
+  ECAL_CORE_NAMESPACE_V5
   {
     CSubscriber::CSubscriber() :
       m_subscriber_impl(nullptr)

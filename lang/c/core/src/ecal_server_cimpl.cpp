@@ -23,7 +23,7 @@
 **/
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_server_v5.h>
+#include <ecal/v5/ecal_server.h>
 #include <ecal/cimpl/ecal_server_cimpl.h>
 
 #include "ecal_common_cimpl.h"

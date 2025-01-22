@@ -24,16 +24,17 @@
 #pragma once
 
 #include <ecal/ecal_deprecate.h>
+#include <ecal/ecal_namespace.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_server.h>
-#include <ecal/ecal_callback_v5.h>
+#include <ecal/v5/ecal_callback.h>
 
 #include <mutex>
 #include <string>
 
 namespace eCAL
 {
-  namespace v5
+  ECAL_CORE_NAMESPACE_V5
   {
     class CServiceServerImpl
     {
@@ -64,7 +65,7 @@ namespace eCAL
 
     private:
       // Pointer to the underlying service server implementation
-      std::shared_ptr<eCAL::CServiceServer> m_service_server_impl;
+      std::shared_ptr<eCAL::v6::CServiceServer> m_service_server_impl;
 
       // Mutex and map for managing event callbacks
       std::mutex m_event_callback_map_mutex;

@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_deprecate.h>
+#include <ecal/ecal_namespace.h>
 #include <ecal/ecal_os.h>
 
 #include <ecal/ecal_callback.h>
@@ -36,10 +37,10 @@
 
 namespace eCAL
 {
-  class CServiceServerImpl;
-
-  inline namespace v6
+  ECAL_CORE_NAMESPACE_V6
   {
+    class CServiceServerImpl;
+
     /**
      * @brief Service Server wrapper class.
     **/

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <ecal/ecal_namespace.h>
 #include "ecal_def.h"
 #include "serialization/ecal_struct_sample_registration.h"
 
@@ -34,8 +35,14 @@
 
 namespace eCAL
 {
-  class CServiceServerImpl;
+  ECAL_CORE_NAMESPACE_V6
+  {
+    class CServiceServerImpl;
+  }
+}
 
+namespace eCAL
+{
   class CServiceGate
   {
   public:
@@ -45,15 +52,15 @@ namespace eCAL
     void Start();
     void Stop();
 
-    bool Register  (const std::string& service_name_, const std::shared_ptr<CServiceServerImpl>& server_);
-    bool Unregister(const std::string& service_name_, const std::shared_ptr<CServiceServerImpl>& server_);
+    bool Register  (const std::string& service_name_, const std::shared_ptr<eCAL::v6::CServiceServerImpl>& server_);
+    bool Unregister(const std::string& service_name_, const std::shared_ptr<eCAL::v6::CServiceServerImpl>& server_);
 
     void GetRegistrations(Registration::SampleList& reg_sample_list_);
 
   protected:
     static std::atomic<bool>      m_created;
 
-    using ServiceNameServiceImplMapT = std::multimap<std::string, std::shared_ptr<CServiceServerImpl>>;
+    using ServiceNameServiceImplMapT = std::multimap<std::string, std::shared_ptr<eCAL::v6::CServiceServerImpl>>;
     std::shared_timed_mutex       m_service_server_map_mutex;
     ServiceNameServiceImplMapT    m_service_server_map;
   };
