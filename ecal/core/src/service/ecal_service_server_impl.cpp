@@ -258,8 +258,8 @@ namespace eCAL
     }
 
     // Create callback functions
-    const eCAL::service::Server::EventCallbackT event_callback =
-      [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())](eCAL::service::ServerEventType event, const std::string& message)
+    const ecal_service::Server::EventCallbackT event_callback =
+      [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())](ecal_service::ServerEventType event, const std::string& message)
       {
         if (auto me = weak_me.lock())
         {
@@ -267,13 +267,13 @@ namespace eCAL
           service_id.service_name = me->m_service_name;
           service_id.service_id.entity_id = me->m_service_id;
           // TODO: Also fill process ID and hostname?
-          me->NotifyEventCallback(service_id, event == eCAL::service::ServerEventType::Connected
+          me->NotifyEventCallback(service_id, event == ecal_service::ServerEventType::Connected
             ? eServerEvent::connected
             : eServerEvent::disconnected, message);
         }
       };
 
-    const eCAL::service::Server::ServiceCallbackT service_callback =
+    const ecal_service::Server::ServiceCallbackT service_callback =
       [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
       {
         if (auto me = weak_me.lock())

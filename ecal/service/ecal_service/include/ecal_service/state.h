@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,21 +19,13 @@
 
 #pragma once
 
-#include <functional>
-#include <memory>
-#include <string>
-
-namespace eCAL
+namespace ecal_service
 {
-  namespace service
+  enum class State
   {
-    enum class ServerEventType: int
-    {
-      Connected,          //!< A client has connected successfully.
-      Disconnected,       //!< The connection to a client has been closed for any reason.
-    };
-
-    using ServerServiceCallbackT = std::function<void(const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response)>;
-    using ServerEventCallbackT   = std::function<void(ServerEventType, const std::string&)>;
-  } // namespace service
-} // namespace eCAL
+    NOT_CONNECTED,  //!< Initial state
+    HANDSHAKE,      //!< The connection is currently in handshake state.
+    CONNECTED,      //!< The connection is established and ready to exchange data.
+    FAILED,         //!< The connection has been closed due to an error or by the user
+  };
+}

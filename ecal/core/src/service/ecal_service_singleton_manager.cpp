@@ -30,28 +30,28 @@ namespace eCAL
 {
   namespace service
   {
-    eCAL::service::LoggerT ecal_logger(const std::string& node_name)
+    ecal_service::LoggerT ecal_logger(const std::string& node_name)
     {
-      return [node_name](const LogLevel log_level, const std::string& message)
+      return [node_name](const ecal_service::LogLevel log_level, const std::string& message)
                         {
                           switch (log_level)
                           {
-                          case LogLevel::DebugVerbose:
+                          case ecal_service::LogLevel::DebugVerbose:
                             eCAL::Logging::Log(eCAL::Logging::log_level_debug4, "[" + node_name + "] " + message);
                             break;
-                          case LogLevel::Debug:
+                          case ecal_service::LogLevel::Debug:
                             eCAL::Logging::Log(eCAL::Logging::log_level_debug1, "[" + node_name + "] " + message);
                             break;
-                          case LogLevel::Info:
+                          case ecal_service::LogLevel::Info:
                             eCAL::Logging::Log(eCAL::Logging::log_level_debug1, "[" + node_name + "] " + message);
                             break;
-                          case LogLevel::Warning:
+                          case ecal_service::LogLevel::Warning:
                             eCAL::Logging::Log(eCAL::Logging::log_level_warning, "[" + node_name + "] " + message);
                             break;
-                          case LogLevel::Error:
+                          case ecal_service::LogLevel::Error:
                             eCAL::Logging::Log(eCAL::Logging::log_level_error, "[" + node_name + "] " + message);
                             break;
-                          case LogLevel::Fatal:
+                          case ecal_service::LogLevel::Fatal:
                             eCAL::Logging::Log(eCAL::Logging::log_level_fatal, "[" + node_name + "] " + message);
                             break;
                           default:
@@ -85,7 +85,7 @@ namespace eCAL
 	// Public API
 	////////////////////////////////////////////////////////////
 
-    std::shared_ptr<eCAL::service::ClientManager> ServiceManager::get_client_manager()
+    std::shared_ptr<ecal_service::ClientManager> ServiceManager::get_client_manager()
     {
       // Quickly check the atomic stopped boolean before actually locking the
       // mutex. It can theoretically change before we got mutex access, so we
@@ -103,7 +103,7 @@ namespace eCAL
 
         // Create the client manager, if it didn't exist, yet
         if (!m_client_manager)
-          m_client_manager = eCAL::service::ClientManager::create(m_io_context, ecal_logger("Service Client"));
+          m_client_manager = ecal_service::ClientManager::create(m_io_context, ecal_logger("Service Client"));
 
         // Start io threads, if necessary
         if (m_io_threads.empty())
@@ -122,7 +122,7 @@ namespace eCAL
       return nullptr;
     }
 
-    std::shared_ptr<eCAL::service::ServerManager> ServiceManager::get_server_manager()
+    std::shared_ptr<ecal_service::ServerManager> ServiceManager::get_server_manager()
     {
       // Quickly check the atomic stopped boolean before actually locking the
       // mutex. It can theoretically change before we got mutex access, so we
@@ -140,7 +140,7 @@ namespace eCAL
 
         // Create the server manager, if it didn't exit, yet
         if (!m_server_manager)
-          m_server_manager = eCAL::service::ServerManager::create(m_io_context, ecal_logger("Service Server"));
+          m_server_manager = ecal_service::ServerManager::create(m_io_context, ecal_logger("Service Server"));
 
         // Start io threads, if necessary
         if (m_io_threads.empty())

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,19 +23,16 @@
 #include <memory>
 #include <string>
 
-#include <ecal/service/error.h>
+#include <ecal_service/error.h>
 
-namespace eCAL
+namespace ecal_service
 {
-  namespace service
+  enum class ClientEventType: int
   {
-    enum class ClientEventType: int
-    {
-      Connected,
-      Disconnected,
-    };
-
-    using ClientEventCallbackT    = std::function<void (ClientEventType, const std::string &)>;
-    using ClientResponseCallbackT = std::function<void (const eCAL::service::Error&, const std::shared_ptr<std::string>&)>;
-  } // namespace service
+    Connected,
+    Disconnected,
+  };
+ 
+  using ClientEventCallbackT    = std::function<void (ClientEventType, const std::string &)>;
+  using ClientResponseCallbackT = std::function<void (const ecal_service::Error&, const std::shared_ptr<std::string>&)>;
 } // namespace eCAL
