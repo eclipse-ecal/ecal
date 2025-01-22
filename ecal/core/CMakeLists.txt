@@ -391,17 +391,17 @@ if(ECAL_CORE_SERVICE)
       src/service/ecal_service_client_impl.cpp
       src/service/ecal_service_client_impl.h
       src/service/ecal_service_client_instance.cpp
-      src/service/ecal_service_client_v5.cpp
-      src/service/ecal_service_client_v5_impl.cpp
-      src/service/ecal_service_client_v5_impl.h
       src/service/ecal_service_server.cpp
       src/service/ecal_service_server_impl.cpp
       src/service/ecal_service_server_impl.h
-      src/service/ecal_service_server_v5.cpp
-      src/service/ecal_service_server_v5_impl.cpp
-      src/service/ecal_service_server_v5_impl.h
       src/service/ecal_service_singleton_manager.cpp
       src/service/ecal_service_singleton_manager.h
+      src/v5/service/ecal_service_client.cpp
+      src/v5/service/ecal_service_client_impl.cpp
+      src/v5/service/ecal_service_client_impl.h
+      src/v5/service/ecal_service_server.cpp
+      src/v5/service/ecal_service_server_impl.cpp
+      src/v5/service/ecal_service_server_impl.h
   )
 endif()
 

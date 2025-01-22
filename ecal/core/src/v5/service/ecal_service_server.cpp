@@ -25,9 +25,9 @@
 #include <ecal/ecal.h>
 #include <string>
 
-#include "ecal_servicegate.h"
+#include "service/ecal_servicegate.h"
 #include "ecal_global_accessors.h"
-#include "ecal_service_server_v5_impl.h"
+#include "ecal_service_server_impl.h"
 
 namespace eCAL
 {

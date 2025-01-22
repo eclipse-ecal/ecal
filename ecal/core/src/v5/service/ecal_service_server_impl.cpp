@@ -23,7 +23,7 @@
 
 #include <ecal/ecal_log.h>
 
-#include "ecal_service_server_v5_impl.h"
+#include "ecal_service_server_impl.h"
 
 namespace eCAL
 {

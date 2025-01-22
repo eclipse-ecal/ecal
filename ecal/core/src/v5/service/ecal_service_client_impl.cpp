@@ -21,7 +21,7 @@
  * @brief  eCAL service client implementation (deprecated eCAL5 version)
 **/
 
-#include "ecal_service_client_v5_impl.h"
+#include "ecal_service_client_impl.h"
 #include <ecal/ecal_namespace.h>
 #include <ecal/ecal_log.h>
 
