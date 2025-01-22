@@ -53,19 +53,6 @@ namespace
 
 namespace
 {
-#if 0 // TODO: Can we remove this?
-  bool isDirectory(const std::string& path_)
-  {
-    if (path_.empty()) return false;
-
-    struct stat st;
-    if (stat(path_.c_str(), &st) == 0)
-      return S_ISDIR(st.st_mode);
-
-    return false;
-  }
-#endif
-
   std::string get_time_str()
   {
     char            fmt[64];
