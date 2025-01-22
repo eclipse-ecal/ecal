@@ -26,7 +26,7 @@
 #include <ecal/ecal_namespace.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/v5/ecal_callback.h>
-#include <ecal/ecal_service_info.h>
+#include <ecal/service/types.h>
 #include <ecal_service/server.h>
 
 #include "serialization/ecal_serialize_sample_registration.h"

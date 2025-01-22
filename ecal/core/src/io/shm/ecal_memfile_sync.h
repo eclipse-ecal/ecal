@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <ecal/ecal_payload_writer.h>
+#include <ecal/pubsub/payload_writer.h>
 
 #include "readwrite/ecal_writer_data.h"
 #include "ecal_eventhandle.h"

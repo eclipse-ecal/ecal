@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   ecal_client.h
+ * @file   client.h
  * @brief  eCAL client interface
 **/
 
@@ -28,10 +28,8 @@
 #include <ecal/ecal_namespace.h>
 #include <ecal/ecal_os.h>
 
-#include <ecal/ecal_callback.h>
-#include <ecal/ecal_client_instance.h>
-#include <ecal/ecal_service_info.h>
-#include <ecal/ecal_types.h>
+#include <ecal/service/client_instance.h>
+#include <ecal/service/types.h>
 
 #include <memory>
 #include <string>

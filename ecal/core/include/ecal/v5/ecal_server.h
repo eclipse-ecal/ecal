@@ -29,7 +29,7 @@
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
 #include <ecal/v5/ecal_callback.h>
-#include <ecal/ecal_service_info.h>
+#include <ecal/service/types.h>
 
 #include <memory>
 #include <string>

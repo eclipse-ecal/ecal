@@ -25,7 +25,7 @@
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/v5/ecal_callback.h>
-#include <ecal/ecal_service_info.h>
+#include <ecal/service/types.h>
 #include <ecal/ecal_types.h>
 #include <ecal_service/client_session.h>
 

@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   ecal_subscriber.h
+ * @file   subscriber.h
  * @brief  eCAL subscriber interface
 **/
 
@@ -28,9 +28,8 @@
 #include <ecal/ecal_namespace.h>
 #include <ecal/ecal_os.h>
 
-#include <ecal/ecal_callback.h>
+#include <ecal/pubsub/types.h>
 #include <ecal/ecal_config.h>
-#include <ecal/ecal_types.h>
 
 #include <memory>
 #include <string>

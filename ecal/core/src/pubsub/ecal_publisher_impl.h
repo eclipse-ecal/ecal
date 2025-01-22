@@ -23,11 +23,10 @@
 
 #pragma once
 
-#include <ecal/ecal_callback.h>
-#include <ecal/v5/ecal_callback.h>
-#include <ecal/ecal_payload_writer.h>
+#include <ecal/pubsub/types.h>
+#include <ecal/pubsub/payload_writer.h>
 #include <ecal/ecal_config.h>
-#include <ecal/ecal_types.h>
+#include <ecal/v5/ecal_callback.h>
 
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "util/frequency_calculator.h"

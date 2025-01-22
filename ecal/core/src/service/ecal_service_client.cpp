@@ -21,7 +21,7 @@
  * @brief  eCAL service client interface
 **/
 
-#include <ecal/ecal_client.h>
+#include <ecal/service/client.h>
 #include <ecal/ecal.h>
 
 #include "ecal_clientgate.h"

@@ -530,13 +530,19 @@ set(ecal_header_cmn
     include/ecal/config/subscriber.h
     include/ecal/config/time.h
     include/ecal/config/transport_layer.h
+    include/ecal/pubsub/subscriber.h
+    include/ecal/pubsub/types.h
+    include/ecal/pubsub/payload_writer.h
+    include/ecal/pubsub/publisher.h
+    include/ecal/service/client.h
+    include/ecal/service/client_instance.h
+    include/ecal/service/server.h
+    include/ecal/service/types.h
     include/ecal/types/logging.h
     include/ecal/types/monitoring.h
     include/ecal/ecal.h
     include/ecal/ecal_callback.h
     include/ecal/v5/ecal_callback.h
-    include/ecal/ecal_client.h
-    include/ecal/ecal_client_instance.h
     include/ecal/v5/ecal_client.h
     include/ecal/ecal_config.h
     include/ecal/ecal_core.h
@@ -545,18 +551,13 @@ set(ecal_header_cmn
     include/ecal/ecal_log.h
     include/ecal/ecal_log_level.h
     include/ecal/ecal_os.h
-    include/ecal/ecal_payload_writer.h
     include/ecal/ecal_monitoring.h
     include/ecal/ecal_namespace.h
     include/ecal/ecal_process.h
     include/ecal/ecal_process_severity.h
     include/ecal/ecal_registration.h
-    include/ecal/ecal_publisher.h
     include/ecal/v5/ecal_publisher.h
-    include/ecal/ecal_server.h
     include/ecal/v5/ecal_server.h
-    include/ecal/ecal_service_info.h
-    include/ecal/ecal_subscriber.h
     include/ecal/v5/ecal_subscriber.h
     include/ecal/ecal_time.h
     include/ecal/ecal_timer.h

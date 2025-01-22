@@ -21,7 +21,7 @@
  * @brief  eCAL service client instance implementation
 **/
 
-#include <ecal/ecal_client_instance.h>
+#include <ecal/service/client_instance.h>
 #include "ecal_service_client_impl.h"
 
 namespace eCAL
