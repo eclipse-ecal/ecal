@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/service/server_manager.h>
+#include <ecal_service/server_manager.h>
 
 #include <cstddef>
 #include <cstdint>
@@ -27,8 +27,8 @@
 
 #include <asio.hpp>
 
-#include <ecal/service/server.h>
-#include <ecal/service/logger.h>
+#include <ecal_service/server.h>
+#include <ecal_service/logger.h>
 
 namespace eCAL
 {

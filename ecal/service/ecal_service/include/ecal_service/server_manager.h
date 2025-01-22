@@ -27,9 +27,9 @@
 
 #include <asio.hpp>
 
-#include <ecal/service/logger.h>
+#include <ecal_service/logger.h>
 
-#include <ecal/service/server.h> // IWYU pragma: export
+#include <ecal_service/server.h> // IWYU pragma: export
 
 namespace eCAL
 {

@@ -28,11 +28,11 @@
 #include <thread>
 #include <stdexcept>
 
-#include <ecal/service/server.h> // Should not be needed, when I use the server manager / client manager
-#include <ecal/service/client_session.h> // Should not be needed, when I use the server manager / client manager
+#include <ecal_service/server.h> // Should not be needed, when I use the server manager / client manager
+#include <ecal_service/client_session.h> // Should not be needed, when I use the server manager / client manager
 
-#include <ecal/service/client_manager.h>
-#include <ecal/service/server_manager.h>
+#include <ecal_service/client_manager.h>
+#include <ecal_service/server_manager.h>
 
 #include "atomic_signalable.h"
 

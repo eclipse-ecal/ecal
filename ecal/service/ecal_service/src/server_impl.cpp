@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +29,9 @@
 #include "server_session_impl_base.h"
 #include "server_session_impl_v1.h"
 
-#include <ecal/service/logger.h>
-#include <ecal/service/server_session_types.h>
-#include <ecal/service/state.h>
+#include <ecal_service/logger.h>
+#include <ecal_service/server_session_types.h>
+#include <ecal_service/state.h>
 
 #include "log_defs.h"
 

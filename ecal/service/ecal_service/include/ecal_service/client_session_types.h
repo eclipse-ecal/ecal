@@ -23,7 +23,7 @@
 #include <memory>
 #include <string>
 
-#include <ecal/service/error.h>
+#include <ecal_service/error.h>
 
 namespace eCAL
 {

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 */
 
 #include <condition_variable>
-#include <ecal/service/client_session.h>
+#include <ecal_service/client_session.h>
 
 #include <cstdint>
 #include <memory>
@@ -29,9 +29,9 @@
 
 #include <asio.hpp>
 
-#include <ecal/service/error.h>
-#include <ecal/service/logger.h>
-#include <ecal/service/state.h>
+#include <ecal_service/error.h>
+#include <ecal_service/logger.h>
+#include <ecal_service/state.h>
 
 #include "client_session_impl_v1.h"
 #include "condition_variable_signaler.h"

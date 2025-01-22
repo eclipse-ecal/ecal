@@ -30,9 +30,9 @@
 
 #include <asio.hpp>
 
-#include <ecal/service/logger.h>
+#include <ecal_service/logger.h>
 
-#include <ecal/service/client_session.h> // IWYU pragma: export
+#include <ecal_service/client_session.h> // IWYU pragma: export
 
 namespace eCAL
 {
