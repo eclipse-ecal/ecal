@@ -201,10 +201,9 @@ namespace eCAL
       bool success = false;
       for (auto& instance : instances)
       {
-        if (instance.GetClientID().host_name == m_host_name)
+        if (instance.GetClientID().host_name == m_host_name || m_host_name.empty())
         {
-          success = instance.CallWithCallback(method_name_, request_, timeout_, callback);
-          break;
+          success |= instance.CallWithCallback(method_name_, request_, timeout_, callback);
         }
       }
       // Call the method using the new API
@@ -226,25 +225,25 @@ namespace eCAL
 
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Making a synchronous call with response collection to method: " + method_name_);
 
-      
       auto instances = m_service_client_impl->GetClientInstances();
-      std::pair<bool, SServiceIDResponse> response;
+      std::vector<std::pair<bool, SServiceIDResponse>> responses;
+      bool success = false;
       for (auto& instance : instances)
       {
-        if (instance.GetClientID().host_name == m_host_name)
+        if (instance.GetClientID().host_name == m_host_name || m_host_name.empty())
         {
-          response = instance.CallWithResponse(method_name_, request_, timeout_);
-          break;
+          responses.emplace_back(instance.CallWithResponse(method_name_, request_, timeout_));
+          success |= responses.back().first;
         }
       }
 
       // Convert the responses to the old format
       service_response_vec_->clear();
+      for (const auto& response : responses)
+        service_response_vec_->push_back(ConvertToServiceResponse(response.second));
       
-      service_response_vec_->push_back(ConvertToServiceResponse(response.second));
-      
-      Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Call completed with success: " + std::to_string(response.first));
-      return response.first;
+      Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Call completed with success: " + std::to_string(success));
+      return success;
     }
 
     bool CServiceClientImpl::CallAsync(const std::string& method_name_, const std::string& request_, int /*timeout_*/)
@@ -277,10 +276,9 @@ namespace eCAL
       bool success = false;
       for (auto& instance : instances)
       {
-        if (instance.GetClientID().host_name == m_host_name)
+        if (instance.GetClientID().host_name == m_host_name || m_host_name.empty())
         {
-          success = instance.CallWithCallbackAsync(method_name_, request_, callback);
-          break;
+          success |= instance.CallWithCallbackAsync(method_name_, request_, callback);
         }
       }
 
