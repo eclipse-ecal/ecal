@@ -65,17 +65,22 @@ endif()
 # config
 ######################################
 set(ecal_config_src
-    src/config/default_configuration.cpp        
+    src/config/default_configuration.cpp
+    src/config/default_configuration.h
     src/config/ecal_config.cpp
     src/config/configuration.cpp
     src/config/ecal_path_processing.cpp
+    src/config/ecal_path_processing.h
     src/types/ecal_custom_data_types.cpp
 )
 if (ECAL_CORE_CONFIGURATION)
   list(APPEND ecal_config_src
       src/config/configuration_to_yaml.cpp
+      src/config/configuration_to_yaml.h
       src/config/configuration_reader.cpp
+      src/config/configuration_reader.h
       src/config/configuration_writer.cpp
+      src/config/configuration_writer.h
   )
 endif()
 ######################################
@@ -183,7 +188,9 @@ endif()
 set(ecal_logging_src
     src/logging/ecal_log.cpp
     src/logging/ecal_log_provider.cpp
+    src/logging/ecal_log_provider.h
     src/logging/ecal_log_receiver.cpp
+    src/logging/ecal_log_receiver.h
 )
 
 ######################################
@@ -433,6 +440,7 @@ endif()
 ######################################
 set(ecal_cmn_src
     src/ecal.cpp
+    src/ecal_config_internal.h
     src/ecal_def.h
     src/ecal_descgate.cpp
     src/ecal_descgate.h
@@ -458,18 +466,55 @@ endif()
 ######################################
 set (ecal_builder_src
     src/config/builder/logging_attribute_builder.cpp
+    src/config/builder/logging_attribute_builder.h
     src/config/builder/registration_attribute_builder.cpp
+    src/config/builder/registration_attribute_builder.h
+
+    src/logging/config/attributes/ecal_log_provider_attributes.h
+    src/logging/config/attributes/ecal_log_receiver_attributes.h
     src/logging/config/builder/udp_attribute_builder.cpp
+    src/logging/config/builder/udp_attribute_builder.h
+
     src/pubsub/config/builder/reader_attribute_builder.cpp
+    src/pubsub/config/builder/reader_attribute_builder.h
     src/pubsub/config/builder/writer_attribute_builder.cpp
+    src/pubsub/config/builder/writer_attribute_builder.h
+
+    src/readwrite/config/attributes/reader_attributes.h
+    src/readwrite/config/attributes/writer_attributes.h
     src/readwrite/config/builder/shm_attribute_builder.cpp
+    src/readwrite/config/builder/shm_attribute_builder.h
     src/readwrite/config/builder/tcp_attribute_builder.cpp
+    src/readwrite/config/builder/tcp_attribute_builder.h
     src/readwrite/config/builder/udp_attribute_builder.cpp
+    src/readwrite/config/builder/udp_attribute_builder.h
+
+    src/readwrite/shm/config/attributes/reader_shm_attributes.h
+    src/readwrite/shm/config/attributes/writer_shm_attributes.h
+
+    src/readwrite/tcp/config/attributes/data_reader_tcp_attributes.h
+    src/readwrite/tcp/config/attributes/data_writer_tcp_attributes.h
+    src/readwrite/tcp/config/attributes/tcp_reader_layer_attributes.h
     src/readwrite/tcp/config/builder/data_reader_tcp_attribute_builder.cpp
+    src/readwrite/tcp/config/builder/data_reader_tcp_attribute_builder.h
+
+    src/readwrite/udp/config/attributes/reader_udp_attributes.h
+    src/readwrite/udp/config/attributes/writer_udp_attributes.h
     src/readwrite/udp/config/builder/udp_attribute_builder.cpp
-    src/registration/config/builder/udp_shm_attribute_builder.cpp
+    src/readwrite/udp/config/builder/udp_attribute_builder.h
+
+    src/registration/config/attributes/registration_attributes.h
+    src/registration/config/attributes/sample_applier_attributes.h
     src/registration/config/builder/sample_applier_attribute_builder.cpp
+    src/registration/config/builder/sample_applier_attribute_builder.h
+    src/registration/config/builder/udp_shm_attribute_builder.cpp
+    src/registration/config/builder/udp_shm_attribute_builder.h
+
+    src/registration/shm/config/attributes/registration_shm_attributes.h
+    src/registration/udp/config/attributes/registration_receiver_udp_attributes.h
+    src/registration/udp/config/attributes/registration_sender_udp_attributes.h
     src/registration/udp/config/builder/udp_attribute_builder.cpp
+    src/registration/udp/config/builder/udp_attribute_builder.h
 )
 
 ######################################

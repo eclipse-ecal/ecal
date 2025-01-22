@@ -51,18 +51,8 @@ namespace
 #include <sys/time.h>
 #include <ctime>
 
-namespace{
-  bool isDirectory(const std::string& path_)
-  {
-    if (path_.empty()) return false;
-
-    struct stat st;
-    if (stat(path_.c_str(), &st) == 0)
-      return S_ISDIR(st.st_mode);
-
-    return false;
-  }
-
+namespace
+{
   std::string get_time_str()
   {
     char            fmt[64];
@@ -149,9 +139,9 @@ namespace eCAL
   namespace Logging
   {
     CLogProvider::CLogProvider(const SProviderAttributes& attr_)
-    : m_attributes(attr_)
-    , m_created(false)
+    : m_created(false)
     , m_logfile(nullptr)
+    , m_attributes(attr_)
     {
     }
 

@@ -70,11 +70,11 @@ namespace eCAL
   CSubscriberImpl::CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_) :
                  m_topic_info(topic_info_),
                  m_topic_size(0),
-                 m_attributes(attr_),
                  m_receive_time(0),
                  m_clock(0),
                  m_frequency_calculator(3.0f),
-                 m_created(false)
+                 m_created(false),
+                 m_attributes(attr_)
   {
 #ifndef NDEBUG
     // log it

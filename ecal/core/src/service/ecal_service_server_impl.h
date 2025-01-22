@@ -118,7 +118,7 @@ namespace eCAL
 
     // Event callback and synchronization
     std::mutex                             m_event_callback_mutex;
-    ServerEventCallbackT                 m_event_callback;
+    ServerEventCallbackT                   m_event_callback;
 
     // Server interface
     std::shared_ptr<eCAL::service::Server> m_tcp_server;
