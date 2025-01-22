@@ -18,6 +18,7 @@
 */
 
 #include <QFont>
+#include <QTimer>
 
 #include "topic_tree_model.h"
 #include "tree_item_type.h"
@@ -92,32 +93,34 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
       auto font = qvariant_cast<QFont>(fontrole);
       font.setBold(true);
       topic_tree_item->setFont(font);
+
+      QTimer::singleShot(10000, [this, topic_id]()
+      {
+        if(topic_tree_item_map_.find(topic_id) != topic_tree_item_map_.end())
+        {
+          topic_tree_item_map_[topic_id].new_topic_timer = true;
+        }
+      });
     }
     else
     {
       auto& tree_entry = topic_tree_item_map_.at(topic_id);
-      auto topic_tree_item = tree_entry.tree_item;
-      if (tree_entry.tree_item_counter < 20)
+      auto *topic_tree_item = tree_entry.tree_item;
+
+      if(tree_entry.new_topic_timer && !tree_entry.default_font)
       {
-        tree_entry.tree_item_counter++;
+        auto fontrole = topic_tree_item->data(1, Qt::ItemDataRole::FontRole);
+        auto font = qvariant_cast<QFont>(fontrole);
+        font.setBold(false);
+        topic_tree_item->setFont(font);
+        tree_entry.default_font = true;
       }
-      else
-      {
-        if (!tree_entry.default_font)
-        {
-          auto fontrole = topic_tree_item->data(1, Qt::ItemDataRole::FontRole);
-          auto font = qvariant_cast<QFont>(fontrole);
-          font.setBold(false);
-          topic_tree_item->setFont(font);
-          tree_entry.default_font = true;
-        }
-      }
+
       // Update an existing topic
       topic_tree_item->update(topic);
       topic_still_existing[topic_id] = true;
     }
   }
-
 
   // Remove obsolete items
   for (const auto& topic : topic_still_existing)
@@ -126,6 +129,7 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
     {
       removeItemFromGroups(topic_tree_item_map_.at(topic.first).tree_item);
       topic_tree_item_map_.erase(topic.first);
+      qDebug() << topic_tree_item_map_.size();
     }
   }
 
@@ -142,7 +146,7 @@ QVector<QPair<int, QVariant>> TopicTreeModel::getTreeItemColumnNameMapping() con
     int column = mapColumnToItem(i, (int)TreeItemType::Topic);
     if (column >= 0)
     {
-      QVariant name = headerData(i, Qt::Orientation::Horizontal, Qt::ItemDataRole::DisplayRole);
+      const QVariant name = headerData(i, Qt::Orientation::Horizontal, Qt::ItemDataRole::DisplayRole);
       column_name_mapping.push_back(QPair<int, QVariant>(column, name));
     }
   }

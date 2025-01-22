@@ -297,6 +297,37 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
   else if (role == Qt::ItemDataRole::FontRole)
   {
+
+    if ((column == Columns::HNAME)
+      || (column == Columns::HGNAME)
+      || (column == Columns::PNAME)
+      || (column == Columns::UNAME)
+      || (column == Columns::TNAME)
+      || (column == Columns::DIRECTION)
+      || (column == Columns::TENCODING)
+      || (column == Columns::TTYPE))
+    {
+      const QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
+      if (raw_data.isEmpty())
+      {
+        QFont font;
+        font.setItalic(true);
+        font.setBold(itemfont.bold());
+        return font;
+      }
+    }
+    else if (column == Columns::TDESC)
+    {
+      const std::string& raw_data = topic_.tdatatype().desc();
+      if (raw_data.empty())
+      {
+        QFont font;
+        font.setItalic(true);
+        font.setBold(itemfont.bold());
+        return font;
+      }
+    }
+
     return itemfont;
   }
 

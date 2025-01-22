@@ -136,8 +136,8 @@ private:
   struct STopicTreeEntry
   {
     TopicTreeItem*  tree_item = nullptr;
-    int             tree_item_counter = 0;
     bool            default_font = false;
+    bool            new_topic_timer = false;
   };
   std::map<std::string, STopicTreeEntry> topic_tree_item_map_;
 };
