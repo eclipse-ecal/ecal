@@ -129,7 +129,6 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
     {
       removeItemFromGroups(topic_tree_item_map_.at(topic.first).tree_item);
       topic_tree_item_map_.erase(topic.first);
-      qDebug() << topic_tree_item_map_.size();
     }
   }
 
