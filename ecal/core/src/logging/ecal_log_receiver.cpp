@@ -37,8 +37,8 @@ namespace eCAL
   namespace Logging
   {
     CLogReceiver::CLogReceiver(const SReceiverAttributes& attr_)
-    : m_attributes(attr_)
-    , m_created(false)
+    : m_created(false)
+    , m_attributes(attr_)
     {
     }
 

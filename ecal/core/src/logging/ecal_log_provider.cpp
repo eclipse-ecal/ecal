@@ -46,6 +46,7 @@ namespace
 }
 #endif
 
+#if 0 // TODO: Can we remove this?
 #ifdef ECAL_OS_LINUX
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -77,6 +78,7 @@ namespace{
     return(std::string(fmt));
   }
 }
+#endif
 #endif
 
 namespace
@@ -149,9 +151,9 @@ namespace eCAL
   namespace Logging
   {
     CLogProvider::CLogProvider(const SProviderAttributes& attr_)
-    : m_attributes(attr_)
-    , m_created(false)
+    : m_created(false)
     , m_logfile(nullptr)
+    , m_attributes(attr_)
     {
     }
 

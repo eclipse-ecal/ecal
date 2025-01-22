@@ -50,7 +50,7 @@ namespace eCAL
 
   // Constructor
   CServiceServerImpl::CServiceServerImpl(const std::string& service_name_, const ServerEventCallbackT& event_callback_)
-    : m_created(false), m_service_name(service_name_), m_event_callback(event_callback_)
+    : m_service_name(service_name_), m_created(false), m_event_callback(event_callback_)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, "CServiceServerImpl::CServiceServerImpl: Initializing service server for: " + m_service_name);

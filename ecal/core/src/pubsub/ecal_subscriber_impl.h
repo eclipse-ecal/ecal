@@ -158,7 +158,7 @@ namespace eCAL
     long long                                 m_read_time = 0;
 
     std::mutex                                m_receive_callback_mutex;
-    ReceiveCallbackT                        m_receive_callback;
+    ReceiveCallbackT                          m_receive_callback;
     std::atomic<int>                          m_receive_time;
 
     std::deque<size_t>                        m_sample_hash_queue;
@@ -168,7 +168,7 @@ namespace eCAL
     EventCallbackMapT                         m_event_callback_map;
 
     std::mutex                                m_event_id_callback_mutex;
-    SubEventCallbackT                       m_event_id_callback;
+    SubEventCallbackT                         m_event_id_callback;
 
     std::atomic<long long>                    m_clock;
 
