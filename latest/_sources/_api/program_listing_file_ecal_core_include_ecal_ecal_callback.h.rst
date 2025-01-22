@@ -32,6 +32,7 @@ Program Listing for File ecal_callback.h
    #pragma once
    
    #include <ecal/ecal_deprecate.h>
+   #include <ecal/ecal_namespace.h>
    #include <ecal/ecal_types.h>
    
    #include <functional>
@@ -119,7 +120,7 @@ Program Listing for File ecal_callback.h
    
      using TimerCallbackT = std::function<void()>;
    
-     inline namespace v6
+     ECAL_CORE_NAMESPACE_V6
      {
        using ReceiveCallbackT = std::function<void(const Registration::STopicId& topic_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)>;
    

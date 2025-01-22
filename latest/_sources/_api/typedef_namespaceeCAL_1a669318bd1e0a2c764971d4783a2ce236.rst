@@ -3,7 +3,7 @@
 Typedef eCAL::ServiceIDResponseVecT
 ===================================
 
-.. did not find file this was defined in
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_service_info.h`
 
 
 Typedef Documentation

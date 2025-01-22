@@ -12,7 +12,7 @@ Inheritance Relationships
 Base Type
 *********
 
-- ``public eCAL::v5::CSubscriber`` (:ref:`exhale_class_classeCAL_1_1v5_1_1CSubscriber`)
+- ``public v5::CSubscriber``
 
 
 Class Documentation

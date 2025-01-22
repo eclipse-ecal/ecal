@@ -52,11 +52,7 @@ Included By
 
 - :ref:`file_ecal_core_include_ecal_ecal_client_instance.h`
 
-- :ref:`file_ecal_core_include_ecal_ecal_client_v5.h`
-
 - :ref:`file_ecal_core_include_ecal_ecal_server.h`
-
-- :ref:`file_ecal_core_include_ecal_ecal_server_v5.h`
 
 
 

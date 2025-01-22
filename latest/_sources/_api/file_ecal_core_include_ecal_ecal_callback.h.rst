@@ -32,6 +32,8 @@ Includes
 
 - ``ecal/ecal_deprecate.h`` (:ref:`file_ecal_core_include_ecal_ecal_deprecate.h`)
 
+- ``ecal/ecal_namespace.h`` (:ref:`file_ecal_core_include_ecal_ecal_namespace.h`)
+
 - ``ecal/ecal_types.h`` (:ref:`file_ecal_core_include_ecal_ecal_types.h`)
 
 - ``functional``
@@ -46,8 +48,6 @@ Included By
 
 - :ref:`file_ecal_core_include_ecal_ecal.h`
 
-- :ref:`file_ecal_core_include_ecal_ecal_callback_v5.h`
-
 - :ref:`file_ecal_core_include_ecal_ecal_client.h`
 
 - :ref:`file_ecal_core_include_ecal_ecal_client_instance.h`
@@ -60,8 +60,6 @@ Included By
 
 - :ref:`file_ecal_core_include_ecal_ecal_subscriber.h`
 
-- :ref:`file_ecal_core_include_ecal_ecal_subscriber_v5.h`
-
 
 
 
@@ -71,20 +69,18 @@ Namespaces
 
 - :ref:`namespace_eCAL`
 
-- :ref:`namespace_eCAL__v6`
-
 
 Classes
 -------
 
 
+- :ref:`exhale_struct_structeCAL_1_1SClientEventCallbackData`
+
+- :ref:`exhale_struct_structeCAL_1_1SPubEventCallbackData`
+
 - :ref:`exhale_struct_structeCAL_1_1SReceiveCallbackData`
 
-- :ref:`exhale_struct_structeCAL_1_1v6_1_1SClientEventCallbackData`
+- :ref:`exhale_struct_structeCAL_1_1SServerEventCallbackData`
 
-- :ref:`exhale_struct_structeCAL_1_1v6_1_1SPubEventCallbackData`
-
-- :ref:`exhale_struct_structeCAL_1_1v6_1_1SServerEventCallbackData`
-
-- :ref:`exhale_struct_structeCAL_1_1v6_1_1SSubEventCallbackData`
+- :ref:`exhale_struct_structeCAL_1_1SSubEventCallbackData`
 

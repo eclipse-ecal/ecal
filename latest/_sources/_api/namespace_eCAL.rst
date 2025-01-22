@@ -42,26 +42,22 @@ Namespaces
 
 - :ref:`namespace_eCAL__Util`
 
-- :ref:`namespace_eCAL__v5`
-
-- :ref:`namespace_eCAL__v6`
-
 
 Classes
 -------
 
 
-- :ref:`exhale_struct_structeCAL_1_1v6_1_1SClientEventCallbackData`
+- :ref:`exhale_struct_structeCAL_1_1SClientEventCallbackData`
 
 - :ref:`exhale_struct_structeCAL_1_1SDataTypeInformation`
 
 - :ref:`exhale_struct_structeCAL_1_1SMethodInfo`
 
-- :ref:`exhale_struct_structeCAL_1_1v6_1_1SPubEventCallbackData`
+- :ref:`exhale_struct_structeCAL_1_1SPubEventCallbackData`
 
 - :ref:`exhale_struct_structeCAL_1_1SReceiveCallbackData`
 
-- :ref:`exhale_struct_structeCAL_1_1v6_1_1SServerEventCallbackData`
+- :ref:`exhale_struct_structeCAL_1_1SServerEventCallbackData`
 
 - :ref:`exhale_struct_structeCAL_1_1SServiceIDResponse`
 
@@ -69,17 +65,9 @@ Classes
 
 - :ref:`exhale_struct_structeCAL_1_1SServiceResponse`
 
-- :ref:`exhale_struct_structeCAL_1_1v6_1_1SSubEventCallbackData`
+- :ref:`exhale_struct_structeCAL_1_1SSubEventCallbackData`
 
 - :ref:`exhale_struct_structeCAL_1_1SVersion`
-
-- :ref:`exhale_struct_structeCAL_1_1v6_1_1SClientEventCallbackData`
-
-- :ref:`exhale_struct_structeCAL_1_1v6_1_1SPubEventCallbackData`
-
-- :ref:`exhale_struct_structeCAL_1_1v6_1_1SServerEventCallbackData`
-
-- :ref:`exhale_struct_structeCAL_1_1v6_1_1SSubEventCallbackData`
 
 - :ref:`exhale_class_classeCAL_1_1CClientInstance`
 
@@ -93,23 +81,9 @@ Classes
 
 - :ref:`exhale_class_classeCAL_1_1CPayloadWriter`
 
-- :ref:`exhale_class_classeCAL_1_1v6_1_1CPublisher`
-
-- :ref:`exhale_class_classeCAL_1_1v6_1_1CServiceClient`
-
-- :ref:`exhale_class_classeCAL_1_1v6_1_1CServiceServer`
-
-- :ref:`exhale_class_classeCAL_1_1v6_1_1CSubscriber`
+- :ref:`exhale_class_classeCAL_1_1CServiceServer`
 
 - :ref:`exhale_class_classeCAL_1_1CTimer`
-
-- :ref:`exhale_class_classeCAL_1_1v6_1_1CPublisher`
-
-- :ref:`exhale_class_classeCAL_1_1v6_1_1CServiceClient`
-
-- :ref:`exhale_class_classeCAL_1_1v6_1_1CServiceServer`
-
-- :ref:`exhale_class_classeCAL_1_1v6_1_1CSubscriber`
 
 
 Enums
@@ -168,21 +142,19 @@ Typedefs
 --------
 
 
-- :ref:`exhale_typedef_namespaceeCAL_1a0be87babd22c6f03b5f3aba6831b6c74`
+- :ref:`exhale_typedef_namespaceeCAL_1ab94e08aca1c495430067ac1effe70918`
 
 - :ref:`exhale_typedef_namespaceeCAL_1a085ef39b12d7ec954557c0543afb87c8`
 
 - :ref:`exhale_typedef_namespaceeCAL_1a5543d583fc59b89461527e3b7ee29fbe`
 
-- :ref:`exhale_typedef_namespaceeCAL_1a0cd1e14ca08cb1fcdec4a0ab31695d67`
-
-- :ref:`exhale_typedef_namespaceeCAL_1abece559e5bf59ace373635779a6927bb`
+- :ref:`exhale_typedef_namespaceeCAL_1a0fd6eaae124ea32be80835570d6fd03b`
 
 - :ref:`exhale_typedef_namespaceeCAL_1a2921beb7f71b3be1f5674f5b78d5caaf`
 
 - :ref:`exhale_typedef_namespaceeCAL_1ab5212bddb4f96210ad5abf44c4f40df4`
 
-- :ref:`exhale_typedef_namespaceeCAL_1a2326d3c84970c2f1d642a316ad347f92`
+- :ref:`exhale_typedef_namespaceeCAL_1af095880595ae6b272e6dfa0ad0356cc1`
 
 - :ref:`exhale_typedef_namespaceeCAL_1a669318bd1e0a2c764971d4783a2ce236`
 
@@ -190,6 +162,13 @@ Typedefs
 
 - :ref:`exhale_typedef_namespaceeCAL_1a46b797741012d9431f54330dfbfd71f3`
 
-- :ref:`exhale_typedef_namespaceeCAL_1acb0046fb94c3b95fd72bbd6a46efd255`
+- :ref:`exhale_typedef_namespaceeCAL_1a9cd97b3be1210f10d091d85ac96dee41`
 
 - :ref:`exhale_typedef_namespaceeCAL_1ada8fc20e2ddd0f5bc55f137861092851`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_namespaceeCAL_1a88e93dd91a0a426e27b1f98a9b0ecf93`

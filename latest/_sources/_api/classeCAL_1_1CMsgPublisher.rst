@@ -12,7 +12,7 @@ Inheritance Relationships
 Base Type
 *********
 
-- ``public eCAL::v5::CPublisher`` (:ref:`exhale_class_classeCAL_1_1v5_1_1CPublisher`)
+- ``public v5::CPublisher``
 
 
 Class Documentation

@@ -40,25 +40,15 @@ Included By
 
 - :ref:`file_ecal_core_include_ecal_ecal_callback.h`
 
-- :ref:`file_ecal_core_include_ecal_ecal_callback_v5.h`
-
 - :ref:`file_ecal_core_include_ecal_ecal_client.h`
 
 - :ref:`file_ecal_core_include_ecal_ecal_client_instance.h`
 
-- :ref:`file_ecal_core_include_ecal_ecal_client_v5.h`
-
 - :ref:`file_ecal_core_include_ecal_ecal_publisher.h`
-
-- :ref:`file_ecal_core_include_ecal_ecal_publisher_v5.h`
 
 - :ref:`file_ecal_core_include_ecal_ecal_server.h`
 
-- :ref:`file_ecal_core_include_ecal_ecal_server_v5.h`
-
 - :ref:`file_ecal_core_include_ecal_ecal_subscriber.h`
-
-- :ref:`file_ecal_core_include_ecal_ecal_subscriber_v5.h`
 
 - :ref:`file_ecal_core_include_ecal_ecal_util.h`
 

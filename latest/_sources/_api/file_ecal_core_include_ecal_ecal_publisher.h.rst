@@ -42,6 +42,8 @@ Includes
 
 - ``ecal/ecal_deprecate.h`` (:ref:`file_ecal_core_include_ecal_ecal_deprecate.h`)
 
+- ``ecal/ecal_namespace.h`` (:ref:`file_ecal_core_include_ecal_ecal_namespace.h`)
+
 - ``ecal/ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
 
 - ``ecal/ecal_payload_writer.h`` (:ref:`file_ecal_core_include_ecal_ecal_payload_writer.h`)
@@ -68,13 +70,4 @@ Namespaces
 
 
 - :ref:`namespace_eCAL`
-
-- :ref:`namespace_eCAL__v6`
-
-
-Classes
--------
-
-
-- :ref:`exhale_class_classeCAL_1_1v6_1_1CPublisher`
 

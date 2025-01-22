@@ -32,6 +32,7 @@ Program Listing for File ecal_subscriber.h
    #pragma once
    
    #include <ecal/ecal_deprecate.h>
+   #include <ecal/ecal_namespace.h>
    #include <ecal/ecal_os.h>
    
    #include <ecal/ecal_callback.h>
@@ -45,7 +46,7 @@ Program Listing for File ecal_subscriber.h
    {
      class CSubscriberImpl;
    
-     inline namespace v6
+     ECAL_CORE_NAMESPACE_V6
      {
        class ECAL_API_CLASS CSubscriber
        {

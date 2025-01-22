@@ -32,6 +32,7 @@ Program Listing for File ecal_server.h
    #pragma once
    
    #include <ecal/ecal_deprecate.h>
+   #include <ecal/ecal_namespace.h>
    #include <ecal/ecal_os.h>
    
    #include <ecal/ecal_callback.h>
@@ -43,10 +44,10 @@ Program Listing for File ecal_server.h
    
    namespace eCAL
    {
-     class CServiceServerImpl;
-   
-     inline namespace v6
+     ECAL_CORE_NAMESPACE_V6
      {
+       class CServiceServerImpl;
+   
        class ECAL_API_CLASS CServiceServer
        {
        public:

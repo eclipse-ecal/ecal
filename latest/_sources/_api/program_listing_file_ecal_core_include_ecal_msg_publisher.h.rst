@@ -12,7 +12,7 @@ Program Listing for File publisher.h
 
    /* ========================= eCAL LICENSE =================================
     *
-    * Copyright (C) 2016 - 2024 Continental Corporation
+    * Copyright (C) 2016 - 2025 Continental Corporation
     *
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ Program Listing for File publisher.h
    #pragma once
    
    #include <ecal/ecal_deprecate.h>
-   #include <ecal/ecal_publisher_v5.h>
+   #include <ecal/v5/ecal_publisher.h>
    #include <ecal/ecal_util.h>
    
    #include <string>
