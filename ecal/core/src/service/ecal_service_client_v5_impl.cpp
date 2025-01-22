@@ -216,23 +216,25 @@ namespace eCAL
 
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Making a synchronous call with response collection to method: " + method_name_);
 
-      // Call the method using the new API
-      ServiceIDResponseVecT service_id_responses;
-      const bool success = m_service_client_impl->CallWithResponse(method_name_, request_, timeout_, service_id_responses);
+      std::pair<bool, SServiceIDResponse> success = { false, SServiceIDResponse() };
+      auto instances = m_service_client_impl->GetClientInstances();
 
-      // Convert the responses to the old format
-      service_response_vec_->clear();
-      for (const auto& service_id_response : service_id_responses)
+      // Call the method using the new API for the correct host name
+      for (auto& instance : instances)
       {
-        // Filter responses based on host name if necessary
-        if (m_host_name.empty() || service_id_response.service_method_id.service_id.host_name == m_host_name)
+        if (instance.GetClientID().host_name == m_host_name)
         {
-          service_response_vec_->push_back(ConvertToServiceResponse(service_id_response));
+          success = instance.CallWithResponse(method_name_, request_, timeout_);
         }
       }
 
-      Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Call completed with success: " + std::to_string(success));
-      return success;
+      // Convert the responses to the old format
+      service_response_vec_->clear();
+      if (success.first)
+        service_response_vec_->push_back(ConvertToServiceResponse(success.second));
+
+      Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Call completed with success: " + std::to_string(success.first));
+      return success.first;
     }
 
     bool CServiceClientImpl::CallAsync(const std::string& method_name_, const std::string& request_, int /*timeout_*/)
