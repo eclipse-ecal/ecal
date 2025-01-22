@@ -12,7 +12,7 @@ Program Listing for File ecal_core.h
 
    /* ========================= eCAL LICENSE =================================
     *
-    * Copyright (C) 2016 - 2024 Continental Corporation
+    * Copyright (C) 2016 - 2025 Continental Corporation
     *
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
@@ -58,9 +58,6 @@ Program Listing for File ecal_core.h
      ECAL_API bool IsInitialized();
    
      ECAL_API bool IsInitialized(unsigned int component_);
-   
-   
-     ECAL_API bool SetUnitName(const std::string& unit_name_);
    
      ECAL_API bool Ok();
    }
