@@ -1,0 +1,1416 @@
+.. |ecalicons_FLATICON_LICENSE| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/license.htm
+   :width: 16px
+
+.. |ecalicons_FLATICON_LICENSE_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/license.htm
+   :width: 38px
+
+.. |ecalicons_FLATICON_LICENSE_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/license.htm
+   :width: 33px
+
+.. |ecalicons_FLATICON_LICENSE_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/license.htm
+   :width: 28px
+
+.. |ecalicons_SAVE| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/save.svg
+   :width: 16px
+
+.. |ecalicons_SAVE_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/save.svg
+   :width: 38px
+
+.. |ecalicons_SAVE_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/save.svg
+   :width: 33px
+
+.. |ecalicons_SAVE_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/save.svg
+   :width: 28px
+
+.. |ecalicons_SAVE_AS| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/save_as.svg
+   :width: 16px
+
+.. |ecalicons_SAVE_AS_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/save_as.svg
+   :width: 38px
+
+.. |ecalicons_SAVE_AS_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/save_as.svg
+   :width: 33px
+
+.. |ecalicons_SAVE_AS_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/save_as.svg
+   :width: 28px
+
+.. |ecalicons_EXIT| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/Exit.svg
+   :width: 16px
+
+.. |ecalicons_EXIT_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/Exit.svg
+   :width: 38px
+
+.. |ecalicons_EXIT_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/Exit.svg
+   :width: 33px
+
+.. |ecalicons_EXIT_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/Exit.svg
+   :width: 28px
+
+.. |ecalicons_EDIT| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Vectors-Market/pencil.svg
+   :width: 16px
+
+.. |ecalicons_EDIT_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Vectors-Market/pencil.svg
+   :width: 38px
+
+.. |ecalicons_EDIT_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Vectors-Market/pencil.svg
+   :width: 33px
+
+.. |ecalicons_EDIT_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Vectors-Market/pencil.svg
+   :width: 28px
+
+.. |ecalicons_DELETE| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/remove.svg
+   :width: 16px
+
+.. |ecalicons_DELETE_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/remove.svg
+   :width: 38px
+
+.. |ecalicons_DELETE_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/remove.svg
+   :width: 33px
+
+.. |ecalicons_DELETE_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/remove.svg
+   :width: 28px
+
+.. |ecalicons_CLEAR| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/broom.svg
+   :width: 16px
+
+.. |ecalicons_CLEAR_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/broom.svg
+   :width: 38px
+
+.. |ecalicons_CLEAR_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/broom.svg
+   :width: 33px
+
+.. |ecalicons_CLEAR_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/broom.svg
+   :width: 28px
+
+.. |ecalicons_EXPAND| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/expand.svg
+   :width: 16px
+
+.. |ecalicons_EXPAND_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/expand.svg
+   :width: 38px
+
+.. |ecalicons_EXPAND_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/expand.svg
+   :width: 33px
+
+.. |ecalicons_EXPAND_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/expand.svg
+   :width: 28px
+
+.. |ecalicons_COLLAPSE| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/collapse.svg
+   :width: 16px
+
+.. |ecalicons_COLLAPSE_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/collapse.svg
+   :width: 38px
+
+.. |ecalicons_COLLAPSE_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/collapse.svg
+   :width: 33px
+
+.. |ecalicons_COLLAPSE_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/collapse.svg
+   :width: 28px
+
+.. |ecalicons_COMMAND_WINDOW| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/console.svg
+   :width: 16px
+
+.. |ecalicons_COMMAND_WINDOW_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/console.svg
+   :width: 38px
+
+.. |ecalicons_COMMAND_WINDOW_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/console.svg
+   :width: 33px
+
+.. |ecalicons_COMMAND_WINDOW_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/console.svg
+   :width: 28px
+
+.. |ecalicons_EYE| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/eye.svg
+   :width: 16px
+
+.. |ecalicons_EYE_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/eye.svg
+   :width: 38px
+
+.. |ecalicons_EYE_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/eye.svg
+   :width: 33px
+
+.. |ecalicons_EYE_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/eye.svg
+   :width: 28px
+
+.. |ecalicons_FILTER_CANCEL| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/filter_cancel.svg
+   :width: 16px
+
+.. |ecalicons_FILTER_CANCEL_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/filter_cancel.svg
+   :width: 38px
+
+.. |ecalicons_FILTER_CANCEL_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/filter_cancel.svg
+   :width: 33px
+
+.. |ecalicons_FILTER_CANCEL_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/filter_cancel.svg
+   :width: 28px
+
+.. |ecalicons_FIND| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/loupe.svg
+   :width: 16px
+
+.. |ecalicons_FIND_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/loupe.svg
+   :width: 38px
+
+.. |ecalicons_FIND_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/loupe.svg
+   :width: 33px
+
+.. |ecalicons_FIND_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/loupe.svg
+   :width: 28px
+
+.. |ecalicons_CHECKMARK| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/checkmark.svg
+   :width: 16px
+
+.. |ecalicons_CHECKMARK_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/checkmark.svg
+   :width: 38px
+
+.. |ecalicons_CHECKMARK_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/checkmark.svg
+   :width: 33px
+
+.. |ecalicons_CHECKMARK_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/checkmark.svg
+   :width: 28px
+
+.. |ecalicons_CROSS| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/cross.svg
+   :width: 16px
+
+.. |ecalicons_CROSS_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/cross.svg
+   :width: 38px
+
+.. |ecalicons_CROSS_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/cross.svg
+   :width: 33px
+
+.. |ecalicons_CROSS_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/cross.svg
+   :width: 28px
+
+.. |ecalicons_PLAY_NEXT| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/play_next.svg
+   :width: 16px
+
+.. |ecalicons_PLAY_NEXT_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/play_next.svg
+   :width: 38px
+
+.. |ecalicons_PLAY_NEXT_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/play_next.svg
+   :width: 33px
+
+.. |ecalicons_PLAY_NEXT_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/play_next.svg
+   :width: 28px
+
+.. |ecalicons_PLAY_PREVIOUS| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/play_previous.svg
+   :width: 16px
+
+.. |ecalicons_PLAY_PREVIOUS_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/play_previous.svg
+   :width: 38px
+
+.. |ecalicons_PLAY_PREVIOUS_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/play_previous.svg
+   :width: 33px
+
+.. |ecalicons_PLAY_PREVIOUS_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/play_previous.svg
+   :width: 28px
+
+.. |ecalicons_REPEAT| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Smashicons/repeat.svg
+   :width: 16px
+
+.. |ecalicons_REPEAT_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Smashicons/repeat.svg
+   :width: 38px
+
+.. |ecalicons_REPEAT_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Smashicons/repeat.svg
+   :width: 33px
+
+.. |ecalicons_REPEAT_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Smashicons/repeat.svg
+   :width: 28px
+
+.. |ecalicons_FAST_FORWARD| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/fast_forward.svg
+   :width: 16px
+
+.. |ecalicons_FAST_FORWARD_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/fast_forward.svg
+   :width: 38px
+
+.. |ecalicons_FAST_FORWARD_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/fast_forward.svg
+   :width: 33px
+
+.. |ecalicons_FAST_FORWARD_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/fast_forward.svg
+   :width: 28px
+
+.. |ecalicons_FORWARD_TO| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/forward_to.svg
+   :width: 16px
+
+.. |ecalicons_FORWARD_TO_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/forward_to.svg
+   :width: 38px
+
+.. |ecalicons_FORWARD_TO_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/forward_to.svg
+   :width: 33px
+
+.. |ecalicons_FORWARD_TO_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/forward_to.svg
+   :width: 28px
+
+.. |ecalicons_REWIND| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/rewind.svg
+   :width: 16px
+
+.. |ecalicons_REWIND_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/rewind.svg
+   :width: 38px
+
+.. |ecalicons_REWIND_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/rewind.svg
+   :width: 33px
+
+.. |ecalicons_REWIND_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Google/rewind.svg
+   :width: 28px
+
+.. |ecalicons_SETTINGS| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Smashicons/gears.svg
+   :width: 16px
+
+.. |ecalicons_SETTINGS_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Smashicons/gears.svg
+   :width: 38px
+
+.. |ecalicons_SETTINGS_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Smashicons/gears.svg
+   :width: 33px
+
+.. |ecalicons_SETTINGS_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Smashicons/gears.svg
+   :width: 28px
+
+.. |ecalicons_TABLE_WIDTH| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/table_width.svg
+   :width: 16px
+
+.. |ecalicons_TABLE_WIDTH_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/table_width.svg
+   :width: 38px
+
+.. |ecalicons_TABLE_WIDTH_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/table_width.svg
+   :width: 33px
+
+.. |ecalicons_TABLE_WIDTH_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/table_width.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_PLAY| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_PLAY_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_PLAY_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_PLAY_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_PLAY_DISABLED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play_disabled.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_PLAY_DISABLED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play_disabled.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_PLAY_DISABLED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play_disabled.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_PLAY_DISABLED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play_disabled.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_PAUSE| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_pause.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_PAUSE_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_pause.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_PAUSE_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_pause.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_PAUSE_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_pause.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_PAUSE_DISABLED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_pause_disabled.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_PAUSE_DISABLED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_pause_disabled.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_PAUSE_DISABLED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_pause_disabled.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_PAUSE_DISABLED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_pause_disabled.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_STOP| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_stop.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_STOP_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_stop.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_STOP_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_stop.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_STOP_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_stop.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_STOP_DISABLED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_stop_disabled.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_STOP_DISABLED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_stop_disabled.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_STOP_DISABLED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_stop_disabled.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_STOP_DISABLED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_stop_disabled.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_PLAY_NEXT| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play_next.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_PLAY_NEXT_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play_next.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_PLAY_NEXT_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play_next.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_PLAY_NEXT_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play_next.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_PLAY_NEXT_DISABLED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play_next_disabled.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_PLAY_NEXT_DISABLED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play_next_disabled.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_PLAY_NEXT_DISABLED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play_next_disabled.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_PLAY_NEXT_DISABLED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_play_next_disabled.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_FORWARD_TO| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_forward_to.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_FORWARD_TO_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_forward_to.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_FORWARD_TO_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_forward_to.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_FORWARD_TO_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_forward_to.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_FORWARD_TO_DISABLED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_forward_to_disabled.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_FORWARD_TO_DISABLED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_forward_to_disabled.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_FORWARD_TO_DISABLED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_forward_to_disabled.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_FORWARD_TO_DISABLED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_forward_to_disabled.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_RECORD| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_record.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_RECORD_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_record.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_RECORD_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_record.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_RECORD_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_record.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_RECORD_DISABLED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_record_disabled.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_RECORD_DISABLED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_record_disabled.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_RECORD_DISABLED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_record_disabled.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_RECORD_DISABLED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_record_disabled.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_POWER| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_POWER_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_POWER_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_POWER_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_POWER_DISABLED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_disabled.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_POWER_DISABLED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_disabled.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_POWER_DISABLED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_disabled.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_POWER_DISABLED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_disabled.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_POWER_ON| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_green.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_POWER_ON_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_green.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_POWER_ON_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_green.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_POWER_ON_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_green.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_POWER_OFF| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_red.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_POWER_OFF_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_red.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_POWER_OFF_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_red.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_POWER_OFF_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_red.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_POWER_ONOFF_DISABLED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_color_disabled.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_POWER_ONOFF_DISABLED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_color_disabled.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_POWER_ONOFF_DISABLED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_color_disabled.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_POWER_ONOFF_DISABLED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_power_color_disabled.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_SAVE_BUFFER| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_save_to_disk.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_SAVE_BUFFER_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_save_to_disk.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_SAVE_BUFFER_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_save_to_disk.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_SAVE_BUFFER_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_save_to_disk.svg
+   :width: 28px
+
+.. |ecalicons_TASKBAR_SAVE_BUFFER_DISABLED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_save_to_disk_disabled.svg
+   :width: 16px
+
+.. |ecalicons_TASKBAR_SAVE_BUFFER_DISABLED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_save_to_disk_disabled.svg
+   :width: 38px
+
+.. |ecalicons_TASKBAR_SAVE_BUFFER_DISABLED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_save_to_disk_disabled.svg
+   :width: 33px
+
+.. |ecalicons_TASKBAR_SAVE_BUFFER_DISABLED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/circle_save_to_disk_disabled.svg
+   :width: 28px
+
+.. |ecalicons_TEXT_ENTRY| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/text-entry-box.svg
+   :width: 16px
+
+.. |ecalicons_TEXT_ENTRY_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/text-entry-box.svg
+   :width: 38px
+
+.. |ecalicons_TEXT_ENTRY_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/text-entry-box.svg
+   :width: 33px
+
+.. |ecalicons_TEXT_ENTRY_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/text-entry-box.svg
+   :width: 28px
+
+.. |ecalicons_PAUSE| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/pause.svg
+   :width: 16px
+
+.. |ecalicons_PAUSE_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/pause.svg
+   :width: 38px
+
+.. |ecalicons_PAUSE_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/pause.svg
+   :width: 33px
+
+.. |ecalicons_PAUSE_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/pause.svg
+   :width: 28px
+
+.. |ecalicons_START| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/play.svg
+   :width: 16px
+
+.. |ecalicons_START_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/play.svg
+   :width: 38px
+
+.. |ecalicons_START_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/play.svg
+   :width: 33px
+
+.. |ecalicons_START_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/play.svg
+   :width: 28px
+
+.. |ecalicons_RECORD| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/record.svg
+   :width: 16px
+
+.. |ecalicons_RECORD_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/record.svg
+   :width: 38px
+
+.. |ecalicons_RECORD_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/record.svg
+   :width: 33px
+
+.. |ecalicons_RECORD_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/record.svg
+   :width: 28px
+
+.. |ecalicons_RESTART| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/restart.svg
+   :width: 16px
+
+.. |ecalicons_RESTART_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/restart.svg
+   :width: 38px
+
+.. |ecalicons_RESTART_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/restart.svg
+   :width: 33px
+
+.. |ecalicons_RESTART_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/restart.svg
+   :width: 28px
+
+.. |ecalicons_STOP| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/stop.svg
+   :width: 16px
+
+.. |ecalicons_STOP_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/stop.svg
+   :width: 38px
+
+.. |ecalicons_STOP_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/stop.svg
+   :width: 33px
+
+.. |ecalicons_STOP_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/stop.svg
+   :width: 28px
+
+.. |ecalicons_REMOVE| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/minus.svg
+   :width: 16px
+
+.. |ecalicons_REMOVE_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/minus.svg
+   :width: 38px
+
+.. |ecalicons_REMOVE_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/minus.svg
+   :width: 33px
+
+.. |ecalicons_REMOVE_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/minus.svg
+   :width: 28px
+
+.. |ecalicons_ADD| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/plus.svg
+   :width: 16px
+
+.. |ecalicons_ADD_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/plus.svg
+   :width: 38px
+
+.. |ecalicons_ADD_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/plus.svg
+   :width: 33px
+
+.. |ecalicons_ADD_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/plus.svg
+   :width: 28px
+
+.. |ecalicons_RESTART_SELECTED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/restart_selected.svg
+   :width: 16px
+
+.. |ecalicons_RESTART_SELECTED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/restart_selected.svg
+   :width: 38px
+
+.. |ecalicons_RESTART_SELECTED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/restart_selected.svg
+   :width: 33px
+
+.. |ecalicons_RESTART_SELECTED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/restart_selected.svg
+   :width: 28px
+
+.. |ecalicons_START_SELECTED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/start_selected.svg
+   :width: 16px
+
+.. |ecalicons_START_SELECTED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/start_selected.svg
+   :width: 38px
+
+.. |ecalicons_START_SELECTED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/start_selected.svg
+   :width: 33px
+
+.. |ecalicons_START_SELECTED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/start_selected.svg
+   :width: 28px
+
+.. |ecalicons_STOP_SELECTED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/stop_selected.svg
+   :width: 16px
+
+.. |ecalicons_STOP_SELECTED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/stop_selected.svg
+   :width: 38px
+
+.. |ecalicons_STOP_SELECTED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/stop_selected.svg
+   :width: 33px
+
+.. |ecalicons_STOP_SELECTED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/stop_selected.svg
+   :width: 28px
+
+.. |ecalicons_RECORD_TEXT| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/record_text.svg
+   :width: 16px
+
+.. |ecalicons_RECORD_TEXT_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/record_text.svg
+   :width: 38px
+
+.. |ecalicons_RECORD_TEXT_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/record_text.svg
+   :width: 33px
+
+.. |ecalicons_RECORD_TEXT_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/record_text.svg
+   :width: 28px
+
+.. |ecalicons_STOP_TEXT| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/stop_text.svg
+   :width: 16px
+
+.. |ecalicons_STOP_TEXT_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/stop_text.svg
+   :width: 38px
+
+.. |ecalicons_STOP_TEXT_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/stop_text.svg
+   :width: 33px
+
+.. |ecalicons_STOP_TEXT_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/stop_text.svg
+   :width: 28px
+
+.. |ecalicons_BUFFER| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/buffer.svg
+   :width: 16px
+
+.. |ecalicons_BUFFER_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/buffer.svg
+   :width: 38px
+
+.. |ecalicons_BUFFER_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/buffer.svg
+   :width: 33px
+
+.. |ecalicons_BUFFER_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/buffer.svg
+   :width: 28px
+
+.. |ecalicons_WAIT| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/hourglass.svg
+   :width: 16px
+
+.. |ecalicons_WAIT_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/hourglass.svg
+   :width: 38px
+
+.. |ecalicons_WAIT_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/hourglass.svg
+   :width: 33px
+
+.. |ecalicons_WAIT_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/Freepik/hourglass.svg
+   :width: 28px
+
+.. |ecalicons_SAVE_TO_DISK| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/save_to_disk.svg
+   :width: 16px
+
+.. |ecalicons_SAVE_TO_DISK_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/save_to_disk.svg
+   :width: 38px
+
+.. |ecalicons_SAVE_TO_DISK_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/save_to_disk.svg
+   :width: 33px
+
+.. |ecalicons_SAVE_TO_DISK_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/save_to_disk.svg
+   :width: 28px
+
+.. |ecalicons_POWER_OFF| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/power_off.svg
+   :width: 16px
+
+.. |ecalicons_POWER_OFF_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/power_off.svg
+   :width: 38px
+
+.. |ecalicons_POWER_OFF_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/power_off.svg
+   :width: 33px
+
+.. |ecalicons_POWER_OFF_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/power_off.svg
+   :width: 28px
+
+.. |ecalicons_POWER_ON| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/power_on.svg
+   :width: 16px
+
+.. |ecalicons_POWER_ON_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/power_on.svg
+   :width: 38px
+
+.. |ecalicons_POWER_ON_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/power_on.svg
+   :width: 33px
+
+.. |ecalicons_POWER_ON_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/power_on.svg
+   :width: 28px
+
+.. |ecalicons_LOCAL| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/local.svg
+   :width: 16px
+
+.. |ecalicons_LOCAL_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/local.svg
+   :width: 38px
+
+.. |ecalicons_LOCAL_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/local.svg
+   :width: 33px
+
+.. |ecalicons_LOCAL_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/local.svg
+   :width: 28px
+
+.. |ecalicons_CONNECTED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/connected.svg
+   :width: 16px
+
+.. |ecalicons_CONNECTED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/connected.svg
+   :width: 38px
+
+.. |ecalicons_CONNECTED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/connected.svg
+   :width: 33px
+
+.. |ecalicons_CONNECTED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/connected.svg
+   :width: 28px
+
+.. |ecalicons_DISCONNECTED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/disconnected.svg
+   :width: 16px
+
+.. |ecalicons_DISCONNECTED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/disconnected.svg
+   :width: 38px
+
+.. |ecalicons_DISCONNECTED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/disconnected.svg
+   :width: 33px
+
+.. |ecalicons_DISCONNECTED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/disconnected.svg
+   :width: 28px
+
+.. |ecalicons_EXPORT| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/yannick/export-arrow.svg
+   :width: 16px
+
+.. |ecalicons_EXPORT_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/yannick/export-arrow.svg
+   :width: 38px
+
+.. |ecalicons_EXPORT_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/yannick/export-arrow.svg
+   :width: 33px
+
+.. |ecalicons_EXPORT_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/yannick/export-arrow.svg
+   :width: 28px
+
+.. |ecalicons_CIRCULAR_STOP| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/yannick/circular-stop-button.svg
+   :width: 16px
+
+.. |ecalicons_CIRCULAR_STOP_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/yannick/circular-stop-button.svg
+   :width: 38px
+
+.. |ecalicons_CIRCULAR_STOP_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/yannick/circular-stop-button.svg
+   :width: 33px
+
+.. |ecalicons_CIRCULAR_STOP_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/yannick/circular-stop-button.svg
+   :width: 28px
+
+.. |ecalicons_IMPORT| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/yannick/import.svg
+   :width: 16px
+
+.. |ecalicons_IMPORT_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/yannick/import.svg
+   :width: 38px
+
+.. |ecalicons_IMPORT_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/yannick/import.svg
+   :width: 33px
+
+.. |ecalicons_IMPORT_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/flaticon/yannick/import.svg
+   :width: 28px
+
+.. |ecalicons_ADDON_CONNECTED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_green.svg
+   :width: 16px
+
+.. |ecalicons_ADDON_CONNECTED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_green.svg
+   :width: 38px
+
+.. |ecalicons_ADDON_CONNECTED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_green.svg
+   :width: 33px
+
+.. |ecalicons_ADDON_CONNECTED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_green.svg
+   :width: 28px
+
+.. |ecalicons_ADDON_DISCONNECTED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_grey_strikethrough.svg
+   :width: 16px
+
+.. |ecalicons_ADDON_DISCONNECTED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_grey_strikethrough.svg
+   :width: 38px
+
+.. |ecalicons_ADDON_DISCONNECTED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_grey_strikethrough.svg
+   :width: 33px
+
+.. |ecalicons_ADDON_DISCONNECTED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_grey_strikethrough.svg
+   :width: 28px
+
+.. |ecalicons_ADDON| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_blue.svg
+   :width: 16px
+
+.. |ecalicons_ADDON_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_blue.svg
+   :width: 38px
+
+.. |ecalicons_ADDON_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_blue.svg
+   :width: 33px
+
+.. |ecalicons_ADDON_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_blue.svg
+   :width: 28px
+
+.. |ecalicons_HOST| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_blue.svg
+   :width: 16px
+
+.. |ecalicons_HOST_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_blue.svg
+   :width: 38px
+
+.. |ecalicons_HOST_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_blue.svg
+   :width: 33px
+
+.. |ecalicons_HOST_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_blue.svg
+   :width: 28px
+
+.. |ecalicons_HOST_CONNECTED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_green.svg
+   :width: 16px
+
+.. |ecalicons_HOST_CONNECTED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_green.svg
+   :width: 38px
+
+.. |ecalicons_HOST_CONNECTED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_green.svg
+   :width: 33px
+
+.. |ecalicons_HOST_CONNECTED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_green.svg
+   :width: 28px
+
+.. |ecalicons_HOST_DISCONNECTED| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_grey_strikethrough.svg
+   :width: 16px
+
+.. |ecalicons_HOST_DISCONNECTED_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_grey_strikethrough.svg
+   :width: 38px
+
+.. |ecalicons_HOST_DISCONNECTED_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_grey_strikethrough.svg
+   :width: 33px
+
+.. |ecalicons_HOST_DISCONNECTED_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_grey_strikethrough.svg
+   :width: 28px
+
+.. |ecalicons_UPLOAD| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/upload.svg
+   :width: 16px
+
+.. |ecalicons_UPLOAD_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/upload.svg
+   :width: 38px
+
+.. |ecalicons_UPLOAD_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/upload.svg
+   :width: 33px
+
+.. |ecalicons_UPLOAD_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/upload.svg
+   :width: 28px
+
+.. |ecalicons_MERGE| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/merge.svg
+   :width: 16px
+
+.. |ecalicons_MERGE_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/merge.svg
+   :width: 38px
+
+.. |ecalicons_MERGE_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/merge.svg
+   :width: 33px
+
+.. |ecalicons_MERGE_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/merge.svg
+   :width: 28px
+
+.. |ecalicons_NEW_FILE| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/new_file.svg
+   :width: 16px
+
+.. |ecalicons_NEW_FILE_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/new_file.svg
+   :width: 38px
+
+.. |ecalicons_NEW_FILE_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/new_file.svg
+   :width: 33px
+
+.. |ecalicons_NEW_FILE_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/new_file.svg
+   :width: 28px
+
+.. |ecalicons_DUPLICATE| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/duplicate.svg
+   :width: 16px
+
+.. |ecalicons_DUPLICATE_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/duplicate.svg
+   :width: 38px
+
+.. |ecalicons_DUPLICATE_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/duplicate.svg
+   :width: 33px
+
+.. |ecalicons_DUPLICATE_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/duplicate.svg
+   :width: 28px
+
+.. |ecalicons_UPDATE_FROM_CLOUD| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/update_from_cloud.svg
+   :width: 16px
+
+.. |ecalicons_UPDATE_FROM_CLOUD_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/update_from_cloud.svg
+   :width: 38px
+
+.. |ecalicons_UPDATE_FROM_CLOUD_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/update_from_cloud.svg
+   :width: 33px
+
+.. |ecalicons_UPDATE_FROM_CLOUD_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/update_from_cloud.svg
+   :width: 28px
+
+.. |ecalicons_IMPORT_FROM_CLOUD| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/import_from_cloud.svg
+   :width: 16px
+
+.. |ecalicons_IMPORT_FROM_CLOUD_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/import_from_cloud.svg
+   :width: 38px
+
+.. |ecalicons_IMPORT_FROM_CLOUD_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/import_from_cloud.svg
+   :width: 33px
+
+.. |ecalicons_IMPORT_FROM_CLOUD_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/import_from_cloud.svg
+   :width: 28px
+
+.. |ecalicons_INFO| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/info.svg
+   :width: 16px
+
+.. |ecalicons_INFO_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/info.svg
+   :width: 38px
+
+.. |ecalicons_INFO_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/info.svg
+   :width: 33px
+
+.. |ecalicons_INFO_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/info.svg
+   :width: 28px
+
+.. |ecalicons_OPEN| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/open.svg
+   :width: 16px
+
+.. |ecalicons_OPEN_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/open.svg
+   :width: 38px
+
+.. |ecalicons_OPEN_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/open.svg
+   :width: 33px
+
+.. |ecalicons_OPEN_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/open.svg
+   :width: 28px
+
+.. |ecalicons_UPDATE| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/update.svg
+   :width: 16px
+
+.. |ecalicons_UPDATE_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/update.svg
+   :width: 38px
+
+.. |ecalicons_UPDATE_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/update.svg
+   :width: 33px
+
+.. |ecalicons_UPDATE_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/update.svg
+   :width: 28px
+
+.. |ecalicons_WARNING| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/warning.svg
+   :width: 16px
+
+.. |ecalicons_WARNING_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/warning.svg
+   :width: 38px
+
+.. |ecalicons_WARNING_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/warning.svg
+   :width: 33px
+
+.. |ecalicons_WARNING_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/warning.svg
+   :width: 28px
+
+.. |ecalicons_ERROR| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/error.svg
+   :width: 16px
+
+.. |ecalicons_ERROR_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/error.svg
+   :width: 38px
+
+.. |ecalicons_ERROR_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/error.svg
+   :width: 33px
+
+.. |ecalicons_ERROR_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/error.svg
+   :width: 28px
+
+.. |ecalicons_HOST_CONNECTED_ERROR| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_green_error.svg
+   :width: 16px
+
+.. |ecalicons_HOST_CONNECTED_ERROR_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_green_error.svg
+   :width: 38px
+
+.. |ecalicons_HOST_CONNECTED_ERROR_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_green_error.svg
+   :width: 33px
+
+.. |ecalicons_HOST_CONNECTED_ERROR_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_green_error.svg
+   :width: 28px
+
+.. |ecalicons_HOST_CONNECTED_WARNING| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_green_warning.svg
+   :width: 16px
+
+.. |ecalicons_HOST_CONNECTED_WARNING_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_green_warning.svg
+   :width: 38px
+
+.. |ecalicons_HOST_CONNECTED_WARNING_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_green_warning.svg
+   :width: 33px
+
+.. |ecalicons_HOST_CONNECTED_WARNING_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_green_warning.svg
+   :width: 28px
+
+.. |ecalicons_HOST_ERROR| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_blue_error.svg
+   :width: 16px
+
+.. |ecalicons_HOST_ERROR_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_blue_error.svg
+   :width: 38px
+
+.. |ecalicons_HOST_ERROR_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_blue_error.svg
+   :width: 33px
+
+.. |ecalicons_HOST_ERROR_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_blue_error.svg
+   :width: 28px
+
+.. |ecalicons_HOST_WARNING| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_blue_warning.svg
+   :width: 16px
+
+.. |ecalicons_HOST_WARNING_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_blue_warning.svg
+   :width: 38px
+
+.. |ecalicons_HOST_WARNING_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_blue_warning.svg
+   :width: 33px
+
+.. |ecalicons_HOST_WARNING_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/screen_blue_warning.svg
+   :width: 28px
+
+.. |ecalicons_ADDON_CONNECTED_ERROR| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_green_error.svg
+   :width: 16px
+
+.. |ecalicons_ADDON_CONNECTED_ERROR_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_green_error.svg
+   :width: 38px
+
+.. |ecalicons_ADDON_CONNECTED_ERROR_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_green_error.svg
+   :width: 33px
+
+.. |ecalicons_ADDON_CONNECTED_ERROR_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_green_error.svg
+   :width: 28px
+
+.. |ecalicons_ADDON_CONNECTED_WARNING| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_green_warning.svg
+   :width: 16px
+
+.. |ecalicons_ADDON_CONNECTED_WARNING_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_green_warning.svg
+   :width: 38px
+
+.. |ecalicons_ADDON_CONNECTED_WARNING_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_green_warning.svg
+   :width: 33px
+
+.. |ecalicons_ADDON_CONNECTED_WARNING_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_green_warning.svg
+   :width: 28px
+
+.. |ecalicons_ADDON_ERROR| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_blue_error.svg
+   :width: 16px
+
+.. |ecalicons_ADDON_ERROR_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_blue_error.svg
+   :width: 38px
+
+.. |ecalicons_ADDON_ERROR_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_blue_error.svg
+   :width: 33px
+
+.. |ecalicons_ADDON_ERROR_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_blue_error.svg
+   :width: 28px
+
+.. |ecalicons_ADDON_WARNING| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_blue_warning.svg
+   :width: 16px
+
+.. |ecalicons_ADDON_WARNING_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_blue_warning.svg
+   :width: 38px
+
+.. |ecalicons_ADDON_WARNING_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_blue_warning.svg
+   :width: 33px
+
+.. |ecalicons_ADDON_WARNING_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/puzzle_blue_warning.svg
+   :width: 28px
+
+.. |ecalicons_EDIT_FILE| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/edit_file.svg
+   :width: 16px
+
+.. |ecalicons_EDIT_FILE_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/edit_file.svg
+   :width: 38px
+
+.. |ecalicons_EDIT_FILE_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/edit_file.svg
+   :width: 33px
+
+.. |ecalicons_EDIT_FILE_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/edit_file.svg
+   :width: 28px
+
+.. |ecalicons_ADD_FILE| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/add_file.svg
+   :width: 16px
+
+.. |ecalicons_ADD_FILE_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/add_file.svg
+   :width: 38px
+
+.. |ecalicons_ADD_FILE_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/add_file.svg
+   :width: 33px
+
+.. |ecalicons_ADD_FILE_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/add_file.svg
+   :width: 28px
+
+.. |ecalicons_SHOW| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/MuraruMihai/show.svg
+   :width: 16px
+
+.. |ecalicons_SHOW_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/MuraruMihai/show.svg
+   :width: 38px
+
+.. |ecalicons_SHOW_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/MuraruMihai/show.svg
+   :width: 33px
+
+.. |ecalicons_SHOW_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/MuraruMihai/show.svg
+   :width: 28px
+
+.. |ecalicons_HIDE| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/MuraruMihai/hide.svg
+   :width: 16px
+
+.. |ecalicons_HIDE_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/MuraruMihai/hide.svg
+   :width: 38px
+
+.. |ecalicons_HIDE_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/MuraruMihai/hide.svg
+   :width: 33px
+
+.. |ecalicons_HIDE_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/MuraruMihai/hide.svg
+   :width: 28px
+
+.. |ecalicons_ARROW_LEFT| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_left.svg
+   :width: 16px
+
+.. |ecalicons_ARROW_LEFT_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_left.svg
+   :width: 38px
+
+.. |ecalicons_ARROW_LEFT_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_left.svg
+   :width: 33px
+
+.. |ecalicons_ARROW_LEFT_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_left.svg
+   :width: 28px
+
+.. |ecalicons_ARROW_RIGHT| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_right.svg
+   :width: 16px
+
+.. |ecalicons_ARROW_RIGHT_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_right.svg
+   :width: 38px
+
+.. |ecalicons_ARROW_RIGHT_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_right.svg
+   :width: 33px
+
+.. |ecalicons_ARROW_RIGHT_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_right.svg
+   :width: 28px
+
+.. |ecalicons_ARROW_DOWN| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_down.svg
+   :width: 16px
+
+.. |ecalicons_ARROW_DOWN_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_down.svg
+   :width: 38px
+
+.. |ecalicons_ARROW_DOWN_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_down.svg
+   :width: 33px
+
+.. |ecalicons_ARROW_DOWN_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_down.svg
+   :width: 28px
+
+.. |ecalicons_ARROW_UP| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_up.svg
+   :width: 16px
+
+.. |ecalicons_ARROW_UP_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_up.svg
+   :width: 38px
+
+.. |ecalicons_ARROW_UP_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_up.svg
+   :width: 33px
+
+.. |ecalicons_ARROW_UP_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/FlorianReimold/arrow_up.svg
+   :width: 28px
+
+.. |ecalicons/darkmode_COMMAND_WINDOW| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/darkmode/console.svg
+   :width: 16px
+
+.. |ecalicons/darkmode_COMMAND_WINDOW_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/darkmode/console.svg
+   :width: 38px
+
+.. |ecalicons/darkmode_COMMAND_WINDOW_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/darkmode/console.svg
+   :width: 33px
+
+.. |ecalicons/darkmode_COMMAND_WINDOW_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/darkmode/console.svg
+   :width: 28px
+
+.. |ecalicons/darkmode_ARROW_DOWN| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_down.svg
+   :width: 16px
+
+.. |ecalicons/darkmode_ARROW_DOWN_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_down.svg
+   :width: 38px
+
+.. |ecalicons/darkmode_ARROW_DOWN_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_down.svg
+   :width: 33px
+
+.. |ecalicons/darkmode_ARROW_DOWN_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_down.svg
+   :width: 28px
+
+.. |ecalicons/darkmode_ARROW_LEFT| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_left.svg
+   :width: 16px
+
+.. |ecalicons/darkmode_ARROW_LEFT_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_left.svg
+   :width: 38px
+
+.. |ecalicons/darkmode_ARROW_LEFT_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_left.svg
+   :width: 33px
+
+.. |ecalicons/darkmode_ARROW_LEFT_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_left.svg
+   :width: 28px
+
+.. |ecalicons/darkmode_ARROW_RIGHT| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_right.svg
+   :width: 16px
+
+.. |ecalicons/darkmode_ARROW_RIGHT_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_right.svg
+   :width: 38px
+
+.. |ecalicons/darkmode_ARROW_RIGHT_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_right.svg
+   :width: 33px
+
+.. |ecalicons/darkmode_ARROW_RIGHT_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_right.svg
+   :width: 28px
+
+.. |ecalicons/darkmode_ARROW_UP| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_up.svg
+   :width: 16px
+
+.. |ecalicons/darkmode_ARROW_UP_h1| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_up.svg
+   :width: 38px
+
+.. |ecalicons/darkmode_ARROW_UP_h2| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_up.svg
+   :width: 33px
+
+.. |ecalicons/darkmode_ARROW_UP_h3| image:: D:/Projects/ecal/ecal-githubcom/app/iconset/lightmode/arrow_up.svg
+   :width: 28px
+
+.. |qecalparser/light_SHOW_DIALOG| image:: D:/Projects/ecal/ecal-githubcom/lib/QEcalParser/resources/show_dialog.svg
+   :width: 16px
+
+.. |qecalparser/light_SHOW_DIALOG_h1| image:: D:/Projects/ecal/ecal-githubcom/lib/QEcalParser/resources/show_dialog.svg
+   :width: 38px
+
+.. |qecalparser/light_SHOW_DIALOG_h2| image:: D:/Projects/ecal/ecal-githubcom/lib/QEcalParser/resources/show_dialog.svg
+   :width: 33px
+
+.. |qecalparser/light_SHOW_DIALOG_h3| image:: D:/Projects/ecal/ecal-githubcom/lib/QEcalParser/resources/show_dialog.svg
+   :width: 28px
+
+.. |qecalparser/dark_SHOW_DIALOG| image:: D:/Projects/ecal/ecal-githubcom/lib/QEcalParser/resources/show_dialog_darkmode.svg
+   :width: 16px
+
+.. |qecalparser/dark_SHOW_DIALOG_h1| image:: D:/Projects/ecal/ecal-githubcom/lib/QEcalParser/resources/show_dialog_darkmode.svg
+   :width: 38px
+
+.. |qecalparser/dark_SHOW_DIALOG_h2| image:: D:/Projects/ecal/ecal-githubcom/lib/QEcalParser/resources/show_dialog_darkmode.svg
+   :width: 33px
+
+.. |qecalparser/dark_SHOW_DIALOG_h3| image:: D:/Projects/ecal/ecal-githubcom/lib/QEcalParser/resources/show_dialog_darkmode.svg
+   :width: 28px
+
+.. |ecalmon_APP_ICON| image:: D:/Projects/ecal/ecal-githubcom/app/mon/mon_gui/resources/ecalmon.ico
+   :width: 16px
+
+.. |ecalmon_APP_ICON_h1| image:: D:/Projects/ecal/ecal-githubcom/app/mon/mon_gui/resources/ecalmon.ico
+   :width: 38px
+
+.. |ecalmon_APP_ICON_h2| image:: D:/Projects/ecal/ecal-githubcom/app/mon/mon_gui/resources/ecalmon.ico
+   :width: 33px
+
+.. |ecalmon_APP_ICON_h3| image:: D:/Projects/ecal/ecal-githubcom/app/mon/mon_gui/resources/ecalmon.ico
+   :width: 28px
+
+.. |ecalplay_APP_ICON| image:: D:/Projects/ecal/ecal-githubcom/app/play/play_gui/resources/ecalplay.ico
+   :width: 16px
+
+.. |ecalplay_APP_ICON_h1| image:: D:/Projects/ecal/ecal-githubcom/app/play/play_gui/resources/ecalplay.ico
+   :width: 38px
+
+.. |ecalplay_APP_ICON_h2| image:: D:/Projects/ecal/ecal-githubcom/app/play/play_gui/resources/ecalplay.ico
+   :width: 33px
+
+.. |ecalplay_APP_ICON_h3| image:: D:/Projects/ecal/ecal-githubcom/app/play/play_gui/resources/ecalplay.ico
+   :width: 28px
+
+.. |ecalrec_APP_ICON| image:: D:/Projects/ecal/ecal-githubcom/app/rec/rec_gui/resources/ecalrec.ico
+   :width: 16px
+
+.. |ecalrec_APP_ICON_h1| image:: D:/Projects/ecal/ecal-githubcom/app/rec/rec_gui/resources/ecalrec.ico
+   :width: 38px
+
+.. |ecalrec_APP_ICON_h2| image:: D:/Projects/ecal/ecal-githubcom/app/rec/rec_gui/resources/ecalrec.ico
+   :width: 33px
+
+.. |ecalrec_APP_ICON_h3| image:: D:/Projects/ecal/ecal-githubcom/app/rec/rec_gui/resources/ecalrec.ico
+   :width: 28px
+
+.. |ecalsys_APP_ICON| image:: D:/Projects/ecal/ecal-githubcom/app/sys/sys_gui/resources/gfx/ecalsys.ico
+   :width: 16px
+
+.. |ecalsys_APP_ICON_h1| image:: D:/Projects/ecal/ecal-githubcom/app/sys/sys_gui/resources/gfx/ecalsys.ico
+   :width: 38px
+
+.. |ecalsys_APP_ICON_h2| image:: D:/Projects/ecal/ecal-githubcom/app/sys/sys_gui/resources/gfx/ecalsys.ico
+   :width: 33px
+
+.. |ecalsys_APP_ICON_h3| image:: D:/Projects/ecal/ecal-githubcom/app/sys/sys_gui/resources/gfx/ecalsys.ico
+   :width: 28px
+
+.. |ecallauncher_APP_ICON| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/ecallauncher.ico
+   :width: 16px
+
+.. |ecallauncher_APP_ICON_h1| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/ecallauncher.ico
+   :width: 38px
+
+.. |ecallauncher_APP_ICON_h2| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/ecallauncher.ico
+   :width: 33px
+
+.. |ecallauncher_APP_ICON_h3| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/ecallauncher.ico
+   :width: 28px
+
+.. |ecallauncher_LABEL_EXIT| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/exit.svg
+   :width: 16px
+
+.. |ecallauncher_LABEL_EXIT_h1| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/exit.svg
+   :width: 38px
+
+.. |ecallauncher_LABEL_EXIT_h2| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/exit.svg
+   :width: 33px
+
+.. |ecallauncher_LABEL_EXIT_h3| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/exit.svg
+   :width: 28px
+
+.. |ecallauncher_LABEL_INFO| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/info.svg
+   :width: 16px
+
+.. |ecallauncher_LABEL_INFO_h1| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/info.svg
+   :width: 38px
+
+.. |ecallauncher_LABEL_INFO_h2| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/info.svg
+   :width: 33px
+
+.. |ecallauncher_LABEL_INFO_h3| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/info.svg
+   :width: 28px
+
+.. |ecallauncher_LOGO| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/logo.svg
+   :width: 16px
+
+.. |ecallauncher_LOGO_h1| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/logo.svg
+   :width: 38px
+
+.. |ecallauncher_LOGO_h2| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/logo.svg
+   :width: 33px
+
+.. |ecallauncher_LOGO_h3| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/logo.svg
+   :width: 28px
+
+.. |ecallauncher_LABEL_MONITOR| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/monitor.svg
+   :width: 16px
+
+.. |ecallauncher_LABEL_MONITOR_h1| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/monitor.svg
+   :width: 38px
+
+.. |ecallauncher_LABEL_MONITOR_h2| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/monitor.svg
+   :width: 33px
+
+.. |ecallauncher_LABEL_MONITOR_h3| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/monitor.svg
+   :width: 28px
+
+.. |ecallauncher_LABEL_PLAY| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/play.svg
+   :width: 16px
+
+.. |ecallauncher_LABEL_PLAY_h1| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/play.svg
+   :width: 38px
+
+.. |ecallauncher_LABEL_PLAY_h2| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/play.svg
+   :width: 33px
+
+.. |ecallauncher_LABEL_PLAY_h3| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/play.svg
+   :width: 28px
+
+.. |ecallauncher_LABEL_REC| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/rec.svg
+   :width: 16px
+
+.. |ecallauncher_LABEL_REC_h1| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/rec.svg
+   :width: 38px
+
+.. |ecallauncher_LABEL_REC_h2| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/rec.svg
+   :width: 33px
+
+.. |ecallauncher_LABEL_REC_h3| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/rec.svg
+   :width: 28px
+
+.. |ecallauncher_LABEL_SYS| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/sys.svg
+   :width: 16px
+
+.. |ecallauncher_LABEL_SYS_h1| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/sys.svg
+   :width: 38px
+
+.. |ecallauncher_LABEL_SYS_h2| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/sys.svg
+   :width: 33px
+
+.. |ecallauncher_LABEL_SYS_h3| image:: D:/Projects/ecal/ecal-githubcom/app/util/launcher/resources/labels/sys.svg
+   :width: 28px
+

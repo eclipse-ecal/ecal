@@ -1,0 +1,188 @@
+.bignums,
+.bignums-hint,
+.bignums-note,
+.bignums-caution,
+.bignums-warning,
+.bignums-attention,
+.bignums-important,
+.bignums-seealso,
+.bignums-tip,
+.bignums-danger,
+.bignums-error,
+.bignums-xxl {
+    padding: 0;
+    counter-reset: li-counter
+}
+
+.bignums>li,
+.bignums-hint>li,
+.bignums-note>li,
+.bignums-caution>li,
+.bignums-warning>li,
+.bignums-attention>li,
+.bignums-important>li,
+.bignums-seealso>li,
+.bignums-tip>li,
+.bignums-danger>li,
+.bignums-error>li,
+.bignums-xxl>li {
+    list-style: none;
+    position: relative;
+    padding: 1rem;
+    padding-left: 3.875rem;
+    padding-top: 1.2875rem;
+    background-color: #e6e6e6;
+    min-height: 4.3rem;
+    border-radius: .25rem
+}
+
+.bignums>li>.first,
+.bignums-hint>li>.first,
+.bignums-note>li>.first,
+.bignums-caution>li>.first,
+.bignums-warning>li>.first,
+.bignums-attention>li>.first,
+.bignums-important>li>.first,
+.bignums-seealso>li>.first,
+.bignums-tip>li>.first,
+.bignums-danger>li>.first,
+.bignums-error>li>.first,
+.bignums-xxl>li>.first {
+    font-weight: 600;
+    font-size: 1.15rem
+}
+
+.bignums>li *:last-child,
+.bignums-hint>li *:last-child,
+.bignums-note>li *:last-child,
+.bignums-caution>li *:last-child,
+.bignums-warning>li *:last-child,
+.bignums-attention>li *:last-child,
+.bignums-important>li *:last-child,
+.bignums-seealso>li *:last-child,
+.bignums-tip>li *:last-child,
+.bignums-danger>li *:last-child,
+.bignums-error>li *:last-child,
+.bignums-xxl>li *:last-child {
+    margin-bottom: 0
+}
+
+.bignums>li:before,
+.bignums-hint>li:before,
+.bignums-note>li:before,
+.bignums-caution>li:before,
+.bignums-warning>li:before,
+.bignums-attention>li:before,
+.bignums-important>li:before,
+.bignums-seealso>li:before,
+.bignums-tip>li:before,
+.bignums-danger>li:before,
+.bignums-error>li:before,
+.bignums-xxl>li:before {
+    font-size: 1.15rem;
+    display: block;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    height: 2em;
+    width: 2em;
+    line-height: 2em;
+    text-align: center;
+    background-color: #313131;
+    color: #fff;
+    border-radius: 50%;
+    content: counter(li-counter, decimal);
+    counter-increment: li-counter;
+    font-weight: 600
+}
+
+.bignums>li+li,
+.bignums-hint>li+li,
+.bignums-note>li+li,
+.bignums-caution>li+li,
+.bignums-warning>li+li,
+.bignums-attention>li+li,
+.bignums-important>li+li,
+.bignums-seealso>li+li,
+.bignums-tip>li+li,
+.bignums-danger>li+li,
+.bignums-error>li+li,
+.bignums-xxl>li+li {
+    margin-top: 1rem
+}
+
+.bignums-hint>li,
+.bignums-note>li {
+    background-color: #ebf7fb
+}
+
+.bignums-hint>li:before,
+.bignums-note>li:before {
+    background-color: #5bc0de;
+    color: #212121
+}
+
+.bignums-caution>li,
+.bignums-warning>li,
+.bignums-attention>li {
+    background-color: #fdf5ea
+}
+
+.bignums-caution>li:before,
+.bignums-warning>li:before,
+.bignums-attention>li:before {
+    background-color: #f0ad4e;
+    color: #212121
+}
+
+.bignums-important>li,
+.bignums-seealso>li,
+.bignums-tip>li {
+    background-color: #ebf6eb
+}
+
+.bignums-important>li:before,
+.bignums-seealso>li:before,
+.bignums-tip>li:before {
+    background-color: #5cb85c;
+    color: #fff
+}
+
+.bignums-danger>li,
+.bignums-error>li {
+    background-color: #faeaea
+}
+
+.bignums-danger>li:before,
+.bignums-error>li:before {
+    background-color: #d9534f;
+    color: #fff
+}
+
+.bignums-xxl>li {
+    padding: 0;
+    padding-left: 3.75rem;
+    padding-top: .375rem;
+    background-color: transparent;
+    min-height: 3rem
+}
+
+.bignums-xxl>li>.first {
+    font-size: 1.5rem
+}
+
+.bignums-xxl>li:before {
+    font-size: 1.5rem;
+    top: 0;
+    left: 0
+}
+
+.bignums-xxl>li+li {
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+    margin-top: 1.375rem;
+    padding-top: 1.375rem
+}
+
+.bignums-xxl>li+li:before {
+    top: 1rem
+}
