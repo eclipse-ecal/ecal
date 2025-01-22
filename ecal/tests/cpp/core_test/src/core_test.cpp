@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_process.h>
 #include <ecal/ecal_defs.h>
+
+#include <ecal_utils/filesystem.h>
 
 #include <gtest/gtest.h>
 #include <string>
@@ -82,34 +84,7 @@ TEST(core_cpp_core, MultipleInitializeFinalize)
   }
 }
 
-namespace
-{
-  std::string extractProcessName(const std::string& full_path_)
-  {
-    // initialize process name with full path
-    std::string processName = full_path_;
-
-    // extract the substring after the last separator
-    size_t lastSeparatorPos = full_path_.find_last_of("\\/");
-    if (lastSeparatorPos != std::string::npos)
-    {
-      processName = full_path_.substr(lastSeparatorPos + 1);
-    }
-
-#ifdef ECAL_OS_WINDOWS
-    // remove the file extension if found
-    size_t lastDotPos = processName.find_last_of('.');
-    if (lastDotPos != std::string::npos)
-    {
-      processName = processName.substr(0, lastDotPos);
-    }
-#endif // ECAL_OS_WINDOWS
-
-    return processName;
-  }
-}
-
-TEST(core_cpp_core, SetGetUnitName)
+TEST(core_cpp_core, GetUnitName)
 {
   // initialize eCAL API with empty unit name (eCAL will use process name as unit name)
   EXPECT_EQ(true, eCAL::Initialize(""));
@@ -118,16 +93,8 @@ TEST(core_cpp_core, SetGetUnitName)
   EXPECT_EQ(true, eCAL::IsInitialized());
 
   // if we call eCAL_Initialize with empty unit name, eCAL will use the process name as unit name
-  std::string process_name = extractProcessName(eCAL::Process::GetProcessName());
+  std::string process_name = EcalUtils::Filesystem::BaseName(eCAL::Process::GetProcessName());
   EXPECT_STREQ(process_name.c_str(), eCAL::Process::GetUnitName().c_str());
-
-  // set unit name (should change the name to 'unit name')
-  EXPECT_EQ(true, eCAL::SetUnitName("unit name"));
-  EXPECT_STREQ("unit name", eCAL::Process::GetUnitName().c_str());
-
-  // set empty unit name (should not change the unit name)
-  EXPECT_EQ(false, eCAL::SetUnitName(""));
-  EXPECT_STREQ("unit name", eCAL::Process::GetUnitName().c_str());
 
   // finalize eCAL API we expect return value 0 because it will be finalized
   EXPECT_EQ(true, eCAL::Finalize());

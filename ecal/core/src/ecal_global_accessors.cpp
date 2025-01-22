@@ -26,6 +26,7 @@
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
 #include "ecal_globals.h"
+#include "ecal_utils/filesystem.h"
 
 #include <atomic>
 #include <string>
@@ -59,33 +60,12 @@ namespace eCAL
 
   void SetGlobalUnitName(const char *unit_name_)
   {
-    // There is a function already "SetUnitName" which sets the g_unit_name just as string.
-    // Used in global API. It does not have the following logic -> should that be added/removed/combined?
-    // For previous consistency this function is added here for the time being.
     if(unit_name_ != nullptr) g_unit_name = unit_name_;
-      if (g_unit_name.empty())
-      {
-        g_unit_name = Process::GetProcessName();
-#ifdef ECAL_OS_WINDOWS
-        size_t p = g_unit_name.rfind('\\');
-        if (p != std::string::npos)
-        {
-          g_unit_name = g_unit_name.substr(p+1);
-        }
-        p = g_unit_name.rfind('.');
-        if (p != std::string::npos)
-        {
-          g_unit_name = g_unit_name.substr(0, p);
-        }
-#endif
-#ifdef ECAL_OS_LINUX
-        const size_t p = g_unit_name.rfind('/');
-        if (p != std::string::npos)
-        {
-          g_unit_name = g_unit_name.substr(p + 1);
-        }
-#endif
-      }
+    
+    if (g_unit_name.empty())
+    {
+      g_unit_name = EcalUtils::Filesystem::BaseName(Process::GetProcessName());
+    }
   }
 
   CGlobals* g_globals()

@@ -72,15 +72,6 @@ extern "C"
   ECALC_API int eCAL_Initialize(const char *unit_name_, unsigned int components_);
 
   /**
-   * @brief  Set/change the unit name of current module.
-   *
-   * @param unit_name_  Defines the name of the eCAL unit. 
-   *
-   * @return  Zero if succeeded.
-  **/
-  ECALC_API int eCAL_SetUnitName(const char *unit_name_);
-
-  /**
    * @brief Finalize eCAL API.
    *
    * @return Zero if succeeded.

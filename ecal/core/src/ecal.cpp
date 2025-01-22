@@ -151,21 +151,6 @@ namespace eCAL
   }
 
   /**
-   * @brief  Set/change the unit name of current module.
-   *
-   * @param unit_name_  Defines the name of the eCAL unit. 
-   *
-   * @return True if succeeded.
-  **/
-  bool SetUnitName(const std::string& unit_name_)
-  {
-    if (unit_name_.empty())
-      return false;
-    g_unit_name = unit_name_;
-    return true;
-  }
-
-  /**
    * @brief Finalize eCAL API.
    *
    * @return True if succeeded.

@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -68,15 +68,6 @@ def getversion_components():
   """ get ecal version as major, minor, patch tuple
   """
   return _ecal.getversion_components()
-
-
-def set_unit_name(unit_name):
-  """ set/change the unit name of the current module
-  
-  :param unit_name: Name of the eCAL unit
-  :type unit_name: string
-  """
-  return _ecal.set_unit_name(unit_name)
 
 
 def getdate():

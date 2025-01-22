@@ -172,14 +172,6 @@ int ecal_is_initialized()
 }
 
 /****************************************/
-/*      ecal_set_unit_name              */
-/****************************************/
-int ecal_set_unit_name(const char* unit_name_)
-{
-  return static_cast<int>(eCAL::SetUnitName(unit_name_));
-}
-
-/****************************************/
 /*      ecal_set_process_state          */
 /****************************************/
 void ecal_set_process_state(const int severity_, const int level_, const char* info_)
