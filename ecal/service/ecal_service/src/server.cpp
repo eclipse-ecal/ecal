@@ -28,72 +28,69 @@
 
 #include "server_impl.h"
 
-namespace eCAL
+namespace ecal_service
 {
-  namespace service
+  ///////////////////////////////////////////
+  // Constructor, Destructor, Create
+  ///////////////////////////////////////////
+  std::shared_ptr<Server> Server::create(const std::shared_ptr<asio::io_context>& io_context
+                                        , std::uint8_t                            protocol_version
+                                        , std::uint16_t                           port
+                                        , const ServiceCallbackT&                 service_callback
+                                        , bool                                    parallel_service_calls_enabled
+                                        , const EventCallbackT&                   event_callback
+                                        , const LoggerT&                          logger
+                                        , const DeleteCallbackT&                  delete_callback)
   {
-    ///////////////////////////////////////////
-    // Constructor, Destructor, Create
-    ///////////////////////////////////////////
-    std::shared_ptr<Server> Server::create(const std::shared_ptr<asio::io_context>& io_context
-                                          , std::uint8_t                            protocol_version
-                                          , std::uint16_t                           port
-                                          , const ServiceCallbackT&                 service_callback
-                                          , bool                                    parallel_service_calls_enabled
-                                          , const EventCallbackT&                   event_callback
-                                          , const LoggerT&                          logger
-                                          , const DeleteCallbackT&                  delete_callback)
+    auto deleter = [delete_callback](Server* server)
     {
-      auto deleter = [delete_callback](Server* server)
-      {
-        delete_callback(server);
-        delete server; // NOLINT(cppcoreguidelines-owning-memory)
-      };
+      delete_callback(server);
+      delete server; // NOLINT(cppcoreguidelines-owning-memory)
+    };
 
-      return std::shared_ptr<Server>(new Server(io_context, protocol_version, port, service_callback, parallel_service_calls_enabled, event_callback, logger), deleter);
-    }
+    return std::shared_ptr<Server>(new Server(io_context, protocol_version, port, service_callback, parallel_service_calls_enabled, event_callback, logger), deleter);
+  }
 
-    std::shared_ptr<Server> Server::create(const std::shared_ptr<asio::io_context>& io_context
-                                          , std::uint8_t                            protocol_version
-                                          , std::uint16_t                           port
-                                          , const ServiceCallbackT&                 service_callback
-                                          , bool                                    parallel_service_calls_enabled
-                                          , const EventCallbackT&                   event_callback
-                                          , const LoggerT&                          logger)
-    {
-      return std::shared_ptr<Server>(new Server(io_context, protocol_version, port, service_callback, parallel_service_calls_enabled, event_callback, logger));
-    }
+  std::shared_ptr<Server> Server::create(const std::shared_ptr<asio::io_context>& io_context
+                                        , std::uint8_t                            protocol_version
+                                        , std::uint16_t                           port
+                                        , const ServiceCallbackT&                 service_callback
+                                        , bool                                    parallel_service_calls_enabled
+                                        , const EventCallbackT&                   event_callback
+                                        , const LoggerT&                          logger)
+  {
+    return std::shared_ptr<Server>(new Server(io_context, protocol_version, port, service_callback, parallel_service_calls_enabled, event_callback, logger));
+  }
 
-    std::shared_ptr<Server> Server::create(const std::shared_ptr<asio::io_context>& io_context
-                                          , std::uint8_t                            protocol_version
-                                          , std::uint16_t                           port
-                                          , const ServiceCallbackT&                 service_callback
-                                          , bool                                    parallel_service_calls_enabled
-                                          , const EventCallbackT&                   event_callback
-                                          , const DeleteCallbackT&                  delete_callback)
-    {
-      return Server::create(io_context, protocol_version, port, service_callback, parallel_service_calls_enabled, event_callback, default_logger("Service Server"), delete_callback);
-    }
+  std::shared_ptr<Server> Server::create(const std::shared_ptr<asio::io_context>& io_context
+                                        , std::uint8_t                            protocol_version
+                                        , std::uint16_t                           port
+                                        , const ServiceCallbackT&                 service_callback
+                                        , bool                                    parallel_service_calls_enabled
+                                        , const EventCallbackT&                   event_callback
+                                        , const DeleteCallbackT&                  delete_callback)
+  {
+    return Server::create(io_context, protocol_version, port, service_callback, parallel_service_calls_enabled, event_callback, default_logger("Service Server"), delete_callback);
+  }
 
-    Server::Server(const std::shared_ptr<asio::io_context>& io_context
-                  , std::uint8_t                            protocol_version
-                  , std::uint16_t                           port
-                  , const ServiceCallbackT&                 service_callback
-                  , bool                                    parallel_service_calls_enabled
-                  , const EventCallbackT&                   event_callback
-                  , const LoggerT&                          logger)
-    {
-      impl_ = ServerImpl::create(io_context, protocol_version, port, service_callback, parallel_service_calls_enabled, event_callback, logger);
-    }
+  Server::Server(const std::shared_ptr<asio::io_context>& io_context
+                , std::uint8_t                            protocol_version
+                , std::uint16_t                           port
+                , const ServiceCallbackT&                 service_callback
+                , bool                                    parallel_service_calls_enabled
+                , const EventCallbackT&                   event_callback
+                , const LoggerT&                          logger)
+  {
+    impl_ = ServerImpl::create(io_context, protocol_version, port, service_callback, parallel_service_calls_enabled, event_callback, logger);
+  }
 
-    ///////////////////////////////////////////
-    // API
-    ///////////////////////////////////////////
-  
-    bool          Server::is_connected()         const { return impl_->is_connected(); }
-    int           Server::get_connection_count() const { return impl_->get_connection_count(); }
-    std::uint16_t Server::get_port()             const { return impl_->get_port(); }
-    void          Server::stop()                       { impl_->stop(); }
+  ///////////////////////////////////////////
+  // API
+  ///////////////////////////////////////////
 
-  } // namespace service
-} // namespace eCAL
+  bool          Server::is_connected()         const { return impl_->is_connected(); }
+  int           Server::get_connection_count() const { return impl_->get_connection_count(); }
+  std::uint16_t Server::get_port()             const { return impl_->get_port(); }
+  void          Server::stop()                       { impl_->stop(); }
+
+} // namespace ecal_service

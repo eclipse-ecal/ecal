@@ -36,63 +36,60 @@
 
 #include <ecal_service/state.h>
 
-namespace eCAL
+namespace ecal_service
 {
-  namespace service
+  class ClientSessionBase
   {
-    class ClientSessionBase
-    {
-    /////////////////////////////////////
-    // Custom types for API
-    /////////////////////////////////////
-    public:
-      using EventCallbackT    = eCAL::service::ClientEventCallbackT;
-      using ResponseCallbackT = eCAL::service::ClientResponseCallbackT;
+  /////////////////////////////////////
+  // Custom types for API
+  /////////////////////////////////////
+  public:
+    using EventCallbackT    = ecal_service::ClientEventCallbackT;
+    using ResponseCallbackT = ecal_service::ClientResponseCallbackT;
 
-    /////////////////////////////////////
-    // Constructor, Destructor, Create
-    /////////////////////////////////////
-    protected:
-      ClientSessionBase(const std::shared_ptr<asio::io_context>& io_context_, const EventCallbackT& event_callback)
-        : io_context_    (io_context_)
-        , socket_        (*io_context_)
-        , event_callback_(event_callback)
-      {}
+  /////////////////////////////////////
+  // Constructor, Destructor, Create
+  /////////////////////////////////////
+  protected:
+    ClientSessionBase(const std::shared_ptr<asio::io_context>& io_context_, const EventCallbackT& event_callback)
+      : io_context_    (io_context_)
+      , socket_        (*io_context_)
+      , event_callback_(event_callback)
+    {}
 
-    public:
-      ClientSessionBase(const ClientSessionBase&)            = delete;
-      ClientSessionBase(ClientSessionBase&&)                 = delete;
-      ClientSessionBase& operator=(const ClientSessionBase&) = delete;
-      ClientSessionBase& operator=(ClientSessionBase&&)      = delete;
+  public:
+    ClientSessionBase(const ClientSessionBase&)            = delete;
+    ClientSessionBase(ClientSessionBase&&)                 = delete;
+    ClientSessionBase& operator=(const ClientSessionBase&) = delete;
+    ClientSessionBase& operator=(ClientSessionBase&&)      = delete;
 
-      virtual ~ClientSessionBase() = default;
+    virtual ~ClientSessionBase() = default;
 
-    /////////////////////////////////////
-    // API
-    /////////////////////////////////////
-    public:
-      virtual bool async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback) = 0;
+  /////////////////////////////////////
+  // API
+  /////////////////////////////////////
+  public:
+    virtual bool async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback) = 0;
 
-      virtual std::string             get_host()            const = 0;
-      virtual std::uint16_t           get_port()            const = 0;
-      virtual asio::ip::tcp::endpoint get_remote_endpoint() const = 0;
+    virtual std::string             get_host()            const = 0;
+    virtual std::uint16_t           get_port()            const = 0;
+    virtual asio::ip::tcp::endpoint get_remote_endpoint() const = 0;
 
-      virtual State         get_state()                     const = 0;
-      virtual std::uint8_t  get_accepted_protocol_version() const = 0;
-      virtual int           get_queue_size()                const = 0;
+    virtual State         get_state()                     const = 0;
+    virtual std::uint8_t  get_accepted_protocol_version() const = 0;
+    virtual int           get_queue_size()                const = 0;
 
-      virtual void stop() = 0;
+    virtual void stop() = 0;
 
-    /////////////////////////////////////
-    // Member variables
-    /////////////////////////////////////
-    protected:
-      const std::shared_ptr<asio::io_context>  io_context_;
-      asio::ip::tcp::socket                    socket_;
-      mutable std::mutex                       socket_mutex_;
-      const EventCallbackT                     event_callback_;
+  /////////////////////////////////////
+  // Member variables
+  /////////////////////////////////////
+  protected:
+    const std::shared_ptr<asio::io_context>  io_context_;
+    asio::ip::tcp::socket                    socket_;
+    mutable std::mutex                       socket_mutex_;
+    const EventCallbackT                     event_callback_;
 
-    };
+  };
 
-  } // namespace service
-} // namespace eCAL
+} // namespace ecal_service

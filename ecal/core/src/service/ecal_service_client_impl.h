@@ -102,7 +102,7 @@ namespace eCAL
       struct SClient
       {
         v5::SServiceAttr service_attr;
-        std::shared_ptr<eCAL::service::ClientSession> client_session;
+        std::shared_ptr<ecal_service::ClientSession> client_session;
         bool connected = false;
       };
 
@@ -141,7 +141,7 @@ namespace eCAL
       };
 
       static std::shared_ptr<SResponseData> PrepareInitialResponse(const SClient& client_, const std::string& method_name_);
-      static eCAL::service::ClientResponseCallbackT CreateResponseCallback(const SClient& client_, const std::shared_ptr<SResponseData>& response_data_);
+      static ecal_service::ClientResponseCallbackT CreateResponseCallback(const SClient& client_, const std::shared_ptr<SResponseData>& response_data_);
 
       static SServiceIDResponse DeserializedResponse(const SClient& client_, const std::string& response_pb_);
 

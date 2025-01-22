@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE ===== ============================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,18 +29,15 @@
 
 #include "protocol_layout.h"
 
-namespace eCAL
+namespace ecal_service
 {
-  namespace service
+  namespace ProtocolV1
   {
-    namespace ProtocolV1
-    {
-      using ErrorCallbackT         = std::function<void(asio::error_code ec)>;
-      using SendSuccessCallback    = std::function<void()>;
-      using ReceiveSuccessCallback = std::function<void(const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)>;
+    using ErrorCallbackT         = std::function<void(asio::error_code ec)>;
+    using SendSuccessCallback    = std::function<void()>;
+    using ReceiveSuccessCallback = std::function<void(const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)>;
 
-      void async_send_payload   (asio::ip::tcp::socket& socket, std::mutex& socket_mutex, const std::shared_ptr<const eCAL::service::TcpHeaderV1>& header_buffer, const std::shared_ptr<const std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb);
-      void async_receive_payload(asio::ip::tcp::socket& socket, std::mutex& socket_mutex, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
-    }
+    void async_send_payload   (asio::ip::tcp::socket& socket, std::mutex& socket_mutex, const std::shared_ptr<const ecal_service::TcpHeaderV1>& header_buffer, const std::shared_ptr<const std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb);
+    void async_receive_payload(asio::ip::tcp::socket& socket, std::mutex& socket_mutex, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
   }
 }

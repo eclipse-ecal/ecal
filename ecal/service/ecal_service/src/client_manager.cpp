@@ -33,90 +33,86 @@
 #include <utility>
 #include <vector>
 
-namespace eCAL
+namespace ecal_service
 {
-  namespace service
+  ///////////////////////////////////////////////////////
+  // Constructor, Destructor, Create
+  ///////////////////////////////////////////////////////
+  std::shared_ptr<ClientManager> ClientManager::create(const std::shared_ptr<asio::io_context>& io_context, const LoggerT& logger)
   {
-    ///////////////////////////////////////////////////////
-    // Constructor, Destructor, Create
-    ///////////////////////////////////////////////////////
-    std::shared_ptr<ClientManager> ClientManager::create(const std::shared_ptr<asio::io_context>& io_context, const LoggerT& logger)
+    return std::shared_ptr<ClientManager>(new ClientManager(io_context, logger)); 
+  }
+
+  ClientManager::ClientManager(const std::shared_ptr<asio::io_context>& io_context, const LoggerT& logger)
+    : io_context_(io_context)
+    , logger_(logger)
+    , stopped_(false)
+    , work_(std::make_unique<asio::io_context::work>(*io_context))
+  {}
+
+  ClientManager::~ClientManager()
+  {
+    stop();
+  }
+
+  ///////////////////////////////////////////////////////
+  // Public API
+  ///////////////////////////////////////////////////////
+  std::shared_ptr<ClientSession> ClientManager::create_client(std::uint8_t                                               protocol_version
+                                                             , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                             , const ClientSession::EventCallbackT&                      event_callback)
+  {
+    const std::lock_guard<std::mutex> lock(client_manager_mutex_);
+    if (stopped_)
     {
-      return std::shared_ptr<ClientManager>(new ClientManager(io_context, logger)); 
+      return nullptr;
     }
 
-    ClientManager::ClientManager(const std::shared_ptr<asio::io_context>& io_context, const LoggerT& logger)
-      : io_context_(io_context)
-      , logger_(logger)
-      , stopped_(false)
-      , work_(std::make_unique<asio::io_context::work>(*io_context))
-    {}
-
-    ClientManager::~ClientManager()
+    auto deleter = [weak_me = std::weak_ptr<ClientManager>(shared_from_this())](ClientSession* session)
     {
-      stop();
-    }
+      auto me = weak_me.lock();
+      if (me)
+      {
+        // Remove the session from the sessions_ map
+        const std::lock_guard<std::mutex> lock(me->client_manager_mutex_);
+        me->sessions_.erase(session);
+      }
+    };
 
-    ///////////////////////////////////////////////////////
-    // Public API
-    ///////////////////////////////////////////////////////
-    std::shared_ptr<ClientSession> ClientManager::create_client(std::uint8_t                                               protocol_version
-                                                               , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
-                                                               , const ClientSession::EventCallbackT&                      event_callback)
+    auto client = ClientSession::create(io_context_, protocol_version, server_list, event_callback, logger_, deleter);
+    sessions_.emplace(client.get(), client);
+    return client;
+  }
+
+  size_t ClientManager::client_count() const
+  {
+    const std::lock_guard<std::mutex> lock(client_manager_mutex_);
+    return sessions_.size();
+  }
+
+  void ClientManager::stop()
+  {
+    std::map<ClientSession*, std::weak_ptr<ClientSession>> sessions_copy;
     {
       const std::lock_guard<std::mutex> lock(client_manager_mutex_);
-      if (stopped_)
-      {
-        return nullptr;
-      }
-
-      auto deleter = [weak_me = std::weak_ptr<ClientManager>(shared_from_this())](ClientSession* session)
-      {
-        auto me = weak_me.lock();
-        if (me)
-        {
-          // Remove the session from the sessions_ map
-          const std::lock_guard<std::mutex> lock(me->client_manager_mutex_);
-          me->sessions_.erase(session);
-        }
-      };
-
-      auto client = ClientSession::create(io_context_, protocol_version, server_list, event_callback, logger_, deleter);
-      sessions_.emplace(client.get(), client);
-      return client;
+      stopped_ = true;
+      sessions_copy = sessions_;
     }
 
-    size_t ClientManager::client_count() const
+    // stop all clients without having the mutex locked, so we don't crash, when this thread directly calls the delete callback, that itself needs to have the mutex locked.
+    for (auto& server_weak : sessions_copy)
     {
-      const std::lock_guard<std::mutex> lock(client_manager_mutex_);
-      return sessions_.size();
+      auto server = server_weak.second.lock();
+      if (server)
+        server->stop();
     }
 
-    void ClientManager::stop()
-    {
-      std::map<ClientSession*, std::weak_ptr<ClientSession>> sessions_copy;
-      {
-        const std::lock_guard<std::mutex> lock(client_manager_mutex_);
-        stopped_ = true;
-        sessions_copy = sessions_;
-      }
+    work_.reset();
+  }
 
-      // stop all clients without having the mutex locked, so we don't crash, when this thread directly calls the delete callback, that itself needs to have the mutex locked.
-      for (auto& server_weak : sessions_copy)
-      {
-        auto server = server_weak.second.lock();
-        if (server)
-          server->stop();
-      }
-
-      work_.reset();
-    }
-
-    bool ClientManager::is_stopped() const
-    {
-      const std::lock_guard<std::mutex> lock(client_manager_mutex_);
-      return stopped_;
-    }
-
+  bool ClientManager::is_stopped() const
+  {
+    const std::lock_guard<std::mutex> lock(client_manager_mutex_);
+    return stopped_;
   }
 }

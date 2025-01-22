@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,17 +23,14 @@
 #include <memory>
 #include <string>
 
-namespace eCAL
+namespace ecal_service
 {
-  namespace service
+  enum class ServerEventType: int
   {
-    enum class ServerEventType: int
-    {
-      Connected,          //!< A client has connected successfully.
-      Disconnected,       //!< The connection to a client has been closed for any reason.
-    };
+    Connected,          //!< A client has connected successfully.
+    Disconnected,       //!< The connection to a client has been closed for any reason.
+  };
 
-    using ServerServiceCallbackT = std::function<void(const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response)>;
-    using ServerEventCallbackT   = std::function<void(ServerEventType, const std::string&)>;
-  } // namespace service
-} // namespace eCAL
+  using ServerServiceCallbackT = std::function<void(const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response)>;
+  using ServerEventCallbackT   = std::function<void(ServerEventType, const std::string&)>;
+} // namespace ecal_service

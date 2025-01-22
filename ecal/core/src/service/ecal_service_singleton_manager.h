@@ -59,8 +59,8 @@ namespace eCAL
       // Public API
       ////////////////////////////////////////////////////////////
     public:
-      std::shared_ptr<eCAL::service::ClientManager> get_client_manager();
-      std::shared_ptr<eCAL::service::ServerManager> get_server_manager();
+      std::shared_ptr<ecal_service::ClientManager> get_client_manager();
+      std::shared_ptr<ecal_service::ServerManager> get_server_manager();
 
       void stop();
       void reset();
@@ -77,8 +77,8 @@ namespace eCAL
       std::shared_ptr<asio::io_context>             m_io_context;
       std::vector<std::unique_ptr<std::thread>>     m_io_threads;
 
-      std::shared_ptr<eCAL::service::ClientManager> m_client_manager;
-      std::shared_ptr<eCAL::service::ServerManager> m_server_manager;
+      std::shared_ptr<ecal_service::ClientManager> m_client_manager;
+      std::shared_ptr<ecal_service::ServerManager> m_server_manager;
     };
 
   }

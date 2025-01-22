@@ -38,8 +38,8 @@ int main(int /*argc*/, char** /*argv*/)
   auto io_context = std::make_shared<asio::io_context>();
 
   // Create a server and client manager
-  auto server_manager = eCAL::service::ServerManager::create(io_context);
-  auto client_manager = eCAL::service::ClientManager::create(io_context);
+  auto server_manager = ecal_service::ServerManager::create(io_context);
+  auto client_manager = ecal_service::ClientManager::create(io_context);
 
   // Create and start an io_context thread.
   // The io_context will be stopped, when the server_manager and client_manager are stopped.
@@ -59,7 +59,7 @@ int main(int /*argc*/, char** /*argv*/)
   //
   // This callback will be called, when the service call is finished.
   auto client_response_callback
-          = [](const eCAL::service::Error& error, const std::shared_ptr<std::string>& response) -> void
+          = [](const ecal_service::Error& error, const std::shared_ptr<std::string>& response) -> void
             {
               if (error)
                 std::cerr << "Error calling service: " << error.ToString() << std::endl;
@@ -68,8 +68,8 @@ int main(int /*argc*/, char** /*argv*/)
             };
 
   // Event callbacks (empty)
-  auto server_event_callback = [](eCAL::service::ServerEventType /*event*/, const std::string& /*message*/) {};
-  auto client_event_callback = [](eCAL::service::ClientEventType /*event*/, const std::string& /*message*/) {};
+  auto server_event_callback = [](ecal_service::ServerEventType /*event*/, const std::string& /*message*/) {};
+  auto client_event_callback = [](ecal_service::ClientEventType /*event*/, const std::string& /*message*/) {};
 
   // Create server
   // The server will choose a free port automatically.

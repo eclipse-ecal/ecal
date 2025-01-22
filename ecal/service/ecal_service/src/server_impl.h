@@ -39,75 +39,72 @@
 
 #include "server_session_impl_base.h"
 
-namespace eCAL
+namespace ecal_service
 {
-  namespace service
+  class ServerImpl : public std::enable_shared_from_this<ServerImpl>
   {
-    class ServerImpl : public std::enable_shared_from_this<ServerImpl>
-    {
-    ///////////////////////////////////////////
-    // Constructor, Destructor, Create
-    ///////////////////////////////////////////
+  ///////////////////////////////////////////
+  // Constructor, Destructor, Create
+  ///////////////////////////////////////////
 
-    public:
-      static std::shared_ptr<ServerImpl> create(const std::shared_ptr<asio::io_context>& io_context
-                                              , std::uint8_t                             protocol_version
-                                              , std::uint16_t                            port
-                                              , const ServerServiceCallbackT&            service_callback
-                                              , bool                                     parallel_service_calls_enabled
-                                              , const ServerEventCallbackT&              event_callback
-                                              , const LoggerT&                           logger = default_logger("Service Server"));
+  public:
+    static std::shared_ptr<ServerImpl> create(const std::shared_ptr<asio::io_context>& io_context
+                                            , std::uint8_t                             protocol_version
+                                            , std::uint16_t                            port
+                                            , const ServerServiceCallbackT&            service_callback
+                                            , bool                                     parallel_service_calls_enabled
+                                            , const ServerEventCallbackT&              event_callback
+                                            , const LoggerT&                           logger = default_logger("Service Server"));
 
-    protected:
-      ServerImpl(const std::shared_ptr<asio::io_context>& io_context
-                , const ServerServiceCallbackT&           service_callback
-                , bool                                    parallel_service_calls_enabled
-                , const ServerEventCallbackT&             event_callback
-                , const LoggerT&                          logger);
+  protected:
+    ServerImpl(const std::shared_ptr<asio::io_context>& io_context
+              , const ServerServiceCallbackT&           service_callback
+              , bool                                    parallel_service_calls_enabled
+              , const ServerEventCallbackT&             event_callback
+              , const LoggerT&                          logger);
 
-    public:
-      ServerImpl(const ServerImpl&)            = delete;                  // Copy construct
-      ServerImpl(ServerImpl&&)                 = delete;                  // Move construct
+  public:
+    ServerImpl(const ServerImpl&)            = delete;                  // Copy construct
+    ServerImpl(ServerImpl&&)                 = delete;                  // Move construct
 
-      ServerImpl& operator=(const ServerImpl&) = delete;                  // Copy assign
-      ServerImpl& operator=(ServerImpl&&)      = delete;                  // Move assign
-  
-      ~ServerImpl();
+    ServerImpl& operator=(const ServerImpl&) = delete;                  // Copy assign
+    ServerImpl& operator=(ServerImpl&&)      = delete;                  // Move assign
 
-    ///////////////////////////////////////////
-    // API
-    ///////////////////////////////////////////
-  
-    public:
-      bool          is_connected()         const;
-      int           get_connection_count() const;
-      std::uint16_t get_port()             const;
+    ~ServerImpl();
 
-      void          stop();
+  ///////////////////////////////////////////
+  // API
+  ///////////////////////////////////////////
 
-    private:
-      void start_accept(std::uint8_t protocol_version, std::uint16_t port);
-      void wait_for_next_client(std::uint8_t protocol_version);
+  public:
+    bool          is_connected()         const;
+    int           get_connection_count() const;
+    std::uint16_t get_port()             const;
 
-    ///////////////////////////////////////////
-    // Member Variables
-    ///////////////////////////////////////////
-  
-    private:
-      const std::shared_ptr<asio::io_context>         io_context_;
-      asio::ip::tcp::acceptor                         acceptor_;
-      mutable std::mutex                              acceptor_mutex_;                                //!< Mutex for stopping the server. The stop() function is both used externally (via API) and from within the server itself. Closing the acceptor is not thread-safe, so we need to protect it.
+    void          stop();
 
-      const bool                                      parallel_service_calls_enabled_;
-      const std::shared_ptr<asio::io_context::strand> service_callback_common_strand_;
-      const ServerServiceCallbackT                    service_callback_;
-      const ServerEventCallbackT                      event_callback_;
+  private:
+    void start_accept(std::uint8_t protocol_version, std::uint16_t port);
+    void wait_for_next_client(std::uint8_t protocol_version);
 
-      mutable std::mutex                              session_list_mutex_;
-      std::vector<std::weak_ptr<ServerSessionBase>>   session_list_;
+  ///////////////////////////////////////////
+  // Member Variables
+  ///////////////////////////////////////////
 
-      const LoggerT                                   logger_;
+  private:
+    const std::shared_ptr<asio::io_context>         io_context_;
+    asio::ip::tcp::acceptor                         acceptor_;
+    mutable std::mutex                              acceptor_mutex_;                                //!< Mutex for stopping the server. The stop() function is both used externally (via API) and from within the server itself. Closing the acceptor is not thread-safe, so we need to protect it.
 
-    };
-  } // namespace service
-} // namespace eCAL
+    const bool                                      parallel_service_calls_enabled_;
+    const std::shared_ptr<asio::io_context::strand> service_callback_common_strand_;
+    const ServerServiceCallbackT                    service_callback_;
+    const ServerEventCallbackT                      event_callback_;
+
+    mutable std::mutex                              session_list_mutex_;
+    std::vector<std::weak_ptr<ServerSessionBase>>   session_list_;
+
+    const LoggerT                                   logger_;
+
+  };
+} // namespace ecal_service

@@ -124,7 +124,7 @@ namespace eCAL
       ServerEventCallbackT                   m_event_callback;
 
       // Server interface
-      std::shared_ptr<eCAL::service::Server> m_tcp_server;
+      std::shared_ptr<ecal_service::Server> m_tcp_server;
     };
   }
 }

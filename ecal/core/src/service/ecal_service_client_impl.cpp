@@ -236,7 +236,7 @@ namespace eCAL
     auto response_data = PrepareInitialResponse(client, method_name_);
 
     // Create the response callback
-    auto response = [client, response_data, entity_id_, response_callback_](const eCAL::service::Error& error, const std::shared_ptr<std::string>& response_)
+    auto response = [client, response_data, entity_id_, response_callback_](const ecal_service::Error& error, const std::shared_ptr<std::string>& response_)
       {
         const std::lock_guard<std::mutex> lock(*response_data->mutex);
         if (!*response_data->block_modifying_response)
@@ -300,7 +300,7 @@ namespace eCAL
       if (client_manager == nullptr || client_manager->is_stopped()) return;
 
       // Event callback (unused)
-      const eCAL::service::ClientSession::EventCallbackT event_callback = [](eCAL::service::ClientEventType /*event*/, const std::string& /*message*/) -> void
+      const ecal_service::ClientSession::EventCallbackT event_callback = [](ecal_service::ClientEventType /*event*/, const std::string& /*message*/) -> void
         {
         // TODO: Replace current connect/disconnect state logic with this client event callback logic
       };
@@ -491,13 +491,13 @@ namespace eCAL
       service_id.service_name = m_service_name;
       service_id.service_id = entity_id;
 
-      if (!client_data.connected && state == eCAL::service::State::CONNECTED)
+      if (!client_data.connected && state == ecal_service::State::CONNECTED)
       {
         client_data.connected = true;
         NotifyEventCallback(service_id, eClientEvent::connected);
         ++it;
       }
-      else if (client_data.connected && state == eCAL::service::State::FAILED)
+      else if (client_data.connected && state == ecal_service::State::FAILED)
       {
         client_data.connected = false;
         NotifyEventCallback(service_id, eClientEvent::disconnected);
@@ -548,9 +548,9 @@ namespace eCAL
     return data;
   }
 
-  eCAL::service::ClientResponseCallbackT CServiceClientImpl::CreateResponseCallback(const SClient & client_, const std::shared_ptr<SResponseData>&response_data_)
+  ecal_service::ClientResponseCallbackT CServiceClientImpl::CreateResponseCallback(const SClient & client_, const std::shared_ptr<SResponseData>&response_data_)
   {
-    return [client_, response_data_](const eCAL::service::Error& error, const std::shared_ptr<std::string>& response_)
+    return [client_, response_data_](const ecal_service::Error& error, const std::shared_ptr<std::string>& response_)
     {
       const std::lock_guard<std::mutex> lock(*response_data_->mutex);
       if (!*response_data_->block_modifying_response)
