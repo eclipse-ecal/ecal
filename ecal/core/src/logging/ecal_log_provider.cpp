@@ -46,13 +46,14 @@ namespace
 }
 #endif
 
-#if 0 // TODO: Can we remove this?
 #ifdef ECAL_OS_LINUX
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <ctime>
 
-namespace{
+namespace
+{
+#if 0 // TODO: Can we remove this?
   bool isDirectory(const std::string& path_)
   {
     if (path_.empty()) return false;
@@ -63,6 +64,7 @@ namespace{
 
     return false;
   }
+#endif
 
   std::string get_time_str()
   {
@@ -78,7 +80,6 @@ namespace{
     return(std::string(fmt));
   }
 }
-#endif
 #endif
 
 namespace
