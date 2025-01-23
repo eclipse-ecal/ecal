@@ -82,7 +82,7 @@ TEST(core_cpp_clientserver_proto, ProtoCallback)
 
   // response callback function
   double math_response(0.0);
-  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::v5::SServiceResponse& service_response_)
   {
     math_response = 0.0;
     switch (service_response_.call_state)
@@ -173,7 +173,7 @@ TEST(core_cpp_clientserver_proto, ProtoBlocking)
   eCAL::Process::SleepMS(2000);
 
   // test ping service
-  eCAL::ServiceResponseVecT service_response_vec;
+  eCAL::v5::ServiceResponseVecT service_response_vec;
   PingRequest ping_request;
   ping_request.set_message("PING");
   ping_client.Call("Ping", ping_request, -1, &service_response_vec);

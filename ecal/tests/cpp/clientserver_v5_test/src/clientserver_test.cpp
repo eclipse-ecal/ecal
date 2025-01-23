@@ -70,7 +70,7 @@ namespace
 #endif
 
 #if DO_LOGGING
-  void PrintResponse(const struct eCAL::SServiceResponse& service_response_)
+  void PrintResponse(const struct eCAL::v5::SServiceResponse& service_response_)
   {
     std::cout << "------ RESPONSE ------" << std::endl;
     std::cout << "Executed on host name : " << service_response_.host_name << std::endl;
@@ -96,7 +96,7 @@ namespace
     std::cout << std::endl;
   }
 #else
-  void PrintResponse(const struct eCAL::SServiceResponse& /*service_response_*/)
+  void PrintResponse(const struct eCAL::v5::SServiceResponse& /*service_response_*/)
   {
   }
 #endif
@@ -283,7 +283,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseCallback)
 
   // response callback function
   std::atomic<int> responses_executed(0);
-  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::v5::SServiceResponse& service_response_)
   {
     PrintResponse(service_response_);
     responses_executed++;
@@ -392,7 +392,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseCallbackTimeout)
 
   // response callback function
   std::atomic<int> responses_executed(0);
-  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::v5::SServiceResponse& service_response_)
                             {
                               PrintResponse(service_response_);
                               responses_executed++;
@@ -543,7 +543,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseAsyncCallback)
 
   // response callback function
   std::atomic<int> responses_executed(0);
-  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::v5::SServiceResponse& service_response_)
   {
     PrintResponse(service_response_);
     responses_executed++;
@@ -619,7 +619,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseAsync)
 
   // response callback function
   atomic_signalable<int> num_client_response_callbacks_finished(0);
-  auto client_response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
+  auto client_response_callback = [&](const struct eCAL::v5::SServiceResponse& service_response_)
                                   {
                                     PrintResponse(service_response_);
                                     num_client_response_callbacks_finished++;
@@ -740,7 +740,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseBlocking)
   // call service
   std::atomic<int> methods_called(0);
   std::atomic<int> responses_executed(0);
-  eCAL::ServiceResponseVecT service_response_vec;
+  eCAL::v5::ServiceResponseVecT service_response_vec;
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
@@ -826,14 +826,14 @@ TEST(core_cpp_clientserver_v5, NestedRPCCall)
   std::atomic<int> methods_called(0);
   std::atomic<int> responses_executed(0);
   bool success(true);
-  auto response_callback1 = [&](const struct eCAL::SServiceResponse& service_response_)
+  auto response_callback1 = [&](const struct eCAL::v5::SServiceResponse& service_response_)
   {
     PrintResponse(service_response_);
     success &= client2.Call("foo::method2", "my request for method 2");
     methods_called++;
     responses_executed++;
   };
-  auto response_callback2 = [&](const struct eCAL::SServiceResponse& service_response_)
+  auto response_callback2 = [&](const struct eCAL::v5::SServiceResponse& service_response_)
   {
     PrintResponse(service_response_);
     responses_executed++;

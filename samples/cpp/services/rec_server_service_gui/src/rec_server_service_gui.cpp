@@ -32,7 +32,7 @@ RecServerServiceGui::RecServerServiceGui(QWidget *parent)
   eCAL::Initialize("RecServerServiceGui");
 
   // create player service client
-  recorder_service_.AddResponseCallback([this](const struct eCAL::SServiceResponse& service_response) {this->onRecorderResponse(service_response); });
+  recorder_service_.AddResponseCallback([this](const struct eCAL::v5::SServiceResponse& service_response) {this->onRecorderResponse(service_response); });
 
   connect(ui_.hostname_lineedit, &QLineEdit::editingFinished, this, [this]() {recorder_service_.SetHostName(ui_.hostname_lineedit->text().toStdString()); });
 
@@ -230,7 +230,7 @@ void RecServerServiceGui::addComment()
 //// Response                                                               ////
 ////////////////////////////////////////////////////////////////////////////////
 
-void RecServerServiceGui::onRecorderResponse(const struct eCAL::SServiceResponse& service_response_)
+void RecServerServiceGui::onRecorderResponse(const struct eCAL::v5::SServiceResponse& service_response_)
 {
   QString     response_string;
   QTextStream response_stream(&response_string);

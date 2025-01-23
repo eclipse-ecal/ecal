@@ -50,7 +50,7 @@ int main()
       // Ping service (blocking call)
       //////////////////////////////////////
       PingRequest               ping_request;
-      eCAL::ServiceResponseVecT service_response_vec;
+      eCAL::v5::ServiceResponseVecT service_response_vec;
       ping_request.set_message("PING");
       if (ping_client.Call("Ping", ping_request, -1, &service_response_vec))
       {

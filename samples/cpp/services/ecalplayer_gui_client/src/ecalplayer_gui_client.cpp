@@ -31,7 +31,7 @@ EcalplayGuiClient::EcalplayGuiClient(QWidget *parent)
   eCAL::Initialize("ecalplayer gui client");
 
   // create player service client
-  player_service_.AddResponseCallback([this](const struct eCAL::SServiceResponse& service_response) {this->onPlayerResponse(service_response); });
+  player_service_.AddResponseCallback([this](const struct eCAL::v5::SServiceResponse& service_response) {this->onPlayerResponse(service_response); });
 
   connect(ui_.get_config_request_button, &QPushButton::clicked,                 this,                   &EcalplayGuiClient::getConfigRequest);
   connect(ui_.set_config_request_button, &QPushButton::clicked,                 this,                   &EcalplayGuiClient::setConfigRequest);
@@ -196,7 +196,7 @@ void EcalplayGuiClient::commandRequest()
 //// Response                                                               ////
 ////////////////////////////////////////////////////////////////////////////////
 
-void EcalplayGuiClient::onPlayerResponse(const struct eCAL::SServiceResponse& service_response_)
+void EcalplayGuiClient::onPlayerResponse(const struct eCAL::v5::SServiceResponse& service_response_)
 {
   QString response_string;
   QTextStream response_stream(&response_string);

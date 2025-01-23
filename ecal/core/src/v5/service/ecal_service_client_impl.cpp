@@ -27,9 +27,9 @@
 
 namespace
 {
-  eCAL::SServiceResponse ConvertToServiceResponse(const eCAL::SServiceIDResponse& service_id_response)
+  eCAL::v5::SServiceResponse ConvertToServiceResponse(const eCAL::SServiceIDResponse& service_id_response)
   {
-    eCAL::SServiceResponse service_response;
+    eCAL::v5::SServiceResponse service_response;
 
     // service/method id
     service_response.host_name    = service_id_response.service_method_id.service_id.host_name;
@@ -191,7 +191,7 @@ namespace eCAL
             Logging::Log(Logging::log_level_debug2, "v5::CServiceClientImpl: Response received for method call.");
             
             // Convert SServiceResponse to SServiceIDResponse
-            const SServiceResponse service_response = ConvertToServiceResponse(service_response_);
+            const v5::SServiceResponse service_response = ConvertToServiceResponse(service_response_);
 
             // Call the stored response callback
             m_response_callback(service_response);

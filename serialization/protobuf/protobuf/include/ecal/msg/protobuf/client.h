@@ -112,7 +112,7 @@ namespace eCAL
        *
        * @return  True if successful.
       **/
-      bool Call(const std::string& method_name_, const google::protobuf::Message& request_, const int timeout_, ServiceResponseVecT* service_response_vec_)
+      bool Call(const std::string& method_name_, const google::protobuf::Message& request_, const int timeout_, v5::ServiceResponseVecT* service_response_vec_)
       {
         return Call(method_name_, request_.SerializeAsString(), timeout_, service_response_vec_);
       }

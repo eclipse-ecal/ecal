@@ -62,7 +62,7 @@ void OnClientState(const eCAL::v5::SClientEventCallbackData* data_)
 }
 
 // callback for math service response
-void OnMathResponse(const struct eCAL::SServiceResponse& service_response_)
+void OnMathResponse(const struct eCAL::v5::SServiceResponse& service_response_)
 {
   switch(service_response_.call_state)
   {
