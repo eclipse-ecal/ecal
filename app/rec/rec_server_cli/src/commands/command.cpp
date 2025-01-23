@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ namespace eCAL
       {
         remote_ecalsys_service->SetHostName(hostname);
 
-        eCAL::ServiceResponseVecT service_response_vec;
+        eCAL::v5::ServiceResponseVecT service_response_vec;
         constexpr int timeout_ms = 1000;
 
         if (remote_ecalsys_service->Call(method_name, request.SerializeAsString(), timeout_ms, &service_response_vec))

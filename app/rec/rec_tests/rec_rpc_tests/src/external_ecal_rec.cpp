@@ -120,7 +120,7 @@ eCAL::rec::Error ExternalEcalRecInstance::GetConfigViaRpc(eCAL::rec_server::RecS
 eCAL::rec::Error ExternalEcalRecInstance::GetConfigViaRpc(eCAL::pb::rec_server::RecServerConfig& config_pb_output)
 {
   eCAL::pb::rec_server::GenericRequest request;
-  eCAL::ServiceResponseVecT            service_response_vec;
+  eCAL::v5::ServiceResponseVecT            service_response_vec;
 
   constexpr int timeout_ms = 1000;
 
@@ -143,7 +143,7 @@ eCAL::rec::Error ExternalEcalRecInstance::SetConfigViaRpc(const eCAL::rec_server
 
 eCAL::rec::Error ExternalEcalRecInstance::SetConfigViaRpc(const eCAL::pb::rec_server::RecServerConfig& config_pb)
 {
-  eCAL::ServiceResponseVecT service_response_vec;
+  eCAL::v5::ServiceResponseVecT service_response_vec;
 
   constexpr int timeout_ms = 1000;
 

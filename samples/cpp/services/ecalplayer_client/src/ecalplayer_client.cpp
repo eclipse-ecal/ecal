@@ -34,7 +34,7 @@
 #include <thread>
 
 // callback for player service response
-void OnPlayerResponse(const struct eCAL::SServiceResponse& service_response_)
+void OnPlayerResponse(const struct eCAL::v5::SServiceResponse& service_response_)
 {
   switch (service_response_.call_state)
   {

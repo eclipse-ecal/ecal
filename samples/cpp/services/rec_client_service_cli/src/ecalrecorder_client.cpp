@@ -34,7 +34,7 @@
 #include <iostream>
 
 // callback for recorder service response
-void OnRecorderResponse(const struct eCAL::SServiceResponse& service_response_)
+void OnRecorderResponse(const struct eCAL::v5::SServiceResponse& service_response_)
 {
   switch (service_response_.call_state)
   {

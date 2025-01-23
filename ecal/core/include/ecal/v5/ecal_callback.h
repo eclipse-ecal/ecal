@@ -106,6 +106,35 @@ namespace eCAL
       unsigned int   version = 0;   //!< client version
     };
 
+
+    /**
+     * @brief Service response struct containing the (responding) server informations and the response itself. (deprecated)
+    **/
+    struct SServiceResponse
+    {
+      SServiceResponse()
+      {
+        ret_state = 0;
+        call_state = eCallState::none;
+      };
+      std::string  host_name;      //!< service host name
+      std::string  service_name;   //!< name of the service
+      std::string  service_id;     //!< id of the service
+      std::string  method_name;    //!< name of the service method
+      std::string  error_msg;      //!< human readable error message
+      int          ret_state;      //!< return state of the called service method
+      eCallState   call_state;     //!< call state (see eCallState)
+      std::string  response;       //!< service response
+    };
+    using ServiceResponseVecT = std::vector<SServiceResponse>; //!< vector of multiple service responses (deprecated)
+
+    /**
+     * @brief Service response callback function type (low level client interface). (deprecated)
+     *
+     * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
+    **/
+    using ResponseCallbackT = std::function<void(const struct v5::SServiceResponse& service_response_)>;
+
     /**
      * @brief eCAL server event callback struct.
     **/

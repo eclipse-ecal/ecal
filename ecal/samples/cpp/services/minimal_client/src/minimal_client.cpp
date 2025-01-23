@@ -62,7 +62,6 @@ int main()
 
   while(eCAL::Ok())
   {
-    eCAL::SServiceResponse service_info;
     std::string method_name("echo");
     std::string request("Hello");
 
@@ -75,18 +74,20 @@ int main()
       const auto service_response = client_instance.CallWithResponse(method_name, request, -1);
       if (std::get<0>(service_response))
       {
+        auto& response_content = std::get<1>(service_response);
         std::cout << std::endl << "Method 'echo' called with message : " << request << std::endl;
-        switch (service_info.call_state)
+        auto& server_host_name = response_content.service_method_id.service_id.host_name;
+        switch (response_content.call_state)
         {
           // service successful executed
         case eCAL::eCallState::executed:
         {
-          std::cout << "Received response : " << service_response.second.response << " from service id " << client_instance.GetClientID() << " from host " << service_info.host_name << std::endl;
+          std::cout << "Received response : " << response_content.response << " from service id " << client_instance.GetClientID() << " from host " << server_host_name << std::endl;
         }
         break;
         // service execution failed
         case eCAL::eCallState::failed:
-          std::cout << "Received error : " << service_info.error_msg << " from service id " << client_instance.GetClientID() << " from host " << service_info.host_name << std::endl;
+          std::cout << "Received error : " << response_content.error_msg << " from service id " << client_instance.GetClientID() << " from host " << server_host_name << std::endl;
           break;
         default:
           break;

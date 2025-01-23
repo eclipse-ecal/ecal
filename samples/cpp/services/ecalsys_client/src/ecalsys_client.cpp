@@ -34,7 +34,7 @@
 #include <iostream>
 
 // callback for sys service response
-void OnSysResponse(const struct eCAL::SServiceResponse& service_response_)
+void OnSysResponse(const struct eCAL::v5::SServiceResponse& service_response_)
 {
   switch (service_response_.call_state)
   {

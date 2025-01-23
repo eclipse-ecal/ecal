@@ -72,7 +72,7 @@ namespace
 
 
   std::recursive_mutex g_response_callback_mtx; // NOLINT(*-avoid-non-const-global-variables)
-  void g_response_callback(const struct eCAL::SServiceResponse& service_response_, const ResponseCallbackCT callback_, void* par_)
+  void g_response_callback(const struct eCAL::v5::SServiceResponse& service_response_, const ResponseCallbackCT callback_, void* par_)
   {
     const std::lock_guard<std::recursive_mutex> lock(g_response_callback_mtx);
     struct SServiceResponseC service_response {};
@@ -137,7 +137,7 @@ extern "C"
   {
     if (handle_ == nullptr) return(0);
     auto* client = static_cast<eCAL::v5::CServiceClient*>(handle_);
-    eCAL::ServiceResponseVecT service_response_vec;
+    eCAL::v5::ServiceResponseVecT service_response_vec;
     if (client->Call(method_name_, std::string(request_, static_cast<size_t>(request_len_)), timeout_, &service_response_vec))
     {
       if (!service_response_vec.empty())

@@ -124,7 +124,7 @@ namespace eCAL
     {
       std::lock_guard<decltype(connection_mutex_)> connection_lock(connection_mutex_);
 
-      eCAL::ServiceResponseVecT service_response_vec;
+      eCAL::v5::ServiceResponseVecT service_response_vec;
       constexpr int timeout_ms = 1000;
 
       if (sys_client_service_.Call(method_name, request.SerializeAsString(), timeout_ms, &service_response_vec))

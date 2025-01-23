@@ -37,7 +37,7 @@ int main()
 
   // prepare service request and response vector
   orchestrator::request     srv_request;
-  eCAL::ServiceResponseVecT srv_response_vec;
+  eCAL::v5::ServiceResponseVecT srv_response_vec;
 
   // call components 1 and 2
   uint64_t cycle = 0;
