@@ -26,8 +26,8 @@ jobs:
         arch: 'win64_msvc2019_64'
 
     - name: Install Dependencies
-      # choco install of version 1.9.3 produced a checksum error
-      run: choco install doxygen.install --version=1.9.2
+      # Pin to latest doxygen version.
+      run: choco install doxygen.install --version=1.13.2
 
     - name: Uninstall Chocolatey
       run: move "$env:PROGRAMDATA\chocolatey" "$env:PROGRAMDATA\_chocolatey"
