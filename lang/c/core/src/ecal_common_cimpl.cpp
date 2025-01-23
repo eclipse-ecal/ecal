@@ -24,7 +24,7 @@
 
 #include "ecal_common_cimpl.h"
 
-#include <ecal/ecalc_types.h>
+#include <ecalc/ecalc_types.h>
 
 #include <cstdlib>
 #include <cstring>

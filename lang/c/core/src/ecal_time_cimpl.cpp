@@ -23,7 +23,7 @@
 **/
 
 #include <ecal/ecal.h>
-#include <ecal/ecalc_types.h>
+#include <ecalc/ecalc_types.h>
 #include <ecalc/time_cimpl.h>
 
 #include "ecal_common_cimpl.h"

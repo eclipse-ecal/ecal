@@ -25,8 +25,8 @@
 #ifndef server_cimpl_h_included
 #define server_cimpl_h_included
 
-#include <ecal/ecalc_export.h>
-#include <ecal/ecalc_types.h>
+#include <ecalc/ecalc_export.h>
+#include <ecalc/ecalc_types.h>
 
 #include <ecalc/service_info_cimpl.h>
 #include <ecalc/callback_cimpl.h>

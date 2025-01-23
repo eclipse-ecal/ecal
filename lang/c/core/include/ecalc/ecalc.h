@@ -30,8 +30,8 @@
 #endif
 
 // all ecal c includes
-#include <ecal/ecalc_export.h>
-#include <ecal/ecalc_types.h>
+#include <ecalc/ecalc_export.h>
+#include <ecalc/ecalc_types.h>
 #include <ecalc/client_cimpl.h>
 #include <ecalc/core_cimpl.h>
 #include <ecalc/log_cimpl.h>

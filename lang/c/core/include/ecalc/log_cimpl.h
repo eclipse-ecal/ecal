@@ -25,7 +25,7 @@
 #ifndef log_cimpl_h_included
 #define log_cimpl_h_included
 
-#include <ecal/ecalc_export.h>
+#include <ecalc/ecalc_export.h>
 
 #ifdef __cplusplus
 extern "C"
