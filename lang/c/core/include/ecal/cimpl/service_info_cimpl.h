@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   ecal_service_info_cimpl.h
+ * @file   service_info_cimpl.h
  * @brief  eCAL service info for C Interface
 **/
 
-#ifndef ecal_service_info_cimpl_h_included
-#define ecal_service_info_cimpl_h_included
+#ifndef service_info_cimpl_h_included
+#define service_info_cimpl_h_included
 
 /**
  * @brief  Service call state.
@@ -82,4 +82,4 @@ typedef int(*MethodCallbackCT)(const char* method_, const char* req_type_, const
 **/
 typedef void(*ResponseCallbackCT)(const struct SServiceResponseC* service_response_, void* par_);
 
-#endif /* ecal_service_info_cimpl_h_included */
+#endif /* service_info_cimpl_h_included */

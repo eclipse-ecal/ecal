@@ -18,17 +18,17 @@
 */
 
 /**
- * @file   ecal_timer_cimpl.h
+ * @file   timer_cimpl.h
  * @brief  eCAL timer c interface
 **/
 
-#ifndef ecal_timer_cimpl_h_included
-#define ecal_timer_cimpl_h_included
+#ifndef timer_cimpl_h_included
+#define timer_cimpl_h_included
 
 #include <ecal/ecalc_export.h>
 #include <ecal/ecalc_types.h>
 
-#include <ecal/cimpl/ecal_callback_cimpl.h>
+#include <ecal/cimpl/callback_cimpl.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -75,4 +75,4 @@ extern "C"
 }
 #endif /*__cplusplus*/
 
-#endif /*ecal_timer_cimpl_h_included*/
+#endif /*timer_cimpl_h_included*/

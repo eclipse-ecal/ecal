@@ -32,17 +32,17 @@
 // all ecal c includes
 #include <ecal/ecalc_export.h>
 #include <ecal/ecalc_types.h>
-#include <ecal/cimpl/ecal_client_cimpl.h>
-#include <ecal/cimpl/ecal_core_cimpl.h>
-#include <ecal/cimpl/ecal_log_cimpl.h>
-#include <ecal/cimpl/ecal_monitoring_cimpl.h>
-#include <ecal/cimpl/ecal_process_cimpl.h>
-#include <ecal/cimpl/ecal_publisher_cimpl.h>
-#include <ecal/cimpl/ecal_server_cimpl.h>
-#include <ecal/cimpl/ecal_subscriber_cimpl.h>
-#include <ecal/cimpl/ecal_time_cimpl.h>
-#include <ecal/cimpl/ecal_timer_cimpl.h>
-#include <ecal/cimpl/ecal_tlayer_cimpl.h>
-#include <ecal/cimpl/ecal_util_cimpl.h>
+#include <ecal/cimpl/client_cimpl.h>
+#include <ecal/cimpl/core_cimpl.h>
+#include <ecal/cimpl/log_cimpl.h>
+#include <ecal/cimpl/monitoring_cimpl.h>
+#include <ecal/cimpl/process_cimpl.h>
+#include <ecal/cimpl/publisher_cimpl.h>
+#include <ecal/cimpl/server_cimpl.h>
+#include <ecal/cimpl/subscriber_cimpl.h>
+#include <ecal/cimpl/time_cimpl.h>
+#include <ecal/cimpl/timer_cimpl.h>
+#include <ecal/cimpl/tlayer_cimpl.h>
+#include <ecal/cimpl/util_cimpl.h>
 
 #endif /* ecalc_h_included */

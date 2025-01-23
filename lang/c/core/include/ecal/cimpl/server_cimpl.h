@@ -18,18 +18,18 @@
 */
 
 /**
- * @file   ecal_server_cimpl.h
+ * @file   server_cimpl.h
  * @brief  eCAL service c interface
 **/
 
-#ifndef ecal_server_cimpl_h_included
-#define ecal_server_cimpl_h_included
+#ifndef server_cimpl_h_included
+#define server_cimpl_h_included
 
 #include <ecal/ecalc_export.h>
 #include <ecal/ecalc_types.h>
 
-#include <ecal/cimpl/ecal_service_info_cimpl.h>
-#include <ecal/cimpl/ecal_callback_cimpl.h>
+#include <ecal/cimpl/service_info_cimpl.h>
+#include <ecal/cimpl/callback_cimpl.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -117,4 +117,4 @@ extern "C"
 }
 #endif /*__cplusplus*/
 
-#endif /*ecal_server_cimpl_h_included*/
+#endif /*server_cimpl_h_included*/

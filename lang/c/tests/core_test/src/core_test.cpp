@@ -17,8 +17,8 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/cimpl/ecal_core_cimpl.h>
-#include <ecal/cimpl/ecal_process_cimpl.h>
+#include <ecal/cimpl/core_cimpl.h>
+#include <ecal/cimpl/process_cimpl.h>
 #include <ecal/defs.h>
 #include <ecal/os.h>
 

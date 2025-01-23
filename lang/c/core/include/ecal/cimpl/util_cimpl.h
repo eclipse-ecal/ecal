@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   ecal_util_cimpl.h
+ * @file   util_cimpl.h
  * @brief  eCAL utility c interface
 **/
 
-#ifndef ecal_util_cimpl_h_included
-#define ecal_util_cimpl_h_included
+#ifndef util_cimpl_h_included
+#define util_cimpl_h_included
 
 #include <ecal/ecalc_export.h>
 
@@ -53,4 +53,4 @@ extern "C"
 }
 #endif /*__cplusplus*/
 
-#endif /*ecal_util_cimpl_h_included*/
+#endif /*util_cimpl_h_included*/

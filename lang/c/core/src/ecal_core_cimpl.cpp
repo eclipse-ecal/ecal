@@ -23,7 +23,7 @@
 **/
 
 #include <ecal/ecal.h>
-#include <ecal/cimpl/ecal_core_cimpl.h>
+#include <ecal/cimpl/core_cimpl.h>
 
 extern "C"
 {

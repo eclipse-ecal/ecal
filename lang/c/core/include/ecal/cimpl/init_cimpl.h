@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   ecal_init_cimpl.h
+ * @file   init_cimpl.h
  * @brief  eCAL initialize components
 **/
 
-#ifndef ecal_init_cimpl_h_included
-#define ecal_init_cimpl_h_included
+#ifndef init_cimpl_h_included
+#define init_cimpl_h_included
 
 #define eCAL_Init_Publisher   0x01                          /*!< Initialize Publisher API            */
 #define eCAL_Init_Subscriber  0x02                          /*!< Initialize Subscriber API           */
@@ -45,4 +45,4 @@
                             | eCAL_Init_Logging    \
                             | eCAL_Init_TimeSync)           /*!< Initialize default eCAL API          */
 
-#endif /*ecal_init_cimpl_h_included*/
+#endif /*init_cimpl_h_included*/

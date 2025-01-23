@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   ecal_time_cimpl.h
+ * @file   time_cimpl.h
  * @brief  eCAL time c interface
 **/
 
-#ifndef ecal_time_cimpl_h_included
-#define ecal_time_cimpl_h_included
+#ifndef time_cimpl_h_included
+#define time_cimpl_h_included
 
 #include <ecal/ecalc_export.h>
 
@@ -110,4 +110,4 @@ extern "C"
 }
 #endif /*__cplusplus*/
 
-#endif /*ecal_time_cimpl_h_included*/
+#endif /*time_cimpl_h_included*/

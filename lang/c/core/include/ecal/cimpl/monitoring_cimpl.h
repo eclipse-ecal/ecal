@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   ecal_monitoring_cimpl.h
+ * @file   monitoring_cimpl.h
  * @brief  eCAL monitoring c interface
 **/
 
-#ifndef ecal_monitoring_cimpl_h_included
-#define ecal_monitoring_cimpl_h_included
+#ifndef monitoring_cimpl_h_included
+#define monitoring_cimpl_h_included
 
 #include <ecal/ecalc_export.h>
 
@@ -60,4 +60,4 @@ extern "C"
 }
 #endif /*__cplusplus*/
 
-#endif /*ecal_monitoring_cimpl_h_included*/
+#endif /*monitoring_cimpl_h_included*/

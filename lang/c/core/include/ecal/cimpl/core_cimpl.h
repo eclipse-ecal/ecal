@@ -18,17 +18,17 @@
 */
 
 /**
- * @file   ecal_core_cimpl.h
+ * @file   core_cimpl.h
  * @brief  eCAL core function c interface
 **/
 
-#ifndef ecal_core_cimpl_h_included
-#define ecal_core_cimpl_h_included
+#ifndef core_cimpl_h_included
+#define core_cimpl_h_included
 
 #include <ecal/ecalc_export.h>
 #include <ecal/ecalc_types.h>
 
-#include <ecal/cimpl/ecal_init_cimpl.h>
+#include <ecal/cimpl/init_cimpl.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -122,4 +122,4 @@ extern "C"
 }
 #endif /*__cplusplus*/
 
-#endif /*ecal_core_cimpl_h_included*/
+#endif /*core_cimpl_h_included*/

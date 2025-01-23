@@ -18,17 +18,17 @@
 */
 
 /**
- * @file   ecal_publisher_cimpl.h
+ * @file   publisher_cimpl.h
  * @brief  eCAL publisher c interface
 **/
 
-#ifndef ecal_publisher_cimpl_h_included
-#define ecal_publisher_cimpl_h_included
+#ifndef publisher_cimpl_h_included
+#define publisher_cimpl_h_included
 
 #include <ecal/ecalc_export.h>
 #include <ecal/ecalc_types.h>
 
-#include <ecal/cimpl/ecal_callback_cimpl.h>
+#include <ecal/cimpl/callback_cimpl.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -157,4 +157,4 @@ extern "C"
 }
 #endif /*__cplusplus*/
 
-#endif /*ecal_publisher_cimpl_h_included*/
+#endif /*publisher_cimpl_h_included*/

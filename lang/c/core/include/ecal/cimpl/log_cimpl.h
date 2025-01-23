@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   ecal_log_cimpl.h
+ * @file   log_cimpl.h
  * @brief  eCAL logging c interface
 **/
 
-#ifndef ecal_log_cimpl_h_included
-#define ecal_log_cimpl_h_included
+#ifndef log_cimpl_h_included
+#define log_cimpl_h_included
 
 #include <ecal/ecalc_export.h>
 
@@ -69,4 +69,4 @@ extern "C"
 }
 #endif /*__cplusplus*/
 
-#endif /*ecal_log_cimpl_h_included*/
+#endif /*log_cimpl_h_included*/
