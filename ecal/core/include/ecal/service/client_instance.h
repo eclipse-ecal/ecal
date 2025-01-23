@@ -18,17 +18,17 @@
 */
 
 /**
- * @file   ecal_client_instance.h
+ * @file   client_instance.h
  * @brief  eCAL client instance interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_callback.h>
 #include <ecal/ecal_deprecate.h>
+#include <ecal/ecal_namespace.h>
 #include <ecal/ecal_os.h>
-#include <ecal/ecal_types.h>
-#include <ecal/ecal_service_info.h>
+
+#include <ecal/service/types.h>
 
 #include <memory>
 #include <string>

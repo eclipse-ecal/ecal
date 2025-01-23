@@ -24,7 +24,8 @@
 #pragma once
 
 #include <ecal/ecal_registration.h>
-#include <ecal/ecal_types.h>
+#include <ecal/pubsub/types.h>
+#include <ecal/service/types.h>
 #include <ecal/ecal_util.h>
 
 #include "serialization/ecal_struct_sample_registration.h"

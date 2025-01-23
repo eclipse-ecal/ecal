@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   ecal_payload_writer.h
+ * @file   payload_writer.h
  * @brief  eCAL payload writer base class
 **/
 

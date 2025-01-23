@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_publisher.h>
+#include <ecal/pubsub/publisher.h>
 
 #include <chrono>
 #include <iostream>

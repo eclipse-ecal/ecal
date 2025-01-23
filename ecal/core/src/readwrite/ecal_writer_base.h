@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <ecal/ecal_payload_writer.h>
+#include <ecal/pubsub/payload_writer.h>
 
 #include "ecal_writer_data.h"
 #include "ecal_writer_info.h"

@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_subscriber.h>
+#include <ecal/pubsub/subscriber.h>
 
 #include <iostream>
 #include <sstream>

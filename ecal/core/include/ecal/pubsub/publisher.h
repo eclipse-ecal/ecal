@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   ecal_publisher.h
+ * @file   publisher.h
  * @brief  eCAL publisher interface
 **/
 
@@ -28,10 +28,10 @@
 #include <ecal/ecal_namespace.h>
 #include <ecal/ecal_os.h>
 
-#include <ecal/ecal_callback.h>
+#include <ecal/pubsub/types.h>
+#include <ecal/pubsub/payload_writer.h>
+
 #include <ecal/ecal_config.h>
-#include <ecal/ecal_payload_writer.h>
-#include <ecal/ecal_types.h>
 
 #include <memory>
 #include <string>

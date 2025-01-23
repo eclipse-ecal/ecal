@@ -28,7 +28,7 @@
 #include <condition_variable>
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_client.h>
+#include <ecal/service/client.h>
 #include <ecal_utils/string.h>
 #include <rec_server_core/rec_server.h>
 #include <rec_client_core/ecal_rec_defs.h>

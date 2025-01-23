@@ -30,7 +30,6 @@
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_process_mode.h>
 #include <ecal/ecal_process_severity.h>
-#include <ecal/ecal_callback.h>
 
 namespace eCAL
 {

@@ -23,7 +23,7 @@
 
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_log.h>
-#include <ecal/ecal_payload_writer.h>
+#include <ecal/pubsub/payload_writer.h>
 #include <ecal/ecal_process.h>
 #include <ecal/ecal_time.h>
 

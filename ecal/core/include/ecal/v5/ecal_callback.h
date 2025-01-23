@@ -27,8 +27,8 @@
 #include <ecal/ecal_namespace.h>
 
 #include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_callback.h>
-#include <ecal/ecal_types.h>
+#include <ecal/pubsub/types.h>   // Should we instead bring back our old event types???
+#include <ecal/service/types.h>  // Should we instead bring back our old event types???
 
 #include <functional>
 #include <string>

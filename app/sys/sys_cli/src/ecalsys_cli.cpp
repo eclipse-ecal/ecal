@@ -27,7 +27,7 @@
 #include <thread>
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_client.h>
+#include <ecal/service/client.h>
 #include <ecalsys/ecal_sys.h>
 #include <ecalsys/esys_defs.h>
 
