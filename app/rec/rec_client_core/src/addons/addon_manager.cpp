@@ -26,7 +26,7 @@
 
 #include <list>
 
-#include <ecal/ecal_defs.h>
+#include <ecal/defs.h>
 
 namespace eCAL
 {

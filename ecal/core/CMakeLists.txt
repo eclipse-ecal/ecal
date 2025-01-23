@@ -39,9 +39,9 @@ endif()
 # If we're currently doing a build within a git repository, we will configure the header files.
 # Else, (e.g. for source packages such as debian source packages) we will use a preconfigured file.
 # If there is really no information available, it will generate a dummy version file 0.0.0
-if     (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/ecal_defs.h")
-  configure_file(src/ecal_defs.h.in "${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h" @ONLY)
-endif  (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/ecal_defs.h")
+if     (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/defs.h")
+  configure_file(src/defs.h.in "${CMAKE_CURRENT_BINARY_DIR}/include/ecal/defs.h" @ONLY)
+endif  (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/defs.h")
 
 if(UNIX)
  include (CheckSymbolExists)
@@ -602,7 +602,7 @@ set(ecal_sources
 
 ecal_add_shared_library(${TARGET_NAME}
     ${ecal_sources}
-    ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h
+    ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/defs.h
 )
 
 if (ECAL_CORE_CONFIGURATION)
@@ -758,7 +758,7 @@ install(DIRECTORY
    "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
     FILES_MATCHING PATTERN "*.h")
 
-# install generated ecal_defs.h file    
+# install generated defs.h file    
 install(DIRECTORY
    "${CMAKE_CURRENT_BINARY_DIR}/include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
     FILES_MATCHING PATTERN "*.h")
