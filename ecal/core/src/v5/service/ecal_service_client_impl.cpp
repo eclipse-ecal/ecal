@@ -198,8 +198,17 @@ namespace eCAL
           }
         };
 
+      auto instances = m_service_client_impl->GetClientInstances();
+      bool success = false;
+      for (auto& instance : instances)
+      {
+        if (instance.GetClientID().host_name == m_host_name || m_host_name.empty())
+        {
+          success |= instance.CallWithCallback(method_name_, request_, timeout_, callback);
+        }
+      }
       // Call the method using the new API
-      return m_service_client_impl->CallWithCallback(method_name_, request_, timeout_, callback);
+      return success;
     }
 
     bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_)
@@ -217,21 +226,23 @@ namespace eCAL
 
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Making a synchronous call with response collection to method: " + method_name_);
 
-      // Call the method using the new API
-      ServiceIDResponseVecT service_id_responses;
-      const bool success = m_service_client_impl->CallWithResponse(method_name_, request_, timeout_, service_id_responses);
-
-      // Convert the responses to the old format
-      service_response_vec_->clear();
-      for (const auto& service_id_response : service_id_responses)
+      auto instances = m_service_client_impl->GetClientInstances();
+      std::vector<std::pair<bool, SServiceIDResponse>> responses;
+      bool success = false;
+      for (auto& instance : instances)
       {
-        // Filter responses based on host name if necessary
-        if (m_host_name.empty() || service_id_response.service_method_id.service_id.host_name == m_host_name)
+        if (instance.GetClientID().host_name == m_host_name || m_host_name.empty())
         {
-          service_response_vec_->push_back(ConvertToServiceResponse(service_id_response));
+          responses.emplace_back(instance.CallWithResponse(method_name_, request_, timeout_));
+          success |= responses.back().first;
         }
       }
 
+      // Convert the responses to the old format
+      service_response_vec_->clear();
+      for (const auto& response : responses)
+        service_response_vec_->push_back(ConvertToServiceResponse(response.second));
+      
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Call completed with success: " + std::to_string(success));
       return success;
     }
@@ -262,8 +273,17 @@ namespace eCAL
           }
         };
 
+      auto instances = m_service_client_impl->GetClientInstances();
+      bool success = false;
+      for (auto& instance : instances)
+      {
+        if (instance.GetClientID().host_name == m_host_name || m_host_name.empty())
+        {
+          success |= instance.CallWithCallbackAsync(method_name_, request_, callback);
+        }
+      }
+
       // Call the method asynchronously using the new API
-      const bool success = m_service_client_impl->CallWithCallbackAsync(method_name_, request_, callback);
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Async call to method: " + method_name_ + " completed with success: " + std::to_string(success));
       return success;
     }
