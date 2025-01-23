@@ -34,10 +34,6 @@ Included By
 
 - :ref:`file_ecal_core_include_ecal_ecal.h`
 
-- :ref:`file_ecal_core_include_ecal_ecal_client.h`
-
-- :ref:`file_ecal_core_include_ecal_ecal_client_instance.h`
-
 - :ref:`file_ecal_core_include_ecal_ecal_config.h`
 
 - :ref:`file_ecal_core_include_ecal_ecal_core.h`
@@ -48,13 +44,7 @@ Included By
 
 - :ref:`file_ecal_core_include_ecal_ecal_process.h`
 
-- :ref:`file_ecal_core_include_ecal_ecal_publisher.h`
-
 - :ref:`file_ecal_core_include_ecal_ecal_registration.h`
-
-- :ref:`file_ecal_core_include_ecal_ecal_server.h`
-
-- :ref:`file_ecal_core_include_ecal_ecal_subscriber.h`
 
 - :ref:`file_ecal_core_include_ecal_ecal_time.h`
 

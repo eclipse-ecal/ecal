@@ -34,8 +34,6 @@ Includes
 
 - ``ecal/ecal_callback.h`` (:ref:`file_ecal_core_include_ecal_ecal_callback.h`)
 
-- ``ecal/ecal_client.h`` (:ref:`file_ecal_core_include_ecal_ecal_client.h`)
-
 - ``ecal/ecal_config.h`` (:ref:`file_ecal_core_include_ecal_ecal_config.h`)
 
 - ``ecal/ecal_core.h`` (:ref:`file_ecal_core_include_ecal_ecal_core.h`)
@@ -50,15 +48,7 @@ Includes
 
 - ``ecal/ecal_process.h`` (:ref:`file_ecal_core_include_ecal_ecal_process.h`)
 
-- ``ecal/ecal_publisher.h`` (:ref:`file_ecal_core_include_ecal_ecal_publisher.h`)
-
 - ``ecal/ecal_registration.h`` (:ref:`file_ecal_core_include_ecal_ecal_registration.h`)
-
-- ``ecal/ecal_server.h`` (:ref:`file_ecal_core_include_ecal_ecal_server.h`)
-
-- ``ecal/ecal_service_info.h`` (:ref:`file_ecal_core_include_ecal_ecal_service_info.h`)
-
-- ``ecal/ecal_subscriber.h`` (:ref:`file_ecal_core_include_ecal_ecal_subscriber.h`)
 
 - ``ecal/ecal_time.h`` (:ref:`file_ecal_core_include_ecal_ecal_time.h`)
 
@@ -67,6 +57,16 @@ Includes
 - ``ecal/ecal_tlayer.h`` (:ref:`file_ecal_core_include_ecal_ecal_tlayer.h`)
 
 - ``ecal/ecal_util.h`` (:ref:`file_ecal_core_include_ecal_ecal_util.h`)
+
+- ``ecal/pubsub/publisher.h``
+
+- ``ecal/pubsub/subscriber.h``
+
+- ``ecal/service/client.h``
+
+- ``ecal/service/server.h``
+
+- ``ecal/service/types.h``
 
 
 

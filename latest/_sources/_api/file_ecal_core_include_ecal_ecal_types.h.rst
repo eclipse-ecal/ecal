@@ -44,23 +44,7 @@ Included By
 -----------
 
 
-- :ref:`file_ecal_core_include_ecal_ecal_callback.h`
-
-- :ref:`file_ecal_core_include_ecal_ecal_client.h`
-
-- :ref:`file_ecal_core_include_ecal_ecal_client_instance.h`
-
 - :ref:`file_ecal_core_include_ecal_ecal_core.h`
-
-- :ref:`file_ecal_core_include_ecal_ecal_publisher.h`
-
-- :ref:`file_ecal_core_include_ecal_ecal_registration.h`
-
-- :ref:`file_ecal_core_include_ecal_ecal_server.h`
-
-- :ref:`file_ecal_core_include_ecal_ecal_service_info.h`
-
-- :ref:`file_ecal_core_include_ecal_ecal_subscriber.h`
 
 
 
@@ -80,15 +64,7 @@ Classes
 
 - :ref:`exhale_struct_structeCAL_1_1Registration_1_1SEntityId`
 
-- :ref:`exhale_struct_structeCAL_1_1Registration_1_1SServiceId`
-
-- :ref:`exhale_struct_structeCAL_1_1Registration_1_1SServiceMethodId`
-
-- :ref:`exhale_struct_structeCAL_1_1Registration_1_1STopicId`
-
 - :ref:`exhale_struct_structeCAL_1_1SDataTypeInformation`
-
-- :ref:`exhale_struct_structeCAL_1_1SServiceMethodInformation`
 
 - :ref:`exhale_struct_structeCAL_1_1SVersion`
 

@@ -34,7 +34,9 @@ Includes
 
 - ``ecal/ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
 
-- ``ecal/ecal_types.h`` (:ref:`file_ecal_core_include_ecal_ecal_types.h`)
+- ``ecal/pubsub/types.h``
+
+- ``ecal/service/types.h``
 
 - ``functional``
 

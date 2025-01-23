@@ -32,7 +32,8 @@ Program Listing for File ecal_registration.h
    #pragma once
    
    #include <ecal/ecal_os.h>
-   #include <ecal/ecal_types.h>
+   #include <ecal/pubsub/types.h>
+   #include <ecal/service/types.h>
    
    #include <cstdint>
    #include <functional>

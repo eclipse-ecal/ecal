@@ -95,16 +95,6 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_ecal_core_include_ecal_ecal_client.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_ecal_core_include_ecal_ecal_client_instance.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
    file_ecal_core_include_ecal_ecal_config.h.rst
 
 .. toctree::
@@ -150,11 +140,6 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_ecal_core_include_ecal_ecal_payload_writer.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
    file_ecal_core_include_ecal_ecal_process.h.rst
 
 .. toctree::
@@ -170,27 +155,7 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_ecal_core_include_ecal_ecal_publisher.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
    file_ecal_core_include_ecal_ecal_registration.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_ecal_core_include_ecal_ecal_server.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_ecal_core_include_ecal_ecal_service_info.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_ecal_core_include_ecal_ecal_subscriber.h.rst
 
 .. toctree::
    :maxdepth: 5

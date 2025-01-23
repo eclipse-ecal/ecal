@@ -73,27 +73,6 @@ Program Listing for File ecal_types.h
        }
      };
    
-     struct SServiceMethodInformation
-     {
-       SDataTypeInformation request_type;   
-       SDataTypeInformation response_type;  
-   
-       bool operator==(const SServiceMethodInformation& other) const
-       {
-         return request_type == other.request_type && response_type == other.response_type;
-       }
-   
-       bool operator!=(const SServiceMethodInformation& other) const
-       {
-         return !(*this == other);
-       }
-   
-       bool operator<(const SServiceMethodInformation& rhs) const
-       {
-         return std::tie(request_type, response_type) < std::tie(rhs.request_type, rhs.response_type);
-       }
-     };
-   
      namespace Registration
      {
        using EntityIdT = uint64_t;
@@ -122,61 +101,5 @@ Program Listing for File ecal_types.h
            << ", host_name: " << id.host_name << ")";
          return os;
        }
-   
-       struct STopicId
-       {
-         SEntityId    topic_id;
-         std::string  topic_name;
-   
-         bool operator==(const STopicId& other) const
-         {
-           return topic_id == other.topic_id && topic_name == other.topic_name;
-         }
-   
-         bool operator<(const STopicId& other) const
-         {
-           return std::tie(topic_id, topic_name) < std::tie(other.topic_id, other.topic_name);
-         }
-       };
-   
-       inline std::ostream& operator<<(std::ostream& os, const STopicId& id)
-       {
-         os << "STopicId(topic_id: " << id.topic_id
-           << ", topic_name: " << id.topic_name << ")";
-         return os;
-       }
-   
-       struct SServiceId
-       {
-         SEntityId    service_id;
-         std::string  service_name;
-   
-         bool operator==(const SServiceId& other) const
-         {
-           return service_id == other.service_id && service_name == other.service_name;
-         }
-   
-         bool operator<(const SServiceId& other) const
-         {
-           return std::tie(service_id, service_name) < std::tie(other.service_id, other.service_name);
-         }
-       };
-   
-       struct SServiceMethodId
-       {
-         SEntityId    service_id;
-         std::string  service_name;
-         std::string  method_name;
-   
-         bool operator==(const SServiceMethodId& other) const
-         {
-           return service_id == other.service_id && service_name == other.service_name && method_name == other.method_name;
-         }
-   
-         bool operator<(const SServiceMethodId& other) const
-         {
-           return std::tie(service_id, service_name, method_name) < std::tie(other.service_id, other.service_name, other.method_name);
-         }
-       };
      }
    }

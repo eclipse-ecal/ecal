@@ -32,8 +32,6 @@ Includes
 
 - ``chrono``
 
-- ``ecal/ecal_callback.h`` (:ref:`file_ecal_core_include_ecal_ecal_callback.h`)
-
 - ``ecal/ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
 
 - ``ecal/ecal_process_mode.h`` (:ref:`file_ecal_core_include_ecal_ecal_process_mode.h`)
