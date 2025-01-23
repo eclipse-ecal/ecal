@@ -34,7 +34,7 @@ namespace eCAL
 {
   ECAL_CORE_NAMESPACE_V6
   {
-  CServiceClient::CServiceClient(const std::string & service_name_, const ServiceMethodInformationMapT method_information_map_, const ClientEventCallbackT event_callback_)
+  CServiceClient::CServiceClient(const std::string & service_name_, const ServiceMethodInfoSetT method_information_map_, const ClientEventCallbackT event_callback_)
   {
     // create client implementation
     m_service_client_impl = CServiceClientImpl::CreateInstance(service_name_, method_information_map_, event_callback_);

@@ -138,7 +138,7 @@ TEST(core_cpp_clientserver, ClientConnectEvent)
     };
 
   // create client
-  eCAL::CServiceClient client("service", eCAL::ServiceMethodInformationMapT(), event_callback);
+  eCAL::CServiceClient client("service", eCAL::ServiceMethodInfoSetT(), event_callback);
 
   // check events
   eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
@@ -399,7 +399,7 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
   ClientVecT client_vec;
   for (auto s = 0; s < num_clients; ++s)
   {
-    client_vec.push_back(std::make_shared<eCAL::CServiceClient>("service", eCAL::ServiceMethodInformationMapT(), event_callback));
+    client_vec.push_back(std::make_shared<eCAL::CServiceClient>("service", eCAL::ServiceMethodInfoSetT(), event_callback));
   }
 
   // response callback function

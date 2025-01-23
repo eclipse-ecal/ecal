@@ -76,7 +76,7 @@ namespace eCAL
   {
     // Factory method to create a new instance of CServiceClientImpl
     std::shared_ptr<CServiceClientImpl> CServiceClientImpl::CreateInstance(
-        const std::string & service_name_, const ServiceMethodInformationMapT & method_information_map_, const ClientEventCallbackT & event_callback_)
+        const std::string & service_name_, const ServiceMethodInfoSetT & method_information_map_, const ClientEventCallbackT & event_callback_)
     {
   #ifndef NDEBUG
       eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CreateInstance: Creating instance of CServiceClientImpl for service: " + service_name_);
@@ -86,17 +86,17 @@ namespace eCAL
 
   // Constructor: Initializes client ID, method call counts, and registers the client
   CServiceClientImpl::CServiceClientImpl(
-      const std::string & service_name_, const ServiceMethodInformationMapT & method_information_map_, const ClientEventCallbackT & event_callback_)
-      : m_service_name(service_name_), m_method_information_map(method_information_map_)
+      const std::string & service_name_, const ServiceMethodInfoSetT & method_information_set_, const ClientEventCallbackT & event_callback_)
+      : m_service_name(service_name_), m_method_information_set(method_information_set_)
   {
 #ifndef NDEBUG
     eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CServiceClientImpl: Initializing service client for: " + service_name_);
 #endif
 
     // initialize method call counts
-    for (const auto& method_information_pair : m_method_information_map)
+    for (const auto& method_information : m_method_information_set)
     {
-      m_method_call_count_map[method_information_pair.first] = 0;
+      m_method_call_count_map[method_information.method_name] = 0;
     }
 
     // create unique client ID
@@ -366,24 +366,23 @@ namespace eCAL
     service_client.uname = Process::GetUnitName();
     service_client.sname = m_service_name;
 
-    const std::lock_guard<std::mutex> lock(m_method_information_map_mutex);
-    for (const auto& method_information_pair : m_method_information_map)
+    const std::lock_guard<std::mutex> lock(m_method_information_set_mutex);
+    for (const auto& method_information : m_method_information_set)
     {
-      const auto& method_name = method_information_pair.first;
-      const auto& method_information = method_information_pair.second;
+      const auto& method_name = method_information.method_name;
 
       Service::Method method;
       method.mname = method_name;
 
       // old type and descriptor fields
-      method.req_type = method_information.request_type.name;
-      method.req_desc = method_information.request_type.descriptor;
-      method.resp_type = method_information.response_type.name;
-      method.resp_desc = method_information.response_type.descriptor;
+      method.req_type = method_information.req_type.name;
+      method.req_desc = method_information.req_type.descriptor;
+      method.resp_type = method_information.resp_type.name;
+      method.resp_desc = method_information.resp_type.descriptor;
 
       // new type and descriptor fields
-      method.req_datatype = method_information.request_type;
-      method.resp_datatype = method_information.response_type;
+      method.req_datatype = method_information.req_type;
+      method.resp_datatype = method_information.resp_type;
 
       {
         const auto& call_count_iter = m_method_call_count_map.find(method_name);
@@ -512,7 +511,7 @@ namespace eCAL
 
   void CServiceClientImpl::IncrementMethodCallCount(const std::string & method_name_)
   {
-    const std::lock_guard<std::mutex> lock(m_method_information_map_mutex);
+    const std::lock_guard<std::mutex> lock(m_method_information_set_mutex);
     m_method_call_count_map[method_name_]++;
   }
 

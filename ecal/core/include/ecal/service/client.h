@@ -55,7 +55,7 @@ namespace eCAL
        * @param event_callback_          The client event callback funtion.
       **/
       ECAL_API_EXPORTED_MEMBER
-        CServiceClient(const std::string& service_name_, const ServiceMethodInformationMapT method_information_map_ = ServiceMethodInformationMapT(), const ClientEventCallbackT event_callback_ = ClientEventCallbackT());
+        CServiceClient(const std::string& service_name_, const ServiceMethodInfoSetT method_information_map_ = ServiceMethodInfoSetT(), const ClientEventCallbackT event_callback_ = ClientEventCallbackT());
 
       /**
        * @brief Destructor.

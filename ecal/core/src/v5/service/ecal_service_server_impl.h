@@ -29,6 +29,7 @@
 #include <ecal/service/server.h>
 #include <ecal/v5/ecal_callback.h>
 
+#include <map>
 #include <mutex>
 #include <string>
 

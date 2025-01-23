@@ -30,7 +30,7 @@
 #include <functional>
 #include <string>
 #include <vector>
-#include <map>
+#include <set>
 
 namespace eCAL
 {
@@ -129,6 +129,16 @@ namespace eCAL
     std::string              method_name; //!< The name of the method.
     SDataTypeInformation     req_type;    //!< The type of the method request.
     SDataTypeInformation     resp_type;   //!< The type of the method response.
+
+    bool operator==(const SMethodInfo& other) const
+    {
+      return method_name == other.method_name && req_type == other.req_type && resp_type == other.resp_type;
+    }
+
+    bool operator<(const SMethodInfo& other) const
+    {
+      return std::tie(method_name, method_name, resp_type) < std::tie(other.method_name, other.method_name, other.resp_type);
+    }
   };
 
   /**
@@ -191,7 +201,7 @@ namespace eCAL
   /**
    * @brief Map of <method name, method information (like request type, reponse type)>.
   **/
-  using ServiceMethodInformationMapT = std::map<std::string, SServiceMethodInformation>;
+  using ServiceMethodInfoSetT = std::set<SMethodInfo>;
   
   ECAL_CORE_NAMESPACE_V6
   {

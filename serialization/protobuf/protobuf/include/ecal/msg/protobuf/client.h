@@ -134,7 +134,7 @@ namespace eCAL
       using eCAL::v5::CServiceClient::Call;
       using eCAL::v5::CServiceClient::CallAsync;
     private:
-      ServiceMethodInformationMapT CreateMethodInformationMap()
+      ServiceMethodInfoSetT CreateMethodInformationMap()
       {
         // As google::protobuf::Service::GetDescriptor() is defined in a protected class scope
         // we need to inherit public from T in order to make the method accessible in our code.
@@ -143,7 +143,7 @@ namespace eCAL
         const google::protobuf::ServiceDescriptor* service_descriptor = service->GetDescriptor();
 
         std::string error_s;
-        ServiceMethodInformationMapT method_information_map;
+        ServiceMethodInfoSetT method_information_map;
         CProtoDynDecoder dyn_decoder;
         for (int i = 0; i < service_descriptor->method_count(); ++i)
         {
@@ -162,12 +162,11 @@ namespace eCAL
           dyn_decoder.GetServiceMessageDescFromType(service_descriptor, request_type_name, request_type_descriptor, error_s);
           dyn_decoder.GetServiceMessageDescFromType(service_descriptor, response_type_name, response_type_descriptor, error_s);
 
-
-          method_information_map[method_name] = SServiceMethodInformation({
-            {request_type_name, "proto", request_type_descriptor} ,
-            {response_type_name, "proto", response_type_descriptor}
-            });
-
+          method_information_map.emplace(SMethodInfo{ method_name,
+            SDataTypeInformation{request_type_name, "proto", request_type_descriptor},
+            SDataTypeInformation{response_type_name, "proto", response_type_descriptor}
+            }
+          );
         }
 
         return method_information_map;

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,12 +59,12 @@ TEST_P(ClientsTestFixture, ClientExpiration)
   // create simple client and let it expire
   {
     // create client
-    eCAL::SServiceMethodInformation service_method_info;
-    service_method_info.request_type.name        = "foo::req_type";
-    service_method_info.request_type.descriptor  = "foo::req_desc";
-    service_method_info.response_type.name       = "foo::resp_type";
-    service_method_info.response_type.descriptor = "foo::resp_desc";
-    const eCAL::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
+    eCAL::SMethodInfo service_method_info;
+    service_method_info.req_type.name        = "foo::req_type";
+    service_method_info.req_type.descriptor  = "foo::req_desc";
+    service_method_info.resp_type.name       = "foo::resp_type";
+    service_method_info.resp_type.descriptor = "foo::resp_desc";
+    const eCAL::CServiceClient client("foo::service", { service_method_info });
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -111,12 +111,13 @@ TEST_P(ClientsTestFixture, GetClientIDs)
   // create simple client
   {
     // create client
-    eCAL::SServiceMethodInformation service_method_info;
-    service_method_info.request_type.name        = "foo::req_type";
-    service_method_info.request_type.descriptor  = "foo::req_desc";
-    service_method_info.response_type.name       = "foo::resp_type";
-    service_method_info.response_type.descriptor = "foo::resp_desc";
-    const eCAL::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
+    eCAL::SMethodInfo service_method_info;
+    service_method_info.method_name          = "foo::method";
+    service_method_info.req_type.name        = "foo::req_type";
+    service_method_info.req_type.descriptor  = "foo::req_desc";
+    service_method_info.resp_type.name       = "foo::resp_type";
+    service_method_info.resp_type.descriptor = "foo::resp_desc";
+    const eCAL::CServiceClient client("foo::service", { service_method_info });
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
