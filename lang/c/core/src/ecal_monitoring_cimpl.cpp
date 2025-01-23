@@ -23,7 +23,7 @@
 **/
 
 #include <ecal/ecal.h>
-#include <ecal/cimpl/monitoring_cimpl.h>
+#include <ecalc/monitoring_cimpl.h>
 
 #include "ecal_common_cimpl.h"
 

@@ -23,7 +23,7 @@
 **/
 
 #include <ecal/ecal.h>
-#include <ecal/cimpl/log_cimpl.h>
+#include <ecalc/log_cimpl.h>
 
 #include "ecal_common_cimpl.h"
 

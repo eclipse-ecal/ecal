@@ -28,8 +28,8 @@
 #include <ecal/ecalc_export.h>
 #include <ecal/ecalc_types.h>
 
-#include <ecal/cimpl/service_info_cimpl.h>
-#include <ecal/cimpl/callback_cimpl.h>
+#include <ecalc/service_info_cimpl.h>
+#include <ecalc/callback_cimpl.h>
 
 #ifdef __cplusplus
 extern "C"

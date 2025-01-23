@@ -23,7 +23,7 @@
 **/
 
 #include <ecal/ecal.h>
-#include <ecal/cimpl/timer_cimpl.h>
+#include <ecalc/timer_cimpl.h>
 
 #include <mutex>
 

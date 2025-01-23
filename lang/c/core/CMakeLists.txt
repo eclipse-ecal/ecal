@@ -54,23 +54,23 @@ endif()
 
 
 set(ecal_header_cimpl
-    include/ecal/cimpl/callback_cimpl.h
-    include/ecal/cimpl/client_cimpl.h
-    include/ecal/cimpl/core_cimpl.h
-    include/ecal/cimpl/init_cimpl.h
-    include/ecal/cimpl/log_cimpl.h
-    include/ecal/cimpl/monitoring_cimpl.h
-    include/ecal/cimpl/process_cimpl.h
-    include/ecal/cimpl/publisher_cimpl.h
-    include/ecal/cimpl/server_cimpl.h
-    include/ecal/cimpl/service_info_cimpl.h
-    include/ecal/cimpl/subscriber_cimpl.h
-    include/ecal/cimpl/time_cimpl.h
-    include/ecal/cimpl/timer_cimpl.h
-    include/ecal/cimpl/util_cimpl.h
-    include/ecal/ecalc.h
-    include/ecal/ecalc_export.h
-    include/ecal/ecalc_types.h
+    include/ecalc/callback_cimpl.h
+    include/ecalc/client_cimpl.h
+    include/ecalc/core_cimpl.h
+    include/ecalc/init_cimpl.h
+    include/ecalc/log_cimpl.h
+    include/ecalc/monitoring_cimpl.h
+    include/ecalc/process_cimpl.h
+    include/ecalc/publisher_cimpl.h
+    include/ecalc/server_cimpl.h
+    include/ecalc/service_info_cimpl.h
+    include/ecalc/subscriber_cimpl.h
+    include/ecalc/time_cimpl.h
+    include/ecalc/timer_cimpl.h
+    include/ecalc/util_cimpl.h
+    include/ecalc/ecalc.h
+    include/ecalc/ecalc_export.h
+    include/ecalc/ecalc_types.h
 )
 
 
