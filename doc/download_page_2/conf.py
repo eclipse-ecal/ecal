@@ -38,20 +38,6 @@ if is_cmake_build:
 
 sys.path.insert(0, sphinx_custom_extension_dir)
 
-# -- Generate ecalicons include file-------------------------------------------
-
-import generate_ecalicons
-qresource_list = [
-    os.path.join(ecal_source_root_dir, r"app/iconset/ecalicons.qrc"),
-    os.path.join(ecal_source_root_dir, r"lib/QEcalParser/resources/qecalparser.qrc"),
-    os.path.join(ecal_source_root_dir, r"app/mon/mon_gui/resources/resources.qrc"),
-    os.path.join(ecal_source_root_dir, r"app/play/play_gui/resources/resources.qrc"),
-    os.path.join(ecal_source_root_dir, r"app/rec/rec_gui/resources/resources.qrc"),
-    os.path.join(ecal_source_root_dir, r"app/sys/sys_gui/resources/resources.qrc"),
-    os.path.join(ecal_source_root_dir, r"app/util/launcher/resources/resources.qrc")
-]
-generate_ecalicons.generate_ecalicons(qresource_list, os.path.join(rst_source_dir, r"_include_ecalicons.txt"))
-
 # -- Generate download archive and tables for the homepage --------------------
 import generate_download_tables
 
@@ -101,53 +87,7 @@ extensions = [
     'sphinx_book_theme',
     'sphinx_tabs.tabs',
     'sphinx.ext.githubpages',
-    'sphinx.ext.todo',
-    'sphinxcontrib.youtube',
 ]
-
-if is_cmake_build:
-    extensions += [ \
-    #    'sphinxcontrib.moderncmakedomain',
-        'breathe',
-        'exhale',
-    #    'ini-directive'
-    ]
-    
-    # For some reason the apidoc crashes on macOS
-    if sys.platform.lower() != "darwin":
-        extensions += [ \
-            'sphinx.ext.autodoc',
-            'sphinxcontrib.apidoc',
-        ]
-
-# Todo Configurations
-if is_cmake_build:
-    todo_include_todos = False
-    todo_emit_warnings = True
-
-apidoc_module_dir = os.path.join(ecal_python_dir)
-apidoc_output_dir = os.path.join(rst_source_dir, '_api_python')
-apidoc_excluded_paths = ['tests']
-apidoc_separate_modules = True
-apidoc_extra_args = ['-f']
-
-# Breathe Configuration
-breathe_default_project = "eCAL"
-
-# Setup the exhale extension
-exhale_args = {
-    # These arguments are required
-    "containmentFolder":     "./_api",
-    "rootFileName":          "ecal_root.rst",
-    "rootFileTitle":         "C++",
-    "doxygenStripFromPath":  ecal_source_root_dir,
-    # Suggested optional arguments
-    "createTreeView":        True,
-    # TIP: if using the sphinx-bootstrap-theme, you need
-    # "treeViewIsBootstrap": True,
-    "exhaleExecutesDoxygen": False
-    #"exhaleDoxygenStdin":    "INPUT = ../include"
-}
 
 # Tell sphinx what the primary language being documented is.
 #primary_domain = 'cpp'
@@ -208,31 +148,14 @@ html_theme_options = {
     "show_navbar_depth": 1,
     "show_toc_level": 2,
     "repository_url": "https://github.com/eclipse-ecal/ecal/",
-    "use_repository_button": True,
-    "use_issues_button": True,
-    "use_edit_page_button": True,
+    "use_repository_button": False,
+    "use_issues_button": False,
+    "use_edit_page_button": False,
     "repository_branch": "master",
     "path_to_docs": "doc/rst/",
     "extra_navbar": "", # => Remove the default text
     "footer_start": ["footer.html"],
     "extra_footer": '',
-
-    # Add version switcher to choose between different versions of the documentation
-    "switcher": {
-        "json_url": "https://eclipse-ecal.github.io/ecal/switcher.json",
-        "version_match": ecal_doc_version,
-    },
-
-     # Set to check_switcher false to allow offline builds
-    "check_switcher": False,
-
-    # Enable a banner telling the user that they look at an outdated version of the documentation
-    "show_version_warning_banner": True,
-}
-
-html_sidebars = {
-    # Add the version switchter to the sidebar
-    "**": ["navbar-logo", "icon-links", "version-switcher", "search-field", "sbt-sidebar-nav.html"]
 }
 
 # -- Options for HTMLHelp output ---------------------------------------------

@@ -9,7 +9,7 @@
 eCAL Releases
 ========================
 
-Here you can find the downloads
+Here you can find the downloads#
 
 Trademark
 =========
@@ -18,12 +18,13 @@ Eclipse eCAL™ is a trademark of the Eclipse Foundation, Inc. and is used with 
 
 .. toctree::
    :hidden:
-   :caption: Getting started
 
-   test
+   eCAL Documentation <https://eclipse-ecal.github.io/ecal/stable/index.html>
 
 .. toctree::
    :hidden:
    :caption: Releases
 
    _download_archive/download_archive
+
+   download_page

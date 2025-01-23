@@ -1,0 +1,128 @@
+{% set ecal_version_string = ecal_version | string -%}
+
+{# Makro for properly naming the OS, possibly with icon. e.g. "|fa-windows| Windows" (-> capitalized) or |fa-ubuntu| Ubuntu 24.04 (-> with Version number) -#}
+{% macro get_os_string(asset, with_icon) -%}
+    {% if asset['properties']['os'] == 'windows' -%}
+        {% set os_string = (with_icon and '|fa-windows| ' or '') ~ 'Windows' -%}
+    {% elif asset['properties']['os'] == 'macos' -%}
+        {% set os_string = (with_icon and '|fa-apple| ' or '') ~ 'macOS' -%}
+    {% elif asset['properties']['os'] == 'ubuntu' -%}
+        {% set os_version_padded = asset['properties']['os_version'].major ~ '.' ~ '%02d' | format(asset['properties']['os_version'].minor) -%}
+        {% set os_string = (with_icon and '|fa-Ubuntu| ' or '') ~ 'Ubuntu ' ~ os_version_padded -%}
+    {% elif asset['properties']['os'] == 'manylinux' -%}
+        {% set os_string = (with_icon and '|fa-linux| ' or '') ~ 'Linux (All)' -%}
+    {% elif asset['properties']['os'] == '' -%}
+        {% set os_string = 'Unknown' -%}
+    {% else -%}
+        {% set os_string = asset['properties']['os'].capitalize() -%}
+    {% endif -%}
+    {{ os_string -}}
+{% endmacro -%}
+
+{# Makro for naming the CPU Architecture. Mainly to make amd64 to x64, so the user can more easily distinguish it from arm64 #}
+{% macro get_cpu_string(asset) -%}
+    {% if asset['properties']['cpu'] == 'amd64' -%}
+        {% set cpu_string = 'x64' -%}
+    {% elif asset['properties']['cpu'] == 'arm64' -%}
+        {% set cpu_string = 'ARM64' -%}
+    {% else -%}
+        {% set cpu_string = asset['properties']['cpu'] -%}
+    {% endif -%}
+    {{ cpu_string -}}
+{% endmacro -%}
+
+.. include:: /include.txt
+
+===============
+eCAL {{ ecal_version_string }}
+===============
+
+- Release Date: {{ gh_release.published_at.strftime('%Y-%m-%d') }}
+- GitHub Release Page: {{ gh_release.html_url }}
+
+Changelog
+=========
+
+.. literalinclude:: changelog_ecal_{{ ecal_version_string.replace('.', '_') }}.txt
+   :language: text
+
+Downloads
+=========
+
+{# Get the ecal_installers from the list and remove them from the main list. -#}
+{% set ecal_installer_list = asset_list | selectattr('type', 'equalto', 'ecal_installer') | list -%}
+{% set asset_list          = asset_list | rejectattr('type', 'equalto', 'ecal_installer') | list -%}
+
+{% if ecal_installer_list %}
+eCAL Installer
+--------------
+
+.. list-table:: 
+   :widths: 2 2 6
+   :header-rows: 1
+
+   * - OS
+
+     - Architecture
+
+     - Files
+
+   {% for asset in ecal_installer_list -%}
+
+   * - {{ get_os_string(asset, true) }}
+
+     - {{ get_cpu_string(asset) }}
+
+     - `{{ asset['filename'] }} <{{ asset['download_link'] }}>`_
+
+   {% endfor -%}
+
+{% endif -%}
+
+{# Get the python bindings from the list -#}
+{% set python_binding_list = asset_list | selectattr('type', 'equalto', 'python_binding') | selectattr('properties.python_implementation', 'equalto', 'cp') | list -%}
+{% set asset_list          = asset_list | rejectattr('type', 'equalto', 'python_binding') | list -%}
+
+{% if python_binding_list %}
+Python Binding
+--------------
+
+.. list-table:: 
+    :widths: 2 2 6
+    :header-rows: 1
+
+    * - OS
+
+      - Architecture
+
+      - Files
+
+    {% for asset in python_binding_list -%}
+
+    * - {{ get_os_string(asset, true) }}
+
+      - {{ get_cpu_string(asset) }}
+
+      - `Python {{ asset['properties']['python_version'].major }}.{{ asset['properties']['python_version'].minor }} <{{ asset['download_link'] }}>`_
+
+    {% endfor -%}
+
+{% endif -%}
+
+{% if asset_list %}
+Other Downloads
+---------------
+
+.. list-table::
+    :widths: 1
+    :header-rows: 1
+
+    * - Files
+
+    {% for asset in asset_list -%}
+
+    * - `{{ asset['filename'] }} <{{ asset['download_link'] }}>`_
+
+    {% endfor -%}
+
+{% endif -%}
