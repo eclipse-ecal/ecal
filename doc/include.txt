@@ -11,6 +11,10 @@
 
    <i class="fab fa-ubuntu"></i>
 
+.. |fa-apple| raw:: html
+
+   <i class="fab fa-apple"></i>
+
 .. |fa-folder-open| raw:: html
 
    <i class="far fa-folder-open"></i>
@@ -50,6 +54,10 @@
 .. |fa-pencil-alt| raw:: html
    
    <i class="fas fa-pencil-alt"></i>
+
+.. |fa-code| raw:: html
+   
+   <i class="fas fa-code"></i>
 
 
 .. |ecalini-path-windows| replace:: :file:`C:\\ProgramData\\eCAL\\ecal.yaml`

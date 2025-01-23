@@ -1,4 +1,4 @@
-.. include:: include.txt
+.. include:: /../include.txt
 
 ============
 eCAL 5.13.3

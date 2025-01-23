@@ -25,6 +25,4 @@ Eclipse eCAL™ is a trademark of the Eclipse Foundation, Inc. and is used with 
    :hidden:
    :caption: Releases
 
-   _download_archive/download_archive
-
-   download_page
+   releases/all_releases

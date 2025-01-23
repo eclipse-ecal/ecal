@@ -1,0 +1,44 @@
+.. include:: /../include.txt
+
+.. _all_releases:
+
+============
+All releases
+============
+
+Here you can find a list of all eCAL Versions ever released on GitHub.
+
+{% for minor_version, releases_dict in releases_dict.items() %}
+eCAL {{ minor_version.major }}.{{ minor_version.minor }}
+===========
+
+{% if minor_version not in list_of_supported_minor_versions -%}
+
+*eCAL {{ minor_version.major }}.{{ minor_version.minor }} has reached its end of life.*
+
+{% endif -%}
+
+.. list-table:: 
+   :widths: 3 3 4
+   :header-rows: 1
+   
+   * - Release
+
+     - Release Date
+
+     - Support Status
+
+{% for ecal_version, gh_release in releases_dict.items() -%}
+{% set is_latest_release_in_this_minor = (ecal_version == releases_dict.keys()|list|first) %}
+   * - :ref:`eCAL {{ gh_release.tag_name }} <{{ get_rst_release_page_label(ecal_version) }}>`
+
+     - {{ gh_release.published_at.strftime("%Y-%m-%d") }}
+
+     - {% if (minor_version in list_of_supported_minor_versions) and is_latest_release_in_this_minor -%}
+       Supported
+       {% else -%}
+       EOL
+       {% endif -%}
+{% endfor -%}
+
+{% endfor -%}

@@ -5,6 +5,7 @@ import re
 import github
 import jinja2
 import semantic_version
+from collections import OrderedDict
 
 ubuntu_default_python_version_dict = \
 {
@@ -46,7 +47,7 @@ Example:
 def get_releases_dict(gh_repo):
     gh_releases  = gh_repo.get_releases()
 
-    gh_release_branches_dict = {}
+    gh_release_branches_dict = OrderedDict()
 
     for gh_release in gh_releases:
         if gh_release.prerelease or gh_release.draft:
@@ -77,9 +78,16 @@ def get_releases_dict(gh_repo):
 
         if not release_branch in gh_release_branches_dict:
             # Initialize dicitonary for this branch
-            gh_release_branches_dict[release_branch] = {}
+            gh_release_branches_dict[release_branch] = OrderedDict()
 
         gh_release_branches_dict[release_branch][version] = gh_release
+
+    # Sort the minor eCAL Release branches by version
+    gh_release_branches_dict = OrderedDict(sorted(gh_release_branches_dict.items(), key = lambda x: x[0], reverse = True))
+
+    # Sort the specific releases by version
+    for release_branch in gh_release_branches_dict:
+        gh_release_branches_dict[release_branch] = OrderedDict(sorted(gh_release_branches_dict[release_branch].items(), key = lambda x: x[0], reverse = True))
 
     return gh_release_branches_dict
 
@@ -204,9 +212,11 @@ def get_asset_properties(ecal_version, gh_asset):
         for index in range(2,4):
             if re.match(r"[a-z]{2}[0-9]+", components[index]):
                 python_implementation = components[index][:2]
-                python_version.major = int(components[index][2])
+                python_version_major_string = components[index][2]
+                python_verstion_minor_string = "0"
                 if len(components[index]) > 3:
-                    python_version.minor = int(components[index][3:])
+                    python_verstion_minor_string = components[index][3:]
+                python_version = semantic_version.Version(python_version_major_string + "." + python_verstion_minor_string + ".0")
                 break
 
         if python_version == semantic_version.Version("0.0.0"):
@@ -261,24 +271,100 @@ def get_asset_properties(ecal_version, gh_asset):
 
     return asset_properties
 
-def generate_download_page(gh_release, ecal_version, asset_list, output_file):
+def generate_all_releases_page(releases_dict, list_of_supported_minor_versions, output_dir):
+    # Create the output directory if it does not exist
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
     # Load the Jinja2 template
     template_loader     = jinja2.FileSystemLoader(searchpath="resource/")
     template_env        = jinja2.Environment(loader=template_loader)
-    template_file       = "download_page.rst.jinja"
+    template_file       = "all_releases_page.rst.jinja"
     template            = template_env.get_template(template_file)
 
     # Render the template with the context
     context = {
-        'gh_release':   gh_release,
-        'ecal_version': ecal_version,
-        'asset_list':   asset_list
+        'releases_dict': releases_dict,
+        'list_of_supported_minor_versions': list_of_supported_minor_versions,
+        'group_asset_list_by_os_and_arch': group_asset_list_by_os_and_arch,
+        'get_rst_release_page_label': get_rst_release_page_label,
     }
     output = template.render(context)
 
     # Save the rendered template to a file
+    output_file = os.path.join(output_dir, "all_releases.rst")
     with open(output_file, "w") as f:
         f.write(output)
+
+def generate_release_page(gh_release,
+                           ecal_version,
+                           asset_list,
+                           minor_is_supported,
+                           latest_version_of_minor,
+                           output_dir):
+    ecal_version_string             = str(ecal_version).replace('.', '_').replace('-', '_').replace('+', '_')
+    download_archive_rst_file_name  = "ecal_" + ecal_version_string + ".rst"
+    changelog_file                  = "changelog_ecal_" + ecal_version_string + ".txt"
+
+    # Create the output directory if it does not exist
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    # Save the changelog to a file
+    changelog = gh_release.body
+    changelog = changelog.replace('\r\n', '\n')
+    with open(os.path.join(output_dir, changelog_file), "w") as f:
+        f.write(changelog)
+
+    # Load the Jinja2 template
+    template_loader     = jinja2.FileSystemLoader(searchpath="resource/")
+    template_env        = jinja2.Environment(loader=template_loader)
+    template_file       = "release_page.rst.jinja"
+    template            = template_env.get_template(template_file)
+
+    # Render the template with the context
+    context = {
+        'gh_release':                       gh_release,
+        'ecal_version':                     ecal_version,
+        'asset_list':                       asset_list,
+        'changelog_file_path':              changelog_file,
+        'minor_is_supported':               minor_is_supported,
+        'latest_version_of_minor':          latest_version_of_minor,
+        'group_asset_list_by_os_and_arch':  group_asset_list_by_os_and_arch,
+        'get_rst_release_page_label':       get_rst_release_page_label,
+    }
+    output = template.render(context)
+
+    # Save the rendered template to a file
+    output_file = os.path.join(output_dir, download_archive_rst_file_name)
+    with open(output_file, "w") as f:
+        f.write(output)
+
+"""
+Groups a list of assets by their OS, OS version, and CPU architecture.
+Args:
+    asset_list (list): A list of asset properties dictionaries.
+Returns:
+    dict: A dictionary where the keys are tuples of (os, os_version, cpu) and
+            the values are lists of asset properties dictionaries.
+"""
+def group_asset_list_by_os_and_arch(asset_list):
+    os_arch_dict = OrderedDict()
+
+    for asset_properties in asset_list:
+        os         = asset_properties['properties'].get('os', 'unknown')
+        os_version = asset_properties['properties'].get('os_version', semantic_version.Version('0.0.0'))
+        cpu        = asset_properties['properties'].get('cpu', 'unknown')
+
+        key = (os, os_version, cpu)
+        if key not in os_arch_dict:
+            os_arch_dict[key] = []
+        os_arch_dict[key].append(asset_properties)
+
+    return os_arch_dict
+
+def get_rst_release_page_label(ecal_version):
+    return "ecal_release_page_" + str(ecal_version).replace('.', '_').replace('-', '_').replace('+', '_')
 
 if __name__=="__main__":
     gh_api_key = os.getenv("ECAL_GH_API_KEY")
@@ -287,8 +373,22 @@ if __name__=="__main__":
         gh_repo = gh.get_repo("eclipse-ecal/ecal")
         releases_dict = get_releases_dict(gh_repo)
 
+        list_of_supported_minor_versions = list(releases_dict.keys())[:2]
+
+        generate_all_releases_page(releases_dict,
+                                   list_of_supported_minor_versions,
+                                   "releases")
+
         for minor_version in releases_dict:
+
+            # Get the latest eCAL Version of this release branch
+            latest_release_for_this_minor = list(releases_dict[minor_version].keys())[0]
+            this_minor_is_supported       = minor_version in list_of_supported_minor_versions
+
             for ecal_version in releases_dict[minor_version]:
+                
+                # Check the support status of this release
+
                 gh_release = releases_dict[minor_version][ecal_version]
                 gh_asset_list = gh_release.get_assets()
 
@@ -298,9 +398,23 @@ if __name__=="__main__":
                     asset_properties = get_asset_properties(ecal_version, gh_asset)
                     asset_list.append(asset_properties)
 
-                generate_download_page(gh_release, ecal_version, asset_list, "download.rst")
+                # Sort the asset list by:
+                # 1. OS (windows > manylinux > ubuntu > macos)
+                # 2. OS version (descending)
+                # 3. CPU (amd64 > arm64)
+                # 4. Python version (descending)
 
-                exit(0)
+                asset_list.sort(key = lambda x: x['properties'].get('python_version', semantic_version.Version("0.0.0")), reverse = True)
+                asset_list.sort(key = lambda x: x['properties'].get('os_version', semantic_version.Version("0.0.0")), reverse = True)
+                asset_list.sort(key = lambda x: x['properties'].get('cpu', 'unknown'))
+                asset_list.sort(key = lambda x: ['windows', 'manylinux', 'ubuntu', 'macos'].index(x['properties'].get('os', 'unknown')) if x['properties'].get('os', 'unknown') in ['windows', 'manylinux', 'ubuntu', 'macos'] else float('inf'))
+
+                generate_release_page(gh_release,
+                                       ecal_version,
+                                       asset_list,
+                                       this_minor_is_supported,
+                                       latest_release_for_this_minor,
+                                       "releases")
 
     else:
         sys.stderr.write("ERROR: Environment variable ECAL_GH_API_KEY not set. Without an API key, GitHub will not provide enough API calls to generate the download tables.\n")

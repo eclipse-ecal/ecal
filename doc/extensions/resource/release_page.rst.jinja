@@ -30,12 +30,21 @@
     {% endif -%}
     {{ cpu_string -}}
 {% endmacro -%}
+:orphan:
 
-.. include:: /include.txt
+.. include:: /../include.txt
+
+.. _{{ get_rst_release_page_label(ecal_version) }}:
 
 ===============
 eCAL {{ ecal_version_string }}
 ===============
+
+{% if not minor_is_supported %}
+.. warning::
+   
+   eCAL {{ ecal_version.major }}.{{ ecal_version.minor }} is not supported anymore. Please consider upgrading to a newer version.
+{% endif %}
 
 - Release Date: {{ gh_release.published_at.strftime('%Y-%m-%d') }}
 - GitHub Release Page: {{ gh_release.html_url }}
@@ -43,11 +52,17 @@ eCAL {{ ecal_version_string }}
 Changelog
 =========
 
-.. literalinclude:: changelog_ecal_{{ ecal_version_string.replace('.', '_') }}.txt
+.. literalinclude:: {{ changelog_file_path }}
    :language: text
 
 Downloads
 =========
+
+{% if ecal_version < latest_version_of_minor %}
+.. note::
+
+   A more recent version of eCAL {{ ecal_version.major }}.{{ ecal_version.minor }} is available: :ref:`eCAL {{ latest_version_of_minor }} <{{ get_rst_release_page_label(latest_version_of_minor) }}>`.
+{% endif %}
 
 {# Get the ecal_installers from the list and remove them from the main list. -#}
 {% set ecal_installer_list = asset_list | selectattr('type', 'equalto', 'ecal_installer') | list -%}
@@ -73,7 +88,7 @@ eCAL Installer
 
      - {{ get_cpu_string(asset) }}
 
-     - `{{ asset['filename'] }} <{{ asset['download_link'] }}>`_
+     - `{{ asset['filename'] }} <{{ asset['download_link'] }}>`__
 
    {% endfor -%}
 
@@ -84,8 +99,44 @@ eCAL Installer
 {% set asset_list          = asset_list | rejectattr('type', 'equalto', 'python_binding') | list -%}
 
 {% if python_binding_list %}
-Python Binding
---------------
+|fa-python| Python Binding
+--------------------------
+
+.. list-table:: 
+   :widths: 2 2 6
+   :header-rows: 1
+
+   * - OS
+
+     - Architecture
+
+     - Files
+
+   {% set python_binding_grouped_dict = group_asset_list_by_os_and_arch(python_binding_list) -%}
+
+   {% for key, value in python_binding_grouped_dict.items() %}
+   * - {{ get_os_string(value[0], true) }}
+
+     - {{ get_cpu_string(value[0]) }}
+
+     - {% for asset in value -%}
+       `Python {{ asset['properties']['python_version'].major }}.{{ asset['properties']['python_version'].minor }} (.{{ asset['filename'].split('.')[-1] }}) <{{ asset['download_link'] }}>`__
+
+       {% endfor -%}
+
+   {% endfor -%}
+
+{% endif -%}
+
+{# Get the PyPy bindings from the list -#}
+{% set pypy_binding_list = asset_list | selectattr('type', 'equalto', 'python_binding') | selectattr('properties.python_implementation', 'equalto', 'pp') | list -%}
+{% set asset_list        = asset_list | rejectattr('type', 'equalto', 'python_binding') | list -%}
+
+{% if pypy_binding_list %}
+|fa-python| PyPy Binding
+------------------------
+
+*PyPy bindings are not compatibly with the regular Python implementation.*
 
 .. list-table:: 
     :widths: 2 2 6
@@ -97,18 +148,42 @@ Python Binding
 
       - Files
 
-    {% for asset in python_binding_list -%}
+    {% set pypy_binding_grouped_dict = group_asset_list_by_os_and_arch(pypy_binding_list) -%}
 
-    * - {{ get_os_string(asset, true) }}
+    {% for key, value in pypy_binding_grouped_dict.items() %}
+    * - {{ get_os_string(value[0], true) }}
 
-      - {{ get_cpu_string(asset) }}
+      - {{ get_cpu_string(value[0]) }}
 
-      - `Python {{ asset['properties']['python_version'].major }}.{{ asset['properties']['python_version'].minor }} <{{ asset['download_link'] }}>`_
+      - {% for asset in value -%}
+         `PyPy {{ asset['properties']['python_version'].major }}.{{ asset['properties']['python_version'].minor }} (.{{ asset['filename'].split('.')[-1] }}) <{{ asset['download_link'] }}>`__
+
+         {% endfor -%}
 
     {% endfor -%}
 
 {% endif -%}
 
+{# Get the source files from the list -#}
+{% set source_file_list = asset_list | selectattr('type', 'equalto', 'source') | list -%}
+{% set asset_list       = asset_list | rejectattr('type', 'equalto', 'source') | list -%}
+
+{% if source_file_list %}
+|fa-code| Source
+----------------
+
+.. list-table::
+    :widths: 1
+
+    {% for asset in source_file_list -%}
+
+    * - `{{ asset['filename'] }} <{{ asset['download_link'] }}>`__
+
+    {% endfor -%}
+
+{% endif %}
+
+{# Get the other files from the list -#}
 {% if asset_list %}
 Other Downloads
 ---------------
@@ -121,7 +196,7 @@ Other Downloads
 
     {% for asset in asset_list -%}
 
-    * - `{{ asset['filename'] }} <{{ asset['download_link'] }}>`_
+    * - `{{ asset['filename'] }} <{{ asset['download_link'] }}>`__
 
     {% endfor -%}
 
