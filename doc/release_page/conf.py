@@ -39,22 +39,16 @@ if is_cmake_build:
 sys.path.insert(0, sphinx_custom_extension_dir)
 
 # -- Generate download archive and tables for the homepage --------------------
-# import generate_download_tables
+import generate_release_documentation
 
-# download_tables_main_page_dir = os.path.join(rst_source_dir, r"_download_main_page")
-# download_archive_dir          = os.path.join(rst_source_dir, r"_download_archive")
-# ppa_tabs_file                 = os.path.join(rst_source_dir, r"getting_started/_ppa_tabs.rst.txt")
-
-# if not os.path.exists(download_tables_main_page_dir) or not os.path.exists(download_archive_dir):
-#     # Only generate download tables, if the directories do not exist.
-#     # Otherwise we may run out of API calls very quickly.
-#     gh_api_key = os.getenv("ECAL_GH_API_KEY")
-#     if gh_api_key:
-#         os.makedirs(download_tables_main_page_dir)
-#         os.makedirs(download_archive_dir)
-#         generate_download_tables.generate_download_tables(gh_api_key, download_tables_main_page_dir, download_archive_dir, ppa_tabs_file)
-#     else:  
-#         print("WARNING: Environment variable ECAL_GH_API_KEY not set. Skipping generating download tables.")
+gh_api_key = os.getenv("ECAL_GH_API_KEY")
+if gh_api_key:
+    release_page_dir = "release"
+    index_file_path = "index.rst"
+    generate_release_documentation.generate_release_documentation(gh_api_key, index_file_path, release_page_dir)
+else:  
+    print("ERROR: Environment variable ECAL_GH_API_KEY not set. Skipping generating download tables.")
+    exit(1)
 
 # -- Project information -----------------------------------------------------
 
