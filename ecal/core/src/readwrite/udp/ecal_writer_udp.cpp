@@ -21,8 +21,8 @@
  * @brief  udp data writer
 **/
 
-#include <ecal/ecal_log.h>
-#include <ecal/ecal_process.h>
+#include <ecal/log.h>
+#include <ecal/process.h>
 
 #include "ecal_writer_udp.h"
 #include "serialization/ecal_serialize_sample_payload.h"

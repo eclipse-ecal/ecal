@@ -18,36 +18,17 @@
 */
 
 /**
- * @file   ecal_log_level.h
- * @brief  eCAL logging severities
+ * @file   namespace.h
+ * @brief  eCAL namespace definitions (for switching between v5 / v6 namespaces
 **/
 
 #pragma once
 
-namespace eCAL
-{
-  namespace Logging
-  {
+#if ECAL_CORE_NAMESPACE_V5_INLINE
+#define ECAL_CORE_NAMESPACE_V5 inline namespace v5
+#define ECAL_CORE_NAMESPACE_V6 namespace v6
+#else
+#define ECAL_CORE_NAMESPACE_V5 namespace v5
+#define ECAL_CORE_NAMESPACE_V6 inline namespace v6
+#endif
 
-    /**
-     * @brief Values that represent different log level to filter on monitoring.
-    **/
-    // We're currently not making this an enum class, because this will not allow the bitmasking anymore.
-    // Need to come up with a different solution in that case.
-    enum eLogLevel
-    {
-      log_level_none = 0,
-      log_level_all = 255,
-      log_level_info = 1,
-      log_level_warning = 2,
-      log_level_error = 4,
-      log_level_fatal = 8,
-      log_level_debug1 = 16,
-      log_level_debug2 = 32,
-      log_level_debug3 = 64,
-      log_level_debug4 = 128,
-    };
-
-    typedef unsigned char Filter;  //!< This type is to be used as a bitmask for the activated logging levels
-  }
-}

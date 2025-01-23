@@ -19,8 +19,8 @@
 
 #include <ecal/cimpl/ecal_core_cimpl.h>
 #include <ecal/cimpl/ecal_process_cimpl.h>
-#include <ecal/ecal_defs.h>
-#include <ecal/ecal_os.h>
+#include <ecal/defs.h>
+#include <ecal/os.h>
 
 #include <ecal_utils/filesystem.h>
 

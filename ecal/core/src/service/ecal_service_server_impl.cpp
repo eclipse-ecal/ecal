@@ -21,9 +21,9 @@
  * @brief  eCAL service server implementation
 **/
 
-#include <ecal/ecal_config.h>
-#include <ecal/ecal_log.h>
-#include <ecal/ecal_process.h>
+#include <ecal/config.h>
+#include <ecal/log.h>
+#include <ecal/process.h>
 
 #include "ecal_global_accessors.h"
 #include "ecal_service_server_impl.h"

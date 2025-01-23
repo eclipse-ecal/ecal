@@ -22,10 +22,10 @@
 **/
 
 #include "ecal_subscriber_impl.h"
-#include <ecal/ecal_config.h>
-#include <ecal/ecal_log.h>
-#include <ecal/ecal_process.h>
-#include <ecal/ecal_time.h>
+#include <ecal/config.h>
+#include <ecal/log.h>
+#include <ecal/process.h>
+#include <ecal/time.h>
 
 #if ECAL_CORE_REGISTRATION
 #include "registration/ecal_registration_provider.h"

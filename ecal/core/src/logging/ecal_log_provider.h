@@ -26,7 +26,7 @@
 #include "config/attributes/ecal_log_provider_attributes.h"
 #include "io/udp/ecal_udp_sample_sender.h"
 
-#include <ecal/ecal_log_level.h>
+#include <ecal/log_level.h>
 #include <ecal/types/logging.h>
 
 #include <atomic>

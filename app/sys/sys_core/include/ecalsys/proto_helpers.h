@@ -34,7 +34,7 @@
 #include <ecalsys/ecal_sys.h>
 #include <ecalsys/task/task_state.h>
 
-#include <ecal/ecal_process_mode.h>
+#include <ecal/process_mode.h>
 
 #include <list>
 #include <memory>

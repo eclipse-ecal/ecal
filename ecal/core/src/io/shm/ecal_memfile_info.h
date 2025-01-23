@@ -27,7 +27,7 @@
 #include <memory>
 #include <string>
 
-#include <ecal/ecal_os.h>
+#include <ecal/os.h>
 
 #ifdef ECAL_OS_WINDOWS
 

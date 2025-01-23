@@ -18,13 +18,13 @@
 */
 
 /**
- * @file   ecal_time.h
+ * @file   time.h
  * @brief  eCAL time interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_os.h>
+#include <ecal/os.h>
 #include <string>
 #include <chrono>
 
@@ -159,3 +159,4 @@ namespace eCAL
   * This is an example on how to use the eCAL Time Interface.
   */
 }
+

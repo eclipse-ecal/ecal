@@ -18,20 +18,20 @@
 */
 
 /**
- * @file   ecal_publisher.h
+ * @file   v5/ecal_publisher.h
  * @brief  eCAL publisher interface (deprecated eCAL5 version)
 **/
 
 #pragma once
 
-#include <ecal/ecal_namespace.h>
+#include <ecal/namespace.h>
 
 #include <ecal/v5/ecal_callback.h>
-#include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_os.h>
+#include <ecal/deprecate.h>
+#include <ecal/os.h>
 #include <ecal/pubsub/payload_writer.h>
-#include <ecal/ecal_config.h>
-#include <ecal/ecal_types.h>
+#include <ecal/config.h>
+#include <ecal/types.h>
 #include <ecal/config/publisher.h>
 
 #include <chrono>

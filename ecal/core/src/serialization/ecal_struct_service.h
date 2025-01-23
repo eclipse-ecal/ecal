@@ -29,7 +29,7 @@
 #include <cstdint>
 #include <tuple>
 
-#include <ecal/ecal_types.h>
+#include <ecal/types.h>
 #include <util/expanding_vector.h>
 
 namespace eCAL

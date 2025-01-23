@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   ecal_defs.h
+ * @file   defs.h
  * @brief  eCAL core defines (version numbers)
 **/
 
-#ifndef ecal_defs_h_included
-#define ecal_defs_h_included
+#ifndef defs_h_included
+#define defs_h_included
 #define ECAL_VERSION_MAJOR (@GIT_REVISION_MAJOR@)
 #define ECAL_VERSION_MINOR (@GIT_REVISION_MINOR@)
 #define ECAL_VERSION_PATCH (@GIT_REVISION_PATCH@)
@@ -41,4 +41,4 @@
 #define ECAL_INSTALL_INCLUDE_DIR "@eCAL_install_include_dir@"
 #define ECAL_INSTALL_PREFIX      "@CMAKE_INSTALL_PREFIX@"
 
-#endif // ecal_defs_h_included
+#endif // defs_h_included

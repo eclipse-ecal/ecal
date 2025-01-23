@@ -2,7 +2,7 @@
 
 #include <sys_client_core/ecal_sys_client.h>
 
-#include <ecal/ecal_process.h>
+#include <ecal/process.h>
 
 namespace eCAL
 {

@@ -19,7 +19,7 @@
 
 #include "measurement_container.h"
 
-#include <ecal/ecal_util.h>
+#include <ecal/util.h>
 #include <ecalhdf5/eh5_meas.h>
 
 #include <algorithm>

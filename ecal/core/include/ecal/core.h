@@ -18,21 +18,21 @@
 */
 
 /**
- * @file   ecal_core.h
+ * @file   core.h
  * @brief  eCAL core function interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_init.h>
+#include <ecal/init.h>
 
 #include <string>
 #include <vector>
 #include <utility>
 
-#include <ecal/ecal_os.h>
+#include <ecal/os.h>
 #include <ecal/config/configuration.h>
-#include <ecal/ecal_types.h>
+#include <ecal/types.h>
 
 namespace eCAL
 {
@@ -108,3 +108,4 @@ namespace eCAL
   **/
   ECAL_API bool Ok();
 }
+

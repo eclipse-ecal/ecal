@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   ecal_init.h
+ * @file   init.h
  * @brief  eCAL initialize components
 **/
 

@@ -24,9 +24,9 @@
 #pragma once
 
 #include <ecal/config/configuration.h>
-#include <ecal/ecal_tlayer.h>
-#include <ecal/ecal_log_level.h>
-#include <ecal/ecal_os.h>
+#include <ecal/tlayer.h>
+#include <ecal/log_level.h>
+#include <ecal/os.h>
 
 /**********************************************************************************************/
 /*                                     config settings                                        */

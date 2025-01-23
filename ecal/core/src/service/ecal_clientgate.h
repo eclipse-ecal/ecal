@@ -23,11 +23,11 @@
 
 #pragma once
 
-#include <ecal/ecal_namespace.h>
+#include <ecal/namespace.h>
 #include "ecal_def.h"
 #include "serialization/ecal_struct_sample_registration.h"
 
-#include <ecal/ecal_callback.h>
+#include <ecal/callback.h>
 
 #include <atomic>
 #include <map>

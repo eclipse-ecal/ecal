@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <ecal/ecal_process_severity.h>
+#include <ecal/process_severity.h>
 #include "status.h"
 #include "rec_server_config.h"
 

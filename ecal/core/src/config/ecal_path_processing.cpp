@@ -26,8 +26,8 @@
 #include "ecal_def.h"
 #include "ecal_utils/ecal_utils.h"
 #include "ecal_utils/filesystem.h"
-#include "ecal/ecal_config.h"
-#include "ecal/ecal_util.h"
+#include "ecal/config.h"
+#include "ecal/util.h"
 #include "util/getenvvar.h"
 
 #include <fstream>

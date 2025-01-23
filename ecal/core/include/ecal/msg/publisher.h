@@ -18,15 +18,15 @@
 */
 
 /**
- * @file   ecal_publisher.h
+ * @file   msg/publisher.h
  * @brief  eCAL message publisher interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_deprecate.h>
+#include <ecal/deprecate.h>
 #include <ecal/v5/ecal_publisher.h>
-#include <ecal/ecal_util.h>
+#include <ecal/util.h>
 
 #include <string>
 #include <vector>

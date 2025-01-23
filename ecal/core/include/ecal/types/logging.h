@@ -18,13 +18,13 @@
 */
 
 /**
- * @file   logging.h
+ * @file   types/logging.h
  * @brief  eCAL logging struct interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_log_level.h>
+#include <ecal/log_level.h>
 
 #include <cstdint>
 #include <list>

@@ -27,8 +27,8 @@
 #include <QLibrary>
 #include <QProcessEnvironment>
 
-#include <ecal/ecal_log.h>
-#include <ecal/ecal_defs.h>
+#include <ecal/log.h>
+#include <ecal/defs.h>
 
 std::unique_ptr<PluginManager> PluginManager::instance_;
 

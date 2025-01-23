@@ -18,13 +18,13 @@
 */
 
 /**
- * @file   ecal_registration.h
+ * @file   registration.h
  * @brief  eCAL registration interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_os.h>
+#include <ecal/os.h>
 #include <ecal/pubsub/types.h>
 #include <ecal/service/types.h>
 
@@ -175,3 +175,4 @@ namespace eCAL
     ECAL_API void GetClientMethodNames(std::set<SServiceMethod>& client_method_names_);
   }
 }
+

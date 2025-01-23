@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   ecal_types.h
+ * @file   types.h
  * @brief  This file contains type definitions for information associated with a given topic
 **/
 

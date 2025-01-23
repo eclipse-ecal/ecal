@@ -26,7 +26,7 @@
 #include <string>
 #include <vector>
 
-#include <ecal/ecal_config.h>
+#include <ecal/config.h>
 
 namespace eCAL
 {

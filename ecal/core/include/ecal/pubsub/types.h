@@ -18,15 +18,15 @@
 */
 
 /**
- * @file   types.h
+ * @file   pubsub/types.h
  * @brief  eCAL subscriber callback interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_namespace.h>
-#include <ecal/ecal_types.h>
+#include <ecal/deprecate.h>
+#include <ecal/namespace.h>
+#include <ecal/types.h>
 
 #include <functional>
 #include <string>
@@ -162,3 +162,4 @@ namespace eCAL
     using SubEventCallbackT = std::function<void(const Registration::STopicId& topic_id_, const SSubEventCallbackData& data_)>;
   }
 }
+

@@ -23,7 +23,7 @@
 #include <rec_server_core/status.h>
 #include <rec_server_core/ecalstate_helpers.h>
 
-#include <ecal/ecal_process.h>
+#include <ecal/process.h>
 
 #include <QMessageBox>
 #include <QIcon>

@@ -21,14 +21,14 @@
  * @brief  Function definitions for setting default config values
 **/
 
-#include "ecal/ecal_config.h"
+#include "ecal/config.h"
 #include "ecal_config_internal.h"
-#include "ecal/ecal_util.h"
+#include "ecal/util.h"
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
 
-#include "ecal/ecal_process.h"
+#include "ecal/process.h"
 
 #ifdef ECAL_CORE_CONFIGURATION
   #include "configuration_reader.h"
@@ -55,7 +55,7 @@
 #include "ecal_utils/filesystem.h"
 #include "util/getenvvar.h"
 #include "ecal_utils/ecal_utils.h"
-#include "ecal/ecal_log.h"
+#include "ecal/log.h"
 
 #include <algorithm>
 #include <fstream>

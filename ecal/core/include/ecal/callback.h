@@ -18,17 +18,20 @@
 */
 
 /**
- * @file   ecal_namespace.h
- * @brief  eCAL namespace definitions (for switching between v5 / v6 namespaces
+ * @file   callback.h
+ * @brief  eCAL subscriber callback interface
 **/
 
 #pragma once
 
-#if ECAL_CORE_NAMESPACE_V5_INLINE
-#define ECAL_CORE_NAMESPACE_V5 inline namespace v5
-#define ECAL_CORE_NAMESPACE_V6 namespace v6
-#else
-#define ECAL_CORE_NAMESPACE_V5 namespace v5
-#define ECAL_CORE_NAMESPACE_V6 inline namespace v6
-#endif
+#include <ecal/deprecate.h>
+#include <functional>
+
+namespace eCAL
+{
+  /**
+   * @brief Timer callback function type.
+  **/
+  using TimerCallbackT = std::function<void()>;
+}
 

@@ -18,13 +18,13 @@
 */
 
 /**
- * @file   monitoring.h
+ * @file   types/monitoring.h
  * @brief  eCAL monitoring struct interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_types.h>
+#include <ecal/types.h>
 
 #include <map>
 #include <string>

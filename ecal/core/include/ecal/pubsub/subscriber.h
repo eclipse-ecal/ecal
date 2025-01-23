@@ -18,18 +18,18 @@
 */
 
 /**
- * @file   subscriber.h
+ * @file   pubsub/subscriber.h
  * @brief  eCAL subscriber interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_namespace.h>
-#include <ecal/ecal_os.h>
+#include <ecal/deprecate.h>
+#include <ecal/namespace.h>
+#include <ecal/os.h>
 
 #include <ecal/pubsub/types.h>
-#include <ecal/ecal_config.h>
+#include <ecal/config.h>
 
 #include <memory>
 #include <string>

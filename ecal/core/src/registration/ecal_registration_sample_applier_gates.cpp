@@ -23,7 +23,7 @@
 #include "pubsub/ecal_pubgate.h"
 #include "service/ecal_clientgate.h"
 
-#include <ecal/ecal_log.h>
+#include <ecal/log.h>
 
 namespace eCAL
 {

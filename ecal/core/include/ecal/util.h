@@ -18,14 +18,14 @@
 */
 
 /**
- * @file   ecal_util.h
+ * @file   util.h
  * @brief  eCAL utility interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_os.h>
-#include <ecal/ecal_deprecate.h>
+#include <ecal/os.h>
+#include <ecal/deprecate.h>
 
 #include <string>
 #include <utility>
@@ -106,3 +106,4 @@ namespace eCAL
     ECAL_API std::string CombinedTopicEncodingAndType(const std::string& topic_encoding_, const std::string& topic_type_);
   }
 }
+

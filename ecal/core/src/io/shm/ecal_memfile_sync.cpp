@@ -21,7 +21,7 @@
  * @brief  synchronized memory file interface
 **/
 
-#include <ecal/ecal_log.h>
+#include <ecal/log.h>
 
 #include "ecal_event.h"
 #include "ecal_memfile_header.h"

@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   dynamic.h
+ * @file   msg/dynamic.h
  * @brief  eCAL dynamic reflection exception
 **/
 
@@ -30,7 +30,7 @@
 #include <string>
 
 #include <ecal/v5/ecal_subscriber.h>
-#include <ecal/ecal_util.h>
+#include <ecal/util.h>
 
 namespace eCAL
 {

@@ -1,6 +1,6 @@
 #include "default_configuration.h"
 
-#include "ecal/ecal_config.h"
+#include "ecal/config.h"
 
 #include <string>
 

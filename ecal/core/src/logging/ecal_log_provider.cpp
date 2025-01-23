@@ -21,7 +21,7 @@
 #include "serialization/ecal_serialize_logging.h"
 #include "config/builder/udp_attribute_builder.h"
 
-#include <ecal/ecal_time.h>
+#include <ecal/time.h>
 #include <ecal_utils/filesystem.h>
 #include <ecal_utils/string.h>
 

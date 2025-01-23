@@ -18,14 +18,14 @@
  */
 
 /**
- * @file   transport_layer.h
+ * @file   config/transport_layer.h
  * @brief  eCAL configuration for the transport layer
 **/
 
 #pragma once
 
 #include <ecal/types/ecal_custom_data_types.h>
-#include <ecal/ecal_os.h>
+#include <ecal/os.h>
 
 namespace eCAL
 {

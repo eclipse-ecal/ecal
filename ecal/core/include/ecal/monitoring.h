@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright (C) 2016 - 2019 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,47 +18,42 @@
 */
 
 /**
- * @file   ecal_log.h
- * @brief  eCAL logging interface
+ * @file   monitoring.h
+ * @brief  eCAL monitoring interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_os.h>
-#include <ecal/ecal_log_level.h>
-#include <ecal/types/logging.h>
-
-#include <list>
+#include <ecal/os.h>
+#include <ecal/types/monitoring.h>
 #include <string>
 
 namespace eCAL
-{  
-  namespace Logging
+{
+  namespace Monitoring
   {
     /**
-     * @brief Log a message.
+     * @brief Get monitoring subset as serialized protobuf string.
      *
-     * @param level_  The level.
-     * @param msg_    The log message string.
-    **/
-    ECAL_API void Log(eLogLevel level_, const std::string& msg_);
-
-    /**
-     * @brief Get logging as serialized protobuf string.
-     *
-     * @param [out] log_  String to store the logging information.
+     * @param [out] mon_       Target string to store the monitoring information. 
+     * @param       entities_  Entities to get.
      *
      * @return True if succeeded.
     **/
-    ECAL_API bool GetLogging(std::string& log_);
-
+    ECAL_API bool GetMonitoring(std::string& mon_, unsigned int entities_ = Entity::All);
+    
     /**
-     * @brief Get logging as struct.
+     * @brief Get monitoring as a struct.
      *
-     * @param [out] log_  Target struct to store the logging information.
+     * @param [out] mon_       Target struct to store the monitoring information.
+     * @param       entities_  Entities definition.
      *
      * @return True if succeeded.
     **/
-    ECAL_API bool GetLogging(Logging::SLogging& log_);
+    ECAL_API bool GetMonitoring(SMonitoring& mon_, unsigned int entities_ = Entity::All);
   }
+  /** @example monitoring_rec.cpp
+  * This is an example how the eCAL Monitoring API may be utilized to print monitoring information.
+  */
 }
+

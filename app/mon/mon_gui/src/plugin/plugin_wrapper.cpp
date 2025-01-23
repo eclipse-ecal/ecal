@@ -28,7 +28,7 @@
 
 #include <stdexcept>
 
-#include <ecal/ecal_log.h>
+#include <ecal/log.h>
 
 QPair<QString, QString> splitTopicType(const QString& topic_type)
 {

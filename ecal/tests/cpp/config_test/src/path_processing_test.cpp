@@ -24,9 +24,9 @@
 #include "ecal_utils/filesystem.h"
 #include "util/getenvvar.h"
 
-#include <ecal/ecal_os.h>
+#include <ecal/os.h>
 #include <ecal_def.h>
-#include <ecal/ecal_util.h>
+#include <ecal/util.h>
 
 #include <cstdlib>
 #include <map>

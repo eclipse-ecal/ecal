@@ -26,7 +26,7 @@
 #include <string>
 #include <vector>
 
-#include <ecal/ecal_process_severity.h>
+#include <ecal/process_severity.h>
 
 // Forward declaration of global accessible classes
 namespace eCAL

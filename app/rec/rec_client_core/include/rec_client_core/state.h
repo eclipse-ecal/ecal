@@ -26,7 +26,7 @@
 #include <vector>
 #include <chrono>
 
-#include <ecal/ecal_time.h>
+#include <ecal/time.h>
 
 namespace eCAL
 {

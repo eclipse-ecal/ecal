@@ -18,7 +18,7 @@
 */
 
 #include "reader_attribute_builder.h"
-#include "ecal/ecal_process.h"
+#include "ecal/process.h"
 
 namespace eCAL
 {

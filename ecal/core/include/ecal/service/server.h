@@ -18,15 +18,15 @@
 */
 
 /**
- * @file   server.h
+ * @file   service/server.h
  * @brief  eCAL server interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_namespace.h>
-#include <ecal/ecal_os.h>
+#include <ecal/deprecate.h>
+#include <ecal/namespace.h>
+#include <ecal/os.h>
 
 #include <ecal/service/types.h>
 

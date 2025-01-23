@@ -21,7 +21,7 @@
  * @brief  memory file data writer
 **/
 
-#include <ecal/ecal_log.h>
+#include <ecal/log.h>
 
 #include "ecal_def.h"
 #include "ecal_writer_shm.h"

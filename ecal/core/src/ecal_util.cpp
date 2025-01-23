@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal/ecal_util.h"
+#include "ecal/util.h"
 #include "ecal_def.h"
 #include "ecal_globals.h"
 #include "ecal_event.h"

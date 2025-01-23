@@ -22,8 +22,8 @@
 **/
 
 #include "ecal_service_client_impl.h"
-#include <ecal/ecal_namespace.h>
-#include <ecal/ecal_log.h>
+#include <ecal/namespace.h>
+#include <ecal/log.h>
 
 namespace
 {

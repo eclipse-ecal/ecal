@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   ecal_os.h
+ * @file   os.h
  * @brief  eCAL os interface
 **/
 

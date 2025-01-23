@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <ecal/ecal_log.h>
+#include <ecal/log.h>
 #include <tcp_pubsub/tcp_pubsub_logger.h>
 
 namespace eCAL

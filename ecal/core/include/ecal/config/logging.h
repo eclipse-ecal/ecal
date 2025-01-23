@@ -18,13 +18,13 @@
  */
 
 /**
- * @file   ecal_logging_config.h
+ * @file   config/logging.h
  * @brief  eCAL configuration for logging
 **/
 
 #pragma once
 
-#include <ecal/ecal_log_level.h>
+#include <ecal/log_level.h>
 
 #include <vector>
 #include <string>

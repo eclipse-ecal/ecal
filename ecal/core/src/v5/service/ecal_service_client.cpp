@@ -23,7 +23,7 @@
 
 #include "ecal_service_client_impl.h"
 
-#include <ecal/ecal_namespace.h>
+#include <ecal/namespace.h>
 
 #include <ecal/ecal.h>
 #include <ecal/v5/ecal_client.h>

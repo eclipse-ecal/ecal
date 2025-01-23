@@ -21,7 +21,7 @@
  * @brief  tcp reader and layer
 **/
 
-#include <ecal/ecal_config.h>
+#include <ecal/config.h>
 #include "config/builder/data_reader_tcp_attribute_builder.h"
 
 #include "ecal_global_accessors.h"

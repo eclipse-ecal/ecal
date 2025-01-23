@@ -18,13 +18,13 @@
 */
 
 /**
- * @file   ecal_timer.h
+ * @file   timer.h
  * @brief  eCAL timer interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_os.h>
+#include <ecal/os.h>
 #include <functional>
 #include <memory>
 
@@ -89,3 +89,4 @@ namespace eCAL
     std::unique_ptr<CTimerImpl> m_timer;
   };
 }
+

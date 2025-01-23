@@ -22,7 +22,7 @@
 #include <string>
 #include <set>
 #include <map>
-#include <ecal/ecal_types.h>
+#include <ecal/types.h>
 
 namespace eCAL
 {

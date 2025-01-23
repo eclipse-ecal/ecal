@@ -27,7 +27,7 @@
 #include "ecal_struct_sample_common.h"
 #include "ecal_struct_service.h"
 
-#include <ecal/ecal_types.h>
+#include <ecal/types.h>
 #include "util/expanding_vector.h"
 
 #include <cstdint>

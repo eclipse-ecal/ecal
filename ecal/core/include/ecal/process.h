@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   ecal_process.h
+ * @file   process.h
  * @brief  eCAL process interface
 **/
 
@@ -27,9 +27,9 @@
 #include <chrono>
 #include <string>
 
-#include <ecal/ecal_os.h>
-#include <ecal/ecal_process_mode.h>
-#include <ecal/ecal_process_severity.h>
+#include <ecal/os.h>
+#include <ecal/process_mode.h>
+#include <ecal/process_severity.h>
 
 namespace eCAL
 {
@@ -189,3 +189,4 @@ namespace eCAL
   * This is an example how functions from the eCAL::Process namespace may be used.
   */
 }
+

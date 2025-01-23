@@ -22,7 +22,7 @@
  *
 **/
 
-#include <ecal/ecal_registration.h>
+#include <ecal/registration.h>
 
 #include "ecal_def.h"
 #include "ecal_globals.h"
