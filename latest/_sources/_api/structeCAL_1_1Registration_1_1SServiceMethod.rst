@@ -3,7 +3,7 @@
 Struct SServiceMethod
 =====================
 
-- Defined in :ref:`file_ecal_core_include_ecal_ecal_registration.h`
+- Defined in :ref:`file_ecal_core_include_ecal_registration.h`
 
 
 Struct Documentation

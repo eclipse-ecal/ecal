@@ -4,6 +4,11 @@
 File publisher.h
 ================
 
+
+:ref:`namespace_eCAL` message publisher interface 
+
+
+
 .. contents:: Contents
    :local:
    :backlinks: none
@@ -29,9 +34,9 @@ Includes
 
 - ``cstring``
 
-- ``ecal/ecal_deprecate.h`` (:ref:`file_ecal_core_include_ecal_ecal_deprecate.h`)
+- ``ecal/deprecate.h`` (:ref:`file_ecal_core_include_ecal_deprecate.h`)
 
-- ``ecal/ecal_util.h`` (:ref:`file_ecal_core_include_ecal_ecal_util.h`)
+- ``ecal/util.h`` (:ref:`file_ecal_core_include_ecal_util.h`)
 
 - ``ecal/v5/ecal_publisher.h``
 

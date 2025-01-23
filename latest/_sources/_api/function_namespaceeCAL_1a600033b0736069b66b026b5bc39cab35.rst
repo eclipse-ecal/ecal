@@ -3,7 +3,7 @@
 Function eCAL::Ok
 =================
 
-- Defined in :ref:`file_ecal_core_include_ecal_ecal_core.h`
+- Defined in :ref:`file_ecal_core_include_ecal_core.h`
 
 
 Function Documentation

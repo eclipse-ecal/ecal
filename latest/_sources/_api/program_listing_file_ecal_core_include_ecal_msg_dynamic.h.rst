@@ -37,7 +37,7 @@ Program Listing for File dynamic.h
    #include <string>
    
    #include <ecal/v5/ecal_subscriber.h>
-   #include <ecal/ecal_util.h>
+   #include <ecal/util.h>
    
    namespace eCAL
    {

@@ -1,0 +1,14 @@
+.. _exhale_function_log_8h_1a4933524c4a46c77a8a3a6c19a005897b:
+
+Function eCAL::Logging::GetLogging(Logging::SLogging&)
+======================================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_log.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::Logging::GetLogging(Logging::SLogging&)
+   :project: eCAL

@@ -31,9 +31,9 @@ Program Listing for File subscriber.h
    
    #pragma once
    
-   #include <ecal/ecal_deprecate.h>
+   #include <ecal/deprecate.h>
    #include <ecal/v5/ecal_subscriber.h>
-   #include <ecal/ecal_util.h>
+   #include <ecal/util.h>
    
    #include <cassert>
    #include <cstring>

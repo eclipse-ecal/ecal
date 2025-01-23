@@ -1,0 +1,14 @@
+.. _exhale_variable_init_8h_1a96226489a8c78215b97cac83986e8c51:
+
+Variable eCAL::Init::Publisher
+==============================
+
+- Defined in :ref:`file_ecal_core_include_ecal_init.h`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: eCAL::Init::Publisher
+   :project: eCAL

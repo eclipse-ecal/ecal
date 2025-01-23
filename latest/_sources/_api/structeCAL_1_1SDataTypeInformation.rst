@@ -3,7 +3,7 @@
 Struct SDataTypeInformation
 ===========================
 
-- Defined in :ref:`file_ecal_core_include_ecal_ecal_types.h`
+- Defined in :ref:`file_ecal_core_include_ecal_types.h`
 
 
 Struct Documentation
