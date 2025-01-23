@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@
  * @brief  eCAL service client instance implementation
 **/
 
-#include <ecal/ecal_client_instance.h>
+#include <ecal/service/client_instance.h>
 #include "ecal_service_client_impl.h"
 
 namespace eCAL
 {
-  CClientInstance::CClientInstance(const Registration::SEntityId& entity_id_, const std::shared_ptr<CServiceClientImpl>& service_client_id_impl_)
+  CClientInstance::CClientInstance(const Registration::SEntityId& entity_id_, const std::shared_ptr<v6::CServiceClientImpl>& service_client_id_impl_)
     : m_entity_id(entity_id_), m_service_client_impl(service_client_id_impl_)
   {
     assert(m_service_client_impl && "service_client_id_impl_ must not be null");

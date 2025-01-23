@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 #include <memory>
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_publisher_v5.h>
+#include <ecal/v5/ecal_publisher.h>
 #include <ecalhdf5/eh5_meas.h>
 
 #include "continuity_report.h"

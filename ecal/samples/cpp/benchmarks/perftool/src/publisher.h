@@ -24,7 +24,7 @@
 #include <chrono>
 #include <condition_variable>
 #include <cstddef>
-#include <ecal/ecal_publisher.h>
+#include <ecal/pubsub/publisher.h>
 #include <memory>
 #include <mutex>
 #include <string>

@@ -18,8 +18,8 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_client_v5.h>
-#include <ecal/ecal_server_v5.h>
+#include <ecal/v5/ecal_client.h>
+#include <ecal/v5/ecal_server.h>
 
 #include <cmath>
 #include <iostream>

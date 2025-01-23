@@ -23,11 +23,10 @@
 
 #pragma once
 
-#include <ecal/ecal_callback.h>
-#include <ecal/ecal_callback_v5.h>
-#include <ecal/ecal_payload_writer.h>
+#include <ecal/pubsub/types.h>
+#include <ecal/pubsub/payload_writer.h>
 #include <ecal/ecal_config.h>
-#include <ecal/ecal_types.h>
+#include <ecal/v5/ecal_callback.h>
 
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "util/frequency_calculator.h"
@@ -87,7 +86,7 @@ namespace eCAL
     bool RemoveEventCallback(ePublisherEvent type_);
 
     // future event callback interface
-    bool SetEventCallback(const PubEventCallbackT callback_);
+    bool SetEventCallback(const v6::PubEventCallbackT callback_);
     bool RemoveEventCallback();
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
@@ -167,7 +166,7 @@ namespace eCAL
     EventCallbackMapT                      m_event_callback_map;
 
     std::mutex                             m_event_id_callback_mutex;
-    PubEventCallbackT                      m_event_id_callback;
+    v6::PubEventCallbackT                  m_event_id_callback;
 
     long long                              m_id = 0;
     long long                              m_clock = 0;

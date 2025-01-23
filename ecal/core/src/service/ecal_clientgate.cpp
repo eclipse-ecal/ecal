@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,18 +60,18 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CClientGate::Register(const std::string& service_name_, const std::shared_ptr<CServiceClientImpl>& client_)
+  bool CClientGate::Register(const std::string& service_name_, const std::shared_ptr<v6::CServiceClientImpl>& client_)
   {
     if (!m_created) return(false);
 
     // register internal client
     const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_map_mutex);
-    m_service_client_map.emplace(std::pair<std::string, std::shared_ptr<CServiceClientImpl>>(service_name_, client_));
+    m_service_client_map.emplace(std::pair<std::string, std::shared_ptr<v6::CServiceClientImpl>>(service_name_, client_));
 
     return(true);
   }
 
-  bool CClientGate::Unregister(const std::string& service_name_, const std::shared_ptr<CServiceClientImpl>& client_)
+  bool CClientGate::Unregister(const std::string& service_name_, const std::shared_ptr<v6::CServiceClientImpl>& client_)
   {
     if (!m_created) return(false);
     bool ret_state = false;

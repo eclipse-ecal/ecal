@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE ===== ============================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,46 +22,43 @@
 #include <asio.hpp>
 #include <string>
 
-namespace eCAL
+namespace ecal_service
 {
-  namespace service
+  // Forward declarations
+  inline std::string get_connection_info_string(const asio::ip::tcp::socket& socket);
+  inline std::string endpoint_to_string(const asio::ip::tcp::endpoint& endpoint);
+
+  inline std::string get_connection_info_string(const asio::ip::tcp::socket& socket)
   {
-    // Forward declarations
-    inline std::string get_connection_info_string(const asio::ip::tcp::socket& socket);
-    inline std::string endpoint_to_string(const asio::ip::tcp::endpoint& endpoint);
+    std::string local_endpoint_string  = "???";
+    std::string remote_endpoint_string = "???";
 
-    inline std::string get_connection_info_string(const asio::ip::tcp::socket& socket)
-    {
-      std::string local_endpoint_string  = "???";
-      std::string remote_endpoint_string = "???";
-
-      // Form local endpoint string
-      {
-        asio::error_code ec;
-        const auto endpoint = socket.local_endpoint(ec);
-        if (!ec)
-          local_endpoint_string = endpoint_to_string(endpoint);
-      }
-
-      // form remote endpoint string
-      {
-        asio::error_code ec;
-        const auto endpoint = socket.remote_endpoint(ec);
-        if (!ec)
-          remote_endpoint_string = endpoint_to_string(endpoint);
-      }
-
-      return local_endpoint_string + " -> " + remote_endpoint_string;
-    }
-
-    inline std::string endpoint_to_string(const asio::ip::tcp::endpoint& endpoint)
+    // Form local endpoint string
     {
       asio::error_code ec;
-      const std::string address_string = endpoint.address().to_string(ec);
+      const auto endpoint = socket.local_endpoint(ec);
       if (!ec)
-        return address_string + ":" + std::to_string(endpoint.port());
-      else
-        return "???";
+        local_endpoint_string = endpoint_to_string(endpoint);
     }
-  } // namespace service
-}// namespace eCAL
+
+    // form remote endpoint string
+    {
+      asio::error_code ec;
+      const auto endpoint = socket.remote_endpoint(ec);
+      if (!ec)
+        remote_endpoint_string = endpoint_to_string(endpoint);
+    }
+
+    return local_endpoint_string + " -> " + remote_endpoint_string;
+  }
+
+  inline std::string endpoint_to_string(const asio::ip::tcp::endpoint& endpoint)
+  {
+    asio::error_code ec;
+    const std::string address_string = endpoint.address().to_string(ec);
+    if (!ec)
+      return address_string + ":" + std::to_string(endpoint.port());
+    else
+      return "???";
+  }
+}// namespace ecal_service

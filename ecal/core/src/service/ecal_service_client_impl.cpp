@@ -72,19 +72,21 @@ namespace
 
 namespace eCAL
 {
-  // Factory method to create a new instance of CServiceClientImpl
-  std::shared_ptr<CServiceClientImpl> CServiceClientImpl::CreateInstance(
-      const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_, const ClientEventCallbackT& event_callback_)
+  ECAL_CORE_NAMESPACE_V6
   {
-#ifndef NDEBUG
-    eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CreateInstance: Creating instance of CServiceClientImpl for service: " + service_name_);
-#endif
-    return std::shared_ptr<CServiceClientImpl>(new CServiceClientImpl(service_name_, method_information_map_, event_callback_));
-  }
+    // Factory method to create a new instance of CServiceClientImpl
+    std::shared_ptr<CServiceClientImpl> CServiceClientImpl::CreateInstance(
+        const std::string & service_name_, const ServiceMethodInformationMapT & method_information_map_, const ClientEventCallbackT & event_callback_)
+    {
+  #ifndef NDEBUG
+      eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CreateInstance: Creating instance of CServiceClientImpl for service: " + service_name_);
+  #endif
+      return std::shared_ptr<CServiceClientImpl>(new CServiceClientImpl(service_name_, method_information_map_, event_callback_));
+    }
 
   // Constructor: Initializes client ID, method call counts, and registers the client
   CServiceClientImpl::CServiceClientImpl(
-      const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_, const ClientEventCallbackT& event_callback_)
+      const std::string & service_name_, const ServiceMethodInformationMapT & method_information_map_, const ClientEventCallbackT & event_callback_)
       : m_service_name(service_name_), m_method_information_map(method_information_map_)
   {
 #ifndef NDEBUG
@@ -163,8 +165,8 @@ namespace eCAL
 
   // Calls a service method synchronously, blocking until a response is received or timeout occurs
   std::pair<bool, SServiceIDResponse> CServiceClientImpl::CallWithCallback(
-      const Registration::SEntityId& entity_id_, const std::string& method_name_,
-      const std::string& request_, int timeout_ms_, const ResponseIDCallbackT& response_callback_)
+      const Registration::SEntityId & entity_id_, const std::string & method_name_,
+      const std::string & request_, int timeout_ms_, const ResponseIDCallbackT & response_callback_)
   {
 #ifndef NDEBUG
     eCAL::Logging::Log(eCAL::Logging::log_level_debug1, "CServiceClientImpl::CallWithCallback: Performing synchronous call for service: " + m_service_name + ", method: " + method_name_);
@@ -190,7 +192,7 @@ namespace eCAL
     {
       Registration::SServiceId service_id;
       service_id.service_name = m_service_name;
-      service_id.service_id   = entity_id_;
+      service_id.service_id = entity_id_;
       NotifyEventCallback(service_id, eClientEvent::timeout);
 #ifndef NDEBUG
       eCAL::Logging::Log(eCAL::Logging::log_level_debug1, "CServiceClientImpl::CallWithCallback: Synchronous call for service: " + m_service_name + ", method: " + method_name_ + " timed out.");
@@ -201,7 +203,7 @@ namespace eCAL
   }
 
   // Asynchronous call to a service with a specified timeout
-  bool CServiceClientImpl::CallWithCallbackAsync(const Registration::SEntityId& entity_id_, const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_)
+  bool CServiceClientImpl::CallWithCallbackAsync(const Registration::SEntityId & entity_id_, const std::string & method_name_, const std::string & request_, const ResponseIDCallbackT & response_callback_)
   {
 #ifndef NDEBUG
     eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CallWithCallbackAsync: Performing asynchronous call for service: " + m_service_name + ", method: " + method_name_);
@@ -234,7 +236,7 @@ namespace eCAL
     auto response_data = PrepareInitialResponse(client, method_name_);
 
     // Create the response callback
-    auto response = [client, response_data, entity_id_, response_callback_](const eCAL::service::Error& error, const std::shared_ptr<std::string>& response_)
+    auto response = [client, response_data, entity_id_, response_callback_](const ecal_service::Error& error, const std::shared_ptr<std::string>& response_)
       {
         const std::lock_guard<std::mutex> lock(*response_data->mutex);
         if (!*response_data->block_modifying_response)
@@ -275,7 +277,7 @@ namespace eCAL
   }
 
   // Check if a specific service is connected
-  bool CServiceClientImpl::IsConnected(const Registration::SEntityId& entity_id_)
+  bool CServiceClientImpl::IsConnected(const Registration::SEntityId & entity_id_)
   {
     const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
     auto iter = m_client_session_map.find(entity_id_);
@@ -286,7 +288,7 @@ namespace eCAL
     return state;
   }
 
-  void CServiceClientImpl::RegisterService(const Registration::SEntityId& entity_id_, const v5::SServiceAttr& service_)
+  void CServiceClientImpl::RegisterService(const Registration::SEntityId & entity_id_, const v5::SServiceAttr & service_)
   {
     const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
 
@@ -298,10 +300,10 @@ namespace eCAL
       if (client_manager == nullptr || client_manager->is_stopped()) return;
 
       // Event callback (unused)
-      const eCAL::service::ClientSession::EventCallbackT event_callback = [](eCAL::service::ClientEventType /*event*/, const std::string& /*message*/) -> void
+      const ecal_service::ClientSession::EventCallbackT event_callback = [](ecal_service::ClientEventType /*event*/, const std::string& /*message*/) -> void
         {
-          // TODO: Replace current connect/disconnect state logic with this client event callback logic
-        };
+        // TODO: Replace current connect/disconnect state logic with this client event callback logic
+      };
 
       // use protocol version 1
       const auto protocol_version = 1;
@@ -335,10 +337,10 @@ namespace eCAL
   {
     Registration::SServiceId service_id;
 
-    service_id.service_id.entity_id  = m_client_id;
+    service_id.service_id.entity_id = m_client_id;
     service_id.service_id.process_id = Process::GetProcessID();
-    service_id.service_id.host_name  = Process::GetHostName();
-    service_id.service_name          = m_service_name;
+    service_id.service_id.host_name = Process::GetHostName();
+    service_id.service_name = m_service_name;
 
     return service_id;
   }
@@ -354,15 +356,15 @@ namespace eCAL
     ecal_reg_sample.cmd_type = bct_reg_client;
 
     auto& service_identifier = ecal_reg_sample.identifier;
-    service_identifier.entity_id  = m_client_id;
+    service_identifier.entity_id = m_client_id;
     service_identifier.process_id = Process::GetProcessID();
-    service_identifier.host_name  = Process::GetHostName();
+    service_identifier.host_name = Process::GetHostName();
 
     auto& service_client = ecal_reg_sample.client;
     service_client.version = m_client_version;
-    service_client.pname   = Process::GetProcessName();
-    service_client.uname   = Process::GetUnitName();
-    service_client.sname   = m_service_name;
+    service_client.pname = Process::GetProcessName();
+    service_client.uname = Process::GetUnitName();
+    service_client.sname = m_service_name;
 
     const std::lock_guard<std::mutex> lock(m_method_information_map_mutex);
     for (const auto& method_information_pair : m_method_information_map)
@@ -374,13 +376,13 @@ namespace eCAL
       method.mname = method_name;
 
       // old type and descriptor fields
-      method.req_type   = method_information.request_type.name;
-      method.req_desc   = method_information.request_type.descriptor;
-      method.resp_type  = method_information.response_type.name;
-      method.resp_desc  = method_information.response_type.descriptor;
+      method.req_type = method_information.request_type.name;
+      method.req_desc = method_information.request_type.descriptor;
+      method.resp_type = method_information.response_type.name;
+      method.resp_desc = method_information.response_type.descriptor;
 
       // new type and descriptor fields
-      method.req_datatype  = method_information.request_type;
+      method.req_datatype = method_information.request_type;
       method.resp_datatype = method_information.response_type;
 
       {
@@ -401,21 +403,21 @@ namespace eCAL
     ecal_reg_sample.cmd_type = bct_unreg_client;
 
     auto& service_identifier = ecal_reg_sample.identifier;
-    service_identifier.entity_id  = m_client_id;
+    service_identifier.entity_id = m_client_id;
     service_identifier.process_id = Process::GetProcessID();
-    service_identifier.host_name  = Process::GetHostName();
+    service_identifier.host_name = Process::GetHostName();
 
     auto& service_client = ecal_reg_sample.client;
     service_client.version = m_client_version;
-    service_client.pname   = Process::GetProcessName();
-    service_client.uname   = Process::GetUnitName();
-    service_client.sname   = m_service_name;
+    service_client.pname = Process::GetProcessName();
+    service_client.uname = Process::GetUnitName();
+    service_client.sname = m_service_name;
 
     return ecal_reg_sample;
   }
 
   // Attempts to retrieve a client session for a given entity ID
-  bool CServiceClientImpl::GetClientByEntity(const Registration::SEntityId& entity_id_, SClient& client_)
+  bool CServiceClientImpl::GetClientByEntity(const Registration::SEntityId & entity_id_, SClient & client_)
   {
     const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
     auto iter = m_client_session_map.find(entity_id_);
@@ -428,8 +430,8 @@ namespace eCAL
 
   // Blocking call to a service with a specified timeout
   std::pair<bool, SServiceIDResponse> CServiceClientImpl::CallMethodWithTimeout(
-    const Registration::SEntityId& entity_id_, SClient& client_, const std::string& method_name_,
-    const std::string& request_, std::chrono::nanoseconds timeout_)
+    const Registration::SEntityId & entity_id_, SClient & client_, const std::string & method_name_,
+    const std::string & request_, std::chrono::nanoseconds timeout_)
   {
     if (method_name_.empty())
       return { false, SServiceIDResponse() };
@@ -440,7 +442,7 @@ namespace eCAL
       return { false, SServiceIDResponse() };
 
     // Prepare response data
-    auto response_data     = PrepareInitialResponse(client_, method_name_);
+    auto response_data = PrepareInitialResponse(client_, method_name_);
     auto response_callback = CreateResponseCallback(client_, response_data);
 
     // Send the service call
@@ -481,21 +483,21 @@ namespace eCAL
       auto state = client_data.client_session->get_state();
 
       Registration::SEntityId entity_id;
-      entity_id.entity_id  = client_data.service_attr.sid;
+      entity_id.entity_id = client_data.service_attr.sid;
       entity_id.process_id = client_data.service_attr.pid;
-      entity_id.host_name  = client_data.service_attr.hname;
+      entity_id.host_name = client_data.service_attr.hname;
 
       Registration::SServiceId service_id;
       service_id.service_name = m_service_name;
-      service_id.service_id   = entity_id;
+      service_id.service_id = entity_id;
 
-      if (!client_data.connected && state == eCAL::service::State::CONNECTED)
+      if (!client_data.connected && state == ecal_service::State::CONNECTED)
       {
         client_data.connected = true;
         NotifyEventCallback(service_id, eClientEvent::connected);
         ++it;
       }
-      else if (client_data.connected && state == eCAL::service::State::FAILED)
+      else if (client_data.connected && state == ecal_service::State::FAILED)
       {
         client_data.connected = false;
         NotifyEventCallback(service_id, eClientEvent::disconnected);
@@ -508,14 +510,14 @@ namespace eCAL
     }
   }
 
-  void CServiceClientImpl::IncrementMethodCallCount(const std::string& method_name_)
+  void CServiceClientImpl::IncrementMethodCallCount(const std::string & method_name_)
   {
     const std::lock_guard<std::mutex> lock(m_method_information_map_mutex);
     m_method_call_count_map[method_name_]++;
   }
 
 
-  void CServiceClientImpl::NotifyEventCallback(const Registration::SServiceId& service_id_, eClientEvent event_type_)
+  void CServiceClientImpl::NotifyEventCallback(const Registration::SServiceId & service_id_, eClientEvent event_type_)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug1, "CServiceClientImpl::NotifyEventCallback: Notifying event callback for: " + m_service_name + " Event Type: " + to_string(event_type_));
@@ -530,25 +532,25 @@ namespace eCAL
     m_event_callback(service_id_, callback_data);
   }
 
-  std::shared_ptr<CServiceClientImpl::SResponseData> CServiceClientImpl::PrepareInitialResponse(const SClient& client_, const std::string& method_name_)
+  std::shared_ptr<CServiceClientImpl::SResponseData> CServiceClientImpl::PrepareInitialResponse(const SClient & client_, const std::string & method_name_)
   {
     auto data = std::make_shared<SResponseData>();
     data->response->first = false;
 
-    data->response->second.service_method_id.service_id.entity_id  = client_.service_attr.sid;
+    data->response->second.service_method_id.service_id.entity_id = client_.service_attr.sid;
     data->response->second.service_method_id.service_id.process_id = client_.service_attr.pid;
-    data->response->second.service_method_id.service_id.host_name  = client_.service_attr.hname;
+    data->response->second.service_method_id.service_id.host_name = client_.service_attr.hname;
 
-    data->response->second.service_method_id.service_name          = client_.service_attr.sname;
-    data->response->second.service_method_id.method_name           = method_name_;
+    data->response->second.service_method_id.service_name = client_.service_attr.sname;
+    data->response->second.service_method_id.method_name = method_name_;
 
     data->response->second.call_state = eCallState::none;
     return data;
   }
 
-  eCAL::service::ClientResponseCallbackT CServiceClientImpl::CreateResponseCallback(const SClient& client_, const std::shared_ptr<SResponseData>& response_data_)
+  ecal_service::ClientResponseCallbackT CServiceClientImpl::CreateResponseCallback(const SClient & client_, const std::shared_ptr<SResponseData>&response_data_)
   {
-    return [client_, response_data_](const eCAL::service::Error& error, const std::shared_ptr<std::string>& response_)
+    return [client_, response_data_](const ecal_service::Error& error, const std::shared_ptr<std::string>& response_)
     {
       const std::lock_guard<std::mutex> lock(*response_data_->mutex);
       if (!*response_data_->block_modifying_response)
@@ -556,13 +558,13 @@ namespace eCAL
         if (error)
         {
           response_data_->response->first = false;
-          response_data_->response->second.error_msg  = error.ToString();
+          response_data_->response->second.error_msg = error.ToString();
           response_data_->response->second.call_state = eCallState::failed;
-          response_data_->response->second.ret_state  = 0;
+          response_data_->response->second.ret_state = 0;
         }
         else
         {
-          response_data_->response->first  = true;
+          response_data_->response->first = true;
           response_data_->response->second = DeserializedResponse(client_, *response_);
         }
       }
@@ -572,7 +574,7 @@ namespace eCAL
   }
 
   // DeSerializes the response string into a service response
-  eCAL::SServiceIDResponse CServiceClientImpl::DeserializedResponse(const SClient& client_, const std::string& response_pb_)
+  eCAL::SServiceIDResponse CServiceClientImpl::DeserializedResponse(const SClient & client_, const std::string & response_pb_)
   {
     eCAL::SServiceIDResponse service_reponse;
     eCAL::Service::Response response;
@@ -580,13 +582,13 @@ namespace eCAL
     {
       const auto& response_header = response.header;
       // service/method id
-      service_reponse.service_method_id.service_id.entity_id  = client_.service_attr.sid;
+      service_reponse.service_method_id.service_id.entity_id = client_.service_attr.sid;
       service_reponse.service_method_id.service_id.process_id = client_.service_attr.pid;
-      service_reponse.service_method_id.service_id.host_name  = response_header.hname;
+      service_reponse.service_method_id.service_id.host_name = response_header.hname;
 
       // service and method name
       service_reponse.service_method_id.service_name = response_header.sname;
-      service_reponse.service_method_id.method_name  = response_header.mname;
+      service_reponse.service_method_id.method_name = response_header.mname;
 
       // error message and return state
       service_reponse.error_msg = response_header.error;
@@ -615,5 +617,6 @@ namespace eCAL
     }
 
     return service_reponse;
+  }
   }
 }

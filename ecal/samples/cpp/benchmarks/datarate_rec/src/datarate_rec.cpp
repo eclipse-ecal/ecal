@@ -25,7 +25,7 @@
 #include <tclap/CmdLine.h>
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_subscriber.h>
+#include <ecal/pubsub/subscriber.h>
 
 // main entry
 int main(int argc, char** argv)
