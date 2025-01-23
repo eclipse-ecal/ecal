@@ -21,8 +21,8 @@
  * @brief  shared memory layer
 **/
 
-#include <ecal/ecal_config.h>
-#include <ecal/ecal_process.h>
+#include <ecal/config.h>
+#include <ecal/process.h>
 
 #include "ecal_global_accessors.h"
 #include "ecal_reader_shm.h"

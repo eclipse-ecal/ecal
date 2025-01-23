@@ -26,7 +26,7 @@
 
 #include "ecalmon.h"
 
-#include <ecal/ecal_util.h>
+#include <ecal/util.h>
 
 #include <iostream>
 

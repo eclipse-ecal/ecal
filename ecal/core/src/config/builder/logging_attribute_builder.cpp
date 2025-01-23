@@ -1,6 +1,6 @@
 #include "logging_attribute_builder.h"
-#include "ecal/ecal_process.h"
-#include "ecal/ecal_util.h"
+#include "ecal/process.h"
+#include "ecal/util.h"
 
 namespace eCAL
 {

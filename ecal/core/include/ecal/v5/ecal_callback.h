@@ -18,15 +18,15 @@
 */
 
 /**
- * @file   ecal_callback.h
+ * @file   v5/ecal_callback.h
  * @brief  eCAL subscriber callback interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_namespace.h>
+#include <ecal/namespace.h>
 
-#include <ecal/ecal_deprecate.h>
+#include <ecal/deprecate.h>
 #include <ecal/pubsub/types.h>   // Should we instead bring back our old event types???
 #include <ecal/service/types.h>  // Should we instead bring back our old event types???
 

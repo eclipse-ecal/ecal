@@ -28,7 +28,7 @@
 #include "ecalsys/task/task_state.h"
 #include "ecalsys/config/config_version.h"
 
-#include "ecal/ecal_process_mode.h"
+#include "ecal/process_mode.h"
 
 namespace py = pybind11;
 

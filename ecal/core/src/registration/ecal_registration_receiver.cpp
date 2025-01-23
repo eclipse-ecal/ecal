@@ -35,7 +35,7 @@
 #include "registration/shm/ecal_registration_receiver_shm.h"
 #endif
 #include "io/udp/ecal_udp_configurations.h"
-#include <ecal/ecal_config.h>
+#include <ecal/config.h>
 #include <atomic>
 #include <functional>
 #include <memory>

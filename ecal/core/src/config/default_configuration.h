@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ecal/ecal_config.h"
+#include "ecal/config.h"
 
 #include <sstream>
 #include <ecal_def.h>

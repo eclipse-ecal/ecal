@@ -20,7 +20,7 @@
 #include "ecalmon.h"
 
 #include "ecal/ecal.h"
-#include <ecal/ecal_config.h>
+#include <ecal/config.h>
 
 #include "widgets/about_dialog/about_dialog.h"
 #include "widgets/license_dialog/license_dialog.h"

@@ -35,7 +35,7 @@
 #endif /*_MSC_VER*/
 
 #include <ecal/msg/dynamic.h>
-#include <ecal/ecal_util.h>
+#include <ecal/util.h>
 
 namespace eCAL
 {

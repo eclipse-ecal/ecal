@@ -18,21 +18,21 @@
 */
 
 /**
- * @file   ecal_subscriber.h
+ * @file   v5/ecal_subscriber.h
  * @brief  eCAL subscriber interface (deprecated eCAL5 version)
 **/
 
 #pragma once
 
-#include <ecal/ecal_namespace.h>
+#include <ecal/namespace.h>
 
 #include <cstddef>
-#include <ecal/ecal_callback.h>
+#include <ecal/callback.h>
 #include <ecal/v5/ecal_callback.h>
-#include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_os.h>
-#include <ecal/ecal_config.h>
-#include <ecal/ecal_types.h>
+#include <ecal/deprecate.h>
+#include <ecal/os.h>
+#include <ecal/config.h>
+#include <ecal/types.h>
 
 #include <memory>
 #include <set>

@@ -25,7 +25,7 @@
 #include <thread>
 
 #include "ecal/ecal.h"
-#include "ecal/ecal_process.h"
+#include "ecal/process.h"
 #include "ecal/msg/protobuf/publisher.h"
 
 #include "../include/logger.h"

@@ -24,7 +24,7 @@
 #pragma once
 
 #include "ecal/config/configuration.h"
-#include "ecal/ecal_config.h"
+#include "ecal/config.h"
 #include "ecal_def.h"
 
 #include <fstream>

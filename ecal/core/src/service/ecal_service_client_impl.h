@@ -22,11 +22,11 @@
 **/
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_callback.h>
+#include <ecal/deprecate.h>
+#include <ecal/callback.h>
 #include <ecal/v5/ecal_callback.h>
 #include <ecal/service/types.h>
-#include <ecal/ecal_types.h>
+#include <ecal/types.h>
 #include <ecal_service/client_session.h>
 
 #include "serialization/ecal_serialize_sample_registration.h"

@@ -18,13 +18,13 @@
  */
 
 /**
- * @file   ecal_registration_config.h
+ * @file   config/registration.h
  * @brief  eCAL configuration for the registration layer
 **/
 
 #pragma once
 
-#include "ecal/ecal_os.h"
+#include "ecal/os.h"
 
 #include <stdexcept>
 #include <string>

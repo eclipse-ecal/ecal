@@ -31,7 +31,7 @@
 
 #include <rec_client_core/ecal_rec_defs.h>
 
-#include <ecal/ecal_process.h>
+#include <ecal/process.h>
 
 ////////////////////////////////////////////////
 // Constructor & Destructor

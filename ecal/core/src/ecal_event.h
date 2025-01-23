@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <ecal/ecal_os.h>
+#include <ecal/os.h>
 #include <string>
 
 #include "ecal_eventhandle.h"

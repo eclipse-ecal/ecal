@@ -21,7 +21,7 @@
 
 #include <string>
 
-#include <ecal/ecal_log_level.h>
+#include <ecal/log_level.h>
 
 namespace eCAL
 {

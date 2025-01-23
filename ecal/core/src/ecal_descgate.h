@@ -23,10 +23,10 @@
 
 #pragma once
 
-#include <ecal/ecal_registration.h>
+#include <ecal/registration.h>
 #include <ecal/pubsub/types.h>
 #include <ecal/service/types.h>
-#include <ecal/ecal_util.h>
+#include <ecal/util.h>
 
 #include "serialization/ecal_struct_sample_registration.h"
 

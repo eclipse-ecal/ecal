@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <ecal/ecal_deprecate.h>
+#include <ecal/deprecate.h>
 #include <ecal/msg/subscriber.h>
 #include <ecal/msg/capnproto/helper.h>
 

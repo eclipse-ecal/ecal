@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   time.h
+ * @file   config/time.h
  * @brief  eCAL time configuration
 **/
 

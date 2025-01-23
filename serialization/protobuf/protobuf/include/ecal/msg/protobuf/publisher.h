@@ -25,7 +25,7 @@
 #pragma once
 
 #include <cstddef>
-#include <ecal/ecal_deprecate.h>
+#include <ecal/deprecate.h>
 #include <ecal/msg/protobuf/ecal_proto_hlp.h>
 #include <ecal/v5/ecal_publisher.h>
 

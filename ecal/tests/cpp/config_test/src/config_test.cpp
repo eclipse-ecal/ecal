@@ -17,8 +17,8 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/ecal_core.h>
-#include <ecal/ecal_config.h>
+#include <ecal/core.h>
+#include <ecal/config.h>
 #include "ini_file.h"
 
 #include <gtest/gtest.h>

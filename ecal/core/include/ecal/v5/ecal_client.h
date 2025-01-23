@@ -18,16 +18,16 @@
 */
 
 /**
- * @file   ecal_client.h
+ * @file   v5/ecal_client.h
  * @brief  eCAL client interface (deprecated eCAL5 version)
 **/
 
 #pragma once
 
-#include <ecal/ecal_namespace.h>
+#include <ecal/namespace.h>
 
-#include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_os.h>
+#include <ecal/deprecate.h>
+#include <ecal/os.h>
 #include <ecal/v5/ecal_callback.h>
 #include <ecal/service/types.h>
 

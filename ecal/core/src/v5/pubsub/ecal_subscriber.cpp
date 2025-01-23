@@ -21,7 +21,7 @@
  * @brief  common data subscriber for eCAL
 **/
 
-#include <ecal/ecal_namespace.h>
+#include <ecal/namespace.h>
 
 #include <ecal/ecal.h>
 #include <ecal/v5/ecal_subscriber.h>

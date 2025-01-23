@@ -18,7 +18,7 @@
  */
 
 /**
- * @file   configuration.h
+ * @file   config/configuration.h
  * @brief  eCAL configuration interface
 **/
 
@@ -33,8 +33,8 @@
 #include <ecal/types/ecal_custom_data_types.h>
 
 
-#include "ecal/ecal_os.h"
-#include "ecal/ecal_log_level.h"
+#include "ecal/os.h"
+#include "ecal/log_level.h"
 
 #include <string>
 #include <vector>

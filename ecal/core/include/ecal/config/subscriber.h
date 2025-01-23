@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   ecal_subscriber_config.h
+ * @file   config/subscriber.h
  * @brief  eCAL subscriber configuration
 **/
 

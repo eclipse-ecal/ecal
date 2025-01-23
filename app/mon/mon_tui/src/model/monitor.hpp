@@ -21,7 +21,7 @@
 #include <chrono>
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_monitoring.h>
+#include <ecal/monitoring.h>
 
 #include <functional>
 #include <string>

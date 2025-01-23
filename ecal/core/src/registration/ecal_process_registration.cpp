@@ -24,8 +24,8 @@
 
 #include "ecal_process_registration.h"
 
-#include <ecal/ecal_init.h>
-#include <ecal/ecal_process.h>
+#include <ecal/init.h>
+#include <ecal/process.h>
 #include "ecal_global_accessors.h"
 #include "ecal_globals.h"
 #include "time/ecal_timegate.h"

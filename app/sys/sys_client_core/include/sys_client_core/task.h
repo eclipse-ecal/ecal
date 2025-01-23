@@ -21,7 +21,7 @@
 
 #include <string>
 
-#include <ecal/ecal_process_mode.h>
+#include <ecal/process_mode.h>
 #include <ecal_utils/filesystem.h>
 #include <chrono>
 

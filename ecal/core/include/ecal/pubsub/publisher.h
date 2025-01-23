@@ -18,20 +18,20 @@
 */
 
 /**
- * @file   publisher.h
+ * @file   pubsub/publisher.h
  * @brief  eCAL publisher interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_namespace.h>
-#include <ecal/ecal_os.h>
+#include <ecal/deprecate.h>
+#include <ecal/namespace.h>
+#include <ecal/os.h>
 
 #include <ecal/pubsub/types.h>
 #include <ecal/pubsub/payload_writer.h>
 
-#include <ecal/ecal_config.h>
+#include <ecal/config.h>
 
 #include <memory>
 #include <string>

@@ -25,7 +25,7 @@
 
 #include <ecal/pubsub/types.h>
 #include <ecal/pubsub/payload_writer.h>
-#include <ecal/ecal_config.h>
+#include <ecal/config.h>
 #include <ecal/v5/ecal_callback.h>
 
 #include "serialization/ecal_serialize_sample_registration.h"

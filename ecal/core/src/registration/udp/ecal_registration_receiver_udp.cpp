@@ -22,7 +22,7 @@
 #include "io/udp/ecal_udp_sample_receiver.h"
 #include "io/udp/ecal_udp_configurations.h"
 #include "serialization/ecal_serialize_sample_registration.h"
-#include <ecal/ecal_config.h>
+#include <ecal/config.h>
 
 #include "registration/udp/config/builder/udp_attribute_builder.h"
 

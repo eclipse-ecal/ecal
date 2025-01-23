@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <ecal/ecal_deprecate.h>
+#include <ecal/deprecate.h>
 #include <ecal/v5/ecal_client.h>
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
 

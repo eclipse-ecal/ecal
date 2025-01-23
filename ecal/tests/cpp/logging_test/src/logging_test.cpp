@@ -18,11 +18,11 @@
 */
 
 #include <chrono>
-#include <ecal/ecal_config.h>
-#include <ecal/ecal_core.h>
-#include <ecal/ecal_log.h>
-#include <ecal/ecal_log_level.h>
-#include <ecal/ecal_process.h>
+#include <ecal/config.h>
+#include <ecal/core.h>
+#include <ecal/log.h>
+#include <ecal/log_level.h>
+#include <ecal/process.h>
 
 #include <gtest/gtest.h>
 

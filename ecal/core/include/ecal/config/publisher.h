@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   publisher.h
+ * @file   config/publisher.h
  * @brief  eCAL publisher configuration
  * 
  * This publisher configuration struct can be used to define the behavior of an eCAL publisher. Additional information on 
@@ -88,7 +88,7 @@
 
 #pragma once
 
-#include <ecal/ecal_tlayer.h>
+#include <ecal/tlayer.h>
 #include <ecal/types/ecal_custom_data_types.h>
 #include <ecal/config/transport_layer.h>
 

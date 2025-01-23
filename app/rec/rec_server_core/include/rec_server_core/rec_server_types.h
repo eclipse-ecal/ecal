@@ -26,7 +26,7 @@
 #include <chrono>
 #include <memory>
 
-#include <ecal/ecal_time.h>
+#include <ecal/time.h>
 
 #include <rec_client_core/topic_info.h>
 #include <rec_client_core/job_config.h>

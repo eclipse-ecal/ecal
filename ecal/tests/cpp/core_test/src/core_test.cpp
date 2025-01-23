@@ -17,10 +17,10 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/ecal_core.h>
-#include <ecal/ecal_os.h>
-#include <ecal/ecal_process.h>
-#include <ecal/ecal_defs.h>
+#include <ecal/core.h>
+#include <ecal/os.h>
+#include <ecal/process.h>
+#include <ecal/defs.h>
 
 #include <ecal_utils/filesystem.h>
 

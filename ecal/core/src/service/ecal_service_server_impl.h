@@ -23,8 +23,8 @@
 
 #pragma once
 
-#include <ecal/ecal_namespace.h>
-#include <ecal/ecal_callback.h>
+#include <ecal/namespace.h>
+#include <ecal/callback.h>
 #include <ecal/v5/ecal_callback.h>
 #include <ecal/service/types.h>
 #include <ecal_service/server.h>

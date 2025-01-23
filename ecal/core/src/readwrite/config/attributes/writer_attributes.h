@@ -23,7 +23,7 @@
 #include <cstddef>
 #include <vector>
 
-#include <ecal/ecal_tlayer.h>
+#include <ecal/tlayer.h>
 
 #include "ecal/types/ecal_custom_data_types.h"
 

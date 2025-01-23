@@ -22,7 +22,7 @@
 #include <vector>
 #include <string>
 #include <chrono>
-#include <ecal/ecal_time.h>
+#include <ecal/time.h>
 #include <ecal/pubsub/types.h>
 
 namespace eCAL

@@ -18,14 +18,14 @@
 */
 
 /**
- * @file   types.h
+ * @file   service/types.h
  * @brief  Type definitions for eCAL services
 **/
 
 #pragma once
 
-#include <ecal/ecal_namespace.h>
-#include <ecal/ecal_types.h>
+#include <ecal/namespace.h>
+#include <ecal/types.h>
 
 #include <functional>
 #include <string>

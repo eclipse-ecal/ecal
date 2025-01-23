@@ -18,28 +18,19 @@
 */
 
 /**
- * @file   ecal_tlayer.h
- * @brief  eCAL transport layer
+ * @file   deprecate.h
+ * @brief  eCAL function / variable deprecation macros
 **/
 
 #pragma once
 
-#include <ecal/ecal_os.h>
+#include <ecal/defs.h>
 
-namespace eCAL
-{
-  namespace TLayer
-  {
-    /**
-     * @brief eCAL transport layer types.
-    **/
-    enum eTransportLayer
-    {
-      tlayer_none       = 0,
-      tlayer_udp_mc     = 1,
-      tlayer_shm        = 4,
-      tlayer_tcp        = 5,
-      tlayer_all        = 255
-    };
-  }
-}
+//uncomment this line if you do want to get deprecation warnings inside eCAL core
+//#undef ECAL_NO_DEPRECATION_WARNINGS
+
+#if !defined(ECAL_NO_DEPRECATION_WARNINGS) && ECAL_VERSION_INTEGER >= ECAL_VERSION_CALCULATE(6, 0, 0)
+#define ECAL_DEPRECATE_SINCE_6_0(__message__) [[deprecated(__message__)]] //!< Deprecate the following function with eCAL Version 5.13.0
+#else 
+#define ECAL_DEPRECATE_SINCE_6_0(__message__)                             //!< Deprecate the following function with eCAL Version 5.13.0
+#endif

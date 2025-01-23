@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   ecal_process_severity.h
+ * @file   process_severity.h
  * @brief  eCAL process severity
 **/
 

@@ -31,7 +31,7 @@
 #include "runner.h"
 #include "task.h"
 
-#include <ecal/ecal_process_mode.h>
+#include <ecal/process_mode.h>
 
 #include <vector>
 

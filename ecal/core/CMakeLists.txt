@@ -541,29 +541,29 @@ set(ecal_header_cmn
     include/ecal/types/logging.h
     include/ecal/types/monitoring.h
     include/ecal/ecal.h
-    include/ecal/ecal_callback.h
+    include/ecal/callback.h
     include/ecal/v5/ecal_callback.h
     include/ecal/v5/ecal_client.h
-    include/ecal/ecal_config.h
-    include/ecal/ecal_core.h
-    include/ecal/ecal_deprecate.h
-    include/ecal/ecal_init.h
-    include/ecal/ecal_log.h
-    include/ecal/ecal_log_level.h
-    include/ecal/ecal_os.h
-    include/ecal/ecal_monitoring.h
-    include/ecal/ecal_namespace.h
-    include/ecal/ecal_process.h
-    include/ecal/ecal_process_severity.h
-    include/ecal/ecal_registration.h
+    include/ecal/config.h
+    include/ecal/core.h
+    include/ecal/deprecate.h
+    include/ecal/init.h
+    include/ecal/log.h
+    include/ecal/log_level.h
+    include/ecal/os.h
+    include/ecal/monitoring.h
+    include/ecal/namespace.h
+    include/ecal/process.h
+    include/ecal/process_severity.h
+    include/ecal/registration.h
     include/ecal/v5/ecal_publisher.h
     include/ecal/v5/ecal_server.h
     include/ecal/v5/ecal_subscriber.h
-    include/ecal/ecal_time.h
-    include/ecal/ecal_timer.h
-    include/ecal/ecal_tlayer.h
-    include/ecal/ecal_types.h
-    include/ecal/ecal_util.h
+    include/ecal/time.h
+    include/ecal/timer.h
+    include/ecal/tlayer.h
+    include/ecal/types.h
+    include/ecal/util.h
 )
 
 set(ecal_header_msg
