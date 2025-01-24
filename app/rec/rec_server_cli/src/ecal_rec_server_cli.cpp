@@ -141,9 +141,12 @@ std::unique_ptr<eCAL::rec_cli::command::Record> record_command;
 * Main Function
 **************************************/
 
-int main(int /*argc*/, char** /*argv*/)
+int main(int argc, char** argv)
 {
 #ifdef WIN32
+  (void)argc; // suppress unused warning
+  (void)argv; // suppress unused warning
+
   EcalUtils::WinCpChanger win_cp_changer(CP_UTF8); // The WinCpChanger will set the Codepage back to the original, once destroyed
 #endif // WIN32
 

@@ -94,30 +94,6 @@ namespace eCAL
     ~CMsgPublisher() override = default;
 
     /**
-     * @brief  Creates this object.
-     *
-     * @param topic_name_      Unique topic name.
-     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
-     * @param config_          Optional configuration parameters.
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    bool Create(const std::string& topic_name_, const struct SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = GetPublisherConfiguration())
-    {
-      return(CPublisher::Create(topic_name_, data_type_info_, config_));
-    }
-
-    /**
-     * @brief  Destroys this object. 
-     *
-     * @return  True if it succeeds, false if it fails. 
-    **/
-    bool Destroy()
-    {
-      return(CPublisher::Destroy());
-    }
-
-    /**
      * @brief  Send serialized message. 
      *
      * @param msg_   The message object. 
