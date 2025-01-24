@@ -130,6 +130,12 @@ namespace eCAL
       eCAL::v5::ServiceResponseVecT service_response_vec;
       constexpr int timeout_ms = 1000;
 
+      // After client creation it takes some time for the client to be actually connected.
+      // As the call and the creation is too close together, the first call will fail.
+      // Here we wait until the connection is established.
+      // 
+      // The overall handling will be reworked when using the V6 implementation.
+      // 
       if (!sys_client_service_.IsConnected())
       {
         const auto registration_timeout = std::chrono::milliseconds(eCAL::GetConfiguration().registration.registration_timeout);
