@@ -1,4 +1,4 @@
-.. _exhale_function_registration_8h_1a653302548bc5b1c637be973288a4e58d:
+.. _exhale_function_registration_8h_1a3a56a8124e08716a5b273a7a1eebe933:
 
 Function eCAL::Registration::GetServerInfo
 ==========================================
@@ -10,5 +10,5 @@ Function Documentation
 ----------------------
 
 
-.. doxygenfunction:: eCAL::Registration::GetServerInfo(const SServiceMethodId&, SServiceMethodInformation&)
+.. doxygenfunction:: eCAL::Registration::GetServerInfo(const SServiceId&, ServiceMethodInfoSetT&)
    :project: eCAL

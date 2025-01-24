@@ -1,4 +1,4 @@
-.. _exhale_function_registration_8h_1aaeb1b39b0e8dac2f7a6ae9e0797c5f11:
+.. _exhale_function_registration_8h_1a671daeff62e03b3f0b6b9fbd30a3a360:
 
 Function eCAL::Registration::GetClientInfo
 ==========================================
@@ -10,5 +10,5 @@ Function Documentation
 ----------------------
 
 
-.. doxygenfunction:: eCAL::Registration::GetClientInfo(const SServiceMethodId&, SServiceMethodInformation&)
+.. doxygenfunction:: eCAL::Registration::GetClientInfo(const SServiceId&, ServiceMethodInfoSetT&)
    :project: eCAL

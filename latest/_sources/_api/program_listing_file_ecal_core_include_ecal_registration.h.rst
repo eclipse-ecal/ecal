@@ -84,17 +84,17 @@ Program Listing for File registration.h
    
        ECAL_API void RemSubscriberEventCallback(CallbackToken token_);
    
-       ECAL_API std::set<SServiceMethodId> GetServerIDs();
+       ECAL_API std::set<SServiceId> GetServerIDs();
    
-       ECAL_API bool GetServerInfo(const SServiceMethodId& id_, SServiceMethodInformation& service_method_info_);
+       ECAL_API bool GetServerInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_method_info_);
    
-       ECAL_API std::set<SServiceMethodId> GetClientIDs();
+       ECAL_API std::set<SServiceId> GetClientIDs();
    
-       ECAL_API bool GetClientInfo(const SServiceMethodId& id_, SServiceMethodInformation& service_method_info_);
+       ECAL_API bool GetClientInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_method_info_);
    
        ECAL_API void GetTopicNames(std::set<std::string>& topic_names_);
    
-       ECAL_API void GetServiceMethodNames(std::set<SServiceMethod>& service_method_names_);
+       ECAL_API void GetServerMethodNames(std::set<SServiceMethod>& server_method_names_);
    
        ECAL_API void GetClientMethodNames(std::set<SServiceMethod>& client_method_names_);
      }

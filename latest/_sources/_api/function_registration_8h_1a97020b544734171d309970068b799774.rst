@@ -1,6 +1,6 @@
-.. _exhale_function_registration_8h_1a812056d30256ba3be552809032bea1bc:
+.. _exhale_function_registration_8h_1a97020b544734171d309970068b799774:
 
-Function eCAL::Registration::GetServerIDs
+Function eCAL::Registration::GetClientIDs
 =========================================
 
 - Defined in :ref:`file_ecal_core_include_ecal_registration.h`
@@ -10,5 +10,5 @@ Function Documentation
 ----------------------
 
 
-.. doxygenfunction:: eCAL::Registration::GetServerIDs()
+.. doxygenfunction:: eCAL::Registration::GetClientIDs()
    :project: eCAL
