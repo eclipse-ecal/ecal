@@ -39,7 +39,7 @@ public:
   {
     RCLOCK,
     HNAME,
-    HGNAME,
+    SHM_TRANSPORT_DOMAIN,
     PID,
     PNAME,
     UNAME,

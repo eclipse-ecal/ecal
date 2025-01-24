@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,12 @@ namespace eCAL
   {
     Registration::SAttributes attr;
     
-    attr.timeout           = std::chrono::milliseconds(reg_config_.registration_timeout);
-    attr.refresh           = reg_config_.registration_refresh;
-    attr.network_enabled   = reg_config_.network_enabled;
-    attr.loopback          = reg_config_.loopback;
-    attr.host_name         = eCAL::Process::GetHostName();
-    attr.host_group_name   = reg_config_.host_group_name;
+    attr.timeout              = std::chrono::milliseconds(reg_config_.registration_timeout);
+    attr.refresh              = reg_config_.registration_refresh;
+    attr.network_enabled      = reg_config_.network_enabled;
+    attr.loopback             = reg_config_.loopback;
+    attr.host_name            = eCAL::Process::GetHostName();
+    attr.shm_transport_domain = reg_config_.shm_transport_domain;
 
     attr.process_id        = process_id_;
 

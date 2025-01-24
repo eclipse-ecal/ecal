@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,11 +147,11 @@ INSTANTIATE_TEST_SUITE_P(
       return config;
     }() },
     ClientsTestParams{ []() {
-      // shm + host group name
+      // shm + shm transport domain
       eCAL::Configuration config;
-      config.registration.layer.shm.enable = true;
-      config.registration.layer.udp.enable = false;
-      config.registration.host_group_name = "abc";
+      config.registration.layer.shm.enable     = true;
+      config.registration.layer.udp.enable     = false;
+      config.registration.shm_transport_domain = "abc";
       return config;
     }() },
       ClientsTestParams{ []() {

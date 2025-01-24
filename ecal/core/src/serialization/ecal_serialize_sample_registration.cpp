@@ -49,8 +49,8 @@ namespace
     pb_process_.rclock = registration_process_.rclock;
     // hname
     eCAL::nanopb::encode_string(pb_process_.hname, registration_identifier_.host_name);
-    // hgname
-    eCAL::nanopb::encode_string(pb_process_.hgname, registration_process_.hgname);
+    // shm_transport_domain
+    eCAL::nanopb::encode_string(pb_process_.shm_transport_domain, registration_process_.shm_transport_domain);
     // pid
     pb_process_.pid = registration_identifier_.process_id;
     // pname
@@ -154,8 +154,8 @@ namespace
     pb_topic_.rclock = registration_topic_.rclock;
     // hname
     eCAL::nanopb::encode_string(pb_topic_.hname, registration_identifier_.host_name);
-    // hgname
-    eCAL::nanopb::encode_string(pb_topic_.hgname, registration_topic_.hgname);
+    // shm_transport_domain
+    eCAL::nanopb::encode_string(pb_topic_.shm_transport_domain, registration_topic_.shm_transport_domain);
     // pid
     pb_topic_.pid = registration_identifier_.process_id;
     // pname
@@ -316,8 +316,8 @@ namespace
     ///////////////////////////////////////////////
     // hname
     eCAL::nanopb::decode_string(pb_sample_.process.hname, registration_.identifier.host_name);
-    // hgname
-    eCAL::nanopb::decode_string(pb_sample_.process.hgname, registration_.process.hgname);
+    // shm_transport_domain
+    eCAL::nanopb::decode_string(pb_sample_.process.shm_transport_domain, registration_.process.shm_transport_domain);
     // pname
     eCAL::nanopb::decode_string(pb_sample_.process.pname, registration_.process.pname);
     // uname
@@ -372,8 +372,8 @@ namespace
     ///////////////////////////////////////////////
     // hname
     eCAL::nanopb::decode_string(pb_sample_.topic.hname, registration_.identifier.host_name);
-    // hgname
-    eCAL::nanopb::decode_string(pb_sample_.topic.hgname, registration_.topic.hgname);
+    // shm_transport_domain
+    eCAL::nanopb::decode_string(pb_sample_.topic.shm_transport_domain, registration_.topic.shm_transport_domain);
     // pname
     eCAL::nanopb::decode_string(pb_sample_.topic.pname, registration_.topic.pname);
     // uname

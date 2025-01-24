@@ -55,11 +55,11 @@ namespace eCAL
     ECAL_API std::string GetHostName();
 
     /**
-     * @brief  Get current host group name.
+     * @brief  Get current SHM transport domain.
      *
-     * @return  Host group name or empty string if failed.
+     * @return  SHM transport domain or empty string if failed.
     **/
-    ECAL_API std::string GetHostGroupName();
+    ECAL_API std::string GetShmTransportDomain();
 
     /**
      * @brief  Get current unit name (defined via eCAL::Initialize). 

@@ -47,8 +47,8 @@ namespace
     pb_process_.rclock = process_.rclock;
     // hname
     eCAL::nanopb::encode_string(pb_process_.hname, process_.hname);
-    // hgname
-    eCAL::nanopb::encode_string(pb_process_.hgname, process_.hgname);
+    // shm_transport_domain
+    eCAL::nanopb::encode_string(pb_process_.shm_transport_domain, process_.shm_transport_domain);
     // pid
     pb_process_.pid = process_.pid;
     // pname
@@ -151,8 +151,8 @@ namespace
     pb_topic_.rclock = topic_.rclock;
     // hname
     eCAL::nanopb::encode_string(pb_topic_.hname, topic_.hname);
-    // hgname
-    eCAL::nanopb::encode_string(pb_topic_.hgname, topic_.hgname);
+    // shm_transport_domain
+    eCAL::nanopb::encode_string(pb_topic_.shm_transport_domain, topic_.shm_transport_domain);
     // pid
     pb_topic_.pid = topic_.pid;
     // pname
@@ -498,8 +498,8 @@ namespace
     ///////////////////////////////////////////////
     // hname
     eCAL::nanopb::decode_string(pb_process_.hname, process_.hname);
-    // hgname
-    eCAL::nanopb::decode_string(pb_process_.hgname, process_.hgname);
+    // shm_transport_domain
+    eCAL::nanopb::decode_string(pb_process_.shm_transport_domain, process_.shm_transport_domain);
     // pname
     eCAL::nanopb::decode_string(pb_process_.pname, process_.pname);
     // uname
@@ -608,8 +608,8 @@ namespace
     ///////////////////////////////////////////////
     // hname
     eCAL::nanopb::decode_string(pb_topic_.hname, topic_.hname);
-    // hgname
-    eCAL::nanopb::decode_string(pb_topic_.hgname, topic_.hgname);
+    // shm_transport_domain
+    eCAL::nanopb::decode_string(pb_topic_.shm_transport_domain, topic_.shm_transport_domain);
     // pname
     eCAL::nanopb::decode_string(pb_topic_.pname, topic_.pname);
     // uname

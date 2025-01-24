@@ -168,7 +168,7 @@ namespace eCAL
 
       sstream << "------------------------- NETWORK --------------------------------" << '\n';
       sstream << "Host name                : " << Process::GetHostName() << '\n';
-      sstream << "Host group name          : " << Process::GetHostGroupName() << '\n';
+      sstream << "SHM transport domain     : " << Process::GetShmTransportDomain() << '\n';
 
       if (Config::IsNetworkEnabled())
       {
@@ -245,9 +245,9 @@ namespace eCAL
       return(g_host_name);
     }
 
-    std::string GetHostGroupName()
+    std::string GetShmTransportDomain()
     {
-      return Config::GetHostGroupName().empty() ? GetHostName() : Config::GetHostGroupName();
+      return Config::GetShmTransportDomain().empty() ? GetHostName() : Config::GetShmTransportDomain();
     }
 
     std::string GetUnitName()

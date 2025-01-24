@@ -147,11 +147,11 @@ INSTANTIATE_TEST_SUITE_P(
       return config;
     }() },
     ServicesTestParams{ []() {
-      // shm + host group name
+      // shm + shm transport domain
       eCAL::Configuration config;
-      config.registration.layer.shm.enable = true;
-      config.registration.layer.udp.enable = false;
-      config.registration.host_group_name = "abc";
+      config.registration.layer.shm.enable     = true;
+      config.registration.layer.udp.enable     = false;
+      config.registration.shm_transport_domain = "abc";
       return config;
     }() },
     ServicesTestParams{[]() {

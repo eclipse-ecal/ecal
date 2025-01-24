@@ -34,7 +34,7 @@ namespace eCAL
       SProcessMon process;
       process.rclock               = rand() % 1000;
       process.hname                = GenerateString(10);
-      process.hgname               = GenerateString(8);
+      process.shm_transport_domain = GenerateString(8);
       process.pid                  = rand() % 1000;
       process.pname                = GenerateString(8);
       process.uname                = GenerateString(6);
@@ -57,7 +57,7 @@ namespace eCAL
       STopicMon topic;
       topic.rclock               = rand() % 1000;
       topic.hname                = GenerateString(10);
-      topic.hgname               = GenerateString(8);
+      topic.shm_transport_domain = GenerateString(8);
       topic.pid                  = rand() % 1000;
       topic.pname                = GenerateString(8);
       topic.uname                = GenerateString(6);

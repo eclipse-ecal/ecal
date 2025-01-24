@@ -212,7 +212,7 @@ namespace eCAL
     struct Process
     {
       int32_t                             rclock = 0;                   // registration clock
-      std::string                         hgname;                       // host group name
+      std::string                         shm_transport_domain;         // shm transport domain
       std::string                         pname;                        // process name
       std::string                         uname;                        // unit name
       std::string                         pparam;                       // process parameter
@@ -226,7 +226,7 @@ namespace eCAL
 
       bool operator==(const Process& other) const {
         return rclock == other.rclock &&
-          hgname == other.hgname &&
+          shm_transport_domain == other.shm_transport_domain &&
           pname == other.pname &&
           uname == other.uname &&
           pparam == other.pparam &&
@@ -242,7 +242,7 @@ namespace eCAL
       void clear()
       {
         rclock = 0;
-        hgname.clear();
+        shm_transport_domain.clear();
         pname.clear();
         uname.clear();
         pparam.clear();
@@ -260,7 +260,7 @@ namespace eCAL
     struct Topic
     {
       int32_t                             rclock = 0;                   // registration clock (heart beat)
-      std::string                         hgname;                       // host group name
+      std::string                         shm_transport_domain;         // shm transport domain
       std::string                         pname;                        // process name
       std::string                         uname;                        // unit name
       std::string                         tname;                        // topic name
@@ -282,7 +282,7 @@ namespace eCAL
 
       bool operator==(const Topic& other) const {
         return rclock == other.rclock &&
-          hgname == other.hgname &&
+          shm_transport_domain == other.shm_transport_domain &&
           pname == other.pname &&
           uname == other.uname &&
           tname == other.tname &&
@@ -302,7 +302,7 @@ namespace eCAL
       void clear()
       {
         rclock = 0;
-        hgname.clear();
+        shm_transport_domain.clear();
         pname.clear();
         uname.clear();
         tname.clear();

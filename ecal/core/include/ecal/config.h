@@ -71,7 +71,7 @@ namespace eCAL
     ECAL_API size_t                   GetTcpPubsubWriterThreadpoolSize     ();
     ECAL_API int                      GetTcpPubsubMaxReconnectionAttemps   ();
 
-    ECAL_API std::string              GetHostGroupName                     ();
+    ECAL_API std::string              GetShmTransportDomain                     ();
 
     /////////////////////////////////////
     // time
