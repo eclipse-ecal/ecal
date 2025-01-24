@@ -124,18 +124,18 @@ namespace eCAL
   /**
    * @brief Service method information struct containing the request and response type information.
   **/
-  struct SMethodInfo
+  struct SServiceMethodInformation
   {
     std::string              method_name;     //!< The name of the method.
     SDataTypeInformation     request_type;    //!< The type of the method request.
     SDataTypeInformation     response_type;   //!< The type of the method response.
 
-    bool operator==(const SMethodInfo& other) const
+    bool operator==(const SServiceMethodInformation& other) const
     {
       return method_name == other.method_name && request_type == other.request_type && response_type == other.response_type;
     }
 
-    bool operator<(const SMethodInfo& other) const
+    bool operator<(const SServiceMethodInformation& other) const
     {
       return std::tie(method_name, method_name, response_type) < std::tie(other.method_name, other.method_name, other.response_type);
     }
@@ -161,7 +161,7 @@ namespace eCAL
    * @param request_    The request.
    * @param response_   The response returned from the method call.
   **/
-  using MethodInfoCallbackT = std::function<int(const SMethodInfo& method_info_, const std::string& request_, std::string& response_)>;
+  using MethodInfoCallbackT = std::function<int(const SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_)>;
 
   /**
    * @brief Service response callback function type (low level client interface).
@@ -174,7 +174,7 @@ namespace eCAL
   /**
    * @brief Map of <method name, method information (like request type, reponse type)>.
   **/
-  using ServiceMethodInfoSetT = std::set<SMethodInfo>;
+  using ServiceMethodInfoSetT = std::set<SServiceMethodInformation>;
   
   ECAL_CORE_NAMESPACE_V6
   {

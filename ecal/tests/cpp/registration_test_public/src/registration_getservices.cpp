@@ -111,7 +111,7 @@ TEST_P(ServicesTestFixture, GetServiceIDs)
     eCAL::CServiceServer service("foo::service");
 
     // add method
-    eCAL::SMethodInfo service_method_info;
+    eCAL::SServiceMethodInformation service_method_info;
     service_method_info.method_name = "method";
     service_method_info.request_type.name        = "foo::req_type";
     service_method_info.request_type.descriptor  = "foo::req_desc";

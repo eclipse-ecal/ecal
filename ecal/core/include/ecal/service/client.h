@@ -51,11 +51,11 @@ namespace eCAL
        * @brief Constructor.
        *
        * @param service_name_            Unique service name.
-       * @param method_information_map_  Map of method names and corresponding datatype information.
+       * @param method_information_set_  Set of method names and corresponding datatype information.
        * @param event_callback_          The client event callback funtion.
       **/
       ECAL_API_EXPORTED_MEMBER
-        CServiceClient(const std::string& service_name_, const ServiceMethodInfoSetT method_information_map_ = ServiceMethodInfoSetT(), const ClientEventCallbackT event_callback_ = ClientEventCallbackT());
+        CServiceClient(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_set_ = ServiceMethodInfoSetT(), const ClientEventCallbackT event_callback_ = ClientEventCallbackT());
 
       /**
        * @brief Destructor.

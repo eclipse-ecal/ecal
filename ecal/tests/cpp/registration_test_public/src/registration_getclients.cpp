@@ -59,7 +59,7 @@ TEST_P(ClientsTestFixture, ClientExpiration)
   // create simple client and let it expire
   {
     // create client
-    eCAL::SMethodInfo service_method_info;
+    eCAL::SServiceMethodInformation service_method_info;
     service_method_info.method_name              = "foo::method";
     service_method_info.request_type.name        = "foo::req_type";
     service_method_info.request_type.descriptor  = "foo::req_desc";
@@ -112,7 +112,7 @@ TEST_P(ClientsTestFixture, GetClientIDs)
   // create simple client
   {
     // create client
-    eCAL::SMethodInfo service_method_info;
+    eCAL::SServiceMethodInformation service_method_info;
     service_method_info.method_name          = "foo::method";
     service_method_info.request_type.name        = "foo::req_type";
     service_method_info.request_type.descriptor  = "foo::req_desc";

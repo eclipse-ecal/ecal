@@ -68,7 +68,7 @@ namespace eCAL
     Stop();
   }
 
-  bool CServiceServerImpl::SetMethodCallback(const SMethodInfo& method_info_, const MethodInfoCallbackT & callback_)
+  bool CServiceServerImpl::SetMethodCallback(const SServiceMethodInformation& method_info_, const MethodInfoCallbackT & callback_)
   {
     const auto& method_ = method_info_.method_name;
 
@@ -477,7 +477,7 @@ namespace eCAL
     // execute method (outside lock guard)
     const std::string& request_s = request.request;
     std::string response_s;
-    const SMethodInfo method_info{
+    const SServiceMethodInformation method_info{
       method.method.mname,
       method.method.req_datatype,
       method.method.resp_datatype

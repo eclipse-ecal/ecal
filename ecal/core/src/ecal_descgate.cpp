@@ -65,7 +65,7 @@ namespace
     {
       const eCAL::SDataTypeInformation request_datatype = GetDataTypeInformation(method.req_datatype, method.req_type, method.req_desc);
       const eCAL::SDataTypeInformation response_datatype = GetDataTypeInformation(method.resp_datatype, method.resp_type, method.resp_desc);
-      methods.insert(eCAL::SMethodInfo{method.mname, request_datatype, response_datatype });
+      methods.insert(eCAL::SServiceMethodInformation{method.mname, request_datatype, response_datatype });
     }
     return methods;
   }

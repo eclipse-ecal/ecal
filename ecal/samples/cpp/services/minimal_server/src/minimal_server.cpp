@@ -24,7 +24,7 @@
 #include <thread>
 
 // method callback
-int OnMethodCallback(const eCAL::SMethodInfo& method_info_, const std::string& request_, std::string& response_)
+int OnMethodCallback(const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_)
 {
   std::cout << "Method called : " << method_info_.method_name << std::endl;
   std::cout << "Request       : " << request_ << std::endl << std::endl;

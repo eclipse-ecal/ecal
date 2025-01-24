@@ -162,7 +162,7 @@ namespace eCAL
           dyn_decoder.GetServiceMessageDescFromType(service_descriptor, request_type_name, request_type_descriptor, error_s);
           dyn_decoder.GetServiceMessageDescFromType(service_descriptor, response_type_name, response_type_descriptor, error_s);
 
-          method_information_map.emplace(SMethodInfo{ method_name,
+          method_information_map.emplace(SServiceMethodInformation{ method_name,
             SDataTypeInformation{request_type_name, "proto", request_type_descriptor},
             SDataTypeInformation{response_type_name, "proto", response_type_descriptor}
             }

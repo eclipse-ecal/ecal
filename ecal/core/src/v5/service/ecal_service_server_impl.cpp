@@ -105,7 +105,7 @@ namespace eCAL
         return false;
       }
 
-      SMethodInfo method_info;
+      SServiceMethodInformation method_info;
       method_info.method_name          = method_;
       method_info.request_type.name        = req_type_;
       method_info.request_type.descriptor  = req_desc_;
@@ -125,14 +125,14 @@ namespace eCAL
         return false;
       }
 
-      SMethodInfo method_info;
+      SServiceMethodInformation method_info;
       method_info.method_name    = method_;
       method_info.request_type.name  = req_type_;
       method_info.response_type.name = resp_type_;
 
       const MethodInfoCallbackT callback =
         [req_type_, resp_type_, callback_](
-          const SMethodInfo& method_info,
+          const SServiceMethodInformation& method_info,
           const std::string& request,
           std::string&       response) -> int
         {

@@ -22,7 +22,7 @@
 #include <chrono>
 #include <thread>
 
-int OnHello(const eCAL::SMethodInfo& /*method_info_*/, const std::string& /*request_*/, std::string& /*response_*/)
+int OnHello(const eCAL::SServiceMethodInformation& /*method_info_*/, const std::string& /*request_*/, std::string& /*response_*/)
 {
   return 0;
 }
