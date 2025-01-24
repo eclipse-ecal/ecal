@@ -948,8 +948,8 @@ namespace
       val = Py_BuildValue("s", topic.hname.c_str());
       PyDict_SetItemString(topicDict, "hname", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", topic.hgname.c_str());
-      PyDict_SetItemString(topicDict, "hgname", val); Py_DECREF(val);
+      val = Py_BuildValue("s", topic.shm_transport_domain.c_str());
+      PyDict_SetItemString(topicDict, "shm_transport_domain", val); Py_DECREF(val);
 
       val = Py_BuildValue("i", topic.pid);
       PyDict_SetItemString(topicDict, "pid", val); Py_DECREF(val);
@@ -1060,8 +1060,8 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", process.hname.c_str());
         PyDict_SetItemString(processDict, "hname", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", process.hgname.c_str());
-        PyDict_SetItemString(processDict, "hgname", val); Py_DECREF(val);
+        val = Py_BuildValue("s", process.shm_transport_domain.c_str());
+        PyDict_SetItemString(processDict, "shm_transport_domain", val); Py_DECREF(val);
 
         val = Py_BuildValue("i", process.pid);
         PyDict_SetItemString(processDict, "pid", val); Py_DECREF(val);

@@ -628,9 +628,9 @@ namespace eCAL
     ecal_reg_sample_identifier.entity_id  = m_topic_id;
     ecal_reg_sample_identifier.host_name  = m_attributes.host_name;
 
-    auto& ecal_reg_sample_topic = ecal_reg_sample.topic;
-    ecal_reg_sample_topic.hgname = m_attributes.host_group_name;
-    ecal_reg_sample_topic.tname  = m_attributes.topic_name;
+    auto& ecal_reg_sample_topic                = ecal_reg_sample.topic;
+    ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
+    ecal_reg_sample_topic.tname                = m_attributes.topic_name;
 
     // topic_information
     {
@@ -716,11 +716,11 @@ namespace eCAL
     ecal_reg_sample_identifier.entity_id  = m_topic_id;
     ecal_reg_sample_identifier.host_name  = m_attributes.host_name;
 
-    auto& ecal_reg_sample_topic  = ecal_unreg_sample.topic;
-    ecal_reg_sample_topic.hgname = m_attributes.host_group_name;
-    ecal_reg_sample_topic.pname  = m_attributes.process_name;
-    ecal_reg_sample_topic.tname  = m_attributes.topic_name;
-    ecal_reg_sample_topic.uname  = m_attributes.unit_name;
+    auto& ecal_reg_sample_topic                = ecal_unreg_sample.topic;
+    ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
+    ecal_reg_sample_topic.pname                = m_attributes.process_name;
+    ecal_reg_sample_topic.tname                = m_attributes.topic_name;
+    ecal_reg_sample_topic.uname                = m_attributes.unit_name;
   }
 
   void CPublisherImpl::FireEvent(const ePublisherEvent type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)

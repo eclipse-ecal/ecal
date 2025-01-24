@@ -74,7 +74,7 @@ namespace eCAL
       bool                 loopback;
 
       std::string          host_name;
-      std::string          host_group_name;
+      std::string          shm_transport_domain;
       int                  process_id;
       std::string          process_name;
 

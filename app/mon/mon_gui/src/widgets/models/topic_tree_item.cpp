@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,9 +52,9 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return topic_.hname().c_str();
     }
-    else if (column == Columns::HGNAME)
+    else if (column == Columns::SHM_TRANSPORT_DOMAIN)
     {
-      return topic_.hgname().c_str();
+      return topic_.shm_transport_domain().c_str();
     }
     else if (column == Columns::PID)
     {
@@ -234,7 +234,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   else if (role == (Qt::ItemDataRole)ItemDataRoles::FilterRole) //-V1016 //-V547
   {
     if ((column == Columns::HNAME)
-      || (column == Columns::HGNAME)
+      || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME)
       || (column == Columns::TNAME)
@@ -299,7 +299,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
 
     if ((column == Columns::HNAME)
-      || (column == Columns::HGNAME)
+      || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME)
       || (column == Columns::TNAME)

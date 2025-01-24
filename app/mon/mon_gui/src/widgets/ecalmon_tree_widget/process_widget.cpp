@@ -64,11 +64,11 @@ ProcessWidget::ProcessWidget(QWidget *parent)
   host.name = "Host";
   preconfigured_group_by_settings.push_back(host);
 
-  EcalmonTreeWidget::GroupSetting host_group;
-  host_group.group_by_columns = { (int)ProcessTreeModel::Columns::HOST_GROUP_NAME };
-  host_group.auto_expand = 0;
-  host_group.name = "Host Group";
-  preconfigured_group_by_settings.push_back(host_group);
+  EcalmonTreeWidget::GroupSetting shm_transport_domain;
+  shm_transport_domain.group_by_columns = { (int)ProcessTreeModel::Columns::SHM_TRANSPORT_DOMAIN };
+  shm_transport_domain.auto_expand = 0;
+  shm_transport_domain.name = "SHM Transport Domain";
+  preconfigured_group_by_settings.push_back(shm_transport_domain);
 
   setGroupSettings(preconfigured_group_by_settings, group_by_enabled_columns);
 

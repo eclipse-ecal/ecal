@@ -39,7 +39,7 @@ namespace eCAL
       {
         if (monitoring1.processes[i].rclock != monitoring2.processes[i].rclock ||
           monitoring1.processes[i].hname != monitoring2.processes[i].hname ||
-          monitoring1.processes[i].hgname != monitoring2.processes[i].hgname ||
+          monitoring1.processes[i].shm_transport_domain != monitoring2.processes[i].shm_transport_domain ||
           monitoring1.processes[i].pid != monitoring2.processes[i].pid ||
           monitoring1.processes[i].pname != monitoring2.processes[i].pname ||
           monitoring1.processes[i].uname != monitoring2.processes[i].uname ||
@@ -69,7 +69,7 @@ namespace eCAL
       {
         if (monitoring1.publisher[i].rclock != monitoring2.publisher[i].rclock ||
           monitoring1.publisher[i].hname != monitoring2.publisher[i].hname ||
-          monitoring1.publisher[i].hgname != monitoring2.publisher[i].hgname ||
+          monitoring1.publisher[i].shm_transport_domain != monitoring2.publisher[i].shm_transport_domain ||
           monitoring1.publisher[i].pid != monitoring2.publisher[i].pid ||
           monitoring1.publisher[i].pname != monitoring2.publisher[i].pname ||
           monitoring1.publisher[i].uname != monitoring2.publisher[i].uname ||
@@ -101,7 +101,7 @@ namespace eCAL
       {
         if (monitoring1.subscriber[i].rclock != monitoring2.subscriber[i].rclock ||
           monitoring1.subscriber[i].hname != monitoring2.subscriber[i].hname ||
-          monitoring1.subscriber[i].hgname != monitoring2.subscriber[i].hgname ||
+          monitoring1.subscriber[i].shm_transport_domain != monitoring2.subscriber[i].shm_transport_domain ||
           monitoring1.subscriber[i].pid != monitoring2.subscriber[i].pid ||
           monitoring1.subscriber[i].pname != monitoring2.subscriber[i].pname ||
           monitoring1.subscriber[i].uname != monitoring2.subscriber[i].uname ||

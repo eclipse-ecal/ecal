@@ -73,7 +73,7 @@ namespace eCAL
     {
       int32_t                             rclock{0};            //!< registration clock (heart beat)
       std::string                         hname;                //!< host name
-      std::string                         hgname;               //!< host group name
+      std::string                         shm_transport_domain; //!< shm transport domain
       int32_t                             pid{0};               //!< process id
       std::string                         pname;                //!< process name
       std::string                         uname;                //!< unit name
@@ -100,7 +100,7 @@ namespace eCAL
     {
       int32_t        rclock{0};                                 //!< registration clock
       std::string    hname;                                     //!< host name
-      std::string    hgname;                                    //!< host group name
+      std::string    shm_transport_domain;                      //!< shm transport domain
       int32_t        pid{0};                                    //!< process id
       std::string    pname;                                     //!< process name
       std::string    uname;                                     //!< unit name

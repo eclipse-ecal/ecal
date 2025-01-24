@@ -57,7 +57,7 @@ typedef struct _eCAL_pb_Process { /* Reserved fields in enums are not supported 
     int32_t component_init_state; /* eCAL component initialization state (eCAL::Initialize(..)) */
     pb_callback_t component_init_info; /* like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc) */
     pb_callback_t ecal_runtime_version; /* loaded / runtime eCAL version of a component */
-    pb_callback_t hgname; /* host group name */
+    pb_callback_t shm_transport_domain; /* shm transport domain */
     pb_callback_t config_file_path; /* Path from where the eCAL configuration for this process was loaded */
 } eCAL_pb_Process;
 
@@ -107,7 +107,7 @@ extern "C" {
 #define eCAL_pb_Process_component_init_state_tag 15
 #define eCAL_pb_Process_component_init_info_tag  16
 #define eCAL_pb_Process_ecal_runtime_version_tag 17
-#define eCAL_pb_Process_hgname_tag               18
+#define eCAL_pb_Process_shm_transport_domain_tag 18
 #define eCAL_pb_Process_config_file_path_tag     19
 
 /* Struct field encoding specification for nanopb */
@@ -131,7 +131,7 @@ X(a, CALLBACK, SINGULAR, STRING,   tsync_mod_name,   14) \
 X(a, STATIC,   SINGULAR, INT32,    component_init_state,  15) \
 X(a, CALLBACK, SINGULAR, STRING,   component_init_info,  16) \
 X(a, CALLBACK, SINGULAR, STRING,   ecal_runtime_version,  17) \
-X(a, CALLBACK, SINGULAR, STRING,   hgname,           18) \
+X(a, CALLBACK, SINGULAR, STRING,   shm_transport_domain,  18) \
 X(a, CALLBACK, SINGULAR, STRING,   config_file_path,  19)
 #define eCAL_pb_Process_CALLBACK pb_default_field_callback
 #define eCAL_pb_Process_DEFAULT NULL
