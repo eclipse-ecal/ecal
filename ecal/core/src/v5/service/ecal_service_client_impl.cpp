@@ -66,7 +66,7 @@ namespace eCAL
       Create(service_name_);
     }
 
-    CServiceClientImpl::CServiceClientImpl(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
+    CServiceClientImpl::CServiceClientImpl(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_)
       : m_service_client_impl(nullptr)
     {
       Logging::Log(Logging::log_level_debug2, "v5::CServiceClientImpl: Initializing service client with name: " + service_name_);
@@ -81,10 +81,10 @@ namespace eCAL
 
     bool CServiceClientImpl::Create(const std::string& service_name_)
     {
-      return Create(service_name_, ServiceMethodInformationMapT());
+      return Create(service_name_, ServiceMethodInfoSetT());
     }
 
-    bool CServiceClientImpl::Create(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
+    bool CServiceClientImpl::Create(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_)
     {
       if (m_service_client_impl != nullptr)
       {

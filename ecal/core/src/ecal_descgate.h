@@ -61,12 +61,12 @@ namespace eCAL
     void RemSubscriberEventCallback(Registration::CallbackToken token_);
 
     // get service information
-    std::set<Registration::SServiceMethodId> GetServerIDs() const;
-    bool GetServerInfo(const Registration::SServiceMethodId& id_, SServiceMethodInformation& service_info_) const;
+    std::set<Registration::SServiceId> GetServerIDs() const;
+    bool GetServerInfo(const Registration::SServiceId& id_, ServiceMethodInfoSetT& service_info_) const;
 
     // get client information
-    std::set<Registration::SServiceMethodId> GetClientIDs() const;
-    bool GetClientInfo(const Registration::SServiceMethodId& id_, SServiceMethodInformation& service_info_) const;
+    std::set<Registration::SServiceId> GetClientIDs() const;
+    bool GetClientInfo(const Registration::SServiceId& id_, ServiceMethodInfoSetT& service_info_) const;
 
     // delete copy constructor and copy assignment operator
     CDescGate(const CDescGate&) = delete;
@@ -76,7 +76,6 @@ namespace eCAL
     CDescGate(CDescGate&&) = delete;
     CDescGate& operator=(CDescGate&&) = delete;
 
-  protected:
     using TopicIdInfoMap  = std::map<Registration::STopicId, SDataTypeInformation>;
     struct STopicIdInfoMap
     {
@@ -91,42 +90,21 @@ namespace eCAL
       TopicEventCallbackMap map;
     };
 
-    using ServiceIdInfoMap = std::map<Registration::SServiceMethodId, SServiceMethodInformation>;
+    using ServiceIdInfoMap = std::map<Registration::SServiceId, ServiceMethodInfoSetT>;
     struct SServiceIdInfoMap
     {
       mutable std::mutex  mtx;
       ServiceIdInfoMap id_map;
     };
 
+  protected:
+
     static std::set<Registration::STopicId>   GetTopicIDs(const STopicIdInfoMap& topic_info_map_);
     static bool                               GetTopic   (const Registration::STopicId& id_, const STopicIdInfoMap& topic_info_map_, SDataTypeInformation& topic_info_);
 
-    static std::set<Registration::SServiceMethodId> GetServerIDs(const SServiceIdInfoMap& service_method_info_map_);
-    static bool                                     GetService   (const Registration::SServiceMethodId& id_, const SServiceIdInfoMap& service_method_info_map_, SServiceMethodInformation& service_method_info_);
+    static std::set<Registration::SServiceId> GetServiceIDs(const SServiceIdInfoMap& service_method_info_map_);
+    static bool                               GetService   (const Registration::SServiceId& id_, const SServiceIdInfoMap& service_method_info_map_, ServiceMethodInfoSetT& service_method_info_);
 
-    static void ApplyTopicDescription(STopicIdInfoMap& topic_info_map_,
-                                      const STopicEventCallbackMap& topic_callback_map_, 
-                                      const Registration::SampleIdentifier& topic_id_,
-                                      const std::string& topic_name_,
-                                      const SDataTypeInformation& topic_info_);
-
-    static void RemTopicDescription(STopicIdInfoMap& topic_info_map_,
-                                    const STopicEventCallbackMap& topic_callback_map_,
-                                    const Registration::SampleIdentifier& topic_id_,
-                                    const std::string& topic_name_);
-
-    static void ApplyServiceDescription(SServiceIdInfoMap& service_method_info_map_,
-                                        const Registration::SampleIdentifier& service_id_,
-                                        const std::string& service_name_,
-                                        const std::string& method_name_,
-                                        const SDataTypeInformation& request_type_information_,
-                                        const SDataTypeInformation& response_type_information_);
-
-    static void RemServiceDescription(SServiceIdInfoMap& service_method_info_map_,
-                                      const Registration::SampleIdentifier& service_id_,
-                                      const std::string& service_name_);
-
-    static SDataTypeInformation GetDataTypeInformation(const SDataTypeInformation& datatype_info_, const std::string& legacy_type_, const std::string& legacy_desc_);
     Registration::CallbackToken CreateToken();
       
     // internal quality topic info publisher/subscriber maps

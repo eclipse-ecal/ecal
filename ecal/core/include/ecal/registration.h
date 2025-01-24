@@ -130,28 +130,28 @@ namespace eCAL
      *
      * @return Set of service id's.
     **/
-    ECAL_API std::set<SServiceMethodId> GetServerIDs();
+    ECAL_API std::set<SServiceId> GetServerIDs();
 
     /**
-     * @brief Get service method information with quality for a specific server.
+     * @brief Get service method information for a specific server.
      *
      * @return True if information could be queried.
     **/
-    ECAL_API bool GetServerInfo(const SServiceMethodId& id_, SServiceMethodInformation& service_method_info_);
+    ECAL_API bool GetServerInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_method_info_);
 
     /**
      * @brief Get complete snapshot of all known clients.
      *
      * @return Set of service id's.
     **/
-    ECAL_API std::set<SServiceMethodId> GetClientIDs();
+    ECAL_API std::set<SServiceId> GetClientIDs();
 
     /**
-     * @brief Get service method information with quality for a specific client.
+     * @brief Get service method information for a specific client.
      *
      * @return True if information could be queried.
     **/
-    ECAL_API bool GetClientInfo(const SServiceMethodId& id_, SServiceMethodInformation& service_method_info_);
+    ECAL_API bool GetClientInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_method_info_);
 
     /**
      * @brief Get all topic names.
@@ -161,14 +161,14 @@ namespace eCAL
     ECAL_API void GetTopicNames(std::set<std::string>& topic_names_);
 
     /**
-     * @brief Get all service/method names.
+     * @brief Get the pairs of service name / method name of all eCAL Servers.
      *
      * @param service_method_names_ Set to store the service/method names (Set { (ServiceName, MethodName) }).
     **/
-    ECAL_API void GetServiceMethodNames(std::set<SServiceMethod>& service_method_names_);
+    ECAL_API void GetServerMethodNames(std::set<SServiceMethod>& server_method_names_);
 
     /**
-     * @brief Get all client/method names.
+     * @brief Get the pairs of service name / method name of all eCAL Clients.
      *
      * @param client_method_names_ Set to store the client/method names (Set { (ClientName, MethodName) }).
     **/
