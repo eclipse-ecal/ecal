@@ -47,7 +47,7 @@ namespace
     return request_shared_ptr;
   }
 
-  eCAL::SServiceIDResponse CreateErrorResponse(const eCAL::Registration::SEntityId& entity_id_, const std::string& service_name_, const std::string& method_name_, const std::string& error_message_)
+  eCAL::SServiceIDResponse CreateErrorResponse(const eCAL::SEntityId& entity_id_, const std::string& service_name_, const std::string& method_name_, const std::string& error_message_)
   {
     eCAL::SServiceIDResponse error_response;
     // service/method id
@@ -62,7 +62,7 @@ namespace
     return error_response;
   }
 
-  void ResponseError(const eCAL::Registration::SEntityId& entity_id_, const std::string& service_name_, const std::string& method_name_,
+  void ResponseError(const eCAL::SEntityId& entity_id_, const std::string& service_name_, const std::string& method_name_,
     const std::string& error_message_, const eCAL::ResponseIDCallbackT& response_callback_)
   {
     eCAL::Logging::Log(eCAL::Logging::log_level_error, "CServiceClientImpl: Response error for service: " + service_name_ + ", method: " + method_name_ + ", error: " + error_message_);
@@ -148,9 +148,9 @@ namespace eCAL
   }
 
   // Retrieve service IDs of all matching services
-  std::vector<Registration::SEntityId> CServiceClientImpl::GetServiceIDs()
+  std::vector<SEntityId> CServiceClientImpl::GetServiceIDs()
   {
-    std::vector<Registration::SEntityId> entity_vector;
+    std::vector<SEntityId> entity_vector;
 
     // lock client map
     const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
@@ -165,7 +165,7 @@ namespace eCAL
 
   // Calls a service method synchronously, blocking until a response is received or timeout occurs
   std::pair<bool, SServiceIDResponse> CServiceClientImpl::CallWithCallback(
-      const Registration::SEntityId & entity_id_, const std::string & method_name_,
+      const SEntityId & entity_id_, const std::string & method_name_,
       const std::string & request_, int timeout_ms_, const ResponseIDCallbackT & response_callback_)
   {
 #ifndef NDEBUG
@@ -190,7 +190,7 @@ namespace eCAL
     // Handle timeout event
     if (!response.first && response.second.call_state == eCallState::timeouted)
     {
-      Registration::SServiceId service_id;
+      SServiceId service_id;
       service_id.service_name = m_service_name;
       service_id.service_id = entity_id_;
       NotifyEventCallback(service_id, eClientEvent::timeout);
@@ -203,7 +203,7 @@ namespace eCAL
   }
 
   // Asynchronous call to a service with a specified timeout
-  bool CServiceClientImpl::CallWithCallbackAsync(const Registration::SEntityId & entity_id_, const std::string & method_name_, const std::string & request_, const ResponseIDCallbackT & response_callback_)
+  bool CServiceClientImpl::CallWithCallbackAsync(const SEntityId & entity_id_, const std::string & method_name_, const std::string & request_, const ResponseIDCallbackT & response_callback_)
   {
 #ifndef NDEBUG
     eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CallWithCallbackAsync: Performing asynchronous call for service: " + m_service_name + ", method: " + method_name_);
@@ -277,7 +277,7 @@ namespace eCAL
   }
 
   // Check if a specific service is connected
-  bool CServiceClientImpl::IsConnected(const Registration::SEntityId & entity_id_)
+  bool CServiceClientImpl::IsConnected(const SEntityId & entity_id_)
   {
     const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
     auto iter = m_client_session_map.find(entity_id_);
@@ -288,7 +288,7 @@ namespace eCAL
     return state;
   }
 
-  void CServiceClientImpl::RegisterService(const Registration::SEntityId & entity_id_, const v5::SServiceAttr & service_)
+  void CServiceClientImpl::RegisterService(const SEntityId & entity_id_, const v5::SServiceAttr & service_)
   {
     const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
 
@@ -333,9 +333,9 @@ namespace eCAL
     return GetRegistrationSample();
   }
 
-  Registration::SServiceId CServiceClientImpl::GetServiceId() const
+  SServiceId CServiceClientImpl::GetServiceId() const
   {
-    Registration::SServiceId service_id;
+    SServiceId service_id;
 
     service_id.service_id.entity_id = m_client_id;
     service_id.service_id.process_id = Process::GetProcessID();
@@ -416,7 +416,7 @@ namespace eCAL
   }
 
   // Attempts to retrieve a client session for a given entity ID
-  bool CServiceClientImpl::GetClientByEntity(const Registration::SEntityId & entity_id_, SClient & client_)
+  bool CServiceClientImpl::GetClientByEntity(const SEntityId & entity_id_, SClient & client_)
   {
     const std::lock_guard<std::mutex> lock(m_client_session_map_mutex);
     auto iter = m_client_session_map.find(entity_id_);
@@ -429,7 +429,7 @@ namespace eCAL
 
   // Blocking call to a service with a specified timeout
   std::pair<bool, SServiceIDResponse> CServiceClientImpl::CallMethodWithTimeout(
-    const Registration::SEntityId & entity_id_, SClient & client_, const std::string & method_name_,
+    const SEntityId & entity_id_, SClient & client_, const std::string & method_name_,
     const std::string & request_, std::chrono::nanoseconds timeout_)
   {
     if (method_name_.empty())
@@ -481,12 +481,12 @@ namespace eCAL
       auto& client_data = it->second;
       auto state = client_data.client_session->get_state();
 
-      Registration::SEntityId entity_id;
+      SEntityId entity_id;
       entity_id.entity_id = client_data.service_attr.sid;
       entity_id.process_id = client_data.service_attr.pid;
       entity_id.host_name = client_data.service_attr.hname;
 
-      Registration::SServiceId service_id;
+      SServiceId service_id;
       service_id.service_name = m_service_name;
       service_id.service_id = entity_id;
 
@@ -516,7 +516,7 @@ namespace eCAL
   }
 
 
-  void CServiceClientImpl::NotifyEventCallback(const Registration::SServiceId & service_id_, eClientEvent event_type_)
+  void CServiceClientImpl::NotifyEventCallback(const SServiceId & service_id_, eClientEvent event_type_)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug1, "CServiceClientImpl::NotifyEventCallback: Notifying event callback for: " + m_service_name + " Event Type: " + to_string(event_type_));

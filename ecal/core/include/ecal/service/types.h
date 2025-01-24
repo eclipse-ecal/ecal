@@ -84,45 +84,46 @@ namespace eCAL
     }
   }
 
-  namespace Registration
+  /**
+   * @brief Unique ID with which to identify a service (client or server)
+   *        It can be queried from the client or the server, and it can be obtained from the registration layer.
+  **/
+  struct SServiceId
   {
+    SEntityId    service_id;
+    std::string  service_name;
 
-    struct SServiceId
+    bool operator==(const SServiceId& other) const
     {
-      SEntityId    service_id;
-      std::string  service_name;
+      return service_id == other.service_id && service_name == other.service_name;
+    }
 
-      bool operator==(const SServiceId& other) const
-      {
-        return service_id == other.service_id && service_name == other.service_name;
-      }
-
-      bool operator<(const SServiceId& other) const
-      {
-        return std::tie(service_id, service_name) < std::tie(other.service_id, other.service_name);
-      }
-    };
-
-    struct SServiceMethodId
+    bool operator<(const SServiceId& other) const
     {
-      SEntityId    service_id;
-      std::string  service_name;
-      std::string  method_name;
+      return std::tie(service_id, service_name) < std::tie(other.service_id, other.service_name);
+    }
+  };
 
-      bool operator==(const SServiceMethodId& other) const
-      {
-        return service_id == other.service_id && service_name == other.service_name && method_name == other.method_name;
-      }
+  struct SServiceMethodId
+  {
+    SEntityId    service_id;
+    std::string  service_name;
+    std::string  method_name;
 
-      bool operator<(const SServiceMethodId& other) const
-      {
-        return std::tie(service_id, service_name, method_name) < std::tie(other.service_id, other.service_name, other.method_name);
-      }
-    };
-  }
+    bool operator==(const SServiceMethodId& other) const
+    {
+      return service_id == other.service_id && service_name == other.service_name && method_name == other.method_name;
+    }
+
+    bool operator<(const SServiceMethodId& other) const
+    {
+      return std::tie(service_id, service_name, method_name) < std::tie(other.service_id, other.service_name, other.method_name);
+    }
+  };
 
   /**
-   * @brief Service method information struct containing the request and response type information.
+   * @brief Service method information struct containing the method name, the request and response type information.
+   *        This type is used when creating services (servers or clients), or when querying information about them from the registration layer.
   **/
   struct SServiceMethodInformation
   {
@@ -146,7 +147,7 @@ namespace eCAL
   **/
   struct SServiceIDResponse
   {
-    Registration::SServiceMethodId service_method_id;            //!< service method information (service id (entity id, process id, host name), service name, method name)
+    SServiceMethodId service_method_id;            //!< service method information (service id (entity id, process id, host name), service name, method name)
     std::string                    error_msg;                    //!< human readable error message
     int                            ret_state  = 0;               //!< return state of the called service method
     eCallState                     call_state = eCallState::none; //!< call state (see eCallState)
@@ -169,7 +170,7 @@ namespace eCAL
    * @param entity_id_         Unique service id (entity id, process id, host name, service name, method name)
    * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
   **/
-  using ResponseIDCallbackT = std::function<void (const Registration::SEntityId& entity_id_, const struct SServiceIDResponse& service_response_)>;
+  using ResponseIDCallbackT = std::function<void (const SEntityId& entity_id_, const struct SServiceIDResponse& service_response_)>;
 
   /**
    * @brief Map of <method name, method information (like request type, reponse type)>.
@@ -193,7 +194,7 @@ namespace eCAL
      * @param service_id_  The service id struct of the connection that triggered the event.
      * @param data_        Event callback data structure with the event specific information.
     **/
-    using ClientEventCallbackT = std::function<void(const Registration::SServiceId& service_id_, const SClientEventCallbackData& data_)>;
+    using ClientEventCallbackT = std::function<void(const SServiceId& service_id_, const SClientEventCallbackData& data_)>;
 
     /**
      * @brief eCAL server event callback struct.
@@ -210,7 +211,7 @@ namespace eCAL
      * @param service_id_  The service id struct of the connection that triggered the event.
      * @param data_        Event callback data structure with the event specific information.
     **/
-    using ServerEventCallbackT = std::function<void(const Registration::SServiceId& service_id_, const struct SServerEventCallbackData& data_)>;
+    using ServerEventCallbackT = std::function<void(const SServiceId& service_id_, const struct SServerEventCallbackData& data_)>;
   }
     
 }

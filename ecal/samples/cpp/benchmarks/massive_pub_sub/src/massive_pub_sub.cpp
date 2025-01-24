@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,10 +68,10 @@ int main()
   // publisher registration event callback
   size_t created_publisher_num(0);
   size_t deleted_publisher_num(0);
-  std::set<eCAL::Registration::STopicId> created_publisher_ids;
-  std::set<eCAL::Registration::STopicId> deleted_publisher_ids;
+  std::set<eCAL::STopicId> created_publisher_ids;
+  std::set<eCAL::STopicId> deleted_publisher_ids;
   eCAL::Registration::AddPublisherEventCallback(
-    [&](const eCAL::Registration::STopicId& id_, eCAL::Registration::RegistrationEventType event_type_)
+    [&](const eCAL::STopicId& id_, eCAL::Registration::RegistrationEventType event_type_)
     {
       switch (event_type_)
       {
@@ -200,7 +200,7 @@ int main()
   }
 
   // check creation events
-  const std::set<eCAL::Registration::STopicId> publisher_ids = eCAL::Registration::GetPublisherIDs();
+  const std::set<eCAL::STopicId> publisher_ids = eCAL::Registration::GetPublisherIDs();
   std::cout << "Number of publisher creation events   " << created_publisher_num << std::endl;
   std::cout << "Size   of publisher creation id set   " << created_publisher_ids.size() << std::endl;
   //std::cout << "Publisher creation id sets are equal  " << (publisher_ids == created_publisher_ids) << std::endl;

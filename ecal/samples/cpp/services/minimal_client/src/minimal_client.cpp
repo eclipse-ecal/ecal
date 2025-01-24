@@ -33,7 +33,7 @@ int main()
   const eCAL::CServiceClient minimal_client("service1", { {"echo", {}, {} } });
 
   // callback for service response
-  auto service_response_callback = [](const eCAL::Registration::SEntityId& entity_id_, const eCAL::SServiceIDResponse& service_response_) {
+  auto service_response_callback = [](const eCAL::SEntityId& entity_id_, const eCAL::SServiceIDResponse& service_response_) {
     switch (service_response_.call_state)
     {
       // service successful executed

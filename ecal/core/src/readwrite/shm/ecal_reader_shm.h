@@ -44,8 +44,8 @@ namespace eCAL
     ~CSHMReaderLayer() override = default;
 
     void Initialize(const eCAL::eCALReader::SHM::SAttributes& attr_) override;
-    void AddSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const Registration::EntityIdT& /*topic_id_*/) override {}
-    void RemSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const Registration::EntityIdT& /*topic_id_*/) override {}
+    void AddSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const EntityIdT& /*topic_id_*/) override {}
+    void RemSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const EntityIdT& /*topic_id_*/) override {}
 
     void SetConnectionParameter(SReaderLayerPar& par_) override;
 

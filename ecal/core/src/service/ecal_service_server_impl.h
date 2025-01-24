@@ -72,7 +72,7 @@ namespace eCAL
       Registration::Sample GetRegistration();
 
       // Retrieves the service id
-      Registration::SServiceId GetServiceId() const;
+      SServiceId GetServiceId() const;
 
       // Retrieves the service name
       std::string GetServiceName() const;
@@ -94,14 +94,14 @@ namespace eCAL
 
       // Request and event callback methods
       int RequestCallback(const std::string& request_pb_, std::string& response_pb_);
-      void NotifyEventCallback(const Registration::SServiceId& service_id_, eServerEvent event_type_, const std::string& message_);
+      void NotifyEventCallback(const SServiceId& service_id_, eServerEvent event_type_, const std::string& message_);
 
       // Server version (incremented for protocol or functionality changes)
       static constexpr int                   m_server_version = 1;
 
       // Server attributes
       std::string                            m_service_name;
-      Registration::EntityIdT                m_service_id;
+      EntityIdT                m_service_id;
 
       // Server connection state and synchronization
       mutable std::mutex                     m_connected_mutex; // mutex protecting m_connected (modified by the event callbacks in another thread)

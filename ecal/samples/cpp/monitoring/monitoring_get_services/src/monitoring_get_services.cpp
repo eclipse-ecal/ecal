@@ -38,7 +38,7 @@ int main()
   {
     // GetServers
     {
-      std::set<eCAL::Registration::SServiceId> server_method_id_set;
+      std::set<eCAL::SServiceId> server_method_id_set;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)

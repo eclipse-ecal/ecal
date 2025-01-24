@@ -33,9 +33,7 @@
 
 namespace eCAL
 {
-  namespace Registration
-  {
-    struct STopicId
+  struct STopicId
     {
       SEntityId    topic_id;
       std::string  topic_name;
@@ -51,13 +49,12 @@ namespace eCAL
       }
     };
 
-    inline std::ostream& operator<<(std::ostream& os, const STopicId& id)
+  inline std::ostream& operator<<(std::ostream& os, const STopicId& id)
     {
       os << "STopicId(topic_id: " << id.topic_id
         << ", topic_name: " << id.topic_name << ")";
       return os;
     }
-  }
   
   /**
    * @brief eCAL subscriber receive callback struct.
@@ -123,7 +120,7 @@ namespace eCAL
      * @param data_type_info_  Topic data type information (encoding, type, descriptor).
      * @param data_            Data struct containing payload, timestamp and publication clock.
     **/
-    using ReceiveCallbackT = std::function<void(const Registration::STopicId& topic_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)>;
+    using ReceiveCallbackT = std::function<void(const STopicId& topic_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)>;
 
     /**
      * @brief eCAL publisher event callback struct.
@@ -141,7 +138,7 @@ namespace eCAL
      * @param topic_id_  The topic id struct of the received message.
      * @param data_      Event callback data structure with the event specific information.
     **/
-    using PubEventCallbackT = std::function<void(const Registration::STopicId& topic_id_, const SPubEventCallbackData& data_)>;
+    using PubEventCallbackT = std::function<void(const STopicId& topic_id_, const SPubEventCallbackData& data_)>;
 
     /**
      * @brief eCAL subscriber event callback struct.
@@ -159,7 +156,7 @@ namespace eCAL
      * @param topic_id_  The topic id struct of the received message.
      * @param data_      Event callback data structure with the event specific information.
     **/
-    using SubEventCallbackT = std::function<void(const Registration::STopicId& topic_id_, const SSubEventCallbackData& data_)>;
+    using SubEventCallbackT = std::function<void(const STopicId& topic_id_, const SSubEventCallbackData& data_)>;
   }
 }
 

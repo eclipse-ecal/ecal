@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -270,7 +270,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
   }
 }
 
-void ProtoMsgCallback(const eCAL::Registration::STopicId& topic_id_, const std::shared_ptr<google::protobuf::Message>& msg_)
+void ProtoMsgCallback(const eCAL::STopicId& topic_id_, const std::shared_ptr<google::protobuf::Message>& msg_)
 {
   ProcProtoMsg(*msg_, topic_id_.topic_name);
   std::cout << std::endl;

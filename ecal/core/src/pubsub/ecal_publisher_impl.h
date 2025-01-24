@@ -103,9 +103,9 @@ namespace eCAL
     bool IsSubscribed() const;
     size_t GetSubscriberCount() const;
 
-    Registration::STopicId GetTopicId() const
+    STopicId GetTopicId() const
     {
-      Registration::STopicId id;
+      STopicId id;
       id.topic_name          = m_attributes.topic_name;
       id.topic_id.entity_id  = m_topic_id;
       id.topic_id.host_name  = m_attributes.host_name;
@@ -142,7 +142,7 @@ namespace eCAL
     
     int32_t GetFrequency();
 
-    Registration::EntityIdT                m_topic_id;
+    EntityIdT                m_topic_id;
     SDataTypeInformation                   m_topic_info;
     std::map<std::string, std::string>     m_attr;
     size_t                                 m_topic_size = 0;

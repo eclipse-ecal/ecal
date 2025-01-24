@@ -187,9 +187,9 @@ namespace eCAL
     return m_service_client_impl->GetServiceName();
   }
 
-  Registration::SServiceId CServiceClient::GetServiceId() const
+  SServiceId CServiceClient::GetServiceId() const
   {
-    if (m_service_client_impl == nullptr) return Registration::SServiceId();
+    if (m_service_client_impl == nullptr) return SServiceId();
     return m_service_client_impl->GetServiceId();
   }
 

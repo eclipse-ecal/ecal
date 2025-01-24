@@ -54,7 +54,7 @@ Subscriber::Subscriber(const std::string&                   topic_name
   if (!quiet)
     statistics_thread_ = std::make_unique<std::thread>([this](){ this->statisticsLoop(); });
 
-  ecal_sub.SetReceiveCallback([this](const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) { callback(data_); });
+  ecal_sub.SetReceiveCallback([this](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) { callback(data_); });
 }
 
 // Destructor

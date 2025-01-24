@@ -96,9 +96,9 @@ namespace eCAL
     bool IsPublished() const;
     size_t GetPublisherCount() const;
 
-    Registration::STopicId GetId() const
+    STopicId GetId() const
     {
-      Registration::STopicId id;
+      STopicId id;
       id.topic_name          = m_attributes.topic_name;
       id.topic_id.entity_id  = m_topic_id;
       id.topic_id.host_name  = m_attributes.host_name;
@@ -134,7 +134,7 @@ namespace eCAL
 
     int32_t GetFrequency();
 
-    Registration::EntityIdT                   m_topic_id;
+    EntityIdT                   m_topic_id;
     SDataTypeInformation                      m_topic_info;
     std::map<std::string, std::string>        m_attr;
     std::atomic<size_t>                       m_topic_size;
@@ -176,7 +176,7 @@ namespace eCAL
 
     std::set<long long>                       m_id_set;
 
-    using WriterCounterMapT = std::unordered_map<Registration::EntityIdT, long long>;
+    using WriterCounterMapT = std::unordered_map<EntityIdT, long long>;
     WriterCounterMapT                         m_writer_counter_map;
     long long                                 m_message_drops = 0;
 

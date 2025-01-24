@@ -59,30 +59,30 @@ namespace eCAL
       ~CServiceClientImpl();
 
       // Retrieve service IDs of all matching services
-      std::vector<Registration::SEntityId> GetServiceIDs();
+      std::vector<SEntityId> GetServiceIDs();
 
       // Blocking call to a specific service; returns response as pair<bool, SServiceIDResponse>
       // if a callback is provided call the callback as well
       std::pair<bool, SServiceIDResponse> CallWithCallback(
-        const Registration::SEntityId& entity_id_, const std::string& method_name_,
+        const SEntityId& entity_id_, const std::string& method_name_,
         const std::string& request_, int timeout_ms_, const ResponseIDCallbackT& response_callback_ = nullptr);
 
       // Asynchronous call to a specific service using callback
       bool CallWithCallbackAsync(
-        const Registration::SEntityId& entity_id_, const std::string& method_name_,
+        const SEntityId& entity_id_, const std::string& method_name_,
         const std::string& request_, const ResponseIDCallbackT& response_callback_);
 
       // Check connection state of a specific service
-      bool IsConnected(const Registration::SEntityId& entity_id_);
+      bool IsConnected(const SEntityId& entity_id_);
 
       // Called by the registration receiver to process a service registration
-      void RegisterService(const Registration::SEntityId& entity_id_, const v5::SServiceAttr& service_);
+      void RegisterService(const SEntityId& entity_id_, const v5::SServiceAttr& service_);
 
       // Called by the registration provider to get a registration sample
       Registration::Sample GetRegistration();
 
       // Retrieves the service id
-      Registration::SServiceId GetServiceId() const;
+      SServiceId GetServiceId() const;
 
       // Retrieves the service name
       std::string GetServiceName() const;
@@ -107,10 +107,10 @@ namespace eCAL
       };
 
       // Get client for specific entity id
-      bool GetClientByEntity(const Registration::SEntityId& entity_id_, SClient& client_);
+      bool GetClientByEntity(const SEntityId& entity_id_, SClient& client_);
 
       // Blocking call to a specific service method with timeout
-      std::pair<bool, SServiceIDResponse> CallMethodWithTimeout(const Registration::SEntityId& entity_id_, SClient& client_,
+      std::pair<bool, SServiceIDResponse> CallMethodWithTimeout(const SEntityId& entity_id_, SClient& client_,
         const std::string& method_name_, const std::string& request_, std::chrono::nanoseconds timeout_);
 
       // Update the connection states for client sessions
@@ -120,7 +120,7 @@ namespace eCAL
       void IncrementMethodCallCount(const std::string& method_name_);
 
       // Notify specific event callback
-      void NotifyEventCallback(const Registration::SServiceId& service_id_, eClientEvent event_type_);
+      void NotifyEventCallback(const SServiceId& service_id_, eClientEvent event_type_);
 
       // SResponseData struct for handling response callbacks
       struct SResponseData
@@ -150,10 +150,10 @@ namespace eCAL
 
       // Service attributes
       std::string                  m_service_name;
-      Registration::EntityIdT      m_client_id;
+      EntityIdT      m_client_id;
 
       // Client session map and synchronization
-      using ClientSessionsMapT = std::map<Registration::SEntityId, SClient>;
+      using ClientSessionsMapT = std::map<SEntityId, SClient>;
       std::mutex                   m_client_session_map_mutex;
       ClientSessionsMapT           m_client_session_map;
 
