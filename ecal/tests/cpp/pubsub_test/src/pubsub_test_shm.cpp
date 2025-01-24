@@ -167,13 +167,20 @@ TEST(core_cpp_pubsub, SubscriberFastReconnectionSHM) {
 
   constexpr auto REGISTRATION_REFRESH_MS = 100;
   constexpr auto REGISTRATION_TIMEOUT_MS = 10 * REGISTRATION_REFRESH_MS;
+
+  constexpr auto MESSAGE_SEND_DELAY =
+      std::chrono::milliseconds(REGISTRATION_REFRESH_MS);
+
   // The delay between the destruction of the subscriber and its recreation
   // must be between the registration refresh and the registration timeout
   constexpr auto RESUBSCRIBE_DELAY =
-      std::chrono::milliseconds(2 * REGISTRATION_REFRESH_MS);
+      std::chrono::milliseconds(3 * REGISTRATION_REFRESH_MS);
+
   // Ensure we wait at least one timeout period
   constexpr auto RECEIVE_TIMEOUT =
       std::chrono::milliseconds(2 * REGISTRATION_TIMEOUT_MS);
+
+  constexpr auto TOPIC = "shm_reconnect_test";
 
   // Prepare config
   auto config = eCAL::Init::Configuration();
@@ -186,77 +193,72 @@ TEST(core_cpp_pubsub, SubscriberFastReconnectionSHM) {
   config.registration.registration_refresh = REGISTRATION_REFRESH_MS;
   config.registration.registration_timeout = REGISTRATION_TIMEOUT_MS;
 
-  // initialize eCAL API
   eCAL::Initialize(config, "SubscriberReconnectionSHM");
 
-  constexpr auto TOPIC = "shm_reconnect_test";
-
-  // start publishing thread
   std::atomic<bool> stop_publishing(false);
-  const auto publish_messages = [&stop_publishing](eCAL::CPublisher &pub) {
+  const auto send_messages = [&](eCAL::CPublisher &pub) {
     while (!stop_publishing) {
       pub.Send("Hello World");
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      std::this_thread::sleep_for(MESSAGE_SEND_DELAY);
     }
-    std::cout << "Stopped publishing" << std::endl;
+    std::cerr << "Stopped publishing\n";
   };
 
-  eCAL::CPublisher pub_foo(TOPIC);
-  std::thread pub_foo_t(publish_messages, std::ref(pub_foo));
+  eCAL::CPublisher publisher(TOPIC);
+  std::thread message_publishing_thread(send_messages, std::ref(publisher));
 
   std::condition_variable cv;
   std::mutex cv_m;
   bool data_received(false);
-
-  const auto receive_lambda =
-      [&cv_m, &cv,
-       &data_received](const eCAL::Registration::STopicId & /*topic_id_*/,
-                       const eCAL::SDataTypeInformation & /*data_type_info_*/,
-                       const eCAL::SReceiveCallbackData & /*data_*/) {
-        {
-          std::cout << "Callback received message" << std::endl;
-          std::lock_guard<std::mutex> lk(cv_m);
-          data_received = true;
-        }
-        cv.notify_all();
-      };
   std::unique_lock<std::mutex> cv_lk(cv_m);
+
+  const auto create_subscriber = [&]() -> eCAL::CSubscriber {
+    eCAL::CSubscriber subscriber(TOPIC);
+
+    const auto receive_lambda =
+        [&](const eCAL::Registration::STopicId & /*topic_id_*/,
+            const eCAL::SDataTypeInformation & /*data_type_info_*/,
+            const eCAL::SReceiveCallbackData & /*data_*/) {
+          {
+            std::cerr << "Callback received message\n";
+            std::lock_guard<std::mutex> lk(cv_m);
+            data_received = true;
+          }
+          // Mutex should be unlocked before notifying the condition variable
+          cv.notify_all();
+        };
+    subscriber.SetReceiveCallback(receive_lambda);
+    return subscriber;
+  };
+
+  const auto receive_one_message = [&]() {
+    // We should receive something within the timeout period
+    cv.wait_for(cv_lk, RECEIVE_TIMEOUT,
+                [&data_received]() { return data_received; });
+
+    EXPECT_TRUE(data_received);
+  };
 
   // 1 - Subscribe to topic and receive a message
   {
-    eCAL::CSubscriber sub_foo(TOPIC);
-    sub_foo.SetReceiveCallback(receive_lambda);
-
-    // We should receive something within the timeout period
-    cv.wait_for(cv_lk, RECEIVE_TIMEOUT,
-                [&data_received]() { return data_received; });
-
-    EXPECT_TRUE(data_received);
-    std::cout << "Closing first subscriber scope (A)" << std::endl;
+    const auto subscriber = create_subscriber();
+    receive_one_message();
+    std::cerr << "Closing first subscriber scope\n";
   }
-  data_received = false; // Reset for next scope
 
   // 2 - Small delay to unlink the SHM file but not timeout the observer
   std::this_thread::sleep_for(RESUBSCRIBE_DELAY);
+  data_received = false; // Reset for next scope
 
   // 3 - Subscribe to topic again and try to receive a message
   {
-    eCAL::CSubscriber sub_foo(TOPIC);
-    sub_foo.SetReceiveCallback(receive_lambda);
-
-    // We should receive something within the timeout period
-    cv.wait_for(cv_lk, RECEIVE_TIMEOUT,
-                [&data_received]() { return data_received; });
-
-    EXPECT_TRUE(data_received);
-    std::cout << "Closing third subscriber scope (A again)" << std::endl;
+    const auto subscriber = create_subscriber();
+    receive_one_message();
+    std::cerr << "Closing second subscriber scope\n";
   }
 
-  // stop publishing and join thread
   stop_publishing = true;
-  pub_foo_t.join();
+  message_publishing_thread.join();
 
-  // finalize eCAL API
-  // without destroying any pub / sub
   eCAL::Finalize();
 }
