@@ -114,7 +114,7 @@ namespace eCAL
 
       std::set<std::string> GetSubscribedTopics() const;
 
-      void EcalMessageReceived(const eCAL::Registration::STopicId& topic_id_, const eCAL::SReceiveCallbackData& data_);
+      void EcalMessageReceived(const eCAL::STopicId& topic_id_, const eCAL::SReceiveCallbackData& data_);
 
       //////////////////////////////////////
       //// API for external threads     ////

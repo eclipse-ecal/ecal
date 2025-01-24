@@ -50,7 +50,7 @@ namespace eCAL
      m_attributes = attr_;
   }
 
-  void CUDPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const Registration::EntityIdT& /*topic_id_*/)
+  void CUDPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const EntityIdT& /*topic_id_*/)
   {
     if (!m_started)
     {      
@@ -77,7 +77,7 @@ namespace eCAL
     m_topic_name_mcast_map[mcast_address]++;
   }
 
-  void CUDPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const Registration::EntityIdT& /*topic_id_*/)
+  void CUDPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const EntityIdT& /*topic_id_*/)
   {
     // we use udp broadcast in local mode
     if (m_attributes.broadcast) return;

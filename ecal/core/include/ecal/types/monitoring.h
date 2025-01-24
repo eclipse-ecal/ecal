@@ -77,7 +77,7 @@ namespace eCAL
       int32_t                             pid{0};               //!< process id
       std::string                         pname;                //!< process name
       std::string                         uname;                //!< unit name
-      Registration::EntityIdT             tid{0};               //!< topic id
+      EntityIdT             tid{0};               //!< topic id
       std::string                         tname;                //!< topic name
       std::string                         direction;            //!< direction (publisher, subscriber)
       SDataTypeInformation                tdatatype;            //!< topic datatype information (name, encoding, descriptor)
@@ -151,7 +151,7 @@ namespace eCAL
       int32_t                  pid{0};                          //<! process id
 
       std::string              sname;                           //<! service name
-      Registration::EntityIdT  sid{0};                          //<! service id
+      EntityIdT  sid{0};                          //<! service id
 
       uint32_t                 version{0};                      //<! service protocol version
       uint32_t                 tcp_port_v0{0};                  //<! the tcp port protocol version 0 used for that service
@@ -169,7 +169,7 @@ namespace eCAL
       int32_t                  pid{0};                          //<! process id
 
       std::string              sname;                           //<! service name
-      Registration::EntityIdT  sid{0};                          //<! service id
+      EntityIdT  sid{0};                          //<! service id
 
       std::vector<SMethodMon>  methods;                         //<! list of methods
 

@@ -49,9 +49,9 @@ namespace
     return datatype_info;
   }
 
-  eCAL::Registration::SEntityId ConvertToEntityId(const eCAL::Registration::SampleIdentifier& sample_identifier)
+  eCAL::SEntityId ConvertToEntityId(const eCAL::Registration::SampleIdentifier& sample_identifier)
   {
-    eCAL::Registration::SEntityId id{ sample_identifier.entity_id, sample_identifier.process_id, sample_identifier.host_name};
+    eCAL::SEntityId id{ sample_identifier.entity_id, sample_identifier.process_id, sample_identifier.host_name};
     return id;
   }
 
@@ -76,7 +76,7 @@ namespace
     const std::string& topic_name_,
     const eCAL::SDataTypeInformation& topic_info_)
   {
-    const auto topic_info_key = eCAL::Registration::STopicId{ ConvertToEntityId(topic_id_), topic_name_ };
+    const auto topic_info_key = eCAL::STopicId{ ConvertToEntityId(topic_id_), topic_name_ };
 
     // update topic info
     bool new_topic_info(false);
@@ -112,7 +112,7 @@ namespace
     const eCAL::Registration::SampleIdentifier& topic_id_,
     const std::string& topic_name_)
   {
-    const auto topic_info_key = eCAL::Registration::STopicId{ ConvertToEntityId(topic_id_), topic_name_ };
+    const auto topic_info_key = eCAL::STopicId{ ConvertToEntityId(topic_id_), topic_name_ };
 
     // delete topic info
     bool deleted_topic_info(false);
@@ -140,7 +140,7 @@ namespace
     const eCAL::Registration::SampleIdentifier& service_id_,
     const Service& service_)
   {
-    const auto service_method_info_key = eCAL::Registration::SServiceId{ ConvertToEntityId(service_id_), service_.sname };
+    const auto service_method_info_key = eCAL::SServiceId{ ConvertToEntityId(service_id_), service_.sname };
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
     service_method_info_map_.id_map[service_method_info_key] = Convert(service_);
@@ -151,7 +151,7 @@ namespace
     const eCAL::Registration::SampleIdentifier& service_id_,
     const Service& service_)
   {
-    const auto service_method_info_key = eCAL::Registration::SServiceId{ ConvertToEntityId(service_id_),  service_.sname };
+    const auto service_method_info_key = eCAL::SServiceId{ ConvertToEntityId(service_id_),  service_.sname };
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
     service_method_info_map_.id_map.erase(service_method_info_key);
@@ -163,12 +163,12 @@ namespace eCAL
   CDescGate::CDescGate() = default;
   CDescGate::~CDescGate() = default;
 
-  std::set<Registration::STopicId> CDescGate::GetPublisherIDs() const
+  std::set<STopicId> CDescGate::GetPublisherIDs() const
   {
     return GetTopicIDs(m_publisher_info_map);
   }
 
-  bool CDescGate::GetPublisherInfo(const Registration::STopicId& id_, SDataTypeInformation& topic_info_) const
+  bool CDescGate::GetPublisherInfo(const STopicId& id_, SDataTypeInformation& topic_info_) const
   {
     return GetTopic(id_, m_publisher_info_map, topic_info_);
   }
@@ -189,12 +189,12 @@ namespace eCAL
     m_publisher_callback_map.map.erase(token_);
   }
 
-  std::set<Registration::STopicId> CDescGate::GetSubscriberIDs() const
+  std::set<STopicId> CDescGate::GetSubscriberIDs() const
   {
     return GetTopicIDs(m_subscriber_info_map);
   }
 
-  bool CDescGate::GetSubscriberInfo(const Registration::STopicId& id_, SDataTypeInformation& topic_info_) const
+  bool CDescGate::GetSubscriberInfo(const STopicId& id_, SDataTypeInformation& topic_info_) const
   {
     return GetTopic(id_, m_subscriber_info_map, topic_info_);
   }
@@ -215,29 +215,29 @@ namespace eCAL
     m_subscriber_callback_map.map.erase(token_);
   }
 
-  std::set<Registration::SServiceId> CDescGate::GetServerIDs() const
+  std::set<SServiceId> CDescGate::GetServerIDs() const
   {
     return GetServiceIDs(m_service_info_map);
   }
 
-  bool CDescGate::GetServerInfo(const Registration::SServiceId& id_, ServiceMethodInfoSetT& service_info_) const
+  bool CDescGate::GetServerInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_info_) const
   {
     return GetService(id_, m_service_info_map, service_info_);
   }
 
-  std::set<Registration::SServiceId> CDescGate::GetClientIDs() const
+  std::set<SServiceId> CDescGate::GetClientIDs() const
   {
     return GetServiceIDs(m_client_info_map);
   }
 
-  bool CDescGate::GetClientInfo(const Registration::SServiceId& id_, ServiceMethodInfoSetT& service_info_) const
+  bool CDescGate::GetClientInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_info_) const
   {
     return GetService(id_, m_client_info_map, service_info_);
   }
 
-  std::set<Registration::STopicId> CDescGate::GetTopicIDs(const STopicIdInfoMap& topic_info_map_)
+  std::set<STopicId> CDescGate::GetTopicIDs(const STopicIdInfoMap& topic_info_map_)
   {
-    std::set<Registration::STopicId> topic_id_set;
+    std::set<STopicId> topic_id_set;
 
     const std::lock_guard<std::mutex> lock(topic_info_map_.mtx);
     for (const auto& topic_map_it : topic_info_map_.map)
@@ -247,7 +247,7 @@ namespace eCAL
     return topic_id_set;
   }
 
-  bool CDescGate::GetTopic(const Registration::STopicId& id_, const STopicIdInfoMap& topic_info_map_, SDataTypeInformation& topic_info_)
+  bool CDescGate::GetTopic(const STopicId& id_, const STopicIdInfoMap& topic_info_map_, SDataTypeInformation& topic_info_)
   {
     const std::lock_guard<std::mutex> lock(topic_info_map_.mtx);
     auto iter = topic_info_map_.map.find(id_);
@@ -262,9 +262,9 @@ namespace eCAL
     }
   }
 
-  std::set<Registration::SServiceId> CDescGate::GetServiceIDs(const SServiceIdInfoMap& service_method_info_map_)
+  std::set<SServiceId> CDescGate::GetServiceIDs(const SServiceIdInfoMap& service_method_info_map_)
   {
-    std::set<Registration::SServiceId> service_id_set;
+    std::set<SServiceId> service_id_set;
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
     for (const auto& service_method_info_map_it : service_method_info_map_.id_map)
@@ -274,7 +274,7 @@ namespace eCAL
     return service_id_set;
   }
 
-  bool CDescGate::GetService(const Registration::SServiceId& id_, const SServiceIdInfoMap& service_method_info_map_, ServiceMethodInfoSetT& service_method_info_)
+  bool CDescGate::GetService(const SServiceId& id_, const SServiceIdInfoMap& service_method_info_map_, ServiceMethodInfoSetT& service_method_info_)
   {
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
     auto iter = service_method_info_map_.id_map.find(id_);

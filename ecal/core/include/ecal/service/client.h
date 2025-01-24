@@ -145,7 +145,7 @@ namespace eCAL
        * @return  The service id.
       **/
       ECAL_API_EXPORTED_MEMBER
-        Registration::SServiceId GetServiceId() const;
+        SServiceId GetServiceId() const;
 
       /**
        * @brief Check connection to at least one service.

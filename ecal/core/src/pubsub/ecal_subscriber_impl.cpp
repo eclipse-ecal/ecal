@@ -537,7 +537,7 @@ namespace eCAL
         cb_data.time  = time_;
         cb_data.clock = clock_;
 
-        Registration::STopicId topic_id;
+        STopicId topic_id;
         topic_id.topic_name          = topic_info_.tname;
         topic_id.topic_id.host_name  = topic_info_.hname;
         topic_id.topic_id.entity_id  = topic_info_.tid;
@@ -787,7 +787,7 @@ namespace eCAL
       data.event_time         = eCAL::Time::GetMicroSeconds();
       data.publisher_datatype = data_type_info_;
 
-      Registration::STopicId topic_id;
+      STopicId topic_id;
       topic_id.topic_id.entity_id  = publication_info_.entity_id;
       topic_id.topic_id.process_id = publication_info_.process_id;
       topic_id.topic_id.host_name  = publication_info_.host_name;

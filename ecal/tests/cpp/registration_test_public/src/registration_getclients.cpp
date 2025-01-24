@@ -54,7 +54,7 @@ protected:
 };
 TEST_P(ClientsTestFixture, ClientExpiration)
 {
-  std::set<eCAL::Registration::SServiceId> id_set;
+  std::set<eCAL::SServiceId> id_set;
 
   // create simple client and let it expire
   {

@@ -52,8 +52,8 @@
 
 struct SSndHash
 {
-  SSndHash(const eCAL::Registration::EntityIdT& t, long long c) : topic_id(t), snd_clock(c) {}
-  eCAL::Registration::EntityIdT topic_id;
+  SSndHash(const eCAL::EntityIdT& t, long long c) : topic_id(t), snd_clock(c) {}
+  eCAL::EntityIdT topic_id;
   long long                     snd_clock;
 };
 
@@ -64,7 +64,7 @@ namespace std
   public:
     size_t operator()(const SSndHash& h) const
     {
-      const size_t h1 = std::hash<eCAL::Registration::EntityIdT>()(h.topic_id);
+      const size_t h1 = std::hash<eCAL::EntityIdT>()(h.topic_id);
       const size_t h2 = std::hash<long long>()(h.snd_clock);
       return h1 ^ (h2 << 1);
     }
@@ -733,7 +733,7 @@ namespace eCAL
       data.event_time          = eCAL::Time::GetMicroSeconds();
       data.subscriber_datatype = data_type_info_;
 
-      Registration::STopicId topic_id;
+      STopicId topic_id;
       topic_id.topic_id.entity_id  = subscription_info_.entity_id;
       topic_id.topic_id.process_id = subscription_info_.process_id;
       topic_id.topic_id.host_name  = subscription_info_.host_name;

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,8 +39,8 @@ TEST(core_cpp_registration_public, GetTopics)
   // initialize eCAL API
   eCAL::Initialize("core_cpp_registration_public");
 
-  std::set<eCAL::Registration::STopicId> topic_id_pub_set;
-  std::set<eCAL::Registration::STopicId> topic_id_sub_set;
+  std::set<eCAL::STopicId> topic_id_pub_set;
+  std::set<eCAL::STopicId> topic_id_sub_set;
 
   // create and check a few pub/sub entities
   {
@@ -167,7 +167,7 @@ TEST(core_cpp_registration_public, GetTopicsParallel)
     size_t max_number_publishers_seen = 0;
 
     std::set<std::string> tmp_topic_names;
-    std::set<eCAL::Registration::STopicId> tmp_topic_ids;
+    std::set<eCAL::STopicId> tmp_topic_ids;
 
     do {
       eCAL::Registration::GetTopicNames(tmp_topic_names);

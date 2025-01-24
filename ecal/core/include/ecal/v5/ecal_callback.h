@@ -71,7 +71,7 @@ namespace eCAL
       std::string             pname;            //!< process name
       std::string             uname;            //!< process unit name
       std::string             sname;            //!< service name
-      Registration::EntityIdT sid = 0;  //!< service id
+      EntityIdT sid = 0;  //!< service id
       int                     pid = 0;  //!< process id
 
       // internal protocol specifics

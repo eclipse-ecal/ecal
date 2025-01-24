@@ -219,7 +219,7 @@ namespace eCAL
       return(m_publisher_impl->GetTopicName());
     }
 
-    Registration::STopicId CPublisher::GetId() const
+    STopicId CPublisher::GetId() const
     {
       if (m_publisher_impl == nullptr) return{};
       return(m_publisher_impl->GetTopicId());

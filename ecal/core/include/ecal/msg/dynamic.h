@@ -148,7 +148,7 @@ namespace eCAL
      * @param clock_     Message writer clock.
      * @param id_        Message id.
      **/
-    using MsgReceiveCallbackT = std::function<void(const Registration::STopicId& topic_id_, const T& msg_, long long time_, long long clock_, long long id_)>;
+    using MsgReceiveCallbackT = std::function<void(const STopicId& topic_id_, const T& msg_, long long time_, long long clock_, long long id_)>;
 
     /**
      * @brief  Add receive callback for incoming messages.
@@ -221,7 +221,7 @@ namespace eCAL
     }
 
   private:
-    void ReceiveCallback(const Registration::STopicId& topic_id_, const SDataTypeInformation& topic_info_, const struct SReceiveCallbackData& data_)
+    void ReceiveCallback(const STopicId& topic_id_, const SDataTypeInformation& topic_info_, const struct SReceiveCallbackData& data_)
     {
       MsgReceiveCallbackT fn_callback = nullptr;
       {

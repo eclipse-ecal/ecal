@@ -55,7 +55,7 @@ protected:
 
 TEST_P(ServicesTestFixture, ServiceExpiration)
 {
-  std::set<eCAL::Registration::SServiceId> id_set;
+  std::set<eCAL::SServiceId> id_set;
 
   // create simple service and let it expire
   {

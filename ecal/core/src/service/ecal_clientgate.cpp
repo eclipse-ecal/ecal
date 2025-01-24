@@ -114,7 +114,7 @@ namespace eCAL
       auto res = m_service_client_map.equal_range(service.sname);
       for (ServiceNameClientIDImplMapT::const_iterator iter = res.first; iter != res.second; ++iter)
       {
-        Registration::SEntityId service_entity;
+        SEntityId service_entity;
         service_entity.entity_id  = service.sid;
         service_entity.process_id = service.pid;
         service_entity.host_name  = service.hname;

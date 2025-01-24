@@ -75,33 +75,30 @@ namespace eCAL
     //!< @endcond
   };
 
-  namespace Registration
+  using EntityIdT = uint64_t;
+
+  struct SEntityId
   {
-    using EntityIdT = uint64_t;
+    EntityIdT    entity_id  = 0;    // unique id within that process (it should already be unique within the whole system)
+    int32_t      process_id = 0;    // process id which produced the sample
+    std::string  host_name;         // host which produced the sample
 
-    struct SEntityId
-    {
-      EntityIdT    entity_id  = 0;    // unique id within that process (it should already be unique within the whole system)
-      int32_t      process_id = 0;    // process id which produced the sample
-      std::string  host_name;         // host which produced the sample
-
-      bool operator==(const SEntityId& other) const {
-        return entity_id == other.entity_id;
-      }
-
-      bool operator<(const SEntityId& other) const
-      {
-        return entity_id < other.entity_id;
-      }
-    };
-
-    // Overload the << operator for SEntityId
-    inline std::ostream& operator<<(std::ostream& os, const SEntityId& id)
-    {
-      os << "SEntityId(entity_id: " << id.entity_id
-        << ", process_id: " << id.process_id
-        << ", host_name: " << id.host_name << ")";
-      return os;
+    bool operator==(const SEntityId& other) const {
+      return entity_id == other.entity_id;
     }
+
+    bool operator<(const SEntityId& other) const
+    {
+      return entity_id < other.entity_id;
+    }
+  };
+
+  // Overload the << operator for SEntityId
+  inline std::ostream& operator<<(std::ostream& os, const SEntityId& id)
+  {
+    os << "SEntityId(entity_id: " << id.entity_id
+      << ", process_id: " << id.process_id
+      << ", host_name: " << id.host_name << ")";
+    return os;
   }
 }

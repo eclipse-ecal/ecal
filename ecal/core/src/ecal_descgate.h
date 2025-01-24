@@ -49,24 +49,24 @@ namespace eCAL
     void ApplySample(const Registration::Sample& sample_, eTLayerType layer_);
 
     // get publisher information
-    std::set<Registration::STopicId> GetPublisherIDs() const;
-    bool GetPublisherInfo(const Registration::STopicId& id_, SDataTypeInformation& topic_info_) const;
+    std::set<STopicId> GetPublisherIDs() const;
+    bool GetPublisherInfo(const STopicId& id_, SDataTypeInformation& topic_info_) const;
     Registration::CallbackToken AddPublisherEventCallback(const Registration::TopicEventCallbackT& callback_);
     void RemPublisherEventCallback(Registration::CallbackToken token_);
 
     // get subscriber information
-    std::set<Registration::STopicId> GetSubscriberIDs() const;
-    bool GetSubscriberInfo(const Registration::STopicId& id_, SDataTypeInformation& topic_info_) const;
+    std::set<STopicId> GetSubscriberIDs() const;
+    bool GetSubscriberInfo(const STopicId& id_, SDataTypeInformation& topic_info_) const;
     Registration::CallbackToken AddSubscriberEventCallback(const Registration::TopicEventCallbackT& callback_);
     void RemSubscriberEventCallback(Registration::CallbackToken token_);
 
     // get service information
-    std::set<Registration::SServiceId> GetServerIDs() const;
-    bool GetServerInfo(const Registration::SServiceId& id_, ServiceMethodInfoSetT& service_info_) const;
+    std::set<SServiceId> GetServerIDs() const;
+    bool GetServerInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_info_) const;
 
     // get client information
-    std::set<Registration::SServiceId> GetClientIDs() const;
-    bool GetClientInfo(const Registration::SServiceId& id_, ServiceMethodInfoSetT& service_info_) const;
+    std::set<SServiceId> GetClientIDs() const;
+    bool GetClientInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_info_) const;
 
     // delete copy constructor and copy assignment operator
     CDescGate(const CDescGate&) = delete;
@@ -76,7 +76,7 @@ namespace eCAL
     CDescGate(CDescGate&&) = delete;
     CDescGate& operator=(CDescGate&&) = delete;
 
-    using TopicIdInfoMap  = std::map<Registration::STopicId, SDataTypeInformation>;
+    using TopicIdInfoMap  = std::map<STopicId, SDataTypeInformation>;
     struct STopicIdInfoMap
     {
       mutable std::mutex mtx;
@@ -90,7 +90,7 @@ namespace eCAL
       TopicEventCallbackMap map;
     };
 
-    using ServiceIdInfoMap = std::map<Registration::SServiceId, ServiceMethodInfoSetT>;
+    using ServiceIdInfoMap = std::map<SServiceId, ServiceMethodInfoSetT>;
     struct SServiceIdInfoMap
     {
       mutable std::mutex  mtx;
@@ -99,11 +99,11 @@ namespace eCAL
 
   protected:
 
-    static std::set<Registration::STopicId>   GetTopicIDs(const STopicIdInfoMap& topic_info_map_);
-    static bool                               GetTopic   (const Registration::STopicId& id_, const STopicIdInfoMap& topic_info_map_, SDataTypeInformation& topic_info_);
+    static std::set<STopicId>   GetTopicIDs(const STopicIdInfoMap& topic_info_map_);
+    static bool                               GetTopic   (const STopicId& id_, const STopicIdInfoMap& topic_info_map_, SDataTypeInformation& topic_info_);
 
-    static std::set<Registration::SServiceId> GetServiceIDs(const SServiceIdInfoMap& service_method_info_map_);
-    static bool                               GetService   (const Registration::SServiceId& id_, const SServiceIdInfoMap& service_method_info_map_, ServiceMethodInfoSetT& service_method_info_);
+    static std::set<SServiceId> GetServiceIDs(const SServiceIdInfoMap& service_method_info_map_);
+    static bool                               GetService   (const SServiceId& id_, const SServiceIdInfoMap& service_method_info_map_, ServiceMethodInfoSetT& service_method_info_);
 
     Registration::CallbackToken CreateToken();
       

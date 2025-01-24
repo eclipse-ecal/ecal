@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,12 +95,12 @@ TEST_P(TestFixture, SubscriberEventCallbackIsTriggered)
 {
   std::atomic<size_t> created_subscriber_num(0);
   std::atomic<size_t> deleted_subscriber_num(0);
-  std::set<eCAL::Registration::STopicId> created_subscriber_ids;
-  std::set<eCAL::Registration::STopicId> deleted_subscriber_ids;
+  std::set<eCAL::STopicId> created_subscriber_ids;
+  std::set<eCAL::STopicId> deleted_subscriber_ids;
 
   // register the callback
   auto callback_token = eCAL::Registration::AddSubscriberEventCallback(
-    [&](const eCAL::Registration::STopicId& id, eCAL::Registration::RegistrationEventType event_type)
+    [&](const eCAL::STopicId& id, eCAL::Registration::RegistrationEventType event_type)
     {
       if (event_type == eCAL::Registration::RegistrationEventType::new_entity)
       {

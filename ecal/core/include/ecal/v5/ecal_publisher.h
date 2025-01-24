@@ -296,7 +296,7 @@ namespace eCAL
        * @return  The topic id.
       **/
       ECAL_API_EXPORTED_MEMBER
-        Registration::STopicId GetId() const;
+        STopicId GetId() const;
 
       /**
        * @brief Gets description of the connected topic.
