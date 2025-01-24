@@ -68,8 +68,10 @@ namespace eCAL
     Stop();
   }
 
-  bool CServiceServerImpl::SetMethodCallback(const std::string & method_, const SServiceMethodInformation & method_info_, const MethodInfoCallbackT & callback_)
+  bool CServiceServerImpl::SetMethodCallback(const SMethodInfo& method_info_, const MethodInfoCallbackT & callback_)
   {
+    const auto& method_ = method_info_.method_name;
+
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug1, "CServiceServerImpl::SetMethodCallback: Adding method callback for method: " + method_);
 #endif

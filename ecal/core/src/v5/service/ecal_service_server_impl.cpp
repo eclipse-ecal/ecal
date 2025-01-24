@@ -105,13 +105,14 @@ namespace eCAL
         return false;
       }
 
-      SServiceMethodInformation method_info;
+      SMethodInfo method_info;
+      method_info.method_name          = method_;
       method_info.request_type.name        = req_type_;
       method_info.request_type.descriptor  = req_desc_;
       method_info.response_type.name       = resp_type_;
       method_info.response_type.descriptor = resp_desc_;
 
-      return m_service_server_impl->SetMethodCallback(method_, method_info, nullptr);
+      return m_service_server_impl->SetMethodCallback(method_info, nullptr);
     }
 
     bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_)
@@ -124,7 +125,8 @@ namespace eCAL
         return false;
       }
 
-      SServiceMethodInformation method_info;
+      SMethodInfo method_info;
+      method_info.method_name    = method_;
       method_info.request_type.name  = req_type_;
       method_info.response_type.name = resp_type_;
 
@@ -134,10 +136,10 @@ namespace eCAL
           const std::string& request,
           std::string&       response) -> int
         {
-          return callback_(method_info.method_name, method_info.req_type.name, method_info.resp_type.name, request, response);
+          return callback_(method_info.method_name, method_info.request_type.name, method_info.response_type.name, request, response);
         };
 
-      return m_service_server_impl->SetMethodCallback(method_, method_info, callback);
+      return m_service_server_impl->SetMethodCallback(method_info, callback);
     }
 
     bool CServiceServerImpl::RemMethodCallback(const std::string& method_)

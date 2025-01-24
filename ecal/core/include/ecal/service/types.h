@@ -126,46 +126,19 @@ namespace eCAL
   **/
   struct SMethodInfo
   {
-    std::string              method_name; //!< The name of the method.
-    SDataTypeInformation     req_type;    //!< The type of the method request.
-    SDataTypeInformation     resp_type;   //!< The type of the method response.
+    std::string              method_name;     //!< The name of the method.
+    SDataTypeInformation     request_type;    //!< The type of the method request.
+    SDataTypeInformation     response_type;   //!< The type of the method response.
 
     bool operator==(const SMethodInfo& other) const
     {
-      return method_name == other.method_name && req_type == other.req_type && resp_type == other.resp_type;
+      return method_name == other.method_name && request_type == other.request_type && response_type == other.response_type;
     }
 
     bool operator<(const SMethodInfo& other) const
     {
-      return std::tie(method_name, method_name, resp_type) < std::tie(other.method_name, other.method_name, other.resp_type);
+      return std::tie(method_name, method_name, response_type) < std::tie(other.method_name, other.method_name, other.response_type);
     }
-  };
-
-  /**
-   * @brief Optional compile time information associated with a given service method
-   *        (necessary for reflection / runtime type checking)
-  **/
-  struct SServiceMethodInformation
-  {
-    SDataTypeInformation request_type;   //!< Data type description of the request
-    SDataTypeInformation response_type;  //!< Data type description of the response
-
-    //!< @cond
-    bool operator==(const SServiceMethodInformation& other) const
-    {
-      return request_type == other.request_type && response_type == other.response_type;
-    }
-
-    bool operator!=(const SServiceMethodInformation& other) const
-    {
-      return !(*this == other);
-    }
-
-    bool operator<(const SServiceMethodInformation& rhs) const
-    {
-      return std::tie(request_type, response_type) < std::tie(rhs.request_type, rhs.response_type);
-    }
-    //!< @endcond
   };
 
   /**

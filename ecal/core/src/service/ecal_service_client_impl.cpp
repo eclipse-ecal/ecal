@@ -375,14 +375,14 @@ namespace eCAL
       method.mname = method_name;
 
       // old type and descriptor fields
-      method.req_type = method_information.req_type.name;
-      method.req_desc = method_information.req_type.descriptor;
-      method.resp_type = method_information.resp_type.name;
-      method.resp_desc = method_information.resp_type.descriptor;
+      method.req_type = method_information.request_type.name;
+      method.req_desc = method_information.request_type.descriptor;
+      method.resp_type = method_information.response_type.name;
+      method.resp_desc = method_information.response_type.descriptor;
 
       // new type and descriptor fields
-      method.req_datatype = method_information.req_type;
-      method.resp_datatype = method_information.resp_type;
+      method.req_datatype = method_information.request_type;
+      method.resp_datatype = method_information.response_type;
 
       {
         const auto& call_count_iter = m_method_call_count_map.find(method_name);

@@ -38,9 +38,7 @@ int main()
   {
     // GetServices
     {
-      std::set<eCAL::Registration::SServiceMethodId> service_method_id_set;
-
-      std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
+      std::set<eCAL::Registration::SServiceId> service_method_id_set;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)

@@ -54,16 +54,16 @@ protected:
 };
 TEST_P(ClientsTestFixture, ClientExpiration)
 {
-  std::set<eCAL::Registration::SServiceMethodId> id_set;
+  std::set<eCAL::Registration::SServiceId> id_set;
 
   // create simple client and let it expire
   {
     // create client
     eCAL::SMethodInfo service_method_info;
-    service_method_info.req_type.name        = "foo::req_type";
-    service_method_info.req_type.descriptor  = "foo::req_desc";
-    service_method_info.resp_type.name       = "foo::resp_type";
-    service_method_info.resp_type.descriptor = "foo::resp_desc";
+    service_method_info.request_type.name        = "foo::req_type";
+    service_method_info.request_type.descriptor  = "foo::req_desc";
+    service_method_info.response_type.name       = "foo::resp_type";
+    service_method_info.response_type.descriptor = "foo::resp_desc";
     const eCAL::CServiceClient client("foo::service", { service_method_info });
 
     // let's register
@@ -113,10 +113,10 @@ TEST_P(ClientsTestFixture, GetClientIDs)
     // create client
     eCAL::SMethodInfo service_method_info;
     service_method_info.method_name          = "foo::method";
-    service_method_info.req_type.name        = "foo::req_type";
-    service_method_info.req_type.descriptor  = "foo::req_desc";
-    service_method_info.resp_type.name       = "foo::resp_type";
-    service_method_info.resp_type.descriptor = "foo::resp_desc";
+    service_method_info.request_type.name        = "foo::req_type";
+    service_method_info.request_type.descriptor  = "foo::req_desc";
+    service_method_info.response_type.name       = "foo::resp_type";
+    service_method_info.response_type.descriptor = "foo::resp_desc";
     const eCAL::CServiceClient client("foo::service", { service_method_info });
 
     // let's register
@@ -127,11 +127,11 @@ TEST_P(ClientsTestFixture, GetClientIDs)
     EXPECT_EQ(1, id_set.size());
     if (id_set.size() > 0)
     {
-      eCAL::SServiceMethodInformation info;
+      eCAL::ServiceMethodInfoSetT info;
       EXPECT_TRUE(eCAL::Registration::GetClientInfo(*id_set.begin(), info));
 
       // check service/method names
-      EXPECT_EQ(service_method_info, info);
+      EXPECT_TRUE(info.find(service_method_info) != info.end());
     }
   }
 }

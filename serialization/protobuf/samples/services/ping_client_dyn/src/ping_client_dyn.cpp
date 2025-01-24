@@ -55,16 +55,23 @@ int main()
   bool service_info_found(false);
   for (const auto& service_id : service_ids)
   {
-    if ((service_id.service_name == service_name) && (service_id.method_name == method_name))
+    if (service_id.service_name == service_name)
     {
-      eCAL::SServiceMethodInformation service_method_info;
-      eCAL::Registration::GetServerInfo(service_id, service_method_info);
-      req_type  = service_method_info.request_type.name;
-      req_desc  = service_method_info.request_type.descriptor;
-      resp_type = service_method_info.response_type.name;
-      resp_desc = service_method_info.response_type.descriptor;
-      service_info_found = true;
-      break;
+      eCAL::ServiceMethodInfoSetT methods;
+      eCAL::Registration::GetServerInfo(service_id, methods);
+
+      for (const auto& method : methods)
+      {
+        if (method.method_name == method_name)
+        {
+          req_type = method.request_type.name;
+          req_desc = method.request_type.descriptor;
+          resp_type = method.response_type.name;
+          resp_desc = method.response_type.descriptor;
+          service_info_found = true;
+          break;
+        }
+      }
     }
   }
   if (!service_info_found)
