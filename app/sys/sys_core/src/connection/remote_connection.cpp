@@ -138,11 +138,11 @@ namespace eCAL
       // 
       if (!sys_client_service_.IsConnected())
       {
-        const auto registration_timeout = std::chrono::milliseconds(eCAL::GetConfiguration().registration.registration_timeout);
+        const auto maximum_wait_time = std::chrono::milliseconds(2 * eCAL::GetConfiguration().registration.registration_refresh);
         const std::chrono::milliseconds wait_time(50);
 
         const auto start_time = std::chrono::steady_clock::now();
-        while (std::chrono::steady_clock::now() - start_time <= registration_timeout && !sys_client_service_.IsConnected())
+        while (std::chrono::steady_clock::now() - start_time <= maximum_wait_time && !sys_client_service_.IsConnected())
         {
           std::this_thread::sleep_for(wait_time);
         }
