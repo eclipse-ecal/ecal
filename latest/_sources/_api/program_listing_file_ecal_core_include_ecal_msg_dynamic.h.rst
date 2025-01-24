@@ -121,7 +121,7 @@ Program Listing for File dynamic.h
          return(v5::CSubscriber::Destroy());
        }
    
-       using MsgReceiveCallbackT = std::function<void(const Registration::STopicId& topic_id_, const T& msg_, long long time_, long long clock_, long long id_)>;
+       using MsgReceiveCallbackT = std::function<void(const STopicId& topic_id_, const T& msg_, long long time_, long long clock_, long long id_)>;
    
        bool AddReceiveCallback(MsgReceiveCallbackT callback_)
        {
@@ -165,7 +165,7 @@ Program Listing for File dynamic.h
        }
    
      private:
-       void ReceiveCallback(const Registration::STopicId& topic_id_, const SDataTypeInformation& topic_info_, const struct SReceiveCallbackData& data_)
+       void ReceiveCallback(const STopicId& topic_id_, const SDataTypeInformation& topic_info_, const struct SReceiveCallbackData& data_)
        {
          MsgReceiveCallbackT fn_callback = nullptr;
          {

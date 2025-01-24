@@ -50,7 +50,7 @@
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_api/structeCAL_1_1Registration_1_1SEntityId';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_api/structeCAL_1_1SEntityId';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-ecal.github.io/ecal/switcher.json';
@@ -61,8 +61,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Struct SServiceMethod" href="structeCAL_1_1Registration_1_1SServiceMethod.html" />
-    <link rel="prev" title="Namespace v5" href="namespace_v5.html" />
+    <link rel="next" title="Struct SVersion" href="structeCAL_1_1SVersion.html" />
+    <link rel="prev" title="Struct SDataTypeInformation" href="structeCAL_1_1SDataTypeInformation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -234,9 +234,9 @@
 <li class="toctree-l3"><a class="reference internal" href="namespace_eCAL__TLayer.html">Namespace eCAL::TLayer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="namespace_eCAL__Util.html">Namespace eCAL::Util</a></li>
 <li class="toctree-l3"><a class="reference internal" href="namespace_v5.html">Namespace v5</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">Struct SEntityId</a></li>
 <li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1Registration_1_1SServiceMethod.html">Struct SServiceMethod</a></li>
 <li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SDataTypeInformation.html">Struct SDataTypeInformation</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">Struct SEntityId</a></li>
 <li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SVersion.html">Struct SVersion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="classCDynamicSleeper.html">Class CDynamicSleeper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CDynamicMessageSubscriber.html">Template Class CDynamicMessageSubscriber</a></li>
@@ -301,6 +301,7 @@
 <li class="toctree-l3"><a class="reference internal" href="function_monitoring_8h_1a8fc01a83c0f83d744ed293860ecf618c.html">Function eCAL::Monitoring::GetMonitoring(std::string&amp;, unsigned int)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_monitoring_8h_1ae47a3d85663687e7089d60c5b57e4816.html">Function eCAL::Monitoring::GetMonitoring(SMonitoring&amp;, unsigned int)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_namespaceeCAL_1a600033b0736069b66b026b5bc39cab35.html">Function eCAL::Ok</a></li>
+<li class="toctree-l3"><a class="reference internal" href="function_namespaceeCAL_1ad71540560ae36e358ab43699cd7f4c31.html">Function eCAL::operator&lt;&lt;</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_process_8h_1a024a270c580d40fe8e59455226ddbf75.html">Function eCAL::Process::DumpConfig()</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_process_8h_1a6ea34958542106657a76e88ce57f02a3.html">Function eCAL::Process::DumpConfig(std::string&amp;)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_process_8h_1af29c2673d6aec8d9120b3072b5444a26.html">Function eCAL::Process::GetHostGroupName</a></li>
@@ -331,7 +332,6 @@
 <li class="toctree-l3"><a class="reference internal" href="function_registration_8h_1ac9173c68b3e7cd741168076e692e759f.html">Function eCAL::Registration::GetSubscriberIDs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_registration_8h_1ad63e05588b1f6436b92cbb34d817ecbf.html">Function eCAL::Registration::GetSubscriberInfo</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_registration_8h_1a0aa936468b700d266a2c1c137d9b3b63.html">Function eCAL::Registration::GetTopicNames</a></li>
-<li class="toctree-l3"><a class="reference internal" href="function_types_8h_1a2f6a5aebcd468f4b8ea81bd56624d085.html">Function eCAL::Registration::operator&lt;&lt;</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_registration_8h_1a32d0524e5d48924312037910dcf646c9.html">Function eCAL::Registration::RemPublisherEventCallback</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_registration_8h_1ae1ae721b779dbc76a0a6f3ce7e3a9f80.html">Function eCAL::Registration::RemSubscriberEventCallback</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_time_8h_1ab6d9d1b4bef72c120b3dc9935047ffda.html">Function eCAL::Time::GetMicroSeconds</a></li>
@@ -382,9 +382,9 @@
 <li class="toctree-l3"><a class="reference internal" href="define_eh5__defs_8h_1a578e5b65d53b5a537f7d90b9d64c0106.html">Define ECAL_HDF5_VERSION_MINOR</a></li>
 <li class="toctree-l3"><a class="reference internal" href="define_eh5__defs_8h_1a2b1361eb83e2597c992f296441ac20e2.html">Define ECAL_HDF5_VERSION_PATCH</a></li>
 <li class="toctree-l3"><a class="reference internal" href="define_ecaltime_8h_1a7fbc67f7baf03488d730190a9b7df7e5.html">Define ECALTIME_API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="typedef_namespaceeCAL_1a155b9cd8eddcadca249b6f5bbf7ad583.html">Typedef eCAL::EntityIdT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="typedef_log__level_8h_1a6c687d0056bbcffcc8adc3ca3ad803da.html">Typedef eCAL::Logging::Filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="typedef_registration_8h_1a31559467ff34c4fda47503952f0bf8c6.html">Typedef eCAL::Registration::CallbackToken</a></li>
-<li class="toctree-l3"><a class="reference internal" href="typedef_types_8h_1a52a7ccff0f1e754f5a13675483e40db6.html">Typedef eCAL::Registration::EntityIdT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="typedef_registration_8h_1a409078e35c152905f1e2300b8a0e6b20.html">Typedef eCAL::Registration::TopicEventCallbackT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="typedef_namespaceeCAL_1ada8fc20e2ddd0f5bc55f137861092851.html">Typedef eCAL::TimerCallbackT</a></li>
 </ul>
@@ -561,7 +561,7 @@
       
       
       
-      <li><a href="https://github.com/eclipse-ecal/ecal/edit/master/doc/rst/_api/structeCAL_1_1Registration_1_1SEntityId.rst" target="_blank"
+      <li><a href="https://github.com/eclipse-ecal/ecal/edit/master/doc/rst/_api/structeCAL_1_1SEntityId.rst" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -578,7 +578,7 @@
       
       
       
-      <li><a href="https://github.com/eclipse-ecal/ecal/issues/new?title=Issue%20on%20page%20%2F_api/structeCAL_1_1Registration_1_1SEntityId.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/eclipse-ecal/ecal/issues/new?title=Issue%20on%20page%20%2F_api/structeCAL_1_1SEntityId.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -608,7 +608,7 @@
       
       
       
-      <li><a href="../_sources/_api/structeCAL_1_1Registration_1_1SEntityId.rst" target="_blank"
+      <li><a href="../_sources/_api/structeCAL_1_1SEntityId.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -695,12 +695,12 @@
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#struct-documentation">Struct Documentation</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL12Registration9SEntityIdE"><code class="docutils literal notranslate"><span class="pre">SEntityId</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL12Registration9SEntityIdeqERK9SEntityId"><code class="docutils literal notranslate"><span class="pre">SEntityId::operator==()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL12Registration9SEntityIdltERK9SEntityId"><code class="docutils literal notranslate"><span class="pre">SEntityId::operator&lt;()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL12Registration9SEntityId9entity_idE"><code class="docutils literal notranslate"><span class="pre">SEntityId::entity_id</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL12Registration9SEntityId10process_idE"><code class="docutils literal notranslate"><span class="pre">SEntityId::process_id</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL12Registration9SEntityId9host_nameE"><code class="docutils literal notranslate"><span class="pre">SEntityId::host_name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL9SEntityIdE"><code class="docutils literal notranslate"><span class="pre">SEntityId</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL9SEntityIdeqERK9SEntityId"><code class="docutils literal notranslate"><span class="pre">SEntityId::operator==()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL9SEntityIdltERK9SEntityId"><code class="docutils literal notranslate"><span class="pre">SEntityId::operator&lt;()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL9SEntityId9entity_idE"><code class="docutils literal notranslate"><span class="pre">SEntityId::entity_id</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL9SEntityId10process_idE"><code class="docutils literal notranslate"><span class="pre">SEntityId::process_id</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL9SEntityId9host_nameE"><code class="docutils literal notranslate"><span class="pre">SEntityId::host_name</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -717,43 +717,43 @@
                 <article class="bd-article">
                   
   <section id="struct-sentityid">
-<span id="exhale-struct-structecal-1-1registration-1-1sentityid"></span><h1>Struct SEntityId<a class="headerlink" href="#struct-sentityid" title="Link to this heading">#</a></h1>
+<span id="exhale-struct-structecal-1-1sentityid"></span><h1>Struct SEntityId<a class="headerlink" href="#struct-sentityid" title="Link to this heading">#</a></h1>
 <ul class="simple">
 <li><p>Defined in <a class="reference internal" href="file_ecal_core_include_ecal_types.h.html#file-ecal-core-include-ecal-types-h"><span class="std std-ref">File types.h</span></a></p></li>
 </ul>
 <section id="struct-documentation">
 <h2>Struct Documentation<a class="headerlink" href="#struct-documentation" title="Link to this heading">#</a></h2>
 <dl class="cpp struct">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL12Registration9SEntityIdE">
-<span id="_CPPv3N4eCAL12Registration9SEntityIdE"></span><span id="_CPPv2N4eCAL12Registration9SEntityIdE"></span><span id="eCAL::Registration::SEntityId"></span><span class="target" id="structeCAL_1_1Registration_1_1SEntityId"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SEntityId</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL12Registration9SEntityIdE" title="Link to this definition">#</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL9SEntityIdE">
+<span id="_CPPv3N4eCAL9SEntityIdE"></span><span id="_CPPv2N4eCAL9SEntityIdE"></span><span id="eCAL::SEntityId"></span><span class="target" id="structeCAL_1_1SEntityId"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SEntityId</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL9SEntityIdE" title="Link to this definition">#</a><br /></dt>
 <dd><div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL12Registration9SEntityIdeqERK9SEntityId">
-<span id="_CPPv3NK4eCAL12Registration9SEntityIdeqERK9SEntityId"></span><span id="_CPPv2NK4eCAL12Registration9SEntityIdeqERK9SEntityId"></span><span id="eCAL::Registration::SEntityId::eq-operator__SEntityIdCRC"></span><span class="target" id="structeCAL_1_1Registration_1_1SEntityId_1a461a2730e4aafaaf11f15b8af06470f9"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">==</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4eCAL12Registration9SEntityIdE" title="eCAL::Registration::SEntityId"><span class="n"><span class="pre">SEntityId</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL12Registration9SEntityIdeqERK9SEntityId" title="Link to this definition">#</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL9SEntityIdeqERK9SEntityId">
+<span id="_CPPv3NK4eCAL9SEntityIdeqERK9SEntityId"></span><span id="_CPPv2NK4eCAL9SEntityIdeqERK9SEntityId"></span><span id="eCAL::SEntityId::eq-operator__SEntityIdCRC"></span><span class="target" id="structeCAL_1_1SEntityId_1ab7d637c86bc9724d3e8515d9eb7ca7d1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">==</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4eCAL9SEntityIdE" title="eCAL::SEntityId"><span class="n"><span class="pre">SEntityId</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL9SEntityIdeqERK9SEntityId" title="Link to this definition">#</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL12Registration9SEntityIdltERK9SEntityId">
-<span id="_CPPv3NK4eCAL12Registration9SEntityIdltERK9SEntityId"></span><span id="_CPPv2NK4eCAL12Registration9SEntityIdltERK9SEntityId"></span><span id="eCAL::Registration::SEntityId::lt-operator__SEntityIdCRC"></span><span class="target" id="structeCAL_1_1Registration_1_1SEntityId_1ae55df7cce46492b1a5d4df240860116f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&lt;</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4eCAL12Registration9SEntityIdE" title="eCAL::Registration::SEntityId"><span class="n"><span class="pre">SEntityId</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL12Registration9SEntityIdltERK9SEntityId" title="Link to this definition">#</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL9SEntityIdltERK9SEntityId">
+<span id="_CPPv3NK4eCAL9SEntityIdltERK9SEntityId"></span><span id="_CPPv2NK4eCAL9SEntityIdltERK9SEntityId"></span><span id="eCAL::SEntityId::lt-operator__SEntityIdCRC"></span><span class="target" id="structeCAL_1_1SEntityId_1af74ee8b67c1f8bd4be72d77c7c05fc5b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&lt;</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4eCAL9SEntityIdE" title="eCAL::SEntityId"><span class="n"><span class="pre">SEntityId</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL9SEntityIdltERK9SEntityId" title="Link to this definition">#</a><br /></dt>
 <dd></dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
 <dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL12Registration9SEntityId9entity_idE">
-<span id="_CPPv3N4eCAL12Registration9SEntityId9entity_idE"></span><span id="_CPPv2N4eCAL12Registration9SEntityId9entity_idE"></span><span id="eCAL::Registration::SEntityId::entity_id__EntityIdT"></span><span class="target" id="structeCAL_1_1Registration_1_1SEntityId_1aec1dea343895ad639a5f00113b0c14e9"></span><a class="reference internal" href="typedef_types_8h_1a52a7ccff0f1e754f5a13675483e40db6.html#_CPPv4N4eCAL12Registration9EntityIdTE" title="eCAL::Registration::EntityIdT"><span class="n"><span class="pre">EntityIdT</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">entity_id</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N4eCAL12Registration9SEntityId9entity_idE" title="Link to this definition">#</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL9SEntityId9entity_idE">
+<span id="_CPPv3N4eCAL9SEntityId9entity_idE"></span><span id="_CPPv2N4eCAL9SEntityId9entity_idE"></span><span id="eCAL::SEntityId::entity_id__EntityIdT"></span><span class="target" id="structeCAL_1_1SEntityId_1a27ccf220ab9423edecd18e2e5369a1e3"></span><a class="reference internal" href="typedef_namespaceeCAL_1a155b9cd8eddcadca249b6f5bbf7ad583.html#_CPPv4N4eCAL9EntityIdTE" title="eCAL::EntityIdT"><span class="n"><span class="pre">EntityIdT</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">entity_id</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N4eCAL9SEntityId9entity_idE" title="Link to this definition">#</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL12Registration9SEntityId10process_idE">
-<span id="_CPPv3N4eCAL12Registration9SEntityId10process_idE"></span><span id="_CPPv2N4eCAL12Registration9SEntityId10process_idE"></span><span id="eCAL::Registration::SEntityId::process_id__int32_t"></span><span class="target" id="structeCAL_1_1Registration_1_1SEntityId_1aa200ebb063d975fe7edcc81cecaf7675"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">process_id</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N4eCAL12Registration9SEntityId10process_idE" title="Link to this definition">#</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL9SEntityId10process_idE">
+<span id="_CPPv3N4eCAL9SEntityId10process_idE"></span><span id="_CPPv2N4eCAL9SEntityId10process_idE"></span><span id="eCAL::SEntityId::process_id__int32_t"></span><span class="target" id="structeCAL_1_1SEntityId_1af159d8ea392e6da3e981283afc3367cb"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">process_id</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N4eCAL9SEntityId10process_idE" title="Link to this definition">#</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL12Registration9SEntityId9host_nameE">
-<span id="_CPPv3N4eCAL12Registration9SEntityId9host_nameE"></span><span id="_CPPv2N4eCAL12Registration9SEntityId9host_nameE"></span><span id="eCAL::Registration::SEntityId::host_name__ss"></span><span class="target" id="structeCAL_1_1Registration_1_1SEntityId_1ab76181a662b87bb4e97a23ad3b08ef13"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">host_name</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL12Registration9SEntityId9host_nameE" title="Link to this definition">#</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL9SEntityId9host_nameE">
+<span id="_CPPv3N4eCAL9SEntityId9host_nameE"></span><span id="_CPPv2N4eCAL9SEntityId9host_nameE"></span><span id="eCAL::SEntityId::host_name__ss"></span><span class="target" id="structeCAL_1_1SEntityId_1a31a72d350f8bdcc18e78eec19aeb90f1"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">host_name</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL9SEntityId9host_nameE" title="Link to this definition">#</a><br /></dt>
 <dd></dd></dl>
 
 </div>
@@ -774,20 +774,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="namespace_v5.html"
+       href="structeCAL_1_1SDataTypeInformation.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Namespace v5</p>
+        <p class="prev-next-title">Struct SDataTypeInformation</p>
       </div>
     </a>
     <a class="right-next"
-       href="structeCAL_1_1Registration_1_1SServiceMethod.html"
+       href="structeCAL_1_1SVersion.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Struct SServiceMethod</p>
+        <p class="prev-next-title">Struct SVersion</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -809,12 +809,12 @@
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#struct-documentation">Struct Documentation</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL12Registration9SEntityIdE"><code class="docutils literal notranslate"><span class="pre">SEntityId</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL12Registration9SEntityIdeqERK9SEntityId"><code class="docutils literal notranslate"><span class="pre">SEntityId::operator==()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL12Registration9SEntityIdltERK9SEntityId"><code class="docutils literal notranslate"><span class="pre">SEntityId::operator&lt;()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL12Registration9SEntityId9entity_idE"><code class="docutils literal notranslate"><span class="pre">SEntityId::entity_id</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL12Registration9SEntityId10process_idE"><code class="docutils literal notranslate"><span class="pre">SEntityId::process_id</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL12Registration9SEntityId9host_nameE"><code class="docutils literal notranslate"><span class="pre">SEntityId::host_name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL9SEntityIdE"><code class="docutils literal notranslate"><span class="pre">SEntityId</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL9SEntityIdeqERK9SEntityId"><code class="docutils literal notranslate"><span class="pre">SEntityId::operator==()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL9SEntityIdltERK9SEntityId"><code class="docutils literal notranslate"><span class="pre">SEntityId::operator&lt;()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL9SEntityId9entity_idE"><code class="docutils literal notranslate"><span class="pre">SEntityId::entity_id</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL9SEntityId10process_idE"><code class="docutils literal notranslate"><span class="pre">SEntityId::process_id</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL9SEntityId9host_nameE"><code class="docutils literal notranslate"><span class="pre">SEntityId::host_name</span></code></a></li>
 </ul>
 </li>
 </ul>

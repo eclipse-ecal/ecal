@@ -55,23 +55,14 @@ Namespaces
 
 - :ref:`namespace_eCAL`
 
-- :ref:`namespace_eCAL__Registration`
-
 
 Classes
 -------
 
 
-- :ref:`exhale_struct_structeCAL_1_1Registration_1_1SEntityId`
-
 - :ref:`exhale_struct_structeCAL_1_1SDataTypeInformation`
 
+- :ref:`exhale_struct_structeCAL_1_1SEntityId`
+
 - :ref:`exhale_struct_structeCAL_1_1SVersion`
-
-
-Typedefs
---------
-
-
-- :ref:`exhale_typedef_types_8h_1a52a7ccff0f1e754f5a13675483e40db6`
 

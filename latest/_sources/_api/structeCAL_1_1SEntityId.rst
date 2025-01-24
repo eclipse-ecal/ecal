@@ -1,4 +1,4 @@
-.. _exhale_struct_structeCAL_1_1Registration_1_1SEntityId:
+.. _exhale_struct_structeCAL_1_1SEntityId:
 
 Struct SEntityId
 ================
@@ -10,7 +10,7 @@ Struct Documentation
 --------------------
 
 
-.. doxygenstruct:: eCAL::Registration::SEntityId
+.. doxygenstruct:: eCAL::SEntityId
    :project: eCAL
    :members:
    :protected-members:

@@ -17,8 +17,6 @@ Classes
 -------
 
 
-- :ref:`exhale_struct_structeCAL_1_1Registration_1_1SEntityId`
-
 - :ref:`exhale_struct_structeCAL_1_1Registration_1_1SServiceMethod`
 
 
@@ -59,8 +57,6 @@ Functions
 
 - :ref:`exhale_function_registration_8h_1a0aa936468b700d266a2c1c137d9b3b63`
 
-- :ref:`exhale_function_types_8h_1a2f6a5aebcd468f4b8ea81bd56624d085`
-
 - :ref:`exhale_function_registration_8h_1a32d0524e5d48924312037910dcf646c9`
 
 - :ref:`exhale_function_registration_8h_1ae1ae721b779dbc76a0a6f3ce7e3a9f80`
@@ -71,7 +67,5 @@ Typedefs
 
 
 - :ref:`exhale_typedef_registration_8h_1a31559467ff34c4fda47503952f0bf8c6`
-
-- :ref:`exhale_typedef_types_8h_1a52a7ccff0f1e754f5a13675483e40db6`
 
 - :ref:`exhale_typedef_registration_8h_1a409078e35c152905f1e2300b8a0e6b20`

@@ -49,6 +49,8 @@ Classes
 
 - :ref:`exhale_struct_structeCAL_1_1SDataTypeInformation`
 
+- :ref:`exhale_struct_structeCAL_1_1SEntityId`
+
 - :ref:`exhale_struct_structeCAL_1_1SVersion`
 
 - :ref:`exhale_class_classeCAL_1_1CDynamicMessageSubscriber`
@@ -90,9 +92,13 @@ Functions
 
 - :ref:`exhale_function_namespaceeCAL_1a600033b0736069b66b026b5bc39cab35`
 
+- :ref:`exhale_function_namespaceeCAL_1ad71540560ae36e358ab43699cd7f4c31`
+
 
 Typedefs
 --------
 
+
+- :ref:`exhale_typedef_namespaceeCAL_1a155b9cd8eddcadca249b6f5bbf7ad583`
 
 - :ref:`exhale_typedef_namespaceeCAL_1ada8fc20e2ddd0f5bc55f137861092851`
