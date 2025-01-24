@@ -216,7 +216,7 @@ TEST(core_cpp_pubsub, SubscriberFastReconnectionSHM) {
     eCAL::CSubscriber subscriber(TOPIC);
 
     const auto receive_lambda =
-        [&](const eCAL::Registration::STopicId & /*topic_id_*/,
+        [&](const eCAL::STopicId & /*topic_id_*/,
             const eCAL::SDataTypeInformation & /*data_type_info_*/,
             const eCAL::SReceiveCallbackData & /*data_*/) {
           {
