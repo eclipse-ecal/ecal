@@ -74,7 +74,7 @@ TEST_P(ServicesTestFixture, ServiceExpiration)
 
     // check service/method names
     std::set<eCAL::Registration::SServiceMethod> service_method_names;
-    eCAL::Registration::GetServiceMethodNames(service_method_names);
+    eCAL::Registration::GetServerMethodNames(service_method_names);
     EXPECT_EQ(service_method_names.size(), 1);
     for (const auto& name : service_method_names)
     {

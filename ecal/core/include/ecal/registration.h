@@ -161,14 +161,14 @@ namespace eCAL
     ECAL_API void GetTopicNames(std::set<std::string>& topic_names_);
 
     /**
-     * @brief Get all service/method names.
+     * @brief Get the pairs of service name / method name of all eCAL Servers.
      *
      * @param service_method_names_ Set to store the service/method names (Set { (ServiceName, MethodName) }).
     **/
-    ECAL_API void GetServiceMethodNames(std::set<SServiceMethod>& service_method_names_);
+    ECAL_API void GetServerMethodNames(std::set<SServiceMethod>& server_method_names_);
 
     /**
-     * @brief Get all client/method names.
+     * @brief Get the pairs of service name / method name of all eCAL Clients.
      *
      * @param client_method_names_ Set to store the client/method names (Set { (ClientName, MethodName) }).
     **/
