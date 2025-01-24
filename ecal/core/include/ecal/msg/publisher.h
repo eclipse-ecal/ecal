@@ -25,7 +25,7 @@
 #pragma once
 
 #include <ecal/deprecate.h>
-#include <ecal/v5/ecal_publisher.h>
+#include <ecal/pubsub/publisher.h>
 #include <ecal/util.h>
 
 #include <string>
@@ -43,18 +43,9 @@ namespace eCAL
    * 
   **/
   template <typename T>
-  class CMsgPublisher : public v5::CPublisher
+  class CMsgPublisher : public CPublisher
   {
   public:
-    /**
-     * @brief  Default Constructor. 
-     *         Using this constructor, the object is not actually in a usable state.
-     *         Before being able to send data, one has to call the `Create()` function, first.
-    **/
-    CMsgPublisher() : CPublisher()
-    {
-    }
-
     /**
      * @brief  Constructor, that automatically intializes the Publisher. 
      *         This should be the preferred constructor.
@@ -69,12 +60,14 @@ namespace eCAL
 
     /**
      * @brief  Constructor, that automatically intializes the Publisher. 
-     *         If no datatype information about the topic is available, this constructor can be used.
+     *         This should be the preferred constructor.
      *
-     * @param topic_name_  Unique topic name.
-     * @param config_      Optional configuration parameters.
+     * @param topic_name_      Unique topic name.
+     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
+     * @param event_callback_  The publisher event callback funtion.
+     * @param config_          Optional configuration parameters.
     **/
-    explicit CMsgPublisher(const std::string& topic_name_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CMsgPublisher(topic_name_, GetDataTypeInformation(), config_)
+    CMsgPublisher(const std::string& topic_name_, const struct SDataTypeInformation& data_type_info_, const PubEventCallbackT event_callback_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CPublisher(topic_name_, data_type_info_, event_callback_, config_)
     {
     }
 
@@ -139,9 +132,9 @@ namespace eCAL
       // serialization, but we send an empty payload
       // to still do some statistics like message clock
         // counting and frequency calculation for the monitoring layer
-      if (!IsSubscribed())
+      if (CPublisher::GetSubscriberCount() == 0)
       {
-        return(eCAL::v5::CPublisher::Send(nullptr, 0, time_) > 0);
+        return(CPublisher::Send(nullptr, 0, time_));
       }
 
       // if we have a subscription allocate memory for the
@@ -153,15 +146,15 @@ namespace eCAL
         m_buffer.resize(size);
         if (Serialize(msg_, m_buffer.data(), m_buffer.size()))
         {
-          return(eCAL::v5::CPublisher::Send(m_buffer.data(), size, time_) > 0);
+          return(CPublisher::Send(m_buffer.data(), size, time_));
         }
       }
       else
       {
         // send a zero payload length message to trigger the subscriber side
-        return(eCAL::v5::CPublisher::Send(nullptr, 0, time_) > 0);
+        return(CPublisher::Send(nullptr, 0, time_));
       }
-      return(0);
+      return false;
     }
 
   protected:

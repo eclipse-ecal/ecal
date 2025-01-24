@@ -113,7 +113,7 @@ namespace eCAL
     bool first_message_received;                /**< Whether we received at least one Message (used for the status message)*/
     eCAL::pb::SimTime::eState play_state;         /**< Current state (used for the status message)*/
 
-    eCAL::protobuf::CSubscriber<eCAL::pb::SimTime> sim_time_subscriber; /**< Subscriber for getting simulation timestamps */
+    std::unique_ptr<eCAL::protobuf::CSubscriber<eCAL::pb::SimTime>> sim_time_subscriber; /**< Subscriber for getting simulation timestamps */
 
     std::mutex time_mutex;                      /**< Mutex for computing the current simulation time */
     long long last_measurement_time;            /**< Last received simulation time */

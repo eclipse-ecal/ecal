@@ -36,7 +36,7 @@ int main(int argc, char** argv)
   config.logging.receiver.enable = true;
   
   auto status = eCAL::Initialize(config, "eCALMon TUI", eCAL::Init::Default | eCAL::Init::Monitoring);
-  if (status == -1) std::cerr << "Failed to init" << std::endl;
+  if (status == false) std::cerr << "Failed to init" << std::endl;
   eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
   TUI::Start(args);
