@@ -3,6 +3,9 @@
 #include <sys_client_core/proto_helpers.h>
 
 #include <EcalParser/EcalParser.h>
+#include <ecal/config.h>
+
+#include <thread>
 
 namespace eCAL
 {
@@ -126,6 +129,18 @@ namespace eCAL
 
       eCAL::v5::ServiceResponseVecT service_response_vec;
       constexpr int timeout_ms = 1000;
+
+      if (!sys_client_service_.IsConnected())
+      {
+        const auto registration_timeout = std::chrono::milliseconds(eCAL::GetConfiguration().registration.registration_timeout);
+        const std::chrono::milliseconds wait_time(50);
+
+        const auto start_time = std::chrono::steady_clock::now();
+        while (std::chrono::steady_clock::now() - start_time <= registration_timeout && !sys_client_service_.IsConnected())
+        {
+          std::this_thread::sleep_for(wait_time);
+        }
+      }
 
       if (sys_client_service_.Call(method_name, request.SerializeAsString(), timeout_ms, &service_response_vec))
       {
