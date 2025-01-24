@@ -255,12 +255,12 @@
 <li class="toctree-l3"><a class="reference internal" href="_api/enum_tlayer_8h_1a65b651c8133a86e4850afa99db69a59a.html">Enum eTransportLayer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_config_8h_1ab602f6c8307b53fe6826d7618ac9f465.html">Function eCAL::Config::GetDropOutOfOrderMessages</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_config_8h_1a2021665a60dc38ea96ec53dfeeabb2ac.html">Function eCAL::Config::GetEcalSysFilterExcludeList</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_config_8h_1ae1578488d4562a7096c389bc0d3acc56.html">Function eCAL::Config::GetHostGroupName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_config_8h_1a0e61706ed81e23d251be210649974bba.html">Function eCAL::Config::GetLoadedEcalIniPath</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_config_8h_1ae2fa1793150cbce526ab0b81e1773f7b.html">Function eCAL::Config::GetRegistrationRefreshMs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_config_8h_1a313807e5364233c84ae52d3a2ab10211.html">Function eCAL::Config::GetRegistrationTimeoutMs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_config_8h_1a10d306047609c59f6c53798259d398a5.html">Function eCAL::Config::GetShmMonitoringDomain</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_config_8h_1ad65c848628fc2d115f4e056b873ade5c.html">Function eCAL::Config::GetShmMonitoringQueueSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_config_8h_1a4c22b23e5ecd29319a4f8563bd1b75f9.html">Function eCAL::Config::GetShmTransportDomain</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_config_8h_1a9e6cb0ba42fa6e1e34e206db76ed3a7c.html">Function eCAL::Config::GetTcpPubsubMaxReconnectionAttemps</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_config_8h_1a28dc0ed11f2d0d590e814564149ccbc7.html">Function eCAL::Config::GetTcpPubsubReaderThreadpoolSize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_config_8h_1a2e3b5b06cd934db1bfac0d8ac6a42766.html">Function eCAL::Config::GetTcpPubsubWriterThreadpoolSize</a></li>
@@ -304,12 +304,12 @@
 <li class="toctree-l3"><a class="reference internal" href="_api/function_namespaceeCAL_1ad71540560ae36e358ab43699cd7f4c31.html">Function eCAL::operator&lt;&lt;</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_process_8h_1a024a270c580d40fe8e59455226ddbf75.html">Function eCAL::Process::DumpConfig()</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_process_8h_1a6ea34958542106657a76e88ce57f02a3.html">Function eCAL::Process::DumpConfig(std::string&amp;)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_api/function_process_8h_1af29c2673d6aec8d9120b3072b5444a26.html">Function eCAL::Process::GetHostGroupName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_process_8h_1a5052f19e8161bc54861f0b101548cc8c.html">Function eCAL::Process::GetHostName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_process_8h_1adf71bf1cf68bc4e60e99c8239b84a3b4.html">Function eCAL::Process::GetProcessID</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_process_8h_1aa3fcf7196e69ebaaaf2424f8089b929a.html">Function eCAL::Process::GetProcessIDAsString</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_process_8h_1a3ef5a956fe6ab65f091b9cccc13a3310.html">Function eCAL::Process::GetProcessName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_process_8h_1a0468b912c32313f944f1425272cfd53d.html">Function eCAL::Process::GetProcessParameter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_process_8h_1af26bf6d1d62325be90f36338346bd0e7.html">Function eCAL::Process::GetShmTransportDomain</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_process_8h_1aafcbbada35b8c548ab7a0b58d46b6f4b.html">Function eCAL::Process::GetTaskParameter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_process_8h_1a9316c16239592058aa92936910c0fff1.html">Function eCAL::Process::GetUnitName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_process_8h_1a49286e24c0e73289030ac25fc9cc0d18.html">Function eCAL::Process::SetState</a></li>
@@ -641,7 +641,6 @@
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
- | <a href="#H"><strong>H</strong></a>
  | <a href="#J"><strong>J</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
@@ -714,8 +713,6 @@
         <li><a href="configuration/options.html#cmdoption-arg-filter_incl">filter_incl</a>
 </li>
         <li><a href="configuration/options.html#cmdoption-arg-group">group</a>
-</li>
-        <li><a href="configuration/options.html#cmdoption-arg-host_group_name">host_group_name</a>
 </li>
         <li><a href="configuration/options.html#cmdoption-arg-join_all_interfaces">join_all_interfaces</a>
 </li>
@@ -790,6 +787,8 @@
         <li><a href="configuration/options.html#cmdoption-arg-share_topic_type">share_topic_type</a>
 </li>
         <li><a href="configuration/options.html#cmdoption-arg-10">shm</a>, <a href="configuration/options.html#cmdoption-arg-4">[1]</a>, <a href="configuration/options.html#cmdoption-arg-shm">[2]</a>
+</li>
+        <li><a href="configuration/options.html#cmdoption-arg-shm_transport_domain">shm_transport_domain</a>
 </li>
         <li><a href="configuration/options.html#cmdoption-arg-sinks">sinks</a>
 </li>
@@ -932,8 +931,6 @@
 </li>
       <li><a href="_api/function_config_8h_1a2021665a60dc38ea96ec53dfeeabb2ac.html#_CPPv4N4eCAL6Config27GetEcalSysFilterExcludeListEv">eCAL::Config::GetEcalSysFilterExcludeList (C++ function)</a>
 </li>
-      <li><a href="_api/function_config_8h_1ae1578488d4562a7096c389bc0d3acc56.html#_CPPv4N4eCAL6Config16GetHostGroupNameEv">eCAL::Config::GetHostGroupName (C++ function)</a>
-</li>
       <li><a href="_api/function_config_8h_1a0e61706ed81e23d251be210649974bba.html#_CPPv4N4eCAL6Config20GetLoadedEcalIniPathEv">eCAL::Config::GetLoadedEcalIniPath (C++ function)</a>
 </li>
       <li><a href="_api/function_config_8h_1ae2fa1793150cbce526ab0b81e1773f7b.html#_CPPv4N4eCAL6Config24GetRegistrationRefreshMsEv">eCAL::Config::GetRegistrationRefreshMs (C++ function)</a>
@@ -943,6 +940,8 @@
       <li><a href="_api/function_config_8h_1a10d306047609c59f6c53798259d398a5.html#_CPPv4N4eCAL6Config22GetShmMonitoringDomainEv">eCAL::Config::GetShmMonitoringDomain (C++ function)</a>
 </li>
       <li><a href="_api/function_config_8h_1ad65c848628fc2d115f4e056b873ade5c.html#_CPPv4N4eCAL6Config25GetShmMonitoringQueueSizeEv">eCAL::Config::GetShmMonitoringQueueSize (C++ function)</a>
+</li>
+      <li><a href="_api/function_config_8h_1a4c22b23e5ecd29319a4f8563bd1b75f9.html#_CPPv4N4eCAL6Config21GetShmTransportDomainEv">eCAL::Config::GetShmTransportDomain (C++ function)</a>
 </li>
       <li><a href="_api/function_config_8h_1a9e6cb0ba42fa6e1e34e206db76ed3a7c.html#_CPPv4N4eCAL6Config34GetTcpPubsubMaxReconnectionAttempsEv">eCAL::Config::GetTcpPubsubMaxReconnectionAttemps (C++ function)</a>
 </li>
@@ -1228,8 +1227,6 @@
 </li>
       <li><a href="_api/enum_process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartMode6normalE">eCAL::Process::eStartMode::normal (C++ enumerator)</a>
 </li>
-      <li><a href="_api/function_process_8h_1af29c2673d6aec8d9120b3072b5444a26.html#_CPPv4N4eCAL7Process16GetHostGroupNameEv">eCAL::Process::GetHostGroupName (C++ function)</a>
-</li>
       <li><a href="_api/function_process_8h_1a5052f19e8161bc54861f0b101548cc8c.html#_CPPv4N4eCAL7Process11GetHostNameEv">eCAL::Process::GetHostName (C++ function)</a>
 </li>
       <li><a href="_api/function_process_8h_1adf71bf1cf68bc4e60e99c8239b84a3b4.html#_CPPv4N4eCAL7Process12GetProcessIDEv">eCAL::Process::GetProcessID (C++ function)</a>
@@ -1239,6 +1236,8 @@
       <li><a href="_api/function_process_8h_1a3ef5a956fe6ab65f091b9cccc13a3310.html#_CPPv4N4eCAL7Process14GetProcessNameEv">eCAL::Process::GetProcessName (C++ function)</a>
 </li>
       <li><a href="_api/function_process_8h_1a0468b912c32313f944f1425272cfd53d.html#_CPPv4N4eCAL7Process19GetProcessParameterEv">eCAL::Process::GetProcessParameter (C++ function)</a>
+</li>
+      <li><a href="_api/function_process_8h_1af26bf6d1d62325be90f36338346bd0e7.html#_CPPv4N4eCAL7Process21GetShmTransportDomainEv">eCAL::Process::GetShmTransportDomain (C++ function)</a>
 </li>
       <li><a href="_api/function_process_8h_1aafcbbada35b8c548ab7a0b58d46b6f4b.html#_CPPv4N4eCAL7Process16GetTaskParameterEPKc">eCAL::Process::GetTaskParameter (C++ function)</a>
 </li>
@@ -1474,19 +1473,6 @@
 
       <ul>
         <li><a href="configuration/options.html#cmdoption-arg-group">command line option</a>
-</li>
-      </ul></li>
-  </ul></td>
-</tr></table>
-
-<h2 id="H">H</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    host_group_name
-
-      <ul>
-        <li><a href="configuration/options.html#cmdoption-arg-host_group_name">command line option</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1806,6 +1792,13 @@
 
       <ul>
         <li><a href="configuration/options.html#cmdoption-arg-10">command line option</a>, <a href="configuration/options.html#cmdoption-arg-4">[1]</a>, <a href="configuration/options.html#cmdoption-arg-shm">[2]</a>
+</li>
+      </ul></li>
+      <li>
+    shm_transport_domain
+
+      <ul>
+        <li><a href="configuration/options.html#cmdoption-arg-shm_transport_domain">command line option</a>
 </li>
       </ul></li>
       <li>

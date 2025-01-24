@@ -21,8 +21,6 @@ Functions
 
 - :ref:`exhale_function_config_8h_1a2021665a60dc38ea96ec53dfeeabb2ac`
 
-- :ref:`exhale_function_config_8h_1ae1578488d4562a7096c389bc0d3acc56`
-
 - :ref:`exhale_function_config_8h_1a0e61706ed81e23d251be210649974bba`
 
 - :ref:`exhale_function_config_8h_1ae2fa1793150cbce526ab0b81e1773f7b`
@@ -32,6 +30,8 @@ Functions
 - :ref:`exhale_function_config_8h_1a10d306047609c59f6c53798259d398a5`
 
 - :ref:`exhale_function_config_8h_1ad65c848628fc2d115f4e056b873ade5c`
+
+- :ref:`exhale_function_config_8h_1a4c22b23e5ecd29319a4f8563bd1b75f9`
 
 - :ref:`exhale_function_config_8h_1a9e6cb0ba42fa6e1e34e206db76ed3a7c`
 

@@ -48,7 +48,7 @@ Program Listing for File process.h
    
        ECAL_API std::string GetHostName();
    
-       ECAL_API std::string GetHostGroupName();
+       ECAL_API std::string GetShmTransportDomain();
    
        ECAL_API std::string GetUnitName();
    
