@@ -38,7 +38,7 @@ endif()
 
 ecal_add_time_plugin(${PROJECT_NAME} SHARED ${ecal_time_linuxptp_src} ${ecal_time_linuxptp_header})
 
-target_link_libraries(${PROJECT_NAME} eCAL::core yaml-cpp::yaml-cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core yaml-cpp::yaml-cpp)
 
 target_include_directories(${PROJECT_NAME} 
   PRIVATE

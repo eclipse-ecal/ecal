@@ -32,7 +32,7 @@ ecal_add_sample(${PROJECT_NAME} ${process_src})
 
 target_include_directories(${PROJECT_NAME} PRIVATE .)
 
-target_link_libraries (${PROJECT_NAME}
+target_link_libraries (${PROJECT_NAME} PRIVATE
     eCAL::core
 )
 
