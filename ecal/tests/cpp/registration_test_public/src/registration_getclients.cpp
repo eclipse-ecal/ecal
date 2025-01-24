@@ -60,6 +60,7 @@ TEST_P(ClientsTestFixture, ClientExpiration)
   {
     // create client
     eCAL::SMethodInfo service_method_info;
+    service_method_info.method_name              = "foo::method";
     service_method_info.request_type.name        = "foo::req_type";
     service_method_info.request_type.descriptor  = "foo::req_desc";
     service_method_info.response_type.name       = "foo::resp_type";

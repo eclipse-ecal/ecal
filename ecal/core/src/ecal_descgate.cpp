@@ -305,10 +305,10 @@ namespace eCAL
       RemServiceDescription(m_service_info_map, sample_.identifier, sample_.service);
       break;
     case bct_reg_client:
-      ApplyServiceDescription(m_service_info_map, sample_.identifier, sample_.client);
+      ApplyServiceDescription(m_client_info_map, sample_.identifier, sample_.client);
       break;
     case bct_unreg_client:
-      RemServiceDescription(m_service_info_map, sample_.identifier, sample_.client);
+      RemServiceDescription(m_client_info_map, sample_.identifier, sample_.client);
       break;
     case bct_reg_publisher:
       ApplyTopicDescription(m_publisher_info_map, m_publisher_callback_map, sample_.identifier, sample_.topic.tname, sample_.topic.tdatatype);

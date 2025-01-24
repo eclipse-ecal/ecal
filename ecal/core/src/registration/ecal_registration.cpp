@@ -128,10 +128,11 @@ namespace eCAL
       service_method_names_.clear();
 
       // get clients id set and insert names into the client_method_names set
-      const std::set<SServiceId> client_id_set = GetClientIDs();
+      const std::set<SServiceId> client_id_set = GetServerIDs();
       for (const auto& client_id : client_id_set)
       {
         eCAL::ServiceMethodInfoSetT methods;
+        (void)GetServerInfo(client_id, methods);
         for (const auto& method : methods)
         {
           service_method_names_.insert({ client_id.service_name, method.method_name });
@@ -148,6 +149,7 @@ namespace eCAL
       for (const auto& client_id : client_id_set)
       {
         eCAL::ServiceMethodInfoSetT methods;
+        (void)GetClientInfo(client_id, methods);
         for (const auto& method : methods)
         {
           client_method_names_.insert({ client_id.service_name, method.method_name });
