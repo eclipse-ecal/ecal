@@ -36,35 +36,33 @@ int main()
   // monitor for ever
   while(eCAL::Ok())
   {
-    // GetServices
+    // GetServers
     {
-      std::set<eCAL::Registration::SServiceMethodId> service_method_id_set;
-
-      std::map<eCAL::Registration::SServiceMethod, eCAL::SServiceMethodInformation> service_info_map;
+      std::set<eCAL::SServiceId> server_method_id_set;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        service_method_id_set = eCAL::Registration::GetServerIDs();
+        server_method_id_set = eCAL::Registration::GetServerIDs();
       }
 
-      auto num_services = service_method_id_set.size();
+      auto num_services = server_method_id_set.size();
       auto diff_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
       std::cout << "GetServices      : " << static_cast<double>(diff_time.count()) / runs << " ms" << " (" << num_services << " services)" << std::endl;
       std::cout << std::endl;
     }
 
-    // GetServiceMethodNames
+    // GetServerMethodNames
     {
-      std::set<eCAL::Registration::SServiceMethod> service_method_names;
+      std::set<eCAL::Registration::SServiceMethod> server_method_names;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        eCAL::Registration::GetServiceMethodNames(service_method_names);
+        eCAL::Registration::GetServerMethodNames(server_method_names);
       }
 
-      auto num_services = service_method_names.size();
+      auto num_services = server_method_names.size();
       auto diff_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
       std::cout << "GetServicesNames : " << static_cast<double>(diff_time.count()) / runs << " ms" << " (" << num_services << " services)" << std::endl;
       std::cout << std::endl;

@@ -66,7 +66,7 @@ namespace eCAL
       Create(service_name_);
     }
 
-    CServiceClientImpl::CServiceClientImpl(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
+    CServiceClientImpl::CServiceClientImpl(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_)
       : m_service_client_impl(nullptr)
     {
       Logging::Log(Logging::log_level_debug2, "v5::CServiceClientImpl: Initializing service client with name: " + service_name_);
@@ -81,10 +81,10 @@ namespace eCAL
 
     bool CServiceClientImpl::Create(const std::string& service_name_)
     {
-      return Create(service_name_, ServiceMethodInformationMapT());
+      return Create(service_name_, ServiceMethodInfoSetT());
     }
 
-    bool CServiceClientImpl::Create(const std::string& service_name_, const ServiceMethodInformationMapT& method_information_map_)
+    bool CServiceClientImpl::Create(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_)
     {
       if (m_service_client_impl != nullptr)
       {
@@ -95,7 +95,7 @@ namespace eCAL
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Creating service client with name: " + service_name_);
 
       // Define the event callback to pass to CServiceClient
-      v6::ClientEventCallbackT event_callback = [this](const Registration::SServiceId& service_id_, const v6::SClientEventCallbackData& data_)
+      v6::ClientEventCallbackT event_callback = [this](const SServiceId& service_id_, const v6::SClientEventCallbackData& data_)
         {
           Logging::Log(Logging::log_level_debug2, "v5::CServiceClientImpl: Event callback triggered for event type: " + to_string(data_.type));
 
@@ -184,7 +184,7 @@ namespace eCAL
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Making a synchronous call to method: " + method_name_);
 
       // Wrap the response callback to filter by host name if necessary
-      const ResponseIDCallbackT callback = [this](const Registration::SEntityId& /*entity_id_*/, const struct SServiceIDResponse& service_response_)
+      const ResponseIDCallbackT callback = [this](const SEntityId& /*entity_id_*/, const struct SServiceIDResponse& service_response_)
         {
           if (m_host_name.empty() || service_response_.service_method_id.service_id.host_name == m_host_name)
           {
@@ -263,7 +263,7 @@ namespace eCAL
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Making an asynchronous call to method: " + method_name_);
 
       // Wrap the response callback to filter by host name if necessary
-      const ResponseIDCallbackT callback = [this](const Registration::SEntityId& /*entity_id_*/, const struct SServiceIDResponse& service_response_)
+      const ResponseIDCallbackT callback = [this](const SEntityId& /*entity_id_*/, const struct SServiceIDResponse& service_response_)
         {
           if (m_host_name.empty() || service_response_.service_method_id.service_id.host_name == m_host_name)
           {

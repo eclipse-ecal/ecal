@@ -63,7 +63,7 @@ namespace eCAL
     size_t            GetTcpPubsubWriterThreadpoolSize     () { return GetConfiguration().transport_layer.tcp.number_executor_writer;}
     int               GetTcpPubsubMaxReconnectionAttemps   () { return GetConfiguration().transport_layer.tcp.max_reconnections;}
 
-    std::string       GetHostGroupName                     () { return GetConfiguration().registration.host_group_name; }
+    std::string       GetShmTransportDomain                () { return GetConfiguration().registration.shm_transport_domain; }
     
     /////////////////////////////////////
     // time

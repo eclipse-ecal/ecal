@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ PluginWidget::PluginWidget(const QString& topic_name, const QString&, QWidget* p
   ui_.content_layout->addWidget(frame);
 
   // Connect the eCAL Subscriber
-  subscriber_.SetReceiveCallback([this](const eCAL::Registration::STopicId& /*topic_id*/,
+  subscriber_.SetReceiveCallback([this](const eCAL::STopicId& /*topic_id*/,
     const eCAL::SDataTypeInformation& /*data_type_info*/,
     const eCAL::SReceiveCallbackData& callback_data)
     {
@@ -134,7 +134,7 @@ void PluginWidget::onUpdate()
 void PluginWidget::onResume()
 {
   // (Re)Connect the eCAL Subscriber
-  subscriber_.SetReceiveCallback([this](const eCAL::Registration::STopicId& /*topic_id*/,
+  subscriber_.SetReceiveCallback([this](const eCAL::STopicId& /*topic_id*/,
     const eCAL::SDataTypeInformation& /*data_type_info*/,
     const eCAL::SReceiveCallbackData& callback_data)
     {

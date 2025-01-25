@@ -64,11 +64,11 @@ Registration settings are listed in the section ``registration``
     
       enable to receive registration information on the same local machine
 
-  .. option:: host_group_name
+  .. option:: shm_transport_domain
 
       ``<hostname>``, default ``""``
 
-      host group name that enables interprocess mechanisms across (virtual) host borders (e.g. Docker);
+      shm transport domain that enables interprocess mechanisms across (virtual) host borders (e.g. Docker);
       by default equivalent to local host name
 
   .. option:: network_enabled

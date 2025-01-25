@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 #include <chrono>
 #include <thread>
 
-int OnHello(const eCAL::SMethodInfo& /*method_info_*/, const std::string& /*request_*/, std::string& /*response_*/)
+int OnHello(const eCAL::SServiceMethodInformation& /*method_info_*/, const std::string& /*request_*/, std::string& /*response_*/)
 {
   return 0;
 }
@@ -37,7 +37,7 @@ int main()
   eCAL::CServiceServer latency_service("latency");
 
   // add hello method callback
-  latency_service.SetMethodCallback("hello", eCAL::SServiceMethodInformation(), OnHello);
+  latency_service.SetMethodCallback({ "hello", {}, {} }, OnHello);
 
   // idle main thread
   while (eCAL::Ok()) std::this_thread::sleep_for(std::chrono::milliseconds(100));

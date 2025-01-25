@@ -42,14 +42,14 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   // However, we cannot send anything over the wire :(
   process_sample_identifier.entity_id = process_sample_identifier.process_id;
 
-  auto& process_sample_process = process_sample.process;
-  process_sample_process.hgname = eCAL::Process::GetHostGroupName();
-  process_sample_process.pname = eCAL::Process::GetProcessName();
-  process_sample_process.uname = eCAL::Process::GetUnitName();
-  process_sample_process.pparam = eCAL::Process::GetProcessParameter();
-  process_sample_process.state.severity = static_cast<Registration::eProcessSeverity>(g_process_severity);
+  auto& process_sample_process                = process_sample.process;
+  process_sample_process.shm_transport_domain = eCAL::Process::GetShmTransportDomain();
+  process_sample_process.pname                = eCAL::Process::GetProcessName();
+  process_sample_process.uname                = eCAL::Process::GetUnitName();
+  process_sample_process.pparam               = eCAL::Process::GetProcessParameter();
+  process_sample_process.state.severity       = static_cast<Registration::eProcessSeverity>(g_process_severity);
   process_sample_process.state.severity_level = static_cast<Registration::eProcessSeverityLevel>(g_process_severity_level);
-  process_sample_process.state.info = g_process_info;
+  process_sample_process.state.info           = g_process_info;
 #if ECAL_CORE_TIMEPLUGIN
   if (g_timegate() == nullptr)
   {

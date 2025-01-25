@@ -32,10 +32,10 @@ namespace eCAL
     attributes.layer_priority_local    = pub_config_.layer_priority_local;
     attributes.layer_priority_remote   = pub_config_.layer_priority_remote;
 
-    attributes.host_name       = Process::GetHostName();
-    attributes.host_group_name = Process::GetHostGroupName();
-    attributes.process_id      = Process::GetProcessID();
-    attributes.process_name    = Process::GetProcessName();
+    attributes.host_name            = Process::GetHostName();
+    attributes.shm_transport_domain = Process::GetShmTransportDomain();
+    attributes.process_id           = Process::GetProcessID();
+    attributes.process_name         = Process::GetProcessName();
 
     attributes.unit_name       = Process::GetUnitName();
     attributes.topic_name      = topic_name_;

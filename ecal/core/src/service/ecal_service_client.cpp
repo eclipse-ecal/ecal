@@ -34,10 +34,10 @@ namespace eCAL
 {
   ECAL_CORE_NAMESPACE_V6
   {
-  CServiceClient::CServiceClient(const std::string & service_name_, const ServiceMethodInformationMapT method_information_map_, const ClientEventCallbackT event_callback_)
+  CServiceClient::CServiceClient(const std::string & service_name_, const ServiceMethodInfoSetT& method_information_set_, const ClientEventCallbackT event_callback_)
   {
     // create client implementation
-    m_service_client_impl = CServiceClientImpl::CreateInstance(service_name_, method_information_map_, event_callback_);
+    m_service_client_impl = CServiceClientImpl::CreateInstance(service_name_, method_information_set_, event_callback_);
 
     // register client
     if (g_clientgate() != nullptr) g_clientgate()->Register(service_name_, m_service_client_impl);
@@ -187,9 +187,9 @@ namespace eCAL
     return m_service_client_impl->GetServiceName();
   }
 
-  Registration::SServiceId CServiceClient::GetServiceId() const
+  SServiceId CServiceClient::GetServiceId() const
   {
-    if (m_service_client_impl == nullptr) return Registration::SServiceId();
+    if (m_service_client_impl == nullptr) return SServiceId();
     return m_service_client_impl->GetServiceId();
   }
 

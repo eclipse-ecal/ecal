@@ -169,11 +169,11 @@ namespace eCAL
       const std::lock_guard<std::mutex> lock(pTopicMap->sync);
 
       // common infos
-      const std::string& host_name       = sample_.identifier.host_name;
-      const std::string& host_group_name = sample_topic.hgname;
-      const std::string& process_name    = sample_topic.pname;
-      const std::string& unit_name       = sample_topic.uname;
-      const auto&        topic_id        = sample_.identifier.entity_id;
+      const std::string& host_name            = sample_.identifier.host_name;
+      const std::string& shm_transport_domain = sample_topic.shm_transport_domain;
+      const std::string& process_name         = sample_topic.pname;
+      const std::string& unit_name            = sample_topic.uname;
+      const auto&        topic_id             = sample_.identifier.entity_id;
       std::string        direction;
       switch (pubsub_type_)
       {
@@ -196,14 +196,14 @@ namespace eCAL
       Monitoring::STopicMon& TopicInfo = (*pTopicMap->map)[topic_map_key];
 
       // set static content
-      TopicInfo.hname     = host_name;
-      TopicInfo.hgname    = host_group_name;
-      TopicInfo.pid       = process_id;
-      TopicInfo.pname     = process_name;
-      TopicInfo.uname     = unit_name;
-      TopicInfo.tname     = topic_name;
-      TopicInfo.direction = direction;
-      TopicInfo.tid       = topic_id;
+      TopicInfo.hname                = host_name;
+      TopicInfo.shm_transport_domain = shm_transport_domain;
+      TopicInfo.pid                  = process_id;
+      TopicInfo.pname                = process_name;
+      TopicInfo.uname                = unit_name;
+      TopicInfo.tname                = topic_name;
+      TopicInfo.direction            = direction;
+      TopicInfo.tid                  = topic_id;
 
       // update flexible content
       TopicInfo.rclock++;
@@ -272,7 +272,7 @@ namespace eCAL
   {
     const auto& sample_process = sample_.process;
     const std::string&    host_name                    = sample_.identifier.host_name;
-    const std::string&    host_group_name              = sample_process.hgname;
+    const std::string&    shm_transport_domain         = sample_process.shm_transport_domain;
     const std::string&    process_name                 = sample_process.pname;
     const int             process_id                   = sample_.identifier.process_id;
     const std::string&    process_param                = sample_process.pparam;
@@ -298,12 +298,12 @@ namespace eCAL
     Monitoring::SProcessMon& ProcessInfo = (*m_process_map.map)[process_map_key];
 
     // set static content
-    ProcessInfo.hname  = host_name;
-    ProcessInfo.hgname = host_group_name;
-    ProcessInfo.pname  = process_name;
-    ProcessInfo.uname  = unit_name;
-    ProcessInfo.pid    = process_id;
-    ProcessInfo.pparam = process_param;
+    ProcessInfo.hname                = host_name;
+    ProcessInfo.shm_transport_domain = shm_transport_domain;
+    ProcessInfo.pname                = process_name;
+    ProcessInfo.uname                = unit_name;
+    ProcessInfo.pid                  = process_id;
+    ProcessInfo.pparam               = process_param;
 
     // update flexible content
     ProcessInfo.rclock++;

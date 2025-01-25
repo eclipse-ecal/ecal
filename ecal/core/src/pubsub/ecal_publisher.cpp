@@ -123,9 +123,9 @@ namespace eCAL
       return(m_publisher_impl->GetTopicName());
     }
   
-    Registration::STopicId CPublisher::GetTopicId() const
+    STopicId CPublisher::GetTopicId() const
     {
-      if (m_publisher_impl == nullptr) return Registration::STopicId();
+      if (m_publisher_impl == nullptr) return STopicId();
       return(m_publisher_impl->GetTopicId());
     }
   

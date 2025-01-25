@@ -96,7 +96,7 @@ namespace eCAL
       return m_subscriber_impl->GetTopicName();
     }
   
-    Registration::STopicId CSubscriber::GetTopicId() const
+    STopicId CSubscriber::GetTopicId() const
     {
       if (m_subscriber_impl == nullptr) return{};
       return m_subscriber_impl->GetId();

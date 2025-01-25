@@ -92,7 +92,7 @@ namespace eCAL
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool SetMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_);
+        bool SetMethodCallback(const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_);
 
       /**
        * @brief Remove method callback.
@@ -118,7 +118,7 @@ namespace eCAL
        * @return  The service id.
       **/
       ECAL_API_EXPORTED_MEMBER
-        Registration::SServiceId GetServiceId() const;
+        SServiceId GetServiceId() const;
 
       /**
        * @brief Check connection state.

@@ -537,7 +537,7 @@ namespace eCAL
         cb_data.time  = time_;
         cb_data.clock = clock_;
 
-        Registration::STopicId topic_id;
+        STopicId topic_id;
         topic_id.topic_name          = topic_info_.tname;
         topic_id.topic_id.host_name  = topic_info_.hname;
         topic_id.topic_id.entity_id  = topic_info_.tid;
@@ -629,14 +629,14 @@ namespace eCAL
     ecal_reg_sample_identifier.entity_id  = m_topic_id;
     ecal_reg_sample_identifier.host_name  = m_attributes.host_name;
 
-    auto& ecal_reg_sample_topic = ecal_reg_sample.topic;
-    ecal_reg_sample_topic.hgname = m_attributes.host_group_name;
-    ecal_reg_sample_topic.tname  = m_attributes.topic_name;
+    auto& ecal_reg_sample_topic                = ecal_reg_sample.topic;
+    ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
+    ecal_reg_sample_topic.tname                = m_attributes.topic_name;
     // topic_information
     {
-      auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.tdatatype;
-      ecal_reg_sample_tdatatype.encoding = m_topic_info.encoding;
-      ecal_reg_sample_tdatatype.name     = m_topic_info.name;
+      auto& ecal_reg_sample_tdatatype      = ecal_reg_sample_topic.tdatatype;
+      ecal_reg_sample_tdatatype.encoding   = m_topic_info.encoding;
+      ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
     }
     ecal_reg_sample_topic.attr  = m_attr;
@@ -698,11 +698,11 @@ namespace eCAL
     ecal_reg_sample_identifier.entity_id = m_topic_id;
     ecal_reg_sample_identifier.host_name = m_attributes.host_name;
 
-    auto& ecal_reg_sample_topic = ecal_unreg_sample.topic;
-    ecal_reg_sample_topic.hgname = m_attributes.host_group_name;
-    ecal_reg_sample_topic.pname  = m_attributes.process_name;
-    ecal_reg_sample_topic.tname  = m_attributes.topic_name;
-    ecal_reg_sample_topic.uname  = m_attributes.unit_name;
+    auto& ecal_reg_sample_topic                = ecal_unreg_sample.topic;
+    ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
+    ecal_reg_sample_topic.pname                = m_attributes.process_name;
+    ecal_reg_sample_topic.tname                = m_attributes.topic_name;
+    ecal_reg_sample_topic.uname                = m_attributes.unit_name;
   }
   
   void CSubscriberImpl::StartTransportLayer()
@@ -787,7 +787,7 @@ namespace eCAL
       data.event_time         = eCAL::Time::GetMicroSeconds();
       data.publisher_datatype = data_type_info_;
 
-      Registration::STopicId topic_id;
+      STopicId topic_id;
       topic_id.topic_id.entity_id  = publication_info_.entity_id;
       topic_id.topic_id.process_id = publication_info_.process_id;
       topic_id.topic_id.host_name  = publication_info_.host_name;

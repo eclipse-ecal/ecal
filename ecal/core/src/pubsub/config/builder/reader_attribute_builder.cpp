@@ -32,7 +32,7 @@ namespace eCAL
     attributes.registration_timeout_ms    = reg_config_.registration_timeout;
     attributes.topic_name                 = topic_name_;
     attributes.host_name                  = Process::GetHostName();
-    attributes.host_group_name            = Process::GetHostGroupName();
+    attributes.shm_transport_domain       = Process::GetShmTransportDomain();
     attributes.process_id                 = Process::GetProcessID();
     attributes.process_name               = Process::GetProcessName();
     attributes.unit_name                  = Process::GetUnitName();

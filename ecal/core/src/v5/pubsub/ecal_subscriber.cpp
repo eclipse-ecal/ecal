@@ -150,7 +150,7 @@ namespace eCAL
 
     bool CSubscriber::AddReceiveCallback(ReceiveCallbackT callback_)
     {
-      auto v6_callback = [callback_](const Registration::STopicId& topic_id_, const SDataTypeInformation&, const eCAL::SReceiveCallbackData& data_)
+      auto v6_callback = [callback_](const STopicId& topic_id_, const SDataTypeInformation&, const eCAL::SReceiveCallbackData& data_)
         {
           callback_(topic_id_.topic_name.c_str(), &data_);
         };
@@ -201,7 +201,7 @@ namespace eCAL
       return(m_subscriber_impl->GetTopicName());
     }
 
-    Registration::STopicId CSubscriber::GetId() const
+    STopicId CSubscriber::GetId() const
     {
       if (m_subscriber_impl == nullptr) return{};
       return(m_subscriber_impl->GetId());

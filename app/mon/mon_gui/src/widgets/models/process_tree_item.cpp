@@ -61,9 +61,9 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return process_.hname().c_str();
     }
-    else if (column == Columns::HGNAME)
+    else if (column == Columns::SHM_TRANSPORT_DOMAIN)
     {
-      return process_.hgname().c_str();
+      return process_.shm_transport_domain().c_str();
     }
     else if (column == Columns::PID)
     {
@@ -118,7 +118,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   else if ((role == Qt::ItemDataRole::DisplayRole) || (role == Qt::ItemDataRole::ToolTipRole))
   {
     if ((column == Columns::HNAME)
-      || (column == Columns::HGNAME)
+      || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME))
     {
@@ -157,7 +157,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   else if (role == (Qt::ItemDataRole)ItemDataRoles::FilterRole) //-V1016 //-V547
   {
     if ((column == Columns::HNAME)
-      || (column == Columns::HGNAME)
+      || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME))
     {
@@ -243,7 +243,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   else if (role == Qt::ItemDataRole::FontRole)
   {
     if ((column == Columns::HNAME)
-      || (column == Columns::HGNAME)
+      || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME))
     {

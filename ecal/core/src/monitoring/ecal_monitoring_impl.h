@@ -73,7 +73,7 @@ namespace eCAL
     bool RegisterTopic(const Registration::Sample& sample_, enum ePubSub pubsub_type_);
     bool UnregisterTopic(const Registration::Sample& sample_, enum ePubSub pubsub_type_);
 
-    using TopicMonMapT = std::map<Registration::EntityIdT, Monitoring::STopicMon>;
+    using TopicMonMapT = std::map<EntityIdT, Monitoring::STopicMon>;
     struct STopicMonMap
     {
       explicit STopicMonMap() :
@@ -84,7 +84,7 @@ namespace eCAL
       std::unique_ptr<TopicMonMapT>  map;
     };
 
-    using ProcessMonMapT = std::map<Registration::EntityIdT, Monitoring::SProcessMon>;
+    using ProcessMonMapT = std::map<EntityIdT, Monitoring::SProcessMon>;
     struct SProcessMonMap
     {
       explicit SProcessMonMap() :
@@ -95,7 +95,7 @@ namespace eCAL
       std::unique_ptr<ProcessMonMapT>  map;
     };
 
-    using ServerMonMapT = std::map<Registration::EntityIdT, Monitoring::SServerMon>;
+    using ServerMonMapT = std::map<EntityIdT, Monitoring::SServerMon>;
     struct SServerMonMap
     {
       explicit SServerMonMap() :
@@ -106,7 +106,7 @@ namespace eCAL
       std::unique_ptr<ServerMonMapT>  map;
     };
 
-    using ClientMonMapT = std::map<Registration::EntityIdT, Monitoring::SClientMon>;
+    using ClientMonMapT = std::map<EntityIdT, Monitoring::SClientMon>;
     struct SClientMonMap
     {
       explicit SClientMonMap() :
