@@ -72,17 +72,17 @@ void printAddressBook(const AddressBook::Reader& addressBook)
   }
 }
 
-void OnAddressbook(const char* topic_name_, AddressBook::Reader msg_, const long long time_)
+void OnAddressbook(const eCAL::Registration::STopicId& topic_id_, AddressBook::Reader msg_, const long long time_)
 {
   // print content
-  std::cout << "topic name : " << topic_name_ << std::endl;
-  std::cout << "time       : " << time_       << std::endl;
+  std::cout << "topic name : " << topic_id_.topic_name << std::endl;
+  std::cout << "time       : " << time_                << std::endl;
   std::cout << std::endl;
   printAddressBook(msg_);
   std::cout << std::endl;
 }
   
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
   eCAL::Initialize("addressbook subscriber");
@@ -93,9 +93,9 @@ int main(int argc, char **argv)
   // create a subscriber (topic name "addressbook")
   eCAL::capnproto::CSubscriber<AddressBook> sub("addressbook");
 
-  // add receive callback function (_1 = topic_name, _2 = msg, _3 = time)
+  // add receive callback function (_1 = topic_id, _2 = msg, _3 = time)
   auto callback = std::bind(OnAddressbook, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-  sub.AddReceiveCallback(callback);
+  sub.SetReceiveCallback(callback);
 
   // enter main loop
   while (eCAL::Ok())
