@@ -72,7 +72,7 @@ void printAddressBook(const AddressBook::Reader& addressBook)
   }
 }
 
-void OnAddressbook(const eCAL::Registration::STopicId& topic_id_, AddressBook::Reader msg_, const long long time_)
+void OnAddressbook(const eCAL::STopicId& topic_id_, AddressBook::Reader msg_, const long long time_)
 {
   // print content
   std::cout << "topic name : " << topic_id_.topic_name << std::endl;

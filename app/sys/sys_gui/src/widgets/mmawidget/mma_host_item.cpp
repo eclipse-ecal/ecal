@@ -227,7 +227,7 @@ void MmaHostItem::disable()
   setEnabled(false);
 }
 
-void MmaHostItem::mmaReceivedCallback(const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::pb::mma::State& state_)
+void MmaHostItem::mmaReceivedCallback(const eCAL::STopicId& /*topic_id_*/, const eCAL::pb::mma::State& state_)
 {
   // only emit the signal in order to make use of the Qt event loop
   emit mmaReceivedSignal(state_);

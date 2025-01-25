@@ -24,7 +24,7 @@
 
 #include "person.pb.h"
 
-void OnPerson(const eCAL::Registration::STopicId& topic_id_, const pb::People::Person& person_, const long long time_, const long long clock_)
+void OnPerson(const eCAL::STopicId& topic_id_, const pb::People::Person& person_, const long long time_, const long long clock_)
 {
   std::cout << "------------------------------------------" << std::endl;
   std::cout << " HEAD "                                     << std::endl;

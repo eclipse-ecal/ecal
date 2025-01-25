@@ -24,7 +24,7 @@
 
 #include "person.pb.h"
 
-void OnEvent(const eCAL::Registration::STopicId& topic_id_, const eCAL::SSubEventCallbackData& data_)
+void OnEvent(const eCAL::STopicId& topic_id_, const eCAL::SSubEventCallbackData& data_)
 {
   std::cout << "topic name       : " << topic_id_.topic_name << std::endl;
   switch (data_.event_type)
