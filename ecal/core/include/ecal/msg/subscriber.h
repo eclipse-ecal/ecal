@@ -61,7 +61,7 @@ namespace eCAL
     {
     }
 
-    CMessageSubscriber(const std::string& topic_name_, const SubEventCallbackT event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration()) : CSubscriber(topic_name_, m_deserializer.GetDataTypeInformation(), event_callback_, config_)
+    CMessageSubscriber(const std::string& topic_name_, const SubEventCallbackT& event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration()) : CSubscriber(topic_name_, m_deserializer.GetDataTypeInformation(), event_callback_, config_)
       , m_deserializer()
     {
     }
@@ -131,7 +131,7 @@ namespace eCAL
      * @param clock_       Message writer clock.
      * @param id_          Message id.
      **/
-    typedef std::function<void(const Registration::STopicId& topic_id_, const T& msg_, long long time_, long long clock_, long long id_) > MsgReceiveCallbackT;
+    using MsgReceiveCallbackT = std::function<void(const Registration::STopicId& topic_id_, const T& msg_, long long time_, long long clock_, long long id_)>;
 
     /**
      * @brief  Add receive callback for incoming messages.

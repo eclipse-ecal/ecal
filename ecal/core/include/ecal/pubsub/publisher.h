@@ -70,7 +70,7 @@ namespace eCAL
        * @param config_          Optional configuration parameters.
       **/
       ECAL_API_EXPORTED_MEMBER
-        CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventCallbackT event_callback_, const Publisher::Configuration& config_ = GetPublisherConfiguration());
+        CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_ = GetPublisherConfiguration());
 
       /**
        * @brief Destructor.

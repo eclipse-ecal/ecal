@@ -67,7 +67,7 @@ namespace eCAL
      * @param event_callback_  The publisher event callback funtion.
      * @param config_          Optional configuration parameters.
     **/
-    CMsgPublisher(const std::string& topic_name_, const struct SDataTypeInformation& data_type_info_, const PubEventCallbackT event_callback_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CPublisher(topic_name_, data_type_info_, event_callback_, config_)
+    CMsgPublisher(const std::string& topic_name_, const struct SDataTypeInformation& data_type_info_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CPublisher(topic_name_, data_type_info_, event_callback_, config_)
     {
     }
 
