@@ -134,19 +134,6 @@ namespace eCAL
       CPublisher& operator=(CPublisher&&) = default;
 
       /**
-       * @brief  Creates this object.
-       *
-       * @param topic_name_  Unique topic name.
-       * @param config_      Optional configuration parameters.
-       *
-       * @return  True if it succeeds, false if it fails.
-      **/
-      bool Create(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration())
-      {
-        return(eCAL::CPublisher::Create(topic_name_, GetDataTypeInformation(), config_));
-      }
-
-      /**
        * @brief Send a serialized message to all subscribers.
        *
        * @param msg_                     The message object.
