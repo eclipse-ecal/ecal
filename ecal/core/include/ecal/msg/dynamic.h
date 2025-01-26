@@ -145,7 +145,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    boolSetReceiveCallback(MsgReceiveCallbackT callback_)
+    bool SetReceiveCallback(MsgReceiveCallbackT callback_)
     {
       RemoveReceiveCallback();
 
