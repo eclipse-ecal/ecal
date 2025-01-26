@@ -51,7 +51,7 @@ PluginWidget::PluginWidget(const QString& topic_name, const QString&, QWidget* p
 
 PluginWidget::~PluginWidget()
 {
-  subscriber_.RemReceiveCallback();
+  subscriber_.RemoveReceiveCallback();
 }
 
 void PluginWidget::ecalMessageReceivedCallback(const std::string& message, long long publish_timestamp_usecs)
@@ -120,7 +120,7 @@ void PluginWidget::onResume()
 
 void PluginWidget::onPause()
 {
-  subscriber_.RemReceiveCallback();
+  subscriber_.RemoveReceiveCallback();
 }
 
 void PluginWidget::updateStringMessageView()

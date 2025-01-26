@@ -142,7 +142,7 @@ namespace eCAL
     **/
     bool SetReceiveCallback(MsgReceiveCallbackT callback_)
     {
-      RemReceiveCallback();
+      RemoveReceiveCallback();
 
       {
         std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
@@ -157,7 +157,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool RemReceiveCallback()
+    bool RemoveReceiveCallback()
     {
       bool ret = CSubscriber::RemoveReceiveCallback();
 

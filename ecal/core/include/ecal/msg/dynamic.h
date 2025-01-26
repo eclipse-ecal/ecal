@@ -116,7 +116,7 @@ namespace eCAL
       if (has_callback)
       {
         // the callback bound to the CSubscriber belongs to rhs, bind to this callback instead
-        CSubscriber::RemReceiveCallback();
+        CSubscriber::RemoveReceiveCallback();
         auto callback = std::bind(&CDynamicMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
         CSubscriber::SetReceiveCallback(callback);
       }

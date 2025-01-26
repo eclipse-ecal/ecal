@@ -58,8 +58,8 @@ PluginWidget::PluginWidget(const QString& topic_name, const QString& topic_type,
   ui_.publish_timestamp_warning_label->setVisible(false);
 
   // Add eCAL Callbacks
-  subscriber_.AddReceiveCallback(std::bind(&PluginWidget::onProtoMessageCallback, this, std::placeholders::_2, std::placeholders::_3));
-  subscriber_.AddErrorCallback(std::bind(&PluginWidget::onProtoErrorCallback, this, std::placeholders::_1));
+  subscriber_.SetReceiveCallback(std::bind(&PluginWidget::onProtoMessageCallback, this, std::placeholders::_2, std::placeholders::_3));
+  subscriber_.SetErrorCallback(std::bind(&PluginWidget::onProtoErrorCallback, this, std::placeholders::_1));
 
   // Button connections
   connect(ui_.expand_button, &QPushButton::clicked, [this]() { tree_view_->expandAll();   });
@@ -102,8 +102,8 @@ PluginWidget::~PluginWidget() noexcept
   qDebug().nospace() << "[" << metaObject()->className() << "]: Deleting Widget for topic " << topic_name_;
 #endif // NDEBUG
 
-  subscriber_.RemReceiveCallback();
-  //subscriber_.RemErrorCallback();
+  subscriber_.RemoveReceiveCallback();
+  //subscriber_.RemoveErrorCallback();
   
   {
     std::lock_guard<std::mutex> lock(capnproto_message_mutex_);
@@ -322,14 +322,14 @@ void PluginWidget::onUpdate()
 void PluginWidget::onResume()
 {
   // Add eCAL Callbacks
-  subscriber_.AddReceiveCallback(std::bind(&PluginWidget::onProtoMessageCallback, this, std::placeholders::_2, std::placeholders::_3));
-  subscriber_.AddErrorCallback(std::bind(&PluginWidget::onProtoErrorCallback, this, std::placeholders::_1));
+  subscriber_.SetReceiveCallback(std::bind(&PluginWidget::onProtoMessageCallback, this, std::placeholders::_2, std::placeholders::_3));
+  subscriber_.SetErrorCallback(std::bind(&PluginWidget::onProtoErrorCallback, this, std::placeholders::_1));
 }
 
 void PluginWidget::onPause()
 {
-  subscriber_.RemReceiveCallback();
-  subscriber_.RemErrorCallback();
+  subscriber_.RemoveReceiveCallback();
+  subscriber_.RemoveErrorCallback();
 }
 
 QWidget* PluginWidget::getWidget()
