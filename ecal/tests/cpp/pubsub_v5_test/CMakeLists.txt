@@ -29,6 +29,7 @@ endif()
 
 set(pubsub_test_src
   src/pubsub_callback_topicid.cpp
+  src/pubsub_receive_test.cpp
   ${pubsub_test_src_shm}
 )
 

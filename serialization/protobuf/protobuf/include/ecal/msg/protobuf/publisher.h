@@ -27,7 +27,7 @@
 #include <cstddef>
 #include <ecal/deprecate.h>
 #include <ecal/msg/protobuf/ecal_proto_hlp.h>
-#include <ecal/v5/ecal_publisher.h>
+#include <ecal/pubsub/publisher.h>
 
 // protobuf includes
 #ifdef _MSC_VER
@@ -54,7 +54,7 @@ namespace eCAL
      *
     **/
     template <typename T>
-    class CPublisher : public eCAL::v5::CPublisher
+    class CPublisher : public eCAL::CPublisher
     {
       class CPayload : public eCAL::CPayloadWriter
       {
@@ -91,13 +91,6 @@ namespace eCAL
     public:
       /**
        * @brief  Constructor.
-      **/
-      CPublisher() : eCAL::v5::CPublisher()
-      {
-      }
-
-      /**
-       * @brief  Constructor.
        *
        * @param topic_name_  Unique topic name.
        * @param config_      Optional configuration parameters.
@@ -107,7 +100,11 @@ namespace eCAL
       // where the vtable is not created yet, or it's destructed.
       // Probably we can handle the Message publishers differently. One message publisher class and then one class for payloads and getting type
       // descriptor information.
-      explicit CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : eCAL::v5::CPublisher(topic_name_, CPublisher::GetDataTypeInformation(), config_)
+      explicit CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : eCAL::CPublisher(topic_name_, CPublisher::GetDataTypeInformation(), config_)
+      {
+      }
+
+      explicit CPublisher(const std::string& topic_name_, const eCAL::PubEventCallbackT& event_callback_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : eCAL::CPublisher(topic_name_, CPublisher::GetDataTypeInformation(), event_callback_, config_)
       {
       }
 
@@ -146,7 +143,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration())
       {
-        return(eCAL::v5::CPublisher::Create(topic_name_, GetDataTypeInformation(), config_));
+        return(eCAL::CPublisher::Create(topic_name_, GetDataTypeInformation(), config_));
       }
 
       /**
@@ -160,7 +157,7 @@ namespace eCAL
       bool Send(const T& msg_, long long time_ = DEFAULT_TIME_ARGUMENT)
       {
         CPayload payload{ msg_ };
-        return (eCAL::v5::CPublisher::Send(payload, time_) > 0);
+        return (eCAL::CPublisher::Send(payload, time_));
       }
 
     private:
