@@ -87,16 +87,6 @@ namespace eCAL
     public:
       /**
       * @brief  Constructor.
-      **/
-      CPublisher()
-        : eCAL::CPublisher()
-        , builder(std::make_unique<capnp::MallocMessageBuilder>())
-        , root_builder(builder->initRoot<message_type>())
-      {
-      }
-
-      /**
-      * @brief  Constructor.
       *
       * @param topic_name_  Unique topic name.
       * @param config_      Optional configuration parameters.
@@ -140,19 +130,6 @@ namespace eCAL
         {
         }
 
-      }
-
-      /**
-      * @brief  Creates this object.
-      *
-      * @param topic_name_  Unique topic name.
-      * @param config_      Optional configuration parameters.
-      *
-      * @return  True if it succeeds, false if it fails.
-      **/
-      bool Create(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = {})
-      {
-        return(eCAL::CPublisher::Create(topic_name_, GetDataTypeInformation(), config_));
       }
 
       typename message_type::Builder GetBuilder()
