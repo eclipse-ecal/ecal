@@ -1,6 +1,5 @@
 include_guard(GLOBAL)
 
-
 add_library(_ecal_warnings INTERFACE)
 
 set(compiler_flags "")
