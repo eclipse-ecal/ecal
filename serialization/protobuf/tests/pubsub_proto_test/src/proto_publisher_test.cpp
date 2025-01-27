@@ -44,29 +44,24 @@ using core_cpp_pubsub_proto_pub = ProtoPublisherTest;
 TEST_F(core_cpp_pubsub_proto_pub, ProtoPublisherTest_MoveAssignment)
 {
   eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoPublisherTest");
+  auto topic_id = person_pub.GetTopicId();
 
-  ASSERT_TRUE(person_pub.IsCreated());
-
-  eCAL::protobuf::CPublisher<pb::People::Person>person_moved;
-
-  ASSERT_FALSE(person_moved.IsCreated());
-
+  eCAL::protobuf::CPublisher<pb::People::Person>person_moved("ProtoPublisherTest");
   person_moved = std::move(person_pub);
-
-  // New Subscriber must be initialized
-  ASSERT_TRUE(person_moved.IsCreated());
-  // Old subscriber is not initialized
-  ASSERT_FALSE(person_pub.IsCreated());
+  // New Publisher must have the same topic id
+  ASSERT_EQ(person_moved.GetTopicId(), topic_id);
+  // Old Publisher must have no topic id
+  ASSERT_EQ(person_pub.GetTopicId(), eCAL::STopicId());
 }
 
 TEST_F(core_cpp_pubsub_proto_pub, ProtoPublisherTest_MoveConstruction)
 {
   eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoPublisherTest");
-
-  ASSERT_TRUE(person_pub.IsCreated());
+  auto topic_id = person_pub.GetTopicId();
 
   eCAL::protobuf::CPublisher<pb::People::Person>person_moved{ std::move(person_pub) };
-
-  ASSERT_TRUE(person_moved.IsCreated());
-  ASSERT_FALSE(person_pub.IsCreated());
+  // New Publisher must have the same topic id
+  ASSERT_EQ(person_moved.GetTopicId(), topic_id);
+  // Old Publisher must have no topic id
+  ASSERT_EQ(person_pub.GetTopicId(), eCAL::STopicId());
 }

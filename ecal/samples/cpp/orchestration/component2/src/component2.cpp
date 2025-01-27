@@ -34,12 +34,12 @@ public:
   ComponentServiceImpl()
   {
     // create subscriber for topic 'foo'
-    subscriber_foo = eCAL::protobuf::CSubscriber<component::foo>("foo");
-    subscriber_foo.AddReceiveCallback(std::bind(&ComponentServiceImpl::on_foo_message, this, std::placeholders::_2));
+    subscriber_foo = std::make_unique<eCAL::protobuf::CSubscriber<component::foo>>("foo");
+    subscriber_foo->SetReceiveCallback(std::bind(&ComponentServiceImpl::on_foo_message, this, std::placeholders::_2));
 
     // create subscriber for topic 'vec'
-    subscriber_vec = eCAL::protobuf::CSubscriber<component::vec>("vec");
-    subscriber_vec.AddReceiveCallback(std::bind(&ComponentServiceImpl::on_vec_message, this, std::placeholders::_2));
+    subscriber_vec = std::make_unique<eCAL::protobuf::CSubscriber<component::vec>>("vec");
+    subscriber_vec->SetReceiveCallback(std::bind(&ComponentServiceImpl::on_vec_message, this, std::placeholders::_2));
   }
 
   // the component execute method
@@ -83,8 +83,8 @@ public:
 
 private:
   std::mutex callback_mtx;
-  eCAL::protobuf::CSubscriber<component::foo> subscriber_foo;
-  eCAL::protobuf::CSubscriber<component::vec> subscriber_vec;
+  std::unique_ptr<eCAL::protobuf::CSubscriber<component::foo>> subscriber_foo;
+  std::unique_ptr<eCAL::protobuf::CSubscriber<component::vec>> subscriber_vec;
   uint64_t                                    id_foo  = 0;
   uint64_t                                    id_vec  = 0;
   int                                         err_cnt = 0;

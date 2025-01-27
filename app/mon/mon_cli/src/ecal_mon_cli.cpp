@@ -334,7 +334,7 @@ void ProcEcho(const std::string& topic_name, int msg_count)
   eCAL::string::CSubscriber<std::string> sub(topic_name);
   std::atomic<int> cnt(msg_count);
   auto msg_cb = [&cnt](const std::string& msg_) { if (cnt != 0) { std::cout << msg_ << std::endl; if (cnt > 0) cnt--; } };
-  sub.AddReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
+  sub.SetReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
 
   while(eCAL::Ok() && (cnt != 0))
   {
@@ -357,7 +357,7 @@ void ProcProto(const std::string& topic_name, int msg_count)
   eCAL::protobuf::CDynamicSubscriber sub(topic_name);
   std::atomic<int> cnt(msg_count);
   auto msg_cb = [&cnt](const std::shared_ptr<google::protobuf::Message>& msg_) { if (cnt != 0) { std::cout << msg_->DebugString() << std::endl; if (cnt > 0) cnt--; } };
-  sub.AddReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
+  sub.SetReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
 
   // enter main loop
   while(eCAL::Ok() && (cnt != 0))

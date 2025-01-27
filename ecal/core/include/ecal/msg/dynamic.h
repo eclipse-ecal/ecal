@@ -29,7 +29,7 @@
 #include <mutex>
 #include <string>
 
-#include <ecal/v5/ecal_subscriber.h>
+#include <ecal/pubsub/subscriber.h>
 #include <ecal/util.h>
 
 namespace eCAL
@@ -68,47 +68,46 @@ namespace eCAL
 
 
   template <typename T, typename DynamicDeserializer>
-  class CDynamicMessageSubscriber final : public v5::CSubscriber
+  class CDynamicMessageSubscriber final : public CSubscriber
   {
   public:
     /**
-     * @brief  Constructor.
+     * @brief Constructor.
     **/
     CDynamicMessageSubscriber() = default;
 
     /**
-    * @brief  Constructor.
+    * @brief Constructor.
     *
     * @param topic_name_  Unique topic name.
     **/
-    CDynamicMessageSubscriber(const std::string& topic_name_) : v5::CSubscriber()
+    CDynamicMessageSubscriber(const std::string& topic_name_) : CSubscriber(topic_name_)
       , m_cb_callback(nullptr)
       , m_error_callback(nullptr)
       , m_deserializer()
     {
-      v5::CSubscriber::Create(topic_name_);
     }
 
     ~CDynamicMessageSubscriber() noexcept
     {
-      Destroy();
+      RemoveReceiveCallback();
     };
 
     /**
-    * @brief  Copy Constructor is not available.
+    * @brief Copy Constructor is not available.
     **/
     CDynamicMessageSubscriber(const CDynamicMessageSubscriber&) = delete;
 
     /**
-    * @brief  Copy Constructor is not available.
+    * @brief Copy Constructor is not available.
     **/
     CDynamicMessageSubscriber& operator=(const CDynamicMessageSubscriber&) = delete;
 
     /**
-    * @brief  Move Constructor
+    * @brief Move Constructor
     **/
     CDynamicMessageSubscriber(CDynamicMessageSubscriber&& rhs)
-      : v5::CSubscriber(std::move(rhs))
+      : CSubscriber(std::move(rhs))
       , m_cb_callback(std::move(rhs.m_cb_callback))
       , m_deserializer(std::move(rhs.m_deserializer))
     {
@@ -117,27 +116,16 @@ namespace eCAL
       if (has_callback)
       {
         // the callback bound to the CSubscriber belongs to rhs, bind to this callback instead
-        v5::CSubscriber::RemReceiveCallback();
+        CSubscriber::RemoveReceiveCallback();
         auto callback = std::bind(&CDynamicMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
-        v5::CSubscriber::AddReceiveCallback(callback);
+        CSubscriber::SetReceiveCallback(callback);
       }
     }
 
     /**
-    * @brief  Move assignment not available
+    * @brief Move assignment not available
     **/
     CDynamicMessageSubscriber& operator=(CDynamicMessageSubscriber&& rhs) = delete;
-
-    /**
-     * @brief Destroys this object.
-     *
-     * @return  true if it succeeds, false if it fails.
-    **/
-    bool Destroy()
-    {
-      RemReceiveCallback();
-      return(v5::CSubscriber::Destroy());
-    }
 
     /**
      * @brief eCAL message receive callback function
@@ -151,15 +139,15 @@ namespace eCAL
     using MsgReceiveCallbackT = std::function<void(const STopicId& topic_id_, const T& msg_, long long time_, long long clock_, long long id_)>;
 
     /**
-     * @brief  Add receive callback for incoming messages.
+     * @brief Set receive callback for incoming messages.
      *
      * @param callback_  The callback function.
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool AddReceiveCallback(MsgReceiveCallbackT callback_)
+    bool SetReceiveCallback(MsgReceiveCallbackT callback_)
     {
-      RemReceiveCallback();
+      RemoveReceiveCallback();
 
       {
         std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
@@ -167,17 +155,17 @@ namespace eCAL
       }
 
       ReceiveCallbackT callback = std::bind(&CDynamicMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-      return(v5::CSubscriber::AddReceiveCallback(callback));
+      return(CSubscriber::SetReceiveCallback(callback));
     }
 
     /**
-     * @brief  Remove receive callback for incoming messages.
+     * @brief Remove receive callback for incoming messages.
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool RemReceiveCallback()
+    bool RemoveReceiveCallback()
     {
-      bool ret = v5::CSubscriber::RemReceiveCallback();
+      bool ret = CSubscriber::RemoveReceiveCallback();
 
       std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
       if (m_cb_callback == nullptr) return(false);
@@ -193,13 +181,13 @@ namespace eCAL
     using ErrorCallbackT = std::function<void(const std::string& error)>;
 
     /**
-     * @brief Add callback function in case an error occurs.
+     * @brief Set callback function in case an error occurs.
      *
      * @param callback_  The callback function to add.
      *
      * @return  True if succeeded, false if not.
     **/
-    bool AddErrorCallback(ErrorCallbackT callback_)
+    bool SetErrorCallback(ErrorCallbackT callback_)
     {
       std::lock_guard<std::mutex> callback_lock(m_error_callback_mutex);
       m_error_callback = callback_;
@@ -212,7 +200,7 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not.
     **/
-    bool RemErrorCallback()
+    bool RemoveErrorCallback()
     {
       std::lock_guard<std::mutex> callback_lock(m_error_callback_mutex);
       m_error_callback = nullptr;

@@ -283,7 +283,7 @@ int main()
 
   // create dynamic subscribers for receiving and decoding messages
   eCAL::protobuf::CDynamicSubscriber sub(MESSAGE_NAME);
-  sub.AddReceiveCallback(std::bind(ProtoMsgCallback, std::placeholders::_1, std::placeholders::_2));
+  sub.SetReceiveCallback(std::bind(ProtoMsgCallback, std::placeholders::_1, std::placeholders::_2));
 
   // enter main loop
   while(eCAL::Ok())

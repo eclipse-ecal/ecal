@@ -40,7 +40,7 @@ namespace eCAL
 {
   ECAL_CORE_NAMESPACE_V6
   {
-    CPublisher::CPublisher(const std::string & topic_name_, const SDataTypeInformation & data_type_info_, const Publisher::Configuration & config_)
+    CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_)
     {
       // create publisher implementation
       m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
@@ -49,7 +49,7 @@ namespace eCAL
       if (g_pubgate() != nullptr) g_pubgate()->Register(topic_name_, m_publisher_impl);
     }
   
-    CPublisher::CPublisher(const std::string & topic_name_, const SDataTypeInformation & data_type_info_, const PubEventCallbackT event_callback_, const Publisher::Configuration & config_) :
+    CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventCallbackT& event_callback_, const Publisher::Configuration & config_) :
       CPublisher(topic_name_, data_type_info_, config_)
     {
       // add event callback for all current event types

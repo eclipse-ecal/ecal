@@ -35,10 +35,6 @@ int main()
   // publisher for topic "Hello"
   eCAL::string::CPublisher<std::string> pub("Hello");
 
-  // set some attributes
-  pub.SetAttribute("Hello", "World");
-  pub.SetAttribute("Hallo", "Welt");
-
   // send updates
   int cnt = 0;
   while (eCAL::Ok())

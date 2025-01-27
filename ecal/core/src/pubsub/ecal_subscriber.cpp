@@ -33,7 +33,7 @@ namespace eCAL
 {
   ECAL_CORE_NAMESPACE_V6
   {
-    CSubscriber::CSubscriber(const std::string & topic_name_, const SDataTypeInformation & data_type_info_, const Subscriber::Configuration & config_)
+    CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_)
     {
       // create subscriber implementation
       m_subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
@@ -42,7 +42,7 @@ namespace eCAL
       if (g_subgate() != nullptr) g_subgate()->Register(topic_name_, m_subscriber_impl);
     }
   
-    CSubscriber::CSubscriber(const std::string & topic_name_, const SDataTypeInformation & data_type_info_, const SubEventCallbackT event_callback_, const Subscriber::Configuration & config_) :
+    CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventCallbackT& event_callback_, const Subscriber::Configuration& config_) :
       CSubscriber(topic_name_, data_type_info_, config_)
     {
       // add event callback for all current event types

@@ -22,6 +22,8 @@
 
 #include <iostream>
 #include <sstream>
+#include <chrono>
+#include <thread>
 
 int main()
 {
@@ -30,21 +32,17 @@ int main()
   std::cout << "-------------------------------" << std::endl;
 
   // initialize eCAL API
-  eCAL::Initialize("minimal_rec");
+  eCAL::Initialize("minimal_rec_cb");
 
   // subscriber for topic "Hello"
   eCAL::string::CSubscriber<std::string> sub("Hello");
 
-  // receive updates
-  std::string rcv_content;
-  while (eCAL::Ok())
-  {
-    // receive content
-    if (sub.Receive(rcv_content, nullptr, 100))
-    {
-      std::cout << "Received \"" << rcv_content << "\"" << std::endl;
-    }
-  }
+  // receive updates in a callback (lambda function)
+  auto msg_cb = [](const std::string& msg_) { std::cout << "Received \"" << msg_ << "\"" << std::endl; };
+  sub.SetReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
+
+  // idle main loop
+  while (eCAL::Ok()) std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
   // finalize eCAL API
   eCAL::Finalize();
