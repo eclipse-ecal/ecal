@@ -91,6 +91,8 @@ option(BUILD_APPS                              "Build the eCAL applications"    
 option(BUILD_APP_REC_ADDON_SDK                 "Build eCAL rec addon SDK"                               ${BUILD_APPS})
 option(BUILD_SAMPLES                           "Build the eCAL samples"                                            ON)
 option(BUILD_TIME                              "Build the eCAL time interfaces"                                    ON)
+option(BUILD_C_BINDING                         "Build eCAL C binding"                                              ON)
+mark_as_advanced(FORCE BUILD_C_BINDING)
 option(BUILD_PY_BINDING                        "Build eCAL python binding"                                        OFF)
 option(BUILD_CSHARP_BINDING                    "Build eCAL C# binding"                                            OFF)
 option(BUILD_ECAL_TESTS                        "Build the eCAL google tests"                                      OFF)
@@ -331,9 +333,11 @@ if(BUILD_CSHARP_BINDING AND WIN32)
   add_subdirectory(lang/csharp)
 endif()
 
-set(ECAL_C_BUILD_SAMPLES     ${BUILD_SAMPLES})
-set(ECAL_C_BUILD_TESTS    ${BUILD_ECAL_TESTS})
-add_subdirectory(lang/c)
+if(BUILD_C_BINDING)
+  set(ECAL_C_BUILD_SAMPLES     ${BUILD_SAMPLES})
+  set(ECAL_C_BUILD_TESTS    ${BUILD_ECAL_TESTS})
+  add_subdirectory(lang/c)
+endif()
 
 # --------------------------------------------------------
 # console applications
