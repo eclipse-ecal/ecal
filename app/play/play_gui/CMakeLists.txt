@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -160,7 +160,7 @@ if (WIN32 AND (${QT_VERSION_MAJOR} EQUAL 5))
     # Maybe we can re-enable the functionality with the following external lib:
     # https://github.com/oblivioncth/Qx
     #
-    target_link_libraries (${PROJECT_NAME}
+    target_link_libraries (${PROJECT_NAME} PRIVATE
         Qt${QT_VERSION_MAJOR}::WinExtras
     )
 endif()
