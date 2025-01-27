@@ -32,9 +32,9 @@ message Topic                                      // eCAL topic
   int32               registration_clock    =  1;  // registration clock (heart beat)
   string              host_name             =  2;  // host name
   string              shm_transport_domain  = 28;  // shm_transport_domain
-  int32               pid                   =  3;  // process id
+  int32               process_id                   =  3;  // process id
   string              process_name                 =  4;  // process name
-  string              uname                 =  5;  // unit name
+  string              unit_name                 =  5;  // unit name
   string              tid                   =  6;  // topic id
   string              tname                 =  7;  // topic name
   string              direction             =  8;  // direction (publisher, subscriber)

@@ -47,7 +47,7 @@ ServiceWidget::ServiceWidget(QWidget *parent)
     (int)ServiceTreeModel::Columns::HOST_NAME,
     (int)ServiceTreeModel::Columns::PROCESS_NAME,
     (int)ServiceTreeModel::Columns::UNIT_NAME,
-    (int)ServiceTreeModel::Columns::PID,
+    (int)ServiceTreeModel::Columns::PROCESS_ID,
     (int)ServiceTreeModel::Columns::SERVICE_NAME,
     (int)ServiceTreeModel::Columns::SERVICE_TYPE,
     (int)ServiceTreeModel::Columns::TCP_PORT,
@@ -82,7 +82,7 @@ ServiceWidget::ServiceWidget(QWidget *parent)
     (int)ServiceTreeModel::Columns::SERVICE_NAME,
     (int)ServiceTreeModel::Columns::SERVICE_TYPE,
     (int)ServiceTreeModel::Columns::HOST_NAME,
-    (int)ServiceTreeModel::Columns::PID,
+    (int)ServiceTreeModel::Columns::PROCESS_ID,
     (int)ServiceTreeModel::Columns::METHOD_NAME,
     (int)ServiceTreeModel::Columns::METHOD_REQUEST_TYPE,
     (int)ServiceTreeModel::Columns::METHOD_RESPONSE_TYPE,
@@ -113,8 +113,8 @@ void ServiceWidget::autoSizeColumns()
   example_service_pb.set_registration_clock(999999);
   example_service_pb.set_host_name("CARPC00____");
   example_service_pb.set_process_name("");
-  example_service_pb.set_uname("eCALRPCService____");
-  example_service_pb.set_pid(999999);
+  example_service_pb.set_unit_name("eCALRPCService____");
+  example_service_pb.set_process_id(999999);
   example_service_pb.set_sname("eCALRPCService____");
   example_service_pb.set_tcp_port_v1(999999);
 
@@ -136,7 +136,7 @@ void ServiceWidget::autoSizeColumns()
     (int)ServiceTreeModel::Columns::UNIT_NAME,
     (int)ServiceTreeModel::Columns::SERVICE_NAME,
     (int)ServiceTreeModel::Columns::HOST_NAME,
-    (int)ServiceTreeModel::Columns::PID,
+    (int)ServiceTreeModel::Columns::PROCESS_ID,
     (int)ServiceTreeModel::Columns::TCP_PORT,
     (int)ServiceTreeModel::Columns::METHOD_NAME,
     (int)ServiceTreeModel::Columns::METHOD_REQUEST_TYPE,

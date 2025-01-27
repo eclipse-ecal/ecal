@@ -53,7 +53,7 @@ namespace eCAL
         const auto& sample_process = sample_.process;
         auto& unregister_sample_process = unregister_sample.process;
         unregister_sample_process.process_name = sample_process.process_name;
-        unregister_sample_process.uname = sample_process.uname;
+        unregister_sample_process.unit_name = sample_process.unit_name;
       }
 
       if (IsTopicRegistration(unregister_sample))
@@ -63,7 +63,7 @@ namespace eCAL
         unregister_sample_topic.shm_transport_domain = sample_topic.shm_transport_domain;
         unregister_sample_topic.process_name                = sample_topic.process_name;
         unregister_sample_topic.tname                = sample_topic.tname;
-        unregister_sample_topic.uname                = sample_topic.uname;
+        unregister_sample_topic.unit_name                = sample_topic.unit_name;
       }
 
       if (unregister_sample.cmd_type == bct_unreg_service)
@@ -72,7 +72,7 @@ namespace eCAL
         auto& unregister_sample_service = unregister_sample.service;
         unregister_sample_service.process_name = sample_service.process_name;
         unregister_sample_service.sname = sample_service.sname;
-        unregister_sample_service.uname = sample_service.uname;
+        unregister_sample_service.unit_name = sample_service.unit_name;
         unregister_sample_service.version = sample_service.version;
       }
 
@@ -83,7 +83,7 @@ namespace eCAL
 
         unregister_sample_client.process_name = sample_client.process_name;
         unregister_sample_client.sname = sample_client.sname;
-        unregister_sample_client.uname = sample_client.uname;
+        unregister_sample_client.unit_name = sample_client.unit_name;
         unregister_sample_client.version = sample_client.version;
       }
       return unregister_sample;

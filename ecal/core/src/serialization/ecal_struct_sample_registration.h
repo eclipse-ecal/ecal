@@ -214,7 +214,7 @@ namespace eCAL
       int32_t                             registration_clock = 0;                   // registration clock
       std::string                         shm_transport_domain;         // shm transport domain
       std::string                         process_name;                        // process name
-      std::string                         uname;                        // unit name
+      std::string                         unit_name;                        // unit name
       std::string                         pparam;                       // process parameter
       ProcessState                        state;                        // process state info
       eTSyncState                         tsync_state = tsync_none;     // time synchronization state
@@ -228,7 +228,7 @@ namespace eCAL
         return registration_clock == other.registration_clock &&
           shm_transport_domain == other.shm_transport_domain &&
           process_name == other.process_name &&
-          uname == other.uname &&
+          unit_name == other.unit_name &&
           pparam == other.pparam &&
           state == other.state &&
           tsync_state == other.tsync_state &&
@@ -244,7 +244,7 @@ namespace eCAL
         registration_clock = 0;
         shm_transport_domain.clear();
         process_name.clear();
-        uname.clear();
+        unit_name.clear();
         pparam.clear();
         state.clear();
         tsync_state = tsync_none;
@@ -262,7 +262,7 @@ namespace eCAL
       int32_t                             registration_clock = 0;                   // registration clock (heart beat)
       std::string                         shm_transport_domain;         // shm transport domain
       std::string                         process_name;                        // process name
-      std::string                         uname;                        // unit name
+      std::string                         unit_name;                        // unit name
       std::string                         tname;                        // topic name
       std::string                         direction;                    // direction (publisher, subscriber)
       SDataTypeInformation                tdatatype;                    // topic datatype information (encoding & type & description)
@@ -284,7 +284,7 @@ namespace eCAL
         return registration_clock == other.registration_clock &&
           shm_transport_domain == other.shm_transport_domain &&
           process_name == other.process_name &&
-          uname == other.uname &&
+          unit_name == other.unit_name &&
           tname == other.tname &&
           direction == other.direction &&
           tdatatype == other.tdatatype &&
@@ -304,7 +304,7 @@ namespace eCAL
         registration_clock = 0;
         shm_transport_domain.clear();
         process_name.clear();
-        uname.clear();
+        unit_name.clear();
         tname.clear();
         direction.clear();
         tdatatype.clear();

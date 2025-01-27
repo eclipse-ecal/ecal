@@ -491,7 +491,7 @@ namespace eCAL
     SPublicationInfo publication_info;
     publication_info.entity_id  = topic_info_.tid;
     publication_info.host_name  = topic_info_.host_name;
-    publication_info.process_id = topic_info_.pid;
+    publication_info.process_id = topic_info_.process_id;
     if (!CheckMessageClock(publication_info, clock_))
     {
       // we will not process that message
@@ -541,12 +541,12 @@ namespace eCAL
         topic_id.topic_name          = topic_info_.tname;
         topic_id.topic_id.host_name  = topic_info_.host_name;
         topic_id.topic_id.entity_id  = topic_info_.tid;
-        topic_id.topic_id.process_id = topic_info_.pid;
+        topic_id.topic_id.process_id = topic_info_.process_id;
 
         SPublicationInfo pub_info;
         pub_info.entity_id  = topic_info_.tid;
         pub_info.host_name  = topic_info_.host_name;
-        pub_info.process_id = topic_info_.pid;
+        pub_info.process_id = topic_info_.process_id;
 
         // execute it
         const std::lock_guard<std::mutex> exec_lock(m_connection_map_mtx);
@@ -679,7 +679,7 @@ namespace eCAL
 #endif
 
     ecal_reg_sample_topic.process_name         = m_attributes.process_name;
-    ecal_reg_sample_topic.uname         = m_attributes.unit_name;
+    ecal_reg_sample_topic.unit_name         = m_attributes.unit_name;
     ecal_reg_sample_topic.dclock        = m_clock;
     ecal_reg_sample_topic.dfreq         = GetFrequency();
     ecal_reg_sample_topic.message_drops = static_cast<int32_t>(m_message_drops);
@@ -702,7 +702,7 @@ namespace eCAL
     ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
     ecal_reg_sample_topic.process_name                = m_attributes.process_name;
     ecal_reg_sample_topic.tname                = m_attributes.topic_name;
-    ecal_reg_sample_topic.uname                = m_attributes.unit_name;
+    ecal_reg_sample_topic.unit_name                = m_attributes.unit_name;
   }
   
   void CSubscriberImpl::StartTransportLayer()

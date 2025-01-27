@@ -49,8 +49,8 @@ public:
     REGISTRATION_CLOCK,
     HOST_NAME,
     PROCESS_NAME,
-    UNAME,
-    PID,
+    UNIT_NAME,
+    PROCESS_ID,
     SNAME,
     STYPE,
     TCP_PORT,
@@ -92,13 +92,13 @@ public:
       {
         return service_.process_name().c_str();
       }
-      else if (column == Columns::UNAME)
+      else if (column == Columns::UNIT_NAME)
       {
-        return service_.uname().c_str();
+        return service_.unit_name().c_str();
       }
-      else if (column == Columns::PID)
+      else if (column == Columns::PROCESS_ID)
       {
-        return service_.pid();
+        return service_.process_id();
       }
       else if (column == Columns::SNAME)
       {
@@ -137,7 +137,7 @@ public:
     {
       if ((column == Columns::HOST_NAME)
         || (column == Columns::PROCESS_NAME)
-        || (column == Columns::UNAME)
+        || (column == Columns::UNIT_NAME)
         || (column == Columns::SNAME)
         || (column == Columns::MNAME)
         || (column == Columns::REQ_TYPE)
@@ -165,7 +165,7 @@ public:
     else if (role == Qt::ItemDataRole::TextAlignmentRole)
     {
       if ((column == Columns::REGISTRATION_CLOCK)
-        || (column == Columns::PID)
+        || (column == Columns::PROCESS_ID)
         || (column == Columns::TCP_PORT)
         || (column == Columns::CALL_COUNT)
         )
@@ -185,19 +185,19 @@ public:
           QStringList list{ service_.host_name().c_str(), service_.process_name().c_str() };
           return list;
         }
-        else if (column == Columns::PID)
+        else if (column == Columns::PROCESS_ID)
         {
-          QStringList list{ service_.host_name().c_str(), QString::number(service_.pid()) };
+          QStringList list{ service_.host_name().c_str(), QString::number(service_.process_id()) };
           return list;
         }
-        else if (column == Columns::UNAME)
+        else if (column == Columns::UNIT_NAME)
         {
-          QStringList list{ service_.host_name().c_str(), service_.uname().c_str(), QString::number(service_.pid()) };
+          QStringList list{ service_.host_name().c_str(), service_.unit_name().c_str(), QString::number(service_.process_id()) };
           return list;
         }
         else if (column == Columns::SNAME)
         {
-          QStringList list{ service_.sname().c_str(), service_.host_name().c_str(), service_.uname().c_str(), QString::number(service_.pid()) };
+          QStringList list{ service_.sname().c_str(), service_.host_name().c_str(), service_.unit_name().c_str(), QString::number(service_.process_id()) };
           return list;
         }
         else
@@ -210,7 +210,7 @@ public:
     {
       if ((column == Columns::HOST_NAME)
         || (column == Columns::PROCESS_NAME)
-        || (column == Columns::UNAME)
+        || (column == Columns::UNIT_NAME)
         || (column == Columns::SNAME)
         || (column == Columns::STYPE)
         || (column == Columns::MNAME)
@@ -250,7 +250,7 @@ public:
 
   static std::string generateIdentifier(const T& service, const eCAL::pb::Method& method)
   {
-    return std::to_string(service.pid()) + "@" + service.host_name() + "@" + service.sname() + "@" + method.mname();
+    return std::to_string(service.process_id()) + "@" + service.host_name() + "@" + service.sname() + "@" + method.mname();
   }
 
   void update(const T& service, const eCAL::pb::Method& method)

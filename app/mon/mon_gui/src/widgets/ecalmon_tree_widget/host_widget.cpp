@@ -88,9 +88,9 @@ void HostWidget::autoSizeColumns()
 
   example_process_pb->set_registration_clock(999999);
   example_process_pb->set_host_name("CARPC00____");
-  example_process_pb->set_pid(999999);
+  example_process_pb->set_process_id(999999);
   example_process_pb->set_process_name("");
-  example_process_pb->set_uname("CameraSensorMapFusionCAF___");
+  example_process_pb->set_unit_name("CameraSensorMapFusionCAF___");
   example_process_pb->set_pparam("");
 
   HostTreeItem* example_host_item = new HostTreeItem("CARPC00____");

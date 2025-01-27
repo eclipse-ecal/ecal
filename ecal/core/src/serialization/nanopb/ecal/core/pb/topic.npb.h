@@ -16,9 +16,9 @@ typedef struct _eCAL_pb_Topic { /* Reserved fields in enums are not supported in
  reserved 9, 10, 11, 14, 15, 22 to 26, 29; */
     int32_t registration_clock; /* registration clock (heart beat) */
     pb_callback_t host_name; /* host name */
-    int32_t pid; /* process id */
+    int32_t process_id; /* process id */
     pb_callback_t process_name; /* process name */
-    pb_callback_t uname; /* unit name */
+    pb_callback_t unit_name; /* unit name */
     pb_callback_t tid; /* topic id */
     pb_callback_t tname; /* topic name */
     pb_callback_t direction; /* direction (publisher, subscriber) */
@@ -57,9 +57,9 @@ extern "C" {
 /* Field tags (for use in manual encoding/decoding) */
 #define eCAL_pb_Topic_registration_clock_tag     1
 #define eCAL_pb_Topic_host_name_tag              2
-#define eCAL_pb_Topic_pid_tag                    3
+#define eCAL_pb_Topic_process_id_tag             3
 #define eCAL_pb_Topic_process_name_tag           4
-#define eCAL_pb_Topic_uname_tag                  5
+#define eCAL_pb_Topic_unit_name_tag              5
 #define eCAL_pb_Topic_tid_tag                    6
 #define eCAL_pb_Topic_tname_tag                  7
 #define eCAL_pb_Topic_direction_tag              8
@@ -81,9 +81,9 @@ extern "C" {
 #define eCAL_pb_Topic_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, INT32,    registration_clock,   1) \
 X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
-X(a, STATIC,   SINGULAR, INT32,    pid,               3) \
+X(a, STATIC,   SINGULAR, INT32,    process_id,        3) \
 X(a, CALLBACK, SINGULAR, STRING,   process_name,      4) \
-X(a, CALLBACK, SINGULAR, STRING,   uname,             5) \
+X(a, CALLBACK, SINGULAR, STRING,   unit_name,         5) \
 X(a, CALLBACK, SINGULAR, STRING,   tid,               6) \
 X(a, CALLBACK, SINGULAR, STRING,   tname,             7) \
 X(a, CALLBACK, SINGULAR, STRING,   direction,         8) \

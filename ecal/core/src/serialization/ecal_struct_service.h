@@ -159,7 +159,7 @@ namespace eCAL
     {
       int32_t                         registration_clock = 0;       // Registration clock
       std::string                     process_name;            // Process name
-      std::string                     uname;            // Unit name
+      std::string                     unit_name;            // Unit name
       std::string                     sname;            // Service name
       Util::CExpandingVector<Method>  methods;          // List of methods
       uint32_t                        version = 0;      // Service protocol version
@@ -169,7 +169,7 @@ namespace eCAL
       bool operator==(const Service& other) const {
         return registration_clock == other.registration_clock &&
           process_name == other.process_name &&
-          uname == other.uname &&
+          unit_name == other.unit_name &&
           sname == other.sname &&
           methods == other.methods &&
           version == other.version &&
@@ -181,7 +181,7 @@ namespace eCAL
       {
         registration_clock = 0;
         process_name.clear();
-        uname.clear();
+        unit_name.clear();
         sname.clear();
         methods.clear();
         version = 0;
@@ -195,7 +195,7 @@ namespace eCAL
     {
       int32_t                         registration_clock = 0;       // Registration clock
       std::string                     process_name;            // Process name
-      std::string                     uname;            // Unit name
+      std::string                     unit_name;            // Unit name
       std::string                     sname;            // Service name
       Util::CExpandingVector<Method>  methods;          // List of methods
       uint32_t                        version = 0;      // Client protocol version
@@ -203,7 +203,7 @@ namespace eCAL
       bool operator==(const Client& other) const {
         return registration_clock == other.registration_clock &&
           process_name == other.process_name &&
-          uname == other.uname &&
+          unit_name == other.unit_name &&
           sname == other.sname &&
           methods == other.methods &&
           version == other.version;
@@ -213,7 +213,7 @@ namespace eCAL
       {
         registration_clock = 0;
         process_name.clear();
-        uname.clear();
+        unit_name.clear();
         sname.clear();
         methods.clear();
         version = 0;

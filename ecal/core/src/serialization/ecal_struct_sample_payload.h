@@ -42,7 +42,7 @@ namespace eCAL
       std::string                         host_name;                        // host name
       uint64_t                            tid;                          // topic id
       std::string                         tname;                        // topic name
-      int32_t                             pid = 0;                      // process id
+      int32_t                             process_id = 0;                      // process id
     };
 
     // Topic content payload

@@ -65,17 +65,17 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return process_.shm_transport_domain().c_str();
     }
-    else if (column == Columns::PID)
+    else if (column == Columns::PROCESS_ID)
     {
-      return process_.pid();
+      return process_.process_id();
     }
     else if (column == Columns::PROCESS_NAME)
     {
       return process_.process_name().c_str();
     }
-    else if (column == Columns::UNAME)
+    else if (column == Columns::UNIT_NAME)
     {
-      return process_.uname().c_str();
+      return process_.unit_name().c_str();
     }
     else if (column == Columns::PPARAM)
     {
@@ -120,7 +120,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     if ((column == Columns::HOST_NAME)
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PROCESS_NAME)
-      || (column == Columns::UNAME))
+      || (column == Columns::UNIT_NAME))
     {
       QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
       return (!raw_data.isEmpty() ? raw_data : "- ? -");
@@ -159,7 +159,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     if ((column == Columns::HOST_NAME)
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PROCESS_NAME)
-      || (column == Columns::UNAME))
+      || (column == Columns::UNIT_NAME))
     {
       return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
     }
@@ -186,7 +186,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   else if (role == Qt::ItemDataRole::TextAlignmentRole)
   {
     if ((column == Columns::REGISTRATION_CLOCK)
-      || (column == Columns::PID)
+      || (column == Columns::PROCESS_ID)
       )
     {
       return Qt::AlignmentFlag::AlignRight;
@@ -199,9 +199,9 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
   else if (role == (Qt::ItemDataRole)ItemDataRoles::GroupRole) //-V1016 //-V547
   {
-    if (column == Columns::PID)
+    if (column == Columns::PROCESS_ID)
     {
-      QStringList list{ process_.host_name().c_str(), QString::number(process_.pid()) };
+      QStringList list{ process_.host_name().c_str(), QString::number(process_.process_id()) };
       return list;
     }
     if (column == Columns::PROCESS_NAME)
@@ -209,9 +209,9 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
       QStringList list{process_.host_name().c_str(), process_.process_name().c_str()};
       return list;
     }
-    else if (column == Columns::UNAME)
+    else if (column == Columns::UNIT_NAME)
     {
-      QStringList list{ process_.host_name().c_str(), process_.uname().c_str(), QString::number(process_.pid()) };
+      QStringList list{ process_.host_name().c_str(), process_.unit_name().c_str(), QString::number(process_.process_id()) };
       return list;
     }
     else
@@ -245,7 +245,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     if ((column == Columns::HOST_NAME)
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PROCESS_NAME)
-      || (column == Columns::UNAME))
+      || (column == Columns::UNIT_NAME))
     {
       QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
       if (raw_data.isEmpty())

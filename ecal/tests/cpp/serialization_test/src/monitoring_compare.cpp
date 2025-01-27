@@ -40,9 +40,9 @@ namespace eCAL
         if (monitoring1.processes[i].registration_clock != monitoring2.processes[i].registration_clock ||
           monitoring1.processes[i].host_name != monitoring2.processes[i].host_name ||
           monitoring1.processes[i].shm_transport_domain != monitoring2.processes[i].shm_transport_domain ||
-          monitoring1.processes[i].pid != monitoring2.processes[i].pid ||
+          monitoring1.processes[i].process_id != monitoring2.processes[i].process_id ||
           monitoring1.processes[i].process_name != monitoring2.processes[i].process_name ||
-          monitoring1.processes[i].uname != monitoring2.processes[i].uname ||
+          monitoring1.processes[i].unit_name != monitoring2.processes[i].unit_name ||
           monitoring1.processes[i].pparam != monitoring2.processes[i].pparam ||
           monitoring1.processes[i].state_severity != monitoring2.processes[i].state_severity ||
           monitoring1.processes[i].state_severity_level != monitoring2.processes[i].state_severity_level ||
@@ -70,9 +70,9 @@ namespace eCAL
         if (monitoring1.publisher[i].registration_clock != monitoring2.publisher[i].registration_clock ||
           monitoring1.publisher[i].host_name != monitoring2.publisher[i].host_name ||
           monitoring1.publisher[i].shm_transport_domain != monitoring2.publisher[i].shm_transport_domain ||
-          monitoring1.publisher[i].pid != monitoring2.publisher[i].pid ||
+          monitoring1.publisher[i].process_id != monitoring2.publisher[i].process_id ||
           monitoring1.publisher[i].process_name != monitoring2.publisher[i].process_name ||
-          monitoring1.publisher[i].uname != monitoring2.publisher[i].uname ||
+          monitoring1.publisher[i].unit_name != monitoring2.publisher[i].unit_name ||
           monitoring1.publisher[i].tid != monitoring2.publisher[i].tid ||
           monitoring1.publisher[i].tname != monitoring2.publisher[i].tname ||
           monitoring1.publisher[i].direction != monitoring2.publisher[i].direction ||
@@ -102,9 +102,9 @@ namespace eCAL
         if (monitoring1.subscriber[i].registration_clock != monitoring2.subscriber[i].registration_clock ||
           monitoring1.subscriber[i].host_name != monitoring2.subscriber[i].host_name ||
           monitoring1.subscriber[i].shm_transport_domain != monitoring2.subscriber[i].shm_transport_domain ||
-          monitoring1.subscriber[i].pid != monitoring2.subscriber[i].pid ||
+          monitoring1.subscriber[i].process_id != monitoring2.subscriber[i].process_id ||
           monitoring1.subscriber[i].process_name != monitoring2.subscriber[i].process_name ||
-          monitoring1.subscriber[i].uname != monitoring2.subscriber[i].uname ||
+          monitoring1.subscriber[i].unit_name != monitoring2.subscriber[i].unit_name ||
           monitoring1.subscriber[i].tid != monitoring2.subscriber[i].tid ||
           monitoring1.subscriber[i].tname != monitoring2.subscriber[i].tname ||
           monitoring1.subscriber[i].direction != monitoring2.subscriber[i].direction ||
@@ -133,9 +133,9 @@ namespace eCAL
       {
         if (monitoring1.server[i].registration_clock != monitoring2.server[i].registration_clock ||
           monitoring1.server[i].host_name != monitoring2.server[i].host_name ||
-          monitoring1.server[i].process_name != monitoring2.serprocess_name].process_name ||
-          monitoring1.server[i].uname != monitoring2.server[i].uname ||
-          monitoring1.server[i].pid != monitoring2.server[i].pid ||
+          monitoring1.server[i].process_name != monitoring2.server[i].process_name ||
+          monitoring1.server[i].unit_name != monitoring2.server[i].unit_name ||
+          monitoring1.server[i].process_id != monitoring2.server[i].process_id ||
           monitoring1.server[i].sname != monitoring2.server[i].sname ||
           monitoring1.server[i].sid != monitoring2.server[i].sid ||
           monitoring1.server[i].version != monitoring2.server[i].version ||
@@ -168,9 +168,9 @@ namespace eCAL
       {
         if (monitoring1.clients[i].registration_clock != monitoring2.clients[i].registration_clock ||
           monitoring1.clients[i].host_name != monitoring2.clients[i].host_name ||
-          monitoring1.clients[i].process_name != monitoring2.clieprocess_name].process_name ||
-          monitoring1.clients[i].uname != monitoring2.clients[i].uname ||
-          monitoring1.clients[i].pid != monitoring2.clients[i].pid ||
+          monitoring1.clients[i].process_name != monitoring2.clients[i].process_name ||
+          monitoring1.clients[i].unit_name != monitoring2.clients[i].unit_name ||
+          monitoring1.clients[i].process_id != monitoring2.clients[i].process_id ||
           monitoring1.clients[i].sname != monitoring2.clients[i].sname ||
           monitoring1.clients[i].sid != monitoring2.clients[i].sid ||
           monitoring1.clients[i].methods.size() != monitoring2.clients[i].methods.size() ||

@@ -74,9 +74,9 @@ namespace eCAL
       int32_t                             registration_clock{0};            //!< registration clock (heart beat)
       std::string                         host_name;                //!< host name
       std::string                         shm_transport_domain; //!< shm transport domain
-      int32_t                             pid{0};               //!< process id
+      int32_t                             process_id{0};               //!< process id
       std::string                         process_name;                //!< process name
-      std::string                         uname;                //!< unit name
+      std::string                         unit_name;                //!< unit name
       EntityIdT             tid{0};               //!< topic id
       std::string                         tname;                //!< topic name
       std::string                         direction;            //!< direction (publisher, subscriber)
@@ -101,9 +101,9 @@ namespace eCAL
       int32_t        registration_clock{0};                                 //!< registration clock
       std::string    host_name;                                     //!< host name
       std::string    shm_transport_domain;                      //!< shm transport domain
-      int32_t        pid{0};                                    //!< process id
+      int32_t        process_id{0};                                    //!< process id
       std::string    process_name;                                     //!< process name
-      std::string    uname;                                     //!< unit name
+      std::string    unit_name;                                     //!< unit name
       std::string    pparam;                                    //!< process parameter
 
       int32_t        state_severity{0};                         //!< process state info severity:
@@ -147,8 +147,8 @@ namespace eCAL
       int32_t                  registration_clock{0};                       //<! registration clock
       std::string              host_name;                           //<! host name
       std::string              process_name;                           //<! process name
-      std::string              uname;                           //<! unit name
-      int32_t                  pid{0};                          //<! process id
+      std::string              unit_name;                           //<! unit name
+      int32_t                  process_id{0};                          //<! process id
 
       std::string              sname;                           //<! service name
       EntityIdT  sid{0};                          //<! service id
@@ -165,8 +165,8 @@ namespace eCAL
       int32_t                  registration_clock{0};                       //<! registration clock
       std::string              host_name;                           //<! host name
       std::string              process_name;                           //<! process name
-      std::string              uname;                           //<! unit name
-      int32_t                  pid{0};                          //<! process id
+      std::string              unit_name;                           //<! unit name
+      int32_t                  process_id{0};                          //<! process id
 
       std::string              sname;                           //<! service name
       EntityIdT  sid{0};                          //<! service id

@@ -722,9 +722,9 @@ PyObject* client_destroy(PyObject* /*self*/, PyObject* args)
 }
 
 /****************************************/
-/*      client_set_hostname             */
+/*      client_set_host_name             */
 /****************************************/
-PyObject* client_set_hostname(PyObject* /*self*/, PyObject* args)   // (client_handle, host_name)
+PyObject* client_set_host_name(PyObject* /*self*/, PyObject* args)   // (client_handle, host_name)
 {
   ECAL_HANDLE client_handle = nullptr;
   const char* host_name     = nullptr;
@@ -732,12 +732,12 @@ PyObject* client_set_hostname(PyObject* /*self*/, PyObject* args)   // (client_h
   if (!PyArg_ParseTuple(args, "ns", &client_handle, &host_name))
     return nullptr;
 
-  bool set_hostname{ false };
+  bool set_host_name{ false };
   Py_BEGIN_ALLOW_THREADS
-    set_hostname = client_set_hostname(client_handle, host_name);
+    set_host_name = client_set_host_name(client_handle, host_name);
   Py_END_ALLOW_THREADS
 
-  return(Py_BuildValue("i", set_hostname));
+  return(Py_BuildValue("i", set_host_name));
 }
 
 /****************************************/
@@ -951,14 +951,14 @@ namespace
       val = Py_BuildValue("s", topic.shm_transport_domain.c_str());
       PyDict_SetItemString(topicDict, "shm_transport_domain", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", topic.pid);
-      PyDict_SetItemString(topicDict, "pid", val); Py_DECREF(val);
+      val = Py_BuildValue("i", topic.process_id);
+      PyDict_SetItemString(topicDict, "process_id", val); Py_DECREF(val);
 
       val = Py_BuildValue("s", topic.process_name.c_str());
       PyDict_SetItemString(topicDict, "process_name", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", topic.uname.c_str());
-      PyDict_SetItemString(topicDict, "uname", val); Py_DECREF(val);
+      val = Py_BuildValue("s", topic.unit_name.c_str());
+      PyDict_SetItemString(topicDict, "unit_name", val); Py_DECREF(val);
 
       val = Py_BuildValue("s", std::to_string(topic.tid).c_str());
       PyDict_SetItemString(topicDict, "tid", val); Py_DECREF(val);
@@ -1063,14 +1063,14 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", process.shm_transport_domain.c_str());
         PyDict_SetItemString(processDict, "shm_transport_domain", val); Py_DECREF(val);
 
-        val = Py_BuildValue("i", process.pid);
-        PyDict_SetItemString(processDict, "pid", val); Py_DECREF(val);
+        val = Py_BuildValue("i", process.process_id);
+        PyDict_SetItemString(processDict, "process_id", val); Py_DECREF(val);
 
         val = Py_BuildValue("s", process.process_name.c_str());
         PyDict_SetItemString(processDict, "process_name", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", process.uname.c_str());
-        PyDict_SetItemString(processDict, "uname", val); Py_DECREF(val);
+        val = Py_BuildValue("s", process.unit_name.c_str());
+        PyDict_SetItemString(processDict, "unit_name", val); Py_DECREF(val);
 
         val = Py_BuildValue("s", process.pparam.c_str());
         PyDict_SetItemString(processDict, "pparam", val); Py_DECREF(val);
@@ -1120,11 +1120,11 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", service.process_name.c_str());
         PyDict_SetItemString(serviceDict, "process_name", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", service.uname.c_str());
-        PyDict_SetItemString(serviceDict, "uname", val); Py_DECREF(val);
+        val = Py_BuildValue("s", service.unit_name.c_str());
+        PyDict_SetItemString(serviceDict, "unit_name", val); Py_DECREF(val);
 
-        val = Py_BuildValue("i", service.pid);
-        PyDict_SetItemString(serviceDict, "pid", val); Py_DECREF(val);
+        val = Py_BuildValue("i", service.process_id);
+        PyDict_SetItemString(serviceDict, "process_id", val); Py_DECREF(val);
 
         val = Py_BuildValue("s", service.sname.c_str());
         PyDict_SetItemString(serviceDict, "sname", val); Py_DECREF(val);
@@ -1192,11 +1192,11 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", client.process_name.c_str());
         PyDict_SetItemString(clientDict, "process_name", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", client.uname.c_str());
-        PyDict_SetItemString(clientDict, "uname", val); Py_DECREF(val);
+        val = Py_BuildValue("s", client.unit_name.c_str());
+        PyDict_SetItemString(clientDict, "unit_name", val); Py_DECREF(val);
 
-        val = Py_BuildValue("i", client.pid);
-        PyDict_SetItemString(clientDict, "pid", val); Py_DECREF(val);
+        val = Py_BuildValue("i", client.process_id);
+        PyDict_SetItemString(clientDict, "process_id", val); Py_DECREF(val);
 
         val = Py_BuildValue("s", client.sname.c_str());
         PyDict_SetItemString(clientDict, "sname", val); Py_DECREF(val);
@@ -1277,8 +1277,8 @@ PyObject* mon_logging(PyObject* /*self*/, PyObject* /*args*/)
       val = Py_BuildValue("s", log.host_name.c_str());
       PyDict_SetItemString(logDict, "host_name", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", log.pid);
-      PyDict_SetItemString(logDict, "pid", val); Py_DECREF(val);
+      val = Py_BuildValue("i", log.process_id);
+      PyDict_SetItemString(logDict, "process_id", val); Py_DECREF(val);
 
       val = Py_BuildValue("s", log.process_name.c_str());
       PyDict_SetItemString(logDict, "process_name", val); Py_DECREF(val);
@@ -1342,7 +1342,7 @@ static PyMethodDef _ecal_methods[] =
   {"client_create",                 client_create,                 METH_VARARGS,  "client_create(service_name)" },
   {"client_destroy",                client_destroy,                METH_VARARGS,  "client_destroy(client_handle)" },
 
-  {"client_set_hostname",           client_set_hostname,           METH_VARARGS,  "client_set_hostname(client_handle, host_name)" },
+  {"client_set_host_name",           client_set_host_name,           METH_VARARGS,  "client_set_host_name(client_handle, host_name)" },
   {"client_call_method",            client_call_method,            METH_VARARGS,  "client_call_method(client_handle, method_name, request, timeout)" },
 
   {"client_add_response_callback",  client_add_response_callback,  METH_VARARGS,  "client_add_response_callback(client_handle, callback)" },

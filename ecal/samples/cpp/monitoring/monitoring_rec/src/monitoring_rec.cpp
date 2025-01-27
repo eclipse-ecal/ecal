@@ -91,13 +91,13 @@ int main()
       for (const auto& process : monitoring.processes())
       {
         // check filtering
-        if (!g_procs_filt_string.empty() && (g_procs_filt_string != process.uname())) continue;
+        if (!g_procs_filt_string.empty() && (g_procs_filt_string != process.unit_name())) continue;
 
         // print process details
         std::cout << "host_name       : " << process.host_name() << std::endl;   // host name
-        std::cout << "pid             : " << process.pid() << std::endl;   // process id
+        std::cout << "process_id             : " << process.process_id() << std::endl;   // process id
         std::cout << "process_name           : " << process.process_name() << std::endl;   // process name
-        std::cout << "uname           : " << process.uname() << std::endl;   // unit name
+        std::cout << "unit_name           : " << process.unit_name() << std::endl;   // unit name
         std::cout << "pparam          : " << process.pparam() << std::endl;   // process parameter
         std::cout << "severity        : " << process.state().severity() << std::endl;   // process state severity
         std::cout << "info            : " << process.state().info() << std::endl;   // process state info
@@ -126,7 +126,7 @@ int main()
         // print process details
         std::cout << "host_name       : " << service.host_name() << std::endl;   // host name
         std::cout << "sname           : " << service.sname() << std::endl;   // service name
-        std::cout << "pid             : " << service.pid() << std::endl;   // process id
+        std::cout << "process_id             : " << service.process_id() << std::endl;   // process id
         std::cout << std::endl;
 
         for (int i = 0; i < service.methods_size(); ++i)
@@ -163,9 +163,9 @@ int main()
         // print topic details
         std::cout << "registration_clock          : " << topic.registration_clock() << std::endl;   // registration clock
         std::cout << "host_name       : " << topic.host_name() << std::endl;   // host name
-        std::cout << "pid             : " << topic.pid() << std::endl;   // process id
+        std::cout << "process_id             : " << topic.process_id() << std::endl;   // process id
         std::cout << "process_name           : " << topic.process_name() << std::endl;   // process name
-        std::cout << "uname           : " << topic.uname() << std::endl;   // unit name
+        std::cout << "unit_name           : " << topic.unit_name() << std::endl;   // unit name
         std::cout << "tid             : " << topic.tid() << std::endl;   // topic id
         std::cout << "tname           : " << topic.tname() << std::endl;   // topic name
         std::cout << "direction       : " << topic.direction() << std::endl;   // direction (publisher, subscriber)

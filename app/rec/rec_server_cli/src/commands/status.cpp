@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -639,7 +639,7 @@ namespace eCAL
         enum class Column : int
         {
           NAME,
-          PID,
+          PROCESS_ID,
           STATUS,
           LENGTH,
           INFO,
@@ -652,7 +652,7 @@ namespace eCAL
         {
           std::vector<table_printer::TableEntry> header_data((int)Column::COLUMN_COUNT);
           header_data[(int)Column::NAME]   = table_printer::TableEntry("Recorder");
-          header_data[(int)Column::PID]    = table_printer::TableEntry("PID");
+          header_data[(int)Column::PROCESS_ID]    = table_printer::TableEntry("PROCESS_ID");
           header_data[(int)Column::STATUS] = table_printer::TableEntry("Status");
           header_data[(int)Column::LENGTH] = table_printer::TableEntry("Length");
           header_data[(int)Column::INFO]   = table_printer::TableEntry("Info");
@@ -706,7 +706,7 @@ namespace eCAL
             }
 
             table_row[(int)Column::NAME]  .content = client_status.first;
-            table_row[(int)Column::PID]   .content = std::to_string(client_status.second.client_pid_);
+            table_row[(int)Column::PROCESS_ID]   .content = std::to_string(client_status.second.client_pid_);
             table_row[(int)Column::STATUS]         = rec_state_entry;
             table_row[(int)Column::LENGTH].content = length_ss.str();
 
@@ -763,7 +763,7 @@ namespace eCAL
             }
 
             table_row[(int)Column::NAME]  .content = getHumanReadableAddonName(client_status.first, addon_status.first, status);
-            table_row[(int)Column::PID]   .content = std::to_string(client_status.second.client_pid_);
+            table_row[(int)Column::PROCESS_ID]   .content = std::to_string(client_status.second.client_pid_);
             table_row[(int)Column::STATUS]         = rec_state_entry;
             table_row[(int)Column::LENGTH].content = std::to_string(addon_status.second.total_frame_count_) + " frames";
             table_row[(int)Column::INFO]  .content = addon_status.second.info_.second;
@@ -810,7 +810,7 @@ namespace eCAL
             << " s / " << client_status.pre_buffer_length_.first << " frames";
 
           ostream << "Client hostname: " << hostname << std::endl;
-          ostream << "PID:             " << client_status.pid_ << std::endl;
+          ostream << "PROCESS_ID:             " << client_status.pid_ << std::endl;
           ostream << "Timestamp:       " << timeToString(client_status.timestamp_) << std::endl;
           ostream << "Time-error:      " << time_error_ss.str() << " s" << std::endl;
           ostream << "Buffer:          " << buffer_ss.str() << std::endl;

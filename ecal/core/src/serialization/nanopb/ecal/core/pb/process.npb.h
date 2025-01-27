@@ -44,9 +44,9 @@ typedef struct _eCAL_pb_Process { /* Reserved fields in enums are not supported 
  reserved 7 to 11; */
     int32_t registration_clock; /* registration clock */
     pb_callback_t host_name; /* host name */
-    int32_t pid; /* process id */
+    int32_t process_id; /* process id */
     pb_callback_t process_name; /* process name */
-    pb_callback_t uname; /* unit name */
+    pb_callback_t unit_name; /* unit name */
     pb_callback_t pparam; /* process parameter */
     /* 10 = data write bytes per sec
  11 = data read bytes per sec */
@@ -97,9 +97,9 @@ extern "C" {
 #define eCAL_pb_ProcessState_severity_level_tag  3
 #define eCAL_pb_Process_registration_clock_tag   1
 #define eCAL_pb_Process_host_name_tag            2
-#define eCAL_pb_Process_pid_tag                  3
+#define eCAL_pb_Process_process_id_tag           3
 #define eCAL_pb_Process_process_name_tag         4
-#define eCAL_pb_Process_uname_tag                5
+#define eCAL_pb_Process_unit_name_tag            5
 #define eCAL_pb_Process_pparam_tag               6
 #define eCAL_pb_Process_state_tag                12
 #define eCAL_pb_Process_tsync_state_tag          13
@@ -121,9 +121,9 @@ X(a, STATIC,   SINGULAR, UENUM,    severity_level,    3)
 #define eCAL_pb_Process_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, INT32,    registration_clock,   1) \
 X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
-X(a, STATIC,   SINGULAR, INT32,    pid,               3) \
+X(a, STATIC,   SINGULAR, INT32,    process_id,        3) \
 X(a, CALLBACK, SINGULAR, STRING,   process_name,      4) \
-X(a, CALLBACK, SINGULAR, STRING,   uname,             5) \
+X(a, CALLBACK, SINGULAR, STRING,   unit_name,         5) \
 X(a, CALLBACK, SINGULAR, STRING,   pparam,            6) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  state,            12) \
 X(a, STATIC,   SINGULAR, UENUM,    tsync_state,      13) \

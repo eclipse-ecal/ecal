@@ -685,7 +685,7 @@ namespace eCAL
 #endif
 
     ecal_reg_sample_topic.process_name  = m_attributes.process_name;
-    ecal_reg_sample_topic.uname  = m_attributes.unit_name;
+    ecal_reg_sample_topic.unit_name  = m_attributes.unit_name;
     ecal_reg_sample_topic.did    = m_id;
     ecal_reg_sample_topic.dclock = m_clock;
     ecal_reg_sample_topic.dfreq  = GetFrequency();
@@ -720,7 +720,7 @@ namespace eCAL
     ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
     ecal_reg_sample_topic.process_name                = m_attributes.process_name;
     ecal_reg_sample_topic.tname                = m_attributes.topic_name;
-    ecal_reg_sample_topic.uname                = m_attributes.unit_name;
+    ecal_reg_sample_topic.unit_name                = m_attributes.unit_name;
   }
 
   void CPublisherImpl::FireEvent(const ePublisherEvent type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)

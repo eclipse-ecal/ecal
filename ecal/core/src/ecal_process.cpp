@@ -752,7 +752,7 @@ namespace eCAL
       if (g_process_par.empty())
       {
 #if defined(ECAL_OS_MACOS)
-        int pid = getpid();
+        int process_id = getpid();
 
         int    mib[3], argmax, argc;
         size_t    size;
@@ -812,7 +812,7 @@ namespace eCAL
          */
         mib[0] = CTL_KERN;
         mib[1] = KERN_PROCARGS2;
-        mib[2] = pid;
+        mib[2] = process_id;
 
         size = (size_t)argmax;
         if (sysctl(mib, 3, procargs.data(), &size, NULL, 0) == -1)

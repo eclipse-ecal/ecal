@@ -43,13 +43,13 @@ int main()
   eCAL::Process::SleepMS(2000);
 
   // start process
-  int pid = eCAL::Process::StartProcess(proc_name, "", "", false, eCAL::Process::eStartMode::normal, false);
+  int process_id = eCAL::Process::StartProcess(proc_name, "", "", false, eCAL::Process::eStartMode::normal, false);
 
   // sleep 2 seconds
   eCAL::Process::SleepMS(2000);
 
   // stop notepad
-  eCAL::Process::StopProcess(pid);
+  eCAL::Process::StopProcess(process_id);
 
   // finalize eCAL API
   eCAL::Finalize();

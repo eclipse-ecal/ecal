@@ -62,7 +62,7 @@ void InitializeAllSamples()
   pub_foo_process_a_unregister.topic.shm_transport_domain = "host0";
   pub_foo_process_a_unregister.topic.process_name = "process_a";
   pub_foo_process_a_unregister.topic.tname = "foo";
-  pub_foo_process_a_register_1.topic.uname = "abc";
+  pub_foo_process_a_register_1.topic.unit_name = "abc";
 
   pub_foo_process_a_register_1 = pub_foo_process_a_unregister;
   pub_foo_process_a_register_1.cmd_type = eCAL::bct_reg_publisher;
@@ -87,7 +87,7 @@ void InitializeAllSamples()
   sub_foo_process_a_unregister.topic.shm_transport_domain = "host0";
   sub_foo_process_a_unregister.topic.process_name = "process_a";
   sub_foo_process_a_unregister.topic.tname = "foo";
-  sub_foo_process_a_register_1.topic.uname = "abc";
+  sub_foo_process_a_register_1.topic.unit_name = "abc";
 
   sub_foo_process_a_register_1 = sub_foo_process_a_unregister;
   sub_foo_process_a_register_1.cmd_type = eCAL::bct_reg_subscriber;
@@ -112,7 +112,7 @@ void InitializeAllSamples()
   sub_foo_process_b_unregister.topic.shm_transport_domain = "host0";
   sub_foo_process_b_unregister.topic.process_name = "process_b";
   sub_foo_process_b_unregister.topic.tname = "foo";
-  sub_foo_process_b_register_1.topic.uname = "abc";
+  sub_foo_process_b_register_1.topic.unit_name = "abc";
 
   sub_foo_process_b_register_1 = sub_foo_process_b_unregister;
   sub_foo_process_b_register_1.cmd_type = eCAL::bct_reg_subscriber;

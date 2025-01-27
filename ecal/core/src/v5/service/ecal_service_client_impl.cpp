@@ -113,7 +113,7 @@ namespace eCAL
             event_data.time = data_.time;
             event_data.attr.host_name = service_id_.service_id.host_name;
             event_data.attr.sname = service_id_.service_name;
-            event_data.attr.pid   = service_id_.service_id.process_id;
+            event_data.attr.process_id   = service_id_.service_id.process_id;
             event_data.attr.sid   = service_id_.service_id.entity_id;
             callback->second(service_id_.service_name.c_str(), &event_data);
           }

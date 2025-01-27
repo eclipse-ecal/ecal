@@ -74,8 +74,8 @@ namespace
     pb_sample_.has_topic = true;
     // host_name
     eCAL::nanopb::encode_string(pb_sample_.topic.host_name, payload_.topic_info.host_name);
-    // pid
-    pb_sample_.topic.pid = payload_.topic_info.pid;
+    // process_id
+    pb_sample_.topic.process_id = payload_.topic_info.process_id;
     // tid
     eCAL::nanopb::encode_int_to_string(pb_sample_.topic.tid, payload_.topic_info.tid);
     // tname
@@ -179,8 +179,8 @@ namespace
     // command type
     payload_.cmd_type = static_cast<eCAL::eCmdType>(pb_sample.cmd_type);
 
-    // pid
-    payload_.topic_info.pid = pb_sample.topic.pid;
+    // process_id
+    payload_.topic_info.process_id = pb_sample.topic.process_id;
 
     // topic content
     payload_.content.id    = pb_sample.content.id;

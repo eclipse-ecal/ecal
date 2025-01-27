@@ -700,9 +700,9 @@ bool client_destroy(ECAL_HANDLE handle_)
 }
 
 /****************************************/
-/*      client_set_hostname             */
+/*      client_set_host_name             */
 /****************************************/
-bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_)
+bool client_set_host_name(ECAL_HANDLE handle_, const char* host_name_)
 {
   auto* client = static_cast<eCAL::v5::CServiceClient*>(handle_);
   if (client != nullptr)

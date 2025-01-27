@@ -109,11 +109,11 @@ namespace eCAL
               auto existing_publisher_it = topic_info_map_it->second.publishers_.find(topic.host_name());
               if (existing_publisher_it != topic_info_map_it->second.publishers_.end())
               {
-                existing_publisher_it->second.emplace(topic.uname());
+                existing_publisher_it->second.emplace(topic.unit_name());
               }
               else
               {
-                topic_info_map_it->second.publishers_.emplace(topic.host_name(), std::set<std::string>{topic.uname()});
+                topic_info_map_it->second.publishers_.emplace(topic.host_name(), std::set<std::string>{topic.unit_name()});
               }
             }
 

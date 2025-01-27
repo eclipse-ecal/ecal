@@ -35,9 +35,9 @@ namespace eCAL
       process.registration_clock   = rand() % 1000;
       process.host_name            = GenerateString(10);
       process.shm_transport_domain = GenerateString(8);
-      process.pid                  = rand() % 1000;
+      process.process_id                  = rand() % 1000;
       process.process_name                = GenerateString(8);
-      process.uname                = GenerateString(6);
+      process.unit_name                = GenerateString(6);
       process.pparam               = GenerateString(20);
       process.state_severity       = rand() % 5;
       process.state_severity_level = rand() % 6;
@@ -58,9 +58,9 @@ namespace eCAL
       topic.registration_clock   = rand() % 1000;
       topic.host_name            = GenerateString(10);
       topic.shm_transport_domain = GenerateString(8);
-      topic.pid                  = rand() % 1000;
+      topic.process_id                  = rand() % 1000;
       topic.process_name                = GenerateString(8);
-      topic.uname                = GenerateString(6);
+      topic.unit_name                = GenerateString(6);
       topic.tid                  = rand();
       topic.tname                = GenerateString(10);
       topic.direction            = direction;
@@ -96,8 +96,8 @@ namespace eCAL
       server.registration_clock = rand() % 1000;
       server.host_name          = GenerateString(10);
       server.process_name       = GenerateString(8);
-      server.uname       = GenerateString(6);
-      server.pid         = rand() % 1000;
+      server.unit_name       = GenerateString(6);
+      server.process_id         = rand() % 1000;
       server.sname       = GenerateString(10);
       server.sid         = rand();
       server.version     = rand() % 100;
@@ -117,8 +117,8 @@ namespace eCAL
       client.registration_clock  = rand() % 1000;
       client.host_name   = GenerateString(10);
       client.process_name   = GenerateString(8);
-      client.uname   = GenerateString(6);
-      client.pid     = rand() % 1000;
+      client.unit_name   = GenerateString(6);
+      client.process_id     = rand() % 1000;
       client.sname   = GenerateString(10);
       client.sid     = rand();
       client.methods.push_back(GenerateServiceMethod());

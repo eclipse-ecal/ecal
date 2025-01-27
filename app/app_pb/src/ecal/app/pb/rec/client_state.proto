@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,8 +130,8 @@ message State
   reserved 22;  // eCAL Rec 2.0 field
                 // repeated WriterState buffer_writer_states = 22;
 
-  string                       hostname                         = 11;
-  int32                        pid                              = 12;
+  string                       host_name                         = 11;
+  int32                        process_id                              = 12;
 
   bool                         initialized                      = 13;
   int64                        pre_buffer_length_frames_count   = 20;

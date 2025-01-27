@@ -56,17 +56,17 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return topic_.shm_transport_domain().c_str();
     }
-    else if (column == Columns::PID)
+    else if (column == Columns::PROCESS_ID)
     {
-      return topic_.pid();
+      return topic_.process_id();
     }
     else if (column == Columns::PROCESS_NAME)
     {
       return topic_.process_name().c_str();
     }
-    else if (column == Columns::UNAME)
+    else if (column == Columns::UNIT_NAME)
     {
-      return topic_.uname().c_str();
+      return topic_.unit_name().c_str();
     }
     else if (column == Columns::TID)
     {
@@ -136,7 +136,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if ((column == Columns::HOST_NAME)
       || (column == Columns::PROCESS_NAME)
-      || (column == Columns::UNAME)
+      || (column == Columns::UNIT_NAME)
       || (column == Columns::TNAME)
       || (column == Columns::DIRECTION)
       || (column == Columns::TENCODING)
@@ -236,7 +236,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     if ((column == Columns::HOST_NAME)
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PROCESS_NAME)
-      || (column == Columns::UNAME)
+      || (column == Columns::UNIT_NAME)
       || (column == Columns::TNAME)
       || (column == Columns::DIRECTION)
       || (column == Columns::TENCODING)
@@ -254,7 +254,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   else if (role == Qt::ItemDataRole::TextAlignmentRole)
   {
     if ((column == Columns::TID)
-      || (column == Columns::PID)
+      || (column == Columns::PROCESS_ID)
       || (column == Columns::REGISTRATION_CLOCK)
       || (column == Columns::TSIZE)
       || (column == Columns::CONNECTIONS_LOC)
@@ -274,9 +274,9 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
   else if (role == (Qt::ItemDataRole)ItemDataRoles::GroupRole) //-V1016 //-V547
   {
-    if (column == Columns::PID)
+    if (column == Columns::PROCESS_ID)
     {
-      const QStringList list{ topic_.host_name().c_str(), QString::number(topic_.pid()) };
+      const QStringList list{ topic_.host_name().c_str(), QString::number(topic_.process_id()) };
       return list;
     }
     else if (column == Columns::PROCESS_NAME)
@@ -284,9 +284,9 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       const QStringList list{topic_.host_name().c_str(), topic_.process_name().c_str()};
       return list;
     }
-    else if (column == Columns::UNAME)
+    else if (column == Columns::UNIT_NAME)
     {
-      const QStringList list{ topic_.host_name().c_str(), topic_.uname().c_str(), QString::number(topic_.pid()) };
+      const QStringList list{ topic_.host_name().c_str(), topic_.unit_name().c_str(), QString::number(topic_.process_id()) };
       return list;
     }
     else
@@ -301,7 +301,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     if ((column == Columns::HOST_NAME)
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PROCESS_NAME)
-      || (column == Columns::UNAME)
+      || (column == Columns::UNIT_NAME)
       || (column == Columns::TNAME)
       || (column == Columns::DIRECTION)
       || (column == Columns::TENCODING)

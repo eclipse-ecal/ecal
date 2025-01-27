@@ -49,12 +49,12 @@ namespace
     eCAL::nanopb::encode_string(pb_process_.host_name, process_.host_name);
     // shm_transport_domain
     eCAL::nanopb::encode_string(pb_process_.shm_transport_domain, process_.shm_transport_domain);
-    // pid
-    pb_process_.pid = process_.pid;
+    // process_id
+    pb_process_.process_id = process_.process_id;
     // process_name
     eCAL::nanopb::encode_string(pb_process_.process_name, process_.process_name);
-    // uname
-    eCAL::nanopb::encode_string(pb_process_.uname, process_.uname);
+    // unit_name
+    eCAL::nanopb::encode_string(pb_process_.unit_name, process_.unit_name);
     // pparam
     eCAL::nanopb::encode_string(pb_process_.pparam, process_.pparam);
     // state
@@ -153,12 +153,12 @@ namespace
     eCAL::nanopb::encode_string(pb_topic_.host_name, topic_.host_name);
     // shm_transport_domain
     eCAL::nanopb::encode_string(pb_topic_.shm_transport_domain, topic_.shm_transport_domain);
-    // pid
-    pb_topic_.pid = topic_.pid;
+    // process_id
+    pb_topic_.process_id = topic_.process_id;
     // process_name
     eCAL::nanopb::encode_string(pb_topic_.process_name, topic_.process_name);
-    // uname
-    eCAL::nanopb::encode_string(pb_topic_.uname, topic_.uname);
+    // unit_name
+    eCAL::nanopb::encode_string(pb_topic_.unit_name, topic_.unit_name);
     // tid
     eCAL::nanopb::encode_int_to_string(pb_topic_.tid, topic_.tid);
     // tname
@@ -305,10 +305,10 @@ namespace
     eCAL::nanopb::encode_string(pb_service_.host_name, service_.host_name);
     // process_name
     eCAL::nanopb::encode_string(pb_service_.process_name, service_.process_name);
-    // uname
-    eCAL::nanopb::encode_string(pb_service_.uname, service_.uname);
-    // pid
-    pb_service_.pid = service_.pid;
+    // unit_name
+    eCAL::nanopb::encode_string(pb_service_.unit_name, service_.unit_name);
+    // process_id
+    pb_service_.process_id = service_.process_id;
     // sname
     eCAL::nanopb::encode_string(pb_service_.sname, service_.sname);
     // sid
@@ -366,10 +366,10 @@ namespace
     eCAL::nanopb::encode_string(pb_client_.host_name, client_.host_name);
     // process_name
     eCAL::nanopb::encode_string(pb_client_.process_name, client_.process_name);
-    // uname
-    eCAL::nanopb::encode_string(pb_client_.uname, client_.uname);
-    // pid
-    pb_client_.pid = client_.pid;
+    // unit_name
+    eCAL::nanopb::encode_string(pb_client_.unit_name, client_.unit_name);
+    // process_id
+    pb_client_.process_id = client_.process_id;
     // sname
     eCAL::nanopb::encode_string(pb_client_.sname, client_.sname);
     // sid
@@ -502,8 +502,8 @@ namespace
     eCAL::nanopb::decode_string(pb_process_.shm_transport_domain, process_.shm_transport_domain);
     // process_name
     eCAL::nanopb::decode_string(pb_process_.process_name, process_.process_name);
-    // uname
-    eCAL::nanopb::decode_string(pb_process_.uname, process_.uname);
+    // unit_name
+    eCAL::nanopb::decode_string(pb_process_.unit_name, process_.unit_name);
     // pparam
     eCAL::nanopb::decode_string(pb_process_.pparam, process_.pparam);
     // state.info
@@ -525,8 +525,8 @@ namespace
     ///////////////////////////////////////////////
     // registration_clock
     process_.registration_clock = pb_process_.registration_clock;
-    // pid
-    process_.pid = pb_process_.pid;
+    // process_id
+    process_.process_id = pb_process_.process_id;
     // state.severity
     process_.state_severity = pb_process_.state.severity;
     // state.severity_level
@@ -612,8 +612,8 @@ namespace
     eCAL::nanopb::decode_string(pb_topic_.shm_transport_domain, topic_.shm_transport_domain);
     // process_name
     eCAL::nanopb::decode_string(pb_topic_.process_name, topic_.process_name);
-    // uname
-    eCAL::nanopb::decode_string(pb_topic_.uname, topic_.uname);
+    // unit_name
+    eCAL::nanopb::decode_string(pb_topic_.unit_name, topic_.unit_name);
     // tid
     eCAL::nanopb::decode_int_from_string(pb_topic_.tid, topic_.tid);
     // tname
@@ -639,8 +639,8 @@ namespace
     ///////////////////////////////////////////////
     // registration_clock
     topic_.registration_clock = pb_topic_.registration_clock;
-    // pid
-    topic_.pid = pb_topic_.pid;
+    // process_id
+    topic_.process_id = pb_topic_.process_id;
     // tsize
     topic_.tsize = pb_topic_.tsize;
     // connections_loc
@@ -747,8 +747,8 @@ namespace
     eCAL::nanopb::decode_string(pb_service_.host_name, service_.host_name);
     // process_name
     eCAL::nanopb::decode_string(pb_service_.process_name, service_.process_name);
-    // uname
-    eCAL::nanopb::decode_string(pb_service_.uname, service_.uname);
+    // unit_name
+    eCAL::nanopb::decode_string(pb_service_.unit_name, service_.unit_name);
     // sname
     eCAL::nanopb::decode_string(pb_service_.sname, service_.sname);
     // sid
@@ -764,8 +764,8 @@ namespace
     ///////////////////////////////////////////////
     // registration_clock
     service_.registration_clock = pb_service_.registration_clock;
-    // pid
-    service_.pid = pb_service_.pid;
+    // process_id
+    service_.process_id = pb_service_.process_id;
     // version
     service_.version = pb_service_.version;
     // tcp_port_v0
@@ -816,8 +816,8 @@ namespace
     eCAL::nanopb::decode_string(pb_client_.host_name, client_.host_name);
     // process_name
     eCAL::nanopb::decode_string(pb_client_.process_name, client_.process_name);
-    // uname
-    eCAL::nanopb::decode_string(pb_client_.uname, client_.uname);
+    // unit_name
+    eCAL::nanopb::decode_string(pb_client_.unit_name, client_.unit_name);
     // sname
     eCAL::nanopb::decode_string(pb_client_.sname, client_.sname);
     // sid
@@ -833,8 +833,8 @@ namespace
     ///////////////////////////////////////////////
     // registration_clock
     client_.registration_clock = pb_client_.registration_clock;
-    // pid
-    client_.pid = pb_client_.pid;
+    // process_id
+    client_.process_id = pb_client_.process_id;
     // version
     client_.version = pb_client_.version;
   }

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public:
   const QString& addonName() const;
   bool isAddonItem() const;
 
-  int                                                     pid()                     const;
+  int                                                     process_id()                     const;
   bool                                                    stillOnline()             const;
   std::pair<bool, std::string>                            infoLastCommandResponse() const;
   std::pair<std::chrono::steady_clock::duration, int64_t> length()                  const;
@@ -63,7 +63,7 @@ public:
   bool                                                    isDeleted()               const;
   const std::pair<bool, std::string>&                     displayedInfo()           const;
 
-  void setPid                    (int                                   pid);
+  void setPid                    (int                                   process_id);
   void setStillOnline            (bool                                  still_online);
   void setInfoLastCommandResponse(const std::pair<bool, std::string>&   info_last_command_response);
   void setLength                 (const std::pair<std::chrono::steady_clock::duration, int64_t>& length);
@@ -73,7 +73,7 @@ public:
   void setInfo                   (const std::pair<bool, std::string>&   info);
   void setIsDeleted              (bool is_deleted);
 
-  bool updatePid                    (int                                 pid);
+  bool updatePid                    (int                                 process_id);
   bool updateStillOnline            (bool                                still_online);
   bool updateInfoLastCommandResponse(const std::pair<bool, std::string>& info_last_command_response);
   bool updateLength                 (const std::pair<std::chrono::steady_clock::duration, int64_t>& length);
@@ -94,7 +94,7 @@ public:
     HOSTNAME,
     ADDON_ID,
     ADDON_NAME,
-    PID,
+    PROCESS_ID,
     STILL_ONLINE,
     LENGTH,
     STATUS,

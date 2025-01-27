@@ -69,10 +69,10 @@ namespace eCAL
       std::string             key;              //!< unique service key (internal)
       std::string             host_name;            //!< host name
       std::string             process_name;            //!< process name
-      std::string             uname;            //!< process unit name
+      std::string             unit_name;            //!< process unit name
       std::string             sname;            //!< service name
       EntityIdT sid = 0;  //!< service id
-      int                     pid = 0;  //!< process id
+      int                     process_id = 0;  //!< process id
 
       // internal protocol specifics
       unsigned int   version = 0;  //!< service protocol version
@@ -98,10 +98,10 @@ namespace eCAL
       std::string    key;           //!< unique service key (internal)
       std::string    host_name;         //!< host name
       std::string    process_name;         //!< process name
-      std::string    uname;         //!< process unit name
+      std::string    unit_name;         //!< process unit name
       std::string    sname;         //!< service name
       std::string    sid;           //!< service id
-      int            pid = 0;       //!< process id
+      int            process_id = 0;       //!< process id
 
       unsigned int   version = 0;   //!< client version
     };

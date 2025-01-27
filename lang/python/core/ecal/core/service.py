@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -83,14 +83,14 @@ class Client(object):
     """
     return ecal_core.client_destroy(self.shandle)
 
-  def set_hostname(self, host_name):
+  def set_host_name(self, host_name):
     """ set host name of the service
 
     :param host_name: the host name the service is running on
     :type host_name:  string
 
     """
-    return ecal_core.client_set_hostname(self.shandle, host_name)
+    return ecal_core.client_set_host_name(self.shandle, host_name)
 
   def add_response_callback(self, callback):
     """ add response callback to client

@@ -116,7 +116,7 @@ namespace eCAL
             }
 
             // set whether this host has an eCAL Rec client
-            if (process.uname() == "eCALRecClient")
+            if (process.unit_name() == "eCALRecClient")
             {
               existing_host_it->second = true;
             }
@@ -150,23 +150,23 @@ namespace eCAL
               auto existing_publisher_it = topic_info_map_it->second.publishers_.find(topic.host_name());
               if (existing_publisher_it != topic_info_map_it->second.publishers_.end())
               {
-                existing_publisher_it->second.emplace(topic.uname());
+                existing_publisher_it->second.emplace(topic.unit_name());
               }
               else
               {
-                topic_info_map_it->second.publishers_.emplace(topic.host_name(), std::set<std::string>{topic.uname()});
+                topic_info_map_it->second.publishers_.emplace(topic.host_name(), std::set<std::string>{topic.unit_name()});
               }
             }
 
             // Set the subscribing eCAL Rec instances
-            if (((topic.uname() == "eCALRecClient") || (topic.uname() == "eCALRecGUI"))
+            if (((topic.unit_name() == "eCALRecClient") || (topic.unit_name() == "eCALRecGUI"))
               && EcalUtils::String::Icompare(topic.direction(), "subscriber"))
             {
               auto running_enabled_rec_client_it = running_enabled_rec_clients.find(topic.host_name());
               if ((running_enabled_rec_client_it != running_enabled_rec_clients.end()
-                && (running_enabled_rec_client_it->second == topic.pid())))
+                && (running_enabled_rec_client_it->second == topic.process_id())))
               {
-                topic_info_map_it->second.rec_subscribers_[{topic.host_name(), topic.pid()}] = (static_cast<double>(topic.dfreq()) / 1000.0);
+                topic_info_map_it->second.rec_subscribers_[{topic.host_name(), topic.process_id()}] = (static_cast<double>(topic.dfreq()) / 1000.0);
               }
             }
           }

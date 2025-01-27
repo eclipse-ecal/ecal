@@ -58,8 +58,8 @@ typedef struct _eCAL_pb_Service {
     int32_t registration_clock; /* registration clock */
     pb_callback_t host_name; /* host name */
     pb_callback_t process_name; /* process name */
-    pb_callback_t uname; /* unit name */
-    int32_t pid; /* process id */
+    pb_callback_t unit_name; /* unit name */
+    int32_t process_id; /* process id */
     pb_callback_t sname; /* service name */
     uint32_t tcp_port_v0; /* the tcp port used for that service  (deprecated) */
     pb_callback_t methods; /* list of methods */
@@ -73,8 +73,8 @@ typedef struct _eCAL_pb_Client {
     int32_t registration_clock; /* registration clock */
     pb_callback_t host_name; /* host name */
     pb_callback_t process_name; /* process name */
-    pb_callback_t uname; /* unit name */
-    int32_t pid; /* process id */
+    pb_callback_t unit_name; /* unit name */
+    int32_t process_id; /* process id */
     pb_callback_t sname; /* service name */
     pb_callback_t sid; /* service id */
     /* transport specific parameter (for internal use) */
@@ -138,8 +138,8 @@ extern "C" {
 #define eCAL_pb_Service_registration_clock_tag   1
 #define eCAL_pb_Service_host_name_tag            2
 #define eCAL_pb_Service_process_name_tag         3
-#define eCAL_pb_Service_uname_tag                4
-#define eCAL_pb_Service_pid_tag                  5
+#define eCAL_pb_Service_unit_name_tag            4
+#define eCAL_pb_Service_process_id_tag           5
 #define eCAL_pb_Service_sname_tag                6
 #define eCAL_pb_Service_tcp_port_v0_tag          7
 #define eCAL_pb_Service_methods_tag              8
@@ -149,8 +149,8 @@ extern "C" {
 #define eCAL_pb_Client_registration_clock_tag    1
 #define eCAL_pb_Client_host_name_tag             2
 #define eCAL_pb_Client_process_name_tag          3
-#define eCAL_pb_Client_uname_tag                 4
-#define eCAL_pb_Client_pid_tag                   5
+#define eCAL_pb_Client_unit_name_tag             4
+#define eCAL_pb_Client_process_id_tag            5
 #define eCAL_pb_Client_sname_tag                 6
 #define eCAL_pb_Client_sid_tag                   7
 #define eCAL_pb_Client_version_tag               8
@@ -201,8 +201,8 @@ X(a, STATIC,   OPTIONAL, MESSAGE,  resp_datatype,     8)
 X(a, STATIC,   SINGULAR, INT32,    registration_clock,   1) \
 X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
 X(a, CALLBACK, SINGULAR, STRING,   process_name,      3) \
-X(a, CALLBACK, SINGULAR, STRING,   uname,             4) \
-X(a, STATIC,   SINGULAR, INT32,    pid,               5) \
+X(a, CALLBACK, SINGULAR, STRING,   unit_name,         4) \
+X(a, STATIC,   SINGULAR, INT32,    process_id,        5) \
 X(a, CALLBACK, SINGULAR, STRING,   sname,             6) \
 X(a, STATIC,   SINGULAR, UINT32,   tcp_port_v0,       7) \
 X(a, CALLBACK, REPEATED, MESSAGE,  methods,           8) \
@@ -217,8 +217,8 @@ X(a, STATIC,   SINGULAR, UINT32,   tcp_port_v1,      11)
 X(a, STATIC,   SINGULAR, INT32,    registration_clock,   1) \
 X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
 X(a, CALLBACK, SINGULAR, STRING,   process_name,      3) \
-X(a, CALLBACK, SINGULAR, STRING,   uname,             4) \
-X(a, STATIC,   SINGULAR, INT32,    pid,               5) \
+X(a, CALLBACK, SINGULAR, STRING,   unit_name,         4) \
+X(a, STATIC,   SINGULAR, INT32,    process_id,        5) \
 X(a, CALLBACK, SINGULAR, STRING,   sname,             6) \
 X(a, CALLBACK, SINGULAR, STRING,   sid,               7) \
 X(a, STATIC,   SINGULAR, UINT32,   version,           8) \

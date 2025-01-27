@@ -172,7 +172,7 @@ namespace eCAL
       const std::string& host_name            = sample_.identifier.host_name;
       const std::string& shm_transport_domain = sample_topic.shm_transport_domain;
       const std::string& process_name         = sample_topic.process_name;
-      const std::string& unit_name            = sample_topic.uname;
+      const std::string& unit_name            = sample_topic.unit_name;
       const auto&        topic_id             = sample_.identifier.entity_id;
       std::string        direction;
       switch (pubsub_type_)
@@ -198,9 +198,9 @@ namespace eCAL
       // set static content
       TopicInfo.host_name                = host_name;
       TopicInfo.shm_transport_domain = shm_transport_domain;
-      TopicInfo.pid                  = process_id;
+      TopicInfo.process_id                  = process_id;
       TopicInfo.process_name                = process_name;
-      TopicInfo.uname                = unit_name;
+      TopicInfo.unit_name                = unit_name;
       TopicInfo.tname                = topic_name;
       TopicInfo.direction            = direction;
       TopicInfo.tid                  = topic_id;
@@ -276,7 +276,7 @@ namespace eCAL
     const std::string&    process_name                 = sample_process.process_name;
     const int             process_id                   = sample_.identifier.process_id;
     const std::string&    process_param                = sample_process.pparam;
-    const std::string&    unit_name                    = sample_process.uname;
+    const std::string&    unit_name                    = sample_process.unit_name;
     const auto&           sample_process_state         = sample_process.state;
     const int             process_state_severity       = sample_process_state.severity;
     const int             process_state_severity_level = sample_process_state.severity_level;
@@ -301,8 +301,8 @@ namespace eCAL
     ProcessInfo.host_name                = host_name;
     ProcessInfo.shm_transport_domain = shm_transport_domain;
     ProcessInfo.process_name                = process_name;
-    ProcessInfo.uname                = unit_name;
-    ProcessInfo.pid                  = process_id;
+    ProcessInfo.unit_name                = unit_name;
+    ProcessInfo.process_id                  = process_id;
     ProcessInfo.pparam               = process_param;
 
     // update flexible content
@@ -343,7 +343,7 @@ namespace eCAL
     const auto& sample_service = sample_.service;
     const std::string& service_name = sample_service.sname;
     const std::string& process_name = sample_service.process_name;
-    const std::string& unit_name    = sample_service.uname;
+    const std::string& unit_name    = sample_service.unit_name;
 
     const uint32_t     tcp_port_v0  = sample_service.tcp_port_v0;
     const uint32_t     tcp_port_v1  = sample_service.tcp_port_v1;
@@ -362,8 +362,8 @@ namespace eCAL
     ServerInfo.sname       = service_name;
     ServerInfo.sid         = service_id;
     ServerInfo.process_name       = process_name;
-    ServerInfo.uname       = unit_name;
-    ServerInfo.pid         = process_id;
+    ServerInfo.unit_name       = unit_name;
+    ServerInfo.process_id         = process_id;
     ServerInfo.tcp_port_v0 = tcp_port_v0;
     ServerInfo.tcp_port_v1 = tcp_port_v1;
 
@@ -409,7 +409,7 @@ namespace eCAL
     const auto& sample_client = sample_.client;
     const std::string& service_name = sample_client.sname;
     const std::string& process_name = sample_client.process_name;
-    const std::string& unit_name    = sample_client.uname;
+    const std::string& unit_name    = sample_client.unit_name;
 
     // create map key
     const auto& client_map_key = service_id;
@@ -425,8 +425,8 @@ namespace eCAL
     ClientInfo.sname = service_name;
     ClientInfo.sid   = service_id;
     ClientInfo.process_name = process_name;
-    ClientInfo.uname = unit_name;
-    ClientInfo.pid   = process_id;
+    ClientInfo.unit_name = unit_name;
+    ClientInfo.process_id   = process_id;
 
     // update flexible content
     ClientInfo.registration_clock++;

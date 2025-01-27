@@ -401,7 +401,7 @@ void ProcFind(const std::string& topic_type_name)
       std::cout << "ttype enc.   : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
       std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
       std::cout << "host_name    : " << topic.host_name()            << std::endl;   // host name
-      std::cout << "pid          : " << topic.pid()                  << std::endl;   // process id
+      std::cout << "process_id          : " << topic.process_id()                  << std::endl;   // process id
       std::cout << "tid          : " << topic.tid()                  << std::endl;   // topic id
       std::cout << std::endl;
     }
@@ -480,7 +480,7 @@ void ProcInfo(const std::string& topic_name)
       std::cout << "ttype enc.   : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
       std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
       std::cout << "host_name    : " << topic.host_name()            << std::endl;   // host name
-      std::cout << "pid          : " << topic.pid()                  << std::endl;   // process id
+      std::cout << "process_id          : " << topic.process_id()                  << std::endl;   // process id
       std::cout << "tid          : " << topic.tid()                  << std::endl;   // topic id
       std::cout << "tsize        : " << topic.tsize()                << std::endl;   // topic size
       std::cout << "dclock       : " << topic.dclock()               << std::endl;   // data clock (send / receive action)
@@ -524,7 +524,7 @@ void ProcList()
       std::cout << "ttype enc.   : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
       std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
       std::cout << "host_name    : " << topic.host_name()            << std::endl;   // host name
-      std::cout << "pid          : " << topic.pid()                  << std::endl;   // process id
+      std::cout << "process_id          : " << topic.process_id()                  << std::endl;   // process id
       std::cout << "tid          : " << topic.tid()                  << std::endl;   // topic id
       std::cout << "tsize        : " << topic.tsize()                << std::endl;   // topic size
       std::cout << "dclock       : " << topic.dclock()               << std::endl;   // data clock (send / receive action)

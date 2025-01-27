@@ -151,7 +151,7 @@ TopicWidget::TopicWidget(QWidget *parent)
     (int)TopicTreeModel::Columns::DIRECTION,
     (int)TopicTreeModel::Columns::UNIT_NAME,
     (int)TopicTreeModel::Columns::HOST_NAME,
-    (int)TopicTreeModel::Columns::PID,
+    (int)TopicTreeModel::Columns::PROCESS_ID,
     (int)TopicTreeModel::Columns::TOPIC_ENCODING,
     (int)TopicTreeModel::Columns::TOPIC_TYPE,
     (int)TopicTreeModel::Columns::TOPIC_SIZE,
@@ -220,9 +220,9 @@ void TopicWidget::autoSizeColumns()
 
   example_topic_pb.set_registration_clock(999999);
   example_topic_pb.set_host_name("HOSTNAME____");
-  example_topic_pb.set_pid(999999);
+  example_topic_pb.set_process_id(999999);
   example_topic_pb.set_process_name("");
-  example_topic_pb.set_uname("ATypicalLongUnitName___");
+  example_topic_pb.set_unit_name("ATypicalLongUnitName___");
   example_topic_pb.set_tid("");
   example_topic_pb.set_tname("ATypicalLongTopicName___");
   example_topic_pb.set_direction("subscriber__");
@@ -257,7 +257,7 @@ void TopicWidget::autoSizeColumns()
     (int)TopicTreeModel::Columns::DIRECTION,
     (int)TopicTreeModel::Columns::UNIT_NAME,
     (int)TopicTreeModel::Columns::HOST_NAME,
-    (int)TopicTreeModel::Columns::PID,
+    (int)TopicTreeModel::Columns::PROCESS_ID,
     (int)TopicTreeModel::Columns::TOPIC_ENCODING,
     (int)TopicTreeModel::Columns::TOPIC_TYPE,
     (int)TopicTreeModel::Columns::HEARTBEAT,

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,8 +101,8 @@ int JobHistoryModel::mapColumnToItem(int model_column, int tree_item_type) const
       return (int)JobHistoryRecorderItem::Columns::ADDON_NAME;
     case (int)Columns::ID:
       return (int)JobHistoryRecorderItem::Columns::ADDON_ID;
-    case (int)Columns::PID:
-      return (int)JobHistoryRecorderItem::Columns::PID;
+    case (int)Columns::PROCESS_ID:
+      return (int)JobHistoryRecorderItem::Columns::PROCESS_ID;
     case (int)Columns::STILL_ONLINE:
       return (int)JobHistoryRecorderItem::Columns::STILL_ONLINE;
     case (int)Columns::LENGTH:
@@ -143,12 +143,12 @@ void JobHistoryModel::setRecorderStatuses(const eCAL::rec_server::RecorderStatus
     {
       // Data that is needed by HDF5 Items _and_ addon items
       std::string hostname              = client_job_status.first;
-      int         pid                   = client_job_status.second.client_pid_;
+      int         process_id                   = client_job_status.second.client_pid_;
       bool        is_deleted            = client_job_status.second.job_status_.is_deleted_;
       auto        recorder_status_it    = std::find_if(recorder_statuses.begin(), recorder_statuses.end(),
-                                                [pid = client_job_status.second.client_pid_] (const auto& rec_status) -> bool
+                                                [process_id = client_job_status.second.client_pid_] (const auto& rec_status) -> bool
                                                 {
-                                                  return (rec_status.second.first.pid_ == pid);
+                                                  return (rec_status.second.first.pid_ == process_id);
                                                 });
       bool        recorder_still_online = (recorder_status_it != recorder_statuses.end());
 
@@ -159,7 +159,7 @@ void JobHistoryModel::setRecorderStatuses(const eCAL::rec_server::RecorderStatus
 
       bool update_needed_hdf5_rec = false;
       update_needed_hdf5_rec = hdf5_recorder_item->updateStillOnline            (recorder_still_online) || update_needed_hdf5_rec;
-      update_needed_hdf5_rec = hdf5_recorder_item->updatePid                    (pid) || update_needed_hdf5_rec;
+      update_needed_hdf5_rec = hdf5_recorder_item->updatePid                    (process_id) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateInfoLastCommandResponse(client_job_status.second.info_last_command_response_) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateLength                 ({ client_job_status.second.job_status_.rec_hdf5_status_.total_length_, client_job_status.second.job_status_.rec_hdf5_status_.total_frame_count_ }) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateUnflushedFrameCount    (client_job_status.second.job_status_.rec_hdf5_status_.unflushed_frame_count_) || update_needed_hdf5_rec;
@@ -217,7 +217,7 @@ void JobHistoryModel::setRecorderStatuses(const eCAL::rec_server::RecorderStatus
 
         bool update_needed_addon = false;
         update_needed_addon = addon_item->updateStillOnline        (addon_still_online) || update_needed_addon;
-        update_needed_addon = addon_item->updatePid                (pid) || update_needed_addon;
+        update_needed_addon = addon_item->updatePid                (process_id) || update_needed_addon;
         update_needed_addon = addon_item->updateLength             ({std::chrono::steady_clock::duration(0), addon_id_status_pair.second.total_frame_count_ }) || update_needed_addon;
         update_needed_addon = addon_item->updateUnflushedFrameCount(addon_id_status_pair.second.unflushed_frame_count_) || update_needed_addon;
         update_needed_addon = addon_item->updateState              (addon_state) || update_needed_addon;

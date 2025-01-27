@@ -74,8 +74,8 @@ message Service                              // service
   int32                registration_clock =  1;  // registration clock
   string               host_name      =  2;  // host name
   string               process_name          =  3;  // process name
-  string               uname          =  4;  // unit name
-  int32                pid            =  5;  // process id
+  string               unit_name          =  4;  // unit name
+  int32                process_id            =  5;  // process id
   string               sname          =  6;  // service name
   string               sid            =  9;  // service id
   repeated Method      methods        =  8;  // list of methods
@@ -91,8 +91,8 @@ message Client                               // client
   int32                registration_clock =  1;  // registration clock
   string               host_name      =  2;  // host name
   string               process_name          =  3;  // process name
-  string               uname          =  4;  // unit name
-  int32                pid            =  5;  // process id
+  string               unit_name          =  4;  // unit name
+  int32                process_id            =  5;  // process id
   string               sname          =  6;  // service name
   string               sid            =  7;  // service id
   repeated Method      methods        =  9;  // list of methods

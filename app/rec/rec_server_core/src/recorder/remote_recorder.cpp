@@ -390,7 +390,7 @@ namespace eCAL
 
             eCAL::rec::proto_helpers::FromProtobuf(state_response_pb, hostname, last_status);
 
-            int32_t                   client_pid  = state_response_pb.pid();
+            int32_t                   client_pid  = state_response_pb.process_id();
 
             {
               std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);

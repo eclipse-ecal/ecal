@@ -157,10 +157,10 @@ class MonitorModel
         hosts_map[host.name] = &host;
       }
       auto &process = processes.emplace_back();
-      process.pid = p.pid();
+      process.process_id = p.process_id();
       process.name = std::move(*p.mutable_process_name());
       process.host_name = std::move(*p.mutable_host_name());
-      process.unit_name = std::move(*p.mutable_uname());
+      process.unit_name = std::move(*p.mutable_unit_name());
       process.params = std::move(*p.mutable_pparam());
       process.severity = Severity(p.state().severity());
       process.severity_level = SeverityLevel(p.state().severity_level());
@@ -193,9 +193,9 @@ class MonitorModel
       auto &topic = topics.emplace_back();
       topic.registration_clock = t.registration_clock();
       topic.host_name = std::move(*t.mutable_host_name());
-      topic.pid = t.pid();
+      topic.process_id = t.process_id();
       topic.process_name = std::move(*t.mutable_process_name());
-      topic.unit_name = std::move(*t.mutable_uname());
+      topic.unit_name = std::move(*t.mutable_unit_name());
       topic.id = std::move(*t.mutable_tid());
       topic.name = std::move(*t.mutable_tname());
       topic.direction = TopicDirection(t.direction());
@@ -233,7 +233,7 @@ class MonitorModel
       service.name = std::move(*s.mutable_sname());
       service.host_name = std::move(*s.mutable_host_name());
       service.process_name = std::move(*s.mutable_process_name());
-      service.unit_name = std::move(*s.mutable_uname());
+      service.unit_name = std::move(*s.mutable_unit_name());
       service.registration_clock = s.registration_clock();
       service.tcp_port = s.tcp_port_v1();
       for(auto &m: *s.mutable_methods())

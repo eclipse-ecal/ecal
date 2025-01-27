@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -319,7 +319,7 @@ bool Processes::GetExtendedProcessInfo(const DWORD _pid, ExtendedProcessInfo_ptr
   ZeroMemory(&peb_ldr, sizeof(peb_ldr));
   ZeroMemory(&peb_upp, sizeof(peb_upp));
 
-  spi.pid = _pid;
+  spi.process_id = _pid;
 
   HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, false, _pid);
   if (hProcess == INVALID_HANDLE_VALUE) 
@@ -438,7 +438,7 @@ bool Processes::GetExtendedProcessInfo(const DWORD _pid, ExtendedProcessInfo_ptr
         }
       }
     }
-    if ((spi.pid == 4) && (failed_to_free_memory == false))
+    if ((spi.process_id == 4) && (failed_to_free_memory == false))
     {
       ExpandEnvironmentStrings(_T("%SystemRoot%\\System32\\ntoskrnl.exe"), spi.image_path, sizeof(spi.image_path));
     }

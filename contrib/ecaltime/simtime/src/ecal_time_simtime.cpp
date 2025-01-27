@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,7 +147,7 @@ void eCAL::CSimTime::onSimTimeMessage(const eCAL::pb::SimTime & sim_time_)
   {
     std::unique_lock<std::mutex> lk(time_mutex);
     last_measurement_time = sim_time_.simulation_time_nsecs();
-    if (sim_time_.hostname() == eCAL::Process::GetHostName()) {
+    if (sim_time_.host_name() == eCAL::Process::GetHostName()) {
       time_of_last_measurement_time = sim_time_.local_time_nsecs();
     }
     else {

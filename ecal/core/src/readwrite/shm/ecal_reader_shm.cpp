@@ -57,7 +57,7 @@ namespace eCAL
         topic_info.tname = par_.topic_name;
         topic_info.host_name = par_.host_name;
         topic_info.tid   = par_.topic_id;
-        topic_info.pid   = par_.process_id;
+        topic_info.process_id   = par_.process_id;
 
         auto data_callback = [this, topic_info](const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_)->size_t
         {
