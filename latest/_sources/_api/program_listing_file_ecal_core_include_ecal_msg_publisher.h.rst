@@ -32,7 +32,7 @@ Program Listing for File publisher.h
    #pragma once
    
    #include <ecal/deprecate.h>
-   #include <ecal/v5/ecal_publisher.h>
+   #include <ecal/pubsub/publisher.h>
    #include <ecal/util.h>
    
    #include <string>
@@ -44,18 +44,14 @@ Program Listing for File publisher.h
    namespace eCAL
    {
      template <typename T>
-     class CMsgPublisher : public v5::CPublisher
+     class CMsgPublisher : public CPublisher
      {
      public:
-       CMsgPublisher() : CPublisher()
+       explicit CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CPublisher(topic_name_, data_type_info_, config_)
        {
        }
    
-       CMsgPublisher(const std::string& topic_name_, const struct SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CPublisher(topic_name_, data_type_info_, config_)
-       {
-       }
-   
-       explicit CMsgPublisher(const std::string& topic_name_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CMsgPublisher(topic_name_, GetDataTypeInformation(), config_)
+       explicit CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CPublisher(topic_name_, data_type_info_, event_callback_, config_)
        {
        }
    
@@ -69,16 +65,6 @@ Program Listing for File publisher.h
    
        ~CMsgPublisher() override = default;
    
-       bool Create(const std::string& topic_name_, const struct SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = GetPublisherConfiguration())
-       {
-         return(CPublisher::Create(topic_name_, data_type_info_, config_));
-       }
-   
-       bool Destroy()
-       {
-         return(CPublisher::Destroy());
-       }
-   
        bool Send(const T& msg_, long long time_ = DEFAULT_TIME_ARGUMENT)
        {
          // this is an optimization ...
@@ -86,9 +72,9 @@ Program Listing for File publisher.h
          // serialization, but we send an empty payload
          // to still do some statistics like message clock
            // counting and frequency calculation for the monitoring layer
-         if (!IsSubscribed())
+         if (CPublisher::GetSubscriberCount() == 0)
          {
-           return(eCAL::v5::CPublisher::Send(nullptr, 0, time_) > 0);
+           return(CPublisher::Send(nullptr, 0, time_));
          }
    
          // if we have a subscription allocate memory for the
@@ -100,20 +86,20 @@ Program Listing for File publisher.h
            m_buffer.resize(size);
            if (Serialize(msg_, m_buffer.data(), m_buffer.size()))
            {
-             return(eCAL::v5::CPublisher::Send(m_buffer.data(), size, time_) > 0);
+             return(CPublisher::Send(m_buffer.data(), size, time_));
            }
          }
          else
          {
            // send a zero payload length message to trigger the subscriber side
-           return(eCAL::v5::CPublisher::Send(nullptr, 0, time_) > 0);
+           return(CPublisher::Send(nullptr, 0, time_));
          }
-         return(0);
+         return false;
        }
    
      protected:
        // We cannot make it pure virtual, as it would break a bunch of implementations, who are not (yet) implementing this function
-       virtual struct SDataTypeInformation GetDataTypeInformation() const { return SDataTypeInformation{}; }
+       virtual SDataTypeInformation GetDataTypeInformation() const { return SDataTypeInformation{}; }
      private:
        virtual size_t GetSize(const T& msg_) const = 0;
        virtual bool Serialize(const T& msg_, char* buffer_, size_t size_) const = 0;

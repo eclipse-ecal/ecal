@@ -59,8 +59,6 @@ Classes
 
 - :ref:`exhale_class_classeCAL_1_1CMsgPublisher`
 
-- :ref:`exhale_class_classeCAL_1_1CMsgSubscriber`
-
 - :ref:`exhale_class_classeCAL_1_1CTimer`
 
 

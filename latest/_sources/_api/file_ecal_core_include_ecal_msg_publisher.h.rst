@@ -36,9 +36,9 @@ Includes
 
 - ``ecal/deprecate.h`` (:ref:`file_ecal_core_include_ecal_deprecate.h`)
 
-- ``ecal/util.h`` (:ref:`file_ecal_core_include_ecal_util.h`)
+- ``ecal/pubsub/publisher.h``
 
-- ``ecal/v5/ecal_publisher.h``
+- ``ecal/util.h`` (:ref:`file_ecal_core_include_ecal_util.h`)
 
 - ``functional``
 

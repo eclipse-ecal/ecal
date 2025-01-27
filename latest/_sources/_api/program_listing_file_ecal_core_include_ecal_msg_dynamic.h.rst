@@ -36,7 +36,7 @@ Program Listing for File dynamic.h
    #include <mutex>
    #include <string>
    
-   #include <ecal/v5/ecal_subscriber.h>
+   #include <ecal/pubsub/subscriber.h>
    #include <ecal/util.h>
    
    namespace eCAL
@@ -75,22 +75,21 @@ Program Listing for File dynamic.h
    
    
      template <typename T, typename DynamicDeserializer>
-     class CDynamicMessageSubscriber final : public v5::CSubscriber
+     class CDynamicMessageSubscriber final : public CSubscriber
      {
      public:
        CDynamicMessageSubscriber() = default;
    
-       CDynamicMessageSubscriber(const std::string& topic_name_) : v5::CSubscriber()
+       CDynamicMessageSubscriber(const std::string& topic_name_) : CSubscriber(topic_name_)
          , m_cb_callback(nullptr)
          , m_error_callback(nullptr)
          , m_deserializer()
        {
-         v5::CSubscriber::Create(topic_name_);
        }
    
        ~CDynamicMessageSubscriber() noexcept
        {
-         Destroy();
+         RemoveReceiveCallback();
        };
    
        CDynamicMessageSubscriber(const CDynamicMessageSubscriber&) = delete;
@@ -98,7 +97,7 @@ Program Listing for File dynamic.h
        CDynamicMessageSubscriber& operator=(const CDynamicMessageSubscriber&) = delete;
    
        CDynamicMessageSubscriber(CDynamicMessageSubscriber&& rhs)
-         : v5::CSubscriber(std::move(rhs))
+         : CSubscriber(std::move(rhs))
          , m_cb_callback(std::move(rhs.m_cb_callback))
          , m_deserializer(std::move(rhs.m_deserializer))
        {
@@ -107,25 +106,19 @@ Program Listing for File dynamic.h
          if (has_callback)
          {
            // the callback bound to the CSubscriber belongs to rhs, bind to this callback instead
-           v5::CSubscriber::RemReceiveCallback();
+           CSubscriber::RemoveReceiveCallback();
            auto callback = std::bind(&CDynamicMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
-           v5::CSubscriber::AddReceiveCallback(callback);
+           CSubscriber::SetReceiveCallback(callback);
          }
        }
    
        CDynamicMessageSubscriber& operator=(CDynamicMessageSubscriber&& rhs) = delete;
    
-       bool Destroy()
-       {
-         RemReceiveCallback();
-         return(v5::CSubscriber::Destroy());
-       }
-   
        using MsgReceiveCallbackT = std::function<void(const STopicId& topic_id_, const T& msg_, long long time_, long long clock_, long long id_)>;
    
-       bool AddReceiveCallback(MsgReceiveCallbackT callback_)
+       bool SetReceiveCallback(MsgReceiveCallbackT callback_)
        {
-         RemReceiveCallback();
+         RemoveReceiveCallback();
    
          {
            std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
@@ -133,12 +126,12 @@ Program Listing for File dynamic.h
          }
    
          ReceiveCallbackT callback = std::bind(&CDynamicMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-         return(v5::CSubscriber::AddReceiveCallback(callback));
+         return(CSubscriber::SetReceiveCallback(callback));
        }
    
-       bool RemReceiveCallback()
+       bool RemoveReceiveCallback()
        {
-         bool ret = v5::CSubscriber::RemReceiveCallback();
+         bool ret = CSubscriber::RemoveReceiveCallback();
    
          std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
          if (m_cb_callback == nullptr) return(false);
@@ -148,7 +141,7 @@ Program Listing for File dynamic.h
    
        using ErrorCallbackT = std::function<void(const std::string& error)>;
    
-       bool AddErrorCallback(ErrorCallbackT callback_)
+       bool SetErrorCallback(ErrorCallbackT callback_)
        {
          std::lock_guard<std::mutex> callback_lock(m_error_callback_mutex);
          m_error_callback = callback_;
@@ -156,7 +149,7 @@ Program Listing for File dynamic.h
          return true;
        }
        
-       bool RemErrorCallback()
+       bool RemoveErrorCallback()
        {
          std::lock_guard<std::mutex> callback_lock(m_error_callback_mutex);
          m_error_callback = nullptr;

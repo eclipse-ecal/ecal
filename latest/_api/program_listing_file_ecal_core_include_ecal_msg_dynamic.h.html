@@ -231,7 +231,6 @@
 <li class="toctree-l3"><a class="reference internal" href="namespace_eCAL__Time.html">Namespace eCAL::Time</a></li>
 <li class="toctree-l3"><a class="reference internal" href="namespace_eCAL__TLayer.html">Namespace eCAL::TLayer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="namespace_eCAL__Util.html">Namespace eCAL::Util</a></li>
-<li class="toctree-l3"><a class="reference internal" href="namespace_v5.html">Namespace v5</a></li>
 <li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1Registration_1_1SServiceMethod.html">Struct SServiceMethod</a></li>
 <li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SDataTypeInformation.html">Struct SDataTypeInformation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SEntityId.html">Struct SEntityId</a></li>
@@ -240,7 +239,6 @@
 <li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CDynamicMessageSubscriber.html">Template Class CDynamicMessageSubscriber</a></li>
 <li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CMessageSubscriber.html">Template Class CMessageSubscriber</a></li>
 <li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CMsgPublisher.html">Template Class CMsgPublisher</a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CMsgSubscriber.html">Template Class CMsgSubscriber</a></li>
 <li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CTimer.html">Class CTimer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html">Class HDF5Meas</a></li>
 <li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html">Class HDF5Meas</a></li>
@@ -723,7 +721,7 @@
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mutex&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/v5/ecal_subscriber.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/pubsub/subscriber.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/util.h&gt;</span>
 
 <span class="k">namespace</span><span class="w"> </span><span class="nn">eCAL</span>
@@ -762,22 +760,21 @@
 
 
 <span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">DynamicDeserializer</span><span class="o">&gt;</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">CDynamicMessageSubscriber</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">v5</span><span class="o">::</span><span class="n">CSubscriber</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">CDynamicMessageSubscriber</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">CSubscriber</span>
 <span class="w">  </span><span class="p">{</span>
 <span class="w">  </span><span class="k">public</span><span class="o">:</span>
 <span class="w">    </span><span class="n">CDynamicMessageSubscriber</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
 
-<span class="w">    </span><span class="n">CDynamicMessageSubscriber</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">v5</span><span class="o">::</span><span class="n">CSubscriber</span><span class="p">()</span>
+<span class="w">    </span><span class="n">CDynamicMessageSubscriber</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">CSubscriber</span><span class="p">(</span><span class="n">topic_name_</span><span class="p">)</span>
 <span class="w">      </span><span class="p">,</span><span class="w"> </span><span class="n">m_cb_callback</span><span class="p">(</span><span class="k">nullptr</span><span class="p">)</span>
 <span class="w">      </span><span class="p">,</span><span class="w"> </span><span class="n">m_error_callback</span><span class="p">(</span><span class="k">nullptr</span><span class="p">)</span>
 <span class="w">      </span><span class="p">,</span><span class="w"> </span><span class="n">m_deserializer</span><span class="p">()</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="n">v5</span><span class="o">::</span><span class="n">CSubscriber</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">topic_name_</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="o">~</span><span class="n">CDynamicMessageSubscriber</span><span class="p">()</span><span class="w"> </span><span class="k">noexcept</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="n">Destroy</span><span class="p">();</span>
+<span class="w">      </span><span class="n">RemoveReceiveCallback</span><span class="p">();</span>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="n">CDynamicMessageSubscriber</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">CDynamicMessageSubscriber</span><span class="o">&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">delete</span><span class="p">;</span>
@@ -785,7 +782,7 @@
 <span class="w">    </span><span class="n">CDynamicMessageSubscriber</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">CDynamicMessageSubscriber</span><span class="o">&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">delete</span><span class="p">;</span>
 
 <span class="w">    </span><span class="n">CDynamicMessageSubscriber</span><span class="p">(</span><span class="n">CDynamicMessageSubscriber</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">rhs</span><span class="p">)</span>
-<span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="n">v5</span><span class="o">::</span><span class="n">CSubscriber</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">rhs</span><span class="p">))</span>
+<span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="n">CSubscriber</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">rhs</span><span class="p">))</span>
 <span class="w">      </span><span class="p">,</span><span class="w"> </span><span class="n">m_cb_callback</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">m_cb_callback</span><span class="p">))</span>
 <span class="w">      </span><span class="p">,</span><span class="w"> </span><span class="n">m_deserializer</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">m_deserializer</span><span class="p">))</span>
 <span class="w">    </span><span class="p">{</span>
@@ -794,25 +791,19 @@
 <span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">has_callback</span><span class="p">)</span>
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="c1">// the callback bound to the CSubscriber belongs to rhs, bind to this callback instead</span>
-<span class="w">        </span><span class="n">v5</span><span class="o">::</span><span class="n">CSubscriber</span><span class="o">::</span><span class="n">RemReceiveCallback</span><span class="p">();</span>
+<span class="w">        </span><span class="n">CSubscriber</span><span class="o">::</span><span class="n">RemoveReceiveCallback</span><span class="p">();</span>
 <span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">CDynamicMessageSubscriber</span><span class="o">::</span><span class="n">ReceiveCallback</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_1</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_2</span><span class="p">);</span>
-<span class="w">        </span><span class="n">v5</span><span class="o">::</span><span class="n">CSubscriber</span><span class="o">::</span><span class="n">AddReceiveCallback</span><span class="p">(</span><span class="n">callback</span><span class="p">);</span>
+<span class="w">        </span><span class="n">CSubscriber</span><span class="o">::</span><span class="n">SetReceiveCallback</span><span class="p">(</span><span class="n">callback</span><span class="p">);</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="n">CDynamicMessageSubscriber</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">CDynamicMessageSubscriber</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">rhs</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">delete</span><span class="p">;</span>
 
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">Destroy</span><span class="p">()</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="n">RemReceiveCallback</span><span class="p">();</span>
-<span class="w">      </span><span class="k">return</span><span class="p">(</span><span class="n">v5</span><span class="o">::</span><span class="n">CSubscriber</span><span class="o">::</span><span class="n">Destroy</span><span class="p">());</span>
-<span class="w">    </span><span class="p">}</span>
-
 <span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">MsgReceiveCallbackT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">STopicId</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_id_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">T</span><span class="o">&amp;</span><span class="w"> </span><span class="n">msg_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">time_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">clock_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">id_</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
 
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">AddReceiveCallback</span><span class="p">(</span><span class="n">MsgReceiveCallbackT</span><span class="w"> </span><span class="n">callback_</span><span class="p">)</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">SetReceiveCallback</span><span class="p">(</span><span class="n">MsgReceiveCallbackT</span><span class="w"> </span><span class="n">callback_</span><span class="p">)</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="n">RemReceiveCallback</span><span class="p">();</span>
+<span class="w">      </span><span class="n">RemoveReceiveCallback</span><span class="p">();</span>
 
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="w"> </span><span class="n">callback_lock</span><span class="p">(</span><span class="n">m_cb_callback_mutex</span><span class="p">);</span>
@@ -820,12 +811,12 @@
 <span class="w">      </span><span class="p">}</span>
 
 <span class="w">      </span><span class="n">ReceiveCallbackT</span><span class="w"> </span><span class="n">callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">CDynamicMessageSubscriber</span><span class="o">::</span><span class="n">ReceiveCallback</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_1</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_2</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_3</span><span class="p">);</span>
-<span class="w">      </span><span class="k">return</span><span class="p">(</span><span class="n">v5</span><span class="o">::</span><span class="n">CSubscriber</span><span class="o">::</span><span class="n">AddReceiveCallback</span><span class="p">(</span><span class="n">callback</span><span class="p">));</span>
+<span class="w">      </span><span class="k">return</span><span class="p">(</span><span class="n">CSubscriber</span><span class="o">::</span><span class="n">SetReceiveCallback</span><span class="p">(</span><span class="n">callback</span><span class="p">));</span>
 <span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">RemReceiveCallback</span><span class="p">()</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">RemoveReceiveCallback</span><span class="p">()</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v5</span><span class="o">::</span><span class="n">CSubscriber</span><span class="o">::</span><span class="n">RemReceiveCallback</span><span class="p">();</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CSubscriber</span><span class="o">::</span><span class="n">RemoveReceiveCallback</span><span class="p">();</span>
 
 <span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="w"> </span><span class="n">callback_lock</span><span class="p">(</span><span class="n">m_cb_callback_mutex</span><span class="p">);</span>
 <span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_cb_callback</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
@@ -835,7 +826,7 @@
 
 <span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">ErrorCallbackT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">error</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
 
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">AddErrorCallback</span><span class="p">(</span><span class="n">ErrorCallbackT</span><span class="w"> </span><span class="n">callback_</span><span class="p">)</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">SetErrorCallback</span><span class="p">(</span><span class="n">ErrorCallbackT</span><span class="w"> </span><span class="n">callback_</span><span class="p">)</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="w"> </span><span class="n">callback_lock</span><span class="p">(</span><span class="n">m_error_callback_mutex</span><span class="p">);</span>
 <span class="w">      </span><span class="n">m_error_callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">callback_</span><span class="p">;</span>
@@ -843,7 +834,7 @@
 <span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
 <span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">RemErrorCallback</span><span class="p">()</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">RemoveErrorCallback</span><span class="p">()</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="w"> </span><span class="n">callback_lock</span><span class="p">(</span><span class="n">m_error_callback_mutex</span><span class="p">);</span>
 <span class="w">      </span><span class="n">m_error_callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>

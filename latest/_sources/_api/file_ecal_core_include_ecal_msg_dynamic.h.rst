@@ -30,9 +30,9 @@ Includes
 --------
 
 
-- ``ecal/util.h`` (:ref:`file_ecal_core_include_ecal_util.h`)
+- ``ecal/pubsub/subscriber.h``
 
-- ``ecal/v5/ecal_subscriber.h``
+- ``ecal/util.h`` (:ref:`file_ecal_core_include_ecal_util.h`)
 
 - ``exception``
 

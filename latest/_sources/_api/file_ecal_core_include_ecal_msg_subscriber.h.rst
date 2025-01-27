@@ -36,9 +36,9 @@ Includes
 
 - ``ecal/deprecate.h`` (:ref:`file_ecal_core_include_ecal_deprecate.h`)
 
-- ``ecal/util.h`` (:ref:`file_ecal_core_include_ecal_util.h`)
+- ``ecal/pubsub/subscriber.h``
 
-- ``ecal/v5/ecal_subscriber.h``
+- ``ecal/util.h`` (:ref:`file_ecal_core_include_ecal_util.h`)
 
 - ``functional``
 
@@ -65,6 +65,4 @@ Classes
 
 
 - :ref:`exhale_class_classeCAL_1_1CMessageSubscriber`
-
-- :ref:`exhale_class_classeCAL_1_1CMsgSubscriber`
 

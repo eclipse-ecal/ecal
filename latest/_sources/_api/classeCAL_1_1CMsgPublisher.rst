@@ -12,7 +12,7 @@ Inheritance Relationships
 Base Type
 *********
 
-- ``public v5::CPublisher``
+- ``public CPublisher``
 
 
 Class Documentation
