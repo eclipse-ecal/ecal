@@ -54,17 +54,17 @@ namespace eCAL
       constexpr unsigned int None = 0x000;
     }
     
-    enum eTLayerType
+    enum class eTransportLayerType
     {
-      tl_none        = 0,
-      tl_ecal_udp_mc = 1,
-      tl_ecal_shm    = 4,
-      tl_ecal_tcp    = 5,
+      none        = 0,
+      udp_mc = 1,
+      shm    = 4,
+      tcp    = 5,
     };
 
-    struct TLayer
+    struct STransportLayer
     {
-      eTLayerType  type    = tl_none;                           //<! transport layer type
+      eTransportLayerType  type    = eTransportLayerType::none;                           //<! transport layer type
       int32_t      version = 0;                                 //<! transport layer version
       bool         active  = false;                             //<! transport layer used?
     };
@@ -82,7 +82,7 @@ namespace eCAL
       std::string                         direction;            //!< direction (publisher, subscriber)
       SDataTypeInformation                tdatatype;            //!< topic datatype information (name, encoding, descriptor)
 	  
-      std::vector<TLayer>                 tlayer;               //!< transport layer details
+      std::vector<STransportLayer>        transport_layer;               //!< transport layer details
       int32_t                             tsize{0};             //!< topic size
 
       int32_t                             connections_loc{0};   //!< number of local connected entities

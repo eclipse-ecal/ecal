@@ -116,7 +116,7 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    auto* layer_vec = static_cast<std::vector<eCAL::Monitoring::TLayer>*>(*arg);
+    auto* layer_vec = static_cast<std::vector<eCAL::Monitoring::STransportLayer>*>(*arg);
 
     for (auto layer : *layer_vec)
     {
@@ -139,7 +139,7 @@ namespace
     return true;
   }
 
-  void encode_mon_registration_layer(pb_callback_t& pb_callback, const std::vector<eCAL::Monitoring::TLayer>& layer_vec)
+  void encode_mon_registration_layer(pb_callback_t& pb_callback, const std::vector<eCAL::Monitoring::STransportLayer>& layer_vec)
   {
     pb_callback.funcs.encode = &encode_mon_registration_layer_field; // NOLINT(*-pro-type-union-access)
     pb_callback.arg = (void*)(&layer_vec);
@@ -188,7 +188,7 @@ namespace
     // dfreq
     pb_topic_.dfreq = topic_.dfreq;
     // tlayer
-    encode_mon_registration_layer(pb_topic_.tlayer, topic_.tlayer);
+    encode_mon_registration_layer(pb_topic_.tlayer, topic_.transport_layer);
     // attr
     eCAL::nanopb::encode_map(pb_topic_.attr, topic_.attr);
   }
@@ -573,7 +573,7 @@ namespace
     if (*arg == nullptr) return false;
 
     eCAL_pb_TLayer           pb_layer = eCAL_pb_TLayer_init_default;
-    eCAL::Monitoring::TLayer layer{};
+    eCAL::Monitoring::STransportLayer layer{};
 
     if (!pb_decode(stream, eCAL_pb_TLayer_fields, &pb_layer))
     {
@@ -581,18 +581,18 @@ namespace
     }
 
     // apply layer values
-    layer.type = static_cast<eCAL::Monitoring::eTLayerType>(pb_layer.type);
+    layer.type = static_cast<eCAL::Monitoring::eTransportLayerType>(pb_layer.type);
     layer.version = pb_layer.version;
     layer.active  = pb_layer.active;
 
     // add layer
-    auto* tgt_vector = static_cast<std::vector<eCAL::Monitoring::TLayer>*>(*arg);
+    auto* tgt_vector = static_cast<std::vector<eCAL::Monitoring::STransportLayer>*>(*arg);
     tgt_vector->push_back(layer);
 
     return true;
   }
 
-  void decode_mon_registration_layer(pb_callback_t& pb_callback, std::vector<eCAL::Monitoring::TLayer>& layer_vec)
+  void decode_mon_registration_layer(pb_callback_t& pb_callback, std::vector<eCAL::Monitoring::STransportLayer>& layer_vec)
   {
     pb_callback.funcs.decode = &decode_mon_registration_layer_field; // NOLINT(*-pro-type-union-access)
     pb_callback.arg = &layer_vec;
@@ -627,7 +627,7 @@ namespace
     // tdatatype.desc
     eCAL::nanopb::decode_string(pb_topic_.tdatatype.desc, topic_.tdatatype.descriptor);
     // tlayer
-    decode_mon_registration_layer(pb_topic_.tlayer, topic_.tlayer);
+    decode_mon_registration_layer(pb_topic_.tlayer, topic_.transport_layer);
     // attr
     eCAL::nanopb::decode_map(pb_topic_.attr, topic_.attr);
   }

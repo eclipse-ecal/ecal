@@ -215,27 +215,27 @@ namespace eCAL
       TopicInfo.attr = std::map<std::string, std::string>{attr.begin(), attr.end()};
 
       // layer
-      TopicInfo.tlayer.clear();
+      TopicInfo.transport_layer.clear();
       // tlayer udp_mc
       {
-        eCAL::Monitoring::TLayer tlayer;
-        tlayer.type   = eCAL::Monitoring::tl_ecal_udp_mc;
+        eCAL::Monitoring::STransportLayer tlayer;
+        tlayer.type   = eCAL::Monitoring::eTransportLayerType::udp_mc;
         tlayer.active = topic_tlayer_ecal_udp;
-        TopicInfo.tlayer.push_back(tlayer);
+        TopicInfo.transport_layer.push_back(tlayer);
       }
       // tlayer shm
       {
-        eCAL::Monitoring::TLayer tlayer;
-        tlayer.type   = eCAL::Monitoring::tl_ecal_shm;
+        eCAL::Monitoring::STransportLayer tlayer;
+        tlayer.type   = eCAL::Monitoring::eTransportLayerType::shm;
         tlayer.active = topic_tlayer_ecal_shm;
-        TopicInfo.tlayer.push_back(tlayer);
+        TopicInfo.transport_layer.push_back(tlayer);
       }
       // tlayer tcp
       {
-        eCAL::Monitoring::TLayer tlayer;
-        tlayer.type   = eCAL::Monitoring::tl_ecal_tcp;
+        eCAL::Monitoring::STransportLayer tlayer;
+        tlayer.type   = eCAL::Monitoring::eTransportLayerType::tcp;
         tlayer.active = topic_tlayer_ecal_tcp;
-        TopicInfo.tlayer.push_back(tlayer);
+        TopicInfo.transport_layer.push_back(tlayer);
       }
 
       TopicInfo.tsize           = static_cast<int>(topic_size);
