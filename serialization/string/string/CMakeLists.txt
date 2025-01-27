@@ -23,7 +23,8 @@
 
 # std::string core communication extension
 ##########################
-ecal_add_interface_library(string_base)
+add_library(string_base INTERFACE)
+add_library(eCAL::string_base ALIAS string_base)
 
 target_sources(string_base
   INTERFACE
@@ -47,7 +48,8 @@ install(
 ##########################
 # std::string core communication extension
 ##########################
-ecal_add_interface_library(string_core)
+add_library(string_core INTERFACE)
+add_library(eCAL::string_core ALIAS string_core)
 
 target_link_libraries(string_core 
   INTERFACE 

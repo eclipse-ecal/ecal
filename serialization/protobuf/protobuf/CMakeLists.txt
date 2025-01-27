@@ -46,6 +46,8 @@ target_link_libraries(protobuf_base PUBLIC protobuf::libprotobuf)
 
 target_compile_features(protobuf_base PUBLIC cxx_std_14)
 
+ecal_add_compiler_warnings(protobuf_base)
+
 install(
   TARGETS protobuf_base
   EXPORT eCALCoreTargets  
@@ -59,7 +61,8 @@ set_property(TARGET protobuf_base PROPERTY FOLDER core)
 ##########################
 # Protobuf core communication extension
 ##########################
-ecal_add_interface_library(protobuf_core)
+add_library(protobuf_core INTERFACE)
+add_library(eCAL::protobuf_core ALIAS protobuf_core)
 
 target_link_libraries(protobuf_core 
   INTERFACE 
