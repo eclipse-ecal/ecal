@@ -37,7 +37,7 @@ set(source_files
 
 set(CMAKE_AUTOMOC ON)
 
-add_library(${PROJECT_NAME} ${source_files})
+ecal_add_library(${PROJECT_NAME} ${source_files})
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME} PUBLIC src)
