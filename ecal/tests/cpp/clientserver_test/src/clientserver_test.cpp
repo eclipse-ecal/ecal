@@ -286,7 +286,7 @@ TEST(core_cpp_clientserver, ClientServerBaseCallback)
 
   // response callback function
   std::atomic<int> responses_executed(0);
-  auto response_callback = [&](const eCAL::SEntityId& /*entity_id_*/, const struct eCAL::SServiceIDResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::SServiceIDResponse& service_response_)
     {
       PrintResponse(service_response_);
       responses_executed++;
@@ -404,7 +404,7 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
 
   // response callback function
   std::atomic<int> responses_executed(0);
-  auto response_callback = [&](const eCAL::SEntityId& /*entity_id_*/, const struct eCAL::SServiceIDResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::SServiceIDResponse& service_response_)
     {
       PrintResponse(service_response_);
       responses_executed++;
@@ -539,7 +539,7 @@ TEST(core_cpp_clientserver, ClientServerBaseAsyncCallback)
 
   // response callback function
   std::atomic<int> responses_executed(0);
-  auto response_callback = [&](const eCAL::SEntityId& /*entity_id_*/, const struct eCAL::SServiceIDResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::SServiceIDResponse& service_response_)
     {
       PrintResponse(service_response_);
       responses_executed++;
@@ -614,7 +614,7 @@ TEST(core_cpp_clientserver, ClientServerBaseAsync)
 
   // response callback function
   atomic_signalable<int> num_client_response_callbacks_finished(0);
-  auto response_callback = [&](const eCAL::SEntityId& /*entity_id_*/, const struct eCAL::SServiceIDResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::SServiceIDResponse& service_response_)
     {
       PrintResponse(service_response_);
       num_client_response_callbacks_finished++;
@@ -823,12 +823,12 @@ TEST(core_cpp_clientserver, NestedRPCCall)
   std::atomic<int> methods_called(0);
   std::atomic<int> responses_executed(0);
   bool success(true);
-  auto response_callback2 = [&](const eCAL::SEntityId& /*entity_id_*/, const struct eCAL::SServiceIDResponse& service_response_)
+  auto response_callback2 = [&](const struct eCAL::SServiceIDResponse& service_response_)
     {
       PrintResponse(service_response_);
       responses_executed++;
     };
-  auto response_callback1 = [&](const eCAL::SEntityId& /*entity_id_*/, const struct eCAL::SServiceIDResponse& service_response_)
+  auto response_callback1 = [&](const struct eCAL::SServiceIDResponse& service_response_)
     {
       PrintResponse(service_response_);
       success &= client2.CallWithCallback("foo::method2", "my request for method 2", -1, response_callback2);

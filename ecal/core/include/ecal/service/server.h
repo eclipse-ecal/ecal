@@ -83,16 +83,15 @@ namespace eCAL
         CServiceServer& operator=(CServiceServer&& rhs) noexcept;
 
       /**
-       * @brief Set/overwrite method callback.
+       * @brief Set/overwrite a method callback, that will be invoked, when a connected client is making a service call.
        *
-       * @param method_       Service method name.
-       * @param method_info_  Service method information (request & response types).
+       * @param method_info_  Service method information (method name, request & response types).
        * @param callback_     Callback function for client request.
        *
        * @return  True if succeeded, false if not.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool SetMethodCallback(const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_);
+        bool SetMethodCallback(const SServiceMethodInformation& method_info_, const ServiceMethodCallbackT& callback_);
 
       /**
        * @brief Remove method callback.

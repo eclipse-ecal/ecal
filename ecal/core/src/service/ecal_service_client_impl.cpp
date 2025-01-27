@@ -53,7 +53,8 @@ namespace
     // service/method id
     error_response.service_method_id.service_id   = entity_id_;
     error_response.service_method_id.service_name = service_name_;
-    error_response.service_method_id.method_name  = method_name_;
+    error_response.service_method_information.method_name  = method_name_;
+    // TODO we need to fill SDatatypeInformation
 
     // error message, return state and call state
     error_response.error_msg                      = error_message_;
@@ -66,7 +67,7 @@ namespace
     const std::string& error_message_, const eCAL::ResponseIDCallbackT& response_callback_)
   {
     eCAL::Logging::Log(eCAL::Logging::log_level_error, "CServiceClientImpl: Response error for service: " + service_name_ + ", method: " + method_name_ + ", error: " + error_message_);
-    response_callback_(entity_id_, CreateErrorResponse(entity_id_, service_name_, method_name_, error_message_));
+    response_callback_(CreateErrorResponse(entity_id_, service_name_, method_name_, error_message_));
   }
 }
 
@@ -184,7 +185,7 @@ namespace eCAL
     // If a callback is provided and the call was successful, invoke the callback
     if (response_callback_ && response.first)
     {
-      response_callback_(entity_id_, response.second);
+      response_callback_(response.second);
     }
 
     // Handle timeout event
@@ -262,7 +263,7 @@ namespace eCAL
         response_data->condition_variable->notify_all();
 
         // Invoke the user-provided callback
-        response_callback_(entity_id_, response_data->response->second);
+        response_callback_(response_data->response->second);
       };
 
     // Send the service call
@@ -527,6 +528,7 @@ namespace eCAL
 
     SClientEventCallbackData callback_data;
     callback_data.type = event_type_;
+    // TODO: user eCAL Time!!!
     callback_data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
     m_event_callback(service_id_, callback_data);
   }
@@ -541,7 +543,8 @@ namespace eCAL
     data->response->second.service_method_id.service_id.host_name = client_.service_attr.hname;
 
     data->response->second.service_method_id.service_name = client_.service_attr.sname;
-    data->response->second.service_method_id.method_name = method_name_;
+    data->response->second.service_method_information.method_name = method_name_;
+    // TODO we need to fill SDatatypeInformation
 
     data->response->second.call_state = eCallState::none;
     return data;
@@ -587,7 +590,8 @@ namespace eCAL
 
       // service and method name
       service_reponse.service_method_id.service_name = response_header.sname;
-      service_reponse.service_method_id.method_name = response_header.mname;
+      service_reponse.service_method_information.method_name = response_header.mname;
+      // TODO fill in information about datatypes. Do we have them? from the other clients? we should???
 
       // error message and return state
       service_reponse.error_msg = response_header.error;

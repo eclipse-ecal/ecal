@@ -68,7 +68,7 @@ namespace eCAL
     Stop();
   }
 
-  bool CServiceServerImpl::SetMethodCallback(const SServiceMethodInformation& method_info_, const MethodInfoCallbackT & callback_)
+  bool CServiceServerImpl::SetMethodCallback(const SServiceMethodInformation& method_info_, const ServiceMethodCallbackT & callback_)
   {
     const auto& method_ = method_info_.method_name;
 

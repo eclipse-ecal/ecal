@@ -59,7 +59,7 @@ namespace eCAL
     public:
       ~CServiceServerImpl();
 
-      bool SetMethodCallback(const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_);
+      bool SetMethodCallback(const SServiceMethodInformation& method_info_, const ServiceMethodCallbackT& callback_);
       bool RemoveMethodCallback(const std::string& method_);
 
       // Check connection state of a specific service
@@ -112,7 +112,7 @@ namespace eCAL
       struct SMethod
       {
         Service::Method     method;
-        MethodInfoCallbackT callback;
+        ServiceMethodCallbackT callback;
       };
 
       using MethodMapT = std::map<std::string, SMethod>;
