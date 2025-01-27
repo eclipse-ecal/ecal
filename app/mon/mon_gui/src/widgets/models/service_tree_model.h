@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,7 +98,7 @@ private:
   {
     { Columns::GROUP,                -1 },
     { Columns::HEARTBEAT,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::RCLOCK },
-    { Columns::HOST_NAME,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::HNAME },
+    { Columns::HOST_NAME,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::HOST_NAME },
     { Columns::PID,                  (int)ServiceTreeItem<eCAL::pb::Service>::Columns::PID },
     { Columns::PROCESS_NAME,         (int)ServiceTreeItem<eCAL::pb::Service>::Columns::PNAME },
     { Columns::UNIT_NAME,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::UNAME },

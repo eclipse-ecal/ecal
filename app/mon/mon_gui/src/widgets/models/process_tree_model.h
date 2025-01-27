@@ -103,7 +103,7 @@ private:
   {
     { Columns::GROUP,                -1 },
     { Columns::UNIT_NAME,            (int)ProcessTreeItem::Columns::UNAME },
-    { Columns::HOST_NAME,            (int)ProcessTreeItem::Columns::HNAME },
+    { Columns::HOST_NAME,            (int)ProcessTreeItem::Columns::HOST_NAME },
     { Columns::SHM_TRANSPORT_DOMAIN, (int)ProcessTreeItem::Columns::SHM_TRANSPORT_DOMAIN},
     { Columns::PID,                  (int)ProcessTreeItem::Columns::PID },
     { Columns::PROCESS_NAME,         (int)ProcessTreeItem::Columns::PNAME },

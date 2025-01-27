@@ -67,7 +67,7 @@ namespace eCAL
     struct SServiceAttr
     {
       std::string             key;              //!< unique service key (internal)
-      std::string             hname;            //!< host name
+      std::string             host_name;            //!< host name
       std::string             pname;            //!< process name
       std::string             uname;            //!< process unit name
       std::string             sname;            //!< service name
@@ -96,7 +96,7 @@ namespace eCAL
     struct SClientAttr
     {
       std::string    key;           //!< unique service key (internal)
-      std::string    hname;         //!< host name
+      std::string    host_name;         //!< host name
       std::string    pname;         //!< process name
       std::string    uname;         //!< process unit name
       std::string    sname;         //!< service name

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -219,7 +219,7 @@ void TopicWidget::autoSizeColumns()
   eCAL::pb::Topic example_topic_pb;
 
   example_topic_pb.set_rclock(999999);
-  example_topic_pb.set_hname("HOSTNAME____");
+  example_topic_pb.set_host_name("HOSTNAME____");
   example_topic_pb.set_pid(999999);
   example_topic_pb.set_pname("");
   example_topic_pb.set_uname("ATypicalLongUnitName___");

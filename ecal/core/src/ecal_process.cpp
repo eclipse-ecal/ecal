@@ -232,10 +232,10 @@ namespace eCAL
     {
       if (g_host_name.empty())
       {
-        char hname[1024] = { 0 };
-        if (gethostname(hname, 1024) == 0)
+        char host_name[1024] = { 0 };
+        if (gethostname(host_name, 1024) == 0)
         {
-          g_host_name = hname;
+          g_host_name = host_name;
         }
         else
         {

@@ -19,7 +19,7 @@ typedef enum _eCAL_pb_ServiceHeader_eCallState {
 
 /* Struct definitions */
 typedef struct _eCAL_pb_ServiceHeader {
-    pb_callback_t hname; /* host name */
+    pb_callback_t host_name; /* host name */
     pb_callback_t sname; /* service name */
     pb_callback_t mname; /* method name */
     pb_callback_t error; /* error message */
@@ -56,7 +56,7 @@ typedef struct _eCAL_pb_Method {
 
 typedef struct _eCAL_pb_Service {
     int32_t rclock; /* registration clock */
-    pb_callback_t hname; /* host name */
+    pb_callback_t host_name; /* host name */
     pb_callback_t pname; /* process name */
     pb_callback_t uname; /* unit name */
     int32_t pid; /* process id */
@@ -71,7 +71,7 @@ typedef struct _eCAL_pb_Service {
 
 typedef struct _eCAL_pb_Client {
     int32_t rclock; /* registration clock */
-    pb_callback_t hname; /* host name */
+    pb_callback_t host_name; /* host name */
     pb_callback_t pname; /* process name */
     pb_callback_t uname; /* unit name */
     int32_t pid; /* process id */
@@ -115,7 +115,7 @@ extern "C" {
 #define eCAL_pb_Client_init_zero                 {0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}}
 
 /* Field tags (for use in manual encoding/decoding) */
-#define eCAL_pb_ServiceHeader_hname_tag          1
+#define eCAL_pb_ServiceHeader_host_name_tag      1
 #define eCAL_pb_ServiceHeader_sname_tag          2
 #define eCAL_pb_ServiceHeader_mname_tag          3
 #define eCAL_pb_ServiceHeader_error_tag          4
@@ -136,7 +136,7 @@ extern "C" {
 #define eCAL_pb_Method_req_datatype_tag          7
 #define eCAL_pb_Method_resp_datatype_tag         8
 #define eCAL_pb_Service_rclock_tag               1
-#define eCAL_pb_Service_hname_tag                2
+#define eCAL_pb_Service_host_name_tag            2
 #define eCAL_pb_Service_pname_tag                3
 #define eCAL_pb_Service_uname_tag                4
 #define eCAL_pb_Service_pid_tag                  5
@@ -147,7 +147,7 @@ extern "C" {
 #define eCAL_pb_Service_version_tag              10
 #define eCAL_pb_Service_tcp_port_v1_tag          11
 #define eCAL_pb_Client_rclock_tag                1
-#define eCAL_pb_Client_hname_tag                 2
+#define eCAL_pb_Client_host_name_tag             2
 #define eCAL_pb_Client_pname_tag                 3
 #define eCAL_pb_Client_uname_tag                 4
 #define eCAL_pb_Client_pid_tag                   5
@@ -158,7 +158,7 @@ extern "C" {
 
 /* Struct field encoding specification for nanopb */
 #define eCAL_pb_ServiceHeader_FIELDLIST(X, a) \
-X(a, CALLBACK, SINGULAR, STRING,   hname,             1) \
+X(a, CALLBACK, SINGULAR, STRING,   host_name,         1) \
 X(a, CALLBACK, SINGULAR, STRING,   sname,             2) \
 X(a, CALLBACK, SINGULAR, STRING,   mname,             3) \
 X(a, CALLBACK, SINGULAR, STRING,   error,             4) \
@@ -199,7 +199,7 @@ X(a, STATIC,   OPTIONAL, MESSAGE,  resp_datatype,     8)
 
 #define eCAL_pb_Service_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, INT32,    rclock,            1) \
-X(a, CALLBACK, SINGULAR, STRING,   hname,             2) \
+X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
 X(a, CALLBACK, SINGULAR, STRING,   pname,             3) \
 X(a, CALLBACK, SINGULAR, STRING,   uname,             4) \
 X(a, STATIC,   SINGULAR, INT32,    pid,               5) \
@@ -215,7 +215,7 @@ X(a, STATIC,   SINGULAR, UINT32,   tcp_port_v1,      11)
 
 #define eCAL_pb_Client_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, INT32,    rclock,            1) \
-X(a, CALLBACK, SINGULAR, STRING,   hname,             2) \
+X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
 X(a, CALLBACK, SINGULAR, STRING,   pname,             3) \
 X(a, CALLBACK, SINGULAR, STRING,   uname,             4) \
 X(a, STATIC,   SINGULAR, INT32,    pid,               5) \

@@ -95,17 +95,17 @@ void EcalSysMonitor::UpdateMonitor()
     for (const auto& process : m_monitoring_pb.processes())
     {
       // Update list of all Hosts
-      m_all_hosts.emplace(process.hname());
+      m_all_hosts.emplace(process.host_name());
 
       //Update list of available Targets
       if (process.uname() == "eCALSysClient")
       {
-        m_hosts_running_ecal_sys_client.emplace(process.hname());
+        m_hosts_running_ecal_sys_client.emplace(process.host_name());
       }
       // Update list of hosts running eCAL Sys
       if ((process.uname() == "eCALSys") || (process.uname() == "eCALSysGUI"))
       {
-        m_hosts_running_ecalsys.push_back(std::pair<std::string, int>(process.hname(), process.pid()));
+        m_hosts_running_ecalsys.push_back(std::pair<std::string, int>(process.host_name(), process.pid()));
       }
     }
   }
@@ -149,7 +149,7 @@ void EcalSysMonitor::UpdateTaskStates(const std::list<std::shared_ptr<EcalSysTas
         std::vector<int> task_pids = task->GetPids();
 
 
-        if ((task->GetHostStartedOn() == process.hname())
+        if ((task->GetHostStartedOn() == process.host_name())
           && (std::find(task_pids.begin(), task_pids.end(), (int)process.pid()) != task_pids.end()))
         {
           // The task is matching!
@@ -277,7 +277,7 @@ std::list<std::shared_ptr<EcalSysTask>> EcalSysMonitor::GetTasksFromCloud()
     std::string monitor_process_name = EcalUtils::String::Trim(monitor_process.uname());
     std::string monitor_process_path = EcalUtils::String::Trim(monitor_process.pname());
     std::string monitor_process_args = EcalUtils::String::Trim(monitor_process.pparam());
-    std::string monitor_process_host = EcalUtils::String::Trim(monitor_process.hname());
+    std::string monitor_process_host = EcalUtils::String::Trim(monitor_process.host_name());
     int pid                          = monitor_process.pid();
     TaskState task_state             = eCAL::sys::proto_helpers::FromProtobuf(monitor_process.state());
 

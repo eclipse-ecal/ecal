@@ -70,7 +70,7 @@ int main()
       && (uname != "eCALSysClient")
       && (uname != "eCALSys-Remote")
       && (uname != "eCALStop")
-      && (process.hname == host_name)
+      && (process.host_name == host_name)
       )
     {
       std::cout << "Stopping process " << process.pname << " (" << process.pid << ")" << std::endl;

@@ -68,7 +68,7 @@ namespace eCAL
 
     // fill sample info
     auto& ecal_sample_topic_info = ecal_sample.topic_info;
-    ecal_sample_topic_info.hname = m_attributes.host_name;
+    ecal_sample_topic_info.host_name = m_attributes.host_name;
     ecal_sample_topic_info.tname = m_attributes.topic_name;
     ecal_sample_topic_info.tid   = m_attributes.topic_id;
 

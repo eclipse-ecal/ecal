@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public:
   enum class Columns : int
   {
     RCLOCK,
-    HNAME,
+    HOST_NAME,
     PNAME,
     UNAME,
     PID,
@@ -84,9 +84,9 @@ public:
       {
         return service_.rclock();
       }
-      else if (column == Columns::HNAME)
+      else if (column == Columns::HOST_NAME)
       {
-        return service_.hname().c_str();
+        return service_.host_name().c_str();
       }
       else if (column == Columns::PNAME)
       {
@@ -135,7 +135,7 @@ public:
     }
     else if ((role == Qt::ItemDataRole::DisplayRole) || (role == Qt::ItemDataRole::ToolTipRole))
     {
-      if ((column == Columns::HNAME)
+      if ((column == Columns::HOST_NAME)
         || (column == Columns::PNAME)
         || (column == Columns::UNAME)
         || (column == Columns::SNAME)
@@ -182,22 +182,22 @@ public:
     {
         if (column == Columns::PNAME)
         {
-          QStringList list{ service_.hname().c_str(), service_.pname().c_str() };
+          QStringList list{ service_.host_name().c_str(), service_.pname().c_str() };
           return list;
         }
         else if (column == Columns::PID)
         {
-          QStringList list{ service_.hname().c_str(), QString::number(service_.pid()) };
+          QStringList list{ service_.host_name().c_str(), QString::number(service_.pid()) };
           return list;
         }
         else if (column == Columns::UNAME)
         {
-          QStringList list{ service_.hname().c_str(), service_.uname().c_str(), QString::number(service_.pid()) };
+          QStringList list{ service_.host_name().c_str(), service_.uname().c_str(), QString::number(service_.pid()) };
           return list;
         }
         else if (column == Columns::SNAME)
         {
-          QStringList list{ service_.sname().c_str(), service_.hname().c_str(), service_.uname().c_str(), QString::number(service_.pid()) };
+          QStringList list{ service_.sname().c_str(), service_.host_name().c_str(), service_.uname().c_str(), QString::number(service_.pid()) };
           return list;
         }
         else
@@ -208,7 +208,7 @@ public:
 
     else if (role == Qt::ItemDataRole::FontRole)
     {
-      if ((column == Columns::HNAME)
+      if ((column == Columns::HOST_NAME)
         || (column == Columns::PNAME)
         || (column == Columns::UNAME)
         || (column == Columns::SNAME)
@@ -250,7 +250,7 @@ public:
 
   static std::string generateIdentifier(const T& service, const eCAL::pb::Method& method)
   {
-    return std::to_string(service.pid()) + "@" + service.hname() + "@" + service.sname() + "@" + method.mname();
+    return std::to_string(service.pid()) + "@" + service.host_name() + "@" + service.sname() + "@" + method.mname();
   }
 
   void update(const T& service, const eCAL::pb::Method& method)

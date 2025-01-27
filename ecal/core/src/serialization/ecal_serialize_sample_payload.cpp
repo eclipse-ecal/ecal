@@ -72,8 +72,8 @@ namespace
 
     // topic information
     pb_sample_.has_topic = true;
-    // hname
-    eCAL::nanopb::encode_string(pb_sample_.topic.hname, payload_.topic_info.hname);
+    // host_name
+    eCAL::nanopb::encode_string(pb_sample_.topic.host_name, payload_.topic_info.host_name);
     // pid
     pb_sample_.topic.pid = payload_.topic_info.pid;
     // tid
@@ -149,8 +149,8 @@ namespace
     ///////////////////////////////////////////////
     // assign decoder
     ///////////////////////////////////////////////
-    // hname
-    eCAL::nanopb::decode_string(pb_sample.topic.hname, payload_.topic_info.hname);
+    // host_name
+    eCAL::nanopb::decode_string(pb_sample.topic.host_name, payload_.topic_info.host_name);
     // tid
     eCAL::nanopb::decode_int_from_string(pb_sample.topic.tid, payload_.topic_info.tid);
     // tname

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,8 @@ namespace
     ///////////////////////////////////////////////
     pb_request_.has_header = true;
 
-    // hname
-    eCAL::nanopb::encode_string(pb_request_.header.hname, request_.header.hname);
+    // host_name
+    eCAL::nanopb::encode_string(pb_request_.header.host_name, request_.header.host_name);
     // sname
     eCAL::nanopb::encode_string(pb_request_.header.sname, request_.header.sname);
     // sid
@@ -119,8 +119,8 @@ namespace
     ///////////////////////////////////////////////
     // header information
     ///////////////////////////////////////////////
-    // hname
-    eCAL::nanopb::decode_string(pb_request.header.hname, request_.header.hname);
+    // host_name
+    eCAL::nanopb::decode_string(pb_request.header.host_name, request_.header.host_name);
     // sname
     eCAL::nanopb::decode_string(pb_request.header.sname, request_.header.sname);
     // sid
@@ -171,8 +171,8 @@ namespace
     ///////////////////////////////////////////////
     pb_response_.has_header = true;
 
-    // hname
-    eCAL::nanopb::encode_string(pb_response_.header.hname, response_.header.hname);
+    // host_name
+    eCAL::nanopb::encode_string(pb_response_.header.host_name, response_.header.host_name);
     // sname
     eCAL::nanopb::encode_string(pb_response_.header.sname, response_.header.sname);
     // sid
@@ -246,8 +246,8 @@ namespace
     ///////////////////////////////////////////////
     // header information
     ///////////////////////////////////////////////
-    // hname
-    eCAL::nanopb::decode_string(pb_response.header.hname, response_.header.hname);
+    // host_name
+    eCAL::nanopb::decode_string(pb_response.header.host_name, response_.header.host_name);
     // sname
     eCAL::nanopb::decode_string(pb_response.header.sname, response_.header.sname);
     // sid

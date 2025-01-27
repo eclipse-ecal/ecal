@@ -113,7 +113,7 @@ private:
   {
     { Columns::GROUP,                  -1 },
     { Columns::HEARTBEAT,              (int)TopicTreeItem::Columns::RCLOCK },
-    { Columns::HOST_NAME,              (int)TopicTreeItem::Columns::HNAME },
+    { Columns::HOST_NAME,              (int)TopicTreeItem::Columns::HOST_NAME },
     { Columns::SHM_TRANSPORT_DOMAIN,   (int)TopicTreeItem::Columns::SHM_TRANSPORT_DOMAIN },
     { Columns::PID,                    (int)TopicTreeItem::Columns::PID },
     { Columns::PROCESS_NAME,           (int)TopicTreeItem::Columns::PNAME },

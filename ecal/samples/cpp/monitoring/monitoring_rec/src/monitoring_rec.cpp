@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,11 +68,11 @@ int main()
       for (const auto& host : monitoring.hosts())
       {
         // check filtering
-        if (!g_host_filt_string.empty() && (g_host_filt_string != host.hname())) continue;
+        if (!g_host_filt_string.empty() && (g_host_filt_string != host.name())) continue;
 
         // print host details
-        std::cout << "hname           : " << host.hname() << std::endl;   // host name
-        std::cout << "os.osname       : " << host.os().osname() << std::endl;   // operating system details
+        std::cout << "host.name       : " << host.name()      << std::endl;   // host name
+        std::cout << "os.name         : " << host.os().name() << std::endl;   // operating system details
         std::cout << std::endl;
       }
     }
@@ -94,7 +94,7 @@ int main()
         if (!g_procs_filt_string.empty() && (g_procs_filt_string != process.uname())) continue;
 
         // print process details
-        std::cout << "hname           : " << process.hname() << std::endl;   // host name
+        std::cout << "host_name       : " << process.host_name() << std::endl;   // host name
         std::cout << "pid             : " << process.pid() << std::endl;   // process id
         std::cout << "pname           : " << process.pname() << std::endl;   // process name
         std::cout << "uname           : " << process.uname() << std::endl;   // unit name
@@ -124,7 +124,7 @@ int main()
         if (!g_services_filt_string.empty() && (g_services_filt_string != service.sname())) continue;
 
         // print process details
-        std::cout << "hname           : " << service.hname() << std::endl;   // host name
+        std::cout << "host_name       : " << service.host_name() << std::endl;   // host name
         std::cout << "sname           : " << service.sname() << std::endl;   // service name
         std::cout << "pid             : " << service.pid() << std::endl;   // process id
         std::cout << std::endl;
@@ -162,7 +162,7 @@ int main()
 
         // print topic details
         std::cout << "rclock          : " << topic.rclock() << std::endl;   // registration clock
-        std::cout << "hname           : " << topic.hname() << std::endl;   // host name
+        std::cout << "host_name       : " << topic.host_name() << std::endl;   // host name
         std::cout << "pid             : " << topic.pid() << std::endl;   // process id
         std::cout << "pname           : " << topic.pname() << std::endl;   // process name
         std::cout << "uname           : " << topic.uname() << std::endl;   // unit name

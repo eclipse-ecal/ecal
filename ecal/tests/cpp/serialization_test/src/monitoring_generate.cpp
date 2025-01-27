@@ -33,7 +33,7 @@ namespace eCAL
     {
       SProcessMon process;
       process.rclock               = rand() % 1000;
-      process.hname                = GenerateString(10);
+      process.host_name                = GenerateString(10);
       process.shm_transport_domain = GenerateString(8);
       process.pid                  = rand() % 1000;
       process.pname                = GenerateString(8);
@@ -56,7 +56,7 @@ namespace eCAL
     {
       STopicMon topic;
       topic.rclock               = rand() % 1000;
-      topic.hname                = GenerateString(10);
+      topic.host_name                = GenerateString(10);
       topic.shm_transport_domain = GenerateString(8);
       topic.pid                  = rand() % 1000;
       topic.pname                = GenerateString(8);
@@ -94,7 +94,7 @@ namespace eCAL
     {
       SServerMon server;
       server.rclock      = rand() % 1000;
-      server.hname       = GenerateString(10);
+      server.host_name       = GenerateString(10);
       server.pname       = GenerateString(8);
       server.uname       = GenerateString(6);
       server.pid         = rand() % 1000;
@@ -115,7 +115,7 @@ namespace eCAL
     {
       SClientMon client;
       client.rclock  = rand() % 1000;
-      client.hname   = GenerateString(10);
+      client.host_name   = GenerateString(10);
       client.pname   = GenerateString(8);
       client.uname   = GenerateString(6);
       client.pid     = rand() % 1000;

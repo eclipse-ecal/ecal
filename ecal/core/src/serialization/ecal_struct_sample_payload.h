@@ -39,7 +39,7 @@ namespace eCAL
     // Topic information
     struct TopicInfo
     {
-      std::string                         hname;                        // host name
+      std::string                         host_name;                        // host name
       uint64_t                            tid;                          // topic id
       std::string                         tname;                        // topic name
       int32_t                             pid = 0;                      // process id

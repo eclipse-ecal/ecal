@@ -96,7 +96,7 @@ namespace eCAL
     v5::SServiceAttr service;
     const auto& ecal_sample_service = ecal_sample_.service;
     const auto& ecal_sample_identifier = ecal_sample_.identifier;
-    service.hname = ecal_sample_identifier.host_name;
+    service.host_name = ecal_sample_identifier.host_name;
     service.pname = ecal_sample_service.pname;
     service.uname = ecal_sample_service.uname;
     service.sname = ecal_sample_service.sname;
@@ -117,7 +117,7 @@ namespace eCAL
         SEntityId service_entity;
         service_entity.entity_id  = service.sid;
         service_entity.process_id = service.pid;
-        service_entity.host_name  = service.hname;
+        service_entity.host_name  = service.host_name;
         iter->second->RegisterService(service_entity, service);
       }
     }

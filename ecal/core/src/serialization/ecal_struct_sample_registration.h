@@ -70,31 +70,31 @@ namespace eCAL
     // Operating system details
     struct OSInfo
     {
-      std::string                         osname;                       // name
+      std::string                         name;                       // name
 
       bool operator==(const OSInfo& other) const {
-        return osname == other.osname;
+        return name == other.name;
       }
 
       void clear()
       {
-        osname.clear();
+        name.clear();
       }
     };
 
     // eCAL host
     struct Host
     {
-      std::string                         hname;                        // host name
+      std::string                         name;                         // host name
       OSInfo                              os;                           // operating system details
 
       bool operator==(const Host& other) const {
-        return hname == other.hname && os == other.os;
+        return name == other.name && os == other.os;
       }
 
       void clear()
       {
-        hname.clear();
+        name.clear();
         os.clear();
       }
     };

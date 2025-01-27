@@ -43,7 +43,7 @@ typedef struct _eCAL_pb_ProcessState {
 typedef struct _eCAL_pb_Process { /* Reserved fields in enums are not supported in protobuf 3.0
  reserved 7 to 11; */
     int32_t rclock; /* registration clock */
-    pb_callback_t hname; /* host name */
+    pb_callback_t host_name; /* host name */
     int32_t pid; /* process id */
     pb_callback_t pname; /* process name */
     pb_callback_t uname; /* unit name */
@@ -96,7 +96,7 @@ extern "C" {
 #define eCAL_pb_ProcessState_info_tag            2
 #define eCAL_pb_ProcessState_severity_level_tag  3
 #define eCAL_pb_Process_rclock_tag               1
-#define eCAL_pb_Process_hname_tag                2
+#define eCAL_pb_Process_host_name_tag            2
 #define eCAL_pb_Process_pid_tag                  3
 #define eCAL_pb_Process_pname_tag                4
 #define eCAL_pb_Process_uname_tag                5
@@ -120,7 +120,7 @@ X(a, STATIC,   SINGULAR, UENUM,    severity_level,    3)
 
 #define eCAL_pb_Process_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, INT32,    rclock,            1) \
-X(a, CALLBACK, SINGULAR, STRING,   hname,             2) \
+X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
 X(a, STATIC,   SINGULAR, INT32,    pid,               3) \
 X(a, CALLBACK, SINGULAR, STRING,   pname,             4) \
 X(a, CALLBACK, SINGULAR, STRING,   uname,             5) \

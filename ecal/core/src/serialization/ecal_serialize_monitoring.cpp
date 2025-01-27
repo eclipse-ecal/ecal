@@ -45,8 +45,8 @@ namespace
     ///////////////////////////////////////////////
     // rclock
     pb_process_.rclock = process_.rclock;
-    // hname
-    eCAL::nanopb::encode_string(pb_process_.hname, process_.hname);
+    // host_name
+    eCAL::nanopb::encode_string(pb_process_.host_name, process_.host_name);
     // shm_transport_domain
     eCAL::nanopb::encode_string(pb_process_.shm_transport_domain, process_.shm_transport_domain);
     // pid
@@ -149,8 +149,8 @@ namespace
   {
     // rclock
     pb_topic_.rclock = topic_.rclock;
-    // hname
-    eCAL::nanopb::encode_string(pb_topic_.hname, topic_.hname);
+    // host_name
+    eCAL::nanopb::encode_string(pb_topic_.host_name, topic_.host_name);
     // shm_transport_domain
     eCAL::nanopb::encode_string(pb_topic_.shm_transport_domain, topic_.shm_transport_domain);
     // pid
@@ -301,8 +301,8 @@ namespace
     ///////////////////////////////////////////////
     // rclock
     pb_service_.rclock = service_.rclock;
-    // hname
-    eCAL::nanopb::encode_string(pb_service_.hname, service_.hname);
+    // host_name
+    eCAL::nanopb::encode_string(pb_service_.host_name, service_.host_name);
     // pname
     eCAL::nanopb::encode_string(pb_service_.pname, service_.pname);
     // uname
@@ -362,8 +362,8 @@ namespace
     ///////////////////////////////////////////////
     // rclock
     pb_client_.rclock = client_.rclock;
-    // hname
-    eCAL::nanopb::encode_string(pb_client_.hname, client_.hname);
+    // host_name
+    eCAL::nanopb::encode_string(pb_client_.host_name, client_.host_name);
     // pname
     eCAL::nanopb::encode_string(pb_client_.pname, client_.pname);
     // uname
@@ -496,8 +496,8 @@ namespace
     ///////////////////////////////////////////////
     // assign decoder
     ///////////////////////////////////////////////
-    // hname
-    eCAL::nanopb::decode_string(pb_process_.hname, process_.hname);
+    // host_name
+    eCAL::nanopb::decode_string(pb_process_.host_name, process_.host_name);
     // shm_transport_domain
     eCAL::nanopb::decode_string(pb_process_.shm_transport_domain, process_.shm_transport_domain);
     // pname
@@ -606,8 +606,8 @@ namespace
     ///////////////////////////////////////////////
     // assign decoder
     ///////////////////////////////////////////////
-    // hname
-    eCAL::nanopb::decode_string(pb_topic_.hname, topic_.hname);
+    // host_name
+    eCAL::nanopb::decode_string(pb_topic_.host_name, topic_.host_name);
     // shm_transport_domain
     eCAL::nanopb::decode_string(pb_topic_.shm_transport_domain, topic_.shm_transport_domain);
     // pname
@@ -743,8 +743,8 @@ namespace
     ///////////////////////////////////////////////
     // assign decoder
     ///////////////////////////////////////////////
-    // hname
-    eCAL::nanopb::decode_string(pb_service_.hname, service_.hname);
+    // host_name
+    eCAL::nanopb::decode_string(pb_service_.host_name, service_.host_name);
     // pname
     eCAL::nanopb::decode_string(pb_service_.pname, service_.pname);
     // uname
@@ -812,8 +812,8 @@ namespace
     ///////////////////////////////////////////////
     // assign decoder
     ///////////////////////////////////////////////
-    // hname
-    eCAL::nanopb::decode_string(pb_client_.hname, client_.hname);
+    // host_name
+    eCAL::nanopb::decode_string(pb_client_.host_name, client_.host_name);
     // pname
     eCAL::nanopb::decode_string(pb_client_.pname, client_.pname);
     // uname

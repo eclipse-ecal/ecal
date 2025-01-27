@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ namespace eCAL
     ServiceHeader GenerateServiceHeader()
     {
       ServiceHeader header;
-      header.hname = GenerateString(8);
+      header.host_name = GenerateString(8);
       header.sname = GenerateString(8);
       header.sid   = GenerateString(5);
       header.mname = GenerateString(8);

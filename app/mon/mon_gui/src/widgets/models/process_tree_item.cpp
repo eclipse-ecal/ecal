@@ -57,9 +57,9 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return process_.rclock();
     }
-    else if (column == Columns::HNAME)
+    else if (column == Columns::HOST_NAME)
     {
-      return process_.hname().c_str();
+      return process_.host_name().c_str();
     }
     else if (column == Columns::SHM_TRANSPORT_DOMAIN)
     {
@@ -117,7 +117,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
   else if ((role == Qt::ItemDataRole::DisplayRole) || (role == Qt::ItemDataRole::ToolTipRole))
   {
-    if ((column == Columns::HNAME)
+    if ((column == Columns::HOST_NAME)
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME))
@@ -156,7 +156,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
   else if (role == (Qt::ItemDataRole)ItemDataRoles::FilterRole) //-V1016 //-V547
   {
-    if ((column == Columns::HNAME)
+    if ((column == Columns::HOST_NAME)
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME))
@@ -201,17 +201,17 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if (column == Columns::PID)
     {
-      QStringList list{ process_.hname().c_str(), QString::number(process_.pid()) };
+      QStringList list{ process_.host_name().c_str(), QString::number(process_.pid()) };
       return list;
     }
     if (column == Columns::PNAME)
     {
-      QStringList list{process_.hname().c_str(), process_.pname().c_str()};
+      QStringList list{process_.host_name().c_str(), process_.pname().c_str()};
       return list;
     }
     else if (column == Columns::UNAME)
     {
-      QStringList list{ process_.hname().c_str(), process_.uname().c_str(), QString::number(process_.pid()) };
+      QStringList list{ process_.host_name().c_str(), process_.uname().c_str(), QString::number(process_.pid()) };
       return list;
     }
     else
@@ -242,7 +242,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
   else if (role == Qt::ItemDataRole::FontRole)
   {
-    if ((column == Columns::HNAME)
+    if ((column == Columns::HOST_NAME)
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME))

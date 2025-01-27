@@ -312,7 +312,7 @@ void ProcBandwidth(const std::string& topic_name)
           unit = "kByte/s";
         }
       }
-      std::cout << int(bw) << " " << unit << " (" << topic.hname() << ":"  << topic.direction() << ")" << std::endl;
+      std::cout << int(bw) << " " << unit << " (" << topic.host_name() << ":"  << topic.direction() << ")" << std::endl;
     }
 
     if(!found) std::cout << "." << std::endl;
@@ -400,7 +400,7 @@ void ProcFind(const std::string& topic_type_name)
       std::cout << "ttype name   : " << topic.tdatatype().name()     << std::endl;   // topic type name
       std::cout << "ttype enc.   : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
       std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
-      std::cout << "hname        : " << topic.hname()                << std::endl;   // host name
+      std::cout << "host_name    : " << topic.host_name()            << std::endl;   // host name
       std::cout << "pid          : " << topic.pid()                  << std::endl;   // process id
       std::cout << "tid          : " << topic.tid()                  << std::endl;   // topic id
       std::cout << std::endl;
@@ -479,7 +479,7 @@ void ProcInfo(const std::string& topic_name)
       std::cout << "ttype name   : " << topic.tdatatype().name()     << std::endl;   // topic type name
       std::cout << "ttype enc.   : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
       std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
-      std::cout << "hname        : " << topic.hname()                << std::endl;   // host name
+      std::cout << "host_name    : " << topic.host_name()            << std::endl;   // host name
       std::cout << "pid          : " << topic.pid()                  << std::endl;   // process id
       std::cout << "tid          : " << topic.tid()                  << std::endl;   // topic id
       std::cout << "tsize        : " << topic.tsize()                << std::endl;   // topic size
@@ -523,7 +523,7 @@ void ProcList()
       std::cout << "ttype name   : " << topic.tdatatype().name()     << std::endl;   // topic type name
       std::cout << "ttype enc.   : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
       std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
-      std::cout << "hname        : " << topic.hname()                << std::endl;   // host name
+      std::cout << "host_name    : " << topic.host_name()            << std::endl;   // host name
       std::cout << "pid          : " << topic.pid()                  << std::endl;   // process id
       std::cout << "tid          : " << topic.tid()                  << std::endl;   // topic id
       std::cout << "tsize        : " << topic.tsize()                << std::endl;   // topic size
@@ -592,7 +592,7 @@ void ProcType(const std::string& topic_name)
     if(ttype_name.empty()) ttype_name = "\"\"";
 
     // print topic type
-    std::cout << ttype_name << " (" << topic.hname() << ":"  << topic.direction() << ")" << std::endl;
+    std::cout << ttype_name << " (" << topic.host_name() << ":"  << topic.direction() << ")" << std::endl;
   }
 }
 
@@ -626,6 +626,6 @@ void ProcDesc(const std::string& topic_name_)
     if (ttype_desc.empty()) ttype_desc = "\"\"";
 
     // print topic description
-    std::cout << ttype_desc << " (" << topic.hname() << ":"  << topic.direction() << ")" << std::endl;
+    std::cout << ttype_desc << " (" << topic.host_name() << ":"  << topic.direction() << ")" << std::endl;
   }
 }

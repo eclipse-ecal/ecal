@@ -48,9 +48,9 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return topic_.rclock();
     }
-    else if (column == Columns::HNAME)
+    else if (column == Columns::HOST_NAME)
     {
-      return topic_.hname().c_str();
+      return topic_.host_name().c_str();
     }
     else if (column == Columns::SHM_TRANSPORT_DOMAIN)
     {
@@ -134,7 +134,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
   else if ((role == Qt::ItemDataRole::DisplayRole) || (role == Qt::ItemDataRole::ToolTipRole))
   {
-    if ((column == Columns::HNAME)
+    if ((column == Columns::HOST_NAME)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME)
       || (column == Columns::TNAME)
@@ -233,7 +233,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
   else if (role == (Qt::ItemDataRole)ItemDataRoles::FilterRole) //-V1016 //-V547
   {
-    if ((column == Columns::HNAME)
+    if ((column == Columns::HOST_NAME)
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME)
@@ -276,17 +276,17 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if (column == Columns::PID)
     {
-      const QStringList list{ topic_.hname().c_str(), QString::number(topic_.pid()) };
+      const QStringList list{ topic_.host_name().c_str(), QString::number(topic_.pid()) };
       return list;
     }
     else if (column == Columns::PNAME)
     {
-      const QStringList list{topic_.hname().c_str(), topic_.pname().c_str()};
+      const QStringList list{topic_.host_name().c_str(), topic_.pname().c_str()};
       return list;
     }
     else if (column == Columns::UNAME)
     {
-      const QStringList list{ topic_.hname().c_str(), topic_.uname().c_str(), QString::number(topic_.pid()) };
+      const QStringList list{ topic_.host_name().c_str(), topic_.uname().c_str(), QString::number(topic_.pid()) };
       return list;
     }
     else
@@ -298,7 +298,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   else if (role == Qt::ItemDataRole::FontRole)
   {
 
-    if ((column == Columns::HNAME)
+    if ((column == Columns::HOST_NAME)
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME)

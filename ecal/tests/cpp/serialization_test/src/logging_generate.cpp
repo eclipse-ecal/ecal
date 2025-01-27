@@ -30,7 +30,7 @@ namespace eCAL
     {
       SLogMessage logMessage;
       logMessage.time    = rand() % 1000;
-      logMessage.hname   = GenerateString(10);
+      logMessage.host_name   = GenerateString(10);
       logMessage.pid     = rand() % 1000;
       logMessage.pname   = GenerateString(8);
       logMessage.uname   = GenerateString(6);

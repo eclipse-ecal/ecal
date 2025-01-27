@@ -97,7 +97,7 @@ class LogModel
   {
     return LogEntry {
       val.time(),
-      val.hname(),
+      val.host_name(),
       val.pid(),
       val.uname(),
       val.pname(),

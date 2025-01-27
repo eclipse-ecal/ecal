@@ -490,7 +490,7 @@ namespace eCAL
     //  - a multiple sent message
     SPublicationInfo publication_info;
     publication_info.entity_id  = topic_info_.tid;
-    publication_info.host_name  = topic_info_.hname;
+    publication_info.host_name  = topic_info_.host_name;
     publication_info.process_id = topic_info_.pid;
     if (!CheckMessageClock(publication_info, clock_))
     {
@@ -539,13 +539,13 @@ namespace eCAL
 
         STopicId topic_id;
         topic_id.topic_name          = topic_info_.tname;
-        topic_id.topic_id.host_name  = topic_info_.hname;
+        topic_id.topic_id.host_name  = topic_info_.host_name;
         topic_id.topic_id.entity_id  = topic_info_.tid;
         topic_id.topic_id.process_id = topic_info_.pid;
 
         SPublicationInfo pub_info;
         pub_info.entity_id  = topic_info_.tid;
-        pub_info.host_name  = topic_info_.hname;
+        pub_info.host_name  = topic_info_.host_name;
         pub_info.process_id = topic_info_.pid;
 
         // execute it

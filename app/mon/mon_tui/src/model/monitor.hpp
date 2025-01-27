@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -150,16 +150,16 @@ class MonitorModel
     std::unordered_map<std::string, Host*> hosts_map;
     for(auto &p: *mon_.mutable_processes())
     {
-      if(hosts_map.find(p.hname()) == hosts_map.end())
+      if(hosts_map.find(p.host_name()) == hosts_map.end())
       {
         auto &host = hosts.emplace_back();
-        host.name = p.hname();
+        host.name = p.host_name();
         hosts_map[host.name] = &host;
       }
       auto &process = processes.emplace_back();
       process.pid = p.pid();
       process.name = std::move(*p.mutable_pname());
-      process.host_name = std::move(*p.mutable_hname());
+      process.host_name = std::move(*p.mutable_host_name());
       process.unit_name = std::move(*p.mutable_uname());
       process.params = std::move(*p.mutable_pparam());
       process.severity = Severity(p.state().severity());
@@ -173,7 +173,7 @@ class MonitorModel
 
     for (auto &t : *mon_.mutable_topics())
     {
-      auto &name = t.hname();
+      auto &name = t.host_name();
       auto &direction = t.direction();
       auto found = hosts_map.find(name);
       if(found != hosts_map.end())
@@ -192,7 +192,7 @@ class MonitorModel
       }
       auto &topic = topics.emplace_back();
       topic.registration_clock = t.rclock();
-      topic.host_name = std::move(*t.mutable_hname());
+      topic.host_name = std::move(*t.mutable_host_name());
       topic.pid = t.pid();
       topic.process_name = std::move(*t.mutable_pname());
       topic.unit_name = std::move(*t.mutable_uname());
@@ -231,7 +231,7 @@ class MonitorModel
       auto &service = services.emplace_back();
       service.id = s.sid();
       service.name = std::move(*s.mutable_sname());
-      service.host_name = std::move(*s.mutable_hname());
+      service.host_name = std::move(*s.mutable_host_name());
       service.process_name = std::move(*s.mutable_pname());
       service.unit_name = std::move(*s.mutable_uname());
       service.registration_clock = s.rclock();

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ namespace eCAL
           // Re-create host list
           for (const auto& process : monitoring_pb.processes())
           {
-            std::string host_name = process.hname();
+            std::string host_name = process.host_name();
             auto existing_host_it = hosts_running_ecal_rec_.find(host_name);
 
             // Add host if it didn't exist already
@@ -147,14 +147,14 @@ namespace eCAL
             // Set the topic publisher
             if (EcalUtils::String::Icompare(topic.direction(), "publisher"))
             {
-              auto existing_publisher_it = topic_info_map_it->second.publishers_.find(topic.hname());
+              auto existing_publisher_it = topic_info_map_it->second.publishers_.find(topic.host_name());
               if (existing_publisher_it != topic_info_map_it->second.publishers_.end())
               {
                 existing_publisher_it->second.emplace(topic.uname());
               }
               else
               {
-                topic_info_map_it->second.publishers_.emplace(topic.hname(), std::set<std::string>{topic.uname()});
+                topic_info_map_it->second.publishers_.emplace(topic.host_name(), std::set<std::string>{topic.uname()});
               }
             }
 
@@ -162,11 +162,11 @@ namespace eCAL
             if (((topic.uname() == "eCALRecClient") || (topic.uname() == "eCALRecGUI"))
               && EcalUtils::String::Icompare(topic.direction(), "subscriber"))
             {
-              auto running_enabled_rec_client_it = running_enabled_rec_clients.find(topic.hname());
+              auto running_enabled_rec_client_it = running_enabled_rec_clients.find(topic.host_name());
               if ((running_enabled_rec_client_it != running_enabled_rec_clients.end()
                 && (running_enabled_rec_client_it->second == topic.pid())))
               {
-                topic_info_map_it->second.rec_subscribers_[{topic.hname(), topic.pid()}] = (static_cast<double>(topic.dfreq()) / 1000.0);
+                topic_info_map_it->second.rec_subscribers_[{topic.host_name(), topic.pid()}] = (static_cast<double>(topic.dfreq()) / 1000.0);
               }
             }
           }

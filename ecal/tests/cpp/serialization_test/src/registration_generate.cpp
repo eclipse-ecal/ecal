@@ -155,7 +155,7 @@ namespace eCAL
     {
       Sample sample;
       sample.cmd_type = bct_reg_process;
-      sample.host.hname = GenerateString(8);
+      sample.host.name = GenerateString(8);
       sample.identifier = GenerateIdentifier();
       // Process samples don't have an id internally, hence it must be 0.
       sample.identifier.entity_id = sample.identifier.process_id;
@@ -167,7 +167,7 @@ namespace eCAL
     {
       Sample sample;
       sample.cmd_type = bct_reg_publisher;
-      sample.host.hname = GenerateString(8);
+      sample.host.name = GenerateString(8);
       sample.identifier = GenerateIdentifier();
       sample.topic = GenerateTopic();
       return sample;
@@ -177,7 +177,7 @@ namespace eCAL
     {
       Sample sample;
       sample.cmd_type = bct_reg_service;
-      sample.host.hname = GenerateString(8);
+      sample.host.name = GenerateString(8);
       sample.identifier = GenerateIdentifier();
       sample.service = GenerateService();
       return sample;
@@ -187,7 +187,7 @@ namespace eCAL
     {
       Sample sample;
       sample.cmd_type = bct_reg_client;
-      sample.host.hname = GenerateString(8);
+      sample.host.name = GenerateString(8);
       sample.identifier = GenerateIdentifier();
       sample.client = GenerateClient();
       return sample;

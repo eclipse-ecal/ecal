@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ namespace eCAL
     // compare two ServiceHeaders for equality
     bool CompareServiceHeaders(const ServiceHeader& header1, const ServiceHeader& header2)
     {
-      return (header1.hname == header2.hname &&
+      return (header1.host_name == header2.host_name &&
               header1.sname == header2.sname &&
               header1.sid   == header2.sid &&
               header1.mname == header2.mname &&

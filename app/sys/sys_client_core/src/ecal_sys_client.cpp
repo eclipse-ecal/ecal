@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -161,7 +161,7 @@ namespace eCAL
         std::vector<int32_t> pid_list;
         for (const auto& process : monitoring_pb.processes())
         {
-          if (process.hname() == eCAL::Process::GetHostName()) // Only handle local tasks!
+          if (process.host_name() == eCAL::Process::GetHostName()) // Only handle local tasks!
           {
 #ifdef _WIN32
             // Windows gives us the proper command line, so we can directly match it

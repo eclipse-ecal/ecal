@@ -47,7 +47,7 @@ namespace eCAL
     // ServiceHeader
     struct ServiceHeader
     {
-      std::string          hname;           // Host name
+      std::string          host_name;           // Host name
       std::string          sname;           // Service name
       std::string          sid;             // Service id
       std::string          mname;           // Method name
@@ -56,7 +56,7 @@ namespace eCAL
       eMethodCallState     state = none;    // Method call state
 
       bool operator==(const ServiceHeader& other) const {
-        return hname == other.hname &&
+        return host_name == other.host_name &&
           sname == other.sname &&
           sid == other.sid &&
           mname == other.mname &&
@@ -67,7 +67,7 @@ namespace eCAL
 
       void clear()
       {
-        hname.clear();
+        host_name.clear();
         sname.clear();
         sid.clear();
         mname.clear();

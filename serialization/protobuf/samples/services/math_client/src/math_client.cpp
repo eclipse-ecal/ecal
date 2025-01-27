@@ -53,7 +53,7 @@ void OnClientState(const eCAL::v5::SClientEventCallbackData* data_)
     break;
   }
 
-  std::cout << "Server Hostname      : " << data_->attr.hname       << std::endl;
+  std::cout << "Server Hostname      : " << data_->attr.host_name       << std::endl;
   std::cout << "Server Name          : " << data_->attr.sname       << std::endl;
   std::cout << "Server Process       : " << data_->attr.pname       << std::endl;
   std::cout << "Server PID           : " << data_->attr.pid         << std::endl;

@@ -47,8 +47,8 @@ namespace
     const auto& registration_identifier_ = registration_.identifier;
     // rclock
     pb_process_.rclock = registration_process_.rclock;
-    // hname
-    eCAL::nanopb::encode_string(pb_process_.hname, registration_identifier_.host_name);
+    // host_name
+    eCAL::nanopb::encode_string(pb_process_.host_name, registration_identifier_.host_name);
     // shm_transport_domain
     eCAL::nanopb::encode_string(pb_process_.shm_transport_domain, registration_process_.shm_transport_domain);
     // pid
@@ -92,8 +92,8 @@ namespace
 
     // rclock
     pb_service_.rclock = registration_service_.rclock;
-    // hname
-    eCAL::nanopb::encode_string(pb_service_.hname, registration_identifier_.host_name);
+    // host_name
+    eCAL::nanopb::encode_string(pb_service_.host_name, registration_identifier_.host_name);
     // pname
     eCAL::nanopb::encode_string(pb_service_.pname, registration_service_.pname);
     // uname
@@ -124,8 +124,8 @@ namespace
 
     // rclock
     pb_client_.rclock = registration_client_.rclock;
-    // hname
-    eCAL::nanopb::encode_string(pb_client_.hname, registration_producer_.host_name);
+    // host_name
+    eCAL::nanopb::encode_string(pb_client_.host_name, registration_producer_.host_name);
     // pname
     eCAL::nanopb::encode_string(pb_client_.pname, registration_client_.pname);
     // uname
@@ -152,8 +152,8 @@ namespace
 
     // rclock
     pb_topic_.rclock = registration_topic_.rclock;
-    // hname
-    eCAL::nanopb::encode_string(pb_topic_.hname, registration_identifier_.host_name);
+    // host_name
+    eCAL::nanopb::encode_string(pb_topic_.host_name, registration_identifier_.host_name);
     // shm_transport_domain
     eCAL::nanopb::encode_string(pb_topic_.shm_transport_domain, registration_topic_.shm_transport_domain);
     // pid
@@ -209,8 +209,8 @@ namespace
     ///////////////////////////////////////////////
     pb_sample_.has_host = true;
 
-    // hname
-    eCAL::nanopb::encode_string(pb_sample_.host.hname, registration_.host.hname);
+    // host_name
+    eCAL::nanopb::encode_string(pb_sample_.host.name, registration_.host.name);
 
     pb_sample_.has_process = false;
     pb_sample_.has_service = false;
@@ -308,14 +308,14 @@ namespace
     ///////////////////////////////////////////////
     // host information
     ///////////////////////////////////////////////
-    // hname
-    eCAL::nanopb::decode_string(pb_sample_.host.hname, registration_.host.hname);
+    // host_name
+    eCAL::nanopb::decode_string(pb_sample_.host.name, registration_.host.name);
 
     ///////////////////////////////////////////////
     // process information
     ///////////////////////////////////////////////
-    // hname
-    eCAL::nanopb::decode_string(pb_sample_.process.hname, registration_.identifier.host_name);
+    // host_name
+    eCAL::nanopb::decode_string(pb_sample_.process.host_name, registration_.identifier.host_name);
     // shm_transport_domain
     eCAL::nanopb::decode_string(pb_sample_.process.shm_transport_domain, registration_.process.shm_transport_domain);
     // pname
@@ -338,8 +338,8 @@ namespace
     ///////////////////////////////////////////////
     // service information
     ///////////////////////////////////////////////
-    // hname
-    eCAL::nanopb::decode_string(pb_sample_.service.hname, registration_.identifier.host_name);
+    // host_name
+    eCAL::nanopb::decode_string(pb_sample_.service.host_name, registration_.identifier.host_name);
     // pname
     eCAL::nanopb::decode_string(pb_sample_.service.pname, registration_.service.pname);
     // uname
@@ -354,8 +354,8 @@ namespace
     ///////////////////////////////////////////////
     // client information
     ///////////////////////////////////////////////
-    // hname
-    eCAL::nanopb::decode_string(pb_sample_.client.hname, registration_.identifier.host_name);
+    // host_name
+    eCAL::nanopb::decode_string(pb_sample_.client.host_name, registration_.identifier.host_name);
     // pname
     eCAL::nanopb::decode_string(pb_sample_.client.pname, registration_.client.pname);
     // uname
@@ -370,8 +370,8 @@ namespace
     ///////////////////////////////////////////////
     // topic information
     ///////////////////////////////////////////////
-    // hname
-    eCAL::nanopb::decode_string(pb_sample_.topic.hname, registration_.identifier.host_name);
+    // host_name
+    eCAL::nanopb::decode_string(pb_sample_.topic.host_name, registration_.identifier.host_name);
     // shm_transport_domain
     eCAL::nanopb::decode_string(pb_sample_.topic.shm_transport_domain, registration_.topic.shm_transport_domain);
     // pname

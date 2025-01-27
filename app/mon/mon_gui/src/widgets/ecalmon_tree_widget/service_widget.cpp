@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ void ServiceWidget::autoSizeColumns()
   eCAL::pb::Service example_service_pb;
 
   example_service_pb.set_rclock(999999);
-  example_service_pb.set_hname("CARPC00____");
+  example_service_pb.set_host_name("CARPC00____");
   example_service_pb.set_pname("");
   example_service_pb.set_uname("eCALRPCService____");
   example_service_pb.set_pid(999999);

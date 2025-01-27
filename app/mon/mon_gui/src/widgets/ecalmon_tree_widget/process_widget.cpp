@@ -109,7 +109,7 @@ void ProcessWidget::autoSizeColumns()
 {
   eCAL::pb::Process example_process_pb;
   example_process_pb.set_rclock(999999);
-  example_process_pb.set_hname("HNAME00____");
+  example_process_pb.set_host_name("HNAME00____");
   example_process_pb.set_pid(999999);
   example_process_pb.set_pname("");
   example_process_pb.set_uname("eCALProcessUnitNameABCDE___");

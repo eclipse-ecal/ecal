@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ namespace eCAL
 
         Payload::TopicInfo topic_info;
         topic_info.tname = par_.topic_name;
-        topic_info.hname = par_.host_name;
+        topic_info.host_name = par_.host_name;
         topic_info.tid   = par_.topic_id;
         topic_info.pid   = par_.process_id;
 

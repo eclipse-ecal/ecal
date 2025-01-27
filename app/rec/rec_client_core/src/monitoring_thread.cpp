@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,14 +106,14 @@ namespace eCAL
               this_topic_info_quality |= INFO_COMES_FROM_PUBLISHER_QUALITYBIT;
 
               // Also update the publisher list
-              auto existing_publisher_it = topic_info_map_it->second.publishers_.find(topic.hname());
+              auto existing_publisher_it = topic_info_map_it->second.publishers_.find(topic.host_name());
               if (existing_publisher_it != topic_info_map_it->second.publishers_.end())
               {
                 existing_publisher_it->second.emplace(topic.uname());
               }
               else
               {
-                topic_info_map_it->second.publishers_.emplace(topic.hname(), std::set<std::string>{topic.uname()});
+                topic_info_map_it->second.publishers_.emplace(topic.host_name(), std::set<std::string>{topic.uname()});
               }
             }
 

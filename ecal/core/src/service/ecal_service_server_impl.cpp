@@ -421,7 +421,7 @@ namespace eCAL
     // prepare response
     Service::Response response;
     auto& response_header = response.header;
-    response_header.hname = Process::GetHostName();
+    response_header.host_name = Process::GetHostName();
     response_header.sname = m_service_name;
     response_header.sid = std::to_string(m_service_id); // TODO: Service ID currently defined as string, should be integer as well
 

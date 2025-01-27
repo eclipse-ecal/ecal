@@ -196,7 +196,7 @@ namespace eCAL
       Monitoring::STopicMon& TopicInfo = (*pTopicMap->map)[topic_map_key];
 
       // set static content
-      TopicInfo.hname                = host_name;
+      TopicInfo.host_name                = host_name;
       TopicInfo.shm_transport_domain = shm_transport_domain;
       TopicInfo.pid                  = process_id;
       TopicInfo.pname                = process_name;
@@ -298,7 +298,7 @@ namespace eCAL
     Monitoring::SProcessMon& ProcessInfo = (*m_process_map.map)[process_map_key];
 
     // set static content
-    ProcessInfo.hname                = host_name;
+    ProcessInfo.host_name                = host_name;
     ProcessInfo.shm_transport_domain = shm_transport_domain;
     ProcessInfo.pname                = process_name;
     ProcessInfo.uname                = unit_name;
@@ -358,7 +358,7 @@ namespace eCAL
     Monitoring::SServerMon& ServerInfo = (*m_server_map.map)[service_map_key];
 
     // set static content
-    ServerInfo.hname       = host_name;
+    ServerInfo.host_name       = host_name;
     ServerInfo.sname       = service_name;
     ServerInfo.sid         = service_id;
     ServerInfo.pname       = process_name;
@@ -421,7 +421,7 @@ namespace eCAL
     Monitoring::SClientMon& ClientInfo = (*m_clients_map.map)[client_map_key];
 
     // set static content
-    ClientInfo.hname = host_name;
+    ClientInfo.host_name = host_name;
     ClientInfo.sname = service_name;
     ClientInfo.sid   = service_id;
     ClientInfo.pname = process_name;

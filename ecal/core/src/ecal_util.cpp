@@ -71,7 +71,7 @@ namespace eCAL
       {
         const std::string pname = process.pname;
         if ( (pname         == process_name_)
-          && (process.hname == host_name)
+          && (process.host_name == host_name)
           )
         {
           proc_id_list.push_back(process.pid);
@@ -114,7 +114,7 @@ namespace eCAL
           && (uname != "eCALSysGUI")
           && (uname != "eCALStop")
           && (uname != "eCALTopic")
-          && (process.hname == host_name)
+          && (process.host_name == host_name)
           )
         {
           proc_id_list.push_back(process.pid);
@@ -146,7 +146,7 @@ namespace eCAL
           || (uname == "eCALStop")
           || (uname == "eCALTopic")
           )
-          && (process.hname == host_name)
+          && (process.host_name == host_name)
           )
         {
           proc_id_list.push_back(process.pid);

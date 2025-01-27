@@ -44,8 +44,8 @@ namespace
   {
     // time
     pb_log_message_.time = log_message_.time;
-    // hname
-    eCAL::nanopb::encode_string(pb_log_message_.hname, log_message_.hname);
+    // host_name
+    eCAL::nanopb::encode_string(pb_log_message_.host_name, log_message_.host_name);
     // pid
     pb_log_message_.pid = log_message_.pid;
     // pname
@@ -113,8 +113,8 @@ namespace
     // assign decoder
     ///////////////////////////////////////////////
 
-    // hname
-    eCAL::nanopb::decode_string(pb_log_message_.hname, log_message_.hname);
+    // host_name
+    eCAL::nanopb::decode_string(pb_log_message_.host_name, log_message_.host_name);
     // pname
     eCAL::nanopb::decode_string(pb_log_message_.pname, log_message_.pname);
     // uname

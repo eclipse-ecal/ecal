@@ -30,7 +30,7 @@ message Topic                                      // eCAL topic
   // reserved 9, 10, 11, 14, 15, 22 to 26, 29;
 
   int32               rclock                =  1;  // registration clock (heart beat)
-  string              hname                 =  2;  // host name
+  string              host_name             =  2;  // host name
   string              shm_transport_domain  = 28;  // shm_transport_domain
   int32               pid                   =  3;  // process id
   string              pname                 =  4;  // process name
