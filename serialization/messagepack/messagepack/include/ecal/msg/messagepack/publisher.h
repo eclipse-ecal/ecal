@@ -49,7 +49,7 @@ namespace eCAL
        * @param topic_name_  Unique topic name.
        * @param config_      Optional configuration parameters.
       **/
-      CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation(), config_)
+      explicit CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation(), config_)
       {
       }
 
@@ -60,7 +60,7 @@ namespace eCAL
        * @param event_callback_  The publisher event callback funtion.
        * @param config_          Optional configuration parameters.
       **/
-      CPublisher(const std::string& topic_name_, const eCAL::PubEventCallbackT& event_callback_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation(), event_callback_, config_)
+      explicit CPublisher(const std::string& topic_name_, const eCAL::PubEventCallbackT& event_callback_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation(), event_callback_, config_)
       {
       }
 

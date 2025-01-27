@@ -56,12 +56,12 @@ namespace eCAL
     * @param topic_name_  Unique topic name.
     * @param config_      Optional configuration parameters.
     **/
-    CMessageSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration()) : CSubscriber(topic_name_, m_deserializer.GetDataTypeInformation(), config_)
+    explicit CMessageSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration()) : CSubscriber(topic_name_, m_deserializer.GetDataTypeInformation(), config_)
       , m_deserializer()
     {
     }
 
-    CMessageSubscriber(const std::string& topic_name_, const SubEventCallbackT& event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration()) : CSubscriber(topic_name_, m_deserializer.GetDataTypeInformation(), event_callback_, config_)
+    explicit CMessageSubscriber(const std::string& topic_name_, const SubEventCallbackT& event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration()) : CSubscriber(topic_name_, m_deserializer.GetDataTypeInformation(), event_callback_, config_)
       , m_deserializer()
     {
     }

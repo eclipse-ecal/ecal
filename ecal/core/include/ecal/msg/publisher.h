@@ -53,7 +53,7 @@ namespace eCAL
      * @param data_type_info_  Topic data type information (encoding, type, descriptor).
      * @param config_          Optional configuration parameters.
     **/
-    CMsgPublisher(const std::string& topic_name_, const struct SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CPublisher(topic_name_, data_type_info_, config_)
+    explicit CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CPublisher(topic_name_, data_type_info_, config_)
     {
     }
 
@@ -65,7 +65,7 @@ namespace eCAL
      * @param event_callback_  The publisher event callback funtion.
      * @param config_          Optional configuration parameters.
     **/
-    CMsgPublisher(const std::string& topic_name_, const struct SDataTypeInformation& data_type_info_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CPublisher(topic_name_, data_type_info_, event_callback_, config_)
+    explicit CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CPublisher(topic_name_, data_type_info_, event_callback_, config_)
     {
     }
 
@@ -133,7 +133,7 @@ namespace eCAL
 
   protected:
     // We cannot make it pure virtual, as it would break a bunch of implementations, who are not (yet) implementing this function
-    virtual struct SDataTypeInformation GetDataTypeInformation() const { return SDataTypeInformation{}; }
+    virtual SDataTypeInformation GetDataTypeInformation() const { return SDataTypeInformation{}; }
   private:
     virtual size_t GetSize(const T& msg_) const = 0;
     virtual bool Serialize(const T& msg_, char* buffer_, size_t size_) const = 0;

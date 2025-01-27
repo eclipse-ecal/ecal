@@ -155,9 +155,9 @@ namespace eCAL
        *
        * @return  Topic information.
       **/
-      struct SDataTypeInformation GetDataTypeInformation() const
+      SDataTypeInformation GetDataTypeInformation() const
       {
-        struct SDataTypeInformation data_type_info;
+        SDataTypeInformation data_type_info;
         static T msg{};
         data_type_info.encoding   = "proto";
         data_type_info.name       = msg.GetTypeName();
