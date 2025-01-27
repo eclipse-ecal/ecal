@@ -77,7 +77,7 @@ namespace eCAL
       int32_t                             process_id{0};               //!< process id
       std::string                         process_name;                //!< process name
       std::string                         unit_name;                //!< unit name
-      EntityIdT             tid{0};               //!< topic id
+      EntityIdT                           topic_id{0};               //!< topic id
       std::string                         tname;                //!< topic name
       std::string                         direction;            //!< direction (publisher, subscriber)
       SDataTypeInformation                tdatatype;            //!< topic datatype information (name, encoding, descriptor)

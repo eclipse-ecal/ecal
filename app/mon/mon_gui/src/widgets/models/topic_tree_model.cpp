@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
 
   for (const auto& topic : monitoring_pb.topics())
   {
-    std::string topic_id = topic.tid();
+    std::string topic_id = topic.topic_id();
 
     if (topic_tree_item_map_.find(topic_id) == topic_tree_item_map_.end())
     {

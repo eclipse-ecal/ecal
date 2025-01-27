@@ -37,7 +37,7 @@ namespace eCAL
       // compare topic info
       if (sample1.topic_info.host_name != sample2.topic_info.host_name ||
           sample1.topic_info.process_id   != sample2.topic_info.process_id ||
-          sample1.topic_info.tid   != sample2.topic_info.tid ||
+          sample1.topic_info.topic_id   != sample2.topic_info.topic_id ||
           sample1.topic_info.tname != sample2.topic_info.tname) {
         return false;
       }

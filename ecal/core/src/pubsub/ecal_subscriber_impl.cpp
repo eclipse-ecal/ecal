@@ -489,7 +489,7 @@ namespace eCAL
     //  - an out-of-order message
     //  - a multiple sent message
     SPublicationInfo publication_info;
-    publication_info.entity_id  = topic_info_.tid;
+    publication_info.entity_id  = topic_info_.topic_id;
     publication_info.host_name  = topic_info_.host_name;
     publication_info.process_id = topic_info_.process_id;
     if (!CheckMessageClock(publication_info, clock_))
@@ -540,11 +540,11 @@ namespace eCAL
         STopicId topic_id;
         topic_id.topic_name          = topic_info_.tname;
         topic_id.topic_id.host_name  = topic_info_.host_name;
-        topic_id.topic_id.entity_id  = topic_info_.tid;
+        topic_id.topic_id.entity_id  = topic_info_.topic_id;
         topic_id.topic_id.process_id = topic_info_.process_id;
 
         SPublicationInfo pub_info;
-        pub_info.entity_id  = topic_info_.tid;
+        pub_info.entity_id  = topic_info_.topic_id;
         pub_info.host_name  = topic_info_.host_name;
         pub_info.process_id = topic_info_.process_id;
 

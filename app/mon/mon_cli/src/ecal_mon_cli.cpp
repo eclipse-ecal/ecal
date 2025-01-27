@@ -402,7 +402,7 @@ void ProcFind(const std::string& topic_type_name)
       std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
       std::cout << "host_name    : " << topic.host_name()            << std::endl;   // host name
       std::cout << "process_id          : " << topic.process_id()                  << std::endl;   // process id
-      std::cout << "tid          : " << topic.tid()                  << std::endl;   // topic id
+      std::cout << "topic_id          : " << topic.topic_id()                  << std::endl;   // topic id
       std::cout << std::endl;
     }
 
@@ -481,7 +481,7 @@ void ProcInfo(const std::string& topic_name)
       std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
       std::cout << "host_name    : " << topic.host_name()            << std::endl;   // host name
       std::cout << "process_id          : " << topic.process_id()                  << std::endl;   // process id
-      std::cout << "tid          : " << topic.tid()                  << std::endl;   // topic id
+      std::cout << "topic_id          : " << topic.topic_id()                  << std::endl;   // topic id
       std::cout << "tsize        : " << topic.tsize()                << std::endl;   // topic size
       std::cout << "dclock       : " << topic.dclock()               << std::endl;   // data clock (send / receive action)
       std::cout << "dfreq        : " << topic.dfreq()/1000.0         << std::endl;   // data frequency (send / receive samples per second * 1000)
@@ -525,7 +525,7 @@ void ProcList()
       std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
       std::cout << "host_name    : " << topic.host_name()            << std::endl;   // host name
       std::cout << "process_id          : " << topic.process_id()                  << std::endl;   // process id
-      std::cout << "tid          : " << topic.tid()                  << std::endl;   // topic id
+      std::cout << "topic_id          : " << topic.topic_id()                  << std::endl;   // topic id
       std::cout << "tsize        : " << topic.tsize()                << std::endl;   // topic size
       std::cout << "dclock       : " << topic.dclock()               << std::endl;   // data clock (send / receive action)
       std::cout << "dfreq        : " << topic.dfreq()/1000.0         << std::endl;   // data frequency (send / receive samples per second * 1000)

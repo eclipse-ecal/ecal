@@ -35,7 +35,7 @@ message Topic                                      // eCAL topic
   int32               process_id                   =  3;  // process id
   string              process_name                 =  4;  // process name
   string              unit_name                 =  5;  // unit name
-  string              tid                   =  6;  // topic id
+  string              topic_id                   =  6;  // topic id
   string              tname                 =  7;  // topic name
   string              direction             =  8;  // direction (publisher, subscriber)
                                                    // 9 = topic type + topic encoding (deprecated)

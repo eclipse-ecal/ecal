@@ -162,8 +162,8 @@ namespace
     eCAL::nanopb::encode_string(pb_topic_.process_name, registration_topic_.process_name);
     // unit_name
     eCAL::nanopb::encode_string(pb_topic_.unit_name, registration_topic_.unit_name);
-    // tid
-    eCAL::nanopb::encode_int_to_string(pb_topic_.tid, registration_identifier_.entity_id);
+    // topic_id
+    eCAL::nanopb::encode_int_to_string(pb_topic_.topic_id, registration_identifier_.entity_id);
     // tname
     eCAL::nanopb::encode_string(pb_topic_.tname, registration_topic_.tname);
     // direction
@@ -378,8 +378,8 @@ namespace
     eCAL::nanopb::decode_string(pb_sample_.topic.process_name, registration_.topic.process_name);
     // unit_name
     eCAL::nanopb::decode_string(pb_sample_.topic.unit_name, registration_.topic.unit_name);
-    // tid
-    eCAL::nanopb::decode_int_from_string(pb_sample_.topic.tid, registration_.identifier.entity_id);
+    // topic_id
+    eCAL::nanopb::decode_int_from_string(pb_sample_.topic.topic_id, registration_.identifier.entity_id);
     // tname
     eCAL::nanopb::decode_string(pb_sample_.topic.tname, registration_.topic.tname);
     // direction
@@ -411,7 +411,7 @@ namespace
       registration_.process.registration_clock = pb_sample_.process.registration_clock;
       // process_id
       registration_.identifier.process_id = pb_sample_.process.process_id;
-      // tid -> we need to use the PID here, because we don't have a designated field for it
+      // topic_id -> we need to use the PID here, because we don't have a designated field for it
       registration_.identifier.entity_id = registration_.identifier.process_id;
       // state.severity
       registration_.process.state.severity = static_cast<eCAL::Registration::eProcessSeverity>(pb_sample_.process.state.severity);

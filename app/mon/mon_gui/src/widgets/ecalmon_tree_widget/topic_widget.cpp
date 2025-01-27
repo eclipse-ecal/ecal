@@ -223,7 +223,7 @@ void TopicWidget::autoSizeColumns()
   example_topic_pb.set_process_id(999999);
   example_topic_pb.set_process_name("");
   example_topic_pb.set_unit_name("ATypicalLongUnitName___");
-  example_topic_pb.set_tid("");
+  example_topic_pb.set_topic_id("");
   example_topic_pb.set_tname("ATypicalLongTopicName___");
   example_topic_pb.set_direction("subscriber__");
   example_topic_pb.mutable_tdatatype()->set_name("Enc.TypeName.Name____");

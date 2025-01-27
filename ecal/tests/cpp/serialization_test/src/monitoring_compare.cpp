@@ -73,7 +73,7 @@ namespace eCAL
           monitoring1.publisher[i].process_id != monitoring2.publisher[i].process_id ||
           monitoring1.publisher[i].process_name != monitoring2.publisher[i].process_name ||
           monitoring1.publisher[i].unit_name != monitoring2.publisher[i].unit_name ||
-          monitoring1.publisher[i].tid != monitoring2.publisher[i].tid ||
+          monitoring1.publisher[i].topic_id != monitoring2.publisher[i].topic_id ||
           monitoring1.publisher[i].tname != monitoring2.publisher[i].tname ||
           monitoring1.publisher[i].direction != monitoring2.publisher[i].direction ||
           monitoring1.publisher[i].tdatatype != monitoring2.publisher[i].tdatatype ||
@@ -105,7 +105,7 @@ namespace eCAL
           monitoring1.subscriber[i].process_id != monitoring2.subscriber[i].process_id ||
           monitoring1.subscriber[i].process_name != monitoring2.subscriber[i].process_name ||
           monitoring1.subscriber[i].unit_name != monitoring2.subscriber[i].unit_name ||
-          monitoring1.subscriber[i].tid != monitoring2.subscriber[i].tid ||
+          monitoring1.subscriber[i].topic_id != monitoring2.subscriber[i].topic_id ||
           monitoring1.subscriber[i].tname != monitoring2.subscriber[i].tname ||
           monitoring1.subscriber[i].direction != monitoring2.subscriber[i].direction ||
           monitoring1.subscriber[i].tdatatype != monitoring2.subscriber[i].tdatatype ||

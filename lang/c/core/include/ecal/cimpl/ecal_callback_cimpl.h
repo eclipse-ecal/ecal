@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ struct SPubEventCallbackDataC
   enum eCAL_Publisher_Event  type;         //!< event type
   long long                  time;         //!< event time stamp
   long long                  clock;        //!< event clock
-  const char*                tid;          //!< topic id of the connected subscriber                          (for pub_event_update_connection only)
+  const char*                topic_id;          //!< topic id of the connected subscriber                          (for pub_event_update_connection only)
   const char*                tname;        //!< topic type encoding of the connected subscriber               (for pub_event_update_connection only)
   const char*                tencoding;    //!< topic type name of the connected subscriber                   (for pub_event_update_connection only)
   const char*                tdesc;        //!< topic type descriptor information of the connected subscriber (for pub_event_update_connection only)
@@ -109,7 +109,7 @@ struct SSubEventCallbackDataC
   enum eCAL_Subscriber_Event type;         //!< event type
   long long                  time;         //!< event time stamp
   long long                  clock;        //!< event clock
-  const char*                tid;          //!< topic id of the connected publisher                          (for sub_event_update_connection only)
+  const char*                topic_id;          //!< topic id of the connected publisher                          (for sub_event_update_connection only)
   const char*                tname;        //!< topic type encoding of the connected publisher               (for sub_event_update_connection only)
   const char*                tencoding;    //!< topic type name of the connected publisher                   (for sub_event_update_connection only)
   const char*                tdesc;        //!< topic type descriptor information of the connected publisher (for sub_event_update_connection only)

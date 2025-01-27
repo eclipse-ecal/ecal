@@ -166,7 +166,7 @@ int main()
         std::cout << "process_id             : " << topic.process_id() << std::endl;   // process id
         std::cout << "process_name           : " << topic.process_name() << std::endl;   // process name
         std::cout << "unit_name           : " << topic.unit_name() << std::endl;   // unit name
-        std::cout << "tid             : " << topic.tid() << std::endl;   // topic id
+        std::cout << "topic_id             : " << topic.topic_id() << std::endl;   // topic id
         std::cout << "tname           : " << topic.tname() << std::endl;   // topic name
         std::cout << "direction       : " << topic.direction() << std::endl;   // direction (publisher, subscriber)
         std::cout << "ttype name      : " << topic.tdatatype().name() << std::endl;   // topic type name

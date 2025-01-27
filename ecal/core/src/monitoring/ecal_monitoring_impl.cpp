@@ -203,7 +203,7 @@ namespace eCAL
       TopicInfo.unit_name                = unit_name;
       TopicInfo.tname                = topic_name;
       TopicInfo.direction            = direction;
-      TopicInfo.tid                  = topic_id;
+      TopicInfo.topic_id                  = topic_id;
 
       // update flexible content
       TopicInfo.registration_clock++;

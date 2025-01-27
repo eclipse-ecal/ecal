@@ -159,8 +159,8 @@ namespace
     eCAL::nanopb::encode_string(pb_topic_.process_name, topic_.process_name);
     // unit_name
     eCAL::nanopb::encode_string(pb_topic_.unit_name, topic_.unit_name);
-    // tid
-    eCAL::nanopb::encode_int_to_string(pb_topic_.tid, topic_.tid);
+    // topic_id
+    eCAL::nanopb::encode_int_to_string(pb_topic_.topic_id, topic_.topic_id);
     // tname
     eCAL::nanopb::encode_string(pb_topic_.tname, topic_.tname);
     // direction
@@ -614,8 +614,8 @@ namespace
     eCAL::nanopb::decode_string(pb_topic_.process_name, topic_.process_name);
     // unit_name
     eCAL::nanopb::decode_string(pb_topic_.unit_name, topic_.unit_name);
-    // tid
-    eCAL::nanopb::decode_int_from_string(pb_topic_.tid, topic_.tid);
+    // topic_id
+    eCAL::nanopb::decode_int_from_string(pb_topic_.topic_id, topic_.topic_id);
     // tname
     eCAL::nanopb::decode_string(pb_topic_.tname, topic_.tname);
     // direction

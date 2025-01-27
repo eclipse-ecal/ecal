@@ -196,7 +196,7 @@ class MonitorModel
       topic.process_id = t.process_id();
       topic.process_name = std::move(*t.mutable_process_name());
       topic.unit_name = std::move(*t.mutable_unit_name());
-      topic.id = std::move(*t.mutable_tid());
+      topic.id = std::move(*t.mutable_topic_id());
       topic.name = std::move(*t.mutable_tname());
       topic.direction = TopicDirection(t.direction());
       topic.encoding = std::move(*t.mutable_tdatatype()->mutable_encoding());

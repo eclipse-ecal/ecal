@@ -62,7 +62,7 @@ namespace
     data.type      = enum_class_to_enum(data_->type);
     data.time      = data_->time;
     data.clock     = data_->clock;
-    data.tid       = data_->tid.c_str();
+    data.topic_id       = data_->tid.c_str();
     data.tname     = data_->tdatatype.name.c_str();
     data.tencoding = data_->tdatatype.encoding.c_str();
     data.tdesc     = data_->tdatatype.descriptor.c_str();

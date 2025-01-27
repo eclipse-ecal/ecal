@@ -61,7 +61,7 @@ namespace eCAL
       topic.process_id                  = rand() % 1000;
       topic.process_name                = GenerateString(8);
       topic.unit_name                = GenerateString(6);
-      topic.tid                  = rand();
+      topic.topic_id                  = rand();
       topic.tname                = GenerateString(10);
       topic.direction            = direction;
       topic.tdatatype            = eCAL::Registration::GenerateDataTypeInformation();

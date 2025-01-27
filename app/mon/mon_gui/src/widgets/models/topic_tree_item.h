@@ -43,7 +43,7 @@ public:
     PROCESS_ID,
     PROCESS_NAME,
     UNIT_NAME,
-    TID,
+    TOPIC_ID,
     TNAME,
     DIRECTION,
     TENCODING,

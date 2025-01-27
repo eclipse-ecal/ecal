@@ -76,8 +76,8 @@ namespace
     eCAL::nanopb::encode_string(pb_sample_.topic.host_name, payload_.topic_info.host_name);
     // process_id
     pb_sample_.topic.process_id = payload_.topic_info.process_id;
-    // tid
-    eCAL::nanopb::encode_int_to_string(pb_sample_.topic.tid, payload_.topic_info.tid);
+    // topic_id
+    eCAL::nanopb::encode_int_to_string(pb_sample_.topic.topic_id, payload_.topic_info.topic_id);
     // tname
     eCAL::nanopb::encode_string(pb_sample_.topic.tname, payload_.topic_info.tname);
 
@@ -151,8 +151,8 @@ namespace
     ///////////////////////////////////////////////
     // host_name
     eCAL::nanopb::decode_string(pb_sample.topic.host_name, payload_.topic_info.host_name);
-    // tid
-    eCAL::nanopb::decode_int_from_string(pb_sample.topic.tid, payload_.topic_info.tid);
+    // topic_id
+    eCAL::nanopb::decode_int_from_string(pb_sample.topic.topic_id, payload_.topic_info.topic_id);
     // tname
     eCAL::nanopb::decode_string(pb_sample.topic.tname, payload_.topic_info.tname);
     // topic content payload

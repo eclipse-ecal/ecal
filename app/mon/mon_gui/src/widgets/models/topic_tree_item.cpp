@@ -68,9 +68,9 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return topic_.unit_name().c_str();
     }
-    else if (column == Columns::TID)
+    else if (column == Columns::TOPIC_ID)
     {
-      return topic_.tid().c_str();
+      return topic_.topic_id().c_str();
     }
     else if (column == Columns::TNAME)
     {
@@ -253,7 +253,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
   else if (role == Qt::ItemDataRole::TextAlignmentRole)
   {
-    if ((column == Columns::TID)
+    if ((column == Columns::TOPIC_ID)
       || (column == Columns::PROCESS_ID)
       || (column == Columns::REGISTRATION_CLOCK)
       || (column == Columns::TSIZE)
@@ -364,5 +364,5 @@ QString TopicTreeItem::toFrequencyString(long long freq)
 
 std::string TopicTreeItem::topicId() const
 {
-  return topic_.tid();
+  return topic_.topic_id();
 }

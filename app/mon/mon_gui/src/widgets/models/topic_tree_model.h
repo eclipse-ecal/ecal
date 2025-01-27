@@ -118,7 +118,7 @@ private:
     { Columns::PROCESS_ID,                    (int)TopicTreeItem::Columns::PROCESS_ID },
     { Columns::PROCESS_NAME,           (int)TopicTreeItem::Columns::PROCESS_NAME },
     { Columns::UNIT_NAME,              (int)TopicTreeItem::Columns::UNIT_NAME },
-    { Columns::TOPIC_ID,               (int)TopicTreeItem::Columns::TID },
+    { Columns::TOPIC_ID,               (int)TopicTreeItem::Columns::TOPIC_ID },
     { Columns::TOPIC_NAME,             (int)TopicTreeItem::Columns::TNAME },
     { Columns::DIRECTION,              (int)TopicTreeItem::Columns::DIRECTION },
     { Columns::TOPIC_ENCODING,         (int)TopicTreeItem::Columns::TENCODING },
