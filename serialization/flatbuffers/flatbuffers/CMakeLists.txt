@@ -21,8 +21,7 @@ find_package(FlatBuffers REQUIRED)
 ##########################
 # FlatBuffers core communication extension
 ##########################
-add_library(flatbuffers_core INTERFACE)
-add_library(eCAL::flatbuffers_core ALIAS flatbuffers_core)
+ecal_add_interface_library(flatbuffers_core)
 
 target_link_libraries(flatbuffers_core 
   INTERFACE 

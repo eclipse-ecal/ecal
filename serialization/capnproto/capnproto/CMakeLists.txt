@@ -21,8 +21,7 @@ find_package(CapnProto REQUIRED)
 ##########################
 # Capnproto core communication extension
 ##########################
-add_library(capnproto_core INTERFACE)
-add_library(eCAL::capnproto_core ALIAS capnproto_core)
+ecal_add_interface_library(capnproto_core)
 
 target_link_libraries(capnproto_core 
   INTERFACE 

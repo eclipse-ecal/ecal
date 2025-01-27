@@ -59,8 +59,7 @@ set_property(TARGET protobuf_base PROPERTY FOLDER core)
 ##########################
 # Protobuf core communication extension
 ##########################
-add_library(protobuf_core INTERFACE)
-add_library(eCAL::protobuf_core ALIAS protobuf_core)
+ecal_add_interface_library(protobuf_core)
 
 target_link_libraries(protobuf_core 
   INTERFACE 

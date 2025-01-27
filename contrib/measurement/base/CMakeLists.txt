@@ -22,8 +22,7 @@ set(ecal_message_header
     include/ecal/measurement/base/measurement.h
 )
 
-add_library(${PROJECT_NAME} INTERFACE)
-add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+ecal_add_interface_library(${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME} INTERFACE 
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

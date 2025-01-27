@@ -149,6 +149,7 @@ endfunction()
 
 function(ecal_add_interface_library TARGET_NAME)
   add_library(${TARGET_NAME} INTERFACE)
+  add_library(eCAL::${TARGET_NAME} ALIAS ${TARGET_NAME})
 endfunction()
 
 function(ecal_add_library TARGET_NAME)
