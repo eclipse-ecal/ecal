@@ -57,7 +57,7 @@ target_compile_options(${PROJECT_NAME}
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf)
+target_link_libraries(${PROJECT_NAME} PUBLIC protobuf::libprotobuf)
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
 
 ecal_install_library(${PROJECT_NAME})

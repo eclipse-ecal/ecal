@@ -495,6 +495,7 @@ install(FILES ${eCAL_config} ${eCAL_config_version}
 
 install(FILES
   cmake/helper_functions/ecal_add_functions.cmake
+  cmake/helper_functions/ecal_compiler_warnings.cmake
   cmake/helper_functions/ecal_helper_functions.cmake
   cmake/helper_functions/ecal_install_functions.cmake
   DESTINATION ${${PROJECT_NAME}_install_cmake_dir}/helper_functions

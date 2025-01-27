@@ -30,7 +30,7 @@ set(minimal_client_src
 
 ecal_add_sample(${PROJECT_NAME} ${minimal_client_src})
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PRIVATE
     eCAL::core
 )
 

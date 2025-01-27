@@ -31,7 +31,7 @@ set(monitoring_rec_src
 
 ecal_add_sample(${PROJECT_NAME} ${monitoring_rec_src})
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PRIVATE
     eCAL::core
     eCAL::core_pb
     protobuf::libprotobuf

@@ -52,11 +52,13 @@ ecal_add_app_console(${PROJECT_NAME} ${meas_cutter_src})
 target_include_directories(${PROJECT_NAME}
   PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
-target_link_libraries(${PROJECT_NAME}   yaml-cpp::yaml-cpp
-                                        tclap::tclap
-                                        eCAL::ecal-utils
-                                        eCAL::hdf5
-                                        Threads::Threads)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+  yaml-cpp::yaml-cpp
+  tclap::tclap
+  eCAL::ecal-utils
+  eCAL::hdf5
+  Threads::Threads
+)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 
 
