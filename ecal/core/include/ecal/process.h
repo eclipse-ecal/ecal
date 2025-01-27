@@ -30,6 +30,7 @@
 #include <ecal/os.h>
 #include <ecal/process_mode.h>
 #include <ecal/process_severity.h>
+#include <ecal/deprecate.h>
 
 namespace eCAL
 {
