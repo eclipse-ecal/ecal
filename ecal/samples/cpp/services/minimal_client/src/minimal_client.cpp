@@ -33,18 +33,18 @@ int main()
   const eCAL::CServiceClient minimal_client("service1", { {"echo", {}, {} } });
 
   // callback for service response
-  auto service_response_callback = [](const eCAL::SEntityId& entity_id_, const eCAL::SServiceIDResponse& service_response_) {
+  auto service_response_callback = [](const eCAL::SServiceIDResponse& service_response_) {
     switch (service_response_.call_state)
     {
       // service successful executed
     case eCAL::eCallState::executed:
     {
-      std::cout << "Received response for method " << service_response_.service_method_id.method_name << " : " << service_response_.response << " from service id " << entity_id_.entity_id << " from host " << service_response_.service_method_id.service_id.host_name << std::endl;
+      std::cout << "Received response for method " << service_response_.service_method_information.method_name << " : " << service_response_.response << " from service id " << service_response_.service_method_id.service_id.entity_id << " from host " << service_response_.service_method_id.service_id.host_name << std::endl;
     }
     break;
     // service execution failed
     case eCAL::eCallState::failed:
-      std::cout << "Received error for method " << service_response_.service_method_id.method_name << " : " << service_response_.error_msg << " from service id " << entity_id_.entity_id << " from host " << service_response_.service_method_id.service_id.host_name << std::endl;
+      std::cout << "Received error for method " << service_response_.service_method_information.method_name << " : " << service_response_.error_msg << " from service id " << service_response_.service_method_id.service_id.entity_id << " from host " << service_response_.service_method_id.service_id.host_name << std::endl;
       break;
     default:
       break;

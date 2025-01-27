@@ -35,25 +35,27 @@
 namespace eCAL
 {
   /**
-   * @brief  Service call state.
+   * @brief  Service call state. This enum class is being used when a client is calling a servers.
   **/
   enum class eCallState
   {
     none = 0,    //!< undefined
-    executed,    //!< executed (successfully)
-    timeouted,   //!< timeout
+    executed,    //!< the service call was executed successfully
+    timeouted,   //!< the service call has timeouted
     failed       //!< failed
   };
 
   /**
    * @brief eCAL service client event callback type.
   **/
+  // TODO: add documentation!!!
   enum class eClientEvent
   {
-    none = 0,
-    connected = 1,
-    disconnected = 2,
-    timeout = 3,
+    none = 0,          //!< undefined
+    connected = 1,     //!< a new server has been connected to this client
+    disconnected = 2,  //!< a server has been disconnected from this client
+    // TODO: does it make sense here? the user is already being notified about the timeout via the eCallState
+    timeout = 3,       //!< a service call has timeouted 
   };
 
   inline std::string to_string(eClientEvent event_) {
@@ -70,9 +72,9 @@ namespace eCAL
   **/
   enum class eServerEvent
   {
-    none = 0,
-    connected = 1,
-    disconnected = 2,
+    none = 0,         //!< undefined
+    connected = 1,    //!< a new client has been connected to this server
+    disconnected = 2, //!< a client has been disconnected from this server
   };
 
   inline std::string to_string(eServerEvent event_) {
@@ -90,8 +92,8 @@ namespace eCAL
   **/
   struct SServiceId
   {
-    SEntityId    service_id;
-    std::string  service_name;
+    SEntityId    service_id;    //!< the actual ID
+    std::string  service_name;  //!< the name of the service
 
     bool operator==(const SServiceId& other) const
     {
@@ -101,23 +103,6 @@ namespace eCAL
     bool operator<(const SServiceId& other) const
     {
       return std::tie(service_id, service_name) < std::tie(other.service_id, other.service_name);
-    }
-  };
-
-  struct SServiceMethodId
-  {
-    SEntityId    service_id;
-    std::string  service_name;
-    std::string  method_name;
-
-    bool operator==(const SServiceMethodId& other) const
-    {
-      return service_id == other.service_id && service_name == other.service_name && method_name == other.method_name;
-    }
-
-    bool operator<(const SServiceMethodId& other) const
-    {
-      return std::tie(service_id, service_name, method_name) < std::tie(other.service_id, other.service_name, other.method_name);
     }
   };
 
@@ -143,40 +128,46 @@ namespace eCAL
   };
 
   /**
+   * @brief Set SServiceMethodInformation (name, request type, reponse type).
+   *            Used to Create a Client Instance
+   *            Can be queried from eCAL::Registration.
+  **/
+  using ServiceMethodInfoSetT = std::set<SServiceMethodInformation>;
+
+  /**
    * @brief Service response struct containing the (responding) server informations and the response itself.
   **/
   struct SServiceIDResponse
   {
-    SServiceMethodId service_method_id;            //!< service method information (service id (entity id, process id, host name), service name, method name)
+    eCallState                     call_state = eCallState::none; //!< call state, to indicate if the call was successful or not
+
+    SServiceId                     service_method_id;            //!< service information (service id (entity id, process id, host name), service name, method name)
+    SServiceMethodInformation      service_method_information;   //!< method information (method name & DatatypeInformation of request and reponse // TODO: the datatypeinformation are not yet filled!!!
+    int                            ret_state  = 0;               //!< return state of the called service method // TODO: does this value even make sense? or should service methods always return void? It's not actually used anywhere
+    std::string                    response;                     //!< the actual response data
+  
     std::string                    error_msg;                    //!< human readable error message
-    int                            ret_state  = 0;               //!< return state of the called service method
-    eCallState                     call_state = eCallState::none; //!< call state (see eCallState)
-    std::string                    response;                     //!< service response
   };
   using ServiceIDResponseVecT = std::vector<SServiceIDResponse>; //!< vector of multiple service responses
 
   /**
+   * @brief Service response callback function type (low level client interface).
+   * 
+   * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
+  **/
+  using ResponseIDCallbackT = std::function<void (const SServiceIDResponse& service_response_)>;
+
+  /**
    * @brief Service method callback function type (low level server interface).
+   *        This is the type definition of a function that can be registered for a CServiceServer.
+   *        It callback is then called, a client
    *
    * @param method_info The method information struct containing the request and response type information.
    * @param request_    The request.
    * @param response_   The response returned from the method call.
   **/
-  using MethodInfoCallbackT = std::function<int(const SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_)>;
-
-  /**
-   * @brief Service response callback function type (low level client interface).
-   * 
-   * @param entity_id_         Unique service id (entity id, process id, host name, service name, method name)
-   * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
-  **/
-  using ResponseIDCallbackT = std::function<void (const SEntityId& entity_id_, const struct SServiceIDResponse& service_response_)>;
-
-  /**
-   * @brief Map of <method name, method information (like request type, reponse type)>.
-  **/
-  using ServiceMethodInfoSetT = std::set<SServiceMethodInformation>;
-  
+  using ServiceMethodCallbackT = std::function<int(const SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_)>;
+ 
   ECAL_CORE_NAMESPACE_V6
   {
       /**

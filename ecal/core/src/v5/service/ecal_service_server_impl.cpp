@@ -130,7 +130,7 @@ namespace eCAL
       method_info.request_type.name  = req_type_;
       method_info.response_type.name = resp_type_;
 
-      const MethodInfoCallbackT callback =
+      const ServiceMethodCallbackT callback =
         [req_type_, resp_type_, callback_](
           const SServiceMethodInformation& method_info,
           const std::string& request,

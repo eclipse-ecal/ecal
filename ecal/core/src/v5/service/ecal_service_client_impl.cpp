@@ -35,7 +35,7 @@ namespace
     service_response.host_name    = service_id_response.service_method_id.service_id.host_name;
     service_response.service_name = service_id_response.service_method_id.service_name;
     service_response.service_id   = std::to_string(service_id_response.service_method_id.service_id.entity_id);
-    service_response.method_name  = service_id_response.service_method_id.method_name;
+    service_response.method_name  = service_id_response.service_method_information.method_name;
 
     // error message, return state and call state
     service_response.error_msg    = service_id_response.error_msg;
@@ -184,7 +184,7 @@ namespace eCAL
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Making a synchronous call to method: " + method_name_);
 
       // Wrap the response callback to filter by host name if necessary
-      const ResponseIDCallbackT callback = [this](const SEntityId& /*entity_id_*/, const struct SServiceIDResponse& service_response_)
+      const ResponseIDCallbackT callback = [this](const SServiceIDResponse& service_response_)
         {
           if (m_host_name.empty() || service_response_.service_method_id.service_id.host_name == m_host_name)
           {
@@ -263,7 +263,7 @@ namespace eCAL
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Making an asynchronous call to method: " + method_name_);
 
       // Wrap the response callback to filter by host name if necessary
-      const ResponseIDCallbackT callback = [this](const SEntityId& /*entity_id_*/, const struct SServiceIDResponse& service_response_)
+      const ResponseIDCallbackT callback = [this](const SServiceIDResponse& service_response_)
         {
           if (m_host_name.empty() || service_response_.service_method_id.service_id.host_name == m_host_name)
           {

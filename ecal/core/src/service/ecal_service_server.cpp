@@ -64,7 +64,7 @@ namespace eCAL
     return *this;
   }
 
-  bool CServiceServer::SetMethodCallback(const SServiceMethodInformation& method_info_, const MethodInfoCallbackT & callback_)
+  bool CServiceServer::SetMethodCallback(const SServiceMethodInformation& method_info_, const ServiceMethodCallbackT & callback_)
   {
     if (m_service_server_impl == nullptr) return false;
     return m_service_server_impl->SetMethodCallback(method_info_, callback_);
