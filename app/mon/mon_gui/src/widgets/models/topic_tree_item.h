@@ -44,7 +44,7 @@ public:
     PROCESS_NAME,
     UNIT_NAME,
     TOPIC_ID,
-    TNAME,
+    TOPIC_NAME,
     DIRECTION,
     TENCODING,
     TTYPE,

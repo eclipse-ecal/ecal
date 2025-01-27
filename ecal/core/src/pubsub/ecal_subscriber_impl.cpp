@@ -538,7 +538,7 @@ namespace eCAL
         cb_data.clock = clock_;
 
         STopicId topic_id;
-        topic_id.topic_name          = topic_info_.tname;
+        topic_id.topic_name          = topic_info_.topic_name;
         topic_id.topic_id.host_name  = topic_info_.host_name;
         topic_id.topic_id.entity_id  = topic_info_.topic_id;
         topic_id.topic_id.process_id = topic_info_.process_id;
@@ -631,7 +631,7 @@ namespace eCAL
 
     auto& ecal_reg_sample_topic                = ecal_reg_sample.topic;
     ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
-    ecal_reg_sample_topic.tname                = m_attributes.topic_name;
+    ecal_reg_sample_topic.topic_name                = m_attributes.topic_name;
     // topic_information
     {
       auto& ecal_reg_sample_tdatatype      = ecal_reg_sample_topic.tdatatype;
@@ -701,7 +701,7 @@ namespace eCAL
     auto& ecal_reg_sample_topic                = ecal_unreg_sample.topic;
     ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
     ecal_reg_sample_topic.process_name                = m_attributes.process_name;
-    ecal_reg_sample_topic.tname                = m_attributes.topic_name;
+    ecal_reg_sample_topic.topic_name                = m_attributes.topic_name;
     ecal_reg_sample_topic.unit_name                = m_attributes.unit_name;
   }
   

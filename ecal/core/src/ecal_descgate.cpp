@@ -311,16 +311,16 @@ namespace eCAL
       RemServiceDescription(m_client_info_map, sample_.identifier, sample_.client);
       break;
     case bct_reg_publisher:
-      ApplyTopicDescription(m_publisher_info_map, m_publisher_callback_map, sample_.identifier, sample_.topic.tname, sample_.topic.tdatatype);
+      ApplyTopicDescription(m_publisher_info_map, m_publisher_callback_map, sample_.identifier, sample_.topic.topic_name, sample_.topic.tdatatype);
       break;
     case bct_unreg_publisher:
-      RemTopicDescription(m_publisher_info_map, m_publisher_callback_map, sample_.identifier, sample_.topic.tname);
+      RemTopicDescription(m_publisher_info_map, m_publisher_callback_map, sample_.identifier, sample_.topic.topic_name);
       break;
     case bct_reg_subscriber:
-      ApplyTopicDescription(m_subscriber_info_map, m_subscriber_callback_map, sample_.identifier, sample_.topic.tname, sample_.topic.tdatatype);
+      ApplyTopicDescription(m_subscriber_info_map, m_subscriber_callback_map, sample_.identifier, sample_.topic.topic_name, sample_.topic.tdatatype);
       break;
     case bct_unreg_subscriber:
-      RemTopicDescription(m_subscriber_info_map, m_subscriber_callback_map, sample_.identifier, sample_.topic.tname);
+      RemTopicDescription(m_subscriber_info_map, m_subscriber_callback_map, sample_.identifier, sample_.topic.topic_name);
       break;
     default:
     {

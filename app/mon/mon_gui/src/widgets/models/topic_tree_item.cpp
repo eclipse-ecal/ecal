@@ -72,9 +72,9 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return topic_.topic_id().c_str();
     }
-    else if (column == Columns::TNAME)
+    else if (column == Columns::TOPIC_NAME)
     {
-      return topic_.tname().c_str();
+      return topic_.topic_name().c_str();
     }
     else if (column == Columns::DIRECTION)
     {
@@ -137,7 +137,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     if ((column == Columns::HOST_NAME)
       || (column == Columns::PROCESS_NAME)
       || (column == Columns::UNIT_NAME)
-      || (column == Columns::TNAME)
+      || (column == Columns::TOPIC_NAME)
       || (column == Columns::DIRECTION)
       || (column == Columns::TENCODING)
       || (column == Columns::TTYPE))
@@ -237,7 +237,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PROCESS_NAME)
       || (column == Columns::UNIT_NAME)
-      || (column == Columns::TNAME)
+      || (column == Columns::TOPIC_NAME)
       || (column == Columns::DIRECTION)
       || (column == Columns::TENCODING)
       || (column == Columns::TTYPE))
@@ -302,7 +302,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PROCESS_NAME)
       || (column == Columns::UNIT_NAME)
-      || (column == Columns::TNAME)
+      || (column == Columns::TOPIC_NAME)
       || (column == Columns::DIRECTION)
       || (column == Columns::TENCODING)
       || (column == Columns::TTYPE))

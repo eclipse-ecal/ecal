@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,9 +36,9 @@ public:
 
     for (int i = 1; i <= publisher_count; ++i)
     {
-      std::ostringstream tname;
-      tname << std::setw(5) << std::setfill('0') << i;
-      publishers.emplace_back("Topic" + tname.str(), eCAL::SDataTypeInformation{ ttype, "",  tdesc });
+      std::ostringstream topic_name;
+      topic_name << std::setw(5) << std::setfill('0') << i;
+      publishers.emplace_back("Topic" + topic_name.str(), eCAL::SDataTypeInformation{ ttype, "",  tdesc });
     }
   }
 

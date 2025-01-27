@@ -263,7 +263,7 @@ namespace eCAL
       std::string                         shm_transport_domain;         // shm transport domain
       std::string                         process_name;                        // process name
       std::string                         unit_name;                        // unit name
-      std::string                         tname;                        // topic name
+      std::string                         topic_name;                        // topic name
       std::string                         direction;                    // direction (publisher, subscriber)
       SDataTypeInformation                tdatatype;                    // topic datatype information (encoding & type & description)
 
@@ -285,7 +285,7 @@ namespace eCAL
           shm_transport_domain == other.shm_transport_domain &&
           process_name == other.process_name &&
           unit_name == other.unit_name &&
-          tname == other.tname &&
+          topic_name == other.topic_name &&
           direction == other.direction &&
           tdatatype == other.tdatatype &&
           tlayer == other.tlayer &&
@@ -305,7 +305,7 @@ namespace eCAL
         shm_transport_domain.clear();
         process_name.clear();
         unit_name.clear();
-        tname.clear();
+        topic_name.clear();
         direction.clear();
         tdatatype.clear();
 

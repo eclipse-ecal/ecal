@@ -107,7 +107,7 @@ namespace eCAL
       topic.shm_transport_domain = GenerateString(6);
       topic.process_name                = GenerateString(10);
       topic.unit_name                = GenerateString(5);
-      topic.tname                = GenerateString(8);
+      topic.topic_name                = GenerateString(8);
       topic.direction            = GenerateString(5);
       topic.tdatatype            = GenerateDataTypeInformation();
       topic.tlayer.push_back(GenerateTLayer());

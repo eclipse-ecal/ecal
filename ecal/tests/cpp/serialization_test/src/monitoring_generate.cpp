@@ -62,7 +62,7 @@ namespace eCAL
       topic.process_name                = GenerateString(8);
       topic.unit_name                = GenerateString(6);
       topic.topic_id                  = rand();
-      topic.tname                = GenerateString(10);
+      topic.topic_name                = GenerateString(10);
       topic.direction            = direction;
       topic.tdatatype            = eCAL::Registration::GenerateDataTypeInformation();
       topic.tlayer.push_back({ tl_ecal_shm, 1, true });

@@ -78,8 +78,8 @@ namespace
     pb_sample_.topic.process_id = payload_.topic_info.process_id;
     // topic_id
     eCAL::nanopb::encode_int_to_string(pb_sample_.topic.topic_id, payload_.topic_info.topic_id);
-    // tname
-    eCAL::nanopb::encode_string(pb_sample_.topic.tname, payload_.topic_info.tname);
+    // topic_name
+    eCAL::nanopb::encode_string(pb_sample_.topic.topic_name, payload_.topic_info.topic_name);
 
     // topic content
     pb_sample_.has_content = true;
@@ -153,8 +153,8 @@ namespace
     eCAL::nanopb::decode_string(pb_sample.topic.host_name, payload_.topic_info.host_name);
     // topic_id
     eCAL::nanopb::decode_int_from_string(pb_sample.topic.topic_id, payload_.topic_info.topic_id);
-    // tname
-    eCAL::nanopb::decode_string(pb_sample.topic.tname, payload_.topic_info.tname);
+    // topic_name
+    eCAL::nanopb::decode_string(pb_sample.topic.topic_name, payload_.topic_info.topic_name);
     // topic content payload
     payload_.content.payload.type = eCAL::Payload::pl_vec;
     eCAL::nanopb::decode_bytes(pb_sample.content.payload, payload_.content.payload.vec);

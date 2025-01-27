@@ -41,7 +41,7 @@ namespace eCAL
     {
       std::string                         host_name;                        // host name
       uint64_t                            topic_id;                          // topic id
-      std::string                         tname;                        // topic name
+      std::string                         topic_name;                        // topic name
       int32_t                             process_id = 0;                      // process id
     };
 

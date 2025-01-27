@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,7 +97,7 @@ namespace eCAL
     if(!m_created) return;
 
     const auto&        ecal_topic = ecal_sample_.topic;
-    const std::string& topic_name = ecal_topic.tname;
+    const std::string& topic_name = ecal_topic.topic_name;
 
     // check topic name
     if (topic_name.empty()) return;
@@ -155,7 +155,7 @@ namespace eCAL
     if (!m_created) return;
 
     const auto& ecal_topic = ecal_sample_.topic;
-    const std::string& topic_name = ecal_topic.tname;
+    const std::string& topic_name = ecal_topic.topic_name;
 
     // check topic name
     if (topic_name.empty()) return;

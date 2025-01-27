@@ -141,7 +141,7 @@ namespace eCAL
   {
     const auto& sample_topic = sample_.topic;
     const int          process_id = sample_.identifier.process_id;
-    const std::string& topic_name = sample_topic.tname;
+    const std::string& topic_name = sample_topic.topic_name;
     const int32_t      topic_size = sample_topic.tsize;
     bool               topic_tlayer_ecal_udp(false);
     bool               topic_tlayer_ecal_shm(false);
@@ -201,7 +201,7 @@ namespace eCAL
       TopicInfo.process_id                  = process_id;
       TopicInfo.process_name                = process_name;
       TopicInfo.unit_name                = unit_name;
-      TopicInfo.tname                = topic_name;
+      TopicInfo.topic_name                = topic_name;
       TopicInfo.direction            = direction;
       TopicInfo.topic_id                  = topic_id;
 

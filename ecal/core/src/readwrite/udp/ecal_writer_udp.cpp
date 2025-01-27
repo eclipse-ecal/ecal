@@ -69,7 +69,7 @@ namespace eCAL
     // fill sample info
     auto& ecal_sample_topic_info = ecal_sample.topic_info;
     ecal_sample_topic_info.host_name = m_attributes.host_name;
-    ecal_sample_topic_info.tname = m_attributes.topic_name;
+    ecal_sample_topic_info.topic_name = m_attributes.topic_name;
     ecal_sample_topic_info.topic_id   = m_attributes.topic_id;
 
     // append content
@@ -90,14 +90,14 @@ namespace eCAL
       {
         if (m_sample_sender_loopback)
         {
-          sent = m_sample_sender_loopback->Send(ecal_sample.topic_info.tname, m_sample_buffer);
+          sent = m_sample_sender_loopback->Send(ecal_sample.topic_info.topic_name, m_sample_buffer);
         }
       }
       else
       {
         if (m_sample_sender_no_loopback)
         {
-          sent = m_sample_sender_no_loopback->Send(ecal_sample.topic_info.tname, m_sample_buffer);
+          sent = m_sample_sender_no_loopback->Send(ecal_sample.topic_info.topic_name, m_sample_buffer);
         }
       }
     }

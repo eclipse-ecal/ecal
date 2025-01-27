@@ -20,7 +20,7 @@ typedef struct _eCAL_pb_Topic { /* Reserved fields in enums are not supported in
     pb_callback_t process_name; /* process name */
     pb_callback_t unit_name; /* unit name */
     pb_callback_t topic_id; /* topic id */
-    pb_callback_t tname; /* topic name */
+    pb_callback_t topic_name; /* topic name */
     pb_callback_t direction; /* direction (publisher, subscriber) */
     pb_callback_t tlayer; /* active topic transport layers and it's specific parameter */
     int32_t tsize; /* topic size */
@@ -61,7 +61,7 @@ extern "C" {
 #define eCAL_pb_Topic_process_name_tag           4
 #define eCAL_pb_Topic_unit_name_tag              5
 #define eCAL_pb_Topic_topic_id_tag               6
-#define eCAL_pb_Topic_tname_tag                  7
+#define eCAL_pb_Topic_topic_name_tag             7
 #define eCAL_pb_Topic_direction_tag              8
 #define eCAL_pb_Topic_tlayer_tag                 12
 #define eCAL_pb_Topic_tsize_tag                  13
@@ -85,7 +85,7 @@ X(a, STATIC,   SINGULAR, INT32,    process_id,        3) \
 X(a, CALLBACK, SINGULAR, STRING,   process_name,      4) \
 X(a, CALLBACK, SINGULAR, STRING,   unit_name,         5) \
 X(a, CALLBACK, SINGULAR, STRING,   topic_id,          6) \
-X(a, CALLBACK, SINGULAR, STRING,   tname,             7) \
+X(a, CALLBACK, SINGULAR, STRING,   topic_name,        7) \
 X(a, CALLBACK, SINGULAR, STRING,   direction,         8) \
 X(a, CALLBACK, REPEATED, MESSAGE,  tlayer,           12) \
 X(a, STATIC,   SINGULAR, INT32,    tsize,            13) \

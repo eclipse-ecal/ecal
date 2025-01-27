@@ -96,7 +96,7 @@ struct SPubEventCallbackDataC
   long long                  time;         //!< event time stamp
   long long                  clock;        //!< event clock
   const char*                topic_id;          //!< topic id of the connected subscriber                          (for pub_event_update_connection only)
-  const char*                tname;        //!< topic type encoding of the connected subscriber               (for pub_event_update_connection only)
+  const char*                topic_name;        //!< topic type encoding of the connected subscriber               (for pub_event_update_connection only)
   const char*                tencoding;    //!< topic type name of the connected subscriber                   (for pub_event_update_connection only)
   const char*                tdesc;        //!< topic type descriptor information of the connected subscriber (for pub_event_update_connection only)
 };
@@ -110,7 +110,7 @@ struct SSubEventCallbackDataC
   long long                  time;         //!< event time stamp
   long long                  clock;        //!< event clock
   const char*                topic_id;          //!< topic id of the connected publisher                          (for sub_event_update_connection only)
-  const char*                tname;        //!< topic type encoding of the connected publisher               (for sub_event_update_connection only)
+  const char*                topic_name;        //!< topic type encoding of the connected publisher               (for sub_event_update_connection only)
   const char*                tencoding;    //!< topic type name of the connected publisher                   (for sub_event_update_connection only)
   const char*                tdesc;        //!< topic type descriptor information of the connected publisher (for sub_event_update_connection only)
 };

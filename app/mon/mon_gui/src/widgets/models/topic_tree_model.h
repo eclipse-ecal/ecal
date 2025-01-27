@@ -119,7 +119,7 @@ private:
     { Columns::PROCESS_NAME,           (int)TopicTreeItem::Columns::PROCESS_NAME },
     { Columns::UNIT_NAME,              (int)TopicTreeItem::Columns::UNIT_NAME },
     { Columns::TOPIC_ID,               (int)TopicTreeItem::Columns::TOPIC_ID },
-    { Columns::TOPIC_NAME,             (int)TopicTreeItem::Columns::TNAME },
+    { Columns::TOPIC_NAME,             (int)TopicTreeItem::Columns::TOPIC_NAME },
     { Columns::DIRECTION,              (int)TopicTreeItem::Columns::DIRECTION },
     { Columns::TOPIC_ENCODING,         (int)TopicTreeItem::Columns::TENCODING },
     { Columns::TOPIC_TYPE,             (int)TopicTreeItem::Columns::TTYPE },

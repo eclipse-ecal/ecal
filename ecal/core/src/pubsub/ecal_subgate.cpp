@@ -120,7 +120,7 @@ namespace eCAL
       if (layer_ == eTLayerType::tl_none)
       {
         // log it
-        Logging::Log(Logging::log_level_error, ecal_sample.topic_info.tname + " : payload received without layer definition !");
+        Logging::Log(Logging::log_level_error, ecal_sample.topic_info.topic_name + " : payload received without layer definition !");
       }
 #endif
 
@@ -149,7 +149,7 @@ namespace eCAL
       {
         // apply sample to data reader
         const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
-        auto res = m_topic_name_subscriber_map.equal_range(ecal_sample.topic_info.tname);
+        auto res = m_topic_name_subscriber_map.equal_range(ecal_sample.topic_info.topic_name);
         std::transform(
           res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
         );
@@ -190,7 +190,7 @@ namespace eCAL
     // Apply the samples to the readers afterwards.
     {
       const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
-      auto res = m_topic_name_subscriber_map.equal_range(topic_info_.tname);
+      auto res = m_topic_name_subscriber_map.equal_range(topic_info_.topic_name);
       std::transform(
         res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
       );
@@ -210,7 +210,7 @@ namespace eCAL
     if(!m_created) return;
 
     const auto&        ecal_topic = ecal_sample_.topic;
-    const std::string& topic_name = ecal_topic.tname;
+    const std::string& topic_name = ecal_topic.topic_name;
 
     // check topic name
     if (topic_name.empty()) return;
@@ -261,7 +261,7 @@ namespace eCAL
     if (!m_created) return;
 
     const auto&        ecal_topic = ecal_sample_.topic;
-    const std::string& topic_name = ecal_topic.tname;
+    const std::string& topic_name = ecal_topic.topic_name;
 
     // check topic name
     if (topic_name.empty()) return;

@@ -63,7 +63,7 @@ namespace
     data.time      = data_->time;
     data.clock     = data_->clock;
     data.topic_id       = data_->tid.c_str();
-    data.tname     = data_->tdatatype.name.c_str();
+    data.topic_name     = data_->tdatatype.name.c_str();
     data.tencoding = data_->tdatatype.encoding.c_str();
     data.tdesc     = data_->tdatatype.descriptor.c_str();
     callback_(topic_name_, &data, par_);

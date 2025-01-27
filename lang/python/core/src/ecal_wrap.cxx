@@ -963,8 +963,8 @@ namespace
       val = Py_BuildValue("s", std::to_string(topic.topic_id).c_str());
       PyDict_SetItemString(topicDict, "topic_id", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", topic.tname.c_str());
-      PyDict_SetItemString(topicDict, "tname", val); Py_DECREF(val);
+      val = Py_BuildValue("s", topic.topic_name.c_str());
+      PyDict_SetItemString(topicDict, "topic_name", val); Py_DECREF(val);
 
       val = Py_BuildValue("s", topic.direction.c_str());
       PyDict_SetItemString(topicDict, "direction", val); Py_DECREF(val);

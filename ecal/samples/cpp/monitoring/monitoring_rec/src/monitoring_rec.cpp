@@ -158,7 +158,7 @@ int main()
       for (const auto& topic : monitoring.topics())
       {
         // check filtering
-        if (!g_topics_filt_string.empty() && (g_topics_filt_string != topic.tname())) continue;
+        if (!g_topics_filt_string.empty() && (g_topics_filt_string != topic.topic_name())) continue;
 
         // print topic details
         std::cout << "registration_clock          : " << topic.registration_clock() << std::endl;   // registration clock
@@ -167,7 +167,7 @@ int main()
         std::cout << "process_name           : " << topic.process_name() << std::endl;   // process name
         std::cout << "unit_name           : " << topic.unit_name() << std::endl;   // unit name
         std::cout << "topic_id             : " << topic.topic_id() << std::endl;   // topic id
-        std::cout << "tname           : " << topic.tname() << std::endl;   // topic name
+        std::cout << "topic_name           : " << topic.topic_name() << std::endl;   // topic name
         std::cout << "direction       : " << topic.direction() << std::endl;   // direction (publisher, subscriber)
         std::cout << "ttype name      : " << topic.tdatatype().name() << std::endl;   // topic type name
         std::cout << "ttype encoding  : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding

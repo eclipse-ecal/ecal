@@ -54,7 +54,7 @@ namespace eCAL
         const std::string memfile_event = memfile_name + "_" + process_id;
 
         Payload::TopicInfo topic_info;
-        topic_info.tname = par_.topic_name;
+        topic_info.topic_name = par_.topic_name;
         topic_info.host_name = par_.host_name;
         topic_info.topic_id   = par_.topic_id;
         topic_info.process_id   = par_.process_id;

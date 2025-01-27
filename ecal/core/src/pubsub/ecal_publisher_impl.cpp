@@ -630,7 +630,7 @@ namespace eCAL
 
     auto& ecal_reg_sample_topic                = ecal_reg_sample.topic;
     ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
-    ecal_reg_sample_topic.tname                = m_attributes.topic_name;
+    ecal_reg_sample_topic.topic_name                = m_attributes.topic_name;
 
     // topic_information
     {
@@ -719,7 +719,7 @@ namespace eCAL
     auto& ecal_reg_sample_topic                = ecal_unreg_sample.topic;
     ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
     ecal_reg_sample_topic.process_name                = m_attributes.process_name;
-    ecal_reg_sample_topic.tname                = m_attributes.topic_name;
+    ecal_reg_sample_topic.topic_name                = m_attributes.topic_name;
     ecal_reg_sample_topic.unit_name                = m_attributes.unit_name;
   }
 

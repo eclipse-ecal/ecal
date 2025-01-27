@@ -432,7 +432,7 @@ void ChannelWidget::uncheckPublished()
       // Only respect published topics not published by eCAL Play itself
       if ((topic.direction() == "publisher") && !((topic.unit_name() == "eCALPlay") || (topic.unit_name() == "eCALPlayGUI")))
       {
-        published_topic_names_.emplace(topic.tname());
+        published_topic_names_.emplace(topic.topic_name());
       }
     }
 

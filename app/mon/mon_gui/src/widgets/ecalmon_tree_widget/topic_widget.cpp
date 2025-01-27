@@ -224,7 +224,7 @@ void TopicWidget::autoSizeColumns()
   example_topic_pb.set_process_name("");
   example_topic_pb.set_unit_name("ATypicalLongUnitName___");
   example_topic_pb.set_topic_id("");
-  example_topic_pb.set_tname("ATypicalLongTopicName___");
+  example_topic_pb.set_topic_name("ATypicalLongTopicName___");
   example_topic_pb.set_direction("subscriber__");
   example_topic_pb.mutable_tdatatype()->set_name("Enc.TypeName.Name____");
   example_topic_pb.mutable_tdatatype()->set_encoding("encdg:");
@@ -295,7 +295,7 @@ void TopicWidget::openReflectionWindowForSelection()
     {
       TopicTreeItem* topic_item = (TopicTreeItem*)item;
 
-      QString topic_name = topic_item->data(TopicTreeItem::Columns::TNAME, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
+      QString topic_name = topic_item->data(TopicTreeItem::Columns::TOPIC_NAME, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
 
       if (visualisation_windows_.contains(topic_name))
       {
@@ -343,7 +343,7 @@ void TopicWidget::fillContextMenu(QMenu& menu, const QList<QAbstractTreeItem*>& 
 
   if (item)
   {
-    QString topic_name     = item->data((int)TopicTreeItem::Columns::TNAME).toString();
+    QString topic_name     = item->data((int)TopicTreeItem::Columns::TOPIC_NAME).toString();
     QString topic_encoding = item->data((int)TopicTreeItem::Columns::TENCODING).toString();
     QString topic_type     = item->data((int)TopicTreeItem::Columns::TTYPE).toString();
 

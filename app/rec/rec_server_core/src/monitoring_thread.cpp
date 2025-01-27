@@ -128,7 +128,7 @@ namespace eCAL
             // Create combined encoding:type type (to be fully compatible to old behavior)
             std::string combined_enc_type = eCAL::Util::CombinedTopicEncodingAndType(topic.tdatatype().encoding(), topic.tdatatype().name());
 
-            auto topic_info_map_it = topic_info_map_.find(topic.tname());
+            auto topic_info_map_it = topic_info_map_.find(topic.topic_name());
             if (topic_info_map_it != topic_info_map_.end())
             {
               // Only update the values if there are information available
@@ -140,8 +140,8 @@ namespace eCAL
             else
             {
               // Create a new topic entry
-              topic_info_map_.emplace(topic.tname(), eCAL::rec_server::TopicInfo(combined_enc_type));
-              topic_info_map_it = topic_info_map_.find(topic.tname());
+              topic_info_map_.emplace(topic.topic_name(), eCAL::rec_server::TopicInfo(combined_enc_type));
+              topic_info_map_it = topic_info_map_.find(topic.topic_name());
             }
 
             // Set the topic publisher

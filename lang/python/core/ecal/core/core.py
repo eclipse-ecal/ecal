@@ -407,7 +407,7 @@ class publisher(object):
 
     """
     # topic name
-    self.tname = topic_name
+    self.topic_name = topic_name
     # topic type
     self.ttype = topic_type
     # topic description
@@ -415,7 +415,7 @@ class publisher(object):
     # topic description
     self.tdesc = topic_desc
     # topic handle
-    self.thandle = pub_create(self.tname, self.ttype, self.tenc, self.tdesc)
+    self.thandle = pub_create(self.topic_name, self.ttype, self.tenc, self.tdesc)
     
   def destroy(self):
     """ destroy publisher
@@ -452,7 +452,7 @@ class subscriber(object):
 
     """
     # topic name
-    self.tname = topic_name
+    self.topic_name = topic_name
     # topic type
     self.ttype = topic_type
     # topic description
@@ -460,7 +460,7 @@ class subscriber(object):
     # topic description
     self.tdesc = topic_desc
     # topic handle
-    self.thandle = sub_create(self.tname, self.ttype, self.tenc, self.tdesc)
+    self.thandle = sub_create(self.topic_name, self.ttype, self.tenc, self.tdesc)
     
   def destroy(self):
     """ destroy subscriber

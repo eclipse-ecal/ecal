@@ -294,7 +294,7 @@ void ProcBandwidth(const std::string& topic_name)
     for(const auto& topic : monitoring.topics())
     {
       // check topic name
-      if(topic.tname() != topic_name) continue;
+      if(topic.topic_name() != topic_name) continue;
       found = true;
 
       std::string unit = "Byte/s";
@@ -396,7 +396,7 @@ void ProcFind(const std::string& topic_type_name)
       if(topic.tdatatype().name() != topic_type_name) continue;
 
       // print topic details
-      std::cout << "tname        : " << topic.tname()                << std::endl;   // topic name
+      std::cout << "topic_name        : " << topic.topic_name()                << std::endl;   // topic name
       std::cout << "ttype name   : " << topic.tdatatype().name()     << std::endl;   // topic type name
       std::cout << "ttype enc.   : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
       std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
@@ -437,7 +437,7 @@ void ProcRate(const std::string& topic_name)
     for(const auto& topic : monitoring.topics())
     {
       // check topic name
-      if(topic.tname() != topic_name) continue;
+      if(topic.topic_name() != topic_name) continue;
       std::cout << topic.dfreq()/1000.0 << std::endl; // data frequency (send / receive samples per second * 1000)
     }
 
@@ -472,10 +472,10 @@ void ProcInfo(const std::string& topic_name)
     for(const auto& topic : monitoring.topics())
     {
       // check topic name
-      if(topic.tname() != topic_name) continue;
+      if(topic.topic_name() != topic_name) continue;
 
       // print topic details
-      std::cout << "tname        : " << topic.tname()                << std::endl;   // topic name
+      std::cout << "topic_name        : " << topic.topic_name()                << std::endl;   // topic name
       std::cout << "ttype name   : " << topic.tdatatype().name()     << std::endl;   // topic type name
       std::cout << "ttype enc.   : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
       std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
@@ -519,7 +519,7 @@ void ProcList()
     for(const auto& topic : monitoring.topics())
     {
       // print topic details
-      std::cout << "tname        : " << topic.tname()                << std::endl;   // topic name
+      std::cout << "topic_name        : " << topic.topic_name()                << std::endl;   // topic name
       std::cout << "ttype name   : " << topic.tdatatype().name()     << std::endl;   // topic type name
       std::cout << "ttype enc.   : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
       std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
@@ -586,7 +586,7 @@ void ProcType(const std::string& topic_name)
   for(const auto& topic : monitoring.topics())
   {
     // check topic name
-    if(topic.tname() != topic_name) continue;
+    if(topic.topic_name() != topic_name) continue;
 
     std::string ttype_name = topic.tdatatype().name();
     if(ttype_name.empty()) ttype_name = "\"\"";
@@ -620,7 +620,7 @@ void ProcDesc(const std::string& topic_name_)
   for(const auto& topic : monitoring.topics())
   {
     // check topic name
-    if(topic.tname() != topic_name_) continue;
+    if(topic.topic_name() != topic_name_) continue;
 
     std::string ttype_desc = topic.tdatatype().desc();
     if (ttype_desc.empty()) ttype_desc = "\"\"";

@@ -184,7 +184,7 @@ void VisualisationWidget::checkForMorePublishersWithSameTopic(const eCAL::pb::Mo
   {
     if (!topic_name_.isNull())
     {
-      if ((topic.tname() == topic_name_.toStdString()) && (topic.direction() == std::string("publisher")))
+      if ((topic.topic_name() == topic_name_.toStdString()) && (topic.direction() == std::string("publisher")))
       {
         publishers.append(QString(QString(topic.host_name().c_str()) + QString(": ") + QString(topic.process_name().c_str())));
       }

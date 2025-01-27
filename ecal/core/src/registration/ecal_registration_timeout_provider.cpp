@@ -62,7 +62,7 @@ namespace eCAL
         auto& unregister_sample_topic                = unregister_sample.topic;
         unregister_sample_topic.shm_transport_domain = sample_topic.shm_transport_domain;
         unregister_sample_topic.process_name                = sample_topic.process_name;
-        unregister_sample_topic.tname                = sample_topic.tname;
+        unregister_sample_topic.topic_name                = sample_topic.topic_name;
         unregister_sample_topic.unit_name                = sample_topic.unit_name;
       }
 

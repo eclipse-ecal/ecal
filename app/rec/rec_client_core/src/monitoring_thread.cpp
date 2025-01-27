@@ -80,12 +80,12 @@ namespace eCAL
           for (const auto& topic : monitoring_pb.topics())
           {
             // Lookup the topic map entry
-            auto topic_info_map_it = topic_info_map_.find(topic.tname());
+            auto topic_info_map_it = topic_info_map_.find(topic.topic_name());
             if (topic_info_map_it == topic_info_map_.end())
             {
               // Create a new topic entry
-              topic_info_map_.emplace(topic.tname(), eCAL::rec::TopicInfo("", "", ""));
-              topic_info_map_it = topic_info_map_.find(topic.tname());
+              topic_info_map_.emplace(topic.topic_name(), eCAL::rec::TopicInfo("", "", ""));
+              topic_info_map_it = topic_info_map_.find(topic.topic_name());
             }
 
             // Create combined encoding:type type (to be fully compatible to old behavior)
@@ -124,11 +124,11 @@ namespace eCAL
 
             // Update the channel_descriptor_map
             {
-              auto channel_descriptor_map_it = channel_descriptor_map.find(topic.tname());
+              auto channel_descriptor_map_it = channel_descriptor_map.find(topic.topic_name());
               if (channel_descriptor_map_it == channel_descriptor_map.end())
               {
                 // Save the new descriptor
-                channel_descriptor_map.emplace(topic.tname(), std::make_pair(this_topic_info_quality, std::make_pair(combined_enc_type, topic.tdatatype().desc())));
+                channel_descriptor_map.emplace(topic.topic_name(), std::make_pair(this_topic_info_quality, std::make_pair(combined_enc_type, topic.tdatatype().desc())));
               }
               else
               {

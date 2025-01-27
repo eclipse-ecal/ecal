@@ -76,7 +76,7 @@ namespace eCAL
     // create new payload sample (header information only, no payload)
     Payload::Sample proto_header;
     auto& proto_header_topic = proto_header.topic_info;
-    proto_header_topic.tname = m_attributes.topic_name;
+    proto_header_topic.topic_name = m_attributes.topic_name;
     proto_header_topic.topic_id   = m_attributes.topic_id;
 
     // set payload content (without payload)

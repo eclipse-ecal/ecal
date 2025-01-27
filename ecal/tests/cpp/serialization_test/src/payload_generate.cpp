@@ -35,7 +35,7 @@ namespace eCAL
       topic.host_name = GenerateString(8);
       topic.process_id   = rand() % 1000;
       topic.topic_id   = rand();
-      topic.tname = GenerateString(10);
+      topic.topic_name = GenerateString(10);
 
       return topic;
     }

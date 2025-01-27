@@ -60,15 +60,15 @@ TEST_P(TestFixture, GetPublisherIDsReturnsCorrectNumber)
     std::vector<eCAL::CPublisher> publisher_vec;
     for (int i = 0; i < GetParam().publisher_count; ++i)
     {
-      std::stringstream tname;
-      tname << "topic_" << i;
+      std::stringstream topic_name;
+      topic_name << "topic_" << i;
 
       eCAL::SDataTypeInformation data_type_info;
-      data_type_info.name       = tname.str() + "_type_name";
-      data_type_info.encoding   = tname.str() + "_type_encoding";
-      data_type_info.descriptor = tname.str() + "_type_descriptor";
+      data_type_info.name       = topic_name.str() + "_type_name";
+      data_type_info.encoding   = topic_name.str() + "_type_encoding";
+      data_type_info.descriptor = topic_name.str() + "_type_descriptor";
 
-      publisher_vec.emplace_back(tname.str(), data_type_info);
+      publisher_vec.emplace_back(topic_name.str(), data_type_info);
     }
 
     // let's register
@@ -119,15 +119,15 @@ TEST_P(TestFixture, PublisherEventCallbackIsTriggered)
     std::vector<eCAL::CPublisher> publisher_vec;
     for (int i = 0; i < GetParam().publisher_count; ++i)
     {
-      std::stringstream tname;
-      tname << "topic_" << i;
+      std::stringstream topic_name;
+      topic_name << "topic_" << i;
 
       eCAL::SDataTypeInformation data_type_info;
-      data_type_info.name       = tname.str() + "_type_name";
-      data_type_info.encoding   = tname.str() + "_type_encoding";
-      data_type_info.descriptor = tname.str() + "_type_descriptor";
+      data_type_info.name       = topic_name.str() + "_type_name";
+      data_type_info.encoding   = topic_name.str() + "_type_encoding";
+      data_type_info.descriptor = topic_name.str() + "_type_descriptor";
 
-      publisher_vec.emplace_back(tname.str(), data_type_info);
+      publisher_vec.emplace_back(topic_name.str(), data_type_info);
     }
 
     // let's register
