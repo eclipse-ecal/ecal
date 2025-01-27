@@ -112,7 +112,7 @@ private:
   std::map<Columns, int> topic_tree_item_column_mapping =
   {
     { Columns::GROUP,                  -1 },
-    { Columns::HEARTBEAT,              (int)TopicTreeItem::Columns::RCLOCK },
+    { Columns::HEARTBEAT,              (int)TopicTreeItem::Columns::REGISTRATION_CLOCK },
     { Columns::HOST_NAME,              (int)TopicTreeItem::Columns::HOST_NAME },
     { Columns::SHM_TRANSPORT_DOMAIN,   (int)TopicTreeItem::Columns::SHM_TRANSPORT_DOMAIN },
     { Columns::PID,                    (int)TopicTreeItem::Columns::PID },

@@ -71,7 +71,7 @@ namespace eCAL
 
     struct STopicMon                                            //<! eCAL Topic struct
     {
-      int32_t                             rclock{0};            //!< registration clock (heart beat)
+      int32_t                             registration_clock{0};            //!< registration clock (heart beat)
       std::string                         host_name;                //!< host name
       std::string                         shm_transport_domain; //!< shm transport domain
       int32_t                             pid{0};               //!< process id
@@ -98,7 +98,7 @@ namespace eCAL
 
     struct SProcessMon                                          //<! eCAL Process struct
     {
-      int32_t        rclock{0};                                 //!< registration clock
+      int32_t        registration_clock{0};                                 //!< registration clock
       std::string    host_name;                                     //!< host name
       std::string    shm_transport_domain;                      //!< shm transport domain
       int32_t        pid{0};                                    //!< process id
@@ -144,7 +144,7 @@ namespace eCAL
 
     struct SServerMon                                           //<! eCAL Server struct
     {
-      int32_t                  rclock{0};                       //<! registration clock
+      int32_t                  registration_clock{0};                       //<! registration clock
       std::string              host_name;                           //<! host name
       std::string              pname;                           //<! process name
       std::string              uname;                           //<! unit name
@@ -162,7 +162,7 @@ namespace eCAL
 
     struct SClientMon                                           //<! eCAL Client struct
     {
-      int32_t                  rclock{0};                       //<! registration clock
+      int32_t                  registration_clock{0};                       //<! registration clock
       std::string              host_name;                           //<! host name
       std::string              pname;                           //<! process name
       std::string              uname;                           //<! unit name

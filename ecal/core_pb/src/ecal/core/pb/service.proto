@@ -71,7 +71,7 @@ message Method                               // method
 
 message Service                              // service
 {
-  int32                rclock         =  1;  // registration clock
+  int32                registration_clock =  1;  // registration clock
   string               host_name      =  2;  // host name
   string               pname          =  3;  // process name
   string               uname          =  4;  // unit name
@@ -88,7 +88,7 @@ message Service                              // service
 
 message Client                               // client
 {
-  int32                rclock         =  1;  // registration clock
+  int32                registration_clock =  1;  // registration clock
   string               host_name      =  2;  // host name
   string               pname          =  3;  // process name
   string               uname          =  4;  // unit name

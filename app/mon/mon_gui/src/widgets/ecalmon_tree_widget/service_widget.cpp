@@ -110,7 +110,7 @@ void ServiceWidget::autoSizeColumns()
 {
   eCAL::pb::Service example_service_pb;
 
-  example_service_pb.set_rclock(999999);
+  example_service_pb.set_registration_clock(999999);
   example_service_pb.set_host_name("CARPC00____");
   example_service_pb.set_pname("");
   example_service_pb.set_uname("eCALRPCService____");

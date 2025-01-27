@@ -32,8 +32,8 @@ namespace eCAL
     SProcessMon GenerateProcess()
     {
       SProcessMon process;
-      process.rclock               = rand() % 1000;
-      process.host_name                = GenerateString(10);
+      process.registration_clock   = rand() % 1000;
+      process.host_name            = GenerateString(10);
       process.shm_transport_domain = GenerateString(8);
       process.pid                  = rand() % 1000;
       process.pname                = GenerateString(8);
@@ -55,8 +55,8 @@ namespace eCAL
     STopicMon GenerateTopic(const std::string& direction)
     {
       STopicMon topic;
-      topic.rclock               = rand() % 1000;
-      topic.host_name                = GenerateString(10);
+      topic.registration_clock   = rand() % 1000;
+      topic.host_name            = GenerateString(10);
       topic.shm_transport_domain = GenerateString(8);
       topic.pid                  = rand() % 1000;
       topic.pname                = GenerateString(8);
@@ -93,8 +93,8 @@ namespace eCAL
     SServerMon GenerateService()
     {
       SServerMon server;
-      server.rclock      = rand() % 1000;
-      server.host_name       = GenerateString(10);
+      server.registration_clock = rand() % 1000;
+      server.host_name          = GenerateString(10);
       server.pname       = GenerateString(8);
       server.uname       = GenerateString(6);
       server.pid         = rand() % 1000;
@@ -114,7 +114,7 @@ namespace eCAL
     SClientMon GenerateClient()
     {
       SClientMon client;
-      client.rclock  = rand() % 1000;
+      client.registration_clock  = rand() % 1000;
       client.host_name   = GenerateString(10);
       client.pname   = GenerateString(8);
       client.uname   = GenerateString(6);

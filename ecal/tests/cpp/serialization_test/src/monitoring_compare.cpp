@@ -37,7 +37,7 @@ namespace eCAL
 
       for (size_t i = 0; i < monitoring1.processes.size(); ++i)
       {
-        if (monitoring1.processes[i].rclock != monitoring2.processes[i].rclock ||
+        if (monitoring1.processes[i].registration_clock != monitoring2.processes[i].registration_clock ||
           monitoring1.processes[i].host_name != monitoring2.processes[i].host_name ||
           monitoring1.processes[i].shm_transport_domain != monitoring2.processes[i].shm_transport_domain ||
           monitoring1.processes[i].pid != monitoring2.processes[i].pid ||
@@ -67,7 +67,7 @@ namespace eCAL
 
       for (size_t i = 0; i < monitoring1.publisher.size(); ++i)
       {
-        if (monitoring1.publisher[i].rclock != monitoring2.publisher[i].rclock ||
+        if (monitoring1.publisher[i].registration_clock != monitoring2.publisher[i].registration_clock ||
           monitoring1.publisher[i].host_name != monitoring2.publisher[i].host_name ||
           monitoring1.publisher[i].shm_transport_domain != monitoring2.publisher[i].shm_transport_domain ||
           monitoring1.publisher[i].pid != monitoring2.publisher[i].pid ||
@@ -99,7 +99,7 @@ namespace eCAL
 
       for (size_t i = 0; i < monitoring1.subscriber.size(); ++i)
       {
-        if (monitoring1.subscriber[i].rclock != monitoring2.subscriber[i].rclock ||
+        if (monitoring1.subscriber[i].registration_clock != monitoring2.subscriber[i].registration_clock ||
           monitoring1.subscriber[i].host_name != monitoring2.subscriber[i].host_name ||
           monitoring1.subscriber[i].shm_transport_domain != monitoring2.subscriber[i].shm_transport_domain ||
           monitoring1.subscriber[i].pid != monitoring2.subscriber[i].pid ||
@@ -131,7 +131,7 @@ namespace eCAL
 
       for (size_t i = 0; i < monitoring1.server.size(); ++i)
       {
-        if (monitoring1.server[i].rclock != monitoring2.server[i].rclock ||
+        if (monitoring1.server[i].registration_clock != monitoring2.server[i].registration_clock ||
           monitoring1.server[i].host_name != monitoring2.server[i].host_name ||
           monitoring1.server[i].pname != monitoring2.server[i].pname ||
           monitoring1.server[i].uname != monitoring2.server[i].uname ||
@@ -166,7 +166,7 @@ namespace eCAL
 
       for (size_t i = 0; i < monitoring1.clients.size(); ++i)
       {
-        if (monitoring1.clients[i].rclock != monitoring2.clients[i].rclock ||
+        if (monitoring1.clients[i].registration_clock != monitoring2.clients[i].registration_clock ||
           monitoring1.clients[i].host_name != monitoring2.clients[i].host_name ||
           monitoring1.clients[i].pname != monitoring2.clients[i].pname ||
           monitoring1.clients[i].uname != monitoring2.clients[i].uname ||

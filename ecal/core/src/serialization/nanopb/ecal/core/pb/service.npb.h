@@ -55,7 +55,7 @@ typedef struct _eCAL_pb_Method {
 } eCAL_pb_Method;
 
 typedef struct _eCAL_pb_Service {
-    int32_t rclock; /* registration clock */
+    int32_t registration_clock; /* registration clock */
     pb_callback_t host_name; /* host name */
     pb_callback_t pname; /* process name */
     pb_callback_t uname; /* unit name */
@@ -70,7 +70,7 @@ typedef struct _eCAL_pb_Service {
 } eCAL_pb_Service;
 
 typedef struct _eCAL_pb_Client {
-    int32_t rclock; /* registration clock */
+    int32_t registration_clock; /* registration clock */
     pb_callback_t host_name; /* host name */
     pb_callback_t pname; /* process name */
     pb_callback_t uname; /* unit name */
@@ -135,7 +135,7 @@ extern "C" {
 #define eCAL_pb_Method_resp_desc_tag             6
 #define eCAL_pb_Method_req_datatype_tag          7
 #define eCAL_pb_Method_resp_datatype_tag         8
-#define eCAL_pb_Service_rclock_tag               1
+#define eCAL_pb_Service_registration_clock_tag   1
 #define eCAL_pb_Service_host_name_tag            2
 #define eCAL_pb_Service_pname_tag                3
 #define eCAL_pb_Service_uname_tag                4
@@ -146,7 +146,7 @@ extern "C" {
 #define eCAL_pb_Service_sid_tag                  9
 #define eCAL_pb_Service_version_tag              10
 #define eCAL_pb_Service_tcp_port_v1_tag          11
-#define eCAL_pb_Client_rclock_tag                1
+#define eCAL_pb_Client_registration_clock_tag    1
 #define eCAL_pb_Client_host_name_tag             2
 #define eCAL_pb_Client_pname_tag                 3
 #define eCAL_pb_Client_uname_tag                 4
@@ -198,7 +198,7 @@ X(a, STATIC,   OPTIONAL, MESSAGE,  resp_datatype,     8)
 #define eCAL_pb_Method_resp_datatype_MSGTYPE eCAL_pb_DataTypeInformation
 
 #define eCAL_pb_Service_FIELDLIST(X, a) \
-X(a, STATIC,   SINGULAR, INT32,    rclock,            1) \
+X(a, STATIC,   SINGULAR, INT32,    registration_clock,   1) \
 X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
 X(a, CALLBACK, SINGULAR, STRING,   pname,             3) \
 X(a, CALLBACK, SINGULAR, STRING,   uname,             4) \
@@ -214,7 +214,7 @@ X(a, STATIC,   SINGULAR, UINT32,   tcp_port_v1,      11)
 #define eCAL_pb_Service_methods_MSGTYPE eCAL_pb_Method
 
 #define eCAL_pb_Client_FIELDLIST(X, a) \
-X(a, STATIC,   SINGULAR, INT32,    rclock,            1) \
+X(a, STATIC,   SINGULAR, INT32,    registration_clock,   1) \
 X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
 X(a, CALLBACK, SINGULAR, STRING,   pname,             3) \
 X(a, CALLBACK, SINGULAR, STRING,   uname,             4) \

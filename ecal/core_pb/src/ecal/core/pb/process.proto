@@ -59,7 +59,7 @@ message Process                                           // process
   // Reserved fields in enums are not supported in protobuf 3.0
   // reserved 7 to 11;
 
-  int32                     rclock               =  1;    // registration clock
+  int32                     registration_clock   = 1;    // registration clock
   string                    host_name            =  2;    // host name
   string                    shm_transport_domain = 18;    // shm transport domain
   int32                     pid                  =  3;    // process id

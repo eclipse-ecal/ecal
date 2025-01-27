@@ -14,7 +14,7 @@
 /* Struct definitions */
 typedef struct _eCAL_pb_Topic { /* Reserved fields in enums are not supported in protobuf 3.0
  reserved 9, 10, 11, 14, 15, 22 to 26, 29; */
-    int32_t rclock; /* registration clock (heart beat) */
+    int32_t registration_clock; /* registration clock (heart beat) */
     pb_callback_t host_name; /* host name */
     int32_t pid; /* process id */
     pb_callback_t pname; /* process name */
@@ -55,7 +55,7 @@ extern "C" {
 #define eCAL_pb_Topic_AttrEntry_init_zero        {{{NULL}, NULL}, {{NULL}, NULL}}
 
 /* Field tags (for use in manual encoding/decoding) */
-#define eCAL_pb_Topic_rclock_tag                 1
+#define eCAL_pb_Topic_registration_clock_tag     1
 #define eCAL_pb_Topic_host_name_tag              2
 #define eCAL_pb_Topic_pid_tag                    3
 #define eCAL_pb_Topic_pname_tag                  4
@@ -79,7 +79,7 @@ extern "C" {
 
 /* Struct field encoding specification for nanopb */
 #define eCAL_pb_Topic_FIELDLIST(X, a) \
-X(a, STATIC,   SINGULAR, INT32,    rclock,            1) \
+X(a, STATIC,   SINGULAR, INT32,    registration_clock,   1) \
 X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
 X(a, STATIC,   SINGULAR, INT32,    pid,               3) \
 X(a, CALLBACK, SINGULAR, STRING,   pname,             4) \

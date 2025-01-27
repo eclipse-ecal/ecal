@@ -44,9 +44,9 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 {
   if (role == (Qt::ItemDataRole)ItemDataRoles::RawDataRole) //-V1016 //-V547
   {
-    if (column == Columns::RCLOCK)
+    if (column == Columns::REGISTRATION_CLOCK)
     {
-      return topic_.rclock();
+      return topic_.registration_clock();
     }
     else if (column == Columns::HOST_NAME)
     {
@@ -255,7 +255,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if ((column == Columns::TID)
       || (column == Columns::PID)
-      || (column == Columns::RCLOCK)
+      || (column == Columns::REGISTRATION_CLOCK)
       || (column == Columns::TSIZE)
       || (column == Columns::CONNECTIONS_LOC)
       || (column == Columns::CONNECTIONS_EXT)

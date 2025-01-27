@@ -53,9 +53,9 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
 {
   if (role == (Qt::ItemDataRole)ItemDataRoles::RawDataRole) //-V1016 //-V547
   {
-    if (column == Columns::RCLOCK)
+    if (column == Columns::REGISTRATION_CLOCK)
     {
-      return process_.rclock();
+      return process_.registration_clock();
     }
     else if (column == Columns::HOST_NAME)
     {
@@ -185,7 +185,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
   else if (role == Qt::ItemDataRole::TextAlignmentRole)
   {
-    if ((column == Columns::RCLOCK)
+    if ((column == Columns::REGISTRATION_CLOCK)
       || (column == Columns::PID)
       )
     {

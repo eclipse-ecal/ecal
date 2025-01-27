@@ -46,7 +46,7 @@ public:
 
   enum class Columns : int
   {
-    RCLOCK,
+    REGISTRATION_CLOCK,
     HOST_NAME,
     PNAME,
     UNAME,
@@ -80,9 +80,9 @@ public:
   {
     if (role == (Qt::ItemDataRole)ItemDataRoles::RawDataRole) //-V1016 //-V547
     {
-      if (column == Columns::RCLOCK)
+      if (column == Columns::REGISTRATION_CLOCK)
       {
-        return service_.rclock();
+        return service_.registration_clock();
       }
       else if (column == Columns::HOST_NAME)
       {
@@ -164,7 +164,7 @@ public:
 
     else if (role == Qt::ItemDataRole::TextAlignmentRole)
     {
-      if ((column == Columns::RCLOCK)
+      if ((column == Columns::REGISTRATION_CLOCK)
         || (column == Columns::PID)
         || (column == Columns::TCP_PORT)
         || (column == Columns::CALL_COUNT)

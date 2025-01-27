@@ -29,7 +29,7 @@ message Topic                                      // eCAL topic
   // Reserved fields in enums are not supported in protobuf 3.0
   // reserved 9, 10, 11, 14, 15, 22 to 26, 29;
 
-  int32               rclock                =  1;  // registration clock (heart beat)
+  int32               registration_clock    =  1;  // registration clock (heart beat)
   string              host_name             =  2;  // host name
   string              shm_transport_domain  = 28;  // shm_transport_domain
   int32               pid                   =  3;  // process id

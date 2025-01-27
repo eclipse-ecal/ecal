@@ -218,7 +218,7 @@ void TopicWidget::autoSizeColumns()
 {
   eCAL::pb::Topic example_topic_pb;
 
-  example_topic_pb.set_rclock(999999);
+  example_topic_pb.set_registration_clock(999999);
   example_topic_pb.set_host_name("HOSTNAME____");
   example_topic_pb.set_pid(999999);
   example_topic_pb.set_pname("");

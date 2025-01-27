@@ -43,8 +43,8 @@ namespace
     ///////////////////////////////////////////////
     // process information
     ///////////////////////////////////////////////
-    // rclock
-    pb_process_.rclock = process_.rclock;
+    // registration_clock
+    pb_process_.registration_clock = process_.registration_clock;
     // host_name
     eCAL::nanopb::encode_string(pb_process_.host_name, process_.host_name);
     // shm_transport_domain
@@ -147,8 +147,8 @@ namespace
 
   void PrepareEncoding(const eCAL::Monitoring::STopicMon& topic_, eCAL_pb_Topic& pb_topic_)
   {
-    // rclock
-    pb_topic_.rclock = topic_.rclock;
+    // registration_clock
+    pb_topic_.registration_clock = topic_.registration_clock;
     // host_name
     eCAL::nanopb::encode_string(pb_topic_.host_name, topic_.host_name);
     // shm_transport_domain
@@ -299,8 +299,8 @@ namespace
     ///////////////////////////////////////////////
     // service information
     ///////////////////////////////////////////////
-    // rclock
-    pb_service_.rclock = service_.rclock;
+    // registration_clock
+    pb_service_.registration_clock = service_.registration_clock;
     // host_name
     eCAL::nanopb::encode_string(pb_service_.host_name, service_.host_name);
     // pname
@@ -360,8 +360,8 @@ namespace
     ///////////////////////////////////////////////
     // client information
     ///////////////////////////////////////////////
-    // rclock
-    pb_client_.rclock = client_.rclock;
+    // registration_clock
+    pb_client_.registration_clock = client_.registration_clock;
     // host_name
     eCAL::nanopb::encode_string(pb_client_.host_name, client_.host_name);
     // pname
@@ -523,8 +523,8 @@ namespace
     ///////////////////////////////////////////////
     // assign values
     ///////////////////////////////////////////////
-    // rclock
-    process_.rclock = pb_process_.rclock;
+    // registration_clock
+    process_.registration_clock = pb_process_.registration_clock;
     // pid
     process_.pid = pb_process_.pid;
     // state.severity
@@ -637,8 +637,8 @@ namespace
     ///////////////////////////////////////////////
     // assign values
     ///////////////////////////////////////////////
-    // rclock
-    topic_.rclock = pb_topic_.rclock;
+    // registration_clock
+    topic_.registration_clock = pb_topic_.registration_clock;
     // pid
     topic_.pid = pb_topic_.pid;
     // tsize
@@ -762,8 +762,8 @@ namespace
     ///////////////////////////////////////////////
     // assign values
     ///////////////////////////////////////////////
-    // rclock
-    service_.rclock = pb_service_.rclock;
+    // registration_clock
+    service_.registration_clock = pb_service_.registration_clock;
     // pid
     service_.pid = pb_service_.pid;
     // version
@@ -831,8 +831,8 @@ namespace
     ///////////////////////////////////////////////
     // assign values
     ///////////////////////////////////////////////
-    // rclock
-    client_.rclock = pb_client_.rclock;
+    // registration_clock
+    client_.registration_clock = pb_client_.registration_clock;
     // pid
     client_.pid = pb_client_.pid;
     // version

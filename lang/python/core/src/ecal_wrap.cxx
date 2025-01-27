@@ -942,8 +942,8 @@ namespace
       PyObject* topicDict = PyDict_New();
       PyList_Append(topic_list_, topicDict); Py_DECREF(topicDict);
 
-      PyObject* val = Py_BuildValue("i", topic.rclock);
-      PyDict_SetItemString(topicDict, "rclock", val); Py_DECREF(val);
+      PyObject* val = Py_BuildValue("i", topic.registration_clock);
+      PyDict_SetItemString(topicDict, "registration_clock", val); Py_DECREF(val);
 
       val = Py_BuildValue("s", topic.host_name.c_str());
       PyDict_SetItemString(topicDict, "host_name", val); Py_DECREF(val);
@@ -1054,8 +1054,8 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         PyObject* processDict = PyDict_New();
         PyList_Append(processList, processDict); Py_DECREF(processDict);
 
-        val = Py_BuildValue("i", process.rclock);
-        PyDict_SetItemString(processDict, "rclock", val); Py_DECREF(val);
+        val = Py_BuildValue("i", process.registration_clock);
+        PyDict_SetItemString(processDict, "registration_clock", val); Py_DECREF(val);
 
         val = Py_BuildValue("s", process.host_name.c_str());
         PyDict_SetItemString(processDict, "host_name", val); Py_DECREF(val);
@@ -1111,8 +1111,8 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         PyObject* serviceDict = PyDict_New();
         PyList_Append(serviceList, serviceDict); Py_DECREF(serviceDict);
 
-        val = Py_BuildValue("i", service.rclock);
-        PyDict_SetItemString(serviceDict, "rclock", val); Py_DECREF(val);
+        val = Py_BuildValue("i", service.registration_clock);
+        PyDict_SetItemString(serviceDict, "registration_clock", val); Py_DECREF(val);
 
         val = Py_BuildValue("s", service.host_name.c_str());
         PyDict_SetItemString(serviceDict, "host_name", val); Py_DECREF(val);
@@ -1183,8 +1183,8 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         PyObject* clientDict = PyDict_New();
         PyList_Append(clientList, clientDict); Py_DECREF(clientDict);
 
-        val = Py_BuildValue("i", client.rclock);
-        PyDict_SetItemString(clientDict, "rclock", val); Py_DECREF(val);
+        val = Py_BuildValue("i", client.registration_clock);
+        PyDict_SetItemString(clientDict, "registration_clock", val); Py_DECREF(val);
 
         val = Py_BuildValue("s", client.host_name.c_str());
         PyDict_SetItemString(clientDict, "host_name", val); Py_DECREF(val);

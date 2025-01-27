@@ -206,7 +206,7 @@ namespace eCAL
       TopicInfo.tid                  = topic_id;
 
       // update flexible content
-      TopicInfo.rclock++;
+      TopicInfo.registration_clock++;
       TopicInfo.tdatatype.encoding   = std::move(topic_datatype_encoding);
       TopicInfo.tdatatype.name       = std::move(topic_datatype_name);
       TopicInfo.tdatatype.descriptor = std::move(topic_datatype_desc);
@@ -306,7 +306,7 @@ namespace eCAL
     ProcessInfo.pparam               = process_param;
 
     // update flexible content
-    ProcessInfo.rclock++;
+    ProcessInfo.registration_clock++;
     ProcessInfo.state_severity       = process_state_severity;
     ProcessInfo.state_severity_level = process_state_severity_level;
     ProcessInfo.state_info           = process_state_info;
@@ -368,7 +368,7 @@ namespace eCAL
     ServerInfo.tcp_port_v1 = tcp_port_v1;
 
     // update flexible content
-    ServerInfo.rclock++;
+    ServerInfo.registration_clock++;
     ServerInfo.methods.clear();
     for (const auto& sample_service_method : sample_.service.methods)
     {
@@ -429,7 +429,7 @@ namespace eCAL
     ClientInfo.pid   = process_id;
 
     // update flexible content
-    ClientInfo.rclock++;
+    ClientInfo.registration_clock++;
     ClientInfo.methods.clear();
     for (const auto& sample_client_method : sample_.client.methods)
     {

@@ -97,7 +97,7 @@ private:
   std::map<Columns, int> tree_item_column_mapping =
   {
     { Columns::GROUP,                -1 },
-    { Columns::HEARTBEAT,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::RCLOCK },
+    { Columns::HEARTBEAT,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::REGISTRATION_CLOCK },
     { Columns::HOST_NAME,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::HOST_NAME },
     { Columns::PID,                  (int)ServiceTreeItem<eCAL::pb::Service>::Columns::PID },
     { Columns::PROCESS_NAME,         (int)ServiceTreeItem<eCAL::pb::Service>::Columns::PNAME },

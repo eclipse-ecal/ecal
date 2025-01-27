@@ -157,7 +157,7 @@ namespace eCAL
     // TODO: this naming is wrong, it should be Server!!!
     struct Service
     {
-      int32_t                         rclock = 0;       // Registration clock
+      int32_t                         registration_clock = 0;       // Registration clock
       std::string                     pname;            // Process name
       std::string                     uname;            // Unit name
       std::string                     sname;            // Service name
@@ -167,7 +167,7 @@ namespace eCAL
       uint32_t                        tcp_port_v1 = 0;  // The TCP port used for that service (v1)
 
       bool operator==(const Service& other) const {
-        return rclock == other.rclock &&
+        return registration_clock == other.registration_clock &&
           pname == other.pname &&
           uname == other.uname &&
           sname == other.sname &&
@@ -179,7 +179,7 @@ namespace eCAL
 
       void clear()
       {
-        rclock = 0;
+        registration_clock = 0;
         pname.clear();
         uname.clear();
         sname.clear();
@@ -193,7 +193,7 @@ namespace eCAL
     // Client
     struct Client
     {
-      int32_t                         rclock = 0;       // Registration clock
+      int32_t                         registration_clock = 0;       // Registration clock
       std::string                     pname;            // Process name
       std::string                     uname;            // Unit name
       std::string                     sname;            // Service name
@@ -201,7 +201,7 @@ namespace eCAL
       uint32_t                        version = 0;      // Client protocol version
 
       bool operator==(const Client& other) const {
-        return rclock == other.rclock &&
+        return registration_clock == other.registration_clock &&
           pname == other.pname &&
           uname == other.uname &&
           sname == other.sname &&
@@ -211,7 +211,7 @@ namespace eCAL
 
       void clear()
       {
-        rclock = 0;
+        registration_clock = 0;
         pname.clear();
         uname.clear();
         sname.clear();

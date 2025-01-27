@@ -50,7 +50,7 @@ namespace eCAL
     Service::Service GenerateService()
     {
       Service::Service service;
-      service.rclock      = rand() % 1000;
+      service.registration_clock      = rand() % 1000;
       service.pname       = GenerateString(10);
       service.uname       = GenerateString(5);
       service.sname       = GenerateString(8);
@@ -67,7 +67,7 @@ namespace eCAL
     Service::Client GenerateClient()
     {
       Service::Client client;
-      client.rclock  = rand() % 1000;
+      client.registration_clock  = rand() % 1000;
       client.pname   = GenerateString(10);
       client.uname   = GenerateString(5);
       client.sname   = GenerateString(8);
@@ -103,7 +103,7 @@ namespace eCAL
     Topic GenerateTopic()
     {
       Topic topic;
-      topic.rclock               = rand() % 1000;
+      topic.registration_clock               = rand() % 1000;
       topic.shm_transport_domain = GenerateString(6);
       topic.pname                = GenerateString(10);
       topic.uname                = GenerateString(5);
@@ -125,7 +125,7 @@ namespace eCAL
     Process GenerateProcess()
     {
       Process process;
-      process.rclock               = rand() % 1000;
+      process.registration_clock               = rand() % 1000;
       process.shm_transport_domain = GenerateString(6);
       process.pname                = GenerateString(10);
       process.uname                = GenerateString(5);

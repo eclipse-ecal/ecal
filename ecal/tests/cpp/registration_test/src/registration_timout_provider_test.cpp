@@ -47,7 +47,7 @@ eCAL::Registration::Sample UpdateTopicSample(const eCAL::Registration::Sample& i
 {
   // vary statistical data
   eCAL::Registration::Sample updated = input_;
-  updated.topic.rclock = input_.topic.rclock + 1;
+  updated.topic.registration_clock = input_.topic.registration_clock + 1;
   updated.topic.dclock = input_.topic.dclock + 10;
   return updated;
 }
@@ -66,7 +66,7 @@ void InitializeAllSamples()
 
   pub_foo_process_a_register_1 = pub_foo_process_a_unregister;
   pub_foo_process_a_register_1.cmd_type = eCAL::bct_reg_publisher;
-  pub_foo_process_a_register_1.topic.rclock = 1;
+  pub_foo_process_a_register_1.topic.registration_clock = 1;
   pub_foo_process_a_register_1.topic.direction = "publisher";
   pub_foo_process_a_register_1.topic.tdatatype = { "a", "b", "c" };
   pub_foo_process_a_register_1.topic.tsize = 100;
@@ -91,7 +91,7 @@ void InitializeAllSamples()
 
   sub_foo_process_a_register_1 = sub_foo_process_a_unregister;
   sub_foo_process_a_register_1.cmd_type = eCAL::bct_reg_subscriber;
-  sub_foo_process_a_register_1.topic.rclock = 1;
+  sub_foo_process_a_register_1.topic.registration_clock = 1;
   sub_foo_process_a_register_1.topic.direction = "subscriber";
   sub_foo_process_a_register_1.topic.tdatatype = { "a", "b", "c" };
   sub_foo_process_a_register_1.topic.tsize = 100;
@@ -116,7 +116,7 @@ void InitializeAllSamples()
 
   sub_foo_process_b_register_1 = sub_foo_process_b_unregister;
   sub_foo_process_b_register_1.cmd_type = eCAL::bct_reg_subscriber;
-  sub_foo_process_b_register_1.topic.rclock = 1;
+  sub_foo_process_b_register_1.topic.registration_clock = 1;
   sub_foo_process_b_register_1.topic.direction = "subscriber";
   sub_foo_process_b_register_1.topic.tdatatype = { "a", "b", "c" };
   sub_foo_process_b_register_1.topic.tsize = 100;

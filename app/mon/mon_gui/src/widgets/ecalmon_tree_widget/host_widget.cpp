@@ -86,7 +86,7 @@ void HostWidget::autoSizeColumns()
 
   auto example_process_pb = example_monitoring_pb.add_processes();
 
-  example_process_pb->set_rclock(999999);
+  example_process_pb->set_registration_clock(999999);
   example_process_pb->set_host_name("CARPC00____");
   example_process_pb->set_pid(999999);
   example_process_pb->set_pname("");

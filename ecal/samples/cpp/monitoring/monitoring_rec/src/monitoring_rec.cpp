@@ -161,7 +161,7 @@ int main()
         if (!g_topics_filt_string.empty() && (g_topics_filt_string != topic.tname())) continue;
 
         // print topic details
-        std::cout << "rclock          : " << topic.rclock() << std::endl;   // registration clock
+        std::cout << "registration_clock          : " << topic.registration_clock() << std::endl;   // registration clock
         std::cout << "host_name       : " << topic.host_name() << std::endl;   // host name
         std::cout << "pid             : " << topic.pid() << std::endl;   // process id
         std::cout << "pname           : " << topic.pname() << std::endl;   // process name

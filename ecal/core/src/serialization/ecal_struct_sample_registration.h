@@ -211,7 +211,7 @@ namespace eCAL
     // Process information
     struct Process
     {
-      int32_t                             rclock = 0;                   // registration clock
+      int32_t                             registration_clock = 0;                   // registration clock
       std::string                         shm_transport_domain;         // shm transport domain
       std::string                         pname;                        // process name
       std::string                         uname;                        // unit name
@@ -225,7 +225,7 @@ namespace eCAL
       std::string                         config_file_path;             // Path from where the eCAL configuration for this process was loadedloaded/runtime eCAL version of a component
 
       bool operator==(const Process& other) const {
-        return rclock == other.rclock &&
+        return registration_clock == other.registration_clock &&
           shm_transport_domain == other.shm_transport_domain &&
           pname == other.pname &&
           uname == other.uname &&
@@ -241,7 +241,7 @@ namespace eCAL
 
       void clear()
       {
-        rclock = 0;
+        registration_clock = 0;
         shm_transport_domain.clear();
         pname.clear();
         uname.clear();
@@ -259,7 +259,7 @@ namespace eCAL
     // eCAL topic information
     struct Topic
     {
-      int32_t                             rclock = 0;                   // registration clock (heart beat)
+      int32_t                             registration_clock = 0;                   // registration clock (heart beat)
       std::string                         shm_transport_domain;         // shm transport domain
       std::string                         pname;                        // process name
       std::string                         uname;                        // unit name
@@ -281,7 +281,7 @@ namespace eCAL
       std::map<std::string, std::string>  attr;                         // generic topic description
 
       bool operator==(const Topic& other) const {
-        return rclock == other.rclock &&
+        return registration_clock == other.registration_clock &&
           shm_transport_domain == other.shm_transport_domain &&
           pname == other.pname &&
           uname == other.uname &&
@@ -301,7 +301,7 @@ namespace eCAL
 
       void clear()
       {
-        rclock = 0;
+        registration_clock = 0;
         shm_transport_domain.clear();
         pname.clear();
         uname.clear();

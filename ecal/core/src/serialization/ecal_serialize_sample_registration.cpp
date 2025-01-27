@@ -45,8 +45,8 @@ namespace
   {
     const auto& registration_process_    = registration_.process;
     const auto& registration_identifier_ = registration_.identifier;
-    // rclock
-    pb_process_.rclock = registration_process_.rclock;
+    // registration_clock
+    pb_process_.registration_clock = registration_process_.registration_clock;
     // host_name
     eCAL::nanopb::encode_string(pb_process_.host_name, registration_identifier_.host_name);
     // shm_transport_domain
@@ -90,8 +90,8 @@ namespace
     const auto& registration_service_    = registration_.service;
     const auto& registration_identifier_ = registration_.identifier;
 
-    // rclock
-    pb_service_.rclock = registration_service_.rclock;
+    // registration_clock
+    pb_service_.registration_clock = registration_service_.registration_clock;
     // host_name
     eCAL::nanopb::encode_string(pb_service_.host_name, registration_identifier_.host_name);
     // pname
@@ -122,8 +122,8 @@ namespace
     const auto& registration_client_ = registration_.client;
     const auto& registration_producer_ = registration_.identifier;
 
-    // rclock
-    pb_client_.rclock = registration_client_.rclock;
+    // registration_clock
+    pb_client_.registration_clock = registration_client_.registration_clock;
     // host_name
     eCAL::nanopb::encode_string(pb_client_.host_name, registration_producer_.host_name);
     // pname
@@ -150,8 +150,8 @@ namespace
     const auto& registration_identifier_ = registration_sample_.identifier;
     const auto& registration_topic_      = registration_sample_.topic;
 
-    // rclock
-    pb_topic_.rclock = registration_topic_.rclock;
+    // registration_clock
+    pb_topic_.registration_clock = registration_topic_.registration_clock;
     // host_name
     eCAL::nanopb::encode_string(pb_topic_.host_name, registration_identifier_.host_name);
     // shm_transport_domain
@@ -407,8 +407,8 @@ namespace
     {
     case eCAL::bct_reg_process:
     case eCAL::bct_unreg_process:
-      // rclock
-      registration_.process.rclock = pb_sample_.process.rclock;
+      // registration_clock
+      registration_.process.registration_clock = pb_sample_.process.registration_clock;
       // pid
       registration_.identifier.process_id = pb_sample_.process.pid;
       // tid -> we need to use the PID here, because we don't have a designated field for it
@@ -424,8 +424,8 @@ namespace
       break;
     case eCAL::bct_reg_service:
     case eCAL::bct_unreg_service:
-      // rclock
-      registration_.service.rclock = pb_sample_.service.rclock;
+      // registration_clock
+      registration_.service.registration_clock = pb_sample_.service.registration_clock;
       // pid
       registration_.identifier.process_id = pb_sample_.service.pid;
       // version
@@ -437,8 +437,8 @@ namespace
       break;
     case eCAL::bct_reg_client:
     case eCAL::bct_unreg_client:
-      // rclock
-      registration_.client.rclock = pb_sample_.client.rclock;
+      // registration_clock
+      registration_.client.registration_clock = pb_sample_.client.registration_clock;
       // pid
       registration_.identifier.process_id = pb_sample_.client.pid;
       // version
@@ -448,8 +448,8 @@ namespace
     case eCAL::bct_unreg_publisher:
     case eCAL::bct_reg_subscriber:
     case eCAL::bct_unreg_subscriber:
-      // rclock
-      registration_.topic.rclock = pb_sample_.topic.rclock;
+      // registration_clock
+      registration_.topic.registration_clock = pb_sample_.topic.registration_clock;
       // pid
       registration_.identifier.process_id = pb_sample_.topic.pid;
       // tsize

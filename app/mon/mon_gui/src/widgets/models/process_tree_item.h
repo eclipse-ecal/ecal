@@ -37,7 +37,7 @@ public:
 
   enum class Columns : int
   {
-    RCLOCK,
+    REGISTRATION_CLOCK,
     HOST_NAME,
     SHM_TRANSPORT_DOMAIN,
     PID,

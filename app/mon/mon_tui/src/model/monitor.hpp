@@ -191,7 +191,7 @@ class MonitorModel
         }
       }
       auto &topic = topics.emplace_back();
-      topic.registration_clock = t.rclock();
+      topic.registration_clock = t.registration_clock();
       topic.host_name = std::move(*t.mutable_host_name());
       topic.pid = t.pid();
       topic.process_name = std::move(*t.mutable_pname());
@@ -234,7 +234,7 @@ class MonitorModel
       service.host_name = std::move(*s.mutable_host_name());
       service.process_name = std::move(*s.mutable_pname());
       service.unit_name = std::move(*s.mutable_uname());
-      service.registration_clock = s.rclock();
+      service.registration_clock = s.registration_clock();
       service.tcp_port = s.tcp_port_v1();
       for(auto &m: *s.mutable_methods())
       {
