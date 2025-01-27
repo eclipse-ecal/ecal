@@ -722,7 +722,6 @@
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/os.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/process_mode.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/process_severity.h&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/deprecate.h&gt;</span>
 
 <span class="k">namespace</span><span class="w"> </span><span class="nn">eCAL</span>
 <span class="p">{</span>
@@ -761,13 +760,10 @@
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">SetState</span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">eSeverity</span><span class="w"> </span><span class="n">severity_</span><span class="p">,</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">eSeverityLevel</span><span class="w"> </span><span class="n">level_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">info_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_6_0</span><span class="p">(</span><span class="s">&quot;This function is deprecated and will be removed in future eCAL versions.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">StartProcess</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">proc_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">proc_args_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">working_dir_</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">create_console_</span><span class="p">,</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">eStartMode</span><span class="w"> </span><span class="n">process_mode_</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">block_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_6_0</span><span class="p">(</span><span class="s">&quot;This function is deprecated and will be removed in future eCAL versions.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">StopProcess</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">proc_name_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_6_0</span><span class="p">(</span><span class="s">&quot;This function is deprecated and will be removed in future eCAL versions.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">StopProcess</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">proc_id_</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
